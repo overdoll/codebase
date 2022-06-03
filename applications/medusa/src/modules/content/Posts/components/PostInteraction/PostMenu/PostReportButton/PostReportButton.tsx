@@ -45,6 +45,9 @@ const Fragment = graphql`
     club {
       slug
     }
+    viewerReport {
+      __typename
+    }
   }
 `
 
@@ -59,9 +62,6 @@ const Mutation = graphql`
     reportPost(input: $input) {
       postReport {
         id
-        account {
-          username
-        }
         rule {
           title
         }
@@ -128,6 +128,15 @@ export default function PostReportButton ({
         onClose()
         clearValues()
       },
+      updater: (store, payload) => {
+        if (payload?.reportPost?.postReport != null) {
+          const reportPayload = store.get(payload.reportPost.postReport.id)
+          const post = store.get(data.id)
+          if (reportPayload != null) {
+            post?.setLinkedRecord(reportPayload, 'viewerReport')
+          }
+        }
+      },
       onError (data) {
         notify({
           status: 'error',
@@ -137,23 +146,39 @@ export default function PostReportButton ({
     })
   }
 
+  const ReportMenuItem = (): JSX.Element => {
+    if (viewerData == null) {
+      return (
+        <MenuLinkItem
+          href={redirect}
+          text={<Trans>Report Post</Trans>}
+          icon={FlagReport}
+        />
+      )
+    }
+
+    if (data?.viewerReport != null) {
+      return (
+        <MenuItem
+          isDisabled
+          text={<Trans>Reported</Trans>}
+          icon={FlagReport}
+        />
+      )
+    }
+
+    return (
+      <MenuItem
+        onClick={onOpen}
+        text={<Trans>Report Post</Trans>}
+        icon={FlagReport}
+      />
+    )
+  }
+
   return (
     <>
-      {viewerData == null
-        ? (
-          <MenuLinkItem
-            href={redirect}
-            text={<Trans>Report Post</Trans>}
-            icon={FlagReport}
-          />
-          )
-        : (
-          <MenuItem
-            onClick={onOpen}
-            text={<Trans>Report Post</Trans>}
-            icon={FlagReport}
-          />
-          )}
+      <ReportMenuItem />
       <Modal
         isOpen={isOpen}
         onClose={onClose}

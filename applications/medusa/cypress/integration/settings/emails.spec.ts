@@ -1,4 +1,4 @@
-import { generateEmail, generateUsernameAndEmail } from '../../../support/generate'
+import { generateEmail, generateUsernameAndEmail } from '../../support/generate'
 
 describe('Email Settings', () => {
   it('should be able to add an email and confirm it, then make it primary and then remove it', () => {

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1d3ffe1fe2f0a0f60c4396a75be58d6d>>
- * @relayHash c32e144a8d353113cb1d9ce3e14985f5
+ * @generated SignedSource<<4ba0bb24f9ea0c93de39b82c13d8d7b2>>
+ * @relayHash c41c909d578b0473dcd7849d75bfd435
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c32e144a8d353113cb1d9ce3e14985f5
+// @relayRequestID c41c909d578b0473dcd7849d75bfd435
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -106,7 +106,11 @@ v8 = {
     (v4/*: any*/)
   ],
   "storageKey": null
-};
+},
+v9 = [
+  (v1/*: any*/),
+  (v2/*: any*/)
+];
 return {
   "fragment": {
     "argumentDefinitions": [],
@@ -285,6 +289,13 @@ return {
                           {
                             "alias": null,
                             "args": null,
+                            "kind": "ScalarField",
+                            "name": "viewerIsOwner",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
                             "concreteType": "ClubMember",
                             "kind": "LinkedField",
                             "name": "viewerMember",
@@ -307,14 +318,21 @@ return {
                       {
                         "alias": null,
                         "args": null,
+                        "concreteType": "PostReport",
+                        "kind": "LinkedField",
+                        "name": "viewerReport",
+                        "plural": false,
+                        "selections": (v9/*: any*/),
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
                         "concreteType": "PostLike",
                         "kind": "LinkedField",
                         "name": "viewerLiked",
                         "plural": false,
-                        "selections": [
-                          (v1/*: any*/),
-                          (v2/*: any*/)
-                        ],
+                        "selections": (v9/*: any*/),
                         "storageKey": null
                       },
                       {
@@ -426,7 +444,7 @@ return {
     ]
   },
   "params": {
-    "id": "c32e144a8d353113cb1d9ce3e14985f5",
+    "id": "c41c909d578b0473dcd7849d75bfd435",
     "metadata": {},
     "name": "ClubsFeedQuery",
     "operationKind": "query",

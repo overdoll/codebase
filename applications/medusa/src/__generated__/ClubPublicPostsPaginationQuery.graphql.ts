@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a878822a89c1cac447d27fe198dc2a1e>>
- * @relayHash 4b00f337af12370dfe86b39891150d82
+ * @generated SignedSource<<85d1e53068b40094ce2d48430d371b59>>
+ * @relayHash 46ab4dd2b3349c9ae360b37eda1bafe2
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4b00f337af12370dfe86b39891150d82
+// @relayRequestID 46ab4dd2b3349c9ae360b37eda1bafe2
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -196,7 +196,11 @@ v19 = {
     (v15/*: any*/)
   ],
   "storageKey": null
-};
+},
+v20 = [
+  (v11/*: any*/),
+  (v12/*: any*/)
+];
 return {
   "fragment": {
     "argumentDefinitions": [
@@ -391,6 +395,13 @@ return {
                               {
                                 "alias": null,
                                 "args": null,
+                                "kind": "ScalarField",
+                                "name": "viewerIsOwner",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
                                 "concreteType": "ClubMember",
                                 "kind": "LinkedField",
                                 "name": "viewerMember",
@@ -413,14 +424,21 @@ return {
                           {
                             "alias": null,
                             "args": null,
+                            "concreteType": "PostReport",
+                            "kind": "LinkedField",
+                            "name": "viewerReport",
+                            "plural": false,
+                            "selections": (v20/*: any*/),
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
                             "concreteType": "PostLike",
                             "kind": "LinkedField",
                             "name": "viewerLiked",
                             "plural": false,
-                            "selections": [
-                              (v11/*: any*/),
-                              (v12/*: any*/)
-                            ],
+                            "selections": (v20/*: any*/),
                             "storageKey": null
                           },
                           {
@@ -489,7 +507,7 @@ return {
     ]
   },
   "params": {
-    "id": "4b00f337af12370dfe86b39891150d82",
+    "id": "46ab4dd2b3349c9ae360b37eda1bafe2",
     "metadata": {},
     "name": "ClubPublicPostsPaginationQuery",
     "operationKind": "query",

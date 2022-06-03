@@ -1,6 +1,6 @@
 import { graphql, useFragment } from 'react-relay'
-import { Badge, HStack, Stack } from '@chakra-ui/react'
-import { GridTile } from '@//:modules/content/ContentSelection'
+import { Badge, HStack, Popover, PopoverBody, PopoverContent, PopoverTrigger, Stack, Text } from '@chakra-ui/react'
+import { ClickableTile, GridTile } from '@//:modules/content/ContentSelection'
 import PostPreviewContent from '@//:modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
 import { PostMenu } from '@//:modules/content/Posts'
 import { Trans } from '@lingui/macro'
@@ -9,8 +9,11 @@ import PostModerateButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
 import PostDeleteButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton'
+import { ConnectionProp } from '@//:types/components'
+import LinkInline from '@//:modules/content/ContentHints/LinkInline/LinkInline'
+import { CLUB_GUIDELINES } from '@//:modules/constants/links'
 
-interface Props {
+interface Props extends ConnectionProp {
   query: RejectedPostFragment$key
 }
 
@@ -23,7 +26,8 @@ const Fragment = graphql`
 `
 
 export default function RejectedPost ({
-  query
+  query,
+  connectionId
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
@@ -32,16 +36,48 @@ export default function RejectedPost ({
       <HStack h={7} align='center' spacing={3} justify='space-between'>
         <Badge borderRadius='base' fontSize='sm' colorScheme='orange'>
           <Trans>
-            Rejected
+            REJECTED
           </Trans>
         </Badge>
         <PostMenu size='xs'>
-          <PostDeleteButton query={data} />
+          <PostDeleteButton connectionId={connectionId} query={data} />
           <PostModerateButton query={data} />
         </PostMenu>
       </HStack>
       <GridTile>
-        <PostPreviewContent query={data} />
+        <Popover>
+          <PopoverTrigger>
+            <ClickableTile>
+              <PostPreviewContent query={data} />
+            </ClickableTile>
+          </PopoverTrigger>
+          <PopoverContent>
+            <PopoverBody>
+              <Stack>
+                <Text color='gray.00' fontSize='sm'>
+                  <Trans>
+                    Your post was reviewed and it was determined that the contents did not comply with the{' '}
+                    <LinkInline
+                      isExternal
+                      color='teal.300'
+                      href={CLUB_GUIDELINES}
+                      fontSize='sm'
+                    >
+                      <Trans>
+                        Club Guidelines
+                      </Trans>
+                    </LinkInline>.
+                  </Trans>
+                </Text>
+                <Text color='gray.00' fontSize='sm'>
+                  <Trans>
+                    Please review the guidelines before posting again so that any future posts are not rejected.
+                  </Trans>
+                </Text>
+              </Stack>
+            </PopoverBody>
+          </PopoverContent>
+        </Popover>
       </GridTile>
     </Stack>
   )

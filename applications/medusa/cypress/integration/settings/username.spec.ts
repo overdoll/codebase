@@ -1,5 +1,5 @@
-import { generateUsernameAndEmail } from '../../../support/generate'
-import { clickOnButton } from '../../../support/user_actions'
+import { generateUsernameAndEmail } from '../../support/generate'
+import { clickOnButton } from '../../support/user_actions'
 
 describe('Username Settings', () => {
   it('should be able to change username', () => {

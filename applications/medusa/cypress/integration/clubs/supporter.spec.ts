@@ -80,7 +80,8 @@ describe('Supporter', () => {
     })
     cy.findByText(/Transaction Approved/iu, { timeout: 60000 }).should('be.visible')
     clickOnButton('Close')
-    cy.findByRole('button', { name: /Manage Subscription/iu }).should('be.visible')
+    clickOnButton(/Manage Subscription/i)
+    cy.findByText('Subscription Details').should('be.visible')
 
     /**
      * Enable two factor so you can support using saved payment method
@@ -207,21 +208,22 @@ describe('Supporter', () => {
     // see transaction metrics
     cy.findByText('Transaction Metrics').should('be.visible')
 
-    // check the payout was issued
-    // TODO payments dont settle so payout is not created
-    // cy.findByText('Deposit Date').should('be.visible')
-
     // go to refunded transaction
     clickOnButton('View Payments')
     cy.findAllByText('PENDING').first().should('be.visible').click({ force: true })
     cy.findByText(/Deduction Breakdown/iu).should('be.visible')
 
     // issue payout
-    cy.visit(`/staff/club/${savedPaymentMethodClub}`)
+    cy.visit(`/staff/club/${newPaymentMethodClub}`)
     clickOnTab('Payouts')
     clickOnButton('Initiate Payout')
     clickOnButton('Confirm Initiate Payout')
     cy.findByText(/Successfully initiated payout/iu).should('be.visible')
+    /*
+    // TODO payout cannot be seen because transactions are still pending
+    cy.visit(`/club/${newPaymentMethodClub}/revenue`)
+    cy.findByText('Deposit Date').should('be.visible')
+     */
 
     /**
      * See refunded transaction as account

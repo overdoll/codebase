@@ -1,7 +1,7 @@
-import { generateUsernameAndEmail } from '../../../support/generate'
-import { join, logout } from '../../../support/join_actions'
-import { gotoNextStep } from '../../../support/flow_builder'
-import { clickOnButton } from '../../../support/user_actions'
+import { generateUsernameAndEmail } from '../../support/generate'
+import { join, logout } from '../../support/join_actions'
+import { gotoNextStep } from '../../support/flow_builder'
+import { clickOnButton } from '../../support/user_actions'
 
 const gotoSettingsPage = (): void => {
   cy.visit('/settings/security')

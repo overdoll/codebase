@@ -1,10 +1,11 @@
 import { generateClubName, generateUsernameAndEmail } from '../../support/generate'
 import { gotoNextStep, gotoPreviousStep, saveCurrentStep } from '../../support/flow_builder'
-import { clickOnButton, clickOnTile, searchForTerm } from '../../support/user_actions'
+import { clickOnButton, clickOnTab, clickOnTile, searchForTerm } from '../../support/user_actions'
 
 const postAudience = 'Standard Audience'
 const postCategories = ['Alter', 'Assure', 'Transmit']
 const postCharacter = 'Haider Woodley'
+const rule = 'Rule #1 without infraction'
 
 const nextStepIsDisabled = (): void => {
   cy.findByRole('button', { name: /Next/iu }).should('be.disabled')
@@ -81,7 +82,7 @@ describe('Create & Manage Posts', () => {
      * Add category, remove category, save categories
      */
     isOnStep('category')
-    nextStepIsDisabled()
+    cy.findByRole('button', { name: '0 / 3' }).should('be.disabled')
     searchForTerm('Search for a category', postCategories[0])
     clickOnTile(postCategories[0])
     // test removing category by the label
@@ -95,8 +96,6 @@ describe('Create & Manage Posts', () => {
     // add second category
     searchForTerm('Search for a category', postCategories[1])
     clickOnTile(postCategories[1])
-    // test button is still disabled if there are two categories
-    nextStepIsDisabled()
     // add third category
     searchForTerm('Search for a category', postCategories[2])
     clickOnTile(postCategories[2])
@@ -252,5 +251,20 @@ describe('Create & Manage Posts', () => {
     cy.visit(`/${clubName}`)
     clickOnButton(/Become a Supporter/iu)
     cy.findByText(/Your contribution directly supports/iu).should('be.visible')
+
+    /**
+     * Remove post as staff
+     */
+    cy.joinWithExistingAccount('0eclipse')
+    cy.visit(`/${clubName}/posts?sort=NEW`)
+    cy.get('button[aria-label="Open Menu"]').should('be.visible').click()
+    cy.findByText('Moderate').should('be.visible').click()
+    clickOnTab('Actions')
+    clickOnButton('Remove Post')
+    clickOnButton('Select Rule')
+    clickOnTile(rule)
+    cy.findByPlaceholderText(/Add a note describing/iu).should('be.visible').type('A note about why the post was removed')
+    clickOnButton('Confirm Remove Post')
+    cy.findByText(/Successfully removed post/iu).should('be.visible')
   })
 })

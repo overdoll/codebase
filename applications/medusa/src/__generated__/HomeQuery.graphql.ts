@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<5b6d5f2066365944731d9acb9877b88f>>
- * @relayHash 9d54a5637978a7bcd76a005d06b40fa6
+ * @generated SignedSource<<4c021c1398aa81ddd3b29daf675aed18>>
+ * @relayHash 7bb709ca02d2338bbda04d9a85b67a1a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9d54a5637978a7bcd76a005d06b40fa6
+// @relayRequestID 7bb709ca02d2338bbda04d9a85b67a1a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -33,11 +33,6 @@ var v0 = [
     "kind": "Literal",
     "name": "first",
     "value": 9
-  },
-  {
-    "kind": "Literal",
-    "name": "sortBy",
-    "value": "TOP"
   }
 ],
 v1 = {
@@ -112,7 +107,11 @@ v8 = {
     (v4/*: any*/)
   ],
   "storageKey": null
-};
+},
+v9 = [
+  (v1/*: any*/),
+  (v2/*: any*/)
+];
 return {
   "fragment": {
     "argumentDefinitions": [],
@@ -166,7 +165,7 @@ return {
         "args": (v0/*: any*/),
         "concreteType": "PostConnection",
         "kind": "LinkedField",
-        "name": "posts",
+        "name": "postsFeed",
         "plural": false,
         "selections": [
           {
@@ -288,6 +287,13 @@ return {
                       {
                         "alias": null,
                         "args": null,
+                        "kind": "ScalarField",
+                        "name": "viewerIsOwner",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
                         "concreteType": "ClubMember",
                         "kind": "LinkedField",
                         "name": "viewerMember",
@@ -310,14 +316,21 @@ return {
                   {
                     "alias": null,
                     "args": null,
+                    "concreteType": "PostReport",
+                    "kind": "LinkedField",
+                    "name": "viewerReport",
+                    "plural": false,
+                    "selections": (v9/*: any*/),
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
                     "concreteType": "PostLike",
                     "kind": "LinkedField",
                     "name": "viewerLiked",
                     "plural": false,
-                    "selections": [
-                      (v1/*: any*/),
-                      (v2/*: any*/)
-                    ],
+                    "selections": (v9/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -359,18 +372,16 @@ return {
             "storageKey": null
           }
         ],
-        "storageKey": "posts(first:9,sortBy:\"TOP\")"
+        "storageKey": "postsFeed(first:9)"
       },
       {
         "alias": null,
         "args": (v0/*: any*/),
-        "filters": [
-          "sortBy"
-        ],
+        "filters": null,
         "handle": "connection",
-        "key": "HomePosts_posts",
+        "key": "HomePosts_postsFeed",
         "kind": "LinkedHandle",
-        "name": "posts"
+        "name": "postsFeed"
       },
       {
         "alias": null,
@@ -459,7 +470,7 @@ return {
     ]
   },
   "params": {
-    "id": "9d54a5637978a7bcd76a005d06b40fa6",
+    "id": "7bb709ca02d2338bbda04d9a85b67a1a",
     "metadata": {},
     "name": "HomeQuery",
     "operationKind": "query",

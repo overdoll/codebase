@@ -1,13 +1,4 @@
-import {
-  Box,
-  Heading,
-  Popover,
-  PopoverBody,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverHeader,
-  PopoverTrigger
-} from '@chakra-ui/react'
+import { Box, Heading, Popover, PopoverBody, PopoverContent, PopoverTrigger, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { ReactNode } from 'react'
 
@@ -25,11 +16,11 @@ export default function RequiredPrompt ({ children }: Props): JSX.Element {
           </Heading>
         </PopoverTrigger>
         <PopoverContent>
-          <PopoverCloseButton />
-          <PopoverHeader fontWeight='semibold'>
-            <Trans>Why is this required</Trans>
-          </PopoverHeader>
-          <PopoverBody textAlign='left' fontSize='sm'>{children}</PopoverBody>
+          <PopoverBody>
+            <Text color='gray.00' fontSize='sm'>
+              {children}
+            </Text>
+          </PopoverBody>
         </PopoverContent>
       </Popover>
     </Box>

@@ -10,6 +10,7 @@ import PostReportButton from '../../../PostInteraction/PostMenu/PostReportButton
 import PostViewButton from '../../../PostInteraction/PostMenu/PostViewButton/PostViewButton'
 import JoinClubFromPost
   from '../../../../../../../domain/slug/root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromPost/JoinClubFromPost'
+import PostArchiveButton from '../../../PostInteraction/PostMenu/PostArchiveButton/PostArchiveButton'
 
 interface Props {
   query: FullSimplePostFragment$key
@@ -25,7 +26,9 @@ const PostFragment = graphql`
     ...PostReportButtonFragment
     ...PostLikeButtonFragment
     ...PostHeaderClubFragment
+    ...PostArchiveButtonFragment
     club @required(action: THROW) {
+      viewerIsOwner
       ...JoinClubFromPostFragment
     }
   }
@@ -61,7 +64,9 @@ export default function FullSimplePost ({
           <PostMenu variant='ghost' size='sm'>
             <PostViewButton query={data} />
             <PostCopyLinkButton query={data} />
-            <PostReportButton query={data} viewerQuery={viewerData} />
+            {data?.club?.viewerIsOwner
+              ? <PostArchiveButton query={data} />
+              : <PostReportButton query={data} viewerQuery={viewerData} />}
             <PostModerateButton query={data} />
           </PostMenu>)}
       />

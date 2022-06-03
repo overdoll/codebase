@@ -1,5 +1,5 @@
-import { generateUsernameAndEmail } from '../../../support/generate'
-import { logout } from '../../../support/join_actions'
+import { generateUsernameAndEmail } from '../../support/generate'
+import { logout } from '../../support/join_actions'
 
 describe('Sessions Settings', () => {
   it('can see current session', () => {

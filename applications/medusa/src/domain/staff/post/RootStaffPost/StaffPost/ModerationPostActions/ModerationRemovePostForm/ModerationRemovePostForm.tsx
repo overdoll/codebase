@@ -130,7 +130,7 @@ export default function ModerationRemovePostForm ({
           colorScheme='orange'
         >
           <Trans>
-            Remove Post
+            Confirm Remove Post
           </Trans>
         </FormSubmitButton>
       </Stack>

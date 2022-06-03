@@ -41,7 +41,7 @@ export default function PublishedPost ({
       <HStack h={7} align='center' spacing={3} justify='space-between'>
         <Badge borderRadius='base' fontSize='sm' colorScheme='green'>
           <Trans>
-            Published
+            PUBLISHED
           </Trans>
         </Badge>
         <PostMenu size='xs'>

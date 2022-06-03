@@ -17706,7 +17706,7 @@ mjml-wrapper@4.12.0:
 
 mjml@^4.12.0:
   version "4.12.0"
-  resolved "https://registry.npmjs.org/mjml/-/mjml-4.12.0.tgz"
+  resolved "https://registry.yarnpkg.com/mjml/-/mjml-4.12.0.tgz#bcf5c508075c5b05d84f611180234f4a2b3e13b0"
   integrity sha512-uWDu1pPQVyoX4iKIrM02J6qOBN6PC1rSMP64DKi2qGU4dpOztVgvTBh6JttIbINV4ZiALtpeGu+jeEUqp2ROXA==
   dependencies:
     "@babel/runtime" "^7.14.6"

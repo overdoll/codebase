@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3715734a08fa5a55939f770493b577eb>>
- * @relayHash 4782597de63129c24b68d846809d3d61
+ * @generated SignedSource<<c0b686c9961d39169c7cdf5f249ad2f3>>
+ * @relayHash f9681e101568ced7d117887631774fc0
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4782597de63129c24b68d846809d3d61
+// @relayRequestID f9681e101568ced7d117887631774fc0
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -153,7 +153,11 @@ v12 = {
     (v8/*: any*/)
   ],
   "storageKey": null
-};
+},
+v13 = [
+  (v5/*: any*/),
+  (v6/*: any*/)
+];
 return {
   "fragment": {
     "argumentDefinitions": [
@@ -334,6 +338,13 @@ return {
                       {
                         "alias": null,
                         "args": null,
+                        "kind": "ScalarField",
+                        "name": "viewerIsOwner",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
                         "concreteType": "ClubMember",
                         "kind": "LinkedField",
                         "name": "viewerMember",
@@ -356,14 +367,21 @@ return {
                   {
                     "alias": null,
                     "args": null,
+                    "concreteType": "PostReport",
+                    "kind": "LinkedField",
+                    "name": "viewerReport",
+                    "plural": false,
+                    "selections": (v13/*: any*/),
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
                     "concreteType": "PostLike",
                     "kind": "LinkedField",
                     "name": "viewerLiked",
                     "plural": false,
-                    "selections": [
-                      (v5/*: any*/),
-                      (v6/*: any*/)
-                    ],
+                    "selections": (v13/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -488,7 +506,7 @@ return {
     ]
   },
   "params": {
-    "id": "4782597de63129c24b68d846809d3d61",
+    "id": "f9681e101568ced7d117887631774fc0",
     "metadata": {},
     "name": "SearchQuery",
     "operationKind": "query",

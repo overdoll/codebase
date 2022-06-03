@@ -13,7 +13,6 @@ import PageContents from './PageContents/PageContents'
 import UniversalNavigator from './UniversalNavigator/UniversalNavigator'
 import { PageProps } from '@//:types/app'
 import NoScript from './NoScript/NoScript'
-import { GetServerSidePropsResult } from 'next'
 
 interface Props {
   children: ReactNode
@@ -53,19 +52,6 @@ const Root: PageProps<Props> = (props: Props): JSX.Element => {
       <NoScript />
     </AccountAuthorizer>
   )
-}
-
-export async function getServerSideProps ({
-  res
-}): Promise<GetServerSidePropsResult<any>> {
-  res.setHeader(
-    'Cache-Control',
-    'public, max-age=31536000, immutable'
-  )
-
-  return {
-    props: {}
-  }
 }
 
 export default Root

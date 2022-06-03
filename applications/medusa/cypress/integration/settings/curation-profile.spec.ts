@@ -1,6 +1,6 @@
-import { generateUsernameAndEmail } from '../../../support/generate'
-import { gotoNextStep, gotoPreviousStep, saveCurrentStep, skipCurrentStep } from '../../../support/flow_builder'
-import { clickOnTile, searchForTerm } from '../../../support/user_actions'
+import { generateUsernameAndEmail } from '../../support/generate'
+import { gotoNextStep, gotoPreviousStep, saveCurrentStep, skipCurrentStep } from '../../support/flow_builder'
+import { clickOnTile, searchForTerm } from '../../support/user_actions'
 
 const preferenceAudience = 'Standard Audience'
 const preferenceCategory = 'Alter'

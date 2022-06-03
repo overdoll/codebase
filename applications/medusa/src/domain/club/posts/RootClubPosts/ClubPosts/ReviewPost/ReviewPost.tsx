@@ -1,9 +1,11 @@
 import { graphql, useFragment } from 'react-relay'
 import type { ReviewPostFragment$key } from '@//:artifacts/ReviewPostFragment.graphql'
-import { Badge, HStack, Stack } from '@chakra-ui/react'
-import { GridTile } from '@//:modules/content/ContentSelection'
+import { Badge, HStack, Popover, PopoverBody, PopoverContent, PopoverTrigger, Stack, Text } from '@chakra-ui/react'
+import { ClickableTile, GridTile } from '@//:modules/content/ContentSelection'
 import PostPreviewContent from '@//:modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
 import { Trans } from '@lingui/macro'
+import { CLUB_GUIDELINES } from '@//:modules/constants/links'
+import LinkInline from '@//:modules/content/ContentHints/LinkInline/LinkInline'
 
 interface Props {
   query: ReviewPostFragment$key
@@ -26,12 +28,44 @@ export default function ReviewPost ({
       <HStack h={7} spacing={3} justify='flex-start'>
         <Badge borderRadius='base' fontSize='sm' colorScheme='purple'>
           <Trans>
-            Review
+            REVIEW
           </Trans>
         </Badge>
       </HStack>
       <GridTile>
-        <PostPreviewContent query={data} />
+        <Popover>
+          <PopoverTrigger>
+            <ClickableTile>
+              <PostPreviewContent query={data} />
+            </ClickableTile>
+          </PopoverTrigger>
+          <PopoverContent>
+            <PopoverBody>
+              <Stack>
+                <Text color='gray.00' fontSize='sm'>
+                  <Trans>
+                    Your post is under review. It will be checked against the{' '}
+                    <LinkInline
+                      isExternal
+                      color='teal.300'
+                      href={CLUB_GUIDELINES}
+                      fontSize='sm'
+                    >
+                      <Trans>
+                        Club Guidelines
+                      </Trans>
+                    </LinkInline> to ensure that it is allowed on the platform.
+                  </Trans>
+                </Text>
+                <Text color='gray.00' fontSize='sm'>
+                  <Trans>
+                    You can expect your post to be reviewed anywhere between a few minutes to a day from submission.
+                  </Trans>
+                </Text>
+              </Stack>
+            </PopoverBody>
+          </PopoverContent>
+        </Popover>
       </GridTile>
     </Stack>
   )

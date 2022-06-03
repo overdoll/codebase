@@ -29,6 +29,8 @@ describe('Post', () => {
     cy.findByText(rule).should('not.be.disabled').click({ force: true })
     clickOnButton('Submit Report')
     cy.findByText(/Post report was submitted/iu).should('be.visible')
+    cy.get('button[aria-label="Open Menu"]').first().click({ force: true })
+    cy.findByText('Reported').should('be.visible')
   })
 
   it('click on character', () => {

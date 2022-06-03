@@ -107,7 +107,7 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
                 )
               case 'REJECTED':
                 return (
-                  <RejectedPost key={index} query={item.node} />
+                  <RejectedPost connectionId={data.posts.__id} key={index} query={item.node} />
                 )
               case 'ARCHIVED':
                 return (
@@ -115,7 +115,7 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
                 )
               case 'REMOVED':
                 return (
-                  <RemovedPost key={index} query={item.node} />
+                  <RemovedPost connectionId={data.posts.__id} key={index} query={item.node} />
                 )
               default:
                 return (
