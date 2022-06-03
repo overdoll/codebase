@@ -8,7 +8,6 @@ import (
 	"overdoll/libraries/passport"
 	"overdoll/libraries/sentry_support"
 	"overdoll/libraries/support"
-	"time"
 )
 
 func init() {
@@ -31,7 +30,7 @@ func NewRawGinRouter() *gin.Engine {
 		router.Use(gin.Recovery())
 		// we also don't log API routes because there's really no point since most of them are graphql calls anyways
 	} else {
-		router.Use(ginzap.Ginzap(zap.L(), time.RFC3339, true))
+		router.Use(customLogger(zap.L()))
 		router.Use(ginzap.RecoveryWithZap(zap.L(), true))
 	}
 
@@ -43,4 +42,16 @@ func NewRawGinRouter() *gin.Engine {
 	router.Use(sentry_support.SentryGinMiddleware())
 
 	return router
+}
+
+func customLogger(logger *zap.Logger) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Next()
+		if len(c.Errors) > 0 {
+			// Append error field if this is an erroneous request.
+			for _, e := range c.Errors.Errors() {
+				logger.Error(e)
+			}
+		}
+	}
 }

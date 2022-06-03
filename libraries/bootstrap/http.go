@@ -24,7 +24,9 @@ func InitializeHttpServer(addr string, handler http.Handler, shutdown func()) {
 	go func() {
 
 		if err := server.ListenAndServe(); err != nil {
-			zap.S().Fatalw("failed to serve http server", zap.Error(err))
+			if err != http.ErrServerClosed {
+				zap.S().Fatalw("failed to serve http server", zap.Error(err))
+			}
 		}
 	}()
 

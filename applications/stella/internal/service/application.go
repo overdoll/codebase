@@ -75,9 +75,10 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 func createApplication(ctx context.Context, eva command.EvaService, loader command.LoaderService, sting activities.StingService, carrier activities.CarrierService, client client.Client) *app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
+	cache := bootstrap.InitializeRedisSession()
 
 	esClient := bootstrap.InitializeElasticSearchSession()
-	clubRepo := adapters.NewClubCassandraElasticsearchRepository(session, esClient)
+	clubRepo := adapters.NewClubCassandraElasticsearchRepository(session, esClient, cache)
 	eventRepo := adapters.NewEventTemporalRepository(client)
 
 	return &app.Application{

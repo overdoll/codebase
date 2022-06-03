@@ -1,7 +1,8 @@
 import NextErrorComponent from 'next/error'
 
-import Sentry from '@sentry/nextjs'
+import * as Sentry from '@sentry/nextjs'
 import ServerError from '@//:domain/500'
+import shouldCaptureError from '@//:modules/operations/shouldCaptureError'
 
 interface MyErrorProps {
   statusCode: number
@@ -18,7 +19,9 @@ const MyError = ({
     // getInitialProps is not called in case of
     // https://github.com/vercel/next.js/issues/8592. As a workaround, we pass
     // err via _app.js so it can be captured
-    Sentry.captureException(err)
+    if (shouldCaptureError(err)) {
+      Sentry.captureException(err)
+    }
     // Flushing is not required in this case as it only happens on the client
   }
 
@@ -54,7 +57,9 @@ MyError.getInitialProps = async ({
   //    Boundaries: https://reactjs.org/docs/error-boundaries.html
 
   if (err != null) {
-    Sentry.captureException(err)
+    if (shouldCaptureError(err)) {
+      Sentry.captureException(err)
+    }
     return errorInitialProps
   }
 

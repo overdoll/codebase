@@ -2,6 +2,7 @@ package principal
 
 import (
 	"context"
+	"fmt"
 	"github.com/getsentry/sentry-go"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -74,20 +75,24 @@ func GinPrincipalRequestMiddleware(srv HttpServicePrincipalFunc) gin.HandlerFunc
 						}
 					}
 
+					scope.SetExtra("principal", map[string]interface{}{
+						"AccountId":     principal.accountId,
+						"Secure":        principal.secure,
+						"Locked":        principal.locked,
+						"Deleting":      principal.deleting,
+						"Roles":         principal.roles,
+						"Username":      principal.username,
+						"Email":         principal.email,
+						"ClubExtension": clubExtensions,
+					})
+
 					scope.AddBreadcrumb(&sentry.Breadcrumb{
-						Category: "Principal",
-						Data: map[string]interface{}{
-							"AccountId":     principal.accountId,
-							"Secure":        principal.secure,
-							"Locked":        principal.locked,
-							"Deleting":      principal.deleting,
-							"Roles":         principal.roles,
-							"Username":      principal.username,
-							"Email":         principal.email,
-							"ClubExtension": clubExtensions,
-						},
-						Level: sentry.LevelInfo,
+						Category: "transport.principal",
+						Type:     "default",
+						Message:  fmt.Sprintf("principal transport with account id %s", principal.accountId),
+						Level:    sentry.LevelInfo,
 					}, 10)
+
 				})
 			}
 		}

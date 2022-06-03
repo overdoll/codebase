@@ -4,26 +4,11 @@ import (
 	"github.com/bazelbuild/rules_go/go/tools/bazel"
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
-	"go.uber.org/zap"
-	"log"
-	"overdoll/libraries/support"
 	"path"
 	"strings"
 )
 
 func Read(root string) {
-
-	logger, err := zap.NewProduction()
-
-	if support.IsDebug() {
-		logger, err = zap.NewDevelopment()
-	}
-
-	if err != nil {
-		log.Fatalf("can't initialize zap logger: %v", err)
-	}
-
-	zap.ReplaceGlobals(logger)
 
 	// need to use bazel runfiles path - most accurate
 	dir, _ := bazel.RunfilesPath()
@@ -39,9 +24,9 @@ func Read(root string) {
 	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
 			// Config file not found; ignore error if desired
-			zap.S().Fatalw("failed to read config - not found", zap.Error(err))
+			panic(err)
 		} else {
-			zap.S().Fatalw("failed to read config", zap.Error(err))
+			panic(err)
 		}
 	}
 }

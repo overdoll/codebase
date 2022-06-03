@@ -77,7 +77,7 @@ func RunHttp(cmd *cobra.Command, args []string) {
 
 	srv := ports.NewHttpServer(app)
 
-	bootstrap.InitializeHttpServer(":8000", srv, func() {})
+	bootstrap.InitializeHttpServer("0.0.0.0:8000", srv, func() {})
 }
 
 func RunGrpc(cmd *cobra.Command, args []string) {

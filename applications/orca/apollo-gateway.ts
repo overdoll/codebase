@@ -5,6 +5,8 @@ import Redis from 'ioredis'
 import cors from 'cors'
 import { buildSubgraphSchema } from '@apollo/federation'
 import * as Sentry from '@sentry/node'
+import pino from 'pino'
+import pinoMiddleware from 'pino-http'
 
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core'
 
@@ -33,6 +35,21 @@ const isNode = (node): boolean =>
   node.interfaces.some(({ name }) => name.value === 'Node')
 
 const DIVIDER_TOKEN = ':'
+
+const logger = pino({
+  formatters: {
+    level (label, number) {
+      return { level: label }
+    }
+  },
+  serializers: {
+    req: (req) => ({
+      id: req.id,
+      method: req.method,
+      url: req.url
+    })
+  }
+})
 
 const typeDefs = gql`
   """
@@ -267,6 +284,7 @@ Sentry.init({
   dsn: process.env.SENTRY_DSN,
   tracesSampleRate: 0,
   release: process.env.APP_VERSION,
+  environment: process.env.APP_ENV,
 })
 
 void (async () => {
@@ -335,7 +353,7 @@ void (async () => {
     ],
   })
 
-  await server.start()
+  app.disable('x-powered-by')
 
   app.use(cors({
     origin: [
@@ -349,7 +367,12 @@ void (async () => {
   }))
 
   app.use(matchQueryMiddleware)
+  app.use(pinoMiddleware({
+    logger: logger,
+    autoLogging: false
+  }))
 
+  await server.start()
   server.applyMiddleware({
     app,
     path: '/',
@@ -360,5 +383,6 @@ void (async () => {
     port: 8000,
     hostname: '0.0.0.0'
   }, resolve))
-  console.log(`🚀 Server ready at http://0.0.0.0:8000${server.graphqlPath}`)
+
+  logger.info('http server starting on 0.0.0.0:8000')
 })()

@@ -85,11 +85,11 @@ const MyApp = ({
 
   // fathom setup for tracking users
   useEffect(() => {
-    const trackingCode: string = process.env.FATHOM_TRACKING_CODE as string
+    const trackingCode: string = process.env.NEXT_PUBLIC_FATHOM_TRACKING_CODE as string
 
     if (trackingCode !== '') {
-      Fathom.load(process.env.FATHOM_TRACKING_CODE as string, {
-        includedDomains: [process.env.FATHOM_DOMAIN as string]
+      Fathom.load(trackingCode, {
+        includedDomains: [process.env.NEXT_PUBLIC_FATHOM_DOMAIN as string]
       })
     }
 

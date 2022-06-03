@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { Component } from 'react'
-import Sentry from '@sentry/nextjs'
+import * as Sentry from '@sentry/nextjs'
+import shouldCaptureError from './shouldCaptureError'
 
 interface PossibleActions {
   error: Error
@@ -25,7 +26,10 @@ export default class ErrorBoundary extends Component<Props, State> {
   }
 
   static getDerivedStateFromError (error: Error): { error: Error } {
-    Sentry.captureException(error)
+    if (shouldCaptureError(error)) {
+      Sentry.captureException(error)
+    }
+
     return {
       error
     }

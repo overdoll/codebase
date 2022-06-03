@@ -4,6 +4,7 @@ go_library(
     name = "adapters",
     srcs = [
         "carrier_grpc.go",
+        "club_account_digest_cassandra_redis_repository.go",
         "club_cassandra_repository.go",
         "club_elasticsearch_repository.go",
         "club_members_cassandra_repository.go",
@@ -22,6 +23,7 @@ go_library(
         "//applications/stella/internal/app/workflows",
         "//applications/stella/internal/domain/club",
         "//applications/sting/proto:v1_go_proto",
+        "//libraries/crypt",
         "//libraries/errors",
         "//libraries/errors/domainerror",
         "//libraries/localization",
@@ -29,6 +31,7 @@ go_library(
         "//libraries/principal",
         "//libraries/scan",
         "//libraries/support",
+        "@com_github_go_redis_redis_v8//:redis",
         "@com_github_gocql_gocql//:gocql",
         "@com_github_olivere_elastic_v7//:elastic",
         "@com_github_scylladb_gocqlx_v2//:gocqlx",

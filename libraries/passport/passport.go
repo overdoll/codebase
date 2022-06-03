@@ -33,15 +33,6 @@ func (p *Passport) Authenticated() error {
 	return ErrNotAuthenticated
 }
 
-func (p *Passport) SafeAccountID() string {
-
-	if p.passport.AccountInfo == nil {
-		return ""
-	}
-
-	return p.AccountID()
-}
-
 // AccountID - may throw nil pointer - make sure you check Authenticated() first
 func (p *Passport) AccountID() string {
 	return p.passport.AccountInfo.Id

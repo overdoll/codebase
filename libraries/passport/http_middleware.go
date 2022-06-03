@@ -2,6 +2,7 @@ package passport
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/getsentry/sentry-go"
 	"github.com/gin-gonic/gin"
 )
@@ -19,16 +20,25 @@ func GinPassportRequestMiddleware() gin.HandlerFunc {
 			// add sentry data to context
 			if hub := sentry.GetHubFromContext(c.Request.Context()); hub != nil {
 				hub.WithScope(func(scope *sentry.Scope) {
+
+					passportData := map[string]interface{}{
+						"IP":        pass.IP(),
+						"UserAgent": pass.UserAgent(),
+						"DeviceId":  pass.DeviceID(),
+					}
+
+					if err := pass.Authenticated(); err == nil {
+						passportData["SessionId"] = pass.SessionID()
+						passportData["AccountId"] = pass.AccountID()
+					}
+
+					scope.SetExtra("passport", passportData)
+
 					scope.AddBreadcrumb(&sentry.Breadcrumb{
-						Category: "Passport",
-						Data: map[string]interface{}{
-							"IP":        pass.IP(),
-							"AccountId": pass.SafeAccountID(),
-							"UserAgent": pass.UserAgent(),
-							"DeviceId":  pass.DeviceID(),
-							"SessionId": pass.SessionID(),
-						},
-						Level: sentry.LevelInfo,
+						Category: "transport.passport",
+						Type:     "default",
+						Message:  fmt.Sprintf("passport transport with device id %s", pass.DeviceID()),
+						Level:    sentry.LevelInfo,
 					}, 10)
 				})
 			}

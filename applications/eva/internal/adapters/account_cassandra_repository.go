@@ -148,7 +148,7 @@ func (r AccountCassandraRepository) getAccountById(ctx context.Context, id strin
 			return nil, domainerror.NewNotFoundError("account", id)
 		}
 
-		return nil, errors.Wrap(err, "failed to get account")
+		return nil, errors.Wrap(support.ParseGoCQLError(err), "failed to get account")
 	}
 
 	return &accountInstance, nil

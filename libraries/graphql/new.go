@@ -2,7 +2,6 @@ package graphql
 
 import (
 	"context"
-	"errors"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/apollotracing"
@@ -10,10 +9,10 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler/lru"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/getsentry/sentry-go"
-	sentrygin "github.com/getsentry/sentry-go/gin"
 	"github.com/gin-gonic/gin"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"go.uber.org/zap"
+	"overdoll/libraries/errors"
 	domainerror2 "overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/support"
 )
@@ -36,12 +35,13 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 				isSafeToView = true
 				defaultMessage = "not authorized"
 			default:
-				zap.S().Errorw("resolver error", zap.Error(e))
+				unwrappedError := errors.Unwrap(e)
+				zap.S().Errorw("resolver error", zap.Error(unwrappedError))
 				defaultMessage = "internal server error"
 				// capture if it's an internal server error
-				if hub := sentrygin.GetHubFromContext(c); hub != nil {
+				if hub := sentry.GetHubFromContext(ctx); hub != nil {
 					hub.WithScope(func(scope *sentry.Scope) {
-						defer hub.CaptureException(e)
+						hub.CaptureException(unwrappedError)
 					})
 				}
 			}
@@ -59,7 +59,7 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 
 		graphAPIHandler.SetRecoverFunc(func(ctx context.Context, err interface{}) error {
 
-			if hub := sentrygin.GetHubFromContext(c); hub != nil {
+			if hub := sentry.GetHubFromContext(ctx); hub != nil {
 				hub.WithScope(func(scope *sentry.Scope) {
 					defer hub.RecoverWithContext(ctx, err)
 				})
