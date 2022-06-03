@@ -14,7 +14,9 @@ import (
 	"go.uber.org/zap"
 	"overdoll/libraries/errors"
 	domainerror2 "overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/sentry_support"
 	"overdoll/libraries/support"
+	"overdoll/libraries/zap_support"
 )
 
 func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
@@ -38,10 +40,7 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 				unwrappedError := errors.Unwrap(e)
 				zap.S().Errorw("resolver error", zap.Error(unwrappedError))
 				defaultMessage = "internal server error"
-				// capture if it's an internal server error
-				if hub := sentry.GetHubFromContext(ctx); hub != nil {
-					hub.CaptureException(unwrappedError)
-				}
+				sentry_support.CaptureException(ctx, unwrappedError)
 			}
 
 			err := graphql.DefaultErrorPresenter(ctx, e)
@@ -56,13 +55,9 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 		})
 
 		graphAPIHandler.SetRecoverFunc(func(ctx context.Context, err interface{}) error {
-
-			if hub := sentry.GetHubFromContext(ctx); hub != nil {
-				defer hub.RecoverWithContext(ctx, err)
-			}
-
-			zap.S().Errorw("resolver panic", zap.Any("panic", err))
-			return errors.New("internal server error")
+			sentry_support.Recover(ctx, err)
+			zap_support.SafePanic("panic while running grpc", zap.Any("stack", err))
+			return errors.New("unrecoverable server error")
 		})
 
 		graphAPIHandler.Use(apollotracing.Tracer{})

@@ -7,12 +7,12 @@ import (
 	"log"
 	"os"
 	"overdoll/libraries/sentry_support"
-	"overdoll/libraries/zap_utilities"
+	"overdoll/libraries/zap_support"
 )
 
 func NewBootstrap(ctx context.Context) {
 
-	logger, err := zap_utilities.NewCustomZap()
+	logger, err := zap_support.NewCustomZap()
 
 	if err != nil {
 		log.Fatalf("can't initialize zap logger: %v", err)

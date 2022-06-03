@@ -5,22 +5,19 @@ import (
 	"github.com/getsentry/sentry-go"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"overdoll/libraries/zap_support"
 	"time"
 )
 
 func recoverWithSentry(hub *sentry.Hub, r interface{}, ctx context.Context, method string) error {
+	zap_support.SafePanic("panic while running grpc", zap.Any("stack", r), zap.String("method", method))
+
 	eventID := hub.RecoverWithContext(ctx, r)
 	if eventID != nil {
 		hub.Flush(time.Second * 2)
-	}
-
-	// log panic && recover server
-	if ce := zap.L().Check(zap.PanicLevel, "panic while running grpc"); ce != nil {
-		zap.L().Core().Write(ce.Entry, []zapcore.Field{zap.Any("stack", r), zap.String("method", method)})
 	}
 
 	return status.Errorf(codes.Internal, "unrecoverable error")

@@ -2,15 +2,12 @@ package principal
 
 import (
 	"context"
-	"fmt"
-	"github.com/getsentry/sentry-go"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"net/http"
 	"overdoll/libraries/passport"
-	"overdoll/libraries/support"
 )
 
 type HttpServicePrincipalFunc interface {
@@ -19,6 +16,11 @@ type HttpServicePrincipalFunc interface {
 
 func GinPrincipalRequestMiddleware(srv HttpServicePrincipalFunc) gin.HandlerFunc {
 	return func(c *gin.Context) {
+
+		if srv == nil {
+			c.Next()
+			return
+		}
 
 		ctx := c.Request.Context()
 
@@ -54,44 +56,6 @@ func GinPrincipalRequestMiddleware(srv HttpServicePrincipalFunc) gin.HandlerFunc
 
 		if principal != nil {
 			c.Request = c.Request.WithContext(toContext(c.Request.Context(), principal))
-
-			// add principal to context
-			if hub := sentry.GetHubFromContext(c.Request.Context()); hub != nil {
-				hub.Scope().SetUser(sentry.User{
-					Email:     principal.Email(),
-					ID:        principal.AccountId(),
-					IPAddress: support.GetIPFromRequest(c.Request),
-					Username:  principal.Username(),
-				})
-
-				var clubExtensions interface{}
-
-				if principal.clubExtension != nil {
-					clubExtensions = map[string]interface{}{
-						"supportedClubIds":  principal.clubExtension.supportedClubIds,
-						"clubMembershipIds": principal.clubExtension.clubMembershipIds,
-						"ownerClubIds":      principal.clubExtension.ownerClubIds,
-					}
-				}
-
-				hub.Scope().SetExtra("principal", map[string]interface{}{
-					"accountId":     principal.accountId,
-					"secure":        principal.secure,
-					"locked":        principal.locked,
-					"deleting":      principal.deleting,
-					"roles":         principal.roles,
-					"username":      principal.username,
-					"email":         principal.email,
-					"clubExtension": clubExtensions,
-				})
-
-				hub.Scope().AddBreadcrumb(&sentry.Breadcrumb{
-					Category: "context.principal",
-					Type:     "default",
-					Message:  fmt.Sprintf("principal context with account id %s", principal.accountId),
-					Level:    sentry.LevelInfo,
-				}, 10)
-			}
 		}
 
 		c.Next()

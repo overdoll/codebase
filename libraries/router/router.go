@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"overdoll/libraries/passport"
+	"overdoll/libraries/principal"
 	"overdoll/libraries/sentry_support"
 	"overdoll/libraries/support"
 )
@@ -14,9 +15,12 @@ func init() {
 	gin.SetMode(gin.ReleaseMode)
 }
 
-func NewGinRouter() *gin.Engine {
+func NewGinRouter(principalService principal.HttpServicePrincipalFunc) *gin.Engine {
 	router := NewRawGinRouter()
 	router.Use(passport.GinPassportRequestMiddleware())
+	router.Use(sentry_support.PassportHttpMiddleware())
+	router.Use(principal.GinPrincipalRequestMiddleware(principalService))
+	router.Use(sentry_support.PrincipalHttpMiddleware())
 	return router
 }
 

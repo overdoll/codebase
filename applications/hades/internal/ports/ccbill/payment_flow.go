@@ -1,12 +1,13 @@
 package ccbill
 
 import (
-	sentrygin "github.com/getsentry/sentry-go/gin"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	"net/http"
 	"overdoll/applications/hades/internal/app"
 	"overdoll/applications/hades/internal/app/command"
 	"overdoll/applications/hades/internal/domain/ccbill"
+	"overdoll/libraries/sentry_support"
 )
 
 func PaymentFlow(app *app.Application) gin.HandlerFunc {
@@ -22,10 +23,8 @@ func PaymentFlow(app *app.Application) gin.HandlerFunc {
 				return
 			}
 
-			if hub := sentrygin.GetHubFromContext(c); hub != nil {
-				hub.CaptureException(err)
-			}
-
+			zap.S().Errorw("error running payment flow", zap.Error(err))
+			sentry_support.CaptureException(c.Request.Context(), err)
 			c.Data(http.StatusInternalServerError, "text", []byte("error"))
 			return
 		}

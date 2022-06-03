@@ -13,6 +13,7 @@ import (
 	"overdoll/libraries/crypt"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/router"
+	"overdoll/libraries/sentry_support"
 )
 
 type GraphQLErrorResponse struct {
@@ -122,6 +123,7 @@ func NewHttpServer(ctx context.Context, app *app.Application) http.Handler {
 
 	proxy := &httputil.ReverseProxy{Director: proxyDirector}
 	proxy.Transport = passport.NewHttpRoundTripper(app)
+	proxy.ErrorHandler = sentry_support.ProxyErrorHandler
 
 	// proxy POST requests to graphql - we add our passport to payload here
 	rtr.POST("/api/graphql", secureRequest(), gin.WrapF(func(w http.ResponseWriter, r *http.Request) {
@@ -129,6 +131,7 @@ func NewHttpServer(ctx context.Context, app *app.Application) http.Handler {
 	}))
 
 	proxy2 := &httputil.ReverseProxy{Director: proxyDirector}
+	proxy2.ErrorHandler = sentry_support.ProxyErrorHandler
 
 	// proxy OPTIONS to the server
 	rtr.OPTIONS("/api/graphql", gin.WrapF(func(w http.ResponseWriter, r *http.Request) {

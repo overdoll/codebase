@@ -74,6 +74,10 @@ func (p *Principal) Username() string {
 	return p.username
 }
 
+func (p *Principal) Roles() []string {
+	return p.roles
+}
+
 func (p *Principal) IsLocked() bool {
 	return p.locked
 }

@@ -1,4 +1,4 @@
-package zap_utilities
+package zap_support
 
 import "go.uber.org/zap"
 

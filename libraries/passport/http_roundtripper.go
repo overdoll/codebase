@@ -2,7 +2,6 @@ package passport
 
 import (
 	"context"
-	"github.com/getsentry/sentry-go"
 	"github.com/gorilla/securecookie"
 	"go.uber.org/zap"
 	"net/http"
@@ -50,12 +49,6 @@ func (h *passportTransport) RoundTrip(req *http.Request) (*http.Response, error)
 	res, err := h.roundTrip(req)
 
 	if err != nil {
-
-		// capture sentry exception
-		if hub := sentry.GetHubFromContext(req.Context()); hub != nil {
-			hub.CaptureException(err)
-		}
-
 		zap.S().Errorw("failed to roundtrip passport", zap.Error(err))
 		return nil, err
 	}

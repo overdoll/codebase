@@ -27,7 +27,7 @@ func dataLoaderToContext(app *app.Application) gin.HandlerFunc {
 
 func NewHttpServer(app *app.Application) http.Handler {
 
-	rtr := router.NewGinRouter()
+	rtr := router.NewGinRouter(nil)
 
 	// graphql
 	rtr.POST("/api/graphql",
