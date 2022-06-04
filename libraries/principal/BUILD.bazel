@@ -16,8 +16,5 @@ go_library(
         "//libraries/errors/domainerror",
         "//libraries/passport",
         "@com_github_gin_gonic_gin//:gin",
-        "@org_golang_google_grpc//codes",
-        "@org_golang_google_grpc//status",
-        "@org_uber_go_zap//:zap",
     ],
 )

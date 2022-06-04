@@ -29,7 +29,7 @@ go_library(
         "//applications/parley/internal/domain/post_audit_log",
         "//applications/parley/internal/domain/report",
         "//applications/parley/internal/domain/rule",
-        "//libraries/errors/domainerror",
+        "//libraries/errors/apperror",
         "//libraries/principal",
         "//libraries/uuid",
     ],

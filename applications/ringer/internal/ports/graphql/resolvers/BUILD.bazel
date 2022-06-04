@@ -13,9 +13,9 @@ go_library(
     deps = [
         "//applications/ringer/internal/app",
         "//applications/ringer/internal/app/query",
-        "//applications/ringer/internal/domain/details",
         "//applications/ringer/internal/domain/payout",
         "//applications/ringer/internal/ports/graphql/types",
+        "//libraries/errors/apperror",
         "//libraries/paging",
         "//libraries/passport",
         "//libraries/principal",

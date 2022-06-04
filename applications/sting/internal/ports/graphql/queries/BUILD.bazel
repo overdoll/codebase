@@ -16,7 +16,7 @@ go_library(
         "//applications/sting/internal/app",
         "//applications/sting/internal/app/query",
         "//applications/sting/internal/ports/graphql/types",
-        "//libraries/errors/domainerror",
+        "//libraries/errors/apperror",
         "//libraries/paging",
         "//libraries/principal",
         "@com_github_vektah_gqlparser_v2//gqlerror",

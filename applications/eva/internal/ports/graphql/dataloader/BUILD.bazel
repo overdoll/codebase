@@ -12,7 +12,7 @@ go_library(
         "//applications/eva/internal/app",
         "//applications/eva/internal/app/query",
         "//applications/eva/internal/ports/graphql/types",
-        "//libraries/errors/domainerror",
+        "//libraries/errors/apperror",
         "//libraries/graphql",
         "@com_github_graph_gophers_dataloader//:dataloader",
     ],

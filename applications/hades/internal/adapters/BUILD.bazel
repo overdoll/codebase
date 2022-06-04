@@ -32,6 +32,7 @@ go_library(
         "//libraries/bucket",
         "//libraries/crypt",
         "//libraries/errors",
+        "//libraries/errors/apperror",
         "//libraries/errors/domainerror",
         "//libraries/localization",
         "//libraries/location",

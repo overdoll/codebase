@@ -26,6 +26,7 @@ go_library(
     visibility = ["//applications/sting:__subpackages__"],
     deps = [
         "//applications/sting/internal/domain/club",
+        "//libraries/errors/apperror",
         "//libraries/errors/domainerror",
         "//libraries/localization",
         "//libraries/paging",

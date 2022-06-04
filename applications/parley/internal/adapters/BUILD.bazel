@@ -28,6 +28,7 @@ go_library(
         "//applications/sting/proto:v1_go_proto",
         "//libraries/bucket",
         "//libraries/errors",
+        "//libraries/errors/apperror",
         "//libraries/errors/domainerror",
         "//libraries/localization",
         "//libraries/paging",

@@ -9,7 +9,7 @@ go_library(
         "//applications/loader/internal/app",
         "//applications/loader/internal/ports/graphql/dataloader",
         "//applications/loader/internal/ports/graphql/types",
-        "//libraries/errors/domainerror",
+        "//libraries/errors/apperror",
         "//libraries/graphql/relay",
     ],
 )

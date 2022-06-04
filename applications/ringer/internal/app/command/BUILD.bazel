@@ -22,6 +22,7 @@ go_library(
         "//applications/ringer/internal/domain/event",
         "//applications/ringer/internal/domain/payment",
         "//applications/ringer/internal/domain/payout",
+        "//libraries/errors/apperror",
         "//libraries/errors/domainerror",
         "//libraries/money",
         "//libraries/principal",

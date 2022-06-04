@@ -19,7 +19,7 @@ go_library(
         "//applications/hades/internal/app",
         "//applications/hades/internal/app/query",
         "//applications/hades/internal/ports/graphql/types",
-        "//libraries/errors/domainerror",
+        "//libraries/errors/apperror",
         "//libraries/graphql",
         "//libraries/paging",
         "//libraries/passport",

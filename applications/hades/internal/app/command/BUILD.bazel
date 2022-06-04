@@ -30,6 +30,7 @@ go_library(
         "//applications/hades/internal/domain/club",
         "//applications/hades/internal/domain/event",
         "//libraries/errors",
+        "//libraries/errors/apperror",
         "//libraries/errors/domainerror",
         "//libraries/location",
         "//libraries/money",

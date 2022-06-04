@@ -26,6 +26,7 @@ go_library(
     importpath = "overdoll/libraries/support",
     visibility = ["//visibility:public"],
     deps = [
+        "//libraries/errors",
         "//libraries/errors/elastic",
         "//libraries/errors/gocql",
         "//libraries/uuid",
