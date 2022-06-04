@@ -14,7 +14,6 @@ require (
 	github.com/disintegration/gift v1.2.1
 	github.com/eventials/go-tus v0.0.0-20200718001131-45c7ec8f5d59
 	github.com/getsentry/sentry-go v0.13.0
-	github.com/gin-contrib/zap v0.0.2
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-playground/validator/v10 v10.6.1
 	github.com/go-redis/redis/v8 v8.10.0

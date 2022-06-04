@@ -61,12 +61,15 @@ func filterStacktraceFrames(frames []sentry.Frame) []sentry.Frame {
 
 func beforeSendHook(event *sentry.Event, hint *sentry.EventHint) *sentry.Event {
 	// strip cookies as these could be used to potentially log in as another account
-	event.Request.Cookies = ""
-	delete(event.Request.Headers, "Cookie")
+	if event.Request != nil {
+		event.Request.Cookies = ""
+		delete(event.Request.Headers, "Cookie")
+		delete(event.Request.Headers, "X-Forwarded-For")
+		delete(event.Request.Headers, "X-Real-Ip")
+	}
+
 	// strip out user's IP address
 	event.User.IPAddress = ""
-	delete(event.Request.Headers, "X-Forwarded-For")
-	delete(event.Request.Headers, "X-Real-Ip")
 
 	if hint.RecoveredException != nil {
 
