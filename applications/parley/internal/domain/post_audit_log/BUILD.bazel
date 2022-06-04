@@ -15,6 +15,5 @@ go_library(
         "//libraries/errors/domainerror",
         "//libraries/paging",
         "//libraries/principal",
-        "//libraries/uuid",
     ],
 )

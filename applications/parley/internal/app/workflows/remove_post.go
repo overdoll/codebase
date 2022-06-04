@@ -3,6 +3,8 @@ package workflows
 import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/parley/internal/app/workflows/activities"
+	"overdoll/libraries/support"
+	"time"
 )
 
 type RemovePostInput struct {
@@ -11,6 +13,7 @@ type RemovePostInput struct {
 	ClubId    string
 	RuleId    string
 	Notes     *string
+	RemovedAt time.Time
 }
 
 func RemovePost(ctx workflow.Context, input RemovePostInput) error {
@@ -20,12 +23,20 @@ func RemovePost(ctx workflow.Context, input RemovePostInput) error {
 
 	var a *activities.Activities
 
+	auditLogId, err := support.GenerateUniqueIdForWorkflow(ctx)
+
+	if err != nil {
+		return err
+	}
+
 	if err := workflow.ExecuteActivity(ctx, a.CreateRemovedPostAuditLog,
 		activities.CreateRemovedPostAuditLogInput{
+			Id:        auditLogId,
 			AccountId: input.AccountId,
 			PostId:    input.PostId,
 			RuleId:    input.RuleId,
 			Notes:     input.Notes,
+			RemovedAt: input.RemovedAt,
 		},
 	).Get(ctx, nil); err != nil {
 		logger.Error("failed to create removed post audit log", "Error", err)

@@ -13,6 +13,7 @@ import (
 	"overdoll/applications/parley/internal/domain/rule"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/principal"
+	"time"
 )
 
 type EventTemporalRepository struct {
@@ -99,11 +100,12 @@ func (r EventTemporalRepository) RejectPost(ctx context.Context, requester *prin
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.RejectPost, workflows.RejectPostInput{
-		AccountId: requester.AccountId(),
-		PostId:    postId,
-		ClubId:    clubId,
-		RuleId:    rule.ID(),
-		Notes:     notes,
+		AccountId:  requester.AccountId(),
+		PostId:     postId,
+		ClubId:     clubId,
+		RuleId:     rule.ID(),
+		Notes:      notes,
+		RejectedAt: time.Now(),
 	})
 
 	if err != nil {
@@ -130,6 +132,7 @@ func (r EventTemporalRepository) RemovePost(ctx context.Context, requester *prin
 		RuleId:    rule.ID(),
 		ClubId:    clubId,
 		Notes:     notes,
+		RemovedAt: time.Now(),
 	})
 
 	if err != nil {
@@ -151,8 +154,9 @@ func (r EventTemporalRepository) ApprovePost(ctx context.Context, requester *pri
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ApprovePost, workflows.ApprovePostInput{
-		AccountId: requester.AccountId(),
-		PostId:    postId,
+		AccountId:  requester.AccountId(),
+		PostId:     postId,
+		ApprovedAt: time.Now(),
 	})
 
 	if err != nil {

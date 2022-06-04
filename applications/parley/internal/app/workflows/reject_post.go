@@ -3,14 +3,17 @@ package workflows
 import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/parley/internal/app/workflows/activities"
+	"overdoll/libraries/support"
+	"time"
 )
 
 type RejectPostInput struct {
-	AccountId string
-	PostId    string
-	ClubId    string
-	RuleId    string
-	Notes     *string
+	AccountId  string
+	PostId     string
+	ClubId     string
+	RuleId     string
+	Notes      *string
+	RejectedAt time.Time
 }
 
 func RejectPost(ctx workflow.Context, input RejectPostInput) error {
@@ -20,12 +23,20 @@ func RejectPost(ctx workflow.Context, input RejectPostInput) error {
 
 	var a *activities.Activities
 
+	auditLogId, err := support.GenerateUniqueIdForWorkflow(ctx)
+
+	if err != nil {
+		return err
+	}
+
 	if err := workflow.ExecuteActivity(ctx, a.CreateRejectedPostAuditLog,
 		activities.CreateRejectedPostAuditLogInput{
-			AccountId: input.AccountId,
-			PostId:    input.PostId,
-			RuleId:    input.RuleId,
-			Notes:     input.Notes,
+			Id:         auditLogId,
+			AccountId:  input.AccountId,
+			PostId:     input.PostId,
+			RuleId:     input.RuleId,
+			Notes:      input.Notes,
+			RejectedAt: input.RejectedAt,
 		},
 	).Get(ctx, nil); err != nil {
 		logger.Error("failed to create rejected post audit log", "Error", err)

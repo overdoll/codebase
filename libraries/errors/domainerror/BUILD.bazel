@@ -8,4 +8,8 @@ go_library(
     ],
     importpath = "overdoll/libraries/errors/domainerror",
     visibility = ["//visibility:public"],
+    deps = [
+        "//libraries/errors",
+        "@com_github_pkg_errors//:errors",
+    ],
 )

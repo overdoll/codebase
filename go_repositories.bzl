@@ -514,13 +514,6 @@ def go_repositories():
         sum = "h1:Y/yl/+YNO8GZSjAhjMsSuLt29uWRFHdHYUb5lYOV9qE=",
         version = "v0.1.0",
     )
-    go_repository(
-        name = "com_github_gin_contrib_zap",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/gin-contrib/zap",
-        sum = "h1:VnIucI+kUsxgzmcrX0gMk19a2I12KirTxi+ufuT2xZk=",
-        version = "v0.0.2",
-    )
 
     go_repository(
         name = "com_github_gin_gonic_gin",

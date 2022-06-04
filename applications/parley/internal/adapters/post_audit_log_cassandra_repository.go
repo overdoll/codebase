@@ -6,7 +6,6 @@ import (
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
-	"github.com/segmentio/ksuid"
 	"overdoll/applications/parley/internal/domain/post_audit_log"
 	"overdoll/libraries/bucket"
 	"overdoll/libraries/errors"
@@ -15,6 +14,7 @@ import (
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/support"
+	"time"
 )
 
 type postRule struct {
@@ -33,56 +33,44 @@ var postRuleTable = table.New(table.Metadata{
 })
 
 type postAuditLog struct {
-	Id                 string  `db:"id"`
-	Bucket             int     `db:"bucket"`
-	PostId             string  `db:"post_id"`
-	ModeratorAccountId string  `db:"moderator_account_id"`
-	Action             string  `db:"action"`
-	RuleId             *string `db:"rule_id"`
-	Notes              *string `db:"notes"`
+	Id                 string    `db:"id"`
+	Bucket             int       `db:"bucket"`
+	PostId             string    `db:"post_id"`
+	ModeratorAccountId string    `db:"moderator_account_id"`
+	Action             string    `db:"action"`
+	RuleId             *string   `db:"rule_id"`
+	Notes              *string   `db:"notes"`
+	CreatedAt          time.Time `db:"created_at"`
+}
+
+var auditLogColumns = []string{
+	"id",
+	"bucket",
+	"post_id",
+	"moderator_account_id",
+	"action",
+	"rule_id",
+	"notes",
+	"created_at",
 }
 
 var postAuditLogTable = table.New(table.Metadata{
-	Name: "post_audit_logs",
-	Columns: []string{
-		"id",
-		"bucket",
-		"post_id",
-		"moderator_account_id",
-		"action",
-		"rule_id",
-		"notes",
-	},
+	Name:    "post_audit_logs",
+	Columns: auditLogColumns,
 	PartKey: []string{"id"},
 	SortKey: []string{},
 })
 
 var postAuditLogByPostTable = table.New(table.Metadata{
-	Name: "post_audit_logs_by_post",
-	Columns: []string{
-		"id",
-		"bucket",
-		"post_id",
-		"moderator_account_id",
-		"action",
-		"rule_id",
-		"notes",
-	},
+	Name:    "post_audit_logs_by_post",
+	Columns: auditLogColumns,
 	PartKey: []string{"post_id"},
 	SortKey: []string{"id"},
 })
 
 var postAuditLogByModeratorTable = table.New(table.Metadata{
-	Name: "post_audit_logs_by_moderator",
-	Columns: []string{
-		"id",
-		"bucket",
-		"post_id",
-		"moderator_account_id",
-		"action",
-		"rule_id",
-		"notes",
-	},
+	Name:    "post_audit_logs_by_moderator",
+	Columns: auditLogColumns,
 	PartKey: []string{"moderator_account_id", "bucket"},
 	SortKey: []string{"id"},
 })
@@ -110,32 +98,22 @@ func NewPostAuditLogCassandraRepository(session gocqlx.Session) PostAuditLogCass
 	return PostAuditLogCassandraRepository{session: session}
 }
 
-func marshalPostAuditLogToDatabase(auditLog *post_audit_log.PostAuditLog) (*postAuditLog, error) {
-
-	parsed, err := ksuid.Parse(auditLog.ID())
-
-	if err != nil {
-		return nil, err
-	}
-
+func marshalPostAuditLogToDatabase(auditLog *post_audit_log.PostAuditLog) *postAuditLog {
 	return &postAuditLog{
 		Id:                 auditLog.ID(),
-		Bucket:             bucket.MakeWeeklyBucketFromTimestamp(parsed.Time()),
+		Bucket:             bucket.MakeWeeklyBucketFromTimestamp(auditLog.CreatedAt()),
 		PostId:             auditLog.PostId(),
 		ModeratorAccountId: auditLog.ModeratorId(),
 		Action:             auditLog.Action().String(),
 		RuleId:             auditLog.RuleId(),
 		Notes:              auditLog.Notes(),
-	}, nil
+		CreatedAt:          auditLog.CreatedAt(),
+	}
 }
 
 func (r PostAuditLogCassandraRepository) CreatePostAuditLog(ctx context.Context, auditLog *post_audit_log.PostAuditLog) error {
 
-	marshalledAuditLog, err := marshalPostAuditLogToDatabase(auditLog)
-
-	if err != nil {
-		return err
-	}
+	marshalledAuditLog := marshalPostAuditLogToDatabase(auditLog)
 
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
@@ -214,6 +192,7 @@ func (r PostAuditLogCassandraRepository) getPostAuditLogById(ctx context.Context
 		postAudit.Action,
 		postAudit.RuleId,
 		postAudit.Notes,
+		postAudit.CreatedAt,
 	), nil
 }
 
@@ -321,6 +300,7 @@ func (r PostAuditLogCassandraRepository) SearchPostAuditLogs(ctx context.Context
 				auditLog.Action,
 				auditLog.RuleId,
 				auditLog.Notes,
+				auditLog.CreatedAt,
 			)
 
 			result.Node = paging.NewNode(auditLog.Id)
@@ -381,6 +361,7 @@ func (r PostAuditLogCassandraRepository) SearchPostAuditLogs(ctx context.Context
 				auditLog.Action,
 				auditLog.RuleId,
 				auditLog.Notes,
+				auditLog.CreatedAt,
 			)
 
 			result.Node = paging.NewNode(auditLog.Id)

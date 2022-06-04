@@ -9,7 +9,6 @@ go_library(
         "//libraries/passport",
         "//libraries/principal",
         "//libraries/sentry_support",
-        "@com_github_getsentry_sentry_go//gin",
         "@com_github_gin_gonic_gin//:gin",
         "@org_uber_go_zap//:zap",
     ],

@@ -4,7 +4,7 @@ import (
 	"overdoll/applications/parley/internal/domain/rule"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/uuid"
+	"time"
 )
 
 type PostAuditLog struct {
@@ -21,6 +21,8 @@ type PostAuditLog struct {
 	action PostAuditLogAction
 
 	ruleId *string
+
+	createdAt time.Time
 }
 
 func CanRemovePost(requester *principal.Principal, ruleInstance *rule.Rule) error {
@@ -36,43 +38,46 @@ func CanRemovePost(requester *principal.Principal, ruleInstance *rule.Rule) erro
 	return nil
 }
 
-func NewRemovePostAuditLog(accountId string, postId string, ruleId string, notes *string) (*PostAuditLog, error) {
+func NewRemovePostAuditLog(id, accountId string, postId string, ruleId string, notes *string, createdAt time.Time) (*PostAuditLog, error) {
 	return &PostAuditLog{
-		id:          uuid.New().String(),
+		id:          id,
 		postId:      postId,
 		moderatorId: accountId,
 		action:      PostAuditLogActionRemoved,
 		ruleId:      &ruleId,
 		notes:       notes,
+		createdAt:   createdAt,
 	}, nil
 }
 
-func NewApprovePostAuditLog(accountId, postId string) (*PostAuditLog, error) {
+func NewApprovePostAuditLog(id, accountId, postId string, createdAt time.Time) (*PostAuditLog, error) {
 	return &PostAuditLog{
-		id:          uuid.New().String(),
+		id:          id,
 		postId:      postId,
 		moderatorId: accountId,
 		action:      PostAuditLogActionApproved,
 		ruleId:      nil,
 		notes:       nil,
+		createdAt:   createdAt,
 	}, nil
 }
 
-func NewRejectPostAuditLog(moderatorId, postId, ruleId string, notes *string) (*PostAuditLog, error) {
+func NewRejectPostAuditLog(id, moderatorId, postId, ruleId string, notes *string, createdAt time.Time) (*PostAuditLog, error) {
 
-	id := ruleId
+	rl := ruleId
 
 	return &PostAuditLog{
-		id:          uuid.New().String(),
+		id:          id,
 		postId:      postId,
 		moderatorId: moderatorId,
 		action:      PostAuditLogActionDenied,
-		ruleId:      &id,
+		ruleId:      &rl,
 		notes:       notes,
+		createdAt:   createdAt,
 	}, nil
 }
 
-func UnmarshalPostAuditLogFromDatabase(id, postId, moderatorId, status string, ruleId, notes *string) *PostAuditLog {
+func UnmarshalPostAuditLogFromDatabase(id, postId, moderatorId, status string, ruleId, notes *string, createdAt time.Time) *PostAuditLog {
 
 	st, _ := PostAuditLogActionFromString(status)
 
@@ -83,6 +88,7 @@ func UnmarshalPostAuditLogFromDatabase(id, postId, moderatorId, status string, r
 		action:      st,
 		ruleId:      ruleId,
 		notes:       notes,
+		createdAt:   createdAt,
 	}
 }
 
@@ -108,6 +114,10 @@ func (m *PostAuditLog) Notes() *string {
 
 func (m *PostAuditLog) ModeratorId() string {
 	return m.moderatorId
+}
+
+func (m *PostAuditLog) CreatedAt() time.Time {
+	return m.createdAt
 }
 
 func (m *PostAuditLog) IsApproved() bool {
