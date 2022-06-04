@@ -2,7 +2,7 @@ package activities
 
 import (
 	"context"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 )
 
 type IsPostAssignedAModeratorInput struct {
@@ -15,7 +15,7 @@ func (h *Activities) IsPostAssignedAModerator(ctx context.Context, input IsPostA
 
 	if err != nil {
 
-		if domainerror.IsNotFoundError(err) {
+		if apperror.IsNotFoundError(err) {
 			return false, nil
 		}
 

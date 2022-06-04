@@ -2,7 +2,7 @@ package resolvers
 
 import (
 	"context"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 	"time"
 
 	"github.com/vektah/gqlparser/v2/gqlerror"
@@ -33,7 +33,7 @@ func (r PostResolver) ViewerReport(ctx context.Context, obj *types.Post) (*types
 
 	if err != nil {
 
-		if domainerror.IsNotFoundError(err) {
+		if apperror.IsNotFoundError(err) {
 			return nil, nil
 		}
 
@@ -112,7 +112,7 @@ func (r PostResolver) Rule(ctx context.Context, obj *types.Post) (*types.Rule, e
 
 	if err != nil {
 
-		if domainerror.IsNotFoundError(err) {
+		if apperror.IsNotFoundError(err) {
 			return nil, nil
 		}
 

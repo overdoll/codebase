@@ -8,7 +8,9 @@ import (
 	"overdoll/applications/ringer/internal/domain/details"
 	"overdoll/libraries/crypt"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/support"
 )
 
 var accountDetailsTable = table.New(table.Metadata{
@@ -46,7 +48,7 @@ func (r DetailsCassandraRepository) DeleteAccountDetailsOperator(ctx context.Con
 		Idempotent(true).
 		BindStruct(accountDetails{AccountId: accountId}).
 		ExecRelease(); err != nil {
-		return errors.Wrap(err, "failed to delete account details")
+		return errors.Wrap(support.NewGocqlError(err), "failed to delete account details")
 	}
 
 	return nil
@@ -64,10 +66,10 @@ func (r DetailsCassandraRepository) GetAccountDetailsByIdOperator(ctx context.Co
 		GetRelease(&accDetails); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, details.ErrAccountDetailsNotFound
+			return nil, apperror.NewNotFoundError("account details", accountId)
 		}
 
-		return nil, errors.Wrap(err, "failed to get account details")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get account details")
 	}
 
 	decryptedFirstName, err := crypt.Decrypt(accDetails.FirstName)
@@ -110,12 +112,12 @@ func (r DetailsCassandraRepository) UpdateAccountDetails(ctx context.Context, re
 
 	detail, err := r.GetAccountDetailsById(ctx, requester, accountId)
 
-	if err != nil && err != details.ErrAccountDetailsNotFound {
+	if err != nil && !apperror.IsNotFoundError(err) {
 		return nil, err
 	}
 
 	// if details are not found we must use a new one as a stub
-	if err == details.ErrAccountDetailsNotFound {
+	if apperror.IsNotFoundError(err) {
 		detail = details.UnmarshalAccountDetailsFromDatabase(accountId, "", "", "USA")
 	}
 
@@ -152,7 +154,7 @@ func (r DetailsCassandraRepository) UpdateAccountDetails(ctx context.Context, re
 			CountryOfResidence: encryptedCountry,
 		}).
 		ExecRelease(); err != nil {
-		return nil, errors.Wrap(err, "failed to update account details")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update account details")
 	}
 
 	return detail, nil

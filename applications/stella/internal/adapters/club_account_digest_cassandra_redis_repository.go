@@ -8,6 +8,7 @@ import (
 	"overdoll/applications/stella/internal/domain/club"
 	"overdoll/libraries/crypt"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/support"
 	"time"
 )
 
@@ -56,6 +57,7 @@ func (r ClubCassandraElasticsearchRepository) cacheAccountClubDigest(ctx context
 		return errors.Wrap(err, "failed to cache account club digest - encryption")
 	}
 
+	// cache for 24 hours
 	_, err = r.cache.WithContext(ctx).Set(ctx, accountDigestPrefix+accountId, valReal, time.Hour*24).Result()
 
 	if err != nil {
@@ -146,7 +148,7 @@ func (r ClubCassandraElasticsearchRepository) getAccountSupportedClubs(ctx conte
 			AccountId: accountId,
 		}).
 		SelectRelease(&supportedClubs); err != nil {
-		return nil, errors.Wrap(err, "failed to get account supported clubs")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get account supported clubs")
 	}
 
 	var supportedIds []string
@@ -172,7 +174,7 @@ func (r ClubCassandraElasticsearchRepository) getAccountClubs(ctx context.Contex
 			AccountId: accountId,
 		}).
 		SelectRelease(&accountClub); err != nil {
-		return nil, errors.Wrap(err, "failed to get account clubs by account")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get account clubs by account")
 	}
 
 	var accountClubIds []string
@@ -198,7 +200,7 @@ func (r ClubCassandraElasticsearchRepository) getAccountClubMemberships(ctx cont
 			MemberAccountId: accountId,
 		}).
 		SelectRelease(&accountClub); err != nil {
-		return nil, errors.Wrap(err, "failed to get club members by account")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get club members by account")
 	}
 
 	var clubIds []string

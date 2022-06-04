@@ -3,8 +3,10 @@ package adapters
 import (
 	"context"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/localization"
+	"overdoll/libraries/support"
 	"strings"
 	"time"
 
@@ -93,7 +95,7 @@ func (r PostsCassandraElasticsearchRepository) GetCharacterIdsFromSlugs(ctx cont
 			"series_id": seriesIds,
 		}).
 		SelectRelease(&characterSlugResults); err != nil {
-		return nil, errors.Wrap(err, "failed to get character slugs")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get character slugs")
 	}
 
 	var ids []string
@@ -128,10 +130,10 @@ func (r PostsCassandraElasticsearchRepository) GetCharacterBySlug(ctx context.Co
 		GetRelease(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, domainerror.NewNotFoundError("character", slug)
+			return nil, apperror.NewNotFoundError("character", slug)
 		}
 
-		return nil, errors.Wrap(err, "failed to get character by slug")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get character by slug")
 	}
 
 	return r.GetCharacterById(ctx, requester, b.CharacterId)
@@ -156,11 +158,11 @@ func (r PostsCassandraElasticsearchRepository) GetCharactersByIds(ctx context.Co
 		Consistency(gocql.LocalQuorum).
 		Bind(chars).
 		SelectRelease(&characterModels); err != nil {
-		return nil, errors.Wrap(err, "failed to get characters by id")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get characters by id")
 	}
 
 	if len(chars) != len(characterModels) {
-		return nil, errors.New("invalid character found")
+		return nil, domainerror.NewValidation("invalid character found")
 	}
 
 	var mediaIds []string
@@ -179,7 +181,7 @@ func (r PostsCassandraElasticsearchRepository) GetCharactersByIds(ctx context.Co
 		Consistency(gocql.One).
 		Bind(mediaIds).
 		SelectRelease(&mediaModels); err != nil {
-		return nil, errors.Wrap(err, "failed to get series by id")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get series by id")
 	}
 
 	for _, char := range characterModels {
@@ -232,7 +234,7 @@ func (r PostsCassandraElasticsearchRepository) deleteUniqueCharacterSlug(ctx con
 		Idempotent(true).
 		BindStruct(characterSlug{Slug: strings.ToLower(slug), CharacterId: id, SeriesId: seriesId}).
 		ExecRelease(); err != nil {
-		return errors.Wrap(err, "failed to release character slug")
+		return errors.Wrap(support.NewGocqlError(err), "failed to release character slug")
 	}
 
 	return nil
@@ -253,7 +255,7 @@ func (r PostsCassandraElasticsearchRepository) CreateCharacter(ctx context.Conte
 		ExecCASRelease()
 
 	if err != nil {
-		return errors.Wrap(err, "failed to create unique character slug")
+		return errors.Wrap(support.NewGocqlError(err), "failed to create unique character slug")
 	}
 
 	if !applied {
@@ -291,7 +293,7 @@ func (r PostsCassandraElasticsearchRepository) CreateCharacter(ctx context.Conte
 			Consistency(gocql.LocalQuorum).
 			BindStruct(char).
 			ExecRelease(); err != nil {
-			return errors.Wrap(err, "failed to delete character")
+			return errors.Wrap(support.NewGocqlError(err), "failed to delete character")
 		}
 
 		return err
@@ -339,7 +341,7 @@ func (r PostsCassandraElasticsearchRepository) updateCharacter(ctx context.Conte
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
 		ExecRelease(); err != nil {
-		return nil, errors.Wrap(err, "failed to update character")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update character")
 	}
 
 	if err := r.indexCharacter(ctx, char); err != nil {
@@ -362,10 +364,10 @@ func (r PostsCassandraElasticsearchRepository) getCharacterById(ctx context.Cont
 		GetRelease(&char); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, domainerror.NewNotFoundError("character", characterId)
+			return nil, apperror.NewNotFoundError("character", characterId)
 		}
 
-		return nil, errors.Wrap(err, "failed to get characters by id")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get characters by id")
 	}
 
 	media, err := r.GetSingleSeriesById(ctx, nil, char.SeriesId)

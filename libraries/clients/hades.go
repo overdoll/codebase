@@ -4,6 +4,7 @@ import (
 	"context"
 	"go.uber.org/zap"
 	hades "overdoll/applications/hades/proto"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/sentry_support"
 	"time"
@@ -30,6 +31,7 @@ func NewHadesClient(ctx context.Context, address string) (hades.HadesClient, fun
 	)
 
 	if err != nil {
+		sentry_support.MustCaptureException(errors.Wrap(err, "failed to start new hades client"))
 		zap.S().Fatalw("failed to start new hades client", zap.Error(err))
 	}
 

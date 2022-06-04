@@ -5,7 +5,7 @@ import (
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/hades/internal/app/query"
 	"overdoll/applications/hades/internal/ports/graphql/types"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/paging"
 )
 
@@ -17,7 +17,7 @@ func (r QueryResolver) CancellationReason(ctx context.Context, reference string)
 
 	if err != nil {
 
-		if domainerror.IsNotFoundError(err) {
+		if apperror.IsNotFoundError(err) {
 			return nil, nil
 		}
 

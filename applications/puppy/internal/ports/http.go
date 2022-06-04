@@ -12,7 +12,7 @@ import (
 	"os"
 	"overdoll/applications/puppy/internal/app"
 	"overdoll/libraries/crypt"
-	"overdoll/libraries/graphql"
+	"overdoll/libraries/errors/graphql"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/router"
 	"overdoll/libraries/sentry_support"
@@ -28,19 +28,19 @@ func secureRequest() gin.HandlerFunc {
 		if err != nil {
 
 			if err == http.ErrNoCookie {
-				c.AbortWithStatusJSON(400, graphql.NewErrorResponse("missing security cookie"))
+				c.AbortWithStatusJSON(http.StatusOK, graphql.NewErrorResponse("missing security cookie"))
 				return
 			}
 
 			zap.S().Errorw("failed to read security cookie", zap.Error(err))
-			c.AbortWithStatusJSON(400, graphql.InternalServerError)
+			c.AbortWithStatusJSON(http.StatusOK, graphql.InternalServerError)
 			return
 		}
 
 		securityHeader := c.Request.Header.Get("X-overdoll-Security")
 
 		if securityHeader == "" {
-			c.AbortWithStatusJSON(400, graphql.NewErrorResponse("missing security header"))
+			c.AbortWithStatusJSON(http.StatusOK, graphql.NewErrorResponse("missing security header"))
 			return
 		}
 
@@ -48,12 +48,12 @@ func secureRequest() gin.HandlerFunc {
 
 		if err != nil {
 			zap.S().Errorw("could not decrypt cookie", zap.Error(err))
-			c.AbortWithStatusJSON(400, graphql.NewErrorResponse("invalid security cookie"))
+			c.AbortWithStatusJSON(http.StatusOK, graphql.NewErrorResponse("invalid security cookie"))
 			return
 		}
 
 		if subtle.ConstantTimeCompare([]byte(decrypted), []byte(c.Request.Header.Get("X-overdoll-Security"))) != 1 {
-			c.AbortWithStatusJSON(400, graphql.NewErrorResponse("security header and cookie mismatch"))
+			c.AbortWithStatusJSON(http.StatusOK, graphql.NewErrorResponse("security header and cookie mismatch"))
 			return
 		}
 
@@ -69,7 +69,7 @@ func proxyErrorHandler(res http.ResponseWriter, req *http.Request, err error) {
 
 	bytes, _ := json.Marshal(graphql.InternalServerError)
 	res.Header().Set("Content-Type", "application/json")
-	res.WriteHeader(http.StatusBadRequest)
+	res.WriteHeader(http.StatusOK)
 	res.Write(bytes)
 }
 
@@ -88,9 +88,8 @@ func NewHttpServer(ctx context.Context, app *app.Application) http.Handler {
 	proxyDirector := func(req *http.Request) {
 		req.URL.Scheme = u.Scheme
 		req.URL.Host = u.Host
-		req.URL.Path, req.URL.RawPath = "/", "/"
+		req.URL.Path, req.URL.RawPath = "/api/graphql", "/api/graphql"
 		if _, ok := req.Header["User-Agent"]; !ok {
-			// explicitly disable User-Agent so it's not set to default value
 			req.Header.Set("User-Agent", "")
 		}
 	}

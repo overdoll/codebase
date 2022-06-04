@@ -14,7 +14,7 @@ var alreadyInitialized = false
 func NewCustomZap() (*zap.Logger, error) {
 
 	if !alreadyInitialized {
-		if err := zap.RegisterEncoder("prefer-stacktrace-from-source", func(config zapcore.EncoderConfig) (zapcore.Encoder, error) {
+		_ = zap.RegisterEncoder("prefer-stacktrace-from-source", func(config zapcore.EncoderConfig) (zapcore.Encoder, error) {
 			if support.IsDebug() {
 				return errorVerboseToStacktraceEncoder{
 					Encoder: zapcore.NewConsoleEncoder(config),
@@ -24,10 +24,7 @@ func NewCustomZap() (*zap.Logger, error) {
 			return errorVerboseToStacktraceEncoder{
 				Encoder: zapcore.NewJSONEncoder(config),
 			}, nil
-		}); err != nil {
-			return nil, err
-		}
-
+		})
 		alreadyInitialized = true
 	}
 

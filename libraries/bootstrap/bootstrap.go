@@ -1,7 +1,6 @@
 package bootstrap
 
 import (
-	"context"
 	"github.com/getsentry/sentry-go"
 	"go.uber.org/zap"
 	"log"
@@ -10,12 +9,12 @@ import (
 	"overdoll/libraries/zap_support"
 )
 
-func NewBootstrap(ctx context.Context) {
+func NewBootstrap() {
 
 	logger, err := zap_support.NewCustomZap()
 
 	if err != nil {
-		log.Fatalf("can't initialize zap logger: %v", err)
+		log.Fatalf("zap logger initialization failed: %v", err)
 	}
 
 	zap.ReplaceGlobals(logger)
@@ -27,6 +26,6 @@ func NewBootstrap(ctx context.Context) {
 		Environment:      os.Getenv("APP_ENV"),
 		BeforeSend:       sentry_support.BeforeSendHook,
 	}); err != nil {
-		zap.S().Errorf("sentry initialization failed: %v\n", err)
+		zap.S().Fatalw("sentry initialization failed", zap.Error(err))
 	}
 }

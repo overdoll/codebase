@@ -3,6 +3,7 @@ package clients
 import (
 	"context"
 	"go.uber.org/zap"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/sentry_support"
 	"time"
@@ -30,6 +31,7 @@ func NewParleyClient(ctx context.Context, address string) (parley.ParleyClient, 
 	)
 
 	if err != nil {
+		sentry_support.MustCaptureException(errors.Wrap(err, "failed to start new parley client"))
 		zap.S().Fatalw("failed to start new parley client", zap.Error(err))
 	}
 

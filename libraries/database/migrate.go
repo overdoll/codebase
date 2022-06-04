@@ -2,6 +2,8 @@ package database
 
 import (
 	"context"
+	"overdoll/libraries/errors"
+	"overdoll/libraries/sentry_support"
 	"time"
 
 	"github.com/scylladb/gocqlx/v2/migrate"
@@ -21,7 +23,7 @@ func createMigrate(config MigrateConfig) *cobra.Command {
 			ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
 			defer cancelFn()
 
-			bootstrap.NewBootstrap(ctx)
+			bootstrap.NewBootstrap()
 
 			// if "keyspace" arg is passed, it will create the keyspace before running migrations
 			for _, arg := range args {
@@ -40,11 +42,17 @@ func createMigrate(config MigrateConfig) *cobra.Command {
 
 			migrate.Callback = config.MigrationCallbacks.Callback
 
+			start := time.Now().UTC()
+
 			if err := migrate.FromFS(context.Background(), session, config.MigrationFiles); err != nil {
+				sentry_support.MustCaptureException(errors.Wrap(err, "migrations failed"))
 				zap.S().Fatalw("migrations failed", zap.Error(err))
 			}
 
-			zap.S().Info("migrations successfully completed!")
+			zap.S().Infof(
+				"sucessfully ran migrations in %s!",
+				time.Since(start).Truncate(time.Millisecond),
+			)
 		},
 	}
 }

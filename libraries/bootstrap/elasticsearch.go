@@ -2,6 +2,7 @@ package bootstrap
 
 import (
 	"os"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/sentry_support"
 	"time"
 
@@ -26,7 +27,8 @@ func InitializeElasticSearchSession() *elastic.Client {
 	)
 
 	if err != nil {
-		zap.S().Fatalw("es session failed", zap.Error(err))
+		sentry_support.MustCaptureException(errors.Wrap(err, "elastic session failed"))
+		zap.S().Fatalw("elastic session failed", zap.Error(err))
 	}
 
 	return client

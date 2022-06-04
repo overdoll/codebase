@@ -93,7 +93,7 @@ func (r PostsCassandraElasticsearchRepository) CreatePostLike(ctx context.Contex
 
 	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return errors.Wrap(err, "failed to create post like")
+		return errors.Wrap(support.NewGocqlError(err), "failed to create post like")
 	}
 
 	return nil
@@ -125,7 +125,7 @@ func (r PostsCassandraElasticsearchRepository) DeletePostLike(ctx context.Contex
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return errors.Wrap(err, "failed to delete post like")
+		return errors.Wrap(support.NewGocqlError(err), "failed to delete post like")
 	}
 
 	return nil
@@ -146,7 +146,7 @@ func (r PostsCassandraElasticsearchRepository) getPostLikeById(ctx context.Conte
 			return nil, post.ErrLikeNotFound
 		}
 
-		return nil, errors.Wrap(err, "failed to get post like by id")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get post like by id")
 	}
 
 	return post.UnmarshalLikeFromDatabase(pstLike.LikedAccountId, pstLike.PostId, pstLike.LikedAt), nil
@@ -188,7 +188,7 @@ func (r PostsCassandraElasticsearchRepository) getAccountPostLikesBuckets(ctx co
 		Consistency(gocql.LocalQuorum).
 		BindStruct(postLikeBucket{LikedAccountId: accountId}).
 		SelectRelease(&pstLike); err != nil {
-		return nil, errors.Wrap(err, "failed to get post like buckets")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get post like buckets")
 	}
 
 	var buckets []int
@@ -230,7 +230,7 @@ func (r PostsCassandraElasticsearchRepository) GetAccountPostLikes(ctx context.C
 			WithContext(ctx).
 			BindMap(info).
 			SelectRelease(&postL); err != nil {
-			return nil, errors.Wrap(err, "failed to get post likes")
+			return nil, errors.Wrap(support.NewGocqlError(err), "failed to get post likes")
 		}
 
 		for _, l := range postL {

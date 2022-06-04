@@ -6,7 +6,7 @@ import (
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/query"
 	"overdoll/applications/sting/internal/ports/graphql/types"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 	"time"
 )
 
@@ -46,7 +46,7 @@ func categoriesByIds(app *app.Application) *dataloader.Loader {
 
 			// fill array positions with errors where not found in DB
 			for v, ix := range keyOrder {
-				results[ix] = &dataloader.Result{Data: nil, Error: domainerror.NewNotFoundError("category", v)}
+				results[ix] = &dataloader.Result{Data: nil, Error: apperror.NewNotFoundError("category", v)}
 			}
 
 			// return results

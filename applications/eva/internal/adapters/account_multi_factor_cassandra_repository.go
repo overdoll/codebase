@@ -60,7 +60,7 @@ func (r AccountCassandraRepository) CreateAccountRecoveryCodes(ctx context.Conte
 			AccountId: accountId,
 		}).
 		ExecRelease(); err != nil {
-		return errors.Wrap(err, "failed to delete recovery codes")
+		return errors.Wrap(support.NewGocqlError(err), "failed to delete recovery codes")
 	}
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
@@ -72,7 +72,7 @@ func (r AccountCassandraRepository) CreateAccountRecoveryCodes(ctx context.Conte
 		encrypt, err := crypt.Encrypt(code.Code())
 
 		if err != nil {
-			return errors.Wrap(err, "failed to encrypt recovery code")
+			return errors.Wrap(support.NewGocqlError(err), "failed to encrypt recovery code")
 		}
 
 		support.BindStructToBatchStatement(
@@ -87,7 +87,7 @@ func (r AccountCassandraRepository) CreateAccountRecoveryCodes(ctx context.Conte
 
 	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return errors.Wrap(err, "failed to create new recovery code set")
+		return errors.Wrap(support.NewGocqlError(err), "failed to create new recovery code set")
 	}
 
 	return nil
@@ -110,7 +110,7 @@ func (r AccountCassandraRepository) GetAccountRecoveryCodes(ctx context.Context,
 			AccountId: accountId,
 		}).
 		SelectRelease(&recoveryCodes); err != nil {
-		return nil, errors.Wrap(err, "failed to get recovery codes for account")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get recovery codes for account")
 	}
 
 	var codes []*account.RecoveryCode
@@ -150,7 +150,7 @@ func (r AccountCassandraRepository) HasAccountRecoveryCodes(ctx context.Context,
 			AccountId: accountId,
 		}).
 		GetRelease(&recoveryCodesCounts); err != nil {
-		return false, errors.Wrap(err, "failed to get recovery codes for account")
+		return false, errors.Wrap(support.NewGocqlError(err), "failed to get recovery codes for account")
 	}
 
 	return recoveryCodesCounts.Count > 0, nil
@@ -170,7 +170,7 @@ func (r AccountCassandraRepository) VerifyAccountRecoveryCode(ctx context.Contex
 			AccountId: accountId,
 		}).
 		SelectRelease(&recoveryCodes); err != nil {
-		return errors.Wrap(err, "failed to get recovery codes for account")
+		return errors.Wrap(support.NewGocqlError(err), "failed to get recovery codes for account")
 	}
 
 	var foundCode *accountMultiFactorRecoveryCodes
@@ -203,7 +203,7 @@ func (r AccountCassandraRepository) VerifyAccountRecoveryCode(ctx context.Contex
 			Code:      foundCode.Code,
 		}).
 		ExecRelease(); err != nil {
-		return errors.Wrap(err, "failed to verify recovery code")
+		return errors.Wrap(support.NewGocqlError(err), "failed to verify recovery code")
 	}
 
 	return nil
@@ -222,11 +222,11 @@ func (r AccountCassandraRepository) GetAccountMultiFactorTOTP(ctx context.Contex
 			AccountId: accountId,
 		}).
 		GetRelease(&multiTOTP); err != nil {
-
 		if err == gocql.ErrNotFound {
 			return nil, account.ErrTOTPNotConfigured
 		}
-		return nil, errors.Wrap(err, "failed to get MFA TOTP")
+
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get MFA TOTP")
 	}
 
 	decryptedOTP, err := crypt.Decrypt(multiTOTP.Secret)
@@ -277,7 +277,7 @@ func (r AccountCassandraRepository) CreateAccountMultiFactorTOTP(ctx context.Con
 
 	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return errors.Wrap(err, "failed to create multi factor account")
+		return errors.Wrap(support.NewGocqlError(err), "failed to create multi factor account")
 	}
 
 	return nil
@@ -314,7 +314,7 @@ func (r AccountCassandraRepository) DeleteAccountMultiFactorTOTP(ctx context.Con
 
 	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return errors.Wrap(err, "failed to delete multi factor account")
+		return errors.Wrap(support.NewGocqlError(err), "failed to delete multi factor account")
 	}
 
 	return nil

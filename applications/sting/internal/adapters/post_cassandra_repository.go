@@ -5,7 +5,8 @@ import (
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/libraries/errors"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
+	"overdoll/libraries/support"
 	"time"
 
 	"github.com/gocql/gocql"
@@ -147,7 +148,7 @@ func (r PostsCassandraElasticsearchRepository) CreatePost(ctx context.Context, p
 		BindStruct(pst).
 		Consistency(gocql.LocalQuorum).
 		ExecRelease(); err != nil {
-		return errors.Wrap(err, "failed to create post")
+		return errors.Wrap(support.NewGocqlError(err), "failed to create post")
 	}
 
 	if err := r.indexPost(ctx, pending); err != nil {
@@ -160,7 +161,7 @@ func (r PostsCassandraElasticsearchRepository) CreatePost(ctx context.Context, p
 			Consistency(gocql.LocalQuorum).
 			BindStruct(pst).
 			ExecRelease(); err != nil {
-			return errors.Wrap(err, "failed to delete post")
+			return errors.Wrap(support.NewGocqlError(err), "failed to delete post")
 		}
 
 		return err
@@ -178,7 +179,7 @@ func (r PostsCassandraElasticsearchRepository) DeletePost(ctx context.Context, i
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&posts{Id: id}).
 		ExecRelease(); err != nil {
-		return errors.Wrap(err, "failed to delete post")
+		return errors.Wrap(support.NewGocqlError(err), "failed to delete post")
 	}
 
 	if err := r.deletePostIndexById(ctx, id); err != nil {
@@ -207,7 +208,7 @@ func (r PostsCassandraElasticsearchRepository) GetPostsByIds(ctx context.Context
 		Consistency(gocql.LocalQuorum).
 		Bind(postIds).
 		SelectRelease(&postsModels); err != nil {
-		return nil, errors.Wrap(err, "failed to get posts by ids")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get posts by ids")
 	}
 
 	for _, b := range postsModels {
@@ -230,10 +231,10 @@ func (r PostsCassandraElasticsearchRepository) getPostById(ctx context.Context, 
 		GetRelease(&postPending); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, domainerror.NewNotFoundError("post", id)
+			return nil, apperror.NewNotFoundError("post", id)
 		}
 
-		return nil, errors.Wrap(err, "failed to get post")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get post")
 	}
 
 	return &postPending, nil
@@ -262,7 +263,7 @@ func (r PostsCassandraElasticsearchRepository) getTerminatedClubIds(ctx context.
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&terminatedClubs{Bucket: 0}).
 		SelectRelease(&suspendedClub); err != nil {
-		return nil, errors.Wrap(err, "failed to get terminated clubs")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get terminated clubs")
 	}
 
 	var ids []string
@@ -283,7 +284,7 @@ func (r PostsCassandraElasticsearchRepository) AddTerminatedClub(ctx context.Con
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&terminatedClubs{Bucket: 0, ClubId: clubId}).
 		ExecRelease(); err != nil {
-		return errors.Wrap(err, "failed to add terminated club")
+		return errors.Wrap(support.NewGocqlError(err), "failed to add terminated club")
 	}
 
 	return nil
@@ -298,7 +299,7 @@ func (r PostsCassandraElasticsearchRepository) RemoveTerminatedClub(ctx context.
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&terminatedClubs{Bucket: 0, ClubId: clubId}).
 		ExecRelease(); err != nil {
-		return errors.Wrap(err, "failed to delete terminated club")
+		return errors.Wrap(support.NewGocqlError(err), "failed to delete terminated club")
 	}
 
 	return nil
@@ -353,7 +354,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePost(ctx context.Context, i
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
 		ExecRelease(); err != nil {
-		return nil, errors.Wrap(err, "failed to update post")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update post")
 	}
 
 	if err := r.indexPost(ctx, currentPost); err != nil {
@@ -392,7 +393,7 @@ func (r PostsCassandraElasticsearchRepository) updatePostRequest(ctx context.Con
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
 		ExecRelease(); err != nil {
-		return nil, errors.Wrap(err, "failed to update post")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update post")
 	}
 
 	if err := r.indexPost(ctx, currentPost); err != nil {
@@ -443,7 +444,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperator(ctx con
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
 		ExecRelease(); err != nil {
-		return nil, errors.Wrap(err, "failed to update post")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update post")
 	}
 
 	if err := r.indexPost(ctx, currentPost); err != nil {
@@ -482,11 +483,11 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostLikesOperator(ctx conte
 		ExecCASRelease()
 
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to update post likes")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update post likes")
 	}
 
 	if !ok {
-		return nil, errors.New("failed to update post likes")
+		return nil, errors.Wrap(support.NewGocqlTransactionError(), "failed to update post likes")
 	}
 
 	if err := r.indexPost(ctx, unmarshalled); err != nil {

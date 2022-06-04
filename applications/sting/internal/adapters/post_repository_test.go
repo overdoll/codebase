@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/internal/domain/post"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
@@ -46,5 +46,5 @@ func TestPostRepository_failure(t *testing.T) {
 	require.Error(t, err, "should have received an error while creating the post")
 
 	_, err = postRepo.GetPostById(ctx, requester, postId)
-	require.True(t, domainerror.IsNotFoundError(err), "post should not have been found")
+	require.True(t, apperror.IsNotFoundError(err), "post should not have been found")
 }

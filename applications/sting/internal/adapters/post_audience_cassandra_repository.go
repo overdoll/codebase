@@ -7,9 +7,10 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/errors"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/support"
 	"strings"
 	"time"
 )
@@ -94,7 +95,7 @@ func (r PostsCassandraElasticsearchRepository) GetAudienceIdsFromSlugs(ctx conte
 		Consistency(gocql.One).
 		Bind(lowercaseSlugs).
 		SelectRelease(&audienceSlugResults); err != nil {
-		return nil, errors.Wrap(err, "failed to get audience slugs")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get audience slugs")
 	}
 
 	var ids []string
@@ -119,10 +120,10 @@ func (r PostsCassandraElasticsearchRepository) GetAudienceBySlug(ctx context.Con
 		GetRelease(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, domainerror.NewNotFoundError("audience", slug)
+			return nil, apperror.NewNotFoundError("audience", slug)
 		}
 
-		return nil, errors.Wrap(err, "failed to get audience by slug")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get audience by slug")
 	}
 
 	return r.GetAudienceById(ctx, requester, b.AudienceId)
@@ -147,7 +148,7 @@ func (r PostsCassandraElasticsearchRepository) GetAudiencesByIds(ctx context.Con
 		Consistency(gocql.One).
 		Bind(audienceIds).
 		SelectRelease(&audienceModels); err != nil {
-		return nil, errors.Wrap(err, "failed to get audiences by id")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get audiences by id")
 	}
 
 	for _, b := range audienceModels {
@@ -179,10 +180,10 @@ func (r PostsCassandraElasticsearchRepository) getAudienceById(ctx context.Conte
 		GetRelease(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, domainerror.NewNotFoundError("audience", audienceId)
+			return nil, apperror.NewNotFoundError("audience", audienceId)
 		}
 
-		return nil, errors.Wrap(err, "failed to get audience by id")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get audience by id")
 	}
 
 	return post.UnmarshalAudienceFromDatabase(
@@ -211,7 +212,7 @@ func (r PostsCassandraElasticsearchRepository) GetAudiences(ctx context.Context,
 		Idempotent(true).
 		Consistency(gocql.One).
 		SelectRelease(&res); err != nil {
-		return nil, errors.Wrap(err, "failed to get audiences")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get audiences")
 	}
 
 	var results []*post.Audience
@@ -240,7 +241,7 @@ func (r PostsCassandraElasticsearchRepository) deleteUniqueAudienceSlug(ctx cont
 		Idempotent(true).
 		BindStruct(audienceSlug{Slug: strings.ToLower(slug), AudienceId: audienceId}).
 		ExecRelease(); err != nil {
-		return errors.Wrap(err, "failed to release audience slug")
+		return errors.Wrap(support.NewGocqlError(err), "failed to release audience slug")
 	}
 
 	return nil
@@ -261,7 +262,7 @@ func (r PostsCassandraElasticsearchRepository) CreateAudience(ctx context.Contex
 		ExecCASRelease()
 
 	if err != nil {
-		return errors.Wrap(err, "failed to create unique audience slug")
+		return errors.Wrap(support.NewGocqlError(err), "failed to create unique audience slug")
 	}
 
 	if !applied {
@@ -298,7 +299,7 @@ func (r PostsCassandraElasticsearchRepository) CreateAudience(ctx context.Contex
 			Consistency(gocql.LocalQuorum).
 			BindStruct(aud).
 			ExecRelease(); err != nil {
-			return errors.Wrap(err, "failed delete audience")
+			return errors.Wrap(support.NewGocqlError(err), "failed delete audience")
 		}
 
 		return err
@@ -352,7 +353,7 @@ func (r PostsCassandraElasticsearchRepository) updateAudience(ctx context.Contex
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
 		ExecRelease(); err != nil {
-		return nil, errors.Wrap(err, "failed to update audience")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update audience")
 	}
 
 	if err := r.indexAudience(ctx, aud); err != nil {

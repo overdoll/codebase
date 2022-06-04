@@ -11,7 +11,7 @@ import (
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/session"
 	eva "overdoll/applications/eva/proto"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/passport"
 )
 
@@ -42,7 +42,7 @@ func (s *Server) GetAccount(ctx context.Context, request *eva.GetAccountRequest)
 
 	if err != nil {
 
-		if domainerror.IsNotFoundError(err) {
+		if apperror.IsNotFoundError(err) {
 			return nil, status.Error(codes.NotFound, err.Error())
 		}
 

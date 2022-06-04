@@ -22,6 +22,13 @@ func unwrapError(exception error) error {
 	return err
 }
 
+func reverse(a []sentry.Exception) {
+	for i := len(a)/2 - 1; i >= 0; i-- {
+		opp := len(a) - 1 - i
+		a[i], a[opp] = a[opp], a[i]
+	}
+}
+
 func BeforeSendHook(event *sentry.Event, hint *sentry.EventHint) *sentry.Event {
 
 	if hint.RecoveredException != nil {
@@ -32,11 +39,28 @@ func BeforeSendHook(event *sentry.Event, hint *sentry.EventHint) *sentry.Event {
 			oldFrames := exception.Stacktrace.Frames
 			exception.Stacktrace.Frames = []sentry.Frame{}
 			for _, frame := range oldFrames {
+				// ignore graphql operation recovery since this messes with the trace log
+				if frame.Function == "(*OperationContext).Recover" {
+					continue
+				}
+
 				// skip frames with sentry support + zap_support (so logger is excluded from frames
-				if !strings.HasPrefix(frame.Module, "overdoll/libraries/sentry_support") && !strings.HasPrefix(frame.Module, "overdoll/libraries/zap_support") {
+				if !strings.HasPrefix(frame.Module, "overdoll/libraries/sentry_support") &&
+					!strings.HasPrefix(frame.Module, "overdoll/libraries/zap_support") {
 					exception.Stacktrace.Frames = append(exception.Stacktrace.Frames, frame)
 				}
 			}
+
+			// check for last frame of our parsed trace log and ensure it's not 'generated.go'
+			oldFrames = exception.Stacktrace.Frames
+			exception.Stacktrace.Frames = []sentry.Frame{}
+			for c, frame := range oldFrames {
+				if c == len(oldFrames)-1 && strings.HasSuffix(frame.Filename, "generated.go") {
+					continue
+				}
+				exception.Stacktrace.Frames = append(exception.Stacktrace.Frames, frame)
+			}
+
 		}
 
 		event.Exception = copyException
@@ -72,6 +96,8 @@ func BeforeSendHook(event *sentry.Event, hint *sentry.EventHint) *sentry.Event {
 				alreadySent[errType] = true
 				err = unwrapError(err)
 			}
+
+			reverse(event.Exception)
 		}
 	}
 

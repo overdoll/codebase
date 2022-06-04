@@ -15,8 +15,9 @@ import (
 	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/libraries/errors"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/support"
 	"time"
 )
 
@@ -88,10 +89,10 @@ func (r BillingCassandraS3TemporalFileRepository) getClubSupportReceipt(ctx cont
 		GetRelease(&receiptFile); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, domainerror.NewNotFoundError("club support receipt", id)
+			return nil, apperror.NewNotFoundError("club support receipt", id)
 		}
 
-		return nil, errors.Wrap(err, "failed to get club supporter receipt from account transaction")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get club supporter receipt from account transaction")
 	}
 
 	return &receiptFile, nil
@@ -154,7 +155,7 @@ func (r BillingCassandraS3TemporalFileRepository) updateClubSupporterReceiptWith
 			FilePath: fileKey,
 		}).
 		ExecRelease(); err != nil {
-		return errors.Wrap(err, "failed to update club supporter receipt with new file")
+		return errors.Wrap(support.NewGocqlError(err), "failed to update club supporter receipt with new file")
 	}
 
 	return nil
@@ -174,7 +175,7 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterRefund
 
 	receiptFile, err := r.getClubSupportReceipt(ctx, id)
 
-	if err != nil && !domainerror.IsNotFoundError(err) {
+	if err != nil && !apperror.IsNotFoundError(err) {
 		return nil, err
 	}
 
@@ -199,7 +200,7 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterRefund
 				TemporalWorkflowId:        workflowId,
 			}).
 			ExecRelease(); err != nil {
-			return nil, errors.Wrap(err, "failed to insert create club supporter receipt")
+			return nil, errors.Wrap(support.NewGocqlError(err), "failed to insert create club supporter receipt")
 		}
 
 		options := client.StartWorkflowOptions{
@@ -234,7 +235,7 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterPaymen
 
 	receiptFile, err := r.getClubSupportReceipt(ctx, history.Id())
 
-	if err != nil && !domainerror.IsNotFoundError(err) {
+	if err != nil && !apperror.IsNotFoundError(err) {
 		return nil, err
 	}
 
@@ -254,7 +255,7 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterPaymen
 				TemporalWorkflowId:   workflowId,
 			}).
 			ExecRelease(); err != nil {
-			return nil, errors.Wrap(err, "failed to insert create club supporter receipt")
+			return nil, errors.Wrap(support.NewGocqlError(err), "failed to insert create club supporter receipt")
 		}
 
 		options := client.StartWorkflowOptions{

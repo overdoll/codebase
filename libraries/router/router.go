@@ -2,13 +2,11 @@ package router
 
 import (
 	sentrygin "github.com/getsentry/sentry-go/gin"
-	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/sentry_support"
-	"overdoll/libraries/support"
 )
 
 func init() {
@@ -29,26 +27,23 @@ func NewRawGinRouter() *gin.Engine {
 
 	router := gin.New()
 
-	if support.IsDebug() {
-		// gin's default loggers are easier to read on the CLI for panic recoveries
-		router.Use(gin.Recovery())
-		// we also don't log API routes because there's really no point since most of them are graphql calls anyways
-	} else {
-		router.Use(customLogger(zap.L()))
-		router.Use(ginzap.RecoveryWithZap(zap.L(), true))
-	}
+	// log any errors that occurred
+	router.Use(customLogger(zap.S()))
+
+	// recover errors during panics (sentry will panic when errors are caught, so we can log them and move on afterwards)
+	router.Use(sentry_support.SentryRecoveryGinMiddleware())
 
 	router.Use(sentrygin.New(sentrygin.Options{
 		Repanic: true,
 	}))
 
 	// add sentry to our gin middleware using sentry gin
-	router.Use(sentry_support.SentryGinMiddleware())
+	router.Use(sentry_support.SentryToContextGinMiddleware())
 
 	return router
 }
 
-func customLogger(logger *zap.Logger) gin.HandlerFunc {
+func customLogger(logger *zap.SugaredLogger) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Next()
 		if len(c.Errors) > 0 {

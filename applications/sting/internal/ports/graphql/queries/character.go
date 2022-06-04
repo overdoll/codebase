@@ -5,7 +5,7 @@ import (
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/sting/internal/app/query"
 	"overdoll/applications/sting/internal/ports/graphql/types"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
@@ -44,7 +44,7 @@ func (r *QueryResolver) Character(ctx context.Context, slug, seriesSlug string) 
 
 	if err != nil {
 
-		if domainerror.IsNotFoundError(err) {
+		if apperror.IsNotFoundError(err) {
 			return nil, nil
 		}
 

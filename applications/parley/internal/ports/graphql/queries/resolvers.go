@@ -6,7 +6,7 @@ import (
 	"overdoll/applications/parley/internal/app"
 	"overdoll/applications/parley/internal/app/query"
 	"overdoll/applications/parley/internal/ports/graphql/types"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
@@ -72,7 +72,7 @@ func (r QueryResolver) Rule(ctx context.Context, reference string) (*types.Rule,
 
 	if err != nil {
 
-		if domainerror.IsNotFoundError(err) {
+		if apperror.IsNotFoundError(err) {
 			return nil, nil
 		}
 

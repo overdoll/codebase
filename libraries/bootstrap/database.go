@@ -2,6 +2,7 @@ package bootstrap
 
 import (
 	"os"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/sentry_support"
 	"strings"
 	"time"
@@ -60,6 +61,7 @@ func InitializeDatabaseSession() gocqlx.Session {
 	session, err := initializeDatabaseSession(keyspace)
 
 	if err != nil {
+		sentry_support.MustCaptureException(errors.Wrap(err, "cassandra session failed"))
 		zap.S().Fatalw("cassandra session failed", zap.Error(err))
 	}
 
@@ -71,6 +73,7 @@ func InitializeDatabaseSessionNoKeyspace() gocqlx.Session {
 	session, err := initializeDatabaseSession("")
 
 	if err != nil {
+		sentry_support.MustCaptureException(errors.Wrap(err, "cassandra session failed"))
 		zap.S().Fatalw("cassandra session failed", zap.Error(err))
 	}
 

@@ -7,7 +7,7 @@ import (
 	"overdoll/applications/ringer/internal/app/query"
 	"overdoll/applications/ringer/internal/domain/payout"
 	"overdoll/applications/ringer/internal/ports/graphql/types"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
@@ -47,7 +47,7 @@ func (r QueryResolver) Payment(ctx context.Context, reference string) (*types.Cl
 
 	if err != nil {
 
-		if domainerror.IsNotFoundError(err) {
+		if apperror.IsNotFoundError(err) {
 			return nil, nil
 		}
 
@@ -101,7 +101,7 @@ func (r QueryResolver) Payout(ctx context.Context, reference string) (*types.Clu
 
 	if err != nil {
 
-		if domainerror.IsNotFoundError(err) {
+		if apperror.IsNotFoundError(err) {
 			return nil, nil
 		}
 

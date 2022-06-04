@@ -24,7 +24,7 @@ func createSeed(config SeederConfig) *cobra.Command {
 			ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
 			defer cancelFn()
 
-			bootstrap.NewBootstrap(ctx)
+			bootstrap.NewBootstrap()
 
 			session := bootstrap.InitializeDatabaseSession()
 
@@ -94,7 +94,7 @@ func createSeed(config SeederConfig) *cobra.Command {
 			}
 
 			zap.S().Infof(
-				"sucessfuly seeded [%s] rows in %s ",
+				"sucessfully seeded [%s] rows in %s!",
 				strconv.Itoa(count),
 				time.Since(start).Truncate(time.Millisecond),
 			)

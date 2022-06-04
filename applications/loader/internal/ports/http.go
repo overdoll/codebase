@@ -40,7 +40,7 @@ func NewHttpServer(app *app.Application) http.Handler {
 	composer, err := app.Commands.TusComposer.Handle(context.Background())
 
 	if err != nil {
-		zap.S().Fatal("failed to get composer ", zap.Error(err))
+		zap.S().Fatalw("failed to get composer", zap.Error(err))
 	}
 
 	handler, err := tusd.NewUnroutedHandler(tusd.Config{
@@ -50,7 +50,7 @@ func NewHttpServer(app *app.Application) http.Handler {
 	})
 
 	if err != nil {
-		zap.S().Fatal("failed to create handler ", zap.Error(err))
+		zap.S().Fatalw("failed to create handler", zap.Error(err))
 	}
 
 	rtr.POST("/api/upload/", gin.WrapH(http.StripPrefix("/api/upload/", handler.Middleware(http.HandlerFunc(handler.PostFile)))))

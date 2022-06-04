@@ -10,7 +10,7 @@ import (
 	"overdoll/applications/parley/internal/domain/report"
 	"overdoll/libraries/bucket"
 	"overdoll/libraries/errors"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/support"
 	"time"
@@ -69,23 +69,18 @@ func NewReportCassandraElasticsearchRepository(session gocqlx.Session, client *e
 	return ReportCassandraElasticsearchRepository{session: session, client: client}
 }
 
-func marshalPostReportToDatabase(report *report.PostReport) (*postReport, error) {
-
+func marshalPostReportToDatabase(report *report.PostReport) *postReport {
 	return &postReport{
 		Bucket:             bucket.MakeMonthlyBucketFromTimestamp(report.CreatedAt()),
 		PostId:             report.PostId(),
 		ReportingAccountId: report.ReportingAccountId(),
 		RuleId:             report.RuleId(),
-	}, nil
+	}
 }
 
 func (r ReportCassandraElasticsearchRepository) CreatePostReport(ctx context.Context, report *report.PostReport) error {
 
-	marshalledPostReport, err := marshalPostReportToDatabase(report)
-
-	if err != nil {
-		return err
-	}
+	marshalledPostReport := marshalPostReportToDatabase(report)
 
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
@@ -112,7 +107,7 @@ func (r ReportCassandraElasticsearchRepository) CreatePostReport(ctx context.Con
 
 	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return errors.Wrap(err, "CreatePostReport")
+		return errors.Wrap(support.NewGocqlError(err), "CreatePostReport")
 	}
 
 	if err := r.indexPostReport(ctx, report); err != nil {
@@ -138,10 +133,10 @@ func (r ReportCassandraElasticsearchRepository) GetPostReportById(ctx context.Co
 		GetRelease(&postRep); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, domainerror.NewNotFoundError("post report", postId+"-"+accountId)
+			return nil, apperror.NewNotFoundError("post report", postId+"-"+accountId)
 		}
 
-		return nil, errors.Wrap(err, "GetPostReportById")
+		return nil, errors.Wrap(support.NewGocqlError(err), "GetPostReportById")
 	}
 
 	rep := report.UnmarshalPostReportFromDatabase(
@@ -170,7 +165,7 @@ func (r ReportCassandraElasticsearchRepository) getPostReportsByAccountBuckets(c
 			ReportingAccountId: accountId,
 		}).
 		SelectRelease(&buckets); err != nil {
-		return nil, errors.Wrap(err, "getPostReportsByAccountBuckets")
+		return nil, errors.Wrap(support.NewGocqlError(err), "getPostReportsByAccountBuckets")
 	}
 
 	var final []int
@@ -203,7 +198,7 @@ func (r ReportCassandraElasticsearchRepository) DeleteAccountData(ctx context.Co
 			Idempotent(true).
 			BindStruct(postReport{Bucket: bucketId, ReportingAccountId: accountId}).
 			SelectRelease(&results); err != nil {
-			return errors.Wrap(err, "DeleteAccountData")
+			return errors.Wrap(support.NewGocqlError(err), "DeleteAccountData")
 		}
 
 		if len(results) == 0 {
@@ -228,7 +223,7 @@ func (r ReportCassandraElasticsearchRepository) DeleteAccountData(ctx context.Co
 		}
 
 		if err := r.session.ExecuteBatch(batch); err != nil {
-			return errors.Wrap(err, "DeleteAccountData: delete post reports")
+			return errors.Wrap(support.NewGocqlError(err), "DeleteAccountData: delete post reports")
 		}
 	}
 
@@ -244,7 +239,7 @@ func (r ReportCassandraElasticsearchRepository) DeleteAccountData(ctx context.Co
 			ReportingAccountId: accountId,
 		}).
 		SelectRelease(&buckets); err != nil {
-		return errors.Wrap(err, "DeleteAccountData: delete post reports by account buckets")
+		return errors.Wrap(support.NewGocqlError(err), "DeleteAccountData: delete post reports by account buckets")
 	}
 
 	return nil

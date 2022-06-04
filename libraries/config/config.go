@@ -10,7 +10,7 @@ import (
 
 func Read(root string) {
 
-	// need to use bazel runfiles path - most accurate
+	// need to use bazel run files path - most accurate
 	dir, _ := bazel.RunfilesPath()
 
 	rt := path.Join(dir, root)
@@ -21,14 +21,7 @@ func Read(root string) {
 
 	viper.SetConfigFile(rt + "/config.toml")
 
-	if err := viper.ReadInConfig(); err != nil {
-		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			// Config file not found; ignore error if desired
-			panic(err)
-		} else {
-			panic(err)
-		}
-	}
+	_ = viper.ReadInConfig()
 }
 
 // GetFilePath - get file path

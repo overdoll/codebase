@@ -25,7 +25,7 @@ func PaymentFlow(app *app.Application) gin.HandlerFunc {
 
 			zap.S().Errorw("error running payment flow", zap.Error(err))
 			sentry_support.CaptureException(c.Request.Context(), err)
-			c.Data(http.StatusInternalServerError, "text", []byte("error"))
+			c.Data(http.StatusInternalServerError, "text", []byte("internal server error"))
 			return
 		}
 

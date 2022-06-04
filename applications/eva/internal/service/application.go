@@ -59,7 +59,7 @@ type ComponentTestApplication struct {
 }
 
 func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication {
-	bootstrap.NewBootstrap(ctx)
+	bootstrap.NewBootstrap()
 	temporalClient := &temporalmocks.Client{}
 
 	carrierClient := &mocks.MockCarrierClient{}
@@ -101,7 +101,7 @@ func createApplication(
 	client client.Client,
 ) *app.Application {
 
-	bootstrap.NewBootstrap(ctx)
+	bootstrap.NewBootstrap()
 
 	session := bootstrap.InitializeDatabaseSession()
 

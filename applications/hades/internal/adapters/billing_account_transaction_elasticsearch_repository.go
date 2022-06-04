@@ -7,7 +7,6 @@ import (
 	"github.com/scylladb/gocqlx/v2"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/libraries/errors"
-	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
@@ -186,7 +185,7 @@ func (r BillingCassandraElasticsearchRepository) SearchAccountTransactions(ctx c
 		Index(AccountTransactionsIndexName)
 
 	if cursor == nil {
-		return nil, domainerror.NewValidation("cursor must be present")
+		return nil, paging.ErrCursorNotPresent
 	}
 
 	if err := cursor.BuildElasticsearch(builder, "created_at", "id", false); err != nil {

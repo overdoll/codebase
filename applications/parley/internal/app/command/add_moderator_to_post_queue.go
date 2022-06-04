@@ -2,9 +2,8 @@ package command
 
 import (
 	"context"
-	"overdoll/libraries/errors/domainerror"
-
 	"overdoll/applications/parley/internal/domain/moderator"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/principal"
 )
 
@@ -25,7 +24,7 @@ func (h AddModeratorToPostQueueHandler) Handle(ctx context.Context, cmd AddModer
 
 	_, err := h.mr.GetModerator(ctx, cmd.Principal, cmd.AccountId)
 
-	if err != nil && !domainerror.IsNotFoundError(err) {
+	if err != nil && !apperror.IsNotFoundError(err) {
 		return err
 	}
 

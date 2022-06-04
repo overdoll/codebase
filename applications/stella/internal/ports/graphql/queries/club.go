@@ -5,7 +5,7 @@ import (
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/stella/internal/app/query"
 	"overdoll/applications/stella/internal/ports/graphql/types"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
@@ -44,7 +44,7 @@ func (r *QueryResolver) Club(ctx context.Context, slug string) (*types.Club, err
 
 	if err != nil {
 
-		if domainerror.IsNotFoundError(err) {
+		if apperror.IsNotFoundError(err) {
 			return nil, nil
 		}
 

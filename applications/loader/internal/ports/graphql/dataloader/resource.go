@@ -6,7 +6,7 @@ import (
 	"overdoll/applications/loader/internal/app"
 	"overdoll/applications/loader/internal/app/query"
 	"overdoll/applications/loader/internal/ports/graphql/types"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 	"strings"
 	"time"
 )
@@ -59,7 +59,7 @@ func resourcesByIds(app *app.Application) *dataloader.Loader {
 
 			// fill array positions with errors where not found in DB
 			for v, ix := range keyOrder {
-				results[ix] = &dataloader.Result{Data: nil, Error: domainerror.NewNotFoundError("resource", v)}
+				results[ix] = &dataloader.Result{Data: nil, Error: apperror.NewNotFoundError("resource", v)}
 			}
 
 			// return results

@@ -18,7 +18,7 @@ import (
 )
 
 func NewApplication(ctx context.Context) (*app.Application, func()) {
-	bootstrap.NewBootstrap(ctx)
+	bootstrap.NewBootstrap()
 	return createApplication(ctx, clients.NewTemporalClient(ctx)), func() {}
 }
 
@@ -28,7 +28,7 @@ type ComponentTestApplication struct {
 }
 
 func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication {
-	bootstrap.NewBootstrap(ctx)
+	bootstrap.NewBootstrap()
 	temporalClient := &temporalmocks.Client{}
 	return &ComponentTestApplication{
 		App:            createApplication(ctx, temporalClient),

@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/internal/domain/post"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
@@ -32,8 +32,8 @@ func TestPostCharacterRepository_failure(t *testing.T) {
 	require.Error(t, err, "should have received an error while creating the character")
 
 	_, err = postRepo.GetCharacterById(ctx, requester, characterId)
-	require.True(t, domainerror.IsNotFoundError(err), "character should not be found by id")
+	require.True(t, apperror.IsNotFoundError(err), "character should not be found by id")
 
 	_, err = postRepo.GetCharacterBySlug(ctx, requester, characterSlug, seriesSlug)
-	require.Equal(t, domainerror.IsNotFoundError(err), "character should not be found by slug")
+	require.Equal(t, apperror.IsNotFoundError(err), "character should not be found by slug")
 }

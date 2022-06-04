@@ -4,7 +4,7 @@ import (
 	"context"
 	"overdoll/applications/eva/internal/app"
 	"overdoll/applications/eva/internal/ports/graphql/types"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 )
 
 type AccountEmailResolver struct {
@@ -17,7 +17,7 @@ func (r AccountEmailResolver) Account(ctx context.Context, obj *types.AccountEma
 
 	if err != nil {
 
-		if domainerror.IsNotFoundError(err) {
+		if apperror.IsNotFoundError(err) {
 			return nil, nil
 		}
 

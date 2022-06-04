@@ -2,6 +2,7 @@ package post
 
 import (
 	"overdoll/applications/sting/internal/domain/club"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/errors/domainerror"
 	"time"
 
@@ -541,7 +542,7 @@ func (p *Post) CanView(suspendedClubIds []string, requester *principal.Principal
 		if err := requester.CheckClubOwner(p.clubId); err != nil {
 
 			if err := requester.BelongsToAccount(p.ContributorId()); err != nil {
-				return domainerror.NewNotFoundError("post", p.id)
+				return apperror.NewNotFoundError("post", p.id)
 			}
 
 			return nil

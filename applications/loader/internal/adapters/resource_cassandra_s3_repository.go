@@ -19,7 +19,7 @@ import (
 	"os"
 	"overdoll/applications/loader/internal/domain/resource"
 	"overdoll/libraries/errors"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/support"
 	"path/filepath"
 	"strings"
@@ -261,7 +261,7 @@ func (r ResourceCassandraS3Repository) createResources(ctx context.Context, res 
 
 	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return errors.Wrap(err, "failed to create resources")
+		return errors.Wrap(support.NewGocqlError(err), "failed to create resources")
 	}
 
 	return nil
@@ -326,7 +326,7 @@ func (r ResourceCassandraS3Repository) getResourcesByIds(ctx context.Context, it
 			"item_id": itemId,
 		}).
 		SelectRelease(&b); err != nil {
-		return nil, errors.Wrap(err, "failed to get resources by ids")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get resources by ids")
 	}
 
 	var final []resources
@@ -374,10 +374,10 @@ func (r ResourceCassandraS3Repository) getResourceById(ctx context.Context, item
 		GetRelease(&i); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, domainerror.NewNotFoundError("resource", resourceId)
+			return nil, apperror.NewNotFoundError("resource", resourceId)
 		}
 
-		return nil, errors.Wrap(err, "failed to get resource by id")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get resource by id")
 	}
 
 	return &i, nil
@@ -421,7 +421,7 @@ func (r ResourceCassandraS3Repository) updateResources(ctx context.Context, res 
 
 	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return errors.Wrap(err, "failed to update resources")
+		return errors.Wrap(support.NewGocqlError(err), "failed to update resources")
 	}
 
 	return nil
@@ -488,7 +488,7 @@ func (r ResourceCassandraS3Repository) DeleteResources(ctx context.Context, reso
 			Idempotent(true).
 			BindStruct(resources{ItemId: resour.ItemId()}).
 			ExecRelease(); err != nil {
-			return errors.Wrap(err, "failed to delete resources")
+			return errors.Wrap(support.NewGocqlError(err), "failed to delete resources")
 		}
 	}
 

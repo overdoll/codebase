@@ -3,7 +3,7 @@ package command
 import (
 	"context"
 	"overdoll/applications/parley/internal/domain/moderator"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/principal"
 )
 
@@ -27,7 +27,7 @@ func (h RemoveModeratorFromPostQueueHandler) Handle(ctx context.Context, cmd Rem
 
 	if err != nil {
 
-		if domainerror.IsNotFoundError(err) {
+		if apperror.IsNotFoundError(err) {
 			return nil
 		}
 

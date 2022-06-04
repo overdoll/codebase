@@ -7,6 +7,7 @@ import (
 	"net"
 	"os"
 	"os/signal"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/sentry_support"
 	"overdoll/libraries/support"
@@ -62,12 +63,14 @@ func InitializeGRPCServer(addr string, f func(server *grpc.Server)) {
 	listener, err := net.Listen("tcp", addr)
 
 	if err != nil {
+		sentry_support.MustCaptureException(errors.Wrap(err, "net.Listen failed"))
 		zap.S().Fatalw("net.Listen failed", zap.Error(err))
 		return
 	}
 
 	go func() {
 		if err := grpcServer.Serve(listener); err != nil {
+			sentry_support.MustCaptureException(errors.Wrap(err, "failed to serve grpc server"))
 			zap.S().Fatalw("failed to serve grpc server", zap.Error(err))
 		}
 	}()

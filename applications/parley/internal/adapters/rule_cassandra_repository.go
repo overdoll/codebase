@@ -7,9 +7,10 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/parley/internal/domain/rule"
 	"overdoll/libraries/errors"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/support"
 )
 
 var rulesTable = table.New(table.Metadata{
@@ -63,7 +64,7 @@ func (r RuleCassandraRepository) CreateRule(ctx context.Context, ruleItem *rule.
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalRuleToDatabase(ruleItem)).
 		ExecRelease(); err != nil {
-		return errors.Wrap(err, "CreateRule")
+		return errors.Wrap(support.NewGocqlError(err), "CreateRule")
 	}
 
 	return nil
@@ -90,7 +91,7 @@ func (r RuleCassandraRepository) GetRules(ctx context.Context, cursor *paging.Cu
 		Consistency(gocql.LocalQuorum).
 		BindStruct(data).
 		SelectRelease(&dbRules); err != nil {
-		return nil, errors.Wrap(err, "GetRules")
+		return nil, errors.Wrap(support.NewGocqlError(err), "GetRules")
 	}
 
 	var rulesItems []*rule.Rule
@@ -128,10 +129,10 @@ func (r RuleCassandraRepository) getRuleById(ctx context.Context, ruleId string)
 		GetRelease(&ruleSingle); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, domainerror.NewNotFoundError("rule", ruleId)
+			return nil, apperror.NewNotFoundError("rule", ruleId)
 		}
 
-		return nil, errors.Wrap(err, "getRuleById")
+		return nil, errors.Wrap(support.NewGocqlError(err), "getRuleById")
 	}
 
 	return rule.UnmarshalRuleFromDatabase(
@@ -170,7 +171,7 @@ func (r RuleCassandraRepository) updateRule(ctx context.Context, ruleId string, 
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalRuleToDatabase(ruleItem)).
 		ExecRelease(); err != nil {
-		return nil, errors.Wrap(err, "updateRule")
+		return nil, errors.Wrap(support.NewGocqlError(err), "updateRule")
 	}
 
 	return ruleItem, nil

@@ -4,6 +4,7 @@ import (
 	"context"
 	"go.uber.org/zap"
 	loader "overdoll/applications/loader/proto"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/sentry_support"
 	"time"
@@ -30,6 +31,7 @@ func NewLoaderClient(ctx context.Context, address string) (loader.LoaderClient, 
 	)
 
 	if err != nil {
+		sentry_support.MustCaptureException(errors.Wrap(err, "failed to start new loader client"))
 		zap.S().Fatalw("failed to start new loader client", zap.Error(err))
 	}
 

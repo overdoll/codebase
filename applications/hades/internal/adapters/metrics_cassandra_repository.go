@@ -11,6 +11,7 @@ import (
 	"overdoll/libraries/errors"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/support"
 	"time"
 )
 
@@ -164,7 +165,7 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 			Currency:  metric.Currency().String(),
 		}).
 		ExecRelease(); err != nil {
-		return errors.Wrap(err, "failed to create club transaction metrics")
+		return errors.Wrap(support.NewGocqlError(err), "failed to create club transaction metrics")
 	}
 
 	// try to get the metrics, to update it
@@ -183,7 +184,7 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 			Consistency(gocql.LocalQuorum).
 			BindStruct(clubTransactionMetricsBuckets{ClubId: metric.ClubId(), Bucket: bucket}).
 			ExecRelease(); err != nil {
-			return errors.Wrap(err, "failed to insert club transaction metric bucket")
+			return errors.Wrap(support.NewGocqlError(err), "failed to insert club transaction metric bucket")
 		}
 
 		target := clubTransactionMetrics{
@@ -209,11 +210,11 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 			ExecCASRelease()
 
 		if err != nil {
-			return errors.Wrap(err, "failed to insert club transaction metric")
+			return errors.Wrap(support.NewGocqlError(err), "failed to insert club transaction metric")
 		}
 
 		if !applied {
-			return errors.New("failed to insert club transaction metric")
+			return errors.Wrap(support.NewGocqlTransactionError(), "failed to insert club transaction metric")
 		}
 
 		met = &target
@@ -242,7 +243,7 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 			Timestamp: newInsertTimestamp,
 		}).
 		GetRelease(&res); err != nil {
-		return errors.Wrap(err, "failed to do metrics count")
+		return errors.Wrap(support.NewGocqlError(err), "failed to do metrics count")
 	}
 
 	metricsBuilder := clubTransactionMetricsTable.
@@ -290,11 +291,11 @@ func (r MetricsCassandraRepository) CreateClubTransactionMetric(ctx context.Cont
 		ExecCASRelease()
 
 	if err != nil {
-		return errors.Wrap(err, "failed to update metrics count")
+		return errors.Wrap(support.NewGocqlError(err), "failed to update metrics count")
 	}
 
 	if !applied {
-		return errors.New("failed to update metrics count")
+		return errors.Wrap(support.NewGocqlTransactionError(), "failed to update metrics count")
 	}
 
 	return nil
@@ -318,7 +319,7 @@ func (r MetricsCassandraRepository) getClubTransactionMetrics(ctx context.Contex
 			return nil, gocql.ErrNotFound
 		}
 
-		return nil, errors.Wrap(err, "failed to get club transaction metric")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get club transaction metric")
 	}
 
 	return &met, nil
@@ -356,7 +357,7 @@ func (r MetricsCassandraRepository) getClubTransactionMetricsBuckets(ctx context
 			ClubId: clubId,
 		}).
 		SelectRelease(&buckets); err != nil {
-		return nil, errors.Wrap(err, "failed to get club transaction metric buckets")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get club transaction metric buckets")
 	}
 
 	var final []int
@@ -403,7 +404,7 @@ func (r MetricsCassandraRepository) SearchClubTransactionMetrics(ctx context.Con
 				continue
 			}
 
-			return nil, errors.Wrap(err, "failed to get club transaction metrics")
+			return nil, errors.Wrap(support.NewGocqlError(err), "failed to get club transaction metrics")
 		}
 
 		res := metrics.UnmarshalClubTransactionMetricsFromDatabase(
@@ -448,7 +449,7 @@ func (r MetricsCassandraRepository) IsClubAlreadySuspended(ctx context.Context, 
 			return false, nil
 		}
 
-		return false, errors.Wrap(err, "failed to get club is already suspended")
+		return false, errors.Wrap(support.NewGocqlError(err), "failed to get club is already suspended")
 	}
 
 	return true, nil
@@ -466,7 +467,7 @@ func (r MetricsCassandraRepository) AddClubAlreadySuspended(ctx context.Context,
 			Bucket: bucket.MakeMonthlyBucketFromTimestamp(timestamp),
 		}).
 		ExecRelease(); err != nil {
-		return errors.Wrap(err, "failed to add club already suspended")
+		return errors.Wrap(support.NewGocqlError(err), "failed to add club already suspended")
 	}
 
 	return nil

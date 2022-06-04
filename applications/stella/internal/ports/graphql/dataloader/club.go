@@ -6,7 +6,7 @@ import (
 	"overdoll/applications/stella/internal/app"
 	"overdoll/applications/stella/internal/app/query"
 	"overdoll/applications/stella/internal/ports/graphql/types"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 	"time"
 )
 
@@ -46,7 +46,7 @@ func clubsByIds(app *app.Application) *dataloader.Loader {
 
 			// fill array positions with errors where not found in DB
 			for v, ix := range keyOrder {
-				results[ix] = &dataloader.Result{Data: nil, Error: domainerror.NewNotFoundError("club", v)}
+				results[ix] = &dataloader.Result{Data: nil, Error: apperror.NewNotFoundError("club", v)}
 			}
 
 			// return results

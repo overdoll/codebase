@@ -3,7 +3,7 @@ package activities
 import (
 	"context"
 	"overdoll/applications/hades/internal/domain/billing"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/money"
 	"time"
 )
@@ -29,7 +29,7 @@ func (h *Activities) CreateAccountClubSupportSubscription(ctx context.Context, i
 	// get an existing expired subscription, if it exists
 	expired, err := h.billing.GetExpiredAccountClubSupporterSubscriptionByAccountAndClubIdOperator(ctx, input.AccountId, input.ClubId)
 
-	if err != nil && !domainerror.IsNotFoundError(err) {
+	if err != nil && !apperror.IsNotFoundError(err) {
 		return err
 	}
 

@@ -3,7 +3,7 @@ package activities
 import (
 	"context"
 	"overdoll/applications/hades/internal/domain/billing"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 	"time"
 )
 
@@ -62,7 +62,7 @@ func (h *Activities) UpdateCCBillSubscriptionDetails(ctx context.Context, input 
 		})
 
 		// the account may not have saved their payment method for this subscription, so we ignore the not existing error
-		if err != nil && !domainerror.IsNotFoundError(err) {
+		if err != nil && !apperror.IsNotFoundError(err) {
 			return err
 		}
 

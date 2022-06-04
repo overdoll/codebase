@@ -12,6 +12,7 @@ import (
 	"overdoll/libraries/errors"
 	"overdoll/libraries/money"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/support"
 )
 
 var balanceColumns = []string{
@@ -66,7 +67,7 @@ func (r BalanceCassandraRepository) getBalanceForClub(ctx context.Context, reque
 			return balance.NewDefaultBalance(clubId)
 		}
 
-		return nil, errors.Wrap(err, "failed to get balance for club")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get balance for club")
 	}
 
 	if err := canViewSensitive(ctx, requester, clubId); err != nil {
@@ -94,7 +95,7 @@ func (r BalanceCassandraRepository) getClubPaymentById(ctx context.Context, paym
 		Idempotent(true).
 		BindStruct(clubPayment{Id: paymentId}).
 		GetRelease(&clubPay); err != nil {
-		return nil, errors.Wrap(err, "failed to get club payment by id")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get club payment by id")
 	}
 
 	return payment.UnmarshalClubPaymentFromDatabase(
@@ -130,7 +131,7 @@ func (r BalanceCassandraRepository) getOrCreateClubBalanceAndUpdate(ctx context.
 		GetRelease(&b)
 
 	if err != nil && err != gocql.ErrNotFound {
-		return errors.Wrap(err, "failed to get club balance")
+		return errors.Wrap(support.NewGocqlError(err), "failed to get club balance")
 	}
 
 	if err == gocql.ErrNotFound {
@@ -151,11 +152,11 @@ func (r BalanceCassandraRepository) getOrCreateClubBalanceAndUpdate(ctx context.
 			ExecCASRelease()
 
 		if err != nil {
-			return errors.Wrap(err, "failed to create club balance")
+			return errors.Wrap(support.NewGocqlError(err), "failed to create club balance")
 		}
 
 		if !applied {
-			return errors.New("failed to insert unique club balance")
+			return errors.Wrap(support.NewGocqlTransactionError(), "failed to insert unique club balance")
 		}
 	}
 
@@ -175,11 +176,11 @@ func (r BalanceCassandraRepository) getOrCreateClubBalanceAndUpdate(ctx context.
 		ExecCASRelease()
 
 	if err != nil {
-		return errors.Wrap(err, "failed to update balance")
+		return errors.Wrap(support.NewGocqlError(err), "failed to update balance")
 	}
 
 	if !ok {
-		return errors.Wrap(err, "failed to execute transaction to update balance")
+		return errors.Wrap(support.NewGocqlTransactionError(), "failed to execute transaction to update balance")
 	}
 
 	return nil

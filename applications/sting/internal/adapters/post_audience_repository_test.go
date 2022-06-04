@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/internal/domain/post"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
@@ -29,8 +29,8 @@ func TestPostAudienceRepository_failure(t *testing.T) {
 	require.Error(t, err, "should have received an error while creating the audience")
 
 	_, err = postRepo.GetAudienceById(ctx, requester, audienceId)
-	require.True(t, domainerror.IsNotFoundError(err), "category should not be found by id")
+	require.True(t, apperror.IsNotFoundError(err), "category should not be found by id")
 
 	_, err = postRepo.GetAudienceBySlug(ctx, requester, audienceSlug)
-	require.True(t, domainerror.IsNotFoundError(err), "category should not be found by slug")
+	require.True(t, apperror.IsNotFoundError(err), "category should not be found by slug")
 }

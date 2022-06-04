@@ -6,9 +6,10 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/libraries/errors"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/support"
 )
 
 var cancellationReasonsTable = table.New(table.Metadata{
@@ -48,7 +49,7 @@ func (r BillingCassandraElasticsearchRepository) CreateCancellationReason(ctx co
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalCancellationReasonToDatabase(reasonItem)).
 		ExecRelease(); err != nil {
-		return errors.Wrap(err, "failed to create cancellation reason")
+		return errors.Wrap(support.NewGocqlError(err), "failed to create cancellation reason")
 	}
 
 	return nil
@@ -75,7 +76,7 @@ func (r BillingCassandraElasticsearchRepository) GetCancellationReasons(ctx cont
 		Consistency(gocql.LocalQuorum).
 		BindStruct(data).
 		SelectRelease(&dbRules); err != nil {
-		return nil, errors.Wrap(err, "failed to get cancellation reason")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get cancellation reason")
 	}
 
 	var rulesItems []*billing.CancellationReason
@@ -111,10 +112,10 @@ func (r BillingCassandraElasticsearchRepository) getCancellationReasonById(ctx c
 		GetRelease(&ruleSingle); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, domainerror.NewNotFoundError("cancellation reason", reasonId)
+			return nil, apperror.NewNotFoundError("cancellation reason", reasonId)
 		}
 
-		return nil, errors.Wrap(err, "failed to get cancellation reason by id")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get cancellation reason by id")
 	}
 
 	return billing.UnmarshalCancellationReasonFromDatabase(
@@ -151,7 +152,7 @@ func (r BillingCassandraElasticsearchRepository) updateCancellationReason(ctx co
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalCancellationReasonToDatabase(ruleItem)).
 		ExecRelease(); err != nil {
-		return nil, errors.Wrap(err, "failed to update cancellation reason")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update cancellation reason")
 	}
 
 	return ruleItem, nil

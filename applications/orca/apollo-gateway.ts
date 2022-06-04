@@ -287,6 +287,8 @@ Sentry.init({
   environment: process.env.APP_ENV,
 })
 
+const PATH = '/api/graphql'
+
 void (async () => {
   const app = express()
   const httpServer = http.createServer(app)
@@ -355,7 +357,12 @@ void (async () => {
 
   app.disable('x-powered-by')
 
-  app.use(cors({
+  app.use(pinoMiddleware({
+    logger: logger,
+    autoLogging: false
+  }))
+
+  app.use(PATH, cors({
     origin: [
       // @ts-expect-error
       process.env.APP_URL,
@@ -366,16 +373,12 @@ void (async () => {
     allowedHeaders: ['Content-Type', 'Authorization', 'X-overdoll-Security']
   }))
 
-  app.use(matchQueryMiddleware)
-  app.use(pinoMiddleware({
-    logger: logger,
-    autoLogging: false
-  }))
+  app.use(PATH, matchQueryMiddleware)
 
   await server.start()
   server.applyMiddleware({
     app,
-    path: '/',
+    path: PATH,
     cors: false
   })
 

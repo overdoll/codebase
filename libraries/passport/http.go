@@ -102,7 +102,8 @@ func fromRequest(r *http.Request) *Passport {
 		pass, err := unserializeFromString(value.String())
 
 		if err != nil {
-			zap.S().Panicw("failed to unserialize passport", zap.Error(err))
+			zap.S().Errorw("failed to unserialize passport from string", zap.Error(err))
+			return nil
 		}
 
 		return pass

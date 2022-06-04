@@ -7,9 +7,10 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/parley/internal/domain/club_infraction"
 	"overdoll/libraries/errors"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/support"
 	"time"
 )
 
@@ -70,7 +71,7 @@ func (r ClubInfractionCassandraRepository) CreateClubInfractionHistory(ctx conte
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalClubInfractionHistoryToDatabase(clubInfraction)).
 		ExecRelease(); err != nil {
-		return errors.Wrap(err, "failed to create club infraction")
+		return errors.Wrap(support.NewGocqlError(err), "failed to create club infraction")
 	}
 
 	return nil
@@ -89,7 +90,7 @@ func (r ClubInfractionCassandraRepository) DeleteClubInfractionHistory(ctx conte
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalClubInfractionHistoryToDatabase(clubInfraction)).
 		ExecRelease(); err != nil {
-		return errors.Wrap(err, "failed to delete club infraction")
+		return errors.Wrap(support.NewGocqlError(err), "failed to delete club infraction")
 	}
 
 	return nil
@@ -106,7 +107,7 @@ func (r ClubInfractionCassandraRepository) GetAllClubInfractionHistoryByClubIdOp
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&clubInfractionHistory{ClubId: accountId}).
 		SelectRelease(&dbClubInfractionHistory); err != nil {
-		return nil, errors.Wrap(err, "failed to get infraction history for account")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get infraction history for account")
 	}
 
 	var infractionHistory []*club_infraction.ClubInfractionHistory
@@ -152,7 +153,7 @@ func (r ClubInfractionCassandraRepository) GetClubInfractionHistoryByClubId(ctx 
 		Consistency(gocql.LocalQuorum).
 		BindStruct(data).
 		SelectRelease(&dbClubInfractionHistory); err != nil {
-		return nil, errors.Wrap(err, "failed to get infraction history for account")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get infraction history for account")
 	}
 
 	var infractionHistory []*club_infraction.ClubInfractionHistory
@@ -202,10 +203,10 @@ func (r ClubInfractionCassandraRepository) getClubInfractionHistoryById(ctx cont
 		GetRelease(&dbAccountInfractionHistory); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, domainerror.NewNotFoundError("club infraction", id)
+			return nil, apperror.NewNotFoundError("club infraction", id)
 		}
 
-		return nil, errors.Wrap(err, "failed to get club infraction history")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get club infraction history")
 	}
 
 	return club_infraction.UnmarshalClubInfractionHistoryFromDatabase(

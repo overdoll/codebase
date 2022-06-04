@@ -183,7 +183,7 @@ func (r ClubCassandraElasticsearchRepository) CreateClubMember(ctx context.Conte
 	// execute batch
 	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return errors.Wrap(err, "failed to add member to lis")
+		return errors.Wrap(support.NewGocqlError(err), "failed to add member to lis")
 	}
 
 	if err := r.indexClubMember(ctx, member); err != nil {
@@ -213,7 +213,7 @@ func (r ClubCassandraElasticsearchRepository) getClubMemberById(ctx context.Cont
 			return nil, club.ErrClubMemberNotFound
 		}
 
-		return nil, errors.Wrap(err, "failed to get club member by id")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get club member by id")
 	}
 
 	return &clubMem, nil
@@ -233,7 +233,7 @@ func (r ClubCassandraElasticsearchRepository) deleteAccountClubMemberships(ctx c
 			MemberAccountId: accountId,
 		}).
 		SelectRelease(&clubMembers); err != nil {
-		return errors.Wrap(err, "failed to get account club members")
+		return errors.Wrap(support.NewGocqlError(err), "failed to get account club members")
 	}
 
 	if len(clubMembers) == 0 {
@@ -284,7 +284,7 @@ func (r ClubCassandraElasticsearchRepository) deleteAccountClubMemberships(ctx c
 
 		support.MarkBatchIdempotent(batch)
 		if err := r.session.ExecuteBatch(batch); err != nil {
-			return errors.Wrap(err, "failed to delete account club memberships")
+			return errors.Wrap(support.NewGocqlError(err), "failed to delete account club memberships")
 		}
 
 		if err := r.clearAccountDigestCache(ctx, accountId); err != nil {
@@ -365,7 +365,7 @@ func (r ClubCassandraElasticsearchRepository) DeleteClubMember(ctx context.Conte
 	// execute batch
 	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return errors.Wrap(err, "failed to delete member from lists")
+		return errors.Wrap(support.NewGocqlError(err), "failed to delete member from lists")
 	}
 
 	if err := r.clearAccountDigestCache(ctx, member.AccountId()); err != nil {
@@ -398,7 +398,7 @@ func (r ClubCassandraElasticsearchRepository) GetAccountClubMembershipsCount(ctx
 			MemberAccountId: accountId,
 		}).
 		GetRelease(&clubMembersCount); err != nil {
-		return 0, errors.Wrap(err, "failed to get account clubs by account count")
+		return 0, errors.Wrap(support.NewGocqlError(err), "failed to get account clubs by account count")
 	}
 
 	return clubMembersCount.Count, nil
@@ -467,7 +467,7 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubMemberIsSupporter(ctx co
 	// execute batch
 	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return nil, errors.Wrap(err, "failed to update club supporter status")
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update club supporter status")
 	}
 
 	if err := r.clearAccountDigestCache(ctx, clb.MemberAccountId); err != nil {

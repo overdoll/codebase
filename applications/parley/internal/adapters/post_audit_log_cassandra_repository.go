@@ -10,6 +10,7 @@ import (
 	"overdoll/applications/parley/internal/domain/post_audit_log"
 	"overdoll/libraries/bucket"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -180,7 +181,7 @@ func (r PostAuditLogCassandraRepository) CreatePostAuditLog(ctx context.Context,
 
 	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return errors.Wrap(err, "CreatePostAuditLog failed")
+		return errors.Wrap(support.NewGocqlError(err), "CreatePostAuditLog failed")
 	}
 
 	return nil
@@ -200,10 +201,10 @@ func (r PostAuditLogCassandraRepository) getPostAuditLogById(ctx context.Context
 		GetRelease(&postAudit); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, domainerror.NewNotFoundError("post audit log", logId)
+			return nil, apperror.NewNotFoundError("post audit log", logId)
 		}
 
-		return nil, errors.Wrap(err, "getPostAuditLogById failed")
+		return nil, errors.Wrap(support.NewGocqlError(err), "getPostAuditLogById failed")
 	}
 
 	return post_audit_log.UnmarshalPostAuditLogFromDatabase(
@@ -249,10 +250,10 @@ func (r PostAuditLogCassandraRepository) GetRuleIdForPost(ctx context.Context, r
 		GetRelease(&postR); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, domainerror.NewNotFoundError("post rule", postId)
+			return nil, apperror.NewNotFoundError("post rule", postId)
 		}
 
-		return nil, errors.Wrap(err, "GetRuleIdForPost")
+		return nil, errors.Wrap(support.NewGocqlError(err), "GetRuleIdForPost")
 	}
 
 	return &postR.RuleId, nil
@@ -270,7 +271,7 @@ func (r PostAuditLogCassandraRepository) getPostAuditLogBucketsForAccount(ctx co
 			ModeratorAccountId: accountId,
 		}).
 		SelectRelease(&buckets); err != nil {
-		return nil, errors.Wrap(err, "getPostAuditLogBucketsForAccount")
+		return nil, errors.Wrap(support.NewGocqlError(err), "getPostAuditLogBucketsForAccount")
 	}
 
 	var final []int
@@ -308,7 +309,7 @@ func (r PostAuditLogCassandraRepository) SearchPostAuditLogs(ctx context.Context
 			Idempotent(true).
 			BindStruct(postAuditLog{PostId: *filter.PostId()}).
 			SelectRelease(&results); err != nil {
-			return nil, errors.Wrap(err, "SearchPostAuditLogs")
+			return nil, errors.Wrap(support.NewGocqlError(err), "SearchPostAuditLogs")
 		}
 
 		for _, auditLog := range results {
@@ -368,7 +369,7 @@ func (r PostAuditLogCassandraRepository) SearchPostAuditLogs(ctx context.Context
 			Idempotent(true).
 			BindStruct(postAuditLog{Bucket: bucketId, ModeratorAccountId: *filter.ModeratorId()}).
 			SelectRelease(&results); err != nil {
-			return nil, errors.Wrap(err, "SearchPostAuditLogs")
+			return nil, errors.Wrap(support.NewGocqlError(err), "SearchPostAuditLogs")
 		}
 
 		for _, auditLog := range results {

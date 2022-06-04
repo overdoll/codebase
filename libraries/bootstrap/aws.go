@@ -2,6 +2,8 @@ package bootstrap
 
 import (
 	"os"
+	"overdoll/libraries/errors"
+	"overdoll/libraries/sentry_support"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -19,6 +21,7 @@ func InitializeAWSSession() *session.Session {
 	})
 
 	if err != nil {
+		sentry_support.MustCaptureException(errors.Wrap(err, "aws session failed"))
 		zap.S().Fatalw("aws session failed", zap.Error(err))
 	}
 

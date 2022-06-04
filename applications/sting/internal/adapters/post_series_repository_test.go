@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/internal/domain/post"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
@@ -29,8 +29,8 @@ func TestPostSeries_failure(t *testing.T) {
 	require.Error(t, err, "should have received an error while creating the series")
 
 	_, err = postRepo.GetSingleSeriesById(ctx, requester, seriesId)
-	require.True(t, domainerror.IsNotFoundError(err), "series should not be found by id")
+	require.True(t, apperror.IsNotFoundError(err), "series should not be found by id")
 
 	_, err = postRepo.GetSeriesBySlug(ctx, requester, seriesSlug)
-	require.Equal(t, domainerror.IsNotFoundError(err), "series should not be found by slug")
+	require.Equal(t, apperror.IsNotFoundError(err), "series should not be found by slug")
 }

@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"overdoll/libraries/errors"
+	"overdoll/libraries/sentry_support"
 	"syscall"
 	"time"
 )
@@ -25,6 +27,7 @@ func InitializeHttpServer(addr string, handler http.Handler, shutdown func()) {
 
 		if err := server.ListenAndServe(); err != nil {
 			if err != http.ErrServerClosed {
+				sentry_support.MustCaptureException(errors.Wrap(err, "failed to serve http server"))
 				zap.S().Fatalw("failed to serve http server", zap.Error(err))
 			}
 		}

@@ -4,6 +4,7 @@ import (
 	"context"
 	"go.uber.org/zap"
 	ringer "overdoll/applications/ringer/proto"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/sentry_support"
 	"time"
@@ -30,6 +31,7 @@ func NewRingerClient(ctx context.Context, address string) (ringer.RingerClient, 
 	)
 
 	if err != nil {
+		sentry_support.MustCaptureException(errors.Wrap(err, "failed to start new ringer client"))
 		zap.S().Fatalw("failed to start new ringer client", zap.Error(err))
 	}
 

@@ -2,12 +2,7 @@ package details
 
 import (
 	"github.com/biter777/countries"
-	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/principal"
-)
-
-var (
-	ErrAccountDetailsNotFound = domainerror.NewValidation("account details not found")
 )
 
 type AccountDetails struct {

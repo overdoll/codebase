@@ -2,7 +2,7 @@ package resolvers
 
 import (
 	"context"
-	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/errors/apperror"
 	"time"
 
 	"github.com/vektah/gqlparser/v2/gqlerror"
@@ -58,7 +58,7 @@ func (r AccountResolver) ModeratorSettings(ctx context.Context, obj *types.Accou
 		Principal: principal.FromContext(ctx),
 	})
 
-	if err != nil && !domainerror.IsNotFoundError(err) {
+	if err != nil && !apperror.IsNotFoundError(err) {
 		return nil, err
 	}
 

@@ -8,6 +8,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"overdoll/libraries/support"
 	"overdoll/libraries/zap_support"
 	"time"
 )
@@ -52,6 +53,12 @@ func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 				zap.S().Errorw("unary server error", zap.Error(err), zap.String("method", info.FullMethod))
 				hub.CaptureException(err)
 			}
+
+			if support.IsDebug() {
+				return resp, err
+			}
+
+			return resp, status.New(st.Code(), "internal server error").Err()
 		}
 
 		return resp, err
@@ -90,8 +97,14 @@ func StreamServerInterceptor() grpc.StreamServerInterceptor {
 				zap.S().Errorw("stream server error", zap.Error(err), zap.String("method", info.FullMethod))
 				hub.CaptureException(err)
 			}
+
+			if support.IsDebug() {
+				return err
+			}
+
+			return status.New(st.Code(), "internal server error").Err()
 		}
 
-		return err
+		return nil
 	}
 }
