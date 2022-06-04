@@ -13,8 +13,15 @@ import (
 func PaymentFlow(app *app.Application) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
+		paymentToken := c.Request.URL.Query().Get("token")
+
+		if paymentToken == "" {
+			c.Data(http.StatusBadRequest, "text", []byte("payment token not present"))
+			return
+		}
+
 		paymentLink, err := app.Commands.GenerateCCBillFlexFormsPaymentLink.Handle(c.Request.Context(), command.GenerateCCBillFlexFormsPaymentLink{
-			PaymentToken: c.Request.URL.Query().Get("token"),
+			PaymentToken: paymentToken,
 		})
 
 		if err != nil {

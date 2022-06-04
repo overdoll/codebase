@@ -3,12 +3,12 @@ package ccbill
 import (
 	"crypto/rand"
 	"encoding/hex"
-	"errors"
 	"github.com/golang/protobuf/proto"
 	"golang.org/x/crypto/nacl/secretbox"
 	"io"
 	"os"
 	hades "overdoll/applications/hades/proto"
+	"overdoll/libraries/errors"
 )
 
 func EncryptCCBillPayment(payment *hades.CCBillPayment) (*string, error) {
@@ -41,7 +41,7 @@ func DecryptCCBillPayment(content string) (*hades.CCBillPayment, error) {
 
 	contentBytes, err := hex.DecodeString(content)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to decode hex string")
 	}
 
 	var secretKey [32]byte

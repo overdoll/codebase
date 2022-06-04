@@ -3,6 +3,7 @@ package ccbill
 import (
 	"os"
 	hades "overdoll/applications/hades/proto"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/domainerror"
 	"time"
 )
@@ -21,7 +22,7 @@ func NewFlexFormsPaymentLinkFromEncryptedPaymentToken(paymentToken string) (*Fle
 	decrypted, err := DecryptCCBillPayment(paymentToken)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "error decrypting payment token")
 	}
 
 	timestamp := decrypted.HeaderConfiguration.CreatedAt.AsTime()

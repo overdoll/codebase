@@ -1,50 +1,57 @@
 package sentry_support
 
 import (
+	"context"
 	"github.com/getsentry/sentry-go"
-	sentrygin "github.com/getsentry/sentry-go/gin"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"net"
 	"net/http"
 	"os"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/graphql"
 	"overdoll/libraries/zap_support"
 	"strings"
+	"time"
 )
 
-func SentryToContextGinMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-
-		if hub := sentrygin.GetHubFromContext(c); hub != nil {
-			c.Request = c.Request.WithContext(sentry.SetHubOnContext(c.Request.Context(), hub))
+// Check for a broken connection, as this is what Gin does already.
+func isBrokenPipeError(err interface{}) bool {
+	if netErr, ok := err.(*net.OpError); ok {
+		if sysErr, ok := netErr.Err.(*os.SyscallError); ok {
+			if strings.Contains(strings.ToLower(sysErr.Error()), "broken pipe") ||
+				strings.Contains(strings.ToLower(sysErr.Error()), "connection reset by peer") {
+				return true
+			}
 		}
-		c.Next()
 	}
+	return false
 }
 
-func SentryRecoveryGinMiddleware() gin.HandlerFunc {
+func SentryGinMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		defer func() {
-			if err := recover(); err != nil {
-				// Check for a broken connection, as it is not really a
-				// condition that warrants a panic stack trace.
-				var brokenPipe bool
-				if ne, ok := err.(*net.OpError); ok {
-					if se, ok := ne.Err.(*os.SyscallError); ok {
-						if strings.Contains(strings.ToLower(se.Error()), "broken pipe") || strings.Contains(strings.ToLower(se.Error()), "connection reset by peer") {
-							brokenPipe = true
-						}
-					}
-				}
+		hub := sentry.GetHubFromContext(c.Request.Context())
+		if hub == nil {
+			hub = sentry.CurrentHub().Clone()
+		}
+		hub.Scope().SetRequest(c.Request)
+		c.Request = c.Request.WithContext(sentry.SetHubOnContext(c.Request.Context(), hub))
 
-				if brokenPipe {
-					c.Error(err.(error))
-					c.Abort()
-					return
-				}
+		if r := recover(); r != nil {
+			if !isBrokenPipeError(r) {
+				var err error
+				errors.RecoverPanic(r, &err)
 
-				zap_support.SafePanic("panic during http request", zap.Any("stack", err))
+				zap_support.SafePanic("panic during http request", zap.Error(err))
+
+				eventID := hub.RecoverWithContext(
+					context.WithValue(c.Request.Context(), sentry.RequestContextKey, r),
+					err,
+				)
+
+				if eventID != nil {
+					hub.Flush(time.Second * 2)
+				}
 
 				if c.Request.URL.Path == "/api/graphql" {
 					c.AbortWithStatusJSON(http.StatusOK, graphql.InternalServerError)
@@ -52,7 +59,8 @@ func SentryRecoveryGinMiddleware() gin.HandlerFunc {
 					c.Data(http.StatusInternalServerError, "text", []byte("internal server error"))
 				}
 			}
-		}()
+		}
+
 		c.Next()
 	}
 }

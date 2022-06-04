@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"overdoll/libraries/errors/graphql"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/support"
 )
 
 func PrincipalHttpMiddleware() gin.HandlerFunc {
@@ -36,10 +35,9 @@ func PrincipalHttpMiddleware() gin.HandlerFunc {
 			// add principal to context
 			if hub := sentry.GetHubFromContext(c.Request.Context()); hub != nil {
 				hub.Scope().SetUser(sentry.User{
-					Email:     prin.Email(),
-					ID:        prin.AccountId(),
-					IPAddress: support.GetIPFromRequest(c.Request),
-					Username:  prin.Username(),
+					Email:    prin.Email(),
+					ID:       prin.AccountId(),
+					Username: prin.Username(),
 				})
 
 				var clubExtensions interface{}
@@ -52,7 +50,7 @@ func PrincipalHttpMiddleware() gin.HandlerFunc {
 					}
 				}
 
-				hub.Scope().SetExtra("principal", map[string]interface{}{
+				hub.Scope().SetExtra("Principal", map[string]interface{}{
 					"accountId":     prin.AccountId(),
 					"secure":        prin.IsSecure(),
 					"locked":        prin.IsLocked(),

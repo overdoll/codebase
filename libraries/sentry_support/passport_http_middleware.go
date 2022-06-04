@@ -13,7 +13,6 @@ func PassportHttpMiddleware() gin.HandlerFunc {
 		if pass := passport.FromContext(c.Request.Context()); pass != nil {
 			if hub := sentry.GetHubFromContext(c.Request.Context()); hub != nil {
 				passportData := map[string]interface{}{
-					"ip":        pass.IP(),
 					"userAgent": pass.UserAgent(),
 					"deviceId":  pass.DeviceID(),
 				}
@@ -23,7 +22,7 @@ func PassportHttpMiddleware() gin.HandlerFunc {
 					passportData["accountId"] = pass.AccountID()
 				}
 
-				hub.Scope().SetExtra("passport", passportData)
+				hub.Scope().SetExtra("Passport", passportData)
 
 				hub.Scope().AddBreadcrumb(&sentry.Breadcrumb{
 					Category: "context.passport",

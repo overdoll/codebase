@@ -1,5 +1,10 @@
 package domainerror
 
+import (
+	errors2 "github.com/pkg/errors"
+	"overdoll/libraries/errors"
+)
+
 type (
 	// Validation represents validation error.
 	Validation struct {
@@ -9,9 +14,18 @@ type (
 
 // NewValidation returns new validation error.
 func NewValidation(message string) error {
-	return &Validation{
+
+	var err error
+
+	err = &Validation{
 		Message: message,
 	}
+
+	err = errors2.WithStack(err)
+	err = errors.PopStack(err)
+	err = errors.PopStack(err)
+
+	return err
 }
 
 // Error returns string message.

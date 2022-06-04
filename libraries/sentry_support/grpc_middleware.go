@@ -8,17 +8,22 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/support"
 	"overdoll/libraries/zap_support"
 	"time"
 )
 
 func recoverWithSentry(hub *sentry.Hub, r interface{}, ctx context.Context, method string) error {
-	zap_support.SafePanic("panic while running grpc", zap.Any("stack", r), zap.String("method", method))
 
-	eventID := hub.RecoverWithContext(ctx, r)
+	var err error
+	errors.RecoverPanic(r, &err)
+
+	zap_support.SafePanic("panic while running grpc", zap.Error(err), zap.String("method", method))
+
+	eventID := hub.RecoverWithContext(ctx, err)
 	if eventID != nil {
-		hub.Flush(time.Second * 2)
+		hub.Flush(time.Second * 5)
 	}
 
 	return status.Errorf(codes.Internal, "unrecoverable error")

@@ -10,17 +10,26 @@ import (
 	domainerror2 "overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/support"
 	"overdoll/libraries/zap_support"
+	"time"
 )
 
 var (
 	unrecoverableError = errors.New("internal server error")
 )
 
-func GraphQLRecoverFunc(ctx context.Context, err interface{}) error {
+func GraphQLRecoverFunc(ctx context.Context, r interface{}) error {
+
+	var err error
+	errors.RecoverPanic(r, &err)
+	zap_support.SafePanic("panic while resolving graphql", zap.Any("error", err))
+
 	if hub := sentry.GetHubFromContext(ctx); hub != nil {
-		defer hub.RecoverWithContext(ctx, err)
+		eventID := hub.RecoverWithContext(ctx, err)
+		if eventID != nil {
+			hub.Flush(time.Second * 5)
+		}
 	}
-	zap_support.SafePanic("panic while running grpc", zap.Any("stack", err))
+
 	return unrecoverableError
 }
 
@@ -64,8 +73,8 @@ func GraphQLErrorPresenter(ctx context.Context, e error) *gqlerror.Error {
 func GraphQLAroundOperations(ctx context.Context, next graphql.OperationHandler) graphql.ResponseHandler {
 	oc := graphql.GetOperationContext(ctx)
 	if hub := sentry.GetHubFromContext(ctx); hub != nil {
-		hub.Scope().SetExtra("operation", oc.OperationName)
-		hub.Scope().SetExtra("query", oc.RawQuery)
+		hub.Scope().SetExtra("GraphQL Operation", oc.OperationName)
+		hub.Scope().SetExtra("GraphQL Query", oc.RawQuery)
 	}
 
 	return next(ctx)

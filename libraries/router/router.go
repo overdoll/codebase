@@ -1,7 +1,6 @@
 package router
 
 import (
-	sentrygin "github.com/getsentry/sentry-go/gin"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"overdoll/libraries/passport"
@@ -30,15 +29,8 @@ func NewRawGinRouter() *gin.Engine {
 	// log any errors that occurred
 	router.Use(customLogger(zap.S()))
 
-	// recover errors during panics (sentry will panic when errors are caught, so we can log them and move on afterwards)
-	router.Use(sentry_support.SentryRecoveryGinMiddleware())
-
-	router.Use(sentrygin.New(sentrygin.Options{
-		Repanic: true,
-	}))
-
-	// add sentry to our gin middleware using sentry gin
-	router.Use(sentry_support.SentryToContextGinMiddleware())
+	// sentry middleware to recover from panics & log errors, as well as adding sentry to the initial context
+	router.Use(sentry_support.SentryGinMiddleware())
 
 	return router
 }

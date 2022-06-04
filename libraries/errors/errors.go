@@ -112,7 +112,7 @@ func callers(skip int) []uintptr {
 	return pc[:n] // return everything that we captured
 }
 
-// RecoverPanic turns a panic into an error, adjusting the stacktrace so it originates at
+// RecoverPanic turns a panic into an error, adjusting the stacktrace so that it originates at
 // the line that caused it.
 //
 // Example:
