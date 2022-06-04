@@ -7,6 +7,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//libraries/passport",
+        "//libraries/principal",
         "//libraries/sentry_support",
         "//libraries/support",
         "@com_github_getsentry_sentry_go//gin",

@@ -8,8 +8,10 @@ go_library(
     deps = [
         "//applications/puppy/internal/app",
         "//libraries/crypt",
+        "//libraries/graphql",
         "//libraries/passport",
         "//libraries/router",
+        "//libraries/sentry_support",
         "@com_github_gin_gonic_gin//:gin",
         "@org_uber_go_zap//:zap",
     ],

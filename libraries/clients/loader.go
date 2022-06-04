@@ -23,10 +23,10 @@ func NewLoaderClient(ctx context.Context, address string) (loader.LoaderClient, 
 		grpc.WithInsecure(),
 		grpc.WithStreamInterceptor(grpc_retry.StreamClientInterceptor(opts...)),
 		grpc.WithUnaryInterceptor(grpc_retry.UnaryClientInterceptor(opts...)),
-		grpc.WithStreamInterceptor(passport.StreamClientInterceptor()),
-		grpc.WithUnaryInterceptor(passport.UnaryClientInterceptor()),
 		grpc.WithUnaryInterceptor(sentry_support.UnaryClientInterceptor()),
 		grpc.WithStreamInterceptor(sentry_support.StreamClientInterceptor()),
+		grpc.WithStreamInterceptor(passport.StreamClientInterceptor()),
+		grpc.WithUnaryInterceptor(passport.UnaryClientInterceptor()),
 	)
 
 	if err != nil {

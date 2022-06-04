@@ -41,15 +41,15 @@ func InitializeGRPCServer(addr string, f func(server *grpc.Server)) {
 	grpcServer := grpc.NewServer(
 		grpc_middleware.WithUnaryServerChain(
 			grpc_ctxtags.UnaryServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)),
+			sentry_support.UnaryServerInterceptor(),
 			passport.UnaryServerInterceptor(),
 			logUnaryInterceptor,
-			sentry_support.UnaryServerInterceptor(),
 		),
 		grpc_middleware.WithStreamServerChain(
 			grpc_ctxtags.StreamServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)),
+			sentry_support.StreamServerInterceptor(),
 			passport.StreamServerInterceptor(),
 			logStreamInterceptor,
-			sentry_support.StreamServerInterceptor(),
 		),
 	)
 

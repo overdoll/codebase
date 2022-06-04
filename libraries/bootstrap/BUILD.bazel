@@ -18,7 +18,7 @@ go_library(
         "//libraries/passport",
         "//libraries/sentry_support",
         "//libraries/support",
-        "//libraries/zap_utilities",
+        "//libraries/zap_support",
         "@com_github_aws_aws_sdk_go//aws",
         "@com_github_aws_aws_sdk_go//aws/credentials",
         "@com_github_aws_aws_sdk_go//aws/session",

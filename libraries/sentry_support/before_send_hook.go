@@ -32,8 +32,8 @@ func BeforeSendHook(event *sentry.Event, hint *sentry.EventHint) *sentry.Event {
 			oldFrames := exception.Stacktrace.Frames
 			exception.Stacktrace.Frames = []sentry.Frame{}
 			for _, frame := range oldFrames {
-				// skip frames with sentry support
-				if !strings.HasPrefix(frame.Module, "overdoll/libraries/sentry_support") {
+				// skip frames with sentry support + zap_support (so logger is excluded from frames
+				if !strings.HasPrefix(frame.Module, "overdoll/libraries/sentry_support") && !strings.HasPrefix(frame.Module, "overdoll/libraries/zap_support") {
 					exception.Stacktrace.Frames = append(exception.Stacktrace.Frames, frame)
 				}
 			}
