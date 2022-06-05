@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "zap_adapters",
+    srcs = [
+        "aws.go",
+        "elastic.go",
+        "gocql.go",
+        "temporal.go",
+    ],
+    importpath = "overdoll/libraries/zap_support/zap_adapters",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@io_temporal_go_sdk//log",
+        "@org_uber_go_zap//:zap",
+    ],
+)

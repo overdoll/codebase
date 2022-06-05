@@ -75,8 +75,10 @@ func GraphQLErrorPresenter(ctx context.Context, e error) *gqlerror.Error {
 func GraphQLAroundOperations(ctx context.Context, next graphql.OperationHandler) graphql.ResponseHandler {
 	oc := graphql.GetOperationContext(ctx)
 	if hub := sentry.GetHubFromContext(ctx); hub != nil {
-		hub.Scope().SetExtra("GraphQL Operation", oc.OperationName)
-		hub.Scope().SetExtra("GraphQL Query", oc.RawQuery)
+		hub.Scope().SetContext("GraphQL", map[string]interface{}{
+			"Query":     oc.RawQuery,
+			"Operation": oc.OperationName,
+		})
 	}
 
 	return next(ctx)

@@ -59,6 +59,7 @@ func InitializeGRPCServer(addr string, f func(server *grpc.Server)) {
 	f(grpcServer)
 
 	zap.S().Infof("starting grpc server on %s", addr)
+	sentry_support.SetServerType("grpc")
 
 	listener, err := net.Listen("tcp", addr)
 

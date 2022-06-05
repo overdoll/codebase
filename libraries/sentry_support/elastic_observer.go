@@ -2,7 +2,6 @@ package sentry_support
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"github.com/getsentry/sentry-go"
 	"io"
@@ -43,15 +42,10 @@ func (t *ElasticObserverTransport) RoundTrip(req *http.Request) (*http.Response,
 			level = "error"
 		}
 
-		var data map[string]interface{}
-
-		_ = json.Unmarshal(bd, &data)
-
 		hub.Scope().AddBreadcrumb(&sentry.Breadcrumb{
 			Type:     "query",
 			Category: "elastic.request",
 			Message:  fmt.Sprintf("%s %s took %s", req.Method, req.URL.Path, time.Now().Sub(start).String()),
-			Data:     data,
 			Level:    sentry.Level(level),
 		}, 10)
 	}

@@ -35,7 +35,6 @@ func PrincipalHttpMiddleware() gin.HandlerFunc {
 			// add principal to context
 			if hub := sentry.GetHubFromContext(c.Request.Context()); hub != nil {
 				hub.Scope().SetUser(sentry.User{
-					Email:    prin.Email(),
 					ID:       prin.AccountId(),
 					Username: prin.Username(),
 				})
@@ -44,21 +43,20 @@ func PrincipalHttpMiddleware() gin.HandlerFunc {
 
 				if prin.ClubExtension() != nil {
 					clubExtensions = map[string]interface{}{
-						"supportedClubIds":  prin.ClubExtension().SupportedClubIds(),
-						"clubMembershipIds": prin.ClubExtension().SupportedClubIds(),
-						"ownerClubIds":      prin.ClubExtension().OwnerClubIds(),
+						"Supported Club Ids":  prin.ClubExtension().SupportedClubIds(),
+						"Club Membership Ids": prin.ClubExtension().SupportedClubIds(),
+						"Owner Club Ids":      prin.ClubExtension().OwnerClubIds(),
 					}
 				}
 
-				hub.Scope().SetExtra("Principal", map[string]interface{}{
-					"accountId":     prin.AccountId(),
-					"secure":        prin.IsSecure(),
-					"locked":        prin.IsLocked(),
-					"deleting":      prin.IsDeleting(),
-					"roles":         prin.Roles(),
-					"username":      prin.Username(),
-					"email":         prin.Email(),
-					"clubExtension": clubExtensions,
+				hub.Scope().SetContext("Principal", map[string]interface{}{
+					"Account ID":     prin.AccountId(),
+					"Is Secure":      prin.IsSecure(),
+					"Is Locked":      prin.IsLocked(),
+					"Is Deleting":    prin.IsDeleting(),
+					"Roles":          prin.Roles(),
+					"Username":       prin.Username(),
+					"Club Extension": clubExtensions,
 				})
 
 				hub.Scope().AddBreadcrumb(&sentry.Breadcrumb{

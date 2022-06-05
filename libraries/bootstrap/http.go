@@ -14,6 +14,8 @@ import (
 
 func InitializeHttpServer(addr string, handler http.Handler, shutdown func()) {
 
+	sentry_support.SetServerType("http")
+
 	server := &http.Server{
 		Addr:         addr,
 		WriteTimeout: time.Second * 10,
