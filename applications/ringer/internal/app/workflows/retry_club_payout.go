@@ -29,7 +29,7 @@ func RetryClubPayout(ctx workflow.Context, input RetryClubPayoutInput) error {
 
 	// spawn a child workflow to process the payout
 	childWorkflowOptions := workflow.ChildWorkflowOptions{
-		WorkflowID:        "ProcessClubPayout_" + input.PayoutId,
+		WorkflowID:        "ringer.ProcessClubPayout_" + input.PayoutId,
 		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 	}
 

@@ -41,7 +41,7 @@ func RemovePostLike(ctx workflow.Context, input RemovePostLikeInput) error {
 	// spawn a child workflow asynchronously to count the total likes
 	// will also ensure we only have 1 of this workflow running at any time
 	childWorkflowOptions := workflow.ChildWorkflowOptions{
-		WorkflowID:        "UpdatePostTagsTotalLikesCount_" + input.PostId,
+		WorkflowID:        "sting.UpdatePostTagsTotalLikesCount_" + input.PostId,
 		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 	}
 

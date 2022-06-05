@@ -21,9 +21,8 @@ func InitializeElasticSearchSession() *elastic.Client {
 		elastic.SetRetryStatusCodes(429, 504),
 		elastic.SetHttpClient(sentry_support.NewElasticObserverHttpClient()),
 		// USEFUL FOR DEBUGGING QUERIES!
-		//elastic.SetErrorLog(log.New(os.Stderr, "ELASTIC ", log.LstdFlags)),
-		//elastic.SetInfoLog(log.New(os.Stdout, "", log.LstdFlags)),
-		//elastic.SetTraceLog(log.New(os.Stderr, "[[ELASTIC]]", 0)),
+		//elastic.SetErrorLog(zap_adapters.NewElasticZapAdapter(zap.S(), false)),
+		//elastic.SetInfoLog(zap_adapters.NewElasticZapAdapter(zap.S(), true)),
 	)
 
 	if err != nil {

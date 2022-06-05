@@ -25,6 +25,5 @@ go_library(
         "//applications/eva/internal/app/command",
         "//applications/eva/internal/domain/account",
         "//applications/eva/internal/domain/session",
-        "//libraries/sentry_support",
     ],
 )

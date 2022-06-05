@@ -45,7 +45,7 @@ func DeleteAccountData(ctx workflow.Context, input DeleteAccountDataInput) error
 
 		// spawn a child workflow that will delete the post like
 		childWorkflowOptions := workflow.ChildWorkflowOptions{
-			WorkflowID:        "RemovePostLike_" + postId + "_" + input.AccountId,
+			WorkflowID:        "sting.RemovePostLike_" + postId + "_" + input.AccountId,
 			ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 		}
 

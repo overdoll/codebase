@@ -63,7 +63,7 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 	} else {
 
 		childWorkflowOptions := workflow.ChildWorkflowOptions{
-			WorkflowID:        "PublishPost_" + input.PostId,
+			WorkflowID:        "sting.PublishPost_" + input.PostId,
 			ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 		}
 

@@ -4,6 +4,7 @@ import (
 	"os"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/sentry_support"
+	"overdoll/libraries/zap_support/zap_adapters"
 	"strings"
 	"time"
 
@@ -40,9 +41,14 @@ func initializeDatabaseSession(keyspace string) (gocqlx.Session, error) {
 	cluster.QueryObserver = &sentry_support.QueryObserver{}
 	cluster.BatchObserver = &sentry_support.BatchObserver{}
 	cluster.RetryPolicy = &gocql.ExponentialBackoffRetryPolicy{
+		Min:        time.Second,
+		Max:        10 * time.Second,
 		NumRetries: 5,
-		Max:        time.Second * 7,
 	}
+
+	cluster.Logger = zap_adapters.NewGocqlZapAdapter(zap.S())
+	cluster.Dialer = &gocql.ScyllaShardAwareDialer{}
+	cluster.PoolConfig.HostSelectionPolicy = gocql.TokenAwareHostPolicy(gocql.RoundRobinHostPolicy())
 
 	// Wrap session on creation with gocqlx
 	session, err := gocqlx.WrapSession(cluster.CreateSession())

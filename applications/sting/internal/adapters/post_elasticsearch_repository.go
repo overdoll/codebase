@@ -363,7 +363,7 @@ func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, re
 		return nil, paging.ErrCursorNotPresent
 	}
 
-	suspendedClubIds, err := r.getTerminatedClubIds(ctx)
+	terminatedClubIds, err := r.getTerminatedClubIds(ctx)
 
 	if err != nil {
 		return nil, err
@@ -373,38 +373,48 @@ func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, re
 		return nil, err
 	}
 
-	query := elastic.NewFunctionScoreQuery()
+	query := elastic.NewBoolQuery()
 
-	// decay from initial post time
-	postedTimeFunc := elastic.
-		NewGaussDecayFunction().
-		FieldName("posted_at").
-		Scale("1d").
-		Decay(0.5)
+	var filterQueries []elastic.Query
 
-	// multiply by likes for this post
-	likesFunc := elastic.
-		NewFieldValueFactorFunction().
-		Field("likes").
-		Factor(1).
-		Modifier("none")
+	filterQueries = append(filterQueries, elastic.NewTermQuery("state", post.Published.String()))
 
-	query.Add(elastic.NewTermQuery("state", post.Published.String()), postedTimeFunc)
-	query.Add(elastic.NewTermsQueryFromStrings("supporter_only_status", post.None.String(), post.Partial.String()), postedTimeFunc)
-
-	query.Add(elastic.NewBoolQuery().MustNot(elastic.NewTermsQueryFromStrings("club_id", suspendedClubIds...)), postedTimeFunc)
+	filterQueries = append(filterQueries, elastic.NewBoolQuery().
+		MustNot(elastic.NewTermsQueryFromStrings("club_id", terminatedClubIds...)),
+	)
 
 	if len(filter.AudienceIds()) > 0 {
-		query.Add(
-			elastic.NewTermsQueryFromStrings("audience_id", filter.AudienceIds()...),
-			likesFunc,
-		)
-	} else {
-		query.AddScoreFunc(likesFunc)
+		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("audience_id", filter.AudienceIds()...))
 	}
 
+	if filterQueries != nil {
+		query.Filter(filterQueries...)
+	}
+
+	scoreQuery := elastic.NewFunctionScoreQuery()
+
+	// decay from initial post time
+	scoreQuery.AddScoreFunc(
+		elastic.
+			NewGaussDecayFunction().
+			FieldName("posted_at").
+			Scale("1d").
+			Decay(0.5),
+	)
+
+	// multiply by likes for this post
+	scoreQuery.AddScoreFunc(
+		elastic.
+			NewFieldValueFactorFunction().
+			Field("likes").
+			Factor(1).
+			Modifier("none"),
+	)
+
+	query.Must(scoreQuery)
+
 	// multiply results
-	query.ScoreMode("multiply")
+	scoreQuery.ScoreMode("multiply")
 
 	builder.Query(query)
 

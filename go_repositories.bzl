@@ -624,8 +624,8 @@ def go_repositories():
         build_file_proto_mode = "disable",
         importpath = "github.com/gocql/gocql",
         replace = "github.com/scylladb/gocql",
-        sum = "h1:BLQMVhKY1c1dUCwYGj1EdubK8qfFyCtJi8XIQu/5IU0=",
-        version = "v0.0.0-20201029162719-81a4afe636ae",
+        sum = "h1:w1ZdsFW72pJDge3Iv6mLum27rMHRDNMjLf2Vg8XdpSA=",
+        version = "v1.6.0",
     )
 
     go_repository(
@@ -1741,8 +1741,8 @@ def go_repositories():
         name = "com_github_scylladb_gocqlx_v2",
         build_file_proto_mode = "disable",
         importpath = "github.com/scylladb/gocqlx/v2",
-        sum = "h1:qEuomw8ymIp+ocHqcFPgTssByJx8UJIRTc5MAXlLYQk=",
-        version = "v2.6.0",
+        sum = "h1:/w1VeJHCEAsg9eTculTvIS9eIe/VmEu0clhlH1CF7lc=",
+        version = "v2.7.0",
     )
 
     go_repository(

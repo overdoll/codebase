@@ -95,7 +95,7 @@ func CCBillRenewalSuccess(ctx workflow.Context, input CCBillRenewalSuccessInput)
 
 	// spawn a child workflow that will calculate club transaction metrics
 	childCtx := workflow.WithChildOptions(ctx, workflow.ChildWorkflowOptions{
-		WorkflowID:        "ClubTransactionMetric_" + uniqueTransactionId,
+		WorkflowID:        "hades.ClubTransactionMetric_" + uniqueTransactionId,
 		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 	})
 

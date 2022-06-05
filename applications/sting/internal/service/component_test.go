@@ -9,6 +9,7 @@ import (
 	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/libraries/principal"
+	"time"
 
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/domain/post"
@@ -68,7 +69,7 @@ func newPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
 	require.NoError(t, err)
 
 	err = pst.UpdateAudienceRequest(prin, post.UnmarshalAudienceFromDatabase(
-		"1pcKiQL7dgUW8CIN7uO1wqFaMql", "StandardAudience", map[string]string{"en": "Standard Audience"}, nil, 1, 0, 0,
+		"1pcKiQL7dgUW8CIN7uO1wqFaMql", "StandardAudience", map[string]string{"en": "Standard Audience"}, nil, 1, 0, 0, time.Now(),
 	))
 
 	require.NoError(t, err)

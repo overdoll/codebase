@@ -31,7 +31,7 @@ func NewSupporterPost(ctx workflow.Context, input NewSupporterPostInput) error {
 		return err
 	}
 
-	workflowId := "ClubSupporterPostNotifications_" + input.ClubId
+	workflowId := "stella.ClubSupporterPostNotifications_" + input.ClubId
 
 	// here, we cancel the workflow if there was an existing workflow that is responsible for sending notifications
 	if err := workflow.RequestCancelExternalWorkflow(ctx, workflowId, "").Get(ctx, nil); err != nil {

@@ -171,7 +171,7 @@ func (r EventTemporalRepository) CCBillNewSaleSuccess(ctx context.Context, paylo
 
 	options := client.StartWorkflowOptions{
 		TaskQueue:             viper.GetString("temporal.queue"),
-		ID:                    "CCBillNewSaleOrUpSaleSuccess_" + input.SubscriptionId + "_" + input.TransactionId,
+		ID:                    "hades.CCBillNewSaleOrUpSaleSuccess_" + input.SubscriptionId + "_" + input.TransactionId,
 		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_REJECT_DUPLICATE,
 	}
 
@@ -288,7 +288,7 @@ func (r EventTemporalRepository) CCBillRenewalSuccess(ctx context.Context, paylo
 
 	options := client.StartWorkflowOptions{
 		TaskQueue:             viper.GetString("temporal.queue"),
-		ID:                    "CCBillRenewalSuccess_" + input.SubscriptionId + "_" + input.TransactionId,
+		ID:                    "hades.CCBillRenewalSuccess_" + input.SubscriptionId + "_" + input.TransactionId,
 		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_REJECT_DUPLICATE,
 	}
 
@@ -372,7 +372,7 @@ func (r EventTemporalRepository) CCBillChargeback(ctx context.Context, payload [
 
 	options := client.StartWorkflowOptions{
 		TaskQueue:             viper.GetString("temporal.queue"),
-		ID:                    "CCBillChargeback_" + input.SubscriptionId + "_" + input.TransactionId,
+		ID:                    "hades.CCBillChargeback_" + input.SubscriptionId + "_" + input.TransactionId,
 		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_REJECT_DUPLICATE,
 	}
 
@@ -455,7 +455,7 @@ func (r EventTemporalRepository) CCBillRefund(ctx context.Context, payload []byt
 
 	options := client.StartWorkflowOptions{
 		TaskQueue:             viper.GetString("temporal.queue"),
-		ID:                    "CCBillRefund_" + input.SubscriptionId + "_" + input.TransactionId,
+		ID:                    "hades.CCBillRefund_" + input.SubscriptionId + "_" + input.TransactionId,
 		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_REJECT_DUPLICATE,
 	}
 
@@ -509,7 +509,7 @@ func (r EventTemporalRepository) CCBillVoid(ctx context.Context, payload []byte)
 
 	options := client.StartWorkflowOptions{
 		TaskQueue:             viper.GetString("temporal.queue"),
-		ID:                    "CCBillVoid_" + input.SubscriptionId + "_" + input.TransactionId,
+		ID:                    "hades.CCBillVoid_" + input.SubscriptionId + "_" + input.TransactionId,
 		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_REJECT_DUPLICATE,
 	}
 
@@ -549,7 +549,7 @@ func (r EventTemporalRepository) CCBillCancellation(ctx context.Context, payload
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "CCBillCancellation_" + input.SubscriptionId,
+		ID:        "hades.CCBillCancellation_" + input.SubscriptionId,
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CCBillCancellation, workflows.CCBillCancellationInput{
@@ -586,7 +586,7 @@ func (r EventTemporalRepository) CCBillExpiration(ctx context.Context, payload [
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "CCBillExpiration_" + input.SubscriptionId,
+		ID:        "hades.CCBillExpiration_" + input.SubscriptionId,
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CCBillExpiration, workflows.CCBillExpirationInput{
@@ -625,7 +625,7 @@ func (r EventTemporalRepository) CCBillUserReactivation(ctx context.Context, pay
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "CCBillUserReactivation_" + uuid.New().String(),
+		ID:        "hades.CCBillUserReactivation_" + uuid.New().String(),
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CCBillUserReactivation, workflows.CCBillUserReactivationInput{
@@ -663,7 +663,7 @@ func (r EventTemporalRepository) CCBillBillingDateChange(ctx context.Context, pa
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "CCBillBillingDateChange_" + uuid.New().String(),
+		ID:        "hades.CCBillBillingDateChange_" + uuid.New().String(),
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CCBillBillingDateChange, workflows.CCBillBillingDateChangeInput{
@@ -716,7 +716,7 @@ func (r EventTemporalRepository) CCBillCustomerDataUpdate(ctx context.Context, p
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "CCBillCustomerDataUpdate_" + uuid.New().String(),
+		ID:        "hades.CCBillCustomerDataUpdate_" + uuid.New().String(),
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CCBillCustomerDataUpdate, workflows.CCBillCustomerDataUpdateInput{
@@ -778,7 +778,7 @@ func (r EventTemporalRepository) CCBillRenewalFailure(ctx context.Context, paylo
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "CCBillRenewalFailure_" + uuid.New().String(),
+		ID:        "hades.CCBillRenewalFailure_" + uuid.New().String(),
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CCBillRenewalFailure, workflows.CCBillRenewalFailureInput{
@@ -803,7 +803,7 @@ func (r EventTemporalRepository) CancelActiveSupporterSubscriptionsForClub(ctx c
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "CancelActiveSubscriptionsForClub_" + clubId,
+		ID:        "hades.CancelActiveSubscriptionsForClub_" + clubId,
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CancelActiveSupporterSubscriptionsForClub, workflows.CancelActiveSupporterSubscriptionsForClubInput{
@@ -823,7 +823,7 @@ func (r EventTemporalRepository) CancelAccountClubSupporterSubscription(ctx cont
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "CancelAccountClubSupporterSubscription_" + subscription.Id(),
+		ID:        "hades.CancelAccountClubSupporterSubscription_" + subscription.Id(),
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CancelAccountClubSupporterSubscription, workflows.CancelAccountClubSupporterSubscriptionInput{

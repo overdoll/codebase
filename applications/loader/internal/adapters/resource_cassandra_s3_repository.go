@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudfront/sign"
 	"github.com/aws/aws-sdk-go/service/s3"
@@ -433,7 +434,7 @@ func (r ResourceCassandraS3Repository) DeleteResources(ctx context.Context, reso
 
 	for _, target := range resourceItems {
 
-		bucket := os.Getenv("UPLOADS_BUCKET")
+		bucket := ""
 
 		if target.IsProcessed() {
 			bucket = os.Getenv("RESOURCES_BUCKET")
@@ -445,23 +446,34 @@ func (r ResourceCassandraS3Repository) DeleteResources(ctx context.Context, reso
 
 		for _, mime := range target.MimeTypes() {
 
-			fileId := "/" + target.ID()
-
 			if target.IsProcessed() {
 
 				format, _ := resource.ExtensionByType(mime)
 
-				fileId = "/" + target.ItemId() + "/" + target.ProcessedId() + format
+				fileId := "/" + target.ItemId() + "/" + target.ProcessedId() + format
+
+				// delete object from originating bucket
+				_, err := s3Client.DeleteObject(&s3.DeleteObjectInput{
+					Bucket: aws.String(bucket),
+					Key:    aws.String(fileId),
+				})
+
+				if err != nil {
+					return errors.Wrap(err, "unable to delete file")
+				}
 			}
 
-			// delete object
+			// delete from uploads bucket
 			_, err := s3Client.DeleteObject(&s3.DeleteObjectInput{
-				Bucket: aws.String(bucket),
-				Key:    aws.String(fileId),
+				Bucket: aws.String(os.Getenv("UPLOADS_BUCKET")),
+				Key:    aws.String("/" + target.ID()),
 			})
 
 			if err != nil {
-				return errors.Wrap(err, "unable to delete file")
+				// ignore no such key errors since uploaded files will expire in the bucket after 30 days
+				if aerr, ok := err.(awserr.Error); ok && aerr.Code() != s3.ErrCodeNoSuchKey {
+					return errors.Wrap(err, "unable to delete file")
+				}
 			}
 		}
 
@@ -483,7 +495,7 @@ func (r ResourceCassandraS3Repository) DeleteResources(ctx context.Context, reso
 
 	for _, resour := range resourceItems {
 		if err := r.session.
-			Query(resourcesTable.Delete()).
+			Query(qb.Delete(resourcesTable.Name()).Where(qb.Eq("item_id")).ToCql()).
 			WithContext(ctx).
 			Idempotent(true).
 			BindStruct(resources{ItemId: resour.ItemId()}).

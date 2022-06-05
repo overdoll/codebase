@@ -30,7 +30,7 @@ func PublishPost(ctx workflow.Context, input PublishPostInput) error {
 	// spawn a child workflow asynchronously to count the total posts
 	// will also ensure we only have 1 of this workflow running at any time
 	childWorkflowOptions := workflow.ChildWorkflowOptions{
-		WorkflowID:        "UpdatePostTagsTotalPostsCount_" + input.PostId,
+		WorkflowID:        "sting.UpdatePostTagsTotalPostsCount_" + input.PostId,
 		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 	}
 

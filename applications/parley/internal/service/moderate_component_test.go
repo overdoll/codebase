@@ -149,7 +149,7 @@ func TestModeratePost_remove(t *testing.T) {
 	rule := seedRule(t, false)
 	ruleIdRelay := convertRuleIdToRelayId(rule.ID())
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ModerateRemovePost, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.RemovePost, mock.Anything)
 
 	err := client.Mutate(context.Background(), &removePost, map[string]interface{}{
 		"input": types.RemovePostInput{

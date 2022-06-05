@@ -24,7 +24,7 @@ func (r EventTemporalRepository) DeleteAccount(ctx context.Context, requester *p
 		return err
 	}
 
-	workflowId := "DeleteAccount_" + acc.ID()
+	workflowId := "eva.DeleteAccount_" + acc.ID()
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),

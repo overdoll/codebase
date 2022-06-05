@@ -90,7 +90,7 @@ func CCBillChargeback(ctx workflow.Context, input CCBillChargebackInput) error {
 
 	// spawn a child workflow that will calculate club transaction metrics
 	childCtx := workflow.WithChildOptions(ctx, workflow.ChildWorkflowOptions{
-		WorkflowID:        "ClubTransactionMetric_" + uniqueId,
+		WorkflowID:        "hades.ClubTransactionMetric_" + uniqueId,
 		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 	})
 

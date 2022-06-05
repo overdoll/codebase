@@ -9,6 +9,7 @@ import (
 	"overdoll/libraries/errors"
 	"overdoll/libraries/sentry_support"
 	"overdoll/libraries/temporal_support"
+	"overdoll/libraries/zap_support/zap_adapters"
 )
 
 func NewTemporalClient(ctx context.Context) client.Client {
@@ -26,8 +27,8 @@ func NewTemporalClient(ctx context.Context) client.Client {
 		HostPort:           os.Getenv("TEMPORAL_URL"),
 		Namespace:          os.Getenv("TEMPORAL_NAMESPACE"),
 		DataConverter:      data,
-		Logger:             temporal_support.NewZapAdapter(zap.L()),
-		ContextPropagators: []workflow.ContextPropagator{sentry_support.NewContextSentryPropagator()},
+		Logger:             zap_adapters.NewTemporalZapAdapter(zap.L()),
+		ContextPropagators: []workflow.ContextPropagator{sentry_support.NewTemporalContextSentryPropagator()},
 	})
 
 	if err != nil {

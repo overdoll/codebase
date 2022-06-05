@@ -5,8 +5,5 @@ go_library(
     srcs = ["not_found.go"],
     importpath = "overdoll/libraries/errors/apperror",
     visibility = ["//visibility:public"],
-    deps = [
-        "//libraries/errors",
-        "@com_github_pkg_errors//:errors",
-    ],
+    deps = ["//libraries/errors"],
 )

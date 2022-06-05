@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-type ModerateRemovePostInput struct {
+type RemovePostInput struct {
 	AccountId string
 	PostId    string
 	ClubId    string
@@ -16,7 +16,7 @@ type ModerateRemovePostInput struct {
 	RemovedAt time.Time
 }
 
-func ModerateRemovePost(ctx workflow.Context, input ModerateRemovePostInput) error {
+func RemovePost(ctx workflow.Context, input RemovePostInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
 	logger := workflow.GetLogger(ctx)

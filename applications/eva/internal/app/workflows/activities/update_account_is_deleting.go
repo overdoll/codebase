@@ -3,7 +3,6 @@ package activities
 import (
 	"context"
 	"overdoll/applications/eva/internal/domain/account"
-	"overdoll/libraries/sentry_support"
 	"time"
 )
 
@@ -18,9 +17,6 @@ type UpdateAccountIsDeletingPayload struct {
 }
 
 func (h *Activities) UpdateAccountIsDeleting(ctx context.Context, input UpdateAccountIsDeletingInput) (*UpdateAccountIsDeletingPayload, error) {
-
-	var err error
-	defer sentry_support.CaptureActivityError(ctx, err)
 
 	acc, err := h.ar.UpdateAccountDeleting(ctx, input.AccountId, func(account *account.Account) error {
 		return account.MarkDeleting(input.Timestamp, input.WorkflowId)

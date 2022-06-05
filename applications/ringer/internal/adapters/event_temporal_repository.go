@@ -26,7 +26,7 @@ func (r EventTemporalRepository) ClubPaymentDeposit(ctx context.Context, request
 
 	options := client.StartWorkflowOptions{
 		TaskQueue:             viper.GetString("temporal.queue"),
-		ID:                    "ClubPaymentDeposit_" + request.AccountTransactionId(),
+		ID:                    "ringer.ClubPaymentDeposit_" + request.AccountTransactionId(),
 		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_REJECT_DUPLICATE,
 	}
 
@@ -51,7 +51,7 @@ func (r EventTemporalRepository) ClubPaymentDeduction(ctx context.Context, reque
 
 	options := client.StartWorkflowOptions{
 		TaskQueue:             viper.GetString("temporal.queue"),
-		ID:                    "ClubPaymentDeduction_" + request.AccountTransactionId(),
+		ID:                    "ringer.ClubPaymentDeduction_" + request.AccountTransactionId(),
 		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_REJECT_DUPLICATE,
 	}
 
@@ -87,7 +87,7 @@ func (r EventTemporalRepository) CancelClubPayout(ctx context.Context, requester
 
 func (r EventTemporalRepository) InitiateClubPayout(ctx context.Context, clubId string, depositDate *time.Time) error {
 
-	workflowId := "GenerateClubMonthlyPayout_Manual_" + clubId
+	workflowId := "ringer.GenerateClubMonthlyPayout_Manual_" + clubId
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
@@ -116,7 +116,7 @@ func (r EventTemporalRepository) RetryClubPayout(ctx context.Context, requester 
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "RetryClubPayout_" + pay.Id(),
+		ID:        "ringer.RetryClubPayout_" + pay.Id(),
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.RetryClubPayout, workflows.RetryClubPayoutInput{PayoutId: pay.Id()})

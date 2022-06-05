@@ -94,7 +94,7 @@ func createSeed(config SeederConfig) *cobra.Command {
 			}
 
 			zap.S().Infof(
-				"sucessfully seeded [%s] rows in %s!",
+				"successfully seeded [%s] rows in %s!",
 				strconv.Itoa(count),
 				time.Since(start).Truncate(time.Millisecond),
 			)

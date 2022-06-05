@@ -42,9 +42,11 @@ func GraphQLErrorPresenter(ctx context.Context, e error) *gqlerror.Error {
 	case *domainerror2.Validation:
 		isSafeToView = true
 		defaultMessage = "validation error"
+		break
 	case *domainerror2.Authorization:
 		isSafeToView = true
 		defaultMessage = "not authorized"
+		break
 	default:
 		unwrappedError := errors.Unwrap(e)
 		// ignore unrecoverable errors that are passed from panics since we want to successfully recover

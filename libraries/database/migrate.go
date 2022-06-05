@@ -50,7 +50,7 @@ func createMigrate(config MigrateConfig) *cobra.Command {
 			}
 
 			zap.S().Infof(
-				"sucessfully ran migrations in %s!",
+				"successfully ran migrations in %s!",
 				time.Since(start).Truncate(time.Millisecond),
 			)
 		},

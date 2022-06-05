@@ -17,6 +17,7 @@ type Repository interface {
 	GetPostLikeById(ctx context.Context, requester *principal.Principal, postId, accountId string) (*Like, error)
 	GetPostLikeByIdOperator(ctx context.Context, postId, accountId string) (*Like, error)
 
+	UpdatePost(ctx context.Context, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostContent(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostCategories(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostCharacters(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)

@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-func recoverWithSentry(hub *sentry.Hub, r interface{}, ctx context.Context, method string) error {
+func recoverGrpcWithSentry(hub *sentry.Hub, r interface{}, ctx context.Context, method string) error {
 
 	var err error
 	errors.RecoverPanic(r, &err)
@@ -45,7 +45,7 @@ func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 
 		defer func() {
 			if r := recover(); r != nil || panicked {
-				err = recoverWithSentry(hub, r, ctx, info.FullMethod)
+				err = recoverGrpcWithSentry(hub, r, ctx, info.FullMethod)
 			}
 		}()
 
@@ -89,7 +89,7 @@ func StreamServerInterceptor() grpc.StreamServerInterceptor {
 
 		defer func() {
 			if r := recover(); r != nil || panicked {
-				err = recoverWithSentry(hub, r, ctx, info.FullMethod)
+				err = recoverGrpcWithSentry(hub, r, ctx, info.FullMethod)
 			}
 		}()
 

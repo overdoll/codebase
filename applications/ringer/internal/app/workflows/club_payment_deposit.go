@@ -91,7 +91,7 @@ func ClubPaymentDeposit(ctx workflow.Context, input ClubPaymentDepositInput) err
 	// spawn an async child workflow which will tally payments at the end of each month
 	// in order to create a payout
 	childWorkflowOptions := workflow.ChildWorkflowOptions{
-		WorkflowID:            "GenerateClubMonthlyPayout_" + input.DestinationClubId,
+		WorkflowID:            "ringer.GenerateClubMonthlyPayout_" + input.DestinationClubId,
 		ParentClosePolicy:     enums.PARENT_CLOSE_POLICY_ABANDON,
 		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
 		CronSchedule:          "0 0 1 * *",
