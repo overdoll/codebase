@@ -126,7 +126,7 @@ func (r EventTemporalRepository) RemovePost(ctx context.Context, requester *prin
 		ID:        "RemovePost_" + postId,
 	}
 
-	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.RemovePost, workflows.RemovePostInput{
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ModerateRemovePost, workflows.ModerateRemovePostInput{
 		AccountId: requester.AccountId(),
 		PostId:    postId,
 		RuleId:    rule.ID(),

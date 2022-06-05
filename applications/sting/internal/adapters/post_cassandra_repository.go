@@ -364,21 +364,9 @@ func (r PostsCassandraElasticsearchRepository) UpdatePost(ctx context.Context, i
 	return currentPost, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) updatePostRequest(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error, columns []string) (*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) updatePostResult(ctx context.Context, currentPost *post.Post, updateFn func(pending *post.Post) error, columns []string) (*post.Post, error) {
 
-	currentPost, err := r.GetPostById(ctx, requester, id)
-
-	if err != nil {
-		return nil, err
-	}
-
-	if err := currentPost.CanUpdate(requester); err != nil {
-		return nil, err
-	}
-
-	err = updateFn(currentPost)
-
-	if err != nil {
+	if err := updateFn(currentPost); err != nil {
 		return nil, err
 	}
 
@@ -401,6 +389,37 @@ func (r PostsCassandraElasticsearchRepository) updatePostRequest(ctx context.Con
 	}
 
 	return currentPost, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) updatePost(ctx context.Context, id string, updateFn func(pending *post.Post) error, columns []string) (*post.Post, error) {
+
+	currentPost, err := r.GetPostByIdOperator(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return r.updatePostResult(ctx, currentPost, updateFn, columns)
+}
+
+func (r PostsCassandraElasticsearchRepository) updatePostRequest(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error, columns []string) (*post.Post, error) {
+
+	currentPost, err := r.GetPostById(ctx, requester, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := currentPost.CanUpdate(requester); err != nil {
+		return nil, err
+	}
+
+	return r.updatePostResult(ctx, currentPost, updateFn, columns)
+}
+
+func (r PostsCassandraElasticsearchRepository) UpdatePostContentAndState(ctx context.Context, id string, updateFn func(pending *post.Post) error) error {
+	_, err := r.updatePost(ctx, id, updateFn, []string{"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status", "status"})
+	return err
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdatePostContent(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {

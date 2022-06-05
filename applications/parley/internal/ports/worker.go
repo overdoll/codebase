@@ -23,7 +23,7 @@ func NewWorker(app *app.Application) (worker.Worker, func()) {
 	w.RegisterWorkflow(workflows.IssueClubInfraction)
 	w.RegisterWorkflow(workflows.PutPostIntoModeratorQueue)
 	w.RegisterWorkflow(workflows.RejectPost)
-	w.RegisterWorkflow(workflows.RemovePost)
+	w.RegisterWorkflow(workflows.ModerateRemovePost)
 	w.RegisterWorkflow(workflows.ReportPost)
 
 	// register activities with our struct
