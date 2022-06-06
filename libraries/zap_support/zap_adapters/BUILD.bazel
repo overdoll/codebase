@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "aws.go",
         "elastic.go",
+        "ffmpeg_go.go",
         "gocql.go",
         "temporal.go",
     ],

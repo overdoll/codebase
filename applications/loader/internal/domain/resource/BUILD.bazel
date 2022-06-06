@@ -17,6 +17,7 @@ go_library(
         "//libraries/errors",
         "//libraries/errors/domainerror",
         "//libraries/uuid",
+        "//libraries/zap_support/zap_adapters",
         "@com_github_capslock_studio_go_webpbin//:go-webpbin",
         "@com_github_disintegration_gift//:gift",
         "@com_github_h2non_filetype//:filetype",
