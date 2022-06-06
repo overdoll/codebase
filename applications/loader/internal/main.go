@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"overdoll/applications/loader/internal/adapters/migrations"
 	"overdoll/applications/loader/internal/adapters/seeders"
@@ -44,7 +43,6 @@ func init() {
 
 func main() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
 		os.Exit(1)
 	}
 }

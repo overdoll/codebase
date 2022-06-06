@@ -13,11 +13,14 @@ import (
 	"image/png"
 	_ "image/png"
 	"io"
+	"io/ioutil"
+	"log"
 	"math"
 	"os"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/uuid"
+	"overdoll/libraries/zap_support/zap_adapters"
 	"strconv"
 )
 
@@ -35,6 +38,11 @@ var extensionsMap = map[string]string{
 	"video/mp4":  ".mp4",
 	"image/png":  ".png",
 	"image/webp": ".webp",
+}
+
+func init() {
+	// not ideal but we need to disable the log messages from ffmpeg-go
+	log.SetOutput(ioutil.Discard)
 }
 
 func ExtensionByType(tp string) (string, error) {
@@ -225,7 +233,6 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 		}
 
 		r.preview = preview
-		_, _ = file.Seek(0, io.SeekStart)
 
 	} else if kind.MIME.Value == "video/mp4" {
 		mimeTypes = append(mimeTypes, "video/mp4")
@@ -240,6 +247,7 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 		if err := ffmpeg_go.Input(file.Name()).
 			Filter("select", ffmpeg_go.Args{fmt.Sprintf("gte(n,%d)", 5)}).
 			Output("pipe:", ffmpeg_go.KwArgs{"vframes": 1, "format": "image2", "vcodec": "png"}).
+			WithErrorOutput(&zap_adapters.FfmpegGoLogErrorAdapter{}).
 			WithOutput(fileThumbnail).
 			Run(); err != nil {
 			return nil, err
@@ -285,14 +293,16 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 		r.videoThumbnail = videoThumb
 		r.resourceType = Video
 
-		preview, err := createPreviewFromFile(file)
+		_, _ = fileThumbnail.Seek(0, io.SeekStart)
+		preview, err := createPreviewFromFile(fileThumbnail)
 
 		if err != nil {
 			return nil, err
 		}
 
+		_, _ = fileThumbnail.Seek(0, io.SeekStart)
+
 		r.preview = preview
-		_, _ = file.Seek(0, io.SeekStart)
 
 	} else {
 		return nil, errors.New(fmt.Sprintf("invalid resource format: %s", kind.MIME.Value))

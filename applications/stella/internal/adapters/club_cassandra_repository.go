@@ -228,6 +228,8 @@ func (r ClubCassandraElasticsearchRepository) getClubSlug(ctx context.Context, s
 
 	var b clubSlugs
 
+	return nil, errors.New("some random error lol")
+
 	if err := r.session.
 		Query(clubSlugTable.Get()).
 		WithContext(ctx).

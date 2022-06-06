@@ -38,7 +38,7 @@ func GraphQLErrorPresenter(ctx context.Context, e error) *gqlerror.Error {
 	defaultMessage := ""
 	isSafeToView := false
 
-	switch e.(type) {
+	switch unwrapError(e).(type) {
 	case *domainerror2.Validation:
 		isSafeToView = true
 		defaultMessage = "validation error"
@@ -49,6 +49,7 @@ func GraphQLErrorPresenter(ctx context.Context, e error) *gqlerror.Error {
 		break
 	default:
 		unwrappedError := errors.Unwrap(e)
+
 		// ignore unrecoverable errors that are passed from panics since we want to successfully recover
 		if unwrappedError == unrecoverableError {
 			return graphql.DefaultErrorPresenter(ctx, e)

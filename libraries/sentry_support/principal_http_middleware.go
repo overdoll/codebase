@@ -39,25 +39,22 @@ func PrincipalHttpMiddleware() gin.HandlerFunc {
 					Username: prin.Username(),
 				})
 
-				var clubExtensions interface{}
+				hub.Scope().SetContext("Principal", map[string]interface{}{
+					"Account ID":  prin.AccountId(),
+					"Is Secure":   prin.IsSecure(),
+					"Is Locked":   prin.IsLocked(),
+					"Is Deleting": prin.IsDeleting(),
+					"Roles":       prin.Roles(),
+					"Username":    prin.Username(),
+				})
 
 				if prin.ClubExtension() != nil {
-					clubExtensions = map[string]interface{}{
+					hub.Scope().SetContext("Principal - Club Extension", map[string]interface{}{
 						"Supported Club Ids":  prin.ClubExtension().SupportedClubIds(),
 						"Club Membership Ids": prin.ClubExtension().SupportedClubIds(),
 						"Owner Club Ids":      prin.ClubExtension().OwnerClubIds(),
-					}
+					})
 				}
-
-				hub.Scope().SetContext("Principal", map[string]interface{}{
-					"Account ID":     prin.AccountId(),
-					"Is Secure":      prin.IsSecure(),
-					"Is Locked":      prin.IsLocked(),
-					"Is Deleting":    prin.IsDeleting(),
-					"Roles":          prin.Roles(),
-					"Username":       prin.Username(),
-					"Club Extension": clubExtensions,
-				})
 
 				hub.Scope().AddBreadcrumb(&sentry.Breadcrumb{
 					Category: "context.principal",

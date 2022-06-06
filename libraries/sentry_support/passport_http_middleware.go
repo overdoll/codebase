@@ -14,8 +14,7 @@ func PassportHttpMiddleware() gin.HandlerFunc {
 			if hub := sentry.GetHubFromContext(c.Request.Context()); hub != nil {
 
 				passportData := map[string]interface{}{
-					"User Agent": pass.UserAgent(),
-					"Device ID":  pass.DeviceID(),
+					"Device ID": pass.DeviceID(),
 				}
 
 				if err := pass.Authenticated(); err == nil {
