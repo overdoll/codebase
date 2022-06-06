@@ -52,17 +52,17 @@ const variantSolid: SystemStyleFunction = (props) => {
 
   return {
     fontWeight: 'extrabold',
-    bg: mode(color, `${c}.400`)(props),
+    bg: c === 'primary' ? mode(color, `${c}.400`)(props) : mode(color, `${c}.300`)(props),
     color: mode(color, `${c}.900`)(props),
     _hover: {
-      bg: mode(bg, transparentize(`${c}.400`, 0.9)(theme))(props),
+      bg: c === 'primary' ? mode(bg, transparentize(`${c}.400`, 0.9)(theme))(props) : mode(bg, transparentize(`${c}.300`, 0.9)(theme))(props),
       _disabled: {
         bg: mode(bg, `${c}.400`)(props)
       }
     },
     _active: {
-      bg: mode(color, `${c}.400`)(props),
-      boxShadow: `0 0 0 2.5px ${getColor(theme, transparentize(`${c}.600`, 1)(theme)) as string}`
+      bg: c === 'primary' ? mode(color, `${c}.400`)(props) : mode(color, `${c}.300`)(props),
+      boxShadow: `0 0 0 2.5px ${getColor(theme, transparentize(c === 'primary' ? `${c}.500` : `${c}.400`, 0.7)(theme)) as string}`
     }
   }
 }

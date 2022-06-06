@@ -148,14 +148,14 @@ export default function PostLikeButton ({
             isLoading={isLiking || isUnliking}
             icon={(<Icon
               icon={hasLiked ? HeartFull : HeartOutline}
-              fill={hasLiked ? 'primary.400' : 'gray.200'}
+              fill={hasLiked ? 'primary.300' : 'gray.200'}
               h={6}
               w={6}
                    />)}
             onClick={isLoggedIn ? (hasLiked ? () => onUndoLike() : () => onLikePost()) : async () => await router.push(redirect)}
             {...rest}
           />
-          <Heading color={hasLiked ? 'primary.400' : 'gray.200'} fontSize='xl'>
+          <Heading color={hasLiked ? 'primary.300' : 'gray.200'} fontSize='xl'>
             {likes}
           </Heading>
         </Flex>

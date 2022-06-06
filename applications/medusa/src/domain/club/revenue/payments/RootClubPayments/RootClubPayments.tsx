@@ -5,7 +5,6 @@ import { useQueryLoader } from 'react-relay/hooks'
 import type { ClubPaymentsQuery as ClubPaymentsQueryType } from '@//:artifacts/ClubPaymentsQuery.graphql'
 import ClubPaymentsQuery from '@//:artifacts/ClubPaymentsQuery.graphql'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
-import SkeletonRectangleGrid from '@//:modules/content/Placeholder/Loading/SkeletonRectangleGrid/SkeletonRectangleGrid'
 import { PageProps } from '@//:types/app'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
@@ -13,6 +12,7 @@ import ClubPayments from './ClubPayments/ClubPayments'
 import { Trans } from '@lingui/macro'
 import { Box } from '@chakra-ui/react'
 import BackButton from '@//:modules/content/PageLayout/BuildingBlocks/BackButton/BackButton'
+import { SkeletonStack } from '@//:modules/content/Placeholder'
 
 interface Props {
   queryRefs: {
@@ -60,7 +60,7 @@ const RootClubPayments: PageProps<Props> = (props: Props) => {
             </PageSectionDescription>
           </PageSectionWrap>
           <QueryErrorBoundary loadQuery={() => loadQuery({ slug: slug as string })}>
-            <Suspense fallback={<SkeletonRectangleGrid />}>
+            <Suspense fallback={<SkeletonStack />}>
               <ClubPayments query={queryRef as PreloadedQuery<ClubPaymentsQueryType>} />
             </Suspense>
           </QueryErrorBoundary>

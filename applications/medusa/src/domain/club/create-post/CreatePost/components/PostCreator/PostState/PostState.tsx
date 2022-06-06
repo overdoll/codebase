@@ -79,7 +79,7 @@ export default function PostState ({
             <Text fontSize='md' color='gray.100'>
               <Trans>Upstanding netizens will read the{' '}
                 <Link
-                  color='teal.400'
+                  color='teal.300'
                   fontSize='md'
                   isExternal
                   href={CLUB_GUIDELINES}

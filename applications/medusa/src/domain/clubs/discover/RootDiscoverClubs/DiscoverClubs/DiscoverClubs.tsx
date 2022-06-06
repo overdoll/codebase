@@ -43,59 +43,64 @@ export default function DiscoverClubs (props: Props): JSX.Element {
     <>
       <AccountInformationBanner query={queryData.viewer} />
       <Box>
-        {notLoggedIn && (
-          <Alert
-            status='info'
-            mb={2}
-          >
-            <Flex
-              w='100%'
-              align='center'
-              justify='space-between'
-            >
-              <HStack spacing={0} align='center'>
-                <AlertIcon />
-                <AlertDescription>
-                  <Trans>
-                    Create an account to join clubs and curate a personalized clubs feed!
-                  </Trans>
-                </AlertDescription>
-              </HStack>
-              <LinkButton
-                href='/join'
-                size='sm'
-                colorScheme='teal'
-                variant='solid'
-              >
-                <Trans>
-                  Create Account
-                </Trans>
-              </LinkButton>
-            </Flex>
-          </Alert>
-        )}
-        {noFeed
+        {notLoggedIn
           ? (
             <Alert
               status='info'
               mb={2}
             >
-              <HStack spacing={0} align='center'>
-                <AlertIcon />
-                <AlertDescription>
+              <Flex
+                w='100%'
+                align='center'
+                justify='space-between'
+              >
+                <HStack spacing={0} align='center'>
+                  <AlertIcon />
+                  <AlertDescription>
+                    <Trans>
+                      Create an account to join clubs and curate a personalized clubs feed!
+                    </Trans>
+                  </AlertDescription>
+                </HStack>
+                <LinkButton
+                  href='/join'
+                  size='sm'
+                  colorScheme='teal'
+                  variant='solid'
+                >
                   <Trans>
-                    Start by joining some clubs and we'll create a personalized feed for you!
+                    Create Account
                   </Trans>
-                </AlertDescription>
-              </HStack>
+                </LinkButton>
+              </Flex>
             </Alert>
             )
           : (
-            <BackButton href='/clubs/feed'>
-              <Trans>
-                Go to My Feed
-              </Trans>
-            </BackButton>
+            <>
+              {noFeed
+                ? (
+                  <Alert
+                    status='info'
+                    mb={2}
+                  >
+                    <HStack spacing={0} align='center'>
+                      <AlertIcon />
+                      <AlertDescription>
+                        <Trans>
+                          Start by joining some clubs and we'll create a personalized feed for you!
+                        </Trans>
+                      </AlertDescription>
+                    </HStack>
+                  </Alert>
+                  )
+                : (
+                  <BackButton href='/clubs/feed'>
+                    <Trans>
+                      Go to My Feed
+                    </Trans>
+                  </BackButton>
+                  )}
+            </>
             )}
       </Box>
     </>

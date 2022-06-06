@@ -144,9 +144,9 @@ export default function ProcessUploads ({
                 w={6}
                 h={6}
                 icon={WarningTriangle}
-                fill='orange.400'
+                fill='orange.300'
               />
-              <Heading fontSize='lg' color='orange.400'>
+              <Heading fontSize='lg' color='orange.300'>
                 <Trans>
                   Cannot upload while rearranging
                 </Trans>

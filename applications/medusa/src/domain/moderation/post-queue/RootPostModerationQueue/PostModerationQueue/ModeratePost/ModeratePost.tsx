@@ -1,6 +1,6 @@
 import type { ModeratePostApproveMutation } from '@//:artifacts/ModeratePostApproveMutation.graphql'
 import type { ModeratePostRejectMutation } from '@//:artifacts/ModeratePostRejectMutation.graphql'
-import { graphql, useFragment } from 'react-relay'
+import { ConnectionHandler, graphql, useFragment } from 'react-relay'
 import { useMutation } from 'react-relay/hooks'
 import { Fade, Flex, HStack, Text, useDisclosure } from '@chakra-ui/react'
 import RejectionReasons from './RejectionReasons/RejectionReasons'
@@ -10,6 +10,7 @@ import { RejectionReasonsFragment$key } from '@//:artifacts/RejectionReasonsFrag
 import { t, Trans } from '@lingui/macro'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { useToast } from '@//:modules/content/ThemeComponents'
+
 interface Props {
   infractions: RejectionReasonsFragment$key
   postID: ModeratePostFragment$key
@@ -77,6 +78,24 @@ export default function ModeratePost (props: Props): JSX.Element {
           status: 'success',
           title: t`Post created by ${data?.club?.name} was approved successfully`
         })
+      },
+      updater: (store, payload) => {
+        if (payload?.approvePost?.post?.id != null) {
+          const storyRecord = store.get(payload.approvePost.post.id)
+          if (storyRecord != null) {
+            const connectionRecord = ConnectionHandler.getConnection(
+              storyRecord,
+              'Posts_postModeratorQueue'
+            )
+            if (connectionRecord != null) {
+              // Remove edge from the connection, given the ID of the node
+              ConnectionHandler.deleteNode(
+                connectionRecord,
+                payload.approvePost.post.id
+              )
+            }
+          }
+        }
       },
       onError () {
         notify({

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<375157d09814d3caad7cf35e2e7ab7ba>>
- * @relayHash a5bc6b1568c5d8673722ad1c4a94a895
+ * @generated SignedSource<<884f4341350d9d01f1d3e38f65b46f82>>
+ * @relayHash d27dc1132cbc14b9a1e5d09ab8546cd1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a5bc6b1568c5d8673722ad1c4a94a895
+// @relayRequestID d27dc1132cbc14b9a1e5d09ab8546cd1
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -90,6 +90,20 @@ v6 = [
         "storageKey": null
       }
     ],
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "width",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "height",
     "storageKey": null
   },
   {
@@ -1033,7 +1047,7 @@ return {
     ]
   },
   "params": {
-    "id": "a5bc6b1568c5d8673722ad1c4a94a895",
+    "id": "d27dc1132cbc14b9a1e5d09ab8546cd1",
     "metadata": {},
     "name": "StaffClubQuery",
     "operationKind": "query",

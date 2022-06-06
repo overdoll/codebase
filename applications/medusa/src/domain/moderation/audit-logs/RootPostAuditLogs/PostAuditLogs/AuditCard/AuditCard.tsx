@@ -58,7 +58,7 @@ export default function AuditCard ({ auditLog }: Props): JSX.Element {
                         icon={data.action === 'APPROVED' ? CheckCircle : DeleteCircle}
                         w={4}
                         h={4}
-                        fill={data.action === 'APPROVED' ? 'green.400' : 'orange.400'}
+                        fill={data.action === 'APPROVED' ? 'green.300' : 'orange.300'}
                       />
                     </Box>
                   </Flex>

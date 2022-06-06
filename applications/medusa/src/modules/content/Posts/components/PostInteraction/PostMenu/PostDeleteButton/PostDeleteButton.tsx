@@ -19,8 +19,9 @@ import { useRef } from 'react'
 import { useHistoryDisclosure } from '../../../../../../hooks'
 import Button from '../../../../../../form/Button/Button'
 import { useToast } from '../../../../../ThemeComponents'
+import { ConnectionProp } from '@//:types/components'
 
-interface Props {
+interface Props extends ConnectionProp {
   query: PostDeleteButtonFragment$key
 }
 
@@ -31,15 +32,16 @@ const Fragment = graphql`
 `
 
 const Mutation = graphql`
-  mutation PostDeleteButtonMutation($input: DeletePostInput!) {
+  mutation PostDeleteButtonMutation($input: DeletePostInput!, $connections: [ID!]!) {
     deletePost(input: $input) {
-      postId
+      postId @deleteEdge(connections: $connections)
     }
   }
 `
 
 export default function PostDeleteButton ({
-  query
+  query,
+  connectionId
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
@@ -60,19 +62,20 @@ export default function PostDeleteButton ({
       variables: {
         input: {
           id: data.id
-        }
+        },
+        connections: [connectionId]
       },
       onCompleted () {
         notify({
           status: 'success',
-          title: t`Post was removed successfully`
+          title: t`Post was deleted successfully`
         })
         onClose()
       },
       onError (data) {
         notify({
           status: 'error',
-          title: t`There was an error removing the post`
+          title: t`There was an error deleting the post`
         })
       }
     })
@@ -97,7 +100,7 @@ export default function PostDeleteButton ({
         <AlertDialogContent>
           <AlertDialogHeader>
             <Trans>
-              Delete Post
+              Delete Post Confirmation
             </Trans>
           </AlertDialogHeader>
           <AlertDialogCloseButton
@@ -115,7 +118,14 @@ export default function PostDeleteButton ({
                 Cancel
               </Trans>
             </Button>
-            <Button isLoading={isInFlight} onClick={onDelete} ml={3} size='lg' colorScheme='orange' variant='solid'>
+            <Button
+              isLoading={isInFlight}
+              onClick={onDelete}
+              ml={3}
+              size='lg'
+              colorScheme='orange'
+              variant='solid'
+            >
               <Trans>
                 Delete Post
               </Trans>

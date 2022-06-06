@@ -75,7 +75,7 @@ export default function ClubPaymentCard ({ query }: Props): JSX.Element {
                       icon={AddPlus}
                       w={2}
                       h={2}
-                      fill='green.400'
+                      fill='green.300'
                     />
                     )}
                 {data.isDeduction

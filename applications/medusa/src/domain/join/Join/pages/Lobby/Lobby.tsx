@@ -73,7 +73,7 @@ export default function Lobby ({
           icon={MailEnvelope}
           w={16}
           h={16}
-          fill='purple.400'
+          fill='purple.300'
         />
         <Box>
           <Heading

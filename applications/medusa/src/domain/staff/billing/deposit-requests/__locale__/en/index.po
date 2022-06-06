@@ -1,0 +1,42 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-06-01 15:52-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/domain/staff/billing/deposit-requests/RootStaffDepositRequests/RootStaffDepositRequests.tsx:39
+msgid "Deposit Requests"
+msgstr ""
+
+#: src/domain/staff/billing/deposit-requests/RootStaffDepositRequests/RootStaffDepositRequests.tsx:44
+msgid "Deposit requests are created on the first of every month and should always be fulfilled by the 15th of the same month for each relevant provider."
+msgstr ""
+
+#: src/domain/staff/billing/deposit-requests/RootStaffDepositRequests/StaffDepositRequests/StaffDepositRequests.tsx:93
+msgid "Due Date"
+msgstr ""
+
+#: src/domain/staff/billing/deposit-requests/RootStaffDepositRequests/StaffDepositRequests/StaffDepositRequests.tsx:88
+msgid "Method"
+msgstr ""
+
+#: src/domain/staff/billing/deposit-requests/RootStaffDepositRequests/StaffDepositRequests/StaffDepositRequests.tsx:102
+msgid "No deposit requests"
+msgstr ""
+
+#: src/domain/staff/billing/deposit-requests/RootStaffDepositRequests/StaffDepositRequests/StaffDepositRequests.tsx:83
+msgid "Total"
+msgstr ""
+
+#: src/domain/staff/billing/deposit-requests/RootStaffDepositRequests/StaffDepositRequests/StaffDepositRequests.tsx:73
+msgid "You should wait at least 2 days before fulfilling a deposit request to ensure all payouts have been processed correctly."
+msgstr ""

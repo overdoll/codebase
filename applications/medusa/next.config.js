@@ -83,6 +83,10 @@ const moduleExports = withBundleAnalyzer({
     // also Next.js only shows 1 error at a time which is really annoying
     ignoreDuringBuilds: true
   },
+  images: {
+    domains: ['sandbox-overdoll-resources.s3.amazonaws.com', 'dcd9vpqfvvgum.cloudfront.net', 's3.amazonaws.com'],
+    minimumCacheTTL: 60
+  },
   webpack: (config) => {
     config.module.rules.push({
       test: /\.svg$/,

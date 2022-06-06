@@ -149,7 +149,7 @@ export default function DraggableContent ({
                 <Icon
                   p={2}
                   icon={data.isSupporterOnly ? PremiumStar : PremiumStarHollow}
-                  fill={data.isSupporterOnly ? 'orange.400' : 'gray.200'}
+                  fill={data.isSupporterOnly ? 'orange.300' : 'gray.200'}
                   h='100%'
                   w='100%'
                 />)}

@@ -139,6 +139,12 @@ export default function SetupPaxumAccountPayoutMethod (): JSX.Element {
               or invalid account email will result in failed payouts and a frozen balance.
             </Trans>
           </Text>
+          <Text color='gray.100' fontSize='sm'>
+            <Trans>
+              Make sure that the First and Last name you have entered in your Payout Details match the First and Last
+              name on your Paxum account. Otherwise, any payouts we send will fail.
+            </Trans>
+          </Text>
         </Stack>
         <Form {...methods} onSubmit={onSubmit}>
           <Stack spacing={2}>

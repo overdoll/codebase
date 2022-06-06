@@ -41,9 +41,9 @@ export default function ResourceIcon ({
   return (
     <Flex flexShrink={0} align='center' justify='center' borderRadius='25%' overflow='hidden' w={8} h={8} {...rest}>
       {data.type === 'IMAGE' &&
-        <ImageSnippet query={data} h='100%' />}
+        <ImageSnippet cover query={data} />}
       {data.type === 'VIDEO' &&
-        <VideoSnippet query={data} h='100%' />}
+        <VideoSnippet query={data} />}
     </Flex>
   )
 }

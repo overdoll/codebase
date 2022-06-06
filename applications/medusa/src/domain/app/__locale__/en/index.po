@@ -25,7 +25,7 @@ msgstr ""
 msgid "Archive Post"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:108
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:111
 msgid "Are you sure you'd like to delete this post? You cannot undo this action and it will be gone forever."
 msgstr ""
 
@@ -53,7 +53,7 @@ msgstr ""
 msgid "Billing"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:114
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:117
 msgid "Cancel"
 msgstr ""
 
@@ -73,7 +73,7 @@ msgstr ""
 #~ msgid "Characters"
 #~ msgstr ""
 
-#: src/modules/content/HookedComponents/Search/components/SearchInput/SearchInput.tsx:47
+#: src/modules/content/HookedComponents/Search/components/SearchInput/SearchInput.tsx:52
 msgid "Clear Search"
 msgstr ""
 
@@ -151,9 +151,9 @@ msgstr ""
 msgid "Create a Post"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:85
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:99
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:119
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:88
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:102
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:129
 msgid "Delete Post"
 msgstr ""
 
@@ -165,7 +165,7 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
-#: src/modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload.tsx:106
+#: src/modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload.tsx:130
 msgid "Drag and drop or tap to upload"
 msgstr ""
 
@@ -177,7 +177,7 @@ msgstr ""
 #~ msgid "Enable JavaScript"
 #~ msgstr ""
 
-#: src/modules/content/DataDisplay/ImageSnippet/ImageSnippet.tsx:41
+#: src/modules/content/DataDisplay/NextImage/ImageError/ImageError.tsx:11
 msgid "Error Loading Image"
 msgstr ""
 
@@ -232,6 +232,18 @@ msgstr ""
 #: src/domain/root/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:80
 #~ msgid "Join"
 #~ msgstr ""
+
+#: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:53
+msgid "Last Month"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:49
+msgid "Last Week"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:57
+msgid "Last Year"
+msgstr ""
 
 #: src/modules/content/Posts/components/PostInteraction/PostLikeButton/PostLikeButton.tsx:143
 msgid "Like"
@@ -454,7 +466,7 @@ msgstr ""
 msgid "Post was archived successfully"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:68
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:71
 msgid "Post was removed successfully"
 msgstr ""
 
@@ -478,7 +490,7 @@ msgstr ""
 msgid "Profile"
 msgstr ""
 
-#: src/modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload.tsx:131
+#: src/modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload.tsx:155
 msgid "Remove Upload"
 msgstr ""
 
@@ -649,7 +661,7 @@ msgstr ""
 msgid "There was an error archiving the post"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:75
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:78
 msgid "There was an error removing the post"
 msgstr ""
 
@@ -702,6 +714,10 @@ msgstr ""
 msgid "This subscription was not found"
 msgstr ""
 
+#: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:41
+msgid "Today"
+msgstr ""
+
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostUnArchiveButton/PostUnArchiveButton.tsx:66
 msgid "Un-Archive Post"
 msgstr ""
@@ -741,6 +757,10 @@ msgstr ""
 
 #: src/common/components/BooleanHeader/BooleanHeader.tsx:16
 msgid "Yes"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:45
+msgid "Yesterday"
 msgstr ""
 
 #: src/common/components/AccountInformationBanner/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:102
@@ -784,7 +804,7 @@ msgstr ""
 #~ msgid "overdoll"
 #~ msgstr ""
 
-#: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:75
+#: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:78
 msgid "{0}"
 msgstr ""
 

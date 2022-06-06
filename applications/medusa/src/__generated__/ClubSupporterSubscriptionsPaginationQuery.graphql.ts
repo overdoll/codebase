@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<151791ba58e45cce0beee2cc301ad58f>>
- * @relayHash 5f20b54c2619f660d0188c91c141e8e8
+ * @generated SignedSource<<2d128193c5c169055dfc06eadccee606>>
+ * @relayHash 8c45ee4a5d0c676c4ab9b573016a2dd5
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 5f20b54c2619f660d0188c91c141e8e8
+// @relayRequestID 8c45ee4a5d0c676c4ab9b573016a2dd5
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -154,6 +154,20 @@ v13 = {
           "storageKey": null
         }
       ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "width",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "height",
       "storageKey": null
     },
     {
@@ -430,7 +444,7 @@ return {
     ]
   },
   "params": {
-    "id": "5f20b54c2619f660d0188c91c141e8e8",
+    "id": "8c45ee4a5d0c676c4ab9b573016a2dd5",
     "metadata": {},
     "name": "ClubSupporterSubscriptionsPaginationQuery",
     "operationKind": "query",

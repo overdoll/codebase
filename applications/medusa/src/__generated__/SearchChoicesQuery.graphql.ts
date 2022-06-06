@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<26ca1bce2a9a584b29492b36b3d57b4e>>
- * @relayHash 6c3e730db7335c5654ea2f6b7b63a02f
+ * @generated SignedSource<<ca13380356c57c86c060a1a5b721e8c9>>
+ * @relayHash f5a2263f0b3eadbc682ba1c99254cf9c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6c3e730db7335c5654ea2f6b7b63a02f
+// @relayRequestID f5a2263f0b3eadbc682ba1c99254cf9c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -204,6 +204,20 @@ v16 = {
           "storageKey": null
         }
       ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "width",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "height",
       "storageKey": null
     },
     {
@@ -596,7 +610,7 @@ return {
     ]
   },
   "params": {
-    "id": "6c3e730db7335c5654ea2f6b7b63a02f",
+    "id": "f5a2263f0b3eadbc682ba1c99254cf9c",
     "metadata": {},
     "name": "SearchChoicesQuery",
     "operationKind": "query",

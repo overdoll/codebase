@@ -24,8 +24,6 @@ const Fragment = graphql`
       slug
       ...PostSupporterContentClubFragment
     }
-    ...PostClickableCategoriesFragment
-    ...PostClickableCharactersFragment
     ...PostSlideIndexFragment
   }
 `

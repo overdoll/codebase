@@ -1,0 +1,62 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-06-01 15:52-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestPayoutsList/StaffDepositRequestPayoutsList.tsx:69
+msgid "Amount"
+msgstr ""
+
+#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestOptions/StaffDepositRequestOptions.tsx:94
+msgid "Base Amount"
+msgstr ""
+
+#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestOptions/StaffDepositRequestOptions.tsx:118
+msgid "Created At"
+msgstr ""
+
+#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequest.tsx:45
+msgid "Deposit Request"
+msgstr ""
+
+#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestOptions/StaffDepositRequestOptions.tsx:106
+msgid "Estimated Fee Amount"
+msgstr ""
+
+#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestOptions/StaffDepositRequestOptions.tsx:82
+msgid "Last Date for Deposit"
+msgstr ""
+
+#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestOptions/StaffDepositRequestOptions.tsx:70
+msgid "Payout Method"
+msgstr ""
+
+#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequest.tsx:50
+msgid "Payouts"
+msgstr ""
+
+#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestPayoutsList/StaffDepositRequestPayoutsList.tsx:74
+msgid "Settlement Date"
+msgstr ""
+
+#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestPayoutsList/StaffDepositRequestPayoutsList.tsx:64
+msgid "Status"
+msgstr ""
+
+#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestOptions/StaffDepositRequestOptions.tsx:56
+msgid "Total Amount"
+msgstr ""
+
+#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestOptions/StaffDepositRequestOptions.tsx:62
+msgid "{totalAmount}"
+msgstr ""

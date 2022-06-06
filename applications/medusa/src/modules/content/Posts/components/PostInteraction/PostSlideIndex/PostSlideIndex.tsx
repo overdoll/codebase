@@ -77,7 +77,7 @@ export default function PostSlideIndex ({
             key={contentIndex}
             w={isActive ? 2 : 1}
             h={isActive ? 2 : 1}
-            bg={isSupporterOnly ? 'orange.400' : 'gray.50'}
+            bg={isSupporterOnly ? 'orange.300' : 'gray.50'}
             borderWidth={1}
             borderColor={isSupporterOnly ? 'orange.50' : 'gray.500'}
             borderRadius='md'

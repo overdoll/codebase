@@ -13,15 +13,15 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/clubs/discover/RootDiscoverClubs/DiscoverClubs/DiscoverClubs.tsx:70
+#: src/domain/clubs/discover/RootDiscoverClubs/DiscoverClubs/DiscoverClubs.tsx:71
 msgid "Create Account"
 msgstr ""
 
-#: src/domain/clubs/discover/RootDiscoverClubs/DiscoverClubs/DiscoverClubs.tsx:59
+#: src/domain/clubs/discover/RootDiscoverClubs/DiscoverClubs/DiscoverClubs.tsx:60
 msgid "Create an account to join clubs and curate a personalized clubs feed!"
 msgstr ""
 
-#: src/domain/clubs/discover/RootDiscoverClubs/DiscoverClubs/DiscoverClubs.tsx:95
+#: src/domain/clubs/discover/RootDiscoverClubs/DiscoverClubs/DiscoverClubs.tsx:98
 msgid "Go to My Feed"
 msgstr ""
 
@@ -33,6 +33,6 @@ msgstr ""
 msgid "Search for a club by name"
 msgstr ""
 
-#: src/domain/clubs/discover/RootDiscoverClubs/DiscoverClubs/DiscoverClubs.tsx:86
+#: src/domain/clubs/discover/RootDiscoverClubs/DiscoverClubs/DiscoverClubs.tsx:89
 msgid "Start by joining some clubs and we'll create a personalized feed for you!"
 msgstr ""

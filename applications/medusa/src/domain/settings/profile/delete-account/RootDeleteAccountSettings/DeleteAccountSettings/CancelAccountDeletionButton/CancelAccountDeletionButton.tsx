@@ -47,7 +47,7 @@ export default function CancelAccountDeletionButton ({
           accountID: data.id
         }
       },
-      onCompleted () {
+      onCompleted (d) {
         notify({
           status: 'success',
           title: t`You have cancelled the deletion of your account`

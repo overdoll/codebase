@@ -1,7 +1,7 @@
 import { ChangeEvent, ReactNode, useRef } from 'react'
 import { Flex, HTMLChakraProps } from '@chakra-ui/react'
 import type { Uppy } from '@uppy/core'
-import { useToast } from '@//:modules/content/ThemeComponents'
+
 interface Props extends HTMLChakraProps<any> {
   uppy: Uppy
   onSelect?: () => void
@@ -17,8 +17,6 @@ export default function FilePicker ({
   children,
   ...rest
 }: Props): JSX.Element {
-  const notify = useToast()
-
   const onChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const input = e.target
 
@@ -36,10 +34,7 @@ export default function FilePicker ({
           data: file
         })
       } catch (err) {
-        notify({
-          status: 'error',
-          title: err.message
-        })
+
       }
     })
   }

@@ -9,7 +9,7 @@ import {
   UseSearchQueryState,
   UseSearchReturn
 } from '../../types'
-import { useCallback, useState, useTransition } from 'react'
+import { useCallback, useDeferredValue, useState, useTransition } from 'react'
 import { FetchPolicy } from 'relay-runtime'
 import { useUpdateEffect } from 'usehooks-ts'
 
@@ -32,6 +32,11 @@ function useSearch<TArguments extends SearchValues> (props: UseSearchProps<TArgu
 
   // @ts-expect-error
   const [isPending, startTransition] = useTransition({
+    timeoutMs: 2000
+  })
+
+  // @ts-expect-error
+  const deferredSearchArgs = useDeferredValue(searchArgs, {
     timeoutMs: 2000
   })
 
@@ -92,12 +97,12 @@ function useSearch<TArguments extends SearchValues> (props: UseSearchProps<TArgu
   }
 
   useUpdateEffect(() => {
-    onChangeCallback?.(searchArgs)
-  }, [searchArgs])
+    onChangeCallback?.(deferredSearchArgs)
+  }, [deferredSearchArgs])
 
   return {
     register,
-    searchArguments: searchArgs,
+    searchArguments: deferredSearchArgs,
     changeArguments,
     setArguments,
     loadQuery

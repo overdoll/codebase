@@ -33,6 +33,10 @@ msgstr ""
 #~ msgid "Looks like you messed up. Something you did here violated our community guidelines. If you keep this up, the bans will become longer."
 #~ msgstr ""
 
+#: src/domain/home/RootHome/CurationProfileAlert/CurationProfileAlert.tsx:85
+msgid "No thanks"
+msgstr ""
+
 #: src/domain/home/RootHome/LockedAccount/LockedAccountTrigger/LockedAccountButton/LockedAccountButton.tsx:38
 #~ msgid "Open Lock Info"
 #~ msgstr ""
@@ -49,11 +53,11 @@ msgstr ""
 #~ msgid "Set up profile"
 #~ msgstr ""
 
-#: src/domain/home/RootHome/CurationProfileAlert/CurationProfileAlert.tsx:61
+#: src/domain/home/RootHome/CurationProfileAlert/CurationProfileAlert.tsx:63
 msgid "Set up your curation profile so we can show you personalized content"
 msgstr ""
 
-#: src/domain/home/RootHome/CurationProfileAlert/CurationProfileAlert.tsx:72
+#: src/domain/home/RootHome/CurationProfileAlert/CurationProfileAlert.tsx:75
 msgid "Setup"
 msgstr ""
 

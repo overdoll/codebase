@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7b63e79f86dd1d9402ff926796b25d19>>
- * @relayHash 94b6b8cef27233f29457d33401d260d7
+ * @generated SignedSource<<97f67e78c2c4c9dd0bab81f4e0b0ff3d>>
+ * @relayHash fae2bb3efe133e80e445449e5f16507d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 94b6b8cef27233f29457d33401d260d7
+// @relayRequestID fae2bb3efe133e80e445449e5f16507d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -119,6 +119,20 @@ v9 = {
 v10 = {
   "alias": null,
   "args": null,
+  "kind": "ScalarField",
+  "name": "width",
+  "storageKey": null
+},
+v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "height",
+  "storageKey": null
+},
+v12 = {
+  "alias": null,
+  "args": null,
   "concreteType": "ResourceUrl",
   "kind": "LinkedField",
   "name": "videoThumbnail",
@@ -128,7 +142,7 @@ v10 = {
   ],
   "storageKey": null
 },
-v11 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -241,6 +255,8 @@ return {
                               (v9/*: any*/),
                               (v10/*: any*/),
                               (v11/*: any*/),
+                              (v12/*: any*/),
+                              (v13/*: any*/),
                               (v7/*: any*/)
                             ],
                             "storageKey": null
@@ -291,9 +307,11 @@ return {
                                             "name": "resource",
                                             "plural": false,
                                             "selections": [
-                                              (v11/*: any*/),
+                                              (v13/*: any*/),
                                               (v9/*: any*/),
                                               (v10/*: any*/),
+                                              (v11/*: any*/),
+                                              (v12/*: any*/),
                                               {
                                                 "alias": null,
                                                 "args": null,
@@ -382,7 +400,7 @@ return {
     ]
   },
   "params": {
-    "id": "94b6b8cef27233f29457d33401d260d7",
+    "id": "fae2bb3efe133e80e445449e5f16507d",
     "metadata": {},
     "name": "ClubListSelectorPaginationFragment",
     "operationKind": "query",

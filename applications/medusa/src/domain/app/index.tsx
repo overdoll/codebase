@@ -1,7 +1,19 @@
 import Root from './Root/Root'
-import data from './__locale__/en'
-import { loadTranslations } from '@//:modules/locale'
+import RootQuery from '@//:artifacts/RootQuery.graphql'
 
-loadTranslations(data)
+Root.getTranslationProps = async (ctx) => ({
+  translations: await import(`./__locale__/${ctx.locale as string}/index`)
+})
+
+Root.getRelayPreloadProps = () => {
+  return {
+    queries: {
+      rootQuery: {
+        params: RootQuery.params,
+        variables: {}
+      }
+    }
+  }
+}
 
 export default Root

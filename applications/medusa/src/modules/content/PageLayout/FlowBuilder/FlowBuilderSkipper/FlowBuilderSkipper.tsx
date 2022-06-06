@@ -30,7 +30,7 @@ export default function FlowBuilderSkipper ({ canSkipSteps = true }: Props): JSX
         >
           <Box
             borderRadius='inherit'
-            bg={item === currentStep ? `${colorScheme as string}.400` : 'transparent'}
+            bg={item === currentStep ? `${colorScheme as string}.300` : 'transparent'}
             p={2}
           >
             <Icon

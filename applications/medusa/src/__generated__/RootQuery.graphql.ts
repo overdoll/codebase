@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<4001c84409b728415e23291c7bd43e97>>
- * @relayHash ea396de5828edeaaeff02d2d5ae8034f
+ * @generated SignedSource<<292142d05be93deb4f581121a1bc92cc>>
+ * @relayHash 0ce5129ec2eee186363cee6f105c5709
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ea396de5828edeaaeff02d2d5ae8034f
+// @relayRequestID 0ce5129ec2eee186363cee6f105c5709
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -17,6 +17,7 @@ export type RootQuery$variables = {};
 export type RootQueryVariables = RootQuery$variables;
 export type RootQuery$data = {
   readonly viewer: {
+    readonly id: string;
     readonly " $fragmentSpreads": FragmentRefs<"AccountAuthorizerFragment" | "UniversalNavigatorFragment">;
   } | null;
 };
@@ -27,7 +28,14 @@ export type RootQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = [
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v1 = [
   {
     "alias": null,
     "args": null,
@@ -36,13 +44,6 @@ var v0 = [
     "storageKey": null
   }
 ],
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
 v2 = {
   "alias": null,
   "args": null,
@@ -65,6 +66,7 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
+          (v0/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -96,6 +98,7 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
+          (v0/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -103,7 +106,7 @@ return {
             "kind": "LinkedField",
             "name": "lock",
             "plural": false,
-            "selections": (v0/*: any*/),
+            "selections": (v1/*: any*/),
             "storageKey": null
           },
           {
@@ -113,7 +116,7 @@ return {
             "kind": "LinkedField",
             "name": "deleting",
             "plural": false,
-            "selections": (v0/*: any*/),
+            "selections": (v1/*: any*/),
             "storageKey": null
           },
           {
@@ -137,7 +140,6 @@ return {
             "name": "isArtist",
             "storageKey": null
           },
-          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -175,6 +177,20 @@ return {
               {
                 "alias": null,
                 "args": null,
+                "kind": "ScalarField",
+                "name": "width",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "height",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
                 "concreteType": "ResourceUrl",
                 "kind": "LinkedField",
                 "name": "videoThumbnail",
@@ -191,7 +207,7 @@ return {
                 "name": "type",
                 "storageKey": null
               },
-              (v1/*: any*/)
+              (v0/*: any*/)
             ],
             "storageKey": null
           }
@@ -201,7 +217,7 @@ return {
     ]
   },
   "params": {
-    "id": "ea396de5828edeaaeff02d2d5ae8034f",
+    "id": "0ce5129ec2eee186363cee6f105c5709",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
@@ -210,6 +226,6 @@ return {
 };
 })();
 
-(node as any).hash = "1dd41baf54f4a4593ae29ab4dcf0c270";
+(node as any).hash = "143692f7e97c1828c459519f72d0d96b";
 
 export default node;

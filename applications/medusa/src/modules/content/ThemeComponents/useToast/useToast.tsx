@@ -6,7 +6,7 @@ import {
   useToast as useChakraToast,
   UseToastOptions
 } from '@chakra-ui/react'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Alert, AlertCloseButton, AlertDescription, AlertIcon, AlertTitle } from '../Alert/Alert'
 import { useSwipeable } from 'react-swipeable'
 
@@ -20,11 +20,11 @@ export default function useToast (options: UseToastInput = {}): (options: UseToa
     md: 'bottom'
   })
 
-  const toast = useChakraToast({
+  const toast = useCallback(useChakraToast({
     variant: 'toast',
-    position: position ?? 'bottom',
+    position: position,
     ...options
-  })
+  }), [position])
 
   const ToastAlert = (props: ToastAlertProps): JSX.Element => {
     const {

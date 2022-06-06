@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6b0df248abe0214d0d15f755bd0f09d4>>
- * @relayHash 81c6ab8588ecbe3cb9431016dc9558ef
+ * @generated SignedSource<<e5325edfd358f978356b8c7970f983ec>>
+ * @relayHash 3c9e69e6cd6a418739e8bebbb130d9d1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 81c6ab8588ecbe3cb9431016dc9558ef
+// @relayRequestID 3c9e69e6cd6a418739e8bebbb130d9d1
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -186,6 +186,20 @@ return {
               {
                 "alias": null,
                 "args": null,
+                "kind": "ScalarField",
+                "name": "width",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "height",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
                 "concreteType": "ResourceUrl",
                 "kind": "LinkedField",
                 "name": "videoThumbnail",
@@ -263,7 +277,7 @@ return {
     ]
   },
   "params": {
-    "id": "81c6ab8588ecbe3cb9431016dc9558ef",
+    "id": "3c9e69e6cd6a418739e8bebbb130d9d1",
     "metadata": {},
     "name": "ClubSettingsQuery",
     "operationKind": "query",

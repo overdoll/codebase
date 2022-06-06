@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fdad81c381510e028e3ad4a5b2938463>>
- * @relayHash 04d7e2de85fb3c9dd260163064fea0aa
+ * @generated SignedSource<<b690c419eb11caad56e9bc1af35db097>>
+ * @relayHash f34bc491088b97d404b768300dae0c5a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 04d7e2de85fb3c9dd260163064fea0aa
+// @relayRequestID f34bc491088b97d404b768300dae0c5a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -225,6 +225,20 @@ return {
                                   {
                                     "alias": null,
                                     "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "width",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "height",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
                                     "concreteType": "ResourceUrl",
                                     "kind": "LinkedField",
                                     "name": "videoThumbnail",
@@ -310,7 +324,7 @@ return {
     ]
   },
   "params": {
-    "id": "04d7e2de85fb3c9dd260163064fea0aa",
+    "id": "f34bc491088b97d404b768300dae0c5a",
     "metadata": {},
     "name": "ExpiredClubSupporterSubscriptionsPaginationQuery",
     "operationKind": "query",

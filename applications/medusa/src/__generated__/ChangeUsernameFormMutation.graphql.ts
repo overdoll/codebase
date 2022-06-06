@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<eabf420586ec4a92c8c54bd47f75df76>>
- * @relayHash 89ac26f06f90d11edac8563669fc1603
+ * @generated SignedSource<<0087371d9fd3d209f2c48f5cf7ed6328>>
+ * @relayHash b08c509df9c5d937483ae12b42088a19
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 89ac26f06f90d11edac8563669fc1603
+// @relayRequestID b08c509df9c5d937483ae12b42088a19
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type UpdateAccountUsernameValidation = "USERNAME_TAKEN" | "%future added value";
@@ -26,6 +26,7 @@ export type ChangeUsernameFormMutation$data = {
     readonly account: {
       readonly id: string;
       readonly username: string;
+      readonly usernameEditAvailableAt: any;
     } | null;
   } | null;
 };
@@ -86,6 +87,13 @@ v1 = [
             "kind": "ScalarField",
             "name": "username",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "usernameEditAvailableAt",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -112,7 +120,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "89ac26f06f90d11edac8563669fc1603",
+    "id": "b08c509df9c5d937483ae12b42088a19",
     "metadata": {},
     "name": "ChangeUsernameFormMutation",
     "operationKind": "mutation",
@@ -121,6 +129,6 @@ return {
 };
 })();
 
-(node as any).hash = "39f8a280199ca1dd27b9ede397eab53b";
+(node as any).hash = "339f85c11a0a99da9f37b1bd09951d9f";
 
 export default node;

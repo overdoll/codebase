@@ -1,5 +1,5 @@
-import { chakra, HTMLChakraProps } from '@chakra-ui/react'
-import { FunctionComponent, useMemo } from 'react'
+import { chakra, HTMLChakraProps, useId } from '@chakra-ui/react'
+import { FunctionComponent } from 'react'
 
 interface Props extends HTMLChakraProps<any> {
   fill?: string
@@ -30,7 +30,7 @@ export default function IconPattern ({
     }
   }
 
-  const id = useMemo(() => (Math.random() + 1).toString(36).substring(7), [])
+  const id = useId()
 
   return (
     <chakra.svg w='100%' h='100%'>

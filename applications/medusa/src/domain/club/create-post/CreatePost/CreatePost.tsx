@@ -19,8 +19,6 @@ import { SequenceResolver } from '@//:modules/content/HookedComponents/Sequence/
 import Head from 'next/head'
 import { PageProps } from '@//:types/app'
 import { useRouter } from 'next/router'
-import { GetServerSideProps } from 'next'
-import { resetServerContext } from 'react-beautiful-dnd'
 
 interface Props {
   queryRefs: {
@@ -136,12 +134,6 @@ const CreatePost: PageProps<Props> = (props: Props) => {
       </PageWrapper>
     </>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  resetServerContext()
-
-  return { props: { data: [] } }
 }
 
 export default CreatePost

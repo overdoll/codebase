@@ -99,6 +99,8 @@ export default function UpdateCategoryButton ({
   }
 
   return (
-    <FlowBuilderNextButton isDisabled={buttonDisabled} />
+    <FlowBuilderNextButton isDisabled={buttonDisabled}>
+      {buttonDisabled ? `${(Object.keys(state.categories)).length} / 3` : undefined}
+    </FlowBuilderNextButton>
   )
 }

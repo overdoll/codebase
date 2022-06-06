@@ -25,7 +25,7 @@ export default function TileOverlay ({
       {backdrop}
       <Flex
         p={2}
-        bg='dimmers.400'
+        bg='dimmers.300'
         w='100%'
         h='100%'
         position='absolute'

@@ -23,7 +23,7 @@ export default function CCBillWindowListener ({
 
   // Only allow messages from a specific window source
   const messageEvent = (event): void => {
-    if (event.origin !== originLink) {
+    if (event.origin !== originLink && event.origin !== '127.0.0.1') {
       return
     }
 
@@ -93,7 +93,7 @@ export default function CCBillWindowListener ({
           </Trans>
         </Text>
       </Box>
-      <Spinner thickness='4px' w={20} h={20} color='teal.400' />
+      <Spinner thickness='4px' w={20} h={20} color='teal.300' />
       <ButtonGroup spacing={4} size='lg' variant='solid'>
         <Button onClick={cancelFlow}>
           <Trans>

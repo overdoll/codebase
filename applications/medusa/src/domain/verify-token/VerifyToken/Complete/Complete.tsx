@@ -59,7 +59,7 @@ export default function Complete ({ query }: Props): JSX.Element {
                   icon={CheckCircle}
                   w={16}
                   h={16}
-                  fill='green.400'
+                  fill='green.300'
                 />
                 <Box>
                   <Heading
@@ -90,7 +90,7 @@ export default function Complete ({ query }: Props): JSX.Element {
                   <Heading
                     textAlign='center'
                     fontSize='md'
-                    color='green.400'
+                    color='green.300'
                   >
                     <>
                       {cookieText.browser.name} {cookieText.browser.major},{' '}
