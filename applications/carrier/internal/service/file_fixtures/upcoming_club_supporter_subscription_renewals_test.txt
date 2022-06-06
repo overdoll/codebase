@@ -16,7 +16,7 @@ Name Amount Date Manage test a club ( https://ci.overdoll.dev/test-club ) 6.99 U
 
 You may manage any of these subscriptions, such as cancelling them, using the button below
 
-Manage Subscriptions
+Manage Subscriptions ( https://ci.overdoll.dev/settings/billing/subscriptions )
 
 Please contact hello@overdoll.com if you have any questions or concerns.
 

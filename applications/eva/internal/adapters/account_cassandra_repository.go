@@ -476,7 +476,6 @@ func (r AccountCassandraRepository) UpdateAccount(ctx context.Context, id string
 		"username",
 		"email",
 		"roles",
-		"verified",
 		"locked_until",
 		"locked",
 		"avatar_resource_id",
