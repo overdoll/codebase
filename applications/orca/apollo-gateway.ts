@@ -340,6 +340,12 @@ void (async () => {
 
   app.use(Sentry.Handlers.errorHandler())
 
+  app.use(function onError (err, req, res, next) {
+    req.log.error('internal server error', { 'error': err })
+    res.statusCode = 500
+    res.end('internal server error')
+  })
+
   await new Promise<void>(resolve => httpServer.listen({
     port: 8000,
     hostname: '0.0.0.0'

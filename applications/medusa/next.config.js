@@ -112,9 +112,10 @@ const moduleExports = withBundleAnalyzer({
 
 let sentryConfig
 
-if (process.env.UPLOAD_SENTRY_SOURCEMAPS != null) {
+if (process.env.PRODUCTION_DEPLOYMENT != null) {
   sentryConfig = withSentryConfig(moduleExports, { silent: true })
   moduleExports.sentry = { hideSourceMaps: true }
+  moduleExports.assetPrefix = process.env.STATIC_ASSETS_URL
 } else {
   moduleExports.sentry = {
     disableServerWebpackPlugin: true,

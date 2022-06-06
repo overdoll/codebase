@@ -256,6 +256,9 @@ def execute_unit_test_commands(configs):
 def execute_build_commands_custom(configs):
     cwd = os.getcwd()
 
+    # is_production = os.getenv("BUILDKITE_BRANCH") == "master"
+    is_production = True
+
     workdir = configs.get("build", {}).get("workdir", None)
 
     if workdir:
@@ -265,8 +268,29 @@ def execute_build_commands_custom(configs):
 
     terminal_print.print_expanded_group(":hammer: Running build commands")
 
+    env = {
+        "NEXT_PUBLIC_SENTRY_DSN": os.getenv("NEXT_PUBLIC_SENTRY_DSN"),
+        "NEXT_PUBLIC_FATHOM_TRACKING_CODE": os.getenv("NEXT_PUBLIC_FATHOM_TRACKING_CODE"),
+        "NEXT_PUBLIC_FATHOM_DOMAIN": os.getenv("NEXT_PUBLIC_FATHOM_DOMAIN"),
+
+        "STATIC_ASSETS_URL": os.getenv("STATIC_ASSETS_URL"),
+        "SENTRY_AUTH_TOKEN": os.getenv("SENTRY_AUTH_TOKEN"),
+        "SENTRY_ORG": os.getenv("SENTRY_ORG"),
+
+        "NEXT_PUBLIC_APP_VERSION": os.getenv("BUILDKITE_COMMIT"),
+        "NEXT_PUBLIC_APP_ENV": "production",
+        "APP_VERSION": os.getenv("BUILDKITE_COMMIT"),
+        "APP_ENV": "production",
+        "SENTRY_PROJECT": "medusa"
+    }
+
+    # make sure we set up the correct variables for the production build - this will inline the production JS with a
+    # CDN prefix + upload sourcemaps to sentry
+    if is_production:
+        env["PRODUCTION_DEPLOYMENT"] = "true"
+
     for i in commands:
-        exec.execute_command(i.split())
+        exec.execute_command(i.split(), env=env)
 
     os.chdir(cwd)
 
@@ -282,6 +306,33 @@ def execute_custom_e2e_commands_custom(configs):
 
     for i in commands:
         exec.execute_command(i.split())
+
+
+# upload medusa's assets to cloudfront
+def execute_cdn_upload(configs):
+    terminal_print.print_expanded_group(":docker: Pulling docker image & extracting assets")
+
+    exec.execute_command(["mkdir", "medusa-assets"])
+
+    commit = os.getenv("BUILDKITE_COMMIT", "")
+    registry = os.getenv("CONTAINER_REGISTRY", "")
+
+    tag = "{}/{}:{}".format(registry, "medusa/dev", commit)
+    exec.execute_command(["docker", "pull", "-t", tag])
+    exec.execute_command(["docker", "run", "--name", "medusa-assets", "-d", "-t", tag])
+    exec.execute_command(["docker", "cp", "medusa-assets:/app/build/static", "medusa-assets"])
+    exec.execute_command(["docker", "stop", "medusa-assets", "-t", "0"])
+
+    terminal_print.print_expanded_group(":cloudfront: Uploading assets to cloudfront")
+
+    exec.execute_command([
+        "aws",
+        "s3",
+        "cp",
+        "medusa-assets",
+        "s3://{}/_next".format(os.getenv("AWS_STATIC_ASSETS_BUCKET")),
+        "--recursive"
+    ])
 
 
 def execute_push_images_commands(configs):
@@ -528,17 +579,28 @@ def print_project_pipeline():
     )
 
     # publish when the branch is master
-    if os.getenv("BUILDKITE_BRANCH") == "master":
-        pipeline_steps.append("wait")
+    # if os.getenv("BUILDKITE_BRANCH") == "master":
+    pipeline_steps.append("wait")
 
-        # must complete all steps before publishing
-        pipeline_steps.append(
-            pipeline.create_step(
-                label=":aws: Publish Images",
-                commands=[".buildkite/pipeline.sh publish"],
-                platform="docker",
-            )
+    # will upload front-end static assets to cloudfront in this step
+    pipeline_steps.append(
+        pipeline.create_step(
+            label=":cloudfront: Upload Front-End to CloudFront",
+            commands=[".buildkite/pipeline.sh frontend_upload_cdn"],
+            platform="docker",
         )
+    )
+
+    pipeline_steps.append("wait")
+
+    # must complete all steps before publishing
+    pipeline_steps.append(
+        pipeline.create_step(
+            label=":aws: Publish Images",
+            commands=[".buildkite/pipeline.sh publish"],
+            platform="docker",
+        )
+    )
 
     print(yaml.dump({"steps": pipeline_steps}))
 
@@ -607,13 +669,14 @@ def main(argv=None):
 
     try:
         configs = parse_config.load_configs().get("steps", {})
-
         # execute any custom build commands before we run bazel targets
         # execute_build_commands_custom(configs)
         if args.subparsers_name == "services_build_test":
             execute_build_commands(configs)
             execute_integration_tests_commands(configs)
             execute_push_images(configs)
+        elif args.subparsers_name == "frontend_upload_cdn":
+            execute_cdn_upload(configs)
         elif args.subparsers_name == "frontend_build_test":
             frontend_config = parse_config.load_configs().get("frontend_steps", {})
             execute_check_commands_custom(frontend_config)
