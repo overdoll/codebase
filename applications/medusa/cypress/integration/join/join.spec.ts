@@ -1,6 +1,6 @@
 import { generateEmailFromExistingUsername, generateUsernameAndEmail } from '../../support/generate'
 import { join, logout } from '../../support/join_actions'
-import { clickOnButton } from '../../support/user_actions'
+import { clickOnButton, typeIntoPlaceholder } from '../../support/user_actions'
 
 Cypress.config('defaultCommandTimeout', 10000)
 
@@ -20,8 +20,7 @@ describe('Join', () => {
     const [username, email] = generateUsernameAndEmail()
     join(email)
     cy.findByRole('button', { name: /Register/iu }).should('not.be.disabled')
-    cy.findByPlaceholderText(/Enter a username/iu)
-      .type(username)
+    typeIntoPlaceholder(/Enter a username/iu, username)
     clickOnButton(/Register/iu)
     cy.url().should('include', '/')
     cy.findByText(/Welcome to overdoll!/iu).should('exist')
@@ -45,8 +44,7 @@ describe('Join', () => {
      */
     const [, email] = generateUsernameAndEmail()
     cy.visit('/join')
-    cy.findByPlaceholderText(/Enter an email/iu)
-      .type(email)
+    typeIntoPlaceholder(/Enter an email/iu, email)
     clickOnButton(/Continue/iu)
     cy.findByText(/Tap on the link/iu).should('be.visible')
     cy.findByText(/Waiting for you to/iu).should('be.visible')
@@ -58,8 +56,7 @@ describe('Join', () => {
     cy.findByText(/Confirm Join Cancellation/iu).should('be.visible')
     clickOnButton(/Yes, cancel/iu)
     clickOnButton(/Continue/iu)
-    cy.findByPlaceholderText(/Enter an email/iu)
-      .type(email)
+    typeIntoPlaceholder(/Enter an email/iu, email)
     clickOnButton(/Continue/iu)
     cy.findByText(/Tap on the link you received/iu).should('be.visible')
   })
@@ -82,8 +79,6 @@ describe('Join', () => {
     cy.findByText(/Confirm Join Cancellation/iu).should('be.visible')
     clickOnButton(/Yes, cancel/iu)
     cy.findByRole('button', { name: /Continue/iu }).should('not.be.disabled')
-    join(email)
-    cy.findByText(/Enter the 6-digit code/iu).should('be.visible')
   })
 
   it('invalid token page', () => {
@@ -91,12 +86,5 @@ describe('Join', () => {
     cy.findByText(/The login link you are attempting to use is either invalid/iu).should('be.visible')
     clickOnButton(/Back to the Join page/iu)
     cy.findByRole('button', { name: /Continue/iu }).should('not.be.disabled')
-  })
-
-  it('go to the invite only page as logged in', () => {
-    const [username] = generateUsernameAndEmail()
-    cy.joinWithNewAccount(username)
-    cy.visit('/clubs/invite-only')
-    cy.findByText(/overdoll is invite-only/iu)
   })
 })

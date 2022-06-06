@@ -14,18 +14,19 @@ export default function TotpQrCodeStep ({
 }: Props): JSX.Element {
   return (
     <Stack spacing={2}>
-      <Flex m={2} justify='center' align='center'>
+      <Flex justify='center' align='center'>
         <Flex
-          h={32}
-          w={32}
           borderRadius='md'
-          bg='gray.00'
           align='center'
           justify='center'
+          position='relative'
+          p={2}
+          bg='gray.00'
         >
           <NextImage
+            height={128}
+            width={128}
             alt='thumbnail'
-            layout='fill'
             src={image ?? ''}
             priority
           />

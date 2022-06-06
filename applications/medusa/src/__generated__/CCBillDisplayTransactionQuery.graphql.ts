@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<2f7d24091b7ab7da9fa59ee99d17d1c6>>
- * @relayHash 50bc1094ac91793f5e07b118f215ed70
+ * @generated SignedSource<<7d296904a97b97ba4814c41882ed1c71>>
+ * @relayHash 05002eb15a61ffeaa738c573b02525cd
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 50bc1094ac91793f5e07b118f215ed70
+// @relayRequestID 05002eb15a61ffeaa738c573b02525cd
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type CCBillDeclineError = "CARD_EXPIRED" | "GENERAL_SYSTEM_ERROR" | "INSUFFICIENT_FUNDS" | "RATE_LIMIT_ERROR" | "TRANSACTION_APPROVAL_REQUIRED" | "TRANSACTION_DECLINED" | "TRANSACTION_DENIED_OR_REFUSED_BY_BANK" | "%future added value";
@@ -26,6 +26,7 @@ export type CCBillDisplayTransactionQuery$data = {
     readonly declineText: string | null;
     readonly linkedAccountClubSupporterSubscription: {
       readonly id?: string;
+      readonly reference?: string;
       readonly supporterSince?: any;
       readonly paymentMethod?: {
         readonly card: {
@@ -37,6 +38,9 @@ export type CCBillDisplayTransactionQuery$data = {
       readonly club?: {
         readonly viewerMember: {
           readonly isSupporter: boolean;
+          readonly clubSupporterSubscription: {
+            readonly reference?: string;
+          } | null;
         } | null;
       };
     } | null;
@@ -95,10 +99,26 @@ v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "supporterSince",
+  "name": "reference",
   "storageKey": null
 },
 v7 = {
+  "kind": "InlineFragment",
+  "selections": [
+    (v2/*: any*/),
+    (v6/*: any*/)
+  ],
+  "type": "IAccountClubSupporterSubscription",
+  "abstractKey": "__isIAccountClubSupporterSubscription"
+},
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "supporterSince",
+  "storageKey": null
+},
+v9 = {
   "alias": null,
   "args": null,
   "concreteType": "PaymentMethod",
@@ -141,12 +161,35 @@ v7 = {
   ],
   "storageKey": null
 },
-v8 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "isSupporter",
   "storageKey": null
+},
+v11 = {
+  "kind": "InlineFragment",
+  "selections": [
+    (v6/*: any*/)
+  ],
+  "type": "IAccountClubSupporterSubscription",
+  "abstractKey": "__isIAccountClubSupporterSubscription"
+},
+v12 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
+},
+v13 = {
+  "kind": "InlineFragment",
+  "selections": [
+    (v2/*: any*/)
+  ],
+  "type": "Node",
+  "abstractKey": "__isNode"
 };
 return {
   "fragment": {
@@ -175,12 +218,12 @@ return {
             "name": "linkedAccountClubSupporterSubscription",
             "plural": false,
             "selections": [
+              (v7/*: any*/),
               {
                 "kind": "InlineFragment",
                 "selections": [
-                  (v2/*: any*/),
-                  (v6/*: any*/),
-                  (v7/*: any*/),
+                  (v8/*: any*/),
+                  (v9/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -197,7 +240,19 @@ return {
                         "name": "viewerMember",
                         "plural": false,
                         "selections": [
-                          (v8/*: any*/)
+                          (v10/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": null,
+                            "kind": "LinkedField",
+                            "name": "clubSupporterSubscription",
+                            "plural": false,
+                            "selections": [
+                              (v11/*: any*/)
+                            ],
+                            "storageKey": null
+                          }
                         ],
                         "storageKey": null
                       }
@@ -244,19 +299,13 @@ return {
             "name": "linkedAccountClubSupporterSubscription",
             "plural": false,
             "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "__typename",
-                "storageKey": null
-              },
+              (v12/*: any*/),
+              (v7/*: any*/),
               {
                 "kind": "InlineFragment",
                 "selections": [
-                  (v2/*: any*/),
-                  (v6/*: any*/),
-                  (v7/*: any*/),
+                  (v8/*: any*/),
+                  (v9/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -273,7 +322,21 @@ return {
                         "name": "viewerMember",
                         "plural": false,
                         "selections": [
-                          (v8/*: any*/),
+                          (v10/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": null,
+                            "kind": "LinkedField",
+                            "name": "clubSupporterSubscription",
+                            "plural": false,
+                            "selections": [
+                              (v12/*: any*/),
+                              (v11/*: any*/),
+                              (v13/*: any*/)
+                            ],
+                            "storageKey": null
+                          },
                           (v2/*: any*/)
                         ],
                         "storageKey": null
@@ -286,14 +349,7 @@ return {
                 "type": "AccountActiveClubSupporterSubscription",
                 "abstractKey": null
               },
-              {
-                "kind": "InlineFragment",
-                "selections": [
-                  (v2/*: any*/)
-                ],
-                "type": "Node",
-                "abstractKey": "__isNode"
-              }
+              (v13/*: any*/)
             ],
             "storageKey": null
           }
@@ -303,7 +359,7 @@ return {
     ]
   },
   "params": {
-    "id": "50bc1094ac91793f5e07b118f215ed70",
+    "id": "05002eb15a61ffeaa738c573b02525cd",
     "metadata": {},
     "name": "CCBillDisplayTransactionQuery",
     "operationKind": "query",
@@ -312,6 +368,6 @@ return {
 };
 })();
 
-(node as any).hash = "d3c8f0ad4becac1b610c92648b97b337";
+(node as any).hash = "388aef01fade3a871d84b037c2c8a7f4";
 
 export default node;

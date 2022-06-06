@@ -10,27 +10,15 @@ export const invalidateViewer = (store): void => {
     .getRoot()
     .getLinkedRecord('viewer')
 
-  viewer.invalidateRecord()
+  if (viewer != null) {
+    viewer.invalidateRecord()
+  }
 }
 
 export const setViewer = (store, payload): void => {
   const root = store.getRoot()
 
-  root.setLinkedRecord(payload, 'viewer')
-}
-
-export const prepareViewer = (store, payload): void => {
-  const viewer = store
-    .getRoot()
-    .getLinkedRecord('viewer')
-
-  // Link the viewer to the payload so ability can run without refresh
-  if (viewer !== null) {
-    invalidateViewer(store)
-  } else {
-    setViewer(store, payload)
+  if (root != null && payload != null) {
+    root.setLinkedRecord(payload, 'viewer')
   }
-
-  // Invalidate token so when user logs out they don't see the old authentication pages
-  invalidateToken(store)
 }

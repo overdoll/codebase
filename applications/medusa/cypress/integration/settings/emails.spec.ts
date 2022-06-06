@@ -1,4 +1,5 @@
 import { generateEmail, generateUsernameAndEmail } from '../../support/generate'
+import { clickOnButton, clickOnPanel, typeIntoPlaceholder } from '../../support/user_actions'
 
 describe('Email Settings', () => {
   it('should be able to add an email and confirm it, then make it primary and then remove it', () => {
@@ -14,13 +15,11 @@ describe('Email Settings', () => {
     /**
      * Add unconfirmed email
      */
-    cy.waitUntil(() => cy.findByRole('button', { name: /Manage Emails/iu }).should('not.be.disabled'))
-    cy.findByText('Manage Emails').should('be.visible').click()
+    clickOnPanel(/Manage Emails/iu)
     cy.url().should('include', '/settings/profile/emails')
-    cy.waitUntil(() => cy.findByRole('button', { name: /Add Email/iu }).should('not.be.disabled'), { timeout: 20000 })
-    cy.findByRole('button', { name: /Add Email/iu }).click()
-    cy.findByPlaceholderText('Enter a new email address').should('be.visible').type(newEmail)
-    cy.findByRole('button', { name: /Submit/iu }).should('not.be.disabled').click()
+    clickOnButton(/Add Email/iu)
+    typeIntoPlaceholder('Enter a new email address', newEmail)
+    clickOnButton(/Submit/iu)
     cy.findByText('UNCONFIRMED').should('exist')
     cy.reload()
     cy.findByText('UNCONFIRMED').should('not.exist')

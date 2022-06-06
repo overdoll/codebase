@@ -1,6 +1,6 @@
 import { generateUsernameAndEmail } from '../../support/generate'
 import { gotoNextStep, gotoPreviousStep, saveCurrentStep, skipCurrentStep } from '../../support/flow_builder'
-import { clickOnTile, searchForTerm } from '../../support/user_actions'
+import { clickOnTile, searchForTerm, typeIntoPlaceholder } from '../../support/user_actions'
 
 const preferenceAudience = 'Standard Audience'
 const preferenceCategory = 'Alter'
@@ -35,7 +35,7 @@ describe('Curation Profile', () => {
     /**
      * Go to curation profile
      */
-    cy.waitUntil(() => cy.findByRole('button', { name: /Complete Curation Profile/iu }).should('not.be.disabled').click())
+    clickOnTile(/Complete Curation Profile/i)
     cy.url().should('include', '/settings/preferences/curation-profile')
 
     /**
@@ -45,7 +45,7 @@ describe('Curation Profile', () => {
     skipCurrentStep()
     cy.findByText(/Age preference was skipped/iu).should('exist')
     gotoPreviousStep()
-    cy.findByPlaceholderText('Your age').should('be.visible').type('19')
+    typeIntoPlaceholder('Your age', '19')
     cy.get('button[aria-label="Remove"]').should('not.be.disabled').click()
     cy.get('button[aria-label="Remove"]').should('be.disabled')
     cy.get('button[aria-label="Add"]').should('not.be.disabled').click()

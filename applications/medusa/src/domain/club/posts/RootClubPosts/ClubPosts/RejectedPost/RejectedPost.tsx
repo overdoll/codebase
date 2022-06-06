@@ -1,5 +1,5 @@
 import { graphql, useFragment } from 'react-relay'
-import { Badge, HStack, Popover, PopoverBody, PopoverContent, PopoverTrigger, Stack, Text } from '@chakra-ui/react'
+import { Badge, HStack, Popover, PopoverBody, PopoverContent, PopoverTrigger, Stack } from '@chakra-ui/react'
 import { ClickableTile, GridTile } from '@//:modules/content/ContentSelection'
 import PostPreviewContent from '@//:modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
 import { PostMenu } from '@//:modules/content/Posts'
@@ -52,29 +52,21 @@ export default function RejectedPost ({
             </ClickableTile>
           </PopoverTrigger>
           <PopoverContent>
-            <PopoverBody>
-              <Stack>
-                <Text color='gray.00' fontSize='sm'>
+            <PopoverBody fontSize='sm'>
+              <Trans>
+                Your post was reviewed and it was determined that the contents did not comply with the{' '}
+                <LinkInline
+                  isExternal
+                  color='teal.300'
+                  href={CLUB_GUIDELINES}
+                  fontSize='sm'
+                >
                   <Trans>
-                    Your post was reviewed and it was determined that the contents did not comply with the{' '}
-                    <LinkInline
-                      isExternal
-                      color='teal.300'
-                      href={CLUB_GUIDELINES}
-                      fontSize='sm'
-                    >
-                      <Trans>
-                        Club Guidelines
-                      </Trans>
-                    </LinkInline>.
+                    Club Guidelines
                   </Trans>
-                </Text>
-                <Text color='gray.00' fontSize='sm'>
-                  <Trans>
-                    Please review the guidelines before posting again so that any future posts are not rejected.
-                  </Trans>
-                </Text>
-              </Stack>
+                </LinkInline>. Please review the guidelines before posting again so that any future posts are not
+                rejected.
+              </Trans>
             </PopoverBody>
           </PopoverContent>
         </Popover>

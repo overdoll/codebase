@@ -1,6 +1,6 @@
 import { generateClubName, generateUsernameAndEmail } from '../../support/generate'
 import { gotoNextStep, gotoPreviousStep, saveCurrentStep } from '../../support/flow_builder'
-import { clickOnButton, clickOnTab, clickOnTile, searchForTerm } from '../../support/user_actions'
+import { clickOnButton, clickOnTab, clickOnTile, searchForTerm, typeIntoPlaceholder } from '../../support/user_actions'
 
 const postAudience = 'Standard Audience'
 const postCategories = ['Alter', 'Assure', 'Transmit']
@@ -163,9 +163,9 @@ describe('Create & Manage Posts', () => {
     gotoNextStep()
     isOnStep('review')
     // test post submission
-    cy.findByRole('button', { name: /Submit/iu }).should('not.be.disabled').click()
+    clickOnButton(/Submit/iu)
     cy.findByText(/Submitted for review/iu).should('exist')
-    cy.findByRole('button', { name: /Post again/iu }).click()
+    clickOnButton(/Post again/i)
     cy.findByText(/Upload Files/iu).should('exist')
 
     /**
@@ -202,7 +202,7 @@ describe('Create & Manage Posts', () => {
     // can exit the flow
     cy.findByText('Arrange Uploads').parent().get('button[aria-label="Exit Creator"]').click()
     cy.waitUntil(() => cy.findByRole('button', { name: /Yes, exit/iu }).should('be.visible'))
-    cy.findByRole('button', { name: /Yes, exit/iu }).click()
+    clickOnButton(/Yes, exit/iu)
     cy.findByText(/Upload one or more files by/iu).should('be.visible')
 
     /**
@@ -263,7 +263,7 @@ describe('Create & Manage Posts', () => {
     clickOnButton('Remove Post')
     clickOnButton('Select Rule')
     clickOnTile(rule)
-    cy.findByPlaceholderText(/Add a note describing/iu).should('be.visible').type('A note about why the post was removed')
+    typeIntoPlaceholder(/Add a note describing/iu, 'A note about why the post was removed')
     clickOnButton('Confirm Remove Post')
     cy.findByText(/Successfully removed post/iu).should('be.visible')
   })

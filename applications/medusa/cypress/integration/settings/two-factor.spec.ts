@@ -1,7 +1,7 @@
 import { generateUsernameAndEmail } from '../../support/generate'
 import { join, logout } from '../../support/join_actions'
 import { gotoNextStep } from '../../support/flow_builder'
-import { clickOnButton } from '../../support/user_actions'
+import { clickOnButton, clickOnPanel, typeIntoPlaceholder } from '../../support/user_actions'
 
 const gotoSettingsPage = (): void => {
   cy.visit('/settings/security')
@@ -40,14 +40,15 @@ describe('Recovery Codes and Two-Factor', () => {
      * Generate and re-generate recovery codes
      */
     // Create recovery codes
-    cy.findByText('Recovery Codes').should('be.visible').click()
+    clickOnPanel('Recovery Codes')
     cy.findByText(/Set up recovery codes/iu).should('be.visible')
     clickOnButton(/Generate Recovery Codes/iu)
     cy.findByText(/Generate new recovery codes/iu).should('exist')
-
+    cy.reload()
     // Generate new codes and check to see if they are equal to the new ones
     cy.get('code').invoke('text').then(initialText => {
       clickOnButton(/Generate Recovery Codes/iu)
+      cy.findByText(/Recovery codes successfully/iu).should('be.visible')
       cy.get('code').invoke('text').should('not.equal', initialText)
     })
 
@@ -61,8 +62,7 @@ describe('Recovery Codes and Two-Factor', () => {
      */
     gotoSettingsPage()
     // Set up authenticator app
-    cy.waitUntil(() => cy.findByRole('button', { name: /Authenticator App/ }).should('not.be.disabled'))
-    cy.findByRole('button', { name: /Authenticator App/ }).click({ force: true })
+    clickOnPanel(/Authenticator App/)
     isOnStep('download')
     gotoNextStep()
     isOnStep('code')
@@ -75,9 +75,9 @@ describe('Recovery Codes and Two-Factor', () => {
         gotoNextStep()
         isOnStep('activate')
         cy.get('form').findByPlaceholderText('123456').type(token as string)
-        cy.findByRole('button', { name: /Activate/iu }).click()
+        clickOnButton(/Activate/iu)
         cy.findByText(/Two-factor setup complete/iu).should('exist')
-        cy.findByRole('button', { name: 'Complete' }).click()
+        clickOnButton('Complete')
       })
     })
 
@@ -115,21 +115,20 @@ describe('Recovery Codes and Two-Factor', () => {
     cy.findByText(/Enter the 6-digit code/iu).should('exist')
     cy.getCookie('cypressTestRecoveryCode').then(cookie => {
       cy.waitUntil(() => cy.findByRole('button', { name: /I lost access/iu }).should('not.be.disabled'))
-      cy.findByRole('button', { name: /I lost access/iu }).click()
+      clickOnButton(/I lost access/iu)
       cy.waitUntil(() => cy.findByPlaceholderText(/recovery code/iu).should('exist'))
-      cy.findByPlaceholderText(/recovery code/iu).type(cookie?.value as string)
+      typeIntoPlaceholder(/recovery code/iu, cookie?.value as string)
       cy.findByRole('button', { name: 'Submit' }).click()
       cy.findByText(/A recovery code was successfully used up to log you in/iu).should('exist')
-      cy.url().should('include', '/')
+      cy.findByText('Home').should('be.visible')
     })
 
     /**
      * Disable two factor
      */
     gotoSettingsPage()
-    cy.waitUntil(() => cy.findByRole('button', { name: /Disable/iu }).should('not.be.disabled'))
     clickOnButton(/Disable/iu)
     clickOnButton(/Disable Two-factor/iu)
-    cy.findByText(/Disable Two-Factor Authentication/iu).should('not.exist')
+    cy.findByRole('button', { name: 'Disable' }).should('not.exist')
   })
 })

@@ -1,5 +1,5 @@
 import { generateUsernameAndEmail } from '../../support/generate'
-import { clickOnButton } from '../../support/user_actions'
+import { clickOnButton, clickOnPanel } from '../../support/user_actions'
 
 describe('Username Settings', () => {
   it('should be able to change username', () => {
@@ -9,7 +9,7 @@ describe('Username Settings', () => {
     const [username] = generateUsernameAndEmail()
     cy.joinWithNewAccount(username)
     cy.visit('/settings/profile')
-    cy.findByText('Manage Username').should('be.visible').click()
+    clickOnPanel('Manage Username')
     cy.url().should('include', '/settings/profile/username')
     clickOnButton(/Change Username/iu)
     const [newUsername] = generateUsernameAndEmail()

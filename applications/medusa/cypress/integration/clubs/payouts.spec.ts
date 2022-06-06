@@ -1,5 +1,5 @@
 import { generateClubName, generateUsernameAndEmail } from '../../support/generate'
-import { clickOnButton, clickOnToggle } from '../../support/user_actions'
+import { clickOnButton, clickOnPanel, clickOnToggle, typeIntoPlaceholder } from '../../support/user_actions'
 
 Cypress.config('defaultCommandTimeout', 10000)
 
@@ -26,10 +26,10 @@ describe('Payouts', () => {
      * Payout details update
      */
     cy.visit('/settings/payouts')
-    cy.findByText('Enter your payout details').should('not.be.disabled').click()
+    clickOnPanel('Enter your payout details')
     cy.url().should('include', '/settings/payouts/details')
-    cy.findByPlaceholderText('Enter a first name').should('be.visible').type('Test')
-    cy.findByPlaceholderText('Enter a last name').should('be.visible').type('Test')
+    typeIntoPlaceholder('Enter a first name', 'Test')
+    typeIntoPlaceholder('Enter a last name', 'Test')
     cy.findByText('Select a country').parent().should('not.be.disabled').select('Iraq')
     clickOnButton('Update Account Details')
     cy.findByText('Successfully updated account details').should('be.visible')
@@ -49,14 +49,14 @@ describe('Payouts', () => {
     /**
      * Payout method update
      */
-    cy.findByText('Payout Method').should('not.be.disabled').click()
+    clickOnPanel('Payout Method')
     cy.url().should('include', '/settings/payouts/method')
     cy.findByText('Read Agreement').should('be.visible')
     clickOnToggle(/I fully understand the information provided/iu, true)
     clickOnButton('Next')
     cy.findByText(/Paxum is an E-wallet/iu).click()
     clickOnButton('Next')
-    cy.findByPlaceholderText('Enter your Paxum payments email').should('be.visible').type('test@example.com')
+    typeIntoPlaceholder('Enter your Paxum payments email', 'test@example.com')
     clickOnButton('Set up payout method')
     clickOnButton('Back to Payouts Settings')
     cy.findByText('Your Payout Method').should('be.visible')

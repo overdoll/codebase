@@ -21,7 +21,7 @@ describe('Lock/Unlock Account', () => {
     /**
      * Unlock account as owner
      */
-    cy.joinWithExistingAccount(username)
+    cy.joinWithNewAccount(username)
     cy.visit('/settings/profile')
     cy.findByText(/Your account is currently locked/iu).should('be.visible')
     clickOnButton('View Details')
@@ -41,7 +41,7 @@ describe('Lock/Unlock Account', () => {
     /**
      * Attempt to unlock account as owner and see that you can't
      */
-    cy.joinWithExistingAccount(username)
+    cy.joinWithNewAccount(username)
     cy.visit('/')
     clickOnButton('View Details')
     cy.findByText(/Locked for/iu).should('be.visible')

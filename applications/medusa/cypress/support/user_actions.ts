@@ -8,8 +8,7 @@ export const clickOnTile = (text: string | RegExp): void => {
 }
 
 export const clickOnButton = (text: string | RegExp): void => {
-  cy.waitUntil(() => cy.findByRole('button', { name: text }).should('not.be.disabled'))
-  cy.findByRole('button', { name: text }).should('exist').click({ force: true })
+  cy.findByRole('button', { name: text }).should('not.be.disabled').click({ force: true })
 }
 
 export const clickOnToggle = (placeholder: string | RegExp, expect: boolean): void => {
@@ -19,4 +18,12 @@ export const clickOnToggle = (placeholder: string | RegExp, expect: boolean): vo
 
 export const clickOnTab = (text: string | RegExp): void => {
   cy.findByRole('tab', { name: text }).should('not.be.disabled').click({ force: true })
+}
+
+export const typeIntoPlaceholder = (placeholder: string | RegExp, type: string): void => {
+  cy.findByPlaceholderText(placeholder).should('be.visible').type(type, { force: true })
+}
+
+export const clickOnPanel = (text: string | RegExp): void => {
+  cy.findByText(text).should('be.visible').click({ force: true })
 }

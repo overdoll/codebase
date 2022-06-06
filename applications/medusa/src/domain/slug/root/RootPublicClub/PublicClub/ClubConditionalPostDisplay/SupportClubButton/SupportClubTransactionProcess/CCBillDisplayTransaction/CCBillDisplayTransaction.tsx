@@ -23,8 +23,11 @@ const Query = graphql`
       declineError
       declineText
       linkedAccountClubSupporterSubscription {
-        ... on AccountActiveClubSupporterSubscription {
+        ... on IAccountClubSupporterSubscription {
           id
+          reference
+        }
+        ... on AccountActiveClubSupporterSubscription {
           supporterSince
           paymentMethod {
             card {
@@ -36,6 +39,11 @@ const Query = graphql`
           club {
             viewerMember {
               isSupporter
+              clubSupporterSubscription {
+                ...on IAccountClubSupporterSubscription {
+                  reference
+                }
+              }
             }
           }
         }

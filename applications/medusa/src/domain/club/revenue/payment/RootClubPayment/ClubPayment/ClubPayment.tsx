@@ -135,7 +135,7 @@ export default function ClubPayment ({ query }: Props): JSX.Element {
                   </Tr>
                   <Tr>
                     <Td>Platform Fee</Td>
-                    <Td isNumeric>+{platformFeeAmount}</Td>
+                    <Td isNumeric>{platformFeeAmount}</Td>
                   </Tr>
                   <Tr>
                     <Td>Total Deducted From Balance</Td>

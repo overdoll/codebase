@@ -1,5 +1,5 @@
 import { generateUsernameAndEmail } from '../../support/generate'
-import { clickOnButton, clickOnTab, clickOnToggle } from '../../support/user_actions'
+import { clickOnButton, clickOnPanel, clickOnTab, clickOnToggle } from '../../support/user_actions'
 
 const testCardDetails = {
   firstName: 'Test',
@@ -97,7 +97,7 @@ describe('Supporter', () => {
      * Cancel subscription, update payment method modal
      */
     cy.visit('/settings/billing')
-    cy.findByText('My Subscriptions').should('be.visible').click({ force: true })
+    clickOnPanel('My Subscriptions')
     cy.url().should('include', '/settings/billing/subscriptions')
     cy.findByText(newPaymentMethodClubName).should('be.visible').click({ force: true })
     cy.findByText('Subscription Details').should('be.visible')
@@ -154,7 +154,7 @@ describe('Supporter', () => {
      * Remove saved payment method
      */
     cy.visit('/settings/billing')
-    cy.findByText('Payment Methods').should('be.visible').click({ force: true })
+    clickOnPanel('Payment Methods')
     cy.url().should('include', '/settings/billing/payment-methods')
 
     cy.findByText(`${testCardDetails.cardExpirationMonth}/${testCardDetails.cardExpirationYear}`).should('be.visible')
@@ -167,7 +167,7 @@ describe('Supporter', () => {
      * Check that you can't delete account with active subscriptions
      */
     cy.visit('/settings/profile')
-    cy.findByText('Delete Account').should('be.visible').click({ force: true })
+    clickOnPanel('Delete Account')
     cy.url().should('include', '/settings/profile/delete-account')
     cy.findByText(/You cannot delete your account until you cancel your subscriptions/iu).should('be.visible')
 

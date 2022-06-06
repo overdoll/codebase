@@ -1,6 +1,6 @@
 import { graphql, useFragment } from 'react-relay'
 import type { RemovedPostFragment$key } from '@//:artifacts/RemovedPostFragment.graphql'
-import { Badge, HStack, Popover, PopoverBody, PopoverContent, PopoverTrigger, Stack, Text } from '@chakra-ui/react'
+import { Badge, HStack, Popover, PopoverBody, PopoverContent, PopoverTrigger, Stack } from '@chakra-ui/react'
 import { ClickableTile, GridTile } from '@//:modules/content/ContentSelection'
 import PostPreviewContent from '@//:modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
 import { PostMenu } from '@//:modules/content/Posts'
@@ -52,22 +52,20 @@ export default function RemovedPost ({
             </ClickableTile>
           </PopoverTrigger>
           <PopoverContent>
-            <PopoverBody>
-              <Text color='gray.00' fontSize='sm'>
-                <Trans>
-                  This post was removed for failing to comply with the{' '}
-                  <LinkInline
-                    isExternal
-                    color='teal.300'
-                    href={CLUB_GUIDELINES}
-                    fontSize='sm'
-                  >
-                    <Trans>
-                      Club Guidelines
-                    </Trans>
-                  </LinkInline>.
-                </Trans>
-              </Text>
+            <PopoverBody fontSize='sm'>
+              <Trans>
+                This post was removed for failing to comply with the{' '}
+                <LinkInline
+                  isExternal
+                  color='teal.300'
+                  href={CLUB_GUIDELINES}
+                  fontSize='sm'
+                >
+                  <Trans>
+                    Club Guidelines
+                  </Trans>
+                </LinkInline>.
+              </Trans>
             </PopoverBody>
           </PopoverContent>
         </Popover>

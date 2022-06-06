@@ -1,5 +1,5 @@
 import { generateClubName, generateUsernameAndEmail } from '../../support/generate'
-import { clickOnButton, clickOnToggle } from '../../support/user_actions'
+import { clickOnButton, clickOnToggle, typeIntoPlaceholder } from '../../support/user_actions'
 
 describe('Suspend/UnSuspend/Terminate/UnTerminate/Cancel Subscriptions Club', () => {
   it('suspend club, unsuspend club, cancel all subscriptions, terminate club, unterminate club', () => {
@@ -68,14 +68,14 @@ describe('Suspend/UnSuspend/Terminate/UnTerminate/Cancel Subscriptions Club', ()
     cy.findByText('Cancel Active Supporter Subscriptions').should('be.visible')
     clickOnButton('Cancel Supporter Subscriptions')
     cy.findByText(/into the input below to confirm that you would like to cancel all of the club's active supporter subscriptions/iu).should('be.visible')
-    cy.findByPlaceholderText(cancellationText).type(cancellationText)
+    typeIntoPlaceholder(cancellationText, cancellationText)
     clickOnButton('Cancel all active club supporter subscriptions')
     cy.findByText(/Successfully cancelled all active club supporter subscriptions/iu).should('be.visible')
 
     // terminate club
     clickOnButton('Terminate Club')
     cy.findByText(/into the input below to confirm that you would like to terminate the club/iu).should('be.visible')
-    cy.findByPlaceholderText(terminationText).type(terminationText)
+    typeIntoPlaceholder(terminationText, terminationText)
     clickOnButton('Confirm Terminate Club')
     cy.findByText(/Successfully terminated club/iu).should('be.visible')
     cy.reload()

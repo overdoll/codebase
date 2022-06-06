@@ -51,6 +51,7 @@ const UsernameMutationGQL = graphql`
       account  {
         id
         username
+        usernameEditAvailableAt
       }
     }
   }

@@ -1,4 +1,4 @@
-import { Box, HTMLChakraProps, Popover, PopoverContent, PopoverTrigger, useDisclosure } from '@chakra-ui/react'
+import { Box, HTMLChakraProps } from '@chakra-ui/react'
 import { ControlVolumeHigh, ControlVolumeMissing, ControlVolumeMuted } from '@//:assets/icons/interface'
 import { Icon } from '../../../../../../../PageLayout'
 
@@ -13,10 +13,6 @@ export default function VolumeButton ({
   onChangeMuted,
   hasAudio
 }: Props): JSX.Element {
-  const {
-    isOpen
-  } = useDisclosure()
-
   if (!hasAudio) {
     return (
       <Box boxShadow='lg' w={6} h={6}>
@@ -25,15 +21,8 @@ export default function VolumeButton ({
     )
   }
   return (
-    <Popover isOpen={isOpen}>
-      <PopoverTrigger>
-        <Box onClick={onChangeMuted} cursor='pointer' w={6} h={6}>
-          <Icon icon={isMuted ? ControlVolumeMuted : ControlVolumeHigh} fill='whiteAlpha.800' />
-        </Box>
-      </PopoverTrigger>
-      <PopoverContent>
-        123
-      </PopoverContent>
-    </Popover>
+    <Box onClick={onChangeMuted} cursor='pointer' w={6} h={6}>
+      <Icon icon={isMuted ? ControlVolumeMuted : ControlVolumeHigh} fill='whiteAlpha.800' />
+    </Box>
   )
 }
