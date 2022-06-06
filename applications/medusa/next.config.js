@@ -116,7 +116,7 @@ const moduleExports = withBundleAnalyzer({
           apply: compiler =>
             compiler.hooks.done.tap('CleanJsMapPlugin', (compilation, cb) => {
               glob.sync('.webpack/**/*.js.map').forEach(f => removeSync(f))
-              cb()
+              // cb()
             })
         }
       ]
@@ -129,7 +129,7 @@ const moduleExports = withBundleAnalyzer({
 let sentryConfig
 
 if (process.env.PRODUCTION_DEPLOYMENT != null) {
-  sentryConfig = withSentryConfig(moduleExports, { silent: false })
+  sentryConfig = withSentryConfig(moduleExports, { silent: true })
   moduleExports.sentry = {
     hideSourceMaps: true,
     setCommits: { auto: true }
