@@ -15,9 +15,6 @@ import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequenc
 import { CLUB_GUIDELINES } from '@//:modules/constants/links'
 import { useRouter } from 'next/router'
 import ClubInformationBanner from '../../../../../../../common/components/ClubInformationBanner/ClubInformationBanner'
-import { useUpdateEffect } from 'usehooks-ts'
-import { useContext } from 'react'
-import { UppyContext } from '../../../context'
 
 interface Props {
   postQuery: PostStateFragment$key | null

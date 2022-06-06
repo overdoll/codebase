@@ -4,7 +4,6 @@ import type { RegisterMutation } from '@//:artifacts/RegisterMutation.graphql'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import RegisterForm from './RegisterForm/RegisterForm'
 import type { RegisterFragment$key } from '@//:artifacts/RegisterFragment.graphql'
-import { useCookies } from 'react-cookie'
 import { t, Trans } from '@lingui/macro'
 import translateValidation from '@//:modules/validation/translateValidation'
 import { useFlash } from '@//:modules/flash'
@@ -12,9 +11,6 @@ import { useLingui } from '@lingui/react'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { COMMUNITY_GUIDELINES, PRIVACY_POLICY, TERMS_OF_SERVICE } from '@//:modules/constants/links'
 import Head from 'next/head'
-import { StringParam, useQueryParam } from 'use-query-params'
-import { useRouter } from 'next/router'
-import { invalidateToken, setViewer } from '../../support/support'
 import RevokeTokenButton from '../../components/RevokeTokenButton/RevokeTokenButton'
 import { OverdollLogo } from '@//:assets/logos'
 import useGrantCleanup from '../../support/useGrantCleanup'
@@ -62,9 +58,10 @@ export default function Register ({ queryRef }: Props): JSX.Element {
 
   const { i18n } = useLingui()
 
-  const { successfulGrant, invalidateGrant } = useGrantCleanup()
-
-  const router = useRouter()
+  const {
+    successfulGrant,
+    invalidateGrant
+  } = useGrantCleanup()
 
   const { flash } = useFlash()
 
