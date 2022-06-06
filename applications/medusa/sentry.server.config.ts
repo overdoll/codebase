@@ -5,7 +5,7 @@ const SENTRY_DSN: string =
 
 Sentry.init({
   dsn: SENTRY_DSN,
-  tracesSampleRate: 0.0,
+  tracesSampleRate: 0.2,
   release: process.env.APP_VERSION,
   environment: process.env.APP_ENV
 })
