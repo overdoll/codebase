@@ -34,7 +34,7 @@ msgid "Email"
 msgstr ""
 
 #: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:131
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:155
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:161
 msgid "Enter your Paxum payments email"
 msgstr ""
 
@@ -44,6 +44,10 @@ msgstr ""
 
 #: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:47
 msgid "In order to receive payments on the platform (and maintain your ability to do so), you must..."
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:143
+msgid "Make sure that the First and Last name you have entered in your Payout Details match the First and Last name on your Paxum account. Otherwise, any payouts we send will fail."
 msgstr ""
 
 #: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:53
@@ -63,7 +67,7 @@ msgstr ""
 msgid "Paxum"
 msgstr ""
 
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:150
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:156
 msgid "Paxum Email"
 msgstr ""
 
@@ -99,7 +103,7 @@ msgstr ""
 msgid "Post at least one new piece of exclusive supporter content every 30 days"
 msgstr ""
 
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:166
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:172
 msgid "Set up payout method"
 msgstr ""
 

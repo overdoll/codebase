@@ -1,17 +1,19 @@
 import { graphql, useFragment } from 'react-relay'
 import type { RemovedPostFragment$key } from '@//:artifacts/RemovedPostFragment.graphql'
-import { Badge, HStack, Stack } from '@chakra-ui/react'
-import { GridTile } from '@//:modules/content/ContentSelection'
-import PostPreviewContent
-  from '@//:modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
+import { Badge, HStack, Popover, PopoverBody, PopoverContent, PopoverTrigger, Stack } from '@chakra-ui/react'
+import { ClickableTile, GridTile } from '@//:modules/content/ContentSelection'
+import PostPreviewContent from '@//:modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
 import { PostMenu } from '@//:modules/content/Posts'
 import { Trans } from '@lingui/macro'
 import PostModerateButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
 import PostDeleteButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton'
+import { ConnectionProp } from '@//:types/components'
+import LinkInline from '@//:modules/content/ContentHints/LinkInline/LinkInline'
+import { CLUB_GUIDELINES } from '@//:modules/constants/links'
 
-interface Props {
+interface Props extends ConnectionProp {
   query: RemovedPostFragment$key
 }
 
@@ -24,25 +26,49 @@ const Fragment = graphql`
 `
 
 export default function RemovedPost ({
-  query
+  query,
+  connectionId
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   return (
     <Stack spacing={1}>
-      <HStack align='center' spacing={3} justify='space-between'>
+      <HStack h={7} align='center' spacing={3} justify='space-between'>
         <Badge borderRadius='base' fontSize='sm' colorScheme='orange'>
           <Trans>
             REMOVED
           </Trans>
         </Badge>
-        <PostMenu h={5} size='xs'>
-          <PostDeleteButton query={data} />
+        <PostMenu size='xs'>
+          <PostDeleteButton connectionId={connectionId} query={data} />
           <PostModerateButton query={data} />
         </PostMenu>
       </HStack>
       <GridTile>
-        <PostPreviewContent query={data} />
+        <Popover>
+          <PopoverTrigger>
+            <ClickableTile>
+              <PostPreviewContent query={data} />
+            </ClickableTile>
+          </PopoverTrigger>
+          <PopoverContent>
+            <PopoverBody fontSize='sm'>
+              <Trans>
+                This post was removed for failing to comply with the{' '}
+                <LinkInline
+                  isExternal
+                  color='teal.300'
+                  href={CLUB_GUIDELINES}
+                  fontSize='sm'
+                >
+                  <Trans>
+                    Club Guidelines
+                  </Trans>
+                </LinkInline>.
+              </Trans>
+            </PopoverBody>
+          </PopoverContent>
+        </Popover>
       </GridTile>
     </Stack>
   )

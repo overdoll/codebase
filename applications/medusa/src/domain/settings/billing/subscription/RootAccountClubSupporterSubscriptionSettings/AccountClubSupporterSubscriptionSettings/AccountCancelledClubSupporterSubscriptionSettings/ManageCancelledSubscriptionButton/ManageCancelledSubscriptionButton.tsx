@@ -5,7 +5,7 @@ import type {
 import Button from '@//:modules/form/Button/Button'
 import { Plural, t, Trans } from '@lingui/macro'
 import differenceInDays from 'date-fns/differenceInDays'
-import { Box, HStack, Popover, PopoverBody, PopoverContent, PopoverTrigger, Text } from '@chakra-ui/react'
+import { Box, HStack, Popover, PopoverBody, PopoverContent, PopoverTrigger } from '@chakra-ui/react'
 import IconButton from '@//:modules/form/IconButton/IconButton'
 import { InfoCircle } from '@//:assets/icons'
 import { useLingui } from '@lingui/react'
@@ -49,20 +49,16 @@ export default function ManageCancelledSubscriptionButton ({ query }: Props): JS
             />
           </PopoverTrigger>
           <PopoverContent>
-            <PopoverBody>
-              <Text fontSize='sm' color='gray.100'>
-                <Plural
-                  value={cancelledRemainingDays}
-                  one='Your benefits will expire in # day.'
-                  other='Your benefits will expire in # days.'
-                />
-              </Text>
-              <Text fontSize='sm' color='gray.100'>
-                <Trans>
-                  You can renew your benefits only after the
-                  subscription has fully expired from the club page.
-                </Trans>
-              </Text>
+            <PopoverBody fontSize='sm'>
+              <Plural
+                value={cancelledRemainingDays}
+                one='Your benefits will expire in # day.'
+                other='Your benefits will expire in # days.'
+              />
+              <Trans>
+                You can renew your benefits only after the
+                subscription has fully expired from the club page.
+              </Trans>
             </PopoverBody>
           </PopoverContent>
         </Popover>

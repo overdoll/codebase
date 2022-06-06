@@ -21,7 +21,7 @@ export default function PayoutCountryNotSupported ({ query }: Props): JSX.Elemen
 
   return (
     <Stack align='center' spacing={4}>
-      <Icon icon={WarningTriangle} fill='orange.400' w={12} h={12} />
+      <Icon icon={WarningTriangle} fill='orange.300' w={12} h={12} />
       <Stack spacing={2}>
         <Heading textAlign='center' fontSize='2xl' color='gray.00'>
           <Trans>

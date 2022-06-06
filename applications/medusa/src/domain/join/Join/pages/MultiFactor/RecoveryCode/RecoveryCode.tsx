@@ -3,7 +3,6 @@ import { Box, Heading, Stack } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
-import { prepareViewer } from '../../../support/support'
 import { RecoveryCodeMutation } from '@//:artifacts/RecoveryCodeMutation.graphql'
 import { RecoveryCodeFragment$key } from '@//:artifacts/RecoveryCodeFragment.graphql'
 import { useLingui } from '@lingui/react'
@@ -19,11 +18,9 @@ import {
   InputFooter,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
-import { StringParam, useQueryParam } from 'use-query-params'
-import { useRouter } from 'next/router'
-import { useCookies } from 'react-cookie'
 import Icon from '../../../../../../modules/content/PageLayout/Flair/Icon/Icon'
 import { Barcode } from '@//:assets/icons'
+import useGrantCleanup from '../../../support/useGrantCleanup'
 
 interface CodeValues {
   code: string
@@ -73,10 +70,6 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
     RecoveryCodeMutationGQL
   )
 
-  const [redirect] = useQueryParam<string | null | undefined>('redirect', StringParam)
-
-  const [, , removeCookie] = useCookies<string>(['token'])
-
   const { i18n } = useLingui()
 
   const schema = Joi.object({
@@ -102,7 +95,10 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
 
   const notify = useToast()
 
-  const router = useRouter()
+  const {
+    successfulGrant,
+    invalidateGrant
+  } = useGrantCleanup()
 
   const onSubmitCode = ({ code }: CodeValues): void => {
     submitCode({
@@ -127,15 +123,11 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
       },
       updater: (store, payload) => {
         if (payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode?.validation === 'TOKEN_INVALID') {
-          store.get(fragment.id)?.invalidateRecord()
-          removeCookie('token')
+          invalidateGrant(store, fragment.id)
         }
         if (payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode?.account?.id != null) {
-          const account = store.get(payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode?.account?.id)
-          store.get(payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode?.revokedAuthenticationTokenId)?.invalidateRecord()
-          prepareViewer(store, account)
-          removeCookie('token')
-          void router.push(redirect != null ? redirect : '/')
+          const viewerPayload = store.getRootField('grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode').getLinkedRecord('account')
+          successfulGrant(store, viewerPayload, payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode?.revokedAuthenticationTokenId)
         }
       },
       onError (data) {

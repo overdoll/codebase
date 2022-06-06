@@ -25,7 +25,7 @@ export default function PostMedia ({
   const DisplayMedia = (): JSX.Element => {
     switch (data.type) {
       case 'IMAGE':
-        return <ImageSnippet objectFit='cover' query={data} />
+        return <ImageSnippet query={data} />
       case 'VIDEO':
         return (
           <PostVideoMedia controls={controls} query={data} />

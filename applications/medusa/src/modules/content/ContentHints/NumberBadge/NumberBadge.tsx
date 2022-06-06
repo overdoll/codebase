@@ -32,7 +32,7 @@ export default function NumberBadge ({
     lg: 'md'
   }
 
-  const boxFill = colorScheme === 'gray' ? `${colorScheme}.700` : `${colorScheme}.400`
+  const boxFill = colorScheme === 'gray' ? `${colorScheme}.700` : `${colorScheme}.300`
   const textFill = colorScheme === 'gray' ? `${colorScheme}.100` : 'gray.00'
 
   const isOverflowing = value > 9

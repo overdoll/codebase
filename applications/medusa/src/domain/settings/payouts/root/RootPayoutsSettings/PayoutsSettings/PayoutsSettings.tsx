@@ -65,7 +65,7 @@ export default function PayoutsSettings (props: Props): JSX.Element {
           </Flex>
         </Alert>
       )}
-      <Stack spacing={8}>
+      <Stack spacing={2}>
         <PayoutsDetailsSettings query={data.viewer} />
         <PayoutsMethodSettings query={data.viewer} />
       </Stack>

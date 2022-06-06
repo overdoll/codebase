@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<78ee3a17c0041c86797931e0aad9c9ab>>
+ * @generated SignedSource<<d8ec5155d6f0e718737b644d8574cfa4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type HomeFragment$data = {
-  readonly posts: {
+  readonly postsFeed: {
     readonly edges: ReadonlyArray<{
       readonly __typename: string;
     }>;
@@ -27,7 +27,7 @@ export type HomeFragment$key = {
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "posts"
+  "postsFeed"
 ],
 v1 = {
   "alias": null,
@@ -75,17 +75,11 @@ return {
   "name": "HomeFragment",
   "selections": [
     {
-      "alias": "posts",
-      "args": [
-        {
-          "kind": "Literal",
-          "name": "sortBy",
-          "value": "TOP"
-        }
-      ],
+      "alias": "postsFeed",
+      "args": null,
       "concreteType": "PostConnection",
       "kind": "LinkedField",
-      "name": "__HomePosts_posts_connection",
+      "name": "__HomePosts_postsFeed_connection",
       "plural": false,
       "selections": [
         {
@@ -150,7 +144,7 @@ return {
           "storageKey": null
         }
       ],
-      "storageKey": "__HomePosts_posts_connection(sortBy:\"TOP\")"
+      "storageKey": null
     }
   ],
   "type": "Query",
@@ -158,6 +152,6 @@ return {
 };
 })();
 
-(node as any).hash = "dc5e4f1164840dfc26955bb436c4e3dc";
+(node as any).hash = "481036120704a7dd42b66c1c31db5fa0";
 
 export default node;

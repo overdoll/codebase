@@ -12,8 +12,9 @@ import { ContentBrushPen } from '@//:assets/icons'
 import PostDeleteButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton'
 import { useRouter } from 'next/router'
+import { ConnectionProp } from '@//:types/components'
 
-interface Props {
+interface Props extends ConnectionProp {
   query: DraftPostFragment$key
 }
 
@@ -27,7 +28,8 @@ const Fragment = graphql`
 `
 
 export default function DraftPost ({
-  query
+  query,
+  connectionId
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
@@ -35,13 +37,13 @@ export default function DraftPost ({
 
   return (
     <Stack spacing={1}>
-      <HStack align='center' spacing={3} justify='space-between'>
+      <HStack h={7} align='center' spacing={3} justify='space-between'>
         <Badge borderRadius='base' fontSize='sm' colorScheme='teal'>
           <Trans>
             DRAFT
           </Trans>
         </Badge>
-        <PostMenu h={5} size='xs'>
+        <PostMenu size='xs'>
           <MenuLinkItem
             href={{
               pathname: '/club/[slug]/create-post',
@@ -56,7 +58,7 @@ export default function DraftPost ({
               </Trans>)}
             icon={ContentBrushPen}
           />
-          <PostDeleteButton query={data} />
+          <PostDeleteButton connectionId={connectionId} query={data} />
           <PostModerateButton query={data} />
         </PostMenu>
       </HStack>

@@ -1,6 +1,6 @@
 import { Icon } from '@//:modules/content/PageLayout'
 import { OverdollLogo } from '@//:assets/logos/platform'
-import { Flex, Heading, HStack, Text } from '@chakra-ui/react'
+import { Flex, Heading, HStack } from '@chakra-ui/react'
 import { LinkTile } from '@//:modules/content/ContentSelection'
 
 export default function SiteLinkLogo (): JSX.Element {
@@ -12,9 +12,6 @@ export default function SiteLinkLogo (): JSX.Element {
           <Heading fontSize='sm' color='primary.400'>
             overdoll
           </Heading>
-          <Text color='primary.50' fontSize='2xs' as='i'>
-            beta (not really)
-          </Text>
         </Flex>
       </HStack>
     </LinkTile>

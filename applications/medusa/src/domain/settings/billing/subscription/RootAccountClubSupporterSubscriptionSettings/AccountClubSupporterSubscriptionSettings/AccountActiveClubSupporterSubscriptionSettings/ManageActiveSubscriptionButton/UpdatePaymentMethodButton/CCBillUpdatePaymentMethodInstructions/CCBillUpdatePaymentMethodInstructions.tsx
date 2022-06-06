@@ -92,7 +92,7 @@ export default function CCBillUpdatePaymentMethodInstructions ({ query }: Props)
                     Navigate to the
                   </Trans>
                   {' '}
-                  <LinkInline isExternal color='teal.400' fontSize='sm' href='https://support.ccbill.com/'>
+                  <LinkInline isExternal color='teal.300' fontSize='sm' href='https://support.ccbill.com/'>
                     <Trans>
                       CCBill Support Center
                     </Trans>

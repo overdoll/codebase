@@ -111,7 +111,7 @@ export default function InitiateClubPayoutForm ({
           colorScheme='green'
         >
           <Trans>
-            Initiate Payout
+            Confirm Initiate Payout
           </Trans>
         </FormSubmitButton>
       </Stack>

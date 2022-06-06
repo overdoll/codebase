@@ -80,7 +80,7 @@ const MenuItem = forwardRef<any, MenuItemProps>(({
   isLoading,
   ...rest
 }: MenuItemProps, forwardRef): JSX.Element => {
-  const color = colorScheme != null ? `${colorScheme}.400` : 'gray.100'
+  const color = colorScheme != null ? `${colorScheme}.300` : 'gray.100'
 
   const IconComponent = (): JSX.Element => {
     if (isLoading === true) {

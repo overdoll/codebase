@@ -64,7 +64,7 @@ export default function StaffRevokeArtistButton ({
       isLoading={isInFlight}
       onClick={onSubmit}
       w='100%'
-      size='lg'
+      size='md'
       colorScheme='orange'
     >
       <Trans>

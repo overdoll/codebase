@@ -1,11 +1,12 @@
 import { clickOnButton, clickOnTile, searchForTerm } from '../../support/user_actions'
 
+const series = 'Foreigner On Mars'
+const category = 'Assure'
+
 Cypress.config('defaultCommandTimeout', 10000)
 
-describe('Use Search', () => {
+describe('Search', () => {
   // const character = 'Orion Strong'
-  const series = 'Foreigner On Mars'
-  const category = 'Assure'
 
   it('home page search', () => {
     cy.visit('/')

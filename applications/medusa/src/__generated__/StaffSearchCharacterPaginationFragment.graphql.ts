@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<821b720f16e7ed773e017a64088256ad>>
- * @relayHash 2fbbb7698fc5b023e9e3e9fcb5824717
+ * @generated SignedSource<<8aa9c1ddd1dcf1724449e52e7def364e>>
+ * @relayHash a805d0d7983c05b8d02fb9bab17b6853
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 2fbbb7698fc5b023e9e3e9fcb5824717
+// @relayRequestID a805d0d7983c05b8d02fb9bab17b6853
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -201,6 +201,20 @@ return {
                       {
                         "alias": null,
                         "args": null,
+                        "kind": "ScalarField",
+                        "name": "width",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "height",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
                         "concreteType": "ResourceUrl",
                         "kind": "LinkedField",
                         "name": "videoThumbnail",
@@ -283,7 +297,7 @@ return {
     ]
   },
   "params": {
-    "id": "2fbbb7698fc5b023e9e3e9fcb5824717",
+    "id": "a805d0d7983c05b8d02fb9bab17b6853",
     "metadata": {},
     "name": "StaffSearchCharacterPaginationFragment",
     "operationKind": "query",

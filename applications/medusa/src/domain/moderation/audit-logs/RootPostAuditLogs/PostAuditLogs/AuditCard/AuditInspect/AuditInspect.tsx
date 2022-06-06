@@ -30,7 +30,7 @@ export default function AuditInspect ({ auditLog }: Props): JSX.Element {
       >
         <Text
           textAlign='center'
-          color={data.action === 'APPROVED' ? 'green.500' : 'orange.400'}
+          color={data.action === 'APPROVED' ? 'green.300' : 'orange.300'}
           fontSize='2xl'
           fontFamily='mono'
         >

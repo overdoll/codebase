@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fed1736c882a6d18d5248d13e4d856d9>>
- * @relayHash ccd6932f0f5bb722b5501ac97cf2c8a5
+ * @generated SignedSource<<14ede247feb1931a1d3c6e8c301383d8>>
+ * @relayHash 945a92b7001301e9894e745627a8b395
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ccd6932f0f5bb722b5501ac97cf2c8a5
+// @relayRequestID 945a92b7001301e9894e745627a8b395
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -257,6 +257,20 @@ return {
                                   {
                                     "alias": null,
                                     "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "width",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "height",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
                                     "concreteType": "ResourceUrl",
                                     "kind": "LinkedField",
                                     "name": "videoThumbnail",
@@ -338,6 +352,18 @@ return {
                       }
                     ],
                     "storageKey": null
+                  },
+                  {
+                    "kind": "ClientExtension",
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "__id",
+                        "storageKey": null
+                      }
+                    ]
                   }
                 ],
                 "storageKey": null
@@ -363,7 +389,7 @@ return {
     ]
   },
   "params": {
-    "id": "ccd6932f0f5bb722b5501ac97cf2c8a5",
+    "id": "945a92b7001301e9894e745627a8b395",
     "metadata": {},
     "name": "ClubPostsPaginationQuery",
     "operationKind": "query",
@@ -372,6 +398,6 @@ return {
 };
 })();
 
-(node as any).hash = "7aee6b0058c74428e51d383ba68f3a6a";
+(node as any).hash = "878f08f5b6b57a35d9884d650db1a58c";
 
 export default node;

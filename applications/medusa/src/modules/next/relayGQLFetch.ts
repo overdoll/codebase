@@ -19,7 +19,7 @@ export const clientFetch = (securityToken) => {
 
     if (Array.isArray(result.errors) && kind === 'mutation') {
       const error = new Error(JSON.stringify(result.errors))
-      console.log(error)
+      console.log('Mutation Error ::', error)
       throw error
     }
 

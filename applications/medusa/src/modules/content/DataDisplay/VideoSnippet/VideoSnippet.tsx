@@ -1,10 +1,11 @@
-import { HTMLChakraProps, Skeleton } from '@chakra-ui/react'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import type { VideoSnippetFragment$key } from '@//:artifacts/VideoSnippetFragment.graphql'
-import SuspenseImage from '../../../operations/SuspenseImage'
+import NextImage from '../NextImage/NextImage'
+import { ImageProps } from 'next/image'
+import { Box } from '@chakra-ui/react'
 
-interface Props extends HTMLChakraProps<any> {
+interface Props extends Omit<ImageProps, 'src' | 'width' | 'height' | 'layout' | 'alt'> {
   innerRef?: () => void
   query: VideoSnippetFragment$key
 }
@@ -19,23 +20,24 @@ const Fragment = graphql`
 
 export default function VideoSnippet ({
   query,
-  innerRef,
   ...rest
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  // TODO add a placeholder in case the URL fails to load due to some error
-
   return (
-    <SuspenseImage
-      alt='thumbnail'
-      w='inherit'
-      h='inherit'
-      objectFit='cover'
-      userSelect='none'
-      src={data?.videoThumbnail?.url}
-      fallback={<Skeleton w='100%' h='100%' />}
-      {...rest}
-    />
+    <Box
+      w='100%'
+      h='100%'
+      position='relative'
+    >
+      <NextImage
+        alt='thumbnail'
+        layout='fill'
+        objectFit='cover'
+        objectPosition='50% 50%'
+        src={data?.videoThumbnail?.url ?? ''}
+        {...rest}
+      />
+    </Box>
   )
 }

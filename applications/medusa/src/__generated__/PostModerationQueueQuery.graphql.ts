@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3c8b35f298a25fb0f1670a7529bc25e4>>
- * @relayHash 2a8eb932645557a0bf812befa1debe7e
+ * @generated SignedSource<<2b92752322ec874b02c7c7c671ab931b>>
+ * @relayHash 428a09ba262a46cc6796becdb48d4547
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 2a8eb932645557a0bf812befa1debe7e
+// @relayRequestID 428a09ba262a46cc6796becdb48d4547
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -78,6 +78,20 @@ v4 = {
 v5 = {
   "alias": null,
   "args": null,
+  "kind": "ScalarField",
+  "name": "width",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "height",
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
   "concreteType": "ResourceUrl",
   "kind": "LinkedField",
   "name": "videoThumbnail",
@@ -87,22 +101,22 @@ v5 = {
   ],
   "storageKey": null
 },
-v6 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "type",
   "storageKey": null
 },
-v7 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "title",
   "storageKey": null
 },
-v8 = [
-  (v7/*: any*/),
+v10 = [
+  (v9/*: any*/),
   (v1/*: any*/)
 ];
 return {
@@ -230,6 +244,8 @@ return {
                                   (v4/*: any*/),
                                   (v5/*: any*/),
                                   (v6/*: any*/),
+                                  (v7/*: any*/),
+                                  (v8/*: any*/),
                                   (v1/*: any*/)
                                 ],
                                 "storageKey": null
@@ -253,9 +269,11 @@ return {
                                 "name": "resource",
                                 "plural": false,
                                 "selections": [
-                                  (v6/*: any*/),
+                                  (v8/*: any*/),
                                   (v4/*: any*/),
                                   (v5/*: any*/),
+                                  (v6/*: any*/),
+                                  (v7/*: any*/),
                                   (v1/*: any*/)
                                 ],
                                 "storageKey": null
@@ -292,7 +310,7 @@ return {
                             "kind": "LinkedField",
                             "name": "audience",
                             "plural": false,
-                            "selections": (v8/*: any*/),
+                            "selections": (v10/*: any*/),
                             "storageKey": null
                           },
                           {
@@ -311,7 +329,7 @@ return {
                                 "kind": "LinkedField",
                                 "name": "series",
                                 "plural": false,
-                                "selections": (v8/*: any*/),
+                                "selections": (v10/*: any*/),
                                 "storageKey": null
                               },
                               (v1/*: any*/)
@@ -325,7 +343,7 @@ return {
                             "kind": "LinkedField",
                             "name": "categories",
                             "plural": true,
-                            "selections": (v8/*: any*/),
+                            "selections": (v10/*: any*/),
                             "storageKey": null
                           },
                           {
@@ -437,7 +455,7 @@ return {
                 "plural": false,
                 "selections": [
                   (v1/*: any*/),
-                  (v7/*: any*/),
+                  (v9/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -457,7 +475,7 @@ return {
     ]
   },
   "params": {
-    "id": "2a8eb932645557a0bf812befa1debe7e",
+    "id": "428a09ba262a46cc6796becdb48d4547",
     "metadata": {},
     "name": "PostModerationQueueQuery",
     "operationKind": "query",

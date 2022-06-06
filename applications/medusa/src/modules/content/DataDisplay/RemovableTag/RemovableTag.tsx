@@ -18,7 +18,7 @@ export default function RemovableTag ({
       <TagCloseButton
         color='gray.00'
         opacity={1}
-        bg='orange.400'
+        bg='orange.300'
         onClick={() => onRemove(id)}
 
       />
