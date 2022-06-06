@@ -45,7 +45,7 @@ export default function StaffClubStatus ({ query }: Props): JSX.Element {
     if (isTerminated) {
       return (
         <LargeBackgroundBox>
-          <Heading fontSize='2xl' color='orange.400'>
+          <Heading fontSize='2xl' color='orange.300'>
             <Trans>
               Terminated
             </Trans>
@@ -63,7 +63,7 @@ export default function StaffClubStatus ({ query }: Props): JSX.Element {
     if (isSuspended) {
       return (
         <LargeBackgroundBox>
-          <Heading fontSize='2xl' color='purple.400'>
+          <Heading fontSize='2xl' color='purple.300'>
             <Trans>
               Suspended
             </Trans>
@@ -94,7 +94,7 @@ export default function StaffClubStatus ({ query }: Props): JSX.Element {
 
     return (
       <LargeBackgroundBox>
-        <Heading fontSize='2xl' color='green.400'>
+        <Heading fontSize='2xl' color='green.300'>
           <Trans>
             Active
           </Trans>

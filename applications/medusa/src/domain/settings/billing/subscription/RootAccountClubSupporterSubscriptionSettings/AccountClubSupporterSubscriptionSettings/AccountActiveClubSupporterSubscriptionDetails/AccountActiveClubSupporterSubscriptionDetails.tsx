@@ -73,7 +73,7 @@ export default function AccountActiveClubSupporterSubscriptionDetails ({
           >
             {data?.club.name}
           </Heading>
-          {data.club.suspension != null && <Icon icon={WarningTriangle} fill='orange.400' w={4} h={4} />}
+          {data.club.suspension != null && <Icon icon={WarningTriangle} fill='orange.300' w={4} h={4} />}
         </HStack>
         <Badge borderRadius='base' fontSize='sm' colorScheme='green'>
           <Trans>

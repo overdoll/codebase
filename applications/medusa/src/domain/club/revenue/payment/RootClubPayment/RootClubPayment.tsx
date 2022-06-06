@@ -5,13 +5,13 @@ import { useQueryLoader } from 'react-relay/hooks'
 import type { ClubPaymentQuery as ClubPaymentQueryType } from '@//:artifacts/ClubPaymentQuery.graphql'
 import ClubPaymentQuery from '@//:artifacts/ClubPaymentQuery.graphql'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
-import SkeletonRectangleGrid from '@//:modules/content/Placeholder/Loading/SkeletonRectangleGrid/SkeletonRectangleGrid'
 import { PageProps } from '@//:types/app'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import ClubPayment from './ClubPayment/ClubPayment'
 import { Trans } from '@lingui/macro'
 import BackButton from '@//:modules/content/PageLayout/BuildingBlocks/BackButton/BackButton'
+import { SkeletonStack } from '@//:modules/content/Placeholder'
 
 interface Props {
   queryRefs: {
@@ -50,7 +50,7 @@ const RootClubPayment: PageProps<Props> = (props: Props) => {
           </Trans>
         </BackButton>
         <QueryErrorBoundary loadQuery={() => loadQuery({ reference: reference as string })}>
-          <Suspense fallback={<SkeletonRectangleGrid />}>
+          <Suspense fallback={<SkeletonStack />}>
             <ClubPayment query={queryRef as PreloadedQuery<ClubPaymentQueryType>} />
           </Suspense>
         </QueryErrorBoundary>

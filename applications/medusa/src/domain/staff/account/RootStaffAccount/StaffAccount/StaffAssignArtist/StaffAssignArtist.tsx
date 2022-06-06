@@ -26,7 +26,7 @@ export default function StaffAssignArtist ({ query }: Props): JSX.Element {
       {data.isArtist
         ? (
           <LargeBackgroundBox>
-            <Heading color='green.400' fontSize='xl'>
+            <Heading color='green.300' fontSize='xl'>
               <Trans>
                 Platform Artist
               </Trans>
@@ -40,7 +40,7 @@ export default function StaffAssignArtist ({ query }: Props): JSX.Element {
           )
         : (
           <LargeBackgroundBox>
-            <Heading color='orange.400' fontSize='xl'>
+            <Heading color='orange.300' fontSize='xl'>
               <Trans>
                 Not Platform Artist
               </Trans>

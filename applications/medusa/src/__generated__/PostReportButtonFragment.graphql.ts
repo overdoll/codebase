@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7db47c8a8b5d53bc06dee1c89c286b5a>>
+ * @generated SignedSource<<28f0320ce3988405e9c52779e7f35cba>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,9 @@ export type PostReportButtonFragment$data = {
   readonly club: {
     readonly slug: string;
   };
+  readonly viewerReport: {
+    readonly __typename: string;
+  } | null;
   readonly " $fragmentType": "PostReportButtonFragment";
 };
 export type PostReportButtonFragment = PostReportButtonFragment$data;
@@ -61,12 +64,30 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "PostReport",
+      "kind": "LinkedField",
+      "name": "viewerReport",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "__typename",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 
-(node as any).hash = "8a9fe0c8acc1d87f4e01bf8e4fa0d96f";
+(node as any).hash = "d07d8fb287f06621098b56269d6fbf36";
 
 export default node;

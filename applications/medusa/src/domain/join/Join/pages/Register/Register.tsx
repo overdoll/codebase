@@ -4,7 +4,6 @@ import type { RegisterMutation } from '@//:artifacts/RegisterMutation.graphql'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import RegisterForm from './RegisterForm/RegisterForm'
 import type { RegisterFragment$key } from '@//:artifacts/RegisterFragment.graphql'
-import { useCookies } from 'react-cookie'
 import { t, Trans } from '@lingui/macro'
 import translateValidation from '@//:modules/validation/translateValidation'
 import { useFlash } from '@//:modules/flash'
@@ -12,11 +11,9 @@ import { useLingui } from '@lingui/react'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { COMMUNITY_GUIDELINES, PRIVACY_POLICY, TERMS_OF_SERVICE } from '@//:modules/constants/links'
 import Head from 'next/head'
-import { StringParam, useQueryParam } from 'use-query-params'
-import { useRouter } from 'next/router'
-import { prepareViewer } from '../../support/support'
 import RevokeTokenButton from '../../components/RevokeTokenButton/RevokeTokenButton'
 import { OverdollLogo } from '@//:assets/logos'
+import useGrantCleanup from '../../support/useGrantCleanup'
 
 interface Props {
   queryRef: RegisterFragment$key
@@ -25,6 +22,7 @@ interface Props {
 const RegisterMutationGQL = graphql`
   mutation RegisterMutation($input: CreateAccountWithAuthenticationTokenInput!) {
     createAccountWithAuthenticationToken(input: $input) {
+      revokedAuthenticationTokenId
       validation
       account {
         id
@@ -56,15 +54,14 @@ export default function Register ({ queryRef }: Props): JSX.Element {
 
   const data = useFragment(RegisterFragment, queryRef)
 
-  const [redirect] = useQueryParam<string | null | undefined>('redirect', StringParam)
-
   const notify = useToast()
 
   const { i18n } = useLingui()
 
-  const [, , removeCookie] = useCookies<string>(['token'])
-
-  const router = useRouter()
+  const {
+    successfulGrant,
+    invalidateGrant
+  } = useGrantCleanup()
 
   const { flash } = useFlash()
 
@@ -78,8 +75,7 @@ export default function Register ({ queryRef }: Props): JSX.Element {
       },
       updater: (store, payload) => {
         if (payload?.createAccountWithAuthenticationToken?.validation === 'TOKEN_INVALID') {
-          store.get(data.id)?.invalidateRecord()
-          removeCookie('token')
+          invalidateGrant(store, data.id)
         }
 
         if (payload.createAccountWithAuthenticationToken?.validation != null) {
@@ -90,14 +86,10 @@ export default function Register ({ queryRef }: Props): JSX.Element {
           })
           return
         }
+        const viewerPayload = store.getRootField('createAccountWithAuthenticationToken').getLinkedRecord('account')
 
-        if (payload?.createAccountWithAuthenticationToken?.account?.id != null) {
-          const account = store.get(payload?.createAccountWithAuthenticationToken?.account?.id)
-          prepareViewer(store, account)
-          removeCookie('token')
-          flash('new.account', '')
-          void router.push(redirect != null ? redirect : '/')
-        }
+        successfulGrant(store, viewerPayload, payload?.createAccountWithAuthenticationToken?.revokedAuthenticationTokenId)
+        flash('new.account', '')
 
         notify({
           status: 'success',
@@ -129,7 +121,7 @@ export default function Register ({ queryRef }: Props): JSX.Element {
             icon={OverdollLogo}
             w={32}
             h={32}
-            fill='green.500'
+            fill='green.300'
           />
           <RegisterForm
             onSubmit={onSubmit}

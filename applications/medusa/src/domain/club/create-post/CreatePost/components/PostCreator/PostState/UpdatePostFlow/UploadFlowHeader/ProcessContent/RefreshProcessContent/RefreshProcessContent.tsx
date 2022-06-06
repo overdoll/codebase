@@ -33,6 +33,8 @@ const Query = graphql`
             mimeType
             url
           }
+          width
+          height
         }
       }
     }
@@ -68,7 +70,7 @@ export default function RefreshProcessContent ({
   if (!contentIsProcessed) {
     return (
       <HStack spacing={3}>
-        <Spinner color='teal.400' w={4} h={4} />
+        <Spinner color='teal.300' w={4} h={4} />
         <Text color='gray.00' fontSize='md'>
           <Trans>
             Processing Post Content
@@ -80,7 +82,7 @@ export default function RefreshProcessContent ({
 
   return (
     <HStack spacing={3}>
-      <Icon icon={CheckMark} fill='green.400' w={4} h={4} />
+      <Icon icon={CheckMark} fill='green.300' w={4} h={4} />
       <Text color='gray.00' fontSize='md'>
         <Trans>
           Post Content Processed

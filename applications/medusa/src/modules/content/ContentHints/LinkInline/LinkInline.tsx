@@ -16,7 +16,7 @@ export default function LinkInline ({
   isExternal,
   ...rest
 }: Props): JSX.Element {
-  const color = colorScheme == null ? undefined : (colorScheme === 'gray' ? `${colorScheme}.00` : `${colorScheme}.400`)
+  const color = colorScheme == null ? undefined : (colorScheme === 'gray' ? `${colorScheme}.00` : `${colorScheme}.300`)
 
   if (isExternal === true) {
     return (

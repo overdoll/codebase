@@ -61,7 +61,7 @@ msgstr ""
 msgid "Needs to be confirmed through email link"
 msgstr ""
 
-#: src/domain/settings/profile/emails/RootEmailsSettings/EmailsSettings/EmailCard/Delete/Delete.tsx:73
+#: src/domain/settings/profile/emails/RootEmailsSettings/EmailsSettings/EmailCard/Delete/Delete.tsx:74
 msgid "Remove"
 msgstr ""
 
@@ -73,7 +73,7 @@ msgstr ""
 msgid "There was an error adding the email"
 msgstr ""
 
-#: src/domain/settings/profile/emails/RootEmailsSettings/EmailsSettings/EmailCard/Delete/Delete.tsx:59
+#: src/domain/settings/profile/emails/RootEmailsSettings/EmailsSettings/EmailCard/Delete/Delete.tsx:61
 msgid "There was an error removing {0}"
 msgstr ""
 
@@ -89,7 +89,7 @@ msgstr ""
 msgid "You have added the maximum amount of confirmed emails. You'll have to remove at least one email to be able to add another."
 msgstr ""
 
-#: src/domain/settings/profile/emails/RootEmailsSettings/EmailsSettings/EmailCard/Delete/Delete.tsx:52
+#: src/domain/settings/profile/emails/RootEmailsSettings/EmailsSettings/EmailCard/Delete/Delete.tsx:54
 msgid "{0} was removed"
 msgstr ""
 

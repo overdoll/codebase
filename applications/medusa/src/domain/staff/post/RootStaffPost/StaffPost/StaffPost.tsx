@@ -26,6 +26,7 @@ import ClubStaffButton from '../../../../slug/root/RootPublicClub/PublicClub/Clu
 import ProfilePageButton from '../../../../profile/RootProfile/Profile/ProfileMenu/ProfilePageButton/ProfilePageButton'
 import ProfileStaffButton
   from '../../../../profile/RootProfile/Profile/ProfileMenu/ProfileStaffButton/ProfileStaffButton'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 
 interface Props {
   query: PreloadedQuery<StaffPostQuery>
@@ -49,6 +50,7 @@ const Query = graphql`
         ...ProfileStaffButtonFragment
       }
       club {
+        slug
         ...LargeClubHeaderFragment
         ...ClubStaffButtonFragment
         ...ClubPageButtonFragment
@@ -107,18 +109,34 @@ export default function StaffPost ({ query }: Props): JSX.Element {
         <TabPanels>
           <TabPanel>
             <Stack spacing={8}>
-              <Box>
-                <PageSectionWrap>
-                  <PageSectionTitle>
-                    <Trans>
-                      State
-                    </Trans>
-                  </PageSectionTitle>
+              <Stack spacing={2}>
+                <Box>
+                  <PageSectionWrap>
+                    <PageSectionTitle>
+                      <Trans>
+                        State
+                      </Trans>
+                    </PageSectionTitle>
+                  </PageSectionWrap>
                   <TagHeader>
                     {queryData.post.state}
                   </TagHeader>
-                </PageSectionWrap>
-              </Box>
+                </Box>
+                <LinkButton
+                  w='100%'
+                  href={{
+                    pathname: '/[slug]/post/[reference]',
+                    query: {
+                      slug: queryData.post.club.slug,
+                      reference: queryData.post.reference
+                    }
+                  }}
+                >
+                  <Trans>
+                    View Post
+                  </Trans>
+                </LinkButton>
+              </Stack>
               <Box>
                 <PageSectionWrap>
                   <PageSectionTitle>

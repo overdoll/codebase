@@ -22,7 +22,7 @@ const HorizontalNavigationDropdownMenuButtonBody = forwardRef(({
   onClick,
   ...rest
 }: Props, forwardRef): JSX.Element => {
-  const colorPalette = colorScheme === 'gray' ? `${colorScheme}.00` : `${colorScheme}.400`
+  const colorPalette = colorScheme === 'gray' ? `${colorScheme}.00` : `${colorScheme}.300`
 
   const TextComponent = (): JSX.Element => {
     if (label == null) return <></>

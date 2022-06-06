@@ -26,11 +26,11 @@ export default function RandomIcon ({ seed }: Props): JSX.Element {
 
   const colors = [
     'gray.00',
-    'purple.400',
-    'orange.400',
-    'teal.400',
-    'green.400',
-    'primary.400'
+    'purple.300',
+    'orange.300',
+    'teal.300',
+    'green.300',
+    'primary.300'
   ]
 
   const chosenIcon = useMemo(() => memoized.nextInt32([0, 3]), [seed])

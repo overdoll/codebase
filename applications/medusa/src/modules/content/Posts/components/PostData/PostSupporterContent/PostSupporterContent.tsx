@@ -43,7 +43,7 @@ export default function PostSupporterContent ({
           <Icon
             p={1}
             icon={PremiumStar}
-            fill='orange.400'
+            fill='orange.300'
             h={7}
             w={7}
           />

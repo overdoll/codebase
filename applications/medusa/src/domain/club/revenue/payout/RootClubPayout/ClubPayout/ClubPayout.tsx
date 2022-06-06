@@ -78,7 +78,7 @@ export default function ClubPayout ({ query }: Props): JSX.Element {
         </StatisticHeader>
         <LargeBackgroundBox>
           <Stack spacing={1}>
-            <Heading fontSize='xl' color={`${STATUS_COLORS[queryData.payout.status] as string}.400`}>
+            <Heading fontSize='xl' color={`${STATUS_COLORS[queryData.payout.status] as string}.300`}>
               {queryData.payout.status}
             </Heading>
             <Heading fontSize='sm' color='gray.200'>

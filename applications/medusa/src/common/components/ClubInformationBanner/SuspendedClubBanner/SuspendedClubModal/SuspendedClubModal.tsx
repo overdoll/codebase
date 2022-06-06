@@ -81,7 +81,7 @@ export default function SuspendedClubModal ({
               <Text fontSize='md'>
                 <Trans>
                   Please review the{' '}
-                  <LinkInline isExternal color='green.400' href={CLUB_GUIDELINES} fontSize='md'>
+                  <LinkInline isExternal color='green.300' href={CLUB_GUIDELINES} fontSize='md'>
                     <Trans>
                       Club Guidelines
                     </Trans>

@@ -63,7 +63,8 @@ export default function UploadCategoryStep (): JSX.Element {
         </PageSectionTitle>
         <PageSectionDescription>
           <Trans>
-            Select the categories that would be most applicable to the content you have uploaded.
+            Select the categories that would be most applicable to the content you have uploaded. You must select a
+            minimum of three to continue.
           </Trans>
         </PageSectionDescription>
       </PageSectionWrap>

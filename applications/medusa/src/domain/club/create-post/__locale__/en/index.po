@@ -21,7 +21,7 @@ msgstr ""
 msgid "Add, arrange, or remove the files you're uploading. You can encourage your fans to become paid supporters by marking some content as supporter-only."
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostState.tsx:73
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostState.tsx:76
 msgid "All characters must be of legal age"
 msgstr ""
 
@@ -29,7 +29,7 @@ msgstr ""
 msgid "Are you sure you'd like to exit the post creator? Your progress will save and you can resume it at any time."
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostState.tsx:68
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostState.tsx:71
 msgid "As a reminder of the guidelines"
 msgstr ""
 
@@ -61,7 +61,7 @@ msgstr ""
 msgid "Drag and drop or tap to upload"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/components/DragOverFileInput/DragOverFileInput.tsx:112
+#: src/domain/club/create-post/CreatePost/components/DragOverFileInput/DragOverFileInput.tsx:106
 msgid "Drop your files to upload them"
 msgstr ""
 
@@ -81,7 +81,7 @@ msgstr ""
 msgid "Exit Post Creator"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostState.tsx:121
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostState.tsx:124
 #: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/UploadFlowHeader.tsx:100
 msgid "Go back"
 msgstr ""
@@ -102,7 +102,7 @@ msgstr ""
 msgid "Mark this content as Supporter Only"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostState.tsx:75
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostState.tsx:78
 msgid "Nothing extremely offensive, shocking, or illegal"
 msgstr ""
 
@@ -218,7 +218,7 @@ msgstr ""
 msgid "There was an error updating the post content"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostState.tsx:110
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostState.tsx:113
 msgid "This post was already submitted"
 msgstr ""
 
@@ -238,7 +238,7 @@ msgstr ""
 #~ msgid "Upstanding netizens will read the <0>Club Guidelines</0> carefully before posting"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostState.tsx:80
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostState.tsx:83
 msgid "Upstanding netizens will read the <0>Club Guidelines</0> carefully. Creating and submitting a post also means you agree to these guidelines."
 msgstr ""
 
@@ -267,7 +267,7 @@ msgstr ""
 #~ msgid "You cannot post until your club is no longer suspended"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostState.tsx:74
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostState.tsx:77
 msgid "You own the rights to the content you upload"
 msgstr ""
 

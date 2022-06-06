@@ -8,7 +8,7 @@ export default function SupporterGuidelinesAgreement (): JSX.Element {
       <Trans>
         I have read and agree to the{' '}
         <Link
-          color='teal.400'
+          color='teal.300'
           fontSize='md'
           isExternal
           href={SUPPORTER_GUIDELINES}

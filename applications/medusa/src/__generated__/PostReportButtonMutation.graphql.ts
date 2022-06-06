@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<54a65e6bc1ead3ad463b290781b8ba66>>
- * @relayHash b390809c507c7f61529b72821bd595ac
+ * @generated SignedSource<<056b8281f1e776b5954cb2c32a80ff09>>
+ * @relayHash 20c260e5bd220caa3f4fa567d38867f9
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b390809c507c7f61529b72821bd595ac
+// @relayRequestID 20c260e5bd220caa3f4fa567d38867f9
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type ReportPostInput = {
@@ -24,9 +24,6 @@ export type PostReportButtonMutation$data = {
   readonly reportPost: {
     readonly postReport: {
       readonly id: string;
-      readonly account: {
-        readonly username: string;
-      };
       readonly rule: {
         readonly title: string;
       };
@@ -65,13 +62,6 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "username",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "title",
   "storageKey": null
 };
@@ -102,24 +92,12 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "Account",
-                "kind": "LinkedField",
-                "name": "account",
-                "plural": false,
-                "selections": [
-                  (v3/*: any*/)
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
                 "concreteType": "Rule",
                 "kind": "LinkedField",
                 "name": "rule",
                 "plural": false,
                 "selections": [
-                  (v4/*: any*/)
+                  (v3/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -159,25 +137,12 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "Account",
-                "kind": "LinkedField",
-                "name": "account",
-                "plural": false,
-                "selections": [
-                  (v3/*: any*/),
-                  (v2/*: any*/)
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
                 "concreteType": "Rule",
                 "kind": "LinkedField",
                 "name": "rule",
                 "plural": false,
                 "selections": [
-                  (v4/*: any*/),
+                  (v3/*: any*/),
                   (v2/*: any*/)
                 ],
                 "storageKey": null
@@ -191,7 +156,7 @@ return {
     ]
   },
   "params": {
-    "id": "b390809c507c7f61529b72821bd595ac",
+    "id": "20c260e5bd220caa3f4fa567d38867f9",
     "metadata": {},
     "name": "PostReportButtonMutation",
     "operationKind": "mutation",
@@ -200,6 +165,6 @@ return {
 };
 })();
 
-(node as any).hash = "7224dd843d213d726b086437466e6aed";
+(node as any).hash = "5bd9aa7e8dfd3b50fa50fe3679a57284";
 
 export default node;

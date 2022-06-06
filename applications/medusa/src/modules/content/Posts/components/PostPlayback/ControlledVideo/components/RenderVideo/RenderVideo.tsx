@@ -19,6 +19,8 @@ const Fragment = graphql`
     videoThumbnail {
       url
     }
+    width
+    height
   }
 `
 
@@ -40,6 +42,8 @@ const RenderVideo = forwardRef<any, Props>(({
       bg='gray.800'
       loop
       playsInline
+      height={data?.height}
+      width={data?.width}
       preload='auto'
       poster={data?.videoThumbnail?.url}
       {...rest}

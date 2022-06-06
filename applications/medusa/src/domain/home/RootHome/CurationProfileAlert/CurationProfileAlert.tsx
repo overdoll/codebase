@@ -1,7 +1,7 @@
 import { useFragment } from 'react-relay/hooks'
 import type { CurationProfileAlertFragment$key } from '@//:artifacts/CurationProfileAlertFragment.graphql'
 import { graphql } from 'react-relay'
-import { Flex, HStack } from '@chakra-ui/react'
+import { HStack, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import { Alert, AlertCloseButton, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
@@ -50,12 +50,8 @@ export default function CurationProfileAlert ({ query }: Props): JSX.Element {
       status='info'
       mb={2}
     >
-      <Flex
-        w='100%'
-        align='center'
-        justify='space-between'
-      >
-        <HStack spacing={0} align='center'>
+      <Stack w='100%' justify='center' spacing={3}>
+        <HStack spacing={1}>
           <AlertIcon />
           <AlertDescription>
             <Trans>
@@ -66,6 +62,7 @@ export default function CurationProfileAlert ({ query }: Props): JSX.Element {
         <LinkButton
           href='/settings/preferences/curation-profile'
           size='sm'
+          width='100%'
           colorScheme='teal'
           variant='solid'
         >
@@ -73,14 +70,14 @@ export default function CurationProfileAlert ({ query }: Props): JSX.Element {
             Setup
           </Trans>
         </LinkButton>
-        <AlertCloseButton
-          position='absolute'
-          size='sm'
-          right={2}
-          top={2}
-          onClick={() => flush('new.account')}
-        />
-      </Flex>
+      </Stack>
+      <AlertCloseButton
+        position='absolute'
+        size='sm'
+        right={2}
+        top={2}
+        onClick={() => flush('new.account')}
+      />
     </Alert>
   )
 }

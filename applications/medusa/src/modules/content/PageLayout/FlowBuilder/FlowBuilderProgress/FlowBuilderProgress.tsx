@@ -17,7 +17,7 @@ export default function FlowBuilderHeader (): JSX.Element {
           h={2}
           w='100%'
           borderRadius='md'
-          bg={currentStep === item ? `${colorScheme as string}.400` : 'gray.700'}
+          bg={currentStep === item ? `${colorScheme as string}.300` : 'gray.700'}
         />)}
     </HStack>
   )

@@ -80,7 +80,7 @@ export default function Confirm ({
                   icon={WarningTriangle}
                   w={16}
                   h={16}
-                  fill='orange.400'
+                  fill='orange.300'
                 />
                 <Box>
                   <Heading
@@ -105,7 +105,7 @@ export default function Confirm ({
                   <Heading
                     textAlign='center'
                     fontSize='md'
-                    color='orange.400'
+                    color='orange.300'
                   >
                     <>
                       {cookieText.browser.name} {cookieText.browser.major},{' '}
@@ -115,7 +115,7 @@ export default function Confirm ({
                   <Heading
                     textAlign='center'
                     fontSize='md'
-                    color='orange.400'
+                    color='orange.300'
                   >
                     <>
                       {data.location.city}, {data.location.subdivision} ({data.location.country})

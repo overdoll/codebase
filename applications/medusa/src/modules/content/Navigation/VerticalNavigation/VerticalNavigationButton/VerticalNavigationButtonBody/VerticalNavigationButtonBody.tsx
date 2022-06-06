@@ -47,12 +47,12 @@ const VerticalNavigationButtonBody = forwardRef<any, Props>(({
       ref={forwardedRef}
       h={10}
       borderRadius='md'
-      _hover={{ bg: buttonType === 'primary' ? isActive ? 'gray.900' : `${colorScheme}.400` : 'initial' }}
-      _active={{ bg: buttonType === 'primary' ? isActive ? 'gray.900' : `${colorScheme}.400` : 'transparent' }}
+      _hover={{ bg: buttonType === 'primary' ? isActive ? 'gray.900' : `${colorScheme}.300` : 'initial' }}
+      _active={{ bg: buttonType === 'primary' ? isActive ? 'gray.900' : `${colorScheme}.300` : 'transparent' }}
       bg={isActive
         ? 'gray.900'
         : buttonType === 'primary'
-          ? `${colorScheme}.400`
+          ? `${colorScheme}.300`
           : 'transparent'}
       onClick={onClick}
       {...rest}

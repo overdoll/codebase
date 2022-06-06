@@ -39,7 +39,7 @@ export default function FlowBuilderHeader ({ children }: Props): JSX.Element {
           h={12}
           w={12}
           borderRadius='md'
-          bg={`${colorScheme as string}.400`}
+          bg={`${colorScheme as string}.300`}
           align='center'
           justify='center'
         >

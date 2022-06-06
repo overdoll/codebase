@@ -5,7 +5,6 @@ import type { Uppy } from '@uppy/core'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { FileUpload } from '@//:assets/icons/interface'
 import { Trans } from '@lingui/macro'
-import { useToast } from '@//:modules/content/ThemeComponents'
 
 interface Props {
   uppy: Uppy
@@ -21,8 +20,6 @@ export default function DragOverFileInput ({
   hasText = true,
   ...rest
 }: Props): JSX.Element {
-  const notify = useToast()
-
   const {
     isOpen,
     onOpen,
@@ -49,10 +46,7 @@ export default function DragOverFileInput ({
           data: file
         })
       } catch (err) {
-        notify({
-          status: 'error',
-          title: err.message
-        })
+
       }
     })
   }

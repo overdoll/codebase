@@ -135,7 +135,7 @@ export default function ClubPayment ({ query }: Props): JSX.Element {
                   </Tr>
                   <Tr>
                     <Td>Platform Fee</Td>
-                    <Td isNumeric>+{platformFeeAmount}</Td>
+                    <Td isNumeric>{platformFeeAmount}</Td>
                   </Tr>
                   <Tr>
                     <Td>Total Deducted From Balance</Td>
@@ -161,7 +161,7 @@ export default function ClubPayment ({ query }: Props): JSX.Element {
           </PageSectionTitle>
         </PageSectionWrap>
         <LargeBackgroundBox>
-          <Heading fontSize='xl' color={`${STATUS_COLORS[queryData.payment.status] as string}.400`}>
+          <Heading fontSize='xl' color={`${STATUS_COLORS[queryData.payment.status] as string}.300`}>
             {queryData.payment.status}
           </Heading>
           <Heading fontSize='sm' color='gray.200'>

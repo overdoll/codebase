@@ -23,8 +23,11 @@ const Query = graphql`
       declineError
       declineText
       linkedAccountClubSupporterSubscription {
-        ... on AccountActiveClubSupporterSubscription {
+        ... on IAccountClubSupporterSubscription {
           id
+          reference
+        }
+        ... on AccountActiveClubSupporterSubscription {
           supporterSince
           paymentMethod {
             card {
@@ -36,6 +39,11 @@ const Query = graphql`
           club {
             viewerMember {
               isSupporter
+              clubSupporterSubscription {
+                ...on IAccountClubSupporterSubscription {
+                  reference
+                }
+              }
             }
           }
         }
@@ -94,7 +102,7 @@ export default function CCBillDisplayTransaction ({
           icon={InfoCircle}
           w={20}
           h={20}
-          fill='teal.400'
+          fill='teal.300'
           ml='auto'
           mr='auto'
         />
@@ -134,7 +142,7 @@ export default function CCBillDisplayTransaction ({
           icon={RemoveCross}
           w={20}
           h={20}
-          fill='orange.400'
+          fill='orange.300'
           ml='auto'
           mr='auto'
         />
@@ -200,7 +208,7 @@ export default function CCBillDisplayTransaction ({
           icon={WarningTriangle}
           w={20}
           h={20}
-          fill='orange.400'
+          fill='orange.300'
           ml='auto'
           mr='auto'
         />
@@ -230,7 +238,7 @@ export default function CCBillDisplayTransaction ({
   if (isVerifying) {
     return (
       <Stack align='center' spacing={4}>
-        <Spinner thickness='4px' w={20} h={20} color='green.400' />
+        <Spinner thickness='4px' w={20} h={20} color='green.300' />
         <Box>
           <Heading textAlign='center' fontSize='2xl' color='gray.00'>
             <Trans>
@@ -260,7 +268,7 @@ export default function CCBillDisplayTransaction ({
         icon={CheckMark}
         w={20}
         h={20}
-        fill='green.400'
+        fill='green.300'
         ml='auto'
         mr='auto'
       />

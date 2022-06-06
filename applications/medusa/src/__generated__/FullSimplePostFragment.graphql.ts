@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a330f43ff4fd0aeeb82f76bdcd46679b>>
+ * @generated SignedSource<<21967da0f25ef3599d1e8d8919a05bc5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,9 +12,10 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type FullSimplePostFragment$data = {
   readonly club: {
+    readonly viewerIsOwner: boolean;
     readonly " $fragmentSpreads": FragmentRefs<"JoinClubFromPostFragment">;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"PostGalleryPublicSimpleFragment" | "PostViewButtonFragment" | "PostModerateButtonFragment" | "PostCopyLinkButtonFragment" | "PostReportButtonFragment" | "PostLikeButtonFragment" | "PostHeaderClubFragment" | "PostClickableCharactersFragment" | "PostClickableCategoriesFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"PostGalleryPublicSimpleFragment" | "PostViewButtonFragment" | "PostModerateButtonFragment" | "PostCopyLinkButtonFragment" | "PostReportButtonFragment" | "PostLikeButtonFragment" | "PostHeaderClubFragment" | "PostArchiveButtonFragment">;
   readonly " $fragmentType": "FullSimplePostFragment";
 };
 export type FullSimplePostFragment = FullSimplePostFragment$data;
@@ -67,12 +68,7 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "PostClickableCharactersFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "PostClickableCategoriesFragment"
+      "name": "PostArchiveButtonFragment"
     },
     {
       "kind": "RequiredField",
@@ -84,6 +80,13 @@ const node: ReaderFragment = {
         "name": "club",
         "plural": false,
         "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "viewerIsOwner",
+            "storageKey": null
+          },
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -100,6 +103,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "14a643b0d9ca0663f771f248912f904c";
+(node as any).hash = "e7ac2fdcfaadf3fcf83d9f2fa4bd0c4a";
 
 export default node;

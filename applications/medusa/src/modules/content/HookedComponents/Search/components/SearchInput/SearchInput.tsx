@@ -4,6 +4,7 @@ import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import CloseButton from '../../../../ThemeComponents/CloseButton/CloseButton'
 import { RegisterFunctionReturn } from '../../types'
+import { useDebounce, useUpdateEffect } from 'usehooks-ts'
 
 type Props = InputProps & RegisterFunctionReturn
 
@@ -15,17 +16,21 @@ export default function SearchInput ({
 }: Props): JSX.Element {
   const [searchInput, setSearch] = useState('')
 
+  const debouncedSearchInput = useDebounce(searchInput, 300)
+
   const { i18n } = useLingui()
 
   const clearSearch = (): void => {
     setSearch('')
-    onChangeRegister(null)
   }
 
   const onChangeInput = (value: string): void => {
     setSearch(value)
-    onChangeRegister(value !== '' ? value : null)
   }
+
+  useUpdateEffect(() => {
+    onChangeRegister(debouncedSearchInput !== '' ? debouncedSearchInput : null)
+  }, [debouncedSearchInput])
 
   return (
     <>

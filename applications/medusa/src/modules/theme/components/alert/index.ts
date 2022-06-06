@@ -99,12 +99,12 @@ const variantToast: PartsStyleFunction<typeof parts> = (props) => {
     container: {
       paddingStart: 3,
       borderStartWidth: 4,
-      borderStartColor: mode(`${c}.400`, `${c}.400`)(props),
+      borderStartColor: mode(`${c}.400`, `${c}.300`)(props),
       bg: mode(`${c}.500`, 'gray.800')(props),
       color: mode('white', 'gray.00')(props)
     },
     icon: {
-      fill: mode(`${c}.400`, `${c}.400`)(props),
+      fill: mode(`${c}.400`, `${c}.300`)(props),
       width: 5,
       height: 5
     },
