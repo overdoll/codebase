@@ -2197,6 +2197,9 @@ type ClubPayout implements Node
   """The club linked to this payout."""
   club: Club! @join__field(graph: RINGER)
 
+  """The amount that will be covered as the cover fee."""
+  coverFeeAmount: Int! @join__field(graph: RINGER)
+
   """When this payout was created."""
   createdAt: Time! @join__field(graph: RINGER)
 
@@ -2240,6 +2243,9 @@ type ClubPayout implements Node
 
   """The status of the payout."""
   status: ClubPayoutStatus! @join__field(graph: RINGER)
+
+  """The amount, with the cover fee."""
+  totalAmount: Int! @join__field(graph: RINGER)
 }
 
 """Connection of the club payout."""
@@ -4754,6 +4760,11 @@ type Resource
 
   """An ID uniquely identifying this resource."""
   id: ID! @join__field(graph: LOADER)
+
+  """
+  The additional 10x10 base64-encoded image that can be used as a preview.
+  """
+  preview: String! @join__field(graph: LOADER)
 
   """
   Whether or not the resource is processed. Can be used for additional permission checks.
