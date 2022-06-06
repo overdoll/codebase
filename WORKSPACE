@@ -1,7 +1,7 @@
 workspace(
     name = "overdoll",
     managed_directories = {
-        "@npm": ["node_modules"],
+        "@npm_orca": ["applications/orca/node_modules"],
     },
 )
 
@@ -107,32 +107,32 @@ crate_repositories()
 
 http_archive(
     name = "io_bazel_rules_go",
-    sha256 = "d6b2513456fe2229811da7eb67a444be7785f5323c6708b38d851d2b51e54d83",
+    sha256 = "ab21448cef298740765f33a7f5acee0607203e4ea321219f2a4c85a6e0fb0a27",
     urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/v0.30.0/rules_go-v0.30.0.zip",
-        "https://github.com/bazelbuild/rules_go/releases/download/v0.30.0/rules_go-v0.30.0.zip",
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/v0.32.0/rules_go-v0.32.0.zip",
+        "https://github.com/bazelbuild/rules_go/releases/download/v0.32.0/rules_go-v0.32.0.zip",
     ],
 )
 
 http_archive(
     name = "bazel_gazelle",
-    sha256 = "de69a09dc70417580aabf20a28619bb3ef60d038470c7cf8442fafcf627c21cb",
+    sha256 = "5982e5463f171da99e3bdaeff8c0f48283a7a5f396ec5282910b9e8a49c0dd7e",
     urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/bazel-gazelle/releases/download/v0.24.0/bazel-gazelle-v0.24.0.tar.gz",
-        "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.24.0/bazel-gazelle-v0.24.0.tar.gz",
+        "https://mirror.bazel.build/github.com/bazelbuild/bazel-gazelle/releases/download/v0.25.0/bazel-gazelle-v0.25.0.tar.gz",
+        "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.25.0/bazel-gazelle-v0.25.0.tar.gz",
     ],
 )
 
 load("@io_bazel_rules_go//go:deps.bzl", "go_download_sdk", "go_register_toolchains", "go_rules_dependencies")
 load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
-load("//:repositories.bzl", "go_repositories")
+load("//:go_repositories.bzl", "go_repositories")
 
-# gazelle:repository_macro repositories.bzl%go_repositories
+# gazelle:repository_macro go_repositories.bzl%go_repositories
 go_repositories()
 
 go_rules_dependencies()
 
-go_register_toolchains(version = "1.17.6")
+go_register_toolchains(version = "1.17.10")
 
 gazelle_dependencies()
 
@@ -203,13 +203,13 @@ load("@io_bazel_rules_docker//container:container.bzl", "container_pull")
 nodejs_image_repos()
 
 yarn_install(
-    name = "npm",
+    name = "npm_orca",
     args = [
         "--target_arch=x64",
         "--target_platform=linux",
     ],
-    package_json = "//:package.json",
-    yarn_lock = "//:yarn.lock",
+    package_json = "//applications/orca:package.json",
+    yarn_lock = "//applications/orca:yarn.lock",
 )
 
 container_pull(
@@ -217,6 +217,7 @@ container_pull(
     registry = "docker.io",
     repository = "library/golang",
     tag = "1.16",
+    digest = "sha256:35fa3cfd4ec01a520f6986535d8f70a5eeef2d40fb8019ff626da24989bdd4f1",
 )
 
 container_pull(
@@ -231,4 +232,5 @@ container_pull(
     registry = "docker.io",
     repository = "jrottenberg/ffmpeg",
     tag = "3.4.9-ubuntu1804",
+    digest = "sha256:f6dd19ab7f63498d2fcde3b1ea1be4515d8ca8374f8f9829ca75d3f114cae780",
 )

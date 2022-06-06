@@ -53,7 +53,7 @@ describe('Club - Become Supporter', () => {
       }).as('windowOpen')
     })
     clickOnButton(/Subscribe with CCBill/iu)
-    cy.findByText(/CCBill is a designated payment processor/iu, { timeout: 20000 }).should('be.visible')
+    cy.findByText(/CCBill is a designated payment processor/iu).should('exist')
 
     // fill out billing details
     cy.get('input[name="firstName"]').type(testCardDetails.firstName)
@@ -69,7 +69,7 @@ describe('Club - Become Supporter', () => {
     cy.get('input[name="cvv2"]').type(testCardDetails.cvv2)
 
     cy.get('[id=placeOrder]').click()
-    cy.url().should('include', Cypress.config().baseUrl as string)
+    cy.url().should('include', '/payment-flow')
     cy.document().then((doc) => {
       // @ts-expect-error
       cy.visit(`/${newPaymentMethodClub}?token=${doc.querySelector('meta[name="overdoll-ccbill-flexforms-payment-flow-token"]')?.content as string}`)
@@ -180,7 +180,7 @@ describe('Club - Become Supporter', () => {
 
     // refund transaction
     cy.visit(`/staff/account/${username}?index=2`)
-    cy.findByText('Payment Transactions').should('be.visible')
+    cy.findByText('Transactions').should('be.visible')
     cy.findAllByText('PAYMENT').first().should('be.visible').click()
     cy.findByText('CCBill Transaction ID').should('be.visible')
     clickOnButton(/Manage Transaction/iu)
@@ -200,7 +200,7 @@ describe('Club - Become Supporter', () => {
     clickOnButton('View Payments')
     cy.findByText(/Your club's Payments are the detailed breakdown/iu).should('be.visible')
     cy.findAllByText('PENDING').first().should('be.visible').click()
-    cy.findByText(/Fee Breakdown/iu).should('be.visible')
+    cy.findByText(/Deduction Breakdown/iu).should('be.visible')
   })
 
   it('see refunded transaction', () => {
@@ -216,6 +216,6 @@ describe('Club - Become Supporter', () => {
     cy.findByText('Transaction History').should('be.visible').click()
     cy.url().should('include', '/settings/billing/transactions')
     cy.findByText(newPaymentMethodClubName).should('be.visible')
-    cy.findByText(/was refunded to this payment method/iu).should('be.visible')
+    cy.waitUntil(() => cy.findAllByText(/refunded to this payment/iu).should('be.visible'))
   })
 })

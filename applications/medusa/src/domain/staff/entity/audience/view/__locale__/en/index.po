@@ -18,7 +18,7 @@ msgstr ""
 msgid "Audience Standard"
 msgstr ""
 
-#: src/domain/staff/entity/audience/view/RootStaffViewAudience/StaffViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnail.tsx:29
+#: src/domain/staff/entity/audience/view/RootStaffViewAudience/StaffViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnail.tsx:30
 #: src/domain/staff/entity/audience/view/RootStaffViewAudience/StaffViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnailForm/ChangeAudienceThumbnailForm.tsx:104
 msgid "Audience Thumbnail"
 msgstr ""
@@ -44,7 +44,7 @@ msgstr ""
 msgid "Change Standard"
 msgstr ""
 
-#: src/domain/staff/entity/audience/view/RootStaffViewAudience/StaffViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnail.tsx:40
+#: src/domain/staff/entity/audience/view/RootStaffViewAudience/StaffViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnail.tsx:46
 msgid "Change Thumbnail"
 msgstr ""
 

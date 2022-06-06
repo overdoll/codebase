@@ -47,6 +47,8 @@ func TestCancelActiveSubscriptionsForClub(t *testing.T) {
 
 	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
+	refreshSubscriptionsIndex(t)
+
 	var accountClubSupporterSubscriptions AccountCancelledClubSupporterSubscriptions
 
 	err = graphqlClient.Query(context.Background(), &accountClubSupporterSubscriptions, map[string]interface{}{

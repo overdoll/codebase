@@ -90,7 +90,7 @@ func (r EventTemporalRepository) RemoveClubSupporter(ctx context.Context, clubId
 
 func (r EventTemporalRepository) SuspendClub(ctx context.Context, requester *principal.Principal, club *club.Club, endTime time.Time, reason string) error {
 
-	if err := club.CanSuspend(requester); err != nil {
+	if err := club.CanSuspend(requester, endTime); err != nil {
 		return err
 	}
 
@@ -132,14 +132,26 @@ func (r EventTemporalRepository) SuspendClubOperator(ctx context.Context, club *
 	return nil
 }
 
+func (r EventTemporalRepository) WaitForClubToBeReady(ctx context.Context, requester *principal.Principal, clb *club.Club) error {
+
+	workflowId := "CreateClub_" + clb.OwnerAccountId()
+
+	// wait for club to be created
+	if err := r.client.GetWorkflow(ctx, workflowId, "").Get(ctx, nil); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r EventTemporalRepository) CreateClub(ctx context.Context, requester *principal.Principal, clb *club.Club) error {
+
+	workflowId := "CreateClub_" + clb.OwnerAccountId()
 
 	// should only have 1 create club workflow running at a time for any account
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "CreateClub_" + clb.OwnerAccountId(),
-		// this will ensure that if we try to create another club, we will error out
-		WorkflowExecutionErrorWhenAlreadyStarted: true,
+		ID:        workflowId,
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CreateClub, workflows.CreateClubInput{
@@ -148,6 +160,11 @@ func (r EventTemporalRepository) CreateClub(ctx context.Context, requester *prin
 		Name:           clb.Name().TranslateDefault(""),
 		OwnerAccountId: clb.OwnerAccountId(),
 	}); err != nil {
+		return err
+	}
+
+	// wait for club to be created
+	if err := r.client.GetWorkflow(ctx, workflowId, "").Get(ctx, nil); err != nil {
 		return err
 	}
 

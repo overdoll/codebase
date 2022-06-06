@@ -8,15 +8,15 @@ Home ( https://overdoll.com/home ) Discover Clubs ( https://overdoll.com/clubs/d
 Subscription Cancelled
 ----------------------
 
-Hello !
+Hello test user!
 
-As requested, we have cancelled your subscription for test a club (https://ci.overdoll.dev/test-club).
+As requested, we have cancelled your subscription for *test a club* (https://ci.overdoll.dev/test-club).
 
-You will no longer be billed. Your club supporter benefits will expire on January 01.
+You will no longer be billed. Your club supporter benefits will expire on *November 12*.
 
 Should you choose to keep your benefits, you may wait for the subscription to expire and resubscribe directly from the club page.
 
-Manage Subscription ( https://ci.overdoll.dev/settings/billing/subscriptions )
+Manage Subscription ( https://ci.overdoll.dev/settings/billing/subscription/25WqY2AZfmlykwqKhQagxmI9gtd )
 
 Please contact hello@overdoll.com if you have any questions or concerns.
 

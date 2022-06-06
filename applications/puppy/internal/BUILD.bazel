@@ -41,20 +41,10 @@ go_image(
 )
 
 container_push(
-    name = "publish-testing",
-    format = "Docker",
-    image = ":image",
-    registry = "$(CONTAINER_REGISTRY)",
-    repository = "puppy/dev",
-    tag = "$(CONTAINER_TAG)",
-)
-
-container_push(
     name = "publish",
     format = "Docker",
     image = ":image",
     registry = "$(CONTAINER_REGISTRY)",
-    repository = "puppy",
-    skip_unchanged_digest = True,
+    repository = "puppy/dev",
     tag = "$(CONTAINER_TAG)",
 )

@@ -2,6 +2,10 @@ import RootTransactionsSettings from './RootTransactionsSettings/RootTransaction
 import TransactionsSettingsQuery from '@//:artifacts/TransactionsSettingsQuery.graphql'
 import SettingsLayout from '../../../../common/components/Layouts/SettingsLayout/SettingsLayout'
 
+RootTransactionsSettings.getTranslationProps = async (ctx) => ({
+  translations: await import(`./__locale__/${ctx.locale as string}/index`)
+})
+
 RootTransactionsSettings.getRelayPreloadProps = () => {
   return {
     queries: {

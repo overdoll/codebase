@@ -1,7 +1,7 @@
 import gcm from '../utilities/gcm'
 
 export const clientFetch = (securityToken) => {
-  return async (data) => {
+  return async (data, kind) => {
     const response = await fetch(
       '/api/graphql',
       {
@@ -15,13 +15,15 @@ export const clientFetch = (securityToken) => {
       }
     )
 
-    const body = await response.json()
+    const result = await response.json()
 
-    if (Array.isArray(body.errors)) {
-      throw new Error(body)
+    if (Array.isArray(result.errors) && kind === 'mutation') {
+      const error = new Error(JSON.stringify(result.errors))
+      console.log(error)
+      throw error
     }
 
-    return body
+    return result
   }
 }
 
@@ -39,20 +41,26 @@ export const serverMiddlewareFetch = (req) => {
       headers[key] = value
     })
 
-    const existingSecurity = req.cookies['od.security']
+    let existingSecurity = req.cookies.get('od.security')
 
     let token: string
 
     if (existingSecurity != null) {
+      existingSecurity = existingSecurity.split(';')[0]
+      existingSecurity = existingSecurity.split('=')[1]
+
       token = await gcm.decrypt(existingSecurity, process.env.SECURITY_SECRET, true)
     } else {
-      token = crypto.getRandomValues(new Uint8Array(64)).toString()
+      const bytes = new Uint8Array(32)
+      crypto.getRandomValues(bytes)
+      token = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('')
+
       const encrypted = await gcm.encrypt(token, process.env.SECURITY_SECRET, true)
 
       if (headers.cookie === '') {
         headers.cookie = `od.security=${encrypted}`
       } else {
-        headers.cookie = `${headers.cookie}';od.security=${encrypted}`
+        headers.cookie = `${headers.cookie}; od.security=${encrypted}`
       }
     }
 

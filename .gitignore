@@ -24,6 +24,8 @@ bazel-*
 build
 .nyc_output
 applications/medusa/coverage
+eslint_cache
+ts_cache
 tmp
 dist
 artifacts

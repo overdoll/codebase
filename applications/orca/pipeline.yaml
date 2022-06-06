@@ -1,20 +1,22 @@
 steps:
   build:
     targets:
-      - //applications/orca:internal
+      - //applications/orca:image
 
   push_image:
     targets:
-      - //applications/orca:publish-testing
+      - //applications/orca:publish
+
   e2e_test:
     setup:
       dockerfile:
-        - ./applications/orca/docker-compose.e2e.yaml
+        - ./applications/orca/docker-compose.ci.e2e.yaml
     network_dependencies:
       - host: orca
         port: 8000
         priority: 0
 
   publish_image:
-    targets:
-      - //applications/orca:publish
+    copy:
+      - from_repo: orca/dev
+        to_repo: orca

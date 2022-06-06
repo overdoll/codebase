@@ -14,7 +14,7 @@ func CreateCancelAccountDeletionLink() (*url.URL, error) {
 		return nil, err
 	}
 
-	u.Path = path.Join(u.Path, "/settings/account")
+	u.Path = path.Join(u.Path, "/settings/profile/delete-account")
 
 	return u, nil
 }

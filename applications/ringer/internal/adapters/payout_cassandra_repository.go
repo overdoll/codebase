@@ -117,6 +117,16 @@ var depositRequestsByMonthTable = table.New(table.Metadata{
 	SortKey: []string{"id"},
 })
 
+var depositRequestsUniqueInsertsTable = table.New(table.Metadata{
+	Name: "deposit_requests_unique_inserts",
+	Columns: []string{
+		"bucket",
+		"payout_method",
+	},
+	PartKey: []string{"bucket", "payout_method"},
+	SortKey: []string{},
+})
+
 var depositRequestsByMonthBucketsTable = table.New(table.Metadata{
 	Name: "deposit_requests_by_month_buckets",
 	Columns: []string{
@@ -484,8 +494,6 @@ func (r PayoutCassandraElasticsearchRepository) CanInitiateClubPayout(ctx contex
 
 func (r PayoutCassandraElasticsearchRepository) CreateDepositRequest(ctx context.Context, deposit *payout.DepositRequest) error {
 
-	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
-
 	marshalled := depositRequests{
 		Bucket:             bucket.MakeMonthlyBucketFromTimestamp(deposit.Timestamp()),
 		Id:                 deposit.Id(),
@@ -499,6 +507,25 @@ func (r PayoutCassandraElasticsearchRepository) CreateDepositRequest(ctx context
 		CreatedAt:          deposit.Timestamp(),
 		LastInsertId:       gocql.UUIDFromTime(deposit.Timestamp()),
 	}
+
+	// make sure that the deposit request we create will be a unique one in terms of bucket + payout method
+	applied, err := depositRequestsUniqueInsertsTable.InsertBuilder().
+		Unique().
+		Query(r.session).
+		WithContext(ctx).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(marshalled).
+		ExecCASRelease()
+
+	if err != nil {
+		return fmt.Errorf("failed to create unique deposit request for month: %v", err)
+	}
+
+	if !applied {
+		return fmt.Errorf("failed to create unique deposit request for month")
+	}
+
+	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
 	stmt, names := depositRequestsTable.Insert()
 	support.BindStructToBatchStatement(

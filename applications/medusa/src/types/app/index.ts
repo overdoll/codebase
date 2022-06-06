@@ -53,6 +53,7 @@ export interface CustomAppProps extends AppInitialProps {
   environment: IEnvironment
   requestProps: RequestProps
   securityToken: string
+  translationProps: any
   relayStore: any
 }
 
@@ -60,6 +61,7 @@ export interface CustomPageAppProps extends AppProps {
   Component: PageProps<NextPageContext, any>
   environment: IEnvironment
   requestProps: RequestProps
+  translationProps: any
   securityToken: string
   relayStore: any
 }
@@ -73,12 +75,17 @@ export type GetRelayPreloadPropsReturn = Partial<{
   }
 }>
 
+export type GetTranslationPropsReturn = Promise<Partial<{
+  translations: any
+}>>
+
 interface PageContext extends NextPageContext {
   cookies: Cookies
 }
 
 export declare type CustomComponentType<C extends BaseContext = PageContext, P = {}> = ComponentType<P> & {
   getRelayPreloadProps?: (context: C) => GetRelayPreloadPropsReturn
+  getTranslationProps?: (context: C) => GetTranslationPropsReturn
   getLayout?: (page: JSX.Element) => JSX.Element
 }
 

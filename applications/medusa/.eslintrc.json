@@ -1,0 +1,96 @@
+{
+  "overrides": [
+    {
+      "extends": [
+        "plugin:cypress/recommended",
+        "plugin:testing-library/recommended"
+      ],
+      "plugins": [
+        "cypress"
+      ],
+      "files": [
+        "cypress/**/*.ts"
+      ],
+      "parserOptions": {
+        "project": [
+          "cypress/tsconfig.json"
+        ]
+      }
+    },
+    {
+      "settings": {
+        "jest": {
+          "version": 26
+        }
+      },
+      "extends": [
+        "plugin:jest/recommended",
+        "plugin:testing-library/recommended",
+        "plugin:testing-library/react"
+      ],
+      "plugins": [
+        "jest"
+      ],
+      "files": [
+        "src/**/*.spec.tsx",
+        "src/**/*.spec.ts"
+      ]
+    }
+  ],
+  "extends": [
+    "standard-with-typescript",
+    "standard-jsx",
+    "standard-react"
+  ],
+  "plugins": [
+    "relay",
+    "testing-library"
+  ],
+  "ignorePatterns": [
+    "**/__locale__/**/*.js",
+    "build/**",
+    "cache/**",
+    "coverage/**",
+    "node_modules/**",
+    ".nyc_output/**"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "babelOptions": {
+      "configFile": ".babelrc"
+    },
+    "project": [
+      "./tsconfig.json"
+    ],
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
+  "rules": {
+    "relay/graphql-syntax": "error",
+    "relay/compat-uses-vars": "warn",
+    "relay/graphql-naming": "error",
+    "relay/generated-flow-types": "off",
+    "relay/must-colocate-fragment-spreads": "off",
+    "relay/no-future-added-value": "warn",
+    "relay/unused-fields": "warn",
+    "relay/hook-required-argument": "error",
+    "react/react-in-jsx-scope": "off",
+    "@typescript-eslint/no-var-requires": "off",
+    "react/jsx-max-props-per-line": [
+      1,
+      {
+        "maximum": 1,
+        "when": "multiline"
+      }
+    ]
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true,
+    "cypress/globals": true
+  }
+}

@@ -1,7 +1,7 @@
 steps:
   build:
     targets:
-      - //applications/puppy/internal:internal
+      - //applications/puppy/internal:image
 
   unit_test:
     coverage:
@@ -12,10 +12,6 @@ steps:
       - //applications/puppy/internal/app/...
       - //applications/puppy/internal/domain/...
       - //applications/puppy/internal/ports/...
-
-  push_image:
-    targets:
-      - //applications/puppy/internal:publish-testing
 
   integration_test:
     coverage:
@@ -29,15 +25,20 @@ steps:
       - //applications/puppy/internal/adapters/...
       - //applications/puppy/internal/service/...
 
+  push_image:
+    targets:
+      - //applications/puppy/internal:publish
+
   e2e_test:
     setup:
       dockerfile:
-        - ./applications/puppy/docker-compose.e2e.yaml
+        - ./applications/puppy/docker-compose.ci.e2e.yaml
     network_dependencies:
       - host: puppy
         port: 8000
         priority: 0
 
   publish_image:
-    targets:
-      - //applications/puppy/internal:publish
+    copy:
+      - from_repo: puppy/dev
+        to_repo: puppy

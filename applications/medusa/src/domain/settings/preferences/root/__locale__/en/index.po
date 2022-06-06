@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/settings/preferences/root/RootCurationSettings/CurationSettings/CurationSettings.tsx:39
+#: src/domain/settings/preferences/root/RootCurationSettings/CurationSettings/CurationSettings.tsx:44
 msgid "Complete Curation Profile"
 msgstr ""
 
@@ -21,14 +21,14 @@ msgstr ""
 msgid "Content Curation"
 msgstr ""
 
-#: src/domain/settings/preferences/root/RootCurationSettings/CurationSettings/CurationSettings.tsx:38
+#: src/domain/settings/preferences/root/RootCurationSettings/CurationSettings/CurationSettings.tsx:43
 msgid "Modify Curation Profile"
 msgstr ""
 
-#: src/domain/settings/preferences/root/RootCurationSettings/CurationSettings/CurationSettings.tsx:43
+#: src/domain/settings/preferences/root/RootCurationSettings/CurationSettings/CurationSettings.tsx:48
 msgid "Reconfigure your curation profile"
 msgstr ""
 
-#: src/domain/settings/preferences/root/RootCurationSettings/CurationSettings/CurationSettings.tsx:44
+#: src/domain/settings/preferences/root/RootCurationSettings/CurationSettings/CurationSettings.tsx:49
 msgid "Set up your curation profile"
 msgstr ""

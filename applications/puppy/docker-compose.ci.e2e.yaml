@@ -1,0 +1,22 @@
+version: '2.2'
+services:
+  puppy:
+    image: $CONTAINER_REGISTRY/puppy/dev:$BUILDKITE_COMMIT
+    entrypoint: ""
+    command: /bin/sh -c "/app/applications/puppy/internal/image.binary"
+    env_file: ../../applications/puppy/.env.ci
+    depends_on:
+      - temporal
+    ports:
+      - 6060:8000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.puppy.rule=PathPrefix(`/api/graphql`)"
+      - "traefik.http.routers.puppy.entrypoints=web"
+      - "traefik.port=8000"
+    restart: "on-failure:20"
+    cpus: 0.1
+
+  run:
+    depends_on:
+      - puppy

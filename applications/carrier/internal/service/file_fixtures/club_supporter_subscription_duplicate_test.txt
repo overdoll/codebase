@@ -8,13 +8,13 @@ Home ( https://overdoll.com/home ) Discover Clubs ( https://overdoll.com/clubs/d
 Duplicate Subscription
 ----------------------
 
-Hello !
+Hello test user!
 
-We detected that you subscribed twice to the same club test a club (https://ci.overdoll.dev/test-club).
+We detected that you subscribed twice to the same club *test a club* (https://ci.overdoll.dev/test-club).
 
 Billing Details
 
-We have voided your most recent subscription to test a club for the amount 6.99 USD
+We have voided your most recent subscription to *test a club* for the amount *6.99 USD*
 
 The charge will eventually disappear from your credit card.
 

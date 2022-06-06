@@ -1,7 +1,7 @@
 steps:
   build:
     targets:
-      - //applications/loader/internal:internal
+      - //applications/loader/internal:image
 
   unit_test:
     coverage:
@@ -13,11 +13,10 @@ steps:
       - //applications/loader/internal/domain/...
       - //applications/loader/internal/ports/...
 
-  push_image:
-    targets:
-      - //applications/loader/internal:publish-testing
-
   integration_test:
+    pre_hook:
+      - //applications/loader/internal:internal -- db migrate keyspace
+      - //applications/loader/internal:internal -- db seed
     coverage:
       - name: loader.integration
         paths:
@@ -29,10 +28,13 @@ steps:
       - //applications/loader/internal/adapters/...
       - //applications/loader/internal/service/...
 
+  push_image:
+    targets:
+      - //applications/loader/internal:publish
+
   e2e_test:
     setup:
       dockerfile:
-        - ./applications/loader/docker-compose.ci.yaml
         - ./applications/loader/docker-compose.ci.e2e.yaml
     network_dependencies:
       - host: loader
@@ -40,5 +42,6 @@ steps:
         priority: 0
 
   publish_image:
-    targets:
-      - //applications/loader/internal:publish
+    copy:
+      - from_repo: loader/dev
+        to_repo: loader

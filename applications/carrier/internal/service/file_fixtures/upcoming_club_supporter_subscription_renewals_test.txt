@@ -8,7 +8,11 @@ Home ( https://overdoll.com/home ) Discover Clubs ( https://overdoll.com/clubs/d
 Upcoming Renewals
 -----------------
 
-Here are your upcoming subscription renewals for this month
+Hello test user!
+
+Here are your upcoming subscription renewals for this month:
+
+Name Amount Date Manage test a club ( https://ci.overdoll.dev/test-club ) 6.99 USD 11/12 Link ( https://ci.overdoll.dev/settings/billing/subscription/25WqY2AZfmlykwqKhQagxmI9gtd )
 
 You may manage any of these subscriptions, such as cancelling them, using the button below
 

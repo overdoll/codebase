@@ -1,37 +1,40 @@
-steps:
-  build:
+frontend_steps:
+  check:
+    workdir: applications/medusa
     commands:
-      - bazel build //applications/medusa:packages
-      - npm run locale:compile
-      - npm run check:tsc
-      - npm run check:eslint
-    targets:
-      - //applications/medusa:bundle
+      - ./run_yarn_install.sh
+      - yarn locale:compile
+      - yarn run check:tsc
+      - yarn run check:eslint
 
   unit_test:
+    workdir: applications/medusa
     coverage:
       - name: medusa.unit
         paths:
-          - ./applications/medusa/unit/coverage.dat
-    targets:
-      - //applications/medusa:unit
+          - ./coverage/coverage.dat
+    commands:
+      - yarn run jest
+
+  build:
+    workdir: applications/medusa
+    commands:
+      - yarn build
 
   push_image:
-    targets:
-      - //applications/medusa:publish-testing
+    workdir: applications/medusa
+    build:
+      - repo: medusa/dev
 
+steps:
   e2e_test:
-    commands:
-      # compile localization files, push queries
-      - npm run locale:compile
-      - npm run push-all-queries
     coverage:
       - name: medusa.e2e
         paths:
           - ./applications/medusa/coverage/clover.xml
     setup:
       dockerfile:
-        - ./applications/medusa/docker-compose.e2e.yaml
+        - ./applications/medusa/docker-compose.ci.e2e.yaml
     network_dependencies:
       - host: medusa
         port: 8000
@@ -41,8 +44,6 @@ steps:
       - cypress/*
 
   publish_image:
-    commands:
-      # compile localization files
-      - npm run locale:compile
-    targets:
-      - //applications/medusa:publish
+    copy:
+      - from_repo: medusa/dev
+        to_repo: medusa

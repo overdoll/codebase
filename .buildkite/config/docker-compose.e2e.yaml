@@ -1,0 +1,31 @@
+version: '2.2'
+services:
+  traefik:
+    image: traefik:v2.1
+    command:
+      - --entrypoints.web.address=:80
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+    ports:
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  temporal:
+    depends_on:
+      - scylla
+    environment:
+      - DB=cassandra
+      - CASSANDRA_SEEDS=scylla
+      - CASSANDRA_HOST=scylla
+      - DYNAMIC_CONFIG_FILE_PATH=config/temporal.yaml
+    image: 771779017151.dkr.ecr.us-east-1.amazonaws.com/temporalio/auto-setup:v1.16.2-patch.2
+    ports:
+      - 7233:7233
+    volumes:
+      - ./services/temporal.yaml:/etc/temporal/config/temporal.yaml
+    cpus: 1
+
+volumes:
+  postgresql:
+    driver: local

@@ -71,7 +71,7 @@ export default function DisableMultiFactor (props: Props): JSX.Element {
 
         if (viewer != null) {
           viewer
-            .setValue(payload?.disableAccountMultiFactor?.accountMultiFactorTotpEnabled, 'multiFactorTotpConfigured')
+            .setValue(payload?.disableAccountMultiFactor?.account?.multiFactorEnabled, 'multiFactorTotpConfigured')
         }
       },
       onError () {

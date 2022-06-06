@@ -72,11 +72,11 @@ msgstr ""
 
 #: src/domain/staff/billing/subscription/RootStaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription.tsx:68
 #: src/domain/staff/billing/subscription/RootStaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffClubSupporterSubscriptionClub/StaffClubSupporterSubscriptionClub.tsx:35
-#: src/domain/staff/billing/subscription/RootStaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffSubscriptionTransactions/StaffTransactionsList/StaffTransactionsList.tsx:61
+#: src/domain/staff/billing/subscription/RootStaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffSubscriptionTransactions/StaffTransactionsList/StaffTransactionsList.tsx:62
 msgid "Club"
 msgstr ""
 
-#: src/domain/staff/billing/subscription/RootStaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffSubscriptionTransactions/StaffTransactionsList/StaffTransactionsList.tsx:66
+#: src/domain/staff/billing/subscription/RootStaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffSubscriptionTransactions/StaffTransactionsList/StaffTransactionsList.tsx:67
 msgid "Date"
 msgstr ""
 
@@ -134,7 +134,7 @@ msgstr ""
 msgid "No billing error found"
 msgstr ""
 
-#: src/domain/staff/billing/subscription/RootStaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffSubscriptionTransactions/StaffTransactionsList/StaffTransactionsList.tsx:56
+#: src/domain/staff/billing/subscription/RootStaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffSubscriptionTransactions/StaffTransactionsList/StaffTransactionsList.tsx:57
 msgid "Price"
 msgstr ""
 
@@ -214,7 +214,7 @@ msgstr ""
 msgid "Transactions"
 msgstr ""
 
-#: src/domain/staff/billing/subscription/RootStaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffSubscriptionTransactions/StaffTransactionsList/StaffTransactionsList.tsx:51
+#: src/domain/staff/billing/subscription/RootStaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffSubscriptionTransactions/StaffTransactionsList/StaffTransactionsList.tsx:52
 msgid "Type"
 msgstr ""
 

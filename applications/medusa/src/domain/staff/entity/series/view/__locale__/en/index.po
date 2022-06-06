@@ -29,7 +29,7 @@ msgstr ""
 msgid "Change Series Title"
 msgstr ""
 
-#: src/domain/staff/entity/series/view/RootStaffViewSeries/StaffViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnail.tsx:40
+#: src/domain/staff/entity/series/view/RootStaffViewSeries/StaffViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnail.tsx:46
 msgid "Change Thumbnail"
 msgstr ""
 
@@ -45,7 +45,7 @@ msgstr ""
 msgid "Locale"
 msgstr ""
 
-#: src/domain/staff/entity/series/view/RootStaffViewSeries/StaffViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnail.tsx:29
+#: src/domain/staff/entity/series/view/RootStaffViewSeries/StaffViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnail.tsx:30
 #: src/domain/staff/entity/series/view/RootStaffViewSeries/StaffViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnailForm/ChangeSeriesThumbnailForm.tsx:104
 msgid "Series Thumbnail"
 msgstr ""

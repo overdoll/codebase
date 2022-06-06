@@ -2,6 +2,10 @@ import RootProfileSettings from './RootProfileSettings/RootProfileSettings'
 import ProfileSettingsQuery from '@//:artifacts/ProfileSettingsQuery.graphql'
 import SettingsLayout from '../../../../common/components/Layouts/SettingsLayout/SettingsLayout'
 
+RootProfileSettings.getTranslationProps = async (ctx) => ({
+  translations: await import(`./__locale__/${ctx.locale as string}/index`)
+})
+
 RootProfileSettings.getRelayPreloadProps = () => {
   return {
     queries: {

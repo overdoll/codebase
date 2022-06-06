@@ -1,3 +1,3 @@
-import RootPublicClub from '../../domain/[slug]/root'
+import RootPublicClub from '../../domain/slug/root'
 
 export default RootPublicClub

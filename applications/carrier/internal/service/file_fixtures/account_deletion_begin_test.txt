@@ -8,15 +8,15 @@ Home ( https://overdoll.com/home ) Discover Clubs ( https://overdoll.com/clubs/d
 Account Deletion Request
 ------------------------
 
-Hello !
+Hello test user!
 
-As requested, we have scheduled a deletion of your account on January 01.
+As requested, we have scheduled a deletion of your account on *November 12*.
 
 We will send you one more reminder letting you know that your account is being deleted before fully confirming the action. You may ignore this and subsequent reminders if you are aware of the action.
 
 Until then, you can restore your account using the button below.
 
-Restore Account ( https://ci.overdoll.dev/settings/account )
+Restore Account ( https://ci.overdoll.dev/settings/profile/delete-account )
 
 overdoll Inc.
 

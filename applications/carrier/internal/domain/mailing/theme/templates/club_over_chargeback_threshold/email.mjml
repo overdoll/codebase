@@ -5,9 +5,12 @@
         <mj-section>
             <mj-column>
                 <mj-text>
-                    <h2>Club Over Chargeback Threshold/h2>
-                    <p>The club {{.ClubName}} ({{.ClubLink}}) has reached the chargeback threshold.</p>
-                    <p>Current chargeback ratio: {{.Threshold}}</p>
+                    <h2>Club Over Chargeback Threshold</h2>
+                    <p>The club <strong>{{.ClubName}}</strong> ({{.ClubLink}}) has reached the chargeback threshold.
+                    </p>
+                    <p>Current chargeback ratio:
+                        <strong>{{.Threshold}}</strong>
+                    </p>
                 </mj-text>
             </mj-column>
         </mj-section>

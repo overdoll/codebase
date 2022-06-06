@@ -1,22 +1,29 @@
 load("@io_bazel_rules_docker//container:container.bzl", "container_push")
-load("@npm//@bazel/typescript:index.bzl", "ts_project")
+load("@npm_orca//@bazel/typescript:index.bzl", "ts_project")
 load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
 load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
 
 package(default_visibility = ["//visibility:public"])
 
+exports_files([
+    "package.json",
+    "tsconfig.json",
+])
+
 _DEPS = [
-    "@npm//@apollo/gateway",
-    "@npm//apollo-server",
-    "@npm//apollo-server-express",
-    "@npm//express",
-    "@npm//graphql",
-    "@npm//body-parser",
-    "@npm//ioredis",
-    "@npm//dotenv",
-    "@npm//@types/node",
-    "@npm//node-fetch",
-    "@npm//cors",
+    "@npm_orca//@apollo/gateway",
+    "@npm_orca//apollo-server",
+    "@npm_orca//@apollo/core-schema",
+    "@npm_orca//apollo-server-express",
+    "@npm_orca//@apollo/federation",
+    "@npm_orca//express",
+    "@npm_orca//graphql",
+    "@npm_orca//body-parser",
+    "@npm_orca//ioredis",
+    "@npm_orca//dotenv",
+    "@npm_orca//@types/node",
+    "@npm_orca//node-fetch",
+    "@npm_orca//cors",
 ]
 
 _DATA = [
@@ -43,22 +50,8 @@ nodejs_binary(
 )
 
 nodejs_image(
-    name = "local-image",
-    binary = ":internal",
-)
-
-nodejs_image(
     name = "image",
     binary = ":internal",
-)
-
-container_push(
-    name = "publish-testing",
-    format = "Docker",
-    image = ":image",
-    registry = "$(CONTAINER_REGISTRY)",
-    repository = "orca/dev",
-    tag = "$(CONTAINER_TAG)",
 )
 
 container_push(
@@ -66,7 +59,6 @@ container_push(
     format = "Docker",
     image = ":image",
     registry = "$(CONTAINER_REGISTRY)",
-    repository = "orca",
-    skip_unchanged_digest = True,
+    repository = "orca/dev",
     tag = "$(CONTAINER_TAG)",
 )

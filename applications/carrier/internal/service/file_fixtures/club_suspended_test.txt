@@ -8,13 +8,13 @@ Home ( https://overdoll.com/home ) Discover Clubs ( https://overdoll.com/clubs/d
 Club Suspended
 --------------
 
-Hello !
+Hello test user!
 
-Your club test a club (https://ci.overdoll.dev/test-club) has been suspended for violating the platform's club guidelines.
+Your club *test a club* (https://ci.overdoll.dev/test-club) has been suspended for violating the platform's club guidelines.
 
 During this time, you will not be able to collect new subscriptions or create any posts.
 
-The suspension will last until Mon, 01 Jan 0001 00:00:00 UTC, after which you will be able to unsuspend your club.
+The suspension will last until *Wed, 12 Nov 2014 11:45:26 UTC* , after which you will be able to unsuspend your club.
 
 Please contact hello@overdoll.com if you have any questions or concerns.
 

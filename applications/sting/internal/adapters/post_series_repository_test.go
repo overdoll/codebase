@@ -27,8 +27,8 @@ func TestPostSeries_failure(t *testing.T) {
 	require.Error(t, err, "should have received an error while creating the series")
 
 	_, err = postRepo.GetSingleSeriesById(ctx, requester, seriesId)
-	require.Equal(t, post.ErrAudienceNotFound, err, "series should not be found by id")
+	require.Equal(t, post.ErrSeriesNotFound, err, "series should not be found by id")
 
 	_, err = postRepo.GetSeriesBySlug(ctx, requester, seriesSlug)
-	require.Equal(t, post.ErrAudienceNotFound, err, "series should not be found by slug")
+	require.Equal(t, post.ErrSeriesNotFound, err, "series should not be found by slug")
 }

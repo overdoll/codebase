@@ -181,16 +181,16 @@ const ClubsCatalog = [
     include: ['src/domain/clubs/create-club/']
   },
   {
-    path: 'src/domain/[slug]/root/__locale__/{locale}/index',
-    include: ['src/domain/[slug]/root/']
+    path: 'src/domain/slug/root/__locale__/{locale}/index',
+    include: ['src/domain/slug/root/']
   },
   {
-    path: 'src/domain/[slug]/post/__locale__/{locale}/index',
-    include: ['src/domain/[slug]/post/']
+    path: 'src/domain/slug/post/__locale__/{locale}/index',
+    include: ['src/domain/slug/post/']
   },
   {
-    path: 'src/domain/[slug]/posts/__locale__/{locale}/index',
-    include: ['src/domain/[slug]/posts/']
+    path: 'src/domain/slug/posts/__locale__/{locale}/index',
+    include: ['src/domain/slug/posts/']
   }
 ]
 

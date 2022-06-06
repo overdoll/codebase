@@ -13,15 +13,27 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/settings/payouts/root/RootPayoutsSettings/PayoutsSettings/PayoutsSettings.tsx:42
+#: src/domain/settings/payouts/root/RootPayoutsSettings/PayoutsSettings/PayoutsDetailsSettings/AccountDetails/AccountDetails.tsx:48
+msgid "Country"
+msgstr ""
+
+#: src/domain/settings/payouts/root/RootPayoutsSettings/PayoutsSettings/PayoutsDetailsSettings/PayoutsDetailsSettings.tsx:36
 msgid "Enter your payout details"
 msgstr ""
 
-#: src/domain/settings/payouts/root/RootPayoutsSettings/PayoutsSettings/PayoutsSettings.tsx:38
+#: src/domain/settings/payouts/root/RootPayoutsSettings/PayoutsSettings/PayoutsDetailsSettings/AccountDetails/AccountDetails.tsx:28
+msgid "First Name"
+msgstr ""
+
+#: src/domain/settings/payouts/root/RootPayoutsSettings/PayoutsSettings/PayoutsDetailsSettings/AccountDetails/AccountDetails.tsx:38
+msgid "Last Name"
+msgstr ""
+
+#: src/domain/settings/payouts/root/RootPayoutsSettings/PayoutsSettings/PayoutsDetailsSettings/PayoutsDetailsSettings.tsx:32
 msgid "Payout Details"
 msgstr ""
 
-#: src/domain/settings/payouts/root/RootPayoutsSettings/PayoutsSettings/PayoutsSettings.tsx:51
+#: src/domain/settings/payouts/root/RootPayoutsSettings/PayoutsSettings/PayoutsMethodSettings/PayoutsMethodSettings.tsx:38
 msgid "Payout Method"
 msgstr ""
 
@@ -29,14 +41,34 @@ msgstr ""
 msgid "Payouts Settings"
 msgstr ""
 
-#: src/domain/settings/payouts/root/RootPayoutsSettings/PayoutsSettings/PayoutsSettings.tsx:55
+#: src/domain/settings/payouts/root/RootPayoutsSettings/PayoutsSettings/PayoutsMethodSettings/PayoutsMethodSettings.tsx:42
 msgid "Set up your payout details first"
 msgstr ""
 
-#: src/domain/settings/payouts/root/RootPayoutsSettings/PayoutsSettings/PayoutsSettings.tsx:43
+#: src/domain/settings/payouts/root/RootPayoutsSettings/PayoutsSettings/PayoutsMethodSettings/PayoutsMethodSettings.tsx:44
+msgid "Set up your payout method"
+msgstr ""
+
+#: src/domain/settings/payouts/root/RootPayoutsSettings/PayoutsSettings/PayoutsSettings.tsx:61
+msgid "Setup"
+msgstr ""
+
+#: src/domain/settings/payouts/root/RootPayoutsSettings/PayoutsSettings/PayoutsDetailsSettings/PayoutsDetailsSettings.tsx:37
 msgid "Update your payout details"
 msgstr ""
 
-#: src/domain/settings/payouts/root/RootPayoutsSettings/PayoutsSettings/PayoutsSettings.tsx:56
+#: src/domain/settings/payouts/root/RootPayoutsSettings/PayoutsSettings/PayoutsMethodSettings/PayoutsMethodSettings.tsx:45
 msgid "Update your payout method"
+msgstr ""
+
+#: src/domain/settings/payouts/root/RootPayoutsSettings/PayoutsSettings/PayoutsSettings.tsx:50
+msgid "You must set up two factor before you can set up payouts for your account"
+msgstr ""
+
+#: src/domain/settings/payouts/root/RootPayoutsSettings/PayoutsSettings/PayoutsDetailsSettings/PayoutsDetailsSettings.tsx:45
+msgid "Your Payout Details"
+msgstr ""
+
+#: src/domain/settings/payouts/root/RootPayoutsSettings/PayoutsSettings/PayoutsMethodSettings/PayoutsMethodSettings.tsx:53
+msgid "Your Payout Method"
 msgstr ""

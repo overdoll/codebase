@@ -8,9 +8,9 @@
                     <h1>
                         New Login
                     </h1>
-                    <h5 font-color="#bfbfbf">
+                    <text font-color="#bfbfbf">
                         Tap on the button below to finish logging into your overdoll account
-                    </h5>
+                    </text>
                 </mj-text>
                 <mj-button css-class="large primary" href="{{.Link}}">
                     Authenticate

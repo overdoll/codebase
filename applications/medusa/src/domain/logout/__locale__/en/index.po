@@ -13,10 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/logout/Logout/Logout.tsx:46
+#: src/domain/logout/Logout/Logout.tsx:45
 msgid "There was an error logging out"
 msgstr ""
 
-#: src/domain/logout/Logout/Logout.tsx:31
+#: src/domain/logout/Logout/Logout.tsx:32
 msgid "You have been logged out"
 msgstr ""

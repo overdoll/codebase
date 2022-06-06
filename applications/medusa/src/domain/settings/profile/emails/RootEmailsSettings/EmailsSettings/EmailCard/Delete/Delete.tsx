@@ -5,6 +5,7 @@ import { SmallMenuItem } from '@//:modules/content/PageLayout'
 import { DeleteBin } from '@//:assets/icons/interface'
 import { t, Trans } from '@lingui/macro'
 import { useToast } from '@//:modules/content/ThemeComponents'
+import { useLingui } from '@lingui/react'
 
 interface Props {
   connectionID: string
@@ -37,6 +38,7 @@ export default function Delete ({
   )
 
   const notify = useToast()
+  const { i18n } = useLingui()
 
   const onDeleteEmail = (): void => {
     deleteEmail({
@@ -49,19 +51,18 @@ export default function Delete ({
       onCompleted () {
         notify({
           status: 'success',
-          title: t`${data.email} was removed`,
+          title: i18n._(t`${data.email} was removed`),
           isClosable: true
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error removing ${data.email}`,
+          title: i18n._(t`There was an error removing ${data.email}`),
           isClosable: true
         })
       }
-    }
-    )
+    })
   }
 
   return (

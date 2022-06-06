@@ -13,6 +13,43 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/club/home/RootClubHome/ClubHome/ClubHome.tsx:57
+#: src/domain/club/home/RootClubHome/ClubHome/ClubSupporterHeader/ClubSupporterHeader.tsx:52
+#: src/domain/club/home/RootClubHome/ClubHome/ClubSupporterHeader/ClubSupporterHeader.tsx:75
+msgid "Cannot Collect Subscriptions"
+msgstr ""
+
+#: src/domain/club/home/RootClubHome/ClubHome/ClubSupporterHeader/ClubSupporterHeader.tsx:116
+msgid "Create Post"
+msgstr ""
+
+#: src/domain/club/home/RootClubHome/ClubHome/ClubSupporterHeader/ClubSupporterHeader.tsx:79
+msgid "In order to collect supporter subscription payments, you must post at least one piece of exclusive supporter content"
+msgstr ""
+
+#: src/domain/club/home/RootClubHome/ClubHome/ClubSupporterHeader/ClubSupporterHeader.tsx:56
+msgid "In order to collect supporter subscription payments, your club must not be suspended."
+msgstr ""
+
+#: src/domain/club/home/RootClubHome/ClubHome/ClubBalanceHeader/ClubBalanceHeader.tsx:41
+msgid "In order to receive payouts, you must have an active payout method set up"
+msgstr ""
+
+#: src/domain/club/home/RootClubHome/ClubHome/ClubHome.tsx:71
 msgid "Members"
+msgstr ""
+
+#: src/domain/club/home/RootClubHome/ClubHome/ClubBalanceHeader/ClubBalanceHeader.tsx:37
+msgid "Payouts Not Setup"
+msgstr ""
+
+#: src/domain/club/home/RootClubHome/ClubHome/ClubSupporterHeader/ClubSupporterHeader.tsx:104
+msgid "Post exclusive content at least once by {nextSupporterPostTime} to keep your supporters"
+msgstr ""
+
+#: src/domain/club/home/RootClubHome/ClubHome/ClubSupporterHeader/ClubSupporterHeader.tsx:93
+msgid "Supporters"
+msgstr ""
+
+#: src/domain/club/home/RootClubHome/ClubHome/ClubSupporterHeader/ClubSupporterHeader.tsx:125
+msgid "You cannot collect new supporters because your club is suspended"
 msgstr ""

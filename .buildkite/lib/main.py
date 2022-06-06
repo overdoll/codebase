@@ -4,6 +4,7 @@
 
 import argparse
 import glob
+import json
 import os
 import random
 import shutil
@@ -12,6 +13,7 @@ import tempfile
 import threading
 import urllib.request
 
+import redis
 import sys
 import yaml
 
@@ -28,6 +30,27 @@ import utils.test_logs as test_logs
 
 random.seed()
 
+default_vars = [
+    "HOME"
+]
+
+test_env_vars = [
+    "CCBILL_FLEXFORMS_URL",
+    "CCBILL_SALT_KEY",
+    "CCBILL_ACCOUNT_NUMBER",
+    "CCBILL_SUB_ACCOUNT_NUMBER",
+    "CCBILL_DATALINK_USERNAME",
+    "CCBILL_DATALINK_PASSWORD",
+    "AWS_ACCESS_KEY",
+    "AWS_ACCESS_SECRET",
+    "AWS_ENDPOINT",
+    "AWS_REGION",
+    "TESTMAIL_API_KEY",
+    "TESTMAIL_NAMESPACE",
+    "AWS_PRIVATE_RESOURCES_KEY_PAIR_ID",
+    "AWS_PRIVATE_RESOURCES_KEY_PAIR_PRIVATE_KEY",
+]
+
 
 def wait_for_network_dependencies(targets):
     for connection in targets:
@@ -40,31 +63,29 @@ def wait_for_network_dependencies(targets):
 
 # execute commands to run integration tests
 def execute_integration_tests_commands(configs):
-    wait_for_network_dependencies(configs.get("integration_test", {}).get("network_dependencies", []))
-
     tmpdir = tempfile.mkdtemp()
 
     try:
-        test_env_vars = [
-            "HOME",
-            "AWS_ACCESS_KEY",
-            "AWS_ACCESS_SECRET",
-            "AWS_ENDPOINT",
-            "AWS_REGION",
-            "TESTMAIL_API_KEY",
-            "TESTMAIL_NAMESPACE",
-            "CCBILL_FLEXFORMS_URL",
-            "CCBILL_SALT_KEY",
-            "CCBILL_ACCOUNT_NUMBER",
-            "CCBILL_SUB_ACCOUNT_NUMBER",
-            "CCBILL_DATALINK_USERNAME",
-            "CCBILL_DATALINK_PASSWORD",
-            "AWS_PRIVATE_RESOURCES_KEY_PAIR_ID",
-            "AWS_PRIVATE_RESOURCES_KEY_PAIR_PRIVATE_KEY",
-        ]
+        run_flags, json_profile_out_test = flags.calculate_flags(
+            "run_flags", "run", tmpdir, default_vars
+        )
+
+        new_flags = []
+
+        env_variables = configs.get("integration_test", {}).get("setup", {}).get("env", {})
+
+        additional_test_env = format.format_env_vars(env_variables)
+
+        for env in additional_test_env:
+            new_flags += ["--test_env={}".format(env)]
+
+        for img in configs.get("integration_test", {}).get("pre_hook", []):
+            target = img.split()
+            bazel.execute_bazel_run(":bazel: Executing hook before integration test {}".format(img), run_flags, target,
+                                    [], env=env_variables)
 
         test_flags, json_profile_out_test = flags.calculate_flags(
-            "test_flags", "test", tmpdir, test_env_vars
+            "test_flags", "test", tmpdir, test_env_vars + default_vars
         )
 
         test_bep_file = os.path.join(tmpdir, "test_bep.json")
@@ -73,18 +94,11 @@ def execute_integration_tests_commands(configs):
             target=test_logs.upload_test_logs_from_bep, args=(test_bep_file, stop_request)
         )
 
-        additional_test_env = format.format_env_vars(
-            configs.get("integration_test", {}).get("setup", {}).get("env", {}))
-
-        for env in additional_test_env:
-            test_flags += ["--test_env={}".format(env)]
+        test_flags += new_flags
 
         try:
             upload_thread.start()
             test_targets = configs.get("integration_test", {}).get("targets", [])
-
-            # integration test MAY be flaky because of external dependencies, so we will attempt retries
-            test_flags += ["--flaky_test_attempts=default"]
 
             try:
                 bazel.execute_bazel_test(":bazel: Running integration tests", test_flags, test_targets, test_bep_file,
@@ -143,7 +157,22 @@ def execute_coverage_command(configs):
         exec.execute_command(cmd)
 
 
+def push_all_queries():
+    r = redis.Redis(host='redis', port=6379, db=2)
+
+    f = open('./applications/medusa/src/queries.json')
+    data = json.load(f)
+
+    for i in data:
+        r.mset({"query:" + i: data[i]})
+
+    f.close()
+
+
 def execute_e2e_tests_commands(configs):
+    # we first need to push all queries into the local redis instance
+    push_all_queries()
+
     # grab all network deps (these services need to be running first),
     # and sort by priority (some services need to be started first)
     deps = sorted(configs.get("e2e_test", {}).get("network_dependencies", []), key=lambda k: k['priority'])
@@ -182,13 +211,68 @@ def upload_execution_artifacts(json_profile_path, tmpdir, json_bep_file=None, ):
         exec.execute_command(["buildkite-agent", "artifact", "upload", json_bep_file], cwd=tmpdir)
 
 
-def execute_build_commands_custom(configs):
-    commands = configs.get("build", {}).get("commands", [])
+def execute_check_commands_custom(configs):
+    cwd = os.getcwd()
 
-    terminal_print.print_expanded_group(":lua: Executing custom commands")
+    workdir = configs.get("check", {}).get("workdir", None)
+
+    if workdir:
+        os.chdir(workdir)
+
+    commands = configs.get("check", {}).get("commands", [])
+
+    terminal_print.print_expanded_group(":one-does-not-simply: Running checks before tests")
 
     for i in commands:
         exec.execute_command(i.split())
+
+    os.chdir(cwd)
+
+    # need to clear cache for eslint + typescript to ensure it updates
+    for f in glob.glob("v1-cache-medusa-nextjs*"):
+        os.remove(f)
+
+
+def execute_unit_test_commands(configs):
+    cwd = os.getcwd()
+
+    workdir = configs.get("unit_test", {}).get("workdir", None)
+
+    if workdir:
+        os.chdir(workdir)
+
+    commands = configs.get("unit_test", {}).get("commands", [])
+
+    terminal_print.print_expanded_group(":test_tube: Running unit tests")
+
+    for i in commands:
+        exec.execute_command(i.split())
+
+    execute_coverage_command(configs.get("unit_test", {}).get("coverage", []))
+
+    os.chdir(cwd)
+
+
+def execute_build_commands_custom(configs):
+    cwd = os.getcwd()
+
+    workdir = configs.get("build", {}).get("workdir", None)
+
+    if workdir:
+        os.chdir(workdir)
+
+    commands = configs.get("build", {}).get("commands", [])
+
+    terminal_print.print_expanded_group(":hammer: Running build commands")
+
+    for i in commands:
+        exec.execute_command(i.split())
+
+    os.chdir(cwd)
+
+    # need to clear cache for nextjs to ensure it's updated
+    for f in glob.glob("v1-cache-medusa-nextjs*"):
+        os.remove(f)
 
 
 def execute_custom_e2e_commands_custom(configs):
@@ -200,39 +284,51 @@ def execute_custom_e2e_commands_custom(configs):
         exec.execute_command(i.split())
 
 
-def execute_custom_publish_commands_custom(configs):
-    commands = configs.get("publish_image", {}).get("commands", [])
+def execute_push_images_commands(configs):
+    cwd = os.getcwd()
 
-    terminal_print.print_expanded_group(":lua: Executing custom commands")
+    workdir = configs.get("push_image", {}).get("workdir", None)
+
+    if workdir:
+        os.chdir(workdir)
+
+    commands = configs.get("push_image", {}).get("build", [])
 
     for i in commands:
-        exec.execute_command(i.split())
+        commit = os.getenv("BUILDKITE_COMMIT", "")
+        registry = os.getenv("CONTAINER_REGISTRY", "")
+
+        tag = "{}/{}:{}".format(registry, i.get("repo"), commit)
+
+        terminal_print.print_expanded_group(":docker: Building Image {}".format(tag))
+
+        exec.execute_command(["docker", "build", "-t", tag, "."])
+
+        terminal_print.print_expanded_group(":docker: Pushing Image {}".format(tag))
+
+        exec.execute_command(["docker", "push", tag])
+
+    os.chdir(cwd)
+
+
+def execute_push_images(configs):
+    tmpdir = tempfile.mkdtemp()
+    try:
+        push_images(configs.get("push_image", {}).get("targets", []), tmpdir)
+    finally:
+        if tmpdir:
+            shutil.rmtree(tmpdir)
 
 
 def execute_build_commands(configs):
+    terminal_print.print_collapsed_group(":bazel: Waiting for bazel remote cache to start up")
+    network.wait_for_port("bazel.remote", "8080", 180)
+
     tmpdir = tempfile.mkdtemp()
 
     try:
-        test_env_vars = [
-            "HOME",
-            "CCBILL_FLEXFORMS_URL",
-            "CCBILL_SALT_KEY",
-            "CCBILL_ACCOUNT_NUMBER",
-            "CCBILL_SUB_ACCOUNT_NUMBER",
-            "CCBILL_DATALINK_USERNAME",
-            "CCBILL_DATALINK_PASSWORD",
-            "AWS_ACCESS_KEY",
-            "AWS_ACCESS_SECRET",
-            "AWS_ENDPOINT",
-            "AWS_REGION",
-            "TESTMAIL_API_KEY",
-            "TESTMAIL_NAMESPACE",
-            "AWS_PRIVATE_RESOURCES_KEY_PAIR_ID",
-            "AWS_PRIVATE_RESOURCES_KEY_PAIR_PRIVATE_KEY",
-        ]
-
         build_flags, json_profile_out_build = flags.calculate_flags(
-            "build_flags", "build", tmpdir, test_env_vars
+            "build_flags", "build", tmpdir, default_vars
         )
 
         build_targets = configs.get("build", {}).get("targets", [])
@@ -243,7 +339,7 @@ def execute_build_commands(configs):
             upload_execution_artifacts(json_profile_out_build, tmpdir)
 
         test_flags, json_profile_out_test = flags.calculate_flags(
-            "test_flags", "test", tmpdir, test_env_vars
+            "test_flags", "test", tmpdir, default_vars
         )
 
         test_bep_file = os.path.join(tmpdir, "test_bep.json")
@@ -256,9 +352,6 @@ def execute_build_commands(configs):
             upload_thread.start()
             test_targets = configs.get("unit_test", {}).get("targets", [])
 
-            # unit tests are not flaky
-            test_flags += ["--flaky_test_attempts=default"]
-
             try:
                 bazel.execute_bazel_test(":bazel: Running unit tests", test_flags, test_targets, test_bep_file, [])
             finally:
@@ -270,8 +363,6 @@ def execute_build_commands(configs):
 
         # We execute our coverage config in tmpdir because that's where the bazel coverage results are stored
         execute_coverage_command(configs.get("unit_test", {}).get("coverage", []))
-
-        push_images(configs.get("push_image", {}).get("targets", []), tmpdir)
 
     finally:
         if tmpdir:
@@ -291,19 +382,6 @@ def print_project_pipeline():
     if not build:
         raise exception.BuildkiteException("build step is empty")
 
-    pipeline_steps.append(
-        pipeline.create_step(
-            label=":bazel: Build & Unit Test",
-            commands=[".buildkite/pipeline.sh build"],
-            # Run tests inside of a docker container
-            platform="docker",
-            cache=True,
-        )
-    )
-
-    # unit tests + build must complete first before integration tests
-    pipeline_steps.append("wait")
-
     default_docker_compose = ["./.buildkite/config/docker-compose.yaml"]
 
     integration = steps.get("integration_test", None)
@@ -312,17 +390,105 @@ def print_project_pipeline():
 
     pipeline_steps.append(
         pipeline.create_step(
-            label=":test_tube: Integration Test",
-            commands=[".buildkite/pipeline.sh integration_test"],
+            label=":typescript: Build & Test Front-End",
+            commands=[".buildkite/pipeline.sh frontend_build_test"],
+            platform="docker",
+            cache=[
+                {
+                    "gencer/cache#v2.4.10": {
+                        "id": "medusa-node_modules",
+                        "backend": "s3",
+                        "key": "v1-cache-{{ id }}-{{ checksum 'applications/medusa/yarn.lock' }}",
+                        "compress": "true",
+                        "paths": [
+                            "applications/medusa/node_modules",
+                        ],
+                        "s3": {
+                            "bucket": "buildkite-runner-cache"
+                        },
+                        "continue_on_error": "true"
+                    }
+                },
+                {
+                    "gencer/cache#v2.4.10": {
+                        "id": "medusa-nextjs",
+                        "backend": "s3",
+                        "key": "v1-cache-{{ id }}-$BUILDKITE_COMMIT",
+                        "restore-keys": [
+                            "v1-cache-{{ id }}-",
+                        ],
+                        "compress": "true",
+                        "paths": [
+                            "applications/medusa/build/cache"
+                        ],
+                        "s3": {
+                            "bucket": "buildkite-runner-cache"
+                        },
+                    }
+                },
+                {
+                    "gencer/cache#v2.4.10": {
+                        "id": "medusa-cache_eslint_typescript",
+                        "backend": "s3",
+                        "key": "v1-cache-{{ id }}-$BUILDKITE_COMMIT",
+                        "restore-keys": [
+                            "v1-cache-{{ id }}-",
+                        ],
+                        "compress": "true",
+                        "paths": [
+                            "applications/medusa/cache"
+                        ],
+                        "s3": {
+                            "bucket": "buildkite-runner-cache"
+                        },
+                    }
+                }
+            ],
+        )
+    )
+
+    pipeline_steps.append(
+        pipeline.create_step(
+            label=":bazel: Build & Test Services",
+            commands=[".buildkite/pipeline.sh services_build_test"],
             platform="docker-compose",
-            # No cache for int tests - these dont include FE tests
-            cache=False,
-            # Include docker-compose configs from all configurations, plus our custom one - the container in which the
-            # integration tests will actually be ran
+            cache=[
+                {
+                    "gencer/cache#v2.4.10": {
+                        "id": "orca-node_modules",
+                        "backend": "s3",
+                        "key": "v1-cache-{{ id }}-{{ runner.os }}-{{ checksum 'applications/orca/yarn.lock' }}",
+                        "compress": "true",
+                        "paths": [
+                            "applications/orca/node_modules"
+                        ],
+                        "s3": {
+                            "bucket": "buildkite-runner-cache"
+                        },
+                    }
+                },
+                {
+                    "gencer/cache#v2.4.10": {
+                        "id": "bazel-repositories",
+                        "backend": "s3",
+                        "key": "v1-cache-{{ id }}-{{ checksum 'go_repositories.bzl' }}-{{ checksum 'Cargo.Bazel.lock' }}",
+                        "compress": "true",
+                        "paths": [
+                            ".bazel_repository_cache"
+                        ],
+                        "s3": {
+                            "bucket": "buildkite-runner-cache"
+                        },
+                    }
+                },
+            ],
             configs=default_docker_compose + integration.get("setup", {}).get("dockerfile", []) + [
                 "./.buildkite/config/docker/docker-compose.integration.yaml"]
         )
     )
+
+    # unit tests + build must complete first before e2e testing
+    pipeline_steps.append("wait")
 
     e2e = steps.get("e2e_test", None)
     if not e2e:
@@ -335,14 +501,28 @@ def print_project_pipeline():
     pipeline_steps.append(
         pipeline.create_step(
             label=':cypress: :chromium: End-to-End Test',
-            # grab commands to run inside of our container (it will be medusa)
             commands=[".buildkite/pipeline.sh e2e_test"],
-            # E2E tests dont require node-modules cache (our image is preinstalled with everything required)
-            cache=True,
             shards=1,
             platform="docker-compose",
+            cache=[
+                {
+                    "gencer/cache#v2.4.10": {
+                        "id": "medusa-node_modules",
+                        "backend": "s3",
+                        "key": "v1-cache-{{ id }}-{{ checksum 'applications/medusa/yarn.lock' }}",
+                        "compress": "true",
+                        "paths": [
+                            "applications/medusa/node_modules",
+                        ],
+                        "s3": {
+                            "bucket": "buildkite-runner-cache"
+                        }
+                    }
+                },
+            ],
             artifacts=e2e.get("artifacts", []),
             configs=default_docker_compose + e2e.get("setup", {}).get("dockerfile", []) + [
+                "./.buildkite/config/docker-compose.e2e.yaml",
                 "./.buildkite/config/docker/docker-compose.e2e.yaml"]
         )
     )
@@ -356,9 +536,6 @@ def print_project_pipeline():
             pipeline.create_step(
                 label=":aws: Publish Images",
                 commands=[".buildkite/pipeline.sh publish"],
-                # Does not require a cache because we already
-                # built our dependencies once - we just publishing to a diff repo
-                cache=True,
                 platform="docker",
             )
         )
@@ -367,24 +544,6 @@ def print_project_pipeline():
 
 
 def push_images(targets, tmpdir):
-    test_env_vars = [
-        "HOME",
-        "CCBILL_FLEXFORMS_URL",
-        "CCBILL_SALT_KEY",
-        "CCBILL_ACCOUNT_NUMBER",
-        "CCBILL_SUB_ACCOUNT_NUMBER",
-        "CCBILL_DATALINK_USERNAME",
-        "CCBILL_DATALINK_PASSWORD",
-        "AWS_ACCESS_KEY",
-        "AWS_ACCESS_SECRET",
-        "AWS_ENDPOINT",
-        "AWS_REGION",
-        "TESTMAIL_API_KEY",
-        "TESTMAIL_NAMESPACE",
-        "AWS_PRIVATE_RESOURCES_KEY_PAIR_ID",
-        "AWS_PRIVATE_RESOURCES_KEY_PAIR_PRIVATE_KEY",
-    ]
-
     run_flags, json_profile_out_test = flags.calculate_flags(
         "run_flags", "run", tmpdir, test_env_vars
     )
@@ -393,16 +552,42 @@ def push_images(targets, tmpdir):
     run_flags += ["--define=CONTAINER_REGISTRY={}".format(os.getenv("CONTAINER_REGISTRY", ""))]
 
     for img in targets:
-        bazel.execute_bazel_run(":docker: Pushing docker image {}".format(img), run_flags, img, [])
+        target = img.split()
+        bazel.execute_bazel_run(":docker: Pushing docker image {}".format(img), run_flags, target, [])
 
 
 def execute_publish_commands(configs):
-    tmpdir = tempfile.mkdtemp()
-    try:
-        push_images(configs.get("publish_image", {}).get("targets", []), tmpdir)
-    finally:
-        if tmpdir:
-            shutil.rmtree(tmpdir)
+    publish = configs.get("publish_image", {}).get("copy", [])
+    for img in publish:
+        from_repo = img.get("from_repo")
+        to_repo = img.get("to_repo")
+
+        terminal_print.print_expanded_group(":docker: Copying image from {} to {}".format(from_repo, to_repo))
+
+        commit = os.getenv("BUILDKITE_COMMIT", "")
+        registry = os.getenv("CONTAINER_REGISTRY", "")
+
+        existing_tag = "{}/{}:{}".format(registry, from_repo, commit)
+
+        # grab our current digest
+        digest = exec.execute_command_and_get_output(["crane", "digest", existing_tag]).rstrip("\n")
+
+        new_tag = "{}/{}@{}".format(registry, to_repo, digest)
+        new_tag_with_commit = "{}/{}:{}".format(registry, from_repo, commit)
+
+        # then, check
+        returncode = exec.execute_command(["crane", "digest", new_tag], fail_if_nonzero=False)
+
+        # return code is not 0, it means the digest was not found
+        if returncode != 0:
+            terminal_print.eprint("\033[93m Digest Not Found, Copying Image \033[0m")
+            copy_return = exec.execute_command(["crane", "cp", existing_tag, new_tag_with_commit])
+
+            if copy_return != 0:
+                raise exception.BuildkiteException(
+                    "failed to copy image from {} to {}".format(existing_tag, new_tag_with_commit))
+        else:
+            terminal_print.eprint("\033[92m Digest Found, Skipping Copy \033[0m")
 
 
 def main(argv=None):
@@ -411,8 +596,9 @@ def main(argv=None):
 
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest="subparsers_name")
-    subparsers.add_parser("build")
-    subparsers.add_parser("integration_test")
+    subparsers.add_parser("services_build_test")
+    subparsers.add_parser("frontend_build_test")
+
     subparsers.add_parser("e2e_test")
     subparsers.add_parser("project_pipeline")
     subparsers.add_parser("publish")
@@ -422,19 +608,24 @@ def main(argv=None):
     try:
         configs = parse_config.load_configs().get("steps", {})
 
-        if args.subparsers_name == "build":
-            # execute any custom build commands before we run bazel targets
-            execute_build_commands_custom(configs)
+        # execute any custom build commands before we run bazel targets
+        # execute_build_commands_custom(configs)
+        if args.subparsers_name == "services_build_test":
             execute_build_commands(configs)
-        elif args.subparsers_name == "integration_test":
             execute_integration_tests_commands(configs)
+            execute_push_images(configs)
+        elif args.subparsers_name == "frontend_build_test":
+            frontend_config = parse_config.load_configs().get("frontend_steps", {})
+            execute_check_commands_custom(frontend_config)
+            execute_unit_test_commands(frontend_config)
+            execute_build_commands_custom(frontend_config)
+            execute_push_images_commands(frontend_config)
         elif args.subparsers_name == "e2e_test":
             execute_custom_e2e_commands_custom(configs)
             execute_e2e_tests_commands(configs)
         elif args.subparsers_name == "project_pipeline":
             print_project_pipeline()
         elif args.subparsers_name == "publish":
-            execute_custom_publish_commands_custom(configs)
             execute_publish_commands(configs)
 
     except exception.BuildkiteException as e:

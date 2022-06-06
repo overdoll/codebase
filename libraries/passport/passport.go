@@ -20,6 +20,7 @@ type Passport struct {
 }
 
 func (p *Passport) Authenticated() error {
+
 	if p.passport.AccountInfo != nil {
 
 		if p.passport.AccountInfo.Id == "" {

@@ -2,6 +2,10 @@ import RootStaffCreateCharacter from './RootStaffCreateCharacter/RootStaffCreate
 import StaffCreateCharacterQuery from '@//:artifacts/StaffCreateCharacterQuery.graphql'
 import StaffLayout from '../../../../../common/components/Layouts/StaffLayout/StaffLayout'
 
+RootStaffCreateCharacter.getTranslationProps = async (ctx) => ({
+  translations: await import(`./__locale__/${ctx.locale as string}/index`)
+})
+
 RootStaffCreateCharacter.getRelayPreloadProps = (ctx) => {
   return {
     queries: {

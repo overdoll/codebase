@@ -6,3 +6,123 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/RootPayoutMethodSettings.tsx:38
+msgid "Back to Payouts Settings"
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutCountryNotSupported/PayoutCountryNotSupported.tsx:27
+msgid "Country Not Supported"
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:107
+msgid "Create an account and get verified"
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodDelete/PayoutMethodDelete.tsx:72
+msgid "Delete Payout Method"
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethod/PayoutMethod.tsx:46
+msgid "Email"
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:131
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:155
+msgid "Enter your Paxum payments email"
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:80
+msgid "I fully understand the information provided to me above and will do my best to follow it"
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:47
+msgid "In order to receive payments on the platform (and maintain your ability to do so), you must..."
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:53
+msgid "Never post any content that contains real human beings"
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:136
+msgid "Once your account is verified, please enter your Paxum email for receiving payments. Entering an unverified or invalid account email will result in failed payouts and a frozen balance."
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:122
+msgid "Open Paxum Sign Up Link"
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/ChoosePayoutMethod/PayoutMethodChoice/PayoutMethodChoice.tsx:19
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:98
+msgid "Paxum"
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:150
+msgid "Paxum Email"
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/ChoosePayoutMethod/PayoutMethodChoice/PayoutMethodChoice.tsx:26
+msgid "Paxum is an E-wallet service that allows you to receive payouts and withdraw them to a local bank account, card, or wire transfer. You will be required to create and verify an account."
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethod/PayoutMethod.tsx:36
+msgid "Payout Method"
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:72
+msgid "Payout method Paxum successfully set up"
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodDelete/PayoutMethodDelete.tsx:48
+msgid "Payout method deleted"
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:33
+msgid "Platform Agreement"
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:26
+msgid "Please read the following important information carefully"
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSettings.tsx:42
+msgid "Please set up payout details before accessing this section"
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:58
+msgid "Post at least one new piece of exclusive supporter content every 30 days"
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:166
+msgid "Set up payout method"
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:39
+msgid "The overdoll platform works with many providers to make it possible to exist. This means that along with you being subject to our guidelines, you are also subject to the ones imposed upon us."
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodDelete/PayoutMethodDelete.tsx:54
+msgid "There was an error deleting your payout method"
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:78
+msgid "There was an error setting up the payout method"
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:112
+msgid "To set up Paxum as a payout method, you must create an account and have it verified by providing the necessary documentation through a Know Your Client procedure. If you already have an account, you may skip this step."
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutCountryNotSupported/PayoutCountryNotSupported.tsx:32
+msgid "Unfortunately, we cannot currently pay out to artists located in the country <0>{0}</0>. This could be because of currently active sanctions or our providers not being able to support it. it."
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:65
+msgid "You will never lose the ability to receive payouts. You will permanently lose the ability to collect subscription payments if you violate the guidelines above."
+msgstr ""

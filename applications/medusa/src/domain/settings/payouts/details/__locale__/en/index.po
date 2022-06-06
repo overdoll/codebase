@@ -6,39 +6,49 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
 
-#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:155
+#: src/domain/settings/payouts/details/RootAccountDetailsSettings/RootAccountDetailsSettings.tsx:38
+msgid "Back to Payouts Settings"
+msgstr ""
+
+#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:166
 msgid "Country"
 msgstr ""
 
-#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:125
+#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:136
 msgid "Enter a first name"
 msgstr ""
 
-#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:143
+#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:154
 msgid "Enter a last name"
 msgstr ""
 
-#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:119
+#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:130
 msgid "First Name"
 msgstr ""
 
-#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:137
+#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:148
 msgid "Last Name"
 msgstr ""
 
-#: src/domain/settings/payouts/details/RootAccountDetailsSettings/RootAccountDetailsSettings.tsx:38
+#: src/domain/settings/payouts/details/RootAccountDetailsSettings/RootAccountDetailsSettings.tsx:44
 msgid "Payout Details"
 msgstr ""
 
-#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:97
+#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:101
 msgid "Successfully updated account details"
 msgstr ""
 
-#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:103
+#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:107
 msgid "There was an error updating your account details"
 msgstr ""
 
-#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:171
+#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:182
 msgid "Update Account Details"
 msgstr ""

@@ -12,7 +12,7 @@ export const prepareViewer = (store, payload): void => {
     root.setLinkedRecord(payload, 'viewer')
   }
 
-  // Invalidate token so when user logs out they don't see the old authenticaton pages
+  // Invalidate token so when user logs out they don't see the old authentication pages
   const token = store.getRoot().getLinkedRecord('viewAuthenticationToken')
   if (token != null) {
     token.invalidateRecord()

@@ -53,5 +53,9 @@ func (h CreateClubHandler) Handle(ctx context.Context, cmd CreateClub) (*club.Cl
 		return nil, err
 	}
 
+	if err := h.event.WaitForClubToBeReady(ctx, cmd.Principal, clb); err != nil {
+		return nil, err
+	}
+
 	return clb, nil
 }

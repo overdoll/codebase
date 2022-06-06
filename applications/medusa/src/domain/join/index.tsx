@@ -1,6 +1,10 @@
 import JoinRoot from './Join/JoinRoot'
 import JoinRootData from '@//:artifacts/JoinRootQuery.graphql'
 
+JoinRoot.getTranslationProps = async (ctx) => ({
+  translations: await import(`./__locale__/${ctx.locale as string}/index`)
+})
+
 JoinRoot.getRelayPreloadProps = (ctx) => {
   let tokenCookie = ctx.cookies.get('token')
 

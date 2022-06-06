@@ -6,6 +6,7 @@ import (
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	"go.temporal.io/sdk/mocks"
 	"overdoll/applications/stella/internal/app/workflows"
 	"overdoll/applications/stella/internal/ports/graphql/types"
 	stella "overdoll/applications/stella/proto"
@@ -98,6 +99,24 @@ func TestCreateClub_and_check_permission(t *testing.T) {
 
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CreateClub, mock.Anything)
 
+	flowRun := &mocks.WorkflowRun{}
+
+	flowRun.
+		On("Get", mock.Anything, mock.Anything).
+		Return(nil)
+
+	application.TemporalClient.
+		On("GetWorkflow", mock.Anything, "CreateClub_"+testingAccountId, mock.Anything).
+		// on GetWorkflow command, this would check if the workflow was completed
+		// so we run our workflow to make sure it's completed
+		Run(
+			func(args mock.Arguments) {
+				workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+				refreshClubESIndex(t)
+			},
+		).
+		Return(flowRun)
+
 	var createClub CreateClub
 
 	fake := TestClub{}
@@ -110,9 +129,6 @@ func TestCreateClub_and_check_permission(t *testing.T) {
 			Name: fake.Name,
 		},
 	})
-
-	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
-	refreshClubESIndex(t)
 
 	require.NoError(t, err)
 

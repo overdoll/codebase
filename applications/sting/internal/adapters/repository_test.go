@@ -4,12 +4,16 @@ import (
 	"github.com/bxcodec/faker/v3"
 	"github.com/olivere/elastic/v7"
 	"github.com/stretchr/testify/require"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/config"
 	"testing"
 )
+
+var elasticURI string
 
 // create buckets before running tests
 func seedConfiguration() bool {
@@ -23,10 +27,35 @@ func TestMain(m *testing.M) {
 		os.Exit(1)
 	}
 
-	// exit tests for now
-	os.Exit(0)
+	handler := http.NotFound
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		handler(w, r)
+	}))
+	defer ts.Close()
 
-	//os.Exit(m.Run())
+	handler = func(w http.ResponseWriter, r *http.Request) {
+
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`
+			{
+			  "_shards": {
+				"total": 1,
+				"failed": 1,
+				"successful": 0
+			  },
+			  "_index": "tttttt",
+			  "_id": "1",
+			  "_version": 1,
+			  "_seq_no": 0,
+			  "_primary_term": 1,
+			  "result": "failed"
+			}
+			`))
+	}
+
+	elasticURI = ts.URL
+
+	os.Exit(m.Run())
 }
 
 type TestSlug struct {
@@ -47,10 +76,13 @@ func newPostRepository(t *testing.T) adapters.PostsCassandraElasticsearchReposit
 func newPostRepositoryWithESFailure(t *testing.T) adapters.PostsCassandraElasticsearchRepository {
 
 	// set up some sort of client that is going to fail when making ES calls
-	client, _ := elastic.NewClient(
-		elastic.SetURL("asdasdasdas-basdurlas-dasdas"),
-		elastic.SetHealthcheck(false),
+	client, err := elastic.NewSimpleClient(
+		elastic.SetURL(elasticURI),
 	)
+
+	if err != nil {
+		panic(err)
+	}
 
 	return adapters.NewPostsCassandraRepository(bootstrap.InitializeDatabaseSession(), client)
 }

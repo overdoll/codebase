@@ -1,7 +1,7 @@
 steps:
   build:
     targets:
-      - //applications/eva/internal:internal
+      - //applications/eva/internal:image
 
   unit_test:
     coverage:
@@ -13,11 +13,10 @@ steps:
       - //applications/eva/internal/domain/...
       - //applications/eva/internal/ports/...
 
-  push_image:
-    targets:
-      - //applications/eva/internal:publish-testing
-
   integration_test:
+    pre_hook:
+      - //applications/eva/internal:internal -- db migrate keyspace
+      - //applications/eva/internal:internal -- db seed
     coverage:
       - name: eva.integration
         paths:
@@ -29,15 +28,20 @@ steps:
       - //applications/eva/internal/adapters/...
       - //applications/eva/internal/service/...
 
+  push_image:
+    targets:
+      - //applications/eva/internal:publish
+
   e2e_test:
     setup:
       dockerfile:
-        - ./applications/eva/docker-compose.ci.yaml
+        - ./applications/eva/docker-compose.ci.e2e.yaml
     network_dependencies:
       - host: eva
         port: 8000
         priority: 0
 
   publish_image:
-    targets:
-      - //applications/eva/internal:publish
+    copy:
+      - from_repo: carrier/dev
+        to_repo: carrier

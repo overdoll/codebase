@@ -45,8 +45,12 @@ msgstr ""
 msgid "7 days"
 msgstr ""
 
-#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffClubSupporterSubscription/StaffAccountActiveClubSupporterSubscriptionPreview/StaffAccountActiveClubSupporterSubscriptionPreview.tsx:40
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffAccountClubSupporterSubscriptionPreview/StaffAccountActiveClubSupporterSubscriptionPreview/StaffAccountActiveClubSupporterSubscriptionPreview.tsx:40
 msgid "ACTIVE"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignArtist/StaffAssignArtistButton/StaffAssignArtistButton.tsx:70
+msgid "Assign Artist"
 msgstr ""
 
 #: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignModerator/StaffAssignModerator.tsx:45
@@ -59,7 +63,7 @@ msgstr ""
 msgid "Assign Staff"
 msgstr ""
 
-#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffClubSupporterSubscription/StaffAccountCancelledClubSupporterSubscriptionPreview/StaffAccountCancelledClubSupporterSubscriptionPreview.tsx:40
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffAccountClubSupporterSubscriptionPreview/StaffAccountCancelledClubSupporterSubscriptionPreview/StaffAccountCancelledClubSupporterSubscriptionPreview.tsx:40
 msgid "CANCELLED"
 msgstr ""
 
@@ -71,19 +75,19 @@ msgstr ""
 msgid "Chargeback Transactions"
 msgstr ""
 
-#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptions.tsx:71
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffAccountClubSupporterSubscriptions.tsx:71
 msgid "Club"
 msgstr ""
 
-#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/StaffLockAccountForm.tsx:108
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/StaffLockAccountForm.tsx:107
 msgid "Confirm Lock Account"
 msgstr ""
 
-#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/StaffLockAccountForm.tsx:95
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/StaffLockAccountForm.tsx:94
 msgid "Duration of Lock"
 msgstr ""
 
-#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffClubSupporterSubscription/StaffAccountExpiredClubSupporterSubscriptionPreview/StaffAccountExpiredClubSupporterSubscriptionPreview.tsx:40
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffAccountClubSupporterSubscriptionPreview/StaffAccountExpiredClubSupporterSubscriptionPreview/StaffAccountExpiredClubSupporterSubscriptionPreview.tsx:40
 msgid "EXPIRED"
 msgstr ""
 
@@ -99,16 +103,28 @@ msgstr ""
 msgid "Moderator"
 msgstr ""
 
-#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptions.tsx:81
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffAccountClubSupporterSubscriptions.tsx:81
 msgid "Next/End/Expired Date"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignArtist/StaffAssignArtist.tsx:44
+msgid "Not Platform Artist"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAccount.tsx:74
+msgid "Owned Clubs"
 msgstr ""
 
 #: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffTransactions/StaffTransactions.tsx:57
 msgid "Payment Transactions"
 msgstr ""
 
-#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAccount.tsx:53
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAccount.tsx:59
 msgid "Permissions"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignArtist/StaffAssignArtist.tsx:30
+msgid "Platform Artist"
 msgstr ""
 
 #: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/LockDurationSelect/LockDurationSelect.tsx:53
@@ -117,6 +133,10 @@ msgstr ""
 
 #: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffTransactions/StaffTransactions.tsx:65
 msgid "Refund Transactions"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignArtist/StaffRevokeArtistButton/StaffRevokeArtistButton.tsx:70
+msgid "Revoke Artist"
 msgstr ""
 
 #: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignModerator/StaffAssignModerator.tsx:41
@@ -137,12 +157,16 @@ msgstr ""
 msgid "Staff"
 msgstr ""
 
-#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptions.tsx:66
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffAccountClubSupporterSubscriptions.tsx:66
 msgid "Status"
 msgstr ""
 
-#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAccount.tsx:58
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAccount.tsx:64
 msgid "Subscriptions"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignArtist/StaffAssignArtistButton/StaffAssignArtistButton.tsx:49
+msgid "Successfully assigned artist role"
 msgstr ""
 
 #: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignModerator/StaffAssignModeratorButton/StaffAssignModeratorButton.tsx:49
@@ -153,8 +177,12 @@ msgstr ""
 msgid "Successfully assigned staff role"
 msgstr ""
 
-#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/StaffLockAccountForm.tsx:71
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/StaffLockAccountForm.tsx:70
 msgid "Successfully locked account until {0}"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignArtist/StaffRevokeArtistButton/StaffRevokeArtistButton.tsx:49
+msgid "Successfully revoked artist role"
 msgstr ""
 
 #: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignModerator/StaffRevokeModeratorButton/StaffRevokeModeratorButton.tsx:49
@@ -169,8 +197,12 @@ msgstr ""
 msgid "Successfully unlocked account"
 msgstr ""
 
-#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptions.tsx:76
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffAccountClubSupporterSubscriptions.tsx:76
 msgid "Supporting Since"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignArtist/StaffAssignArtistButton/StaffAssignArtistButton.tsx:55
+msgid "There was an error assigning the artist role"
 msgstr ""
 
 #: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignModerator/StaffAssignModeratorButton/StaffAssignModeratorButton.tsx:55
@@ -181,8 +213,12 @@ msgstr ""
 msgid "There was an error assigning the staff role"
 msgstr ""
 
-#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/StaffLockAccountForm.tsx:77
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccountForm/StaffLockAccountForm.tsx:76
 msgid "There was an error locking the account"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignArtist/StaffRevokeArtistButton/StaffRevokeArtistButton.tsx:55
+msgid "There was an error revoking the artist role"
 msgstr ""
 
 #: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignModerator/StaffRevokeModeratorButton/StaffRevokeModeratorButton.tsx:55
@@ -197,7 +233,15 @@ msgstr ""
 msgid "There was an error unlocking the account"
 msgstr ""
 
-#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAccount.tsx:63
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignArtist/StaffAssignArtist.tsx:35
+msgid "This account is an artist and can create clubs as well as post"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAssignArtist/StaffAssignArtist.tsx:49
+msgid "This account is not an artist"
+msgstr ""
+
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAccount.tsx:69
 msgid "Transactions"
 msgstr ""
 

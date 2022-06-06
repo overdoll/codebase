@@ -21,20 +21,24 @@ msgstr ""
 msgid "Continue Support"
 msgstr ""
 
-#: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/SubscriptionsSettings/SubscriptionsSettings.tsx:33
+#: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/SubscriptionsSettings/SubscriptionsSettings.tsx:39
 msgid "Current"
 msgstr ""
 
-#: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/SubscriptionsSettings/ExpiredClubSupporterSubscriptionsSettings/ExpiredAccountClubSupporterSubscriptionPreview/ExpiredAccountClubSupporterSubscriptionPreview.tsx:73
+#: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/SubscriptionsSettings/ExpiredClubSupporterSubscriptionsSettings/ExpiredAccountClubSupporterSubscriptionPreview/ExpiredAccountClubSupporterSubscriptionPreview.tsx:79
 msgid "EXPIRED"
 msgstr ""
 
-#: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/SubscriptionsSettings/SubscriptionsSettings.tsx:38
+#: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/SubscriptionsSettings/SubscriptionsSettings.tsx:44
 msgid "Expired"
 msgstr ""
 
-#: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/SubscriptionsSettings/ExpiredClubSupporterSubscriptionsSettings/ExpiredAccountClubSupporterSubscriptionPreview/ExpiredAccountClubSupporterSubscriptionPreview.tsx:91
+#: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/SubscriptionsSettings/ExpiredClubSupporterSubscriptionsSettings/ExpiredAccountClubSupporterSubscriptionPreview/ExpiredAccountClubSupporterSubscriptionPreview.tsx:97
 msgid "Expired on"
+msgstr ""
+
+#: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/SubscriptionsSettings/SubscriptionsSettings.tsx:59
+msgid "For questions or concerns about your billing, please contact hello@overdoll.com"
 msgstr ""
 
 #: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/RootSubscriptionsSettings.tsx:38
@@ -45,10 +49,10 @@ msgstr ""
 msgid "My Subscriptions"
 msgstr ""
 
-#: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/SubscriptionsSettings/ExpiredClubSupporterSubscriptionsSettings/ExpiredAccountClubSupporterSubscriptionPreview/ExpiredAccountClubSupporterSubscriptionPreview.tsx:81
+#: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/SubscriptionsSettings/ExpiredClubSupporterSubscriptionsSettings/ExpiredAccountClubSupporterSubscriptionPreview/ExpiredAccountClubSupporterSubscriptionPreview.tsx:87
 msgid "Supporter since"
 msgstr ""
 
-#: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/SubscriptionsSettings/ExpiredClubSupporterSubscriptionsSettings/ExpiredAccountClubSupporterSubscriptionPreview/ExpiredAccountClubSupporterSubscriptionPreview.tsx:96
+#: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/SubscriptionsSettings/ExpiredClubSupporterSubscriptionsSettings/ExpiredAccountClubSupporterSubscriptionPreview/ExpiredAccountClubSupporterSubscriptionPreview.tsx:102
 msgid "{expiredAt}"
 msgstr ""

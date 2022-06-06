@@ -1,12 +1,12 @@
 from . import format
 
-DEFAULT_IMAGE = "771779017151.dkr.ecr.us-east-1.amazonaws.com/ci:v1"
+DEFAULT_IMAGE = "771779017151.dkr.ecr.us-east-1.amazonaws.com/ci@sha256:4d09a1d8d093fe966682fd53f2ec9199c9177da58f478fd50c226fb70c04410f"
 
 
-def create_step(label, commands, platform, configs=None, artifacts=None, cache=True, additional_env_vars=None, shards=1,
+def create_step(label, commands, platform, configs=None, artifacts=None, cache=None, additional_env_vars=None, shards=1,
                 soft_fail=None):
     if platform == "docker":
-        step = create_docker_step(label, commands, additional_env_vars)
+        step = create_docker_step(label, commands, additional_env_vars, cache)
     elif platform == "docker-compose":
         step = create_docker_compose_step(label, commands, additional_env_vars, configs, cache)
     else:
@@ -40,65 +40,55 @@ def create_step(label, commands, platform, configs=None, artifacts=None, cache=T
     return step
 
 
-def get_cache_plugin():
-    return {
-        "id": "node",
-        "backend": "s3",
-        "key": "v1-cache-{{ id }}-{{ runner.os }}-{{ checksum 'yarn.lock' }}",
-        # We dont use restore-keys because the bazel nodejs rules will sometimes
-        # mess up and throw a "target not found error"
-        # so we always do a fresh install of node_modules on each run, if there are new dependencies
-        # "restore-keys": [
-        #     "v1-cache-{{ id }}-{{ runner.os }}-",
-        #     "v1-cache-{{ id }}-",
-        # ],
-        "compress": "true",
-        "paths": [
-            "node_modules"
-        ],
-        "s3": {
-            "bucket": "buildkite-runner-cache"
-        },
-    }
-
-
-def create_docker_step(label, commands, additional_env_vars=None):
+def create_docker_step(label, commands, additional_env_vars=None, cache=None):
     vars = [
         "CONTAINER_REGISTRY",
         "DOCKER_CONFIG",
         "CODECOV_API_KEY",
+        "BUILDKITE_COMMIT",
+        "AWS_ACCESS_KEY",
+        "AWS_ACCESS_SECRET",
+        "AWS_ENDPOINT",
+        "AWS_REGION",
+        "FORCE_COLOR=1",
     ]
 
     step = {
         "label": label,
         "command": commands,
         "agents": {"queue": "default"},
-        "plugins": {
-            "gencer/cache#v2.4.8": get_cache_plugin(),
-            "docker#v3.5.0": {
-                "always-pull": True,
-                "environment": format.format_env_vars(additional_env_vars) + vars,
-                "image": DEFAULT_IMAGE,
-                "network": "host",
-                "privileged": True,
-                "propagate-environment": True,
-                "propagate-uid-gid": True,
-                "volumes": [
-                    "/etc/group:/etc/group:ro",
-                    "/etc/passwd:/etc/passwd:ro",
-                    "/opt:/opt:ro",
-                    "/var/lib/buildkite-agent:/var/lib/buildkite-agent",
-                    "/var/run/docker.sock:/var/run/docker.sock",
-                    "/tmp:/tmp",
-                ],
+        "plugins": [
+            {
+                "docker#v3.5.0": {
+                    "shell": ["/bin/bash", "-e", "-c"],
+                    "environment": format.format_env_vars(additional_env_vars) + vars,
+                    "image": DEFAULT_IMAGE,
+                    "user": "root",
+                    "propagate-aws-auth-tokens": True,
+                    "network": "host",
+                    "privileged": True,
+                    "propagate-environment": True,
+                    "volumes": [
+                        "/etc/group:/etc/group:ro",
+                        "/etc/passwd:/etc/passwd:ro",
+                        "/opt:/opt:ro",
+                        "/var/lib/buildkite-agent:/var/lib/buildkite-agent",
+                        "/var/run/docker.sock:/var/run/docker.sock",
+                        "/tmp:/tmp",
+                    ],
+                }
+
             },
-        },
+        ],
     }
+
+    if cache:
+        step["plugins"] = step["plugins"] + cache
 
     return step
 
 
-def create_docker_compose_step(label, commands, additional_env_vars=None, configs=None, cache=True):
+def create_docker_compose_step(label, commands, additional_env_vars=None, configs=None, cache=None):
     vars = [
         "CCBILL_FLEXFORMS_URL",
         "CCBILL_SALT_KEY",
@@ -154,28 +144,32 @@ def create_docker_compose_step(label, commands, additional_env_vars=None, config
         "BUILDKITE_BUILD_AUTHOR",
         "BUILDKITE_PULL_REQUEST",
         "BUILDKITE_AGENT_ID",
-        "CI"
+        "CI",
+        "FORCE_COLOR=1",
     ]
 
     step = {
         "label": label,
         "command": commands,
         "agents": {"queue": "default"},
-        "plugins": {
-            "docker-compose#v3.7.0": {
-                "env": format.format_env_vars(additional_env_vars) + vars,
-                "run": "run",
-                "config": configs,
-                "workdir": "/workdir",
-                "skip-checkout": False,
-                "dependencies": True,
-                "build-parallel": True,
-                "upload-container-logs": "always",
-            },
-        },
+        "plugins": [
+            {
+                "docker-compose#v3.7.0": {
+                    "shell": ["/bin/bash", "-e", "-c"],
+                    "env": format.format_env_vars(additional_env_vars) + vars,
+                    "run": "run",
+                    "config": configs,
+                    "workdir": "/workdir",
+                    "skip-checkout": False,
+                    "dependencies": True,
+                    "build-parallel": True,
+                    "upload-container-logs": "always",
+                },
+            }
+        ],
     }
 
     if cache:
-        step["plugins"]["gencer/cache#v2.4.8"] = get_cache_plugin()
+        step["plugins"] = step["plugins"] + cache
 
     return step

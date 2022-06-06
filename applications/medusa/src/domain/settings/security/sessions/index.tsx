@@ -2,6 +2,10 @@ import RootSessionsSettings from './RootSessionsSettings/RootSessionsSettings'
 import SessionsSettingsQuery from '@//:artifacts/SessionsSettingsQuery.graphql'
 import SettingsLayout from '../../../../common/components/Layouts/SettingsLayout/SettingsLayout'
 
+RootSessionsSettings.getTranslationProps = async (ctx) => ({
+  translations: await import(`./__locale__/${ctx.locale as string}/index`)
+})
+
 RootSessionsSettings.getRelayPreloadProps = () => {
   return {
     queries: {

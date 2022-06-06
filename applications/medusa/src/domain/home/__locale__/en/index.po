@@ -17,7 +17,7 @@ msgstr ""
 #~ msgid "Account Locked"
 #~ msgstr ""
 
-#: src/domain/home/RootHome/Home/Home.tsx:68
+#: src/domain/home/RootHome/Home/Home.tsx:69
 msgid "Home"
 msgstr ""
 
@@ -42,11 +42,19 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/home/RootHome/NewAccountModal/NewAccountModal.tsx:75
-msgid "Set Up Your Profile"
-msgstr ""
+#~ msgid "Set Up Your Profile"
+#~ msgstr ""
 
 #: src/domain/home/RootHome/NewAccountModal/NewAccountModal.tsx:96
-msgid "Set up profile"
+#~ msgid "Set up profile"
+#~ msgstr ""
+
+#: src/domain/home/RootHome/CurationProfileAlert/CurationProfileAlert.tsx:61
+msgid "Set up your curation profile so we can show you personalized content"
+msgstr ""
+
+#: src/domain/home/RootHome/CurationProfileAlert/CurationProfileAlert.tsx:72
+msgid "Setup"
 msgstr ""
 
 #: src/domain/home/RootHome/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:84
@@ -62,8 +70,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/home/RootHome/NewAccountModal/NewAccountModal.tsx:82
-msgid "Welcome to overdoll! We're so glad to have you here. On our platform, we strive to make sure you're served content you want to see. Take a few minutes to set up your curation profile to let us know what you like?"
-msgstr ""
+#~ msgid "Welcome to overdoll! We're so glad to have you here. On our platform, we strive to make sure you're served content you want to see. Take a few minutes to set up your curation profile to let us know what you like?"
+#~ msgstr ""
 
 #: src/domain/home/RootHome/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:102
 #~ msgid "You may unlock your account after agreeing to the community guidelines."

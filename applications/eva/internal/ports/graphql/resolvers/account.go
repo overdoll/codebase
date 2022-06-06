@@ -8,6 +8,7 @@ import (
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/session"
 	"overdoll/applications/eva/internal/ports/graphql/types"
+	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
@@ -16,6 +17,27 @@ import (
 
 type AccountResolver struct {
 	App *app.Application
+}
+
+func checkPermissions(ctx context.Context, id relay.ID) error {
+	if principal.FromContext(ctx) == nil {
+
+		if passport.FromContext(ctx).AccountID() != id.GetID() {
+			return passport.ErrNotAuthenticated
+		}
+
+		return nil
+	}
+
+	if principal.FromContext(ctx).IsStaff() {
+		return nil
+	}
+
+	if err := principal.FromContext(ctx).BelongsToAccount(id.GetID()); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (r AccountResolver) RecoveryCodesGenerated(ctx context.Context, obj *types.Account) (bool, error) {
@@ -42,7 +64,7 @@ func (r AccountResolver) MultiFactorEnabled(ctx context.Context, obj *types.Acco
 		return false, err
 	}
 
-	if err := principal.FromContext(ctx).BelongsToAccount(obj.ID.GetID()); err != nil {
+	if err := checkPermissions(ctx, obj.ID); err != nil {
 		return false, err
 	}
 
@@ -55,7 +77,7 @@ func (r AccountResolver) CanDisableMultiFactor(ctx context.Context, obj *types.A
 		return false, err
 	}
 
-	if err := principal.FromContext(ctx).BelongsToAccount(obj.ID.GetID()); err != nil {
+	if err := checkPermissions(ctx, obj.ID); err != nil {
 		return false, err
 	}
 
@@ -86,7 +108,7 @@ func (r AccountResolver) UsernameEditAvailableAt(ctx context.Context, obj *types
 		return nil, err
 	}
 
-	if err := principal.FromContext(ctx).BelongsToAccount(obj.ID.GetID()); err != nil {
+	if err := checkPermissions(ctx, obj.ID); err != nil {
 		return nil, err
 	}
 
@@ -111,11 +133,7 @@ func (r AccountResolver) Lock(ctx context.Context, obj *types.Account) (*types.A
 		return nil, err
 	}
 
-	if principal.FromContext(ctx).IsStaff() {
-		return obj.Lock, nil
-	}
-
-	if err := principal.FromContext(ctx).BelongsToAccount(obj.ID.GetID()); err != nil {
+	if err := checkPermissions(ctx, obj.ID); err != nil {
 		return nil, err
 	}
 
@@ -128,11 +146,7 @@ func (r AccountResolver) Deleting(ctx context.Context, obj *types.Account) (*typ
 		return nil, err
 	}
 
-	if principal.FromContext(ctx).IsStaff() {
-		return obj.Deleting, nil
-	}
-
-	if err := principal.FromContext(ctx).BelongsToAccount(obj.ID.GetID()); err != nil {
+	if err := checkPermissions(ctx, obj.ID); err != nil {
 		return nil, err
 	}
 

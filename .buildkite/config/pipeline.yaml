@@ -3,21 +3,15 @@ steps:
   integration_test:
     setup:
       env:
-        DB_HOST: scylla
+        DB_HOST: "scylla"
         ELASTICSEARCH_URL: http://elasticsearch:9200
         TEMPORAL_URL: temporal:7233
         TEMPORAL_NAMESPACE: default
         GIN_MODE: debug
         APP_DEBUG: "true"
-        EVA_SERVICE: eva:8080
         RESOURCES_BUCKET: sandbox-overdoll-resources
         UPLOADS_BUCKET: sandbox-overdoll-uploads
         PRIVATE_RESOURCES_BUCKET: sandbox-overdoll-private-resources
-        PARLEY_SERVICE: parley:8080
-        STING_SERVICE: sting:8080
-        CARRIER_SERVICE: carrier:8080
-        LOADER_SERVICE: loader:8080
-        STELLA_SERVICE: stella:8080
         APP_KEY: AES256Key-32Characters1234567890
         SESSION_SECRET: AES256Key-32Characters1234567890
         REDIS_HOST: redis
@@ -36,9 +30,9 @@ steps:
         PRIVATE_RESOURCES_URL: https://dcd9vpqfvvgum.cloudfront.net
         OVERDOLL_CCBILL_ENCRYPTION_SECRET: AES256Key-32Characters1234567890
         FILES_BUCKET: sandbox-overdoll-files
-        IS_CI: true
+        IS_CI: "true"
         PAXUM_FROM_EMAIL: payer@domain.com
         PAXUM_SANDBOX: "true"
         PAXUM_SHARED_SECRET: "1234567890"
         TEMPORAL_ENCRYPTION_KEY: AES256Key-32Characters1234567890
-
+        STAFF_ADDRESS: i2fhz.carrier-staff-ci@inbox.testmail.app
