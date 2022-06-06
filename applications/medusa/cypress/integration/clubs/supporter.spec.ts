@@ -212,18 +212,18 @@ describe('Supporter', () => {
     clickOnButton('View Payments')
     cy.findAllByText('PENDING').first().should('be.visible').click({ force: true })
     cy.findByText(/Deduction Breakdown/iu).should('be.visible')
-
-    // issue payout
-    cy.visit(`/staff/club/${newPaymentMethodClub}`)
-    clickOnTab('Payouts')
-    clickOnButton('Initiate Payout')
-    clickOnButton('Confirm Initiate Payout')
-    cy.findByText(/Successfully initiated payout/iu).should('be.visible')
     /*
-    // TODO payout cannot be seen because transactions are still pending
-    cy.visit(`/club/${newPaymentMethodClub}/revenue`)
-    cy.findByText('Deposit Date').should('be.visible')
-     */
+        // issue payout
+        cy.visit(`/staff/club/${newPaymentMethodClub}`)
+        clickOnTab('Payouts')
+        clickOnButton('Initiate Payout')
+        clickOnButton('Confirm Initiate Payout')
+        cy.findByText(/Successfully initiated payout/iu).should('be.visible')
+
+        // TODO payout cannot be seen because transactions are still pending
+        cy.visit(`/club/${newPaymentMethodClub}/revenue`)
+        cy.findByText('Deposit Date').should('be.visible')
+    */
 
     /**
      * See refunded transaction as account
