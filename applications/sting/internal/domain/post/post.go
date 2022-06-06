@@ -312,6 +312,7 @@ func (p *Post) AddContentRequest(requester *principal.Principal, contentIds []st
 			resourceId:       contentId,
 			resourceIdHidden: "",
 			isSupporterOnly:  false,
+			post:             p,
 		})
 	}
 
@@ -473,6 +474,10 @@ func (p *Post) CanArchive(requester *principal.Principal) error {
 		return domainerror.NewValidation("only published posts can be archived")
 	}
 
+	if err := requester.CheckClubOwner(p.clubId); err != nil {
+		return err
+	}
+
 	return p.MakeArchived()
 }
 
@@ -480,6 +485,10 @@ func (p *Post) CanUnArchive(requester *principal.Principal) error {
 
 	if p.state != Archived {
 		return domainerror.NewValidation("only archived posts can be unarchived")
+	}
+
+	if err := requester.CheckClubOwner(p.clubId); err != nil {
+		return err
 	}
 
 	return p.MakePublish()

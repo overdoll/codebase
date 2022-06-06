@@ -195,7 +195,7 @@ func TestBillingFlow_NewSaleSuccess(t *testing.T) {
 		Return(nil)
 
 	application.TemporalClient.
-		On("GetWorkflow", mock.Anything, "ClubSupporterPaymentReceipt_"+transaction.Reference, mock.Anything).
+		On("GetWorkflow", mock.Anything, "hades.ClubSupporterPaymentReceipt_"+transaction.Reference, mock.Anything).
 		// on GetWorkflow command, this would check if the workflow was completed
 		// so we run our workflow to make sure it's completed
 		Run(

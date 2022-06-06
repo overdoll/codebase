@@ -3,6 +3,7 @@ package sentry_support
 import (
 	"github.com/getsentry/sentry-go"
 	"net/url"
+	"os"
 	"reflect"
 	"strings"
 )
@@ -76,6 +77,12 @@ func filterStacktraceFrames(frames []sentry.Frame) []sentry.Frame {
 }
 
 func beforeSendHook(event *sentry.Event, hint *sentry.EventHint) *sentry.Event {
+
+	// don't send event or attempt to even send it if sentry DSN is empty
+	if os.Getenv("SENTRY_DSN") == "" {
+		return nil
+	}
+
 	// strip out all sensitive data that could potentially be used
 	if event.Request != nil {
 

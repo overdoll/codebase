@@ -108,20 +108,6 @@ const moduleExports = withBundleAnalyzer({
       '@//:common': path.resolve(__dirname, 'src/common')
     }
 
-    // after webpack build, delete sourcemaps
-    if (process.env.PRODUCTION_DEPLOYMENT != null) {
-      config.plugins = [
-        ...config.plugins,
-        {
-          apply: compiler =>
-            compiler.hooks.done.tap('CleanJsMapPlugin', (compilation, cb) => {
-              glob.sync('.webpack/**/*.js.map').forEach(f => removeSync(f))
-              // cb()
-            })
-        }
-      ]
-    }
-
     return config
   }
 })
