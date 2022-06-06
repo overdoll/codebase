@@ -12,7 +12,7 @@ const testCardDetails = {
   creditCardNum: '4111111111111111',
   cardExpirationMonth: '04',
   cardExpirationYear: '2030',
-  cvv2: '301'
+  cvv2: '301',
 }
 
 const newPaymentMethodClub = 'TestClub'
