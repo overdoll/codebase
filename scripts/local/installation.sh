@@ -10,6 +10,14 @@ cd "$parent_path"
 
 cd ../../development/local/dependencies
 
+# Apply Nginx ingress & wait
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+
+kubectl wait --namespace ingress-nginx \
+  --for=condition=ready pod \
+  --selector=app.kubernetes.io/component=controller \
+  --timeout=90s
+
 # Apply cert-manager and wait
 kubectl apply -f cert-manager.yaml
 
