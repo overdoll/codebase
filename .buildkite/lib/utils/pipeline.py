@@ -51,6 +51,13 @@ def create_docker_step(label, commands, additional_env_vars=None, cache=None):
         "AWS_ENDPOINT",
         "AWS_REGION",
         "FORCE_COLOR=1",
+        "SENTRY_AUTH_TOKEN",
+        "SENTRY_ORG",
+        "STATIC_ASSETS_URL",
+        "AWS_STATIC_ASSETS_BUCKET",
+        "NEXT_PUBLIC_SENTRY_DSN",
+        "NEXT_PUBLIC_FATHOM_TRACKING_CODE",
+        "NEXT_PUBLIC_FATHOM_DOMAIN",
     ]
 
     step = {
