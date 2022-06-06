@@ -61,9 +61,14 @@ func (he errorVerboseToStacktraceEncoder) EncodeEntry(ent zapcore.Entry, fields 
 			continue
 		}
 
-		if t, ok := f.Interface.(stackTracer); ok {
-			st = t
+		if t, ok := f.Interface.(error); ok {
+			stackTrace := errors.GetStackTracerFromError(t)
+
+			if stackTrace != nil {
+				st = stackTrace
+			}
 		}
+
 		filteredFields = append(filteredFields, PlainError(f.Interface.(error)))
 	}
 	if st != nil {

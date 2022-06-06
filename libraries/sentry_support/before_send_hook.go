@@ -2,6 +2,7 @@ package sentry_support
 
 import (
 	"github.com/getsentry/sentry-go"
+	"net/url"
 	"reflect"
 	"strings"
 )
@@ -20,6 +21,21 @@ func unwrapError(exception error) error {
 	}
 
 	return err
+}
+
+// recursively unwrap error until we are no longer an "errors.withStack" and "errors.withMessage"
+// we also take the stack trace with us along the way, when encountering *errors.withStack
+func unwrap(err error, trace error) (error, error) {
+	typeOf := reflect.TypeOf(err).String()
+	if typeOf != "*errors.withMessage" && typeOf != "*errors.withStack" && typeOf != "*fmt.wrapError" {
+		return err, trace
+	}
+
+	if typeOf == "*errors.withStack" {
+		return unwrap(unwrapError(err), err)
+	}
+
+	return unwrap(unwrapError(err), trace)
 }
 
 func reverse(a []sentry.Exception) {
@@ -63,6 +79,13 @@ func beforeSendHook(event *sentry.Event, hint *sentry.EventHint) *sentry.Event {
 	// strip out all sensitive data that could potentially be used
 	if event.Request != nil {
 
+		u, _ := url.Parse(event.Request.URL)
+		// remove host from url
+		u.Host = ""
+		u.Scheme = "http"
+
+		event.Request.URL = u.String()
+
 		// delete all cookies
 		event.Request.Cookies = ""
 
@@ -101,47 +124,26 @@ func beforeSendHook(event *sentry.Event, hint *sentry.EventHint) *sentry.Event {
 		err := hint.OriginalException
 		event.Exception = []sentry.Exception{}
 
-		alreadySent := make(map[string]bool)
-
 		for i := 0; i < maxErrorDepth && err != nil; i++ {
 
-			errType := reflect.TypeOf(err).String()
+			originalMessage := err.Error()
 
-			//// need to go 1 level deep for the real error with errors.withStack (gives us errors.withMessage)
-			//if errType == "*errors.withStack" {
-			//	err = unwrapError(err)
-			//	errType = reflect.TypeOf(err).String()
-			//}
-			//
-			//// need to go 1 level deeper for the real error with errors.withMessage
-			//if errType == "*errors.withMessage" {
-			//	err = unwrapError(err)
-			//	errType = reflect.TypeOf(err).String()
-			//}
-			//
-			//// skip nil errors
-			//if err == nil {
-			//	continue
-			//}
+			var trace error
+			err, trace = unwrap(err, nil)
 
-			// make sure we dont report the same error type twice
-			if _, _ = alreadySent[errType]; true {
+			// extract stack trace - if it's there, filter frames. otherwise, don't
+			stackTrace := sentry.ExtractStacktrace(trace)
 
-				// extract stack trace - if it's there, filter frames. otherwise, don't
-				stackTrace := sentry.ExtractStacktrace(err)
-
-				if stackTrace != nil {
-					stackTrace.Frames = filterStacktraceFrames(stackTrace.Frames)
-				}
-
-				event.Exception = append(event.Exception, sentry.Exception{
-					Type:       errType,
-					Value:      err.Error(),
-					Stacktrace: stackTrace,
-				})
+			if stackTrace != nil {
+				stackTrace.Frames = filterStacktraceFrames(stackTrace.Frames)
 			}
 
-			alreadySent[errType] = true
+			event.Exception = append(event.Exception, sentry.Exception{
+				Type:       reflect.TypeOf(err).String(),
+				Value:      originalMessage,
+				Stacktrace: stackTrace,
+			})
+
 			err = unwrapError(err)
 		}
 

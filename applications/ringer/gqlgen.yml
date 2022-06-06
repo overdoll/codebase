@@ -14,6 +14,7 @@ model:
 federation:
   filename: internal/ports/graphql/federation.go
   package: gen
+  version: 2
 
 autobind:
   - overdoll/libraries/graphql/relay

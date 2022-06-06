@@ -39,6 +39,15 @@ func New(msg string, args ...interface{}) error {
 	return PopStack(errors.New(fmt.Sprintf(msg, args...)))
 }
 
+func GetStackTracerFromError(cause error) StackTracer {
+	causeStackTracer := new(StackTracer)
+	if errors.As(cause, causeStackTracer) {
+		return *causeStackTracer
+	}
+
+	return nil
+}
+
 // Wrap creates a new error from a cause, decorating the original error message with a
 // prefix.
 //
@@ -46,12 +55,14 @@ func New(msg string, args ...interface{}) error {
 // meaning we won't create another stack trace when there is already a stack trace present
 // that matches our current program position.
 func Wrap(cause error, msg string, args ...interface{}) error {
-	causeStackTracer := new(StackTracer)
-	if errors.As(cause, causeStackTracer) {
+
+	stackTrace := GetStackTracerFromError(cause)
+
+	if stackTrace != nil {
 		// If our cause has set a stack trace, and that trace is a child of our own function
 		// as inferred by prefix matching our current program counter stack, then we only want
 		// to decorate the error message rather than add a redundant stack trace.
-		if ancestorOfCause(callers(1), (*causeStackTracer).StackTrace()) {
+		if ancestorOfCause(callers(1), stackTrace.StackTrace()) {
 			return errors.WithMessagef(cause, msg, args...) // no stack added, no pop required
 		}
 	}
