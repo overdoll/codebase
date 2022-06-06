@@ -1,5 +1,7 @@
 const { withSentryConfig } = require('@sentry/nextjs')
 const nextBuildId = require('next-build-id')
+const glob = require('glob')
+const { removeSync } = require('fs-extra')
 
 const path = require('path')
 const securityHeaders = [
@@ -106,6 +108,20 @@ const moduleExports = withBundleAnalyzer({
       '@//:common': path.resolve(__dirname, 'src/common')
     }
 
+    // after webpack build, delete sourcemaps
+    if (process.env.PRODUCTION_DEPLOYMENT != null) {
+      config.plugins = [
+        ...config.plugins,
+        {
+          apply: compiler =>
+            compiler.hooks.done.tap('CleanJsMapPlugin', (compilation, cb) => {
+              glob.sync('.webpack/**/*.js.map').forEach(f => removeSync(f))
+              cb()
+            })
+        }
+      ]
+    }
+
     return config
   }
 })
@@ -114,7 +130,10 @@ let sentryConfig
 
 if (process.env.PRODUCTION_DEPLOYMENT != null) {
   sentryConfig = withSentryConfig(moduleExports, { silent: false })
-  moduleExports.sentry = { hideSourceMaps: true }
+  moduleExports.sentry = {
+    hideSourceMaps: true,
+    setCommits: { auto: true }
+  }
   moduleExports.assetPrefix = process.env.STATIC_ASSETS_URL
 } else {
   moduleExports.sentry = {
