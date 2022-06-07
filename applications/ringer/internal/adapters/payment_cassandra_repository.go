@@ -256,7 +256,7 @@ func (r PaymentCassandraElasticsearchRepository) UpdateClubPaymentsCompleted(ctx
 
 	for _, paymentId := range paymentIds {
 		if err := r.session.
-			Query(clubPaymentsTable.Update("complete")).
+			Query(clubPaymentsTable.Update("status")).
 			WithContext(ctx).
 			Idempotent(true).
 			BindStruct(clubPayment{Id: paymentId, Status: payment.Complete.String()}).
