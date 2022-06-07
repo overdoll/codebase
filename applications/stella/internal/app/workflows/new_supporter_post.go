@@ -5,6 +5,7 @@ import (
 	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/stella/internal/app/workflows/activities"
+	"strings"
 )
 
 type NewSupporterPostInput struct {
@@ -35,8 +36,10 @@ func NewSupporterPost(ctx workflow.Context, input NewSupporterPostInput) error {
 
 	// here, we cancel the workflow if there was an existing workflow that is responsible for sending notifications
 	if err := workflow.RequestCancelExternalWorkflow(ctx, workflowId, "").Get(ctx, nil); err != nil {
-		logger.Error("failed to cancel notification workflow", "Error", err)
-		return err
+		// only bail out if err is not a not found error
+		if !strings.HasSuffix(err.Error(), "ExternalWorkflowExecutionNotFound") {
+			return err
+		}
 	}
 
 	childCtx := workflow.WithChildOptions(ctx, workflow.ChildWorkflowOptions{

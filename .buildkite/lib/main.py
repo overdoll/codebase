@@ -505,17 +505,6 @@ def print_project_pipeline():
         )
     )
 
-    pipeline_steps.append("wait")
-
-    # will upload front-end static assets to cloudfront in this step
-    pipeline_steps.append(
-        pipeline.create_step(
-            label=":cloudfront: Upload Front-End to CloudFront",
-            commands=[".buildkite/pipeline.sh frontend_upload_cdn"],
-            platform="docker",
-        )
-    )
-
     pipeline_steps.append(
         pipeline.create_step(
             label=":bazel: Build & Test Services",
@@ -597,18 +586,28 @@ def print_project_pipeline():
     )
 
     # publish when the branch is master
-    # if os.getenv("BUILDKITE_BRANCH") == "master":
+    if os.getenv("BUILDKITE_BRANCH") == "master":
+        pipeline_steps.append("wait")
 
-    pipeline_steps.append("wait")
-
-    # must complete all steps before publishing
-    pipeline_steps.append(
-        pipeline.create_step(
-            label=":aws: Publish Images",
-            commands=[".buildkite/pipeline.sh publish"],
-            platform="docker",
+        # will upload front-end static assets to cloudfront in this step
+        pipeline_steps.append(
+            pipeline.create_step(
+                label=":cloudfront: Upload Front-End to CloudFront",
+                commands=[".buildkite/pipeline.sh frontend_upload_cdn"],
+                platform="docker",
+            )
         )
-    )
+
+        pipeline_steps.append("wait")
+
+        # must complete all steps before publishing
+        pipeline_steps.append(
+            pipeline.create_step(
+                label=":aws: Publish Images",
+                commands=[".buildkite/pipeline.sh publish"],
+                platform="docker",
+            )
+        )
 
     print(yaml.dump({"steps": pipeline_steps}))
 

@@ -20,7 +20,6 @@ import (
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/uuid"
-	"overdoll/libraries/zap_support/zap_adapters"
 	"strconv"
 )
 
@@ -207,7 +206,7 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 
 		if err := enc.Encode(newFile, src); err != nil {
 			_ = newFile.Close()
-			return nil, err
+			return nil, errors.Wrap(err, "failed to convert png to webp")
 		}
 
 		// our resource will contain 2 mimetypes - a PNG and a webp
@@ -247,10 +246,10 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 		if err := ffmpeg_go.Input(file.Name()).
 			Filter("select", ffmpeg_go.Args{fmt.Sprintf("gte(n,%d)", 5)}).
 			Output("pipe:", ffmpeg_go.KwArgs{"vframes": 1, "format": "image2", "vcodec": "png"}).
-			WithErrorOutput(&zap_adapters.FfmpegGoLogErrorAdapter{}).
+			//	WithErrorOutput(&zap_adapters.FfmpegGoLogErrorAdapter{}).
 			WithOutput(fileThumbnail).
 			Run(); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to process ffmpeg_go file")
 		}
 
 		videoThumb := "t-" + fileName

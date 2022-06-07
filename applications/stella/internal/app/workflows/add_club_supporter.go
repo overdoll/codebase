@@ -36,7 +36,8 @@ func AddClubSupporter(ctx workflow.Context, input AddClubSupporterInput) error {
 	if !alreadyAMember {
 
 		childWorkflowOptions := workflow.ChildWorkflowOptions{
-			WorkflowID: "sting.AddClubMember_" + input.ClubId + "_" + input.AccountId,
+			WorkflowID:          "sting.AddClubMember_" + input.ClubId + "_" + input.AccountId,
+			WaitForCancellation: true,
 		}
 
 		childCtx := workflow.WithChildOptions(ctx, childWorkflowOptions)

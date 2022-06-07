@@ -85,6 +85,7 @@ const moduleExports = withBundleAnalyzer({
     // also Next.js only shows 1 error at a time which is really annoying
     ignoreDuringBuilds: true
   },
+  assetPrefix: process.env.STATIC_ASSETS_URL,
   images: {
     domains: ['sandbox-overdoll-resources.s3.amazonaws.com', 'dcd9vpqfvvgum.cloudfront.net', 's3.amazonaws.com'],
     minimumCacheTTL: 60
@@ -120,7 +121,6 @@ if (process.env.PRODUCTION_DEPLOYMENT != null) {
     hideSourceMaps: true,
     setCommits: { auto: true }
   }
-  moduleExports.assetPrefix = process.env.STATIC_ASSETS_URL
 } else {
   moduleExports.sentry = {
     disableServerWebpackPlugin: true,
