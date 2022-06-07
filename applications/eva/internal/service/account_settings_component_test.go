@@ -351,7 +351,7 @@ func TestAccount_delete(t *testing.T) {
 
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.DeleteAccount, workflows.DeleteAccountInput{
 		AccountId:  accountId,
-		WorkflowId: "DeleteAccount_" + accountId,
+		WorkflowId: "eva.DeleteAccount_" + accountId,
 		CanCancel:  true,
 	})
 
@@ -390,7 +390,7 @@ func TestAccount_delete_and_cancel(t *testing.T) {
 
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.DeleteAccount, workflows.DeleteAccountInput{
 		AccountId:  accountId,
-		WorkflowId: "DeleteAccount_" + accountId,
+		WorkflowId: "eva.DeleteAccount_" + accountId,
 		CanCancel:  true,
 	})
 

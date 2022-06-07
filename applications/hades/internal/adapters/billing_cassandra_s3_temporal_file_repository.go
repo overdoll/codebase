@@ -186,7 +186,7 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterRefund
 			return nil, err
 		}
 
-		workflowId := "ClubSupporterRefundReceipt_" + id
+		workflowId := "hades.ClubSupporterRefundReceipt_" + id
 
 		if err := r.session.
 			Query(receiptFilesTable.Insert()).
@@ -242,7 +242,7 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterPaymen
 	// receipt file doesn't exist, create it
 	if receiptFile == nil {
 
-		workflowId := "ClubSupporterPaymentReceipt_" + history.Id()
+		workflowId := "hades.ClubSupporterPaymentReceipt_" + history.Id()
 
 		if err := r.session.
 			Query(receiptFilesTable.Insert()).

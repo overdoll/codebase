@@ -45,8 +45,8 @@ func SentryGinMiddleware() gin.HandlerFunc {
 				errors.RecoverPanic(r, &err)
 
 				if support.IsDebug() {
-					zap_support.SafePanic("panic during http request")
 					fmt.Println(err)
+					zap_support.SafePanic("panic during http request")
 				} else {
 					zap_support.SafePanic("panic during http request", zap.Error(err))
 				}

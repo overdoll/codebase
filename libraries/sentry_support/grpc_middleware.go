@@ -21,8 +21,8 @@ func recoverGrpcWithSentry(hub *sentry.Hub, r interface{}, ctx context.Context, 
 	errors.RecoverPanic(r, &err)
 
 	if support.IsDebug() {
-		zap_support.SafePanic("panic while running grpc")
 		fmt.Println(err)
+		zap_support.SafePanic("panic while running grpc")
 	} else {
 		zap_support.SafePanic("panic while running grpc", zap.Error(err), zap.String("method", method))
 	}

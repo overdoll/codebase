@@ -24,8 +24,8 @@ func GraphQLRecoverFunc(ctx context.Context, r interface{}) error {
 	errors.RecoverPanic(r, &err)
 
 	if support.IsDebug() {
-		zap_support.SafePanic("panic while resolving graphql")
 		fmt.Println(err)
+		zap_support.SafePanic("panic while resolving graphql")
 	} else {
 		zap_support.SafePanic("panic while resolving graphql", zap.Any("error", err))
 	}
