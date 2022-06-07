@@ -320,7 +320,7 @@ def execute_cdn_upload(configs):
     tag = "{}/{}:{}".format(registry, "medusa/dev", commit)
     exec.execute_command(["docker", "pull", tag])
     exec.execute_command(["docker", "run", tag, "--name", "medusa-assets", "-d"])
-    exec.execute_command(["docker", "cp", "medusa-assets:/app/build/static", "medusa-assets"])
+    exec.execute_command(["docker", "cp", "medusa-assets:/app/build/static", "medusa-assets/static"])
     exec.execute_command(["docker", "stop", "medusa-assets", "-t", "0"])
 
     terminal_print.print_expanded_group(":cloudfront: Uploading assets to cloudfront")
