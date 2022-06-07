@@ -85,7 +85,6 @@ const moduleExports = withBundleAnalyzer({
     // also Next.js only shows 1 error at a time which is really annoying
     ignoreDuringBuilds: true
   },
-  assetPrefix: process.env.STATIC_ASSETS_URL,
   webpack: (config) => {
     config.module.rules.push({
       test: /\.svg$/,
@@ -117,6 +116,7 @@ if (process.env.PRODUCTION_DEPLOYMENT != null) {
     hideSourceMaps: true,
     setCommits: { auto: true }
   }
+  moduleExports.assetPrefix = process.env.STATIC_ASSETS_URL
 } else {
   moduleExports.sentry = {
     disableServerWebpackPlugin: true,
