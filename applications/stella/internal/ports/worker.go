@@ -2,10 +2,10 @@ package ports
 
 import (
 	"context"
-	"github.com/spf13/viper"
 	"go.temporal.io/sdk/worker"
 	"overdoll/applications/stella/internal/app"
 	"overdoll/applications/stella/internal/app/workflows"
+	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
 )
 
@@ -17,7 +17,7 @@ func NewWorker(app *app.Application) (worker.Worker, func()) {
 
 	client := clients.NewTemporalClient(context.Background())
 
-	w := worker.New(client, viper.GetString("temporal.queue"), worker.Options{})
+	w := bootstrap.NewWorker(client)
 
 	w.RegisterWorkflow(workflows.AddClubMember)
 	w.RegisterWorkflow(workflows.RemoveClubMember)

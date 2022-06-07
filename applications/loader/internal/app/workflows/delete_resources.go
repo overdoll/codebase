@@ -13,6 +13,7 @@ type DeleteResourcesInput struct {
 func DeleteResources(ctx workflow.Context, input DeleteResourcesInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -22,6 +23,7 @@ func DeleteResources(ctx workflow.Context, input DeleteResourcesInput) error {
 			ResourceIds: input.ResourceIds,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to delete resources", "Error", err)
 		return err
 	}
 

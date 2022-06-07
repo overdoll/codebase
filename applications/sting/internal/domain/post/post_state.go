@@ -1,6 +1,8 @@
 package post
 
-import "errors"
+import (
+	"overdoll/libraries/errors/domainerror"
+)
 
 type State struct {
 	slug string
@@ -39,5 +41,5 @@ func StateFromString(s string) (State, error) {
 		return Archived, nil
 	}
 
-	return Unknown, errors.New("unknown post state: " + s)
+	return Unknown, domainerror.NewValidation("unknown post state: " + s)
 }

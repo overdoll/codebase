@@ -12,6 +12,7 @@ type DeletePostInput struct {
 func DeletePost(ctx workflow.Context, input DeletePostInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -20,6 +21,7 @@ func DeletePost(ctx workflow.Context, input DeletePostInput) error {
 			PostId: input.PostId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to delete post", "Error", err)
 		return err
 	}
 

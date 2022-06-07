@@ -33,6 +33,9 @@ go_library(
         "//applications/stella/proto:v1_go_proto",
         "//applications/sting/proto:v1_go_proto",
         "//libraries/crypt",
+        "//libraries/errors",
+        "//libraries/errors/apperror",
+        "//libraries/errors/domainerror",
         "//libraries/paging",
         "//libraries/passport",
         "//libraries/principal",
@@ -46,6 +49,7 @@ go_library(
         "@com_github_spf13_viper//:viper",
         "@io_temporal_go_sdk//client",
         "@org_golang_google_protobuf//types/known/timestamppb",
+        "@org_uber_go_zap//:zap",
     ],
 )
 
@@ -61,6 +65,7 @@ go_test(
         "//applications/eva/internal/domain/account",
         "//libraries/bootstrap",
         "//libraries/config",
+        "//libraries/errors/apperror",
         "//libraries/uuid",
         "@com_github_bxcodec_faker_v3//:faker",
         "@com_github_stretchr_testify//assert",

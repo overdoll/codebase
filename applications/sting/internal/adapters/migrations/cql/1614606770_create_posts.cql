@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS categories
     thumbnail_resource_id text,
     total_likes           int,
     total_posts           int,
+    created_at            timestamp,
     primary key ( id )
 );
 
@@ -27,6 +28,7 @@ CREATE TABLE IF NOT EXISTS characters
     series_id             text,
     total_likes           int,
     total_posts           int,
+    created_at            timestamp,
     primary key ( id )
 );
 
@@ -48,6 +50,7 @@ CREATE TABLE IF NOT EXISTS series
     thumbnail_resource_id text,
     total_likes           int,
     total_posts           int,
+    created_at            timestamp,
     primary key ( id )
 );
 
@@ -69,6 +72,7 @@ CREATE TABLE IF NOT EXISTS audience
     total_likes           int,
     total_posts           int,
     standard              int,
+    created_at            timestamp,
     primary key ( id )
 );
 

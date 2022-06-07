@@ -2,9 +2,9 @@ package rule
 
 import (
 	"bytes"
-	"errors"
 	"github.com/go-playground/validator/v10"
 	"github.com/yuin/goldmark"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
 
@@ -13,8 +13,7 @@ import (
 )
 
 var (
-	ErrRuleNotFound   = errors.New("rule not found")
-	ErrRuleDeprecated = errors.New("rule not found")
+	ErrRuleDeprecated = domainerror.NewValidation("rule not found")
 )
 
 type Rule struct {
@@ -156,7 +155,7 @@ func validateTitle(title string) error {
 	err := validator.New().Var(title, "required,max=25")
 
 	if err != nil {
-		return err
+		return domainerror.NewValidation(err.Error())
 	}
 
 	return nil
@@ -171,7 +170,7 @@ func validateDescription(description string) error {
 	// attempt markdown conversion
 	var buf bytes.Buffer
 	if err := goldmark.Convert([]byte(description), &buf); err != nil {
-		return err
+		return domainerror.NewValidation(err.Error())
 	}
 
 	return nil

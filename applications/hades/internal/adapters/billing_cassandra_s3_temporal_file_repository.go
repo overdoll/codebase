@@ -2,7 +2,6 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
@@ -15,7 +14,10 @@ import (
 	"os"
 	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/support"
 	"time"
 )
 
@@ -65,7 +67,7 @@ func (r BillingCassandraS3TemporalFileRepository) unmarshalClubSupportReceipt(ct
 	urlStr, err := req.Presign(15 * time.Minute)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to presign supporter receipt url")
 	}
 
 	return billing.UnmarshalClubSupporterReceiptFromDatabase(urlStr), nil
@@ -79,6 +81,7 @@ func (r BillingCassandraS3TemporalFileRepository) getClubSupportReceipt(ctx cont
 		SelectBuilder().
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&receiptFiles{
 			Id: id,
@@ -86,10 +89,10 @@ func (r BillingCassandraS3TemporalFileRepository) getClubSupportReceipt(ctx cont
 		GetRelease(&receiptFile); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, billing.ErrClubSupporterReceiptNotFound
+			return nil, apperror.NewNotFoundError("club support receipt", id)
 		}
 
-		return nil, fmt.Errorf("failed to get club supporter receipt from account transaction history: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get club supporter receipt from account transaction")
 	}
 
 	return &receiptFile, nil
@@ -99,7 +102,7 @@ func (r BillingCassandraS3TemporalFileRepository) waitForClubSupportReceiptWorkf
 
 	// wait for workflow to complete
 	if err := r.client.GetWorkflow(ctx, workflowId, "").Get(ctx, nil); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to get workflow for club supporter receipt")
 	}
 
 	receiptFile, err := r.getClubSupportReceipt(ctx, id)
@@ -127,7 +130,7 @@ func (r BillingCassandraS3TemporalFileRepository) updateClubSupporterReceiptWith
 	file, err := os.Open(fileName)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to open receipt file")
 	}
 
 	// upload our new file
@@ -138,20 +141,21 @@ func (r BillingCassandraS3TemporalFileRepository) updateClubSupporterReceiptWith
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to upload receipt file")
 	}
 
 	// update db
 	if err := r.session.
 		Query(receiptFilesTable.Update("file_path")).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&receiptFiles{
 			Id:       receiptFile.Id,
 			FilePath: fileKey,
 		}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to update club supporter receipt with new file: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to update club supporter receipt with new file")
 	}
 
 	return nil
@@ -171,7 +175,7 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterRefund
 
 	receiptFile, err := r.getClubSupportReceipt(ctx, id)
 
-	if err != nil && err != billing.ErrClubSupporterReceiptNotFound {
+	if err != nil && !apperror.IsNotFoundError(err) {
 		return nil, err
 	}
 
@@ -182,12 +186,13 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterRefund
 			return nil, err
 		}
 
-		workflowId := "ClubSupporterRefundReceipt_" + id
+		workflowId := "hades.ClubSupporterRefundReceipt_" + id
 
 		if err := r.session.
 			Query(receiptFilesTable.Insert()).
 			Consistency(gocql.LocalQuorum).
 			WithContext(ctx).
+			Idempotent(true).
 			BindStruct(&receiptFiles{
 				Id:                        id,
 				AccountTransactionId:      history.Id(),
@@ -195,7 +200,7 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterRefund
 				TemporalWorkflowId:        workflowId,
 			}).
 			ExecRelease(); err != nil {
-			return nil, fmt.Errorf("failed to insert create club supporter receipt: %v", err)
+			return nil, errors.Wrap(support.NewGocqlError(err), "failed to insert create club supporter receipt")
 		}
 
 		options := client.StartWorkflowOptions{
@@ -209,7 +214,7 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterRefund
 				AccountTransactionEventId: eventId,
 			},
 		); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to start workflow for generating refund receipt")
 		}
 
 		return r.waitForClubSupportReceiptWorkflow(ctx, id, workflowId)
@@ -230,18 +235,19 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterPaymen
 
 	receiptFile, err := r.getClubSupportReceipt(ctx, history.Id())
 
-	if err != nil && err != billing.ErrClubSupporterReceiptNotFound {
+	if err != nil && !apperror.IsNotFoundError(err) {
 		return nil, err
 	}
 
 	// receipt file doesn't exist, create it
 	if receiptFile == nil {
 
-		workflowId := "ClubSupporterPaymentReceipt_" + history.Id()
+		workflowId := "hades.ClubSupporterPaymentReceipt_" + history.Id()
 
 		if err := r.session.
 			Query(receiptFilesTable.Insert()).
 			WithContext(ctx).
+			Idempotent(true).
 			Consistency(gocql.LocalQuorum).
 			BindStruct(&receiptFiles{
 				Id:                   history.Id(),
@@ -249,7 +255,7 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterPaymen
 				TemporalWorkflowId:   workflowId,
 			}).
 			ExecRelease(); err != nil {
-			return nil, fmt.Errorf("failed to insert create club supporter receipt: %v", err)
+			return nil, errors.Wrap(support.NewGocqlError(err), "failed to insert create club supporter receipt")
 		}
 
 		options := client.StartWorkflowOptions{
@@ -258,7 +264,7 @@ func (r BillingCassandraS3TemporalFileRepository) GetOrCreateClubSupporterPaymen
 		}
 
 		if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.GenerateClubSupporterPaymentReceiptFromAccountTransaction, workflows.GenerateClubSupporterPaymentReceiptFromAccountTransactionInput{AccountTransactionId: history.Id()}); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to start workflow for generating payment receipt")
 		}
 
 		return r.waitForClubSupportReceiptWorkflow(ctx, history.Id(), workflowId)

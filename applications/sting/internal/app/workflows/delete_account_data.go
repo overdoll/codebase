@@ -14,6 +14,7 @@ type DeleteAccountDataInput struct {
 func DeleteAccountData(ctx workflow.Context, input DeleteAccountDataInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -23,6 +24,7 @@ func DeleteAccountData(ctx workflow.Context, input DeleteAccountDataInput) error
 			AccountId: input.AccountId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to delete account curation profile", "Error", err)
 		return err
 	}
 
@@ -34,6 +36,7 @@ func DeleteAccountData(ctx workflow.Context, input DeleteAccountDataInput) error
 			AccountId: input.AccountId,
 		},
 	).Get(ctx, &payload); err != nil {
+		logger.Error("failed to get account post likes", "Error", err)
 		return err
 	}
 
@@ -42,7 +45,7 @@ func DeleteAccountData(ctx workflow.Context, input DeleteAccountDataInput) error
 
 		// spawn a child workflow that will delete the post like
 		childWorkflowOptions := workflow.ChildWorkflowOptions{
-			WorkflowID:        "RemovePostLike_" + postId + "_" + input.AccountId,
+			WorkflowID:        "sting.RemovePostLike_" + postId + "_" + input.AccountId,
 			ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 		}
 
@@ -56,6 +59,7 @@ func DeleteAccountData(ctx workflow.Context, input DeleteAccountDataInput) error
 		).
 			GetChildWorkflowExecution().
 			Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+			logger.Error("failed to remove post like", "Error", err)
 			return err
 		}
 	}

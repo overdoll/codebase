@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"overdoll/applications/loader/internal/adapters/migrations"
 	"overdoll/applications/loader/internal/adapters/seeders"
@@ -44,7 +43,6 @@ func init() {
 
 func main() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
 		os.Exit(1)
 	}
 }
@@ -78,7 +76,7 @@ func RunHttp(cmd *cobra.Command, args []string) {
 
 	srv := ports.NewHttpServer(app)
 
-	bootstrap.InitializeHttpServer(":8000", srv, func() {})
+	bootstrap.InitializeHttpServer("0.0.0.0:8000", srv, func() {})
 }
 
 func RunGrpc(cmd *cobra.Command, args []string) {

@@ -1,6 +1,8 @@
 package ccbill
 
-import "errors"
+import (
+	"overdoll/libraries/errors/domainerror"
+)
 
 type SubscriptionStatusValue struct {
 	slug int
@@ -27,5 +29,5 @@ func SubscriptionStatusValueFromInt(s int) (SubscriptionStatusValue, error) {
 		return ActiveAndNotCancelled, nil
 	}
 
-	return Unknown, errors.New("unknown subscription status: " + string(1))
+	return Unknown, domainerror.NewValidation("unknown subscription status: " + string(1))
 }

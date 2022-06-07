@@ -4,6 +4,7 @@ import (
 	"context"
 	"overdoll/applications/carrier/internal/domain/club"
 	stella "overdoll/applications/stella/proto"
+	"overdoll/libraries/errors"
 )
 
 type StellaGrpc struct {
@@ -19,7 +20,7 @@ func (s StellaGrpc) GetClub(ctx context.Context, clubId string) (*club.Club, err
 	md, err := s.client.GetClubById(ctx, &stella.GetClubByIdRequest{ClubId: clubId})
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "error retrieving club")
 	}
 
 	return club.UnmarshalClubFromDatabase(md.Club.Slug, md.Club.Name, md.Club.OwnerAccountId), nil

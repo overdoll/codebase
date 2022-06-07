@@ -2,12 +2,14 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/support"
 )
 
 var cancellationReasonsTable = table.New(table.Metadata{
@@ -43,10 +45,11 @@ func (r BillingCassandraElasticsearchRepository) CreateCancellationReason(ctx co
 	if err := r.session.
 		Query(cancellationReasonsTable.Insert()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalCancellationReasonToDatabase(reasonItem)).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to create cancellation reason: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to create cancellation reason")
 	}
 
 	return nil
@@ -69,10 +72,11 @@ func (r BillingCassandraElasticsearchRepository) GetCancellationReasons(ctx cont
 	if err := builder.
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(data).
 		SelectRelease(&dbRules); err != nil {
-		return nil, fmt.Errorf("failed to get cancellationReason: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get cancellation reason")
 	}
 
 	var rulesItems []*billing.CancellationReason
@@ -102,15 +106,16 @@ func (r BillingCassandraElasticsearchRepository) getCancellationReasonById(ctx c
 	if err := r.session.
 		Query(cancellationReasonsTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&cancellationReason{Id: reasonId, Bucket: 0}).
 		GetRelease(&ruleSingle); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, billing.ErrReasonNotFound
+			return nil, apperror.NewNotFoundError("cancellation reason", reasonId)
 		}
 
-		return nil, fmt.Errorf("failed to get cancellation reason by id: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get cancellation reason by id")
 	}
 
 	return billing.UnmarshalCancellationReasonFromDatabase(
@@ -143,10 +148,11 @@ func (r BillingCassandraElasticsearchRepository) updateCancellationReason(ctx co
 			columns...,
 		)).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalCancellationReasonToDatabase(ruleItem)).
 		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to update cancellation reason: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update cancellation reason")
 	}
 
 	return ruleItem, nil

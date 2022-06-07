@@ -50,6 +50,5 @@ go_library(
         "//applications/sting/internal/domain/event",
         "//applications/sting/internal/domain/post",
         "//libraries/principal",
-        "@com_github_pkg_errors//:errors",
     ],
 )

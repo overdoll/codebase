@@ -14,7 +14,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//libraries/money",
-        "//libraries/support",
+        "//libraries/sentry_support",
         "@com_github_99designs_gqlgen//graphql",
         "@com_github_99designs_gqlgen//graphql/handler",
         "@com_github_99designs_gqlgen//graphql/handler/apollotracing",
@@ -22,7 +22,5 @@ go_library(
         "@com_github_99designs_gqlgen//graphql/handler/lru",
         "@com_github_99designs_gqlgen//graphql/handler/transport",
         "@com_github_gin_gonic_gin//:gin",
-        "@com_github_vektah_gqlparser_v2//gqlerror",
-        "@org_uber_go_zap//:zap",
     ],
 )

@@ -11,7 +11,9 @@ import (
 	"overdoll/applications/parley/internal/domain/post_audit_log"
 	"overdoll/applications/parley/internal/domain/report"
 	"overdoll/applications/parley/internal/domain/rule"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/principal"
+	"time"
 )
 
 type EventTemporalRepository struct {
@@ -26,7 +28,7 @@ func (r EventTemporalRepository) PutPostIntoModeratorQueue(ctx context.Context, 
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "PutPostIntoModeratorQueue_" + postId,
+		ID:        "parley.PutPostIntoModeratorQueue_" + postId,
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.PutPostIntoModeratorQueue, workflows.PutPostIntoModeratorQueueInput{
@@ -34,7 +36,7 @@ func (r EventTemporalRepository) PutPostIntoModeratorQueue(ctx context.Context, 
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute put post into moderation queue workflow")
 	}
 
 	return nil
@@ -44,7 +46,7 @@ func (r EventTemporalRepository) ReportPost(ctx context.Context, report *report.
 
 	options := client.StartWorkflowOptions{
 		TaskQueue:             viper.GetString("temporal.queue"),
-		ID:                    "ReportPost_" + report.PostId() + "_" + report.ReportingAccountId(),
+		ID:                    "parley.ReportPost_" + report.PostId() + "_" + report.ReportingAccountId(),
 		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
 	}
 
@@ -56,7 +58,7 @@ func (r EventTemporalRepository) ReportPost(ctx context.Context, report *report.
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute report post workflow")
 	}
 
 	return nil
@@ -70,7 +72,7 @@ func (r EventTemporalRepository) IssueClubInfraction(ctx context.Context, reques
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "IssueClubInfraction_" + clubId,
+		ID:        "parley.IssueClubInfraction_" + clubId,
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.IssueClubInfraction, workflows.IssueClubInfractionInput{
@@ -80,7 +82,7 @@ func (r EventTemporalRepository) IssueClubInfraction(ctx context.Context, reques
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute issue club infraction workflow")
 	}
 
 	return nil
@@ -93,20 +95,22 @@ func (r EventTemporalRepository) RejectPost(ctx context.Context, requester *prin
 	}
 
 	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "RejectPost_" + postId,
+		TaskQueue:             viper.GetString("temporal.queue"),
+		ID:                    "parley.RejectPost_" + postId,
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.RejectPost, workflows.RejectPostInput{
-		AccountId: requester.AccountId(),
-		PostId:    postId,
-		ClubId:    clubId,
-		RuleId:    rule.ID(),
-		Notes:     notes,
+		AccountId:  requester.AccountId(),
+		PostId:     postId,
+		ClubId:     clubId,
+		RuleId:     rule.ID(),
+		Notes:      notes,
+		RejectedAt: time.Now(),
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute reject post workflow")
 	}
 
 	return nil
@@ -119,8 +123,9 @@ func (r EventTemporalRepository) RemovePost(ctx context.Context, requester *prin
 	}
 
 	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "RemovePost_" + postId,
+		TaskQueue:             viper.GetString("temporal.queue"),
+		ID:                    "parley.RemovePost_" + postId,
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.RemovePost, workflows.RemovePostInput{
@@ -129,10 +134,11 @@ func (r EventTemporalRepository) RemovePost(ctx context.Context, requester *prin
 		RuleId:    rule.ID(),
 		ClubId:    clubId,
 		Notes:     notes,
+		RemovedAt: time.Now(),
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute remove post workflow")
 	}
 
 	return nil
@@ -145,17 +151,19 @@ func (r EventTemporalRepository) ApprovePost(ctx context.Context, requester *pri
 	}
 
 	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "ApprovePost_" + postId,
+		TaskQueue:             viper.GetString("temporal.queue"),
+		ID:                    "parley.ApprovePost_" + postId,
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ApprovePost, workflows.ApprovePostInput{
-		AccountId: requester.AccountId(),
-		PostId:    postId,
+		AccountId:  requester.AccountId(),
+		PostId:     postId,
+		ApprovedAt: time.Now(),
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute approve post workflow")
 	}
 
 	return nil

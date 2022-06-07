@@ -1,7 +1,7 @@
 package billing
 
 import (
-	"errors"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -9,8 +9,7 @@ import (
 )
 
 var (
-	ErrAccountClubSupportSubscriptionNotFound  = errors.New("account club support subscription not found")
-	ErrAccountClubSupportSubscriptionDuplicate = errors.New("account club support subscription is duplicate")
+	ErrAccountClubSupportSubscriptionDuplicate = domainerror.NewValidation("account club support subscription is duplicate")
 )
 
 type AccountClubSupporterSubscription struct {

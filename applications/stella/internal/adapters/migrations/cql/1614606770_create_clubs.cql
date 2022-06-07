@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS clubs
     has_created_supporter_only_post boolean,
     terminated                      boolean,
     terminated_by_account_id        text,
+    created_at                      timestamp,
     primary key ( id )
 );
 

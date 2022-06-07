@@ -2,10 +2,9 @@ package command
 
 import (
 	"context"
-	"errors"
-	errors2 "github.com/pkg/errors"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/event"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/principal"
 )
 
@@ -36,21 +35,21 @@ func (h DeleteAccountHandler) Handle(ctx context.Context, cmd DeleteAccount) (*a
 	ok, err := h.hades.CanDeleteAccountData(ctx, cmd.AccountId)
 
 	if err != nil {
-		return nil, errors2.Wrap(err, "failed to check if can delete account data: hades")
+		return nil, err
 	}
 
 	if !ok {
-		return nil, errors.New("cannot delete account")
+		return nil, domainerror.NewValidation("cannot delete account: active subscriptions remain")
 	}
 
 	ok, err = h.stella.CanDeleteAccountData(ctx, cmd.AccountId)
 
 	if err != nil {
-		return nil, errors2.Wrap(err, "failed to check if can delete account data: stella")
+		return nil, err
 	}
 
 	if !ok {
-		return nil, errors.New("cannot delete account")
+		return nil, domainerror.NewValidation("cannot delete account: active clubs remain")
 	}
 
 	if err := h.event.DeleteAccount(ctx, cmd.Principal, acc); err != nil {

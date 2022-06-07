@@ -5,5 +5,10 @@ import (
 )
 
 func (h *Activities) ParleyDeleteAccountData(ctx context.Context, accountId string) error {
-	return h.parley.DeleteAccountData(ctx, accountId)
+
+	if err := h.parley.DeleteAccountData(ctx, accountId); err != nil {
+		return err
+	}
+
+	return nil
 }

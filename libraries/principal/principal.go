@@ -1,13 +1,13 @@
 package principal
 
 import (
-	"errors"
 	eva "overdoll/applications/eva/proto"
+	"overdoll/libraries/errors/domainerror"
 )
 
 var (
-	ErrNotAuthorized = errors.New("not authorized")
-	ErrLocked        = errors.New("account is locked")
+	ErrNotAuthorized = domainerror.NewAuthorization("principal not authorized")
+	ErrLocked        = domainerror.NewAuthorization("account is locked")
 )
 
 // principal contains all methods required for authorization checks
@@ -18,9 +18,9 @@ var (
 // see "eva" or "sting" for implementation examples
 type Principal struct {
 	accountId string
+	username  string
 	roles     []string
 	email     string
-	verified  bool
 	locked    bool
 	secure    bool
 	deleting  bool
@@ -28,12 +28,12 @@ type Principal struct {
 	clubExtension *ClubExtension
 }
 
-func NewPrincipal(accountId, email string, roles []string, verified, locked, secure, deleting bool) *Principal {
+func NewPrincipal(accountId, username, email string, roles []string, locked, secure, deleting bool) *Principal {
 	return &Principal{
 		accountId: accountId,
 		email:     email,
+		username:  username,
 		roles:     roles,
-		verified:  verified,
 		locked:    locked,
 		secure:    secure,
 		deleting:  deleting,
@@ -45,10 +45,10 @@ func UnmarshalFromEvaProto(proto *eva.Account) *Principal {
 	return &Principal{
 		accountId: proto.Id,
 		roles:     proto.Roles,
-		verified:  proto.Verified,
 		locked:    proto.Locked,
 		email:     proto.Email,
 		secure:    proto.Secure,
+		username:  proto.Username,
 	}
 }
 
@@ -70,8 +70,12 @@ func (p *Principal) Email() string {
 	return p.email
 }
 
-func (p *Principal) IsVerified() bool {
-	return p.verified == true
+func (p *Principal) Username() string {
+	return p.username
+}
+
+func (p *Principal) Roles() []string {
+	return p.roles
 }
 
 func (p *Principal) IsLocked() bool {

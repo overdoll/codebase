@@ -1,6 +1,8 @@
 package post
 
-import "errors"
+import (
+	"overdoll/libraries/errors/domainerror"
+)
 
 type SupporterOnlyStatus struct {
 	slug string
@@ -27,5 +29,5 @@ func SupporterOnlyStatusFromString(s string) (SupporterOnlyStatus, error) {
 		return None, nil
 	}
 
-	return UnknownSupporterOnly, errors.New("unknown supporter only status: " + s)
+	return UnknownSupporterOnly, domainerror.NewValidation("unknown supporter only status: " + s)
 }

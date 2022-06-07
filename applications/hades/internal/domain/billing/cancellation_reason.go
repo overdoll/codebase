@@ -1,17 +1,12 @@
 package billing
 
 import (
-	"errors"
 	"github.com/go-playground/validator/v10"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
-)
-
-var (
-	ErrReasonNotFound   = errors.New("cancellation reason not found")
-	ErrReasonDeprecated = errors.New("cancellation reason is deprecated")
 )
 
 type CancellationReason struct {
@@ -105,7 +100,7 @@ func validateTitle(title string) error {
 	err := validator.New().Var(title, "required,max=25")
 
 	if err != nil {
-		return err
+		return domainerror.NewValidation(err.Error())
 	}
 
 	return nil

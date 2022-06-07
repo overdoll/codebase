@@ -11,7 +11,9 @@ type RemoveClubSupporterInput struct {
 }
 
 func RemoveClubSupporter(ctx workflow.Context, input RemoveClubSupporterInput) error {
+
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -22,6 +24,7 @@ func RemoveClubSupporter(ctx workflow.Context, input RemoveClubSupporterInput) e
 			AccountId: input.AccountId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to unmark club member supporter", "Error", err)
 		return err
 	}
 

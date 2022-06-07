@@ -15,8 +15,8 @@ go_library(
     deps = [
         "//applications/sting/internal/app",
         "//applications/sting/internal/app/query",
-        "//applications/sting/internal/domain/post",
         "//applications/sting/internal/ports/graphql/types",
+        "//libraries/errors/apperror",
         "//libraries/paging",
         "//libraries/principal",
         "@com_github_vektah_gqlparser_v2//gqlerror",

@@ -1,6 +1,8 @@
 package post_audit_log
 
-import "errors"
+import (
+	"overdoll/libraries/errors/domainerror"
+)
 
 type PostAuditLogAction struct {
 	slug string
@@ -27,5 +29,5 @@ func PostAuditLogActionFromString(s string) (PostAuditLogAction, error) {
 		return PostAuditLogActionDenied, nil
 	}
 
-	return PostAuditLogActionUnknown, errors.New("unknown post audit log action: " + s)
+	return PostAuditLogActionUnknown, domainerror.NewValidation("unknown post audit log action: " + s)
 }

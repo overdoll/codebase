@@ -2,7 +2,6 @@ package command
 
 import (
 	"context"
-	"github.com/pkg/errors"
 	"overdoll/applications/eva/internal/domain/location"
 	"overdoll/applications/eva/internal/domain/token"
 	"overdoll/libraries/passport"
@@ -49,7 +48,7 @@ func (h GrantAuthenticationTokenHandler) Handle(ctx context.Context, cmd GrantAu
 
 	// send login token notification
 	if err := h.carrier.NewLoginToken(ctx, temporary.Email(), instance.Token(), temporary.Secret()); err != nil {
-		return nil, errors.Wrap(err, "failed to send login token email")
+		return nil, err
 	}
 
 	return instance, nil

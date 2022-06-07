@@ -2,13 +2,15 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/ringer/internal/domain/details"
 	"overdoll/libraries/crypt"
+	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/support"
 )
 
 var accountDetailsTable = table.New(table.Metadata{
@@ -43,9 +45,10 @@ func (r DetailsCassandraRepository) DeleteAccountDetailsOperator(ctx context.Con
 	if err := r.session.
 		Query(accountDetailsTable.Delete()).
 		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(accountDetails{AccountId: accountId}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to delete account details: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to delete account details")
 	}
 
 	return nil
@@ -58,32 +61,33 @@ func (r DetailsCassandraRepository) GetAccountDetailsByIdOperator(ctx context.Co
 	if err := r.session.
 		Query(accountDetailsTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(accountDetails{AccountId: accountId}).
 		GetRelease(&accDetails); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, details.ErrAccountDetailsNotFound
+			return nil, apperror.NewNotFoundError("account details", accountId)
 		}
 
-		return nil, fmt.Errorf("failed to get account details: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get account details")
 	}
 
 	decryptedFirstName, err := crypt.Decrypt(accDetails.FirstName)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to decrypt first name")
 	}
 
 	decryptedLastName, err := crypt.Decrypt(accDetails.LastName)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to decrypt last name")
 	}
 
 	decryptedCountry, err := crypt.Decrypt(accDetails.CountryOfResidence)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to decrypt country of residence")
 	}
 
 	return details.UnmarshalAccountDetailsFromDatabase(accDetails.AccountId, decryptedFirstName, decryptedLastName, decryptedCountry), nil
@@ -108,12 +112,12 @@ func (r DetailsCassandraRepository) UpdateAccountDetails(ctx context.Context, re
 
 	detail, err := r.GetAccountDetailsById(ctx, requester, accountId)
 
-	if err != nil && err != details.ErrAccountDetailsNotFound {
+	if err != nil && !apperror.IsNotFoundError(err) {
 		return nil, err
 	}
 
 	// if details are not found we must use a new one as a stub
-	if err == details.ErrAccountDetailsNotFound {
+	if apperror.IsNotFoundError(err) {
 		detail = details.UnmarshalAccountDetailsFromDatabase(accountId, "", "", "USA")
 	}
 
@@ -124,24 +128,25 @@ func (r DetailsCassandraRepository) UpdateAccountDetails(ctx context.Context, re
 	encryptedFirstName, err := crypt.Encrypt(detail.FirstName())
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to encrypt first name")
 	}
 
 	encryptedLastName, err := crypt.Encrypt(detail.LastName())
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to encrypt last name")
 	}
 
 	encryptedCountry, err := crypt.Encrypt(detail.Country().Alpha3())
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to encrypt country of residence")
 	}
 
 	if err := r.session.
 		Query(accountDetailsTable.Update("first_name", "last_name", "country_of_residence_iso3166_alpha3")).
 		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(&accountDetails{
 			AccountId:          detail.AccountId(),
 			FirstName:          encryptedFirstName,
@@ -149,7 +154,7 @@ func (r DetailsCassandraRepository) UpdateAccountDetails(ctx context.Context, re
 			CountryOfResidence: encryptedCountry,
 		}).
 		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to update account details: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update account details")
 	}
 
 	return detail, nil

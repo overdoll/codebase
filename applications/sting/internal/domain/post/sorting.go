@@ -1,7 +1,7 @@
 package post
 
 import (
-	"errors"
+	"overdoll/libraries/errors/domainerror"
 )
 
 type Sorting struct {
@@ -30,5 +30,5 @@ func SortingFromString(s string) (Sorting, error) {
 		return PopularSort, nil
 	}
 
-	return UnknownSort, errors.New("unknown sorting type: " + s)
+	return UnknownSort, domainerror.NewValidation("unknown sorting type: " + s)
 }

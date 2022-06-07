@@ -1,15 +1,10 @@
 package report
 
 import (
-	"errors"
 	"overdoll/applications/parley/internal/domain/rule"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"time"
-)
-
-var (
-	ErrPostReportNotFound = errors.New("post report not found")
 )
 
 type PostReport struct {

@@ -27,6 +27,8 @@ go_library(
         "//applications/hades/internal/domain/billing",
         "//applications/hades/internal/domain/club",
         "//applications/hades/proto:v1_go_proto",
+        "//libraries/errors",
+        "//libraries/errors/domainerror",
         "//libraries/principal",
         "@com_github_golang_protobuf//proto:go_default_library",
         "@org_golang_google_protobuf//types/known/timestamppb",

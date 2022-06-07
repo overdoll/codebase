@@ -11,6 +11,7 @@ import (
 	"net/url"
 	"os"
 	"overdoll/applications/ringer/internal/domain/paxum"
+	"overdoll/libraries/errors"
 	"strconv"
 	"strings"
 )
@@ -48,7 +49,7 @@ func (r PaxumHttpCassandraRepository) TransferFunds(ctx context.Context, transfe
 	q := addSandboxDataToRequest(url.Values{})
 
 	formattedAmount := strconv.FormatFloat(transfer.Amount(), 'f', 2, 64)
-	payoutNote := fmt.Sprintf("overdoll payout to creator. reference #%s", transfer.PayoutId())
+	payoutNote := transfer.Note()
 
 	q.Add("method", "transferFunds")
 	q.Add("fromEmail", os.Getenv("PAXUM_FROM_EMAIL"))
@@ -78,13 +79,13 @@ func (r PaxumHttpCassandraRepository) TransferFunds(ctx context.Context, transfe
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to create new TransferFunds request")
 	}
 
 	resp, err := r.client.Do(req)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to run TransferFunds request")
 	}
 
 	body, err := io.ReadAll(resp.Body)
@@ -95,7 +96,7 @@ func (r PaxumHttpCassandraRepository) TransferFunds(ctx context.Context, transfe
 	var result transferFundsResponse
 
 	if err := xml.Unmarshal(body, &result); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal xml: %s", err)
+		return nil, errors.Wrap(err, "failed to unmarshal TransferFunds xml")
 	}
 
 	// non-successful response, send back an error

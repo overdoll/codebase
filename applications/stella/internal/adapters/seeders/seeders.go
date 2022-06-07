@@ -11,7 +11,7 @@ import (
 
 func afterSeeders(ctx context.Context, session gocqlx.Session) error {
 
-	repository := adapters.NewClubCassandraElasticsearchRepository(session, bootstrap.InitializeElasticSearchSession())
+	repository := adapters.NewClubCassandraElasticsearchRepository(session, bootstrap.InitializeElasticSearchSession(), bootstrap.InitializeRedisSession())
 
 	if err := repository.IndexAllClubs(ctx); err != nil {
 		return err

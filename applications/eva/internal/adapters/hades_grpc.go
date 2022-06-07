@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	hades "overdoll/applications/hades/proto"
+	"overdoll/libraries/errors"
 )
 
 type HadesGrpc struct {
@@ -18,7 +19,7 @@ func (s HadesGrpc) CanDeleteAccountData(ctx context.Context, accountId string) (
 	res, err := s.client.CanDeleteAccountData(ctx, &hades.CanDeleteAccountDataRequest{AccountId: accountId})
 
 	if err != nil {
-		return false, err
+		return false, errors.Wrap(err, "error checking if can delete account data")
 	}
 
 	return res.CanDelete, nil
@@ -29,7 +30,7 @@ func (s HadesGrpc) DeleteAccountData(ctx context.Context, accountId string) erro
 	_, err := s.client.DeleteAccountData(ctx, &hades.DeleteAccountDataRequest{AccountId: accountId})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error deleting account data")
 	}
 
 	return nil

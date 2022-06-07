@@ -31,6 +31,12 @@ const clubPayoutsIndex = `
 				"amount": {
 					"type": "integer"
 				},
+				"cover_fee_amount": {
+					"type": "integer"
+				},
+				"total_amount": {
+					"type": "integer"
+				},
 				"payout_account_id": {
 					"type": "keyword"
 				},

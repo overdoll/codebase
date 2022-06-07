@@ -12,12 +12,18 @@ type UpdateTotalPostsForPostTagsInput struct {
 func UpdateTotalPostsForPostTags(ctx workflow.Context, input UpdateTotalPostsForPostTagsInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
-	return workflow.ExecuteActivity(ctx, a.UpdateTotalPostsForPostTags,
+	if err := workflow.ExecuteActivity(ctx, a.UpdateTotalPostsForPostTags,
 		activities.UpdateTotalPostsForPostTagsInput{
 			PostId: input.PostId,
 		},
-	).Get(ctx, nil)
+	).Get(ctx, nil); err != nil {
+		logger.Error("failed to update total posts for post tags", "Error", err)
+		return err
+	}
+
+	return nil
 }

@@ -1,6 +1,8 @@
 package payout
 
-import "errors"
+import (
+	"overdoll/libraries/errors/domainerror"
+)
 
 type Status struct {
 	slug string
@@ -33,5 +35,5 @@ func StatusFromString(s string) (Status, error) {
 		return Processing, nil
 	}
 
-	return UnknownStatus, errors.New("unknown status: " + s)
+	return UnknownStatus, domainerror.NewValidation("unknown status: " + s)
 }

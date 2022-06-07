@@ -14,6 +14,7 @@ type UnSuspendClubInput struct {
 func UnSuspendClub(ctx workflow.Context, input UnSuspendClubInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	uniqueId, err := support.GenerateUniqueIdForWorkflow(ctx)
 
@@ -31,6 +32,7 @@ func UnSuspendClub(ctx workflow.Context, input UnSuspendClubInput) error {
 			AccountId:       input.AccountId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to un suspend club", "Error", err)
 		return err
 	}
 

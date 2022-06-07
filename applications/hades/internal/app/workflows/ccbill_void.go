@@ -16,6 +16,7 @@ type CCBillVoidInput struct {
 func CCBillVoid(ctx workflow.Context, input CCBillVoidInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -23,6 +24,7 @@ func CCBillVoid(ctx workflow.Context, input CCBillVoidInput) error {
 
 	// get subscription details so we know the club
 	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, input.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
+		logger.Error("failed to get ccbill subscription details", "Error", err)
 		return err
 	}
 
@@ -36,6 +38,7 @@ func CCBillVoid(ctx workflow.Context, input CCBillVoidInput) error {
 
 	// get subscription details so we know the club
 	if err := workflow.ExecuteActivity(ctx, a.GetCCBillTransactionDetails, input.TransactionId).Get(ctx, &transactionDetails); err != nil {
+		logger.Error("failed to get ccbill transaction details", "Error", err)
 		return err
 	}
 
@@ -47,6 +50,7 @@ func CCBillVoid(ctx workflow.Context, input CCBillVoidInput) error {
 			Reason:               input.Reason,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to get ccbill subscription details", "Error", err)
 		return err
 	}
 
@@ -61,6 +65,7 @@ func CCBillVoid(ctx workflow.Context, input CCBillVoidInput) error {
 			Currency:             subscriptionDetails.Currency,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to create new payment deduction", "Error", err)
 		return err
 	}
 

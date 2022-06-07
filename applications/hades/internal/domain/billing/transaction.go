@@ -1,6 +1,8 @@
 package billing
 
-import "errors"
+import (
+	"overdoll/libraries/errors/domainerror"
+)
 
 type Transaction struct {
 	slug string
@@ -30,5 +32,5 @@ func TransactionFromString(s string) (Transaction, error) {
 		return Refund, nil
 	}
 
-	return UnknownTransaction, errors.New("unknown transaction: " + s)
+	return UnknownTransaction, domainerror.NewValidation("unknown transaction: " + s)
 }

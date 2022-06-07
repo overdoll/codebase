@@ -1,8 +1,9 @@
 package post
 
 import (
-	"errors"
 	"overdoll/applications/sting/internal/domain/club"
+	"overdoll/libraries/errors/apperror"
+	"overdoll/libraries/errors/domainerror"
 	"time"
 
 	"overdoll/libraries/paging"
@@ -11,10 +12,7 @@ import (
 )
 
 var (
-	ErrNotDraft         = errors.New("post must be in draft")
-	ErrNotPublishing    = errors.New("post must be publishing")
-	ErrNotFound         = errors.New("post not found")
-	ErrAlreadyModerated = errors.New("already moderated")
+	ErrNotDraft = domainerror.NewValidation("post must be in draft")
 )
 
 type Post struct {
@@ -74,6 +72,12 @@ func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int,
 
 	for _, resourceId := range contentResourceIds {
 		content = append(content, &Content{
+			post: &Post{
+				id:                  id,
+				state:               ps,
+				supporterOnlyStatus: so,
+				clubId:              clubId,
+			},
 			resourceId:       resourceId,
 			resourceIdHidden: contentSupporterOnlyResourceIds[resourceId],
 			isSupporterOnly:  contentSupporterOnly[resourceId],
@@ -256,7 +260,7 @@ func (p *Post) SubmitPostRequest(requester *principal.Principal, allResourcesPro
 	}
 
 	if !allResourcesProcessed {
-		return errors.New("all resources must be processed before submitting")
+		return domainerror.NewValidation("all resources must be processed before submitting")
 	}
 
 	if p.state != Draft {
@@ -308,6 +312,7 @@ func (p *Post) AddContentRequest(requester *principal.Principal, contentIds []st
 			resourceId:       contentId,
 			resourceIdHidden: "",
 			isSupporterOnly:  false,
+			post:             p,
 		})
 	}
 
@@ -323,7 +328,7 @@ func (p *Post) UpdateContentOrderRequest(requester *principal.Principal, content
 	}
 
 	if len(contentIds) != len(p.content) {
-		return errors.New("missing resources")
+		return domainerror.NewValidation("missing resources")
 	}
 
 	var reorderedContent []*Content
@@ -341,7 +346,7 @@ func (p *Post) UpdateContentOrderRequest(requester *principal.Principal, content
 		}
 
 		if !foundContent {
-			return errors.New("content was not found as part of post. must send IDs already part of post")
+			return domainerror.NewValidation("content was not found as part of post. must send IDs already part of post")
 		}
 	}
 
@@ -453,7 +458,7 @@ func (p *Post) UpdateCategoriesRequest(requester *principal.Principal, categorie
 func (p *Post) CanDelete(requester *principal.Principal) error {
 
 	if p.state != Published && p.state != Archived && p.state != Removed && p.state != Rejected && p.state != Discarded && p.state != Draft {
-		return errors.New("invalid deletion state for post: post must be archived, draft, removed, rejected, discarded")
+		return domainerror.NewValidation("invalid deletion state for post: post must be archived, draft, removed, rejected, discarded")
 	}
 
 	if requester.IsStaff() {
@@ -466,7 +471,11 @@ func (p *Post) CanDelete(requester *principal.Principal) error {
 func (p *Post) CanArchive(requester *principal.Principal) error {
 
 	if p.state != Published {
-		return errors.New("only published posts can be archived")
+		return domainerror.NewValidation("only published posts can be archived")
+	}
+
+	if err := requester.CheckClubOwner(p.clubId); err != nil {
+		return err
 	}
 
 	return p.MakeArchived()
@@ -475,7 +484,11 @@ func (p *Post) CanArchive(requester *principal.Principal) error {
 func (p *Post) CanUnArchive(requester *principal.Principal) error {
 
 	if p.state != Archived {
-		return errors.New("only archived posts can be unarchived")
+		return domainerror.NewValidation("only archived posts can be unarchived")
+	}
+
+	if err := requester.CheckClubOwner(p.clubId); err != nil {
+		return err
 	}
 
 	return p.MakePublish()
@@ -492,7 +505,7 @@ func (p *Post) CanUpdate(requester *principal.Principal) error {
 	}
 
 	if p.state != Draft {
-		return errors.New("can only update post in draft")
+		return domainerror.NewValidation("can only update post in draft")
 	}
 
 	return nil
@@ -538,7 +551,7 @@ func (p *Post) CanView(suspendedClubIds []string, requester *principal.Principal
 		if err := requester.CheckClubOwner(p.clubId); err != nil {
 
 			if err := requester.BelongsToAccount(p.ContributorId()); err != nil {
-				return ErrNotFound
+				return apperror.NewNotFoundError("post", p.id)
 			}
 
 			return nil

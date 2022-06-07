@@ -1,13 +1,16 @@
 package post
 
-import "github.com/go-playground/validator/v10"
+import (
+	"github.com/go-playground/validator/v10"
+	"overdoll/libraries/errors/domainerror"
+)
 
 func validateSlug(slug string) error {
 
 	err := validator.New().Var(slug, "required,max=25,excludesall= ,alphanum")
 
 	if err != nil {
-		return err
+		return domainerror.NewValidation(err.Error())
 	}
 
 	return nil

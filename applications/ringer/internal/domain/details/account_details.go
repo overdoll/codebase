@@ -1,13 +1,8 @@
 package details
 
 import (
-	"errors"
 	"github.com/biter777/countries"
 	"overdoll/libraries/principal"
-)
-
-var (
-	ErrAccountDetailsNotFound = errors.New("account details not found")
 )
 
 type AccountDetails struct {

@@ -2,7 +2,6 @@ package command
 
 import (
 	"context"
-	errors2 "github.com/pkg/errors"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/principal"
 )
@@ -26,7 +25,7 @@ func (h CreatePostHandler) Handle(ctx context.Context, cmd CreatePost) (*post.Po
 	club, err := h.stella.GetClubById(ctx, cmd.ClubId)
 
 	if err != nil {
-		return nil, errors2.Wrap(err, "failed to get club by id")
+		return nil, err
 	}
 
 	pendingPost, err := post.NewPost(cmd.Principal, club)

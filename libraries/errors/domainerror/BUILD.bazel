@@ -1,0 +1,11 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "domainerror",
+    srcs = [
+        "authorization.go",
+        "validation.go",
+    ],
+    importpath = "overdoll/libraries/errors/domainerror",
+    visibility = ["//visibility:public"],
+)

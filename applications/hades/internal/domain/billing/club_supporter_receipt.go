@@ -1,12 +1,8 @@
 package billing
 
 import (
-	"errors"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/principal"
-)
-
-var (
-	ErrClubSupporterReceiptNotFound = errors.New("club supporter receipt not found")
 )
 
 type ClubSupporterReceipt struct {

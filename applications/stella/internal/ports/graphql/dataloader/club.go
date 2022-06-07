@@ -5,8 +5,8 @@ import (
 	"github.com/graph-gophers/dataloader"
 	"overdoll/applications/stella/internal/app"
 	"overdoll/applications/stella/internal/app/query"
-	"overdoll/applications/stella/internal/domain/club"
 	"overdoll/applications/stella/internal/ports/graphql/types"
+	"overdoll/libraries/errors/apperror"
 	"time"
 )
 
@@ -45,8 +45,8 @@ func clubsByIds(app *app.Application) *dataloader.Loader {
 			}
 
 			// fill array positions with errors where not found in DB
-			for _, ix := range keyOrder {
-				results[ix] = &dataloader.Result{Data: nil, Error: club.ErrClubNotFound}
+			for v, ix := range keyOrder {
+				results[ix] = &dataloader.Result{Data: nil, Error: apperror.NewNotFoundError("club", v)}
 			}
 
 			// return results

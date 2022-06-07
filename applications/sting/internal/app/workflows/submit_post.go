@@ -17,6 +17,7 @@ type SubmitPostInput struct {
 func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -25,6 +26,7 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 			PostId: input.PostId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to create pixelated resources for supporter only content", "Error", err)
 		return err
 	}
 
@@ -34,6 +36,7 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 			PostDate: input.PostDate,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to submit post", "Error", err)
 		return err
 	}
 
@@ -44,6 +47,7 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 			PostId: input.PostId,
 		},
 	).Get(ctx, &inReview); err != nil {
+		logger.Error("failed to put post into moderator queue or publish", "Error", err)
 		return err
 	}
 
@@ -53,12 +57,13 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 				PostId: input.PostId,
 			},
 		).Get(ctx, nil); err != nil {
+			logger.Error("failed to review post", "Error", err)
 			return err
 		}
 	} else {
 
 		childWorkflowOptions := workflow.ChildWorkflowOptions{
-			WorkflowID:        "PublishPost_" + input.PostId,
+			WorkflowID:        "sting.PublishPost_" + input.PostId,
 			ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 		}
 
@@ -71,6 +76,7 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 		).
 			GetChildWorkflowExecution().
 			Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+			logger.Error("failed to publish post", "Error", err)
 			return err
 		}
 	}

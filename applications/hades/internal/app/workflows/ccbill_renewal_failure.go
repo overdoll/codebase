@@ -18,6 +18,7 @@ type CCBillRenewalFailureInput struct {
 func CCBillRenewalFailure(ctx workflow.Context, input CCBillRenewalFailureInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -25,6 +26,7 @@ func CCBillRenewalFailure(ctx workflow.Context, input CCBillRenewalFailureInput)
 
 	// get subscription details so we know the club
 	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, input.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
+		logger.Error("failed to get ccbill subscription details", "Error", err)
 		return err
 	}
 
@@ -38,6 +40,7 @@ func CCBillRenewalFailure(ctx workflow.Context, input CCBillRenewalFailureInput)
 			NextRetryDate:                      input.NextRetryDate,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to update account club supporter subscription ccbill failure", "Error", err)
 		return err
 	}
 
@@ -47,6 +50,7 @@ func CCBillRenewalFailure(ctx workflow.Context, input CCBillRenewalFailureInput)
 			AccountClubSupporterSubscriptionId: subscriptionDetails.AccountClubSupporterSubscriptionId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to send account club supporter subscription failure notification", "Error", err)
 		return err
 	}
 

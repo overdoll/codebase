@@ -1,11 +1,11 @@
 package ccbill
 
 import (
-	"errors"
+	"overdoll/libraries/errors/domainerror"
 )
 
 var (
-	ErrInvalidRefundAmount = errors.New("refund amount invalid")
+	ErrInvalidRefundAmount = domainerror.NewValidation("refund amount invalid")
 )
 
 type Refund struct {

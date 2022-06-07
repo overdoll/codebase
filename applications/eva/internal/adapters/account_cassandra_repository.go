@@ -2,8 +2,10 @@ package adapters
 
 import (
 	"context"
-	"errors"
-	"fmt"
+	"go.uber.org/zap"
+	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/apperror"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/support"
@@ -24,7 +26,6 @@ var accountTable = table.New(table.Metadata{
 		"username",
 		"email",
 		"roles",
-		"verified",
 		"avatar_resource_id",
 		"locked",
 		"locked_until",
@@ -34,6 +35,7 @@ var accountTable = table.New(table.Metadata{
 		"deleted",
 		"last_username_edit",
 		"multi_factor_enabled",
+		"created_at",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -44,7 +46,6 @@ type accounts struct {
 	Username                    string     `db:"username"`
 	Email                       string     `db:"email"`
 	Roles                       []string   `db:"roles"`
-	Verified                    bool       `db:"verified"`
 	AvatarResourceId            *string    `db:"avatar_resource_id"`
 	Locked                      bool       `db:"locked"`
 	LockedUntil                 *time.Time `db:"locked_until"`
@@ -54,6 +55,7 @@ type accounts struct {
 	Deleted                     bool       `db:"deleted"`
 	LastUsernameEdit            time.Time  `db:"last_username_edit"`
 	MultiFactorEnabled          bool       `db:"multi_factor_enabled"`
+	CreatedAt                   time.Time  `db:"created_at"`
 }
 
 var accountUsernameTable = table.New(table.Metadata{
@@ -118,7 +120,6 @@ func marshalUserToDatabase(usr *account.Account) *accounts {
 		Username:                    usr.Username(),
 		Roles:                       usr.RolesAsString(),
 		AvatarResourceId:            usr.AvatarResourceId(),
-		Verified:                    usr.Verified(),
 		LockedUntil:                 usr.LockedUntil(),
 		Locked:                      usr.IsLocked(),
 		Deleting:                    usr.IsDeleting(),
@@ -126,6 +127,7 @@ func marshalUserToDatabase(usr *account.Account) *accounts {
 		ScheduledDeletionAt:         usr.ScheduledDeletionAt(),
 		ScheduledDeletionWorkflowId: usr.ScheduledDeletionWorkflowId(),
 		MultiFactorEnabled:          usr.MultiFactorEnabled(),
+		CreatedAt:                   usr.CreatedAt(),
 	}
 }
 
@@ -135,17 +137,19 @@ func (r AccountCassandraRepository) getAccountById(ctx context.Context, id strin
 	if err := r.session.
 		Query(accountTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalOne).
+		Idempotent(true).
 		BindStruct(&accounts{
 			Id: id,
 		}).
 		GetRelease(&accountInstance); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, account.ErrAccountNotFound
+			return nil, apperror.NewNotFoundError("account", id)
 		}
 
-		return nil, fmt.Errorf("failed to get account: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get account")
 	}
 
 	return &accountInstance, nil
@@ -165,7 +169,6 @@ func (r AccountCassandraRepository) GetAccountById(ctx context.Context, id strin
 		accountInstance.Username,
 		accountInstance.Email,
 		accountInstance.Roles,
-		accountInstance.Verified,
 		accountInstance.AvatarResourceId,
 		accountInstance.Locked,
 		accountInstance.LockedUntil,
@@ -175,6 +178,7 @@ func (r AccountCassandraRepository) GetAccountById(ctx context.Context, id strin
 		accountInstance.MultiFactorEnabled,
 		accountInstance.LastUsernameEdit,
 		accountInstance.Deleted,
+		accountInstance.CreatedAt,
 	), nil
 }
 
@@ -188,15 +192,11 @@ func (r AccountCassandraRepository) GetAccountsById(ctx context.Context, ids []s
 		Where(qb.In("id")).
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalOne).
 		Bind(ids).
 		SelectRelease(&accountInstances); err != nil {
-
-		if err == gocql.ErrNotFound {
-			return nil, account.ErrAccountNotFound
-		}
-
-		return nil, fmt.Errorf("failed to get accounts: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get account by id")
 	}
 
 	var accounts []*account.Account
@@ -207,7 +207,6 @@ func (r AccountCassandraRepository) GetAccountsById(ctx context.Context, ids []s
 			accountInstance.Username,
 			accountInstance.Email,
 			accountInstance.Roles,
-			accountInstance.Verified,
 			accountInstance.AvatarResourceId,
 			accountInstance.Locked,
 			accountInstance.LockedUntil,
@@ -217,6 +216,7 @@ func (r AccountCassandraRepository) GetAccountsById(ctx context.Context, ids []s
 			accountInstance.MultiFactorEnabled,
 			accountInstance.LastUsernameEdit,
 			accountInstance.Deleted,
+			accountInstance.CreatedAt,
 		))
 	}
 
@@ -232,6 +232,7 @@ func (r AccountCassandraRepository) GetAccountByEmail(ctx context.Context, email
 	if err := r.session.
 		Query(accountEmailTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&accountEmail{
 			Email: strings.ToLower(email),
@@ -239,10 +240,9 @@ func (r AccountCassandraRepository) GetAccountByEmail(ctx context.Context, email
 		Get(&accEmail); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, account.ErrAccountNotFound
+			return nil, apperror.NewNotFoundError("account - email", email)
 		}
-
-		return nil, fmt.Errorf("failed to get account by email: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get account by email")
 	}
 
 	// Get our user using the accounts AccountId, from the user email instance
@@ -275,7 +275,7 @@ func (r AccountCassandraRepository) createUniqueAccountUsername(ctx context.Cont
 
 	// Do our checks to make sure we got a unique username
 	if err != nil {
-		return fmt.Errorf("failed to create unique username: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to create unique username")
 	}
 
 	if !applied {
@@ -300,11 +300,11 @@ func (r AccountCassandraRepository) deleteAccountUsername(ctx context.Context, a
 		ExecCASRelease()
 
 	if err != nil {
-		return fmt.Errorf("failed to delete unique username: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to delete unique username")
 	}
 
 	if !applied {
-		return fmt.Errorf("could not delete unique username: %v", err)
+		return errors.Wrap(support.NewGocqlTransactionError(), "could not delete unique username")
 	}
 
 	return nil
@@ -325,7 +325,7 @@ func (r AccountCassandraRepository) createUniqueAccountEmail(ctx context.Context
 		ExecCASRelease()
 
 	if err != nil {
-		return fmt.Errorf("failed to create unique email: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to create unique email")
 	}
 
 	if !applied {
@@ -344,8 +344,9 @@ func (r AccountCassandraRepository) deleteAccountEmail(ctx context.Context, acco
 
 	batch.Query(stmt, accountId, email)
 
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to delete account email: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to delete account email")
 	}
 
 	applied, err := accountEmailTable.
@@ -360,11 +361,11 @@ func (r AccountCassandraRepository) deleteAccountEmail(ctx context.Context, acco
 		ExecCASRelease()
 
 	if err != nil {
-		return fmt.Errorf("failed to delete account email: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to delete account email")
 	}
 
 	if !applied {
-		return fmt.Errorf("failed to delete account email: %v", err)
+		return errors.Wrap(support.NewGocqlTransactionError(), "failed to delete account email")
 	}
 
 	return nil
@@ -415,24 +416,10 @@ func (r AccountCassandraRepository) CreateAccount(ctx context.Context, instance 
 	support.BindStructToBatchStatement(
 		batch,
 		stmt, names,
-		accounts{
-			Id:                          instance.ID(),
-			Username:                    instance.Username(),
-			Email:                       instance.Email(),
-			Roles:                       instance.RolesAsString(),
-			Verified:                    instance.Verified(),
-			AvatarResourceId:            instance.AvatarResourceId(),
-			Locked:                      instance.Locked(),
-			LockedUntil:                 instance.LockedUntil(),
-			Deleting:                    instance.IsDeleting(),
-			ScheduledDeletionAt:         instance.ScheduledDeletionAt(),
-			ScheduledDeletionWorkflowId: instance.ScheduledDeletionWorkflowId(),
-			Deleted:                     instance.IsDeleted(),
-			LastUsernameEdit:            instance.LastUsernameEdit(),
-			MultiFactorEnabled:          instance.MultiFactorEnabled(),
-		},
+		marshalUserToDatabase(instance),
 	)
 
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
 
 		// do a rollback if this batch statement fails
@@ -447,7 +434,7 @@ func (r AccountCassandraRepository) CreateAccount(ctx context.Context, instance 
 			return err2
 		}
 
-		return fmt.Errorf("failed to create account: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to create account")
 	}
 
 	return nil
@@ -476,8 +463,9 @@ func (r AccountCassandraRepository) updateAccount(ctx context.Context, id string
 		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalUserToDatabase(currentUser)).
+		Idempotent(true).
 		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to update account: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update account")
 	}
 
 	return currentUser, nil
@@ -488,7 +476,6 @@ func (r AccountCassandraRepository) UpdateAccount(ctx context.Context, id string
 		"username",
 		"email",
 		"roles",
-		"verified",
 		"locked_until",
 		"locked",
 		"avatar_resource_id",
@@ -533,8 +520,9 @@ func (r AccountCassandraRepository) DeleteAccountData(ctx context.Context, accou
 		BindStruct(&emailByAccount{
 			AccountId: accountId,
 		}).
+		Idempotent(true).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to delete account emails: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to delete account emails")
 	}
 
 	acc.Email = ""
@@ -553,8 +541,10 @@ func (r AccountCassandraRepository) DeleteAccountData(ctx context.Context, accou
 		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(acc).
+		Idempotent(true).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to update account: %v", err)
+		zap.S().Errorw("failed to update account", zap.Error(err))
+		return errors.Wrap(support.NewGocqlError(err), "failed to update account")
 	}
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
@@ -568,8 +558,9 @@ func (r AccountCassandraRepository) DeleteAccountData(ctx context.Context, accou
 
 	batch.Query(stmt, accountId)
 
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to delete multi factor account data: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to delete multi factor account data")
 	}
 
 	return nil
@@ -591,9 +582,7 @@ func (r AccountCassandraRepository) UpdateAccountUsername(ctx context.Context, r
 
 	oldUsername := instance.Username()
 
-	err = updateFn(instance)
-
-	if err != nil {
+	if err := updateFn(instance); err != nil {
 		return nil, err
 	}
 
@@ -602,7 +591,7 @@ func (r AccountCassandraRepository) UpdateAccountUsername(ctx context.Context, r
 
 	if err != nil {
 
-		if err != account.ErrAccountNotFound {
+		if !apperror.IsNotFoundError(err) {
 			return nil, err
 		}
 
@@ -637,13 +626,14 @@ func (r AccountCassandraRepository) UpdateAccountUsername(ctx context.Context, r
 			},
 		)
 
+		support.MarkBatchIdempotent(batch)
 		if err := r.session.ExecuteBatch(batch); err != nil {
 
 			if err := r.deleteAccountUsername(ctx, instance.ID(), instance.Username()); err != nil {
 				return nil, err
 			}
 
-			return nil, fmt.Errorf("failed to update account username: %v", err)
+			return nil, errors.Wrap(support.NewGocqlError(err), "failed to update account username")
 		}
 
 		return instance, nil
@@ -664,16 +654,16 @@ func (r AccountCassandraRepository) GetAccountByUsername(ctx context.Context, us
 		Query(accountUsernameTable.Get()).
 		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
+		Idempotent(true).
 		BindStruct(&AccountUsername{
 			Username: strings.ToLower(username),
 		}).
 		Get(&accountUsername); err != nil {
-
 		if err == gocql.ErrNotFound {
-			return nil, account.ErrAccountNotFound
+			return nil, apperror.NewNotFoundError("account - username", username)
 		}
 
-		return nil, fmt.Errorf("failed to get account by username: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get account by username")
 	}
 
 	// Get our user using the accounts AccountId, from the user email instance
@@ -696,6 +686,7 @@ func (r AccountCassandraRepository) GetAccountEmail(ctx context.Context, request
 		Query(emailByAccountTable.Get()).
 		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
+		Idempotent(true).
 		BindStruct(&emailByAccount{
 			AccountId: accountId,
 			Email:     email,
@@ -703,10 +694,9 @@ func (r AccountCassandraRepository) GetAccountEmail(ctx context.Context, request
 		Get(&accountEmail); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, account.ErrAccountNotFound
+			return nil, apperror.NewNotFoundError("account", accountId)
 		}
-
-		return nil, fmt.Errorf("failed to get email by account: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get email by account")
 	}
 
 	result := account.UnmarshalEmailFromDatabase(accountEmail.Email, accountEmail.AccountId, accountEmail.Status)
@@ -742,15 +732,15 @@ func (r AccountCassandraRepository) GetAccountEmails(ctx context.Context, reques
 	if err := builder.
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(data).
 		SelectRelease(&accountEmails); err != nil {
-
 		if err == gocql.ErrNotFound {
-			return nil, account.ErrAccountNotFound
+			return nil, apperror.NewNotFoundError("account", accountId)
 		}
 
-		return nil, fmt.Errorf("failed to get emails by account: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get emails by account")
 	}
 
 	var emails []*account.Email
@@ -818,7 +808,7 @@ func (r AccountCassandraRepository) UpdateAccountMakeEmailPrimary(ctx context.Co
 	}
 
 	if newEmail == nil {
-		return nil, nil, errors.New("email not found")
+		return nil, nil, domainerror.NewValidation("email not found")
 	}
 
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
@@ -841,8 +831,9 @@ func (r AccountCassandraRepository) UpdateAccountMakeEmailPrimary(ctx context.Co
 
 	batch.Query(stmt, newEmail.Email(), accountId)
 
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return nil, nil, fmt.Errorf("failed to make email primary: %v", err)
+		return nil, nil, errors.Wrap(support.NewGocqlError(err), "failed to make email primary")
 	}
 
 	return acc, newEmail, nil
@@ -852,7 +843,7 @@ func (r AccountCassandraRepository) CreateAccountEmail(ctx context.Context, requ
 	// check to make sure this email is not taken
 	existingAcc, err := r.GetAccountByEmail(ctx, email.Email())
 
-	if err != nil && err != account.ErrAccountNotFound {
+	if err != nil && !apperror.IsNotFoundError(err) {
 		return err
 	}
 
@@ -869,18 +860,17 @@ func (r AccountCassandraRepository) CreateAccountEmail(ctx context.Context, requ
 		Query(emailByAccountTable.Insert()).
 		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
+		Idempotent(true).
 		BindStruct(emailByAccount{
 			Email:     email.Email(),
 			AccountId: email.AccountId(),
 			Status:    1,
 		}).
 		ExecRelease(); err != nil {
-
 		if err := r.deleteAccountEmail(ctx, email.AccountId(), email.Email()); err != nil {
 			return err
 		}
-
-		return fmt.Errorf("failed to add account email - cassandra: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to add account email")
 	}
 
 	return nil

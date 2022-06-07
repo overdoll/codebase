@@ -27,6 +27,7 @@ type CCBillCustomerDataUpdateInput struct {
 func CCBillCustomerDataUpdate(ctx workflow.Context, input CCBillCustomerDataUpdateInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -50,6 +51,7 @@ func CCBillCustomerDataUpdate(ctx workflow.Context, input CCBillCustomerDataUpda
 			Timestamp:            input.Timestamp,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to update ccbill subscription details", "Error", err)
 		return err
 	}
 

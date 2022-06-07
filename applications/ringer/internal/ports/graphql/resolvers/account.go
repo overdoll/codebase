@@ -4,9 +4,9 @@ import (
 	"context"
 	"overdoll/applications/ringer/internal/app"
 	"overdoll/applications/ringer/internal/app/query"
-	"overdoll/applications/ringer/internal/domain/details"
 	"overdoll/applications/ringer/internal/domain/payout"
 	"overdoll/applications/ringer/internal/ports/graphql/types"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
 )
@@ -28,7 +28,7 @@ func (r AccountResolver) Details(ctx context.Context, obj *types.Account) (*type
 
 	if err != nil {
 
-		if err == details.ErrAccountDetailsNotFound {
+		if apperror.IsNotFoundError(err) {
 			return nil, nil
 		}
 

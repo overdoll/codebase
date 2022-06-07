@@ -42,7 +42,19 @@ func NewHttpRoundTripper(r repository) http.RoundTripper {
 		repository: r,
 	}
 }
+
 func (h *passportTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+
+	res, err := h.roundTrip(req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+func (h *passportTransport) roundTrip(req *http.Request) (*http.Response, error) {
 
 	sessionId, accountId, err := h.repository.GetSessionDataFromRequest(req)
 

@@ -5,8 +5,8 @@ import (
 	"github.com/graph-gophers/dataloader"
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/query"
-	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/applications/sting/internal/ports/graphql/types"
+	"overdoll/libraries/errors/apperror"
 	"time"
 )
 
@@ -45,8 +45,8 @@ func audiencesByIds(app *app.Application) *dataloader.Loader {
 			}
 
 			// fill array positions with errors where not found in DB
-			for _, ix := range keyOrder {
-				results[ix] = &dataloader.Result{Data: nil, Error: post.ErrAudienceNotFound}
+			for v, ix := range keyOrder {
+				results[ix] = &dataloader.Result{Data: nil, Error: apperror.NewNotFoundError("audience", v)}
 			}
 
 			// return results

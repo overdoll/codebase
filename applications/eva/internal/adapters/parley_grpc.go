@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	parley "overdoll/applications/parley/proto"
+	"overdoll/libraries/errors"
 )
 
 type ParleyGrpc struct {
@@ -18,7 +19,7 @@ func (s ParleyGrpc) DeleteAccountData(ctx context.Context, accountId string) err
 	_, err := s.client.DeleteAccountData(ctx, &parley.DeleteAccountDataRequest{AccountId: accountId})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error deleting account data")
 	}
 
 	return nil

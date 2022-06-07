@@ -52,6 +52,7 @@ type CCBillNewSaleOrUpSaleSuccessInput struct {
 func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUpSaleSuccessInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -99,6 +100,7 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUpS
 			PostalCode:         input.PostalCode,
 		},
 	).Get(ctx, &existingClubSupport); err != nil {
+		logger.Error("failed to create unique ccbill subscription", "Error", err)
 		return err
 	}
 
@@ -111,6 +113,7 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUpS
 				CCBillTransactionId: input.TransactionId,
 			},
 		).Get(ctx, nil); err != nil {
+			logger.Error("failed to void ccbill transaction", "Error", err)
 			return err
 		}
 
@@ -123,6 +126,7 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUpS
 				Amount:    input.BilledRecurringPrice,
 			},
 		).Get(ctx, nil); err != nil {
+			logger.Error("failed to send account club supporter duplicate notification", "Error", err)
 			return err
 		}
 
@@ -150,6 +154,7 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUpS
 			BillingDate:                        input.BilledAtDate,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to create initial club supporter account transaction", "Error", err)
 		return err
 	}
 
@@ -169,6 +174,7 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUpS
 			Currency:                           input.BilledCurrency,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to create account club supporter subscription", "Error", err)
 		return err
 	}
 
@@ -180,6 +186,7 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUpS
 			SupportedAt: input.Timestamp,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to add club supporter", "Error", err)
 		return err
 	}
 
@@ -189,6 +196,7 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUpS
 			AccountClubSupporterSubscriptionId: uniqueSubscriptionId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to send new subscription notification", "Error", err)
 		return err
 	}
 
@@ -203,6 +211,7 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUpS
 			Currency:             input.AccountingCurrency,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to create a new payment deposit", "Error", err)
 		return err
 	}
 
@@ -210,10 +219,9 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUpS
 	// that will run this notification reminder at the beginning of each month to tell you how many subscriptions
 	// you have re-billing this month
 	childCtx := workflow.WithChildOptions(ctx, workflow.ChildWorkflowOptions{
-		WorkflowID:            "UpcomingSubscriptionReminderNotification_" + input.PaymentToken.AccountInitiator.AccountId,
-		ParentClosePolicy:     enums.PARENT_CLOSE_POLICY_ABANDON,
-		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
-		CronSchedule:          "0 0 1 * *",
+		WorkflowID:        "hades.UpcomingSubscriptionReminderNotification_" + input.PaymentToken.AccountInitiator.AccountId,
+		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
+		CronSchedule:      "0 0 1 * *",
 	})
 
 	if err := workflow.ExecuteChildWorkflow(childCtx, UpcomingSubscriptionReminderNotification,
@@ -223,6 +231,7 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUpS
 	).
 		GetChildWorkflowExecution().
 		Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+		logger.Error("failed to send upcoming subscription reminder notification", "Error", err)
 		return err
 	}
 
@@ -243,6 +252,7 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUpS
 	).
 		GetChildWorkflowExecution().
 		Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+		logger.Error("failed to create club transaction metric", "Error", err)
 		return err
 	}
 

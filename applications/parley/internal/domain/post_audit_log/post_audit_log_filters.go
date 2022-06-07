@@ -1,7 +1,7 @@
 package post_audit_log
 
 import (
-	"errors"
+	"overdoll/libraries/errors/domainerror"
 	"time"
 )
 
@@ -15,18 +15,18 @@ type PostAuditLogFilters struct {
 func NewPostAuditLogFilters(moderatorId, postId *string, from, to *time.Time) (*PostAuditLogFilters, error) {
 
 	if postId == nil && moderatorId == nil {
-		return nil, errors.New("must select at least post or moderator")
+		return nil, domainerror.NewValidation("must select at least post or moderator")
 	}
 
 	if to == nil && from == nil {
 		if moderatorId != nil {
-			return nil, errors.New("must select time range for audit logs when searching for moderator logs")
+			return nil, domainerror.NewValidation("must select time range for audit logs when searching for moderator logs")
 		}
 	}
 
 	if to != nil && from != nil {
 		if to.Before(*from) {
-			return nil, errors.New("to must be after from")
+			return nil, domainerror.NewValidation("to must be after from")
 		}
 	}
 

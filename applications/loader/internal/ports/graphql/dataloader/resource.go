@@ -5,8 +5,8 @@ import (
 	"github.com/graph-gophers/dataloader"
 	"overdoll/applications/loader/internal/app"
 	"overdoll/applications/loader/internal/app/query"
-	"overdoll/applications/loader/internal/domain/resource"
 	"overdoll/applications/loader/internal/ports/graphql/types"
+	"overdoll/libraries/errors/apperror"
 	"strings"
 	"time"
 )
@@ -58,8 +58,8 @@ func resourcesByIds(app *app.Application) *dataloader.Loader {
 			}
 
 			// fill array positions with errors where not found in DB
-			for _, ix := range keyOrder {
-				results[ix] = &dataloader.Result{Data: nil, Error: resource.ErrResourceNotFound}
+			for v, ix := range keyOrder {
+				results[ix] = &dataloader.Result{Data: nil, Error: apperror.NewNotFoundError("resource", v)}
 			}
 
 			// return results

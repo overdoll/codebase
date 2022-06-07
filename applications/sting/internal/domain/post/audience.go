@@ -1,18 +1,18 @@
 package post
 
 import (
-	"errors"
 	"github.com/go-playground/validator/v10"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
+	"time"
 
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 )
 
 var (
-	ErrAudienceNotFound      = errors.New("audience not found")
-	ErrAudienceSlugNotUnique = errors.New("audience slug is not unique")
+	ErrAudienceSlugNotUnique = domainerror.NewValidation("audience slug is not unique")
 )
 
 type Audience struct {
@@ -27,6 +27,8 @@ type Audience struct {
 	totalPosts int
 
 	standard bool
+
+	createdAt time.Time
 }
 
 func NewAudience(requester *principal.Principal, slug, title string, standard bool) (*Audience, error) {
@@ -61,6 +63,7 @@ func NewAudience(requester *principal.Principal, slug, title string, standard bo
 		totalLikes:          0,
 		totalPosts:          0,
 		standard:            standard,
+		createdAt:           time.Now(),
 	}, nil
 }
 
@@ -91,6 +94,10 @@ func (m *Audience) ThumbnailResourceId() *string {
 // IsStandard a "standard" audience is an audience that the majority will consume
 func (m *Audience) IsStandard() bool {
 	return m.standard
+}
+
+func (m *Audience) CreatedAt() time.Time {
+	return m.createdAt
 }
 
 func (m *Audience) UpdateTotalPosts(totalPosts int) error {
@@ -155,7 +162,7 @@ func (m *Audience) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalAudienceFromDatabase(id, slug string, title map[string]string, thumbnail *string, standard int, totalLikes, totalPosts int) *Audience {
+func UnmarshalAudienceFromDatabase(id, slug string, title map[string]string, thumbnail *string, standard int, totalLikes, totalPosts int, createdAt time.Time) *Audience {
 	return &Audience{
 		id:                  id,
 		slug:                slug,
@@ -164,6 +171,7 @@ func UnmarshalAudienceFromDatabase(id, slug string, title map[string]string, thu
 		title:               localization.UnmarshalTranslationFromDatabase(title),
 		thumbnailResourceId: thumbnail,
 		standard:            standard == 1,
+		createdAt:           createdAt,
 	}
 }
 
@@ -172,7 +180,7 @@ func validateAudienceTitle(name string) error {
 	err := validator.New().Var(name, "required,max=25")
 
 	if err != nil {
-		return err
+		return domainerror.NewValidation(err.Error())
 	}
 
 	return nil

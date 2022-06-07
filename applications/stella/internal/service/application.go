@@ -17,7 +17,7 @@ import (
 )
 
 func NewApplication(ctx context.Context) (*app.Application, func()) {
-	bootstrap.NewBootstrap(ctx)
+	bootstrap.NewBootstrap()
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 	loaderClient, cleanup2 := clients.NewLoaderClient(ctx, os.Getenv("LOADER_SERVICE"))
 	stingClient, cleanup3 := clients.NewStingClient(ctx, os.Getenv("STING_SERVICE"))
@@ -47,7 +47,7 @@ type ComponentTestApplication struct {
 }
 
 func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication {
-	bootstrap.NewBootstrap(ctx)
+	bootstrap.NewBootstrap()
 	temporalClient := &temporalmocks.Client{}
 
 	evaClient := &mocks.MockEvaClient{}
@@ -75,9 +75,10 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 func createApplication(ctx context.Context, eva command.EvaService, loader command.LoaderService, sting activities.StingService, carrier activities.CarrierService, client client.Client) *app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
+	cache := bootstrap.InitializeRedisSession()
 
 	esClient := bootstrap.InitializeElasticSearchSession()
-	clubRepo := adapters.NewClubCassandraElasticsearchRepository(session, esClient)
+	clubRepo := adapters.NewClubCassandraElasticsearchRepository(session, esClient, cache)
 	eventRepo := adapters.NewEventTemporalRepository(client)
 
 	return &app.Application{

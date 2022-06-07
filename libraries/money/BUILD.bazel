@@ -5,4 +5,5 @@ go_library(
     srcs = ["currency.go"],
     importpath = "overdoll/libraries/money",
     visibility = ["//visibility:public"],
+    deps = ["//libraries/errors/domainerror"],
 )

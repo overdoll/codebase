@@ -1,24 +1,32 @@
 package resource
 
 import (
+	"bytes"
+	"encoding/base64"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/CapsLock-Studio/go-webpbin"
 	"github.com/h2non/filetype"
+	"github.com/nfnt/resize"
 	ffmpeg_go "github.com/u2takey/ffmpeg-go"
+	"go.uber.org/zap"
 	"image"
+	"image/png"
 	_ "image/png"
 	"io"
+	"io/ioutil"
+	"log"
 	"math"
 	"os"
+	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/uuid"
+	"overdoll/libraries/zap_support/zap_adapters"
 	"strconv"
 )
 
 var (
-	ErrResourceNotFound   = errors.New("resource not found")
-	ErrFileTypeNotAllowed = errors.New("filetype not allowed")
+	ErrFileTypeNotAllowed = domainerror.NewValidation("filetype not allowed")
 )
 
 // accepted formats
@@ -31,6 +39,11 @@ var extensionsMap = map[string]string{
 	"video/mp4":  ".mp4",
 	"image/png":  ".png",
 	"image/webp": ".webp",
+}
+
+func init() {
+	// not ideal but we need to disable the log messages from ffmpeg-go
+	log.SetOutput(ioutil.Discard)
 }
 
 func ExtensionByType(tp string) (string, error) {
@@ -71,6 +84,8 @@ type Resource struct {
 	mimeTypes    []string
 	sizes        []int
 	resourceType Type
+
+	preview string
 }
 
 func NewImageProcessedResource(itemId, mimeType string, isPrivate bool, height, width int) (*Resource, error) {
@@ -121,7 +136,27 @@ func NewResource(itemId, id, mimeType string, isPrivate bool) (*Resource, error)
 		height:        0,
 		width:         0,
 		videoDuration: 0,
+		preview:       "",
 	}, nil
+}
+
+func createPreviewFromFile(r io.Reader) (string, error) {
+	img, err := png.Decode(r)
+
+	if err != nil {
+		return "", err
+	}
+
+	resizedImage := resize.Resize(10, 10, img, resize.Lanczos3)
+
+	buf := new(bytes.Buffer)
+	err = png.Encode(buf, resizedImage)
+
+	if err != nil {
+		return "", err
+	}
+
+	return "data:image/png;base64," + base64.StdEncoding.EncodeToString(buf.Bytes()), nil
 }
 
 // ProcessResource process resource - should be at a new Url and any additional mimetypes that are available
@@ -139,7 +174,7 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 	// do a mime type check on the file to make sure its an accepted file and to get our extension
 	kind, _ := filetype.Match(headBuffer)
 	if kind == filetype.Unknown {
-		return nil, fmt.Errorf("uknown file type: %s", kind)
+		return nil, errors.Wrap(err, "uknown file type")
 	}
 
 	var newFileName string
@@ -156,7 +191,7 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 		src, _, err := image.Decode(file)
 
 		if err != nil {
-			return nil, fmt.Errorf("failed to decode png %v", err)
+			return nil, errors.Wrap(err, "failed to decode png")
 		}
 
 		newFileExtension = ".webp"
@@ -173,7 +208,7 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 
 		if err := enc.Encode(newFile, src); err != nil {
 			_ = newFile.Close()
-			return nil, err
+			return nil, errors.Wrap(err, "failed to convert png to webp")
 		}
 
 		// our resource will contain 2 mimetypes - a PNG and a webp
@@ -191,6 +226,15 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 		r.height = cfgSrc.Height
 		r.width = cfgSrc.Width
 
+		_, _ = file.Seek(0, io.SeekStart)
+		preview, err := createPreviewFromFile(file)
+
+		if err != nil {
+			return nil, err
+		}
+
+		r.preview = preview
+
 	} else if kind.MIME.Value == "video/mp4" {
 		mimeTypes = append(mimeTypes, "video/mp4")
 
@@ -201,12 +245,18 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 			return nil, err
 		}
 
+		log := &zap_adapters.FfmpegGoLogErrorAdapter{
+			Output: *new([]byte),
+		}
+
 		if err := ffmpeg_go.Input(file.Name()).
 			Filter("select", ffmpeg_go.Args{fmt.Sprintf("gte(n,%d)", 5)}).
 			Output("pipe:", ffmpeg_go.KwArgs{"vframes": 1, "format": "image2", "vcodec": "png"}).
+			WithErrorOutput(log).
 			WithOutput(fileThumbnail).
 			Run(); err != nil {
-			return nil, err
+			zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(log.Output)))
+			return nil, errors.Wrap(err, "failed to process ffmpeg_go file")
 		}
 
 		videoThumb := "t-" + fileName
@@ -249,8 +299,19 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 		r.videoThumbnail = videoThumb
 		r.resourceType = Video
 
+		_, _ = fileThumbnail.Seek(0, io.SeekStart)
+		preview, err := createPreviewFromFile(fileThumbnail)
+
+		if err != nil {
+			return nil, err
+		}
+
+		_, _ = fileThumbnail.Seek(0, io.SeekStart)
+
+		r.preview = preview
+
 	} else {
-		return nil, fmt.Errorf("invalid resource format: %s", kind.MIME.Value)
+		return nil, errors.New(fmt.Sprintf("invalid resource format: %s", kind.MIME.Value))
 	}
 
 	fileKey := r.itemId + "/" + fileName
@@ -274,7 +335,7 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 	r.processed = true
 
 	if err := file.Close(); err != nil {
-		return nil, fmt.Errorf("failed to close file: %v", err)
+		return nil, errors.Wrap(err, "failed to close file")
 	}
 
 	return moveTargets, nil
@@ -330,6 +391,10 @@ func (r *Resource) VideoDuration() int {
 	return r.videoDuration
 }
 
+func (r *Resource) Preview() string {
+	return r.preview
+}
+
 func (r *Resource) IsImage() bool {
 	return r.resourceType == Image
 }
@@ -354,7 +419,7 @@ func (r *Resource) FullUrls() []*Url {
 	return r.urls
 }
 
-func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate bool, mimeTypes []string, processed bool, processedId string, videoDuration int, videoThumbnail, videoThumbnailMimeType string, width, height int, urls []*Url, videoThumbnailUrl *Url) *Resource {
+func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate bool, mimeTypes []string, processed bool, processedId string, videoDuration int, videoThumbnail, videoThumbnailMimeType string, width, height int, urls []*Url, videoThumbnailUrl *Url, preview string) *Resource {
 
 	typ, _ := TypeFromInt(tp)
 
@@ -373,5 +438,6 @@ func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate 
 		processed:              processed,
 		urls:                   urls,
 		videoThumbnailUrl:      videoThumbnailUrl,
+		preview:                preview,
 	}
 }

@@ -1,8 +1,6 @@
 package graphql
 
 import (
-	"context"
-	"errors"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/apollotracing"
@@ -10,9 +8,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler/lru"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/gin-gonic/gin"
-	"github.com/vektah/gqlparser/v2/gqlerror"
-	"go.uber.org/zap"
-	"overdoll/libraries/support"
+	"overdoll/libraries/sentry_support"
 )
 
 func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
@@ -20,30 +16,17 @@ func HandleGraphQL(schema graphql.ExecutableSchema) gin.HandlerFunc {
 		graphAPIHandler := handler.New(schema)
 
 		// set default error presenter to show 'internal server error'
-		graphAPIHandler.SetErrorPresenter(func(ctx context.Context, e error) *gqlerror.Error {
-			// notify bug tracker?
+		graphAPIHandler.SetErrorPresenter(sentry_support.GraphQLErrorPresenter)
 
-			err := graphql.DefaultErrorPresenter(ctx, e)
-
-			zap.S().Error("resolver failed ", err)
-
-			if !support.IsDebug() {
-				err.Message = "internal server error"
-			}
-
-			return err
-		})
-
-		graphAPIHandler.SetRecoverFunc(func(ctx context.Context, err interface{}) error {
-			// notify bug tracker?
-			zap.S().Error("resolver failed ", err)
-			return errors.New("internal server error")
-		})
+		graphAPIHandler.SetRecoverFunc(sentry_support.GraphQLRecoverFunc)
 
 		graphAPIHandler.Use(apollotracing.Tracer{})
 
 		// introspection is always allowed because these individual services are never actually exposed
 		graphAPIHandler.Use(extension.Introspection{})
+
+		// add sentry data as breadcrumbs
+		graphAPIHandler.AroundOperations(sentry_support.GraphQLAroundOperations)
 
 		graphAPIHandler.AddTransport(transport.POST{})
 

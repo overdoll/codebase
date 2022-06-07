@@ -2,9 +2,9 @@ package activities
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"overdoll/applications/loader/internal/domain/resource"
+	"overdoll/libraries/errors"
 )
 
 type ProcessResourcesInput struct {
@@ -43,7 +43,7 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 		targetsToMove, err := target.ProcessResource(file)
 
 		if err != nil {
-			return fmt.Errorf("failed to process resource: %v", err)
+			return errors.Wrap(err, "failed to process resource")
 		}
 
 		// upload the new resource

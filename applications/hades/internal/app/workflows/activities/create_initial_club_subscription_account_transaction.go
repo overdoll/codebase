@@ -2,7 +2,6 @@ package activities
 
 import (
 	"context"
-	"fmt"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/libraries/money"
 	"time"
@@ -54,7 +53,7 @@ func (h *Activities) CreateInitialClubSubscriptionAccountTransaction(ctx context
 	}
 
 	if err := h.billing.CreateAccountTransactionOperator(ctx, transaction); err != nil {
-		return fmt.Errorf("failed to create transaction history: %s", err)
+		return err
 	}
 
 	return nil

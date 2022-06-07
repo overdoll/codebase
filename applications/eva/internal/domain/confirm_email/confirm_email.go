@@ -1,9 +1,9 @@
 package confirm_email
 
 import (
-	"errors"
 	"github.com/go-playground/validator/v10"
 	"overdoll/libraries/crypt"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
 	"strings"
@@ -69,7 +69,7 @@ func (c *ConfirmEmail) ConfirmEmail(requester *principal.Principal, secret strin
 	}
 
 	if resultEmail != c.email {
-		return errors.New("invalid secret")
+		return domainerror.NewValidation("invalid secret")
 	}
 
 	c.confirmed = true
@@ -103,7 +103,7 @@ func validateEmail(email string) error {
 	err := validator.New().Var(email, "required,email")
 
 	if err != nil {
-		return err
+		return domainerror.NewValidation(err.Error())
 	}
 
 	return nil

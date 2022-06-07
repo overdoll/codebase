@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	eva "overdoll/applications/eva/proto"
+	"overdoll/libraries/errors"
 )
 
 type EvaGrpcSessionRepository struct {
@@ -18,7 +19,7 @@ func (s EvaGrpcSessionRepository) GetSession(ctx context.Context, sessionId stri
 	ss, err := s.client.GetSession(ctx, &eva.SessionRequest{Id: sessionId})
 
 	if err != nil {
-		return false, "", err
+		return false, "", errors.Wrap(err, "failed to get session")
 	}
 
 	return ss.Valid, ss.AccountId, nil
@@ -29,7 +30,7 @@ func (s EvaGrpcSessionRepository) RevokeSession(ctx context.Context, sessionId s
 	_, err := s.client.RevokeSession(ctx, &eva.SessionRequest{Id: sessionId})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to revoke session")
 	}
 
 	return nil
@@ -40,7 +41,7 @@ func (s EvaGrpcSessionRepository) CreateSession(ctx context.Context, accountId s
 	ss, err := s.client.CreateSession(ctx, &eva.CreateSessionRequest{AccountId: accountId})
 
 	if err != nil {
-		return "", err
+		return "", errors.Wrap(err, "failed to create session")
 	}
 
 	return ss.Id, nil

@@ -2,7 +2,6 @@ package ccbill
 
 import (
 	"bytes"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"io"
@@ -11,6 +10,7 @@ import (
 	"net/http"
 	"overdoll/applications/hades/internal/app"
 	"overdoll/applications/hades/internal/app/command"
+	"overdoll/libraries/sentry_support"
 	"overdoll/libraries/support"
 )
 
@@ -33,7 +33,7 @@ func Webhook(app *app.Application) gin.HandlerFunc {
 
 		trial := net.ParseIP(ip)
 		if trial.To4() == nil {
-			fmt.Println("invalid ip header")
+			zap.S().Infow("invalid ip header", zap.String("ip", ip))
 			c.Data(http.StatusBadRequest, "text", []byte("invalid ip header"))
 			return
 		}
@@ -52,7 +52,7 @@ func Webhook(app *app.Application) gin.HandlerFunc {
 		}
 
 		if !validIp {
-			fmt.Printf("bad ip: %s", ip)
+			zap.S().Infow("bad ip", zap.String("ip", ip))
 			c.Data(http.StatusBadRequest, "text", []byte("bad ip"))
 			return
 		}
@@ -71,6 +71,7 @@ func Webhook(app *app.Application) gin.HandlerFunc {
 			EventType: eventType,
 		}); err != nil {
 			zap.S().Errorw("ccbill webhook failed", zap.Error(err))
+			sentry_support.CaptureException(c.Request.Context(), err)
 			c.Data(http.StatusInternalServerError, "text", []byte("internal server error"))
 			return
 		}

@@ -4,7 +4,6 @@ CREATE TABLE IF NOT EXISTS accounts
     username                       text,
     email                          text,
     roles                          list<text>,
-    verified                       boolean,
     avatar_resource_id             text,
     locked                         boolean,
     locked_until                   timestamp,
@@ -14,6 +13,7 @@ CREATE TABLE IF NOT EXISTS accounts
     deleted                        boolean,
     last_username_edit             timestamp,
     multi_factor_enabled           boolean,
+    created_at                     timestamp,
     primary key ( id )
 );
 

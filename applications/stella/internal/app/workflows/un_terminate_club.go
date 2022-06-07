@@ -12,6 +12,7 @@ type UnTerminateClubInput struct {
 func UnTerminateClub(ctx workflow.Context, input UnTerminateClubInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -20,6 +21,7 @@ func UnTerminateClub(ctx workflow.Context, input UnTerminateClubInput) error {
 			ClubId: input.ClubId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to un terminate club", "Error", err)
 		return err
 	}
 
@@ -28,6 +30,7 @@ func UnTerminateClub(ctx workflow.Context, input UnTerminateClubInput) error {
 			ClubId: input.ClubId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to remove terminated club", "Error", err)
 		return err
 	}
 

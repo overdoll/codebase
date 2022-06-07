@@ -2,13 +2,15 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/parley/internal/domain/rule"
+	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/support"
 )
 
 var rulesTable = table.New(table.Metadata{
@@ -58,10 +60,11 @@ func (r RuleCassandraRepository) CreateRule(ctx context.Context, ruleItem *rule.
 	if err := r.session.
 		Query(rulesTable.Insert()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalRuleToDatabase(ruleItem)).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to create rule reason: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "CreateRule")
 	}
 
 	return nil
@@ -84,10 +87,11 @@ func (r RuleCassandraRepository) GetRules(ctx context.Context, cursor *paging.Cu
 	if err := builder.
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(data).
 		SelectRelease(&dbRules); err != nil {
-		return nil, fmt.Errorf("failed to get rules: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "GetRules")
 	}
 
 	var rulesItems []*rule.Rule
@@ -119,15 +123,16 @@ func (r RuleCassandraRepository) getRuleById(ctx context.Context, ruleId string)
 	if err := r.session.
 		Query(rulesTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&rules{Id: ruleId, Bucket: 0}).
 		GetRelease(&ruleSingle); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, rule.ErrRuleNotFound
+			return nil, apperror.NewNotFoundError("rule", ruleId)
 		}
 
-		return nil, fmt.Errorf("failed to get rule by id: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "getRuleById")
 	}
 
 	return rule.UnmarshalRuleFromDatabase(
@@ -162,10 +167,11 @@ func (r RuleCassandraRepository) updateRule(ctx context.Context, ruleId string, 
 			columns...,
 		)).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalRuleToDatabase(ruleItem)).
 		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to update rule: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "updateRule")
 	}
 
 	return ruleItem, nil

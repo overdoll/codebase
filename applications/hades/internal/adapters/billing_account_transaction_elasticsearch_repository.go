@@ -3,14 +3,14 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
-	"go.uber.org/zap"
 	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
+	"overdoll/libraries/support"
 	"time"
 )
 
@@ -49,7 +49,7 @@ func unmarshalAccountTransactionDocument(hit *elastic.SearchHit) (*billing.Accou
 	err := json.Unmarshal(hit.Source, &doc)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to unmarshal account transaction: %v", err)
+		return nil, errors.Wrap(err, "failed to unmarshal account transaction")
 	}
 
 	decrypted, err := decryptPaymentMethod(doc.EncryptedPaymentMethod)
@@ -159,7 +159,7 @@ func (r BillingCassandraElasticsearchRepository) GetAccountTransactionsCount(ctx
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to get transactions count: %v", err)
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed to get account transactions count")
 	}
 
 	return &response, nil
@@ -185,7 +185,7 @@ func (r BillingCassandraElasticsearchRepository) SearchAccountTransactions(ctx c
 		Index(AccountTransactionsIndexName)
 
 	if cursor == nil {
-		return nil, fmt.Errorf("cursor must be present")
+		return nil, paging.ErrCursorNotPresent
 	}
 
 	if err := cursor.BuildElasticsearch(builder, "created_at", "id", false); err != nil {
@@ -217,9 +217,7 @@ func (r BillingCassandraElasticsearchRepository) SearchAccountTransactions(ctx c
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Errorw("failed to search account transactions: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return nil, fmt.Errorf("failed to search account transactions: %v", err)
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed to search account transactions")
 	}
 
 	var transactions []*billing.AccountTransaction
@@ -299,7 +297,7 @@ func (r BillingCassandraElasticsearchRepository) IndexAllAccountTransactions(ctx
 				Do(ctx)
 
 			if err != nil {
-				return fmt.Errorf("failed to index account transaction: %v", err)
+				return errors.Wrap(support.ParseElasticError(err), "failed to index account transactions")
 			}
 		}
 
@@ -329,7 +327,7 @@ func (r BillingCassandraElasticsearchRepository) indexAccountTransaction(ctx con
 		Do(ctx)
 
 	if err != nil {
-		return fmt.Errorf("failed to index account transaction: %v", err)
+		return errors.Wrap(support.ParseElasticError(err), "failed to index account transaction")
 	}
 
 	return nil

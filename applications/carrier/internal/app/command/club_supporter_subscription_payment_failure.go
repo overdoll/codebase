@@ -2,7 +2,6 @@ package command
 
 import (
 	"context"
-	"github.com/pkg/errors"
 	"overdoll/applications/carrier/internal/domain/links"
 	"overdoll/applications/carrier/internal/domain/mailing"
 )
@@ -28,13 +27,13 @@ func (h ClubSupporterSubscriptionPaymentFailureHandler) Handle(ctx context.Conte
 	acc, err := h.eva.GetAccount(ctx, cmd.AccountId)
 
 	if err != nil {
-		return errors.Wrap(err, "failed to get account")
+		return err
 	}
 
 	clubDetails, err := h.stella.GetClub(ctx, cmd.ClubId)
 
 	if err != nil {
-		return errors.Wrap(err, "failed to get club")
+		return err
 	}
 
 	clubUrl, err := links.CreateClubUrl(clubDetails.Slug())

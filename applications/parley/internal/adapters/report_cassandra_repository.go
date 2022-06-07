@@ -2,7 +2,6 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
@@ -10,6 +9,8 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/parley/internal/domain/report"
 	"overdoll/libraries/bucket"
+	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/support"
 	"time"
@@ -68,23 +69,18 @@ func NewReportCassandraElasticsearchRepository(session gocqlx.Session, client *e
 	return ReportCassandraElasticsearchRepository{session: session, client: client}
 }
 
-func marshalPostReportToDatabase(report *report.PostReport) (*postReport, error) {
-
+func marshalPostReportToDatabase(report *report.PostReport) *postReport {
 	return &postReport{
 		Bucket:             bucket.MakeMonthlyBucketFromTimestamp(report.CreatedAt()),
 		PostId:             report.PostId(),
 		ReportingAccountId: report.ReportingAccountId(),
 		RuleId:             report.RuleId(),
-	}, nil
+	}
 }
 
 func (r ReportCassandraElasticsearchRepository) CreatePostReport(ctx context.Context, report *report.PostReport) error {
 
-	marshalledPostReport, err := marshalPostReportToDatabase(report)
-
-	if err != nil {
-		return err
-	}
+	marshalledPostReport := marshalPostReportToDatabase(report)
 
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
@@ -109,8 +105,9 @@ func (r ReportCassandraElasticsearchRepository) CreatePostReport(ctx context.Con
 		marshalledPostReport,
 	)
 
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to create report log: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "CreatePostReport")
 	}
 
 	if err := r.indexPostReport(ctx, report); err != nil {
@@ -127,6 +124,7 @@ func (r ReportCassandraElasticsearchRepository) GetPostReportById(ctx context.Co
 	if err := r.session.
 		Query(postReportTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&postReport{
 			PostId:             postId,
@@ -135,10 +133,10 @@ func (r ReportCassandraElasticsearchRepository) GetPostReportById(ctx context.Co
 		GetRelease(&postRep); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, report.ErrPostReportNotFound
+			return nil, apperror.NewNotFoundError("post report", postId+"-"+accountId)
 		}
 
-		return nil, fmt.Errorf("failed to get report for post: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "GetPostReportById")
 	}
 
 	rep := report.UnmarshalPostReportFromDatabase(
@@ -161,12 +159,13 @@ func (r ReportCassandraElasticsearchRepository) getPostReportsByAccountBuckets(c
 
 	if err := r.session.Query(postReportsByAccountBucketsTable.Select()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(postReport{
 			ReportingAccountId: accountId,
 		}).
 		SelectRelease(&buckets); err != nil {
-		return nil, fmt.Errorf("failed to get post reports by account buckets: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "getPostReportsByAccountBuckets")
 	}
 
 	var final []int
@@ -196,9 +195,10 @@ func (r ReportCassandraElasticsearchRepository) DeleteAccountData(ctx context.Co
 		if err := builder.
 			Query(r.session).
 			WithContext(ctx).
+			Idempotent(true).
 			BindStruct(postReport{Bucket: bucketId, ReportingAccountId: accountId}).
 			SelectRelease(&results); err != nil {
-			return fmt.Errorf("failed to search post reports: %v", err)
+			return errors.Wrap(support.NewGocqlError(err), "DeleteAccountData")
 		}
 
 		if len(results) == 0 {
@@ -223,7 +223,7 @@ func (r ReportCassandraElasticsearchRepository) DeleteAccountData(ctx context.Co
 		}
 
 		if err := r.session.ExecuteBatch(batch); err != nil {
-			return fmt.Errorf("failed to delete report log: %v", err)
+			return errors.Wrap(support.NewGocqlError(err), "DeleteAccountData: delete post reports")
 		}
 	}
 
@@ -233,12 +233,13 @@ func (r ReportCassandraElasticsearchRepository) DeleteAccountData(ctx context.Co
 		Where(qb.Eq("reporting_account_id")).
 		ToCql()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(postReport{
 			ReportingAccountId: accountId,
 		}).
 		SelectRelease(&buckets); err != nil {
-		return fmt.Errorf("failed to delete post reports by account buckets: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "DeleteAccountData: delete post reports by account buckets")
 	}
 
 	return nil

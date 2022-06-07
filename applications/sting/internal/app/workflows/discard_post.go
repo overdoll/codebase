@@ -12,12 +12,18 @@ type DiscardPostInput struct {
 func DiscardPost(ctx workflow.Context, input DiscardPostInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
-	return workflow.ExecuteActivity(ctx, a.DiscardPost,
+	if err := workflow.ExecuteActivity(ctx, a.DiscardPost,
 		activities.DiscardPostInput{
 			PostId: input.PostId,
 		},
-	).Get(ctx, nil)
+	).Get(ctx, nil); err != nil {
+		logger.Error("failed to discard post", "Error", err)
+		return err
+	}
+
+	return nil
 }

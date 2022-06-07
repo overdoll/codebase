@@ -3,11 +3,11 @@ package ccbill
 import (
 	"bytes"
 	_ "embed"
-	"errors"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"html/template"
 	"os"
 	hades "overdoll/applications/hades/proto"
+	"overdoll/libraries/errors"
 	"time"
 )
 

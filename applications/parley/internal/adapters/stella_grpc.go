@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	stella "overdoll/applications/stella/proto"
+	"overdoll/libraries/errors"
 )
 
 type StellaGrpc struct {
@@ -18,7 +19,7 @@ func (s StellaGrpc) GetClubById(ctx context.Context, clubId string) error {
 	_, err := s.client.GetClubById(ctx, &stella.GetClubByIdRequest{ClubId: clubId})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "stella - GetClubById")
 	}
 
 	return nil
@@ -44,7 +45,7 @@ func (s StellaGrpc) SuspendClub(ctx context.Context, clubId string, endTime int6
 	_, err := s.client.SuspendClub(ctx, &stella.SuspendClubRequest{ClubId: clubId, EndTimeUnix: endTime, Source: reason})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "stella - SuspendClub")
 	}
 
 	return nil

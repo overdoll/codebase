@@ -2,7 +2,7 @@ package passport
 
 import (
 	"context"
-	"errors"
+	"overdoll/libraries/errors/domainerror"
 	libraries_passport_v1 "overdoll/libraries/passport/proto"
 
 	"sync"
@@ -10,8 +10,8 @@ import (
 )
 
 var (
-	ErrNotAuthenticated = errors.New("not authenticated")
-	errExpired          = errors.New("passport expired")
+	ErrNotAuthenticated = domainerror.NewAuthorization("not authenticated")
+	errExpired          = domainerror.NewAuthorization("passport expired")
 )
 
 type Passport struct {

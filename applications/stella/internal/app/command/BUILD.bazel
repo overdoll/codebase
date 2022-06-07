@@ -28,6 +28,5 @@ go_library(
         "//applications/stella/internal/domain/club",
         "//applications/stella/internal/domain/event",
         "//libraries/principal",
-        "@com_github_pkg_errors//:errors",
     ],
 )

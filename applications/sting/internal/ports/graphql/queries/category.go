@@ -4,8 +4,8 @@ import (
 	"context"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/sting/internal/app/query"
-	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/applications/sting/internal/ports/graphql/types"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
@@ -42,7 +42,7 @@ func (r *QueryResolver) Category(ctx context.Context, slug string) (*types.Categ
 
 	if err != nil {
 
-		if err == post.ErrCategoryNotFound {
+		if apperror.IsNotFoundError(err) {
 			return nil, nil
 		}
 

@@ -24,7 +24,7 @@ func createSeed(config SeederConfig) *cobra.Command {
 			ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
 			defer cancelFn()
 
-			bootstrap.NewBootstrap(ctx)
+			bootstrap.NewBootstrap()
 
 			session := bootstrap.InitializeDatabaseSession()
 
@@ -37,7 +37,7 @@ func createSeed(config SeederConfig) *cobra.Command {
 			fm, err := fs.Glob(config.SeederFiles, "*.json")
 
 			if err != nil {
-				zap.S().Fatal("failed to open seeder files", zap.Error(err))
+				zap.S().Fatalw("failed to open seeder files", zap.Error(err))
 			}
 
 			for _, path := range fm {
@@ -46,7 +46,7 @@ func createSeed(config SeederConfig) *cobra.Command {
 
 				file, err := config.SeederFiles.Open(path)
 				if err != nil {
-					zap.S().Fatal("error opening file", zap.Error(err))
+					zap.S().Fatalw("error opening file", zap.Error(err))
 				}
 
 				data, err := ioutil.ReadAll(file)
@@ -54,7 +54,7 @@ func createSeed(config SeederConfig) *cobra.Command {
 				file.Close()
 
 				if err != nil {
-					zap.S().Fatal("error reading file", zap.Error(err))
+					zap.S().Fatalw("error reading file", zap.Error(err))
 				}
 
 				var obj []map[string]interface{}
@@ -63,7 +63,7 @@ func createSeed(config SeederConfig) *cobra.Command {
 				err = json.Unmarshal(data, &obj)
 
 				if err != nil {
-					zap.S().Fatal("error reading json", zap.Error(err))
+					zap.S().Fatalw("error reading json", zap.Error(err))
 				}
 
 				// Insert into table, based on the filename (filename determines table)
@@ -72,7 +72,7 @@ func createSeed(config SeederConfig) *cobra.Command {
 					jsonStr, err := json.Marshal(row)
 
 					if err != nil {
-						zap.S().Fatal("error converting to json", zap.Error(err))
+						zap.S().Fatalw("error converting to json", zap.Error(err))
 					}
 
 					batch.Entries = append(batch.Entries, gocql.BatchEntry{
@@ -86,15 +86,15 @@ func createSeed(config SeederConfig) *cobra.Command {
 			}
 
 			if err = session.ExecuteBatch(batch); err != nil {
-				zap.S().Fatal("failed to insert rows", zap.Error(err))
+				zap.S().Fatalw("failed to insert rows", zap.Error(err))
 			}
 
 			if err := config.SeederCallbacks(ctx, session); err != nil {
-				zap.S().Fatal("failed to run seeder callbacks", zap.Error(err))
+				zap.S().Fatalw("failed to run seeder callbacks", zap.Error(err))
 			}
 
 			zap.S().Infof(
-				"sucessfuly seeded [%s] rows in %s ",
+				"successfully seeded [%s] rows in %s!",
 				strconv.Itoa(count),
 				time.Since(start).Truncate(time.Millisecond),
 			)

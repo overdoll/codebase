@@ -2,7 +2,6 @@ package command
 
 import (
 	"context"
-	"github.com/pkg/errors"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/principal"
 )
@@ -31,7 +30,7 @@ func (h AddPostContentHandler) Handle(ctx context.Context, cmd AddPostContent) (
 		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.PostId, cmd.Content, true)
 
 		if err != nil {
-			return errors.Wrap(err, "failed to create processed resources from uploads")
+			return err
 		}
 
 		return post.AddContentRequest(cmd.Principal, resourceIds)

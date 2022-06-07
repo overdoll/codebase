@@ -2,6 +2,7 @@ package account
 
 import (
 	"crypto/rand"
+	"overdoll/libraries/errors"
 
 	"overdoll/libraries/principal"
 )
@@ -56,7 +57,7 @@ func GenerateRecoveryCodeSet() ([]*RecoveryCode, error) {
 		code, err := randomString()
 
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "error generating random string")
 		}
 
 		recoveryCodes = append(recoveryCodes, NewRecoveryCode(code))

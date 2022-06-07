@@ -17,6 +17,7 @@ type AddPostLikeInput struct {
 func AddPostLike(ctx workflow.Context, input AddPostLikeInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -27,6 +28,7 @@ func AddPostLike(ctx workflow.Context, input AddPostLikeInput) error {
 			LikedAt:   input.LikedAt,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to create post like", "Error", err)
 		return err
 	}
 
@@ -35,13 +37,14 @@ func AddPostLike(ctx workflow.Context, input AddPostLikeInput) error {
 			PostId: input.PostId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to add like to post", "Error", err)
 		return err
 	}
 
 	// spawn a child workflow asynchronously to count the total likes
 	// will also ensure we only have 1 of this workflow running at any time
 	childWorkflowOptions := workflow.ChildWorkflowOptions{
-		WorkflowID:        "UpdatePostTagsTotalLikesCount_" + input.PostId,
+		WorkflowID:        "sting.UpdatePostTagsTotalLikesCount_" + input.PostId,
 		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
 	}
 
@@ -54,6 +57,7 @@ func AddPostLike(ctx workflow.Context, input AddPostLikeInput) error {
 	).
 		GetChildWorkflowExecution().
 		Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+		logger.Error("failed to update post tags total likes count", "Error", err)
 		return err
 	}
 

@@ -5,15 +5,12 @@ go_library(
     srcs = [
         "data_converter.go",
         "encrypt.go",
-        "zap_adapter.go",
     ],
     importpath = "overdoll/libraries/temporal_support",
     visibility = ["//visibility:public"],
     deps = [
         "@io_temporal_go_api//common/v1:common",
         "@io_temporal_go_sdk//converter",
-        "@io_temporal_go_sdk//log",
-        "@org_uber_go_zap//:zap",
     ],
 )
 

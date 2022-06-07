@@ -1,7 +1,7 @@
 package resource
 
 import (
-	"errors"
+	"overdoll/libraries/errors/domainerror"
 	"strconv"
 )
 
@@ -27,5 +27,5 @@ func TypeFromInt(i int) (Type, error) {
 		return Video, nil
 	}
 
-	return Unknown, errors.New("unknown type: " + strconv.Itoa(i))
+	return Unknown, domainerror.NewValidation("unknown type: " + strconv.Itoa(i))
 }

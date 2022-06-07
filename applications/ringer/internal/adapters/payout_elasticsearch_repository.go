@@ -3,13 +3,14 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
 	"overdoll/applications/ringer/internal/domain/payout"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
+	"overdoll/libraries/support"
 	"time"
 )
 
@@ -26,6 +27,8 @@ type clubPayoutDocument struct {
 	ClubId             string                    `json:"club_id"`
 	Currency           string                    `json:"currency"`
 	Amount             uint64                    `json:"amount"`
+	CoverFeeAmount     uint64                    `json:"cover_fee_amount"`
+	TotalAmount        uint64                    `json:"total_amount"`
 	PayoutAccountId    string                    `json:"payout_account_id"`
 	DepositRequestId   string                    `json:"deposit_request_id"`
 	CreatedAt          time.Time                 `json:"created_at"`
@@ -39,10 +42,8 @@ func unmarshalClubPayoutDocument(hit *elastic.SearchHit) (*payout.ClubPayout, er
 
 	var doc clubPayoutDocument
 
-	err := json.Unmarshal(hit.Source, &doc)
-
-	if err != nil {
-		return nil, fmt.Errorf("failed to unmarshal club payout: %v", err)
+	if err := json.Unmarshal(hit.Source, &doc); err != nil {
+		return nil, errors.Wrap(err, "failed to unmarshal club payout")
 	}
 
 	var events []*payout.ClubPayoutEvent
@@ -61,6 +62,8 @@ func unmarshalClubPayoutDocument(hit *elastic.SearchHit) (*payout.ClubPayout, er
 		doc.ClubId,
 		doc.Currency,
 		doc.Amount,
+		doc.CoverFeeAmount,
+		doc.TotalAmount,
 		doc.DepositDate,
 		doc.PayoutAccountId,
 		doc.DepositRequestId,
@@ -93,6 +96,8 @@ func marshalClubPayoutToDocument(pay *payout.ClubPayout) (*clubPayoutDocument, e
 		ClubId:             pay.ClubId(),
 		Currency:           pay.Currency().String(),
 		Amount:             pay.Amount(),
+		CoverFeeAmount:     pay.CoverFeeAmount(),
+		TotalAmount:        pay.TotalAmount(),
 		PayoutAccountId:    pay.PayoutAccountId(),
 		DepositRequestId:   pay.DepositRequestId(),
 		CreatedAt:          pay.CreatedAt(),
@@ -107,7 +112,7 @@ func (r PayoutCassandraElasticsearchRepository) SearchClubPayouts(ctx context.Co
 		Index(ClubPayoutsIndexName)
 
 	if cursor == nil {
-		return nil, fmt.Errorf("cursor must be present")
+		return nil, paging.ErrCursorNotPresent
 	}
 
 	if err := cursor.BuildElasticsearch(builder, "created_at", "id", false); err != nil {
@@ -164,7 +169,7 @@ func (r PayoutCassandraElasticsearchRepository) SearchClubPayouts(ctx context.Co
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to search club payouts: %v", err)
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed to search club payouts")
 	}
 
 	var pays []*payout.ClubPayout
@@ -223,6 +228,8 @@ func (r PayoutCassandraElasticsearchRepository) IndexAllClubPayouts(ctx context.
 				ClubId:             pay.ClubId,
 				Currency:           pay.Currency,
 				Amount:             pay.Amount,
+				CoverFeeAmount:     pay.CoverFeeAmount,
+				TotalAmount:        pay.TotalAmount,
 				PayoutAccountId:    pay.PayoutAccountId,
 				DepositRequestId:   pay.DepositRequestId,
 				CreatedAt:          pay.CreatedAt,
@@ -238,7 +245,7 @@ func (r PayoutCassandraElasticsearchRepository) IndexAllClubPayouts(ctx context.
 				Do(ctx)
 
 			if err != nil {
-				return fmt.Errorf("failed to index club payouts: %v", err)
+				return errors.Wrap(support.ParseElasticError(err), "failed to index club payouts")
 			}
 		}
 
@@ -268,7 +275,7 @@ func (r PayoutCassandraElasticsearchRepository) indexClubPayout(ctx context.Cont
 		Do(ctx)
 
 	if err != nil {
-		return fmt.Errorf("failed to index club payout: %v", err)
+		return errors.Wrap(support.ParseElasticError(err), "failed to index club payout")
 	}
 
 	return nil

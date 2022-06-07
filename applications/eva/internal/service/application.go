@@ -59,7 +59,7 @@ type ComponentTestApplication struct {
 }
 
 func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication {
-	bootstrap.NewBootstrap(ctx)
+	bootstrap.NewBootstrap()
 	temporalClient := &temporalmocks.Client{}
 
 	carrierClient := &mocks.MockCarrierClient{}
@@ -101,7 +101,7 @@ func createApplication(
 	client client.Client,
 ) *app.Application {
 
-	bootstrap.NewBootstrap(ctx)
+	bootstrap.NewBootstrap()
 
 	session := bootstrap.InitializeDatabaseSession()
 
@@ -110,7 +110,7 @@ func createApplication(
 	db, err := geoip2.Open(config.GetFilePath(os.Getenv("GEOIP_DATABASE_LOCATION")))
 
 	if err != nil {
-		zap.S().Fatal("failed to open database", zap.Error(err))
+		zap.S().Fatalw("failed to open database", zap.Error(err))
 	}
 
 	tokenRepo := adapters.NewAuthenticationTokenRedisRepository(redis)

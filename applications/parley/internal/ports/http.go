@@ -28,9 +28,7 @@ func (s GraphQLServer) PrincipalById(ctx context.Context, id string) (*principal
 
 func NewHttpServer(app *app.Application) http.Handler {
 
-	rtr := router.NewGinRouter()
-
-	rtr.Use(principal.GinPrincipalRequestMiddleware(GraphQLServer{app: app}))
+	rtr := router.NewGinRouter(GraphQLServer{app: app})
 
 	rtr.POST("/api/graphql",
 		graphql.HandleGraphQL(gen.NewExecutableSchema(gen.Config{

@@ -3,9 +3,11 @@ package adapters
 import (
 	"context"
 	"github.com/spf13/viper"
+	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/principal"
 	"time"
 )
@@ -21,8 +23,9 @@ func NewEventTemporalRepository(client client.Client) EventTemporalRepository {
 func (r EventTemporalRepository) PublishPost(ctx context.Context, postId string) error {
 
 	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "PublishPost_" + postId,
+		TaskQueue:             viper.GetString("temporal.queue"),
+		ID:                    "sting.PublishPost_" + postId,
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.PublishPost, workflows.PublishPostInput{
@@ -30,7 +33,7 @@ func (r EventTemporalRepository) PublishPost(ctx context.Context, postId string)
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to run publish post workflow")
 	}
 
 	return nil
@@ -39,8 +42,9 @@ func (r EventTemporalRepository) PublishPost(ctx context.Context, postId string)
 func (r EventTemporalRepository) DiscardPost(ctx context.Context, postId string) error {
 
 	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "DiscardPost_" + postId,
+		TaskQueue:             viper.GetString("temporal.queue"),
+		ID:                    "sting.DiscardPost_" + postId,
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.DiscardPost, workflows.DiscardPostInput{
@@ -48,7 +52,7 @@ func (r EventTemporalRepository) DiscardPost(ctx context.Context, postId string)
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute discard post workflow")
 	}
 
 	return nil
@@ -61,8 +65,9 @@ func (r EventTemporalRepository) DeletePost(ctx context.Context, requester *prin
 	}
 
 	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "DeletePost_" + pst.ID(),
+		TaskQueue:             viper.GetString("temporal.queue"),
+		ID:                    "sting.DeletePost_" + pst.ID(),
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.DeletePost, workflows.DeletePostInput{
@@ -70,7 +75,7 @@ func (r EventTemporalRepository) DeletePost(ctx context.Context, requester *prin
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute delete post workflow")
 	}
 
 	return nil
@@ -84,7 +89,7 @@ func (r EventTemporalRepository) ArchivePost(ctx context.Context, requester *pri
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "ArchivePost_" + pst.ID(),
+		ID:        "sting.ArchivePost_" + pst.ID(),
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ArchivePost, workflows.ArchivePostInput{
@@ -92,7 +97,7 @@ func (r EventTemporalRepository) ArchivePost(ctx context.Context, requester *pri
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute archive post workflow")
 	}
 
 	return nil
@@ -106,7 +111,7 @@ func (r EventTemporalRepository) UnArchivePost(ctx context.Context, requester *p
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "UnArchivePost_" + pst.ID(),
+		ID:        "sting.UnArchivePost_" + pst.ID(),
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.UnArchivePost, workflows.UnArchivePostInput{
@@ -114,7 +119,7 @@ func (r EventTemporalRepository) UnArchivePost(ctx context.Context, requester *p
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute un archive post workflow")
 	}
 
 	return nil
@@ -123,8 +128,9 @@ func (r EventTemporalRepository) UnArchivePost(ctx context.Context, requester *p
 func (r EventTemporalRepository) RemovePost(ctx context.Context, postId string) error {
 
 	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "RemovePost_" + postId,
+		TaskQueue:             viper.GetString("temporal.queue"),
+		ID:                    "sting.RemovePost_" + postId,
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.RemovePost, workflows.RemovePostInput{
@@ -132,7 +138,7 @@ func (r EventTemporalRepository) RemovePost(ctx context.Context, postId string) 
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute remove post workflow")
 	}
 
 	return nil
@@ -141,8 +147,9 @@ func (r EventTemporalRepository) RemovePost(ctx context.Context, postId string) 
 func (r EventTemporalRepository) SubmitPost(ctx context.Context, requester *principal.Principal, pst *post.Post, submitTime time.Time) error {
 
 	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "SubmitPost_" + pst.ID(),
+		TaskQueue:             viper.GetString("temporal.queue"),
+		ID:                    "sting.SubmitPost_" + pst.ID(),
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.SubmitPost, workflows.SubmitPostInput{
@@ -151,7 +158,7 @@ func (r EventTemporalRepository) SubmitPost(ctx context.Context, requester *prin
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute submit post workflow")
 	}
 
 	return nil
@@ -161,7 +168,7 @@ func (r EventTemporalRepository) AddPostLike(ctx context.Context, like *post.Lik
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "AddPostLike_" + like.PostId() + "_" + like.AccountId(),
+		ID:        "sting.AddPostLike_" + like.PostId() + "_" + like.AccountId(),
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.AddPostLike, workflows.AddPostLikeInput{
@@ -171,7 +178,7 @@ func (r EventTemporalRepository) AddPostLike(ctx context.Context, like *post.Lik
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute add post like workflow")
 	}
 
 	return nil
@@ -181,7 +188,7 @@ func (r EventTemporalRepository) RemovePostLike(ctx context.Context, like *post.
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "RemovePostLike_" + like.PostId() + "_" + like.AccountId(),
+		ID:        "sting.RemovePostLike_" + like.PostId() + "_" + like.AccountId(),
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.RemovePostLike, workflows.RemovePostLikeInput{
@@ -190,7 +197,7 @@ func (r EventTemporalRepository) RemovePostLike(ctx context.Context, like *post.
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute remove post like workflow")
 	}
 
 	return nil
@@ -200,7 +207,7 @@ func (r EventTemporalRepository) DeleteAccountData(ctx context.Context, accountI
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "DeleteAccountData_" + accountId,
+		ID:        "sting.DeleteAccountData_" + accountId,
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.DeleteAccountData, workflows.DeleteAccountDataInput{
@@ -208,7 +215,7 @@ func (r EventTemporalRepository) DeleteAccountData(ctx context.Context, accountI
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute delete account data workflow")
 	}
 
 	return nil

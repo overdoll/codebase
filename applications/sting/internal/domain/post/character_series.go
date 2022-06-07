@@ -1,18 +1,18 @@
 package post
 
 import (
-	"errors"
 	"github.com/go-playground/validator/v10"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
+	"time"
 
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 )
 
 var (
-	ErrSeriesNotFound      = errors.New("series not found")
-	ErrSeriesSlugNotUnique = errors.New("series slug is not unique")
+	ErrSeriesSlugNotUnique = domainerror.NewValidation("series slug is not unique")
 )
 
 type Series struct {
@@ -25,6 +25,8 @@ type Series struct {
 
 	totalLikes int
 	totalPosts int
+
+	createdAt time.Time
 }
 
 func NewSeries(requester *principal.Principal, slug, title string) (*Series, error) {
@@ -58,6 +60,7 @@ func NewSeries(requester *principal.Principal, slug, title string) (*Series, err
 		thumbnailResourceId: nil,
 		totalLikes:          0,
 		totalPosts:          0,
+		createdAt:           time.Now(),
 	}, nil
 }
 
@@ -83,6 +86,10 @@ func (m *Series) TotalLikes() int {
 
 func (m *Series) TotalPosts() int {
 	return m.totalPosts
+}
+
+func (m *Series) CreatedAt() time.Time {
+	return m.createdAt
 }
 
 func (m *Series) UpdateTotalPosts(totalPosts int) error {
@@ -136,7 +143,7 @@ func (m *Series) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalSeriesFromDatabase(id, slug string, title map[string]string, thumbnail *string, totalLikes, totalPosts int) *Series {
+func UnmarshalSeriesFromDatabase(id, slug string, title map[string]string, thumbnail *string, totalLikes, totalPosts int, createdAt time.Time) *Series {
 	return &Series{
 		id:                  id,
 		slug:                slug,
@@ -144,6 +151,7 @@ func UnmarshalSeriesFromDatabase(id, slug string, title map[string]string, thumb
 		thumbnailResourceId: thumbnail,
 		totalLikes:          totalLikes,
 		totalPosts:          totalPosts,
+		createdAt:           createdAt,
 	}
 }
 
@@ -152,7 +160,7 @@ func validateSeriesTitle(title string) error {
 	err := validator.New().Var(title, "required,max=25")
 
 	if err != nil {
-		return err
+		return domainerror.NewValidation(err.Error())
 	}
 
 	return nil

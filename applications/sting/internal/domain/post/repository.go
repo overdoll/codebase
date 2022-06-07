@@ -17,15 +17,15 @@ type Repository interface {
 	GetPostLikeById(ctx context.Context, requester *principal.Principal, postId, accountId string) (*Like, error)
 	GetPostLikeByIdOperator(ctx context.Context, postId, accountId string) (*Like, error)
 
+	UpdatePost(ctx context.Context, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostContent(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostCategories(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostCharacters(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
-
+	UpdatePostContentAndState(ctx context.Context, id string, updateFn func(pending *Post) error) error
 	UpdatePostContentOperator(ctx context.Context, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostLikesOperator(ctx context.Context, id string, updateFn func(pending *Post) error) (*Post, error)
 
-	UpdatePost(ctx context.Context, postId string, updateFn func(post *Post) error) (*Post, error)
 	DeletePost(ctx context.Context, postId string) error
 
 	CreateCharacter(ctx context.Context, requester *principal.Principal, character *Character) error

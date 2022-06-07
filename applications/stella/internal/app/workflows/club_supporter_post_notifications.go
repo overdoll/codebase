@@ -14,6 +14,7 @@ type ClubSupporterPostNotificationsInput struct {
 func ClubSupporterPostNotifications(ctx workflow.Context, input ClubSupporterPostNotificationsInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -25,6 +26,7 @@ func ClubSupporterPostNotifications(ctx workflow.Context, input ClubSupporterPos
 
 	// wait until we are 3/4ths of the time there to send the notification
 	if err := workflow.Sleep(ctx, mostTimePassed); err != nil {
+		logger.Error("failed to sleep", "Error", err)
 		return err
 	}
 
@@ -35,6 +37,7 @@ func ClubSupporterPostNotifications(ctx workflow.Context, input ClubSupporterPos
 			DurationPassed: mostTimePassed,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to send club supporter required post reminder notification", "Error", err)
 		return err
 	}
 
@@ -49,6 +52,7 @@ func ClubSupporterPostNotifications(ctx workflow.Context, input ClubSupporterPos
 			ClubId: input.ClubId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed send club supporter no posts notification", "Error", err)
 		return err
 	}
 

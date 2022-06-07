@@ -48,6 +48,13 @@ type GetOrCreateCCBillSubscriptionAndCheckForDuplicatesPayload struct {
 
 func (h *Activities) GetOrCreateCCBillSubscriptionAndCheckForDuplicates(ctx context.Context, input GetOrCreateCCBillSubscriptionAndCheckForDuplicatesInput) (*GetOrCreateCCBillSubscriptionAndCheckForDuplicatesPayload, error) {
 
+	// make sure view subscription status works here
+	_, err := h.ccbill.ViewSubscriptionStatus(ctx, input.CCBillSubscriptionId)
+
+	if err != nil {
+		return nil, err
+	}
+
 	// if we reached here, we have a brand-new subscription, so we construct it
 
 	card, err := billing.NewCard(input.CardBin, input.CardType, input.CardLast4, input.CardExpirationDate)

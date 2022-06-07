@@ -5,5 +5,10 @@ import (
 )
 
 func (h *Activities) RingerDeleteAccountData(ctx context.Context, accountId string) error {
-	return h.ringer.DeleteAccountData(ctx, accountId)
+
+	if err := h.ringer.DeleteAccountData(ctx, accountId); err != nil {
+		return err
+	}
+
+	return nil
 }

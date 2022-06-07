@@ -26,6 +26,7 @@ import prepass from 'react-ssr-prepass'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
 import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'
 import Head from 'next/head'
+import * as Fathom from 'fathom-client'
 import '@fontsource/inter/400.css'
 import '@fontsource/inter/600.css'
 import '@fontsource/source-code-pro/400.css'
@@ -84,6 +85,31 @@ const MyApp = ({
   if (CanUseDOM) {
     globalRelayEnvironment = environment
   }
+
+  // fathom setup for tracking users
+  useEffect(() => {
+    const trackingCode: string = process.env.NEXT_PUBLIC_FATHOM_TRACKING_CODE as string
+
+    if (trackingCode !== '') {
+      Fathom.load(trackingCode, {
+        includedDomains: [process.env.NEXT_PUBLIC_FATHOM_DOMAIN as string]
+      })
+    }
+
+    function onRouteChangeComplete (): void {
+      if (trackingCode !== '') {
+        Fathom.trackPageview()
+      }
+    }
+
+    // Record a pageview when route changes
+    router.events.on('routeChangeComplete', onRouteChangeComplete)
+
+    // Unassign event listener
+    return () => {
+      router.events.off('routeChangeComplete', onRouteChangeComplete)
+    }
+  }, [])
 
   useEffect(() => {
     if ('serviceWorker' in navigator) {

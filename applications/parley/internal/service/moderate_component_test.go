@@ -208,13 +208,7 @@ func TestModeratePost_reject(t *testing.T) {
 
 	var rejectPost RejectPost
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.RejectPost, workflows.RejectPostInput{
-		AccountId: accountId,
-		PostId:    postId,
-		ClubId:    postId,
-		RuleId:    rule.ID(),
-		Notes:     &notes,
-	})
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.RejectPost, mock.Anything)
 
 	err := client.Mutate(context.Background(), &rejectPost, map[string]interface{}{
 		"input": types.RejectPostInput{
@@ -259,36 +253,27 @@ func TestModeratePost_reject_with_infraction(t *testing.T) {
 	client := getHttpClientWithAuthenticatedAccount(t, accountId)
 
 	postId := uuid.New().String()
-	postIdRelay := convertPostIdToRelayId(postId)
 	clubId := convertClubIdToRelayId(postId)
 
 	rule := seedRuleInfraction(t)
-	ruleIdRelay := convertRuleIdToRelayId(rule.ID())
 	seedPostModerator(t, accountId, postId)
 
 	postModeratorQueue := accountPostModeratorQueue(t, client, accountId)
 	require.Len(t, postModeratorQueue.Entities[0].Account.PostModeratorQueue.Edges, 1, "should be in queue")
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.RejectPost, workflows.RejectPostInput{
-		AccountId: accountId,
-		PostId:    postId,
-		ClubId:    postId,
-		RuleId:    rule.ID(),
-		Notes:     nil,
+	env := getWorkflowEnvironment()
+
+	env.ExecuteWorkflow(workflows.RejectPost, workflows.RejectPostInput{
+		AccountId:  accountId,
+		PostId:     postId,
+		ClubId:     postId,
+		RuleId:     rule.ID(),
+		Notes:      nil,
+		RejectedAt: time.Now(),
 	})
 
-	var rejectPost RejectPost
-
-	err := client.Mutate(context.Background(), &rejectPost, map[string]interface{}{
-		"input": types.RejectPostInput{
-			PostID: postIdRelay,
-			RuleID: ruleIdRelay,
-		},
-	})
-
-	require.NoError(t, err, "no error rejecting a post with infraction")
-
-	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+	require.True(t, env.IsWorkflowCompleted(), "workflow should be completed")
+	require.NoError(t, env.GetWorkflowError(), "no error executing the workflow")
 
 	clubInfractionHistory := getClubInfractionHistory(t, client, clubId)
 

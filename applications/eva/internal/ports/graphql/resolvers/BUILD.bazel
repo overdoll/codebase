@@ -11,9 +11,9 @@ go_library(
     deps = [
         "//applications/eva/internal/app",
         "//applications/eva/internal/app/query",
-        "//applications/eva/internal/domain/account",
         "//applications/eva/internal/domain/session",
         "//applications/eva/internal/ports/graphql/types",
+        "//libraries/errors/apperror",
         "//libraries/graphql/relay",
         "//libraries/paging",
         "//libraries/passport",

@@ -106,7 +106,7 @@ func TestCreateClub_and_check_permission(t *testing.T) {
 		Return(nil)
 
 	application.TemporalClient.
-		On("GetWorkflow", mock.Anything, "CreateClub_"+testingAccountId, mock.Anything).
+		On("GetWorkflow", mock.Anything, "stella.CreateClub_"+testingAccountId, mock.Anything).
 		// on GetWorkflow command, this would check if the workflow was completed
 		// so we run our workflow to make sure it's completed
 		Run(

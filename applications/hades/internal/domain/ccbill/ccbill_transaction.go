@@ -57,7 +57,7 @@ func decryptCCBillTransaction(content string) (*hades.CCBillTransaction, error) 
 	newPaymentMessage := &hades.CCBillTransaction{}
 	err = proto.Unmarshal(decrypted, newPaymentMessage)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	return newPaymentMessage, nil

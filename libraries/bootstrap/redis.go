@@ -2,6 +2,8 @@ package bootstrap
 
 import (
 	"os"
+	"overdoll/libraries/errors"
+	"overdoll/libraries/sentry_support"
 
 	"github.com/go-redis/redis/v8"
 	"github.com/spf13/viper"
@@ -13,7 +15,8 @@ func InitializeRedisSession() *redis.Client {
 	client, err := initializeRedisSession(viper.GetInt("redis.db"))
 
 	if err != nil {
-		zap.S().Fatal("redis session failed", zap.Error(err))
+		sentry_support.MustCaptureException(errors.Wrap(err, "redis session failed"))
+		zap.S().Fatalw("redis session failed", zap.Error(err))
 	}
 
 	return client
@@ -22,21 +25,9 @@ func InitializeRedisSession() *redis.Client {
 func initializeRedisSession(db int) (*redis.Client, error) {
 
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     os.Getenv("REDIS_HOST") + ":6379",
-		Password: "", // no password set
-		DB:       db, // use default DB
+		Addr: os.Getenv("REDIS_HOST") + ":6379",
+		DB:   db,
 	})
 
 	return rdb, nil
-}
-
-func InitializeRedisSessionWithCustomDB(db int) *redis.Client {
-
-	client, err := initializeRedisSession(db)
-
-	if err != nil {
-		zap.S().Fatal("redis session failed", zap.Error(err))
-	}
-
-	return client
 }

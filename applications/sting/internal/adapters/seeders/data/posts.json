@@ -19,6 +19,7 @@
     "posted_at": "2022-02-23 21:56:05.930",
     "series_ids": [],
     "state": "PUBLISHED",
+    "supporter_only_status": "NONE",
     "likes_last_update_id": "5bfbcb5f-cd83-11ec-a8ea-520fda81e34b",
     "likes": 0
   },
@@ -42,6 +43,7 @@
     "posted_at": "2022-02-23 21:56:05.930",
     "series_ids": [],
     "state": "PUBLISHED",
+    "supporter_only_status": "NONE",
     "likes_last_update_id": "5bfbcb5f-cd83-11ec-a8ea-520fda81e34b",
     "likes": 0
   }

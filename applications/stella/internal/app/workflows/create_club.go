@@ -15,6 +15,7 @@ type CreateClubInput struct {
 func CreateClub(ctx workflow.Context, input CreateClubInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -27,6 +28,7 @@ func CreateClub(ctx workflow.Context, input CreateClubInput) error {
 			OwnerAccountId: input.OwnerAccountId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to create club", "Error", err)
 		return err
 	}
 

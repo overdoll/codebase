@@ -13,9 +13,9 @@ go_library(
     deps = [
         "//applications/hades/internal/app",
         "//applications/hades/internal/app/query",
-        "//applications/hades/internal/domain/billing",
         "//applications/hades/internal/domain/ccbill",
         "//applications/hades/internal/ports/graphql/types",
+        "//libraries/errors/apperror",
         "//libraries/graphql",
         "//libraries/graphql/relay",
         "//libraries/paging",

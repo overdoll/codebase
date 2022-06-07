@@ -3,14 +3,15 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
 	"overdoll/applications/stella/internal/domain/club"
+	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
+	"overdoll/libraries/support"
 	"time"
 )
 
@@ -25,7 +26,7 @@ type clubMembersDocument struct {
 
 const ClubMembersIndexName = "club_members"
 
-func marshalClubMemberToDocument(cat *club.Member) (*clubMembersDocument, error) {
+func marshalClubMemberToDocument(cat *club.Member) *clubMembersDocument {
 	return &clubMembersDocument{
 		Id:              cat.ClubId() + "-" + cat.AccountId(),
 		ClubId:          cat.ClubId(),
@@ -33,7 +34,7 @@ func marshalClubMemberToDocument(cat *club.Member) (*clubMembersDocument, error)
 		JoinedAt:        cat.JoinedAt(),
 		IsSupporter:     cat.IsSupporter(),
 		SupporterSince:  cat.SupporterSince(),
-	}, nil
+	}
 }
 
 func (r ClubCassandraElasticsearchRepository) getClubsSupporterMembershipCount(ctx context.Context, clubId string) (int64, error) {
@@ -50,7 +51,7 @@ func (r ClubCassandraElasticsearchRepository) getClubsSupporterMembershipCount(c
 	count, err := builder.ErrorTrace(true).Pretty(true).Do(ctx)
 
 	if err != nil {
-		return 0, fmt.Errorf("failed to get club memberships supporter count: %v", err)
+		return 0, errors.Wrap(support.ParseElasticError(err), "failed to get club memberships supporter count")
 	}
 
 	return count, nil
@@ -62,11 +63,7 @@ func (r ClubCassandraElasticsearchRepository) SearchClubMembers(ctx context.Cont
 		Index(ClubMembersIndexName)
 
 	if cursor == nil {
-		return nil, errors.New("cursor required")
-	}
-
-	if cursor == nil {
-		return nil, fmt.Errorf("cursor must be present")
+		return nil, paging.ErrCursorNotPresent
 	}
 
 	var sortingColumn string
@@ -84,7 +81,7 @@ func (r ClubCassandraElasticsearchRepository) SearchClubMembers(ctx context.Cont
 	query := elastic.NewBoolQuery()
 
 	if filters.AccountId() == nil && filters.ClubId() == nil {
-		return nil, errors.New("can only search by either club or account")
+		return nil, domainerror.NewValidation("can only search by either club or account")
 	}
 
 	if filters.AccountId() != nil {
@@ -127,7 +124,7 @@ func (r ClubCassandraElasticsearchRepository) SearchClubMembers(ctx context.Cont
 	response, err := builder.ErrorTrace(true).Pretty(true).Do(ctx)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed search club members: %v", err)
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed search club members")
 	}
 
 	var members []*club.Member
@@ -139,7 +136,7 @@ func (r ClubCassandraElasticsearchRepository) SearchClubMembers(ctx context.Cont
 		err := json.Unmarshal(hit.Source, &clb)
 
 		if err != nil {
-			return nil, fmt.Errorf("failed search club members - unmarshal: %v", err)
+			return nil, errors.Wrap(err, "failed search club members - unmarshal")
 		}
 
 		member := club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt, clb.IsSupporter, clb.SupporterSince)
@@ -153,13 +150,9 @@ func (r ClubCassandraElasticsearchRepository) SearchClubMembers(ctx context.Cont
 
 func (r ClubCassandraElasticsearchRepository) indexClubMember(ctx context.Context, club *club.Member) error {
 
-	clb, err := marshalClubMemberToDocument(club)
+	clb := marshalClubMemberToDocument(club)
 
-	if err != nil {
-		return err
-	}
-
-	_, err = r.client.
+	_, err := r.client.
 		Index().
 		Index(ClubMembersIndexName).
 		Id(clb.Id).
@@ -167,7 +160,7 @@ func (r ClubCassandraElasticsearchRepository) indexClubMember(ctx context.Contex
 		Do(ctx)
 
 	if err != nil {
-		return fmt.Errorf("failed to index club member: %v", err)
+		return errors.Wrap(support.ParseElasticError(err), "failed to index club member")
 	}
 
 	return nil
@@ -206,7 +199,7 @@ func (r ClubCassandraElasticsearchRepository) IndexAllClubMembers(ctx context.Co
 				Do(ctx)
 
 			if err != nil {
-				return fmt.Errorf("failed to index club members: %v", err)
+				return errors.Wrap(support.ParseElasticError(err), "failed to index club members")
 			}
 		}
 
@@ -223,7 +216,7 @@ func (r ClubCassandraElasticsearchRepository) IndexAllClubMembers(ctx context.Co
 func (r ClubCassandraElasticsearchRepository) deleteClubMemberIndexById(ctx context.Context, clubId, accountId string) error {
 
 	if _, err := r.client.Delete().Index(ClubMembersIndexName).Id(clubId + "-" + accountId).Do(ctx); err != nil {
-		return fmt.Errorf("failed to delete club member document: %v", err)
+		return errors.Wrap(support.ParseElasticError(err), "failed to delete club member document")
 	}
 
 	return nil

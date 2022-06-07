@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	sting "overdoll/applications/sting/proto"
+	"overdoll/libraries/errors"
 )
 
 type StingGrpc struct {
@@ -18,7 +19,7 @@ func (s StingGrpc) DeleteAccountData(ctx context.Context, accountId string) erro
 	_, err := s.client.DeleteAccountData(ctx, &sting.DeleteAccountDataRequest{AccountId: accountId})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error deleting account data")
 	}
 
 	return nil

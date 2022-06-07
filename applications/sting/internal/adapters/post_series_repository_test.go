@@ -4,9 +4,11 @@ import (
 	"context"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
+	"time"
 )
 
 func TestPostSeries_failure(t *testing.T) {
@@ -17,7 +19,7 @@ func TestPostSeries_failure(t *testing.T) {
 	seriesId := uuid.New().String()
 	seriesSlug := createFakeSlug(t)
 
-	series := post.UnmarshalSeriesFromDatabase(seriesId, seriesSlug, map[string]string{"en": "test"}, nil, 0, 0)
+	series := post.UnmarshalSeriesFromDatabase(seriesId, seriesSlug, map[string]string{"en": "test"}, nil, 0, 0, time.Now())
 
 	ctx := context.Background()
 
@@ -27,8 +29,8 @@ func TestPostSeries_failure(t *testing.T) {
 	require.Error(t, err, "should have received an error while creating the series")
 
 	_, err = postRepo.GetSingleSeriesById(ctx, requester, seriesId)
-	require.Equal(t, post.ErrSeriesNotFound, err, "series should not be found by id")
+	require.True(t, apperror.IsNotFoundError(err), "series should not be found by id")
 
 	_, err = postRepo.GetSeriesBySlug(ctx, requester, seriesSlug)
-	require.Equal(t, post.ErrSeriesNotFound, err, "series should not be found by slug")
+	require.True(t, apperror.IsNotFoundError(err), "series should not be found by slug")
 }

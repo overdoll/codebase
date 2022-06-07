@@ -5,8 +5,7 @@
     "email": "i2fhz.poisonminion@inbox.testmail.app",
     "roles": [
       "MODERATOR"
-    ],
-    "verified": true
+    ]
   },
   {
     "id": "1q7MJ5IyRTV0X4J27F3m5wGD5mj",
@@ -14,22 +13,19 @@
     "email": "i2fhz.0eclipse@inbox.testmail.app",
     "roles": [
       "STAFF"
-    ],
-    "verified": true
+    ]
   },
   {
     "id": "1q7MIqqnkzew33q4elXuN1Ri27d",
     "username": "artist_unverified",
     "email": "i2fhz.artist_unverified@inbox.testmail.app",
-    "roles": [],
-    "verified": false
+    "roles": []
   },
   {
     "id": "1q7MIw0U6TEpELH0FqnxrcXt3E0",
     "username": "artist_verified",
     "email": "i2fhz.artist_verified@inbox.testmail.app",
-    "roles": [],
-    "verified": true
+    "roles": []
   },
   {
     "id": "1pcKibRoqTAUgmOiNpGLIrztM9R",

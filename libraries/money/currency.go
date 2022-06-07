@@ -1,6 +1,8 @@
 package money
 
-import "errors"
+import (
+	"overdoll/libraries/errors/domainerror"
+)
 
 type Currency struct {
 	Slug string `json:"slug"`
@@ -36,5 +38,5 @@ func CurrencyFromString(s string) (Currency, error) {
 		return EUR, nil
 	}
 
-	return UnknownCurrency, errors.New("unknown currency: " + s)
+	return UnknownCurrency, domainerror.NewValidation("unknown currency: " + s)
 }

@@ -1,14 +1,14 @@
 package payout
 
 import (
-	"errors"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
 
 var (
-	ErrAccountPayoutMethodNotFound = errors.New("account payout method not found")
+	ErrAccountPayoutMethodNotFound = domainerror.NewValidation("account payout method not found")
 )
 
 type AccountPayoutMethod struct {

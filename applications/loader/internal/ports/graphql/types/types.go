@@ -10,13 +10,6 @@ import (
 	"strconv"
 )
 
-type Language struct {
-	// BCP47 locale
-	Locale string `json:"locale"`
-	// Fully qualified name
-	Name string `json:"name"`
-}
-
 // A resource represents an image or a video format that contains an ID to uniquely identify it,
 // and urls to access the resources. We have many urls in order to provide a fallback for older browsers
 //
@@ -38,6 +31,8 @@ type Resource struct {
 	VideoDuration int `json:"videoDuration"`
 	// Video thumbnail, if video.
 	VideoThumbnail *ResourceURL `json:"videoThumbnail"`
+	// The additional 10x10 base64-encoded image that can be used as a preview.
+	Preview string `json:"preview"`
 }
 
 func (Resource) IsEntity() {}
@@ -46,13 +41,6 @@ func (Resource) IsEntity() {}
 type ResourceURL struct {
 	URL      graphql1.URI `json:"url"`
 	MimeType string       `json:"mimeType"`
-}
-
-type Translation struct {
-	// The language linked to this translation.
-	Language *Language `json:"language"`
-	// The translation text.
-	Text string `json:"text"`
 }
 
 // Identifies the type of resource

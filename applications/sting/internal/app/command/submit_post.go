@@ -5,7 +5,6 @@ import (
 	"overdoll/applications/sting/internal/domain/event"
 	"time"
 
-	"github.com/pkg/errors"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/principal"
 )
@@ -36,7 +35,7 @@ func (h SubmitPostHandler) Handle(ctx context.Context, cmd SubmitPost) (*post.Po
 	allProcessed, err := h.loader.AllResourcesProcessed(ctx, pst.ID(), pst.AllContentResourceIds())
 
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to get resource process status")
+		return nil, err
 	}
 
 	if err := pst.SubmitPostRequest(cmd.Principal, allProcessed); err != nil {

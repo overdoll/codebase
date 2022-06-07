@@ -4,6 +4,9 @@ import { ApolloServer } from 'apollo-server-express'
 import Redis from 'ioredis'
 import cors from 'cors'
 import { buildSubgraphSchema } from '@apollo/federation'
+import * as Sentry from '@sentry/node'
+import pino from 'pino'
+import pinoMiddleware from 'pino-http'
 
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core'
 
@@ -32,6 +35,21 @@ const isNode = (node): boolean =>
   node.interfaces.some(({ name }) => name.value === 'Node')
 
 const DIVIDER_TOKEN = ':'
+
+const logger = pino({
+  formatters: {
+    level (label, number) {
+      return { level: label }
+    }
+  },
+  serializers: {
+    req: (req) => ({
+      id: req.id,
+      method: req.method,
+      url: req.url
+    })
+  }
+})
 
 const typeDefs = gql`
   """
@@ -262,9 +280,19 @@ function matchQueryMiddleware (req, res, next): void {
   })
 }
 
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  tracesSampleRate: 0,
+  release: process.env.APP_VERSION,
+  environment: process.env.APP_ENV,
+})
+
+const PATH = '/api/graphql'
+
 void (async () => {
   const app = express()
   const httpServer = http.createServer(app)
+
   const server = new ApolloServer({
     gateway,
     // @ts-expect-error
@@ -278,12 +306,19 @@ void (async () => {
     }),
     // disable playground, add middleware for a custom playground
     playground: false,
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })]
+    plugins: [
+      ApolloServerPluginDrainHttpServer({ httpServer })
+    ],
   })
 
-  await server.start()
+  app.disable('x-powered-by')
 
-  app.use(cors({
+  app.use(pinoMiddleware({
+    logger: logger,
+    autoLogging: false
+  }))
+
+  app.use(PATH, cors({
     origin: [
       // @ts-expect-error
       process.env.APP_URL,
@@ -294,17 +329,27 @@ void (async () => {
     allowedHeaders: ['Content-Type', 'Authorization', 'X-overdoll-Security']
   }))
 
-  app.use(matchQueryMiddleware)
+  app.use(PATH, matchQueryMiddleware)
 
+  await server.start()
   server.applyMiddleware({
     app,
-    path: '/',
+    path: PATH,
     cors: false
+  })
+
+  app.use(Sentry.Handlers.errorHandler())
+
+  app.use(function onError (err, req, res, next) {
+    req.log.error('internal server error', { 'error': err })
+    res.statusCode = 500
+    res.end('internal server error')
   })
 
   await new Promise<void>(resolve => httpServer.listen({
     port: 8000,
     hostname: '0.0.0.0'
   }, resolve))
-  console.log(`🚀 Server ready at http://0.0.0.0:8000${server.graphqlPath}`)
+
+  logger.info('http server starting on 0.0.0.0:8000')
 })()

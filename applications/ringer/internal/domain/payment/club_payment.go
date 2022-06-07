@@ -1,14 +1,9 @@
 package payment
 
 import (
-	"errors"
 	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"time"
-)
-
-var (
-	ErrClubPaymentNotFound = errors.New("club payment not found")
 )
 
 type ClubPayment struct {
