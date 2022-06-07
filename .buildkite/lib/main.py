@@ -9,6 +9,7 @@ import os
 import random
 import shutil
 import stat
+import string
 import tempfile
 import threading
 import urllib.request
@@ -318,11 +319,13 @@ def execute_cdn_upload(configs):
     commit = os.getenv("BUILDKITE_COMMIT", "")
     registry = os.getenv("CONTAINER_REGISTRY", "")
 
+    container_name = ''.join(random.choice(string.ascii_letters) for i in range(10))
+
     tag = "{}/{}:{}".format(registry, "medusa/dev", commit)
     exec.execute_command(["docker", "pull", tag])
-    exec.execute_command(["docker", "run", "--name", "medusa-assets", "-d", tag])
-    exec.execute_command(["docker", "cp", "medusa-assets:/app/build/static", "medusa-assets"])
-    exec.execute_command(["docker", "stop", "medusa-assets", "-t", "0"])
+    exec.execute_command(["docker", "run", "--name", container_name, "-d", tag])
+    exec.execute_command(["docker", "cp", "{}:/app/build/static".format(container_name), container_name])
+    exec.execute_command(["docker", "stop", container_name, "-t", "0"])
 
     terminal_print.print_expanded_group(":cloudfront: Uploading assets to cloudfront")
 
