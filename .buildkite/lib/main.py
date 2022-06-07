@@ -321,7 +321,7 @@ def execute_cdn_upload(configs):
     tag = "{}/{}:{}".format(registry, "medusa/dev", commit)
     exec.execute_command(["docker", "pull", tag])
     exec.execute_command(["docker", "run", "--name", "medusa-assets", "-d", tag])
-    exec.execute_command(["docker", "cp", "medusa-assets:/app/build/static", "medusa-assets/static"])
+    exec.execute_command(["docker", "cp", "medusa-assets:/app/build/static", "medusa-assets"])
     exec.execute_command(["docker", "stop", "medusa-assets", "-t", "0"])
 
     terminal_print.print_expanded_group(":cloudfront: Uploading assets to cloudfront")
@@ -333,7 +333,11 @@ def execute_cdn_upload(configs):
         "medusa-assets",
         "s3://{}/_next".format(os.getenv("AWS_STATIC_ASSETS_BUCKET")),
         "--recursive"
-    ])
+    ], env={
+        "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY"),
+        "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_ACCESS_SECRET"),
+        "AWS_DEFAULT_REGION": os.getenv("AWS_REGION"),
+    })
 
 
 def execute_push_images_commands(configs):
