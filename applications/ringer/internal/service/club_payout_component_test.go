@@ -177,7 +177,7 @@ func TestClubPayout(t *testing.T) {
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.GenerateClubMonthlyPayout, workflows.GenerateClubMonthlyPayoutInput{
 		ClubId:     clubId,
 		FutureTime: nil,
-		WorkflowId: "GenerateClubMonthlyPayout_Manual_" + clubId,
+		WorkflowId: "ringer.GenerateClubMonthlyPayout_Manual_" + clubId,
 		CanCancel:  true,
 	})
 
@@ -481,6 +481,8 @@ func TestClubPayout_update_deposit_date(t *testing.T) {
 	gClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	seedPayments(t, uuid.New().String(), clubId, accountId, 15)
+
+	refreshPayoutsIndex(t)
 
 	// run a workflow to create a payout for this club
 	env := getWorkflowEnvironment()

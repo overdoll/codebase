@@ -342,7 +342,6 @@ func (r PayoutCassandraElasticsearchRepository) CreateClubPayout(ctx context.Con
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalled).
 		ExecRelease(); err != nil {
-
 		return errors.Wrap(support.NewGocqlError(err), "failed to insert club payout")
 	}
 

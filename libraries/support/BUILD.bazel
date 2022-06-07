@@ -15,6 +15,7 @@ go_library(
     name = "support",
     srcs = [
         "bind_struct.go",
+        "ci.go",
         "debug.go",
         "generate_unique_id_for_workflow.go",
         "ip.go",

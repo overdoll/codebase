@@ -2,6 +2,7 @@ package sentry_support
 
 import (
 	"context"
+	"fmt"
 	"github.com/getsentry/sentry-go"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -10,6 +11,7 @@ import (
 	"os"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/graphql"
+	"overdoll/libraries/support"
 	"overdoll/libraries/zap_support"
 	"strings"
 	"time"
@@ -42,7 +44,12 @@ func SentryGinMiddleware() gin.HandlerFunc {
 				var err error
 				errors.RecoverPanic(r, &err)
 
-				zap_support.SafePanic("panic during http request", zap.Error(err))
+				if support.IsDebug() {
+					zap_support.SafePanic("panic during http request")
+					fmt.Println(err)
+				} else {
+					zap_support.SafePanic("panic during http request", zap.Error(err))
+				}
 
 				eventID := hub.RecoverWithContext(
 					context.WithValue(c.Request.Context(), sentry.RequestContextKey, r),

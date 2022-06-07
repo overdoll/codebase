@@ -2,6 +2,7 @@ package sentry_support
 
 import (
 	"context"
+	"fmt"
 	"github.com/getsentry/sentry-go"
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"go.uber.org/zap"
@@ -19,7 +20,12 @@ func recoverGrpcWithSentry(hub *sentry.Hub, r interface{}, ctx context.Context, 
 	var err error
 	errors.RecoverPanic(r, &err)
 
-	zap_support.SafePanic("panic while running grpc", zap.Error(err), zap.String("method", method))
+	if support.IsDebug() {
+		zap_support.SafePanic("panic while running grpc")
+		fmt.Println(err)
+	} else {
+		zap_support.SafePanic("panic while running grpc", zap.Error(err), zap.String("method", method))
+	}
 
 	eventID := hub.RecoverWithContext(ctx, err)
 	if eventID != nil {

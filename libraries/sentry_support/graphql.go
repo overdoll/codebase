@@ -2,6 +2,7 @@ package sentry_support
 
 import (
 	"context"
+	"fmt"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/getsentry/sentry-go"
 	"github.com/vektah/gqlparser/v2/gqlerror"
@@ -21,7 +22,13 @@ func GraphQLRecoverFunc(ctx context.Context, r interface{}) error {
 
 	var err error
 	errors.RecoverPanic(r, &err)
-	zap_support.SafePanic("panic while resolving graphql", zap.Any("error", err))
+
+	if support.IsDebug() {
+		zap_support.SafePanic("panic while resolving graphql")
+		fmt.Println(err)
+	} else {
+		zap_support.SafePanic("panic while resolving graphql", zap.Any("error", err))
+	}
 
 	if hub := sentry.GetHubFromContext(ctx); hub != nil {
 		eventID := hub.RecoverWithContext(ctx, err)

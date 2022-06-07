@@ -4,6 +4,7 @@ import (
 	"os"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/sentry_support"
+	"overdoll/libraries/support"
 	"overdoll/libraries/zap_support/zap_adapters"
 	"strings"
 	"time"
@@ -40,10 +41,14 @@ func initializeDatabaseSession(keyspace string) (gocqlx.Session, error) {
 	cluster.ReconnectionPolicy = &gocql.ConstantReconnectionPolicy{MaxRetries: 30, Interval: 10 * time.Second}
 	cluster.QueryObserver = &sentry_support.QueryObserver{}
 	cluster.BatchObserver = &sentry_support.BatchObserver{}
-	cluster.RetryPolicy = &gocql.ExponentialBackoffRetryPolicy{
-		Min:        time.Second,
-		Max:        10 * time.Second,
-		NumRetries: 5,
+
+	// the retry policy can make tests buggy (workflows timeout if retries occur), so we only enable them in non-test mode
+	if !support.IsTest() {
+		cluster.RetryPolicy = &gocql.ExponentialBackoffRetryPolicy{
+			Min:        time.Second,
+			Max:        7 * time.Second,
+			NumRetries: 5,
+		}
 	}
 
 	cluster.Logger = zap_adapters.NewGocqlZapAdapter(zap.S())
