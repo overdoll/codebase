@@ -1,12 +1,14 @@
 package zap_adapters
 
-import (
-	"go.uber.org/zap"
-)
+type FfmpegGoLogErrorAdapter struct {
+	output []byte
+}
 
-type FfmpegGoLogErrorAdapter struct{}
+func (l *FfmpegGoLogErrorAdapter) GetOutput() []byte {
+	return l.output
+}
 
 func (l *FfmpegGoLogErrorAdapter) Write(p []byte) (n int, err error) {
-	zap.S().Errorw("%s", string(p))
+	l.output = append(l.output, p...)
 	return len(p), nil
 }

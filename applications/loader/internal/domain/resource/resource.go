@@ -9,6 +9,7 @@ import (
 	"github.com/h2non/filetype"
 	"github.com/nfnt/resize"
 	ffmpeg_go "github.com/u2takey/ffmpeg-go"
+	"go.uber.org/zap"
 	"image"
 	"image/png"
 	_ "image/png"
@@ -20,6 +21,7 @@ import (
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/uuid"
+	"overdoll/libraries/zap_support/zap_adapters"
 	"strconv"
 )
 
@@ -243,12 +245,15 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 			return nil, err
 		}
 
+		log := &zap_adapters.FfmpegGoLogErrorAdapter{}
+
 		if err := ffmpeg_go.Input(file.Name()).
 			Filter("select", ffmpeg_go.Args{fmt.Sprintf("gte(n,%d)", 5)}).
 			Output("pipe:", ffmpeg_go.KwArgs{"vframes": 1, "format": "image2", "vcodec": "png"}).
-			//	WithErrorOutput(&zap_adapters.FfmpegGoLogErrorAdapter{}).
+			WithErrorOutput(log).
 			WithOutput(fileThumbnail).
 			Run(); err != nil {
+			zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(log.GetOutput())))
 			return nil, errors.Wrap(err, "failed to process ffmpeg_go file")
 		}
 
