@@ -207,7 +207,7 @@ func MarshalClubPayoutToGraphQL(ctx context.Context, result *payout.ClubPayout) 
 		Reference:      result.Id(),
 		Status:         stat,
 		Currency:       graphql.MarshalCurrencyToGraphQL(ctx, result.Currency()),
-		Amount:         int(result.TotalAmount()),
+		Amount:         int(result.Amount()),
 		CoverFeeAmount: int(result.CoverFeeAmount()),
 		TotalAmount:    int(result.TotalAmount()),
 		Events:         clubEvents,
