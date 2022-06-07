@@ -314,7 +314,6 @@ def execute_cdn_upload(configs):
     terminal_print.print_expanded_group(":docker: Pulling docker image & extracting assets")
 
     exec.execute_command(["mkdir", "medusa-assets"])
-    exec.execute_command(["mkdir", "medusa-assets/static"])
 
     commit = os.getenv("BUILDKITE_COMMIT", "")
     registry = os.getenv("CONTAINER_REGISTRY", "")
@@ -324,7 +323,7 @@ def execute_cdn_upload(configs):
     tag = "{}/{}:{}".format(registry, "medusa/dev", commit)
     exec.execute_command(["docker", "pull", tag])
     exec.execute_command(["docker", "run", "--name", container_name, "-d", tag])
-    exec.execute_command(["docker", "cp", "{}:/app/build/static".format(container_name), container_name])
+    exec.execute_command(["docker", "cp", "{}:/app/build/static".format(container_name), "medusa-assets"])
     exec.execute_command(["docker", "stop", container_name, "-t", "0"])
 
     terminal_print.print_expanded_group(":cloudfront: Uploading assets to cloudfront")
