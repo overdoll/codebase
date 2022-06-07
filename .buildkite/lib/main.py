@@ -548,6 +548,17 @@ def print_project_pipeline():
     # unit tests + build must complete first before e2e testing
     pipeline_steps.append("wait")
 
+    if os.getenv("BUILDKITE_BRANCH") == "master":
+        # will upload front-end static assets to cloudfront in this step
+        pipeline_steps.append(
+            pipeline.create_step(
+                label=":cloudfront: Upload Front-End to CloudFront",
+                commands=[".buildkite/pipeline.sh frontend_upload_cdn"],
+                platform="docker",
+            )
+        )
+        pipeline_steps.append("wait")
+
     e2e = steps.get("e2e_test", None)
     if not e2e:
         raise exception.BuildkiteException("e2e step is empty")
@@ -587,17 +598,6 @@ def print_project_pipeline():
 
     # publish when the branch is master
     if os.getenv("BUILDKITE_BRANCH") == "master":
-        pipeline_steps.append("wait")
-
-        # will upload front-end static assets to cloudfront in this step
-        pipeline_steps.append(
-            pipeline.create_step(
-                label=":cloudfront: Upload Front-End to CloudFront",
-                commands=[".buildkite/pipeline.sh frontend_upload_cdn"],
-                platform="docker",
-            )
-        )
-
         pipeline_steps.append("wait")
 
         # must complete all steps before publishing
