@@ -661,6 +661,7 @@ def main(argv=None):
     subparsers = parser.add_subparsers(dest="subparsers_name")
     subparsers.add_parser("services_build_test")
     subparsers.add_parser("frontend_build_test")
+    subparsers.add_parser("frontend_upload_cdn")
 
     subparsers.add_parser("e2e_test")
     subparsers.add_parser("project_pipeline")
