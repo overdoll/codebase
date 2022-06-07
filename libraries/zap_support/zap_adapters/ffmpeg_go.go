@@ -1,14 +1,10 @@
 package zap_adapters
 
 type FfmpegGoLogErrorAdapter struct {
-	output []byte
-}
-
-func (l *FfmpegGoLogErrorAdapter) GetOutput() []byte {
-	return l.output
+	Output []byte
 }
 
 func (l *FfmpegGoLogErrorAdapter) Write(p []byte) (n int, err error) {
-	l.output = append(l.output, p...)
+	l.Output = append(l.Output, p...)
 	return len(p), nil
 }

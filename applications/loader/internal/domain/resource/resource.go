@@ -245,7 +245,9 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 			return nil, err
 		}
 
-		log := &zap_adapters.FfmpegGoLogErrorAdapter{}
+		log := &zap_adapters.FfmpegGoLogErrorAdapter{
+			Output: *new([]byte),
+		}
 
 		if err := ffmpeg_go.Input(file.Name()).
 			Filter("select", ffmpeg_go.Args{fmt.Sprintf("gte(n,%d)", 5)}).
@@ -253,7 +255,7 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 			WithErrorOutput(log).
 			WithOutput(fileThumbnail).
 			Run(); err != nil {
-			zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(log.GetOutput())))
+			zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(log.Output)))
 			return nil, errors.Wrap(err, "failed to process ffmpeg_go file")
 		}
 
