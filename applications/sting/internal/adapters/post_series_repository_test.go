@@ -32,5 +32,5 @@ func TestPostSeries_failure(t *testing.T) {
 	require.True(t, apperror.IsNotFoundError(err), "series should not be found by id")
 
 	_, err = postRepo.GetSeriesBySlug(ctx, requester, seriesSlug)
-	require.Equal(t, apperror.IsNotFoundError(err), "series should not be found by slug")
+	require.True(t, apperror.IsNotFoundError(err), "series should not be found by slug")
 }

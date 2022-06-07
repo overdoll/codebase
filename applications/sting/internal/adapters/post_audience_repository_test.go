@@ -29,8 +29,8 @@ func TestPostAudienceRepository_failure(t *testing.T) {
 	require.Error(t, err, "should have received an error while creating the audience")
 
 	_, err = postRepo.GetAudienceById(ctx, requester, audienceId)
-	require.True(t, apperror.IsNotFoundError(err), "category should not be found by id")
+	require.True(t, apperror.IsNotFoundError(err), "audience should not be found by id")
 
 	_, err = postRepo.GetAudienceBySlug(ctx, requester, audienceSlug)
-	require.True(t, apperror.IsNotFoundError(err), "category should not be found by slug")
+	require.True(t, apperror.IsNotFoundError(err), "audience should not be found by slug")
 }

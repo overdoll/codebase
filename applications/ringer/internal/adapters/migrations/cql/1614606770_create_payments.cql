@@ -84,6 +84,8 @@ CREATE TABLE IF NOT EXISTS club_payouts
     deposit_date         timestamp,
     club_id              text,
     amount               bigint,
+    cover_fee_amount     bigint,
+    total_amount         bigint,
     currency             text,
     payout_account_id    text,
     deposit_request_id   text,

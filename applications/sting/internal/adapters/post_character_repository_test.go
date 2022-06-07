@@ -35,5 +35,5 @@ func TestPostCharacterRepository_failure(t *testing.T) {
 	require.True(t, apperror.IsNotFoundError(err), "character should not be found by id")
 
 	_, err = postRepo.GetCharacterBySlug(ctx, requester, characterSlug, seriesSlug)
-	require.Equal(t, apperror.IsNotFoundError(err), "character should not be found by slug")
+	require.True(t, apperror.IsNotFoundError(err), "character should not be found by slug")
 }

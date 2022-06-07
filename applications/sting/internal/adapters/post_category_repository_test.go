@@ -32,5 +32,5 @@ func TestPostCategoryRepository_failure(t *testing.T) {
 	require.True(t, apperror.IsNotFoundError(err), "category should not be found by id")
 
 	_, err = postRepo.GetCategoryBySlug(ctx, requester, categorySlug)
-	require.Equal(t, apperror.IsNotFoundError(err), "category should not be found by slug")
+	require.True(t, apperror.IsNotFoundError(err), "category should not be found by slug")
 }
