@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<388d4e07ecfc185862e0ba91c3990087>>
- * @relayHash 3713b78a0ed5ea2b244488fb0612f7e8
+ * @generated SignedSource<<69eb8c25d81ddaf5320ceb9dcbdfc52d>>
+ * @relayHash de7200ce2cee39aab78c31ed083a21c8
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3713b78a0ed5ea2b244488fb0612f7e8
+// @relayRequestID de7200ce2cee39aab78c31ed083a21c8
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -22,6 +22,7 @@ export type ClubPayoutQueryVariables = ClubPayoutQuery$variables;
 export type ClubPayoutQuery$data = {
   readonly payout: {
     readonly amount: number;
+    readonly coverFeeAmount: number;
     readonly currency: Currency;
     readonly status: ClubPayoutStatus;
     readonly depositDate: any;
@@ -60,31 +61,38 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "currency",
+  "name": "coverFeeAmount",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "status",
+  "name": "currency",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "status",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "depositDate",
   "storageKey": null
 },
-v6 = [
+v7 = [
   {
     "kind": "Literal",
     "name": "first",
     "value": 5
   }
 ],
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -110,6 +118,7 @@ return {
           (v3/*: any*/),
           (v4/*: any*/),
           (v5/*: any*/),
+          (v6/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -140,9 +149,10 @@ return {
           (v3/*: any*/),
           (v4/*: any*/),
           (v5/*: any*/),
+          (v6/*: any*/),
           {
             "alias": null,
-            "args": (v6/*: any*/),
+            "args": (v7/*: any*/),
             "concreteType": "ClubPaymentConnection",
             "kind": "LinkedField",
             "name": "payments",
@@ -185,8 +195,8 @@ return {
                         "name": "finalAmount",
                         "storageKey": null
                       },
-                      (v3/*: any*/),
                       (v4/*: any*/),
+                      (v5/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -194,7 +204,7 @@ return {
                         "name": "isDeduction",
                         "storageKey": null
                       },
-                      (v7/*: any*/),
+                      (v8/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -245,21 +255,21 @@ return {
           },
           {
             "alias": null,
-            "args": (v6/*: any*/),
+            "args": (v7/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "ClubPayoutPayments_payments",
             "kind": "LinkedHandle",
             "name": "payments"
           },
-          (v7/*: any*/)
+          (v8/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "3713b78a0ed5ea2b244488fb0612f7e8",
+    "id": "de7200ce2cee39aab78c31ed083a21c8",
     "metadata": {},
     "name": "ClubPayoutQuery",
     "operationKind": "query",
@@ -268,6 +278,6 @@ return {
 };
 })();
 
-(node as any).hash = "2c6ff521b0f12540312ac1982c7bf493";
+(node as any).hash = "fe83d661db645130d32209b7222948a0";
 
 export default node;

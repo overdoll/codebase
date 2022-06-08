@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<75d9f9c1add35f41a31beb2d867d79fd>>
- * @relayHash e3bc4d4418f4d3e6c150c95b9361b238
+ * @generated SignedSource<<6c9d6e4fb9e399a85dd6c03da19e62d8>>
+ * @relayHash 334ed31e2d55acb747a5953392e601f2
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e3bc4d4418f4d3e6c150c95b9361b238
+// @relayRequestID 334ed31e2d55acb747a5953392e601f2
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
@@ -35,6 +35,9 @@ export type ProcessUploadsMutation$data = {
             readonly url: string;
             readonly mimeType: string;
           }>;
+          readonly preview: string;
+          readonly width: number;
+          readonly height: number;
         };
       }>;
     } | null;
@@ -113,6 +116,27 @@ v6 = {
     }
   ],
   "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "preview",
+  "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "width",
+  "storageKey": null
+},
+v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "height",
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -158,7 +182,10 @@ return {
                     "selections": [
                       (v4/*: any*/),
                       (v5/*: any*/),
-                      (v6/*: any*/)
+                      (v6/*: any*/),
+                      (v7/*: any*/),
+                      (v8/*: any*/),
+                      (v9/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -219,6 +246,9 @@ return {
                       (v4/*: any*/),
                       (v5/*: any*/),
                       (v6/*: any*/),
+                      (v7/*: any*/),
+                      (v8/*: any*/),
+                      (v9/*: any*/),
                       (v2/*: any*/)
                     ],
                     "storageKey": null
@@ -235,7 +265,7 @@ return {
     ]
   },
   "params": {
-    "id": "e3bc4d4418f4d3e6c150c95b9361b238",
+    "id": "334ed31e2d55acb747a5953392e601f2",
     "metadata": {},
     "name": "ProcessUploadsMutation",
     "operationKind": "mutation",
@@ -244,6 +274,6 @@ return {
 };
 })();
 
-(node as any).hash = "d37618f316e8b0b2a8d9c3d1fc1a28eb";
+(node as any).hash = "bf3b457412a05a55f15945d97b9a7b56";
 
 export default node;

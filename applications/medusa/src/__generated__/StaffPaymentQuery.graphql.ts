@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<cb12a76fdf5a1d618d6c63c930d5e13e>>
- * @relayHash afe765c27e1fbbd4f84c6490ab0476fb
+ * @generated SignedSource<<a4eece4f761c499e49aa3333c2267631>>
+ * @relayHash 4c543a1dd70bb8c14b1c4fb54e3b77e2
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID afe765c27e1fbbd4f84c6490ab0476fb
+// @relayRequestID 4c543a1dd70bb8c14b1c4fb54e3b77e2
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -71,13 +71,15 @@ v5 = {
   "name": "id",
   "storageKey": null
 },
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
-};
+v6 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -283,16 +285,7 @@ return {
                     "kind": "LinkedField",
                     "name": "urls",
                     "plural": true,
-                    "selections": [
-                      (v6/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "mimeType",
-                        "storageKey": null
-                      }
-                    ],
+                    "selections": (v6/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -312,13 +305,18 @@ return {
                   {
                     "alias": null,
                     "args": null,
+                    "kind": "ScalarField",
+                    "name": "preview",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
                     "concreteType": "ResourceUrl",
                     "kind": "LinkedField",
                     "name": "videoThumbnail",
                     "plural": false,
-                    "selections": [
-                      (v6/*: any*/)
-                    ],
+                    "selections": (v6/*: any*/),
                     "storageKey": null
                   },
                   (v3/*: any*/),
@@ -343,7 +341,7 @@ return {
     ]
   },
   "params": {
-    "id": "afe765c27e1fbbd4f84c6490ab0476fb",
+    "id": "4c543a1dd70bb8c14b1c4fb54e3b77e2",
     "metadata": {},
     "name": "StaffPaymentQuery",
     "operationKind": "query",

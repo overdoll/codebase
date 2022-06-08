@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f1cf691ca8bae916f3d692d53ee8116d>>
- * @relayHash 21d4220943fd040e8155578d4d8cc3f1
+ * @generated SignedSource<<cb5d76eb84810fb2e81ea923da4a2b77>>
+ * @relayHash ee66e35b59ff043923ddea7f5f1c44f8
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 21d4220943fd040e8155578d4d8cc3f1
+// @relayRequestID ee66e35b59ff043923ddea7f5f1c44f8
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -145,13 +145,15 @@ v12 = {
   "name": "type",
   "storageKey": null
 },
-v13 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
-},
+v13 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  }
+],
 v14 = {
   "alias": null,
   "args": null,
@@ -159,16 +161,7 @@ v14 = {
   "kind": "LinkedField",
   "name": "urls",
   "plural": true,
-  "selections": [
-    (v13/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "mimeType",
-      "storageKey": null
-    }
-  ],
+  "selections": (v13/*: any*/),
   "storageKey": null
 },
 v15 = {
@@ -188,24 +181,30 @@ v16 = {
 v17 = {
   "alias": null,
   "args": null,
+  "kind": "ScalarField",
+  "name": "preview",
+  "storageKey": null
+},
+v18 = {
+  "alias": null,
+  "args": null,
   "concreteType": "ResourceUrl",
   "kind": "LinkedField",
   "name": "videoThumbnail",
   "plural": false,
-  "selections": [
-    (v13/*: any*/)
-  ],
+  "selections": (v13/*: any*/),
   "storageKey": null
 },
-v18 = [
+v19 = [
   (v14/*: any*/),
   (v15/*: any*/),
   (v16/*: any*/),
   (v17/*: any*/),
+  (v18/*: any*/),
   (v12/*: any*/),
   (v2/*: any*/)
 ],
-v19 = [
+v20 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -558,12 +557,12 @@ return {
             "kind": "LinkedField",
             "name": "avatar",
             "plural": false,
-            "selections": (v18/*: any*/),
+            "selections": (v19/*: any*/),
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v19/*: any*/),
+            "args": (v20/*: any*/),
             "concreteType": "ClubConnection",
             "kind": "LinkedField",
             "name": "clubs",
@@ -601,7 +600,7 @@ return {
                         "kind": "LinkedField",
                         "name": "thumbnail",
                         "plural": false,
-                        "selections": (v18/*: any*/),
+                        "selections": (v19/*: any*/),
                         "storageKey": null
                       },
                       {
@@ -655,6 +654,7 @@ return {
                                           (v15/*: any*/),
                                           (v16/*: any*/),
                                           (v17/*: any*/),
+                                          (v18/*: any*/),
                                           {
                                             "alias": null,
                                             "args": null,
@@ -694,7 +694,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v19/*: any*/),
+            "args": (v20/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "StaffAccountClubs_clubs",
@@ -707,7 +707,7 @@ return {
     ]
   },
   "params": {
-    "id": "21d4220943fd040e8155578d4d8cc3f1",
+    "id": "ee66e35b59ff043923ddea7f5f1c44f8",
     "metadata": {},
     "name": "StaffAccountQuery",
     "operationKind": "query",

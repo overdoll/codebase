@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fefdbf20116726bcd246cd07a6614995>>
- * @relayHash 145af7cbdfa8c80bffc779d015d8e319
+ * @generated SignedSource<<43b739f07d56693276d3ccd1a77c4efe>>
+ * @relayHash d412829d7ff3a6a2d23f98a30dfd9567
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 145af7cbdfa8c80bffc779d015d8e319
+// @relayRequestID d412829d7ff3a6a2d23f98a30dfd9567
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type RefreshProcessContentQuery$variables = {
@@ -36,6 +36,7 @@ export type RefreshProcessContentQuery$data = {
         }>;
         readonly width: number;
         readonly height: number;
+        readonly preview: string;
       };
     }>;
   } | null;
@@ -154,6 +155,13 @@ v12 = {
   "kind": "ScalarField",
   "name": "height",
   "storageKey": null
+},
+v13 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "preview",
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -196,7 +204,8 @@ return {
                   (v9/*: any*/),
                   (v10/*: any*/),
                   (v11/*: any*/),
-                  (v12/*: any*/)
+                  (v12/*: any*/),
+                  (v13/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -251,6 +260,7 @@ return {
                   (v10/*: any*/),
                   (v11/*: any*/),
                   (v12/*: any*/),
+                  (v13/*: any*/),
                   (v2/*: any*/)
                 ],
                 "storageKey": null
@@ -264,7 +274,7 @@ return {
     ]
   },
   "params": {
-    "id": "145af7cbdfa8c80bffc779d015d8e319",
+    "id": "d412829d7ff3a6a2d23f98a30dfd9567",
     "metadata": {},
     "name": "RefreshProcessContentQuery",
     "operationKind": "query",
@@ -273,6 +283,6 @@ return {
 };
 })();
 
-(node as any).hash = "5494cbc1b61bbc4dba7d14b34301944c";
+(node as any).hash = "7d89692d967443d455846658d6eef47d";
 
 export default node;

@@ -36,6 +36,9 @@ const Mutation = graphql`
             url
             mimeType
           }
+          preview
+          width
+          height
         }
       }
     }

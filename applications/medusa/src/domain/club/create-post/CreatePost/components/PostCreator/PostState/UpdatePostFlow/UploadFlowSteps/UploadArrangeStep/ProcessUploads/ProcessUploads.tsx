@@ -46,6 +46,9 @@ const ProcessUploadsMutationGQL = graphql`
               url
               mimeType
             }
+            preview
+            width
+            height
           }
         }
       }

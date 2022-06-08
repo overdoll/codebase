@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f8cb76e0b76d654f5d72073202832d80>>
- * @relayHash 9f475a3456692fc3bd75df7f4afc042d
+ * @generated SignedSource<<9f582cbcd21519450687aaec4bcf59a0>>
+ * @relayHash 92fa85d92b3f5c5cb99ed097ce7b673a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9f475a3456692fc3bd75df7f4afc042d
+// @relayRequestID 92fa85d92b3f5c5cb99ed097ce7b673a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -92,13 +92,15 @@ v6 = {
   "name": "slug",
   "storageKey": null
 },
-v7 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
-},
+v7 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  }
+],
 v8 = {
   "alias": null,
   "args": null,
@@ -106,16 +108,7 @@ v8 = {
   "kind": "LinkedField",
   "name": "urls",
   "plural": true,
-  "selections": [
-    (v7/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "mimeType",
-      "storageKey": null
-    }
-  ],
+  "selections": (v7/*: any*/),
   "storageKey": null
 },
 v9 = {
@@ -135,23 +128,28 @@ v10 = {
 v11 = {
   "alias": null,
   "args": null,
+  "kind": "ScalarField",
+  "name": "preview",
+  "storageKey": null
+},
+v12 = {
+  "alias": null,
+  "args": null,
   "concreteType": "ResourceUrl",
   "kind": "LinkedField",
   "name": "videoThumbnail",
   "plural": false,
-  "selections": [
-    (v7/*: any*/)
-  ],
+  "selections": (v7/*: any*/),
   "storageKey": null
 },
-v12 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "type",
   "storageKey": null
 },
-v13 = {
+v14 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
@@ -164,11 +162,12 @@ v13 = {
     (v10/*: any*/),
     (v11/*: any*/),
     (v12/*: any*/),
+    (v13/*: any*/),
     (v4/*: any*/)
   ],
   "storageKey": null
 },
-v14 = [
+v15 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -188,21 +187,21 @@ v14 = [
     ]
   }
 ],
-v15 = {
+v16 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "cursor",
   "storageKey": null
 },
-v16 = {
+v17 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "reference",
   "storageKey": null
 },
-v17 = {
+v18 = {
   "alias": null,
   "args": null,
   "concreteType": "PageInfo",
@@ -227,9 +226,9 @@ v17 = {
   ],
   "storageKey": null
 },
-v18 = {
+v19 = {
   "alias": "exclusivePosts",
-  "args": (v14/*: any*/),
+  "args": (v15/*: any*/),
   "concreteType": "PostConnection",
   "kind": "LinkedField",
   "name": "posts",
@@ -244,7 +243,7 @@ v18 = {
       "plural": true,
       "selections": [
         (v2/*: any*/),
-        (v15/*: any*/),
+        (v16/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -255,7 +254,7 @@ v18 = {
           "selections": [
             (v2/*: any*/),
             (v4/*: any*/),
-            (v16/*: any*/),
+            (v17/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -280,7 +279,7 @@ v18 = {
                   "name": "resource",
                   "plural": false,
                   "selections": [
-                    (v12/*: any*/),
+                    (v13/*: any*/),
                     {
                       "alias": null,
                       "args": null,
@@ -299,6 +298,7 @@ v18 = {
                     (v9/*: any*/),
                     (v10/*: any*/),
                     (v11/*: any*/),
+                    (v12/*: any*/),
                     (v4/*: any*/)
                   ],
                   "storageKey": null
@@ -325,13 +325,13 @@ v18 = {
       ],
       "storageKey": null
     },
-    (v17/*: any*/)
+    (v18/*: any*/)
   ],
   "storageKey": "posts(first:10,sortBy:\"NEW\",supporterOnlyStatus:[\"FULL\",\"PARTIAL\"])"
 },
-v19 = {
+v20 = {
   "alias": "exclusivePosts",
-  "args": (v14/*: any*/),
+  "args": (v15/*: any*/),
   "filters": [
     "sortBy",
     "supporterOnlyStatus"
@@ -341,7 +341,7 @@ v19 = {
   "kind": "LinkedHandle",
   "name": "posts"
 },
-v20 = {
+v21 = {
   "kind": "InlineFragment",
   "selections": [
     (v4/*: any*/)
@@ -349,7 +349,7 @@ v20 = {
   "type": "Node",
   "abstractKey": "__isNode"
 },
-v21 = [
+v22 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -464,7 +464,7 @@ return {
                   (v4/*: any*/),
                   (v5/*: any*/),
                   (v6/*: any*/),
-                  (v13/*: any*/),
+                  (v14/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -483,8 +483,8 @@ return {
                     ],
                     "storageKey": null
                   },
-                  (v18/*: any*/),
-                  (v19/*: any*/)
+                  (v19/*: any*/),
+                  (v20/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -519,7 +519,7 @@ return {
                         "name": "expiration",
                         "storageKey": null
                       },
-                      (v12/*: any*/)
+                      (v13/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -565,7 +565,7 @@ return {
                 ],
                 "storageKey": null
               },
-              (v16/*: any*/)
+              (v17/*: any*/)
             ],
             "type": "AccountActiveClubSupporterSubscription",
             "abstractKey": null
@@ -573,7 +573,7 @@ return {
           {
             "kind": "InlineFragment",
             "selections": [
-              (v16/*: any*/),
+              (v17/*: any*/),
               (v3/*: any*/),
               {
                 "alias": null,
@@ -593,9 +593,9 @@ return {
                   (v4/*: any*/),
                   (v5/*: any*/),
                   (v6/*: any*/),
-                  (v13/*: any*/),
-                  (v18/*: any*/),
-                  (v19/*: any*/)
+                  (v14/*: any*/),
+                  (v19/*: any*/),
+                  (v20/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -610,7 +610,7 @@ return {
             "type": "AccountCancelledClubSupporterSubscription",
             "abstractKey": null
           },
-          (v20/*: any*/)
+          (v21/*: any*/)
         ],
         "storageKey": null
       },
@@ -624,7 +624,7 @@ return {
         "selections": [
           {
             "alias": null,
-            "args": (v21/*: any*/),
+            "args": (v22/*: any*/),
             "concreteType": "AccountClubSupporterSubscriptionConnection",
             "kind": "LinkedField",
             "name": "clubSupporterSubscriptions",
@@ -639,7 +639,7 @@ return {
                 "plural": true,
                 "selections": [
                   (v2/*: any*/),
-                  (v15/*: any*/),
+                  (v16/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -649,14 +649,14 @@ return {
                     "plural": false,
                     "selections": [
                       (v2/*: any*/),
-                      (v20/*: any*/)
+                      (v21/*: any*/)
                     ],
                     "storageKey": null
                   }
                 ],
                 "storageKey": null
               },
-              (v17/*: any*/),
+              (v18/*: any*/),
               {
                 "kind": "ClientExtension",
                 "selections": [
@@ -674,7 +674,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v21/*: any*/),
+            "args": (v22/*: any*/),
             "filters": [
               "status"
             ],
@@ -690,7 +690,7 @@ return {
     ]
   },
   "params": {
-    "id": "9f475a3456692fc3bd75df7f4afc042d",
+    "id": "92fa85d92b3f5c5cb99ed097ce7b673a",
     "metadata": {},
     "name": "AccountClubSupporterSubscriptionSettingsQuery",
     "operationKind": "query",

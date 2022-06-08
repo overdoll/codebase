@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1279f41dd9d8e702e25dc64fe5f38b20>>
- * @relayHash 70dc3560872227b2509cbe681b90eca4
+ * @generated SignedSource<<c4013bd5675a441cca0e4282206b652f>>
+ * @relayHash c19436125eda281c1de0e9fb12238f91
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 70dc3560872227b2509cbe681b90eca4
+// @relayRequestID c19436125eda281c1de0e9fb12238f91
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -54,13 +54,15 @@ v2 = {
   "name": "id",
   "storageKey": null
 },
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
-};
+v3 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -135,16 +137,7 @@ return {
                 "kind": "LinkedField",
                 "name": "urls",
                 "plural": true,
-                "selections": [
-                  (v3/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "mimeType",
-                    "storageKey": null
-                  }
-                ],
+                "selections": (v3/*: any*/),
                 "storageKey": null
               },
               {
@@ -164,13 +157,18 @@ return {
               {
                 "alias": null,
                 "args": null,
+                "kind": "ScalarField",
+                "name": "preview",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
                 "concreteType": "ResourceUrl",
                 "kind": "LinkedField",
                 "name": "videoThumbnail",
                 "plural": false,
-                "selections": [
-                  (v3/*: any*/)
-                ],
+                "selections": (v3/*: any*/),
                 "storageKey": null
               },
               {
@@ -190,7 +188,7 @@ return {
     ]
   },
   "params": {
-    "id": "70dc3560872227b2509cbe681b90eca4",
+    "id": "c19436125eda281c1de0e9fb12238f91",
     "metadata": {},
     "name": "ThumbnailClubSettingsQuery",
     "operationKind": "query",

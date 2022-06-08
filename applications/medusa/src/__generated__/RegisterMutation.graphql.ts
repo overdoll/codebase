@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f78b1930ea4712a8127bde28a6c677e1>>
- * @relayHash db9d72640ddf3dd48eb05dac9ed3cf14
+ * @generated SignedSource<<92a6721248a74e8a0e6099ff1f52e1f6>>
+ * @relayHash f736e5de8ffce5443541770af8de90bf
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID db9d72640ddf3dd48eb05dac9ed3cf14
+// @relayRequestID f736e5de8ffce5443541770af8de90bf
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -108,13 +108,15 @@ v8 = {
   "name": "isArtist",
   "storageKey": null
 },
-v9 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
-};
+v9 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -220,16 +222,7 @@ return {
                     "kind": "LinkedField",
                     "name": "urls",
                     "plural": true,
-                    "selections": [
-                      (v9/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "mimeType",
-                        "storageKey": null
-                      }
-                    ],
+                    "selections": (v9/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -249,13 +242,18 @@ return {
                   {
                     "alias": null,
                     "args": null,
+                    "kind": "ScalarField",
+                    "name": "preview",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
                     "concreteType": "ResourceUrl",
                     "kind": "LinkedField",
                     "name": "videoThumbnail",
                     "plural": false,
-                    "selections": [
-                      (v9/*: any*/)
-                    ],
+                    "selections": (v9/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -285,7 +283,7 @@ return {
     ]
   },
   "params": {
-    "id": "db9d72640ddf3dd48eb05dac9ed3cf14",
+    "id": "f736e5de8ffce5443541770af8de90bf",
     "metadata": {},
     "name": "RegisterMutation",
     "operationKind": "mutation",

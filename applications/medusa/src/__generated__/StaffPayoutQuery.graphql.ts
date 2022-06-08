@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7106c7a32e1ebd0bad0fce1cce044f48>>
- * @relayHash c3bc1b13618cd9351099747bfa15a6f5
+ * @generated SignedSource<<3390e5be09427401a8d55dfaf2323e32>>
+ * @relayHash a3bda2813a21a5efc4fbdd2dc5eb06c2
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c3bc1b13618cd9351099747bfa15a6f5
+// @relayRequestID a3bda2813a21a5efc4fbdd2dc5eb06c2
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -64,13 +64,15 @@ v4 = {
   "name": "id",
   "storageKey": null
 },
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
-},
+v5 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  }
+],
 v6 = [
   {
     "alias": null,
@@ -79,16 +81,7 @@ v6 = [
     "kind": "LinkedField",
     "name": "urls",
     "plural": true,
-    "selections": [
-      (v5/*: any*/),
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "mimeType",
-        "storageKey": null
-      }
-    ],
+    "selections": (v5/*: any*/),
     "storageKey": null
   },
   {
@@ -108,13 +101,18 @@ v6 = [
   {
     "alias": null,
     "args": null,
+    "kind": "ScalarField",
+    "name": "preview",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
     "concreteType": "ResourceUrl",
     "kind": "LinkedField",
     "name": "videoThumbnail",
     "plural": false,
-    "selections": [
-      (v5/*: any*/)
-    ],
+    "selections": (v5/*: any*/),
     "storageKey": null
   },
   {
@@ -213,6 +211,13 @@ return {
             "args": null,
             "kind": "ScalarField",
             "name": "depositDate",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "coverFeeAmount",
             "storageKey": null
           },
           (v4/*: any*/),
@@ -418,7 +423,7 @@ return {
     ]
   },
   "params": {
-    "id": "c3bc1b13618cd9351099747bfa15a6f5",
+    "id": "a3bda2813a21a5efc4fbdd2dc5eb06c2",
     "metadata": {},
     "name": "StaffPayoutQuery",
     "operationKind": "query",

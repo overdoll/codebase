@@ -1,3 +1,9 @@
+"""Exposes a URL that specifies the behavior of this scalar."""
+directive @specifiedBy(
+  """The URL that specifies the behavior of this scalar."""
+  url: String!
+) on SCALAR
+
 type Account implements Node {
   """A URL pointing to the account's public avatar."""
   avatar: Resource
@@ -759,7 +765,8 @@ type AccountSession implements Node {
   created: Time!
 
   """
-  If the session belongs to the currently authenticated account. This means that the session cannot be revoked (or else we get weird stuff)
+  If the session belongs to the currently authenticated account. This means that
+  the session cannot be revoked (or else we get weird stuff)
   """
   current: Boolean!
 
@@ -789,6 +796,12 @@ type AccountSessionConnection {
 type AccountSessionEdge {
   cursor: String!
   node: AccountSession!
+}
+
+"""Properties by which accounts connections can be sorted."""
+enum AccountsSort {
+  """Accounts by newest first"""
+  NEW
 }
 
 """
@@ -889,12 +902,6 @@ enum AccountTransactionType {
   PAYMENT
   REFUND
   VOID
-}
-
-"""Properties by which accounts connections can be sorted."""
-enum AccountsSort {
-  """Accounts by newest first"""
-  NEW
 }
 
 """Add an email to the account"""
@@ -1141,7 +1148,8 @@ type AuthenticationToken {
   location: Location!
 
   """
-  When the token is viewed with the correct ID, whether or not the devices match (you cannot use the token unless the device is the same).
+  When the token is viewed with the correct ID, whether or not the devices match
+  (you cannot use the token unless the device is the same).
   """
   sameDevice: Boolean!
 
@@ -1160,7 +1168,8 @@ type AuthenticationToken {
   userAgent: String!
 
   """
-  Whether or not the token is verified (required in order to see account status, and to use it for completing the auth flow).
+  Whether or not the token is verified (required in order to see account status,
+  and to use it for completing the auth flow).
   """
   verified: Boolean!
 }
@@ -1174,9 +1183,6 @@ type AuthenticationTokenAccountStatus {
   """
   registered: Boolean!
 }
-
-"""Localization formatted in BCP47."""
-scalar BCP47
 
 """
 A balance item.
@@ -1193,6 +1199,9 @@ type Balance {
   """When the balance was last updated."""
   updatedAt: Time
 }
+
+"""Localization formatted in BCP47."""
+scalar BCP47
 
 """Become club supporter with saved payment method."""
 input BecomeClubSupporterWithAccountSavedPaymentMethodInput {
@@ -1229,144 +1238,6 @@ type BillingContact {
   firstName: String!
   lastName: String!
   phoneNumber: String!
-}
-
-enum CCBillDeclineError {
-  CARD_EXPIRED
-  GENERAL_SYSTEM_ERROR
-  INSUFFICIENT_FUNDS
-  RATE_LIMIT_ERROR
-  TRANSACTION_APPROVAL_REQUIRED
-  TRANSACTION_DECLINED
-  TRANSACTION_DENIED_OR_REFUSED_BY_BANK
-}
-
-"""
-The ccbill subscription details.
-
-When this object is present, this means that it can only be updated through CCBill support. https://support.ccbill.com/
-
-For example: active subscriptions' payment methods can only be updated through support, or any saved payment methods.
-"""
-type CCBillSubscription {
-  """The identifier for this subscription."""
-  ccbillSubscriptionId: String!
-
-  """The email belonging to this subscription."""
-  email: String!
-
-  """A link to modify the subscription."""
-  link: URI!
-
-  """The payment method belonging to this subscription."""
-  paymentMethod: String!
-}
-
-type CCBillSubscriptionDetails {
-  """The account linked to this ccbill subscription."""
-  account: Account!
-  accountingCurrency: Currency!
-
-  """Accounting details."""
-  accountingInitialPrice: Int!
-  accountingRecurringPrice: Int!
-  billedCurrency: Currency!
-
-  """Billed details."""
-  billedInitialPrice: Int!
-  billedRecurringPrice: Int!
-
-  """If this subscription was cancelled, the date it occurred."""
-  cancelDate: Time
-
-  """The amount of chargebacks issued."""
-  chargebacksIssued: Int!
-
-  """The club linked to this ccbill subscription, if there is one."""
-  club: Club
-
-  """If this subscription was cancelled, the expiration date."""
-  expirationDate: Time
-
-  """The ID of the subscription."""
-  id: ID!
-
-  """Whether or not this subscription was a duplicate."""
-  isDuplicate: Boolean!
-
-  """Whether or not this is recurring, or a one-time charge."""
-  isRecurring: Boolean!
-
-  """Payment method linked to this CCBill subscription."""
-  paymentMethod: PaymentMethod!
-
-  """The amount of refunds issued."""
-  refundsIssued: Int!
-
-  """The signup date."""
-  signupDate: Time!
-
-  """The status of the CCBill subscription."""
-  status: CCBillSubscriptionStatus!
-  subscriptionCurrency: Currency!
-
-  """Subscription details."""
-  subscriptionInitialPrice: Int!
-  subscriptionRecurringPrice: Int!
-
-  """The amount of rebills that occurred."""
-  timesRebilled: Int!
-
-  """When this subscription was updated last."""
-  updatedAt: Time!
-
-  """The amount of voids issued."""
-  voidsIssued: Int!
-}
-
-enum CCBillSubscriptionStatus {
-  """An active subscription that was cancelled, or a one-time charge."""
-  ACTIVE_AND_CANCELLED
-
-  """An active subscription that is not cancelled."""
-  ACTIVE_AND_NOT_CANCELLED
-
-  """An inactive subscription, i.e. expired."""
-  INACTIVE
-}
-
-"""
-Represents a CCBill transaction, which may or may not contain these fields.
-"""
-type CCBillTransaction {
-  ccbillSubscriptionId: String!
-  ccbillTransactionId: String
-}
-
-type CCBillTransactionDetails {
-  """Whether or not the transaction was approved."""
-  approved: Boolean!
-
-  """The decline code from CCBill."""
-  declineCode: String
-
-  """The error from CCBill, if the transaction was not approved."""
-  declineError: CCBillDeclineError
-
-  """The decline text from CCBill."""
-  declineText: String
-
-  """An ID uniquely identifying this transaction."""
-  id: ID!
-
-  """
-  If this transaction was approved, poll this field to until this is not null anymore.
-  
-  This signifies that the transaction has processed successfully (on our end),
-  
-  and the supporter benefits are now available.
-  """
-  linkedAccountClubSupporterSubscription: AccountClubSupporterSubscription
 }
 
 """Cancel account club supporter subscription input."""
@@ -1564,6 +1435,144 @@ type CategoryCurationProfile {
 type CategoryEdge {
   cursor: String!
   node: Category!
+}
+
+enum CCBillDeclineError {
+  CARD_EXPIRED
+  GENERAL_SYSTEM_ERROR
+  INSUFFICIENT_FUNDS
+  RATE_LIMIT_ERROR
+  TRANSACTION_APPROVAL_REQUIRED
+  TRANSACTION_DECLINED
+  TRANSACTION_DENIED_OR_REFUSED_BY_BANK
+}
+
+"""
+The ccbill subscription details.
+
+When this object is present, this means that it can only be updated through CCBill support. https://support.ccbill.com/
+
+For example: active subscriptions' payment methods can only be updated through support, or any saved payment methods.
+"""
+type CCBillSubscription {
+  """The identifier for this subscription."""
+  ccbillSubscriptionId: String!
+
+  """The email belonging to this subscription."""
+  email: String!
+
+  """A link to modify the subscription."""
+  link: URI!
+
+  """The payment method belonging to this subscription."""
+  paymentMethod: String!
+}
+
+type CCBillSubscriptionDetails {
+  """The account linked to this ccbill subscription."""
+  account: Account!
+  accountingCurrency: Currency!
+
+  """Accounting details."""
+  accountingInitialPrice: Int!
+  accountingRecurringPrice: Int!
+  billedCurrency: Currency!
+
+  """Billed details."""
+  billedInitialPrice: Int!
+  billedRecurringPrice: Int!
+
+  """If this subscription was cancelled, the date it occurred."""
+  cancelDate: Time
+
+  """The amount of chargebacks issued."""
+  chargebacksIssued: Int!
+
+  """The club linked to this ccbill subscription, if there is one."""
+  club: Club
+
+  """If this subscription was cancelled, the expiration date."""
+  expirationDate: Time
+
+  """The ID of the subscription."""
+  id: ID!
+
+  """Whether or not this subscription was a duplicate."""
+  isDuplicate: Boolean!
+
+  """Whether or not this is recurring, or a one-time charge."""
+  isRecurring: Boolean!
+
+  """Payment method linked to this CCBill subscription."""
+  paymentMethod: PaymentMethod!
+
+  """The amount of refunds issued."""
+  refundsIssued: Int!
+
+  """The signup date."""
+  signupDate: Time!
+
+  """The status of the CCBill subscription."""
+  status: CCBillSubscriptionStatus!
+  subscriptionCurrency: Currency!
+
+  """Subscription details."""
+  subscriptionInitialPrice: Int!
+  subscriptionRecurringPrice: Int!
+
+  """The amount of rebills that occurred."""
+  timesRebilled: Int!
+
+  """When this subscription was updated last."""
+  updatedAt: Time!
+
+  """The amount of voids issued."""
+  voidsIssued: Int!
+}
+
+enum CCBillSubscriptionStatus {
+  """An active subscription that was cancelled, or a one-time charge."""
+  ACTIVE_AND_CANCELLED
+
+  """An active subscription that is not cancelled."""
+  ACTIVE_AND_NOT_CANCELLED
+
+  """An inactive subscription, i.e. expired."""
+  INACTIVE
+}
+
+"""
+Represents a CCBill transaction, which may or may not contain these fields.
+"""
+type CCBillTransaction {
+  ccbillSubscriptionId: String!
+  ccbillTransactionId: String
+}
+
+type CCBillTransactionDetails {
+  """Whether or not the transaction was approved."""
+  approved: Boolean!
+
+  """The decline code from CCBill."""
+  declineCode: String
+
+  """The error from CCBill, if the transaction was not approved."""
+  declineError: CCBillDeclineError
+
+  """The decline text from CCBill."""
+  declineText: String
+
+  """An ID uniquely identifying this transaction."""
+  id: ID!
+
+  """
+  If this transaction was approved, poll this field to until this is not null anymore.
+  
+  This signifies that the transaction has processed successfully (on our end),
+  
+  and the supporter benefits are now available.
+  """
+  linkedAccountClubSupporterSubscription: AccountClubSupporterSubscription
 }
 
 type Character implements Node {
@@ -1818,7 +1827,8 @@ type Club implements Node {
   slug: String!
 
   """
-  An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug.
+  An alias list of slugs. These are valid, as in, you can find the club using
+  the slug. However, it should always be replaced by the default slug.
   """
   slugAliases: [ClubSlugAlias!]!
 
@@ -1984,7 +1994,8 @@ type ClubMember implements Node {
   """
   The subscription linked to this club member.
   
-  Note that an account can have multiple subscriptions for the same club, due to the fact that we keep expired subscriptions.
+  Note that an account can have multiple subscriptions for the same club, due to
+  the fact that we keep expired subscriptions.
   
   So this will just grab the most recent active subscription for this club.
   """
@@ -2102,7 +2113,8 @@ enum ClubPaymentStatus {
   A payment is ready to be picked up as part of a payout.
   
   Note that a payment can be picked up by multiple payouts, it will only transition to the complete state once
-  the minimum threshold for the payout has been reached. If the payout threshold isn't reached, the payment will be picked up
+  the minimum threshold for the payout has been reached. If the payout threshold
+  isn't reached, the payment will be picked up
   by the next scheduled payout.
   """
   READY
@@ -2119,6 +2131,9 @@ type ClubPayout implements Node {
 
   """The club linked to this payout."""
   club: Club!
+
+  """The amount that will be covered as the cover fee."""
+  coverFeeAmount: Int!
 
   """When this payout was created."""
   createdAt: Time!
@@ -2163,6 +2178,9 @@ type ClubPayout implements Node {
 
   """The status of the payout."""
   status: ClubPayoutStatus!
+
+  """The amount, with the cover fee."""
+  totalAmount: Int!
 }
 
 """Connection of the club payout."""
@@ -2233,6 +2251,12 @@ type ClubRemovedSuspensionLog {
 type ClubSlugAlias {
   """The slug alias"""
   slug: String!
+}
+
+"""Properties by which club connections can be sorted."""
+enum ClubsSort {
+  """Clubs by popularity"""
+  POPULAR
 }
 
 type ClubSuspension {
@@ -2320,12 +2344,6 @@ type ClubTransactionMetricConnection {
 type ClubTransactionMetricEdge {
   cursor: String!
   node: ClubTransactionMetric!
-}
-
-"""Properties by which club connections can be sorted."""
-enum ClubsSort {
-  """Clubs by popularity"""
-  POPULAR
 }
 
 """Input for confirming the account email"""
@@ -2743,7 +2761,8 @@ type DepositRequest implements Node {
   id: ID!
 
   """
-  The last date the deposit, meaning the last day until the deposit should be made, this is when all of the payouts would be scheduled.
+  The last date the deposit, meaning the last day until the deposit should be
+  made, this is when all of the payouts would be scheduled.
   """
   lastDateForDeposit: Time!
 
@@ -2836,7 +2855,9 @@ type ExpiredAccountClubSupporterSubscription {
   id: ID!
 
   """
-  When the account first became a supporter. Note that when subscribing next time, this date will be kept, but subtracted by the amount of days they were not a supporter, and normalized to the current date.
+  When the account first became a supporter. Note that when subscribing next
+  time, this date will be kept, but subtracted by the amount of days they were
+  not a supporter, and normalized to the current date.
   """
   supporterSince: Time!
 }
@@ -3468,7 +3489,8 @@ type Mutation {
   """
   Initiate a club payout for the specific club.
   
-  Note that only 1 payout can be created at a time, so this call will fail if there is a payout either "in progress" or "queued".
+  Note that only 1 payout can be created at a time, so this call will fail if
+  there is a payout either "in progress" or "queued".
   
   Staff+ only.
   """
@@ -4018,6 +4040,15 @@ type PostReportEdge {
   node: PostReport!
 }
 
+"""Properties by which posts connections can be sorted."""
+enum PostsSort {
+  """Posts by newest first"""
+  NEW
+
+  """Posts by top likes"""
+  TOP
+}
+
 enum PostState {
   ARCHIVED
   DISCARDED
@@ -4026,15 +4057,6 @@ enum PostState {
   REJECTED
   REMOVED
   REVIEW
-}
-
-"""Properties by which posts connections can be sorted."""
-enum PostsSort {
-  """Posts by newest first"""
-  NEW
-
-  """Posts by top likes"""
-  TOP
 }
 
 """Type describing a price."""
@@ -4176,7 +4198,8 @@ type Query {
   After a successful transaction (through CCBill FlexForms or becomeClubSupporterWithAccountSavedPaymentMethod),
   use the returned token in this query to grab the current state of the transaction.
   
-  It will tell you if the transaction was approved or denied, as well as having the ability to poll until a subscription is finalized.
+  It will tell you if the transaction was approved or denied, as well as having
+  the ability to poll until a subscription is finalized.
   """
   ccbillTransactionDetails(token: String!): CCBillTransactionDetails
 
@@ -4294,7 +4317,8 @@ type Query {
   """
   List of all available languages
   
-  Should be used as a reference for back-end queries when requesting a specific language or adding a new language to a backend list
+  Should be used as a reference for back-end queries when requesting a specific
+  language or adding a new language to a backend list
   """
   languages: [Language!]!
 
@@ -4491,7 +4515,8 @@ type Query {
   """
   Get the status of the authentication token - whether or not it is redeemed, account status, etc..
   
-  Note: you can only view the authentication token if you're the originating device or you have entered a valid secret (not from same device)
+  Note: you can only view the authentication token if you're the originating
+  device or you have entered a valid secret (not from same device)
   """
   viewAuthenticationToken(secret: String, token: String!): AuthenticationToken
 
@@ -4655,6 +4680,11 @@ type Resource {
 
   """An ID uniquely identifying this resource."""
   id: ID!
+
+  """
+  The additional 10x10 base64-encoded image that can be used as a preview.
+  """
+  preview: String!
 
   """
   Whether or not the resource is processed. Can be used for additional permission checks.
@@ -4979,9 +5009,6 @@ type Translation {
   text: String!
 }
 
-"""An RFC 3986, RFC 3987, and RFC 6570 (level 4) compliant URI string."""
-scalar URI
-
 """Un-Archive post."""
 input UnArchivePostInput {
   """The post to un-archive"""
@@ -4992,30 +5019,6 @@ input UnArchivePostInput {
 type UnArchivePostPayload {
   """The un-archived post."""
   post: Post
-}
-
-"""Un-Suspend the club."""
-input UnSuspendClubInput {
-  """The club to un-suspend."""
-  clubId: ID!
-}
-
-"""Un suspend club payload."""
-type UnSuspendClubPayload {
-  """The new club after it's not suspended anymore."""
-  club: Club
-}
-
-"""Un-Terminate the club."""
-input UnTerminateClubInput {
-  """The club to un-terminate."""
-  clubId: ID!
-}
-
-"""Un terminate club payload."""
-type UnTerminateClubPayload {
-  """The new club after it's not terminated anymore."""
-  club: Club
 }
 
 """Undo like on a post."""
@@ -5040,6 +5043,30 @@ input UnlockAccountInput {
 type UnlockAccountPayload {
   """Account that was unlocked"""
   account: Account
+}
+
+"""Un-Suspend the club."""
+input UnSuspendClubInput {
+  """The club to un-suspend."""
+  clubId: ID!
+}
+
+"""Un suspend club payload."""
+type UnSuspendClubPayload {
+  """The new club after it's not suspended anymore."""
+  club: Club
+}
+
+"""Un-Terminate the club."""
+input UnTerminateClubInput {
+  """The club to un-terminate."""
+  clubId: ID!
+}
+
+"""Un terminate club payload."""
+type UnTerminateClubPayload {
+  """The new club after it's not terminated anymore."""
+  club: Club
 }
 
 """Update account details."""
@@ -5565,6 +5592,9 @@ type UpdateSeriesTitlePayload {
   """The series after update"""
   series: Series
 }
+
+"""An RFC 3986, RFC 3987, and RFC 6570 (level 4) compliant URI string."""
+scalar URI
 
 """Input for verifying authentication token"""
 input VerifyAuthenticationTokenInput {

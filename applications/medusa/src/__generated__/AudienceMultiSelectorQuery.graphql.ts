@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<cccd36414dfd2f2ab37348081dabb244>>
- * @relayHash 5defc8d1667dbee264183bd526ebc3a7
+ * @generated SignedSource<<7d1deb3506f11d98ff26a36351a75c7f>>
+ * @relayHash 0dc4b92922f651235ffbf1edcb500485
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 5defc8d1667dbee264183bd526ebc3a7
+// @relayRequestID 0dc4b92922f651235ffbf1edcb500485
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -47,13 +47,15 @@ v1 = {
   "name": "title",
   "storageKey": null
 },
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
-};
+v2 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": [],
@@ -159,16 +161,7 @@ return {
                         "kind": "LinkedField",
                         "name": "urls",
                         "plural": true,
-                        "selections": [
-                          (v2/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "mimeType",
-                            "storageKey": null
-                          }
-                        ],
+                        "selections": (v2/*: any*/),
                         "storageKey": null
                       },
                       {
@@ -188,13 +181,18 @@ return {
                       {
                         "alias": null,
                         "args": null,
+                        "kind": "ScalarField",
+                        "name": "preview",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
                         "concreteType": "ResourceUrl",
                         "kind": "LinkedField",
                         "name": "videoThumbnail",
                         "plural": false,
-                        "selections": [
-                          (v2/*: any*/)
-                        ],
+                        "selections": (v2/*: any*/),
                         "storageKey": null
                       },
                       {
@@ -220,7 +218,7 @@ return {
     ]
   },
   "params": {
-    "id": "5defc8d1667dbee264183bd526ebc3a7",
+    "id": "0dc4b92922f651235ffbf1edcb500485",
     "metadata": {},
     "name": "AudienceMultiSelectorQuery",
     "operationKind": "query",

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<41b43ff71a5ac7f714a1c2b573fa9794>>
+ * @generated SignedSource<<b7ff4a5cfec971fc3985d2596cc279a3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ import { FragmentRefs } from "relay-runtime";
 export type StaffPayoutOptionsFragment$data = {
   readonly amount: number;
   readonly currency: Currency;
+  readonly coverFeeAmount: number;
   readonly status: ClubPayoutStatus;
   readonly depositDate: any;
   readonly " $fragmentSpreads": FragmentRefs<"UpdateClubPayoutDepositDateFormFragment" | "StaffCancelClubPayoutButtonFragment" | "StaffRetryClubPayoutButtonFragment">;
@@ -44,6 +45,13 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "ScalarField",
       "name": "currency",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "coverFeeAmount",
       "storageKey": null
     },
     {
@@ -80,6 +88,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "0bb57d1ba10b146a2e758b6ef00243f0";
+(node as any).hash = "849a54a29ea7501e155cdbe6435ca305";
 
 export default node;
