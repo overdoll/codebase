@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"overdoll/libraries/errors"
 
 	"overdoll/applications/carrier/internal/domain/identifier"
 	eva "overdoll/applications/eva/proto"
@@ -22,7 +23,7 @@ func (s EvaGrpc) GetAccount(ctx context.Context, id string) (*identifier.Identif
 	})
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "error retrieving account")
 	}
 
 	return identifier.UnmarshalIdentifierFromDatabase(usr.Id, usr.Username, usr.Email), nil

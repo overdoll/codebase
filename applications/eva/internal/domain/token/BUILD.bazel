@@ -11,6 +11,8 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/eva/internal/domain/location",
+        "//libraries/errors",
+        "//libraries/errors/domainerror",
         "//libraries/passport",
         "//libraries/uuid",
         "@com_github_go_playground_validator_v10//:validator",

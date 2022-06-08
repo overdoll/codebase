@@ -2,9 +2,10 @@ package command
 
 import (
 	"context"
-	"errors"
 	"overdoll/applications/ringer/internal/domain/details"
 	"overdoll/applications/ringer/internal/domain/payout"
+	"overdoll/libraries/errors/apperror"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/principal"
 )
 
@@ -29,8 +30,8 @@ func (h SetPaxumAccountPayoutMethodHandler) Handle(ctx context.Context, cmd SetP
 
 	if err != nil {
 
-		if err == details.ErrAccountDetailsNotFound {
-			return nil, errors.New("account identification must be filled out before creating a payout method")
+		if apperror.IsNotFoundError(err) {
+			return nil, domainerror.NewValidation("account identification must be filled out before creating a payout method")
 		}
 
 		return nil, err

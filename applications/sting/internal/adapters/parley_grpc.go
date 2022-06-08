@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"overdoll/libraries/errors"
 
 	parley "overdoll/applications/parley/proto"
 )
@@ -21,7 +22,7 @@ func (s ParleyGrpc) PutPostIntoModeratorQueueOrPublish(ctx context.Context, post
 	})
 
 	if err != nil {
-		return false, err
+		return false, errors.Wrap(err, "failed to put post into moderator queue or publish")
 	}
 
 	return res.PutIntoReview, nil

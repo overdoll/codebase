@@ -12,5 +12,6 @@ CREATE TABLE IF NOT EXISTS resources
     video_thumbnail_mime_type text,
     width                     int,
     height                    int,
+    preview                   text,
     primary key ( item_id, resource_id )
 );

@@ -2,7 +2,6 @@ package command
 
 import (
 	"context"
-	"github.com/pkg/errors"
 	"os"
 	"overdoll/applications/carrier/internal/domain/links"
 	"overdoll/applications/carrier/internal/domain/mailing"
@@ -27,7 +26,7 @@ func (h ClubSupporterNoPostsHandler) Handle(ctx context.Context, cmd ClubSupport
 	clubDetails, err := h.stella.GetClub(ctx, cmd.ClubId)
 
 	if err != nil {
-		return errors.Wrap(err, "failed to get club")
+		return err
 	}
 
 	clubUrl, err := links.CreateClubUrl(clubDetails.Slug())

@@ -6,11 +6,12 @@ import (
 	"fmt"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
-	"go.uber.org/zap"
 	"overdoll/applications/ringer/internal/domain/payment"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
+	"overdoll/libraries/support"
 	"time"
 )
 
@@ -67,7 +68,7 @@ func unmarshalClubPaymentDocument(hit *elastic.SearchHit) (*payment.ClubPayment,
 	return createdTransaction, nil
 }
 
-func marshalClubPaymentToDocument(pay *payment.ClubPayment) (*clubPaymentDocument, error) {
+func marshalClubPaymentToDocument(pay *payment.ClubPayment) *clubPaymentDocument {
 	return &clubPaymentDocument{
 		Id:                       pay.Id(),
 		Source:                   pay.Source().String(),
@@ -84,7 +85,7 @@ func marshalClubPaymentToDocument(pay *payment.ClubPayment) (*clubPaymentDocumen
 		DeductionSourcePaymentId: pay.DeductionSourcePaymentId(),
 		CreatedAt:                pay.CreatedAt(),
 		ClubPayoutIds:            pay.ClubPayoutIds(),
-	}, nil
+	}
 }
 
 func (r PaymentCassandraElasticsearchRepository) SearchClubPayments(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *payment.ClubPaymentsFilters) ([]*payment.ClubPayment, error) {
@@ -93,7 +94,7 @@ func (r PaymentCassandraElasticsearchRepository) SearchClubPayments(ctx context.
 		Index(ClubPaymentsIndexName)
 
 	if cursor == nil {
-		return nil, fmt.Errorf("cursor must be present")
+		return nil, paging.ErrCursorNotPresent
 	}
 
 	// general search
@@ -143,7 +144,7 @@ func (r PaymentCassandraElasticsearchRepository) SearchClubPayments(ctx context.
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to search club payments: %v", err)
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed to search club payments")
 	}
 
 	var pays []*payment.ClubPayment
@@ -179,9 +180,7 @@ func (r PaymentCassandraElasticsearchRepository) updateIndexPaymentPayoutId(ctx 
 		Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Errorw("failed to update index append club payments payout id: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return fmt.Errorf("failed to update index append club payments payout id: %v", err)
+		return errors.Wrap(support.ParseElasticError(err), "failed to update index append club payments payout id")
 	}
 
 	return nil
@@ -229,7 +228,7 @@ func (r PaymentCassandraElasticsearchRepository) IndexAllClubPayments(ctx contex
 				Do(ctx)
 
 			if err != nil {
-				return fmt.Errorf("failed to index club payments: %v", err)
+				return errors.Wrap(support.ParseElasticError(err), "failed to index club payments")
 			}
 		}
 
@@ -245,13 +244,9 @@ func (r PaymentCassandraElasticsearchRepository) IndexAllClubPayments(ctx contex
 
 func (r PaymentCassandraElasticsearchRepository) indexClubPayment(ctx context.Context, pay *payment.ClubPayment) error {
 
-	pst, err := marshalClubPaymentToDocument(pay)
+	pst := marshalClubPaymentToDocument(pay)
 
-	if err != nil {
-		return err
-	}
-
-	_, err = r.client.
+	_, err := r.client.
 		Index().
 		Index(ClubPaymentsIndexName).
 		Id(pst.Id).
@@ -259,7 +254,7 @@ func (r PaymentCassandraElasticsearchRepository) indexClubPayment(ctx context.Co
 		Do(ctx)
 
 	if err != nil {
-		return fmt.Errorf("failed to index club payment: %v", err)
+		return errors.Wrap(support.ParseElasticError(err), "failed to index club payment")
 	}
 
 	return nil
@@ -273,7 +268,7 @@ func (r PaymentCassandraElasticsearchRepository) updateIndexClubPaymentsComplete
 		Do(ctx)
 
 	if err != nil {
-		return fmt.Errorf("failed to update index club payments completed: %v", err)
+		return errors.Wrap(support.ParseElasticError(err), "failed to update index club payments completed")
 	}
 
 	return nil

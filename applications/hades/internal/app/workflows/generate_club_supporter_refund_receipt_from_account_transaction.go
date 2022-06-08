@@ -13,6 +13,7 @@ type GenerateClubSupporterRefundReceiptFromAccountTransactionInput struct {
 func GenerateClubSupporterRefundReceiptFromAccountTransaction(ctx workflow.Context, input GenerateClubSupporterRefundReceiptFromAccountTransactionInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -22,6 +23,7 @@ func GenerateClubSupporterRefundReceiptFromAccountTransaction(ctx workflow.Conte
 			AccountTransactionEventId: input.AccountTransactionEventId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to generate club supporter refund receipt from account transaction", "Error", err)
 		return err
 	}
 

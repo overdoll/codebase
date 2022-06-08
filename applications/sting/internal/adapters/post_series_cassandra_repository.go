@@ -2,9 +2,12 @@ package adapters
 
 import (
 	"context"
-	"fmt"
+	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/localization"
+	"overdoll/libraries/support"
 	"strings"
+	"time"
 
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -22,6 +25,7 @@ var seriesTable = table.New(table.Metadata{
 		"thumbnail_resource_id",
 		"total_likes",
 		"total_posts",
+		"created_at",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -34,6 +38,7 @@ type series struct {
 	ThumbnailResourceId *string           `db:"thumbnail_resource_id"`
 	TotalLikes          int               `db:"total_likes"`
 	TotalPosts          int               `db:"total_posts"`
+	CreatedAt           time.Time         `db:"created_at"`
 }
 
 var seriesSlugTable = table.New(table.Metadata{
@@ -51,7 +56,7 @@ type seriesSlug struct {
 	Slug     string `db:"slug"`
 }
 
-func marshalSeriesToDatabase(pending *post.Series) (*series, error) {
+func marshalSeriesToDatabase(pending *post.Series) *series {
 	return &series{
 		Id:                  pending.ID(),
 		Slug:                pending.Slug(),
@@ -59,7 +64,8 @@ func marshalSeriesToDatabase(pending *post.Series) (*series, error) {
 		ThumbnailResourceId: pending.ThumbnailResourceId(),
 		TotalLikes:          pending.TotalLikes(),
 		TotalPosts:          pending.TotalPosts(),
-	}, nil
+		CreatedAt:           pending.CreatedAt(),
+	}
 }
 
 func (r PostsCassandraElasticsearchRepository) getSeriesBySlug(ctx context.Context, requester *principal.Principal, slug string) (*seriesSlug, error) {
@@ -69,15 +75,16 @@ func (r PostsCassandraElasticsearchRepository) getSeriesBySlug(ctx context.Conte
 	if err := r.session.
 		Query(seriesSlugTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(seriesSlug{Slug: strings.ToLower(slug)}).
 		GetRelease(&b); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, post.ErrSeriesNotFound
+			return nil, apperror.NewNotFoundError("series", slug)
 		}
 
-		return nil, fmt.Errorf("failed to get series by slug: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get series by slug")
 	}
 
 	return &b, nil
@@ -97,10 +104,11 @@ func (r PostsCassandraElasticsearchRepository) GetSeriesIdsFromSlugs(ctx context
 		Where(qb.In("slug")).
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.One).
 		Bind(lowercaseSlugs).
 		SelectRelease(&seriesSlugResults); err != nil {
-		return nil, fmt.Errorf("failed to get series slugs: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get series slugs")
 	}
 
 	var ids []string
@@ -134,15 +142,16 @@ func (r PostsCassandraElasticsearchRepository) getSingleSeriesById(ctx context.C
 	if err := r.session.
 		Query(seriesTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(series{Id: seriesId}).
 		GetRelease(&med); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, post.ErrSeriesNotFound
+			return nil, apperror.NewNotFoundError("series", seriesId)
 		}
 
-		return nil, fmt.Errorf("failed to get media by id: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get series by id")
 	}
 
 	return post.UnmarshalSeriesFromDatabase(
@@ -152,6 +161,7 @@ func (r PostsCassandraElasticsearchRepository) getSingleSeriesById(ctx context.C
 		med.ThumbnailResourceId,
 		med.TotalLikes,
 		med.TotalPosts,
+		med.CreatedAt,
 	), nil
 }
 
@@ -170,10 +180,11 @@ func (r PostsCassandraElasticsearchRepository) GetSeriesByIds(ctx context.Contex
 		Where(qb.In("id")).
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.One).
 		Bind(medi).
 		SelectRelease(&mediaModels); err != nil {
-		return nil, fmt.Errorf("failed to get medias by id: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get series by id")
 	}
 
 	for _, med := range mediaModels {
@@ -184,6 +195,7 @@ func (r PostsCassandraElasticsearchRepository) GetSeriesByIds(ctx context.Contex
 			med.ThumbnailResourceId,
 			med.TotalLikes,
 			med.TotalPosts,
+			med.CreatedAt,
 		))
 	}
 
@@ -195,9 +207,10 @@ func (r PostsCassandraElasticsearchRepository) deleteUniqueSeriesSlug(ctx contex
 	if err := r.session.
 		Query(seriesSlugTable.DeleteBuilder().Existing().ToCql()).
 		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(seriesSlug{Slug: strings.ToLower(slug), SeriesId: id}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to release series slug: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to release series slug")
 	}
 
 	return nil
@@ -205,11 +218,7 @@ func (r PostsCassandraElasticsearchRepository) deleteUniqueSeriesSlug(ctx contex
 
 func (r PostsCassandraElasticsearchRepository) CreateSeries(ctx context.Context, requester *principal.Principal, series *post.Series) error {
 
-	ser, err := marshalSeriesToDatabase(series)
-
-	if err != nil {
-		return err
-	}
+	ser := marshalSeriesToDatabase(series)
 
 	// first, do a unique insert of club to ensure we reserve a unique slug
 	applied, err := seriesSlugTable.
@@ -222,7 +231,7 @@ func (r PostsCassandraElasticsearchRepository) CreateSeries(ctx context.Context,
 		ExecCASRelease()
 
 	if err != nil {
-		return fmt.Errorf("failed to create unique character slug: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to create unique character slug")
 	}
 
 	if !applied {
@@ -232,6 +241,7 @@ func (r PostsCassandraElasticsearchRepository) CreateSeries(ctx context.Context,
 	if err := r.session.
 		Query(seriesTable.Insert()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(ser).
 		ExecRelease(); err != nil {
@@ -240,7 +250,7 @@ func (r PostsCassandraElasticsearchRepository) CreateSeries(ctx context.Context,
 			return err
 		}
 
-		return err
+		return errors.Wrap(err, "failed to insert series")
 	}
 
 	if err := r.indexSeries(ctx, series); err != nil {
@@ -253,10 +263,11 @@ func (r PostsCassandraElasticsearchRepository) CreateSeries(ctx context.Context,
 		if err := r.session.
 			Query(seriesTable.Delete()).
 			WithContext(ctx).
+			Idempotent(true).
 			Consistency(gocql.LocalQuorum).
 			BindStruct(ser).
 			ExecRelease(); err != nil {
-			return err
+			return errors.Wrap(support.NewGocqlError(err), "failed to delete series")
 		}
 
 		return err
@@ -289,25 +300,22 @@ func (r PostsCassandraElasticsearchRepository) updateSeries(ctx context.Context,
 		return nil, err
 	}
 
-	if err = updateFn(series); err != nil {
+	if err := updateFn(series); err != nil {
 		return nil, err
 	}
 
-	pst, err := marshalSeriesToDatabase(series)
-
-	if err != nil {
-		return nil, err
-	}
+	pst := marshalSeriesToDatabase(series)
 
 	if err := r.session.
 		Query(seriesTable.Update(
 			columns...,
 		)).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
 		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to update series: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update series")
 	}
 
 	if err := r.indexSeries(ctx, series); err != nil {

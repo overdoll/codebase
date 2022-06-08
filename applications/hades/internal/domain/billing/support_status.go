@@ -1,6 +1,8 @@
 package billing
 
-import "errors"
+import (
+	"overdoll/libraries/errors/domainerror"
+)
 
 type SupportStatus struct {
 	slug string
@@ -27,5 +29,5 @@ func SupportStatusFromString(s string) (SupportStatus, error) {
 		return Expired, nil
 	}
 
-	return UnknownSupportStatus, errors.New("unknown support status: " + s)
+	return UnknownSupportStatus, domainerror.NewValidation("unknown support status: " + s)
 }

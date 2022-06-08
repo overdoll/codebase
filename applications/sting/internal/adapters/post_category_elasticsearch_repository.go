@@ -3,10 +3,9 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"fmt"
-	"go.uber.org/zap"
-	"overdoll/libraries/uuid"
-	"strconv"
+	"overdoll/libraries/errors"
+	"overdoll/libraries/support"
+	"time"
 
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
@@ -22,41 +21,31 @@ type categoryDocument struct {
 	Slug                string            `json:"slug"`
 	ThumbnailResourceId *string           `json:"thumbnail_resource_id"`
 	Title               map[string]string `json:"title"`
-	CreatedAt           string            `json:"created_at"`
+	CreatedAt           time.Time         `json:"created_at"`
 	TotalLikes          int               `json:"total_likes"`
 	TotalPosts          int               `json:"total_posts"`
 }
 
 const CategoryIndexName = "categories"
 
-func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
-
-	parse, err := uuid.Parse(cat.ID())
-
-	if err != nil {
-		return nil, err
-	}
+func marshalCategoryToDocument(cat *post.Category) *categoryDocument {
 
 	return &categoryDocument{
 		Id:                  cat.ID(),
 		Slug:                cat.Slug(),
 		ThumbnailResourceId: cat.ThumbnailResourceId(),
 		Title:               localization.MarshalTranslationToDatabase(cat.Title()),
-		CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
+		CreatedAt:           cat.CreatedAt(),
 		TotalLikes:          cat.TotalLikes(),
 		TotalPosts:          cat.TotalPosts(),
-	}, nil
+	}
 }
 
 func (r PostsCassandraElasticsearchRepository) indexCategory(ctx context.Context, category *post.Category) error {
 
-	cat, err := marshalCategoryToDocument(category)
+	cat := marshalCategoryToDocument(category)
 
-	if err != nil {
-		return err
-	}
-
-	_, err = r.client.
+	_, err := r.client.
 		Index().
 		Index(CategoryIndexName).
 		Id(category.ID()).
@@ -64,9 +53,7 @@ func (r PostsCassandraElasticsearchRepository) indexCategory(ctx context.Context
 		Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Error("failed to index category: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return fmt.Errorf("failed to index category: %v", err)
+		return errors.Wrap(support.ParseElasticError(err), "failed to index category")
 	}
 
 	return nil
@@ -78,7 +65,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Cont
 		Index(CategoryIndexName).ErrorTrace(true)
 
 	if cursor == nil {
-		return nil, fmt.Errorf("cursor must be present")
+		return nil, paging.ErrCursorNotPresent
 	}
 
 	var sortingColumn string
@@ -120,9 +107,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Cont
 	response, err := builder.Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Error("failed to search categories: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return nil, fmt.Errorf("failed to search categories: %v", err)
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed to search categories")
 	}
 
 	var cats []*post.Category
@@ -134,7 +119,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Cont
 		err := json.Unmarshal(hit.Source, &pst)
 
 		if err != nil {
-			return nil, fmt.Errorf("failed to unmarshal document: %v", err)
+			return nil, errors.Wrap(err, "failed to unmarshal category document")
 		}
 
 		newCategory := post.UnmarshalCategoryFromDatabase(
@@ -144,6 +129,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Cont
 			pst.ThumbnailResourceId,
 			pst.TotalLikes,
 			pst.TotalPosts,
+			pst.CreatedAt,
 		)
 		newCategory.Node = paging.NewNode(hit.Sort)
 
@@ -169,22 +155,16 @@ func (r PostsCassandraElasticsearchRepository) IndexAllCategories(ctx context.Co
 
 		for iter.StructScan(&c) {
 
-			parse, err := uuid.Parse(c.Id)
-
-			if err != nil {
-				return err
-			}
-
 			doc := categoryDocument{
 				Id:                  c.Id,
 				Slug:                c.Slug,
 				ThumbnailResourceId: c.ThumbnailResourceId,
 				Title:               c.Title,
-				CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
+				CreatedAt:           c.CreatedAt,
 				TotalLikes:          c.TotalLikes,
 			}
 
-			_, err = r.client.
+			_, err := r.client.
 				Index().
 				Index(CategoryIndexName).
 				Id(c.Id).
@@ -192,7 +172,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllCategories(ctx context.Co
 				Do(ctx)
 
 			if err != nil {
-				return fmt.Errorf("failed to index categories: %v", err)
+				return errors.Wrap(support.ParseElasticError(err), "failed to index categories")
 			}
 		}
 

@@ -2,10 +2,10 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/stella/internal/domain/club"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/support"
 	"time"
@@ -181,11 +181,16 @@ func (r ClubCassandraElasticsearchRepository) CreateClubMember(ctx context.Conte
 	)
 
 	// execute batch
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to add member to list: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to add member to lis")
 	}
 
 	if err := r.indexClubMember(ctx, member); err != nil {
+		return err
+	}
+
+	if err := r.clearAccountDigestCache(ctx, member.AccountId()); err != nil {
 		return err
 	}
 
@@ -199,6 +204,7 @@ func (r ClubCassandraElasticsearchRepository) getClubMemberById(ctx context.Cont
 	if err := r.session.
 		Query(clubMembersTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubMember{ClubId: clubId, MemberAccountId: accountId}).
 		GetRelease(&clubMem); err != nil {
@@ -207,7 +213,7 @@ func (r ClubCassandraElasticsearchRepository) getClubMemberById(ctx context.Cont
 			return nil, club.ErrClubMemberNotFound
 		}
 
-		return nil, fmt.Errorf("failed to get club member by id: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get club member by id")
 	}
 
 	return &clubMem, nil
@@ -221,12 +227,13 @@ func (r ClubCassandraElasticsearchRepository) deleteAccountClubMemberships(ctx c
 		SelectBuilder().
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubMembersByAccount{
 			MemberAccountId: accountId,
 		}).
 		SelectRelease(&clubMembers); err != nil {
-		return fmt.Errorf("failed to get account club members: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to get account club members")
 	}
 
 	if len(clubMembers) == 0 {
@@ -275,8 +282,13 @@ func (r ClubCassandraElasticsearchRepository) deleteAccountClubMemberships(ctx c
 			},
 		)
 
+		support.MarkBatchIdempotent(batch)
 		if err := r.session.ExecuteBatch(batch); err != nil {
-			return fmt.Errorf("failed to delete account club memberships: %v", err)
+			return errors.Wrap(support.NewGocqlError(err), "failed to delete account club memberships")
+		}
+
+		if err := r.clearAccountDigestCache(ctx, accountId); err != nil {
+			return err
 		}
 	}
 
@@ -351,8 +363,13 @@ func (r ClubCassandraElasticsearchRepository) DeleteClubMember(ctx context.Conte
 	)
 
 	// execute batch
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to delete member from lists: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to delete member from lists")
+	}
+
+	if err := r.clearAccountDigestCache(ctx, member.AccountId()); err != nil {
+		return err
 	}
 
 	return nil
@@ -375,12 +392,13 @@ func (r ClubCassandraElasticsearchRepository) GetAccountClubMembershipsCount(ctx
 		CountAll().
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(clubMembersByAccount{
 			MemberAccountId: accountId,
 		}).
 		GetRelease(&clubMembersCount); err != nil {
-		return 0, fmt.Errorf("failed to get account clubs by account count: %v", err)
+		return 0, errors.Wrap(support.NewGocqlError(err), "failed to get account clubs by account count")
 	}
 
 	return clubMembersCount.Count, nil
@@ -447,106 +465,14 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubMemberIsSupporter(ctx co
 	}
 
 	// execute batch
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return nil, fmt.Errorf("failed to update club supporter status: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update club supporter status")
+	}
+
+	if err := r.clearAccountDigestCache(ctx, clb.MemberAccountId); err != nil {
+		return nil, err
 	}
 
 	return currentClub, nil
-}
-
-func (r ClubCassandraElasticsearchRepository) getAccountClubMemberships(ctx context.Context, accountId string) ([]string, error) {
-
-	var accountClub []clubMembersByAccount
-
-	if err := clubMembersByAccountTable.
-		SelectBuilder().
-		Query(r.session).
-		WithContext(ctx).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(clubMembersByAccount{
-			MemberAccountId: accountId,
-		}).
-		SelectRelease(&accountClub); err != nil {
-		return nil, fmt.Errorf("failed to get club members by account: %v", err)
-	}
-
-	var clubIds []string
-	for _, clb := range accountClub {
-		clubIds = append(clubIds, clb.ClubId)
-	}
-
-	return clubIds, nil
-}
-
-func (r ClubCassandraElasticsearchRepository) getAccountClubs(ctx context.Context, accountId string) ([]string, error) {
-
-	var accountClub []accountClubs
-
-	if err := accountClubsTable.
-		SelectBuilder().
-		Query(r.session).
-		WithContext(ctx).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(accountClubs{
-			AccountId: accountId,
-		}).
-		SelectRelease(&accountClub); err != nil {
-		return nil, fmt.Errorf("failed to get account clubs by account: %v", err)
-	}
-
-	var accountClubIds []string
-
-	for _, c := range accountClub {
-		accountClubIds = append(accountClubIds, c.ClubId)
-	}
-
-	return accountClubIds, nil
-}
-
-func (r ClubCassandraElasticsearchRepository) getAccountSupportedClubs(ctx context.Context, accountId string) ([]string, error) {
-
-	var supportedClubs []*accountSupportedClubs
-
-	if err := accountSupportedClubsTable.
-		SelectBuilder().
-		Query(r.session).
-		WithContext(ctx).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(accountSupportedClubs{
-			AccountId: accountId,
-		}).
-		SelectRelease(&supportedClubs); err != nil {
-		return nil, fmt.Errorf("failed to get account supported clubs: %v", err)
-	}
-
-	var supportedIds []string
-
-	for _, supported := range supportedClubs {
-		supportedIds = append(supportedIds, supported.ClubId)
-	}
-
-	return supportedIds, nil
-}
-
-func (r ClubCassandraElasticsearchRepository) GetAccountClubDigestById(ctx context.Context, accountId string) (*club.AccountClubDigest, error) {
-
-	supportedClubIds, err := r.getAccountSupportedClubs(ctx, accountId)
-
-	if err != nil {
-		return nil, err
-	}
-
-	accountClubIds, err := r.getAccountClubs(ctx, accountId)
-
-	if err != nil {
-		return nil, err
-	}
-
-	accountMembershipClubIds, err := r.getAccountClubMemberships(ctx, accountId)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return club.UnmarshalAccountClubDigestFromDatabase(supportedClubIds, accountMembershipClubIds, accountClubIds), nil
 }

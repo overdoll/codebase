@@ -66,6 +66,7 @@ CREATE TABLE IF NOT EXISTS post_audit_logs
     action               text,
     rule_id              text,
     notes                text,
+    created_at           timestamp,
     primary key ( id ),
 );
 
@@ -78,6 +79,7 @@ CREATE TABLE IF NOT EXISTS post_audit_logs_by_post
     action               text,
     rule_id              text,
     notes                text,
+    created_at           timestamp,
     primary key ( post_id, id ),
 ) WITH CLUSTERING ORDER BY (id DESC);
 
@@ -90,6 +92,7 @@ CREATE TABLE IF NOT EXISTS post_audit_logs_by_moderator
     action               text,
     rule_id              text,
     notes                text,
+    created_at           timestamp,
     primary key ( (moderator_account_id, bucket), id ),
 ) WITH CLUSTERING ORDER BY (id DESC);
 

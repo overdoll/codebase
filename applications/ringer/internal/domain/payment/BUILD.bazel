@@ -13,6 +13,7 @@ go_library(
     importpath = "overdoll/applications/ringer/internal/domain/payment",
     visibility = ["//applications/ringer:__subpackages__"],
     deps = [
+        "//libraries/errors/domainerror",
         "//libraries/money",
         "//libraries/paging",
         "//libraries/principal",

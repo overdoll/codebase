@@ -2,7 +2,10 @@ package clients
 
 import (
 	"context"
+	"go.uber.org/zap"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/passport"
+	"overdoll/libraries/sentry_support"
 	"time"
 
 	grpc_retry "github.com/grpc-ecosystem/go-grpc-middleware/retry"
@@ -21,12 +24,15 @@ func NewEvaClient(ctx context.Context, address string) (eva.EvaClient, func()) {
 		grpc.WithInsecure(),
 		grpc.WithStreamInterceptor(grpc_retry.StreamClientInterceptor(opts...)),
 		grpc.WithUnaryInterceptor(grpc_retry.UnaryClientInterceptor(opts...)),
+		grpc.WithUnaryInterceptor(sentry_support.UnaryClientInterceptor()),
+		grpc.WithStreamInterceptor(sentry_support.StreamClientInterceptor()),
 		grpc.WithStreamInterceptor(passport.StreamClientInterceptor()),
 		grpc.WithUnaryInterceptor(passport.UnaryClientInterceptor()),
 	)
 
 	if err != nil {
-		panic(err)
+		sentry_support.MustCaptureException(errors.Wrap(err, "failed to start new eva client"))
+		zap.S().Fatalw("failed to start new eva client", zap.Error(err))
 	}
 
 	return eva.NewEvaClient(evaConnection), func() {

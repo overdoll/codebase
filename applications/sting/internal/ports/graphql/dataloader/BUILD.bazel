@@ -15,8 +15,8 @@ go_library(
     deps = [
         "//applications/sting/internal/app",
         "//applications/sting/internal/app/query",
-        "//applications/sting/internal/domain/post",
         "//applications/sting/internal/ports/graphql/types",
+        "//libraries/errors/apperror",
         "//libraries/graphql",
         "@com_github_graph_gophers_dataloader//:dataloader",
     ],

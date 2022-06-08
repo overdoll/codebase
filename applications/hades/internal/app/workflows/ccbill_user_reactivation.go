@@ -15,6 +15,7 @@ type CCBillUserReactivationInput struct {
 func CCBillUserReactivation(ctx workflow.Context, input CCBillUserReactivationInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -22,6 +23,7 @@ func CCBillUserReactivation(ctx workflow.Context, input CCBillUserReactivationIn
 
 	// get subscription details so we know the club
 	if err := workflow.ExecuteActivity(ctx, a.GetCCBillSubscriptionDetails, input.SubscriptionId).Get(ctx, &subscriptionDetails); err != nil {
+		logger.Error("failed to get ccbill subscription details", "Error", err)
 		return err
 	}
 
@@ -37,6 +39,7 @@ func CCBillUserReactivation(ctx workflow.Context, input CCBillUserReactivationIn
 			NextBillingDate:                    input.NextBillingDate,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to mark account club supporter subscription reactivated", "Error", err)
 		return err
 	}
 

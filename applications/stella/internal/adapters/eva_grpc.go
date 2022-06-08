@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"overdoll/libraries/errors"
 
 	eva "overdoll/applications/eva/proto"
 	"overdoll/libraries/principal"
@@ -22,7 +23,7 @@ func (s EvaGrpc) GetAccount(ctx context.Context, id string) (*principal.Principa
 	})
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "eva - failed to get account")
 	}
 
 	if acc == nil {

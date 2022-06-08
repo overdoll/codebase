@@ -16,13 +16,15 @@ import (
 )
 
 type ClubPayoutModified struct {
-	Id          relay.ID
-	Reference   string
-	Status      types.ClubPayoutStatus
-	Currency    graphql1.Currency
-	Amount      int
-	Events      []types.ClubPayoutEvent
-	DepositDate time.Time
+	Id             relay.ID
+	Reference      string
+	Status         types.ClubPayoutStatus
+	Currency       graphql1.Currency
+	Amount         int
+	CoverFeeAmount int
+	TotalAmount    int
+	Events         []types.ClubPayoutEvent
+	DepositDate    time.Time
 }
 
 type ClubPayouts struct {
@@ -175,7 +177,7 @@ func TestClubPayout(t *testing.T) {
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.GenerateClubMonthlyPayout, workflows.GenerateClubMonthlyPayoutInput{
 		ClubId:     clubId,
 		FutureTime: nil,
-		WorkflowId: "GenerateClubMonthlyPayout_Manual_" + clubId,
+		WorkflowId: "ringer.GenerateClubMonthlyPayout_Manual_" + clubId,
 		CanCancel:  true,
 	})
 
@@ -211,6 +213,8 @@ func TestClubPayout(t *testing.T) {
 		// check payment is in correct state
 		require.Equal(t, types.ClubPayoutStatusQueued, targetPayout.Status, "payout is queued")
 		require.Equal(t, 10500, targetPayout.Amount, "correct base amount")
+		require.Equal(t, 25, targetPayout.CoverFeeAmount, "correct cover amount")
+		require.Equal(t, 10525, targetPayout.TotalAmount, "correct total amount")
 		require.Equal(t, graphql1.CurrencyUsd, targetPayout.Currency, "correct currency")
 
 		payoutId = targetPayout.Reference
@@ -477,6 +481,8 @@ func TestClubPayout_update_deposit_date(t *testing.T) {
 	gClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
 	seedPayments(t, uuid.New().String(), clubId, accountId, 15)
+
+	refreshPayoutsIndex(t)
 
 	// run a workflow to create a payout for this club
 	env := getWorkflowEnvironment()

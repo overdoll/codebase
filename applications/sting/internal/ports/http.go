@@ -4,10 +4,9 @@ import (
 	"context"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"overdoll/applications/sting/internal/ports/graphql/dataloader"
-
 	"overdoll/applications/sting/internal/app"
 	gen "overdoll/applications/sting/internal/ports/graphql"
+	"overdoll/applications/sting/internal/ports/graphql/dataloader"
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/router"
@@ -38,10 +37,9 @@ func dataLoaderToContext(app *app.Application) gin.HandlerFunc {
 
 func NewHttpServer(app *app.Application) http.Handler {
 
-	rtr := router.NewGinRouter()
+	rtr := router.NewGinRouter(GraphQLServer{app: app})
 
 	rtr.Use(dataLoaderToContext(app))
-	rtr.Use(principal.GinPrincipalRequestMiddleware(GraphQLServer{app: app}))
 
 	// graphql
 	rtr.POST("/api/graphql",

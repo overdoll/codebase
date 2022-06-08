@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	loader "overdoll/applications/loader/proto"
+	"overdoll/libraries/errors"
 )
 
 type LoaderGrpc struct {
@@ -18,7 +19,7 @@ func (s LoaderGrpc) CreateOrGetResourcesFromUploads(ctx context.Context, itemId 
 	md, err := s.client.CreateOrGetResourcesFromUploads(ctx, &loader.CreateOrGetResourcesFromUploadsRequest{ItemId: itemId, ResourceIds: resourceIds})
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "loader - failed to get or create resources from uploads")
 	}
 
 	return md.AllResourceIds, nil

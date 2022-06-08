@@ -8,5 +8,8 @@ go_library(
     ],
     importpath = "overdoll/applications/ringer/internal/domain/paxum",
     visibility = ["//applications/ringer:__subpackages__"],
-    deps = ["//libraries/money"],
+    deps = [
+        "//libraries/errors/domainerror",
+        "//libraries/money",
+    ],
 )

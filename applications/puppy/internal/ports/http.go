@@ -3,24 +3,20 @@ package ports
 import (
 	"context"
 	"crypto/subtle"
+	"encoding/json"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
 	"os"
 	"overdoll/applications/puppy/internal/app"
 	"overdoll/libraries/crypt"
+	"overdoll/libraries/errors/graphql"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/router"
+	"overdoll/libraries/sentry_support"
 )
-
-type GraphQLErrorResponse struct {
-	Errors []struct {
-		Message   string   `json:"message"`
-		Path      []string `json:"path"`
-		Locations []string `json:"locations"`
-	} `json:"errors"`
-}
 
 // Custom middleware that will ensure our security cookie + header is present
 // Essentially, this is CSRF protection
@@ -29,72 +25,52 @@ func secureRequest() gin.HandlerFunc {
 
 		ck, err := c.Request.Cookie("od.security")
 
-		if err != nil && err == http.ErrNoCookie {
-			c.AbortWithStatusJSON(400, GraphQLErrorResponse{Errors: []struct {
-				Message   string   `json:"message"`
-				Path      []string `json:"path"`
-				Locations []string `json:"locations"`
-			}{
-				{
-					Message:   "missing security cookie",
-					Path:      []string{},
-					Locations: []string{},
-				},
-			}})
+		if err != nil {
+
+			if err == http.ErrNoCookie {
+				c.AbortWithStatusJSON(http.StatusOK, graphql.NewErrorResponse("missing security cookie"))
+				return
+			}
+
+			zap.S().Errorw("failed to read security cookie", zap.Error(err))
+			c.AbortWithStatusJSON(http.StatusOK, graphql.InternalServerError)
 			return
 		}
 
 		securityHeader := c.Request.Header.Get("X-overdoll-Security")
 
 		if securityHeader == "" {
-			c.AbortWithStatusJSON(400, GraphQLErrorResponse{Errors: []struct {
-				Message   string   `json:"message"`
-				Path      []string `json:"path"`
-				Locations []string `json:"locations"`
-			}{
-				{
-					Message:   "missing security header",
-					Path:      []string{},
-					Locations: []string{},
-				},
-			}})
+			c.AbortWithStatusJSON(http.StatusOK, graphql.NewErrorResponse("missing security header"))
 			return
 		}
 
 		decrypted, err := crypt.DecryptWithCustomPassphrase(ck.Value, os.Getenv("SECURITY_SECRET"))
 
 		if err != nil {
-			c.AbortWithStatusJSON(400, GraphQLErrorResponse{Errors: []struct {
-				Message   string   `json:"message"`
-				Path      []string `json:"path"`
-				Locations []string `json:"locations"`
-			}{
-				{
-					Message:   "invalid security cookie",
-					Path:      []string{},
-					Locations: []string{},
-				},
-			}})
+			zap.S().Errorw("could not decrypt cookie", zap.Error(err))
+			c.AbortWithStatusJSON(http.StatusOK, graphql.NewErrorResponse("invalid security cookie"))
 			return
 		}
 
 		if subtle.ConstantTimeCompare([]byte(decrypted), []byte(c.Request.Header.Get("X-overdoll-Security"))) != 1 {
-			c.AbortWithStatusJSON(400, GraphQLErrorResponse{Errors: []struct {
-				Message   string   `json:"message"`
-				Path      []string `json:"path"`
-				Locations []string `json:"locations"`
-			}{
-				{
-					Message:   "security header and cookie mismatch",
-					Path:      []string{},
-					Locations: []string{},
-				},
-			}})
+			c.AbortWithStatusJSON(http.StatusOK, graphql.NewErrorResponse("security header and cookie mismatch"))
 			return
 		}
 
 		c.Next()
 	}
+}
+
+func proxyErrorHandler(res http.ResponseWriter, req *http.Request, err error) {
+
+	sentry_support.CaptureException(req.Context(), err)
+
+	zap.S().Errorw("failed to proxy http", zap.Error(err))
+
+	bytes, _ := json.Marshal(graphql.InternalServerError)
+	res.Header().Set("Content-Type", "application/json")
+	res.WriteHeader(http.StatusOK)
+	res.Write(bytes)
 }
 
 func NewHttpServer(ctx context.Context, app *app.Application) http.Handler {
@@ -103,7 +79,7 @@ func NewHttpServer(ctx context.Context, app *app.Application) http.Handler {
 
 	u, err := url.Parse(os.Getenv("ORCA_SERVICE"))
 	if err != nil {
-		panic(err)
+		zap.S().Fatalw("failed to parse orca URL", zap.Error(err))
 	}
 
 	// we must create a custom proxy director
@@ -112,15 +88,15 @@ func NewHttpServer(ctx context.Context, app *app.Application) http.Handler {
 	proxyDirector := func(req *http.Request) {
 		req.URL.Scheme = u.Scheme
 		req.URL.Host = u.Host
-		req.URL.Path, req.URL.RawPath = "/", "/"
+		req.URL.Path, req.URL.RawPath = "/api/graphql", "/api/graphql"
 		if _, ok := req.Header["User-Agent"]; !ok {
-			// explicitly disable User-Agent so it's not set to default value
 			req.Header.Set("User-Agent", "")
 		}
 	}
 
 	proxy := &httputil.ReverseProxy{Director: proxyDirector}
 	proxy.Transport = passport.NewHttpRoundTripper(app)
+	proxy.ErrorHandler = proxyErrorHandler
 
 	// proxy POST requests to graphql - we add our passport to payload here
 	rtr.POST("/api/graphql", secureRequest(), gin.WrapF(func(w http.ResponseWriter, r *http.Request) {
@@ -128,6 +104,7 @@ func NewHttpServer(ctx context.Context, app *app.Application) http.Handler {
 	}))
 
 	proxy2 := &httputil.ReverseProxy{Director: proxyDirector}
+	proxy2.ErrorHandler = proxyErrorHandler
 
 	// proxy OPTIONS to the server
 	rtr.OPTIONS("/api/graphql", gin.WrapF(func(w http.ResponseWriter, r *http.Request) {

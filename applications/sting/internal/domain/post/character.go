@@ -1,18 +1,18 @@
 package post
 
 import (
-	"errors"
 	"github.com/go-playground/validator/v10"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
+	"time"
 
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 )
 
 var (
-	ErrCharacterNotFound      = errors.New("character not found")
-	ErrCharacterSlugNotUnique = errors.New("character slug is not unique")
+	ErrCharacterSlugNotUnique = domainerror.NewValidation("character slug is not unique")
 )
 
 type Character struct {
@@ -26,6 +26,8 @@ type Character struct {
 
 	totalLikes int
 	totalPosts int
+
+	createdAt time.Time
 }
 
 func NewCharacter(requester *principal.Principal, slug, name string, series *Series) (*Character, error) {
@@ -60,6 +62,7 @@ func NewCharacter(requester *principal.Principal, slug, name string, series *Ser
 		thumbnailResourceId: nil,
 		totalLikes:          0,
 		totalPosts:          0,
+		createdAt:           time.Now(),
 	}, nil
 }
 
@@ -77,6 +80,10 @@ func (c *Character) Name() *localization.Translation {
 
 func (c *Character) Series() *Series {
 	return c.series
+}
+
+func (c *Character) CreatedAt() time.Time {
+	return c.createdAt
 }
 
 func (c *Character) ThumbnailResourceId() *string {
@@ -142,7 +149,7 @@ func (c *Character) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalCharacterFromDatabase(id, slug string, name map[string]string, thumbnail *string, totalLikes, totalPosts int, media *Series) *Character {
+func UnmarshalCharacterFromDatabase(id, slug string, name map[string]string, thumbnail *string, totalLikes, totalPosts int, createdAt time.Time, media *Series) *Character {
 	return &Character{
 		id:                  id,
 		slug:                slug,
@@ -151,6 +158,7 @@ func UnmarshalCharacterFromDatabase(id, slug string, name map[string]string, thu
 		series:              media,
 		totalLikes:          totalLikes,
 		totalPosts:          totalPosts,
+		createdAt:           createdAt,
 	}
 }
 
@@ -159,7 +167,7 @@ func validateCharacterName(name string) error {
 	err := validator.New().Var(name, "required,max=25")
 
 	if err != nil {
-		return err
+		return domainerror.NewValidation(err.Error())
 	}
 
 	return nil

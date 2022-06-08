@@ -5,6 +5,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"overdoll/applications/hades/internal/domain/billing"
 	ringer "overdoll/applications/ringer/proto"
+	"overdoll/libraries/errors"
 	"time"
 )
 
@@ -31,7 +32,7 @@ func (s RingerGrpc) NewClubSupporterSubscriptionPaymentDeposit(ctx context.Conte
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error creating new club supporter subscription payment deposit")
 	}
 
 	return nil
@@ -52,7 +53,7 @@ func (s RingerGrpc) NewClubSupporterSubscriptionPaymentDeduction(ctx context.Con
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error creating new club supporter subscription payment deduction")
 	}
 
 	return nil

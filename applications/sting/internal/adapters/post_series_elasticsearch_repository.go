@@ -3,10 +3,9 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"fmt"
-	"go.uber.org/zap"
-	"overdoll/libraries/uuid"
-	"strconv"
+	"overdoll/libraries/errors"
+	"overdoll/libraries/support"
+	"time"
 
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
@@ -22,30 +21,23 @@ type seriesDocument struct {
 	Slug                string            `json:"slug"`
 	ThumbnailResourceId *string           `json:"thumbnail_resource_id"`
 	Title               map[string]string `json:"title"`
-	CreatedAt           string            `json:"created_at"`
+	CreatedAt           time.Time         `json:"created_at"`
 	TotalLikes          int               `json:"total_likes"`
 	TotalPosts          int               `json:"total_posts"`
 }
 
 const SeriesIndexName = "series"
 
-func marshalSeriesToDocument(s *post.Series) (*seriesDocument, error) {
-
-	parse, err := uuid.Parse(s.ID())
-
-	if err != nil {
-		return nil, err
-	}
-
+func marshalSeriesToDocument(s *post.Series) *seriesDocument {
 	return &seriesDocument{
 		Id:                  s.ID(),
 		Slug:                s.Slug(),
 		ThumbnailResourceId: s.ThumbnailResourceId(),
 		Title:               localization.MarshalTranslationToDatabase(s.Title()),
-		CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
+		CreatedAt:           s.CreatedAt(),
 		TotalLikes:          s.TotalLikes(),
 		TotalPosts:          s.TotalPosts(),
-	}, nil
+	}
 }
 
 func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Series, error) {
@@ -54,7 +46,7 @@ func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context,
 		Index(SeriesIndexName)
 
 	if cursor == nil {
-		return nil, fmt.Errorf("cursor must be present")
+		return nil, paging.ErrCursorNotPresent
 	}
 
 	var sortingColumn string
@@ -96,9 +88,7 @@ func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context,
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Error("failed to search series: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return nil, fmt.Errorf("failed search series: %v", err)
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed search series")
 	}
 
 	var meds []*post.Series
@@ -110,7 +100,7 @@ func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context,
 		err := json.Unmarshal(hit.Source, &md)
 
 		if err != nil {
-			return nil, fmt.Errorf("failed search medias - unmarshal: %v", err)
+			return nil, errors.Wrap(err, "failed search series - unmarshal")
 		}
 
 		newMedia := post.UnmarshalSeriesFromDatabase(
@@ -120,6 +110,7 @@ func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context,
 			md.ThumbnailResourceId,
 			md.TotalLikes,
 			md.TotalPosts,
+			md.CreatedAt,
 		)
 		newMedia.Node = paging.NewNode(hit.Sort)
 
@@ -131,13 +122,9 @@ func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context,
 
 func (r PostsCassandraElasticsearchRepository) indexSeries(ctx context.Context, series *post.Series) error {
 
-	ss, err := marshalSeriesToDocument(series)
+	ss := marshalSeriesToDocument(series)
 
-	if err != nil {
-		return err
-	}
-
-	_, err = r.client.
+	_, err := r.client.
 		Index().
 		Index(SeriesIndexName).
 		Id(series.ID()).
@@ -145,9 +132,7 @@ func (r PostsCassandraElasticsearchRepository) indexSeries(ctx context.Context, 
 		Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Error("failed to index series: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return fmt.Errorf("failed to index series: %v", err)
+		return errors.Wrap(support.ParseElasticError(err), "failed to index series")
 	}
 
 	_, err = r.client.UpdateByQuery(CharacterIndexName).
@@ -156,9 +141,7 @@ func (r PostsCassandraElasticsearchRepository) indexSeries(ctx context.Context, 
 		Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Error("failed to index characters: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return fmt.Errorf("failed to update index characters: %v", err)
+		return errors.Wrap(support.ParseElasticError(err), "failed to update index characters")
 	}
 
 	return nil
@@ -180,22 +163,16 @@ func (r PostsCassandraElasticsearchRepository) IndexAllSeries(ctx context.Contex
 
 		for iter.StructScan(&m) {
 
-			parse, err := uuid.Parse(m.Id)
-
-			if err != nil {
-				return err
-			}
-
 			doc := seriesDocument{
 				Id:                  m.Id,
 				Slug:                m.Slug,
 				ThumbnailResourceId: m.ThumbnailResourceId,
 				Title:               m.Title,
-				CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
+				CreatedAt:           m.CreatedAt,
 				TotalLikes:          m.TotalLikes,
 			}
 
-			_, err = r.client.
+			_, err := r.client.
 				Index().
 				Index(SeriesIndexName).
 				Id(m.Id).
@@ -203,7 +180,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllSeries(ctx context.Contex
 				Do(ctx)
 
 			if err != nil {
-				return fmt.Errorf("failed to index series: %v", err)
+				return errors.Wrap(support.ParseElasticError(err), "failed to index series")
 			}
 		}
 

@@ -1,6 +1,6 @@
 from . import format
 
-DEFAULT_IMAGE = "771779017151.dkr.ecr.us-east-1.amazonaws.com/ci@sha256:4d09a1d8d093fe966682fd53f2ec9199c9177da58f478fd50c226fb70c04410f"
+DEFAULT_IMAGE = "771779017151.dkr.ecr.us-east-1.amazonaws.com/ci@sha256:5f98bdc35ad9386f7fd108067eeff4f88429267e765778ad353318fd1e0ede4a"
 
 
 def create_step(label, commands, platform, configs=None, artifacts=None, cache=None, additional_env_vars=None, shards=1,
@@ -51,6 +51,13 @@ def create_docker_step(label, commands, additional_env_vars=None, cache=None):
         "AWS_ENDPOINT",
         "AWS_REGION",
         "FORCE_COLOR=1",
+        "SENTRY_AUTH_TOKEN",
+        "SENTRY_ORG",
+        "STATIC_ASSETS_URL",
+        "AWS_STATIC_ASSETS_BUCKET",
+        "NEXT_PUBLIC_SENTRY_DSN",
+        "NEXT_PUBLIC_FATHOM_TRACKING_CODE",
+        "NEXT_PUBLIC_FATHOM_DOMAIN",
     ]
 
     step = {
@@ -146,6 +153,13 @@ def create_docker_compose_step(label, commands, additional_env_vars=None, config
         "BUILDKITE_AGENT_ID",
         "CI",
         "FORCE_COLOR=1",
+        "SENTRY_AUTH_TOKEN",
+        "SENTRY_ORG",
+        "STATIC_ASSETS_URL",
+        "AWS_STATIC_ASSETS_BUCKET",
+        "NEXT_PUBLIC_SENTRY_DSN",
+        "NEXT_PUBLIC_FATHOM_TRACKING_CODE",
+        "NEXT_PUBLIC_FATHOM_DOMAIN",
     ]
 
     step = {

@@ -39,6 +39,7 @@ func TestPostAuditLog_Search_cursor(t *testing.T) {
 			"APPROVED",
 			nil,
 			nil,
+			time.Now(),
 		)
 
 		// create the new post

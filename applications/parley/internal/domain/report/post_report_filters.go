@@ -1,7 +1,7 @@
 package report
 
 import (
-	"errors"
+	"overdoll/libraries/errors/domainerror"
 	"time"
 )
 
@@ -15,7 +15,7 @@ func NewPostReportFilters(postId *string, from time.Time, to *time.Time) (*PostR
 
 	if to != nil {
 		if to.Before(from) {
-			return nil, errors.New("to must be after from")
+			return nil, domainerror.NewValidation("to must be after from")
 		}
 	}
 

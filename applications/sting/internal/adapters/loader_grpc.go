@@ -4,6 +4,7 @@ import (
 	"context"
 	loader "overdoll/applications/loader/proto"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/errors"
 )
 
 type LoaderGrpc struct {
@@ -19,7 +20,7 @@ func (s LoaderGrpc) CreateOrGetResourcesFromUploads(ctx context.Context, itemId 
 	md, err := s.client.CreateOrGetResourcesFromUploads(ctx, &loader.CreateOrGetResourcesFromUploadsRequest{ItemId: itemId, ResourceIds: resourceIds, Private: private})
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to create or get resources from uploads")
 	}
 
 	return md.AllResourceIds, nil
@@ -43,7 +44,7 @@ func (s LoaderGrpc) CopyResourcesAndApplyPixelateFilter(ctx context.Context, ite
 	})
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to copy resources and apply pixelate filter")
 	}
 
 	var res []*post.NewContent
@@ -60,7 +61,7 @@ func (s LoaderGrpc) DeleteResources(ctx context.Context, itemId string, resource
 	_, err := s.client.DeleteResources(ctx, &loader.DeleteResourcesRequest{ItemId: itemId, ResourceIds: resourceIds})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to delete resources")
 	}
 
 	return nil
@@ -71,7 +72,7 @@ func (s LoaderGrpc) AllResourcesProcessed(ctx context.Context, itemId string, re
 	res, err := s.client.GetResources(ctx, &loader.GetResourcesRequest{ItemId: itemId, ResourceIds: resourceIds})
 
 	if err != nil {
-		return false, err
+		return false, errors.Wrap(err, "failed to get resources")
 	}
 
 	for _, item := range res.Resources {

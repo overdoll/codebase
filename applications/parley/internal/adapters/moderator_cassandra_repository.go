@@ -2,7 +2,8 @@ package adapters
 
 import (
 	"context"
-	"fmt"
+	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/support"
 	"time"
@@ -88,15 +89,16 @@ func (r ModeratorCassandraRepository) getModerator(ctx context.Context, id strin
 	if err := r.session.
 		Query(moderatorTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&moderators{AccountId: id, Bucket: 0}).
 		GetRelease(&md); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, moderator.ErrModeratorNotFound
+			return nil, apperror.NewNotFoundError("moderator", id)
 		}
 
-		return nil, fmt.Errorf("failed to get moderators: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get moderators")
 	}
 
 	return moderator.UnmarshalModeratorFromDatabase(md.AccountId, md.LastSelected), nil
@@ -108,6 +110,7 @@ func (r ModeratorCassandraRepository) GetPostModeratorByPostId(ctx context.Conte
 
 	if err := r.session.Query(postModeratorsTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&postModerators{
 			PostId: postId,
@@ -115,10 +118,10 @@ func (r ModeratorCassandraRepository) GetPostModeratorByPostId(ctx context.Conte
 		GetRelease(&postModerator); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, moderator.ErrPostModeratorNotFound
+			return nil, apperror.NewNotFoundError("post moderator", postId)
 		}
 
-		return nil, fmt.Errorf("failed to get post moderator by post id: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get post moderator by post id")
 	}
 
 	return moderator.UnmarshalPostModeratorFromDatabase(postModerator.AccountId, postModerator.PostId, postModerator.PlacedAt, postModerator.ReassignmentAt), nil
@@ -150,8 +153,9 @@ func (r ModeratorCassandraRepository) CreatePostModerator(ctx context.Context, q
 		postModerator,
 	)
 
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to create post moderator queue: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to create post moderator queue")
 	}
 
 	return nil
@@ -175,12 +179,13 @@ func (r ModeratorCassandraRepository) SearchPostModerator(ctx context.Context, r
 
 	if err := builder.Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&postModerators{
 			AccountId: accountId,
 		}).
 		SelectRelease(&postModeratorQueueItems); err != nil {
-		return nil, fmt.Errorf("failed to get post moderators for account: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get post moderators for account")
 	}
 
 	var postQueue []*moderator.PostModerator
@@ -200,6 +205,7 @@ func (r ModeratorCassandraRepository) getPostModeratorByPostId(ctx context.Conte
 
 	if err := r.session.Query(postModeratorsTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&postModerators{
 			PostId: postId,
@@ -207,10 +213,10 @@ func (r ModeratorCassandraRepository) getPostModeratorByPostId(ctx context.Conte
 		GetRelease(&item); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, moderator.ErrPostModeratorNotFound
+			return nil, apperror.NewNotFoundError("post moderator", postId)
 		}
 
-		return nil, fmt.Errorf("failed to get post moderator queue for account: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get post moderator queue for account")
 	}
 
 	return &item, nil
@@ -251,7 +257,7 @@ func (r ModeratorCassandraRepository) DeletePostModeratorByPostId(ctx context.Co
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to delete post moderator: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to delete post moderator")
 	}
 
 	return nil
@@ -279,10 +285,11 @@ func (r ModeratorCassandraRepository) GetModerators(ctx context.Context) ([]*mod
 	if err := r.session.
 		Query(moderatorTable.Select()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&moderators{Bucket: 0}).
 		SelectRelease(&dbModerators); err != nil {
-		return nil, fmt.Errorf("failed to get moderators: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get moderators")
 	}
 
 	var moderators []*moderator.Moderator
@@ -298,10 +305,11 @@ func (r ModeratorCassandraRepository) CreateModerator(ctx context.Context, mod *
 	if err := r.session.
 		Query(moderatorTable.Insert()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshaModeratorToDatabase(mod)).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to create moderators: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to create moderators")
 	}
 
 	return nil
@@ -324,10 +332,11 @@ func (r ModeratorCassandraRepository) UpdateModerator(ctx context.Context, id st
 	if err := r.session.
 		Query(moderatorTable.Update("last_selected")).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshaModeratorToDatabase(currentMod)).
 		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to update moderators: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update moderators")
 	}
 
 	return currentMod, nil
@@ -344,13 +353,14 @@ func (r ModeratorCassandraRepository) RemoveModerator(ctx context.Context, reque
 	if err := r.session.
 		Query(moderatorTable.Delete()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&moderators{
 			AccountId: accountId,
 			Bucket:    0,
 		}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to remove moderators: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to remove moderators")
 	}
 
 	return nil

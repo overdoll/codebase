@@ -2,11 +2,10 @@ package adapters
 
 import (
 	"context"
-	"errors"
-	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/ses"
 	"os"
+	"overdoll/libraries/errors"
 
 	"overdoll/applications/carrier/internal/domain/mailing"
 )
@@ -49,7 +48,7 @@ func (r MailingSESRepository) SendEmail(ctx context.Context, recipient *mailing.
 	_, err := r.client.SendEmail(sesEmailInput)
 
 	if err != nil {
-		return fmt.Errorf("could not send SES email: %v", err)
+		return errors.Wrap(err, "could not send SES email")
 	}
 
 	return nil

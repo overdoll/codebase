@@ -14,6 +14,7 @@ type IssueClubInfractionInput struct {
 func IssueClubInfraction(ctx workflow.Context, input IssueClubInfractionInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -26,6 +27,7 @@ func IssueClubInfraction(ctx workflow.Context, input IssueClubInfractionInput) e
 			RuleId:    input.RuleId,
 		},
 	).Get(ctx, &clubSuspensionLength); err != nil {
+		logger.Error("failed to issue manual club infraction", "Error", err)
 		return err
 	}
 
@@ -37,6 +39,7 @@ func IssueClubInfraction(ctx workflow.Context, input IssueClubInfractionInput) e
 			IsPostRemoval:     false,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to suspend club", "Error", err)
 		return err
 	}
 

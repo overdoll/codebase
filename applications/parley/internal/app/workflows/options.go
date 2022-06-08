@@ -15,7 +15,7 @@ var options = workflow.ActivityOptions{
 	RetryPolicy: &temporal.RetryPolicy{
 		InitialInterval:    time.Second,
 		BackoffCoefficient: 2.0,
-		MaximumInterval:    time.Minute,
-		MaximumAttempts:    5,
+		MaximumInterval:    time.Second * 100,
+		MaximumAttempts:    0,
 	},
 }

@@ -7,6 +7,7 @@ go_library(
     visibility = ["//applications/puppy:__subpackages__"],
     deps = [
         "//applications/puppy/internal/domain/session",
+        "//libraries/errors",
         "//libraries/passport",
         "//libraries/support",
         "@com_github_google_uuid//:uuid",

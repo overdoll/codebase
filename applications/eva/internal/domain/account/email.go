@@ -1,7 +1,7 @@
 package account
 
 import (
-	"errors"
+	"overdoll/libraries/errors/domainerror"
 	"strings"
 
 	"overdoll/libraries/paging"
@@ -16,7 +16,7 @@ type Email struct {
 }
 
 var (
-	ErrEmailNotConfirmed = errors.New("email not confirmed")
+	ErrEmailNotConfirmed = domainerror.NewValidation("email not confirmed")
 )
 
 const (
@@ -105,7 +105,7 @@ func CanDeleteAccountEmail(requester *principal.Principal, accountId string, ema
 			foundEmail = true
 
 			if em.IsPrimary() {
-				return errors.New("email is primary")
+				return domainerror.NewValidation("email is primary")
 			}
 
 			break
@@ -113,7 +113,7 @@ func CanDeleteAccountEmail(requester *principal.Principal, accountId string, ema
 	}
 
 	if !foundEmail {
-		return errors.New("email does not belong to account")
+		return domainerror.NewValidation("email does not belong to account")
 	}
 
 	return nil

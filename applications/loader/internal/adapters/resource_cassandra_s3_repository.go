@@ -3,8 +3,8 @@ package adapters
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudfront/sign"
 	"github.com/aws/aws-sdk-go/service/s3"
@@ -19,6 +19,8 @@ import (
 	"net/http"
 	"os"
 	"overdoll/applications/loader/internal/domain/resource"
+	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/support"
 	"path/filepath"
 	"strings"
@@ -41,6 +43,7 @@ var resourcesTable = table.New(table.Metadata{
 		"video_thumbnail_mime_type",
 		"width",
 		"height",
+		"preview",
 	},
 	PartKey: []string{"item_id"},
 	SortKey: []string{"resource_id"},
@@ -61,6 +64,7 @@ type resources struct {
 	VideoThumbnailMimeType string `db:"video_thumbnail_mime_type"`
 	Width                  int    `db:"width"`
 	Height                 int    `db:"height"`
+	Preview                string `db:"preview"`
 }
 
 type ResourceCassandraS3Repository struct {
@@ -72,7 +76,7 @@ type ResourceCassandraS3Repository struct {
 func NewResourceCassandraS3Repository(session gocqlx.Session, aws *session.Session, resourcesSigner *sign.URLSigner) ResourceCassandraS3Repository {
 	return ResourceCassandraS3Repository{session: session, aws: aws, resourcesSigner: resourcesSigner}
 }
-func unmarshalResourceFromDatabase(i resources) (*resource.Resource, error) {
+func unmarshalResourceFromDatabase(i resources) *resource.Resource {
 	return resource.UnmarshalResourceFromDatabase(
 		i.ItemId,
 		i.ResourceId,
@@ -88,7 +92,8 @@ func unmarshalResourceFromDatabase(i resources) (*resource.Resource, error) {
 		i.Height,
 		nil,
 		nil,
-	), nil
+		i.Preview,
+	)
 }
 
 func unmarshalResourceFromDatabaseWithSignedUrls(resourcesSigner *sign.URLSigner, a *session.Session, i resources) (*resource.Resource, error) {
@@ -130,7 +135,7 @@ func unmarshalResourceFromDatabaseWithSignedUrls(resourcesSigner *sign.URLSigner
 			signedURL, err := resourcesSigner.Sign(os.Getenv("PRIVATE_RESOURCES_URL")+key, time.Now().Add(15*time.Minute))
 
 			if err != nil {
-				return nil, fmt.Errorf("could not generate signed url: %s", err)
+				return nil, errors.Wrap(err, "could not generate signed url")
 			}
 
 			url = signedURL
@@ -145,7 +150,7 @@ func unmarshalResourceFromDatabaseWithSignedUrls(resourcesSigner *sign.URLSigner
 			urlStr, err := req.Presign(15 * time.Minute)
 
 			if err != nil {
-				return nil, fmt.Errorf("could not generate signed url: %s", err)
+				return nil, errors.Wrap(err, "could not generate signed url")
 			}
 
 			url = urlStr
@@ -177,11 +182,7 @@ func unmarshalResourceFromDatabaseWithSignedUrls(resourcesSigner *sign.URLSigner
 			signedURL, err := resourcesSigner.Sign(os.Getenv("PRIVATE_RESOURCES_URL")+"/"+i.ItemId+"/"+i.VideoThumbnail+format, time.Now().Add(15*time.Minute))
 
 			if err != nil {
-				return nil, fmt.Errorf("could not generate video thumbnail signed url: %s", err)
-			}
-
-			if err != nil {
-				return nil, err
+				return nil, errors.Wrap(err, "could not generate video thumbnail signed url")
 			}
 
 			videoThumbnail = resource.UnmarshalUrlFromDatabase(
@@ -212,6 +213,7 @@ func unmarshalResourceFromDatabaseWithSignedUrls(resourcesSigner *sign.URLSigner
 		i.Height,
 		urls,
 		videoThumbnail,
+		i.Preview,
 	), nil
 }
 
@@ -240,6 +242,7 @@ func marshalResourceToDatabase(r *resource.Resource) *resources {
 		Width:                  r.Width(),
 		Height:                 r.Height(),
 		VideoDuration:          r.VideoDuration(),
+		Preview:                r.Preview(),
 	}
 }
 
@@ -257,8 +260,12 @@ func (r ResourceCassandraS3Repository) createResources(ctx context.Context, res 
 		)
 	}
 
-	// execute batch.
-	return r.session.ExecuteBatch(batch)
+	support.MarkBatchIdempotent(batch)
+	if err := r.session.ExecuteBatch(batch); err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to create resources")
+	}
+
+	return nil
 }
 
 // GetResourcesByIdsWithUrls - concurrently generate resource IDs with urls because RSA signing can be slow
@@ -286,7 +293,7 @@ func (r ResourceCassandraS3Repository) GetResourcesByIdsWithUrls(ctx context.Con
 			if err == nil {
 				resourcesResult[index] = result
 			} else {
-				errs <- fmt.Errorf("error unmarshalling resource: %s", err)
+				errs <- errors.Wrap(err, "error unmarshalling resource")
 			}
 		}(i, z)
 	}
@@ -315,11 +322,12 @@ func (r ResourceCassandraS3Repository) getResourcesByIds(ctx context.Context, it
 		Where(qb.In("item_id")).
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		BindMap(map[string]interface{}{
 			"item_id": itemId,
 		}).
 		SelectRelease(&b); err != nil {
-		return nil, fmt.Errorf("failed to get resources by ids: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get resources by ids")
 	}
 
 	var final []resources
@@ -348,13 +356,7 @@ func (r ResourceCassandraS3Repository) GetResourcesByIds(ctx context.Context, it
 	var resourcesResult []*resource.Resource
 
 	for _, i := range b {
-		result, err := unmarshalResourceFromDatabase(i)
-
-		if err != nil {
-			return nil, err
-		}
-
-		resourcesResult = append(resourcesResult, result)
+		resourcesResult = append(resourcesResult, unmarshalResourceFromDatabase(i))
 	}
 
 	return resourcesResult, nil
@@ -368,14 +370,15 @@ func (r ResourceCassandraS3Repository) getResourceById(ctx context.Context, item
 		Query(resourcesTable.Get()).
 		WithContext(ctx).
 		Consistency(gocql.One).
+		Idempotent(true).
 		BindStruct(resources{ItemId: itemId, ResourceId: resourceId}).
 		GetRelease(&i); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, resource.ErrResourceNotFound
+			return nil, apperror.NewNotFoundError("resource", resourceId)
 		}
 
-		return nil, fmt.Errorf("failed to get resource by id: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get resource by id")
 	}
 
 	return &i, nil
@@ -389,7 +392,7 @@ func (r ResourceCassandraS3Repository) GetResourceById(ctx context.Context, item
 		return nil, err
 	}
 
-	return unmarshalResourceFromDatabase(*i)
+	return unmarshalResourceFromDatabase(*i), nil
 }
 
 func (r ResourceCassandraS3Repository) updateResources(ctx context.Context, res []*resource.Resource) error {
@@ -407,6 +410,7 @@ func (r ResourceCassandraS3Repository) updateResources(ctx context.Context, res 
 			"video_thumbnail_mime_type",
 			"width",
 			"height",
+			"preview",
 		)
 
 		support.BindStructToBatchStatement(
@@ -416,17 +420,21 @@ func (r ResourceCassandraS3Repository) updateResources(ctx context.Context, res 
 		)
 	}
 
-	// execute batch.
-	return r.session.ExecuteBatch(batch)
+	support.MarkBatchIdempotent(batch)
+	if err := r.session.ExecuteBatch(batch); err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to update resources")
+	}
+
+	return nil
 }
 
-func (r ResourceCassandraS3Repository) DeleteResources(ctx context.Context, resources []*resource.Resource) error {
+func (r ResourceCassandraS3Repository) DeleteResources(ctx context.Context, resourceItems []*resource.Resource) error {
 
 	s3Client := s3.New(r.aws)
 
-	for _, target := range resources {
+	for _, target := range resourceItems {
 
-		bucket := os.Getenv("UPLOADS_BUCKET")
+		bucket := ""
 
 		if target.IsProcessed() {
 			bucket = os.Getenv("RESOURCES_BUCKET")
@@ -438,23 +446,34 @@ func (r ResourceCassandraS3Repository) DeleteResources(ctx context.Context, reso
 
 		for _, mime := range target.MimeTypes() {
 
-			fileId := "/" + target.ID()
-
 			if target.IsProcessed() {
 
 				format, _ := resource.ExtensionByType(mime)
 
-				fileId = "/" + target.ItemId() + "/" + target.ProcessedId() + format
+				fileId := "/" + target.ItemId() + "/" + target.ProcessedId() + format
+
+				// delete object from originating bucket
+				_, err := s3Client.DeleteObject(&s3.DeleteObjectInput{
+					Bucket: aws.String(bucket),
+					Key:    aws.String(fileId),
+				})
+
+				if err != nil {
+					return errors.Wrap(err, "unable to delete file")
+				}
 			}
 
-			// delete object
+			// delete from uploads bucket
 			_, err := s3Client.DeleteObject(&s3.DeleteObjectInput{
-				Bucket: aws.String(bucket),
-				Key:    aws.String(fileId),
+				Bucket: aws.String(os.Getenv("UPLOADS_BUCKET")),
+				Key:    aws.String("/" + target.ID()),
 			})
 
 			if err != nil {
-				return fmt.Errorf("unable to delete file %v", err)
+				// ignore no such key errors since uploaded files will expire in the bucket after 30 days
+				if aerr, ok := err.(awserr.Error); ok && aerr.Code() != s3.ErrCodeNoSuchKey {
+					return errors.Wrap(err, "unable to delete file")
+				}
 			}
 		}
 
@@ -469,21 +488,23 @@ func (r ResourceCassandraS3Repository) DeleteResources(ctx context.Context, reso
 			})
 
 			if err != nil {
-				return fmt.Errorf("unable to delete video thumbnail file %v", err)
+				return errors.Wrap(err, "unable to delete video thumbnail file")
 			}
 		}
 	}
 
-	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
-
-	for _, r := range resources {
-		// remove selected resources
-		stmt, _ := qb.Delete(resourcesTable.Name()).Where(qb.Eq("item_id")).ToCql()
-		batch.Query(stmt, r.ItemId())
+	for _, resour := range resourceItems {
+		if err := r.session.
+			Query(qb.Delete(resourcesTable.Name()).Where(qb.Eq("item_id")).ToCql()).
+			WithContext(ctx).
+			Idempotent(true).
+			BindStruct(resources{ItemId: resour.ItemId()}).
+			ExecRelease(); err != nil {
+			return errors.Wrap(support.NewGocqlError(err), "failed to delete resources")
+		}
 	}
 
-	// execute batch.
-	return r.session.ExecuteBatch(batch)
+	return nil
 }
 
 // GetAndCreateResources will create resources from a list of IDs passed
@@ -504,7 +525,7 @@ func (r ResourceCassandraS3Repository) GetAndCreateResources(ctx context.Context
 		})
 
 		if err != nil {
-			return nil, fmt.Errorf("failed to head file: %v", err)
+			return nil, errors.Wrap(err, "failed to head file")
 		}
 
 		// create a new resource - our url + the content type that came back from S3
@@ -556,7 +577,7 @@ func (r ResourceCassandraS3Repository) downloadResource(ctx context.Context, fil
 	file, err := os.Create(strings.Split(fileId, "/")[len(strings.Split(fileId, "/"))-1])
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to create file: %v", err)
+		return nil, errors.Wrap(err, "failed to create file")
 	}
 
 	bucket := os.Getenv("UPLOADS_BUCKET")
@@ -578,7 +599,7 @@ func (r ResourceCassandraS3Repository) downloadResource(ctx context.Context, fil
 	)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to download file: %v", err)
+		return nil, errors.Wrap(err, "failed to download file")
 	}
 
 	return file, nil
@@ -593,14 +614,14 @@ func (r ResourceCassandraS3Repository) UploadAndCreateResource(ctx context.Conte
 	fileInfo, err := file.Stat()
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to stat file")
 	}
 
 	var size = fileInfo.Size()
 	buffer := make([]byte, size)
 
 	if _, err := file.Read(buffer); err != nil {
-		return err
+		return errors.Wrap(err, "failed to read file")
 	}
 
 	bucket := os.Getenv("RESOURCES_BUCKET")
@@ -626,7 +647,7 @@ func (r ResourceCassandraS3Repository) UploadAndCreateResource(ctx context.Conte
 
 	// new file that was created
 	if _, err := s3Client.PutObject(input); err != nil {
-		return fmt.Errorf("failed to put file: %v", err)
+		return errors.Wrap(err, "failed to put file")
 	}
 
 	// wait until file is available in private bucket
@@ -635,7 +656,7 @@ func (r ResourceCassandraS3Repository) UploadAndCreateResource(ctx context.Conte
 		Bucket: aws.String(bucket),
 		Key:    aws.String(url),
 	}); err != nil {
-		return fmt.Errorf("failed to wait for file: %v", err)
+		return errors.Wrap(err, "failed to wait for file")
 	}
 
 	// clean up file at the end to free up resources
@@ -691,7 +712,7 @@ func (r ResourceCassandraS3Repository) UploadProcessedResource(ctx context.Conte
 		_, err = s3Client.PutObject(input)
 
 		if err != nil {
-			return fmt.Errorf("failed to put file: %v", err)
+			return errors.Wrap(err, "failed to put file")
 		}
 
 		// wait until file is available in private bucket
@@ -700,7 +721,7 @@ func (r ResourceCassandraS3Repository) UploadProcessedResource(ctx context.Conte
 			Bucket: aws.String(bucket),
 			Key:    aws.String(moveTarget.RemoteUrlTarget()),
 		}); err != nil {
-			return fmt.Errorf("failed to wait for file: %v", err)
+			return errors.Wrap(err, "failed to wait for file")
 		}
 
 		// clean up file at the end to free up resources

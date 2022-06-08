@@ -8,6 +8,7 @@ import (
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/confirm_email"
 	"overdoll/libraries/crypt"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/principal"
 )
 
@@ -38,7 +39,7 @@ func (r ConfirmEmailRedisRepository) DeleteConfirmEmail(ctx context.Context, req
 	_, err := r.client.WithContext(ctx).Del(ctx, confirmEmailPrefix+confirmEmail.ID()).Result()
 
 	if err != nil {
-		return fmt.Errorf("failed delete confirm email - delete redis key: %v", err)
+		return errors.Wrap(err, "failed delete confirm email - delete redis key")
 	}
 
 	return nil
@@ -54,23 +55,23 @@ func (r ConfirmEmailRedisRepository) AddConfirmEmail(ctx context.Context, confir
 	val, err := json.Marshal(authCookie)
 
 	if err != nil {
-		return fmt.Errorf("failed to add confirm email - json marshal: %v", err)
+		return errors.Wrap(err, "failed to add confirm email - json marshal")
 	}
 
 	valReal, err := crypt.Encrypt(string(val))
 
 	if err != nil {
-		return fmt.Errorf("failed to add confirm email - encryption: %v", err)
+		return errors.Wrap(err, "failed to add confirm email - encryption")
 	}
 
 	ok, err := r.client.WithContext(ctx).SetNX(ctx, confirmEmailPrefix+confirmEmail.ID(), valReal, confirmEmail.Expires()).Result()
 
 	if err != nil {
-		return fmt.Errorf("failed to add confirm email - redis: %v", err)
+		return errors.Wrap(err, "failed to add confirm email - redis")
 	}
 
 	if !ok {
-		return fmt.Errorf("failed to add confirm email - duplicate key: %s", confirmEmailPrefix+confirmEmail.ID())
+		return errors.New(fmt.Sprintf("failed to add confirm email - duplicate key: %s", confirmEmailPrefix+confirmEmail.ID()))
 	}
 
 	return nil
@@ -86,19 +87,19 @@ func (r ConfirmEmailRedisRepository) GetConfirmEmail(ctx context.Context, reques
 			return nil, account.ErrEmailCodeInvalid
 		}
 
-		return nil, fmt.Errorf("failed to get confirm email - redis: %v", err)
+		return nil, errors.Wrap(err, "failed to get confirm email - redis")
 	}
 
 	val, err = crypt.Decrypt(val)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to get confirm email - decryption: %v", err)
+		return nil, errors.Wrap(err, "failed to get confirm email - decryption")
 	}
 
 	var confirmItem emailConfirmation
 
 	if err := json.Unmarshal([]byte(val), &confirmItem); err != nil {
-		return nil, fmt.Errorf("failed to get confirm email - unmarshal: %v", err)
+		return nil, errors.Wrap(err, "failed to get confirm email - unmarshal")
 	}
 
 	return confirm_email.UnmarshalConfirmEmailFromDatabase(id, confirmItem.Email, confirmItem.AccountId), nil

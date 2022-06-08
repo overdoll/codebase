@@ -4,8 +4,8 @@ import (
 	"context"
 	"overdoll/applications/hades/internal/app"
 	"overdoll/applications/hades/internal/app/query"
-	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/ports/graphql/types"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
 )
@@ -28,7 +28,7 @@ func (r ClubMemberResolver) ClubSupporterSubscription(ctx context.Context, obj *
 
 	if err != nil {
 
-		if err == billing.ErrAccountClubSupportSubscriptionNotFound {
+		if apperror.IsNotFoundError(err) {
 			return nil, nil
 		}
 

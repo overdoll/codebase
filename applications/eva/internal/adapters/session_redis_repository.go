@@ -3,9 +3,8 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"overdoll/applications/eva/internal/domain/location"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/passport"
 	"strings"
 	"time"
@@ -49,20 +48,20 @@ func (r SessionRepository) getSessionById(ctx context.Context, passport *passpor
 			return nil, session.ErrSessionsNotFound
 		}
 
-		return nil, fmt.Errorf("failed to get session by id: %v", err)
+		return nil, errors.Wrap(err, "failed to get session by id")
 	}
 
 	// decrypt session - since value is initially encrypted
 	details, err := crypt.Decrypt(val)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to decrypt session: %v", err)
+		return nil, errors.Wrap(err, "failed to decrypt session")
 	}
 
 	var sessionItem sessions
 
 	if err := json.Unmarshal([]byte(details), &sessionItem); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal session: %v", err)
+		return nil, errors.Wrap(err, "failed to unmarshal session")
 	}
 
 	current := false
@@ -119,7 +118,7 @@ func (r SessionRepository) scanKeys(ctx context.Context, accountId string, count
 				return nil, 0, session.ErrSessionsNotFound
 			}
 
-			return nil, 0, fmt.Errorf("failed to get sessions for account: %v", err)
+			return nil, 0, errors.Wrap(err, "failed to get sessions for account")
 		}
 
 		return newKeys, newCursor, nil
@@ -157,7 +156,7 @@ func (r SessionRepository) DeleteAccountSessionData(ctx context.Context, account
 		_, err := r.client.WithContext(ctx).Del(ctx, key).Result()
 
 		if err != nil {
-			return fmt.Errorf("failed to delete session: %v", err)
+			return errors.Wrap(err, "failed to delete session")
 		}
 	}
 
@@ -180,8 +179,6 @@ func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, requester
 		if err != nil {
 			return nil, err
 		}
-	} else {
-
 	}
 
 	var sessions []*session.Session
@@ -217,7 +214,7 @@ func (r SessionRepository) revokeSessionById(ctx context.Context, sessionId stri
 			return session.ErrSessionsNotFound
 		}
 
-		return fmt.Errorf("failed to revoke session by id: %v", err)
+		return errors.Wrap(err, "failed to revoke session by id")
 	}
 
 	return nil
@@ -251,18 +248,18 @@ func (r SessionRepository) CreateSessionOperator(ctx context.Context, session *s
 	})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to marshal session")
 	}
 
 	valReal, err := crypt.Encrypt(string(val))
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to encrypt session")
 	}
 
 	ok, err := r.client.WithContext(ctx).SetNX(ctx, sessionPrefix+session.ID(), valReal, time.Second*time.Duration(session.Duration())).Result()
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to create session")
 	}
 
 	if !ok {
@@ -294,18 +291,18 @@ func (r SessionRepository) UpdateSessionOperator(ctx context.Context, sessionId 
 	})
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to marshal session")
 	}
 
 	valReal, err := crypt.Encrypt(string(val))
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to encrypt session")
 	}
 
 	_, err = r.client.WithContext(ctx).Set(ctx, sessionPrefix+session.ID(), valReal, time.Second*time.Duration(session.Duration())).Result()
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to update session")
 	}
 
 	return session, nil

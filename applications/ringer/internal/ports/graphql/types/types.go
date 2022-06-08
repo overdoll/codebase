@@ -164,6 +164,10 @@ type ClubPayout struct {
 	Currency graphql1.Currency `json:"currency"`
 	// The amount this payout is created in.
 	Amount int `json:"amount"`
+	// The amount that will be covered as the cover fee.
+	CoverFeeAmount int `json:"coverFeeAmount"`
+	// The amount, with the cover fee.
+	TotalAmount int `json:"totalAmount"`
 	// If a payout failed, an event will be created here.
 	Events []*ClubPayoutEvent `json:"events"`
 	// The club linked to this payout.

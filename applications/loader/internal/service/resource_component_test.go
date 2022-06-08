@@ -400,6 +400,8 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	require.Equal(t, "image/webp", newImageResource.Urls[0].MimeType, "expected first image to be webp")
 	require.Equal(t, "image/png", newImageResource.Urls[1].MimeType, "expected second image to be png")
 
+	require.NotEmpty(t, newImageResource.Preview, "preview is not empty for image")
+
 	// correct dimensions
 	require.Equal(t, 532, newImageResource.Height, "should be the correct height")
 	require.Equal(t, 656, newImageResource.Width, "should be the correct width")
@@ -416,6 +418,8 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 
 	require.Equal(t, "video/mp4", newVideoResource.Urls[0].MimeType, "expected video to be mp4")
 	require.Equal(t, "image/png", newVideoResource.VideoThumbnail.MimeType, "expected video thumbnail to be png")
+
+	require.NotEmpty(t, newVideoResource.Preview, "preview is not empty for video")
 
 	var processedAssertions int
 
@@ -453,7 +457,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	// run workflow to delete resources
 	deleteWorkflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
-	// run grpc and see that we didnt find any resources
+	// run grpc and see that we didn't find any resources
 	resources, err = grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{
 		ItemId:      itemId,
 		ResourceIds: resourceIds,

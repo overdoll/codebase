@@ -2,8 +2,8 @@ package command
 
 import (
 	"context"
-	"errors"
 	"overdoll/applications/ringer/internal/domain/event"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/money"
 	"time"
 )
@@ -29,7 +29,7 @@ func NewClubPaymentDepositHandler(event event.Repository) ClubPaymentDepositHand
 func (h ClubPaymentDepositHandler) Handle(ctx context.Context, cmd ClubPaymentDeposit) error {
 
 	if !cmd.IsClubSupporterSubscription {
-		return errors.New("invalid payment type - only club supporter subscriptions are supported")
+		return domainerror.NewValidation("invalid payment type - only club supporter subscriptions are supported")
 	}
 
 	currency, err := money.CurrencyFromString(cmd.Currency)

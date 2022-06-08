@@ -1,8 +1,8 @@
 package payment
 
 import (
-	"errors"
 	"math"
+	"overdoll/libraries/errors/domainerror"
 )
 
 const (
@@ -51,7 +51,7 @@ func (p *ClubPlatformFee) UpdatePercent(newPercent uint64) error {
 		return nil
 	}
 
-	return errors.New("invalid percentage set for platform fee")
+	return domainerror.NewValidation("invalid percentage set for platform fee")
 }
 
 func UnmarshalClubPlatformFeeFromDatabase(clubId string, percent uint64) *ClubPlatformFee {

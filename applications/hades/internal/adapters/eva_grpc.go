@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/location"
 
 	eva "overdoll/applications/eva/proto"
@@ -23,7 +24,7 @@ func (s EvaGrpc) GetAccount(ctx context.Context, id string) (*principal.Principa
 	})
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "error getting account by id")
 	}
 
 	if acc == nil {
@@ -40,7 +41,7 @@ func (s EvaGrpc) LocationFromIp(ctx context.Context, ip string) (*location.Locat
 	})
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "error getting location from ip")
 	}
 
 	return location.UnmarshalLocationFromDatabase(

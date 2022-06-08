@@ -1,11 +1,11 @@
 package post
 
 import (
-	"errors"
+	"overdoll/libraries/errors/domainerror"
 )
 
 var (
-	ErrSeriesRequired = errors.New("a series slug is required when searching by character slugs")
+	ErrSeriesRequired = domainerror.NewValidation("a series slug is required when searching by character slugs")
 )
 
 type CharacterFilters struct {

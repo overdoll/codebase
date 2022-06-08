@@ -2,7 +2,6 @@ package command
 
 import (
 	"context"
-	errors2 "github.com/pkg/errors"
 	"overdoll/applications/parley/internal/domain/event"
 	"overdoll/applications/parley/internal/domain/moderator"
 )
@@ -26,7 +25,7 @@ func (h PutPostIntoModeratorQueueOrPublishHandler) Handle(ctx context.Context, c
 	_, err := h.sting.GetPost(ctx, cmd.PostId)
 
 	if err != nil {
-		return false, errors2.Wrap(err, "failed to get post by id")
+		return false, err
 	}
 
 	if err := h.event.PutPostIntoModeratorQueue(ctx, cmd.PostId); err != nil {

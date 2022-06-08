@@ -4,11 +4,12 @@ import (
 	"context"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	"go.uber.org/zap"
-	"log"
 	"net"
 	"os"
 	"os/signal"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/passport"
+	"overdoll/libraries/sentry_support"
 	"overdoll/libraries/support"
 	"syscall"
 	"time"
@@ -41,11 +42,13 @@ func InitializeGRPCServer(addr string, f func(server *grpc.Server)) {
 	grpcServer := grpc.NewServer(
 		grpc_middleware.WithUnaryServerChain(
 			grpc_ctxtags.UnaryServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)),
+			sentry_support.UnaryServerInterceptor(),
 			passport.UnaryServerInterceptor(),
 			logUnaryInterceptor,
 		),
 		grpc_middleware.WithStreamServerChain(
 			grpc_ctxtags.StreamServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)),
+			sentry_support.StreamServerInterceptor(),
 			passport.StreamServerInterceptor(),
 			logStreamInterceptor,
 		),
@@ -55,18 +58,21 @@ func InitializeGRPCServer(addr string, f func(server *grpc.Server)) {
 
 	f(grpcServer)
 
-	log.Printf("starting grpc server on %s", addr)
+	zap.S().Infof("starting grpc server on %s", addr)
+	sentry_support.SetServerType("grpc")
 
 	listener, err := net.Listen("tcp", addr)
 
 	if err != nil {
-		log.Fatal("net.Listen failed")
+		sentry_support.MustCaptureException(errors.Wrap(err, "net.Listen failed"))
+		zap.S().Fatalw("net.Listen failed", zap.Error(err))
 		return
 	}
 
 	go func() {
 		if err := grpcServer.Serve(listener); err != nil {
-			log.Fatalf("failed to serve: %v", err)
+			sentry_support.MustCaptureException(errors.Wrap(err, "failed to serve grpc server"))
+			zap.S().Fatalw("failed to serve grpc server", zap.Error(err))
 		}
 	}()
 
@@ -77,7 +83,8 @@ func InitializeGRPCServer(addr string, f func(server *grpc.Server)) {
 	<-sig
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
-	log.Print("shutting down grpc server")
+
+	zap.S().Info("shutting down grpc server")
 	grpcServer.GracefulStop()
 
 	<-ctx.Done()

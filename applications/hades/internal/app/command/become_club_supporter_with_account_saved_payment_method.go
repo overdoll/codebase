@@ -2,10 +2,10 @@ package command
 
 import (
 	"context"
-	"errors"
-	errors2 "github.com/pkg/errors"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/ccbill"
+	"overdoll/libraries/errors/apperror"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/money"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
@@ -35,18 +35,18 @@ func (h BecomeClubSupporterWithAccountSavedPaymentMethodHandler) Handle(ctx cont
 	club, err := h.stella.GetClubById(ctx, cmd.ClubId)
 
 	if err != nil {
-		return nil, errors2.Wrap(err, "failed to get club by id")
+		return nil, err
 	}
 
 	// check to make sure an existing subscription doesn't already exist for this club + account combination
 	subscription, err := h.br.HasExistingAccountClubSupporterSubscription(ctx, cmd.Principal, cmd.Principal.AccountId(), cmd.ClubId)
 
-	if err != nil && err != billing.ErrAccountClubSupportSubscriptionNotFound {
+	if err != nil && !apperror.IsNotFoundError(err) {
 		return nil, err
 	}
 
 	if subscription != nil {
-		return nil, errors.New("existing subscription found")
+		return nil, domainerror.NewValidation("existing subscription found")
 	}
 
 	savedPaymentMethod, err := h.br.GetAccountSavedPaymentMethodByIdOperator(ctx, cmd.Principal.AccountId(), cmd.AccountSavedPaymentMethodId)

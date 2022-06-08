@@ -2,15 +2,19 @@ package bootstrap
 
 import (
 	"context"
-	"log"
+	"go.uber.org/zap"
 	"net/http"
 	"os"
 	"os/signal"
+	"overdoll/libraries/errors"
+	"overdoll/libraries/sentry_support"
 	"syscall"
 	"time"
 )
 
 func InitializeHttpServer(addr string, handler http.Handler, shutdown func()) {
+
+	sentry_support.SetServerType("http")
 
 	server := &http.Server{
 		Addr:         addr,
@@ -20,9 +24,15 @@ func InitializeHttpServer(addr string, handler http.Handler, shutdown func()) {
 	}
 
 	// Start graph_api server
-	log.Printf("http server started on %s", server.Addr)
+	zap.S().Infof("starting http server on %s", server.Addr)
 	go func() {
-		log.Fatal(server.ListenAndServe())
+
+		if err := server.ListenAndServe(); err != nil {
+			if err != http.ErrServerClosed {
+				sentry_support.MustCaptureException(errors.Wrap(err, "failed to serve http server"))
+				zap.S().Fatalw("failed to serve http server", zap.Error(err))
+			}
+		}
 	}()
 
 	sig := make(chan os.Signal, 1)
@@ -32,7 +42,8 @@ func InitializeHttpServer(addr string, handler http.Handler, shutdown func()) {
 	<-sig
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
-	log.Print("shutting down http server")
+
+	zap.S().Info("shutting down http server")
 
 	if err := server.Shutdown(ctx); err != nil {
 		shutdown()

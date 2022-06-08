@@ -7,11 +7,10 @@ message Account {
   string id = 1;
   string username = 2;
   repeated string roles = 3;
-  bool verified = 4;
-  string email = 5;
-  bool locked = 6;
-  bool secure = 7;
-  bool deleting = 8;
+  string email = 4;
+  bool locked = 5;
+  bool secure = 6;
+  bool deleting = 7;
 }
 
 message GetAccountRequest {

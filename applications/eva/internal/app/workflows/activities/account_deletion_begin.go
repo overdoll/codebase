@@ -11,5 +11,10 @@ type AccountDeletionBeginInput struct {
 }
 
 func (h *Activities) AccountDeletionBegin(ctx context.Context, input AccountDeletionBeginInput) error {
-	return h.carrier.AccountDeletionBegin(ctx, input.AccountId, input.DeletionDate)
+
+	if err := h.carrier.AccountDeletionBegin(ctx, input.AccountId, input.DeletionDate); err != nil {
+		return err
+	}
+
+	return nil
 }

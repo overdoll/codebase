@@ -11,6 +11,7 @@ import (
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/session"
 	eva "overdoll/applications/eva/proto"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/passport"
 )
 
@@ -29,7 +30,6 @@ func marshalAccountToProto(usr *account.Account) *eva.Account {
 		Username: usr.Username(),
 		Id:       usr.ID(),
 		Roles:    usr.RolesAsString(),
-		Verified: usr.Verified(),
 		Email:    usr.Email(),
 		Locked:   usr.IsLocked(),
 		Secure:   usr.IsSecure(),
@@ -42,7 +42,7 @@ func (s *Server) GetAccount(ctx context.Context, request *eva.GetAccountRequest)
 
 	if err != nil {
 
-		if err == account.ErrAccountNotFound {
+		if apperror.IsNotFoundError(err) {
 			return nil, status.Error(codes.NotFound, err.Error())
 		}
 

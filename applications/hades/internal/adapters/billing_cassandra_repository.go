@@ -3,8 +3,6 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
@@ -13,6 +11,9 @@ import (
 	"overdoll/applications/hades/internal/domain/billing"
 	bucket2 "overdoll/libraries/bucket"
 	"overdoll/libraries/crypt"
+	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/apperror"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/support"
@@ -361,12 +362,12 @@ func encryptPaymentMethod(payM *billing.PaymentMethod) (string, error) {
 	u, err := json.Marshal(&payment)
 
 	if err != nil {
-		return "", err
+		return "", errors.Wrap(err, "failed unmarshal encrypted payment method")
 	}
 
 	encryptedPaymentMethod, err := crypt.Encrypt(string(u))
 	if err != nil {
-		return "", fmt.Errorf("failed to encrypt payment method: %v", err)
+		return "", errors.Wrap(err, "failed to encrypt payment method")
 	}
 
 	return encryptedPaymentMethod, nil
@@ -376,13 +377,13 @@ func decryptPaymentMethod(payM string) (*billing.PaymentMethod, error) {
 
 	decrypted, err := crypt.Decrypt(payM)
 	if err != nil {
-		return nil, fmt.Errorf("failed to decrypt payment method: %v", err)
+		return nil, errors.Wrap(err, "failed to decrypt payment method")
 	}
 
 	var newPaymentMethod paymentMethod
 
 	if err := json.Unmarshal([]byte(decrypted), &newPaymentMethod); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal payment method: %s", err)
+		return nil, errors.Wrap(err, "failed to unmarshal payment method")
 	}
 
 	var contact *billing.Contact
@@ -487,7 +488,7 @@ func marshalAccountTransactionToDatabase(transaction *billing.AccountTransaction
 	enc, err := encryptPaymentMethod(transaction.PaymentMethod())
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to encrypt payment method: %s", err)
+		return nil, err
 	}
 
 	var events []string
@@ -503,7 +504,7 @@ func marshalAccountTransactionToDatabase(transaction *billing.AccountTransaction
 		})
 
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to marshal account transaction event")
 		}
 
 		events = append(events, string(res))
@@ -550,7 +551,7 @@ func (r BillingCassandraElasticsearchRepository) CreateAccountSavedPaymentMethod
 		WithContext(ctx).
 		BindStruct(marshalled).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to create saved payment method: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to create saved payment method")
 	}
 
 	return nil
@@ -568,7 +569,7 @@ func (r BillingCassandraElasticsearchRepository) DeleteAccountSavedPaymentMethod
 		Consistency(gocql.LocalQuorum).
 		BindStruct(accountSavedPaymentMethod{Id: id, AccountId: accountId}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to delete saved payment method by id: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to delete saved payment method by id")
 	}
 
 	return nil
@@ -597,8 +598,7 @@ func (r BillingCassandraElasticsearchRepository) GetAccountSavedPaymentMethods(c
 			AccountId: accountId,
 		}).
 		SelectRelease(&accountSavedPayments); err != nil {
-
-		return nil, fmt.Errorf("failed to get saved payment methods for account: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get saved payment methods for account")
 	}
 
 	var savedPayments []*billing.SavedPaymentMethod
@@ -643,7 +643,10 @@ func (r BillingCassandraElasticsearchRepository) GetAccountSavedPaymentMethodByI
 		WithContext(ctx).
 		BindStruct(&accountSavedPaymentMethod{AccountId: accountId, Id: id}).
 		GetRelease(&savedPay); err != nil {
-		return nil, err
+		if err == gocql.ErrNotFound {
+			return nil, apperror.NewNotFoundError("account saved payment method", accountId+"-"+id)
+		}
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get account saved payment method")
 	}
 
 	decrypt, err := decryptPaymentMethod(savedPay.EncryptedPaymentMethod)
@@ -679,7 +682,7 @@ func (r BillingCassandraElasticsearchRepository) UpdateAccountSavedPaymentMethod
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalled).
 		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to update account saved payment method: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update account saved payment method")
 	}
 
 	return savedPaymentMethod, nil
@@ -696,7 +699,7 @@ func (r BillingCassandraElasticsearchRepository) getActiveClubSupporterSubscript
 			ClubId: clubId,
 		}).
 		SelectRelease(&buckets); err != nil {
-		return nil, fmt.Errorf("failed to get club active supporter subscription buckets: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get club active supporter subscription buckets")
 	}
 
 	var final []int
@@ -732,7 +735,7 @@ func (r BillingCassandraElasticsearchRepository) GetActiveClubSupporterSubscript
 				ClubId: clubId,
 			}).
 			SelectRelease(&subs); err != nil {
-			return nil, fmt.Errorf("failed to get club active supporter subscriptions: %v", err)
+			return nil, errors.Wrap(support.NewGocqlError(err), "failed to get club active supporter subscriptions")
 		}
 
 		for _, l := range subs {
@@ -790,7 +793,7 @@ func (r BillingCassandraElasticsearchRepository) CreateAccountClubSupporterSubsc
 	)
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to create account club supporter subscription: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to create account club supporter subscription")
 	}
 
 	if err := r.indexAccountClubSupporterSubscription(ctx, accountClubSupp); err != nil {
@@ -822,7 +825,7 @@ func (r BillingCassandraElasticsearchRepository) DeleteAccountSavedPaymentMethod
 			Id:        id,
 		}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to delete account saved payment method: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to delete account saved payment method")
 	}
 
 	return nil
@@ -841,10 +844,10 @@ func (r BillingCassandraElasticsearchRepository) GetAccountClubSupporterSubscrip
 		GetRelease(&accountClubSupported); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, billing.ErrAccountClubSupportSubscriptionNotFound
+			return nil, apperror.NewNotFoundError("account club supporter subscription", id)
 		}
 
-		return nil, fmt.Errorf("failed to get account club support by id: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get account club support by id")
 	}
 
 	decrypt, err := decryptPaymentMethod(accountClubSupported.EncryptedPaymentMethod)
@@ -916,7 +919,7 @@ func (r BillingCassandraElasticsearchRepository) updateAccountClubSupporterSubsc
 		Consistency(gocql.LocalQuorum).
 		BindStruct(marshalled).
 		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to update club support subscription: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update club support subscription")
 	}
 
 	if err := r.indexAccountClubSupporterSubscription(ctx, subscription); err != nil {
@@ -955,7 +958,7 @@ func (r BillingCassandraElasticsearchRepository) UpdateAccountClubSupporterSubsc
 				CCBillSubscriptionId: s.CCBillSubscriptionId(),
 			}).
 			ExecRelease(); err != nil {
-			return nil, fmt.Errorf("failed to delete club active supporter subscriptions: %v", err)
+			return nil, errors.Wrap(support.NewGocqlError(err), "failed to delete club active supporter subscriptions")
 		}
 	}
 
@@ -966,7 +969,7 @@ func (r BillingCassandraElasticsearchRepository) UpdateAccountClubSupporterSubsc
 			WithContext(ctx).
 			BindStruct(accountClubSupporterSubscriptionLock{ClubId: s.ClubId(), AccountId: s.AccountId()}).
 			ExecRelease(); err != nil {
-			return nil, fmt.Errorf("failed to release lock on account club supporter subscription: %v", err)
+			return nil, errors.Wrap(support.NewGocqlError(err), "failed to release lock on account club supporter subscription")
 		}
 
 		// also delete from active or cancelled list
@@ -975,7 +978,7 @@ func (r BillingCassandraElasticsearchRepository) UpdateAccountClubSupporterSubsc
 			WithContext(ctx).
 			BindStruct(accountClubSupporterSubscription{ClubId: s.ClubId(), AccountId: s.AccountId(), Id: s.Id()}).
 			ExecRelease(); err != nil {
-			return nil, fmt.Errorf("failed to delete club active or cancelled supporter subscription: %v", err)
+			return nil, errors.Wrap(support.NewGocqlError(err), "failed to delete club active or cancelled supporter subscription")
 		}
 	}
 
@@ -1026,7 +1029,7 @@ func (r BillingCassandraElasticsearchRepository) HasActiveOrCancelledAccountClub
 			"account_id": accountId,
 		}).
 		GetRelease(&clubMemberCounter); err != nil {
-		return nil, fmt.Errorf("failed to get has active or cancelled account club supporter subscriptions: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get has active or cancelled account club supporter subscriptions")
 	}
 
 	value := clubMemberCounter.Count > 0
@@ -1043,7 +1046,7 @@ func (r BillingCassandraElasticsearchRepository) DeleteAccountData(ctx context.C
 	}
 
 	if *hasActive {
-		return errors.New("cannot delete account data for account that has active or cancelled subscriptions")
+		return domainerror.NewValidation("cannot delete account data for account that has active or cancelled subscriptions")
 	}
 
 	// delete any saved payment methods
@@ -1055,7 +1058,7 @@ func (r BillingCassandraElasticsearchRepository) DeleteAccountData(ctx context.C
 		Consistency(gocql.LocalQuorum).
 		BindStruct(accountSavedPaymentMethod{AccountId: accountId}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to delete saved payment methods for account: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to delete saved payment methods for account")
 	}
 
 	// delete expired subscriptions
@@ -1067,7 +1070,7 @@ func (r BillingCassandraElasticsearchRepository) DeleteAccountData(ctx context.C
 		Consistency(gocql.LocalQuorum).
 		BindStruct(expiredAccountClubSupporterSubscription{AccountId: accountId}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to delete expired account club supporter subscriptions for account: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to delete expired account club supporter subscriptions for account")
 	}
 
 	return nil
@@ -1084,10 +1087,10 @@ func (r BillingCassandraElasticsearchRepository) HasExistingAccountClubSupporter
 		GetRelease(&lockedSub); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, billing.ErrAccountClubSupportSubscriptionNotFound
+			return nil, apperror.NewNotFoundError("account club supporter subscription", accountId+"-"+clubId)
 		}
 
-		return nil, fmt.Errorf("failed to get locked account club supporter subscription: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get locked account club supporter subscription")
 	}
 
 	var accountClubSupported accountClubSupporterSubscription
@@ -1100,10 +1103,10 @@ func (r BillingCassandraElasticsearchRepository) HasExistingAccountClubSupporter
 		}).
 		GetRelease(&accountClubSupported); err != nil {
 		if err == gocql.ErrNotFound {
-			return nil, billing.ErrAccountClubSupportSubscriptionNotFound
+			return nil, apperror.NewNotFoundError("account club supporter subscription", lockedSub.AccountClubSupporterSubscriptionId)
 		}
 
-		return nil, fmt.Errorf("failed to get account club support by id: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get account club support by id")
 	}
 
 	decrypt, err := decryptPaymentMethod(accountClubSupported.EncryptedPaymentMethod)
@@ -1159,7 +1162,7 @@ func (r BillingCassandraElasticsearchRepository) GetExpiredAccountClubSupporterS
 			AccountId: accountId,
 		}).
 		SelectRelease(&expiredSubscriptions); err != nil {
-		return nil, fmt.Errorf("failed to get expired account club supporter subscriptions: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get expired account club supporter subscriptions")
 	}
 
 	var accountExpired []*billing.ExpiredAccountClubSupporterSubscription
@@ -1197,11 +1200,11 @@ func (r BillingCassandraElasticsearchRepository) GetExpiredAccountClubSupporterS
 			ClubId:    clubId,
 		}).
 		SelectRelease(&accountExpired); err != nil {
-		return nil, fmt.Errorf("failed to get expired account club support by account and club id: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get expired account club support by account and club id")
 	}
 
 	if len(accountExpired) == 0 {
-		return nil, billing.ErrExpiredAccountClubSupportSubscriptionNotFound
+		return nil, apperror.NewNotFoundError("expired account club supporter subscription", accountId+"-"+clubId)
 	}
 
 	expired := accountExpired[0]
@@ -1229,7 +1232,7 @@ func (r BillingCassandraElasticsearchRepository) DeleteExpiredAccountClubSupport
 			ClubId:    clubId,
 		}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to delete expired account club support by account and club id: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to delete expired account club support by account and club id")
 	}
 
 	return nil
@@ -1249,7 +1252,7 @@ func (r BillingCassandraElasticsearchRepository) CreateExpiredAccountClubSupport
 			CCBillSubscriptionId: expired.CCBillSubscriptionId(),
 		}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to create expired account club supporter: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to create expired account club supporter")
 	}
 
 	return nil
@@ -1268,10 +1271,10 @@ func (r BillingCassandraElasticsearchRepository) GetAccountTransactionByCCBillTr
 		GetRelease(&transaction); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, billing.ErrAccountTransactionNotFound
+			return nil, apperror.NewNotFoundError("account transaction (ccbill)", ccbillTransactionId)
 		}
 
-		return nil, fmt.Errorf("failed to account transaction by ccbill transaction id: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to account transaction by ccbill transaction id")
 	}
 
 	return r.GetAccountTransactionByIdOperator(ctx, transaction.Id)
@@ -1305,10 +1308,10 @@ func (r BillingCassandraElasticsearchRepository) GetAccountTransactionByIdOperat
 		GetRelease(&transaction); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, billing.ErrAccountTransactionNotFound
+			return nil, apperror.NewNotFoundError("account transaction", transactionHistoryId)
 		}
 
-		return nil, fmt.Errorf("failed to account transaction history: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to account transaction by id")
 	}
 
 	decrypt, err := decryptPaymentMethod(transaction.EncryptedPaymentMethod)
@@ -1324,7 +1327,7 @@ func (r BillingCassandraElasticsearchRepository) GetAccountTransactionByIdOperat
 		var unmarshal accountTransactionEvent
 
 		if err := json.Unmarshal([]byte(e), &unmarshal); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to unmarshal account transaction event")
 		}
 
 		events = append(events, billing.UnmarshalAccountTransactionEventFromDatabase(
@@ -1368,7 +1371,7 @@ func (r BillingCassandraElasticsearchRepository) CreateAccountTransactionOperato
 		WithContext(ctx).
 		BindStruct(marshalled).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to create account transaction: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to create account transaction")
 	}
 
 	if marshalled.CCBillTransactionId != nil {
@@ -1378,7 +1381,7 @@ func (r BillingCassandraElasticsearchRepository) CreateAccountTransactionOperato
 			WithContext(ctx).
 			BindStruct(marshalled).
 			ExecRelease(); err != nil {
-			return fmt.Errorf("failed to create account transaction by ccbill transaction id: %v", err)
+			return errors.Wrap(support.NewGocqlError(err), "failed to create account transaction by ccbill transaction id")
 		}
 	}
 
@@ -1417,7 +1420,7 @@ func (r BillingCassandraElasticsearchRepository) UpdateAccountTransactionOperato
 		WithContext(ctx).
 		BindStruct(marshalled).
 		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to update account transaction: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update account transaction")
 	}
 
 	if err := r.indexAccountTransaction(ctx, transaction); err != nil {
@@ -1441,10 +1444,10 @@ func (r BillingCassandraElasticsearchRepository) GetCCBillSubscriptionDetailsByI
 		GetRelease(&ccbillSubscription); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return nil, billing.ErrCCBillSubscriptionNotFound
+			return nil, apperror.NewNotFoundError("ccbill subscription details", ccbillSubscriptionId)
 		}
 
-		return nil, fmt.Errorf("failed to get ccbill subscription: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get ccbill subscription")
 	}
 
 	decrypt, err := decryptPaymentMethod(ccbillSubscription.EncryptedPaymentMethod)
@@ -1490,7 +1493,7 @@ func (r BillingCassandraElasticsearchRepository) CreateCCBillSubscriptionDetails
 		GetRelease(&lockedSub)
 
 	if err != nil && err != gocql.ErrNotFound {
-		return fmt.Errorf("failed to get locked account club supporter subscription: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to get locked account club supporter subscription")
 	}
 
 	if err == nil {
@@ -1504,7 +1507,7 @@ func (r BillingCassandraElasticsearchRepository) CreateCCBillSubscriptionDetails
 				WithContext(ctx).
 				BindStruct(marshalled).
 				ExecRelease(); err != nil {
-				return fmt.Errorf("failed to create ccbill subscription: %v", err)
+				return errors.Wrap(support.NewGocqlError(err), "failed to create ccbill subscription")
 			}
 
 			return billing.ErrAccountClubSupportSubscriptionDuplicate
@@ -1528,11 +1531,11 @@ func (r BillingCassandraElasticsearchRepository) CreateCCBillSubscriptionDetails
 			ExecCASRelease()
 
 		if err != nil {
-			return fmt.Errorf("failed to lock account club supporter subscription: %v", err)
+			return errors.Wrap(support.NewGocqlError(err), "failed to lock account club supporter subscription")
 		}
 
 		if !applied {
-			return fmt.Errorf("failed to lock account club supporter subscription")
+			return errors.Wrap(support.NewGocqlTransactionError(), "failed to lock account club supporter subscription")
 		}
 	}
 
@@ -1540,7 +1543,7 @@ func (r BillingCassandraElasticsearchRepository) CreateCCBillSubscriptionDetails
 		WithContext(ctx).
 		BindStruct(marshalled).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to create ccbill subscription: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to create ccbill subscription")
 	}
 
 	return nil
@@ -1571,7 +1574,7 @@ func (r BillingCassandraElasticsearchRepository) UpdateCCBillSubscriptionDetails
 		WithContext(ctx).
 		BindStruct(marshalled).
 		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to updated ccbill subscription: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to updated ccbill subscription")
 	}
 
 	return ccbillSubscription, nil

@@ -16,7 +16,7 @@ func NewApplication(ctx context.Context) (*app.Application, func()) {
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 
 	// bootstrap application
-	bootstrap.NewBootstrap(ctx)
+	bootstrap.NewBootstrap()
 
 	return createApplication(ctx, evaClient),
 		func() {

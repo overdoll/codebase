@@ -18,7 +18,7 @@ import (
 )
 
 func NewApplication(ctx context.Context) (*app.Application, func()) {
-	bootstrap.NewBootstrap(ctx)
+	bootstrap.NewBootstrap()
 
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 	stellaClient, cleanup2 := clients.NewStellaClient(ctx, os.Getenv("STELLA_SERVICE"))
@@ -45,7 +45,7 @@ type ComponentTestApplication struct {
 }
 
 func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication {
-	bootstrap.NewBootstrap(ctx)
+	bootstrap.NewBootstrap()
 
 	temporalClient := &temporalmocks.Client{}
 	evaClient := &mocks.MockEvaClient{}

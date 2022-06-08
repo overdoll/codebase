@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	stella "overdoll/applications/stella/proto"
+	"overdoll/libraries/errors"
 )
 
 type StellaGrpc struct {
@@ -18,7 +19,7 @@ func (s StellaGrpc) CanDeleteAccountData(ctx context.Context, accountId string) 
 	res, err := s.client.CanDeleteAccountData(ctx, &stella.CanDeleteAccountDataRequest{AccountId: accountId})
 
 	if err != nil {
-		return false, err
+		return false, errors.Wrap(err, "error checking if can delete account data")
 	}
 
 	return res.CanDelete, nil
@@ -29,7 +30,7 @@ func (s StellaGrpc) DeleteAccountData(ctx context.Context, accountId string) err
 	_, err := s.client.DeleteAccountData(ctx, &stella.DeleteAccountDataRequest{AccountId: accountId})
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error deleting account data")
 	}
 
 	return nil

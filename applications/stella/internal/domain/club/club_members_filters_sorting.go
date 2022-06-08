@@ -1,7 +1,7 @@
 package club
 
 import (
-	"errors"
+	"overdoll/libraries/errors/domainerror"
 )
 
 type MemberSorting struct {
@@ -24,5 +24,5 @@ func MemberSortingFromString(s string) (MemberSorting, error) {
 		return MemberNewSort, nil
 	}
 
-	return UnknownMemberSort, errors.New("unknown member sorting type: " + s)
+	return UnknownMemberSort, domainerror.NewValidation("unknown member sorting type: " + s)
 }

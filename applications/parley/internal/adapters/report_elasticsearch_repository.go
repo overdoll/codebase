@@ -3,14 +3,14 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
 	"overdoll/applications/parley/internal/domain/report"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/scan"
+	"overdoll/libraries/support"
 	"time"
 )
 
@@ -44,11 +44,7 @@ func (r ReportCassandraElasticsearchRepository) SearchPostReports(ctx context.Co
 		Index(PostReportsIndexName)
 
 	if cursor == nil {
-		return nil, errors.New("cursor required")
-	}
-
-	if cursor == nil {
-		return nil, fmt.Errorf("cursor must be present")
+		return nil, paging.ErrCursorNotPresent
 	}
 
 	if err := cursor.BuildElasticsearch(builder, "created_at", "id", false); err != nil {
@@ -66,7 +62,7 @@ func (r ReportCassandraElasticsearchRepository) SearchPostReports(ctx context.Co
 	response, err := builder.ErrorTrace(true).Pretty(true).Do(ctx)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed search club members: %v", err)
+		return nil, errors.Wrap(support.ParseElasticError(err), "SearchPostReports")
 	}
 
 	var reports []*report.PostReport
@@ -78,7 +74,7 @@ func (r ReportCassandraElasticsearchRepository) SearchPostReports(ctx context.Co
 		err := json.Unmarshal(hit.Source, &rpt)
 
 		if err != nil {
-			return nil, fmt.Errorf("failed search post reports - unmarshal: %v", err)
+			return nil, errors.Wrap(err, "SearchPostReports - Unmarshal")
 		}
 
 		rep := report.UnmarshalPostReportFromDatabase(rpt.PostId, rpt.ReportingAccountId, rpt.RuleId, rpt.CreatedAt)
@@ -106,7 +102,7 @@ func (r ReportCassandraElasticsearchRepository) indexPostReport(ctx context.Cont
 		Do(ctx)
 
 	if err != nil {
-		return fmt.Errorf("failed to index post report: %v", err)
+		return errors.Wrap(support.ParseElasticError(err), "indexPostReport")
 	}
 
 	return nil
@@ -144,7 +140,7 @@ func (r ReportCassandraElasticsearchRepository) IndexAllPostReports(ctx context.
 				Do(ctx)
 
 			if err != nil {
-				return fmt.Errorf("failed to index post report: %v", err)
+				return errors.Wrap(support.ParseElasticError(err), "IndexAllPostReports")
 			}
 		}
 
@@ -161,7 +157,7 @@ func (r ReportCassandraElasticsearchRepository) IndexAllPostReports(ctx context.
 func (r ReportCassandraElasticsearchRepository) deletePostReportsIndexById(ctx context.Context, postId, accountId string) error {
 
 	if _, err := r.client.Delete().Index(PostReportsIndexName).Id(postId + "-" + accountId).Do(ctx); err != nil {
-		return fmt.Errorf("failed to delete post report: %v", err)
+		return errors.Wrap(support.ParseElasticError(err), "deletePostReportsIndexById")
 	}
 
 	return nil

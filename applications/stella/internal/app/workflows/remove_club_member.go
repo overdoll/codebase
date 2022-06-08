@@ -13,6 +13,7 @@ type RemoveClubMemberInput struct {
 func RemoveClubMember(ctx workflow.Context, input RemoveClubMemberInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -23,6 +24,7 @@ func RemoveClubMember(ctx workflow.Context, input RemoveClubMemberInput) error {
 			AccountId: input.AccountId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to remove club member from list", "Error", err)
 		return err
 	}
 
@@ -32,6 +34,7 @@ func RemoveClubMember(ctx workflow.Context, input RemoveClubMemberInput) error {
 			AccountId: input.AccountId,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to subtract club member", "Error", err)
 		return err
 	}
 

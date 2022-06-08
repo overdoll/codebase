@@ -1,0 +1,36 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "zap_utilities",
+    srcs = [
+        "encoder.go",
+        "plainerror.go",
+    ],
+    importpath = "overdoll/libraries/zap_utilities",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libraries/errors",
+        "//libraries/support",
+        "@org_uber_go_zap//:zap",
+        "@org_uber_go_zap//buffer",
+        "@org_uber_go_zap//zapcore",
+    ],
+)
+
+go_library(
+    name = "zap_support",
+    srcs = [
+        "encoder.go",
+        "plainerror.go",
+        "safe_panic.go",
+    ],
+    importpath = "overdoll/libraries/zap_support",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libraries/errors",
+        "//libraries/support",
+        "@org_uber_go_zap//:zap",
+        "@org_uber_go_zap//buffer",
+        "@org_uber_go_zap//zapcore",
+    ],
+)

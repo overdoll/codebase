@@ -3,8 +3,8 @@ package resolvers
 import (
 	"context"
 	"overdoll/applications/eva/internal/app"
-	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/ports/graphql/types"
+	"overdoll/libraries/errors/apperror"
 )
 
 type AccountEmailResolver struct {
@@ -17,7 +17,7 @@ func (r AccountEmailResolver) Account(ctx context.Context, obj *types.AccountEma
 
 	if err != nil {
 
-		if err == account.ErrAccountNotFound {
+		if apperror.IsNotFoundError(err) {
 			return nil, nil
 		}
 

@@ -2,7 +2,6 @@ package activities
 
 import (
 	"context"
-	"github.com/pkg/errors"
 )
 
 type DiscardPostInput struct {
@@ -13,7 +12,7 @@ func (h *Activities) DiscardPost(ctx context.Context, input DiscardPostInput) er
 
 	// post approved
 	if err := h.sting.DiscardPost(ctx, input.PostId); err != nil {
-		return errors.Wrap(err, "failed to discard post")
+		return err
 	}
 
 	return nil

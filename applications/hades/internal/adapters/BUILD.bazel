@@ -31,6 +31,9 @@ go_library(
         "//applications/stella/proto:v1_go_proto",
         "//libraries/bucket",
         "//libraries/crypt",
+        "//libraries/errors",
+        "//libraries/errors/apperror",
+        "//libraries/errors/domainerror",
         "//libraries/localization",
         "//libraries/location",
         "//libraries/money",
@@ -52,7 +55,6 @@ go_library(
         "@io_temporal_go_api//enums/v1:enums",
         "@io_temporal_go_sdk//client",
         "@org_golang_google_protobuf//types/known/timestamppb",
-        "@org_uber_go_zap//:zap",
     ],
 )
 

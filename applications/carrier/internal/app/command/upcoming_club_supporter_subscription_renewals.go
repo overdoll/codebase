@@ -2,7 +2,6 @@ package command
 
 import (
 	"context"
-	"github.com/pkg/errors"
 	"overdoll/applications/carrier/internal/domain/formatters"
 	"overdoll/applications/carrier/internal/domain/links"
 	"overdoll/applications/carrier/internal/domain/mailing"
@@ -35,17 +34,23 @@ func (h UpcomingClubSupporterSubscriptionRenewalsHandler) Handle(ctx context.Con
 	acc, err := h.eva.GetAccount(ctx, cmd.AccountId)
 
 	if err != nil {
-		return errors.Wrap(err, "failed to get account")
+		return err
 	}
 
 	var clubRenewals []map[string]interface{}
+
+	globalSubscriptionUrl, err := links.CreateManageSubscriptionUrl()
+
+	if err != nil {
+		return err
+	}
 
 	for _, renewal := range cmd.Renewals {
 
 		clubDetails, err := h.stella.GetClub(ctx, renewal.ClubId)
 
 		if err != nil {
-			return errors.Wrap(err, "failed to get club")
+			return err
 		}
 
 		clubUrl, err := links.CreateClubUrl(clubDetails.Slug())
@@ -78,8 +83,9 @@ func (h UpcomingClubSupporterSubscriptionRenewalsHandler) Handle(ctx context.Con
 	template, err := mailing.NewTemplate(
 		"upcoming_club_supporter_subscription_renewals",
 		map[string]interface{}{
-			"Username": acc.Username(),
-			"Renewals": clubRenewals,
+			"Username":                acc.Username(),
+			"Renewals":                clubRenewals,
+			"ManageSubscriptionsLink": globalSubscriptionUrl,
 		},
 	)
 

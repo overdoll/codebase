@@ -3,11 +3,9 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"overdoll/applications/stella/internal/domain/club"
-	"overdoll/libraries/uuid"
-	"strconv"
+	"overdoll/libraries/errors"
+	"overdoll/libraries/support"
 	"time"
 
 	"github.com/olivere/elastic/v7"
@@ -24,7 +22,7 @@ type clubDocument struct {
 	SlugAliases                 []string          `json:"slug_aliases"`
 	ThumbnailResourceId         *string           `json:"thumbnail_resource_id"`
 	Name                        map[string]string `json:"name"`
-	CreatedAt                   string            `json:"created_at"`
+	CreatedAt                   time.Time         `json:"created_at"`
 	MembersCount                int               `json:"members_count"`
 	OwnerAccountId              string            `json:"owner_account_id"`
 	Suspended                   bool              `json:"suspended"`
@@ -37,13 +35,7 @@ type clubDocument struct {
 
 const ClubsIndexName = "clubs"
 
-func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
-
-	parse, err := uuid.Parse(cat.ID())
-
-	if err != nil {
-		return nil, err
-	}
+func marshalClubToDocument(cat *club.Club) *clubDocument {
 
 	return &clubDocument{
 		Id:                  cat.ID(),
@@ -51,23 +43,19 @@ func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 		SlugAliases:         cat.SlugAliases(),
 		ThumbnailResourceId: cat.ThumbnailResourceId(),
 		Name:                localization.MarshalTranslationToDatabase(cat.Name()),
-		CreatedAt:           strconv.FormatInt(parse.Time().Unix(), 10),
+		CreatedAt:           cat.CreatedAt(),
 		MembersCount:        cat.MembersCount(),
 		OwnerAccountId:      cat.OwnerAccountId(),
 		Suspended:           cat.Suspended(),
 		SuspendedUntil:      cat.SuspendedUntil(),
-	}, nil
+	}
 }
 
 func (r ClubCassandraElasticsearchRepository) indexClub(ctx context.Context, club *club.Club) error {
 
-	clb, err := marshalClubToDocument(club)
+	clb := marshalClubToDocument(club)
 
-	if err != nil {
-		return err
-	}
-
-	_, err = r.client.
+	_, err := r.client.
 		Index().
 		Index(ClubsIndexName).
 		Id(clb.Id).
@@ -75,7 +63,7 @@ func (r ClubCassandraElasticsearchRepository) indexClub(ctx context.Context, clu
 		Do(ctx)
 
 	if err != nil {
-		return fmt.Errorf("failed to index club: %v", err)
+		return errors.Wrap(support.ParseElasticError(err), "failed to index club")
 	}
 
 	return nil
@@ -87,11 +75,7 @@ func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, r
 		Index(ClubsIndexName)
 
 	if cursor == nil {
-		return nil, errors.New("cursor required")
-	}
-
-	if cursor == nil {
-		return nil, fmt.Errorf("cursor must be present")
+		return nil, paging.ErrCursorNotPresent
 	}
 
 	var sortingColumn string
@@ -151,7 +135,7 @@ func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, r
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed search clubs: %v", err)
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed search clubs")
 	}
 
 	var brands []*club.Club
@@ -163,7 +147,7 @@ func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, r
 		err := json.Unmarshal(hit.Source, &bd)
 
 		if err != nil {
-			return nil, fmt.Errorf("failed search clubs - unmarshal: %v", err)
+			return nil, errors.Wrap(err, "failed search clubs - unmarshal")
 		}
 
 		newBrand := club.UnmarshalClubFromDatabase(
@@ -180,6 +164,7 @@ func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, r
 			bd.HasCreatedSupporterOnlyPost,
 			bd.Terminated,
 			bd.TerminatedByAccountId,
+			bd.CreatedAt,
 		)
 		newBrand.Node = paging.NewNode(hit.Sort)
 
@@ -205,12 +190,6 @@ func (r ClubCassandraElasticsearchRepository) IndexAllClubs(ctx context.Context)
 
 		for iter.StructScan(&m) {
 
-			parse, err := uuid.Parse(m.Id)
-
-			if err != nil {
-				return err
-			}
-
 			doc := clubDocument{
 				Id:                          m.Id,
 				Slug:                        m.Slug,
@@ -218,7 +197,7 @@ func (r ClubCassandraElasticsearchRepository) IndexAllClubs(ctx context.Context)
 				ThumbnailResourceId:         m.ThumbnailResourceId,
 				Name:                        m.Name,
 				OwnerAccountId:              m.OwnerAccountId,
-				CreatedAt:                   strconv.FormatInt(parse.Time().Unix(), 10),
+				CreatedAt:                   m.CreatedAt,
 				MembersCount:                m.MembersCount,
 				Suspended:                   m.Suspended,
 				SuspendedUntil:              m.SuspendedUntil,
@@ -228,7 +207,7 @@ func (r ClubCassandraElasticsearchRepository) IndexAllClubs(ctx context.Context)
 				TerminatedByAccountId:       m.TerminatedByAccountId,
 			}
 
-			_, err = r.client.
+			_, err := r.client.
 				Index().
 				Index(ClubsIndexName).
 				Id(m.Id).
@@ -236,7 +215,7 @@ func (r ClubCassandraElasticsearchRepository) IndexAllClubs(ctx context.Context)
 				Do(ctx)
 
 			if err != nil {
-				return fmt.Errorf("failed to index clubs: %v", err)
+				return errors.Wrap(support.ParseElasticError(err), "failed to index clubs")
 			}
 		}
 

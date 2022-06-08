@@ -2,7 +2,7 @@ package command
 
 import (
 	"context"
-	"fmt"
+	"go.uber.org/zap"
 	"overdoll/applications/hades/internal/domain/event"
 )
 
@@ -47,7 +47,7 @@ func (h ProcessCCBillWebhookHandler) Handle(ctx context.Context, cmd ProcessCCBi
 	case "RenewalFailure": // failure to renew (rebill declined)
 		return h.event.CCBillRenewalFailure(ctx, cmd.Payload)
 	default:
-		fmt.Println(fmt.Sprintf("event not processed: %s", cmd.EventType))
+		zap.S().Infow("event not processed", zap.String("eventType", cmd.EventType))
 	}
 
 	return nil

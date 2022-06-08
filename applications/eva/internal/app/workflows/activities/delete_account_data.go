@@ -5,5 +5,10 @@ import (
 )
 
 func (h *Activities) DeleteAccountData(ctx context.Context, accountId string) error {
-	return h.ar.DeleteAccountData(ctx, accountId)
+
+	if err := h.ar.DeleteAccountData(ctx, accountId); err != nil {
+		return err
+	}
+
+	return nil
 }

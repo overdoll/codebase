@@ -3,9 +3,8 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"overdoll/applications/eva/internal/domain/location"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/passport"
 
 	"github.com/go-redis/redis/v8"
@@ -46,19 +45,19 @@ func (r AuthenticationTokenRepository) GetAuthenticationToken(ctx context.Contex
 			return nil, token.ErrTokenNotFound
 		}
 
-		return nil, fmt.Errorf("failed to get authentication token id: %v", err)
+		return nil, errors.Wrap(err, "failed to get authentication token id")
 	}
 
 	val, err = crypt.Decrypt(val)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to decrypt token: %v", err)
+		return nil, errors.Wrap(err, "failed to decrypt token")
 	}
 
 	var cookieItem authenticationToken
 
 	if err := json.Unmarshal([]byte(val), &cookieItem); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal token: %v", err)
+		return nil, errors.Wrap(err, "failed to unmarshal token")
 	}
 
 	instance := token.UnmarshalAuthenticationTokenFromDatabase(
@@ -95,7 +94,7 @@ func (r AuthenticationTokenRepository) DeleteAuthenticationToken(ctx context.Con
 	_, err = r.client.WithContext(ctx).Del(ctx, authenticationTokenPrefix+id).Result()
 
 	if err != nil {
-		return fmt.Errorf("failed to delete token: %v", err)
+		return errors.Wrap(err, "failed to delete token")
 	}
 
 	return nil
@@ -118,19 +117,19 @@ func (r AuthenticationTokenRepository) CreateAuthenticationToken(ctx context.Con
 	val, err := json.Marshal(authCookie)
 
 	if err != nil {
-		return fmt.Errorf("failed to marshal token: %v", err)
+		return errors.Wrap(err, "failed to marshal token")
 	}
 
 	newVal, err := crypt.Encrypt(string(val))
 
 	if err != nil {
-		return fmt.Errorf("failed to encrypt token: %v", err)
+		return errors.Wrap(err, "failed to encrypt token")
 	}
 
 	ok, err := r.client.WithContext(ctx).SetNX(ctx, authenticationTokenPrefix+instance.Token(), newVal, instance.Expiration()).Result()
 
 	if err != nil {
-		return fmt.Errorf("failed to create token: %v", err)
+		return errors.Wrap(err, "failed to create token")
 	}
 
 	if !ok {
@@ -180,19 +179,19 @@ func (r AuthenticationTokenRepository) UpdateAuthenticationToken(ctx context.Con
 	val, err := json.Marshal(authCookie)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to marshal token: %v", err)
+		return nil, errors.Wrap(err, "failed to marshall token")
 	}
 
 	newVal, err := crypt.Encrypt(string(val))
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to encrypt token: %v", err)
+		return nil, errors.Wrap(err, "failed to encrypt authentication token")
 	}
 
 	_, err = r.client.WithContext(ctx).Set(ctx, authenticationTokenPrefix+instance.Token(), newVal, instance.Expiration()).Result()
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to update token: %v", err)
+		return nil, errors.Wrap(err, "failed to update authentication token")
 	}
 
 	return instance, nil

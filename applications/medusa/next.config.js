@@ -1,3 +1,8 @@
+const { withSentryConfig } = require('@sentry/nextjs')
+const nextBuildId = require('next-build-id')
+const glob = require('glob')
+const { removeSync } = require('fs-extra')
+
 const path = require('path')
 const securityHeaders = [
   {
@@ -30,7 +35,7 @@ const securityHeaders = [
   },
   {
     key: 'Content-Security-Policy',
-    value: 'default-src https://fonts.gstatic.com https://dcd9vpqfvvgum.cloudfront.net https://sandbox-overdoll-resources.s3.amazonaws.com data: blob: \'self\' \'unsafe-inline\' \'unsafe-eval\' ;script-src \'unsafe-inline\' \'unsafe-eval\' blob: data: \'self\';style-src https://fonts.googleapis.com data: \'self\' \'unsafe-inline\';connect-src \'self\' ws://localhost:* blob: ;media-src https://dcd9vpqfvvgum.cloudfront.net \'self\' data:;frame-src \'none\' ;object-src blob: data: ;worker-src \'self\' blob: data:;block-all-mixed-content;upgrade-insecure-requests;'
+    value: 'default-src https://static.dollycdn.net https://fonts.gstatic.com https://dcd9vpqfvvgum.cloudfront.net https://sandbox-overdoll-resources.s3.amazonaws.com data: blob: \'self\' \'unsafe-inline\' \'unsafe-eval\' ;script-src https://static.dollycdn.net \'unsafe-inline\' \'unsafe-eval\' blob: data: \'self\';style-src https://fonts.googleapis.com https://static.dollycdn.net data: \'self\' \'unsafe-inline\';connect-src \'self\' ws://localhost:* blob: ;media-src https://dcd9vpqfvvgum.cloudfront.net \'self\' data:;frame-src \'none\' ;object-src blob: data: ;worker-src \'self\' blob: data:;block-all-mixed-content;upgrade-insecure-requests;'
   }
 ]
 
@@ -44,7 +49,7 @@ if (process.env.ANALYZE === 'true') {
   })
 }
 
-module.exports = withBundleAnalyzer({
+const moduleExports = withBundleAnalyzer({
   async headers () {
     return [
       {
@@ -54,6 +59,7 @@ module.exports = withBundleAnalyzer({
       }
     ]
   },
+  generateBuildId: () => nextBuildId({ dir: __dirname }),
   distDir: 'build',
   generateEtags: false,
   poweredByHeader: false,
@@ -79,10 +85,6 @@ module.exports = withBundleAnalyzer({
     // also Next.js only shows 1 error at a time which is really annoying
     ignoreDuringBuilds: true
   },
-  images: {
-    domains: ['sandbox-overdoll-resources.s3.amazonaws.com', 'dcd9vpqfvvgum.cloudfront.net', 's3.amazonaws.com'],
-    minimumCacheTTL: 60
-  },
   webpack: (config) => {
     config.module.rules.push({
       test: /\.svg$/,
@@ -105,3 +107,22 @@ module.exports = withBundleAnalyzer({
     return config
   }
 })
+
+let sentryConfig
+
+if (process.env.PRODUCTION_DEPLOYMENT != null) {
+  sentryConfig = withSentryConfig(moduleExports, { silent: true })
+  moduleExports.sentry = {
+    hideSourceMaps: true,
+    setCommits: { auto: true }
+  }
+  moduleExports.assetPrefix = process.env.STATIC_ASSETS_URL
+} else {
+  moduleExports.sentry = {
+    disableServerWebpackPlugin: true,
+    disableClientWebpackPlugin: true
+  }
+  sentryConfig = withSentryConfig(moduleExports)
+}
+
+module.exports = sentryConfig

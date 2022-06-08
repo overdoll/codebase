@@ -1,6 +1,8 @@
 package club_infraction
 
-import "errors"
+import (
+	"overdoll/libraries/errors/domainerror"
+)
 
 type ClubInfractionHistorySource struct {
 	slug string
@@ -27,5 +29,5 @@ func ClubInfractionHistorySourceFromString(s string) (ClubInfractionHistorySourc
 		return ClubInfractionHistorySourcePostManualRemoval, nil
 	}
 
-	return ClubInfractionHistorySourceUnknown, errors.New("unknown club infraction history source: " + s)
+	return ClubInfractionHistorySourceUnknown, domainerror.NewValidation("unknown club infraction history source: " + s)
 }

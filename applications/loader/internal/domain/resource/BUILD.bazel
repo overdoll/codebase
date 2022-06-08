@@ -14,11 +14,16 @@ go_library(
     importpath = "overdoll/applications/loader/internal/domain/resource",
     visibility = ["//applications/loader:__subpackages__"],
     deps = [
+        "//libraries/errors",
+        "//libraries/errors/domainerror",
         "//libraries/uuid",
+        "//libraries/zap_support/zap_adapters",
         "@com_github_capslock_studio_go_webpbin//:go-webpbin",
         "@com_github_disintegration_gift//:gift",
         "@com_github_h2non_filetype//:filetype",
+        "@com_github_nfnt_resize//:resize",
         "@com_github_tus_tusd//pkg/handler",
         "@com_github_u2takey_ffmpeg_go//:ffmpeg-go",
+        "@org_uber_go_zap//:zap",
     ],
 )

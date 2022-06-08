@@ -10,5 +10,10 @@ type AccountDeletedInput struct {
 }
 
 func (h *Activities) AccountDeleted(ctx context.Context, input AccountDeletedInput) error {
-	return h.carrier.AccountDeleted(ctx, input.Username, input.Email)
+
+	if err := h.carrier.AccountDeleted(ctx, input.Username, input.Email); err != nil {
+		return err
+	}
+
+	return nil
 }

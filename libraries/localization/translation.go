@@ -116,7 +116,7 @@ func UnmarshalTranslationFromDatabase(translations map[string]string) *Translati
 
 		// if invalid translation object, log and continue
 		if err != nil {
-			zap.S().Error("invalid translation: ", zap.String("locale", locale), zap.Error(err))
+			zap.S().Errorw("invalid translation: ", zap.String("locale", locale), zap.Error(err))
 			continue
 		}
 

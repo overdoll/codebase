@@ -2,6 +2,7 @@ package account
 
 import (
 	"errors"
+	"overdoll/libraries/errors/domainerror"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -17,7 +18,6 @@ type Account struct {
 	username         string
 	email            string
 	roles            []Role
-	verified         bool
 	avatarResourceId *string
 
 	locked      bool
@@ -31,21 +31,22 @@ type Account struct {
 	lastUsernameEdit time.Time
 
 	multiFactorEnabled bool
+
+	createdAt time.Time
 }
 
 var (
-	ErrUsernameNotUnique      = errors.New("username is not unique")
-	ErrEmailNotUnique         = errors.New("email is not unique")
-	ErrEmailCodeInvalid       = errors.New("email confirmation expired or invalid")
-	ErrAccountNotFound        = errors.New("account not found")
-	ErrAccountPrivileged      = errors.New("account is privileged")
-	ErrMultiFactorRequired    = errors.New("account needs to have multi factor enabled")
-	ErrAccountNoRole          = errors.New("account does not have the assigned role")
-	ErrUsernameChangeCooldown = errors.New("cannot change username yet")
-	ErrAccountIsDeleting      = errors.New("cannot updated account in deleting status")
+	ErrUsernameNotUnique      = domainerror.NewValidation("username is not unique")
+	ErrEmailNotUnique         = domainerror.NewValidation("email is not unique")
+	ErrEmailCodeInvalid       = domainerror.NewValidation("email confirmation expired or invalid")
+	ErrAccountPrivileged      = domainerror.NewValidation("account is privileged")
+	ErrMultiFactorRequired    = domainerror.NewValidation("account needs to have multi factor enabled")
+	ErrAccountNoRole          = domainerror.NewValidation("account does not have the assigned role")
+	ErrUsernameChangeCooldown = domainerror.NewValidation("cannot change username yet")
+	ErrAccountIsDeleting      = domainerror.NewValidation("cannot updated account in deleting status")
 )
 
-func UnmarshalAccountFromDatabase(id, username, email string, roles []string, verified bool, avatar *string, locked bool, lockedUntil *time.Time, isDeleting bool, scheduledDeletionAt *time.Time, scheduledDeletionWorkflowId *string, multiFactorEnabled bool, lastUsernameEdit time.Time, isDeleted bool) *Account {
+func UnmarshalAccountFromDatabase(id, username, email string, roles []string, avatar *string, locked bool, lockedUntil *time.Time, isDeleting bool, scheduledDeletionAt *time.Time, scheduledDeletionWorkflowId *string, multiFactorEnabled bool, lastUsernameEdit time.Time, isDeleted bool, createdAt time.Time) *Account {
 
 	var newRoles []Role
 
@@ -59,7 +60,6 @@ func UnmarshalAccountFromDatabase(id, username, email string, roles []string, ve
 		username:                    username,
 		email:                       email,
 		roles:                       newRoles,
-		verified:                    verified,
 		avatarResourceId:            avatar,
 		deleting:                    isDeleting,
 		scheduledDeletionAt:         scheduledDeletionAt,
@@ -69,6 +69,7 @@ func UnmarshalAccountFromDatabase(id, username, email string, roles []string, ve
 		multiFactorEnabled:          multiFactorEnabled,
 		lastUsernameEdit:            lastUsernameEdit,
 		deleted:                     isDeleted,
+		createdAt:                   createdAt,
 	}
 }
 
@@ -83,6 +84,7 @@ func NewAccount(id, username, email string) (*Account, error) {
 		username:         username,
 		email:            email,
 		lastUsernameEdit: time.Now().Add(time.Duration(-(24 * 30 * 2)) * time.Hour),
+		createdAt:        time.Now(),
 	}, nil
 }
 
@@ -96,10 +98,6 @@ func (a *Account) Email() string {
 
 func (a *Account) Username() string {
 	return a.username
-}
-
-func (a *Account) Verified() bool {
-	return a.verified
 }
 
 func (a *Account) AvatarResourceId() *string {
@@ -166,6 +164,10 @@ func (a *Account) ScheduledDeletionWorkflowId() *string {
 
 func (a *Account) MultiFactorEnabled() bool {
 	return a.multiFactorEnabled
+}
+
+func (a *Account) CreatedAt() time.Time {
+	return a.createdAt
 }
 
 func (a *Account) IsDeleting() bool {
@@ -348,7 +350,7 @@ func validateUsername(username string) error {
 	err := validator.New().Var(username, "required,alphanum,max=25,excludesall= ")
 
 	if err != nil {
-		return err
+		return domainerror.NewValidation(err.Error())
 	}
 
 	return nil
@@ -545,5 +547,5 @@ func (a *Account) RevokeModeratorRole(requester *principal.Principal) error {
 }
 
 func ToPrincipal(acc *Account) *principal.Principal {
-	return principal.NewPrincipal(acc.id, acc.email, acc.RolesAsString(), acc.verified, acc.locked, acc.IsSecure(), false)
+	return principal.NewPrincipal(acc.id, acc.username, acc.email, acc.RolesAsString(), acc.locked, acc.IsSecure(), false)
 }

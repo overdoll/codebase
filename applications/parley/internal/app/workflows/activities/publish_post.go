@@ -2,7 +2,6 @@ package activities
 
 import (
 	"context"
-	"github.com/pkg/errors"
 )
 
 type PublishPostInput struct {
@@ -13,7 +12,7 @@ func (h *Activities) PublishPost(ctx context.Context, input PublishPostInput) er
 
 	// post approved
 	if err := h.sting.PublishPost(ctx, input.PostId); err != nil {
-		return errors.Wrap(err, "failed to publish post")
+		return err
 	}
 
 	return nil

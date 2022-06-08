@@ -4,9 +4,11 @@ import (
 	"context"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
+	"time"
 )
 
 func TestPostCategoryRepository_failure(t *testing.T) {
@@ -17,7 +19,7 @@ func TestPostCategoryRepository_failure(t *testing.T) {
 	categoryId := uuid.New().String()
 	categorySlug := createFakeSlug(t)
 
-	category := post.UnmarshalCategoryFromDatabase(categoryId, categorySlug, map[string]string{"en": "test"}, nil, 0, 0)
+	category := post.UnmarshalCategoryFromDatabase(categoryId, categorySlug, map[string]string{"en": "test"}, nil, 0, 0, time.Now())
 
 	ctx := context.Background()
 
@@ -27,8 +29,8 @@ func TestPostCategoryRepository_failure(t *testing.T) {
 	require.Error(t, err, "should have received an error while creating the category")
 
 	_, err = postRepo.GetCategoryById(ctx, requester, categoryId)
-	require.Equal(t, post.ErrCategoryNotFound, err, "category should not be found by id")
+	require.True(t, apperror.IsNotFoundError(err), "category should not be found by id")
 
 	_, err = postRepo.GetCategoryBySlug(ctx, requester, categorySlug)
-	require.Equal(t, post.ErrCategoryNotFound, err, "category should not be found by slug")
+	require.True(t, apperror.IsNotFoundError(err), "category should not be found by slug")
 }

@@ -1,15 +1,11 @@
 package payout
 
 import (
-	"errors"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"time"
-)
-
-var (
-	ErrClubPayoutNotFound = errors.New("club payout not found")
 )
 
 type ClubPayout struct {
@@ -23,7 +19,10 @@ type ClubPayout struct {
 	depositRequestId   string
 	temporalWorkflowId string
 
-	amount   uint64
+	totalAmount    uint64
+	coverFeeAmount uint64
+	amount         uint64
+
 	currency money.Currency
 
 	createdAt   time.Time
@@ -38,6 +37,12 @@ func NewQueuedPayout(depositRequestId string, accountMethod *AccountPayoutMethod
 		depositDate = &dt
 	}
 
+	var coverFeeAmount uint64
+
+	if accountMethod.Method() == Paxum {
+		coverFeeAmount = 25
+	}
+
 	return &ClubPayout{
 		depositRequestId:   depositRequestId,
 		payoutAccountId:    accountMethod.accountId,
@@ -45,7 +50,9 @@ func NewQueuedPayout(depositRequestId string, accountMethod *AccountPayoutMethod
 		status:             Queued,
 		clubId:             clubId,
 		temporalWorkflowId: temporalWorkflowId,
+		coverFeeAmount:     coverFeeAmount,
 		amount:             amount,
+		totalAmount:        amount + coverFeeAmount,
 		depositDate:        *depositDate,
 		currency:           currency,
 		createdAt:          timestamp,
@@ -68,8 +75,16 @@ func (p *ClubPayout) TemporalWorkflowId() string {
 	return p.temporalWorkflowId
 }
 
+func (p *ClubPayout) CoverFeeAmount() uint64 {
+	return p.coverFeeAmount
+}
+
 func (p *ClubPayout) Amount() uint64 {
 	return p.amount
+}
+
+func (p *ClubPayout) TotalAmount() uint64 {
+	return p.totalAmount
 }
 
 func (p *ClubPayout) Currency() money.Currency {
@@ -154,7 +169,7 @@ func (p *ClubPayout) CanCancel(requester *principal.Principal) error {
 	}
 
 	if p.status != Queued {
-		return errors.New("can only cancel a queued payout")
+		return domainerror.NewValidation("can only cancel a queued payout")
 	}
 
 	return nil
@@ -167,7 +182,7 @@ func (p *ClubPayout) CanRetry(requester *principal.Principal) error {
 	}
 
 	if p.status != Failed {
-		return errors.New("can only retry a failed payout")
+		return domainerror.NewValidation("can only retry a failed payout")
 	}
 
 	return nil
@@ -180,7 +195,7 @@ func (p *ClubPayout) CanUpdateDepositDate(requester *principal.Principal) error 
 	}
 
 	if p.status != Queued {
-		return errors.New("can only delay a queued payout")
+		return domainerror.NewValidation("can only delay a queued payout")
 	}
 
 	return nil
@@ -201,6 +216,8 @@ func UnmarshalClubPayoutFromDatabase(
 	clubId string,
 	currency string,
 	amount uint64,
+	coverFeeAmount uint64,
+	totalAmount uint64,
 	depositDate time.Time,
 	accountPayoutMethodId string,
 	depositRequestId string,
@@ -218,6 +235,8 @@ func UnmarshalClubPayoutFromDatabase(
 		depositRequestId:   depositRequestId,
 		temporalWorkflowId: temporalWorkflowId,
 		amount:             amount,
+		totalAmount:        totalAmount,
+		coverFeeAmount:     coverFeeAmount,
 		currency:           cr,
 		createdAt:          createdAt,
 		depositDate:        depositDate,

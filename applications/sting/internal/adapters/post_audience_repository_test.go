@@ -4,9 +4,11 @@ import (
 	"context"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
+	"time"
 )
 
 func TestPostAudienceRepository_failure(t *testing.T) {
@@ -17,7 +19,7 @@ func TestPostAudienceRepository_failure(t *testing.T) {
 	audienceId := uuid.New().String()
 	audienceSlug := createFakeSlug(t)
 
-	audience := post.UnmarshalAudienceFromDatabase(audienceId, audienceSlug, map[string]string{"en": "test"}, nil, 0, 0, 0)
+	audience := post.UnmarshalAudienceFromDatabase(audienceId, audienceSlug, map[string]string{"en": "test"}, nil, 0, 0, 0, time.Now())
 
 	ctx := context.Background()
 
@@ -27,8 +29,8 @@ func TestPostAudienceRepository_failure(t *testing.T) {
 	require.Error(t, err, "should have received an error while creating the audience")
 
 	_, err = postRepo.GetAudienceById(ctx, requester, audienceId)
-	require.Equal(t, post.ErrAudienceNotFound, err, "category should not be found by id")
+	require.True(t, apperror.IsNotFoundError(err), "audience should not be found by id")
 
 	_, err = postRepo.GetAudienceBySlug(ctx, requester, audienceSlug)
-	require.Equal(t, post.ErrAudienceNotFound, err, "category should not be found by slug")
+	require.True(t, apperror.IsNotFoundError(err), "audience should not be found by slug")
 }

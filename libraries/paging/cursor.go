@@ -8,7 +8,12 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2/qb"
+	"overdoll/libraries/errors/domainerror"
 	"sort"
+)
+
+var (
+	ErrCursorNotPresent = domainerror.NewValidation("cursor not present")
 )
 
 type Node struct {

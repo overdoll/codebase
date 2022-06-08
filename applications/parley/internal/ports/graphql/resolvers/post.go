@@ -2,13 +2,12 @@ package resolvers
 
 import (
 	"context"
-	"overdoll/applications/parley/internal/domain/rule"
+	"overdoll/libraries/errors/apperror"
 	"time"
 
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/parley/internal/app"
 	"overdoll/applications/parley/internal/app/query"
-	"overdoll/applications/parley/internal/domain/report"
 	"overdoll/applications/parley/internal/ports/graphql/types"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
@@ -34,7 +33,7 @@ func (r PostResolver) ViewerReport(ctx context.Context, obj *types.Post) (*types
 
 	if err != nil {
 
-		if err == report.ErrPostReportNotFound {
+		if apperror.IsNotFoundError(err) {
 			return nil, nil
 		}
 
@@ -113,7 +112,7 @@ func (r PostResolver) Rule(ctx context.Context, obj *types.Post) (*types.Rule, e
 
 	if err != nil {
 
-		if err == rule.ErrRuleNotFound {
+		if apperror.IsNotFoundError(err) {
 			return nil, nil
 		}
 

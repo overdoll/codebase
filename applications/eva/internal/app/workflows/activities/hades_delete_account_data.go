@@ -5,5 +5,10 @@ import (
 )
 
 func (h *Activities) HadesDeleteAccountData(ctx context.Context, accountId string) error {
-	return h.hades.DeleteAccountData(ctx, accountId)
+
+	if err := h.hades.DeleteAccountData(ctx, accountId); err != nil {
+		return err
+	}
+
+	return nil
 }

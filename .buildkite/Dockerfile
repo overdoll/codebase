@@ -25,3 +25,11 @@ RUN mv crane /bin
 
 RUN apt install python3-yaml
 RUN python3 -m pip install redis
+
+# install sentry
+RUN curl -sL https://sentry.io/get-cli/ | SENTRY_CLI_VERSION="2.1.0" bash
+
+# install AWS CLI
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+RUN unzip awscliv2.zip
+RUN ./aws/install

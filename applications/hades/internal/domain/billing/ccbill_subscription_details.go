@@ -1,15 +1,10 @@
 package billing
 
 import (
-	"errors"
 	"overdoll/libraries/money"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"time"
-)
-
-var (
-	ErrCCBillSubscriptionNotFound = errors.New("ccbill subscription not found")
 )
 
 type CCBillSubscriptionDetails struct {
@@ -146,7 +141,7 @@ func (c *CCBillSubscriptionDetails) UpdatePaymentMethod(paymentMethod *PaymentMe
 func (c *CCBillSubscriptionDetails) CanView(requester *principal.Principal) error {
 
 	if !requester.IsStaff() {
-		return errors.New("only staff can view ccbill subscription details")
+		return principal.ErrNotAuthorized
 	}
 
 	return nil

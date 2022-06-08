@@ -2,6 +2,7 @@ package query
 
 import (
 	"context"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/passport"
 
 	"overdoll/applications/eva/internal/domain/account"
@@ -63,7 +64,7 @@ func (h ViewAuthenticationTokenHandler) Handle(ctx context.Context, query ViewAu
 	// user has to register
 	if err != nil {
 
-		if err == account.ErrAccountNotFound {
+		if apperror.IsNotFoundError(err) {
 			return ck, nil, nil
 		}
 

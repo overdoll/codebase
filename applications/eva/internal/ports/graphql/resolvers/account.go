@@ -5,9 +5,9 @@ import (
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/eva/internal/app"
 	"overdoll/applications/eva/internal/app/query"
-	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/applications/eva/internal/domain/session"
 	"overdoll/applications/eva/internal/ports/graphql/types"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
@@ -173,7 +173,7 @@ func (r AccountResolver) Emails(ctx context.Context, obj *types.Account, after *
 
 	if err != nil {
 
-		if err == account.ErrAccountNotFound {
+		if apperror.IsNotFoundError(err) {
 			return types.MarshalAccountEmailToGraphQLConnection(results, cursor), nil
 		}
 

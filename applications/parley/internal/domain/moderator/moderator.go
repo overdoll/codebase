@@ -1,14 +1,9 @@
 package moderator
 
 import (
-	"errors"
 	"time"
 
 	"overdoll/libraries/principal"
-)
-
-var (
-	ErrModeratorNotFound = errors.New("moderator not found")
 )
 
 type Moderator struct {

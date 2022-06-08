@@ -28,6 +28,5 @@ go_library(
         "//applications/carrier/internal/domain/identifier",
         "//applications/carrier/internal/domain/links",
         "//applications/carrier/internal/domain/mailing",
-        "@com_github_pkg_errors//:errors",
     ],
 )

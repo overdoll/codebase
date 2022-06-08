@@ -3,9 +3,9 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"fmt"
-	"go.uber.org/zap"
 	"math"
+	"overdoll/libraries/errors"
+	"overdoll/libraries/support"
 	"time"
 
 	elastic "github.com/olivere/elastic/v7"
@@ -43,7 +43,7 @@ func unmarshalPostDocument(hit *elastic.SearchHit) (*post.Post, error) {
 	err := json.Unmarshal(hit.Source, &pst)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to unmarshal post: %v", err)
+		return nil, errors.Wrap(err, "failed to unmarshal post")
 	}
 
 	var audience *string
@@ -122,7 +122,7 @@ func (r PostsCassandraElasticsearchRepository) RefreshPostIndex(ctx context.Cont
 		Do(ctx)
 
 	if err != nil {
-		return fmt.Errorf("failed to refresh post index: %v", err)
+		return errors.Wrap(support.ParseElasticError(err), "failed to refresh post index")
 	}
 
 	return nil
@@ -144,9 +144,7 @@ func (r PostsCassandraElasticsearchRepository) indexPost(ctx context.Context, po
 		Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Error("failed to index post: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return fmt.Errorf("failed to index post: %v", err)
+		return errors.Wrap(support.ParseElasticError(err), "failed to index post")
 	}
 
 	return nil
@@ -164,9 +162,7 @@ func (r PostsCassandraElasticsearchRepository) GetTotalLikesForCharacterOperator
 		Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Errorw("failed to get total likes for character: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return 0, nil
+		return 0, errors.Wrap(support.ParseElasticError(err), "failed to get total likes for character")
 	}
 
 	sm, _ := response.Aggregations.Sum("total_likes")
@@ -185,9 +181,7 @@ func (r PostsCassandraElasticsearchRepository) GetTotalPostsForCharacterOperator
 		Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Error("failed to get total posts for character: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return 0, nil
+		return 0, errors.Wrap(support.ParseElasticError(err), "failed to get total posts for character")
 	}
 
 	return int(count), nil
@@ -205,9 +199,7 @@ func (r PostsCassandraElasticsearchRepository) GetTotalLikesForAudienceOperator(
 		Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Error("failed to get total likes for audience: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return 0, nil
+		return 0, errors.Wrap(support.ParseElasticError(err), "failed to get total likes for audience")
 	}
 
 	sm, _ := response.Aggregations.Sum("total_likes")
@@ -226,9 +218,7 @@ func (r PostsCassandraElasticsearchRepository) GetTotalPostsForAudienceOperator(
 		Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Error("failed to get total posts for audience: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return 0, nil
+		return 0, errors.Wrap(support.ParseElasticError(err), "failed to get total posts for audience")
 	}
 
 	return int(count), nil
@@ -246,9 +236,7 @@ func (r PostsCassandraElasticsearchRepository) GetTotalLikesForSeriesOperator(ct
 		Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Error("failed to get total likes for series: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return 0, nil
+		return 0, errors.Wrap(support.ParseElasticError(err), "failed to get total likes for series")
 	}
 
 	sm, _ := response.Aggregations.Sum("total_likes")
@@ -267,9 +255,7 @@ func (r PostsCassandraElasticsearchRepository) GetTotalPostsForSeriesOperator(ct
 		Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Error("failed to get total posts for series: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return 0, nil
+		return 0, errors.Wrap(support.ParseElasticError(err), "failed to get total posts for series")
 	}
 
 	return int(count), nil
@@ -287,9 +273,7 @@ func (r PostsCassandraElasticsearchRepository) GetTotalLikesForCategoryOperator(
 		Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Error("failed to get total likes for category: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return 0, nil
+		return 0, errors.Wrap(support.ParseElasticError(err), "failed to get total likes for category")
 	}
 
 	sm, _ := response.Aggregations.Sum("total_likes")
@@ -308,9 +292,7 @@ func (r PostsCassandraElasticsearchRepository) GetTotalPostsForCategoryOperator(
 		Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Error("failed to get total posts for category: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return 0, nil
+		return 0, errors.Wrap(support.ParseElasticError(err), "failed to get total posts for category")
 	}
 
 	return int(count), nil
@@ -322,7 +304,7 @@ func (r PostsCassandraElasticsearchRepository) ClubMembersPostsFeed(ctx context.
 		Index(PostIndexName)
 
 	if cursor == nil {
-		return nil, fmt.Errorf("cursor must be present")
+		return nil, paging.ErrCursorNotPresent
 	}
 
 	if err := cursor.BuildElasticsearch(builder, "created_at", "id", true); err != nil {
@@ -353,9 +335,7 @@ func (r PostsCassandraElasticsearchRepository) ClubMembersPostsFeed(ctx context.
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Error("failed to search club members post feed: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return nil, fmt.Errorf("failed to search posts: %v", err)
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed to search posts")
 	}
 
 	var posts []*post.Post
@@ -380,10 +360,10 @@ func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, re
 		Index(PostIndexName)
 
 	if cursor == nil {
-		return nil, fmt.Errorf("cursor must be present")
+		return nil, paging.ErrCursorNotPresent
 	}
 
-	suspendedClubIds, err := r.getTerminatedClubIds(ctx)
+	terminatedClubIds, err := r.getTerminatedClubIds(ctx)
 
 	if err != nil {
 		return nil, err
@@ -393,47 +373,55 @@ func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, re
 		return nil, err
 	}
 
-	query := elastic.NewFunctionScoreQuery()
+	query := elastic.NewBoolQuery()
 
-	// decay from initial post time
-	postedTimeFunc := elastic.
-		NewGaussDecayFunction().
-		FieldName("posted_at").
-		Scale("1d").
-		Decay(0.5)
+	var filterQueries []elastic.Query
 
-	// multiply by likes for this post
-	likesFunc := elastic.
-		NewFieldValueFactorFunction().
-		Field("likes").
-		Factor(1).
-		Modifier("none")
+	filterQueries = append(filterQueries, elastic.NewTermQuery("state", post.Published.String()))
 
-	query.Add(elastic.NewTermQuery("state", post.Published.String()), postedTimeFunc)
-	query.Add(elastic.NewTermsQueryFromStrings("supporter_only_status", post.None.String(), post.Partial.String()), postedTimeFunc)
-
-	query.Add(elastic.NewBoolQuery().MustNot(elastic.NewTermsQueryFromStrings("club_id", suspendedClubIds...)), postedTimeFunc)
+	filterQueries = append(filterQueries, elastic.NewBoolQuery().
+		MustNot(elastic.NewTermsQueryFromStrings("club_id", terminatedClubIds...)),
+	)
 
 	if len(filter.AudienceIds()) > 0 {
-		query.Add(
-			elastic.NewTermsQueryFromStrings("audience_id", filter.AudienceIds()...),
-			likesFunc,
-		)
-	} else {
-		query.AddScoreFunc(likesFunc)
+		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("audience_id", filter.AudienceIds()...))
 	}
 
+	if filterQueries != nil {
+		query.Filter(filterQueries...)
+	}
+
+	scoreQuery := elastic.NewFunctionScoreQuery()
+
+	// decay from initial post time
+	scoreQuery.AddScoreFunc(
+		elastic.
+			NewGaussDecayFunction().
+			FieldName("posted_at").
+			Scale("1d").
+			Decay(0.5),
+	)
+
+	// multiply by likes for this post
+	scoreQuery.AddScoreFunc(
+		elastic.
+			NewFieldValueFactorFunction().
+			Field("likes").
+			Factor(1).
+			Modifier("none"),
+	)
+
+	query.Must(scoreQuery)
+
 	// multiply results
-	query.ScoreMode("multiply")
+	scoreQuery.ScoreMode("multiply")
 
 	builder.Query(query)
 
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Error("failed to search posts feed: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
-		return nil, fmt.Errorf("failed to search posts: %v", err)
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed to search posts")
 	}
 
 	var posts []*post.Post
@@ -458,7 +446,7 @@ func (r PostsCassandraElasticsearchRepository) SearchPosts(ctx context.Context, 
 		Index(PostIndexName)
 
 	if cursor == nil {
-		return nil, fmt.Errorf("cursor must be present")
+		return nil, paging.ErrCursorNotPresent
 	}
 
 	var sortingColumn string
@@ -482,8 +470,6 @@ func (r PostsCassandraElasticsearchRepository) SearchPosts(ctx context.Context, 
 	suspendedClubIds, err := r.getTerminatedClubIds(ctx)
 
 	if err != nil {
-		e, _ := err.(*elastic.Error)
-		zap.S().Error("failed to search posts: elastic failed", zap.Int("status", e.Status), zap.Any("error", e.Details))
 		return nil, err
 	}
 
@@ -545,7 +531,7 @@ func (r PostsCassandraElasticsearchRepository) SearchPosts(ctx context.Context, 
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to search posts: %v", err)
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed to search posts")
 	}
 
 	var posts []*post.Post
@@ -612,7 +598,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllPosts(ctx context.Context
 				Do(ctx)
 
 			if err != nil {
-				return fmt.Errorf("failed to index post: %v", err)
+				return errors.Wrap(err, "failed to index post")
 			}
 		}
 
@@ -629,7 +615,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllPosts(ctx context.Context
 func (r PostsCassandraElasticsearchRepository) deletePostIndexById(ctx context.Context, id string) error {
 
 	if _, err := r.client.Delete().Index(PostIndexName).Id(id).Do(ctx); err != nil {
-		return fmt.Errorf("failed to delete post document: %v", err)
+		return errors.Wrap(err, "failed to delete post document")
 	}
 
 	return nil

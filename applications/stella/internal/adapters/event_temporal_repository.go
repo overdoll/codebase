@@ -6,6 +6,7 @@ import (
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/stella/internal/app/workflows"
 	"overdoll/applications/stella/internal/domain/club"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/principal"
 	"time"
 )
@@ -22,7 +23,7 @@ func (r EventTemporalRepository) AddClubMember(ctx context.Context, member *club
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "AddClubMember_" + member.ClubId() + "_" + member.AccountId(),
+		ID:        "stella.AddClubMember_" + member.ClubId() + "_" + member.AccountId(),
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.AddClubMember, workflows.AddClubMemberInput{
@@ -30,7 +31,7 @@ func (r EventTemporalRepository) AddClubMember(ctx context.Context, member *club
 		AccountId: member.AccountId(),
 		JoinedAt:  member.JoinedAt(),
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute AddClubMember workflow")
 	}
 
 	return nil
@@ -40,14 +41,14 @@ func (r EventTemporalRepository) RemoveClubMember(ctx context.Context, member *c
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "RemoveClubMember_" + member.ClubId() + "_" + member.AccountId(),
+		ID:        "stella.RemoveClubMember_" + member.ClubId() + "_" + member.AccountId(),
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.RemoveClubMember, workflows.RemoveClubMemberInput{
 		ClubId:    member.ClubId(),
 		AccountId: member.AccountId(),
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute RemoveClubMember workflow")
 	}
 
 	return nil
@@ -57,7 +58,7 @@ func (r EventTemporalRepository) AddClubSupporter(ctx context.Context, clubId, a
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "AddClubSupporter_" + clubId + "_" + accountId,
+		ID:        "stella.AddClubSupporter_" + clubId + "_" + accountId,
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.AddClubSupporter, workflows.AddClubSupporterInput{
@@ -65,7 +66,7 @@ func (r EventTemporalRepository) AddClubSupporter(ctx context.Context, clubId, a
 		AccountId:   accountId,
 		SupportedAt: supportedAt,
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute AddClubSupporter workflow")
 	}
 
 	return nil
@@ -75,14 +76,14 @@ func (r EventTemporalRepository) RemoveClubSupporter(ctx context.Context, clubId
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "RemoveClubSupporter_" + clubId + "_" + accountId,
+		ID:        "stella.RemoveClubSupporter_" + clubId + "_" + accountId,
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.RemoveClubSupporter, workflows.RemoveClubSupporterInput{
 		ClubId:    clubId,
 		AccountId: accountId,
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute RemoveClubSupporter workflow")
 	}
 
 	return nil
@@ -96,7 +97,7 @@ func (r EventTemporalRepository) SuspendClub(ctx context.Context, requester *pri
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "SuspendClub_" + club.ID(),
+		ID:        "stella.SuspendClub_" + club.ID(),
 	}
 
 	accId := requester.AccountId()
@@ -107,7 +108,7 @@ func (r EventTemporalRepository) SuspendClub(ctx context.Context, requester *pri
 		Reason:    reason,
 		EndTime:   endTime,
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute SuspendClub workflow")
 	}
 
 	return nil
@@ -117,7 +118,7 @@ func (r EventTemporalRepository) SuspendClubOperator(ctx context.Context, club *
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "SuspendClub_" + club.ID(),
+		ID:        "stella.SuspendClub_" + club.ID(),
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.SuspendClub, workflows.SuspendClubInput{
@@ -126,7 +127,7 @@ func (r EventTemporalRepository) SuspendClubOperator(ctx context.Context, club *
 		Reason:    reason,
 		EndTime:   endTime,
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute SuspendClubOperator workflow")
 	}
 
 	return nil
@@ -134,11 +135,11 @@ func (r EventTemporalRepository) SuspendClubOperator(ctx context.Context, club *
 
 func (r EventTemporalRepository) WaitForClubToBeReady(ctx context.Context, requester *principal.Principal, clb *club.Club) error {
 
-	workflowId := "CreateClub_" + clb.OwnerAccountId()
+	workflowId := "stella.CreateClub_" + clb.OwnerAccountId()
 
 	// wait for club to be created
 	if err := r.client.GetWorkflow(ctx, workflowId, "").Get(ctx, nil); err != nil {
-		return err
+		return errors.Wrap(err, "failed to get workflow WaitForClubToBeReady %s", workflowId)
 	}
 
 	return nil
@@ -146,7 +147,7 @@ func (r EventTemporalRepository) WaitForClubToBeReady(ctx context.Context, reque
 
 func (r EventTemporalRepository) CreateClub(ctx context.Context, requester *principal.Principal, clb *club.Club) error {
 
-	workflowId := "CreateClub_" + clb.OwnerAccountId()
+	workflowId := "stella.CreateClub_" + clb.OwnerAccountId()
 
 	// should only have 1 create club workflow running at a time for any account
 	options := client.StartWorkflowOptions{
@@ -160,12 +161,7 @@ func (r EventTemporalRepository) CreateClub(ctx context.Context, requester *prin
 		Name:           clb.Name().TranslateDefault(""),
 		OwnerAccountId: clb.OwnerAccountId(),
 	}); err != nil {
-		return err
-	}
-
-	// wait for club to be created
-	if err := r.client.GetWorkflow(ctx, workflowId, "").Get(ctx, nil); err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute CreateClub workflow")
 	}
 
 	return nil
@@ -179,14 +175,14 @@ func (r EventTemporalRepository) UnSuspendClub(ctx context.Context, requester *p
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "UnSuspendClub_" + clb.ID(),
+		ID:        "stella.UnSuspendClub_" + clb.ID(),
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.UnSuspendClub, workflows.UnSuspendClubInput{
 		ClubId:    clb.ID(),
 		AccountId: requester.AccountId(),
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute UnSuspendClub workflow")
 	}
 
 	return nil
@@ -196,13 +192,13 @@ func (r EventTemporalRepository) NewSupporterPost(ctx context.Context, clubId st
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "NewSupporterPost_" + clubId,
+		ID:        "stella.NewSupporterPost_" + clubId,
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.NewSupporterPost, workflows.NewSupporterPostInput{
 		ClubId: clubId,
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute NewSupporterPost workflow")
 	}
 
 	return nil
@@ -216,14 +212,14 @@ func (r EventTemporalRepository) TerminateClub(ctx context.Context, requester *p
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "TerminateClub_" + clb.ID(),
+		ID:        "stella.TerminateClub_" + clb.ID(),
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.TerminateClub, workflows.TerminateClubInput{
 		ClubId:    clb.ID(),
 		AccountId: requester.AccountId(),
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute TerminateClub workflow")
 	}
 
 	return nil
@@ -237,13 +233,13 @@ func (r EventTemporalRepository) UnTerminateClub(ctx context.Context, requester 
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "UnTerminateClub_" + clb.ID(),
+		ID:        "stella.UnTerminateClub_" + clb.ID(),
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.UnTerminateClub, workflows.UnTerminateClubInput{
 		ClubId: clb.ID(),
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "failed to execute UnTerminateClub workflow")
 	}
 
 	return nil

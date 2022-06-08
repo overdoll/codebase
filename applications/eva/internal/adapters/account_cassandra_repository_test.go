@@ -2,6 +2,7 @@ package adapters_test
 
 import (
 	"context"
+	"overdoll/libraries/errors/apperror"
 	"sync"
 	"testing"
 
@@ -25,7 +26,7 @@ func TestUserRepository_GetUser_not_exists(t *testing.T) {
 	usr, err := repo.GetAccountById(ctx, id)
 
 	assert.Nil(t, usr)
-	assert.EqualError(t, err, account.ErrAccountNotFound.Error())
+	assert.True(t, apperror.IsNotFoundError(err))
 }
 
 func TestUserRepository_GetUserByEmail_not_exists(t *testing.T) {
@@ -37,7 +38,7 @@ func TestUserRepository_GetUserByEmail_not_exists(t *testing.T) {
 	usr, err := repo.GetAccountByEmail(ctx, "some-random-non-existent-email")
 
 	assert.Nil(t, usr)
-	assert.EqualError(t, err, account.ErrAccountNotFound.Error(), "should have been a not found error")
+	assert.True(t, apperror.IsNotFoundError(err), "should have been a not found error")
 }
 
 func TestUserRepository_GetUser_email_exists(t *testing.T) {

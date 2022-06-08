@@ -1,8 +1,8 @@
 package club
 
 import (
-	"errors"
 	"github.com/go-playground/validator/v10"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -11,11 +11,10 @@ import (
 )
 
 var (
-	ErrClubNotFound                = errors.New("club not found")
-	ErrClubSlugNotUnique           = errors.New("club slug is not unique")
-	ErrClubSlugMax                 = errors.New("maximum slugs reached for club")
-	ErrAccountTooManyClubs         = errors.New("account has created too many clubs")
-	ErrClubSlugDoesNotBelongToClub = errors.New("club slug does not belong to club")
+	ErrClubSlugNotUnique           = domainerror.NewValidation("club slug is not unique")
+	ErrClubSlugMax                 = domainerror.NewValidation("maximum slugs reached for club")
+	ErrAccountTooManyClubs         = domainerror.NewValidation("account has created too many clubs")
+	ErrClubSlugDoesNotBelongToClub = domainerror.NewValidation("club slug does not belong to club")
 )
 
 const (
@@ -47,6 +46,8 @@ type Club struct {
 
 	membersCount   int
 	ownerAccountId string
+
+	createdAt time.Time
 }
 
 func NewMustClub(id, slug string, name string, ownerAccountId string) *Club {
@@ -63,6 +64,7 @@ func NewMustClub(id, slug string, name string, ownerAccountId string) *Club {
 		ownerAccountId:              ownerAccountId,
 		hasCreatedSupporterOnlyPost: false,
 		terminated:                  false,
+		createdAt:                   time.Now(),
 	}
 }
 
@@ -73,7 +75,7 @@ func NewClub(requester *principal.Principal, slug, name string, currentClubCount
 	}
 
 	if !requester.IsStaff() && !requester.IsArtist() {
-		return nil, errors.New("must be artist or staff in order to create a club")
+		return nil, domainerror.NewAuthorization("must be artist or staff in order to create a club")
 	}
 
 	res, err := IsAccountClubsLimitReached(requester, requester.AccountId(), currentClubCount)
@@ -112,10 +114,11 @@ func NewClub(requester *principal.Principal, slug, name string, currentClubCount
 		ownerAccountId:              requester.AccountId(),
 		hasCreatedSupporterOnlyPost: false,
 		terminated:                  false,
+		createdAt:                   time.Now(),
 	}, nil
 }
 
-func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail *string, membersCount int, ownerAccountId string, suspended bool, suspendedUntil, nextSupporterPostTime *time.Time, hasCreatedSupporterOnlyPost bool, terminated bool, terminatedByAccountId *string) *Club {
+func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail *string, membersCount int, ownerAccountId string, suspended bool, suspendedUntil, nextSupporterPostTime *time.Time, hasCreatedSupporterOnlyPost bool, terminated bool, terminatedByAccountId *string, createdAt time.Time) *Club {
 	return &Club{
 		id:                          id,
 		slug:                        slug,
@@ -130,6 +133,7 @@ func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name 
 		hasCreatedSupporterOnlyPost: hasCreatedSupporterOnlyPost,
 		terminated:                  terminated,
 		terminatedByAccountId:       terminatedByAccountId,
+		createdAt:                   createdAt,
 	}
 }
 
@@ -186,6 +190,10 @@ func (m *Club) SuspendedUntil() *time.Time {
 	return m.suspendedUntil
 }
 
+func (m *Club) CreatedAt() time.Time {
+	return m.createdAt
+}
+
 func (m *Club) NextSupporterPostTime() *time.Time {
 	return m.nextSupporterPostTime
 }
@@ -203,7 +211,7 @@ func (m *Club) CanUnSuspend(requester *principal.Principal) error {
 		}
 
 		if !time.Now().After(*m.suspendedUntil) {
-			return errors.New("cannot un suspend yet")
+			return domainerror.NewValidation("cannot un suspend yet")
 		}
 
 		return nil
@@ -490,7 +498,7 @@ func validateName(name string) error {
 	err := validator.New().Var(name, "required,max=25")
 
 	if err != nil {
-		return err
+		return domainerror.NewValidation(err.Error())
 	}
 
 	return nil
@@ -501,7 +509,7 @@ func validateSlug(slug string) error {
 	err := validator.New().Var(slug, "required,max=25,excludesall= ,alphanum")
 
 	if err != nil {
-		return err
+		return domainerror.NewValidation(err.Error())
 	}
 
 	return nil

@@ -4,19 +4,19 @@ import (
 	"context"
 )
 
-type MutationType string
+type contextKey string
 
 const (
-	MutationKey = "PassportContextKey"
+	key = "PassportContextKey"
 )
 
 func withContext(ctx context.Context, passport *Passport) context.Context {
-	return context.WithValue(ctx, MutationType(MutationKey), passport)
+	return context.WithValue(ctx, contextKey(key), passport)
 }
 
 func fromContext(ctx context.Context) *Passport {
 
-	raw, ok := ctx.Value(MutationType(MutationKey)).(*Passport)
+	raw, ok := ctx.Value(contextKey(key)).(*Passport)
 
 	if !ok {
 		return nil

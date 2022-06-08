@@ -2,12 +2,13 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/sting/internal/domain/curation"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/support"
 	"time"
 )
 
@@ -51,6 +52,7 @@ func (r CurationProfileCassandraRepository) getProfileByAccountId(ctx context.Co
 	if err := r.session.
 		Query(curationProfileTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(curationProfile{AccountId: accountId}).
 		GetRelease(&personalProfile); err != nil {
@@ -67,7 +69,7 @@ func (r CurationProfileCassandraRepository) getProfileByAccountId(ctx context.Co
 			), nil
 		}
 
-		return nil, fmt.Errorf("failed to get personalization profile by id: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get personalization profile by id")
 	}
 
 	return curation.UnmarshalProfileFromDatabase(
@@ -113,6 +115,7 @@ func (r CurationProfileCassandraRepository) updateProfile(ctx context.Context, r
 			columns...,
 		)).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&curationProfile{
 			AccountId:          profile.AccountId(),
@@ -124,7 +127,7 @@ func (r CurationProfileCassandraRepository) updateProfile(ctx context.Context, r
 			CategoryIdsSkipped: profile.CategoryProfileSkipped(),
 		}).
 		ExecRelease(); err != nil {
-		return nil, fmt.Errorf("failed to update curation profile: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update curation profile")
 	}
 
 	return profile, nil
@@ -147,10 +150,11 @@ func (r CurationProfileCassandraRepository) DeleteProfileOperator(ctx context.Co
 	if err := r.session.
 		Query(curationProfileTable.Delete()).
 		WithContext(ctx).
+		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(curationProfile{AccountId: accountId}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to delete curation profile: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to delete curation profile")
 	}
 
 	return nil

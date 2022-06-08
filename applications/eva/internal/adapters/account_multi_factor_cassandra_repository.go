@@ -2,12 +2,12 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/eva/internal/domain/account"
 	"overdoll/libraries/crypt"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/support"
 )
@@ -55,11 +55,12 @@ func (r AccountCassandraRepository) CreateAccountRecoveryCodes(ctx context.Conte
 		Where(qb.Eq("account_id")).
 		Query(r.session).
 		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(&accountMultiFactorRecoveryCodes{
 			AccountId: accountId,
 		}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to delete recovery codes: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to delete recovery codes")
 	}
 
 	batch := r.session.NewBatch(gocql.LoggedBatch)
@@ -71,7 +72,7 @@ func (r AccountCassandraRepository) CreateAccountRecoveryCodes(ctx context.Conte
 		encrypt, err := crypt.Encrypt(code.Code())
 
 		if err != nil {
-			return fmt.Errorf("failed to encrypt recovery code: %v", err)
+			return errors.Wrap(support.NewGocqlError(err), "failed to encrypt recovery code")
 		}
 
 		support.BindStructToBatchStatement(
@@ -84,8 +85,9 @@ func (r AccountCassandraRepository) CreateAccountRecoveryCodes(ctx context.Conte
 		)
 	}
 
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to create new recovery code set: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to create new recovery code set")
 	}
 
 	return nil
@@ -103,11 +105,12 @@ func (r AccountCassandraRepository) GetAccountRecoveryCodes(ctx context.Context,
 	if err := r.session.
 		Query(accountMultiFactorRecoveryCodeTable.Select()).
 		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(&accountMultiFactorRecoveryCodes{
 			AccountId: accountId,
 		}).
 		SelectRelease(&recoveryCodes); err != nil {
-		return nil, fmt.Errorf("failed to get recovery codes for account: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get recovery codes for account")
 	}
 
 	var codes []*account.RecoveryCode
@@ -116,7 +119,7 @@ func (r AccountCassandraRepository) GetAccountRecoveryCodes(ctx context.Context,
 		decryptedCode, err := crypt.Decrypt(cd.Code)
 
 		if err != nil {
-			return nil, fmt.Errorf("failed to decrypt recovery codes for account: %v", err)
+			return nil, errors.Wrap(err, "failed to decrypt recovery codes for account")
 		}
 
 		codes = append(codes, account.UnmarshalRecoveryCodeFromDatabase(decryptedCode))
@@ -141,12 +144,13 @@ func (r AccountCassandraRepository) HasAccountRecoveryCodes(ctx context.Context,
 		SelectBuilder().
 		CountAll().
 		Query(r.session).
+		Idempotent(true).
 		WithContext(ctx).
 		BindStruct(&accountMultiFactorRecoveryCodes{
 			AccountId: accountId,
 		}).
 		GetRelease(&recoveryCodesCounts); err != nil {
-		return false, fmt.Errorf("failed to get recovery codes for account: %v", err)
+		return false, errors.Wrap(support.NewGocqlError(err), "failed to get recovery codes for account")
 	}
 
 	return recoveryCodesCounts.Count > 0, nil
@@ -161,11 +165,12 @@ func (r AccountCassandraRepository) VerifyAccountRecoveryCode(ctx context.Contex
 	if err := r.session.
 		Query(accountMultiFactorRecoveryCodeTable.Select()).
 		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(&accountMultiFactorRecoveryCodes{
 			AccountId: accountId,
 		}).
 		SelectRelease(&recoveryCodes); err != nil {
-		return fmt.Errorf("failed to get recovery codes for account: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to get recovery codes for account")
 	}
 
 	var foundCode *accountMultiFactorRecoveryCodes
@@ -175,7 +180,7 @@ func (r AccountCassandraRepository) VerifyAccountRecoveryCode(ctx context.Contex
 		decryptedCode, err := crypt.Decrypt(cd.Code)
 
 		if err != nil {
-			return fmt.Errorf("failed to decrypt recovery codes for account: %v", err)
+			return errors.Wrap(err, "failed to decrypt recovery codes for account")
 		}
 
 		// if recovery code matches, make it part of our codes
@@ -192,12 +197,13 @@ func (r AccountCassandraRepository) VerifyAccountRecoveryCode(ctx context.Contex
 	if err := r.session.
 		Query(accountMultiFactorRecoveryCodeTable.Delete()).
 		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(&accountMultiFactorRecoveryCodes{
 			AccountId: accountId,
 			Code:      foundCode.Code,
 		}).
 		ExecRelease(); err != nil {
-		return fmt.Errorf("failed to verify recovery code: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to verify recovery code")
 	}
 
 	return nil
@@ -211,22 +217,22 @@ func (r AccountCassandraRepository) GetAccountMultiFactorTOTP(ctx context.Contex
 	if err := r.session.
 		Query(accountMultiFactorTotpTable.Get()).
 		WithContext(ctx).
+		Idempotent(true).
 		BindStruct(&accountMultiFactorTOTP{
 			AccountId: accountId,
 		}).
 		GetRelease(&multiTOTP); err != nil {
-
 		if err == gocql.ErrNotFound {
 			return nil, account.ErrTOTPNotConfigured
 		}
 
-		return nil, fmt.Errorf("failed to get MFA TOTP: %v", err)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get MFA TOTP")
 	}
 
 	decryptedOTP, err := crypt.Decrypt(multiTOTP.Secret)
 
 	if err != nil {
-		return nil, fmt.Errorf("failed to decrypt TOTP secret: %v", err)
+		return nil, errors.Wrap(err, "failed to decrypt MFA TOTP")
 	}
 
 	return account.UnmarshalTOTPFromDatabase(decryptedOTP), nil
@@ -242,7 +248,7 @@ func (r AccountCassandraRepository) CreateAccountMultiFactorTOTP(ctx context.Con
 	encryptedOTP, err := crypt.Encrypt(totp.Secret())
 
 	if err != nil {
-		return fmt.Errorf("failed to encrypt MFA TOTP: %v", err)
+		return errors.Wrap(err, "failed to encrypt MFA TOTP")
 	}
 
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
@@ -269,8 +275,9 @@ func (r AccountCassandraRepository) CreateAccountMultiFactorTOTP(ctx context.Con
 		},
 	)
 
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to create multi factor account: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to create multi factor account")
 	}
 
 	return nil
@@ -305,8 +312,9 @@ func (r AccountCassandraRepository) DeleteAccountMultiFactorTOTP(ctx context.Con
 		},
 	)
 
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
-		return fmt.Errorf("failed to delete multi factor account: %v", err)
+		return errors.Wrap(support.NewGocqlError(err), "failed to delete multi factor account")
 	}
 
 	return nil

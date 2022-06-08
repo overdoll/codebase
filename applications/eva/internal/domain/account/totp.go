@@ -3,9 +3,10 @@ package account
 import (
 	"bytes"
 	"encoding/base64"
-	"errors"
+	"go.uber.org/zap"
 	"image/png"
 	"overdoll/libraries/crypt"
+	"overdoll/libraries/errors/domainerror"
 	"time"
 
 	"github.com/pquerna/otp"
@@ -25,10 +26,10 @@ const (
 )
 
 var (
-	ErrTOTPCodeInvalid            = errors.New("TOTP code not valid")
-	ErrTOTPNotConfigured          = errors.New("TOTP not configured")
-	ErrRecoveryCodesNotConfigured = errors.New("recovery codes not configured")
-	ErrRecoveryCodeInvalid        = errors.New("recovery code invalid")
+	ErrTOTPCodeInvalid            = domainerror.NewValidation("TOTP code not valid")
+	ErrTOTPNotConfigured          = domainerror.NewValidation("TOTP not configured")
+	ErrRecoveryCodesNotConfigured = domainerror.NewValidation("recovery codes not configured")
+	ErrRecoveryCodeInvalid        = domainerror.NewValidation("recovery code invalid")
 )
 
 // OTP will be returned from the DB as encrypted (because the getter returns it as so)
@@ -37,7 +38,7 @@ func UnmarshalTOTPFromDatabase(secret string) *TOTP {
 	val, err := crypt.Encrypt(secret)
 
 	if err != nil {
-		panic(err)
+		zap.S().Panicw("failed to unmarshal totp", zap.Error(err))
 	}
 
 	return &TOTP{

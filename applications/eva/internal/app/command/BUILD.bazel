@@ -42,8 +42,8 @@ go_library(
         "//applications/eva/internal/domain/location",
         "//applications/eva/internal/domain/session",
         "//applications/eva/internal/domain/token",
+        "//libraries/errors/domainerror",
         "//libraries/passport",
         "//libraries/principal",
-        "@com_github_pkg_errors//:errors",
     ],
 )

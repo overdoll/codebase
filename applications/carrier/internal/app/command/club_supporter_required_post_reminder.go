@@ -2,7 +2,6 @@ package command
 
 import (
 	"context"
-	"github.com/pkg/errors"
 	"overdoll/applications/carrier/internal/domain/links"
 	"overdoll/applications/carrier/internal/domain/mailing"
 	"strconv"
@@ -29,13 +28,13 @@ func (h ClubSupporterRequiredPostReminderHandler) Handle(ctx context.Context, cm
 	clubDetails, err := h.stella.GetClub(ctx, cmd.ClubId)
 
 	if err != nil {
-		return errors.Wrap(err, "failed to get club")
+		return err
 	}
 
 	acc, err := h.eva.GetAccount(ctx, clubDetails.OwnerAccountId())
 
 	if err != nil {
-		return errors.Wrap(err, "failed to get account")
+		return err
 	}
 
 	clubUrl, err := links.CreateClubUrl(clubDetails.Slug())

@@ -13,6 +13,7 @@ type UpcomingSubscriptionReminderNotificationInput struct {
 func UpcomingSubscriptionReminderNotification(ctx workflow.Context, input UpcomingSubscriptionReminderNotificationInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -24,6 +25,7 @@ func UpcomingSubscriptionReminderNotification(ctx workflow.Context, input Upcomi
 			AccountId: input.AccountId,
 		},
 	).Get(ctx, &sendUpcomingNotificationResponse); err != nil {
+		logger.Error("failed to send upcoming subscription reminder notification", "Error", err)
 		return err
 	}
 

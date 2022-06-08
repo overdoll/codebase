@@ -11,9 +11,11 @@ go_library(
     deps = [
         "//applications/loader/internal/app/workflows",
         "//applications/loader/internal/domain/resource",
+        "//libraries/errors",
+        "//libraries/errors/apperror",
         "//libraries/support",
-        "//libraries/uuid",
         "@com_github_aws_aws_sdk_go//aws",
+        "@com_github_aws_aws_sdk_go//aws/awserr",
         "@com_github_aws_aws_sdk_go//aws/session",
         "@com_github_aws_aws_sdk_go//service/cloudfront/sign",
         "@com_github_aws_aws_sdk_go//service/s3",
@@ -25,6 +27,7 @@ go_library(
         "@com_github_spf13_viper//:viper",
         "@com_github_tus_tusd//pkg/handler",
         "@com_github_tus_tusd//pkg/s3store",
+        "@io_temporal_go_api//enums/v1:enums",
         "@io_temporal_go_sdk//client",
     ],
 )

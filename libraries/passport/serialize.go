@@ -3,7 +3,6 @@ package passport
 import (
 	"encoding/base64"
 	"github.com/golang/protobuf/proto"
-	"go.uber.org/zap"
 	libraries_passport_v1 "overdoll/libraries/passport/proto"
 )
 
@@ -12,7 +11,6 @@ func unmarshalPassport(marshal []byte) (*Passport, error) {
 	var msg libraries_passport_v1.Passport
 
 	if err := proto.Unmarshal(marshal, &msg); err != nil {
-		zap.S().Errorf("could not unmarshal passport proto: %s", err)
 		return nil, err
 	}
 

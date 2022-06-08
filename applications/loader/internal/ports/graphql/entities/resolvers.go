@@ -3,9 +3,9 @@ package entities
 import (
 	"context"
 	"overdoll/applications/loader/internal/app"
-	"overdoll/applications/loader/internal/domain/resource"
 	"overdoll/applications/loader/internal/ports/graphql/dataloader"
 	"overdoll/applications/loader/internal/ports/graphql/types"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/graphql/relay"
 )
 
@@ -19,7 +19,7 @@ func (e EntityResolver) FindResourceByID(ctx context.Context, id relay.ID) (*typ
 
 	if err != nil {
 		// we allow resource to be nil
-		if err == resource.ErrResourceNotFound {
+		if apperror.IsNotFoundError(err) {
 			return nil, nil
 		}
 

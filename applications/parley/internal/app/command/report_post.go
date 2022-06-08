@@ -5,7 +5,6 @@ import (
 	"overdoll/applications/parley/internal/domain/event"
 	"overdoll/applications/parley/internal/domain/rule"
 
-	"github.com/pkg/errors"
 	"overdoll/applications/parley/internal/domain/report"
 	"overdoll/libraries/principal"
 )
@@ -33,7 +32,7 @@ func (h ReportPostHandler) Handle(ctx context.Context, cmd ReportPost) (*report.
 	_, err := h.sting.GetPost(ctx, cmd.PostId)
 
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to get post")
+		return nil, err
 	}
 
 	ruleItem, err := h.rur.GetRuleById(ctx, cmd.RuleId)

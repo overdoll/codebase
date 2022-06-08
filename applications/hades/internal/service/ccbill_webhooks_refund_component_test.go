@@ -119,7 +119,7 @@ func TestBillingFlow_Refund(t *testing.T) {
 		Return(nil)
 
 	application.TemporalClient.
-		On("GetWorkflow", mock.Anything, "ClubSupporterRefundReceipt_"+transaction.Reference+"-"+eventId, mock.Anything).
+		On("GetWorkflow", mock.Anything, "hades.ClubSupporterRefundReceipt_"+transaction.Reference+"-"+eventId, mock.Anything).
 		// on GetWorkflow command, this would check if the workflow was completed
 		// so we run our workflow to make sure it's completed
 		Run(

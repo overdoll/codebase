@@ -8,7 +8,6 @@ import (
 	"overdoll/applications/parley/internal/domain/post_audit_log"
 	"overdoll/applications/parley/internal/domain/rule"
 
-	"github.com/pkg/errors"
 	"overdoll/libraries/principal"
 )
 
@@ -37,7 +36,7 @@ func (h RemovePostHandler) Handle(ctx context.Context, cmd RemovePost) error {
 	clubId, err := h.sting.GetPost(ctx, cmd.PostId)
 
 	if err != nil {
-		return errors.Wrap(err, "failed to get post")
+		return err
 	}
 
 	ruleItem, err := h.rr.GetRuleById(ctx, cmd.RuleId)

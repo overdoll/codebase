@@ -16,6 +16,7 @@ type ReportPostInput struct {
 func ReportPost(ctx workflow.Context, input ReportPostInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
+	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
@@ -27,6 +28,7 @@ func ReportPost(ctx workflow.Context, input ReportPostInput) error {
 			CreatedAt: input.CreatedAt,
 		},
 	).Get(ctx, nil); err != nil {
+		logger.Error("failed to create post report", "Error", err)
 		return err
 	}
 

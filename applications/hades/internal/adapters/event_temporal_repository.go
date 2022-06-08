@@ -9,6 +9,7 @@ import (
 	"overdoll/applications/hades/internal/app/workflows"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/applications/hades/internal/domain/ccbill"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/money"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
@@ -93,84 +94,84 @@ func (r EventTemporalRepository) CCBillNewSaleSuccess(ctx context.Context, paylo
 	accountingInitialPrice, err := ccbill.ParseCCBillCurrencyAmount(input.AccountingInitialPrice, input.AccountingCurrency)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing accounting initial price")
 	}
 
 	accountingRecurringPrice, err := ccbill.ParseCCBillCurrencyAmount(input.AccountingRecurringPrice, input.AccountingCurrency)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing accounting recurring price")
 	}
 
 	accountingCurrency, err := money.CurrencyFromString(input.AccountingCurrency)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing accounting currency")
 	}
 
 	subscriptionInitialPrice, err := ccbill.ParseCCBillCurrencyAmount(input.SubscriptionInitialPrice, input.SubscriptionCurrency)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing subscription initial price")
 	}
 
 	subscriptionRecurringPrice, err := ccbill.ParseCCBillCurrencyAmount(input.SubscriptionRecurringPrice, input.SubscriptionCurrency)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing subscription recurring price")
 	}
 
 	subscriptionCurrency, err := money.CurrencyFromString(input.SubscriptionCurrency)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing subscription currency")
 	}
 
 	billedInitialPrice, err := ccbill.ParseCCBillCurrencyAmount(input.BilledInitialPrice, input.BilledCurrency)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing billed initial price")
 	}
 
 	billedRecurringPrice, err := ccbill.ParseCCBillCurrencyAmount(input.BilledRecurringPrice, input.BilledCurrency)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing billed recurring price")
 	}
 
 	billedCurrency, err := money.CurrencyFromString(input.BilledCurrency)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing billed currency")
 	}
 
 	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing timestamp")
 	}
 
 	billedAtDate, err := ccbill.ParseCCBillDate(strings.Split(input.Timestamp, " ")[0])
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing billed at date")
 	}
 
 	nextBillingDate, err := ccbill.ParseCCBillDate(input.NextRenewalDate)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing next billing date")
 	}
 
 	paymentToken, err := ccbill.DecryptCCBillPayment(input.XOverdollPaymentToken)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error decrypting ccbill payment token")
 	}
 
 	options := client.StartWorkflowOptions{
 		TaskQueue:             viper.GetString("temporal.queue"),
-		ID:                    "CCBillNewSaleOrUpSaleSuccess_" + input.SubscriptionId + "_" + input.TransactionId,
+		ID:                    "hades.CCBillNewSaleOrUpSaleSuccess_" + input.SubscriptionId + "_" + input.TransactionId,
 		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_REJECT_DUPLICATE,
 	}
 
@@ -204,7 +205,7 @@ func (r EventTemporalRepository) CCBillNewSaleSuccess(ctx context.Context, paylo
 		PostalCode:                 input.PostalCode,
 		State:                      input.State,
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "error executing ccbill new sale or upsale success")
 	}
 
 	return nil
@@ -240,54 +241,54 @@ func (r EventTemporalRepository) CCBillRenewalSuccess(ctx context.Context, paylo
 	var input CCBillRenewalSuccess
 
 	if err := json.Unmarshal(payload, &input); err != nil {
-		return err
+		return errors.Wrap(err, "error unmarshalling renewal success payload")
 	}
 
 	amount, err := ccbill.ParseCCBillCurrencyAmount(input.BilledAmount, input.BilledCurrency)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing ccbill amount")
 	}
 
 	currency, err := money.CurrencyFromString(input.BilledCurrency)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing ccbill currency")
 	}
 
 	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing timestamp")
 	}
 
 	billedAtDate, err := ccbill.ParseCCBillDate(strings.Split(input.RenewalDate, " ")[0])
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing billed at date")
 	}
 
 	nextBillingDate, err := ccbill.ParseCCBillDate(input.NextRenewalDate)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing next billing date")
 	}
 
 	accountingAmount, err := ccbill.ParseCCBillCurrencyAmount(input.AccountingAmount, input.AccountingCurrency)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing accounting amount")
 	}
 
 	accountingCurrency, err := money.CurrencyFromString(input.AccountingCurrency)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing accounting currency")
 	}
 
 	options := client.StartWorkflowOptions{
 		TaskQueue:             viper.GetString("temporal.queue"),
-		ID:                    "CCBillRenewalSuccess_" + input.SubscriptionId + "_" + input.TransactionId,
+		ID:                    "hades.CCBillRenewalSuccess_" + input.SubscriptionId + "_" + input.TransactionId,
 		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_REJECT_DUPLICATE,
 	}
 
@@ -305,7 +306,7 @@ func (r EventTemporalRepository) CCBillRenewalSuccess(ctx context.Context, paylo
 		Last4:              input.Last4,
 		ExpDate:            input.ExpDate,
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "error running ccbill renewal success workflow")
 	}
 
 	return nil
@@ -336,42 +337,42 @@ func (r EventTemporalRepository) CCBillChargeback(ctx context.Context, payload [
 	var input CCBillChargeback
 
 	if err := json.Unmarshal(payload, &input); err != nil {
-		return err
+		return errors.Wrap(err, "error unmarshalling ccbill chargeback")
 	}
 
 	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing ccbill timestamp")
 	}
 
 	amount, err := ccbill.ParseCCBillCurrencyAmount(input.Amount, input.Currency)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing ccbill amount")
 	}
 
 	currency, err := money.CurrencyFromString(input.Currency)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing ccbill currency")
 	}
 
 	accountingAmount, err := ccbill.ParseCCBillCurrencyAmount(input.AccountingAmount, input.AccountingCurrency)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing accounting amount")
 	}
 
 	accountingCurrency, err := money.CurrencyFromString(input.AccountingCurrency)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing accounting currency")
 	}
 
 	options := client.StartWorkflowOptions{
 		TaskQueue:             viper.GetString("temporal.queue"),
-		ID:                    "CCBillChargeback_" + input.SubscriptionId + "_" + input.TransactionId,
+		ID:                    "hades.CCBillChargeback_" + input.SubscriptionId + "_" + input.TransactionId,
 		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_REJECT_DUPLICATE,
 	}
 
@@ -388,7 +389,7 @@ func (r EventTemporalRepository) CCBillChargeback(ctx context.Context, payload [
 		Last4:              input.Last4,
 		ExpDate:            input.ExpDate,
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "error running ccbill chargeback workflow")
 	}
 
 	return nil
@@ -419,42 +420,42 @@ func (r EventTemporalRepository) CCBillRefund(ctx context.Context, payload []byt
 	var input CCBillRefund
 
 	if err := json.Unmarshal(payload, &input); err != nil {
-		return err
+		return errors.Wrap(err, "error unmarshalling ccbill refund")
 	}
 
 	amount, err := ccbill.ParseCCBillCurrencyAmount(input.Amount, input.Currency)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing ccbill amount")
 	}
 
 	currency, err := money.CurrencyFromString(input.Currency)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing ccbill currency")
 	}
 
 	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing timestamp")
 	}
 
 	accountingAmount, err := ccbill.ParseCCBillCurrencyAmount(input.AccountingAmount, input.AccountingCurrency)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing accounting amount")
 	}
 
 	accountingCurrency, err := money.CurrencyFromString(input.AccountingCurrency)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing accounting currency")
 	}
 
 	options := client.StartWorkflowOptions{
 		TaskQueue:             viper.GetString("temporal.queue"),
-		ID:                    "CCBillRefund_" + input.SubscriptionId + "_" + input.TransactionId,
+		ID:                    "hades.CCBillRefund_" + input.SubscriptionId + "_" + input.TransactionId,
 		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_REJECT_DUPLICATE,
 	}
 
@@ -471,7 +472,7 @@ func (r EventTemporalRepository) CCBillRefund(ctx context.Context, payload []byt
 		Last4:              input.Last4,
 		ExpDate:            input.ExpDate,
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "error running ccbill refund workflow")
 	}
 
 	return nil
@@ -497,18 +498,18 @@ func (r EventTemporalRepository) CCBillVoid(ctx context.Context, payload []byte)
 	var input CCBillVoid
 
 	if err := json.Unmarshal(payload, &input); err != nil {
-		return err
+		return errors.Wrap(err, "error unmarshalling ccbill void")
 	}
 
 	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing timestamp")
 	}
 
 	options := client.StartWorkflowOptions{
 		TaskQueue:             viper.GetString("temporal.queue"),
-		ID:                    "CCBillVoid_" + input.SubscriptionId + "_" + input.TransactionId,
+		ID:                    "hades.CCBillVoid_" + input.SubscriptionId + "_" + input.TransactionId,
 		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_REJECT_DUPLICATE,
 	}
 
@@ -518,7 +519,7 @@ func (r EventTemporalRepository) CCBillVoid(ctx context.Context, payload []byte)
 		Timestamp:      timestamp,
 		Reason:         input.Reason,
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "error running ccbill void workflow")
 	}
 
 	return nil
@@ -537,18 +538,18 @@ func (r EventTemporalRepository) CCBillCancellation(ctx context.Context, payload
 	var input CCBillCancellation
 
 	if err := json.Unmarshal(payload, &input); err != nil {
-		return err
+		return errors.Wrap(err, "error unmarshalling ccbill cancellation")
 	}
 
 	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing timestamp")
 	}
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "CCBillCancellation_" + input.SubscriptionId,
+		ID:        "hades.CCBillCancellation_" + input.SubscriptionId,
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CCBillCancellation, workflows.CCBillCancellationInput{
@@ -556,7 +557,7 @@ func (r EventTemporalRepository) CCBillCancellation(ctx context.Context, payload
 		Timestamp:      timestamp,
 		Reason:         input.Reason,
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "error running ccbill cancellation workflow")
 	}
 
 	return nil
@@ -574,25 +575,25 @@ func (r EventTemporalRepository) CCBillExpiration(ctx context.Context, payload [
 	var input CCBillExpiration
 
 	if err := json.Unmarshal(payload, &input); err != nil {
-		return err
+		return errors.Wrap(err, "error unmarshalling ccbill expiration")
 	}
 
 	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing ccbill timestamp")
 	}
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "CCBillExpiration_" + input.SubscriptionId,
+		ID:        "hades.CCBillExpiration_" + input.SubscriptionId,
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CCBillExpiration, workflows.CCBillExpirationInput{
 		SubscriptionId: input.SubscriptionId,
 		Timestamp:      timestamp,
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "error running ccbill expiration workflow")
 	}
 
 	return nil
@@ -613,18 +614,18 @@ func (r EventTemporalRepository) CCBillUserReactivation(ctx context.Context, pay
 	var input CCBillUserReactivation
 
 	if err := json.Unmarshal(payload, &input); err != nil {
-		return err
+		return errors.Wrap(err, "error unmarshalling ccbill user reactivation")
 	}
 
 	nextBillingDate, err := ccbill.ParseCCBillDate(input.NextRenewalDate)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing next billing date")
 	}
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "CCBillUserReactivation_" + uuid.New().String(),
+		ID:        "hades.CCBillUserReactivation_" + uuid.New().String(),
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CCBillUserReactivation, workflows.CCBillUserReactivationInput{
@@ -632,7 +633,7 @@ func (r EventTemporalRepository) CCBillUserReactivation(ctx context.Context, pay
 		SubscriptionId:  input.SubscriptionId,
 		NextBillingDate: nextBillingDate,
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "error running ccbill user reactivation workflow")
 	}
 
 	return nil
@@ -651,25 +652,25 @@ func (r EventTemporalRepository) CCBillBillingDateChange(ctx context.Context, pa
 	var input CCBillBillingDateChange
 
 	if err := json.Unmarshal(payload, &input); err != nil {
-		return err
+		return errors.Wrap(err, "error unmarshalling ccbill billing date change")
 	}
 
 	nextBillingDate, err := ccbill.ParseCCBillDate(input.NextRenewalDate)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing next renewal date")
 	}
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "CCBillBillingDateChange_" + uuid.New().String(),
+		ID:        "hades.CCBillBillingDateChange_" + uuid.New().String(),
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CCBillBillingDateChange, workflows.CCBillBillingDateChangeInput{
 		SubscriptionId:  input.SubscriptionId,
 		NextBillingDate: nextBillingDate,
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "error running ccbill billing date change workflow")
 	}
 
 	return nil
@@ -704,18 +705,18 @@ func (r EventTemporalRepository) CCBillCustomerDataUpdate(ctx context.Context, p
 	var input CCBillCustomerDataUpdate
 
 	if err := json.Unmarshal(payload, &input); err != nil {
-		return err
+		return errors.Wrap(err, "error unmarshalling ccbill billing date change")
 	}
 
 	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing timestamp")
 	}
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "CCBillCustomerDataUpdate_" + uuid.New().String(),
+		ID:        "hades.CCBillCustomerDataUpdate_" + uuid.New().String(),
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CCBillCustomerDataUpdate, workflows.CCBillCustomerDataUpdateInput{
@@ -735,7 +736,7 @@ func (r EventTemporalRepository) CCBillCustomerDataUpdate(ctx context.Context, p
 		Bin:            input.Bin,
 		ExpDate:        input.ExpDate,
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "error running ccbill customer data update workflow")
 	}
 
 	return nil
@@ -760,24 +761,24 @@ func (r EventTemporalRepository) CCBillRenewalFailure(ctx context.Context, paylo
 	var input CCBillRenewalFailure
 
 	if err := json.Unmarshal(payload, &input); err != nil {
-		return err
+		return errors.Wrap(err, "error unmarshalling ccbill renewal failure")
 	}
 
 	timestamp, err := ccbill.ParseCCBillDateWithTime(input.Timestamp)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing timestamp")
 	}
 
 	nextRetryDate, err := ccbill.ParseCCBillDate(input.NextRetryDate)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "error parsing next retry date")
 	}
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "CCBillRenewalFailure_" + uuid.New().String(),
+		ID:        "hades.CCBillRenewalFailure_" + uuid.New().String(),
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CCBillRenewalFailure, workflows.CCBillRenewalFailureInput{
@@ -788,7 +789,7 @@ func (r EventTemporalRepository) CCBillRenewalFailure(ctx context.Context, paylo
 		FailureReason:  input.FailureReason,
 		FailureCode:    input.FailureCode,
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "error running ccbill renewal failure workflow")
 	}
 
 	return nil
@@ -802,13 +803,13 @@ func (r EventTemporalRepository) CancelActiveSupporterSubscriptionsForClub(ctx c
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "CancelActiveSubscriptionsForClub_" + clubId,
+		ID:        "hades.CancelActiveSubscriptionsForClub_" + clubId,
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CancelActiveSupporterSubscriptionsForClub, workflows.CancelActiveSupporterSubscriptionsForClubInput{
 		ClubId: clubId,
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "error running cancel active supporter subscriptions for club workflow")
 	}
 
 	return nil
@@ -822,14 +823,14 @@ func (r EventTemporalRepository) CancelAccountClubSupporterSubscription(ctx cont
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "CancelAccountClubSupporterSubscription_" + subscription.Id(),
+		ID:        "hades.CancelAccountClubSupporterSubscription_" + subscription.Id(),
 	}
 
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.CancelAccountClubSupporterSubscription, workflows.CancelAccountClubSupporterSubscriptionInput{
 		AccountClubSupporterSubscriptionId: subscription.Id(),
 		CancellationReasonId:               cancellationReason.ID(),
 	}); err != nil {
-		return err
+		return errors.Wrap(err, "error running cancel account club supporter subscription workflow")
 	}
 
 	return nil

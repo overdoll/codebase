@@ -1,18 +1,18 @@
 package post
 
 import (
-	"errors"
 	"github.com/go-playground/validator/v10"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/uuid"
+	"time"
 
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 )
 
 var (
-	ErrCategoryNotFound      = errors.New("category not found")
-	ErrCategorySlugNotUnique = errors.New("category slug is not unique")
+	ErrCategorySlugNotUnique = domainerror.NewValidation("category slug is not unique")
 )
 
 type Category struct {
@@ -24,6 +24,8 @@ type Category struct {
 	thumbnailResourceId *string
 	totalLikes          int
 	totalPosts          int
+
+	createdAt time.Time
 }
 
 func NewCategory(requester *principal.Principal, slug, title string) (*Category, error) {
@@ -57,6 +59,7 @@ func NewCategory(requester *principal.Principal, slug, title string) (*Category,
 		thumbnailResourceId: nil,
 		totalLikes:          0,
 		totalPosts:          0,
+		createdAt:           time.Now(),
 	}, nil
 }
 
@@ -82,6 +85,10 @@ func (c *Category) TotalLikes() int {
 
 func (c *Category) TotalPosts() int {
 	return c.totalPosts
+}
+
+func (c *Category) CreatedAt() time.Time {
+	return c.createdAt
 }
 
 func (c *Category) UpdateTotalPosts(totalPosts int) error {
@@ -135,7 +142,7 @@ func (c *Category) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalCategoryFromDatabase(id, slug string, title map[string]string, thumbnail *string, totalLikes, totalPosts int) *Category {
+func UnmarshalCategoryFromDatabase(id, slug string, title map[string]string, thumbnail *string, totalLikes, totalPosts int, createdAt time.Time) *Category {
 	return &Category{
 		id:                  id,
 		slug:                slug,
@@ -143,6 +150,7 @@ func UnmarshalCategoryFromDatabase(id, slug string, title map[string]string, thu
 		thumbnailResourceId: thumbnail,
 		totalLikes:          totalLikes,
 		totalPosts:          totalPosts,
+		createdAt:           createdAt,
 	}
 }
 
@@ -151,7 +159,7 @@ func validateCategoryTitle(name string) error {
 	err := validator.New().Var(name, "required,max=25")
 
 	if err != nil {
-		return err
+		return domainerror.NewValidation(err.Error())
 	}
 
 	return nil

@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/securecookie"
 	"net/http"
 	"overdoll/applications/puppy/internal/domain/session"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/support"
 	"strings"
@@ -31,12 +32,12 @@ func (a *Application) GetDeviceDataFromRequest(req *http.Request) (string, strin
 
 	if err == nil {
 		if err := a.Cookie.Decode(deviceCookieName, c.Value, &deviceId); err != nil {
-			return "", "", "", err
+			return "", "", "", errors.Wrap(err, "failed to decode cookie")
 		}
 	}
 
 	if err != nil && err != http.ErrNoCookie {
-		return "", "", "", err
+		return "", "", "", errors.Wrap(err, "failed to get cookie")
 	}
 
 	// no device ID - generate a new one (will be saved at the end of the request)
@@ -52,7 +53,7 @@ func (a *Application) GetSessionDataFromRequest(req *http.Request) (string, stri
 	c, err := req.Cookie(sessionCookieName)
 
 	if err != nil && err != http.ErrNoCookie {
-		return "", "", err
+		return "", "", errors.Wrap(err, "failed to get cookie")
 	}
 
 	var sessionId string
@@ -60,7 +61,7 @@ func (a *Application) GetSessionDataFromRequest(req *http.Request) (string, stri
 
 	if err == nil {
 		if err := a.Cookie.Decode(sessionCookieName, c.Value, &sessionId); err != nil {
-			return "", "", err
+			return "", "", errors.Wrap(err, "failed to decode cookie")
 		}
 		valid, currentAccountId, err := a.Repository.GetSession(req.Context(), sessionId)
 
@@ -96,7 +97,7 @@ func (a *Application) NewAccountSessionEvent(ctx context.Context, res *http.Resp
 	encoded, err := a.Cookie.Encode(sessionCookieName, sessionId)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to encode cookie")
 	}
 
 	ck := http.Cookie{
@@ -139,7 +140,7 @@ func (a *Application) ResponseEvent(ctx context.Context, res *http.Response) err
 	}
 
 	if err != nil && err != http.ErrNoCookie {
-		return err
+		return errors.Wrap(err, "failed to get cookie")
 	}
 
 	_, err = res.Request.Cookie(deviceCookieName)
@@ -151,7 +152,7 @@ func (a *Application) ResponseEvent(ctx context.Context, res *http.Response) err
 			encoded, err := a.Cookie.Encode(deviceCookieName, passport.FromContext(ctx).DeviceID())
 
 			if err != nil {
-				return err
+				return errors.Wrap(err, "failed to encode cookie")
 			}
 
 			ck := http.Cookie{
