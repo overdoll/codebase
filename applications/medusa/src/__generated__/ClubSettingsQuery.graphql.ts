@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e5325edfd358f978356b8c7970f983ec>>
- * @relayHash 3c9e69e6cd6a418739e8bebbb130d9d1
+ * @generated SignedSource<<6c9864b4bf8f9d34efab3634b0885a8a>>
+ * @relayHash 0468402be89b3c8103961082bd88745a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3c9e69e6cd6a418739e8bebbb130d9d1
+// @relayRequestID 0468402be89b3c8103961082bd88745a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -78,13 +78,15 @@ v5 = {
   "name": "viewerIsOwner",
   "storageKey": null
 },
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
-},
+v6 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  }
+],
 v7 = {
   "alias": null,
   "args": null,
@@ -171,16 +173,7 @@ return {
                 "kind": "LinkedField",
                 "name": "urls",
                 "plural": true,
-                "selections": [
-                  (v6/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "mimeType",
-                    "storageKey": null
-                  }
-                ],
+                "selections": (v6/*: any*/),
                 "storageKey": null
               },
               {
@@ -200,13 +193,18 @@ return {
               {
                 "alias": null,
                 "args": null,
+                "kind": "ScalarField",
+                "name": "preview",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
                 "concreteType": "ResourceUrl",
                 "kind": "LinkedField",
                 "name": "videoThumbnail",
                 "plural": false,
-                "selections": [
-                  (v6/*: any*/)
-                ],
+                "selections": (v6/*: any*/),
                 "storageKey": null
               },
               {
@@ -277,7 +275,7 @@ return {
     ]
   },
   "params": {
-    "id": "3c9e69e6cd6a418739e8bebbb130d9d1",
+    "id": "0468402be89b3c8103961082bd88745a",
     "metadata": {},
     "name": "ClubSettingsQuery",
     "operationKind": "query",

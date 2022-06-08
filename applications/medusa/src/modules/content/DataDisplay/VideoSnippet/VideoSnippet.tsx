@@ -15,6 +15,7 @@ const Fragment = graphql`
     videoThumbnail {
       url
     }
+    preview
   }
 `
 
@@ -34,6 +35,8 @@ export default function VideoSnippet ({
         alt='thumbnail'
         layout='fill'
         objectFit='cover'
+        placeholder={(data?.preview !== '' && data?.preview != null) ? 'blur' : undefined}
+        blurDataURL={data?.preview}
         objectPosition='50% 50%'
         src={data?.videoThumbnail?.url ?? ''}
         {...rest}

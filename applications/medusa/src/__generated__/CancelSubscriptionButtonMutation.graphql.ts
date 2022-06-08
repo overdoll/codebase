@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<651d966899e60a0c5e72f4ea9fabe777>>
- * @relayHash 6ad2a80237e1a85e6794de6884848b89
+ * @generated SignedSource<<61116a0023450b69eedd14b4e1911a25>>
+ * @relayHash 9dcaa6a940e16707f0210ca5b3fa827d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6ad2a80237e1a85e6794de6884848b89
+// @relayRequestID 9dcaa6a940e16707f0210ca5b3fa827d
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -127,13 +127,15 @@ v11 = {
   "name": "slug",
   "storageKey": null
 },
-v12 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
-};
+v12 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -272,16 +274,7 @@ return {
                             "kind": "LinkedField",
                             "name": "urls",
                             "plural": true,
-                            "selections": [
-                              (v12/*: any*/),
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "mimeType",
-                                "storageKey": null
-                              }
-                            ],
+                            "selections": (v12/*: any*/),
                             "storageKey": null
                           },
                           {
@@ -301,13 +294,18 @@ return {
                           {
                             "alias": null,
                             "args": null,
+                            "kind": "ScalarField",
+                            "name": "preview",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
                             "concreteType": "ResourceUrl",
                             "kind": "LinkedField",
                             "name": "videoThumbnail",
                             "plural": false,
-                            "selections": [
-                              (v12/*: any*/)
-                            ],
+                            "selections": (v12/*: any*/),
                             "storageKey": null
                           },
                           {
@@ -344,7 +342,7 @@ return {
     ]
   },
   "params": {
-    "id": "6ad2a80237e1a85e6794de6884848b89",
+    "id": "9dcaa6a940e16707f0210ca5b3fa827d",
     "metadata": {},
     "name": "CancelSubscriptionButtonMutation",
     "operationKind": "mutation",

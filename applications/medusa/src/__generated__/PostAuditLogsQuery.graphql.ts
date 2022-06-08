@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7159eaee5323ae014934fa036ab6b5e7>>
- * @relayHash a085067e19e8f6cce69850db4c31f2c9
+ * @generated SignedSource<<1fd974271197e303ffef9f589d3bb7d1>>
+ * @relayHash 85126be71ce9f4dcfabd6a0b480de49e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a085067e19e8f6cce69850db4c31f2c9
+// @relayRequestID 85126be71ce9f4dcfabd6a0b480de49e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -73,25 +73,9 @@ v3 = {
   "name": "url",
   "storageKey": null
 },
-v4 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "ResourceUrl",
-  "kind": "LinkedField",
-  "name": "urls",
-  "plural": true,
-  "selections": [
-    (v3/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "mimeType",
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-},
+v4 = [
+  (v3/*: any*/)
+],
 v5 = {
   "alias": null,
   "args": null,
@@ -109,16 +93,21 @@ v6 = {
 v7 = {
   "alias": null,
   "args": null,
+  "kind": "ScalarField",
+  "name": "preview",
+  "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
   "concreteType": "ResourceUrl",
   "kind": "LinkedField",
   "name": "videoThumbnail",
   "plural": false,
-  "selections": [
-    (v3/*: any*/)
-  ],
+  "selections": (v4/*: any*/),
   "storageKey": null
 },
-v8 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -236,11 +225,21 @@ return {
                                 "name": "thumbnail",
                                 "plural": false,
                                 "selections": [
-                                  (v4/*: any*/),
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "concreteType": "ResourceUrl",
+                                    "kind": "LinkedField",
+                                    "name": "urls",
+                                    "plural": true,
+                                    "selections": (v4/*: any*/),
+                                    "storageKey": null
+                                  },
                                   (v5/*: any*/),
                                   (v6/*: any*/),
                                   (v7/*: any*/),
                                   (v8/*: any*/),
+                                  (v9/*: any*/),
                                   (v2/*: any*/)
                                 ],
                                 "storageKey": null
@@ -265,11 +264,30 @@ return {
                                 "name": "resource",
                                 "plural": false,
                                 "selections": [
-                                  (v8/*: any*/),
-                                  (v4/*: any*/),
+                                  (v9/*: any*/),
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "concreteType": "ResourceUrl",
+                                    "kind": "LinkedField",
+                                    "name": "urls",
+                                    "plural": true,
+                                    "selections": [
+                                      (v3/*: any*/),
+                                      {
+                                        "alias": null,
+                                        "args": null,
+                                        "kind": "ScalarField",
+                                        "name": "mimeType",
+                                        "storageKey": null
+                                      }
+                                    ],
+                                    "storageKey": null
+                                  },
                                   (v5/*: any*/),
                                   (v6/*: any*/),
                                   (v7/*: any*/),
+                                  (v8/*: any*/),
                                   (v2/*: any*/)
                                 ],
                                 "storageKey": null
@@ -384,7 +402,7 @@ return {
     ]
   },
   "params": {
-    "id": "a085067e19e8f6cce69850db4c31f2c9",
+    "id": "85126be71ce9f4dcfabd6a0b480de49e",
     "metadata": {},
     "name": "PostAuditLogsQuery",
     "operationKind": "query",

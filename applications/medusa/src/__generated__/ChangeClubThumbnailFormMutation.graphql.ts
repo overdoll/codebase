@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ed1671fcfd9e7036098f3da8b576a2b2>>
- * @relayHash b3860f3f81b3a47de297279ad3f6d0aa
+ * @generated SignedSource<<938c181b40aafe6c7275cf6bd3ad2625>>
+ * @relayHash 0f10b72e384432782bbd108cfb87ec1b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b3860f3f81b3a47de297279ad3f6d0aa
+// @relayRequestID 0f10b72e384432782bbd108cfb87ec1b
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
@@ -32,6 +32,9 @@ export type ChangeClubThumbnailFormMutation$data = {
           readonly url: string;
           readonly mimeType: string;
         }>;
+        readonly preview: string;
+        readonly width: number;
+        readonly height: number;
       } | null;
     } | null;
   } | null;
@@ -102,6 +105,27 @@ v5 = {
     }
   ],
   "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "preview",
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "width",
+  "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "height",
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -137,7 +161,10 @@ return {
                 "plural": false,
                 "selections": [
                   (v4/*: any*/),
-                  (v5/*: any*/)
+                  (v5/*: any*/),
+                  (v6/*: any*/),
+                  (v7/*: any*/),
+                  (v8/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -185,6 +212,9 @@ return {
                 "selections": [
                   (v4/*: any*/),
                   (v5/*: any*/),
+                  (v6/*: any*/),
+                  (v7/*: any*/),
+                  (v8/*: any*/),
                   (v2/*: any*/)
                 ],
                 "storageKey": null
@@ -198,7 +228,7 @@ return {
     ]
   },
   "params": {
-    "id": "b3860f3f81b3a47de297279ad3f6d0aa",
+    "id": "0f10b72e384432782bbd108cfb87ec1b",
     "metadata": {},
     "name": "ChangeClubThumbnailFormMutation",
     "operationKind": "mutation",
@@ -207,6 +237,6 @@ return {
 };
 })();
 
-(node as any).hash = "597b82c0d8cad03277559d2542713664";
+(node as any).hash = "da6d148f7afd1a75a733efa12b41f443";
 
 export default node;

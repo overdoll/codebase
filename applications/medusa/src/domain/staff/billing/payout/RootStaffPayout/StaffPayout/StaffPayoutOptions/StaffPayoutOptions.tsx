@@ -25,6 +25,7 @@ const Fragment = graphql`
   fragment StaffPayoutOptionsFragment on ClubPayout {
     amount
     currency
+    coverFeeAmount
     status
     depositDate
     ...UpdateClubPayoutDepositDateFormFragment
@@ -41,6 +42,12 @@ export default function StaffPayoutOptions ({ query }: Props): JSX.Element {
   const depositDate = format(new Date(data.depositDate as Date), dateFormatWithTime, { locale })
   const amount = displayPrice({
     amount: data.amount,
+    currency: data.currency,
+    locale: locale
+  })
+
+  const coverFeeAmount = displayPrice({
+    amount: data.coverFeeAmount,
     currency: data.currency,
     locale: locale
   })
@@ -94,6 +101,20 @@ export default function StaffPayoutOptions ({ query }: Props): JSX.Element {
         <SmallBackgroundBox>
           <Trans>
             {amount}
+          </Trans>
+        </SmallBackgroundBox>
+      </Box>
+      <Box>
+        <PageSectionWrap>
+          <PageSectionTitle>
+            <Trans>
+              Cover Fee Amount
+            </Trans>
+          </PageSectionTitle>
+        </PageSectionWrap>
+        <SmallBackgroundBox>
+          <Trans>
+            {coverFeeAmount}
           </Trans>
         </SmallBackgroundBox>
       </Box>

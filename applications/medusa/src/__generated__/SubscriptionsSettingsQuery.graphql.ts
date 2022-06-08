@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<55c84d42a54e119ef036372c7fbf882e>>
- * @relayHash 87bd0214a2192fa46fba81c29cdfee5c
+ * @generated SignedSource<<1681840eda850589f9aa594243af9370>>
+ * @relayHash bcbb9c3d2dde9f08776265659816aa5e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 87bd0214a2192fa46fba81c29cdfee5c
+// @relayRequestID bcbb9c3d2dde9f08776265659816aa5e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -88,13 +88,15 @@ v8 = {
   "name": "slug",
   "storageKey": null
 },
-v9 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
-},
+v9 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  }
+],
 v10 = {
   "alias": null,
   "args": null,
@@ -110,16 +112,7 @@ v10 = {
       "kind": "LinkedField",
       "name": "urls",
       "plural": true,
-      "selections": [
-        (v9/*: any*/),
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "mimeType",
-          "storageKey": null
-        }
-      ],
+      "selections": (v9/*: any*/),
       "storageKey": null
     },
     {
@@ -139,13 +132,18 @@ v10 = {
     {
       "alias": null,
       "args": null,
+      "kind": "ScalarField",
+      "name": "preview",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
       "concreteType": "ResourceUrl",
       "kind": "LinkedField",
       "name": "videoThumbnail",
       "plural": false,
-      "selections": [
-        (v9/*: any*/)
-      ],
+      "selections": (v9/*: any*/),
       "storageKey": null
     },
     {
@@ -508,7 +506,7 @@ return {
     ]
   },
   "params": {
-    "id": "87bd0214a2192fa46fba81c29cdfee5c",
+    "id": "bcbb9c3d2dde9f08776265659816aa5e",
     "metadata": {},
     "name": "SubscriptionsSettingsQuery",
     "operationKind": "query",

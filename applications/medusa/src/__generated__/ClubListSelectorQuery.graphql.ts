@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<094cb5b63314ee285a7c0fe9e8f3ccc6>>
- * @relayHash 236909dee022b4a6237073dd93c31c62
+ * @generated SignedSource<<560096af0338d1a98bc60797a58f9533>>
+ * @relayHash 5059b96fd6cbee20656ef40e554d7169
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 236909dee022b4a6237073dd93c31c62
+// @relayRequestID 5059b96fd6cbee20656ef40e554d7169
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -41,13 +41,15 @@ v1 = {
   "name": "id",
   "storageKey": null
 },
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
-},
+v2 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  }
+],
 v3 = {
   "alias": null,
   "args": null,
@@ -55,16 +57,7 @@ v3 = {
   "kind": "LinkedField",
   "name": "urls",
   "plural": true,
-  "selections": [
-    (v2/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "mimeType",
-      "storageKey": null
-    }
-  ],
+  "selections": (v2/*: any*/),
   "storageKey": null
 },
 v4 = {
@@ -84,16 +77,21 @@ v5 = {
 v6 = {
   "alias": null,
   "args": null,
+  "kind": "ScalarField",
+  "name": "preview",
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
   "concreteType": "ResourceUrl",
   "kind": "LinkedField",
   "name": "videoThumbnail",
   "plural": false,
-  "selections": [
-    (v2/*: any*/)
-  ],
+  "selections": (v2/*: any*/),
   "storageKey": null
 },
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -193,6 +191,7 @@ return {
                           (v5/*: any*/),
                           (v6/*: any*/),
                           (v7/*: any*/),
+                          (v8/*: any*/),
                           (v1/*: any*/)
                         ],
                         "storageKey": null
@@ -243,11 +242,12 @@ return {
                                         "name": "resource",
                                         "plural": false,
                                         "selections": [
-                                          (v7/*: any*/),
+                                          (v8/*: any*/),
                                           (v3/*: any*/),
                                           (v4/*: any*/),
                                           (v5/*: any*/),
                                           (v6/*: any*/),
+                                          (v7/*: any*/),
                                           {
                                             "alias": null,
                                             "args": null,
@@ -339,7 +339,7 @@ return {
     ]
   },
   "params": {
-    "id": "236909dee022b4a6237073dd93c31c62",
+    "id": "5059b96fd6cbee20656ef40e554d7169",
     "metadata": {},
     "name": "ClubListSelectorQuery",
     "operationKind": "query",

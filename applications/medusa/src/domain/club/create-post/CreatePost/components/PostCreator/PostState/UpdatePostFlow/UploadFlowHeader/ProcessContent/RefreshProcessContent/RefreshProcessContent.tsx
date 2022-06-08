@@ -35,6 +35,7 @@ const Query = graphql`
           }
           width
           height
+          preview
         }
       }
     }

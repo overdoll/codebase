@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ad071ecf271dfc8636af90b43a13c447>>
- * @relayHash a2639fc3d7f46f3547d19ae3a029561a
+ * @generated SignedSource<<b06dbd2221e993ba31f042d0be490970>>
+ * @relayHash b0c85c25a2090deab99a417045ad1acc
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a2639fc3d7f46f3547d19ae3a029561a
+// @relayRequestID b0c85c25a2090deab99a417045ad1acc
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -143,13 +143,15 @@ v11 = {
   "selections": (v9/*: any*/),
   "storageKey": null
 },
-v12 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
-};
+v12 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -259,16 +261,7 @@ return {
                     "kind": "LinkedField",
                     "name": "urls",
                     "plural": true,
-                    "selections": [
-                      (v12/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "mimeType",
-                        "storageKey": null
-                      }
-                    ],
+                    "selections": (v12/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -288,13 +281,18 @@ return {
                   {
                     "alias": null,
                     "args": null,
+                    "kind": "ScalarField",
+                    "name": "preview",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
                     "concreteType": "ResourceUrl",
                     "kind": "LinkedField",
                     "name": "videoThumbnail",
                     "plural": false,
-                    "selections": [
-                      (v12/*: any*/)
-                    ],
+                    "selections": (v12/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -324,7 +322,7 @@ return {
     ]
   },
   "params": {
-    "id": "a2639fc3d7f46f3547d19ae3a029561a",
+    "id": "b0c85c25a2090deab99a417045ad1acc",
     "metadata": {},
     "name": "RecoveryCodeMutation",
     "operationKind": "mutation",

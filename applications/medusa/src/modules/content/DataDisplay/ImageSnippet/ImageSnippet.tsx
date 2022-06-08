@@ -16,10 +16,10 @@ const Fragment = graphql`
   fragment ImageSnippetFragment on Resource {
     urls {
       url
-      mimeType
     }
     width
     height
+    preview
   }
 `
 
@@ -69,6 +69,8 @@ export default function ImageSnippet ({
       <NextImage
         {...IMAGE_PROPS}
         src={displayUrl(errorCount)}
+        placeholder={(data?.preview !== '' && data?.preview != null) ? 'blur' : undefined}
+        blurDataURL={data?.preview ?? undefined}
         onErrorCapture={onErrorCapture}
         {...rest}
       />

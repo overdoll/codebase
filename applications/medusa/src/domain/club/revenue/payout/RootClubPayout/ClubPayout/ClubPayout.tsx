@@ -29,6 +29,7 @@ const Query = graphql`
   query ClubPayoutQuery($reference: String!)  {
     payout(reference: $reference) {
       amount
+      coverFeeAmount
       currency
       status
       depositDate
@@ -60,6 +61,12 @@ export default function ClubPayout ({ query }: Props): JSX.Element {
 
   const amount = displayPrice({
     amount: queryData.payout.amount,
+    currency: queryData.payout.currency,
+    locale: locale
+  })
+
+  const coverFeeAmount = displayPrice({
+    amount: queryData.payout.coverFeeAmount,
     currency: queryData.payout.currency,
     locale: locale
   })
@@ -97,6 +104,14 @@ export default function ClubPayout ({ query }: Props): JSX.Element {
               </Trans>
             </Heading>
           </Stack>
+        </LargeBackgroundBox>
+        <LargeBackgroundBox>
+          <Heading color='gray.200' fontSize='sm'>
+            <Trans>
+              A cover fee amount of {coverFeeAmount} will be added to the payout to cover any charges you may incur for
+              receiving the payout
+            </Trans>
+          </Heading>
         </LargeBackgroundBox>
       </Stack>
       <Box>

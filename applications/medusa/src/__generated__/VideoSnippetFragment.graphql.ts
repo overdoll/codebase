@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9e2da4294280dac0ab10dddeab15dc96>>
+ * @generated SignedSource<<5ab2c4de9d0e26271f4994cbdb14f7bd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type VideoSnippetFragment$data = {
   readonly videoThumbnail: {
     readonly url: string;
   } | null;
+  readonly preview: string;
   readonly " $fragmentType": "VideoSnippetFragment";
 };
 export type VideoSnippetFragment = VideoSnippetFragment$data;
@@ -45,12 +46,19 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "preview",
+      "storageKey": null
     }
   ],
   "type": "Resource",
   "abstractKey": null
 };
 
-(node as any).hash = "44910205c617e3743c77026ad205f34e";
+(node as any).hash = "1be50f672b3eefbbe06b7bb0cee3278c";
 
 export default node;
