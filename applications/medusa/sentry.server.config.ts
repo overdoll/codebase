@@ -7,5 +7,9 @@ Sentry.init({
   dsn: SENTRY_DSN,
   tracesSampleRate: 0.2,
   release: process.env.APP_VERSION,
-  environment: process.env.APP_ENV
+  environment: process.env.APP_ENV,
+  beforeSend (event) {
+    console.log(event)
+    return event
+  }
 })

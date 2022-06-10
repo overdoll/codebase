@@ -183,6 +183,13 @@ class NodeGateway extends ApolloGateway {
       return new LocalGraphQLDataSource(this.nodeSchema)
     }
 
+    const targetEnv = serviceDef.name.toUpperCase() + '_SERVICE_URL'
+    const overrideUrl = process.env[targetEnv]
+
+    if (overrideUrl != null && overrideUrl !== '') {
+      serviceDef.url = overrideUrl
+    }
+
     // @ts-expect-error
     return super.createDataSource(serviceDef)
   }
@@ -317,17 +324,19 @@ void (async () => {
     logger: logger,
     autoLogging: false
   }))
-  
-  app.use(PATH, cors({
-    origin: [
-      // @ts-expect-error
-      process.env.APP_URL,
-      'https://studio.apollographql.com'
-    ],
-    credentials: true,
-    methods: ['OPTIONS', 'POST'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-overdoll-Security']
-  }))
+
+  if (process.env.APP_ENV !== 'production') {
+    app.use(PATH, cors({
+      origin: [
+        // @ts-expect-error
+        process.env.APP_URL,
+        'https://studio.apollographql.com'
+      ],
+      credentials: true,
+      methods: ['OPTIONS', 'POST'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-overdoll-Security']
+    }))
+  }
 
   app.use(PATH, matchQueryMiddleware)
 
