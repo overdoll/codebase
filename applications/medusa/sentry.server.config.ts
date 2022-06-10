@@ -9,7 +9,6 @@ Sentry.init({
   release: process.env.APP_VERSION,
   environment: process.env.APP_ENV,
   beforeSend (event) {
-    console.log(event)
     return event
   }
 })
