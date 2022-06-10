@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "clients",
     srcs = [
+        "base.go",
         "carrier.go",
         "eva.go",
         "hades.go",
@@ -27,8 +28,10 @@ go_library(
         "//libraries/errors",
         "//libraries/passport",
         "//libraries/sentry_support",
+        "//libraries/support",
         "//libraries/temporal_support",
         "//libraries/zap_support/zap_adapters",
+        "@com_github_grpc_ecosystem_go_grpc_middleware//logging/zap",
         "@com_github_grpc_ecosystem_go_grpc_middleware//retry",
         "@io_temporal_go_sdk//client",
         "@io_temporal_go_sdk//workflow",

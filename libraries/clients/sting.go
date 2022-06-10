@@ -2,10 +2,12 @@ package clients
 
 import (
 	"context"
+	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	"go.uber.org/zap"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/sentry_support"
+	"overdoll/libraries/support"
 	"time"
 
 	grpc_retry "github.com/grpc-ecosystem/go-grpc-middleware/retry"
@@ -20,8 +22,27 @@ func NewStingClient(ctx context.Context, address string) (sting.StingClient, fun
 		grpc_retry.WithCodes(codes.Aborted, codes.Unavailable),
 	}
 
+	// only enable zap logging in production since it can get quite verbose
+	if !support.IsDebug() {
+		grpc_zap.ReplaceGrpcLoggerV2(zap.L())
+	}
+
+	logUnaryInterceptor := blankUnaryClientInterceptor()
+
+	if !support.IsDebug() {
+		logUnaryInterceptor = grpc_zap.UnaryClientInterceptor(zap.L())
+	}
+
+	logStreamInterceptor := blankStreamClientInterceptor()
+
+	if !support.IsDebug() {
+		logStreamInterceptor = grpc_zap.StreamClientInterceptor(zap.L())
+	}
+
 	stingConnection, err := grpc.DialContext(ctx, address,
 		grpc.WithInsecure(),
+		grpc.WithStreamInterceptor(logStreamInterceptor),
+		grpc.WithUnaryInterceptor(logUnaryInterceptor),
 		grpc.WithStreamInterceptor(grpc_retry.StreamClientInterceptor(opts...)),
 		grpc.WithUnaryInterceptor(grpc_retry.UnaryClientInterceptor(opts...)),
 		grpc.WithUnaryInterceptor(sentry_support.UnaryClientInterceptor()),
