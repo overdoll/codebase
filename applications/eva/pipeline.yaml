@@ -43,5 +43,5 @@ steps:
 
   publish_image:
     copy:
-      - from_repo: carrier/dev
-        to_repo: carrier
+      - from_repo: eva/dev
+        to_repo: eva
