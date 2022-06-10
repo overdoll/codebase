@@ -7,7 +7,7 @@ describe('Pages', () => {
 
   it('go to the invite only page as not logged in', () => {
     cy.visit('/clubs/invite-only')
-    cy.findByText(/overdoll is invite-only/iu)
+    cy.findAllByText(/overdoll is invite-only/iu)
   })
 
   it('go to the clubs discover page as not logged in', () => {
