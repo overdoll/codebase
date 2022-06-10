@@ -317,7 +317,7 @@ void (async () => {
     logger: logger,
     autoLogging: false
   }))
-
+  
   app.use(PATH, cors({
     origin: [
       // @ts-expect-error
