@@ -257,8 +257,7 @@ def execute_unit_test_commands(configs):
 def execute_build_commands_custom(configs):
     cwd = os.getcwd()
 
-    # is_production = os.getenv("BUILDKITE_BRANCH") == "master"
-    is_production = True
+    is_production = os.getenv("BUILDKITE_BRANCH") == "master"
 
     workdir = configs.get("build", {}).get("workdir", None)
 
