@@ -36,6 +36,6 @@ export default function ClubSlug (): Joi.Schema {
       'string.min': i18n._(t`The club link must be at least 3 characters`),
       'string.max': i18n._(t`The club link cannot exceed 15 characters`),
       'string.pattern.base': i18n._(t`The club link can only contain numbers and letters.`),
-      'any.invalid': i18n._(t`Sorry, this keyword is reserved and you cannot use it.`),
+      'any.invalid': i18n._(t`Sorry, this keyword is reserved and you cannot use it.`)
     })
 }

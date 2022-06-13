@@ -2,7 +2,7 @@ import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import { usePaginationFragment } from 'react-relay'
 import {
   StaffSearchAudiencesQuery,
-  StaffSearchAudiencesQuery$variables,
+  StaffSearchAudiencesQuery$variables
 } from '@//:artifacts/StaffSearchAudiencesQuery.graphql'
 import removeNode from '@//:modules/support/removeNode'
 import { AudienceTileOverlay, LinkTile, LoadMoreStackTile, StackTile } from '@//:modules/content/ContentSelection'
