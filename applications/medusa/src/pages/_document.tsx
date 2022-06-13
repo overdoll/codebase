@@ -7,6 +7,10 @@ export default function Document (): JSX.Element {
   return (
     <Html>
       <Head>
+        <meta
+          name='description'
+          content='overdoll is a site where artists can post digital adult content and earn subscription revenue from fans.'
+        />
         <FaviconComponent />
       </Head>
       <body>

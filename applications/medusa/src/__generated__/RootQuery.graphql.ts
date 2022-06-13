@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<aea1cc49f8914c8378a70c1b91094a20>>
- * @relayHash b8645ebeeef49e7cb3157a41917a790d
+ * @generated SignedSource<<af6e4694e4aa70847088630dfd85784c>>
+ * @relayHash bdd1ff8d3c1b8d88379aae8e276cc11f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b8645ebeeef49e7cb3157a41917a790d
+// @relayRequestID bdd1ff8d3c1b8d88379aae8e276cc11f
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -104,6 +104,20 @@ return {
           {
             "alias": null,
             "args": null,
+            "kind": "ScalarField",
+            "name": "reference",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "username",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "AccountLock",
             "kind": "LinkedField",
             "name": "lock",
@@ -140,13 +154,6 @@ return {
             "args": null,
             "kind": "ScalarField",
             "name": "isArtist",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "username",
             "storageKey": null
           },
           {
@@ -215,7 +222,7 @@ return {
     ]
   },
   "params": {
-    "id": "b8645ebeeef49e7cb3157a41917a790d",
+    "id": "bdd1ff8d3c1b8d88379aae8e276cc11f",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
