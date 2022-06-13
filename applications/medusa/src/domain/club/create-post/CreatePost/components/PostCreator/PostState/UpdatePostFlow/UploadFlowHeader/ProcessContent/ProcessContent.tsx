@@ -2,7 +2,7 @@ import type { ProcessContentFragment$key } from '@//:artifacts/ProcessContentFra
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import RefreshProcessContent from './RefreshProcessContent/RefreshProcessContent'
-import { Suspense, useEffect } from 'react'
+import { Suspense, useEffect, useRef } from 'react'
 import { Collapse } from '@chakra-ui/react'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
@@ -34,6 +34,8 @@ export default function ProcessContent ({
 
   const { state } = useSequenceContext()
 
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
   const {
     searchArguments,
     loadQuery
@@ -44,13 +46,21 @@ export default function ProcessContent ({
   })
 
   useEffect(() => {
-    if (state.isProcessing === false) return
-    const refreshLoop = (): void => {
-      loadQuery()
-      setTimeout(refreshLoop, 5000)
+    if (state.isProcessing === false) {
+      if (timeoutRef.current != null) {
+        clearTimeout(timeoutRef.current)
+        timeoutRef.current = null
+      }
+
+      return
     }
 
-    setTimeout(refreshLoop, 5000)
+    const refreshLoop = (): void => {
+      loadQuery()
+      timeoutRef.current = setTimeout(refreshLoop, 5000)
+    }
+
+    timeoutRef.current = setTimeout(refreshLoop, 5000)
   }, [state.isProcessing])
 
   return (

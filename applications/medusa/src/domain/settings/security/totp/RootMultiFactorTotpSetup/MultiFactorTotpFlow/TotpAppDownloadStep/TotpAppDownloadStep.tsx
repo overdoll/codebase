@@ -20,7 +20,7 @@ export default function TotpAppDownloadStep (): JSX.Element {
         </Text>
       </Box>
       <Stack spacing={2}>
-        <PagePanelWrap isExternal href='support.google.com/accounts/answer/1066447'>
+        <PagePanelWrap isExternal href='https://support.google.com/accounts/answer/1066447'>
           <PagePanelIcon icon={MobilePhone} colorScheme='gray' />
           <PagePanelText
             title={
@@ -31,7 +31,7 @@ export default function TotpAppDownloadStep (): JSX.Element {
             )}
           />
         </PagePanelWrap>
-        <PagePanelWrap isExternal href='authy.com/features/setup/'>
+        <PagePanelWrap isExternal href='https://authy.com/features/setup/'>
           <PagePanelIcon icon={MobilePhone} colorScheme='gray' />
           <PagePanelText
             title={

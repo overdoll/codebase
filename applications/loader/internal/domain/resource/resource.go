@@ -249,7 +249,9 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 			Output: *new([]byte),
 		}
 
-		if err := ffmpeg_go.Input(file.Name()).
+		if err := ffmpeg_go.Input(file.Name(), map[string]interface{}{
+			"f": "'mp4'",
+		}).
 			Filter("select", ffmpeg_go.Args{fmt.Sprintf("gte(n,%d)", 5)}).
 			Output("pipe:", ffmpeg_go.KwArgs{"vframes": 1, "format": "image2", "vcodec": "png"}).
 			WithErrorOutput(log).
@@ -266,7 +268,9 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 			remoteUrlTarget: r.itemId + "/" + videoThumb + ".png",
 		})
 
-		str, err := ffmpeg_go.Probe(file.Name())
+		str, err := ffmpeg_go.Probe(file.Name(), map[string]interface{}{
+			"f": "'mp4'",
+		})
 
 		if err != nil {
 			return nil, err

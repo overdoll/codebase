@@ -31,7 +31,7 @@ func (a *Application) GetDeviceDataFromRequest(req *http.Request) (string, strin
 	c, err := req.Cookie(deviceCookieName)
 
 	if err == nil {
-		if err := a.Cookie.Decode(deviceCookieName, c.Value, &deviceId); err != nil {
+		if err := a.Cookie.Decode(deviceCookieName, c.Value, &deviceId); err != nil && err != securecookie.ErrMacInvalid {
 			return "", "", "", errors.Wrap(err, "failed to decode cookie")
 		}
 	}
@@ -60,17 +60,20 @@ func (a *Application) GetSessionDataFromRequest(req *http.Request) (string, stri
 	var accountId string
 
 	if err == nil {
-		if err := a.Cookie.Decode(sessionCookieName, c.Value, &sessionId); err != nil {
+		if err := a.Cookie.Decode(sessionCookieName, c.Value, &sessionId); err != nil && err != securecookie.ErrMacInvalid {
 			return "", "", errors.Wrap(err, "failed to decode cookie")
 		}
-		valid, currentAccountId, err := a.Repository.GetSession(req.Context(), sessionId)
 
-		if err != nil {
-			return "", "", err
-		}
+		if sessionId != "" {
+			valid, currentAccountId, err := a.Repository.GetSession(req.Context(), sessionId)
 
-		if valid {
-			accountId = currentAccountId
+			if err != nil {
+				return "", "", err
+			}
+
+			if valid {
+				accountId = currentAccountId
+			}
 		}
 	}
 
