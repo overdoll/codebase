@@ -16,5 +16,9 @@ func NewBootstrap() {
 
 	zap.ReplaceGlobals(logger)
 
+	// only show errors
+	// disable for now  - this is too verbose
+	//grpc_zap.ReplaceGrpcLoggerV2WithVerbosity(logger, int(zapcore.ErrorLevel))
+
 	sentry_support.SentryInit()
 }

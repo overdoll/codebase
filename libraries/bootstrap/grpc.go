@@ -2,7 +2,6 @@ package bootstrap
 
 import (
 	"context"
-	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	"go.uber.org/zap"
 	"net"
 	"os"
@@ -10,7 +9,6 @@ import (
 	"overdoll/libraries/errors"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/sentry_support"
-	"overdoll/libraries/support"
 	"syscall"
 	"time"
 
@@ -22,35 +20,16 @@ import (
 
 func InitializeGRPCServer(addr string, f func(server *grpc.Server)) {
 
-	// only enable zap logging in production since it can get quite verbose
-	if !support.IsDebug() {
-		grpc_zap.ReplaceGrpcLoggerV2(zap.L())
-	}
-
-	logUnaryInterceptor := BlankUnaryServerInterceptor()
-
-	if !support.IsDebug() {
-		logUnaryInterceptor = grpc_zap.UnaryServerInterceptor(zap.L())
-	}
-
-	logStreamInterceptor := BlankStreamServerInterceptor()
-
-	if !support.IsDebug() {
-		logStreamInterceptor = grpc_zap.StreamServerInterceptor(zap.L())
-	}
-
 	grpcServer := grpc.NewServer(
 		grpc_middleware.WithUnaryServerChain(
 			grpc_ctxtags.UnaryServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)),
 			sentry_support.UnaryServerInterceptor(),
 			passport.UnaryServerInterceptor(),
-			logUnaryInterceptor,
 		),
 		grpc_middleware.WithStreamServerChain(
 			grpc_ctxtags.StreamServerInterceptor(grpc_ctxtags.WithFieldExtractor(grpc_ctxtags.CodeGenRequestFieldExtractor)),
 			sentry_support.StreamServerInterceptor(),
 			passport.StreamServerInterceptor(),
-			logStreamInterceptor,
 		),
 	)
 
@@ -89,16 +68,4 @@ func InitializeGRPCServer(addr string, f func(server *grpc.Server)) {
 
 	<-ctx.Done()
 	os.Exit(0)
-}
-
-func BlankUnaryServerInterceptor() grpc.UnaryServerInterceptor {
-	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
-		return handler(ctx, req)
-	}
-}
-
-func BlankStreamServerInterceptor() grpc.StreamServerInterceptor {
-	return func(srv interface{}, stream grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
-		return handler(srv, stream)
-	}
 }
