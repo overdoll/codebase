@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2022-04-12 12:04-0400\n"
+"POT-Creation-Date: 2022-06-13 18:09-0400\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -29,10 +29,6 @@ msgstr ""
 msgid "Are you sure you'd like to delete this post? You cannot undo this action and it will be gone forever."
 msgstr ""
 
-#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:76
-#~ msgid "Audiences"
-#~ msgstr ""
-
 #: src/common/components/Layouts/ModerationLayout/ModerationLayout.tsx:34
 msgid "Audit Logs"
 msgstr ""
@@ -56,22 +52,6 @@ msgstr ""
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:117
 msgid "Cancel"
 msgstr ""
-
-#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:112
-#~ msgid "Cancellation Reasons"
-#~ msgstr ""
-
-#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:58
-#~ msgid "Categories"
-#~ msgstr ""
-
-#: src/domain/root/Root/UniversalNavigator/AlternativeMenu/LanguageManager/LanguageManager.tsx:78
-#~ msgid "Changing to your preferred language..."
-#~ msgstr ""
-
-#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:22
-#~ msgid "Characters"
-#~ msgstr ""
 
 #: src/modules/content/HookedComponents/Search/components/SearchInput/SearchInput.tsx:52
 msgid "Clear Search"
@@ -102,10 +82,6 @@ msgstr ""
 msgid "Club was terminated by {0}. Goodbye."
 msgstr ""
 
-#: src/domain/root/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:107
-#~ msgid "Content Moderation"
-#~ msgstr ""
-
 #: src/modules/hooks/useCopyToClipboardWrapper.ts:23
 msgid "Copied to clipboard!"
 msgstr ""
@@ -118,43 +94,17 @@ msgstr ""
 msgid "Copy Link"
 msgstr ""
 
-#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:83
-#~ msgid "Create Audience"
-#~ msgstr ""
-
-#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:119
-#~ msgid "Create Cancellation Reason"
-#~ msgstr ""
-
-#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:65
-#~ msgid "Create Category"
-#~ msgstr ""
-
-#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:29
-#~ msgid "Create Character"
-#~ msgstr ""
-
-#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:101
-#~ msgid "Create Rule"
-#~ msgstr ""
-
-#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:47
-#~ msgid "Create Series"
-#~ msgstr ""
-
-#: src/domain/root/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonClub/DropdownMenuButtonClub.tsx:35
-#: src/domain/root/Root/UniversalNavigator/MainMenu/MainMenuButtonCreatePost/MainMenuButtonCreatePost.tsx:41
-#~ msgid "Create a Club"
-#~ msgstr ""
-
 #: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:82
 msgid "Create a Post"
 msgstr ""
 
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:88
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:102
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:129
 msgid "Delete Post"
+msgstr ""
+
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:102
+msgid "Delete Post Confirmation"
 msgstr ""
 
 #: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:35
@@ -165,17 +115,9 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
-#: src/modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload.tsx:130
+#: src/modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload.tsx:131
 msgid "Drag and drop or tap to upload"
 msgstr ""
-
-#: src/domain/root/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:71
-#~ msgid "Dropdown Menu"
-#~ msgstr ""
-
-#: src/domain/root/Root/NoScript/NoScript.tsx:23
-#~ msgid "Enable JavaScript"
-#~ msgstr ""
 
 #: src/modules/content/DataDisplay/NextImage/ImageError/ImageError.tsx:11
 msgid "Error Loading Image"
@@ -187,6 +129,10 @@ msgstr ""
 
 #: src/modules/content/Placeholder/Fallback/ErrorFallback/ErrorFallback.tsx:35
 msgid "Error {0}"
+msgstr ""
+
+#: src/modules/operations/ErrorBoundary.tsx:60
+msgid "Error: {0}"
 msgstr ""
 
 #: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContent.tsx:51
@@ -201,16 +147,6 @@ msgstr ""
 msgid "Go Back"
 msgstr ""
 
-#: src/domain/root/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonProfile/DropdownMenuButtonProfile.tsx:53
-#: src/domain/root/Root/UniversalNavigator/AlternativeMenu/QuickAccessButtonProfile/QuickAccessButtonProfile.tsx:28
-#~ msgid "Go to my profile"
-#~ msgstr ""
-
-#: src/domain/root/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:64
-#: src/domain/root/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:136
-#~ msgid "Help"
-#~ msgstr ""
-
 #: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:94
 #: src/modules/content/Placeholder/NotFound/NotFoundFooter/NotFoundFooter.tsx:22
 msgid "Home"
@@ -223,15 +159,6 @@ msgstr ""
 #: src/common/components/AccountInformationBanner/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:102
 msgid "I promise to be better and to follow the community guidelines more closely"
 msgstr ""
-
-#: src/domain/root/Root/NoScript/NoScript.tsx:28
-#~ msgid "In order for the platform to function correctly, JavaScript must be enabled in your browser. Please enable it and refresh the page."
-#~ msgstr ""
-
-#: src/domain/root/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:51
-#: src/domain/root/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:80
-#~ msgid "Join"
-#~ msgstr ""
 
 #: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:53
 msgid "Last Month"
@@ -274,10 +201,6 @@ msgstr ""
 msgid "Locked for {remaining}"
 msgstr ""
 
-#: src/domain/root/Root/UniversalNavigator/AlternativeMenu/AlternativeMenu.tsx:147
-#~ msgid "Log Out"
-#~ msgstr ""
-
 #: src/common/components/AccountInformationBanner/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:75
 #: src/common/components/ClubInformationBanner/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:75
 msgid "Looks like you messed up. Something you did here violated our community guidelines. If you keep this up, the bans will become longer."
@@ -308,14 +231,6 @@ msgstr ""
 msgid "Moderation"
 msgstr ""
 
-#: src/domain/root/Root/UniversalNavigator/MainMenu/MainMenu.tsx:25
-#~ msgid "My Clubs"
-#~ msgstr ""
-
-#: src/domain/root/Root/UniversalNavigator/AlternativeMenu/DropdownMenuButtonProfile/DropdownMenuButtonProfile.tsx:73
-#~ msgid "My Profile"
-#~ msgstr ""
-
 #: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderNextButton/FlowBuilderNextButton.tsx:29
 msgid "Next"
 msgstr ""
@@ -329,20 +244,25 @@ msgid "No audiences were found{0}"
 msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyCategories/EmptyCategories.tsx:10
-msgid "No categories were found{0}"
-msgstr ""
+#~ msgid "No categories were found{0}"
+#~ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyGeneralSearch/EmptyGeneralSearch.tsx:10
-msgid "No categories, characters, or series were found{0}"
-msgstr ""
+#~ msgid "No categories, characters, or series were found{0}"
+#~ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyCharacters/EmptyCharacters.tsx:10
-msgid "No characters were found{0}"
-msgstr ""
+#~ msgid "No characters were found{0}"
+#~ msgstr ""
 
-#: src/modules/content/Placeholder/Empty/EmptyClubs/EmptyClubs.tsx:10
-msgid "No clubs were found{0}"
-msgstr ""
+#: src/modules/content/Placeholder/Empty/EmptyClubs/EmptyClubs.tsx:5
+#~ msgid "No clubs were found"
+#~ msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyClubs/EmptyClubs.tsx:7
+#: src/modules/content/Placeholder/Empty/EmptyClubs/EmptyClubs.tsx:13
+#~ msgid "No clubs were found with the name {hint}"
+#~ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyPaymentMethods/EmptyPaymentMethods.tsx:7
 msgid "No payment methods found"
@@ -356,17 +276,13 @@ msgstr ""
 msgid "No payouts were found"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/PostsInfiniteScroll.tsx:71
-#~ msgid "No posts found"
-#~ msgstr ""
-
 #: src/modules/content/Placeholder/Empty/EmptyRules/EmptyRules.tsx:7
 msgid "No rules were found"
 msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptySeries/EmptySeries.tsx:10
-msgid "No series were found{0}"
-msgstr ""
+#~ msgid "No series were found{0}"
+#~ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptySubscriptions/EmptySubscriptions.tsx:7
 msgid "No subscriptions were found"
@@ -467,7 +383,7 @@ msgid "Post was archived successfully"
 msgstr ""
 
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:71
-msgid "Post was removed successfully"
+msgid "Post was deleted successfully"
 msgstr ""
 
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostUnArchiveButton/PostUnArchiveButton.tsx:50
@@ -490,17 +406,21 @@ msgstr ""
 msgid "Profile"
 msgstr ""
 
-#: src/modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload.tsx:155
+#: src/modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload.tsx:157
 msgid "Remove Upload"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:146
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:153
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:154
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:173
 msgid "Report Post"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:167
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:192
 msgid "Report post"
+msgstr ""
+
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:164
+msgid "Reported"
 msgstr ""
 
 #: src/modules/content/Placeholder/Fallback/ErrorFallback/ErrorFallback.tsx:54
@@ -512,38 +432,10 @@ msgstr ""
 msgid "Revenue"
 msgstr ""
 
-#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:94
-#~ msgid "Rules"
-#~ msgstr ""
-
 #: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderSaveButton/FlowBuilderSaveButton.tsx:13
 #: src/modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/GeneralSearch/SearchChoices/SaveGeneralSearchButton/SaveGeneralSearchButton.tsx:91
 msgid "Save"
 msgstr ""
-
-#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:89
-#~ msgid "Search Audiences"
-#~ msgstr ""
-
-#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:125
-#~ msgid "Search Cancellation Reasons"
-#~ msgstr ""
-
-#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:71
-#~ msgid "Search Categories"
-#~ msgstr ""
-
-#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:35
-#~ msgid "Search Characters"
-#~ msgstr ""
-
-#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:107
-#~ msgid "Search Rules"
-#~ msgstr ""
-
-#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:53
-#~ msgid "Search Series"
-#~ msgstr ""
 
 #: src/modules/content/HookedComponents/Form/FormInput/Inputs/SeriesInput/SelectSeriesButton/SelectSeriesButton.tsx:111
 msgid "Search for a series"
@@ -577,10 +469,6 @@ msgstr ""
 msgid "Select a series"
 msgstr ""
 
-#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:40
-#~ msgid "Series"
-#~ msgstr ""
-
 #: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:138
 msgid "Settings"
 msgstr ""
@@ -601,7 +489,7 @@ msgstr ""
 msgid "Sorry, this username is already taken"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:195
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:220
 msgid "Submit Report"
 msgstr ""
 
@@ -662,10 +550,10 @@ msgid "There was an error archiving the post"
 msgstr ""
 
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:78
-msgid "There was an error removing the post"
+msgid "There was an error deleting the post"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:134
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:143
 msgid "There was an error submitting the report"
 msgstr ""
 
@@ -800,9 +688,42 @@ msgstr ""
 msgid "Your club has been un-suspended"
 msgstr ""
 
-#: src/domain/root/Root/UniversalNavigator/SiteLinkLogo/SiteLinkLogo.tsx:17
-#~ msgid "overdoll"
+#: src/modules/content/Placeholder/Empty/EmptyClubs/EmptyClubs.tsx:7
+#~ msgid "message.empty_clubs"
 #~ msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyCategories/EmptyCategories.tsx:6
+msgid "message.placeholder.empty.categories.one"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyCategories/EmptyCategories.tsx:9
+msgid "message.placeholder.empty.categories.other"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyCharacters/EmptyCharacters.tsx:6
+msgid "message.placeholder.empty.characters.one"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyCharacters/EmptyCharacters.tsx:9
+msgid "message.placeholder.empty.characters.other"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyClubs/EmptyClubs.tsx:7
+#: src/modules/content/Placeholder/Empty/EmptyGeneralSearch/EmptyGeneralSearch.tsx:7
+msgid "message.placeholder.empty.clubs.one"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyGeneralSearch/EmptyGeneralSearch.tsx:13
+msgid "message.placeholder.empty.clubs.other"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptySeries/EmptySeries.tsx:6
+msgid "message.placeholder.empty.series.one"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptySeries/EmptySeries.tsx:9
+msgid "message.placeholder.empty.series.other"
+msgstr ""
 
 #: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:78
 msgid "{0}"

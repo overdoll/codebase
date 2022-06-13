@@ -34,8 +34,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/home/RootHome/CurationProfileAlert/CurationProfileAlert.tsx:85
-msgid "No thanks"
-msgstr ""
+#~ msgid "No thanks"
+#~ msgstr ""
 
 #: src/domain/home/RootHome/LockedAccount/LockedAccountTrigger/LockedAccountButton/LockedAccountButton.tsx:38
 #~ msgid "Open Lock Info"
@@ -53,11 +53,11 @@ msgstr ""
 #~ msgid "Set up profile"
 #~ msgstr ""
 
-#: src/domain/home/RootHome/CurationProfileAlert/CurationProfileAlert.tsx:63
+#: src/domain/home/RootHome/CurationProfileAlert/CurationProfileAlert.tsx:57
 msgid "Set up your curation profile so we can show you personalized content"
 msgstr ""
 
-#: src/domain/home/RootHome/CurationProfileAlert/CurationProfileAlert.tsx:75
+#: src/domain/home/RootHome/CurationProfileAlert/CurationProfileAlert.tsx:69
 msgid "Setup"
 msgstr ""
 

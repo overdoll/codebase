@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { Component } from 'react'
 import * as Sentry from '@sentry/nextjs'
 import shouldCaptureError from './shouldCaptureError'
+import { Trans } from '@lingui/macro'
 
 interface PossibleActions {
   error: Error
@@ -56,7 +57,7 @@ export default class ErrorBoundary extends Component<Props, State> {
 
       return (
         <div>
-          <div>Error: {this.state.error.message}</div>
+          <div><Trans>Error: {this.state.error.message}</Trans></div>
           <div>
             <pre>{JSON.stringify(this.state.error.stack, null, 2)}</pre>
           </div>

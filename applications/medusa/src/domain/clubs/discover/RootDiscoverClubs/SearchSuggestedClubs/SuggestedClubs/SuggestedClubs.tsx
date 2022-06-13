@@ -63,7 +63,7 @@ export default function SuggestedClubs ({
     <>
       <EmptyBoundary
         fallback={
-          <EmptyClubs />
+          <EmptyClubs hint={searchArguments.variables.search} />
         }
         condition={data.clubs.edges.length < 1}
       >

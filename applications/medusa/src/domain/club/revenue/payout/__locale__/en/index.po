@@ -14,6 +14,10 @@ msgstr ""
 "Plural-Forms: \n"
 
 #: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:110
+msgid "A cover fee amount of {coverFeeAmount} will be added to the payout to cover any charges you may incur for receiving the payout"
+msgstr ""
+
+#: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:125
 msgid "All of the payments that are associated with this payout."
 msgstr ""
 
@@ -21,34 +25,34 @@ msgstr ""
 msgid "Back to Revenue"
 msgstr ""
 
-#: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:105
+#: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:120
 msgid "Payments"
 msgstr ""
 
-#: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:73
+#: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:80
 msgid "Payout Amount"
 msgstr ""
 
-#: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:53
+#: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:54
 msgid "The payout is processing and will be deposited shortly."
 msgstr ""
 
-#: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:54
+#: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:55
 msgid "The payout is ready and will be processed on the standard payout schedule."
 msgstr ""
 
-#: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:50
+#: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:51
 msgid "The payout was cancelled. The next payout will occur on the standard payout schedule."
 msgstr ""
 
-#: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:52
+#: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:53
 msgid "The payout was not deposited. We will retry a few more times to deposit to your preferred payout method before cancelling the payout."
 msgstr ""
 
-#: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:51
+#: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:52
 msgid "The payout was successfully deposited into your preferred payout method."
 msgstr ""
 
-#: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:95
+#: src/domain/club/revenue/payout/RootClubPayout/ClubPayout/ClubPayout.tsx:102
 msgid "The payout will be attempted for deposit to your preferred payout method on this date"
 msgstr ""

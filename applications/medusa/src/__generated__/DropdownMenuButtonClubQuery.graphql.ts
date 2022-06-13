@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3d1a99ac0a117becd8c718c1fafa25c0>>
- * @relayHash 6de2dd83725cb0b53995e46f89a3bb02
+ * @generated SignedSource<<a46b6c62e63455dda0375f03c8698ecb>>
+ * @relayHash 2ca60b38a60ef773732b233c435d8fce
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6de2dd83725cb0b53995e46f89a3bb02
+// @relayRequestID 2ca60b38a60ef773732b233c435d8fce
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type DropdownMenuButtonClubQuery$variables = {};
@@ -33,28 +33,67 @@ export type DropdownMenuButtonClubQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "kind": "Literal",
-    "name": "first",
-    "value": 1
-  }
-],
-v1 = {
+var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v2 = {
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "slug",
   "storageKey": null
 },
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
+},
 v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "cursor",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "PageInfo",
+  "kind": "LinkedField",
+  "name": "pageInfo",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "endCursor",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "hasNextPage",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v5 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 1
+  }
+],
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -77,11 +116,11 @@ return {
         "plural": false,
         "selections": [
           {
-            "alias": null,
-            "args": (v0/*: any*/),
+            "alias": "clubs",
+            "args": null,
             "concreteType": "ClubConnection",
             "kind": "LinkedField",
-            "name": "clubs",
+            "name": "__CreateClubListener_clubs_connection",
             "plural": false,
             "selections": [
               {
@@ -100,16 +139,19 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
+                      (v0/*: any*/),
                       (v1/*: any*/),
                       (v2/*: any*/)
                     ],
                     "storageKey": null
-                  }
+                  },
+                  (v3/*: any*/)
                 ],
                 "storageKey": null
-              }
+              },
+              (v4/*: any*/)
             ],
-            "storageKey": "clubs(first:1)"
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -134,7 +176,7 @@ return {
         "selections": [
           {
             "alias": null,
-            "args": (v0/*: any*/),
+            "args": (v5/*: any*/),
             "concreteType": "ClubConnection",
             "kind": "LinkedField",
             "name": "clubs",
@@ -156,27 +198,51 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
+                      (v0/*: any*/),
                       (v1/*: any*/),
-                      (v2/*: any*/),
-                      (v3/*: any*/)
+                      (v6/*: any*/),
+                      (v2/*: any*/)
                     ],
                     "storageKey": null
-                  }
+                  },
+                  (v3/*: any*/)
                 ],
                 "storageKey": null
-              }
+              },
+              (v4/*: any*/)
             ],
             "storageKey": "clubs(first:1)"
           },
-          (v3/*: any*/)
+          {
+            "alias": null,
+            "args": (v5/*: any*/),
+            "filters": null,
+            "handle": "connection",
+            "key": "CreateClubListener_clubs",
+            "kind": "LinkedHandle",
+            "name": "clubs"
+          },
+          (v6/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "6de2dd83725cb0b53995e46f89a3bb02",
-    "metadata": {},
+    "id": "2ca60b38a60ef773732b233c435d8fce",
+    "metadata": {
+      "connection": [
+        {
+          "count": null,
+          "cursor": null,
+          "direction": "forward",
+          "path": [
+            "viewer",
+            "clubs"
+          ]
+        }
+      ]
+    },
     "name": "DropdownMenuButtonClubQuery",
     "operationKind": "query",
     "text": null
@@ -184,6 +250,6 @@ return {
 };
 })();
 
-(node as any).hash = "b102acde679f886bf34cc0a044c25bd0";
+(node as any).hash = "e592ab38aef2e71a3c59d3b0a6981d3d";
 
 export default node;
