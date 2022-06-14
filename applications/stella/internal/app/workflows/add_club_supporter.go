@@ -1,7 +1,6 @@
 package workflows
 
 import (
-	"go.temporal.io/api/common/v1"
 	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/stella/internal/app/workflows/activities"
@@ -45,8 +44,6 @@ func AddClubSupporter(ctx workflow.Context, input AddClubSupporterInput) error {
 
 		childCtx := workflow.WithChildOptions(ctx, childWorkflowOptions)
 
-		var childWE common.WorkflowExecution
-
 		if err := workflow.ExecuteChildWorkflow(childCtx, AddClubMember,
 			AddClubMemberInput{
 				ClubId:    input.ClubId,
@@ -54,7 +51,7 @@ func AddClubSupporter(ctx workflow.Context, input AddClubSupporterInput) error {
 			},
 		).
 			GetChildWorkflowExecution().
-			Get(childCtx, &childWE); err != nil {
+			Get(childCtx, nil); err != nil {
 			logger.Error("failed to add club member", "Error", err)
 			return err
 		}
