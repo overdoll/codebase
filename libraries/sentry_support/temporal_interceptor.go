@@ -7,6 +7,7 @@ import (
 	"go.temporal.io/sdk/activity"
 	"go.temporal.io/sdk/converter"
 	"go.temporal.io/sdk/interceptor"
+	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/libraries/errors"
 	"strconv"
@@ -33,6 +34,11 @@ func recoverWithTemporalHub(hub *sentry.Hub) {
 }
 
 func captureTemporalExceptionAndFlush(hub *sentry.Hub, err error) {
+
+	// ignore cancellation error
+	if temporal.IsCanceledError(err) {
+		return
+	}
 
 	if err != nil && hub != nil {
 		hub.CaptureException(err)

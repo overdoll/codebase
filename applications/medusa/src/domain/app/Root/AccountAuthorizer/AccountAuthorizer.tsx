@@ -3,6 +3,7 @@ import { AbilityContext } from '@//:modules/authorization/AbilityContext'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { AccountAuthorizerFragment$key } from '@//:artifacts/AccountAuthorizerFragment.graphql'
 import defineAbility from '@//:modules/authorization/defineAbility'
+import * as Sentry from '@sentry/nextjs'
 
 interface Props {
   children: ReactNode
@@ -11,6 +12,8 @@ interface Props {
 
 const AccountAuthorizerGQL = graphql`
   fragment AccountAuthorizerFragment on Account {
+    reference
+    username
     lock {
       __typename
     }
@@ -40,6 +43,15 @@ export default function AccountAuthorizer ({
           }
         : null
     )), [data])
+
+  useMemo(() => {
+    if (data != null) {
+      Sentry.setUser({
+        username: data.username,
+        id: data.reference
+      })
+    }
+  }, [])
 
   return (
     <AbilityContext.Provider value={ability}>

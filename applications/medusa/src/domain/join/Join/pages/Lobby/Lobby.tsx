@@ -1,12 +1,11 @@
 import { graphql, useFragment } from 'react-relay/hooks'
-import { Suspense, useEffect } from 'react'
+import { Suspense, useEffect, useRef } from 'react'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { Box, Flex, Heading, Stack } from '@chakra-ui/react'
 import type { LobbyFragment$key } from '@//:artifacts/LobbyFragment.graphql'
 import { Trans } from '@lingui/macro'
 import Head from 'next/head'
 import { MailEnvelope } from '@//:assets/icons'
-import { Timeout } from '@//:types/components'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 
 import { QueryErrorBoundary } from '@//:modules/content/Placeholder'
@@ -29,12 +28,12 @@ const LobbyFragment = graphql`
   }
 `
 
-let timeout: null | Timeout = null
-
 export default function Lobby ({
   queryRef
 }: Props): JSX.Element {
   const data = useFragment(LobbyFragment, queryRef)
+
+  const timeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const [cookies] = useCookies<string>(['token'])
 
@@ -51,14 +50,15 @@ export default function Lobby ({
   useEffect(() => {
     const refreshLoop = (): void => {
       loadQuery()
-      timeout = setTimeout(refreshLoop, 2000)
+      timeout.current = setTimeout(refreshLoop, 2000)
     }
 
-    timeout = setTimeout(refreshLoop, 2000)
+    timeout.current = setTimeout(refreshLoop, 2000)
 
     return () => {
-      if (timeout != null) {
-        clearTimeout(timeout)
+      if (timeout.current != null) {
+        clearTimeout(timeout.current)
+        timeout.current = null
       }
     }
   }, [])

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d238fa78672ce15adaf7e0e7ddbe1280>>
+ * @generated SignedSource<<99b34fb9813e27cbbf41dc8b9400aa3c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,8 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type AccountAuthorizerFragment$data = {
+  readonly reference: string;
+  readonly username: string;
   readonly lock: {
     readonly __typename: string;
   } | null;
@@ -44,6 +46,20 @@ return {
   "metadata": null,
   "name": "AccountAuthorizerFragment",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "reference",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "username",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -91,6 +107,6 @@ return {
 };
 })();
 
-(node as any).hash = "e2d5b8c9aad5dada6aeb05d155aebb2c";
+(node as any).hash = "6439c6e84a42b7c5993480319fe23afd";
 
 export default node;

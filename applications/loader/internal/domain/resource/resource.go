@@ -245,17 +245,19 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 			return nil, err
 		}
 
-		log := &zap_adapters.FfmpegGoLogErrorAdapter{
+		ffmpegLogger := &zap_adapters.FfmpegGoLogErrorAdapter{
 			Output: *new([]byte),
 		}
 
-		if err := ffmpeg_go.Input(file.Name()).
+		if err := ffmpeg_go.Input(file.Name(), map[string]interface{}{
+			"f": "mp4",
+		}).
 			Filter("select", ffmpeg_go.Args{fmt.Sprintf("gte(n,%d)", 5)}).
 			Output("pipe:", ffmpeg_go.KwArgs{"vframes": 1, "format": "image2", "vcodec": "png"}).
-			WithErrorOutput(log).
+			WithErrorOutput(ffmpegLogger).
 			WithOutput(fileThumbnail).
 			Run(); err != nil {
-			zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(log.Output)))
+			zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(ffmpegLogger.Output)))
 			return nil, errors.Wrap(err, "failed to process ffmpeg_go file")
 		}
 
@@ -266,7 +268,9 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 			remoteUrlTarget: r.itemId + "/" + videoThumb + ".png",
 		})
 
-		str, err := ffmpeg_go.Probe(file.Name())
+		str, err := ffmpeg_go.Probe(file.Name(), map[string]interface{}{
+			"f": "mp4",
+		})
 
 		if err != nil {
 			return nil, err

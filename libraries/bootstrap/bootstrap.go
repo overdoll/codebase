@@ -1,6 +1,7 @@
 package bootstrap
 
 import (
+	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	"go.uber.org/zap"
 	"overdoll/libraries/sentry_support"
 	"overdoll/libraries/zap_support"
@@ -17,8 +18,7 @@ func NewBootstrap() {
 	zap.ReplaceGlobals(logger)
 
 	// only show errors
-	// disable for now  - this is too verbose
-	//grpc_zap.ReplaceGrpcLoggerV2WithVerbosity(logger, int(zapcore.ErrorLevel))
+	grpc_zap.ReplaceGrpcLoggerV2(logger.WithOptions(zap.IncreaseLevel(zap.WarnLevel)))
 
 	sentry_support.SentryInit()
 }

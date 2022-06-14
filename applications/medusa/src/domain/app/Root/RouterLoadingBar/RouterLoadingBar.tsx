@@ -37,6 +37,7 @@ export default function RouterLoadingBar (): JSX.Element {
       in={isOpen}
     >
       <Progress
+        aria-label='site progress bar'
         w='100%'
         top={0}
         right={0}

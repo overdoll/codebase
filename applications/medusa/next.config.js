@@ -1,7 +1,6 @@
 const { withSentryConfig } = require('@sentry/nextjs')
 const nextBuildId = require('next-build-id')
-const glob = require('glob')
-const { removeSync } = require('fs-extra')
+const { DefinePlugin } = require('webpack')
 
 const path = require('path')
 const securityHeaders = [
@@ -85,7 +84,13 @@ const moduleExports = withBundleAnalyzer({
     // also Next.js only shows 1 error at a time which is really annoying
     ignoreDuringBuilds: true
   },
-  webpack: (config) => {
+  webpack: (config, { buildId }) => {
+    config.plugins.push(
+      new DefinePlugin({
+        'process.env.NEXT_BUILD_ID': JSON.stringify(buildId)
+      })
+    )
+
     config.module.rules.push({
       test: /\.svg$/,
       use: ['@svgr/webpack']
@@ -111,12 +116,12 @@ const moduleExports = withBundleAnalyzer({
 let sentryConfig
 
 if (process.env.PRODUCTION_DEPLOYMENT != null) {
-  sentryConfig = withSentryConfig(moduleExports, { silent: true })
   moduleExports.sentry = {
     hideSourceMaps: true,
     setCommits: { auto: true }
   }
   moduleExports.assetPrefix = process.env.STATIC_ASSETS_URL
+  sentryConfig = withSentryConfig(moduleExports, { silent: true })
 } else {
   moduleExports.sentry = {
     disableServerWebpackPlugin: true,
