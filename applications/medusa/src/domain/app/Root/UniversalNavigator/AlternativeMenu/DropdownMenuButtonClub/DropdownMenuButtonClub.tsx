@@ -9,7 +9,7 @@ import { DropdownMenuButtonClubQuery } from '@//:artifacts/DropdownMenuButtonClu
 const Query = graphql`
   query DropdownMenuButtonClubQuery {
     viewer {
-      clubs(first: 1) {
+      clubs(first: 1) @connection(key: "CreateClubListener_clubs") {
         edges {
           node {
             name

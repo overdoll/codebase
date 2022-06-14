@@ -164,7 +164,7 @@ msgstr ""
 msgid "View Club"
 msgstr ""
 
-#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings/ManageCancelledSubscriptionButton/ManageCancelledSubscriptionButton.tsx:61
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings/ManageCancelledSubscriptionButton/ManageCancelledSubscriptionButton.tsx:58
 msgid "You can renew your benefits only after the subscription has fully expired from the club page."
 msgstr ""
 
@@ -180,6 +180,6 @@ msgstr ""
 msgid "{cancelledRemainingDays, plural, one {Benefits expire in # day} other {Benefits expire in # days}}"
 msgstr ""
 
-#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings/ManageCancelledSubscriptionButton/ManageCancelledSubscriptionButton.tsx:54
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionSettings/ManageCancelledSubscriptionButton/ManageCancelledSubscriptionButton.tsx:53
 msgid "{cancelledRemainingDays, plural, one {Your benefits will expire in # day.} other {Your benefits will expire in # days.}}"
 msgstr ""

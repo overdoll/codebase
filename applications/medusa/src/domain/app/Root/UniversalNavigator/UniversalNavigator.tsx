@@ -13,6 +13,7 @@ interface Props {
 
 const UniversalNavigatorGQL = graphql`
   fragment UniversalNavigatorFragment on Account {
+    id
     ...AlternativeMenuFragment
   }
 `
@@ -20,9 +21,9 @@ const UniversalNavigatorGQL = graphql`
 export default function UniversalNavigator ({ queryRef }: Props): JSX.Element {
   const data = useFragment(UniversalNavigatorGQL, queryRef)
 
-  const MainMenuMemo = useMemo(() => <MainMenu />, [data])
+  const MainMenuMemo = useMemo(() => <MainMenu />, [data?.id])
 
-  const AlternativeMenuMemo = useMemo(() => <AlternativeMenu queryRef={data} />, [data])
+  const AlternativeMenuMemo = useMemo(() => <AlternativeMenu queryRef={data} />, [data?.id])
 
   return (
     <>

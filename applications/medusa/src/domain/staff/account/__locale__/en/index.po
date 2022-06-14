@@ -111,7 +111,7 @@ msgstr ""
 msgid "Not Platform Artist"
 msgstr ""
 
-#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAccount.tsx:74
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAccount.tsx:71
 msgid "Owned Clubs"
 msgstr ""
 
@@ -119,7 +119,7 @@ msgstr ""
 msgid "Payment Transactions"
 msgstr ""
 
-#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAccount.tsx:59
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAccount.tsx:56
 msgid "Permissions"
 msgstr ""
 
@@ -161,7 +161,7 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAccount.tsx:64
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAccount.tsx:61
 msgid "Subscriptions"
 msgstr ""
 
@@ -241,7 +241,7 @@ msgstr ""
 msgid "This account is not an artist"
 msgstr ""
 
-#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAccount.tsx:69
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffAccount.tsx:66
 msgid "Transactions"
 msgstr ""
 

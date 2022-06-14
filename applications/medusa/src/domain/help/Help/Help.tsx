@@ -18,6 +18,7 @@ import {
   SeriesIdentifier,
   WarningTriangle
 } from '@//:assets/icons'
+import { SocialTwitter } from '@//:assets/logos'
 import { Trans } from '@lingui/macro'
 import { SearchBar } from '@//:assets/icons/navigation'
 import { Box, Stack } from '@chakra-ui/react'
@@ -169,6 +170,28 @@ const Help: PageProps<{}> = () => {
                   }
                   description={(
                     <Trans>Come say hello!</Trans>
+                  )}
+                />
+              </PagePanelWrap>
+            </ListSpacer>
+          </Box>
+          <Box>
+            <PageSectionWrap>
+              <PageSectionTitle>
+                <Trans>
+                  Social
+                </Trans>
+              </PageSectionTitle>
+            </PageSectionWrap>
+            <ListSpacer>
+              <PagePanelWrap isExternal href='https://twitter.com/overdoll_com'>
+                <PagePanelIcon icon={SocialTwitter} colorScheme='teal' />
+                <PagePanelText
+                  title={
+                    <Trans>Twitter</Trans>
+                  }
+                  description={(
+                    <Trans>Follow us on Twitter!</Trans>
                   )}
                 />
               </PagePanelWrap>

@@ -36,7 +36,7 @@ func TestNewLoginTokenEmail(t *testing.T) {
 		generateEmailFileFixture("new_login_token_test.html", content.Html)
 		generateEmailFileFixture("new_login_token_test.txt", content.Text)
 	} else {
-		require.Equal(t, "New Login to overdoll", content.Subject, "correct subject for the email")
+		require.Equal(t, "New login to overdoll", content.Subject, "correct subject for the email")
 		require.Equal(t, newLoginTokenHtml, content.Html, "correct content for the email html")
 		require.Equal(t, newLoginTokenText, content.Text, "correct content for the email text")
 	}
