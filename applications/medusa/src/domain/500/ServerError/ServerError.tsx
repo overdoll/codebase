@@ -43,6 +43,15 @@ const ServerError: PageProps<{}> = (): JSX.Element => {
               </Trans>
             </Text>
           </Box>
+          <Text
+            fontSize='md'
+            textAlign='center'
+            color='gray.200'
+          >
+            <Trans>
+              If you continue to experience issues for an extended period of time, please contact hello@overdoll.com
+            </Trans>
+          </Text>
         </Stack>
       </PageWrapper>
     </>

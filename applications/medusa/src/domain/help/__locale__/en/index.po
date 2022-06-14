@@ -13,102 +13,106 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/help/Help/Help.tsx:158
+#: src/domain/help/Help/Help.tsx:159
 msgid "18 U.S.C. § 2257"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:161
+#: src/domain/help/Help/Help.tsx:162
 msgid "18 U.S.C. § 2257 statement"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:105
+#: src/domain/help/Help/Help.tsx:106
 msgid "Billing help and subscriptions"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:80
+#: src/domain/help/Help/Help.tsx:204
+msgid "Build ID: {0}"
+msgstr ""
+
+#: src/domain/help/Help/Help.tsx:81
 msgid "Club Guidelines"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:172
+#: src/domain/help/Help/Help.tsx:173
 msgid "Come say hello!"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:69
+#: src/domain/help/Help/Help.tsx:70
 msgid "Community Guidelines"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:169
+#: src/domain/help/Help/Help.tsx:170
 msgid "Contact Us"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:147
+#: src/domain/help/Help/Help.tsx:148
 msgid "DMCA and Copyright"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:150
+#: src/domain/help/Help/Help.tsx:151
 msgid "DMCA claims information"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:194
+#: src/domain/help/Help/Help.tsx:195
 msgid "Follow us on Twitter!"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:83
+#: src/domain/help/Help/Help.tsx:84
 msgid "For clubs posting content"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:72
+#: src/domain/help/Help/Help.tsx:73
 msgid "General platform rules for everyone"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:139
+#: src/domain/help/Help/Help.tsx:140
 msgid "How we protect you"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:128
+#: src/domain/help/Help/Help.tsx:129
 msgid "How you use our platform"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:94
+#: src/domain/help/Help/Help.tsx:95
 msgid "Information about payouts"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:115
+#: src/domain/help/Help/Help.tsx:116
 msgid "Legal"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:91
+#: src/domain/help/Help/Help.tsx:92
 msgid "Payouts Information"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:49
+#: src/domain/help/Help/Help.tsx:50
 msgid "Platform"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:181
+#: src/domain/help/Help/Help.tsx:182
 msgid "Social"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:102
+#: src/domain/help/Help/Help.tsx:103
 msgid "Supporter Guidelines"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:125
+#: src/domain/help/Help/Help.tsx:126
 msgid "Terms of Service"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:191
+#: src/domain/help/Help/Help.tsx:192
 msgid "Twitter"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:58
+#: src/domain/help/Help/Help.tsx:59
 msgid "What is overdoll?"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:61
+#: src/domain/help/Help/Help.tsx:62
 msgid "What we're all about"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:136
+#: src/domain/help/Help/Help.tsx:137
 msgid "Your Privacy"
 msgstr ""

@@ -24,7 +24,7 @@ const RootHome: PageProps<Props> = (props: Props): JSX.Element => {
   return (
     <>
       <Head>
-        <title>Find Your Club - overdoll.com</title>
+        <title>overdoll.com - Rule34, Hentai, 3D Porn and Videos</title>
       </Head>
       <PageWrapper>
         <QueryErrorBoundary loadQuery={() => loadQuery({})}>

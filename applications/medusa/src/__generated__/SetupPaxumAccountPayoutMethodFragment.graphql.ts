@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<177c90c48cacdcfa5119ac237893245b>>
+ * @generated SignedSource<<432b01d4826c55f67cf835908529446f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,26 +10,27 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PayoutMethodSetupFlowFragment$data = {
+export type SetupPaxumAccountPayoutMethodFragment$data = {
   readonly details: {
     readonly country: {
-      readonly " $fragmentSpreads": FragmentRefs<"ChoosePayoutMethodFragment">;
+      readonly alpha3: string;
     };
+    readonly firstName: string;
+    readonly lastName: string;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"SetupPayoutMethodFragment">;
-  readonly " $fragmentType": "PayoutMethodSetupFlowFragment";
+  readonly " $fragmentType": "SetupPaxumAccountPayoutMethodFragment";
 };
-export type PayoutMethodSetupFlowFragment = PayoutMethodSetupFlowFragment$data;
-export type PayoutMethodSetupFlowFragment$key = {
-  readonly " $data"?: PayoutMethodSetupFlowFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"PayoutMethodSetupFlowFragment">;
+export type SetupPaxumAccountPayoutMethodFragment = SetupPaxumAccountPayoutMethodFragment$data;
+export type SetupPaxumAccountPayoutMethodFragment$key = {
+  readonly " $data"?: SetupPaxumAccountPayoutMethodFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"SetupPaxumAccountPayoutMethodFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "PayoutMethodSetupFlowFragment",
+  "name": "SetupPaxumAccountPayoutMethodFragment",
   "selections": [
     {
       "kind": "RequiredField",
@@ -52,32 +53,43 @@ const node: ReaderFragment = {
               "plural": false,
               "selections": [
                 {
+                  "alias": null,
                   "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "ChoosePayoutMethodFragment"
+                  "kind": "ScalarField",
+                  "name": "alpha3",
+                  "storageKey": null
                 }
               ],
               "storageKey": null
             },
             "action": "THROW",
             "path": "details.country"
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "firstName",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "lastName",
+            "storageKey": null
           }
         ],
         "storageKey": null
       },
       "action": "THROW",
       "path": "details"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "SetupPayoutMethodFragment"
     }
   ],
   "type": "Account",
   "abstractKey": null
 };
 
-(node as any).hash = "16413067a979aab630c63bf858ab56ba";
+(node as any).hash = "b30507dc7c922d4b96116eb7d50dc488";
 
 export default node;

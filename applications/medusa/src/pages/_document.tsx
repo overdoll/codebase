@@ -5,11 +5,13 @@ import 'ioredis'
 
 export default function Document (): JSX.Element {
   return (
-    <Html>
+    <Html prefix='og: https://ogp.me/ns#'>
       <Head>
+        <meta property='og:site_name' content='overdoll' />
+        <meta property='og:title' content='overdoll.com - Rule34, Hentai, 3D Porn and Videos' />
         <meta
           name='description'
-          content='overdoll is a site where artists can post digital adult content and earn subscription revenue from fans.'
+          content='overdoll is a platform where adult content artists and fans connect. Artists can collect subscriptions from posting and fans can find any content.'
         />
         <FaviconComponent />
       </Head>

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<55268e90e1ed6e8a54f3b09adb7af70b>>
- * @relayHash ee4a14cc0004f9fdf8a996dc36828075
+ * @generated SignedSource<<a5ead3cee0dda6448d0992519484fc2a>>
+ * @relayHash f82b308d7f8150a795ee4ce93d121106
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,18 +9,18 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ee4a14cc0004f9fdf8a996dc36828075
+// @relayRequestID f82b308d7f8150a795ee4ce93d121106
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SetPaxumAccountPayoutMethodInput = {
   email: string;
 };
-export type SetupPaxumAccountPayoutMethodMutation$variables = {
+export type SetPaxumAccountPayoutMethodFormMutation$variables = {
   input: SetPaxumAccountPayoutMethodInput;
 };
-export type SetupPaxumAccountPayoutMethodMutationVariables = SetupPaxumAccountPayoutMethodMutation$variables;
-export type SetupPaxumAccountPayoutMethodMutation$data = {
+export type SetPaxumAccountPayoutMethodFormMutationVariables = SetPaxumAccountPayoutMethodFormMutation$variables;
+export type SetPaxumAccountPayoutMethodFormMutation$data = {
   readonly setPaxumAccountPayoutMethod: {
     readonly accountPayoutMethod: {
       readonly __typename: string;
@@ -30,10 +30,10 @@ export type SetupPaxumAccountPayoutMethodMutation$data = {
     } | null;
   } | null;
 };
-export type SetupPaxumAccountPayoutMethodMutationResponse = SetupPaxumAccountPayoutMethodMutation$data;
-export type SetupPaxumAccountPayoutMethodMutation = {
-  variables: SetupPaxumAccountPayoutMethodMutationVariables;
-  response: SetupPaxumAccountPayoutMethodMutation$data;
+export type SetPaxumAccountPayoutMethodFormMutationResponse = SetPaxumAccountPayoutMethodFormMutation$data;
+export type SetPaxumAccountPayoutMethodFormMutation = {
+  variables: SetPaxumAccountPayoutMethodFormMutationVariables;
+  response: SetPaxumAccountPayoutMethodFormMutation$data;
 };
 
 const node: ConcreteRequest = (function(){
@@ -84,7 +84,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "SetupPaxumAccountPayoutMethodMutation",
+    "name": "SetPaxumAccountPayoutMethodFormMutation",
     "selections": [
       {
         "alias": null,
@@ -128,7 +128,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "SetupPaxumAccountPayoutMethodMutation",
+    "name": "SetPaxumAccountPayoutMethodFormMutation",
     "selections": [
       {
         "alias": null,
@@ -161,15 +161,15 @@ return {
     ]
   },
   "params": {
-    "id": "ee4a14cc0004f9fdf8a996dc36828075",
+    "id": "f82b308d7f8150a795ee4ce93d121106",
     "metadata": {},
-    "name": "SetupPaxumAccountPayoutMethodMutation",
+    "name": "SetPaxumAccountPayoutMethodFormMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
 
-(node as any).hash = "e36e5a072d92109e984bd1c00d7ce6b6";
+(node as any).hash = "fe8152064681c20d916b17949ce9a95d";
 
 export default node;

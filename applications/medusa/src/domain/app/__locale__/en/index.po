@@ -6,6 +6,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
 
 #: src/common/components/AccountInformationBanner/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:71
 msgid "Account Locked"
@@ -122,8 +128,8 @@ msgid "Error Loading Video"
 msgstr ""
 
 #: src/modules/content/Placeholder/Fallback/ErrorFallback/ErrorFallback.tsx:35
-msgid "Error {0}"
-msgstr ""
+#~ msgid "Error {0}"
+#~ msgstr ""
 
 #: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContent.tsx:51
 msgid "Exclusive Supporter Content"
@@ -384,7 +390,6 @@ msgstr ""
 msgid "Reported"
 msgstr ""
 
-#: src/modules/content/Placeholder/Fallback/ErrorFallback/ErrorFallback.tsx:54
 #: src/modules/content/Posts/components/PostPlayback/ControlledVideo/components/ControlVideo/LoadingSpinner/LoadingSpinner.tsx:31
 msgid "Retry"
 msgstr ""
@@ -647,6 +652,14 @@ msgstr ""
 
 #: src/common/components/ClubInformationBanner/SuspendedClubBanner/SuspendedClubModal/UnSuspendClubForm/UnSuspendClubForm.tsx:77
 msgid "Your club has been un-suspended"
+msgstr ""
+
+#: src/modules/content/Placeholder/Fallback/ErrorFallback/ErrorFallback.tsx:37
+msgid "message.fallback.error.message"
+msgstr ""
+
+#: src/modules/content/Placeholder/Fallback/ErrorFallback/ErrorFallback.tsx:59
+msgid "message.fallback.error.retry"
 msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyAudiences/EmptyAudiences.tsx:6

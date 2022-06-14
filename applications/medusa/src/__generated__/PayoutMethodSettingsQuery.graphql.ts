@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<cc2e0df1b554120f07214588d69ac169>>
- * @relayHash bdb3c15f83326969860a6f5976dfb9d0
+ * @generated SignedSource<<5831d2405f89deb3546727eff741919c>>
+ * @relayHash b0769bebf021e7f0b6373454f9a33e91
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID bdb3c15f83326969860a6f5976dfb9d0
+// @relayRequestID b0769bebf021e7f0b6373454f9a33e91
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -25,9 +25,10 @@ export type PayoutMethodSettingsQuery$data = {
     readonly details: {
       readonly country: {
         readonly payoutMethods: ReadonlyArray<PayoutMethod>;
-        readonly " $fragmentSpreads": FragmentRefs<"PayoutMethodSetupFlowFragment" | "PayoutCountryNotSupportedFragment">;
+        readonly " $fragmentSpreads": FragmentRefs<"PayoutCountryNotSupportedFragment">;
       };
     } | null;
+    readonly " $fragmentSpreads": FragmentRefs<"PayoutMethodSetupFlowFragment">;
   };
 };
 export type PayoutMethodSettingsQueryResponse = PayoutMethodSettingsQuery$data;
@@ -112,11 +113,6 @@ return {
                     {
                       "args": null,
                       "kind": "FragmentSpread",
-                      "name": "PayoutMethodSetupFlowFragment"
-                    },
-                    {
-                      "args": null,
-                      "kind": "FragmentSpread",
                       "name": "PayoutCountryNotSupportedFragment"
                     }
                   ],
@@ -124,6 +120,11 @@ return {
                 }
               ],
               "storageKey": null
+            },
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "PayoutMethodSetupFlowFragment"
             }
           ],
           "storageKey": null
@@ -204,11 +205,32 @@ return {
                     "name": "name",
                     "storageKey": null
                   },
-                  (v2/*: any*/)
+                  (v2/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "alpha3",
+                    "storageKey": null
+                  }
                 ],
                 "storageKey": null
               },
-              (v2/*: any*/)
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "firstName",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "lastName",
+                "storageKey": null
+              }
             ],
             "storageKey": null
           },
@@ -219,7 +241,7 @@ return {
     ]
   },
   "params": {
-    "id": "bdb3c15f83326969860a6f5976dfb9d0",
+    "id": "b0769bebf021e7f0b6373454f9a33e91",
     "metadata": {},
     "name": "PayoutMethodSettingsQuery",
     "operationKind": "query",
@@ -228,7 +250,7 @@ return {
 };
 })();
 
-(node as any).hash = "8a9e6f04333b6305f4f1bdefcf5d4144";
+(node as any).hash = "778ccf799d55c020c7f13212e547221c";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);
