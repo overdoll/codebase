@@ -1,9 +1,8 @@
-import { Trans as TransMacro } from '@lingui/macro'
 import { Trans } from '@lingui/react'
 import EmptyBackground, { HintProp } from '../EmptyBackground/EmptyBackground'
 
 export default function EmptyCharacters ({ hint }: HintProp): JSX.Element {
-  const emptyMessage = <TransMacro id='message.placeholder.empty.characters.one'>No characters were found</TransMacro>
+  const emptyMessage = <Trans values={{}} components={{}} id='message.placeholder.empty.characters.one'>No characters were found</Trans>
 
   const fullMessage = (
     <Trans

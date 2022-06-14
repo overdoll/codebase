@@ -13,14 +13,14 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/404/CatchAll/CatchAll.tsx:52
+#: src/domain/404/CatchAll/CatchAll.tsx:50
 msgid "Back"
 msgstr ""
 
-#: src/domain/404/CatchAll/CatchAll.tsx:61
+#: src/domain/404/CatchAll/CatchAll.tsx:59
 msgid "Home"
 msgstr ""
 
-#: src/domain/404/CatchAll/CatchAll.tsx:37
+#: src/domain/404/CatchAll/CatchAll.tsx:35
 msgid "It doesn't look like there's anything here"
 msgstr ""

@@ -1,9 +1,12 @@
-import { Trans as TransMacro } from '@lingui/macro'
 import { Trans } from '@lingui/react'
 import EmptyBackground, { HintProp } from '../EmptyBackground/EmptyBackground'
 
 export default function EmptyCategories ({ hint }: HintProp): JSX.Element {
-  const emptyMessage = <TransMacro id='message.placeholder.empty.categories.one'>No categories were found</TransMacro>
+  const emptyMessage = (
+    <Trans values={{}} components={{}} id='message.placeholder.empty.categories.one'>No categories
+      were found
+    </Trans>
+  )
 
   const fullMessage = (
     <Trans

@@ -1,17 +1,11 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2022-06-13 18:09-0400\n"
+"POT-Creation-Date: 2022-06-13 20:51-0400\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: en\n"
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Plural-Forms: \n"
 
 #: src/common/components/AccountInformationBanner/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:71
 msgid "Account Locked"
@@ -131,10 +125,6 @@ msgstr ""
 msgid "Error {0}"
 msgstr ""
 
-#: src/modules/operations/ErrorBoundary.tsx:60
-msgid "Error: {0}"
-msgstr ""
-
 #: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContent.tsx:51
 msgid "Exclusive Supporter Content"
 msgstr ""
@@ -239,31 +229,6 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: src/modules/content/Placeholder/Empty/EmptyAudiences/EmptyAudiences.tsx:10
-msgid "No audiences were found{0}"
-msgstr ""
-
-#: src/modules/content/Placeholder/Empty/EmptyCategories/EmptyCategories.tsx:10
-#~ msgid "No categories were found{0}"
-#~ msgstr ""
-
-#: src/modules/content/Placeholder/Empty/EmptyGeneralSearch/EmptyGeneralSearch.tsx:10
-#~ msgid "No categories, characters, or series were found{0}"
-#~ msgstr ""
-
-#: src/modules/content/Placeholder/Empty/EmptyCharacters/EmptyCharacters.tsx:10
-#~ msgid "No characters were found{0}"
-#~ msgstr ""
-
-#: src/modules/content/Placeholder/Empty/EmptyClubs/EmptyClubs.tsx:5
-#~ msgid "No clubs were found"
-#~ msgstr ""
-
-#: src/modules/content/Placeholder/Empty/EmptyClubs/EmptyClubs.tsx:7
-#: src/modules/content/Placeholder/Empty/EmptyClubs/EmptyClubs.tsx:13
-#~ msgid "No clubs were found with the name {hint}"
-#~ msgstr ""
-
 #: src/modules/content/Placeholder/Empty/EmptyPaymentMethods/EmptyPaymentMethods.tsx:7
 msgid "No payment methods found"
 msgstr ""
@@ -279,10 +244,6 @@ msgstr ""
 #: src/modules/content/Placeholder/Empty/EmptyRules/EmptyRules.tsx:7
 msgid "No rules were found"
 msgstr ""
-
-#: src/modules/content/Placeholder/Empty/EmptySeries/EmptySeries.tsx:10
-#~ msgid "No series were found{0}"
-#~ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptySubscriptions/EmptySubscriptions.tsx:7
 msgid "No subscriptions were found"
@@ -688,31 +649,36 @@ msgstr ""
 msgid "Your club has been un-suspended"
 msgstr ""
 
-#: src/modules/content/Placeholder/Empty/EmptyClubs/EmptyClubs.tsx:7
-#~ msgid "message.empty_clubs"
-#~ msgstr ""
+#: src/modules/content/Placeholder/Empty/EmptyAudiences/EmptyAudiences.tsx:6
+msgid "message.placeholder.empty.audiences.one"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyAudiences/EmptyAudiences.tsx:10
+msgid "message.placeholder.empty.audiences.other"
+msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyCategories/EmptyCategories.tsx:6
 msgid "message.placeholder.empty.categories.one"
 msgstr ""
 
-#: src/modules/content/Placeholder/Empty/EmptyCategories/EmptyCategories.tsx:9
+#: src/modules/content/Placeholder/Empty/EmptyCategories/EmptyCategories.tsx:12
 msgid "message.placeholder.empty.categories.other"
 msgstr ""
 
-#: src/modules/content/Placeholder/Empty/EmptyCharacters/EmptyCharacters.tsx:6
+#: src/modules/content/Placeholder/Empty/EmptyCharacters/EmptyCharacters.tsx:5
 msgid "message.placeholder.empty.characters.one"
 msgstr ""
 
-#: src/modules/content/Placeholder/Empty/EmptyCharacters/EmptyCharacters.tsx:9
+#: src/modules/content/Placeholder/Empty/EmptyCharacters/EmptyCharacters.tsx:8
 msgid "message.placeholder.empty.characters.other"
 msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyClubs/EmptyClubs.tsx:7
-#: src/modules/content/Placeholder/Empty/EmptyGeneralSearch/EmptyGeneralSearch.tsx:7
+#: src/modules/content/Placeholder/Empty/EmptyGeneralSearch/EmptyGeneralSearch.tsx:6
 msgid "message.placeholder.empty.clubs.one"
 msgstr ""
 
+#: src/modules/content/Placeholder/Empty/EmptyClubs/EmptyClubs.tsx:13
 #: src/modules/content/Placeholder/Empty/EmptyGeneralSearch/EmptyGeneralSearch.tsx:13
 msgid "message.placeholder.empty.clubs.other"
 msgstr ""
@@ -721,7 +687,7 @@ msgstr ""
 msgid "message.placeholder.empty.series.one"
 msgstr ""
 
-#: src/modules/content/Placeholder/Empty/EmptySeries/EmptySeries.tsx:9
+#: src/modules/content/Placeholder/Empty/EmptySeries/EmptySeries.tsx:12
 msgid "message.placeholder.empty.series.other"
 msgstr ""
 
