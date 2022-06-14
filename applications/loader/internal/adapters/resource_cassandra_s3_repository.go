@@ -661,6 +661,7 @@ func (r ResourceCassandraS3Repository) UploadAndCreateResource(ctx context.Conte
 
 	// clean up file at the end to free up resources
 	_ = file.Close()
+	_ = os.Remove(file.Name())
 
 	if err := r.createResources(ctx, []*resource.Resource{target}); err != nil {
 		return err

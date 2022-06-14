@@ -23,6 +23,13 @@ import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
 import CoreSchema from '@apollo/core-schema'
 
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  tracesSampleRate: 0,
+  release: process.env.APP_VERSION,
+  environment: process.env.APP_ENV,
+})
+
 const supergraphSdl = readFileSync(join(__dirname, './schema/schema.graphql')).toString()
 
 dotenv.config({
@@ -286,13 +293,6 @@ function matchQueryMiddleware (req, res, next): void {
     next()
   })
 }
-
-Sentry.init({
-  dsn: process.env.SENTRY_DSN,
-  tracesSampleRate: 0,
-  release: process.env.APP_VERSION,
-  environment: process.env.APP_ENV,
-})
 
 const PATH = '/api/graphql'
 

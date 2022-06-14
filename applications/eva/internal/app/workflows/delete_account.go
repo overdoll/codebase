@@ -2,7 +2,6 @@ package workflows
 
 import (
 	"errors"
-	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/eva/internal/app/workflows/activities"
 )
@@ -72,7 +71,7 @@ func DeleteAccount(ctx workflow.Context, input DeleteAccountInput) error {
 	duration := payload.DeletionDate.Sub(workflow.Now(ctx))
 
 	// halfway through, send a reminder
-	if err := workflow.Sleep(ctx, duration/2); err != nil && !temporal.IsCanceledError(err) {
+	if err := workflow.Sleep(ctx, duration/2); err != nil {
 		logger.Error("failed to sleep 1/2", "Error", err)
 		return err
 	}
@@ -89,7 +88,7 @@ func DeleteAccount(ctx workflow.Context, input DeleteAccountInput) error {
 	}
 
 	// wait for second half of duration
-	if err := workflow.Sleep(ctx, duration/2); err != nil && !temporal.IsCanceledError(err) {
+	if err := workflow.Sleep(ctx, duration/2); err != nil {
 		logger.Error("failed to sleep 2/2", "Error", err)
 		return err
 	}

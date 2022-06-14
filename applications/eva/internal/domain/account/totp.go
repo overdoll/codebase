@@ -3,13 +3,15 @@ package account
 import (
 	"bytes"
 	"encoding/base64"
+	"github.com/pquerna/otp"
 	"go.uber.org/zap"
 	"image/png"
+	"net/url"
 	"overdoll/libraries/crypt"
 	"overdoll/libraries/errors/domainerror"
+	"strconv"
 	"time"
 
-	"github.com/pquerna/otp"
 	"github.com/pquerna/otp/totp"
 	"overdoll/libraries/principal"
 )
@@ -32,7 +34,7 @@ var (
 	ErrRecoveryCodeInvalid        = domainerror.NewValidation("recovery code invalid")
 )
 
-// OTP will be returned from the DB as encrypted (because the getter returns it as so)
+// UnmarshalTOTPFromDatabase OTP will be returned from the DB as encrypted (because the getter returns it as so)
 func UnmarshalTOTPFromDatabase(secret string) *TOTP {
 
 	val, err := crypt.Encrypt(secret)
@@ -73,12 +75,25 @@ func (c *TOTP) ID() string {
 // Image - returns an image URL that can be easily used in HTML as an image SRC (base64 encoded)
 func (c *TOTP) Image() (string, error) {
 
-	key, _ := totp.Generate(totp.GenerateOpts{
-		Issuer:      issuer,
-		AccountName: c.name,
-		Secret:      []byte(c.secret),
-		Digits:      otp.DigitsSix,
-	})
+	v := url.Values{}
+	v.Set("secret", c.secret)
+	v.Set("issuer", issuer)
+	v.Set("period", strconv.FormatUint(uint64(30), 10))
+	v.Set("algorithm", otp.AlgorithmSHA1.String())
+	v.Set("digits", otp.DigitsSix.String())
+
+	u := url.URL{
+		Scheme:   "otpauth",
+		Host:     "totp",
+		Path:     "/" + issuer + ":" + c.name,
+		RawQuery: v.Encode(),
+	}
+
+	key, err := otp.NewKeyFromURL(u.String())
+
+	if err != nil {
+		return "", err
+	}
 
 	img, err := key.Image(100, 100)
 
@@ -103,10 +118,14 @@ func NewTOTP(recoveryCodes []*RecoveryCode, username string) (*TOTP, error) {
 		return nil, ErrRecoveryCodesNotConfigured
 	}
 
-	key, _ := totp.Generate(totp.GenerateOpts{
+	key, err := totp.Generate(totp.GenerateOpts{
 		Issuer:      issuer,
 		AccountName: username,
 	})
+
+	if err != nil {
+		return nil, err
+	}
 
 	val, err := crypt.Encrypt(key.Secret())
 

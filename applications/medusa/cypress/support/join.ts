@@ -89,6 +89,10 @@ const joinAndVerify = (email: string): void => {
       }
     )
     .then(({ body }) => {
+      if (body.data.grantAuthenticationToken == null) {
+        cy.log(body.data)
+      }
+
       expect(body.data.grantAuthenticationToken.authenticationToken).to.not.equal(null)
     })
     .its('body.data.grantAuthenticationToken.authenticationToken.token')

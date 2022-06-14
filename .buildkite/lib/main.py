@@ -257,8 +257,7 @@ def execute_unit_test_commands(configs):
 def execute_build_commands_custom(configs):
     cwd = os.getcwd()
 
-    # is_production = os.getenv("BUILDKITE_BRANCH") == "master"
-    is_production = True
+    is_production = os.getenv("BUILDKITE_BRANCH") == "master"
 
     workdir = configs.get("build", {}).get("workdir", None)
 
@@ -314,6 +313,7 @@ def execute_cdn_upload(configs):
     terminal_print.print_expanded_group(":docker: Pulling docker image & extracting assets")
 
     exec.execute_command(["mkdir", "medusa-assets"])
+    exec.execute_command(["mkdir", "medusa-public"])
 
     commit = os.getenv("BUILDKITE_COMMIT", "")
     registry = os.getenv("CONTAINER_REGISTRY", "")
@@ -324,10 +324,19 @@ def execute_cdn_upload(configs):
     exec.execute_command(["docker", "pull", tag])
     exec.execute_command(["docker", "run", "--name", container_name, "-d", tag])
     exec.execute_command(["docker", "cp", "{}:/app/build/static".format(container_name), "medusa-assets"])
+    exec.execute_command(["docker", "cp", "{}:/app/public".format(container_name), "medusa-public"])
+
     exec.execute_command(["docker", "stop", container_name, "-t", "0"])
 
     terminal_print.print_expanded_group(":cloudfront: Uploading assets to cloudfront")
 
+    env = {
+        "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY"),
+        "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_ACCESS_SECRET"),
+        "AWS_DEFAULT_REGION": os.getenv("AWS_REGION"),
+    }
+
+    # copy static assets to a _next folder
     exec.execute_command([
         "aws",
         "s3",
@@ -335,11 +344,17 @@ def execute_cdn_upload(configs):
         "medusa-assets",
         "s3://{}/_next".format(os.getenv("AWS_STATIC_ASSETS_BUCKET")),
         "--recursive"
-    ], env={
-        "AWS_ACCESS_KEY_ID": os.getenv("AWS_ACCESS_KEY"),
-        "AWS_SECRET_ACCESS_KEY": os.getenv("AWS_ACCESS_SECRET"),
-        "AWS_DEFAULT_REGION": os.getenv("AWS_REGION"),
-    })
+    ], env=env)
+
+    # copy everything from the public folder right into the bucket
+    exec.execute_command([
+        "aws",
+        "s3",
+        "cp",
+        "medusa-public/public",
+        "s3://{}".format(os.getenv("AWS_STATIC_ASSETS_BUCKET")),
+        "--recursive"
+    ], env=env)
 
 
 def execute_push_images_commands(configs):

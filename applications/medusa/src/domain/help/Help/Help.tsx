@@ -21,7 +21,7 @@ import {
 import { SocialTwitter } from '@//:assets/logos'
 import { Trans } from '@lingui/macro'
 import { SearchBar } from '@//:assets/icons/navigation'
-import { Box, Stack } from '@chakra-ui/react'
+import { Box, Stack, Text } from '@chakra-ui/react'
 import {
   CLUB_GUIDELINES,
   COMMUNITY_GUIDELINES,
@@ -32,6 +32,7 @@ import {
 } from '@//:modules/constants/links'
 import Head from 'next/head'
 import { PageProps } from '@//:types/app'
+import Can from '@//:modules/authorization/Can'
 
 const Help: PageProps<{}> = () => {
   return (
@@ -197,6 +198,13 @@ const Help: PageProps<{}> = () => {
               </PagePanelWrap>
             </ListSpacer>
           </Box>
+          <Can I='staff' a='Entity'>
+            <Box>
+              <Text fontFamily='mono' fontSize='sm' color='gray.200'>
+                Build ID: {process.env.NEXT_BUILD_ID ?? 'unknown'}
+              </Text>
+            </Box>
+          </Can>
         </Stack>
       </PageWrapper>
     </>

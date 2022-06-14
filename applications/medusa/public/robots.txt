@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://overdoll.com/sitemap.xml

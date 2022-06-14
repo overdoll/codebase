@@ -1,6 +1,7 @@
 package workflows
 
 import (
+	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/stella/internal/app/workflows/activities"
 	"time"
@@ -38,6 +39,7 @@ func AddClubSupporter(ctx workflow.Context, input AddClubSupporterInput) error {
 		childWorkflowOptions := workflow.ChildWorkflowOptions{
 			WorkflowID:          "sting.AddClubMember_" + input.ClubId + "_" + input.AccountId,
 			WaitForCancellation: true,
+			ParentClosePolicy:   enums.PARENT_CLOSE_POLICY_REQUEST_CANCEL,
 		}
 
 		childCtx := workflow.WithChildOptions(ctx, childWorkflowOptions)
@@ -49,10 +51,11 @@ func AddClubSupporter(ctx workflow.Context, input AddClubSupporterInput) error {
 			},
 		).
 			GetChildWorkflowExecution().
-			Get(ctx, nil); err != nil {
+			Get(childCtx, nil); err != nil {
 			logger.Error("failed to add club member", "Error", err)
 			return err
 		}
+
 	}
 
 	// mark the member as supporter

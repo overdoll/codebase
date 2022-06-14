@@ -2,6 +2,8 @@ package zap_adapters
 
 import (
 	"fmt"
+	"go.temporal.io/sdk/temporal"
+	"go.uber.org/zap/zapcore"
 
 	"go.temporal.io/sdk/log"
 	"go.uber.org/zap"
@@ -49,7 +51,25 @@ func (log *TemporalZapAdapter) Warn(msg string, keyvals ...interface{}) {
 }
 
 func (log *TemporalZapAdapter) Error(msg string, keyvals ...interface{}) {
-	log.zl.Error(msg, log.fields(keyvals)...)
+
+	fields := log.fields(keyvals)
+
+	for _, field := range fields {
+		if field.Type == zapcore.ErrorType {
+
+			val, ok := field.Interface.(error)
+
+			if ok {
+				// ignore cancellation errors from being logged
+				if temporal.IsCanceledError(val) {
+					return
+				}
+			}
+
+		}
+	}
+
+	log.zl.Error(msg, fields...)
 }
 
 func (log *TemporalZapAdapter) With(keyvals ...interface{}) log.Logger {
