@@ -203,10 +203,14 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 			return nil, err
 		}
 
-		// lossless encoder
-		enc := webpbin.Encoder{Quality: 100}
+		bin := webpbin.NewCWebP()
+		bin.ExecPath("/usr/local/bin/cwebp")
 
-		if err := enc.Encode(newFile, src); err != nil {
+		if err := bin.
+			Quality(100).
+			InputImage(src).
+			Output(newFile).
+			Run(); err != nil {
 			_ = newFile.Close()
 			return nil, errors.Wrap(err, "failed to convert png to webp")
 		}

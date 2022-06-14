@@ -58,6 +58,14 @@ const moduleExports = withBundleAnalyzer({
       }
     ]
   },
+  rewrites: async () => {
+    return [
+      {
+        source: '/readyz',
+        destination: '/api/readyz'
+      }
+    ]
+  },
   generateBuildId: () => nextBuildId({ dir: __dirname }),
   distDir: 'build',
   generateEtags: false,

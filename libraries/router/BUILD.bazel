@@ -8,6 +8,7 @@ go_library(
     deps = [
         "//libraries/passport",
         "//libraries/principal",
+        "//libraries/probe",
         "//libraries/sentry_support",
         "@com_github_gin_gonic_gin//:gin",
         "@org_uber_go_zap//:zap",
