@@ -2,6 +2,7 @@ package types
 
 import (
 	"context"
+	"go.opencensus.io/resource"
 	"overdoll/applications/sting/internal/domain/curation"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/graphql"
@@ -62,7 +63,7 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 
 	for _, res := range result.Content() {
 
-		resourceId := res.ResourceIdRequest(principal.FromContext(ctx))
+		resourceId := res.ResourceRequest(principal.FromContext(ctx))
 
 		if resourceId != "" {
 			content = append(content, &PostContent{
@@ -567,4 +568,47 @@ func MarshalPostToGraphQLConnection(ctx context.Context, results []*post.Post, c
 	}
 
 	return conn
+}
+
+func MarshalResourceToGraphQL(ctx context.Context, res *resource.Resource) *Resource {
+
+	var urls []*ResourceURL
+	var videoUrl *ResourceURL
+
+	for _, url := range res.FullUrls() {
+		urls = append(urls, &ResourceURL{
+			URL:      graphql.URI(url.FullUrl()),
+			MimeType: url.MimeType(),
+		})
+	}
+
+	var tp ResourceType
+
+	if res.IsImage() {
+		tp = ResourceTypeImage
+	}
+
+	if res.IsVideo() {
+		tp = ResourceTypeVideo
+		url := res.VideoThumbnailFullUrl()
+
+		if url != nil {
+			videoUrl = &ResourceURL{
+				URL:      graphql.URI(url.FullUrl()),
+				MimeType: url.MimeType(),
+			}
+		}
+	}
+
+	return &Resource{
+		ID:             relay.NewID(Resource{}, res.ItemId(), res.ID()),
+		Processed:      res.IsProcessed(),
+		Type:           tp,
+		Urls:           urls,
+		Width:          res.Width(),
+		Height:         res.Height(),
+		VideoDuration:  res.VideoDuration(),
+		VideoThumbnail: videoUrl,
+		Preview:        res.Preview(),
+	}
 }

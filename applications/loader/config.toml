@@ -1,5 +1,0 @@
-[db]
-keyspace = "loader"
-
-[temporal]
-queue = "loader"

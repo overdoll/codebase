@@ -9,6 +9,17 @@ services:
       - traefik
       - temporal
       - elasticsearch
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sting.rule=Path(`/api/upload/{document}`) || Path(`/api/upload/`)"
+      - "traefik.http.routers.sting.entrypoints=web"
+    environment:
+      - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+      - AWS_ACCESS_SECRET=${AWS_ACCESS_SECRET}
+      - AWS_ENDPOINT=${AWS_ENDPOINT}
+      - AWS_REGION=${AWS_REGION}
+      - AWS_PRIVATE_RESOURCES_KEY_PAIR_ID=${AWS_PRIVATE_RESOURCES_KEY_PAIR_ID}
+      - AWS_PRIVATE_RESOURCES_KEY_PAIR_PRIVATE_KEY=${AWS_PRIVATE_RESOURCES_KEY_PAIR_PRIVATE_KEY}
     ports:
       - 3040:8000
       - 3050:8080

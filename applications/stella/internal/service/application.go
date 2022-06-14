@@ -19,13 +19,11 @@ import (
 func NewApplication(ctx context.Context) (*app.Application, func()) {
 	bootstrap.NewBootstrap()
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
-	loaderClient, cleanup2 := clients.NewLoaderClient(ctx, os.Getenv("LOADER_SERVICE"))
 	stingClient, cleanup3 := clients.NewStingClient(ctx, os.Getenv("STING_SERVICE"))
 	carrierClient, cleanup4 := clients.NewCarrierClient(ctx, os.Getenv("CARRIER_SERVICE"))
 
 	return createApplication(ctx,
 			adapters.NewEvaGrpc(evaClient),
-			adapters.NewLoaderGrpc(loaderClient),
 			adapters.NewStingGrpc(stingClient),
 			adapters.NewCarrierGrpc(carrierClient),
 			clients.NewTemporalClient(ctx)),
@@ -51,7 +49,6 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 	temporalClient := &temporalmocks.Client{}
 
 	evaClient := &mocks.MockEvaClient{}
-	loaderClient := &mocks.MockLoaderClient{}
 	stingClient := &mocks.MockStingClient{}
 	carrierClient := &mocks.MockCarrierClient{}
 
@@ -59,20 +56,18 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 		App: createApplication(
 			ctx,
 			adapters.NewEvaGrpc(evaClient),
-			adapters.NewLoaderGrpc(loaderClient),
 			adapters.NewStingGrpc(stingClient),
 			adapters.NewCarrierGrpc(carrierClient),
 			temporalClient,
 		),
 		TemporalClient: temporalClient,
 		EvaClient:      evaClient,
-		LoaderClient:   loaderClient,
 		CarrierClient:  carrierClient,
 		StingClient:    stingClient,
 	}
 }
 
-func createApplication(ctx context.Context, eva command.EvaService, loader command.LoaderService, sting activities.StingService, carrier activities.CarrierService, client client.Client) *app.Application {
+func createApplication(ctx context.Context, eva command.EvaService, sting activities.StingService, carrier activities.CarrierService, client client.Client) *app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 	cache := bootstrap.InitializeRedisSession()

@@ -7,9 +7,9 @@ type Content struct {
 
 	id string
 
-	resourceId string
+	resource *Resource
 
-	resourceIdHidden string
+	resourceHidden *Resource
 
 	isSupporterOnly bool
 }
@@ -18,25 +18,25 @@ func (m *Content) Id() string {
 	return m.id
 }
 
-func (m *Content) ResourceIdRequest(requester *principal.Principal) string {
+func (m *Content) ResourceRequest(requester *principal.Principal) *Resource {
 
 	if !m.canView(requester) {
-		return m.resourceIdHidden
+		return m.resourceHidden
 	}
 
-	return m.resourceId
+	return m.resource
 }
 
-func (m *Content) ResourceId() string {
-	return m.resourceId
+func (m *Content) Resource() *Resource {
+	return m.resource
 }
 
-func (m *Content) ResourceIdHidden() string {
-	return m.resourceIdHidden
+func (m *Content) ResourceHidden() *Resource {
+	return m.resourceHidden
 }
 
-func (m *Content) UpdateResourceIdHidden(id string) error {
-	m.resourceIdHidden = id
+func (m *Content) UpdateResourceHidden(id *Resource) error {
+	m.resourceHidden = id
 	return nil
 }
 

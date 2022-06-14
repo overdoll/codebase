@@ -1,8 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "event",
-    srcs = ["repository.go"],
-    importpath = "overdoll/applications/loader/internal/domain/event",
-    visibility = ["//applications/loader:__subpackages__"],
-)

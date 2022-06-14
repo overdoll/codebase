@@ -3,12 +3,18 @@ package service_test
 import (
 	"context"
 	"encoding/base64"
+	"github.com/bazelbuild/rules_go/go/tools/bazel"
+	"github.com/eventials/go-tus"
 	"log"
+	"mime"
 	"os"
 	stella "overdoll/applications/stella/proto"
 	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/libraries/principal"
+	"path"
+	"path/filepath"
+	"strings"
 	"time"
 
 	"overdoll/applications/sting/internal/adapters"
@@ -34,9 +40,59 @@ import (
 
 const StingHttpAddr = ":4564"
 const StingGraphqlClientAddr = "http://:4564/api/graphql"
+const StingTusClientAddr = "http://:3333/api/upload/"
 
 const StingGrpcAddr = "localhost:6667"
 const StingGrpcClientAddr = "localhost:6667"
+
+func getTusClient(t *testing.T) *tus.Client {
+
+	// use a custom http client so we can attach our passport
+	cfg := tus.DefaultConfig()
+
+	client, err := tus.NewClient(StingTusClientAddr, cfg)
+	require.NoError(t, err)
+
+	return client
+}
+
+func uploadFileWithTus(t *testing.T, tusClient *tus.Client, filePath string) string {
+
+	// use bazel runfiles path
+	dir, err := bazel.RunfilesPath()
+	require.NoError(t, err)
+
+	f, err := os.Open(path.Join(dir, filePath))
+	require.NoError(t, err)
+
+	defer f.Close()
+
+	fi, err := f.Stat()
+	require.NoError(t, err)
+
+	// create the tus client.
+	// create an upload from a file.
+	upload, _ := tus.NewUploadFromFile(f)
+
+	// set filetype extension header or else
+	// filetype wont be set up properly
+	fileTypeEncoded := mime.TypeByExtension(filepath.Ext(filePath))
+	upload.Metadata["filetype"] = fileTypeEncoded
+	upload.Metadata["type"] = fileTypeEncoded
+	upload.Metadata["name"] = fi.Name()
+
+	// create the uploader.
+	uploader, _ := tusClient.CreateUpload(upload)
+
+	// start the uploading process.
+	err = uploader.Upload()
+	require.NoError(t, err)
+
+	split := strings.Split(uploader.Url(), "/")
+
+	// get last part of url = ID of the upload
+	return split[len(split)-1]
+}
 
 func getGraphqlClientWithAuthenticatedAccount(t *testing.T, accountId string) *graphql.Client {
 

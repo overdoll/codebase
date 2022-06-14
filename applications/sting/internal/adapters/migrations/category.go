@@ -20,6 +20,10 @@ const categoryIndexProperties = `
 	"thumbnail_resource_id": {
 		"type": "keyword"
 	},
+	"thumbnail_resource": {
+         "type": "object",
+		 "dynamic": true
+	},
 	"total_likes": {
 		"type": "integer"
 	},

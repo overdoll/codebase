@@ -20,6 +20,10 @@ const audienceIndexProperties = `
 	"thumbnail_resource_id": {
 		"type": "keyword"
 	},
+	"thumbnail_resource": {
+         "type": "object",
+		 "dynamic": true
+	},
 	"standard": {
 		"type": "integer"
 	},

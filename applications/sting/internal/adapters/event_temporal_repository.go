@@ -2,6 +2,8 @@ package adapters
 
 import (
 	"context"
+	"crypto/md5"
+	"encoding/hex"
 	"github.com/spf13/viper"
 	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/sdk/client"
@@ -216,6 +218,67 @@ func (r EventTemporalRepository) DeleteAccountData(ctx context.Context, accountI
 
 	if err != nil {
 		return errors.Wrap(err, "failed to execute delete account data workflow")
+	}
+
+	return nil
+}
+
+func (r EventTemporalRepository) ProcessResourcesForPost(ctx context.Context, post *post.Post, resources []*post.Resource) error {
+
+	var resourceIds []string
+
+	processResourcesHash := md5.New()
+	processResourcesHash.Write([]byte(post.ID()))
+	for _, resource := range resources {
+		processResourcesHash.Write([]byte(resource.ItemId()))
+		processResourcesHash.Write([]byte(resource.ID()))
+
+		resourceIds = append(resourceIds, resource.ID())
+	}
+
+	options := client.StartWorkflowOptions{
+		TaskQueue:             viper.GetString("temporal.queue"),
+		ID:                    "sting.ProcessResourcesForPostUpload_" + hex.EncodeToString(processResourcesHash.Sum(nil)[:]),
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
+	}
+
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ProcessResourcesForPost,
+		workflows.ProcessResourcesForPostInput{
+			PostId:      post.ID(),
+			ResourceIds: resourceIds,
+		},
+	)
+
+	if err != nil {
+		return errors.Wrap(err, "failed to run process resources for post workflow")
+	}
+
+	return nil
+}
+
+func (r EventTemporalRepository) DeleteResourcesForPost(ctx context.Context, postId string, resourceIds []string) error {
+
+	deleteResourcesHash := md5.New()
+	deleteResourcesHash.Write([]byte(postId))
+	for _, resource := range resourceIds {
+		deleteResourcesHash.Write([]byte(resource))
+	}
+
+	options := client.StartWorkflowOptions{
+		TaskQueue:             viper.GetString("temporal.queue"),
+		ID:                    "sting.DeleteProcessedResourcesForPost_" + hex.EncodeToString(deleteResourcesHash.Sum(nil)[:]),
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
+	}
+
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.DeleteResourcesForPost,
+		workflows.DeleteResourcesForPostInput{
+			PostId:      postId,
+			ResourceIds: resourceIds,
+		},
+	)
+
+	if err != nil {
+		return errors.Wrap(err, "failed to run delete resources workflow")
 	}
 
 	return nil

@@ -231,8 +231,8 @@ container_pull(
 
 container_pull(
     name = "go_ffmpeg_image",
-    registry = "docker.io",
-    repository = DOCKER_REGISTRY,
+    registry = DOCKER_REGISTRY,
+    repository = "base-images/resource-processing",
     tag = "v1.0.0",
     digest = "sha256:ef6978d2c7c4059759b8036c3198d18c85ec4aadc0d9ac1361d50e5cb6474d7d",
 )

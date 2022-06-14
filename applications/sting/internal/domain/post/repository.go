@@ -2,6 +2,8 @@ package post
 
 import (
 	"context"
+	tusd "github.com/tus/tusd/pkg/handler"
+	"os"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
@@ -103,4 +105,14 @@ type Repository interface {
 	RemoveTerminatedClub(ctx context.Context, clubId string) error
 
 	GetAccountPostLikes(ctx context.Context, accountId string) ([]string, error)
+
+	UpdatePostResources(ctx context.Context, postId string, res []*Resource) error
+
+	GetAndCreateResourcesForPost(ctx context.Context, post *Post, uploads []string, isPrivate bool) ([]*Resource, error)
+	DeleteResourcesForPost(ctx context.Context, postId string, resourceIds []string) error
+	GetComposer(ctx context.Context) (*tusd.StoreComposer, error)
+	DownloadResource(ctx context.Context, resource *Resource) (*os.File, error)
+	DownloadVideoThumbnailForResource(ctx context.Context, resource *Resource) (*os.File, error)
+	UploadProcessedResource(ctx context.Context, move []*Move, resource *Resource) error
+	UploadResource(ctx context.Context, file *os.File, target *Resource) error
 }

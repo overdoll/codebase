@@ -2,10 +2,6 @@ extend type Account @key(fields: "id")  {
   id: ID! @external
 }
 
-extend type Resource @key(fields: "id")  {
-  id: ID! @external
-}
-
 extend type Club @key(fields: "id")  {
   id: ID! @external
 }

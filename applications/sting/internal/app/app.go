@@ -13,6 +13,8 @@ type Application struct {
 }
 
 type Commands struct {
+	TusComposer command.TusComposerHandler
+
 	CreatePost    command.CreatePostHandler
 	DiscardPost   command.DiscardPostHandler
 	PublishPost   command.PublishPostHandler

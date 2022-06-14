@@ -88,10 +88,10 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 	contentSupporterOnlyResourceIds := make(map[string]string)
 
 	for _, cont := range pst.Content() {
-		contentResourceIds = append(contentResourceIds, cont.ResourceId())
-		contentSupporterOnly[cont.ResourceId()] = cont.IsSupporterOnly()
+		contentResourceIds = append(contentResourceIds, cont.Resource())
+		contentSupporterOnly[cont.Resource()] = cont.IsSupporterOnly()
 		if cont.IsSupporterOnly() {
-			contentSupporterOnlyResourceIds[cont.ResourceId()] = cont.ResourceIdHidden()
+			contentSupporterOnlyResourceIds[cont.Resource()] = cont.ResourceHidden()
 		}
 	}
 

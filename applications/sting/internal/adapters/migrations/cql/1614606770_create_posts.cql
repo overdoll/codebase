@@ -99,6 +99,7 @@ CREATE TABLE IF NOT EXISTS posts
     character_ids                       list<text>,
     series_ids                          list<text>,
     content_resource_ids                list<text>,
+    content_resources                   map<text, text>,
     content_supporter_only              map<text, boolean>,
     content_supporter_only_resource_ids map<text, text>,
     created_at                          timestamp,

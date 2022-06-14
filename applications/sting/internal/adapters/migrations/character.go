@@ -20,6 +20,10 @@ const characterIndexProperties = `
 	"thumbnail_resource_id": {
 		"type": "keyword"
 	},
+	"thumbnail_resource": {
+         "type": "object",
+		 "dynamic": true
+	},
 	"name": ` + localization.ESIndex + `
 	"created_at": {
 		"type": "date"
