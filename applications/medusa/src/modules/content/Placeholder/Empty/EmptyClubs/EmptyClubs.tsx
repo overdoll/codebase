@@ -1,13 +1,26 @@
-import { t } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
+import { Trans } from '@lingui/react'
+
 import EmptyBackground, { HintProp } from '../EmptyBackground/EmptyBackground'
 
 export default function EmptyClubs ({ hint }: HintProp): JSX.Element {
-  const { i18n } = useLingui()
+  const emptyMessage = (
+    <Trans values={{}} components={{}} id='message.placeholder.empty.clubs.one'>No clubs were
+      found
+    </Trans>
+  )
+
+  const fullMessage = (
+    <Trans
+      id='message.placeholder.empty.clubs.other'
+      values={{ hint: hint }}
+      message={`No clubs were found with the name ${hint as string}`}
+      components={{}}
+    />
+  )
 
   return (
     <EmptyBackground>
-      {i18n._(t`No clubs were found${hint != null ? ` with the name ${hint}` : ''}`)}
+      {hint == null ? emptyMessage : fullMessage}
     </EmptyBackground>
   )
 }

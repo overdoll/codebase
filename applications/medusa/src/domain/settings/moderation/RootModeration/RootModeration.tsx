@@ -1,6 +1,6 @@
 import type { PreloadedQuery } from 'react-relay/hooks'
 import type { QueueSettingsQuery } from '@//:artifacts/QueueSettingsQuery.graphql'
-import RootModerationSettings from './RootQueueSettings/RootQueueSettings'
+import RootQueueSettings from './RootQueueSettings/RootQueueSettings'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import { PageProps } from '@//:types/app'
 import Head from 'next/head'
@@ -20,7 +20,7 @@ const RootModeration: PageProps<Props> = (props: Props) => {
         </title>
       </Head>
       <PageWrapper>
-        <RootModerationSettings query={props.queryRefs.queueQuery} />
+        <RootQueueSettings query={props.queryRefs.queueQuery} />
       </PageWrapper>
     </>
   )

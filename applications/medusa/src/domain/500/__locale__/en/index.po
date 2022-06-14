@@ -13,10 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/500/ServerError/ServerError.tsx:41
+#: src/domain/500/ServerError/ServerError.tsx:40
 msgid "It looks like we're experiencing some server issues. Our best people are on it and we should be back shortly!"
 msgstr ""
 
-#: src/domain/500/ServerError/ServerError.tsx:32
+#: src/domain/500/ServerError/ServerError.tsx:31
 msgid "We're currently experiencing server issues"
 msgstr ""

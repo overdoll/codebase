@@ -56,7 +56,7 @@ export default class ErrorBoundary extends Component<Props, State> {
 
       return (
         <div>
-          <div>Error: {this.state.error.message}</div>
+          <div>An error has occurred</div>
           <div>
             <pre>{JSON.stringify(this.state.error.stack, null, 2)}</pre>
           </div>

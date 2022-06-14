@@ -66,6 +66,10 @@ msgstr ""
 msgid "Cancel all subscriptions and wait for the benefits to expire"
 msgstr ""
 
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/InitiateClubPayoutForm/InitiateClubPayoutForm.tsx:113
+msgid "Confirm Initiate Payout"
+msgstr ""
+
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/SuspendClubForm/SuspendClubForm.tsx:114
 msgid "Confirm Suspend Club"
 msgstr ""
@@ -103,7 +107,6 @@ msgstr ""
 msgid "Infractions"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/InitiateClubPayoutForm/InitiateClubPayoutForm.tsx:113
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/StaffClubPayouts.tsx:55
 msgid "Initiate Payout"
 msgstr ""

@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/settings/profile/username/RootUsernameSettings/UsernameSettings/ChangeUsernameForm/ChangeUsernameForm.tsx:186
+#: src/domain/settings/profile/username/RootUsernameSettings/UsernameSettings/ChangeUsernameForm/ChangeUsernameForm.tsx:187
 msgid "Are you sure you'd like to change your username to"
 msgstr ""
 
@@ -25,24 +25,24 @@ msgstr ""
 msgid "Change Username"
 msgstr ""
 
-#: src/domain/settings/profile/username/RootUsernameSettings/UsernameSettings/ChangeUsernameForm/ChangeUsernameForm.tsx:175
+#: src/domain/settings/profile/username/RootUsernameSettings/UsernameSettings/ChangeUsernameForm/ChangeUsernameForm.tsx:176
 msgid "Changing your to a different one username will break any links that include your current username."
 msgstr ""
 
-#: src/domain/settings/profile/username/RootUsernameSettings/UsernameSettings/ChangeUsernameForm/ChangeUsernameForm.tsx:164
+#: src/domain/settings/profile/username/RootUsernameSettings/UsernameSettings/ChangeUsernameForm/ChangeUsernameForm.tsx:165
 msgid "Confirm Username Change"
 msgstr ""
 
-#: src/domain/settings/profile/username/RootUsernameSettings/UsernameSettings/ChangeUsernameForm/ChangeUsernameForm.tsx:133
-#: src/domain/settings/profile/username/RootUsernameSettings/UsernameSettings/ChangeUsernameForm/ChangeUsernameForm.tsx:139
+#: src/domain/settings/profile/username/RootUsernameSettings/UsernameSettings/ChangeUsernameForm/ChangeUsernameForm.tsx:134
+#: src/domain/settings/profile/username/RootUsernameSettings/UsernameSettings/ChangeUsernameForm/ChangeUsernameForm.tsx:140
 msgid "Enter a new username"
 msgstr ""
 
-#: src/domain/settings/profile/username/RootUsernameSettings/UsernameSettings/ChangeUsernameForm/ChangeUsernameForm.tsx:195
+#: src/domain/settings/profile/username/RootUsernameSettings/UsernameSettings/ChangeUsernameForm/ChangeUsernameForm.tsx:196
 msgid "Go back"
 msgstr ""
 
-#: src/domain/settings/profile/username/RootUsernameSettings/UsernameSettings/ChangeUsernameForm/ChangeUsernameForm.tsx:180
+#: src/domain/settings/profile/username/RootUsernameSettings/UsernameSettings/ChangeUsernameForm/ChangeUsernameForm.tsx:181
 msgid "In addition, you won't be able to change your username for 30 days after confirming."
 msgstr ""
 
@@ -50,11 +50,11 @@ msgstr ""
 msgid "Modify your displayed username"
 msgstr ""
 
-#: src/domain/settings/profile/username/RootUsernameSettings/UsernameSettings/ChangeUsernameForm/ChangeUsernameForm.tsx:146
+#: src/domain/settings/profile/username/RootUsernameSettings/UsernameSettings/ChangeUsernameForm/ChangeUsernameForm.tsx:147
 msgid "Submit"
 msgstr ""
 
-#: src/domain/settings/profile/username/RootUsernameSettings/UsernameSettings/ChangeUsernameForm/ChangeUsernameForm.tsx:122
+#: src/domain/settings/profile/username/RootUsernameSettings/UsernameSettings/ChangeUsernameForm/ChangeUsernameForm.tsx:123
 msgid "There was an error changing your username"
 msgstr ""
 
@@ -62,11 +62,11 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: src/domain/settings/profile/username/RootUsernameSettings/UsernameSettings/ChangeUsernameForm/ChangeUsernameForm.tsx:116
+#: src/domain/settings/profile/username/RootUsernameSettings/UsernameSettings/ChangeUsernameForm/ChangeUsernameForm.tsx:117
 msgid "Username changed successfully"
 msgstr ""
 
-#: src/domain/settings/profile/username/RootUsernameSettings/UsernameSettings/ChangeUsernameForm/ChangeUsernameForm.tsx:206
+#: src/domain/settings/profile/username/RootUsernameSettings/UsernameSettings/ChangeUsernameForm/ChangeUsernameForm.tsx:207
 msgid "Yes, change"
 msgstr ""
 
