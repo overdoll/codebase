@@ -212,12 +212,14 @@ yarn_install(
     yarn_lock = "//applications/orca:yarn.lock",
 )
 
+DOCKER_REGISTRY = "771779017151.dkr.ecr.us-east-1.amazonaws.com"
+
 container_pull(
     name = "go_base_image",
-    registry = "docker.io",
-    repository = "library/golang",
-    tag = "1.16",
-    digest = "sha256:35fa3cfd4ec01a520f6986535d8f70a5eeef2d40fb8019ff626da24989bdd4f1",
+    registry = DOCKER_REGISTRY,
+    repository = "base-images/go",
+    tag = "v1.0.0",
+    digest = "sha256:63f5d2f9f46a3ebd65bf3bb6b85161c82bbd754c5ec2e0c205a4fbf591e9e250",
 )
 
 container_pull(
@@ -230,7 +232,7 @@ container_pull(
 container_pull(
     name = "go_ffmpeg_image",
     registry = "docker.io",
-    repository = "jrottenberg/ffmpeg",
-    tag = "3.4.9-ubuntu1804",
-    digest = "sha256:f6dd19ab7f63498d2fcde3b1ea1be4515d8ca8374f8f9829ca75d3f114cae780",
+    repository = DOCKER_REGISTRY,
+    tag = "v1.0.0",
+    digest = "sha256:ef6978d2c7c4059759b8036c3198d18c85ec4aadc0d9ac1361d50e5cb6474d7d",
 )
