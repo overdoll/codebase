@@ -1,5 +1,5 @@
 function prefixStaticUrl (url: string): string {
-  return `${process.env.STATIC_ASSETS_URL as string}${url}`
+  return `${process.env.STATIC_ASSETS_URL as string ?? ''}${url}`
 }
 
 const FaviconComponent = (): JSX.Element => {
