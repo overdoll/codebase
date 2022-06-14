@@ -351,7 +351,7 @@ def execute_cdn_upload(configs):
         "aws",
         "s3",
         "cp",
-        "medusa-public",
+        "medusa-public/public",
         "s3://{}".format(os.getenv("AWS_STATIC_ASSETS_BUCKET")),
         "--recursive"
     ], env=env)
