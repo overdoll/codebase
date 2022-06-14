@@ -22,7 +22,6 @@ import (
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/support"
-	"overdoll/libraries/uuid"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -575,7 +574,7 @@ func (r ResourceCassandraS3Repository) DownloadResource(ctx context.Context, tar
 func (r ResourceCassandraS3Repository) downloadResource(ctx context.Context, fileId string, isProcessed, isPrivate bool) (*os.File, error) {
 	downloader := s3manager.NewDownloader(r.aws)
 
-	file, err := os.Create(uuid.New().String())
+	file, err := os.Create(strings.Split(fileId, "/")[len(strings.Split(fileId, "/"))-1])
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to create file")
