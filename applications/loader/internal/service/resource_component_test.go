@@ -8,10 +8,10 @@ import (
 	"github.com/stretchr/testify/require"
 	"image/png"
 	"os"
+	"overdoll/applications/loader/internal/app/workflows"
 	"overdoll/applications/loader/internal/ports/graphql/types"
-	"overdoll/applications/loader/internal/service"
 	loader "overdoll/applications/loader/proto"
-	workflows2 "overdoll/applications/sting/internal/app/workflows"
+	"overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
@@ -21,14 +21,14 @@ import (
 
 type Resources struct {
 	Entities []struct {
-		Resource types.Resource `graphql:"... on Resource"`
+		Resource graphql.Resource `graphql:"... on Resource"`
 	} `graphql:"_entities(representations: $representations)"`
 }
 
 type _Any map[string]interface{}
 
 func convertResourceIdToRelayId(itemId, resourceId string) relay.ID {
-	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Resource{}, itemId, resourceId))))
+	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(graphql.Resource, itemId, resourceId))))
 }
 
 func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
@@ -38,14 +38,14 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 	// create an item ID to associate the resources with
 	itemId := uuid.New().String()
 
-	tusClient := service.getTusClient(t)
+	tusClient := getTusClient(t)
 	// upload some files
-	imageFileId := service.uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_1.png")
-	videoFileId := service.uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_2.mp4")
+	imageFileId := uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_1.png")
+	videoFileId := uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_2.mp4")
 
-	grpcClient := service.getGrpcClient(t)
+	grpcClient := getGrpcClient(t)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(service.application.TemporalClient, workflows2.ProcessResourcesForPost, workflows2.ProcessResourcesForPostInput{ItemId: itemId, ResourceIds: []string{
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceIds: []string{
 		strings.Split(imageFileId, "+")[0],
 		strings.Split(videoFileId, "+")[0],
 	}})
@@ -59,7 +59,7 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 
 	require.NoError(t, err, "no error creating new resources from uploads")
 
-	workflowExecution.FindAndExecuteWorkflow(t, service.getWorkflowEnvironment())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	resourceResults, err := grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{
 		ItemId:      itemId,
@@ -70,7 +70,7 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 
 	require.True(t, resourceResults.Resources[0].Private, "should be private")
 
-	client := service.getGraphqlClient(t)
+	client := getGraphqlClient(t)
 
 	var newResources Resources
 
@@ -234,14 +234,14 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	// create an item ID to associate the resources with
 	itemId := uuid.New().String()
 
-	tusClient := service.getTusClient(t)
+	tusClient := getTusClient(t)
 	// upload some files
-	imageFileId := service.uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_1.png")
-	videoFileId := service.uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_2.mp4")
+	imageFileId := uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_1.png")
+	videoFileId := uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_2.mp4")
 
-	grpcClient := service.getGrpcClient(t)
+	grpcClient := getGrpcClient(t)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(service.application.TemporalClient, workflows2.ProcessResourcesForPost, workflows2.ProcessResourcesForPostInput{ItemId: itemId, ResourceIds: []string{
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceIds: []string{
 		strings.Split(imageFileId, "+")[0],
 		strings.Split(videoFileId, "+")[0],
 	}})
@@ -291,7 +291,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	require.False(t, videoResource.Processed, "should not be processed #2")
 	require.Equal(t, videoResource.ItemId, itemId, "correct item ID #2")
 
-	client := service.getGraphqlClient(t)
+	client := getGraphqlClient(t)
 
 	var newResources Resources
 
@@ -316,15 +316,15 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	// check results
 	require.Len(t, newResources.Entities, 2, "should have found all graphql entities")
 
-	var newImageResource types.Resource
-	var newVideoResource types.Resource
+	var newImageResource graphql.Resource
+	var newVideoResource graphql.Resource
 
 	for _, res := range newResources.Entities {
-		if res.Resource.Type == types.ResourceTypeVideo {
+		if res.Resource.Type == graphql.ResourceTypeVideo {
 			newVideoResource = res.Resource
 		}
 
-		if res.Resource.Type == types.ResourceTypeImage {
+		if res.Resource.Type == graphql.ResourceTypeImage {
 			newImageResource = res.Resource
 		}
 	}
@@ -340,7 +340,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 
 	require.Equal(t, 2, assertions, "expected to have checked 2 files")
 
-	workflowExecution.FindAndExecuteWorkflow(t, service.getWorkflowEnvironment())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	// then, run grpc call once again to make sure its processed
 	resources, err = grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{
@@ -386,11 +386,11 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 		sDec, _ := base64.StdEncoding.DecodeString(res.Resource.ID.GetID())
 		newResourceIds = append(newResourceIds, relay.ID(sDec).GetID())
 
-		if res.Resource.Type == types.ResourceTypeVideo {
+		if res.Resource.Type == graphql.ResourceTypeVideo {
 			newVideoResource = res.Resource
 		}
 
-		if res.Resource.Type == types.ResourceTypeImage {
+		if res.Resource.Type == graphql.ResourceTypeImage {
 			newImageResource = res.Resource
 		}
 	}
@@ -436,7 +436,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 			processedAssertions += 1
 		}
 
-		if entity.Resource.Type == types.ResourceTypeVideo {
+		if entity.Resource.Type == graphql.ResourceTypeVideo {
 			downloadUrl := entity.Resource.VideoThumbnail.URL.String()
 			require.True(t, testing_tools.FileExists(entity.Resource.VideoThumbnail.URL.String()), "video thumbnail file exists in bucket")
 			resourceUrlsTo404 = append(resourceUrlsTo404, downloadUrl)
@@ -446,7 +446,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 
 	require.Equal(t, 4, processedAssertions, "expected to have checked 4 files")
 
-	deleteWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(service.application.TemporalClient, workflows2.DeleteResourcesForPost, mock.Anything)
+	deleteWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.DeleteResources, mock.Anything)
 
 	// finally, delete all resources
 	_, err = grpcClient.DeleteResources(context.Background(), &loader.DeleteResourcesRequest{
@@ -456,7 +456,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	require.NoError(t, err)
 
 	// run workflow to delete resources
-	deleteWorkflowExecution.FindAndExecuteWorkflow(t, service.getWorkflowEnvironment())
+	deleteWorkflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	// run grpc and see that we didn't find any resources
 	resources, err = grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{

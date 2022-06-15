@@ -1,12 +1,12 @@
 CREATE TABLE IF NOT EXISTS categories
 (
-    id                    text,
-    slug                  text,
-    title                 map<text, text>,
-    thumbnail_resource_id text,
-    total_likes           int,
-    total_posts           int,
-    created_at            timestamp,
+    id                 text,
+    slug               text,
+    title              map<text, text>,
+    thumbnail_resource text,
+    total_likes        int,
+    total_posts        int,
+    created_at         timestamp,
     primary key ( id )
 );
 
@@ -21,14 +21,14 @@ CREATE TABLE IF NOT EXISTS categories_slugs
 
 CREATE TABLE IF NOT EXISTS characters
 (
-    id                    text,
-    slug                  text,
-    name                  map<text, text>,
-    thumbnail_resource_id text,
-    series_id             text,
-    total_likes           int,
-    total_posts           int,
-    created_at            timestamp,
+    id                 text,
+    slug               text,
+    name               map<text, text>,
+    thumbnail_resource text,
+    series_id          text,
+    total_likes        int,
+    total_posts        int,
+    created_at         timestamp,
     primary key ( id )
 );
 
@@ -44,13 +44,13 @@ CREATE TABLE IF NOT EXISTS characters_slugs
 
 CREATE TABLE IF NOT EXISTS series
 (
-    id                    text,
-    slug                  text,
-    title                 map<text, text>,
-    thumbnail_resource_id text,
-    total_likes           int,
-    total_posts           int,
-    created_at            timestamp,
+    id                 text,
+    slug               text,
+    title              map<text, text>,
+    thumbnail_resource text,
+    total_likes        int,
+    total_posts        int,
+    created_at         timestamp,
     primary key ( id )
 );
 
@@ -65,14 +65,14 @@ CREATE TABLE IF NOT EXISTS series_slugs
 
 CREATE TABLE IF NOT EXISTS audience
 (
-    id                    text,
-    slug                  text,
-    title                 map<text, text>,
-    thumbnail_resource_id text,
-    total_likes           int,
-    total_posts           int,
-    standard              int,
-    created_at            timestamp,
+    id                 text,
+    slug               text,
+    title              map<text, text>,
+    thumbnail_resource text,
+    total_likes        int,
+    total_posts        int,
+    standard           int,
+    created_at         timestamp,
     primary key ( id )
 );
 

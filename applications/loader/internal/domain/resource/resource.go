@@ -1,4 +1,4 @@
-package post
+package resource
 
 import (
 	"bytes"
@@ -20,13 +20,16 @@ import (
 	"os"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/resource"
+	"overdoll/libraries/resource/proto"
 	"overdoll/libraries/uuid"
 	"overdoll/libraries/zap_support/zap_adapters"
 	"strconv"
 )
 
 var (
-	ErrFileTypeNotAllowed = domainerror.NewValidation("filetype not allowed")
+	ErrFileTypeNotAllowed       = domainerror.NewValidation("filetype not allowed")
+	ErrResourceCallbackNotFound = errors.New("resource callback not found")
 )
 
 // accepted formats
@@ -68,8 +71,7 @@ type Resource struct {
 	processed   bool
 	processedId string
 
-	urls              []*Url
-	videoThumbnailUrl *Url
+	token string
 
 	isPrivate bool
 
@@ -82,8 +84,7 @@ type Resource struct {
 	videoDuration int
 
 	mimeTypes    []string
-	sizes        []int
-	resourceType Type
+	resourceType resource.Type
 
 	preview string
 }
@@ -95,8 +96,7 @@ func NewImageProcessedResource(itemId, mimeType string, isPrivate bool, height, 
 		itemId:       itemId,
 		processedId:  id,
 		mimeTypes:    []string{mimeType},
-		sizes:        []int{},
-		resourceType: Image,
+		resourceType: resource.Image,
 		isPrivate:    isPrivate,
 		processed:    true,
 		height:       height,
@@ -104,20 +104,20 @@ func NewImageProcessedResource(itemId, mimeType string, isPrivate bool, height, 
 	}, nil
 }
 
-func NewResource(itemId, id, mimeType string, isPrivate bool) (*Resource, error) {
+func NewResource(itemId, id, mimeType string, isPrivate bool, token string) (*Resource, error) {
 
 	// initial mimetype we dont care about until we do a processing step later that determines the type
-	var rType Type
+	var rType resource.Type
 
 	for _, m := range imageAcceptedTypes {
 		if m == mimeType {
-			rType = Image
+			rType = resource.Image
 		}
 	}
 
 	for _, m := range videoAcceptedTypes {
 		if m == mimeType {
-			rType = Video
+			rType = resource.Video
 		}
 	}
 
@@ -129,10 +129,10 @@ func NewResource(itemId, id, mimeType string, isPrivate bool) (*Resource, error)
 		id:            id,
 		itemId:        itemId,
 		mimeTypes:     []string{mimeType},
-		sizes:         []int{},
 		resourceType:  rType,
 		isPrivate:     isPrivate,
 		processed:     false,
+		token:         token,
 		height:        0,
 		width:         0,
 		videoDuration: 0,
@@ -218,7 +218,7 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 		// our resource will contain 2 mimetypes - a PNG and a webp
 		mimeTypes = append(mimeTypes, "image/webp")
 		mimeTypes = append(mimeTypes, "image/png")
-		r.resourceType = Image
+		r.resourceType = resource.Image
 
 		// get config
 		_, _ = file.Seek(0, io.SeekStart)
@@ -305,7 +305,7 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 
 		r.videoThumbnailMimeType = "image/png"
 		r.videoThumbnail = videoThumb
-		r.resourceType = Video
+		r.resourceType = resource.Video
 
 		_, _ = fileThumbnail.Seek(0, io.SeekStart)
 		preview, err := createPreviewFromFile(fileThumbnail)
@@ -370,12 +370,12 @@ func (r *Resource) LastMimeType() string {
 }
 
 func (r *Resource) MakeImage() error {
-	r.resourceType = Image
+	r.resourceType = resource.Image
 	return nil
 }
 
 func (r *Resource) MakeVideo() error {
-	r.resourceType = Video
+	r.resourceType = resource.Video
 	return nil
 }
 
@@ -403,12 +403,16 @@ func (r *Resource) Preview() string {
 	return r.preview
 }
 
+func (r *Resource) Token() string {
+	return r.token
+}
+
 func (r *Resource) IsImage() bool {
-	return r.resourceType == Image
+	return r.resourceType == resource.Image
 }
 
 func (r *Resource) IsVideo() bool {
-	return r.resourceType == Video
+	return r.resourceType == resource.Video
 }
 
 func (r *Resource) VideoThumbnailMimeType() string {
@@ -419,17 +423,9 @@ func (r *Resource) VideoThumbnail() string {
 	return r.videoThumbnail
 }
 
-func (r *Resource) VideoThumbnailFullUrl() *Url {
-	return r.videoThumbnailUrl
-}
+func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate bool, mimeTypes []string, processed bool, processedId string, videoDuration int, videoThumbnail, videoThumbnailMimeType string, width, height int, preview, token string) *Resource {
 
-func (r *Resource) FullUrls() []*Url {
-	return r.urls
-}
-
-func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate bool, mimeTypes []string, processed bool, processedId string, videoDuration int, videoThumbnail, videoThumbnailMimeType string, width, height int, urls []*Url, videoThumbnailUrl *Url, preview string) *Resource {
-
-	typ, _ := TypeFromInt(tp)
+	typ, _ := resource.TypeFromInt(tp)
 
 	return &Resource{
 		id:                     resourceId,
@@ -444,8 +440,35 @@ func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate 
 		mimeTypes:              mimeTypes,
 		resourceType:           typ,
 		processed:              processed,
-		urls:                   urls,
-		videoThumbnailUrl:      videoThumbnailUrl,
 		preview:                preview,
+		token:                  token,
+	}
+}
+
+func ToProto(res *Resource) *proto.Resource {
+	var tp proto.ResourceType
+
+	if res.IsImage() {
+		tp = proto.ResourceType_IMAGE
+	}
+
+	if res.IsVideo() {
+		tp = proto.ResourceType_VIDEO
+	}
+	return &proto.Resource{
+		Id:                     res.ID(),
+		ItemId:                 res.ItemId(),
+		Processed:              res.IsProcessed(),
+		ProcessedId:            res.ProcessedId(),
+		Private:                res.IsPrivate(),
+		VideoThumbnail:         res.VideoThumbnail(),
+		VideoThumbnailMimeType: res.VideoThumbnailMimeType(),
+		Width:                  int64(res.Width()),
+		Height:                 int64(res.Height()),
+		VideoDuration:          int64(res.VideoDuration()),
+		MimeTypes:              res.MimeTypes(),
+		Type:                   tp,
+		Preview:                res.Preview(),
+		Token:                  res.Token(),
 	}
 }

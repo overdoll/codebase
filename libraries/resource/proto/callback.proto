@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package overdoll.libraries;
+
+import "libraries/resource/proto/resource.proto";
+
+message UpdateResourcesRequest {
+  repeated overdoll.libraries.Resource resources = 1;
+}
+
+message UpdateResourcesResponse {}
+
+service ResourceCallback {
+  rpc UpdateResources(UpdateResourcesRequest) returns (UpdateResourcesResponse);
+}

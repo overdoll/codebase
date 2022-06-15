@@ -2,24 +2,24 @@ package workflows
 
 import (
 	"go.temporal.io/sdk/workflow"
-	"overdoll/applications/sting/internal/app/workflows/activities"
+	"overdoll/applications/loader/internal/app/workflows/activities"
 )
 
-type DeleteResourcesForPostInput struct {
-	PostId      string
+type DeleteResourcesInput struct {
+	ItemId      string
 	ResourceIds []string
 }
 
-func DeleteResourcesForPost(ctx workflow.Context, input DeleteResourcesForPostInput) error {
+func DeleteResources(ctx workflow.Context, input DeleteResourcesInput) error {
 
 	ctx = workflow.WithActivityOptions(ctx, options)
 	logger := workflow.GetLogger(ctx)
 
 	var a *activities.Activities
 
-	if err := workflow.ExecuteActivity(ctx, a.DeleteResourcesForPost,
-		activities.DeleteResourcesForPostInput{
-			PostId:      input.PostId,
+	if err := workflow.ExecuteActivity(ctx, a.DeleteResources,
+		activities.DeleteResourcesInput{
+			ItemId:      input.ItemId,
 			ResourceIds: input.ResourceIds,
 		},
 	).Get(ctx, nil); err != nil {

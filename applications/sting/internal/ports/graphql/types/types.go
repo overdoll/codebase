@@ -55,7 +55,7 @@ type Audience struct {
 	// A url-friendly ID. Should be used when searching.
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
-	Thumbnail *Resource `json:"thumbnail"`
+	Thumbnail *graphql1.Resource `json:"thumbnail"`
 	// A title for this audience.
 	//
 	// Optionally pass a locale to display it in a specific language. English by default.
@@ -100,7 +100,7 @@ type Category struct {
 	// A url-friendly ID. Should be used when searching
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
-	Thumbnail *Resource `json:"thumbnail"`
+	Thumbnail *graphql1.Resource `json:"thumbnail"`
 	// A title for this category.
 	//
 	// Optionally pass a locale to display it in a specific language. English by default.
@@ -143,7 +143,7 @@ type Character struct {
 	// A url-friendly ID. Should be used when searching
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
-	Thumbnail *Resource `json:"thumbnail"`
+	Thumbnail *graphql1.Resource `json:"thumbnail"`
 	// A name for this character.
 	//
 	// Optionally pass a locale to display it in a specific language. English by default.
@@ -368,7 +368,7 @@ type PostContent struct {
 	// The ID of this content.
 	ID relay.ID `json:"id"`
 	// The resource belonging to this content.
-	Resource *Resource `json:"resource"`
+	Resource *graphql1.Resource `json:"resource"`
 	// Whether or not this content is supporter only.
 	IsSupporterOnly bool `json:"isSupporterOnly"`
 	// Whether or not the viewer is able to see this content.
@@ -408,19 +408,13 @@ type RemovePostContentPayload struct {
 	Post *Post `json:"post"`
 }
 
-type Resource struct {
-	ID relay.ID `json:"id"`
-}
-
-func (Resource) IsEntity() {}
-
 type Series struct {
 	// An ID pointing to this series.
 	ID relay.ID `json:"id"`
 	// A url-friendly ID. Should be used when searching
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
-	Thumbnail *Resource `json:"thumbnail"`
+	Thumbnail *graphql1.Resource `json:"thumbnail"`
 	// A title for this series.
 	//
 	// Optionally pass a locale to display it in a specific language. English by default.

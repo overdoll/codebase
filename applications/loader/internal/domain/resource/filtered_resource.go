@@ -1,4 +1,4 @@
-package post
+package resource
 
 type FilteredResource struct {
 	oldResource *Resource

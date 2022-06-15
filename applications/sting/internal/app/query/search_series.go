@@ -2,7 +2,6 @@ package query
 
 import (
 	"context"
-
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"

@@ -2,10 +2,8 @@ package service
 
 import (
 	"context"
-	"github.com/aws/aws-sdk-go/service/cloudfront/sign"
 	"go.temporal.io/sdk/client"
 	temporalmocks "go.temporal.io/sdk/mocks"
-	"go.uber.org/zap"
 	"os"
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/app"
@@ -14,7 +12,7 @@ import (
 	"overdoll/applications/sting/internal/app/workflows/activities"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
-	"overdoll/libraries/support"
+	"overdoll/libraries/resource"
 	"overdoll/libraries/testing_tools/mocks"
 )
 
@@ -23,16 +21,19 @@ func NewApplication(ctx context.Context) (*app.Application, func()) {
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 	parleyClient, cleanup2 := clients.NewParleyClient(ctx, os.Getenv("PARLEY_SERVICE"))
 	stellaClient, cleanup3 := clients.NewStellaClient(ctx, os.Getenv("STELLA_SERVICE"))
+	loaderClient, cleanup4 := clients.NewLoaderClient(ctx, os.Getenv("LOADER_SERVICE"))
 
 	return createApplication(ctx,
 			adapters.NewEvaGrpc(evaClient),
 			adapters.NewParleyGrpc(parleyClient),
 			adapters.NewStellaGrpc(stellaClient),
+			adapters.NewLoaderGrpc(loaderClient),
 			clients.NewTemporalClient(ctx)),
 		func() {
 			cleanup()
 			cleanup2()
 			cleanup3()
+			cleanup4()
 		}
 }
 
@@ -42,6 +43,7 @@ type ComponentTestApplication struct {
 	EvaClient      *mocks.MockEvaClient
 	ParleyClient   *mocks.MockParleyClient
 	StellaClient   *mocks.MockStellaClient
+	LoaderClient   *mocks.MockLoaderClient
 }
 
 func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication {
@@ -50,6 +52,7 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 	evaClient := &mocks.MockEvaClient{}
 	parleyClient := &mocks.MockParleyClient{}
 	stellaClient := &mocks.MockStellaClient{}
+	loaderClient := &mocks.MockLoaderClient{}
 	temporalClient := &temporalmocks.Client{}
 
 	return &ComponentTestApplication{
@@ -58,53 +61,46 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 			adapters.NewEvaGrpc(evaClient),
 			adapters.NewParleyGrpc(parleyClient),
 			adapters.NewStellaGrpc(stellaClient),
+			adapters.NewLoaderGrpc(loaderClient),
 			temporalClient,
 		),
 		TemporalClient: temporalClient,
 		EvaClient:      evaClient,
 		ParleyClient:   parleyClient,
 		StellaClient:   stellaClient,
+		LoaderClient:   loaderClient,
 	}
 }
 
-func createApplication(ctx context.Context, eva command.EvaService, parley activities.ParleyService, stella query.StellaService, client client.Client) *app.Application {
+func createApplication(ctx context.Context, eva command.EvaService, parley activities.ParleyService, stella query.StellaService, loader command.LoaderService, client client.Client) *app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 	esClient := bootstrap.InitializeElasticSearchSession()
 	eventRepo := adapters.NewEventTemporalRepository(client)
 
-	awsSession := bootstrap.InitializeAWSSession()
+	resourceSerializer := resource.NewSerializer()
 
-	resourcesRsa, err := support.ParseRsaPrivateKeyFromPemEnvFile(os.Getenv("AWS_PRIVATE_RESOURCES_KEY_PAIR_PRIVATE_KEY"))
-
-	if err != nil {
-		zap.S().Fatalw("failed to parse RSA private key", zap.Error(err))
-	}
-
-	resourcesSigner := sign.NewURLSigner(os.Getenv("AWS_PRIVATE_RESOURCES_KEY_PAIR_ID"), resourcesRsa)
-
-	postRepo := adapters.NewPostsCassandraRepository(session, esClient, awsSession, resourcesSigner)
+	postRepo := adapters.NewPostsCassandraRepository(session, esClient, resourceSerializer)
 	personalizationRepo := adapters.NewCurationProfileCassandraRepository(session)
 
 	return &app.Application{
 		Commands: app.Commands{
-			TusComposer: command.NewTusComposerHandler(postRepo),
-
-			CreatePost:    command.NewCreatePostHandler(postRepo, stella),
-			PublishPost:   command.NewPublishPostHandler(postRepo, eventRepo),
-			DiscardPost:   command.NewDiscardPostHandler(postRepo, eventRepo),
-			RejectPost:    command.NewRejectPostHandler(postRepo),
-			SubmitPost:    command.NewSubmitPostHandler(postRepo, eventRepo, loader),
-			RemovePost:    command.NewRemovePostHandler(postRepo, eventRepo),
-			DeletePost:    command.NewDeletePostHandler(postRepo, eventRepo),
-			ArchivePost:   command.NewArchivePostHandler(postRepo, eventRepo),
-			UnArchivePost: command.NewUnArchivePostHandler(postRepo, eventRepo),
+			UpdateResources: command.NewUpdateResourcesHandler(postRepo),
+			CreatePost:      command.NewCreatePostHandler(postRepo, stella),
+			PublishPost:     command.NewPublishPostHandler(postRepo, eventRepo),
+			DiscardPost:     command.NewDiscardPostHandler(postRepo, eventRepo),
+			RejectPost:      command.NewRejectPostHandler(postRepo),
+			SubmitPost:      command.NewSubmitPostHandler(postRepo, eventRepo),
+			RemovePost:      command.NewRemovePostHandler(postRepo, eventRepo),
+			DeletePost:      command.NewDeletePostHandler(postRepo, eventRepo),
+			ArchivePost:     command.NewArchivePostHandler(postRepo, eventRepo),
+			UnArchivePost:   command.NewUnArchivePostHandler(postRepo, eventRepo),
 
 			AddTerminatedClub:    command.NewAddTerminatedClubHandler(postRepo),
 			RemoveTerminatedClub: command.NewRemoveTerminatedClubHandler(postRepo),
 
 			AddPostContent:                   command.NewAddPostContentHandler(postRepo, loader),
-			RemovePostContent:                command.NewRemovePostContentHandler(postRepo),
+			RemovePostContent:                command.NewRemovePostContentHandler(postRepo, loader),
 			UpdatePostContentOrder:           command.NewUpdatePostContentOrderHandler(postRepo),
 			UpdatePostContentIsSupporterOnly: command.NewUpdatePostContentIsSupporterOnlyHandler(postRepo),
 

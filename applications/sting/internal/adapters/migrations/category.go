@@ -17,7 +17,7 @@ const categoryIndexProperties = `
 	"slug": {
 		"type": "keyword"
 	},
-	"thumbnail_resource_id": {
+	"thumbnail_resource": {
 		"type": "keyword"
 	},
 	"thumbnail_resource": {

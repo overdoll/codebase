@@ -2,13 +2,17 @@ package ports
 
 import (
 	"context"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
-	"overdoll/libraries/principal"
-
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/command"
 	"overdoll/applications/sting/internal/app/query"
+	"overdoll/applications/sting/internal/domain/post"
 	sting "overdoll/applications/sting/proto"
+	"overdoll/libraries/principal"
+	"overdoll/libraries/resource"
+	"overdoll/libraries/resource/proto"
 )
 
 type Server struct {
@@ -122,4 +126,18 @@ func (s Server) RemoveTerminatedClub(ctx context.Context, request *sting.RemoveT
 	}
 
 	return &emptypb.Empty{}, nil
+}
+
+func (s Server) UpdateResources(ctx context.Context, request *proto.UpdateResourcesRequest) (*proto.UpdateResourcesResponse, error) {
+
+	if err := s.app.Commands.UpdateResources.Handle(ctx, command.UpdateResources{Resources: resource.UnmarshalResourcesFromProto(request.Resources)}); err != nil {
+
+		if err == post.ErrResourceNotPresent {
+			return nil, status.Error(codes.NotFound, err.Error())
+		}
+
+		return nil, err
+	}
+
+	return &proto.UpdateResourcesResponse{ShouldRetry: false}, nil
 }

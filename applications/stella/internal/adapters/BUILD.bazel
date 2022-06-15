@@ -11,7 +11,6 @@ go_library(
         "club_members_elasticsearch_repository.go",
         "eva_grpc.go",
         "event_temporal_repository.go",
-        "loader_grpc.go",
         "sting_grpc.go",
     ],
     importpath = "overdoll/applications/stella/internal/adapters",
@@ -19,7 +18,6 @@ go_library(
     deps = [
         "//applications/carrier/proto:v1_go_proto",
         "//applications/eva/proto:v1_go_proto",
-        "//applications/loader/proto:v1_go_proto",
         "//applications/stella/internal/app/workflows",
         "//applications/stella/internal/domain/club",
         "//applications/sting/proto:v1_go_proto",

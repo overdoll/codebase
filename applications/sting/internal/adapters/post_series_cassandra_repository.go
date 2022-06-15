@@ -5,6 +5,7 @@ import (
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/localization"
+	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"strings"
 	"time"
@@ -22,7 +23,7 @@ var seriesTable = table.New(table.Metadata{
 		"id",
 		"slug",
 		"title",
-		"thumbnail_resource_id",
+		"thumbnail_resource",
 		"total_likes",
 		"total_posts",
 		"created_at",
@@ -32,13 +33,13 @@ var seriesTable = table.New(table.Metadata{
 })
 
 type series struct {
-	Id                  string            `db:"id"`
-	Slug                string            `db:"slug"`
-	Title               map[string]string `db:"title"`
-	ThumbnailResourceId *string           `db:"thumbnail_resource_id"`
-	TotalLikes          int               `db:"total_likes"`
-	TotalPosts          int               `db:"total_posts"`
-	CreatedAt           time.Time         `db:"created_at"`
+	Id                string            `db:"id"`
+	Slug              string            `db:"slug"`
+	Title             map[string]string `db:"title"`
+	ThumbnailResource string            `db:"thumbnail_resource"`
+	TotalLikes        int               `db:"total_likes"`
+	TotalPosts        int               `db:"total_posts"`
+	CreatedAt         time.Time         `db:"created_at"`
 }
 
 var seriesSlugTable = table.New(table.Metadata{
@@ -56,16 +57,23 @@ type seriesSlug struct {
 	Slug     string `db:"slug"`
 }
 
-func marshalSeriesToDatabase(pending *post.Series) *series {
-	return &series{
-		Id:                  pending.ID(),
-		Slug:                pending.Slug(),
-		Title:               localization.MarshalTranslationToDatabase(pending.Title()),
-		ThumbnailResourceId: pending.ThumbnailResourceId(),
-		TotalLikes:          pending.TotalLikes(),
-		TotalPosts:          pending.TotalPosts(),
-		CreatedAt:           pending.CreatedAt(),
+func marshalSeriesToDatabase(pending *post.Series) (*series, error) {
+
+	marshalled, err := resource.MarshalResourceToDatabase(pending.ThumbnailResource())
+
+	if err != nil {
+		return nil, err
 	}
+
+	return &series{
+		Id:                pending.ID(),
+		Slug:              pending.Slug(),
+		Title:             localization.MarshalTranslationToDatabase(pending.Title()),
+		ThumbnailResource: marshalled,
+		TotalLikes:        pending.TotalLikes(),
+		TotalPosts:        pending.TotalPosts(),
+		CreatedAt:         pending.CreatedAt(),
+	}, nil
 }
 
 func (r PostsCassandraElasticsearchRepository) getSeriesBySlug(ctx context.Context, requester *principal.Principal, slug string) (*seriesSlug, error) {
@@ -154,11 +162,17 @@ func (r PostsCassandraElasticsearchRepository) getSingleSeriesById(ctx context.C
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get series by id")
 	}
 
+	unmarshalledResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, med.ThumbnailResource)
+
+	if err != nil {
+		return nil, err
+	}
+
 	return post.UnmarshalSeriesFromDatabase(
 		med.Id,
 		med.Slug,
 		med.Title,
-		med.ThumbnailResourceId,
+		unmarshalledResource,
 		med.TotalLikes,
 		med.TotalPosts,
 		med.CreatedAt,
@@ -188,11 +202,18 @@ func (r PostsCassandraElasticsearchRepository) GetSeriesByIds(ctx context.Contex
 	}
 
 	for _, med := range mediaModels {
+
+		unmarshalledResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, med.ThumbnailResource)
+
+		if err != nil {
+			return nil, err
+		}
+
 		medias = append(medias, post.UnmarshalSeriesFromDatabase(
 			med.Id,
 			med.Slug,
 			med.Title,
-			med.ThumbnailResourceId,
+			unmarshalledResource,
 			med.TotalLikes,
 			med.TotalPosts,
 			med.CreatedAt,
@@ -218,7 +239,11 @@ func (r PostsCassandraElasticsearchRepository) deleteUniqueSeriesSlug(ctx contex
 
 func (r PostsCassandraElasticsearchRepository) CreateSeries(ctx context.Context, requester *principal.Principal, series *post.Series) error {
 
-	ser := marshalSeriesToDatabase(series)
+	ser, err := marshalSeriesToDatabase(series)
+
+	if err != nil {
+		return err
+	}
 
 	// first, do a unique insert of club to ensure we reserve a unique slug
 	applied, err := seriesSlugTable.
@@ -277,7 +302,11 @@ func (r PostsCassandraElasticsearchRepository) CreateSeries(ctx context.Context,
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateSeriesThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
-	return r.updateSeries(ctx, id, updateFn, []string{"thumbnail_resource_id"})
+	return r.updateSeries(ctx, id, updateFn, []string{"thumbnail_resource"})
+}
+
+func (r PostsCassandraElasticsearchRepository) UpdateSeriesThumbnailOperator(ctx context.Context, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
+	return r.updateSeries(ctx, id, updateFn, []string{"thumbnail_resource"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateSeriesTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
@@ -304,7 +333,11 @@ func (r PostsCassandraElasticsearchRepository) updateSeries(ctx context.Context,
 		return nil, err
 	}
 
-	pst := marshalSeriesToDatabase(series)
+	pst, err := marshalSeriesToDatabase(series)
+
+	if err != nil {
+		return nil, err
+	}
 
 	if err := r.session.
 		Query(seriesTable.Update(

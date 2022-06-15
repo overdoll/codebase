@@ -2,8 +2,6 @@ package post
 
 import (
 	"context"
-	tusd "github.com/tus/tusd/pkg/handler"
-	"os"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
@@ -36,6 +34,7 @@ type Repository interface {
 	GetCharacterBySlug(ctx context.Context, requester *principal.Principal, slug, seriesSlug string) (*Character, error)
 	GetCharacterIdsFromSlugs(ctx context.Context, characterSlugs, seriesIds []string) ([]string, error)
 
+	UpdateCharacterThumbnailOperator(ctx context.Context, id string, updateFn func(character *Character) error) (*Character, error)
 	UpdateCharacterThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(character *Character) error) (*Character, error)
 	UpdateCharacterName(ctx context.Context, requester *principal.Principal, id string, updateFn func(character *Character) error) (*Character, error)
 
@@ -49,6 +48,7 @@ type Repository interface {
 	GetAudienceBySlug(ctx context.Context, requester *principal.Principal, slug string) (*Audience, error)
 	GetAudienceIdsFromSlugs(ctx context.Context, audienceSlugs []string) ([]string, error)
 
+	UpdateAudienceThumbnailOperator(ctx context.Context, id string, updateFn func(audience *Audience) error) (*Audience, error)
 	UpdateAudienceThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *Audience) error) (*Audience, error)
 	UpdateAudienceTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *Audience) error) (*Audience, error)
 	UpdateAudienceIsStandard(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *Audience) error) (*Audience, error)
@@ -62,6 +62,7 @@ type Repository interface {
 	GetSeriesBySlug(ctx context.Context, requester *principal.Principal, slug string) (*Series, error)
 	GetSeriesIdsFromSlugs(ctx context.Context, seriesIds []string) ([]string, error)
 
+	UpdateSeriesThumbnailOperator(ctx context.Context, id string, updateFn func(series *Series) error) (*Series, error)
 	UpdateSeriesThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(series *Series) error) (*Series, error)
 	UpdateSeriesTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(series *Series) error) (*Series, error)
 
@@ -74,6 +75,7 @@ type Repository interface {
 	GetCategoryIdsFromSlugs(ctx context.Context, categoryIds []string) ([]string, error)
 
 	CreateCategory(ctx context.Context, requester *principal.Principal, category *Category) error
+	UpdateCategoryThumbnailOperator(ctx context.Context, id string, updateFn func(category *Category) error) (*Category, error)
 	UpdateCategoryThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *Category) error) (*Category, error)
 	UpdateCategoryTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *Category) error) (*Category, error)
 
@@ -105,14 +107,4 @@ type Repository interface {
 	RemoveTerminatedClub(ctx context.Context, clubId string) error
 
 	GetAccountPostLikes(ctx context.Context, accountId string) ([]string, error)
-
-	UpdatePostResources(ctx context.Context, postId string, res []*Resource) error
-
-	GetAndCreateResourcesForPost(ctx context.Context, post *Post, uploads []string, isPrivate bool) ([]*Resource, error)
-	DeleteResourcesForPost(ctx context.Context, postId string, resourceIds []string) error
-	GetComposer(ctx context.Context) (*tusd.StoreComposer, error)
-	DownloadResource(ctx context.Context, resource *Resource) (*os.File, error)
-	DownloadVideoThumbnailForResource(ctx context.Context, resource *Resource) (*os.File, error)
-	UploadProcessedResource(ctx context.Context, move []*Move, resource *Resource) error
-	UploadResource(ctx context.Context, file *os.File, target *Resource) error
 }

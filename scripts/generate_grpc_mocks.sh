@@ -18,3 +18,4 @@ mockery --name LoaderClient --dir applications/loader/proto --output libraries/t
 mockery --name HadesClient --dir applications/hades/proto --output libraries/testing_tools/mocks --structname MockHadesClient
 mockery --name EvaClient --dir applications/eva/proto --output libraries/testing_tools/mocks --structname MockEvaClient
 mockery --name CarrierClient --dir applications/carrier/proto --output libraries/testing_tools/mocks --structname MockCarrierClient
+mockery --name ResourceCallbackClient --dir libraries/resource/proto --output libraries/testing_tools/mocks --structname MockResourceCallbackClient

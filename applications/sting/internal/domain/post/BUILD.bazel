@@ -31,6 +31,7 @@ go_library(
         "//libraries/localization",
         "//libraries/paging",
         "//libraries/principal",
+        "//libraries/resource",
         "//libraries/uuid",
         "@com_github_go_playground_validator_v10//:validator",
     ],

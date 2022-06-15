@@ -19,7 +19,4 @@ type Repository interface {
 	RemovePostLike(ctx context.Context, like *post.Like) error
 
 	DeleteAccountData(ctx context.Context, postId string) error
-
-	ProcessResourcesForPost(ctx context.Context, post *post.Post, resources []*post.Resource) error
-	DeleteResources(ctx context.Context, itemId string, resourceIds []string) error
 }

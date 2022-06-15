@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"time"
 
@@ -17,35 +18,45 @@ import (
 )
 
 type categoryDocument struct {
-	Id                  string            `json:"id"`
-	Slug                string            `json:"slug"`
-	ThumbnailResourceId *string           `json:"thumbnail_resource_id"`
-	Title               map[string]string `json:"title"`
-	CreatedAt           time.Time         `json:"created_at"`
-	TotalLikes          int               `json:"total_likes"`
-	TotalPosts          int               `json:"total_posts"`
+	Id                string            `json:"id"`
+	Slug              string            `json:"slug"`
+	ThumbnailResource string            `json:"thumbnail_resource"`
+	Title             map[string]string `json:"title"`
+	CreatedAt         time.Time         `json:"created_at"`
+	TotalLikes        int               `json:"total_likes"`
+	TotalPosts        int               `json:"total_posts"`
 }
 
 const CategoryIndexName = "categories"
 
-func marshalCategoryToDocument(cat *post.Category) *categoryDocument {
+func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
+
+	marshalled, err := resource.MarshalResourceToDatabase(cat.ThumbnailResource())
+
+	if err != nil {
+		return nil, err
+	}
 
 	return &categoryDocument{
-		Id:                  cat.ID(),
-		Slug:                cat.Slug(),
-		ThumbnailResourceId: cat.ThumbnailResourceId(),
-		Title:               localization.MarshalTranslationToDatabase(cat.Title()),
-		CreatedAt:           cat.CreatedAt(),
-		TotalLikes:          cat.TotalLikes(),
-		TotalPosts:          cat.TotalPosts(),
-	}
+		Id:                cat.ID(),
+		Slug:              cat.Slug(),
+		ThumbnailResource: marshalled,
+		Title:             localization.MarshalTranslationToDatabase(cat.Title()),
+		CreatedAt:         cat.CreatedAt(),
+		TotalLikes:        cat.TotalLikes(),
+		TotalPosts:        cat.TotalPosts(),
+	}, nil
 }
 
 func (r PostsCassandraElasticsearchRepository) indexCategory(ctx context.Context, category *post.Category) error {
 
-	cat := marshalCategoryToDocument(category)
+	cat, err := marshalCategoryToDocument(category)
 
-	_, err := r.client.
+	if err != nil {
+		return err
+	}
+
+	_, err = r.client.
 		Index().
 		Index(CategoryIndexName).
 		Id(category.ID()).
@@ -122,11 +133,17 @@ func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Cont
 			return nil, errors.Wrap(err, "failed to unmarshal category document")
 		}
 
+		unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, pst.ThumbnailResource)
+
+		if err != nil {
+			return nil, err
+		}
+
 		newCategory := post.UnmarshalCategoryFromDatabase(
 			pst.Id,
 			pst.Slug,
 			pst.Title,
-			pst.ThumbnailResourceId,
+			unmarshalled,
 			pst.TotalLikes,
 			pst.TotalPosts,
 			pst.CreatedAt,
@@ -156,12 +173,12 @@ func (r PostsCassandraElasticsearchRepository) IndexAllCategories(ctx context.Co
 		for iter.StructScan(&c) {
 
 			doc := categoryDocument{
-				Id:                  c.Id,
-				Slug:                c.Slug,
-				ThumbnailResourceId: c.ThumbnailResourceId,
-				Title:               c.Title,
-				CreatedAt:           c.CreatedAt,
-				TotalLikes:          c.TotalLikes,
+				Id:                c.Id,
+				Slug:              c.Slug,
+				ThumbnailResource: c.ThumbnailResource,
+				Title:             c.Title,
+				CreatedAt:         c.CreatedAt,
+				TotalLikes:        c.TotalLikes,
 			}
 
 			_, err := r.client.

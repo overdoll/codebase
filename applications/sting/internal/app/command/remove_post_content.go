@@ -14,11 +14,12 @@ type RemovePostContent struct {
 }
 
 type RemovePostContentHandler struct {
-	pr post.Repository
+	pr     post.Repository
+	loader LoaderService
 }
 
-func NewRemovePostContentHandler(pr post.Repository) RemovePostContentHandler {
-	return RemovePostContentHandler{pr: pr}
+func NewRemovePostContentHandler(pr post.Repository, loader LoaderService) RemovePostContentHandler {
+	return RemovePostContentHandler{pr: pr, loader: loader}
 }
 
 func (h RemovePostContentHandler) Handle(ctx context.Context, cmd RemovePostContent) (*post.Post, error) {
@@ -28,6 +29,10 @@ func (h RemovePostContentHandler) Handle(ctx context.Context, cmd RemovePostCont
 	})
 
 	if err != nil {
+		return nil, err
+	}
+
+	if err := h.loader.DeleteResources(ctx, cmd.PostId, cmd.ContentIds); err != nil {
 		return nil, err
 	}
 

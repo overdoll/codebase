@@ -4,6 +4,7 @@ import (
 	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/resource"
 	"time"
 
 	"overdoll/libraries/paging"
@@ -12,7 +13,8 @@ import (
 )
 
 var (
-	ErrNotDraft = domainerror.NewValidation("post must be in draft")
+	ErrNotDraft           = domainerror.NewValidation("post must be in draft")
+	ErrResourceNotPresent = domainerror.NewValidation("resource is not present")
 )
 
 type Post struct {
@@ -63,7 +65,7 @@ func NewPost(requester *principal.Principal, club *club.Club) (*Post, error) {
 	}, nil
 }
 
-func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int, contributorId string, contentResourceIds []string, contentResources []*Resource, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt time.Time, postedAt *time.Time) *Post {
+func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int, contributorId string, contentResourceIds []string, contentResources []*resource.Resource, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt time.Time, postedAt *time.Time) *Post {
 
 	ps, _ := StateFromString(state)
 	so, _ := SupporterOnlyStatusFromString(supporterOnlyStatus)
@@ -72,18 +74,18 @@ func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int,
 
 	for _, resourceId := range contentResourceIds {
 
-		var res *Resource
-		var hiddenRes *Resource
+		var res *resource.Resource
+		var hiddenRes *resource.Resource
 
 		for _, r := range contentResources {
-			if r.id == resourceId {
+			if r.ID() == resourceId {
 				res = r
 			}
 
 			hidden, okHidden := contentSupporterOnlyResourceIds[resourceId]
 
 			if okHidden {
-				if hidden == r.id {
+				if hidden == r.ID() {
 					hiddenRes = r
 				}
 			}
@@ -259,14 +261,16 @@ func (p *Post) UpdatePostPostedDate(date time.Time) error {
 	return nil
 }
 
-func (p *Post) SubmitPostRequest(requester *principal.Principal, allResourcesProcessed bool) error {
+func (p *Post) SubmitPostRequest(requester *principal.Principal) error {
 
 	if err := p.CanUpdate(requester); err != nil {
 		return err
 	}
 
-	if !allResourcesProcessed {
-		return domainerror.NewValidation("all resources must be processed before submitting")
+	for _, cnt := range p.content {
+		if !cnt.resource.IsProcessed() {
+			return domainerror.NewValidation("all resources must be processed before submitting")
+		}
 	}
 
 	if p.state != Draft {
@@ -274,6 +278,23 @@ func (p *Post) SubmitPostRequest(requester *principal.Principal, allResourcesPro
 	}
 
 	return nil
+}
+
+func (p *Post) AllContentResourceIds() []string {
+
+	var resourceIds []string
+
+	for _, cnt := range p.content {
+		if cnt.resource != nil {
+			resourceIds = append(resourceIds, cnt.resource.ID())
+		}
+
+		if cnt.resourceHidden != nil {
+			resourceIds = append(resourceIds, cnt.resourceHidden.ID())
+		}
+	}
+
+	return resourceIds
 }
 
 func (p *Post) UpdateAudienceRequest(requester *principal.Principal, audience *Audience) error {
@@ -305,7 +326,7 @@ func (p *Post) updatePostSupporterOnlyStatus() {
 	}
 }
 
-func (p *Post) AddContentRequest(requester *principal.Principal, resources []*Resource) error {
+func (p *Post) AddContentRequest(requester *principal.Principal, resources []*resource.Resource) error {
 
 	if err := p.CanUpdate(requester); err != nil {
 		return err
@@ -324,6 +345,30 @@ func (p *Post) AddContentRequest(requester *principal.Principal, resources []*Re
 
 	p.content = append(p.content, newContent...)
 	p.updatePostSupporterOnlyStatus()
+	return nil
+}
+
+func (p *Post) UpdateContentExisting(resources []*resource.Resource) error {
+
+	foundCount := 0
+
+	for _, content := range p.Content() {
+		for _, res := range resources {
+			if res.ID() == content.Resource().ID() {
+				foundCount += 1
+				if err := content.UpdateResource(res); err != nil {
+					return err
+				}
+				break
+			}
+		}
+	}
+
+	// make sure we updated all resources for this post otherwise we send a not found error
+	if foundCount != len(resources) {
+		return ErrResourceNotPresent
+	}
+
 	return nil
 }
 
@@ -407,6 +452,9 @@ func (p *Post) RemoveContentRequest(requester *principal.Principal, contentIds [
 
 		for _, removedContent := range contentIds {
 			if removedContent == content.id {
+				if !content.resource.IsProcessed() {
+					return domainerror.NewValidation("cannot remove content that is not yet processed")
+				}
 				foundContent = true
 				continue
 			}
@@ -564,6 +612,18 @@ func (p *Post) CanView(suspendedClubIds []string, requester *principal.Principal
 		}
 
 		return nil
+	}
+
+	return nil
+}
+
+func validateExistingThumbnail(current *resource.Resource, new *resource.Resource) error {
+	if current == nil {
+		return ErrResourceNotPresent
+	}
+
+	if current.ID() != new.ID() {
+		return ErrResourceNotPresent
 	}
 
 	return nil

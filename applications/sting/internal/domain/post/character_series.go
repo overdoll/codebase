@@ -4,6 +4,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/resource"
 	"overdoll/libraries/uuid"
 	"time"
 
@@ -18,10 +19,10 @@ var (
 type Series struct {
 	*paging.Node
 
-	id                  string
-	slug                string
-	title               *localization.Translation
-	thumbnailResourceId *string
+	id                string
+	slug              string
+	title             *localization.Translation
+	thumbnailResource *resource.Resource
 
 	totalLikes int
 	totalPosts int
@@ -54,13 +55,13 @@ func NewSeries(requester *principal.Principal, slug, title string) (*Series, err
 	}
 
 	return &Series{
-		id:                  uuid.New().String(),
-		slug:                slug,
-		title:               lc,
-		thumbnailResourceId: nil,
-		totalLikes:          0,
-		totalPosts:          0,
-		createdAt:           time.Now(),
+		id:                uuid.New().String(),
+		slug:              slug,
+		title:             lc,
+		thumbnailResource: nil,
+		totalLikes:        0,
+		totalPosts:        0,
+		createdAt:         time.Now(),
 	}, nil
 }
 
@@ -76,8 +77,8 @@ func (m *Series) Title() *localization.Translation {
 	return m.title
 }
 
-func (m *Series) ThumbnailResourceId() *string {
-	return m.thumbnailResourceId
+func (m *Series) ThumbnailResource() *resource.Resource {
+	return m.thumbnailResource
 }
 
 func (m *Series) TotalLikes() int {
@@ -119,13 +120,24 @@ func (m *Series) UpdateTitle(requester *principal.Principal, title, locale strin
 	return nil
 }
 
-func (m *Series) UpdateThumbnail(requester *principal.Principal, thumbnail string) error {
+func (m *Series) UpdateThumbnail(requester *principal.Principal, thumbnail *resource.Resource) error {
 
 	if err := m.canUpdate(requester); err != nil {
 		return err
 	}
 
-	m.thumbnailResourceId = &thumbnail
+	m.thumbnailResource = thumbnail
+
+	return nil
+}
+
+func (m *Series) UpdateThumbnailExisting(thumbnail *resource.Resource) error {
+
+	if err := validateExistingThumbnail(m.thumbnailResource, thumbnail); err != nil {
+		return err
+	}
+
+	m.thumbnailResource = thumbnail
 
 	return nil
 }
@@ -143,15 +155,15 @@ func (m *Series) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalSeriesFromDatabase(id, slug string, title map[string]string, thumbnail *string, totalLikes, totalPosts int, createdAt time.Time) *Series {
+func UnmarshalSeriesFromDatabase(id, slug string, title map[string]string, thumbnail *resource.Resource, totalLikes, totalPosts int, createdAt time.Time) *Series {
 	return &Series{
-		id:                  id,
-		slug:                slug,
-		title:               localization.UnmarshalTranslationFromDatabase(title),
-		thumbnailResourceId: thumbnail,
-		totalLikes:          totalLikes,
-		totalPosts:          totalPosts,
-		createdAt:           createdAt,
+		id:                id,
+		slug:              slug,
+		title:             localization.UnmarshalTranslationFromDatabase(title),
+		thumbnailResource: thumbnail,
+		totalLikes:        totalLikes,
+		totalPosts:        totalPosts,
+		createdAt:         createdAt,
 	}
 }
 

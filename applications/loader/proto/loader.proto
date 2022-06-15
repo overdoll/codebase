@@ -2,20 +2,14 @@ syntax = "proto3";
 
 package applications.grpc.loader.v1;
 
+import "libraries/resource/proto/resource.proto";
+
 message Filters {
   optional PixelateFilter pixelate = 1;
 }
 
 message PixelateFilter {
   int64 size = 1;
-}
-
-message Resource {
-  string id = 1;
-  string itemId = 2;
-  bool processed = 3;
-  string processedId = 4;
-  bool private = 5;
 }
 
 message ResourceIdentifier {
@@ -28,14 +22,9 @@ message DeleteResourcesRequest {
   repeated string resourceIds = 2;
 }
 
-message GetResourcesRequest {
-  string itemId = 1;
-  repeated string resourceIds = 2;
-}
-
 message FilteredResources {
   ResourceIdentifier oldResource = 1;
-  ResourceIdentifier newResource = 2;
+  overdoll.libraries.Resource newResource = 2;
 }
 
 message CopyResourcesAndApplyFilterRequest {
@@ -52,21 +41,28 @@ message CreateOrGetResourcesFromUploadsRequest {
   string itemId = 1;
   repeated string resourceIds = 2;
   bool private = 3;
+  overdoll.libraries.SOURCE source = 4;
+  string token = 5;
 }
 
 message CreateOrGetResourcesFromUploadsResponse {
-  repeated string allResourceIds = 1;
+  repeated overdoll.libraries.Resource resources = 1;
+}
+
+message GetResourcesResponse {
+  repeated overdoll.libraries.Resource resources = 1;
+}
+
+message GetResourcesRequest {
+  string itemId = 1;
+  repeated string resourceIds = 2;
 }
 
 message DeleteResourcesResponse {}
 
-message GetResourcesResponse {
-  repeated Resource resources = 1;
-}
-
 service Loader {
   rpc CreateOrGetResourcesFromUploads(CreateOrGetResourcesFromUploadsRequest) returns (CreateOrGetResourcesFromUploadsResponse);
-  rpc DeleteResources(DeleteResourcesRequest) returns (DeleteResourcesResponse);
   rpc GetResources(GetResourcesRequest) returns (GetResourcesResponse);
+  rpc DeleteResources(DeleteResourcesRequest) returns (DeleteResourcesResponse);
   rpc CopyResourcesAndApplyFilter(CopyResourcesAndApplyFilterRequest) returns (CopyResourcesAndApplyFilterResponse);
 }

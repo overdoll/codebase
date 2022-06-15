@@ -2,7 +2,6 @@ package types
 
 import (
 	"context"
-	"go.opencensus.io/resource"
 	"overdoll/applications/sting/internal/domain/curation"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/graphql"
@@ -66,9 +65,10 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 		resourceId := res.ResourceRequest(principal.FromContext(ctx))
 
 		if resourceId != nil {
+
 			content = append(content, &PostContent{
-				ID:                                relay.NewID(PostContent{}, res.Id(), resourceId),
-				Resource:                          &Resource{ID: relay.NewID(Resource{}, result.ID(), resourceId)},
+				ID:                                relay.NewID(PostContent{}, res.Id(), resourceId.ID()),
+				Resource:                          graphql.MarshalResourceToGraphQL(ctx, resourceId),
 				IsSupporterOnly:                   res.IsSupporterOnly(),
 				ViewerCanViewSupporterOnlyContent: res.CanViewSupporterOnly(principal.FromContext(ctx)),
 			})
@@ -163,10 +163,10 @@ func MarshalPostLikeToGraphQL(ctx context.Context, result *post.Like) *PostLike 
 
 func MarshalAudienceToGraphQL(ctx context.Context, result *post.Audience) *Audience {
 
-	var res *Resource
+	var res *graphql.Resource
 
-	if result.ThumbnailResourceId() != nil {
-		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), *result.ThumbnailResourceId())}
+	if result.ThumbnailResource() != nil {
+		res = graphql.MarshalResourceToGraphQL(ctx, result.ThumbnailResource())
 	}
 
 	var titleTranslations []*graphql.Translation
@@ -193,10 +193,10 @@ func MarshalAudienceToGraphQL(ctx context.Context, result *post.Audience) *Audie
 
 func MarshalSeriesToGraphQL(ctx context.Context, result *post.Series) *Series {
 
-	var res *Resource
+	var res *graphql.Resource
 
-	if result.ThumbnailResourceId() != nil {
-		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), *result.ThumbnailResourceId())}
+	if result.ThumbnailResource() != nil {
+		res = graphql.MarshalResourceToGraphQL(ctx, result.ThumbnailResource())
 	}
 
 	var titleTranslations []*graphql.Translation
@@ -222,10 +222,10 @@ func MarshalSeriesToGraphQL(ctx context.Context, result *post.Series) *Series {
 
 func MarshalCategoryToGraphQL(ctx context.Context, result *post.Category) *Category {
 
-	var res *Resource
+	var res *graphql.Resource
 
-	if result.ThumbnailResourceId() != nil {
-		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), *result.ThumbnailResourceId())}
+	if result.ThumbnailResource() != nil {
+		res = graphql.MarshalResourceToGraphQL(ctx, result.ThumbnailResource())
 	}
 
 	var titleTranslations []*graphql.Translation
@@ -251,10 +251,10 @@ func MarshalCategoryToGraphQL(ctx context.Context, result *post.Category) *Categ
 
 func MarshalCharacterToGraphQL(ctx context.Context, result *post.Character) *Character {
 
-	var res *Resource
+	var res *graphql.Resource
 
-	if result.ThumbnailResourceId() != nil {
-		res = &Resource{ID: relay.NewID(Resource{}, result.ID(), *result.ThumbnailResourceId())}
+	if result.ThumbnailResource() != nil {
+		res = graphql.MarshalResourceToGraphQL(ctx, result.ThumbnailResource())
 	}
 
 	var nameTranslations []*graphql.Translation
@@ -568,47 +568,4 @@ func MarshalPostToGraphQLConnection(ctx context.Context, results []*post.Post, c
 	}
 
 	return conn
-}
-
-func MarshalResourceToGraphQL(ctx context.Context, res *resource.Resource) *Resource {
-
-	var urls []*ResourceURL
-	var videoUrl *ResourceURL
-
-	for _, url := range res.FullUrls() {
-		urls = append(urls, &ResourceURL{
-			URL:      graphql.URI(url.FullUrl()),
-			MimeType: url.MimeType(),
-		})
-	}
-
-	var tp ResourceType
-
-	if res.IsImage() {
-		tp = ResourceTypeImage
-	}
-
-	if res.IsVideo() {
-		tp = ResourceTypeVideo
-		url := res.VideoThumbnailFullUrl()
-
-		if url != nil {
-			videoUrl = &ResourceURL{
-				URL:      graphql.URI(url.FullUrl()),
-				MimeType: url.MimeType(),
-			}
-		}
-	}
-
-	return &Resource{
-		ID:             relay.NewID(Resource{}, res.ItemId(), res.ID()),
-		Processed:      res.IsProcessed(),
-		Type:           tp,
-		Urls:           urls,
-		Width:          res.Width(),
-		Height:         res.Height(),
-		VideoDuration:  res.VideoDuration(),
-		VideoThumbnail: videoUrl,
-		Preview:        res.Preview(),
-	}
 }

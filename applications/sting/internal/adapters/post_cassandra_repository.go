@@ -2,14 +2,11 @@ package adapters
 
 import (
 	"context"
-	"encoding/json"
-	"github.com/99designs/gqlgen/graphql"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/cloudfront/sign"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
+	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"time"
 
@@ -81,14 +78,13 @@ type terminatedClubs struct {
 }
 
 type PostsCassandraElasticsearchRepository struct {
-	session         gocqlx.Session
-	client          *elastic.Client
-	aws             *session.Session
-	resourcesSigner *sign.URLSigner
+	session            gocqlx.Session
+	client             *elastic.Client
+	resourceSerializer *resource.Serializer
 }
 
-func NewPostsCassandraRepository(session gocqlx.Session, client *elastic.Client, aws *session.Session, resourcesSigner *sign.URLSigner) PostsCassandraElasticsearchRepository {
-	return PostsCassandraElasticsearchRepository{session: session, client: client, aws: aws, resourcesSigner: resourcesSigner}
+func NewPostsCassandraRepository(session gocqlx.Session, client *elastic.Client, resourcesSerializer *resource.Serializer) PostsCassandraElasticsearchRepository {
+	return PostsCassandraElasticsearchRepository{session: session, client: client, resourceSerializer: resourcesSerializer}
 }
 
 func marshalPostToDatabase(pending *post.Post) (*posts, error) {
@@ -105,13 +101,23 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 			contentSupporterOnlyResourceIds[cont.Resource().ID()] = cont.ResourceHidden().ID()
 		}
 
-		res, err := json.Marshal(marshalResourceToDatabase(cont.Resource()))
+		if cont.ResourceHidden() != nil {
+			marshalled, err := resource.MarshalResourceToDatabase(cont.ResourceHidden())
+
+			if err != nil {
+				return nil, err
+			}
+
+			contentResources[cont.ResourceHidden().ID()] = marshalled
+		}
+
+		marshalled, err := resource.MarshalResourceToDatabase(cont.Resource())
 
 		if err != nil {
 			return nil, err
 		}
 
-		contentResources[cont.Resource().ID()] = string(res)
+		contentResources[cont.Resource().ID()] = marshalled
 	}
 
 	return &posts{
@@ -137,36 +143,16 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 
 func (r *PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Context, postPending posts) (*post.Post, error) {
 
-	var resource []*post.Resource
+	var resourceValues []string
 
-	// if we're in a graphql request, generate signed urls. otherwise, just do a regular unmarshal
-	if graphql.HasOperationContext(ctx) {
+	for _, r := range postPending.ContentResources {
+		resourceValues = append(resourceValues, r)
+	}
 
-		var valueString []string
+	resources, err := r.resourceSerializer.UnmarshalResourcesFromDatabase(ctx, resourceValues)
 
-		for _, r := range postPending.ContentResources {
-			valueString = append(valueString, r)
-		}
-
-		target, err := r.unmarshalResources(ctx, valueString)
-
-		if err != nil {
-			return nil, err
-		}
-
-		resource = target
-	} else {
-		for _, resourceString := range postPending.ContentResources {
-
-			var output resources
-
-			if err := json.Unmarshal([]byte(resourceString), &output); err != nil {
-				return nil, err
-			}
-
-			// otherwise, use regular
-			resource = append(resource, unmarshalResourceFromDatabase(output))
-		}
+	if err != nil {
+		return nil, err
 	}
 
 	return post.UnmarshalPostFromDatabase(
@@ -176,7 +162,7 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Contex
 		postPending.Likes,
 		postPending.ContributorId,
 		postPending.ContentResourceIds,
-		resource,
+		resources,
 		postPending.ContentSupporterOnly,
 		postPending.ContentSupporterOnlyResourceIds,
 		postPending.ClubId,
@@ -493,12 +479,12 @@ func (r PostsCassandraElasticsearchRepository) updatePostRequest(ctx context.Con
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdatePostContentAndState(ctx context.Context, id string, updateFn func(pending *post.Post) error) error {
-	_, err := r.updatePost(ctx, id, updateFn, []string{"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status", "state"})
+	_, err := r.updatePost(ctx, id, updateFn, []string{"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status", "state", "content_resources"})
 	return err
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdatePostContent(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
-	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status"})
+	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status", "content_resources"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdatePostAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
@@ -521,9 +507,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperator(ctx con
 		return nil, err
 	}
 
-	err = updateFn(currentPost)
-
-	if err != nil {
+	if err = updateFn(currentPost); err != nil {
 		return nil, err
 	}
 

@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/errors/domainerror"
 
 	"overdoll/libraries/principal"
 )
@@ -24,9 +25,21 @@ func NewUpdateSeriesThumbnailHandler(pr post.Repository, loader LoaderService) U
 
 func (h UpdateSeriesThumbnailHandler) Handle(ctx context.Context, cmd UpdateSeriesThumbnail) (*post.Series, error) {
 
+	var oldResourceId string
+
 	series, err := h.pr.UpdateSeriesThumbnail(ctx, cmd.Principal, cmd.SeriesId, func(series *post.Series) error {
 
-		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.SeriesId, []string{cmd.Thumbnail}, false)
+		if series.ThumbnailResource() != nil {
+			if !series.ThumbnailResource().IsProcessed() {
+				return domainerror.NewValidation("cannot update thumbnail until resource is processed")
+			}
+		}
+
+		if series.ThumbnailResource() != nil {
+			oldResourceId = series.ThumbnailResource().ID()
+		}
+
+		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.SeriesId, []string{cmd.Thumbnail}, false, "SERIES")
 
 		if err != nil {
 			return err
@@ -34,6 +47,12 @@ func (h UpdateSeriesThumbnailHandler) Handle(ctx context.Context, cmd UpdateSeri
 
 		return series.UpdateThumbnail(cmd.Principal, resourceIds[0])
 	})
+
+	if oldResourceId != "" {
+		if err := h.loader.DeleteResources(ctx, cmd.SeriesId, []string{oldResourceId}); err != nil {
+			return nil, err
+		}
+	}
 
 	if err != nil {
 		return nil, err

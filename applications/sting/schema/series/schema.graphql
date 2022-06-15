@@ -6,7 +6,7 @@ type Series implements Node @key(fields: "id") {
   slug: String!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail: Resource @goField(forceResolver: true)
+  thumbnail: Resource
 
   """
   A title for this series.

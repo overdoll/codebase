@@ -4,6 +4,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/resource"
 	"overdoll/libraries/uuid"
 	"time"
 
@@ -18,11 +19,11 @@ var (
 type Character struct {
 	*paging.Node
 
-	id                  string
-	slug                string
-	name                *localization.Translation
-	thumbnailResourceId *string
-	series              *Series
+	id                string
+	slug              string
+	name              *localization.Translation
+	thumbnailResource *resource.Resource
+	series            *Series
 
 	totalLikes int
 	totalPosts int
@@ -55,14 +56,14 @@ func NewCharacter(requester *principal.Principal, slug, name string, series *Ser
 	}
 
 	return &Character{
-		id:                  uuid.New().String(),
-		slug:                slug,
-		name:                lc,
-		series:              series,
-		thumbnailResourceId: nil,
-		totalLikes:          0,
-		totalPosts:          0,
-		createdAt:           time.Now(),
+		id:                uuid.New().String(),
+		slug:              slug,
+		name:              lc,
+		series:            series,
+		thumbnailResource: nil,
+		totalLikes:        0,
+		totalPosts:        0,
+		createdAt:         time.Now(),
 	}, nil
 }
 
@@ -86,8 +87,8 @@ func (c *Character) CreatedAt() time.Time {
 	return c.createdAt
 }
 
-func (c *Character) ThumbnailResourceId() *string {
-	return c.thumbnailResourceId
+func (c *Character) ThumbnailResource() *resource.Resource {
+	return c.thumbnailResource
 }
 
 func (c *Character) TotalLikes() int {
@@ -125,13 +126,24 @@ func (c *Character) UpdateName(requester *principal.Principal, name, locale stri
 	return nil
 }
 
-func (c *Character) UpdateThumbnail(requester *principal.Principal, thumbnail string) error {
+func (c *Character) UpdateThumbnail(requester *principal.Principal, thumbnail *resource.Resource) error {
 
 	if err := c.canUpdate(requester); err != nil {
 		return err
 	}
 
-	c.thumbnailResourceId = &thumbnail
+	c.thumbnailResource = thumbnail
+
+	return nil
+}
+
+func (c *Character) UpdateThumbnailExisting(thumbnail *resource.Resource) error {
+
+	if err := validateExistingThumbnail(c.thumbnailResource, thumbnail); err != nil {
+		return err
+	}
+
+	c.thumbnailResource = thumbnail
 
 	return nil
 }
@@ -149,16 +161,16 @@ func (c *Character) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalCharacterFromDatabase(id, slug string, name map[string]string, thumbnail *string, totalLikes, totalPosts int, createdAt time.Time, media *Series) *Character {
+func UnmarshalCharacterFromDatabase(id, slug string, name map[string]string, thumbnail *resource.Resource, totalLikes, totalPosts int, createdAt time.Time, media *Series) *Character {
 	return &Character{
-		id:                  id,
-		slug:                slug,
-		name:                localization.UnmarshalTranslationFromDatabase(name),
-		thumbnailResourceId: thumbnail,
-		series:              media,
-		totalLikes:          totalLikes,
-		totalPosts:          totalPosts,
-		createdAt:           createdAt,
+		id:                id,
+		slug:              slug,
+		name:              localization.UnmarshalTranslationFromDatabase(name),
+		thumbnailResource: thumbnail,
+		series:            media,
+		totalLikes:        totalLikes,
+		totalPosts:        totalPosts,
+		createdAt:         createdAt,
 	}
 }
 

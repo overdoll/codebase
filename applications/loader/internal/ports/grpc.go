@@ -5,7 +5,9 @@ import (
 	"overdoll/applications/loader/internal/app"
 	"overdoll/applications/loader/internal/app/command"
 	"overdoll/applications/loader/internal/app/query"
+	"overdoll/applications/loader/internal/domain/resource"
 	loader "overdoll/applications/loader/proto"
+	"overdoll/libraries/resource/proto"
 )
 
 type Server struct {
@@ -30,13 +32,13 @@ func (s Server) CreateOrGetResourcesFromUploads(ctx context.Context, request *lo
 		return nil, err
 	}
 
-	var newResourceIds []string
+	var response []*proto.Resource
 
-	for _, r := range resources {
-		newResourceIds = append(newResourceIds, r.ID())
+	for _, res := range resources {
+		response = append(response, resource.ToProto(res))
 	}
 
-	return &loader.CreateOrGetResourcesFromUploadsResponse{AllResourceIds: newResourceIds}, nil
+	return &loader.CreateOrGetResourcesFromUploadsResponse{Resources: response}, nil
 }
 
 func (s Server) DeleteResources(ctx context.Context, request *loader.DeleteResourcesRequest) (*loader.DeleteResourcesResponse, error) {
@@ -53,7 +55,7 @@ func (s Server) DeleteResources(ctx context.Context, request *loader.DeleteResou
 
 func (s Server) GetResources(ctx context.Context, request *loader.GetResourcesRequest) (*loader.GetResourcesResponse, error) {
 
-	allResources, err := s.app.Queries.ResourcesByIdsWithUrls.Handle(ctx, query.ResourcesByIdsWithUrls{
+	allResources, err := s.app.Queries.ResourcesByIds.Handle(ctx, query.ResourcesByIds{
 		ItemIds:     []string{request.ItemId},
 		ResourceIds: request.ResourceIds,
 	})
@@ -62,19 +64,13 @@ func (s Server) GetResources(ctx context.Context, request *loader.GetResourcesRe
 		return nil, err
 	}
 
-	var responseResources []*loader.Resource
+	var response []*proto.Resource
 
-	for _, resource := range allResources {
-		responseResources = append(responseResources, &loader.Resource{
-			Id:          resource.ID(),
-			ItemId:      resource.ItemId(),
-			Processed:   resource.IsProcessed(),
-			ProcessedId: resource.ProcessedId(),
-			Private:     resource.IsPrivate(),
-		})
+	for _, res := range allResources {
+		response = append(response, resource.ToProto(res))
 	}
 
-	return &loader.GetResourcesResponse{Resources: responseResources}, nil
+	return &loader.GetResourcesResponse{Resources: response}, nil
 }
 
 func (s Server) CopyResourcesAndApplyFilter(ctx context.Context, request *loader.CopyResourcesAndApplyFilterRequest) (*loader.CopyResourcesAndApplyFilterResponse, error) {
@@ -116,10 +112,7 @@ func (s Server) CopyResourcesAndApplyFilter(ctx context.Context, request *loader
 				Id:     r.OldResource().ID(),
 				ItemId: r.OldResource().ItemId(),
 			},
-			NewResource: &loader.ResourceIdentifier{
-				Id:     r.NewResource().ID(),
-				ItemId: r.NewResource().ItemId(),
-			},
+			NewResource: resource.ToProto(r.NewResource()),
 		})
 	}
 

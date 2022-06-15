@@ -13,8 +13,6 @@ type Application struct {
 }
 
 type Commands struct {
-	TusComposer command.TusComposerHandler
-
 	CreatePost    command.CreatePostHandler
 	DiscardPost   command.DiscardPostHandler
 	PublishPost   command.PublishPostHandler
@@ -62,6 +60,8 @@ type Commands struct {
 	UpdateSeriesThumbnail command.UpdateSeriesThumbnailHandler
 
 	DeleteAccountData command.DeleteAccountDataHandler
+
+	UpdateResources command.UpdateResourcesHandler
 }
 
 type Queries struct {

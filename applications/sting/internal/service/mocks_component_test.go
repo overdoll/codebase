@@ -6,6 +6,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 	eva "overdoll/applications/eva/proto"
+	service2 "overdoll/applications/loader/internal/service"
 	loader "overdoll/applications/loader/proto"
 	parley "overdoll/applications/parley/proto"
 	stella "overdoll/applications/stella/proto"
@@ -42,7 +43,7 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 			})
 		}
 
-		return &loader.GetResourcesResponse{Resources: res}
+		return &loader.GetResourcesResponse{service2.Resources: res}
 	}, nil)
 
 	application.LoaderClient.On("CopyResourcesAndApplyFilter", mock.Anything, mock.Anything).Return(func(c context.Context, req *loader.CopyResourcesAndApplyFilterRequest, g ...grpc.CallOption) *loader.CopyResourcesAndApplyFilterResponse {
@@ -62,7 +63,7 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 			})
 		}
 
-		return &loader.CopyResourcesAndApplyFilterResponse{Resources: res}
+		return &loader.CopyResourcesAndApplyFilterResponse{service2.Resources: res}
 	}, nil)
 }
 

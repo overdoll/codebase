@@ -1,4 +1,4 @@
-package post
+package resource
 
 type Url struct {
 	fullUrl  string
@@ -13,7 +13,7 @@ func (r *Url) MimeType() string {
 	return r.mimeType
 }
 
-func UnmarshalUrlFromDatabase(fullUrl, mimeType string) *Url {
+func unmarshalUrlFromDatabase(fullUrl, mimeType string) *Url {
 	return &Url{
 		fullUrl:  fullUrl,
 		mimeType: mimeType,

@@ -1,4 +1,4 @@
-package post
+package resource
 
 import (
 	"github.com/disintegration/gift"

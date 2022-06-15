@@ -39,6 +39,7 @@ go_library(
         "update_post_characters.go",
         "update_post_content_is_supporter_only.go",
         "update_post_content_order.go",
+        "update_resources.go",
         "update_series_thumbnail.go",
         "update_series_title.go",
     ],
@@ -49,6 +50,8 @@ go_library(
         "//applications/sting/internal/domain/curation",
         "//applications/sting/internal/domain/event",
         "//applications/sting/internal/domain/post",
+        "//libraries/errors/domainerror",
         "//libraries/principal",
+        "//libraries/resource",
     ],
 )

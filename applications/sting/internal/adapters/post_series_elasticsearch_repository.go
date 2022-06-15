@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"time"
 
@@ -17,27 +18,34 @@ import (
 )
 
 type seriesDocument struct {
-	Id                  string            `json:"id"`
-	Slug                string            `json:"slug"`
-	ThumbnailResourceId *string           `json:"thumbnail_resource_id"`
-	Title               map[string]string `json:"title"`
-	CreatedAt           time.Time         `json:"created_at"`
-	TotalLikes          int               `json:"total_likes"`
-	TotalPosts          int               `json:"total_posts"`
+	Id                string            `json:"id"`
+	Slug              string            `json:"slug"`
+	ThumbnailResource string            `json:"thumbnail_resource"`
+	Title             map[string]string `json:"title"`
+	CreatedAt         time.Time         `json:"created_at"`
+	TotalLikes        int               `json:"total_likes"`
+	TotalPosts        int               `json:"total_posts"`
 }
 
 const SeriesIndexName = "series"
 
-func marshalSeriesToDocument(s *post.Series) *seriesDocument {
-	return &seriesDocument{
-		Id:                  s.ID(),
-		Slug:                s.Slug(),
-		ThumbnailResourceId: s.ThumbnailResourceId(),
-		Title:               localization.MarshalTranslationToDatabase(s.Title()),
-		CreatedAt:           s.CreatedAt(),
-		TotalLikes:          s.TotalLikes(),
-		TotalPosts:          s.TotalPosts(),
+func marshalSeriesToDocument(s *post.Series) (*seriesDocument, error) {
+
+	marshalled, err := resource.MarshalResourceToDatabase(s.ThumbnailResource())
+
+	if err != nil {
+		return nil, err
 	}
+
+	return &seriesDocument{
+		Id:                s.ID(),
+		Slug:              s.Slug(),
+		ThumbnailResource: marshalled,
+		Title:             localization.MarshalTranslationToDatabase(s.Title()),
+		CreatedAt:         s.CreatedAt(),
+		TotalLikes:        s.TotalLikes(),
+		TotalPosts:        s.TotalPosts(),
+	}, nil
 }
 
 func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Series, error) {
@@ -103,11 +111,17 @@ func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context,
 			return nil, errors.Wrap(err, "failed search series - unmarshal")
 		}
 
+		unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, md.ThumbnailResource)
+
+		if err != nil {
+			return nil, err
+		}
+
 		newMedia := post.UnmarshalSeriesFromDatabase(
 			md.Id,
 			md.Slug,
 			md.Title,
-			md.ThumbnailResourceId,
+			unmarshalled,
 			md.TotalLikes,
 			md.TotalPosts,
 			md.CreatedAt,
@@ -122,9 +136,13 @@ func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context,
 
 func (r PostsCassandraElasticsearchRepository) indexSeries(ctx context.Context, series *post.Series) error {
 
-	ss := marshalSeriesToDocument(series)
+	ss, err := marshalSeriesToDocument(series)
 
-	_, err := r.client.
+	if err != nil {
+		return err
+	}
+
+	_, err = r.client.
 		Index().
 		Index(SeriesIndexName).
 		Id(series.ID()).
@@ -164,12 +182,12 @@ func (r PostsCassandraElasticsearchRepository) IndexAllSeries(ctx context.Contex
 		for iter.StructScan(&m) {
 
 			doc := seriesDocument{
-				Id:                  m.Id,
-				Slug:                m.Slug,
-				ThumbnailResourceId: m.ThumbnailResourceId,
-				Title:               m.Title,
-				CreatedAt:           m.CreatedAt,
-				TotalLikes:          m.TotalLikes,
+				Id:                m.Id,
+				Slug:              m.Slug,
+				ThumbnailResource: m.ThumbnailResource,
+				Title:             m.Title,
+				CreatedAt:         m.CreatedAt,
+				TotalLikes:        m.TotalLikes,
 			}
 
 			_, err := r.client.

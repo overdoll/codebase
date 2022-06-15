@@ -3,8 +3,9 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "adapters",
     srcs = [
+        "callback_grpc.go",
         "event_temporal_repository.go",
-        "resource_cassandra_s3_repository.go",
+        "resource_cassandra_repository.go",
     ],
     importpath = "overdoll/applications/loader/internal/adapters",
     visibility = ["//applications/loader:__subpackages__"],
@@ -13,11 +14,11 @@ go_library(
         "//applications/loader/internal/domain/resource",
         "//libraries/errors",
         "//libraries/errors/apperror",
+        "//libraries/resource/proto:libraries_go_proto",
         "//libraries/support",
         "@com_github_aws_aws_sdk_go//aws",
         "@com_github_aws_aws_sdk_go//aws/awserr",
         "@com_github_aws_aws_sdk_go//aws/session",
-        "@com_github_aws_aws_sdk_go//service/cloudfront/sign",
         "@com_github_aws_aws_sdk_go//service/s3",
         "@com_github_aws_aws_sdk_go//service/s3/s3manager",
         "@com_github_gocql_gocql//:gocql",
@@ -29,5 +30,7 @@ go_library(
         "@com_github_tus_tusd//pkg/s3store",
         "@io_temporal_go_api//enums/v1:enums",
         "@io_temporal_go_sdk//client",
+        "@org_golang_google_grpc//codes",
+        "@org_golang_google_grpc//status",
     ],
 )

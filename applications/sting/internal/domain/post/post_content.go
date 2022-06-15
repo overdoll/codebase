@@ -1,15 +1,18 @@
 package post
 
-import "overdoll/libraries/principal"
+import (
+	"overdoll/libraries/principal"
+	"overdoll/libraries/resource"
+)
 
 type Content struct {
 	post *Post
 
 	id string
 
-	resource *Resource
+	resource *resource.Resource
 
-	resourceHidden *Resource
+	resourceHidden *resource.Resource
 
 	isSupporterOnly bool
 }
@@ -18,7 +21,7 @@ func (m *Content) Id() string {
 	return m.id
 }
 
-func (m *Content) ResourceRequest(requester *principal.Principal) *Resource {
+func (m *Content) ResourceRequest(requester *principal.Principal) *resource.Resource {
 
 	if !m.canView(requester) {
 		return m.resourceHidden
@@ -27,15 +30,20 @@ func (m *Content) ResourceRequest(requester *principal.Principal) *Resource {
 	return m.resource
 }
 
-func (m *Content) Resource() *Resource {
+func (m *Content) Resource() *resource.Resource {
 	return m.resource
 }
 
-func (m *Content) ResourceHidden() *Resource {
+func (m *Content) ResourceHidden() *resource.Resource {
 	return m.resourceHidden
 }
 
-func (m *Content) UpdateResourceHidden(id *Resource) error {
+func (m *Content) UpdateResource(id *resource.Resource) error {
+	m.resource = id
+	return nil
+}
+
+func (m *Content) UpdateResourceHidden(id *resource.Resource) error {
 	m.resourceHidden = id
 	return nil
 }

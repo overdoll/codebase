@@ -3,48 +3,79 @@ package adapters
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/cloudfront/sign"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/gocql/gocql"
+	"github.com/scylladb/gocqlx/v2"
+	"github.com/scylladb/gocqlx/v2/qb"
+	"github.com/scylladb/gocqlx/v2/table"
 	tusd "github.com/tus/tusd/pkg/handler"
 	"github.com/tus/tusd/pkg/s3store"
 	"io"
 	"net/http"
 	"os"
-	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/applications/loader/internal/domain/resource"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/support"
 	"path/filepath"
 	"strings"
-	"sync"
-	"time"
 )
 
+var resourcesTable = table.New(table.Metadata{
+	Name: "resources",
+	Columns: []string{
+		"item_id",
+		"resource_id",
+		"type",
+		"is_private",
+		"mime_types",
+		"processed",
+		"processed_id",
+		"video_duration",
+		"video_thumbnail",
+		"video_thumbnail_mime_type",
+		"width",
+		"height",
+		"preview",
+		"token",
+	},
+	PartKey: []string{"item_id"},
+	SortKey: []string{"resource_id"},
+})
+
 type resources struct {
-	ItemId      string   `json:"item_id"`
-	ResourceId  string   `json:"resource_id"`
-	Type        int      `json:"type"`
-	MimeTypes   []string `json:"mime_types"`
-	Processed   bool     `json:"processed"`
-	ProcessedId string   `json:"processed_id"`
+	ItemId      string   `db:"item_id"`
+	ResourceId  string   `db:"resource_id"`
+	Type        int      `db:"type"`
+	MimeTypes   []string `db:"mime_types"`
+	Processed   bool     `db:"processed"`
+	ProcessedId string   `db:"processed_id"`
 
-	IsPrivate bool `json:"is_private"`
+	IsPrivate bool `db:"is_private"`
 
-	VideoDuration          int    `json:"video_duration"`
-	VideoThumbnail         string `json:"video_thumbnail"`
-	VideoThumbnailMimeType string `json:"video_thumbnail_mime_type"`
-	Width                  int    `json:"width"`
-	Height                 int    `json:"height"`
-	Preview                string `json:"preview"`
+	VideoDuration          int    `db:"video_duration"`
+	VideoThumbnail         string `db:"video_thumbnail"`
+	VideoThumbnailMimeType string `db:"video_thumbnail_mime_type"`
+	Width                  int    `db:"width"`
+	Height                 int    `db:"height"`
+	Preview                string `db:"preview"`
+	Token                  string `db:"token"`
 }
 
-func unmarshalResourceFromDatabase(i resources) *post.Resource {
-	return post.UnmarshalResourceFromDatabase(
+type ResourceCassandraS3Repository struct {
+	session gocqlx.Session
+	aws     *session.Session
+}
+
+func NewResourceCassandraS3Repository(session gocqlx.Session, aws *session.Session) ResourceCassandraS3Repository {
+	return ResourceCassandraS3Repository{session: session, aws: aws}
+}
+func unmarshalResourceFromDatabase(i resources) *resource.Resource {
+	return resource.UnmarshalResourceFromDatabase(
 		i.ItemId,
 		i.ResourceId,
 		i.Type,
@@ -57,134 +88,12 @@ func unmarshalResourceFromDatabase(i resources) *post.Resource {
 		i.VideoThumbnailMimeType,
 		i.Width,
 		i.Height,
-		nil,
-		nil,
 		i.Preview,
+		i.Token,
 	)
 }
 
-func unmarshalResourceFromDatabaseWithSignedUrls(resourcesSigner *sign.URLSigner, a *session.Session, i resources) (*post.Resource, error) {
-
-	s3Client := s3.New(a)
-
-	bucket := os.Getenv("UPLOADS_BUCKET")
-
-	if i.Processed {
-		bucket = os.Getenv("RESOURCES_BUCKET")
-	}
-
-	if i.Processed && i.IsPrivate {
-		bucket = os.Getenv("PRIVATE_RESOURCES_BUCKET")
-	}
-
-	var urls []*post.Url
-
-	for _, mime := range i.MimeTypes {
-
-		key := "/" + i.ResourceId
-
-		extension := ""
-
-		format, err := post.ExtensionByType(mime)
-
-		if err == nil && i.Processed {
-			extension = format
-		}
-
-		if i.Processed {
-			key = "/" + i.ItemId + "/" + i.ProcessedId + extension
-		}
-
-		var url string
-
-		if i.IsPrivate && i.Processed {
-
-			signedURL, err := resourcesSigner.Sign(os.Getenv("PRIVATE_RESOURCES_URL")+key, time.Now().Add(15*time.Minute))
-
-			if err != nil {
-				return nil, errors.Wrap(err, "could not generate signed url")
-			}
-
-			url = signedURL
-
-		} else if !i.IsPrivate && !i.Processed {
-
-			req, _ := s3Client.GetObjectRequest(&s3.GetObjectInput{
-				Bucket: aws.String(bucket),
-				Key:    aws.String(key),
-			})
-
-			urlStr, err := req.Presign(15 * time.Minute)
-
-			if err != nil {
-				return nil, errors.Wrap(err, "could not generate signed url")
-			}
-
-			url = urlStr
-		} else if !i.IsPrivate && i.Processed {
-
-			domain := os.Getenv("UPLOADS_URL")
-
-			if i.Processed {
-				domain = os.Getenv("RESOURCES_URL")
-			}
-
-			url = domain + key
-		}
-
-		urls = append(urls, post.UnmarshalUrlFromDatabase(
-			url,
-			mime,
-		))
-	}
-
-	var videoThumbnail *post.Url
-
-	if i.VideoThumbnail != "" {
-
-		format, _ := post.ExtensionByType(i.VideoThumbnailMimeType)
-
-		if i.IsPrivate {
-
-			signedURL, err := resourcesSigner.Sign(os.Getenv("PRIVATE_RESOURCES_URL")+"/"+i.ItemId+"/"+i.VideoThumbnail+format, time.Now().Add(15*time.Minute))
-
-			if err != nil {
-				return nil, errors.Wrap(err, "could not generate video thumbnail signed url")
-			}
-
-			videoThumbnail = post.UnmarshalUrlFromDatabase(
-				signedURL,
-				i.VideoThumbnailMimeType,
-			)
-		} else {
-			videoThumbnail = post.UnmarshalUrlFromDatabase(
-				os.Getenv("RESOURCES_URL")+"/"+i.ItemId+"/"+i.VideoThumbnail+format,
-				i.VideoThumbnailMimeType,
-			)
-		}
-
-	}
-
-	return post.UnmarshalResourceFromDatabase(
-		i.ItemId,
-		i.ResourceId,
-		i.Type,
-		i.IsPrivate,
-		i.MimeTypes,
-		i.Processed,
-		i.ProcessedId,
-		i.VideoDuration,
-		i.VideoThumbnail,
-		i.VideoThumbnailMimeType,
-		i.Width,
-		i.Height,
-		urls,
-		videoThumbnail,
-		i.Preview,
-	), nil
-}
-
-func marshalResourceToDatabase(r *post.Resource) *resources {
+func marshalResourceToDatabase(r *resource.Resource) *resources {
 
 	var typ int
 
@@ -210,80 +119,148 @@ func marshalResourceToDatabase(r *post.Resource) *resources {
 		Height:                 r.Height(),
 		VideoDuration:          r.VideoDuration(),
 		Preview:                r.Preview(),
+		Token:                  r.Token(),
 	}
 }
 
-func (r PostsCassandraElasticsearchRepository) unmarshalResources(ctx context.Context, resourcesList []string) ([]*post.Resource, error) {
+func (r ResourceCassandraS3Repository) createResources(ctx context.Context, res []*resource.Resource) error {
 
-	var res []resources
+	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
-	for _, rString := range resourcesList {
-
-		var re resources
-
-		if err := json.Unmarshal([]byte(rString), &re); err != nil {
-			return nil, err
-		}
-
-		res = append(res, re)
+	for _, r := range res {
+		// remove selected resources
+		stmt, names := resourcesTable.Insert()
+		support.BindStructToBatchStatement(
+			batch,
+			stmt, names,
+			marshalResourceToDatabase(r),
+		)
 	}
 
-	var wg sync.WaitGroup
+	support.MarkBatchIdempotent(batch)
+	if err := r.session.ExecuteBatch(batch); err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to create resources")
+	}
 
-	wg.Add(len(res))
+	return nil
+}
 
-	errs := make(chan error)
+func (r ResourceCassandraS3Repository) getResourcesByIds(ctx context.Context, itemId, resourceIds []string) ([]resources, error) {
 
-	resourcesResult := make([]*post.Resource, len(res))
+	var b []resources
 
-	for i, z := range res {
-		go func(index int, z resources) {
-			defer wg.Done()
-			result, err := unmarshalResourceFromDatabaseWithSignedUrls(r.resourcesSigner, r.aws, z)
+	if err := qb.
+		Select(resourcesTable.Name()).
+		Where(qb.In("item_id")).
+		Query(r.session).
+		WithContext(ctx).
+		Idempotent(true).
+		BindMap(map[string]interface{}{
+			"item_id": itemId,
+		}).
+		SelectRelease(&b); err != nil {
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get resources by ids")
+	}
 
-			if err == nil {
-				resourcesResult[index] = result
-			} else {
-				errs <- errors.Wrap(err, "error unmarshalling resource")
+	var final []resources
+
+	for _, i := range b {
+
+		for _, target := range resourceIds {
+			if target == i.ResourceId {
+				final = append(final, i)
+				break
 			}
-		}(i, z)
+		}
 	}
 
-	go func() {
-		wg.Wait()
-		close(errs)
-	}()
+	return final, nil
+}
 
-	// return the first error
-	for err := range errs {
-		if err != nil {
-			return nil, err
-		}
+func (r ResourceCassandraS3Repository) GetResourcesByIds(ctx context.Context, itemId, resourceIds []string) ([]*resource.Resource, error) {
+
+	b, err := r.getResourcesByIds(ctx, itemId, resourceIds)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var resourcesResult []*resource.Resource
+
+	for _, i := range b {
+		resourcesResult = append(resourcesResult, unmarshalResourceFromDatabase(i))
 	}
 
 	return resourcesResult, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) DeleteResourcesForPost(ctx context.Context, postId string) error {
+func (r ResourceCassandraS3Repository) getResourceById(ctx context.Context, itemId string, resourceId string) (*resources, error) {
 
-	pst, err := r.GetPostByIdOperator(ctx, postId)
+	var i resources
 
-	if err != nil {
-		return err
-	}
+	if err := r.session.
+		Query(resourcesTable.Get()).
+		WithContext(ctx).
+		Consistency(gocql.One).
+		Idempotent(true).
+		BindStruct(resources{ItemId: itemId, ResourceId: resourceId}).
+		GetRelease(&i); err != nil {
 
-	var resourceItems []*post.Resource
-	var newPostContent []*post.Content
-
-	for _, cnt := range pst.Content() {
-		resourceItems = append(resourceItems, cnt.Resource())
-		if cnt.ResourceHidden() != nil {
-			resourceItems = append(resourceItems, cnt.ResourceHidden())
-			break
+		if err == gocql.ErrNotFound {
+			return nil, apperror.NewNotFoundError("resource", resourceId)
 		}
 
-		newPostContent = append(newPostContent, cnt)
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get resource by id")
 	}
+
+	return &i, nil
+}
+
+func (r ResourceCassandraS3Repository) GetResourceById(ctx context.Context, itemId string, resourceId string) (*resource.Resource, error) {
+
+	i, err := r.getResourceById(ctx, itemId, resourceId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return unmarshalResourceFromDatabase(*i), nil
+}
+
+func (r ResourceCassandraS3Repository) updateResources(ctx context.Context, res []*resource.Resource) error {
+
+	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
+
+	for _, r := range res {
+
+		stmt, names := resourcesTable.Update(
+			"mime_types",
+			"processed",
+			"processed_id",
+			"video_duration",
+			"video_thumbnail",
+			"video_thumbnail_mime_type",
+			"width",
+			"height",
+			"preview",
+		)
+
+		support.BindStructToBatchStatement(
+			batch,
+			stmt, names,
+			marshalResourceToDatabase(r),
+		)
+	}
+
+	support.MarkBatchIdempotent(batch)
+	if err := r.session.ExecuteBatch(batch); err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to update resources")
+	}
+
+	return nil
+}
+
+func (r ResourceCassandraS3Repository) DeleteResources(ctx context.Context, resourceItems []*resource.Resource) error {
 
 	s3Client := s3.New(r.aws)
 
@@ -303,7 +280,7 @@ func (r PostsCassandraElasticsearchRepository) DeleteResourcesForPost(ctx contex
 
 			if target.IsProcessed() {
 
-				format, _ := post.ExtensionByType(mime)
+				format, _ := resource.ExtensionByType(mime)
 
 				fileId := "/" + target.ItemId() + "/" + target.ProcessedId() + format
 
@@ -334,7 +311,7 @@ func (r PostsCassandraElasticsearchRepository) DeleteResourcesForPost(ctx contex
 
 		if target.IsVideo() && target.IsProcessed() {
 
-			thumbnailType, _ := post.ExtensionByType(target.VideoThumbnailMimeType())
+			thumbnailType, _ := resource.ExtensionByType(target.VideoThumbnailMimeType())
 
 			// delete object
 			_, err := s3Client.DeleteObject(&s3.DeleteObjectInput{
@@ -348,51 +325,29 @@ func (r PostsCassandraElasticsearchRepository) DeleteResourcesForPost(ctx contex
 		}
 	}
 
-	if err := pst.ClearAllContent(); err != nil {
-		return err
-	}
-
-	marshalled, err := marshalPostToDatabase(pst)
-
-	if err != nil {
-		return err
-	}
-
-	if err := r.session.
-		Query(postTable.Update(
-			"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status", "content_resources",
-		)).
-		WithContext(ctx).
-		Idempotent(true).
-		Consistency(gocql.LocalQuorum).
-		BindStruct(marshalled).
-		ExecRelease(); err != nil {
-		return errors.Wrap(support.NewGocqlError(err), "failed to update post")
-	}
-
-	if err := r.indexPost(ctx, pst); err != nil {
-		return err
+	for _, resour := range resourceItems {
+		if err := r.session.
+			Query(qb.Delete(resourcesTable.Name()).Where(qb.Eq("item_id")).ToCql()).
+			WithContext(ctx).
+			Idempotent(true).
+			BindStruct(resources{ItemId: resour.ItemId()}).
+			ExecRelease(); err != nil {
+			return errors.Wrap(support.NewGocqlError(err), "failed to delete resources")
+		}
 	}
 
 	return nil
 }
 
-// GetAndCreateResourcesForPost will create resources from a list of IDs passed
+// GetAndCreateResources will create resources from a list of IDs passed
 // uploads are stored in uploads bucket - we HeadObject each file to determine the file format
-func (r PostsCassandraElasticsearchRepository) GetAndCreateResourcesForPost(ctx context.Context, pst *post.Post, uploads []string, isPrivate bool) ([]*post.Resource, error) {
+func (r ResourceCassandraS3Repository) GetAndCreateResources(ctx context.Context, itemId string, uploads []string, isPrivate bool, token string) ([]*resource.Resource, error) {
 
-	var newUploadIds []string
-
-	for _, uploadId := range uploads {
-		// fix upload IDs
-		newUploadIds = append(newUploadIds, getUploadIdWithoutExtension(uploadId))
-	}
-
-	var newResources []*post.Resource
+	var resources []*resource.Resource
 
 	s3Client := s3.New(r.aws)
 
-	for _, uploadId := range newUploadIds {
+	for _, uploadId := range uploads {
 
 		fileId := strings.Split(uploadId, "+")[0]
 
@@ -408,43 +363,48 @@ func (r PostsCassandraElasticsearchRepository) GetAndCreateResourcesForPost(ctx 
 		// create a new resource - our url + the content type that came back from S3
 
 		fileType := resp.Metadata["Filetype"]
-		newResource, err := post.NewResource(
-			pst.ID(),
+		newResource, err := resource.NewResource(
+			itemId,
 			uploadId,
 			*fileType,
 			isPrivate,
+			token,
 		)
 
 		if err != nil {
 			return nil, err
 		}
 
-		newResources = append(newResources, newResource)
+		resources = append(resources, newResource)
 	}
 
-	return newResources, nil
+	if err := r.createResources(ctx, resources); err != nil {
+		return nil, err
+	}
+
+	return resources, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) DownloadVideoThumbnailForResource(ctx context.Context, target *post.Resource) (*os.File, error) {
+func (r ResourceCassandraS3Repository) DownloadVideoThumbnailForResource(ctx context.Context, target *resource.Resource) (*os.File, error) {
 
-	format, _ := post.ExtensionByType(target.VideoThumbnailMimeType())
+	format, _ := resource.ExtensionByType(target.VideoThumbnailMimeType())
 	fileId := "/" + target.ItemId() + "/" + target.VideoThumbnail() + format
 
 	return r.downloadResource(ctx, fileId, target.IsProcessed(), target.IsPrivate())
 }
 
-func (r PostsCassandraElasticsearchRepository) DownloadResource(ctx context.Context, target *post.Resource) (*os.File, error) {
+func (r ResourceCassandraS3Repository) DownloadResource(ctx context.Context, target *resource.Resource) (*os.File, error) {
 	fileId := strings.Split(target.ID(), "+")[0]
 
 	if target.IsProcessed() {
-		format, _ := post.ExtensionByType(target.LastMimeType())
+		format, _ := resource.ExtensionByType(target.LastMimeType())
 		fileId = "/" + target.ItemId() + "/" + target.ProcessedId() + format
 	}
 
 	return r.downloadResource(ctx, fileId, target.IsProcessed(), target.IsPrivate())
 }
 
-func (r PostsCassandraElasticsearchRepository) downloadResource(ctx context.Context, fileId string, isProcessed, isPrivate bool) (*os.File, error) {
+func (r ResourceCassandraS3Repository) downloadResource(ctx context.Context, fileId string, isProcessed, isPrivate bool) (*os.File, error) {
 	downloader := s3manager.NewDownloader(r.aws)
 
 	file, err := os.Create(strings.Split(fileId, "/")[len(strings.Split(fileId, "/"))-1])
@@ -478,8 +438,7 @@ func (r PostsCassandraElasticsearchRepository) downloadResource(ctx context.Cont
 	return file, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) UploadResource(ctx context.Context, file *os.File, target *post.Resource) error {
-
+func (r ResourceCassandraS3Repository) UploadAndCreateResource(ctx context.Context, file *os.File, target *resource.Resource) error {
 	s3Client := s3.New(r.aws)
 
 	// seek to beginning of files
@@ -537,13 +496,17 @@ func (r PostsCassandraElasticsearchRepository) UploadResource(ctx context.Contex
 	_ = file.Close()
 	_ = os.Remove(file.Name())
 
+	if err := r.createResources(ctx, []*resource.Resource{target}); err != nil {
+		return err
+	}
+
 	return nil
 }
 
-// UploadProcessedResourceAndUpdatePost - do filetype validation on each resource, and add to to the static bucket, with a specified prefix
+// UploadProcessedResource - do filetype validation on each resource, and add to to the static bucket, with a specified prefix
 // expects that the resource that was passed into the method is a resource that originates in UploadsBucket, so in our case
 // it was uploaded through TUS
-func (r PostsCassandraElasticsearchRepository) UploadProcessedResourceAndUpdatePost(ctx context.Context, post *post.Post, moveTarget []*post.Move, target *post.Resource) error {
+func (r ResourceCassandraS3Repository) UploadProcessedResource(ctx context.Context, moveTarget []*resource.Move, target *resource.Resource) error {
 	s3Client := s3.New(r.aws)
 
 	// go through each new file from the filesystem (contained by resource) and upload to s3
@@ -600,10 +563,14 @@ func (r PostsCassandraElasticsearchRepository) UploadProcessedResourceAndUpdateP
 		_ = os.Remove(moveTarget.OsFileLocation())
 	}
 
+	if err := r.updateResources(ctx, []*resource.Resource{target}); err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (r PostsCassandraElasticsearchRepository) GetComposer(ctx context.Context) (*tusd.StoreComposer, error) {
+func (r ResourceCassandraS3Repository) GetComposer(ctx context.Context) (*tusd.StoreComposer, error) {
 	s3Client := s3.New(r.aws)
 
 	store := s3store.New(os.Getenv("UPLOADS_BUCKET"), s3Client)
@@ -612,12 +579,4 @@ func (r PostsCassandraElasticsearchRepository) GetComposer(ctx context.Context) 
 	store.UseIn(composer)
 
 	return composer, nil
-}
-
-func getUploadIdWithoutExtension(uploadId string) string {
-	// strip any urls or extensions
-	splitPath := strings.Split(uploadId, "/")
-	idWithOrWithoutExtension := splitPath[len(strings.Split(uploadId, "/"))-1]
-
-	return strings.Split(idWithOrWithoutExtension, "+")[0]
 }

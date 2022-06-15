@@ -20,5 +20,5 @@ type Commands struct {
 }
 
 type Queries struct {
-	ResourcesByIdsWithUrls query.ResourcesByIdsWithUrlsHandler
+	ResourcesByIds query.ResourcesByIdsHandler
 }

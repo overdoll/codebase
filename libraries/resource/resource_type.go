@@ -1,4 +1,4 @@
-package post
+package resource
 
 import (
 	"overdoll/libraries/errors/domainerror"

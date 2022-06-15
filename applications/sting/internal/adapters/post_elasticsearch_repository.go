@@ -3,9 +3,9 @@ package adapters
 import (
 	"context"
 	"encoding/json"
-	"github.com/99designs/gqlgen/graphql"
 	"math"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"time"
 
@@ -54,36 +54,16 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPostDocument(ctx contex
 		audience = &pst.AudienceId
 	}
 
-	var resource []*post.Resource
+	var valueString []string
 
-	// if we're in a graphql request, generate signed urls. otherwise, just do a regular unmarshal
-	if graphql.HasOperationContext(ctx) {
+	for _, r := range pst.ContentResources {
+		valueString = append(valueString, r)
+	}
 
-		var valueString []string
+	resources, err := r.resourceSerializer.UnmarshalResourcesFromDatabase(ctx, valueString)
 
-		for _, r := range pst.ContentResources {
-			valueString = append(valueString, r)
-		}
-
-		target, err := r.unmarshalResources(ctx, valueString)
-
-		if err != nil {
-			return nil, err
-		}
-
-		resource = target
-	} else {
-		for _, resourceString := range pst.ContentResources {
-
-			var output resources
-
-			if err := json.Unmarshal([]byte(resourceString), &output); err != nil {
-				return nil, err
-			}
-
-			// otherwise, use regular
-			resource = append(resource, unmarshalResourceFromDatabase(output))
-		}
+	if err != nil {
+		return nil, err
 	}
 
 	createdPost := post.UnmarshalPostFromDatabase(
@@ -93,7 +73,7 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPostDocument(ctx contex
 		pst.Likes,
 		pst.ContributorId,
 		pst.ContentResourceIds,
-		resource,
+		resources,
 		pst.ContentSupporterOnly,
 		pst.ContentSupporterOnlyResourceIds,
 		pst.ClubId,
@@ -130,13 +110,23 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 			contentSupporterOnlyResourceIds[cont.Resource().ID()] = cont.ResourceHidden().ID()
 		}
 
-		res, err := json.Marshal(marshalResourceToDatabase(cont.Resource()))
+		if cont.ResourceHidden() != nil {
+			marshalled, err := resource.MarshalResourceToDatabase(cont.ResourceHidden())
+
+			if err != nil {
+				return nil, err
+			}
+
+			contentResources[cont.ResourceHidden().ID()] = marshalled
+		}
+
+		marshalled, err := resource.MarshalResourceToDatabase(cont.Resource())
 
 		if err != nil {
 			return nil, err
 		}
 
-		contentResources[cont.Resource().ID()] = string(res)
+		contentResources[cont.Resource().ID()] = marshalled
 	}
 
 	return &postDocument{
@@ -387,7 +377,7 @@ func (r PostsCassandraElasticsearchRepository) ClubMembersPostsFeed(ctx context.
 
 	for _, hit := range response.Hits.Hits {
 
-		createdPost, err := unmarshalPostDocument(hit)
+		createdPost, err := r.unmarshalPostDocument(ctx, hit)
 
 		if err != nil {
 			return nil, err
@@ -473,7 +463,7 @@ func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, re
 
 	for _, hit := range response.Hits.Hits {
 
-		createdPost, err := unmarshalPostDocument(hit)
+		createdPost, err := r.unmarshalPostDocument(ctx, hit)
 
 		if err != nil {
 			return nil, err
@@ -583,7 +573,7 @@ func (r PostsCassandraElasticsearchRepository) SearchPosts(ctx context.Context, 
 
 	for _, hit := range response.Hits.Hits {
 
-		createdPost, err := unmarshalPostDocument(hit)
+		createdPost, err := r.unmarshalPostDocument(ctx, hit)
 
 		if err != nil {
 			return nil, err
