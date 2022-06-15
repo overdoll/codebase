@@ -7,12 +7,11 @@ import (
 )
 
 type PrincipalByIdHandler struct {
-	eva    EvaService
-	stella StellaService
+	eva EvaService
 }
 
-func NewPrincipalByIdHandler(eva EvaService, stella StellaService) PrincipalByIdHandler {
-	return PrincipalByIdHandler{eva: eva, stella: stella}
+func NewPrincipalByIdHandler(eva EvaService) PrincipalByIdHandler {
+	return PrincipalByIdHandler{eva: eva}
 }
 
 func (h PrincipalByIdHandler) Handle(ctx context.Context, id string) (*principal.Principal, error) {
@@ -20,16 +19,6 @@ func (h PrincipalByIdHandler) Handle(ctx context.Context, id string) (*principal
 	result, err := h.eva.GetAccount(ctx, id)
 
 	if err != nil {
-		return nil, err
-	}
-
-	clubExtension, err := h.stella.GetAccountClubPrincipalExtension(ctx, id)
-
-	if err != nil {
-		return nil, err
-	}
-
-	if err := result.ExtendWithClubExtension(clubExtension); err != nil {
 		return nil, err
 	}
 

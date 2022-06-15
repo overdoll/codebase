@@ -3,9 +3,9 @@ package service_test
 import (
 	"context"
 	"encoding/base64"
+	"github.com/bxcodec/faker/v3"
 	"log"
 	"os"
-	stella "overdoll/applications/stella/proto"
 	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/libraries/principal"
@@ -53,10 +53,58 @@ func getGraphqlClient(t *testing.T) *graphql.Client {
 	return graphql.NewClient(StingGraphqlClientAddr, client)
 }
 
+type TestClub struct {
+	Name string `faker:"title_male"`
+	Slug string `faker:"username"`
+}
+
+func newPrincipal(t *testing.T, accountId string) *principal.Principal {
+	return testing_tools.NewArtistPrincipal(accountId)
+}
+
+func newClub(t *testing.T, accountId string) *club.Club {
+
+	fake := TestClub{}
+	err := faker.FakeData(&fake)
+	require.NoError(t, err)
+
+	clb, err := club.NewClub(newPrincipal(t, accountId), fake.Slug, fake.Name, 0)
+	require.NoError(t, err)
+
+	return clb
+}
+
+func refreshClubESIndex(t *testing.T) {
+	es := bootstrap.InitializeElasticSearchSession()
+	_, err := es.Refresh(adapters.ClubsIndexName).Do(context.Background())
+	require.NoError(t, err)
+}
+
+func refreshClubMembersESIndex(t *testing.T) {
+	es := bootstrap.InitializeElasticSearchSession()
+	_, err := es.Refresh(adapters.ClubMembersIndexName).Do(context.Background())
+	require.NoError(t, err)
+}
+
+// helper which seeds a new post in the database
+func seedClub(t *testing.T, accountId string) *club.Club {
+	pst := newClub(t, accountId)
+
+	session := bootstrap.InitializeDatabaseSession()
+	es := bootstrap.InitializeElasticSearchSession()
+	redis := bootstrap.InitializeRedisSession()
+
+	adapter := adapters.NewClubCassandraElasticsearchRepository(session, es, redis)
+	err := adapter.ReserveSlugForClub(context.Background(), pst)
+	require.NoError(t, err)
+	err = adapter.CreateClub(context.Background(), pst)
+	require.NoError(t, err)
+	return pst
+}
 func newPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
 
 	prin := testing_tools.NewDefaultPrincipal(accountId)
-	ext, err := principal.NewClubExtension(&stella.GetAccountClubDigestResponse{
+	ext, err := principal.NewClubExtension(&sting.GetAccountClubDigestResponse{
 		SupportedClubIds:  nil,
 		ClubMembershipIds: nil,
 		OwnerClubIds:      []string{clubId},
@@ -66,7 +114,7 @@ func newPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
 	err = prin.ExtendWithClubExtension(ext)
 	require.NoError(t, err)
 
-	pst, err := post.NewPost(prin, club.UnmarshalClubFromDatabase(clubId, "", "", false, accountId))
+	pst, err := post.NewPost(prin, club.UnmarshalClubFromDatabase(clubId, "", nil, false, accountId, nil))
 	require.NoError(t, err)
 
 	err = pst.UpdateAudienceRequest(prin, post.UnmarshalAudienceFromDatabase(

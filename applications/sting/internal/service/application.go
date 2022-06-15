@@ -20,13 +20,13 @@ func NewApplication(ctx context.Context) (*app.Application, func()) {
 	bootstrap.NewBootstrap()
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 	parleyClient, cleanup2 := clients.NewParleyClient(ctx, os.Getenv("PARLEY_SERVICE"))
-	stellaClient, cleanup3 := clients.NewStellaClient(ctx, os.Getenv("STELLA_SERVICE"))
+	carrierClient, cleanup3 := clients.NewCarrierClient(ctx, os.Getenv("CARRIER_SERVICE"))
 	loaderClient, cleanup4 := clients.NewLoaderClient(ctx, os.Getenv("LOADER_SERVICE"))
 
 	return createApplication(ctx,
 			adapters.NewEvaGrpc(evaClient),
 			adapters.NewParleyGrpc(parleyClient),
-			adapters.NewStellaGrpc(stellaClient),
+			adapters.NewCarrierGrpc(carrierClient),
 			adapters.NewLoaderGrpc(loaderClient),
 			clients.NewTemporalClient(ctx)),
 		func() {
@@ -42,8 +42,8 @@ type ComponentTestApplication struct {
 	TemporalClient *temporalmocks.Client
 	EvaClient      *mocks.MockEvaClient
 	ParleyClient   *mocks.MockParleyClient
-	StellaClient   *mocks.MockStellaClient
 	LoaderClient   *mocks.MockLoaderClient
+	CarrierClient  *mocks.MockCarrierClient
 }
 
 func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication {
@@ -51,8 +51,8 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 
 	evaClient := &mocks.MockEvaClient{}
 	parleyClient := &mocks.MockParleyClient{}
-	stellaClient := &mocks.MockStellaClient{}
 	loaderClient := &mocks.MockLoaderClient{}
+	carrierClient := &mocks.MockCarrierClient{}
 	temporalClient := &temporalmocks.Client{}
 
 	return &ComponentTestApplication{
@@ -60,23 +60,27 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 			ctx,
 			adapters.NewEvaGrpc(evaClient),
 			adapters.NewParleyGrpc(parleyClient),
-			adapters.NewStellaGrpc(stellaClient),
+			adapters.NewCarrierGrpc(carrierClient),
 			adapters.NewLoaderGrpc(loaderClient),
 			temporalClient,
 		),
 		TemporalClient: temporalClient,
 		EvaClient:      evaClient,
 		ParleyClient:   parleyClient,
-		StellaClient:   stellaClient,
 		LoaderClient:   loaderClient,
+		CarrierClient:  carrierClient,
 	}
 }
 
-func createApplication(ctx context.Context, eva command.EvaService, parley activities.ParleyService, stella query.StellaService, loader command.LoaderService, client client.Client) *app.Application {
+func createApplication(ctx context.Context, eva command.EvaService, parley activities.ParleyService, carrier activities.CarrierService, loader command.LoaderService, client client.Client) *app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 	esClient := bootstrap.InitializeElasticSearchSession()
 	eventRepo := adapters.NewEventTemporalRepository(client)
+
+	cache := bootstrap.InitializeRedisSession()
+
+	clubRepo := adapters.NewClubCassandraElasticsearchRepository(session, esClient, cache)
 
 	resourceSerializer := resource.NewSerializer()
 
@@ -86,7 +90,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 	return &app.Application{
 		Commands: app.Commands{
 			UpdateResources: command.NewUpdateResourcesHandler(postRepo),
-			CreatePost:      command.NewCreatePostHandler(postRepo, stella),
+			CreatePost:      command.NewCreatePostHandler(postRepo, clubRepo),
 			PublishPost:     command.NewPublishPostHandler(postRepo, eventRepo),
 			DiscardPost:     command.NewDiscardPostHandler(postRepo, eventRepo),
 			RejectPost:      command.NewRejectPostHandler(postRepo),
@@ -132,10 +136,27 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			UpdateSeriesTitle:     command.NewUpdateSeriesTitleHandler(postRepo),
 			UpdateSeriesThumbnail: command.NewUpdateSeriesThumbnailHandler(postRepo, loader),
 
-			DeleteAccountData: command.NewDeleteAccountDataHandler(eventRepo),
+			CreateClub:                    command.NewCreateClubHandler(clubRepo, eventRepo),
+			AddClubSlugAlias:              command.NewAddClubSlugAliasHandler(clubRepo),
+			RemoveClubSlugAlias:           command.NewRemoveClubSlugAliasHandler(clubRepo),
+			UpdateClubName:                command.NewUpdateClubNameHandler(clubRepo),
+			PromoteClubSlugAliasToDefault: command.NewPromoteClubSlugAliasToDefaultHandler(clubRepo),
+			JoinClub:                      command.NewJoinClubHandler(clubRepo, eventRepo),
+			LeaveClub:                     command.NewLeaveClubHandler(clubRepo, eventRepo),
+			UpdateClubThumbnail:           command.NewUpdateClubThumbnailHandler(clubRepo, loader),
+			SuspendClubOperator:           command.NewSuspendClubOperatorHandler(clubRepo, eventRepo),
+			SuspendClub:                   command.NewSuspendClubHandler(clubRepo, eventRepo),
+			UnSuspendClub:                 command.NewUnSuspendClubHandler(clubRepo, eventRepo),
+			AddClubSupporter:              command.NewAddClubSupporterHandler(eventRepo),
+			RemoveClubSupporter:           command.NewRemoveClubSupporterHandler(eventRepo),
+			DeleteAccountData:             command.NewDeleteAccountDataHandler(eventRepo),
+			NewSupporterPost:              command.NewNewSupporterPostHandler(eventRepo),
+
+			TerminateClub:   command.NewTerminateClubHandler(clubRepo, eventRepo),
+			UnTerminateClub: command.NewUnTerminateClubHandler(clubRepo, eventRepo),
 		},
 		Queries: app.Queries{
-			PrincipalById:    query.NewPrincipalByIdHandler(eva, stella),
+			PrincipalById:    query.NewPrincipalByIdHandler(eva),
 			SearchCharacters: query.NewSearchCharactersHandler(postRepo),
 			CharacterBySlug:  query.NewCharacterBySlugHandler(postRepo),
 			CharactersByIds:  query.NewCharactersByIdsHandler(postRepo),
@@ -164,7 +185,24 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			ClubMembersPostsFeed:  query.NewClubMembersPostsFeedHandler(postRepo),
 
 			PostLikeById: query.NewPostLikeByIdHandler(postRepo),
+
+			ClubsByIds:                  query.NewClubsByIdsHandler(clubRepo),
+			SearchClubs:                 query.NewSearchClubsHandler(clubRepo),
+			AccountClubDigest:           query.NewAccountClubDigestHandler(clubRepo),
+			ClubBySlug:                  query.NewClubBySlugHandler(clubRepo),
+			ClubById:                    query.NewClubByIdHandler(clubRepo),
+			AccountClubsCount:           query.NewAccountClubsCountHandler(clubRepo),
+			AccountClubsLimit:           query.NewAccountClubsLimitHandler(clubRepo),
+			ClubSlugAliasesLimit:        query.NewClubSlugAliasesLimitHandler(clubRepo),
+			AccountClubMembershipsLimit: query.NewAccountClubMembershipsLimitHandler(clubRepo),
+			AccountClubMembershipsCount: query.NewAccountClubMembershipsCountHandler(clubRepo),
+			ClubMemberById:              query.NewClubMemberByIdHandler(clubRepo),
+			SearchClubMemberships:       query.NewSearchClubMembershipsHandler(clubRepo),
+			ClubSuspensionLogs:          query.NewClubSuspensionLogsHandler(clubRepo),
+			CanDeleteAccountData:        query.NewCanDeleteAccountDataHandler(clubRepo),
+			HasNonTerminatedClubs:       query.NewHasNonTerminatedClubsHandler(clubRepo),
+			ClubSupporterMembersCount:   query.NewClubSupporterMembersCountHandler(clubRepo),
 		},
-		Activities: activities.NewActivitiesHandler(postRepo, personalizationRepo, stella, parley, loader),
+		Activities: activities.NewActivitiesHandler(postRepo, clubRepo, personalizationRepo, parley, loader, carrier),
 	}
 }

@@ -19,9 +19,7 @@ func (h *Activities) CheckPostSupporterStatusAndSendNew(ctx context.Context, inp
 
 	// send a notification if partial or full supporter-only status
 	if pst.SupporterOnlyStatus() == post.Partial || pst.SupporterOnlyStatus() == post.Full {
-		if err := h.stella.NewSupporterPost(ctx, pst.ClubId()); err != nil {
-			return err
-		}
+		// TODO: new supporter post
 	}
 
 	return nil

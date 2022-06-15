@@ -2,8 +2,9 @@ package post
 
 import (
 	"github.com/stretchr/testify/require"
-	stella "overdoll/applications/stella/proto"
+	sting "overdoll/applications/sting/proto"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/resource"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
@@ -12,14 +13,14 @@ import (
 func TestPostContent_non_published_supporter_only(t *testing.T) {
 	t.Parallel()
 
-	resourceId := uuid.New().String()
-	resourceIdHidden := uuid.New().String()
+	resourceId := &resource.Resource{}
+	resourceIdHidden := &resource.Resource{}
 
 	contentItem := &Content{
-		id:               uuid.New().String(),
-		resourceId:       resourceId,
-		resourceIdHidden: resourceIdHidden,
-		isSupporterOnly:  true,
+		id:              uuid.New().String(),
+		resource:        resourceId,
+		resourceHidden:  resourceIdHidden,
+		isSupporterOnly: true,
 		post: &Post{
 			state: Draft,
 		},
@@ -32,14 +33,14 @@ func TestPostContent_non_published_supporter_only(t *testing.T) {
 func TestPostContent_published_non_supporter_only(t *testing.T) {
 	t.Parallel()
 
-	resourceId := uuid.New().String()
-	resourceIdHidden := uuid.New().String()
+	resourceId := &resource.Resource{}
+	resourceIdHidden := &resource.Resource{}
 
 	contentItem := &Content{
-		id:               uuid.New().String(),
-		resourceId:       resourceId,
-		resourceIdHidden: resourceIdHidden,
-		isSupporterOnly:  false,
+		id:              uuid.New().String(),
+		resource:        resourceId,
+		resourceHidden:  resourceIdHidden,
+		isSupporterOnly: false,
 		post: &Post{
 			state: Published,
 		},
@@ -52,15 +53,15 @@ func TestPostContent_published_non_supporter_only(t *testing.T) {
 func TestPostContent_published_supporter_only(t *testing.T) {
 	t.Parallel()
 
-	resourceId := uuid.New().String()
-	resourceIdHidden := uuid.New().String()
+	resourceId := &resource.Resource{}
+	resourceIdHidden := &resource.Resource{}
 	clubId := uuid.New().String()
 
 	contentItem := &Content{
-		id:               uuid.New().String(),
-		resourceId:       resourceId,
-		resourceIdHidden: resourceIdHidden,
-		isSupporterOnly:  true,
+		id:              uuid.New().String(),
+		resource:        resourceId,
+		resourceHidden:  resourceIdHidden,
+		isSupporterOnly: true,
 		post: &Post{
 			state:  Published,
 			clubId: clubId,
@@ -68,7 +69,7 @@ func TestPostContent_published_supporter_only(t *testing.T) {
 	}
 
 	requester := testing_tools.NewDefaultPrincipal("")
-	p, _ := principal.NewClubExtension(&stella.GetAccountClubDigestResponse{
+	p, _ := principal.NewClubExtension(&sting.GetAccountClubDigestResponse{
 		SupportedClubIds:  []string{clubId},
 		ClubMembershipIds: nil,
 		OwnerClubIds:      []string{clubId},
@@ -82,14 +83,14 @@ func TestPostContent_published_supporter_only(t *testing.T) {
 func TestPostContent_published_supporter_only_as_staff(t *testing.T) {
 	t.Parallel()
 
-	resourceId := uuid.New().String()
-	resourceIdHidden := uuid.New().String()
+	resourceId := &resource.Resource{}
+	resourceIdHidden := &resource.Resource{}
 
 	contentItem := &Content{
-		id:               uuid.New().String(),
-		resourceId:       resourceId,
-		resourceIdHidden: resourceIdHidden,
-		isSupporterOnly:  true,
+		id:              uuid.New().String(),
+		resource:        resourceId,
+		resourceHidden:  resourceIdHidden,
+		isSupporterOnly: true,
 		post: &Post{
 			state: Published,
 		},
@@ -104,14 +105,14 @@ func TestPostContent_published_supporter_only_as_staff(t *testing.T) {
 func TestPostContent_published_supporter_only_as_nobody(t *testing.T) {
 	t.Parallel()
 
-	resourceId := uuid.New().String()
-	resourceIdHidden := uuid.New().String()
+	resourceId := &resource.Resource{}
+	resourceIdHidden := &resource.Resource{}
 
 	contentItem := &Content{
-		id:               uuid.New().String(),
-		resourceId:       resourceId,
-		resourceIdHidden: resourceIdHidden,
-		isSupporterOnly:  true,
+		id:              uuid.New().String(),
+		resource:        resourceId,
+		resourceHidden:  resourceIdHidden,
+		isSupporterOnly: true,
 		post: &Post{
 			state: Published,
 		},

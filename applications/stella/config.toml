@@ -1,8 +1,0 @@
-[db]
-keyspace = "stella"
-
-[temporal]
-queue = "stella"
-
-[redis]
-db = 3

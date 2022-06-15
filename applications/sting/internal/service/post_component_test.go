@@ -51,8 +51,6 @@ func getPost(t *testing.T, client *graphql.Client, id string) Post {
 	return post
 }
 
-type _Any map[string]interface{}
-
 type CreatePost struct {
 	CreatePost *struct {
 		Post *PostModified

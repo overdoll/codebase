@@ -11,7 +11,6 @@ cd "$parent_path"
 cd ../
 
 mockery --name StingClient --dir applications/sting/proto --output libraries/testing_tools/mocks --structname MockStingClient
-mockery --name StellaClient --dir applications/stella/proto --output libraries/testing_tools/mocks --structname MockStellaClient
 mockery --name RingerClient --dir applications/ringer/proto --output libraries/testing_tools/mocks --structname MockRingerClient
 mockery --name ParleyClient --dir applications/parley/proto --output libraries/testing_tools/mocks --structname MockParleyClient
 mockery --name LoaderClient --dir applications/loader/proto --output libraries/testing_tools/mocks --structname MockLoaderClient

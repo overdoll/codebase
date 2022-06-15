@@ -13,6 +13,7 @@ import (
 	"overdoll/libraries/principal"
 	"overdoll/libraries/resource"
 	"overdoll/libraries/resource/proto"
+	"time"
 )
 
 type Server struct {
@@ -139,5 +140,94 @@ func (s Server) UpdateResources(ctx context.Context, request *proto.UpdateResour
 		return nil, err
 	}
 
-	return &proto.UpdateResourcesResponse{ShouldRetry: false}, nil
+	return &proto.UpdateResourcesResponse{}, nil
+}
+
+func (s Server) GetClubById(ctx context.Context, request *sting.GetClubByIdRequest) (*sting.GetClubByIdResponse, error) {
+
+	clb, err := s.app.Queries.ClubById.Handle(ctx, query.ClubById{
+		Id: request.ClubId,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &sting.GetClubByIdResponse{
+		Club: &sting.Club{
+			Slug:           clb.Slug(),
+			Name:           clb.Name().TranslateDefault(""),
+			OwnerAccountId: clb.OwnerAccountId(),
+			IsSuspended:    clb.IsSuspended(),
+			CanSupport:     clb.CanSupport(),
+		},
+	}, nil
+}
+
+func (s Server) SuspendClub(ctx context.Context, request *sting.SuspendClubRequest) (*emptypb.Empty, error) {
+
+	clubId := request.ClubId
+	if err := s.app.Commands.SuspendClubOperator.Handle(ctx, command.SuspendClubOperator{
+		ClubId:  clubId,
+		EndTime: time.Unix(request.EndTimeUnix, 0),
+	}); err != nil {
+		return nil, err
+	}
+
+	return &emptypb.Empty{}, nil
+}
+
+func (s Server) AddClubSupporter(ctx context.Context, request *sting.AddClubSupporterRequest) (*emptypb.Empty, error) {
+
+	if err := s.app.Commands.AddClubSupporter.Handle(ctx, command.AddClubSupporter{
+		ClubId:      request.ClubId,
+		AccountId:   request.AccountId,
+		SupportedAt: request.SupportedAt.AsTime(),
+	}); err != nil {
+		return nil, err
+	}
+
+	return &emptypb.Empty{}, nil
+}
+
+func (s Server) RemoveClubSupporter(ctx context.Context, request *sting.RemoveClubSupporterRequest) (*emptypb.Empty, error) {
+
+	if err := s.app.Commands.RemoveClubSupporter.Handle(ctx, command.RemoveClubSupporter{
+		ClubId:    request.ClubId,
+		AccountId: request.AccountId,
+	}); err != nil {
+		return nil, err
+	}
+
+	return &emptypb.Empty{}, nil
+}
+
+func (s Server) GetAccountClubDigest(ctx context.Context, request *sting.GetAccountClubDigestRequest) (*sting.GetAccountClubDigestResponse, error) {
+
+	req, err := s.app.Queries.AccountClubDigest.Handle(ctx, query.AccountClubDigest{
+		AccountId: request.AccountId,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &sting.GetAccountClubDigestResponse{
+		SupportedClubIds:  req.SupportedClubIds(),
+		ClubMembershipIds: req.ClubMembershipIds(),
+		OwnerClubIds:      req.OwnerClubIds(),
+	}, nil
+}
+
+func (s Server) CanDeleteAccountData(ctx context.Context, request *sting.CanDeleteAccountDataRequest) (*sting.CanDeleteAccountDataResponse, error) {
+
+	req, err := s.app.Queries.CanDeleteAccountData.Handle(ctx, query.CanDeleteAccountData{
+		AccountId: request.AccountId,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &sting.CanDeleteAccountDataResponse{CanDelete: req}, nil
 }

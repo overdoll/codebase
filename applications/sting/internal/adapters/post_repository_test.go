@@ -29,6 +29,7 @@ func TestPostRepository_failure(t *testing.T) {
 			nil,
 			nil,
 			nil,
+			nil,
 			uuid.New().String(),
 			&audienceId,
 			nil,
