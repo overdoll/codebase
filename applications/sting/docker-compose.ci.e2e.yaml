@@ -9,10 +9,6 @@ services:
       - traefik
       - temporal
       - elasticsearch
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.sting.rule=Path(`/api/upload/{document}`) || Path(`/api/upload/`)"
-      - "traefik.http.routers.sting.entrypoints=web"
     environment:
       - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
       - AWS_ACCESS_SECRET=${AWS_ACCESS_SECRET}

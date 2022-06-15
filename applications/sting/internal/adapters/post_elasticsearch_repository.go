@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"encoding/json"
+	"github.com/99designs/gqlgen/graphql"
 	"math"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/support"
@@ -21,6 +22,7 @@ type postDocument struct {
 	State                           string            `json:"state"`
 	SupporterOnlyStatus             string            `json:"supporter_only_status"`
 	ContentResourceIds              []string          `json:"content_resource_ids"`
+	ContentResources                map[string]string `json:"content_resources"`
 	ContentSupporterOnly            map[string]bool   `json:"content_supporter_only"`
 	ContentSupporterOnlyResourceIds map[string]string `json:"content_supporter_only_resource_ids"`
 	Likes                           int               `json:"likes"`
@@ -36,7 +38,7 @@ type postDocument struct {
 
 const PostIndexName = "posts"
 
-func unmarshalPostDocument(hit *elastic.SearchHit) (*post.Post, error) {
+func (r *PostsCassandraElasticsearchRepository) unmarshalPostDocument(ctx context.Context, hit *elastic.SearchHit) (*post.Post, error) {
 
 	var pst postDocument
 
@@ -52,6 +54,38 @@ func unmarshalPostDocument(hit *elastic.SearchHit) (*post.Post, error) {
 		audience = &pst.AudienceId
 	}
 
+	var resource []*post.Resource
+
+	// if we're in a graphql request, generate signed urls. otherwise, just do a regular unmarshal
+	if graphql.HasOperationContext(ctx) {
+
+		var valueString []string
+
+		for _, r := range pst.ContentResources {
+			valueString = append(valueString, r)
+		}
+
+		target, err := r.unmarshalResources(ctx, valueString)
+
+		if err != nil {
+			return nil, err
+		}
+
+		resource = target
+	} else {
+		for _, resourceString := range pst.ContentResources {
+
+			var output resources
+
+			if err := json.Unmarshal([]byte(resourceString), &output); err != nil {
+				return nil, err
+			}
+
+			// otherwise, use regular
+			resource = append(resource, unmarshalResourceFromDatabase(output))
+		}
+	}
+
 	createdPost := post.UnmarshalPostFromDatabase(
 		pst.Id,
 		pst.State,
@@ -59,6 +93,7 @@ func unmarshalPostDocument(hit *elastic.SearchHit) (*post.Post, error) {
 		pst.Likes,
 		pst.ContributorId,
 		pst.ContentResourceIds,
+		resource,
 		pst.ContentSupporterOnly,
 		pst.ContentSupporterOnlyResourceIds,
 		pst.ClubId,
@@ -86,13 +121,22 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 	var contentResourceIds []string
 	contentSupporterOnly := make(map[string]bool)
 	contentSupporterOnlyResourceIds := make(map[string]string)
+	contentResources := make(map[string]string)
 
 	for _, cont := range pst.Content() {
-		contentResourceIds = append(contentResourceIds, cont.Resource())
-		contentSupporterOnly[cont.Resource()] = cont.IsSupporterOnly()
-		if cont.IsSupporterOnly() {
-			contentSupporterOnlyResourceIds[cont.Resource()] = cont.ResourceHidden()
+		contentResourceIds = append(contentResourceIds, cont.Resource().ID())
+		contentSupporterOnly[cont.Resource().ID()] = cont.IsSupporterOnly()
+		if cont.IsSupporterOnly() && cont.ResourceHidden() != nil {
+			contentSupporterOnlyResourceIds[cont.Resource().ID()] = cont.ResourceHidden().ID()
 		}
+
+		res, err := json.Marshal(marshalResourceToDatabase(cont.Resource()))
+
+		if err != nil {
+			return nil, err
+		}
+
+		contentResources[cont.Resource().ID()] = string(res)
 	}
 
 	return &postDocument{
@@ -103,6 +147,7 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 		AudienceId:                      audience,
 		ClubId:                          pst.ClubId(),
 		ContributorId:                   pst.ContributorId(),
+		ContentResources:                contentResources,
 		ContentResourceIds:              contentResourceIds,
 		ContentSupporterOnly:            contentSupporterOnly,
 		ContentSupporterOnlyResourceIds: contentSupporterOnlyResourceIds,

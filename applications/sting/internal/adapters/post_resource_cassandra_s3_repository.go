@@ -10,6 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/cloudfront/sign"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/gocql/gocql"
 	tusd "github.com/tus/tusd/pkg/handler"
 	"github.com/tus/tusd/pkg/s3store"
 	"io"
@@ -17,6 +18,7 @@ import (
 	"os"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/support"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -31,7 +33,7 @@ type resources struct {
 	Processed   bool     `json:"processed"`
 	ProcessedId string   `json:"processed_id"`
 
-	IsPrivate bool `db:"is_private"`
+	IsPrivate bool `json:"is_private"`
 
 	VideoDuration          int    `json:"video_duration"`
 	VideoThumbnail         string `json:"video_thumbnail"`
@@ -262,7 +264,26 @@ func (r PostsCassandraElasticsearchRepository) unmarshalResources(ctx context.Co
 	return resourcesResult, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) DeleteResources(ctx context.Context, resourceItems []*post.Resource) error {
+func (r PostsCassandraElasticsearchRepository) DeleteResourcesForPost(ctx context.Context, postId string) error {
+
+	pst, err := r.GetPostByIdOperator(ctx, postId)
+
+	if err != nil {
+		return err
+	}
+
+	var resourceItems []*post.Resource
+	var newPostContent []*post.Content
+
+	for _, cnt := range pst.Content() {
+		resourceItems = append(resourceItems, cnt.Resource())
+		if cnt.ResourceHidden() != nil {
+			resourceItems = append(resourceItems, cnt.ResourceHidden())
+			break
+		}
+
+		newPostContent = append(newPostContent, cnt)
+	}
 
 	s3Client := s3.New(r.aws)
 
@@ -327,8 +348,30 @@ func (r PostsCassandraElasticsearchRepository) DeleteResources(ctx context.Conte
 		}
 	}
 
-	for _, _ = range resourceItems {
-		// TODO: delete resources from post
+	if err := pst.ClearAllContent(); err != nil {
+		return err
+	}
+
+	marshalled, err := marshalPostToDatabase(pst)
+
+	if err != nil {
+		return err
+	}
+
+	if err := r.session.
+		Query(postTable.Update(
+			"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status", "content_resources",
+		)).
+		WithContext(ctx).
+		Idempotent(true).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(marshalled).
+		ExecRelease(); err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to update post")
+	}
+
+	if err := r.indexPost(ctx, pst); err != nil {
+		return err
 	}
 
 	return nil
@@ -497,10 +540,10 @@ func (r PostsCassandraElasticsearchRepository) UploadResource(ctx context.Contex
 	return nil
 }
 
-// UploadProcessedResource - do filetype validation on each resource, and add to to the static bucket, with a specified prefix
+// UploadProcessedResourceAndUpdatePost - do filetype validation on each resource, and add to to the static bucket, with a specified prefix
 // expects that the resource that was passed into the method is a resource that originates in UploadsBucket, so in our case
 // it was uploaded through TUS
-func (r PostsCassandraElasticsearchRepository) UploadProcessedResource(ctx context.Context, moveTarget []*post.Move, target *post.Resource) error {
+func (r PostsCassandraElasticsearchRepository) UploadProcessedResourceAndUpdatePost(ctx context.Context, post *post.Post, moveTarget []*post.Move, target *post.Resource) error {
 	s3Client := s3.New(r.aws)
 
 	// go through each new file from the filesystem (contained by resource) and upload to s3
