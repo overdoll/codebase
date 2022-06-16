@@ -6,7 +6,6 @@ import { ImageProps } from 'next/image'
 import { useState } from 'react'
 import { Flex } from '@chakra-ui/react'
 import ImageError from '../NextImage/ImageError/ImageError'
-import useGeneratePreview from '../../../hooks/useGeneratePreview'
 
 interface Props extends Omit<ImageProps, 'src' | 'width' | 'height' | 'layout' | 'alt'> {
   query: ImageSnippetFragment$key | null
@@ -57,8 +56,6 @@ export default function ImageSnippet ({
     setErrorCount(x => x + 1)
   }
 
-  const preview = useGeneratePreview(data?.preview)
-
   if (errorCount >= errorLimit) {
     return (
       <Flex h='100%'>
@@ -68,12 +65,17 @@ export default function ImageSnippet ({
   }
 
   return (
-    <Flex w='100%' h='100%' position={cover === true ? 'relative' : 'static'}>
+    <Flex
+      w='100%'
+      h='100%'
+      position={cover === true ? 'relative' : 'static'}
+    >
       <NextImage
         {...IMAGE_PROPS}
+        style={{
+          backgroundColor: data?.preview != null && data?.preview !== '' ? data?.preview : 'none'
+        }}
         src={displayUrl(errorCount)}
-        placeholder={preview != null ? 'blur' : undefined}
-        blurDataURL={preview ?? undefined}
         onErrorCapture={onErrorCapture}
         {...rest}
       />

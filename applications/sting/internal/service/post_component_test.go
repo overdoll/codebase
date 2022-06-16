@@ -24,12 +24,9 @@ type PostModified struct {
 	Contributor struct {
 		Id string
 	}
-	State      types.PostState
-	Characters []CharacterModified
-	Audience   *AudienceModified
-	Club       struct {
-		Id string
-	}
+	State               types.PostState
+	Characters          []CharacterModified
+	Audience            *AudienceModified
 	Categories          []CategoryModified
 	Content             []types.PostContent
 	SupporterOnlyStatus types.SupporterOnlyStatus
@@ -493,9 +490,8 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	// make sure getPost works, and correct data is assigned
 	stingClient := getGrpcClient(t)
-	data, e := stingClient.GetPost(context.Background(), &sting.PostRequest{Id: postId})
+	_, e := stingClient.GetPost(context.Background(), &sting.PostRequest{Id: postId})
 	require.NoError(t, e)
-	require.Equal(t, relay.NewMustUnmarshalFromBase64(post.Post.Club.Id).GetID(), data.ClubId, "should have correct club ID assigned")
 
 	var postsEntities PostsEntities
 	err = client.Query(context.Background(), &postsEntities, map[string]interface{}{
