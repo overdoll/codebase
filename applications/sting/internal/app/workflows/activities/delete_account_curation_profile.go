@@ -9,5 +9,5 @@ type DeleteAccountCurationProfileInput struct {
 }
 
 func (h *Activities) DeleteAccountCurationProfile(ctx context.Context, input DeleteAccountCurationProfileInput) error {
-	return h.cr.DeleteProfileOperator(ctx, input.AccountId)
+	return h.cur.DeleteProfileOperator(ctx, input.AccountId)
 }

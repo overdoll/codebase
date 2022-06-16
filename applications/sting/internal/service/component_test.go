@@ -3,12 +3,13 @@ package service_test
 import (
 	"context"
 	"encoding/base64"
+	"github.com/bxcodec/faker/v3"
 	"log"
 	"os"
-	stella "overdoll/applications/stella/proto"
 	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/resource"
 	"time"
 
 	"overdoll/applications/sting/internal/adapters"
@@ -52,10 +53,60 @@ func getGraphqlClient(t *testing.T) *graphql.Client {
 	return graphql.NewClient(StingGraphqlClientAddr, client)
 }
 
+type TestClub struct {
+	Name string `faker:"title_male"`
+	Slug string `faker:"username"`
+}
+
+func newPrincipal(t *testing.T, accountId string) *principal.Principal {
+	return testing_tools.NewArtistPrincipal(accountId)
+}
+
+func newClub(t *testing.T, accountId string) *club.Club {
+
+	fake := TestClub{}
+	err := faker.FakeData(&fake)
+	require.NoError(t, err)
+
+	clb, err := club.NewClub(newPrincipal(t, accountId), fake.Slug, fake.Name, 0)
+	require.NoError(t, err)
+
+	return clb
+}
+
+func refreshClubESIndex(t *testing.T) {
+	es := bootstrap.InitializeElasticSearchSession()
+	_, err := es.Refresh(adapters.ClubsIndexName).Do(context.Background())
+	require.NoError(t, err)
+}
+
+func refreshClubMembersESIndex(t *testing.T) {
+	es := bootstrap.InitializeElasticSearchSession()
+	_, err := es.Refresh(adapters.ClubMembersIndexName).Do(context.Background())
+	require.NoError(t, err)
+}
+
+// helper which seeds a new post in the database
+func seedClub(t *testing.T, accountId string) *club.Club {
+	pst := newClub(t, accountId)
+
+	session := bootstrap.InitializeDatabaseSession()
+	es := bootstrap.InitializeElasticSearchSession()
+	redis := bootstrap.InitializeRedisSession()
+
+	serializer := resource.NewSerializer()
+
+	adapter := adapters.NewClubCassandraElasticsearchRepository(session, es, redis, serializer)
+	err := adapter.ReserveSlugForClub(context.Background(), pst)
+	require.NoError(t, err)
+	err = adapter.CreateClub(context.Background(), pst)
+	require.NoError(t, err)
+	return pst
+}
 func newPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
 
 	prin := testing_tools.NewDefaultPrincipal(accountId)
-	ext, err := principal.NewClubExtension(&stella.GetAccountClubDigestResponse{
+	ext, err := principal.NewClubExtension(&sting.GetAccountClubDigestResponse{
 		SupportedClubIds:  nil,
 		ClubMembershipIds: nil,
 		OwnerClubIds:      []string{clubId},
@@ -65,16 +116,16 @@ func newPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
 	err = prin.ExtendWithClubExtension(ext)
 	require.NoError(t, err)
 
-	pst, err := post.NewPost(prin, club.UnmarshalClubFromDatabase(clubId, "", "", false, accountId))
+	pst, err := post.NewPost(prin, club.UnmarshalClubFromDatabase(clubId, "", nil, nil, nil, 0, accountId, false, nil, nil, false, false, nil, time.Now(), time.Now()))
 	require.NoError(t, err)
 
 	err = pst.UpdateAudienceRequest(prin, post.UnmarshalAudienceFromDatabase(
-		"1pcKiQL7dgUW8CIN7uO1wqFaMql", "StandardAudience", map[string]string{"en": "Standard Audience"}, nil, 1, 0, 0, time.Now(),
+		"1pcKiQL7dgUW8CIN7uO1wqFaMql", "StandardAudience", map[string]string{"en": "Standard Audience"}, nil, 1, 0, 0, time.Now(), time.Now(),
 	))
 
 	require.NoError(t, err)
 
-	err = pst.SubmitPostRequest(prin, true)
+	err = pst.SubmitPostRequest(prin)
 
 	require.NoError(t, err)
 	return pst
@@ -108,7 +159,9 @@ func seedPost(t *testing.T, pst *post.Post) *post.Post {
 	session := bootstrap.InitializeDatabaseSession()
 	es := bootstrap.InitializeElasticSearchSession()
 
-	adapter := adapters.NewPostsCassandraRepository(session, es)
+	serializer := resource.NewSerializer()
+
+	adapter := adapters.NewPostsCassandraRepository(session, es, serializer)
 	err := adapter.CreatePost(context.Background(), pst)
 	require.NoError(t, err)
 
@@ -180,6 +233,9 @@ func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 	env.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
 	env.RegisterWorkflow(workflows.RemovePost)
 	env.RegisterWorkflow(workflows.RemovePostLike)
+	env.RegisterWorkflow(workflows.NewSupporterPost)
+	env.RegisterWorkflow(workflows.ClubSupporterPostNotifications)
+	env.RegisterWorkflow(workflows.AddClubMember)
 
 	return env
 }

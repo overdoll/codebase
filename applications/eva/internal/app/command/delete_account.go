@@ -14,14 +14,14 @@ type DeleteAccount struct {
 }
 
 type DeleteAccountHandler struct {
-	ar     account.Repository
-	event  event.Repository
-	hades  HadesService
-	stella StellaService
+	ar    account.Repository
+	event event.Repository
+	hades HadesService
+	sting StingService
 }
 
-func NewDeleteAccountHandler(ar account.Repository, event event.Repository, hades HadesService, stella StellaService) DeleteAccountHandler {
-	return DeleteAccountHandler{ar: ar, event: event, hades: hades, stella: stella}
+func NewDeleteAccountHandler(ar account.Repository, event event.Repository, hades HadesService, stella StingService) DeleteAccountHandler {
+	return DeleteAccountHandler{ar: ar, event: event, hades: hades, sting: stella}
 }
 
 func (h DeleteAccountHandler) Handle(ctx context.Context, cmd DeleteAccount) (*account.Account, error) {
@@ -42,7 +42,7 @@ func (h DeleteAccountHandler) Handle(ctx context.Context, cmd DeleteAccount) (*a
 		return nil, domainerror.NewValidation("cannot delete account: active subscriptions remain")
 	}
 
-	ok, err = h.stella.CanDeleteAccountData(ctx, cmd.AccountId)
+	ok, err = h.sting.CanDeleteAccountData(ctx, cmd.AccountId)
 
 	if err != nil {
 		return nil, err

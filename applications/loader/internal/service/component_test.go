@@ -5,7 +5,6 @@ import (
 	"github.com/CapsLock-Studio/go-webpbin"
 	"github.com/bazelbuild/rules_go/go/tools/bazel"
 	"github.com/eventials/go-tus"
-	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"go.temporal.io/sdk/testsuite"
 	"google.golang.org/grpc"
@@ -22,13 +21,11 @@ import (
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
 	"overdoll/libraries/config"
-	"overdoll/libraries/passport"
 	"overdoll/libraries/testing_tools"
 	"testing"
 )
 
 const LoaderHttpAddr = ":3333"
-const LoaderGraphqlClientAddr = "http://:3333/api/graphql"
 const LoaderTusClientAddr = "http://:3333/api/upload/"
 
 const LoaderGrpcAddr = "localhost:3334"
@@ -81,13 +78,6 @@ func uploadFileWithTus(t *testing.T, tusClient *tus.Client, filePath string) str
 
 	// get last part of url = ID of the upload
 	return split[len(split)-1]
-}
-
-func getGraphqlClient(t *testing.T) *graphql.Client {
-
-	client, _ := passport.NewHTTPTestClientWithPassport(nil)
-
-	return graphql.NewClient(LoaderGraphqlClientAddr, client)
 }
 
 func getGrpcClient(t *testing.T) loader.LoaderClient {

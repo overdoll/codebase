@@ -31,6 +31,7 @@ go_library(
         "//libraries/localization",
         "//libraries/paging",
         "//libraries/principal",
+        "//libraries/resource",
         "//libraries/uuid",
         "@com_github_go_playground_validator_v10//:validator",
     ],
@@ -41,8 +42,9 @@ go_test(
     srcs = ["post_content_test.go"],
     embed = [":post"],
     deps = [
-        "//applications/stella/proto:v1_go_proto",
+        "//applications/sting/proto:v1_go_proto",
         "//libraries/principal",
+        "//libraries/resource",
         "//libraries/testing_tools",
         "//libraries/uuid",
         "@com_github_stretchr_testify//require",

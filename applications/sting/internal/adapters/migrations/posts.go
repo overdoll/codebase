@@ -46,6 +46,10 @@ const postIndex = `
 				"content_resource_ids": {
                      "type": "keyword"
 				},
+				"content_resources": {
+                     "type": "object",
+					 "dynamic": true
+				},
 				"content_supporter_only": {
                      "type": "object",
 					 "dynamic": true
@@ -56,7 +60,10 @@ const postIndex = `
 				},
 				"created_at": {
                      "type": "date"
-				},			
+				},
+				"updated_at": {
+					"type": "date"
+				},
 				"posted_at": {
                      "type": "date"
 				},

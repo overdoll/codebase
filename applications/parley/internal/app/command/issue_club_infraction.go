@@ -18,19 +18,19 @@ type IssueClubInfraction struct {
 }
 
 type IssueClubInfractionHandler struct {
-	cr     club_infraction.Repository
-	rr     rule.Repository
-	event  event.Repository
-	stella StellaService
+	cr    club_infraction.Repository
+	rr    rule.Repository
+	event event.Repository
+	sting StingService
 }
 
-func NewIssueClubInfractionHandler(cr club_infraction.Repository, rr rule.Repository, event event.Repository, ss StellaService) IssueClubInfractionHandler {
-	return IssueClubInfractionHandler{cr: cr, rr: rr, event: event, stella: ss}
+func NewIssueClubInfractionHandler(cr club_infraction.Repository, rr rule.Repository, event event.Repository, sting StingService) IssueClubInfractionHandler {
+	return IssueClubInfractionHandler{cr: cr, rr: rr, event: event, sting: sting}
 }
 
 func (h IssueClubInfractionHandler) Handle(ctx context.Context, cmd IssueClubInfraction) (*club_infraction.ClubInfractionHistory, error) {
 
-	if err := h.stella.GetClubById(ctx, cmd.ClubId); err != nil {
+	if err := h.sting.GetClubById(ctx, cmd.ClubId); err != nil {
 		return nil, err
 	}
 

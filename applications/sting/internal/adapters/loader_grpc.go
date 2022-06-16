@@ -5,25 +5,36 @@ import (
 	loader "overdoll/applications/loader/proto"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/resource"
+	"overdoll/libraries/resource/proto"
 )
 
 type LoaderGrpc struct {
-	client loader.LoaderClient
+	client     loader.LoaderClient
+	serializer *resource.Serializer
 }
 
-func NewLoaderGrpc(client loader.LoaderClient) LoaderGrpc {
-	return LoaderGrpc{client: client}
+func NewLoaderGrpc(client loader.LoaderClient, serializer *resource.Serializer) LoaderGrpc {
+	return LoaderGrpc{client: client, serializer: serializer}
 }
 
-func (s LoaderGrpc) CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string, private bool) ([]string, error) {
+func (s LoaderGrpc) CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string, private bool, token string) ([]*resource.Resource, error) {
 
-	md, err := s.client.CreateOrGetResourcesFromUploads(ctx, &loader.CreateOrGetResourcesFromUploadsRequest{ItemId: itemId, ResourceIds: resourceIds, Private: private})
+	md, err := s.client.CreateOrGetResourcesFromUploads(ctx, &loader.CreateOrGetResourcesFromUploadsRequest{
+		ItemId: itemId, ResourceIds: resourceIds, Private: private, Token: token, Source: proto.SOURCE_STING,
+	})
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to create or get resources from uploads")
 	}
 
-	return md.AllResourceIds, nil
+	resources, err := s.serializer.UnmarshalResourcesFromProto(ctx, md.Resources)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return resources, nil
 }
 
 func (s LoaderGrpc) CopyResourcesAndApplyPixelateFilter(ctx context.Context, itemId string, resourceIds []string, pixelate int, private bool) ([]*post.NewContent, error) {
@@ -48,9 +59,15 @@ func (s LoaderGrpc) CopyResourcesAndApplyPixelateFilter(ctx context.Context, ite
 	}
 
 	var res []*post.NewContent
-
 	for _, r := range md.Resources {
-		res = append(res, post.UnmarshalNewContentFromDatabase(itemId, r.OldResource.Id, r.NewResource.Id))
+
+		unmarshalled, err := s.serializer.UnmarshalResourceFromProto(ctx, r.NewResource)
+
+		if err != nil {
+			return nil, err
+		}
+
+		res = append(res, post.UnmarshalNewContentFromDatabase(itemId, r.OldResource.Id, unmarshalled))
 	}
 
 	return res, nil
@@ -65,21 +82,4 @@ func (s LoaderGrpc) DeleteResources(ctx context.Context, itemId string, resource
 	}
 
 	return nil
-}
-
-func (s LoaderGrpc) AllResourcesProcessed(ctx context.Context, itemId string, resourceIds []string) (bool, error) {
-
-	res, err := s.client.GetResources(ctx, &loader.GetResourcesRequest{ItemId: itemId, ResourceIds: resourceIds})
-
-	if err != nil {
-		return false, errors.Wrap(err, "failed to get resources")
-	}
-
-	for _, item := range res.Resources {
-		if !item.Processed {
-			return false, nil
-		}
-	}
-
-	return true, nil
 }

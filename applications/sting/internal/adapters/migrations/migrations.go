@@ -14,6 +14,8 @@ func registerCallbacks() migrate.CallbackRegister {
 	reg.Add(migrate.CallComment, "create_characters_index", createCharacterIndex)
 	reg.Add(migrate.CallComment, "create_series_index", createSeriesIndex)
 	reg.Add(migrate.CallComment, "create_posts_index", createPostsIndex)
+	reg.Add(migrate.CallComment, "create_clubs_index", createClubsIndex)
+	reg.Add(migrate.CallComment, "create_club_members_index", createClubMembersIndex)
 
 	return reg
 }

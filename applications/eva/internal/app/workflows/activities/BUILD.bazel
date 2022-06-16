@@ -13,7 +13,6 @@ go_library(
         "hades_delete_account_data.go",
         "parley_delete_account_data.go",
         "ringer_delete_account_data.go",
-        "stella_delete_account_data.go",
         "sting_delete_account_data.go",
         "update_account_cancel_deletion.go",
         "update_account_deleted.go",

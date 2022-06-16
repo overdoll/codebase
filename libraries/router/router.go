@@ -5,6 +5,7 @@ import (
 	"go.uber.org/zap"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/probe"
 	"overdoll/libraries/sentry_support"
 )
 
@@ -14,6 +15,7 @@ func init() {
 
 func NewGinRouter(principalService principal.HttpServicePrincipalFunc) *gin.Engine {
 	router := NewRawGinRouter()
+	router.GET("/readyz", probe.ReadyZ())
 	router.Use(passport.GinPassportRequestMiddleware())
 	router.Use(sentry_support.PassportHttpMiddleware())
 	router.Use(principal.GinPrincipalRequestMiddleware(principalService))

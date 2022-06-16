@@ -6,7 +6,6 @@ import (
 	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/testing_tools"
-	"overdoll/libraries/uuid"
 	"testing"
 )
 
@@ -26,10 +25,10 @@ type UnArchivePost struct {
 func TestArchivePost_and_undo(t *testing.T) {
 	t.Parallel()
 
-	clubId := uuid.New().String()
 	testingAccountId := newFakeAccount(t)
 	mockAccountNormal(t, testingAccountId)
-	mockAccountDigestClubOwner(t, testingAccountId, clubId)
+	clb := seedClub(t, testingAccountId)
+	clubId := clb.ID()
 	publishedPost := seedPublishedPost(t, testingAccountId, clubId)
 
 	postId := publishedPost.ID()

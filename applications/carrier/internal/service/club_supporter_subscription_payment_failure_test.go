@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 	carrier "overdoll/applications/carrier/proto"
 	eva "overdoll/applications/eva/proto"
-	stella "overdoll/applications/stella/proto"
+	sting "overdoll/applications/sting/proto"
 	"overdoll/libraries/uuid"
 	"testing"
 	"time"
@@ -31,7 +31,7 @@ func TestClubSupporterSubscriptionPaymentFailure(t *testing.T) {
 	email := generateEmail("carrier-" + accountId)
 
 	application.EvaClient.On("GetAccount", mock.Anything, &eva.GetAccountRequest{Id: accountId}).Return(&eva.Account{Id: accountId, Email: email, Username: "test user"}, nil).Once()
-	application.StellaClient.On("GetClubById", mock.Anything, &stella.GetClubByIdRequest{ClubId: clubId}).Return(&stella.GetClubByIdResponse{Club: &stella.Club{OwnerAccountId: accountId, Slug: "test-club", Name: "test a club"}}, nil).Once()
+	application.StingClient.On("GetClubById", mock.Anything, &sting.GetClubByIdRequest{ClubId: clubId}).Return(&sting.GetClubByIdResponse{Club: &sting.Club{OwnerAccountId: accountId, Slug: "test-club", Name: "test a club"}}, nil).Once()
 
 	_, err := client.ClubSupporterSubscriptionPaymentFailure(context.Background(), &carrier.ClubSupporterSubscriptionPaymentFailureRequest{
 		Account:      &carrier.Account{Id: accountId},

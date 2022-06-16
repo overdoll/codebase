@@ -13,6 +13,7 @@ type DataLoader struct {
 	audiencesByIds  *dataloader.Loader
 	categoriesByIds *dataloader.Loader
 	seriesByIds     *dataloader.Loader
+	clubsByIds      *dataloader.Loader
 }
 
 func NewDataLoader(app *app.Application) *DataLoader {
@@ -22,6 +23,7 @@ func NewDataLoader(app *app.Application) *DataLoader {
 		audiencesByIds:  audiencesByIds(app),
 		categoriesByIds: categoriesByIds(app),
 		seriesByIds:     seriesByIds(app),
+		clubsByIds:      clubsByIds(app),
 	}
 }
 

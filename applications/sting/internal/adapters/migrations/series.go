@@ -17,7 +17,7 @@ const seriesIndexProperties = `
 	"slug": {
 		"type": "keyword"
 	},
-	"thumbnail_resource_id": {
+	"thumbnail_resource": {
 		"type": "keyword"
 	},
 	"total_likes": {
@@ -28,6 +28,9 @@ const seriesIndexProperties = `
 	},
 	"title":  ` + localization.ESIndex + `
 	"created_at": {
+		"type": "date"
+	},
+	"updated_at": {
 		"type": "date"
 	}
 }

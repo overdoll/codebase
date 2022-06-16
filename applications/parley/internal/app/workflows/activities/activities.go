@@ -9,15 +9,14 @@ import (
 )
 
 type Activities struct {
-	pr     post_audit_log.Repository
-	mr     moderator.Repository
-	rr     rule.Repository
-	rpr    report.Repository
-	cr     club_infraction.Repository
-	sting  StingService
-	stella StellaService
+	pr    post_audit_log.Repository
+	mr    moderator.Repository
+	rr    rule.Repository
+	rpr   report.Repository
+	cr    club_infraction.Repository
+	sting StingService
 }
 
-func NewActivitiesHandler(mr moderator.Repository, rpr report.Repository, pr post_audit_log.Repository, rr rule.Repository, cr club_infraction.Repository, sting StingService, stella StellaService) *Activities {
-	return &Activities{mr: mr, pr: pr, rr: rr, cr: cr, rpr: rpr, sting: sting, stella: stella}
+func NewActivitiesHandler(mr moderator.Repository, rpr report.Repository, pr post_audit_log.Repository, rr rule.Repository, cr club_infraction.Repository, sting StingService) *Activities {
+	return &Activities{mr: mr, pr: pr, rr: rr, cr: cr, rpr: rpr, sting: sting}
 }

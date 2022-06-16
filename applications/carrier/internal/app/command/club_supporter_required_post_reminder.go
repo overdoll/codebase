@@ -16,10 +16,10 @@ type ClubSupporterRequiredPostReminder struct {
 type ClubSupporterRequiredPostReminderHandler struct {
 	mr     mailing.Repository
 	eva    EvaService
-	stella StellaService
+	stella StingService
 }
 
-func NewClubSupporterRequiredPostReminderHandler(mr mailing.Repository, eva EvaService, stella StellaService) ClubSupporterRequiredPostReminderHandler {
+func NewClubSupporterRequiredPostReminderHandler(mr mailing.Repository, eva EvaService, stella StingService) ClubSupporterRequiredPostReminderHandler {
 	return ClubSupporterRequiredPostReminderHandler{mr: mr, eva: eva, stella: stella}
 }
 

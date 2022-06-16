@@ -12,7 +12,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//applications/eva/proto:v1_go_proto",
-        "//applications/stella/proto:v1_go_proto",
+        "//applications/sting/proto:v1_go_proto",
         "//libraries/errors/domainerror",
         "//libraries/passport",
         "@com_github_gin_gonic_gin//:gin",

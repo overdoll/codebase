@@ -45,7 +45,7 @@ func (h *Activities) CheckClubTransactionChargebackMetric(ctx context.Context, i
 	returnValue.Suspended = true
 	returnValue.ChargebackFloat = metric.ChargebacksCountRatio()
 
-	if err := h.stella.SuspendClub(ctx, input.ClubId, true); err != nil {
+	if err := h.sting.SuspendClub(ctx, input.ClubId, true); err != nil {
 		return nil, err
 	}
 

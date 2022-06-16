@@ -33,7 +33,6 @@ go_library(
         "//libraries/bootstrap",
         "//libraries/errors",
         "//libraries/sentry_support",
-        "@com_github_gocql_gocql//:gocql",
         "@com_github_scylladb_gocqlx_v2//:gocqlx",
         "@com_github_scylladb_gocqlx_v2//migrate",
         "@com_github_spf13_cobra//:cobra",

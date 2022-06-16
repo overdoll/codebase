@@ -1,0 +1,32 @@
+[
+  {
+    "id": "25WqY2AZfmlykwqKhQagxmI9gtd",
+    "members_count": 0,
+    "members_count_last_update_id": "5bfbcb5f-cd83-11ec-a8ea-520fda81e34b",
+    "name": {
+      "en": "Test Club"
+    },
+    "owner_account_id": "1q7MJ5IyRTV0X4J27F3m5wGD5mj",
+    "slug": "TestClub",
+    "slug_aliases": [],
+    "suspended": false,
+    "suspended_until": "",
+    "has_created_supporter_only_post": true,
+    "next_supporter_post_time": "2022-04-08 00:09:01.117"
+  },
+  {
+    "id": "25WqY2AZfmlykwqKhQagxmI9gts",
+    "members_count": 0,
+    "members_count_last_update_id": "5bfbcb5f-cd83-11ec-a8ea-520fda81e34b",
+    "name": {
+      "en": "Second Test Club"
+    },
+    "owner_account_id": "1q7MJ5IyRTV0X4J27F3m5wGD5mj",
+    "slug": "SecondTestClub",
+    "slug_aliases": [],
+    "suspended": false,
+    "suspended_until": "",
+    "has_created_supporter_only_post": true,
+    "next_supporter_post_time": "2022-04-08 00:09:01.117"
+  }
+]

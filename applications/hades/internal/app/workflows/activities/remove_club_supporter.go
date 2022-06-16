@@ -10,5 +10,5 @@ type RemoveClubSupporterInput struct {
 }
 
 func (h *Activities) RemoveClubSupporter(ctx context.Context, input RemoveClubSupporterInput) error {
-	return h.stella.RemoveClubSupporter(ctx, input.ClubId, input.AccountId)
+	return h.sting.RemoveClubSupporter(ctx, input.ClubId, input.AccountId)
 }

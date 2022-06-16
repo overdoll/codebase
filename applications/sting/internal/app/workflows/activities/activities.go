@@ -1,19 +1,22 @@
 package activities
 
 import (
+	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/applications/sting/internal/domain/curation"
 	"overdoll/applications/sting/internal/domain/post"
 )
 
 type Activities struct {
-	pr post.Repository
-	cr curation.Repository
+	pr  post.Repository
+	cr  club.Repository
+	cur curation.Repository
 
-	stella StellaService
+	carrier CarrierService
+
 	parley ParleyService
 	loader LoaderService
 }
 
-func NewActivitiesHandler(pr post.Repository, cr curation.Repository, stella StellaService, parley ParleyService, loader LoaderService) *Activities {
-	return &Activities{pr: pr, cr: cr, parley: parley, loader: loader, stella: stella}
+func NewActivitiesHandler(pr post.Repository, cr club.Repository, cur curation.Repository, parley ParleyService, loader LoaderService, carrier CarrierService) *Activities {
+	return &Activities{pr: pr, cur: cur, cr: cr, parley: parley, loader: loader, carrier: carrier}
 }

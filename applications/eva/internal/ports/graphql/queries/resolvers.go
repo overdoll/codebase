@@ -27,7 +27,7 @@ func (r *QueryResolver) Account(ctx context.Context, username string) (*types.Ac
 		return nil, err
 	}
 
-	return types.MarshalAccountToGraphQL(acc), nil
+	return types.MarshalAccountToGraphQL(ctx, acc), nil
 }
 
 func (r *QueryResolver) ViewAuthenticationToken(ctx context.Context, tk string, secret *string) (*types.AuthenticationToken, error) {
@@ -72,5 +72,5 @@ func (r *QueryResolver) Viewer(ctx context.Context) (*types.Account, error) {
 		return nil, err
 	}
 
-	return types.MarshalAccountToGraphQL(acc), nil
+	return types.MarshalAccountToGraphQL(ctx, acc), nil
 }

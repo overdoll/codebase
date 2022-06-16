@@ -2,6 +2,7 @@ package event
 
 import (
 	"context"
+	club "overdoll/applications/sting/internal/domain/club"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/principal"
 	"time"
@@ -19,4 +20,18 @@ type Repository interface {
 	RemovePostLike(ctx context.Context, like *post.Like) error
 
 	DeleteAccountData(ctx context.Context, postId string) error
+
+	AddClubSupporter(ctx context.Context, clubId, accountId string, supportedAt time.Time) error
+	RemoveClubSupporter(ctx context.Context, clubId, accountId string) error
+	AddClubMember(ctx context.Context, member *club.Member) error
+	RemoveClubMember(ctx context.Context, member *club.Member) error
+	SuspendClub(ctx context.Context, requester *principal.Principal, club *club.Club, endTime time.Time, reason string) error
+	SuspendClubOperator(ctx context.Context, club *club.Club, accountId *string, endTime time.Time, reason string) error
+	UnSuspendClub(ctx context.Context, requester *principal.Principal, clb *club.Club) error
+
+	WaitForClubToBeReady(ctx context.Context, requester *principal.Principal, clb *club.Club) error
+	CreateClub(ctx context.Context, requester *principal.Principal, clb *club.Club) error
+
+	TerminateClub(ctx context.Context, requester *principal.Principal, clb *club.Club) error
+	UnTerminateClub(ctx context.Context, requester *principal.Principal, clb *club.Club) error
 }

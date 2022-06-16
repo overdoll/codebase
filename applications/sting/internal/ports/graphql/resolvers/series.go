@@ -7,7 +7,6 @@ import (
 	"overdoll/applications/sting/internal/app/query"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/graphql"
-	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
@@ -18,14 +17,6 @@ type SeriesResolver struct {
 
 func (r SeriesResolver) Title(ctx context.Context, obj *types.Series, locale *string) (string, error) {
 	return graphql.GetTranslationFromTranslationsAndLanguage(obj.TitleTranslations, locale)
-}
-
-func (r SeriesResolver) Thumbnail(ctx context.Context, obj *types.Series) (*types.Resource, error) {
-	if obj.Thumbnail == nil {
-		return nil, nil
-	}
-
-	return &types.Resource{ID: relay.NewID(types.Resource{}, obj.ID.GetID(), obj.Thumbnail.ID.GetID())}, nil
 }
 
 func (r SeriesResolver) Posts(ctx context.Context, obj *types.Series, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error) {

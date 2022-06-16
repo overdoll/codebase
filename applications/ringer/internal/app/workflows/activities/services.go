@@ -5,6 +5,6 @@ import (
 	"overdoll/applications/ringer/internal/domain/club"
 )
 
-type StellaService interface {
+type StingService interface {
 	GetClubById(ctx context.Context, clubId string) (*club.Club, error)
 }

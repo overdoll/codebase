@@ -19,11 +19,6 @@ type HadesService interface {
 	CanDeleteAccountData(ctx context.Context, accountId string) (bool, error)
 }
 
-type StellaService interface {
-	DeleteAccountData(ctx context.Context, accountId string) error
-	CanDeleteAccountData(ctx context.Context, accountId string) (bool, error)
-}
-
 type ParleyService interface {
 	DeleteAccountData(ctx context.Context, accountId string) error
 }
@@ -34,4 +29,5 @@ type RingerService interface {
 
 type StingService interface {
 	DeleteAccountData(ctx context.Context, accountId string) error
+	CanDeleteAccountData(ctx context.Context, accountId string) (bool, error)
 }

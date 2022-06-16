@@ -17,7 +17,7 @@ const characterIndexProperties = `
 	"slug": {
 		"type": "keyword"
 	},
-	"thumbnail_resource_id": {
+	"thumbnail_resource": {
 		"type": "keyword"
 	},
 	"name": ` + localization.ESIndex + `
@@ -33,6 +33,9 @@ const characterIndexProperties = `
 	"series": {
 		"type": "nested",
 		"properties": ` + seriesIndexProperties + ` 
+	},
+	"updated_at": {
+		"type": "date"
 	}
 }
 `

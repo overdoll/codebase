@@ -15,10 +15,10 @@ type ClubSupporterSubscriptionPaymentFailure struct {
 type ClubSupporterSubscriptionPaymentFailureHandler struct {
 	mr     mailing.Repository
 	eva    EvaService
-	stella StellaService
+	stella StingService
 }
 
-func NewClubSupporterSubscriptionPaymentFailureHandler(mr mailing.Repository, eva EvaService, stella StellaService) ClubSupporterSubscriptionPaymentFailureHandler {
+func NewClubSupporterSubscriptionPaymentFailureHandler(mr mailing.Repository, eva EvaService, stella StingService) ClubSupporterSubscriptionPaymentFailureHandler {
 	return ClubSupporterSubscriptionPaymentFailureHandler{mr: mr, eva: eva, stella: stella}
 }
 

@@ -36,7 +36,7 @@ type clubPayoutDocument struct {
 	TemporalWorkflowId string                    `json:"temporal_workflow_id"`
 }
 
-const ClubPayoutsIndexName = "club_payouts"
+const ClubPayoutsIndexName = "ringer.club_payouts"
 
 func unmarshalClubPayoutDocument(hit *elastic.SearchHit) (*payout.ClubPayout, error) {
 

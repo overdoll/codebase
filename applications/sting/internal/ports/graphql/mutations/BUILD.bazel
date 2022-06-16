@@ -6,6 +6,7 @@ go_library(
         "audience.go",
         "category.go",
         "character.go",
+        "club.go",
         "curation_profile.go",
         "post.go",
         "post_like.go",
@@ -17,6 +18,7 @@ go_library(
     deps = [
         "//applications/sting/internal/app",
         "//applications/sting/internal/app/command",
+        "//applications/sting/internal/domain/club",
         "//applications/sting/internal/domain/post",
         "//applications/sting/internal/ports/graphql/types",
         "//libraries/graphql/relay",

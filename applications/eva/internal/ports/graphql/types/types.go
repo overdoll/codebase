@@ -5,6 +5,7 @@ package types
 import (
 	"fmt"
 	"io"
+	graphql1 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"strconv"
 	"time"
@@ -16,7 +17,7 @@ type Account struct {
 	// The ID that the account can be referenced by
 	Reference string `json:"reference"`
 	// A URL pointing to the account's public avatar.
-	Avatar *Resource `json:"avatar"`
+	Avatar *graphql1.Resource `json:"avatar"`
 	// The username of the account.
 	Username string `json:"username"`
 	// Whether or not this account is a staff member
@@ -437,12 +438,6 @@ type MultiFactorTotp struct {
 	// Always html image compatible. Just set SRC tag to this and it will work!
 	ImageSrc string `json:"imageSrc"`
 }
-
-type Resource struct {
-	ID relay.ID `json:"id"`
-}
-
-func (Resource) IsEntity() {}
 
 // Payload for revoking the current viewer
 type RevokeAccountAccessPayload struct {

@@ -45,10 +45,10 @@ type clubBalance struct {
 
 type BalanceCassandraRepository struct {
 	session gocqlx.Session
-	stella  query.StellaService
+	stella  query.StingService
 }
 
-func NewBalanceCassandraRepository(session gocqlx.Session, stella query.StellaService) BalanceCassandraRepository {
+func NewBalanceCassandraRepository(session gocqlx.Session, stella query.StingService) BalanceCassandraRepository {
 	return BalanceCassandraRepository{session: session, stella: stella}
 }
 

@@ -7,7 +7,7 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 	eva "overdoll/applications/eva/proto"
 	"overdoll/applications/hades/internal/service"
-	stella "overdoll/applications/stella/proto"
+	sting "overdoll/applications/sting/proto"
 	"testing"
 )
 
@@ -36,11 +36,11 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 	application.RingerClient.On("NewClubSupporterSubscriptionPaymentDeposit", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
 	application.RingerClient.On("NewClubSupporterSubscriptionPaymentDeduction", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
 
-	application.StellaClient.On("SuspendClub", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
-	application.StellaClient.On("AddClubSupporter", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
-	application.StellaClient.On("RemoveClubSupporter", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
+	application.StingClient.On("SuspendClub", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
+	application.StingClient.On("AddClubSupporter", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
+	application.StingClient.On("RemoveClubSupporter", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
 
-	application.StellaClient.On("GetClubById", mock.Anything, mock.Anything).Return(&stella.GetClubByIdResponse{Club: &stella.Club{OwnerAccountId: "", CanSupport: true}}, nil)
+	application.StingClient.On("GetClubById", mock.Anything, mock.Anything).Return(&sting.GetClubByIdResponse{Club: &sting.Club{OwnerAccountId: "", CanSupport: true}}, nil)
 
 	application.RingerClient.On("ClubPaymentDeposit", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
 	application.RingerClient.On("ClubPaymentDeduction", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
@@ -67,8 +67,8 @@ func mockAccountNormal(t *testing.T, accountId string) {
 }
 
 func mockAccountDigest(t *testing.T, accountId string, clubId string) {
-	application.StellaClient.On("GetAccountClubDigest", mock.Anything,
-		&stella.GetAccountClubDigestRequest{AccountId: accountId}).Return(&stella.GetAccountClubDigestResponse{
+	application.StingClient.On("GetAccountClubDigest", mock.Anything,
+		&sting.GetAccountClubDigestRequest{AccountId: accountId}).Return(&sting.GetAccountClubDigestResponse{
 		SupportedClubIds:  []string{},
 		ClubMembershipIds: []string{},
 		OwnerClubIds:      []string{clubId},

@@ -10,23 +10,23 @@ import (
 )
 
 type Activities struct {
-	pr     payment.Repository
-	br     balance.Repository
-	par    payout.Repository
-	pxr    paxum.Repository
-	dr     details.Repository
-	stella StellaService
-	eva    query.EvaService
+	pr    payment.Repository
+	br    balance.Repository
+	par   payout.Repository
+	pxr   paxum.Repository
+	dr    details.Repository
+	sting StingService
+	eva   query.EvaService
 }
 
-func NewActivitiesHandler(pr payment.Repository, par payout.Repository, br balance.Repository, dr details.Repository, pxr paxum.Repository, stella StellaService, eva query.EvaService) *Activities {
+func NewActivitiesHandler(pr payment.Repository, par payout.Repository, br balance.Repository, dr details.Repository, pxr paxum.Repository, sting StingService, eva query.EvaService) *Activities {
 	return &Activities{
-		pr:     pr,
-		par:    par,
-		br:     br,
-		dr:     dr,
-		pxr:    pxr,
-		stella: stella,
-		eva:    eva,
+		pr:    pr,
+		par:   par,
+		br:    br,
+		dr:    dr,
+		pxr:   pxr,
+		sting: sting,
+		eva:   eva,
 	}
 }

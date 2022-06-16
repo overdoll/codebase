@@ -40,6 +40,15 @@ func captureTemporalExceptionAndFlush(hub *sentry.Hub, err error) {
 		return
 	}
 
+	var applicationErr *temporal.ApplicationError
+	if errors.As(err, &applicationErr) {
+		switch applicationErr.Type() {
+		// ignore app recoverable errors
+		case "Recoverable":
+			return
+		}
+	}
+
 	if err != nil && hub != nil {
 		hub.CaptureException(err)
 	}

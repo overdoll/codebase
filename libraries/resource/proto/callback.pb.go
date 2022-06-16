@@ -1,0 +1,1 @@
+../../../bazel-out/k8-fastbuild/bin/libraries/resource/proto/libraries_go_proto_/overdoll/libraries/resource/proto/callback.pb.go

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"time"
 
@@ -18,36 +19,55 @@ import (
 )
 
 type characterDocument struct {
-	Id                  string            `json:"id"`
-	Slug                string            `json:"slug"`
-	ThumbnailResourceId *string           `json:"thumbnail_resource_id"`
-	Name                map[string]string `json:"name"`
-	Series              seriesDocument    `json:"series"`
-	CreatedAt           time.Time         `json:"created_at"`
-	TotalLikes          int               `json:"total_likes"`
-	TotalPosts          int               `json:"total_posts"`
+	Id                string            `json:"id"`
+	Slug              string            `json:"slug"`
+	ThumbnailResource string            `json:"thumbnail_resource"`
+	Name              map[string]string `json:"name"`
+	Series            seriesDocument    `json:"series"`
+	CreatedAt         time.Time         `json:"created_at"`
+	UpdatedAt         time.Time         `json:"updated_at"`
+	TotalLikes        int               `json:"total_likes"`
+	TotalPosts        int               `json:"total_posts"`
 }
 
-const CharacterIndexName = "characters"
+const CharacterIndexName = "sting.characters"
 
-func marshalCharacterToDocument(char *post.Character) *characterDocument {
-	return &characterDocument{
-		Id:                  char.ID(),
-		ThumbnailResourceId: char.ThumbnailResourceId(),
-		Name:                localization.MarshalTranslationToDatabase(char.Name()),
-		Slug:                char.Slug(),
-		CreatedAt:           char.CreatedAt(),
-		TotalLikes:          char.TotalLikes(),
-		TotalPosts:          char.TotalPosts(),
-		Series:              *marshalSeriesToDocument(char.Series()),
+func marshalCharacterToDocument(char *post.Character) (*characterDocument, error) {
+
+	marshalled, err := resource.MarshalResourceToDatabase(char.ThumbnailResource())
+
+	if err != nil {
+		return nil, err
 	}
+
+	marshalledSeries, err := marshalSeriesToDocument(char.Series())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &characterDocument{
+		Id:                char.ID(),
+		ThumbnailResource: marshalled,
+		Name:              localization.MarshalTranslationToDatabase(char.Name()),
+		Slug:              char.Slug(),
+		CreatedAt:         char.CreatedAt(),
+		UpdatedAt:         char.UpdatedAt(),
+		TotalLikes:        char.TotalLikes(),
+		TotalPosts:        char.TotalPosts(),
+		Series:            *marshalledSeries,
+	}, nil
 }
 
 func (r PostsCassandraElasticsearchRepository) indexCharacter(ctx context.Context, character *post.Character) error {
 
-	char := marshalCharacterToDocument(character)
+	char, err := marshalCharacterToDocument(character)
 
-	_, err := r.client.
+	if err != nil {
+		return err
+	}
+
+	_, err = r.client.
 		Index().
 		Index(CharacterIndexName).
 		Id(character.ID()).
@@ -126,22 +146,36 @@ func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Cont
 			return nil, errors.Wrap(err, "failed to unmarshal character document")
 		}
 
+		unmarshalledCharacterResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, chr.ThumbnailResource)
+
+		if err != nil {
+			return nil, err
+		}
+
+		unmarshalledSeriesResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, chr.Series.ThumbnailResource)
+
+		if err != nil {
+			return nil, err
+		}
+
 		newCharacter := post.UnmarshalCharacterFromDatabase(
 			chr.Id,
 			chr.Slug,
 			chr.Name,
-			chr.ThumbnailResourceId,
+			unmarshalledCharacterResource,
 			chr.TotalLikes,
 			chr.TotalPosts,
 			chr.CreatedAt,
+			chr.UpdatedAt,
 			post.UnmarshalSeriesFromDatabase(
 				chr.Series.Id,
 				chr.Series.Slug,
 				chr.Series.Title,
-				chr.Series.ThumbnailResourceId,
+				unmarshalledSeriesResource,
 				chr.Series.TotalLikes,
 				chr.Series.TotalPosts,
 				chr.Series.CreatedAt,
+				chr.Series.UpdatedAt,
 			))
 		newCharacter.Node = paging.NewNode(hit.Sort)
 
@@ -175,21 +209,22 @@ func (r PostsCassandraElasticsearchRepository) IndexAllCharacters(ctx context.Co
 			}
 
 			doc := characterDocument{
-				Id:                  c.Id,
-				ThumbnailResourceId: c.ThumbnailResourceId,
-				Name:                c.Name,
-				Slug:                c.Slug,
-				CreatedAt:           c.CreatedAt,
-				TotalLikes:          c.TotalLikes,
-				TotalPosts:          c.TotalPosts,
+				Id:                c.Id,
+				ThumbnailResource: c.ThumbnailResource,
+				Name:              c.Name,
+				Slug:              c.Slug,
+				CreatedAt:         c.CreatedAt,
+				UpdatedAt:         c.UpdatedAt,
+				TotalLikes:        c.TotalLikes,
+				TotalPosts:        c.TotalPosts,
 				Series: seriesDocument{
-					Id:                  m.Id,
-					ThumbnailResourceId: m.ThumbnailResourceId,
-					Title:               m.Title,
-					Slug:                m.Slug,
-					CreatedAt:           m.CreatedAt,
-					TotalLikes:          m.TotalLikes,
-					TotalPosts:          c.TotalPosts,
+					Id:                m.Id,
+					ThumbnailResource: m.ThumbnailResource,
+					Title:             m.Title,
+					Slug:              m.Slug,
+					CreatedAt:         m.CreatedAt,
+					TotalLikes:        m.TotalLikes,
+					TotalPosts:        c.TotalPosts,
 				},
 			}
 

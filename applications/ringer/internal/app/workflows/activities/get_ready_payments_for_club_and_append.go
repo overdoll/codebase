@@ -20,7 +20,7 @@ type GetReadyPaymentsForClubAndAppendPayload struct {
 func (h *Activities) GetReadyPaymentsForClubAndAppend(ctx context.Context, input GetReadyPaymentsForClubAndAppendInput) (*GetReadyPaymentsForClubAndAppendPayload, error) {
 
 	// first, grab the account payout method
-	clb, err := h.stella.GetClubById(ctx, input.ClubId)
+	clb, err := h.sting.GetClubById(ctx, input.ClubId)
 
 	if err != nil {
 		return nil, err

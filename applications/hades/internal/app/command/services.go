@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-type StellaService interface {
+type StingService interface {
 	GetClubById(ctx context.Context, clubId string) (*club.Club, error)
 	AddClubSupporter(ctx context.Context, clubId, accountId string, supportedAt time.Time) error
 	RemoveClubSupporter(ctx context.Context, clubId, accountId string) error

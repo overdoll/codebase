@@ -22,10 +22,10 @@ type GenerateCCBillClubSupportPaymentLink struct {
 type GenerateCCBillClubSupportPaymentLinkHandler struct {
 	br     billing.Repository
 	pr     billing.PricingRepository
-	stella StellaService
+	stella StingService
 }
 
-func NewGenerateCCBillClubSupportPaymentLinkHandler(br billing.Repository, pr billing.PricingRepository, stella StellaService) GenerateCCBillClubSupportPaymentLinkHandler {
+func NewGenerateCCBillClubSupportPaymentLinkHandler(br billing.Repository, pr billing.PricingRepository, stella StingService) GenerateCCBillClubSupportPaymentLinkHandler {
 	return GenerateCCBillClubSupportPaymentLinkHandler{br: br, pr: pr, stella: stella}
 }
 

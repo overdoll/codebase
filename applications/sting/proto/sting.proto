@@ -3,6 +3,7 @@ syntax = "proto3";
 package applications.grpc.sting.v1;
 
 import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
 
 message PostRequest {
   string id = 1;
@@ -12,26 +13,84 @@ message Post {
   string clubId = 1;
 }
 
-message AddTerminatedClubRequest {
-  string clubId = 1;
-}
-
-message RemoveTerminatedClubRequest {
-  string clubId = 1;
-}
-
 message DeleteAccountDataRequest {
   string accountId = 1;
 }
 
+message Club {
+  string slug = 1;
+  string name = 2;
+  string ownerAccountId = 3;
+  bool isSuspended = 4;
+  bool canSupport = 5;
+}
+
+message GetClubByIdRequest {
+  string clubId = 1;
+}
+
+message GetClubByIdResponse {
+  Club club = 1;
+}
+
+message AddClubSupporterRequest {
+  string accountId = 1;
+  string clubId = 2;
+  google.protobuf.Timestamp supportedAt = 3;
+}
+
+message RemoveClubSupporterRequest {
+  string accountId = 1;
+  string clubId = 2;
+}
+
+message SuspendClubRequest {
+  string clubId = 1;
+  int64 endTimeUnix = 2;
+  optional string initiatorAccountId = 3;
+  SuspensionSource source = 4;
+}
+
+enum SuspensionSource {
+  POST_MODERATION_QUEUE = 0;
+  POST_REMOVAL = 1;
+  MANUAL = 2;
+  AUTOMATED_CHARGEBACKS = 3;
+}
+
+message GetAccountClubDigestRequest {
+  string accountId = 1;
+}
+
+message GetAccountClubDigestResponse {
+  repeated string supportedClubIds = 1;
+  repeated string clubMembershipIds = 2;
+  repeated string ownerClubIds = 3;
+}
+
+message CanDeleteAccountDataRequest {
+  string accountId = 1;
+}
+
+message CanDeleteAccountDataResponse {
+  bool canDelete = 1;
+}
+
 service Sting {
   rpc GetPost(PostRequest) returns (Post);
+
   rpc PublishPost(PostRequest) returns (google.protobuf.Empty);
   rpc RemovePost(PostRequest) returns (google.protobuf.Empty);
   rpc RejectPost(PostRequest) returns (google.protobuf.Empty);
   rpc DiscardPost(PostRequest) returns (google.protobuf.Empty);
-  rpc AddTerminatedClub(AddTerminatedClubRequest) returns (google.protobuf.Empty);
-  rpc RemoveTerminatedClub(RemoveTerminatedClubRequest) returns (google.protobuf.Empty);
+  rpc SuspendClub(SuspendClubRequest) returns (google.protobuf.Empty);
 
+  rpc CanDeleteAccountData(CanDeleteAccountDataRequest) returns (CanDeleteAccountDataResponse);
   rpc DeleteAccountData(DeleteAccountDataRequest) returns (google.protobuf.Empty);
+
+  rpc GetClubById(GetClubByIdRequest) returns (GetClubByIdResponse);
+  rpc GetAccountClubDigest(GetAccountClubDigestRequest) returns (GetAccountClubDigestResponse);
+
+  rpc AddClubSupporter(AddClubSupporterRequest) returns (google.protobuf.Empty);
+  rpc RemoveClubSupporter(RemoveClubSupporterRequest) returns (google.protobuf.Empty);
 }

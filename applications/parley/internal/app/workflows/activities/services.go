@@ -10,8 +10,5 @@ type StingService interface {
 	RejectPost(context.Context, string) error
 	DiscardPost(context.Context, string) error
 	RemovePost(context.Context, string) error
-}
-
-type StellaService interface {
 	SuspendClub(ctx context.Context, clubId string, endTime int64, isModerationQueue bool, isPostRemoval bool) error
 }

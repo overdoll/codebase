@@ -5,6 +5,7 @@ import (
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/localization"
+	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"strings"
 	"time"
@@ -22,23 +23,25 @@ var categoryTable = table.New(table.Metadata{
 		"id",
 		"title",
 		"slug",
-		"thumbnail_resource_id",
+		"thumbnail_resource",
 		"total_likes",
 		"total_posts",
 		"created_at",
+		"updated_at",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
 })
 
 type category struct {
-	Id                  string            `db:"id"`
-	Slug                string            `db:"slug"`
-	Title               map[string]string `db:"title"`
-	ThumbnailResourceId *string           `db:"thumbnail_resource_id"`
-	TotalLikes          int               `db:"total_likes"`
-	TotalPosts          int               `db:"total_posts"`
-	CreatedAt           time.Time         `db:"created_at"`
+	Id                string            `db:"id"`
+	Slug              string            `db:"slug"`
+	Title             map[string]string `db:"title"`
+	ThumbnailResource string            `db:"thumbnail_resource"`
+	TotalLikes        int               `db:"total_likes"`
+	TotalPosts        int               `db:"total_posts"`
+	CreatedAt         time.Time         `db:"created_at"`
+	UpdatedAt         time.Time         `db:"updated_at"`
 }
 
 var categorySlugTable = table.New(table.Metadata{
@@ -56,16 +59,24 @@ type categorySlugs struct {
 	Slug       string `db:"slug"`
 }
 
-func marshalCategoryToDatabase(pending *post.Category) *category {
-	return &category{
-		Id:                  pending.ID(),
-		Slug:                pending.Slug(),
-		Title:               localization.MarshalTranslationToDatabase(pending.Title()),
-		ThumbnailResourceId: pending.ThumbnailResourceId(),
-		TotalLikes:          pending.TotalLikes(),
-		TotalPosts:          pending.TotalPosts(),
-		CreatedAt:           pending.CreatedAt(),
+func marshalCategoryToDatabase(pending *post.Category) (*category, error) {
+
+	marshalled, err := resource.MarshalResourceToDatabase(pending.ThumbnailResource())
+
+	if err != nil {
+		return nil, err
 	}
+
+	return &category{
+		Id:                pending.ID(),
+		Slug:              pending.Slug(),
+		Title:             localization.MarshalTranslationToDatabase(pending.Title()),
+		ThumbnailResource: marshalled,
+		TotalLikes:        pending.TotalLikes(),
+		TotalPosts:        pending.TotalPosts(),
+		CreatedAt:         pending.CreatedAt(),
+		UpdatedAt:         pending.UpdatedAt(),
+	}, nil
 }
 
 func (r PostsCassandraElasticsearchRepository) GetCategoryIdsFromSlugs(ctx context.Context, categorySlug []string) ([]string, error) {
@@ -142,14 +153,22 @@ func (r PostsCassandraElasticsearchRepository) GetCategoriesByIds(ctx context.Co
 	}
 
 	for _, cat := range categoriesModels {
+
+		unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, cat.ThumbnailResource)
+
+		if err != nil {
+			return nil, err
+		}
+
 		categories = append(categories, post.UnmarshalCategoryFromDatabase(
 			cat.Id,
 			cat.Slug,
 			cat.Title,
-			cat.ThumbnailResourceId,
+			unmarshalled,
 			cat.TotalLikes,
 			cat.TotalPosts,
 			cat.CreatedAt,
+			cat.UpdatedAt,
 		))
 	}
 
@@ -176,7 +195,11 @@ func (r PostsCassandraElasticsearchRepository) deleteUniqueCategorySlug(ctx cont
 
 func (r PostsCassandraElasticsearchRepository) CreateCategory(ctx context.Context, requester *principal.Principal, category *post.Category) error {
 
-	pst := marshalCategoryToDatabase(category)
+	pst, err := marshalCategoryToDatabase(category)
+
+	if err != nil {
+		return err
+	}
 
 	// first, do a unique insert of club to ensure we reserve a unique slug
 	applied, err := categorySlugTable.
@@ -248,7 +271,11 @@ func (r PostsCassandraElasticsearchRepository) updateCategory(ctx context.Contex
 		return nil, err
 	}
 
-	pst := marshalCategoryToDatabase(category)
+	pst, err := marshalCategoryToDatabase(category)
+
+	if err != nil {
+		return nil, err
+	}
 
 	if err := r.session.
 		Query(categoryTable.Update(
@@ -269,8 +296,12 @@ func (r PostsCassandraElasticsearchRepository) updateCategory(ctx context.Contex
 	return category, nil
 }
 
+func (r PostsCassandraElasticsearchRepository) UpdateCategoryThumbnailOperator(ctx context.Context, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
+	return r.updateCategory(ctx, id, updateFn, []string{"thumbnail_resource"})
+}
+
 func (r PostsCassandraElasticsearchRepository) UpdateCategoryThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
-	return r.updateCategory(ctx, id, updateFn, []string{"thumbnail_resource_id"})
+	return r.updateCategory(ctx, id, updateFn, []string{"thumbnail_resource"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateCategoryTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
@@ -304,13 +335,20 @@ func (r PostsCassandraElasticsearchRepository) getCategoryById(ctx context.Conte
 		return nil, errors.Wrap(err, "failed to get category by id")
 	}
 
+	unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, cat.ThumbnailResource)
+
+	if err != nil {
+		return nil, err
+	}
+
 	return post.UnmarshalCategoryFromDatabase(
 		cat.Id,
 		cat.Slug,
 		cat.Title,
-		cat.ThumbnailResourceId,
+		unmarshalled,
 		cat.TotalLikes,
 		cat.TotalPosts,
 		cat.CreatedAt,
+		cat.UpdatedAt,
 	), nil
 }

@@ -43,11 +43,13 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 				nil,
 				nil,
 				nil,
+				nil,
 				testClubId,
 				&audienceId,
 				nil,
 				nil,
 				nil,
+				time.Now(),
 				time.Now(),
 				&postTime,
 			)

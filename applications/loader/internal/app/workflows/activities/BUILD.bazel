@@ -6,6 +6,8 @@ go_library(
         "activities.go",
         "delete_resources.go",
         "process_resources.go",
+        "send_callback.go",
+        "services.go",
     ],
     importpath = "overdoll/applications/loader/internal/app/workflows/activities",
     visibility = ["//applications/loader:__subpackages__"],

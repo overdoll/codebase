@@ -115,7 +115,7 @@ func (r *MutationResolver) EnrollAccountMultiFactorTotp(ctx context.Context, inp
 		return nil, err
 	}
 
-	return &types.EnrollAccountMultiFactorTotpPayload{Account: types.MarshalAccountToGraphQL(acc)}, nil
+	return &types.EnrollAccountMultiFactorTotpPayload{Account: types.MarshalAccountToGraphQL(ctx, acc)}, nil
 }
 
 func (r *MutationResolver) AddAccountEmail(ctx context.Context, input types.AddAccountEmailInput) (*types.AddAccountEmailPayload, error) {
@@ -173,7 +173,7 @@ func (r *MutationResolver) UpdateAccountUsername(ctx context.Context, input type
 		return nil, err
 	}
 
-	return &types.UpdateAccountUsernamePayload{Account: types.MarshalAccountToGraphQL(acc)}, nil
+	return &types.UpdateAccountUsernamePayload{Account: types.MarshalAccountToGraphQL(ctx, acc)}, nil
 }
 
 func (r *MutationResolver) RevokeAccountSession(ctx context.Context, input types.RevokeAccountSessionInput) (*types.RevokeAccountSessionPayload, error) {
@@ -257,5 +257,5 @@ func (r *MutationResolver) DisableAccountMultiFactor(ctx context.Context) (*type
 		return nil, err
 	}
 
-	return &types.DisableAccountMultiFactorPayload{Account: types.MarshalAccountToGraphQL(acc)}, nil
+	return &types.DisableAccountMultiFactorPayload{Account: types.MarshalAccountToGraphQL(ctx, acc)}, nil
 }

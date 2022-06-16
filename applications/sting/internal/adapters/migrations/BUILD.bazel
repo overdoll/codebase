@@ -6,6 +6,8 @@ go_library(
         "audience.go",
         "category.go",
         "character.go",
+        "club_members.go",
+        "clubs.go",
         "migrations.go",
         "posts.go",
         "series.go",
