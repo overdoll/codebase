@@ -377,9 +377,7 @@ func (r PostsCassandraElasticsearchRepository) updateAudience(ctx context.Contex
 		return nil, err
 	}
 
-	err = updateFn(aud)
-
-	if err != nil {
+	if err = updateFn(aud); err != nil {
 		return nil, err
 	}
 

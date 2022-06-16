@@ -417,6 +417,8 @@ func (m *Club) UpdateThumbnailExisting(thumbnail *resource.Resource) error {
 		return resource.ErrResourceNotPresent
 	}
 
+	m.thumbnailResource = thumbnail
+
 	m.update()
 
 	return nil

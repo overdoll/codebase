@@ -418,6 +418,14 @@ def go_repositories():
         version = "v0.0.0-20171103203638-1ea166775780",
     )
     go_repository(
+        name = "com_github_edlinorg_prominentcolor",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/EdlinOrg/prominentcolor",
+        sum = "h1:sQNY8Dtsv3PK3J1LbmrDmtlZm9Y9U8Loi1iZIl4YN3Y=",
+        version = "v1.0.0",
+    )
+
+    go_repository(
         name = "com_github_eknkc_amber",
         build_file_proto_mode = "disable",
         importpath = "github.com/eknkc/amber",
@@ -1259,6 +1267,13 @@ def go_repositories():
         sum = "h1:R6zcoZZbvVcGMvDCKo45A9U/lzYyzl5NfYIvznmDfE4=",
         version = "v3.0.0",
     )
+    go_repository(
+        name = "com_github_lucasb_eyer_go_colorful",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/lucasb-eyer/go-colorful",
+        sum = "h1:1nnpGOrhyZZuNyfu1QjKiUICQ74+3FNCN69Aj6K7nkY=",
+        version = "v1.2.0",
+    )
 
     go_repository(
         name = "com_github_magiconair_properties",
@@ -1346,8 +1361,8 @@ def go_repositories():
         name = "com_github_mitchellh_go_homedir",
         build_file_proto_mode = "disable",
         importpath = "github.com/mitchellh/go-homedir",
-        sum = "h1:lukF9ziXFxDFPkA1vsr5zpc1XuPDn/wFntq5mG+4E0Y=",
-        version = "v1.1.0",
+        sum = "h1:vKb8ShqSby24Yrqr/yDYkuFz8d0WUjys40rvnGC8aR0=",
+        version = "v1.0.0",
     )
     go_repository(
         name = "com_github_mitchellh_go_testing_interface",
@@ -1477,6 +1492,13 @@ def go_repositories():
         sum = "h1:P2Ga83D34wi1o9J6Wh1mRuqd4mF/x/lgBS7N7AbDhec=",
         version = "v0.0.5",
     )
+    go_repository(
+        name = "com_github_oliamb_cutter",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/oliamb/cutter",
+        sum = "h1:Lfwkya0HHNU1YLnGv2hTkzHfasrSMkgv4Dn+5rmlk3k=",
+        version = "v0.2.2",
+    )
 
     go_repository(
         name = "com_github_olivere_elastic_v7",
@@ -1563,8 +1585,8 @@ def go_repositories():
         name = "com_github_pelletier_go_toml",
         build_file_proto_mode = "disable",
         importpath = "github.com/pelletier/go-toml",
-        sum = "h1:aetoXYr0Tv7xRU/V4B4IZJ2QcbtMUFoNb3ORp7TzIK4=",
-        version = "v1.6.0",
+        sum = "h1:tjENF6MfZAg8e4ZmZTeWaWiT2vXtsoO6+iuOjFhECwM=",
+        version = "v1.9.4",
     )
     go_repository(
         name = "com_github_phpdave11_gofpdi",
@@ -1869,8 +1891,8 @@ def go_repositories():
         name = "com_github_spf13_cobra",
         build_file_proto_mode = "disable",
         importpath = "github.com/spf13/cobra",
-        sum = "h1:xghbfqPkxzxP3C/f3n5DdpAbdKLj4ZE4BWQI362l53M=",
-        version = "v1.1.3",
+        sum = "h1:y+wJpx64xcgO1V+RcnwW0LEHxTKRi2ZDPSBjWnrg88Q=",
+        version = "v1.4.0",
     )
     go_repository(
         name = "com_github_spf13_jwalterweatherman",

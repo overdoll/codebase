@@ -28,6 +28,7 @@ func (h UpdateResourcesHandler) Handle(ctx context.Context, cmd UpdateResources)
 		_, ok := groupedByTokenAndId[res.Token()]
 
 		if !ok {
+			groupedByTokenAndId[res.Token()] = make(map[string][]*resource.Resource)
 			groupedByTokenAndId[res.Token()][res.ItemId()] = []*resource.Resource{res}
 		} else {
 			value, ok := groupedByTokenAndId[res.Token()][res.ItemId()]

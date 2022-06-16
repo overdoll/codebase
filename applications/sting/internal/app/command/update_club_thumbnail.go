@@ -3,7 +3,6 @@ package command
 import (
 	"context"
 	"overdoll/applications/sting/internal/domain/club"
-	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/principal"
 )
 
@@ -28,12 +27,6 @@ func (h UpdateClubThumbnailHandler) Handle(ctx context.Context, cmd UpdateClubTh
 	var oldResourceId string
 
 	clb, err := h.cr.UpdateClubThumbnail(ctx, cmd.ClubId, func(clb *club.Club) error {
-
-		if clb.ThumbnailResource() != nil {
-			if !clb.ThumbnailResource().IsProcessed() {
-				return domainerror.NewValidation("cannot update thumbnail until resource is processed")
-			}
-		}
 
 		if clb.ThumbnailResource() != nil {
 			oldResourceId = clb.ThumbnailResource().ID()

@@ -107,13 +107,19 @@ func (m *Audience) UpdatedAt() time.Time {
 	return m.updatedAt
 }
 
+func (m *Audience) update() {
+	m.updatedAt = time.Now()
+}
+
 func (m *Audience) UpdateTotalPosts(totalPosts int) error {
 	m.totalPosts = totalPosts
+	m.update()
 	return nil
 }
 
 func (m *Audience) UpdateTotalLikes(totalLikes int) error {
 	m.totalLikes = totalLikes
+	m.update()
 	return nil
 }
 
@@ -130,6 +136,7 @@ func (m *Audience) UpdateTitle(requester *principal.Principal, title, locale str
 	if err := m.title.UpdateTranslation(title, locale); err != nil {
 		return err
 	}
+	m.update()
 
 	return nil
 }
@@ -141,6 +148,7 @@ func (m *Audience) UpdateThumbnailExisting(thumbnail *resource.Resource) error {
 	}
 
 	m.thumbnailResource = thumbnail
+	m.update()
 
 	return nil
 }
@@ -163,6 +171,7 @@ func (m *Audience) UpdateIsStandard(requester *principal.Principal, standard boo
 	}
 
 	m.standard = standard
+	m.update()
 
 	return nil
 }

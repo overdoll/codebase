@@ -1,13 +1,11 @@
 package resource
 
 import (
-	"bytes"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"github.com/CapsLock-Studio/go-webpbin"
+	"github.com/EdlinOrg/prominentcolor"
 	"github.com/h2non/filetype"
-	"github.com/nfnt/resize"
 	ffmpeg_go "github.com/u2takey/ffmpeg-go"
 	"go.uber.org/zap"
 	"image"
@@ -157,16 +155,14 @@ func createPreviewFromFile(r io.Reader) (string, error) {
 		return "", err
 	}
 
-	resizedImage := resize.Resize(10, 10, img, resize.Lanczos3)
-
-	buf := new(bytes.Buffer)
-	err = png.Encode(buf, resizedImage)
-
+	cols, err := prominentcolor.KmeansWithArgs(prominentcolor.ArgumentNoCropping, img)
 	if err != nil {
 		return "", err
 	}
 
-	return "data:image/png;base64," + base64.StdEncoding.EncodeToString(buf.Bytes()), nil
+	col := cols[0]
+
+	return fmt.Sprintf("#%02x%02x%02x", col.Color.R, col.Color.G, col.Color.B), nil
 }
 
 // ProcessResource process resource - should be at a new Url and any additional mimetypes that are available

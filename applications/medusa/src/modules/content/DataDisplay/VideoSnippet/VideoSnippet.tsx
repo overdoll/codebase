@@ -4,6 +4,7 @@ import type { VideoSnippetFragment$key } from '@//:artifacts/VideoSnippetFragmen
 import NextImage from '../NextImage/NextImage'
 import { ImageProps } from 'next/image'
 import { Box } from '@chakra-ui/react'
+import useGeneratePreview from '../../../hooks/useGeneratePreview'
 
 interface Props extends Omit<ImageProps, 'src' | 'width' | 'height' | 'layout' | 'alt'> {
   innerRef?: () => void
@@ -25,6 +26,8 @@ export default function VideoSnippet ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
+  const preview = useGeneratePreview(data?.preview)
+
   return (
     <Box
       w='100%'
@@ -35,8 +38,8 @@ export default function VideoSnippet ({
         alt='thumbnail'
         layout='fill'
         objectFit='cover'
-        placeholder={(data?.preview !== '' && data?.preview != null) ? 'blur' : undefined}
-        blurDataURL={data?.preview}
+        placeholder={preview != null ? 'blur' : undefined}
+        blurDataURL={preview ?? undefined}
         objectPosition='50% 50%'
         src={data?.videoThumbnail?.url ?? ''}
         {...rest}

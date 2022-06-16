@@ -63,7 +63,7 @@ type resources struct {
 	Width                  int    `db:"width"`
 	Height                 int    `db:"height"`
 	Preview                string `db:"preview"`
-	Token                  string `db:"resource_token"`
+	ResourceToken          string `db:"resource_token"`
 }
 
 type ResourceCassandraS3Repository struct {
@@ -89,7 +89,7 @@ func unmarshalResourceFromDatabase(i resources) *resource.Resource {
 		i.Width,
 		i.Height,
 		i.Preview,
-		i.Token,
+		i.ResourceToken,
 	)
 }
 
@@ -119,7 +119,7 @@ func marshalResourceToDatabase(r *resource.Resource) *resources {
 		Height:                 r.Height(),
 		VideoDuration:          r.VideoDuration(),
 		Preview:                r.Preview(),
-		Token:                  r.Token(),
+		ResourceToken:          r.Token(),
 	}
 }
 
@@ -327,14 +327,12 @@ func (r ResourceCassandraS3Repository) DeleteResources(ctx context.Context, reso
 				return errors.Wrap(err, "unable to delete video thumbnail file")
 			}
 		}
-	}
 
-	for _, resour := range resourceItems {
 		if err := r.session.
-			Query(qb.Delete(resourcesTable.Name()).Where(qb.Eq("item_id")).ToCql()).
+			Query(qb.Delete(resourcesTable.Name()).Where(qb.Eq("item_id"), qb.Eq("resource_id")).ToCql()).
 			WithContext(ctx).
 			Idempotent(true).
-			BindStruct(resources{ItemId: resour.ItemId()}).
+			BindStruct(resources{ItemId: target.ItemId(), ResourceId: target.ID()}).
 			ExecRelease(); err != nil {
 			return errors.Wrap(support.NewGocqlError(err), "failed to delete resources")
 		}

@@ -3,8 +3,6 @@ package command
 import (
 	"context"
 	"overdoll/applications/sting/internal/domain/post"
-	"overdoll/libraries/errors/domainerror"
-
 	"overdoll/libraries/principal"
 )
 
@@ -28,12 +26,6 @@ func (h UpdateCategoryThumbnailHandler) Handle(ctx context.Context, cmd UpdateCa
 	var oldResourceId string
 
 	cat, err := h.pr.UpdateCategoryThumbnail(ctx, cmd.Principal, cmd.CategoryId, func(category *post.Category) error {
-
-		if category.ThumbnailResource() != nil {
-			if !category.ThumbnailResource().IsProcessed() {
-				return domainerror.NewValidation("cannot update thumbnail until resource is processed")
-			}
-		}
 
 		if category.ThumbnailResource() != nil {
 			oldResourceId = category.ThumbnailResource().ID()

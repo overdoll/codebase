@@ -63,7 +63,6 @@ go_library(
         "//applications/sting/internal/domain/curation",
         "//applications/sting/internal/domain/event",
         "//applications/sting/internal/domain/post",
-        "//libraries/errors/domainerror",
         "//libraries/principal",
         "//libraries/resource",
     ],
