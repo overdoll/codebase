@@ -23,11 +23,12 @@ type seriesDocument struct {
 	ThumbnailResource string            `json:"thumbnail_resource"`
 	Title             map[string]string `json:"title"`
 	CreatedAt         time.Time         `json:"created_at"`
+	UpdatedAt         time.Time         `json:"updated_at"`
 	TotalLikes        int               `json:"total_likes"`
 	TotalPosts        int               `json:"total_posts"`
 }
 
-const SeriesIndexName = "series"
+const SeriesIndexName = "sting.series"
 
 func marshalSeriesToDocument(s *post.Series) (*seriesDocument, error) {
 
@@ -45,6 +46,7 @@ func marshalSeriesToDocument(s *post.Series) (*seriesDocument, error) {
 		CreatedAt:         s.CreatedAt(),
 		TotalLikes:        s.TotalLikes(),
 		TotalPosts:        s.TotalPosts(),
+		UpdatedAt:         s.UpdatedAt(),
 	}, nil
 }
 
@@ -125,6 +127,7 @@ func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context,
 			md.TotalLikes,
 			md.TotalPosts,
 			md.CreatedAt,
+			md.UpdatedAt,
 		)
 		newMedia.Node = paging.NewNode(hit.Sort)
 
@@ -187,7 +190,9 @@ func (r PostsCassandraElasticsearchRepository) IndexAllSeries(ctx context.Contex
 				ThumbnailResource: m.ThumbnailResource,
 				Title:             m.Title,
 				CreatedAt:         m.CreatedAt,
+				UpdatedAt:         m.UpdatedAt,
 				TotalLikes:        m.TotalLikes,
+				TotalPosts:        m.TotalPosts,
 			}
 
 			_, err := r.client.

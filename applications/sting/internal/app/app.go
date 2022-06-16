@@ -28,9 +28,6 @@ type Commands struct {
 	UpdatePostContentOrder           command.UpdatePostContentOrderHandler
 	UpdatePostContentIsSupporterOnly command.UpdatePostContentIsSupporterOnlyHandler
 
-	AddTerminatedClub    command.AddTerminatedClubHandler
-	RemoveTerminatedClub command.RemoveTerminatedClubHandler
-
 	UpdatePostCategories command.UpdatePostCategoriesHandler
 	UpdatePostCharacters command.UpdatePostCharactersHandler
 	UpdatePostAudience   command.UpdatePostAudienceHandler
@@ -82,8 +79,6 @@ type Commands struct {
 	UnTerminateClub command.UnTerminateClubHandler
 
 	SuspendClubOperator command.SuspendClubOperatorHandler
-
-	NewSupporterPost command.NewSupporterPostHandler
 }
 
 type Queries struct {

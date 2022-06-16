@@ -24,14 +24,13 @@ type RejectPostHandler struct {
 	mr    moderator.Repository
 	event event.Repository
 
-	rr     rule.Repository
-	eva    EvaService
-	sting  StingService
-	stella StellaService
+	rr    rule.Repository
+	eva   EvaService
+	sting StingService
 }
 
-func NewRejectPostHandler(pr post_audit_log.Repository, rr rule.Repository, cr club_infraction.Repository, mr moderator.Repository, event event.Repository, eva EvaService, sting StingService, stella StellaService) RejectPostHandler {
-	return RejectPostHandler{sting: sting, eva: eva, mr: mr, event: event, pr: pr, rr: rr, cr: cr, stella: stella}
+func NewRejectPostHandler(pr post_audit_log.Repository, rr rule.Repository, cr club_infraction.Repository, mr moderator.Repository, event event.Repository, eva EvaService, sting StingService) RejectPostHandler {
+	return RejectPostHandler{sting: sting, eva: eva, mr: mr, event: event, pr: pr, rr: rr, cr: cr}
 }
 
 func (h RejectPostHandler) Handle(ctx context.Context, cmd RejectPost) error {

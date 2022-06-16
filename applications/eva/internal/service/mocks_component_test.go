@@ -7,7 +7,7 @@ import (
 	carrier "overdoll/applications/carrier/proto"
 	"overdoll/applications/eva/internal/service"
 	hades "overdoll/applications/hades/proto"
-	stella "overdoll/applications/stella/proto"
+	sting "overdoll/applications/sting/proto"
 	"overdoll/libraries/testing_tools"
 )
 
@@ -44,8 +44,7 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 	application.HadesClient.On("DeleteAccountData", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
 	application.HadesClient.On("CanDeleteAccountData", mock.Anything, mock.Anything).Return(&hades.CanDeleteAccountDataResponse{CanDelete: true}, nil)
 
-	application.StellaClient.On("DeleteAccountData", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
-	application.StellaClient.On("CanDeleteAccountData", mock.Anything, mock.Anything).Return(&stella.CanDeleteAccountDataResponse{CanDelete: true}, nil)
+	application.StingClient.On("CanDeleteAccountData", mock.Anything, mock.Anything).Return(&sting.CanDeleteAccountDataResponse{CanDelete: true}, nil)
 
 	application.ParleyClient.On("DeleteAccountData", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
 

@@ -24,3 +24,14 @@ func (s StingGrpc) DeleteAccountData(ctx context.Context, accountId string) erro
 
 	return nil
 }
+
+func (s StingGrpc) CanDeleteAccountData(ctx context.Context, accountId string) (bool, error) {
+
+	res, err := s.client.CanDeleteAccountData(ctx, &sting.CanDeleteAccountDataRequest{AccountId: accountId})
+
+	if err != nil {
+		return false, errors.Wrap(err, "error checking if can delete account data")
+	}
+
+	return res.CanDelete, nil
+}

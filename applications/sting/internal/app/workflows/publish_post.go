@@ -47,14 +47,36 @@ func PublishPost(ctx workflow.Context, input PublishPostInput) error {
 		return err
 	}
 
+	var payload *activities.CheckPostSupporterStatusAndSendNewPayload
+
 	// if the post has supporter-only content, we send a notification to stella that a new premium post was created
 	if err := workflow.ExecuteActivity(ctx, a.CheckPostSupporterStatusAndSendNew,
 		activities.CheckPostSupporterStatusAndSendNewInput{
 			PostId: input.PostId,
 		},
-	).Get(ctx, nil); err != nil {
+	).Get(ctx, &payload); err != nil {
 		logger.Error("failed to check post supporter status and send new", "Error", err)
 		return err
+	}
+
+	// if post was a supporter post, then we do this
+	if payload.IsSupporter {
+		childWorkflowOptions = workflow.ChildWorkflowOptions{
+			WorkflowID:        "sting.NewSupporterPost_" + payload.ClubId,
+			ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
+		}
+
+		childCtx = workflow.WithChildOptions(ctx, childWorkflowOptions)
+
+		if err := workflow.ExecuteChildWorkflow(childCtx, NewSupporterPost, NewSupporterPostInput{
+			ClubId: payload.ClubId,
+		}).
+			GetChildWorkflowExecution().
+			Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+			logger.Error("failed to create new supporter post", "Error", err)
+			return err
+		}
+
 	}
 
 	return nil

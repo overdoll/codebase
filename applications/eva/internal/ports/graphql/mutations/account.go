@@ -24,7 +24,7 @@ func (r *MutationResolver) DeleteAccount(ctx context.Context, input types.Delete
 	}
 
 	return &types.DeleteAccountPayload{
-		Account: types.MarshalAccountToGraphQL(acc),
+		Account: types.MarshalAccountToGraphQL(ctx, acc),
 	}, nil
 }
 
@@ -44,6 +44,6 @@ func (r *MutationResolver) CancelAccountDeletion(ctx context.Context, input type
 	}
 
 	return &types.CancelAccountDeletionPayload{
-		Account: types.MarshalAccountToGraphQL(acc),
+		Account: types.MarshalAccountToGraphQL(ctx, acc),
 	}, nil
 }

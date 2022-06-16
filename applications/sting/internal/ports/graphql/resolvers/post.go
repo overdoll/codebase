@@ -105,3 +105,7 @@ func (r PostResolver) ViewerLiked(ctx context.Context, obj *types.Post) (*types.
 
 	return types.MarshalPostLikeToGraphQL(ctx, postLike), nil
 }
+
+func (r PostResolver) Club(ctx context.Context, obj *types.Post) (*types.Club, error) {
+	return dataloader.For(ctx).GetClubById(ctx, obj.Club.ID.GetID())
+}

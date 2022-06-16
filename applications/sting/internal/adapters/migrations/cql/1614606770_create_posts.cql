@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS clubs
     terminated                      boolean,
     terminated_by_account_id        text,
     created_at                      timestamp,
+    updated_at                      timestamp,
     primary key ( id )
 );
 
@@ -87,6 +88,7 @@ CREATE TABLE IF NOT EXISTS categories
     total_likes        int,
     total_posts        int,
     created_at         timestamp,
+    updated_at         timestamp,
     primary key ( id )
 );
 
@@ -109,6 +111,7 @@ CREATE TABLE IF NOT EXISTS characters
     total_likes        int,
     total_posts        int,
     created_at         timestamp,
+    updated_at         timestamp,
     primary key ( id )
 );
 
@@ -131,6 +134,7 @@ CREATE TABLE IF NOT EXISTS series
     total_likes        int,
     total_posts        int,
     created_at         timestamp,
+    updated_at         timestamp,
     primary key ( id )
 );
 
@@ -153,6 +157,7 @@ CREATE TABLE IF NOT EXISTS audience
     total_posts        int,
     standard           int,
     created_at         timestamp,
+    updated_at         timestamp,
     primary key ( id )
 );
 
@@ -183,6 +188,7 @@ CREATE TABLE IF NOT EXISTS posts
     content_supporter_only              map<text, boolean>,
     content_supporter_only_resource_ids map<text, text>,
     created_at                          timestamp,
+    updated_at                          timestamp,
     posted_at                           timestamp,
     primary key ( id )
 );

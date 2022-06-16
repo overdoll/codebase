@@ -33,10 +33,11 @@ type postDocument struct {
 	CharacterIds                    []string          `json:"character_ids"`
 	SeriesIds                       []string          `json:"series_ids"`
 	CreatedAt                       time.Time         `json:"created_at"`
+	UpdatedAt                       time.Time         `json:"updated_at"`
 	PostedAt                        *time.Time        `json:"posted_at"`
 }
 
-const PostIndexName = "posts"
+const PostIndexName = "sting.posts"
 
 func (r *PostsCassandraElasticsearchRepository) unmarshalPostDocument(ctx context.Context, hit *elastic.SearchHit) (*post.Post, error) {
 
@@ -82,6 +83,7 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPostDocument(ctx contex
 		pst.SeriesIds,
 		pst.CategoryIds,
 		pst.CreatedAt,
+		pst.UpdatedAt,
 		pst.PostedAt,
 	)
 
@@ -145,6 +147,7 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 		CharacterIds:                    pst.CharacterIds(),
 		SeriesIds:                       pst.SeriesIds(),
 		CreatedAt:                       pst.CreatedAt(),
+		UpdatedAt:                       pst.UpdatedAt(),
 		PostedAt:                        pst.PostedAt(),
 	}, nil
 }
@@ -622,6 +625,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllPosts(ctx context.Context
 				CharacterIds:                    p.CharacterIds,
 				SeriesIds:                       p.SeriesIds,
 				CreatedAt:                       p.CreatedAt,
+				UpdatedAt:                       p.UpdatedAt,
 				PostedAt:                        p.PostedAt,
 			}
 

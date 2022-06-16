@@ -21,11 +21,9 @@ func NewApplication(ctx context.Context) (*app.Application, func()) {
 
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 	stingClient, cleanup2 := clients.NewStingClient(ctx, os.Getenv("STING_SERVICE"))
-	stellaClient, cleanup := clients.NewStellaClient(ctx, os.Getenv("STELLA_SERVICE"))
 
 	return createApplication(ctx,
 			adapters.NewEvaGrpc(evaClient),
-			adapters.NewStellaGrpc(stellaClient),
 			adapters.NewStingGrpc(stingClient),
 			clients.NewTemporalClient(ctx)),
 		func() {
@@ -39,7 +37,6 @@ type ComponentTestApplication struct {
 	TemporalClient *temporalmocks.Client
 	EvaClient      *mocks.MockEvaClient
 	StingClient    *mocks.MockStingClient
-	StellaClient   *mocks.MockStellaClient
 }
 
 func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication {
@@ -49,24 +46,21 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 
 	evaClient := &mocks.MockEvaClient{}
 	stingClient := &mocks.MockStingClient{}
-	stellaClient := &mocks.MockStellaClient{}
 
 	return &ComponentTestApplication{
 		App: createApplication(
 			ctx,
 			adapters.NewEvaGrpc(evaClient),
-			adapters.NewStellaGrpc(stellaClient),
 			adapters.NewStingGrpc(stingClient),
 			temporalClient,
 		),
 		TemporalClient: temporalClient,
 		EvaClient:      evaClient,
 		StingClient:    stingClient,
-		StellaClient:   stellaClient,
 	}
 }
 
-func createApplication(ctx context.Context, eva command.EvaService, stella command.StellaService, sting command.StingService, client client.Client) *app.Application {
+func createApplication(ctx context.Context, eva command.EvaService, sting command.StingService, client client.Client) *app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 	esClient := bootstrap.InitializeElasticSearchSession()
@@ -86,7 +80,7 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 			AddModeratorToPostQueue:            command.NewAddModeratorToPostQueueHandler(moderatorRepo),
 			RemoveModeratorFromPostQueue:       command.NewRemoveModeratorFromPostQueue(moderatorRepo, eva),
 
-			RejectPost:  command.NewRejectPostHandler(postAuditLogRepo, ruleRepo, clubInfractionRepo, moderatorRepo, eventRepo, eva, sting, stella),
+			RejectPost:  command.NewRejectPostHandler(postAuditLogRepo, ruleRepo, clubInfractionRepo, moderatorRepo, eventRepo, eva, sting),
 			ApprovePost: command.NewApprovePostHandler(postAuditLogRepo, moderatorRepo, eventRepo, sting),
 			RemovePost:  command.NewRemovePostHandler(postAuditLogRepo, ruleRepo, clubInfractionRepo, moderatorRepo, eventRepo, sting),
 
@@ -100,7 +94,7 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 
 			ReportPost: command.NewReportPostHandler(reportRepo, ruleRepo, sting, eventRepo),
 
-			IssueClubInfraction:         command.NewIssueClubInfractionHandler(clubInfractionRepo, ruleRepo, eventRepo, stella),
+			IssueClubInfraction:         command.NewIssueClubInfractionHandler(clubInfractionRepo, ruleRepo, eventRepo, sting),
 			RemoveClubInfractionHistory: command.NewRemoveClubInfractionHistoryHandler(clubInfractionRepo),
 		},
 		Queries: app.Queries{
@@ -120,6 +114,6 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 			PostAuditLogById:          query.NewPostAuditLogByIdHandler(postAuditLogRepo),
 			ModeratorById:             query.NewModeratorByIdHandler(moderatorRepo),
 		},
-		Activities: activities.NewActivitiesHandler(moderatorRepo, reportRepo, postAuditLogRepo, ruleRepo, clubInfractionRepo, sting, stella),
+		Activities: activities.NewActivitiesHandler(moderatorRepo, reportRepo, postAuditLogRepo, ruleRepo, clubInfractionRepo, sting),
 	}
 }

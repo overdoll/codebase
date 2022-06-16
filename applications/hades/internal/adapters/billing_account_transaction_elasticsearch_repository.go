@@ -40,7 +40,7 @@ type accountTransactionDocument struct {
 	Events                      []accountTransactionEventDocument `json:"events"`
 }
 
-const AccountTransactionsIndexName = "account_transactions"
+const AccountTransactionsIndexName = "hades.account_transactions"
 
 func unmarshalAccountTransactionDocument(hit *elastic.SearchHit) (*billing.AccountTransaction, error) {
 

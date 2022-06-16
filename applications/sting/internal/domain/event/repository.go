@@ -28,7 +28,6 @@ type Repository interface {
 	SuspendClub(ctx context.Context, requester *principal.Principal, club *club.Club, endTime time.Time, reason string) error
 	SuspendClubOperator(ctx context.Context, club *club.Club, accountId *string, endTime time.Time, reason string) error
 	UnSuspendClub(ctx context.Context, requester *principal.Principal, clb *club.Club) error
-	NewSupporterPost(ctx context.Context, clubId string) error
 
 	WaitForClubToBeReady(ctx context.Context, requester *principal.Principal, clb *club.Club) error
 	CreateClub(ctx context.Context, requester *principal.Principal, clb *club.Club) error

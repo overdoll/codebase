@@ -6,6 +6,7 @@ go_library(
     importpath = "overdoll/applications/sting/internal/domain/event",
     visibility = ["//applications/sting:__subpackages__"],
     deps = [
+        "//applications/sting/internal/domain/club",
         "//applications/sting/internal/domain/post",
         "//libraries/principal",
     ],

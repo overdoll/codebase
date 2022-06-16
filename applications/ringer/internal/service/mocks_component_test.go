@@ -32,25 +32,25 @@ func mockAccountStaff(t *testing.T, accountId string) {
 }
 
 func mockAccountDigestOwnClub(t *testing.T, accountId, clubId string) {
-	application.StellaClient.On("GetAccountClubDigest", mock.Anything,
+	application.StingClient.On("GetAccountClubDigest", mock.Anything,
 		&stella.GetAccountClubDigestRequest{AccountId: accountId}).Return(&stella.GetAccountClubDigestResponse{
 		SupportedClubIds:  []string{},
 		ClubMembershipIds: []string{},
 		OwnerClubIds:      []string{clubId},
 	}, nil)
 
-	application.StellaClient.On("GetClubById", mock.Anything, &stella.GetClubByIdRequest{ClubId: clubId}).Return(&stella.GetClubByIdResponse{Club: &stella.Club{OwnerAccountId: accountId}}, nil)
+	application.StingClient.On("GetClubById", mock.Anything, &stella.GetClubByIdRequest{ClubId: clubId}).Return(&stella.GetClubByIdResponse{Club: &stella.Club{OwnerAccountId: accountId}}, nil)
 }
 
 func mockAccountDigestDefault(t *testing.T, accountId, clubId string) {
-	application.StellaClient.On("GetAccountClubDigest", mock.Anything,
+	application.StingClient.On("GetAccountClubDigest", mock.Anything,
 		&stella.GetAccountClubDigestRequest{AccountId: accountId}).Return(&stella.GetAccountClubDigestResponse{
 		SupportedClubIds:  []string{},
 		ClubMembershipIds: []string{},
 		OwnerClubIds:      []string{},
 	}, nil)
 	accId := uuid.New().String()
-	application.StellaClient.On("GetClubById", mock.Anything, &stella.GetClubByIdRequest{ClubId: clubId}).Return(&stella.GetClubByIdResponse{Club: &stella.Club{OwnerAccountId: accId}}, nil)
+	application.StingClient.On("GetClubById", mock.Anything, &stella.GetClubByIdRequest{ClubId: clubId}).Return(&stella.GetClubByIdResponse{Club: &stella.Club{OwnerAccountId: accId}}, nil)
 	application.EvaClient.On("GetAccount", mock.Anything, &eva.GetAccountRequest{Id: accId}).Return(&eva.Account{
 		Id:     accId,
 		Roles:  []string{"ARTIST"},

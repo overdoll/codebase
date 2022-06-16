@@ -59,6 +59,7 @@ type posts struct {
 	CharacterIds                    []string          `db:"character_ids"`
 	SeriesIds                       []string          `db:"series_ids"`
 	CreatedAt                       time.Time         `db:"created_at"`
+	UpdatedAt                       time.Time         `db:"updated_at"`
 	PostedAt                        *time.Time        `db:"posted_at"`
 }
 
@@ -138,6 +139,7 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 		SeriesIds:                       pending.SeriesIds(),
 		CreatedAt:                       pending.CreatedAt(),
 		PostedAt:                        pending.PostedAt(),
+		UpdatedAt:                       pending.UpdatedAt(),
 	}, nil
 }
 
@@ -171,6 +173,7 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Contex
 		postPending.SeriesIds,
 		postPending.CategoryIds,
 		postPending.CreatedAt,
+		postPending.UpdatedAt,
 		postPending.PostedAt,
 	), nil
 }
@@ -405,6 +408,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePost(ctx context.Context, i
 		Query(postTable.Update(
 			"state",
 			"posted_at",
+			"updated_at",
 		)).
 		WithContext(ctx).
 		Idempotent(true).
@@ -435,7 +439,7 @@ func (r PostsCassandraElasticsearchRepository) updatePostResult(ctx context.Cont
 
 	if err := r.session.
 		Query(postTable.Update(
-			columns...,
+			append(columns, "updated_at")...,
 		)).
 		WithContext(ctx).
 		Idempotent(true).
@@ -519,7 +523,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperator(ctx con
 
 	if err := r.session.
 		Query(postTable.Update(
-			"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status", "content_resources",
+			"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status", "content_resources", "updated_at",
 		)).
 		WithContext(ctx).
 		Idempotent(true).
@@ -554,11 +558,11 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostLikesOperator(ctx conte
 		return nil, err
 	}
 
-	ok, err := postTable.UpdateBuilder("likes", "likes_last_update_id").
+	ok, err := postTable.UpdateBuilder("likes", "likes_last_update_id", "updated_at").
 		If(qb.EqLit("likes_last_update_id", postPending.LikesLastUpdateId.String())).
 		Query(r.session).
 		WithContext(ctx).
-		BindStruct(posts{Id: id, Likes: unmarshalled.Likes(), LikesLastUpdateId: gocql.TimeUUID()}).
+		BindStruct(posts{Id: id, Likes: unmarshalled.Likes(), LikesLastUpdateId: gocql.TimeUUID(), UpdatedAt: unmarshalled.UpdatedAt()}).
 		SerialConsistency(gocql.Serial).
 		ExecCASRelease()
 

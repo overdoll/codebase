@@ -28,6 +28,7 @@ type Series struct {
 	totalPosts int
 
 	createdAt time.Time
+	updatedAt time.Time
 }
 
 func NewSeries(requester *principal.Principal, slug, title string) (*Series, error) {
@@ -62,6 +63,7 @@ func NewSeries(requester *principal.Principal, slug, title string) (*Series, err
 		totalLikes:        0,
 		totalPosts:        0,
 		createdAt:         time.Now(),
+		updatedAt:         time.Now(),
 	}, nil
 }
 
@@ -93,13 +95,23 @@ func (m *Series) CreatedAt() time.Time {
 	return m.createdAt
 }
 
+func (m *Series) UpdatedAt() time.Time {
+	return m.updatedAt
+}
+
+func (m *Series) update() {
+	m.updatedAt = time.Now()
+}
+
 func (m *Series) UpdateTotalPosts(totalPosts int) error {
 	m.totalPosts = totalPosts
+	m.update()
 	return nil
 }
 
 func (m *Series) UpdateTotalLikes(totalLikes int) error {
 	m.totalLikes = totalLikes
+	m.update()
 	return nil
 }
 
@@ -116,6 +128,8 @@ func (m *Series) UpdateTitle(requester *principal.Principal, title, locale strin
 	if err := m.title.UpdateTranslation(title, locale); err != nil {
 		return err
 	}
+
+	m.update()
 
 	return nil
 }
@@ -139,6 +153,8 @@ func (m *Series) UpdateThumbnailExisting(thumbnail *resource.Resource) error {
 
 	m.thumbnailResource = thumbnail
 
+	m.update()
+
 	return nil
 }
 
@@ -155,7 +171,7 @@ func (m *Series) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalSeriesFromDatabase(id, slug string, title map[string]string, thumbnail *resource.Resource, totalLikes, totalPosts int, createdAt time.Time) *Series {
+func UnmarshalSeriesFromDatabase(id, slug string, title map[string]string, thumbnail *resource.Resource, totalLikes, totalPosts int, createdAt, updatedAt time.Time) *Series {
 	return &Series{
 		id:                id,
 		slug:              slug,
@@ -164,6 +180,7 @@ func UnmarshalSeriesFromDatabase(id, slug string, title map[string]string, thumb
 		totalLikes:        totalLikes,
 		totalPosts:        totalPosts,
 		createdAt:         createdAt,
+		updatedAt:         updatedAt,
 	}
 }
 

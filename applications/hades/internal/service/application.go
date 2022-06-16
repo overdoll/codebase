@@ -23,7 +23,7 @@ func NewApplication(ctx context.Context) (*app.Application, func()) {
 	bootstrap.NewBootstrap()
 
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
-	stellaClient, cleanup2 := clients.NewStellaClient(ctx, os.Getenv("STELLA_SERVICE"))
+	stellaClient, cleanup2 := clients.NewStingClient(ctx, os.Getenv("STING_SERVICE"))
 	carrierClient, cleanup3 := clients.NewCarrierClient(ctx, os.Getenv("CARRIER_SERVICE"))
 	ringerClient, cleanup4 := clients.NewRingerClient(ctx, os.Getenv("RINGER_SERVICE"))
 
@@ -31,7 +31,7 @@ func NewApplication(ctx context.Context) (*app.Application, func()) {
 
 	return createApplication(ctx,
 			adapters.NewEvaGrpc(evaClient),
-			adapters.NewStellaGrpc(stellaClient),
+			adapters.NewStingGrpc(stellaClient),
 			adapters.NewCarrierGrpc(carrierClient),
 			adapters.NewRingerGrpc(ringerClient),
 			ccbillClient,
@@ -50,7 +50,7 @@ type ComponentTestApplication struct {
 	TemporalClient *temporalmocks.Client
 	EvaClient      *mocks.MockEvaClient
 	CarrierClient  *mocks.MockCarrierClient
-	StellaClient   *mocks.MockStellaClient
+	StingClient    *mocks.MockStingClient
 	RingerClient   *mocks.MockRingerClient
 }
 
@@ -59,7 +59,7 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 	temporalClient := &temporalmocks.Client{}
 
 	evaClient := &mocks.MockEvaClient{}
-	stellaClient := &mocks.MockStellaClient{}
+	stingClient := &mocks.MockStingClient{}
 	carrierClient := &mocks.MockCarrierClient{}
 	ringerClient := &mocks.MockRingerClient{}
 
@@ -67,7 +67,7 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 		App: createApplication(
 			ctx,
 			adapters.NewEvaGrpc(evaClient),
-			adapters.NewStellaGrpc(stellaClient),
+			adapters.NewStingGrpc(stingClient),
 			adapters.NewCarrierGrpc(carrierClient),
 			adapters.NewRingerGrpc(ringerClient),
 			MockCCBillHttpClient{},
@@ -76,12 +76,12 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 		TemporalClient: temporalClient,
 		EvaClient:      evaClient,
 		CarrierClient:  carrierClient,
-		StellaClient:   stellaClient,
+		StingClient:    stingClient,
 		RingerClient:   ringerClient,
 	}
 }
 
-func createApplication(ctx context.Context, eva query.EvaService, stella command.StellaService, carrier command.CarrierService, ringer command.RingerService, ccbillClient adapters.CCBillHttpClient, client client.Client) *app.Application {
+func createApplication(ctx context.Context, eva query.EvaService, sting command.StingService, carrier command.CarrierService, ringer command.RingerService, ccbillClient adapters.CCBillHttpClient, client client.Client) *app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 	esClient := bootstrap.InitializeElasticSearchSession()
@@ -101,10 +101,10 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 			UpdateCancellationReasonTitle:                                    command.NewUpdateCancellationReasonTitleHandler(billingRepo),
 			GenerateCCBillFlexFormsPaymentLink:                               command.NewGenerateCCBillFlexFormsPaymentLink(),
 			ParseCCBillFlexFormsResponseAndGenerateTemplate:                  command.NewParseCCBillFlexFormsResponseAndGenerateTemplate(),
-			GenerateCCBillClubSupporterPaymentLink:                           command.NewGenerateCCBillClubSupportPaymentLinkHandler(billingRepo, pricingRepo, stella),
+			GenerateCCBillClubSupporterPaymentLink:                           command.NewGenerateCCBillClubSupportPaymentLinkHandler(billingRepo, pricingRepo, sting),
 			ProcessCCBillWebhook:                                             command.NewProcessCCBillWebhookHandler(eventRepo),
 			GenerateProratedRefundAmountForAccountTransaction:                command.NewGenerateProratedRefundAmountForAccountTransactionHandler(billingRepo),
-			BecomeClubSupporterWithAccountSavedPaymentMethod:                 command.NewBecomeClubSupporterWithAccountSavedPaymentMethodHandler(billingRepo, pricingRepo, ccbillRepo, stella),
+			BecomeClubSupporterWithAccountSavedPaymentMethod:                 command.NewBecomeClubSupporterWithAccountSavedPaymentMethodHandler(billingRepo, pricingRepo, ccbillRepo, sting),
 			CancelAccountClubSupporterSubscription:                           command.NewCancelAccountClubSupporterSubscriptionHandler(billingRepo, eventRepo),
 			DeleteAccountSavedPaymentMethod:                                  command.NewDeleteAccountSavedPaymentMethodHandler(billingRepo),
 			RefundAccountTransaction:                                         command.NewRefundAccountTransactionHandler(billingRepo, ccbillRepo),
@@ -115,7 +115,7 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 			CancelActiveSupporterSubscriptionsForClub:                        command.NewCancelActiveSubscriptionsForClubHandler(eventRepo),
 		},
 		Queries: app.Queries{
-			PrincipalById:                                      query.NewPrincipalByIdHandler(eva, stella),
+			PrincipalById:                                      query.NewPrincipalByIdHandler(eva, sting),
 			SearchAccountClubSupporterSubscriptions:            query.NewSearchAccountClubSupporterSubscriptionsHandler(billingRepo),
 			ExpiredAccountClubSupporterSubscriptionsByAccount:  query.NewExpiredAccountClubSupporterSubscriptionsByAccountHandler(billingRepo),
 			AccountClubSupporterSubscriptionById:               query.NewAccountClubSupporterSubscriptionByIdHandler(billingRepo),
@@ -138,6 +138,6 @@ func createApplication(ctx context.Context, eva query.EvaService, stella command
 			CanDeleteAccountData:   query.NewCanDeleteAccountDataHandler(billingRepo),
 			ClubTransactionMetrics: query.NewClubTransactionMetricsHandler(metricRepo),
 		},
-		Activities: activities.NewActivitiesHandler(billingRepo, metricRepo, billingFileRepo, ccbillRepo, stella, carrier, ringer),
+		Activities: activities.NewActivitiesHandler(billingRepo, metricRepo, billingFileRepo, ccbillRepo, sting, carrier, ringer),
 	}
 }

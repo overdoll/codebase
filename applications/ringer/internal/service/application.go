@@ -21,13 +21,13 @@ func NewApplication(ctx context.Context) (*app.Application, func()) {
 	bootstrap.NewBootstrap()
 
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
-	stellaClient, cleanup2 := clients.NewStellaClient(ctx, os.Getenv("STELLA_SERVICE"))
+	stingClient, cleanup2 := clients.NewStingClient(ctx, os.Getenv("STING_SERVICE"))
 
 	paxumClient := &http.Client{}
 
 	return createApplication(ctx,
 			adapters.NewEvaGrpc(evaClient),
-			adapters.NewStellaGrpc(stellaClient),
+			adapters.NewStingGrpc(stingClient),
 			clients.NewTemporalClient(ctx),
 			paxumClient,
 		),
@@ -41,7 +41,7 @@ type ComponentTestApplication struct {
 	App            *app.Application
 	TemporalClient *temporalmocks.Client
 	EvaClient      *mocks.MockEvaClient
-	StellaClient   *mocks.MockStellaClient
+	StingClient    *mocks.MockStellaClient
 }
 
 func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication {
@@ -49,22 +49,22 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 
 	temporalClient := &temporalmocks.Client{}
 	evaClient := &mocks.MockEvaClient{}
-	stellaClient := &mocks.MockStellaClient{}
+	stingClient := &mocks.MockStingClient{}
 
 	return &ComponentTestApplication{
 		App: createApplication(
 			ctx,
 			adapters.NewEvaGrpc(evaClient),
-			adapters.NewStellaGrpc(stellaClient),
+			adapters.NewStingGrpc(stingClient),
 			temporalClient,
 			MockPaxumHttpClient{},
 		),
 		TemporalClient: temporalClient,
 		EvaClient:      evaClient,
-		StellaClient:   stellaClient,
+		StingClient:    stingClient,
 	}
 }
-func createApplication(ctx context.Context, eva query.EvaService, stella query.StellaService, client client.Client, paxumClient adapters.PaxumHttpClient) *app.Application {
+func createApplication(ctx context.Context, eva query.EvaService, sting query.StingService, client client.Client, paxumClient adapters.PaxumHttpClient) *app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 	esClient := bootstrap.InitializeElasticSearchSession()
@@ -73,7 +73,7 @@ func createApplication(ctx context.Context, eva query.EvaService, stella query.S
 
 	paymentRepo := adapters.NewPaymentCassandraRepository(session, esClient)
 	payoutRepo := adapters.NewPayoutCassandraElasticsearchRepository(session, esClient)
-	balanceRepo := adapters.NewBalanceCassandraRepository(session, stella)
+	balanceRepo := adapters.NewBalanceCassandraRepository(session, sting)
 	detailsRepo := adapters.NewDetailsCassandraRepository(session)
 	paxumRepo := adapters.NewPaxumHttpCassandraRepository(paxumClient)
 
@@ -92,7 +92,7 @@ func createApplication(ctx context.Context, eva query.EvaService, stella query.S
 			DeleteAccountData:           command.NewDeleteAccountDataHandler(detailsRepo, payoutRepo),
 		},
 		Queries: app.Queries{
-			PrincipalById:           query.NewPrincipalByIdHandler(eva, stella),
+			PrincipalById:           query.NewPrincipalByIdHandler(eva, sting),
 			AccountDetailsById:      query.NewAccountDetailsByIdHandler(detailsRepo),
 			AccountPayoutMethodById: query.NewAccountPayoutMethodsByIdHandler(payoutRepo),
 			ClubBalanceById:         query.NewClubBalanceByIdHandlerHandler(balanceRepo),
@@ -106,6 +106,6 @@ func createApplication(ctx context.Context, eva query.EvaService, stella query.S
 			SearchClubPayouts:       query.NewSearchClubPayoutsHandler(payoutRepo),
 			SearchClubPayments:      query.NewSearchClubPaymentsHandler(paymentRepo),
 		},
-		Activities: activities.NewActivitiesHandler(paymentRepo, payoutRepo, balanceRepo, detailsRepo, paxumRepo, stella, eva),
+		Activities: activities.NewActivitiesHandler(paymentRepo, payoutRepo, balanceRepo, detailsRepo, paxumRepo, sting, eva),
 	}
 }

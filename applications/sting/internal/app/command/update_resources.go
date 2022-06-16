@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/resource"
 )
@@ -12,10 +13,11 @@ type UpdateResources struct {
 
 type UpdateResourcesHandler struct {
 	pr post.Repository
+	cr club.Repository
 }
 
-func NewUpdateResourcesHandler(pr post.Repository) UpdateResourcesHandler {
-	return UpdateResourcesHandler{pr: pr}
+func NewUpdateResourcesHandler(pr post.Repository, cr club.Repository) UpdateResourcesHandler {
+	return UpdateResourcesHandler{pr: pr, cr: cr}
 }
 
 func (h UpdateResourcesHandler) Handle(ctx context.Context, cmd UpdateResources) error {
@@ -88,6 +90,17 @@ func (h UpdateResourcesHandler) Handle(ctx context.Context, cmd UpdateResources)
 		case "CHARACTER":
 			for itemId, resources := range value {
 				_, err := h.pr.UpdateCharacterThumbnailOperator(ctx, itemId, func(aud *post.Character) error {
+					return aud.UpdateThumbnailExisting(resources[0])
+				})
+
+				if err != nil {
+					return err
+				}
+			}
+			break
+		case "CLUB":
+			for itemId, resources := range value {
+				_, err := h.cr.UpdateClubThumbnail(ctx, itemId, func(aud *club.Club) error {
 					return aud.UpdateThumbnailExisting(resources[0])
 				})
 

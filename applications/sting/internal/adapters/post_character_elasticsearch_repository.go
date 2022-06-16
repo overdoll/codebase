@@ -25,11 +25,12 @@ type characterDocument struct {
 	Name              map[string]string `json:"name"`
 	Series            seriesDocument    `json:"series"`
 	CreatedAt         time.Time         `json:"created_at"`
+	UpdatedAt         time.Time         `json:"updated_at"`
 	TotalLikes        int               `json:"total_likes"`
 	TotalPosts        int               `json:"total_posts"`
 }
 
-const CharacterIndexName = "characters"
+const CharacterIndexName = "sting.characters"
 
 func marshalCharacterToDocument(char *post.Character) (*characterDocument, error) {
 
@@ -51,6 +52,7 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 		Name:              localization.MarshalTranslationToDatabase(char.Name()),
 		Slug:              char.Slug(),
 		CreatedAt:         char.CreatedAt(),
+		UpdatedAt:         char.UpdatedAt(),
 		TotalLikes:        char.TotalLikes(),
 		TotalPosts:        char.TotalPosts(),
 		Series:            *marshalledSeries,
@@ -164,6 +166,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Cont
 			chr.TotalLikes,
 			chr.TotalPosts,
 			chr.CreatedAt,
+			chr.UpdatedAt,
 			post.UnmarshalSeriesFromDatabase(
 				chr.Series.Id,
 				chr.Series.Slug,
@@ -172,6 +175,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Cont
 				chr.Series.TotalLikes,
 				chr.Series.TotalPosts,
 				chr.Series.CreatedAt,
+				chr.Series.UpdatedAt,
 			))
 		newCharacter.Node = paging.NewNode(hit.Sort)
 
@@ -210,6 +214,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllCharacters(ctx context.Co
 				Name:              c.Name,
 				Slug:              c.Slug,
 				CreatedAt:         c.CreatedAt,
+				UpdatedAt:         c.UpdatedAt,
 				TotalLikes:        c.TotalLikes,
 				TotalPosts:        c.TotalPosts,
 				Series: seriesDocument{

@@ -87,3 +87,9 @@ func (r *Resolver) CategoryCurationProfile() CategoryCurationProfileResolver {
 		App: r.app,
 	}
 }
+
+func (r *Resolver) ClubMember() ClubMemberResolver {
+	return &resolvers.ClubMemberResolver{
+		App: r.app,
+	}
+}

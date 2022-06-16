@@ -107,28 +107,6 @@ func (s Server) DeleteAccountData(ctx context.Context, request *sting.DeleteAcco
 	return &emptypb.Empty{}, nil
 }
 
-func (s Server) AddTerminatedClub(ctx context.Context, request *sting.AddTerminatedClubRequest) (*emptypb.Empty, error) {
-
-	if err := s.app.Commands.AddTerminatedClub.Handle(ctx, command.AddTerminatedClub{
-		ClubId: request.ClubId,
-	}); err != nil {
-		return nil, err
-	}
-
-	return &emptypb.Empty{}, nil
-}
-
-func (s Server) RemoveTerminatedClub(ctx context.Context, request *sting.RemoveTerminatedClubRequest) (*emptypb.Empty, error) {
-
-	if err := s.app.Commands.RemoveTerminatedClub.Handle(ctx, command.RemoveTerminatedClub{
-		ClubId: request.ClubId,
-	}); err != nil {
-		return nil, err
-	}
-
-	return &emptypb.Empty{}, nil
-}
-
 func (s Server) UpdateResources(ctx context.Context, request *proto.UpdateResourcesRequest) (*proto.UpdateResourcesResponse, error) {
 
 	if err := s.app.Commands.UpdateResources.Handle(ctx, command.UpdateResources{Resources: resource.UnmarshalResourcesFromProto(request.Resources)}); err != nil {

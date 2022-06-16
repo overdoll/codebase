@@ -8,6 +8,7 @@ import (
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"strings"
 	"time"
@@ -26,7 +27,7 @@ var accountTable = table.New(table.Metadata{
 		"username",
 		"email",
 		"roles",
-		"avatar_resource_id",
+		"avatar_resource",
 		"locked",
 		"locked_until",
 		"deleting",
@@ -46,7 +47,7 @@ type accounts struct {
 	Username                    string     `db:"username"`
 	Email                       string     `db:"email"`
 	Roles                       []string   `db:"roles"`
-	AvatarResourceId            *string    `db:"avatar_resource_id"`
+	AvatarResource              string     `db:"avatar_resource"`
 	Locked                      bool       `db:"locked"`
 	LockedUntil                 *time.Time `db:"locked_until"`
 	Deleting                    bool       `db:"deleting"`
@@ -113,13 +114,20 @@ func NewAccountCassandraRedisRepository(session gocqlx.Session) AccountCassandra
 	return AccountCassandraRepository{session: session}
 }
 
-func marshalUserToDatabase(usr *account.Account) *accounts {
+func marshalUserToDatabase(usr *account.Account) (*accounts, error) {
+
+	marshalled, err := resource.MarshalResourceToDatabase(usr.AvatarResource())
+
+	if err != nil {
+		return nil, err
+	}
+
 	return &accounts{
 		Id:                          usr.ID(),
 		Email:                       usr.Email(),
 		Username:                    usr.Username(),
 		Roles:                       usr.RolesAsString(),
-		AvatarResourceId:            usr.AvatarResourceId(),
+		AvatarResource:              marshalled,
 		LockedUntil:                 usr.LockedUntil(),
 		Locked:                      usr.IsLocked(),
 		Deleting:                    usr.IsDeleting(),
@@ -128,7 +136,7 @@ func marshalUserToDatabase(usr *account.Account) *accounts {
 		ScheduledDeletionWorkflowId: usr.ScheduledDeletionWorkflowId(),
 		MultiFactorEnabled:          usr.MultiFactorEnabled(),
 		CreatedAt:                   usr.CreatedAt(),
-	}
+	}, nil
 }
 
 func (r AccountCassandraRepository) getAccountById(ctx context.Context, id string) (*accounts, error) {
@@ -169,7 +177,7 @@ func (r AccountCassandraRepository) GetAccountById(ctx context.Context, id strin
 		accountInstance.Username,
 		accountInstance.Email,
 		accountInstance.Roles,
-		accountInstance.AvatarResourceId,
+		nil,
 		accountInstance.Locked,
 		accountInstance.LockedUntil,
 		accountInstance.Deleting,
@@ -207,7 +215,7 @@ func (r AccountCassandraRepository) GetAccountsById(ctx context.Context, ids []s
 			accountInstance.Username,
 			accountInstance.Email,
 			accountInstance.Roles,
-			accountInstance.AvatarResourceId,
+			nil,
 			accountInstance.Locked,
 			accountInstance.LockedUntil,
 			accountInstance.Deleting,
@@ -410,13 +418,19 @@ func (r AccountCassandraRepository) CreateAccount(ctx context.Context, instance 
 		},
 	)
 
+	acc, err := marshalUserToDatabase(instance)
+
+	if err != nil {
+		return err
+	}
+
 	// Create a lookup table that will be used to find the user using their unique ID
 	// Will also contain all major information about the user such as permissions, etc...
 	stmt, names = accountTable.Insert()
 	support.BindStructToBatchStatement(
 		batch,
 		stmt, names,
-		marshalUserToDatabase(instance),
+		acc,
 	)
 
 	support.MarkBatchIdempotent(batch)
@@ -448,7 +462,11 @@ func (r AccountCassandraRepository) updateAccount(ctx context.Context, id string
 		return nil, err
 	}
 
-	err = updateFn(currentUser)
+	if err = updateFn(currentUser); err != nil {
+		return nil, err
+	}
+
+	marshalled, err := marshalUserToDatabase(currentUser)
 
 	if err != nil {
 		return nil, err
@@ -462,7 +480,7 @@ func (r AccountCassandraRepository) updateAccount(ctx context.Context, id string
 		).
 		WithContext(ctx).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(marshalUserToDatabase(currentUser)).
+		BindStruct(marshalled).
 		Idempotent(true).
 		ExecRelease(); err != nil {
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update account")
@@ -478,7 +496,7 @@ func (r AccountCassandraRepository) UpdateAccount(ctx context.Context, id string
 		"roles",
 		"locked_until",
 		"locked",
-		"avatar_resource_id",
+		"avatar_resource",
 		"multi_factor_enabled",
 	})
 }
@@ -527,7 +545,7 @@ func (r AccountCassandraRepository) DeleteAccountData(ctx context.Context, accou
 
 	acc.Email = ""
 	acc.Username = "[deleted]"
-	acc.AvatarResourceId = nil
+	acc.AvatarResource = ""
 	acc.MultiFactorEnabled = false
 
 	if err := r.session.
@@ -535,7 +553,7 @@ func (r AccountCassandraRepository) DeleteAccountData(ctx context.Context, accou
 			accountTable.Update(
 				"email",
 				"username",
-				"avatar_resource_id",
+				"avatar_resource",
 			),
 		).
 		WithContext(ctx).

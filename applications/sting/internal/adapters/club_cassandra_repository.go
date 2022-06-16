@@ -15,6 +15,7 @@ import (
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"strings"
 	"time"
@@ -38,6 +39,7 @@ var clubTable = table.New(table.Metadata{
 		"terminated",
 		"terminated_by_account_id",
 		"created_at",
+		"upated_at",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -48,7 +50,7 @@ type clubs struct {
 	Slug                        string            `db:"slug"`
 	SlugAliases                 []string          `db:"slug_aliases"`
 	Name                        map[string]string `db:"name"`
-	ThumbnailResourceId         *string           `db:"thumbnail_resource_id"`
+	ThumbnailResource           string            `db:"thumbnail_resource"`
 	MembersCount                int               `db:"members_count"`
 	MembersCountLastUpdateId    gocql.UUID        `db:"members_count_last_update_id"`
 	OwnerAccountId              string            `db:"owner_account_id"`
@@ -59,6 +61,7 @@ type clubs struct {
 	Terminated                  bool              `db:"terminated"`
 	TerminatedByAccountId       *string           `db:"terminated_by_account_id"`
 	CreatedAt                   time.Time         `db:"created_at"`
+	UpdatedAt                   time.Time         `db:"updated_at"`
 }
 
 var clubSlugTable = table.New(table.Metadata{
@@ -115,22 +118,30 @@ type clubSuspensionLog struct {
 }
 
 type ClubCassandraElasticsearchRepository struct {
-	session gocqlx.Session
-	client  *elastic.Client
-	cache   *redis.Client
+	session            gocqlx.Session
+	client             *elastic.Client
+	cache              *redis.Client
+	resourceSerializer *resource.Serializer
 }
 
-func NewClubCassandraElasticsearchRepository(session gocqlx.Session, client *elastic.Client, cache *redis.Client) ClubCassandraElasticsearchRepository {
-	return ClubCassandraElasticsearchRepository{session: session, client: client, cache: cache}
+func NewClubCassandraElasticsearchRepository(session gocqlx.Session, client *elastic.Client, cache *redis.Client, resourcesSerializer *resource.Serializer) ClubCassandraElasticsearchRepository {
+	return ClubCassandraElasticsearchRepository{session: session, client: client, cache: cache, resourceSerializer: resourcesSerializer}
 }
 
-func marshalClubToDatabase(cl *club.Club) *clubs {
+func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
+
+	marshalled, err := resource.MarshalResourceToDatabase(cl.ThumbnailResource())
+
+	if err != nil {
+		return nil, err
+	}
+
 	return &clubs{
 		Id:                          cl.ID(),
 		Slug:                        cl.Slug(),
 		SlugAliases:                 cl.SlugAliases(),
 		Name:                        localization.MarshalTranslationToDatabase(cl.Name()),
-		ThumbnailResourceId:         cl.ThumbnailResource(),
+		ThumbnailResource:           marshalled,
 		MembersCount:                cl.MembersCount(),
 		MembersCountLastUpdateId:    gocql.TimeUUID(),
 		OwnerAccountId:              cl.OwnerAccountId(),
@@ -141,7 +152,8 @@ func marshalClubToDatabase(cl *club.Club) *clubs {
 		Terminated:                  cl.Terminated(),
 		TerminatedByAccountId:       cl.TerminatedByAccountId(),
 		CreatedAt:                   cl.CreatedAt(),
-	}
+		UpdatedAt:                   cl.UpdatedAt(),
+	}, nil
 }
 
 func (r ClubCassandraElasticsearchRepository) CreateClubSuspensionLog(ctx context.Context, suspensionLog *club.SuspensionLog) error {
@@ -297,12 +309,18 @@ func (r ClubCassandraElasticsearchRepository) GetClubById(ctx context.Context, b
 		return nil, err
 	}
 
+	unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, b.ThumbnailResource)
+
+	if err != nil {
+		return nil, err
+	}
+
 	return club.UnmarshalClubFromDatabase(
 		b.Id,
 		b.Slug,
 		b.SlugAliases,
 		b.Name,
-		b.ThumbnailResourceId,
+		unmarshalled,
 		b.MembersCount,
 		b.OwnerAccountId,
 		b.Suspended,
@@ -312,6 +330,7 @@ func (r ClubCassandraElasticsearchRepository) GetClubById(ctx context.Context, b
 		b.Terminated,
 		b.TerminatedByAccountId,
 		b.CreatedAt,
+		b.UpdatedAt,
 	), nil
 }
 
@@ -349,12 +368,19 @@ func (r ClubCassandraElasticsearchRepository) GetClubsByIds(ctx context.Context,
 	var clbs []*club.Club
 
 	for _, b := range databaseClubs {
+
+		unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, b.ThumbnailResource)
+
+		if err != nil {
+			return nil, err
+		}
+
 		clbs = append(clbs, club.UnmarshalClubFromDatabase(
 			b.Id,
 			b.Slug,
 			b.SlugAliases,
 			b.Name,
-			b.ThumbnailResourceId,
+			unmarshalled,
 			b.MembersCount,
 			b.OwnerAccountId,
 			b.Suspended,
@@ -364,6 +390,7 @@ func (r ClubCassandraElasticsearchRepository) GetClubsByIds(ctx context.Context,
 			b.Terminated,
 			b.TerminatedByAccountId,
 			b.CreatedAt,
+			b.UpdatedAt,
 		))
 	}
 
@@ -394,13 +421,14 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubSlug(ctx context.Context
 	// put the new slug
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
-	stmt, names := clubTable.UpdateBuilder().Remove("slug_aliases").ToCql()
+	stmt, names := clubTable.UpdateBuilder("updated_at").Remove("slug_aliases").ToCql()
 	support.BindStructToBatchStatement(
 		batch,
 		stmt, names,
 		clubs{
 			Id:          clubId,
 			SlugAliases: []string{aliasDefault},
+			UpdatedAt:   currentClub.UpdatedAt(),
 		},
 	)
 
@@ -455,7 +483,11 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubSlugAliases(ctx context.
 
 	newSlugs := currentClub.SlugAliases()
 
-	pst := marshalClubToDatabase(currentClub)
+	pst, err := marshalClubToDatabase(currentClub)
+
+	if err != nil {
+		return nil, err
+	}
 
 	newAliasSlugToAdd := ""
 	aliasSlugToRemove := ""
@@ -533,7 +565,7 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubSlugAliases(ctx context.
 	}
 
 	if err := clubTable.
-		UpdateBuilder().
+		UpdateBuilder("updated_at").
 		Remove("slug_aliases").
 		Query(r.session).
 		WithContext(ctx).
@@ -541,6 +573,7 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubSlugAliases(ctx context.
 		BindMap(map[string]interface{}{
 			"id":           pst.Id,
 			"slug_aliases": []string{aliasSlugToRemove},
+			"updated_at":   time.Now(),
 		}).
 		ExecRelease(); err != nil {
 
@@ -586,12 +619,18 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubMembersCount(ctx context
 		return err
 	}
 
+	unmarshalledResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, clb.ThumbnailResource)
+
+	if err != nil {
+		return err
+	}
+
 	unmarshalled := club.UnmarshalClubFromDatabase(
 		clb.Id,
 		clb.Slug,
 		clb.SlugAliases,
 		clb.Name,
-		clb.ThumbnailResourceId,
+		unmarshalledResource,
 		clb.MembersCount,
 		clb.OwnerAccountId,
 		clb.Suspended,
@@ -601,17 +640,18 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubMembersCount(ctx context
 		clb.Terminated,
 		clb.TerminatedByAccountId,
 		clb.CreatedAt,
+		clb.UpdatedAt,
 	)
 
 	if err := updateFn(unmarshalled); err != nil {
 		return err
 	}
 
-	ok, err := clubTable.UpdateBuilder("members_count", "members_count_last_update_id").
+	ok, err := clubTable.UpdateBuilder("members_count", "members_count_last_update_id", "updated_at").
 		If(qb.EqLit("members_count_last_update_id", clb.MembersCountLastUpdateId.String())).
 		Query(r.session).
 		WithContext(ctx).
-		BindStruct(clubs{Id: clubId, MembersCount: unmarshalled.MembersCount(), MembersCountLastUpdateId: gocql.TimeUUID()}).
+		BindStruct(clubs{Id: clubId, MembersCount: unmarshalled.MembersCount(), MembersCountLastUpdateId: gocql.TimeUUID(), UpdatedAt: unmarshalled.UpdatedAt()}).
 		SerialConsistency(gocql.Serial).
 		ExecCASRelease()
 
@@ -638,10 +678,14 @@ func (r ClubCassandraElasticsearchRepository) updateClubRequest(ctx context.Cont
 		return nil, err
 	}
 
-	pst := marshalClubToDatabase(currentClub)
+	pst, err := marshalClubToDatabase(currentClub)
+
+	if err != nil {
+		return nil, err
+	}
 
 	if err := r.session.
-		Query(clubTable.Update(columns...)).
+		Query(clubTable.Update(append(columns, "updated_at")...)).
 		WithContext(ctx).
 		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
@@ -718,7 +762,11 @@ func (r ClubCassandraElasticsearchRepository) deleteClub(ctx context.Context, cl
 }
 func (r ClubCassandraElasticsearchRepository) ReserveSlugForClub(ctx context.Context, clb *club.Club) error {
 
-	cla := marshalClubToDatabase(clb)
+	cla, err := marshalClubToDatabase(clb)
+
+	if err != nil {
+		return err
+	}
 
 	if err := r.createUniqueClubSlug(ctx, cla.Id, cla.Slug); err != nil {
 		return err
@@ -729,7 +777,11 @@ func (r ClubCassandraElasticsearchRepository) ReserveSlugForClub(ctx context.Con
 
 func (r ClubCassandraElasticsearchRepository) DeleteReservedSlugForClub(ctx context.Context, club *club.Club) error {
 
-	cla := marshalClubToDatabase(club)
+	cla, err := marshalClubToDatabase(club)
+
+	if err != nil {
+		return err
+	}
 
 	// if fails, release unique slug
 	if err := r.deleteUniqueClubSlug(ctx, cla.Id, cla.Slug); err != nil {
@@ -741,7 +793,11 @@ func (r ClubCassandraElasticsearchRepository) DeleteReservedSlugForClub(ctx cont
 
 func (r ClubCassandraElasticsearchRepository) CreateClub(ctx context.Context, club *club.Club) error {
 
-	cla := marshalClubToDatabase(club)
+	cla, err := marshalClubToDatabase(club)
+
+	if err != nil {
+		return err
+	}
 
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 

@@ -2,7 +2,12 @@ package resource
 
 import (
 	_ "image/png"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/resource/proto"
+)
+
+var (
+	ErrResourceNotPresent = domainerror.NewValidation("resource is not present")
 )
 
 // Resource represents a media resource that can either be an image or a video

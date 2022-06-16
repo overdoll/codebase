@@ -49,6 +49,7 @@ type Club struct {
 	ownerAccountId string
 
 	createdAt time.Time
+	updatedAt time.Time
 }
 
 func NewMustClub(id, slug string, name string, ownerAccountId string) *Club {
@@ -66,6 +67,7 @@ func NewMustClub(id, slug string, name string, ownerAccountId string) *Club {
 		hasCreatedSupporterOnlyPost: false,
 		terminated:                  false,
 		createdAt:                   time.Now(),
+		updatedAt:                   time.Now(),
 	}
 }
 
@@ -116,10 +118,11 @@ func NewClub(requester *principal.Principal, slug, name string, currentClubCount
 		hasCreatedSupporterOnlyPost: false,
 		terminated:                  false,
 		createdAt:                   time.Now(),
+		updatedAt:                   time.Now(),
 	}, nil
 }
 
-func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail *resource.Resource, membersCount int, ownerAccountId string, suspended bool, suspendedUntil, nextSupporterPostTime *time.Time, hasCreatedSupporterOnlyPost bool, terminated bool, terminatedByAccountId *string, createdAt time.Time) *Club {
+func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail *resource.Resource, membersCount int, ownerAccountId string, suspended bool, suspendedUntil, nextSupporterPostTime *time.Time, hasCreatedSupporterOnlyPost bool, terminated bool, terminatedByAccountId *string, createdAt, updatedAt time.Time) *Club {
 	return &Club{
 		id:                          id,
 		slug:                        slug,
@@ -135,6 +138,7 @@ func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name 
 		terminated:                  terminated,
 		terminatedByAccountId:       terminatedByAccountId,
 		createdAt:                   createdAt,
+		updatedAt:                   updatedAt,
 	}
 }
 
@@ -193,6 +197,14 @@ func (m *Club) SuspendedUntil() *time.Time {
 
 func (m *Club) CreatedAt() time.Time {
 	return m.createdAt
+}
+
+func (m *Club) UpdatedAt() time.Time {
+	return m.updatedAt
+}
+
+func (m *Club) update() {
+	m.updatedAt = time.Now()
 }
 
 func (m *Club) NextSupporterPostTime() *time.Time {
@@ -261,6 +273,8 @@ func (m *Club) Suspend(endTime time.Time) error {
 	m.suspended = true
 	m.suspendedUntil = &endTime
 
+	m.update()
+
 	return nil
 }
 
@@ -269,12 +283,17 @@ func (m *Club) Terminate(accountId string) error {
 	m.terminatedByAccountId = &accountId
 	m.terminated = true
 
+	m.update()
+
 	return nil
 }
 
 func (m *Club) UnTerminate() error {
 	m.terminatedByAccountId = nil
 	m.terminated = false
+
+	m.update()
+
 	return nil
 }
 
@@ -283,12 +302,17 @@ func (m *Club) UpdateNextSupporterPostTime(timestamp time.Time) error {
 	m.nextSupporterPostTime = &ts
 	m.hasCreatedSupporterOnlyPost = true
 
+	m.update()
+
 	return nil
 }
 
 func (m *Club) UnSuspend() error {
 	m.suspended = false
 	m.suspendedUntil = nil
+
+	m.update()
+
 	return nil
 }
 
@@ -306,6 +330,8 @@ func (m *Club) AddSlugAlias(requester *principal.Principal, slug string) error {
 	}
 
 	m.slugAliases = append(m.slugAliases, slug)
+
+	m.update()
 
 	return nil
 }
@@ -337,6 +363,7 @@ func (m *Club) MakeSlugAliasDefault(requester *principal.Principal, slug string)
 
 	// make default slug
 	m.slug = slug
+	m.update()
 
 	return nil
 }
@@ -362,6 +389,8 @@ func (m *Club) RemoveSlugAlias(requester *principal.Principal, slug string) erro
 
 	m.slugAliases = append(m.slugAliases[:pos], m.slugAliases[pos+1:]...)
 
+	m.update()
+
 	return nil
 }
 
@@ -373,15 +402,34 @@ func (m *Club) UpdateThumbnail(requester *principal.Principal, thumbnail *resour
 
 	m.thumbnailResource = thumbnail
 
+	m.update()
+
+	return nil
+}
+
+func (m *Club) UpdateThumbnailExisting(thumbnail *resource.Resource) error {
+
+	if m.thumbnailResource == nil {
+		return resource.ErrResourceNotPresent
+	}
+
+	if m.thumbnailResource.ID() != thumbnail.ID() {
+		return resource.ErrResourceNotPresent
+	}
+
+	m.update()
+
 	return nil
 }
 
 func (m *Club) AddMember() error {
+	m.update()
 	m.membersCount += 1
 	return nil
 }
 
 func (m *Club) SubtractMember() error {
+	m.update()
 	m.membersCount -= 1
 	return nil
 }
@@ -399,6 +447,8 @@ func (m *Club) UpdateName(requester *principal.Principal, name string) error {
 	if err := m.name.UpdateDefaultTranslation(name); err != nil {
 		return err
 	}
+
+	m.update()
 
 	return nil
 }

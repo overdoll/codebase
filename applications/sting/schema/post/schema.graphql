@@ -29,7 +29,7 @@ type Post implements Node @key(fields: "id") {
   contributor: Account!
 
   """The club belonging to the post"""
-  club: Club!
+  club: Club! @goField(forceResolver: true)
 
   """Content belonging to this post"""
   content: [PostContent!]!

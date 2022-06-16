@@ -50,6 +50,9 @@ const clubsIndexProperties = `
 	},
 	"created_at": {
 		"type": "date"
+	},
+	"updated_at": {
+		"type": "date"
 	}
 }
 `

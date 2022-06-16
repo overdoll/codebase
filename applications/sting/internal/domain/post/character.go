@@ -29,6 +29,7 @@ type Character struct {
 	totalPosts int
 
 	createdAt time.Time
+	updatedAt time.Time
 }
 
 func NewCharacter(requester *principal.Principal, slug, name string, series *Series) (*Character, error) {
@@ -64,6 +65,7 @@ func NewCharacter(requester *principal.Principal, slug, name string, series *Ser
 		totalLikes:        0,
 		totalPosts:        0,
 		createdAt:         time.Now(),
+		updatedAt:         time.Now(),
 	}, nil
 }
 
@@ -87,6 +89,14 @@ func (c *Character) CreatedAt() time.Time {
 	return c.createdAt
 }
 
+func (c *Character) UpdatedAt() time.Time {
+	return c.updatedAt
+}
+
+func (c *Character) update() {
+	c.updatedAt = time.Now()
+}
+
 func (c *Character) ThumbnailResource() *resource.Resource {
 	return c.thumbnailResource
 }
@@ -101,11 +111,13 @@ func (c *Character) TotalPosts() int {
 
 func (c *Character) UpdateTotalPosts(totalPosts int) error {
 	c.totalPosts = totalPosts
+	c.update()
 	return nil
 }
 
 func (c *Character) UpdateTotalLikes(totalLikes int) error {
 	c.totalLikes = totalLikes
+	c.update()
 	return nil
 }
 
@@ -122,6 +134,8 @@ func (c *Character) UpdateName(requester *principal.Principal, name, locale stri
 	if err := c.name.UpdateTranslation(name, locale); err != nil {
 		return err
 	}
+
+	c.update()
 
 	return nil
 }
@@ -145,6 +159,8 @@ func (c *Character) UpdateThumbnailExisting(thumbnail *resource.Resource) error 
 
 	c.thumbnailResource = thumbnail
 
+	c.update()
+
 	return nil
 }
 
@@ -161,7 +177,7 @@ func (c *Character) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalCharacterFromDatabase(id, slug string, name map[string]string, thumbnail *resource.Resource, totalLikes, totalPosts int, createdAt time.Time, media *Series) *Character {
+func UnmarshalCharacterFromDatabase(id, slug string, name map[string]string, thumbnail *resource.Resource, totalLikes, totalPosts int, createdAt, updatedAt time.Time, media *Series) *Character {
 	return &Character{
 		id:                id,
 		slug:              slug,
@@ -171,6 +187,7 @@ func UnmarshalCharacterFromDatabase(id, slug string, name map[string]string, thu
 		totalLikes:        totalLikes,
 		totalPosts:        totalPosts,
 		createdAt:         createdAt,
+		updatedAt:         updatedAt,
 	}
 }
 

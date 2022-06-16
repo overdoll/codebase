@@ -27,7 +27,6 @@ go_library(
         "//applications/ringer/internal/domain/paxum",
         "//applications/ringer/internal/domain/payment",
         "//applications/ringer/internal/domain/payout",
-        "//applications/stella/proto:v1_go_proto",
         "//libraries/bucket",
         "//libraries/crypt",
         "//libraries/errors",

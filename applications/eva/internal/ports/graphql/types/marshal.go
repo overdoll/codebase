@@ -20,18 +20,16 @@ func MarshalLanguageToGraphQL(result *localization.Language) *graphql.Language {
 	return &graphql.Language{Locale: result.Locale(), Name: result.Name()}
 }
 
-func MarshalAccountToGraphQL(result *account.Account) *Account {
+func MarshalAccountToGraphQL(ctx context.Context, result *account.Account) *Account {
 
 	if result == nil {
 		return nil
 	}
 
-	var accountAvatar *Resource
+	var res *graphql.Resource
 
-	if result.AvatarResourceId() != nil {
-		accountAvatar = &Resource{
-			ID: relay.NewID(Resource{}, result.ID(), *result.AvatarResourceId()),
-		}
+	if result.AvatarResource() != nil {
+		res = graphql.MarshalResourceToGraphQL(ctx, result.AvatarResource())
 	}
 
 	var accountDeleting *AccountDeleting
@@ -43,7 +41,7 @@ func MarshalAccountToGraphQL(result *account.Account) *Account {
 	return &Account{
 		ID:                      relay.NewID(Account{}, result.ID()),
 		Reference:               result.ID(),
-		Avatar:                  accountAvatar,
+		Avatar:                  res,
 		Username:                result.Username(),
 		IsSecure:                result.IsSecure(),
 		IsStaff:                 result.IsStaff(),

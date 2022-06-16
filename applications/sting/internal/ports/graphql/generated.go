@@ -47,6 +47,7 @@ type ResolverRoot interface {
 	CategoryCurationProfile() CategoryCurationProfileResolver
 	Character() CharacterResolver
 	Club() ClubResolver
+	ClubMember() ClubMemberResolver
 	Entity() EntityResolver
 	Mutation() MutationResolver
 	Post() PostResolver
@@ -180,7 +181,7 @@ type ComplexityRoot struct {
 		Suspension              func(childComplexity int) int
 		SuspensionLogs          func(childComplexity int, after *string, before *string, first *int, last *int) int
 		Termination             func(childComplexity int) int
-		Thumbnail               func(childComplexity int, size *int) int
+		Thumbnail               func(childComplexity int) int
 		ViewerIsOwner           func(childComplexity int) int
 		ViewerMember            func(childComplexity int) int
 	}
@@ -640,8 +641,6 @@ type CharacterResolver interface {
 type ClubResolver interface {
 	SlugAliasesLimit(ctx context.Context, obj *types.Club) (int, error)
 
-	Thumbnail(ctx context.Context, obj *types.Club, size *int) (*graphql1.Resource, error)
-
 	SuspensionLogs(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int) (*types.ClubSuspensionLogConnection, error)
 
 	ViewerMember(ctx context.Context, obj *types.Club) (*types.ClubMember, error)
@@ -649,6 +648,9 @@ type ClubResolver interface {
 
 	Members(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, supporter bool, sortBy types.ClubMembersSort) (*types.ClubMemberConnection, error)
 	Posts(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error)
+}
+type ClubMemberResolver interface {
+	Club(ctx context.Context, obj *types.ClubMember) (*types.Club, error)
 }
 type EntityResolver interface {
 	FindAccountByID(ctx context.Context, id relay.ID) (*types.Account, error)
@@ -706,6 +708,8 @@ type MutationResolver interface {
 	UpdateSeriesThumbnail(ctx context.Context, input types.UpdateSeriesThumbnailInput) (*types.UpdateSeriesThumbnailPayload, error)
 }
 type PostResolver interface {
+	Club(ctx context.Context, obj *types.Post) (*types.Club, error)
+
 	SuggestedPosts(ctx context.Context, obj *types.Post, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
 	Audience(ctx context.Context, obj *types.Post) (*types.Audience, error)
 	Categories(ctx context.Context, obj *types.Post) ([]*types.Category, error)
@@ -1344,12 +1348,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		args, err := ec.field_Club_thumbnail_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Club.Thumbnail(childComplexity, args["size"].(*int)), true
+		return e.complexity.Club.Thumbnail(childComplexity), true
 
 	case "Club.viewerIsOwner":
 		if e.complexity.Club.ViewerIsOwner == nil {
@@ -3828,7 +3827,7 @@ extend type Mutation {
   slugAliases: [ClubSlugAlias!]!
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail(size: Int): Resource @goField(forceResolver: true)
+  thumbnail: Resource
 
   """A name for this club."""
   name: String!
@@ -4025,7 +4024,7 @@ type ClubMember implements Node @key(fields: "id") {
   joinedAt: Time!
 
   """The club that this membership belongs to."""
-  club: Club!
+  club: Club! @goField(forceResolver: true)
 
   """The account that belongs to this membership."""
   account: Account!
@@ -4643,7 +4642,7 @@ type Post implements Node @key(fields: "id") {
   contributor: Account!
 
   """The club belonging to the post"""
-  club: Club!
+  club: Club! @goField(forceResolver: true)
 
   """Content belonging to this post"""
   content: [PostContent!]!
@@ -6378,21 +6377,6 @@ func (ec *executionContext) field_Club_suspensionLogs_args(ctx context.Context, 
 		}
 	}
 	args["last"] = arg3
-	return args, nil
-}
-
-func (ec *executionContext) field_Club_thumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *int
-	if tmp, ok := rawArgs["size"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
-		arg0, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["size"] = arg0
 	return args, nil
 }
 
@@ -11321,7 +11305,7 @@ func (ec *executionContext) _Club_thumbnail(ctx context.Context, field graphql.C
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Club().Thumbnail(rctx, obj, fc.Args["size"].(*int))
+		return obj.Thumbnail, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11339,8 +11323,8 @@ func (ec *executionContext) fieldContext_Club_thumbnail(ctx context.Context, fie
 	fc = &graphql.FieldContext{
 		Object:     "Club",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
@@ -11364,17 +11348,6 @@ func (ec *executionContext) fieldContext_Club_thumbnail(ctx context.Context, fie
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Resource", field.Name)
 		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Club_thumbnail_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return
 	}
 	return fc, nil
 }
@@ -12567,7 +12540,7 @@ func (ec *executionContext) _ClubMember_club(ctx context.Context, field graphql.
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Club, nil
+		return ec.resolvers.ClubMember().Club(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12588,8 +12561,8 @@ func (ec *executionContext) fieldContext_ClubMember_club(ctx context.Context, fi
 	fc = &graphql.FieldContext{
 		Object:     "ClubMember",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
@@ -18190,7 +18163,7 @@ func (ec *executionContext) _Post_club(ctx context.Context, field graphql.Collec
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Club, nil
+		return ec.resolvers.Post().Club(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -18211,8 +18184,8 @@ func (ec *executionContext) fieldContext_Post_club(ctx context.Context, field gr
 	fc = &graphql.FieldContext{
 		Object:     "Post",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
@@ -28003,22 +27976,9 @@ func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "thumbnail":
-			field := field
 
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Club_thumbnail(ctx, field, obj)
-				return res
-			}
+			out.Values[i] = ec._Club_thumbnail(ctx, field, obj)
 
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
 		case "name":
 
 			out.Values[i] = ec._Club_name(ctx, field, obj)
@@ -28305,35 +28265,48 @@ func (ec *executionContext) _ClubMember(ctx context.Context, sel ast.SelectionSe
 			out.Values[i] = ec._ClubMember_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "joinedAt":
 
 			out.Values[i] = ec._ClubMember_joinedAt(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "club":
+			field := field
 
-			out.Values[i] = ec._ClubMember_club(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._ClubMember_club(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "account":
 
 			out.Values[i] = ec._ClubMember_account(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "isSupporter":
 
 			out.Values[i] = ec._ClubMember_isSupporter(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "supporterSince":
 
@@ -29620,12 +29593,25 @@ func (ec *executionContext) _Post(ctx context.Context, sel ast.SelectionSet, obj
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "club":
+			field := field
 
-			out.Values[i] = ec._Post_club(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Post_club(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "content":
 
 			out.Values[i] = ec._Post_content(ctx, field, obj)

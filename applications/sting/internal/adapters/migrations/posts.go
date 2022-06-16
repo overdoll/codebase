@@ -60,7 +60,10 @@ const postIndex = `
 				},
 				"created_at": {
                      "type": "date"
-				},			
+				},
+				"updated_at": {
+					"type": "date"
+				},
 				"posted_at": {
                      "type": "date"
 				},

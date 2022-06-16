@@ -26,9 +26,10 @@ type audienceDocument struct {
 	TotalLikes        int               `json:"total_likes"`
 	TotalPosts        int               `json:"total_posts"`
 	CreatedAt         time.Time         `json:"created_at"`
+	UpdatedAt         time.Time         `json:"updated_at"`
 }
 
-const AudienceIndexName = "audience"
+const AudienceIndexName = "sting.audience"
 
 func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 
@@ -59,6 +60,7 @@ func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 		Standard:          stnd,
 		TotalLikes:        cat.TotalLikes(),
 		TotalPosts:        cat.TotalPosts(),
+		UpdatedAt:         cat.UpdatedAt(),
 	}, nil
 }
 
@@ -129,7 +131,7 @@ func (r PostsCassandraElasticsearchRepository) SearchAudience(ctx context.Contex
 			return nil, err
 		}
 
-		newAudience := post.UnmarshalAudienceFromDatabase(bd.Id, bd.Slug, bd.Title, unmarshalled, bd.Standard, bd.TotalLikes, bd.TotalPosts, bd.CreatedAt)
+		newAudience := post.UnmarshalAudienceFromDatabase(bd.Id, bd.Slug, bd.Title, unmarshalled, bd.Standard, bd.TotalLikes, bd.TotalPosts, bd.CreatedAt, bd.UpdatedAt)
 		newAudience.Node = paging.NewNode(hit.Sort)
 
 		audiences = append(audiences, newAudience)
@@ -184,6 +186,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllAudience(ctx context.Cont
 				Standard:          m.Standard,
 				CreatedAt:         m.CreatedAt,
 				TotalLikes:        m.TotalLikes,
+				UpdatedAt:         m.UpdatedAt,
 			}
 
 			_, err := r.client.

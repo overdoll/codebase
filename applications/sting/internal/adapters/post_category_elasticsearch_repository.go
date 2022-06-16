@@ -27,7 +27,7 @@ type categoryDocument struct {
 	TotalPosts        int               `json:"total_posts"`
 }
 
-const CategoryIndexName = "categories"
+const CategoryIndexName = "sting.categories"
 
 func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 

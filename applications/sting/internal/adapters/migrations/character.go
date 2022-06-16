@@ -37,6 +37,9 @@ const characterIndexProperties = `
 	"series": {
 		"type": "nested",
 		"properties": ` + seriesIndexProperties + ` 
+	},
+	"updated_at": {
+		"type": "date"
 	}
 }
 `

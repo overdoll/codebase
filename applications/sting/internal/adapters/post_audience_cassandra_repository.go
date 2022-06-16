@@ -27,6 +27,7 @@ var audienceTable = table.New(table.Metadata{
 		"total_likes",
 		"total_posts",
 		"created_at",
+		"updated_at",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -41,6 +42,7 @@ type audience struct {
 	TotalLikes        int               `db:"total_likes"`
 	TotalPosts        int               `db:"total_posts"`
 	CreatedAt         time.Time         `db:"created_at"`
+	UpdatedAt         time.Time         `db:"updated_at"`
 }
 
 var audienceSlugTable = table.New(table.Metadata{
@@ -81,6 +83,7 @@ func marshalAudienceToDatabase(pending *post.Audience) (*audience, error) {
 		TotalLikes:        pending.TotalLikes(),
 		TotalPosts:        pending.TotalPosts(),
 		CreatedAt:         pending.CreatedAt(),
+		UpdatedAt:         pending.UpdatedAt(),
 	}, nil
 }
 
@@ -175,6 +178,7 @@ func (r PostsCassandraElasticsearchRepository) GetAudiencesByIds(ctx context.Con
 			b.TotalLikes,
 			b.TotalPosts,
 			b.CreatedAt,
+			b.UpdatedAt,
 		))
 	}
 
@@ -215,6 +219,7 @@ func (r PostsCassandraElasticsearchRepository) getAudienceById(ctx context.Conte
 		b.TotalLikes,
 		b.TotalPosts,
 		b.CreatedAt,
+		b.UpdatedAt,
 	), nil
 }
 
@@ -254,6 +259,7 @@ func (r PostsCassandraElasticsearchRepository) GetAudiences(ctx context.Context,
 			b.TotalLikes,
 			b.TotalPosts,
 			b.CreatedAt,
+			b.UpdatedAt,
 		))
 	}
 
@@ -385,7 +391,7 @@ func (r PostsCassandraElasticsearchRepository) updateAudience(ctx context.Contex
 
 	if err := r.session.
 		Query(audienceTable.Update(
-			columns...,
+			append(columns, "updated_at")...,
 		)).
 		WithContext(ctx).
 		Idempotent(true).

@@ -1,3 +1,0 @@
-extend type Resource @key(fields: "id")  {
-  id: ID! @external
-}

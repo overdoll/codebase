@@ -28,7 +28,6 @@ go_library(
         "//applications/hades/internal/domain/club",
         "//applications/hades/internal/domain/metrics",
         "//applications/ringer/proto:v1_go_proto",
-        "//applications/stella/proto:v1_go_proto",
         "//libraries/bucket",
         "//libraries/crypt",
         "//libraries/errors",

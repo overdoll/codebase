@@ -61,7 +61,7 @@ func (r *MutationResolver) GrantAccountAccessWithAuthenticationToken(ctx context
 	}
 
 	return &types.GrantAccountAccessWithAuthenticationTokenPayload{
-		Account:                      types.MarshalAccountToGraphQL(acc),
+		Account:                      types.MarshalAccountToGraphQL(ctx, acc),
 		RevokedAuthenticationTokenID: relay.NewID(types.AuthenticationToken{}, input.Token),
 	}, nil
 }
@@ -154,7 +154,7 @@ func (r *MutationResolver) CreateAccountWithAuthenticationToken(ctx context.Cont
 	}
 
 	return &types.CreateAccountWithAuthenticationTokenPayload{
-		Account:                      types.MarshalAccountToGraphQL(acc),
+		Account:                      types.MarshalAccountToGraphQL(ctx, acc),
 		RevokedAuthenticationTokenID: relay.NewID(types.AuthenticationToken{}, input.Token),
 	}, err
 }
@@ -192,7 +192,7 @@ func (r *MutationResolver) GrantAccountAccessWithAuthenticationTokenAndMultiFact
 	}
 
 	return &types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload{
-		Account:                      types.MarshalAccountToGraphQL(acc),
+		Account:                      types.MarshalAccountToGraphQL(ctx, acc),
 		RevokedAuthenticationTokenID: relay.NewID(types.AuthenticationToken{}, input.Token),
 	}, nil
 }
@@ -230,7 +230,7 @@ func (r *MutationResolver) GrantAccountAccessWithAuthenticationTokenAndMultiFact
 	}
 
 	return &types.GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload{
-		Account:                      types.MarshalAccountToGraphQL(acc),
+		Account:                      types.MarshalAccountToGraphQL(ctx, acc),
 		RevokedAuthenticationTokenID: relay.NewID(types.AuthenticationToken{}, input.Token),
 	}, nil
 }

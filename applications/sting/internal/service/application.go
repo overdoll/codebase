@@ -100,9 +100,6 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			ArchivePost:     command.NewArchivePostHandler(postRepo, eventRepo),
 			UnArchivePost:   command.NewUnArchivePostHandler(postRepo, eventRepo),
 
-			AddTerminatedClub:    command.NewAddTerminatedClubHandler(postRepo),
-			RemoveTerminatedClub: command.NewRemoveTerminatedClubHandler(postRepo),
-
 			AddPostContent:                   command.NewAddPostContentHandler(postRepo, loader),
 			RemovePostContent:                command.NewRemovePostContentHandler(postRepo, loader),
 			UpdatePostContentOrder:           command.NewUpdatePostContentOrderHandler(postRepo),
@@ -150,7 +147,6 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			AddClubSupporter:              command.NewAddClubSupporterHandler(eventRepo),
 			RemoveClubSupporter:           command.NewRemoveClubSupporterHandler(eventRepo),
 			DeleteAccountData:             command.NewDeleteAccountDataHandler(eventRepo),
-			NewSupporterPost:              command.NewNewSupporterPostHandler(eventRepo),
 
 			TerminateClub:   command.NewTerminateClubHandler(clubRepo, eventRepo),
 			UnTerminateClub: command.NewUnTerminateClubHandler(clubRepo, eventRepo),

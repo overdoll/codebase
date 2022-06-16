@@ -10,19 +10,17 @@ type Activities struct {
 	ar      account.Repository
 	sr      session.Repository
 	hades   command.HadesService
-	stella  command.StellaService
 	sting   command.StingService
 	parley  command.ParleyService
 	ringer  command.RingerService
 	carrier command.CarrierService
 }
 
-func NewActivitiesHandler(ar account.Repository, sr session.Repository, hades command.HadesService, stella command.StellaService, sting command.StingService, parley command.ParleyService, ringer command.RingerService, carrier command.CarrierService) *Activities {
+func NewActivitiesHandler(ar account.Repository, sr session.Repository, hades command.HadesService, sting command.StingService, parley command.ParleyService, ringer command.RingerService, carrier command.CarrierService) *Activities {
 	return &Activities{
 		ar:      ar,
 		sr:      sr,
 		hades:   hades,
-		stella:  stella,
 		sting:   sting,
 		parley:  parley,
 		ringer:  ringer,

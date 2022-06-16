@@ -29,6 +29,7 @@ var characterTable = table.New(table.Metadata{
 		"total_likes",
 		"total_posts",
 		"created_at",
+		"updated_at",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -43,6 +44,7 @@ type character struct {
 	TotalLikes        int               `db:"total_likes"`
 	TotalPosts        int               `db:"total_posts"`
 	CreatedAt         time.Time         `db:"created_at"`
+	UpdatedAt         time.Time         `db:"updated_at"`
 }
 
 var charactersSlugTable = table.New(table.Metadata{
@@ -79,6 +81,7 @@ func marshalCharacterToDatabase(pending *post.Character) (*character, error) {
 		TotalPosts:        pending.TotalPosts(),
 		SeriesId:          pending.Series().ID(),
 		CreatedAt:         pending.CreatedAt(),
+		UpdatedAt:         pending.UpdatedAt(),
 	}, nil
 }
 
@@ -227,6 +230,7 @@ func (r PostsCassandraElasticsearchRepository) GetCharactersByIds(ctx context.Co
 			char.TotalLikes,
 			char.TotalPosts,
 			char.CreatedAt,
+			char.UpdatedAt,
 			post.UnmarshalSeriesFromDatabase(
 				serial.Id,
 				serial.Slug,
@@ -235,6 +239,7 @@ func (r PostsCassandraElasticsearchRepository) GetCharactersByIds(ctx context.Co
 				serial.TotalLikes,
 				serial.TotalPosts,
 				serial.CreatedAt,
+				serial.UpdatedAt,
 			),
 		))
 	}
@@ -366,7 +371,7 @@ func (r PostsCassandraElasticsearchRepository) updateCharacter(ctx context.Conte
 
 	if err := r.session.
 		Query(characterTable.Update(
-			columns...,
+			append(columns, "updated_at")...,
 		)).
 		WithContext(ctx).
 		Idempotent(true).
@@ -422,6 +427,7 @@ func (r PostsCassandraElasticsearchRepository) getCharacterById(ctx context.Cont
 		char.TotalLikes,
 		char.TotalPosts,
 		char.CreatedAt,
+		char.UpdatedAt,
 		media,
 	), nil
 }

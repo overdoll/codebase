@@ -27,6 +27,7 @@ var seriesTable = table.New(table.Metadata{
 		"total_likes",
 		"total_posts",
 		"created_at",
+		"updated_at",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -40,6 +41,7 @@ type series struct {
 	TotalLikes        int               `db:"total_likes"`
 	TotalPosts        int               `db:"total_posts"`
 	CreatedAt         time.Time         `db:"created_at"`
+	UpdatedAt         time.Time         `db:"updated_at"`
 }
 
 var seriesSlugTable = table.New(table.Metadata{
@@ -73,6 +75,7 @@ func marshalSeriesToDatabase(pending *post.Series) (*series, error) {
 		TotalLikes:        pending.TotalLikes(),
 		TotalPosts:        pending.TotalPosts(),
 		CreatedAt:         pending.CreatedAt(),
+		UpdatedAt:         pending.UpdatedAt(),
 	}, nil
 }
 
@@ -176,6 +179,7 @@ func (r PostsCassandraElasticsearchRepository) getSingleSeriesById(ctx context.C
 		med.TotalLikes,
 		med.TotalPosts,
 		med.CreatedAt,
+		med.UpdatedAt,
 	), nil
 }
 
@@ -217,6 +221,7 @@ func (r PostsCassandraElasticsearchRepository) GetSeriesByIds(ctx context.Contex
 			med.TotalLikes,
 			med.TotalPosts,
 			med.CreatedAt,
+			med.UpdatedAt,
 		))
 	}
 
@@ -341,7 +346,7 @@ func (r PostsCassandraElasticsearchRepository) updateSeries(ctx context.Context,
 
 	if err := r.session.
 		Query(seriesTable.Update(
-			columns...,
+			append(columns, "updated_at")...,
 		)).
 		WithContext(ctx).
 		Idempotent(true).

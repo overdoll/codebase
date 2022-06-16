@@ -46,7 +46,6 @@ go_test(
         "//applications/ringer/internal/ports",
         "//applications/ringer/internal/ports/graphql/types",
         "//applications/ringer/proto:v1_go_proto",
-        "//applications/stella/proto:v1_go_proto",
         "//libraries/bootstrap",
         "//libraries/config",
         "//libraries/graphql",

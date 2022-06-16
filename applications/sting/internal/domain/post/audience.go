@@ -30,6 +30,7 @@ type Audience struct {
 	standard bool
 
 	createdAt time.Time
+	updatedAt time.Time
 }
 
 func NewAudience(requester *principal.Principal, slug, title string, standard bool) (*Audience, error) {
@@ -65,6 +66,7 @@ func NewAudience(requester *principal.Principal, slug, title string, standard bo
 		totalPosts:        0,
 		standard:          standard,
 		createdAt:         time.Now(),
+		updatedAt:         time.Now(),
 	}, nil
 }
 
@@ -99,6 +101,10 @@ func (m *Audience) IsStandard() bool {
 
 func (m *Audience) CreatedAt() time.Time {
 	return m.createdAt
+}
+
+func (m *Audience) UpdatedAt() time.Time {
+	return m.updatedAt
 }
 
 func (m *Audience) UpdateTotalPosts(totalPosts int) error {
@@ -174,7 +180,7 @@ func (m *Audience) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalAudienceFromDatabase(id, slug string, title map[string]string, thumbnail *resource.Resource, standard int, totalLikes, totalPosts int, createdAt time.Time) *Audience {
+func UnmarshalAudienceFromDatabase(id, slug string, title map[string]string, thumbnail *resource.Resource, standard int, totalLikes, totalPosts int, createdAt, updatedAt time.Time) *Audience {
 	return &Audience{
 		id:                id,
 		slug:              slug,
@@ -184,6 +190,7 @@ func UnmarshalAudienceFromDatabase(id, slug string, title map[string]string, thu
 		thumbnailResource: thumbnail,
 		standard:          standard == 1,
 		createdAt:         createdAt,
+		updatedAt:         updatedAt,
 	}
 }
 

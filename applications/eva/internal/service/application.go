@@ -22,7 +22,6 @@ func NewApplication(ctx context.Context) (*app.Application, func()) {
 
 	carrierClient, cleanup := clients.NewCarrierClient(ctx, os.Getenv("CARRIER_SERVICE"))
 	hadesClient, cleanup2 := clients.NewHadesClient(ctx, os.Getenv("HADES_SERVICE"))
-	stellaClient, cleanup3 := clients.NewStellaClient(ctx, os.Getenv("STELLA_SERVICE"))
 	parleyClient, cleanup4 := clients.NewParleyClient(ctx, os.Getenv("PARLEY_SERVICE"))
 	stingClient, cleanup5 := clients.NewStingClient(ctx, os.Getenv("STING_SERVICE"))
 	ringerClient, cleanup6 := clients.NewRingerClient(ctx, os.Getenv("RINGER_SERVICE"))
@@ -31,7 +30,6 @@ func NewApplication(ctx context.Context) (*app.Application, func()) {
 			ctx,
 			adapters.NewCarrierGrpc(carrierClient),
 			adapters.NewHadesGrpc(hadesClient),
-			adapters.NewStellaGrpc(stellaClient),
 			adapters.NewRingerGrpc(ringerClient),
 			adapters.NewParleyGrpc(parleyClient),
 			adapters.NewStingGrpc(stingClient),
@@ -40,7 +38,6 @@ func NewApplication(ctx context.Context) (*app.Application, func()) {
 		func() {
 			cleanup()
 			cleanup2()
-			cleanup3()
 			cleanup4()
 			cleanup5()
 			cleanup6()
@@ -52,7 +49,6 @@ type ComponentTestApplication struct {
 	TemporalClient *temporalmocks.Client
 	CarrierClient  *mocks.MockCarrierClient
 	HadesClient    *mocks.MockHadesClient
-	StellaClient   *mocks.MockStellaClient
 	RingerClient   *mocks.MockRingerClient
 	ParleyClient   *mocks.MockParleyClient
 	StingClient    *mocks.MockStingClient
@@ -64,7 +60,6 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 
 	carrierClient := &mocks.MockCarrierClient{}
 	hadesClient := &mocks.MockHadesClient{}
-	stellaClient := &mocks.MockStellaClient{}
 	ringerClient := &mocks.MockRingerClient{}
 	parleyClient := &mocks.MockParleyClient{}
 	stingClient := &mocks.MockStingClient{}
@@ -74,7 +69,6 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 			ctx,
 			adapters.NewCarrierGrpc(carrierClient),
 			adapters.NewHadesGrpc(hadesClient),
-			adapters.NewStellaGrpc(stellaClient),
 			adapters.NewRingerGrpc(ringerClient),
 			adapters.NewParleyGrpc(parleyClient),
 			adapters.NewStingGrpc(stingClient),
@@ -83,7 +77,6 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 		TemporalClient: temporalClient,
 		CarrierClient:  carrierClient,
 		HadesClient:    hadesClient,
-		StellaClient:   stellaClient,
 		RingerClient:   ringerClient,
 		ParleyClient:   parleyClient,
 		StingClient:    stingClient,
@@ -94,7 +87,6 @@ func createApplication(
 	ctx context.Context,
 	carrier command.CarrierService,
 	hades command.HadesService,
-	stella command.StellaService,
 	ringer command.RingerService,
 	parley command.ParleyService,
 	sting command.StingService,
@@ -152,7 +144,7 @@ func createApplication(
 			RevokeAccountSessionOperator: command.NewRevokeAccountSessionOperatorHandler(sessionRepo),
 
 			CancelAccountDeletion: command.NewCancelAccountDeletionHandler(accountRepo, eventRepo),
-			DeleteAccount:         command.NewDeleteAccountHandler(accountRepo, eventRepo, hades, stella),
+			DeleteAccount:         command.NewDeleteAccountHandler(accountRepo, eventRepo, hades, sting),
 		},
 		Queries: app.Queries{
 			AccountById:            query.NewAccountByIdHandler(accountRepo),
@@ -176,7 +168,6 @@ func createApplication(
 			accountRepo,
 			sessionRepo,
 			hades,
-			stella,
 			sting,
 			parley,
 			ringer,

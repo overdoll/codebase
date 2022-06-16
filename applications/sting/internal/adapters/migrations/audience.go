@@ -36,6 +36,9 @@ const audienceIndexProperties = `
 	"title": ` + localization.ESIndex + `
 	"created_at": {
 		"type": "date"
+	},
+	"updated_at": {
+		"type": "date"
 	}
 }
 `

@@ -7,10 +7,10 @@ import (
 
 type PrincipalByIdHandler struct {
 	eva    EvaService
-	stella StellaService
+	stella StingService
 }
 
-func NewPrincipalByIdHandler(eva EvaService, stella StellaService) PrincipalByIdHandler {
+func NewPrincipalByIdHandler(eva EvaService, stella StingService) PrincipalByIdHandler {
 	return PrincipalByIdHandler{eva: eva, stella: stella}
 }
 

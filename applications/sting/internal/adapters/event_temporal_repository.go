@@ -391,22 +391,6 @@ func (r EventTemporalRepository) UnSuspendClub(ctx context.Context, requester *p
 	return nil
 }
 
-func (r EventTemporalRepository) NewSupporterPost(ctx context.Context, clubId string) error {
-
-	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "sting.NewSupporterPost_" + clubId,
-	}
-
-	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.NewSupporterPost, workflows.NewSupporterPostInput{
-		ClubId: clubId,
-	}); err != nil {
-		return errors.Wrap(err, "failed to execute NewSupporterPost workflow")
-	}
-
-	return nil
-}
-
 func (r EventTemporalRepository) TerminateClub(ctx context.Context, requester *principal.Principal, clb *club.Club) error {
 
 	if err := clb.CanTerminate(requester); err != nil {

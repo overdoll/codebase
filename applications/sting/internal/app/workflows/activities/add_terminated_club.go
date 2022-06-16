@@ -10,7 +10,9 @@ type AddTerminatedClubInput struct {
 
 func (h *Activities) AddTerminatedClub(ctx context.Context, input AddTerminatedClubInput) error {
 
-	// TODO: add terminated club
+	if err := h.pr.AddTerminatedClub(ctx, input.ClubId); err != nil {
+		return err
+	}
 
 	return nil
 }

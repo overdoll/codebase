@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"time"
 
@@ -20,7 +21,7 @@ type clubDocument struct {
 	Id                          string            `json:"id"`
 	Slug                        string            `json:"slug"`
 	SlugAliases                 []string          `json:"slug_aliases"`
-	ThumbnailResourceId         *string           `json:"thumbnail_resource_id"`
+	ThumbnailResource           string            `json:"thumbnail_resource"`
 	Name                        map[string]string `json:"name"`
 	CreatedAt                   time.Time         `json:"created_at"`
 	MembersCount                int               `json:"members_count"`
@@ -31,31 +32,47 @@ type clubDocument struct {
 	HasCreatedSupporterOnlyPost bool              `json:"has_created_supporter_only_post"`
 	Terminated                  bool              `json:"terminated"`
 	TerminatedByAccountId       *string           `json:"terminated_by_account_id"`
+	UpdatedAt                   time.Time         `json:"updated_at"`
 }
 
-const ClubsIndexName = "clubs"
+const ClubsIndexName = "sting.clubs"
 
-func marshalClubToDocument(cat *club.Club) *clubDocument {
+func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
+
+	marshalled, err := resource.MarshalResourceToDatabase(cat.ThumbnailResource())
+
+	if err != nil {
+		return nil, err
+	}
 
 	return &clubDocument{
-		Id:                  cat.ID(),
-		Slug:                cat.Slug(),
-		SlugAliases:         cat.SlugAliases(),
-		ThumbnailResourceId: cat.ThumbnailResource(),
-		Name:                localization.MarshalTranslationToDatabase(cat.Name()),
-		CreatedAt:           cat.CreatedAt(),
-		MembersCount:        cat.MembersCount(),
-		OwnerAccountId:      cat.OwnerAccountId(),
-		Suspended:           cat.Suspended(),
-		SuspendedUntil:      cat.SuspendedUntil(),
-	}
+		Id:                          cat.ID(),
+		Slug:                        cat.Slug(),
+		SlugAliases:                 cat.SlugAliases(),
+		ThumbnailResource:           marshalled,
+		Name:                        localization.MarshalTranslationToDatabase(cat.Name()),
+		CreatedAt:                   cat.CreatedAt(),
+		UpdatedAt:                   cat.UpdatedAt(),
+		MembersCount:                cat.MembersCount(),
+		OwnerAccountId:              cat.OwnerAccountId(),
+		Suspended:                   cat.Suspended(),
+		SuspendedUntil:              cat.SuspendedUntil(),
+		NextSupporterPostTime:       cat.NextSupporterPostTime(),
+		HasCreatedSupporterOnlyPost: cat.HasCreatedSupporterOnlyPost(),
+		Terminated:                  cat.Terminated(),
+		TerminatedByAccountId:       cat.TerminatedByAccountId(),
+	}, nil
 }
 
 func (r ClubCassandraElasticsearchRepository) indexClub(ctx context.Context, club *club.Club) error {
 
-	clb := marshalClubToDocument(club)
+	clb, err := marshalClubToDocument(club)
 
-	_, err := r.client.
+	if err != nil {
+		return err
+	}
+
+	_, err = r.client.
 		Index().
 		Index(ClubsIndexName).
 		Id(clb.Id).
@@ -150,12 +167,18 @@ func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, r
 			return nil, errors.Wrap(err, "failed search clubs - unmarshal")
 		}
 
+		unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, bd.ThumbnailResource)
+
+		if err != nil {
+			return nil, err
+		}
+
 		newBrand := club.UnmarshalClubFromDatabase(
 			bd.Id,
 			bd.Slug,
 			bd.SlugAliases,
 			bd.Name,
-			bd.ThumbnailResourceId,
+			unmarshalled,
 			bd.MembersCount,
 			bd.OwnerAccountId,
 			bd.Suspended,
@@ -165,6 +188,7 @@ func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, r
 			bd.Terminated,
 			bd.TerminatedByAccountId,
 			bd.CreatedAt,
+			bd.UpdatedAt,
 		)
 		newBrand.Node = paging.NewNode(hit.Sort)
 
@@ -194,7 +218,7 @@ func (r ClubCassandraElasticsearchRepository) IndexAllClubs(ctx context.Context)
 				Id:                          m.Id,
 				Slug:                        m.Slug,
 				SlugAliases:                 m.SlugAliases,
-				ThumbnailResourceId:         m.ThumbnailResourceId,
+				ThumbnailResource:           m.ThumbnailResource,
 				Name:                        m.Name,
 				OwnerAccountId:              m.OwnerAccountId,
 				CreatedAt:                   m.CreatedAt,
@@ -205,6 +229,7 @@ func (r ClubCassandraElasticsearchRepository) IndexAllClubs(ctx context.Context)
 				NextSupporterPostTime:       m.NextSupporterPostTime,
 				Terminated:                  m.Terminated,
 				TerminatedByAccountId:       m.TerminatedByAccountId,
+				UpdatedAt:                   m.UpdatedAt,
 			}
 
 			_, err := r.client.

@@ -13,8 +13,7 @@ import (
 )
 
 var (
-	ErrNotDraft           = domainerror.NewValidation("post must be in draft")
-	ErrResourceNotPresent = domainerror.NewValidation("resource is not present")
+	ErrNotDraft = domainerror.NewValidation("post must be in draft")
 )
 
 type Post struct {
@@ -39,6 +38,7 @@ type Post struct {
 	content []*Content
 
 	createdAt time.Time
+	updatedAt time.Time
 	postedAt  *time.Time
 
 	likes int
@@ -51,21 +51,22 @@ func NewPost(requester *principal.Principal, club *club.Club) (*Post, error) {
 		return nil, principal.ErrLocked
 	}
 
-	if err := requester.CheckClubOwner(club.Id()); err != nil {
+	if err := requester.CheckClubOwner(club.ID()); err != nil {
 		return nil, err
 	}
 
 	return &Post{
 		id:                  id.String(),
-		clubId:              club.Id(),
+		clubId:              club.ID(),
 		state:               Draft,
 		supporterOnlyStatus: None,
 		contributorId:       requester.AccountId(),
 		createdAt:           time.Now(),
+		updatedAt:           time.Now(),
 	}, nil
 }
 
-func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int, contributorId string, contentResourceIds []string, contentResources []*resource.Resource, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt time.Time, postedAt *time.Time) *Post {
+func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int, contributorId string, contentResourceIds []string, contentResources []*resource.Resource, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt, updatedAt time.Time, postedAt *time.Time) *Post {
 
 	ps, _ := StateFromString(state)
 	so, _ := SupporterOnlyStatusFromString(supporterOnlyStatus)
@@ -119,6 +120,7 @@ func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int,
 		seriesIds:           seriesIds,
 		categoryIds:         categoryIds,
 		createdAt:           createdAt,
+		updatedAt:           updatedAt,
 		postedAt:            postedAt,
 	}
 }
@@ -173,6 +175,14 @@ func (p *Post) CreatedAt() time.Time {
 
 func (p *Post) PostedAt() *time.Time {
 	return p.postedAt
+}
+
+func (p *Post) UpdatedAt() time.Time {
+	return p.updatedAt
+}
+
+func (p *Post) update() {
+	p.updatedAt = time.Now()
 }
 
 func (p *Post) MakePublish() error {
@@ -258,6 +268,7 @@ func (p *Post) MakeArchived() error {
 
 func (p *Post) UpdatePostPostedDate(date time.Time) error {
 	p.postedAt = &date
+	p.update()
 	return nil
 }
 
@@ -276,6 +287,8 @@ func (p *Post) SubmitPostRequest(requester *principal.Principal) error {
 	if p.state != Draft {
 		return ErrNotDraft
 	}
+
+	p.update()
 
 	return nil
 }
@@ -304,6 +317,9 @@ func (p *Post) UpdateAudienceRequest(requester *principal.Principal, audience *A
 	}
 	id := audience.ID()
 	p.audienceId = &id
+
+	p.update()
+
 	return nil
 }
 
@@ -324,6 +340,8 @@ func (p *Post) updatePostSupporterOnlyStatus() {
 	} else {
 		p.supporterOnlyStatus = Partial
 	}
+
+	p.update()
 }
 
 func (p *Post) AddContentRequest(requester *principal.Principal, resources []*resource.Resource) error {
@@ -366,8 +384,10 @@ func (p *Post) UpdateContentExisting(resources []*resource.Resource) error {
 
 	// make sure we updated all resources for this post otherwise we send a not found error
 	if foundCount != len(resources) {
-		return ErrResourceNotPresent
+		return resource.ErrResourceNotPresent
 	}
+
+	p.update()
 
 	return nil
 }
@@ -402,6 +422,8 @@ func (p *Post) UpdateContentOrderRequest(requester *principal.Principal, content
 	}
 
 	p.content = reorderedContent
+
+	p.update()
 
 	return nil
 }
@@ -467,6 +489,9 @@ func (p *Post) RemoveContentRequest(requester *principal.Principal, contentIds [
 
 	p.content = actualContent
 	p.updatePostSupporterOnlyStatus()
+
+	p.update()
+
 	return nil
 }
 
@@ -490,6 +515,9 @@ func (p *Post) UpdateCharactersRequest(requester *principal.Principal, character
 	}
 
 	p.characterIds = characterIds
+
+	p.update()
+
 	return nil
 }
 
@@ -506,6 +534,9 @@ func (p *Post) UpdateCategoriesRequest(requester *principal.Principal, categorie
 	}
 
 	p.categoryIds = categoryIds
+
+	p.update()
+
 	return nil
 }
 
@@ -619,11 +650,11 @@ func (p *Post) CanView(suspendedClubIds []string, requester *principal.Principal
 
 func validateExistingThumbnail(current *resource.Resource, new *resource.Resource) error {
 	if current == nil {
-		return ErrResourceNotPresent
+		return resource.ErrResourceNotPresent
 	}
 
 	if current.ID() != new.ID() {
-		return ErrResourceNotPresent
+		return resource.ErrResourceNotPresent
 	}
 
 	return nil

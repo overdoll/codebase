@@ -10,7 +10,9 @@ type RemoveTerminatedClubInput struct {
 
 func (h *Activities) RemoveTerminatedClub(ctx context.Context, input RemoveTerminatedClubInput) error {
 
-	// TODO: remove terminated club
+	if err := h.pr.RemoveTerminatedClub(ctx, input.ClubId); err != nil {
+		return err
+	}
 
 	return nil
 }

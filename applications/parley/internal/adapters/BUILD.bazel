@@ -24,7 +24,6 @@ go_library(
         "//applications/parley/internal/domain/post_audit_log",
         "//applications/parley/internal/domain/report",
         "//applications/parley/internal/domain/rule",
-        "//applications/stella/proto:v1_go_proto",
         "//applications/sting/proto:v1_go_proto",
         "//libraries/bucket",
         "//libraries/errors",

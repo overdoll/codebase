@@ -24,7 +24,7 @@ type clubMembersDocument struct {
 	SupporterSince  *time.Time `json:"supporter_since"`
 }
 
-const ClubMembersIndexName = "club_members"
+const ClubMembersIndexName = "sting.club_members"
 
 func marshalClubMemberToDocument(cat *club.Member) *clubMembersDocument {
 	return &clubMembersDocument{
