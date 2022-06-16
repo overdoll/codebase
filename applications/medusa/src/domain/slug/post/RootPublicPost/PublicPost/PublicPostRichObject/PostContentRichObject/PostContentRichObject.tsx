@@ -28,7 +28,11 @@ export default function PostContentRichObject ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const content = data.content[0]
+  const content = data?.content?.[0]
+
+  if (content == null) {
+    return <></>
+  }
 
   return (
     <Head>

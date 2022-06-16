@@ -24,7 +24,7 @@ const ServerError: PageProps<{}> = (): JSX.Element => {
           />
           <Box>
             <Heading
-              fontSize='lg'
+              fontSize='xl'
               textAlign='center'
               color='gray.00'
             >
@@ -35,7 +35,7 @@ const ServerError: PageProps<{}> = (): JSX.Element => {
             <Text
               fontSize='md'
               textAlign='center'
-              color='gray.00'
+              color='gray.100'
             >
               <Trans>
                 It looks like we're experiencing some server issues. Our best people are on it and we should be back
@@ -44,7 +44,7 @@ const ServerError: PageProps<{}> = (): JSX.Element => {
             </Text>
           </Box>
           <Text
-            fontSize='md'
+            fontSize='sm'
             textAlign='center'
             color='gray.200'
           >

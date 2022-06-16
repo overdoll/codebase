@@ -30,7 +30,7 @@ export default function PublicClubRichObject ({
 
   const ogTitle = `${data.name} on overdoll - overdoll.com/${data.slug}`
 
-  const ogUrl = `/${data.slug}`
+  const ogUrl = `https://overdoll.com/${data.slug}`
 
   return (
     <>

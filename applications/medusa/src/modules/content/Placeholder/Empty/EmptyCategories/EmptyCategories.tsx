@@ -1,11 +1,15 @@
 import { Trans } from '@lingui/react'
 import EmptyBackground, { HintProp } from '../EmptyBackground/EmptyBackground'
+import { CategoryIdentifier } from '@//:assets/icons'
 
 export default function EmptyCategories ({ hint }: HintProp): JSX.Element {
   const emptyMessage = (
-    <Trans values={{}} components={{}} id='message.placeholder.empty.categories.one'>No categories
-      were found
-    </Trans>
+    <Trans
+      id='message.placeholder.empty.categories.one'
+      message='No categories were found'
+      values={{}}
+      components={{}}
+    />
   )
 
   const fullMessage = (
@@ -18,7 +22,7 @@ export default function EmptyCategories ({ hint }: HintProp): JSX.Element {
   )
 
   return (
-    <EmptyBackground>
+    <EmptyBackground icon={CategoryIdentifier}>
       {hint == null ? emptyMessage : fullMessage}
     </EmptyBackground>
   )

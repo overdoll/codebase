@@ -1,6 +1,5 @@
 import { Suspense } from 'react'
 import SkeletonStack from '@//:modules/content/Placeholder/Loading/SkeletonStack/SkeletonStack'
-import MultiFactorTotpSetup from './MultiFactorTotpHeader/MultiFactorTotpHeader'
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import type {
   MultiFactorTotpHeaderQuery as MultiFactorTotpHeaderQueryType
@@ -12,6 +11,7 @@ import { Trans } from '@lingui/macro'
 import BackButton from '@//:modules/content/PageLayout/BuildingBlocks/BackButton/BackButton'
 import Head from 'next/head'
 import { PageProps } from '@//:types/app'
+import MultiFactorTotpHeader from './MultiFactorTotpHeader/MultiFactorTotpHeader'
 
 interface Props {
   queryRefs: {
@@ -52,7 +52,7 @@ const RootMultiFactorTotpSetup: PageProps<Props> = (props: Props) => {
         </PageSectionWrap>
         <QueryErrorBoundary loadQuery={() => loadQuery({})}>
           <Suspense fallback={<SkeletonStack />}>
-            <MultiFactorTotpSetup query={queryRef as PreloadedQuery<MultiFactorTotpHeaderQueryType>} />
+            <MultiFactorTotpHeader query={queryRef as PreloadedQuery<MultiFactorTotpHeaderQueryType>} />
           </Suspense>
         </QueryErrorBoundary>
       </PageWrapper>

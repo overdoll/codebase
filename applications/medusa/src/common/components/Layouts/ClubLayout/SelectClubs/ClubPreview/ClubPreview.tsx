@@ -47,6 +47,7 @@ export default function ClubPreview ({
           {data.name}
         </Heading>
         <Text
+          fontFamily='mono'
           color='gray.200'
           fontSize='sm'
         >

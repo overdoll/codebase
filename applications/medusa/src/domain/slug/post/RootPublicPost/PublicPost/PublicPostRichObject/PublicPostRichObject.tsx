@@ -36,7 +36,7 @@ export default function PublicPostRichObject ({
 
   const ogTitle = `${getCharacterNames()} by ${data.club.name} - overdoll.com/${data.club.slug}`
 
-  const ogUrl = `/${data.club.slug}/post/${data.reference}`
+  const ogUrl = `https://overdoll.com/${data.club.slug}/post/${data.reference}`
 
   return (
     <>
@@ -47,7 +47,6 @@ export default function PublicPostRichObject ({
         <meta property='og:title' content={`Post by ${data.club.name} on overdoll.com/${data.club.slug}`} />
         <meta property='og:description' content={`${getCharacterNames()} posted by ${data.club.name}`} />
         <meta property='og:url' content={ogUrl} />
-
       </Head>
       <PostContentRichObject query={data} />
     </>

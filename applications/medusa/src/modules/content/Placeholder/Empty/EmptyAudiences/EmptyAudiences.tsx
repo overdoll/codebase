@@ -1,9 +1,15 @@
 import { Trans } from '@lingui/react'
 import EmptyBackground, { HintProp } from '../EmptyBackground/EmptyBackground'
+import { UserHuman } from '@//:assets/icons'
 
 export default function EmptyAudiences ({ hint }: HintProp): JSX.Element {
   const emptyMessage = (
-    <Trans values={{}} components={{}} id='message.placeholder.empty.audiences.one'>No audiences were found</Trans>
+    <Trans
+      id='message.placeholder.empty.audiences.one'
+      message='No audiences were found'
+      values={{}}
+      components={{}}
+    />
   )
 
   const fullMessage = (
@@ -16,7 +22,7 @@ export default function EmptyAudiences ({ hint }: HintProp): JSX.Element {
   )
 
   return (
-    <EmptyBackground>
+    <EmptyBackground icon={UserHuman}>
       {hint == null ? emptyMessage : fullMessage}
     </EmptyBackground>
   )

@@ -1,4 +1,4 @@
-import { Flex, Skeleton, Stack, Text } from '@chakra-ui/react'
+import { Box, Flex, Heading, Skeleton, Stack } from '@chakra-ui/react'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { Fragment as ReactFragment, useEffect, useState } from 'react'
 import { graphql, usePaginationFragment } from 'react-relay'
@@ -10,7 +10,7 @@ import PostPreview from './PostPreview/PostPreview'
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { usePreloadedQuery } from 'react-relay/hooks'
 import type { PostModerationQueueQuery } from '@//:artifacts/PostModerationQueueQuery.graphql'
-import { LargeBackgroundBox, PostPlaceholder, SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import { PostPlaceholder, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import IconButton from '@//:modules/form/IconButton/IconButton'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 import { useLingui } from '@lingui/react'
@@ -141,7 +141,7 @@ export default function PostModerationQueue (props: Props): JSX.Element {
 
   // Show the posts queue for the user
   return (
-    <Stack spacing={2}>
+    <Stack spacing={6}>
       <Flex>
         {currentIndex !== 0 &&
           <IconButton
@@ -155,12 +155,12 @@ export default function PostModerationQueue (props: Props): JSX.Element {
             onClick={previousPage}
           />}
         <SmallBackgroundBox align='center' justify='center' w='100%'>
-          <Text
-            color='gray.300'
+          <Heading
+            color='gray.200'
             fontSize='md'
           >
             <Trans>Posted on {formattedDate}</Trans>
-          </Text>
+          </Heading>
         </SmallBackgroundBox>
         {(currentIndex + 1 !== data.postModeratorQueue?.edges.length || hasNext) &&
           <IconButton
@@ -180,20 +180,29 @@ export default function PostModerationQueue (props: Props): JSX.Element {
           return <ReactFragment key={index} />
         }
         return (
-          <LargeBackgroundBox
-            key={index}
-            position='relative'
-          >
-            <PostPreview query={item.node.post} />
-            <PostTagsPreview query={item.node.post} />
-            <Flex justify='flex-end' mt={4}>
-              <ModeratePost
-                connectionID={postsConnection}
-                infractions={queryData}
-                postID={item.node.post}
-              />
-            </Flex>
-          </LargeBackgroundBox>
+          <ReactFragment key={index}>
+            <Box
+              key={index}
+              position='relative'
+            >
+              <PostPreview query={item.node.post} />
+              <PostTagsPreview query={item.node.post} />
+            </Box>
+            <SmallBackgroundBox>
+              <Flex align='center' justify='space-between'>
+                <Heading color='gray.200' fontSize='lg'>
+                  <Trans>
+                    Your Decision
+                  </Trans>
+                </Heading>
+                <ModeratePost
+                  connectionID={postsConnection}
+                  infractions={queryData}
+                  postID={item.node.post}
+                />
+              </Flex>
+            </SmallBackgroundBox>
+          </ReactFragment>
         )
       })}
     </Stack>

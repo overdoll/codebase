@@ -1,12 +1,12 @@
 import { Trans } from '@lingui/macro'
 import EmptyBackground from '../EmptyBackground/EmptyBackground'
-import { PayoutMethod } from '@//:assets/icons'
+import { FileMultiple } from '@//:assets/icons'
 
 export default function EmptyPayouts (): JSX.Element {
   return (
-    <EmptyBackground icon={PayoutMethod}>
+    <EmptyBackground icon={FileMultiple}>
       <Trans>
-        No payouts were found
+        No posts were found
       </Trans>
     </EmptyBackground>
   )

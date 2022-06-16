@@ -8,6 +8,7 @@ import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import { GridTile, LinkTile } from '@//:modules/content/ContentSelection'
 import { UrlObject } from 'url'
+import { EmptyPosts } from '@//:modules/content/Placeholder'
 
 interface Props {
   query: PostsHorizontalPreviewFragment$key | null
@@ -38,11 +39,7 @@ export default function PostsHorizontalPreview ({
 
   if (((data?.edges) != null) && data?.edges.length < 1) {
     return (
-      <SmallBackgroundBox>
-        <Trans>
-          No posts found
-        </Trans>
-      </SmallBackgroundBox>
+      <EmptyPosts />
     )
   }
 

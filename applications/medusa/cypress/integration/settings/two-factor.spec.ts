@@ -76,8 +76,7 @@ describe('Recovery Codes and Two-Factor', () => {
         isOnStep('activate')
         cy.get('form').findByPlaceholderText('123456').type(token as string)
         clickOnButton(/Activate/iu)
-        cy.findByText(/Two-factor setup complete/iu).should('exist')
-        clickOnButton('Complete')
+        cy.findByText('Two-Factor Setup Complete').should('exist')
       })
     })
 

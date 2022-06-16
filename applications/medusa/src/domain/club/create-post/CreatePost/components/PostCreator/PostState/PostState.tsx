@@ -1,11 +1,11 @@
 import { graphql, useFragment } from 'react-relay/hooks'
-import { Box, Heading, Link, Stack, Text } from '@chakra-ui/react'
+import { Box, Heading, HStack, Link, Stack, Text } from '@chakra-ui/react'
 import UpdatePostFlow from './UpdatePostFlow/UpdatePostFlow'
 import Button from '@//:modules/form/Button/Button'
 import { PostPlaceholder } from '@//:modules/content/PageLayout'
 import CreatePostFlow from './CreatePostFlow/CreatePostFlow'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
-import { PauseCircle } from '@//:assets/icons/interface'
+import { CheckCircle, DeleteCircle, PauseCircle } from '@//:assets/icons/interface'
 import type { PostStateFragment$key } from '@//:artifacts/PostStateFragment.graphql'
 import type { PostStateClubFragment$key } from '@//:artifacts/PostStateClubFragment.graphql'
 import { Trans } from '@lingui/macro'
@@ -63,18 +63,40 @@ export default function PostState ({
         <ClubInformationBanner query={clubData} />
         <Stack spacing={4}>
           <CreatePostFlow clubId={clubData.id} />
-          <Box>
-            <Heading color='gray.00' fontSize='xl'>
+          <Stack spacing={2}>
+            <Heading color='gray.00' fontSize='2xl'>
               <Trans>
                 As a reminder of the guidelines
               </Trans>
             </Heading>
-            <Box ml={4}>
-              <Text><Trans>All characters must be of legal age</Trans></Text>
-              <Text><Trans>You own the rights to the content you upload</Trans></Text>
-              <Text><Trans>Nothing extremely offensive, shocking, or illegal</Trans></Text>
-            </Box>
-          </Box>
+            <Stack spacing={2}>
+              <HStack align='center' spacing={3}>
+                <Icon flexShrink={0} icon={CheckCircle} fill='gray.100' w={3} h={3} />
+                <Heading fontSize='md' color='gray.100'>
+                  <Trans>
+                    All characters must be depicted as 18 or older
+                  </Trans>
+                </Heading>
+              </HStack>
+              <HStack align='center' spacing={3}>
+                <Icon flexShrink={0} icon={DeleteCircle} fill='gray.100' w={3} h={3} />
+                <Heading fontSize='md' color='gray.100'>
+                  <Trans>
+                    Cannot contain themes of incest, non-consensual sexual behaviour, non-consensual mutilation,
+                    or bestiality
+                  </Trans>
+                </Heading>
+              </HStack>
+              <HStack align='center' spacing={3}>
+                <Icon flexShrink={0} icon={DeleteCircle} fill='gray.100' w={3} h={3} />
+                <Heading fontSize='md' color='gray.100'>
+                  <Trans>
+                    Nothing extremely offensive, shocking, or illegal
+                  </Trans>
+                </Heading>
+              </HStack>
+            </Stack>
+          </Stack>
           <Box>
             <Text fontSize='md' color='gray.100'>
               <Trans>Upstanding netizens will read the{' '}
@@ -85,7 +107,7 @@ export default function PostState ({
                   href={CLUB_GUIDELINES}
                 >
                   Club Guidelines
-                </Link>{' '}carefully. Creating and submitting a post also means you agree to these guidelines.
+                </Link>{' '}carefully before posting
               </Trans>
             </Text>
           </Box>
