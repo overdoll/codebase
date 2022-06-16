@@ -11,7 +11,6 @@
     "slug_aliases": [],
     "suspended": false,
     "suspended_until": "",
-    "thumbnail_resource_id": null,
     "has_created_supporter_only_post": true,
     "next_supporter_post_time": "2022-04-08 00:09:01.117"
   },
@@ -27,7 +26,6 @@
     "slug_aliases": [],
     "suspended": false,
     "suspended_until": "",
-    "thumbnail_resource_id": null,
     "has_created_supporter_only_post": true,
     "next_supporter_post_time": "2022-04-08 00:09:01.117"
   }

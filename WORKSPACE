@@ -218,8 +218,8 @@ container_pull(
     name = "go_base_image",
     registry = DOCKER_REGISTRY,
     repository = "base-images/go",
-    tag = "v1.0.0",
-    digest = "sha256:63f5d2f9f46a3ebd65bf3bb6b85161c82bbd754c5ec2e0c205a4fbf591e9e250",
+    tag = "v1.1.0",
+    digest = "sha256:23ca6013c3a6b868df167960c685cdcfb03d1656d6e2feda00757031b9538935",
 )
 
 container_pull(
@@ -233,6 +233,6 @@ container_pull(
     name = "go_ffmpeg_image",
     registry = DOCKER_REGISTRY,
     repository = "base-images/resource-processing",
-    tag = "v1.0.0",
-    digest = "sha256:ef6978d2c7c4059759b8036c3198d18c85ec4aadc0d9ac1361d50e5cb6474d7d",
+    tag = "v1.1.0",
+    digest = "sha256:74586f3d3f1b980725713984a8c77074ee026f2917aeaf60889bbb5f7a5d095f",
 )

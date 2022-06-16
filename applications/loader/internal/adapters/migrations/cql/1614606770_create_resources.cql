@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS resources
     item_id                   text,
     resource_id               text,
     type                      int,
-    "token"                   text,
+    resource_token            text,
     is_private                boolean,
     mime_types                list<text>,
     processed                 boolean,

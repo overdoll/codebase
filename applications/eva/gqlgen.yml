@@ -29,10 +29,14 @@ models:
     model: overdoll/libraries/graphql/relay.PageInfo
   URI:
     model: overdoll/libraries/graphql.URI
+  Date:
+    model: overdoll/libraries/graphql.Date
   Translation:
     model: overdoll/libraries/graphql.Translation
   Language:
     model: overdoll/libraries/graphql.Language
+  Currency:
+    model: overdoll/libraries/graphql.Currency
   Resource:
     model: overdoll/libraries/graphql.Resource
   ResourceUrl:

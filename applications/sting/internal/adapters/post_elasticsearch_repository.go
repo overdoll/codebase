@@ -615,6 +615,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllPosts(ctx context.Context
 				State:                           p.State,
 				SupporterOnlyStatus:             p.SupporterOnlyStatus,
 				ContentResourceIds:              p.ContentResourceIds,
+				ContentResources:                p.ContentResources,
 				ContentSupporterOnly:            p.ContentSupporterOnly,
 				ContentSupporterOnlyResourceIds: p.ContentSupporterOnlyResourceIds,
 				Likes:                           p.Likes,

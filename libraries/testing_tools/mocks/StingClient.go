@@ -48,36 +48,6 @@ func (_m *MockStingClient) AddClubSupporter(ctx context.Context, in *proto.AddCl
 	return r0, r1
 }
 
-// AddTerminatedClub provides a mock function with given fields: ctx, in, opts
-func (_m *MockStingClient) AddTerminatedClub(ctx context.Context, in *proto.AddTerminatedClubRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	_va := make([]interface{}, len(opts))
-	for _i := range opts {
-		_va[_i] = opts[_i]
-	}
-	var _ca []interface{}
-	_ca = append(_ca, ctx, in)
-	_ca = append(_ca, _va...)
-	ret := _m.Called(_ca...)
-
-	var r0 *emptypb.Empty
-	if rf, ok := ret.Get(0).(func(context.Context, *proto.AddTerminatedClubRequest, ...grpc.CallOption) *emptypb.Empty); ok {
-		r0 = rf(ctx, in, opts...)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*emptypb.Empty)
-		}
-	}
-
-	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, *proto.AddTerminatedClubRequest, ...grpc.CallOption) error); ok {
-		r1 = rf(ctx, in, opts...)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
 // CanDeleteAccountData provides a mock function with given fields: ctx, in, opts
 func (_m *MockStingClient) CanDeleteAccountData(ctx context.Context, in *proto.CanDeleteAccountDataRequest, opts ...grpc.CallOption) (*proto.CanDeleteAccountDataResponse, error) {
 	_va := make([]interface{}, len(opts))
@@ -370,36 +340,6 @@ func (_m *MockStingClient) RemovePost(ctx context.Context, in *proto.PostRequest
 
 	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *proto.PostRequest, ...grpc.CallOption) error); ok {
-		r1 = rf(ctx, in, opts...)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// RemoveTerminatedClub provides a mock function with given fields: ctx, in, opts
-func (_m *MockStingClient) RemoveTerminatedClub(ctx context.Context, in *proto.RemoveTerminatedClubRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	_va := make([]interface{}, len(opts))
-	for _i := range opts {
-		_va[_i] = opts[_i]
-	}
-	var _ca []interface{}
-	_ca = append(_ca, ctx, in)
-	_ca = append(_ca, _va...)
-	ret := _m.Called(_ca...)
-
-	var r0 *emptypb.Empty
-	if rf, ok := ret.Get(0).(func(context.Context, *proto.RemoveTerminatedClubRequest, ...grpc.CallOption) *emptypb.Empty); ok {
-		r0 = rf(ctx, in, opts...)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*emptypb.Empty)
-		}
-	}
-
-	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, *proto.RemoveTerminatedClubRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
 		r1 = ret.Error(1)

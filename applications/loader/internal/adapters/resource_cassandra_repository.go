@@ -41,7 +41,7 @@ var resourcesTable = table.New(table.Metadata{
 		"width",
 		"height",
 		"preview",
-		"token",
+		"resource_token",
 	},
 	PartKey: []string{"item_id"},
 	SortKey: []string{"resource_id"},
@@ -63,7 +63,7 @@ type resources struct {
 	Width                  int    `db:"width"`
 	Height                 int    `db:"height"`
 	Preview                string `db:"preview"`
-	Token                  string `db:"token"`
+	Token                  string `db:"resource_token"`
 }
 
 type ResourceCassandraS3Repository struct {

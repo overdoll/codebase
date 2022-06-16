@@ -49,7 +49,6 @@ type ResolverRoot interface {
 	PostAuditLog() PostAuditLogResolver
 	PostReport() PostReportResolver
 	Query() QueryResolver
-	Resource() ResourceResolver
 	Rule() RuleResolver
 }
 
@@ -354,11 +353,6 @@ type QueryResolver interface {
 	Rule(ctx context.Context, reference string) (*types.Rule, error)
 	Rules(ctx context.Context, after *string, before *string, first *int, last *int, deprecated bool) (*types.RuleConnection, error)
 	PostReports(ctx context.Context, after *string, before *string, first *int, last *int, from time.Time, to *time.Time) (*types.PostReportConnection, error)
-}
-type ResourceResolver interface {
-	Urls(ctx context.Context, obj *graphql1.Resource) ([]*types.ResourceURL, error)
-
-	VideoThumbnail(ctx context.Context, obj *graphql1.Resource) (*types.ResourceURL, error)
 }
 type RuleResolver interface {
 	Title(ctx context.Context, obj *types.Rule, locale *string) (string, error)
@@ -8185,7 +8179,7 @@ func (ec *executionContext) _Resource_urls(ctx context.Context, field graphql.Co
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Resource().Urls(rctx, obj)
+		return obj.Urls, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8197,17 +8191,17 @@ func (ec *executionContext) _Resource_urls(ctx context.Context, field graphql.Co
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*types.ResourceURL)
+	res := resTmp.([]*graphql1.ResourceURL)
 	fc.Result = res
-	return ec.marshalNResourceUrl2ᚕᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceURLᚄ(ctx, field.Selections, res)
+	return ec.marshalNResourceUrl2ᚕᚖoverdollᚋlibrariesᚋgraphqlᚐResourceURLᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Resource_urls(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Resource",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "url":
@@ -8367,7 +8361,7 @@ func (ec *executionContext) _Resource_videoThumbnail(ctx context.Context, field 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Resource().VideoThumbnail(rctx, obj)
+		return obj.VideoThumbnail, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8376,17 +8370,17 @@ func (ec *executionContext) _Resource_videoThumbnail(ctx context.Context, field 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*types.ResourceURL)
+	res := resTmp.(*graphql1.ResourceURL)
 	fc.Result = res
-	return ec.marshalOResourceUrl2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceURL(ctx, field.Selections, res)
+	return ec.marshalOResourceUrl2ᚖoverdollᚋlibrariesᚋgraphqlᚐResourceURL(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Resource_videoThumbnail(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Resource",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "url":
@@ -8444,7 +8438,7 @@ func (ec *executionContext) fieldContext_Resource_preview(ctx context.Context, f
 	return fc, nil
 }
 
-func (ec *executionContext) _ResourceUrl_url(ctx context.Context, field graphql.CollectedField, obj *types.ResourceURL) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResourceUrl_url(ctx context.Context, field graphql.CollectedField, obj *graphql1.ResourceURL) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_ResourceUrl_url(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -8488,7 +8482,7 @@ func (ec *executionContext) fieldContext_ResourceUrl_url(ctx context.Context, fi
 	return fc, nil
 }
 
-func (ec *executionContext) _ResourceUrl_mimeType(ctx context.Context, field graphql.CollectedField, obj *types.ResourceURL) (ret graphql.Marshaler) {
+func (ec *executionContext) _ResourceUrl_mimeType(ctx context.Context, field graphql.CollectedField, obj *graphql1.ResourceURL) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_ResourceUrl_mimeType(ctx, field)
 	if err != nil {
 		return graphql.Null
@@ -13389,86 +13383,60 @@ func (ec *executionContext) _Resource(ctx context.Context, sel ast.SelectionSet,
 			out.Values[i] = ec._Resource_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "type":
 
 			out.Values[i] = ec._Resource_type(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "processed":
 
 			out.Values[i] = ec._Resource_processed(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "urls":
-			field := field
 
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Resource_urls(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
+			out.Values[i] = ec._Resource_urls(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
 			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
 		case "width":
 
 			out.Values[i] = ec._Resource_width(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "height":
 
 			out.Values[i] = ec._Resource_height(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "videoDuration":
 
 			out.Values[i] = ec._Resource_videoDuration(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "videoThumbnail":
-			field := field
 
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Resource_videoThumbnail(ctx, field, obj)
-				return res
-			}
+			out.Values[i] = ec._Resource_videoThumbnail(ctx, field, obj)
 
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
 		case "preview":
 
 			out.Values[i] = ec._Resource_preview(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -13483,7 +13451,7 @@ func (ec *executionContext) _Resource(ctx context.Context, sel ast.SelectionSet,
 
 var resourceUrlImplementors = []string{"ResourceUrl"}
 
-func (ec *executionContext) _ResourceUrl(ctx context.Context, sel ast.SelectionSet, obj *types.ResourceURL) graphql.Marshaler {
+func (ec *executionContext) _ResourceUrl(ctx context.Context, sel ast.SelectionSet, obj *graphql1.ResourceURL) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, resourceUrlImplementors)
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
@@ -14697,7 +14665,7 @@ func (ec *executionContext) marshalNResourceType2overdollᚋlibrariesᚋgraphql�
 	return v
 }
 
-func (ec *executionContext) marshalNResourceUrl2ᚕᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceURLᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.ResourceURL) graphql.Marshaler {
+func (ec *executionContext) marshalNResourceUrl2ᚕᚖoverdollᚋlibrariesᚋgraphqlᚐResourceURLᚄ(ctx context.Context, sel ast.SelectionSet, v []*graphql1.ResourceURL) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -14721,7 +14689,7 @@ func (ec *executionContext) marshalNResourceUrl2ᚕᚖoverdollᚋapplicationsᚋ
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNResourceUrl2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceURL(ctx, sel, v[i])
+			ret[i] = ec.marshalNResourceUrl2ᚖoverdollᚋlibrariesᚋgraphqlᚐResourceURL(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -14741,7 +14709,7 @@ func (ec *executionContext) marshalNResourceUrl2ᚕᚖoverdollᚋapplicationsᚋ
 	return ret
 }
 
-func (ec *executionContext) marshalNResourceUrl2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceURL(ctx context.Context, sel ast.SelectionSet, v *types.ResourceURL) graphql.Marshaler {
+func (ec *executionContext) marshalNResourceUrl2ᚖoverdollᚋlibrariesᚋgraphqlᚐResourceURL(ctx context.Context, sel ast.SelectionSet, v *graphql1.ResourceURL) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -15459,7 +15427,7 @@ func (ec *executionContext) marshalOReportPostPayload2ᚖoverdollᚋapplications
 	return ec._ReportPostPayload(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOResourceUrl2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐResourceURL(ctx context.Context, sel ast.SelectionSet, v *types.ResourceURL) graphql.Marshaler {
+func (ec *executionContext) marshalOResourceUrl2ᚖoverdollᚋlibrariesᚋgraphqlᚐResourceURL(ctx context.Context, sel ast.SelectionSet, v *graphql1.ResourceURL) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}

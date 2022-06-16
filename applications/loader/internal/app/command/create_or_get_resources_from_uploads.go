@@ -11,6 +11,7 @@ type CreateOrGetResourcesFromUploads struct {
 	ItemId    string
 	UploadIds []string
 	IsPrivate bool
+	Token     string
 }
 
 type CreateOrGetResourcesFromUploadsHandler struct {
@@ -62,7 +63,7 @@ func (h CreateOrGetResourcesFromUploadsHandler) Handle(ctx context.Context, cmd 
 	// found at least 1 resource that was not created
 	if len(idsNotFound) > 0 {
 		// get the resources from our remote source - grabbing information like file info
-		newResources, err = h.rr.GetAndCreateResources(ctx, cmd.ItemId, idsNotFound, cmd.IsPrivate)
+		newResources, err = h.rr.GetAndCreateResources(ctx, cmd.ItemId, idsNotFound, cmd.IsPrivate, cmd.Token)
 
 		if err != nil {
 			return nil, err

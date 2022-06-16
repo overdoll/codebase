@@ -20,7 +20,7 @@ const clubsIndexProperties = `
 	"slug_aliases": {
 		"type": "keyword"
 	},
-	"thumbnail_resource_id": {
+	"thumbnail_resource": {
 		"type": "keyword"
 	},
 	"name": ` + localization.ESIndex + `

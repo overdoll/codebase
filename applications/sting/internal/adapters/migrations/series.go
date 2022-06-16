@@ -20,10 +20,6 @@ const seriesIndexProperties = `
 	"thumbnail_resource": {
 		"type": "keyword"
 	},
-	"thumbnail_resource": {
- 		"type": "object",
-		"dynamic": true
-	},
 	"total_likes": {
 		"type": "integer"
 	},

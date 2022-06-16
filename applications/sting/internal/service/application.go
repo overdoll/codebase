@@ -23,11 +23,13 @@ func NewApplication(ctx context.Context) (*app.Application, func()) {
 	carrierClient, cleanup3 := clients.NewCarrierClient(ctx, os.Getenv("CARRIER_SERVICE"))
 	loaderClient, cleanup4 := clients.NewLoaderClient(ctx, os.Getenv("LOADER_SERVICE"))
 
+	serializer := resource.NewSerializer()
+
 	return createApplication(ctx,
 			adapters.NewEvaGrpc(evaClient),
 			adapters.NewParleyGrpc(parleyClient),
 			adapters.NewCarrierGrpc(carrierClient),
-			adapters.NewLoaderGrpc(loaderClient),
+			adapters.NewLoaderGrpc(loaderClient, serializer),
 			clients.NewTemporalClient(ctx)),
 		func() {
 			cleanup()
@@ -55,13 +57,15 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 	carrierClient := &mocks.MockCarrierClient{}
 	temporalClient := &temporalmocks.Client{}
 
+	serializer := resource.NewSerializer()
+
 	return &ComponentTestApplication{
 		App: createApplication(
 			ctx,
 			adapters.NewEvaGrpc(evaClient),
 			adapters.NewParleyGrpc(parleyClient),
 			adapters.NewCarrierGrpc(carrierClient),
-			adapters.NewLoaderGrpc(loaderClient),
+			adapters.NewLoaderGrpc(loaderClient, serializer),
 			temporalClient,
 		),
 		TemporalClient: temporalClient,
@@ -79,17 +83,16 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 	eventRepo := adapters.NewEventTemporalRepository(client)
 
 	cache := bootstrap.InitializeRedisSession()
-
-	clubRepo := adapters.NewClubCassandraElasticsearchRepository(session, esClient, cache)
-
 	resourceSerializer := resource.NewSerializer()
+
+	clubRepo := adapters.NewClubCassandraElasticsearchRepository(session, esClient, cache, resourceSerializer)
 
 	postRepo := adapters.NewPostsCassandraRepository(session, esClient, resourceSerializer)
 	personalizationRepo := adapters.NewCurationProfileCassandraRepository(session)
 
 	return &app.Application{
 		Commands: app.Commands{
-			UpdateResources: command.NewUpdateResourcesHandler(postRepo),
+			UpdateResources: command.NewUpdateResourcesHandler(postRepo, clubRepo),
 			CreatePost:      command.NewCreatePostHandler(postRepo, clubRepo),
 			PublishPost:     command.NewPublishPostHandler(postRepo, eventRepo),
 			DiscardPost:     command.NewDiscardPostHandler(postRepo, eventRepo),
@@ -152,7 +155,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			UnTerminateClub: command.NewUnTerminateClubHandler(clubRepo, eventRepo),
 		},
 		Queries: app.Queries{
-			PrincipalById:    query.NewPrincipalByIdHandler(eva),
+			PrincipalById:    query.NewPrincipalByIdHandler(eva, clubRepo),
 			SearchCharacters: query.NewSearchCharactersHandler(postRepo),
 			CharacterBySlug:  query.NewCharacterBySlugHandler(postRepo),
 			CharactersByIds:  query.NewCharactersByIdsHandler(postRepo),

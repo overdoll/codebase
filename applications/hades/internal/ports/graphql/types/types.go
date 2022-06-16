@@ -702,12 +702,6 @@ type RefundAmount struct {
 	Currency graphql1.Currency `json:"currency"`
 }
 
-// A type representing a url to the resource and the mimetype
-type ResourceURL struct {
-	URL      graphql1.URI `json:"url"`
-	MimeType string       `json:"mimeType"`
-}
-
 // Update reason.
 type UpdateCancellationReasonDeprecatedInput struct {
 	// The cancellation reason to update.

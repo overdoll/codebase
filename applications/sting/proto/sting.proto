@@ -78,17 +78,18 @@ message CanDeleteAccountDataResponse {
 
 service Sting {
   rpc GetPost(PostRequest) returns (Post);
+
   rpc PublishPost(PostRequest) returns (google.protobuf.Empty);
   rpc RemovePost(PostRequest) returns (google.protobuf.Empty);
   rpc RejectPost(PostRequest) returns (google.protobuf.Empty);
   rpc DiscardPost(PostRequest) returns (google.protobuf.Empty);
+  rpc SuspendClub(SuspendClubRequest) returns (google.protobuf.Empty);
 
   rpc CanDeleteAccountData(CanDeleteAccountDataRequest) returns (CanDeleteAccountDataResponse);
   rpc DeleteAccountData(DeleteAccountDataRequest) returns (google.protobuf.Empty);
 
   rpc GetClubById(GetClubByIdRequest) returns (GetClubByIdResponse);
   rpc GetAccountClubDigest(GetAccountClubDigestRequest) returns (GetAccountClubDigestResponse);
-  rpc SuspendClub(SuspendClubRequest) returns (google.protobuf.Empty);
 
   rpc AddClubSupporter(AddClubSupporterRequest) returns (google.protobuf.Empty);
   rpc RemoveClubSupporter(RemoveClubSupporterRequest) returns (google.protobuf.Empty);

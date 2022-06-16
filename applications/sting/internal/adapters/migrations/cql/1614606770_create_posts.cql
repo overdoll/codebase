@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS clubs
     suspended_until                 timestamp,
     members_count                   int,
     members_count_last_update_id    timeuuid,
-    thumbnail_resource_id           text,
+    thumbnail_resource              text,
     owner_account_id                text,
     next_supporter_post_time        timestamp,
     has_created_supporter_only_post boolean,
