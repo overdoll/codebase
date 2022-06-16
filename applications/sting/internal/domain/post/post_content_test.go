@@ -17,7 +17,6 @@ func TestPostContent_non_published_supporter_only(t *testing.T) {
 	resourceIdHidden := &resource.Resource{}
 
 	contentItem := &Content{
-		id:              uuid.New().String(),
 		resource:        resourceId,
 		resourceHidden:  resourceIdHidden,
 		isSupporterOnly: true,
@@ -37,7 +36,6 @@ func TestPostContent_published_non_supporter_only(t *testing.T) {
 	resourceIdHidden := &resource.Resource{}
 
 	contentItem := &Content{
-		id:              uuid.New().String(),
 		resource:        resourceId,
 		resourceHidden:  resourceIdHidden,
 		isSupporterOnly: false,
@@ -58,7 +56,6 @@ func TestPostContent_published_supporter_only(t *testing.T) {
 	clubId := uuid.New().String()
 
 	contentItem := &Content{
-		id:              uuid.New().String(),
 		resource:        resourceId,
 		resourceHidden:  resourceIdHidden,
 		isSupporterOnly: true,
@@ -87,7 +84,6 @@ func TestPostContent_published_supporter_only_as_staff(t *testing.T) {
 	resourceIdHidden := &resource.Resource{}
 
 	contentItem := &Content{
-		id:              uuid.New().String(),
 		resource:        resourceId,
 		resourceHidden:  resourceIdHidden,
 		isSupporterOnly: true,
@@ -109,7 +105,6 @@ func TestPostContent_published_supporter_only_as_nobody(t *testing.T) {
 	resourceIdHidden := &resource.Resource{}
 
 	contentItem := &Content{
-		id:              uuid.New().String(),
 		resource:        resourceId,
 		resourceHidden:  resourceIdHidden,
 		isSupporterOnly: true,
