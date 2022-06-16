@@ -10,6 +10,8 @@ import { RejectionReasonsFragment$key } from '@//:artifacts/RejectionReasonsFrag
 import { t, Trans } from '@lingui/macro'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { useToast } from '@//:modules/content/ThemeComponents'
+import { Icon } from '@//:modules/content/PageLayout'
+import { CheckMark, RemoveCross } from '@//:assets/icons'
 
 interface Props {
   infractions: RejectionReasonsFragment$key
@@ -135,13 +137,27 @@ export default function ModeratePost (props: Props): JSX.Element {
 
   return (
     <>
-      <HStack spacing={4}>
-        <Button size='md' isDisabled={isApprovingPost} onClick={onOpen} colorScheme='orange' variant='solid'>
+      <HStack w='100%' justify='flex-end' spacing={4}>
+        <Button
+          leftIcon={<Icon icon={RemoveCross} w={3} h={3} fill='orange.900' />}
+          size='md'
+          isDisabled={isApprovingPost}
+          onClick={onOpen}
+          colorScheme='orange'
+          variant='solid'
+        >
           <Trans>
             Reject
           </Trans>
         </Button>
-        <Button size='md' isLoading={isApprovingPost} onClick={onApprovePost} colorScheme='green' variant='solid'>
+        <Button
+          size='md'
+          leftIcon={<Icon icon={CheckMark} w={3} h={3} fill='green.900' />}
+          isLoading={isApprovingPost}
+          onClick={onApprovePost}
+          colorScheme='green'
+          variant='solid'
+        >
           <Trans>
             Approve
           </Trans>
@@ -163,7 +179,7 @@ export default function ModeratePost (props: Props): JSX.Element {
             w='100%'
             h='100%'
             position='absolute'
-            borderRadius={10}
+            borderRadius='base'
             backdropFilter='blur(5px)'
           >
             <Flex align='center' w='100%' justify='space-between'>

@@ -187,21 +187,14 @@ export default function PostModerationQueue (props: Props): JSX.Element {
             >
               <PostPreview query={item.node.post} />
               <PostTagsPreview query={item.node.post} />
-            </Box>
-            <SmallBackgroundBox>
-              <Flex align='center' justify='space-between'>
-                <Heading color='gray.200' fontSize='lg'>
-                  <Trans>
-                    Your Decision
-                  </Trans>
-                </Heading>
+              <Flex mt={8}>
                 <ModeratePost
                   connectionID={postsConnection}
                   infractions={queryData}
                   postID={item.node.post}
                 />
               </Flex>
-            </SmallBackgroundBox>
+            </Box>
           </ReactFragment>
         )
       })}
