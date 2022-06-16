@@ -41,7 +41,7 @@ type ComponentTestApplication struct {
 	App            *app.Application
 	TemporalClient *temporalmocks.Client
 	EvaClient      *mocks.MockEvaClient
-	StingClient    *mocks.MockStellaClient
+	StingClient    *mocks.MockStingClient
 }
 
 func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication {

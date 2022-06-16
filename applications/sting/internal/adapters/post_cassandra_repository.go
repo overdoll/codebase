@@ -36,6 +36,7 @@ var postTable = table.New(table.Metadata{
 		"character_ids",
 		"series_ids",
 		"created_at",
+		"updated_at",
 		"posted_at",
 	},
 	PartKey: []string{"id"},

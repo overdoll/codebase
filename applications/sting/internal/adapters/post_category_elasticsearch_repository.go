@@ -23,6 +23,7 @@ type categoryDocument struct {
 	ThumbnailResource string            `json:"thumbnail_resource"`
 	Title             map[string]string `json:"title"`
 	CreatedAt         time.Time         `json:"created_at"`
+	UpdatedAt         time.Time         `json:"updated_at"`
 	TotalLikes        int               `json:"total_likes"`
 	TotalPosts        int               `json:"total_posts"`
 }
@@ -43,6 +44,7 @@ func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 		ThumbnailResource: marshalled,
 		Title:             localization.MarshalTranslationToDatabase(cat.Title()),
 		CreatedAt:         cat.CreatedAt(),
+		UpdatedAt:         cat.UpdatedAt(),
 		TotalLikes:        cat.TotalLikes(),
 		TotalPosts:        cat.TotalPosts(),
 	}, nil
@@ -147,6 +149,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Cont
 			pst.TotalLikes,
 			pst.TotalPosts,
 			pst.CreatedAt,
+			pst.UpdatedAt,
 		)
 		newCategory.Node = paging.NewNode(hit.Sort)
 
@@ -178,6 +181,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllCategories(ctx context.Co
 				ThumbnailResource: c.ThumbnailResource,
 				Title:             c.Title,
 				CreatedAt:         c.CreatedAt,
+				UpdatedAt:         c.UpdatedAt,
 				TotalLikes:        c.TotalLikes,
 			}
 

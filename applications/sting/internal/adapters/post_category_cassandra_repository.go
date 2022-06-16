@@ -27,6 +27,7 @@ var categoryTable = table.New(table.Metadata{
 		"total_likes",
 		"total_posts",
 		"created_at",
+		"updated_at",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
@@ -40,6 +41,7 @@ type category struct {
 	TotalLikes        int               `db:"total_likes"`
 	TotalPosts        int               `db:"total_posts"`
 	CreatedAt         time.Time         `db:"created_at"`
+	UpdatedAt         time.Time         `db:"updated_at"`
 }
 
 var categorySlugTable = table.New(table.Metadata{
@@ -73,6 +75,7 @@ func marshalCategoryToDatabase(pending *post.Category) (*category, error) {
 		TotalLikes:        pending.TotalLikes(),
 		TotalPosts:        pending.TotalPosts(),
 		CreatedAt:         pending.CreatedAt(),
+		UpdatedAt:         pending.UpdatedAt(),
 	}, nil
 }
 
@@ -165,6 +168,7 @@ func (r PostsCassandraElasticsearchRepository) GetCategoriesByIds(ctx context.Co
 			cat.TotalLikes,
 			cat.TotalPosts,
 			cat.CreatedAt,
+			cat.UpdatedAt,
 		))
 	}
 
@@ -345,5 +349,6 @@ func (r PostsCassandraElasticsearchRepository) getCategoryById(ctx context.Conte
 		cat.TotalLikes,
 		cat.TotalPosts,
 		cat.CreatedAt,
+		cat.UpdatedAt,
 	), nil
 }

@@ -3,7 +3,6 @@ package resource
 import (
 	_ "image/png"
 	"overdoll/libraries/errors/domainerror"
-	"overdoll/libraries/resource/proto"
 )
 
 var (
@@ -122,47 +121,4 @@ func (r *Resource) VideoThumbnailFullUrl() *Url {
 
 func (r *Resource) FullUrls() []*Url {
 	return r.urls
-}
-
-func UnmarshalResourceFromProto(resource *proto.Resource) *Resource {
-
-	var tp Type
-
-	if resource.Type == proto.ResourceType_IMAGE {
-		tp = Image
-	}
-
-	if resource.Type == proto.ResourceType_VIDEO {
-		tp = Video
-	}
-
-	return &Resource{
-		itemId:                 resource.ItemId,
-		id:                     resource.Id,
-		processed:              resource.Processed,
-		processedId:            resource.ProcessedId,
-		urls:                   nil,
-		videoThumbnailUrl:      nil,
-		isPrivate:              resource.Private,
-		videoThumbnail:         resource.VideoThumbnail,
-		videoThumbnailMimeType: resource.VideoThumbnailMimeType,
-		width:                  int(resource.Width),
-		height:                 int(resource.Height),
-		videoDuration:          int(resource.VideoDuration),
-		mimeTypes:              resource.MimeTypes,
-		resourceType:           tp,
-		preview:                resource.Preview,
-		token:                  resource.Token,
-	}
-}
-
-func UnmarshalResourcesFromProto(resource []*proto.Resource) []*Resource {
-
-	var resources []*Resource
-
-	for _, item := range resource {
-		resources = append(resources, UnmarshalResourceFromProto(item))
-	}
-
-	return resources
 }

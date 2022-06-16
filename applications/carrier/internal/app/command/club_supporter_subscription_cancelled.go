@@ -18,10 +18,10 @@ type ClubSupporterSubscriptionCancelled struct {
 type ClubSupporterSubscriptionCancelledHandler struct {
 	mr     mailing.Repository
 	eva    EvaService
-	stella StellaService
+	stella StingService
 }
 
-func NewClubSupporterSubscriptionCancelledHandler(mr mailing.Repository, eva EvaService, stella StellaService) ClubSupporterSubscriptionCancelledHandler {
+func NewClubSupporterSubscriptionCancelledHandler(mr mailing.Repository, eva EvaService, stella StingService) ClubSupporterSubscriptionCancelledHandler {
 	return ClubSupporterSubscriptionCancelledHandler{mr: mr, eva: eva, stella: stella}
 }
 

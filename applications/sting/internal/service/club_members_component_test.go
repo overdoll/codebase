@@ -6,10 +6,10 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/types/known/timestamppb"
-	workflows "overdoll/applications/stella/internal/app/workflows"
-	"overdoll/applications/stella/internal/ports/graphql/types"
-	"overdoll/applications/stella/internal/service"
-	stella "overdoll/applications/stella/proto"
+	"overdoll/applications/sting/internal/app/workflows"
+	"overdoll/applications/sting/internal/ports/graphql/types"
+	"overdoll/applications/sting/internal/service"
+	sting "overdoll/applications/sting/proto"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
@@ -67,7 +67,7 @@ type AccountClubDetails struct {
 }
 
 func getClubViewer(t *testing.T, client *graphql.Client, id string) ClubViewer {
-	service.refreshClubMembersESIndex(t)
+	refreshClubMembersESIndex(t)
 
 	var club ClubViewer
 
@@ -109,17 +109,17 @@ type LeaveClub struct {
 func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	t.Parallel()
 
-	testingAccountId := service.newFakeAccount(t)
-	service.mockAccountNormal(t, testingAccountId)
+	testingAccountId := newFakeAccount(t)
+	mockAccountNormal(t, testingAccountId)
 	ownerAccountId := uuid.New().String()
-	service.mockAccountNormal(t, ownerAccountId)
+	mockAccountNormal(t, ownerAccountId)
 
-	client := service.getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
-	clb := service.seedClub(t, ownerAccountId)
+	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
+	clb := seedClub(t, ownerAccountId)
 	clubId := clb.ID()
-	relayId := service.convertClubIdToRelayId(clb.ID())
+	relayId := convertClubIdToRelayId(clb.ID())
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(service.application.TemporalClient, workflows.AddClubMember, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.AddClubMember, mock.Anything)
 
 	// become a club member
 	var joinClub JoinClub
@@ -169,7 +169,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	grpcClient := service.getGrpcClient(t)
 
 	// check permissions
-	res, err := grpcClient.GetAccountClubDigest(context.Background(), &stella.GetAccountClubDigestRequest{
+	res, err := grpcClient.GetAccountClubDigest(context.Background(), &sting.GetAccountClubDigestRequest{
 		AccountId: testingAccountId,
 	})
 
@@ -181,7 +181,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	addSupporterWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(service.application.TemporalClient, workflows.AddClubSupporter, mock.Anything)
 
 	// now, make this member a supporter
-	_, err = grpcClient.AddClubSupporter(context.Background(), &stella.AddClubSupporterRequest{
+	_, err = grpcClient.AddClubSupporter(context.Background(), &sting.AddClubSupporterRequest{
 		AccountId:   testingAccountId,
 		ClubId:      clubId,
 		SupportedAt: timestamppb.Now(),
@@ -200,7 +200,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	removeSupporterWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(service.application.TemporalClient, workflows.RemoveClubSupporter, mock.Anything)
 
 	// now, make this member a supporter
-	_, err = grpcClient.RemoveClubSupporter(context.Background(), &stella.RemoveClubSupporterRequest{
+	_, err = grpcClient.RemoveClubSupporter(context.Background(), &sting.RemoveClubSupporterRequest{
 		AccountId: testingAccountId,
 		ClubId:    clubId,
 	})
@@ -245,7 +245,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 
 	workflowExecution.FindAndExecuteWorkflow(t, service.getWorkflowEnvironment())
 
-	_, err = grpcClient.DeleteAccountData(context.Background(), &stella.DeleteAccountDataRequest{AccountId: testingAccountId})
+	_, err = grpcClient.DeleteAccountData(context.Background(), &sting.DeleteAccountDataRequest{AccountId: testingAccountId})
 	require.NoError(t, err, "no error deleting account data")
 
 	clubViewer = getClubViewer(t, client, clb.Slug())

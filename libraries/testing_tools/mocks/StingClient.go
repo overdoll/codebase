@@ -18,6 +18,36 @@ type MockStingClient struct {
 	mock.Mock
 }
 
+// AddClubSupporter provides a mock function with given fields: ctx, in, opts
+func (_m *MockStingClient) AddClubSupporter(ctx context.Context, in *proto.AddClubSupporterRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	_va := make([]interface{}, len(opts))
+	for _i := range opts {
+		_va[_i] = opts[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, ctx, in)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *emptypb.Empty
+	if rf, ok := ret.Get(0).(func(context.Context, *proto.AddClubSupporterRequest, ...grpc.CallOption) *emptypb.Empty); ok {
+		r0 = rf(ctx, in, opts...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*emptypb.Empty)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *proto.AddClubSupporterRequest, ...grpc.CallOption) error); ok {
+		r1 = rf(ctx, in, opts...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // AddTerminatedClub provides a mock function with given fields: ctx, in, opts
 func (_m *MockStingClient) AddTerminatedClub(ctx context.Context, in *proto.AddTerminatedClubRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	_va := make([]interface{}, len(opts))
@@ -40,6 +70,36 @@ func (_m *MockStingClient) AddTerminatedClub(ctx context.Context, in *proto.AddT
 
 	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *proto.AddTerminatedClubRequest, ...grpc.CallOption) error); ok {
+		r1 = rf(ctx, in, opts...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// CanDeleteAccountData provides a mock function with given fields: ctx, in, opts
+func (_m *MockStingClient) CanDeleteAccountData(ctx context.Context, in *proto.CanDeleteAccountDataRequest, opts ...grpc.CallOption) (*proto.CanDeleteAccountDataResponse, error) {
+	_va := make([]interface{}, len(opts))
+	for _i := range opts {
+		_va[_i] = opts[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, ctx, in)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *proto.CanDeleteAccountDataResponse
+	if rf, ok := ret.Get(0).(func(context.Context, *proto.CanDeleteAccountDataRequest, ...grpc.CallOption) *proto.CanDeleteAccountDataResponse); ok {
+		r0 = rf(ctx, in, opts...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*proto.CanDeleteAccountDataResponse)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *proto.CanDeleteAccountDataRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
 		r1 = ret.Error(1)
@@ -100,6 +160,66 @@ func (_m *MockStingClient) DiscardPost(ctx context.Context, in *proto.PostReques
 
 	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *proto.PostRequest, ...grpc.CallOption) error); ok {
+		r1 = rf(ctx, in, opts...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetAccountClubDigest provides a mock function with given fields: ctx, in, opts
+func (_m *MockStingClient) GetAccountClubDigest(ctx context.Context, in *proto.GetAccountClubDigestRequest, opts ...grpc.CallOption) (*proto.GetAccountClubDigestResponse, error) {
+	_va := make([]interface{}, len(opts))
+	for _i := range opts {
+		_va[_i] = opts[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, ctx, in)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *proto.GetAccountClubDigestResponse
+	if rf, ok := ret.Get(0).(func(context.Context, *proto.GetAccountClubDigestRequest, ...grpc.CallOption) *proto.GetAccountClubDigestResponse); ok {
+		r0 = rf(ctx, in, opts...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*proto.GetAccountClubDigestResponse)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *proto.GetAccountClubDigestRequest, ...grpc.CallOption) error); ok {
+		r1 = rf(ctx, in, opts...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetClubById provides a mock function with given fields: ctx, in, opts
+func (_m *MockStingClient) GetClubById(ctx context.Context, in *proto.GetClubByIdRequest, opts ...grpc.CallOption) (*proto.GetClubByIdResponse, error) {
+	_va := make([]interface{}, len(opts))
+	for _i := range opts {
+		_va[_i] = opts[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, ctx, in)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *proto.GetClubByIdResponse
+	if rf, ok := ret.Get(0).(func(context.Context, *proto.GetClubByIdRequest, ...grpc.CallOption) *proto.GetClubByIdResponse); ok {
+		r0 = rf(ctx, in, opts...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*proto.GetClubByIdResponse)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *proto.GetClubByIdRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
 		r1 = ret.Error(1)
@@ -198,6 +318,36 @@ func (_m *MockStingClient) RejectPost(ctx context.Context, in *proto.PostRequest
 	return r0, r1
 }
 
+// RemoveClubSupporter provides a mock function with given fields: ctx, in, opts
+func (_m *MockStingClient) RemoveClubSupporter(ctx context.Context, in *proto.RemoveClubSupporterRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	_va := make([]interface{}, len(opts))
+	for _i := range opts {
+		_va[_i] = opts[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, ctx, in)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *emptypb.Empty
+	if rf, ok := ret.Get(0).(func(context.Context, *proto.RemoveClubSupporterRequest, ...grpc.CallOption) *emptypb.Empty); ok {
+		r0 = rf(ctx, in, opts...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*emptypb.Empty)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *proto.RemoveClubSupporterRequest, ...grpc.CallOption) error); ok {
+		r1 = rf(ctx, in, opts...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // RemovePost provides a mock function with given fields: ctx, in, opts
 func (_m *MockStingClient) RemovePost(ctx context.Context, in *proto.PostRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	_va := make([]interface{}, len(opts))
@@ -250,6 +400,36 @@ func (_m *MockStingClient) RemoveTerminatedClub(ctx context.Context, in *proto.R
 
 	var r1 error
 	if rf, ok := ret.Get(1).(func(context.Context, *proto.RemoveTerminatedClubRequest, ...grpc.CallOption) error); ok {
+		r1 = rf(ctx, in, opts...)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// SuspendClub provides a mock function with given fields: ctx, in, opts
+func (_m *MockStingClient) SuspendClub(ctx context.Context, in *proto.SuspendClubRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	_va := make([]interface{}, len(opts))
+	for _i := range opts {
+		_va[_i] = opts[_i]
+	}
+	var _ca []interface{}
+	_ca = append(_ca, ctx, in)
+	_ca = append(_ca, _va...)
+	ret := _m.Called(_ca...)
+
+	var r0 *emptypb.Empty
+	if rf, ok := ret.Get(0).(func(context.Context, *proto.SuspendClubRequest, ...grpc.CallOption) *emptypb.Empty); ok {
+		r0 = rf(ctx, in, opts...)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*emptypb.Empty)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(context.Context, *proto.SuspendClubRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
 		r1 = ret.Error(1)

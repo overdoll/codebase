@@ -2,7 +2,6 @@ package activities
 
 import (
 	"context"
-	"overdoll/applications/loader/internal/domain/resource"
 )
 
 type SendCallbackInput struct {
@@ -21,13 +20,6 @@ func (h *Activities) SendCallback(ctx context.Context, input SendCallbackInput) 
 	}
 
 	if err := h.callback.SendCallback(ctx, input.Source, resources); err != nil {
-
-		// todo: for this error, we do a finite amount of retries (since its possible that the callback was not found when
-		// todo: performing it to another service)
-		if err == resource.ErrResourceCallbackNotFound {
-
-		}
-
 		return err
 	}
 

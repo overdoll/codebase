@@ -2,34 +2,21 @@ package service_test
 
 import (
 	"context"
-	"encoding/base64"
+	graphql2 "github.com/99designs/gqlgen/graphql"
 	"github.com/corona10/goimagehash"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"image/png"
 	"os"
 	"overdoll/applications/loader/internal/app/workflows"
-	"overdoll/applications/loader/internal/ports/graphql/types"
 	loader "overdoll/applications/loader/proto"
-	"overdoll/libraries/graphql"
-	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/resource"
+	"overdoll/libraries/resource/proto"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"strings"
 	"testing"
 )
-
-type Resources struct {
-	Entities []struct {
-		Resource graphql.Resource `graphql:"... on Resource"`
-	} `graphql:"_entities(representations: $representations)"`
-}
-
-type _Any map[string]interface{}
-
-func convertResourceIdToRelayId(itemId, resourceId string) relay.ID {
-	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(graphql.Resource, itemId, resourceId))))
-}
 
 func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 
@@ -45,9 +32,12 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 
 	grpcClient := getGrpcClient(t)
 
+	imageId := strings.Split(imageFileId, "+")[0]
+	videoId := strings.Split(videoFileId, "+")[0]
+
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceIds: []string{
-		strings.Split(imageFileId, "+")[0],
-		strings.Split(videoFileId, "+")[0],
+		imageId,
+		videoId,
 	}})
 
 	// start processing of files by calling grpc endpoint
@@ -63,51 +53,32 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 
 	resourceResults, err := grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{
 		ItemId:      itemId,
-		ResourceIds: res.AllResourceIds,
+		ResourceIds: []string{res.Resources[0].Id, res.Resources[1].Id},
 	})
 
 	require.NoError(t, err, "no error getting resources")
 
 	require.True(t, resourceResults.Resources[0].Private, "should be private")
 
-	client := getGraphqlClient(t)
+	// create serializer instance
+	serializer := resource.NewSerializer()
 
-	var newResources Resources
-
-	resourceEntities := []_Any{
-		{
-			"__typename": "Resource",
-			"id":         convertResourceIdToRelayId(itemId, res.AllResourceIds[0]),
-		},
-		{
-			"__typename": "Resource",
-			"id":         convertResourceIdToRelayId(itemId, res.AllResourceIds[1]),
-		},
-	}
-
-	// query our resources through graphql
-	err = client.Query(context.Background(), &newResources, map[string]interface{}{
-		"representations": resourceEntities,
-	})
-
-	require.NoError(t, err, "no error grabbing entities")
-
-	// check results
-	require.Len(t, newResources.Entities, 2, "should have found all graphql entities")
+	unmarshalledResources, err := serializer.UnmarshalResourcesFromProto(graphql2.WithOperationContext(context.Background(), &graphql2.OperationContext{}), resourceResults.Resources)
+	require.NoError(t, err, "no error unmarshalling resources from proto")
 
 	var assertions int
 
 	// validate all urls that the files are accessible
-	for _, entity := range newResources.Entities {
+	for _, entity := range unmarshalledResources {
 
-		for _, u := range entity.Resource.Urls {
+		for _, u := range entity.FullUrls() {
 			assertions += 1
-			require.True(t, testing_tools.FileExists(u.URL.String()), "file exists in bucket")
+			require.True(t, testing_tools.FileExists(u.FullUrl()), "file exists in bucket")
 		}
 
-		if entity.Resource.Type == types.ResourceTypeVideo {
+		if entity.IsVideo() {
 			assertions += 1
-			require.True(t, testing_tools.FileExists(entity.Resource.VideoThumbnail.URL.String()), "video thumbnail file exists in bucket")
+			require.True(t, testing_tools.FileExists(entity.VideoThumbnailFullUrl().FullUrl()), "video thumbnail file exists in bucket")
 		}
 	}
 
@@ -119,11 +90,11 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 		&loader.CopyResourcesAndApplyFilterRequest{
 			Resources: []*loader.ResourceIdentifier{
 				{
-					Id:     res.AllResourceIds[0],
+					Id:     imageId,
 					ItemId: itemId,
 				},
 				{
-					Id:     res.AllResourceIds[1],
+					Id:     videoId,
 					ItemId: itemId,
 				},
 			},
@@ -141,54 +112,42 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 	var originalVideoFileNewId string
 
 	for _, r := range copyResourceResults.Resources {
-		if r.OldResource.Id == res.AllResourceIds[0] {
+		if r.OldResource.Id == imageId {
 			originalImageFileNewId = r.NewResource.Id
-		} else if r.OldResource.Id == res.AllResourceIds[1] {
+		} else if r.OldResource.Id == videoId {
 			originalVideoFileNewId = r.NewResource.Id
 		}
 	}
 
-	var filteredResources Resources
-
-	// query our resources through graphql
-	err = client.Query(context.Background(), &filteredResources, map[string]interface{}{
-		"representations": []_Any{
-			{
-				"__typename": "Resource",
-				"id":         convertResourceIdToRelayId(itemId, copyResourceResults.Resources[0].NewResource.Id),
-			},
-			{
-				"__typename": "Resource",
-				"id":         convertResourceIdToRelayId(itemId, copyResourceResults.Resources[1].NewResource.Id),
-			},
-		},
+	resourceResults, err = grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{
+		ItemId:      itemId,
+		ResourceIds: []string{copyResourceResults.Resources[0].NewResource.Id, copyResourceResults.Resources[1].NewResource.Id},
 	})
 
 	require.NoError(t, err, "no error grabbing new filtered resource")
 
-	require.Len(t, filteredResources.Entities, 2, "should have 2 entities")
+	require.Len(t, resourceResults.Resources, 2, "should have 2 entities")
+
+	unmarshalledResources, err = serializer.UnmarshalResourcesFromProto(graphql2.WithOperationContext(context.Background(), &graphql2.OperationContext{}), resourceResults.Resources)
+	require.NoError(t, err, "no error unmarshalling resources from proto")
 
 	// validate all urls that the files are accessible, and check hashes
-	for _, entity := range filteredResources.Entities {
+	for _, entity := range unmarshalledResources {
 
 		var downloadUrl string
 		var referenceFile string
 
-		decoded, _ := base64.StdEncoding.DecodeString(entity.Resource.ID.GetID())
-
-		resourceId := relay.NewID(string(decoded)).GetID()
-
-		if resourceId == originalImageFileNewId {
-			for _, u := range entity.Resource.Urls {
-				downloadUrl = u.URL.String()
+		if entity.ID() == originalImageFileNewId {
+			for _, u := range entity.FullUrls() {
+				downloadUrl = u.FullUrl()
 				targ, _ := testing_tools.NormalizedPathFromBazelTarget("applications/loader/internal/service/file_fixtures/test_file_1_pixelated.png")
 				referenceFile = targ
 			}
 		}
 
-		if resourceId == originalVideoFileNewId {
-			for _, u := range entity.Resource.Urls {
-				downloadUrl = u.URL.String()
+		if entity.ID() == originalVideoFileNewId {
+			for _, u := range entity.FullUrls() {
+				downloadUrl = u.FullUrl()
 				targ, _ := testing_tools.NormalizedPathFromBazelTarget("applications/loader/internal/service/file_fixtures/test_file_2_pixelated.png")
 				referenceFile = targ
 			}
@@ -255,9 +214,10 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 
 	require.NoError(t, err, "no error creating new resources from uploads")
 
-	resourceIds := res.AllResourceIds
 	videoFileId = strings.Split(videoFileId, "+")[0]
 	imageFileId = strings.Split(imageFileId, "+")[0]
+
+	resourceIds := []string{res.Resources[0].Id, res.Resources[1].Id}
 
 	// get resources and see that they are not processed yet (we did not run the workflow)
 	resources, err := grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{
@@ -270,8 +230,8 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	// should have 2 elements
 	require.Len(t, resources.Resources, 2, "should have 2 elements in res")
 
-	var imageResource *loader.Resource
-	var videoResource *loader.Resource
+	var imageResource *proto.Resource
+	var videoResource *proto.Resource
 
 	for _, res := range resources.Resources {
 		if res.Id == videoFileId {
@@ -291,49 +251,17 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	require.False(t, videoResource.Processed, "should not be processed #2")
 	require.Equal(t, videoResource.ItemId, itemId, "correct item ID #2")
 
-	client := getGraphqlClient(t)
-
-	var newResources Resources
-
-	resourceEntities := []_Any{
-		{
-			"__typename": "Resource",
-			"id":         convertResourceIdToRelayId(imageResource.ItemId, imageResource.Id),
-		},
-		{
-			"__typename": "Resource",
-			"id":         convertResourceIdToRelayId(videoResource.ItemId, videoResource.Id),
-		},
-	}
-
-	// query our resources through graphql
-	err = client.Query(context.Background(), &newResources, map[string]interface{}{
-		"representations": resourceEntities,
-	})
-
 	require.NoError(t, err, "no error grabbing entities")
 
-	// check results
-	require.Len(t, newResources.Entities, 2, "should have found all graphql entities")
-
-	var newImageResource graphql.Resource
-	var newVideoResource graphql.Resource
-
-	for _, res := range newResources.Entities {
-		if res.Resource.Type == graphql.ResourceTypeVideo {
-			newVideoResource = res.Resource
-		}
-
-		if res.Resource.Type == graphql.ResourceTypeImage {
-			newImageResource = res.Resource
-		}
-	}
+	serializer := resource.NewSerializer()
+	unmarshalledResources, err := serializer.UnmarshalResourcesFromProto(graphql2.WithOperationContext(context.Background(), &graphql2.OperationContext{}), resources.Resources)
+	require.NoError(t, err, "no error unmarshalling resources from proto")
 
 	var assertions int
 
-	for _, entity := range newResources.Entities {
-		for _, u := range entity.Resource.Urls {
-			require.True(t, testing_tools.FileExists(u.URL.String()), "uploaded file exists in bucket")
+	for _, entity := range unmarshalledResources {
+		for _, u := range entity.FullUrls() {
+			require.True(t, testing_tools.FileExists(u.FullUrl()), "uploaded file exists in bucket")
 			assertions += 1
 		}
 	}
@@ -350,77 +278,57 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 
 	require.NoError(t, err, "no error getting resources")
 
-	// should have 2 elements
-	require.Len(t, resources.Resources, 2, "should have 2 elements")
+	unmarshalledResources, err = serializer.UnmarshalResourcesFromProto(graphql2.WithOperationContext(context.Background(), &graphql2.OperationContext{}), resources.Resources)
+	require.NoError(t, err, "no error unmarshalling resources from proto")
 
-	for _, res := range resources.Resources {
-		if res.Id == videoFileId {
-			videoResource = res
+	// should have 2 elements
+	require.Len(t, unmarshalledResources, 2, "should have 2 elements")
+
+	var newImageResource *resource.Resource
+	var newVideoResource *resource.Resource
+
+	for _, res := range unmarshalledResources {
+		if res.ID() == videoFileId {
+			newVideoResource = res
 		}
 
-		if res.Id == imageFileId {
-			imageResource = res
+		if res.ID() == imageFileId {
+			newImageResource = res
 		}
 	}
 
 	// first element is processed
-	require.True(t, imageResource.Processed, "should be processed #1")
+	require.True(t, newImageResource.IsProcessed(), "should be processed #1")
 
 	// second element is processed
-	require.True(t, videoResource.Processed, "should be processed #2")
-
-	// run graphql call and see that the resources are updated
-	err = client.Query(context.Background(), &newResources, map[string]interface{}{
-		"representations": resourceEntities,
-	})
-
-	// check results
-	require.Len(t, newResources.Entities, 2, "should have found all graphql entities")
-
-	// save the new IDs for later
-	var newResourceIds []string
-
-	for _, res := range newResources.Entities {
-
-		// weird bug, we have to base64 decode first
-		sDec, _ := base64.StdEncoding.DecodeString(res.Resource.ID.GetID())
-		newResourceIds = append(newResourceIds, relay.ID(sDec).GetID())
-
-		if res.Resource.Type == graphql.ResourceTypeVideo {
-			newVideoResource = res.Resource
-		}
-
-		if res.Resource.Type == graphql.ResourceTypeImage {
-			newImageResource = res.Resource
-		}
-	}
+	require.True(t, newVideoResource.IsProcessed(), "should be processed #2")
 
 	// expect 2 urls for image
-	require.Len(t, newImageResource.Urls, 2)
+	require.Len(t, newImageResource.FullUrls(), 2)
 
-	require.Equal(t, "image/webp", newImageResource.Urls[0].MimeType, "expected first image to be webp")
-	require.Equal(t, "image/png", newImageResource.Urls[1].MimeType, "expected second image to be png")
+	require.Equal(t, "image/webp", newImageResource.FullUrls()[0].MimeType(), "expected first image to be webp")
+	require.Equal(t, "image/png", newImageResource.FullUrls()[1].MimeType(), "expected second image to be png")
 
-	require.NotEmpty(t, newImageResource.Preview, "preview is not empty for image")
+	require.NotEmpty(t, newImageResource.Preview(), "preview is not empty for image")
 
 	// correct dimensions
-	require.Equal(t, 532, newImageResource.Height, "should be the correct height")
-	require.Equal(t, 656, newImageResource.Width, "should be the correct width")
+	require.Equal(t, 532, newImageResource.Height(), "should be the correct height")
+	require.Equal(t, 656, newImageResource.Width(), "should be the correct width")
 
 	// expect 1 url for video
-	require.Len(t, newVideoResource.Urls, 1)
+	require.Len(t, newVideoResource.FullUrls(), 1)
 
 	// correct dimensions
-	require.Equal(t, 360, newVideoResource.Height, "should be the correct height")
-	require.Equal(t, 640, newVideoResource.Width, "should be the correct width")
+	require.Equal(t, 360, newVideoResource.Height(), "should be the correct height")
+	require.Equal(t, 640, newVideoResource.Width(), "should be the correct width")
 
 	// correct duration
-	require.Equal(t, 13347, newVideoResource.VideoDuration, "should be the correct duration")
+	require.Equal(t, 13347, newVideoResource.VideoDuration(), "should be the correct duration")
 
-	require.Equal(t, "video/mp4", newVideoResource.Urls[0].MimeType, "expected video to be mp4")
-	require.Equal(t, "image/png", newVideoResource.VideoThumbnail.MimeType, "expected video thumbnail to be png")
+	require.Equal(t, "video/mp4", newVideoResource.FullUrls()[0].MimeType, "expected video to be mp4")
+	require.Equal(t, "image/png", newVideoResource.VideoThumbnailMimeType(), "expected video thumbnail to be png")
 
-	require.NotEmpty(t, newVideoResource.Preview, "preview is not empty for video")
+	require.NotEmpty(t, newVideoResource.Preview(), "preview is not empty for video")
 
 	var processedAssertions int
 
@@ -428,17 +336,17 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	var resourceUrlsTo404 []string
 
 	// assert files existence
-	for _, entity := range newResources.Entities {
-		for _, u := range entity.Resource.Urls {
-			downloadUrl := u.URL.String()
+	for _, entity := range unmarshalledResources {
+		for _, u := range entity.FullUrls() {
+			downloadUrl := u.FullUrl()
 			require.True(t, testing_tools.FileExists(downloadUrl), "processed file exists in bucket")
 			resourceUrlsTo404 = append(resourceUrlsTo404, downloadUrl)
 			processedAssertions += 1
 		}
 
-		if entity.Resource.Type == graphql.ResourceTypeVideo {
-			downloadUrl := entity.Resource.VideoThumbnail.URL.String()
-			require.True(t, testing_tools.FileExists(entity.Resource.VideoThumbnail.URL.String()), "video thumbnail file exists in bucket")
+		if entity.IsVideo() {
+			downloadUrl := entity.VideoThumbnailFullUrl().FullUrl()
+			require.True(t, testing_tools.FileExists(downloadUrl), "video thumbnail file exists in bucket")
 			resourceUrlsTo404 = append(resourceUrlsTo404, downloadUrl)
 			processedAssertions += 1
 		}

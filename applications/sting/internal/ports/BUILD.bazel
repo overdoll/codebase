@@ -14,7 +14,6 @@ go_library(
         "//applications/sting/internal/app/command",
         "//applications/sting/internal/app/query",
         "//applications/sting/internal/app/workflows",
-        "//applications/sting/internal/domain/post",
         "//applications/sting/internal/ports/graphql",
         "//applications/sting/internal/ports/graphql/dataloader",
         "//applications/sting/proto:v1_go_proto",

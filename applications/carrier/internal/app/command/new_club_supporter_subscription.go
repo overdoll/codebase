@@ -22,10 +22,10 @@ type NewClubSupporterSubscription struct {
 type NewClubSupporterSubscriptionHandler struct {
 	mr     mailing.Repository
 	eva    EvaService
-	stella StellaService
+	stella StingService
 }
 
-func NewNewClubSupporterSubscriptionHandler(mr mailing.Repository, eva EvaService, stella StellaService) NewClubSupporterSubscriptionHandler {
+func NewNewClubSupporterSubscriptionHandler(mr mailing.Repository, eva EvaService, stella StingService) NewClubSupporterSubscriptionHandler {
 	return NewClubSupporterSubscriptionHandler{mr: mr, eva: eva, stella: stella}
 }
 

@@ -60,6 +60,7 @@ go_test(
         "//applications/hades/internal/ports",
         "//applications/hades/internal/ports/graphql/types",
         "//applications/hades/proto:v1_go_proto",
+        "//applications/sting/proto:v1_go_proto",
         "//libraries/bootstrap",
         "//libraries/clients",
         "//libraries/config",

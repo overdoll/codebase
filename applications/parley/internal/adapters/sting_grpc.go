@@ -20,7 +20,7 @@ func (s StingGrpc) GetClubById(ctx context.Context, clubId string) error {
 	_, err := s.client.GetClubById(ctx, &sting.GetClubByIdRequest{ClubId: clubId})
 
 	if err != nil {
-		return errors.Wrap(err, "stella - GetClubById")
+		return errors.Wrap(err, "sting - GetClubById")
 	}
 
 	return nil
@@ -46,7 +46,7 @@ func (s StingGrpc) SuspendClub(ctx context.Context, clubId string, endTime int64
 	_, err := s.client.SuspendClub(ctx, &sting.SuspendClubRequest{ClubId: clubId, EndTimeUnix: endTime, Source: reason})
 
 	if err != nil {
-		return errors.Wrap(err, "stella - SuspendClub")
+		return errors.Wrap(err, "sting - SuspendClub")
 	}
 
 	return nil

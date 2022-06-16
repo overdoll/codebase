@@ -94,7 +94,9 @@ func seedClub(t *testing.T, accountId string) *club.Club {
 	es := bootstrap.InitializeElasticSearchSession()
 	redis := bootstrap.InitializeRedisSession()
 
-	adapter := adapters.NewClubCassandraElasticsearchRepository(session, es, redis)
+	serializer := resource.NewSerializer()
+
+	adapter := adapters.NewClubCassandraElasticsearchRepository(session, es, redis, serializer)
 	err := adapter.ReserveSlugForClub(context.Background(), pst)
 	require.NoError(t, err)
 	err = adapter.CreateClub(context.Background(), pst)
@@ -114,11 +116,11 @@ func newPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
 	err = prin.ExtendWithClubExtension(ext)
 	require.NoError(t, err)
 
-	pst, err := post.NewPost(prin, club.UnmarshalClubFromDatabase(clubId, "", nil, false, accountId, nil))
+	pst, err := post.NewPost(prin, club.UnmarshalClubFromDatabase(clubId, "", nil, nil, nil, 0, accountId, false, nil, nil, false, false, nil, time.Now(), time.Now()))
 	require.NoError(t, err)
 
 	err = pst.UpdateAudienceRequest(prin, post.UnmarshalAudienceFromDatabase(
-		"1pcKiQL7dgUW8CIN7uO1wqFaMql", "StandardAudience", map[string]string{"en": "Standard Audience"}, nil, 1, 0, 0, time.Now(),
+		"1pcKiQL7dgUW8CIN7uO1wqFaMql", "StandardAudience", map[string]string{"en": "Standard Audience"}, nil, 1, 0, 0, time.Now(), time.Now(),
 	))
 
 	require.NoError(t, err)

@@ -16,6 +16,7 @@ go_library(
         "create_club.go",
         "create_pixelated_resources_for_supporter_only_content.go",
         "create_post_like.go",
+        "delete_account_club_data.go",
         "delete_account_curation_profile.go",
         "delete_post.go",
         "delete_post_like.go",

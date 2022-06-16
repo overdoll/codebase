@@ -87,7 +87,6 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 
 	accountId := uuid.New().String()
 	mockAccountStaff(t, accountId)
-	mockAccountDigestNormal(t, accountId)
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 

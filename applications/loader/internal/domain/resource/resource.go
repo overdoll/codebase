@@ -27,9 +27,19 @@ import (
 	"strconv"
 )
 
+type ErrorResourceCallbackNotFound struct{}
+
+func newResourceCallbackNotFound() error {
+	return &ErrorResourceCallbackNotFound{}
+}
+
+func (c *ErrorResourceCallbackNotFound) Error() string {
+	return "resource callback not found"
+}
+
 var (
 	ErrFileTypeNotAllowed       = domainerror.NewValidation("filetype not allowed")
-	ErrResourceCallbackNotFound = errors.New("resource callback not found")
+	ErrResourceCallbackNotFound = newResourceCallbackNotFound()
 )
 
 // accepted formats

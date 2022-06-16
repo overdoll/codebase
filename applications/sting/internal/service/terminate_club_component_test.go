@@ -36,7 +36,14 @@ func TestTerminateClub_and_unTerminate(t *testing.T) {
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, staffAccountId)
 	clb := seedClub(t, regularAccountId)
+	publishedPost := seedPublishedPost(t, uuid.New().String(), clb.ID())
+	postId := publishedPost.ID()
 	relayId := service.convertClubIdToRelayId(clb.ID())
+
+	// TEST WITH REGULAR ACCOUNT TO SEE IF YOU CAN SEE POST
+	regularClient := getGraphqlClientWithAuthenticatedAccount(t, regularAccountId)
+	pst := getPost(t, regularClient, postId)
+	require.NotNil(t, pst.Post, "post is not nil")
 
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(service.application.TemporalClient, workflows.TerminateClub, mock.Anything)
 
@@ -55,6 +62,10 @@ func TestTerminateClub_and_unTerminate(t *testing.T) {
 
 	updatedClb := getClub(t, client, clb.Slug())
 	require.NotNil(t, updatedClb.Club.Termination, "club is terminated")
+
+	// POST SHOULD NO LONGER BE VISIBLE AFTER TERMINATING
+	pst = getPost(t, regularClient, postId)
+	require.Nil(t, pst.Post, "post should be nil")
 
 	grpcClient := service.getGrpcClient(t)
 
@@ -92,4 +103,8 @@ func TestTerminateClub_and_unTerminate(t *testing.T) {
 	randomUserGraphqlClient = service.getGraphqlClientWithAuthenticatedAccount(t, randomUser)
 	updatedClb = getClub(t, randomUserGraphqlClient, clb.Slug())
 	require.NotNil(t, updatedClb.Club, "club should be found")
+
+	// POST SHOULD BE VISIBLE ONCE AGAIN
+	pst = getPost(t, randomUserGraphqlClient, postId)
+	require.NotNil(t, pst.Post, "post is not nil")
 }

@@ -49,7 +49,7 @@ func PublishPost(ctx workflow.Context, input PublishPostInput) error {
 
 	var payload *activities.CheckPostSupporterStatusAndSendNewPayload
 
-	// if the post has supporter-only content, we send a notification to stella that a new premium post was created
+	// if the post has supporter-only content, we update the club that we have created a new supporter only post
 	if err := workflow.ExecuteActivity(ctx, a.CheckPostSupporterStatusAndSendNew,
 		activities.CheckPostSupporterStatusAndSendNewInput{
 			PostId: input.PostId,

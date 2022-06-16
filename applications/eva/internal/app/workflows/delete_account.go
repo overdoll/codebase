@@ -105,12 +105,6 @@ func DeleteAccount(ctx workflow.Context, input DeleteAccountInput) error {
 		return err
 	}
 
-	// delete all membership data
-	if err := workflow.ExecuteActivity(ctx, a.StellaDeleteAccountData, input.AccountId).Get(ctx, nil); err != nil {
-		logger.Error("stella - failed to delete account data", "Error", err)
-		return err
-	}
-
 	// delete all account reports/moderation data
 	if err := workflow.ExecuteActivity(ctx, a.ParleyDeleteAccountData, input.AccountId).Get(ctx, nil); err != nil {
 		logger.Error("parley - failed to delete account data", "Error", err)

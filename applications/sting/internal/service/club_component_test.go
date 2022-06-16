@@ -136,6 +136,8 @@ func TestCreateClub_and_check_permission(t *testing.T) {
 	newClb := getClub(t, client, fake.Slug)
 	require.Equal(t, newClb.Club.Slug, fake.Slug, "should see club with correct slug")
 	require.True(t, newClb.Club.ViewerIsOwner, "creator should be owner of club")
+	require.False(t, newClb.Club.CanSupport, "should not be able to support a newly created club")
+	require.Nil(t, newClb.Club.NextSupporterPostTime, "next support time should be nil")
 
 	can, err = grpcClient.CanDeleteAccountData(context.Background(), &sting.CanDeleteAccountDataRequest{AccountId: testingAccountId})
 	require.NoError(t, err, "no error seeing if you can delete account data")

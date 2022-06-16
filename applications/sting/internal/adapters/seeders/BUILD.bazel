@@ -10,6 +10,7 @@ go_library(
         "//applications/sting/internal/adapters/seeders/data",
         "//libraries/bootstrap",
         "//libraries/database",
+        "//libraries/resource",
         "@com_github_scylladb_gocqlx_v2//:gocqlx",
     ],
 )

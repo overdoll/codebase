@@ -8,7 +8,6 @@ import (
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/command"
 	"overdoll/applications/sting/internal/app/query"
-	"overdoll/applications/sting/internal/domain/post"
 	sting "overdoll/applications/sting/proto"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/resource"
@@ -109,9 +108,15 @@ func (s Server) DeleteAccountData(ctx context.Context, request *sting.DeleteAcco
 
 func (s Server) UpdateResources(ctx context.Context, request *proto.UpdateResourcesRequest) (*proto.UpdateResourcesResponse, error) {
 
-	if err := s.app.Commands.UpdateResources.Handle(ctx, command.UpdateResources{Resources: resource.UnmarshalResourcesFromProto(request.Resources)}); err != nil {
+	unmarshalled, err := resource.UnmarshalResourcesFromProto(ctx, request.Resources)
 
-		if err == post.ErrResourceNotPresent {
+	if err != nil {
+		return nil, err
+	}
+
+	if err := s.app.Commands.UpdateResources.Handle(ctx, command.UpdateResources{Resources: unmarshalled}); err != nil {
+
+		if err == resource.ErrResourceNotPresent {
 			return nil, status.Error(codes.NotFound, err.Error())
 		}
 

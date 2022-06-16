@@ -48,6 +48,7 @@ go_test(
         "//applications/eva/internal/ports/graphql/types",
         "//applications/eva/proto:v1_go_proto",
         "//applications/hades/proto:v1_go_proto",
+        "//applications/sting/proto:v1_go_proto",
         "//libraries/bootstrap",
         "//libraries/config",
         "//libraries/graphql",

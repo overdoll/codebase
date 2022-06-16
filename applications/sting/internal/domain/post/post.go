@@ -474,9 +474,6 @@ func (p *Post) RemoveContentRequest(requester *principal.Principal, contentIds [
 
 		for _, removedContent := range contentIds {
 			if removedContent == content.id {
-				if !content.resource.IsProcessed() {
-					return domainerror.NewValidation("cannot remove content that is not yet processed")
-				}
 				foundContent = true
 				continue
 			}

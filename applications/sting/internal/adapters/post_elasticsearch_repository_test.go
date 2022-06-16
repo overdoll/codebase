@@ -50,6 +50,7 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 				nil,
 				nil,
 				time.Now(),
+				time.Now(),
 				&postTime,
 			)
 

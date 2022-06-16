@@ -42,6 +42,7 @@ go_test(
     srcs = ["post_content_test.go"],
     embed = [":post"],
     deps = [
+        "//applications/sting/proto:v1_go_proto",
         "//libraries/principal",
         "//libraries/resource",
         "//libraries/testing_tools",

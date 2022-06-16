@@ -6,10 +6,10 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 	eva "overdoll/applications/eva/proto"
-	service2 "overdoll/applications/loader/internal/service"
 	loader "overdoll/applications/loader/proto"
 	parley "overdoll/applications/parley/proto"
 	"overdoll/applications/sting/internal/service"
+	"overdoll/libraries/resource/proto"
 	"testing"
 )
 
@@ -19,7 +19,19 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 	application = testApplication
 
 	application.LoaderClient.On("CreateOrGetResourcesFromUploads", mock.Anything, mock.Anything).Return(func(c context.Context, req *loader.CreateOrGetResourcesFromUploadsRequest, g ...grpc.CallOption) *loader.CreateOrGetResourcesFromUploadsResponse {
-		return &loader.CreateOrGetResourcesFromUploadsResponse{AllResourceIds: req.ResourceIds}
+
+		var res []*proto.Resource
+
+		for _, r := range req.ResourceIds {
+			res = append(res, &proto.Resource{
+				Id:        req.ItemId,
+				ItemId:    r,
+				Processed: false,
+				Private:   false,
+			})
+		}
+
+		return &loader.CreateOrGetResourcesFromUploadsResponse{Resources: res}
 	}, nil)
 
 	application.CarrierClient.On("ClubSuspended", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
@@ -30,16 +42,12 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 
 	application.ParleyClient.On("PutPostIntoModeratorQueueOrPublish", mock.Anything, mock.Anything).Return(&parley.PutPostIntoModeratorQueueOrPublishResponse{PutIntoReview: false}, nil)
 
-	application.LoaderClient.On("CreateOrGetResourcesFromUploads", mock.Anything, mock.Anything).Return(func(c context.Context, req *loader.CreateOrGetResourcesFromUploadsRequest, g ...grpc.CallOption) *loader.CreateOrGetResourcesFromUploadsResponse {
-		return &loader.CreateOrGetResourcesFromUploadsResponse{AllResourceIds: req.ResourceIds}
-	}, nil)
-
 	application.LoaderClient.On("GetResources", mock.Anything, mock.Anything).Return(func(c context.Context, req *loader.GetResourcesRequest, g ...grpc.CallOption) *loader.GetResourcesResponse {
 
-		var res []*loader.Resource
+		var res []*proto.Resource
 
 		for _, r := range req.ResourceIds {
-			res = append(res, &loader.Resource{
+			res = append(res, &proto.Resource{
 				Id:          req.ItemId,
 				ItemId:      r,
 				Processed:   true,
@@ -48,7 +56,7 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 			})
 		}
 
-		return &loader.GetResourcesResponse{service2.Resources: res}
+		return &loader.GetResourcesResponse{Resources: res}
 	}, nil)
 
 	application.LoaderClient.On("CopyResourcesAndApplyFilter", mock.Anything, mock.Anything).Return(func(c context.Context, req *loader.CopyResourcesAndApplyFilterRequest, g ...grpc.CallOption) *loader.CopyResourcesAndApplyFilterResponse {
@@ -61,14 +69,14 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 					Id:     r.Id,
 					ItemId: r.ItemId,
 				},
-				NewResource: &loader.ResourceIdentifier{
+				NewResource: &proto.Resource{
 					ItemId: r.ItemId,
 					Id:     r.Id + "_FILTERED",
 				},
 			})
 		}
 
-		return &loader.CopyResourcesAndApplyFilterResponse{service2.Resources: res}
+		return &loader.CopyResourcesAndApplyFilterResponse{Resources: res}
 	}, nil)
 }
 
@@ -90,20 +98,4 @@ func mockAccountNormal(t *testing.T, accountId string) {
 			Secure: true,
 		}
 	}, nil)
-}
-
-func mockAccountDigestClubOwner(t *testing.T, accountId string, clubId string) {
-
-}
-
-func mockAccountDigestNormal(t *testing.T, accountId string) {
-
-}
-
-func mockAccountDigestMembership(t *testing.T, accountId, clubId string) {
-
-}
-
-func mockAccountDigestSupporter(t *testing.T, accountId, clubId string) {
-
 }

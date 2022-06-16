@@ -36,6 +36,7 @@ func TestPostRepository_failure(t *testing.T) {
 			nil,
 			nil,
 			time.Now(),
+			time.Now(),
 			nil,
 		)
 

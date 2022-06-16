@@ -14,10 +14,10 @@ type ClubSupporterNoPosts struct {
 type ClubSupporterNoPostsHandler struct {
 	mr     mailing.Repository
 	eva    EvaService
-	stella StellaService
+	stella StingService
 }
 
-func NewClubSupporterNoPostsHandler(mr mailing.Repository, eva EvaService, stella StellaService) ClubSupporterNoPostsHandler {
+func NewClubSupporterNoPostsHandler(mr mailing.Repository, eva EvaService, stella StingService) ClubSupporterNoPostsHandler {
 	return ClubSupporterNoPostsHandler{mr: mr, eva: eva, stella: stella}
 }
 

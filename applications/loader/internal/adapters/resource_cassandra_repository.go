@@ -266,6 +266,10 @@ func (r ResourceCassandraS3Repository) DeleteResources(ctx context.Context, reso
 
 	for _, target := range resourceItems {
 
+		if !target.IsProcessed() {
+			return apperror.NewRecoverableError("resource not yet processed")
+		}
+
 		bucket := ""
 
 		if target.IsProcessed() {

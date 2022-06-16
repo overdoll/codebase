@@ -10,6 +10,7 @@ go_library(
         "category_curation_profile.go",
         "character.go",
         "club.go",
+        "club_member.go",
         "post.go",
         "series.go",
     ],

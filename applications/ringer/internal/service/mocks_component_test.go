@@ -4,7 +4,7 @@ import (
 	"github.com/stretchr/testify/mock"
 	eva "overdoll/applications/eva/proto"
 	"overdoll/applications/ringer/internal/service"
-	stella "overdoll/applications/stella/proto"
+	sting "overdoll/applications/sting/proto"
 	"overdoll/libraries/uuid"
 	"testing"
 )
@@ -33,24 +33,24 @@ func mockAccountStaff(t *testing.T, accountId string) {
 
 func mockAccountDigestOwnClub(t *testing.T, accountId, clubId string) {
 	application.StingClient.On("GetAccountClubDigest", mock.Anything,
-		&stella.GetAccountClubDigestRequest{AccountId: accountId}).Return(&stella.GetAccountClubDigestResponse{
+		&sting.GetAccountClubDigestRequest{AccountId: accountId}).Return(&sting.GetAccountClubDigestResponse{
 		SupportedClubIds:  []string{},
 		ClubMembershipIds: []string{},
 		OwnerClubIds:      []string{clubId},
 	}, nil)
 
-	application.StingClient.On("GetClubById", mock.Anything, &stella.GetClubByIdRequest{ClubId: clubId}).Return(&stella.GetClubByIdResponse{Club: &stella.Club{OwnerAccountId: accountId}}, nil)
+	application.StingClient.On("GetClubById", mock.Anything, &sting.GetClubByIdRequest{ClubId: clubId}).Return(&sting.GetClubByIdResponse{Club: &sting.Club{OwnerAccountId: accountId}}, nil)
 }
 
 func mockAccountDigestDefault(t *testing.T, accountId, clubId string) {
 	application.StingClient.On("GetAccountClubDigest", mock.Anything,
-		&stella.GetAccountClubDigestRequest{AccountId: accountId}).Return(&stella.GetAccountClubDigestResponse{
+		&sting.GetAccountClubDigestRequest{AccountId: accountId}).Return(&sting.GetAccountClubDigestResponse{
 		SupportedClubIds:  []string{},
 		ClubMembershipIds: []string{},
 		OwnerClubIds:      []string{},
 	}, nil)
 	accId := uuid.New().String()
-	application.StingClient.On("GetClubById", mock.Anything, &stella.GetClubByIdRequest{ClubId: clubId}).Return(&stella.GetClubByIdResponse{Club: &stella.Club{OwnerAccountId: accId}}, nil)
+	application.StingClient.On("GetClubById", mock.Anything, &sting.GetClubByIdRequest{ClubId: clubId}).Return(&sting.GetClubByIdResponse{Club: &sting.Club{OwnerAccountId: accId}}, nil)
 	application.EvaClient.On("GetAccount", mock.Anything, &eva.GetAccountRequest{Id: accId}).Return(&eva.Account{
 		Id:     accId,
 		Roles:  []string{"ARTIST"},

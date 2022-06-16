@@ -10,11 +10,12 @@ import (
 )
 
 type LoaderGrpc struct {
-	client loader.LoaderClient
+	client     loader.LoaderClient
+	serializer *resource.Serializer
 }
 
-func NewLoaderGrpc(client loader.LoaderClient) LoaderGrpc {
-	return LoaderGrpc{client: client}
+func NewLoaderGrpc(client loader.LoaderClient, serializer *resource.Serializer) LoaderGrpc {
+	return LoaderGrpc{client: client, serializer: serializer}
 }
 
 func (s LoaderGrpc) CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string, private bool, token string) ([]*resource.Resource, error) {
@@ -25,7 +26,13 @@ func (s LoaderGrpc) CreateOrGetResourcesFromUploads(ctx context.Context, itemId 
 		return nil, errors.Wrap(err, "failed to create or get resources from uploads")
 	}
 
-	return resource.UnmarshalResourcesFromProto(md.Resources), nil
+	resources, err := s.serializer.UnmarshalResourcesFromProto(ctx, md.Resources)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return resources, nil
 }
 
 func (s LoaderGrpc) CopyResourcesAndApplyPixelateFilter(ctx context.Context, itemId string, resourceIds []string, pixelate int, private bool) ([]*post.NewContent, error) {
@@ -50,9 +57,15 @@ func (s LoaderGrpc) CopyResourcesAndApplyPixelateFilter(ctx context.Context, ite
 	}
 
 	var res []*post.NewContent
-
 	for _, r := range md.Resources {
-		res = append(res, post.UnmarshalNewContentFromDatabase(itemId, r.OldResource.Id, resource.UnmarshalResourceFromProto(r.NewResource)))
+
+		unmarshalled, err := s.serializer.UnmarshalResourceFromProto(ctx, r.NewResource)
+
+		if err != nil {
+			return nil, err
+		}
+
+		res = append(res, post.UnmarshalNewContentFromDatabase(itemId, r.OldResource.Id, unmarshalled))
 	}
 
 	return res, nil

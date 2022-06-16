@@ -82,7 +82,6 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 
 	accountId := uuid.New().String()
 	mockAccountStaff(t, accountId)
-	mockAccountDigestNormal(t, accountId)
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
@@ -161,7 +160,6 @@ func TestCreateCharacter_update_series_and_search_character(t *testing.T) {
 
 	accountId := uuid.New().String()
 	mockAccountStaff(t, accountId)
-	mockAccountDigestNormal(t, accountId)
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 

@@ -8,7 +8,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 	carrier "overdoll/applications/carrier/proto"
 	eva "overdoll/applications/eva/proto"
-	stella "overdoll/applications/stella/proto"
+	sting "overdoll/applications/sting/proto"
 	"overdoll/libraries/uuid"
 	"testing"
 	"time"
@@ -31,7 +31,7 @@ func TestNewClubSupporterSubscription(t *testing.T) {
 	email := generateEmail("carrier-" + accountId)
 
 	application.EvaClient.On("GetAccount", mock.Anything, &eva.GetAccountRequest{Id: accountId}).Return(&eva.Account{Id: accountId, Email: email, Username: "test user"}, nil).Once()
-	application.StellaClient.On("GetClubById", mock.Anything, &stella.GetClubByIdRequest{ClubId: clubId}).Return(&stella.GetClubByIdResponse{Club: &stella.Club{OwnerAccountId: accountId, Slug: "test-club", Name: "test a club"}}, nil).Once()
+	application.StingClient.On("GetClubById", mock.Anything, &sting.GetClubByIdRequest{ClubId: clubId}).Return(&sting.GetClubByIdResponse{Club: &sting.Club{OwnerAccountId: accountId, Slug: "test-club", Name: "test a club"}}, nil).Once()
 
 	tm, _ := time.Parse("2006-01-02T15:04:05.000Z", "2014-11-12T11:45:26.371Z")
 

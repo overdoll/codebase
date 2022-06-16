@@ -12,12 +12,13 @@ import (
 	"os"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/resource/proto"
 	"overdoll/libraries/support"
 	"sync"
 	"time"
 )
 
-type SerializedResource struct {
+type serializedResource struct {
 	ItemId                 string   `json:"item_id"`
 	ResourceId             string   `json:"resource_id"`
 	Type                   int      `json:"type"`
@@ -77,26 +78,42 @@ func unmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate 
 	}
 }
 
-func MarshalResourcesToDatabase(resources []*Resource) ([]string, error) {
-	return nil, nil
-}
-
 func MarshalResourceToDatabase(resources *Resource) (string, error) {
 
 	if resources == nil {
 		return "", nil
 	}
 
-	return "", nil
+	data, err := json.Marshal(&serializedResource{
+		ItemId:                 resources.itemId,
+		ResourceId:             resources.id,
+		Type:                   resources.resourceType.Int(),
+		MimeTypes:              resources.MimeTypes(),
+		Processed:              resources.processed,
+		ProcessedId:            resources.processedId,
+		IsPrivate:              resources.isPrivate,
+		VideoDuration:          resources.videoDuration,
+		VideoThumbnail:         resources.videoThumbnail,
+		VideoThumbnailMimeType: resources.videoThumbnailMimeType,
+		Width:                  resources.width,
+		Height:                 resources.height,
+		Preview:                resources.preview,
+	})
+
+	if err != nil {
+		return "", err
+	}
+
+	return string(data), nil
 }
 
 func (c Serializer) unmarshalResources(ctx context.Context, resourcesList []string) ([]*Resource, error) {
 
-	var res []SerializedResource
+	var res []serializedResource
 
 	for _, rString := range resourcesList {
 
-		var re SerializedResource
+		var re serializedResource
 
 		if err := json.Unmarshal([]byte(rString), &re); err != nil {
 			return nil, err
@@ -114,7 +131,7 @@ func (c Serializer) unmarshalResources(ctx context.Context, resourcesList []stri
 	resourcesResult := make([]*Resource, len(res))
 
 	for i, z := range res {
-		go func(index int, z SerializedResource) {
+		go func(index int, z serializedResource) {
 			defer wg.Done()
 			result, err := c.unmarshalResourceFromDatabaseWithSignedUrls(z)
 
@@ -141,6 +158,101 @@ func (c Serializer) unmarshalResources(ctx context.Context, resourcesList []stri
 	return resourcesResult, nil
 }
 
+func UnmarshalResourcesFromProto(ctx context.Context, resource []*proto.Resource) ([]*Resource, error) {
+
+	var resources []*Resource
+
+	for _, item := range resource {
+		resources = append(resources, UnmarshalResourceFromProto(ctx, item))
+	}
+
+	return resources, nil
+}
+
+func UnmarshalResourceFromProto(ctx context.Context, resource *proto.Resource) *Resource {
+
+	var tp Type
+
+	if resource.Type == proto.ResourceType_IMAGE {
+		tp = Image
+	}
+
+	if resource.Type == proto.ResourceType_VIDEO {
+		tp = Video
+	}
+
+	return &Resource{
+		itemId:                 resource.ItemId,
+		id:                     resource.Id,
+		processed:              resource.Processed,
+		processedId:            resource.ProcessedId,
+		urls:                   nil,
+		videoThumbnailUrl:      nil,
+		isPrivate:              resource.Private,
+		videoThumbnail:         resource.VideoThumbnail,
+		videoThumbnailMimeType: resource.VideoThumbnailMimeType,
+		width:                  int(resource.Width),
+		height:                 int(resource.Height),
+		videoDuration:          int(resource.VideoDuration),
+		mimeTypes:              resource.MimeTypes,
+		resourceType:           tp,
+		preview:                resource.Preview,
+		token:                  resource.Token,
+	}
+}
+
+func (c *Serializer) UnmarshalResourceFromProto(ctx context.Context, resource *proto.Resource) (*Resource, error) {
+	result, err := c.UnmarshalResourcesFromProto(ctx, []*proto.Resource{resource})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result[0], nil
+}
+
+func (c *Serializer) UnmarshalResourcesFromProto(ctx context.Context, resource []*proto.Resource) ([]*Resource, error) {
+
+	var resources []string
+
+	for _, item := range resource {
+
+		var tp int
+
+		if item.Type == proto.ResourceType_IMAGE {
+			tp = 1
+		}
+
+		if item.Type == proto.ResourceType_VIDEO {
+			tp = 2
+		}
+
+		data, err := json.Marshal(&serializedResource{
+			ItemId:                 item.ItemId,
+			ResourceId:             item.Id,
+			Type:                   tp,
+			MimeTypes:              item.MimeTypes,
+			Processed:              item.Processed,
+			ProcessedId:            item.ProcessedId,
+			IsPrivate:              item.Private,
+			VideoDuration:          int(item.VideoDuration),
+			VideoThumbnail:         item.VideoThumbnail,
+			VideoThumbnailMimeType: item.VideoThumbnailMimeType,
+			Width:                  int(item.Width),
+			Height:                 int(item.Height),
+			Preview:                item.Preview,
+		})
+
+		if err != nil {
+			return nil, err
+		}
+
+		resources = append(resources, string(data))
+	}
+
+	return c.UnmarshalResourcesFromDatabase(ctx, resources)
+}
+
 func (c *Serializer) UnmarshalResourceFromDatabase(ctx context.Context, serializedResources string) (*Resource, error) {
 
 	if serializedResources == "" {
@@ -158,7 +270,7 @@ func (c *Serializer) UnmarshalResourceFromDatabase(ctx context.Context, serializ
 		return target[0], nil
 	}
 
-	var i SerializedResource
+	var i serializedResource
 
 	if err := json.Unmarshal([]byte(serializedResources), &i); err != nil {
 		return nil, err
@@ -205,7 +317,7 @@ func (c *Serializer) UnmarshalResourcesFromDatabase(ctx context.Context, seriali
 	} else {
 		for _, resourceString := range serializedResources {
 
-			var i SerializedResource
+			var i serializedResource
 
 			if err := json.Unmarshal([]byte(resourceString), &i); err != nil {
 				return nil, err
@@ -235,7 +347,7 @@ func (c *Serializer) UnmarshalResourcesFromDatabase(ctx context.Context, seriali
 	return targets, nil
 }
 
-func (c *Serializer) unmarshalResourceFromDatabaseWithSignedUrls(i SerializedResource) (*Resource, error) {
+func (c *Serializer) unmarshalResourceFromDatabaseWithSignedUrls(i serializedResource) (*Resource, error) {
 
 	s3Client := s3.New(c.aws)
 
@@ -271,7 +383,7 @@ func (c *Serializer) unmarshalResourceFromDatabaseWithSignedUrls(i SerializedRes
 
 		if i.IsPrivate && i.Processed {
 
-			signedURL, err := c.resourcesSigner.Sign(os.Getenv("PRIVATE_RESOURCES_URL")+key, time.Now().Add(15*time.Minute))
+			signedURL, err := c.resourcesSigner.Sign(os.Getenv("PRIVATE_RESOURCES_URL")+key, time.Now().Add(60*time.Minute))
 
 			if err != nil {
 				return nil, errors.Wrap(err, "could not generate signed url")
@@ -318,7 +430,7 @@ func (c *Serializer) unmarshalResourceFromDatabaseWithSignedUrls(i SerializedRes
 
 		if i.IsPrivate {
 
-			signedURL, err := c.resourcesSigner.Sign(os.Getenv("PRIVATE_RESOURCES_URL")+"/"+i.ItemId+"/"+i.VideoThumbnail+format, time.Now().Add(15*time.Minute))
+			signedURL, err := c.resourcesSigner.Sign(os.Getenv("PRIVATE_RESOURCES_URL")+"/"+i.ItemId+"/"+i.VideoThumbnail+format, time.Now().Add(60*time.Minute))
 
 			if err != nil {
 				return nil, errors.Wrap(err, "could not generate video thumbnail signed url")

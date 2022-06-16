@@ -83,7 +83,6 @@ func TestCreateCategory_update_and_search(t *testing.T) {
 
 	accountId := uuid.New().String()
 	mockAccountStaff(t, accountId)
-	mockAccountDigestNormal(t, accountId)
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 

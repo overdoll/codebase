@@ -15,6 +15,7 @@ import (
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
+	"time"
 )
 
 type PostModified struct {
@@ -150,10 +151,10 @@ type PostsEntities struct {
 func TestCreatePost_Submit_and_publish(t *testing.T) {
 	t.Parallel()
 
-	clubId := uuid.New().String()
 	testingAccountId := newFakeAccount(t)
+	clb := seedClub(t, testingAccountId)
+	clubId := clb.ID()
 	mockAccountNormal(t, testingAccountId)
-	mockAccountDigestClubOwner(t, testingAccountId, clubId)
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 
@@ -363,7 +364,6 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	testAccount := uuid.New().String()
 	mockAccountNormal(t, testAccount)
-	mockAccountDigestNormal(t, testAccount)
 	client = getGraphqlClientWithAuthenticatedAccount(t, testAccount)
 
 	post = getPost(t, client, postId)
@@ -376,7 +376,17 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	testAccountClubSupporter := uuid.New().String()
 	mockAccountNormal(t, testAccountClubSupporter)
-	mockAccountDigestSupporter(t, testAccountClubSupporter, clubId)
+
+	// make this account a supporter
+	env := getWorkflowEnvironment()
+	env.ExecuteWorkflow(workflows.AddClubSupporter, workflows.AddClubSupporterInput{
+		ClubId:      clubId,
+		AccountId:   testAccountClubSupporter,
+		SupportedAt: time.Now(),
+	})
+	require.True(t, env.IsWorkflowCompleted())
+	require.NoError(t, env.GetWorkflowError())
+
 	client = getGraphqlClientWithAuthenticatedAccount(t, testAccountClubSupporter)
 
 	post = getPost(t, client, postId)
@@ -514,15 +524,20 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.Equal(t, 1, len(clubPosts.Entities[0].Club.Posts.Edges), "1 post for supporter only status partial")
+
+	// SHOULD BE ABLE TO SUPPORT CLUB SINCE WE POSTED AT LEAST 1 PREMIUM POST
+	clubViewer := getClub(t, client, clb.Slug())
+	require.True(t, clubViewer.Club.CanSupport, "should be able to support now that the club has created a new post")
+	require.NotNil(t, clubViewer.Club.NextSupporterPostTime, "should have a next supporter post time now")
 }
 
 func TestCreatePost_Publish(t *testing.T) {
 	t.Parallel()
 
-	clubId := uuid.New().String()
 	testingAccountId := newFakeAccount(t)
+	clb := seedClub(t, testingAccountId)
+	clubId := clb.ID()
 	mockAccountNormal(t, testingAccountId)
-	mockAccountDigestClubOwner(t, testingAccountId, clubId)
 
 	pst := seedReviewPost(t, testingAccountId, clubId)
 	postId := pst.ID()
@@ -548,10 +563,10 @@ func TestCreatePost_Publish(t *testing.T) {
 func TestCreatePost_Discard(t *testing.T) {
 	t.Parallel()
 
-	clubId := uuid.New().String()
 	testingAccountId := newFakeAccount(t)
+	clb := seedClub(t, testingAccountId)
+	clubId := clb.ID()
 	mockAccountNormal(t, testingAccountId)
-	mockAccountDigestClubOwner(t, testingAccountId, clubId)
 
 	pst := seedPublishingPost(t, testingAccountId, clubId)
 	postId := pst.ID()
@@ -585,10 +600,10 @@ type DeletePost struct {
 func TestCreatePost_Reject_and_delete(t *testing.T) {
 	t.Parallel()
 
-	clubId := uuid.New().String()
 	testingAccountId := newFakeAccount(t)
+	clb := seedClub(t, testingAccountId)
+	clubId := clb.ID()
 	mockAccountNormal(t, testingAccountId)
-	mockAccountDigestClubOwner(t, testingAccountId, clubId)
 
 	pst := seedPublishingPost(t, testingAccountId, clubId)
 	postId := pst.ID()
@@ -629,10 +644,10 @@ func TestCreatePost_Reject_and_delete(t *testing.T) {
 func TestCreatePost_Remove(t *testing.T) {
 	t.Parallel()
 
-	clubId := uuid.New().String()
 	testingAccountId := newFakeAccount(t)
+	clb := seedClub(t, testingAccountId)
+	clubId := clb.ID()
 	mockAccountNormal(t, testingAccountId)
-	mockAccountDigestClubOwner(t, testingAccountId, clubId)
 
 	pst := seedPublishingPost(t, testingAccountId, clubId)
 	postId := pst.ID()

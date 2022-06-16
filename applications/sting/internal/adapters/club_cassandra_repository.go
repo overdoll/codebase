@@ -39,7 +39,7 @@ var clubTable = table.New(table.Metadata{
 		"terminated",
 		"terminated_by_account_id",
 		"created_at",
-		"upated_at",
+		"updated_at",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
