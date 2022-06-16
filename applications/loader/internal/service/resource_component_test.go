@@ -16,6 +16,7 @@ import (
 	"overdoll/libraries/uuid"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
@@ -38,18 +39,22 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceIds: []string{
 		imageId,
 		videoId,
-	}})
+	}, Source: "STING"})
 
 	// start processing of files by calling grpc endpoint
 	res, err := grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{
 		ItemId:      itemId,
 		ResourceIds: []string{imageFileId, videoFileId},
 		Private:     true,
+		Source:      proto.SOURCE_STING,
 	})
 
 	require.NoError(t, err, "no error creating new resources from uploads")
 
-	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+	env := getWorkflowEnvironment()
+	env.SetTestTimeout(time.Second * 10)
+
+	workflowExecution.FindAndExecuteWorkflow(t, env)
 
 	resourceResults, err := grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{
 		ItemId:      itemId,
@@ -203,13 +208,14 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceIds: []string{
 		strings.Split(imageFileId, "+")[0],
 		strings.Split(videoFileId, "+")[0],
-	}})
+	}, Source: "STING"})
 
 	// start processing of files by calling grpc endpoint
 	res, err := grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{
 		ItemId:      itemId,
 		ResourceIds: []string{imageFileId, videoFileId},
 		Private:     false,
+		Source:      proto.SOURCE_STING,
 	})
 
 	require.NoError(t, err, "no error creating new resources from uploads")
@@ -268,7 +274,10 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 
 	require.Equal(t, 2, assertions, "expected to have checked 2 files")
 
-	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+	env := getWorkflowEnvironment()
+	env.SetTestTimeout(time.Second * 10)
+
+	workflowExecution.FindAndExecuteWorkflow(t, env)
 
 	// then, run grpc call once again to make sure its processed
 	resources, err = grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{
@@ -325,7 +334,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	// correct duration
 	require.Equal(t, 13347, newVideoResource.VideoDuration(), "should be the correct duration")
 
-	require.Equal(t, "video/mp4", newVideoResource.FullUrls()[0].MimeType, "expected video to be mp4")
+	require.Equal(t, "video/mp4", newVideoResource.FullUrls()[0].MimeType(), "expected video to be mp4")
 	require.Equal(t, "image/png", newVideoResource.VideoThumbnailMimeType(), "expected video thumbnail to be png")
 
 	require.NotEmpty(t, newVideoResource.Preview(), "preview is not empty for video")

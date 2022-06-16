@@ -19,7 +19,7 @@ func NewEventTemporalRepository(client client.Client) EventTemporalRepository {
 	return EventTemporalRepository{client: client}
 }
 
-func (r EventTemporalRepository) ProcessResources(ctx context.Context, itemId string, resourceIds []string) error {
+func (r EventTemporalRepository) ProcessResources(ctx context.Context, itemId string, resourceIds []string, source string) error {
 
 	processResourcesHash := md5.New()
 	processResourcesHash.Write([]byte(itemId))
@@ -37,6 +37,7 @@ func (r EventTemporalRepository) ProcessResources(ctx context.Context, itemId st
 		workflows.ProcessResourcesInput{
 			ItemId:      itemId,
 			ResourceIds: resourceIds,
+			Source:      source,
 		},
 	)
 

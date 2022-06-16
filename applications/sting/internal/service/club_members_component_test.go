@@ -8,7 +8,6 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
-	"overdoll/applications/sting/internal/service"
 	sting "overdoll/applications/sting/proto"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
@@ -124,13 +123,13 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	// become a club member
 	var joinClub JoinClub
 	err := client.Mutate(context.Background(), &joinClub, map[string]interface{}{
-		"input": types.JoinClubInput{ClubID: service.convertClubIdToRelayId(clubId)},
+		"input": types.JoinClubInput{ClubID: convertClubIdToRelayId(clubId)},
 	})
 	require.NoError(t, err, "no error becoming a club member")
 
-	workflowExecution.FindAndExecuteWorkflow(t, service.getWorkflowEnvironment())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
-	service.refreshClubESIndex(t)
+	refreshClubESIndex(t)
 
 	// get club and check that the viewer is part of it
 	clubViewer := getClubViewer(t, client, clb.Slug())
@@ -139,7 +138,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	// make sure count is "2"
 	require.Equal(t, 2, clubViewer.Club.MembersCount, "two club members total, including the original owner")
 
-	clubViewerOwner := getClubViewerWithSupportersCount(t, service.getGraphqlClientWithAuthenticatedAccount(t, ownerAccountId), clb.Slug())
+	clubViewerOwner := getClubViewerWithSupportersCount(t, getGraphqlClientWithAuthenticatedAccount(t, ownerAccountId), clb.Slug())
 	require.Equal(t, 1, clubViewerOwner.Club.MembersIsSupporterCount, "no supporters")
 
 	// grab account ID so we can look through club members
@@ -155,7 +154,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 		"representations": []_Any{
 			{
 				"__typename": "Account",
-				"id":         service.convertAccountIdToRelayId(testingAccountId),
+				"id":         convertAccountIdToRelayId(testingAccountId),
 			},
 		},
 	})
@@ -166,7 +165,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	require.Equal(t, accountId, accountClubDetails.Entities[0].Account.ClubMemberships.Edges[0].Node.Account.ID, "should have found the club member in account's club membership list")
 
 	// grpc: check the results are the same
-	grpcClient := service.getGrpcClient(t)
+	grpcClient := getGrpcClient(t)
 
 	// check permissions
 	res, err := grpcClient.GetAccountClubDigest(context.Background(), &sting.GetAccountClubDigestRequest{
@@ -178,7 +177,7 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 
 	require.Equal(t, clubId, res.ClubMembershipIds[0], "should have a matching club ID")
 
-	addSupporterWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(service.application.TemporalClient, workflows.AddClubSupporter, mock.Anything)
+	addSupporterWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.AddClubSupporter, mock.Anything)
 
 	// now, make this member a supporter
 	_, err = grpcClient.AddClubSupporter(context.Background(), &sting.AddClubSupporterRequest{
@@ -189,15 +188,15 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	require.NoError(t, err, "no error making a club member a supporter")
 
 	// run supporter method
-	addSupporterWorkflowExecution.FindAndExecuteWorkflow(t, service.getWorkflowEnvironment())
+	addSupporterWorkflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	clubViewer = getClubViewer(t, client, clb.Slug())
 	require.True(t, clubViewer.Club.ViewerMember.IsSupporter, "should now be a supporter of club")
 
-	clubViewerOwner = getClubViewerWithSupportersCount(t, service.getGraphqlClientWithAuthenticatedAccount(t, ownerAccountId), clb.Slug())
+	clubViewerOwner = getClubViewerWithSupportersCount(t, getGraphqlClientWithAuthenticatedAccount(t, ownerAccountId), clb.Slug())
 	require.Equal(t, 2, clubViewerOwner.Club.MembersIsSupporterCount, "2 supporters")
 
-	removeSupporterWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(service.application.TemporalClient, workflows.RemoveClubSupporter, mock.Anything)
+	removeSupporterWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.RemoveClubSupporter, mock.Anything)
 
 	// now, make this member a supporter
 	_, err = grpcClient.RemoveClubSupporter(context.Background(), &sting.RemoveClubSupporterRequest{
@@ -207,15 +206,15 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	require.NoError(t, err, "no error making a club member a supporter")
 
 	// run supporter method
-	removeSupporterWorkflowExecution.FindAndExecuteWorkflow(t, service.getWorkflowEnvironment())
+	removeSupporterWorkflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	clubViewer = getClubViewer(t, client, clb.Slug())
 	require.False(t, clubViewer.Club.ViewerMember.IsSupporter, "should no longer be a supporter of the club")
 
-	clubViewerOwner = getClubViewerWithSupportersCount(t, service.getGraphqlClientWithAuthenticatedAccount(t, ownerAccountId), clb.Slug())
+	clubViewerOwner = getClubViewerWithSupportersCount(t, getGraphqlClientWithAuthenticatedAccount(t, ownerAccountId), clb.Slug())
 	require.Equal(t, 1, clubViewerOwner.Club.MembersIsSupporterCount, "no supporters")
 
-	removeMemberWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(service.application.TemporalClient, workflows.RemoveClubMember, mock.Anything)
+	removeMemberWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.RemoveClubMember, mock.Anything)
 
 	// withdraw club membership
 	var leaveClub LeaveClub
@@ -224,9 +223,9 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	})
 	require.NoError(t, err, "no error withdrawing club membership")
 
-	removeMemberWorkflowExecution.FindAndExecuteWorkflow(t, service.getWorkflowEnvironment())
+	removeMemberWorkflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
-	service.refreshClubESIndex(t)
+	refreshClubESIndex(t)
 
 	// get club and check that the viewer is part of it
 	clubViewer = getClubViewer(t, client, clb.Slug())
@@ -236,17 +235,21 @@ func TestCreateClub_become_member_and_withdraw(t *testing.T) {
 	require.Equal(t, 1, clubViewer.Club.MembersCount, "only 1 member, owner")
 	require.Len(t, clubViewer.Club.Members.Edges, 1, "edges count is 1, owner only")
 
-	workflowExecution = testing_tools.NewMockWorkflowWithArgs(service.application.TemporalClient, workflows.AddClubMember, mock.Anything)
+	workflowExecution = testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.AddClubMember, mock.Anything)
 
 	err = client.Mutate(context.Background(), &joinClub, map[string]interface{}{
-		"input": types.JoinClubInput{ClubID: service.convertClubIdToRelayId(clubId)},
+		"input": types.JoinClubInput{ClubID: convertClubIdToRelayId(clubId)},
 	})
 	require.NoError(t, err, "no error becoming a club member")
 
-	workflowExecution.FindAndExecuteWorkflow(t, service.getWorkflowEnvironment())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+
+	workflowExecution = testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.DeleteAccountData, workflows.DeleteAccountDataInput{AccountId: testingAccountId})
 
 	_, err = grpcClient.DeleteAccountData(context.Background(), &sting.DeleteAccountDataRequest{AccountId: testingAccountId})
 	require.NoError(t, err, "no error deleting account data")
+
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	clubViewer = getClubViewer(t, client, clb.Slug())
 	require.Nil(t, clubViewer.Club.ViewerMember, "should no longer be a member")

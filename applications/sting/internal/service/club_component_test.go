@@ -9,7 +9,6 @@ import (
 	"go.temporal.io/sdk/mocks"
 	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
-	"overdoll/applications/sting/internal/service"
 	sting "overdoll/applications/sting/proto"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/testing_tools"
@@ -87,18 +86,18 @@ type CreateClub struct {
 func TestCreateClub_and_check_permission(t *testing.T) {
 	t.Parallel()
 
-	testingAccountId := service.newFakeAccount(t)
-	service.mockAccountNormal(t, testingAccountId)
+	testingAccountId := newFakeAccount(t)
+	mockAccountNormal(t, testingAccountId)
 
-	grpcClient := service.getGrpcClient(t)
+	grpcClient := getGrpcClient(t)
 
 	can, err := grpcClient.CanDeleteAccountData(context.Background(), &sting.CanDeleteAccountDataRequest{AccountId: testingAccountId})
 	require.NoError(t, err, "no error seeing if you can delete account data")
 	require.True(t, can.CanDelete, "should be able to delete")
 
-	client := service.getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
+	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(service.application.TemporalClient, workflows.CreateClub, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.CreateClub, mock.Anything)
 
 	flowRun := &mocks.WorkflowRun{}
 
@@ -106,21 +105,21 @@ func TestCreateClub_and_check_permission(t *testing.T) {
 		On("Get", mock.Anything, mock.Anything).
 		Return(nil)
 
-	service.application.TemporalClient.
+	application.TemporalClient.
 		On("GetWorkflow", mock.Anything, "sting.CreateClub_"+testingAccountId, mock.Anything).
 		// on GetWorkflow command, this would check if the workflow was completed
 		// so we run our workflow to make sure it's completed
 		Run(
 			func(args mock.Arguments) {
-				workflowExecution.FindAndExecuteWorkflow(t, service.getWorkflowEnvironment())
-				service.refreshClubESIndex(t)
+				workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+				refreshClubESIndex(t)
 			},
 		).
 		Return(flowRun)
 
 	var createClub CreateClub
 
-	fake := service.TestClub{}
+	fake := TestClub{}
 	err = faker.FakeData(&fake)
 	require.NoError(t, err)
 
@@ -144,7 +143,7 @@ func TestCreateClub_and_check_permission(t *testing.T) {
 	require.False(t, can.CanDelete, "cannot delete account anymore")
 
 	// refresh index or else we don't see it
-	service.refreshClubESIndex(t)
+	refreshClubESIndex(t)
 
 	// check permissions
 	res, err := grpcClient.GetAccountClubDigest(context.Background(), &sting.GetAccountClubDigestRequest{
@@ -164,7 +163,7 @@ func TestCreateClub_and_check_permission(t *testing.T) {
 		"representations": []_Any{
 			{
 				"__typename": "Account",
-				"id":         service.convertAccountIdToRelayId(testingAccountId),
+				"id":         convertAccountIdToRelayId(testingAccountId),
 			},
 		},
 	})
@@ -199,16 +198,16 @@ type RemoveClubSlugAlias struct {
 func TestCreateClub_edit_slugs(t *testing.T) {
 	t.Parallel()
 
-	testingAccountId := service.newFakeAccount(t)
-	service.mockAccountNormal(t, testingAccountId)
-	client := service.getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
-	clb := service.seedClub(t, testingAccountId)
-	relayId := service.convertClubIdToRelayId(clb.ID())
+	testingAccountId := newFakeAccount(t)
+	mockAccountNormal(t, testingAccountId)
+	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
+	clb := seedClub(t, testingAccountId)
+	relayId := convertClubIdToRelayId(clb.ID())
 
 	oldSlug := clb.Slug()
 
 	// create a test slug we can use
-	fake := service.TestClub{}
+	fake := TestClub{}
 	err := faker.FakeData(&fake)
 	require.NoError(t, err, "no error creating fake data for club")
 
@@ -292,15 +291,15 @@ type UpdateClubName struct {
 func TestCreateClub_edit_name(t *testing.T) {
 	t.Parallel()
 
-	testingAccountId := service.newFakeAccount(t)
-	service.mockAccountNormal(t, testingAccountId)
+	testingAccountId := newFakeAccount(t)
+	mockAccountNormal(t, testingAccountId)
 
-	client := service.getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
-	clb := service.seedClub(t, testingAccountId)
-	relayId := service.convertClubIdToRelayId(clb.ID())
+	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
+	clb := seedClub(t, testingAccountId)
+	relayId := convertClubIdToRelayId(clb.ID())
 
 	// create a test name
-	fake := service.TestClub{}
+	fake := TestClub{}
 	err := faker.FakeData(&fake)
 	require.NoError(t, err, "no error creating fake data for club")
 
@@ -330,12 +329,12 @@ type UpdateClubThumbnail struct {
 func TestCreateClub_edit_thumbnail(t *testing.T) {
 	t.Parallel()
 
-	testingAccountId := service.newFakeAccount(t)
-	service.mockAccountNormal(t, testingAccountId)
+	testingAccountId := newFakeAccount(t)
+	mockAccountNormal(t, testingAccountId)
 
-	client := service.getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
-	clb := service.seedClub(t, testingAccountId)
-	relayId := service.convertClubIdToRelayId(clb.ID())
+	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
+	clb := seedClub(t, testingAccountId)
+	relayId := convertClubIdToRelayId(clb.ID())
 
 	thumbnailId := "test-thumbnail"
 

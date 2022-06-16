@@ -93,7 +93,6 @@ func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int,
 		}
 
 		content = append(content, &Content{
-			id: resourceId,
 			post: &Post{
 				id:                  id,
 				state:               ps,
@@ -329,7 +328,7 @@ func (p *Post) updatePostSupporterOnlyStatus() {
 
 	for _, c := range p.content {
 		if c.isSupporterOnly {
-			supporterOnlyContent = append(supporterOnlyContent, c.id)
+			supporterOnlyContent = append(supporterOnlyContent, c.resource.ID())
 		}
 	}
 
@@ -409,7 +408,7 @@ func (p *Post) UpdateContentOrderRequest(requester *principal.Principal, content
 		foundContent := false
 
 		for _, currentContent := range p.content {
-			if currentContent.id == newContent {
+			if currentContent.resource.ID() == newContent {
 				foundContent = true
 				reorderedContent = append(reorderedContent, currentContent)
 				break
@@ -441,7 +440,7 @@ func (p *Post) UpdateContentSupporterOnly(requester *principal.Principal, conten
 		foundContent := false
 
 		for _, updatedContent := range contentIds {
-			if updatedContent == content.id {
+			if updatedContent == content.resource.ID() {
 				foundContent = true
 				continue
 			}
@@ -473,7 +472,7 @@ func (p *Post) RemoveContentRequest(requester *principal.Principal, contentIds [
 		foundContent := false
 
 		for _, removedContent := range contentIds {
-			if removedContent == content.id {
+			if removedContent == content.resource.ID() {
 				foundContent = true
 				continue
 			}

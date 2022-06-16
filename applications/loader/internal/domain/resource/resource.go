@@ -214,7 +214,6 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 		}
 
 		bin := webpbin.NewCWebP()
-		bin.ExecPath("/usr/local/bin/cwebp")
 
 		if err := bin.
 			Quality(100).

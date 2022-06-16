@@ -233,6 +233,9 @@ func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 	env.RegisterWorkflow(workflows.UpdateTotalLikesForPostTags)
 	env.RegisterWorkflow(workflows.RemovePost)
 	env.RegisterWorkflow(workflows.RemovePostLike)
+	env.RegisterWorkflow(workflows.NewSupporterPost)
+	env.RegisterWorkflow(workflows.ClubSupporterPostNotifications)
+	env.RegisterWorkflow(workflows.AddClubMember)
 
 	return env
 }

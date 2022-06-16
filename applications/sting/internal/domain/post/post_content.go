@@ -8,17 +8,11 @@ import (
 type Content struct {
 	post *Post
 
-	id string
-
 	resource *resource.Resource
 
 	resourceHidden *resource.Resource
 
 	isSupporterOnly bool
-}
-
-func (m *Content) Id() string {
-	return m.id
 }
 
 func (m *Content) ResourceRequest(requester *principal.Principal) *resource.Resource {

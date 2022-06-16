@@ -7,7 +7,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
-	"overdoll/applications/sting/internal/service"
 	sting "overdoll/applications/sting/proto"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/testing_tools"
@@ -71,15 +70,15 @@ func TestSuspendClub_and_unsuspend(t *testing.T) {
 	t.Parallel()
 
 	staffAccountId := uuid.New().String()
-	service.mockAccountStaff(t, staffAccountId)
+	mockAccountStaff(t, staffAccountId)
 
-	client := service.getGraphqlClientWithAuthenticatedAccount(t, staffAccountId)
-	grpcClient := service.getGrpcClient(t)
-	clb := service.seedClub(t, staffAccountId)
-	relayId := service.convertClubIdToRelayId(clb.ID())
+	client := getGraphqlClientWithAuthenticatedAccount(t, staffAccountId)
+	grpcClient := getGrpcClient(t)
+	clb := seedClub(t, staffAccountId)
+	relayId := convertClubIdToRelayId(clb.ID())
 	clubId := clb.ID()
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(service.application.TemporalClient, workflows.SuspendClub, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.SuspendClub, mock.Anything)
 
 	var suspendClub SuspendClub
 	err := client.Mutate(context.Background(), &suspendClub, map[string]interface{}{
@@ -91,9 +90,9 @@ func TestSuspendClub_and_unsuspend(t *testing.T) {
 
 	require.NoError(t, err, "no error suspending club")
 
-	workflowExecution.FindAndExecuteWorkflow(t, service.getWorkflowEnvironment())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
-	service.refreshClubESIndex(t)
+	refreshClubESIndex(t)
 
 	// make sure thumbnail is set
 	updatedClb := getSuspensionClub(t, client, clb.Slug())
@@ -101,7 +100,7 @@ func TestSuspendClub_and_unsuspend(t *testing.T) {
 	require.Len(t, updatedClb.Club.SuspensionLogs.Edges, 1, "should have 1 suspension log")
 	require.Equal(t, types.ClubSuspensionReasonManual, updatedClb.Club.SuspensionLogs.Edges[0].Node.ItemIssued.Reason, "should have 1 suspension log")
 
-	workflowExecution = testing_tools.NewMockWorkflowWithArgs(service.application.TemporalClient, workflows.SuspendClub, mock.Anything)
+	workflowExecution = testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.SuspendClub, mock.Anything)
 
 	_, err = grpcClient.SuspendClub(context.Background(), &sting.SuspendClubRequest{
 		ClubId:      clubId,
@@ -110,9 +109,9 @@ func TestSuspendClub_and_unsuspend(t *testing.T) {
 
 	require.NoError(t, err, "no error suspending club")
 
-	workflowExecution.FindAndExecuteWorkflow(t, service.getWorkflowEnvironment())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
-	workflowExecution = testing_tools.NewMockWorkflowWithArgs(service.application.TemporalClient, workflows.UnSuspendClub, mock.Anything)
+	workflowExecution = testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.UnSuspendClub, mock.Anything)
 
 	var unSuspendClub UnSuspendClub
 	err = client.Mutate(context.Background(), &unSuspendClub, map[string]interface{}{
@@ -123,7 +122,7 @@ func TestSuspendClub_and_unsuspend(t *testing.T) {
 
 	require.NoError(t, err, "no error un suspending club")
 
-	workflowExecution.FindAndExecuteWorkflow(t, service.getWorkflowEnvironment())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	updatedClb = getSuspensionClub(t, client, clb.Slug())
 	require.Nil(t, updatedClb.Club.Suspension, "club is suspended")

@@ -357,7 +357,18 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	postId := submitPost.SubmitPost.Post.Reference
 
-	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+	env := getWorkflowEnvironment()
+
+	env.OnRequestCancelExternalWorkflow(mock.Anything, mock.Anything, mock.Anything).
+		Run(
+			func(args mock.Arguments) {
+
+			},
+		).
+		Return(nil).
+		Once()
+
+	workflowExecution.FindAndExecuteWorkflow(t, env)
 
 	// refresh ES index or we wont see it
 	refreshPostESIndex(t)
@@ -378,7 +389,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	mockAccountNormal(t, testAccountClubSupporter)
 
 	// make this account a supporter
-	env := getWorkflowEnvironment()
+	env = getWorkflowEnvironment()
 	env.ExecuteWorkflow(workflows.AddClubSupporter, workflows.AddClubSupporterInput{
 		ClubId:      clubId,
 		AccountId:   testAccountClubSupporter,
@@ -549,7 +560,18 @@ func TestCreatePost_Publish(t *testing.T) {
 	_, e := stingClient.PublishPost(context.Background(), &sting.PostRequest{Id: postId})
 	require.NoError(t, e)
 
-	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+	env := getWorkflowEnvironment()
+
+	env.OnRequestCancelExternalWorkflow(mock.Anything, mock.Anything, mock.Anything).
+		Run(
+			func(args mock.Arguments) {
+
+			},
+		).
+		Return(nil).
+		Once()
+
+	workflowExecution.FindAndExecuteWorkflow(t, env)
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 

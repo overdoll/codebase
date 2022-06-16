@@ -28,7 +28,7 @@ var clubTable = table.New(table.Metadata{
 		"slug",
 		"slug_aliases",
 		"name",
-		"thumbnail_resource_id",
+		"thumbnail_resource",
 		"members_count",
 		"members_count_last_update_id",
 		"owner_account_id",
@@ -596,7 +596,7 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubName(ctx context.Context
 }
 
 func (r ClubCassandraElasticsearchRepository) UpdateClubThumbnail(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
-	return r.updateClubRequest(ctx, clubId, updateFn, []string{"thumbnail_resource_id"})
+	return r.updateClubRequest(ctx, clubId, updateFn, []string{"thumbnail_resource"})
 }
 
 func (r ClubCassandraElasticsearchRepository) UpdateClubSuspensionStatus(ctx context.Context, clubId string, updateFn func(club *club.Club) error) (*club.Club, error) {

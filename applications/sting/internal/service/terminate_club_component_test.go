@@ -6,7 +6,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
-	"overdoll/applications/sting/internal/service"
 	sting "overdoll/applications/sting/proto"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
@@ -34,18 +33,21 @@ func TestTerminateClub_and_unTerminate(t *testing.T) {
 	regularAccountId := uuid.New().String()
 	mockAccountNormal(t, regularAccountId)
 
+	randomAccountId := uuid.New().String()
+	mockAccountNormal(t, randomAccountId)
+
 	client := getGraphqlClientWithAuthenticatedAccount(t, staffAccountId)
 	clb := seedClub(t, regularAccountId)
 	publishedPost := seedPublishedPost(t, uuid.New().String(), clb.ID())
 	postId := publishedPost.ID()
-	relayId := service.convertClubIdToRelayId(clb.ID())
+	relayId := convertClubIdToRelayId(clb.ID())
 
 	// TEST WITH REGULAR ACCOUNT TO SEE IF YOU CAN SEE POST
-	regularClient := getGraphqlClientWithAuthenticatedAccount(t, regularAccountId)
+	regularClient := getGraphqlClientWithAuthenticatedAccount(t, randomAccountId)
 	pst := getPost(t, regularClient, postId)
 	require.NotNil(t, pst.Post, "post is not nil")
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(service.application.TemporalClient, workflows.TerminateClub, mock.Anything)
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.TerminateClub, mock.Anything)
 
 	var terminateClub TerminateClub
 	err := client.Mutate(context.Background(), &terminateClub, map[string]interface{}{
@@ -56,9 +58,9 @@ func TestTerminateClub_and_unTerminate(t *testing.T) {
 
 	require.NoError(t, err, "no error terminating club")
 
-	workflowExecution.FindAndExecuteWorkflow(t, service.getWorkflowEnvironment())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
-	service.refreshClubESIndex(t)
+	refreshClubESIndex(t)
 
 	updatedClb := getClub(t, client, clb.Slug())
 	require.NotNil(t, updatedClb.Club.Termination, "club is terminated")
@@ -67,7 +69,7 @@ func TestTerminateClub_and_unTerminate(t *testing.T) {
 	pst = getPost(t, regularClient, postId)
 	require.Nil(t, pst.Post, "post should be nil")
 
-	grpcClient := service.getGrpcClient(t)
+	grpcClient := getGrpcClient(t)
 
 	can, err := grpcClient.CanDeleteAccountData(context.Background(), &sting.CanDeleteAccountDataRequest{AccountId: regularAccountId})
 	require.NoError(t, err, "no error seeing if you can delete account data")
@@ -76,14 +78,14 @@ func TestTerminateClub_and_unTerminate(t *testing.T) {
 	// should not be able to find the club publicly
 
 	randomUser := uuid.New().String()
-	service.mockAccountNormal(t, randomUser)
+	mockAccountNormal(t, randomUser)
 
-	randomUserGraphqlClient := service.getGraphqlClientWithAuthenticatedAccount(t, randomUser)
+	randomUserGraphqlClient := getGraphqlClientWithAuthenticatedAccount(t, randomUser)
 
 	updatedClb = getClub(t, randomUserGraphqlClient, clb.Slug())
 	require.Nil(t, updatedClb.Club, "club should not be found")
 
-	workflowExecution = testing_tools.NewMockWorkflowWithArgs(service.application.TemporalClient, workflows.UnTerminateClub, mock.Anything)
+	workflowExecution = testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.UnTerminateClub, mock.Anything)
 
 	var unTerminateClub UnTerminateClub
 	err = client.Mutate(context.Background(), &unTerminateClub, map[string]interface{}{
@@ -94,13 +96,13 @@ func TestTerminateClub_and_unTerminate(t *testing.T) {
 
 	require.NoError(t, err, "no error un terminating")
 
-	workflowExecution.FindAndExecuteWorkflow(t, service.getWorkflowEnvironment())
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	updatedClb = getClub(t, client, clb.Slug())
 	require.Nil(t, updatedClb.Club.Termination, "club is no longer suspended")
 
 	// should be able to find the club again
-	randomUserGraphqlClient = service.getGraphqlClientWithAuthenticatedAccount(t, randomUser)
+	randomUserGraphqlClient = getGraphqlClientWithAuthenticatedAccount(t, randomUser)
 	updatedClb = getClub(t, randomUserGraphqlClient, clb.Slug())
 	require.NotNil(t, updatedClb.Club, "club should be found")
 

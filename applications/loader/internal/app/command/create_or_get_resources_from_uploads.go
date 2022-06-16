@@ -12,6 +12,7 @@ type CreateOrGetResourcesFromUploads struct {
 	UploadIds []string
 	IsPrivate bool
 	Token     string
+	Source    string
 }
 
 type CreateOrGetResourcesFromUploadsHandler struct {
@@ -79,7 +80,7 @@ func (h CreateOrGetResourcesFromUploadsHandler) Handle(ctx context.Context, cmd 
 		newResourceIds = append(newResourceIds, r.ID())
 	}
 
-	if err := h.event.ProcessResources(ctx, cmd.ItemId, newResourceIds); err != nil {
+	if err := h.event.ProcessResources(ctx, cmd.ItemId, newResourceIds, cmd.Source); err != nil {
 		return nil, err
 	}
 

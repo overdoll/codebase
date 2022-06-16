@@ -4,7 +4,7 @@ go_library(
     name = "service",
     srcs = ["application.go"],
     importpath = "overdoll/applications/sting/internal/service",
-    visibility = ["//visibility:public"],
+    visibility = ["//applications/sting:__subpackages__"],
     deps = [
         "//applications/sting/internal/adapters",
         "//applications/sting/internal/app",

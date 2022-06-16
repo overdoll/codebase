@@ -139,7 +139,7 @@ func TestLikePost_and_undo_and_delete(t *testing.T) {
 
 	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
-	workflowExecution = testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.DeleteAccountData, mock.Anything)
+	workflowExecution = testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.DeleteAccountData, workflows.DeleteAccountDataInput{AccountId: testingAccountId})
 
 	grpcClient := getGrpcClient(t)
 

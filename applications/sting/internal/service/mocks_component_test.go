@@ -24,9 +24,9 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 
 		for _, r := range req.ResourceIds {
 			res = append(res, &proto.Resource{
-				Id:        req.ItemId,
-				ItemId:    r,
-				Processed: false,
+				Id:        r,
+				ItemId:    req.ItemId,
+				Processed: true,
 				Private:   false,
 			})
 		}

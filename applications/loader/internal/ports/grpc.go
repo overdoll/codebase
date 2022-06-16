@@ -27,6 +27,7 @@ func (s Server) CreateOrGetResourcesFromUploads(ctx context.Context, request *lo
 		UploadIds: request.ResourceIds,
 		IsPrivate: request.Private,
 		Token:     request.Token,
+		Source:    request.Source.String(),
 	})
 
 	if err != nil {
