@@ -305,6 +305,12 @@ type ReportPostPayload struct {
 	PostReport *PostReport `json:"postReport"`
 }
 
+// A type representing a url to the resource and the mimetype
+type ResourceURL struct {
+	URL      graphql1.URI `json:"url"`
+	MimeType string       `json:"mimeType"`
+}
+
 // Rule.
 type Rule struct {
 	// ID of the rule.

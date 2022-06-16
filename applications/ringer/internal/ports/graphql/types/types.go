@@ -300,6 +300,12 @@ type InitiateClubPayoutPayload struct {
 	Club *Club `json:"club"`
 }
 
+// A type representing a url to the resource and the mimetype
+type ResourceURL struct {
+	URL      graphql1.URI `json:"url"`
+	MimeType string       `json:"mimeType"`
+}
+
 // Retry a specific payout.
 type RetryClubPayoutInput struct {
 	// The payout to retry.
