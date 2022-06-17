@@ -355,7 +355,7 @@ void (async () => {
   })
 
   // readyz endpoint
-  app.use('/readyz', (req, res) => {
+  app.get('/readyz', (req, res) => {
     res.send('ok')
   })
 
