@@ -33,7 +33,7 @@ type clubPaymentDocument struct {
 	ClubPayoutIds            []string  `json:"club_payout_ids"`
 }
 
-const ClubPaymentsIndexName = "club_payments"
+const ClubPaymentsIndexName = "ringer.club_payments"
 
 func unmarshalClubPaymentDocument(hit *elastic.SearchHit) (*payment.ClubPayment, error) {
 

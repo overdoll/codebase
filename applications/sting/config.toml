@@ -3,3 +3,6 @@ keyspace = "sting"
 
 [temporal]
 queue = "sting"
+
+[redis]
+db = 3

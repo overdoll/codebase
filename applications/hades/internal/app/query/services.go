@@ -12,6 +12,6 @@ type EvaService interface {
 	LocationFromIp(ctx context.Context, ip string) (*location.Location, error)
 }
 
-type StellaService interface {
+type StingService interface {
 	GetAccountClubPrincipalExtension(ctx context.Context, accountId string) (*principal.ClubExtension, error)
 }

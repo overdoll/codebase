@@ -7,8 +7,7 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 	eva "overdoll/applications/eva/proto"
 	"overdoll/applications/parley/internal/service"
-	stella "overdoll/applications/stella/proto"
-	"overdoll/applications/sting/proto"
+	sting "overdoll/applications/sting/proto"
 	"testing"
 )
 
@@ -22,13 +21,13 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 	application.StingClient.On("DiscardPost", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
 	application.StingClient.On("UndoPost", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
 	application.StingClient.On("RemovePost", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
-	application.StellaClient.On("SuspendClub", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
+	application.StingClient.On("SuspendClub", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
 
-	application.StingClient.On("GetPost", mock.Anything, mock.Anything).Return(func(c context.Context, r *proto.PostRequest, g ...grpc.CallOption) *proto.Post {
-		return &proto.Post{ClubId: r.Id}
+	application.StingClient.On("GetPost", mock.Anything, mock.Anything).Return(func(c context.Context, r *sting.PostRequest, g ...grpc.CallOption) *sting.Post {
+		return &sting.Post{ClubId: r.Id}
 	}, nil)
 
-	application.StellaClient.On("GetClubById", mock.Anything, mock.Anything).Return(&stella.GetClubByIdResponse{Club: &stella.Club{OwnerAccountId: "", CanSupport: true}}, nil)
+	application.StingClient.On("GetClubById", mock.Anything, mock.Anything).Return(&sting.GetClubByIdResponse{Club: &sting.Club{OwnerAccountId: "", CanSupport: true}}, nil)
 
 }
 

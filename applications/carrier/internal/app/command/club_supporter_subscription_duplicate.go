@@ -17,10 +17,10 @@ type ClubSupporterSubscriptionDuplicate struct {
 type ClubSupporterSubscriptionDuplicateHandler struct {
 	mr     mailing.Repository
 	eva    EvaService
-	stella StellaService
+	stella StingService
 }
 
-func NewClubSupporterSubscriptionDuplicateHandler(mr mailing.Repository, eva EvaService, stella StellaService) ClubSupporterSubscriptionDuplicateHandler {
+func NewClubSupporterSubscriptionDuplicateHandler(mr mailing.Repository, eva EvaService, stella StingService) ClubSupporterSubscriptionDuplicateHandler {
 	return ClubSupporterSubscriptionDuplicateHandler{mr: mr, eva: eva, stella: stella}
 }
 

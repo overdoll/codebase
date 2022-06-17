@@ -5,7 +5,7 @@ go_library(
     srcs = [
         "eva_grpc.go",
         "mailing_ses_respository.go",
-        "stella_grpc.go",
+        "sting_grpc.go",
     ],
     importpath = "overdoll/applications/carrier/internal/adapters",
     visibility = ["//applications/carrier:__subpackages__"],
@@ -14,7 +14,7 @@ go_library(
         "//applications/carrier/internal/domain/identifier",
         "//applications/carrier/internal/domain/mailing",
         "//applications/eva/proto:v1_go_proto",
-        "//applications/stella/proto:v1_go_proto",
+        "//applications/sting/proto:v1_go_proto",
         "//libraries/errors",
         "@com_github_aws_aws_sdk_go//aws",
         "@com_github_aws_aws_sdk_go//service/ses",

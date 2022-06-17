@@ -36,7 +36,7 @@ func accountsByIds(app *app.Application) *dataloader.Loader {
 				ix, ok := keyOrder[record.ID()]
 				// if found, remove from index lookup map so we know elements were found
 				if ok {
-					results[ix] = &dataloader.Result{Data: types.MarshalAccountToGraphQL(record), Error: nil}
+					results[ix] = &dataloader.Result{Data: types.MarshalAccountToGraphQL(ctx, record), Error: nil}
 					delete(keyOrder, record.ID())
 				}
 			}

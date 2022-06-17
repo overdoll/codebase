@@ -19,10 +19,10 @@ type ClubSupporterSubscriptionRefunded struct {
 type ClubSupporterSubscriptionRefundedHandler struct {
 	mr     mailing.Repository
 	eva    EvaService
-	stella StellaService
+	stella StingService
 }
 
-func NewClubSupporterSubscriptionRefundedHandler(mr mailing.Repository, eva EvaService, stella StellaService) ClubSupporterSubscriptionRefundedHandler {
+func NewClubSupporterSubscriptionRefundedHandler(mr mailing.Repository, eva EvaService, stella StingService) ClubSupporterSubscriptionRefundedHandler {
 	return ClubSupporterSubscriptionRefundedHandler{mr: mr, eva: eva, stella: stella}
 }
 

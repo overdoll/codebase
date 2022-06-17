@@ -5,6 +5,7 @@ import (
 	"go.uber.org/zap"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/probe"
 	"overdoll/libraries/sentry_support"
 )
 
@@ -31,6 +32,9 @@ func NewRawGinRouter() *gin.Engine {
 
 	// sentry middleware to recover from panics & log errors, as well as adding sentry to the initial context
 	router.Use(sentry_support.SentryGinMiddleware())
+
+	// readyz probe
+	router.GET("/readyz", probe.ReadyZ())
 
 	return router
 }

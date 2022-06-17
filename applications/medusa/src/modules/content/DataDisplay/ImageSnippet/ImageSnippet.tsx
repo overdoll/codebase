@@ -68,9 +68,10 @@ export default function ImageSnippet ({
     <Flex justify='center' w='100%' h='100%' position={cover === true ? 'relative' : 'static'}>
       <NextImage
         {...IMAGE_PROPS}
+        style={{
+          backgroundColor: data?.preview != null && data?.preview !== '' ? data?.preview : 'none'
+        }}
         src={displayUrl(errorCount)}
-        placeholder={(data?.preview !== '' && data?.preview != null) ? 'blur' : undefined}
-        blurDataURL={data?.preview ?? undefined}
         onErrorCapture={onErrorCapture}
         {...rest}
       />

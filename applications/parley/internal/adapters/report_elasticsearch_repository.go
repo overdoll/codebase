@@ -22,7 +22,7 @@ type postReportDocument struct {
 	CreatedAt          time.Time `json:"created_at"`
 }
 
-const PostReportsIndexName = "post_reports"
+const PostReportsIndexName = "parley.post_reports"
 
 func marshalPostReportToDocument(cat *report.PostReport) (*postReportDocument, error) {
 	return &postReportDocument{

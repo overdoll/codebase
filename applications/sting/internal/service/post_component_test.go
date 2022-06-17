@@ -15,6 +15,7 @@ import (
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
+	"time"
 )
 
 type PostModified struct {
@@ -23,12 +24,9 @@ type PostModified struct {
 	Contributor struct {
 		Id string
 	}
-	State      types.PostState
-	Characters []CharacterModified
-	Audience   *AudienceModified
-	Club       struct {
-		Id string
-	}
+	State               types.PostState
+	Characters          []CharacterModified
+	Audience            *AudienceModified
 	Categories          []CategoryModified
 	Content             []types.PostContent
 	SupporterOnlyStatus types.SupporterOnlyStatus
@@ -50,8 +48,6 @@ func getPost(t *testing.T, client *graphql.Client, id string) Post {
 
 	return post
 }
-
-type _Any map[string]interface{}
 
 type CreatePost struct {
 	CreatePost *struct {
@@ -152,10 +148,10 @@ type PostsEntities struct {
 func TestCreatePost_Submit_and_publish(t *testing.T) {
 	t.Parallel()
 
-	clubId := uuid.New().String()
 	testingAccountId := newFakeAccount(t)
+	clb := seedClub(t, testingAccountId)
+	clubId := clb.ID()
 	mockAccountNormal(t, testingAccountId)
-	mockAccountDigestClubOwner(t, testingAccountId, clubId)
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 
@@ -358,14 +354,24 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	postId := submitPost.SubmitPost.Post.Reference
 
-	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+	env := getWorkflowEnvironment()
+
+	env.OnRequestCancelExternalWorkflow(mock.Anything, mock.Anything, mock.Anything).
+		Run(
+			func(args mock.Arguments) {
+
+			},
+		).
+		Return(nil).
+		Once()
+
+	workflowExecution.FindAndExecuteWorkflow(t, env)
 
 	// refresh ES index or we wont see it
 	refreshPostESIndex(t)
 
 	testAccount := uuid.New().String()
 	mockAccountNormal(t, testAccount)
-	mockAccountDigestNormal(t, testAccount)
 	client = getGraphqlClientWithAuthenticatedAccount(t, testAccount)
 
 	post = getPost(t, client, postId)
@@ -378,7 +384,17 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	testAccountClubSupporter := uuid.New().String()
 	mockAccountNormal(t, testAccountClubSupporter)
-	mockAccountDigestSupporter(t, testAccountClubSupporter, clubId)
+
+	// make this account a supporter
+	env = getWorkflowEnvironment()
+	env.ExecuteWorkflow(workflows.AddClubSupporter, workflows.AddClubSupporterInput{
+		ClubId:      clubId,
+		AccountId:   testAccountClubSupporter,
+		SupportedAt: time.Now(),
+	})
+	require.True(t, env.IsWorkflowCompleted())
+	require.NoError(t, env.GetWorkflowError())
+
 	client = getGraphqlClientWithAuthenticatedAccount(t, testAccountClubSupporter)
 
 	post = getPost(t, client, postId)
@@ -474,9 +490,8 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	// make sure getPost works, and correct data is assigned
 	stingClient := getGrpcClient(t)
-	data, e := stingClient.GetPost(context.Background(), &sting.PostRequest{Id: postId})
+	_, e := stingClient.GetPost(context.Background(), &sting.PostRequest{Id: postId})
 	require.NoError(t, e)
-	require.Equal(t, relay.NewMustUnmarshalFromBase64(post.Post.Club.Id).GetID(), data.ClubId, "should have correct club ID assigned")
 
 	var postsEntities PostsEntities
 	err = client.Query(context.Background(), &postsEntities, map[string]interface{}{
@@ -516,15 +531,20 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	})
 	require.NoError(t, err)
 	require.Equal(t, 1, len(clubPosts.Entities[0].Club.Posts.Edges), "1 post for supporter only status partial")
+
+	// SHOULD BE ABLE TO SUPPORT CLUB SINCE WE POSTED AT LEAST 1 PREMIUM POST
+	clubViewer := getClub(t, client, clb.Slug())
+	require.True(t, clubViewer.Club.CanSupport, "should be able to support now that the club has created a new post")
+	require.NotNil(t, clubViewer.Club.NextSupporterPostTime, "should have a next supporter post time now")
 }
 
 func TestCreatePost_Publish(t *testing.T) {
 	t.Parallel()
 
-	clubId := uuid.New().String()
 	testingAccountId := newFakeAccount(t)
+	clb := seedClub(t, testingAccountId)
+	clubId := clb.ID()
 	mockAccountNormal(t, testingAccountId)
-	mockAccountDigestClubOwner(t, testingAccountId, clubId)
 
 	pst := seedReviewPost(t, testingAccountId, clubId)
 	postId := pst.ID()
@@ -536,7 +556,18 @@ func TestCreatePost_Publish(t *testing.T) {
 	_, e := stingClient.PublishPost(context.Background(), &sting.PostRequest{Id: postId})
 	require.NoError(t, e)
 
-	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+	env := getWorkflowEnvironment()
+
+	env.OnRequestCancelExternalWorkflow(mock.Anything, mock.Anything, mock.Anything).
+		Run(
+			func(args mock.Arguments) {
+
+			},
+		).
+		Return(nil).
+		Once()
+
+	workflowExecution.FindAndExecuteWorkflow(t, env)
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 
@@ -550,10 +581,10 @@ func TestCreatePost_Publish(t *testing.T) {
 func TestCreatePost_Discard(t *testing.T) {
 	t.Parallel()
 
-	clubId := uuid.New().String()
 	testingAccountId := newFakeAccount(t)
+	clb := seedClub(t, testingAccountId)
+	clubId := clb.ID()
 	mockAccountNormal(t, testingAccountId)
-	mockAccountDigestClubOwner(t, testingAccountId, clubId)
 
 	pst := seedPublishingPost(t, testingAccountId, clubId)
 	postId := pst.ID()
@@ -587,10 +618,10 @@ type DeletePost struct {
 func TestCreatePost_Reject_and_delete(t *testing.T) {
 	t.Parallel()
 
-	clubId := uuid.New().String()
 	testingAccountId := newFakeAccount(t)
+	clb := seedClub(t, testingAccountId)
+	clubId := clb.ID()
 	mockAccountNormal(t, testingAccountId)
-	mockAccountDigestClubOwner(t, testingAccountId, clubId)
 
 	pst := seedPublishingPost(t, testingAccountId, clubId)
 	postId := pst.ID()
@@ -631,10 +662,10 @@ func TestCreatePost_Reject_and_delete(t *testing.T) {
 func TestCreatePost_Remove(t *testing.T) {
 	t.Parallel()
 
-	clubId := uuid.New().String()
 	testingAccountId := newFakeAccount(t)
+	clb := seedClub(t, testingAccountId)
+	clubId := clb.ID()
 	mockAccountNormal(t, testingAccountId)
-	mockAccountDigestClubOwner(t, testingAccountId, clubId)
 
 	pst := seedPublishingPost(t, testingAccountId, clubId)
 	postId := pst.ID()

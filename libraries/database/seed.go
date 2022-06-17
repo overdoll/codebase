@@ -10,7 +10,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gocql/gocql"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 	"overdoll/libraries/bootstrap"
@@ -29,8 +28,6 @@ func createSeed(config SeederConfig) *cobra.Command {
 			session := bootstrap.InitializeDatabaseSession()
 
 			start := time.Now().UTC()
-
-			batch := session.NewBatch(gocql.UnloggedBatch).WithContext(ctx)
 
 			count := 0
 
@@ -75,18 +72,12 @@ func createSeed(config SeederConfig) *cobra.Command {
 						zap.S().Fatalw("error converting to json", zap.Error(err))
 					}
 
-					batch.Entries = append(batch.Entries, gocql.BatchEntry{
-						Stmt:       "INSERT INTO " + trimmedName + " JSON ? IF NOT EXISTS",
-						Args:       []interface{}{string(jsonStr)},
-						Idempotent: true,
-					})
+					if err := session.Query("INSERT INTO "+trimmedName+" JSON ?", nil).Bind(string(jsonStr)).ExecRelease(); err != nil {
+						zap.S().Fatalw("failed to insert rows", zap.Error(err))
+					}
 				}
 
 				count += len(obj)
-			}
-
-			if err = session.ExecuteBatch(batch); err != nil {
-				zap.S().Fatalw("failed to insert rows", zap.Error(err))
 			}
 
 			if err := config.SeederCallbacks(ctx, session); err != nil {

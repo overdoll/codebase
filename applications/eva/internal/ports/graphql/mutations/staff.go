@@ -23,7 +23,7 @@ func (r *MutationResolver) AssignAccountModeratorRole(ctx context.Context, input
 		return nil, err
 	}
 
-	return &types.AssignAccountModeratorRolePayload{Account: types.MarshalAccountToGraphQL(acc)}, nil
+	return &types.AssignAccountModeratorRolePayload{Account: types.MarshalAccountToGraphQL(ctx, acc)}, nil
 }
 
 func (r *MutationResolver) AssignAccountStaffRole(ctx context.Context, input types.AssignAccountStaffRole) (*types.AssignAccountStaffRolePayload, error) {
@@ -41,7 +41,7 @@ func (r *MutationResolver) AssignAccountStaffRole(ctx context.Context, input typ
 		return nil, err
 	}
 
-	return &types.AssignAccountStaffRolePayload{Account: types.MarshalAccountToGraphQL(acc)}, nil
+	return &types.AssignAccountStaffRolePayload{Account: types.MarshalAccountToGraphQL(ctx, acc)}, nil
 }
 
 func (r *MutationResolver) RevokeAccountModeratorRole(ctx context.Context, input types.RevokeAccountModeratorRole) (*types.RevokeAccountModeratorRolePayload, error) {
@@ -59,7 +59,7 @@ func (r *MutationResolver) RevokeAccountModeratorRole(ctx context.Context, input
 		return nil, err
 	}
 
-	return &types.RevokeAccountModeratorRolePayload{Account: types.MarshalAccountToGraphQL(acc)}, nil
+	return &types.RevokeAccountModeratorRolePayload{Account: types.MarshalAccountToGraphQL(ctx, acc)}, nil
 }
 
 func (r *MutationResolver) RevokeAccountStaffRole(ctx context.Context, input types.RevokeAccountStaffRole) (*types.RevokeAccountStaffRolePayload, error) {
@@ -77,7 +77,7 @@ func (r *MutationResolver) RevokeAccountStaffRole(ctx context.Context, input typ
 		return nil, err
 	}
 
-	return &types.RevokeAccountStaffRolePayload{Account: types.MarshalAccountToGraphQL(acc)}, nil
+	return &types.RevokeAccountStaffRolePayload{Account: types.MarshalAccountToGraphQL(ctx, acc)}, nil
 }
 
 func (r *MutationResolver) AssignAccountArtistRole(ctx context.Context, input types.AssignAccountArtistRole) (*types.AssignAccountArtistRolePayload, error) {
@@ -95,7 +95,7 @@ func (r *MutationResolver) AssignAccountArtistRole(ctx context.Context, input ty
 		return nil, err
 	}
 
-	return &types.AssignAccountArtistRolePayload{Account: types.MarshalAccountToGraphQL(acc)}, nil
+	return &types.AssignAccountArtistRolePayload{Account: types.MarshalAccountToGraphQL(ctx, acc)}, nil
 }
 
 func (r *MutationResolver) RevokeAccountArtistRole(ctx context.Context, input types.RevokeAccountArtistRole) (*types.RevokeAccountArtistRolePayload, error) {
@@ -113,7 +113,7 @@ func (r *MutationResolver) RevokeAccountArtistRole(ctx context.Context, input ty
 		return nil, err
 	}
 
-	return &types.RevokeAccountArtistRolePayload{Account: types.MarshalAccountToGraphQL(acc)}, nil
+	return &types.RevokeAccountArtistRolePayload{Account: types.MarshalAccountToGraphQL(ctx, acc)}, nil
 }
 
 func (r *MutationResolver) UnlockAccount(ctx context.Context, input types.UnlockAccountInput) (*types.UnlockAccountPayload, error) {
@@ -132,7 +132,7 @@ func (r *MutationResolver) UnlockAccount(ctx context.Context, input types.Unlock
 	}
 
 	return &types.UnlockAccountPayload{
-		Account: types.MarshalAccountToGraphQL(acc),
+		Account: types.MarshalAccountToGraphQL(ctx, acc),
 	}, nil
 }
 
@@ -153,6 +153,6 @@ func (r *MutationResolver) LockAccount(ctx context.Context, input types.LockAcco
 	}
 
 	return &types.LockAccountPayload{
-		Account: types.MarshalAccountToGraphQL(acc),
+		Account: types.MarshalAccountToGraphQL(ctx, acc),
 	}, nil
 }

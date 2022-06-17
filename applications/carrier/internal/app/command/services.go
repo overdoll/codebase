@@ -11,6 +11,6 @@ type EvaService interface {
 	GetAccount(context.Context, string) (*identifier.Identifier, error)
 }
 
-type StellaService interface {
+type StingService interface {
 	GetClub(context.Context, string) (*club.Club, error)
 }

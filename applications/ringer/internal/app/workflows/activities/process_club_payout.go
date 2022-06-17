@@ -39,7 +39,7 @@ func (h *Activities) ProcessClubPayout(ctx context.Context, input ProcessClubPay
 		return nil, err
 	}
 
-	club, err := h.stella.GetClubById(ctx, clubPayout.ClubId())
+	club, err := h.sting.GetClubById(ctx, clubPayout.ClubId())
 
 	if err != nil {
 		return nil, err

@@ -19,7 +19,7 @@ func TestPostSeries_failure(t *testing.T) {
 	seriesId := uuid.New().String()
 	seriesSlug := createFakeSlug(t)
 
-	series := post.UnmarshalSeriesFromDatabase(seriesId, seriesSlug, map[string]string{"en": "test"}, nil, 0, 0, time.Now())
+	series := post.UnmarshalSeriesFromDatabase(seriesId, seriesSlug, map[string]string{"en": "test"}, nil, 0, 0, time.Now(), time.Now())
 
 	ctx := context.Background()
 

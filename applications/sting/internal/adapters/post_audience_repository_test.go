@@ -19,7 +19,7 @@ func TestPostAudienceRepository_failure(t *testing.T) {
 	audienceId := uuid.New().String()
 	audienceSlug := createFakeSlug(t)
 
-	audience := post.UnmarshalAudienceFromDatabase(audienceId, audienceSlug, map[string]string{"en": "test"}, nil, 0, 0, 0, time.Now())
+	audience := post.UnmarshalAudienceFromDatabase(audienceId, audienceSlug, map[string]string{"en": "test"}, nil, 0, 0, 0, time.Now(), time.Now())
 
 	ctx := context.Background()
 

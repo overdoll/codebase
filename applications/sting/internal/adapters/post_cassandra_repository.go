@@ -6,6 +6,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
+	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"time"
 
@@ -25,6 +26,7 @@ var postTable = table.New(table.Metadata{
 		"likes_last_update_id",
 		"supporter_only_status",
 		"content_resource_ids",
+		"content_resources",
 		"content_supporter_only",
 		"content_supporter_only_resource_ids",
 		"contributor_account_id",
@@ -34,6 +36,7 @@ var postTable = table.New(table.Metadata{
 		"character_ids",
 		"series_ids",
 		"created_at",
+		"updated_at",
 		"posted_at",
 	},
 	PartKey: []string{"id"},
@@ -48,6 +51,7 @@ type posts struct {
 	SupporterOnlyStatus             string            `db:"supporter_only_status"`
 	ContentResourceIds              []string          `db:"content_resource_ids"`
 	ContentSupporterOnly            map[string]bool   `db:"content_supporter_only"`
+	ContentResources                map[string]string `db:"content_resources"`
 	ContentSupporterOnlyResourceIds map[string]string `db:"content_supporter_only_resource_ids"`
 	ContributorId                   string            `db:"contributor_account_id"`
 	ClubId                          string            `db:"club_id"`
@@ -56,6 +60,7 @@ type posts struct {
 	CharacterIds                    []string          `db:"character_ids"`
 	SeriesIds                       []string          `db:"series_ids"`
 	CreatedAt                       time.Time         `db:"created_at"`
+	UpdatedAt                       time.Time         `db:"updated_at"`
 	PostedAt                        *time.Time        `db:"posted_at"`
 }
 
@@ -75,26 +80,46 @@ type terminatedClubs struct {
 }
 
 type PostsCassandraElasticsearchRepository struct {
-	session gocqlx.Session
-	client  *elastic.Client
+	session            gocqlx.Session
+	client             *elastic.Client
+	resourceSerializer *resource.Serializer
 }
 
-func NewPostsCassandraRepository(session gocqlx.Session, client *elastic.Client) PostsCassandraElasticsearchRepository {
-	return PostsCassandraElasticsearchRepository{session: session, client: client}
+func NewPostsCassandraRepository(session gocqlx.Session, client *elastic.Client, resourcesSerializer *resource.Serializer) PostsCassandraElasticsearchRepository {
+	return PostsCassandraElasticsearchRepository{session: session, client: client, resourceSerializer: resourcesSerializer}
 }
 
-func marshalPostToDatabase(pending *post.Post) *posts {
+func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 
 	var contentResourceIds []string
 	contentSupporterOnly := make(map[string]bool)
 	contentSupporterOnlyResourceIds := make(map[string]string)
+	contentResources := make(map[string]string)
 
 	for _, cont := range pending.Content() {
-		contentResourceIds = append(contentResourceIds, cont.ResourceId())
-		contentSupporterOnly[cont.ResourceId()] = cont.IsSupporterOnly()
-		if cont.IsSupporterOnly() && cont.ResourceIdHidden() != "" {
-			contentSupporterOnlyResourceIds[cont.ResourceId()] = cont.ResourceIdHidden()
+		contentResourceIds = append(contentResourceIds, cont.Resource().ID())
+		contentSupporterOnly[cont.Resource().ID()] = cont.IsSupporterOnly()
+		if cont.IsSupporterOnly() && cont.ResourceHidden() != nil {
+			contentSupporterOnlyResourceIds[cont.Resource().ID()] = cont.ResourceHidden().ID()
 		}
+
+		if cont.ResourceHidden() != nil {
+			marshalled, err := resource.MarshalResourceToDatabase(cont.ResourceHidden())
+
+			if err != nil {
+				return nil, err
+			}
+
+			contentResources[cont.ResourceHidden().ID()] = marshalled
+		}
+
+		marshalled, err := resource.MarshalResourceToDatabase(cont.Resource())
+
+		if err != nil {
+			return nil, err
+		}
+
+		contentResources[cont.Resource().ID()] = marshalled
 	}
 
 	return &posts{
@@ -108,16 +133,31 @@ func marshalPostToDatabase(pending *post.Post) *posts {
 		ContributorId:                   pending.ContributorId(),
 		ContentResourceIds:              contentResourceIds,
 		ContentSupporterOnly:            contentSupporterOnly,
+		ContentResources:                contentResources,
 		ContentSupporterOnlyResourceIds: contentSupporterOnlyResourceIds,
 		CategoryIds:                     pending.CategoryIds(),
 		CharacterIds:                    pending.CharacterIds(),
 		SeriesIds:                       pending.SeriesIds(),
 		CreatedAt:                       pending.CreatedAt(),
 		PostedAt:                        pending.PostedAt(),
-	}
+		UpdatedAt:                       pending.UpdatedAt(),
+	}, nil
 }
 
-func unmarshalPost(ctx context.Context, postPending posts) *post.Post {
+func (r *PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Context, postPending posts) (*post.Post, error) {
+
+	var resourceValues []string
+
+	for _, r := range postPending.ContentResources {
+		resourceValues = append(resourceValues, r)
+	}
+
+	resources, err := r.resourceSerializer.UnmarshalResourcesFromDatabase(ctx, resourceValues)
+
+	if err != nil {
+		return nil, err
+	}
+
 	return post.UnmarshalPostFromDatabase(
 		postPending.Id,
 		postPending.State,
@@ -125,6 +165,7 @@ func unmarshalPost(ctx context.Context, postPending posts) *post.Post {
 		postPending.Likes,
 		postPending.ContributorId,
 		postPending.ContentResourceIds,
+		resources,
 		postPending.ContentSupporterOnly,
 		postPending.ContentSupporterOnlyResourceIds,
 		postPending.ClubId,
@@ -133,13 +174,18 @@ func unmarshalPost(ctx context.Context, postPending posts) *post.Post {
 		postPending.SeriesIds,
 		postPending.CategoryIds,
 		postPending.CreatedAt,
+		postPending.UpdatedAt,
 		postPending.PostedAt,
-	)
+	), nil
 }
 
 func (r PostsCassandraElasticsearchRepository) CreatePost(ctx context.Context, pending *post.Post) error {
 
-	pst := marshalPostToDatabase(pending)
+	pst, err := marshalPostToDatabase(pending)
+
+	if err != nil {
+		return err
+	}
 
 	if err := r.session.
 		Query(postTable.Insert()).
@@ -212,7 +258,14 @@ func (r PostsCassandraElasticsearchRepository) GetPostsByIds(ctx context.Context
 	}
 
 	for _, b := range postsModels {
-		postResults = append(postResults, unmarshalPost(ctx, *b))
+
+		unmarshalled, err := r.unmarshalPost(ctx, *b)
+
+		if err != nil {
+			return nil, err
+		}
+
+		postResults = append(postResults, unmarshalled)
 	}
 
 	return postResults, nil
@@ -248,7 +301,7 @@ func (r PostsCassandraElasticsearchRepository) GetPostByIdOperator(ctx context.C
 		return nil, err
 	}
 
-	return unmarshalPost(ctx, *postPending), nil
+	return r.unmarshalPost(ctx, *postPending)
 }
 
 func (r PostsCassandraElasticsearchRepository) getTerminatedClubIds(ctx context.Context) ([]string, error) {
@@ -313,7 +366,11 @@ func (r PostsCassandraElasticsearchRepository) GetPostById(ctx context.Context, 
 		return nil, err
 	}
 
-	pst := unmarshalPost(ctx, *postPending)
+	pst, err := r.unmarshalPost(ctx, *postPending)
+
+	if err != nil {
+		return nil, err
+	}
 
 	suspendedClubIds, err := r.getTerminatedClubIds(ctx)
 
@@ -342,12 +399,17 @@ func (r PostsCassandraElasticsearchRepository) UpdatePost(ctx context.Context, i
 		return nil, err
 	}
 
-	pst := marshalPostToDatabase(currentPost)
+	pst, err := marshalPostToDatabase(currentPost)
+
+	if err != nil {
+		return nil, err
+	}
 
 	if err := r.session.
 		Query(postTable.Update(
 			"state",
 			"posted_at",
+			"updated_at",
 		)).
 		WithContext(ctx).
 		Idempotent(true).
@@ -370,11 +432,15 @@ func (r PostsCassandraElasticsearchRepository) updatePostResult(ctx context.Cont
 		return nil, err
 	}
 
-	pst := marshalPostToDatabase(currentPost)
+	pst, err := marshalPostToDatabase(currentPost)
+
+	if err != nil {
+		return nil, err
+	}
 
 	if err := r.session.
 		Query(postTable.Update(
-			columns...,
+			append(columns, "updated_at")...,
 		)).
 		WithContext(ctx).
 		Idempotent(true).
@@ -418,12 +484,12 @@ func (r PostsCassandraElasticsearchRepository) updatePostRequest(ctx context.Con
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdatePostContentAndState(ctx context.Context, id string, updateFn func(pending *post.Post) error) error {
-	_, err := r.updatePost(ctx, id, updateFn, []string{"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status", "state"})
+	_, err := r.updatePost(ctx, id, updateFn, []string{"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status", "state", "content_resources"})
 	return err
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdatePostContent(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
-	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status"})
+	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status", "content_resources"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdatePostAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
@@ -446,17 +512,19 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperator(ctx con
 		return nil, err
 	}
 
-	err = updateFn(currentPost)
+	if err = updateFn(currentPost); err != nil {
+		return nil, err
+	}
+
+	pst, err := marshalPostToDatabase(currentPost)
 
 	if err != nil {
 		return nil, err
 	}
 
-	pst := marshalPostToDatabase(currentPost)
-
 	if err := r.session.
 		Query(postTable.Update(
-			"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status",
+			"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status", "content_resources", "updated_at",
 		)).
 		WithContext(ctx).
 		Idempotent(true).
@@ -481,23 +549,21 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostLikesOperator(ctx conte
 		return nil, err
 	}
 
-	unmarshalled := unmarshalPost(ctx, *postPending)
+	unmarshalled, err := r.unmarshalPost(ctx, *postPending)
 
 	if err != nil {
 		return nil, err
 	}
 
-	err = updateFn(unmarshalled)
-
-	if err != nil {
+	if err = updateFn(unmarshalled); err != nil {
 		return nil, err
 	}
 
-	ok, err := postTable.UpdateBuilder("likes", "likes_last_update_id").
+	ok, err := postTable.UpdateBuilder("likes", "likes_last_update_id", "updated_at").
 		If(qb.EqLit("likes_last_update_id", postPending.LikesLastUpdateId.String())).
 		Query(r.session).
 		WithContext(ctx).
-		BindStruct(posts{Id: id, Likes: unmarshalled.Likes(), LikesLastUpdateId: gocql.TimeUUID()}).
+		BindStruct(posts{Id: id, Likes: unmarshalled.Likes(), LikesLastUpdateId: gocql.TimeUUID(), UpdatedAt: unmarshalled.UpdatedAt()}).
 		SerialConsistency(gocql.Serial).
 		ExecCASRelease()
 

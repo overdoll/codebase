@@ -77,7 +77,7 @@ go_test(
         "//applications/carrier/internal/ports",
         "//applications/carrier/proto:v1_go_proto",
         "//applications/eva/proto:v1_go_proto",
-        "//applications/stella/proto:v1_go_proto",
+        "//applications/sting/proto:v1_go_proto",
         "//libraries/bootstrap",
         "//libraries/clients",
         "//libraries/config",

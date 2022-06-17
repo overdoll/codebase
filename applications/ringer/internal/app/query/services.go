@@ -10,7 +10,7 @@ type EvaService interface {
 	GetAccount(context.Context, string) (*principal.Principal, error)
 }
 
-type StellaService interface {
+type StingService interface {
 	GetAccountClubPrincipalExtension(ctx context.Context, accountId string) (*principal.ClubExtension, error)
 	GetClubById(ctx context.Context, clubId string) (*club.Club, error)
 }

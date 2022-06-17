@@ -26,7 +26,6 @@ func InitializeHttpServer(addr string, handler http.Handler, shutdown func()) {
 	// Start graph_api server
 	zap.S().Infof("starting http server on %s", server.Addr)
 	go func() {
-
 		if err := server.ListenAndServe(); err != nil {
 			if err != http.ErrServerClosed {
 				sentry_support.MustCaptureException(errors.Wrap(err, "failed to serve http server"))
@@ -40,7 +39,7 @@ func InitializeHttpServer(addr string, handler http.Handler, shutdown func()) {
 
 	// Block until cancel signal is received.
 	<-sig
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 
 	zap.S().Info("shutting down http server")

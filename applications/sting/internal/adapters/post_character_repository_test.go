@@ -21,8 +21,8 @@ func TestPostCharacterRepository_failure(t *testing.T) {
 	characterSlug := createFakeSlug(t)
 	seriesSlug := "foreigneronmars"
 
-	character := post.UnmarshalCharacterFromDatabase(characterId, characterSlug, map[string]string{"en": "test"}, nil, 0, 0, time.Now(),
-		post.UnmarshalSeriesFromDatabase("1pcKiQL7dgUW8CIN7uO1wqFaMql", "foreigneronmars", map[string]string{"en": "test"}, nil, 0, 0, time.Now()))
+	character := post.UnmarshalCharacterFromDatabase(characterId, characterSlug, map[string]string{"en": "test"}, nil, 0, 0, time.Now(), time.Now(),
+		post.UnmarshalSeriesFromDatabase("1pcKiQL7dgUW8CIN7uO1wqFaMql", "foreigneronmars", map[string]string{"en": "test"}, nil, 0, 0, time.Now(), time.Now()))
 
 	ctx := context.Background()
 

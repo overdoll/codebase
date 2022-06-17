@@ -10,6 +10,7 @@ import (
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"strings"
 	"time"
@@ -21,25 +22,27 @@ var audienceTable = table.New(table.Metadata{
 		"id",
 		"slug",
 		"title",
-		"thumbnail_resource_id",
+		"thumbnail_resource",
 		"standard",
 		"total_likes",
 		"total_posts",
 		"created_at",
+		"updated_at",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
 })
 
 type audience struct {
-	Id                  string            `db:"id"`
-	Slug                string            `db:"slug"`
-	Title               map[string]string `db:"title"`
-	ThumbnailResourceId *string           `db:"thumbnail_resource_id"`
-	Standard            int               `db:"standard"`
-	TotalLikes          int               `db:"total_likes"`
-	TotalPosts          int               `db:"total_posts"`
-	CreatedAt           time.Time         `db:"created_at"`
+	Id                string            `db:"id"`
+	Slug              string            `db:"slug"`
+	Title             map[string]string `db:"title"`
+	ThumbnailResource string            `db:"thumbnail_resource"`
+	Standard          int               `db:"standard"`
+	TotalLikes        int               `db:"total_likes"`
+	TotalPosts        int               `db:"total_posts"`
+	CreatedAt         time.Time         `db:"created_at"`
+	UpdatedAt         time.Time         `db:"updated_at"`
 }
 
 var audienceSlugTable = table.New(table.Metadata{
@@ -57,7 +60,7 @@ type audienceSlug struct {
 	Slug       string `db:"slug"`
 }
 
-func marshalAudienceToDatabase(pending *post.Audience) *audience {
+func marshalAudienceToDatabase(pending *post.Audience) (*audience, error) {
 
 	standard := 0
 
@@ -65,16 +68,23 @@ func marshalAudienceToDatabase(pending *post.Audience) *audience {
 		standard = 1
 	}
 
-	return &audience{
-		Id:                  pending.ID(),
-		Slug:                pending.Slug(),
-		Standard:            standard,
-		Title:               localization.MarshalTranslationToDatabase(pending.Title()),
-		ThumbnailResourceId: pending.ThumbnailResourceId(),
-		TotalLikes:          pending.TotalLikes(),
-		TotalPosts:          pending.TotalPosts(),
-		CreatedAt:           pending.CreatedAt(),
+	marshalled, err := resource.MarshalResourceToDatabase(pending.ThumbnailResource())
+
+	if err != nil {
+		return nil, err
 	}
+
+	return &audience{
+		Id:                pending.ID(),
+		Slug:              pending.Slug(),
+		Standard:          standard,
+		Title:             localization.MarshalTranslationToDatabase(pending.Title()),
+		ThumbnailResource: marshalled,
+		TotalLikes:        pending.TotalLikes(),
+		TotalPosts:        pending.TotalPosts(),
+		CreatedAt:         pending.CreatedAt(),
+		UpdatedAt:         pending.UpdatedAt(),
+	}, nil
 }
 
 func (r PostsCassandraElasticsearchRepository) GetAudienceIdsFromSlugs(ctx context.Context, audienceSlugs []string) ([]string, error) {
@@ -152,15 +162,23 @@ func (r PostsCassandraElasticsearchRepository) GetAudiencesByIds(ctx context.Con
 	}
 
 	for _, b := range audienceModels {
+
+		unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, b.ThumbnailResource)
+
+		if err != nil {
+			return nil, err
+		}
+
 		audiences = append(audiences, post.UnmarshalAudienceFromDatabase(
 			b.Id,
 			b.Slug,
 			b.Title,
-			b.ThumbnailResourceId,
+			unmarshalled,
 			b.Standard,
 			b.TotalLikes,
 			b.TotalPosts,
 			b.CreatedAt,
+			b.UpdatedAt,
 		))
 	}
 
@@ -186,15 +204,22 @@ func (r PostsCassandraElasticsearchRepository) getAudienceById(ctx context.Conte
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get audience by id")
 	}
 
+	unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, b.ThumbnailResource)
+
+	if err != nil {
+		return nil, err
+	}
+
 	return post.UnmarshalAudienceFromDatabase(
 		b.Id,
 		b.Slug,
 		b.Title,
-		b.ThumbnailResourceId,
+		unmarshalled,
 		b.Standard,
 		b.TotalLikes,
 		b.TotalPosts,
 		b.CreatedAt,
+		b.UpdatedAt,
 	), nil
 }
 
@@ -218,15 +243,23 @@ func (r PostsCassandraElasticsearchRepository) GetAudiences(ctx context.Context,
 	var results []*post.Audience
 
 	for _, b := range res {
+
+		unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, b.ThumbnailResource)
+
+		if err != nil {
+			return nil, err
+		}
+
 		results = append(results, post.UnmarshalAudienceFromDatabase(
 			b.Id,
 			b.Slug,
 			b.Title,
-			b.ThumbnailResourceId,
+			unmarshalled,
 			b.Standard,
 			b.TotalLikes,
 			b.TotalPosts,
 			b.CreatedAt,
+			b.UpdatedAt,
 		))
 	}
 
@@ -249,7 +282,11 @@ func (r PostsCassandraElasticsearchRepository) deleteUniqueAudienceSlug(ctx cont
 
 func (r PostsCassandraElasticsearchRepository) CreateAudience(ctx context.Context, requester *principal.Principal, audience *post.Audience) error {
 
-	aud := marshalAudienceToDatabase(audience)
+	aud, err := marshalAudienceToDatabase(audience)
+
+	if err != nil {
+		return err
+	}
 
 	// first, do a unique insert of club to ensure we reserve a unique slug
 	applied, err := audienceSlugTable.
@@ -308,8 +345,12 @@ func (r PostsCassandraElasticsearchRepository) CreateAudience(ctx context.Contex
 	return nil
 }
 
+func (r PostsCassandraElasticsearchRepository) UpdateAudienceThumbnailOperator(ctx context.Context, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
+	return r.updateAudience(ctx, id, updateFn, []string{"thumbnail_resource"})
+}
+
 func (r PostsCassandraElasticsearchRepository) UpdateAudienceThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
-	return r.updateAudience(ctx, id, updateFn, []string{"thumbnail_resource_id"})
+	return r.updateAudience(ctx, id, updateFn, []string{"thumbnail_resource"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateAudienceTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
@@ -336,17 +377,19 @@ func (r PostsCassandraElasticsearchRepository) updateAudience(ctx context.Contex
 		return nil, err
 	}
 
-	err = updateFn(aud)
+	if err = updateFn(aud); err != nil {
+		return nil, err
+	}
+
+	pst, err := marshalAudienceToDatabase(aud)
 
 	if err != nil {
 		return nil, err
 	}
 
-	pst := marshalAudienceToDatabase(aud)
-
 	if err := r.session.
 		Query(audienceTable.Update(
-			columns...,
+			append(columns, "updated_at")...,
 		)).
 		WithContext(ctx).
 		Idempotent(true).

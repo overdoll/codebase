@@ -4,6 +4,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/principal"
+	"overdoll/libraries/resource"
 	"overdoll/libraries/uuid"
 	"time"
 
@@ -18,10 +19,10 @@ var (
 type Audience struct {
 	*paging.Node
 
-	id                  string
-	slug                string
-	title               *localization.Translation
-	thumbnailResourceId *string
+	id                string
+	slug              string
+	title             *localization.Translation
+	thumbnailResource *resource.Resource
 
 	totalLikes int
 	totalPosts int
@@ -29,6 +30,7 @@ type Audience struct {
 	standard bool
 
 	createdAt time.Time
+	updatedAt time.Time
 }
 
 func NewAudience(requester *principal.Principal, slug, title string, standard bool) (*Audience, error) {
@@ -56,14 +58,15 @@ func NewAudience(requester *principal.Principal, slug, title string, standard bo
 	}
 
 	return &Audience{
-		id:                  uuid.New().String(),
-		slug:                slug,
-		title:               lc,
-		thumbnailResourceId: nil,
-		totalLikes:          0,
-		totalPosts:          0,
-		standard:            standard,
-		createdAt:           time.Now(),
+		id:                uuid.New().String(),
+		slug:              slug,
+		title:             lc,
+		thumbnailResource: nil,
+		totalLikes:        0,
+		totalPosts:        0,
+		standard:          standard,
+		createdAt:         time.Now(),
+		updatedAt:         time.Now(),
 	}, nil
 }
 
@@ -87,8 +90,8 @@ func (m *Audience) TotalPosts() int {
 	return m.totalPosts
 }
 
-func (m *Audience) ThumbnailResourceId() *string {
-	return m.thumbnailResourceId
+func (m *Audience) ThumbnailResource() *resource.Resource {
+	return m.thumbnailResource
 }
 
 // IsStandard a "standard" audience is an audience that the majority will consume
@@ -100,13 +103,23 @@ func (m *Audience) CreatedAt() time.Time {
 	return m.createdAt
 }
 
+func (m *Audience) UpdatedAt() time.Time {
+	return m.updatedAt
+}
+
+func (m *Audience) update() {
+	m.updatedAt = time.Now()
+}
+
 func (m *Audience) UpdateTotalPosts(totalPosts int) error {
 	m.totalPosts = totalPosts
+	m.update()
 	return nil
 }
 
 func (m *Audience) UpdateTotalLikes(totalLikes int) error {
 	m.totalLikes = totalLikes
+	m.update()
 	return nil
 }
 
@@ -123,17 +136,30 @@ func (m *Audience) UpdateTitle(requester *principal.Principal, title, locale str
 	if err := m.title.UpdateTranslation(title, locale); err != nil {
 		return err
 	}
+	m.update()
 
 	return nil
 }
 
-func (m *Audience) UpdateThumbnail(requester *principal.Principal, thumbnail string) error {
+func (m *Audience) UpdateThumbnailExisting(thumbnail *resource.Resource) error {
+
+	if err := validateExistingThumbnail(m.thumbnailResource, thumbnail); err != nil {
+		return err
+	}
+
+	m.thumbnailResource = thumbnail
+	m.update()
+
+	return nil
+}
+
+func (m *Audience) UpdateThumbnail(requester *principal.Principal, thumbnail *resource.Resource) error {
 
 	if err := m.canUpdate(requester); err != nil {
 		return err
 	}
 
-	m.thumbnailResourceId = &thumbnail
+	m.thumbnailResource = thumbnail
 
 	return nil
 }
@@ -145,6 +171,7 @@ func (m *Audience) UpdateIsStandard(requester *principal.Principal, standard boo
 	}
 
 	m.standard = standard
+	m.update()
 
 	return nil
 }
@@ -162,16 +189,17 @@ func (m *Audience) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalAudienceFromDatabase(id, slug string, title map[string]string, thumbnail *string, standard int, totalLikes, totalPosts int, createdAt time.Time) *Audience {
+func UnmarshalAudienceFromDatabase(id, slug string, title map[string]string, thumbnail *resource.Resource, standard int, totalLikes, totalPosts int, createdAt, updatedAt time.Time) *Audience {
 	return &Audience{
-		id:                  id,
-		slug:                slug,
-		totalLikes:          totalLikes,
-		totalPosts:          totalPosts,
-		title:               localization.UnmarshalTranslationFromDatabase(title),
-		thumbnailResourceId: thumbnail,
-		standard:            standard == 1,
-		createdAt:           createdAt,
+		id:                id,
+		slug:              slug,
+		totalLikes:        totalLikes,
+		totalPosts:        totalPosts,
+		title:             localization.UnmarshalTranslationFromDatabase(title),
+		thumbnailResource: thumbnail,
+		standard:          standard == 1,
+		createdAt:         createdAt,
+		updatedAt:         updatedAt,
 	}
 }
 

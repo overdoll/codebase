@@ -3,6 +3,8 @@ package bootstrap
 import (
 	"context"
 	"go.uber.org/zap"
+	"google.golang.org/grpc/health"
+	"google.golang.org/grpc/health/grpc_health_v1"
 	"net"
 	"os"
 	"os/signal"
@@ -37,6 +39,9 @@ func InitializeGRPCServer(addr string, f func(server *grpc.Server)) {
 
 	f(grpcServer)
 
+	healthServer := health.NewServer()
+	grpc_health_v1.RegisterHealthServer(grpcServer, healthServer)
+
 	zap.S().Infof("starting grpc server on %s", addr)
 	sentry_support.SetServerType("grpc")
 
@@ -60,12 +65,24 @@ func InitializeGRPCServer(addr string, f func(server *grpc.Server)) {
 
 	// Block until cancel signal is received.
 	<-sig
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 
 	zap.S().Info("shutting down grpc server")
-	grpcServer.GracefulStop()
 
-	<-ctx.Done()
+	ok := make(chan struct{})
+
+	go func() {
+		grpcServer.GracefulStop()
+		close(ok)
+	}()
+
+	select {
+	case <-ok:
+	case <-ctx.Done():
+		grpcServer.Stop()
+	}
+
 	os.Exit(0)
 }

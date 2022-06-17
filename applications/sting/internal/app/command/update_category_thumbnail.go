@@ -3,7 +3,6 @@ package command
 import (
 	"context"
 	"overdoll/applications/sting/internal/domain/post"
-
 	"overdoll/libraries/principal"
 )
 
@@ -24,9 +23,16 @@ func NewUpdateCategoryThumbnailHandler(pr post.Repository, loader LoaderService)
 
 func (h UpdateCategoryThumbnailHandler) Handle(ctx context.Context, cmd UpdateCategoryThumbnail) (*post.Category, error) {
 
+	var oldResourceId string
+
 	cat, err := h.pr.UpdateCategoryThumbnail(ctx, cmd.Principal, cmd.CategoryId, func(category *post.Category) error {
+
+		if category.ThumbnailResource() != nil {
+			oldResourceId = category.ThumbnailResource().ID()
+		}
+
 		// create resources from content
-		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.CategoryId, []string{cmd.Thumbnail}, false)
+		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.CategoryId, []string{cmd.Thumbnail}, false, "AUDIENCE")
 
 		if err != nil {
 			return err
@@ -34,6 +40,16 @@ func (h UpdateCategoryThumbnailHandler) Handle(ctx context.Context, cmd UpdateCa
 
 		return category.UpdateThumbnail(cmd.Principal, resourceIds[0])
 	})
+
+	if oldResourceId != "" {
+		if err := h.loader.DeleteResources(ctx, cmd.CategoryId, []string{oldResourceId}); err != nil {
+			return nil, err
+		}
+	}
+
+	if err != nil {
+		return nil, err
+	}
 
 	if err != nil {
 		return nil, err

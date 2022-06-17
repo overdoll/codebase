@@ -2,7 +2,27 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "club",
-    srcs = ["club.go"],
+    srcs = [
+        "account_club_digest.go",
+        "club.go",
+        "club_filters.go",
+        "club_filters_sorting.go",
+        "club_member.go",
+        "club_members_filters.go",
+        "club_members_filters_sorting.go",
+        "club_suspension_log.go",
+        "repository.go",
+        "suspension_reason.go",
+    ],
     importpath = "overdoll/applications/sting/internal/domain/club",
     visibility = ["//applications/sting:__subpackages__"],
+    deps = [
+        "//libraries/errors/domainerror",
+        "//libraries/localization",
+        "//libraries/paging",
+        "//libraries/principal",
+        "//libraries/resource",
+        "//libraries/uuid",
+        "@com_github_go_playground_validator_v10//:validator",
+    ],
 )

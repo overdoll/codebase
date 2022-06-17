@@ -24,5 +24,5 @@ func (r AccountEmailResolver) Account(ctx context.Context, obj *types.AccountEma
 		return nil, err
 	}
 
-	return types.MarshalAccountToGraphQL(acc), nil
+	return types.MarshalAccountToGraphQL(ctx, acc), nil
 }

@@ -28,6 +28,16 @@ func DeleteAccountData(ctx workflow.Context, input DeleteAccountDataInput) error
 		return err
 	}
 
+	// delete account club data
+	if err := workflow.ExecuteActivity(ctx, a.DeleteAccountClubData,
+		activities.DeleteAccountClubDataInput{
+			AccountId: input.AccountId,
+		},
+	).Get(ctx, nil); err != nil {
+		logger.Error("failed to delete club data", "Error", err)
+		return err
+	}
+
 	var payload *activities.GetAccountPostLikesPayload
 
 	// get all posts that the account liked

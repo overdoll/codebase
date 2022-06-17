@@ -1,0 +1,627 @@
+type Club implements Node @key(fields: "id") {
+  """An ID pointing to this club."""
+  id: ID!
+
+  """An internal reference, uniquely identifying the club."""
+  reference: String!
+
+  """A url-friendly ID. Should be used when searching"""
+  slug: String!
+
+  """
+  Maximum amount of slug aliases that can be created for this club.
+  """
+  slugAliasesLimit: Int! @goField(forceResolver: true)
+
+  """An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug."""
+  slugAliases: [ClubSlugAlias!]!
+
+  """A URL pointing to the object's thumbnail."""
+  thumbnail: Resource
+
+  """A name for this club."""
+  name: String!
+
+  """The account that owns this club."""
+  owner: Account!
+
+  """
+  Whether or not this club is terminated.
+  """
+  termination: ClubTermination
+
+  """
+  Whether or not this club is suspended.
+  """
+  suspension: ClubSuspension
+
+  """
+  Club Suspension Logs.
+
+  Can see who a club was suspended by, the reason and who unsuspended a particular club.
+  """
+  suspensionLogs(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): ClubSuspensionLogConnection! @goField(forceResolver: true)
+
+  """
+  Whether or not the viewer is the owner of the club.
+  """
+  viewerIsOwner: Boolean!
+
+  """
+  Whether or not you can become a supporter of this club.
+  """
+  canSupport: Boolean!
+
+  """
+  When the owner of the club needs to post the next supporter post.
+
+  Usually 30 days after the next post.
+
+  Nil if no supporter-only posts have been created.
+  """
+  nextSupporterPostTime: Time
+
+  """Whether or not the viewer is a member of this club."""
+  viewerMember: ClubMember @goField(forceResolver: true)
+
+  """The total amount of members in this club, who are supporters."""
+  membersIsSupporterCount: Int! @goField(forceResolver: true)
+
+  """The total amount of members in this club."""
+  membersCount: Int!
+
+  """Club members."""
+  members(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by whether or not this is a supporter."""
+    supporter: Boolean! = false
+
+    """sorting options for club members."""
+    sortBy: ClubMembersSort! = NEWEST
+  ): ClubMemberConnection! @goField(forceResolver: true)
+}
+
+type ClubSuspension {
+  """When the suspension expires. Can call UnSuspendClub when time = now."""
+  expires: Time!
+}
+
+type ClubTermination {
+  """The account that terminated the club."""
+  account: Account!
+}
+
+"""The club slug alias"""
+type ClubSlugAlias {
+  """The slug alias"""
+  slug: String!
+}
+
+type ClubEdge {
+  cursor: String!
+  node: Club!
+}
+
+type ClubConnection {
+  edges: [ClubEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ClubMemberEdge {
+  cursor: String!
+  node: ClubMember!
+}
+
+type ClubMemberConnection {
+  edges: [ClubMemberEdge!]!
+  pageInfo: PageInfo!
+}
+
+"""Reasons a club suspension was created."""
+enum ClubSuspensionReason {
+  """Suspension was issued from a post moderation queue."""
+  POST_MODERATION_QUEUE
+
+  """Suspension was issued from a post removal."""
+  POST_REMOVAL
+
+  """Suspension was issued manually."""
+  MANUAL
+}
+
+type ClubIssuedSuspensionLog {
+  """
+  The ID linked to this suspension log.
+  """
+  id: ID!
+
+  """
+  The account that created this suspension.
+
+  If nil, the suspension was created automatically
+  """
+  account: Account
+
+  """
+  The reason this suspension was issued.
+  """
+  reason: ClubSuspensionReason!
+
+  """
+  How long the club was suspended until.
+  """
+  suspendedUntil: Time!
+}
+
+type ClubRemovedSuspensionLog {
+  """
+  The ID linked to this suspension log.
+  """
+  id: ID!
+
+  """
+  The account that removed this suspension.
+  """
+  account: Account!
+}
+
+union ClubSuspensionLog = ClubIssuedSuspensionLog | ClubRemovedSuspensionLog
+
+type ClubSuspensionLogEdge {
+  cursor: String!
+  node: ClubSuspensionLog!
+}
+
+type ClubSuspensionLogConnection {
+  edges: [ClubSuspensionLogEdge!]!
+  pageInfo: PageInfo!
+}
+
+"""Properties by which club member connections can be sorted."""
+enum ClubMembersSort {
+  """By oldest members"""
+  NEWEST
+}
+
+type ClubMember implements Node @key(fields: "id") {
+  """An ID pointing to this club member."""
+  id: ID!
+
+  """When the membership was created (when the account originally joined)."""
+  joinedAt: Time!
+
+  """The club that this membership belongs to."""
+  club: Club! @goField(forceResolver: true)
+
+  """The account that belongs to this membership."""
+  account: Account!
+
+  """Whether or not this member is a supporter."""
+  isSupporter: Boolean!
+
+  """If is a supporter, when they became a supporter."""
+  supporterSince: Time
+}
+
+"""Add alias slug."""
+input AddClubSlugAliasInput {
+  """The club to update"""
+  id: ID!
+
+  """
+  The chosen slug for the club.
+
+  Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
+  """
+  slug: String!
+}
+
+"""Remove alias slug."""
+input RemoveClubSlugAliasInput {
+  """The club to update"""
+  id: ID!
+
+  """The chosen slug for the club."""
+  slug: String!
+}
+
+"""Create club."""
+input CreateClubInput {
+  """
+  The chosen slug for the club.
+
+  Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
+  """
+  slug: String!
+
+  """
+  The chosen name for the club.
+
+  Validation: Max 25 characters.
+  """
+  name: String!
+}
+
+"""Join a club input."""
+input JoinClubInput {
+  """The chosen club ID."""
+  clubId: ID!
+}
+
+"""Leave a club."""
+input LeaveClubInput {
+  """The chosen club ID."""
+  clubId: ID!
+}
+
+"""Update club name."""
+input UpdateClubNameInput {
+  """The club to update"""
+  id: ID!
+
+  """
+  The chosen name for the club.
+
+  Validation: Max 25 characters.
+  """
+  name: String!
+}
+
+"""Update club thumbnail."""
+input UpdateClubThumbnailInput {
+  """The club to update"""
+  id: ID!
+
+  """The thumbnail for the club."""
+  thumbnail: String!
+}
+
+"""Update alias slug to default."""
+input PromoteClubSlugAliasToDefaultInput {
+  """The club to update"""
+  id: ID!
+
+  """The chosen slug for the club."""
+  slug: String!
+}
+
+"""Validation for creating a new club"""
+enum CreateClubValidation {
+  SLUG_TAKEN
+}
+
+"""Payload for a new club"""
+type CreateClubPayload {
+  """The club after creation"""
+  club: Club
+
+  """Validation for creating a new club"""
+  validation: CreateClubValidation
+}
+
+"""Payload for a new club member"""
+type JoinClubPayload {
+  """The membership after creation"""
+  clubMember: ClubMember
+}
+
+"""Payload for leaving a club"""
+type LeaveClubPayload {
+  """The club membership that was removed"""
+  clubMemberId: ID!
+}
+
+"""Validation for adding a new slug to a club"""
+enum AddClubSlugAliasValidation {
+  SLUG_TAKEN
+}
+
+"""Payload for a new alt slug"""
+type AddClubSlugAliasPayload {
+  """The club after update"""
+  club: Club
+
+  """Validation for adding a new club"""
+  validation: AddClubSlugAliasValidation
+}
+
+"""Payload for a new alt slug"""
+type RemoveClubSlugAliasPayload {
+  """The club after update"""
+  club: Club
+}
+
+"""Payload for a new alt slug"""
+type PromoteClubSlugAliasToDefaultPayload {
+  """The club after update"""
+  club: Club
+}
+
+"""Payload for updating the name"""
+type UpdateClubNamePayload {
+  """The club after update"""
+  club: Club
+}
+
+"""Payload for updating the thumbnail"""
+type UpdateClubThumbnailPayload {
+  """The club after update"""
+  club: Club
+}
+
+"""Properties by which club connections can be sorted."""
+enum ClubsSort {
+  """Clubs by popularity"""
+  POPULAR
+}
+
+"""Un-Suspend the club."""
+input UnSuspendClubInput {
+  """The club to un-suspend."""
+  clubId: ID!
+}
+
+"""Suspend the club."""
+input SuspendClubInput {
+  """The club to suspend."""
+  clubId: ID!
+
+  """When the suspension should end."""
+  endTime: Time!
+}
+
+"""Terminate the club."""
+input TerminateClubInput {
+  """The club to terminate."""
+  clubId: ID!
+}
+
+"""Un-Terminate the club."""
+input UnTerminateClubInput {
+  """The club to un-terminate."""
+  clubId: ID!
+}
+
+"""Un terminate club payload."""
+type UnTerminateClubPayload {
+  """The new club after it's not terminated anymore."""
+  club: Club
+}
+
+"""Un suspend club payload."""
+type UnSuspendClubPayload {
+  """The new club after it's not suspended anymore."""
+  club: Club
+}
+
+"""Suspend club payload."""
+type SuspendClubPayload {
+  """The new club after it's suspended."""
+  club: Club
+}
+
+"""Terminate club payload."""
+type TerminateClubPayload {
+  """The new club after it's terminated."""
+  club: Club
+}
+
+extend type Mutation {
+  """
+  Join the club, becoming a member.
+  """
+  joinClub(input: JoinClubInput!): JoinClubPayload
+
+  """
+  Leave the club.
+
+  If you are the owner of the club, you cannot leave the club.
+  """
+  leaveClub(input: LeaveClubInput!): LeaveClubPayload
+
+  """
+  Create a new club
+  """
+  createClub(input: CreateClubInput!): CreateClubPayload
+
+  """
+  Add an alternative slug to the club
+  """
+  addClubSlugAlias(input: AddClubSlugAliasInput!): AddClubSlugAliasPayload
+
+  """
+  Remove an alternative slug from the club
+  """
+  removeClubSlugAlias(input: RemoveClubSlugAliasInput!): RemoveClubSlugAliasPayload
+
+  """
+  Make the alias slug the default, swapping out the old slug into the alias list.
+  """
+  promoteClubSlugAliasToDefault(input: PromoteClubSlugAliasToDefaultInput!): PromoteClubSlugAliasToDefaultPayload
+
+  """
+  Update the club's name (english-only for now)
+  """
+  updateClubName(input: UpdateClubNameInput!): UpdateClubNamePayload
+
+  """
+  Update the club thumbnail
+  """
+  updateClubThumbnail(input: UpdateClubThumbnailInput!): UpdateClubThumbnailPayload
+
+  """
+  Suspend the club.
+
+  Staff+ only.
+  """
+  suspendClub(input: SuspendClubInput!): SuspendClubPayload
+
+  """
+  Un-Suspend the club. Suspension must be expired.
+
+  Staff+ may un-suspend even if suspension hasn't expired yet.
+  """
+  unSuspendClub(input: UnSuspendClubInput!): UnSuspendClubPayload
+
+  """
+  Terminate the club.
+
+  Terminating a club will remove it from public visibility and cancel all subscriptions.
+
+  Staff+ only.
+  """
+  terminateClub(input: TerminateClubInput!): TerminateClubPayload
+
+  """
+  Un-Terminate the club.
+
+  Un-terminating will allow the club to be viewed publicly again, but all subscriptions will remain cancelled.
+
+  Staff+ only.
+  """
+  unTerminateClub(input: UnTerminateClubInput!): UnTerminateClubPayload
+}
+
+extend type Query {
+  """Search multiple clubs."""
+  clubs(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Search by club slugs."""
+    slugs: [String!]
+
+    """Filter by the name of the club."""
+    name: String
+
+    """
+    Filter by all the clubs that are suspended.
+
+    Staff+ only for "true"
+    """
+    suspended: Boolean! = false
+
+    """
+    Filter by all the clubs that are terminated.
+
+    Staff+ only for "true"
+    """
+    terminated: Boolean! = false
+
+    """Sorting options for clubs."""
+    sortBy: ClubsSort! = POPULAR
+  ): ClubConnection!
+
+  """Get a single club."""
+  club(
+    """Search by slug of the club."""
+    slug: String!
+  ): Club
+}
+
+extend type Account {
+
+  """
+  Maximum amount of clubs that you can create.
+  """
+  clubsLimit: Int! @goField(forceResolver: true)
+
+  """
+  Current count of the amount of clubs that the account has created.
+  """
+  clubsCount: Int! @goField(forceResolver: true)
+
+  """
+  Whether or not this club has non-terminated clubs.
+
+  Cannot delete account if this is true.
+  """
+  hasNonTerminatedClubs: Boolean! @goField(forceResolver: true)
+
+  """Represents the clubs that the account has created."""
+  clubs(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Search by club slugs."""
+    slugs: [String!]
+
+    """Filter by the name of the club."""
+    name: String
+
+    """Sorting options for clubs."""
+    sortBy: ClubsSort! = POPULAR
+  ): ClubConnection! @goField(forceResolver: true)
+
+  """
+  Maximum amount of clubs that you can join as an account.
+  """
+  clubMembershipsLimit: Int! @goField(forceResolver: true)
+
+  """
+  Current count of club memberships. Should be compared against the limit before joining a club.
+  """
+  clubMembershipsCount: Int! @goField(forceResolver: true)
+
+  """Represents the club memberships that the account has."""
+  clubMemberships(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by whether or not this is a supporter."""
+    supporter: Boolean! = false
+
+    """sorting options for club members."""
+    sortBy: ClubMembersSort! = NEWEST
+  ): ClubMemberConnection! @goField(forceResolver: true)
+}

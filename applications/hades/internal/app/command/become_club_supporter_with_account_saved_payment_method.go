@@ -23,10 +23,10 @@ type BecomeClubSupporterWithAccountSavedPaymentMethodHandler struct {
 	br     billing.Repository
 	pr     billing.PricingRepository
 	cr     ccbill.Repository
-	stella StellaService
+	stella StingService
 }
 
-func NewBecomeClubSupporterWithAccountSavedPaymentMethodHandler(br billing.Repository, pr billing.PricingRepository, cr ccbill.Repository, stella StellaService) BecomeClubSupporterWithAccountSavedPaymentMethodHandler {
+func NewBecomeClubSupporterWithAccountSavedPaymentMethodHandler(br billing.Repository, pr billing.PricingRepository, cr ccbill.Repository, stella StingService) BecomeClubSupporterWithAccountSavedPaymentMethodHandler {
 	return BecomeClubSupporterWithAccountSavedPaymentMethodHandler{br: br, pr: pr, cr: cr, stella: stella}
 }
 

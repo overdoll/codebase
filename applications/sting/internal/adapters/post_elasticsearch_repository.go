@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"math"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"time"
 
@@ -21,6 +22,7 @@ type postDocument struct {
 	State                           string            `json:"state"`
 	SupporterOnlyStatus             string            `json:"supporter_only_status"`
 	ContentResourceIds              []string          `json:"content_resource_ids"`
+	ContentResources                map[string]string `json:"content_resources"`
 	ContentSupporterOnly            map[string]bool   `json:"content_supporter_only"`
 	ContentSupporterOnlyResourceIds map[string]string `json:"content_supporter_only_resource_ids"`
 	Likes                           int               `json:"likes"`
@@ -31,12 +33,13 @@ type postDocument struct {
 	CharacterIds                    []string          `json:"character_ids"`
 	SeriesIds                       []string          `json:"series_ids"`
 	CreatedAt                       time.Time         `json:"created_at"`
+	UpdatedAt                       time.Time         `json:"updated_at"`
 	PostedAt                        *time.Time        `json:"posted_at"`
 }
 
-const PostIndexName = "posts"
+const PostIndexName = "sting.posts"
 
-func unmarshalPostDocument(hit *elastic.SearchHit) (*post.Post, error) {
+func (r *PostsCassandraElasticsearchRepository) unmarshalPostDocument(ctx context.Context, hit *elastic.SearchHit) (*post.Post, error) {
 
 	var pst postDocument
 
@@ -52,6 +55,18 @@ func unmarshalPostDocument(hit *elastic.SearchHit) (*post.Post, error) {
 		audience = &pst.AudienceId
 	}
 
+	var valueString []string
+
+	for _, r := range pst.ContentResources {
+		valueString = append(valueString, r)
+	}
+
+	resources, err := r.resourceSerializer.UnmarshalResourcesFromDatabase(ctx, valueString)
+
+	if err != nil {
+		return nil, err
+	}
+
 	createdPost := post.UnmarshalPostFromDatabase(
 		pst.Id,
 		pst.State,
@@ -59,6 +74,7 @@ func unmarshalPostDocument(hit *elastic.SearchHit) (*post.Post, error) {
 		pst.Likes,
 		pst.ContributorId,
 		pst.ContentResourceIds,
+		resources,
 		pst.ContentSupporterOnly,
 		pst.ContentSupporterOnlyResourceIds,
 		pst.ClubId,
@@ -67,6 +83,7 @@ func unmarshalPostDocument(hit *elastic.SearchHit) (*post.Post, error) {
 		pst.SeriesIds,
 		pst.CategoryIds,
 		pst.CreatedAt,
+		pst.UpdatedAt,
 		pst.PostedAt,
 	)
 
@@ -86,13 +103,32 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 	var contentResourceIds []string
 	contentSupporterOnly := make(map[string]bool)
 	contentSupporterOnlyResourceIds := make(map[string]string)
+	contentResources := make(map[string]string)
 
 	for _, cont := range pst.Content() {
-		contentResourceIds = append(contentResourceIds, cont.ResourceId())
-		contentSupporterOnly[cont.ResourceId()] = cont.IsSupporterOnly()
-		if cont.IsSupporterOnly() {
-			contentSupporterOnlyResourceIds[cont.ResourceId()] = cont.ResourceIdHidden()
+		contentResourceIds = append(contentResourceIds, cont.Resource().ID())
+		contentSupporterOnly[cont.Resource().ID()] = cont.IsSupporterOnly()
+		if cont.IsSupporterOnly() && cont.ResourceHidden() != nil {
+			contentSupporterOnlyResourceIds[cont.Resource().ID()] = cont.ResourceHidden().ID()
 		}
+
+		if cont.ResourceHidden() != nil {
+			marshalled, err := resource.MarshalResourceToDatabase(cont.ResourceHidden())
+
+			if err != nil {
+				return nil, err
+			}
+
+			contentResources[cont.ResourceHidden().ID()] = marshalled
+		}
+
+		marshalled, err := resource.MarshalResourceToDatabase(cont.Resource())
+
+		if err != nil {
+			return nil, err
+		}
+
+		contentResources[cont.Resource().ID()] = marshalled
 	}
 
 	return &postDocument{
@@ -103,6 +139,7 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 		AudienceId:                      audience,
 		ClubId:                          pst.ClubId(),
 		ContributorId:                   pst.ContributorId(),
+		ContentResources:                contentResources,
 		ContentResourceIds:              contentResourceIds,
 		ContentSupporterOnly:            contentSupporterOnly,
 		ContentSupporterOnlyResourceIds: contentSupporterOnlyResourceIds,
@@ -110,6 +147,7 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 		CharacterIds:                    pst.CharacterIds(),
 		SeriesIds:                       pst.SeriesIds(),
 		CreatedAt:                       pst.CreatedAt(),
+		UpdatedAt:                       pst.UpdatedAt(),
 		PostedAt:                        pst.PostedAt(),
 	}, nil
 }
@@ -342,7 +380,7 @@ func (r PostsCassandraElasticsearchRepository) ClubMembersPostsFeed(ctx context.
 
 	for _, hit := range response.Hits.Hits {
 
-		createdPost, err := unmarshalPostDocument(hit)
+		createdPost, err := r.unmarshalPostDocument(ctx, hit)
 
 		if err != nil {
 			return nil, err
@@ -428,7 +466,7 @@ func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, re
 
 	for _, hit := range response.Hits.Hits {
 
-		createdPost, err := unmarshalPostDocument(hit)
+		createdPost, err := r.unmarshalPostDocument(ctx, hit)
 
 		if err != nil {
 			return nil, err
@@ -538,7 +576,7 @@ func (r PostsCassandraElasticsearchRepository) SearchPosts(ctx context.Context, 
 
 	for _, hit := range response.Hits.Hits {
 
-		createdPost, err := unmarshalPostDocument(hit)
+		createdPost, err := r.unmarshalPostDocument(ctx, hit)
 
 		if err != nil {
 			return nil, err
@@ -577,6 +615,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllPosts(ctx context.Context
 				State:                           p.State,
 				SupporterOnlyStatus:             p.SupporterOnlyStatus,
 				ContentResourceIds:              p.ContentResourceIds,
+				ContentResources:                p.ContentResources,
 				ContentSupporterOnly:            p.ContentSupporterOnly,
 				ContentSupporterOnlyResourceIds: p.ContentSupporterOnlyResourceIds,
 				Likes:                           p.Likes,
@@ -587,6 +626,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllPosts(ctx context.Context
 				CharacterIds:                    p.CharacterIds,
 				SeriesIds:                       p.SeriesIds,
 				CreatedAt:                       p.CreatedAt,
+				UpdatedAt:                       p.UpdatedAt,
 				PostedAt:                        p.PostedAt,
 			}
 

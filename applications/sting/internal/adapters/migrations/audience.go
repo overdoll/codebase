@@ -17,7 +17,7 @@ const audienceIndexProperties = `
 	"slug": {
 		"type": "keyword"
 	},
-	"thumbnail_resource_id": {
+	"thumbnail_resource": {
 		"type": "keyword"
 	},
 	"standard": {
@@ -31,6 +31,9 @@ const audienceIndexProperties = `
 	},
 	"title": ` + localization.ESIndex + `
 	"created_at": {
+		"type": "date"
+	},
+	"updated_at": {
 		"type": "date"
 	}
 }

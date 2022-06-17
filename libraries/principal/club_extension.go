@@ -2,7 +2,7 @@ package principal
 
 import (
 	"errors"
-	stella "overdoll/applications/stella/proto"
+	sting "overdoll/applications/sting/proto"
 )
 
 type ClubExtension struct {
@@ -11,7 +11,7 @@ type ClubExtension struct {
 	ownerClubIds      []string
 }
 
-func NewClubExtension(proto *stella.GetAccountClubDigestResponse) (*ClubExtension, error) {
+func NewClubExtension(proto *sting.GetAccountClubDigestResponse) (*ClubExtension, error) {
 	return &ClubExtension{
 		supportedClubIds:  proto.SupportedClubIds,
 		clubMembershipIds: proto.ClubMembershipIds,

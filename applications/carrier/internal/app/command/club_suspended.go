@@ -15,10 +15,10 @@ type ClubSuspended struct {
 type ClubSuspendedHandler struct {
 	mr     mailing.Repository
 	eva    EvaService
-	stella StellaService
+	stella StingService
 }
 
-func NewClubSuspendedHandler(mr mailing.Repository, eva EvaService, stella StellaService) ClubSuspendedHandler {
+func NewClubSuspendedHandler(mr mailing.Repository, eva EvaService, stella StingService) ClubSuspendedHandler {
 	return ClubSuspendedHandler{mr: mr, eva: eva, stella: stella}
 }
 

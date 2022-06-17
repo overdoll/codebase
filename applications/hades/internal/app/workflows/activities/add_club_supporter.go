@@ -12,5 +12,5 @@ type AddClubSupporterInput struct {
 }
 
 func (h *Activities) AddClubSupporter(ctx context.Context, input AddClubSupporterInput) error {
-	return h.stella.AddClubSupporter(ctx, input.ClubId, input.AccountId, input.SupportedAt)
+	return h.sting.AddClubSupporter(ctx, input.ClubId, input.AccountId, input.SupportedAt)
 }

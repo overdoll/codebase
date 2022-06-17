@@ -8,8 +8,8 @@ import (
 	eva "overdoll/applications/eva/proto"
 	loader "overdoll/applications/loader/proto"
 	parley "overdoll/applications/parley/proto"
-	stella "overdoll/applications/stella/proto"
 	"overdoll/applications/sting/internal/service"
+	"overdoll/libraries/resource/proto"
 	"testing"
 )
 
@@ -18,22 +18,36 @@ var application *service.ComponentTestApplication
 func mockServices(testApplication *service.ComponentTestApplication) {
 	application = testApplication
 
-	application.StellaClient.On("NewSupporterPost", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
+	application.LoaderClient.On("CreateOrGetResourcesFromUploads", mock.Anything, mock.Anything).Return(func(c context.Context, req *loader.CreateOrGetResourcesFromUploadsRequest, g ...grpc.CallOption) *loader.CreateOrGetResourcesFromUploadsResponse {
+
+		var res []*proto.Resource
+
+		for _, r := range req.ResourceIds {
+			res = append(res, &proto.Resource{
+				Id:        r,
+				ItemId:    req.ItemId,
+				Processed: true,
+				Private:   false,
+			})
+		}
+
+		return &loader.CreateOrGetResourcesFromUploadsResponse{Resources: res}
+	}, nil)
+
+	application.CarrierClient.On("ClubSuspended", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
+	application.CarrierClient.On("ClubSupporterRequiredPostReminder", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
+	application.CarrierClient.On("ClubSupporterNoPosts", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
 
 	application.LoaderClient.On("DeleteResources", mock.Anything, mock.Anything).Return(&loader.DeleteResourcesResponse{}, nil)
 
 	application.ParleyClient.On("PutPostIntoModeratorQueueOrPublish", mock.Anything, mock.Anything).Return(&parley.PutPostIntoModeratorQueueOrPublishResponse{PutIntoReview: false}, nil)
 
-	application.LoaderClient.On("CreateOrGetResourcesFromUploads", mock.Anything, mock.Anything).Return(func(c context.Context, req *loader.CreateOrGetResourcesFromUploadsRequest, g ...grpc.CallOption) *loader.CreateOrGetResourcesFromUploadsResponse {
-		return &loader.CreateOrGetResourcesFromUploadsResponse{AllResourceIds: req.ResourceIds}
-	}, nil)
-
 	application.LoaderClient.On("GetResources", mock.Anything, mock.Anything).Return(func(c context.Context, req *loader.GetResourcesRequest, g ...grpc.CallOption) *loader.GetResourcesResponse {
 
-		var res []*loader.Resource
+		var res []*proto.Resource
 
 		for _, r := range req.ResourceIds {
-			res = append(res, &loader.Resource{
+			res = append(res, &proto.Resource{
 				Id:          req.ItemId,
 				ItemId:      r,
 				Processed:   true,
@@ -55,7 +69,7 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 					Id:     r.Id,
 					ItemId: r.ItemId,
 				},
-				NewResource: &loader.ResourceIdentifier{
+				NewResource: &proto.Resource{
 					ItemId: r.ItemId,
 					Id:     r.Id + "_FILTERED",
 				},
@@ -83,42 +97,5 @@ func mockAccountNormal(t *testing.T, accountId string) {
 			Roles:  []string{"ARTIST"},
 			Secure: true,
 		}
-	}, nil)
-}
-
-func mockAccountDigestClubOwner(t *testing.T, accountId string, clubId string) {
-	application.StellaClient.On("GetAccountClubDigest", mock.Anything,
-		&stella.GetAccountClubDigestRequest{AccountId: accountId}).Return(&stella.GetAccountClubDigestResponse{
-		SupportedClubIds:  []string{},
-		ClubMembershipIds: []string{},
-		OwnerClubIds:      []string{clubId},
-	}, nil)
-	application.StellaClient.On("GetClubById", mock.Anything, &stella.GetClubByIdRequest{ClubId: clubId}).Return(&stella.GetClubByIdResponse{Club: &stella.Club{OwnerAccountId: accountId}}, nil)
-}
-
-func mockAccountDigestNormal(t *testing.T, accountId string) {
-	application.StellaClient.On("GetAccountClubDigest", mock.Anything,
-		&stella.GetAccountClubDigestRequest{AccountId: accountId}).Return(&stella.GetAccountClubDigestResponse{
-		SupportedClubIds:  []string{},
-		ClubMembershipIds: []string{},
-		OwnerClubIds:      []string{},
-	}, nil)
-}
-
-func mockAccountDigestMembership(t *testing.T, accountId, clubId string) {
-	application.StellaClient.On("GetAccountClubDigest", mock.Anything,
-		&stella.GetAccountClubDigestRequest{AccountId: accountId}).Return(&stella.GetAccountClubDigestResponse{
-		SupportedClubIds:  []string{},
-		ClubMembershipIds: []string{clubId},
-		OwnerClubIds:      []string{},
-	}, nil)
-}
-
-func mockAccountDigestSupporter(t *testing.T, accountId, clubId string) {
-	application.StellaClient.On("GetAccountClubDigest", mock.Anything,
-		&stella.GetAccountClubDigestRequest{AccountId: accountId}).Return(&stella.GetAccountClubDigestResponse{
-		SupportedClubIds:  []string{clubId},
-		ClubMembershipIds: []string{},
-		OwnerClubIds:      []string{},
 	}, nil)
 }

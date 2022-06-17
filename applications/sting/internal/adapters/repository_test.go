@@ -10,6 +10,7 @@ import (
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/config"
+	"overdoll/libraries/resource"
 	"testing"
 )
 
@@ -70,7 +71,7 @@ func createFakeSlug(t *testing.T) string {
 }
 
 func newPostRepository(t *testing.T) adapters.PostsCassandraElasticsearchRepository {
-	return adapters.NewPostsCassandraRepository(bootstrap.InitializeDatabaseSession(), bootstrap.InitializeElasticSearchSession())
+	return adapters.NewPostsCassandraRepository(bootstrap.InitializeDatabaseSession(), bootstrap.InitializeElasticSearchSession(), resource.NewSerializer())
 }
 
 func newPostRepositoryWithESFailure(t *testing.T) adapters.PostsCassandraElasticsearchRepository {
@@ -84,5 +85,5 @@ func newPostRepositoryWithESFailure(t *testing.T) adapters.PostsCassandraElastic
 		panic(err)
 	}
 
-	return adapters.NewPostsCassandraRepository(bootstrap.InitializeDatabaseSession(), client)
+	return adapters.NewPostsCassandraRepository(bootstrap.InitializeDatabaseSession(), client, resource.NewSerializer())
 }

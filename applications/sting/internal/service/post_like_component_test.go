@@ -75,9 +75,9 @@ func TestLikePost_and_undo_and_delete(t *testing.T) {
 	t.Parallel()
 
 	testingAccountId := newFakeAccount(t)
-	clubId := uuid.New().String()
+	clb := seedClub(t, uuid.New().String())
+	clubId := clb.ID()
 	mockAccountNormal(t, testingAccountId)
-	mockAccountDigestNormal(t, testingAccountId)
 
 	publishedPost := seedPublishedPost(t, uuid.New().String(), clubId)
 	postId := publishedPost.ID()
@@ -139,7 +139,7 @@ func TestLikePost_and_undo_and_delete(t *testing.T) {
 
 	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
-	workflowExecution = testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.DeleteAccountData, mock.Anything)
+	workflowExecution = testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.DeleteAccountData, workflows.DeleteAccountDataInput{AccountId: testingAccountId})
 
 	grpcClient := getGrpcClient(t)
 

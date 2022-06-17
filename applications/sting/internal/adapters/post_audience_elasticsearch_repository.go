@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"overdoll/libraries/errors"
+	resource "overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"time"
 
@@ -17,19 +18,20 @@ import (
 )
 
 type audienceDocument struct {
-	Id                  string            `json:"id"`
-	Slug                string            `json:"slug"`
-	Title               map[string]string `json:"title"`
-	ThumbnailResourceId *string           `json:"thumbnail_resource_id"`
-	Standard            int               `json:"standard"`
-	TotalLikes          int               `json:"total_likes"`
-	TotalPosts          int               `json:"total_posts"`
-	CreatedAt           time.Time         `json:"created_at"`
+	Id                string            `json:"id"`
+	Slug              string            `json:"slug"`
+	Title             map[string]string `json:"title"`
+	ThumbnailResource string            `json:"thumbnail_resource"`
+	Standard          int               `json:"standard"`
+	TotalLikes        int               `json:"total_likes"`
+	TotalPosts        int               `json:"total_posts"`
+	CreatedAt         time.Time         `json:"created_at"`
+	UpdatedAt         time.Time         `json:"updated_at"`
 }
 
-const AudienceIndexName = "audience"
+const AudienceIndexName = "sting.audience"
 
-func marshalAudienceToDocument(cat *post.Audience) *audienceDocument {
+func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 
 	stnd := 0
 
@@ -37,16 +39,29 @@ func marshalAudienceToDocument(cat *post.Audience) *audienceDocument {
 		stnd = 1
 	}
 
-	return &audienceDocument{
-		Id:                  cat.ID(),
-		Slug:                cat.Slug(),
-		ThumbnailResourceId: cat.ThumbnailResourceId(),
-		Title:               localization.MarshalTranslationToDatabase(cat.Title()),
-		CreatedAt:           cat.CreatedAt(),
-		Standard:            stnd,
-		TotalLikes:          cat.TotalLikes(),
-		TotalPosts:          cat.TotalPosts(),
+	var res string
+
+	if cat.ThumbnailResource() != nil {
+		marshalled, err := resource.MarshalResourceToDatabase(cat.ThumbnailResource())
+
+		if err != nil {
+			return nil, err
+		}
+
+		res = marshalled
 	}
+
+	return &audienceDocument{
+		Id:                cat.ID(),
+		Slug:              cat.Slug(),
+		ThumbnailResource: res,
+		Title:             localization.MarshalTranslationToDatabase(cat.Title()),
+		CreatedAt:         cat.CreatedAt(),
+		Standard:          stnd,
+		TotalLikes:        cat.TotalLikes(),
+		TotalPosts:        cat.TotalPosts(),
+		UpdatedAt:         cat.UpdatedAt(),
+	}, nil
 }
 
 func (r PostsCassandraElasticsearchRepository) SearchAudience(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Audience, error) {
@@ -110,7 +125,13 @@ func (r PostsCassandraElasticsearchRepository) SearchAudience(ctx context.Contex
 			return nil, errors.Wrap(err, "failed search audience - unmarshal")
 		}
 
-		newAudience := post.UnmarshalAudienceFromDatabase(bd.Id, bd.Slug, bd.Title, bd.ThumbnailResourceId, bd.Standard, bd.TotalLikes, bd.TotalPosts, bd.CreatedAt)
+		unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, bd.ThumbnailResource)
+
+		if err != nil {
+			return nil, err
+		}
+
+		newAudience := post.UnmarshalAudienceFromDatabase(bd.Id, bd.Slug, bd.Title, unmarshalled, bd.Standard, bd.TotalLikes, bd.TotalPosts, bd.CreatedAt, bd.UpdatedAt)
 		newAudience.Node = paging.NewNode(hit.Sort)
 
 		audiences = append(audiences, newAudience)
@@ -121,11 +142,17 @@ func (r PostsCassandraElasticsearchRepository) SearchAudience(ctx context.Contex
 
 func (r PostsCassandraElasticsearchRepository) indexAudience(ctx context.Context, audience *post.Audience) error {
 
-	_, err := r.client.
+	marshalled, err := marshalAudienceToDocument(audience)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = r.client.
 		Index().
 		Index(AudienceIndexName).
 		Id(audience.ID()).
-		BodyJson(marshalAudienceToDocument(audience)).
+		BodyJson(marshalled).
 		Do(ctx)
 
 	if err != nil {
@@ -152,13 +179,14 @@ func (r PostsCassandraElasticsearchRepository) IndexAllAudience(ctx context.Cont
 		for iter.StructScan(&m) {
 
 			doc := audienceDocument{
-				Id:                  m.Id,
-				Slug:                m.Slug,
-				ThumbnailResourceId: m.ThumbnailResourceId,
-				Title:               m.Title,
-				Standard:            m.Standard,
-				CreatedAt:           m.CreatedAt,
-				TotalLikes:          m.TotalLikes,
+				Id:                m.Id,
+				Slug:              m.Slug,
+				ThumbnailResource: m.ThumbnailResource,
+				Title:             m.Title,
+				Standard:          m.Standard,
+				CreatedAt:         m.CreatedAt,
+				TotalLikes:        m.TotalLikes,
+				UpdatedAt:         m.UpdatedAt,
 			}
 
 			_, err := r.client.

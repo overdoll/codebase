@@ -297,8 +297,15 @@ function matchQueryMiddleware (req, res, next): void {
 const PATH = '/api/graphql'
 
 void (async () => {
+
   const app = express()
   const httpServer = http.createServer(app)
+
+  process.on('SIGTERM', () => {
+    httpServer.close(() => {
+      logger.info('http server closed')
+    })
+  })
 
   const server = new ApolloServer({
     gateway,
@@ -347,6 +354,11 @@ void (async () => {
     cors: false
   })
 
+  // readyz endpoint
+  app.get('/readyz', (req, res) => {
+    res.send('ok')
+  })
+
   app.use(Sentry.Handlers.errorHandler())
 
   app.use(function onError (err, req, res, next) {
@@ -362,3 +374,4 @@ void (async () => {
 
   logger.info('http server starting on 0.0.0.0:8000')
 })()
+

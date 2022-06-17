@@ -11,6 +11,7 @@ go_library(
     visibility = ["//applications/loader:__subpackages__"],
     deps = [
         "//applications/loader/internal/app/workflows/activities",
+        "//libraries/errors",
         "@io_temporal_go_sdk//temporal",
         "@io_temporal_go_sdk//workflow",
     ],

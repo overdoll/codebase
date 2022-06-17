@@ -2,10 +2,8 @@ package service
 
 import (
 	"context"
-	"github.com/aws/aws-sdk-go/service/cloudfront/sign"
 	"go.temporal.io/sdk/client"
 	temporalmocks "go.temporal.io/sdk/mocks"
-	"go.uber.org/zap"
 	"os"
 	"overdoll/applications/loader/internal/adapters"
 	"overdoll/applications/loader/internal/app"
@@ -14,43 +12,43 @@ import (
 	"overdoll/applications/loader/internal/app/workflows/activities"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
-	"overdoll/libraries/support"
+	"overdoll/libraries/testing_tools/mocks"
 )
 
 func NewApplication(ctx context.Context) (*app.Application, func()) {
 	bootstrap.NewBootstrap()
-	return createApplication(ctx, clients.NewTemporalClient(ctx)), func() {}
+	stingClient, cleanup := clients.NewStingCallbackClient(ctx, os.Getenv("STING_SERVICE"))
+
+	return createApplication(ctx, adapters.NewCallbackGrpc(stingClient), clients.NewTemporalClient(ctx)), func() {
+		cleanup()
+	}
 }
 
 type ComponentTestApplication struct {
-	App            *app.Application
-	TemporalClient *temporalmocks.Client
+	App                 *app.Application
+	TemporalClient      *temporalmocks.Client
+	StingCallbackClient *mocks.MockResourceCallbackClient
 }
 
 func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication {
 	bootstrap.NewBootstrap()
 	temporalClient := &temporalmocks.Client{}
+	callbackMock := &mocks.MockResourceCallbackClient{}
+
 	return &ComponentTestApplication{
-		App:            createApplication(ctx, temporalClient),
-		TemporalClient: temporalClient,
+		App:                 createApplication(ctx, adapters.NewCallbackGrpc(callbackMock), temporalClient),
+		TemporalClient:      temporalClient,
+		StingCallbackClient: callbackMock,
 	}
 }
 
-func createApplication(ctx context.Context, client client.Client) *app.Application {
+func createApplication(ctx context.Context, callbackService activities.CallbackService, client client.Client) *app.Application {
 
 	s := bootstrap.InitializeDatabaseSession()
 
 	awsSession := bootstrap.InitializeAWSSession()
 
-	resourcesRsa, err := support.ParseRsaPrivateKeyFromPemEnvFile(os.Getenv("AWS_PRIVATE_RESOURCES_KEY_PAIR_PRIVATE_KEY"))
-
-	if err != nil {
-		zap.S().Fatalw("failed to parse RSA private key", zap.Error(err))
-	}
-
-	resourcesSigner := sign.NewURLSigner(os.Getenv("AWS_PRIVATE_RESOURCES_KEY_PAIR_ID"), resourcesRsa)
-
-	resourceRepo := adapters.NewResourceCassandraS3Repository(s, awsSession, resourcesSigner)
+	resourceRepo := adapters.NewResourceCassandraS3Repository(s, awsSession)
 
 	eventRepo := adapters.NewEventTemporalRepository(client)
 
@@ -62,8 +60,8 @@ func createApplication(ctx context.Context, client client.Client) *app.Applicati
 			CopyResourcesAndApplyFilters:       command.NewCopyResourcesAndApplyFiltersHandler(resourceRepo, eventRepo),
 		},
 		Queries: app.Queries{
-			ResourcesByIdsWithUrls: query.NewResourcesByIdsWithUrlsHandler(resourceRepo),
+			ResourcesByIds: query.NewResourcesByIdsHandler(resourceRepo),
 		},
-		Activities: activities.NewActivitiesHandler(resourceRepo),
+		Activities: activities.NewActivitiesHandler(resourceRepo, callbackService),
 	}
 }

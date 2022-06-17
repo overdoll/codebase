@@ -18,9 +18,9 @@ func NewApplication(ctx context.Context) (*app.Application, func()) {
 	bootstrap.NewBootstrap()
 
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
-	stellaClient, cleanup2 := clients.NewStellaClient(ctx, os.Getenv("STELLA_SERVICE"))
+	stingClient, cleanup2 := clients.NewStingClient(ctx, os.Getenv("STING_SERVICE"))
 
-	return createApplication(ctx, adapters.NewEvaGrpc(evaClient), adapters.NewStellaGrpc(stellaClient)),
+	return createApplication(ctx, adapters.NewEvaGrpc(evaClient), adapters.NewStingGrpc(stingClient)),
 		func() {
 			cleanup()
 			cleanup2()
@@ -28,29 +28,29 @@ func NewApplication(ctx context.Context) (*app.Application, func()) {
 }
 
 type ComponentTestApplication struct {
-	App          *app.Application
-	EvaClient    *mocks.MockEvaClient
-	StellaClient *mocks.MockStellaClient
+	App         *app.Application
+	EvaClient   *mocks.MockEvaClient
+	StingClient *mocks.MockStingClient
 }
 
 func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication {
 	bootstrap.NewBootstrap()
 
 	evaClient := &mocks.MockEvaClient{}
-	stellaClient := &mocks.MockStellaClient{}
+	stingClient := &mocks.MockStingClient{}
 
 	return &ComponentTestApplication{
 		App: createApplication(
 			ctx,
 			adapters.NewEvaGrpc(evaClient),
-			adapters.NewStellaGrpc(stellaClient),
+			adapters.NewStingGrpc(stingClient),
 		),
-		StellaClient: stellaClient,
-		EvaClient:    evaClient,
+		StingClient: stingClient,
+		EvaClient:   evaClient,
 	}
 }
 
-func createApplication(ctx context.Context, eva command.EvaService, stella command.StellaService) *app.Application {
+func createApplication(ctx context.Context, eva command.EvaService, sting command.StingService) *app.Application {
 
 	awsSession := bootstrap.InitializeAWSSession()
 	client := ses.New(awsSession)
@@ -61,19 +61,19 @@ func createApplication(ctx context.Context, eva command.EvaService, stella comma
 		Commands: app.Commands{
 			ConfirmAccountEmail:                       command.NewConfirmAccountEmailHandler(mailingRepo, eva),
 			NewLoginToken:                             command.NewNewLoginTokenHandler(mailingRepo),
-			NewClubSupporterSubscription:              command.NewNewClubSupporterSubscriptionHandler(mailingRepo, eva, stella),
-			ClubSupporterSubscriptionCancelled:        command.NewClubSupporterSubscriptionCancelledHandler(mailingRepo, eva, stella),
-			ClubSupporterSubscriptionPaymentFailure:   command.NewClubSupporterSubscriptionPaymentFailureHandler(mailingRepo, eva, stella),
-			ClubSupporterSubscriptionRefunded:         command.NewClubSupporterSubscriptionRefundedHandler(mailingRepo, eva, stella),
-			UpcomingClubSupporterSubscriptionRenewals: command.NewUpcomingClubSupporterSubscriptionRenewalsHandler(mailingRepo, eva, stella),
-			ClubSupporterNoPosts:                      command.NewClubSupporterNoPostsHandler(mailingRepo, eva, stella),
-			ClubSupporterRequiredPostReminder:         command.NewClubSupporterRequiredPostReminderHandler(mailingRepo, eva, stella),
+			NewClubSupporterSubscription:              command.NewNewClubSupporterSubscriptionHandler(mailingRepo, eva, sting),
+			ClubSupporterSubscriptionCancelled:        command.NewClubSupporterSubscriptionCancelledHandler(mailingRepo, eva, sting),
+			ClubSupporterSubscriptionPaymentFailure:   command.NewClubSupporterSubscriptionPaymentFailureHandler(mailingRepo, eva, sting),
+			ClubSupporterSubscriptionRefunded:         command.NewClubSupporterSubscriptionRefundedHandler(mailingRepo, eva, sting),
+			UpcomingClubSupporterSubscriptionRenewals: command.NewUpcomingClubSupporterSubscriptionRenewalsHandler(mailingRepo, eva, sting),
+			ClubSupporterNoPosts:                      command.NewClubSupporterNoPostsHandler(mailingRepo, eva, sting),
+			ClubSupporterRequiredPostReminder:         command.NewClubSupporterRequiredPostReminderHandler(mailingRepo, eva, sting),
 			AccountDeletionReminder:                   command.NewAccountDeletionReminderHandler(mailingRepo, eva),
 			AccountDeletionBegin:                      command.NewAccountDeletionBeginHandler(mailingRepo, eva),
 			AccountDeleted:                            command.NewAccountDeletedHandler(mailingRepo),
-			ClubSuspended:                             command.NewClubSuspendedHandler(mailingRepo, eva, stella),
-			ClubOverChargebackThreshold:               command.NewClubOverChargebackThresholdHandler(mailingRepo, eva, stella),
-			ClubSupporterSubscriptionDuplicate:        command.NewClubSupporterSubscriptionDuplicateHandler(mailingRepo, eva, stella),
+			ClubSuspended:                             command.NewClubSuspendedHandler(mailingRepo, eva, sting),
+			ClubOverChargebackThreshold:               command.NewClubOverChargebackThresholdHandler(mailingRepo, eva, sting),
+			ClubSupporterSubscriptionDuplicate:        command.NewClubSupporterSubscriptionDuplicateHandler(mailingRepo, eva, sting),
 		},
 		Queries: app.Queries{},
 	}

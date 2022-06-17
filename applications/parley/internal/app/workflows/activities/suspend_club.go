@@ -13,7 +13,7 @@ type SuspendClubInput struct {
 
 func (h *Activities) SuspendClub(ctx context.Context, input SuspendClubInput) error {
 
-	if err := h.stella.SuspendClub(ctx, input.ClubId, input.Duration, input.IsModerationQueue, input.IsPostRemoval); err != nil {
+	if err := h.sting.SuspendClub(ctx, input.ClubId, input.Duration, input.IsModerationQueue, input.IsPostRemoval); err != nil {
 		return err
 	}
 

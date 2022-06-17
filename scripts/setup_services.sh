@@ -19,9 +19,6 @@ sh setup/loader.sh
 sh cleanup/parley.sh
 sh setup/parley.sh
 
-sh cleanup/stella.sh
-sh setup/stella.sh
-
 sh cleanup/sting.sh
 sh setup/sting.sh
 

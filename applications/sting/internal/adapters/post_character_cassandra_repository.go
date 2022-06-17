@@ -6,6 +6,7 @@ import (
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/localization"
+	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"strings"
 	"time"
@@ -23,25 +24,27 @@ var characterTable = table.New(table.Metadata{
 		"id",
 		"slug",
 		"name",
-		"thumbnail_resource_id",
+		"thumbnail_resource",
 		"series_id",
 		"total_likes",
 		"total_posts",
 		"created_at",
+		"updated_at",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
 })
 
 type character struct {
-	Id                  string            `db:"id"`
-	Slug                string            `db:"slug"`
-	Name                map[string]string `db:"name"`
-	ThumbnailResourceId *string           `db:"thumbnail_resource_id"`
-	SeriesId            string            `db:"series_id"`
-	TotalLikes          int               `db:"total_likes"`
-	TotalPosts          int               `db:"total_posts"`
-	CreatedAt           time.Time         `db:"created_at"`
+	Id                string            `db:"id"`
+	Slug              string            `db:"slug"`
+	Name              map[string]string `db:"name"`
+	ThumbnailResource string            `db:"thumbnail_resource"`
+	SeriesId          string            `db:"series_id"`
+	TotalLikes        int               `db:"total_likes"`
+	TotalPosts        int               `db:"total_posts"`
+	CreatedAt         time.Time         `db:"created_at"`
+	UpdatedAt         time.Time         `db:"updated_at"`
 }
 
 var charactersSlugTable = table.New(table.Metadata{
@@ -61,17 +64,25 @@ type characterSlug struct {
 	Slug        string `db:"slug"`
 }
 
-func marshalCharacterToDatabase(pending *post.Character) *character {
-	return &character{
-		Id:                  pending.ID(),
-		Slug:                pending.Slug(),
-		Name:                localization.MarshalTranslationToDatabase(pending.Name()),
-		ThumbnailResourceId: pending.ThumbnailResourceId(),
-		TotalLikes:          pending.TotalLikes(),
-		TotalPosts:          pending.TotalPosts(),
-		SeriesId:            pending.Series().ID(),
-		CreatedAt:           pending.CreatedAt(),
+func marshalCharacterToDatabase(pending *post.Character) (*character, error) {
+
+	marshalled, err := resource.MarshalResourceToDatabase(pending.ThumbnailResource())
+
+	if err != nil {
+		return nil, err
 	}
+
+	return &character{
+		Id:                pending.ID(),
+		Slug:              pending.Slug(),
+		Name:              localization.MarshalTranslationToDatabase(pending.Name()),
+		ThumbnailResource: marshalled,
+		TotalLikes:        pending.TotalLikes(),
+		TotalPosts:        pending.TotalPosts(),
+		SeriesId:          pending.Series().ID(),
+		CreatedAt:         pending.CreatedAt(),
+		UpdatedAt:         pending.UpdatedAt(),
+	}, nil
 }
 
 func (r PostsCassandraElasticsearchRepository) GetCharacterIdsFromSlugs(ctx context.Context, characterSlugs, seriesIds []string) ([]string, error) {
@@ -199,22 +210,36 @@ func (r PostsCassandraElasticsearchRepository) GetCharactersByIds(ctx context.Co
 			return nil, errors.New("no series found for character")
 		}
 
+		unmarshalledCharacter, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, char.ThumbnailResource)
+
+		if err != nil {
+			return nil, err
+		}
+
+		unmarshalledSeries, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, serial.ThumbnailResource)
+
+		if err != nil {
+			return nil, err
+		}
+
 		characters = append(characters, post.UnmarshalCharacterFromDatabase(
 			char.Id,
 			char.Slug,
 			char.Name,
-			char.ThumbnailResourceId,
+			unmarshalledCharacter,
 			char.TotalLikes,
 			char.TotalPosts,
 			char.CreatedAt,
+			char.UpdatedAt,
 			post.UnmarshalSeriesFromDatabase(
 				serial.Id,
 				serial.Slug,
 				serial.Title,
-				serial.ThumbnailResourceId,
+				unmarshalledSeries,
 				serial.TotalLikes,
 				serial.TotalPosts,
 				serial.CreatedAt,
+				serial.UpdatedAt,
 			),
 		))
 	}
@@ -242,7 +267,11 @@ func (r PostsCassandraElasticsearchRepository) deleteUniqueCharacterSlug(ctx con
 
 func (r PostsCassandraElasticsearchRepository) CreateCharacter(ctx context.Context, requester *principal.Principal, character *post.Character) error {
 
-	char := marshalCharacterToDatabase(character)
+	char, err := marshalCharacterToDatabase(character)
+
+	if err != nil {
+		return err
+	}
 
 	// first, do a unique insert of club to ensure we reserve a unique slug
 	applied, err := charactersSlugTable.
@@ -302,8 +331,12 @@ func (r PostsCassandraElasticsearchRepository) CreateCharacter(ctx context.Conte
 	return nil
 }
 
+func (r PostsCassandraElasticsearchRepository) UpdateCharacterThumbnailOperator(ctx context.Context, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
+	return r.updateCharacter(ctx, id, updateFn, []string{"thumbnail_resource"})
+}
+
 func (r PostsCassandraElasticsearchRepository) UpdateCharacterThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
-	return r.updateCharacter(ctx, id, updateFn, []string{"thumbnail_resource_id"})
+	return r.updateCharacter(ctx, id, updateFn, []string{"thumbnail_resource"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateCharacterName(ctx context.Context, requester *principal.Principal, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
@@ -330,11 +363,15 @@ func (r PostsCassandraElasticsearchRepository) updateCharacter(ctx context.Conte
 		return nil, err
 	}
 
-	pst := marshalCharacterToDatabase(char)
+	pst, err := marshalCharacterToDatabase(char)
+
+	if err != nil {
+		return nil, err
+	}
 
 	if err := r.session.
 		Query(characterTable.Update(
-			columns...,
+			append(columns, "updated_at")...,
 		)).
 		WithContext(ctx).
 		Idempotent(true).
@@ -376,14 +413,21 @@ func (r PostsCassandraElasticsearchRepository) getCharacterById(ctx context.Cont
 		return nil, err
 	}
 
+	unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, char.ThumbnailResource)
+
+	if err != nil {
+		return nil, err
+	}
+
 	return post.UnmarshalCharacterFromDatabase(
 		char.Id,
 		char.Slug,
 		char.Name,
-		char.ThumbnailResourceId,
+		unmarshalled,
 		char.TotalLikes,
 		char.TotalPosts,
 		char.CreatedAt,
+		char.UpdatedAt,
 		media,
 	), nil
 }

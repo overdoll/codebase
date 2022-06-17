@@ -22,7 +22,6 @@ type Account implements Node
   @join__type(graph: HADES, key: "id")
   @join__type(graph: PARLEY, key: "id")
   @join__type(graph: RINGER, key: "id")
-  @join__type(graph: STELLA, key: "id")
   @join__type(graph: STING, key: "id")
 {
   """A URL pointing to the account's public avatar."""
@@ -69,15 +68,15 @@ type Account implements Node
 
     """Filter by whether or not this is a supporter."""
     supporter: Boolean! = false
-  ): ClubMemberConnection! @join__field(graph: STELLA)
+  ): ClubMemberConnection! @join__field(graph: STING)
 
   """
   Current count of club memberships. Should be compared against the limit before joining a club.
   """
-  clubMembershipsCount: Int! @join__field(graph: STELLA)
+  clubMembershipsCount: Int! @join__field(graph: STING)
 
   """Maximum amount of clubs that you can join as an account."""
-  clubMembershipsLimit: Int! @join__field(graph: STELLA)
+  clubMembershipsLimit: Int! @join__field(graph: STING)
 
   """Club supporter subscriptions linked to this account."""
   clubSupporterSubscriptions(
@@ -123,13 +122,13 @@ type Account implements Node
 
     """Sorting options for clubs."""
     sortBy: ClubsSort! = POPULAR
-  ): ClubConnection! @join__field(graph: STELLA)
+  ): ClubConnection! @join__field(graph: STING)
 
   """Current count of the amount of clubs that the account has created."""
-  clubsCount: Int! @join__field(graph: STELLA)
+  clubsCount: Int! @join__field(graph: STING)
 
   """Maximum amount of clubs that you can create."""
-  clubsLimit: Int! @join__field(graph: STELLA)
+  clubsLimit: Int! @join__field(graph: STING)
 
   """The curation profile linked to this account."""
   curationProfile: CurationProfile! @join__field(graph: STING)
@@ -199,7 +198,7 @@ type Account implements Node
   
   Cannot delete account if this is true.
   """
-  hasNonTerminatedClubs: Boolean! @join__field(graph: STELLA)
+  hasNonTerminatedClubs: Boolean! @join__field(graph: STING)
 
   """ID representing the account"""
   id: ID! @join__field(graph: EVA)
@@ -1708,21 +1707,20 @@ enum CharactersSort {
 }
 
 type Club implements Node
-  @join__owner(graph: STELLA)
-  @join__type(graph: STELLA, key: "id")
+  @join__owner(graph: STING)
+  @join__type(graph: STING, key: "id")
   @join__type(graph: HADES, key: "id")
   @join__type(graph: PARLEY, key: "id")
   @join__type(graph: RINGER, key: "id")
-  @join__type(graph: STING, key: "id")
 {
   """The current balance of this club."""
   balance: Balance! @join__field(graph: RINGER)
 
   """Whether or not you can become a supporter of this club."""
-  canSupport: Boolean! @join__field(graph: STELLA)
+  canSupport: Boolean! @join__field(graph: STING)
 
   """An ID pointing to this club."""
-  id: ID! @join__field(graph: STELLA)
+  id: ID! @join__field(graph: STING)
 
   """
   Infraction history for this club
@@ -1766,16 +1764,16 @@ type Club implements Node
 
     """Filter by whether or not this is a supporter."""
     supporter: Boolean! = false
-  ): ClubMemberConnection! @join__field(graph: STELLA)
+  ): ClubMemberConnection! @join__field(graph: STING)
 
   """The total amount of members in this club."""
-  membersCount: Int! @join__field(graph: STELLA)
+  membersCount: Int! @join__field(graph: STING)
 
   """The total amount of members in this club, who are supporters."""
-  membersIsSupporterCount: Int! @join__field(graph: STELLA)
+  membersIsSupporterCount: Int! @join__field(graph: STING)
 
   """A name for this club."""
-  name: String! @join__field(graph: STELLA)
+  name: String! @join__field(graph: STING)
 
   """
   When the owner of the club needs to post the next supporter post.
@@ -1784,10 +1782,10 @@ type Club implements Node
   
   Nil if no supporter-only posts have been created.
   """
-  nextSupporterPostTime: Time @join__field(graph: STELLA)
+  nextSupporterPostTime: Time @join__field(graph: STING)
 
   """The account that owns this club."""
-  owner: Account! @join__field(graph: STELLA)
+  owner: Account! @join__field(graph: STING)
 
   """All payments made to this club."""
   payments(
@@ -1876,18 +1874,18 @@ type Club implements Node
   ): PostConnection! @join__field(graph: STING)
 
   """An internal reference, uniquely identifying the club."""
-  reference: String! @join__field(graph: STELLA)
+  reference: String! @join__field(graph: STING)
 
   """A url-friendly ID. Should be used when searching"""
-  slug: String! @join__field(graph: STELLA)
+  slug: String! @join__field(graph: STING)
 
   """
   An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug.
   """
-  slugAliases: [ClubSlugAlias!]! @join__field(graph: STELLA)
+  slugAliases: [ClubSlugAlias!]! @join__field(graph: STING)
 
   """Maximum amount of slug aliases that can be created for this club."""
-  slugAliasesLimit: Int! @join__field(graph: STELLA)
+  slugAliasesLimit: Int! @join__field(graph: STING)
 
   """A supporter subscription price for this club."""
   supporterSubscriptionPrice: LocalizedPricingPoint! @join__field(graph: HADES)
@@ -1913,7 +1911,7 @@ type Club implements Node
   ): AccountClubSupporterSubscriptionConnection! @join__field(graph: HADES)
 
   """Whether or not this club is suspended."""
-  suspension: ClubSuspension @join__field(graph: STELLA)
+  suspension: ClubSuspension @join__field(graph: STING)
 
   """
   Club Suspension Logs.
@@ -1934,13 +1932,13 @@ type Club implements Node
 
     """Returns the last _n_ elements from the list."""
     last: Int
-  ): ClubSuspensionLogConnection! @join__field(graph: STELLA)
+  ): ClubSuspensionLogConnection! @join__field(graph: STING)
 
   """Whether or not this club is terminated."""
-  termination: ClubTermination @join__field(graph: STELLA)
+  termination: ClubTermination @join__field(graph: STING)
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail(size: Int): Resource @join__field(graph: STELLA)
+  thumbnail: Resource @join__field(graph: STING)
 
   """Month-by-month transaction metrics of this club."""
   transactionMetrics(
@@ -1960,10 +1958,10 @@ type Club implements Node
   ): ClubTransactionMetricConnection! @join__field(graph: HADES)
 
   """Whether or not the viewer is the owner of the club."""
-  viewerIsOwner: Boolean! @join__field(graph: STELLA)
+  viewerIsOwner: Boolean! @join__field(graph: STING)
 
   """Whether or not the viewer is a member of this club."""
-  viewerMember: ClubMember @join__field(graph: STELLA)
+  viewerMember: ClubMember @join__field(graph: STING)
 }
 
 type ClubConnection {
@@ -2042,15 +2040,15 @@ type ClubIssuedSuspensionLog {
 }
 
 type ClubMember implements Node
-  @join__owner(graph: STELLA)
-  @join__type(graph: STELLA, key: "id")
+  @join__owner(graph: STING)
+  @join__type(graph: STING, key: "id")
   @join__type(graph: HADES, key: "id")
 {
   """The account that belongs to this membership."""
-  account: Account! @join__field(graph: STELLA)
+  account: Account! @join__field(graph: STING)
 
   """The club that this membership belongs to."""
-  club: Club! @join__field(graph: STELLA)
+  club: Club! @join__field(graph: STING)
 
   """
   The subscription linked to this club member.
@@ -2062,16 +2060,16 @@ type ClubMember implements Node
   clubSupporterSubscription: AccountClubSupporterSubscription @join__field(graph: HADES)
 
   """An ID pointing to this club member."""
-  id: ID! @join__field(graph: STELLA)
+  id: ID! @join__field(graph: STING)
 
   """Whether or not this member is a supporter."""
-  isSupporter: Boolean! @join__field(graph: STELLA)
+  isSupporter: Boolean! @join__field(graph: STING)
 
   """When the membership was created (when the account originally joined)."""
-  joinedAt: Time! @join__field(graph: STELLA)
+  joinedAt: Time! @join__field(graph: STING)
 
   """If is a supporter, when they became a supporter."""
-  supporterSince: Time @join__field(graph: STELLA)
+  supporterSince: Time @join__field(graph: STING)
 }
 
 type ClubMemberConnection {
@@ -3358,7 +3356,7 @@ type Mutation {
   addAccountEmail(input: AddAccountEmailInput!): AddAccountEmailPayload @join__field(graph: EVA)
 
   """Add an alternative slug to the club"""
-  addClubSlugAlias(input: AddClubSlugAliasInput!): AddClubSlugAliasPayload @join__field(graph: STELLA)
+  addClubSlugAlias(input: AddClubSlugAliasInput!): AddClubSlugAliasPayload @join__field(graph: STING)
 
   """
   Add moderator to posts queue
@@ -3431,7 +3429,7 @@ type Mutation {
   createCharacter(input: CreateCharacterInput!): CreateCharacterPayload @join__field(graph: STING)
 
   """Create a new club"""
-  createClub(input: CreateClubInput!): CreateClubPayload @join__field(graph: STELLA)
+  createClub(input: CreateClubInput!): CreateClubPayload @join__field(graph: STING)
 
   """Create a new post"""
   createPost(input: CreatePostInput!): CreatePostPayload @join__field(graph: STING)
@@ -3564,14 +3562,14 @@ type Mutation {
   issueClubInfraction(input: IssueClubInfractionInput!): IssueClubInfractionPayload @join__field(graph: PARLEY)
 
   """Join the club, becoming a member."""
-  joinClub(input: JoinClubInput!): JoinClubPayload @join__field(graph: STELLA)
+  joinClub(input: JoinClubInput!): JoinClubPayload @join__field(graph: STING)
 
   """
   Leave the club.
   
   If you are the owner of the club, you cannot leave the club.
   """
-  leaveClub(input: LeaveClubInput!): LeaveClubPayload @join__field(graph: STELLA)
+  leaveClub(input: LeaveClubInput!): LeaveClubPayload @join__field(graph: STING)
 
   """Like a post"""
   likePost(input: LikePostInput!): LikePostPayload @join__field(graph: STING)
@@ -3582,7 +3580,7 @@ type Mutation {
   """
   Make the alias slug the default, swapping out the old slug into the alias list.
   """
-  promoteClubSlugAliasToDefault(input: PromoteClubSlugAliasToDefaultInput!): PromoteClubSlugAliasToDefaultPayload @join__field(graph: STELLA)
+  promoteClubSlugAliasToDefault(input: PromoteClubSlugAliasToDefaultInput!): PromoteClubSlugAliasToDefaultPayload @join__field(graph: STING)
 
   """
   Issue a refund on a transaction.
@@ -3606,7 +3604,7 @@ type Mutation {
   removeClubInfractionHistory(input: RemoveClubInfractionHistoryInput!): RemoveClubInfractionHistoryPayload @join__field(graph: PARLEY)
 
   """Remove an alternative slug from the club"""
-  removeClubSlugAlias(input: RemoveClubSlugAliasInput!): RemoveClubSlugAliasPayload @join__field(graph: STELLA)
+  removeClubSlugAlias(input: RemoveClubSlugAliasInput!): RemoveClubSlugAliasPayload @join__field(graph: STING)
 
   """
   Remove moderator from posts queue
@@ -3670,7 +3668,7 @@ type Mutation {
   
   Staff+ only.
   """
-  suspendClub(input: SuspendClubInput!): SuspendClubPayload @join__field(graph: STELLA)
+  suspendClub(input: SuspendClubInput!): SuspendClubPayload @join__field(graph: STING)
 
   """
   Terminate the club.
@@ -3679,7 +3677,7 @@ type Mutation {
   
   Staff+ only.
   """
-  terminateClub(input: TerminateClubInput!): TerminateClubPayload @join__field(graph: STELLA)
+  terminateClub(input: TerminateClubInput!): TerminateClubPayload @join__field(graph: STING)
 
   """Un-archive a post, putting it back in public view."""
   unArchivePost(input: UnArchivePostInput!): UnArchivePostPayload @join__field(graph: STING)
@@ -3689,7 +3687,7 @@ type Mutation {
   
   Staff+ may un-suspend even if suspension hasn't expired yet.
   """
-  unSuspendClub(input: UnSuspendClubInput!): UnSuspendClubPayload @join__field(graph: STELLA)
+  unSuspendClub(input: UnSuspendClubInput!): UnSuspendClubPayload @join__field(graph: STING)
 
   """
   Un-Terminate the club.
@@ -3698,7 +3696,7 @@ type Mutation {
   
   Staff+ only.
   """
-  unTerminateClub(input: UnTerminateClubInput!): UnTerminateClubPayload @join__field(graph: STELLA)
+  unTerminateClub(input: UnTerminateClubInput!): UnTerminateClubPayload @join__field(graph: STING)
 
   """Undo a like on a post"""
   undoLikePost(input: UndoLikePostInput!): UndoLikePostPayload @join__field(graph: STING)
@@ -3755,7 +3753,7 @@ type Mutation {
   updateCharacterThumbnail(input: UpdateCharacterThumbnailInput!): UpdateCharacterThumbnailPayload @join__field(graph: STING)
 
   """Update the club's name (english-only for now)"""
-  updateClubName(input: UpdateClubNameInput!): UpdateClubNamePayload @join__field(graph: STELLA)
+  updateClubName(input: UpdateClubNameInput!): UpdateClubNamePayload @join__field(graph: STING)
 
   """
   Update a payout's deposit date.
@@ -3778,7 +3776,7 @@ type Mutation {
   updateClubPlatformFee(input: UpdateClubPlatformFeeInput!): UpdateClubPlatformFeePayload @join__field(graph: RINGER)
 
   """Update the club thumbnail"""
-  updateClubThumbnail(input: UpdateClubThumbnailInput!): UpdateClubThumbnailPayload @join__field(graph: STELLA)
+  updateClubThumbnail(input: UpdateClubThumbnailInput!): UpdateClubThumbnailPayload @join__field(graph: STING)
 
   """Update the audience for the curation profile"""
   updateCurationProfileAudience(input: UpdateCurationProfileAudienceInput!): UpdateCurationProfileAudiencePayload @join__field(graph: STING)
@@ -4325,7 +4323,7 @@ type Query {
   club(
     """Search by slug of the club."""
     slug: String!
-  ): Club @join__field(graph: STELLA)
+  ): Club @join__field(graph: STING)
 
   """Search multiple clubs."""
   clubs(
@@ -4365,7 +4363,7 @@ type Query {
     Staff+ only for "true"
     """
     terminated: Boolean! = false
-  ): ClubConnection! @join__field(graph: STELLA)
+  ): ClubConnection! @join__field(graph: STING)
 
   """Grab all available countries."""
   countries: [Country!]! @join__field(graph: RINGER)
@@ -4748,43 +4746,37 @@ and urls to access the resources. We have many urls in order to provide a fallba
 
 We also identify the type of resource (image or video) to make it easy to distinguish them
 """
-type Resource
-  @join__owner(graph: LOADER)
-  @join__type(graph: LOADER, key: "id")
-  @join__type(graph: EVA, key: "id")
-  @join__type(graph: STELLA, key: "id")
-  @join__type(graph: STING, key: "id")
-{
+type Resource {
   """The height."""
-  height: Int! @join__field(graph: LOADER)
+  height: Int!
 
   """An ID uniquely identifying this resource."""
-  id: ID! @join__field(graph: LOADER)
+  id: ID!
 
   """
   The additional 10x10 base64-encoded image that can be used as a preview.
   """
-  preview: String! @join__field(graph: LOADER)
+  preview: String!
 
   """
   Whether or not the resource is processed. Can be used for additional permission checks.
   """
-  processed: Boolean! @join__field(graph: LOADER)
+  processed: Boolean!
 
   """The type of resource - either an image or a video."""
-  type: ResourceType! @join__field(graph: LOADER)
+  type: ResourceType!
 
   """URLs to access the resource."""
-  urls: [ResourceUrl!]! @join__field(graph: LOADER)
+  urls: [ResourceUrl!]!
 
   """Duration, if video."""
-  videoDuration: Int! @join__field(graph: LOADER)
+  videoDuration: Int!
 
   """Video thumbnail, if video."""
-  videoThumbnail: ResourceUrl @join__field(graph: LOADER)
+  videoThumbnail: ResourceUrl
 
   """The width."""
-  width: Int! @join__field(graph: LOADER)
+  width: Int!
 }
 
 """Identifies the type of resource"""
@@ -5722,10 +5714,8 @@ scalar join__FieldSet
 enum join__Graph {
   EVA @join__graph(name: "eva" url: "http://eva:8000/api/graphql")
   HADES @join__graph(name: "hades" url: "http://hades:8000/api/graphql")
-  LOADER @join__graph(name: "loader" url: "http://loader:8000/api/graphql")
   PARLEY @join__graph(name: "parley" url: "http://parley:8000/api/graphql")
   RELAY @join__graph(name: "relay" url: "http://some-fake-endpoint")
   RINGER @join__graph(name: "ringer" url: "http://ringer:8000/api/graphql")
-  STELLA @join__graph(name: "stella" url: "http://stella:8000/api/graphql")
   STING @join__graph(name: "sting" url: "http://sting:8000/api/graphql")
 }

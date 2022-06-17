@@ -5,9 +5,10 @@ import (
 )
 
 type Activities struct {
-	rr resource.Repository
+	rr       resource.Repository
+	callback CallbackService
 }
 
-func NewActivitiesHandler(rr resource.Repository) *Activities {
-	return &Activities{rr: rr}
+func NewActivitiesHandler(rr resource.Repository, callback CallbackService) *Activities {
+	return &Activities{rr: rr, callback: callback}
 }

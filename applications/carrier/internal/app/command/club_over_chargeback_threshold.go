@@ -16,10 +16,10 @@ type ClubOverChargebackThreshold struct {
 type ClubOverChargebackThresholdHandler struct {
 	mr     mailing.Repository
 	eva    EvaService
-	stella StellaService
+	stella StingService
 }
 
-func NewClubOverChargebackThresholdHandler(mr mailing.Repository, eva EvaService, stella StellaService) ClubOverChargebackThresholdHandler {
+func NewClubOverChargebackThresholdHandler(mr mailing.Repository, eva EvaService, stella StingService) ClubOverChargebackThresholdHandler {
 	return ClubOverChargebackThresholdHandler{mr: mr, eva: eva, stella: stella}
 }
 

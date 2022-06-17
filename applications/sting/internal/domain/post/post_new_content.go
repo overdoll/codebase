@@ -1,10 +1,12 @@
 package post
 
+import "overdoll/libraries/resource"
+
 type NewContent struct {
 	postId string
 
 	oldResourceId string
-	newResourceId string
+	newResource   *resource.Resource
 }
 
 func (n *NewContent) PostId() string {
@@ -15,14 +17,14 @@ func (n *NewContent) OldResourceId() string {
 	return n.oldResourceId
 }
 
-func (n *NewContent) NewResourceId() string {
-	return n.newResourceId
+func (n *NewContent) NewResource() *resource.Resource {
+	return n.newResource
 }
 
-func UnmarshalNewContentFromDatabase(postId, oldResourceId, newResourceId string) *NewContent {
+func UnmarshalNewContentFromDatabase(postId, oldResourceId string, newResource *resource.Resource) *NewContent {
 	return &NewContent{
 		postId:        postId,
 		oldResourceId: oldResourceId,
-		newResourceId: newResourceId,
+		newResource:   newResource,
 	}
 }

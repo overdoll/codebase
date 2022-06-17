@@ -15,6 +15,43 @@ func NewStingGrpc(client sting.StingClient) StingGrpc {
 	return StingGrpc{client: client}
 }
 
+func (s StingGrpc) GetClubById(ctx context.Context, clubId string) error {
+
+	_, err := s.client.GetClubById(ctx, &sting.GetClubByIdRequest{ClubId: clubId})
+
+	if err != nil {
+		return errors.Wrap(err, "sting - GetClubById")
+	}
+
+	return nil
+}
+
+func (s StingGrpc) SuspendClub(ctx context.Context, clubId string, endTime int64, isModerationQueue bool, isPostRemoval bool) error {
+
+	var reason sting.SuspensionSource
+
+	if isModerationQueue {
+		reason = sting.SuspensionSource_POST_MODERATION_QUEUE
+	}
+
+	if isPostRemoval {
+		reason = sting.SuspensionSource_POST_REMOVAL
+	}
+
+	// manual
+	if !isPostRemoval && !isModerationQueue {
+		reason = sting.SuspensionSource_MANUAL
+	}
+
+	_, err := s.client.SuspendClub(ctx, &sting.SuspendClubRequest{ClubId: clubId, EndTimeUnix: endTime, Source: reason})
+
+	if err != nil {
+		return errors.Wrap(err, "sting - SuspendClub")
+	}
+
+	return nil
+}
+
 func (s StingGrpc) GetPost(ctx context.Context, id string) (string, error) {
 
 	md, err := s.client.GetPost(ctx, &sting.PostRequest{Id: id})

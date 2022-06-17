@@ -11,14 +11,6 @@ subgraphs:
     routing_url: http://parley:8000/api/graphql
     schema:
       subgraph_url: http://parley:8000/api/graphql
-  stella:
-    routing_url: http://stella:8000/api/graphql
-    schema:
-      subgraph_url: http://stella:8000/api/graphql
-  loader:
-    routing_url: http://loader:8000/api/graphql
-    schema:
-      subgraph_url: http://loader:8000/api/graphql
   hades:
     routing_url: http://hades:8000/api/graphql
     schema:

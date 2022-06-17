@@ -95,29 +95,6 @@ if "loader" in to_run or is_raw:
         ],
     }
 
-if "stella" in to_run or is_raw:
-     applications["stella"] = {
-        "type": "go",
-        "directory": "stella",
-        "image_reference": "stella-image",
-        "image_target": "//applications/stella/internal:local-image",
-        "binary_target": "//applications/stella/internal:internal",
-        "binary_output": "applications/stella/internal/internal_/internal",
-        "container_workdir": "/app/applications/stella/internal/local-image.binary.runfiles/overdoll/",
-        "container_binary": "applications/stella/internal/local-image.binary_/local-image.binary",
-        "bazel_image": "bazel/applications/stella/internal:local-image",
-        "dependencies": [
-            "applications/stella/.env",
-            "applications/stella/config.toml",
-            "applications/stella/database",
-        ],
-        "live_update": [
-            sync("applications/stella/.env", "/app/applications/stella/internal/local-image.binary.runfiles/overdoll/applications/stella/.env"),
-            sync("applications/stella/config.toml", "/app/applications/stella/internal/local-image.binary.runfiles/overdoll/applications/stella/config.toml"),
-            sync("applications/stella/database", "/app/applications/stella/internal/local-image.binary.runfiles/overdoll/applications/stella/database"),
-        ],
-     }
-
 if "puppy" in to_run or is_raw:
    applications["puppy"] = {
         "type": "go",
