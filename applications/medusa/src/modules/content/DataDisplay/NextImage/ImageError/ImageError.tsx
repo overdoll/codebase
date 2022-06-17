@@ -5,7 +5,15 @@ import { Trans } from '@lingui/macro'
 
 export default function ImageError (): JSX.Element {
   return (
-    <Stack borderRadius='md' p={4} bg='dimmers.500' direction='column' justify='center' align='center' spacing={2}>
+    <Stack
+      borderRadius='md'
+      p={4}
+      bg='dimmers.500'
+      direction='column'
+      justify='center'
+      align='center'
+      spacing={2}
+    >
       <Icon icon={WarningTriangle} w={6} h={6} fill='orange.300' />
       <Heading textAlign='center' fontSize='md' color='orange.300'>
         <Trans>

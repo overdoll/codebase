@@ -35,12 +35,14 @@ export default function ImageSnippet ({
   const errorLimit = data?.urls.length ?? 0
 
   const IMAGE_PROPS = {
-    alt: 'thumbnail',
     width: cover === true ? undefined : data?.width,
     height: cover === true ? undefined : data?.height,
     layout: cover === true ? 'fill' : 'intrinsic' as any,
     objectFit: 'cover' as any,
-    objectPosition: '50% 50%'
+    objectPosition: '50% 50%',
+    style: {
+      backgroundColor: data?.preview != null && data?.preview !== '' ? data?.preview : 'none'
+    }
   }
 
   const displayUrl = (currentErrorCount): string => {
@@ -58,8 +60,15 @@ export default function ImageSnippet ({
 
   if (errorCount >= errorLimit) {
     return (
-      <Flex h='100%'>
-        <ImageError />
+      <Flex position='relative' justify='center' w='100%' h='100%'>
+        <NextImage
+          {...IMAGE_PROPS}
+          src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+          {...rest}
+        />
+        <Flex h='100%' position='absolute' align='center' justify='center'>
+          <ImageError />
+        </Flex>
       </Flex>
     )
   }
@@ -68,9 +77,6 @@ export default function ImageSnippet ({
     <Flex justify='center' w='100%' h='100%' position={cover === true ? 'relative' : 'static'}>
       <NextImage
         {...IMAGE_PROPS}
-        style={{
-          backgroundColor: data?.preview != null && data?.preview !== '' ? data?.preview : 'none'
-        }}
         src={displayUrl(errorCount)}
         onErrorCapture={onErrorCapture}
         {...rest}

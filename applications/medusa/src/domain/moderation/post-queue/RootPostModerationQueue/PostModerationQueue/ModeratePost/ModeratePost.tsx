@@ -70,6 +70,24 @@ export default function ModeratePost (props: Props): JSX.Element {
 
   const notify = useToast()
 
+  const deleteNodeAfterApproval = (store): void => {
+    const storyRecord = store
+      .getRoot()
+      .getLinkedRecord('viewer')
+    if (storyRecord != null) {
+      const connectionRecord = ConnectionHandler.getConnection(
+        storyRecord,
+        'Posts_postModeratorQueue'
+      )
+      if (connectionRecord != null) {
+        ConnectionHandler.deleteNode(
+          connectionRecord,
+          data.id
+        )
+      }
+    }
+  }
+
   const onApprovePost = (): void => {
     approvePost({
       variables: {
@@ -83,21 +101,8 @@ export default function ModeratePost (props: Props): JSX.Element {
           title: t`Post created by ${data?.post.club?.name} was approved successfully`
         })
       },
-      updater: (store, payload) => {
-        const storyRecord = store.get(data.post.id)
-        if (storyRecord != null) {
-          const connectionRecord = ConnectionHandler.getConnection(
-            storyRecord,
-            'Posts_postModeratorQueue'
-          )
-          console.log(connectionRecord)
-          if (connectionRecord != null) {
-            ConnectionHandler.deleteNode(
-              connectionRecord,
-              data.id
-            )
-          }
-        }
+      updater: (store) => {
+        deleteNodeAfterApproval(store)
       },
       onError () {
         notify({
@@ -114,8 +119,7 @@ export default function ModeratePost (props: Props): JSX.Element {
           postId: data.id,
           ruleId: formData.rejectionId,
           notes: formData.note
-        },
-        connections: [props.connectionID]
+        }
       },
       onCompleted () {
         notify({
@@ -124,6 +128,9 @@ export default function ModeratePost (props: Props): JSX.Element {
           isClosable: true
         })
         onClose()
+      },
+      updater: (store) => {
+        deleteNodeAfterApproval(store)
       },
       onError () {
         notify({

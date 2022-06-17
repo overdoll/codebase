@@ -3,7 +3,6 @@ import type {
   PostModerationQueueQuery as PostModerationQueueQueryType
 } from '@//:artifacts/PostModerationQueueQuery.graphql'
 import PostModerationQueueQuery from '@//:artifacts/PostModerationQueueQuery.graphql'
-import SkeletonStack from '@//:modules/content/Placeholder/Loading/SkeletonStack/SkeletonStack'
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { useQueryLoader } from 'react-relay/hooks'
 import PostModerationQueue from './PostModerationQueue/PostModerationQueue'
@@ -13,6 +12,7 @@ import { Trans } from '@lingui/macro'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import Head from 'next/head'
 import { PageProps } from '@//:types/app'
+import { SkeletonPost } from '@//:modules/content/Placeholder'
 
 interface Props {
   queryRefs: {
@@ -30,7 +30,7 @@ const RootPostModerationQueue: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Post Moderation Queue - Moderation :: overdoll.com
+          Posts Queue - overdoll
         </title>
       </Head>
       <PageWrapper>
@@ -48,9 +48,10 @@ const RootPostModerationQueue: PageProps<Props> = (props: Props) => {
           </PageSectionDescription>
         </PageSectionWrap>
         <QueryErrorBoundary loadQuery={() => loadQuery({})}>
-          <Suspense fallback={<SkeletonStack />}>
+          <Suspense fallback={<SkeletonPost />}>
             <GlobalVideoManagerProvider>
               <PostModerationQueue
+                loadQuery={loadQuery}
                 query={queryRef as PreloadedQuery<PostModerationQueueQueryType>}
               />
             </GlobalVideoManagerProvider>

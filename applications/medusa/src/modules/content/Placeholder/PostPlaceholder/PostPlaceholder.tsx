@@ -1,8 +1,8 @@
-import { Flex, HTMLChakraProps, Stack } from '@chakra-ui/react'
+import { Flex, FlexProps } from '@chakra-ui/react'
 import { LargeBackgroundBox } from '../../PageLayout'
 import { ReactNode } from 'react'
 
-interface Props extends HTMLChakraProps<any> {
+interface Props extends FlexProps {
   children: ReactNode
 }
 
@@ -20,9 +20,7 @@ export default function PostPlaceholder ({
         height='500px'
         {...rest}
       >
-        <Stack align='center' spacing={4}>
-          {children}
-        </Stack>
+        {children}
       </Flex>
     </LargeBackgroundBox>
   )
