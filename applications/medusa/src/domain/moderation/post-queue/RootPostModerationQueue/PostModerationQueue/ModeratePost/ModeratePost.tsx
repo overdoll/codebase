@@ -19,31 +19,34 @@ interface Props {
   connectionID: string
 }
 
+const PostIDGQL = graphql`
+  fragment ModeratePostFragment on PostModerator {
+    id
+    post {
+      id
+      club {
+        name
+      }
+    }
+  }
+`
+
 const ModeratePostApproveGQL = graphql`
-  mutation ModeratePostApproveMutation($input: ApprovePostInput!, $connections: [ID!]!) {
+  mutation ModeratePostApproveMutation($input: ApprovePostInput!) {
     approvePost(input: $input) {
       post {
-        id @deleteEdge(connections: $connections)
+        id
       }
     }
   }
 `
 
 const ModeratePostRejectGQL = graphql`
-  mutation ModeratePostRejectMutation($input: RejectPostInput!, $connections: [ID!]!) {
+  mutation ModeratePostRejectMutation($input: RejectPostInput!) {
     rejectPost(input: $input) {
       post {
-        id @deleteEdge(connections: $connections)
+        id
       }
-    }
-  }
-`
-
-const PostIDGQL = graphql`
-  fragment ModeratePostFragment on Post {
-    id
-    club {
-      name
     }
   }
 `
@@ -71,38 +74,35 @@ export default function ModeratePost (props: Props): JSX.Element {
     approvePost({
       variables: {
         input: {
-          postId: data.id
-        },
-        connections: [props.connectionID]
+          postId: data.post.id
+        }
       },
       onCompleted () {
         notify({
           status: 'success',
-          title: t`Post created by ${data?.club?.name} was approved successfully`
+          title: t`Post created by ${data?.post.club?.name} was approved successfully`
         })
       },
       updater: (store, payload) => {
-        if (payload?.approvePost?.post?.id != null) {
-          const storyRecord = store.get(payload.approvePost.post.id)
-          if (storyRecord != null) {
-            const connectionRecord = ConnectionHandler.getConnection(
-              storyRecord,
-              'Posts_postModeratorQueue'
+        const storyRecord = store.get(data.post.id)
+        if (storyRecord != null) {
+          const connectionRecord = ConnectionHandler.getConnection(
+            storyRecord,
+            'Posts_postModeratorQueue'
+          )
+          console.log(connectionRecord)
+          if (connectionRecord != null) {
+            ConnectionHandler.deleteNode(
+              connectionRecord,
+              data.id
             )
-            if (connectionRecord != null) {
-              // Remove edge from the connection, given the ID of the node
-              ConnectionHandler.deleteNode(
-                connectionRecord,
-                payload.approvePost.post.id
-              )
-            }
           }
         }
       },
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error approving a post created by ${data?.club?.name}`
+          title: t`There was an error approving a post created by ${data?.post?.club?.name}`
         })
       }
     })
@@ -120,7 +120,7 @@ export default function ModeratePost (props: Props): JSX.Element {
       onCompleted () {
         notify({
           status: 'success',
-          title: t`Post created by ${data?.club?.name} was successfully rejected`,
+          title: t`Post created by ${data?.post.club?.name} was successfully rejected`,
           isClosable: true
         })
         onClose()
@@ -128,7 +128,7 @@ export default function ModeratePost (props: Props): JSX.Element {
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error rejecting the post created by ${data?.club?.name}`,
+          title: t`There was an error rejecting the post created by ${data?.post.club?.name}`,
           isClosable: true
         })
       }

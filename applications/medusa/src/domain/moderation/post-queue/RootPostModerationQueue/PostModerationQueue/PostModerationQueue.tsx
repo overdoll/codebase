@@ -43,13 +43,14 @@ const Fragment = graphql`
       __id
       edges {
         node {
+          id
           post {
             id
-            ...PostPreviewFragment
-            ...ModeratePostFragment
-            ...PostTagsPreviewFragment
             postedAt
+            ...PostPreviewFragment
+            ...PostTagsPreviewFragment
           }
+          ...ModeratePostFragment
         }
       }
     }
@@ -191,7 +192,7 @@ export default function PostModerationQueue (props: Props): JSX.Element {
                 <ModeratePost
                   connectionID={postsConnection}
                   infractions={queryData}
-                  postID={item.node.post}
+                  postID={item.node}
                 />
               </Flex>
             </Box>

@@ -58,12 +58,10 @@ export default function PostSlideIndex ({
 
   return (
     <HStack
-      position='absolute'
-      bottom={0}
-      zIndex={1}
       w='100%'
-      py={1}
-      spacing={1}
+      pt={2}
+      px={1}
+      spacing={2}
       align='center'
       justify='center'
       {...rest}
@@ -75,11 +73,9 @@ export default function PostSlideIndex ({
         return (
           <Flex
             key={contentIndex}
-            w={isActive ? 2 : 1}
-            h={isActive ? 2 : 1}
-            bg={isSupporterOnly ? 'orange.300' : 'gray.50'}
-            borderWidth={1}
-            borderColor={isSupporterOnly ? 'orange.50' : 'gray.500'}
+            w={`${100 / slidesCount}%`}
+            h={1}
+            bg={!isSupporterOnly ? (isActive ? 'gray.200' : 'gray.50') : (isActive ? 'orange.300' : 'gray.50')}
             borderRadius='md'
           />
         )

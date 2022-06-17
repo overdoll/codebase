@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<74bfb46f21f4064a143b82c5425491ff>>
+ * @generated SignedSource<<54ccd470765ac5fad79d52fe5cb4bc40>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,11 +15,13 @@ export type PostModerationQueueFragment$data = {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly id: string;
         readonly post: {
           readonly id: string;
           readonly postedAt: any | null;
-          readonly " $fragmentSpreads": FragmentRefs<"PostPreviewFragment" | "ModeratePostFragment" | "PostTagsPreviewFragment">;
+          readonly " $fragmentSpreads": FragmentRefs<"PostPreviewFragment" | "PostTagsPreviewFragment">;
         };
+        readonly " $fragmentSpreads": FragmentRefs<"ModeratePostFragment">;
       };
     }>;
   };
@@ -114,6 +116,7 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
+                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -124,6 +127,13 @@ return {
                   "selections": [
                     (v1/*: any*/),
                     {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "postedAt",
+                      "storageKey": null
+                    },
+                    {
                       "args": null,
                       "kind": "FragmentSpread",
                       "name": "PostPreviewFragment"
@@ -131,22 +141,15 @@ return {
                     {
                       "args": null,
                       "kind": "FragmentSpread",
-                      "name": "ModeratePostFragment"
-                    },
-                    {
-                      "args": null,
-                      "kind": "FragmentSpread",
                       "name": "PostTagsPreviewFragment"
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "postedAt",
-                      "storageKey": null
                     }
                   ],
                   "storageKey": null
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "ModeratePostFragment"
                 },
                 {
                   "alias": null,
@@ -215,6 +218,6 @@ return {
 };
 })();
 
-(node as any).hash = "7c425557c42abec81a42baa3e8e5f3af";
+(node as any).hash = "1c8085a16fe61d54e6c5554b58879b16";
 
 export default node;

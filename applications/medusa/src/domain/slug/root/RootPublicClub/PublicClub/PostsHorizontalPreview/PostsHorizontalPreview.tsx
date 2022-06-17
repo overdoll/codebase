@@ -4,9 +4,8 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { Box, Flex, Heading } from '@chakra-ui/react'
 import { PostPreviewContent } from '@//:modules/content/Posts'
 import type { PostsHorizontalPreviewFragment$key } from '@//:artifacts/PostsHorizontalPreviewFragment.graphql'
-import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
-import { GridTile, LinkTile } from '@//:modules/content/ContentSelection'
+import { LinkTile } from '@//:modules/content/ContentSelection'
 import { UrlObject } from 'url'
 import { EmptyPosts } from '@//:modules/content/Placeholder'
 
@@ -47,14 +46,14 @@ export default function PostsHorizontalPreview ({
     <Box>
       <Swiper
         spaceBetween={16}
-        centeredSlides={data?.edges != null && data?.edges.length < 3}
-        slidesPerView={data?.edges != null && data?.edges.length < 3 ? 2 : 2.5}
+        centeredSlides={data?.edges != null && data?.edges.length < 2}
+        slidesPerView={2.5}
       >
         {data?.edges.map((item, index) =>
           <SwiperSlide
             key={index}
           >
-            <GridTile>
+            <Flex h={270} w={200}>
               <LinkTile href={{
                 pathname: '/[slug]/post/[reference]',
                 query: {
@@ -65,21 +64,19 @@ export default function PostsHorizontalPreview ({
               >
                 <PostPreviewContent query={item.node} />
               </LinkTile>
-            </GridTile>
+            </Flex>
           </SwiperSlide>)}
         {hasNext && (
           <SwiperSlide>
-            <GridTile>
-              <LinkTile href={href}>
-                <Flex bg='gray.800' h='100%' w='100%' align='center' justify='center'>
-                  <Heading fontSize='lg' color='gray.00'>
-                    <Trans>
-                      See all
-                    </Trans>
-                  </Heading>
-                </Flex>
-              </LinkTile>
-            </GridTile>
+            <LinkTile href={href}>
+              <Flex h={270} w={200} bg='gray.800' align='center' justify='center'>
+                <Heading fontSize='lg' color='gray.00'>
+                  <Trans>
+                    See all
+                  </Trans>
+                </Heading>
+              </Flex>
+            </LinkTile>
           </SwiperSlide>)}
       </Swiper>
     </Box>

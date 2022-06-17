@@ -44,3 +44,4 @@ export { default as SubscriptionIdentifier } from './normal-bold/subscription-id
 export { default as PaymentMethodIdentifier } from './normal-bold/payment-method-identifier.svg'
 export { default as PremiumStarHollow } from './normal-bold/premium-star-hollow.svg'
 export { default as ArchiveFile } from './mini-bold/actions/archive-file.svg'
+export { default as ActionUnlock } from './mini-bold/actions/action-unlock.svg'

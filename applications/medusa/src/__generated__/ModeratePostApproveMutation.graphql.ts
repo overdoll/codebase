@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<05b2b167314366569694483752deae87>>
+ * @generated SignedSource<<e747a87c9025a8fe58c5ccdcdcfc051f>>
  * @relayHash 81a7aec44cbe991cebafa80a19bbafc3
  * @lightSyntaxTransform
  * @nogrep
@@ -17,7 +17,6 @@ export type ApprovePostInput = {
 };
 export type ModeratePostApproveMutation$variables = {
   input: ApprovePostInput;
-  connections: ReadonlyArray<string>;
 };
 export type ModeratePostApproveMutationVariables = ModeratePostApproveMutation$variables;
 export type ModeratePostApproveMutation$data = {
@@ -34,116 +33,66 @@ export type ModeratePostApproveMutation = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "connections"
-},
-v1 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "input"
-},
-v2 = [
+var v0 = [
   {
-    "kind": "Variable",
-    "name": "input",
-    "variableName": "input"
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "input"
   }
 ],
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-};
-return {
-  "fragment": {
-    "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/)
+v1 = [
+  {
+    "alias": null,
+    "args": [
+      {
+        "kind": "Variable",
+        "name": "input",
+        "variableName": "input"
+      }
     ],
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "ModeratePostApproveMutation",
+    "concreteType": "ApprovePostPayload",
+    "kind": "LinkedField",
+    "name": "approvePost",
+    "plural": false,
     "selections": [
       {
         "alias": null,
-        "args": (v2/*: any*/),
-        "concreteType": "ApprovePostPayload",
+        "args": null,
+        "concreteType": "Post",
         "kind": "LinkedField",
-        "name": "approvePost",
+        "name": "post",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "Post",
-            "kind": "LinkedField",
-            "name": "post",
-            "plural": false,
-            "selections": [
-              (v3/*: any*/)
-            ],
+            "kind": "ScalarField",
+            "name": "id",
             "storageKey": null
           }
         ],
         "storageKey": null
       }
     ],
+    "storageKey": null
+  }
+];
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "ModeratePostApproveMutation",
+    "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [
-      (v1/*: any*/),
-      (v0/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "ModeratePostApproveMutation",
-    "selections": [
-      {
-        "alias": null,
-        "args": (v2/*: any*/),
-        "concreteType": "ApprovePostPayload",
-        "kind": "LinkedField",
-        "name": "approvePost",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Post",
-            "kind": "LinkedField",
-            "name": "post",
-            "plural": false,
-            "selections": [
-              (v3/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "filters": null,
-                "handle": "deleteEdge",
-                "key": "",
-                "kind": "ScalarHandle",
-                "name": "id",
-                "handleArgs": [
-                  {
-                    "kind": "Variable",
-                    "name": "connections",
-                    "variableName": "connections"
-                  }
-                ]
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ]
+    "selections": (v1/*: any*/)
   },
   "params": {
     "id": "81a7aec44cbe991cebafa80a19bbafc3",
@@ -155,6 +104,6 @@ return {
 };
 })();
 
-(node as any).hash = "886358de62d177e7779c643c346c7541";
+(node as any).hash = "82f9ab6d13e97962d79d4b0207359cea";
 
 export default node;

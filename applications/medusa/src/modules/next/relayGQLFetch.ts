@@ -29,7 +29,7 @@ export const clientFetch = (securityToken) => {
       const error = new Error(JSON.stringify(result.errors))
       console.log('Query Error ::', error)
       // we filter out the viewer if there a query error so it doesn't mess with the internal store
-      if (result?.data.viewer === null) {
+      if (result?.data?.viewer === null) {
         const {
           data: queryData,
           ...restResult
@@ -143,7 +143,7 @@ export const serverFetch = (req, res) => {
 
     // we filter out the viewer if there a query error so it doesn't mess with the internal store
     if (Array.isArray(responseData.errors)) {
-      if (responseData?.data.viewer === null) {
+      if (responseData?.data?.viewer === null) {
         const {
           data: queryData,
           ...restResult

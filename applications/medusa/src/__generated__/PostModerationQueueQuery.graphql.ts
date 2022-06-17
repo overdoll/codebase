@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<5649b2ac6ddeaa209f1a0f9f97c3afed>>
- * @relayHash 32924c016317af00d1264a93396193a4
+ * @generated SignedSource<<b010a33719a3a3c63885320d8b550555>>
+ * @relayHash 23b0e5a1f7113746a86cf0b424cfa987
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 32924c016317af00d1264a93396193a4
+// @relayRequestID 23b0e5a1f7113746a86cf0b424cfa987
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -196,6 +196,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
+                      (v1/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -205,6 +206,13 @@ return {
                         "plural": false,
                         "selections": [
                           (v1/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "postedAt",
+                            "storageKey": null
+                          },
                           {
                             "alias": null,
                             "args": null,
@@ -363,18 +371,10 @@ return {
                             "plural": true,
                             "selections": (v11/*: any*/),
                             "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "postedAt",
-                            "storageKey": null
                           }
                         ],
                         "storageKey": null
                       },
-                      (v1/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -493,7 +493,7 @@ return {
     ]
   },
   "params": {
-    "id": "32924c016317af00d1264a93396193a4",
+    "id": "23b0e5a1f7113746a86cf0b424cfa987",
     "metadata": {},
     "name": "PostModerationQueueQuery",
     "operationKind": "query",

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<febe5c99bffc143a7b68b11b648af766>>
+ * @generated SignedSource<<d0d49fef45806c0321802625e654c805>>
  * @relayHash 7ef08502181bf8c03472866198be2206
  * @lightSyntaxTransform
  * @nogrep
@@ -19,7 +19,6 @@ export type RejectPostInput = {
 };
 export type ModeratePostRejectMutation$variables = {
   input: RejectPostInput;
-  connections: ReadonlyArray<string>;
 };
 export type ModeratePostRejectMutationVariables = ModeratePostRejectMutation$variables;
 export type ModeratePostRejectMutation$data = {
@@ -36,116 +35,66 @@ export type ModeratePostRejectMutation = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "connections"
-},
-v1 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "input"
-},
-v2 = [
+var v0 = [
   {
-    "kind": "Variable",
-    "name": "input",
-    "variableName": "input"
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "input"
   }
 ],
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-};
-return {
-  "fragment": {
-    "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/)
+v1 = [
+  {
+    "alias": null,
+    "args": [
+      {
+        "kind": "Variable",
+        "name": "input",
+        "variableName": "input"
+      }
     ],
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "ModeratePostRejectMutation",
+    "concreteType": "RejectPostPayload",
+    "kind": "LinkedField",
+    "name": "rejectPost",
+    "plural": false,
     "selections": [
       {
         "alias": null,
-        "args": (v2/*: any*/),
-        "concreteType": "RejectPostPayload",
+        "args": null,
+        "concreteType": "Post",
         "kind": "LinkedField",
-        "name": "rejectPost",
+        "name": "post",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "Post",
-            "kind": "LinkedField",
-            "name": "post",
-            "plural": false,
-            "selections": [
-              (v3/*: any*/)
-            ],
+            "kind": "ScalarField",
+            "name": "id",
             "storageKey": null
           }
         ],
         "storageKey": null
       }
     ],
+    "storageKey": null
+  }
+];
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "ModeratePostRejectMutation",
+    "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [
-      (v1/*: any*/),
-      (v0/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "ModeratePostRejectMutation",
-    "selections": [
-      {
-        "alias": null,
-        "args": (v2/*: any*/),
-        "concreteType": "RejectPostPayload",
-        "kind": "LinkedField",
-        "name": "rejectPost",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Post",
-            "kind": "LinkedField",
-            "name": "post",
-            "plural": false,
-            "selections": [
-              (v3/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "filters": null,
-                "handle": "deleteEdge",
-                "key": "",
-                "kind": "ScalarHandle",
-                "name": "id",
-                "handleArgs": [
-                  {
-                    "kind": "Variable",
-                    "name": "connections",
-                    "variableName": "connections"
-                  }
-                ]
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ]
+    "selections": (v1/*: any*/)
   },
   "params": {
     "id": "7ef08502181bf8c03472866198be2206",
@@ -157,6 +106,6 @@ return {
 };
 })();
 
-(node as any).hash = "437cfbac12649689ce300715dfdb1751";
+(node as any).hash = "b78dc13d1d1bee9f4c63636ae3087a23";
 
 export default node;

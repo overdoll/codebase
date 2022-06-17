@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8cfb1a2c47fc22c31da5350bf70f8bf1>>
- * @relayHash 23bd0c2540662c13f85ccaaa247c9305
+ * @generated SignedSource<<ef44a6ceecafe83e4a873fc669dc0f78>>
+ * @relayHash 02a1a8c01339109de64fe3fa24040481
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 23bd0c2540662c13f85ccaaa247c9305
+// @relayRequestID 02a1a8c01339109de64fe3fa24040481
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type PostLikeButtonLikeMutation$variables = {
@@ -19,11 +19,7 @@ export type PostLikeButtonLikeMutationVariables = PostLikeButtonLikeMutation$var
 export type PostLikeButtonLikeMutation$data = {
   readonly likePost: {
     readonly postLike: {
-      readonly post: {
-        readonly viewerLiked: {
-          readonly __typename: string;
-        } | null;
-      };
+      readonly __typename: string;
     } | null;
   } | null;
 };
@@ -60,13 +56,6 @@ v2 = {
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
 };
 return {
   "fragment": {
@@ -91,29 +80,7 @@ return {
             "name": "postLike",
             "plural": false,
             "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Post",
-                "kind": "LinkedField",
-                "name": "post",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "PostLike",
-                    "kind": "LinkedField",
-                    "name": "viewerLiked",
-                    "plural": false,
-                    "selections": [
-                      (v2/*: any*/)
-                    ],
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              }
+              (v2/*: any*/)
             ],
             "storageKey": null
           }
@@ -146,32 +113,14 @@ return {
             "name": "postLike",
             "plural": false,
             "selections": [
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "Post",
-                "kind": "LinkedField",
-                "name": "post",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "PostLike",
-                    "kind": "LinkedField",
-                    "name": "viewerLiked",
-                    "plural": false,
-                    "selections": [
-                      (v2/*: any*/),
-                      (v3/*: any*/)
-                    ],
-                    "storageKey": null
-                  },
-                  (v3/*: any*/)
-                ],
+                "kind": "ScalarField",
+                "name": "id",
                 "storageKey": null
-              },
-              (v3/*: any*/)
+              }
             ],
             "storageKey": null
           }
@@ -181,7 +130,7 @@ return {
     ]
   },
   "params": {
-    "id": "23bd0c2540662c13f85ccaaa247c9305",
+    "id": "02a1a8c01339109de64fe3fa24040481",
     "metadata": {},
     "name": "PostLikeButtonLikeMutation",
     "operationKind": "mutation",
@@ -190,6 +139,6 @@ return {
 };
 })();
 
-(node as any).hash = "69bc0fbf3421afc9e0e8989ed040f21b";
+(node as any).hash = "0b73534429aa9406b441bf86e382bbb1";
 
 export default node;

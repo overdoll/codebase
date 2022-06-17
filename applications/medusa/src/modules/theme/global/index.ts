@@ -45,6 +45,9 @@ export default function global (props): any {
     },
     '::-moz-selection': {
       background: 'gray.300'
+    },
+    '.swiper-wrapper': {
+      alignItems: 'center'
     }
   }
 }

@@ -47,7 +47,6 @@ export default function PostGalleryPublicSimple ({
           >
             <Flex
               direction='column'
-              bg='gray.800'
               w='100%'
               cursor='pointer'
               align='center'

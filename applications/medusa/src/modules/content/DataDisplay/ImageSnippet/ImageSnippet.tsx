@@ -65,7 +65,7 @@ export default function ImageSnippet ({
   }
 
   return (
-    <Flex w='100%' h='100%' position={cover === true ? 'relative' : 'static'}>
+    <Flex justify='center' w='100%' h='100%' position={cover === true ? 'relative' : 'static'}>
       <NextImage
         {...IMAGE_PROPS}
         src={displayUrl(errorCount)}
