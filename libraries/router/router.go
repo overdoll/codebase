@@ -15,7 +15,6 @@ func init() {
 
 func NewGinRouter(principalService principal.HttpServicePrincipalFunc) *gin.Engine {
 	router := NewRawGinRouter()
-	router.GET("/readyz", probe.ReadyZ())
 	router.Use(passport.GinPassportRequestMiddleware())
 	router.Use(sentry_support.PassportHttpMiddleware())
 	router.Use(principal.GinPrincipalRequestMiddleware(principalService))
@@ -33,6 +32,9 @@ func NewRawGinRouter() *gin.Engine {
 
 	// sentry middleware to recover from panics & log errors, as well as adding sentry to the initial context
 	router.Use(sentry_support.SentryGinMiddleware())
+
+	// readyz probe
+	router.GET("/readyz", probe.ReadyZ())
 
 	return router
 }
