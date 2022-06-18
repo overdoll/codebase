@@ -17,7 +17,7 @@ msgstr ""
 msgid "Add some categories"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/UploadArrangeStep.tsx:68
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/UploadArrangeStep.tsx:70
 msgid "Add, arrange, or remove the files you're uploading. You can encourage your fans to become paid supporters by marking some content as supporter-only."
 msgstr ""
 
@@ -102,6 +102,10 @@ msgstr ""
 msgid "Have a character suggestion or want your character listed? Send us an email at hello@overdoll.com!"
 msgstr ""
 
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/UploadArrangeStep.tsx:83
+msgid "If uploading supporter only content, it's recommended that you upload two pieces of content to encourage conversions. The first one should be free and a reduced version of the original content and the second should be the original version."
+msgstr ""
+
 #: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadReviewStep/UploadReviewStep.tsx:35
 msgid "Make sure you like what you see before you submit the post"
 msgstr ""
@@ -110,7 +114,7 @@ msgstr ""
 #~ msgid "Make sure you like what you see before you submit the post."
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/DraggableContent/DraggableContent.tsx:138
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/DraggableContent/DraggableContent.tsx:144
 msgid "Mark this content as Supporter Only"
 msgstr ""
 
@@ -130,7 +134,7 @@ msgstr ""
 msgid "Post again"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/UploadArrangeStep.tsx:65
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/UploadArrangeStep.tsx:67
 msgid "Posting {0} media"
 msgstr ""
 
@@ -150,7 +154,7 @@ msgstr ""
 msgid "Remove File"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/DraggableContent/DraggableContent.tsx:167
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/DraggableContent/DraggableContent.tsx:173
 msgid "Remove Upload"
 msgstr ""
 
@@ -202,7 +206,7 @@ msgstr ""
 msgid "Submitted For Review"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/DraggableContent/DraggableContent.tsx:143
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/DraggableContent/DraggableContent.tsx:149
 msgid "Supporter Only"
 msgstr ""
 
@@ -248,6 +252,10 @@ msgstr ""
 
 #: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostState.tsx:132
 msgid "This post was already submitted"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/DraggableContent/DraggableContent.tsx:139
+msgid "Un-mark this content as Supporter Only"
 msgstr ""
 
 #: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/DraggableContent/DraggableContent.tsx:84

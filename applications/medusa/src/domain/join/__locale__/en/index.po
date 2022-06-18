@@ -25,7 +25,7 @@ msgstr ""
 msgid "A recovery code was successfully used up to log you in"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:175
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:176
 msgid "An 8-character recovery code"
 msgstr ""
 
@@ -78,7 +78,7 @@ msgstr ""
 msgid "Enter a username"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:157
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:158
 msgid "Enter an 8-character recovery code"
 msgstr ""
 
@@ -86,7 +86,7 @@ msgstr ""
 msgid "Enter an email"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:148
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:149
 msgid "Enter the 6-digit code from your Authenticator app"
 msgstr ""
 
@@ -110,7 +110,7 @@ msgstr ""
 msgid "Have your content distributed across the platform"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:186
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:187
 msgid "I lost access to my device"
 msgstr ""
 
@@ -122,11 +122,11 @@ msgstr ""
 #~ msgid "If you cancel the joining flow, you'll be brought back to the initial page and the link sent in the email will be invalidated. Are you sure?"
 #~ msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:162
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:163
 msgid "If you lost access to your two-factor device, you can use one of the recovery codes you downloaded when you set up two-factor authentication."
 msgstr ""
 
-#: src/domain/join/Join/pages/Grant/Grant.tsx:124
+#: src/domain/join/Join/pages/Grant/Grant.tsx:118
 msgid "Logging in"
 msgstr ""
 
@@ -142,7 +142,7 @@ msgstr ""
 msgid "Please enter a recovery code"
 msgstr ""
 
-#: src/domain/join/Join/pages/Grant/Grant.tsx:129
+#: src/domain/join/Join/pages/Grant/Grant.tsx:123
 msgid "Please wait while we log you in..."
 msgstr ""
 
@@ -154,11 +154,11 @@ msgstr ""
 msgid "Register"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:187
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:188
 msgid "Submit"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:176
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:177
 msgid "Submit Code"
 msgstr ""
 
@@ -174,23 +174,23 @@ msgstr ""
 #~ msgid "The login code has previously expired or is no longer valid. Try again?"
 #~ msgstr ""
 
-#: src/domain/join/Join/pages/Join/Join.tsx:116
+#: src/domain/join/Join/pages/Join/Join.tsx:112
 msgid "The login link has previously expired or is no longer valid. Please try logging in again."
 msgstr ""
 
-#: src/domain/join/Join/pages/Grant/Grant.tsx:98
+#: src/domain/join/Join/pages/Grant/Grant.tsx:92
 msgid "There was an error logging you in"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:136
+#: src/domain/join/Join/pages/MultiFactor/RecoveryCode/RecoveryCode.tsx:137
 msgid "There was an error submitting a recovery code"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:127
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:128
 msgid "There was an error submitting the authentication code"
 msgstr ""
 
-#: src/domain/join/Join/pages/Join/Join.tsx:96
+#: src/domain/join/Join/pages/Join/Join.tsx:95
 msgid "There was an error with joining"
 msgstr ""
 
@@ -210,7 +210,7 @@ msgstr ""
 msgid "Waiting for you to click on the email link"
 msgstr ""
 
-#: src/domain/join/Join/pages/Grant/Grant.tsx:88
+#: src/domain/join/Join/pages/Grant/Grant.tsx:77
 msgid "Welcome back!"
 msgstr ""
 
@@ -226,7 +226,7 @@ msgstr ""
 msgid "Yes, cancel"
 msgstr ""
 
-#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:153
+#: src/domain/join/Join/pages/MultiFactor/TotpSubmission/TotpSubmission.tsx:154
 msgid "You can find this code in the same app you used to set up two-factor authentication"
 msgstr ""
 

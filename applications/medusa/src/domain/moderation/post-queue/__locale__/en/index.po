@@ -21,7 +21,7 @@ msgstr ""
 msgid "All Clear"
 msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:168
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:167
 msgid "Approve"
 msgstr ""
 
@@ -41,7 +41,7 @@ msgstr ""
 msgid "Characters"
 msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/PostModerationQueue.tsx:184
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/PostModerationQueue.tsx:181
 msgid "Load More Posts"
 msgstr ""
 
@@ -65,19 +65,19 @@ msgstr ""
 msgid "Post Moderation Queue"
 msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:101
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:100
 msgid "Post created by {0} was approved successfully"
 msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:127
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:126
 msgid "Post created by {0} was successfully rejected"
 msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/PostModerationQueue.tsx:178
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/PostModerationQueue.tsx:175
 msgid "Posted on {formattedDate}"
 msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/PostModerationQueue.tsx:163
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/PostModerationQueue.tsx:160
 msgid "Previous Post"
 msgstr ""
 
@@ -89,7 +89,7 @@ msgstr ""
 msgid "Refresh Queue"
 msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:156
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:155
 msgid "Reject"
 msgstr ""
 
@@ -97,7 +97,7 @@ msgstr ""
 msgid "Reject Post"
 msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:194
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:193
 msgid "Select a reason for rejecting this post"
 msgstr ""
 
@@ -117,11 +117,11 @@ msgstr ""
 #~ msgid "There are no posts in your queue at the moment. Try checking again tomorrow?"
 #~ msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:110
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:109
 msgid "There was an error approving a post created by {0}"
 msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:138
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:137
 msgid "There was an error rejecting the post created by {0}"
 msgstr ""
 

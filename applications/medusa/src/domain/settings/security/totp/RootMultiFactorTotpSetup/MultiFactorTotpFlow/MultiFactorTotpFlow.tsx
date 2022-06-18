@@ -42,8 +42,7 @@ export default function MultiFactorTotpFlow (): JSX.Element {
 
   const {
     isOpen,
-    onOpen,
-    onClose
+    onOpen
   } = useDisclosure()
 
   const steps = ['app', 'code', 'activate']
