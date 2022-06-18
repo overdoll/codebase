@@ -29,7 +29,7 @@ const RootStaffPayout: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Payout - Staff :: overdoll.com
+          Payout - Staff · overdoll.com
         </title>
       </Head>
       <PageWrapper>

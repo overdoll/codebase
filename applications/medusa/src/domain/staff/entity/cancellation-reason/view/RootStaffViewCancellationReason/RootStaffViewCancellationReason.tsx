@@ -34,7 +34,7 @@ const RootStaffViewCancellationReason: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          View Cancellation Reason - Staff :: overdoll.com
+          View Cancellation Reason - Staff · overdoll.com
         </title>
       </Head>
       <PageWrapper>

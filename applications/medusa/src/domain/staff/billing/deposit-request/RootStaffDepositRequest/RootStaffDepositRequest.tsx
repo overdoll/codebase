@@ -31,7 +31,7 @@ const RootStaffDepositRequest: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Deposit Request - Staff :: overdoll.com
+          Deposit Request - Staff · overdoll.com
         </title>
       </Head>
       <PageWrapper>

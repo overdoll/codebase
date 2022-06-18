@@ -30,7 +30,7 @@ const RootStaffPost: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Post - Staff :: overdoll.com
+          Post - Staff · overdoll.com
         </title>
       </Head>
       <PageWrapper>

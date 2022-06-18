@@ -13,11 +13,12 @@ import PostSearchButton
 import { Heading, HStack, Stack } from '@chakra-ui/react'
 import PostSupporterStatusButton
   from '@//:modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSupporterStatusButton/PostSupporterStatusButton'
-import Head from 'next/head'
 import { PageProps } from '@//:types/app'
 import { useRouter } from 'next/router'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
+import RootPublicClubPostsRichObject
+  from '../../../../common/rich-objects/slug/RootPublicClubPostsRichObject/RootPublicClubPostsRichObject'
 
 interface Props {
   queryRefs: {
@@ -40,11 +41,7 @@ const RootPublicClubPosts: PageProps<Props> = (props: Props) => {
 
   return (
     <>
-      <Head>
-        <title>
-          Club Posts Search - overdoll
-        </title>
-      </Head>
+      <RootPublicClubPostsRichObject />
       <PageWrapper>
         <Stack spacing={8}>
           <Stack spacing={2}>

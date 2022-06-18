@@ -134,10 +134,16 @@ export default function DraggableContent ({
         {dragDisabled && (
           <Tooltip
             placement='bottom'
-            label={(
-              <Trans>
-                Mark this content as Supporter Only
-              </Trans>)}
+            label={data.isSupporterOnly
+              ? (
+                <Trans>
+                  Un-mark this content as Supporter Only
+                </Trans>
+                )
+              : (
+                <Trans>
+                  Mark this content as Supporter Only
+                </Trans>)}
           >
             <IconButton
               aria-label={i18n._(t`Supporter Only`)}

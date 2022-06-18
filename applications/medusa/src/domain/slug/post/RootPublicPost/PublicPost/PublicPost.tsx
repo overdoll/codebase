@@ -14,7 +14,7 @@ import { Trans } from '@lingui/macro'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import AccountInformationBanner
   from '../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
-import PublicPostRichObject from './PublicPostRichObject/PublicPostRichObject'
+import PublicPostRichObject from '../../../../../common/rich-objects/slug/PublicPostRichObject/PublicPostRichObject'
 
 interface Props {
   query: PreloadedQuery<PublicPostQuery>

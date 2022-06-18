@@ -1,4 +1,3 @@
-import Head from 'next/head'
 import { PageProps } from '@//:types/app'
 import SearchSuggestedClubs from './SearchSuggestedClubs/SearchSuggestedClubs'
 import { PageWrapper } from '@//:modules/content/PageLayout'
@@ -8,6 +7,8 @@ import QueryErrorBoundary from '../../../../modules/content/Placeholder/Fallback
 import DiscoverClubs from './DiscoverClubs/DiscoverClubs'
 import type { DiscoverClubsQuery as DiscoverClubsQueryType } from '@//:artifacts/DiscoverClubsQuery.graphql'
 import DiscoverClubsQuery from '@//:artifacts/DiscoverClubsQuery.graphql'
+import RootDiscoverClubsRichObject
+  from '../../../../common/rich-objects/discover/RootDiscoverClubsRichObject/RootDiscoverClubsRichObject'
 
 interface Props {
   queryRefs: {
@@ -23,11 +24,7 @@ const RootDiscoverClubs: PageProps<Props> = (props: Props) => {
 
   return (
     <>
-      <Head>
-        <title>
-          Discover Clubs - overdoll
-        </title>
-      </Head>
+      <RootDiscoverClubsRichObject />
       <PageWrapper>
         <QueryErrorBoundary loadQuery={() => loadQuery({})}>
           <Suspense fallback={<></>}>

@@ -124,8 +124,10 @@ const MenuLinkItem = ({
   ...rest
 }: MenuLinkItemProps): JSX.Element => {
   return (
-    <Link href={href}>
-      <MenuItem {...rest} />
+    <Link passHref href={href}>
+      <Box w='100%' as='a'>
+        <MenuItem {...rest} />
+      </Box>
     </Link>
   )
 }

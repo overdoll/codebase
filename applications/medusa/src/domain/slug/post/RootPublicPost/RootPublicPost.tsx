@@ -6,9 +6,10 @@ import type { PublicPostQuery as PublicPostQueryType } from '@//:artifacts/Publi
 import PublicPostQuery from '@//:artifacts/PublicPostQuery.graphql'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
 import { PageWrapper } from '@//:modules/content/PageLayout'
-import Head from 'next/head'
 import { PageProps } from '@//:types/app'
 import { useRouter } from 'next/router'
+import RootPublicPostRichObject
+  from '../../../../common/rich-objects/slug/RootPublicPostRichObject/RootPublicPostRichObject'
 
 interface Props {
   queryRefs: {
@@ -26,11 +27,7 @@ const RootPublicPost: PageProps<Props> = (props: Props) => {
 
   return (
     <>
-      <Head>
-        <title>
-          Post - overdoll
-        </title>
-      </Head>
+      <RootPublicPostRichObject />
       <PageWrapper>
         <QueryErrorBoundary loadQuery={() => loadQuery({ reference: reference as string ?? '' })}>
           <Suspense fallback={(

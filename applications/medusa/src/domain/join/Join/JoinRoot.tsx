@@ -21,6 +21,7 @@ import PlatformBenefitsAdvert from './components/PlatformBenefitsAdvert/Platform
 import { useCookies } from 'react-cookie'
 import { Flex } from '@chakra-ui/react'
 import RevokeTokenButton from './components/RevokeTokenButton/RevokeTokenButton'
+import JoinRichObject from '../../../common/rich-objects/join/JoinRichObject/JoinRichObject'
 
 interface Props {
   queryRefs: {
@@ -148,13 +149,16 @@ const JoinRoot: PageProps<Props> = (props: Props): JSX.Element => {
   }
 
   return (
-    <BackgroundPatternWrapper>
-      <PageWrapperDesktop>
-        <PlatformBenefitsAdvert>
-          <JoinFragment />
-        </PlatformBenefitsAdvert>
-      </PageWrapperDesktop>
-    </BackgroundPatternWrapper>
+    <>
+      <JoinRichObject />
+      <BackgroundPatternWrapper>
+        <PageWrapperDesktop>
+          <PlatformBenefitsAdvert>
+            <JoinFragment />
+          </PlatformBenefitsAdvert>
+        </PageWrapperDesktop>
+      </BackgroundPatternWrapper>
+    </>
   )
 }
 

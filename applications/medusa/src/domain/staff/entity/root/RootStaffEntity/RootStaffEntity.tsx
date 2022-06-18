@@ -25,7 +25,7 @@ const RootStaffEntity: PageProps<{}> = () => {
     <>
       <Head>
         <title>
-          Manage - Staff :: overdoll
+          Manage - Staff · overdoll
         </title>
       </Head>
       <PageWrapper>

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<54ccd470765ac5fad79d52fe5cb4bc40>>
+ * @generated SignedSource<<6f254f9365e0ca1b21d3a9a345bd378b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,6 @@ import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostModerationQueueFragment$data = {
   readonly postModeratorQueue: {
-    readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
@@ -195,18 +194,6 @@ return {
             }
           ],
           "storageKey": null
-        },
-        {
-          "kind": "ClientExtension",
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "__id",
-              "storageKey": null
-            }
-          ]
         }
       ],
       "storageKey": null
@@ -218,6 +205,6 @@ return {
 };
 })();
 
-(node as any).hash = "1c8085a16fe61d54e6c5554b58879b16";
+(node as any).hash = "943b918e39d92c60dedc8bc916749273";
 
 export default node;

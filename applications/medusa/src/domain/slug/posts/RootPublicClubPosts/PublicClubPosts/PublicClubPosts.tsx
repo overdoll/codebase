@@ -5,9 +5,10 @@ import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import PostsInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/PostsInfiniteScroll'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
-import Head from 'next/head'
 import AccountInformationBanner
   from '../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
+import PublicClubPostsRichObject
+  from '../../../../../common/rich-objects/slug/PublicClubPostsRichObject/PublicClubPostsRichObject'
 
 interface Props {
   query: PreloadedQuery<PublicClubPostsQuery>
@@ -22,9 +23,8 @@ const Query = graphql`
     $supporterOnlyStatus: [SupporterOnlyStatus!]
   ) {
     club(slug: $slug) {
-      slug
-      name
       ...PublicClubPostsFragment
+      ...PublicClubPostsRichObjectFragment
     }
     viewer {
       ...PostsInfiniteScrollViewerFragment
@@ -79,11 +79,7 @@ export default function PublicClubPosts (props: Props): JSX.Element {
 
   return (
     <>
-      <Head>
-        <title>
-          {queryData.club.name}'s Posts - overdoll.com/{queryData.club.slug}
-        </title>
-      </Head>
+      <PublicClubPostsRichObject clubQuery={queryData.club} />
       <AccountInformationBanner query={queryData.viewer} />
       <GlobalVideoManagerProvider>
         <PostsInfiniteScroll

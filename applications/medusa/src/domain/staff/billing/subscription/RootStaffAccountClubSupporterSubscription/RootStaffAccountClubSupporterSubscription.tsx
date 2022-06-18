@@ -33,7 +33,7 @@ const RootStaffAccountClubSupporterSubscription: PageProps<Props> = (props: Prop
     <>
       <Head>
         <title>
-          Subscription - Staff :: overdoll.com
+          Subscription - Staff · overdoll.com
         </title>
       </Head>
       <PageWrapperDesktop>

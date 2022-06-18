@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b010a33719a3a3c63885320d8b550555>>
+ * @generated SignedSource<<e379912180e8e5b229a13927a1b85be6>>
  * @relayHash 23b0e5a1f7113746a86cf0b424cfa987
  * @lightSyntaxTransform
  * @nogrep
@@ -419,18 +419,6 @@ return {
                   }
                 ],
                 "storageKey": null
-              },
-              {
-                "kind": "ClientExtension",
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "__id",
-                    "storageKey": null
-                  }
-                ]
               }
             ],
             "storageKey": "postModeratorQueue(first:1)"

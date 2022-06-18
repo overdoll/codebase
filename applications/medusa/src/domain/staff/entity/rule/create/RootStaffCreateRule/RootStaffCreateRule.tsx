@@ -27,7 +27,7 @@ const RootStaffCreateRule: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Create Rule - Staff :: overdoll.com
+          Create Rule - Staff · overdoll.com
         </title>
       </Head>
       <PageWrapper>

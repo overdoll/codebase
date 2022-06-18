@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<848d17e71801f776d5fbd576c87ade00>>
+ * @generated SignedSource<<9446a7f1c292b2b03b74be705f7adb50>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type UploadArrangeStepFragment$data = {
   readonly content: ReadonlyArray<{
     readonly id: string;
+    readonly isSupporterOnly: boolean;
   }>;
   readonly " $fragmentSpreads": FragmentRefs<"ArrangeUploadsFragment" | "ProcessUploadsFragment">;
   readonly " $fragmentType": "UploadArrangeStepFragment";
@@ -43,6 +44,13 @@ const node: ReaderFragment = {
           "kind": "ScalarField",
           "name": "id",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "isSupporterOnly",
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -62,6 +70,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "4dc3ce1cce2115209f9b6a3d0fb4845c";
+(node as any).hash = "8ecb29b31b0d53061044548664f6f41f";
 
 export default node;

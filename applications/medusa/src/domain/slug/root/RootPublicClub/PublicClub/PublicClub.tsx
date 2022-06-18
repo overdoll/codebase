@@ -14,11 +14,10 @@ import { NotFoundClub } from '@//:modules/content/Placeholder'
 import ClubMenu from './ClubMenu/ClubMenu'
 import JoinClubFromPage from './JoinClubButton/JoinClubFromPage/JoinClubFromPage'
 import ClubSuspendedStaffAlert from './ClubSuspendedStaffAlert/ClubSuspendedStaffAlert'
-import Head from 'next/head'
 import AccountInformationBanner
   from '../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
 import ClubConditionalPostDisplay from './ClubConditionalPostDisplay/ClubConditionalPostDisplay'
-import PublicClubRichObject from './PublicClubRichObject/PublicClubRichObject'
+import PublicClubRichObject from '../../../../../common/rich-objects/slug/PublicClubRichObject/PublicClubRichObject'
 
 interface Props {
   query: PreloadedQuery<PublicClubQuery>

@@ -27,7 +27,7 @@ const RootStaffCreateAudience: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Create Audience - Staff :: overdoll.com
+          Create Audience - Staff · overdoll.com
         </title>
       </Head>
       <PageWrapper>

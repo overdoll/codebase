@@ -1,5 +1,4 @@
 import { PageWrapper } from '@//:modules/content/PageLayout'
-import Head from 'next/head'
 import { PageProps } from '@//:types/app'
 import Button from '@//:modules/form/Button/Button'
 import { Trans } from '@lingui/macro'
@@ -9,6 +8,7 @@ import HighlightInline from '@//:modules/content/ContentHints/HighlightInline/Hi
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import { OverdollLogo } from '@//:assets/logos'
 import Icon from '../../../../modules/content/PageLayout/Flair/Icon/Icon'
+import InviteOnlyRichObject from '../../../../common/rich-objects/invite-only/InviteOnlyRichObject/InviteOnlyRichObject'
 
 const InviteOnly: PageProps<{}> = () => {
   const HEADER_PROPS = {
@@ -27,11 +27,7 @@ const InviteOnly: PageProps<{}> = () => {
 
   return (
     <>
-      <Head>
-        <title>
-          overdoll is invite-only for artists - overdoll
-        </title>
-      </Head>
+      <InviteOnlyRichObject />
       <PageWrapper>
         <Stack spacing={16}>
           <Icon

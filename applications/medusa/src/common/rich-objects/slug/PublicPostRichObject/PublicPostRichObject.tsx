@@ -3,6 +3,7 @@ import type { PublicPostRichObjectFragment$key } from '@//:artifacts/PublicPostR
 import Head from 'next/head'
 import React from 'react'
 import PostContentRichObject from './PostContentRichObject/PostContentRichObject'
+import { DESCRIPTION_FEATURES, DESCRIPTION_PREFIX, TITLE_FEATURES } from '@//:modules/constants/rich-objects'
 
 interface Props {
   query: PublicPostRichObjectFragment$key
@@ -34,19 +35,38 @@ export default function PublicPostRichObject ({
     return ((data.characters as Array<{ name: string }>).map((item) => item.name)).join(', ')
   }
 
-  const ogTitle = `${getCharacterNames()} by ${data.club.name} - overdoll.com/${data.club.slug}`
+  const TITLE = `${getCharacterNames()} From ${data.club.name}'s ${TITLE_FEATURES} - overdoll.com/${data.club.slug}`
 
-  const ogUrl = `https://overdoll.com/${data.club.slug}/post/${data.reference}`
+  const DESCRIPTION = `${DESCRIPTION_PREFIX} ${getCharacterNames()} ${DESCRIPTION_FEATURES} by ${data.club.name} on overdoll.com`
+
+  const URL = `https://overdoll.com/${data.club.slug}/post/${data.reference}`
 
   return (
     <>
       <Head>
         <title>
-          {ogTitle}
+          {TITLE}
         </title>
-        <meta property='og:title' content={`Post by ${data.club.name} on overdoll.com/${data.club.slug}`} />
-        <meta property='og:description' content={`${getCharacterNames()} posted by ${data.club.name}`} />
-        <meta property='og:url' content={ogUrl} />
+        <meta
+          property='og:title'
+          key='og:title'
+          content={TITLE}
+        />
+        <meta
+          property='description'
+          key='description'
+          content={DESCRIPTION}
+        />
+        <meta
+          property='og:description'
+          key='og:description'
+          content={DESCRIPTION}
+        />
+        <meta
+          property='og:url'
+          key='og:url'
+          content={URL}
+        />
       </Head>
       <PostContentRichObject query={data} />
     </>
