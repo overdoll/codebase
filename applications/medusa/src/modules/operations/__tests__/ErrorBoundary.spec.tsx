@@ -63,7 +63,7 @@ it('should catch error when thrown', async () => {
   render(<Root />)
 
   // error thrown by our component
-  await waitFor(() => expect(screen.getByText('An error has occurred')).toBeVisible())
+  await waitFor(() => expect(screen.getByText('Error')).toBeVisible())
 })
 
 it('should render fallback when error is thrown', async () => {
