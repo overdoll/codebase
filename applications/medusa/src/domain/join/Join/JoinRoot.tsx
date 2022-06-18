@@ -19,7 +19,6 @@ import BackgroundPatternWrapper from './components/BackgroundPatternWrapper/Back
 import PageWrapperDesktop from '../../../common/components/PageWrapperDesktop/PageWrapperDesktop'
 import PlatformBenefitsAdvert from './components/PlatformBenefitsAdvert/PlatformBenefitsAdvert'
 import { useCookies } from 'react-cookie'
-import { useUpdateEffect } from 'usehooks-ts'
 import { Flex } from '@chakra-ui/react'
 import RevokeTokenButton from './components/RevokeTokenButton/RevokeTokenButton'
 
@@ -62,6 +61,8 @@ const JoinRoot: PageProps<Props> = (props: Props): JSX.Element => {
 
   const [cookies] = useCookies<string>(['token'])
 
+  const [cookieToken, setCookieToken] = useState<string>('')
+
   const ref = usePreloadedQuery<JoinRootQuery>(JoinTokenStatus, queryRef as PreloadedQuery<JoinRootQuery>)
 
   const data = ref.viewAuthenticationToken
@@ -71,20 +72,17 @@ const JoinRoot: PageProps<Props> = (props: Props): JSX.Element => {
   const authenticationInitiated = !(data == null)
   const authenticationTokenVerified = data?.verified === true
 
-  // Keep track of the cookie here
-  let tokenCookie = cookies.token
-
-  if (tokenCookie != null) {
-    tokenCookie = tokenCookie.split(';')[0]
-  }
-
   // used to track whether there was previously a token grant, so that if
   // an invalid token was returned, we can show an "expired" token page
   const [hadGrant, setHadGrant] = useState<boolean>(false)
 
+  const clearGrant = (): void => {
+    setHadGrant(false)
+  }
+
   // if token invalidated we want to re-run the query
   useSubscribeToInvalidationState([data?.id as string], () => {
-    loadQuery({ token: tokenCookie ?? null })
+    loadQuery({ token: cookieToken }, { fetchPolicy: 'network-only' })
   })
 
   // when a new join is started, we want to make sure that we save the fact that
@@ -95,15 +93,15 @@ const JoinRoot: PageProps<Props> = (props: Props): JSX.Element => {
     }
   }, [data])
 
-  const clearGrant = (): void => {
-    setHadGrant(false)
-  }
-
-  useUpdateEffect(() => {
-    if (tokenCookie != null) {
-      loadQuery({ token: tokenCookie })
+  useEffect(() => {
+    if (cookies.token != null) {
+      setCookieToken(cookies.token.split(';')[0])
     }
-  }, [tokenCookie])
+  }, [cookies.token])
+
+  useEffect(() => {
+    loadQuery({ token: cookieToken }, { fetchPolicy: 'network-only' })
+  }, [cookieToken])
 
   const JoinFragment = (): JSX.Element => {
     // when authentication not initiated
@@ -120,7 +118,7 @@ const JoinRoot: PageProps<Props> = (props: Props): JSX.Element => {
     if (!authenticationTokenVerified) {
       return (
         <QueryErrorBoundary
-          loadQuery={() => loadQuery({ token: tokenCookie }, { fetchPolicy: 'network-only' })}
+          loadQuery={() => loadQuery({ token: cookieToken })}
         >
           <Suspense fallback={SkeletonStack}>
             <Flex align='center' h='100%' position='relative'>

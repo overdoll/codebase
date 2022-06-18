@@ -17,11 +17,11 @@ msgstr ""
 msgid "Add a note describing the reason in detail..."
 msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/NoPostsPlaceholder/NoPostsPlaceholder.tsx:68
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/NoPostsPlaceholder/NoPostsPlaceholder.tsx:122
 msgid "All Clear"
 msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:145
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:168
 msgid "Approve"
 msgstr ""
 
@@ -41,15 +41,15 @@ msgstr ""
 msgid "Characters"
 msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/PostModerationQueue.tsx:167
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/PostModerationQueue.tsx:184
 msgid "Load More Posts"
 msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/NoPostsPlaceholder/NoPostsPlaceholder.tsx:35
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/NoPostsPlaceholder/NoPostsPlaceholder.tsx:80
 msgid "Moderation Paused"
 msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/NoPostsPlaceholder/NoPostsPlaceholder.tsx:50
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/NoPostsPlaceholder/NoPostsPlaceholder.tsx:95
 msgid "Moderation Settings"
 msgstr ""
 
@@ -65,19 +65,19 @@ msgstr ""
 msgid "Post Moderation Queue"
 msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:79
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:101
 msgid "Post created by {0} was approved successfully"
 msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:121
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:127
 msgid "Post created by {0} was successfully rejected"
 msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/PostModerationQueue.tsx:162
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/PostModerationQueue.tsx:178
 msgid "Posted on {formattedDate}"
 msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/PostModerationQueue.tsx:148
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/PostModerationQueue.tsx:163
 msgid "Previous Post"
 msgstr ""
 
@@ -85,7 +85,11 @@ msgstr ""
 msgid "Reason"
 msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:140
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/NoPostsPlaceholder/NoPostsPlaceholder.tsx:108
+msgid "Refresh Queue"
+msgstr ""
+
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:156
 msgid "Reject"
 msgstr ""
 
@@ -93,7 +97,7 @@ msgstr ""
 msgid "Reject Post"
 msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:171
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:194
 msgid "Select a reason for rejecting this post"
 msgstr ""
 
@@ -101,19 +105,23 @@ msgstr ""
 msgid "Select the rejection reason"
 msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/NoPostsPlaceholder/NoPostsPlaceholder.tsx:40
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/NoPostsPlaceholder/NoPostsPlaceholder.tsx:85
 msgid "Since you've paused your moderator status, you won't get anymore new cases."
 msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/NoPostsPlaceholder/NoPostsPlaceholder.tsx:73
-msgid "There are no posts in your queue at the moment. Try checking again tomorrow?"
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/NoPostsPlaceholder/NoPostsPlaceholder.tsx:127
+msgid "There are no posts in your queue"
 msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:103
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/NoPostsPlaceholder/NoPostsPlaceholder.tsx:73
+#~ msgid "There are no posts in your queue at the moment. Try checking again tomorrow?"
+#~ msgstr ""
+
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:110
 msgid "There was an error approving a post created by {0}"
 msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:129
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/ModeratePost.tsx:138
 msgid "There was an error rejecting the post created by {0}"
 msgstr ""
 

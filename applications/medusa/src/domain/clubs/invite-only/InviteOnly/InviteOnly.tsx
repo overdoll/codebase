@@ -29,7 +29,7 @@ const InviteOnly: PageProps<{}> = () => {
     <>
       <Head>
         <title>
-          overdoll is invite-only for artists :: overdoll
+          overdoll is invite-only for artists - overdoll
         </title>
       </Head>
       <PageWrapper>

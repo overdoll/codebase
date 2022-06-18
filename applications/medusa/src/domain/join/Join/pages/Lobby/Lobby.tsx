@@ -66,7 +66,7 @@ export default function Lobby ({
   return (
     <>
       <Head>
-        <title>Waiting for authentication... :: overdoll</title>
+        <title>Waiting for authentication - overdoll</title>
       </Head>
       <Stack spacing={6}>
         <Icon

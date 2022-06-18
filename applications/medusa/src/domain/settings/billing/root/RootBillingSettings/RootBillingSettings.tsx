@@ -18,7 +18,7 @@ const RootBillingSettings: PageProps<{}> = () => {
     <>
       <Head>
         <title>
-          Billing - Settings :: overdoll.com
+          Billing Settings - overdoll
         </title>
       </Head>
       <PageWrapper>

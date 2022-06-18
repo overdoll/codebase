@@ -27,7 +27,7 @@ const RootPublicClub: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Club :: overdoll
+          Club - overdoll
         </title>
       </Head>
       <PageWrapper>

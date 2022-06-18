@@ -32,7 +32,7 @@ const RootSearch: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Search :: overdoll.com
+          Search · overdoll
         </title>
       </Head>
       <PageWrapper>

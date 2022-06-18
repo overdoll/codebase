@@ -103,7 +103,7 @@ export default function Join ({
   return (
     <>
       <Head>
-        <title>Join :: overdoll</title>
+        <title>Join - overdoll</title>
       </Head>
       <Stack w='100%' h='100%' justify='center' align='center' spacing={4}>
         {(data == null && hadGrant) && (

@@ -81,7 +81,7 @@ export default function PublicClubPosts (props: Props): JSX.Element {
     <>
       <Head>
         <title>
-          {queryData.club.name}'s Posts :: overdoll.com/{queryData.club.slug}
+          {queryData.club.name}'s Posts - overdoll.com/{queryData.club.slug}
         </title>
       </Head>
       <AccountInformationBanner query={queryData.viewer} />

@@ -16,7 +16,6 @@ import { CheckMark, RemoveCross } from '@//:assets/icons'
 interface Props {
   infractions: RejectionReasonsFragment$key
   postID: ModeratePostFragment$key
-  connectionID: string
 }
 
 const PostIDGQL = graphql`

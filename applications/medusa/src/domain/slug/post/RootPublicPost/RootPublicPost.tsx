@@ -28,7 +28,7 @@ const RootPublicPost: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Post :: overdoll.com
+          Post - overdoll
         </title>
       </Head>
       <PageWrapper>

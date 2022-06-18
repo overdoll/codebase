@@ -13,12 +13,12 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:255
+#: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:270
 msgid "Attempt {timeoutCount} of {TIMEOUT_LIMIT}..."
 msgstr ""
 
 #: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:130
-#: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:196
+#: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:204
 msgid "Back"
 msgstr ""
 
@@ -34,8 +34,8 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:230
-#: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:288
+#: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:245
+#: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:303
 msgid "Close"
 msgstr ""
 
@@ -100,7 +100,7 @@ msgstr ""
 msgid "Manage Subscription"
 msgstr ""
 
-#: src/domain/slug/root/RootPublicClub/PublicClub/PublicClub.tsx:105
+#: src/domain/slug/root/RootPublicClub/PublicClub/PublicClub.tsx:100
 msgid "Members"
 msgstr ""
 
@@ -109,11 +109,19 @@ msgid "Next"
 msgstr ""
 
 #: src/domain/slug/root/RootPublicClub/PublicClub/PostsHorizontalPreview/PostsHorizontalPreview.tsx:42
-msgid "No posts found"
+#~ msgid "No posts found"
+#~ msgstr ""
+
+#: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:225
+msgid "Pending Club Benefits"
 msgstr ""
 
-#: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:217
-msgid "Pending Club Benefits"
+#: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:197
+msgid "Please email hello@overdoll.com if you continue to experience billing issues"
+msgstr ""
+
+#: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:240
+msgid "Please email hello@overdoll.com if you continue to experience issues with receiving your club benefits"
 msgstr ""
 
 #: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/SupportClubButton/SupportClubTransactionProcess/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:95
@@ -138,7 +146,7 @@ msgstr ""
 msgid "See All"
 msgstr ""
 
-#: src/domain/slug/root/RootPublicClub/PublicClub/PostsHorizontalPreview/PostsHorizontalPreview.tsx:79
+#: src/domain/slug/root/RootPublicClub/PublicClub/PostsHorizontalPreview/PostsHorizontalPreview.tsx:74
 msgid "See all"
 msgstr ""
 
@@ -218,7 +226,7 @@ msgstr ""
 msgid "This page will update after you have successfully submitted your payment details"
 msgstr ""
 
-#: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:277
+#: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:292
 msgid "Transaction Approved!"
 msgstr ""
 
@@ -234,15 +242,15 @@ msgstr ""
 msgid "Use a saved payment method"
 msgstr ""
 
-#: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:244
+#: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:259
 msgid "Verifying Transaction"
 msgstr ""
 
-#: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:222
+#: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:230
 msgid "We received your payment, but weren't able to issue your club benefits in a reasonable amount of time. Try refreshing the page or coming back in a few minutes and you should see your club benefits!"
 msgstr ""
 
-#: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:249
+#: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:264
 msgid "We've received your payment! Now we're issuing your club benefits. This page will update shortly."
 msgstr ""
 
@@ -259,7 +267,7 @@ msgstr ""
 msgid "You are the owner"
 msgstr ""
 
-#: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:282
+#: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/SupportClubButton/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:297
 msgid "You can start using your club benefits right away!"
 msgstr ""
 

@@ -11,7 +11,7 @@ const ServerError: PageProps<{}> = (): JSX.Element => {
     <>
       <Head>
         <title>
-          Temporary Server Issues :: overdoll
+          Temporary Server Issues - overdoll
         </title>
       </Head>
       <PageWrapper>

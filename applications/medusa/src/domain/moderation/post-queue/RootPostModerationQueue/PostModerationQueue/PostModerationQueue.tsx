@@ -47,7 +47,6 @@ const Fragment = graphql`
     ...NoPostsPlaceholderFragment
     postModeratorQueue (first: $first, after: $after)
     @connection(key: "Posts_postModeratorQueue") {
-      __id
       edges {
         node {
           id
@@ -88,8 +87,6 @@ export default function PostModerationQueue ({
   const [currentIndex, setCurrentIndex] = useState(0)
 
   const currentPost = data?.postModeratorQueue.edges[currentIndex]?.node.post
-
-  const postsConnection = data.postModeratorQueue.__id
 
   const nextPage = (): void => {
     if (currentIndex + 1 >= data?.postModeratorQueue.edges.length) {
@@ -206,7 +203,6 @@ export default function PostModerationQueue ({
                 <PostTagsPreview query={item.node.post} />
                 <Flex mt={8}>
                   <ModeratePost
-                    connectionID={postsConnection}
                     infractions={queryData}
                     postID={item.node}
                   />

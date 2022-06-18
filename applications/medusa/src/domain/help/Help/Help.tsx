@@ -39,7 +39,7 @@ const Help: PageProps<{}> = () => {
     <>
       <Head>
         <title>
-          Help :: overdoll
+          Help - overdoll
         </title>
       </Head>
       <PageWrapper>

@@ -124,6 +124,7 @@ export default function RecoveryCode ({ queryRef }: Props): JSX.Element {
       updater: (store, payload) => {
         if (payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode?.validation === 'TOKEN_INVALID') {
           invalidateGrant(store, fragment.id)
+          return
         }
         if (payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode?.account?.id != null) {
           const viewerPayload = store.getRootField('grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode').getLinkedRecord('account')

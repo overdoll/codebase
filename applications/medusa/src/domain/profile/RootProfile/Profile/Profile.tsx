@@ -58,7 +58,7 @@ export default function Profile (props: Props): JSX.Element {
     <>
       <Head>
         <title>
-          {queryData.account.username}'s profile :: overdoll.com
+          {queryData.account.username}'s Profile - overdoll
         </title>
       </Head>
       <Stack spacing={8}>

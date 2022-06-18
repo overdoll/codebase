@@ -32,7 +32,7 @@ const RootClubPayments: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Club Payments :: overdoll.com
+          Club Payments - overdoll
         </title>
       </Head>
       <PageWrapper>

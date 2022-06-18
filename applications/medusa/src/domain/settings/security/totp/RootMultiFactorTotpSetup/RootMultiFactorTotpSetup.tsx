@@ -29,7 +29,7 @@ const RootMultiFactorTotpSetup: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Authenticator Setup - Security - Settings :: overdoll.com
+          Authenticator App Setup - overdoll
         </title>
       </Head>
       <PageWrapper>

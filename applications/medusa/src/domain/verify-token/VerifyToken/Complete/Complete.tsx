@@ -48,7 +48,7 @@ export default function Complete ({ query }: Props): JSX.Element {
   return (
     <>
       <Head>
-        <title>Verification complete :: overdoll</title>
+        <title>Verification complete - overdoll</title>
       </Head>
       <BackgroundPatternWrapper>
         <PageWrapperDesktop>

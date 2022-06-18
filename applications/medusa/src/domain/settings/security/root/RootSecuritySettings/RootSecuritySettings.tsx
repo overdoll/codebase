@@ -28,7 +28,7 @@ const RootSecuritySettings: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Security - Settings :: overdoll.com
+          Security Settings - overdoll
         </title>
       </Head>
       <PageWrapper>

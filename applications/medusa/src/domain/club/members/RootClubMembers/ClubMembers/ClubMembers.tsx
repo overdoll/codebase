@@ -80,7 +80,7 @@ export default function ClubMembers ({ query }: Props): JSX.Element {
     <>
       <Head>
         <title>
-          {queryData.club.name}'s Members :: overdoll.com
+          {queryData.club.name}'s Members - overdoll
         </title>
       </Head>
       <Stack>

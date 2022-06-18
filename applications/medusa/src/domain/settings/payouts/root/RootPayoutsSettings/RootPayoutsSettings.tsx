@@ -27,7 +27,7 @@ const RootSecuritySettings: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Payouts - Settings :: overdoll.com
+          Payouts - overdoll
         </title>
       </Head>
       <PageWrapper>

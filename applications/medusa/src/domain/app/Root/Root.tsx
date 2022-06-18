@@ -40,7 +40,7 @@ const Root: PageProps<Props> = (props: Props): JSX.Element => {
   const data = usePreloadedQuery<RootQueryType>(Query, queryRef as PreloadedQuery<RootQueryType>)
 
   useSubscribeToInvalidationState([data?.viewer?.id as string], () => {
-    loadQuery({})
+    loadQuery({}, { fetchPolicy: 'network-only' })
   })
 
   return (

@@ -28,7 +28,7 @@ const RootEmailsSettings: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Emails - Profile - Settings :: overdoll.com
+          Email Settings - overdoll
         </title>
       </Head>
       <PageWrapper>

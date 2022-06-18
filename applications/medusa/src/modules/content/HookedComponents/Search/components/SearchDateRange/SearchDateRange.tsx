@@ -1,4 +1,4 @@
-import { t, Trans } from '@lingui/macro'
+import { t } from '@lingui/macro'
 import Select from '../../../../../form/Select/Select'
 import { SelectProps } from '@chakra-ui/react'
 import { RegisterFunctionReturn } from '../../types'
@@ -75,9 +75,7 @@ export default function SearchDateRange ({
     <Select value={date} id={id} onChange={onChange} {...rest}>
       {dates.map((item, index) => (
         <option key={index} value={item.value as unknown as string}>
-          <Trans>
-            {item.title}
-          </Trans>
+          {item.title}
         </option>)
       )}
     </Select>

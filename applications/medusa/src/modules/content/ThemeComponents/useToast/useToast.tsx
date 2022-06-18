@@ -18,7 +18,7 @@ export default function useToast (options: UseToastInput = {}): (options: UseToa
   const position = useBreakpointValue<ToastPosition>({
     base: 'top',
     md: 'bottom'
-  })
+  }, 'top')
 
   const toast = useCallback(useChakraToast({
     variant: 'toast',

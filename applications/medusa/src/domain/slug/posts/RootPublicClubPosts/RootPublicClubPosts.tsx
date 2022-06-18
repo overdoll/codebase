@@ -42,12 +42,11 @@ const RootPublicClubPosts: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Club Posts :: overdoll
+          Club Posts Search - overdoll
         </title>
       </Head>
       <PageWrapper>
         <Stack spacing={8}>
-
           <Stack spacing={2}>
             <HStack spacing={2} justify='space-between'>
               <Heading color='gray.00' fontSize='2xl'>
