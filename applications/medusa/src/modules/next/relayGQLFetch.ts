@@ -94,11 +94,7 @@ export const serverMiddlewareFetch = (req) => {
       }
     )
 
-    const result = await response.json()
-
-    console.log('server middleware', result)
-
-    return result
+    return await response.json()
   }
 }
 

@@ -25,21 +25,25 @@ export default function VideoSnippet ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
+  const previewBackground = data?.preview != null && data?.preview !== '' ? data?.preview : 'gray.800'
+
   return (
     <Box
       w='100%'
       h='100%'
+      display='block'
       position='relative'
+      bg={previewBackground}
     >
       <NextImage
-        alt='thumbnail'
+        alt=''
         layout='fill'
         objectFit='cover'
         style={{
-          backgroundColor: data?.preview != null && data?.preview !== '' ? data?.preview : 'none'
+          backgroundColor: previewBackground,
+          userSelect: 'none'
         }}
-        objectPosition='50% 50%'
-        src={data?.videoThumbnail?.url ?? ''}
+        src={data?.videoThumbnail?.url ?? 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='}
         {...rest}
       />
     </Box>

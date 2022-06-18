@@ -8,6 +8,7 @@ export default function ImageError (): JSX.Element {
     <Stack
       borderRadius='md'
       p={4}
+      w={200}
       bg='dimmers.500'
       direction='column'
       justify='center'

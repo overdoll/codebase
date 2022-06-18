@@ -69,7 +69,7 @@ export default function PostGalleryPublicSimple ({
                   }}
                   passHref
                 >
-                  <Box as='a'>
+                  <Box w='100%' h='100%' as='a'>
                     <PostMedia controls={{ canControl: false }} query={item.resource} />
                   </Box>
                 </Link>

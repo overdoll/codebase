@@ -125,7 +125,7 @@ export default function NoPostsPlaceholder ({
         </Heading>
         <Text color='gray.200'>
           <Trans>
-            There are no posts in your queue at the moment.
+            There are no posts in your queue
           </Trans>
         </Text>
       </Box>

@@ -125,7 +125,7 @@ export default function PostSupporterContent ({
   )
 
   const SupporterUnlockedPrompt = (
-    <Box h='100%' position='relative'>
+    <Box h='100%' w='100%' position='relative'>
       <Box {...GLOW} h='100%' w='100%' position='absolute' />
       {children}
     </Box>
