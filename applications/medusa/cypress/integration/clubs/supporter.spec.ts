@@ -19,7 +19,6 @@ const newPaymentMethodClub = 'TestClub'
 const newPaymentMethodClubName = 'Test Club'
 
 const savedPaymentMethodClub = 'SecondTestClub'
-const savedPaymentMethodClubName = 'Second Test Club'
 
 Cypress.config('defaultCommandTimeout', 10000)
 
