@@ -22,6 +22,7 @@ import { useCookies } from 'react-cookie'
 import { Flex } from '@chakra-ui/react'
 import RevokeTokenButton from './components/RevokeTokenButton/RevokeTokenButton'
 import JoinRichObject from '../../../common/rich-objects/join/JoinRichObject/JoinRichObject'
+import { useUpdateEffect } from 'usehooks-ts'
 
 interface Props {
   queryRefs: {
@@ -94,13 +95,16 @@ const JoinRoot: PageProps<Props> = (props: Props): JSX.Element => {
     }
   }, [data])
 
+  /*
   useEffect(() => {
     if (cookies.token != null) {
       setCookieToken(cookies.token.split(';')[0])
     }
   }, [cookies.token])
 
-  useEffect(() => {
+   */
+
+  useUpdateEffect(() => {
     loadQuery({ token: cookieToken }, { fetchPolicy: 'network-only' })
   }, [cookieToken])
 

@@ -5,14 +5,6 @@ import { clickOnButton, typeIntoPlaceholder } from '../../support/user_actions'
 Cypress.config('defaultCommandTimeout', 10000)
 
 describe('Join', () => {
-  it('check join on existing account', () => {
-    const email = generateEmailFromExistingUsername('artist_verified')
-
-    join(email)
-
-    cy.url().should('include', '/')
-  })
-
   it('check join on new random account', () => {
     /**
      * Register and check state
@@ -20,7 +12,7 @@ describe('Join', () => {
     const [username, email] = generateUsernameAndEmail()
     join(email)
     cy.findByRole('button', { name: /Register/iu }).should('not.be.disabled')
-    typeIntoPlaceholder(/Enter a username/iu, username)
+    typeIntoPlaceholder('Enter a username', username)
     clickOnButton(/Register/iu)
     cy.url().should('include', '/')
     cy.findByText(/Welcome to overdoll!/iu).should('exist')
@@ -36,6 +28,14 @@ describe('Join', () => {
     clickOnButton(/Log Out/iu)
     cy.findAllByText(/You have been logged out/iu).should('exist')
     cy.get('a[href="/join"]').should('be.visible')
+  })
+
+  it('check join on existing account', () => {
+    const email = generateEmailFromExistingUsername('artist_verified')
+
+    join(email)
+
+    cy.url().should('include', '/')
   })
 
   it('revoke token in lobby', () => {

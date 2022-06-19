@@ -74,7 +74,7 @@ describe('Recovery Codes and Two-Factor', () => {
       cy.task('generateOTP', secret).then(token => {
         gotoNextStep()
         isOnStep('activate')
-        cy.get('form').findByPlaceholderText('123456').type(token as string)
+        cy.get('form').findByPlaceholderText('123456').type(token as string, { force: true })
         clickOnButton(/Activate/iu)
         cy.findByText('Two-Factor Setup Complete').should('exist')
       })
@@ -94,7 +94,7 @@ describe('Recovery Codes and Two-Factor', () => {
       cy.task('generateOTP', cookie?.value).then(token => {
         cy.waitUntil(() => cy.get('form').findByPlaceholderText('123456').should('not.be.disabled')).then(element => {
           if (element != null) {
-            cy.get(element).type(token as string)
+            cy.get(element).type(token as string, { force: true })
             cy.findByRole('button', { name: /Submit Code/iu }).click()
             cy.findByText(/Welcome back! Thanks for using two-factor to log in!/iu).should('exist')
           }
