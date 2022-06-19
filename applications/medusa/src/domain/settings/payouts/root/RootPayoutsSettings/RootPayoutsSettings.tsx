@@ -2,7 +2,7 @@ import type { PreloadedQuery } from 'react-relay/hooks'
 import { useQueryLoader } from 'react-relay/hooks'
 import type { PayoutsSettingsQuery as PayoutsSettingsQueryType } from '@//:artifacts/PayoutsSettingsQuery.graphql'
 import PayoutsSettingsQuery from '@//:artifacts/PayoutsSettingsQuery.graphql'
-import { PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
+import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
 import Head from 'next/head'
 import { PageProps } from '@//:types/app'
 import PayoutsSettings from './PayoutsSettings/PayoutsSettings'
@@ -37,6 +37,12 @@ const RootSecuritySettings: PageProps<Props> = (props: Props) => {
               Payouts Settings
             </Trans>
           </PageSectionTitle>
+          <PageSectionDescription>
+            <Trans>
+              Transferring funds from your wallet can only happen once you have your payout details and payout method
+              set up.
+            </Trans>
+          </PageSectionDescription>
         </PageSectionWrap>
         <QueryErrorBoundary loadQuery={() => loadQuery({})}>
           <Suspense fallback={<SkeletonStack />}>
