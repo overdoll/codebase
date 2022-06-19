@@ -95,15 +95,6 @@ const JoinRoot: PageProps<Props> = (props: Props): JSX.Element => {
     }
   }, [data])
 
-  /*
-  useEffect(() => {
-    if (cookies.token != null) {
-      setCookieToken(cookies.token.split(';')[0])
-    }
-  }, [cookies.token])
-
-   */
-
   useUpdateEffect(() => {
     loadQuery({ token: cookieToken }, { fetchPolicy: 'network-only' })
   }, [cookieToken])
