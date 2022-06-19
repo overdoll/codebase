@@ -82,6 +82,8 @@ const JoinRoot: PageProps<Props> = (props: Props): JSX.Element => {
     setHadGrant(false)
   }
 
+  //
+
   // if token invalidated we want to re-run the query
   useSubscribeToInvalidationState([data?.id as string], () => {
     loadQuery({ token: cookieToken }, { fetchPolicy: 'network-only' })
