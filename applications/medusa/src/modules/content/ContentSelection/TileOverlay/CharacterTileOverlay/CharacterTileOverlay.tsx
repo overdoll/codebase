@@ -1,10 +1,8 @@
 import { Stack, Text } from '@chakra-ui/react'
 import ResourceItem from '../../../DataDisplay/ResourceItem/ResourceItem'
-import { CharacterIdentifier } from '@//:assets/icons/interface'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { CharacterTileOverlayFragment$key } from '@//:artifacts/CharacterTileOverlayFragment.graphql'
 import { TileOverlay } from '../../index'
-import { Icon } from '../../../PageLayout'
 
 interface Props {
   query: CharacterTileOverlayFragment$key
@@ -37,12 +35,12 @@ export default function CharacterTileOverlay ({
       />
     }
     >
-      <Stack spacing={1}>
-        <Icon w={4} h={4} icon={CharacterIdentifier} fill='gray.00' />
+      <Stack px={1} py={2} w='100%' h='100%' align='center' justify='center' spacing={0}>
         <Text
           fontSize='lg'
           color='gray.00'
           textAlign='center'
+          noOfLines={2}
         >
           {data.name}
         </Text>
@@ -50,6 +48,7 @@ export default function CharacterTileOverlay ({
           textAlign='center'
           fontSize='sm'
           color='gray.100'
+          noOfLines={2}
         >
           {data.series.title}
         </Text>

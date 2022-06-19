@@ -7,7 +7,7 @@ export default function StackTile ({
   return (
     <Flex
       w='100%'
-      minH={58}
+      minH={10}
       {...rest}
     >
       {children}
