@@ -57,7 +57,8 @@ export default function UploadCharacterStep (): JSX.Element {
         </PageSectionTitle>
         <PageSectionDescription>
           <Trans>
-            Select the character(s) that are the primary focus in your content.
+            Select the character(s) that are the primary focus in your content. You must select at least one to
+            continue.
           </Trans>
         </PageSectionDescription>
       </PageSectionWrap>

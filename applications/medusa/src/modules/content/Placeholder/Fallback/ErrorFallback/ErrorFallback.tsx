@@ -1,8 +1,8 @@
 import { Button, Flex } from '@chakra-ui/react'
 import Icon from '../../../PageLayout/Flair/Icon/Icon'
 import { ArrowButtonRefresh } from '@//:assets/icons/navigation'
-import { Trans } from '@lingui/macro'
-import { Alert, AlertDescription, AlertIcon } from '../../../ThemeComponents/Alert/Alert'
+import { Trans } from '@lingui/react'
+import { Alert, AlertDescription, AlertIcon } from '../../../ThemeComponents'
 
 interface Props {
   error?: Error
@@ -26,15 +26,20 @@ export default function ErrorFallback ({
     }
   }
 
+  const errorMessage = error?.message ?? ''
+
   return (
     <Alert m={0} my={2} status='warning'>
       <Flex w='100%' align='center' justify='space-between'>
         <Flex align='center'>
           <AlertIcon />
           <AlertDescription>
-            <Trans>
-              Error {error?.message}
-            </Trans>
+            <Trans
+              id='message.fallback.error.message'
+              values={{ errorMessage: errorMessage }}
+              message={`Error ${errorMessage}`}
+              components={{}}
+            />
           </AlertDescription>
         </Flex>
         <Button
@@ -51,9 +56,12 @@ export default function ErrorFallback ({
           colorScheme='orange'
           variant='solid'
         >
-          <Trans>
-            Retry
-          </Trans>
+          <Trans
+            id='message.fallback.error.retry'
+            values={{}}
+            message='Retry'
+            components={{}}
+          />
         </Button>
       </Flex>
     </Alert>

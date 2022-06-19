@@ -28,7 +28,7 @@ const RootStaffSearchCategories: PageProps<{}> = () => {
     <>
       <Head>
         <title>
-          Search Categories - Staff :: overdoll.com
+          Search Categories - Staff · overdoll.com
         </title>
       </Head>
       <PageWrapper>

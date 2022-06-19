@@ -53,7 +53,7 @@ export default function ClubHome ({ query }: Props): JSX.Element {
     <>
       <Head>
         <title>
-          Manage {queryData.club.name} :: overdoll.com
+          Manage {queryData.club.name} - overdoll
         </title>
       </Head>
       <ClubInformationBanner query={queryData.club} />

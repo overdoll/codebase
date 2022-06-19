@@ -35,7 +35,7 @@ export default function AccountTileOverlay ({
     >
       <Stack spacing={2} align='center' justify='center'>
         <ResourceIcon w={10} h={10} seed={data.id} query={data.avatar} />
-        <Text fontSize='md' color='gray.00'>
+        <Text fontFamily='mono' fontSize='md' color='gray.00'>
           {data.username}
         </Text>
         {isSupporter

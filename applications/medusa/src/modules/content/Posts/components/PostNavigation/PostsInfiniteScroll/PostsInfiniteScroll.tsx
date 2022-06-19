@@ -4,11 +4,10 @@ import { Box, Flex, Spinner, Stack } from '@chakra-ui/react'
 import FullSimplePost from './FullSimplePost/FullSimplePost'
 import type { PostsInfiniteScrollFragment$key } from '@//:artifacts/PostsInfiniteScrollFragment.graphql'
 import type { PostsInfiniteScrollViewerFragment$key } from '@//:artifacts/PostsInfiniteScrollViewerFragment.graphql'
-import { SmallBackgroundBox } from '../../../../PageLayout'
-import { Trans } from '@lingui/macro'
 import LoadMoreObserver from './LoadMoreObserver/LoadMoreObserver'
 import { Fragment } from 'react'
 import { LoadMoreFn } from 'react-relay/relay-hooks/useLoadMoreFunction'
+import { EmptyPosts } from '../../../../Placeholder'
 
 interface Props {
   query: PostsInfiniteScrollFragment$key
@@ -47,16 +46,12 @@ export default function PostsInfiniteScroll ({
 
   if (((data?.edges) != null) && data?.edges.length < 1) {
     return (
-      <SmallBackgroundBox>
-        <Trans>
-          We couldn't find any posts
-        </Trans>
-      </SmallBackgroundBox>
+      <EmptyPosts />
     )
   }
 
   const SpinnerSection = (): JSX.Element => {
-    if (hasNext) {
+    if (hasNext || isLoadingNext) {
       return (
         <Flex w='100%' justify='center'>
           <Spinner color='gray.100' size='sm' />

@@ -49,7 +49,7 @@ const RootClubPosts: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          My Posts :: overdoll.com
+          My Posts - overdoll
         </title>
       </Head>
       <PageWrapper>

@@ -29,7 +29,7 @@ const RootStaffAccount: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Account - Staff :: overdoll.com
+          Account - Staff · overdoll.com
         </title>
       </Head>
       <PageWrapperDesktop>

@@ -35,7 +35,7 @@ const RootAccountClubSupporterSubscriptionSettings: PageProps<Props> = (props: P
     <>
       <Head>
         <title>
-          Subscription - Billing - Settings :: overdoll.com
+          Subscription Settings - overdoll
         </title>
       </Head>
       <PageWrapper>

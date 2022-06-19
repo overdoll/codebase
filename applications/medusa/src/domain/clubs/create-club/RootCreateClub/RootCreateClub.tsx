@@ -25,7 +25,7 @@ const RootCreateClub: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Create Your Club! :: overdoll.com
+          Create your club - overdoll
         </title>
       </Head>
       <PageWrapper>

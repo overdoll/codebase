@@ -2,11 +2,8 @@ import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { Box, Heading, Spinner, Stack } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import type { GrantFragment$key } from '@//:artifacts/GrantFragment.graphql'
-import { useCookies } from 'react-cookie'
 import { GrantMutation } from '@//:artifacts/GrantMutation.graphql'
 import { t, Trans } from '@lingui/macro'
-import translateValidation from '@//:modules/validation/translateValidation'
-import { useLingui } from '@lingui/react'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import Head from 'next/head'
 import useGrantCleanup from '../../support/useGrantCleanup'
@@ -55,11 +52,10 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
 
   const notify = useToast()
 
-  const { i18n } = useLingui()
-
-  const [, , removeCookie] = useCookies(['token'])
-
-  const { successfulGrant } = useGrantCleanup()
+  const {
+    successfulGrant,
+    invalidateGrant
+  } = useGrantCleanup()
 
   // grant account access
   useEffect(() => {
@@ -73,14 +69,7 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
         if (data.grantAccountAccessWithAuthenticationToken == null) {
           return
         }
-
-        // If there's an error with the token, bring user back to login page
         if (data.grantAccountAccessWithAuthenticationToken.validation != null) {
-          notify({
-            status: 'error',
-            title: i18n._(translateValidation(data.grantAccountAccessWithAuthenticationToken.validation))
-          })
-          removeCookie('token')
           return
         }
         notify({
@@ -89,8 +78,13 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
         })
       },
       updater: (store, payload) => {
+        if (payload?.grantAccountAccessWithAuthenticationToken?.validation != null) {
+          invalidateGrant(store, data.id)
+          return
+        }
+        if (payload?.grantAccountAccessWithAuthenticationToken?.revokedAuthenticationTokenId == null) return
         const viewerPayload = store.getRootField('grantAccountAccessWithAuthenticationToken').getLinkedRecord('account')
-        successfulGrant(store, viewerPayload, payload?.grantAccountAccessWithAuthenticationToken?.revokedAuthenticationTokenId)
+        successfulGrant(store, viewerPayload, payload.grantAccountAccessWithAuthenticationToken.revokedAuthenticationTokenId)
       },
       onError (data) {
         notify({
@@ -105,7 +99,7 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
   return (
     <>
       <Head>
-        <title>Logging In... :: overdoll</title>
+        <title>Logging you in - overdoll</title>
       </Head>
       <Stack align='center' justify='center' h='100%' spacing={6}>
         <Spinner

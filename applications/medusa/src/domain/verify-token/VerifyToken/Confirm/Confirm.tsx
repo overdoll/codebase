@@ -69,7 +69,7 @@ export default function Confirm ({
   return (
     <>
       <Head>
-        <title>Verify login :: overdoll</title>
+        <title>Verify login - overdoll</title>
       </Head>
       <BackgroundPatternWrapper>
         <PageWrapperDesktop>

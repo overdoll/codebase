@@ -5,9 +5,8 @@ import { NotFoundPublicPost } from '@//:modules/content/Placeholder'
 import { Heading, HStack, Stack, useUpdateEffect } from '@chakra-ui/react'
 import SuggestedPosts from './SuggestedPosts/SuggestedPosts'
 import { useQueryParam } from 'use-query-params'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import PublicPostPage from './PublicPostPage/PublicPostPage'
-import Head from 'next/head'
 import { useRouter } from 'next/router'
 import PostSearchButton
   from '../../../../../modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/PostSearchButton'
@@ -15,6 +14,7 @@ import { Trans } from '@lingui/macro'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import AccountInformationBanner
   from '../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
+import PublicPostRichObject from '../../../../../common/rich-objects/slug/PublicPostRichObject/PublicPostRichObject'
 
 interface Props {
   query: PreloadedQuery<PublicPostQuery>
@@ -29,11 +29,8 @@ const Query = graphql`
         name
         slug
       }
-      characters {
-        name
-      }
       ...PublicPostPageFragment
-
+      ...PublicPostRichObjectFragment
     }
     viewer {
       ...SuggestedPostsViewerFragment
@@ -61,13 +58,6 @@ export default function PublicPost (props: Props): JSX.Element {
 
   const [, setParamStep] = useQueryParam<string | null | undefined>('step')
 
-  const getCharacterNames = (): string => {
-    if (queryData?.post?.characters.length === 1) {
-      return queryData?.post?.characters[0].name
-    }
-    return ((queryData?.post?.characters as Array<{ name: string }>).map((item) => item.name)).join(', ')
-  }
-
   useUpdateEffect(() => {
     setParamStep(undefined)
   }, [queryData.post.reference])
@@ -86,11 +76,7 @@ export default function PublicPost (props: Props): JSX.Element {
 
   return (
     <>
-      <Head>
-        <title>
-          {getCharacterNames()} by {queryData.post.club.name} :: overdoll.com/{queryData.post.club.slug}
-        </title>
-      </Head>
+      <PublicPostRichObject query={queryData.post} />
       <AccountInformationBanner query={queryData.viewer} />
       <Stack spacing={4}>
         <HStack spacing={2} justify='space-between'>

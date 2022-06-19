@@ -42,11 +42,7 @@ const LikeMutation = graphql`
   mutation PostLikeButtonLikeMutation($postId: ID!) {
     likePost(input: {id: $postId}) {
       postLike {
-        post {
-          viewerLiked {
-            __typename
-          }
-        }
+        __typename
       }
     }
   }
@@ -92,16 +88,14 @@ export default function PostLikeButton ({
       variables: {
         postId: data?.id
       },
-      optimisticUpdater: (store) => {
-        const node = store.get(data.id)
-        if (node != null) {
-          node.setValue(node.getValue('likes') as number + 1, 'likes')
-        }
-      },
       updater: (store) => {
         const node = store.get(data.id)
+        const payload = store.getRootField('likePost')?.getLinkedRecord('postLike')
         if (node != null) {
           node.setValue(node.getValue('likes') as number + 1, 'likes')
+          if (payload != null) {
+            node.setLinkedRecord(payload, 'viewerLiked')
+          }
         }
       }
     })
@@ -113,13 +107,6 @@ export default function PostLikeButton ({
     undoLike({
       variables: {
         postId: data?.id
-      },
-      optimisticUpdater: (store) => {
-        const node = store.get(data.id)
-        if (node != null) {
-          node.setValue(node.getValue('likes') as number - 1, 'likes')
-          node.setValue(null, 'viewerLiked')
-        }
       },
       updater: (store) => {
         const node = store.get(data.id)

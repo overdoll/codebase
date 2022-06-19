@@ -1,9 +1,9 @@
 import { Flex, Heading } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay'
 import type { PostHeaderClubFragment$key } from '@//:artifacts/PostHeaderClubFragment.graphql'
-import { ClickableBox, ResourceIcon } from '../../../../PageLayout'
+import { ResourceIcon } from '../../../../PageLayout'
 import type { ResourceIconFragment$key } from '@//:artifacts/ResourceIconFragment.graphql'
-import { Link } from '../../../../../routing'
+import { LinkTile } from '../../../../ContentSelection'
 
 const Fragment = graphql`
   fragment PostHeaderClubFragment on Post {
@@ -26,21 +26,19 @@ export default function PostHeaderClub ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   return (
-    <Link href={`/${data?.club?.slug as string}`}>
-      <ClickableBox bg='transparent' p={0}>
-        <Flex align='center'>
-          <ResourceIcon
-            h={8}
-            w={8}
-            mr={3}
-            seed={data?.club?.id}
-            query={data?.club?.thumbnail as ResourceIconFragment$key}
-          />
-          <Heading color='gray.00' fontSize='lg'>
-            {data?.club?.name}
-          </Heading>
-        </Flex>
-      </ClickableBox>
-    </Link>
+    <LinkTile href={`/${data?.club?.slug as string}`}>
+      <Flex align='center'>
+        <ResourceIcon
+          h={8}
+          w={8}
+          mr={3}
+          seed={data?.club?.id}
+          query={data?.club?.thumbnail as ResourceIconFragment$key}
+        />
+        <Heading color='gray.00' fontSize='lg'>
+          {data?.club?.name}
+        </Heading>
+      </Flex>
+    </LinkTile>
   )
 }

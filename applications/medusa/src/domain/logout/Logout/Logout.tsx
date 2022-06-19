@@ -6,7 +6,7 @@ import { useToast } from '@//:modules/content/ThemeComponents'
 import { PageProps } from '@//:types/app'
 import { useRouter } from 'next/router'
 import type { LogoutMutation } from '@//:artifacts/LogoutMutation.graphql'
-import { invalidateViewer } from '../../join/Join/support/support'
+import { invalidateToken } from '../../join/Join/support/support'
 
 const LogoutButtonGQL = graphql`
   mutation LogoutMutation {
@@ -32,8 +32,12 @@ const Logout: PageProps<{}> = () => {
           title: t`You have been logged out`
         })
       },
-      updater: (store) => {
-        invalidateViewer(store)
+      updater: (store, payload) => {
+        if (payload?.revokeAccountAccess?.revokedAccountId != null) {
+          store.get(payload.revokeAccountAccess.revokedAccountId)?.invalidateRecord()
+        }
+        // TODO the mutation should also return the revokedAuthenticationToken so we can invalidate and clear it in the store
+        invalidateToken(store)
         void router.push('/')
       },
       onError () {

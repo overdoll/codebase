@@ -28,7 +28,7 @@ const RootSessionsSettings: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Sessions - Security - Settings :: overdoll.com
+          Sessions - overdoll
         </title>
       </Head>
       <PageWrapper>

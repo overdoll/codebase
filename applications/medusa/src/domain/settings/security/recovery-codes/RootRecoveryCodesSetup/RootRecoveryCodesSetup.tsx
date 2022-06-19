@@ -29,7 +29,7 @@ const RootRecoveryCodesSetup: PageProps<Props> = (props: Props): JSX.Element => 
     <>
       <Head>
         <title>
-          Recovery Codes - Security - Settings :: overdoll.com
+          Recovery Codes - overdoll
         </title>
       </Head>
       <PageWrapper>

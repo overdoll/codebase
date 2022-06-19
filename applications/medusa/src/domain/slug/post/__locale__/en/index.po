@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/slug/post/RootPublicPost/PublicPost/PublicPost.tsx:110
+#: src/domain/slug/post/RootPublicPost/PublicPost/PublicPost.tsx:96
 msgid "Suggested Posts"
 msgstr ""
 
@@ -25,6 +25,6 @@ msgstr ""
 msgid "This post is not published. Only you can see it."
 msgstr ""
 
-#: src/domain/slug/post/RootPublicPost/PublicPost/PublicPost.tsx:98
+#: src/domain/slug/post/RootPublicPost/PublicPost/PublicPost.tsx:84
 msgid "View Post"
 msgstr ""

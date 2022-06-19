@@ -27,7 +27,7 @@ const RootStaffCreateCancellationReason: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Create Cancellation Reason - Staff :: overdoll.com
+          Create Cancellation Reason - Staff · overdoll.com
         </title>
       </Head>
       <PageWrapper>

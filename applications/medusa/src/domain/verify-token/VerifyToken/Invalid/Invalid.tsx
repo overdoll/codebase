@@ -12,7 +12,7 @@ export default function Invalid (): JSX.Element {
   return (
     <>
       <Head>
-        <title>Invalid authentication :: overdoll</title>
+        <title>Invalid login link - overdoll</title>
       </Head>
       <BackgroundPatternWrapper>
         <PageWrapperDesktop>

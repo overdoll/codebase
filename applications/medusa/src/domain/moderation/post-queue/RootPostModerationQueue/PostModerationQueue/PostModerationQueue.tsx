@@ -1,4 +1,4 @@
-import { Flex, Skeleton, Stack, Text } from '@chakra-ui/react'
+import { Box, Flex, Heading, Stack } from '@chakra-ui/react'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { Fragment as ReactFragment, useEffect, useState } from 'react'
 import { graphql, usePaginationFragment } from 'react-relay'
@@ -9,15 +9,22 @@ import { ArrowButtonLeft, ArrowButtonRight } from '@//:assets/icons/navigation'
 import PostPreview from './PostPreview/PostPreview'
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { usePreloadedQuery } from 'react-relay/hooks'
-import type { PostModerationQueueQuery } from '@//:artifacts/PostModerationQueueQuery.graphql'
-import { LargeBackgroundBox, PostPlaceholder, SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import type {
+  PostModerationQueueQuery,
+  PostModerationQueueQuery$variables
+} from '@//:artifacts/PostModerationQueueQuery.graphql'
+import { PostPlaceholder, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import IconButton from '@//:modules/form/IconButton/IconButton'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import PostTagsPreview from './PostTagsPreview/PostTagsPreview'
+import { LoadQueryType } from '@//:types/hooks'
+import Head from 'next/head'
+import { SkeletonPost } from '@//:modules/content/Placeholder'
 
 interface Props {
+  loadQuery: LoadQueryType<PostModerationQueueQuery$variables>
   query: PreloadedQuery<PostModerationQueueQuery>
 }
 
@@ -40,26 +47,29 @@ const Fragment = graphql`
     ...NoPostsPlaceholderFragment
     postModeratorQueue (first: $first, after: $after)
     @connection(key: "Posts_postModeratorQueue") {
-      __id
       edges {
         node {
+          id
           post {
             id
-            ...PostPreviewFragment
-            ...ModeratePostFragment
-            ...PostTagsPreviewFragment
             postedAt
+            ...PostPreviewFragment
+            ...PostTagsPreviewFragment
           }
+          ...ModeratePostFragment
         }
       }
     }
   }
 `
 
-export default function PostModerationQueue (props: Props): JSX.Element {
+export default function PostModerationQueue ({
+  query,
+  loadQuery
+}: Props): JSX.Element {
   const queryData = usePreloadedQuery<PostModerationQueueQuery>(
     Query,
-    props.query
+    query
   )
 
   const {
@@ -77,8 +87,6 @@ export default function PostModerationQueue (props: Props): JSX.Element {
   const [currentIndex, setCurrentIndex] = useState(0)
 
   const currentPost = data?.postModeratorQueue.edges[currentIndex]?.node.post
-
-  const postsConnection = data.postModeratorQueue.__id
 
   const nextPage = (): void => {
     if (currentIndex + 1 >= data?.postModeratorQueue.edges.length) {
@@ -119,12 +127,7 @@ export default function PostModerationQueue (props: Props): JSX.Element {
   // so we can have a loading state
   if ((data.postModeratorQueue.edges.length < 1 && hasNext) || (currentPost == null && data.postModeratorQueue.edges.length > 0)) {
     return (
-      <PostPlaceholder>
-        <Skeleton
-          h='100%'
-          w='100%'
-        />
-      </PostPlaceholder>
+      <SkeletonPost />
     )
   }
 
@@ -132,7 +135,7 @@ export default function PostModerationQueue (props: Props): JSX.Element {
   if (data.postModeratorQueue.edges.length < 1) {
     return (
       <PostPlaceholder>
-        <NoPostsPlaceholder moderator={data} />
+        <NoPostsPlaceholder loadQuery={loadQuery} query={data} />
       </PostPlaceholder>
     )
   }
@@ -141,61 +144,74 @@ export default function PostModerationQueue (props: Props): JSX.Element {
 
   // Show the posts queue for the user
   return (
-    <Stack spacing={2}>
-      <Flex>
-        {currentIndex !== 0 &&
-          <IconButton
-            aria-label={i18n._(t`Previous Post`)}
-            icon={<Icon icon={ArrowButtonLeft} w={4} h={4} fill='gray.300' />}
-            variant='solid'
-            mr={2}
-            size='lg'
-            bg='gray.800'
-            borderRadius='base'
-            onClick={previousPage}
-          />}
-        <SmallBackgroundBox align='center' justify='center' w='100%'>
-          <Text
-            color='gray.300'
-            fontSize='md'
-          >
-            <Trans>Posted on {formattedDate}</Trans>
-          </Text>
-        </SmallBackgroundBox>
-        {(currentIndex + 1 !== data.postModeratorQueue?.edges.length || hasNext) &&
-          <IconButton
-            aria-label={i18n._(t`Load More Posts`)}
-            ml={2}
-            icon={<Icon icon={ArrowButtonRight} w={4} h={4} fill='gray.300' />}
-            variant='solid'
-            bg='gray.800'
-            size='lg'
-            borderRadius='base'
-            isLoading={isLoadingNext}
-            onClick={nextPage}
-          />}
-      </Flex>
-      {data?.postModeratorQueue.edges.map((item, index) => {
-        if (index !== currentIndex) {
-          return <ReactFragment key={index} />
-        }
-        return (
-          <LargeBackgroundBox
-            key={index}
-            position='relative'
-          >
-            <PostPreview query={item.node.post} />
-            <PostTagsPreview query={item.node.post} />
-            <Flex justify='flex-end' mt={4}>
-              <ModeratePost
-                connectionID={postsConnection}
-                infractions={queryData}
-                postID={item.node.post}
-              />
+    <>
+      <Head>
+        {data?.postModeratorQueue.edges.length > 0 &&
+          (
+            <title>
+              (!) Posts in queue - overdoll
+            </title>
+          )}
+      </Head>
+      <Stack spacing={6}>
+        <Flex>
+          {currentIndex !== 0 &&
+            <IconButton
+              aria-label={i18n._(t`Previous Post`)}
+              icon={<Icon icon={ArrowButtonLeft} w={4} h={4} fill='gray.300' />}
+              variant='solid'
+              mr={2}
+              size='lg'
+              bg='gray.800'
+              borderRadius='base'
+              onClick={previousPage}
+            />}
+          <SmallBackgroundBox w='100%'>
+            <Flex align='center' justify='center' w='100%' h='100%'>
+              <Heading
+                color='gray.200'
+                fontSize='md'
+              >
+                <Trans>Posted on {formattedDate}</Trans>
+              </Heading>
             </Flex>
-          </LargeBackgroundBox>
-        )
-      })}
-    </Stack>
+          </SmallBackgroundBox>
+          {(currentIndex + 1 !== data.postModeratorQueue?.edges.length || hasNext) &&
+            <IconButton
+              aria-label={i18n._(t`Load More Posts`)}
+              ml={2}
+              icon={<Icon icon={ArrowButtonRight} w={4} h={4} fill='gray.300' />}
+              variant='solid'
+              bg='gray.800'
+              size='lg'
+              borderRadius='base'
+              isLoading={isLoadingNext}
+              onClick={nextPage}
+            />}
+        </Flex>
+        {data?.postModeratorQueue.edges.map((item, index) => {
+          if (index !== currentIndex) {
+            return <ReactFragment key={index} />
+          }
+          return (
+            <ReactFragment key={index}>
+              <Box
+                key={index}
+                position='relative'
+              >
+                <PostPreview query={item.node.post} />
+                <PostTagsPreview query={item.node.post} />
+                <Flex mt={8}>
+                  <ModeratePost
+                    infractions={queryData}
+                    postID={item.node}
+                  />
+                </Flex>
+              </Box>
+            </ReactFragment>
+          )
+        })}
+      </Stack>
+    </>
   )
 }

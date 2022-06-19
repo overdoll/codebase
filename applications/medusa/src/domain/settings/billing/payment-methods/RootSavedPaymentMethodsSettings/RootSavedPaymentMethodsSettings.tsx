@@ -30,7 +30,7 @@ const RootSavedPaymentMethodsSettings: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Saved Payment Methods - Billing - Settings :: overdoll.com
+          Saved Payment Methods - overdoll
         </title>
       </Head>
       <PageWrapper>

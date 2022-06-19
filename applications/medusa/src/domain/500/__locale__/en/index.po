@@ -13,6 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/domain/500/ServerError/ServerError.tsx:51
+msgid "If you continue to experience issues for an extended period of time, please contact hello@overdoll.com"
+msgstr ""
+
 #: src/domain/500/ServerError/ServerError.tsx:40
 msgid "It looks like we're experiencing some server issues. Our best people are on it and we should be back shortly!"
 msgstr ""

@@ -5,12 +5,8 @@ import 'ioredis'
 
 export default function Document (): JSX.Element {
   return (
-    <Html>
+    <Html prefix='og: https://ogp.me/ns#'>
       <Head>
-        <meta
-          name='description'
-          content='overdoll is a site where artists can post digital adult content and earn subscription revenue from fans.'
-        />
         <FaviconComponent />
       </Head>
       <body>

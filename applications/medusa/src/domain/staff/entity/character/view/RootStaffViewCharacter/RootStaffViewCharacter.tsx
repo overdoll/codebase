@@ -39,7 +39,7 @@ const RootStaffViewCharacter: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          View Character - Staff :: overdoll.com
+          View Character - Staff · overdoll.com
         </title>
       </Head>
       <PageWrapper>

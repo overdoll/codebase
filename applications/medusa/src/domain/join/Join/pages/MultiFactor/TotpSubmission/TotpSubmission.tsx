@@ -114,6 +114,7 @@ export default function TotpSubmission ({ queryRef }: Props): JSX.Element {
       updater: (store, payload) => {
         if (payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp?.validation === 'TOKEN_INVALID') {
           invalidateGrant(store, data.id)
+          return
         }
 
         if (payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp?.account?.id != null) {

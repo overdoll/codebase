@@ -19,7 +19,7 @@ const RootStaffSearchRules: PageProps<{}> = () => {
     <>
       <Head>
         <title>
-          Search Rules - Staff :: overdoll.com
+          Search Rules - Staff · overdoll.com
         </title>
       </Head>
       <PageWrapper>

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<74bfb46f21f4064a143b82c5425491ff>>
+ * @generated SignedSource<<6f254f9365e0ca1b21d3a9a345bd378b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,14 +12,15 @@ import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostModerationQueueFragment$data = {
   readonly postModeratorQueue: {
-    readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly id: string;
         readonly post: {
           readonly id: string;
           readonly postedAt: any | null;
-          readonly " $fragmentSpreads": FragmentRefs<"PostPreviewFragment" | "ModeratePostFragment" | "PostTagsPreviewFragment">;
+          readonly " $fragmentSpreads": FragmentRefs<"PostPreviewFragment" | "PostTagsPreviewFragment">;
         };
+        readonly " $fragmentSpreads": FragmentRefs<"ModeratePostFragment">;
       };
     }>;
   };
@@ -114,6 +115,7 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
+                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -124,6 +126,13 @@ return {
                   "selections": [
                     (v1/*: any*/),
                     {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "postedAt",
+                      "storageKey": null
+                    },
+                    {
                       "args": null,
                       "kind": "FragmentSpread",
                       "name": "PostPreviewFragment"
@@ -131,22 +140,15 @@ return {
                     {
                       "args": null,
                       "kind": "FragmentSpread",
-                      "name": "ModeratePostFragment"
-                    },
-                    {
-                      "args": null,
-                      "kind": "FragmentSpread",
                       "name": "PostTagsPreviewFragment"
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "postedAt",
-                      "storageKey": null
                     }
                   ],
                   "storageKey": null
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "ModeratePostFragment"
                 },
                 {
                   "alias": null,
@@ -192,18 +194,6 @@ return {
             }
           ],
           "storageKey": null
-        },
-        {
-          "kind": "ClientExtension",
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "__id",
-              "storageKey": null
-            }
-          ]
         }
       ],
       "storageKey": null
@@ -215,6 +205,6 @@ return {
 };
 })();
 
-(node as any).hash = "7c425557c42abec81a42baa3e8e5f3af";
+(node as any).hash = "943b918e39d92c60dedc8bc916749273";
 
 export default node;

@@ -114,7 +114,7 @@ const CreatePost: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Create a Post :: overdoll.com
+          Create a Post - overdoll
         </title>
       </Head>
       <PageWrapper>

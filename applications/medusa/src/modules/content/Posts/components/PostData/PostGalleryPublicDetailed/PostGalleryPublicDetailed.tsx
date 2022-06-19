@@ -52,7 +52,13 @@ export default function PostGalleryPublicDetailed ({
           <SwiperSlide
             key={index}
           >
-            <Flex direction='column' minH={300} bg='gray.800' w='100%' align='center' justify='center'>
+            <Flex
+              direction='column'
+              minH={300}
+              w='100%'
+              align='center'
+              justify='center'
+            >
               <PostSupporterContent
                 clubQuery={data.club}
                 query={item}

@@ -18,22 +18,24 @@ export default function useGrantCleanup (): UseGrantCleanupReturn {
 
   const [, , removeCookie] = useCookies<string>(['token'])
 
+  const invalidateAuthenticationToken = (store, authenticationTokenId): void => {
+    // TODO this is not working for some reason. the token doesn't get invalidated or deleted from the store
+    store.get(authenticationTokenId)?.invalidateRecord()
+    store.delete(authenticationTokenId)
+  }
+
   const successfulGrant: SuccessfulGrantType = (store, viewerPayload, revokedAuthenticationToken) => {
     setViewer(store, viewerPayload)
     void router.push(redirect != null ? redirect : '/').then(() => {
       removeCookie('token')
-      if (revokedAuthenticationToken != null) {
-        store.get(revokedAuthenticationToken)?.invalidateRecord()
-      }
+      invalidateAuthenticationToken(store, revokedAuthenticationToken)
     })
   }
 
   const invalidateGrant: InvalidateGrantType = (store, invalidatedAuthenticationToken) => {
     invalidateToken(store)
     removeCookie('token')
-    if (invalidatedAuthenticationToken != null) {
-      store.get(invalidatedAuthenticationToken)?.invalidateRecord()
-    }
+    invalidateAuthenticationToken(store, invalidatedAuthenticationToken)
   }
 
   return {

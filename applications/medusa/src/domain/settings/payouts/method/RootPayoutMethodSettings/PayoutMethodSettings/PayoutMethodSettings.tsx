@@ -21,10 +21,10 @@ const Query = graphql`
       details {
         country {
           payoutMethods
-          ...PayoutMethodSetupFlowFragment
           ...PayoutCountryNotSupportedFragment
         }
       }
+      ...PayoutMethodSetupFlowFragment
     }
   }
 `
@@ -60,6 +60,6 @@ export default function PayoutMethodSettings (props: Props): JSX.Element {
   }
 
   return (
-    <PayoutMethodSetupFlow query={data.viewer.details.country} />
+    <PayoutMethodSetupFlow query={data.viewer} />
   )
 }

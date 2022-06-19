@@ -16,7 +16,7 @@ const RootModeration: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Moderation - Settings :: overdoll.com
+          Moderation - Settings · overdoll.com
         </title>
       </Head>
       <PageWrapper>

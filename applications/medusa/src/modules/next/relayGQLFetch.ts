@@ -17,10 +17,29 @@ export const clientFetch = (securityToken) => {
 
     const result = await response.json()
 
+    // throw errors for mutations if array of errors is detected in the response
     if (Array.isArray(result.errors) && kind === 'mutation') {
       const error = new Error(JSON.stringify(result.errors))
       console.log('Mutation Error ::', error)
       throw error
+    }
+
+    // throw errors for queries if array of errors is detected in the response
+    if (Array.isArray(result.errors) && kind === 'query') {
+      const error = new Error(JSON.stringify(result.errors))
+      console.log('Query Error ::', error)
+      // we filter out the viewer if there a query error so it doesn't mess with the internal store
+      if (result?.data?.viewer === null) {
+        const {
+          data: queryData,
+          ...restResult
+        } = result
+        const {
+          viewer,
+          ...restData
+        } = queryData
+        return { data: { ...restData }, ...restResult }
+      }
     }
 
     return result
@@ -28,7 +47,7 @@ export const clientFetch = (securityToken) => {
 }
 
 // used for fetching inside of Next.js middleware
-// note that we have to manually assign security cookies incase they are not present
+// note that we have to manually assign security cookies in case they are not present
 export const serverMiddlewareFetch = (req) => {
   return async (data) => {
     const headers = {
@@ -80,7 +99,7 @@ export const serverMiddlewareFetch = (req) => {
 }
 
 export const serverFetch = (req, res) => {
-  return async (data) => {
+  return async (data, kind) => {
     const headers = {
       'Content-Type': 'application/json',
       Accept: 'application/json'
@@ -116,6 +135,21 @@ export const serverFetch = (req, res) => {
             res.setHeader('set-cookie', [setCookie])
           }
         })
+    }
+
+    // we filter out the viewer if there a query error so it doesn't mess with the internal store
+    if (Array.isArray(responseData.errors)) {
+      if (responseData?.data?.viewer === null) {
+        const {
+          data: queryData,
+          ...restResult
+        } = responseData
+        const {
+          viewer,
+          ...restData
+        } = queryData
+        return { data: { ...restData }, ...restResult }
+      }
     }
 
     return responseData

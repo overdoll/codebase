@@ -1,3 +1,5 @@
+import { typeIntoPlaceholder } from './user_actions'
+
 export const logout = (): void => {
   cy.visit('/logout')
 
@@ -15,8 +17,7 @@ export const join = (email: string): void => {
     startTimestamp = Date.now() - 500
   })
 
-  cy.findByPlaceholderText(/Enter an email/iu)
-    .type(email)
+  typeIntoPlaceholder(/Enter an email/iu, email)
 
   cy.findByRole('button', { name: /Continue/iu })
     .click()

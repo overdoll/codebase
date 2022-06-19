@@ -102,7 +102,7 @@ export default function TransactionSettingsCard ({
       </TableBodyRow>
       {data.type === 'REFUND' && (
         <Text fontSize='md' color='gray.200'>
-          ${totalRefunded} was refunded to this payment method
+          {totalRefunded} was refunded to this payment method
         </Text>
       )}
     </Stack>

@@ -110,7 +110,7 @@ export default function Register ({ queryRef }: Props): JSX.Element {
   return (
     <>
       <Head>
-        <title>Create Your Account :: overdoll</title>
+        <title>Create your account - overdoll</title>
       </Head>
       <Flex w='100%' justify='center' align='center' h='100%' position='relative'>
         <Flex top={0} position='absolute' w='100%' justify='flex-end'>

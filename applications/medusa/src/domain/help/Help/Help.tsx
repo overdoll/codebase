@@ -39,7 +39,7 @@ const Help: PageProps<{}> = () => {
     <>
       <Head>
         <title>
-          Help :: overdoll
+          Help - overdoll
         </title>
       </Head>
       <PageWrapper>
@@ -201,7 +201,9 @@ const Help: PageProps<{}> = () => {
           <Can I='staff' a='Entity'>
             <Box>
               <Text fontFamily='mono' fontSize='sm' color='gray.200'>
-                Build ID: {process.env.NEXT_BUILD_ID ?? 'unknown'}
+                <Trans>
+                  Build ID: {process.env.NEXT_BUILD_ID ?? 'unknown'}
+                </Trans>
               </Text>
             </Box>
           </Can>

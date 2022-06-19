@@ -14,10 +14,10 @@ import { NotFoundClub } from '@//:modules/content/Placeholder'
 import ClubMenu from './ClubMenu/ClubMenu'
 import JoinClubFromPage from './JoinClubButton/JoinClubFromPage/JoinClubFromPage'
 import ClubSuspendedStaffAlert from './ClubSuspendedStaffAlert/ClubSuspendedStaffAlert'
-import Head from 'next/head'
 import AccountInformationBanner
   from '../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
 import ClubConditionalPostDisplay from './ClubConditionalPostDisplay/ClubConditionalPostDisplay'
+import PublicClubRichObject from '../../../../../common/rich-objects/slug/PublicClubRichObject/PublicClubRichObject'
 
 interface Props {
   query: PreloadedQuery<PublicClubQuery>
@@ -27,8 +27,6 @@ const Query = graphql`
   query PublicClubQuery($slug: String!) {
     club(slug: $slug) {
       id
-      name
-      slug
       membersCount
       backgroundPost: posts(first: 1) {
         edges {
@@ -37,7 +35,6 @@ const Query = graphql`
               resource {
                 ...ResourceItemFragment
               }
-
             }
           }
         }
@@ -49,6 +46,7 @@ const Query = graphql`
       ...SupportClubButtonClubFragment
       ...ClubSuspendedStaffAlertFragment
       ...ClubConditionalPostDisplayFragment
+      ...PublicClubRichObjectFragment
     }
     viewer {
       ...JoinClubFromPageViewerFragment
@@ -74,11 +72,7 @@ export default function PublicClub (props: Props): JSX.Element {
 
   return (
     <>
-      <Head>
-        <title>
-          {queryData.club.name} on overdoll :: overdoll.com/{queryData.club.slug}
-        </title>
-      </Head>
+      <PublicClubRichObject query={queryData.club} />
       <AccountInformationBanner query={queryData.viewer} />
       <ClubSuspendedStaffAlert query={queryData?.club} />
       <Stack spacing={8}>

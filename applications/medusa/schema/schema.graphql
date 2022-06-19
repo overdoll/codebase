@@ -1886,7 +1886,7 @@ type Club implements Node {
   termination: ClubTermination
 
   """A URL pointing to the object's thumbnail."""
-  thumbnail(size: Int): Resource
+  thumbnail: Resource
 
   """Month-by-month transaction metrics of this club."""
   transactionMetrics(

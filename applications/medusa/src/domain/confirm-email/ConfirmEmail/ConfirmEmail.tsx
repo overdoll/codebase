@@ -69,7 +69,7 @@ const ConfirmEmail: PageProps<{}> = (): JSX.Element => {
     <>
       <Head>
         <title>
-          Confirming Email... :: overdoll
+          Confirming your email - overdoll
         </title>
       </Head>
       <Flex

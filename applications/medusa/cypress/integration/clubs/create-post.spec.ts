@@ -115,7 +115,7 @@ describe('Create & Manage Posts', () => {
      * Review step works and contains exclusive supporter content
      */
     isOnStep('review')
-    cy.findByText('Exclusive Supporter Content').should('be.visible')
+    cy.findByText(/Exclusive Supporter Content/iu).should('be.visible')
 
     /**
      * Refresh page to check that everything has saved correctly

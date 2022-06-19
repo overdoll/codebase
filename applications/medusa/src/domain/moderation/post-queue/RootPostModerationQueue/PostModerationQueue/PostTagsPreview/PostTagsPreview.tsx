@@ -24,7 +24,7 @@ export default function PostTagsPreview ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   return (
-    <Stack spacing={2}>
+    <Stack mt={2} spacing={2}>
       <Flex direction='column'>
         <Heading mb={1} fontSize='md' color='gray.300'>
           <Trans>

@@ -51,7 +51,7 @@ describe('Payouts', () => {
      */
     clickOnPanel('Payout Method')
     cy.url().should('include', '/settings/payouts/method')
-    cy.findByText('Read Agreement').should('be.visible')
+    cy.findByText('Platform Agreement').should('be.visible')
     clickOnToggle(/I fully understand the information provided/iu, true)
     clickOnButton('Next')
     cy.findByText(/Paxum is an E-wallet/iu).click()

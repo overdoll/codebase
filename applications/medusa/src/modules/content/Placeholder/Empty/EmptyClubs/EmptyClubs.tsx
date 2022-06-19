@@ -1,12 +1,15 @@
 import { Trans } from '@lingui/react'
-
 import EmptyBackground, { HintProp } from '../EmptyBackground/EmptyBackground'
+import { ClubPeopleGroup } from '@//:assets/icons'
 
 export default function EmptyClubs ({ hint }: HintProp): JSX.Element {
   const emptyMessage = (
-    <Trans values={{}} components={{}} id='message.placeholder.empty.clubs.one'>No clubs were
-      found
-    </Trans>
+    <Trans
+      id='message.placeholder.empty.clubs.one'
+      message='No clubs were found'
+      values={{}}
+      components={{}}
+    />
   )
 
   const fullMessage = (
@@ -19,7 +22,7 @@ export default function EmptyClubs ({ hint }: HintProp): JSX.Element {
   )
 
   return (
-    <EmptyBackground>
+    <EmptyBackground icon={ClubPeopleGroup}>
       {hint == null ? emptyMessage : fullMessage}
     </EmptyBackground>
   )

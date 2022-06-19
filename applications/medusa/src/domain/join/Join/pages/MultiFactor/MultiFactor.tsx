@@ -48,7 +48,7 @@ export default function MultiFactor ({ queryRef }: Props): JSX.Element {
   return (
     <>
       <Head>
-        <title>Two-Factor Authentication :: overdoll</title>
+        <title>Two-Factor Authentication - overdoll</title>
       </Head>
       <Flex align='center' justify='center' h='100%' position='relative'>
         <FlowBuilder

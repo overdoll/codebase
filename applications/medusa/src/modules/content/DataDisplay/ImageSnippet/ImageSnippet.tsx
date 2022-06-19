@@ -4,7 +4,7 @@ import type { ImageSnippetFragment$key } from '@//:artifacts/ImageSnippetFragmen
 import NextImage from '../NextImage/NextImage'
 import { ImageProps } from 'next/image'
 import { useState } from 'react'
-import { Flex } from '@chakra-ui/react'
+import { Box, Flex } from '@chakra-ui/react'
 import ImageError from '../NextImage/ImageError/ImageError'
 
 interface Props extends Omit<ImageProps, 'src' | 'width' | 'height' | 'layout' | 'alt'> {
@@ -34,19 +34,28 @@ export default function ImageSnippet ({
 
   const errorLimit = data?.urls.length ?? 0
 
+  const determineCover = cover === true || (data?.width == null && data?.height == null)
+
+  const previewBackground = data?.preview != null && data?.preview !== '' ? data?.preview : 'gray.800'
+
+  const tiniestImage = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+
   const IMAGE_PROPS = {
-    alt: 'thumbnail',
-    width: cover === true ? undefined : data?.width,
-    height: cover === true ? undefined : data?.height,
-    layout: cover === true ? 'fill' : 'intrinsic' as any,
-    objectFit: 'cover' as any,
-    objectPosition: '50% 50%'
+    alt: '',
+    layout: determineCover ? 'fill' : 'responsive' as any,
+    width: determineCover ? undefined : data?.width,
+    height: determineCover ? undefined : data?.height,
+    objectFit: determineCover ? 'cover' : undefined as any,
+    style: {
+      backgroundColor: previewBackground,
+      userSelect: 'none' as any
+    }
   }
 
   const displayUrl = (currentErrorCount): string => {
     if (currentErrorCount >= errorLimit || data?.urls == null) {
       // return tiniest 1x1 base64 image as fallback because nextjs image doesn't like empty src values
-      return 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+      return tiniestImage
     }
 
     return data?.urls[errorCount].url
@@ -58,27 +67,36 @@ export default function ImageSnippet ({
 
   if (errorCount >= errorLimit) {
     return (
-      <Flex h='100%'>
-        <ImageError />
-      </Flex>
+      <Box w='100%' h='100%'>
+        <Box
+          bg={previewBackground}
+          position={determineCover ? 'relative' : 'static'}
+          display='block'
+          w='100%'
+          h='100%'
+        >
+          <NextImage
+            {...IMAGE_PROPS}
+            src={tiniestImage}
+            {...rest}
+          />
+        </Box>
+        <Flex top={0} right={0} w='100%' h='100%' position='absolute' align='center' justify='center'>
+          <ImageError />
+        </Flex>
+      </Box>
+
     )
   }
 
   return (
-    <Flex
-      w='100%'
-      h='100%'
-      position={cover === true ? 'relative' : 'static'}
-    >
+    <Box position={determineCover ? 'relative' : 'static'} w='100%' h='100%' display='block'>
       <NextImage
         {...IMAGE_PROPS}
-        style={{
-          backgroundColor: data?.preview != null && data?.preview !== '' ? data?.preview : 'none'
-        }}
         src={displayUrl(errorCount)}
         onErrorCapture={onErrorCapture}
         {...rest}
       />
-    </Flex>
+    </Box>
   )
 }

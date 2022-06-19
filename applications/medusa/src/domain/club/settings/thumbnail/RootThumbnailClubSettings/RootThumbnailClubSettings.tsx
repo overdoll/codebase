@@ -31,7 +31,7 @@ const RootThumbnailClubSettings: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Thumbnail - Club Settings :: overdoll.com
+          Club Thumbnail Settings - overdoll
         </title>
       </Head>
       <PageWrapper>

@@ -30,7 +30,7 @@ const RootSubscriptionsSettings: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          My Subscriptions - Billing - Settings :: overdoll.com
+          My Subscriptions - overdoll
         </title>
       </Head>
       <PageWrapper>

@@ -2,9 +2,7 @@ import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { usePaginationFragment } from 'react-relay'
 import { ClubPostsQuery } from '@//:artifacts/ClubPostsQuery.graphql'
 import { GridTile, GridWrap, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
-import { Trans } from '@lingui/macro'
-import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
-import { EmptyBoundary, NotFoundClub } from '@//:modules/content/Placeholder'
+import { EmptyBoundary, EmptyPosts, NotFoundClub } from '@//:modules/content/Placeholder'
 import DraftPost from './DraftPost/DraftPost'
 import PublishedPost from './PublishedPost/PublishedPost'
 import PostPreviewContent from '@//:modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
@@ -82,12 +80,7 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
     <>
       <ClubInformationBanner query={queryData.club} />
       <EmptyBoundary
-        fallback={(
-          <SmallBackgroundBox>
-            <Trans>
-              No posts found
-            </Trans>
-          </SmallBackgroundBox>)}
+        fallback={<EmptyPosts />}
         condition={data?.posts?.edges.length < 1}
       >
         <GridWrap>

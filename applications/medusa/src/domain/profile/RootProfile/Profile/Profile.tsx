@@ -58,7 +58,7 @@ export default function Profile (props: Props): JSX.Element {
     <>
       <Head>
         <title>
-          {queryData.account.username}'s Profile :: overdoll.com
+          {queryData.account.username}'s Profile - overdoll
         </title>
       </Head>
       <Stack spacing={8}>
@@ -78,7 +78,7 @@ export default function Profile (props: Props): JSX.Element {
                   h={16}
                   query={queryData?.account?.avatar}
                 />
-                <Heading color='gray.00' fontSize='4xl'>
+                <Heading fontFamily='mono' color='gray.00' fontSize='4xl'>
                   {queryData?.account?.username}
                 </Heading>
               </Stack>

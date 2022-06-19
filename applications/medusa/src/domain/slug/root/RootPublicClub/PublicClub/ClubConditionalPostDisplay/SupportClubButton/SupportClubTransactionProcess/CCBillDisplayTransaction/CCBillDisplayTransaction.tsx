@@ -190,6 +190,14 @@ export default function CCBillDisplayTransaction ({
                 {queryData.ccbillTransactionDetails.declineText}
               </Text>
             </HStack>
+            <Text
+              fontSize='sm'
+              color='gray.200'
+            >
+              <Trans>
+                Please email hello@overdoll.com if you continue to experience billing issues
+              </Trans>
+            </Text>
           </Stack>
         </Box>
         <Button onClick={onCancel} size='lg' colorScheme='orange'>
@@ -221,11 +229,18 @@ export default function CCBillDisplayTransaction ({
           <Text textAlign='center' fontSize='md' color='gray.100'>
             <Trans>
               We received your payment, but weren't able to issue your club benefits in a reasonable amount of time.
-              Try
-              refreshing the page or coming back in a few minutes and you should see your club benefits!
+              Try refreshing the page or coming back in a few minutes and you should see your club benefits!
             </Trans>
           </Text>
         </Box>
+        <Text
+          fontSize='md'
+          color='gray.200'
+        >
+          <Trans>
+            Please email hello@overdoll.com if you continue to experience issues with receiving your club benefits
+          </Trans>
+        </Text>
         <Button onClick={onComplete} size='lg' colorScheme='orange'>
           <Trans>
             Close

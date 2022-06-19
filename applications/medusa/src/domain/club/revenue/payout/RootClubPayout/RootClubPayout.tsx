@@ -36,7 +36,7 @@ const RootClubPayout: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Payout Information :: overdoll.com
+          Payout Information - overdoll
         </title>
       </Head>
       <PageWrapper>
