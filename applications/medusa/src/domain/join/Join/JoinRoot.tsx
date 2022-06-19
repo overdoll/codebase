@@ -63,7 +63,7 @@ const JoinRoot: PageProps<Props> = (props: Props): JSX.Element => {
 
   const [cookies] = useCookies<string>(['token'])
 
-  const [cookieToken, setCookieToken] = useState<string>('')
+  const [cookieToken] = useState<string>(cookies.token != null ? cookies.token.split(';')[0] : '')
 
   const ref = usePreloadedQuery<JoinRootQuery>(JoinTokenStatus, queryRef as PreloadedQuery<JoinRootQuery>)
 
