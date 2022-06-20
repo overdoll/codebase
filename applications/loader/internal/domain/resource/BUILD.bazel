@@ -8,6 +8,7 @@ go_library(
         "move.go",
         "repository.go",
         "resource.go",
+        "upload.go",
     ],
     importpath = "overdoll/applications/loader/internal/domain/resource",
     visibility = ["//applications/loader:__subpackages__"],

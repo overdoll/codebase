@@ -1,10 +1,8 @@
 package workflows
 
 import (
-	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/loader/internal/app/workflows/activities"
-	"overdoll/libraries/errors"
 	"time"
 )
 
@@ -44,35 +42,28 @@ func ProcessResources(ctx workflow.Context, input ProcessResourcesInput) error {
 			}
 		}
 
+		if input.IsNotFound {
+			break
+		}
+
+		var sendCallbackPayload *activities.SendCallbackPayload
+
 		if err := workflow.ExecuteActivity(ctx, a.SendCallback,
 			activities.SendCallbackInput{
 				ItemId:      input.ItemId,
 				ResourceIds: input.ResourceIds,
 				Source:      input.Source,
 			},
-		).Get(ctx, nil); err != nil {
-
-			var applicationErr *temporal.ApplicationError
-			if errors.As(err, &applicationErr) {
-				switch applicationErr.Type() {
-				case "ErrorResourceCallbackNotFound":
-
-					// on second try, if we get another not found error, we break out
-					if i == 1 {
-						input.IsNotFound = true
-						break
-					}
-
-					continue
-				}
-			}
-
+		).Get(ctx, &sendCallbackPayload); err != nil {
 			logger.Error("failed to send callback", "Error", err)
 			return err
 		}
 
-		// if we get here, break out of loop and finish
-		break
+		if sendCallbackPayload.NotFound {
+			if i == 1 {
+				input.IsNotFound = true
+			}
+		}
 	}
 
 	return nil
