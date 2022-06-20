@@ -79,8 +79,8 @@ msgid "Club is currently locked and access is limited"
 msgstr ""
 
 #: src/common/components/ClubInformationBanner/TerminatedClubBanner/TerminatedClubBanner.tsx:37
-msgid "Club was terminated by {0}. Goodbye."
-msgstr ""
+#~ msgid "Club was terminated by {0}. Goodbye."
+#~ msgstr ""
 
 #: src/modules/hooks/useCopyToClipboardWrapper.ts:23
 msgid "Copied to clipboard!"
@@ -550,6 +550,10 @@ msgstr ""
 
 #: src/modules/content/Placeholder/NotFound/NotFoundClub/NotFoundClub.tsx:10
 msgid "This club was not found"
+msgstr ""
+
+#: src/common/components/ClubInformationBanner/TerminatedClubBanner/TerminatedClubBanner.tsx:19
+msgid "This club was terminated and will not be visible to the public anymore. Please contact hello@overdoll.com if this was done in error."
 msgstr ""
 
 #: src/modules/validation/translateValidation.ts:9

@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react'
-import { Box, Heading, Spinner, Text } from '@chakra-ui/react'
+import { Box, Heading, Spinner, Stack, Text } from '@chakra-ui/react'
 import { graphql, useMutation } from 'react-relay/hooks'
 import { useQueryParam } from 'use-query-params'
 import { PostPlaceholder } from '@//:modules/content/PageLayout'
@@ -78,8 +78,10 @@ export default function CreatePostFlow ({ clubId }: Props): JSX.Element {
   if (isCreatingPost) {
     return (
       <PostPlaceholder>
-        <Spinner mb={6} thickness='4px' w={12} h={12} color='primary.500' />
-        <Text color='gray.100'><Trans>Creating your post...</Trans></Text>
+        <Stack spacing={6}>
+          <Spinner thickness='4px' w={12} h={12} color='primary.500' />
+          <Text color='gray.100'><Trans>Creating your post...</Trans></Text>
+        </Stack>
       </PostPlaceholder>
     )
   }
@@ -88,24 +90,26 @@ export default function CreatePostFlow ({ clubId }: Props): JSX.Element {
     <FilePicker uppy={uppy}>
       <DragOverFileInput uppy={uppy}>
         <PostPlaceholder>
-          <Icon
-            w={12}
-            h={12}
-            icon={FileUpload}
-            fill='teal.300'
-          />
-          <Box>
-            <Heading color='gray.00' fontSize='4xl'>
-              <Trans>
-                Upload Files
-              </Trans>
-            </Heading>
-            <Text color='gray.200'>
-              <Trans>
-                Upload one or more files by dragging and dropping them or by tapping here
-              </Trans>
-            </Text>
-          </Box>
+          <Stack spacing={6}>
+            <Icon
+              w={12}
+              h={12}
+              icon={FileUpload}
+              fill='teal.300'
+            />
+            <Box>
+              <Heading color='gray.00' fontSize='4xl'>
+                <Trans>
+                  Upload Files
+                </Trans>
+              </Heading>
+              <Text color='gray.200'>
+                <Trans>
+                  Upload one or more files by dragging and dropping them or by tapping here
+                </Trans>
+              </Text>
+            </Box>
+          </Stack>
         </PostPlaceholder>
       </DragOverFileInput>
     </FilePicker>

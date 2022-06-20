@@ -49,7 +49,7 @@ msgstr ""
 msgid "Cannot upload while rearranging"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/components/ClubRestricted/ClubRestricted.tsx:28
+#: src/domain/club/create-post/CreatePost/components/ClubRestricted/ClubRestricted.tsx:29
 msgid "Club Restricted"
 msgstr ""
 
@@ -57,7 +57,7 @@ msgstr ""
 #~ msgid "Club Suspended"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:82
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:83
 msgid "Creating your post..."
 msgstr ""
 
@@ -126,11 +126,11 @@ msgstr ""
 msgid "Post Content Processed"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:49
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:52
 msgid "Post Submitted"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:39
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:41
 msgid "Post again"
 msgstr ""
 
@@ -202,7 +202,7 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:22
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:23
 msgid "Submitted For Review"
 msgstr ""
 
@@ -210,7 +210,7 @@ msgstr ""
 msgid "Supporter Only"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:27
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:28
 msgid "Thanks for posting! Your submission will be reviewed by our moderation team to ensure it does not violate any club guidelines. Once approved, it will be visible to the public."
 msgstr ""
 
@@ -262,11 +262,11 @@ msgstr ""
 msgid "Up"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:99
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:102
 msgid "Upload Files"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:104
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:107
 msgid "Upload one or more files by dragging and dropping them or by tapping here"
 msgstr ""
 
@@ -303,7 +303,7 @@ msgstr ""
 msgid "Yes, exit"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/components/ClubRestricted/ClubRestricted.tsx:33
+#: src/domain/club/create-post/CreatePost/components/ClubRestricted/ClubRestricted.tsx:34
 msgid "You cannot post at this time due to a restriction on your club"
 msgstr ""
 
@@ -319,7 +319,7 @@ msgstr ""
 #~ msgid "You'll need to upload at least one file to continue"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:54
+#: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:57
 msgid "Your post is now visible to the public"
 msgstr ""
 

@@ -17,6 +17,9 @@ const Fragment = graphql`
     suspension {
       expires
     }
+    termination {
+      __typename
+    }
   }
 `
 
@@ -48,6 +51,29 @@ export default function ClubSuspendedStaffAlert ({ query }: Props): JSX.Element 
                       The suspension expires in {remaining}.
                     </Trans>
                     )}
+              </AlertDescription>
+            </HStack>
+            <LinkButton
+              size='sm'
+              colorScheme='orange'
+              variant='solid'
+              href={`/staff/club/${data.slug}`}
+            >
+              <Trans>
+                Manage
+              </Trans>
+            </LinkButton>
+          </HStack>
+        </Alert>)}
+      {data.termination != null && (
+        <Alert mb={2} status='warning'>
+          <HStack spacing={4} justify='space-between'>
+            <HStack>
+              <AlertIcon />
+              <AlertDescription>
+                <Trans>
+                  This club is currently terminated. Only staff can see this page.
+                </Trans>
               </AlertDescription>
             </HStack>
             <LinkButton

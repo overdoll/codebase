@@ -70,7 +70,7 @@ export default function Profile (props: Props): JSX.Element {
                 query={null}
               />)}
           >
-            <Flex h='100%' w='100%' align='center' justify='center' position='relative'>
+            <Flex p={2} h='100%' w='100%' align='center' justify='center' position='relative'>
               <Stack align='center' p={4} spacing={2}>
                 <ResourceIcon
                   seed={queryData?.account?.id}
@@ -82,7 +82,7 @@ export default function Profile (props: Props): JSX.Element {
                   {queryData?.account?.username}
                 </Heading>
               </Stack>
-              <Flex top={0} right={0} position='absolute'>
+              <Flex top={2} right={2} position='absolute'>
                 <ProfileMenu query={queryData?.account} />
               </Flex>
             </Flex>
