@@ -5,6 +5,7 @@ go 1.17
 require (
 	github.com/99designs/gqlgen v0.17.9
 	github.com/CapsLock-Studio/go-webpbin v0.0.0-20210717145055-bd2f105d3ee0
+	github.com/EdlinOrg/prominentcolor v1.0.0
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/aws/aws-sdk-go v1.42.52
 	github.com/bazelbuild/rules_go v0.27.0
@@ -27,7 +28,6 @@ require (
 	github.com/hashicorp/go-plugin v1.4.4
 	github.com/joho/godotenv v1.3.0
 	github.com/jung-kurt/gofpdf v1.16.2
-	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
 	github.com/olivere/elastic/v7 v7.0.31
 	github.com/oschwald/geoip2-golang v1.5.0
 	github.com/pkg/errors v0.9.1
@@ -57,7 +57,6 @@ require (
 )
 
 require (
-	github.com/EdlinOrg/prominentcolor v1.0.0 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/andybalholm/cascadia v1.3.1 // indirect
 	github.com/benbjohnson/clock v1.3.0 // indirect
@@ -101,6 +100,7 @@ require (
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
+	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
 	github.com/nickalie/go-binwrapper v0.0.0-20190114141239-525121d43c84 // indirect
 	github.com/nwaples/rardecode v1.1.1 // indirect
 	github.com/oklog/run v1.1.0 // indirect

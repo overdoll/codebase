@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<39debea0dd738d26eb0da0f716c1f8fc>>
- * @relayHash eeb02380da718645e747767d06aa1cda
+ * @generated SignedSource<<fa44930494eb36300c8003ee9b9e393b>>
+ * @relayHash c18794748b3b17d7bcf6f6548b7b8e50
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID eeb02380da718645e747767d06aa1cda
+// @relayRequestID c18794748b3b17d7bcf6f6548b7b8e50
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -63,6 +63,11 @@ v3 = [
     "kind": "Variable",
     "name": "name",
     "variableName": "search"
+  },
+  {
+    "kind": "Literal",
+    "name": "terminated",
+    "value": false
   }
 ],
 v4 = {
@@ -359,7 +364,8 @@ return {
         "alias": null,
         "args": (v3/*: any*/),
         "filters": [
-          "name"
+          "name",
+          "terminated"
         ],
         "handle": "connection",
         "key": "SuggestedClubs_clubs",
@@ -369,7 +375,7 @@ return {
     ]
   },
   "params": {
-    "id": "eeb02380da718645e747767d06aa1cda",
+    "id": "c18794748b3b17d7bcf6f6548b7b8e50",
     "metadata": {},
     "name": "SuggestedClubsPaginationQuery",
     "operationKind": "query",
@@ -378,6 +384,6 @@ return {
 };
 })();
 
-(node as any).hash = "493eea8479af22f175a0e4a2393572f6";
+(node as any).hash = "ae61998b5235311fc0811fbcbf622ef6";
 
 export default node;

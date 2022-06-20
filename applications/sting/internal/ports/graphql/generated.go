@@ -431,7 +431,7 @@ type ComplexityRoot struct {
 		Character          func(childComplexity int, slug string, seriesSlug string) int
 		Characters         func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, seriesSlug *string, name *string, sortBy types.CharactersSort) int
 		Club               func(childComplexity int, slug string) int
-		Clubs              func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended bool, terminated bool, sortBy types.ClubsSort) int
+		Clubs              func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended *bool, terminated *bool, sortBy types.ClubsSort) int
 		Post               func(childComplexity int, reference string) int
 		Posts              func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) int
 		PostsFeed          func(childComplexity int, after *string, before *string, first *int, last *int) int
@@ -724,7 +724,7 @@ type QueryResolver interface {
 	Audience(ctx context.Context, slug string) (*types.Audience, error)
 	Characters(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, seriesSlug *string, name *string, sortBy types.CharactersSort) (*types.CharacterConnection, error)
 	Character(ctx context.Context, slug string, seriesSlug string) (*types.Character, error)
-	Clubs(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended bool, terminated bool, sortBy types.ClubsSort) (*types.ClubConnection, error)
+	Clubs(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended *bool, terminated *bool, sortBy types.ClubsSort) (*types.ClubConnection, error)
 	Club(ctx context.Context, slug string) (*types.Club, error)
 	PostsFeed(ctx context.Context, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
 	Post(ctx context.Context, reference string) (*types.Post, error)
@@ -2663,7 +2663,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Clubs(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["suspended"].(bool), args["terminated"].(bool), args["sortBy"].(types.ClubsSort)), true
+		return e.complexity.Query.Clubs(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["suspended"].(*bool), args["terminated"].(*bool), args["sortBy"].(types.ClubsSort)), true
 
 	case "Query.post":
 		if e.complexity.Query.Post == nil {
@@ -4339,16 +4339,20 @@ extend type Query {
     """
     Filter by all the clubs that are suspended.
 
-    Staff+ only for "true"
+    By default, will show all clubs that are suspended and terminated.
+
+    False to show all clubs that are not suspended and True to show only clubs that are suspended.
     """
-    suspended: Boolean! = false
+    suspended: Boolean
 
     """
     Filter by all the clubs that are terminated.
 
-    Staff+ only for "true"
+    By default, will show all terminated clubs.
+
+    False to show all clubs that are not terminated and True to show only clubs that are terminated.
     """
-    terminated: Boolean! = false
+    terminated: Boolean
 
     """Sorting options for clubs."""
     sortBy: ClubsSort! = POPULAR
@@ -7559,19 +7563,19 @@ func (ec *executionContext) field_Query_clubs_args(ctx context.Context, rawArgs 
 		}
 	}
 	args["name"] = arg5
-	var arg6 bool
+	var arg6 *bool
 	if tmp, ok := rawArgs["suspended"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("suspended"))
-		arg6, err = ec.unmarshalNBoolean2bool(ctx, tmp)
+		arg6, err = ec.unmarshalOBoolean2ᚖbool(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
 	args["suspended"] = arg6
-	var arg7 bool
+	var arg7 *bool
 	if tmp, ok := rawArgs["terminated"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("terminated"))
-		arg7, err = ec.unmarshalNBoolean2bool(ctx, tmp)
+		arg7, err = ec.unmarshalOBoolean2ᚖbool(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -19859,7 +19863,7 @@ func (ec *executionContext) _Query_clubs(ctx context.Context, field graphql.Coll
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Clubs(rctx, fc.Args["after"].(*string), fc.Args["before"].(*string), fc.Args["first"].(*int), fc.Args["last"].(*int), fc.Args["slugs"].([]string), fc.Args["name"].(*string), fc.Args["suspended"].(bool), fc.Args["terminated"].(bool), fc.Args["sortBy"].(types.ClubsSort))
+		return ec.resolvers.Query().Clubs(rctx, fc.Args["after"].(*string), fc.Args["before"].(*string), fc.Args["first"].(*int), fc.Args["last"].(*int), fc.Args["slugs"].([]string), fc.Args["name"].(*string), fc.Args["suspended"].(*bool), fc.Args["terminated"].(*bool), fc.Args["sortBy"].(types.ClubsSort))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

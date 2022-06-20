@@ -27,7 +27,7 @@ const Fragment = graphql`
     after: {type: String}
   )
   @refetchable(queryName: "SuggestedClubsPaginationQuery" ) {
-    clubs (first: $first, after: $after, name: $search)
+    clubs (first: $first, after: $after, name: $search, terminated: false)
     @connection (key: "SuggestedClubs_clubs") {
       edges {
         node {

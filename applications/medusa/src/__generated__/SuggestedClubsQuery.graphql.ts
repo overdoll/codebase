@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<bb72fb8971906354331b9719b64b8692>>
- * @relayHash df4b012ed833497ad9ba409d657ac9f4
+ * @generated SignedSource<<55e6d37c893ba1cdefae177edb2c800e>>
+ * @relayHash 72485ed8a7c0689942e19a42b02ae7e8
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID df4b012ed833497ad9ba409d657ac9f4
+// @relayRequestID 72485ed8a7c0689942e19a42b02ae7e8
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -47,6 +47,11 @@ v1 = [
     "kind": "Variable",
     "name": "name",
     "variableName": "search"
+  },
+  {
+    "kind": "Literal",
+    "name": "terminated",
+    "value": false
   }
 ],
 v2 = {
@@ -356,7 +361,8 @@ return {
         "alias": null,
         "args": (v1/*: any*/),
         "filters": [
-          "name"
+          "name",
+          "terminated"
         ],
         "handle": "connection",
         "key": "SuggestedClubs_clubs",
@@ -392,7 +398,7 @@ return {
     ]
   },
   "params": {
-    "id": "df4b012ed833497ad9ba409d657ac9f4",
+    "id": "72485ed8a7c0689942e19a42b02ae7e8",
     "metadata": {},
     "name": "SuggestedClubsQuery",
     "operationKind": "query",

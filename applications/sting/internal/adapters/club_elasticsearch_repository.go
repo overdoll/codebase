@@ -121,11 +121,11 @@ func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, r
 		}
 	}
 
-	if filter.Suspended() != nil && *filter.Suspended() {
+	if filter.Suspended() != nil {
 		query.Filter(elastic.NewTermQuery("suspended", *filter.Suspended()))
 	}
 
-	if filter.Terminated() != nil && *filter.Suspended() {
+	if filter.Terminated() != nil {
 		query.Filter(elastic.NewTermQuery("terminated", *filter.Terminated()))
 	}
 
