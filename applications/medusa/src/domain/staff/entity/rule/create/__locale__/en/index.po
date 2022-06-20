@@ -34,6 +34,10 @@ msgstr ""
 msgid "Error creating rule {0}"
 msgstr ""
 
+#: src/domain/staff/entity/rule/create/RootStaffCreateRule/StaffCreateRule/CreateRuleForm/CreateRuleForm.tsx:79
+msgid "Rule \"{0}\" was created successfully"
+msgstr ""
+
 #: src/domain/staff/entity/rule/create/RootStaffCreateRule/StaffCreateRule/CreateRuleForm/CreateRuleForm.tsx:115
 msgid "Rule Description"
 msgstr ""
@@ -47,5 +51,5 @@ msgid "Rule Title"
 msgstr ""
 
 #: src/domain/staff/entity/rule/create/RootStaffCreateRule/StaffCreateRule/CreateRuleForm/CreateRuleForm.tsx:79
-msgid "Rule {0} was created successfully"
-msgstr ""
+#~ msgid "Rule {0} was created successfully"
+#~ msgstr ""

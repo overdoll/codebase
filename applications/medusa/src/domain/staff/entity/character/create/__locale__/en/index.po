@@ -13,6 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/domain/staff/entity/character/create/RootStaffCreateCharacter/StaffCreateCharacter/CreateCharacterForm/CreateCharacterForm.tsx:89
+msgid "Character \"{0}\" was created successfully"
+msgstr ""
+
 #: src/domain/staff/entity/character/create/RootStaffCreateCharacter/StaffCreateCharacter/CreateCharacterForm/CreateCharacterForm.tsx:116
 msgid "Character Name"
 msgstr ""
@@ -26,8 +30,8 @@ msgid "Character Slug"
 msgstr ""
 
 #: src/domain/staff/entity/character/create/RootStaffCreateCharacter/StaffCreateCharacter/CreateCharacterForm/CreateCharacterForm.tsx:89
-msgid "Character {0} was created successfully"
-msgstr ""
+#~ msgid "Character {0} was created successfully"
+#~ msgstr ""
 
 #: src/domain/staff/entity/character/create/RootStaffCreateCharacter/RootStaffCreateCharacter.tsx:35
 #: src/domain/staff/entity/character/create/RootStaffCreateCharacter/StaffCreateCharacter/CreateCharacterForm/CreateCharacterForm.tsx:156
