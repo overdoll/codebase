@@ -32,7 +32,7 @@ const RootStaffViewAudience: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          View Audience - Staff :: overdoll.com
+          View Audience - Staff · overdoll.com
         </title>
       </Head>
       <PageWrapper>

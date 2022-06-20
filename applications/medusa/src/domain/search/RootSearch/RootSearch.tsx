@@ -9,10 +9,10 @@ import useGeneralSearchArguments
   from '@//:modules/content/Posts/components/PostNavigation/PostsSearch/support/useGeneralSearchArguments'
 import { PostOrderButton, PostSearchButton } from '@//:modules/content/Posts/components/PostNavigation/PostsSearch'
 import { Heading, HStack, Stack } from '@chakra-ui/react'
-import Head from 'next/head'
 import { PageProps } from '@//:types/app'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
+import RootSearchRichObject from '../../../common/rich-objects/search/RootSearchRichObject/RootSearchRichObject'
 
 interface Props {
   queryRefs: {
@@ -30,11 +30,7 @@ const RootSearch: PageProps<Props> = (props: Props) => {
 
   return (
     <>
-      <Head>
-        <title>
-          Search :: overdoll.com
-        </title>
-      </Head>
+      <RootSearchRichObject />
       <PageWrapper>
         <Stack spacing={8}>
           <Stack spacing={2}>

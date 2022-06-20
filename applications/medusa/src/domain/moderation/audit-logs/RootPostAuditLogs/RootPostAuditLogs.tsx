@@ -28,7 +28,7 @@ const RootPostAuditLogs: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Post Audit Logs - Moderation :: overdoll.com
+          Post Audit Logs - Moderation - overdoll
         </title>
       </Head>
       <PageWrapper>

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2f076a1dcc2b8fb5564c9bbae7bad82f>>
+ * @generated SignedSource<<e9e0d64824a71cce5d97015ea51e878d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,8 +12,11 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ModeratePostFragment$data = {
   readonly id: string;
-  readonly club: {
-    readonly name: string;
+  readonly post: {
+    readonly id: string;
+    readonly club: {
+      readonly name: string;
+    };
   };
   readonly " $fragmentType": "ModeratePostFragment";
 };
@@ -23,42 +26,57 @@ export type ModeratePostFragment$key = {
   readonly " $fragmentSpreads": FragmentRefs<"ModeratePostFragment">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
   "name": "ModeratePostFragment",
   "selections": [
+    (v0/*: any*/),
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "Club",
+      "concreteType": "Post",
       "kind": "LinkedField",
-      "name": "club",
+      "name": "post",
       "plural": false,
       "selections": [
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
-          "kind": "ScalarField",
-          "name": "name",
+          "concreteType": "Club",
+          "kind": "LinkedField",
+          "name": "club",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "name",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         }
       ],
       "storageKey": null
     }
   ],
-  "type": "Post",
+  "type": "PostModerator",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "a4e30de4c2f8f821ce71cea9dbcd4239";
+(node as any).hash = "4508fdab7f79e2e29525d427f948e270";
 
 export default node;

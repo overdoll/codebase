@@ -13,6 +13,6 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/slug/posts/RootPublicClubPosts/RootPublicClubPosts.tsx:54
+#: src/domain/slug/posts/RootPublicClubPosts/RootPublicClubPosts.tsx:50
 msgid "Club Posts Search"
 msgstr ""

@@ -7,7 +7,7 @@ import Home from './Home/Home'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
 import { PageProps } from '@//:types/app'
 import { PageWrapper } from '@//:modules/content/PageLayout'
-import Head from 'next/head'
+import RootHomeRichObject from '../../../common/rich-objects/home/RootHomeRichObject/RootHomeRichObject'
 
 interface Props {
   queryRefs: {
@@ -23,9 +23,7 @@ const RootHome: PageProps<Props> = (props: Props): JSX.Element => {
 
   return (
     <>
-      <Head>
-        <title>Find Your Club - overdoll.com</title>
-      </Head>
+      <RootHomeRichObject />
       <PageWrapper>
         <QueryErrorBoundary loadQuery={() => loadQuery({})}>
           <Suspense fallback={<SkeletonPost />}>

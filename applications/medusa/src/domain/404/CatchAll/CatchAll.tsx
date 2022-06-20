@@ -16,7 +16,7 @@ const CatchAll: PageProps<{}> = (): JSX.Element => {
     <>
       <Head>
         <title>
-          Not Found :: overdoll
+          Not found - overdoll
         </title>
       </Head>
       <PageWrapper>

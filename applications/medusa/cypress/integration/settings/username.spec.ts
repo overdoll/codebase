@@ -13,7 +13,7 @@ describe('Username Settings', () => {
     cy.url().should('include', '/settings/profile/username')
     clickOnButton(/Change Username/iu)
     const [newUsername] = generateUsernameAndEmail()
-    cy.get('form').findByPlaceholderText('Enter a new username').should('be.visible').type(newUsername)
+    cy.get('form').findByPlaceholderText('Enter a new username').should('be.visible').type(newUsername, { force: true })
     cy.findByRole('button', { name: /Submit/iu }).should('not.be.disabled').click()
     cy.findByRole('button', { name: /Yes, change/iu }).should('not.be.disabled').click()
     cy.waitUntil(() => cy.findAllByText(new RegExp(newUsername, 'iu')).should('exist'))

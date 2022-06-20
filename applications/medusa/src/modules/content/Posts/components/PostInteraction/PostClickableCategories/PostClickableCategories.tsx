@@ -39,7 +39,7 @@ export default function PostClickableCategories ({ query }: Props): JSX.Element 
   }
 
   return (
-    <Wrap>
+    <Wrap overflow='show'>
       {data?.categories.map((item, index) =>
         <WrapItem key={index}>
           <ClickableBox onClick={() => onClick(item)} variant='ghost' bg='transparent' borderRadius='xl' p={0}>

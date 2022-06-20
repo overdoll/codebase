@@ -32,7 +32,7 @@ const RootPostReports: PageProps<{}> = () => {
     <>
       <Head>
         <title>
-          Post Reports - Moderation :: overdoll.com
+          Post Reports - Moderation - overdoll
         </title>
       </Head>
       <PageWrapper>

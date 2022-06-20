@@ -31,7 +31,7 @@ const RootAliasesClubSettings: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Aliases - Club Settings :: overdoll.com
+          Club Alias Settings - overdoll
         </title>
       </Head>
       <PageWrapper>

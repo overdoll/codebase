@@ -5,9 +5,9 @@ import { LinkTile } from '@//:modules/content/ContentSelection'
 
 export default function SiteLinkLogo (): JSX.Element {
   return (
-    <LinkTile h={12} href='/'>
-      <HStack align='center' justify='center'>
-        <Icon icon={OverdollLogo} fill='primary.400' w={10} h={10} />
+    <LinkTile h={8} href='/'>
+      <HStack spacing={1} align='center' justify='center'>
+        <Icon icon={OverdollLogo} fill='primary.400' w={8} h={8} />
         <Flex direction='column' align='center'>
           <Heading fontSize='sm' color='primary.400'>
             overdoll

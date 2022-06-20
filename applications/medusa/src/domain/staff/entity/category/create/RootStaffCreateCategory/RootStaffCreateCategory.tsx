@@ -27,7 +27,7 @@ const RootStaffCreateCategory: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Create Category - Staff :: overdoll.com
+          Create Category - Staff · overdoll.com
         </title>
       </Head>
       <PageWrapper>

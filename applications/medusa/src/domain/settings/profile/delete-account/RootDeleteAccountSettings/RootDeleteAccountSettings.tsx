@@ -30,7 +30,7 @@ const RootDeleteAccountSettings: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Delete Account - Profile - Settings :: overdoll.com
+          Delete Account - overdoll
         </title>
       </Head>
       <PageWrapper>

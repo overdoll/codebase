@@ -83,7 +83,7 @@ export default function CreateCategoryForm ({
         }
         notify({
           status: 'success',
-          title: t`Category ${formValues.title} was created successfully`
+          title: t`Category "${formValues.title}" was created successfully`
         })
       },
       onError (data) {

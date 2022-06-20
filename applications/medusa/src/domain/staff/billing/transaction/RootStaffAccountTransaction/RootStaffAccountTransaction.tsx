@@ -31,7 +31,7 @@ const RootStaffAccountTransaction: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Transaction - Staff :: overdoll.com
+          Transaction - Staff · overdoll.com
         </title>
       </Head>
       <PageWrapperDesktop>

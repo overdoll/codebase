@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5d529fce2b3ebd0bbf0107424f85baad>>
+ * @generated SignedSource<<177c90c48cacdcfa5119ac237893245b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,12 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PayoutMethodSetupFlowFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"ChoosePayoutMethodFragment">;
+  readonly details: {
+    readonly country: {
+      readonly " $fragmentSpreads": FragmentRefs<"ChoosePayoutMethodFragment">;
+    };
+  };
+  readonly " $fragmentSpreads": FragmentRefs<"SetupPayoutMethodFragment">;
   readonly " $fragmentType": "PayoutMethodSetupFlowFragment";
 };
 export type PayoutMethodSetupFlowFragment = PayoutMethodSetupFlowFragment$data;
@@ -27,15 +32,52 @@ const node: ReaderFragment = {
   "name": "PayoutMethodSetupFlowFragment",
   "selections": [
     {
+      "kind": "RequiredField",
+      "field": {
+        "alias": null,
+        "args": null,
+        "concreteType": "AccountDetails",
+        "kind": "LinkedField",
+        "name": "details",
+        "plural": false,
+        "selections": [
+          {
+            "kind": "RequiredField",
+            "field": {
+              "alias": null,
+              "args": null,
+              "concreteType": "Country",
+              "kind": "LinkedField",
+              "name": "country",
+              "plural": false,
+              "selections": [
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "ChoosePayoutMethodFragment"
+                }
+              ],
+              "storageKey": null
+            },
+            "action": "THROW",
+            "path": "details.country"
+          }
+        ],
+        "storageKey": null
+      },
+      "action": "THROW",
+      "path": "details"
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "ChoosePayoutMethodFragment"
+      "name": "SetupPayoutMethodFragment"
     }
   ],
-  "type": "Country",
+  "type": "Account",
   "abstractKey": null
 };
 
-(node as any).hash = "fc0a976be223248e5c19c71e302e3c51";
+(node as any).hash = "16413067a979aab630c63bf858ab56ba";
 
 export default node;

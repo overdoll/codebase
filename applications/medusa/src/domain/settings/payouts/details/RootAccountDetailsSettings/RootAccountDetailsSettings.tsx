@@ -30,7 +30,7 @@ const RootAccountDetailsSettings: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Details - Settings :: overdoll.com
+          Payout Details - overdoll
         </title>
       </Head>
       <PageWrapper>

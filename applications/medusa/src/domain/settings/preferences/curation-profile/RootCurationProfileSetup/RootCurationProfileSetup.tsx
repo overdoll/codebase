@@ -29,7 +29,7 @@ const RootMultiFactorTotpSetup: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Curation Profile - Preferences - Settings :: overdoll.com
+          Curation Profile - overdoll
         </title>
       </Head>
       <PageWrapper>

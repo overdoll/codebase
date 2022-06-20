@@ -47,7 +47,6 @@ export default function PostGalleryPublicSimple ({
           >
             <Flex
               direction='column'
-              bg='gray.800'
               w='100%'
               cursor='pointer'
               align='center'
@@ -70,7 +69,7 @@ export default function PostGalleryPublicSimple ({
                   }}
                   passHref
                 >
-                  <Box as='a'>
+                  <Box w='100%' h='100%' as='a'>
                     <PostMedia controls={{ canControl: false }} query={item.resource} />
                   </Box>
                 </Link>

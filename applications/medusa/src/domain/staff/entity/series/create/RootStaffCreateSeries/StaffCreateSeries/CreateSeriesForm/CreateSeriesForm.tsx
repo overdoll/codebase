@@ -83,7 +83,7 @@ export default function CreateSeriesForm ({
         }
         notify({
           status: 'success',
-          title: t`Series ${formValues.title} was created successfully`
+          title: t`Series "${formValues.title}" was created successfully`
         })
       },
       onError (data) {

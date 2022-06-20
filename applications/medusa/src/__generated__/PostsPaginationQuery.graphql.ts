@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8cb45114bc6187cd6f1083cbf87c8723>>
- * @relayHash 7689a8e6a9643ec716dd90d34641882a
+ * @generated SignedSource<<e17f7071008ac7cf9e65083fbe89282e>>
+ * @relayHash d6af561ac8672899662090eda7389086
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7689a8e6a9643ec716dd90d34641882a
+// @relayRequestID d6af561ac8672899662090eda7389086
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -234,6 +234,7 @@ return {
                         "name": "node",
                         "plural": false,
                         "selections": [
+                          (v4/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -243,6 +244,13 @@ return {
                             "plural": false,
                             "selections": [
                               (v4/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "postedAt",
+                                "storageKey": null
+                              },
                               {
                                 "alias": null,
                                 "args": null,
@@ -401,18 +409,10 @@ return {
                                 "plural": true,
                                 "selections": (v13/*: any*/),
                                 "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "postedAt",
-                                "storageKey": null
                               }
                             ],
                             "storageKey": null
                           },
-                          (v4/*: any*/),
                           (v3/*: any*/)
                         ],
                         "storageKey": null
@@ -451,18 +451,6 @@ return {
                       }
                     ],
                     "storageKey": null
-                  },
-                  {
-                    "kind": "ClientExtension",
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "__id",
-                        "storageKey": null
-                      }
-                    ]
                   }
                 ],
                 "storageKey": null
@@ -486,7 +474,7 @@ return {
     ]
   },
   "params": {
-    "id": "7689a8e6a9643ec716dd90d34641882a",
+    "id": "d6af561ac8672899662090eda7389086",
     "metadata": {},
     "name": "PostsPaginationQuery",
     "operationKind": "query",
@@ -495,6 +483,6 @@ return {
 };
 })();
 
-(node as any).hash = "7c425557c42abec81a42baa3e8e5f3af";
+(node as any).hash = "943b918e39d92c60dedc8bc916749273";
 
 export default node;

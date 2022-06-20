@@ -50,7 +50,7 @@ export default function ClubLayout ({ children }: Props): JSX.Element {
     <>
       <Head>
         <title>
-          Manage Club :: overdoll.com
+          Manage Club - overdoll.com
         </title>
       </Head>
       <VerticalNavigation>

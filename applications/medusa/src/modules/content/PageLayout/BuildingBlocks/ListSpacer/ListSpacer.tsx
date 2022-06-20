@@ -1,7 +1,7 @@
-import { Stack } from '@chakra-ui/react'
+import { Stack, StackProps } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 
-interface Props {
+interface Props extends StackProps {
   children: ReactNode
 }
 

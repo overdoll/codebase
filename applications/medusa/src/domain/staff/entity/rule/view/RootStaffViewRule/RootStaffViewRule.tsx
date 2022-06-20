@@ -32,7 +32,7 @@ const RootStaffViewRule: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          View Rule - Staff :: overdoll.com
+          View Rule - Staff · overdoll.com
         </title>
       </Head>
       <PageWrapper>

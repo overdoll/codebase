@@ -28,7 +28,7 @@ const RootUsernameSettings: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Username - Profile - Settings :: overdoll.com
+          Username Settings - overdoll
         </title>
       </Head>
       <PageWrapper>

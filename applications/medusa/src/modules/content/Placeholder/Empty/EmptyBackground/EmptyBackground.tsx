@@ -1,5 +1,6 @@
-import { Flex, Text } from '@chakra-ui/react'
-import { ReactNode } from 'react'
+import { Heading, Stack } from '@chakra-ui/react'
+import { FunctionComponent, ReactNode } from 'react'
+import { Icon } from '../../../PageLayout'
 
 export interface HintProp {
   hint?: string | undefined | null
@@ -7,14 +8,19 @@ export interface HintProp {
 
 interface Props {
   children: ReactNode
+  icon: FunctionComponent<any>
 }
 
-export default function EmptyBackground ({ children }: Props): JSX.Element {
+export default function EmptyBackground ({
+  children,
+  icon
+}: Props): JSX.Element {
   return (
-    <Flex px={4} py={4} bg='gray.800' borderRadius='md' h={100} justify='center' align='center'>
-      <Text color='gray.200' textAlign='center' fontSize='lg'>
+    <Stack spacing={3} px={4} py={8} bg='gray.800' borderRadius='md' justify='center' align='center'>
+      <Icon icon={icon} w={7} h={7} fill='gray.200' />
+      <Heading color='gray.200' textAlign='center' fontSize='lg'>
         {children}
-      </Text>
-    </Flex>
+      </Heading>
+    </Stack>
   )
 }

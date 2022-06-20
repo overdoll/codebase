@@ -21,8 +21,13 @@ interface Props {
 }
 
 const Fragment = graphql`
-  fragment PayoutMethodSetupFlowFragment on Country {
-    ...ChoosePayoutMethodFragment
+  fragment PayoutMethodSetupFlowFragment on Account {
+    details @required(action: THROW) {
+      country @required(action: THROW) {
+        ...ChoosePayoutMethodFragment
+      }
+    }
+    ...SetupPayoutMethodFragment
   }
 `
 
@@ -37,8 +42,8 @@ export default function PayoutMethodSetupFlow ({ query }: Props): JSX.Element {
 
   const components = {
     agreement: <AgreementPayoutMethod agree={agree} setAgree={setAgree} />,
-    method: <ChoosePayoutMethod query={data} />,
-    setup: <SetupPayoutMethod />
+    method: <ChoosePayoutMethod query={data.details.country} />,
+    setup: <SetupPayoutMethod query={data} />
   }
 
   const headers = {

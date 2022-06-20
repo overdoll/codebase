@@ -31,7 +31,7 @@ const RootSubscriptionsSettings: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Transaction History - Billing - Settings :: overdoll.com
+          Transaction History - overdoll
         </title>
       </Head>
       <PageWrapper>

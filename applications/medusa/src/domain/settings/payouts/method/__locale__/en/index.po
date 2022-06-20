@@ -21,7 +21,8 @@ msgstr ""
 msgid "Country Not Supported"
 msgstr ""
 
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:107
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:38
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:66
 msgid "Create an account and get verified"
 msgstr ""
 
@@ -33,8 +34,8 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:131
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:161
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetPaxumAccountPayoutMethodForm/SetPaxumAccountPayoutMethodForm.tsx:103
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:103
 msgid "Enter your Paxum payments email"
 msgstr ""
 
@@ -47,27 +48,35 @@ msgid "In order to receive payments on the platform (and maintain your ability t
 msgstr ""
 
 #: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:143
-msgid "Make sure that the First and Last name you have entered in your Payout Details match the First and Last name on your Paxum account. Otherwise, any payouts we send will fail."
+#~ msgid "Make sure that the First and Last name you have entered in your Payout Details match the First and Last name on your Paxum account. Otherwise, any payouts we send will fail."
+#~ msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:115
+msgid "Make sure that the First name ({0}) and Last name ({1}) you have entered in your Payout Details match the First name and Last name on your Paxum account. Otherwise, any payouts we send will fail."
 msgstr ""
 
 #: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:53
 msgid "Never post any content that contains real human beings"
 msgstr ""
 
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:136
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:108
 msgid "Once your account is verified, please enter your Paxum email for receiving payments. Entering an unverified or invalid account email will result in failed payouts and a frozen balance."
 msgstr ""
 
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:122
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:53
+msgid "Open Paxum Bank Sign Up Link"
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:80
 msgid "Open Paxum Sign Up Link"
 msgstr ""
 
 #: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/ChoosePayoutMethod/PayoutMethodChoice/PayoutMethodChoice.tsx:19
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:98
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:93
 msgid "Paxum"
 msgstr ""
 
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:156
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetPaxumAccountPayoutMethodForm/SetPaxumAccountPayoutMethodForm.tsx:98
 msgid "Paxum Email"
 msgstr ""
 
@@ -79,7 +88,7 @@ msgstr ""
 msgid "Payout Method"
 msgstr ""
 
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:72
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetPaxumAccountPayoutMethodForm/SetPaxumAccountPayoutMethodForm.tsx:68
 msgid "Payout method Paxum successfully set up"
 msgstr ""
 
@@ -103,7 +112,7 @@ msgstr ""
 msgid "Post at least one new piece of exclusive supporter content every 30 days"
 msgstr ""
 
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:172
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetPaxumAccountPayoutMethodForm/SetPaxumAccountPayoutMethodForm.tsx:114
 msgid "Set up payout method"
 msgstr ""
 
@@ -115,13 +124,21 @@ msgstr ""
 msgid "There was an error deleting your payout method"
 msgstr ""
 
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:78
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetPaxumAccountPayoutMethodForm/SetPaxumAccountPayoutMethodForm.tsx:74
 msgid "There was an error setting up the payout method"
 msgstr ""
 
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:112
-msgid "To set up Paxum as a payout method, you must create an account and have it verified by providing the necessary documentation through a Know Your Client procedure. If you already have an account, you may skip this step."
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:71
+msgid "To set up Paxum as a payout method, you must create an account and have it verified by providing the necessary documentation through a Know Your Client procedure."
 msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:43
+msgid "To set up Paxum as a payout method, you must create an account and have it verified by providing the necessary documentation through a Know Your Client procedure. For artists in the United States, the platform through which you sign up is Paxum Bank."
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:112
+#~ msgid "To set up Paxum as a payout method, you must create an account and have it verified by providing the necessary documentation through a Know Your Client procedure. If you already have an account, you may skip this step."
+#~ msgstr ""
 
 #: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutCountryNotSupported/PayoutCountryNotSupported.tsx:32
 msgid "Unfortunately, we cannot currently pay out to artists located in the country <0>{0}</0>. This could be because of currently active sanctions or our providers not being able to support it. it."

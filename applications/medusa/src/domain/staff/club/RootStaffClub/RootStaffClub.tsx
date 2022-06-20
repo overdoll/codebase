@@ -29,7 +29,7 @@ const RootStaffClub: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Club - Staff :: overdoll.com
+          Club - Staff · overdoll.com
         </title>
       </Head>
       <PageWrapperDesktop>

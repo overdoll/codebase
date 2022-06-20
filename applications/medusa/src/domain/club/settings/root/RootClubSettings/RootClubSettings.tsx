@@ -38,7 +38,7 @@ const RootClubSettings: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Club Settings :: overdoll.com
+          Club Settings - overdoll
         </title>
       </Head>
       <PageWrapper>

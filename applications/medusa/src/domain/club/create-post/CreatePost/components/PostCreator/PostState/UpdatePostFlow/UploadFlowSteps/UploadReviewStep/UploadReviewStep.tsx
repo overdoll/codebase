@@ -6,6 +6,7 @@ import { Trans } from '@lingui/macro'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import PostReview from './PostReview/PostReview'
 import { Stack } from '@chakra-ui/react'
+import SuggestPrompt from '../../../../../SuggestPrompt/SuggestPrompt'
 
 interface Props {
   query: UploadReviewStepFragment$key
@@ -23,7 +24,7 @@ export default function UploadReviewStep ({
   const data = useFragment(Fragment, query)
 
   return (
-    <Stack spacing={2}>
+    <Stack spacing={8}>
       <PageSectionWrap>
         <PageSectionTitle colorScheme='teal'>
           <Trans>
@@ -32,13 +33,19 @@ export default function UploadReviewStep ({
         </PageSectionTitle>
         <PageSectionDescription>
           <Trans>
-            Make sure you like what you see before you submit the post.
+            Make sure you like what you see before you submit the post
           </Trans>
         </PageSectionDescription>
       </PageSectionWrap>
       <GlobalVideoManagerProvider>
         <PostReview query={data} />
       </GlobalVideoManagerProvider>
+      <SuggestPrompt>
+        <Trans>
+          Upon submission, your post will be reviewed by our moderation team to ensure it does not violate any club
+          guidelines. Your post should be visible to the public within a day of submission.
+        </Trans>
+      </SuggestPrompt>
     </Stack>
   )
 }

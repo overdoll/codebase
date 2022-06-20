@@ -19,7 +19,7 @@ const RootStaffSearchCancellationReasons: PageProps<{}> = () => {
     <>
       <Head>
         <title>
-          Search Cancellation Reasons - Staff :: overdoll.com
+          Search Cancellation Reasons - Staff · overdoll.com
         </title>
       </Head>
       <PageWrapper>

@@ -46,7 +46,7 @@ export default function UploadAudienceStep (): JSX.Element {
         <PageSectionDescription>
           <Trans>
             The audience is the group of people that you intended this post for. This will determine whether or not a
-            user can see your post based on their set preferences.
+            user can see your post based on their set preferences. You can only select one audience.
           </Trans>
         </PageSectionDescription>
       </PageSectionWrap>

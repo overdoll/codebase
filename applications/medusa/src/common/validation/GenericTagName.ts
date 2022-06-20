@@ -7,7 +7,7 @@ export default function GenericTagName (): Joi.Schema {
   return Joi
     .string()
     .required()
-    .min(3)
+    .min(2)
     .max(70)
     .messages({
       'string.empty': i18n._(t`Please enter a name`),

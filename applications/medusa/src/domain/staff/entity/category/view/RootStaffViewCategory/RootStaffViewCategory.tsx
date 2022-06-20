@@ -32,7 +32,7 @@ const RootStaffViewCategory: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          View Categories - Staff :: overdoll.com
+          View Categories - Staff · overdoll.com
         </title>
       </Head>
       <PageWrapper>

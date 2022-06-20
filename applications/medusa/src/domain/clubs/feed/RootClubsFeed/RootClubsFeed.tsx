@@ -25,7 +25,7 @@ const RootClubsFeed: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Clubs Feed :: overdoll
+          Clubs Feed - overdoll
         </title>
       </Head>
       <PageWrapper>

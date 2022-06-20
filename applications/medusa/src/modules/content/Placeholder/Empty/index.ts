@@ -10,3 +10,4 @@ export { default as EmptyTransactions } from './EmptyTransactions/EmptyTransacti
 export { default as EmptyPaymentMethods } from './EmptyPaymentMethods/EmptyPaymentMethods'
 export { default as EmptyPayouts } from './EmptyPayouts/EmptyPayouts'
 export { default as EmptyPayments } from './EmptyPayments/EmptyPayments'
+export { default as EmptyPosts } from './EmptyPosts/EmptyPosts'

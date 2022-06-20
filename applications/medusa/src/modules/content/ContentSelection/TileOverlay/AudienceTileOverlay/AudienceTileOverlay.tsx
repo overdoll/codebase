@@ -1,4 +1,4 @@
-import { Text } from '@chakra-ui/react'
+import { Flex, Text } from '@chakra-ui/react'
 import ResourceItem from '../../../DataDisplay/ResourceItem/ResourceItem'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { AudienceTileOverlayFragment$key } from '@//:artifacts/AudienceTileOverlayFragment.graphql'
@@ -25,7 +25,6 @@ export default function AudienceTileOverlay ({
 
   return (
     <TileOverlay
-      maxH={58}
       backdrop={
         <ResourceItem
           seed={data.id}
@@ -33,13 +32,16 @@ export default function AudienceTileOverlay ({
         />
       }
     >
-      <Text
-        fontSize='lg'
-        color='gray.00'
-        textAlign='center'
-      >
-        {data.title}
-      </Text>
+      <Flex py={2} px={4} w='100%' h='100%' align='center' justify='center'>
+        <Text
+          fontSize='lg'
+          color='gray.00'
+          textAlign='center'
+          noOfLines={2}
+        >
+          {data.title}
+        </Text>
+      </Flex>
     </TileOverlay>
   )
 }

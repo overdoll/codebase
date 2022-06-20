@@ -1,5 +1,5 @@
 import RootPublicClubPosts from './RootPublicClubPosts/RootPublicClubPosts'
-import PublicPostQuery from '@//:artifacts/PublicPostQuery.graphql'
+import PublicClubPostsQuery from '@//:artifacts/PublicClubPostsQuery.graphql'
 import { decodeRouterArguments } from '@//:modules/content/Posts/components/PostNavigation/PostsSearch'
 
 RootPublicClubPosts.getTranslationProps = async (ctx) => ({
@@ -12,7 +12,7 @@ RootPublicClubPosts.getRelayPreloadProps = (ctx) => {
   return {
     queries: {
       publicClubPosts: {
-        params: PublicPostQuery.params,
+        params: PublicClubPostsQuery.params,
         variables: {
           slug: query.slug,
           ...decodeRouterArguments(query)

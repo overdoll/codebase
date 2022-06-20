@@ -66,7 +66,7 @@ export default function CreateCancellationReasonForm ({
       onCompleted (data) {
         notify({
           status: 'success',
-          title: t`Cancellation reason ${formValues.title} was created successfully`
+          title: t`Cancellation reason "${formValues.title}" was created successfully`
         })
       },
       onError (data) {

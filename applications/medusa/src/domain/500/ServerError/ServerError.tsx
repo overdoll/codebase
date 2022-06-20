@@ -11,7 +11,7 @@ const ServerError: PageProps<{}> = (): JSX.Element => {
     <>
       <Head>
         <title>
-          Temporary Server Issues :: overdoll
+          Temporary Server Issues - overdoll
         </title>
       </Head>
       <PageWrapper>
@@ -24,7 +24,7 @@ const ServerError: PageProps<{}> = (): JSX.Element => {
           />
           <Box>
             <Heading
-              fontSize='lg'
+              fontSize='xl'
               textAlign='center'
               color='gray.00'
             >
@@ -35,7 +35,7 @@ const ServerError: PageProps<{}> = (): JSX.Element => {
             <Text
               fontSize='md'
               textAlign='center'
-              color='gray.00'
+              color='gray.100'
             >
               <Trans>
                 It looks like we're experiencing some server issues. Our best people are on it and we should be back
@@ -43,6 +43,15 @@ const ServerError: PageProps<{}> = (): JSX.Element => {
               </Trans>
             </Text>
           </Box>
+          <Text
+            fontSize='sm'
+            textAlign='center'
+            color='gray.200'
+          >
+            <Trans>
+              If you continue to experience issues for an extended period of time, please contact hello@overdoll.com
+            </Trans>
+          </Text>
         </Stack>
       </PageWrapper>
     </>

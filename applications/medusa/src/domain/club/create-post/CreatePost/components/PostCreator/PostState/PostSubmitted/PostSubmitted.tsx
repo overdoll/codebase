@@ -25,8 +25,8 @@ export default function PostSubmitted (): JSX.Element {
           </Heading>
           <Text mb={8} textAlign='center' color='gray.100' fontSize='md'>
             <Trans>
-              Your post will be reviewed to ensure it falls within our community guidelines. Once approved, it will be
-              visible to the public.
+              Thanks for posting! Your submission will be reviewed by our moderation team to ensure it does not violate
+              any club guidelines. Once approved, it will be visible to the public.
             </Trans>
           </Text>
         </Box>
@@ -35,7 +35,8 @@ export default function PostSubmitted (): JSX.Element {
           colorScheme='teal'
           size='lg'
           onClick={onRetry}
-        ><Trans>Post again</Trans>
+        >
+          <Trans>Post again</Trans>
         </Button>
       </PostPlaceholder>
     )

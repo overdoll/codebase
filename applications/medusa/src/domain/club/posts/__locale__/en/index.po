@@ -38,8 +38,8 @@ msgid "In Review"
 msgstr ""
 
 #: src/domain/club/posts/RootClubPosts/ClubPosts/ClubPosts.tsx:87
-msgid "No posts found"
-msgstr ""
+#~ msgid "No posts found"
+#~ msgstr ""
 
 #: src/domain/club/posts/RootClubPosts/ClubPosts/PublishedPost/PublishedPost.tsx:43
 msgid "PUBLISHED"

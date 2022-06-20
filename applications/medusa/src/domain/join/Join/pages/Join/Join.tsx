@@ -9,7 +9,6 @@ import { JoinMutation } from '@//:artifacts/JoinMutation.graphql'
 import { t, Trans } from '@lingui/macro'
 import { Alert, AlertCloseButton, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
 import { useToast } from '@//:modules/content/ThemeComponents'
-import Head from 'next/head'
 
 interface Props {
   queryRef: JoinFragment$key | null
@@ -102,9 +101,6 @@ export default function Join ({
   // Ask user to authenticate
   return (
     <>
-      <Head>
-        <title>Join :: overdoll</title>
-      </Head>
       <Stack w='100%' h='100%' justify='center' align='center' spacing={4}>
         {(data == null && hadGrant) && (
           <Alert

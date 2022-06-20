@@ -86,7 +86,7 @@ export default function CreateCharacterForm ({
         }
         notify({
           status: 'success',
-          title: t`Character ${formValues.name} was created successfully`
+          title: t`Character "${formValues.name}" was created successfully`
         })
       },
       onError (data) {

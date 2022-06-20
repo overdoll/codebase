@@ -30,7 +30,7 @@ const RootPayoutMethodSettings: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Payout Method - Settings :: overdoll.com
+          Payout Method - overdoll
         </title>
       </Head>
       <PageWrapper>

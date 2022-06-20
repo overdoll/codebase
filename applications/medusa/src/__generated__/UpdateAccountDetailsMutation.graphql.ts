@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<21a3543fde9286d8c7156dedbc533010>>
- * @relayHash e393fc31df6535db2a0d9c2e10764c98
+ * @generated SignedSource<<dba3d1eb1aa4cf0379c1f8da1145269c>>
+ * @relayHash e8c7fff818a05aa6c08283a68549d6c2
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e393fc31df6535db2a0d9c2e10764c98
+// @relayRequestID e8c7fff818a05aa6c08283a68549d6c2
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type PayoutMethod = "PAXUM" | "%future added value";
@@ -32,6 +32,7 @@ export type UpdateAccountDetailsMutation$data = {
         readonly id: string;
         readonly name: string;
         readonly emoji: string;
+        readonly alpha3: string;
         readonly payoutMethods: ReadonlyArray<PayoutMethod>;
       };
     } | null;
@@ -123,6 +124,13 @@ v2 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
+                "name": "alpha3",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
                 "name": "payoutMethods",
                 "storageKey": null
               }
@@ -154,7 +162,7 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "id": "e393fc31df6535db2a0d9c2e10764c98",
+    "id": "e8c7fff818a05aa6c08283a68549d6c2",
     "metadata": {},
     "name": "UpdateAccountDetailsMutation",
     "operationKind": "mutation",
@@ -163,6 +171,6 @@ return {
 };
 })();
 
-(node as any).hash = "64e63bb13c0db49e2841ce66b4871047";
+(node as any).hash = "0e0957e983a2d787cef2eca5205da086";
 
 export default node;

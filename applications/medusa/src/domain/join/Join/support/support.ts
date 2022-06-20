@@ -16,9 +16,12 @@ export const invalidateViewer = (store): void => {
 }
 
 export const setViewer = (store, payload): void => {
-  const root = store.getRoot()
+  const viewer = store.getRoot().getOrCreateLinkedRecord('viewer', 'Account')
 
-  if (root != null && payload != null) {
-    root.setLinkedRecord(payload, 'viewer')
+  // TODO this makes the viewer initially null and causes a flicker in the UI. find a way to handle it better?
+  // if you use setLinkedRecord and the authenticationToken gets invalidated, the viewer goes from being updated to null
+  // because setLinkedRecord only creates a link between the record and does not copy over the values
+  if (viewer == null && payload != null) {
+    viewer.copyFieldsFrom(payload)
   }
 }

@@ -27,7 +27,7 @@ const RootCurationSettings: PageProps<Props> = (props: Props) => {
     <>
       <Head>
         <title>
-          Preferences - Settings :: overdoll.com
+          Preference Settings - overdoll
         </title>
       </Head>
       <PageWrapper>

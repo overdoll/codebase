@@ -57,6 +57,7 @@ const Mutation = graphql`
           id
           name
           emoji
+          alpha3
           payoutMethods
         }
       }
@@ -111,7 +112,7 @@ export default function UpdateAccountDetails ({ query }: Props): JSX.Element {
         const viewer = store.getRoot().getLinkedRecord('viewer')
         if (viewer != null) {
           const payload = store.getRootField('updateAccountDetails').getLinkedRecord('accountDetails')
-          viewer.setLinkedRecord(payload, 'details')
+          viewer.getOrCreateLinkedRecord('details', 'AccountDetails').copyFieldsFrom(payload)
         }
       }
     })

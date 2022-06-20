@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0313435915c095afbadf9f30e41e84ab>>
- * @relayHash 14bb3949629d89dfaaa14b8f6da1f217
+ * @generated SignedSource<<c493b2537385199b2b20048dd7bc8c23>>
+ * @relayHash 0f9af1925452b3764636986a6f572f03
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 14bb3949629d89dfaaa14b8f6da1f217
+// @relayRequestID 0f9af1925452b3764636986a6f572f03
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -109,14 +109,14 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "title",
+                    "name": "id",
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "id",
+                    "name": "title",
                     "storageKey": null
                   },
                   {
@@ -179,7 +179,7 @@ return {
     ]
   },
   "params": {
-    "id": "14bb3949629d89dfaaa14b8f6da1f217",
+    "id": "0f9af1925452b3764636986a6f572f03",
     "metadata": {},
     "name": "StaffSearchCancellationReasonsPaginationFragment",
     "operationKind": "query",
