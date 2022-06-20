@@ -178,7 +178,7 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUpS
 		return err
 	}
 
-	// tell stella about this new supporter
+	// tell sting about this new supporter
 	if err := workflow.ExecuteActivity(ctx, a.AddClubSupporter,
 		activities.AddClubSupporterInput{
 			AccountId:   input.PaymentToken.AccountInitiator.AccountId,
@@ -206,6 +206,7 @@ func CCBillNewSaleOrUpSaleSuccess(ctx workflow.Context, input CCBillNewSaleOrUpS
 			AccountId:            input.PaymentToken.AccountInitiator.AccountId,
 			ClubId:               input.PaymentToken.CcbillClubSupporter.ClubId,
 			AccountTransactionId: uniqueTransactionId,
+			IdempotencyKey:       uniqueTransactionId,
 			Timestamp:            input.Timestamp,
 			Amount:               input.AccountingRecurringPrice,
 			Currency:             input.AccountingCurrency,

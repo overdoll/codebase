@@ -2293,8 +2293,8 @@ def go_repositories():
         name = "in_gopkg_yaml_v3",
         build_file_proto_mode = "disable",
         importpath = "gopkg.in/yaml.v3",
-        sum = "h1:h8qDotaEPuJATrMmW04NCwg7v22aHH28wwpauUhK9Oo=",
-        version = "v3.0.0-20210107192922-496545a6307b",
+        sum = "h1:fxVm/GzAzEWqLHuvctI91KS9hhNmmWOoWu0XTYJS7CA=",
+        version = "v3.0.1",
     )
     go_repository(
         name = "io_etcd_go_bbolt",
@@ -2383,15 +2383,15 @@ def go_repositories():
         name = "io_temporal_go_api",
         build_file_proto_mode = "disable",
         importpath = "go.temporal.io/api",
-        sum = "h1:SgkeoCikBXMd/3fNNtymIfhpxk8o/E3zIZFBFkHzTtU=",
-        version = "v1.7.1-0.20220223032354-6e6fe738916a",
+        sum = "h1:FzAMmBeLs6BEMFyHeJ9M9GAv6McFuH/GjnliBCdQ/Zw=",
+        version = "v1.8.0",
     )
     go_repository(
         name = "io_temporal_go_sdk",
         build_file_proto_mode = "disable",
         importpath = "go.temporal.io/sdk",
-        sum = "h1:7tJO72gK4xmsZ8W3Xp1rwKYdkwQ/mgnKN5LmROyZTac=",
-        version = "v1.14.0",
+        sum = "h1:1ZJEBNqLHAN0H64NpD4pydriYF9qhUIaimSVONm3ZKs=",
+        version = "v1.15.0",
     )
 
     go_repository(
@@ -2412,15 +2412,15 @@ def go_repositories():
         name = "org_golang_google_genproto",
         build_file_proto_mode = "disable",
         importpath = "google.golang.org/genproto",
-        sum = "h1:q1kiSVscqoDeqTF27eQ2NnLLDmqF0I373qQNXYMy0fo=",
-        version = "v0.0.0-20220505152158-f39f71e6c8f3",
+        sum = "h1:qRu95HZ148xXw+XeZ3dvqe85PxH4X8+jIo0iRPKcEnM=",
+        version = "v0.0.0-20220602131408-e326c6e8e9c8",
     )
     go_repository(
         name = "org_golang_google_grpc",
         build_file_proto_mode = "disable",
         importpath = "google.golang.org/grpc",
-        sum = "h1:oCjezcn6g6A75TGoKYBPgKmVBLexhYLM6MebdrPApP8=",
-        version = "v1.46.0",
+        sum = "h1:9n77onPX5F3qfFCqjy9dhn8PbNQsIKeVU04J9G7umt8=",
+        version = "v1.47.0",
     )
 
     go_repository(
@@ -2477,8 +2477,8 @@ def go_repositories():
         name = "org_golang_x_net",
         build_file_proto_mode = "disable",
         importpath = "golang.org/x/net",
-        sum = "h1:HVyaeDAYux4pnY+D/SiwmLOR36ewZ4iGQIIrtnuCjFA=",
-        version = "v0.0.0-20220425223048-2871e0cb64e4",
+        sum = "h1:MYimHLfoXEpOhqd/zgoA/uoXzHB86AEky4LAx5ij9xA=",
+        version = "v0.0.0-20220531201128-c960675eff93",
     )
     go_repository(
         name = "org_golang_x_oauth2",

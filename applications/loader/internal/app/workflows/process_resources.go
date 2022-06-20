@@ -12,6 +12,7 @@ type ProcessResourcesInput struct {
 	ItemId      string
 	ResourceIds []string
 	Source      string
+	IsNotFound  bool
 }
 
 func ProcessResources(ctx workflow.Context, input ProcessResourcesInput) error {
@@ -58,6 +59,7 @@ func ProcessResources(ctx workflow.Context, input ProcessResourcesInput) error {
 
 					// on second try, if we get another not found error, we break out
 					if i == 1 {
+						input.IsNotFound = true
 						break
 					}
 

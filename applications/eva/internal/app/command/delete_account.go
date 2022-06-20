@@ -20,8 +20,8 @@ type DeleteAccountHandler struct {
 	sting StingService
 }
 
-func NewDeleteAccountHandler(ar account.Repository, event event.Repository, hades HadesService, stella StingService) DeleteAccountHandler {
-	return DeleteAccountHandler{ar: ar, event: event, hades: hades, sting: stella}
+func NewDeleteAccountHandler(ar account.Repository, event event.Repository, hades HadesService, sting StingService) DeleteAccountHandler {
+	return DeleteAccountHandler{ar: ar, event: event, hades: hades, sting: sting}
 }
 
 func (h DeleteAccountHandler) Handle(ctx context.Context, cmd DeleteAccount) (*account.Account, error) {

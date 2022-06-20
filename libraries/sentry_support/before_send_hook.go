@@ -106,33 +106,40 @@ func beforeSendHook(event *sentry.Event, hint *sentry.EventHint) *sentry.Event {
 	// strip out user's IP address
 	event.User.IPAddress = ""
 
-	if hint.RecoveredException != nil {
+	if hint.OriginalException != nil || hint.RecoveredException != nil {
 
-		// exception length is 0 - we need to reconstruct the error to look better
-		if len(event.Exception) == 0 {
-			event.Exception = []sentry.Exception{{
-				// runtime.plainError is usually the error thrown during panics so, we just use this as the baseline
-				Type:       "runtime.plainError",
-				Value:      event.Message,
-				Stacktrace: event.Threads[0].Stacktrace,
-			}}
+		var err error
 
-			// clear message & threads
-			event.Message = ""
-			event.Threads = []sentry.Thread{}
-		}
+		if hint.RecoveredException != nil {
+			if val, ok := hint.RecoveredException.(error); ok {
+				err = val
+			} else {
+				// exception length is 0 - we need to reconstruct the error to look better
+				if len(event.Exception) == 0 {
+					event.Exception = []sentry.Exception{{
+						// runtime.plainError is usually the error thrown during panics so, we just use this as the baseline
+						Type:       "runtime.plainError",
+						Value:      event.Message,
+						Stacktrace: event.Threads[0].Stacktrace,
+					}}
 
-		for _, exception := range event.Exception {
+					// clear message & threads
+					event.Message = ""
+					event.Threads = []sentry.Thread{}
+				}
 
-			if exception.Stacktrace != nil && exception.Stacktrace.Frames != nil {
-				exception.Stacktrace.Frames = filterStacktraceFrames(exception.Stacktrace.Frames)
+				for _, exception := range event.Exception {
+					if exception.Stacktrace != nil {
+						exception.Stacktrace.Frames = filterStacktraceFrames(exception.Stacktrace.Frames)
+					}
+				}
+
+				return event
 			}
-
+		} else if hint.OriginalException != nil {
+			err = hint.OriginalException
 		}
-	}
 
-	if hint.OriginalException != nil {
-		err := hint.OriginalException
 		event.Exception = []sentry.Exception{}
 
 		for i := 0; i < maxErrorDepth && err != nil; i++ {
@@ -142,11 +149,15 @@ func beforeSendHook(event *sentry.Event, hint *sentry.EventHint) *sentry.Event {
 			var trace error
 			err, trace = unwrap(err, nil)
 
-			// extract stack trace - if it's there, filter frames. otherwise, don't
-			stackTrace := sentry.ExtractStacktrace(trace)
+			var stackTrace *sentry.Stacktrace
 
-			if stackTrace != nil {
-				stackTrace.Frames = filterStacktraceFrames(stackTrace.Frames)
+			if trace != nil {
+				// extract stack trace - if it's there, filter frames. otherwise, don't
+				stackTrace = sentry.ExtractStacktrace(trace)
+
+				if stackTrace != nil {
+					stackTrace.Frames = filterStacktraceFrames(stackTrace.Frames)
+				}
 			}
 
 			event.Exception = append(event.Exception, sentry.Exception{

@@ -13,13 +13,13 @@ type ClubSupporterSubscriptionPaymentFailure struct {
 }
 
 type ClubSupporterSubscriptionPaymentFailureHandler struct {
-	mr     mailing.Repository
-	eva    EvaService
-	stella StingService
+	mr    mailing.Repository
+	eva   EvaService
+	sting StingService
 }
 
-func NewClubSupporterSubscriptionPaymentFailureHandler(mr mailing.Repository, eva EvaService, stella StingService) ClubSupporterSubscriptionPaymentFailureHandler {
-	return ClubSupporterSubscriptionPaymentFailureHandler{mr: mr, eva: eva, stella: stella}
+func NewClubSupporterSubscriptionPaymentFailureHandler(mr mailing.Repository, eva EvaService, sting StingService) ClubSupporterSubscriptionPaymentFailureHandler {
+	return ClubSupporterSubscriptionPaymentFailureHandler{mr: mr, eva: eva, sting: sting}
 }
 
 func (h ClubSupporterSubscriptionPaymentFailureHandler) Handle(ctx context.Context, cmd ClubSupporterSubscriptionPaymentFailure) error {
@@ -30,7 +30,7 @@ func (h ClubSupporterSubscriptionPaymentFailureHandler) Handle(ctx context.Conte
 		return err
 	}
 
-	clubDetails, err := h.stella.GetClub(ctx, cmd.ClubId)
+	clubDetails, err := h.sting.GetClub(ctx, cmd.ClubId)
 
 	if err != nil {
 		return err

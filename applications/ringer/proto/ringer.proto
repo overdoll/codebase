@@ -32,6 +32,7 @@ message ClubPaymentDepositRequest {
   Payment payment = 4;
   google.protobuf.Timestamp timestamp = 5;
   PaymentSource source = 6;
+  string idempotencyKey = 7;
 }
 
 message ClubPaymentDeductionRequest {
@@ -41,4 +42,5 @@ message ClubPaymentDeductionRequest {
   Payment payment = 4;
   google.protobuf.Timestamp timestamp = 5;
   PaymentSource source = 6;
+  string idempotencyKey = 7;
 }

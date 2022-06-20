@@ -20,19 +20,19 @@ type BecomeClubSupporterWithAccountSavedPaymentMethod struct {
 }
 
 type BecomeClubSupporterWithAccountSavedPaymentMethodHandler struct {
-	br     billing.Repository
-	pr     billing.PricingRepository
-	cr     ccbill.Repository
-	stella StingService
+	br    billing.Repository
+	pr    billing.PricingRepository
+	cr    ccbill.Repository
+	sting StingService
 }
 
-func NewBecomeClubSupporterWithAccountSavedPaymentMethodHandler(br billing.Repository, pr billing.PricingRepository, cr ccbill.Repository, stella StingService) BecomeClubSupporterWithAccountSavedPaymentMethodHandler {
-	return BecomeClubSupporterWithAccountSavedPaymentMethodHandler{br: br, pr: pr, cr: cr, stella: stella}
+func NewBecomeClubSupporterWithAccountSavedPaymentMethodHandler(br billing.Repository, pr billing.PricingRepository, cr ccbill.Repository, sting StingService) BecomeClubSupporterWithAccountSavedPaymentMethodHandler {
+	return BecomeClubSupporterWithAccountSavedPaymentMethodHandler{br: br, pr: pr, cr: cr, sting: sting}
 }
 
 func (h BecomeClubSupporterWithAccountSavedPaymentMethodHandler) Handle(ctx context.Context, cmd BecomeClubSupporterWithAccountSavedPaymentMethod) (*string, error) {
 
-	club, err := h.stella.GetClubById(ctx, cmd.ClubId)
+	club, err := h.sting.GetClubById(ctx, cmd.ClubId)
 
 	if err != nil {
 		return nil, err

@@ -343,13 +343,13 @@ func (r ResourceCassandraS3Repository) DeleteResources(ctx context.Context, reso
 
 // GetAndCreateResources will create resources from a list of IDs passed
 // uploads are stored in uploads bucket - we HeadObject each file to determine the file format
-func (r ResourceCassandraS3Repository) GetAndCreateResources(ctx context.Context, itemId string, uploads []string, isPrivate bool, token string) ([]*resource.Resource, error) {
+func (r ResourceCassandraS3Repository) GetAndCreateResources(ctx context.Context, upload *resource.Upload) ([]*resource.Resource, error) {
 
 	var resources []*resource.Resource
 
 	s3Client := s3.New(r.aws)
 
-	for _, uploadId := range uploads {
+	for _, uploadId := range upload.UploadIds() {
 
 		fileId := strings.Split(uploadId, "+")[0]
 
@@ -366,11 +366,13 @@ func (r ResourceCassandraS3Repository) GetAndCreateResources(ctx context.Context
 
 		fileType := resp.Metadata["Filetype"]
 		newResource, err := resource.NewResource(
-			itemId,
+			upload.ItemId(),
 			uploadId,
 			*fileType,
-			isPrivate,
-			token,
+			upload.IsPrivate(),
+			upload.Token(),
+			upload.AllowImages(),
+			upload.AllowVideos(),
 		)
 
 		if err != nil {

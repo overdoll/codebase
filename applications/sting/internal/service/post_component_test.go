@@ -477,6 +477,18 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found post with audience")
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
+		"supporterOnlyStatus": []types.SupporterOnlyStatus{},
+		"state":               types.PostStatePublished,
+		"characterSlugs":      []graphql.String{},
+		"categorySlugs":       []graphql.String{},
+		"audienceSlugs":       []graphql.String{},
+		"seriesSlugs":         []graphql.String{"CatCanDance"},
+	})
+
+	require.NoError(t, err, "no error searching for series")
+	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found post with series")
+
+	err = client.Query(context.Background(), &posts, map[string]interface{}{
 		"supporterOnlyStatus": []types.SupporterOnlyStatus{types.SupporterOnlyStatusPartial},
 		"state":               types.PostStatePublished,
 		"categorySlugs":       []graphql.String{},

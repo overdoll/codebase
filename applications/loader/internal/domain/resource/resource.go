@@ -112,19 +112,25 @@ func NewImageProcessedResource(itemId, mimeType string, isPrivate bool, height, 
 	}, nil
 }
 
-func NewResource(itemId, id, mimeType string, isPrivate bool, token string) (*Resource, error) {
+func NewResource(itemId, id, mimeType string, isPrivate bool, token string, allowImages, allowVideos bool) (*Resource, error) {
 
 	// initial mimetype we dont care about until we do a processing step later that determines the type
 	var rType resource.Type
 
 	for _, m := range imageAcceptedTypes {
 		if m == mimeType {
+			if !allowImages {
+				return nil, ErrFileTypeNotAllowed
+			}
 			rType = resource.Image
 		}
 	}
 
 	for _, m := range videoAcceptedTypes {
 		if m == mimeType {
+			if !allowVideos {
+				return nil, ErrFileTypeNotAllowed
+			}
 			rType = resource.Video
 		}
 	}
