@@ -29,13 +29,7 @@ func (h SuggestedPostsForPostHandler) Handle(ctx context.Context, query Suggeste
 		return nil, err
 	}
 
-	filters, err := post.NewSuggestedPostsByPost(pst)
-
-	if err != nil {
-		return nil, err
-	}
-
-	posts, err := h.pr.SearchPosts(ctx, query.Principal, query.Cursor, filters)
+	posts, err := h.pr.SuggestedPostsByPost(ctx, query.Principal, query.Cursor, pst)
 
 	if err != nil {
 		return nil, err

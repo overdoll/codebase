@@ -263,6 +263,8 @@ const gateway = new NodeGateway({
   }
 })
 
+const isProduction = process.env.APP_ENV !== 'production'
+
 const jsonParser = bodyParser.json()
 
 // @ts-expect-error
@@ -284,6 +286,20 @@ function matchQueryMiddleware (req, res, next): void {
               path: [],
               locations: [],
               message: `cannot find queryId: ${queryId as string}`
+            }
+          ]
+        })
+        return
+      }
+    } else {
+      if (isProduction) {
+        res.status(400).send({
+          data: null,
+          errors: [
+            {
+              path: [],
+              locations: [],
+              message: `only persisted queries are permitted`
             }
           ]
         })
@@ -332,7 +348,7 @@ void (async () => {
     autoLogging: false
   }))
 
-  if (process.env.APP_ENV !== 'production') {
+  if (!isProduction) {
     app.use(PATH, cors({
       origin: [
         // @ts-expect-error

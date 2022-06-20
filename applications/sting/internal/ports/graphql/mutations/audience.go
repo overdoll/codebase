@@ -22,6 +22,7 @@ func (r *MutationResolver) CreateAudience(ctx context.Context, input types.Creat
 				Principal: principal.FromContext(ctx),
 				Slug:      input.Slug,
 				Title:     input.Title,
+				Standard:  input.Standard,
 			},
 		)
 
