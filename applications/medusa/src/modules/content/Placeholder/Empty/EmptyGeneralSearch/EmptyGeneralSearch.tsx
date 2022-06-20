@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/react'
 import EmptyBackground, { HintProp } from '../EmptyBackground/EmptyBackground'
-import { RemoveCross } from '@//:assets/icons'
+import { SearchBar } from '@//:assets/icons'
 
 export default function EmptyGeneralSearch ({ hint }: HintProp): JSX.Element {
   const emptyMessage = (
@@ -22,7 +22,7 @@ export default function EmptyGeneralSearch ({ hint }: HintProp): JSX.Element {
   )
 
   return (
-    <EmptyBackground icon={RemoveCross}>
+    <EmptyBackground icon={SearchBar}>
       {hint == null ? emptyMessage : fullMessage}
     </EmptyBackground>
   )

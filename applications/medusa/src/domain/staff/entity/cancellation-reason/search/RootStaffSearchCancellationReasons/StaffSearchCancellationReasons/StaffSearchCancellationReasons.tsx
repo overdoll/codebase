@@ -64,7 +64,7 @@ export default function StaffSearchCancellationReasons ({ searchArguments }: Pro
     >
       <Stack spacing={2}>
         {cancellationReasons.map((item, index) => (
-          <StackTile key={index}>
+          <StackTile minH={10} key={index}>
             <LinkTile href={{
               pathname: '/staff/entity/cancellation-reason/[reference]',
               query: { reference: item.reference }

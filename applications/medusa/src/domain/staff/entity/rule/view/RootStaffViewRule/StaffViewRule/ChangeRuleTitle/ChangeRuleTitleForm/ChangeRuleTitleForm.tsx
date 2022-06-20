@@ -78,7 +78,7 @@ export default function ChangeRuleTitleForm ({
     commit({
       variables: {
         input: {
-          id: data.id,
+          ruleId: data.id,
           ...formValues
         }
       },

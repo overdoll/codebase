@@ -33,20 +33,18 @@ export default function SelectRuleList ({
     searchArguments.options
   )
 
-  //
-
   return (
     <EmptyBoundary
       fallback={<EmptyRules />}
       condition={queryData.rules.edges.length < 1}
     >
-      <Stack spacing={2}>
+      <Stack spacing={1}>
         {queryData.rules.edges.map((item, index) => (
           <StackTile key={index}>
             <Choice
               {...register(item.node.id, { title: item.node.title })}
             >
-              <RuleTileOverlay query={item.node} />
+              {({ isActive }) => <RuleTileOverlay isActive={isActive} query={item.node} />}
             </Choice>
           </StackTile>
         )

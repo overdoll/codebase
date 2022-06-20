@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8cf8e605fd2bc5fea16d8e830da8b599>>
- * @relayHash b1a07db6cb1a34b5dd524511d4859e50
+ * @generated SignedSource<<f240a9280cab980358b9ebb277ee3715>>
+ * @relayHash 65250235a92f1ca77ccdd56c17b7c07b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b1a07db6cb1a34b5dd524511d4859e50
+// @relayRequestID 65250235a92f1ca77ccdd56c17b7c07b
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type CreateAudienceValidation = "SLUG_TAKEN" | "%future added value";
@@ -29,6 +29,7 @@ export type CreateAudienceFormMutation$data = {
       readonly id: string;
       readonly title: string;
       readonly slug: string;
+      readonly standard: boolean;
     } | null;
     readonly validation: CreateAudienceValidation | null;
   } | null;
@@ -84,6 +85,13 @@ v3 = {
       "args": null,
       "kind": "ScalarField",
       "name": "slug",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "standard",
       "storageKey": null
     }
   ],
@@ -169,7 +177,7 @@ return {
     ]
   },
   "params": {
-    "id": "b1a07db6cb1a34b5dd524511d4859e50",
+    "id": "65250235a92f1ca77ccdd56c17b7c07b",
     "metadata": {},
     "name": "CreateAudienceFormMutation",
     "operationKind": "mutation",
@@ -178,6 +186,6 @@ return {
 };
 })();
 
-(node as any).hash = "99977ae725305c5f3a50f518b5fc0591";
+(node as any).hash = "1d10e947b352a72ce01d9aba3f1fd4f6";
 
 export default node;

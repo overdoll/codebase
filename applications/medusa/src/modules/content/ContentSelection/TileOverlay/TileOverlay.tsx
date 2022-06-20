@@ -1,4 +1,4 @@
-import { Flex, FlexProps } from '@chakra-ui/react'
+import { Box, Flex, FlexProps } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 
 interface Props extends FlexProps {
@@ -22,21 +22,21 @@ export default function TileOverlay ({
       position='relative'
       {...rest}
     >
-      {backdrop}
-      <Flex
-        p={2}
+      <Box
+        w='100%'
+        h='100%'
         bg='dimmers.300'
+        zIndex={1}
+      >
+        {children}
+      </Box>
+      <Box
         w='100%'
         h='100%'
         position='absolute'
-        align='center'
-        justify='center'
-        direction='column'
-        whiteSpace='normal'
-        wordBreak='break-word'
       >
-        {children}
-      </Flex>
+        {backdrop}
+      </Box>
     </Flex>
   )
 }

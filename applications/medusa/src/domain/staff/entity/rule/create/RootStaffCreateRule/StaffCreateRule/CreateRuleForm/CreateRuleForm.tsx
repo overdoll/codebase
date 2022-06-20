@@ -76,7 +76,7 @@ export default function CreateRuleForm ({
       onCompleted (data) {
         notify({
           status: 'success',
-          title: t`Rule ${formValues.title} was created successfully`
+          title: t`Rule "${formValues.title}" was created successfully`
         })
       },
       onError (data) {

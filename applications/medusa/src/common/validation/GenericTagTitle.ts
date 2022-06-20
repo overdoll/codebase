@@ -8,10 +8,10 @@ export default function GenericTagTitle (): Joi.Schema {
     .string()
     .required()
     .min(3)
-    .max(30)
+    .max(70)
     .messages({
       'string.empty': i18n._(t`Please enter a title`),
       'string.min': i18n._(t`The title must be at least 3 characters`),
-      'string.max': i18n._(t`The title cannot exceed 30 characters`)
+      'string.max': i18n._(t`The title cannot exceed 70 characters`)
     })
 }

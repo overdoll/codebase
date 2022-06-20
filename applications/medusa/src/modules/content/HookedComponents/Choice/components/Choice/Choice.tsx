@@ -1,10 +1,16 @@
-import { ReactNode, useTransition } from 'react'
+import { useTransition } from 'react'
 import { Box } from '@chakra-ui/react'
 import { RegisterFunctionReturn } from '../../types'
 import { ClickableTile } from '../../../../ContentSelection'
+import runIfFunction from '../../../../../support/runIfFunction'
+import { MaybeRenderProp } from '@//:types/components'
+
+interface ChildrenCallable {
+  isActive: boolean
+}
 
 interface ChoiceProps extends RegisterFunctionReturn {
-  children: ReactNode
+  children: MaybeRenderProp<ChildrenCallable>
   isDisabled?: boolean | undefined
 }
 
@@ -17,7 +23,7 @@ export default function Choice ({
 }: ChoiceProps): JSX.Element {
   // @ts-expect-error
   const [isPending, startTransition] = useTransition({
-    timeoutMs: 1000
+    timeoutMs: 300
   })
 
   const onClick = (): void => {
@@ -40,7 +46,9 @@ export default function Choice ({
         isPending={isPending}
         onClick={onClick}
       >
-        {children}
+        {runIfFunction(children, {
+          isActive
+        })}
       </ClickableTile>
     </Box>
   )

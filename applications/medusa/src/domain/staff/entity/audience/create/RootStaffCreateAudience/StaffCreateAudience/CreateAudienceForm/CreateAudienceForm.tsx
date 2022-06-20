@@ -37,6 +37,7 @@ const Mutation = graphql`
         id
         title
         slug
+        standard
       }
       validation
     }
@@ -69,6 +70,8 @@ export default function CreateAudienceForm ({
     }
   })
 
+  console.log(methods.getValues())
+
   const {
     setError
   } = methods
@@ -89,7 +92,7 @@ export default function CreateAudienceForm ({
         }
         notify({
           status: 'success',
-          title: t`Audience ${formValues.title} was created successfully`
+          title: t`Audience "${formValues.title}" was created successfully`
         })
       },
       onError (data) {

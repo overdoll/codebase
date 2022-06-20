@@ -13,8 +13,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  ModalOverlay,
-  Stack
+  ModalOverlay
 } from '@chakra-ui/react'
 import CloseButton from '../../../../../ThemeComponents/CloseButton/CloseButton'
 import QueryErrorBoundary from '../../../../../Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
@@ -184,13 +183,13 @@ export default function PostReportButton ({
         onClose={onClose}
         motionPreset='none'
         isCentered
-        preserveScrollBarGap
+        scrollBehavior='inside'
       >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
             <Trans>
-              Report post
+              Report Post
             </Trans>
           </ModalHeader>
           <ModalCloseButton
@@ -198,16 +197,14 @@ export default function PostReportButton ({
             as={CloseButton}
           />
           <ModalBody>
-            <Stack spacing={2}>
-              <QueryErrorBoundary loadQuery={loadQuery}>
-                <Suspense fallback={<SkeletonStack />}>
-                  <SelectRuleList
-                    searchArguments={searchArguments}
-                    register={register}
-                  />
-                </Suspense>
-              </QueryErrorBoundary>
-            </Stack>
+            <QueryErrorBoundary loadQuery={loadQuery}>
+              <Suspense fallback={<SkeletonStack />}>
+                <SelectRuleList
+                  searchArguments={searchArguments}
+                  register={register}
+                />
+              </Suspense>
+            </QueryErrorBoundary>
           </ModalBody>
           <ModalFooter>
             <Button
