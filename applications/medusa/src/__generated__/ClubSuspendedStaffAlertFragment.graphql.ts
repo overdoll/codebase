@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<572047878c9b96984d34a9258302666f>>
+ * @generated SignedSource<<42f029b5672cd8f3c3cb9ab2c09c4d0e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,9 @@ export type ClubSuspendedStaffAlertFragment$data = {
   readonly slug: string;
   readonly suspension: {
     readonly expires: any;
+  } | null;
+  readonly termination: {
+    readonly __typename: string;
   } | null;
   readonly " $fragmentType": "ClubSuspendedStaffAlertFragment";
 };
@@ -53,12 +56,30 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ClubTermination",
+      "kind": "LinkedField",
+      "name": "termination",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "__typename",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "75511a5ed3d9fcdf4da1defe9fbdd7de";
+(node as any).hash = "350bb1d9390d243d5a52c4384eb949c7";
 
 export default node;

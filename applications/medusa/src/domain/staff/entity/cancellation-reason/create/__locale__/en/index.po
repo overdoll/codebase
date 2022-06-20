@@ -18,8 +18,12 @@ msgid "Cancellation Reason Title"
 msgstr ""
 
 #: src/domain/staff/entity/cancellation-reason/create/RootStaffCreateCancellationReason/StaffCreateCancellationReason/CreateCancellationReasonForm/CreateCancellationReasonForm.tsx:69
-msgid "Cancellation reason {0} was created successfully"
+msgid "Cancellation reason \"{0}\" was created successfully"
 msgstr ""
+
+#: src/domain/staff/entity/cancellation-reason/create/RootStaffCreateCancellationReason/StaffCreateCancellationReason/CreateCancellationReasonForm/CreateCancellationReasonForm.tsx:69
+#~ msgid "Cancellation reason {0} was created successfully"
+#~ msgstr ""
 
 #: src/domain/staff/entity/cancellation-reason/create/RootStaffCreateCancellationReason/RootStaffCreateCancellationReason.tsx:35
 #: src/domain/staff/entity/cancellation-reason/create/RootStaffCreateCancellationReason/StaffCreateCancellationReason/CreateCancellationReasonForm/CreateCancellationReasonForm.tsx:106

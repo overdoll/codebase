@@ -15,7 +15,6 @@ const Fragment = graphql`
     termination {
       __typename
     }
-    ...TerminatedClubBannerFragment
     ...SuspendedClubBannerFragment
   }
 `
@@ -24,7 +23,7 @@ export default function ClubInformationBanner ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   if (data.termination != null) {
-    return <TerminatedClubBanner query={data} />
+    return <TerminatedClubBanner />
   }
 
   if (data.suspension != null) {

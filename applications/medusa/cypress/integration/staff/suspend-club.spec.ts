@@ -86,7 +86,7 @@ describe('Suspend/UnSuspend/Terminate/UnTerminate/Cancel Subscriptions Club', ()
      */
     cy.joinWithNewAccount(username)
     cy.visit(`/club/${club}/home`)
-    cy.findByText(/Club was terminated by/iu).should('be.visible')
+    cy.findByText(/This club is currently terminated/iu).should('be.visible')
 
     /**
      * UnTerminate club as staff
@@ -103,6 +103,6 @@ describe('Suspend/UnSuspend/Terminate/UnTerminate/Cancel Subscriptions Club', ()
      */
     cy.joinWithNewAccount(username)
     cy.visit(`/club/${club}/home`)
-    cy.findByText(/Club was terminated by/iu).should('not.exist')
+    cy.findByText(/This club is currently terminated/iu).should('not.exist')
   })
 })

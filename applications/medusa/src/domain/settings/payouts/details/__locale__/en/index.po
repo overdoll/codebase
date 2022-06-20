@@ -17,23 +17,23 @@ msgstr ""
 msgid "Back to Payouts Settings"
 msgstr ""
 
-#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:166
+#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:167
 msgid "Country"
 msgstr ""
 
-#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:136
+#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:137
 msgid "Enter a first name"
 msgstr ""
 
-#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:154
+#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:155
 msgid "Enter a last name"
 msgstr ""
 
-#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:130
+#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:131
 msgid "First Name"
 msgstr ""
 
-#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:148
+#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:149
 msgid "Last Name"
 msgstr ""
 
@@ -41,14 +41,14 @@ msgstr ""
 msgid "Payout Details"
 msgstr ""
 
-#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:101
+#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:102
 msgid "Successfully updated account details"
 msgstr ""
 
-#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:107
+#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:108
 msgid "There was an error updating your account details"
 msgstr ""
 
-#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:182
+#: src/domain/settings/payouts/details/RootAccountDetailsSettings/AccountDetailsSettings/UpdateAccountDetails/UpdateAccountDetails.tsx:183
 msgid "Update Account Details"
 msgstr ""

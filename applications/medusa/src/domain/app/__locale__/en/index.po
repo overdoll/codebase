@@ -79,8 +79,8 @@ msgid "Club is currently locked and access is limited"
 msgstr ""
 
 #: src/common/components/ClubInformationBanner/TerminatedClubBanner/TerminatedClubBanner.tsx:37
-msgid "Club was terminated by {0}. Goodbye."
-msgstr ""
+#~ msgid "Club was terminated by {0}. Goodbye."
+#~ msgstr ""
 
 #: src/modules/hooks/useCopyToClipboardWrapper.ts:23
 msgid "Copied to clipboard!"
@@ -349,7 +349,7 @@ msgstr ""
 msgid "Post Reports"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:126
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:125
 msgid "Post report was submitted successfully"
 msgstr ""
 
@@ -385,16 +385,17 @@ msgstr ""
 msgid "Remove Upload"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:154
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:173
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:153
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:172
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:191
 msgid "Report Post"
 msgstr ""
 
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:192
-msgid "Report post"
-msgstr ""
+#~ msgid "Report post"
+#~ msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:164
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:163
 msgid "Reported"
 msgstr ""
 
@@ -463,7 +464,7 @@ msgstr ""
 msgid "Sorry, this username is already taken"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:220
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:217
 msgid "Submit Report"
 msgstr ""
 
@@ -527,7 +528,7 @@ msgstr ""
 msgid "There was an error deleting the post"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:143
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:142
 msgid "There was an error submitting the report"
 msgstr ""
 
@@ -549,6 +550,10 @@ msgstr ""
 
 #: src/modules/content/Placeholder/NotFound/NotFoundClub/NotFoundClub.tsx:10
 msgid "This club was not found"
+msgstr ""
+
+#: src/common/components/ClubInformationBanner/TerminatedClubBanner/TerminatedClubBanner.tsx:19
+msgid "This club was terminated and will not be visible to the public anymore. Please contact hello@overdoll.com if this was done in error."
 msgstr ""
 
 #: src/modules/validation/translateValidation.ts:9

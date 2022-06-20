@@ -1,26 +1,8 @@
 import { Box, Flex } from '@chakra-ui/react'
-import { graphql, useFragment } from 'react-relay/hooks'
-import { TerminatedClubBannerFragment$key } from '@//:artifacts/TerminatedClubBannerFragment.graphql'
 import { Trans } from '@lingui/macro'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
 
-interface Props {
-  query: TerminatedClubBannerFragment$key
-}
-
-const Fragment = graphql`
-  fragment TerminatedClubBannerFragment on Club {
-    termination {
-      account {
-        username
-      }
-    }
-  }
-`
-
-export default function TerminatedClubBanner ({ query }: Props): JSX.Element {
-  const data = useFragment(Fragment, query)
-
+export default function TerminatedClubBanner (): JSX.Element {
   return (
     <Box>
       <Alert
@@ -35,7 +17,9 @@ export default function TerminatedClubBanner ({ query }: Props): JSX.Element {
             <AlertIcon />
             <AlertDescription>
               <Trans>
-                Club was terminated by {data?.termination?.account?.username}. Goodbye.
+                This club was terminated and will not be visible to the public anymore. Please contact
+                hello@overdoll.com if
+                this was done in error.
               </Trans>
             </AlertDescription>
           </Flex>
