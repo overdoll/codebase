@@ -14,5 +14,6 @@ go_library(
     deps = [
         "//applications/loader/internal/domain/resource",
         "//libraries/errors",
+        "@io_temporal_go_sdk//temporal",
     ],
 )

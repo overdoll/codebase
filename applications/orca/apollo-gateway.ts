@@ -263,7 +263,7 @@ const gateway = new NodeGateway({
   }
 })
 
-const isProduction = process.env.APP_ENV !== 'production'
+const isProduction = process.env.APP_ENV === 'production'
 
 const jsonParser = bodyParser.json()
 

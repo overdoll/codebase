@@ -19,7 +19,7 @@ async function generate () {
   const output = await cli.generate(
     {
       schema: {
-        [process.env.URL + '/api/graphql']: {
+        [process.env.APP_URL + '/api/graphql']: {
           headers: {
             'X-overdoll-Security': token,
             Cookie: Cookie.serialize('od.security', encrypted)
