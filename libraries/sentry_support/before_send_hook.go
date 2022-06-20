@@ -123,7 +123,11 @@ func beforeSendHook(event *sentry.Event, hint *sentry.EventHint) *sentry.Event {
 		}
 
 		for _, exception := range event.Exception {
-			exception.Stacktrace.Frames = filterStacktraceFrames(exception.Stacktrace.Frames)
+
+			if exception.Stacktrace != nil && exception.Stacktrace.Frames != nil {
+				exception.Stacktrace.Frames = filterStacktraceFrames(exception.Stacktrace.Frames)
+			}
+
 		}
 	}
 
