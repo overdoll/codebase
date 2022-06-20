@@ -8,7 +8,7 @@ const U: UppyType = Uppy({
   id: 'single-file-upload',
   restrictions: {
     maxNumberOfFiles: 1,
-    allowedFileTypes: ['image/jpeg', 'image/png'],
+    allowedFileTypes: ['image/png'],
     maxFileSize: 25000000
   },
   autoProceed: true,

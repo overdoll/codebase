@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ca449de97f389bc7dd0516bd9c3eace5>>
+ * @generated SignedSource<<5847096a856310c55e6a2ec09c098240>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,7 @@ export type ClubInformationBannerFragment$data = {
   readonly termination: {
     readonly __typename: string;
   } | null;
-  readonly " $fragmentSpreads": FragmentRefs<"TerminatedClubBannerFragment" | "SuspendedClubBannerFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"SuspendedClubBannerFragment">;
   readonly " $fragmentType": "ClubInformationBannerFragment";
 };
 export type ClubInformationBannerFragment = ClubInformationBannerFragment$data;
@@ -65,11 +65,6 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "TerminatedClubBannerFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
       "name": "SuspendedClubBannerFragment"
     }
   ],
@@ -78,6 +73,6 @@ return {
 };
 })();
 
-(node as any).hash = "a0d5c5a26ba9b7d759953c6ae3251bd5";
+(node as any).hash = "eb7601f8cc09038e4fe8bf8ca23bb2cb";
 
 export default node;

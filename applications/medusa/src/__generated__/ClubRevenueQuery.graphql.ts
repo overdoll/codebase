@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f3121e95351cd1894f2f0bcb1a7c56ad>>
- * @relayHash 0f111b23b6b9b7e5e74bbb40fbc8788f
+ * @generated SignedSource<<c5d8f590614cff822a80b12c0c6a8a0d>>
+ * @relayHash fd0e4f6280db3e9b01009330c2f99d8f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0f111b23b6b9b7e5e74bbb40fbc8788f
+// @relayRequestID fd0e4f6280db3e9b01009330c2f99d8f
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -124,6 +124,9 @@ v10 = {
   "storageKey": null
 },
 v11 = [
+  (v2/*: any*/)
+],
+v12 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -307,9 +310,7 @@ return {
                 "kind": "LinkedField",
                 "name": "lock",
                 "plural": false,
-                "selections": [
-                  (v2/*: any*/)
-                ],
+                "selections": (v11/*: any*/),
                 "storageKey": null
               },
               {
@@ -362,33 +363,12 @@ return {
             "kind": "LinkedField",
             "name": "termination",
             "plural": false,
-            "selections": [
-              (v2/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Account",
-                "kind": "LinkedField",
-                "name": "account",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "username",
-                    "storageKey": null
-                  },
-                  (v8/*: any*/)
-                ],
-                "storageKey": null
-              }
-            ],
+            "selections": (v11/*: any*/),
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v11/*: any*/),
+            "args": (v12/*: any*/),
             "concreteType": "ClubTransactionMetricConnection",
             "kind": "LinkedField",
             "name": "transactionMetrics",
@@ -488,7 +468,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v11/*: any*/),
+            "args": (v12/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "ClubTransactionMetrics_transactionMetrics",
@@ -501,7 +481,7 @@ return {
     ]
   },
   "params": {
-    "id": "0f111b23b6b9b7e5e74bbb40fbc8788f",
+    "id": "fd0e4f6280db3e9b01009330c2f99d8f",
     "metadata": {},
     "name": "ClubRevenueQuery",
     "operationKind": "query",

@@ -84,9 +84,9 @@ export default function PublicClub (props: Props): JSX.Element {
                 query={queryData?.club?.backgroundPost?.edges[0]?.node?.content[0].resource ?? null}
               />)}
           >
-            <Flex h='100%' w='100%' align='center' justify='center' position='relative'>
+            <Flex p={2} h='100%' w='100%' align='center' justify='center' position='relative'>
               <LargeClubHeader query={queryData?.club} />
-              <Flex top={0} right={0} position='absolute'>
+              <Flex top={2} right={2} position='absolute'>
                 <ClubMenu query={queryData?.club} />
               </Flex>
             </Flex>

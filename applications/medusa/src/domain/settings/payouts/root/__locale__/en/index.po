@@ -53,6 +53,10 @@ msgstr ""
 msgid "Setup"
 msgstr ""
 
+#: src/domain/settings/payouts/root/RootPayoutsSettings/RootPayoutsSettings.tsx:41
+msgid "Transferring funds from your wallet can only happen once you have your payout details and payout method set up."
+msgstr ""
+
 #: src/domain/settings/payouts/root/RootPayoutsSettings/PayoutsSettings/PayoutsDetailsSettings/PayoutsDetailsSettings.tsx:37
 msgid "Update your payout details"
 msgstr ""

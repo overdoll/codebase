@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e3ed3a16e475175019990d238d10a86a>>
- * @relayHash d1a693e74c557e286ae8dc37f4a7cb96
+ * @generated SignedSource<<1458f1142bc1d1d8425bff8375c1b724>>
+ * @relayHash c8d343240dff8ebee5d78c2650ba3fbe
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d1a693e74c557e286ae8dc37f4a7cb96
+// @relayRequestID c8d343240dff8ebee5d78c2650ba3fbe
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -385,26 +385,7 @@ return {
             "name": "termination",
             "plural": false,
             "selections": [
-              (v6/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Account",
-                "kind": "LinkedField",
-                "name": "account",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "username",
-                    "storageKey": null
-                  },
-                  (v4/*: any*/)
-                ],
-                "storageKey": null
-              }
+              (v6/*: any*/)
             ],
             "storageKey": null
           }
@@ -414,7 +395,7 @@ return {
     ]
   },
   "params": {
-    "id": "d1a693e74c557e286ae8dc37f4a7cb96",
+    "id": "c8d343240dff8ebee5d78c2650ba3fbe",
     "metadata": {},
     "name": "ClubPostsQuery",
     "operationKind": "query",

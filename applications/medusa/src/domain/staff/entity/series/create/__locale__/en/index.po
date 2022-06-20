@@ -30,6 +30,10 @@ msgstr ""
 msgid "Error creating series {0}"
 msgstr ""
 
+#: src/domain/staff/entity/series/create/RootStaffCreateSeries/StaffCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:86
+msgid "Series \"{0}\" was created successfully"
+msgstr ""
+
 #: src/domain/staff/entity/series/create/RootStaffCreateSeries/StaffCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:127
 msgid "Series Slug"
 msgstr ""
@@ -39,5 +43,5 @@ msgid "Series Title"
 msgstr ""
 
 #: src/domain/staff/entity/series/create/RootStaffCreateSeries/StaffCreateSeries/CreateSeriesForm/CreateSeriesForm.tsx:86
-msgid "Series {0} was created successfully"
-msgstr ""
+#~ msgid "Series {0} was created successfully"
+#~ msgstr ""

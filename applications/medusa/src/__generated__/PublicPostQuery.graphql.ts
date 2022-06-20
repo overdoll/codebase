@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fc9b8d0ae0fd9910f4769b8b4bb8b87f>>
- * @relayHash 90fcb09e1096561a160f7398a390ae8c
+ * @generated SignedSource<<8c130c67ad08ed59dfca09f7d2ac33ca>>
+ * @relayHash 032c3f1e6544ba07171fd094214e6aa3
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 90fcb09e1096561a160f7398a390ae8c
+// @relayRequestID 032c3f1e6544ba07171fd094214e6aa3
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -516,6 +516,18 @@ return {
                 ],
                 "storageKey": null
               },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ClubTermination",
+                "kind": "LinkedField",
+                "name": "termination",
+                "plural": false,
+                "selections": [
+                  (v6/*: any*/)
+                ],
+                "storageKey": null
+              },
               (v16/*: any*/),
               (v18/*: any*/),
               (v17/*: any*/)
@@ -641,7 +653,7 @@ return {
     ]
   },
   "params": {
-    "id": "90fcb09e1096561a160f7398a390ae8c",
+    "id": "032c3f1e6544ba07171fd094214e6aa3",
     "metadata": {},
     "name": "PublicPostQuery",
     "operationKind": "query",

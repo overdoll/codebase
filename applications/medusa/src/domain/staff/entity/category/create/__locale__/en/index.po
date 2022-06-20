@@ -13,6 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/domain/staff/entity/category/create/RootStaffCreateCategory/StaffCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:86
+msgid "Category \"{0}\" was created successfully"
+msgstr ""
+
 #: src/domain/staff/entity/category/create/RootStaffCreateCategory/StaffCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:127
 msgid "Category Slug"
 msgstr ""
@@ -22,8 +26,8 @@ msgid "Category Title"
 msgstr ""
 
 #: src/domain/staff/entity/category/create/RootStaffCreateCategory/StaffCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:86
-msgid "Category {0} was created successfully"
-msgstr ""
+#~ msgid "Category {0} was created successfully"
+#~ msgstr ""
 
 #: src/domain/staff/entity/category/create/RootStaffCreateCategory/RootStaffCreateCategory.tsx:35
 #: src/domain/staff/entity/category/create/RootStaffCreateCategory/StaffCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:142
