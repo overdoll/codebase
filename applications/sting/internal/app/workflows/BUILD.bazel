@@ -11,6 +11,7 @@ go_library(
         "delete_account_data.go",
         "delete_post.go",
         "discard_post.go",
+        "mark_club_member_as_supporter.go",
         "new_post_like.go",
         "new_supporter_post.go",
         "options.go",
@@ -32,7 +33,6 @@ go_library(
     visibility = ["//applications/sting:__subpackages__"],
     deps = [
         "//applications/sting/internal/app/workflows/activities",
-        "//libraries/errors",
         "//libraries/support",
         "@io_temporal_go_api//enums/v1:enums",
         "@io_temporal_go_sdk//temporal",
