@@ -181,6 +181,7 @@ describe('Create & Manage Posts', () => {
      * Upload new files, remove upload, rearrange
      */
     // test drag and drop
+    // TODO: the drag-n-drop breaks the uploader - uploads some sort of incorrect mp4 file that's too large, so processing will never finish
     cy.findByText(/Upload Files/iu).should('not.be.disabled').get('input[type="file"]').attachFile('test-video.mp4', { subjectType: 'drag-n-drop' })
     // use the upload files button to upload
     cy.findByText(/Upload Files/iu).should('not.be.disabled').get('input[type="file"]').attachFile('test-post.png')

@@ -60,6 +60,7 @@ func CCBillVoid(ctx workflow.Context, input CCBillVoidInput) error {
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
 			AccountTransactionId: transactionDetails.TransactionId,
+			IdempotencyKey:       transactionDetails.TransactionId,
 			Timestamp:            input.Timestamp,
 			Amount:               subscriptionDetails.Amount,
 			Currency:             subscriptionDetails.Currency,

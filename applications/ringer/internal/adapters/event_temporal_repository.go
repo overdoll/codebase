@@ -10,6 +10,7 @@ import (
 	"overdoll/applications/ringer/internal/domain/event"
 	"overdoll/applications/ringer/internal/domain/payout"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/principal"
 	"time"
 )
@@ -24,9 +25,13 @@ func NewEventTemporalRepository(client client.Client) EventTemporalRepository {
 
 func (r EventTemporalRepository) ClubPaymentDeposit(ctx context.Context, request *event.PaymentRequest) error {
 
+	if request.IdempotencyKey() == "" {
+		return domainerror.NewValidation("blank idempotency key not allowed")
+	}
+
 	options := client.StartWorkflowOptions{
 		TaskQueue:             viper.GetString("temporal.queue"),
-		ID:                    "ringer.ClubPaymentDeposit_" + request.AccountTransactionId(),
+		ID:                    "ringer.ClubPaymentDeposit_" + request.IdempotencyKey(),
 		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_REJECT_DUPLICATE,
 	}
 
@@ -49,9 +54,13 @@ func (r EventTemporalRepository) ClubPaymentDeposit(ctx context.Context, request
 
 func (r EventTemporalRepository) ClubPaymentDeduction(ctx context.Context, request *event.PaymentRequest) error {
 
+	if request.IdempotencyKey() == "" {
+		return domainerror.NewValidation("blank idempotency key not allowed")
+	}
+
 	options := client.StartWorkflowOptions{
 		TaskQueue:             viper.GetString("temporal.queue"),
-		ID:                    "ringer.ClubPaymentDeduction_" + request.AccountTransactionId(),
+		ID:                    "ringer.ClubPaymentDeduction_" + request.IdempotencyKey(),
 		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_REJECT_DUPLICATE,
 	}
 

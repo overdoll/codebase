@@ -7,7 +7,7 @@ import (
 )
 
 type Repository interface {
-	GetAndCreateResources(ctx context.Context, itemId string, uploads []string, isPrivate bool, token string) ([]*Resource, error)
+	GetAndCreateResources(ctx context.Context, upload *Upload) ([]*Resource, error)
 	DeleteResources(ctx context.Context, resources []*Resource) error
 	GetComposer(ctx context.Context) (*tusd.StoreComposer, error)
 	DownloadResource(ctx context.Context, resource *Resource) (*os.File, error)

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4b2f3efa0e1376ea8488175e1931ea15>>
+ * @generated SignedSource<<4d870543eaa5d3245529d0f5a1e1ba12>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -80,6 +80,11 @@ return {
           "kind": "Variable",
           "name": "name",
           "variableName": "search"
+        },
+        {
+          "kind": "Literal",
+          "name": "terminated",
+          "value": false
         }
       ],
       "concreteType": "ClubConnection",
@@ -174,6 +179,6 @@ return {
 };
 })();
 
-(node as any).hash = "493eea8479af22f175a0e4a2393572f6";
+(node as any).hash = "ae61998b5235311fc0811fbcbf622ef6";
 
 export default node;

@@ -34,10 +34,6 @@ mv applications/puppy/.env applications/puppy/.env.backup2
 mv applications/puppy/.env.backup applications/puppy/.env
 mv applications/puppy/.env.backup2 applications/puppy/.env.backup
 
-mv applications/stella/.env applications/stella/.env.backup2
-mv applications/stella/.env.backup applications/stella/.env
-mv applications/stella/.env.backup2 applications/stella/.env.backup
-
 mv applications/sting/.env applications/sting/.env.backup2
 mv applications/sting/.env.backup applications/sting/.env
 mv applications/sting/.env.backup2 applications/sting/.env.backup

@@ -7,7 +7,9 @@ import (
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/bootstrap"
+	graphql2 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/resource/proto"
 	"overdoll/libraries/uuid"
 	"testing"
 
@@ -17,11 +19,10 @@ import (
 
 type SeriesModified struct {
 	Id        relay.ID
+	Reference string
 	Title     string
 	Slug      string
-	Thumbnail *struct {
-		Id string
-	}
+	Thumbnail *graphql2.Resource
 }
 
 type SearchSeries struct {
@@ -135,22 +136,43 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 
 	require.NoError(t, err, "no error updating series title")
 
+	seriesThumbnailId := "04ba807328b59c911a8a37f80447e16a"
+
 	var updateSeriesThumbnail UpdateSeriesThumbnail
 
 	err = client.Mutate(context.Background(), &updateSeriesThumbnail, map[string]interface{}{
 		"input": types.UpdateSeriesThumbnailInput{
 			ID:        series.Id,
-			Thumbnail: "04ba807328b59c911a8a37f80447e16a",
+			Thumbnail: seriesThumbnailId,
 		},
 	})
 
 	require.NoError(t, err, "no error updating series thumbnail")
+
+	require.False(t, updateSeriesThumbnail.UpdateSeriesThumbnail.Series.Thumbnail.Processed, "not yet processed")
+
+	grpcClient := getGrpcCallbackClient(t)
+
+	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
+		Id:          seriesThumbnailId,
+		ItemId:      updateSeriesThumbnail.UpdateSeriesThumbnail.Series.Reference,
+		Processed:   true,
+		Type:        proto.ResourceType_IMAGE,
+		ProcessedId: uuid.New().String(),
+		Private:     false,
+		Width:       100,
+		Height:      100,
+		Token:       "SERIES",
+	}}})
+
+	require.NoError(t, err, "no error updating resource")
 
 	series = getSeriesBySlug(t, client, currentSeriesSlug)
 
 	require.NotNil(t, series, "expected to have found series")
 	require.Equal(t, fake.Title, series.Title, "title has been updated")
 	require.NotNil(t, series.Thumbnail, "has a thumbnail")
+	require.True(t, series.Thumbnail.Processed, "thumbnail is processed")
 }
 
 func TestCreateCharacter_update_series_and_search_character(t *testing.T) {

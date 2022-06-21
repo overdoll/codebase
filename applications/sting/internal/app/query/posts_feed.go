@@ -40,22 +40,6 @@ func (h PostsFeedHandler) Handle(ctx context.Context, query PostsFeed) ([]*post.
 		categoryIds = personalProfile.CategoryIds()
 	}
 
-	// no audiences selected, select the "standard"
-	if len(audienceIDs) == 0 {
-
-		audiences, err := h.pr.GetAudiences(ctx, query.Principal)
-
-		if err != nil {
-			return nil, err
-		}
-
-		for _, aud := range audiences {
-			if aud.IsStandard() {
-				audienceIDs = append(audienceIDs, aud.ID())
-			}
-		}
-	}
-
 	filters, err := post.NewPostFeed(audienceIDs, categoryIds)
 
 	if err != nil {

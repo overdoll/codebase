@@ -20,18 +20,18 @@ type GenerateCCBillClubSupportPaymentLink struct {
 }
 
 type GenerateCCBillClubSupportPaymentLinkHandler struct {
-	br     billing.Repository
-	pr     billing.PricingRepository
-	stella StingService
+	br    billing.Repository
+	pr    billing.PricingRepository
+	sting StingService
 }
 
-func NewGenerateCCBillClubSupportPaymentLinkHandler(br billing.Repository, pr billing.PricingRepository, stella StingService) GenerateCCBillClubSupportPaymentLinkHandler {
-	return GenerateCCBillClubSupportPaymentLinkHandler{br: br, pr: pr, stella: stella}
+func NewGenerateCCBillClubSupportPaymentLinkHandler(br billing.Repository, pr billing.PricingRepository, sting StingService) GenerateCCBillClubSupportPaymentLinkHandler {
+	return GenerateCCBillClubSupportPaymentLinkHandler{br: br, pr: pr, sting: sting}
 }
 
 func (h GenerateCCBillClubSupportPaymentLinkHandler) Handle(ctx context.Context, cmd GenerateCCBillClubSupportPaymentLink) (*ccbill.ClubSupporterPaymentLink, error) {
 
-	club, err := h.stella.GetClubById(ctx, cmd.ClubId)
+	club, err := h.sting.GetClubById(ctx, cmd.ClubId)
 
 	if err != nil {
 		return nil, err

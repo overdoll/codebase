@@ -93,6 +93,7 @@ func CCBillRefund(ctx workflow.Context, input CCBillRefundInput) error {
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
 			AccountTransactionId: transactionDetails.TransactionId,
+			IdempotencyKey:       uniqueId,
 			Timestamp:            input.Timestamp,
 			Amount:               input.Amount,
 			Currency:             input.Currency,

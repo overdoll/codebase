@@ -8,19 +8,20 @@ import (
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/bootstrap"
+	graphql2 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/resource/proto"
 	"overdoll/libraries/uuid"
 	"testing"
 )
 
 type AudienceModified struct {
 	Id        relay.ID
+	Reference string
 	Title     string
 	Slug      string
 	Standard  bool
-	Thumbnail *struct {
-		Id string
-	}
+	Thumbnail *graphql2.Resource
 }
 
 type SearchAudience struct {
@@ -140,16 +141,35 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 
 	require.NoError(t, err, "no error updating audience title")
 
+	audienceThumbnailId := "00be69a89e31d28cf8e79b7373d505c7"
+
 	var updateAudienceThumbnail UpdateAudienceThumbnail
 
 	err = client.Mutate(context.Background(), &updateAudienceThumbnail, map[string]interface{}{
 		"input": types.UpdateAudienceThumbnailInput{
 			ID:        audience.Id,
-			Thumbnail: "00be69a89e31d28cf8e79b7373d505c7",
+			Thumbnail: audienceThumbnailId,
 		},
 	})
 
 	require.NoError(t, err, "no error updating audience thumbnail")
+	require.False(t, updateAudienceThumbnail.UpdateAudienceThumbnail.Audience.Thumbnail.Processed, "not yet processed")
+
+	grpcClient := getGrpcCallbackClient(t)
+
+	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
+		Id:          audienceThumbnailId,
+		ItemId:      updateAudienceThumbnail.UpdateAudienceThumbnail.Audience.Reference,
+		Processed:   true,
+		Type:        proto.ResourceType_IMAGE,
+		ProcessedId: uuid.New().String(),
+		Private:     false,
+		Width:       100,
+		Height:      100,
+		Token:       "AUDIENCE",
+	}}})
+
+	require.NoError(t, err, "no error updating resource")
 
 	var updateAudienceIsStandard UpdateAudienceIsStandard
 
@@ -167,5 +187,6 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 
 	require.Equal(t, fake.Title, audience.Title, "title has been updated")
 	require.NotNil(t, audience.Thumbnail, "has a thumbnail")
+	require.True(t, audience.Thumbnail.Processed, "should be processed")
 	require.True(t, audience.Standard, "is standard now")
 }

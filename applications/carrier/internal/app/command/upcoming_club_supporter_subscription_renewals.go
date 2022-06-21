@@ -20,13 +20,13 @@ type UpcomingClubSupporterSubscriptionRenewals struct {
 }
 
 type UpcomingClubSupporterSubscriptionRenewalsHandler struct {
-	mr     mailing.Repository
-	eva    EvaService
-	stella StingService
+	mr    mailing.Repository
+	eva   EvaService
+	sting StingService
 }
 
-func NewUpcomingClubSupporterSubscriptionRenewalsHandler(mr mailing.Repository, eva EvaService, stella StingService) UpcomingClubSupporterSubscriptionRenewalsHandler {
-	return UpcomingClubSupporterSubscriptionRenewalsHandler{mr: mr, eva: eva, stella: stella}
+func NewUpcomingClubSupporterSubscriptionRenewalsHandler(mr mailing.Repository, eva EvaService, sting StingService) UpcomingClubSupporterSubscriptionRenewalsHandler {
+	return UpcomingClubSupporterSubscriptionRenewalsHandler{mr: mr, eva: eva, sting: sting}
 }
 
 func (h UpcomingClubSupporterSubscriptionRenewalsHandler) Handle(ctx context.Context, cmd UpcomingClubSupporterSubscriptionRenewals) error {
@@ -47,7 +47,7 @@ func (h UpcomingClubSupporterSubscriptionRenewalsHandler) Handle(ctx context.Con
 
 	for _, renewal := range cmd.Renewals {
 
-		clubDetails, err := h.stella.GetClub(ctx, renewal.ClubId)
+		clubDetails, err := h.sting.GetClub(ctx, renewal.ClubId)
 
 		if err != nil {
 			return err

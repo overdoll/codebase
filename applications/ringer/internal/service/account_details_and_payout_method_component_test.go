@@ -60,7 +60,7 @@ func TestCreateAndGetAccountPayoutMethod(t *testing.T) {
 
 	firstName := "Bob"
 	lastName := "Michael"
-	countryId := convertCountryIdToRelayId("USA")
+	countryId := convertCountryIdToRelayId("CA")
 
 	var res UpdateAccountDetails
 
@@ -91,7 +91,7 @@ func TestCreateAndGetAccountPayoutMethod(t *testing.T) {
 	require.NotNil(t, details.Entities[0].Account.Details, "account details is not nil")
 	require.Equal(t, firstName, details.Entities[0].Account.Details.FirstName, "first name is equal")
 	require.Equal(t, lastName, details.Entities[0].Account.Details.LastName, "last name is equal")
-	require.Equal(t, "United States", details.Entities[0].Account.Details.Country.Name, "country is equal")
+	require.Equal(t, "Canada", details.Entities[0].Account.Details.Country.Name, "country is equal")
 	require.Equal(t, types.PayoutMethodPaxum, details.Entities[0].Account.Details.Country.PayoutMethods[0], "correct payout method is set for country")
 
 	email := "test-email@test.com"

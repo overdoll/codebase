@@ -12,18 +12,18 @@ type ClubSupporterNoPosts struct {
 }
 
 type ClubSupporterNoPostsHandler struct {
-	mr     mailing.Repository
-	eva    EvaService
-	stella StingService
+	mr    mailing.Repository
+	eva   EvaService
+	sting StingService
 }
 
-func NewClubSupporterNoPostsHandler(mr mailing.Repository, eva EvaService, stella StingService) ClubSupporterNoPostsHandler {
-	return ClubSupporterNoPostsHandler{mr: mr, eva: eva, stella: stella}
+func NewClubSupporterNoPostsHandler(mr mailing.Repository, eva EvaService, sting StingService) ClubSupporterNoPostsHandler {
+	return ClubSupporterNoPostsHandler{mr: mr, eva: eva, sting: sting}
 }
 
 func (h ClubSupporterNoPostsHandler) Handle(ctx context.Context, cmd ClubSupporterNoPosts) error {
 
-	clubDetails, err := h.stella.GetClub(ctx, cmd.ClubId)
+	clubDetails, err := h.sting.GetClub(ctx, cmd.ClubId)
 
 	if err != nil {
 		return err

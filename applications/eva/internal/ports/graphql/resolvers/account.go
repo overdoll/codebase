@@ -19,6 +19,19 @@ type AccountResolver struct {
 	App *app.Application
 }
 
+func (r AccountResolver) IsSecure(ctx context.Context, obj *types.Account) (bool, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return false, err
+	}
+
+	if err := checkPermissions(ctx, obj.ID); err != nil {
+		return false, err
+	}
+
+	return obj.IsSecure, nil
+}
+
 func checkPermissions(ctx context.Context, id relay.ID) error {
 	if principal.FromContext(ctx) == nil {
 

@@ -372,6 +372,8 @@ type ComplexityRoot struct {
 }
 
 type AccountResolver interface {
+	IsSecure(ctx context.Context, obj *types.Account) (bool, error)
+
 	Lock(ctx context.Context, obj *types.Account) (*types.AccountLock, error)
 	Deleting(ctx context.Context, obj *types.Account) (*types.AccountDeleting, error)
 	Sessions(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.AccountSessionConnection, error)
@@ -1857,7 +1859,7 @@ var sources = []*ast.Source{
 
   At the moment, an account is secure once they have two factor authentication enabled. This may include future conditions.
   """
-  isSecure: Boolean!
+  isSecure: Boolean! @goField(forceResolver: true)
 
   """
   Whether or not this account is deleted.
@@ -3910,7 +3912,7 @@ func (ec *executionContext) _Account_isSecure(ctx context.Context, field graphql
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.IsSecure, nil
+		return ec.resolvers.Account().IsSecure(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3931,8 +3933,8 @@ func (ec *executionContext) fieldContext_Account_isSecure(ctx context.Context, f
 	fc = &graphql.FieldContext{
 		Object:     "Account",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Boolean does not have child fields")
 		},
@@ -14793,12 +14795,25 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "isSecure":
+			field := field
 
-			out.Values[i] = ec._Account_isSecure(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Account_isSecure(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
 			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "isDeleted":
 
 			out.Values[i] = ec._Account_isDeleted(ctx, field, obj)

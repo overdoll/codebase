@@ -18,10 +18,6 @@ Until then, you can restore your account using the button below.
 
 Restore Account ( https://ci.overdoll.dev/settings/profile/delete-account )
 
-overdoll Inc.
-
-152-4936 Yonge Street, Toronto Ontario M2N 6S3, Canada
-
 Terms of Service ( https://www.corpodoll.com/tos/ )
 
 Privacy Policy ( https://www.corpodoll.com/privacy/ )

@@ -18,7 +18,7 @@ func NewBootstrap() {
 	zap.ReplaceGlobals(logger)
 
 	// only show errors
-	grpc_zap.ReplaceGrpcLoggerV2(logger.WithOptions(zap.IncreaseLevel(zap.WarnLevel)))
+	grpc_zap.ReplaceGrpcLoggerV2(logger.WithOptions(zap.IncreaseLevel(zap.ErrorLevel)))
 
 	sentry_support.SentryInit()
 }

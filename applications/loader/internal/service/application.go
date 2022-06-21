@@ -17,7 +17,7 @@ import (
 
 func NewApplication(ctx context.Context) (*app.Application, func()) {
 	bootstrap.NewBootstrap()
-	stingClient, cleanup := clients.NewStingCallbackClient(ctx, os.Getenv("STING_SERVICE"))
+	stingClient, cleanup := clients.NewResourceCallbackClient(ctx, os.Getenv("STING_SERVICE"))
 
 	return createApplication(ctx, adapters.NewCallbackGrpc(stingClient), clients.NewTemporalClient(ctx)), func() {
 		cleanup()

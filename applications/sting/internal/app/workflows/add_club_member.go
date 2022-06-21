@@ -3,7 +3,6 @@ package workflows
 import (
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/sting/internal/app/workflows/activities"
-	activities2 "overdoll/applications/sting/internal/app/workflows/activities"
 	"time"
 )
 
@@ -22,7 +21,7 @@ func AddClubMember(ctx workflow.Context, input AddClubMemberInput) error {
 
 	// adds the member to the list - the account's own list and the club's list
 	if err := workflow.ExecuteActivity(ctx, a.AddClubMemberToList,
-		activities2.AddClubMemberToListInput{
+		activities.AddClubMemberToListInput{
 			ClubId:    input.ClubId,
 			AccountId: input.AccountId,
 			JoinedAt:  input.JoinedAt,
@@ -33,7 +32,7 @@ func AddClubMember(ctx workflow.Context, input AddClubMemberInput) error {
 	}
 
 	if err := workflow.ExecuteActivity(ctx, a.AddClubMember,
-		activities2.AddClubMemberInput{
+		activities.AddClubMemberInput{
 			ClubId:    input.ClubId,
 			AccountId: input.AccountId,
 		},

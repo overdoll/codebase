@@ -14,18 +14,18 @@ type ClubOverChargebackThreshold struct {
 }
 
 type ClubOverChargebackThresholdHandler struct {
-	mr     mailing.Repository
-	eva    EvaService
-	stella StingService
+	mr    mailing.Repository
+	eva   EvaService
+	sting StingService
 }
 
-func NewClubOverChargebackThresholdHandler(mr mailing.Repository, eva EvaService, stella StingService) ClubOverChargebackThresholdHandler {
-	return ClubOverChargebackThresholdHandler{mr: mr, eva: eva, stella: stella}
+func NewClubOverChargebackThresholdHandler(mr mailing.Repository, eva EvaService, sting StingService) ClubOverChargebackThresholdHandler {
+	return ClubOverChargebackThresholdHandler{mr: mr, eva: eva, sting: sting}
 }
 
 func (h ClubOverChargebackThresholdHandler) Handle(ctx context.Context, cmd ClubOverChargebackThreshold) error {
 
-	clubDetails, err := h.stella.GetClub(ctx, cmd.ClubId)
+	clubDetails, err := h.sting.GetClub(ctx, cmd.ClubId)
 
 	if err != nil {
 		return err

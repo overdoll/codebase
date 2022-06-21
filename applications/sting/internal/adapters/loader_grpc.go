@@ -2,9 +2,12 @@ package adapters
 
 import (
 	"context"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	loader "overdoll/applications/loader/proto"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/resource"
 	"overdoll/libraries/resource/proto"
 )
@@ -18,13 +21,26 @@ func NewLoaderGrpc(client loader.LoaderClient, serializer *resource.Serializer) 
 	return LoaderGrpc{client: client, serializer: serializer}
 }
 
-func (s LoaderGrpc) CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string, private bool, token string) ([]*resource.Resource, error) {
+func (s LoaderGrpc) CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string, private bool, token string, onlyImages bool) ([]*resource.Resource, error) {
 
-	md, err := s.client.CreateOrGetResourcesFromUploads(ctx, &loader.CreateOrGetResourcesFromUploadsRequest{
+	req := &loader.CreateOrGetResourcesFromUploadsRequest{
 		ItemId: itemId, ResourceIds: resourceIds, Private: private, Token: token, Source: proto.SOURCE_STING,
-	})
+	}
+
+	if onlyImages {
+		req.ValidationOptions = &loader.ValidationOptions{AllowImages: true, AllowVideos: false}
+	}
+
+	md, err := s.client.CreateOrGetResourcesFromUploads(ctx, req)
 
 	if err != nil {
+
+		st, ok := status.FromError(err)
+		// invalid arguments from loader means that the file type was invalid or not allowed
+		if ok && st.Code() == codes.InvalidArgument {
+			return nil, domainerror.NewValidation("file type not allowed")
+		}
+
 		return nil, errors.Wrap(err, "failed to create or get resources from uploads")
 	}
 

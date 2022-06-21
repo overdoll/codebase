@@ -336,6 +336,64 @@ func (r PostsCassandraElasticsearchRepository) GetTotalPostsForCategoryOperator(
 	return int(count), nil
 }
 
+func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, pst *post.Post) ([]*post.Post, error) {
+
+	builder := r.client.Search().
+		Index(PostIndexName)
+
+	if cursor == nil {
+		return nil, paging.ErrCursorNotPresent
+	}
+
+	if err := cursor.BuildElasticsearch(builder, "created_at", "id", true); err != nil {
+		return nil, err
+	}
+
+	query := elastic.NewBoolQuery()
+
+	var filterQueries []elastic.Query
+
+	terminatedClubIds, err := r.getTerminatedClubIds(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	filterQueries = append(filterQueries, elastic.NewBoolQuery().
+		MustNot(elastic.NewTermsQueryFromStrings("club_id", terminatedClubIds...)).
+		MustNot(elastic.NewTermsQueryFromStrings("id", pst.ID())),
+	)
+
+	filterQueries = append(filterQueries, elastic.NewTermQuery("audience_id", *pst.AudienceId()))
+	filterQueries = append(filterQueries, elastic.NewTermQuery("state", post.Published.String()))
+	filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("supporter_only_status", post.None.String(), post.Partial.String()))
+
+	query.Filter(filterQueries...)
+
+	builder.Query(query)
+
+	response, err := builder.Pretty(true).Do(ctx)
+
+	if err != nil {
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed to search suggested posts by post")
+	}
+
+	var posts []*post.Post
+
+	for _, hit := range response.Hits.Hits {
+
+		createdPost, err := r.unmarshalPostDocument(ctx, hit)
+
+		if err != nil {
+			return nil, err
+		}
+
+		posts = append(posts, createdPost)
+	}
+
+	return posts, nil
+}
+
 func (r PostsCassandraElasticsearchRepository) ClubMembersPostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*post.Post, error) {
 
 	builder := r.client.Search().

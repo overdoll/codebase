@@ -12,7 +12,6 @@ cd "$parent_path"
 sh ../cleanup/eva.sh
 sh ../cleanup/loader.sh
 sh ../cleanup/parley.sh
-sh ../cleanup/stella.sh
 sh ../cleanup/sting.sh
 sh ../cleanup/hades.sh
 sh ../cleanup/ringer.sh

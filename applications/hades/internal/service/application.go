@@ -23,7 +23,7 @@ func NewApplication(ctx context.Context) (*app.Application, func()) {
 	bootstrap.NewBootstrap()
 
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
-	stellaClient, cleanup2 := clients.NewStingClient(ctx, os.Getenv("STING_SERVICE"))
+	stingClient, cleanup2 := clients.NewStingClient(ctx, os.Getenv("STING_SERVICE"))
 	carrierClient, cleanup3 := clients.NewCarrierClient(ctx, os.Getenv("CARRIER_SERVICE"))
 	ringerClient, cleanup4 := clients.NewRingerClient(ctx, os.Getenv("RINGER_SERVICE"))
 
@@ -31,7 +31,7 @@ func NewApplication(ctx context.Context) (*app.Application, func()) {
 
 	return createApplication(ctx,
 			adapters.NewEvaGrpc(evaClient),
-			adapters.NewStingGrpc(stellaClient),
+			adapters.NewStingGrpc(stingClient),
 			adapters.NewCarrierGrpc(carrierClient),
 			adapters.NewRingerGrpc(ringerClient),
 			ccbillClient,

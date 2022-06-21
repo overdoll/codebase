@@ -2,6 +2,8 @@ package ports
 
 import (
 	"context"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"overdoll/applications/loader/internal/app"
 	"overdoll/applications/loader/internal/app/command"
 	"overdoll/applications/loader/internal/app/query"
@@ -22,15 +24,30 @@ func NewGrpcServer(application *app.Application) *Server {
 
 func (s Server) CreateOrGetResourcesFromUploads(ctx context.Context, request *loader.CreateOrGetResourcesFromUploadsRequest) (*loader.CreateOrGetResourcesFromUploadsResponse, error) {
 
+	allowVideos := true
+	allowImages := true
+
+	if request.ValidationOptions != nil {
+		allowVideos = request.ValidationOptions.AllowVideos
+		allowImages = request.ValidationOptions.AllowImages
+	}
+
 	resources, err := s.app.Commands.NewCreateOrGetResourcesFromUploads.Handle(ctx, command.CreateOrGetResourcesFromUploads{
-		ItemId:    request.ItemId,
-		UploadIds: request.ResourceIds,
-		IsPrivate: request.Private,
-		Token:     request.Token,
-		Source:    request.Source.String(),
+		ItemId:      request.ItemId,
+		UploadIds:   request.ResourceIds,
+		IsPrivate:   request.Private,
+		Token:       request.Token,
+		Source:      request.Source.String(),
+		AllowVideos: allowVideos,
+		AllowImages: allowImages,
 	})
 
 	if err != nil {
+
+		if err == resource.ErrFileTypeNotAllowed {
+			return nil, status.Error(codes.InvalidArgument, err.Error())
+		}
+
 		return nil, err
 	}
 

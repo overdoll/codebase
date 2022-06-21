@@ -43,6 +43,7 @@ message CreateOrGetResourcesFromUploadsRequest {
   bool private = 3;
   overdoll.libraries.SOURCE source = 4;
   string token = 5;
+  optional ValidationOptions validationOptions = 6;
 }
 
 message CreateOrGetResourcesFromUploadsResponse {
@@ -59,6 +60,11 @@ message GetResourcesRequest {
 }
 
 message DeleteResourcesResponse {}
+
+message ValidationOptions {
+  bool allowImages = 1;
+  bool allowVideos = 2;
+}
 
 service Loader {
   rpc CreateOrGetResourcesFromUploads(CreateOrGetResourcesFromUploadsRequest) returns (CreateOrGetResourcesFromUploadsResponse);

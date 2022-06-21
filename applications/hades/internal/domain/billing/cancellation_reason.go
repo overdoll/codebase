@@ -97,7 +97,7 @@ func (m *CancellationReason) canUpdate(requester *principal.Principal) error {
 
 func validateTitle(title string) error {
 
-	err := validator.New().Var(title, "required,max=25")
+	err := validator.New().Var(title, "required,max=75")
 
 	if err != nil {
 		return domainerror.NewValidation(err.Error())

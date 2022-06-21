@@ -7,12 +7,12 @@ import (
 )
 
 type PrincipalByIdHandler struct {
-	eva    EvaService
-	stella StingService
+	eva   EvaService
+	sting StingService
 }
 
-func NewPrincipalByIdHandler(eva EvaService, stella StingService) PrincipalByIdHandler {
-	return PrincipalByIdHandler{eva: eva, stella: stella}
+func NewPrincipalByIdHandler(eva EvaService, sting StingService) PrincipalByIdHandler {
+	return PrincipalByIdHandler{eva: eva, sting: sting}
 }
 
 func (h PrincipalByIdHandler) Handle(ctx context.Context, id string) (*principal.Principal, error) {
@@ -23,7 +23,7 @@ func (h PrincipalByIdHandler) Handle(ctx context.Context, id string) (*principal
 		return nil, err
 	}
 
-	clubExtension, err := h.stella.GetAccountClubPrincipalExtension(ctx, id)
+	clubExtension, err := h.sting.GetAccountClubPrincipalExtension(ctx, id)
 
 	if err != nil {
 		return nil, err

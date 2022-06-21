@@ -10,7 +10,7 @@ import (
 	"overdoll/libraries/principal"
 )
 
-func (r *QueryResolver) Clubs(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended bool, terminated bool, sortBy types.ClubsSort) (*types.ClubConnection, error) {
+func (r *QueryResolver) Clubs(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended *bool, terminated *bool, sortBy types.ClubsSort) (*types.ClubConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -24,8 +24,8 @@ func (r *QueryResolver) Clubs(ctx context.Context, after *string, before *string
 		Name:       name,
 		Slugs:      slugs,
 		SortBy:     sortBy.String(),
-		Suspended:  &suspended,
-		Terminated: &terminated,
+		Suspended:  suspended,
+		Terminated: terminated,
 	})
 
 	if err != nil {

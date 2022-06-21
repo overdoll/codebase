@@ -45,11 +45,11 @@ type clubBalance struct {
 
 type BalanceCassandraRepository struct {
 	session gocqlx.Session
-	stella  query.StingService
+	sting   query.StingService
 }
 
-func NewBalanceCassandraRepository(session gocqlx.Session, stella query.StingService) BalanceCassandraRepository {
-	return BalanceCassandraRepository{session: session, stella: stella}
+func NewBalanceCassandraRepository(session gocqlx.Session, sting query.StingService) BalanceCassandraRepository {
+	return BalanceCassandraRepository{session: session, sting: sting}
 }
 
 func (r BalanceCassandraRepository) getBalanceForClub(ctx context.Context, requester *principal.Principal, clubId string, table *table.Table) (*balance.ClubBalance, error) {
