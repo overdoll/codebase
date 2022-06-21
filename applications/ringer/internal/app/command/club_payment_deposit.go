@@ -9,6 +9,7 @@ import (
 )
 
 type ClubPaymentDeposit struct {
+	IdempotencyKey              string
 	AccountId                   string
 	ClubId                      string
 	AccountTransactionId        string
@@ -39,6 +40,7 @@ func (h ClubPaymentDepositHandler) Handle(ctx context.Context, cmd ClubPaymentDe
 	}
 
 	request, err := event.NewClubSupporterSubscriptionPaymentDepositRequest(
+		cmd.IdempotencyKey,
 		cmd.AccountTransactionId,
 		cmd.AccountId,
 		cmd.ClubId,

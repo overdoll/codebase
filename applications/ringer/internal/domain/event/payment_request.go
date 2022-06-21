@@ -18,9 +18,11 @@ type PaymentRequest struct {
 	timestamp time.Time
 
 	isDeduction bool
+
+	idempotencyKey string
 }
 
-func NewClubSupporterSubscriptionPaymentDepositRequest(accountTransactionId, sourceAccountId, destinationClubId string, amount uint64, currency money.Currency, timestamp time.Time) (*PaymentRequest, error) {
+func NewClubSupporterSubscriptionPaymentDepositRequest(idempotencyKey, accountTransactionId, sourceAccountId, destinationClubId string, amount uint64, currency money.Currency, timestamp time.Time) (*PaymentRequest, error) {
 
 	if currency != money.USD {
 		return nil, domainerror.NewValidation("deposits are only accepted in USD")
@@ -29,6 +31,7 @@ func NewClubSupporterSubscriptionPaymentDepositRequest(accountTransactionId, sou
 	return &PaymentRequest{
 		isClubSupporterSubscription: true,
 		accountTransactionId:        accountTransactionId,
+		idempotencyKey:              idempotencyKey,
 		sourceAccountId:             sourceAccountId,
 		destinationClubId:           destinationClubId,
 		amount:                      amount,
@@ -37,7 +40,7 @@ func NewClubSupporterSubscriptionPaymentDepositRequest(accountTransactionId, sou
 	}, nil
 }
 
-func NewClubSupporterSubscriptionPaymentDeductionRequest(accountTransactionId, sourceAccountId, destinationClubId string, amount uint64, currency money.Currency, timestamp time.Time) (*PaymentRequest, error) {
+func NewClubSupporterSubscriptionPaymentDeductionRequest(idempotencyKey, accountTransactionId, sourceAccountId, destinationClubId string, amount uint64, currency money.Currency, timestamp time.Time) (*PaymentRequest, error) {
 
 	if currency != money.USD {
 		return nil, domainerror.NewValidation("deductions are only accepted in USD")
@@ -46,6 +49,7 @@ func NewClubSupporterSubscriptionPaymentDeductionRequest(accountTransactionId, s
 	return &PaymentRequest{
 		isClubSupporterSubscription: true,
 		accountTransactionId:        accountTransactionId,
+		idempotencyKey:              idempotencyKey,
 		sourceAccountId:             sourceAccountId,
 		destinationClubId:           destinationClubId,
 		amount:                      amount,
@@ -53,6 +57,10 @@ func NewClubSupporterSubscriptionPaymentDeductionRequest(accountTransactionId, s
 		timestamp:                   timestamp,
 		isDeduction:                 true,
 	}, nil
+}
+
+func (p *PaymentRequest) IdempotencyKey() string {
+	return p.idempotencyKey
 }
 
 func (p *PaymentRequest) IsClubSupporterSubscription() bool {

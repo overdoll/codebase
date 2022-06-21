@@ -511,6 +511,7 @@ func (p *Post) UpdateCharactersRequest(requester *principal.Principal, character
 	}
 
 	p.characterIds = characterIds
+	p.seriesIds = seriesIds
 
 	p.update()
 

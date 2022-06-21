@@ -14,18 +14,18 @@ type ClubSupporterRequiredPostReminder struct {
 }
 
 type ClubSupporterRequiredPostReminderHandler struct {
-	mr     mailing.Repository
-	eva    EvaService
-	stella StingService
+	mr    mailing.Repository
+	eva   EvaService
+	sting StingService
 }
 
-func NewClubSupporterRequiredPostReminderHandler(mr mailing.Repository, eva EvaService, stella StingService) ClubSupporterRequiredPostReminderHandler {
-	return ClubSupporterRequiredPostReminderHandler{mr: mr, eva: eva, stella: stella}
+func NewClubSupporterRequiredPostReminderHandler(mr mailing.Repository, eva EvaService, sting StingService) ClubSupporterRequiredPostReminderHandler {
+	return ClubSupporterRequiredPostReminderHandler{mr: mr, eva: eva, sting: sting}
 }
 
 func (h ClubSupporterRequiredPostReminderHandler) Handle(ctx context.Context, cmd ClubSupporterRequiredPostReminder) error {
 
-	clubDetails, err := h.stella.GetClub(ctx, cmd.ClubId)
+	clubDetails, err := h.sting.GetClub(ctx, cmd.ClubId)
 
 	if err != nil {
 		return err

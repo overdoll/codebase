@@ -2,6 +2,9 @@ type Series implements Node @key(fields: "id") {
   """An ID pointing to this series."""
   id: ID!
 
+  """An ID that can be used to uniquely-identify this series. Never changes."""
+  reference: String!
+
   """A url-friendly ID. Should be used when searching"""
   slug: String!
 

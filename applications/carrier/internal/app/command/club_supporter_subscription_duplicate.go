@@ -15,13 +15,13 @@ type ClubSupporterSubscriptionDuplicate struct {
 }
 
 type ClubSupporterSubscriptionDuplicateHandler struct {
-	mr     mailing.Repository
-	eva    EvaService
-	stella StingService
+	mr    mailing.Repository
+	eva   EvaService
+	sting StingService
 }
 
-func NewClubSupporterSubscriptionDuplicateHandler(mr mailing.Repository, eva EvaService, stella StingService) ClubSupporterSubscriptionDuplicateHandler {
-	return ClubSupporterSubscriptionDuplicateHandler{mr: mr, eva: eva, stella: stella}
+func NewClubSupporterSubscriptionDuplicateHandler(mr mailing.Repository, eva EvaService, sting StingService) ClubSupporterSubscriptionDuplicateHandler {
+	return ClubSupporterSubscriptionDuplicateHandler{mr: mr, eva: eva, sting: sting}
 }
 
 func (h ClubSupporterSubscriptionDuplicateHandler) Handle(ctx context.Context, cmd ClubSupporterSubscriptionDuplicate) error {
@@ -32,7 +32,7 @@ func (h ClubSupporterSubscriptionDuplicateHandler) Handle(ctx context.Context, c
 		return err
 	}
 
-	clubDetails, err := h.stella.GetClub(ctx, cmd.ClubId)
+	clubDetails, err := h.sting.GetClub(ctx, cmd.ClubId)
 
 	if err != nil {
 		return err

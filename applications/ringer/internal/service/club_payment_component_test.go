@@ -101,10 +101,13 @@ func TestClubPaymentDeposit(t *testing.T) {
 	mockAccountDigestOwnClub(t, accountId, clubId)
 	gClient := getGraphqlClientWithAuthenticatedAccount(t, accountId)
 
+	key := uuid.New().String()
+
 	_, err := client.ClubPaymentDeposit(context.Background(), &ringer.ClubPaymentDepositRequest{
-		AccountTransactionId: uuid.New().String(),
+		AccountTransactionId: key,
 		SourceAccountId:      accountId,
 		DestinationClubId:    clubId,
+		IdempotencyKey:       key,
 		Payment: &ringer.Payment{
 			Amount:   100,
 			Currency: "USD",
@@ -207,6 +210,7 @@ func TestClubPaymentDeduction(t *testing.T) {
 		AccountTransactionId: accountTransactionId,
 		SourceAccountId:      accountId,
 		DestinationClubId:    clubId,
+		IdempotencyKey:       accountTransactionId,
 		Payment: &ringer.Payment{
 			Amount:   50,
 			Currency: "USD",

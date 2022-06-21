@@ -11,6 +11,7 @@ type NewClubSupporterSubscriptionPaymentDeductionInput struct {
 	AccountId            string
 	ClubId               string
 	AccountTransactionId string
+	IdempotencyKey       string
 
 	Amount    uint64
 	Currency  money.Currency
@@ -20,6 +21,7 @@ type NewClubSupporterSubscriptionPaymentDeductionInput struct {
 func (h *Activities) NewClubSupporterSubscriptionPaymentDeduction(ctx context.Context, input NewClubSupporterSubscriptionPaymentDeductionInput) error {
 	return h.ringer.NewClubSupporterSubscriptionPaymentDeduction(
 		ctx,
+		input.IdempotencyKey,
 		input.AccountId,
 		input.ClubId,
 		input.AccountTransactionId,

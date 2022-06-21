@@ -44,7 +44,7 @@ func (i ID) GetID() string {
 // a composite ID.
 // This function will grab the ID starting from the left, starting from 0
 
-// for example: StructName:SomeID1:SomeID2
+// GetCompositePartID for example: StructName:SomeID1:SomeID2
 // GetCompositePartID(0) will get "SomeID2"
 // GetCompositePartID(1) will get "SomeID1"
 func (i ID) GetCompositePartID(pos int) string {
@@ -63,17 +63,6 @@ func (i ID) GetCompositePartID(pos int) string {
 
 func (i ID) GetTypeName() string {
 	return decode(i)[0]
-}
-
-func NewMustUnmarshalFromBase64(s string) ID {
-
-	sDec, err := base64.StdEncoding.DecodeString(s)
-
-	if err != nil {
-		return ID("")
-	}
-
-	return ID(sDec)
 }
 
 // UnmarshalGQL implements the graphql.Unmarshaler interface

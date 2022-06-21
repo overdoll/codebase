@@ -3,6 +3,7 @@ package adapters
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -20,6 +21,7 @@ import (
 	"overdoll/applications/loader/internal/domain/resource"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/support"
 	"path/filepath"
 	"strings"
@@ -343,13 +345,13 @@ func (r ResourceCassandraS3Repository) DeleteResources(ctx context.Context, reso
 
 // GetAndCreateResources will create resources from a list of IDs passed
 // uploads are stored in uploads bucket - we HeadObject each file to determine the file format
-func (r ResourceCassandraS3Repository) GetAndCreateResources(ctx context.Context, itemId string, uploads []string, isPrivate bool, token string) ([]*resource.Resource, error) {
+func (r ResourceCassandraS3Repository) GetAndCreateResources(ctx context.Context, upload *resource.Upload) ([]*resource.Resource, error) {
 
 	var resources []*resource.Resource
 
 	s3Client := s3.New(r.aws)
 
-	for _, uploadId := range uploads {
+	for _, uploadId := range upload.UploadIds() {
 
 		fileId := strings.Split(uploadId, "+")[0]
 
@@ -362,15 +364,49 @@ func (r ResourceCassandraS3Repository) GetAndCreateResources(ctx context.Context
 			return nil, errors.Wrap(err, "failed to head file")
 		}
 
-		// create a new resource - our url + the content type that came back from S3
+		getResp, err := s3Client.GetObject(&s3.GetObjectInput{
+			Bucket: aws.String(os.Getenv("UPLOADS_BUCKET")),
+			Key:    aws.String(fileId + ".info"),
+		})
 
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to get object")
+		}
+
+		b, err := io.ReadAll(getResp.Body)
+
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to read body")
+		}
+
+		type UploadMetaData struct {
+			Size int
+		}
+
+		var data *UploadMetaData
+
+		if err := json.Unmarshal(b, &data); err != nil {
+			return nil, errors.Wrap(err, "failed to unmarshal upload metadata")
+		}
+
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to parse content length")
+		}
+
+		if int64(data.Size) != *resp.ContentLength {
+			return nil, domainerror.NewValidation("file not yet fully uploaded")
+		}
+
+		// create a new resource - our url + the content type that came back from S3
 		fileType := resp.Metadata["Filetype"]
 		newResource, err := resource.NewResource(
-			itemId,
+			upload.ItemId(),
 			uploadId,
 			*fileType,
-			isPrivate,
-			token,
+			upload.IsPrivate(),
+			upload.Token(),
+			upload.AllowImages(),
+			upload.AllowVideos(),
 		)
 
 		if err != nil {

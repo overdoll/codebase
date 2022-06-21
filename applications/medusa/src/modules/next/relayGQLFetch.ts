@@ -20,14 +20,14 @@ export const clientFetch = (securityToken) => {
     // throw errors for mutations if array of errors is detected in the response
     if (Array.isArray(result.errors) && kind === 'mutation') {
       const error = new Error(JSON.stringify(result.errors))
-      console.log('Mutation Error ::', error)
+      console.error('Mutation Error ::', error)
       throw error
     }
 
     // throw errors for queries if array of errors is detected in the response
     if (Array.isArray(result.errors) && kind === 'query') {
       const error = new Error(JSON.stringify(result.errors))
-      console.log('Query Error ::', error)
+      console.error('Query Error ::', error)
       // we filter out the viewer if there a query error so it doesn't mess with the internal store
       if (result?.data?.viewer === null) {
         const {

@@ -19,8 +19,8 @@ type StingService interface {
 }
 
 type RingerService interface {
-	NewClubSupporterSubscriptionPaymentDeposit(ctx context.Context, accountId, clubId, transactionId string, timestamp time.Time, price *billing.Price) error
-	NewClubSupporterSubscriptionPaymentDeduction(ctx context.Context, accountId, clubId, transactionId string, timestamp time.Time, price *billing.Price) error
+	NewClubSupporterSubscriptionPaymentDeposit(ctx context.Context, idempotencyKey, accountId, clubId, transactionId string, timestamp time.Time, price *billing.Price) error
+	NewClubSupporterSubscriptionPaymentDeduction(ctx context.Context, idempotencyKey, accountId, clubId, transactionId string, timestamp time.Time, price *billing.Price) error
 }
 
 type EvaService interface {

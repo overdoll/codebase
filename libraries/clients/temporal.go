@@ -23,7 +23,7 @@ func NewTemporalClient(ctx context.Context) client.Client {
 		zap.S().Fatalw("unable to create temporal data converter", zap.Error(err))
 	}
 
-	c, err := client.NewClient(client.Options{
+	c, err := client.NewLazyClient(client.Options{
 		HostPort:           os.Getenv("TEMPORAL_URL"),
 		Namespace:          os.Getenv("TEMPORAL_NAMESPACE"),
 		DataConverter:      data,

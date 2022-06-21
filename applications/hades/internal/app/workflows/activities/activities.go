@@ -17,11 +17,11 @@ type Activities struct {
 	ringer  command.RingerService
 }
 
-func NewActivitiesHandler(billing billing.Repository, mr metrics.Repository, fr billing.FileRepository, ccbill ccbill.Repository, stella command.StingService, carrier command.CarrierService, ringer command.RingerService) *Activities {
+func NewActivitiesHandler(billing billing.Repository, mr metrics.Repository, fr billing.FileRepository, ccbill ccbill.Repository, sting command.StingService, carrier command.CarrierService, ringer command.RingerService) *Activities {
 	return &Activities{
 		billing: billing,
 		mr:      mr,
-		sting:   stella,
+		sting:   sting,
 		fr:      fr,
 		ccbill:  ccbill,
 		carrier: carrier,

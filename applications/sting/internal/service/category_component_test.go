@@ -6,7 +6,9 @@ import (
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/bootstrap"
+	graphql2 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/resource/proto"
 	"overdoll/libraries/uuid"
 	"testing"
 
@@ -17,9 +19,8 @@ import (
 type CategoryModified struct {
 	Id        relay.ID
 	Title     string
-	Thumbnail *struct {
-		Id string
-	}
+	Reference string
+	Thumbnail *graphql2.Resource
 }
 
 type SearchCategories struct {
@@ -135,20 +136,41 @@ func TestCreateCategory_update_and_search(t *testing.T) {
 
 	require.NoError(t, err, "no error updating category title")
 
+	categoryThumbnailId := "00be69a89e31d28cf8e79b7373d505c7"
+
 	var updateCategoryThumbnail UpdateCategoryThumbnail
 
 	err = client.Mutate(context.Background(), &updateCategoryThumbnail, map[string]interface{}{
 		"input": types.UpdateCategoryThumbnailInput{
 			ID:        category.Id,
-			Thumbnail: "00be69a89e31d28cf8e79b7373d505c7",
+			Thumbnail: categoryThumbnailId,
 		},
 	})
 
+	require.False(t, updateCategoryThumbnail.UpdateCategoryThumbnail.Category.Thumbnail.Processed, "not yet processed")
+
 	require.NoError(t, err, "no error updating category thumbnail")
+
+	grpcClient := getGrpcCallbackClient(t)
+
+	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
+		Id:          categoryThumbnailId,
+		ItemId:      category.Reference,
+		Processed:   true,
+		Type:        proto.ResourceType_IMAGE,
+		ProcessedId: uuid.New().String(),
+		Private:     false,
+		Width:       100,
+		Height:      100,
+		Token:       "CATEGORY",
+	}}})
+
+	require.NoError(t, err, "no error updating resource")
 
 	category = getCategoryBySlug(t, client, currentCategorySlug)
 
 	require.NotNil(t, category, "found category")
 	require.Equal(t, fake.Title, category.Title, "title has been updated")
 	require.NotNil(t, category.Thumbnail, "has a thumbnail")
+	require.True(t, category.Thumbnail.Processed, "thumbnail is processed")
 }

@@ -49,6 +49,8 @@ func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 			ctx = sentry.SetHubOnContext(ctx, hub)
 		}
 
+		hub.Scope().SetTag("grpc.method", info.FullMethod)
+
 		defer func() {
 			if r := recover(); r != nil || panicked {
 				err = recoverGrpcWithSentry(hub, r, ctx, info.FullMethod)
@@ -60,7 +62,7 @@ func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 
 		if err != nil && !panicked {
 			st, ok := status.FromError(err)
-			if (ok && st.Code() != codes.NotFound) || !ok {
+			if (ok && st.Code() != codes.NotFound && st.Code() != codes.InvalidArgument) || !ok {
 				zap.S().Errorw("unary server error", zap.Error(err), zap.String("method", info.FullMethod))
 				hub.CaptureException(err)
 			}
@@ -90,6 +92,8 @@ func StreamServerInterceptor() grpc.StreamServerInterceptor {
 			ctx = sentry.SetHubOnContext(ctx, hub)
 		}
 
+		hub.Scope().SetTag("grpc.method", info.FullMethod)
+
 		stream := grpc_middleware.WrapServerStream(ss)
 		stream.WrappedContext = ctx
 
@@ -104,7 +108,7 @@ func StreamServerInterceptor() grpc.StreamServerInterceptor {
 
 		if err != nil && !panicked {
 			st, ok := status.FromError(err)
-			if (ok && st.Code() != codes.NotFound) || !ok {
+			if (ok && st.Code() != codes.NotFound && st.Code() != codes.InvalidArgument) || !ok {
 				zap.S().Errorw("stream server error", zap.Error(err), zap.String("method", info.FullMethod))
 				hub.CaptureException(err)
 			}

@@ -4279,16 +4279,20 @@ type Query {
     """
     Filter by all the clubs that are suspended.
     
-    Staff+ only for "true"
+    By default, will show all clubs that are suspended and terminated.
+    
+    False to show all clubs that are not suspended and True to show only clubs that are suspended.
     """
-    suspended: Boolean! = false
+    suspended: Boolean
 
     """
     Filter by all the clubs that are terminated.
     
-    Staff+ only for "true"
+    By default, will show all terminated clubs.
+    
+    False to show all clubs that are not terminated and True to show only clubs that are terminated.
     """
-    terminated: Boolean! = false
+    terminated: Boolean
   ): ClubConnection!
 
   """Grab all available countries."""

@@ -27,6 +27,7 @@ func (s Server) ClubPaymentDeposit(ctx context.Context, request *ringer.ClubPaym
 	}
 
 	if err := s.app.Commands.ClubPaymentDeposit.Handle(ctx, command.ClubPaymentDeposit{
+		IdempotencyKey:              request.IdempotencyKey,
 		AccountId:                   request.SourceAccountId,
 		ClubId:                      request.DestinationClubId,
 		AccountTransactionId:        request.AccountTransactionId,
@@ -50,6 +51,7 @@ func (s Server) ClubPaymentDeduction(ctx context.Context, request *ringer.ClubPa
 	}
 
 	if err := s.app.Commands.ClubPaymentDeduction.Handle(ctx, command.ClubPaymentDeduction{
+		IdempotencyKey:              request.IdempotencyKey,
 		AccountId:                   request.SourceAccountId,
 		ClubId:                      request.DestinationClubId,
 		AccountTransactionId:        request.AccountTransactionId,

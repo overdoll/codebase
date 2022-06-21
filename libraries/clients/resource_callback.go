@@ -14,13 +14,13 @@ import (
 	"google.golang.org/grpc/codes"
 )
 
-func NewStingCallbackClient(ctx context.Context, address string) (proto.ResourceCallbackClient, func()) {
+func NewResourceCallbackClient(ctx context.Context, address string) (proto.ResourceCallbackClient, func()) {
 	opts := []grpc_retry.CallOption{
 		grpc_retry.WithBackoff(grpc_retry.BackoffExponential(100 * time.Millisecond)),
 		grpc_retry.WithCodes(codes.Aborted, codes.Unavailable),
 	}
 
-	stingConnection, err := grpc.DialContext(ctx, address,
+	callbackConnection, err := grpc.DialContext(ctx, address,
 		grpc.WithInsecure(),
 		grpc.WithStreamInterceptor(grpc_retry.StreamClientInterceptor(opts...)),
 		grpc.WithUnaryInterceptor(grpc_retry.UnaryClientInterceptor(opts...)),
@@ -31,11 +31,11 @@ func NewStingCallbackClient(ctx context.Context, address string) (proto.Resource
 	)
 
 	if err != nil {
-		sentry_support.MustCaptureException(errors.Wrap(err, "failed to start new sting client"))
-		zap.S().Fatalw("failed to start new sting client", zap.Error(err))
+		sentry_support.MustCaptureException(errors.Wrap(err, "failed to start new resource callback client"))
+		zap.S().Fatalw("failed to start new resource callback client", zap.Error(err))
 	}
 
-	return proto.NewResourceCallbackClient(stingConnection), func() {
-		_ = stingConnection.Close()
+	return proto.NewResourceCallbackClient(callbackConnection), func() {
+		_ = callbackConnection.Close()
 	}
 }

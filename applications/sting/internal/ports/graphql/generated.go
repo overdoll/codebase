@@ -90,6 +90,7 @@ type ComplexityRoot struct {
 	Audience struct {
 		ID                func(childComplexity int) int
 		Posts             func(childComplexity int, after *string, before *string, first *int, last *int, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) int
+		Reference         func(childComplexity int) int
 		Slug              func(childComplexity int) int
 		Standard          func(childComplexity int) int
 		Thumbnail         func(childComplexity int) int
@@ -118,6 +119,7 @@ type ComplexityRoot struct {
 	Category struct {
 		ID                func(childComplexity int) int
 		Posts             func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) int
+		Reference         func(childComplexity int) int
 		Slug              func(childComplexity int) int
 		Thumbnail         func(childComplexity int) int
 		Title             func(childComplexity int, locale *string) int
@@ -147,6 +149,7 @@ type ComplexityRoot struct {
 		Name             func(childComplexity int, locale *string) int
 		NameTranslations func(childComplexity int) int
 		Posts            func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) int
+		Reference        func(childComplexity int) int
 		Series           func(childComplexity int) int
 		Slug             func(childComplexity int) int
 		Thumbnail        func(childComplexity int) int
@@ -431,7 +434,7 @@ type ComplexityRoot struct {
 		Character          func(childComplexity int, slug string, seriesSlug string) int
 		Characters         func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, seriesSlug *string, name *string, sortBy types.CharactersSort) int
 		Club               func(childComplexity int, slug string) int
-		Clubs              func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended bool, terminated bool, sortBy types.ClubsSort) int
+		Clubs              func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended *bool, terminated *bool, sortBy types.ClubsSort) int
 		Post               func(childComplexity int, reference string) int
 		Posts              func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) int
 		PostsFeed          func(childComplexity int, after *string, before *string, first *int, last *int) int
@@ -469,6 +472,7 @@ type ComplexityRoot struct {
 	Series struct {
 		ID                func(childComplexity int) int
 		Posts             func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) int
+		Reference         func(childComplexity int) int
 		Slug              func(childComplexity int) int
 		Thumbnail         func(childComplexity int) int
 		Title             func(childComplexity int, locale *string) int
@@ -724,7 +728,7 @@ type QueryResolver interface {
 	Audience(ctx context.Context, slug string) (*types.Audience, error)
 	Characters(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, seriesSlug *string, name *string, sortBy types.CharactersSort) (*types.CharacterConnection, error)
 	Character(ctx context.Context, slug string, seriesSlug string) (*types.Character, error)
-	Clubs(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended bool, terminated bool, sortBy types.ClubsSort) (*types.ClubConnection, error)
+	Clubs(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended *bool, terminated *bool, sortBy types.ClubsSort) (*types.ClubConnection, error)
 	Club(ctx context.Context, slug string) (*types.Club, error)
 	PostsFeed(ctx context.Context, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
 	Post(ctx context.Context, reference string) (*types.Post, error)
@@ -897,6 +901,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Audience.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["sortBy"].(types.PostsSort)), true
 
+	case "Audience.reference":
+		if e.complexity.Audience.Reference == nil {
+			break
+		}
+
+		return e.complexity.Audience.Reference(childComplexity), true
+
 	case "Audience.slug":
 		if e.complexity.Audience.Slug == nil {
 			break
@@ -1018,6 +1029,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Category.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["sortBy"].(types.PostsSort)), true
+
+	case "Category.reference":
+		if e.complexity.Category.Reference == nil {
+			break
+		}
+
+		return e.complexity.Category.Reference(childComplexity), true
 
 	case "Category.slug":
 		if e.complexity.Category.Slug == nil {
@@ -1152,6 +1170,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Character.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["sortBy"].(types.PostsSort)), true
+
+	case "Character.reference":
+		if e.complexity.Character.Reference == nil {
+			break
+		}
+
+		return e.complexity.Character.Reference(childComplexity), true
 
 	case "Character.series":
 		if e.complexity.Character.Series == nil {
@@ -2663,7 +2688,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Clubs(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["suspended"].(bool), args["terminated"].(bool), args["sortBy"].(types.ClubsSort)), true
+		return e.complexity.Query.Clubs(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["suspended"].(*bool), args["terminated"].(*bool), args["sortBy"].(types.ClubsSort)), true
 
 	case "Query.post":
 		if e.complexity.Query.Post == nil {
@@ -2853,6 +2878,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Series.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["sortBy"].(types.PostsSort)), true
+
+	case "Series.reference":
+		if e.complexity.Series.Reference == nil {
+			break
+		}
+
+		return e.complexity.Series.Reference(childComplexity), true
 
 	case "Series.slug":
 		if e.complexity.Series.Slug == nil {
@@ -3253,6 +3285,9 @@ var sources = []*ast.Source{
   """An ID pointing to this audience."""
   id: ID!
 
+  """An ID that can be used to uniquely-identify this audience. Never changes."""
+  reference: String!
+
   """A url-friendly ID. Should be used when searching."""
   slug: String!
 
@@ -3450,6 +3485,9 @@ extend type Mutation {
   """An ID pointing to this category."""
   id: ID!
 
+  """An ID that can be used to uniquely-identify this category. Never changes."""
+  reference: String!
+
   """A url-friendly ID. Should be used when searching"""
   slug: String!
 
@@ -3620,6 +3658,9 @@ type Mutation {
 	{Name: "../../../schema/character/schema.graphql", Input: `type Character implements Node @key(fields: "id") {
   """An ID pointing to this character."""
   id: ID!
+
+  """An ID that can be used to uniquely-identify this character. Never changes."""
+  reference: String!
 
   """A url-friendly ID. Should be used when searching"""
   slug: String!
@@ -4339,16 +4380,20 @@ extend type Query {
     """
     Filter by all the clubs that are suspended.
 
-    Staff+ only for "true"
+    By default, will show all clubs that are suspended and terminated.
+
+    False to show all clubs that are not suspended and True to show only clubs that are suspended.
     """
-    suspended: Boolean! = false
+    suspended: Boolean
 
     """
     Filter by all the clubs that are terminated.
 
-    Staff+ only for "true"
+    By default, will show all terminated clubs.
+
+    False to show all clubs that are not terminated and True to show only clubs that are terminated.
     """
-    terminated: Boolean! = false
+    terminated: Boolean
 
     """Sorting options for clubs."""
     sortBy: ClubsSort! = POPULAR
@@ -5240,6 +5285,9 @@ extend type Audience {
   """An ID pointing to this series."""
   id: ID!
 
+  """An ID that can be used to uniquely-identify this series. Never changes."""
+  reference: String!
+
   """A url-friendly ID. Should be used when searching"""
   slug: String!
 
@@ -5494,7 +5542,7 @@ type Resource {
   """Video thumbnail, if video."""
   videoThumbnail: ResourceUrl
 
-  """The additional 10x10 base64-encoded image that can be used as a preview."""
+  """A hex-code color of the resource that can be used in-place while the resource is loading."""
   preview: String!
 }
 `, BuiltIn: false},
@@ -7559,19 +7607,19 @@ func (ec *executionContext) field_Query_clubs_args(ctx context.Context, rawArgs 
 		}
 	}
 	args["name"] = arg5
-	var arg6 bool
+	var arg6 *bool
 	if tmp, ok := rawArgs["suspended"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("suspended"))
-		arg6, err = ec.unmarshalNBoolean2bool(ctx, tmp)
+		arg6, err = ec.unmarshalOBoolean2ᚖbool(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
 	args["suspended"] = arg6
-	var arg7 bool
+	var arg7 *bool
 	if tmp, ok := rawArgs["terminated"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("terminated"))
-		arg7, err = ec.unmarshalNBoolean2bool(ctx, tmp)
+		arg7, err = ec.unmarshalOBoolean2ᚖbool(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -8860,6 +8908,50 @@ func (ec *executionContext) fieldContext_Audience_id(ctx context.Context, field 
 	return fc, nil
 }
 
+func (ec *executionContext) _Audience_reference(ctx context.Context, field graphql.CollectedField, obj *types.Audience) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Audience_reference(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Reference, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Audience_reference(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Audience",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Audience_slug(ctx context.Context, field graphql.CollectedField, obj *types.Audience) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Audience_slug(ctx, field)
 	if err != nil {
@@ -9496,6 +9588,8 @@ func (ec *executionContext) fieldContext_AudienceCurationProfile_audiences(ctx c
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Audience_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Audience_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Audience_slug(ctx, field)
 			case "thumbnail":
@@ -9604,6 +9698,8 @@ func (ec *executionContext) fieldContext_AudienceEdge_node(ctx context.Context, 
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Audience_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Audience_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Audience_slug(ctx, field)
 			case "thumbnail":
@@ -9666,6 +9762,50 @@ func (ec *executionContext) fieldContext_Category_id(ctx context.Context, field 
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Category_reference(ctx context.Context, field graphql.CollectedField, obj *types.Category) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Category_reference(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Reference, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Category_reference(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Category",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -10263,6 +10403,8 @@ func (ec *executionContext) fieldContext_CategoryCurationProfile_categories(ctx 
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Category_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Category_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Category_slug(ctx, field)
 			case "thumbnail":
@@ -10369,6 +10511,8 @@ func (ec *executionContext) fieldContext_CategoryEdge_node(ctx context.Context, 
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Category_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Category_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Category_slug(ctx, field)
 			case "thumbnail":
@@ -10429,6 +10573,50 @@ func (ec *executionContext) fieldContext_Character_id(ctx context.Context, field
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Character_reference(ctx context.Context, field graphql.CollectedField, obj *types.Character) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Character_reference(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Reference, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Character_reference(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Character",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -10773,6 +10961,8 @@ func (ec *executionContext) fieldContext_Character_series(ctx context.Context, f
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Series_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Series_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Series_slug(ctx, field)
 			case "thumbnail":
@@ -11044,6 +11234,8 @@ func (ec *executionContext) fieldContext_CharacterEdge_node(ctx context.Context,
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Character_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Character_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Character_slug(ctx, field)
 			case "thumbnail":
@@ -13467,6 +13659,8 @@ func (ec *executionContext) fieldContext_CreateAudiencePayload_audience(ctx cont
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Audience_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Audience_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Audience_slug(ctx, field)
 			case "thumbnail":
@@ -13569,6 +13763,8 @@ func (ec *executionContext) fieldContext_CreateCategoryPayload_category(ctx cont
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Category_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Category_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Category_slug(ctx, field)
 			case "thumbnail":
@@ -13669,6 +13865,8 @@ func (ec *executionContext) fieldContext_CreateCharacterPayload_character(ctx co
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Character_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Character_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Character_slug(ctx, field)
 			case "thumbnail":
@@ -13966,6 +14164,8 @@ func (ec *executionContext) fieldContext_CreateSeriesPayload_series(ctx context.
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Series_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Series_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Series_slug(ctx, field)
 			case "thumbnail":
@@ -14562,6 +14762,8 @@ func (ec *executionContext) fieldContext_Entity_findAudienceByID(ctx context.Con
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Audience_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Audience_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Audience_slug(ctx, field)
 			case "thumbnail":
@@ -14637,6 +14839,8 @@ func (ec *executionContext) fieldContext_Entity_findCategoryByID(ctx context.Con
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Category_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Category_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Category_slug(ctx, field)
 			case "thumbnail":
@@ -14710,6 +14914,8 @@ func (ec *executionContext) fieldContext_Entity_findCharacterByID(ctx context.Co
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Character_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Character_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Character_slug(ctx, field)
 			case "thumbnail":
@@ -15101,6 +15307,8 @@ func (ec *executionContext) fieldContext_Entity_findSeriesByID(ctx context.Conte
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Series_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Series_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Series_slug(ctx, field)
 			case "thumbnail":
@@ -18471,6 +18679,8 @@ func (ec *executionContext) fieldContext_Post_audience(ctx context.Context, fiel
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Audience_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Audience_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Audience_slug(ctx, field)
 			case "thumbnail":
@@ -18535,6 +18745,8 @@ func (ec *executionContext) fieldContext_Post_categories(ctx context.Context, fi
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Category_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Category_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Category_slug(ctx, field)
 			case "thumbnail":
@@ -18597,6 +18809,8 @@ func (ec *executionContext) fieldContext_Post_characters(ctx context.Context, fi
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Character_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Character_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Character_slug(ctx, field)
 			case "thumbnail":
@@ -19547,6 +19761,8 @@ func (ec *executionContext) fieldContext_Query_category(ctx context.Context, fie
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Category_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Category_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Category_slug(ctx, field)
 			case "thumbnail":
@@ -19678,6 +19894,8 @@ func (ec *executionContext) fieldContext_Query_audience(ctx context.Context, fie
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Audience_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Audience_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Audience_slug(ctx, field)
 			case "thumbnail":
@@ -19811,6 +20029,8 @@ func (ec *executionContext) fieldContext_Query_character(ctx context.Context, fi
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Character_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Character_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Character_slug(ctx, field)
 			case "thumbnail":
@@ -19859,7 +20079,7 @@ func (ec *executionContext) _Query_clubs(ctx context.Context, field graphql.Coll
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Clubs(rctx, fc.Args["after"].(*string), fc.Args["before"].(*string), fc.Args["first"].(*int), fc.Args["last"].(*int), fc.Args["slugs"].([]string), fc.Args["name"].(*string), fc.Args["suspended"].(bool), fc.Args["terminated"].(bool), fc.Args["sortBy"].(types.ClubsSort))
+		return ec.resolvers.Query().Clubs(rctx, fc.Args["after"].(*string), fc.Args["before"].(*string), fc.Args["first"].(*int), fc.Args["last"].(*int), fc.Args["slugs"].([]string), fc.Args["name"].(*string), fc.Args["suspended"].(*bool), fc.Args["terminated"].(*bool), fc.Args["sortBy"].(types.ClubsSort))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -20303,6 +20523,8 @@ func (ec *executionContext) fieldContext_Query_serial(ctx context.Context, field
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Series_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Series_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Series_slug(ctx, field)
 			case "thumbnail":
@@ -21258,6 +21480,50 @@ func (ec *executionContext) fieldContext_Series_id(ctx context.Context, field gr
 	return fc, nil
 }
 
+func (ec *executionContext) _Series_reference(ctx context.Context, field graphql.CollectedField, obj *types.Series) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Series_reference(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Reference, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Series_reference(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Series",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Series_slug(ctx context.Context, field graphql.CollectedField, obj *types.Series) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Series_slug(ctx, field)
 	if err != nil {
@@ -21806,6 +22072,8 @@ func (ec *executionContext) fieldContext_SeriesEdge_node(ctx context.Context, fi
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Series_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Series_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Series_slug(ctx, field)
 			case "thumbnail":
@@ -22470,6 +22738,8 @@ func (ec *executionContext) fieldContext_UpdateAudienceIsStandardPayload_audienc
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Audience_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Audience_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Audience_slug(ctx, field)
 			case "thumbnail":
@@ -22531,6 +22801,8 @@ func (ec *executionContext) fieldContext_UpdateAudienceThumbnailPayload_audience
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Audience_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Audience_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Audience_slug(ctx, field)
 			case "thumbnail":
@@ -22592,6 +22864,8 @@ func (ec *executionContext) fieldContext_UpdateAudienceTitlePayload_audience(ctx
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Audience_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Audience_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Audience_slug(ctx, field)
 			case "thumbnail":
@@ -22653,6 +22927,8 @@ func (ec *executionContext) fieldContext_UpdateCategoryThumbnailPayload_category
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Category_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Category_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Category_slug(ctx, field)
 			case "thumbnail":
@@ -22712,6 +22988,8 @@ func (ec *executionContext) fieldContext_UpdateCategoryTitlePayload_category(ctx
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Category_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Category_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Category_slug(ctx, field)
 			case "thumbnail":
@@ -22771,6 +23049,8 @@ func (ec *executionContext) fieldContext_UpdateCharacterNamePayload_character(ct
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Character_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Character_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Character_slug(ctx, field)
 			case "thumbnail":
@@ -22832,6 +23112,8 @@ func (ec *executionContext) fieldContext_UpdateCharacterThumbnailPayload_charact
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Character_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Character_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Character_slug(ctx, field)
 			case "thumbnail":
@@ -23652,6 +23934,8 @@ func (ec *executionContext) fieldContext_UpdateSeriesThumbnailPayload_series(ctx
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Series_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Series_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Series_slug(ctx, field)
 			case "thumbnail":
@@ -23711,6 +23995,8 @@ func (ec *executionContext) fieldContext_UpdateSeriesTitlePayload_series(ctx con
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Series_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Series_reference(ctx, field)
 			case "slug":
 				return ec.fieldContext_Series_slug(ctx, field)
 			case "thumbnail":
@@ -27300,6 +27586,13 @@ func (ec *executionContext) _Audience(ctx context.Context, sel ast.SelectionSet,
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "reference":
+
+			out.Values[i] = ec._Audience_reference(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "slug":
 
 			out.Values[i] = ec._Audience_slug(ctx, field, obj)
@@ -27532,6 +27825,13 @@ func (ec *executionContext) _Category(ctx context.Context, sel ast.SelectionSet,
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "reference":
+
+			out.Values[i] = ec._Category_reference(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "slug":
 
 			out.Values[i] = ec._Category_slug(ctx, field, obj)
@@ -27753,6 +28053,13 @@ func (ec *executionContext) _Character(ctx context.Context, sel ast.SelectionSet
 		case "id":
 
 			out.Values[i] = ec._Character_id(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "reference":
+
+			out.Values[i] = ec._Character_reference(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
@@ -30483,6 +30790,13 @@ func (ec *executionContext) _Series(ctx context.Context, sel ast.SelectionSet, o
 		case "id":
 
 			out.Values[i] = ec._Series_id(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "reference":
+
+			out.Values[i] = ec._Series_reference(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)

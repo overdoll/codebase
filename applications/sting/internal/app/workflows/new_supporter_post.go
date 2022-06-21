@@ -5,7 +5,6 @@ import (
 	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/sting/internal/app/workflows/activities"
-	"strings"
 )
 
 type NewSupporterPostInput struct {
@@ -32,19 +31,10 @@ func NewSupporterPost(ctx workflow.Context, input NewSupporterPostInput) error {
 		return err
 	}
 
-	workflowId := "sting.ClubSupporterPostNotifications_" + input.ClubId
-
-	// here, we cancel the workflow if there was an existing workflow that is responsible for sending notifications
-	if err := workflow.RequestCancelExternalWorkflow(ctx, workflowId, "").Get(ctx, nil); err != nil {
-		// only bail out if err is not a not found error
-		if !strings.HasSuffix(err.Error(), "ExternalWorkflowExecutionNotFound") {
-			return err
-		}
-	}
-
 	childCtx := workflow.WithChildOptions(ctx, workflow.ChildWorkflowOptions{
-		WorkflowID:        workflowId,
-		ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
+		WorkflowID:            "sting.ClubSupporterPostNotifications_" + input.ClubId,
+		ParentClosePolicy:     enums.PARENT_CLOSE_POLICY_ABANDON,
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_TERMINATE_IF_RUNNING,
 	})
 
 	// here, we schedule a workflow that will send notifications to both us and the club owner if they

@@ -12,6 +12,7 @@ import (
 	sting "overdoll/applications/sting/proto"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/graphql/relay"
+	"overdoll/libraries/resource/proto"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
@@ -173,13 +174,15 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	// check to make sure post is in a draft state
 	require.Equal(t, types.PostStateDraft, createPost.CreatePost.Post.State)
 
+	resourceIds := []string{"00be69a89e31d28cf8e79b7373d505c7", "01af3cada165015c65f341dd2d21a04a", "04ba807328b59c911a8a37f80447e16a"}
+
 	// update with new content (1 file)
 	var addPostContent AddPostContent
 
 	err = client.Mutate(context.Background(), &addPostContent, map[string]interface{}{
 		"input": types.AddPostContentInput{
 			ID:      newPostId,
-			Content: []string{"00be69a89e31d28cf8e79b7373d505c7", "01af3cada165015c65f341dd2d21a04a", "04ba807328b59c911a8a37f80447e16a"},
+			Content: resourceIds,
 		},
 	})
 
@@ -339,6 +342,31 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	})
 	require.Error(t, err)
 
+	// mark resources as processed in order to be able to submit
+	grpcClient := getGrpcCallbackClient(t)
+
+	var targets []*proto.Resource
+
+	for v, id := range resourceIds {
+		if v == 2 {
+			break
+		}
+		targets = append(targets, &proto.Resource{
+			Id:          id,
+			ItemId:      newPostReference,
+			Type:        proto.ResourceType_IMAGE,
+			Processed:   true,
+			ProcessedId: uuid.New().String(),
+			Private:     false,
+			Width:       100,
+			Height:      100,
+			Token:       "POST",
+		})
+	}
+
+	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: targets})
+	require.NoError(t, err, "no error updating resources")
+
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.SubmitPost, mock.Anything)
 
 	// finally, submit the post for review
@@ -475,6 +503,18 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	require.NoError(t, err, "no error searching for audience")
 	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found post with audience")
+
+	err = client.Query(context.Background(), &posts, map[string]interface{}{
+		"supporterOnlyStatus": []types.SupporterOnlyStatus{},
+		"state":               types.PostStatePublished,
+		"characterSlugs":      []graphql.String{},
+		"categorySlugs":       []graphql.String{},
+		"audienceSlugs":       []graphql.String{},
+		"seriesSlugs":         []graphql.String{"CatCanDance"},
+	})
+
+	require.NoError(t, err, "no error searching for series")
+	require.GreaterOrEqual(t, len(posts.Posts.Edges), 1, "found post with series")
 
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
 		"supporterOnlyStatus": []types.SupporterOnlyStatus{types.SupporterOnlyStatusPartial},

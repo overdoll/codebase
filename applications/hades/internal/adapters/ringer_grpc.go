@@ -17,7 +17,7 @@ func NewRingerGrpc(client ringer.RingerClient) RingerGrpc {
 	return RingerGrpc{client: client}
 }
 
-func (s RingerGrpc) NewClubSupporterSubscriptionPaymentDeposit(ctx context.Context, accountId, clubId, transactionId string, timestamp time.Time, price *billing.Price) error {
+func (s RingerGrpc) NewClubSupporterSubscriptionPaymentDeposit(ctx context.Context, idempotencyKey, accountId, clubId, transactionId string, timestamp time.Time, price *billing.Price) error {
 
 	_, err := s.client.ClubPaymentDeposit(ctx, &ringer.ClubPaymentDepositRequest{
 		AccountTransactionId: transactionId,
@@ -27,8 +27,9 @@ func (s RingerGrpc) NewClubSupporterSubscriptionPaymentDeposit(ctx context.Conte
 			Amount:   price.Amount(),
 			Currency: price.Currency().String(),
 		},
-		Timestamp: timestamppb.New(timestamp),
-		Source:    ringer.PaymentSource_CLUB_SUPPORTER_SUBSCRIPTION,
+		Timestamp:      timestamppb.New(timestamp),
+		Source:         ringer.PaymentSource_CLUB_SUPPORTER_SUBSCRIPTION,
+		IdempotencyKey: idempotencyKey,
 	})
 
 	if err != nil {
@@ -38,7 +39,7 @@ func (s RingerGrpc) NewClubSupporterSubscriptionPaymentDeposit(ctx context.Conte
 	return nil
 }
 
-func (s RingerGrpc) NewClubSupporterSubscriptionPaymentDeduction(ctx context.Context, accountId, clubId, transactionId string, timestamp time.Time, price *billing.Price) error {
+func (s RingerGrpc) NewClubSupporterSubscriptionPaymentDeduction(ctx context.Context, idempotencyKey, accountId, clubId, transactionId string, timestamp time.Time, price *billing.Price) error {
 
 	_, err := s.client.ClubPaymentDeduction(ctx, &ringer.ClubPaymentDeductionRequest{
 		AccountTransactionId: transactionId,
@@ -48,8 +49,9 @@ func (s RingerGrpc) NewClubSupporterSubscriptionPaymentDeduction(ctx context.Con
 			Amount:   price.Amount(),
 			Currency: price.Currency().String(),
 		},
-		Timestamp: timestamppb.New(timestamp),
-		Source:    ringer.PaymentSource_CLUB_SUPPORTER_SUBSCRIPTION,
+		Timestamp:      timestamppb.New(timestamp),
+		Source:         ringer.PaymentSource_CLUB_SUPPORTER_SUBSCRIPTION,
+		IdempotencyKey: idempotencyKey,
 	})
 
 	if err != nil {

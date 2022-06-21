@@ -67,7 +67,7 @@ export default function ImageSnippet ({
 
   if (errorCount >= errorLimit) {
     return (
-      <Box w='100%' h='100%'>
+      <Box w='100%' h='100%' position='relative'>
         <Box
           bg={previewBackground}
           position={determineCover ? 'relative' : 'static'}
@@ -85,7 +85,6 @@ export default function ImageSnippet ({
           <ImageError />
         </Flex>
       </Box>
-
     )
   }
 

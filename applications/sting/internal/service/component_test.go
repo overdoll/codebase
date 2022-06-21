@@ -10,6 +10,7 @@ import (
 	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/resource"
+	resource_proto "overdoll/libraries/resource/proto"
 	"time"
 
 	"overdoll/applications/sting/internal/adapters"
@@ -221,6 +222,13 @@ func getGrpcClient(t *testing.T) sting.StingClient {
 	return stingClient
 }
 
+func getGrpcCallbackClient(t *testing.T) resource_proto.ResourceCallbackClient {
+
+	stingClient, _ := clients.NewResourceCallbackClient(context.Background(), StingGrpcClientAddr)
+
+	return stingClient
+}
+
 func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 
 	suite := new(testsuite.WorkflowTestSuite)
@@ -258,6 +266,7 @@ func startService(m *testing.M) bool {
 	s := ports.NewGrpcServer(app.App)
 
 	go bootstrap.InitializeGRPCServer(StingGrpcAddr, func(server *grpc.Server) {
+		resource_proto.RegisterResourceCallbackServer(server, s)
 		sting.RegisterStingServer(server, s)
 	})
 
