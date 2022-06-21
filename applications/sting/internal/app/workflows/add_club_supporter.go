@@ -1,7 +1,6 @@
 package workflows
 
 import (
-	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/sting/internal/app/workflows/activities"
 	"time"
@@ -36,45 +35,38 @@ func AddClubSupporter(ctx workflow.Context, input AddClubSupporterInput) error {
 	// was not already a member, add as a club member
 	if !alreadyAMember {
 
-		childWorkflowOptions := workflow.ChildWorkflowOptions{
-			WorkflowID:          "sting.AddClubMember_" + input.ClubId + "_" + input.AccountId,
-			WaitForCancellation: true,
-			ParentClosePolicy:   enums.PARENT_CLOSE_POLICY_REQUEST_CANCEL,
+		// adds the member to the list - the account's own list and the club's list
+		if err := workflow.ExecuteActivity(ctx, a.AddClubMemberToList,
+			activities.AddClubMemberToListInput{
+				ClubId:    input.ClubId,
+				AccountId: input.AccountId,
+				JoinedAt:  input.SupportedAt,
+			},
+		).Get(ctx, nil); err != nil {
+			logger.Error("failed to add club member to list", "Error", err)
+			return err
 		}
 
-		childCtx := workflow.WithChildOptions(ctx, childWorkflowOptions)
-
-		if err := workflow.ExecuteChildWorkflow(childCtx, AddClubMember,
-			AddClubMemberInput{
+		if err := workflow.ExecuteActivity(ctx, a.AddClubMember,
+			activities.AddClubMemberInput{
 				ClubId:    input.ClubId,
 				AccountId: input.AccountId,
 			},
-		).
-			GetChildWorkflowExecution().
-			Get(childCtx, nil); err != nil {
+		).Get(ctx, nil); err != nil {
 			logger.Error("failed to add club member", "Error", err)
 			return err
 		}
 	}
 
-	childWorkflowOptions := workflow.ChildWorkflowOptions{
-		WorkflowID:            "sting.MarkClubMemberSupporter_" + input.ClubId + "_" + input.AccountId,
-		WaitForCancellation:   true,
-		ParentClosePolicy:     enums.PARENT_CLOSE_POLICY_REQUEST_CANCEL,
-		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE,
-	}
-
-	childCtx := workflow.WithChildOptions(ctx, childWorkflowOptions)
-
-	if err := workflow.ExecuteChildWorkflow(childCtx, MarkClubMemberAsSupporter,
-		MarkClubMemberAsSupporterInput{
-			ClubId:    input.ClubId,
-			AccountId: input.AccountId,
+	// mark the member as supporter
+	if err := workflow.ExecuteActivity(ctx, a.MarkClubMemberAsSupporter,
+		activities.MarkClubMemberAsSupporterInput{
+			ClubId:      input.ClubId,
+			AccountId:   input.AccountId,
+			SupportedAt: input.SupportedAt,
 		},
-	).
-		GetChildWorkflowExecution().
-		Get(childCtx, nil); err != nil {
-		logger.Error("failed to add club member", "Error", err)
+	).Get(ctx, nil); err != nil {
+		logger.Error("failed to mark club member as supporter", "Error", err)
 		return err
 	}
 

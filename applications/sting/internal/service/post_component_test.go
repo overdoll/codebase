@@ -347,7 +347,10 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	var targets []*proto.Resource
 
-	for _, id := range resourceIds {
+	for v, id := range resourceIds {
+		if v == 2 {
+			break
+		}
 		targets = append(targets, &proto.Resource{
 			Id:          id,
 			ItemId:      newPostReference,

@@ -162,7 +162,7 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 		Private:     false,
 		Width:       100,
 		Height:      100,
-		Token:       "AUDIENCE",
+		Token:       "SERIES",
 	}}})
 
 	require.NoError(t, err, "no error updating resource")

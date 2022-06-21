@@ -159,7 +159,7 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 
 	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
 		Id:          audienceThumbnailId,
-		ItemId:      audience.Reference,
+		ItemId:      updateAudienceThumbnail.UpdateAudienceThumbnail.Audience.Reference,
 		Processed:   true,
 		Type:        proto.ResourceType_IMAGE,
 		ProcessedId: uuid.New().String(),

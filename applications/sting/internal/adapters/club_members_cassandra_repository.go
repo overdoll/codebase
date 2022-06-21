@@ -160,30 +160,27 @@ func (r ClubCassandraElasticsearchRepository) CreateClubMember(ctx context.Conte
 		SupporterSince:  member.SupporterSince(),
 	}
 
-	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
+	if err := r.session.
+		Query(clubMembersTable.Insert()).
+		WithContext(ctx).
+		Idempotent(true).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(marshalled).
+		ExecRelease(); err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to create club member")
+	}
 
-	stmt, names := clubMembersTable.Insert()
-	support.BindStructToBatchStatement(
-		batch,
-		stmt, names,
-		marshalled,
-	)
-
-	// insert into account's club list
-	stmt, names = clubMembersByAccountTable.Insert()
-	support.BindStructToBatchStatement(
-		batch,
-		stmt, names,
-		clubMembersByAccount{
+	if err := r.session.
+		Query(clubMembersByAccountTable.Insert()).
+		WithContext(ctx).
+		Idempotent(true).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(clubMembersByAccount{
 			ClubId:          marshalled.ClubId,
 			MemberAccountId: marshalled.MemberAccountId,
-		},
-	)
-
-	// execute batch
-	support.MarkBatchIdempotent(batch)
-	if err := r.session.ExecuteBatch(batch); err != nil {
-		return errors.Wrap(support.NewGocqlError(err), "failed to add member to lis")
+		}).
+		ExecRelease(); err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to insert club members by account")
 	}
 
 	if err := r.indexClubMember(ctx, member); err != nil {
@@ -206,7 +203,7 @@ func (r ClubCassandraElasticsearchRepository) getClubMemberById(ctx context.Cont
 		WithContext(ctx).
 		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(clubMember{ClubId: clubId, MemberAccountId: accountId}).
+		BindStruct(&clubMember{ClubId: clubId, MemberAccountId: accountId}).
 		GetRelease(&clubMem); err != nil {
 
 		if err == gocql.ErrNotFound {
