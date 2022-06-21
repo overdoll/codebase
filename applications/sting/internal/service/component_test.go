@@ -244,6 +244,7 @@ func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 	env.RegisterWorkflow(workflows.NewSupporterPost)
 	env.RegisterWorkflow(workflows.ClubSupporterPostNotifications)
 	env.RegisterWorkflow(workflows.AddClubMember)
+	env.RegisterWorkflow(workflows.MarkClubMemberAsSupporter)
 
 	return env
 }
