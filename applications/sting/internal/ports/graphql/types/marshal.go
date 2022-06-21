@@ -185,6 +185,7 @@ func MarshalAudienceToGraphQL(ctx context.Context, result *post.Audience) *Audie
 
 	return &Audience{
 		ID:                relay.NewID(Audience{}, result.ID()),
+		Reference:         result.ID(),
 		TitleTranslations: titleTranslations,
 		Slug:              result.Slug(),
 		Thumbnail:         res,
