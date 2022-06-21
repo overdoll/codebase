@@ -10,8 +10,10 @@ import (
 	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	sting "overdoll/applications/sting/proto"
-	"overdoll/libraries/graphql/relay"
+	graphql2 "overdoll/libraries/graphql"
+	"overdoll/libraries/resource/proto"
 	"overdoll/libraries/testing_tools"
+	"overdoll/libraries/uuid"
 	"testing"
 	"time"
 )
@@ -29,9 +31,7 @@ type ClubModified struct {
 	SlugAliases []struct {
 		Slug string
 	}
-	Thumbnail *struct {
-		ID relay.ID
-	}
+	Thumbnail             *graphql2.Resource
 	ViewerIsOwner         bool
 	CanSupport            bool
 	NextSupporterPostTime *time.Time
@@ -351,4 +351,24 @@ func TestCreateClub_edit_thumbnail(t *testing.T) {
 	// make sure thumbnail is set
 	updatedClb := getClub(t, client, clb.Slug())
 	require.NotNil(t, updatedClb.Club.Thumbnail, "thumbnail is not nil")
+	require.False(t, updatedClb.Club.Thumbnail.Processed, "thumbnail is not yet processed")
+
+	grpcClient := getGrpcCallbackClient(t)
+
+	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
+		Id:          thumbnailId,
+		ItemId:      clb.ID(),
+		Processed:   true,
+		Type:        proto.ResourceType_IMAGE,
+		ProcessedId: uuid.New().String(),
+		Private:     false,
+		Width:       100,
+		Height:      100,
+		Token:       "CLUB",
+	}}})
+
+	require.NoError(t, err, "no error updating resource")
+
+	updatedClb = getClub(t, client, clb.Slug())
+	require.True(t, updatedClb.Club.Thumbnail.Processed, "thumbnail is should be processed now")
 }

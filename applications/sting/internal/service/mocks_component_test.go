@@ -26,8 +26,9 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 			res = append(res, &proto.Resource{
 				Id:        r,
 				ItemId:    req.ItemId,
-				Processed: true,
-				Private:   false,
+				Processed: false,
+				Private:   req.Private,
+				Token:     req.Token,
 			})
 		}
 
@@ -41,23 +42,6 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 	application.LoaderClient.On("DeleteResources", mock.Anything, mock.Anything).Return(&loader.DeleteResourcesResponse{}, nil)
 
 	application.ParleyClient.On("PutPostIntoModeratorQueueOrPublish", mock.Anything, mock.Anything).Return(&parley.PutPostIntoModeratorQueueOrPublishResponse{PutIntoReview: false}, nil)
-
-	application.LoaderClient.On("GetResources", mock.Anything, mock.Anything).Return(func(c context.Context, req *loader.GetResourcesRequest, g ...grpc.CallOption) *loader.GetResourcesResponse {
-
-		var res []*proto.Resource
-
-		for _, r := range req.ResourceIds {
-			res = append(res, &proto.Resource{
-				Id:          req.ItemId,
-				ItemId:      r,
-				Processed:   true,
-				ProcessedId: r + "_PROCESSED",
-				Private:     true,
-			})
-		}
-
-		return &loader.GetResourcesResponse{Resources: res}
-	}, nil)
 
 	application.LoaderClient.On("CopyResourcesAndApplyFilter", mock.Anything, mock.Anything).Return(func(c context.Context, req *loader.CopyResourcesAndApplyFilterRequest, g ...grpc.CallOption) *loader.CopyResourcesAndApplyFilterResponse {
 

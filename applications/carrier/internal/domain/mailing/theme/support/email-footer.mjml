@@ -1,14 +1,4 @@
 <mj-section>
-    <mj-column width="100%">
-        <mj-text color="#bfbfbf">
-            <p>
-                overdoll Inc.
-            </p>
-            <p>
-                152-4936 Yonge Street, Toronto Ontario M2N 6S3, Canada
-            </p>
-        </mj-text>
-    </mj-column>
     <mj-group width="100%">
         <mj-column>
             <mj-text align="center" color="#bfbfbf">

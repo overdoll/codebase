@@ -215,6 +215,7 @@ func MarshalSeriesToGraphQL(ctx context.Context, result *post.Series) *Series {
 
 	return &Series{
 		ID:                relay.NewID(Series{}, result.ID()),
+		Reference:         result.ID(),
 		Slug:              result.Slug(),
 		TitleTranslations: titleTranslations,
 		Thumbnail:         res,
@@ -244,6 +245,7 @@ func MarshalCategoryToGraphQL(ctx context.Context, result *post.Category) *Categ
 
 	return &Category{
 		ID:                relay.NewID(Category{}, result.ID()),
+		Reference:         result.ID(),
 		Thumbnail:         res,
 		Slug:              result.Slug(),
 		TitleTranslations: titleTranslations,
@@ -273,6 +275,7 @@ func MarshalCharacterToGraphQL(ctx context.Context, result *post.Character) *Cha
 
 	return &Character{
 		ID:               relay.NewID(Character{}, result.ID()),
+		Reference:        result.ID(),
 		Slug:             result.Slug(),
 		Thumbnail:        res,
 		NameTranslations: nameTranslations,

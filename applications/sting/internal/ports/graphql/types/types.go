@@ -90,6 +90,8 @@ type ArchivePostPayload struct {
 type Audience struct {
 	// An ID pointing to this audience.
 	ID relay.ID `json:"id"`
+	// An ID that can be used to uniquely-identify this audience. Never changes.
+	Reference string `json:"reference"`
 	// A url-friendly ID. Should be used when searching.
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
@@ -135,6 +137,8 @@ type AudienceEdge struct {
 type Category struct {
 	// An ID pointing to this category.
 	ID relay.ID `json:"id"`
+	// An ID that can be used to uniquely-identify this category. Never changes.
+	Reference string `json:"reference"`
 	// A url-friendly ID. Should be used when searching
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
@@ -178,6 +182,8 @@ type CategoryEdge struct {
 type Character struct {
 	// An ID pointing to this character.
 	ID relay.ID `json:"id"`
+	// An ID that can be used to uniquely-identify this character. Never changes.
+	Reference string `json:"reference"`
 	// A url-friendly ID. Should be used when searching
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
@@ -651,6 +657,8 @@ type RemovePostContentPayload struct {
 type Series struct {
 	// An ID pointing to this series.
 	ID relay.ID `json:"id"`
+	// An ID that can be used to uniquely-identify this series. Never changes.
+	Reference string `json:"reference"`
 	// A url-friendly ID. Should be used when searching
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
