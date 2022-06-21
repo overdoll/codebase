@@ -253,7 +253,7 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 	} else if kind.MIME.Value == "video/mp4" {
 		mimeTypes = append(mimeTypes, "video/mp4")
 
-		thumbnailFileName := "t-" + fileName + "." + ".png"
+		thumbnailFileName := "t-" + fileName + ".png"
 
 		fileThumbnail, err := os.Create(thumbnailFileName)
 		if err != nil {

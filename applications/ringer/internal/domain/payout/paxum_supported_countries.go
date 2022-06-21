@@ -8,6 +8,7 @@ var paxumSupportedCountries = []countries.CountryCode{
 	countries.Albania,
 	countries.Algeria,
 	countries.AmericanSamoa,
+	countries.Belarus,
 	countries.Andorra,
 	countries.Anguilla,
 	countries.Antarctica,
