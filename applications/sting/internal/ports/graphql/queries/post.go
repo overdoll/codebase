@@ -10,6 +10,27 @@ import (
 	"overdoll/libraries/principal"
 )
 
+func (r *QueryResolver) Search(ctx context.Context, after *string, before *string, first *int, last *int, qs string) (*types.SearchConnection, error) {
+
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
+	}
+
+	results, err := r.App.Queries.Search.Handle(ctx, query.Search{
+		Principal: principal.FromContext(ctx),
+		Cursor:    cursor,
+		Query:     qs,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalSearchToGraphQLConnection(ctx, results, cursor), nil
+}
+
 func (r *QueryResolver) PostsFeed(ctx context.Context, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)

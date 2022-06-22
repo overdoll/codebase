@@ -15,6 +15,10 @@ type ClubSuspensionLog interface {
 	IsClubSuspensionLog()
 }
 
+type Search interface {
+	IsSearch()
+}
+
 type Account struct {
 	// Maximum amount of clubs that you can create.
 	ClubsLimit int `json:"clubsLimit"`
@@ -158,6 +162,7 @@ type Category struct {
 }
 
 func (Category) IsNode()   {}
+func (Category) IsSearch() {}
 func (Category) IsEntity() {}
 
 type CategoryConnection struct {
@@ -205,6 +210,7 @@ type Character struct {
 }
 
 func (Character) IsNode()   {}
+func (Character) IsSearch() {}
 func (Character) IsEntity() {}
 
 type CharacterConnection struct {
@@ -244,6 +250,12 @@ type Club struct {
 	SuspensionLogs *ClubSuspensionLogConnection `json:"suspensionLogs"`
 	// Whether or not the viewer is the owner of the club.
 	ViewerIsOwner bool `json:"viewerIsOwner"`
+	// Whether creating supporter-only posts is enabled or disabled for this club.
+	//
+	// When this is true, a club owner cannot mark individual content in a post as "supporter-only".
+	//
+	// Additionally, if a club owner attempts to submit a post with supporter-only content already present, they will not be able to.
+	CanCreateSupporterOnlyPosts bool `json:"canCreateSupporterOnlyPosts"`
 	// Whether or not you can become a supporter of this club.
 	CanSupport bool `json:"canSupport"`
 	// When the owner of the club needs to post the next supporter post.
@@ -265,6 +277,7 @@ type Club struct {
 }
 
 func (Club) IsNode()   {}
+func (Club) IsSearch() {}
 func (Club) IsEntity() {}
 
 type ClubConnection struct {
@@ -505,6 +518,30 @@ type DeletePostPayload struct {
 	PostID *relay.ID `json:"postId"`
 }
 
+// Disable club supporter-only posts.
+type DisableClubSupporterOnlyPostsInput struct {
+	// The club to disable supporter-only posts for.
+	ClubID relay.ID `json:"clubId"`
+}
+
+// Disable club supporter-only posts payload.
+type DisableClubSupporterOnlyPostsPayload struct {
+	// The new club after supporter-only posts are disabled.
+	Club *Club `json:"club"`
+}
+
+// Enable club supporter-only posts.
+type EnableClubSupporterOnlyPostsInput struct {
+	// The club to enable supporter-only posts for.
+	ClubID relay.ID `json:"clubId"`
+}
+
+// Enable club supporter-only posts payload.
+type EnableClubSupporterOnlyPostsPayload struct {
+	// The new club after supporter-only posts are enabled.
+	Club *Club `json:"club"`
+}
+
 // Join a club input.
 type JoinClubInput struct {
 	// The chosen club ID.
@@ -654,6 +691,16 @@ type RemovePostContentPayload struct {
 	Post *Post `json:"post"`
 }
 
+type SearchConnection struct {
+	Edges    []*SearchEdge   `json:"edges"`
+	PageInfo *relay.PageInfo `json:"pageInfo"`
+}
+
+type SearchEdge struct {
+	Cursor string `json:"cursor"`
+	Node   Search `json:"node"`
+}
+
 type Series struct {
 	// An ID pointing to this series.
 	ID relay.ID `json:"id"`
@@ -677,6 +724,7 @@ type Series struct {
 	Posts *PostConnection `json:"posts"`
 }
 
+func (Series) IsSearch() {}
 func (Series) IsNode()   {}
 func (Series) IsEntity() {}
 

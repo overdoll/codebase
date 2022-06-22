@@ -271,7 +271,15 @@ func (p *Post) UpdatePostPostedDate(date time.Time) error {
 	return nil
 }
 
-func (p *Post) SubmitPostRequest(requester *principal.Principal) error {
+func (p *Post) SubmitPostRequest(clb *club.Club, requester *principal.Principal) error {
+
+	if clb.SupporterOnlyPostsDisabled() {
+		for _, cnt := range p.content {
+			if cnt.isSupporterOnly {
+				return domainerror.NewValidation("cannot submit post with supporter only content when it is disabled")
+			}
+		}
+	}
 
 	if err := p.CanUpdate(requester); err != nil {
 		return err
@@ -427,7 +435,13 @@ func (p *Post) UpdateContentOrderRequest(requester *principal.Principal, content
 	return nil
 }
 
-func (p *Post) UpdateContentSupporterOnly(requester *principal.Principal, contentIds []string, supporterOnly bool) error {
+func (p *Post) UpdateContentSupporterOnly(clb *club.Club, requester *principal.Principal, contentIds []string, supporterOnly bool) error {
+
+	if supporterOnly {
+		if clb.SupporterOnlyPostsDisabled() {
+			return domainerror.NewValidation("cannot make supporter only content when disabled for club")
+		}
+	}
 
 	if err := p.CanUpdate(requester); err != nil {
 		return err

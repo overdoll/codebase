@@ -119,6 +119,22 @@ func (r *Resource) VideoThumbnailFullUrl() *Url {
 	return r.videoThumbnailUrl
 }
 
+func (r *Resource) ThumbnailAsRegularResource() *Resource {
+	return &Resource{
+		itemId:       r.itemId,
+		id:           r.videoThumbnail,
+		processed:    true,
+		processedId:  r.videoThumbnail,
+		token:        r.token,
+		isPrivate:    false,
+		width:        r.width,
+		height:       r.height,
+		mimeTypes:    []string{r.videoThumbnailMimeType},
+		resourceType: Image,
+		preview:      r.preview,
+	}
+}
+
 func (r *Resource) FullUrls() []*Url {
 	return r.urls
 }

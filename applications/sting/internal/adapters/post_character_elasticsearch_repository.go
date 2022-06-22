@@ -59,6 +59,52 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 	}, nil
 }
 
+func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx context.Context, hit *elastic.SearchHit) (*post.Character, error) {
+
+	var chr characterDocument
+
+	err := json.Unmarshal(hit.Source, &chr)
+
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to unmarshal character document")
+	}
+
+	unmarshalledCharacterResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, chr.ThumbnailResource)
+
+	if err != nil {
+		return nil, err
+	}
+
+	unmarshalledSeriesResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, chr.Series.ThumbnailResource)
+
+	if err != nil {
+		return nil, err
+	}
+
+	newCharacter := post.UnmarshalCharacterFromDatabase(
+		chr.Id,
+		chr.Slug,
+		chr.Name,
+		unmarshalledCharacterResource,
+		chr.TotalLikes,
+		chr.TotalPosts,
+		chr.CreatedAt,
+		chr.UpdatedAt,
+		post.UnmarshalSeriesFromDatabase(
+			chr.Series.Id,
+			chr.Series.Slug,
+			chr.Series.Title,
+			unmarshalledSeriesResource,
+			chr.Series.TotalLikes,
+			chr.Series.TotalPosts,
+			chr.Series.CreatedAt,
+			chr.Series.UpdatedAt,
+		))
+	newCharacter.Node = paging.NewNode(hit.Sort)
+
+	return newCharacter, nil
+}
+
 func (r PostsCassandraElasticsearchRepository) indexCharacter(ctx context.Context, character *post.Character) error {
 
 	char, err := marshalCharacterToDocument(character)
@@ -138,48 +184,13 @@ func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Cont
 
 	for _, hit := range response.Hits.Hits {
 
-		var chr characterDocument
-
-		err := json.Unmarshal(hit.Source, &chr)
-
-		if err != nil {
-			return nil, errors.Wrap(err, "failed to unmarshal character document")
-		}
-
-		unmarshalledCharacterResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, chr.ThumbnailResource)
+		result, err := r.unmarshalCharacterDocument(ctx, hit)
 
 		if err != nil {
 			return nil, err
 		}
 
-		unmarshalledSeriesResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, chr.Series.ThumbnailResource)
-
-		if err != nil {
-			return nil, err
-		}
-
-		newCharacter := post.UnmarshalCharacterFromDatabase(
-			chr.Id,
-			chr.Slug,
-			chr.Name,
-			unmarshalledCharacterResource,
-			chr.TotalLikes,
-			chr.TotalPosts,
-			chr.CreatedAt,
-			chr.UpdatedAt,
-			post.UnmarshalSeriesFromDatabase(
-				chr.Series.Id,
-				chr.Series.Slug,
-				chr.Series.Title,
-				unmarshalledSeriesResource,
-				chr.Series.TotalLikes,
-				chr.Series.TotalPosts,
-				chr.Series.CreatedAt,
-				chr.Series.UpdatedAt,
-			))
-		newCharacter.Node = paging.NewNode(hit.Sort)
-
-		characters = append(characters, newCharacter)
+		characters = append(characters, result)
 	}
 
 	return characters, nil

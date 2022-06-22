@@ -76,7 +76,15 @@ func PublishPost(ctx workflow.Context, input PublishPostInput) error {
 			logger.Error("failed to create new supporter post", "Error", err)
 			return err
 		}
+	}
 
+	if err := workflow.ExecuteActivity(ctx, a.UpdateClubBanner,
+		activities.UpdateClubBannerInput{
+			PostId: input.PostId,
+		},
+	).Get(ctx, nil); err != nil {
+		logger.Error("failed to update club banner", "Error", err)
+		return err
 	}
 
 	return nil

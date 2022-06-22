@@ -60,6 +60,15 @@ type Club implements Node @key(fields: "id") {
   viewerIsOwner: Boolean!
 
   """
+  Whether creating supporter-only posts is enabled or disabled for this club.
+
+  When this is true, a club owner cannot mark individual content in a post as "supporter-only".
+
+  Additionally, if a club owner attempts to submit a post with supporter-only content already present, they will not be able to.
+  """
+  canCreateSupporterOnlyPosts: Boolean!
+
+  """
   Whether or not you can become a supporter of this club.
   """
   canSupport: Boolean!
@@ -405,6 +414,30 @@ input UnTerminateClubInput {
   clubId: ID!
 }
 
+"""Enable club supporter-only posts."""
+input EnableClubSupporterOnlyPostsInput {
+  """The club to enable supporter-only posts for."""
+  clubId: ID!
+}
+
+"""Disable club supporter-only posts."""
+input DisableClubSupporterOnlyPostsInput {
+  """The club to disable supporter-only posts for."""
+  clubId: ID!
+}
+
+"""Disable club supporter-only posts payload."""
+type DisableClubSupporterOnlyPostsPayload {
+  """The new club after supporter-only posts are disabled."""
+  club: Club
+}
+
+"""Enable club supporter-only posts payload."""
+type EnableClubSupporterOnlyPostsPayload {
+  """The new club after supporter-only posts are enabled."""
+  club: Club
+}
+
 """Un terminate club payload."""
 type UnTerminateClubPayload {
   """The new club after it's not terminated anymore."""
@@ -503,9 +536,42 @@ extend type Mutation {
   Staff+ only.
   """
   unTerminateClub(input: UnTerminateClubInput!): UnTerminateClubPayload
+
+  """
+  Enable club supporter-only posts, if previously disabled.
+
+  Staff+ only.
+  """
+  enableClubSupporterOnlyPosts(input: EnableClubSupporterOnlyPostsInput!): EnableClubSupporterOnlyPostsPayload
+
+  """
+  Disable club supporter-only posts.
+
+  When this mutation is ran, the club will no longer be able to create supporter-only posts, and their supporter timer will reset, as well as removing the ability to collect subscriptions.
+
+  In order to be able to collect subscriptions again, the enableClubSupporterOnlyPosts mutation should be ran, and the club owner should create a post with supporter-only content.
+
+  Staff+ only.
+  """
+  disableClubSupporterOnlyPosts(input: DisableClubSupporterOnlyPostsInput!): DisableClubSupporterOnlyPostsPayload
 }
 
 extend type Query {
+  """Club discovery endpoint."""
+  discoverClubs(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): ClubConnection!
+
   """Search multiple clubs."""
   clubs(
     """Returns the elements in the list that come after the specified cursor."""

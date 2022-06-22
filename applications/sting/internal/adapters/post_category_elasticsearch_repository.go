@@ -50,6 +50,37 @@ func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 	}, nil
 }
 
+func (r PostsCassandraElasticsearchRepository) unmarshalCategoryDocument(ctx context.Context, hit *elastic.SearchHit) (*post.Category, error) {
+
+	var pst categoryDocument
+
+	err := json.Unmarshal(hit.Source, &pst)
+
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to unmarshal category document")
+	}
+
+	unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, pst.ThumbnailResource)
+
+	if err != nil {
+		return nil, err
+	}
+
+	newCategory := post.UnmarshalCategoryFromDatabase(
+		pst.Id,
+		pst.Slug,
+		pst.Title,
+		unmarshalled,
+		pst.TotalLikes,
+		pst.TotalPosts,
+		pst.CreatedAt,
+		pst.UpdatedAt,
+	)
+	newCategory.Node = paging.NewNode(hit.Sort)
+
+	return newCategory, nil
+}
+
 func (r PostsCassandraElasticsearchRepository) indexCategory(ctx context.Context, category *post.Category) error {
 
 	cat, err := marshalCategoryToDocument(category)
@@ -127,31 +158,11 @@ func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Cont
 
 	for _, hit := range response.Hits.Hits {
 
-		var pst categoryDocument
-
-		err := json.Unmarshal(hit.Source, &pst)
-
-		if err != nil {
-			return nil, errors.Wrap(err, "failed to unmarshal category document")
-		}
-
-		unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, pst.ThumbnailResource)
+		newCategory, err := r.unmarshalCategoryDocument(ctx, hit)
 
 		if err != nil {
 			return nil, err
 		}
-
-		newCategory := post.UnmarshalCategoryFromDatabase(
-			pst.Id,
-			pst.Slug,
-			pst.Title,
-			unmarshalled,
-			pst.TotalLikes,
-			pst.TotalPosts,
-			pst.CreatedAt,
-			pst.UpdatedAt,
-		)
-		newCategory.Node = paging.NewNode(hit.Sort)
 
 		cats = append(cats, newCategory)
 	}

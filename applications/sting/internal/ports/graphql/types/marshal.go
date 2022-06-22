@@ -651,19 +651,20 @@ func MarshalClubToGraphQL(ctx context.Context, result *club.Club) *Club {
 	}
 
 	return &Club{
-		ID:                    relay.NewID(Club{}, result.ID()),
-		Reference:             result.ID(),
-		Name:                  result.Name().TranslateDefault(""),
-		Slug:                  result.Slug(),
-		SlugAliases:           slugAliases,
-		NextSupporterPostTime: result.NextSupporterPostTime(),
-		CanSupport:            result.CanSupport(),
-		MembersCount:          result.MembersCount(),
-		Thumbnail:             res,
-		Owner:                 &Account{ID: relay.NewID(Account{}, result.OwnerAccountId())},
-		Suspension:            suspension,
-		Termination:           termination,
-		ViewerIsOwner:         accountId == result.OwnerAccountId(),
+		ID:                          relay.NewID(Club{}, result.ID()),
+		Reference:                   result.ID(),
+		CanCreateSupporterOnlyPosts: result.CanCreateSupporterOnlyPosts(),
+		Name:                        result.Name().TranslateDefault(""),
+		Slug:                        result.Slug(),
+		SlugAliases:                 slugAliases,
+		NextSupporterPostTime:       result.NextSupporterPostTime(),
+		CanSupport:                  result.CanSupport(),
+		MembersCount:                result.MembersCount(),
+		Thumbnail:                   res,
+		Owner:                       &Account{ID: relay.NewID(Account{}, result.OwnerAccountId())},
+		Suspension:                  suspension,
+		Termination:                 termination,
+		ViewerIsOwner:               accountId == result.OwnerAccountId(),
 	}
 }
 
@@ -781,6 +782,53 @@ func MarshalClubSuspensionLogsToGraphQLConnection(ctx context.Context, results [
 	}
 
 	return conn
+}
+
+func MarshalSearchToGraphQLConnection(ctx context.Context, results []interface{}, cursor *paging.Cursor) *SearchConnection {
+
+	var clubs []*SearchEdge
+
+	for _, result := range results {
+		switch v := result.(type) {
+		case *club.Club:
+			clubs = append(clubs, &SearchEdge{
+				Cursor: "U2VhcmNoOjo=",
+				Node:   MarshalClubToGraphQL(ctx, v),
+			})
+			break
+		case *post.Category:
+			clubs = append(clubs, &SearchEdge{
+				Cursor: "U2VhcmNoOjo=",
+				Node:   MarshalCategoryToGraphQL(ctx, v),
+			})
+			break
+		case *post.Character:
+			clubs = append(clubs, &SearchEdge{
+				Cursor: "U2VhcmNoOjo=",
+				Node:   MarshalCharacterToGraphQL(ctx, v),
+			})
+			break
+		case *post.Series:
+			clubs = append(clubs, &SearchEdge{
+				Cursor: "U2VhcmNoOjo=",
+				Node:   MarshalSeriesToGraphQL(ctx, v),
+			})
+			break
+		default:
+			continue
+		}
+
+	}
+
+	return &SearchConnection{
+		PageInfo: &relay.PageInfo{
+			HasNextPage:     false,
+			HasPreviousPage: false,
+			StartCursor:     nil,
+			EndCursor:       nil,
+		},
+		Edges: clubs,
+	}
 }
 
 func MarshalClubsToGraphQLConnection(ctx context.Context, results []*club.Club, cursor *paging.Cursor) *ClubConnection {

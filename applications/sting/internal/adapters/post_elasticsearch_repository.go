@@ -3,8 +3,10 @@ package adapters
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"math"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/localization"
 	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"time"
@@ -334,6 +336,135 @@ func (r PostsCassandraElasticsearchRepository) GetTotalPostsForCategoryOperator(
 	}
 
 	return int(count), nil
+}
+
+func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, qs string) ([]interface{}, error) {
+
+	builder := elastic.NewSearchSource().
+		IndexBoosts(
+			elastic.IndexBoost{
+				Index: CategoryIndexName,
+				Boost: 5,
+			},
+		).
+		IndexBoosts(
+			elastic.IndexBoost{
+				Index: CharacterIndexName,
+				Boost: 4,
+			},
+		).
+		IndexBoosts(
+			elastic.IndexBoost{
+				Index: SeriesIndexName,
+				Boost: 3,
+			},
+		).
+		IndexBoosts(
+			elastic.IndexBoost{
+				Index: ClubsIndexName,
+				Boost: 0.5,
+			},
+		)
+
+	if cursor != nil && cursor.GetLimit() > 0 {
+		builder.Size(cursor.GetLimit())
+	}
+
+	query := elastic.NewBoolQuery()
+
+	// match category
+	query.Should(elastic.NewBoolQuery().Must(
+		elastic.
+			NewMultiMatchQuery(qs, localization.GetESSearchFields("name")...).
+			Type("best_fields"),
+	).
+		Must(elastic.NewTermQuery("_index", CategoryIndexName)))
+
+	query.Should(elastic.NewBoolQuery().Must(
+		elastic.
+			NewMultiMatchQuery(qs, localization.GetESSearchFields("name")...).
+			Type("best_fields"),
+	).
+		Must(elastic.NewTermQuery("_index", CharacterIndexName)))
+
+	query.Should(elastic.NewBoolQuery().Must(
+		elastic.
+			NewMultiMatchQuery(qs, localization.GetESSearchFields("title")...).
+			Type("best_fields"),
+	).
+		Must(elastic.NewTermQuery("_index", SeriesIndexName)))
+
+	query.Should(elastic.NewBoolQuery().Must(
+		elastic.
+			NewMultiMatchQuery(qs, localization.GetESSearchFields("title")...).
+			Type("best_fields"),
+	).
+		Must(elastic.NewTermQuery("_index", ClubsIndexName)))
+
+	builder.Query(query)
+
+	response, err := r.client.Search().SearchSource(builder).Pretty(true).Do(ctx)
+
+	if err != nil {
+		return nil, errors.Wrap(support.ParseElasticError(err), fmt.Sprintf("failed to search query '%s'", qs))
+	}
+
+	var results []interface{}
+
+	for _, hit := range response.Hits.Hits {
+
+		switch hit.Index {
+		case SeriesIndexName:
+
+			result, err := r.unmarshalSeriesDocument(ctx, hit)
+
+			if err != nil {
+				return nil, err
+			}
+
+			results = append(results, result)
+
+			break
+		case ClubsIndexName:
+
+			result, err := unmarshalClubDocument(ctx, hit, r.resourceSerializer)
+
+			if err != nil {
+				return nil, err
+			}
+
+			results = append(results, result)
+
+			break
+		case CharacterIndexName:
+
+			result, err := r.unmarshalCharacterDocument(ctx, hit)
+
+			if err != nil {
+				return nil, err
+			}
+
+			results = append(results, result)
+
+			break
+		case CategoryIndexName:
+
+			result, err := r.unmarshalCategoryDocument(ctx, hit)
+
+			if err != nil {
+				return nil, err
+			}
+
+			results = append(results, result)
+
+			break
+		default:
+			continue
+		}
+	}
+
+	return results, nil
+
 }
 
 func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, pst *post.Post) ([]*post.Post, error) {

@@ -8,6 +8,7 @@ go_library(
         "character.go",
         "club_members.go",
         "clubs.go",
+        "clubs_banner_disable_supporter_only.go",
         "migrations.go",
         "posts.go",
         "series.go",

@@ -64,6 +64,26 @@ func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 	}, nil
 }
 
+func (r PostsCassandraElasticsearchRepository) unmarshalAudienceDocument(ctx context.Context, hit *elastic.SearchHit) (*post.Audience, error) {
+
+	var bd audienceDocument
+
+	if err := json.Unmarshal(hit.Source, &bd); err != nil {
+		return nil, errors.Wrap(err, "failed search audience - unmarshal")
+	}
+
+	unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, bd.ThumbnailResource)
+
+	if err != nil {
+		return nil, err
+	}
+
+	newAudience := post.UnmarshalAudienceFromDatabase(bd.Id, bd.Slug, bd.Title, unmarshalled, bd.Standard, bd.TotalLikes, bd.TotalPosts, bd.CreatedAt, bd.UpdatedAt)
+	newAudience.Node = paging.NewNode(hit.Sort)
+
+	return newAudience, nil
+}
+
 func (r PostsCassandraElasticsearchRepository) SearchAudience(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Audience, error) {
 
 	builder := r.client.Search().
@@ -119,22 +139,13 @@ func (r PostsCassandraElasticsearchRepository) SearchAudience(ctx context.Contex
 
 	for _, hit := range response.Hits.Hits {
 
-		var bd audienceDocument
-
-		if err := json.Unmarshal(hit.Source, &bd); err != nil {
-			return nil, errors.Wrap(err, "failed search audience - unmarshal")
-		}
-
-		unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, bd.ThumbnailResource)
+		result, err := r.unmarshalAudienceDocument(ctx, hit)
 
 		if err != nil {
 			return nil, err
 		}
 
-		newAudience := post.UnmarshalAudienceFromDatabase(bd.Id, bd.Slug, bd.Title, unmarshalled, bd.Standard, bd.TotalLikes, bd.TotalPosts, bd.CreatedAt, bd.UpdatedAt)
-		newAudience.Node = paging.NewNode(hit.Sort)
-
-		audiences = append(audiences, newAudience)
+		audiences = append(audiences, result)
 	}
 
 	return audiences, nil

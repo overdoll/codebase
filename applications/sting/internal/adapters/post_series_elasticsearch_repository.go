@@ -50,6 +50,38 @@ func marshalSeriesToDocument(s *post.Series) (*seriesDocument, error) {
 	}, nil
 }
 
+func (r PostsCassandraElasticsearchRepository) unmarshalSeriesDocument(ctx context.Context, hit *elastic.SearchHit) (*post.Series, error) {
+
+	var md seriesDocument
+
+	err := json.Unmarshal(hit.Source, &md)
+
+	if err != nil {
+		return nil, errors.Wrap(err, "failed search series - unmarshal")
+	}
+
+	unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, md.ThumbnailResource)
+
+	if err != nil {
+		return nil, err
+	}
+
+	newMedia := post.UnmarshalSeriesFromDatabase(
+		md.Id,
+		md.Slug,
+		md.Title,
+		unmarshalled,
+		md.TotalLikes,
+		md.TotalPosts,
+		md.CreatedAt,
+		md.UpdatedAt,
+	)
+
+	newMedia.Node = paging.NewNode(hit.Sort)
+
+	return newMedia, nil
+}
+
 func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Series, error) {
 
 	builder := r.client.Search().
@@ -105,31 +137,11 @@ func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context,
 
 	for _, hit := range response.Hits.Hits {
 
-		var md seriesDocument
-
-		err := json.Unmarshal(hit.Source, &md)
-
-		if err != nil {
-			return nil, errors.Wrap(err, "failed search series - unmarshal")
-		}
-
-		unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, md.ThumbnailResource)
+		newMedia, err := r.unmarshalSeriesDocument(ctx, hit)
 
 		if err != nil {
 			return nil, err
 		}
-
-		newMedia := post.UnmarshalSeriesFromDatabase(
-			md.Id,
-			md.Slug,
-			md.Title,
-			unmarshalled,
-			md.TotalLikes,
-			md.TotalPosts,
-			md.CreatedAt,
-			md.UpdatedAt,
-		)
-		newMedia.Node = paging.NewNode(hit.Sort)
 
 		meds = append(meds, newMedia)
 	}
