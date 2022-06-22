@@ -78,7 +78,6 @@ export default function PublicPost (props: Props): JSX.Element {
     <>
       <PublicPostRichObject query={queryData.post} />
       <AccountInformationBanner query={queryData.viewer} />
-      <PublicPostPage query={queryData.post} viewerQuery={queryData.viewer} />
       <Stack spacing={4}>
         <HStack spacing={2} justify='space-between'>
           <Heading color='gray.00' fontSize='2xl'>
@@ -90,6 +89,7 @@ export default function PublicPost (props: Props): JSX.Element {
         </HStack>
         <Stack spacing={24}>
           <GlobalVideoManagerProvider>
+            <PublicPostPage query={queryData.post} viewerQuery={queryData.viewer} />
             <Stack spacing={4}>
               <HStack spacing={2} justify='space-between'>
                 <Heading color='gray.00' fontSize='2xl'>

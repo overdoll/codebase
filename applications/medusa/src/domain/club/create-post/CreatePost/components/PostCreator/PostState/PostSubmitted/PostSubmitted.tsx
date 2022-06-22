@@ -17,7 +17,7 @@ export default function PostSubmitted (): JSX.Element {
   if (state.isInReview === true) {
     return (
       <PostPlaceholder>
-        <Stack spacing={6}>
+        <Stack align='center' spacing={6}>
           <Box>
             <Heading mb={2} textAlign='center' color='gray.00' fontSize='2xl'>
               <Trans>

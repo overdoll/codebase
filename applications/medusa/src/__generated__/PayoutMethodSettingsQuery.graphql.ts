@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<5831d2405f89deb3546727eff741919c>>
- * @relayHash b0769bebf021e7f0b6373454f9a33e91
+ * @generated SignedSource<<340d215131c7505879a0611d9d7bba8e>>
+ * @relayHash 3e466058d91b23e0989bcda8e781ead6
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b0769bebf021e7f0b6373454f9a33e91
+// @relayRequestID 3e466058d91b23e0989bcda8e781ead6
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -205,14 +205,7 @@ return {
                     "name": "name",
                     "storageKey": null
                   },
-                  (v2/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "alpha3",
-                    "storageKey": null
-                  }
+                  (v2/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -241,7 +234,7 @@ return {
     ]
   },
   "params": {
-    "id": "b0769bebf021e7f0b6373454f9a33e91",
+    "id": "3e466058d91b23e0989bcda8e781ead6",
     "metadata": {},
     "name": "PayoutMethodSettingsQuery",
     "operationKind": "query",
