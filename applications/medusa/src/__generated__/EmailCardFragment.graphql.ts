@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<14c4ec4066f210f21441f9654916f467>>
+ * @generated SignedSource<<08ba462ad4182d6388452c36b9e78410>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,6 @@ export type EmailCardFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"DeleteFragment" | "MakePrimaryFragment">;
   readonly " $fragmentType": "EmailCardFragment";
 };
-export type EmailCardFragment = EmailCardFragment$data;
 export type EmailCardFragment$key = {
   readonly " $data"?: EmailCardFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"EmailCardFragment">;

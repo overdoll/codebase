@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fc4d749856050e22be38601686c5dedc>>
+ * @generated SignedSource<<f561d6e3a19013ef1201adfbde93e956>>
  * @relayHash b967fc979637ab4b3429d5fbf634d9d7
  * @lightSyntaxTransform
  * @nogrep
@@ -20,29 +20,27 @@ export type UpdatePostContentOrderInput = {
 export type ArrangeButtonMutation$variables = {
   input: UpdatePostContentOrderInput;
 };
-export type ArrangeButtonMutationVariables = ArrangeButtonMutation$variables;
 export type ArrangeButtonMutation$data = {
   readonly updatePostContentOrder: {
     readonly post: {
-      readonly id: string;
       readonly content: ReadonlyArray<{
         readonly id: string;
         readonly resource: {
-          readonly type: ResourceType;
           readonly processed: boolean;
+          readonly type: ResourceType;
           readonly urls: ReadonlyArray<{
-            readonly url: string;
             readonly mimeType: string;
+            readonly url: string;
           }>;
         };
       }>;
+      readonly id: string;
     } | null;
   } | null;
 };
-export type ArrangeButtonMutationResponse = ArrangeButtonMutation$data;
 export type ArrangeButtonMutation = {
-  variables: ArrangeButtonMutationVariables;
   response: ArrangeButtonMutation$data;
+  variables: ArrangeButtonMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

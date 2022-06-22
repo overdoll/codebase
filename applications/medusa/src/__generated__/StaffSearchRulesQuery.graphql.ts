@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1e9e3575d8b6ba4a8e639f0659a06c52>>
+ * @generated SignedSource<<2304533e6585b97588a9e8ef579fd4ef>>
  * @relayHash a6ac77d99d972da33cb42e7b4f24d144
  * @lightSyntaxTransform
  * @nogrep
@@ -14,14 +14,12 @@
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type StaffSearchRulesQuery$variables = {};
-export type StaffSearchRulesQueryVariables = StaffSearchRulesQuery$variables;
 export type StaffSearchRulesQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"StaffSearchRulesFragment">;
 };
-export type StaffSearchRulesQueryResponse = StaffSearchRulesQuery$data;
 export type StaffSearchRulesQuery = {
-  variables: StaffSearchRulesQueryVariables;
   response: StaffSearchRulesQuery$data;
+  variables: StaffSearchRulesQuery$variables;
 };
 
 const node: ConcreteRequest = {

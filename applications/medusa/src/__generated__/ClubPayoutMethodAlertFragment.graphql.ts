@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<af6e4a32f62332472a48ab5d7c657b6f>>
+ * @generated SignedSource<<4c265ccf5b80be0dee41e94fc2ae4e2f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type ClubPayoutMethodAlertFragment$data = {
   readonly owner: {
     readonly lock: {
-      readonly __typename: string;
+      readonly __typename: "AccountLock";
     } | null;
     readonly payoutMethod: {
       readonly __typename: string;
@@ -21,7 +21,6 @@ export type ClubPayoutMethodAlertFragment$data = {
   };
   readonly " $fragmentType": "ClubPayoutMethodAlertFragment";
 };
-export type ClubPayoutMethodAlertFragment = ClubPayoutMethodAlertFragment$data;
 export type ClubPayoutMethodAlertFragment$key = {
   readonly " $data"?: ClubPayoutMethodAlertFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ClubPayoutMethodAlertFragment">;

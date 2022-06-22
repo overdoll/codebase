@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<482c9fec8fb8fe5aeb433903dc1be70d>>
+ * @generated SignedSource<<afeece8d4af97fe99599a8aa9bd5dd71>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,19 +12,18 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type ClubTransactionMetricFragment$data = {
-  readonly month: number;
-  readonly year: number;
-  readonly currency: Currency;
-  readonly chargebacksAmountRatio: number;
   readonly chargebacksAmount: number;
+  readonly chargebacksAmountRatio: number;
   readonly chargebacksCount: number;
-  readonly refundsAmountRatio: number;
+  readonly currency: Currency;
+  readonly month: number;
   readonly refundsAmount: number;
+  readonly refundsAmountRatio: number;
   readonly refundsCount: number;
   readonly totalTransactionsAmount: number;
+  readonly year: number;
   readonly " $fragmentType": "ClubTransactionMetricFragment";
 };
-export type ClubTransactionMetricFragment = ClubTransactionMetricFragment$data;
 export type ClubTransactionMetricFragment$key = {
   readonly " $data"?: ClubTransactionMetricFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ClubTransactionMetricFragment">;

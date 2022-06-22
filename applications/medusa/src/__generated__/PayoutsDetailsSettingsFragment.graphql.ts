@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e85d59ec6ac112333f75a5ab5c955e98>>
+ * @generated SignedSource<<a6d529f5e15ab390b70f5525834a107c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,6 @@ export type PayoutsDetailsSettingsFragment$data = {
   readonly multiFactorTotpConfigured: boolean;
   readonly " $fragmentType": "PayoutsDetailsSettingsFragment";
 };
-export type PayoutsDetailsSettingsFragment = PayoutsDetailsSettingsFragment$data;
 export type PayoutsDetailsSettingsFragment$key = {
   readonly " $data"?: PayoutsDetailsSettingsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PayoutsDetailsSettingsFragment">;

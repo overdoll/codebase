@@ -14,6 +14,7 @@ interface Props extends Omit<ImageProps, 'src' | 'width' | 'height' | 'layout' |
 
 const Fragment = graphql`
   fragment ImageSnippetFragment on Resource {
+    id
     urls {
       url
     }
@@ -23,6 +24,8 @@ const Fragment = graphql`
   }
 `
 
+const errorCaptureCache = new Map<string, number>()
+
 export default function ImageSnippet ({
   query,
   cover,
@@ -30,7 +33,9 @@ export default function ImageSnippet ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const [errorCount, setErrorCount] = useState(0)
+  const captureId = data?.id as string
+
+  const [errorCount, setErrorCount] = useState(errorCaptureCache.has(captureId) ? errorCaptureCache.get(captureId) as number : 0)
 
   const errorLimit = data?.urls.length ?? 0
 
@@ -62,7 +67,13 @@ export default function ImageSnippet ({
   }
 
   const onErrorCapture = (): void => {
-    setErrorCount(x => x + 1)
+    setErrorCount(x => {
+      const newValue = x + 1
+
+      // add to error capture cache so that re-renders of the same image won't try to re-load the image
+      errorCaptureCache.set(captureId, newValue)
+      return newValue
+    })
   }
 
   if (errorCount >= errorLimit) {
@@ -94,6 +105,7 @@ export default function ImageSnippet ({
         {...IMAGE_PROPS}
         src={displayUrl(errorCount)}
         onErrorCapture={onErrorCapture}
+        priority
         {...rest}
       />
     </Box>

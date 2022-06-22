@@ -1,6 +1,9 @@
 import { Stack } from '@chakra-ui/react'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import type { ArrangeUploadsFragment, ArrangeUploadsFragment$key } from '@//:artifacts/ArrangeUploadsFragment.graphql'
+import type {
+  ArrangeUploadsFragment$data,
+  ArrangeUploadsFragment$key
+} from '@//:artifacts/ArrangeUploadsFragment.graphql'
 import DraggableContent from './DraggableContent/DraggableContent'
 import { useContext, useEffect, useState } from 'react'
 import { UppyContext } from '../../../../../../../context'
@@ -75,10 +78,10 @@ const SupporterUploadsMutationGQL = graphql`
 // TODO find an alternative to the draggable library and replace as it doesn't support react 18
 
 const reorder = (
-  list: ArrangeUploadsFragment['content'],
+  list: ArrangeUploadsFragment$data['content'],
   startIndex: number,
   endIndex: number
-): ArrangeUploadsFragment['content'] => {
+): ArrangeUploadsFragment$data['content'] => {
   const result = Array.from(list)
   const [removed] = result.splice(startIndex, 1)
   result.splice(endIndex, 0, removed)

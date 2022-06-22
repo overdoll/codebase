@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bf83891011efe78e00d8a413acf78330>>
+ * @generated SignedSource<<34c01b13dda53a7ccc6815e9fcfaa2b5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type UpdateClubPlatformFeeFormFragment$data = {
   readonly id: string;
   readonly " $fragmentType": "UpdateClubPlatformFeeFormFragment";
 };
-export type UpdateClubPlatformFeeFormFragment = UpdateClubPlatformFeeFormFragment$data;
 export type UpdateClubPlatformFeeFormFragment$key = {
   readonly " $data"?: UpdateClubPlatformFeeFormFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"UpdateClubPlatformFeeFormFragment">;

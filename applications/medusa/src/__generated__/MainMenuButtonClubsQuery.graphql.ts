@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<978bfae4e85422938a12b25196c90208>>
+ * @generated SignedSource<<714bdf0f9d6ac0e6b0869431c0c07bf9>>
  * @relayHash 11075cb2750040cec06ad9924e7df4f9
  * @lightSyntaxTransform
  * @nogrep
@@ -13,23 +13,21 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type MainMenuButtonClubsQuery$variables = {};
-export type MainMenuButtonClubsQueryVariables = MainMenuButtonClubsQuery$variables;
 export type MainMenuButtonClubsQuery$data = {
   readonly viewer: {
-    readonly clubMembershipsCount: number;
     readonly clubMembersPostsFeed: {
       readonly edges: ReadonlyArray<{
         readonly node: {
-          readonly __typename: string;
+          readonly __typename: "Post";
         };
       }>;
     };
+    readonly clubMembershipsCount: number;
   } | null;
 };
-export type MainMenuButtonClubsQueryResponse = MainMenuButtonClubsQuery$data;
 export type MainMenuButtonClubsQuery = {
-  variables: MainMenuButtonClubsQueryVariables;
   response: MainMenuButtonClubsQuery$data;
+  variables: MainMenuButtonClubsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

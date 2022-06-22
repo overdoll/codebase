@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8d95c97dac37a2f140500fa56a39a774>>
+ * @generated SignedSource<<e73af7ee4d5f35bfbc1074cad786131f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,21 +11,20 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostGalleryPublicSimpleFragment$data = {
-  readonly reference: string;
+  readonly club: {
+    readonly slug: string;
+    readonly " $fragmentSpreads": FragmentRefs<"PostSupporterContentClubFragment">;
+  };
   readonly content: ReadonlyArray<{
     readonly resource: {
       readonly " $fragmentSpreads": FragmentRefs<"PostMediaFragment">;
     };
     readonly " $fragmentSpreads": FragmentRefs<"PostSupporterContentFragment">;
   }>;
-  readonly club: {
-    readonly slug: string;
-    readonly " $fragmentSpreads": FragmentRefs<"PostSupporterContentClubFragment">;
-  };
+  readonly reference: string;
   readonly " $fragmentSpreads": FragmentRefs<"PostSlideIndexFragment">;
   readonly " $fragmentType": "PostGalleryPublicSimpleFragment";
 };
-export type PostGalleryPublicSimpleFragment = PostGalleryPublicSimpleFragment$data;
 export type PostGalleryPublicSimpleFragment$key = {
   readonly " $data"?: PostGalleryPublicSimpleFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PostGalleryPublicSimpleFragment">;

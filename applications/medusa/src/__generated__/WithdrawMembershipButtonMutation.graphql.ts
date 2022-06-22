@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8100743382f10da1081521dd0838e731>>
+ * @generated SignedSource<<465d31c95ae53464f2357241764f5f14>>
  * @relayHash a0fad07776196ade427749cd66960d32
  * @lightSyntaxTransform
  * @nogrep
@@ -15,16 +15,14 @@ import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type WithdrawMembershipButtonMutation$variables = {
   clubId: string;
 };
-export type WithdrawMembershipButtonMutationVariables = WithdrawMembershipButtonMutation$variables;
 export type WithdrawMembershipButtonMutation$data = {
   readonly leaveClub: {
     readonly clubMemberId: string;
   } | null;
 };
-export type WithdrawMembershipButtonMutationResponse = WithdrawMembershipButtonMutation$data;
 export type WithdrawMembershipButtonMutation = {
-  variables: WithdrawMembershipButtonMutationVariables;
   response: WithdrawMembershipButtonMutation$data;
+  variables: WithdrawMembershipButtonMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

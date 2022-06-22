@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<289f9b07869339ae03b9b6b48817edd6>>
+ * @generated SignedSource<<a397641f1866e02633d096c732252033>>
  * @relayHash 45da1a6e185615ee1f81f3e201359820
  * @lightSyntaxTransform
  * @nogrep
@@ -14,20 +14,18 @@
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type CurationSettingsQuery$variables = {};
-export type CurationSettingsQueryVariables = CurationSettingsQuery$variables;
 export type CurationSettingsQuery$data = {
   readonly viewer: {
     readonly curationProfile: {
-      readonly id: string;
       readonly completed: boolean;
+      readonly id: string;
     };
     readonly " $fragmentSpreads": FragmentRefs<"AccountInformationBannerFragment">;
   } | null;
 };
-export type CurationSettingsQueryResponse = CurationSettingsQuery$data;
 export type CurationSettingsQuery = {
-  variables: CurationSettingsQueryVariables;
   response: CurationSettingsQuery$data;
+  variables: CurationSettingsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

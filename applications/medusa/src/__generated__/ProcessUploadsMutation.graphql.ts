@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6c9d6e4fb9e399a85dd6c03da19e62d8>>
+ * @generated SignedSource<<4068cf4c043820b5fc08bb303051f18b>>
  * @relayHash 334ed31e2d55acb747a5953392e601f2
  * @lightSyntaxTransform
  * @nogrep
@@ -20,33 +20,31 @@ export type AddPostContentInput = {
 export type ProcessUploadsMutation$variables = {
   input: AddPostContentInput;
 };
-export type ProcessUploadsMutationVariables = ProcessUploadsMutation$variables;
 export type ProcessUploadsMutation$data = {
   readonly addPostContent: {
     readonly post: {
-      readonly id: string;
-      readonly reference: string;
       readonly content: ReadonlyArray<{
         readonly id: string;
         readonly resource: {
-          readonly type: ResourceType;
-          readonly processed: boolean;
-          readonly urls: ReadonlyArray<{
-            readonly url: string;
-            readonly mimeType: string;
-          }>;
-          readonly preview: string;
-          readonly width: number;
           readonly height: number;
+          readonly preview: string;
+          readonly processed: boolean;
+          readonly type: ResourceType;
+          readonly urls: ReadonlyArray<{
+            readonly mimeType: string;
+            readonly url: string;
+          }>;
+          readonly width: number;
         };
       }>;
+      readonly id: string;
+      readonly reference: string;
     } | null;
   } | null;
 };
-export type ProcessUploadsMutationResponse = ProcessUploadsMutation$data;
 export type ProcessUploadsMutation = {
-  variables: ProcessUploadsMutationVariables;
   response: ProcessUploadsMutation$data;
+  variables: ProcessUploadsMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

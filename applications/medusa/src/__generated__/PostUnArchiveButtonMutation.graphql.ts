@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<aa1a539ab035d6c536b6c0742db5788a>>
+ * @generated SignedSource<<502b3d48a65fe8de59adaab40a0e3ccd>>
  * @relayHash 21a028efd79935b6a34dfc53b4bac41e
  * @lightSyntaxTransform
  * @nogrep
@@ -19,7 +19,6 @@ export type UnArchivePostInput = {
 export type PostUnArchiveButtonMutation$variables = {
   input: UnArchivePostInput;
 };
-export type PostUnArchiveButtonMutationVariables = PostUnArchiveButtonMutation$variables;
 export type PostUnArchiveButtonMutation$data = {
   readonly unArchivePost: {
     readonly post: {
@@ -28,10 +27,9 @@ export type PostUnArchiveButtonMutation$data = {
     } | null;
   } | null;
 };
-export type PostUnArchiveButtonMutationResponse = PostUnArchiveButtonMutation$data;
 export type PostUnArchiveButtonMutation = {
-  variables: PostUnArchiveButtonMutationVariables;
   response: PostUnArchiveButtonMutation$data;
+  variables: PostUnArchiveButtonMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

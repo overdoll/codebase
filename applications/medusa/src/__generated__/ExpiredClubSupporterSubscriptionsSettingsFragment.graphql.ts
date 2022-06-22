@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<364fc84c37b64fcb8b3908943fd1e2c2>>
+ * @generated SignedSource<<9a8540c254266d07b3758570d43de389>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,7 +21,6 @@ export type ExpiredClubSupporterSubscriptionsSettingsFragment$data = {
   readonly id: string;
   readonly " $fragmentType": "ExpiredClubSupporterSubscriptionsSettingsFragment";
 };
-export type ExpiredClubSupporterSubscriptionsSettingsFragment = ExpiredClubSupporterSubscriptionsSettingsFragment$data;
 export type ExpiredClubSupporterSubscriptionsSettingsFragment$key = {
   readonly " $data"?: ExpiredClubSupporterSubscriptionsSettingsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ExpiredClubSupporterSubscriptionsSettingsFragment">;

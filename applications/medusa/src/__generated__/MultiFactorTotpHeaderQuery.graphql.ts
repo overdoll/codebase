@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dc30e817ec3d620db9f346508c3263d2>>
+ * @generated SignedSource<<fa9b6a421428a261ad530b66dbeb9425>>
  * @relayHash 31b9f7c5cb488bf65b60500d8d4fd9dc
  * @lightSyntaxTransform
  * @nogrep
@@ -13,17 +13,15 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type MultiFactorTotpHeaderQuery$variables = {};
-export type MultiFactorTotpHeaderQueryVariables = MultiFactorTotpHeaderQuery$variables;
 export type MultiFactorTotpHeaderQuery$data = {
   readonly viewer: {
     readonly multiFactorTotpConfigured: boolean;
     readonly recoveryCodesGenerated: boolean;
   };
 };
-export type MultiFactorTotpHeaderQueryResponse = MultiFactorTotpHeaderQuery$data;
 export type MultiFactorTotpHeaderQuery = {
-  variables: MultiFactorTotpHeaderQueryVariables;
   response: MultiFactorTotpHeaderQuery$data;
+  variables: MultiFactorTotpHeaderQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

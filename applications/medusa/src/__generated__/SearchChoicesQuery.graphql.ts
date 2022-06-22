@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3aea2fc6623cdee04dc6dfeb731a122f>>
- * @relayHash d18752fae3eba000d06a7c60e6227af9
+ * @generated SignedSource<<5516cc64486b135a328f886f809e4c2e>>
+ * @relayHash 741c7523484aae64d299d881e91dcc88
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,18 +9,17 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d18752fae3eba000d06a7c60e6227af9
+// @relayRequestID 741c7523484aae64d299d881e91dcc88
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SearchChoicesQuery$variables = {
-  search?: string | null;
-  seriesSlugs?: ReadonlyArray<string> | null;
-  charactersSlugs?: ReadonlyArray<string> | null;
   categoriesSlugs?: ReadonlyArray<string> | null;
   charactersSeriesSlug?: string | null;
+  charactersSlugs?: ReadonlyArray<string> | null;
+  search?: string | null;
+  seriesSlugs?: ReadonlyArray<string> | null;
 };
-export type SearchChoicesQueryVariables = SearchChoicesQuery$variables;
 export type SearchChoicesQuery$data = {
   readonly categories: {
     readonly edges: ReadonlyArray<{
@@ -35,11 +34,11 @@ export type SearchChoicesQuery$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
-        readonly slug: string;
         readonly name: string;
         readonly series: {
           readonly slug: string;
         };
+        readonly slug: string;
       };
     }>;
   };
@@ -54,10 +53,9 @@ export type SearchChoicesQuery$data = {
   };
   readonly " $fragmentSpreads": FragmentRefs<"GeneralSearchCategoriesFragment" | "GeneralSearchCharactersFragment" | "GeneralSearchSeriesFragment">;
 };
-export type SearchChoicesQueryResponse = SearchChoicesQuery$data;
 export type SearchChoicesQuery = {
-  variables: SearchChoicesQueryVariables;
   response: SearchChoicesQuery$data;
+  variables: SearchChoicesQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -189,6 +187,7 @@ v16 = {
       "name": "type",
       "storageKey": null
     },
+    (v8/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -236,8 +235,7 @@ v16 = {
       "kind": "ScalarField",
       "name": "processed",
       "storageKey": null
-    },
-    (v8/*: any*/)
+    }
   ],
   "storageKey": null
 },
@@ -608,7 +606,7 @@ return {
     ]
   },
   "params": {
-    "id": "d18752fae3eba000d06a7c60e6227af9",
+    "id": "741c7523484aae64d299d881e91dcc88",
     "metadata": {},
     "name": "SearchChoicesQuery",
     "operationKind": "query",

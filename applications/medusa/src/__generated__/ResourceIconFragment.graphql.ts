@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fa57b15a909b4b4c6cb6595735e03025>>
+ * @generated SignedSource<<b4a453659438cca2a8ca12b7c4871abf>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,6 @@ export type ResourceIconFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"ImageSnippetFragment" | "VideoSnippetFragment">;
   readonly " $fragmentType": "ResourceIconFragment";
 };
-export type ResourceIconFragment = ResourceIconFragment$data;
 export type ResourceIconFragment$key = {
   readonly " $data"?: ResourceIconFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5d493bce9d6bf42c1cff7a31935bd7e3>>
+ * @generated SignedSource<<faf470df0b740a472781f44fe009ac8d>>
  * @relayHash 82ee8bac1024c01bae41907fca24f5a1
  * @lightSyntaxTransform
  * @nogrep
@@ -20,21 +20,19 @@ export type EnrollAccountMultiFactorTotpInput = {
 export type TotpActivationFormMutation$variables = {
   input: EnrollAccountMultiFactorTotpInput;
 };
-export type TotpActivationFormMutationVariables = TotpActivationFormMutation$variables;
 export type TotpActivationFormMutation$data = {
   readonly enrollAccountMultiFactorTotp: {
-    readonly validation: EnrollAccountMultiFactorTotpValidation | null;
     readonly account: {
       readonly id: string;
       readonly multiFactorEnabled: boolean;
       readonly multiFactorTotpConfigured: boolean;
     } | null;
+    readonly validation: EnrollAccountMultiFactorTotpValidation | null;
   } | null;
 };
-export type TotpActivationFormMutationResponse = TotpActivationFormMutation$data;
 export type TotpActivationFormMutation = {
-  variables: TotpActivationFormMutationVariables;
   response: TotpActivationFormMutation$data;
+  variables: TotpActivationFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

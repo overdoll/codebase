@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3a5d60de9d4488294ab00da5455a2de7>>
+ * @generated SignedSource<<da0e965853c8d12d8291bb23a7014d43>>
  * @relayHash 46442a2e632818c647dea45c8eaf6766
  * @lightSyntaxTransform
  * @nogrep
@@ -15,16 +15,14 @@ import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type PostLikeButtonUndoMutation$variables = {
   postId: string;
 };
-export type PostLikeButtonUndoMutationVariables = PostLikeButtonUndoMutation$variables;
 export type PostLikeButtonUndoMutation$data = {
   readonly undoLikePost: {
     readonly postLikeId: string | null;
   } | null;
 };
-export type PostLikeButtonUndoMutationResponse = PostLikeButtonUndoMutation$data;
 export type PostLikeButtonUndoMutation = {
-  variables: PostLikeButtonUndoMutationVariables;
   response: PostLikeButtonUndoMutation$data;
+  variables: PostLikeButtonUndoMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

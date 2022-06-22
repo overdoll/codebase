@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3390e5be09427401a8d55dfaf2323e32>>
- * @relayHash a3bda2813a21a5efc4fbdd2dc5eb06c2
+ * @generated SignedSource<<253866d3e4851a5670ce9bb928812a16>>
+ * @relayHash 1173de1868d8217a37ebcdf343207d57
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,23 +9,21 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a3bda2813a21a5efc4fbdd2dc5eb06c2
+// @relayRequestID 1173de1868d8217a37ebcdf343207d57
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type StaffPayoutQuery$variables = {
   reference: string;
 };
-export type StaffPayoutQueryVariables = StaffPayoutQuery$variables;
 export type StaffPayoutQuery$data = {
   readonly payout: {
-    readonly " $fragmentSpreads": FragmentRefs<"StaffClubPayoutCardFragment" | "StaffPayoutOptionsFragment" | "StaffPayoutAccountFragment" | "StaffPayoutPaymentsListFragment" | "StaffPayoutEventsFragment" | "StaffPayoutClubFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"StaffClubPayoutCardFragment" | "StaffPayoutAccountFragment" | "StaffPayoutClubFragment" | "StaffPayoutEventsFragment" | "StaffPayoutOptionsFragment" | "StaffPayoutPaymentsListFragment">;
   } | null;
 };
-export type StaffPayoutQueryResponse = StaffPayoutQuery$data;
 export type StaffPayoutQuery = {
-  variables: StaffPayoutQueryVariables;
   response: StaffPayoutQuery$data;
+  variables: StaffPayoutQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -74,6 +72,7 @@ v5 = [
   }
 ],
 v6 = [
+  (v4/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -121,8 +120,7 @@ v6 = [
     "kind": "ScalarField",
     "name": "type",
     "storageKey": null
-  },
-  (v4/*: any*/)
+  }
 ],
 v7 = [
   {
@@ -423,7 +421,7 @@ return {
     ]
   },
   "params": {
-    "id": "a3bda2813a21a5efc4fbdd2dc5eb06c2",
+    "id": "1173de1868d8217a37ebcdf343207d57",
     "metadata": {},
     "name": "StaffPayoutQuery",
     "operationKind": "query",

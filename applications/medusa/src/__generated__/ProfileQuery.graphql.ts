@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a96d2cac0538bd1865ae86b873890881>>
- * @relayHash 3b706af69e72b30e3042d3d4da253549
+ * @generated SignedSource<<c77905bab1869b2cfcf89a6e11c0cb79>>
+ * @relayHash c77685175c1c2899ccf5d42476941616
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,29 +9,27 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3b706af69e72b30e3042d3d4da253549
+// @relayRequestID c77685175c1c2899ccf5d42476941616
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ProfileQuery$variables = {
   username: string;
 };
-export type ProfileQueryVariables = ProfileQuery$variables;
 export type ProfileQuery$data = {
   readonly account: {
-    readonly id: string;
-    readonly isDeleted: boolean;
-    readonly username: string;
     readonly avatar: {
       readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
     } | null;
+    readonly id: string;
+    readonly isDeleted: boolean;
+    readonly username: string;
     readonly " $fragmentSpreads": FragmentRefs<"ProfileMenuFragment">;
   } | null;
 };
-export type ProfileQueryResponse = ProfileQuery$data;
 export type ProfileQuery = {
-  variables: ProfileQueryVariables;
   response: ProfileQuery$data;
+  variables: ProfileQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -150,6 +148,7 @@ return {
             "name": "avatar",
             "plural": false,
             "selections": [
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -197,8 +196,7 @@ return {
                 "kind": "ScalarField",
                 "name": "type",
                 "storageKey": null
-              },
-              (v2/*: any*/)
+              }
             ],
             "storageKey": null
           }
@@ -208,7 +206,7 @@ return {
     ]
   },
   "params": {
-    "id": "3b706af69e72b30e3042d3d4da253549",
+    "id": "c77685175c1c2899ccf5d42476941616",
     "metadata": {},
     "name": "ProfileQuery",
     "operationKind": "query",

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<263f7979f3203c1cd188694abb6455df>>
+ * @generated SignedSource<<101b71fa4cccc856eabd77855972aaed>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,14 +11,13 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type CompleteFragment$data = {
-  readonly userAgent: string;
-  readonly sameDevice: boolean;
   readonly accountStatus: {
     readonly registered: boolean;
   } | null;
+  readonly sameDevice: boolean;
+  readonly userAgent: string;
   readonly " $fragmentType": "CompleteFragment";
 };
-export type CompleteFragment = CompleteFragment$data;
 export type CompleteFragment$key = {
   readonly " $data"?: CompleteFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"CompleteFragment">;

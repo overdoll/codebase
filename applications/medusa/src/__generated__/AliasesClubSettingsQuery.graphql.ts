@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9fd138343c775f6dc4aa20fb84ab9322>>
+ * @generated SignedSource<<f2ba645e5e0bd9ef2297112eb6bc6ee0>>
  * @relayHash 81ff3c7aef30c14da9f7aa1df29284da
  * @lightSyntaxTransform
  * @nogrep
@@ -16,22 +16,20 @@ import { FragmentRefs } from "relay-runtime";
 export type AliasesClubSettingsQuery$variables = {
   slug: string;
 };
-export type AliasesClubSettingsQueryVariables = AliasesClubSettingsQuery$variables;
 export type AliasesClubSettingsQuery$data = {
   readonly club: {
-    readonly slug: string;
     readonly id: string;
-    readonly slugAliasesLimit: number;
+    readonly slug: string;
     readonly slugAliases: ReadonlyArray<{
       readonly slug: string;
     }>;
-    readonly " $fragmentSpreads": FragmentRefs<"ManageClubSlugAliasesFragment" | "AddClubSlugAliasFragment">;
+    readonly slugAliasesLimit: number;
+    readonly " $fragmentSpreads": FragmentRefs<"AddClubSlugAliasFragment" | "ManageClubSlugAliasesFragment">;
   } | null;
 };
-export type AliasesClubSettingsQueryResponse = AliasesClubSettingsQuery$data;
 export type AliasesClubSettingsQuery = {
-  variables: AliasesClubSettingsQueryVariables;
   response: AliasesClubSettingsQuery$data;
+  variables: AliasesClubSettingsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

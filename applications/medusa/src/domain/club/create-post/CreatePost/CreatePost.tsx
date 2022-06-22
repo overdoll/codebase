@@ -3,7 +3,7 @@ import { Suspense, useEffect } from 'react'
 import PostCreator from './components/PostCreator/PostCreator'
 import { UppyContext } from './context'
 import { useQueryParam } from 'use-query-params'
-import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
+import { PreloadableConcreteRequest, PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import PostCreatorQuery, { PostCreatorQuery as PostCreatorQueryType } from '@//:artifacts/PostCreatorQuery.graphql'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
@@ -96,7 +96,7 @@ const CreatePost: PageProps<Props> = (props: Props) => {
   const [postReference] = useQueryParam<string | null | undefined>('post')
 
   const [queryRef, loadQuery] = useQueryLoader(
-    PostCreatorQuery,
+    PostCreatorQuery as PreloadableConcreteRequest<PostCreatorQueryType>,
     props.queryRefs.postCreatorQuery
   )
 

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6b78d5b8395090f69dd3c3916a0bb203>>
- * @relayHash b22a335e41cfd5c323765bdbac41619c
+ * @generated SignedSource<<16167ca39af0774facaefb9ae9746008>>
+ * @relayHash 13ff440157835a9c3b14fa8c6bae3ab2
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b22a335e41cfd5c323765bdbac41619c
+// @relayRequestID 13ff440157835a9c3b14fa8c6bae3ab2
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,14 +18,12 @@ export type StaffSearchCharacterPaginationFragment$variables = {
   first?: number | null;
   name?: string | null;
 };
-export type StaffSearchCharacterPaginationFragmentVariables = StaffSearchCharacterPaginationFragment$variables;
 export type StaffSearchCharacterPaginationFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"StaffSearchCharacterFragment">;
 };
-export type StaffSearchCharacterPaginationFragmentResponse = StaffSearchCharacterPaginationFragment$data;
 export type StaffSearchCharacterPaginationFragment = {
-  variables: StaffSearchCharacterPaginationFragmentVariables;
   response: StaffSearchCharacterPaginationFragment$data;
+  variables: StaffSearchCharacterPaginationFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -181,6 +179,7 @@ return {
                         "name": "type",
                         "storageKey": null
                       },
+                      (v5/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -228,8 +227,7 @@ return {
                         "kind": "ScalarField",
                         "name": "processed",
                         "storageKey": null
-                      },
-                      (v5/*: any*/)
+                      }
                     ],
                     "storageKey": null
                   },
@@ -295,7 +293,7 @@ return {
     ]
   },
   "params": {
-    "id": "b22a335e41cfd5c323765bdbac41619c",
+    "id": "13ff440157835a9c3b14fa8c6bae3ab2",
     "metadata": {},
     "name": "StaffSearchCharacterPaginationFragment",
     "operationKind": "query",

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<36dce87a7935fa5b6bad984ea2664fd3>>
+ * @generated SignedSource<<c318548f81fa78a47050e6b5739549f9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,6 @@ export type ChangeCategoryTitleFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"ChangeCategoryTitleFormFragment">;
   readonly " $fragmentType": "ChangeCategoryTitleFragment";
 };
-export type ChangeCategoryTitleFragment = ChangeCategoryTitleFragment$data;
 export type ChangeCategoryTitleFragment$key = {
   readonly " $data"?: ChangeCategoryTitleFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ChangeCategoryTitleFragment">;

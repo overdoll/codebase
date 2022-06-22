@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<361acab3c47587a6696300adbe206ef0>>
+ * @generated SignedSource<<08fa3df6f897ca4ecb3d09a55dbea7ff>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type PostUnArchiveButtonFragment$data = {
   readonly id: string;
   readonly " $fragmentType": "PostUnArchiveButtonFragment";
 };
-export type PostUnArchiveButtonFragment = PostUnArchiveButtonFragment$data;
 export type PostUnArchiveButtonFragment$key = {
   readonly " $data"?: PostUnArchiveButtonFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PostUnArchiveButtonFragment">;

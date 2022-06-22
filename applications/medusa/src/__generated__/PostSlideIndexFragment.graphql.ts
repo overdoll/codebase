@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e2f39fe2532e19d7736a99c62cd857bc>>
+ * @generated SignedSource<<058fb944ba3f4c77f8d2de90c5509687>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,13 +11,12 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostSlideIndexFragment$data = {
-  readonly reference: string;
   readonly content: ReadonlyArray<{
     readonly isSupporterOnly: boolean;
   }>;
+  readonly reference: string;
   readonly " $fragmentType": "PostSlideIndexFragment";
 };
-export type PostSlideIndexFragment = PostSlideIndexFragment$data;
 export type PostSlideIndexFragment$key = {
   readonly " $data"?: PostSlideIndexFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PostSlideIndexFragment">;

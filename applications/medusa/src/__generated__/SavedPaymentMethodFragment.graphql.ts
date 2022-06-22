@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b32cfab2800b84fa0030bb50ff0590a4>>
+ * @generated SignedSource<<6a9b33cd1f1ede3357278ea43ebe2214>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,10 +11,9 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SavedPaymentMethodFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"ChooseCurrencyFragment" | "BillingSummaryFragment" | "CCBillSelectSavedPaymentFormFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"BillingSummaryFragment" | "CCBillSelectSavedPaymentFormFragment" | "ChooseCurrencyFragment">;
   readonly " $fragmentType": "SavedPaymentMethodFragment";
 };
-export type SavedPaymentMethodFragment = SavedPaymentMethodFragment$data;
 export type SavedPaymentMethodFragment$key = {
   readonly " $data"?: SavedPaymentMethodFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"SavedPaymentMethodFragment">;

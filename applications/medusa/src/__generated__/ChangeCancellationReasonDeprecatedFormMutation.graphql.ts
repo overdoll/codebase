@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1d6ec0d75badba7a7aeaf1024cc14176>>
+ * @generated SignedSource<<97ad228e4b89b7e277e8f1e9ce249808>>
  * @relayHash d7cfbba76755f2ecc42e9d31243ede3f
  * @lightSyntaxTransform
  * @nogrep
@@ -19,19 +19,17 @@ export type UpdateCancellationReasonDeprecatedInput = {
 export type ChangeCancellationReasonDeprecatedFormMutation$variables = {
   input: UpdateCancellationReasonDeprecatedInput;
 };
-export type ChangeCancellationReasonDeprecatedFormMutationVariables = ChangeCancellationReasonDeprecatedFormMutation$variables;
 export type ChangeCancellationReasonDeprecatedFormMutation$data = {
   readonly updateCancellationReasonDeprecated: {
     readonly cancellationReason: {
-      readonly id: string;
       readonly deprecated: boolean;
+      readonly id: string;
     } | null;
   } | null;
 };
-export type ChangeCancellationReasonDeprecatedFormMutationResponse = ChangeCancellationReasonDeprecatedFormMutation$data;
 export type ChangeCancellationReasonDeprecatedFormMutation = {
-  variables: ChangeCancellationReasonDeprecatedFormMutationVariables;
   response: ChangeCancellationReasonDeprecatedFormMutation$data;
+  variables: ChangeCancellationReasonDeprecatedFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

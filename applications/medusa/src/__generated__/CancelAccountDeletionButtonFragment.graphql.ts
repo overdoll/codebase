@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a0e74efa8cd4e5e1d23202d600a1995c>>
+ * @generated SignedSource<<2eb7dce42c21a040f4e4bc5d8270989b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type CancelAccountDeletionButtonFragment$data = {
   readonly id: string;
   readonly " $fragmentType": "CancelAccountDeletionButtonFragment";
 };
-export type CancelAccountDeletionButtonFragment = CancelAccountDeletionButtonFragment$data;
 export type CancelAccountDeletionButtonFragment$key = {
   readonly " $data"?: CancelAccountDeletionButtonFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"CancelAccountDeletionButtonFragment">;

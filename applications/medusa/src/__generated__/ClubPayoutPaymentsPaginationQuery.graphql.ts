@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6120824e80d5c23c94b81a9f40e5b982>>
+ * @generated SignedSource<<e37e20387f0bd23d7437a715d764b818>>
  * @relayHash 6668434f6cf0856cf42e259b116c1417
  * @lightSyntaxTransform
  * @nogrep
@@ -18,16 +18,14 @@ export type ClubPayoutPaymentsPaginationQuery$variables = {
   first?: number | null;
   id: string;
 };
-export type ClubPayoutPaymentsPaginationQueryVariables = ClubPayoutPaymentsPaginationQuery$variables;
 export type ClubPayoutPaymentsPaginationQuery$data = {
   readonly node: {
     readonly " $fragmentSpreads": FragmentRefs<"ClubPayoutPaymentsListFragment">;
   } | null;
 };
-export type ClubPayoutPaymentsPaginationQueryResponse = ClubPayoutPaymentsPaginationQuery$data;
 export type ClubPayoutPaymentsPaginationQuery = {
-  variables: ClubPayoutPaymentsPaginationQueryVariables;
   response: ClubPayoutPaymentsPaginationQuery$data;
+  variables: ClubPayoutPaymentsPaginationQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d25d2f59a0f5e57094cd1026c521c805>>
- * @relayHash 0c64783e7b37afaa49e2b891c053378e
+ * @generated SignedSource<<df11c5428f0b21f4a72e1a383559f6a4>>
+ * @relayHash 23be4fdd7381f9285daa869845e5c309
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,19 +9,18 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0c64783e7b37afaa49e2b891c053378e
+// @relayRequestID 23be4fdd7381f9285daa869845e5c309
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ClubSettingsQuery$variables = {
   slug: string;
 };
-export type ClubSettingsQueryVariables = ClubSettingsQuery$variables;
 export type ClubSettingsQuery$data = {
   readonly club: {
     readonly id: string;
-    readonly slug: string;
     readonly name: string;
+    readonly slug: string;
     readonly thumbnail: {
       readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
     } | null;
@@ -29,10 +28,9 @@ export type ClubSettingsQuery$data = {
     readonly " $fragmentSpreads": FragmentRefs<"ClubInformationBannerFragment">;
   } | null;
 };
-export type ClubSettingsQueryResponse = ClubSettingsQuery$data;
 export type ClubSettingsQuery = {
-  variables: ClubSettingsQueryVariables;
   response: ClubSettingsQuery$data;
+  variables: ClubSettingsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -166,6 +164,7 @@ return {
             "name": "thumbnail",
             "plural": false,
             "selections": [
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -213,8 +212,7 @@ return {
                 "kind": "ScalarField",
                 "name": "type",
                 "storageKey": null
-              },
-              (v2/*: any*/)
+              }
             ],
             "storageKey": null
           },
@@ -256,7 +254,7 @@ return {
     ]
   },
   "params": {
-    "id": "0c64783e7b37afaa49e2b891c053378e",
+    "id": "23be4fdd7381f9285daa869845e5c309",
     "metadata": {},
     "name": "ClubSettingsQuery",
     "operationKind": "query",

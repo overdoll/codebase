@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<46a24e3e20842a75029ea9cfc669544f>>
+ * @generated SignedSource<<1d7709898c5cd8eefe5fdd55c6fddac7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,14 +14,13 @@ export type ClubConditionalPostDisplayFragment$data = {
   readonly posts: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly __typename: string;
+        readonly __typename: "Post";
       };
     }>;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"SupportClubButtonClubFragment" | "ClubExclusivePostsFragment" | "ClubTopPostsFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"ClubExclusivePostsFragment" | "ClubTopPostsFragment" | "SupportClubButtonClubFragment">;
   readonly " $fragmentType": "ClubConditionalPostDisplayFragment";
 };
-export type ClubConditionalPostDisplayFragment = ClubConditionalPostDisplayFragment$data;
 export type ClubConditionalPostDisplayFragment$key = {
   readonly " $data"?: ClubConditionalPostDisplayFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ClubConditionalPostDisplayFragment">;

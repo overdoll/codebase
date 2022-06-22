@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<9f058619ec7518e20d9018a36852ba63>>
- * @relayHash 000b8a0d77e0ac6d51a7ead84d962fa1
+ * @generated SignedSource<<55f22e284a2448caaf42014ea01320c2>>
+ * @relayHash 92973f7d753fd696a4197d64ab188c27
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,21 +9,19 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 000b8a0d77e0ac6d51a7ead84d962fa1
+// @relayRequestID 92973f7d753fd696a4197d64ab188c27
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ClubsFeedQuery$variables = {};
-export type ClubsFeedQueryVariables = ClubsFeedQuery$variables;
 export type ClubsFeedQuery$data = {
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"ClubPostsFeedFragment" | "ClubPostsFeedViewerFragment" | "AccountInformationBannerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"AccountInformationBannerFragment" | "ClubPostsFeedFragment" | "ClubPostsFeedViewerFragment">;
   } | null;
 };
-export type ClubsFeedQueryResponse = ClubsFeedQuery$data;
 export type ClubsFeedQuery = {
-  variables: ClubsFeedQueryVariables;
   response: ClubsFeedQuery$data;
+  variables: ClubsFeedQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -209,6 +207,7 @@ return {
                             "plural": false,
                             "selections": [
                               (v3/*: any*/),
+                              (v2/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -231,8 +230,7 @@ return {
                               (v5/*: any*/),
                               (v6/*: any*/),
                               (v7/*: any*/),
-                              (v9/*: any*/),
-                              (v2/*: any*/)
+                              (v9/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -285,6 +283,7 @@ return {
                             "name": "thumbnail",
                             "plural": false,
                             "selections": [
+                              (v2/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -299,8 +298,7 @@ return {
                               (v6/*: any*/),
                               (v7/*: any*/),
                               (v9/*: any*/),
-                              (v3/*: any*/),
-                              (v2/*: any*/)
+                              (v3/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -462,7 +460,7 @@ return {
     ]
   },
   "params": {
-    "id": "000b8a0d77e0ac6d51a7ead84d962fa1",
+    "id": "92973f7d753fd696a4197d64ab188c27",
     "metadata": {},
     "name": "ClubsFeedQuery",
     "operationKind": "query",

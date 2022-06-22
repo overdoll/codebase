@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a1701a06ca1dacc65d8cd5be95055e7b>>
- * @relayHash 70729ca614988302be60e87f6079c95e
+ * @generated SignedSource<<68a552e9fac9def800f48e12961d7d0d>>
+ * @relayHash e5f3846c20fe8dafb9000681c88d6820
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,18 +9,15 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 70729ca614988302be60e87f6079c95e
+// @relayRequestID e5f3846c20fe8dafb9000681c88d6820
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PublicClubQuery$variables = {
   slug: string;
 };
-export type PublicClubQueryVariables = PublicClubQuery$variables;
 export type PublicClubQuery$data = {
   readonly club: {
-    readonly id: string;
-    readonly membersCount: number;
     readonly backgroundPost: {
       readonly edges: ReadonlyArray<{
         readonly node: {
@@ -32,16 +29,17 @@ export type PublicClubQuery$data = {
         };
       }>;
     };
-    readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment" | "JoinClubFromPageFragment" | "ClubMenuFragment" | "ClubExclusivePostsFragment" | "SupportClubButtonClubFragment" | "ClubSuspendedStaffAlertFragment" | "ClubConditionalPostDisplayFragment" | "PublicClubRichObjectFragment">;
+    readonly id: string;
+    readonly membersCount: number;
+    readonly " $fragmentSpreads": FragmentRefs<"ClubConditionalPostDisplayFragment" | "ClubExclusivePostsFragment" | "ClubMenuFragment" | "ClubSuspendedStaffAlertFragment" | "JoinClubFromPageFragment" | "LargeClubHeaderFragment" | "PublicClubRichObjectFragment" | "SupportClubButtonClubFragment">;
   } | null;
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"JoinClubFromPageViewerFragment" | "AccountInformationBannerFragment" | "ClubConditionalPostDisplayViewerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"AccountInformationBannerFragment" | "ClubConditionalPostDisplayViewerFragment" | "JoinClubFromPageViewerFragment">;
   } | null;
 };
-export type PublicClubQueryResponse = PublicClubQuery$data;
 export type PublicClubQuery = {
-  variables: PublicClubQueryVariables;
   response: PublicClubQuery$data;
+  variables: PublicClubQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -248,12 +246,12 @@ v19 = [
                     "name": "videoDuration",
                     "storageKey": null
                   },
+                  (v2/*: any*/),
                   (v13/*: any*/),
                   (v7/*: any*/),
                   (v8/*: any*/),
                   (v9/*: any*/),
-                  (v11/*: any*/),
-                  (v2/*: any*/)
+                  (v11/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -541,6 +539,7 @@ return {
                             "plural": false,
                             "selections": [
                               (v5/*: any*/),
+                              (v2/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -564,8 +563,7 @@ return {
                               (v8/*: any*/),
                               (v9/*: any*/),
                               (v11/*: any*/),
-                              (v12/*: any*/),
-                              (v2/*: any*/)
+                              (v12/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -598,13 +596,13 @@ return {
             "name": "thumbnail",
             "plural": false,
             "selections": [
+              (v2/*: any*/),
               (v13/*: any*/),
               (v7/*: any*/),
               (v8/*: any*/),
               (v9/*: any*/),
               (v11/*: any*/),
-              (v5/*: any*/),
-              (v2/*: any*/)
+              (v5/*: any*/)
             ],
             "storageKey": null
           },
@@ -953,7 +951,7 @@ return {
     ]
   },
   "params": {
-    "id": "70729ca614988302be60e87f6079c95e",
+    "id": "e5f3846c20fe8dafb9000681c88d6820",
     "metadata": {},
     "name": "PublicClubQuery",
     "operationKind": "query",

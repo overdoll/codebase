@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8cfead23d5110c8ce6d096d38b55d63d>>
+ * @generated SignedSource<<93145786c7f9bcbb398fb882a3bbc5e2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type ManageCancelledSubscriptionButtonFragment$data = {
   readonly endDate: any;
   readonly " $fragmentType": "ManageCancelledSubscriptionButtonFragment";
 };
-export type ManageCancelledSubscriptionButtonFragment = ManageCancelledSubscriptionButtonFragment$data;
 export type ManageCancelledSubscriptionButtonFragment$key = {
   readonly " $data"?: ManageCancelledSubscriptionButtonFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ManageCancelledSubscriptionButtonFragment">;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0ef8f955ae3f0e08be70039766c44dc1>>
+ * @generated SignedSource<<cce4fa03f49a97092c2ef82e66553af9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,6 @@ export type UploadSearchCharactersMultiSelectorFragment$data = {
   };
   readonly " $fragmentType": "UploadSearchCharactersMultiSelectorFragment";
 };
-export type UploadSearchCharactersMultiSelectorFragment = UploadSearchCharactersMultiSelectorFragment$data;
 export type UploadSearchCharactersMultiSelectorFragment$key = {
   readonly " $data"?: UploadSearchCharactersMultiSelectorFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"UploadSearchCharactersMultiSelectorFragment">;

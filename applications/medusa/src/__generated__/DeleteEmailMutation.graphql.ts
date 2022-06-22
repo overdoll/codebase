@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5f1795fe8a69e62cdb7212cf1e4aa4e2>>
+ * @generated SignedSource<<54006abf26b234b12672d7691df10d94>>
  * @relayHash a1440aace9828c9d8a4b25dc64d80b80
  * @lightSyntaxTransform
  * @nogrep
@@ -16,19 +16,17 @@ export type DeleteAccountEmailInput = {
   accountEmailId: string;
 };
 export type DeleteEmailMutation$variables = {
-  input: DeleteAccountEmailInput;
   connections: ReadonlyArray<string>;
+  input: DeleteAccountEmailInput;
 };
-export type DeleteEmailMutationVariables = DeleteEmailMutation$variables;
 export type DeleteEmailMutation$data = {
   readonly deleteAccountEmail: {
     readonly accountEmailId: string;
   } | null;
 };
-export type DeleteEmailMutationResponse = DeleteEmailMutation$data;
 export type DeleteEmailMutation = {
-  variables: DeleteEmailMutationVariables;
   response: DeleteEmailMutation$data;
+  variables: DeleteEmailMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

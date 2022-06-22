@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<538a621d50ad966dc768924385843b40>>
+ * @generated SignedSource<<2a6b1429bae2fa0950c2033af50daa63>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,13 +13,12 @@ export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future 
 import { FragmentRefs } from "relay-runtime";
 export type StaffClubPayoutsFragment$data = {
   readonly pendingBalance: {
-    readonly currency: Currency;
     readonly amount: number;
+    readonly currency: Currency;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"ClubBalanceFragment" | "UpdateClubPlatformFeeFormFragment" | "InitiateClubPayoutFormFragment" | "StaffClubPayoutsListFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"ClubBalanceFragment" | "InitiateClubPayoutFormFragment" | "StaffClubPayoutsListFragment" | "UpdateClubPlatformFeeFormFragment">;
   readonly " $fragmentType": "StaffClubPayoutsFragment";
 };
-export type StaffClubPayoutsFragment = StaffClubPayoutsFragment$data;
 export type StaffClubPayoutsFragment$key = {
   readonly " $data"?: StaffClubPayoutsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"StaffClubPayoutsFragment">;

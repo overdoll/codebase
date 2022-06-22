@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<daf04e82f71800eff846316a575af6e3>>
+ * @generated SignedSource<<193f4bd181f2045da877b8ac33888675>>
  * @relayHash 860d23a00aac121c98615378aff739a1
  * @lightSyntaxTransform
  * @nogrep
@@ -18,16 +18,14 @@ export type StaffClubSuspensionLogsPaginationQuery$variables = {
   first?: number | null;
   id: string;
 };
-export type StaffClubSuspensionLogsPaginationQueryVariables = StaffClubSuspensionLogsPaginationQuery$variables;
 export type StaffClubSuspensionLogsPaginationQuery$data = {
   readonly node: {
     readonly " $fragmentSpreads": FragmentRefs<"StaffClubSuspensionLogsFragment">;
   } | null;
 };
-export type StaffClubSuspensionLogsPaginationQueryResponse = StaffClubSuspensionLogsPaginationQuery$data;
 export type StaffClubSuspensionLogsPaginationQuery = {
-  variables: StaffClubSuspensionLogsPaginationQueryVariables;
   response: StaffClubSuspensionLogsPaginationQuery$data;
+  variables: StaffClubSuspensionLogsPaginationQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<bb4b846bf1999eb3ac319badd683006c>>
- * @relayHash 853e60b760065385586c7d7f92f65d92
+ * @generated SignedSource<<fc3019464d029c1980e2020330e732f9>>
+ * @relayHash bb92112203c6b201341f5ab95596e7aa
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 853e60b760065385586c7d7f92f65d92
+// @relayRequestID bb92112203c6b201341f5ab95596e7aa
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -20,14 +20,12 @@ export type GeneralSearchCharactersFragmentPaginationFragment$variables = {
   first?: number | null;
   search?: string | null;
 };
-export type GeneralSearchCharactersFragmentPaginationFragmentVariables = GeneralSearchCharactersFragmentPaginationFragment$variables;
 export type GeneralSearchCharactersFragmentPaginationFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"GeneralSearchCharactersFragment">;
 };
-export type GeneralSearchCharactersFragmentPaginationFragmentResponse = GeneralSearchCharactersFragmentPaginationFragment$data;
 export type GeneralSearchCharactersFragmentPaginationFragment = {
-  variables: GeneralSearchCharactersFragmentPaginationFragmentVariables;
   response: GeneralSearchCharactersFragmentPaginationFragment$data;
+  variables: GeneralSearchCharactersFragmentPaginationFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -203,6 +201,7 @@ return {
                         "name": "type",
                         "storageKey": null
                       },
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -250,8 +249,7 @@ return {
                         "kind": "ScalarField",
                         "name": "processed",
                         "storageKey": null
-                      },
-                      (v4/*: any*/)
+                      }
                     ],
                     "storageKey": null
                   },
@@ -319,7 +317,7 @@ return {
     ]
   },
   "params": {
-    "id": "853e60b760065385586c7d7f92f65d92",
+    "id": "bb92112203c6b201341f5ab95596e7aa",
     "metadata": {},
     "name": "GeneralSearchCharactersFragmentPaginationFragment",
     "operationKind": "query",

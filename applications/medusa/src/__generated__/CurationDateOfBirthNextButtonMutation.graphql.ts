@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d01c574b1385bb2f154fd5f801c7b574>>
+ * @generated SignedSource<<147dc2ac3adf103e3a67d13dd1b99451>>
  * @relayHash 13c95462e8e0b48f0ab896e5853fe65d
  * @lightSyntaxTransform
  * @nogrep
@@ -16,24 +16,22 @@ export type CurationDateOfBirthNextButtonMutation$variables = {
   dateOfBirth?: any | null;
   skipped: boolean;
 };
-export type CurationDateOfBirthNextButtonMutationVariables = CurationDateOfBirthNextButtonMutation$variables;
 export type CurationDateOfBirthNextButtonMutation$data = {
   readonly updateCurationProfileDateOfBirth: {
     readonly curationProfile: {
-      readonly id: string;
       readonly completed: boolean;
       readonly dateOfBirth: {
-        readonly skipped: boolean;
         readonly completed: boolean;
         readonly dateOfBirth: any | null;
+        readonly skipped: boolean;
       };
+      readonly id: string;
     } | null;
   } | null;
 };
-export type CurationDateOfBirthNextButtonMutationResponse = CurationDateOfBirthNextButtonMutation$data;
 export type CurationDateOfBirthNextButtonMutation = {
-  variables: CurationDateOfBirthNextButtonMutationVariables;
   response: CurationDateOfBirthNextButtonMutation$data;
+  variables: CurationDateOfBirthNextButtonMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

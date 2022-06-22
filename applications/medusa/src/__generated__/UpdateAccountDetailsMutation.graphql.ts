@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dba3d1eb1aa4cf0379c1f8da1145269c>>
+ * @generated SignedSource<<a81059664f9e050354b17df5662d1c34>>
  * @relayHash e8c7fff818a05aa6c08283a68549d6c2
  * @lightSyntaxTransform
  * @nogrep
@@ -21,27 +21,25 @@ export type UpdateAccountDetailsInput = {
 export type UpdateAccountDetailsMutation$variables = {
   input: UpdateAccountDetailsInput;
 };
-export type UpdateAccountDetailsMutationVariables = UpdateAccountDetailsMutation$variables;
 export type UpdateAccountDetailsMutation$data = {
   readonly updateAccountDetails: {
     readonly accountDetails: {
-      readonly id: string;
-      readonly firstName: string;
-      readonly lastName: string;
       readonly country: {
+        readonly alpha3: string;
+        readonly emoji: string;
         readonly id: string;
         readonly name: string;
-        readonly emoji: string;
-        readonly alpha3: string;
         readonly payoutMethods: ReadonlyArray<PayoutMethod>;
       };
+      readonly firstName: string;
+      readonly id: string;
+      readonly lastName: string;
     } | null;
   } | null;
 };
-export type UpdateAccountDetailsMutationResponse = UpdateAccountDetailsMutation$data;
 export type UpdateAccountDetailsMutation = {
-  variables: UpdateAccountDetailsMutationVariables;
   response: UpdateAccountDetailsMutation$data;
+  variables: UpdateAccountDetailsMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

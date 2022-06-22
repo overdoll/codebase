@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0506dcb60aa193eb08c34a7230eefc78>>
+ * @generated SignedSource<<374ce9719b16f90909530e323e08c08e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,14 +11,13 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ProcessUploadsFragment$data = {
-  readonly id: string;
-  readonly reference: string;
   readonly content: ReadonlyArray<{
     readonly id: string;
   }>;
+  readonly id: string;
+  readonly reference: string;
   readonly " $fragmentType": "ProcessUploadsFragment";
 };
-export type ProcessUploadsFragment = ProcessUploadsFragment$data;
 export type ProcessUploadsFragment$key = {
   readonly " $data"?: ProcessUploadsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ProcessUploadsFragment">;

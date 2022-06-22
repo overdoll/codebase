@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f391698d3fee007ad976330ae8618e6d>>
- * @relayHash 29819d0176bf6540a4c05b3a9c22300e
+ * @generated SignedSource<<d0f0968e61d54c8457a6efdf580b1ca6>>
+ * @relayHash edf6ae89765ff0db5597d86014d70f0b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,14 +9,13 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 29819d0176bf6540a4c05b3a9c22300e
+// @relayRequestID edf6ae89765ff0db5597d86014d70f0b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ClubMembersQuery$variables = {
   slug: string;
 };
-export type ClubMembersQueryVariables = ClubMembersQuery$variables;
 export type ClubMembersQuery$data = {
   readonly club: {
     readonly name: string;
@@ -24,10 +23,9 @@ export type ClubMembersQuery$data = {
     readonly " $fragmentSpreads": FragmentRefs<"ClubInformationBannerFragment" | "ClubMembersFragment">;
   } | null;
 };
-export type ClubMembersQueryResponse = ClubMembersQuery$data;
 export type ClubMembersQuery = {
-  variables: ClubMembersQueryVariables;
   response: ClubMembersQuery$data;
+  variables: ClubMembersQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -226,6 +224,7 @@ return {
                             "name": "avatar",
                             "plural": false,
                             "selections": [
+                              (v5/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -280,8 +279,7 @@ return {
                                 "kind": "ScalarField",
                                 "name": "processed",
                                 "storageKey": null
-                              },
-                              (v5/*: any*/)
+                              }
                             ],
                             "storageKey": null
                           }
@@ -353,7 +351,7 @@ return {
     ]
   },
   "params": {
-    "id": "29819d0176bf6540a4c05b3a9c22300e",
+    "id": "edf6ae89765ff0db5597d86014d70f0b",
     "metadata": {},
     "name": "ClubMembersQuery",
     "operationKind": "query",

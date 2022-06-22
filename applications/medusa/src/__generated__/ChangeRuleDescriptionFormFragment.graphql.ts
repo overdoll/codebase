@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ae54c94e7d5a5d71698e870cb3b5b064>>
+ * @generated SignedSource<<8aef0eae662b77a0d4048fc88aa24233>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type ChangeRuleDescriptionFormFragment$data = {
   readonly id: string;
   readonly " $fragmentType": "ChangeRuleDescriptionFormFragment";
 };
-export type ChangeRuleDescriptionFormFragment = ChangeRuleDescriptionFormFragment$data;
 export type ChangeRuleDescriptionFormFragment$key = {
   readonly " $data"?: ChangeRuleDescriptionFormFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ChangeRuleDescriptionFormFragment">;

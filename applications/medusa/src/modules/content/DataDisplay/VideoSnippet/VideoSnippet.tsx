@@ -43,6 +43,7 @@ export default function VideoSnippet ({
           backgroundColor: previewBackground,
           userSelect: 'none'
         }}
+        priority
         src={data?.videoThumbnail?.url ?? 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='}
         {...rest}
       />

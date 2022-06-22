@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6edbc6372e0af86cf8ca60d7623d59f4>>
+ * @generated SignedSource<<21c572ead96f98a3a6277c36359d6597>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type SuspendClubFormFragment$data = {
   readonly id: string;
   readonly " $fragmentType": "SuspendClubFormFragment";
 };
-export type SuspendClubFormFragment = SuspendClubFormFragment$data;
 export type SuspendClubFormFragment$key = {
   readonly " $data"?: SuspendClubFormFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"SuspendClubFormFragment">;

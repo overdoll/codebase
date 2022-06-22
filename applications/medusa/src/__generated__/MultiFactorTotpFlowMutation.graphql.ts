@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<74fcf7ed009266fb13465d0c0e566cda>>
+ * @generated SignedSource<<5b0b647e28283dc4788c8700c85d4391>>
  * @relayHash 8ff037e504b055ff04061393c42088d1
  * @lightSyntaxTransform
  * @nogrep
@@ -13,20 +13,18 @@
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type MultiFactorTotpFlowMutation$variables = {};
-export type MultiFactorTotpFlowMutationVariables = MultiFactorTotpFlowMutation$variables;
 export type MultiFactorTotpFlowMutation$data = {
   readonly generateAccountMultiFactorTotp: {
     readonly multiFactorTotp: {
       readonly id: string;
-      readonly secret: string;
       readonly imageSrc: string;
+      readonly secret: string;
     } | null;
   } | null;
 };
-export type MultiFactorTotpFlowMutationResponse = MultiFactorTotpFlowMutation$data;
 export type MultiFactorTotpFlowMutation = {
-  variables: MultiFactorTotpFlowMutationVariables;
   response: MultiFactorTotpFlowMutation$data;
+  variables: MultiFactorTotpFlowMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

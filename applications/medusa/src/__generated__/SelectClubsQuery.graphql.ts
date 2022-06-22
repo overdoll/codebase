@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<53d166c1b3806130cacfd1f423783a38>>
- * @relayHash 964b292af45cb3fd396f3241a12a2221
+ * @generated SignedSource<<a3e23988fe7c4919ede3dd351387cc98>>
+ * @relayHash b95e9e9830b0ffbdeb35faa56f3073a2
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,29 +9,27 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 964b292af45cb3fd396f3241a12a2221
+// @relayRequestID b95e9e9830b0ffbdeb35faa56f3073a2
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SelectClubsQuery$variables = {
   slug: string;
 };
-export type SelectClubsQueryVariables = SelectClubsQuery$variables;
 export type SelectClubsQuery$data = {
   readonly club: {
-    readonly viewerIsOwner: boolean;
     readonly slug: string;
+    readonly viewerIsOwner: boolean;
     readonly " $fragmentSpreads": FragmentRefs<"ClubPreviewFragment" | "SuspendedClubBannerFragment">;
   } | null;
   readonly viewer: {
-    readonly id: string;
     readonly clubsCount: number;
+    readonly id: string;
   } | null;
 };
-export type SelectClubsQueryResponse = SelectClubsQuery$data;
 export type SelectClubsQuery = {
-  variables: SelectClubsQueryVariables;
   response: SelectClubsQuery$data;
+  variables: SelectClubsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -165,6 +163,7 @@ return {
             "name": "thumbnail",
             "plural": false,
             "selections": [
+              (v4/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -212,8 +211,7 @@ return {
                 "kind": "ScalarField",
                 "name": "type",
                 "storageKey": null
-              },
-              (v4/*: any*/)
+              }
             ],
             "storageKey": null
           },
@@ -242,7 +240,7 @@ return {
     ]
   },
   "params": {
-    "id": "964b292af45cb3fd396f3241a12a2221",
+    "id": "b95e9e9830b0ffbdeb35faa56f3073a2",
     "metadata": {},
     "name": "SelectClubsQuery",
     "operationKind": "query",

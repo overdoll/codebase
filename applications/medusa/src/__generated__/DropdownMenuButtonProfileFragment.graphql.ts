@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ab036987dfde268018ca70b180dd724e>>
+ * @generated SignedSource<<f72057773004a18f3c94d958fb8207d6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,14 +11,13 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type DropdownMenuButtonProfileFragment$data = {
-  readonly id: string;
-  readonly username: string;
   readonly avatar: {
     readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
   } | null;
+  readonly id: string;
+  readonly username: string;
   readonly " $fragmentType": "DropdownMenuButtonProfileFragment";
 };
-export type DropdownMenuButtonProfileFragment = DropdownMenuButtonProfileFragment$data;
 export type DropdownMenuButtonProfileFragment$key = {
   readonly " $data"?: DropdownMenuButtonProfileFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"DropdownMenuButtonProfileFragment">;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d67dd5b35e3bb4f5b3b7e0b00f7f0796>>
+ * @generated SignedSource<<a9f14a932b62a6cfaaffa6e603ab28e0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,13 +13,12 @@ import { FragmentRefs } from "relay-runtime";
 export type SearchFragment$data = {
   readonly posts: {
     readonly edges: ReadonlyArray<{
-      readonly __typename: string;
+      readonly __typename: "PostEdge";
     }>;
     readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollFragment">;
   };
   readonly " $fragmentType": "SearchFragment";
 };
-export type SearchFragment = SearchFragment$data;
 export type SearchFragment$key = {
   readonly " $data"?: SearchFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"SearchFragment">;

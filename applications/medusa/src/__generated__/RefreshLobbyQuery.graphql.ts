@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f689f9ce30b32df61bc3e91e52916b86>>
+ * @generated SignedSource<<8f6d380a70b8376dbb2d606ae55dc66f>>
  * @relayHash ff960d9f5cb874323e938256197abc2a
  * @lightSyntaxTransform
  * @nogrep
@@ -15,25 +15,23 @@ import { ConcreteRequest, Query } from 'relay-runtime';
 export type RefreshLobbyQuery$variables = {
   token: string;
 };
-export type RefreshLobbyQueryVariables = RefreshLobbyQuery$variables;
 export type RefreshLobbyQuery$data = {
   readonly viewAuthenticationToken: {
-    readonly id: string;
-    readonly verified: boolean;
-    readonly token: string;
-    readonly sameDevice: boolean;
     readonly accountStatus: {
-      readonly registered: boolean;
       readonly multiFactor: {
-        readonly __typename: string;
+        readonly __typename: "MultiFactor";
       } | null;
+      readonly registered: boolean;
     } | null;
+    readonly id: string;
+    readonly sameDevice: boolean;
+    readonly token: string;
+    readonly verified: boolean;
   } | null;
 };
-export type RefreshLobbyQueryResponse = RefreshLobbyQuery$data;
 export type RefreshLobbyQuery = {
-  variables: RefreshLobbyQueryVariables;
   response: RefreshLobbyQuery$data;
+  variables: RefreshLobbyQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

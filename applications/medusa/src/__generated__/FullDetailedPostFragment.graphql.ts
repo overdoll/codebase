@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5283c92d17048b464492ea8dfc28cbf0>>
+ * @generated SignedSource<<6bb4645dbda3bb35be4d1d649d5db329>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,15 +12,14 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type FullDetailedPostFragment$data = {
-  readonly state: PostState;
   readonly club: {
     readonly viewerIsOwner: boolean;
     readonly " $fragmentSpreads": FragmentRefs<"JoinClubFromPostFragment">;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"PostGalleryPublicDetailedFragment" | "PostCopyLinkButtonFragment" | "PostReportButtonFragment" | "PostModerateButtonFragment" | "PostLikeButtonFragment" | "PostHeaderClubFragment" | "PostClickableCharactersFragment" | "PostClickableCategoriesFragment" | "PostArchiveButtonFragment" | "PostUnArchiveButtonFragment">;
+  readonly state: PostState;
+  readonly " $fragmentSpreads": FragmentRefs<"PostArchiveButtonFragment" | "PostClickableCategoriesFragment" | "PostClickableCharactersFragment" | "PostCopyLinkButtonFragment" | "PostGalleryPublicDetailedFragment" | "PostHeaderClubFragment" | "PostLikeButtonFragment" | "PostModerateButtonFragment" | "PostReportButtonFragment" | "PostUnArchiveButtonFragment">;
   readonly " $fragmentType": "FullDetailedPostFragment";
 };
-export type FullDetailedPostFragment = FullDetailedPostFragment$data;
 export type FullDetailedPostFragment$key = {
   readonly " $data"?: FullDetailedPostFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"FullDetailedPostFragment">;

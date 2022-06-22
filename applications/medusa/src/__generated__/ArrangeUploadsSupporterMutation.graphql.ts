@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a7a814f201c91103e0b9ac9d911b3b57>>
+ * @generated SignedSource<<5efc558dd4c7646a16b3ce7c64dc5b9b>>
  * @relayHash daa57749417b1c67a04523cb1f6d23ba
  * @lightSyntaxTransform
  * @nogrep
@@ -20,26 +20,24 @@ export type UpdatePostContentIsSupporterOnlyInput = {
 export type ArrangeUploadsSupporterMutation$variables = {
   input: UpdatePostContentIsSupporterOnlyInput;
 };
-export type ArrangeUploadsSupporterMutationVariables = ArrangeUploadsSupporterMutation$variables;
 export type ArrangeUploadsSupporterMutation$data = {
   readonly updatePostContentIsSupporterOnly: {
     readonly post: {
-      readonly id: string;
-      readonly reference: string;
       readonly content: ReadonlyArray<{
-        readonly viewerCanViewSupporterOnlyContent: boolean;
         readonly isSupporterOnly: boolean;
         readonly resource: {
           readonly id: string;
         };
+        readonly viewerCanViewSupporterOnlyContent: boolean;
       }>;
+      readonly id: string;
+      readonly reference: string;
     } | null;
   } | null;
 };
-export type ArrangeUploadsSupporterMutationResponse = ArrangeUploadsSupporterMutation$data;
 export type ArrangeUploadsSupporterMutation = {
-  variables: ArrangeUploadsSupporterMutationVariables;
   response: ArrangeUploadsSupporterMutation$data;
+  variables: ArrangeUploadsSupporterMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

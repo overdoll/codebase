@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8925c8da7e6a7a03216ff4c859dec26f>>
+ * @generated SignedSource<<bf0bf3ee871afa387ab482856ebd54b9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type PostVideoMediaFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"ControlledVideoFragment">;
   readonly " $fragmentType": "PostVideoMediaFragment";
 };
-export type PostVideoMediaFragment = PostVideoMediaFragment$data;
 export type PostVideoMediaFragment$key = {
   readonly " $data"?: PostVideoMediaFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PostVideoMediaFragment">;

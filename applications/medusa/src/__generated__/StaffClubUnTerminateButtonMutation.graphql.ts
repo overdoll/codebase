@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b4c71d7754ce1ce9ba95340145308b10>>
+ * @generated SignedSource<<6cf25846ef7dd3ebbc956ae12c8dcb4c>>
  * @relayHash 15ecc3716945ffc3d5da7e9c7555f30e
  * @lightSyntaxTransform
  * @nogrep
@@ -18,7 +18,6 @@ export type UnTerminateClubInput = {
 export type StaffClubUnTerminateButtonMutation$variables = {
   input: UnTerminateClubInput;
 };
-export type StaffClubUnTerminateButtonMutationVariables = StaffClubUnTerminateButtonMutation$variables;
 export type StaffClubUnTerminateButtonMutation$data = {
   readonly unTerminateClub: {
     readonly club: {
@@ -32,10 +31,9 @@ export type StaffClubUnTerminateButtonMutation$data = {
     } | null;
   } | null;
 };
-export type StaffClubUnTerminateButtonMutationResponse = StaffClubUnTerminateButtonMutation$data;
 export type StaffClubUnTerminateButtonMutation = {
-  variables: StaffClubUnTerminateButtonMutationVariables;
   response: StaffClubUnTerminateButtonMutation$data;
+  variables: StaffClubUnTerminateButtonMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

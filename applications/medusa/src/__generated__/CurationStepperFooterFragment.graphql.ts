@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e6826adf91de1d3bba3682d1998ba3a6>>
+ * @generated SignedSource<<91a91cb7fde6e74ec797dd1c16c09755>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,18 +11,17 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type CurationStepperFooterFragment$data = {
-  readonly dateOfBirth: {
-    readonly " $fragmentSpreads": FragmentRefs<"CurationDateOfBirthNextButtonFragment">;
-  };
   readonly audience: {
     readonly " $fragmentSpreads": FragmentRefs<"CurationAudienceNextButtonFragment">;
   };
   readonly category: {
     readonly " $fragmentSpreads": FragmentRefs<"CurationCategoryNextButtonFragment">;
   };
+  readonly dateOfBirth: {
+    readonly " $fragmentSpreads": FragmentRefs<"CurationDateOfBirthNextButtonFragment">;
+  };
   readonly " $fragmentType": "CurationStepperFooterFragment";
 };
-export type CurationStepperFooterFragment = CurationStepperFooterFragment$data;
 export type CurationStepperFooterFragment$key = {
   readonly " $data"?: CurationStepperFooterFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"CurationStepperFooterFragment">;

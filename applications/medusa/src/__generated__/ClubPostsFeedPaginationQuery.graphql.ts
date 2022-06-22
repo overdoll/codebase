@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<63b16234b90e6744275ffa4df0c75b3b>>
- * @relayHash 8653dd2ff8e4a5dda8122ba1178858fe
+ * @generated SignedSource<<84a7f7aa6b01b5519927abb517f7adb9>>
+ * @relayHash f5d6da4bd27d79ff923e93f73979806d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8653dd2ff8e4a5dda8122ba1178858fe
+// @relayRequestID f5d6da4bd27d79ff923e93f73979806d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,16 +18,14 @@ export type ClubPostsFeedPaginationQuery$variables = {
   first?: number | null;
   id: string;
 };
-export type ClubPostsFeedPaginationQueryVariables = ClubPostsFeedPaginationQuery$variables;
 export type ClubPostsFeedPaginationQuery$data = {
   readonly node: {
     readonly " $fragmentSpreads": FragmentRefs<"ClubPostsFeedFragment">;
   } | null;
 };
-export type ClubPostsFeedPaginationQueryResponse = ClubPostsFeedPaginationQuery$data;
 export type ClubPostsFeedPaginationQuery = {
-  variables: ClubPostsFeedPaginationQueryVariables;
   response: ClubPostsFeedPaginationQuery$data;
+  variables: ClubPostsFeedPaginationQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -237,6 +235,7 @@ return {
                                 "plural": false,
                                 "selections": [
                                   (v5/*: any*/),
+                                  (v4/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -259,8 +258,7 @@ return {
                                   (v7/*: any*/),
                                   (v8/*: any*/),
                                   (v9/*: any*/),
-                                  (v11/*: any*/),
-                                  (v4/*: any*/)
+                                  (v11/*: any*/)
                                 ],
                                 "storageKey": null
                               },
@@ -313,6 +311,7 @@ return {
                                 "name": "thumbnail",
                                 "plural": false,
                                 "selections": [
+                                  (v4/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -327,8 +326,7 @@ return {
                                   (v8/*: any*/),
                                   (v9/*: any*/),
                                   (v11/*: any*/),
-                                  (v5/*: any*/),
-                                  (v4/*: any*/)
+                                  (v5/*: any*/)
                                 ],
                                 "storageKey": null
                               },
@@ -441,7 +439,7 @@ return {
     ]
   },
   "params": {
-    "id": "8653dd2ff8e4a5dda8122ba1178858fe",
+    "id": "f5d6da4bd27d79ff923e93f73979806d",
     "metadata": {},
     "name": "ClubPostsFeedPaginationQuery",
     "operationKind": "query",

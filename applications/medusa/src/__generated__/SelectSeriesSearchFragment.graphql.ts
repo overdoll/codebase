@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fb9f7ee33790e19617b103344101d6c3>>
+ * @generated SignedSource<<3f5e7c6a5035078d11a433d912269591>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,6 @@ export type SelectSeriesSearchFragment$data = {
   };
   readonly " $fragmentType": "SelectSeriesSearchFragment";
 };
-export type SelectSeriesSearchFragment = SelectSeriesSearchFragment$data;
 export type SelectSeriesSearchFragment$key = {
   readonly " $data"?: SelectSeriesSearchFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"SelectSeriesSearchFragment">;

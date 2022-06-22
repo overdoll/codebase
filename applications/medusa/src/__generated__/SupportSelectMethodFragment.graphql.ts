@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<052afefcf13dd92d9710db4321a675cf>>
+ * @generated SignedSource<<128000c53ba22100efddf3ef75f3d3d9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,7 +20,6 @@ export type SupportSelectMethodFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"NewPaymentMethodFragment" | "SavedPaymentMethodFragment">;
   readonly " $fragmentType": "SupportSelectMethodFragment";
 };
-export type SupportSelectMethodFragment = SupportSelectMethodFragment$data;
 export type SupportSelectMethodFragment$key = {
   readonly " $data"?: SupportSelectMethodFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"SupportSelectMethodFragment">;

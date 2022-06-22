@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<5ed4a906fe61944eb4d2759f894ea5bd>>
- * @relayHash f557de7324f53d64394e8ee5d550693f
+ * @generated SignedSource<<4ae119df1bb20dc7f3a3ce9309fa7aff>>
+ * @relayHash b10d2c6cd31e3c1d505999c267718c2d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,23 +9,21 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f557de7324f53d64394e8ee5d550693f
+// @relayRequestID b10d2c6cd31e3c1d505999c267718c2d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type StaffViewCategoryQuery$variables = {
   slug: string;
 };
-export type StaffViewCategoryQueryVariables = StaffViewCategoryQuery$variables;
 export type StaffViewCategoryQuery$data = {
   readonly category: {
-    readonly " $fragmentSpreads": FragmentRefs<"ChangeCategoryTitleFragment" | "ChangeCategoryThumbnailFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ChangeCategoryThumbnailFragment" | "ChangeCategoryTitleFragment">;
   } | null;
 };
-export type StaffViewCategoryQueryResponse = StaffViewCategoryQuery$data;
 export type StaffViewCategoryQuery = {
-  variables: StaffViewCategoryQueryVariables;
   response: StaffViewCategoryQuery$data;
+  variables: StaffViewCategoryQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -164,6 +162,7 @@ return {
             "name": "thumbnail",
             "plural": false,
             "selections": [
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -211,8 +210,7 @@ return {
                 "kind": "ScalarField",
                 "name": "type",
                 "storageKey": null
-              },
-              (v2/*: any*/)
+              }
             ],
             "storageKey": null
           }
@@ -222,7 +220,7 @@ return {
     ]
   },
   "params": {
-    "id": "f557de7324f53d64394e8ee5d550693f",
+    "id": "b10d2c6cd31e3c1d505999c267718c2d",
     "metadata": {},
     "name": "StaffViewCategoryQuery",
     "operationKind": "query",

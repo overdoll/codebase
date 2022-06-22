@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<43b739f07d56693276d3ccd1a77c4efe>>
+ * @generated SignedSource<<b4b28793be3cb413a793a3efd2770238>>
  * @relayHash d412829d7ff3a6a2d23f98a30dfd9567
  * @lightSyntaxTransform
  * @nogrep
@@ -15,36 +15,34 @@ import { ConcreteRequest, Query } from 'relay-runtime';
 export type RefreshProcessContentQuery$variables = {
   reference: string;
 };
-export type RefreshProcessContentQueryVariables = RefreshProcessContentQuery$variables;
 export type RefreshProcessContentQuery$data = {
   readonly post: {
-    readonly id: string;
-    readonly reference: string;
     readonly content: ReadonlyArray<{
       readonly id: string;
-      readonly viewerCanViewSupporterOnlyContent: boolean;
       readonly isSupporterOnly: boolean;
       readonly resource: {
+        readonly height: number;
+        readonly preview: string;
         readonly processed: boolean;
-        readonly videoDuration: number;
-        readonly videoThumbnail: {
-          readonly url: string;
-        } | null;
         readonly urls: ReadonlyArray<{
           readonly mimeType: string;
           readonly url: string;
         }>;
+        readonly videoDuration: number;
+        readonly videoThumbnail: {
+          readonly url: string;
+        } | null;
         readonly width: number;
-        readonly height: number;
-        readonly preview: string;
       };
+      readonly viewerCanViewSupporterOnlyContent: boolean;
     }>;
+    readonly id: string;
+    readonly reference: string;
   } | null;
 };
-export type RefreshProcessContentQueryResponse = RefreshProcessContentQuery$data;
 export type RefreshProcessContentQuery = {
-  variables: RefreshProcessContentQueryVariables;
   response: RefreshProcessContentQuery$data;
+  variables: RefreshProcessContentQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

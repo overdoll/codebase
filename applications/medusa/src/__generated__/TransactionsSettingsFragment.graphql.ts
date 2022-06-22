@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<31b8d406929e0fb69a5888f7e165c755>>
+ * @generated SignedSource<<a57507cb07e5e060c9efdd8ac5567721>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type TransactionsSettingsFragment$data = {
+  readonly id: string;
   readonly transactions: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -19,10 +20,8 @@ export type TransactionsSettingsFragment$data = {
       };
     }>;
   };
-  readonly id: string;
   readonly " $fragmentType": "TransactionsSettingsFragment";
 };
-export type TransactionsSettingsFragment = TransactionsSettingsFragment$data;
 export type TransactionsSettingsFragment$key = {
   readonly " $data"?: TransactionsSettingsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"TransactionsSettingsFragment">;

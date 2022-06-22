@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<31bcf9aea457010efecf6d929873b678>>
+ * @generated SignedSource<<f3df0243f605acf5d8ba9214188bb263>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,13 +12,12 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type AudienceTileOverlayFragment$data = {
   readonly id: string;
-  readonly title: string;
   readonly thumbnail: {
     readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
   } | null;
+  readonly title: string;
   readonly " $fragmentType": "AudienceTileOverlayFragment";
 };
-export type AudienceTileOverlayFragment = AudienceTileOverlayFragment$data;
 export type AudienceTileOverlayFragment$key = {
   readonly " $data"?: AudienceTileOverlayFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"AudienceTileOverlayFragment">;

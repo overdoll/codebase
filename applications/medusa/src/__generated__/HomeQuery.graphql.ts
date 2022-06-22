@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3fe7ab9ba70bd6a3b9a420c601cdc121>>
- * @relayHash b561bdc3c0b5ed9c881d9d1119c49f2b
+ * @generated SignedSource<<29480a2aed08d0848f3107d99d643dc1>>
+ * @relayHash cf555d9bb7087ae40bd145cc9b59c127
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,22 +9,20 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b561bdc3c0b5ed9c881d9d1119c49f2b
+// @relayRequestID cf555d9bb7087ae40bd145cc9b59c127
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type HomeQuery$variables = {};
-export type HomeQueryVariables = HomeQuery$variables;
 export type HomeQuery$data = {
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollViewerFragment" | "CurationProfileAlertFragment" | "AccountInformationBannerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"AccountInformationBannerFragment" | "CurationProfileAlertFragment" | "PostsInfiniteScrollViewerFragment">;
   } | null;
   readonly " $fragmentSpreads": FragmentRefs<"HomeFragment">;
 };
-export type HomeQueryResponse = HomeQuery$data;
 export type HomeQuery = {
-  variables: HomeQueryVariables;
   response: HomeQuery$data;
+  variables: HomeQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -207,6 +205,7 @@ return {
                         "plural": false,
                         "selections": [
                           (v3/*: any*/),
+                          (v2/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -229,8 +228,7 @@ return {
                           (v5/*: any*/),
                           (v6/*: any*/),
                           (v7/*: any*/),
-                          (v9/*: any*/),
-                          (v2/*: any*/)
+                          (v9/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -283,6 +281,7 @@ return {
                         "name": "thumbnail",
                         "plural": false,
                         "selections": [
+                          (v2/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -297,8 +296,7 @@ return {
                           (v6/*: any*/),
                           (v7/*: any*/),
                           (v9/*: any*/),
-                          (v3/*: any*/),
-                          (v2/*: any*/)
+                          (v3/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -488,7 +486,7 @@ return {
     ]
   },
   "params": {
-    "id": "b561bdc3c0b5ed9c881d9d1119c49f2b",
+    "id": "cf555d9bb7087ae40bd145cc9b59c127",
     "metadata": {},
     "name": "HomeQuery",
     "operationKind": "query",

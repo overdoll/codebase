@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<630010b6705797d0f6bbc96f77eba137>>
+ * @generated SignedSource<<fe61bb162fc043f5029507c12744d8d7>>
  * @relayHash b8b2349b6ccbf555ede496c181a7fa94
  * @lightSyntaxTransform
  * @nogrep
@@ -18,7 +18,6 @@ export type AssignAccountArtistRole = {
 export type StaffAssignArtistButtonMutation$variables = {
   input: AssignAccountArtistRole;
 };
-export type StaffAssignArtistButtonMutationVariables = StaffAssignArtistButtonMutation$variables;
 export type StaffAssignArtistButtonMutation$data = {
   readonly assignAccountArtistRole: {
     readonly account: {
@@ -27,10 +26,9 @@ export type StaffAssignArtistButtonMutation$data = {
     } | null;
   } | null;
 };
-export type StaffAssignArtistButtonMutationResponse = StaffAssignArtistButtonMutation$data;
 export type StaffAssignArtistButtonMutation = {
-  variables: StaffAssignArtistButtonMutationVariables;
   response: StaffAssignArtistButtonMutation$data;
+  variables: StaffAssignArtistButtonMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5ef7edc0e05a91aa3f55697b87fe4855>>
+ * @generated SignedSource<<d2181b71b5731f6a707136605b2d0177>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,14 +15,13 @@ export type RejectionReasonsFragment$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
-        readonly title: string;
         readonly infraction: boolean;
+        readonly title: string;
       };
     }>;
   };
   readonly " $fragmentType": "RejectionReasonsFragment";
 };
-export type RejectionReasonsFragment = RejectionReasonsFragment$data;
 export type RejectionReasonsFragment$key = {
   readonly " $data"?: RejectionReasonsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"RejectionReasonsFragment">;

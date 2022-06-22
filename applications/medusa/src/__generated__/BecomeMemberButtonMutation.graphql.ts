@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d98fbcb5fbec5f1ac9c97ae08f2ef027>>
+ * @generated SignedSource<<d37c19fde70250b7d7b41d4b43904dd7>>
  * @relayHash e0239e642fdd19aeef27f25d3709f305
  * @lightSyntaxTransform
  * @nogrep
@@ -15,25 +15,23 @@ import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type BecomeMemberButtonMutation$variables = {
   clubId: string;
 };
-export type BecomeMemberButtonMutationVariables = BecomeMemberButtonMutation$variables;
 export type BecomeMemberButtonMutation$data = {
   readonly joinClub: {
     readonly clubMember: {
-      readonly id: string;
-      readonly club: {
-        readonly id: string;
-      };
       readonly account: {
         readonly id: string;
       };
+      readonly club: {
+        readonly id: string;
+      };
+      readonly id: string;
       readonly joinedAt: any;
     } | null;
   } | null;
 };
-export type BecomeMemberButtonMutationResponse = BecomeMemberButtonMutation$data;
 export type BecomeMemberButtonMutation = {
-  variables: BecomeMemberButtonMutationVariables;
   response: BecomeMemberButtonMutation$data;
+  variables: BecomeMemberButtonMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

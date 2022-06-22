@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fe37677f68dc2499f1d80c1e2d36cb61>>
- * @relayHash df29c3afa649c636eca5647c28391c20
+ * @generated SignedSource<<5a33f5e87ced7a126e60d18979776f32>>
+ * @relayHash dfd937c883b4488485d0d1f170e7e717
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID df29c3afa649c636eca5647c28391c20
+// @relayRequestID dfd937c883b4488485d0d1f170e7e717
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,16 +18,14 @@ export type ExpiredClubSupporterSubscriptionsPaginationQuery$variables = {
   first?: number | null;
   id: string;
 };
-export type ExpiredClubSupporterSubscriptionsPaginationQueryVariables = ExpiredClubSupporterSubscriptionsPaginationQuery$variables;
 export type ExpiredClubSupporterSubscriptionsPaginationQuery$data = {
   readonly node: {
     readonly " $fragmentSpreads": FragmentRefs<"ExpiredClubSupporterSubscriptionsSettingsFragment">;
   } | null;
 };
-export type ExpiredClubSupporterSubscriptionsPaginationQueryResponse = ExpiredClubSupporterSubscriptionsPaginationQuery$data;
 export type ExpiredClubSupporterSubscriptionsPaginationQuery = {
-  variables: ExpiredClubSupporterSubscriptionsPaginationQueryVariables;
   response: ExpiredClubSupporterSubscriptionsPaginationQuery$data;
+  variables: ExpiredClubSupporterSubscriptionsPaginationQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -205,6 +203,7 @@ return {
                                 "name": "thumbnail",
                                 "plural": false,
                                 "selections": [
+                                  (v4/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -252,8 +251,7 @@ return {
                                     "kind": "ScalarField",
                                     "name": "type",
                                     "storageKey": null
-                                  },
-                                  (v4/*: any*/)
+                                  }
                                 ],
                                 "storageKey": null
                               }
@@ -322,7 +320,7 @@ return {
     ]
   },
   "params": {
-    "id": "df29c3afa649c636eca5647c28391c20",
+    "id": "dfd937c883b4488485d0d1f170e7e717",
     "metadata": {},
     "name": "ExpiredClubSupporterSubscriptionsPaginationQuery",
     "operationKind": "query",

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<756bf2a302db7f7084663f8c5843af44>>
+ * @generated SignedSource<<a4394afaca186477b3fb6cb1484ed4ca>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,6 @@ export type ChoosePayoutMethodFragment$data = {
   readonly payoutMethods: ReadonlyArray<PayoutMethod>;
   readonly " $fragmentType": "ChoosePayoutMethodFragment";
 };
-export type ChoosePayoutMethodFragment = ChoosePayoutMethodFragment$data;
 export type ChoosePayoutMethodFragment$key = {
   readonly " $data"?: ChoosePayoutMethodFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ChoosePayoutMethodFragment">;

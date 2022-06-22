@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b8b01cf829820899f2d2a2f86f40ef44>>
+ * @generated SignedSource<<a4137231b5285893db5ba9eef268e56c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,14 +11,13 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ArchivedPostFragment$data = {
-  readonly reference: string;
   readonly club: {
     readonly slug: string;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"PostPreviewContentFragment" | "PostModerateButtonFragment" | "PostUnArchiveButtonFragment" | "PostViewButtonFragment">;
+  readonly reference: string;
+  readonly " $fragmentSpreads": FragmentRefs<"PostModerateButtonFragment" | "PostPreviewContentFragment" | "PostUnArchiveButtonFragment" | "PostViewButtonFragment">;
   readonly " $fragmentType": "ArchivedPostFragment";
 };
-export type ArchivedPostFragment = ArchivedPostFragment$data;
 export type ArchivedPostFragment$key = {
   readonly " $data"?: ArchivedPostFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ArchivedPostFragment">;

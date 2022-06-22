@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a82f158d1c29ecd13e7471a611f7df36>>
+ * @generated SignedSource<<b0a04955f0b8f47d1e2dcb6ea41468ff>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,14 +15,13 @@ export type ResourceInfoFragment$data = {
   readonly id: string;
   readonly isSupporterOnly: boolean;
   readonly resource: {
-    readonly type: ResourceType;
     readonly processed: boolean;
+    readonly type: ResourceType;
     readonly videoDuration: number;
     readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
   };
   readonly " $fragmentType": "ResourceInfoFragment";
 };
-export type ResourceInfoFragment = ResourceInfoFragment$data;
 export type ResourceInfoFragment$key = {
   readonly " $data"?: ResourceInfoFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ResourceInfoFragment">;

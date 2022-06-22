@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<462ba87d3a2ec94848fe17ddfc29ae1f>>
+ * @generated SignedSource<<a83803e859a2dcb4452b925def91cfd2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,13 +11,12 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostCopyLinkButtonFragment$data = {
-  readonly reference: string;
   readonly club: {
     readonly slug: string;
   };
+  readonly reference: string;
   readonly " $fragmentType": "PostCopyLinkButtonFragment";
 };
-export type PostCopyLinkButtonFragment = PostCopyLinkButtonFragment$data;
 export type PostCopyLinkButtonFragment$key = {
   readonly " $data"?: PostCopyLinkButtonFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PostCopyLinkButtonFragment">;

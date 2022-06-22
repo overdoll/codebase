@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8566995d08b18e12edf5ffba2c1fbff1>>
+ * @generated SignedSource<<2a346ae3830946f4fd3ac17f929cbbd7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,14 +11,13 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type CancelSubscriptionButtonFragment$data = {
-  readonly id: string;
   readonly club: {
     readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment">;
   };
+  readonly id: string;
   readonly nextBillingDate: any;
   readonly " $fragmentType": "CancelSubscriptionButtonFragment";
 };
-export type CancelSubscriptionButtonFragment = CancelSubscriptionButtonFragment$data;
 export type CancelSubscriptionButtonFragment$key = {
   readonly " $data"?: CancelSubscriptionButtonFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"CancelSubscriptionButtonFragment">;

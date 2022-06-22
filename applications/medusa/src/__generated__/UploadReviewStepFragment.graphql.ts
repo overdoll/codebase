@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6ed0c0ec2234a841934429cb07a441d3>>
+ * @generated SignedSource<<0e02a2b79ac0ebfe0ebed56eea0d8311>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type UploadReviewStepFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"PostReviewFragment">;
   readonly " $fragmentType": "UploadReviewStepFragment";
 };
-export type UploadReviewStepFragment = UploadReviewStepFragment$data;
 export type UploadReviewStepFragment$key = {
   readonly " $data"?: UploadReviewStepFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"UploadReviewStepFragment">;

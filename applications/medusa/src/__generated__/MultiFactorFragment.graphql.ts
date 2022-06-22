@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<760294efd5304f4aedd2119269971e9e>>
+ * @generated SignedSource<<03a753e78a91cc801c63e0f2453ecb67>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,10 +16,9 @@ export type MultiFactorFragment$data = {
       readonly totp: boolean;
     } | null;
   } | null;
-  readonly " $fragmentSpreads": FragmentRefs<"TotpSubmissionFragment" | "RecoveryCodeFragment" | "RevokeTokenButtonFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"RecoveryCodeFragment" | "RevokeTokenButtonFragment" | "TotpSubmissionFragment">;
   readonly " $fragmentType": "MultiFactorFragment";
 };
-export type MultiFactorFragment = MultiFactorFragment$data;
 export type MultiFactorFragment$key = {
   readonly " $data"?: MultiFactorFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"MultiFactorFragment">;

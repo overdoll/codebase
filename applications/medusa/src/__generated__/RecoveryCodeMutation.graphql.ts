@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b06dbd2221e993ba31f042d0be490970>>
- * @relayHash b0c85c25a2090deab99a417045ad1acc
+ * @generated SignedSource<<a19fd11978e90c8e589ef52cb6237496>>
+ * @relayHash 15c451256b2d4b35738f1ecdb2085024
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b0c85c25a2090deab99a417045ad1acc
+// @relayRequestID 15c451256b2d4b35738f1ecdb2085024
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -21,33 +21,31 @@ export type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeI
 export type RecoveryCodeMutation$variables = {
   input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput;
 };
-export type RecoveryCodeMutationVariables = RecoveryCodeMutation$variables;
 export type RecoveryCodeMutation$data = {
   readonly grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode: {
-    readonly revokedAuthenticationTokenId: string;
-    readonly validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation | null;
     readonly account: {
-      readonly id: string;
-      readonly username: string;
-      readonly isModerator: boolean;
-      readonly isStaff: boolean;
-      readonly isArtist: boolean;
-      readonly deleting: {
-        readonly __typename: string;
-      } | null;
-      readonly lock: {
-        readonly __typename: string;
-      } | null;
       readonly avatar: {
         readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment" | "ResourceItemFragment">;
       } | null;
+      readonly deleting: {
+        readonly __typename: "AccountDeleting";
+      } | null;
+      readonly id: string;
+      readonly isArtist: boolean;
+      readonly isModerator: boolean;
+      readonly isStaff: boolean;
+      readonly lock: {
+        readonly __typename: "AccountLock";
+      } | null;
+      readonly username: string;
     } | null;
+    readonly revokedAuthenticationTokenId: string;
+    readonly validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation | null;
   } | null;
 };
-export type RecoveryCodeMutationResponse = RecoveryCodeMutation$data;
 export type RecoveryCodeMutation = {
-  variables: RecoveryCodeMutationVariables;
   response: RecoveryCodeMutation$data;
+  variables: RecoveryCodeMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -254,6 +252,7 @@ return {
                 "name": "avatar",
                 "plural": false,
                 "selections": [
+                  (v4/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -308,8 +307,7 @@ return {
                     "kind": "ScalarField",
                     "name": "processed",
                     "storageKey": null
-                  },
-                  (v4/*: any*/)
+                  }
                 ],
                 "storageKey": null
               }
@@ -322,7 +320,7 @@ return {
     ]
   },
   "params": {
-    "id": "b0c85c25a2090deab99a417045ad1acc",
+    "id": "15c451256b2d4b35738f1ecdb2085024",
     "metadata": {},
     "name": "RecoveryCodeMutation",
     "operationKind": "mutation",

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a0c466b664a0510cdc7f659072412916>>
+ * @generated SignedSource<<fe9a3bc76b9927bb797d16adb70a97a6>>
  * @relayHash a4731ccb30824fd550281621068a0e11
  * @lightSyntaxTransform
  * @nogrep
@@ -18,22 +18,20 @@ export type DeleteAccountInput = {
 export type DeleteAccountFormMutation$variables = {
   input: DeleteAccountInput;
 };
-export type DeleteAccountFormMutationVariables = DeleteAccountFormMutation$variables;
 export type DeleteAccountFormMutation$data = {
   readonly deleteAccount: {
     readonly account: {
-      readonly id: string;
-      readonly isDeleted: boolean;
       readonly deleting: {
         readonly scheduledDeletion: any;
       } | null;
+      readonly id: string;
+      readonly isDeleted: boolean;
     } | null;
   } | null;
 };
-export type DeleteAccountFormMutationResponse = DeleteAccountFormMutation$data;
 export type DeleteAccountFormMutation = {
-  variables: DeleteAccountFormMutationVariables;
   response: DeleteAccountFormMutation$data;
+  variables: DeleteAccountFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

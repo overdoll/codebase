@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<58682b7888aaeb91409867ff23047a77>>
+ * @generated SignedSource<<deeb4b44581a04c6d7190f2d94e3bc8e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,6 @@ export type MultiFactorTotpSettingsFragment$data = {
   readonly recoveryCodesGenerated: boolean;
   readonly " $fragmentType": "MultiFactorTotpSettingsFragment";
 };
-export type MultiFactorTotpSettingsFragment = MultiFactorTotpSettingsFragment$data;
 export type MultiFactorTotpSettingsFragment$key = {
   readonly " $data"?: MultiFactorTotpSettingsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"MultiFactorTotpSettingsFragment">;

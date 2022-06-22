@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9146763cccc96f04e39ddfd1d52cb0aa>>
+ * @generated SignedSource<<f627b733eed8b4992086cfdf7c227abe>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,19 +12,18 @@ import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type ClubPostsFragment$data = {
+  readonly id: string;
   readonly posts: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly state: PostState;
-        readonly " $fragmentSpreads": FragmentRefs<"PostPreviewContentFragment" | "DraftPostFragment" | "PublishedPostFragment" | "ReviewPostFragment" | "RejectedPostFragment" | "ArchivedPostFragment" | "RemovedPostFragment">;
+        readonly " $fragmentSpreads": FragmentRefs<"ArchivedPostFragment" | "DraftPostFragment" | "PostPreviewContentFragment" | "PublishedPostFragment" | "RejectedPostFragment" | "RemovedPostFragment" | "ReviewPostFragment">;
       };
     }>;
   };
-  readonly id: string;
   readonly " $fragmentType": "ClubPostsFragment";
 };
-export type ClubPostsFragment = ClubPostsFragment$data;
 export type ClubPostsFragment$key = {
   readonly " $data"?: ClubPostsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ClubPostsFragment">;

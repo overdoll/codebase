@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f0ad8b7314165f78e61c9e7f933368f4>>
+ * @generated SignedSource<<2a40b9de745aaf4277befd7ba45d3522>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,6 @@ export type ChangeRuleDeprecatedFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"ChangeRuleDeprecatedFormFragment">;
   readonly " $fragmentType": "ChangeRuleDeprecatedFragment";
 };
-export type ChangeRuleDeprecatedFragment = ChangeRuleDeprecatedFragment$data;
 export type ChangeRuleDeprecatedFragment$key = {
   readonly " $data"?: ChangeRuleDeprecatedFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ChangeRuleDeprecatedFragment">;

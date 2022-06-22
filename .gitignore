@@ -38,6 +38,8 @@ target
 .ijwb
 .idea.bak
 .idea
+sw.js
+workbox-*.js
 .garden
 tilt_options.json
 

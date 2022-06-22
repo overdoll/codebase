@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<92a6721248a74e8a0e6099ff1f52e1f6>>
- * @relayHash f736e5de8ffce5443541770af8de90bf
+ * @generated SignedSource<<1033a3b6ec10e8b148d061d6d1a065f6>>
+ * @relayHash e96af7caa470aee60417c0e5f21bfdab
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f736e5de8ffce5443541770af8de90bf
+// @relayRequestID e96af7caa470aee60417c0e5f21bfdab
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -21,27 +21,25 @@ export type CreateAccountWithAuthenticationTokenInput = {
 export type RegisterMutation$variables = {
   input: CreateAccountWithAuthenticationTokenInput;
 };
-export type RegisterMutationVariables = RegisterMutation$variables;
 export type RegisterMutation$data = {
   readonly createAccountWithAuthenticationToken: {
-    readonly revokedAuthenticationTokenId: string;
-    readonly validation: CreateAccountWithAuthenticationTokenValidation | null;
     readonly account: {
-      readonly id: string;
-      readonly username: string;
-      readonly isModerator: boolean;
-      readonly isStaff: boolean;
-      readonly isArtist: boolean;
       readonly avatar: {
         readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment" | "ResourceItemFragment">;
       } | null;
+      readonly id: string;
+      readonly isArtist: boolean;
+      readonly isModerator: boolean;
+      readonly isStaff: boolean;
+      readonly username: string;
     } | null;
+    readonly revokedAuthenticationTokenId: string;
+    readonly validation: CreateAccountWithAuthenticationTokenValidation | null;
   } | null;
 };
-export type RegisterMutationResponse = RegisterMutation$data;
 export type RegisterMutation = {
-  variables: RegisterMutationVariables;
   response: RegisterMutation$data;
+  variables: RegisterMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -215,6 +213,7 @@ return {
                 "name": "avatar",
                 "plural": false,
                 "selections": [
+                  (v4/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -269,8 +268,7 @@ return {
                     "kind": "ScalarField",
                     "name": "processed",
                     "storageKey": null
-                  },
-                  (v4/*: any*/)
+                  }
                 ],
                 "storageKey": null
               }
@@ -283,7 +281,7 @@ return {
     ]
   },
   "params": {
-    "id": "f736e5de8ffce5443541770af8de90bf",
+    "id": "e96af7caa470aee60417c0e5f21bfdab",
     "metadata": {},
     "name": "RegisterMutation",
     "operationKind": "mutation",

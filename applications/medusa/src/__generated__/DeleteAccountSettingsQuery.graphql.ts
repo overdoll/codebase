@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<39eccc6d89d194b99eec8d9c092dd871>>
+ * @generated SignedSource<<4b9dfc54f2edbff2af2ef9111bd3b6c2>>
  * @relayHash ae09ad848f04439a37da94e88c6e732d
  * @lightSyntaxTransform
  * @nogrep
@@ -14,7 +14,6 @@
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type DeleteAccountSettingsQuery$variables = {};
-export type DeleteAccountSettingsQueryVariables = DeleteAccountSettingsQuery$variables;
 export type DeleteAccountSettingsQuery$data = {
   readonly viewer: {
     readonly deleting: {
@@ -22,13 +21,12 @@ export type DeleteAccountSettingsQuery$data = {
     } | null;
     readonly hasActiveOrCancelledAccountClubSupporterSubscriptions: boolean;
     readonly hasNonTerminatedClubs: boolean;
-    readonly " $fragmentSpreads": FragmentRefs<"DeleteAccountFormFragment" | "CancelAccountDeletionButtonFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"CancelAccountDeletionButtonFragment" | "DeleteAccountFormFragment">;
   };
 };
-export type DeleteAccountSettingsQueryResponse = DeleteAccountSettingsQuery$data;
 export type DeleteAccountSettingsQuery = {
-  variables: DeleteAccountSettingsQueryVariables;
   response: DeleteAccountSettingsQuery$data;
+  variables: DeleteAccountSettingsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

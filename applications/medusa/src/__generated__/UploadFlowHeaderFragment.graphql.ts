@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c16f8a4a4161ebd57020344ed8350eb5>>
+ * @generated SignedSource<<465a98744ad7f8c742d43fa546658fe4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type UploadFlowHeaderFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"ProcessContentFragment">;
   readonly " $fragmentType": "UploadFlowHeaderFragment";
 };
-export type UploadFlowHeaderFragment = UploadFlowHeaderFragment$data;
 export type UploadFlowHeaderFragment$key = {
   readonly " $data"?: UploadFlowHeaderFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"UploadFlowHeaderFragment">;

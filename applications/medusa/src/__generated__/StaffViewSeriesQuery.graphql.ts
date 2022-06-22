@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a940dab583208ada1354ef025117f27c>>
- * @relayHash 5fc18b69c88d84ea45080086d7d44184
+ * @generated SignedSource<<258b2e243ada0a30ba36aa717d835bfe>>
+ * @relayHash aaa301688b6d92504c52ab334ce16e10
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,23 +9,21 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 5fc18b69c88d84ea45080086d7d44184
+// @relayRequestID aaa301688b6d92504c52ab334ce16e10
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type StaffViewSeriesQuery$variables = {
   slug: string;
 };
-export type StaffViewSeriesQueryVariables = StaffViewSeriesQuery$variables;
 export type StaffViewSeriesQuery$data = {
   readonly serial: {
-    readonly " $fragmentSpreads": FragmentRefs<"ChangeSeriesTitleFragment" | "ChangeSeriesThumbnailFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ChangeSeriesThumbnailFragment" | "ChangeSeriesTitleFragment">;
   } | null;
 };
-export type StaffViewSeriesQueryResponse = StaffViewSeriesQuery$data;
 export type StaffViewSeriesQuery = {
-  variables: StaffViewSeriesQueryVariables;
   response: StaffViewSeriesQuery$data;
+  variables: StaffViewSeriesQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -164,6 +162,7 @@ return {
             "name": "thumbnail",
             "plural": false,
             "selections": [
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -211,8 +210,7 @@ return {
                 "kind": "ScalarField",
                 "name": "type",
                 "storageKey": null
-              },
-              (v2/*: any*/)
+              }
             ],
             "storageKey": null
           }
@@ -222,7 +220,7 @@ return {
     ]
   },
   "params": {
-    "id": "5fc18b69c88d84ea45080086d7d44184",
+    "id": "aaa301688b6d92504c52ab334ce16e10",
     "metadata": {},
     "name": "StaffViewSeriesQuery",
     "operationKind": "query",

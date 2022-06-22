@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6638e39f899e3e92b7804ceca73c7086>>
+ * @generated SignedSource<<3ee97b0265b5a74b43b6bacd7f1bc12a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,6 @@ export type PostStaticAudienceFragment$data = {
   } | null;
   readonly " $fragmentType": "PostStaticAudienceFragment";
 };
-export type PostStaticAudienceFragment = PostStaticAudienceFragment$data;
 export type PostStaticAudienceFragment$key = {
   readonly " $data"?: PostStaticAudienceFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PostStaticAudienceFragment">;

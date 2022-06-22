@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<181dc4ee4f29b66cd3770b13ed240a32>>
+ * @generated SignedSource<<9902c986df4e5aa891143edfd2157934>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,6 @@ export type PostPreviewContentFragment$data = {
   }>;
   readonly " $fragmentType": "PostPreviewContentFragment";
 };
-export type PostPreviewContentFragment = PostPreviewContentFragment$data;
 export type PostPreviewContentFragment$key = {
   readonly " $data"?: PostPreviewContentFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PostPreviewContentFragment">;

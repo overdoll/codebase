@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<afa2f710eb28574dfbd48e3cad992222>>
+ * @generated SignedSource<<5af1b9b00bc70c5ffbdd5ab3a13da453>>
  * @relayHash 4363557719e3fc856fc9670127b240ff
  * @lightSyntaxTransform
  * @nogrep
@@ -18,7 +18,6 @@ export type TerminateClubInput = {
 export type StaffClubTerminateFormMutation$variables = {
   input: TerminateClubInput;
 };
-export type StaffClubTerminateFormMutationVariables = StaffClubTerminateFormMutation$variables;
 export type StaffClubTerminateFormMutation$data = {
   readonly terminateClub: {
     readonly club: {
@@ -32,10 +31,9 @@ export type StaffClubTerminateFormMutation$data = {
     } | null;
   } | null;
 };
-export type StaffClubTerminateFormMutationResponse = StaffClubTerminateFormMutation$data;
 export type StaffClubTerminateFormMutation = {
-  variables: StaffClubTerminateFormMutationVariables;
   response: StaffClubTerminateFormMutation$data;
+  variables: StaffClubTerminateFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

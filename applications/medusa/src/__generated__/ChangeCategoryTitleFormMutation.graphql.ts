@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6a229deff2a02c01c398d448d37de10f>>
+ * @generated SignedSource<<61c77283aa214719e5fee657b8ad477e>>
  * @relayHash 3f4366a06d946692f8b5fbea8d77db2f
  * @lightSyntaxTransform
  * @nogrep
@@ -20,26 +20,24 @@ export type UpdateCategoryTitleInput = {
 export type ChangeCategoryTitleFormMutation$variables = {
   input: UpdateCategoryTitleInput;
 };
-export type ChangeCategoryTitleFormMutationVariables = ChangeCategoryTitleFormMutation$variables;
 export type ChangeCategoryTitleFormMutation$data = {
   readonly updateCategoryTitle: {
     readonly category: {
       readonly id: string;
       readonly title: string;
       readonly titleTranslations: ReadonlyArray<{
-        readonly text: string;
         readonly language: {
           readonly locale: string;
           readonly name: string;
         };
+        readonly text: string;
       }>;
     } | null;
   } | null;
 };
-export type ChangeCategoryTitleFormMutationResponse = ChangeCategoryTitleFormMutation$data;
 export type ChangeCategoryTitleFormMutation = {
-  variables: ChangeCategoryTitleFormMutationVariables;
   response: ChangeCategoryTitleFormMutation$data;
+  variables: ChangeCategoryTitleFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

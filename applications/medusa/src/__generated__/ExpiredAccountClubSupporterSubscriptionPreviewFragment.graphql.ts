@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<44e5e0d2ffff81acd8d689fd18331966>>
+ * @generated SignedSource<<4bcc4fbd634418b225863713bee26a44>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,8 +11,6 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ExpiredAccountClubSupporterSubscriptionPreviewFragment$data = {
-  readonly supporterSince: any;
-  readonly expiredAt: any;
   readonly club: {
     readonly id: string;
     readonly name: string;
@@ -21,10 +19,11 @@ export type ExpiredAccountClubSupporterSubscriptionPreviewFragment$data = {
       readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
     } | null;
   };
+  readonly expiredAt: any;
+  readonly supporterSince: any;
   readonly " $fragmentSpreads": FragmentRefs<"ManageExpiredSubscriptionButtonFragment">;
   readonly " $fragmentType": "ExpiredAccountClubSupporterSubscriptionPreviewFragment";
 };
-export type ExpiredAccountClubSupporterSubscriptionPreviewFragment = ExpiredAccountClubSupporterSubscriptionPreviewFragment$data;
 export type ExpiredAccountClubSupporterSubscriptionPreviewFragment$key = {
   readonly " $data"?: ExpiredAccountClubSupporterSubscriptionPreviewFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ExpiredAccountClubSupporterSubscriptionPreviewFragment">;

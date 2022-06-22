@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a421fa2b15c0024c4c205d038e2a4cb5>>
- * @relayHash 90288f1c15cb16a46b6c5b674df2c28b
+ * @generated SignedSource<<6fee226cc3072adc4b7ef37be108fc70>>
+ * @relayHash b3718a842cb5ec2a93e7b433ecb3397b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,33 +9,31 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 90288f1c15cb16a46b6c5b674df2c28b
+// @relayRequestID b3718a842cb5ec2a93e7b433ecb3397b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostsSort = "NEW" | "TOP" | "%future added value";
 export type SupporterOnlyStatus = "FULL" | "NONE" | "PARTIAL" | "%future added value";
 export type PublicClubPostsQuery$variables = {
+  categorySlugs?: ReadonlyArray<string> | null;
+  characterSlugs?: ReadonlyArray<string> | null;
+  seriesSlugs?: ReadonlyArray<string> | null;
   slug: string;
   sortBy: PostsSort;
-  categorySlugs?: ReadonlyArray<string> | null;
-  seriesSlugs?: ReadonlyArray<string> | null;
-  characterSlugs?: ReadonlyArray<string> | null;
   supporterOnlyStatus?: ReadonlyArray<SupporterOnlyStatus> | null;
 };
-export type PublicClubPostsQueryVariables = PublicClubPostsQuery$variables;
 export type PublicClubPostsQuery$data = {
   readonly club: {
     readonly " $fragmentSpreads": FragmentRefs<"PublicClubPostsFragment" | "PublicClubPostsRichObjectFragment">;
   } | null;
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollViewerFragment" | "AccountInformationBannerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"AccountInformationBannerFragment" | "PostsInfiniteScrollViewerFragment">;
   } | null;
 };
-export type PublicClubPostsQueryResponse = PublicClubPostsQuery$data;
 export type PublicClubPostsQuery = {
-  variables: PublicClubPostsQueryVariables;
   response: PublicClubPostsQuery$data;
+  variables: PublicClubPostsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -327,6 +325,7 @@ return {
                             "plural": false,
                             "selections": [
                               (v10/*: any*/),
+                              (v9/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -349,8 +348,7 @@ return {
                               (v12/*: any*/),
                               (v13/*: any*/),
                               (v14/*: any*/),
-                              (v16/*: any*/),
-                              (v9/*: any*/)
+                              (v16/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -391,6 +389,7 @@ return {
                             "name": "thumbnail",
                             "plural": false,
                             "selections": [
+                              (v9/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -405,8 +404,7 @@ return {
                               (v13/*: any*/),
                               (v14/*: any*/),
                               (v16/*: any*/),
-                              (v10/*: any*/),
-                              (v9/*: any*/)
+                              (v10/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -588,7 +586,7 @@ return {
     ]
   },
   "params": {
-    "id": "90288f1c15cb16a46b6c5b674df2c28b",
+    "id": "b3718a842cb5ec2a93e7b433ecb3397b",
     "metadata": {},
     "name": "PublicClubPostsQuery",
     "operationKind": "query",

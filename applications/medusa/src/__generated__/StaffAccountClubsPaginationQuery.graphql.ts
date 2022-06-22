@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<dee645b01e943d6c2ab5d810243b81e8>>
- * @relayHash bf28acbaca1eaf6812a26c81534d4dc0
+ * @generated SignedSource<<bfca78d8c6558f6817e38acef95bfc5b>>
+ * @relayHash ec031a9702ac34bb6c937f12ff82b2e9
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID bf28acbaca1eaf6812a26c81534d4dc0
+// @relayRequestID ec031a9702ac34bb6c937f12ff82b2e9
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,16 +18,14 @@ export type StaffAccountClubsPaginationQuery$variables = {
   first?: number | null;
   id: string;
 };
-export type StaffAccountClubsPaginationQueryVariables = StaffAccountClubsPaginationQuery$variables;
 export type StaffAccountClubsPaginationQuery$data = {
   readonly node: {
     readonly " $fragmentSpreads": FragmentRefs<"StaffAccountClubsFragment">;
   } | null;
 };
-export type StaffAccountClubsPaginationQueryResponse = StaffAccountClubsPaginationQuery$data;
 export type StaffAccountClubsPaginationQuery = {
-  variables: StaffAccountClubsPaginationQueryVariables;
   response: StaffAccountClubsPaginationQuery$data;
+  variables: StaffAccountClubsPaginationQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -231,13 +229,13 @@ return {
                             "name": "thumbnail",
                             "plural": false,
                             "selections": [
+                              (v4/*: any*/),
                               (v6/*: any*/),
                               (v7/*: any*/),
                               (v8/*: any*/),
                               (v9/*: any*/),
                               (v10/*: any*/),
-                              (v11/*: any*/),
-                              (v4/*: any*/)
+                              (v11/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -288,6 +286,7 @@ return {
                                             "plural": false,
                                             "selections": [
                                               (v11/*: any*/),
+                                              (v4/*: any*/),
                                               (v6/*: any*/),
                                               (v7/*: any*/),
                                               (v8/*: any*/),
@@ -299,8 +298,7 @@ return {
                                                 "kind": "ScalarField",
                                                 "name": "processed",
                                                 "storageKey": null
-                                              },
-                                              (v4/*: any*/)
+                                              }
                                             ],
                                             "storageKey": null
                                           },
@@ -379,7 +377,7 @@ return {
     ]
   },
   "params": {
-    "id": "bf28acbaca1eaf6812a26c81534d4dc0",
+    "id": "ec031a9702ac34bb6c937f12ff82b2e9",
     "metadata": {},
     "name": "StaffAccountClubsPaginationQuery",
     "operationKind": "query",

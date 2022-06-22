@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b77c609b36e77baf51cb9f374d648ff6>>
+ * @generated SignedSource<<601044aa4fc085b8d2690db0150ba276>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type PostsInfiniteScrollViewerFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"FullSimplePostViewerFragment">;
   readonly " $fragmentType": "PostsInfiniteScrollViewerFragment";
 };
-export type PostsInfiniteScrollViewerFragment = PostsInfiniteScrollViewerFragment$data;
 export type PostsInfiniteScrollViewerFragment$key = {
   readonly " $data"?: PostsInfiniteScrollViewerFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollViewerFragment">;

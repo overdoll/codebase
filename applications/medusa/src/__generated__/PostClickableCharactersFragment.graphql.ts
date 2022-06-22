@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1c299e5352196aa26f072c81959a8dd2>>
+ * @generated SignedSource<<9539cd8f6c10d14ad50eaf4ad0eed349>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,11 +16,10 @@ export type PostClickableCharactersFragment$data = {
     readonly thumbnail: {
       readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
     } | null;
-    readonly " $fragmentSpreads": FragmentRefs<"ClickSeriesFragment" | "ClickCharacterFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ClickCharacterFragment" | "ClickSeriesFragment">;
   }>;
   readonly " $fragmentType": "PostClickableCharactersFragment";
 };
-export type PostClickableCharactersFragment = PostClickableCharactersFragment$data;
 export type PostClickableCharactersFragment$key = {
   readonly " $data"?: PostClickableCharactersFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PostClickableCharactersFragment">;

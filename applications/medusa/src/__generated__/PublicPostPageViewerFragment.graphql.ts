@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0a7e2b36d12ab0e3788125f333bceecb>>
+ * @generated SignedSource<<0894f1dd6c61bfb3fcad6961b0de40da>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type PublicPostPageViewerFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"FullDetailedPostViewerFragment">;
   readonly " $fragmentType": "PublicPostPageViewerFragment";
 };
-export type PublicPostPageViewerFragment = PublicPostPageViewerFragment$data;
 export type PublicPostPageViewerFragment$key = {
   readonly " $data"?: PublicPostPageViewerFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PublicPostPageViewerFragment">;

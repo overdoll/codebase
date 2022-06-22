@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<503a88e9fcf5a4f1cd4dd72125f8b1ec>>
+ * @generated SignedSource<<decfa49c53aa57bf73d41ff7fc090612>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,6 @@ export type TotpSubmissionFragment$data = {
   readonly token: string;
   readonly " $fragmentType": "TotpSubmissionFragment";
 };
-export type TotpSubmissionFragment = TotpSubmissionFragment$data;
 export type TotpSubmissionFragment$key = {
   readonly " $data"?: TotpSubmissionFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"TotpSubmissionFragment">;

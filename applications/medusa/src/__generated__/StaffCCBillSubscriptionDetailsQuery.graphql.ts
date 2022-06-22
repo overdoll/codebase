@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<05485b7f04dd2385199836e1acf72a4c>>
+ * @generated SignedSource<<19c33145e34366d77af1b306a0477f94>>
  * @relayHash 5c77a4c0376fdc068455b6c305dccf84
  * @lightSyntaxTransform
  * @nogrep
@@ -17,39 +17,37 @@ export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future 
 export type StaffCCBillSubscriptionDetailsQuery$variables = {
   id: string;
 };
-export type StaffCCBillSubscriptionDetailsQueryVariables = StaffCCBillSubscriptionDetailsQuery$variables;
 export type StaffCCBillSubscriptionDetailsQuery$data = {
   readonly ccbillSubscriptionDetails: {
-    readonly id: string;
     readonly account: {
       readonly id: string;
     };
-    readonly club: {
-      readonly id: string;
-    } | null;
-    readonly status: CCBillSubscriptionStatus;
-    readonly isRecurring: boolean;
-    readonly signupDate: any;
-    readonly cancelDate: any | null;
-    readonly expirationDate: any | null;
     readonly accountingCurrency: Currency;
     readonly accountingInitialPrice: number;
     readonly accountingRecurringPrice: number;
     readonly billedCurrency: Currency;
     readonly billedInitialPrice: number;
     readonly billedRecurringPrice: number;
+    readonly cancelDate: any | null;
+    readonly chargebacksIssued: number;
+    readonly club: {
+      readonly id: string;
+    } | null;
+    readonly expirationDate: any | null;
+    readonly id: string;
+    readonly isRecurring: boolean;
+    readonly refundsIssued: number;
+    readonly signupDate: any;
+    readonly status: CCBillSubscriptionStatus;
     readonly subscriptionCurrency: Currency;
     readonly subscriptionInitialPrice: number;
     readonly subscriptionRecurringPrice: number;
-    readonly refundsIssued: number;
-    readonly chargebacksIssued: number;
     readonly updatedAt: any;
   } | null;
 };
-export type StaffCCBillSubscriptionDetailsQueryResponse = StaffCCBillSubscriptionDetailsQuery$data;
 export type StaffCCBillSubscriptionDetailsQuery = {
-  variables: StaffCCBillSubscriptionDetailsQueryVariables;
   response: StaffCCBillSubscriptionDetailsQuery$data;
+  variables: StaffCCBillSubscriptionDetailsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

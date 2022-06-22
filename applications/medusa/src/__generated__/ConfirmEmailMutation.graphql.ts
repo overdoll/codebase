@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<71fabaa9237d8245b3eb438191429f4b>>
+ * @generated SignedSource<<c589ef62631300460ec50acb8ee00fec>>
  * @relayHash 1f650479820cf72957f1588bc01645a4
  * @lightSyntaxTransform
  * @nogrep
@@ -20,20 +20,18 @@ export type ConfirmAccountEmailInput = {
 export type ConfirmEmailMutation$variables = {
   input: ConfirmAccountEmailInput;
 };
-export type ConfirmEmailMutationVariables = ConfirmEmailMutation$variables;
 export type ConfirmEmailMutation$data = {
   readonly confirmAccountEmail: {
     readonly accountEmail: {
-      readonly id: string;
       readonly email: string;
+      readonly id: string;
       readonly status: AccountEmailStatus;
     } | null;
   } | null;
 };
-export type ConfirmEmailMutationResponse = ConfirmEmailMutation$data;
 export type ConfirmEmailMutation = {
-  variables: ConfirmEmailMutationVariables;
   response: ConfirmEmailMutation$data;
+  variables: ConfirmEmailMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

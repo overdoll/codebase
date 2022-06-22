@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c6981ef4dff7e4ae9fa6420ba9c37ee0>>
+ * @generated SignedSource<<c2d70e903ee547fd18c3da28e76d032d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,15 +14,14 @@ export type PayoutMethod = "PAXUM" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type StaffDepositRequestOptionsFragment$data = {
   readonly baseAmount: number;
+  readonly createdAt: any;
   readonly currency: Currency;
   readonly estimatedFeeAmount: number;
-  readonly payoutMethod: PayoutMethod;
   readonly lastDateForDeposit: any;
-  readonly createdAt: any;
+  readonly payoutMethod: PayoutMethod;
   readonly totalAmount: number;
   readonly " $fragmentType": "StaffDepositRequestOptionsFragment";
 };
-export type StaffDepositRequestOptionsFragment = StaffDepositRequestOptionsFragment$data;
 export type StaffDepositRequestOptionsFragment$key = {
   readonly " $data"?: StaffDepositRequestOptionsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"StaffDepositRequestOptionsFragment">;

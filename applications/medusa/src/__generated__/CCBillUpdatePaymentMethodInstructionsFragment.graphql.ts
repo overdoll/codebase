@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<56ff2b38f75fadb7fb97dcdd5d0f66a1>>
+ * @generated SignedSource<<57308f5c8402eb6527817a06ba5452d1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,12 +14,11 @@ export type CCBillUpdatePaymentMethodInstructionsFragment$data = {
   readonly ccbillSubscription: {
     readonly ccbillSubscriptionId: string;
     readonly email: string;
-    readonly paymentMethod: string;
     readonly link: string;
+    readonly paymentMethod: string;
   };
   readonly " $fragmentType": "CCBillUpdatePaymentMethodInstructionsFragment";
 };
-export type CCBillUpdatePaymentMethodInstructionsFragment = CCBillUpdatePaymentMethodInstructionsFragment$data;
 export type CCBillUpdatePaymentMethodInstructionsFragment$key = {
   readonly " $data"?: CCBillUpdatePaymentMethodInstructionsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"CCBillUpdatePaymentMethodInstructionsFragment">;

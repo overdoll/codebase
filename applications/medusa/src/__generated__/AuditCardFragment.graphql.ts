@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ed5fb1889c99f34ba202535eda06dcf1>>
+ * @generated SignedSource<<a5c4c7d66192e18cc147e4cb86ece0e9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,17 +12,16 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 export type PostAuditLogAction = "APPROVED" | "DENIED" | "REMOVED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type AuditCardFragment$data = {
+  readonly action: PostAuditLogAction;
   readonly post: {
-    readonly postedAt: any | null;
     readonly club: {
       readonly name: string;
     };
+    readonly postedAt: any | null;
   };
-  readonly action: PostAuditLogAction;
   readonly " $fragmentSpreads": FragmentRefs<"AuditInspectFragment">;
   readonly " $fragmentType": "AuditCardFragment";
 };
-export type AuditCardFragment = AuditCardFragment$data;
 export type AuditCardFragment$key = {
   readonly " $data"?: AuditCardFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"AuditCardFragment">;

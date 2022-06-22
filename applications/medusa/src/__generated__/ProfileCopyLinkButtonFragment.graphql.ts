@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f8184a57fa4c13c90b5daae92b82bf82>>
+ * @generated SignedSource<<223a238674e51d1e2f303e4705179cbe>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type ProfileCopyLinkButtonFragment$data = {
   readonly username: string;
   readonly " $fragmentType": "ProfileCopyLinkButtonFragment";
 };
-export type ProfileCopyLinkButtonFragment = ProfileCopyLinkButtonFragment$data;
 export type ProfileCopyLinkButtonFragment$key = {
   readonly " $data"?: ProfileCopyLinkButtonFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ProfileCopyLinkButtonFragment">;

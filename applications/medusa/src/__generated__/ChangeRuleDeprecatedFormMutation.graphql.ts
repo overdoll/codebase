@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bafa5ff4af3f60382550f00fa9483ef5>>
+ * @generated SignedSource<<d7ae77b892424740fcd4d9b7ec4ce612>>
  * @relayHash d5e2c1d6a74ab209ad64f98ca256fbf9
  * @lightSyntaxTransform
  * @nogrep
@@ -19,19 +19,17 @@ export type UpdateRuleDeprecatedInput = {
 export type ChangeRuleDeprecatedFormMutation$variables = {
   input: UpdateRuleDeprecatedInput;
 };
-export type ChangeRuleDeprecatedFormMutationVariables = ChangeRuleDeprecatedFormMutation$variables;
 export type ChangeRuleDeprecatedFormMutation$data = {
   readonly updateRuleDeprecated: {
     readonly rule: {
-      readonly id: string;
       readonly deprecated: boolean;
+      readonly id: string;
     } | null;
   } | null;
 };
-export type ChangeRuleDeprecatedFormMutationResponse = ChangeRuleDeprecatedFormMutation$data;
 export type ChangeRuleDeprecatedFormMutation = {
-  variables: ChangeRuleDeprecatedFormMutationVariables;
   response: ChangeRuleDeprecatedFormMutation$data;
+  variables: ChangeRuleDeprecatedFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

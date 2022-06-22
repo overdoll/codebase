@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5f88a63d75e04aaf79cb288790dbe45e>>
+ * @generated SignedSource<<93865c97452b1e041d089e9ec546ed34>>
  * @relayHash 276f9fef59125ad01ecd84fdfb829c88
  * @lightSyntaxTransform
  * @nogrep
@@ -16,17 +16,15 @@ import { FragmentRefs } from "relay-runtime";
 export type NameClubSettingsQuery$variables = {
   slug: string;
 };
-export type NameClubSettingsQueryVariables = NameClubSettingsQuery$variables;
 export type NameClubSettingsQuery$data = {
   readonly club: {
     readonly name: string;
     readonly " $fragmentSpreads": FragmentRefs<"ChangeClubNameFormFragment">;
   } | null;
 };
-export type NameClubSettingsQueryResponse = NameClubSettingsQuery$data;
 export type NameClubSettingsQuery = {
-  variables: NameClubSettingsQueryVariables;
   response: NameClubSettingsQuery$data;
+  variables: NameClubSettingsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

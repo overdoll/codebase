@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<38621c6ade88ff45a39970602dd15e0d>>
- * @relayHash ba41c0306e9097c254b1ed7032acc558
+ * @generated SignedSource<<5c19f26ad2d4e9cb390ecebc8e2bf00d>>
+ * @relayHash b1e52494a7a0b3c30efec8d13e1f630a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ba41c0306e9097c254b1ed7032acc558
+// @relayRequestID b1e52494a7a0b3c30efec8d13e1f630a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -19,14 +19,12 @@ export type GeneralSearchSeriesPaginationFragment$variables = {
   search?: string | null;
   seriesSlugs?: ReadonlyArray<string> | null;
 };
-export type GeneralSearchSeriesPaginationFragmentVariables = GeneralSearchSeriesPaginationFragment$variables;
 export type GeneralSearchSeriesPaginationFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"GeneralSearchSeriesFragment">;
 };
-export type GeneralSearchSeriesPaginationFragmentResponse = GeneralSearchSeriesPaginationFragment$data;
 export type GeneralSearchSeriesPaginationFragment = {
-  variables: GeneralSearchSeriesPaginationFragmentVariables;
   response: GeneralSearchSeriesPaginationFragment$data;
+  variables: GeneralSearchSeriesPaginationFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -171,6 +169,7 @@ return {
                         "name": "type",
                         "storageKey": null
                       },
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -218,8 +217,7 @@ return {
                         "kind": "ScalarField",
                         "name": "processed",
                         "storageKey": null
-                      },
-                      (v4/*: any*/)
+                      }
                     ],
                     "storageKey": null
                   },
@@ -286,7 +284,7 @@ return {
     ]
   },
   "params": {
-    "id": "ba41c0306e9097c254b1ed7032acc558",
+    "id": "b1e52494a7a0b3c30efec8d13e1f630a",
     "metadata": {},
     "name": "GeneralSearchSeriesPaginationFragment",
     "operationKind": "query",

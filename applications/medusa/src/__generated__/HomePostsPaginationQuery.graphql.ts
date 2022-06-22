@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0b91cc6cc9c85f286236bcd11bedb7c4>>
- * @relayHash aa4202bed7b3fb33937274ef1aad20e5
+ * @generated SignedSource<<408d2a72a196af59a99cc9d59d95a671>>
+ * @relayHash 45d0dd39c83a695ae85e609983b8e98a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID aa4202bed7b3fb33937274ef1aad20e5
+// @relayRequestID 45d0dd39c83a695ae85e609983b8e98a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -17,14 +17,12 @@ export type HomePostsPaginationQuery$variables = {
   after?: string | null;
   first?: number | null;
 };
-export type HomePostsPaginationQueryVariables = HomePostsPaginationQuery$variables;
 export type HomePostsPaginationQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"HomeFragment">;
 };
-export type HomePostsPaginationQueryResponse = HomePostsPaginationQuery$data;
 export type HomePostsPaginationQuery = {
-  variables: HomePostsPaginationQueryVariables;
   response: HomePostsPaginationQuery$data;
+  variables: HomePostsPaginationQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -198,6 +196,7 @@ return {
                         "plural": false,
                         "selections": [
                           (v4/*: any*/),
+                          (v3/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -220,8 +219,7 @@ return {
                           (v6/*: any*/),
                           (v7/*: any*/),
                           (v8/*: any*/),
-                          (v10/*: any*/),
-                          (v3/*: any*/)
+                          (v10/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -274,6 +272,7 @@ return {
                         "name": "thumbnail",
                         "plural": false,
                         "selections": [
+                          (v3/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -288,8 +287,7 @@ return {
                           (v7/*: any*/),
                           (v8/*: any*/),
                           (v10/*: any*/),
-                          (v4/*: any*/),
-                          (v3/*: any*/)
+                          (v4/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -395,7 +393,7 @@ return {
     ]
   },
   "params": {
-    "id": "aa4202bed7b3fb33937274ef1aad20e5",
+    "id": "45d0dd39c83a695ae85e609983b8e98a",
     "metadata": {},
     "name": "HomePostsPaginationQuery",
     "operationKind": "query",

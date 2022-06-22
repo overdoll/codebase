@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<708be44bfa2dcf91654b9e4f11e19923>>
+ * @generated SignedSource<<057e3b0a75c2eefaa184c37041d28da5>>
  * @relayHash 54ce97eb0a119c5089ee326c98213071
  * @lightSyntaxTransform
  * @nogrep
@@ -19,7 +19,6 @@ export type SubmitPostInput = {
 export type SubmitPostButtonMutation$variables = {
   input: SubmitPostInput;
 };
-export type SubmitPostButtonMutationVariables = SubmitPostButtonMutation$variables;
 export type SubmitPostButtonMutation$data = {
   readonly submitPost: {
     readonly post: {
@@ -28,10 +27,9 @@ export type SubmitPostButtonMutation$data = {
     } | null;
   } | null;
 };
-export type SubmitPostButtonMutationResponse = SubmitPostButtonMutation$data;
 export type SubmitPostButtonMutation = {
-  variables: SubmitPostButtonMutationVariables;
   response: SubmitPostButtonMutation$data;
+  variables: SubmitPostButtonMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

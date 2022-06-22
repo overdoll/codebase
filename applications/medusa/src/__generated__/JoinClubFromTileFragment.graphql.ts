@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b14300ae9b316222ad34ecddbb73ddf6>>
+ * @generated SignedSource<<1cd8043b94a17efdb56a7b6b50eb1e2a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,14 +11,13 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type JoinClubFromTileFragment$data = {
+  readonly slug: string;
   readonly viewerMember: {
     readonly isSupporter: boolean;
   } | null;
-  readonly slug: string;
   readonly " $fragmentSpreads": FragmentRefs<"BecomeMemberButtonClubFragment" | "WithdrawMembershipButtonClubFragment">;
   readonly " $fragmentType": "JoinClubFromTileFragment";
 };
-export type JoinClubFromTileFragment = JoinClubFromTileFragment$data;
 export type JoinClubFromTileFragment$key = {
   readonly " $data"?: JoinClubFromTileFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"JoinClubFromTileFragment">;

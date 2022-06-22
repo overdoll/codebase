@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6800ac3d5094cfad4b312865c2d7bac1>>
+ * @generated SignedSource<<b9187b2e70c4a4f560d0ad8ba4e5f543>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type SubmitPostButtonFragment$data = {
   readonly id: string;
   readonly " $fragmentType": "SubmitPostButtonFragment";
 };
-export type SubmitPostButtonFragment = SubmitPostButtonFragment$data;
 export type SubmitPostButtonFragment$key = {
   readonly " $data"?: SubmitPostButtonFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"SubmitPostButtonFragment">;

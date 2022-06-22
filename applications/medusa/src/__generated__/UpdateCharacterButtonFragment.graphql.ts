@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<65969a669a11d8f2a0d8dfa9e03707a2>>
+ * @generated SignedSource<<9211c07eb7d53e63d31c9dae2d2c7176>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,13 +11,12 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type UpdateCharacterButtonFragment$data = {
-  readonly id: string;
   readonly characters: ReadonlyArray<{
     readonly id: string;
   }>;
+  readonly id: string;
   readonly " $fragmentType": "UpdateCharacterButtonFragment";
 };
-export type UpdateCharacterButtonFragment = UpdateCharacterButtonFragment$data;
 export type UpdateCharacterButtonFragment$key = {
   readonly " $data"?: UpdateCharacterButtonFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"UpdateCharacterButtonFragment">;

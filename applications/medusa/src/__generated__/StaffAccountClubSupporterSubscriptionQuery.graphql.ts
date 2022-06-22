@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<dfaf8ce85011b26a65d53f91a05a9c7a>>
- * @relayHash 9fb603c08bc4df38d2a3d296d8327ac5
+ * @generated SignedSource<<b5ecbfbfc74a81bf15e96996931a1b0d>>
+ * @relayHash d6a65edc9adb18adc8a3680a2a656a1f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,24 +9,22 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9fb603c08bc4df38d2a3d296d8327ac5
+// @relayRequestID d6a65edc9adb18adc8a3680a2a656a1f
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type StaffAccountClubSupporterSubscriptionQuery$variables = {
   reference: string;
 };
-export type StaffAccountClubSupporterSubscriptionQueryVariables = StaffAccountClubSupporterSubscriptionQuery$variables;
 export type StaffAccountClubSupporterSubscriptionQuery$data = {
   readonly accountClubSupporterSubscription: {
     readonly __typename: string;
-    readonly " $fragmentSpreads": FragmentRefs<"StaffAccountClubSupporterSubscriptionPreviewFragment" | "StaffClubSupporterSubscriptionBillingErrorFragment" | "StaffClubSupporterSubscriptionAccountFragment" | "StaffClubSupporterSubscriptionClubFragment" | "StaffSubscriptionOptionsFragment" | "StaffSubscriptionTransactionsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"StaffAccountClubSupporterSubscriptionPreviewFragment" | "StaffClubSupporterSubscriptionAccountFragment" | "StaffClubSupporterSubscriptionBillingErrorFragment" | "StaffClubSupporterSubscriptionClubFragment" | "StaffSubscriptionOptionsFragment" | "StaffSubscriptionTransactionsFragment">;
   } | null;
 };
-export type StaffAccountClubSupporterSubscriptionQueryResponse = StaffAccountClubSupporterSubscriptionQuery$data;
 export type StaffAccountClubSupporterSubscriptionQuery = {
-  variables: StaffAccountClubSupporterSubscriptionQueryVariables;
   response: StaffAccountClubSupporterSubscriptionQuery$data;
+  variables: StaffAccountClubSupporterSubscriptionQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -82,6 +80,7 @@ v6 = {
   "storageKey": null
 },
 v7 = [
+  (v3/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -123,8 +122,7 @@ v7 = [
     "selections": (v5/*: any*/),
     "storageKey": null
   },
-  (v6/*: any*/),
-  (v3/*: any*/)
+  (v6/*: any*/)
 ],
 v8 = {
   "alias": null,
@@ -647,7 +645,7 @@ return {
     ]
   },
   "params": {
-    "id": "9fb603c08bc4df38d2a3d296d8327ac5",
+    "id": "d6a65edc9adb18adc8a3680a2a656a1f",
     "metadata": {},
     "name": "StaffAccountClubSupporterSubscriptionQuery",
     "operationKind": "query",

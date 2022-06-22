@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e67d010e0fe26db81e0fe3eef755abd3>>
+ * @generated SignedSource<<bb724538ef0405a93467f72be26cdb8e>>
  * @relayHash 0d258f26ce3e9ebb86453f51934cda7f
  * @lightSyntaxTransform
  * @nogrep
@@ -18,21 +18,19 @@ export type GrantAuthenticationTokenInput = {
 export type JoinMutation$variables = {
   input: GrantAuthenticationTokenInput;
 };
-export type JoinMutationVariables = JoinMutation$variables;
 export type JoinMutation$data = {
   readonly grantAuthenticationToken: {
     readonly authenticationToken: {
-      readonly id: string;
       readonly email: string | null;
-      readonly token: string;
+      readonly id: string;
       readonly sameDevice: boolean;
+      readonly token: string;
     } | null;
   } | null;
 };
-export type JoinMutationResponse = JoinMutation$data;
 export type JoinMutation = {
-  variables: JoinMutationVariables;
   response: JoinMutation$data;
+  variables: JoinMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<143b3cb10af515589fd2d76fb2fb434a>>
+ * @generated SignedSource<<533539ff57bd204a3b6a2c6bc5e6c911>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,7 +24,6 @@ export type EmailsSettingsFragment$data = {
   readonly id: string;
   readonly " $fragmentType": "EmailsSettingsFragment";
 };
-export type EmailsSettingsFragment = EmailsSettingsFragment$data;
 export type EmailsSettingsFragment$key = {
   readonly " $data"?: EmailsSettingsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"EmailsSettingsFragment">;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6a661b3d77d1c14c2d0b4ff524ed0813>>
+ * @generated SignedSource<<d3491e9e3673af654ee6617385dbdfab>>
  * @relayHash ec3dd342fb43ea066bd28e7a2ebd2ca3
  * @lightSyntaxTransform
  * @nogrep
@@ -15,10 +15,8 @@ import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type AccountEmailStatus = "CONFIRMED" | "PRIMARY" | "UNCONFIRMED" | "%future added value";
 export type ProfileSettingsQuery$variables = {};
-export type ProfileSettingsQueryVariables = ProfileSettingsQuery$variables;
 export type ProfileSettingsQuery$data = {
   readonly viewer: {
-    readonly username: string;
     readonly emails: {
       readonly edges: ReadonlyArray<{
         readonly node: {
@@ -27,13 +25,13 @@ export type ProfileSettingsQuery$data = {
         };
       }>;
     };
+    readonly username: string;
     readonly " $fragmentSpreads": FragmentRefs<"AccountInformationBannerFragment">;
   };
 };
-export type ProfileSettingsQueryResponse = ProfileSettingsQuery$data;
 export type ProfileSettingsQuery = {
-  variables: ProfileSettingsQueryVariables;
   response: ProfileSettingsQuery$data;
+  variables: ProfileSettingsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

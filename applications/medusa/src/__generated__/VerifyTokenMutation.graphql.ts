@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3d9f0612d972f81b564e06acd85d4c40>>
+ * @generated SignedSource<<ab79709fe75f06d194dfb165deb2f0ca>>
  * @relayHash 783f87ee699c44d613ebcdc34d94128e
  * @lightSyntaxTransform
  * @nogrep
@@ -20,20 +20,18 @@ export type VerifyAuthenticationTokenInput = {
 export type VerifyTokenMutation$variables = {
   input: VerifyAuthenticationTokenInput;
 };
-export type VerifyTokenMutationVariables = VerifyTokenMutation$variables;
 export type VerifyTokenMutation$data = {
   readonly verifyAuthenticationToken: {
-    readonly validation: VerifyAuthenticationTokenValidation | null;
     readonly authenticationToken: {
       readonly id: string;
       readonly verified: boolean;
     } | null;
+    readonly validation: VerifyAuthenticationTokenValidation | null;
   } | null;
 };
-export type VerifyTokenMutationResponse = VerifyTokenMutation$data;
 export type VerifyTokenMutation = {
-  variables: VerifyTokenMutationVariables;
   response: VerifyTokenMutation$data;
+  variables: VerifyTokenMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

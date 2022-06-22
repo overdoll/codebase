@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<05589025eed7c80d23c5b5cfb5070070>>
+ * @generated SignedSource<<ede3a93bcc93daaa7c66a0c95326d23b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,14 +14,13 @@ import { FragmentRefs } from "relay-runtime";
 export type BillingSummaryFragment$data = {
   readonly supporterSubscriptionPrice: {
     readonly prices: ReadonlyArray<{
-      readonly currency: Currency;
       readonly amount: number;
+      readonly currency: Currency;
     }>;
   };
   readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment">;
   readonly " $fragmentType": "BillingSummaryFragment";
 };
-export type BillingSummaryFragment = BillingSummaryFragment$data;
 export type BillingSummaryFragment$key = {
   readonly " $data"?: BillingSummaryFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"BillingSummaryFragment">;

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<dd8d9c8998ce38c9574b524a04f4724c>>
- * @relayHash f7a1b1362075064347604206d4bbc8d3
+ * @generated SignedSource<<87ffdb58bac4ee5b4c81a5b7188873d7>>
+ * @relayHash a71ab6973fce5d70f16caf6f5371777a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,23 +9,21 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f7a1b1362075064347604206d4bbc8d3
+// @relayRequestID a71ab6973fce5d70f16caf6f5371777a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type StaffViewAudienceQuery$variables = {
   slug: string;
 };
-export type StaffViewAudienceQueryVariables = StaffViewAudienceQuery$variables;
 export type StaffViewAudienceQuery$data = {
   readonly audience: {
-    readonly " $fragmentSpreads": FragmentRefs<"ChangeAudienceTitleFragment" | "ChangeAudienceThumbnailFragment" | "ChangeAudienceStandardFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ChangeAudienceStandardFragment" | "ChangeAudienceThumbnailFragment" | "ChangeAudienceTitleFragment">;
   } | null;
 };
-export type StaffViewAudienceQueryResponse = StaffViewAudienceQuery$data;
 export type StaffViewAudienceQuery = {
-  variables: StaffViewAudienceQueryVariables;
   response: StaffViewAudienceQuery$data;
+  variables: StaffViewAudienceQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -169,6 +167,7 @@ return {
             "name": "thumbnail",
             "plural": false,
             "selections": [
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -216,8 +215,7 @@ return {
                 "kind": "ScalarField",
                 "name": "type",
                 "storageKey": null
-              },
-              (v2/*: any*/)
+              }
             ],
             "storageKey": null
           },
@@ -234,7 +232,7 @@ return {
     ]
   },
   "params": {
-    "id": "f7a1b1362075064347604206d4bbc8d3",
+    "id": "a71ab6973fce5d70f16caf6f5371777a",
     "metadata": {},
     "name": "StaffViewAudienceQuery",
     "operationKind": "query",

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<46ba0ee4136f75221ce3e54bc2f2e818>>
+ * @generated SignedSource<<60b2540617163fcfb5bce9f366861e9a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,9 +13,6 @@ import { FragmentRefs } from "relay-runtime";
 export type ClubTileOverlayFragment$data = {
   readonly id: string;
   readonly name: string;
-  readonly thumbnail: {
-    readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
-  } | null;
   readonly posts: {
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -27,9 +24,11 @@ export type ClubTileOverlayFragment$data = {
       };
     }>;
   };
+  readonly thumbnail: {
+    readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
+  } | null;
   readonly " $fragmentType": "ClubTileOverlayFragment";
 };
-export type ClubTileOverlayFragment = ClubTileOverlayFragment$data;
 export type ClubTileOverlayFragment$key = {
   readonly " $data"?: ClubTileOverlayFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ClubTileOverlayFragment">;

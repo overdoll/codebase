@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<849fc12efda2b561ea59c197de08cdfd>>
+ * @generated SignedSource<<c3ab050402a6f61e417f545a8f7eb67b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,11 +11,10 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ChangeCancellationReasonDeprecatedFormFragment$data = {
-  readonly id: string;
   readonly deprecated: boolean;
+  readonly id: string;
   readonly " $fragmentType": "ChangeCancellationReasonDeprecatedFormFragment";
 };
-export type ChangeCancellationReasonDeprecatedFormFragment = ChangeCancellationReasonDeprecatedFormFragment$data;
 export type ChangeCancellationReasonDeprecatedFormFragment$key = {
   readonly " $data"?: ChangeCancellationReasonDeprecatedFormFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ChangeCancellationReasonDeprecatedFormFragment">;

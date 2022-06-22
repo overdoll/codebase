@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ba199464ec7b4cb3cd7c67e0ab0dee70>>
+ * @generated SignedSource<<35f9d0b3936469d02fe056195df07785>>
  * @relayHash 717f268257501a145bfc69d145b4bc78
  * @lightSyntaxTransform
  * @nogrep
@@ -13,22 +13,20 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type StaffCreateCategoryQuery$variables = {
-  first?: number | null;
   after?: string | null;
+  first?: number | null;
 };
-export type StaffCreateCategoryQueryVariables = StaffCreateCategoryQuery$variables;
 export type StaffCreateCategoryQuery$data = {
   readonly categories: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
-      readonly __typename: string;
+      readonly __typename: "CategoryEdge";
     }>;
   };
 };
-export type StaffCreateCategoryQueryResponse = StaffCreateCategoryQuery$data;
 export type StaffCreateCategoryQuery = {
-  variables: StaffCreateCategoryQueryVariables;
   response: StaffCreateCategoryQuery$data;
+  variables: StaffCreateCategoryQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

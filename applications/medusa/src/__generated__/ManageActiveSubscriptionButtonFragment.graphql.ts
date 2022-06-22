@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e6272854f31fc634a8bebc5c20d29911>>
+ * @generated SignedSource<<6edee0c6601aac0432baa87ea745390a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type ManageActiveSubscriptionButtonFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"CancelSubscriptionButtonFragment" | "UpdatePaymentMethodButtonFragment">;
   readonly " $fragmentType": "ManageActiveSubscriptionButtonFragment";
 };
-export type ManageActiveSubscriptionButtonFragment = ManageActiveSubscriptionButtonFragment$data;
 export type ManageActiveSubscriptionButtonFragment$key = {
   readonly " $data"?: ManageActiveSubscriptionButtonFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ManageActiveSubscriptionButtonFragment">;

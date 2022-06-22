@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<653b8ec2c0e16a2dac4e7c3e0fa9b096>>
- * @relayHash 03299ee67346df074ce42ac0928cba28
+ * @generated SignedSource<<1f0c5b6b5819a68dc70cc06268fbb922>>
+ * @relayHash e3587b3a3ffebe82a9384331d00b4614
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 03299ee67346df074ce42ac0928cba28
+// @relayRequestID e3587b3a3ffebe82a9384331d00b4614
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,16 +18,14 @@ export type ClubTopPostsPaginationQuery$variables = {
   first?: number | null;
   id: string;
 };
-export type ClubTopPostsPaginationQueryVariables = ClubTopPostsPaginationQuery$variables;
 export type ClubTopPostsPaginationQuery$data = {
   readonly node: {
     readonly " $fragmentSpreads": FragmentRefs<"ClubTopPostsFragment">;
   } | null;
 };
-export type ClubTopPostsPaginationQueryResponse = ClubTopPostsPaginationQuery$data;
 export type ClubTopPostsPaginationQuery = {
-  variables: ClubTopPostsPaginationQueryVariables;
   response: ClubTopPostsPaginationQuery$data;
+  variables: ClubTopPostsPaginationQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -240,6 +238,7 @@ return {
                                     "name": "videoDuration",
                                     "storageKey": null
                                   },
+                                  (v5/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -280,8 +279,7 @@ return {
                                     "plural": false,
                                     "selections": (v8/*: any*/),
                                     "storageKey": null
-                                  },
-                                  (v5/*: any*/)
+                                  }
                                 ],
                                 "storageKey": null
                               }
@@ -356,7 +354,7 @@ return {
     ]
   },
   "params": {
-    "id": "03299ee67346df074ce42ac0928cba28",
+    "id": "e3587b3a3ffebe82a9384331d00b4614",
     "metadata": {},
     "name": "ClubTopPostsPaginationQuery",
     "operationKind": "query",

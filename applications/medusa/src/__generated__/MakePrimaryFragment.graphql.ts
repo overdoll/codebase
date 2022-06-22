@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ea9e24cbe81408537f2b2bc576bcb074>>
+ * @generated SignedSource<<398056adb260144ed5cecf4df7c15f9c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,11 +11,10 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type MakePrimaryFragment$data = {
-  readonly id: string;
   readonly email: string;
+  readonly id: string;
   readonly " $fragmentType": "MakePrimaryFragment";
 };
-export type MakePrimaryFragment = MakePrimaryFragment$data;
 export type MakePrimaryFragment$key = {
   readonly " $data"?: MakePrimaryFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"MakePrimaryFragment">;

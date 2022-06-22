@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4fe1bf2f3a36686e1cb503978cefeb42>>
+ * @generated SignedSource<<18c5703c8eecbf40840f355412a97a83>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,6 @@ export type GrantFragment$data = {
   readonly token: string;
   readonly " $fragmentType": "GrantFragment";
 };
-export type GrantFragment = GrantFragment$data;
 export type GrantFragment$key = {
   readonly " $data"?: GrantFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"GrantFragment">;

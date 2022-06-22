@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<af63341953c93d726f3dcbd1e8f7a552>>
+ * @generated SignedSource<<2a32947ad7fd8d3226dbf932183c710d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,6 @@ export type RecoveryCodeFragment$data = {
   readonly token: string;
   readonly " $fragmentType": "RecoveryCodeFragment";
 };
-export type RecoveryCodeFragment = RecoveryCodeFragment$data;
 export type RecoveryCodeFragment$key = {
   readonly " $data"?: RecoveryCodeFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"RecoveryCodeFragment">;

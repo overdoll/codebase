@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7a2d99bfa889121af22739a1efcaf7f3>>
+ * @generated SignedSource<<835ab2eabf4b4b8464422ed790a426e8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,12 +12,11 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ClickSeriesFragment$data = {
   readonly series: {
-    readonly title: string;
     readonly slug: string;
+    readonly title: string;
   };
   readonly " $fragmentType": "ClickSeriesFragment";
 };
-export type ClickSeriesFragment = ClickSeriesFragment$data;
 export type ClickSeriesFragment$key = {
   readonly " $data"?: ClickSeriesFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ClickSeriesFragment">;

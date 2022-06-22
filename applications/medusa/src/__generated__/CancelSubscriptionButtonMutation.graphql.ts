@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<61116a0023450b69eedd14b4e1911a25>>
- * @relayHash 9dcaa6a940e16707f0210ca5b3fa827d
+ * @generated SignedSource<<2d289638cbe2f9e0174fef48ed4858e5>>
+ * @relayHash 7902da561403ace0691ee1cc52bffc56
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9dcaa6a940e16707f0210ca5b3fa827d
+// @relayRequestID 7902da561403ace0691ee1cc52bffc56
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -20,16 +20,11 @@ export type CancelAccountClubSupporterSubscriptionInput = {
 export type CancelSubscriptionButtonMutation$variables = {
   input: CancelAccountClubSupporterSubscriptionInput;
 };
-export type CancelSubscriptionButtonMutationVariables = CancelSubscriptionButtonMutation$variables;
 export type CancelSubscriptionButtonMutation$data = {
   readonly cancelAccountClubSupporterSubscription: {
     readonly clubSupporterSubscription: {
       readonly __typename: string;
-      readonly id?: string;
-      readonly reference?: string;
-      readonly supporterSince?: any;
       readonly cancelledAt?: any;
-      readonly endDate?: any;
       readonly club?: {
         readonly name: string;
         readonly slug: string;
@@ -37,14 +32,17 @@ export type CancelSubscriptionButtonMutation$data = {
           readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
         } | null;
       };
+      readonly endDate?: any;
+      readonly id?: string;
+      readonly reference?: string;
+      readonly supporterSince?: any;
       readonly " $fragmentSpreads": FragmentRefs<"ManageCancelledSubscriptionButtonFragment">;
     } | null;
   } | null;
 };
-export type CancelSubscriptionButtonMutationResponse = CancelSubscriptionButtonMutation$data;
 export type CancelSubscriptionButtonMutation = {
-  variables: CancelSubscriptionButtonMutationVariables;
   response: CancelSubscriptionButtonMutation$data;
+  variables: CancelSubscriptionButtonMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -267,6 +265,7 @@ return {
                         "name": "thumbnail",
                         "plural": false,
                         "selections": [
+                          (v3/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -314,8 +313,7 @@ return {
                             "kind": "ScalarField",
                             "name": "type",
                             "storageKey": null
-                          },
-                          (v3/*: any*/)
+                          }
                         ],
                         "storageKey": null
                       },
@@ -342,7 +340,7 @@ return {
     ]
   },
   "params": {
-    "id": "9dcaa6a940e16707f0210ca5b3fa827d",
+    "id": "7902da561403ace0691ee1cc52bffc56",
     "metadata": {},
     "name": "CancelSubscriptionButtonMutation",
     "operationKind": "mutation",

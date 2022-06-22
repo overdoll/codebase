@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a9abad1d1b12ea16476608ae3832ff94>>
+ * @generated SignedSource<<2120fa8048ed382b467454c19066c8b3>>
  * @relayHash cd4a8c78de6041cba5003e98bef1b054
  * @lightSyntaxTransform
  * @nogrep
@@ -18,7 +18,6 @@ export type AddModeratorToPostQueueInput = {
 export type QueueSettingsAddMutation$variables = {
   input: AddModeratorToPostQueueInput;
 };
-export type QueueSettingsAddMutationVariables = QueueSettingsAddMutation$variables;
 export type QueueSettingsAddMutation$data = {
   readonly addModeratorToPostQueue: {
     readonly account: {
@@ -29,10 +28,9 @@ export type QueueSettingsAddMutation$data = {
     } | null;
   } | null;
 };
-export type QueueSettingsAddMutationResponse = QueueSettingsAddMutation$data;
 export type QueueSettingsAddMutation = {
-  variables: QueueSettingsAddMutationVariables;
   response: QueueSettingsAddMutation$data;
+  variables: QueueSettingsAddMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<72acc92d7af00edd6fbb1b081e270faa>>
+ * @generated SignedSource<<46a40766dc293aea4cc4e4b4b4afd2f5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,6 @@ export type ChooseCurrencyFragment$data = {
   };
   readonly " $fragmentType": "ChooseCurrencyFragment";
 };
-export type ChooseCurrencyFragment = ChooseCurrencyFragment$data;
 export type ChooseCurrencyFragment$key = {
   readonly " $data"?: ChooseCurrencyFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ChooseCurrencyFragment">;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8f19c6179f13a6362efafc7d7df76c4e>>
+ * @generated SignedSource<<70caebffdd1ba008ea1e7264b8203608>>
  * @relayHash 31c93fefea6e3c4c1cda343aab1920cf
  * @lightSyntaxTransform
  * @nogrep
@@ -21,7 +21,6 @@ export type RemovePostInput = {
 export type ModerationRemovePostFormMutation$variables = {
   input: RemovePostInput;
 };
-export type ModerationRemovePostFormMutationVariables = ModerationRemovePostFormMutation$variables;
 export type ModerationRemovePostFormMutation$data = {
   readonly removePost: {
     readonly post: {
@@ -30,10 +29,9 @@ export type ModerationRemovePostFormMutation$data = {
     } | null;
   } | null;
 };
-export type ModerationRemovePostFormMutationResponse = ModerationRemovePostFormMutation$data;
 export type ModerationRemovePostFormMutation = {
-  variables: ModerationRemovePostFormMutationVariables;
   response: ModerationRemovePostFormMutation$data;
+  variables: ModerationRemovePostFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

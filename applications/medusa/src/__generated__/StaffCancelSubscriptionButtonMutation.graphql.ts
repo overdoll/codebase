@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<10dcf709d040696f87a1c914d3bffaa6>>
+ * @generated SignedSource<<0419e7df0b46ac4fa7dfa025d984d81f>>
  * @relayHash 6f9c8ffb59ee8eae7310cb3f3df501a8
  * @lightSyntaxTransform
  * @nogrep
@@ -19,27 +19,25 @@ export type CancelAccountClubSupporterSubscriptionInput = {
 export type StaffCancelSubscriptionButtonMutation$variables = {
   input: CancelAccountClubSupporterSubscriptionInput;
 };
-export type StaffCancelSubscriptionButtonMutationVariables = StaffCancelSubscriptionButtonMutation$variables;
 export type StaffCancelSubscriptionButtonMutation$data = {
   readonly cancelAccountClubSupporterSubscription: {
     readonly clubSupporterSubscription: {
       readonly __typename: string;
-      readonly id?: string;
-      readonly reference?: string;
-      readonly supporterSince?: any;
       readonly cancelledAt?: any;
-      readonly endDate?: any;
       readonly club?: {
         readonly name: string;
         readonly slug: string;
       };
+      readonly endDate?: any;
+      readonly id?: string;
+      readonly reference?: string;
+      readonly supporterSince?: any;
     } | null;
   } | null;
 };
-export type StaffCancelSubscriptionButtonMutationResponse = StaffCancelSubscriptionButtonMutation$data;
 export type StaffCancelSubscriptionButtonMutation = {
-  variables: StaffCancelSubscriptionButtonMutationVariables;
   response: StaffCancelSubscriptionButtonMutation$data;
+  variables: StaffCancelSubscriptionButtonMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

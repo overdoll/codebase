@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<202229f32b37813c7f1f11471d006a34>>
+ * @generated SignedSource<<911e6ff2f80593b1d9eb8aa935aef884>>
  * @relayHash 156dcdbb29a85a68a1984dda3c2e3d13
  * @lightSyntaxTransform
  * @nogrep
@@ -13,22 +13,20 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type StaffCreateAudienceQuery$variables = {
-  first?: number | null;
   after?: string | null;
+  first?: number | null;
 };
-export type StaffCreateAudienceQueryVariables = StaffCreateAudienceQuery$variables;
 export type StaffCreateAudienceQuery$data = {
   readonly audiences: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
-      readonly __typename: string;
+      readonly __typename: "AudienceEdge";
     }>;
   };
 };
-export type StaffCreateAudienceQueryResponse = StaffCreateAudienceQuery$data;
 export type StaffCreateAudienceQuery = {
-  variables: StaffCreateAudienceQueryVariables;
   response: StaffCreateAudienceQuery$data;
+  variables: StaffCreateAudienceQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<420f83b6de9a8cfb6ef8e3bedcc6b4f3>>
+ * @generated SignedSource<<e640b50c46e4f504781bc119747522f5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type JoinFragment$data = {
   readonly email: string | null;
   readonly " $fragmentType": "JoinFragment";
 };
-export type JoinFragment = JoinFragment$data;
 export type JoinFragment$key = {
   readonly " $data"?: JoinFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"JoinFragment">;

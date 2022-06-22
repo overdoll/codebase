@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d76eca534d94397469c661a8d18407e3>>
+ * @generated SignedSource<<2e0ff1d13d577b7172816b484b2ded88>>
  * @relayHash 5eeec9b3b7781a24a63f54b340b6fda1
  * @lightSyntaxTransform
  * @nogrep
@@ -20,29 +20,27 @@ export type IssueClubInfractionInput = {
 export type IssueClubInfractionFormMutation$variables = {
   input: IssueClubInfractionInput;
 };
-export type IssueClubInfractionFormMutationVariables = IssueClubInfractionFormMutation$variables;
 export type IssueClubInfractionFormMutation$data = {
   readonly issueClubInfraction: {
     readonly clubInfractionHistory: {
-      readonly id: string;
       readonly club: {
         readonly id: string;
         readonly suspension: {
           readonly expires: any;
         } | null;
       };
-      readonly issuedAt: any;
       readonly expiresAt: any;
+      readonly id: string;
+      readonly issuedAt: any;
       readonly rule: {
         readonly title: string;
       };
     } | null;
   } | null;
 };
-export type IssueClubInfractionFormMutationResponse = IssueClubInfractionFormMutation$data;
 export type IssueClubInfractionFormMutation = {
-  variables: IssueClubInfractionFormMutationVariables;
   response: IssueClubInfractionFormMutation$data;
+  variables: IssueClubInfractionFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

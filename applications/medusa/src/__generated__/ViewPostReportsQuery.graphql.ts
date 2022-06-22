@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e4291ac44b6986142a367cc9333c10f3>>
+ * @generated SignedSource<<c70cdf5d4e16e7edd9be5f85f145d133>>
  * @relayHash ed59323f91ddac3053f19a666e45c953
  * @lightSyntaxTransform
  * @nogrep
@@ -14,20 +14,18 @@
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ViewPostReportsQuery$variables = {
-  reference: string;
   from: any;
+  reference: string;
   to?: any | null;
 };
-export type ViewPostReportsQueryVariables = ViewPostReportsQuery$variables;
 export type ViewPostReportsQuery$data = {
   readonly post: {
     readonly " $fragmentSpreads": FragmentRefs<"ViewPostReportsFragment">;
   };
 };
-export type ViewPostReportsQueryResponse = ViewPostReportsQuery$data;
 export type ViewPostReportsQuery = {
-  variables: ViewPostReportsQueryVariables;
   response: ViewPostReportsQuery$data;
+  variables: ViewPostReportsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

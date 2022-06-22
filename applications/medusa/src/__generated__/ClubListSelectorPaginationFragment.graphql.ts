@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fa57956d306538e05d33891087752e52>>
- * @relayHash eab6963f8dbf88e9242d3d0e9fa949f0
+ * @generated SignedSource<<42339ce6c4e575c4473d216058cfe86f>>
+ * @relayHash db0ecd0919804ac411deace1ee65c4cc
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,26 +9,24 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID eab6963f8dbf88e9242d3d0e9fa949f0
+// @relayRequestID db0ecd0919804ac411deace1ee65c4cc
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ClubListSelectorPaginationFragment$variables = {
   after?: string | null;
   first?: number | null;
-  name?: string | null;
   id: string;
+  name?: string | null;
 };
-export type ClubListSelectorPaginationFragmentVariables = ClubListSelectorPaginationFragment$variables;
 export type ClubListSelectorPaginationFragment$data = {
   readonly node: {
     readonly " $fragmentSpreads": FragmentRefs<"ClubListSelectorFragment">;
   } | null;
 };
-export type ClubListSelectorPaginationFragmentResponse = ClubListSelectorPaginationFragment$data;
 export type ClubListSelectorPaginationFragment = {
-  variables: ClubListSelectorPaginationFragmentVariables;
   response: ClubListSelectorPaginationFragment$data;
+  variables: ClubListSelectorPaginationFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -250,13 +248,13 @@ return {
                             "name": "thumbnail",
                             "plural": false,
                             "selections": [
+                              (v7/*: any*/),
                               (v9/*: any*/),
                               (v10/*: any*/),
                               (v11/*: any*/),
                               (v12/*: any*/),
                               (v13/*: any*/),
-                              (v14/*: any*/),
-                              (v7/*: any*/)
+                              (v14/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -307,6 +305,7 @@ return {
                                             "plural": false,
                                             "selections": [
                                               (v14/*: any*/),
+                                              (v7/*: any*/),
                                               (v9/*: any*/),
                                               (v10/*: any*/),
                                               (v11/*: any*/),
@@ -318,8 +317,7 @@ return {
                                                 "kind": "ScalarField",
                                                 "name": "processed",
                                                 "storageKey": null
-                                              },
-                                              (v7/*: any*/)
+                                              }
                                             ],
                                             "storageKey": null
                                           },
@@ -400,7 +398,7 @@ return {
     ]
   },
   "params": {
-    "id": "eab6963f8dbf88e9242d3d0e9fa949f0",
+    "id": "db0ecd0919804ac411deace1ee65c4cc",
     "metadata": {},
     "name": "ClubListSelectorPaginationFragment",
     "operationKind": "query",

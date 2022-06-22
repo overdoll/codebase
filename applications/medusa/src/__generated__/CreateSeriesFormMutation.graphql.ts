@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6c211de8a363c77f74140bf3b936e885>>
+ * @generated SignedSource<<b09115d6828077dd5ee4a14c0244b890>>
  * @relayHash 269cec9b33c14d80cebaeca7a552aab1
  * @lightSyntaxTransform
  * @nogrep
@@ -18,24 +18,22 @@ export type CreateSeriesInput = {
   title: string;
 };
 export type CreateSeriesFormMutation$variables = {
-  input: CreateSeriesInput;
   connections: ReadonlyArray<string>;
+  input: CreateSeriesInput;
 };
-export type CreateSeriesFormMutationVariables = CreateSeriesFormMutation$variables;
 export type CreateSeriesFormMutation$data = {
   readonly createSeries: {
     readonly series: {
       readonly id: string;
-      readonly title: string;
       readonly slug: string;
+      readonly title: string;
     } | null;
     readonly validation: CreateSeriesValidation | null;
   } | null;
 };
-export type CreateSeriesFormMutationResponse = CreateSeriesFormMutation$data;
 export type CreateSeriesFormMutation = {
-  variables: CreateSeriesFormMutationVariables;
   response: CreateSeriesFormMutation$data;
+  variables: CreateSeriesFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

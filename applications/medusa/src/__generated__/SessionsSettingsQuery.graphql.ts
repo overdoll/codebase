@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<17e4f683ba61c5d6da981fe2b2d0545d>>
+ * @generated SignedSource<<9d08baeeda6b8907b518b96b7a4c77b2>>
  * @relayHash 12394b7b0f0683341610a6774b87a3c5
  * @lightSyntaxTransform
  * @nogrep
@@ -14,16 +14,14 @@
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SessionsSettingsQuery$variables = {};
-export type SessionsSettingsQueryVariables = SessionsSettingsQuery$variables;
 export type SessionsSettingsQuery$data = {
   readonly viewer: {
     readonly " $fragmentSpreads": FragmentRefs<"SessionsSettingsFragment">;
   } | null;
 };
-export type SessionsSettingsQueryResponse = SessionsSettingsQuery$data;
 export type SessionsSettingsQuery = {
-  variables: SessionsSettingsQueryVariables;
   response: SessionsSettingsQuery$data;
+  variables: SessionsSettingsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

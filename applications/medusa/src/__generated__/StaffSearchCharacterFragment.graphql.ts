@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b5472fabde1846cbe08fcc082d670513>>
+ * @generated SignedSource<<183320b15209de639fd052c47550feb2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,17 +14,16 @@ export type StaffSearchCharacterFragment$data = {
   readonly characters: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly slug: string;
         readonly series: {
           readonly slug: string;
         };
+        readonly slug: string;
         readonly " $fragmentSpreads": FragmentRefs<"CharacterTileOverlayFragment">;
       };
     }>;
   };
   readonly " $fragmentType": "StaffSearchCharacterFragment";
 };
-export type StaffSearchCharacterFragment = StaffSearchCharacterFragment$data;
 export type StaffSearchCharacterFragment$key = {
   readonly " $data"?: StaffSearchCharacterFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"StaffSearchCharacterFragment">;

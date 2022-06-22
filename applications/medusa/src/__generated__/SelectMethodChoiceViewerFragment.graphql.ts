@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<09ef8313ab27a3cea44e0b6698c9fc8d>>
+ * @generated SignedSource<<3e83bd6bd0c3b83d4afba4241bea7450>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,18 +11,17 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SelectMethodChoiceViewerFragment$data = {
+  readonly __typename: "Account";
+  readonly isSecure: boolean;
   readonly savedPaymentMethods: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly __typename: string;
+        readonly __typename: "AccountSavedPaymentMethod";
       };
     }>;
   };
-  readonly isSecure: boolean;
-  readonly __typename: "Account";
   readonly " $fragmentType": "SelectMethodChoiceViewerFragment";
 };
-export type SelectMethodChoiceViewerFragment = SelectMethodChoiceViewerFragment$data;
 export type SelectMethodChoiceViewerFragment$key = {
   readonly " $data"?: SelectMethodChoiceViewerFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"SelectMethodChoiceViewerFragment">;

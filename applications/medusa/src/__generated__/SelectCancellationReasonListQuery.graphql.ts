@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<648554ec01f649c66957b854d8301f34>>
+ * @generated SignedSource<<a3b1be0eb6aa74334fd7fe72d907d603>>
  * @relayHash 0b303be1829f52208b72a7dfd7ae1ee4
  * @lightSyntaxTransform
  * @nogrep
@@ -14,7 +14,6 @@
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SelectCancellationReasonListQuery$variables = {};
-export type SelectCancellationReasonListQueryVariables = SelectCancellationReasonListQuery$variables;
 export type SelectCancellationReasonListQuery$data = {
   readonly cancellationReasons: {
     readonly edges: ReadonlyArray<{
@@ -25,10 +24,9 @@ export type SelectCancellationReasonListQuery$data = {
     }>;
   };
 };
-export type SelectCancellationReasonListQueryResponse = SelectCancellationReasonListQuery$data;
 export type SelectCancellationReasonListQuery = {
-  variables: SelectCancellationReasonListQueryVariables;
   response: SelectCancellationReasonListQuery$data;
+  variables: SelectCancellationReasonListQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

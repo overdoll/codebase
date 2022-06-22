@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7d1deb3506f11d98ff26a36351a75c7f>>
- * @relayHash 0dc4b92922f651235ffbf1edcb500485
+ * @generated SignedSource<<427f7987cef50fb176fe171412b55ddc>>
+ * @relayHash b3104e20f7d4ca36e4c24bca8bb67d58
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,12 +9,11 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0dc4b92922f651235ffbf1edcb500485
+// @relayRequestID b3104e20f7d4ca36e4c24bca8bb67d58
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type AudienceMultiSelectorQuery$variables = {};
-export type AudienceMultiSelectorQueryVariables = AudienceMultiSelectorQuery$variables;
 export type AudienceMultiSelectorQuery$data = {
   readonly audiences: {
     readonly edges: ReadonlyArray<{
@@ -26,10 +25,9 @@ export type AudienceMultiSelectorQuery$data = {
     }>;
   };
 };
-export type AudienceMultiSelectorQueryResponse = AudienceMultiSelectorQuery$data;
 export type AudienceMultiSelectorQuery = {
-  variables: AudienceMultiSelectorQueryVariables;
   response: AudienceMultiSelectorQuery$data;
+  variables: AudienceMultiSelectorQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -154,6 +152,7 @@ return {
                         "name": "type",
                         "storageKey": null
                       },
+                      (v0/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -201,8 +200,7 @@ return {
                         "kind": "ScalarField",
                         "name": "processed",
                         "storageKey": null
-                      },
-                      (v0/*: any*/)
+                      }
                     ],
                     "storageKey": null
                   }
@@ -218,7 +216,7 @@ return {
     ]
   },
   "params": {
-    "id": "0dc4b92922f651235ffbf1edcb500485",
+    "id": "b3104e20f7d4ca36e4c24bca8bb67d58",
     "metadata": {},
     "name": "AudienceMultiSelectorQuery",
     "operationKind": "query",

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<40c40e8fb4e3815473f673787ed805be>>
+ * @generated SignedSource<<d7c2a710de7a95e60be204403c0e6c8c>>
  * @relayHash 15182e8e9e125bda5574764aa156047b
  * @lightSyntaxTransform
  * @nogrep
@@ -13,17 +13,15 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type CountriesOptionsQuery$variables = {};
-export type CountriesOptionsQueryVariables = CountriesOptionsQuery$variables;
 export type CountriesOptionsQuery$data = {
   readonly countries: ReadonlyArray<{
     readonly id: string;
     readonly name: string;
   }>;
 };
-export type CountriesOptionsQueryResponse = CountriesOptionsQuery$data;
 export type CountriesOptionsQuery = {
-  variables: CountriesOptionsQueryVariables;
   response: CountriesOptionsQuery$data;
+  variables: CountriesOptionsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

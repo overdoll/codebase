@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<733b978ae229dd74b111a80b37a8db9b>>
+ * @generated SignedSource<<e4c3422f3c3bb09ec75ef2e19f87f065>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,6 @@ export type DeletingAccountBannerFragment$data = {
   };
   readonly " $fragmentType": "DeletingAccountBannerFragment";
 };
-export type DeletingAccountBannerFragment = DeletingAccountBannerFragment$data;
 export type DeletingAccountBannerFragment$key = {
   readonly " $data"?: DeletingAccountBannerFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"DeletingAccountBannerFragment">;

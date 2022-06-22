@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6dd7c671ea5b289b06e62a24a51dc298>>
+ * @generated SignedSource<<cde3e5988a0e1f8afd131f8e00cbfd1a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,14 +14,13 @@ export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future 
 import { FragmentRefs } from "relay-runtime";
 export type StaffPaymentOptionsFragment$data = {
   readonly baseAmount: number;
-  readonly platformFeeAmount: number;
-  readonly finalAmount: number;
   readonly currency: Currency;
-  readonly status: ClubPaymentStatus;
+  readonly finalAmount: number;
   readonly isDeduction: boolean;
+  readonly platformFeeAmount: number;
+  readonly status: ClubPaymentStatus;
   readonly " $fragmentType": "StaffPaymentOptionsFragment";
 };
-export type StaffPaymentOptionsFragment = StaffPaymentOptionsFragment$data;
 export type StaffPaymentOptionsFragment$key = {
   readonly " $data"?: StaffPaymentOptionsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"StaffPaymentOptionsFragment">;
