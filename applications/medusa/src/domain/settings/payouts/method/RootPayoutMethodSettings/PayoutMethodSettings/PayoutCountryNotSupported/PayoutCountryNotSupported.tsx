@@ -36,7 +36,6 @@ export default function PayoutCountryNotSupported ({ query }: Props): JSX.Elemen
             >{data.name}
             </HighlightInline>.
             This could be because of currently active sanctions or our providers not being able to support it.
-            it.
           </Trans>
         </Text>
       </Stack>

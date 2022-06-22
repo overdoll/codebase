@@ -1,9 +1,27 @@
-import { Heading, Stack } from '@chakra-ui/react'
+import { Flex, Heading, Stack } from '@chakra-ui/react'
 import Icon from '../../../PageLayout/Flair/Icon/Icon'
 import { WarningTriangle } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 
-export default function ImageError (): JSX.Element {
+interface Props {
+  tiny?: boolean
+}
+
+export default function ImageError ({ tiny }: Props): JSX.Element {
+  if (tiny === true) {
+    return (
+      <Flex
+        p={2}
+        justify='center'
+        align='center'
+        w='100%'
+        h='100%'
+      >
+        <Icon icon={WarningTriangle} w='100%' h='100%' fill='orange.300' />
+      </Flex>
+    )
+  }
+
   return (
     <Stack
       borderRadius='md'
