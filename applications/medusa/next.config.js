@@ -267,7 +267,7 @@ if (process.env.PRODUCTION_DEPLOYMENT != null) {
     disableClientWebpackPlugin: true
   }
 
-  finalConfig = withPlugins([withSentryConfig, withPWA], moduleExports)
+  finalConfig = withPlugins([withSentryConfig], moduleExports)
 }
 
 module.exports = finalConfig
