@@ -161,6 +161,11 @@ type PostsEntities struct {
 func TestCreatePost_Submit_and_publish(t *testing.T) {
 	t.Parallel()
 
+	staffAccountId := uuid.New().String()
+	mockAccountStaff(t, staffAccountId)
+
+	staffClient := getGraphqlClientWithAuthenticatedAccount(t, staffAccountId)
+
 	testingAccountId := newFakeAccount(t)
 	clb := seedClub(t, testingAccountId)
 	clubId := clb.ID()
@@ -593,7 +598,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	var disableSupporterOnlyPosts DisableClubSupporterOnlyPosts
 
-	err = client.Mutate(context.Background(), &disableSupporterOnlyPosts, map[string]interface{}{
+	err = staffClient.Mutate(context.Background(), &disableSupporterOnlyPosts, map[string]interface{}{
 		"input": types.DisableClubSupporterOnlyPostsInput{
 			ClubID: clubViewer.Club.ID,
 		},
@@ -612,7 +617,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	var enableSupporterOnlyPosts EnableClubSupporterOnlyPosts
 
-	err = client.Mutate(context.Background(), &enableSupporterOnlyPosts, map[string]interface{}{
+	err = staffClient.Mutate(context.Background(), &enableSupporterOnlyPosts, map[string]interface{}{
 		"input": types.EnableClubSupporterOnlyPostsInput{
 			ClubID: clubViewer.Club.ID,
 		},

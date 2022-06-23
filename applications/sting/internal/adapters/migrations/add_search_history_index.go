@@ -19,7 +19,7 @@ func addSearchHistoryIndex(ctx context.Context, session gocqlx.Session, ev migra
 
 	esClient := bootstrap.InitializeElasticSearchSession()
 
-	_, err := esClient.PutMapping().Index(adapters.SearchHistoryIndexName).BodyString(searchHistoryIndex).Do(ctx)
+	_, err := esClient.CreateIndex(adapters.SearchHistoryIndexName).BodyString(searchHistoryIndex).Do(ctx)
 
 	if err != nil {
 		return err

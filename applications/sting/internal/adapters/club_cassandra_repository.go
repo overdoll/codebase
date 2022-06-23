@@ -34,7 +34,7 @@ var clubTable = table.New(table.Metadata{
 		"members_count_last_update_id",
 		"owner_account_id",
 		"suspended",
-		"disable_supporter_only_posts",
+		"supporter_only_posts_disabled",
 		"suspended_until",
 		"next_supporter_post_time",
 		"has_created_supporter_only_post",

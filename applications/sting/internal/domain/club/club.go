@@ -191,7 +191,7 @@ func (m *Club) IsSuspended() bool {
 }
 
 func (m *Club) CanCreateSupporterOnlyPosts() bool {
-	return m.supporterOnlyPostsDisabled
+	return !m.supporterOnlyPostsDisabled
 }
 
 func (m *Club) SupporterOnlyPostsDisabled() bool {

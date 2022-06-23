@@ -29,6 +29,7 @@ go_library(
         "//libraries/errors/domainerror",
         "//libraries/localization",
         "//libraries/paging",
+        "//libraries/passport",
         "//libraries/principal",
         "//libraries/resource",
         "//libraries/uuid",

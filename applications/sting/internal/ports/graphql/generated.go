@@ -168,6 +168,7 @@ type ComplexityRoot struct {
 	}
 
 	Club struct {
+		Banner                      func(childComplexity int) int
 		CanCreateSupporterOnlyPosts func(childComplexity int) int
 		CanSupport                  func(childComplexity int) int
 		ID                          func(childComplexity int) int
@@ -1267,6 +1268,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CharacterEdge.Node(childComplexity), true
+
+	case "Club.banner":
+		if e.complexity.Club.Banner == nil {
+			break
+		}
+
+		return e.complexity.Club.Banner(childComplexity), true
 
 	case "Club.canCreateSupporterOnlyPosts":
 		if e.complexity.Club.CanCreateSupporterOnlyPosts == nil {
@@ -3993,8 +4001,11 @@ extend type Mutation {
   """An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug."""
   slugAliases: [ClubSlugAlias!]!
 
-  """A URL pointing to the object's thumbnail."""
+  """A resource of the club's thumbnail."""
   thumbnail: Resource
+
+  """A resource of the club's banner."""
+  banner: Resource
 
   """A name for this club."""
   name: String!
@@ -8993,6 +9004,8 @@ func (ec *executionContext) fieldContext_AddClubSlugAliasPayload_club(ctx contex
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
+			case "banner":
+				return ec.fieldContext_Club_banner(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -11895,6 +11908,67 @@ func (ec *executionContext) fieldContext_Club_thumbnail(ctx context.Context, fie
 	return fc, nil
 }
 
+func (ec *executionContext) _Club_banner(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Club_banner(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Banner, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*graphql1.Resource)
+	fc.Result = res
+	return ec.marshalOResource2ᚖoverdollᚋlibrariesᚋgraphqlᚐResource(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Club_banner(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Club",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Resource_id(ctx, field)
+			case "type":
+				return ec.fieldContext_Resource_type(ctx, field)
+			case "processed":
+				return ec.fieldContext_Resource_processed(ctx, field)
+			case "urls":
+				return ec.fieldContext_Resource_urls(ctx, field)
+			case "width":
+				return ec.fieldContext_Resource_width(ctx, field)
+			case "height":
+				return ec.fieldContext_Resource_height(ctx, field)
+			case "videoDuration":
+				return ec.fieldContext_Resource_videoDuration(ctx, field)
+			case "videoThumbnail":
+				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
+			case "preview":
+				return ec.fieldContext_Resource_preview(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Resource", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Club_name(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Club_name(ctx, field)
 	if err != nil {
@@ -12795,6 +12869,8 @@ func (ec *executionContext) fieldContext_ClubEdge_node(ctx context.Context, fiel
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
+			case "banner":
+				return ec.fieldContext_Club_banner(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -13166,6 +13242,8 @@ func (ec *executionContext) fieldContext_ClubMember_club(ctx context.Context, fi
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
+			case "banner":
+				return ec.fieldContext_Club_banner(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -14378,6 +14456,8 @@ func (ec *executionContext) fieldContext_CreateClubPayload_club(ctx context.Cont
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
+			case "banner":
+				return ec.fieldContext_Club_banner(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -15091,6 +15171,8 @@ func (ec *executionContext) fieldContext_DisableClubSupporterOnlyPostsPayload_cl
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
+			case "banner":
+				return ec.fieldContext_Club_banner(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -15174,6 +15256,8 @@ func (ec *executionContext) fieldContext_EnableClubSupporterOnlyPostsPayload_clu
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
+			case "banner":
+				return ec.fieldContext_Club_banner(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -15568,6 +15652,8 @@ func (ec *executionContext) fieldContext_Entity_findClubByID(ctx context.Context
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
+			case "banner":
+				return ec.fieldContext_Club_banner(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -19089,6 +19175,8 @@ func (ec *executionContext) fieldContext_Post_club(ctx context.Context, field gr
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
+			case "banner":
+				return ec.fieldContext_Club_banner(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -20312,6 +20400,8 @@ func (ec *executionContext) fieldContext_PromoteClubSlugAliasToDefaultPayload_cl
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
+			case "banner":
+				return ec.fieldContext_Club_banner(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -20920,6 +21010,8 @@ func (ec *executionContext) fieldContext_Query_club(ctx context.Context, field g
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
+			case "banner":
+				return ec.fieldContext_Club_banner(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -21646,6 +21738,8 @@ func (ec *executionContext) fieldContext_RemoveClubSlugAliasPayload_club(ctx con
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
+			case "banner":
+				return ec.fieldContext_Club_banner(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -23219,6 +23313,8 @@ func (ec *executionContext) fieldContext_SuspendClubPayload_club(ctx context.Con
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
+			case "banner":
+				return ec.fieldContext_Club_banner(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -23302,6 +23398,8 @@ func (ec *executionContext) fieldContext_TerminateClubPayload_club(ctx context.C
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
+			case "banner":
+				return ec.fieldContext_Club_banner(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -23552,6 +23650,8 @@ func (ec *executionContext) fieldContext_UnSuspendClubPayload_club(ctx context.C
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
+			case "banner":
+				return ec.fieldContext_Club_banner(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -23635,6 +23735,8 @@ func (ec *executionContext) fieldContext_UnTerminateClubPayload_club(ctx context
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
+			case "banner":
+				return ec.fieldContext_Club_banner(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -24196,6 +24298,8 @@ func (ec *executionContext) fieldContext_UpdateClubNamePayload_club(ctx context.
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
+			case "banner":
+				return ec.fieldContext_Club_banner(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -24279,6 +24383,8 @@ func (ec *executionContext) fieldContext_UpdateClubThumbnailPayload_club(ctx con
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
+			case "banner":
+				return ec.fieldContext_Club_banner(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -29383,6 +29489,10 @@ func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj
 		case "thumbnail":
 
 			out.Values[i] = ec._Club_thumbnail(ctx, field, obj)
+
+		case "banner":
+
+			out.Values[i] = ec._Club_banner(ctx, field, obj)
 
 		case "name":
 

@@ -16,8 +16,11 @@ type Club implements Node @key(fields: "id") {
   """An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug."""
   slugAliases: [ClubSlugAlias!]!
 
-  """A URL pointing to the object's thumbnail."""
+  """A resource of the club's thumbnail."""
   thumbnail: Resource
+
+  """A resource of the club's banner."""
+  banner: Resource
 
   """A name for this club."""
   name: String!

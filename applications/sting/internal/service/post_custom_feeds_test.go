@@ -28,7 +28,7 @@ func TestSearch(t *testing.T) {
 	var search Search
 
 	err := client.Query(context.Background(), &search, map[string]interface{}{
-		"query": "Margaret Lee",
+		"query": graphql.String("Margaret Lee"),
 	})
 
 	require.NoError(t, err, "no error searching")

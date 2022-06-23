@@ -16,6 +16,10 @@ var (
 	ErrCursorNotPresent = domainerror.NewValidation("cursor not present")
 )
 
+func init() {
+	gob.Register(gocql.UUID{})
+}
+
 type Node struct {
 	cursor string
 }
@@ -36,10 +40,12 @@ func (n *Node) Cursor() string {
 }
 
 type Cursor struct {
-	after  *gob.Decoder
-	before *gob.Decoder
-	first  *int
-	last   *int
+	after          *gob.Decoder
+	afterOriginal  *string
+	before         *gob.Decoder
+	beforeOriginal *string
+	first          *int
+	last           *int
 }
 
 func NewCursor(after, before *string, first, last *int) (*Cursor, error) {
@@ -47,12 +53,12 @@ func NewCursor(after, before *string, first, last *int) (*Cursor, error) {
 	var afterDst *gob.Decoder
 
 	if after != nil && *after != "" {
-		decoded, err := base64.StdEncoding.DecodeString(*after)
+
+		dec, err := decodeBuffer(after)
+
 		if err != nil {
 			return nil, err
 		}
-
-		dec := gob.NewDecoder(bytes.NewBuffer(decoded))
 
 		afterDst = dec
 	}
@@ -60,11 +66,12 @@ func NewCursor(after, before *string, first, last *int) (*Cursor, error) {
 	var beforeDst *gob.Decoder
 
 	if before != nil && *before != "" {
-		decoded, err := base64.StdEncoding.DecodeString(*before)
+		dec, err := decodeBuffer(before)
+
 		if err != nil {
 			return nil, err
 		}
-		dec := gob.NewDecoder(bytes.NewBuffer(decoded))
+
 		beforeDst = dec
 	}
 
@@ -85,15 +92,25 @@ func NewCursor(after, before *string, first, last *int) (*Cursor, error) {
 	}
 
 	return &Cursor{
-		after:  afterDst,
-		before: beforeDst,
-		first:  first,
-		last:   last,
+		after:          afterDst,
+		afterOriginal:  after,
+		before:         beforeDst,
+		beforeOriginal: before,
+		first:          first,
+		last:           last,
 	}, nil
 }
 
 func (c *Cursor) After() *gob.Decoder {
 	return c.after
+}
+
+func decodeBuffer(input *string) (*gob.Decoder, error) {
+	decoded, err := base64.StdEncoding.DecodeString(*input)
+	if err != nil {
+		return nil, err
+	}
+	return gob.NewDecoder(bytes.NewBuffer(decoded)), nil
 }
 
 func (c *Cursor) Before() *gob.Decoder {
@@ -225,7 +242,18 @@ func (c *Cursor) BuildCassandra(builder *qb.SelectBuilder, column string, ascend
 		err := c.After().Decode(&createdCursorString)
 
 		if err != nil {
-			c.After().Decode(&createdCursorTimeUUID)
+
+			// decode buffer again since there was an error
+			buff, err := decodeBuffer(c.afterOriginal)
+
+			if err != nil {
+				return err
+			}
+
+			err = buff.Decode(&createdCursorTimeUUID)
+			if err != nil {
+				return err
+			}
 		}
 
 		hasCursor = true
@@ -235,7 +263,18 @@ func (c *Cursor) BuildCassandra(builder *qb.SelectBuilder, column string, ascend
 		err := c.Before().Decode(&createdCursorString)
 
 		if err != nil {
-			c.Before().Decode(&createdCursorTimeUUID)
+
+			// decode buffer again since there was an error
+			buff, err := decodeBuffer(c.beforeOriginal)
+
+			if err != nil {
+				return err
+			}
+
+			err = buff.Decode(&createdCursorTimeUUID)
+			if err != nil {
+				return err
+			}
 		}
 
 		hasCursor = true

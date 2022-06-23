@@ -234,8 +234,10 @@ type Club struct {
 	SlugAliasesLimit int `json:"slugAliasesLimit"`
 	// An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug.
 	SlugAliases []*ClubSlugAlias `json:"slugAliases"`
-	// A URL pointing to the object's thumbnail.
+	// A resource of the club's thumbnail.
 	Thumbnail *graphql1.Resource `json:"thumbnail"`
+	// A resource of the club's banner.
+	Banner *graphql1.Resource `json:"banner"`
 	// A name for this club.
 	Name string `json:"name"`
 	// The account that owns this club.

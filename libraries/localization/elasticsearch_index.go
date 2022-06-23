@@ -7,7 +7,7 @@ const ESSettings = `
           "tokenizer": "autocomplete",
           "filter": [
             "lowercase",
-			"truncate",
+			"truncate"
           ]
         },
         "autocomplete_search": {

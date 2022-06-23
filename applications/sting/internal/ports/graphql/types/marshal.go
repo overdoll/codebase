@@ -620,10 +620,16 @@ func MarshalClubSuspensionLogToGraphQL(ctx context.Context, result *club.Suspens
 
 func MarshalClubToGraphQL(ctx context.Context, result *club.Club) *Club {
 
-	var res *graphql.Resource
+	var thumbnail *graphql.Resource
 
 	if result.ThumbnailResource() != nil {
-		res = graphql.MarshalResourceToGraphQL(ctx, result.ThumbnailResource())
+		thumbnail = graphql.MarshalResourceToGraphQL(ctx, result.ThumbnailResource())
+	}
+
+	var banner *graphql.Resource
+
+	if result.BannerResource() != nil {
+		banner = graphql.MarshalResourceToGraphQL(ctx, result.BannerResource())
 	}
 
 	var slugAliases []*ClubSlugAlias
@@ -660,7 +666,8 @@ func MarshalClubToGraphQL(ctx context.Context, result *club.Club) *Club {
 		NextSupporterPostTime:       result.NextSupporterPostTime(),
 		CanSupport:                  result.CanSupport(),
 		MembersCount:                result.MembersCount(),
-		Thumbnail:                   res,
+		Thumbnail:                   thumbnail,
+		Banner:                      banner,
 		Owner:                       &Account{ID: relay.NewID(Account{}, result.OwnerAccountId())},
 		Suspension:                  suspension,
 		Termination:                 termination,

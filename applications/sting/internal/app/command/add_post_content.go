@@ -27,7 +27,7 @@ func (h AddPostContentHandler) Handle(ctx context.Context, cmd AddPostContent) (
 	pendingPost, err := h.pr.UpdatePostContent(ctx, cmd.Principal, cmd.PostId, func(post *post.Post) error {
 
 		// create resources from content
-		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.PostId, cmd.Content, false, "POST", false)
+		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.PostId, cmd.Content, true, "POST", false)
 
 		if err != nil {
 			return err
