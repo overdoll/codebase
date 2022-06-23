@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6a49c86e96421d542ab4b362c73e22ed>>
- * @relayHash b0769bebf021e7f0b6373454f9a33e91
+ * @generated SignedSource<<340d215131c7505879a0611d9d7bba8e>>
+ * @relayHash 3e466058d91b23e0989bcda8e781ead6
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,30 +9,32 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b0769bebf021e7f0b6373454f9a33e91
+// @relayRequestID 3e466058d91b23e0989bcda8e781ead6
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PayoutMethod = "PAXUM" | "%future added value";
 export type PayoutMethodSettingsQuery$variables = {};
+export type PayoutMethodSettingsQueryVariables = PayoutMethodSettingsQuery$variables;
 export type PayoutMethodSettingsQuery$data = {
   readonly viewer: {
+    readonly payoutMethod: {
+      readonly __typename: string;
+      readonly " $fragmentSpreads": FragmentRefs<"PayoutMethodDeleteFragment">;
+    } | null;
     readonly details: {
       readonly country: {
         readonly payoutMethods: ReadonlyArray<PayoutMethod>;
         readonly " $fragmentSpreads": FragmentRefs<"PayoutCountryNotSupportedFragment">;
       };
     } | null;
-    readonly payoutMethod: {
-      readonly __typename: string;
-      readonly " $fragmentSpreads": FragmentRefs<"PayoutMethodDeleteFragment">;
-    } | null;
     readonly " $fragmentSpreads": FragmentRefs<"PayoutMethodSetupFlowFragment">;
   };
 };
+export type PayoutMethodSettingsQueryResponse = PayoutMethodSettingsQuery$data;
 export type PayoutMethodSettingsQuery = {
+  variables: PayoutMethodSettingsQueryVariables;
   response: PayoutMethodSettingsQuery$data;
-  variables: PayoutMethodSettingsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -203,14 +205,7 @@ return {
                     "name": "name",
                     "storageKey": null
                   },
-                  (v2/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "alpha3",
-                    "storageKey": null
-                  }
+                  (v2/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -239,7 +234,7 @@ return {
     ]
   },
   "params": {
-    "id": "b0769bebf021e7f0b6373454f9a33e91",
+    "id": "3e466058d91b23e0989bcda8e781ead6",
     "metadata": {},
     "name": "PayoutMethodSettingsQuery",
     "operationKind": "query",

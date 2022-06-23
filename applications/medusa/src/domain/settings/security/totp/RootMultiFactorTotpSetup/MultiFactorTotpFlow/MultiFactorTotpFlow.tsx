@@ -100,7 +100,7 @@ export default function MultiFactorTotpFlow (): JSX.Element {
   if (isOpen) {
     return (
       <PostPlaceholder>
-        <Stack spacing={8}>
+        <Stack align='center' spacing={8}>
           <Stack spacing={2}>
             <Heading textAlign='center' color='gray.00' fontSize='2xl'>
               <Trans>

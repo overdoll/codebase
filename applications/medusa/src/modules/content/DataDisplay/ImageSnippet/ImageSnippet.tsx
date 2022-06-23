@@ -10,6 +10,7 @@ import ImageError from '../NextImage/ImageError/ImageError'
 interface Props extends Omit<ImageProps, 'src' | 'width' | 'height' | 'layout' | 'alt'> {
   query: ImageSnippetFragment$key | null
   cover?: boolean
+  tinyError?: boolean
 }
 
 const Fragment = graphql`
@@ -29,6 +30,7 @@ const errorCaptureCache = new Map<string, number>()
 export default function ImageSnippet ({
   query,
   cover,
+  tinyError,
   ...rest
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
@@ -93,7 +95,7 @@ export default function ImageSnippet ({
           />
         </Box>
         <Flex top={0} right={0} w='100%' h='100%' position='absolute' align='center' justify='center'>
-          <ImageError />
+          <ImageError tiny={tinyError === true} />
         </Flex>
       </Box>
     )

@@ -51,11 +51,23 @@ export default function PostsInfiniteScroll ({
   }
 
   const SpinnerSection = (): JSX.Element => {
-    if (hasNext || isLoadingNext) {
+    const SpinnerComponent = (
+      <Flex w='100%' justify='center'>
+        <Spinner color='gray.100' size='sm' />
+      </Flex>
+    )
+
+    if (isLoadingNext) {
+      return SpinnerComponent
+    }
+
+    if (hasNext) {
       return (
-        <Flex w='100%' justify='center'>
-          <Spinner color='gray.100' size='sm' />
-        </Flex>
+        <Box>
+          <LoadMoreObserver loadNext={loadNext} />
+          {SpinnerComponent}
+        </Box>
+
       )
     }
     return <></>
@@ -66,7 +78,8 @@ export default function PostsInfiniteScroll ({
       {data?.edges.map((item, index) =>
         (
           <Fragment key={index}>
-            {hasNext && <LoadMoreObserver loadNext={loadNext} index={index} length={data.edges.length} />}
+            {(hasNext && data.edges.length - 2 === index) &&
+              <LoadMoreObserver loadNext={loadNext} />}
             <Box key={index}>
               <FullSimplePost query={item.node} viewerQuery={viewerData} />
             </Box>

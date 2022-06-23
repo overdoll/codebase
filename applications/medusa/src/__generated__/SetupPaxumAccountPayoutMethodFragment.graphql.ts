@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ac3baac2ce1c202516e0bb359900e9d5>>
+ * @generated SignedSource<<b43fbc78cf25da2f385eefd91e8796e2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,14 +12,12 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SetupPaxumAccountPayoutMethodFragment$data = {
   readonly details: {
-    readonly country: {
-      readonly alpha3: string;
-    };
     readonly firstName: string;
     readonly lastName: string;
   };
   readonly " $fragmentType": "SetupPaxumAccountPayoutMethodFragment";
 };
+export type SetupPaxumAccountPayoutMethodFragment = SetupPaxumAccountPayoutMethodFragment$data;
 export type SetupPaxumAccountPayoutMethodFragment$key = {
   readonly " $data"?: SetupPaxumAccountPayoutMethodFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"SetupPaxumAccountPayoutMethodFragment">;
@@ -41,29 +39,6 @@ const node: ReaderFragment = {
         "name": "details",
         "plural": false,
         "selections": [
-          {
-            "kind": "RequiredField",
-            "field": {
-              "alias": null,
-              "args": null,
-              "concreteType": "Country",
-              "kind": "LinkedField",
-              "name": "country",
-              "plural": false,
-              "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "alpha3",
-                  "storageKey": null
-                }
-              ],
-              "storageKey": null
-            },
-            "action": "THROW",
-            "path": "details.country"
-          },
           {
             "alias": null,
             "args": null,
@@ -89,6 +64,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "b30507dc7c922d4b96116eb7d50dc488";
+(node as any).hash = "a151f068d2a9e7ae6cb70bb89dfb6e13";
 
 export default node;
