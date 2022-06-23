@@ -449,6 +449,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	require.True(t, post.Post.Content[1].ViewerCanViewSupporterOnlyContent, "can view supporter only because they are a supporter")
 	require.True(t, post.Post.Content[1].IsSupporterOnly, "cant view first content because its supporter only")
+	require.Nil(t, post.Post.Content[1].SupporterOnlyResource, "supporter only resource is nil")
 
 	originalId := post.Post.Content[1].Resource.ID
 
@@ -462,6 +463,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	require.False(t, post.Post.Content[1].ViewerCanViewSupporterOnlyContent, "cant view first content because its supporter only")
 	require.True(t, post.Post.Content[1].IsSupporterOnly, "cant view first content because its supporter only")
+	require.NotNil(t, post.Post.Content[1].SupporterOnlyResource, "can view supporter only resource")
 
 	sDec, _ := base64.StdEncoding.DecodeString(post.Post.Content[1].Resource.ID.GetID())
 	resourceId := relay.ID(sDec).GetID()

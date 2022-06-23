@@ -626,6 +626,12 @@ type PostContent struct {
 	ID relay.ID `json:"id"`
 	// The resource belonging to this content.
 	Resource *graphql1.Resource `json:"resource"`
+	// The resource for the supporter-only content.
+	//
+	// If "viewerCanViewSupporterOnlyContent" is false, then this field will contain the original resource, with the URLs omitted. This allows you to use the details, such as the type (since the resource in the "resource" box will always be an image) or see the duration of the video.
+	//
+	// This field will be nil if "viewerCanViewSupporterOnlyContent" is true
+	SupporterOnlyResource *graphql1.Resource `json:"supporterOnlyResource"`
 	// Whether or not this content is supporter only.
 	IsSupporterOnly bool `json:"isSupporterOnly"`
 	// Whether or not the viewer is able to see this content.

@@ -70,7 +70,6 @@ func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passp
 
 	query := elastic.NewBoolQuery()
 
-	// match category
 	query.Should(elastic.NewBoolQuery().Must(
 		elastic.
 			NewMultiMatchQuery(qs, localization.GetESSearchFields("title")...).

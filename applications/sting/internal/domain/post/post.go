@@ -2,6 +2,7 @@ package post
 
 import (
 	"overdoll/applications/sting/internal/domain/club"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/resource"
@@ -79,9 +80,6 @@ func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int,
 		var hiddenRes *resource.Resource
 
 		for _, r := range contentResources {
-			if r.ID() == resourceId {
-				res = r
-			}
 
 			hidden, okHidden := contentSupporterOnlyResourceIds[resourceId]
 
@@ -89,20 +87,34 @@ func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int,
 				if hidden == r.ID() {
 					hiddenRes = r
 				}
+
+				// because the original resource is supposed to be hidden, we clear the URLs, so we don't accidentally expose it
+				res.ClearUrls()
+
+				// if the full urls are not blank or the video thumbnail is not nil, skip the content, so we don't accidentally expose it
+				if len(res.FullUrls()) != 0 || res.VideoThumbnailFullUrl() != nil {
+					continue
+				}
+			}
+
+			if r.ID() == resourceId {
+				res = r
 			}
 		}
 
-		content = append(content, &Content{
-			post: &Post{
-				id:                  id,
-				state:               ps,
-				supporterOnlyStatus: so,
-				clubId:              clubId,
-			},
-			resource:        res,
-			resourceHidden:  hiddenRes,
-			isSupporterOnly: contentSupporterOnly[resourceId],
-		})
+		if res != nil {
+			content = append(content, &Content{
+				post: &Post{
+					id:                  id,
+					state:               ps,
+					supporterOnlyStatus: so,
+					clubId:              clubId,
+				},
+				resource:        res,
+				resourceHidden:  hiddenRes,
+				isSupporterOnly: contentSupporterOnly[resourceId],
+			})
+		}
 
 	}
 
@@ -360,6 +372,11 @@ func (p *Post) AddContentRequest(requester *principal.Principal, resources []*re
 	var newContent []*Content
 
 	for _, contentId := range resources {
+
+		if !contentId.IsPrivate() {
+			return errors.New("only private content is allowed for posts")
+		}
+
 		newContent = append(newContent, &Content{
 			resource:        contentId,
 			resourceHidden:  nil,

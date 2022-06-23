@@ -6,6 +6,15 @@ type PostContent {
   """The resource belonging to this content."""
   resource: Resource!
 
+  """
+  The resource for the supporter-only content.
+
+  If "viewerCanViewSupporterOnlyContent" is false, then this field will contain the original resource, with the URLs omitted. This allows you to use the details, such as the type (since the resource in the "resource" box will always be an image) or see the duration of the video.
+
+  This field will be nil if "viewerCanViewSupporterOnlyContent" is true
+  """
+  supporterOnlyResource: Resource
+
   """Whether or not this content is supporter only."""
   isSupporterOnly: Boolean!
 

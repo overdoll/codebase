@@ -50,17 +50,36 @@ if (process.env.ANALYZE === 'true') {
   })
 }
 
+const manifestRegexFilters = [
+  /static\/chunks\/pages\/staff/u,
+  /static\/chunks\/pages\/settings/u,
+  /static\/chunks\/pages\/moderation/u,
+  /static\/chunks\/pages\/club/u,
+  /static\/chunks\/pages\/profile/u
+]
+
 const moduleExports = withBundleAnalyzer({
   pwa: {
     manifestTransforms: [
       async (manifestEntries) => {
-        const manifest = manifestEntries.map((m) => {
-          if (!/^(?:[a-z]+:)?\/\//.test(m.url)) {
-            // add cdn origin for relative urls
-            m.url = `${process.env.STATIC_ASSETS_URL}${m.url}`
-          }
-          return m
-        })
+        const manifest = manifestEntries
+          .filter((m) => {
+            for (let i = 0; i < manifestRegexFilters.length; i++) {
+              if (m.url.match(manifestRegexFilters[i])) {
+                return false
+              }
+            }
+
+            return true
+          })
+          .map((m) => {
+            if (!/^(?:[a-z]+:)?\/\//.test(m.url)) {
+              // add cdn origin for relative urls
+              m.url = `${process.env.STATIC_ASSETS_URL}${m.url}`
+            }
+            return m
+          })
+
         return {
           manifest,
           warnings: []
@@ -248,7 +267,7 @@ if (process.env.PRODUCTION_DEPLOYMENT != null) {
     disableClientWebpackPlugin: true
   }
 
-  finalConfig = withPlugins([withSentryConfig], moduleExports)
+  finalConfig = withPlugins([withSentryConfig, withPWA], moduleExports)
 }
 
 module.exports = finalConfig

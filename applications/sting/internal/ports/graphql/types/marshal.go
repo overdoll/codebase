@@ -68,11 +68,20 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 
 		if resourceId != nil {
 
+			canView := res.CanViewSupporterOnly(principal.FromContext(ctx))
+
+			var supporterOnlyResource *graphql.Resource
+
+			if res.Resource() != nil && !canView {
+				supporterOnlyResource = graphql.MarshalResourceToGraphQL(ctx, res.Resource())
+			}
+
 			content = append(content, &PostContent{
 				ID:                                relay.NewID(PostContent{}, result.ID(), resourceId.ID()),
 				Resource:                          graphql.MarshalResourceToGraphQL(ctx, resourceId),
+				SupporterOnlyResource:             supporterOnlyResource,
 				IsSupporterOnly:                   res.IsSupporterOnly(),
-				ViewerCanViewSupporterOnlyContent: res.CanViewSupporterOnly(principal.FromContext(ctx)),
+				ViewerCanViewSupporterOnlyContent: canView,
 			})
 		}
 	}

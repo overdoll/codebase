@@ -419,6 +419,7 @@ type ComplexityRoot struct {
 		ID                                func(childComplexity int) int
 		IsSupporterOnly                   func(childComplexity int) int
 		Resource                          func(childComplexity int) int
+		SupporterOnlyResource             func(childComplexity int) int
 		ViewerCanViewSupporterOnlyContent func(childComplexity int) int
 	}
 
@@ -2617,6 +2618,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.PostContent.Resource(childComplexity), true
+
+	case "PostContent.supporterOnlyResource":
+		if e.complexity.PostContent.SupporterOnlyResource == nil {
+			break
+		}
+
+		return e.complexity.PostContent.SupporterOnlyResource(childComplexity), true
 
 	case "PostContent.viewerCanViewSupporterOnlyContent":
 		if e.complexity.PostContent.ViewerCanViewSupporterOnlyContent == nil {
@@ -4866,6 +4874,15 @@ type PostContent {
 
   """The resource belonging to this content."""
   resource: Resource!
+
+  """
+  The resource for the supporter-only content.
+
+  If "viewerCanViewSupporterOnlyContent" is false, then this field will contain the original resource, with the URLs omitted. This allows you to use the details, such as the type (since the resource in the "resource" box will always be an image) or see the duration of the video.
+
+  This field will be nil if "viewerCanViewSupporterOnlyContent" is true
+  """
+  supporterOnlyResource: Resource
 
   """Whether or not this content is supporter only."""
   isSupporterOnly: Boolean!
@@ -19255,6 +19272,8 @@ func (ec *executionContext) fieldContext_Post_content(ctx context.Context, field
 				return ec.fieldContext_PostContent_id(ctx, field)
 			case "resource":
 				return ec.fieldContext_PostContent_resource(ctx, field)
+			case "supporterOnlyResource":
+				return ec.fieldContext_PostContent_supporterOnlyResource(ctx, field)
 			case "isSupporterOnly":
 				return ec.fieldContext_PostContent_isSupporterOnly(ctx, field)
 			case "viewerCanViewSupporterOnlyContent":
@@ -19880,6 +19899,67 @@ func (ec *executionContext) _PostContent_resource(ctx context.Context, field gra
 }
 
 func (ec *executionContext) fieldContext_PostContent_resource(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PostContent",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Resource_id(ctx, field)
+			case "type":
+				return ec.fieldContext_Resource_type(ctx, field)
+			case "processed":
+				return ec.fieldContext_Resource_processed(ctx, field)
+			case "urls":
+				return ec.fieldContext_Resource_urls(ctx, field)
+			case "width":
+				return ec.fieldContext_Resource_width(ctx, field)
+			case "height":
+				return ec.fieldContext_Resource_height(ctx, field)
+			case "videoDuration":
+				return ec.fieldContext_Resource_videoDuration(ctx, field)
+			case "videoThumbnail":
+				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
+			case "preview":
+				return ec.fieldContext_Resource_preview(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Resource", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _PostContent_supporterOnlyResource(ctx context.Context, field graphql.CollectedField, obj *types.PostContent) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PostContent_supporterOnlyResource(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SupporterOnlyResource, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*graphql1.Resource)
+	fc.Result = res
+	return ec.marshalOResource2ᚖoverdollᚋlibrariesᚋgraphqlᚐResource(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PostContent_supporterOnlyResource(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "PostContent",
 		Field:      field,
@@ -31385,6 +31465,10 @@ func (ec *executionContext) _PostContent(ctx context.Context, sel ast.SelectionS
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "supporterOnlyResource":
+
+			out.Values[i] = ec._PostContent_supporterOnlyResource(ctx, field, obj)
+
 		case "isSupporterOnly":
 
 			out.Values[i] = ec._PostContent_isSupporterOnly(ctx, field, obj)

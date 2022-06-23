@@ -234,6 +234,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllCharacters(ctx context.Co
 					Title:             m.Title,
 					Slug:              m.Slug,
 					CreatedAt:         m.CreatedAt,
+					UpdatedAt:         m.UpdatedAt,
 					TotalLikes:        m.TotalLikes,
 					TotalPosts:        c.TotalPosts,
 				},
@@ -242,7 +243,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllCharacters(ctx context.Co
 			_, err := r.client.
 				Index().
 				Index(CharacterIndexName).
-				Id(m.Id).
+				Id(c.Id).
 				BodyJson(doc).
 				Do(ctx)
 

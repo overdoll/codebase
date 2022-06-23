@@ -107,6 +107,11 @@ func (r *Resource) IsVideo() bool {
 	return r.resourceType == Video
 }
 
+func (r *Resource) ClearUrls() {
+	r.urls = nil
+	r.videoThumbnailUrl = nil
+}
+
 func (r *Resource) VideoThumbnailMimeType() string {
 	return r.videoThumbnailMimeType
 }
