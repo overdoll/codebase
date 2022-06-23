@@ -40,17 +40,17 @@ export default function PostGalleryPublicSimple ({
         spaceBetween={20}
         speed={100}
       >
-        <PostSlideIndex query={data}/>
+        <PostSlideIndex query={data} />
         {data?.content.map((item, index) =>
           <SwiperSlide
             key={index}
           >
             <Flex
-              direction="column"
-              w="100%"
-              cursor="pointer"
-              align="center"
-              justify="center"
+              direction='column'
+              w='100%'
+              cursor='pointer'
+              align='center'
+              justify='center'
               minH={300}
               maxH={800}
             >
@@ -69,8 +69,8 @@ export default function PostGalleryPublicSimple ({
                   }}
                   passHref
                 >
-                  <Box w="100%" h="100%" as="a">
-                    <PostMedia controls={{ canControl: false }} query={item.resource}/>
+                  <Box w='100%' h='100%' as='a'>
+                    <PostMedia controls={{ canControl: false }} query={item.resource} />
                   </Box>
                 </Link>
               </PostSupporterContent>
