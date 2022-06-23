@@ -7,6 +7,7 @@ import (
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
 )
 
@@ -20,6 +21,7 @@ func (r *QueryResolver) Search(ctx context.Context, after *string, before *strin
 
 	results, err := r.App.Queries.Search.Handle(ctx, query.Search{
 		Principal: principal.FromContext(ctx),
+		Passport:  passport.FromContext(ctx),
 		Cursor:    cursor,
 		Query:     qs,
 	})

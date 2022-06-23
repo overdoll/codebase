@@ -7,6 +7,58 @@ import (
 	"testing"
 )
 
+type Search struct {
+	Search *struct {
+		Edges []*struct {
+			Node struct {
+				Item CharacterModified `graphql:"... on Character"`
+			}
+		}
+	} `graphql:"search(query: $query)"`
+}
+
+func TestSearch(t *testing.T) {
+	t.Parallel()
+
+	testingAccountId := newFakeAccount(t)
+	mockAccountNormal(t, testingAccountId)
+
+	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
+
+	var search Search
+
+	err := client.Query(context.Background(), &search, map[string]interface{}{
+		"query": "Margaret Lee",
+	})
+
+	require.NoError(t, err, "no error searching")
+
+	require.Len(t, search.Search.Edges, 1, "should have found 1 result")
+}
+
+type DiscoverClubs struct {
+	DiscoverClubs *struct {
+		Edges []*struct {
+			Node ClubModified
+		}
+	} `graphql:"discoverClubs()"`
+}
+
+func TestDiscoverClubs(t *testing.T) {
+	t.Parallel()
+
+	testingAccountId := newFakeAccount(t)
+	mockAccountNormal(t, testingAccountId)
+
+	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
+
+	var discoverClubs DiscoverClubs
+
+	err := client.Query(context.Background(), &discoverClubs, nil)
+
+	require.NoError(t, err, "no error grabbing discover clubs")
+}
+
 type PostsFeed struct {
 	PostsFeed *struct {
 		Edges []*struct {

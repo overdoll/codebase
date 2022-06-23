@@ -112,6 +112,18 @@ type SubmitPost struct {
 	} `graphql:"submitPost(input: $input)"`
 }
 
+type DisableClubSupporterOnlyPosts struct {
+	DisableClubSupporterOnlyPosts *struct {
+		Club *ClubModified
+	} `graphql:"disableClubSupporterOnlyPosts(input: $input)"`
+}
+
+type EnableClubSupporterOnlyPosts struct {
+	EnableClubSupporterOnlyPosts *struct {
+		Club *ClubModified
+	} `graphql:"enableClubSupporterOnlyPosts(input: $input)"`
+}
+
 type AccountPosts struct {
 	Entities []struct {
 		Account struct {
@@ -576,6 +588,39 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	clubViewer := getClub(t, client, clb.Slug())
 	require.True(t, clubViewer.Club.CanSupport, "should be able to support now that the club has created a new post")
 	require.NotNil(t, clubViewer.Club.NextSupporterPostTime, "should have a next supporter post time now")
+	require.NotNil(t, clubViewer.Club.Banner, "banner should now be present after creating a post")
+	require.True(t, clubViewer.Club.CanCreateSupporterOnlyPosts, "should be able to create supporter only posts")
+
+	var disableSupporterOnlyPosts DisableClubSupporterOnlyPosts
+
+	err = client.Mutate(context.Background(), &disableSupporterOnlyPosts, map[string]interface{}{
+		"input": types.DisableClubSupporterOnlyPostsInput{
+			ClubID: clubViewer.Club.ID,
+		},
+	})
+
+	require.NoError(t, err, "no error disabling supporter only posts")
+
+	require.False(t, disableSupporterOnlyPosts.DisableClubSupporterOnlyPosts.Club.CanSupport, "can support is now false")
+	require.Nil(t, disableSupporterOnlyPosts.DisableClubSupporterOnlyPosts.Club.NextSupporterPostTime, "no next supporter post time since it was disabled")
+	require.False(t, disableSupporterOnlyPosts.DisableClubSupporterOnlyPosts.Club.CanCreateSupporterOnlyPosts, "cannot create supporter only posts anymore")
+
+	clubViewer = getClub(t, client, clb.Slug())
+	require.False(t, clubViewer.Club.CanSupport, "can support is now false")
+	require.Nil(t, clubViewer.Club.NextSupporterPostTime, "no next supporter post time since it was disabled")
+	require.False(t, clubViewer.Club.CanCreateSupporterOnlyPosts, "cannot create supporter only posts anymore")
+
+	var enableSupporterOnlyPosts EnableClubSupporterOnlyPosts
+
+	err = client.Mutate(context.Background(), &enableSupporterOnlyPosts, map[string]interface{}{
+		"input": types.EnableClubSupporterOnlyPostsInput{
+			ClubID: clubViewer.Club.ID,
+		},
+	})
+
+	require.True(t, enableSupporterOnlyPosts.EnableClubSupporterOnlyPosts.Club.CanCreateSupporterOnlyPosts, "can create supporter only posts")
+	clubViewer = getClub(t, client, clb.Slug())
+	require.True(t, clubViewer.Club.CanCreateSupporterOnlyPosts, "can create supporter only posts")
 }
 
 func TestCreatePost_Publish(t *testing.T) {

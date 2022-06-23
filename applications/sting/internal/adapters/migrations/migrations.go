@@ -17,6 +17,7 @@ func registerCallbacks() migrate.CallbackRegister {
 	reg.Add(migrate.CallComment, "create_clubs_index", createClubsIndex)
 	reg.Add(migrate.CallComment, "create_club_members_index", createClubMembersIndex)
 	reg.Add(migrate.CallComment, "add_clubs_banner_disable_supporter_only_posts_index", addClubsBannerToIndex)
+	reg.Add(migrate.CallComment, "add_search_history_index", addSearchHistoryIndex)
 
 	return reg
 }

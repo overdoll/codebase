@@ -4,12 +4,14 @@ import (
 	"context"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/passport"
 
 	"overdoll/libraries/principal"
 )
 
 type Search struct {
 	Principal *principal.Principal
+	Passport  *passport.Passport
 	Cursor    *paging.Cursor
 	Query     string
 }
@@ -24,7 +26,7 @@ func NewSearchHandler(pr post.Repository) SearchHandler {
 
 func (h SearchHandler) Handle(ctx context.Context, query Search) ([]interface{}, error) {
 
-	results, err := h.pr.Search(ctx, query.Principal, query.Cursor, query.Query)
+	results, err := h.pr.Search(ctx, query.Passport, query.Principal, query.Cursor, query.Query)
 
 	if err != nil {
 		return nil, err

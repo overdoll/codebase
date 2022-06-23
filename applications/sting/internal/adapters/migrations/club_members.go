@@ -32,7 +32,7 @@ const clubMembersIndexProperties = `
 `
 
 const clubMembersIndex = `
-{
+{	
 	"mappings": {
 		"dynamic": "strict",
 		"properties":` + clubMembersIndexProperties + `

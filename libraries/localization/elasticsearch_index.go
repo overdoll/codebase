@@ -1,5 +1,31 @@
 package localization
 
+const ESSettings = `
+    "analysis": {
+      "analyzer": {
+        "autocomplete": {
+          "tokenizer": "autocomplete",
+          "filter": [
+            "lowercase",
+			"truncate",
+          ]
+        },
+        "autocomplete_search": {
+          "tokenizer": "lowercase"
+        }
+      },
+      "tokenizer": {
+        "autocomplete": {
+          "type": "edge_ngram",
+          "min_gram": 2,
+          "max_gram": 25,
+          "token_chars": [
+            "letter"
+          ]
+        }
+      }
+    }`
+
 // ESIndex elasticsearch index with language mappings
 const ESIndex = `
 {
@@ -12,7 +38,8 @@ const ESIndex = `
 		},
 		"en": {
 			"type": "text",
-			"analyzer": "english"
+			"analyzer": "autocomplete",
+			"search_analyzer": "autocomplete_search"
 		},
 		"es": {
 			"type": "text",

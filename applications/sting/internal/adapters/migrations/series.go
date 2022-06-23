@@ -38,6 +38,7 @@ const seriesIndexProperties = `
 
 const seriesIndex = `
 {
+    "settings": { ` + localization.ESSettings + ` },
 	"mappings": {
 		"dynamic": "strict",
 		"properties": ` + seriesIndexProperties + `

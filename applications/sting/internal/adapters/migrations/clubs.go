@@ -59,6 +59,7 @@ const clubsIndexProperties = `
 
 const clubsIndex = `
 {
+    "settings": { ` + localization.ESSettings + ` },
 	"mappings": {
 		"dynamic": "strict",
 		"properties":` + clubsIndexProperties + `

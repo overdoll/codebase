@@ -42,6 +42,7 @@ const characterIndexProperties = `
 
 const characterIndex = `
 {
+    "settings": { ` + localization.ESSettings + ` },
 	"mappings": {
 		"dynamic": "strict",
 		"properties": ` + characterIndexProperties + `

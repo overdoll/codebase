@@ -38,6 +38,7 @@ const categoryIndexProperties = `
 
 const categoryIndex = `
 {
+    "settings": { ` + localization.ESSettings + ` },
 	"mappings": {
 		"dynamic": "strict",
 		"properties": ` + categoryIndexProperties + `
