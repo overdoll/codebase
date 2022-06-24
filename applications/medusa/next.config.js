@@ -64,6 +64,11 @@ const moduleExports = withBundleAnalyzer({
       async (manifestEntries) => {
         const manifest = manifestEntries
           .filter((m) => {
+            // dont include .js.map files
+            if (/^[^.]+.js.map$/.test(m.url)) {
+              return false
+            }
+
             for (let i = 0; i < manifestRegexFilters.length; i++) {
               if (m.url.match(manifestRegexFilters[i])) {
                 return false
