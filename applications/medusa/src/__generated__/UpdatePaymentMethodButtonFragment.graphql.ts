@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a647f2d08ff23f69bcb3dc284f42fa8f>>
+ * @generated SignedSource<<627e3180cc1302c67f4460561175a4ce>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,6 @@ export type UpdatePaymentMethodButtonFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"CCBillUpdatePaymentMethodInstructionsFragment">;
   readonly " $fragmentType": "UpdatePaymentMethodButtonFragment";
 };
-export type UpdatePaymentMethodButtonFragment = UpdatePaymentMethodButtonFragment$data;
 export type UpdatePaymentMethodButtonFragment$key = {
   readonly " $data"?: UpdatePaymentMethodButtonFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"UpdatePaymentMethodButtonFragment">;

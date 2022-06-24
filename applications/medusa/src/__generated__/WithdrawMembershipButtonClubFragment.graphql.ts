@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3dfb8335337d89c92bc96b6c7bec8900>>
+ * @generated SignedSource<<d9fb8396442aee5d67eeb3cd25467558>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,6 @@ export type WithdrawMembershipButtonClubFragment$data = {
   readonly name: string;
   readonly " $fragmentType": "WithdrawMembershipButtonClubFragment";
 };
-export type WithdrawMembershipButtonClubFragment = WithdrawMembershipButtonClubFragment$data;
 export type WithdrawMembershipButtonClubFragment$key = {
   readonly " $data"?: WithdrawMembershipButtonClubFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"WithdrawMembershipButtonClubFragment">;

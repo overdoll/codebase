@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<02f1ce175998e175e92bdbf85df56969>>
+ * @generated SignedSource<<80003faad27555752aab934b69b1f5ed>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type PostReportButtonViewerFragment$data = {
   readonly id: string;
   readonly " $fragmentType": "PostReportButtonViewerFragment";
 };
-export type PostReportButtonViewerFragment = PostReportButtonViewerFragment$data;
 export type PostReportButtonViewerFragment$key = {
   readonly " $data"?: PostReportButtonViewerFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PostReportButtonViewerFragment">;

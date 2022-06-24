@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<9f582cbcd21519450687aaec4bcf59a0>>
- * @relayHash 92fa85d92b3f5c5cb99ed097ce7b673a
+ * @generated SignedSource<<6fe8f90686d0fa2aa5e086d45469ff89>>
+ * @relayHash 7cbd6262e765b289c3fdadeb6c079fd4
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,14 +9,13 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 92fa85d92b3f5c5cb99ed097ce7b673a
+// @relayRequestID 7cbd6262e765b289c3fdadeb6c079fd4
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type AccountClubSupporterSubscriptionSettingsQuery$variables = {
   reference: string;
 };
-export type AccountClubSupporterSubscriptionSettingsQueryVariables = AccountClubSupporterSubscriptionSettingsQuery$variables;
 export type AccountClubSupporterSubscriptionSettingsQuery$data = {
   readonly accountClubSupporterSubscription: {
     readonly __typename: "AccountActiveClubSupporterSubscription";
@@ -36,10 +35,9 @@ export type AccountClubSupporterSubscriptionSettingsQuery$data = {
     readonly " $fragmentSpreads": FragmentRefs<"AccountClubSupporterSubscriptionSettingsFragment">;
   } | null;
 };
-export type AccountClubSupporterSubscriptionSettingsQueryResponse = AccountClubSupporterSubscriptionSettingsQuery$data;
 export type AccountClubSupporterSubscriptionSettingsQuery = {
-  variables: AccountClubSupporterSubscriptionSettingsQueryVariables;
   response: AccountClubSupporterSubscriptionSettingsQuery$data;
+  variables: AccountClubSupporterSubscriptionSettingsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -157,13 +155,13 @@ v14 = {
   "name": "thumbnail",
   "plural": false,
   "selections": [
+    (v4/*: any*/),
     (v8/*: any*/),
     (v9/*: any*/),
     (v10/*: any*/),
     (v11/*: any*/),
     (v12/*: any*/),
-    (v13/*: any*/),
-    (v4/*: any*/)
+    (v13/*: any*/)
   ],
   "storageKey": null
 },
@@ -294,12 +292,12 @@ v19 = {
                       "name": "videoDuration",
                       "storageKey": null
                     },
+                    (v4/*: any*/),
                     (v8/*: any*/),
                     (v9/*: any*/),
                     (v10/*: any*/),
                     (v11/*: any*/),
-                    (v12/*: any*/),
-                    (v4/*: any*/)
+                    (v12/*: any*/)
                   ],
                   "storageKey": null
                 }
@@ -690,7 +688,7 @@ return {
     ]
   },
   "params": {
-    "id": "92fa85d92b3f5c5cb99ed097ce7b673a",
+    "id": "7cbd6262e765b289c3fdadeb6c079fd4",
     "metadata": {},
     "name": "AccountClubSupporterSubscriptionSettingsQuery",
     "operationKind": "query",

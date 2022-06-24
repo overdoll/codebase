@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<df5080142dba59d06df97f368d808ff2>>
+ * @generated SignedSource<<55265f67d0dfbbc38aec7ca0b031c5ab>>
  * @relayHash 3c5e1cac059628bd9aad8e4f38904351
  * @lightSyntaxTransform
  * @nogrep
@@ -21,16 +21,14 @@ export type GenerateCCBillClubSupporterPaymentLinkInput = {
 export type CCBillSubscribeFormMutation$variables = {
   input: GenerateCCBillClubSupporterPaymentLinkInput;
 };
-export type CCBillSubscribeFormMutationVariables = CCBillSubscribeFormMutation$variables;
 export type CCBillSubscribeFormMutation$data = {
   readonly generateCCBillClubSupporterPaymentLink: {
     readonly paymentLink: string | null;
   } | null;
 };
-export type CCBillSubscribeFormMutationResponse = CCBillSubscribeFormMutation$data;
 export type CCBillSubscribeFormMutation = {
-  variables: CCBillSubscribeFormMutationVariables;
   response: CCBillSubscribeFormMutation$data;
+  variables: CCBillSubscribeFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

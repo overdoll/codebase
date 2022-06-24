@@ -70,7 +70,7 @@ func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*p
 
 		if len(query.CharacterSlugs) > 0 {
 
-			characterIds, err = h.pr.GetCharacterIdsFromSlugs(ctx, query.SeriesSlugs, seriesIds)
+			characterIds, err = h.pr.GetCharacterIdsFromSlugs(ctx, query.CharacterSlugs, seriesIds)
 
 			if err != nil {
 				return nil, err

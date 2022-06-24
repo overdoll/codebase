@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ff00c2779e57a5d6c3f7efa2d92f7d87>>
+ * @generated SignedSource<<ff3e418180221246c36bcb1906b3c7a1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,16 +13,15 @@ import { FragmentRefs } from "relay-runtime";
 export type PostsHorizontalPreviewFragment$data = {
   readonly edges: ReadonlyArray<{
     readonly node: {
-      readonly reference: string;
       readonly club: {
         readonly slug: string;
       };
+      readonly reference: string;
       readonly " $fragmentSpreads": FragmentRefs<"PostPreviewContentFragment">;
     };
   }>;
   readonly " $fragmentType": "PostsHorizontalPreviewFragment";
 };
-export type PostsHorizontalPreviewFragment = PostsHorizontalPreviewFragment$data;
 export type PostsHorizontalPreviewFragment$key = {
   readonly " $data"?: PostsHorizontalPreviewFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PostsHorizontalPreviewFragment">;

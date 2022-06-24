@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<056b8281f1e776b5954cb2c32a80ff09>>
+ * @generated SignedSource<<39d07acec481905afcd214575317af2d>>
  * @relayHash 20c260e5bd220caa3f4fa567d38867f9
  * @lightSyntaxTransform
  * @nogrep
@@ -19,7 +19,6 @@ export type ReportPostInput = {
 export type PostReportButtonMutation$variables = {
   input: ReportPostInput;
 };
-export type PostReportButtonMutationVariables = PostReportButtonMutation$variables;
 export type PostReportButtonMutation$data = {
   readonly reportPost: {
     readonly postReport: {
@@ -30,10 +29,9 @@ export type PostReportButtonMutation$data = {
     } | null;
   } | null;
 };
-export type PostReportButtonMutationResponse = PostReportButtonMutation$data;
 export type PostReportButtonMutation = {
-  variables: PostReportButtonMutationVariables;
   response: PostReportButtonMutation$data;
+  variables: PostReportButtonMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

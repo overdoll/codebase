@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<99f55b729a5af5509aa00b7b566688bc>>
+ * @generated SignedSource<<29ca04c35dd2a7a1648ae151b13de6ea>>
  * @relayHash 7dd288a6d97c5218b5ed54b4807bd467
  * @lightSyntaxTransform
  * @nogrep
@@ -16,18 +16,16 @@ import { FragmentRefs } from "relay-runtime";
 export type ClubPaymentsQuery$variables = {
   slug: string;
 };
-export type ClubPaymentsQueryVariables = ClubPaymentsQuery$variables;
 export type ClubPaymentsQuery$data = {
   readonly club: {
-    readonly __typename: string;
+    readonly __typename: "Club";
     readonly viewerIsOwner: boolean;
     readonly " $fragmentSpreads": FragmentRefs<"ClubPaymentsFragment">;
   } | null;
 };
-export type ClubPaymentsQueryResponse = ClubPaymentsQuery$data;
 export type ClubPaymentsQuery = {
-  variables: ClubPaymentsQueryVariables;
   response: ClubPaymentsQuery$data;
+  variables: ClubPaymentsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

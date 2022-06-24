@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3c8fc0a3c4cf0e10c6c3a59b0556b07d>>
+ * @generated SignedSource<<2feacdff7377c516028488503b0bcaf1>>
  * @relayHash 904ca34a485e0ac2c304cf48a19b8446
  * @lightSyntaxTransform
  * @nogrep
@@ -20,7 +20,6 @@ export type InitiateClubPayoutInput = {
 export type InitiateClubPayoutFormMutation$variables = {
   input: InitiateClubPayoutInput;
 };
-export type InitiateClubPayoutFormMutationVariables = InitiateClubPayoutFormMutation$variables;
 export type InitiateClubPayoutFormMutation$data = {
   readonly initiateClubPayout: {
     readonly club: {
@@ -28,19 +27,18 @@ export type InitiateClubPayoutFormMutation$data = {
       readonly payouts: {
         readonly edges: ReadonlyArray<{
           readonly node: {
+            readonly depositDate: any;
             readonly id: string;
             readonly status: ClubPayoutStatus;
-            readonly depositDate: any;
           };
         }>;
       };
     };
   } | null;
 };
-export type InitiateClubPayoutFormMutationResponse = InitiateClubPayoutFormMutation$data;
 export type InitiateClubPayoutFormMutation = {
-  variables: InitiateClubPayoutFormMutationVariables;
   response: InitiateClubPayoutFormMutation$data;
+  variables: InitiateClubPayoutFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

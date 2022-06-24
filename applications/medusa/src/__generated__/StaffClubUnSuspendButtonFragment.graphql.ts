@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6c3e2610086eed2e39163240cd08996b>>
+ * @generated SignedSource<<0ba3684f5817e0a79d954493b14b24a8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type StaffClubUnSuspendButtonFragment$data = {
   readonly id: string;
   readonly " $fragmentType": "StaffClubUnSuspendButtonFragment";
 };
-export type StaffClubUnSuspendButtonFragment = StaffClubUnSuspendButtonFragment$data;
 export type StaffClubUnSuspendButtonFragment$key = {
   readonly " $data"?: StaffClubUnSuspendButtonFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"StaffClubUnSuspendButtonFragment">;

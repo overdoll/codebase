@@ -16,7 +16,8 @@ import {
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { MenuItem } from '@//:modules/content/ThemeComponents/Menu/Menu'
 import { PaymentMethodIdentifier } from '@//:assets/icons'
-import PaymentMethod from '../../../../../../payment-methods/RootSavedPaymentMethodsSettings/SavedPaymentMethodsSettings/PaymentMethod/PaymentMethod'
+import PaymentMethod
+  from '../../../../../../payment-methods/RootSavedPaymentMethodsSettings/SavedPaymentMethodsSettings/PaymentMethod/PaymentMethod'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import CCBillUpdatePaymentMethodInstructions
   from './CCBillUpdatePaymentMethodInstructions/CCBillUpdatePaymentMethodInstructions'

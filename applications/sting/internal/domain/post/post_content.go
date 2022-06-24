@@ -24,6 +24,15 @@ func (m *Content) ResourceRequest(requester *principal.Principal) *resource.Reso
 	return m.resource
 }
 
+func (m *Content) SupporterOnlyResourceRequest(requester *principal.Principal) *resource.Resource {
+
+	if m.canView(requester) {
+		return nil
+	}
+
+	return m.resource.AsEmpty()
+}
+
 func (m *Content) Resource() *resource.Resource {
 	return m.resource
 }

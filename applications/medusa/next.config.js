@@ -1,6 +1,8 @@
 const { withSentryConfig } = require('@sentry/nextjs')
 const nextBuildId = require('next-build-id')
 const { DefinePlugin } = require('webpack')
+const withPWA = require('next-pwa')
+const withPlugins = require('next-compose-plugins')
 
 const path = require('path')
 const securityHeaders = [
@@ -48,13 +50,123 @@ if (process.env.ANALYZE === 'true') {
   })
 }
 
+const manifestRegexFilters = [
+  /static\/chunks\/pages\/staff/u,
+  /static\/chunks\/pages\/settings/u,
+  /static\/chunks\/pages\/moderation/u,
+  /static\/chunks\/pages\/club/u,
+  /static\/chunks\/pages\/profile/u
+]
+
 const moduleExports = withBundleAnalyzer({
+  pwa: {
+    manifestTransforms: [
+      async (manifestEntries) => {
+        const manifest = manifestEntries
+          .filter((m) => {
+            for (let i = 0; i < manifestRegexFilters.length; i++) {
+              if (m.url.match(manifestRegexFilters[i])) {
+                return false
+              }
+            }
+
+            return true
+          })
+          .map((m) => {
+            if (!/^(?:[a-z]+:)?\/\//.test(m.url)) {
+              // add cdn origin for relative urls
+              m.url = `${process.env.STATIC_ASSETS_URL}${m.url}`
+            }
+            return m
+          })
+
+        return {
+          manifest,
+          warnings: []
+        }
+      }
+    ],
+    dest: 'public',
+    mode: 'production',
+    dynamicStartUrl: true,
+    cacheOnFrontEndNav: false,
+    runtimeCaching: [
+      {
+        urlPattern: /\.(?:eot|otf|ttc|ttf|woff|woff2|font.css)$/i,
+        handler: 'StaleWhileRevalidate',
+        options: {
+          cacheName: 'static-font-assets',
+          expiration: {
+            maxEntries: 4,
+            maxAgeSeconds: 31536000
+          }
+        }
+      },
+      {
+        urlPattern: /\.(?:js)$/i,
+        handler: 'StaleWhileRevalidate',
+        options: {
+          cacheName: 'static-js-assets',
+          expiration: {
+            maxEntries: 32,
+            maxAgeSeconds: 31536000
+          }
+        }
+      },
+      {
+        urlPattern: /\.(?:css|less)$/i,
+        handler: 'StaleWhileRevalidate',
+        options: {
+          cacheName: 'static-style-assets',
+          expiration: {
+            maxEntries: 32,
+            maxAgeSeconds: 31536000
+          }
+        }
+      },
+      {
+        urlPattern: /\/_next\/data\/.+\/.+\.json$/i,
+        handler: 'StaleWhileRevalidate',
+        options: {
+          cacheName: 'next-data',
+          expiration: {
+            maxEntries: 32,
+            maxAgeSeconds: 24 * 60 * 60 // 24 hours
+          }
+        }
+      },
+      {
+        urlPattern: /\.(?:json|xml|csv)$/i,
+        handler: 'NetworkFirst',
+        options: {
+          cacheName: 'static-data-assets',
+          expiration: {
+            maxEntries: 32,
+            maxAgeSeconds: 24 * 60 * 60 // 24 hours
+          }
+        }
+      }
+    ]
+  },
   async headers () {
     return [
       {
         // Apply these headers to all routes in your application.
         source: '/:path*',
         headers: securityHeaders
+      },
+      {
+        source: '/service-worker.js',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=43200, immutable'
+          },
+          {
+            key: 'Service-Worker-Allowed',
+            value: '/'
+          }
+        ]
       }
     ]
   },
@@ -92,7 +204,11 @@ const moduleExports = withBundleAnalyzer({
     // also Next.js only shows 1 error at a time which is really annoying
     ignoreDuringBuilds: true
   },
-  webpack: (config, { buildId }) => {
+  webpack: (config, {
+    buildId,
+    isServer,
+    dev
+  }) => {
     config.plugins.push(
       new DefinePlugin({
         'process.env.NEXT_BUILD_ID': JSON.stringify(buildId)
@@ -104,7 +220,6 @@ const moduleExports = withBundleAnalyzer({
       use: ['@svgr/webpack']
     })
 
-    // don't polyfill crypto package
     config.resolve.alias.crypto = false
 
     config.resolve.alias = {
@@ -117,11 +232,27 @@ const moduleExports = withBundleAnalyzer({
       '@//:common': path.resolve(__dirname, 'src/common')
     }
 
+    if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'react-ssr-prepass': false,
+        buffer: false
+      }
+    }
+
+    if (process.env.ENABLE_PROFILER === 'true' && !dev) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'react-dom$': 'react-dom/profiling',
+        'scheduler/tracing': 'scheduler/tracing-profiling'
+      }
+    }
+
     return config
   }
 })
 
-let sentryConfig
+let finalConfig
 
 if (process.env.PRODUCTION_DEPLOYMENT != null) {
   moduleExports.sentry = {
@@ -129,13 +260,14 @@ if (process.env.PRODUCTION_DEPLOYMENT != null) {
     setCommits: { auto: true }
   }
   moduleExports.assetPrefix = process.env.STATIC_ASSETS_URL
-  sentryConfig = withSentryConfig(moduleExports, { silent: true })
+  finalConfig = withPlugins([(nextConfig) => withSentryConfig(nextConfig, { silent: true }), withPWA], moduleExports)
 } else {
   moduleExports.sentry = {
     disableServerWebpackPlugin: true,
     disableClientWebpackPlugin: true
   }
-  sentryConfig = withSentryConfig(moduleExports)
+
+  finalConfig = withPlugins([withSentryConfig], moduleExports)
 }
 
-module.exports = sentryConfig
+module.exports = finalConfig

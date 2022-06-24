@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b1c7a8edf2708ccde8cb8ea6615ed6ea>>
+ * @generated SignedSource<<bf35434a99bdb677db11bed2c670b685>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,10 +11,9 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ReviewPostFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"PostPreviewContentFragment" | "PostModerateButtonFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"PostModerateButtonFragment" | "PostPreviewContentFragment">;
   readonly " $fragmentType": "ReviewPostFragment";
 };
-export type ReviewPostFragment = ReviewPostFragment$data;
 export type ReviewPostFragment$key = {
   readonly " $data"?: ReviewPostFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ReviewPostFragment">;

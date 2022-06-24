@@ -107,6 +107,27 @@ func (r *Resource) IsVideo() bool {
 	return r.resourceType == Video
 }
 
+func (r *Resource) AsEmpty() *Resource {
+	return &Resource{
+		itemId:                 r.itemId,
+		id:                     r.id,
+		processed:              r.processed,
+		processedId:            r.processedId,
+		token:                  r.token,
+		isPrivate:              r.isPrivate,
+		width:                  r.width,
+		height:                 r.height,
+		mimeTypes:              r.mimeTypes,
+		resourceType:           r.resourceType,
+		preview:                r.preview,
+		urls:                   nil,
+		videoThumbnailUrl:      nil,
+		videoThumbnail:         r.videoThumbnail,
+		videoThumbnailMimeType: r.videoThumbnailMimeType,
+		videoDuration:          r.videoDuration,
+	}
+}
+
 func (r *Resource) VideoThumbnailMimeType() string {
 	return r.videoThumbnailMimeType
 }

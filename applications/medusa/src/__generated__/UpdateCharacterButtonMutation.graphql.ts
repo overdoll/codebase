@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d23ee33c6e926b14f2579f0350c864a8>>
+ * @generated SignedSource<<a62389d4597a7b710f59047218d4c867>>
  * @relayHash d78bdf6063db2073170144c745fd3aea
  * @lightSyntaxTransform
  * @nogrep
@@ -20,11 +20,9 @@ export type UpdatePostCharactersInput = {
 export type UpdateCharacterButtonMutation$variables = {
   input: UpdatePostCharactersInput;
 };
-export type UpdateCharacterButtonMutationVariables = UpdateCharacterButtonMutation$variables;
 export type UpdateCharacterButtonMutation$data = {
   readonly updatePostCharacters: {
     readonly post: {
-      readonly id: string;
       readonly characters: ReadonlyArray<{
         readonly id: string;
         readonly name: string;
@@ -40,13 +38,13 @@ export type UpdateCharacterButtonMutation$data = {
           }>;
         } | null;
       }>;
+      readonly id: string;
     } | null;
   } | null;
 };
-export type UpdateCharacterButtonMutationResponse = UpdateCharacterButtonMutation$data;
 export type UpdateCharacterButtonMutation = {
-  variables: UpdateCharacterButtonMutationVariables;
   response: UpdateCharacterButtonMutation$data;
+  variables: UpdateCharacterButtonMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a6731985ca6520456a866d6bc43c93dd>>
+ * @generated SignedSource<<eca7d6f23ba610ffa36fbe104dd4835d>>
  * @relayHash 6e6a50822c40178d4c7e29cae60bb438
  * @lightSyntaxTransform
  * @nogrep
@@ -21,16 +21,14 @@ export type BecomeClubSupporterWithAccountSavedPaymentMethodInput = {
 export type CCBillSelectSavedPaymentFormMutation$variables = {
   input: BecomeClubSupporterWithAccountSavedPaymentMethodInput;
 };
-export type CCBillSelectSavedPaymentFormMutationVariables = CCBillSelectSavedPaymentFormMutation$variables;
 export type CCBillSelectSavedPaymentFormMutation$data = {
   readonly becomeClubSupporterWithAccountSavedPaymentMethod: {
     readonly ccbillTransactionToken: string | null;
   } | null;
 };
-export type CCBillSelectSavedPaymentFormMutationResponse = CCBillSelectSavedPaymentFormMutation$data;
 export type CCBillSelectSavedPaymentFormMutation = {
-  variables: CCBillSelectSavedPaymentFormMutationVariables;
   response: CCBillSelectSavedPaymentFormMutation$data;
+  variables: CCBillSelectSavedPaymentFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

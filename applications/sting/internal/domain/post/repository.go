@@ -3,6 +3,7 @@ package post
 import (
 	"context"
 	"overdoll/libraries/paging"
+	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
 )
 
@@ -85,6 +86,7 @@ type Repository interface {
 	PostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *Feed) ([]*Post, error)
 	ClubMembersPostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*Post, error)
 	SuggestedPostsByPost(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, post *Post) ([]*Post, error)
+	Search(ctx context.Context, passport *passport.Passport, requester *principal.Principal, cursor *paging.Cursor, query string) ([]interface{}, error)
 	SearchPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *Filters) ([]*Post, error)
 	RefreshPostIndex(ctx context.Context) error
 

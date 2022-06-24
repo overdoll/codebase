@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<177c90c48cacdcfa5119ac237893245b>>
+ * @generated SignedSource<<65e0cda705f9a9dc5dc5fa9363251d64>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,6 @@ export type PayoutMethodSetupFlowFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"SetupPayoutMethodFragment">;
   readonly " $fragmentType": "PayoutMethodSetupFlowFragment";
 };
-export type PayoutMethodSetupFlowFragment = PayoutMethodSetupFlowFragment$data;
 export type PayoutMethodSetupFlowFragment$key = {
   readonly " $data"?: PayoutMethodSetupFlowFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PayoutMethodSetupFlowFragment">;

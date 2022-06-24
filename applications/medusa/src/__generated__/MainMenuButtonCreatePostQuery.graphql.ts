@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bc990a85439e2084d0ff0923aed2c56c>>
+ * @generated SignedSource<<6dbbfe6e8cca47c96cc79c266ad0880f>>
  * @relayHash aaa6cd8cc790b55e09bf19b139b4ad4e
  * @lightSyntaxTransform
  * @nogrep
@@ -13,29 +13,27 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type MainMenuButtonCreatePostQuery$variables = {
-  first?: number | null;
   after?: string | null;
+  first?: number | null;
 };
-export type MainMenuButtonCreatePostQueryVariables = MainMenuButtonCreatePostQuery$variables;
 export type MainMenuButtonCreatePostQuery$data = {
   readonly viewer: {
-    readonly clubsCount: number;
     readonly clubs: {
       readonly __id: string;
       readonly edges: ReadonlyArray<{
         readonly node: {
           readonly id: string;
-          readonly slug: string;
           readonly name: string;
+          readonly slug: string;
         };
       }>;
     };
+    readonly clubsCount: number;
   } | null;
 };
-export type MainMenuButtonCreatePostQueryResponse = MainMenuButtonCreatePostQuery$data;
 export type MainMenuButtonCreatePostQuery = {
-  variables: MainMenuButtonCreatePostQueryVariables;
   response: MainMenuButtonCreatePostQuery$data;
+  variables: MainMenuButtonCreatePostQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

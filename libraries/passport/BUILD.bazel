@@ -15,6 +15,7 @@ go_library(
         "passport.go",
         "serialize.go",
         "signing.go",
+        "test_context.go",
         "testing_passport.go",
     ],
     importpath = "overdoll/libraries/passport",

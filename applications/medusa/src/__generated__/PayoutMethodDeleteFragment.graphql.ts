@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<78dee7dcbc4765d947ad1519ed4a91af>>
+ * @generated SignedSource<<3c204b4f1b4d3a40c23456eab5d66643>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,6 @@ export type PayoutMethodDeleteFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"PayoutMethodFragment">;
   readonly " $fragmentType": "PayoutMethodDeleteFragment";
 };
-export type PayoutMethodDeleteFragment = PayoutMethodDeleteFragment$data;
 export type PayoutMethodDeleteFragment$key = {
   readonly " $data"?: PayoutMethodDeleteFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PayoutMethodDeleteFragment">;

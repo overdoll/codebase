@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bad99508922f23ca68349a85f87404c5>>
+ * @generated SignedSource<<46b22794c83a508836a92c4f34f60afb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -31,7 +31,6 @@ export type StaffClubSuspensionLogFragment$data = {
   readonly __typename: "%other";
   readonly " $fragmentType": "StaffClubSuspensionLogFragment";
 };
-export type StaffClubSuspensionLogFragment = StaffClubSuspensionLogFragment$data;
 export type StaffClubSuspensionLogFragment$key = {
   readonly " $data"?: StaffClubSuspensionLogFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"StaffClubSuspensionLogFragment">;

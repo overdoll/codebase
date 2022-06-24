@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bf3cc3997aef6356432bdc241418cf7a>>
+ * @generated SignedSource<<5906f528328a788c79dafd995708010a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type SupportClubButtonViewerFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"SupportClubTransactionProcessViewerFragment">;
   readonly " $fragmentType": "SupportClubButtonViewerFragment";
 };
-export type SupportClubButtonViewerFragment = SupportClubButtonViewerFragment$data;
 export type SupportClubButtonViewerFragment$key = {
   readonly " $data"?: SupportClubButtonViewerFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"SupportClubButtonViewerFragment">;

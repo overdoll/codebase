@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d48feb4dc618e1179d8ec6e3b5ded22f>>
+ * @generated SignedSource<<b9a704436958dd0d59a52c743e08c9f9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,12 +12,11 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type StaffRefundAccountTransactionFormFragment$data = {
-  readonly id: string;
   readonly currency: Currency;
+  readonly id: string;
   readonly " $fragmentSpreads": FragmentRefs<"StaffGenerateRefundAmountForAccountTransactionInputFragment">;
   readonly " $fragmentType": "StaffRefundAccountTransactionFormFragment";
 };
-export type StaffRefundAccountTransactionFormFragment = StaffRefundAccountTransactionFormFragment$data;
 export type StaffRefundAccountTransactionFormFragment$key = {
   readonly " $data"?: StaffRefundAccountTransactionFormFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"StaffRefundAccountTransactionFormFragment">;

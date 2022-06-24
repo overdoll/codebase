@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<332db8a000ae02872dd0559d79d227d7>>
+ * @generated SignedSource<<e5c0672d6415d1ab6d9ba434739eb986>>
  * @relayHash 536483e8895954294762dfa1b9c71a26
  * @lightSyntaxTransform
  * @nogrep
@@ -14,17 +14,15 @@
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type MultiFactorSettingsQuery$variables = {};
-export type MultiFactorSettingsQueryVariables = MultiFactorSettingsQuery$variables;
 export type MultiFactorSettingsQuery$data = {
   readonly viewer: {
     readonly multiFactorTotpConfigured: boolean;
-    readonly " $fragmentSpreads": FragmentRefs<"DisableMultiFactorFragment" | "MultiFactorTotpSettingsFragment" | "RecoveryCodesSettingsFragment" | "AccountInformationBannerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"AccountInformationBannerFragment" | "DisableMultiFactorFragment" | "MultiFactorTotpSettingsFragment" | "RecoveryCodesSettingsFragment">;
   };
 };
-export type MultiFactorSettingsQueryResponse = MultiFactorSettingsQuery$data;
 export type MultiFactorSettingsQuery = {
-  variables: MultiFactorSettingsQueryVariables;
   response: MultiFactorSettingsQuery$data;
+  variables: MultiFactorSettingsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

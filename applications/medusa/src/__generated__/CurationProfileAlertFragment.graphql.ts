@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f3212ea9ecf69887efd8f9a99a2b3299>>
+ * @generated SignedSource<<2e5e9d36b5f24a4b67e3b9a3149d63c5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,13 +11,12 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type CurationProfileAlertFragment$data = {
+  readonly __typename: "Account";
   readonly curationProfile: {
     readonly completed: boolean;
   };
-  readonly __typename: "Account";
   readonly " $fragmentType": "CurationProfileAlertFragment";
 };
-export type CurationProfileAlertFragment = CurationProfileAlertFragment$data;
 export type CurationProfileAlertFragment$key = {
   readonly " $data"?: CurationProfileAlertFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"CurationProfileAlertFragment">;

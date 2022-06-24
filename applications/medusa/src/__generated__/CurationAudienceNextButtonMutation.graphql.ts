@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0b68311e800837ccd3bf8cf78b7f2e45>>
+ * @generated SignedSource<<563c65f4667534f5d0ef2e08b55e270f>>
  * @relayHash cf774420a10bf5d7b6ab60ad70f0ebcd
  * @lightSyntaxTransform
  * @nogrep
@@ -16,26 +16,24 @@ export type CurationAudienceNextButtonMutation$variables = {
   audienceIds: ReadonlyArray<string>;
   skipped: boolean;
 };
-export type CurationAudienceNextButtonMutationVariables = CurationAudienceNextButtonMutation$variables;
 export type CurationAudienceNextButtonMutation$data = {
   readonly updateCurationProfileAudience: {
     readonly curationProfile: {
-      readonly id: string;
-      readonly completed: boolean;
       readonly audience: {
-        readonly skipped: boolean;
-        readonly completed: boolean;
         readonly audiences: ReadonlyArray<{
           readonly id: string;
         }>;
+        readonly completed: boolean;
+        readonly skipped: boolean;
       };
+      readonly completed: boolean;
+      readonly id: string;
     } | null;
   } | null;
 };
-export type CurationAudienceNextButtonMutationResponse = CurationAudienceNextButtonMutation$data;
 export type CurationAudienceNextButtonMutation = {
-  variables: CurationAudienceNextButtonMutationVariables;
   response: CurationAudienceNextButtonMutation$data;
+  variables: CurationAudienceNextButtonMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

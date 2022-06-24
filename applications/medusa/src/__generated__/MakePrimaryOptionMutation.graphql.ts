@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7401897b3ccd9877cdc021ebd6c32d39>>
+ * @generated SignedSource<<a37105d2a05f8528851bcd47eaa7a8a0>>
  * @relayHash 06a6bef9081d887fba03239a6c25e315
  * @lightSyntaxTransform
  * @nogrep
@@ -19,25 +19,23 @@ export type UpdateAccountEmailStatusToPrimaryInput = {
 export type MakePrimaryOptionMutation$variables = {
   input: UpdateAccountEmailStatusToPrimaryInput;
 };
-export type MakePrimaryOptionMutationVariables = MakePrimaryOptionMutation$variables;
 export type MakePrimaryOptionMutation$data = {
   readonly updateAccountEmailStatusToPrimary: {
     readonly primaryAccountEmail: {
-      readonly id: string;
       readonly email: string;
+      readonly id: string;
       readonly status: AccountEmailStatus;
     } | null;
     readonly updatedAccountEmail: {
-      readonly id: string;
       readonly email: string;
+      readonly id: string;
       readonly status: AccountEmailStatus;
     } | null;
   } | null;
 };
-export type MakePrimaryOptionMutationResponse = MakePrimaryOptionMutation$data;
 export type MakePrimaryOptionMutation = {
-  variables: MakePrimaryOptionMutationVariables;
   response: MakePrimaryOptionMutation$data;
+  variables: MakePrimaryOptionMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

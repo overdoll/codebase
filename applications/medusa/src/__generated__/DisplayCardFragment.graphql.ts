@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<391681238b98777533ee6c8e07a13a49>>
+ * @generated SignedSource<<c72b022841ca5384feeb9541072e95bd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,6 @@ export type DisplayCardFragment$data = {
   readonly type: CardType;
   readonly " $fragmentType": "DisplayCardFragment";
 };
-export type DisplayCardFragment = DisplayCardFragment$data;
 export type DisplayCardFragment$key = {
   readonly " $data"?: DisplayCardFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"DisplayCardFragment">;

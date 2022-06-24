@@ -23,6 +23,7 @@ export default function Link ({
     <NextLink
       scroll
       {...rest}
+      prefetch={false}
     >
       {children}
     </NextLink>

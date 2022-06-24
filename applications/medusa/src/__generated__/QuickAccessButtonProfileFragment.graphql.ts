@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1e1c47f2158626fdf6f069f3a4f37b9c>>
+ * @generated SignedSource<<53b17798e5555687eac59d50b554f0a7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,14 +11,13 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type QuickAccessButtonProfileFragment$data = {
-  readonly id: string;
-  readonly username: string;
   readonly avatar: {
     readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
   } | null;
+  readonly id: string;
+  readonly username: string;
   readonly " $fragmentType": "QuickAccessButtonProfileFragment";
 };
-export type QuickAccessButtonProfileFragment = QuickAccessButtonProfileFragment$data;
 export type QuickAccessButtonProfileFragment$key = {
   readonly " $data"?: QuickAccessButtonProfileFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"QuickAccessButtonProfileFragment">;

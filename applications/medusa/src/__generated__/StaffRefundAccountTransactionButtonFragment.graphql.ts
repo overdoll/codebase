@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6d0161c53282a2e27c507ba8a7489dee>>
+ * @generated SignedSource<<643f9a133403424b6c1785d88809c961>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,6 @@ export type StaffRefundAccountTransactionButtonFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"StaffRefundAccountTransactionFormFragment">;
   readonly " $fragmentType": "StaffRefundAccountTransactionButtonFragment";
 };
-export type StaffRefundAccountTransactionButtonFragment = StaffRefundAccountTransactionButtonFragment$data;
 export type StaffRefundAccountTransactionButtonFragment$key = {
   readonly " $data"?: StaffRefundAccountTransactionButtonFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"StaffRefundAccountTransactionButtonFragment">;

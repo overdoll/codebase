@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bbd8d116ce63dd8c697f8d412a00869c>>
+ * @generated SignedSource<<63a5b1d7edc6dc6e249aad8b18cbbbbb>>
  * @relayHash e0c974d97985c686e636a3f8bd6a56e5
  * @lightSyntaxTransform
  * @nogrep
@@ -18,7 +18,6 @@ export type UnlockAccountInput = {
 export type StaffUnlockAccountFormMutation$variables = {
   input: UnlockAccountInput;
 };
-export type StaffUnlockAccountFormMutationVariables = StaffUnlockAccountFormMutation$variables;
 export type StaffUnlockAccountFormMutation$data = {
   readonly unlockAccount: {
     readonly account: {
@@ -29,10 +28,9 @@ export type StaffUnlockAccountFormMutation$data = {
     } | null;
   } | null;
 };
-export type StaffUnlockAccountFormMutationResponse = StaffUnlockAccountFormMutation$data;
 export type StaffUnlockAccountFormMutation = {
-  variables: StaffUnlockAccountFormMutationVariables;
   response: StaffUnlockAccountFormMutation$data;
+  variables: StaffUnlockAccountFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

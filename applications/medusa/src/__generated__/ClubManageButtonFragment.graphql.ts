@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3ad6d0481d899055aaf6f6e5b4a53a33>>
+ * @generated SignedSource<<7f3a7226d3a863910a03cda011baf3a4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,6 @@ export type ClubManageButtonFragment$data = {
   readonly viewerIsOwner: boolean;
   readonly " $fragmentType": "ClubManageButtonFragment";
 };
-export type ClubManageButtonFragment = ClubManageButtonFragment$data;
 export type ClubManageButtonFragment$key = {
   readonly " $data"?: ClubManageButtonFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ClubManageButtonFragment">;

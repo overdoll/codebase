@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c284eb74ba7e2d56a53998f7f2ecae8a>>
+ * @generated SignedSource<<2131fb62332396e5be03fe3908815848>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,6 @@ export type CurationCategoryNextButtonFragment$data = {
   }>;
   readonly " $fragmentType": "CurationCategoryNextButtonFragment";
 };
-export type CurationCategoryNextButtonFragment = CurationCategoryNextButtonFragment$data;
 export type CurationCategoryNextButtonFragment$key = {
   readonly " $data"?: CurationCategoryNextButtonFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"CurationCategoryNextButtonFragment">;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d2dee96062c2287af4c8f5a945c6282e>>
+ * @generated SignedSource<<1356f240d9d9a0e87a9d9296809fb9d3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type UpdateClubPayoutDepositDateFormFragment$data = {
   readonly id: string;
   readonly " $fragmentType": "UpdateClubPayoutDepositDateFormFragment";
 };
-export type UpdateClubPayoutDepositDateFormFragment = UpdateClubPayoutDepositDateFormFragment$data;
 export type UpdateClubPayoutDepositDateFormFragment$key = {
   readonly " $data"?: UpdateClubPayoutDepositDateFormFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"UpdateClubPayoutDepositDateFormFragment">;

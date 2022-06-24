@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<77602887ffd3aa143a1f0ebe7944a5d2>>
+ * @generated SignedSource<<4f6ddd1faae8f3a1716ba09813b1d376>>
  * @relayHash 1dd96056a5d03145570b194e50e511a0
  * @lightSyntaxTransform
  * @nogrep
@@ -19,22 +19,20 @@ export type UpdatePostAudienceInput = {
 export type UpdateAudienceButtonMutation$variables = {
   input: UpdatePostAudienceInput;
 };
-export type UpdateAudienceButtonMutationVariables = UpdateAudienceButtonMutation$variables;
 export type UpdateAudienceButtonMutation$data = {
   readonly updatePostAudience: {
     readonly post: {
-      readonly id: string;
       readonly audience: {
         readonly id: string;
         readonly title: string;
       } | null;
+      readonly id: string;
     } | null;
   } | null;
 };
-export type UpdateAudienceButtonMutationResponse = UpdateAudienceButtonMutation$data;
 export type UpdateAudienceButtonMutation = {
-  variables: UpdateAudienceButtonMutationVariables;
   response: UpdateAudienceButtonMutation$data;
+  variables: UpdateAudienceButtonMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

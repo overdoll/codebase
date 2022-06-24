@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cff132591bffe65395999c8d4a277ae6>>
+ * @generated SignedSource<<e952a4cdd6f24b06ea4b3a4ad874c5b7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,15 +11,15 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ImageSnippetFragment$data = {
+  readonly height: number;
+  readonly id: string;
+  readonly preview: string;
   readonly urls: ReadonlyArray<{
     readonly url: string;
   }>;
   readonly width: number;
-  readonly height: number;
-  readonly preview: string;
   readonly " $fragmentType": "ImageSnippetFragment";
 };
-export type ImageSnippetFragment = ImageSnippetFragment$data;
 export type ImageSnippetFragment$key = {
   readonly " $data"?: ImageSnippetFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ImageSnippetFragment">;
@@ -31,6 +31,13 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "ImageSnippetFragment",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -75,6 +82,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "d1f1201ccbc7b656c5f941efdcf037f9";
+(node as any).hash = "8f4f28ea11488813016e1c498329df34";
 
 export default node;

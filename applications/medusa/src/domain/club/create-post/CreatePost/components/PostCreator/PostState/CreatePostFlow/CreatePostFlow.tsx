@@ -7,7 +7,7 @@ import DragOverFileInput from '../../../DragOverFileInput/DragOverFileInput'
 import FilePicker from '../../../FilePicker/FilePicker'
 import { FileUpload } from '@//:assets/icons/interface'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
-import { CreatePostFlowMutationResponse } from '@//:artifacts/CreatePostFlowMutation.graphql'
+import { CreatePostFlowMutation$data } from '@//:artifacts/CreatePostFlowMutation.graphql'
 import { t, Trans } from '@lingui/macro'
 import { UppyContext } from '../../../../context'
 import { useToast } from '@//:modules/content/ThemeComponents'
@@ -40,7 +40,7 @@ export default function CreatePostFlow ({ clubId }: Props): JSX.Element {
       variables: {
         clubId: id
       },
-      onCompleted (data: CreatePostFlowMutationResponse) {
+      onCompleted (data: CreatePostFlowMutation$data) {
         setPostReference(data?.createPost?.post?.reference as string)
       },
       onError () {

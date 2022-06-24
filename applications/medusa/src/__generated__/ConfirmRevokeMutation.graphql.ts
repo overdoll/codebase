@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8a82857d5f5fc6cb856740bb5886c057>>
+ * @generated SignedSource<<a3b91b156ddc95d55aaad49d2438596b>>
  * @relayHash 66447af1fee23a4edaee4700871549be
  * @lightSyntaxTransform
  * @nogrep
@@ -19,16 +19,14 @@ export type RevokeAuthenticationTokenInput = {
 export type ConfirmRevokeMutation$variables = {
   input: RevokeAuthenticationTokenInput;
 };
-export type ConfirmRevokeMutationVariables = ConfirmRevokeMutation$variables;
 export type ConfirmRevokeMutation$data = {
   readonly revokeAuthenticationToken: {
     readonly revokedAuthenticationTokenId: string;
   } | null;
 };
-export type ConfirmRevokeMutationResponse = ConfirmRevokeMutation$data;
 export type ConfirmRevokeMutation = {
-  variables: ConfirmRevokeMutationVariables;
   response: ConfirmRevokeMutation$data;
+  variables: ConfirmRevokeMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

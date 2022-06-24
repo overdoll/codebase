@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c22954d412ecb5ef547e91d6a64926fb>>
+ * @generated SignedSource<<eddf5031e519c04afe642768bb9de66c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,15 +12,14 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type ClubFullBalanceFragment$data = {
-  readonly slug: string;
   readonly pendingBalance: {
     readonly amount: number;
     readonly currency: Currency;
   };
+  readonly slug: string;
   readonly " $fragmentSpreads": FragmentRefs<"ClubBalanceFragment">;
   readonly " $fragmentType": "ClubFullBalanceFragment";
 };
-export type ClubFullBalanceFragment = ClubFullBalanceFragment$data;
 export type ClubFullBalanceFragment$key = {
   readonly " $data"?: ClubFullBalanceFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ClubFullBalanceFragment">;

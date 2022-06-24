@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1458f1142bc1d1d8425bff8375c1b724>>
- * @relayHash c8d343240dff8ebee5d78c2650ba3fbe
+ * @generated SignedSource<<76651d13ee357f45d5e11a37ea061336>>
+ * @relayHash a83d0b90e5c6f85900409e520fd53bdf
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c8d343240dff8ebee5d78c2650ba3fbe
+// @relayRequestID a83d0b90e5c6f85900409e520fd53bdf
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,17 +18,15 @@ export type ClubPostsQuery$variables = {
   slug: string;
   state?: PostState | null;
 };
-export type ClubPostsQueryVariables = ClubPostsQuery$variables;
 export type ClubPostsQuery$data = {
   readonly club: {
     readonly viewerIsOwner: boolean;
-    readonly " $fragmentSpreads": FragmentRefs<"ClubPostsFragment" | "ClubInformationBannerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ClubInformationBannerFragment" | "ClubPostsFragment">;
   } | null;
 };
-export type ClubPostsQueryResponse = ClubPostsQuery$data;
 export type ClubPostsQuery = {
-  variables: ClubPostsQueryVariables;
   response: ClubPostsQuery$data;
+  variables: ClubPostsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -217,6 +215,7 @@ return {
                                 "name": "videoDuration",
                                 "storageKey": null
                               },
+                              (v4/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -257,8 +256,7 @@ return {
                                 "plural": false,
                                 "selections": (v5/*: any*/),
                                 "storageKey": null
-                              },
-                              (v4/*: any*/)
+                              }
                             ],
                             "storageKey": null
                           }
@@ -395,7 +393,7 @@ return {
     ]
   },
   "params": {
-    "id": "c8d343240dff8ebee5d78c2650ba3fbe",
+    "id": "a83d0b90e5c6f85900409e520fd53bdf",
     "metadata": {},
     "name": "ClubPostsQuery",
     "operationKind": "query",

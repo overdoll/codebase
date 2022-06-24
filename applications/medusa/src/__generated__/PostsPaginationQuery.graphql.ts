@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e17f7071008ac7cf9e65083fbe89282e>>
- * @relayHash d6af561ac8672899662090eda7389086
+ * @generated SignedSource<<b66661b9293c638ec24987ef5726cc26>>
+ * @relayHash 900128114a146aaf40d7b390d88ab340
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d6af561ac8672899662090eda7389086
+// @relayRequestID 900128114a146aaf40d7b390d88ab340
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,16 +18,14 @@ export type PostsPaginationQuery$variables = {
   first?: number | null;
   id: string;
 };
-export type PostsPaginationQueryVariables = PostsPaginationQuery$variables;
 export type PostsPaginationQuery$data = {
   readonly node: {
     readonly " $fragmentSpreads": FragmentRefs<"PostModerationQueueFragment">;
   } | null;
 };
-export type PostsPaginationQueryResponse = PostsPaginationQuery$data;
 export type PostsPaginationQuery = {
-  variables: PostsPaginationQueryVariables;
   response: PostsPaginationQuery$data;
+  variables: PostsPaginationQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -276,6 +274,7 @@ return {
                                     "name": "thumbnail",
                                     "plural": false,
                                     "selections": [
+                                      (v4/*: any*/),
                                       {
                                         "alias": null,
                                         "args": null,
@@ -290,8 +289,7 @@ return {
                                       (v9/*: any*/),
                                       (v10/*: any*/),
                                       (v11/*: any*/),
-                                      (v12/*: any*/),
-                                      (v4/*: any*/)
+                                      (v12/*: any*/)
                                     ],
                                     "storageKey": null
                                   }
@@ -315,6 +313,7 @@ return {
                                     "plural": false,
                                     "selections": [
                                       (v12/*: any*/),
+                                      (v4/*: any*/),
                                       {
                                         "alias": null,
                                         "args": null,
@@ -337,8 +336,7 @@ return {
                                       (v8/*: any*/),
                                       (v9/*: any*/),
                                       (v10/*: any*/),
-                                      (v11/*: any*/),
-                                      (v4/*: any*/)
+                                      (v11/*: any*/)
                                     ],
                                     "storageKey": null
                                   },
@@ -474,7 +472,7 @@ return {
     ]
   },
   "params": {
-    "id": "d6af561ac8672899662090eda7389086",
+    "id": "900128114a146aaf40d7b390d88ab340",
     "metadata": {},
     "name": "PostsPaginationQuery",
     "operationKind": "query",

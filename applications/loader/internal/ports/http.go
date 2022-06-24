@@ -5,8 +5,6 @@ import (
 	"github.com/gin-gonic/gin"
 	tusd "github.com/tus/tusd/pkg/handler"
 	"go.uber.org/zap"
-	"io/ioutil"
-	"log"
 	"net/http"
 	"overdoll/applications/loader/internal/app"
 	"overdoll/libraries/router"
@@ -26,14 +24,14 @@ func NewHttpServer(app *app.Application) http.Handler {
 		zap.S().Fatalw("failed to get composer", zap.Error(err))
 	}
 
-	logger := log.Default()
-	logger.SetOutput(ioutil.Discard)
+	//logger := log.Default()
+	//logger.SetOutput(ioutil.Discard)
 
 	handler, err := tusd.NewUnroutedHandler(tusd.Config{
 		BasePath:                "/api/upload/",
 		StoreComposer:           composer,
 		RespectForwardedHeaders: true,
-		Logger:                  logger,
+		//Logger:                  logger,
 	})
 
 	if err != nil {

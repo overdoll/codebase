@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5ddf6aa18993170f3ffc28a8f2018bb8>>
+ * @generated SignedSource<<ce80080d0bc6e101f93df285992f3bf6>>
  * @relayHash 738a8dd478395b198824263fe1be6c04
  * @lightSyntaxTransform
  * @nogrep
@@ -14,19 +14,17 @@
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type LockedAccountButtonQuery$variables = {};
-export type LockedAccountButtonQueryVariables = LockedAccountButtonQuery$variables;
 export type LockedAccountButtonQuery$data = {
   readonly viewer: {
     readonly lock: {
-      readonly __typename: string;
+      readonly __typename: "AccountLock";
     } | null;
     readonly " $fragmentSpreads": FragmentRefs<"LockedAccountModalFragment">;
   } | null;
 };
-export type LockedAccountButtonQueryResponse = LockedAccountButtonQuery$data;
 export type LockedAccountButtonQuery = {
-  variables: LockedAccountButtonQueryVariables;
   response: LockedAccountButtonQuery$data;
+  variables: LockedAccountButtonQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

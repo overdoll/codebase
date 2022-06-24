@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<433a6db775a96af5fcc4aeda4a237236>>
+ * @generated SignedSource<<c17827cbc43a99bcc5acce287ee78df4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,14 +14,13 @@ export type PostClickableCategoriesFragment$data = {
   readonly categories: ReadonlyArray<{
     readonly id: string;
     readonly slug: string;
-    readonly title: string;
     readonly thumbnail: {
       readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
     } | null;
+    readonly title: string;
   }>;
   readonly " $fragmentType": "PostClickableCategoriesFragment";
 };
-export type PostClickableCategoriesFragment = PostClickableCategoriesFragment$data;
 export type PostClickableCategoriesFragment$key = {
   readonly " $data"?: PostClickableCategoriesFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PostClickableCategoriesFragment">;

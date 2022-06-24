@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bf44d02deb7030de92b006e53d69de12>>
+ * @generated SignedSource<<56336d6708740e1cd48c1da303883d08>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,30 +11,29 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type UpdatePostFlowFragment$data = {
-  readonly content: ReadonlyArray<{
-    readonly id: string;
-    readonly isSupporterOnly: boolean;
-    readonly viewerCanViewSupporterOnlyContent: boolean;
-    readonly resource: {
-      readonly processed: boolean;
-    };
-  }>;
   readonly audience: {
     readonly id: string;
     readonly title: string;
   } | null;
-  readonly characters: ReadonlyArray<{
-    readonly id: string;
-    readonly name: string;
-  }>;
   readonly categories: ReadonlyArray<{
     readonly id: string;
     readonly title: string;
   }>;
-  readonly " $fragmentSpreads": FragmentRefs<"UploadFlowHeaderFragment" | "UploadFlowFooterFragment" | "UploadReviewStepFragment" | "UploadArrangeStepFragment">;
+  readonly characters: ReadonlyArray<{
+    readonly id: string;
+    readonly name: string;
+  }>;
+  readonly content: ReadonlyArray<{
+    readonly id: string;
+    readonly isSupporterOnly: boolean;
+    readonly resource: {
+      readonly processed: boolean;
+    };
+    readonly viewerCanViewSupporterOnlyContent: boolean;
+  }>;
+  readonly " $fragmentSpreads": FragmentRefs<"UploadArrangeStepFragment" | "UploadFlowFooterFragment" | "UploadFlowHeaderFragment" | "UploadReviewStepFragment">;
   readonly " $fragmentType": "UpdatePostFlowFragment";
 };
-export type UpdatePostFlowFragment = UpdatePostFlowFragment$data;
 export type UpdatePostFlowFragment$key = {
   readonly " $data"?: UpdatePostFlowFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"UpdatePostFlowFragment">;

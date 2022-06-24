@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c4209bbedc953c356736d17cd455e5ee>>
+ * @generated SignedSource<<a9c5016ee1eaf460fc96d449573ad642>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,6 @@ export type ChangeAudienceThumbnailFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"ChangeAudienceThumbnailFormFragment">;
   readonly " $fragmentType": "ChangeAudienceThumbnailFragment";
 };
-export type ChangeAudienceThumbnailFragment = ChangeAudienceThumbnailFragment$data;
 export type ChangeAudienceThumbnailFragment$key = {
   readonly " $data"?: ChangeAudienceThumbnailFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ChangeAudienceThumbnailFragment">;

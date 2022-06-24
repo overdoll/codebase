@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5c74bd7cb4ec720e4676c51f35851e3b>>
+ * @generated SignedSource<<5edb36ff1a38f7093ecc33942ed8c5cc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type PostLikeButtonViewerFragment$data = {
   readonly id: string;
   readonly " $fragmentType": "PostLikeButtonViewerFragment";
 };
-export type PostLikeButtonViewerFragment = PostLikeButtonViewerFragment$data;
 export type PostLikeButtonViewerFragment$key = {
   readonly " $data"?: PostLikeButtonViewerFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PostLikeButtonViewerFragment">;

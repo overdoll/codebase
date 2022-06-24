@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<320b6c1d4958b234bfcf38ea3ef14323>>
+ * @generated SignedSource<<8be2f77f9c63f51097ebc3205b94dbfa>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,18 +11,17 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type RenderVideoFragment$data = {
+  readonly height: number;
   readonly urls: ReadonlyArray<{
-    readonly url: string;
     readonly mimeType: string;
+    readonly url: string;
   }>;
   readonly videoThumbnail: {
     readonly url: string;
   } | null;
   readonly width: number;
-  readonly height: number;
   readonly " $fragmentType": "RenderVideoFragment";
 };
-export type RenderVideoFragment = RenderVideoFragment$data;
 export type RenderVideoFragment$key = {
   readonly " $data"?: RenderVideoFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"RenderVideoFragment">;

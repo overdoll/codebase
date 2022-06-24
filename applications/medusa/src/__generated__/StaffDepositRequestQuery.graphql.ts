@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8ffaaabd6b421af8f565be75b99c8b87>>
+ * @generated SignedSource<<89c33a4b2a8875f43582bc42d10ba452>>
  * @relayHash 639d7447f457c1e6ab875e6aa672dade
  * @lightSyntaxTransform
  * @nogrep
@@ -16,16 +16,14 @@ import { FragmentRefs } from "relay-runtime";
 export type StaffDepositRequestQuery$variables = {
   reference: string;
 };
-export type StaffDepositRequestQueryVariables = StaffDepositRequestQuery$variables;
 export type StaffDepositRequestQuery$data = {
   readonly depositRequest: {
     readonly " $fragmentSpreads": FragmentRefs<"StaffDepositRequestCardFragment" | "StaffDepositRequestOptionsFragment" | "StaffDepositRequestPayoutsListFragment">;
   } | null;
 };
-export type StaffDepositRequestQueryResponse = StaffDepositRequestQuery$data;
 export type StaffDepositRequestQuery = {
-  variables: StaffDepositRequestQueryVariables;
   response: StaffDepositRequestQuery$data;
+  variables: StaffDepositRequestQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<76112ffaa30559ba3aa5a0a7d7b9dca4>>
+ * @generated SignedSource<<02f2e397e5c58f9dfa9c836940939375>>
  * @relayHash 06ec1eb7d07d859efb5cf1ad040cdf04
  * @lightSyntaxTransform
  * @nogrep
@@ -20,26 +20,24 @@ export type UpdateRuleTitleInput = {
 export type ChangeRuleTitleFormMutation$variables = {
   input: UpdateRuleTitleInput;
 };
-export type ChangeRuleTitleFormMutationVariables = ChangeRuleTitleFormMutation$variables;
 export type ChangeRuleTitleFormMutation$data = {
   readonly updateRuleTitle: {
     readonly rule: {
       readonly id: string;
       readonly title: string;
       readonly titleTranslations: ReadonlyArray<{
-        readonly text: string;
         readonly language: {
           readonly locale: string;
           readonly name: string;
         };
+        readonly text: string;
       }>;
     } | null;
   } | null;
 };
-export type ChangeRuleTitleFormMutationResponse = ChangeRuleTitleFormMutation$data;
 export type ChangeRuleTitleFormMutation = {
-  variables: ChangeRuleTitleFormMutationVariables;
   response: ChangeRuleTitleFormMutation$data;
+  variables: ChangeRuleTitleFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

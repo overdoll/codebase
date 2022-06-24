@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4e6e4ac62ea754b5ed1df284b137eedd>>
+ * @generated SignedSource<<6c10c5fef7b648f5862e0ec0b69546d8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,7 +23,6 @@ export type PostGalleryPublicDetailedFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"PostSlideIndexFragment">;
   readonly " $fragmentType": "PostGalleryPublicDetailedFragment";
 };
-export type PostGalleryPublicDetailedFragment = PostGalleryPublicDetailedFragment$data;
 export type PostGalleryPublicDetailedFragment$key = {
   readonly " $data"?: PostGalleryPublicDetailedFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PostGalleryPublicDetailedFragment">;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a04a48a7e2cf90bd5914bd516ad08f0f>>
+ * @generated SignedSource<<fc8a91f09290372af9fb56c48b5133de>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,12 +12,11 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type ResourceItemFragment$data = {
-  readonly type: ResourceType;
   readonly processed: boolean;
+  readonly type: ResourceType;
   readonly " $fragmentSpreads": FragmentRefs<"ImageSnippetFragment" | "VideoSnippetFragment">;
   readonly " $fragmentType": "ResourceItemFragment";
 };
-export type ResourceItemFragment = ResourceItemFragment$data;
 export type ResourceItemFragment$key = {
   readonly " $data"?: ResourceItemFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0142727478371d9ff3c789eea1b9069d>>
+ * @generated SignedSource<<f9c0d56c37be27aac054acc4c08aaa81>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type SuggestedPostsViewerFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollViewerFragment">;
   readonly " $fragmentType": "SuggestedPostsViewerFragment";
 };
-export type SuggestedPostsViewerFragment = SuggestedPostsViewerFragment$data;
 export type SuggestedPostsViewerFragment$key = {
   readonly " $data"?: SuggestedPostsViewerFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"SuggestedPostsViewerFragment">;

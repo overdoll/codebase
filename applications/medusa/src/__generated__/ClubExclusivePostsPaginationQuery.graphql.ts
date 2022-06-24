@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f78248921627b8aff9a7fadcf98e5b97>>
- * @relayHash 86a2e4f5d60c8d29e05637cffc34cd34
+ * @generated SignedSource<<7cc7b7da5c979d2b598182e5951fb28a>>
+ * @relayHash 4f4e9bba36e49ee3426464ef5f6c0ef9
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 86a2e4f5d60c8d29e05637cffc34cd34
+// @relayRequestID 4f4e9bba36e49ee3426464ef5f6c0ef9
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,16 +18,14 @@ export type ClubExclusivePostsPaginationQuery$variables = {
   first?: number | null;
   id: string;
 };
-export type ClubExclusivePostsPaginationQueryVariables = ClubExclusivePostsPaginationQuery$variables;
 export type ClubExclusivePostsPaginationQuery$data = {
   readonly node: {
     readonly " $fragmentSpreads": FragmentRefs<"ClubExclusivePostsFragment">;
   } | null;
 };
-export type ClubExclusivePostsPaginationQueryResponse = ClubExclusivePostsPaginationQuery$data;
 export type ClubExclusivePostsPaginationQuery = {
-  variables: ClubExclusivePostsPaginationQueryVariables;
   response: ClubExclusivePostsPaginationQuery$data;
+  variables: ClubExclusivePostsPaginationQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -248,6 +246,7 @@ return {
                                     "name": "videoDuration",
                                     "storageKey": null
                                   },
+                                  (v5/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -288,8 +287,7 @@ return {
                                     "plural": false,
                                     "selections": (v8/*: any*/),
                                     "storageKey": null
-                                  },
-                                  (v5/*: any*/)
+                                  }
                                 ],
                                 "storageKey": null
                               }
@@ -365,7 +363,7 @@ return {
     ]
   },
   "params": {
-    "id": "86a2e4f5d60c8d29e05637cffc34cd34",
+    "id": "4f4e9bba36e49ee3426464ef5f6c0ef9",
     "metadata": {},
     "name": "ClubExclusivePostsPaginationQuery",
     "operationKind": "query",

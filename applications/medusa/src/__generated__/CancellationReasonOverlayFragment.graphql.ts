@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0a6a322c55224c1fd02504d3e45b600a>>
+ * @generated SignedSource<<1b6b79651dd361ca5b1bb1c850b3f2db>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,6 @@ export type CancellationReasonOverlayFragment$data = {
   readonly title: string;
   readonly " $fragmentType": "CancellationReasonOverlayFragment";
 };
-export type CancellationReasonOverlayFragment = CancellationReasonOverlayFragment$data;
 export type CancellationReasonOverlayFragment$key = {
   readonly " $data"?: CancellationReasonOverlayFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"CancellationReasonOverlayFragment">;

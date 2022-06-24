@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1fd974271197e303ffef9f589d3bb7d1>>
- * @relayHash 85126be71ce9f4dcfabd6a0b480de49e
+ * @generated SignedSource<<e9134dff676732b020655a68a723ec32>>
+ * @relayHash 46c06fbb353eae02fbd46b02fe36fe36
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 85126be71ce9f4dcfabd6a0b480de49e
+// @relayRequestID 46c06fbb353eae02fbd46b02fe36fe36
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -17,16 +17,14 @@ export type PostAuditLogsQuery$variables = {
   from: any;
   to: any;
 };
-export type PostAuditLogsQueryVariables = PostAuditLogsQuery$variables;
 export type PostAuditLogsQuery$data = {
   readonly viewer: {
     readonly " $fragmentSpreads": FragmentRefs<"PostAuditLogsFragment">;
   } | null;
 };
-export type PostAuditLogsQueryResponse = PostAuditLogsQuery$data;
 export type PostAuditLogsQuery = {
-  variables: PostAuditLogsQueryVariables;
   response: PostAuditLogsQuery$data;
+  variables: PostAuditLogsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -225,6 +223,7 @@ return {
                                 "name": "thumbnail",
                                 "plural": false,
                                 "selections": [
+                                  (v2/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -239,8 +238,7 @@ return {
                                   (v6/*: any*/),
                                   (v7/*: any*/),
                                   (v8/*: any*/),
-                                  (v9/*: any*/),
-                                  (v2/*: any*/)
+                                  (v9/*: any*/)
                                 ],
                                 "storageKey": null
                               }
@@ -265,6 +263,7 @@ return {
                                 "plural": false,
                                 "selections": [
                                   (v9/*: any*/),
+                                  (v2/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -287,8 +286,7 @@ return {
                                   (v5/*: any*/),
                                   (v6/*: any*/),
                                   (v7/*: any*/),
-                                  (v8/*: any*/),
-                                  (v2/*: any*/)
+                                  (v8/*: any*/)
                                 ],
                                 "storageKey": null
                               },
@@ -402,7 +400,7 @@ return {
     ]
   },
   "params": {
-    "id": "85126be71ce9f4dcfabd6a0b480de49e",
+    "id": "46c06fbb353eae02fbd46b02fe36fe36",
     "metadata": {},
     "name": "PostAuditLogsQuery",
     "operationKind": "query",

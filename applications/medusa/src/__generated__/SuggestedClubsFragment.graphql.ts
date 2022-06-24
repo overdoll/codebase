@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4d870543eaa5d3245529d0f5a1e1ba12>>
+ * @generated SignedSource<<5e2cb84572862702595d9a1286247381>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,13 +15,12 @@ export type SuggestedClubsFragment$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly slug: string;
-        readonly " $fragmentSpreads": FragmentRefs<"JoinClubFromTileFragment" | "ClubTileOverlayFragment">;
+        readonly " $fragmentSpreads": FragmentRefs<"ClubTileOverlayFragment" | "JoinClubFromTileFragment">;
       };
     }>;
   };
   readonly " $fragmentType": "SuggestedClubsFragment";
 };
-export type SuggestedClubsFragment = SuggestedClubsFragment$data;
 export type SuggestedClubsFragment$key = {
   readonly " $data"?: SuggestedClubsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"SuggestedClubsFragment">;

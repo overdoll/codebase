@@ -64,13 +64,15 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 
 	for _, res := range result.Content() {
 
-		resourceId := res.ResourceRequest(principal.FromContext(ctx))
+		req := principal.FromContext(ctx)
+
+		resourceId := res.ResourceRequest(req)
 
 		if resourceId != nil {
-
 			content = append(content, &PostContent{
 				ID:                                relay.NewID(PostContent{}, result.ID(), resourceId.ID()),
 				Resource:                          graphql.MarshalResourceToGraphQL(ctx, resourceId),
+				SupporterOnlyResource:             graphql.MarshalResourceToGraphQL(ctx, res.SupporterOnlyResourceRequest(req)),
 				IsSupporterOnly:                   res.IsSupporterOnly(),
 				ViewerCanViewSupporterOnlyContent: res.CanViewSupporterOnly(principal.FromContext(ctx)),
 			})
@@ -620,10 +622,16 @@ func MarshalClubSuspensionLogToGraphQL(ctx context.Context, result *club.Suspens
 
 func MarshalClubToGraphQL(ctx context.Context, result *club.Club) *Club {
 
-	var res *graphql.Resource
+	var thumbnail *graphql.Resource
 
 	if result.ThumbnailResource() != nil {
-		res = graphql.MarshalResourceToGraphQL(ctx, result.ThumbnailResource())
+		thumbnail = graphql.MarshalResourceToGraphQL(ctx, result.ThumbnailResource())
+	}
+
+	var banner *graphql.Resource
+
+	if result.BannerResource() != nil {
+		banner = graphql.MarshalResourceToGraphQL(ctx, result.BannerResource())
 	}
 
 	var slugAliases []*ClubSlugAlias
@@ -651,19 +659,21 @@ func MarshalClubToGraphQL(ctx context.Context, result *club.Club) *Club {
 	}
 
 	return &Club{
-		ID:                    relay.NewID(Club{}, result.ID()),
-		Reference:             result.ID(),
-		Name:                  result.Name().TranslateDefault(""),
-		Slug:                  result.Slug(),
-		SlugAliases:           slugAliases,
-		NextSupporterPostTime: result.NextSupporterPostTime(),
-		CanSupport:            result.CanSupport(),
-		MembersCount:          result.MembersCount(),
-		Thumbnail:             res,
-		Owner:                 &Account{ID: relay.NewID(Account{}, result.OwnerAccountId())},
-		Suspension:            suspension,
-		Termination:           termination,
-		ViewerIsOwner:         accountId == result.OwnerAccountId(),
+		ID:                          relay.NewID(Club{}, result.ID()),
+		Reference:                   result.ID(),
+		CanCreateSupporterOnlyPosts: result.CanCreateSupporterOnlyPosts(),
+		Name:                        result.Name().TranslateDefault(""),
+		Slug:                        result.Slug(),
+		SlugAliases:                 slugAliases,
+		NextSupporterPostTime:       result.NextSupporterPostTime(),
+		CanSupport:                  result.CanSupport(),
+		MembersCount:                result.MembersCount(),
+		Thumbnail:                   thumbnail,
+		Banner:                      banner,
+		Owner:                       &Account{ID: relay.NewID(Account{}, result.OwnerAccountId())},
+		Suspension:                  suspension,
+		Termination:                 termination,
+		ViewerIsOwner:               accountId == result.OwnerAccountId(),
 	}
 }
 
@@ -781,6 +791,53 @@ func MarshalClubSuspensionLogsToGraphQLConnection(ctx context.Context, results [
 	}
 
 	return conn
+}
+
+func MarshalSearchToGraphQLConnection(ctx context.Context, results []interface{}, cursor *paging.Cursor) *SearchConnection {
+
+	var clubs []*SearchEdge
+
+	for _, result := range results {
+		switch v := result.(type) {
+		case *club.Club:
+			clubs = append(clubs, &SearchEdge{
+				Cursor: "U2VhcmNoOjo=",
+				Node:   MarshalClubToGraphQL(ctx, v),
+			})
+			break
+		case *post.Category:
+			clubs = append(clubs, &SearchEdge{
+				Cursor: "U2VhcmNoOjo=",
+				Node:   MarshalCategoryToGraphQL(ctx, v),
+			})
+			break
+		case *post.Character:
+			clubs = append(clubs, &SearchEdge{
+				Cursor: "U2VhcmNoOjo=",
+				Node:   MarshalCharacterToGraphQL(ctx, v),
+			})
+			break
+		case *post.Series:
+			clubs = append(clubs, &SearchEdge{
+				Cursor: "U2VhcmNoOjo=",
+				Node:   MarshalSeriesToGraphQL(ctx, v),
+			})
+			break
+		default:
+			continue
+		}
+
+	}
+
+	return &SearchConnection{
+		PageInfo: &relay.PageInfo{
+			HasNextPage:     false,
+			HasPreviousPage: false,
+			StartCursor:     nil,
+			EndCursor:       nil,
+		},
+		Edges: clubs,
+	}
 }
 
 func MarshalClubsToGraphQLConnection(ctx context.Context, results []*club.Club, cursor *paging.Cursor) *ClubConnection {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<982dbfff935892a9902e49699a19d87d>>
+ * @generated SignedSource<<9c867e355bdec110c96466a02af76fae>>
  * @relayHash 52db7692944eed56f5af8dcb247dd756
  * @lightSyntaxTransform
  * @nogrep
@@ -14,21 +14,19 @@
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type VerifyTokenQuery$variables = {
-  token: string;
   secret?: string | null;
+  token: string;
 };
-export type VerifyTokenQueryVariables = VerifyTokenQuery$variables;
 export type VerifyTokenQuery$data = {
   readonly viewAuthenticationToken: {
-    readonly verified: boolean;
     readonly secure: boolean;
-    readonly " $fragmentSpreads": FragmentRefs<"ConfirmFragment" | "CompleteFragment">;
+    readonly verified: boolean;
+    readonly " $fragmentSpreads": FragmentRefs<"CompleteFragment" | "ConfirmFragment">;
   } | null;
 };
-export type VerifyTokenQueryResponse = VerifyTokenQuery$data;
 export type VerifyTokenQuery = {
-  variables: VerifyTokenQueryVariables;
   response: VerifyTokenQuery$data;
+  variables: VerifyTokenQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

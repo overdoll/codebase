@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7c2fb2355e0fe7c380efa4925256806d>>
+ * @generated SignedSource<<10495264fa9564e01c6bf9ff3e622608>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,8 +12,8 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PayoutMethodFragment$data = {
   readonly __typename: "AccountPaxumPayoutMethod";
-  readonly id: string;
   readonly email: string;
+  readonly id: string;
   readonly " $fragmentType": "PayoutMethodFragment";
 } | {
   // This will never be '%other', but we need some
@@ -21,7 +21,6 @@ export type PayoutMethodFragment$data = {
   readonly __typename: "%other";
   readonly " $fragmentType": "PayoutMethodFragment";
 };
-export type PayoutMethodFragment = PayoutMethodFragment$data;
 export type PayoutMethodFragment$key = {
   readonly " $data"?: PayoutMethodFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PayoutMethodFragment">;

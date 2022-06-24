@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3089a29871970479f752e86e4b0e63cb>>
+ * @generated SignedSource<<ce834583a74d490fbfd15e0c6029f028>>
  * @relayHash 23dfc3141aebab39a7ff92c5c057114f
  * @lightSyntaxTransform
  * @nogrep
@@ -18,24 +18,22 @@ export type CreateCategoryInput = {
   title: string;
 };
 export type CreateCategoryFormMutation$variables = {
-  input: CreateCategoryInput;
   connections: ReadonlyArray<string>;
+  input: CreateCategoryInput;
 };
-export type CreateCategoryFormMutationVariables = CreateCategoryFormMutation$variables;
 export type CreateCategoryFormMutation$data = {
   readonly createCategory: {
     readonly category: {
       readonly id: string;
-      readonly title: string;
       readonly slug: string;
+      readonly title: string;
     } | null;
     readonly validation: CreateCategoryValidation | null;
   } | null;
 };
-export type CreateCategoryFormMutationResponse = CreateCategoryFormMutation$data;
 export type CreateCategoryFormMutation = {
-  variables: CreateCategoryFormMutationVariables;
   response: CreateCategoryFormMutation$data;
+  variables: CreateCategoryFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

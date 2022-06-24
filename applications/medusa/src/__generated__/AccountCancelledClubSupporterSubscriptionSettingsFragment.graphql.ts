@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9277c39cdab312942fc4b85e5078fc3a>>
+ * @generated SignedSource<<085db0c89e59e61fabfe89cd60cae13c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,15 +11,14 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type AccountCancelledClubSupporterSubscriptionSettingsFragment$data = {
-  readonly reference: string;
   readonly club: {
     readonly slug: string;
     readonly " $fragmentSpreads": FragmentRefs<"ClubExclusivePostsFragment">;
   };
+  readonly reference: string;
   readonly " $fragmentSpreads": FragmentRefs<"AccountCancelledClubSupporterSubscriptionDetailsFragment" | "ManageCancelledSubscriptionButtonFragment">;
   readonly " $fragmentType": "AccountCancelledClubSupporterSubscriptionSettingsFragment";
 };
-export type AccountCancelledClubSupporterSubscriptionSettingsFragment = AccountCancelledClubSupporterSubscriptionSettingsFragment$data;
 export type AccountCancelledClubSupporterSubscriptionSettingsFragment$key = {
   readonly " $data"?: AccountCancelledClubSupporterSubscriptionSettingsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"AccountCancelledClubSupporterSubscriptionSettingsFragment">;

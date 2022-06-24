@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<60f1132c15a8aea99ed4347f302072c3>>
+ * @generated SignedSource<<9df4a05ad19744b175760e4edc7aecd3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type ClubCopyLinkButtonFragment$data = {
   readonly slug: string;
   readonly " $fragmentType": "ClubCopyLinkButtonFragment";
 };
-export type ClubCopyLinkButtonFragment = ClubCopyLinkButtonFragment$data;
 export type ClubCopyLinkButtonFragment$key = {
   readonly " $data"?: ClubCopyLinkButtonFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ClubCopyLinkButtonFragment">;

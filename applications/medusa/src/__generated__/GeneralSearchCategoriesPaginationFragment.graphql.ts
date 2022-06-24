@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b407a446d2ecbde90708495a484d22f4>>
- * @relayHash 8e713b047b00a0be627799643cf9a415
+ * @generated SignedSource<<0fab1d117bfdf47893c4546147557b50>>
+ * @relayHash a2df88d9b1ac6ddad07d6f196940e5e6
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8e713b047b00a0be627799643cf9a415
+// @relayRequestID a2df88d9b1ac6ddad07d6f196940e5e6
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -19,14 +19,12 @@ export type GeneralSearchCategoriesPaginationFragment$variables = {
   first?: number | null;
   search?: string | null;
 };
-export type GeneralSearchCategoriesPaginationFragmentVariables = GeneralSearchCategoriesPaginationFragment$variables;
 export type GeneralSearchCategoriesPaginationFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"GeneralSearchCategoriesFragment">;
 };
-export type GeneralSearchCategoriesPaginationFragmentResponse = GeneralSearchCategoriesPaginationFragment$data;
 export type GeneralSearchCategoriesPaginationFragment = {
-  variables: GeneralSearchCategoriesPaginationFragmentVariables;
   response: GeneralSearchCategoriesPaginationFragment$data;
+  variables: GeneralSearchCategoriesPaginationFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -171,6 +169,7 @@ return {
                         "name": "type",
                         "storageKey": null
                       },
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -218,8 +217,7 @@ return {
                         "kind": "ScalarField",
                         "name": "processed",
                         "storageKey": null
-                      },
-                      (v4/*: any*/)
+                      }
                     ],
                     "storageKey": null
                   },
@@ -286,7 +284,7 @@ return {
     ]
   },
   "params": {
-    "id": "8e713b047b00a0be627799643cf9a415",
+    "id": "a2df88d9b1ac6ddad07d6f196940e5e6",
     "metadata": {},
     "name": "GeneralSearchCategoriesPaginationFragment",
     "operationKind": "query",

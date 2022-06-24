@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<09062076305d21f174385189894b2897>>
+ * @generated SignedSource<<2316efd26c07b17e76d50993c8e9cb29>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type ModerationRemovePostFormFragment$data = {
   readonly id: string;
   readonly " $fragmentType": "ModerationRemovePostFormFragment";
 };
-export type ModerationRemovePostFormFragment = ModerationRemovePostFormFragment$data;
 export type ModerationRemovePostFormFragment$key = {
   readonly " $data"?: ModerationRemovePostFormFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ModerationRemovePostFormFragment">;

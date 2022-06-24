@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a749bff5221f9ba89939e594c574415a>>
- * @relayHash be88fbbf7ee67ae8bd64b8b1726a5a85
+ * @generated SignedSource<<b03ad2f69064da279bcdf4dd228b8d5d>>
+ * @relayHash 18ffc18c9641ca853b9f7d1b1191feaa
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID be88fbbf7ee67ae8bd64b8b1726a5a85
+// @relayRequestID 18ffc18c9641ca853b9f7d1b1191feaa
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -20,33 +20,31 @@ export type GrantAccountAccessWithAuthenticationTokenInput = {
 export type GrantMutation$variables = {
   input: GrantAccountAccessWithAuthenticationTokenInput;
 };
-export type GrantMutationVariables = GrantMutation$variables;
 export type GrantMutation$data = {
   readonly grantAccountAccessWithAuthenticationToken: {
-    readonly validation: GrantAccountAccessWithAuthenticationTokenValidation | null;
-    readonly revokedAuthenticationTokenId: string;
     readonly account: {
-      readonly id: string;
-      readonly username: string;
-      readonly isModerator: boolean;
-      readonly isStaff: boolean;
-      readonly isArtist: boolean;
-      readonly deleting: {
-        readonly __typename: string;
-      } | null;
-      readonly lock: {
-        readonly __typename: string;
-      } | null;
       readonly avatar: {
         readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment" | "ResourceItemFragment">;
       } | null;
+      readonly deleting: {
+        readonly __typename: "AccountDeleting";
+      } | null;
+      readonly id: string;
+      readonly isArtist: boolean;
+      readonly isModerator: boolean;
+      readonly isStaff: boolean;
+      readonly lock: {
+        readonly __typename: "AccountLock";
+      } | null;
+      readonly username: string;
     } | null;
+    readonly revokedAuthenticationTokenId: string;
+    readonly validation: GrantAccountAccessWithAuthenticationTokenValidation | null;
   } | null;
 };
-export type GrantMutationResponse = GrantMutation$data;
 export type GrantMutation = {
-  variables: GrantMutationVariables;
   response: GrantMutation$data;
+  variables: GrantMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -253,6 +251,7 @@ return {
                 "name": "avatar",
                 "plural": false,
                 "selections": [
+                  (v4/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -307,8 +306,7 @@ return {
                     "kind": "ScalarField",
                     "name": "processed",
                     "storageKey": null
-                  },
-                  (v4/*: any*/)
+                  }
                 ],
                 "storageKey": null
               }
@@ -321,7 +319,7 @@ return {
     ]
   },
   "params": {
-    "id": "be88fbbf7ee67ae8bd64b8b1726a5a85",
+    "id": "18ffc18c9641ca853b9f7d1b1191feaa",
     "metadata": {},
     "name": "GrantMutation",
     "operationKind": "mutation",

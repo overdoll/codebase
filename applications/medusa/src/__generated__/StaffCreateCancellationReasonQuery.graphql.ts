@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<95117db05eabddf388d0ade990d534b9>>
+ * @generated SignedSource<<adeb623c6b1d37d06062bc2a9d71d2da>>
  * @relayHash c2b75980560d23364b775046236174c2
  * @lightSyntaxTransform
  * @nogrep
@@ -13,22 +13,20 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type StaffCreateCancellationReasonQuery$variables = {
-  first?: number | null;
   after?: string | null;
+  first?: number | null;
 };
-export type StaffCreateCancellationReasonQueryVariables = StaffCreateCancellationReasonQuery$variables;
 export type StaffCreateCancellationReasonQuery$data = {
   readonly cancellationReasons: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
-      readonly __typename: string;
+      readonly __typename: "CancellationReasonEdge";
     }>;
   };
 };
-export type StaffCreateCancellationReasonQueryResponse = StaffCreateCancellationReasonQuery$data;
 export type StaffCreateCancellationReasonQuery = {
-  variables: StaffCreateCancellationReasonQueryVariables;
   response: StaffCreateCancellationReasonQuery$data;
+  variables: StaffCreateCancellationReasonQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

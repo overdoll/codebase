@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<2e874c7fa2cb4945501b23da503a265d>>
- * @relayHash 7cd9513d8b6119d33724b3a3b589177b
+ * @generated SignedSource<<abeeb00eaa4106795c96c92513b1d3a3>>
+ * @relayHash 5cd989f6491a26c2773196c490218843
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,21 +9,19 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7cd9513d8b6119d33724b3a3b589177b
+// @relayRequestID 5cd989f6491a26c2773196c490218843
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SelectSeriesSearchQuery$variables = {
   title?: string | null;
 };
-export type SelectSeriesSearchQueryVariables = SelectSeriesSearchQuery$variables;
 export type SelectSeriesSearchQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"SelectSeriesSearchFragment">;
 };
-export type SelectSeriesSearchQueryResponse = SelectSeriesSearchQuery$data;
 export type SelectSeriesSearchQuery = {
-  variables: SelectSeriesSearchQueryVariables;
   response: SelectSeriesSearchQuery$data;
+  variables: SelectSeriesSearchQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -131,6 +129,7 @@ return {
                         "name": "type",
                         "storageKey": null
                       },
+                      (v2/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -178,8 +177,7 @@ return {
                         "kind": "ScalarField",
                         "name": "processed",
                         "storageKey": null
-                      },
-                      (v2/*: any*/)
+                      }
                     ],
                     "storageKey": null
                   },
@@ -245,7 +243,7 @@ return {
     ]
   },
   "params": {
-    "id": "7cd9513d8b6119d33724b3a3b589177b",
+    "id": "5cd989f6491a26c2773196c490218843",
     "metadata": {},
     "name": "SelectSeriesSearchQuery",
     "operationKind": "query",

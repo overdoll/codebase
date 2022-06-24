@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1709b61704fd4bfe6331aa5e834776bb>>
+ * @generated SignedSource<<52d4fa12e417cf87fe66409ee71b4ce6>>
  * @relayHash 5ad5fb0fd15f89acb4a7f9867a3f7a74
  * @lightSyntaxTransform
  * @nogrep
@@ -20,14 +20,11 @@ export type UpdatePostCategoriesInput = {
 export type UpdateCategoryButtonMutation$variables = {
   input: UpdatePostCategoriesInput;
 };
-export type UpdateCategoryButtonMutationVariables = UpdateCategoryButtonMutation$variables;
 export type UpdateCategoryButtonMutation$data = {
   readonly updatePostCategories: {
     readonly post: {
-      readonly id: string;
       readonly categories: ReadonlyArray<{
         readonly id: string;
-        readonly title: string;
         readonly slug: string;
         readonly thumbnail: {
           readonly type: ResourceType;
@@ -36,14 +33,15 @@ export type UpdateCategoryButtonMutation$data = {
             readonly url: string;
           }>;
         } | null;
+        readonly title: string;
       }>;
+      readonly id: string;
     } | null;
   } | null;
 };
-export type UpdateCategoryButtonMutationResponse = UpdateCategoryButtonMutation$data;
 export type UpdateCategoryButtonMutation = {
-  variables: UpdateCategoryButtonMutationVariables;
   response: UpdateCategoryButtonMutation$data;
+  variables: UpdateCategoryButtonMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

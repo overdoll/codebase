@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<4af8cbba78a3fdf3e736b02d63f090aa>>
- * @relayHash 4d02f76c3bb8831387f6f2857b58ef8a
+ * @generated SignedSource<<34c5a42dcfcbe3c34d291f5a96797201>>
+ * @relayHash 231396cc11c1d26a0f3133533cc4e1b2
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,23 +9,21 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4d02f76c3bb8831387f6f2857b58ef8a
+// @relayRequestID 231396cc11c1d26a0f3133533cc4e1b2
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type StaffAccountTransactionQuery$variables = {
   reference: string;
 };
-export type StaffAccountTransactionQueryVariables = StaffAccountTransactionQuery$variables;
 export type StaffAccountTransactionQuery$data = {
   readonly accountTransaction: {
-    readonly " $fragmentSpreads": FragmentRefs<"StaffTransactionCardFragment" | "StaffAccountTransactionOptionsFragment" | "StaffAccountTransactionSubscriptionFragment" | "StaffAccountTransactionEventsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"StaffAccountTransactionEventsFragment" | "StaffAccountTransactionOptionsFragment" | "StaffAccountTransactionSubscriptionFragment" | "StaffTransactionCardFragment">;
   } | null;
 };
-export type StaffAccountTransactionQueryResponse = StaffAccountTransactionQuery$data;
 export type StaffAccountTransactionQuery = {
-  variables: StaffAccountTransactionQueryVariables;
   response: StaffAccountTransactionQuery$data;
+  variables: StaffAccountTransactionQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -217,6 +215,7 @@ return {
                         "name": "avatar",
                         "plural": false,
                         "selections": [
+                          (v7/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -258,8 +257,7 @@ return {
                             "selections": (v9/*: any*/),
                             "storageKey": null
                           },
-                          (v2/*: any*/),
-                          (v7/*: any*/)
+                          (v2/*: any*/)
                         ],
                         "storageKey": null
                       }
@@ -433,7 +431,7 @@ return {
     ]
   },
   "params": {
-    "id": "4d02f76c3bb8831387f6f2857b58ef8a",
+    "id": "231396cc11c1d26a0f3133533cc4e1b2",
     "metadata": {},
     "name": "StaffAccountTransactionQuery",
     "operationKind": "query",

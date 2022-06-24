@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d3fde7c2bdb7be522bc9f8fc3979ad72>>
+ * @generated SignedSource<<393c713b11055c33485001c11407799c>>
  * @relayHash ab61a710048b2705df9806b96d78d691
  * @lightSyntaxTransform
  * @nogrep
@@ -16,19 +16,17 @@ export type DeleteAccountSavedPaymentMethodInput = {
   savedPaymentMethodId: string;
 };
 export type DeleteSavedPaymentMethodButtonMutation$variables = {
-  input: DeleteAccountSavedPaymentMethodInput;
   connections: ReadonlyArray<string>;
+  input: DeleteAccountSavedPaymentMethodInput;
 };
-export type DeleteSavedPaymentMethodButtonMutationVariables = DeleteSavedPaymentMethodButtonMutation$variables;
 export type DeleteSavedPaymentMethodButtonMutation$data = {
   readonly deleteAccountSavedPaymentMethod: {
     readonly deletedAccountSavedPaymentMethodId: string;
   } | null;
 };
-export type DeleteSavedPaymentMethodButtonMutationResponse = DeleteSavedPaymentMethodButtonMutation$data;
 export type DeleteSavedPaymentMethodButtonMutation = {
-  variables: DeleteSavedPaymentMethodButtonMutationVariables;
   response: DeleteSavedPaymentMethodButtonMutation$data;
+  variables: DeleteSavedPaymentMethodButtonMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

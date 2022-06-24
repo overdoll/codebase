@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<27d2c95eab6ae0e802747aec76f07dde>>
+ * @generated SignedSource<<57340ef44a07e4fcdff6e648a62699bd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,17 +11,16 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PayoutsMethodSettingsFragment$data = {
-  readonly payoutMethod: {
-    readonly __typename: string;
-    readonly " $fragmentSpreads": FragmentRefs<"PayoutMethodFragment">;
-  } | null;
   readonly details: {
     readonly id: string;
   } | null;
   readonly multiFactorTotpConfigured: boolean;
+  readonly payoutMethod: {
+    readonly __typename: string;
+    readonly " $fragmentSpreads": FragmentRefs<"PayoutMethodFragment">;
+  } | null;
   readonly " $fragmentType": "PayoutsMethodSettingsFragment";
 };
-export type PayoutsMethodSettingsFragment = PayoutsMethodSettingsFragment$data;
 export type PayoutsMethodSettingsFragment$key = {
   readonly " $data"?: PayoutsMethodSettingsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PayoutsMethodSettingsFragment">;

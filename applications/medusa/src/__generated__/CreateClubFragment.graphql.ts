@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c1984490f069026af678aac9bee4c86d>>
+ * @generated SignedSource<<82371bf71131070383fde709d6836463>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,14 +16,13 @@ export type CreateClubFragment$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
-        readonly slug: string;
         readonly name: string;
+        readonly slug: string;
       };
     }>;
   };
   readonly " $fragmentType": "CreateClubFragment";
 };
-export type CreateClubFragment = CreateClubFragment$data;
 export type CreateClubFragment$key = {
   readonly " $data"?: CreateClubFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"CreateClubFragment">;

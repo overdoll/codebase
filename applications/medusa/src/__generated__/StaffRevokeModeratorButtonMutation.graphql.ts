@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a248e5c2482a5ce3b110fd1bb2863ee0>>
+ * @generated SignedSource<<84b0a53ee9a4eeaae082e04875fb3f8e>>
  * @relayHash 93388e99f09efae4f0702c8708e40a1c
  * @lightSyntaxTransform
  * @nogrep
@@ -18,7 +18,6 @@ export type RevokeAccountModeratorRole = {
 export type StaffRevokeModeratorButtonMutation$variables = {
   input: RevokeAccountModeratorRole;
 };
-export type StaffRevokeModeratorButtonMutationVariables = StaffRevokeModeratorButtonMutation$variables;
 export type StaffRevokeModeratorButtonMutation$data = {
   readonly revokeAccountModeratorRole: {
     readonly account: {
@@ -27,10 +26,9 @@ export type StaffRevokeModeratorButtonMutation$data = {
     } | null;
   } | null;
 };
-export type StaffRevokeModeratorButtonMutationResponse = StaffRevokeModeratorButtonMutation$data;
 export type StaffRevokeModeratorButtonMutation = {
-  variables: StaffRevokeModeratorButtonMutationVariables;
   response: StaffRevokeModeratorButtonMutation$data;
+  variables: StaffRevokeModeratorButtonMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b1da51fbe68eac8c15ea54010bf55059>>
+ * @generated SignedSource<<e1d594c236811bf7d6b70c0de4c24765>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,20 +11,19 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SessionCardFragment$data = {
+  readonly created: any;
+  readonly current: boolean;
   readonly device: string;
   readonly ip: string;
+  readonly lastSeen: any;
   readonly location: {
     readonly city: string;
     readonly country: string;
     readonly subdivision: string;
   };
-  readonly lastSeen: any;
-  readonly current: boolean;
-  readonly created: any;
   readonly " $fragmentSpreads": FragmentRefs<"RevokeSessionFragment">;
   readonly " $fragmentType": "SessionCardFragment";
 };
-export type SessionCardFragment = SessionCardFragment$data;
 export type SessionCardFragment$key = {
   readonly " $data"?: SessionCardFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"SessionCardFragment">;

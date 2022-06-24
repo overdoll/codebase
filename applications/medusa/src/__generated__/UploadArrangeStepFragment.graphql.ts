@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9446a7f1c292b2b03b74be705f7adb50>>
+ * @generated SignedSource<<a976dba6b3a85a9f2a1495120885721b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,6 @@ export type UploadArrangeStepFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"ArrangeUploadsFragment" | "ProcessUploadsFragment">;
   readonly " $fragmentType": "UploadArrangeStepFragment";
 };
-export type UploadArrangeStepFragment = UploadArrangeStepFragment$data;
 export type UploadArrangeStepFragment$key = {
   readonly " $data"?: UploadArrangeStepFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"UploadArrangeStepFragment">;

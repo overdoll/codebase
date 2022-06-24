@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<748f52beb13593c4389642946f70b964>>
- * @relayHash d62068f4a21e6d032a50eef5d5f74261
+ * @generated SignedSource<<d80bbfba4f0f5d18b4ef4228fa77dc47>>
+ * @relayHash 0a9de06aa6f9f1cfdfb15c1d65709b2f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,24 +9,22 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d62068f4a21e6d032a50eef5d5f74261
+// @relayRequestID 0a9de06aa6f9f1cfdfb15c1d65709b2f
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type StaffViewCharacterQuery$variables = {
-  slug: string;
   seriesSlug: string;
+  slug: string;
 };
-export type StaffViewCharacterQueryVariables = StaffViewCharacterQuery$variables;
 export type StaffViewCharacterQuery$data = {
   readonly character: {
     readonly " $fragmentSpreads": FragmentRefs<"ChangeCharacterNameFragment" | "ChangeCharacterThumbnailFragment">;
   } | null;
 };
-export type StaffViewCharacterQueryResponse = StaffViewCharacterQuery$data;
 export type StaffViewCharacterQuery = {
-  variables: StaffViewCharacterQueryVariables;
   response: StaffViewCharacterQuery$data;
+  variables: StaffViewCharacterQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -174,6 +172,7 @@ return {
             "name": "thumbnail",
             "plural": false,
             "selections": [
+              (v4/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -221,8 +220,7 @@ return {
                 "kind": "ScalarField",
                 "name": "type",
                 "storageKey": null
-              },
-              (v4/*: any*/)
+              }
             ],
             "storageKey": null
           }
@@ -232,7 +230,7 @@ return {
     ]
   },
   "params": {
-    "id": "d62068f4a21e6d032a50eef5d5f74261",
+    "id": "0a9de06aa6f9f1cfdfb15c1d65709b2f",
     "metadata": {},
     "name": "StaffViewCharacterQuery",
     "operationKind": "query",

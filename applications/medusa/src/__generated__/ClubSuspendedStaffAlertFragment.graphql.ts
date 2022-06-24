@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<42f029b5672cd8f3c3cb9ab2c09c4d0e>>
+ * @generated SignedSource<<c8de95882987cf4d21ff83097692011a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,11 +16,10 @@ export type ClubSuspendedStaffAlertFragment$data = {
     readonly expires: any;
   } | null;
   readonly termination: {
-    readonly __typename: string;
+    readonly __typename: "ClubTermination";
   } | null;
   readonly " $fragmentType": "ClubSuspendedStaffAlertFragment";
 };
-export type ClubSuspendedStaffAlertFragment = ClubSuspendedStaffAlertFragment$data;
 export type ClubSuspendedStaffAlertFragment$key = {
   readonly " $data"?: ClubSuspendedStaffAlertFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ClubSuspendedStaffAlertFragment">;

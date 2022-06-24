@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4f97441bfe51ad522792126198a1bdba>>
+ * @generated SignedSource<<352625cc9f00fad1772cd6e7c225b4d6>>
  * @relayHash f32f4a26839218a074c117a378e05f8e
  * @lightSyntaxTransform
  * @nogrep
@@ -19,7 +19,6 @@ export type CancelClubPayoutInput = {
 export type StaffCancelClubPayoutButtonMutation$variables = {
   input: CancelClubPayoutInput;
 };
-export type StaffCancelClubPayoutButtonMutationVariables = StaffCancelClubPayoutButtonMutation$variables;
 export type StaffCancelClubPayoutButtonMutation$data = {
   readonly cancelClubPayout: {
     readonly clubPayout: {
@@ -28,10 +27,9 @@ export type StaffCancelClubPayoutButtonMutation$data = {
     } | null;
   } | null;
 };
-export type StaffCancelClubPayoutButtonMutationResponse = StaffCancelClubPayoutButtonMutation$data;
 export type StaffCancelClubPayoutButtonMutation = {
-  variables: StaffCancelClubPayoutButtonMutationVariables;
   response: StaffCancelClubPayoutButtonMutation$data;
+  variables: StaffCancelClubPayoutButtonMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

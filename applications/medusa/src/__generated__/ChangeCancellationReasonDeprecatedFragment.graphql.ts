@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8d65acd1d888d55cf567719a37b82cc9>>
+ * @generated SignedSource<<d1005aaa70d253cc54be83fb681182b9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,6 @@ export type ChangeCancellationReasonDeprecatedFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"ChangeCancellationReasonDeprecatedFormFragment">;
   readonly " $fragmentType": "ChangeCancellationReasonDeprecatedFragment";
 };
-export type ChangeCancellationReasonDeprecatedFragment = ChangeCancellationReasonDeprecatedFragment$data;
 export type ChangeCancellationReasonDeprecatedFragment$key = {
   readonly " $data"?: ChangeCancellationReasonDeprecatedFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ChangeCancellationReasonDeprecatedFragment">;

@@ -13,7 +13,7 @@ type CopyResourcesAndApplyFilters struct {
 		ItemId     string
 		ResourceId string
 	}
-	Filters struct {
+	Filters *struct {
 		Pixelate *struct {
 			Size int
 		}
@@ -68,8 +68,10 @@ func (h CopyResourcesAndApplyFiltersHandler) Handle(ctx context.Context, cmd Cop
 
 		var pixelate *int
 
-		if cmd.Filters.Pixelate != nil {
-			pixelate = &cmd.Filters.Pixelate.Size
+		if cmd.Filters != nil {
+			if cmd.Filters.Pixelate != nil {
+				pixelate = &cmd.Filters.Pixelate.Size
+			}
 		}
 
 		filters, err := resource.NewImageFilters(pixelate)

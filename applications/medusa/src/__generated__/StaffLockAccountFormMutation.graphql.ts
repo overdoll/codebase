@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1a83bfa3dcfeb09fedd3aa0af84ba1c7>>
+ * @generated SignedSource<<b0ffa61111e4898cfecc58e8921fadb1>>
  * @relayHash 3156551a3b42e591ea6e0339661ee6e4
  * @lightSyntaxTransform
  * @nogrep
@@ -19,7 +19,6 @@ export type LockAccountInput = {
 export type StaffLockAccountFormMutation$variables = {
   input: LockAccountInput;
 };
-export type StaffLockAccountFormMutationVariables = StaffLockAccountFormMutation$variables;
 export type StaffLockAccountFormMutation$data = {
   readonly lockAccount: {
     readonly account: {
@@ -30,10 +29,9 @@ export type StaffLockAccountFormMutation$data = {
     } | null;
   } | null;
 };
-export type StaffLockAccountFormMutationResponse = StaffLockAccountFormMutation$data;
 export type StaffLockAccountFormMutation = {
-  variables: StaffLockAccountFormMutationVariables;
   response: StaffLockAccountFormMutation$data;
+  variables: StaffLockAccountFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cf182dc3d11de1e7614b643af9c9372c>>
+ * @generated SignedSource<<4b198c588058777fef2afc107d1c2196>>
  * @relayHash a79f1c0558459bc05fce835276d72821
  * @lightSyntaxTransform
  * @nogrep
@@ -18,23 +18,21 @@ export type UnlockAccountInput = {
 export type UnlockAccountFormMutation$variables = {
   input: UnlockAccountInput;
 };
-export type UnlockAccountFormMutationVariables = UnlockAccountFormMutation$variables;
 export type UnlockAccountFormMutation$data = {
   readonly unlockAccount: {
     readonly account: {
       readonly id: string;
+      readonly isModerator: boolean;
+      readonly isStaff: boolean;
       readonly lock: {
         readonly expires: any;
       } | null;
-      readonly isModerator: boolean;
-      readonly isStaff: boolean;
     } | null;
   } | null;
 };
-export type UnlockAccountFormMutationResponse = UnlockAccountFormMutation$data;
 export type UnlockAccountFormMutation = {
-  variables: UnlockAccountFormMutationVariables;
   response: UnlockAccountFormMutation$data;
+  variables: UnlockAccountFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

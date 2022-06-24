@@ -6,6 +6,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/migrate"
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/libraries/bootstrap"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/localization"
 )
 
@@ -59,6 +60,7 @@ const clubsIndexProperties = `
 
 const clubsIndex = `
 {
+    "settings": { ` + localization.ESSettings + ` },
 	"mappings": {
 		"dynamic": "strict",
 		"properties":` + clubsIndexProperties + `
@@ -72,7 +74,7 @@ func createClubsIndex(ctx context.Context, session gocqlx.Session, ev migrate.Ca
 	_, err := esClient.CreateIndex(adapters.ClubsIndexName).BodyString(clubsIndex).Do(ctx)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to create clubs index")
 	}
 
 	return nil

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c4013bd5675a441cca0e4282206b652f>>
- * @relayHash c19436125eda281c1de0e9fb12238f91
+ * @generated SignedSource<<615f958d608d392b5242b736485b07e1>>
+ * @relayHash fc2f407663a48e983e10e073e01868f0
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,14 +9,13 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c19436125eda281c1de0e9fb12238f91
+// @relayRequestID fc2f407663a48e983e10e073e01868f0
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ThumbnailClubSettingsQuery$variables = {
   slug: string;
 };
-export type ThumbnailClubSettingsQueryVariables = ThumbnailClubSettingsQuery$variables;
 export type ThumbnailClubSettingsQuery$data = {
   readonly club: {
     readonly id: string;
@@ -26,10 +25,9 @@ export type ThumbnailClubSettingsQuery$data = {
     readonly " $fragmentSpreads": FragmentRefs<"ChangeClubThumbnailFormFragment">;
   } | null;
 };
-export type ThumbnailClubSettingsQueryResponse = ThumbnailClubSettingsQuery$data;
 export type ThumbnailClubSettingsQuery = {
-  variables: ThumbnailClubSettingsQueryVariables;
   response: ThumbnailClubSettingsQuery$data;
+  variables: ThumbnailClubSettingsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -130,6 +128,7 @@ return {
             "name": "thumbnail",
             "plural": false,
             "selections": [
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -177,8 +176,7 @@ return {
                 "kind": "ScalarField",
                 "name": "type",
                 "storageKey": null
-              },
-              (v2/*: any*/)
+              }
             ],
             "storageKey": null
           }
@@ -188,7 +186,7 @@ return {
     ]
   },
   "params": {
-    "id": "c19436125eda281c1de0e9fb12238f91",
+    "id": "fc2f407663a48e983e10e073e01868f0",
     "metadata": {},
     "name": "ThumbnailClubSettingsQuery",
     "operationKind": "query",

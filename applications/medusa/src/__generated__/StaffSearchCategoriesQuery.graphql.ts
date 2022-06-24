@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<19fd00c5a087d073f0226831d1119a1f>>
- * @relayHash af8084f40704782e2fb6625e8de2979e
+ * @generated SignedSource<<6906295ceb6c1cdff54712400b93dca0>>
+ * @relayHash 9b99fb358262923dfd6e49a6d867b183
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,21 +9,19 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID af8084f40704782e2fb6625e8de2979e
+// @relayRequestID 9b99fb358262923dfd6e49a6d867b183
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type StaffSearchCategoriesQuery$variables = {
   title?: string | null;
 };
-export type StaffSearchCategoriesQueryVariables = StaffSearchCategoriesQuery$variables;
 export type StaffSearchCategoriesQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"StaffSearchCategoriesFragment">;
 };
-export type StaffSearchCategoriesQueryResponse = StaffSearchCategoriesQuery$data;
 export type StaffSearchCategoriesQuery = {
-  variables: StaffSearchCategoriesQueryVariables;
   response: StaffSearchCategoriesQuery$data;
+  variables: StaffSearchCategoriesQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -138,6 +136,7 @@ return {
                         "name": "type",
                         "storageKey": null
                       },
+                      (v2/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -185,8 +184,7 @@ return {
                         "kind": "ScalarField",
                         "name": "processed",
                         "storageKey": null
-                      },
-                      (v2/*: any*/)
+                      }
                     ],
                     "storageKey": null
                   },
@@ -252,7 +250,7 @@ return {
     ]
   },
   "params": {
-    "id": "af8084f40704782e2fb6625e8de2979e",
+    "id": "9b99fb358262923dfd6e49a6d867b183",
     "metadata": {},
     "name": "StaffSearchCategoriesQuery",
     "operationKind": "query",

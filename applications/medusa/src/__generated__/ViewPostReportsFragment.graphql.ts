@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3e7b2f169c1376013eaf2771fddf87f6>>
+ * @generated SignedSource<<2c6ec80fcf893e73d7d8206f2f56ff0c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,23 +11,22 @@
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ViewPostReportsFragment$data = {
+  readonly id: string;
   readonly reports: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly id: string;
         readonly account: {
           readonly username: string;
         };
+        readonly id: string;
         readonly rule: {
           readonly title: string;
         };
       };
     }>;
   };
-  readonly id: string;
   readonly " $fragmentType": "ViewPostReportsFragment";
 };
-export type ViewPostReportsFragment = ViewPostReportsFragment$data;
 export type ViewPostReportsFragment$key = {
   readonly " $data"?: ViewPostReportsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ViewPostReportsFragment">;

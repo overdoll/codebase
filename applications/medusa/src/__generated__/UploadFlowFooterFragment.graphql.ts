@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<10b3f25b12e43ec52b30d962f504a701>>
+ * @generated SignedSource<<4aa5342151ca5f8d223b217c832482d0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,10 +11,9 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type UploadFlowFooterFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"UpdateAudienceButton" | "UpdateCategoryButtonFragment" | "UpdateCharacterButtonFragment" | "SubmitPostButtonFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"SubmitPostButtonFragment" | "UpdateAudienceButton" | "UpdateCategoryButtonFragment" | "UpdateCharacterButtonFragment">;
   readonly " $fragmentType": "UploadFlowFooterFragment";
 };
-export type UploadFlowFooterFragment = UploadFlowFooterFragment$data;
 export type UploadFlowFooterFragment$key = {
   readonly " $data"?: UploadFlowFooterFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"UploadFlowFooterFragment">;

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<55e6d37c893ba1cdefae177edb2c800e>>
- * @relayHash 72485ed8a7c0689942e19a42b02ae7e8
+ * @generated SignedSource<<1e98a4d9a39bf2b96061d45b58041b4d>>
+ * @relayHash 5b46ca8da0e2aa157dc0a3ebeae59396
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,24 +9,22 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 72485ed8a7c0689942e19a42b02ae7e8
+// @relayRequestID 5b46ca8da0e2aa157dc0a3ebeae59396
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SuggestedClubsQuery$variables = {
   search?: string | null;
 };
-export type SuggestedClubsQueryVariables = SuggestedClubsQuery$variables;
 export type SuggestedClubsQuery$data = {
   readonly viewer: {
     readonly " $fragmentSpreads": FragmentRefs<"JoinClubFromTileViewerFragment">;
   } | null;
   readonly " $fragmentSpreads": FragmentRefs<"SuggestedClubsFragment">;
 };
-export type SuggestedClubsQueryResponse = SuggestedClubsQuery$data;
 export type SuggestedClubsQuery = {
-  variables: SuggestedClubsQueryVariables;
   response: SuggestedClubsQuery$data;
+  variables: SuggestedClubsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -222,13 +220,13 @@ return {
                     "name": "thumbnail",
                     "plural": false,
                     "selections": [
+                      (v2/*: any*/),
                       (v4/*: any*/),
                       (v5/*: any*/),
                       (v6/*: any*/),
                       (v7/*: any*/),
                       (v8/*: any*/),
-                      (v9/*: any*/),
-                      (v2/*: any*/)
+                      (v9/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -279,6 +277,7 @@ return {
                                     "plural": false,
                                     "selections": [
                                       (v9/*: any*/),
+                                      (v2/*: any*/),
                                       (v4/*: any*/),
                                       (v5/*: any*/),
                                       (v6/*: any*/),
@@ -290,8 +289,7 @@ return {
                                         "kind": "ScalarField",
                                         "name": "processed",
                                         "storageKey": null
-                                      },
-                                      (v2/*: any*/)
+                                      }
                                     ],
                                     "storageKey": null
                                   },
@@ -398,7 +396,7 @@ return {
     ]
   },
   "params": {
-    "id": "72485ed8a7c0689942e19a42b02ae7e8",
+    "id": "5b46ca8da0e2aa157dc0a3ebeae59396",
     "metadata": {},
     "name": "SuggestedClubsQuery",
     "operationKind": "query",

@@ -117,7 +117,9 @@ func newPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
 	err = prin.ExtendWithClubExtension(ext)
 	require.NoError(t, err)
 
-	pst, err := post.NewPost(prin, club.UnmarshalClubFromDatabase(clubId, "", nil, nil, nil, 0, accountId, false, nil, nil, false, false, nil, time.Now(), time.Now()))
+	clb := club.UnmarshalClubFromDatabase(clubId, "", nil, nil, nil, nil, 0, accountId, false, nil, nil, false, false, nil, false, time.Now(), time.Now())
+
+	pst, err := post.NewPost(prin, clb)
 	require.NoError(t, err)
 
 	err = pst.UpdateAudienceRequest(prin, post.UnmarshalAudienceFromDatabase(
@@ -126,7 +128,7 @@ func newPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
 
 	require.NoError(t, err)
 
-	err = pst.SubmitPostRequest(prin)
+	err = pst.SubmitPostRequest(clb, prin)
 
 	require.NoError(t, err)
 	return pst

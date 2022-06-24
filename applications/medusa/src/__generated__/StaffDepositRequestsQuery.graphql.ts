@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6597ea810ba67a73bb32f88cc9e4e9a3>>
+ * @generated SignedSource<<157b5fa86faca1f475c14f70c17ba1bb>>
  * @relayHash 0fc7a8ddd09d631d32656746b103125a
  * @lightSyntaxTransform
  * @nogrep
@@ -14,14 +14,12 @@
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type StaffDepositRequestsQuery$variables = {};
-export type StaffDepositRequestsQueryVariables = StaffDepositRequestsQuery$variables;
 export type StaffDepositRequestsQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"StaffDepositRequestsFragment">;
 };
-export type StaffDepositRequestsQueryResponse = StaffDepositRequestsQuery$data;
 export type StaffDepositRequestsQuery = {
-  variables: StaffDepositRequestsQueryVariables;
   response: StaffDepositRequestsQuery$data;
+  variables: StaffDepositRequestsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

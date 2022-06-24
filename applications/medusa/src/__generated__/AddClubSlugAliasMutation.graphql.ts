@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b9577e95d1fadd7cfcd49b4cf796e431>>
+ * @generated SignedSource<<91626e0ff1b590401e9ebbeec7c36320>>
  * @relayHash 3025dddf16066f205f6fb516e9fb342e
  * @lightSyntaxTransform
  * @nogrep
@@ -20,7 +20,6 @@ export type AddClubSlugAliasInput = {
 export type AddClubSlugAliasMutation$variables = {
   input: AddClubSlugAliasInput;
 };
-export type AddClubSlugAliasMutationVariables = AddClubSlugAliasMutation$variables;
 export type AddClubSlugAliasMutation$data = {
   readonly addClubSlugAlias: {
     readonly club: {
@@ -34,10 +33,9 @@ export type AddClubSlugAliasMutation$data = {
     readonly validation: AddClubSlugAliasValidation | null;
   } | null;
 };
-export type AddClubSlugAliasMutationResponse = AddClubSlugAliasMutation$data;
 export type AddClubSlugAliasMutation = {
-  variables: AddClubSlugAliasMutationVariables;
   response: AddClubSlugAliasMutation$data;
+  variables: AddClubSlugAliasMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<097a9836903cc02d842e4809e0ffe1e3>>
+ * @generated SignedSource<<381fe592d7e260be5d941a12cec1760d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type NewPaymentMethodViewerFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"ClosePaymentModalButtonFragment">;
   readonly " $fragmentType": "NewPaymentMethodViewerFragment";
 };
-export type NewPaymentMethodViewerFragment = NewPaymentMethodViewerFragment$data;
 export type NewPaymentMethodViewerFragment$key = {
   readonly " $data"?: NewPaymentMethodViewerFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"NewPaymentMethodViewerFragment">;

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1bef60181702c2c238e51db61eb4e1cf>>
- * @relayHash 5fcef5bb2c520a2e4cbd6724aad70343
+ * @generated SignedSource<<fb3d8a019de653fbf9d2c7235399b658>>
+ * @relayHash c67f7ed6582bb43d0d5f00c3db3d04b1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 5fcef5bb2c520a2e4cbd6724aad70343
+// @relayRequestID c67f7ed6582bb43d0d5f00c3db3d04b1
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,14 +18,12 @@ export type SelectSeriesPaginationFragment$variables = {
   first?: number | null;
   title?: string | null;
 };
-export type SelectSeriesPaginationFragmentVariables = SelectSeriesPaginationFragment$variables;
 export type SelectSeriesPaginationFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"SelectSeriesSearchFragment">;
 };
-export type SelectSeriesPaginationFragmentResponse = SelectSeriesPaginationFragment$data;
 export type SelectSeriesPaginationFragment = {
-  variables: SelectSeriesPaginationFragmentVariables;
   response: SelectSeriesPaginationFragment$data;
+  variables: SelectSeriesPaginationFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -153,6 +151,7 @@ return {
                         "name": "type",
                         "storageKey": null
                       },
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -200,8 +199,7 @@ return {
                         "kind": "ScalarField",
                         "name": "processed",
                         "storageKey": null
-                      },
-                      (v4/*: any*/)
+                      }
                     ],
                     "storageKey": null
                   },
@@ -267,7 +265,7 @@ return {
     ]
   },
   "params": {
-    "id": "5fcef5bb2c520a2e4cbd6724aad70343",
+    "id": "c67f7ed6582bb43d0d5f00c3db3d04b1",
     "metadata": {},
     "name": "SelectSeriesPaginationFragment",
     "operationKind": "query",

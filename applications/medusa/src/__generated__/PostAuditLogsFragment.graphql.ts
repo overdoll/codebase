@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8b523d54882a375d96f355e98a391b3a>>
+ * @generated SignedSource<<4a8e717671c523e0d05142c808dc9c9f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostAuditLogsFragment$data = {
+  readonly id: string;
   readonly postAuditLogs: {
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -18,10 +19,8 @@ export type PostAuditLogsFragment$data = {
       };
     }>;
   };
-  readonly id: string;
   readonly " $fragmentType": "PostAuditLogsFragment";
 };
-export type PostAuditLogsFragment = PostAuditLogsFragment$data;
 export type PostAuditLogsFragment$key = {
   readonly " $data"?: PostAuditLogsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PostAuditLogsFragment">;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e9e0d64824a71cce5d97015ea51e878d>>
+ * @generated SignedSource<<ccf68e1f0dcde4118b4fc61d984316d1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,14 +13,13 @@ import { FragmentRefs } from "relay-runtime";
 export type ModeratePostFragment$data = {
   readonly id: string;
   readonly post: {
-    readonly id: string;
     readonly club: {
       readonly name: string;
     };
+    readonly id: string;
   };
   readonly " $fragmentType": "ModeratePostFragment";
 };
-export type ModeratePostFragment = ModeratePostFragment$data;
 export type ModeratePostFragment$key = {
   readonly " $data"?: ModeratePostFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ModeratePostFragment">;

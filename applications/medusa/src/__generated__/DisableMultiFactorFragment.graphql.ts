@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<efc9d49ebd44cbc93b07bc01386370c2>>
+ * @generated SignedSource<<c3ca81312089e5afcaa4823ca0bab6e1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type DisableMultiFactorFragment$data = {
   readonly canDisableMultiFactor: boolean;
   readonly " $fragmentType": "DisableMultiFactorFragment";
 };
-export type DisableMultiFactorFragment = DisableMultiFactorFragment$data;
 export type DisableMultiFactorFragment$key = {
   readonly " $data"?: DisableMultiFactorFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"DisableMultiFactorFragment">;

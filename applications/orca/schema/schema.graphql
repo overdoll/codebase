@@ -1117,6 +1117,11 @@ type Audience implements Node
     supporterOnlyStatus: [SupporterOnlyStatus!]
   ): PostConnection! @join__field(graph: STING)
 
+  """
+  An ID that can be used to uniquely-identify this audience. Never changes.
+  """
+  reference: String! @join__field(graph: STING)
+
   """A url-friendly ID. Should be used when searching."""
   slug: String! @join__field(graph: STING)
 
@@ -1575,6 +1580,11 @@ type Category implements Node
     supporterOnlyStatus: [SupporterOnlyStatus!]
   ): PostConnection! @join__field(graph: STING)
 
+  """
+  An ID that can be used to uniquely-identify this category. Never changes.
+  """
+  reference: String! @join__field(graph: STING)
+
   """A url-friendly ID. Should be used when searching"""
   slug: String! @join__field(graph: STING)
 
@@ -1668,6 +1678,11 @@ type Character implements Node
     supporterOnlyStatus: [SupporterOnlyStatus!]
   ): PostConnection! @join__field(graph: STING)
 
+  """
+  An ID that can be used to uniquely-identify this character. Never changes.
+  """
+  reference: String! @join__field(graph: STING)
+
   """The series linked to this character."""
   series: Series! @join__field(graph: STING)
 
@@ -1715,6 +1730,18 @@ type Club implements Node
 {
   """The current balance of this club."""
   balance: Balance! @join__field(graph: RINGER)
+
+  """A resource of the club's banner."""
+  banner: Resource @join__field(graph: STING)
+
+  """
+  Whether creating supporter-only posts is enabled or disabled for this club.
+  
+  When this is true, a club owner cannot mark individual content in a post as "supporter-only".
+  
+  Additionally, if a club owner attempts to submit a post with supporter-only content already present, they will not be able to.
+  """
+  canCreateSupporterOnlyPosts: Boolean! @join__field(graph: STING)
 
   """Whether or not you can become a supporter of this club."""
   canSupport: Boolean! @join__field(graph: STING)
@@ -1937,7 +1964,7 @@ type Club implements Node
   """Whether or not this club is terminated."""
   termination: ClubTermination @join__field(graph: STING)
 
-  """A URL pointing to the object's thumbnail."""
+  """A resource of the club's thumbnail."""
   thumbnail: Resource @join__field(graph: STING)
 
   """Month-by-month transaction metrics of this club."""
@@ -2879,6 +2906,30 @@ type DisableAccountMultiFactorPayload {
   account: Account
 }
 
+"""Disable club supporter-only posts."""
+input DisableClubSupporterOnlyPostsInput {
+  """The club to disable supporter-only posts for."""
+  clubId: ID!
+}
+
+"""Disable club supporter-only posts payload."""
+type DisableClubSupporterOnlyPostsPayload {
+  """The new club after supporter-only posts are disabled."""
+  club: Club
+}
+
+"""Enable club supporter-only posts."""
+input EnableClubSupporterOnlyPostsInput {
+  """The club to enable supporter-only posts for."""
+  clubId: ID!
+}
+
+"""Enable club supporter-only posts payload."""
+type EnableClubSupporterOnlyPostsPayload {
+  """The new club after supporter-only posts are enabled."""
+  club: Club
+}
+
 """Input for enrolling the account into TOTP"""
 input EnrollAccountMultiFactorTotpInput {
   """The code that the TOTP expects"""
@@ -3479,6 +3530,24 @@ type Mutation {
   disableAccountMultiFactor: DisableAccountMultiFactorPayload @join__field(graph: EVA)
 
   """
+  Disable club supporter-only posts.
+  
+  When this mutation is ran, the club will no longer be able to create supporter-only posts, and their supporter timer will reset, as well as removing the ability to collect subscriptions.
+  
+  In order to be able to collect subscriptions again, the enableClubSupporterOnlyPosts mutation should be ran, and the club owner should create a post with supporter-only content.
+  
+  Staff+ only.
+  """
+  disableClubSupporterOnlyPosts(input: DisableClubSupporterOnlyPostsInput!): DisableClubSupporterOnlyPostsPayload @join__field(graph: STING)
+
+  """
+  Enable club supporter-only posts, if previously disabled.
+  
+  Staff+ only.
+  """
+  enableClubSupporterOnlyPosts(input: EnableClubSupporterOnlyPostsInput!): EnableClubSupporterOnlyPostsPayload @join__field(graph: STING)
+
+  """
   Enroll into TOTP.
   
   Must have called "generateAccountMultiFactorTOTP" first before enrolling, since this will
@@ -3796,7 +3865,13 @@ type Mutation {
   """Update a post in draft status - characters"""
   updatePostCharacters(input: UpdatePostCharactersInput!): UpdatePostCharactersPayload @join__field(graph: STING)
 
-  """Update a post content - whether or not it is supporter only"""
+  """
+  Update a post content - whether or not it is supporter only.
+  
+  If updating to true, the club must be able to post supporter-only content through "canCreateSupporterOnlyPosts"
+  
+  Can update to false even if "canCreateSupporterOnlyPosts" is false.
+  """
   updatePostContentIsSupporterOnly(input: UpdatePostContentIsSupporterOnlyInput!): UpdatePostContentIsSupporterOnlyPayload @join__field(graph: STING)
 
   """
@@ -4031,6 +4106,15 @@ type PostContent {
 
   """The resource belonging to this content."""
   resource: Resource!
+
+  """
+  The resource for the supporter-only content.
+  
+  If "viewerCanViewSupporterOnlyContent" is false, then this field will contain the original resource, with the URLs omitted. This allows you to use the details, such as the type (since the resource in the "resource" box will always be an image) or see the duration of the video.
+  
+  This field will be nil if "viewerCanViewSupporterOnlyContent" is true
+  """
+  supporterOnlyResource: Resource
 
   """Whether or not the viewer is able to see this content."""
   viewerCanViewSupporterOnlyContent: Boolean!
@@ -4392,6 +4476,23 @@ type Query {
     last: Int
   ): DepositRequestConnection! @join__field(graph: RINGER)
 
+  """Club discovery endpoint."""
+  discoverClubs(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): ClubConnection! @join__field(graph: STING)
+
   """
   List of all available languages
   
@@ -4556,6 +4657,26 @@ type Query {
     """Returns the last _n_ elements from the list."""
     last: Int
   ): RuleConnection! @join__field(graph: PARLEY)
+
+  """Perform a search across multiple types."""
+  search(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """What you want to search."""
+    query: String!
+  ): SearchConnection! @join__field(graph: STING)
 
   """Get a single serial."""
   serial(
@@ -4758,7 +4879,7 @@ type Resource {
   id: ID!
 
   """
-  The additional 10x10 base64-encoded image that can be used as a preview.
+  A hex-code color of the resource that can be used in-place while the resource is loading.
   """
   preview: String!
 
@@ -4930,6 +5051,18 @@ type RuleEdge {
   node: Rule!
 }
 
+union Search = Category | Character | Club | Series
+
+type SearchConnection {
+  edges: [SearchEdge!]!
+  pageInfo: PageInfo!
+}
+
+type SearchEdge {
+  cursor: String!
+  node: Search!
+}
+
 type Series implements Node
   @join__owner(graph: STING)
   @join__type(graph: STING, key: "id")
@@ -4971,6 +5104,11 @@ type Series implements Node
     """Search by a post supporter only status."""
     supporterOnlyStatus: [SupporterOnlyStatus!]
   ): PostConnection! @join__field(graph: STING)
+
+  """
+  An ID that can be used to uniquely-identify this series. Never changes.
+  """
+  reference: String! @join__field(graph: STING)
 
   """A url-friendly ID. Should be used when searching"""
   slug: String! @join__field(graph: STING)

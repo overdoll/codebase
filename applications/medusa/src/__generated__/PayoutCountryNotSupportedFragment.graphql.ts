@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f08c925ce79d42cfee2b0009d0437792>>
+ * @generated SignedSource<<377a1ca5713ad839b7eb0030afd96224>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type PayoutCountryNotSupportedFragment$data = {
   readonly name: string;
   readonly " $fragmentType": "PayoutCountryNotSupportedFragment";
 };
-export type PayoutCountryNotSupportedFragment = PayoutCountryNotSupportedFragment$data;
 export type PayoutCountryNotSupportedFragment$key = {
   readonly " $data"?: PayoutCountryNotSupportedFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PayoutCountryNotSupportedFragment">;

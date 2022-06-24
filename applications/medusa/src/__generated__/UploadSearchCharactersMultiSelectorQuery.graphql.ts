@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<aefa55ef0c4353b6538778136ab20301>>
- * @relayHash dc7e01a71e456dd959c7e077fbbe3f7d
+ * @generated SignedSource<<6b7d7a911ca09d2c6cb7ccbb7d481835>>
+ * @relayHash 057f26c9b8900894360fe5b80ccab8d5
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,21 +9,19 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID dc7e01a71e456dd959c7e077fbbe3f7d
+// @relayRequestID 057f26c9b8900894360fe5b80ccab8d5
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type UploadSearchCharactersMultiSelectorQuery$variables = {
   name?: string | null;
 };
-export type UploadSearchCharactersMultiSelectorQueryVariables = UploadSearchCharactersMultiSelectorQuery$variables;
 export type UploadSearchCharactersMultiSelectorQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"UploadSearchCharactersMultiSelectorFragment">;
 };
-export type UploadSearchCharactersMultiSelectorQueryResponse = UploadSearchCharactersMultiSelectorQuery$data;
 export type UploadSearchCharactersMultiSelectorQuery = {
-  variables: UploadSearchCharactersMultiSelectorQueryVariables;
   response: UploadSearchCharactersMultiSelectorQuery$data;
+  variables: UploadSearchCharactersMultiSelectorQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -153,6 +151,7 @@ return {
                         "name": "type",
                         "storageKey": null
                       },
+                      (v3/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -200,8 +199,7 @@ return {
                         "kind": "ScalarField",
                         "name": "processed",
                         "storageKey": null
-                      },
-                      (v3/*: any*/)
+                      }
                     ],
                     "storageKey": null
                   },
@@ -267,7 +265,7 @@ return {
     ]
   },
   "params": {
-    "id": "dc7e01a71e456dd959c7e077fbbe3f7d",
+    "id": "057f26c9b8900894360fe5b80ccab8d5",
     "metadata": {},
     "name": "UploadSearchCharactersMultiSelectorQuery",
     "operationKind": "query",

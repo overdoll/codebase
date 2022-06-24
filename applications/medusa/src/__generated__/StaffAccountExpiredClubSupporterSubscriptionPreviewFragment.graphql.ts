@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8ab2bbef8f09e0cea94fc99d5eecd7d2>>
+ * @generated SignedSource<<cf0d1492a51c5532718613b570c68b7f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,14 +11,13 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type StaffAccountExpiredClubSupporterSubscriptionPreviewFragment$data = {
-  readonly supporterSince: any;
-  readonly expiredAt: any;
   readonly club: {
     readonly name: string;
   };
+  readonly expiredAt: any;
+  readonly supporterSince: any;
   readonly " $fragmentType": "StaffAccountExpiredClubSupporterSubscriptionPreviewFragment";
 };
-export type StaffAccountExpiredClubSupporterSubscriptionPreviewFragment = StaffAccountExpiredClubSupporterSubscriptionPreviewFragment$data;
 export type StaffAccountExpiredClubSupporterSubscriptionPreviewFragment$key = {
   readonly " $data"?: StaffAccountExpiredClubSupporterSubscriptionPreviewFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"StaffAccountExpiredClubSupporterSubscriptionPreviewFragment">;

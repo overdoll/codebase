@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<72d1db09c4334eca33fec210a48248f9>>
+ * @generated SignedSource<<b24d39b3f6f25114bf97207ff8a5f68b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,12 +13,11 @@ export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future 
 import { FragmentRefs } from "relay-runtime";
 export type StaffAccountTransactionEventFragment$data = {
   readonly amount: number;
+  readonly createdAt: any;
   readonly currency: Currency;
   readonly reason: string;
-  readonly createdAt: any;
   readonly " $fragmentType": "StaffAccountTransactionEventFragment";
 };
-export type StaffAccountTransactionEventFragment = StaffAccountTransactionEventFragment$data;
 export type StaffAccountTransactionEventFragment$key = {
   readonly " $data"?: StaffAccountTransactionEventFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"StaffAccountTransactionEventFragment">;

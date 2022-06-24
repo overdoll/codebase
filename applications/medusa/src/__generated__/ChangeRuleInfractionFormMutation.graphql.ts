@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bef84902870f319c7d649e9fd5ba2ab6>>
+ * @generated SignedSource<<601157d28edf0d0096555bcc899e7e3e>>
  * @relayHash 9d76c867eeaf618e63a5869261656a0f
  * @lightSyntaxTransform
  * @nogrep
@@ -19,7 +19,6 @@ export type UpdateRuleInfractionInput = {
 export type ChangeRuleInfractionFormMutation$variables = {
   input: UpdateRuleInfractionInput;
 };
-export type ChangeRuleInfractionFormMutationVariables = ChangeRuleInfractionFormMutation$variables;
 export type ChangeRuleInfractionFormMutation$data = {
   readonly updateRuleInfraction: {
     readonly rule: {
@@ -28,10 +27,9 @@ export type ChangeRuleInfractionFormMutation$data = {
     } | null;
   } | null;
 };
-export type ChangeRuleInfractionFormMutationResponse = ChangeRuleInfractionFormMutation$data;
 export type ChangeRuleInfractionFormMutation = {
-  variables: ChangeRuleInfractionFormMutationVariables;
   response: ChangeRuleInfractionFormMutation$data;
+  variables: ChangeRuleInfractionFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

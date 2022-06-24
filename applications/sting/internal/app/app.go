@@ -60,6 +60,9 @@ type Commands struct {
 
 	UpdateResources command.UpdateResourcesHandler
 
+	DisableClubSupporterOnlyPosts command.DisableClubSupporterOnlyPostsHandler
+	EnableClubSupporterOnlyPosts  command.EnableClubSupporterOnlyPostsHandler
+
 	CreateClub                    command.CreateClubHandler
 	UpdateClubName                command.UpdateClubNameHandler
 	UpdateClubThumbnail           command.UpdateClubThumbnailHandler
@@ -113,6 +116,9 @@ type Queries struct {
 	PostsFeed             query.PostsFeedHandler
 	SuggestedPostsForPost query.SuggestedPostsForPostHandler
 	ClubMembersPostsFeed  query.ClubMembersPostsFeedHandler
+
+	DiscoverClubs query.DiscoverClubsHandler
+	Search        query.SearchHandler
 
 	SearchClubs                 query.SearchClubsHandler
 	ClubBySlug                  query.ClubBySlugHandler

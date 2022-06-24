@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<021acc65ffbdd90e9882f2200dad86f6>>
+ * @generated SignedSource<<858b318f6014e4f040ae12a582e70228>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type CCBillSelectSavedPaymentFormViewerFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"SelectPaymentMethodInputFragment">;
   readonly " $fragmentType": "CCBillSelectSavedPaymentFormViewerFragment";
 };
-export type CCBillSelectSavedPaymentFormViewerFragment = CCBillSelectSavedPaymentFormViewerFragment$data;
 export type CCBillSelectSavedPaymentFormViewerFragment$key = {
   readonly " $data"?: CCBillSelectSavedPaymentFormViewerFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"CCBillSelectSavedPaymentFormViewerFragment">;

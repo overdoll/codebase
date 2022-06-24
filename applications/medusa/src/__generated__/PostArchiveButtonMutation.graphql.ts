@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e46fcc8167172b52679b90ed50b4ed67>>
+ * @generated SignedSource<<9a69ca35c6ab54852b8c555c28444aa9>>
  * @relayHash fba510db779c812692a0c7145555b5c9
  * @lightSyntaxTransform
  * @nogrep
@@ -19,7 +19,6 @@ export type ArchivePostInput = {
 export type PostArchiveButtonMutation$variables = {
   input: ArchivePostInput;
 };
-export type PostArchiveButtonMutationVariables = PostArchiveButtonMutation$variables;
 export type PostArchiveButtonMutation$data = {
   readonly archivePost: {
     readonly post: {
@@ -28,10 +27,9 @@ export type PostArchiveButtonMutation$data = {
     } | null;
   } | null;
 };
-export type PostArchiveButtonMutationResponse = PostArchiveButtonMutation$data;
 export type PostArchiveButtonMutation = {
-  variables: PostArchiveButtonMutationVariables;
   response: PostArchiveButtonMutation$data;
+  variables: PostArchiveButtonMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

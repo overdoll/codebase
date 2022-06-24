@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9f97c27c4fd94469df45d6eaf068fd34>>
+ * @generated SignedSource<<2d2c78ba68ab7b1c2ada675efc44d771>>
  * @relayHash 71108957416e586f80f5ed3a2bb99e82
  * @lightSyntaxTransform
  * @nogrep
@@ -18,7 +18,6 @@ export type RemoveModeratorFromPostQueueInput = {
 export type QueueSettingsRemoveMutation$variables = {
   input: RemoveModeratorFromPostQueueInput;
 };
-export type QueueSettingsRemoveMutationVariables = QueueSettingsRemoveMutation$variables;
 export type QueueSettingsRemoveMutation$data = {
   readonly removeModeratorFromPostQueue: {
     readonly account: {
@@ -29,10 +28,9 @@ export type QueueSettingsRemoveMutation$data = {
     } | null;
   } | null;
 };
-export type QueueSettingsRemoveMutationResponse = QueueSettingsRemoveMutation$data;
 export type QueueSettingsRemoveMutation = {
-  variables: QueueSettingsRemoveMutationVariables;
   response: QueueSettingsRemoveMutation$data;
+  variables: QueueSettingsRemoveMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

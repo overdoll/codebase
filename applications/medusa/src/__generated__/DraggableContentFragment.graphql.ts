@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<89a6e70588f25da1c6eae6ac55f3c685>>
+ * @generated SignedSource<<7eabf072f8d6bcd044d409c5f75acaec>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,6 @@ export type DraggableContentFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"ResourceInfoFragment">;
   readonly " $fragmentType": "DraggableContentFragment";
 };
-export type DraggableContentFragment = DraggableContentFragment$data;
 export type DraggableContentFragment$key = {
   readonly " $data"?: DraggableContentFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"DraggableContentFragment">;

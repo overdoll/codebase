@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<116555035c4e16960a24b3c5f9e71c78>>
+ * @generated SignedSource<<d3d93f3528128581cff6bb18d718aed9>>
  * @relayHash 871e900bd0799c0a5b76d45a8f6daab0
  * @lightSyntaxTransform
  * @nogrep
@@ -20,7 +20,6 @@ export type UpdateCharacterThumbnailInput = {
 export type ChangeCharacterThumbnailFormMutation$variables = {
   input: UpdateCharacterThumbnailInput;
 };
-export type ChangeCharacterThumbnailFormMutationVariables = ChangeCharacterThumbnailFormMutation$variables;
 export type ChangeCharacterThumbnailFormMutation$data = {
   readonly updateCharacterThumbnail: {
     readonly character: {
@@ -28,17 +27,16 @@ export type ChangeCharacterThumbnailFormMutation$data = {
       readonly thumbnail: {
         readonly type: ResourceType;
         readonly urls: ReadonlyArray<{
-          readonly url: string;
           readonly mimeType: string;
+          readonly url: string;
         }>;
       } | null;
     } | null;
   } | null;
 };
-export type ChangeCharacterThumbnailFormMutationResponse = ChangeCharacterThumbnailFormMutation$data;
 export type ChangeCharacterThumbnailFormMutation = {
-  variables: ChangeCharacterThumbnailFormMutationVariables;
   response: ChangeCharacterThumbnailFormMutation$data;
+  variables: ChangeCharacterThumbnailFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

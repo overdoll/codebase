@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a701dd5010854db926459ec42878fac0>>
+ * @generated SignedSource<<87abb78dc534395992e3d8be84c86a2c>>
  * @relayHash 06f231f9450ad429f31c8079eff2f4e6
  * @lightSyntaxTransform
  * @nogrep
@@ -16,10 +16,9 @@ export type CreateCancellationReasonInput = {
   title: string;
 };
 export type CreateCancellationReasonFormMutation$variables = {
-  input: CreateCancellationReasonInput;
   connections: ReadonlyArray<string>;
+  input: CreateCancellationReasonInput;
 };
-export type CreateCancellationReasonFormMutationVariables = CreateCancellationReasonFormMutation$variables;
 export type CreateCancellationReasonFormMutation$data = {
   readonly createCancellationReason: {
     readonly cancellationReason: {
@@ -28,10 +27,9 @@ export type CreateCancellationReasonFormMutation$data = {
     } | null;
   } | null;
 };
-export type CreateCancellationReasonFormMutationResponse = CreateCancellationReasonFormMutation$data;
 export type CreateCancellationReasonFormMutation = {
-  variables: CreateCancellationReasonFormMutationVariables;
   response: CreateCancellationReasonFormMutation$data;
+  variables: CreateCancellationReasonFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

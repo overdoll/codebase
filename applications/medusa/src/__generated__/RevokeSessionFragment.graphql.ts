@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<97981c2939d96d436fb9b58d5ed883b7>>
+ * @generated SignedSource<<5e19e53267c824e0422df9710df2777b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type RevokeSessionFragment$data = {
   readonly id: string;
   readonly " $fragmentType": "RevokeSessionFragment";
 };
-export type RevokeSessionFragment = RevokeSessionFragment$data;
 export type RevokeSessionFragment$key = {
   readonly " $data"?: RevokeSessionFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"RevokeSessionFragment">;

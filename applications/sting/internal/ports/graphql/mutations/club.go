@@ -9,6 +9,54 @@ import (
 	"overdoll/libraries/principal"
 )
 
+func (r *MutationResolver) EnableClubSupporterOnlyPosts(ctx context.Context, input types.EnableClubSupporterOnlyPostsInput) (*types.EnableClubSupporterOnlyPostsPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	pst, err := r.App.Commands.EnableClubSupporterOnlyPosts.
+		Handle(
+			ctx,
+			command.EnableClubSupporterOnlyPosts{
+				ClubId:    input.ClubID.GetID(),
+				Principal: principal.FromContext(ctx),
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.EnableClubSupporterOnlyPostsPayload{
+		Club: types.MarshalClubToGraphQL(ctx, pst),
+	}, nil
+}
+
+func (r *MutationResolver) DisableClubSupporterOnlyPosts(ctx context.Context, input types.DisableClubSupporterOnlyPostsInput) (*types.DisableClubSupporterOnlyPostsPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	pst, err := r.App.Commands.DisableClubSupporterOnlyPosts.
+		Handle(
+			ctx,
+			command.DisableClubSupporterOnlyPosts{
+				ClubId:    input.ClubID.GetID(),
+				Principal: principal.FromContext(ctx),
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.DisableClubSupporterOnlyPostsPayload{
+		Club: types.MarshalClubToGraphQL(ctx, pst),
+	}, nil
+}
+
 func (r *MutationResolver) CreateClub(ctx context.Context, input types.CreateClubInput) (*types.CreateClubPayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {

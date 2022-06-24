@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<40ff1fadc6aeb4b4ed6a7e8b925c32de>>
+ * @generated SignedSource<<0ef831dafb182f783f01570f3b0aae9c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,10 +19,9 @@ export type StaffClubStatusFragment$data = {
       readonly username: string;
     };
   } | null;
-  readonly " $fragmentSpreads": FragmentRefs<"SuspendClubFormFragment" | "StaffClubUnSuspendButtonFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffClubUnSuspendButtonFragment" | "SuspendClubFormFragment">;
   readonly " $fragmentType": "StaffClubStatusFragment";
 };
-export type StaffClubStatusFragment = StaffClubStatusFragment$data;
 export type StaffClubStatusFragment$key = {
   readonly " $data"?: StaffClubStatusFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"StaffClubStatusFragment">;

@@ -2,28 +2,21 @@ package post
 
 import "overdoll/libraries/resource"
 
-type NewContent struct {
-	postId string
-
+type NewResource struct {
 	oldResourceId string
 	newResource   *resource.Resource
 }
 
-func (n *NewContent) PostId() string {
-	return n.postId
-}
-
-func (n *NewContent) OldResourceId() string {
+func (n *NewResource) OldResourceId() string {
 	return n.oldResourceId
 }
 
-func (n *NewContent) NewResource() *resource.Resource {
+func (n *NewResource) NewResource() *resource.Resource {
 	return n.newResource
 }
 
-func UnmarshalNewContentFromDatabase(postId, oldResourceId string, newResource *resource.Resource) *NewContent {
-	return &NewContent{
-		postId:        postId,
+func UnmarshalNewResourceFromDatabase(oldResourceId string, newResource *resource.Resource) *NewResource {
+	return &NewResource{
 		oldResourceId: oldResourceId,
 		newResource:   newResource,
 	}

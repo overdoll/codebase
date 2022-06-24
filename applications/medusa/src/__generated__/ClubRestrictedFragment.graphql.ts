@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<52a773b39c89e100fd62d1756c9427e7>>
+ * @generated SignedSource<<27fd836ff9c2a4d65b6d343eb5a25ecc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type ClubRestrictedFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"ClubInformationBannerFragment">;
   readonly " $fragmentType": "ClubRestrictedFragment";
 };
-export type ClubRestrictedFragment = ClubRestrictedFragment$data;
 export type ClubRestrictedFragment$key = {
   readonly " $data"?: ClubRestrictedFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ClubRestrictedFragment">;

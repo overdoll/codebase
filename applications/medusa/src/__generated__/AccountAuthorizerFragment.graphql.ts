@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<99b34fb9813e27cbbf41dc8b9400aa3c>>
+ * @generated SignedSource<<0a4f68505fc430bce3153af71ca557a7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,20 +11,19 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type AccountAuthorizerFragment$data = {
-  readonly reference: string;
-  readonly username: string;
-  readonly lock: {
-    readonly __typename: string;
-  } | null;
   readonly deleting: {
-    readonly __typename: string;
+    readonly __typename: "AccountDeleting";
   } | null;
+  readonly isArtist: boolean;
   readonly isModerator: boolean;
   readonly isStaff: boolean;
-  readonly isArtist: boolean;
+  readonly lock: {
+    readonly __typename: "AccountLock";
+  } | null;
+  readonly reference: string;
+  readonly username: string;
   readonly " $fragmentType": "AccountAuthorizerFragment";
 };
-export type AccountAuthorizerFragment = AccountAuthorizerFragment$data;
 export type AccountAuthorizerFragment$key = {
   readonly " $data"?: AccountAuthorizerFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"AccountAuthorizerFragment">;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<85bf8aafe9f467341948df493ed0e708>>
+ * @generated SignedSource<<45b1bdba7b26d3ec05542ea6ce22cd79>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,6 @@ export type PostStaticCategoriesFragment$data = {
   }>;
   readonly " $fragmentType": "PostStaticCategoriesFragment";
 };
-export type PostStaticCategoriesFragment = PostStaticCategoriesFragment$data;
 export type PostStaticCategoriesFragment$key = {
   readonly " $data"?: PostStaticCategoriesFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PostStaticCategoriesFragment">;

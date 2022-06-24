@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<05ba7f0bf82bdb995f8e131c275093c8>>
+ * @generated SignedSource<<3e036a458297bb6cdec5c4677809b897>>
  * @relayHash ea44164ff2f779fdbe860953ddf6fe6c
  * @lightSyntaxTransform
  * @nogrep
@@ -13,7 +13,6 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type RecoveryCodesSetupQuery$variables = {};
-export type RecoveryCodesSetupQueryVariables = RecoveryCodesSetupQuery$variables;
 export type RecoveryCodesSetupQuery$data = {
   readonly viewer: {
     readonly id: string;
@@ -23,10 +22,9 @@ export type RecoveryCodesSetupQuery$data = {
     }>;
   };
 };
-export type RecoveryCodesSetupQueryResponse = RecoveryCodesSetupQuery$data;
 export type RecoveryCodesSetupQuery = {
-  variables: RecoveryCodesSetupQueryVariables;
   response: RecoveryCodesSetupQuery$data;
+  variables: RecoveryCodesSetupQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

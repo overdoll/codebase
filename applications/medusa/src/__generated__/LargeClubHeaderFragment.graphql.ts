@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f6508eff80ebc0ce6bae115aaf5c4615>>
+ * @generated SignedSource<<c15ea0df5a8e2851f9dd1272fa713a9b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,6 @@ export type LargeClubHeaderFragment$data = {
   } | null;
   readonly " $fragmentType": "LargeClubHeaderFragment";
 };
-export type LargeClubHeaderFragment = LargeClubHeaderFragment$data;
 export type LargeClubHeaderFragment$key = {
   readonly " $data"?: LargeClubHeaderFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment">;

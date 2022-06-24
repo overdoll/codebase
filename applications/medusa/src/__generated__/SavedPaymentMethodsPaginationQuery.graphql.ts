@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a7d0e2a9c1e141d9dca93430f124fd3c>>
+ * @generated SignedSource<<e39ed69b43646f3e4e66d0808b94235d>>
  * @relayHash 5664d783af7fa33eaf295ae0d08fbeb1
  * @lightSyntaxTransform
  * @nogrep
@@ -18,16 +18,14 @@ export type SavedPaymentMethodsPaginationQuery$variables = {
   first?: number | null;
   id: string;
 };
-export type SavedPaymentMethodsPaginationQueryVariables = SavedPaymentMethodsPaginationQuery$variables;
 export type SavedPaymentMethodsPaginationQuery$data = {
   readonly node: {
     readonly " $fragmentSpreads": FragmentRefs<"SavedPaymentMethodsSettingsFragment">;
   } | null;
 };
-export type SavedPaymentMethodsPaginationQueryResponse = SavedPaymentMethodsPaginationQuery$data;
 export type SavedPaymentMethodsPaginationQuery = {
-  variables: SavedPaymentMethodsPaginationQueryVariables;
   response: SavedPaymentMethodsPaginationQuery$data;
+  variables: SavedPaymentMethodsPaginationQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

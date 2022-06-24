@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a60cd600e94dc9b174e1fa7a362f9823>>
+ * @generated SignedSource<<a79268f63cc5a4e4bfab868886af5674>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,15 +15,14 @@ export type GeneralSearchSeriesFragment$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
-        readonly title: string;
         readonly slug: string;
+        readonly title: string;
         readonly " $fragmentSpreads": FragmentRefs<"SeriesTileOverlayFragment">;
       };
     }>;
   };
   readonly " $fragmentType": "GeneralSearchSeriesFragment";
 };
-export type GeneralSearchSeriesFragment = GeneralSearchSeriesFragment$data;
 export type GeneralSearchSeriesFragment$key = {
   readonly " $data"?: GeneralSearchSeriesFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"GeneralSearchSeriesFragment">;

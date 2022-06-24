@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f240a9280cab980358b9ebb277ee3715>>
+ * @generated SignedSource<<c594ef8beb2252db0207076cba4b1e62>>
  * @relayHash 65250235a92f1ca77ccdd56c17b7c07b
  * @lightSyntaxTransform
  * @nogrep
@@ -19,25 +19,23 @@ export type CreateAudienceInput = {
   title: string;
 };
 export type CreateAudienceFormMutation$variables = {
-  input: CreateAudienceInput;
   connections: ReadonlyArray<string>;
+  input: CreateAudienceInput;
 };
-export type CreateAudienceFormMutationVariables = CreateAudienceFormMutation$variables;
 export type CreateAudienceFormMutation$data = {
   readonly createAudience: {
     readonly audience: {
       readonly id: string;
-      readonly title: string;
       readonly slug: string;
       readonly standard: boolean;
+      readonly title: string;
     } | null;
     readonly validation: CreateAudienceValidation | null;
   } | null;
 };
-export type CreateAudienceFormMutationResponse = CreateAudienceFormMutation$data;
 export type CreateAudienceFormMutation = {
-  variables: CreateAudienceFormMutationVariables;
   response: CreateAudienceFormMutation$data;
+  variables: CreateAudienceFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
