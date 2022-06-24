@@ -11,3 +11,4 @@ coverage
 .git
 build/static/**/*.js.map
 build/static/**/*.css.map
+public/*.js.map
