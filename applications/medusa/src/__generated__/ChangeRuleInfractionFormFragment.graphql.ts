@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dd870c8f6b199d1a5fb9ebd086ba5a69>>
+ * @generated SignedSource<<1e9b673b2d53d7ef02d21a0fcb788f92>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,6 @@ export type ChangeRuleInfractionFormFragment$data = {
   readonly infraction: boolean;
   readonly " $fragmentType": "ChangeRuleInfractionFormFragment";
 };
-export type ChangeRuleInfractionFormFragment = ChangeRuleInfractionFormFragment$data;
 export type ChangeRuleInfractionFormFragment$key = {
   readonly " $data"?: ChangeRuleInfractionFormFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ChangeRuleInfractionFormFragment">;

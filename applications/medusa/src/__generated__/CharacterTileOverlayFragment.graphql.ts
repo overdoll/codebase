@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e8f32d2f2c03754418f26f152a509738>>
+ * @generated SignedSource<<7b3da09c79ebf098255a0ad62781481c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,7 +21,6 @@ export type CharacterTileOverlayFragment$data = {
   } | null;
   readonly " $fragmentType": "CharacterTileOverlayFragment";
 };
-export type CharacterTileOverlayFragment = CharacterTileOverlayFragment$data;
 export type CharacterTileOverlayFragment$key = {
   readonly " $data"?: CharacterTileOverlayFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"CharacterTileOverlayFragment">;

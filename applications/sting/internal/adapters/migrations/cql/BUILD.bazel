@@ -3,7 +3,10 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "cql",
     srcs = ["embed.go"],
-    embedsrcs = ["1614606770_create_posts.cql"],
+    embedsrcs = [
+        "1614606770_create_posts.cql",
+        "1655917417_modify_clubs.cql",
+    ],
     importpath = "overdoll/applications/sting/internal/adapters/migrations/cql",
     visibility = ["//applications/sting:__subpackages__"],
 )

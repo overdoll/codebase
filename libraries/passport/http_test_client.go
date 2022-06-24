@@ -40,7 +40,6 @@ func (a *memoryPassportStore) GetSessionDataFromRequest(req *http.Request) (stri
 	return a.pocket.passport.SessionID(), a.pocket.passport.AccountID(), nil
 }
 
-// make into a regular passport
 func (a *memoryPassportStore) RevokedAccountSessionEvent(ctx context.Context, res *http.Response, sessionId string) error {
 	a.pocket.passport = FromContext(ctx)
 	return nil

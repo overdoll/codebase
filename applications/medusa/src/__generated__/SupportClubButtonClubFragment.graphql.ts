@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ac02e2ce4040f2b927fc06b9ebfc00ab>>
+ * @generated SignedSource<<828b880f5a1089b20c5f1cf217996c2c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,25 +12,24 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type SupportClubButtonClubFragment$data = {
-  readonly slug: string;
-  readonly viewerMember: {
-    readonly isSupporter: boolean;
-    readonly clubSupporterSubscription: {
-      readonly reference?: string;
-    } | null;
-  } | null;
   readonly canSupport: boolean;
-  readonly viewerIsOwner: boolean;
+  readonly slug: string;
   readonly supporterSubscriptionPrice: {
     readonly localizedPrice: {
       readonly amount: number;
       readonly currency: Currency;
     };
   };
+  readonly viewerIsOwner: boolean;
+  readonly viewerMember: {
+    readonly clubSupporterSubscription: {
+      readonly reference?: string;
+    } | null;
+    readonly isSupporter: boolean;
+  } | null;
   readonly " $fragmentSpreads": FragmentRefs<"SupportClubTransactionProcessFragment">;
   readonly " $fragmentType": "SupportClubButtonClubFragment";
 };
-export type SupportClubButtonClubFragment = SupportClubButtonClubFragment$data;
 export type SupportClubButtonClubFragment$key = {
   readonly " $data"?: SupportClubButtonClubFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"SupportClubButtonClubFragment">;

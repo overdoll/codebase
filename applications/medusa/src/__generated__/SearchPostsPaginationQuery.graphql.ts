@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<eaa765abe1f7b80b95c0cb33132aa42d>>
- * @relayHash 8af25906a295963ac7239e804b439f14
+ * @generated SignedSource<<cf3d6455939b80d130e824adee7ba522>>
+ * @relayHash 05f7a3d31baeeb672794dd00bab70dd8
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8af25906a295963ac7239e804b439f14
+// @relayRequestID 05f7a3d31baeeb672794dd00bab70dd8
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -22,14 +22,12 @@ export type SearchPostsPaginationQuery$variables = {
   seriesSlugs?: ReadonlyArray<string> | null;
   sortBy: PostsSort;
 };
-export type SearchPostsPaginationQueryVariables = SearchPostsPaginationQuery$variables;
 export type SearchPostsPaginationQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"SearchFragment">;
 };
-export type SearchPostsPaginationQueryResponse = SearchPostsPaginationQuery$data;
 export type SearchPostsPaginationQuery = {
-  variables: SearchPostsPaginationQueryVariables;
   response: SearchPostsPaginationQuery$data;
+  variables: SearchPostsPaginationQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -248,6 +246,7 @@ return {
                         "plural": false,
                         "selections": [
                           (v6/*: any*/),
+                          (v5/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -270,8 +269,7 @@ return {
                           (v8/*: any*/),
                           (v9/*: any*/),
                           (v10/*: any*/),
-                          (v12/*: any*/),
-                          (v5/*: any*/)
+                          (v12/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -324,6 +322,7 @@ return {
                         "name": "thumbnail",
                         "plural": false,
                         "selections": [
+                          (v5/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -338,8 +337,7 @@ return {
                           (v9/*: any*/),
                           (v10/*: any*/),
                           (v12/*: any*/),
-                          (v6/*: any*/),
-                          (v5/*: any*/)
+                          (v6/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -450,7 +448,7 @@ return {
     ]
   },
   "params": {
-    "id": "8af25906a295963ac7239e804b439f14",
+    "id": "05f7a3d31baeeb672794dd00bab70dd8",
     "metadata": {},
     "name": "SearchPostsPaginationQuery",
     "operationKind": "query",

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<06a8f007aa1a64d3d81664bd8a21e336>>
+ * @generated SignedSource<<64f477e63b14eecc34cfdc1ebb2fa430>>
  * @relayHash a5f6256299b3f4e1f18c58b9547da094
  * @lightSyntaxTransform
  * @nogrep
@@ -19,7 +19,6 @@ export type UpdateClubPlatformFeeInput = {
 export type UpdateClubPlatformFeeFormMutation$variables = {
   input: UpdateClubPlatformFeeInput;
 };
-export type UpdateClubPlatformFeeFormMutationVariables = UpdateClubPlatformFeeFormMutation$variables;
 export type UpdateClubPlatformFeeFormMutation$data = {
   readonly updateClubPlatformFee: {
     readonly clubPlatformFee: {
@@ -28,10 +27,9 @@ export type UpdateClubPlatformFeeFormMutation$data = {
     } | null;
   } | null;
 };
-export type UpdateClubPlatformFeeFormMutationResponse = UpdateClubPlatformFeeFormMutation$data;
 export type UpdateClubPlatformFeeFormMutation = {
-  variables: UpdateClubPlatformFeeFormMutationVariables;
   response: UpdateClubPlatformFeeFormMutation$data;
+  variables: UpdateClubPlatformFeeFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

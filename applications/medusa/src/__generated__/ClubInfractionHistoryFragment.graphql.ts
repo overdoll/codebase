@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f1d711f58b4390b4ae6e3cd7bbf06bce>>
+ * @generated SignedSource<<0c7bb8f8753138c68de8df18cb99bd19>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,22 +11,21 @@
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ClubInfractionHistoryFragment$data = {
+  readonly id: string;
   readonly infractionHistory: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly expiresAt: any;
         readonly id: string;
         readonly issuedAt: any;
-        readonly expiresAt: any;
         readonly rule: {
           readonly title: string;
         };
       };
     }>;
   };
-  readonly id: string;
   readonly " $fragmentType": "ClubInfractionHistoryFragment";
 };
-export type ClubInfractionHistoryFragment = ClubInfractionHistoryFragment$data;
 export type ClubInfractionHistoryFragment$key = {
   readonly " $data"?: ClubInfractionHistoryFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ClubInfractionHistoryFragment">;

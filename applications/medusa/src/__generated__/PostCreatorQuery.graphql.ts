@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<501704776d954324d15801b730f3ae7e>>
- * @relayHash 569e5dc640b7392725b2922f919e7312
+ * @generated SignedSource<<9440cfcc8c2fa4a5941d937ba4f1d14a>>
+ * @relayHash bd24ee71f632a433d3fdfbd3c8beb389
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 569e5dc640b7392725b2922f919e7312
+// @relayRequestID bd24ee71f632a433d3fdfbd3c8beb389
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -17,28 +17,26 @@ export type PostCreatorQuery$variables = {
   reference: string;
   slug: string;
 };
-export type PostCreatorQueryVariables = PostCreatorQuery$variables;
 export type PostCreatorQuery$data = {
-  readonly post: {
-    readonly __typename: string;
-    readonly " $fragmentSpreads": FragmentRefs<"PostStateFragment">;
-  } | null;
   readonly club: {
-    readonly __typename: string;
+    readonly __typename: "Club";
     readonly suspension: {
-      readonly __typename: string;
+      readonly __typename: "ClubSuspension";
     } | null;
     readonly termination: {
-      readonly __typename: string;
+      readonly __typename: "ClubTermination";
     } | null;
     readonly viewerIsOwner: boolean;
-    readonly " $fragmentSpreads": FragmentRefs<"PostStateClubFragment" | "ClubRestrictedFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ClubRestrictedFragment" | "PostStateClubFragment">;
+  } | null;
+  readonly post: {
+    readonly __typename: "Post";
+    readonly " $fragmentSpreads": FragmentRefs<"PostStateFragment">;
   } | null;
 };
-export type PostCreatorQueryResponse = PostCreatorQuery$data;
 export type PostCreatorQuery = {
-  variables: PostCreatorQueryVariables;
   response: PostCreatorQuery$data;
+  variables: PostCreatorQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -172,6 +170,7 @@ v17 = {
   "name": "thumbnail",
   "plural": false,
   "selections": [
+    (v7/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -186,8 +185,7 @@ v17 = {
     (v11/*: any*/),
     (v12/*: any*/),
     (v14/*: any*/),
-    (v8/*: any*/),
-    (v7/*: any*/)
+    (v8/*: any*/)
   ],
   "storageKey": null
 },
@@ -479,7 +477,7 @@ return {
     ]
   },
   "params": {
-    "id": "569e5dc640b7392725b2922f919e7312",
+    "id": "bd24ee71f632a433d3fdfbd3c8beb389",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

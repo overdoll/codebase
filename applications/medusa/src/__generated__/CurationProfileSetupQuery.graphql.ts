@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ad3744a079d242d09816ac96f7425c41>>
+ * @generated SignedSource<<69f56ca8c8b7494b9b8543a78e0e64d5>>
  * @relayHash 7a05033bcbc27033c0ea37e8252be1d3
  * @lightSyntaxTransform
  * @nogrep
@@ -14,14 +14,9 @@
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type CurationProfileSetupQuery$variables = {};
-export type CurationProfileSetupQueryVariables = CurationProfileSetupQuery$variables;
 export type CurationProfileSetupQuery$data = {
   readonly viewer: {
     readonly curationProfile: {
-      readonly completed: boolean;
-      readonly dateOfBirth: {
-        readonly dateOfBirth: any | null;
-      };
       readonly audience: {
         readonly audiences: ReadonlyArray<{
           readonly id: string;
@@ -34,14 +29,17 @@ export type CurationProfileSetupQuery$data = {
           readonly title: string;
         }>;
       };
+      readonly completed: boolean;
+      readonly dateOfBirth: {
+        readonly dateOfBirth: any | null;
+      };
       readonly " $fragmentSpreads": FragmentRefs<"CurationStepperFooterFragment">;
     };
   } | null;
 };
-export type CurationProfileSetupQueryResponse = CurationProfileSetupQuery$data;
 export type CurationProfileSetupQuery = {
-  variables: CurationProfileSetupQueryVariables;
   response: CurationProfileSetupQuery$data;
+  variables: CurationProfileSetupQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

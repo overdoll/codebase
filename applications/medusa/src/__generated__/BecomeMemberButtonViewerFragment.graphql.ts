@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dc4d7ea17c81e63031562e086198c788>>
+ * @generated SignedSource<<7eb8a6bc023a580a0106fdfe83f00a0a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,11 +11,10 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type BecomeMemberButtonViewerFragment$data = {
-  readonly clubMembershipsLimit: number;
   readonly clubMembershipsCount: number;
+  readonly clubMembershipsLimit: number;
   readonly " $fragmentType": "BecomeMemberButtonViewerFragment";
 };
-export type BecomeMemberButtonViewerFragment = BecomeMemberButtonViewerFragment$data;
 export type BecomeMemberButtonViewerFragment$key = {
   readonly " $data"?: BecomeMemberButtonViewerFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"BecomeMemberButtonViewerFragment">;

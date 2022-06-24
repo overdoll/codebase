@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<21967da0f25ef3599d1e8d8919a05bc5>>
+ * @generated SignedSource<<5a57d47ad0a7bba1c1dc1b82a6a6d4da>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,10 +15,9 @@ export type FullSimplePostFragment$data = {
     readonly viewerIsOwner: boolean;
     readonly " $fragmentSpreads": FragmentRefs<"JoinClubFromPostFragment">;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"PostGalleryPublicSimpleFragment" | "PostViewButtonFragment" | "PostModerateButtonFragment" | "PostCopyLinkButtonFragment" | "PostReportButtonFragment" | "PostLikeButtonFragment" | "PostHeaderClubFragment" | "PostArchiveButtonFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"PostArchiveButtonFragment" | "PostCopyLinkButtonFragment" | "PostGalleryPublicSimpleFragment" | "PostHeaderClubFragment" | "PostLikeButtonFragment" | "PostModerateButtonFragment" | "PostReportButtonFragment" | "PostViewButtonFragment">;
   readonly " $fragmentType": "FullSimplePostFragment";
 };
-export type FullSimplePostFragment = FullSimplePostFragment$data;
 export type FullSimplePostFragment$key = {
   readonly " $data"?: FullSimplePostFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"FullSimplePostFragment">;

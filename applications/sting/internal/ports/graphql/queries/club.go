@@ -10,6 +10,26 @@ import (
 	"overdoll/libraries/principal"
 )
 
+func (r *QueryResolver) DiscoverClubs(ctx context.Context, after *string, before *string, first *int, last *int) (*types.ClubConnection, error) {
+
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
+	}
+
+	results, err := r.App.Queries.DiscoverClubs.Handle(ctx, query.DiscoverClubs{
+		Principal: principal.FromContext(ctx),
+		Cursor:    cursor,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalClubsToGraphQLConnection(ctx, results, cursor), nil
+}
+
 func (r *QueryResolver) Clubs(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended *bool, terminated *bool, sortBy types.ClubsSort) (*types.ClubConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)

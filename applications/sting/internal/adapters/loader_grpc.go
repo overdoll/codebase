@@ -53,7 +53,40 @@ func (s LoaderGrpc) CreateOrGetResourcesFromUploads(ctx context.Context, itemId 
 	return resources, nil
 }
 
-func (s LoaderGrpc) CopyResourcesAndApplyPixelateFilter(ctx context.Context, itemId string, resourceIds []string, pixelate int, private bool) ([]*post.NewContent, error) {
+func (s LoaderGrpc) CopyResourceIntoImage(ctx context.Context, itemId string, resourceId string, private bool) (*post.NewResource, error) {
+
+	var toApply []*loader.ResourceIdentifier
+
+	toApply = append(toApply, &loader.ResourceIdentifier{
+		Id:     resourceId,
+		ItemId: itemId,
+	})
+
+	md, err := s.client.CopyResourcesAndApplyFilter(ctx, &loader.CopyResourcesAndApplyFilterRequest{
+		Resources: toApply,
+		Private:   private,
+	})
+
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to copy resources")
+	}
+
+	var res []*post.NewResource
+	for _, r := range md.Resources {
+
+		unmarshalled, err := s.serializer.UnmarshalResourceFromProto(ctx, r.NewResource)
+
+		if err != nil {
+			return nil, err
+		}
+
+		res = append(res, post.UnmarshalNewResourceFromDatabase(r.OldResource.Id, unmarshalled))
+	}
+
+	return res[0], nil
+}
+
+func (s LoaderGrpc) CopyResourcesAndApplyPixelateFilter(ctx context.Context, itemId string, resourceIds []string, pixelate int, private bool) ([]*post.NewResource, error) {
 
 	var toApply []*loader.ResourceIdentifier
 
@@ -74,7 +107,7 @@ func (s LoaderGrpc) CopyResourcesAndApplyPixelateFilter(ctx context.Context, ite
 		return nil, errors.Wrap(err, "failed to copy resources and apply pixelate filter")
 	}
 
-	var res []*post.NewContent
+	var res []*post.NewResource
 	for _, r := range md.Resources {
 
 		unmarshalled, err := s.serializer.UnmarshalResourceFromProto(ctx, r.NewResource)
@@ -83,7 +116,7 @@ func (s LoaderGrpc) CopyResourcesAndApplyPixelateFilter(ctx context.Context, ite
 			return nil, err
 		}
 
-		res = append(res, post.UnmarshalNewContentFromDatabase(itemId, r.OldResource.Id, unmarshalled))
+		res = append(res, post.UnmarshalNewResourceFromDatabase(r.OldResource.Id, unmarshalled))
 	}
 
 	return res, nil

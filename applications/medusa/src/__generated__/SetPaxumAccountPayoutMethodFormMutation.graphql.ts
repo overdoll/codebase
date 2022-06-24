@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a5ead3cee0dda6448d0992519484fc2a>>
+ * @generated SignedSource<<656968ec47d2aaaed3f6be263242acd3>>
  * @relayHash f82b308d7f8150a795ee4ce93d121106
  * @lightSyntaxTransform
  * @nogrep
@@ -19,21 +19,19 @@ export type SetPaxumAccountPayoutMethodInput = {
 export type SetPaxumAccountPayoutMethodFormMutation$variables = {
   input: SetPaxumAccountPayoutMethodInput;
 };
-export type SetPaxumAccountPayoutMethodFormMutationVariables = SetPaxumAccountPayoutMethodFormMutation$variables;
 export type SetPaxumAccountPayoutMethodFormMutation$data = {
   readonly setPaxumAccountPayoutMethod: {
     readonly accountPayoutMethod: {
       readonly __typename: string;
-      readonly id?: string;
       readonly email?: string;
-      readonly " $fragmentSpreads": FragmentRefs<"PayoutMethodFragment" | "PayoutMethodDeleteFragment">;
+      readonly id?: string;
+      readonly " $fragmentSpreads": FragmentRefs<"PayoutMethodDeleteFragment" | "PayoutMethodFragment">;
     } | null;
   } | null;
 };
-export type SetPaxumAccountPayoutMethodFormMutationResponse = SetPaxumAccountPayoutMethodFormMutation$data;
 export type SetPaxumAccountPayoutMethodFormMutation = {
-  variables: SetPaxumAccountPayoutMethodFormMutationVariables;
   response: SetPaxumAccountPayoutMethodFormMutation$data;
+  variables: SetPaxumAccountPayoutMethodFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

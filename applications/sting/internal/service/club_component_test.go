@@ -11,6 +11,7 @@ import (
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	sting "overdoll/applications/sting/proto"
 	graphql2 "overdoll/libraries/graphql"
+	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/resource/proto"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
@@ -19,7 +20,7 @@ import (
 )
 
 type ClubModified struct {
-	ID          string
+	ID          relay.ID
 	Reference   string
 	Slug        string
 	Name        string
@@ -31,11 +32,13 @@ type ClubModified struct {
 	SlugAliases []struct {
 		Slug string
 	}
-	Thumbnail             *graphql2.Resource
-	ViewerIsOwner         bool
-	CanSupport            bool
-	NextSupporterPostTime *time.Time
-	Suspension            *types.ClubSuspension
+	Thumbnail                   *graphql2.Resource
+	Banner                      *graphql2.Resource
+	ViewerIsOwner               bool
+	CanSupport                  bool
+	CanCreateSupporterOnlyPosts bool
+	NextSupporterPostTime       *time.Time
+	Suspension                  *types.ClubSuspension
 }
 
 type Club struct {

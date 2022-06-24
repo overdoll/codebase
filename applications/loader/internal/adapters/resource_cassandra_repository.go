@@ -611,7 +611,17 @@ func (r ResourceCassandraS3Repository) UploadProcessedResource(ctx context.Conte
 func (r ResourceCassandraS3Repository) GetComposer(ctx context.Context) (*tusd.StoreComposer, error) {
 	s3Client := s3.New(r.aws)
 
-	store := s3store.New(os.Getenv("UPLOADS_BUCKET"), s3Client)
+	store := &s3store.S3Store{
+		Bucket:             os.Getenv("UPLOADS_BUCKET"),
+		Service:            s3Client,
+		MaxPartSize:        5 * 1024 * 1024 * 1024,
+		MinPartSize:        5 * 1024 * 1024,
+		PreferredPartSize:  50 * 1024 * 1024,
+		MaxMultipartParts:  10000,
+		MaxObjectSize:      5 * 1024 * 1024 * 1024 * 1024,
+		MaxBufferedParts:   20,
+		TemporaryDirectory: "",
+	}
 
 	composer := tusd.NewStoreComposer()
 	store.UseIn(composer)

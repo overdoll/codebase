@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<45db8b4e82c76287c8e5fc760a7f3590>>
+ * @generated SignedSource<<d4e102aa9b67347df553c7fc75425aff>>
  * @relayHash 676b6cf519fb02fdd3d922c56becd760
  * @lightSyntaxTransform
  * @nogrep
@@ -16,19 +16,17 @@ export type DeletePostInput = {
   id: string;
 };
 export type PostDeleteButtonMutation$variables = {
-  input: DeletePostInput;
   connections: ReadonlyArray<string>;
+  input: DeletePostInput;
 };
-export type PostDeleteButtonMutationVariables = PostDeleteButtonMutation$variables;
 export type PostDeleteButtonMutation$data = {
   readonly deletePost: {
     readonly postId: string | null;
   } | null;
 };
-export type PostDeleteButtonMutationResponse = PostDeleteButtonMutation$data;
 export type PostDeleteButtonMutation = {
-  variables: PostDeleteButtonMutationVariables;
   response: PostDeleteButtonMutation$data;
+  variables: PostDeleteButtonMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e379912180e8e5b229a13927a1b85be6>>
- * @relayHash 23b0e5a1f7113746a86cf0b424cfa987
+ * @generated SignedSource<<1e273711c877d6f1fee604addde1d83e>>
+ * @relayHash 9132e5186bad9893513af88d3ea57d10
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,22 +9,20 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 23b0e5a1f7113746a86cf0b424cfa987
+// @relayRequestID 9132e5186bad9893513af88d3ea57d10
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostModerationQueueQuery$variables = {};
-export type PostModerationQueueQueryVariables = PostModerationQueueQuery$variables;
 export type PostModerationQueueQuery$data = {
   readonly viewer: {
     readonly " $fragmentSpreads": FragmentRefs<"PostModerationQueueFragment">;
   } | null;
   readonly " $fragmentSpreads": FragmentRefs<"RejectionReasonsFragment">;
 };
-export type PostModerationQueueQueryResponse = PostModerationQueueQuery$data;
 export type PostModerationQueueQuery = {
-  variables: PostModerationQueueQueryVariables;
   response: PostModerationQueueQuery$data;
+  variables: PostModerationQueueQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -238,6 +236,7 @@ return {
                                 "name": "thumbnail",
                                 "plural": false,
                                 "selections": [
+                                  (v1/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -252,8 +251,7 @@ return {
                                   (v6/*: any*/),
                                   (v7/*: any*/),
                                   (v8/*: any*/),
-                                  (v9/*: any*/),
-                                  (v1/*: any*/)
+                                  (v9/*: any*/)
                                 ],
                                 "storageKey": null
                               }
@@ -277,6 +275,7 @@ return {
                                 "plural": false,
                                 "selections": [
                                   (v9/*: any*/),
+                                  (v1/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -299,8 +298,7 @@ return {
                                   (v5/*: any*/),
                                   (v6/*: any*/),
                                   (v7/*: any*/),
-                                  (v8/*: any*/),
-                                  (v1/*: any*/)
+                                  (v8/*: any*/)
                                 ],
                                 "storageKey": null
                               },
@@ -481,7 +479,7 @@ return {
     ]
   },
   "params": {
-    "id": "23b0e5a1f7113746a86cf0b424cfa987",
+    "id": "9132e5186bad9893513af88d3ea57d10",
     "metadata": {},
     "name": "PostModerationQueueQuery",
     "operationKind": "query",

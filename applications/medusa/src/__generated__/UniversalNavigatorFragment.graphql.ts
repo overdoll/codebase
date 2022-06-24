@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3f3bd65c1fbd2d7e523fb6ac6c13db6d>>
+ * @generated SignedSource<<4988fa314328989fc4ab0c5e239be40d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,6 @@ export type UniversalNavigatorFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"AlternativeMenuFragment">;
   readonly " $fragmentType": "UniversalNavigatorFragment";
 };
-export type UniversalNavigatorFragment = UniversalNavigatorFragment$data;
 export type UniversalNavigatorFragment$key = {
   readonly " $data"?: UniversalNavigatorFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"UniversalNavigatorFragment">;

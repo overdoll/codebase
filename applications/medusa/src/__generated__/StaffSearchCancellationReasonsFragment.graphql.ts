@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<45af1b0ddb34b43d1a0db8a971399663>>
+ * @generated SignedSource<<15ebf6c4a45d8219ad4f1670683b0aca>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,7 +21,6 @@ export type StaffSearchCancellationReasonsFragment$data = {
   };
   readonly " $fragmentType": "StaffSearchCancellationReasonsFragment";
 };
-export type StaffSearchCancellationReasonsFragment = StaffSearchCancellationReasonsFragment$data;
 export type StaffSearchCancellationReasonsFragment$key = {
   readonly " $data"?: StaffSearchCancellationReasonsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"StaffSearchCancellationReasonsFragment">;

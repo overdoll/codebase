@@ -31,6 +31,7 @@ type Club struct {
 	slugAliases       []string
 	name              *localization.Translation
 	thumbnailResource *resource.Resource
+	bannerResource    *resource.Resource
 
 	suspended      bool
 	suspendedUntil *time.Time
@@ -40,6 +41,8 @@ type Club struct {
 
 	nextSupporterPostTime       *time.Time
 	hasCreatedSupporterOnlyPost bool
+
+	supporterOnlyPostsDisabled bool
 
 	canSupport bool
 
@@ -62,10 +65,12 @@ func NewMustClub(id, slug string, name string, ownerAccountId string) *Club {
 		name:                        lc,
 		slugAliases:                 []string{},
 		thumbnailResource:           nil,
+		bannerResource:              nil,
 		membersCount:                1,
 		ownerAccountId:              ownerAccountId,
 		hasCreatedSupporterOnlyPost: false,
 		terminated:                  false,
+		supporterOnlyPostsDisabled:  false,
 		createdAt:                   time.Now(),
 		updatedAt:                   time.Now(),
 	}
@@ -122,13 +127,14 @@ func NewClub(requester *principal.Principal, slug, name string, currentClubCount
 	}, nil
 }
 
-func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail *resource.Resource, membersCount int, ownerAccountId string, suspended bool, suspendedUntil, nextSupporterPostTime *time.Time, hasCreatedSupporterOnlyPost bool, terminated bool, terminatedByAccountId *string, createdAt, updatedAt time.Time) *Club {
+func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail *resource.Resource, banner *resource.Resource, membersCount int, ownerAccountId string, suspended bool, suspendedUntil, nextSupporterPostTime *time.Time, hasCreatedSupporterOnlyPost bool, terminated bool, terminatedByAccountId *string, supporterOnlyPostsDisabled bool, createdAt, updatedAt time.Time) *Club {
 	return &Club{
 		id:                          id,
 		slug:                        slug,
 		slugAliases:                 alternativeSlugs,
 		name:                        localization.UnmarshalTranslationFromDatabase(name),
 		thumbnailResource:           thumbnail,
+		bannerResource:              banner,
 		ownerAccountId:              ownerAccountId,
 		membersCount:                membersCount,
 		suspended:                   suspended,
@@ -139,6 +145,7 @@ func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name 
 		terminatedByAccountId:       terminatedByAccountId,
 		createdAt:                   createdAt,
 		updatedAt:                   updatedAt,
+		supporterOnlyPostsDisabled:  supporterOnlyPostsDisabled,
 	}
 }
 
@@ -162,6 +169,10 @@ func (m *Club) ThumbnailResource() *resource.Resource {
 	return m.thumbnailResource
 }
 
+func (m *Club) BannerResource() *resource.Resource {
+	return m.bannerResource
+}
+
 func (m *Club) MembersCount() int {
 	return m.membersCount
 }
@@ -177,6 +188,14 @@ func (m *Club) OwnerAccountId() string {
 func (m *Club) IsSuspended() bool {
 	// this is also true when terminated to prevent posting
 	return m.suspended || m.terminated
+}
+
+func (m *Club) CanCreateSupporterOnlyPosts() bool {
+	return !m.supporterOnlyPostsDisabled
+}
+
+func (m *Club) SupporterOnlyPostsDisabled() bool {
+	return m.supporterOnlyPostsDisabled
 }
 
 func (m *Club) Suspended() bool {
@@ -239,6 +258,29 @@ func (m *Club) CanSupport() bool {
 
 func (m *Club) CanViewSupporterCount(requester *principal.Principal) error {
 	return requester.BelongsToAccount(m.ownerAccountId)
+}
+
+func (m *Club) UpdateEnableSupporterOnlyPosts(requester *principal.Principal) error {
+
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
+	m.supporterOnlyPostsDisabled = false
+
+	return nil
+}
+
+func (m *Club) UpdateDisableSupporterOnlyPosts(requester *principal.Principal) error {
+
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
+
+	m.supporterOnlyPostsDisabled = true
+	m.hasCreatedSupporterOnlyPost = false
+	m.nextSupporterPostTime = nil
+
+	return nil
 }
 
 func (m *Club) CanSuspend(requester *principal.Principal, endTime time.Time) error {
@@ -401,6 +443,15 @@ func (m *Club) UpdateThumbnail(requester *principal.Principal, thumbnail *resour
 	}
 
 	m.thumbnailResource = thumbnail
+
+	m.update()
+
+	return nil
+}
+
+func (m *Club) UpdateBanner(thumbnail *resource.Resource) error {
+
+	m.bannerResource = thumbnail
 
 	m.update()
 

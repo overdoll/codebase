@@ -18,8 +18,10 @@ type Repository interface {
 	DeleteReservedSlugForClub(ctx context.Context, club *Club) error
 
 	UpdateClubThumbnail(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
+	UpdateClubBanner(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
 	UpdateClubMembersCount(ctx context.Context, clubId string, updateFn func(cl *Club) error) error
 	UpdateClubName(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
+	UpdateClubSupporterOnlyPostsDisabled(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
 	UpdateClubSlugAliases(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
 	UpdateClubSlug(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
 	UpdateClubSuspensionStatus(ctx context.Context, clubId string, updateFn func(club *Club) error) (*Club, error)
@@ -45,6 +47,7 @@ type Repository interface {
 	GetClubSuspensionLogs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, clubId string) ([]*SuspensionLog, error)
 
 	SearchClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *Filters) ([]*Club, error)
+	DiscoverClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*Club, error)
 
 	CreateClubSuspensionLog(ctx context.Context, suspensionLog *SuspensionLog) error
 

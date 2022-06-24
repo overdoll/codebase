@@ -351,6 +351,40 @@ func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.
 
 	query := elastic.NewBoolQuery()
 
+	query.Should(
+		elastic.
+			NewBoolQuery().
+			Must(
+				elastic.NewTermsQueryFromStrings("character_ids", pst.CategoryIds()...).Boost(6),
+			),
+	)
+
+	query.Should(
+		elastic.
+			NewBoolQuery().
+			Must(
+				elastic.NewTermsQueryFromStrings("category_ids", pst.CategoryIds()...).Boost(5),
+			),
+	)
+
+	query.Should(
+		elastic.
+			NewBoolQuery().
+			Must(
+				elastic.NewTermQuery("audience_id", pst.AudienceId()).Boost(2),
+			),
+	)
+
+	query.Should(
+		elastic.
+			NewBoolQuery().
+			Must(
+				elastic.NewTermQuery("club_id", pst.ClubId()).Boost(1),
+			),
+	)
+
+	builder.Query(query)
+
 	var filterQueries []elastic.Query
 
 	terminatedClubIds, err := r.getTerminatedClubIds(ctx)

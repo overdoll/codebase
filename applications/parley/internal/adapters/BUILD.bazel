@@ -47,12 +47,14 @@ go_library(
 go_test(
     name = "adapters_test",
     srcs = [
+        "moderator_cassandra_repository_test.go",
         "post_audit_log_repository_test.go",
         "repository_test.go",
     ],
     data = ["//applications/parley:config.toml"],
     deps = [
         ":adapters",
+        "//applications/parley/internal/domain/moderator",
         "//applications/parley/internal/domain/post_audit_log",
         "//libraries/bootstrap",
         "//libraries/config",

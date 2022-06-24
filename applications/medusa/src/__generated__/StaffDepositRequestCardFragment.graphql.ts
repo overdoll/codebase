@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8dc79052bdcce27050945c1d5b912d12>>
+ * @generated SignedSource<<5fa71c17831c4b2e49e472580ba48b2f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,13 +13,12 @@ export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future 
 export type PayoutMethod = "PAXUM" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type StaffDepositRequestCardFragment$data = {
-  readonly totalAmount: number;
   readonly currency: Currency;
   readonly lastDateForDeposit: any;
   readonly payoutMethod: PayoutMethod;
+  readonly totalAmount: number;
   readonly " $fragmentType": "StaffDepositRequestCardFragment";
 };
-export type StaffDepositRequestCardFragment = StaffDepositRequestCardFragment$data;
 export type StaffDepositRequestCardFragment$key = {
   readonly " $data"?: StaffDepositRequestCardFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"StaffDepositRequestCardFragment">;

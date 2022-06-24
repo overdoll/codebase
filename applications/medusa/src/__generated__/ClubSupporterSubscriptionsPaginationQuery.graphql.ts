@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8edc7750fba14f767e3661be069f81ea>>
- * @relayHash 9f7c73f52f682f95191a1e46b679cd53
+ * @generated SignedSource<<058dbc7b29dd61e18f2d02ba41d31a4f>>
+ * @relayHash 12530e48bd7558d01baddf48f046e0d7
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9f7c73f52f682f95191a1e46b679cd53
+// @relayRequestID 12530e48bd7558d01baddf48f046e0d7
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,16 +18,14 @@ export type ClubSupporterSubscriptionsPaginationQuery$variables = {
   first?: number | null;
   id: string;
 };
-export type ClubSupporterSubscriptionsPaginationQueryVariables = ClubSupporterSubscriptionsPaginationQuery$variables;
 export type ClubSupporterSubscriptionsPaginationQuery$data = {
   readonly node: {
     readonly " $fragmentSpreads": FragmentRefs<"ClubSupporterSubscriptionsSettingsFragment">;
   } | null;
 };
-export type ClubSupporterSubscriptionsPaginationQueryResponse = ClubSupporterSubscriptionsPaginationQuery$data;
 export type ClubSupporterSubscriptionsPaginationQuery = {
-  variables: ClubSupporterSubscriptionsPaginationQueryVariables;
   response: ClubSupporterSubscriptionsPaginationQuery$data;
+  variables: ClubSupporterSubscriptionsPaginationQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -139,6 +137,7 @@ v13 = {
   "name": "thumbnail",
   "plural": false,
   "selections": [
+    (v5/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -186,8 +185,7 @@ v13 = {
       "kind": "ScalarField",
       "name": "type",
       "storageKey": null
-    },
-    (v5/*: any*/)
+    }
   ],
   "storageKey": null
 },
@@ -442,7 +440,7 @@ return {
     ]
   },
   "params": {
-    "id": "9f7c73f52f682f95191a1e46b679cd53",
+    "id": "12530e48bd7558d01baddf48f046e0d7",
     "metadata": {},
     "name": "ClubSupporterSubscriptionsPaginationQuery",
     "operationKind": "query",

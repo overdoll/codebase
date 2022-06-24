@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<cae6de6bb3723b79c2e7da2042a4c13c>>
- * @relayHash 4aa6fc0d08d6b842d68ab43dee6ce67a
+ * @generated SignedSource<<add95750cb5a28b3abfd5187fe359d2b>>
+ * @relayHash 27a35bf285dd68dde76e0cf2e15fcec3
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4aa6fc0d08d6b842d68ab43dee6ce67a
+// @relayRequestID 27a35bf285dd68dde76e0cf2e15fcec3
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -17,26 +17,24 @@ export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJE
 export type StaffPostQuery$variables = {
   reference: string;
 };
-export type StaffPostQueryVariables = StaffPostQuery$variables;
 export type StaffPostQuery$data = {
   readonly post: {
-    readonly __typename: string;
-    readonly reference: string;
-    readonly state: PostState;
+    readonly __typename: "Post";
+    readonly club: {
+      readonly slug: string;
+      readonly " $fragmentSpreads": FragmentRefs<"ClubPageButtonFragment" | "ClubStaffButtonFragment" | "LargeClubHeaderFragment">;
+    };
     readonly contributor: {
       readonly " $fragmentSpreads": FragmentRefs<"LargeAccountHeaderFragment" | "ProfilePageButtonFragment" | "ProfileStaffButtonFragment">;
     };
-    readonly club: {
-      readonly slug: string;
-      readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment" | "ClubStaffButtonFragment" | "ClubPageButtonFragment">;
-    };
-    readonly " $fragmentSpreads": FragmentRefs<"PostPreviewFragment" | "PostTagsPreviewFragment" | "ModerationPostActionsFragment">;
+    readonly reference: string;
+    readonly state: PostState;
+    readonly " $fragmentSpreads": FragmentRefs<"ModerationPostActionsFragment" | "PostPreviewFragment" | "PostTagsPreviewFragment">;
   };
 };
-export type StaffPostQueryResponse = StaffPostQuery$data;
 export type StaffPostQuery = {
-  variables: StaffPostQueryVariables;
   response: StaffPostQuery$data;
+  variables: StaffPostQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -138,6 +136,7 @@ v13 = {
   "storageKey": null
 },
 v14 = [
+  (v6/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -152,8 +151,7 @@ v14 = [
   (v10/*: any*/),
   (v11/*: any*/),
   (v12/*: any*/),
-  (v13/*: any*/),
-  (v6/*: any*/)
+  (v13/*: any*/)
 ],
 v15 = {
   "alias": null,
@@ -357,6 +355,7 @@ return {
                 "plural": false,
                 "selections": [
                   (v13/*: any*/),
+                  (v6/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -379,8 +378,7 @@ return {
                   (v9/*: any*/),
                   (v10/*: any*/),
                   (v11/*: any*/),
-                  (v12/*: any*/),
-                  (v6/*: any*/)
+                  (v12/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -452,7 +450,7 @@ return {
     ]
   },
   "params": {
-    "id": "4aa6fc0d08d6b842d68ab43dee6ce67a",
+    "id": "27a35bf285dd68dde76e0cf2e15fcec3",
     "metadata": {},
     "name": "StaffPostQuery",
     "operationKind": "query",

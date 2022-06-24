@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<749a7ad2468bda927094a7d4e4e39d66>>
+ * @generated SignedSource<<6537f873bfea866bc9d13a3cb24d10a3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,7 +21,6 @@ export type PostHeaderClubFragment$data = {
   };
   readonly " $fragmentType": "PostHeaderClubFragment";
 };
-export type PostHeaderClubFragment = PostHeaderClubFragment$data;
 export type PostHeaderClubFragment$key = {
   readonly " $data"?: PostHeaderClubFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PostHeaderClubFragment">;

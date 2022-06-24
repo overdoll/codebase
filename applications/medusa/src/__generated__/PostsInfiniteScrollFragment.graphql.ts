@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fed467ba944487be7557ca8d6002c097>>
+ * @generated SignedSource<<a1e292aa1baa58d2e4539e332d122ddf>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,6 @@ export type PostsInfiniteScrollFragment$data = {
   }>;
   readonly " $fragmentType": "PostsInfiniteScrollFragment";
 };
-export type PostsInfiniteScrollFragment = PostsInfiniteScrollFragment$data;
 export type PostsInfiniteScrollFragment$key = {
   readonly " $data"?: PostsInfiniteScrollFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollFragment">;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0042aec38513bcee1c8cc68ba1edebb5>>
+ * @generated SignedSource<<fa9492b904822a9e296c6495e186246d>>
  * @relayHash 43a783722a257b96b021232b77936c7d
  * @lightSyntaxTransform
  * @nogrep
@@ -18,23 +18,21 @@ export type CreateRuleInput = {
   title: string;
 };
 export type CreateRuleFormMutation$variables = {
-  input: CreateRuleInput;
   connections: ReadonlyArray<string>;
+  input: CreateRuleInput;
 };
-export type CreateRuleFormMutationVariables = CreateRuleFormMutation$variables;
 export type CreateRuleFormMutation$data = {
   readonly createRule: {
     readonly rule: {
+      readonly description: string;
       readonly id: string;
       readonly title: string;
-      readonly description: string;
     } | null;
   } | null;
 };
-export type CreateRuleFormMutationResponse = CreateRuleFormMutation$data;
 export type CreateRuleFormMutation = {
-  variables: CreateRuleFormMutationVariables;
   response: CreateRuleFormMutation$data;
+  variables: CreateRuleFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<abf02068ae259f6efc1d55b40fdbe31c>>
+ * @generated SignedSource<<b3f0de373b1022402e985d3ed61cc725>>
  * @relayHash 1a60f06f45c54cf3fb51f663213396b9
  * @lightSyntaxTransform
  * @nogrep
@@ -19,19 +19,17 @@ export type UpdateClubPayoutDepositDateInput = {
 export type UpdateClubPayoutDepositDateFormMutation$variables = {
   input: UpdateClubPayoutDepositDateInput;
 };
-export type UpdateClubPayoutDepositDateFormMutationVariables = UpdateClubPayoutDepositDateFormMutation$variables;
 export type UpdateClubPayoutDepositDateFormMutation$data = {
   readonly updateClubPayoutDepositDate: {
     readonly clubPayout: {
-      readonly id: string;
       readonly depositDate: any;
+      readonly id: string;
     } | null;
   } | null;
 };
-export type UpdateClubPayoutDepositDateFormMutationResponse = UpdateClubPayoutDepositDateFormMutation$data;
 export type UpdateClubPayoutDepositDateFormMutation = {
-  variables: UpdateClubPayoutDepositDateFormMutationVariables;
   response: UpdateClubPayoutDepositDateFormMutation$data;
+  variables: UpdateClubPayoutDepositDateFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

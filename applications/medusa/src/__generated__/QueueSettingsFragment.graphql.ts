@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<57bffa5e6c3b688e3f629cbc4555864f>>
+ * @generated SignedSource<<81fa59c9cb1e4fc4bdfab71996fafce7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,6 @@ export type QueueSettingsFragment$data = {
   };
   readonly " $fragmentType": "QueueSettingsFragment";
 };
-export type QueueSettingsFragment = QueueSettingsFragment$data;
 export type QueueSettingsFragment$key = {
   readonly " $data"?: QueueSettingsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"QueueSettingsFragment">;

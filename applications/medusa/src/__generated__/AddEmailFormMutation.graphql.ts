@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e74360f8f540a28705c3c79781ed1a08>>
+ * @generated SignedSource<<cbebe4a856a0bdf8bbad72113b0816f1>>
  * @relayHash 11225120e6fd1210cdd23abd0729955a
  * @lightSyntaxTransform
  * @nogrep
@@ -17,23 +17,21 @@ export type AddAccountEmailInput = {
   email: string;
 };
 export type AddEmailFormMutation$variables = {
-  input: AddAccountEmailInput;
   connections: ReadonlyArray<string>;
+  input: AddAccountEmailInput;
 };
-export type AddEmailFormMutationVariables = AddEmailFormMutation$variables;
 export type AddEmailFormMutation$data = {
   readonly addAccountEmail: {
     readonly accountEmail: {
-      readonly id: string;
       readonly email: string;
+      readonly id: string;
       readonly status: AccountEmailStatus;
     } | null;
   } | null;
 };
-export type AddEmailFormMutationResponse = AddEmailFormMutation$data;
 export type AddEmailFormMutation = {
-  variables: AddEmailFormMutationVariables;
   response: AddEmailFormMutation$data;
+  variables: AddEmailFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

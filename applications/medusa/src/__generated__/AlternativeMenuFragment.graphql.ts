@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b164b59b62afcb11abd918cb12bf1a71>>
+ * @generated SignedSource<<c6d70ab83bb1430580c7e75c20ede3b7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type AlternativeMenuFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"DropdownMenuButtonProfileFragment" | "QuickAccessButtonProfileFragment">;
   readonly " $fragmentType": "AlternativeMenuFragment";
 };
-export type AlternativeMenuFragment = AlternativeMenuFragment$data;
 export type AlternativeMenuFragment$key = {
   readonly " $data"?: AlternativeMenuFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"AlternativeMenuFragment">;

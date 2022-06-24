@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0b85edf3fe71a8d21f8bbef72b6a045f>>
+ * @generated SignedSource<<d4c46f4df726441365d1c7746cc752e7>>
  * @relayHash c1f67c085962e07f0db09594fbdc76fc
  * @lightSyntaxTransform
  * @nogrep
@@ -14,24 +14,22 @@
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type DiscoverClubsQuery$variables = {};
-export type DiscoverClubsQueryVariables = DiscoverClubsQuery$variables;
 export type DiscoverClubsQuery$data = {
   readonly viewer: {
-    readonly clubMembershipsCount: number;
     readonly clubMembersPostsFeed: {
       readonly edges: ReadonlyArray<{
         readonly node: {
-          readonly __typename: string;
+          readonly __typename: "Post";
         };
       }>;
     };
+    readonly clubMembershipsCount: number;
     readonly " $fragmentSpreads": FragmentRefs<"AccountInformationBannerFragment">;
   } | null;
 };
-export type DiscoverClubsQueryResponse = DiscoverClubsQuery$data;
 export type DiscoverClubsQuery = {
-  variables: DiscoverClubsQueryVariables;
   response: DiscoverClubsQuery$data;
+  variables: DiscoverClubsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

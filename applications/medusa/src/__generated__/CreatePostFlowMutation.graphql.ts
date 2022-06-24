@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<836252691cdd164258258e9ade0cdc6d>>
+ * @generated SignedSource<<7af2018ed6f38d02fba7e3c734b13b54>>
  * @relayHash 4507276f7be03af7c8648e69f1b14017
  * @lightSyntaxTransform
  * @nogrep
@@ -15,7 +15,6 @@ import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type CreatePostFlowMutation$variables = {
   clubId: string;
 };
-export type CreatePostFlowMutationVariables = CreatePostFlowMutation$variables;
 export type CreatePostFlowMutation$data = {
   readonly createPost: {
     readonly post: {
@@ -23,10 +22,9 @@ export type CreatePostFlowMutation$data = {
     } | null;
   } | null;
 };
-export type CreatePostFlowMutationResponse = CreatePostFlowMutation$data;
 export type CreatePostFlowMutation = {
-  variables: CreatePostFlowMutationVariables;
   response: CreatePostFlowMutation$data;
+  variables: CreatePostFlowMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

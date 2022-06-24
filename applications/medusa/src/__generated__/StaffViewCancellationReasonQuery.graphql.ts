@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<140ed461017034bf7c2861b0a8a0021d>>
+ * @generated SignedSource<<ace671c11772c72085138af419c174a7>>
  * @relayHash c9fdcff5236ed5783b95875ae438713a
  * @lightSyntaxTransform
  * @nogrep
@@ -16,16 +16,14 @@ import { FragmentRefs } from "relay-runtime";
 export type StaffViewCancellationReasonQuery$variables = {
   reference: string;
 };
-export type StaffViewCancellationReasonQueryVariables = StaffViewCancellationReasonQuery$variables;
 export type StaffViewCancellationReasonQuery$data = {
   readonly cancellationReason: {
-    readonly " $fragmentSpreads": FragmentRefs<"ChangeCancellationReasonTitleFragment" | "ChangeCancellationReasonDeprecatedFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ChangeCancellationReasonDeprecatedFragment" | "ChangeCancellationReasonTitleFragment">;
   } | null;
 };
-export type StaffViewCancellationReasonQueryResponse = StaffViewCancellationReasonQuery$data;
 export type StaffViewCancellationReasonQuery = {
-  variables: StaffViewCancellationReasonQueryVariables;
   response: StaffViewCancellationReasonQuery$data;
+  variables: StaffViewCancellationReasonQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<afa2ac39fa81e9c1317199baa403ba35>>
+ * @generated SignedSource<<6ab15f4b9aa6d6da2238d66c10791de9>>
  * @relayHash e7e315cd53afae5da2347629f69a2167
  * @lightSyntaxTransform
  * @nogrep
@@ -16,16 +16,14 @@ import { FragmentRefs } from "relay-runtime";
 export type StaffViewRuleQuery$variables = {
   reference: string;
 };
-export type StaffViewRuleQueryVariables = StaffViewRuleQuery$variables;
 export type StaffViewRuleQuery$data = {
   readonly rule: {
-    readonly " $fragmentSpreads": FragmentRefs<"ChangeRuleTitleFragment" | "ChangeRuleDescriptionFragment" | "ChangeRuleInfractionFragment" | "ChangeRuleDeprecatedFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ChangeRuleDeprecatedFragment" | "ChangeRuleDescriptionFragment" | "ChangeRuleInfractionFragment" | "ChangeRuleTitleFragment">;
   } | null;
 };
-export type StaffViewRuleQueryResponse = StaffViewRuleQuery$data;
 export type StaffViewRuleQuery = {
-  variables: StaffViewRuleQueryVariables;
   response: StaffViewRuleQuery$data;
+  variables: StaffViewRuleQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

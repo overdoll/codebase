@@ -29,10 +29,12 @@ var clubTable = table.New(table.Metadata{
 		"slug_aliases",
 		"name",
 		"thumbnail_resource",
+		"banner_resource",
 		"members_count",
 		"members_count_last_update_id",
 		"owner_account_id",
 		"suspended",
+		"supporter_only_posts_disabled",
 		"suspended_until",
 		"next_supporter_post_time",
 		"has_created_supporter_only_post",
@@ -51,11 +53,13 @@ type clubs struct {
 	SlugAliases                 []string          `db:"slug_aliases"`
 	Name                        map[string]string `db:"name"`
 	ThumbnailResource           string            `db:"thumbnail_resource"`
+	BannerResource              string            `db:"banner_resource"`
 	MembersCount                int               `db:"members_count"`
 	MembersCountLastUpdateId    gocql.UUID        `db:"members_count_last_update_id"`
 	OwnerAccountId              string            `db:"owner_account_id"`
 	Suspended                   bool              `db:"suspended"`
 	SuspendedUntil              *time.Time        `db:"suspended_until"`
+	SupporterOnlyPostsDisabled  bool              `db:"supporter_only_posts_disabled"`
 	NextSupporterPostTime       *time.Time        `db:"next_supporter_post_time"`
 	HasCreatedSupporterOnlyPost bool              `db:"has_created_supporter_only_post"`
 	Terminated                  bool              `db:"terminated"`
@@ -136,12 +140,20 @@ func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
 		return nil, err
 	}
 
+	marshalledBanner, err := resource.MarshalResourceToDatabase(cl.BannerResource())
+
+	if err != nil {
+		return nil, err
+	}
+
 	return &clubs{
 		Id:                          cl.ID(),
 		Slug:                        cl.Slug(),
 		SlugAliases:                 cl.SlugAliases(),
 		Name:                        localization.MarshalTranslationToDatabase(cl.Name()),
 		ThumbnailResource:           marshalled,
+		BannerResource:              marshalledBanner,
+		SupporterOnlyPostsDisabled:  cl.SupporterOnlyPostsDisabled(),
 		MembersCount:                cl.MembersCount(),
 		MembersCountLastUpdateId:    gocql.TimeUUID(),
 		OwnerAccountId:              cl.OwnerAccountId(),
@@ -315,12 +327,19 @@ func (r ClubCassandraElasticsearchRepository) GetClubById(ctx context.Context, b
 		return nil, err
 	}
 
+	unmarshalledBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, b.BannerResource)
+
+	if err != nil {
+		return nil, err
+	}
+
 	return club.UnmarshalClubFromDatabase(
 		b.Id,
 		b.Slug,
 		b.SlugAliases,
 		b.Name,
 		unmarshalled,
+		unmarshalledBanner,
 		b.MembersCount,
 		b.OwnerAccountId,
 		b.Suspended,
@@ -329,6 +348,7 @@ func (r ClubCassandraElasticsearchRepository) GetClubById(ctx context.Context, b
 		b.HasCreatedSupporterOnlyPost,
 		b.Terminated,
 		b.TerminatedByAccountId,
+		b.SupporterOnlyPostsDisabled,
 		b.CreatedAt,
 		b.UpdatedAt,
 	), nil
@@ -375,12 +395,19 @@ func (r ClubCassandraElasticsearchRepository) GetClubsByIds(ctx context.Context,
 			return nil, err
 		}
 
+		unmarshalledBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, b.BannerResource)
+
+		if err != nil {
+			return nil, err
+		}
+
 		clbs = append(clbs, club.UnmarshalClubFromDatabase(
 			b.Id,
 			b.Slug,
 			b.SlugAliases,
 			b.Name,
 			unmarshalled,
+			unmarshalledBanner,
 			b.MembersCount,
 			b.OwnerAccountId,
 			b.Suspended,
@@ -389,6 +416,7 @@ func (r ClubCassandraElasticsearchRepository) GetClubsByIds(ctx context.Context,
 			b.HasCreatedSupporterOnlyPost,
 			b.Terminated,
 			b.TerminatedByAccountId,
+			b.SupporterOnlyPostsDisabled,
 			b.CreatedAt,
 			b.UpdatedAt,
 		))
@@ -599,6 +627,10 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubThumbnail(ctx context.Co
 	return r.updateClubRequest(ctx, clubId, updateFn, []string{"thumbnail_resource"})
 }
 
+func (r ClubCassandraElasticsearchRepository) UpdateClubBanner(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
+	return r.updateClubRequest(ctx, clubId, updateFn, []string{"banner_resource"})
+}
+
 func (r ClubCassandraElasticsearchRepository) UpdateClubSuspensionStatus(ctx context.Context, clubId string, updateFn func(club *club.Club) error) (*club.Club, error) {
 	return r.updateClubRequest(ctx, clubId, updateFn, []string{"suspended", "suspended_until"})
 }
@@ -609,6 +641,10 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubNextSupporterPostTime(ct
 
 func (r ClubCassandraElasticsearchRepository) UpdateClubTerminationStatus(ctx context.Context, clubId string, updateFn func(club *club.Club) error) (*club.Club, error) {
 	return r.updateClubRequest(ctx, clubId, updateFn, []string{"terminated", "terminated_by_account_id"})
+}
+
+func (r ClubCassandraElasticsearchRepository) UpdateClubSupporterOnlyPostsDisabled(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
+	return r.updateClubRequest(ctx, clubId, updateFn, []string{"supporter_only_posts_disabled", "next_supporter_post_time", "has_created_supporter_only_post"})
 }
 
 func (r ClubCassandraElasticsearchRepository) UpdateClubMembersCount(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) error {
@@ -625,12 +661,19 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubMembersCount(ctx context
 		return err
 	}
 
+	unmarshalledBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, clb.BannerResource)
+
+	if err != nil {
+		return err
+	}
+
 	unmarshalled := club.UnmarshalClubFromDatabase(
 		clb.Id,
 		clb.Slug,
 		clb.SlugAliases,
 		clb.Name,
 		unmarshalledResource,
+		unmarshalledBanner,
 		clb.MembersCount,
 		clb.OwnerAccountId,
 		clb.Suspended,
@@ -639,6 +682,7 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubMembersCount(ctx context
 		clb.HasCreatedSupporterOnlyPost,
 		clb.Terminated,
 		clb.TerminatedByAccountId,
+		clb.SupporterOnlyPostsDisabled,
 		clb.CreatedAt,
 		clb.UpdatedAt,
 	)

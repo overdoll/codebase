@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a08b829f55722532e42f9992753cd8e6>>
+ * @generated SignedSource<<1be7ccc3cd4b621ad2b44d88c8e5c929>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,10 +11,9 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ProfileMenuFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"ProfileStaffButtonFragment" | "ProfileCopyLinkButtonFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"ProfileCopyLinkButtonFragment" | "ProfileStaffButtonFragment">;
   readonly " $fragmentType": "ProfileMenuFragment";
 };
-export type ProfileMenuFragment = ProfileMenuFragment$data;
 export type ProfileMenuFragment$key = {
   readonly " $data"?: ProfileMenuFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ProfileMenuFragment">;

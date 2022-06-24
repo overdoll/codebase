@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3aad66780b3d9a904e6f3b0daf9e69c6>>
+ * @generated SignedSource<<c74608d5dca37ea2fa611c47217f0046>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type PostModerateButtonFragment$data = {
   readonly reference: string;
   readonly " $fragmentType": "PostModerateButtonFragment";
 };
-export type PostModerateButtonFragment = PostModerateButtonFragment$data;
 export type PostModerateButtonFragment$key = {
   readonly " $data"?: PostModerateButtonFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PostModerateButtonFragment">;

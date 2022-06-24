@@ -2,6 +2,7 @@ package post
 
 import (
 	"overdoll/applications/sting/internal/domain/club"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/resource"
@@ -79,6 +80,7 @@ func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int,
 		var hiddenRes *resource.Resource
 
 		for _, r := range contentResources {
+
 			if r.ID() == resourceId {
 				res = r
 			}
@@ -92,17 +94,19 @@ func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int,
 			}
 		}
 
-		content = append(content, &Content{
-			post: &Post{
-				id:                  id,
-				state:               ps,
-				supporterOnlyStatus: so,
-				clubId:              clubId,
-			},
-			resource:        res,
-			resourceHidden:  hiddenRes,
-			isSupporterOnly: contentSupporterOnly[resourceId],
-		})
+		if res != nil {
+			content = append(content, &Content{
+				post: &Post{
+					id:                  id,
+					state:               ps,
+					supporterOnlyStatus: so,
+					clubId:              clubId,
+				},
+				resource:        res,
+				resourceHidden:  hiddenRes,
+				isSupporterOnly: contentSupporterOnly[resourceId],
+			})
+		}
 
 	}
 
@@ -271,7 +275,15 @@ func (p *Post) UpdatePostPostedDate(date time.Time) error {
 	return nil
 }
 
-func (p *Post) SubmitPostRequest(requester *principal.Principal) error {
+func (p *Post) SubmitPostRequest(clb *club.Club, requester *principal.Principal) error {
+
+	if clb.SupporterOnlyPostsDisabled() {
+		for _, cnt := range p.content {
+			if cnt.isSupporterOnly {
+				return domainerror.NewValidation("cannot submit post with supporter only content when it is disabled")
+			}
+		}
+	}
 
 	if err := p.CanUpdate(requester); err != nil {
 		return err
@@ -352,6 +364,11 @@ func (p *Post) AddContentRequest(requester *principal.Principal, resources []*re
 	var newContent []*Content
 
 	for _, contentId := range resources {
+
+		if !contentId.IsPrivate() {
+			return errors.New("only private content is allowed for posts")
+		}
+
 		newContent = append(newContent, &Content{
 			resource:        contentId,
 			resourceHidden:  nil,
@@ -427,7 +444,13 @@ func (p *Post) UpdateContentOrderRequest(requester *principal.Principal, content
 	return nil
 }
 
-func (p *Post) UpdateContentSupporterOnly(requester *principal.Principal, contentIds []string, supporterOnly bool) error {
+func (p *Post) UpdateContentSupporterOnly(clb *club.Club, requester *principal.Principal, contentIds []string, supporterOnly bool) error {
+
+	if supporterOnly {
+		if clb.SupporterOnlyPostsDisabled() {
+			return domainerror.NewValidation("cannot make supporter only content when disabled for club")
+		}
+	}
 
 	if err := p.CanUpdate(requester); err != nil {
 		return err

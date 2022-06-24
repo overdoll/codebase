@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<85128d7b5f719496d7dbd1a54959a6cf>>
+ * @generated SignedSource<<de0bfd1d01af3300b002bd3570f42494>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,6 @@ export type LockedAccountModalFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"UnlockAccountFormFragment">;
   readonly " $fragmentType": "LockedAccountModalFragment";
 };
-export type LockedAccountModalFragment = LockedAccountModalFragment$data;
 export type LockedAccountModalFragment$key = {
   readonly " $data"?: LockedAccountModalFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"LockedAccountModalFragment">;

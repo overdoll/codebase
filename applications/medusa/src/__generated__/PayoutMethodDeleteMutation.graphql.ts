@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<02e74f60ffdf64d92aa726b7ff21d656>>
+ * @generated SignedSource<<286ae7c186732c984c2b6cb44ab7d3ff>>
  * @relayHash d05ef2b078b977d7c6a453a9e0402641
  * @lightSyntaxTransform
  * @nogrep
@@ -18,16 +18,14 @@ export type DeleteAccountPayoutMethodInput = {
 export type PayoutMethodDeleteMutation$variables = {
   input: DeleteAccountPayoutMethodInput;
 };
-export type PayoutMethodDeleteMutationVariables = PayoutMethodDeleteMutation$variables;
 export type PayoutMethodDeleteMutation$data = {
   readonly deleteAccountPayoutMethod: {
     readonly deletedAccountPayoutMethodId: string;
   } | null;
 };
-export type PayoutMethodDeleteMutationResponse = PayoutMethodDeleteMutation$data;
 export type PayoutMethodDeleteMutation = {
-  variables: PayoutMethodDeleteMutationVariables;
   response: PayoutMethodDeleteMutation$data;
+  variables: PayoutMethodDeleteMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

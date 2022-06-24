@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a4eece4f761c499e49aa3333c2267631>>
- * @relayHash 4c543a1dd70bb8c14b1c4fb54e3b77e2
+ * @generated SignedSource<<f501d1c04b3a46503012bc913f11b6b4>>
+ * @relayHash 0945d6c0b4294ff659cfe95e52ef797c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,23 +9,21 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4c543a1dd70bb8c14b1c4fb54e3b77e2
+// @relayRequestID 0945d6c0b4294ff659cfe95e52ef797c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type StaffPaymentQuery$variables = {
   reference: string;
 };
-export type StaffPaymentQueryVariables = StaffPaymentQuery$variables;
 export type StaffPaymentQuery$data = {
   readonly payment: {
-    readonly " $fragmentSpreads": FragmentRefs<"StaffClubPaymentCardFragment" | "StaffPaymentOptionsFragment" | "StaffPaymentTransactionFragment" | "StaffPaymentClubFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"StaffClubPaymentCardFragment" | "StaffPaymentClubFragment" | "StaffPaymentOptionsFragment" | "StaffPaymentTransactionFragment">;
   } | null;
 };
-export type StaffPaymentQueryResponse = StaffPaymentQuery$data;
 export type StaffPaymentQuery = {
-  variables: StaffPaymentQueryVariables;
   response: StaffPaymentQuery$data;
+  variables: StaffPaymentQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -278,6 +276,7 @@ return {
                 "name": "thumbnail",
                 "plural": false,
                 "selections": [
+                  (v5/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -319,8 +318,7 @@ return {
                     "selections": (v6/*: any*/),
                     "storageKey": null
                   },
-                  (v3/*: any*/),
-                  (v5/*: any*/)
+                  (v3/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -341,7 +339,7 @@ return {
     ]
   },
   "params": {
-    "id": "4c543a1dd70bb8c14b1c4fb54e3b77e2",
+    "id": "0945d6c0b4294ff659cfe95e52ef797c",
     "metadata": {},
     "name": "StaffPaymentQuery",
     "operationKind": "query",

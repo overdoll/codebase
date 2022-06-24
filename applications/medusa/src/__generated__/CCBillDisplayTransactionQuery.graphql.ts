@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7d296904a97b97ba4814c41882ed1c71>>
+ * @generated SignedSource<<7fa2cf33a29597c168ef955fe20f68b4>>
  * @relayHash 05002eb15a61ffeaa738c573b02525cd
  * @lightSyntaxTransform
  * @nogrep
@@ -17,39 +17,37 @@ export type CardType = "AMEX" | "DISCOVER" | "JCB" | "MASTERCARD" | "OTHER" | "V
 export type CCBillDisplayTransactionQuery$variables = {
   token: string;
 };
-export type CCBillDisplayTransactionQueryVariables = CCBillDisplayTransactionQuery$variables;
 export type CCBillDisplayTransactionQuery$data = {
   readonly ccbillTransactionDetails: {
-    readonly id: string;
     readonly approved: boolean;
     readonly declineError: CCBillDeclineError | null;
     readonly declineText: string | null;
+    readonly id: string;
     readonly linkedAccountClubSupporterSubscription: {
-      readonly id?: string;
-      readonly reference?: string;
-      readonly supporterSince?: any;
-      readonly paymentMethod?: {
-        readonly card: {
-          readonly last4: string;
-          readonly expiration: string;
-          readonly type: CardType;
-        };
-      };
       readonly club?: {
         readonly viewerMember: {
-          readonly isSupporter: boolean;
           readonly clubSupporterSubscription: {
             readonly reference?: string;
           } | null;
+          readonly isSupporter: boolean;
         } | null;
       };
+      readonly id?: string;
+      readonly paymentMethod?: {
+        readonly card: {
+          readonly expiration: string;
+          readonly last4: string;
+          readonly type: CardType;
+        };
+      };
+      readonly reference?: string;
+      readonly supporterSince?: any;
     } | null;
   } | null;
 };
-export type CCBillDisplayTransactionQueryResponse = CCBillDisplayTransactionQuery$data;
 export type CCBillDisplayTransactionQuery = {
-  variables: CCBillDisplayTransactionQueryVariables;
   response: CCBillDisplayTransactionQuery$data;
+  variables: CCBillDisplayTransactionQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8b31e92cf4765dd30d30a6e22855dfb1>>
- * @relayHash c91d55ee1fd5b78788c11dd3eca0a2ae
+ * @generated SignedSource<<98abc7b3d845f9a807f65b4d273c9505>>
+ * @relayHash 30d9832e21078f5dd8f518309db54212
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c91d55ee1fd5b78788c11dd3eca0a2ae
+// @relayRequestID 30d9832e21078f5dd8f518309db54212
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -21,33 +21,31 @@ export type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput = {
 export type TotpSubmissionMutation$variables = {
   input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput;
 };
-export type TotpSubmissionMutationVariables = TotpSubmissionMutation$variables;
 export type TotpSubmissionMutation$data = {
   readonly grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp: {
-    readonly revokedAuthenticationTokenId: string;
-    readonly validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation | null;
     readonly account: {
-      readonly id: string;
-      readonly username: string;
-      readonly isModerator: boolean;
-      readonly isStaff: boolean;
-      readonly isArtist: boolean;
-      readonly deleting: {
-        readonly __typename: string;
-      } | null;
-      readonly lock: {
-        readonly __typename: string;
-      } | null;
       readonly avatar: {
         readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment" | "ResourceItemFragment">;
       } | null;
+      readonly deleting: {
+        readonly __typename: "AccountDeleting";
+      } | null;
+      readonly id: string;
+      readonly isArtist: boolean;
+      readonly isModerator: boolean;
+      readonly isStaff: boolean;
+      readonly lock: {
+        readonly __typename: "AccountLock";
+      } | null;
+      readonly username: string;
     } | null;
+    readonly revokedAuthenticationTokenId: string;
+    readonly validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation | null;
   } | null;
 };
-export type TotpSubmissionMutationResponse = TotpSubmissionMutation$data;
 export type TotpSubmissionMutation = {
-  variables: TotpSubmissionMutationVariables;
   response: TotpSubmissionMutation$data;
+  variables: TotpSubmissionMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -254,6 +252,7 @@ return {
                 "name": "avatar",
                 "plural": false,
                 "selections": [
+                  (v4/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -308,8 +307,7 @@ return {
                     "kind": "ScalarField",
                     "name": "processed",
                     "storageKey": null
-                  },
-                  (v4/*: any*/)
+                  }
                 ],
                 "storageKey": null
               }
@@ -322,7 +320,7 @@ return {
     ]
   },
   "params": {
-    "id": "c91d55ee1fd5b78788c11dd3eca0a2ae",
+    "id": "30d9832e21078f5dd8f518309db54212",
     "metadata": {},
     "name": "TotpSubmissionMutation",
     "operationKind": "mutation",

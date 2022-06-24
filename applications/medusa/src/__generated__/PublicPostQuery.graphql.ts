@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8c130c67ad08ed59dfca09f7d2ac33ca>>
- * @relayHash 032c3f1e6544ba07171fd094214e6aa3
+ * @generated SignedSource<<54a14c4ca8c439918df7363017d3def7>>
+ * @relayHash aa898ce0d3ed9f3c2b1c3cfb114f263b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,31 +9,29 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 032c3f1e6544ba07171fd094214e6aa3
+// @relayRequestID aa898ce0d3ed9f3c2b1c3cfb114f263b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PublicPostQuery$variables = {
   reference: string;
 };
-export type PublicPostQueryVariables = PublicPostQuery$variables;
 export type PublicPostQuery$data = {
   readonly post: {
-    readonly reference: string;
     readonly club: {
       readonly name: string;
       readonly slug: string;
     };
-    readonly " $fragmentSpreads": FragmentRefs<"SuggestedPostsFragment" | "PublicPostPageFragment" | "PublicPostRichObjectFragment">;
+    readonly reference: string;
+    readonly " $fragmentSpreads": FragmentRefs<"PublicPostPageFragment" | "PublicPostRichObjectFragment" | "SuggestedPostsFragment">;
   } | null;
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"SuggestedPostsViewerFragment" | "PublicPostPageViewerFragment" | "AccountInformationBannerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"AccountInformationBannerFragment" | "PublicPostPageViewerFragment" | "SuggestedPostsViewerFragment">;
   } | null;
 };
-export type PublicPostQueryResponse = PublicPostQuery$data;
 export type PublicPostQuery = {
-  variables: PublicPostQueryVariables;
   response: PublicPostQuery$data;
+  variables: PublicPostQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -158,6 +156,7 @@ v15 = {
       "plural": false,
       "selections": [
         (v8/*: any*/),
+        (v7/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -180,8 +179,7 @@ v15 = {
         (v10/*: any*/),
         (v11/*: any*/),
         (v12/*: any*/),
-        (v14/*: any*/),
-        (v7/*: any*/)
+        (v14/*: any*/)
       ],
       "storageKey": null
     },
@@ -211,6 +209,7 @@ v16 = {
   "name": "thumbnail",
   "plural": false,
   "selections": [
+    (v7/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -225,8 +224,7 @@ v16 = {
     (v11/*: any*/),
     (v12/*: any*/),
     (v14/*: any*/),
-    (v8/*: any*/),
-    (v7/*: any*/)
+    (v8/*: any*/)
   ],
   "storageKey": null
 },
@@ -653,7 +651,7 @@ return {
     ]
   },
   "params": {
-    "id": "032c3f1e6544ba07171fd094214e6aa3",
+    "id": "aa898ce0d3ed9f3c2b1c3cfb114f263b",
     "metadata": {},
     "name": "PublicPostQuery",
     "operationKind": "query",

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dc66db1fe8f6247a6a42d1d71318c515>>
+ * @generated SignedSource<<54c916e5451735bef7d963f49abae5f3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type JoinClubFromTileViewerFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"BecomeMemberButtonViewerFragment">;
   readonly " $fragmentType": "JoinClubFromTileViewerFragment";
 };
-export type JoinClubFromTileViewerFragment = JoinClubFromTileViewerFragment$data;
 export type JoinClubFromTileViewerFragment$key = {
   readonly " $data"?: JoinClubFromTileViewerFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"JoinClubFromTileViewerFragment">;

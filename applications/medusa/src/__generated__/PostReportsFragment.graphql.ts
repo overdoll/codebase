@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0bb2c48411653ba68951bcf098a098e7>>
+ * @generated SignedSource<<0ad83e7060e3f13b127d58947d27c8a4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,25 +14,24 @@ export type PostReportsFragment$data = {
   readonly postReports: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly id: string;
         readonly account: {
           readonly username: string;
         };
-        readonly rule: {
-          readonly title: string;
-        };
+        readonly id: string;
         readonly post: {
-          readonly reference: string;
           readonly club: {
             readonly slug: string;
           };
+          readonly reference: string;
+        };
+        readonly rule: {
+          readonly title: string;
         };
       };
     }>;
   };
   readonly " $fragmentType": "PostReportsFragment";
 };
-export type PostReportsFragment = PostReportsFragment$data;
 export type PostReportsFragment$key = {
   readonly " $data"?: PostReportsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PostReportsFragment">;

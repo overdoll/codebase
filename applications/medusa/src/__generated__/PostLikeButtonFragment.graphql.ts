@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e8bcc9e35b127a7bea1204560d07ebf8>>
+ * @generated SignedSource<<457d929bdb996d6e79b5daace054fc1b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,18 +11,17 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostLikeButtonFragment$data = {
-  readonly id: string;
-  readonly reference: string;
   readonly club: {
     readonly slug: string;
   };
-  readonly viewerLiked: {
-    readonly __typename: string;
-  } | null;
+  readonly id: string;
   readonly likes: number;
+  readonly reference: string;
+  readonly viewerLiked: {
+    readonly __typename: "PostLike";
+  } | null;
   readonly " $fragmentType": "PostLikeButtonFragment";
 };
-export type PostLikeButtonFragment = PostLikeButtonFragment$data;
 export type PostLikeButtonFragment$key = {
   readonly " $data"?: PostLikeButtonFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PostLikeButtonFragment">;

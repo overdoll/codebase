@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c32310a384ace94593399e50f12d4ae9>>
- * @relayHash 604d4717ee8b65e76976118e389241ce
+ * @generated SignedSource<<0fbc396c47201052eafde84706b23809>>
+ * @relayHash b1ca0a8ca43535c42892b5c9d40c00b8
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,24 +9,22 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 604d4717ee8b65e76976118e389241ce
+// @relayRequestID b1ca0a8ca43535c42892b5c9d40c00b8
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type StaffClubQuery$variables = {
   slug: string;
 };
-export type StaffClubQueryVariables = StaffClubQuery$variables;
 export type StaffClubQuery$data = {
   readonly club: {
-    readonly __typename: string;
-    readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment" | "StaffClubStatusFragment" | "StaffClubInfractionsFragment" | "ClubPageButtonFragment" | "StaffClubOwnerFragment" | "StaffClubPayoutsFragment" | "StaffClubPaymentsFragment" | "StaffClubSuspensionsFragment" | "StaffClubTerminationFragment" | "StaffClubSupporterSubscriptionsFragment">;
+    readonly __typename: "Club";
+    readonly " $fragmentSpreads": FragmentRefs<"ClubPageButtonFragment" | "LargeClubHeaderFragment" | "StaffClubInfractionsFragment" | "StaffClubOwnerFragment" | "StaffClubPaymentsFragment" | "StaffClubPayoutsFragment" | "StaffClubStatusFragment" | "StaffClubSupporterSubscriptionsFragment" | "StaffClubSuspensionsFragment" | "StaffClubTerminationFragment">;
   } | null;
 };
-export type StaffClubQueryResponse = StaffClubQuery$data;
 export type StaffClubQuery = {
-  variables: StaffClubQueryVariables;
   response: StaffClubQuery$data;
+  variables: StaffClubQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -75,6 +73,7 @@ v5 = [
   }
 ],
 v6 = [
+  (v3/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -122,8 +121,7 @@ v6 = [
     "kind": "ScalarField",
     "name": "type",
     "storageKey": null
-  },
-  (v3/*: any*/)
+  }
 ],
 v7 = {
   "alias": null,
@@ -1045,7 +1043,7 @@ return {
     ]
   },
   "params": {
-    "id": "604d4717ee8b65e76976118e389241ce",
+    "id": "b1ca0a8ca43535c42892b5c9d40c00b8",
     "metadata": {},
     "name": "StaffClubQuery",
     "operationKind": "query",

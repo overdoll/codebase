@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<23a61fdede136dd5c1cf3b5616447ea0>>
+ * @generated SignedSource<<e96270e847d1c9b999268fb636a20e77>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,14 +11,13 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type TranslationSnippetFragment$data = {
-  readonly text: string;
   readonly language: {
     readonly locale: string;
     readonly name: string;
   };
+  readonly text: string;
   readonly " $fragmentType": "TranslationSnippetFragment";
 };
-export type TranslationSnippetFragment = TranslationSnippetFragment$data;
 export type TranslationSnippetFragment$key = {
   readonly " $data"?: TranslationSnippetFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"TranslationSnippetFragment">;

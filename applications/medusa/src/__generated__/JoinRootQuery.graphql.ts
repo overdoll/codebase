@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cc2fb36048013641feb0cab4344f6b28>>
+ * @generated SignedSource<<c6abbadd1b0be43e474d723c8b557b39>>
  * @relayHash 5351a626541e7f528192f65095164e01
  * @lightSyntaxTransform
  * @nogrep
@@ -16,26 +16,24 @@ import { FragmentRefs } from "relay-runtime";
 export type JoinRootQuery$variables = {
   token: string;
 };
-export type JoinRootQueryVariables = JoinRootQuery$variables;
 export type JoinRootQuery$data = {
   readonly viewAuthenticationToken: {
-    readonly id: string;
-    readonly verified: boolean;
-    readonly token: string;
-    readonly sameDevice: boolean;
     readonly accountStatus: {
-      readonly registered: boolean;
       readonly multiFactor: {
-        readonly __typename: string;
+        readonly __typename: "MultiFactor";
       } | null;
+      readonly registered: boolean;
     } | null;
-    readonly " $fragmentSpreads": FragmentRefs<"LobbyFragment" | "JoinFragment" | "RegisterFragment" | "MultiFactorFragment" | "GrantFragment" | "RevokeTokenButtonFragment">;
+    readonly id: string;
+    readonly sameDevice: boolean;
+    readonly token: string;
+    readonly verified: boolean;
+    readonly " $fragmentSpreads": FragmentRefs<"GrantFragment" | "JoinFragment" | "LobbyFragment" | "MultiFactorFragment" | "RegisterFragment" | "RevokeTokenButtonFragment">;
   } | null;
 };
-export type JoinRootQueryResponse = JoinRootQuery$data;
 export type JoinRootQuery = {
-  variables: JoinRootQueryVariables;
   response: JoinRootQuery$data;
+  variables: JoinRootQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

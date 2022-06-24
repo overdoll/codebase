@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a46b6c62e63455dda0375f03c8698ecb>>
+ * @generated SignedSource<<c566601286b995fdbb70fdfb92ab1f9a>>
  * @relayHash 2ca60b38a60ef773732b233c435d8fce
  * @lightSyntaxTransform
  * @nogrep
@@ -13,7 +13,6 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type DropdownMenuButtonClubQuery$variables = {};
-export type DropdownMenuButtonClubQueryVariables = DropdownMenuButtonClubQuery$variables;
 export type DropdownMenuButtonClubQuery$data = {
   readonly viewer: {
     readonly clubs: {
@@ -26,10 +25,9 @@ export type DropdownMenuButtonClubQuery$data = {
     };
   } | null;
 };
-export type DropdownMenuButtonClubQueryResponse = DropdownMenuButtonClubQuery$data;
 export type DropdownMenuButtonClubQuery = {
-  variables: DropdownMenuButtonClubQueryVariables;
   response: DropdownMenuButtonClubQuery$data;
+  variables: DropdownMenuButtonClubQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<efee6982e2c7df8666d251a54fe73b54>>
+ * @generated SignedSource<<2ffa510c2ee0373efec0177de21a383a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,6 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type AccountCancelledClubSupporterSubscriptionDetailsFragment$data = {
-  readonly supporterSince: any;
   readonly cancelledAt: any;
   readonly club: {
     readonly id: string;
@@ -21,9 +20,9 @@ export type AccountCancelledClubSupporterSubscriptionDetailsFragment$data = {
       readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
     } | null;
   };
+  readonly supporterSince: any;
   readonly " $fragmentType": "AccountCancelledClubSupporterSubscriptionDetailsFragment";
 };
-export type AccountCancelledClubSupporterSubscriptionDetailsFragment = AccountCancelledClubSupporterSubscriptionDetailsFragment$data;
 export type AccountCancelledClubSupporterSubscriptionDetailsFragment$key = {
   readonly " $data"?: AccountCancelledClubSupporterSubscriptionDetailsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"AccountCancelledClubSupporterSubscriptionDetailsFragment">;

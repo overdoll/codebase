@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b88e84506de4a27fb5af3d234e19edd3>>
- * @relayHash 507a92a85038c80a72e92dc8b50c7c56
+ * @generated SignedSource<<657850b2e27c9b11627aed1a175df5af>>
+ * @relayHash adf57f115c116caa559a0d773e1fe3b0
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,28 +9,26 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 507a92a85038c80a72e92dc8b50c7c56
+// @relayRequestID adf57f115c116caa559a0d773e1fe3b0
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostsSort = "NEW" | "TOP" | "%future added value";
 export type SearchQuery$variables = {
-  sortBy: PostsSort;
   categorySlugs?: ReadonlyArray<string> | null;
-  seriesSlugs?: ReadonlyArray<string> | null;
   characterSlugs?: ReadonlyArray<string> | null;
+  seriesSlugs?: ReadonlyArray<string> | null;
+  sortBy: PostsSort;
 };
-export type SearchQueryVariables = SearchQuery$variables;
 export type SearchQuery$data = {
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollViewerFragment" | "AccountInformationBannerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"AccountInformationBannerFragment" | "PostsInfiniteScrollViewerFragment">;
   } | null;
   readonly " $fragmentSpreads": FragmentRefs<"SearchFragment">;
 };
-export type SearchQueryResponse = SearchQuery$data;
 export type SearchQuery = {
-  variables: SearchQueryVariables;
   response: SearchQuery$data;
+  variables: SearchQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -258,6 +256,7 @@ return {
                         "plural": false,
                         "selections": [
                           (v7/*: any*/),
+                          (v6/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -280,8 +279,7 @@ return {
                           (v9/*: any*/),
                           (v10/*: any*/),
                           (v11/*: any*/),
-                          (v13/*: any*/),
-                          (v6/*: any*/)
+                          (v13/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -334,6 +332,7 @@ return {
                         "name": "thumbnail",
                         "plural": false,
                         "selections": [
+                          (v6/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -348,8 +347,7 @@ return {
                           (v10/*: any*/),
                           (v11/*: any*/),
                           (v13/*: any*/),
-                          (v7/*: any*/),
-                          (v6/*: any*/)
+                          (v7/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -524,7 +522,7 @@ return {
     ]
   },
   "params": {
-    "id": "507a92a85038c80a72e92dc8b50c7c56",
+    "id": "adf57f115c116caa559a0d773e1fe3b0",
     "metadata": {},
     "name": "SearchQuery",
     "operationKind": "query",

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ab10cabb84d1cf4919b31d556c9e0b44>>
+ * @generated SignedSource<<cde703f19632ac36e843de337487ebab>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,6 @@ export type StaffLockAccountFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"StaffLockAccountFormFragment" | "StaffUnlockAccountFormFragment">;
   readonly " $fragmentType": "StaffLockAccountFragment";
 };
-export type StaffLockAccountFragment = StaffLockAccountFragment$data;
 export type StaffLockAccountFragment$key = {
   readonly " $data"?: StaffLockAccountFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"StaffLockAccountFragment">;

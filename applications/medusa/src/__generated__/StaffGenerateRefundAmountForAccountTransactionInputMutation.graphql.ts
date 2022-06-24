@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f0117f8ed6723412c9c9b3036cebcfc5>>
+ * @generated SignedSource<<6e645df64018900979c6b3899f45fe31>>
  * @relayHash 4acb968e94d42f3c1d06757a5efb48ca
  * @lightSyntaxTransform
  * @nogrep
@@ -19,7 +19,6 @@ export type GenerateRefundAmountForAccountTransactionInput = {
 export type StaffGenerateRefundAmountForAccountTransactionInputMutation$variables = {
   input: GenerateRefundAmountForAccountTransactionInput;
 };
-export type StaffGenerateRefundAmountForAccountTransactionInputMutationVariables = StaffGenerateRefundAmountForAccountTransactionInputMutation$variables;
 export type StaffGenerateRefundAmountForAccountTransactionInputMutation$data = {
   readonly generateRefundAmountForAccountTransaction: {
     readonly refundAmount: {
@@ -29,10 +28,9 @@ export type StaffGenerateRefundAmountForAccountTransactionInputMutation$data = {
     } | null;
   } | null;
 };
-export type StaffGenerateRefundAmountForAccountTransactionInputMutationResponse = StaffGenerateRefundAmountForAccountTransactionInputMutation$data;
 export type StaffGenerateRefundAmountForAccountTransactionInputMutation = {
-  variables: StaffGenerateRefundAmountForAccountTransactionInputMutationVariables;
   response: StaffGenerateRefundAmountForAccountTransactionInputMutation$data;
+  variables: StaffGenerateRefundAmountForAccountTransactionInputMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

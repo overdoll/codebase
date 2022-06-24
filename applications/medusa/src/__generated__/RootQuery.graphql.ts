@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c73242faf2d223f647bdb44043d5acc7>>
- * @relayHash ec05f1b365043569fb09fe34abdb82d0
+ * @generated SignedSource<<2a6ebb9062dafdc7321823f765fc685a>>
+ * @relayHash cc9803c44f60bfdbd1cf760799b7db4b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,22 +9,20 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ec05f1b365043569fb09fe34abdb82d0
+// @relayRequestID cc9803c44f60bfdbd1cf760799b7db4b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type RootQuery$variables = {};
-export type RootQueryVariables = RootQuery$variables;
 export type RootQuery$data = {
   readonly viewer: {
     readonly id: string;
     readonly " $fragmentSpreads": FragmentRefs<"AccountAuthorizerFragment" | "UniversalNavigatorFragment">;
   } | null;
 };
-export type RootQueryResponse = RootQuery$data;
 export type RootQuery = {
-  variables: RootQueryVariables;
   response: RootQuery$data;
+  variables: RootQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -164,6 +162,7 @@ return {
             "name": "avatar",
             "plural": false,
             "selections": [
+              (v0/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -211,8 +210,7 @@ return {
                 "kind": "ScalarField",
                 "name": "type",
                 "storageKey": null
-              },
-              (v0/*: any*/)
+              }
             ],
             "storageKey": null
           }
@@ -222,7 +220,7 @@ return {
     ]
   },
   "params": {
-    "id": "ec05f1b365043569fb09fe34abdb82d0",
+    "id": "cc9803c44f60bfdbd1cf760799b7db4b",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",

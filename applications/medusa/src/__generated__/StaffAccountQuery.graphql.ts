@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<cb5d76eb84810fb2e81ea923da4a2b77>>
- * @relayHash ee66e35b59ff043923ddea7f5f1c44f8
+ * @generated SignedSource<<549b24ab0270d23717ccb12c9a16b5c4>>
+ * @relayHash fde114ec96bbe4207216c4fb49e895ba
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,23 +9,21 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ee66e35b59ff043923ddea7f5f1c44f8
+// @relayRequestID fde114ec96bbe4207216c4fb49e895ba
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type StaffAccountQuery$variables = {
   username: string;
 };
-export type StaffAccountQueryVariables = StaffAccountQuery$variables;
 export type StaffAccountQuery$data = {
   readonly account: {
-    readonly " $fragmentSpreads": FragmentRefs<"StaffPermissionsFragment" | "StaffAccountClubSupporterSubscriptionsFragment" | "StaffTransactionsFragment" | "LargeAccountHeaderFragment" | "ProfilePageButtonFragment" | "StaffAccountClubsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"LargeAccountHeaderFragment" | "ProfilePageButtonFragment" | "StaffAccountClubSupporterSubscriptionsFragment" | "StaffAccountClubsFragment" | "StaffPermissionsFragment" | "StaffTransactionsFragment">;
   } | null;
 };
-export type StaffAccountQueryResponse = StaffAccountQuery$data;
 export type StaffAccountQuery = {
-  variables: StaffAccountQueryVariables;
   response: StaffAccountQuery$data;
+  variables: StaffAccountQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -196,13 +194,13 @@ v18 = {
   "storageKey": null
 },
 v19 = [
+  (v2/*: any*/),
   (v14/*: any*/),
   (v15/*: any*/),
   (v16/*: any*/),
   (v17/*: any*/),
   (v18/*: any*/),
-  (v12/*: any*/),
-  (v2/*: any*/)
+  (v12/*: any*/)
 ],
 v20 = [
   {
@@ -650,6 +648,7 @@ return {
                                         "plural": false,
                                         "selections": [
                                           (v12/*: any*/),
+                                          (v2/*: any*/),
                                           (v14/*: any*/),
                                           (v15/*: any*/),
                                           (v16/*: any*/),
@@ -661,8 +660,7 @@ return {
                                             "kind": "ScalarField",
                                             "name": "processed",
                                             "storageKey": null
-                                          },
-                                          (v2/*: any*/)
+                                          }
                                         ],
                                         "storageKey": null
                                       },
@@ -707,7 +705,7 @@ return {
     ]
   },
   "params": {
-    "id": "ee66e35b59ff043923ddea7f5f1c44f8",
+    "id": "fde114ec96bbe4207216c4fb49e895ba",
     "metadata": {},
     "name": "StaffAccountQuery",
     "operationKind": "query",

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<178e4a7e9e363b09f4796580afdbe0b7>>
- * @relayHash 475a06782c4239108c5a17fd94a32660
+ * @generated SignedSource<<df29980ac5f5faae7edc0bbafe86ed56>>
+ * @relayHash 1fd9913a8eb95c3b7ced70367aa5a5b1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 475a06782c4239108c5a17fd94a32660
+// @relayRequestID 1fd9913a8eb95c3b7ced70367aa5a5b1
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,14 +18,12 @@ export type StaffSearchCategoriesPaginationFragment$variables = {
   first?: number | null;
   title?: string | null;
 };
-export type StaffSearchCategoriesPaginationFragmentVariables = StaffSearchCategoriesPaginationFragment$variables;
 export type StaffSearchCategoriesPaginationFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"StaffSearchCategoriesFragment">;
 };
-export type StaffSearchCategoriesPaginationFragmentResponse = StaffSearchCategoriesPaginationFragment$data;
 export type StaffSearchCategoriesPaginationFragment = {
-  variables: StaffSearchCategoriesPaginationFragmentVariables;
   response: StaffSearchCategoriesPaginationFragment$data;
+  variables: StaffSearchCategoriesPaginationFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -160,6 +158,7 @@ return {
                         "name": "type",
                         "storageKey": null
                       },
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -207,8 +206,7 @@ return {
                         "kind": "ScalarField",
                         "name": "processed",
                         "storageKey": null
-                      },
-                      (v4/*: any*/)
+                      }
                     ],
                     "storageKey": null
                   },
@@ -274,7 +272,7 @@ return {
     ]
   },
   "params": {
-    "id": "475a06782c4239108c5a17fd94a32660",
+    "id": "1fd9913a8eb95c3b7ced70367aa5a5b1",
     "metadata": {},
     "name": "StaffSearchCategoriesPaginationFragment",
     "operationKind": "query",

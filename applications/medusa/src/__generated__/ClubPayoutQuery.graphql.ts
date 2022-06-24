@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<69eb8c25d81ddaf5320ceb9dcbdfc52d>>
+ * @generated SignedSource<<85fad436a13ff4261196ebab460fb7b3>>
  * @relayHash de7200ce2cee39aab78c31ed083a21c8
  * @lightSyntaxTransform
  * @nogrep
@@ -18,21 +18,19 @@ export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future 
 export type ClubPayoutQuery$variables = {
   reference: string;
 };
-export type ClubPayoutQueryVariables = ClubPayoutQuery$variables;
 export type ClubPayoutQuery$data = {
   readonly payout: {
     readonly amount: number;
     readonly coverFeeAmount: number;
     readonly currency: Currency;
-    readonly status: ClubPayoutStatus;
     readonly depositDate: any;
+    readonly status: ClubPayoutStatus;
     readonly " $fragmentSpreads": FragmentRefs<"ClubPayoutPaymentsListFragment">;
   } | null;
 };
-export type ClubPayoutQueryResponse = ClubPayoutQuery$data;
 export type ClubPayoutQuery = {
-  variables: ClubPayoutQueryVariables;
   response: ClubPayoutQuery$data;
+  variables: ClubPayoutQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

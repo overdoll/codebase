@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7c14d9711006de6800b40fda8b6a4f54>>
- * @relayHash aa14f0329719b396c8d0af13004e959f
+ * @generated SignedSource<<b594c1f01bebcdb221bcdd16cb9bdb95>>
+ * @relayHash f442b62d16dc2857b44b690d7c5d4baa
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID aa14f0329719b396c8d0af13004e959f
+// @relayRequestID f442b62d16dc2857b44b690d7c5d4baa
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,14 +18,12 @@ export type CategoryMultiSelectorPaginationFragment$variables = {
   first?: number | null;
   title?: string | null;
 };
-export type CategoryMultiSelectorPaginationFragmentVariables = CategoryMultiSelectorPaginationFragment$variables;
 export type CategoryMultiSelectorPaginationFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"CategoryMultiSelectorFragment">;
 };
-export type CategoryMultiSelectorPaginationFragmentResponse = CategoryMultiSelectorPaginationFragment$data;
 export type CategoryMultiSelectorPaginationFragment = {
-  variables: CategoryMultiSelectorPaginationFragmentVariables;
   response: CategoryMultiSelectorPaginationFragment$data;
+  variables: CategoryMultiSelectorPaginationFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -153,6 +151,7 @@ return {
                         "name": "type",
                         "storageKey": null
                       },
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -200,8 +199,7 @@ return {
                         "kind": "ScalarField",
                         "name": "processed",
                         "storageKey": null
-                      },
-                      (v4/*: any*/)
+                      }
                     ],
                     "storageKey": null
                   },
@@ -267,7 +265,7 @@ return {
     ]
   },
   "params": {
-    "id": "aa14f0329719b396c8d0af13004e959f",
+    "id": "f442b62d16dc2857b44b690d7c5d4baa",
     "metadata": {},
     "name": "CategoryMultiSelectorPaginationFragment",
     "operationKind": "query",

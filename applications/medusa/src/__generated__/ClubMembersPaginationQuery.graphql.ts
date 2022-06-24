@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e29f6c312bd03bfecde5094665e4966d>>
- * @relayHash 10934010af0422c2289da4b9ff09d100
+ * @generated SignedSource<<a2d27cf6a5a9624e39080e750d151709>>
+ * @relayHash 5bee61f50fa97b8475483e7c7d219642
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 10934010af0422c2289da4b9ff09d100
+// @relayRequestID 5bee61f50fa97b8475483e7c7d219642
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,16 +18,14 @@ export type ClubMembersPaginationQuery$variables = {
   first?: number | null;
   id: string;
 };
-export type ClubMembersPaginationQueryVariables = ClubMembersPaginationQuery$variables;
 export type ClubMembersPaginationQuery$data = {
   readonly node: {
     readonly " $fragmentSpreads": FragmentRefs<"ClubMembersFragment">;
   } | null;
 };
-export type ClubMembersPaginationQueryResponse = ClubMembersPaginationQuery$data;
 export type ClubMembersPaginationQuery = {
-  variables: ClubMembersPaginationQueryVariables;
   response: ClubMembersPaginationQuery$data;
+  variables: ClubMembersPaginationQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -191,6 +189,7 @@ return {
                                 "name": "avatar",
                                 "plural": false,
                                 "selections": [
+                                  (v4/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -245,8 +244,7 @@ return {
                                     "kind": "ScalarField",
                                     "name": "processed",
                                     "storageKey": null
-                                  },
-                                  (v4/*: any*/)
+                                  }
                                 ],
                                 "storageKey": null
                               }
@@ -322,7 +320,7 @@ return {
     ]
   },
   "params": {
-    "id": "10934010af0422c2289da4b9ff09d100",
+    "id": "5bee61f50fa97b8475483e7c7d219642",
     "metadata": {},
     "name": "ClubMembersPaginationQuery",
     "operationKind": "query",

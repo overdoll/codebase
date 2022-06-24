@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a933ca0a380deba72fd3a4da81c6a660>>
+ * @generated SignedSource<<a072bd4664b4cf803bf87d3e5c6042fa>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,8 +15,8 @@ export type ClubSupporterSubscriptionsSettingsFragment$data = {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly __id: string;
         readonly __typename: string;
+        readonly __id: string;
         readonly id?: string;
         readonly " $fragmentSpreads": FragmentRefs<"AccountActiveClubSupporterSubscriptionPreviewFragment" | "AccountCancelledClubSupporterSubscriptionPreviewFragment">;
       };
@@ -25,7 +25,6 @@ export type ClubSupporterSubscriptionsSettingsFragment$data = {
   readonly id: string;
   readonly " $fragmentType": "ClubSupporterSubscriptionsSettingsFragment";
 };
-export type ClubSupporterSubscriptionsSettingsFragment = ClubSupporterSubscriptionsSettingsFragment$data;
 export type ClubSupporterSubscriptionsSettingsFragment$key = {
   readonly " $data"?: ClubSupporterSubscriptionsSettingsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ClubSupporterSubscriptionsSettingsFragment">;

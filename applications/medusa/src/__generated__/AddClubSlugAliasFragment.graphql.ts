@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b789e863fb47254f51a81483e5b63cc5>>
+ * @generated SignedSource<<08a55e6f6fbf3ee334d1f9bcac2058e6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,6 @@ export type AddClubSlugAliasFragment$data = {
   readonly slug: string;
   readonly " $fragmentType": "AddClubSlugAliasFragment";
 };
-export type AddClubSlugAliasFragment = AddClubSlugAliasFragment$data;
 export type AddClubSlugAliasFragment$key = {
   readonly " $data"?: AddClubSlugAliasFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"AddClubSlugAliasFragment">;

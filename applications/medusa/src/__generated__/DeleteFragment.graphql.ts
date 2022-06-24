@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4c8e5cecc13c58b853262140b52c4c2d>>
+ * @generated SignedSource<<006db75dc3733b9786b2e955b1cd5218>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,11 +11,10 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type DeleteFragment$data = {
-  readonly id: string;
   readonly email: string;
+  readonly id: string;
   readonly " $fragmentType": "DeleteFragment";
 };
-export type DeleteFragment = DeleteFragment$data;
 export type DeleteFragment$key = {
   readonly " $data"?: DeleteFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"DeleteFragment">;

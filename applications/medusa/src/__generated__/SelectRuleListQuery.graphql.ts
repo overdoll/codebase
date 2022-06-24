@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8b7963db8d675f579ebf90a1dc3fce5e>>
+ * @generated SignedSource<<866bf24c6c0e7ccde2334bdf3d9b857d>>
  * @relayHash 9913427fa16a28e7e5e0ad19fd43f744
  * @lightSyntaxTransform
  * @nogrep
@@ -14,7 +14,6 @@
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SelectRuleListQuery$variables = {};
-export type SelectRuleListQueryVariables = SelectRuleListQuery$variables;
 export type SelectRuleListQuery$data = {
   readonly rules: {
     readonly edges: ReadonlyArray<{
@@ -26,10 +25,9 @@ export type SelectRuleListQuery$data = {
     }>;
   };
 };
-export type SelectRuleListQueryResponse = SelectRuleListQuery$data;
 export type SelectRuleListQuery = {
-  variables: SelectRuleListQueryVariables;
   response: SelectRuleListQuery$data;
+  variables: SelectRuleListQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

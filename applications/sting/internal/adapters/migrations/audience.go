@@ -41,6 +41,7 @@ const audienceIndexProperties = `
 
 const audienceIndex = `
 {
+    "settings": { ` + localization.ESSettings + ` },
 	"mappings": {
 		"dynamic": "strict",
 		"properties": ` + audienceIndexProperties + `

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4fefcd27e938e02da6f0015b154f595f>>
+ * @generated SignedSource<<9a78d9c301676360b34d00279e6fa0ae>>
  * @relayHash ce7bd0499648db7be6978ba1b6e3e1cb
  * @lightSyntaxTransform
  * @nogrep
@@ -14,17 +14,15 @@
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PayoutsSettingsQuery$variables = {};
-export type PayoutsSettingsQueryVariables = PayoutsSettingsQuery$variables;
 export type PayoutsSettingsQuery$data = {
   readonly viewer: {
     readonly multiFactorTotpConfigured: boolean;
-    readonly " $fragmentSpreads": FragmentRefs<"PayoutsDetailsSettingsFragment" | "PayoutsMethodSettingsFragment" | "AccountInformationBannerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"AccountInformationBannerFragment" | "PayoutsDetailsSettingsFragment" | "PayoutsMethodSettingsFragment">;
   };
 };
-export type PayoutsSettingsQueryResponse = PayoutsSettingsQuery$data;
 export type PayoutsSettingsQuery = {
-  variables: PayoutsSettingsQueryVariables;
   response: PayoutsSettingsQuery$data;
+  variables: PayoutsSettingsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

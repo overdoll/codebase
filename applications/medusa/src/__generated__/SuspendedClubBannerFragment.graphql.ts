@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<eaa4fcb0ef0324a40b2fd667a343820f>>
+ * @generated SignedSource<<05b8ba62d6852e53519034c9c30eabbb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type SuspendedClubBannerFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"SuspendedClubModalFragment">;
   readonly " $fragmentType": "SuspendedClubBannerFragment";
 };
-export type SuspendedClubBannerFragment = SuspendedClubBannerFragment$data;
 export type SuspendedClubBannerFragment$key = {
   readonly " $data"?: SuspendedClubBannerFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"SuspendedClubBannerFragment">;

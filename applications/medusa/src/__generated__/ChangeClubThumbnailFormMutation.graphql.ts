@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<938c181b40aafe6c7275cf6bd3ad2625>>
+ * @generated SignedSource<<d95eb1167abcc2a23fb4d805e56e7d3b>>
  * @relayHash 0f10b72e384432782bbd108cfb87ec1b
  * @lightSyntaxTransform
  * @nogrep
@@ -20,29 +20,27 @@ export type UpdateClubThumbnailInput = {
 export type ChangeClubThumbnailFormMutation$variables = {
   input: UpdateClubThumbnailInput;
 };
-export type ChangeClubThumbnailFormMutationVariables = ChangeClubThumbnailFormMutation$variables;
 export type ChangeClubThumbnailFormMutation$data = {
   readonly updateClubThumbnail: {
     readonly club: {
       readonly id: string;
       readonly name: string;
       readonly thumbnail: {
+        readonly height: number;
+        readonly preview: string;
         readonly type: ResourceType;
         readonly urls: ReadonlyArray<{
-          readonly url: string;
           readonly mimeType: string;
+          readonly url: string;
         }>;
-        readonly preview: string;
         readonly width: number;
-        readonly height: number;
       } | null;
     } | null;
   } | null;
 };
-export type ChangeClubThumbnailFormMutationResponse = ChangeClubThumbnailFormMutation$data;
 export type ChangeClubThumbnailFormMutation = {
-  variables: ChangeClubThumbnailFormMutationVariables;
   response: ChangeClubThumbnailFormMutation$data;
+  variables: ChangeClubThumbnailFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<5eba8b185188a0f71c0a98fb088361d5>>
- * @relayHash 4562f01b0ac653681135ba1725a528fa
+ * @generated SignedSource<<5495144b210d16da19a867fe60e0a3bc>>
+ * @relayHash 3c1c0f25cc1bb3d573183e7f1bb7932d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4562f01b0ac653681135ba1725a528fa
+// @relayRequestID 3c1c0f25cc1bb3d573183e7f1bb7932d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,16 +18,14 @@ export type TransactionsSettingsPaginationQuery$variables = {
   first?: number | null;
   id: string;
 };
-export type TransactionsSettingsPaginationQueryVariables = TransactionsSettingsPaginationQuery$variables;
 export type TransactionsSettingsPaginationQuery$data = {
   readonly node: {
     readonly " $fragmentSpreads": FragmentRefs<"TransactionsSettingsFragment">;
   } | null;
 };
-export type TransactionsSettingsPaginationQueryResponse = TransactionsSettingsPaginationQuery$data;
 export type TransactionsSettingsPaginationQuery = {
-  variables: TransactionsSettingsPaginationQueryVariables;
   response: TransactionsSettingsPaginationQuery$data;
+  variables: TransactionsSettingsPaginationQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -231,6 +229,7 @@ return {
                                         "name": "thumbnail",
                                         "plural": false,
                                         "selections": [
+                                          (v4/*: any*/),
                                           {
                                             "alias": null,
                                             "args": null,
@@ -272,8 +271,7 @@ return {
                                             "selections": (v5/*: any*/),
                                             "storageKey": null
                                           },
-                                          (v6/*: any*/),
-                                          (v4/*: any*/)
+                                          (v6/*: any*/)
                                         ],
                                         "storageKey": null
                                       }
@@ -400,7 +398,7 @@ return {
     ]
   },
   "params": {
-    "id": "4562f01b0ac653681135ba1725a528fa",
+    "id": "3c1c0f25cc1bb3d573183e7f1bb7932d",
     "metadata": {},
     "name": "TransactionsSettingsPaginationQuery",
     "operationKind": "query",

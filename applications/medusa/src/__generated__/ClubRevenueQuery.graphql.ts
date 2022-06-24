@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c5d8f590614cff822a80b12c0c6a8a0d>>
+ * @generated SignedSource<<bac26708eae29bdb34307d6a8f3d4bac>>
  * @relayHash fd0e4f6280db3e9b01009330c2f99d8f
  * @lightSyntaxTransform
  * @nogrep
@@ -16,18 +16,16 @@ import { FragmentRefs } from "relay-runtime";
 export type ClubRevenueQuery$variables = {
   slug: string;
 };
-export type ClubRevenueQueryVariables = ClubRevenueQuery$variables;
 export type ClubRevenueQuery$data = {
   readonly club: {
-    readonly __typename: string;
+    readonly __typename: "Club";
     readonly viewerIsOwner: boolean;
-    readonly " $fragmentSpreads": FragmentRefs<"ClubFullBalanceFragment" | "ClubPayoutsListFragment" | "ClubPayoutMethodAlertFragment" | "ClubInformationBannerFragment" | "ClubTransactionMetricsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ClubFullBalanceFragment" | "ClubInformationBannerFragment" | "ClubPayoutMethodAlertFragment" | "ClubPayoutsListFragment" | "ClubTransactionMetricsFragment">;
   } | null;
 };
-export type ClubRevenueQueryResponse = ClubRevenueQuery$data;
 export type ClubRevenueQuery = {
-  variables: ClubRevenueQueryVariables;
   response: ClubRevenueQuery$data;
+  variables: ClubRevenueQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<78bc4297a3eeea2150e7c3a94dd38da8>>
+ * @generated SignedSource<<31d2684b6769c21c6af31305d78bb9f0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,13 +13,12 @@ export type ClubPaymentStatus = "COMPLETE" | "PENDING" | "READY" | "%future adde
 export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type StaffClubPaymentCardFragment$data = {
-  readonly status: ClubPaymentStatus;
   readonly currency: Currency;
   readonly finalAmount: number;
   readonly settlementDate: any;
+  readonly status: ClubPaymentStatus;
   readonly " $fragmentType": "StaffClubPaymentCardFragment";
 };
-export type StaffClubPaymentCardFragment = StaffClubPaymentCardFragment$data;
 export type StaffClubPaymentCardFragment$key = {
   readonly " $data"?: StaffClubPaymentCardFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"StaffClubPaymentCardFragment">;

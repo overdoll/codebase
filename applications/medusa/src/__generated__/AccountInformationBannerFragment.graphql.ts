@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e633e45b376d3896160fec65f49d607d>>
+ * @generated SignedSource<<69be8ee320588b1de13da00331bf9d05>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,16 +11,15 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type AccountInformationBannerFragment$data = {
-  readonly lock: {
-    readonly __typename: string;
-  } | null;
   readonly deleting: {
-    readonly __typename: string;
+    readonly __typename: "AccountDeleting";
   } | null;
-  readonly " $fragmentSpreads": FragmentRefs<"LockedAccountBannerFragment" | "DeletingAccountBannerFragment">;
+  readonly lock: {
+    readonly __typename: "AccountLock";
+  } | null;
+  readonly " $fragmentSpreads": FragmentRefs<"DeletingAccountBannerFragment" | "LockedAccountBannerFragment">;
   readonly " $fragmentType": "AccountInformationBannerFragment";
 };
-export type AccountInformationBannerFragment = AccountInformationBannerFragment$data;
 export type AccountInformationBannerFragment$key = {
   readonly " $data"?: AccountInformationBannerFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"AccountInformationBannerFragment">;

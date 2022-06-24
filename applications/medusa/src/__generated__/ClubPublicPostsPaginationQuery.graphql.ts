@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<2822f44e92f914dc2cef236f502dc408>>
- * @relayHash 5cfa6b8e220803c6f0290567cac99385
+ * @generated SignedSource<<6f62aa7454b199e9d51f618db0910651>>
+ * @relayHash e1c921cfa7a52c880419c765aad1eaa4
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 5cfa6b8e220803c6f0290567cac99385
+// @relayRequestID e1c921cfa7a52c880419c765aad1eaa4
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -20,21 +20,19 @@ export type ClubPublicPostsPaginationQuery$variables = {
   categorySlugs?: ReadonlyArray<string> | null;
   characterSlugs?: ReadonlyArray<string> | null;
   first?: number | null;
+  id: string;
   seriesSlugs?: ReadonlyArray<string> | null;
   sortBy: PostsSort;
   supporterOnlyStatus?: ReadonlyArray<SupporterOnlyStatus> | null;
-  id: string;
 };
-export type ClubPublicPostsPaginationQueryVariables = ClubPublicPostsPaginationQuery$variables;
 export type ClubPublicPostsPaginationQuery$data = {
   readonly node: {
     readonly " $fragmentSpreads": FragmentRefs<"PublicClubPostsFragment">;
   } | null;
 };
-export type ClubPublicPostsPaginationQueryResponse = ClubPublicPostsPaginationQuery$data;
 export type ClubPublicPostsPaginationQuery = {
-  variables: ClubPublicPostsPaginationQueryVariables;
   response: ClubPublicPostsPaginationQuery$data;
+  variables: ClubPublicPostsPaginationQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -315,6 +313,7 @@ return {
                                 "plural": false,
                                 "selections": [
                                   (v14/*: any*/),
+                                  (v12/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -337,8 +336,7 @@ return {
                                   (v16/*: any*/),
                                   (v17/*: any*/),
                                   (v18/*: any*/),
-                                  (v20/*: any*/),
-                                  (v12/*: any*/)
+                                  (v20/*: any*/)
                                 ],
                                 "storageKey": null
                               },
@@ -391,6 +389,7 @@ return {
                                 "name": "thumbnail",
                                 "plural": false,
                                 "selections": [
+                                  (v12/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -405,8 +404,7 @@ return {
                                   (v17/*: any*/),
                                   (v18/*: any*/),
                                   (v20/*: any*/),
-                                  (v14/*: any*/),
-                                  (v12/*: any*/)
+                                  (v14/*: any*/)
                                 ],
                                 "storageKey": null
                               },
@@ -525,7 +523,7 @@ return {
     ]
   },
   "params": {
-    "id": "5cfa6b8e220803c6f0290567cac99385",
+    "id": "e1c921cfa7a52c880419c765aad1eaa4",
     "metadata": {},
     "name": "ClubPublicPostsPaginationQuery",
     "operationKind": "query",

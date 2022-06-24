@@ -22,6 +22,8 @@ type clubDocument struct {
 	Slug                        string            `json:"slug"`
 	SlugAliases                 []string          `json:"slug_aliases"`
 	ThumbnailResource           string            `json:"thumbnail_resource"`
+	BannerResource              string            `json:"banner_resource"`
+	SupporterOnlyPostsDisabled  bool              `json:"supporter_only_posts_disabled"`
 	Name                        map[string]string `json:"name"`
 	CreatedAt                   time.Time         `json:"created_at"`
 	MembersCount                int               `json:"members_count"`
@@ -39,7 +41,13 @@ const ClubsIndexName = "sting.clubs"
 
 func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 
-	marshalled, err := resource.MarshalResourceToDatabase(cat.ThumbnailResource())
+	marshalledThumbnail, err := resource.MarshalResourceToDatabase(cat.ThumbnailResource())
+
+	if err != nil {
+		return nil, err
+	}
+
+	marshalledBanner, err := resource.MarshalResourceToDatabase(cat.BannerResource())
 
 	if err != nil {
 		return nil, err
@@ -49,7 +57,9 @@ func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 		Id:                          cat.ID(),
 		Slug:                        cat.Slug(),
 		SlugAliases:                 cat.SlugAliases(),
-		ThumbnailResource:           marshalled,
+		ThumbnailResource:           marshalledThumbnail,
+		BannerResource:              marshalledBanner,
+		SupporterOnlyPostsDisabled:  cat.SupporterOnlyPostsDisabled(),
 		Name:                        localization.MarshalTranslationToDatabase(cat.Name()),
 		CreatedAt:                   cat.CreatedAt(),
 		UpdatedAt:                   cat.UpdatedAt(),
@@ -62,6 +72,51 @@ func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 		Terminated:                  cat.Terminated(),
 		TerminatedByAccountId:       cat.TerminatedByAccountId(),
 	}, nil
+}
+
+func unmarshalClubDocument(ctx context.Context, hit *elastic.SearchHit, resourceSerializer *resource.Serializer) (*club.Club, error) {
+	var bd clubDocument
+
+	err := json.Unmarshal(hit.Source, &bd)
+
+	if err != nil {
+		return nil, errors.Wrap(err, "failed search clubs - unmarshal")
+	}
+
+	unmarshalledThumbnail, err := resourceSerializer.UnmarshalResourceFromDatabase(ctx, bd.ThumbnailResource)
+
+	if err != nil {
+		return nil, err
+	}
+
+	unmarshalledBanner, err := resourceSerializer.UnmarshalResourceFromDatabase(ctx, bd.BannerResource)
+
+	if err != nil {
+		return nil, err
+	}
+
+	newBrand := club.UnmarshalClubFromDatabase(
+		bd.Id,
+		bd.Slug,
+		bd.SlugAliases,
+		bd.Name,
+		unmarshalledThumbnail,
+		unmarshalledBanner,
+		bd.MembersCount,
+		bd.OwnerAccountId,
+		bd.Suspended,
+		bd.SuspendedUntil,
+		bd.NextSupporterPostTime,
+		bd.HasCreatedSupporterOnlyPost,
+		bd.Terminated,
+		bd.TerminatedByAccountId,
+		bd.SupporterOnlyPostsDisabled,
+		bd.CreatedAt,
+		bd.UpdatedAt,
+	)
+	newBrand.Node = paging.NewNode(hit.Sort)
+
+	return newBrand, nil
 }
 
 func (r ClubCassandraElasticsearchRepository) indexClub(ctx context.Context, club *club.Club) error {
@@ -84,6 +139,57 @@ func (r ClubCassandraElasticsearchRepository) indexClub(ctx context.Context, clu
 	}
 
 	return nil
+}
+func (r ClubCassandraElasticsearchRepository) DiscoverClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*club.Club, error) {
+
+	builder := r.client.Search().
+		Index(ClubsIndexName)
+
+	if cursor == nil {
+		return nil, paging.ErrCursorNotPresent
+	}
+
+	if err := cursor.BuildElasticsearch(builder, "members_count", "id", false); err != nil {
+		return nil, err
+	}
+
+	var clubMembershipIds []string
+
+	if requester != nil {
+		clubMembershipIds = requester.ClubExtension().ClubMembershipIds()
+	}
+
+	query := elastic.NewBoolQuery()
+
+	query.Filter(elastic.NewBoolQuery().
+		// don't include clubs in the discovery if you are already a member of that club
+		MustNot(elastic.NewTermsQueryFromStrings("club_id", clubMembershipIds...)),
+	)
+
+	query.Filter(elastic.NewTermQuery("terminated", false))
+
+	builder.Query(query)
+
+	response, err := builder.Pretty(true).Do(ctx)
+
+	if err != nil {
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed to discover clubs")
+	}
+
+	var brands []*club.Club
+
+	for _, hit := range response.Hits.Hits {
+
+		newBrand, err := unmarshalClubDocument(ctx, hit, r.resourceSerializer)
+
+		if err != nil {
+			return nil, err
+		}
+
+		brands = append(brands, newBrand)
+	}
+
+	return brands, nil
 }
 
 func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *club.Filters) ([]*club.Club, error) {
@@ -159,38 +265,11 @@ func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, r
 
 	for _, hit := range response.Hits.Hits {
 
-		var bd clubDocument
-
-		err := json.Unmarshal(hit.Source, &bd)
-
-		if err != nil {
-			return nil, errors.Wrap(err, "failed search clubs - unmarshal")
-		}
-
-		unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, bd.ThumbnailResource)
+		newBrand, err := unmarshalClubDocument(ctx, hit, r.resourceSerializer)
 
 		if err != nil {
 			return nil, err
 		}
-
-		newBrand := club.UnmarshalClubFromDatabase(
-			bd.Id,
-			bd.Slug,
-			bd.SlugAliases,
-			bd.Name,
-			unmarshalled,
-			bd.MembersCount,
-			bd.OwnerAccountId,
-			bd.Suspended,
-			bd.SuspendedUntil,
-			bd.NextSupporterPostTime,
-			bd.HasCreatedSupporterOnlyPost,
-			bd.Terminated,
-			bd.TerminatedByAccountId,
-			bd.CreatedAt,
-			bd.UpdatedAt,
-		)
-		newBrand.Node = paging.NewNode(hit.Sort)
 
 		brands = append(brands, newBrand)
 	}
@@ -219,6 +298,8 @@ func (r ClubCassandraElasticsearchRepository) IndexAllClubs(ctx context.Context)
 				Slug:                        m.Slug,
 				SlugAliases:                 m.SlugAliases,
 				ThumbnailResource:           m.ThumbnailResource,
+				BannerResource:              m.BannerResource,
+				SupporterOnlyPostsDisabled:  m.SupporterOnlyPostsDisabled,
 				Name:                        m.Name,
 				OwnerAccountId:              m.OwnerAccountId,
 				CreatedAt:                   m.CreatedAt,

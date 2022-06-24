@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e747a87c9025a8fe58c5ccdcdcfc051f>>
+ * @generated SignedSource<<68cd564dc7f67715c8b6e31387cd271e>>
  * @relayHash 81a7aec44cbe991cebafa80a19bbafc3
  * @lightSyntaxTransform
  * @nogrep
@@ -18,7 +18,6 @@ export type ApprovePostInput = {
 export type ModeratePostApproveMutation$variables = {
   input: ApprovePostInput;
 };
-export type ModeratePostApproveMutationVariables = ModeratePostApproveMutation$variables;
 export type ModeratePostApproveMutation$data = {
   readonly approvePost: {
     readonly post: {
@@ -26,10 +25,9 @@ export type ModeratePostApproveMutation$data = {
     } | null;
   } | null;
 };
-export type ModeratePostApproveMutationResponse = ModeratePostApproveMutation$data;
 export type ModeratePostApproveMutation = {
-  variables: ModeratePostApproveMutationVariables;
   response: ModeratePostApproveMutation$data;
+  variables: ModeratePostApproveMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

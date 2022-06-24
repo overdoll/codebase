@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7ab574173734288db9c5652a2495dcf9>>
+ * @generated SignedSource<<74220faf0edf4076b58cefe920b33876>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ClubMembersFragment$data = {
+  readonly id: string;
   readonly members: {
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -18,10 +19,8 @@ export type ClubMembersFragment$data = {
       };
     }>;
   };
-  readonly id: string;
   readonly " $fragmentType": "ClubMembersFragment";
 };
-export type ClubMembersFragment = ClubMembersFragment$data;
 export type ClubMembersFragment$key = {
   readonly " $data"?: ClubMembersFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ClubMembersFragment">;

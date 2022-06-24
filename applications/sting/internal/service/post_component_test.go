@@ -112,6 +112,18 @@ type SubmitPost struct {
 	} `graphql:"submitPost(input: $input)"`
 }
 
+type DisableClubSupporterOnlyPosts struct {
+	DisableClubSupporterOnlyPosts *struct {
+		Club *ClubModified
+	} `graphql:"disableClubSupporterOnlyPosts(input: $input)"`
+}
+
+type EnableClubSupporterOnlyPosts struct {
+	EnableClubSupporterOnlyPosts *struct {
+		Club *ClubModified
+	} `graphql:"enableClubSupporterOnlyPosts(input: $input)"`
+}
+
 type AccountPosts struct {
 	Entities []struct {
 		Account struct {
@@ -148,6 +160,11 @@ type PostsEntities struct {
 // then, we test our GRPC endpoints for revoking
 func TestCreatePost_Submit_and_publish(t *testing.T) {
 	t.Parallel()
+
+	staffAccountId := uuid.New().String()
+	mockAccountStaff(t, staffAccountId)
+
+	staffClient := getGraphqlClientWithAuthenticatedAccount(t, staffAccountId)
 
 	testingAccountId := newFakeAccount(t)
 	clb := seedClub(t, testingAccountId)
@@ -432,6 +449,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	require.True(t, post.Post.Content[1].ViewerCanViewSupporterOnlyContent, "can view supporter only because they are a supporter")
 	require.True(t, post.Post.Content[1].IsSupporterOnly, "cant view first content because its supporter only")
+	require.Nil(t, post.Post.Content[1].SupporterOnlyResource, "supporter only resource is nil")
 
 	originalId := post.Post.Content[1].Resource.ID
 
@@ -445,6 +463,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	require.False(t, post.Post.Content[1].ViewerCanViewSupporterOnlyContent, "cant view first content because its supporter only")
 	require.True(t, post.Post.Content[1].IsSupporterOnly, "cant view first content because its supporter only")
+	require.NotNil(t, post.Post.Content[1].SupporterOnlyResource, "can view supporter only resource")
 
 	sDec, _ := base64.StdEncoding.DecodeString(post.Post.Content[1].Resource.ID.GetID())
 	resourceId := relay.ID(sDec).GetID()
@@ -576,6 +595,39 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	clubViewer := getClub(t, client, clb.Slug())
 	require.True(t, clubViewer.Club.CanSupport, "should be able to support now that the club has created a new post")
 	require.NotNil(t, clubViewer.Club.NextSupporterPostTime, "should have a next supporter post time now")
+	require.NotNil(t, clubViewer.Club.Banner, "banner should now be present after creating a post")
+	require.True(t, clubViewer.Club.CanCreateSupporterOnlyPosts, "should be able to create supporter only posts")
+
+	var disableSupporterOnlyPosts DisableClubSupporterOnlyPosts
+
+	err = staffClient.Mutate(context.Background(), &disableSupporterOnlyPosts, map[string]interface{}{
+		"input": types.DisableClubSupporterOnlyPostsInput{
+			ClubID: clubViewer.Club.ID,
+		},
+	})
+
+	require.NoError(t, err, "no error disabling supporter only posts")
+
+	require.False(t, disableSupporterOnlyPosts.DisableClubSupporterOnlyPosts.Club.CanSupport, "can support is now false")
+	require.Nil(t, disableSupporterOnlyPosts.DisableClubSupporterOnlyPosts.Club.NextSupporterPostTime, "no next supporter post time since it was disabled")
+	require.False(t, disableSupporterOnlyPosts.DisableClubSupporterOnlyPosts.Club.CanCreateSupporterOnlyPosts, "cannot create supporter only posts anymore")
+
+	clubViewer = getClub(t, client, clb.Slug())
+	require.False(t, clubViewer.Club.CanSupport, "can support is now false")
+	require.Nil(t, clubViewer.Club.NextSupporterPostTime, "no next supporter post time since it was disabled")
+	require.False(t, clubViewer.Club.CanCreateSupporterOnlyPosts, "cannot create supporter only posts anymore")
+
+	var enableSupporterOnlyPosts EnableClubSupporterOnlyPosts
+
+	err = staffClient.Mutate(context.Background(), &enableSupporterOnlyPosts, map[string]interface{}{
+		"input": types.EnableClubSupporterOnlyPostsInput{
+			ClubID: clubViewer.Club.ID,
+		},
+	})
+
+	require.True(t, enableSupporterOnlyPosts.EnableClubSupporterOnlyPosts.Club.CanCreateSupporterOnlyPosts, "can create supporter only posts")
+	clubViewer = getClub(t, client, clb.Slug())
+	require.True(t, clubViewer.Club.CanCreateSupporterOnlyPosts, "can create supporter only posts")
 }
 
 func TestCreatePost_Publish(t *testing.T) {

@@ -84,14 +84,20 @@ func (e ResourceType) MarshalGQL(w io.Writer) {
 
 func MarshalResourceToGraphQL(ctx context.Context, res *resource.Resource) *Resource {
 
+	if res == nil {
+		return nil
+	}
+
 	var urls []*ResourceURL
 	var videoUrl *ResourceURL
 
-	for _, url := range res.FullUrls() {
-		urls = append(urls, &ResourceURL{
-			URL:      URI(url.FullUrl()),
-			MimeType: url.MimeType(),
-		})
+	if res.FullUrls() != nil {
+		for _, url := range res.FullUrls() {
+			urls = append(urls, &ResourceURL{
+				URL:      URI(url.FullUrl()),
+				MimeType: url.MimeType(),
+			})
+		}
 	}
 
 	var tp ResourceType

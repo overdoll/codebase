@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/applications/sting/internal/domain/event"
 	"time"
 
@@ -16,11 +17,12 @@ type SubmitPost struct {
 
 type SubmitPostHandler struct {
 	pr    post.Repository
+	cr    club.Repository
 	event event.Repository
 }
 
-func NewSubmitPostHandler(pr post.Repository, event event.Repository) SubmitPostHandler {
-	return SubmitPostHandler{pr: pr, event: event}
+func NewSubmitPostHandler(pr post.Repository, cr club.Repository, event event.Repository) SubmitPostHandler {
+	return SubmitPostHandler{pr: pr, cr: cr, event: event}
 }
 
 func (h SubmitPostHandler) Handle(ctx context.Context, cmd SubmitPost) (*post.Post, error) {
@@ -31,7 +33,13 @@ func (h SubmitPostHandler) Handle(ctx context.Context, cmd SubmitPost) (*post.Po
 		return nil, err
 	}
 
-	if err := pst.SubmitPostRequest(cmd.Principal); err != nil {
+	clb, err := h.cr.GetClubById(ctx, pst.ClubId())
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := pst.SubmitPostRequest(clb, cmd.Principal); err != nil {
 		return nil, err
 	}
 

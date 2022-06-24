@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f96325c01dd0ebae35e9bded97e4c508>>
+ * @generated SignedSource<<582edefb000555c8dd862ebbc4086dae>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,19 +12,18 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type StaffAccountExpiredClubSupporterSubscriptionOptionsFragment$data = {
-  readonly expiredAt: any;
+  readonly billingAmount: number;
+  readonly billingCurrency: Currency;
   readonly cancellationReason: {
     readonly title: string;
   } | null;
-  readonly billingAmount: number;
-  readonly billingCurrency: Currency;
   readonly ccbillSubscription: {
     readonly ccbillSubscriptionId: string;
   } | null;
+  readonly expiredAt: any;
   readonly " $fragmentSpreads": FragmentRefs<"StaffSyncSubscriptionButtonFragment">;
   readonly " $fragmentType": "StaffAccountExpiredClubSupporterSubscriptionOptionsFragment";
 };
-export type StaffAccountExpiredClubSupporterSubscriptionOptionsFragment = StaffAccountExpiredClubSupporterSubscriptionOptionsFragment$data;
 export type StaffAccountExpiredClubSupporterSubscriptionOptionsFragment$key = {
   readonly " $data"?: StaffAccountExpiredClubSupporterSubscriptionOptionsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"StaffAccountExpiredClubSupporterSubscriptionOptionsFragment">;

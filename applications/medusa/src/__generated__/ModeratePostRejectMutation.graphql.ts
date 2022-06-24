@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d0d49fef45806c0321802625e654c805>>
+ * @generated SignedSource<<f717a0d666529beef0c84c0ac3cf6f63>>
  * @relayHash 7ef08502181bf8c03472866198be2206
  * @lightSyntaxTransform
  * @nogrep
@@ -20,7 +20,6 @@ export type RejectPostInput = {
 export type ModeratePostRejectMutation$variables = {
   input: RejectPostInput;
 };
-export type ModeratePostRejectMutationVariables = ModeratePostRejectMutation$variables;
 export type ModeratePostRejectMutation$data = {
   readonly rejectPost: {
     readonly post: {
@@ -28,10 +27,9 @@ export type ModeratePostRejectMutation$data = {
     } | null;
   } | null;
 };
-export type ModeratePostRejectMutationResponse = ModeratePostRejectMutation$data;
 export type ModeratePostRejectMutation = {
-  variables: ModeratePostRejectMutationVariables;
   response: ModeratePostRejectMutation$data;
+  variables: ModeratePostRejectMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<70d1c1e64e580b9161c08c063e508b7b>>
+ * @generated SignedSource<<18fae8958b5fbcd7a258ab452ab57c18>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,10 +11,9 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type StaffPermissionsFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"StaffLockAccountFragment" | "StaffAssignModeratorFragment" | "StaffAssignStaffFragment" | "StaffAssignArtistFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffAssignArtistFragment" | "StaffAssignModeratorFragment" | "StaffAssignStaffFragment" | "StaffLockAccountFragment">;
   readonly " $fragmentType": "StaffPermissionsFragment";
 };
-export type StaffPermissionsFragment = StaffPermissionsFragment$data;
 export type StaffPermissionsFragment$key = {
   readonly " $data"?: StaffPermissionsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"StaffPermissionsFragment">;

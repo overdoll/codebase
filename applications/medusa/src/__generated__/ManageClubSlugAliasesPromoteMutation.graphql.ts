@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7736de3d111aad0c64e3427aa9b797aa>>
+ * @generated SignedSource<<2b7805dd8e71bb7e9c7eb77db6426cd7>>
  * @relayHash 2d767cb4f31fad132502d70b0104b34f
  * @lightSyntaxTransform
  * @nogrep
@@ -16,7 +16,6 @@ export type ManageClubSlugAliasesPromoteMutation$variables = {
   id: string;
   slug: string;
 };
-export type ManageClubSlugAliasesPromoteMutationVariables = ManageClubSlugAliasesPromoteMutation$variables;
 export type ManageClubSlugAliasesPromoteMutation$data = {
   readonly promoteClubSlugAliasToDefault: {
     readonly club: {
@@ -27,10 +26,9 @@ export type ManageClubSlugAliasesPromoteMutation$data = {
     } | null;
   } | null;
 };
-export type ManageClubSlugAliasesPromoteMutationResponse = ManageClubSlugAliasesPromoteMutation$data;
 export type ManageClubSlugAliasesPromoteMutation = {
-  variables: ManageClubSlugAliasesPromoteMutationVariables;
   response: ManageClubSlugAliasesPromoteMutation$data;
+  variables: ManageClubSlugAliasesPromoteMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

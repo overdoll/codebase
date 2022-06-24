@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<215459edb8ece2675563b02c0b2a152b>>
+ * @generated SignedSource<<f73ab43ed100c7d09fbfde4aa2aece38>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type CurationDateOfBirthNextButtonFragment$data = {
   readonly dateOfBirth: any | null;
   readonly " $fragmentType": "CurationDateOfBirthNextButtonFragment";
 };
-export type CurationDateOfBirthNextButtonFragment = CurationDateOfBirthNextButtonFragment$data;
 export type CurationDateOfBirthNextButtonFragment$key = {
   readonly " $data"?: CurationDateOfBirthNextButtonFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"CurationDateOfBirthNextButtonFragment">;

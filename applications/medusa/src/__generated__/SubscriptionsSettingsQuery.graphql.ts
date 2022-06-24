@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1681840eda850589f9aa594243af9370>>
- * @relayHash bcbb9c3d2dde9f08776265659816aa5e
+ * @generated SignedSource<<1836d0c50e1081d2a9221260127dfcdc>>
+ * @relayHash 9765765305f0d3ccd4eee042e52afcbd
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,21 +9,19 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID bcbb9c3d2dde9f08776265659816aa5e
+// @relayRequestID 9765765305f0d3ccd4eee042e52afcbd
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SubscriptionsSettingsQuery$variables = {};
-export type SubscriptionsSettingsQueryVariables = SubscriptionsSettingsQuery$variables;
 export type SubscriptionsSettingsQuery$data = {
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"ClubSupporterSubscriptionsSettingsFragment" | "ExpiredClubSupporterSubscriptionsSettingsFragment" | "AccountInformationBannerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"AccountInformationBannerFragment" | "ClubSupporterSubscriptionsSettingsFragment" | "ExpiredClubSupporterSubscriptionsSettingsFragment">;
   };
 };
-export type SubscriptionsSettingsQueryResponse = SubscriptionsSettingsQuery$data;
 export type SubscriptionsSettingsQuery = {
-  variables: SubscriptionsSettingsQueryVariables;
   response: SubscriptionsSettingsQuery$data;
+  variables: SubscriptionsSettingsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -105,6 +103,7 @@ v10 = {
   "name": "thumbnail",
   "plural": false,
   "selections": [
+    (v3/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -152,8 +151,7 @@ v10 = {
       "kind": "ScalarField",
       "name": "type",
       "storageKey": null
-    },
-    (v3/*: any*/)
+    }
   ],
   "storageKey": null
 },
@@ -506,7 +504,7 @@ return {
     ]
   },
   "params": {
-    "id": "bcbb9c3d2dde9f08776265659816aa5e",
+    "id": "9765765305f0d3ccd4eee042e52afcbd",
     "metadata": {},
     "name": "SubscriptionsSettingsQuery",
     "operationKind": "query",

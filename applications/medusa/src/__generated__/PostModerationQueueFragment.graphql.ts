@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6f254f9365e0ca1b21d3a9a345bd378b>>
+ * @generated SignedSource<<9adf9824da2d9727c08be4a2faec1926>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostModerationQueueFragment$data = {
+  readonly id: string;
   readonly postModeratorQueue: {
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -24,11 +25,9 @@ export type PostModerationQueueFragment$data = {
       };
     }>;
   };
-  readonly id: string;
   readonly " $fragmentSpreads": FragmentRefs<"NoPostsPlaceholderFragment">;
   readonly " $fragmentType": "PostModerationQueueFragment";
 };
-export type PostModerationQueueFragment = PostModerationQueueFragment$data;
 export type PostModerationQueueFragment$key = {
   readonly " $data"?: PostModerationQueueFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PostModerationQueueFragment">;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<50f2802340e79d86826633e3100ab9bc>>
+ * @generated SignedSource<<a794c1bcd6f59b877cc5bb17d7e02619>>
  * @relayHash fd3f2981cc122ce5e0722a4740ad9456
  * @lightSyntaxTransform
  * @nogrep
@@ -13,16 +13,14 @@
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type LogoutMutation$variables = {};
-export type LogoutMutationVariables = LogoutMutation$variables;
 export type LogoutMutation$data = {
   readonly revokeAccountAccess: {
     readonly revokedAccountId: string;
   } | null;
 };
-export type LogoutMutationResponse = LogoutMutation$data;
 export type LogoutMutation = {
-  variables: LogoutMutationVariables;
   response: LogoutMutation$data;
+  variables: LogoutMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

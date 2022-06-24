@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a853e46c175e126089bf7f3cadabd3d9>>
+ * @generated SignedSource<<ff2b24b3edd6a6c5ddd9dd50d8aa84c2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,17 +13,16 @@ export type AccountTransactionType = "CHARGEBACK" | "PAYMENT" | "REFUND" | "VOID
 export type Currency = "AUD" | "CAD" | "EUR" | "GBP" | "JPY" | "USD" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type StaffAccountTransactionOptionsFragment$data = {
-  readonly type: AccountTransactionType;
-  readonly billedAtDate: any;
   readonly amount: number;
-  readonly currency: Currency;
+  readonly billedAtDate: any;
   readonly ccbillTransaction: {
     readonly ccbillTransactionId: string | null;
   } | null;
+  readonly currency: Currency;
+  readonly type: AccountTransactionType;
   readonly " $fragmentSpreads": FragmentRefs<"StaffRefundAccountTransactionButtonFragment">;
   readonly " $fragmentType": "StaffAccountTransactionOptionsFragment";
 };
-export type StaffAccountTransactionOptionsFragment = StaffAccountTransactionOptionsFragment$data;
 export type StaffAccountTransactionOptionsFragment$key = {
   readonly " $data"?: StaffAccountTransactionOptionsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"StaffAccountTransactionOptionsFragment">;

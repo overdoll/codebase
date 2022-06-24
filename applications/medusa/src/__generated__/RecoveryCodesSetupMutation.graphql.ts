@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6c80d47fcfe7b72abd286417c6420aad>>
+ * @generated SignedSource<<6de36dc3a6a73a3bc55328ba76896d5c>>
  * @relayHash f949eac0bb807076baf26b8240cba212
  * @lightSyntaxTransform
  * @nogrep
@@ -13,7 +13,6 @@
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type RecoveryCodesSetupMutation$variables = {};
-export type RecoveryCodesSetupMutationVariables = RecoveryCodesSetupMutation$variables;
 export type RecoveryCodesSetupMutation$data = {
   readonly generateAccountMultiFactorRecoveryCodes: {
     readonly accountMultiFactorRecoveryCodes: ReadonlyArray<{
@@ -22,10 +21,9 @@ export type RecoveryCodesSetupMutation$data = {
     }>;
   } | null;
 };
-export type RecoveryCodesSetupMutationResponse = RecoveryCodesSetupMutation$data;
 export type RecoveryCodesSetupMutation = {
-  variables: RecoveryCodesSetupMutationVariables;
   response: RecoveryCodesSetupMutation$data;
+  variables: RecoveryCodesSetupMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c10acf3f808033e07c7ec9292fdcb384>>
+ * @generated SignedSource<<a7eff70c86f5b4158941c158da084d13>>
  * @relayHash a4f2ddd3c39a36e038577fa110701b43
  * @lightSyntaxTransform
  * @nogrep
@@ -19,7 +19,6 @@ export type UpdateClubNameInput = {
 export type ChangeClubNameFormMutation$variables = {
   input: UpdateClubNameInput;
 };
-export type ChangeClubNameFormMutationVariables = ChangeClubNameFormMutation$variables;
 export type ChangeClubNameFormMutation$data = {
   readonly updateClubName: {
     readonly club: {
@@ -28,10 +27,9 @@ export type ChangeClubNameFormMutation$data = {
     } | null;
   } | null;
 };
-export type ChangeClubNameFormMutationResponse = ChangeClubNameFormMutation$data;
 export type ChangeClubNameFormMutation = {
-  variables: ChangeClubNameFormMutationVariables;
   response: ChangeClubNameFormMutation$data;
+  variables: ChangeClubNameFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

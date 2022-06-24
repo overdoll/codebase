@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<60df6ad434e457d463e8e7c4fde9d35e>>
+ * @generated SignedSource<<604490bd9452b800474673e4582d9037>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,14 +12,13 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type PublicPostPageFragment$data = {
-  readonly state: PostState;
   readonly club: {
     readonly " $fragmentSpreads": FragmentRefs<"ClubSuspendedStaffAlertFragment">;
   };
+  readonly state: PostState;
   readonly " $fragmentSpreads": FragmentRefs<"FullDetailedPostFragment">;
   readonly " $fragmentType": "PublicPostPageFragment";
 };
-export type PublicPostPageFragment = PublicPostPageFragment$data;
 export type PublicPostPageFragment$key = {
   readonly " $data"?: PublicPostPageFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PublicPostPageFragment">;

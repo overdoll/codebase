@@ -12,7 +12,8 @@ type EvaService interface {
 }
 
 type LoaderService interface {
-	CopyResourcesAndApplyPixelateFilter(ctx context.Context, itemId string, resourceIds []string, pixelate int, private bool) ([]*post.NewContent, error)
+	CopyResourceIntoImage(ctx context.Context, itemId string, resourceId string, private bool) (*post.NewResource, error)
+	CopyResourcesAndApplyPixelateFilter(ctx context.Context, itemId string, resourceIds []string, pixelate int, private bool) ([]*post.NewResource, error)
 	CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string, private bool, token string, onlyImages bool) ([]*resource.Resource, error)
 	DeleteResources(ctx context.Context, itemId string, resourceIds []string) error
 }

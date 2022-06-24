@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9c6d4f5b0af8c07357cfc7903d7c2fea>>
+ * @generated SignedSource<<447c0735e77ab9ddd55d710ca563185c>>
  * @relayHash 0f80e5048d1ba22d29ef0ecf2b3fe4aa
  * @lightSyntaxTransform
  * @nogrep
@@ -20,7 +20,6 @@ export type UpdateSeriesThumbnailInput = {
 export type ChangeSeriesThumbnailFormMutation$variables = {
   input: UpdateSeriesThumbnailInput;
 };
-export type ChangeSeriesThumbnailFormMutationVariables = ChangeSeriesThumbnailFormMutation$variables;
 export type ChangeSeriesThumbnailFormMutation$data = {
   readonly updateSeriesThumbnail: {
     readonly series: {
@@ -28,17 +27,16 @@ export type ChangeSeriesThumbnailFormMutation$data = {
       readonly thumbnail: {
         readonly type: ResourceType;
         readonly urls: ReadonlyArray<{
-          readonly url: string;
           readonly mimeType: string;
+          readonly url: string;
         }>;
       } | null;
     } | null;
   } | null;
 };
-export type ChangeSeriesThumbnailFormMutationResponse = ChangeSeriesThumbnailFormMutation$data;
 export type ChangeSeriesThumbnailFormMutation = {
-  variables: ChangeSeriesThumbnailFormMutationVariables;
   response: ChangeSeriesThumbnailFormMutation$data;
+  variables: ChangeSeriesThumbnailFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

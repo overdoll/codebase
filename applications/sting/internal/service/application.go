@@ -97,16 +97,19 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			PublishPost:     command.NewPublishPostHandler(postRepo, eventRepo),
 			DiscardPost:     command.NewDiscardPostHandler(postRepo, eventRepo),
 			RejectPost:      command.NewRejectPostHandler(postRepo),
-			SubmitPost:      command.NewSubmitPostHandler(postRepo, eventRepo),
+			SubmitPost:      command.NewSubmitPostHandler(postRepo, clubRepo, eventRepo),
 			RemovePost:      command.NewRemovePostHandler(postRepo, eventRepo),
 			DeletePost:      command.NewDeletePostHandler(postRepo, eventRepo),
 			ArchivePost:     command.NewArchivePostHandler(postRepo, eventRepo),
 			UnArchivePost:   command.NewUnArchivePostHandler(postRepo, eventRepo),
 
+			DisableClubSupporterOnlyPosts: command.NewDisableClubSupporterOnlyPostsHandler(clubRepo),
+			EnableClubSupporterOnlyPosts:  command.NewEnableClubSupporterOnlyPostsHandler(clubRepo),
+
 			AddPostContent:                   command.NewAddPostContentHandler(postRepo, loader),
 			RemovePostContent:                command.NewRemovePostContentHandler(postRepo, loader),
 			UpdatePostContentOrder:           command.NewUpdatePostContentOrderHandler(postRepo),
-			UpdatePostContentIsSupporterOnly: command.NewUpdatePostContentIsSupporterOnlyHandler(postRepo),
+			UpdatePostContentIsSupporterOnly: command.NewUpdatePostContentIsSupporterOnlyHandler(postRepo, clubRepo),
 
 			UpdatePostCategories: command.NewUpdatePostCategoriesHandler(postRepo),
 			UpdatePostCharacters: command.NewUpdatePostCharactersHandler(postRepo),
@@ -155,6 +158,9 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			UnTerminateClub: command.NewUnTerminateClubHandler(clubRepo, eventRepo),
 		},
 		Queries: app.Queries{
+			DiscoverClubs: query.NewDiscoverClubsHandler(clubRepo),
+			Search:        query.NewSearchHandler(postRepo),
+
 			PrincipalById:    query.NewPrincipalByIdHandler(eva, clubRepo),
 			SearchCharacters: query.NewSearchCharactersHandler(postRepo),
 			CharacterBySlug:  query.NewCharacterBySlugHandler(postRepo),

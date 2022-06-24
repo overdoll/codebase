@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1689dd2e53e31e6a7ac4196cba488b81>>
+ * @generated SignedSource<<d605244dcbdb156442d5c66594f4aed5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,18 +14,17 @@ import { FragmentRefs } from "relay-runtime";
 export type PostContentRichObjectFragment$data = {
   readonly content: ReadonlyArray<{
     readonly resource: {
-      readonly urls: ReadonlyArray<{
-        readonly url: string;
-        readonly mimeType: string;
-      }>;
-      readonly width: number;
       readonly height: number;
       readonly type: ResourceType;
+      readonly urls: ReadonlyArray<{
+        readonly mimeType: string;
+        readonly url: string;
+      }>;
+      readonly width: number;
     };
   }>;
   readonly " $fragmentType": "PostContentRichObjectFragment";
 };
-export type PostContentRichObjectFragment = PostContentRichObjectFragment$data;
 export type PostContentRichObjectFragment$key = {
   readonly " $data"?: PostContentRichObjectFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PostContentRichObjectFragment">;

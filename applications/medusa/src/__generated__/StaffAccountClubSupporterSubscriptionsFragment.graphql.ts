@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6d4c8f4c171b5aabdc4cd52c0e4f021e>>
+ * @generated SignedSource<<3fe1db482c99702a4e3d7195b0bf0618>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,6 @@ export type StaffAccountClubSupporterSubscriptionsFragment$data = {
   readonly id: string;
   readonly " $fragmentType": "StaffAccountClubSupporterSubscriptionsFragment";
 };
-export type StaffAccountClubSupporterSubscriptionsFragment = StaffAccountClubSupporterSubscriptionsFragment$data;
 export type StaffAccountClubSupporterSubscriptionsFragment$key = {
   readonly " $data"?: StaffAccountClubSupporterSubscriptionsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"StaffAccountClubSupporterSubscriptionsFragment">;

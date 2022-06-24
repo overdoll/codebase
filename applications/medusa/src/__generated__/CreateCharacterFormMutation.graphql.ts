@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d3c28a1a9c15782144d87e6fdd75bd5c>>
+ * @generated SignedSource<<07484e17e6ef28206d4fc5cf01da92d8>>
  * @relayHash fa7344770216d9d966352df15e03aabc
  * @lightSyntaxTransform
  * @nogrep
@@ -19,10 +19,9 @@ export type CreateCharacterInput = {
   slug: string;
 };
 export type CreateCharacterFormMutation$variables = {
-  input: CreateCharacterInput;
   connections: ReadonlyArray<string>;
+  input: CreateCharacterInput;
 };
-export type CreateCharacterFormMutationVariables = CreateCharacterFormMutation$variables;
 export type CreateCharacterFormMutation$data = {
   readonly createCharacter: {
     readonly character: {
@@ -33,10 +32,9 @@ export type CreateCharacterFormMutation$data = {
     readonly validation: CreateCharacterValidation | null;
   } | null;
 };
-export type CreateCharacterFormMutationResponse = CreateCharacterFormMutation$data;
 export type CreateCharacterFormMutation = {
-  variables: CreateCharacterFormMutationVariables;
   response: CreateCharacterFormMutation$data;
+  variables: CreateCharacterFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

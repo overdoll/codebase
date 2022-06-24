@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9037873b6210ce135adcc2f3133efb0c>>
+ * @generated SignedSource<<6a9d2a84ff0ea5491101c15a98f8168c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,10 +14,9 @@ export type StaffClubPaymentsFragment$data = {
   readonly platformFee: {
     readonly percent: number;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"UpdateClubPlatformFeeFormFragment" | "StaffClubPaymentsListFragment" | "ClubTransactionMetricsFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"ClubTransactionMetricsFragment" | "StaffClubPaymentsListFragment" | "UpdateClubPlatformFeeFormFragment">;
   readonly " $fragmentType": "StaffClubPaymentsFragment";
 };
-export type StaffClubPaymentsFragment = StaffClubPaymentsFragment$data;
 export type StaffClubPaymentsFragment$key = {
   readonly " $data"?: StaffClubPaymentsFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"StaffClubPaymentsFragment">;

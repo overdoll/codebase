@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c493b2537385199b2b20048dd7bc8c23>>
+ * @generated SignedSource<<35ff8035efa55b6e9cfa61cb8b88d28f>>
  * @relayHash 0f9af1925452b3764636986a6f572f03
  * @lightSyntaxTransform
  * @nogrep
@@ -17,14 +17,12 @@ export type StaffSearchCancellationReasonsPaginationFragment$variables = {
   after?: string | null;
   first?: number | null;
 };
-export type StaffSearchCancellationReasonsPaginationFragmentVariables = StaffSearchCancellationReasonsPaginationFragment$variables;
 export type StaffSearchCancellationReasonsPaginationFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"StaffSearchCancellationReasonsFragment">;
 };
-export type StaffSearchCancellationReasonsPaginationFragmentResponse = StaffSearchCancellationReasonsPaginationFragment$data;
 export type StaffSearchCancellationReasonsPaginationFragment = {
-  variables: StaffSearchCancellationReasonsPaginationFragmentVariables;
   response: StaffSearchCancellationReasonsPaginationFragment$data;
+  variables: StaffSearchCancellationReasonsPaginationFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){

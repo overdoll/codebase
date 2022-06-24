@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fd3959d0b222727b746468c1181b1aeb>>
+ * @generated SignedSource<<505baa9cd59c332d819acfdf5c1f7d64>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,7 +19,6 @@ export type ClubBalanceHeaderFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"ClubBalanceFragment">;
   readonly " $fragmentType": "ClubBalanceHeaderFragment";
 };
-export type ClubBalanceHeaderFragment = ClubBalanceHeaderFragment$data;
 export type ClubBalanceHeaderFragment$key = {
   readonly " $data"?: ClubBalanceHeaderFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ClubBalanceHeaderFragment">;

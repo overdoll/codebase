@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<26d1a3080f5279677228cdbed3e8cae0>>
+ * @generated SignedSource<<94d6e57731a2774fcc9e3cd02dcb80e9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,14 +12,13 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ClubMemberTileFragment$data = {
   readonly account: {
-    readonly username: string;
     readonly isDeleted: boolean;
+    readonly username: string;
     readonly " $fragmentSpreads": FragmentRefs<"AccountTileOverlayFragment">;
   };
   readonly isSupporter: boolean;
   readonly " $fragmentType": "ClubMemberTileFragment";
 };
-export type ClubMemberTileFragment = ClubMemberTileFragment$data;
 export type ClubMemberTileFragment$key = {
   readonly " $data"?: ClubMemberTileFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ClubMemberTileFragment">;

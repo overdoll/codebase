@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dbb3f593f625a5e1e8a71ba3c94dbae5>>
+ * @generated SignedSource<<0265a6724b422f6ef417ef3443b0c32f>>
  * @relayHash 2cfec37cadc1e20492ab7f5fc4d1b4bb
  * @lightSyntaxTransform
  * @nogrep
@@ -17,19 +17,17 @@ export type ViewPostReportsPaginationQuery$variables = {
   after?: string | null;
   first?: number | null;
   from: any;
-  to?: any | null;
   id: string;
+  to?: any | null;
 };
-export type ViewPostReportsPaginationQueryVariables = ViewPostReportsPaginationQuery$variables;
 export type ViewPostReportsPaginationQuery$data = {
   readonly node: {
     readonly " $fragmentSpreads": FragmentRefs<"ViewPostReportsFragment">;
   } | null;
 };
-export type ViewPostReportsPaginationQueryResponse = ViewPostReportsPaginationQuery$data;
 export type ViewPostReportsPaginationQuery = {
-  variables: ViewPostReportsPaginationQueryVariables;
   response: ViewPostReportsPaginationQuery$data;
+  variables: ViewPostReportsPaginationQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

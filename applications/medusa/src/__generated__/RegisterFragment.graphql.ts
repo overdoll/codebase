@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<991b3de9ba30ca98e5abe1e146a05760>>
+ * @generated SignedSource<<8d9062c3b406523a3ca9c585137ab4ec>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,6 @@ export type RegisterFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"RevokeTokenButtonFragment">;
   readonly " $fragmentType": "RegisterFragment";
 };
-export type RegisterFragment = RegisterFragment$data;
 export type RegisterFragment$key = {
   readonly " $data"?: RegisterFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"RegisterFragment">;

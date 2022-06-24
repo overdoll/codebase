@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<011ac5e78993ab286dce4542140ea88a>>
+ * @generated SignedSource<<bdb93301c8fff4aa0334d9e596834680>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,13 +14,12 @@ export type ClosePaymentModalButtonFragment$data = {
   readonly savedPaymentMethods: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly __typename: string;
+        readonly __typename: "AccountSavedPaymentMethod";
       };
     }>;
   };
   readonly " $fragmentType": "ClosePaymentModalButtonFragment";
 };
-export type ClosePaymentModalButtonFragment = ClosePaymentModalButtonFragment$data;
 export type ClosePaymentModalButtonFragment$key = {
   readonly " $data"?: ClosePaymentModalButtonFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ClosePaymentModalButtonFragment">;

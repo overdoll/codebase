@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<182b2e7a8b57b92fc197f59404a9dcb2>>
+ * @generated SignedSource<<98f9a6b33d90fdd05662a77475804a77>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,6 @@ export type NoPostsPlaceholderFragment$data = {
   };
   readonly " $fragmentType": "NoPostsPlaceholderFragment";
 };
-export type NoPostsPlaceholderFragment = NoPostsPlaceholderFragment$data;
 export type NoPostsPlaceholderFragment$key = {
   readonly " $data"?: NoPostsPlaceholderFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"NoPostsPlaceholderFragment">;

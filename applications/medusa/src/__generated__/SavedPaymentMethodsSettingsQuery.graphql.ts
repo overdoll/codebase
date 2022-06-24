@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<46724679a485f2b76f5d924c3b33a3a9>>
+ * @generated SignedSource<<9a2a4ccc64829a5b64e99b02b3c5151c>>
  * @relayHash a63e2437b8120f135f18b667b6c1f6a0
  * @lightSyntaxTransform
  * @nogrep
@@ -14,17 +14,15 @@
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SavedPaymentMethodsSettingsQuery$variables = {};
-export type SavedPaymentMethodsSettingsQueryVariables = SavedPaymentMethodsSettingsQuery$variables;
 export type SavedPaymentMethodsSettingsQuery$data = {
   readonly viewer: {
     readonly isSecure: boolean;
-    readonly " $fragmentSpreads": FragmentRefs<"SavedPaymentMethodsSettingsFragment" | "AccountInformationBannerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"AccountInformationBannerFragment" | "SavedPaymentMethodsSettingsFragment">;
   };
 };
-export type SavedPaymentMethodsSettingsQueryResponse = SavedPaymentMethodsSettingsQuery$data;
 export type SavedPaymentMethodsSettingsQuery = {
-  variables: SavedPaymentMethodsSettingsQueryVariables;
   response: SavedPaymentMethodsSettingsQuery$data;
+  variables: SavedPaymentMethodsSettingsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

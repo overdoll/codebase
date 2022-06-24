@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<02a47080b4892c10e0849f957220389b>>
+ * @generated SignedSource<<d8b5975a57fa21c0571c2627ff508a48>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,6 @@ export type StaffPayoutAccountFragment$data = {
   };
   readonly " $fragmentType": "StaffPayoutAccountFragment";
 };
-export type StaffPayoutAccountFragment = StaffPayoutAccountFragment$data;
 export type StaffPayoutAccountFragment$key = {
   readonly " $data"?: StaffPayoutAccountFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"StaffPayoutAccountFragment">;

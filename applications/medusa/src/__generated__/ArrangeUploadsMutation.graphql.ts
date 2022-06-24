@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d63a42860fcf49f18bbc0170580f0854>>
+ * @generated SignedSource<<63591ed1c18bfcecbc287abbeffb1dca>>
  * @relayHash ddbf1d76d1de80b2332011fd23b8214f
  * @lightSyntaxTransform
  * @nogrep
@@ -20,30 +20,28 @@ export type RemovePostContentInput = {
 export type ArrangeUploadsMutation$variables = {
   input: RemovePostContentInput;
 };
-export type ArrangeUploadsMutationVariables = ArrangeUploadsMutation$variables;
 export type ArrangeUploadsMutation$data = {
   readonly removePostContent: {
     readonly post: {
-      readonly id: string;
-      readonly reference: string;
       readonly content: ReadonlyArray<{
         readonly resource: {
           readonly id: string;
-          readonly type: ResourceType;
           readonly processed: boolean;
+          readonly type: ResourceType;
           readonly urls: ReadonlyArray<{
-            readonly url: string;
             readonly mimeType: string;
+            readonly url: string;
           }>;
         };
       }>;
+      readonly id: string;
+      readonly reference: string;
     } | null;
   } | null;
 };
-export type ArrangeUploadsMutationResponse = ArrangeUploadsMutation$data;
 export type ArrangeUploadsMutation = {
-  variables: ArrangeUploadsMutationVariables;
   response: ArrangeUploadsMutation$data;
+  variables: ArrangeUploadsMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

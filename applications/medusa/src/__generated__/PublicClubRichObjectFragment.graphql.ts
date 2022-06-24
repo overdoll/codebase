@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e5bc00372ef10ca25833c867c934d7ef>>
+ * @generated SignedSource<<a68033c5b4e5e13476880d1109598b66>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,8 +11,6 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PublicClubRichObjectFragment$data = {
-  readonly slug: string;
-  readonly name: string;
   readonly backgroundPost: {
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -20,9 +18,10 @@ export type PublicClubRichObjectFragment$data = {
       };
     }>;
   };
+  readonly name: string;
+  readonly slug: string;
   readonly " $fragmentType": "PublicClubRichObjectFragment";
 };
-export type PublicClubRichObjectFragment = PublicClubRichObjectFragment$data;
 export type PublicClubRichObjectFragment$key = {
   readonly " $data"?: PublicClubRichObjectFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PublicClubRichObjectFragment">;

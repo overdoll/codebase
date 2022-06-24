@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b1065e1d5e2a801a3e0c720a043fd04f>>
+ * @generated SignedSource<<944530a84d891d4eeb7b080ec216db0b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type ClubPostsFeedViewerFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollViewerFragment">;
   readonly " $fragmentType": "ClubPostsFeedViewerFragment";
 };
-export type ClubPostsFeedViewerFragment = ClubPostsFeedViewerFragment$data;
 export type ClubPostsFeedViewerFragment$key = {
   readonly " $data"?: ClubPostsFeedViewerFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ClubPostsFeedViewerFragment">;

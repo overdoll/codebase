@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8f1c8c46ebe468c5e7a387e1640d30a8>>
+ * @generated SignedSource<<e556ecf61104b4134945dcc94f04e47b>>
  * @relayHash dc84e1128085603f8b1065d8a7ce23b1
  * @lightSyntaxTransform
  * @nogrep
@@ -21,26 +21,24 @@ export type RefundAccountTransactionInput = {
 export type StaffRefundAccountTransactionFormMutation$variables = {
   input: RefundAccountTransactionInput;
 };
-export type StaffRefundAccountTransactionFormMutationVariables = StaffRefundAccountTransactionFormMutation$variables;
 export type StaffRefundAccountTransactionFormMutation$data = {
   readonly refundAccountTransaction: {
     readonly accountTransaction: {
-      readonly id: string;
-      readonly type: AccountTransactionType;
       readonly currency: Currency;
       readonly events: ReadonlyArray<{
         readonly amount: number;
+        readonly createdAt: any;
         readonly currency: Currency;
         readonly reason: string;
-        readonly createdAt: any;
       }>;
+      readonly id: string;
+      readonly type: AccountTransactionType;
     } | null;
   } | null;
 };
-export type StaffRefundAccountTransactionFormMutationResponse = StaffRefundAccountTransactionFormMutation$data;
 export type StaffRefundAccountTransactionFormMutation = {
-  variables: StaffRefundAccountTransactionFormMutationVariables;
   response: StaffRefundAccountTransactionFormMutation$data;
+  variables: StaffRefundAccountTransactionFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

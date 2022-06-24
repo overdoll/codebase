@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<141fcb1b8a86b3b41b86c2af9f05f944>>
+ * @generated SignedSource<<41f96ba5a5af9f881c5672a8c2cf5f19>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,7 +23,6 @@ export type GeneralSearchCategoriesFragment$data = {
   };
   readonly " $fragmentType": "GeneralSearchCategoriesFragment";
 };
-export type GeneralSearchCategoriesFragment = GeneralSearchCategoriesFragment$data;
 export type GeneralSearchCategoriesFragment$key = {
   readonly " $data"?: GeneralSearchCategoriesFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"GeneralSearchCategoriesFragment">;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b1b089f47b65d54b499a112c82b6e9c2>>
+ * @generated SignedSource<<916744616905e181f7c26237f1be2078>>
  * @relayHash f382fa8bed99e804fe2978fed4aa9a5c
  * @lightSyntaxTransform
  * @nogrep
@@ -16,19 +16,17 @@ export type RevokeAccountSessionInput = {
   accountSessionId: string;
 };
 export type RevokeSessionMutation$variables = {
-  input: RevokeAccountSessionInput;
   connections: ReadonlyArray<string>;
+  input: RevokeAccountSessionInput;
 };
-export type RevokeSessionMutationVariables = RevokeSessionMutation$variables;
 export type RevokeSessionMutation$data = {
   readonly revokeAccountSession: {
     readonly accountSessionId: string;
   } | null;
 };
-export type RevokeSessionMutationResponse = RevokeSessionMutation$data;
 export type RevokeSessionMutation = {
-  variables: RevokeSessionMutationVariables;
   response: RevokeSessionMutation$data;
+  variables: RevokeSessionMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

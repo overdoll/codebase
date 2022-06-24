@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2db38456828d6f342227f557e916f198>>
+ * @generated SignedSource<<b7a5df4d212a130aabf026d0d8b6c10d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,6 @@ export type ManageClubSlugAliasesFragment$data = {
   }>;
   readonly " $fragmentType": "ManageClubSlugAliasesFragment";
 };
-export type ManageClubSlugAliasesFragment = ManageClubSlugAliasesFragment$data;
 export type ManageClubSlugAliasesFragment$key = {
   readonly " $data"?: ManageClubSlugAliasesFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ManageClubSlugAliasesFragment">;

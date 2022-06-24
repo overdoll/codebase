@@ -40,6 +40,7 @@ go_library(
         "un_suspend_club.go",
         "un_terminate_club.go",
         "unmark_club_member_supporter.go",
+        "update_club_banner.go",
         "update_club_next_supporter_post_time.go",
         "update_total_likes_for_post_tags.go",
         "update_total_posts_for_post_tags.go",

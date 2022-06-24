@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<394d6542f7d72b98b57db34e7f200ebc>>
+ * @generated SignedSource<<52d07f9f119bd84e8e1ac703b987a123>>
  * @relayHash 3d8e1358405b0cd8693cdbbedc63e021
  * @lightSyntaxTransform
  * @nogrep
@@ -19,7 +19,6 @@ export type UpdateAudienceIsStandardInput = {
 export type ChangeAudienceStandardFormMutation$variables = {
   input: UpdateAudienceIsStandardInput;
 };
-export type ChangeAudienceStandardFormMutationVariables = ChangeAudienceStandardFormMutation$variables;
 export type ChangeAudienceStandardFormMutation$data = {
   readonly updateAudienceIsStandard: {
     readonly audience: {
@@ -28,10 +27,9 @@ export type ChangeAudienceStandardFormMutation$data = {
     } | null;
   } | null;
 };
-export type ChangeAudienceStandardFormMutationResponse = ChangeAudienceStandardFormMutation$data;
 export type ChangeAudienceStandardFormMutation = {
-  variables: ChangeAudienceStandardFormMutationVariables;
   response: ChangeAudienceStandardFormMutation$data;
+  variables: ChangeAudienceStandardFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

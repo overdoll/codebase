@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6269070dc1457ac615c5d03cd81a3549>>
- * @relayHash 6c8578d258c9985dc1106fb67d1b8e3d
+ * @generated SignedSource<<8a0ab728abfaf6c27c07ee7b62fb9ecc>>
+ * @relayHash 6ee5f1add1310dc53a96f37fe440561c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,12 +9,11 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6c8578d258c9985dc1106fb67d1b8e3d
+// @relayRequestID 6ee5f1add1310dc53a96f37fe440561c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type UploadAudiencesSingleSelectorQuery$variables = {};
-export type UploadAudiencesSingleSelectorQueryVariables = UploadAudiencesSingleSelectorQuery$variables;
 export type UploadAudiencesSingleSelectorQuery$data = {
   readonly audiences: {
     readonly edges: ReadonlyArray<{
@@ -26,10 +25,9 @@ export type UploadAudiencesSingleSelectorQuery$data = {
     }>;
   };
 };
-export type UploadAudiencesSingleSelectorQueryResponse = UploadAudiencesSingleSelectorQuery$data;
 export type UploadAudiencesSingleSelectorQuery = {
-  variables: UploadAudiencesSingleSelectorQueryVariables;
   response: UploadAudiencesSingleSelectorQuery$data;
+  variables: UploadAudiencesSingleSelectorQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -154,6 +152,7 @@ return {
                         "name": "type",
                         "storageKey": null
                       },
+                      (v0/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -201,8 +200,7 @@ return {
                         "kind": "ScalarField",
                         "name": "processed",
                         "storageKey": null
-                      },
-                      (v0/*: any*/)
+                      }
                     ],
                     "storageKey": null
                   }
@@ -218,7 +216,7 @@ return {
     ]
   },
   "params": {
-    "id": "6c8578d258c9985dc1106fb67d1b8e3d",
+    "id": "6ee5f1add1310dc53a96f37fe440561c",
     "metadata": {},
     "name": "UploadAudiencesSingleSelectorQuery",
     "operationKind": "query",

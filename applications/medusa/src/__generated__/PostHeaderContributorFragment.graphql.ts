@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1ecab0f17621a772718058e94dbb30d0>>
+ * @generated SignedSource<<3ddc4d67937ffc9b5820633c4ee48713>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,15 +12,14 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostHeaderContributorFragment$data = {
   readonly contributor: {
-    readonly id: string;
-    readonly username: string;
     readonly avatar: {
       readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
     } | null;
+    readonly id: string;
+    readonly username: string;
   };
   readonly " $fragmentType": "PostHeaderContributorFragment";
 };
-export type PostHeaderContributorFragment = PostHeaderContributorFragment$data;
 export type PostHeaderContributorFragment$key = {
   readonly " $data"?: PostHeaderContributorFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"PostHeaderContributorFragment">;

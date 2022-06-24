@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<241cc6eb2e8931af807dedc0630b1cbd>>
- * @relayHash 04b8fbaa04bf20ece7f834d2221ff3c1
+ * @generated SignedSource<<04dffa6acf92686b22ff64623779ab89>>
+ * @relayHash b00bec63fb6406f6fa7d202cf8f0c12e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,21 +9,19 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 04b8fbaa04bf20ece7f834d2221ff3c1
+// @relayRequestID b00bec63fb6406f6fa7d202cf8f0c12e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type TransactionsSettingsQuery$variables = {};
-export type TransactionsSettingsQueryVariables = TransactionsSettingsQuery$variables;
 export type TransactionsSettingsQuery$data = {
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"TransactionsSettingsFragment" | "AccountInformationBannerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"AccountInformationBannerFragment" | "TransactionsSettingsFragment">;
   };
 };
-export type TransactionsSettingsQueryResponse = TransactionsSettingsQuery$data;
 export type TransactionsSettingsQuery = {
-  variables: TransactionsSettingsQueryVariables;
   response: TransactionsSettingsQuery$data;
+  variables: TransactionsSettingsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -203,6 +201,7 @@ return {
                                     "name": "thumbnail",
                                     "plural": false,
                                     "selections": [
+                                      (v2/*: any*/),
                                       {
                                         "alias": null,
                                         "args": null,
@@ -244,8 +243,7 @@ return {
                                         "selections": (v3/*: any*/),
                                         "storageKey": null
                                       },
-                                      (v4/*: any*/),
-                                      (v2/*: any*/)
+                                      (v4/*: any*/)
                                     ],
                                     "storageKey": null
                                   }
@@ -407,7 +405,7 @@ return {
     ]
   },
   "params": {
-    "id": "04b8fbaa04bf20ece7f834d2221ff3c1",
+    "id": "b00bec63fb6406f6fa7d202cf8f0c12e",
     "metadata": {},
     "name": "TransactionsSettingsQuery",
     "operationKind": "query",

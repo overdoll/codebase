@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f223771f3cf362a69f70df44b1f44dd2>>
+ * @generated SignedSource<<f7cb413b78953ecffc8d1a723c807522>>
  * @relayHash a00cddee8171c2359ee52bd1541c53fb
  * @lightSyntaxTransform
  * @nogrep
@@ -13,7 +13,6 @@
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type DisableMultiFactorMutation$variables = {};
-export type DisableMultiFactorMutationVariables = DisableMultiFactorMutation$variables;
 export type DisableMultiFactorMutation$data = {
   readonly disableAccountMultiFactor: {
     readonly account: {
@@ -21,10 +20,9 @@ export type DisableMultiFactorMutation$data = {
     } | null;
   } | null;
 };
-export type DisableMultiFactorMutationResponse = DisableMultiFactorMutation$data;
 export type DisableMultiFactorMutation = {
-  variables: DisableMultiFactorMutationVariables;
   response: DisableMultiFactorMutation$data;
+  variables: DisableMultiFactorMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){

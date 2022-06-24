@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<89563668938ac67daf3e10b32be23386>>
+ * @generated SignedSource<<47e388023c4f7097ea52dcfd49bdb4fc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,6 @@ export type DeleteAccountFormFragment$data = {
   readonly username: string;
   readonly " $fragmentType": "DeleteAccountFormFragment";
 };
-export type DeleteAccountFormFragment = DeleteAccountFormFragment$data;
 export type DeleteAccountFormFragment$key = {
   readonly " $data"?: DeleteAccountFormFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"DeleteAccountFormFragment">;

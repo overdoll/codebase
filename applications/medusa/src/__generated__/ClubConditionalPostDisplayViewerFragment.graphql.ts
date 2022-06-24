@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0a5c83ed49a6c6837f56982ba07d5108>>
+ * @generated SignedSource<<e51e4816655107376777541c281cb7c5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type ClubConditionalPostDisplayViewerFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"SupportClubButtonViewerFragment">;
   readonly " $fragmentType": "ClubConditionalPostDisplayViewerFragment";
 };
-export type ClubConditionalPostDisplayViewerFragment = ClubConditionalPostDisplayViewerFragment$data;
 export type ClubConditionalPostDisplayViewerFragment$key = {
   readonly " $data"?: ClubConditionalPostDisplayViewerFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ClubConditionalPostDisplayViewerFragment">;

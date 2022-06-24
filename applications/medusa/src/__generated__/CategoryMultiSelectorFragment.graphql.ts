@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<69cb18ed71919957058933a432a4aaba>>
+ * @generated SignedSource<<b1605b86f3e56121878164cd6598c5e9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,6 @@ export type CategoryMultiSelectorFragment$data = {
   };
   readonly " $fragmentType": "CategoryMultiSelectorFragment";
 };
-export type CategoryMultiSelectorFragment = CategoryMultiSelectorFragment$data;
 export type CategoryMultiSelectorFragment$key = {
   readonly " $data"?: CategoryMultiSelectorFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"CategoryMultiSelectorFragment">;

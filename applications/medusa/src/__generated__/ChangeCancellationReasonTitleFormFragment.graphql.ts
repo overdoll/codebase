@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<96af50ae96c4015f3ef269fd7bbbaa56>>
+ * @generated SignedSource<<1c8555a628fba673f15e3c123b2f8dca>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type ChangeCancellationReasonTitleFormFragment$data = {
   readonly id: string;
   readonly " $fragmentType": "ChangeCancellationReasonTitleFormFragment";
 };
-export type ChangeCancellationReasonTitleFormFragment = ChangeCancellationReasonTitleFormFragment$data;
 export type ChangeCancellationReasonTitleFormFragment$key = {
   readonly " $data"?: ChangeCancellationReasonTitleFormFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"ChangeCancellationReasonTitleFormFragment">;

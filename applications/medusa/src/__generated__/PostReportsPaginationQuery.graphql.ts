@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e67b260452e82b18754726ff6c6a55af>>
+ * @generated SignedSource<<43c19b92e2eefc01af4ace385b932f68>>
  * @relayHash cdb5e2aff73584a3dbb3af672a4dff4a
  * @lightSyntaxTransform
  * @nogrep
@@ -19,14 +19,12 @@ export type PostReportsPaginationQuery$variables = {
   from: any;
   to?: any | null;
 };
-export type PostReportsPaginationQueryVariables = PostReportsPaginationQuery$variables;
 export type PostReportsPaginationQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"PostReportsFragment">;
 };
-export type PostReportsPaginationQueryResponse = PostReportsPaginationQuery$data;
 export type PostReportsPaginationQuery = {
-  variables: PostReportsPaginationQueryVariables;
   response: PostReportsPaginationQuery$data;
+  variables: PostReportsPaginationQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

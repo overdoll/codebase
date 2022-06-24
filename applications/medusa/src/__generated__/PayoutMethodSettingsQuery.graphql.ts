@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<340d215131c7505879a0611d9d7bba8e>>
+ * @generated SignedSource<<deb2c71fcbc8436e60aec5deb54ccc52>>
  * @relayHash 3e466058d91b23e0989bcda8e781ead6
  * @lightSyntaxTransform
  * @nogrep
@@ -15,26 +15,24 @@ import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PayoutMethod = "PAXUM" | "%future added value";
 export type PayoutMethodSettingsQuery$variables = {};
-export type PayoutMethodSettingsQueryVariables = PayoutMethodSettingsQuery$variables;
 export type PayoutMethodSettingsQuery$data = {
   readonly viewer: {
-    readonly payoutMethod: {
-      readonly __typename: string;
-      readonly " $fragmentSpreads": FragmentRefs<"PayoutMethodDeleteFragment">;
-    } | null;
     readonly details: {
       readonly country: {
         readonly payoutMethods: ReadonlyArray<PayoutMethod>;
         readonly " $fragmentSpreads": FragmentRefs<"PayoutCountryNotSupportedFragment">;
       };
     } | null;
+    readonly payoutMethod: {
+      readonly __typename: string;
+      readonly " $fragmentSpreads": FragmentRefs<"PayoutMethodDeleteFragment">;
+    } | null;
     readonly " $fragmentSpreads": FragmentRefs<"PayoutMethodSetupFlowFragment">;
   };
 };
-export type PayoutMethodSettingsQueryResponse = PayoutMethodSettingsQuery$data;
 export type PayoutMethodSettingsQuery = {
-  variables: PayoutMethodSettingsQueryVariables;
   response: PayoutMethodSettingsQuery$data;
+  variables: PayoutMethodSettingsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){

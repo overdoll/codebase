@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b898b6c07dd03a687448219173c0bc06>>
+ * @generated SignedSource<<d016ee8c4ca4d3e30eb2d840d1da1cfc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type StaffGenerateRefundAmountForAccountTransactionInputFragment$data = {
   readonly id: string;
   readonly " $fragmentType": "StaffGenerateRefundAmountForAccountTransactionInputFragment";
 };
-export type StaffGenerateRefundAmountForAccountTransactionInputFragment = StaffGenerateRefundAmountForAccountTransactionInputFragment$data;
 export type StaffGenerateRefundAmountForAccountTransactionInputFragment$key = {
   readonly " $data"?: StaffGenerateRefundAmountForAccountTransactionInputFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"StaffGenerateRefundAmountForAccountTransactionInputFragment">;

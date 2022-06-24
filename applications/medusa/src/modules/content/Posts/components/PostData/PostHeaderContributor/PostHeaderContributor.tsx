@@ -24,10 +24,11 @@ export default function PostHeaderContributor ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   return (
-    <Link href={{
-      pathname: '/profile/[username]',
-      query: { username: data?.contributor?.username }
-    }}
+    <Link
+      href={{
+        pathname: '/profile/[username]',
+        query: { username: data?.contributor?.username }
+      }}
     >
       <ClickableBox bg='transparent' p={0}>
         <Flex align='center'>
