@@ -345,7 +345,7 @@ def execute_cdn_upload(configs):
         "s3://{}/_next".format(os.getenv("AWS_STATIC_ASSETS_BUCKET")),
         "--recursive",
         "--metadata",
-        "Cache-Control=public,max-age=31536000,immutable"
+        "Cache-Control='public,max-age=31536000,immutable'"
     ], env=env)
 
     # copy everything from the public folder right into the bucket
