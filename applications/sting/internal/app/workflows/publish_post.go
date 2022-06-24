@@ -78,13 +78,15 @@ func PublishPost(ctx workflow.Context, input PublishPostInput) error {
 		}
 	}
 
-	if err := workflow.ExecuteActivity(ctx, a.UpdateClubBanner,
-		activities.UpdateClubBannerInput{
-			PostId: input.PostId,
-		},
-	).Get(ctx, nil); err != nil {
-		logger.Error("failed to update club banner", "Error", err)
-		return err
+	if !payload.ClubHasBanner {
+		if err := workflow.ExecuteActivity(ctx, a.UpdateClubBanner,
+			activities.UpdateClubBannerInput{
+				PostId: input.PostId,
+			},
+		).Get(ctx, nil); err != nil {
+			logger.Error("failed to update club banner", "Error", err)
+			return err
+		}
 	}
 
 	return nil

@@ -107,9 +107,25 @@ func (r *Resource) IsVideo() bool {
 	return r.resourceType == Video
 }
 
-func (r *Resource) ClearUrls() {
-	r.urls = nil
-	r.videoThumbnailUrl = nil
+func (r *Resource) AsEmpty() *Resource {
+	return &Resource{
+		itemId:                 r.itemId,
+		id:                     r.id,
+		processed:              r.processed,
+		processedId:            r.processedId,
+		token:                  r.token,
+		isPrivate:              r.isPrivate,
+		width:                  r.width,
+		height:                 r.height,
+		mimeTypes:              r.mimeTypes,
+		resourceType:           r.resourceType,
+		preview:                r.preview,
+		urls:                   nil,
+		videoThumbnailUrl:      nil,
+		videoThumbnail:         r.videoThumbnail,
+		videoThumbnailMimeType: r.videoThumbnailMimeType,
+		videoDuration:          r.videoDuration,
+	}
 }
 
 func (r *Resource) VideoThumbnailMimeType() string {
@@ -122,22 +138,6 @@ func (r *Resource) VideoThumbnail() string {
 
 func (r *Resource) VideoThumbnailFullUrl() *Url {
 	return r.videoThumbnailUrl
-}
-
-func (r *Resource) ThumbnailAsRegularResource() *Resource {
-	return &Resource{
-		itemId:       r.itemId,
-		id:           r.videoThumbnail,
-		processed:    true,
-		processedId:  r.videoThumbnail,
-		token:        r.token,
-		isPrivate:    false,
-		width:        r.width,
-		height:       r.height,
-		mimeTypes:    []string{r.videoThumbnailMimeType},
-		resourceType: Image,
-		preview:      r.preview,
-	}
 }
 
 func (r *Resource) FullUrls() []*Url {

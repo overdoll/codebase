@@ -22,11 +22,8 @@ func (h *Activities) UpdateClubBanner(ctx context.Context, input UpdateClubBanne
 
 	for _, cnt := range pst.Content() {
 		if !cnt.IsSupporterOnly() {
-			if cnt.Resource().IsVideo() {
-				chosenResource = cnt.Resource().ThumbnailAsRegularResource()
-			} else {
-				chosenResource = cnt.Resource()
-			}
+			chosenResource = cnt.Resource()
+			break
 		}
 	}
 
@@ -34,8 +31,14 @@ func (h *Activities) UpdateClubBanner(ctx context.Context, input UpdateClubBanne
 		return nil
 	}
 
+	newContent, err := h.loader.CopyResourceIntoImage(ctx, input.PostId, chosenResource.ID(), false)
+
+	if err != nil {
+		return err
+	}
+
 	_, err = h.cr.UpdateClubBanner(ctx, pst.ClubId(), func(cl *club.Club) error {
-		return cl.UpdateBanner(chosenResource)
+		return cl.UpdateBanner(newContent.NewResource())
 	})
 
 	if err != nil {

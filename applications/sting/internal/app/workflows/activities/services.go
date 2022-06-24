@@ -14,7 +14,8 @@ type ParleyService interface {
 type LoaderService interface {
 	CreateOrGetResourcesFromUploads(context.Context, string, []string, bool, string, bool) ([]*resource.Resource, error)
 	DeleteResources(context.Context, string, []string) error
-	CopyResourcesAndApplyPixelateFilter(ctx context.Context, itemId string, resourceIds []string, pixelate int, private bool) ([]*post.NewContent, error)
+	CopyResourceIntoImage(ctx context.Context, itemId string, resourceId string, private bool) (*post.NewResource, error)
+	CopyResourcesAndApplyPixelateFilter(ctx context.Context, itemId string, resourceIds []string, pixelate int, private bool) ([]*post.NewResource, error)
 }
 
 type CarrierService interface {

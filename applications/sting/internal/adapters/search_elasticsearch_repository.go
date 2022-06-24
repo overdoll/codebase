@@ -16,9 +16,9 @@ import (
 )
 
 type SearchResultHistory struct {
-	Score *float64
-	Id    string `json:"id"`
-	Key   string `json:"key"`
+	Score *float64 `json:"score"`
+	Id    string   `json:"id"`
+	Key   string   `json:"key"`
 }
 
 type SearchHistory struct {

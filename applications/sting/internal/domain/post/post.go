@@ -81,24 +81,16 @@ func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int,
 
 		for _, r := range contentResources {
 
+			if r.ID() == resourceId {
+				res = r
+			}
+
 			hidden, okHidden := contentSupporterOnlyResourceIds[resourceId]
 
 			if okHidden {
 				if hidden == r.ID() {
 					hiddenRes = r
 				}
-
-				// because the original resource is supposed to be hidden, we clear the URLs, so we don't accidentally expose it
-				res.ClearUrls()
-
-				// if the full urls are not blank or the video thumbnail is not nil, skip the content, so we don't accidentally expose it
-				if len(res.FullUrls()) != 0 || res.VideoThumbnailFullUrl() != nil {
-					continue
-				}
-			}
-
-			if r.ID() == resourceId {
-				res = r
 			}
 		}
 

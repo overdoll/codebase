@@ -99,7 +99,7 @@ func (s Server) CopyResourcesAndApplyFilter(ctx context.Context, request *loader
 			ItemId     string
 			ResourceId string
 		}{},
-		Filters:   struct{ Pixelate *struct{ Size int } }{},
+		Filters:   &struct{ Pixelate *struct{ Size int } }{},
 		IsPrivate: request.Private,
 	}
 
@@ -113,8 +113,10 @@ func (s Server) CopyResourcesAndApplyFilter(ctx context.Context, request *loader
 		})
 	}
 
-	if request.Filters.Pixelate != nil {
-		data.Filters.Pixelate = &struct{ Size int }{Size: int(request.Filters.Pixelate.Size)}
+	if request.Filters != nil {
+		if request.Filters.Pixelate != nil {
+			data.Filters.Pixelate = &struct{ Size int }{Size: int(request.Filters.Pixelate.Size)}
+		}
 	}
 
 	filteredResources, err := s.app.Commands.CopyResourcesAndApplyFilters.Handle(ctx, data)
