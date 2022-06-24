@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b43fbc78cf25da2f385eefd91e8796e2>>
+ * @generated SignedSource<<915343b8560e2ba261551880a5dd06db>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,6 @@ export type SetupPaxumAccountPayoutMethodFragment$data = {
   };
   readonly " $fragmentType": "SetupPaxumAccountPayoutMethodFragment";
 };
-export type SetupPaxumAccountPayoutMethodFragment = SetupPaxumAccountPayoutMethodFragment$data;
 export type SetupPaxumAccountPayoutMethodFragment$key = {
   readonly " $data"?: SetupPaxumAccountPayoutMethodFragment$data;
   readonly " $fragmentSpreads": FragmentRefs<"SetupPaxumAccountPayoutMethodFragment">;
