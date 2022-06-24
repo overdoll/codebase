@@ -107,7 +107,6 @@ export default function ImageSnippet ({
         {...IMAGE_PROPS}
         src={displayUrl(errorCount)}
         onErrorCapture={onErrorCapture}
-        priority
         {...rest}
       />
     </Box>
