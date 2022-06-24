@@ -65,7 +65,7 @@ const moduleExports = withBundleAnalyzer({
         const manifest = manifestEntries
           .filter((m) => {
             // dont include .js.map files
-            if (/^[^.]+.js.map$/.test(m.url)) {
+            if (m.url.split('.').pop() === 'map') {
               return false
             }
 
