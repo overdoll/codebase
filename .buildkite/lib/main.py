@@ -344,7 +344,8 @@ def execute_cdn_upload(configs):
         "medusa-assets",
         "s3://{}/_next".format(os.getenv("AWS_STATIC_ASSETS_BUCKET")),
         "--recursive",
-        "--metadata='{\"Cache-Control\":\"public,max-age=31536000,immutable\"}'",
+        "--metadata",
+        "Cache-Control=public,max-age=31536000,immutable"
     ], env=env)
 
     # copy everything from the public folder right into the bucket
