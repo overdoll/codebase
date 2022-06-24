@@ -138,7 +138,7 @@ func (r CCBillHttpRepository) ViewSubscriptionStatus(ctx context.Context, ccbill
 		nextBillingDate = &newNextBillingDate
 	}
 
-	signupDate, err := time.ParseInLocation("20060102150405", subResult.SignupDate, loc)
+	signupDate, err := time.ParseInLocation("20060102", subResult.SignupDate, loc)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "error parsing signup date")
