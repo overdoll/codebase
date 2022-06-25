@@ -6,6 +6,7 @@ import PostSupporterContent from '../PostSupporterContent/PostSupporterContent'
 import PostMedia from '../../PostPlayback/PostMedia/PostMedia'
 import PostSlideIndex from '../../PostInteraction/PostSlideIndex/PostSlideIndex'
 import { NumberParam, useQueryParam } from 'use-query-params'
+import { useState } from 'react'
 
 interface Props {
   query: PostGalleryPublicDetailedFragment$key
@@ -18,6 +19,7 @@ const Fragment = graphql`
     }
     content {
       resource {
+        preview
         ...PostMediaFragment
       }
       ...PostSupporterContentFragment
@@ -30,6 +32,8 @@ export default function PostGalleryPublicDetailed ({
   query
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
+
+  const [swiper, setSwiper] = useState(null)
 
   const [slide] = useQueryParam<number | null | undefined>('slide', NumberParam)
 
@@ -45,12 +49,16 @@ export default function PostGalleryPublicDetailed ({
         grabCursor
         spaceBetween={20}
         speed={100}
+        onSwiper={(swiper) => setSwiper(swiper)}
         onAfterInit={(swiper) => slideTo(swiper)}
       >
-        <PostSlideIndex query={data} />
         {data.content.map((item, index) =>
           <SwiperSlide
             key={index}
+            style={{
+              backgroundColor: item.resource.preview != null && item.resource.preview !== '' ? item.resource.preview : 'gray.800',
+              height: swiper?.height
+            }}
           >
             <Flex
               direction='column'
@@ -74,6 +82,7 @@ export default function PostGalleryPublicDetailed ({
             </Flex>
           </SwiperSlide>)}
       </Swiper>
+      <PostSlideIndex swiper={swiper} query={data} />
     </Box>
   )
 }

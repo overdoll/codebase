@@ -7,9 +7,13 @@ import { useState } from 'react'
 import { Box, Flex } from '@chakra-ui/react'
 import ImageError from '../NextImage/ImageError/ImageError'
 
-interface Props extends Omit<ImageProps, 'src' | 'width' | 'height' | 'layout' | 'alt'> {
-  query: ImageSnippetFragment$key | null
+export interface ImageSnippetCoverProps {
   cover?: boolean
+  containCover?: boolean
+}
+
+interface Props extends Omit<ImageProps, 'src' | 'width' | 'height' | 'layout' | 'alt'>, ImageSnippetCoverProps {
+  query: ImageSnippetFragment$key | null
   tinyError?: boolean
 }
 
@@ -30,6 +34,7 @@ const errorCaptureCache = new Map<string, number>()
 export default function ImageSnippet ({
   query,
   cover,
+  containCover,
   tinyError,
   ...rest
 }: Props): JSX.Element {
@@ -37,7 +42,7 @@ export default function ImageSnippet ({
 
   const captureId = data?.id as string
 
-  const [errorCount, setErrorCount] = useState(errorCaptureCache.has(captureId) ? errorCaptureCache.get(captureId) as number : 0)
+  const [errorCount, setErrorCount] = useState(errorCaptureCache.has(captureId) ? data?.urls.length as number : 0)
 
   const errorLimit = data?.urls.length ?? 0
 
@@ -52,7 +57,7 @@ export default function ImageSnippet ({
     layout: determineCover ? 'fill' : 'responsive' as any,
     width: determineCover ? undefined : data?.width,
     height: determineCover ? undefined : data?.height,
-    objectFit: determineCover ? 'cover' : undefined as any,
+    objectFit: determineCover ? (containCover === true ? 'contain' : 'cover') : undefined as any,
     style: {
       backgroundColor: previewBackground,
       userSelect: 'none' as any
@@ -100,6 +105,8 @@ export default function ImageSnippet ({
       </Box>
     )
   }
+
+  // TODO having the priority tag will not trigger the error callback sometimes, which is probably fine since they wont happen very often
 
   return (
     <Box position={determineCover ? 'relative' : 'static'} w='100%' h='100%' display='block'>

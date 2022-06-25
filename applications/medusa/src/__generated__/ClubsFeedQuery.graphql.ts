@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<55f22e284a2448caaf42014ea01320c2>>
- * @relayHash 92973f7d753fd696a4197d64ab188c27
+ * @generated SignedSource<<c7fbf101f6ab2d7c3b26ead7bdedc350>>
+ * @relayHash 80e7be75efdfc5c386586abe558286d5
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 92973f7d753fd696a4197d64ab188c27
+// @relayRequestID 80e7be75efdfc5c386586abe558286d5
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -327,6 +327,13 @@ return {
                               (v2/*: any*/)
                             ],
                             "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "canSupport",
+                            "storageKey": null
                           }
                         ],
                         "storageKey": null
@@ -460,7 +467,7 @@ return {
     ]
   },
   "params": {
-    "id": "92973f7d753fd696a4197d64ab188c27",
+    "id": "80e7be75efdfc5c386586abe558286d5",
     "metadata": {},
     "name": "ClubsFeedQuery",
     "operationKind": "query",

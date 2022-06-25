@@ -1,11 +1,12 @@
 import { graphql, useFragment } from 'react-relay'
 import { Box, Flex } from '@chakra-ui/react'
-import { Swiper, SwiperSlide } from 'swiper/react'
+import { Swiper, SwiperProps, SwiperSlide } from 'swiper/react'
 import { PostGalleryPublicSimpleFragment$key } from '@//:artifacts/PostGalleryPublicSimpleFragment.graphql'
 import PostSupporterContent from '../PostSupporterContent/PostSupporterContent'
 import { Link } from '../../../../../routing'
 import PostMedia from '../../PostPlayback/PostMedia/PostMedia'
 import PostSlideIndex from '../../PostInteraction/PostSlideIndex/PostSlideIndex'
+import { useState } from 'react'
 
 interface Props {
   query: PostGalleryPublicSimpleFragment$key
@@ -17,6 +18,7 @@ const Fragment = graphql`
     content {
       resource {
         ...PostMediaFragment
+        preview
       }
       ...PostSupporterContentFragment
     }
@@ -33,17 +35,23 @@ export default function PostGalleryPublicSimple ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
+  const [swiper, setSwiper] = useState<null | SwiperProps>(null)
+
   return (
     <Box>
       <Swiper
         grabCursor
         spaceBetween={20}
         speed={100}
+        onSwiper={(swiper) => setSwiper(swiper)}
       >
-        <PostSlideIndex query={data} />
         {data?.content.map((item, index) =>
           <SwiperSlide
             key={index}
+            style={{
+              backgroundColor: item.resource.preview != null && item.resource.preview !== '' ? item.resource.preview : 'gray.800',
+              height: swiper?.height
+            }}
           >
             <Flex
               direction='column'
@@ -53,6 +61,7 @@ export default function PostGalleryPublicSimple ({
               justify='center'
               minH={300}
               maxH={800}
+              overflow='hidden'
             >
               <PostSupporterContent
                 query={item}
@@ -78,6 +87,7 @@ export default function PostGalleryPublicSimple ({
           </SwiperSlide>
         )}
       </Swiper>
+      <PostSlideIndex swiper={swiper} query={data} />
     </Box>
   )
 }

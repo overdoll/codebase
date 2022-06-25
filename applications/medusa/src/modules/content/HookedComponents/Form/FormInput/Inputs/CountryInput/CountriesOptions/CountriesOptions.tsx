@@ -16,9 +16,11 @@ const Query = graphql`
 export default function CountriesOptions ({ searchArguments }: CountriesOptionsProps): JSX.Element {
   const data = useLazyLoadQuery<CountriesOptionsQuery>(Query, searchArguments.variables, searchArguments.options)
 
+  const sortedData = [...data.countries].sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
+
   return (
     <>
-      {data.countries.map((item, index) =>
+      {sortedData.map((item, index) =>
         <option key={index} value={item.id}>{item.name}</option>
       )}
     </>

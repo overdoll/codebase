@@ -2,13 +2,13 @@ import { Flex, HStack } from '@chakra-ui/react'
 import { graphql } from 'react-relay'
 import { PostSlideIndexFragment$key } from '@//:artifacts/PostSlideIndexFragment.graphql'
 import { useFragment } from 'react-relay/hooks'
-import { useSwiper } from 'swiper/react'
 import { useEffect, useState } from 'react'
 import { useUpdateEffect } from 'usehooks-ts'
 import { NumberParam, useQueryParam } from 'use-query-params'
 
 interface Props {
   query: PostSlideIndexFragment$key
+  swiper: any
 }
 
 const Fragment = graphql`
@@ -22,23 +22,24 @@ const Fragment = graphql`
 
 export default function PostSlideIndex ({
   query,
+  swiper,
   ...rest
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const swiper = useSwiper()
-
   const [slide] = useQueryParam<number | null | undefined>('slide', NumberParam)
 
-  const [activeIndex, setActiveIndex] = useState(slide ?? swiper.activeIndex)
+  const [activeIndex, setActiveIndex] = useState(slide ?? swiper?.activeIndex)
 
   const slidesCount = data.content.length
 
   useEffect(() => {
-    if (swiper != null && !swiper.destroyed) {
+    if (swiper == null) return
+    if (!swiper.destroyed) {
       swiper.on('slideChange', (swiper) => {
         setActiveIndex(swiper.activeIndex)
       })
+      setActiveIndex(swiper.activeIndex)
     }
     return () => {
       swiper.off('slideChange')

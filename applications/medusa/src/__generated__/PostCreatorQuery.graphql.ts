@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<9440cfcc8c2fa4a5941d937ba4f1d14a>>
- * @relayHash bd24ee71f632a433d3fdfbd3c8beb389
+ * @generated SignedSource<<7a72f570522d22e5a8abc3bce8e95bbc>>
+ * @relayHash 67e1d9a1b4d7cd80ff5f15b8774a1fb3
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID bd24ee71f632a433d3fdfbd3c8beb389
+// @relayRequestID 67e1d9a1b4d7cd80ff5f15b8774a1fb3
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -104,39 +104,39 @@ v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "type",
+  "name": "preview",
   "storageKey": null
 },
 v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "type",
   "storageKey": null
 },
 v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "width",
+  "name": "url",
   "storageKey": null
 },
 v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "height",
+  "name": "width",
   "storageKey": null
 },
 v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "preview",
+  "name": "height",
   "storageKey": null
 },
 v13 = [
-  (v9/*: any*/)
+  (v10/*: any*/)
 ],
 v14 = {
   "alias": null,
@@ -181,11 +181,11 @@ v17 = {
       "selections": (v13/*: any*/),
       "storageKey": null
     },
-    (v10/*: any*/),
     (v11/*: any*/),
     (v12/*: any*/),
+    (v8/*: any*/),
     (v14/*: any*/),
-    (v8/*: any*/)
+    (v9/*: any*/)
   ],
   "storageKey": null
 },
@@ -312,6 +312,7 @@ return {
                   },
                   (v7/*: any*/),
                   (v8/*: any*/),
+                  (v9/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -320,7 +321,7 @@ return {
                     "name": "urls",
                     "plural": true,
                     "selections": [
-                      (v9/*: any*/),
+                      (v10/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -331,7 +332,6 @@ return {
                     ],
                     "storageKey": null
                   },
-                  (v10/*: any*/),
                   (v11/*: any*/),
                   (v12/*: any*/),
                   (v14/*: any*/),
@@ -477,7 +477,7 @@ return {
     ]
   },
   "params": {
-    "id": "bd24ee71f632a433d3fdfbd3c8beb389",
+    "id": "67e1d9a1b4d7cd80ff5f15b8774a1fb3",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

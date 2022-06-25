@@ -78,7 +78,7 @@ export default function PublicPost (props: Props): JSX.Element {
     <>
       <PublicPostRichObject query={queryData.post} />
       <AccountInformationBanner query={queryData.viewer} />
-      <Stack spacing={4}>
+      <Stack spacing={8}>
         <HStack spacing={2} justify='space-between'>
           <Heading color='gray.00' fontSize='2xl'>
             <Trans>

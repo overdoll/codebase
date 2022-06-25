@@ -1,13 +1,15 @@
-import { Box, Flex, HTMLChakraProps, Stack, Text } from '@chakra-ui/react'
+import { Box, Flex, Stack, Text } from '@chakra-ui/react'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import type { ResourceInfoFragment$key } from '@//:artifacts/ResourceInfoFragment.graphql'
 import ResourceItem from '../ResourceItem/ResourceItem'
 import { Icon } from '../../PageLayout'
 import { ControlPlayButton, PictureIdentifier, PremiumStar } from '@//:assets/icons'
+import { ImageSnippetCoverProps } from '../ImageSnippet/ImageSnippet'
 
-interface Props extends HTMLChakraProps<any> {
+interface Props extends ImageSnippetCoverProps {
   query: ResourceInfoFragment$key
+  cover?: boolean
 }
 
 const Fragment = graphql`
@@ -24,19 +26,21 @@ const Fragment = graphql`
 `
 
 export default function ResourceInfo ({
-  query
+  query,
+  cover,
+  containCover
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   if (data?.resource == null || !data?.resource?.processed) {
     return (
-      <ResourceItem seed={data?.id} h='100%' query={data?.resource} />
+      <ResourceItem containCover={containCover} cover={cover} seed={data?.id} h='100%' query={data?.resource} />
     )
   }
 
   return (
     <Flex w='100%' h='100%' position='relative'>
-      <ResourceItem seed={data.id} query={data.resource} />
+      <ResourceItem containCover={containCover} cover={cover} seed={data.id} query={data.resource} />
       <Flex w='100%' h='100%' align='center' justify='center' position='absolute'>
         <Stack align='center' spacing={1}>
           <Box p={2} borderRadius='full' bg='dimmers.400' w={8} h={8}>

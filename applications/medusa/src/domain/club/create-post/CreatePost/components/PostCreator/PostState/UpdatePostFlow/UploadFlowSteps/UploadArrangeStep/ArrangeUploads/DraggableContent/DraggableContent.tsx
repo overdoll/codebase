@@ -127,8 +127,10 @@ export default function DraggableContent ({
           </Heading>
         </Flex>
       </Flex>
-      <Flex align='center' justify='center' w='38%'>
-        <ResourceInfo query={data} />
+      <Flex p={2} align='center' justify='center' w='38%'>
+        <Flex overflow='hidden' w='100%' h='100%' borderRadius='md'>
+          <ResourceInfo containCover query={data} />
+        </Flex>
       </Flex>
       <Flex align='center' justify='center' w='38%'>
         {dragDisabled && (

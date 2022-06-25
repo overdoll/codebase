@@ -10,9 +10,9 @@
 
 To set up a local environment, here are the instructions (from the root of the repo):
 
-- `./scripts/local/create-cluster.sh` and wait for the cluster to finish creating
+- `./scripts/local/create_cluster.sh` and wait for the cluster to finish creating
 - `./scripts/local/installation.sh` to install everything in the cluster
-- **OPTIONAL** `./scripts/local/export-certificates.sh` to export certificates (if you plan on working locally) (
+- **OPTIONAL** `./scripts/local/export_certificates.sh` to export certificates (if you plan on working locally) (
   certificate is found under ./development/local-files/CA.crt and should be imported into Chrome/Firefox)
 - `./scripts/local/fresh_install_setup.sh` for a fresh installation setup (**required**)
 - `tilt up` to start up all the services and get them ready
