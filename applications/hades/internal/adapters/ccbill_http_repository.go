@@ -109,17 +109,18 @@ func (r CCBillHttpRepository) ViewSubscriptionStatus(ctx context.Context, ccbill
 
 	if subResult.CancelDate != "" {
 
-		newCancelDate, err := time.ParseInLocation("20060102150405", subResult.CancelDate, loc)
+		newCancelDate, err := ccbill.ParseDateWithTimeString(subResult.CancelDate)
 
 		if err != nil {
-			return nil, errors.Wrap(err, "error parsing cancel date")
+			return nil, errors.Wrap(err, "error parsing expiration date")
 		}
 
 		cancelDate = &newCancelDate
 	}
 
 	if subResult.ExpirationDate != "" {
-		newExpirationDate, err := time.ParseInLocation("20060102150405", subResult.ExpirationDate, loc)
+
+		newExpirationDate, err := ccbill.ParseDateWithTimeString(subResult.ExpirationDate)
 
 		if err != nil {
 			return nil, errors.Wrap(err, "error parsing expiration date")
@@ -138,10 +139,10 @@ func (r CCBillHttpRepository) ViewSubscriptionStatus(ctx context.Context, ccbill
 		nextBillingDate = &newNextBillingDate
 	}
 
-	signupDate, err := time.ParseInLocation("20060102150405", subResult.SignupDate, loc)
+	signupDate, err := ccbill.ParseDateWithTimeString(subResult.SignupDate)
 
 	if err != nil {
-		return nil, errors.Wrap(err, "error parsing signup date")
+		return nil, err
 	}
 
 	var isRecurring bool

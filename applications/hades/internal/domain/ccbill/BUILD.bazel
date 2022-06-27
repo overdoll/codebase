@@ -18,6 +18,7 @@ go_library(
         "subscription_status.go",
         "subscription_status_value.go",
         "support.go",
+        "time.go",
         "validate_ccbill_transaction.go",
     ],
     embedsrcs = ["payment_flow_callback.gohtml"],

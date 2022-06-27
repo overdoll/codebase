@@ -26,9 +26,9 @@ export default function TotpQrCodeStep ({
           <NextImage
             height={128}
             width={128}
+            priority
             alt='thumbnail'
             src={image ?? ''}
-            priority
           />
         </Flex>
       </Flex>
