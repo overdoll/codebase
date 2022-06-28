@@ -7,6 +7,7 @@ import PostMedia from '../../PostPlayback/PostMedia/PostMedia'
 import PostSlideIndex from '../../PostInteraction/PostSlideIndex/PostSlideIndex'
 import { NumberParam, useQueryParam } from 'use-query-params'
 import { useState } from 'react'
+import SwiperType from 'swiper'
 
 interface Props {
   query: PostGalleryPublicDetailedFragment$key
@@ -33,7 +34,7 @@ export default function PostGalleryPublicDetailed ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const [swiper, setSwiper] = useState(null)
+  const [swiper, setSwiper] = useState<null | SwiperType>(null)
 
   const [slide] = useQueryParam<number | null | undefined>('slide', NumberParam)
 
@@ -61,28 +62,35 @@ export default function PostGalleryPublicDetailed ({
             }}
           >
             <Flex
-              direction='column'
-              minH={300}
+              h='100%'
               w='100%'
               align='center'
               justify='center'
             >
-              <PostSupporterContent
-                clubQuery={data.club}
-                query={item}
+              <Flex
+                direction='column'
+                minH={300}
+                w='100%'
+                align='center'
+                justify='center'
               >
-                <PostMedia
-                  controls={{
-                    canSeek: true,
-                    canFullscreen: true
-                  }}
-                  query={item.resource}
-                />
-              </PostSupporterContent>
+                <PostSupporterContent
+                  clubQuery={data.club}
+                  query={item}
+                >
+                  <PostMedia
+                    controls={{
+                      canSeek: true,
+                      canFullscreen: true
+                    }}
+                    query={item.resource}
+                  />
+                </PostSupporterContent>
+              </Flex>
             </Flex>
           </SwiperSlide>)}
       </Swiper>
-      <PostSlideIndex swiper={swiper} query={data} />
+      {swiper != null && <PostSlideIndex swiper={swiper} query={data} />}
     </Box>
   )
 }

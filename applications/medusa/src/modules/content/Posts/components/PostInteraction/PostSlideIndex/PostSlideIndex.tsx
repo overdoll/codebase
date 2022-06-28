@@ -5,10 +5,11 @@ import { useFragment } from 'react-relay/hooks'
 import { useEffect, useState } from 'react'
 import { useUpdateEffect } from 'usehooks-ts'
 import { NumberParam, useQueryParam } from 'use-query-params'
+import SwiperType from 'swiper'
 
 interface Props {
   query: PostSlideIndexFragment$key
-  swiper: any
+  swiper: SwiperType
 }
 
 const Fragment = graphql`

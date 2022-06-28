@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7cc7b7da5c979d2b598182e5951fb28a>>
- * @relayHash 4f4e9bba36e49ee3426464ef5f6c0ef9
+ * @generated SignedSource<<95411bfddeb73c678d5d71b238eb0528>>
+ * @relayHash e9e20c26766b39c6a6f43c7d62b4ec24
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4f4e9bba36e49ee3426464ef5f6c0ef9
+// @relayRequestID e9e20c26766b39c6a6f43c7d62b4ec24
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -101,7 +101,21 @@ v7 = [
     ]
   }
 ],
-v8 = [
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "type",
+  "storageKey": null
+},
+v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "videoDuration",
+  "storageKey": null
+},
+v10 = [
   {
     "alias": null,
     "args": null,
@@ -225,13 +239,7 @@ return {
                                 "name": "resource",
                                 "plural": false,
                                 "selections": [
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "type",
-                                    "storageKey": null
-                                  },
+                                  (v8/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -239,13 +247,7 @@ return {
                                     "name": "processed",
                                     "storageKey": null
                                   },
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "videoDuration",
-                                    "storageKey": null
-                                  },
+                                  (v9/*: any*/),
                                   (v5/*: any*/),
                                   {
                                     "alias": null,
@@ -254,7 +256,7 @@ return {
                                     "kind": "LinkedField",
                                     "name": "urls",
                                     "plural": true,
-                                    "selections": (v8/*: any*/),
+                                    "selections": (v10/*: any*/),
                                     "storageKey": null
                                   },
                                   {
@@ -285,9 +287,23 @@ return {
                                     "kind": "LinkedField",
                                     "name": "videoThumbnail",
                                     "plural": false,
-                                    "selections": (v8/*: any*/),
+                                    "selections": (v10/*: any*/),
                                     "storageKey": null
                                   }
+                                ],
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "Resource",
+                                "kind": "LinkedField",
+                                "name": "supporterOnlyResource",
+                                "plural": false,
+                                "selections": [
+                                  (v8/*: any*/),
+                                  (v9/*: any*/),
+                                  (v5/*: any*/)
                                 ],
                                 "storageKey": null
                               }
@@ -363,7 +379,7 @@ return {
     ]
   },
   "params": {
-    "id": "4f4e9bba36e49ee3426464ef5f6c0ef9",
+    "id": "e9e20c26766b39c6a6f43c7d62b4ec24",
     "metadata": {},
     "name": "ClubExclusivePostsPaginationQuery",
     "operationKind": "query",

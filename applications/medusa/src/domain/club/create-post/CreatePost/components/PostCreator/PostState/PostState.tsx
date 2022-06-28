@@ -15,6 +15,7 @@ import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequenc
 import { CLUB_GUIDELINES } from '@//:modules/constants/links'
 import { useRouter } from 'next/router'
 import ClubInformationBanner from '../../../../../../../common/components/ClubInformationBanner/ClubInformationBanner'
+import ClubDraftPostsAlert from './ClubDraftPostsAlert/ClubDraftPostsAlert'
 
 interface Props {
   postQuery: PostStateFragment$key | null
@@ -34,6 +35,7 @@ const ClubFragment = graphql`
     __typename
     id
     ...ClubInformationBannerFragment
+    ...ClubDraftPostsAlertFragment
   }
 `
 
@@ -62,6 +64,7 @@ export default function PostState ({
       <>
         <ClubInformationBanner query={clubData} />
         <Stack spacing={4}>
+          <ClubDraftPostsAlert query={clubData} />
           <CreatePostFlow clubId={clubData.id} />
           <Stack spacing={2}>
             <Heading color='gray.00' fontSize='2xl'>

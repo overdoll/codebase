@@ -1,34 +1,25 @@
 import { graphql, usePaginationFragment } from 'react-relay'
 import { ClubTileOverlay, GridTile, GridWrap, LinkTile, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
-import { useLazyLoadQuery } from 'react-relay/hooks'
 import { Box } from '@chakra-ui/react'
-import { SuggestedClubsQuery } from '@//:artifacts/SuggestedClubsQuery.graphql'
-import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
+import { DiscoverClubsListFragment$key } from '@//:artifacts/DiscoverClubsListFragment.graphql'
 import { EmptyBoundary, EmptyClubs } from '@//:modules/content/Placeholder'
 import JoinClubFromTile
   from '../../../../../slug/root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromTile/JoinClubFromTile'
+import type { DiscoverClubsQuery } from '@//:artifacts/DiscoverClubsQuery.graphql'
 
-interface Props extends ComponentSearchArguments<any> {
+interface Props {
+  query: DiscoverClubsListFragment$key
 }
 
-const Query = graphql`
-  query SuggestedClubsQuery($search: String) {
-    ...SuggestedClubsFragment
-    viewer {
-      ...JoinClubFromTileViewerFragment
-    }
-  }
-`
-
 const Fragment = graphql`
-  fragment SuggestedClubsFragment on Query
+  fragment DiscoverClubsListFragment on Query
   @argumentDefinitions(
     first: {type: Int, defaultValue: 11}
     after: {type: String}
   )
-  @refetchable(queryName: "SuggestedClubsPaginationQuery" ) {
-    clubs (first: $first, after: $after, name: $search, terminated: false)
-    @connection (key: "SuggestedClubs_clubs") {
+  @refetchable(queryName: "DiscoverClubsPaginationQuery" ) {
+    discoverClubs (first: $first, after: $after)
+    @connection (key: "DiscoverClubs_discoverClubs") {
       edges {
         node {
           slug
@@ -37,38 +28,35 @@ const Fragment = graphql`
         }
       }
     }
+    viewer {
+      ...JoinClubFromTileViewerFragment
+    }
   }
 `
 
-export default function SuggestedClubs ({
-  searchArguments
+export default function DiscoverClubsList ({
+  query
 }: Props): JSX.Element {
-  const queryData = useLazyLoadQuery<SuggestedClubsQuery>(
-    Query,
-    searchArguments.variables,
-    searchArguments.options
-  )
-
   const {
     data,
     loadNext,
     hasNext,
     isLoadingNext
-  } = usePaginationFragment<SuggestedClubsQuery, any>(
+  } = usePaginationFragment<DiscoverClubsQuery, any>(
     Fragment,
-    queryData
+    query
   )
 
   return (
     <>
       <EmptyBoundary
         fallback={
-          <EmptyClubs hint={searchArguments.variables.search} />
+          <EmptyClubs />
         }
-        condition={data.clubs.edges.length < 1}
+        condition={data.discoverClubs.edges.length < 1}
       >
         <GridWrap>
-          {data.clubs.edges.map((item, index) =>
+          {data.discoverClubs.edges.map((item, index) =>
             <Box key={index} h='100%'>
               <GridTile key={index}>
                 <LinkTile href={`/${item.node.slug as string}`}>
@@ -76,7 +64,7 @@ export default function SuggestedClubs ({
                 </LinkTile>
               </GridTile>
               <Box mt={2}>
-                <JoinClubFromTile w='100%' size='md' clubQuery={item.node} viewerQuery={queryData?.viewer} />
+                <JoinClubFromTile w='100%' size='md' clubQuery={item.node} viewerQuery={data?.viewer} />
               </Box>
             </Box>)}
           <LoadMoreGridTile

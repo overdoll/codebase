@@ -20,6 +20,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment ClubSupporterHeaderFragment on Club {
+    canCreateSupporterOnlyPosts
     canSupport
     nextSupporterPostTime
     membersCount
@@ -60,7 +61,7 @@ export default function ClubSupporterHeader ({ query }: Props): JSX.Element {
     )
   }
 
-  if (!data.canSupport && data.suspension == null) {
+  if (!data.canSupport && data.suspension == null && data.canCreateSupporterOnlyPosts) {
     return (
       <LinkTile
         href={{
@@ -73,7 +74,7 @@ export default function ClubSupporterHeader ({ query }: Props): JSX.Element {
           icon={WarningTriangle}
           title={(
             <Trans>
-              Cannot Collect Subscriptions
+              Not Collecting Subscriptions
             </Trans>)}
         >
           <Trans>
@@ -98,27 +99,44 @@ export default function ClubSupporterHeader ({ query }: Props): JSX.Element {
       </StatisticHeader>
       {data.suspension == null
         ? (
-          <LargeBackgroundBox>
-            <HStack spacing={4} justify='space-between'>
-              <Heading fontSize='sm' color='gray.200'>
-                <Trans>
-                  Post exclusive content at least once by {nextSupporterPostTime} to keep your supporters
-                </Trans>
-              </Heading>
-              <LinkButton
-                size='sm'
-                variant='solid'
-                href={{
-                  pathname: '/club/[slug]/create-post',
-                  query: { slug: slug }
-                }}
-              >
-                <Trans>
-                  Create Post
-                </Trans>
-              </LinkButton>
-            </HStack>
-          </LargeBackgroundBox>)
+          <>
+            {
+              data.canCreateSupporterOnlyPosts
+                ? (
+                  <LargeBackgroundBox>
+                    <HStack spacing={4} justify='space-between'>
+                      <Heading fontSize='sm' color='gray.200'>
+                        <Trans>
+                          Post exclusive content at least once by {nextSupporterPostTime} to keep your supporters
+                        </Trans>
+                      </Heading>
+                      <LinkButton
+                        size='sm'
+                        variant='solid'
+                        href={{
+                          pathname: '/club/[slug]/create-post',
+                          query: { slug: slug }
+                        }}
+                      >
+                        <Trans>
+                          Create Post
+                        </Trans>
+                      </LinkButton>
+                    </HStack>
+                  </LargeBackgroundBox>
+                  )
+                : (
+                  <LargeBackgroundBox>
+                    <Heading fontSize='sm' color='gray.200'>
+                      <Trans>
+                        Creating supporter only posts has been disabled for your club
+                      </Trans>
+                    </Heading>
+                  </LargeBackgroundBox>
+                  )
+            }
+          </>
+          )
         : (
           <LargeBackgroundBox>
             <Heading fontSize='sm' color='gray.200'>

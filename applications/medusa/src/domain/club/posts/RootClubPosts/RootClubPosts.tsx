@@ -14,6 +14,7 @@ import SearchSelect from '@//:modules/content/HookedComponents/Search/components
 import { PageProps } from '@//:types/app'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
+import { useQueryParam } from 'use-query-params'
 
 interface Props {
   queryRefs: {
@@ -32,6 +33,8 @@ const RootClubPosts: PageProps<Props> = (props: Props) => {
     props.queryRefs.clubPostsQuery
   )
 
+  const [state, setState] = useQueryParam<PostState | null | undefined>('state')
+
   const { query: { slug } } = useRouter()
 
   const {
@@ -40,9 +43,12 @@ const RootClubPosts: PageProps<Props> = (props: Props) => {
   } = useSearch<SearchProps>({
     defaultValue: {
       slug: slug as string,
-      state: null
+      state: state ?? null
     },
-    onChange: (args) => loadQuery({ ...args.variables })
+    onChange: (args) => {
+      loadQuery({ ...args.variables })
+      state != null && setState(undefined)
+    }
   })
 
   return (
@@ -63,6 +69,7 @@ const RootClubPosts: PageProps<Props> = (props: Props) => {
             <SearchSelect
               variant='outline'
               placeholder='All Posts'
+              defaultValue={state ?? undefined}
               {...register('state', 'change')}
             >
               <option value='PUBLISHED'>

@@ -11,9 +11,10 @@ export default function SearchSelect ({
   onChangeRegister,
   isPending,
   children,
+  defaultValue,
   ...rest
 }: Props): JSX.Element {
-  const [selectValue, setSelect] = useState('')
+  const [selectValue, setSelect] = useState(defaultValue ?? '')
 
   const onChangeInput = (value: string): void => {
     setSelect(value)

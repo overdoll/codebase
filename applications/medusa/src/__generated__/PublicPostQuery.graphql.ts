@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d77b98780188c9ee2699f9d7f2fe379e>>
- * @relayHash c28c11b6d4240238b89b1dd3e3e7eab9
+ * @generated SignedSource<<3b01d357390888f8e8fd22858fb6e69e>>
+ * @relayHash 0138ce72e527207c7d5c278617850e14
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c28c11b6d4240238b89b1dd3e3e7eab9
+// @relayRequestID 0138ce72e527207c7d5c278617850e14
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -268,13 +268,6 @@ v26 = {
   "args": null,
   "kind": "ScalarField",
   "name": "expires",
-  "storageKey": null
-},
-v27 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "title",
   "storageKey": null
 };
 return {
@@ -594,6 +587,8 @@ return {
             "plural": true,
             "selections": [
               (v7/*: any*/),
+              (v3/*: any*/),
+              (v4/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -602,14 +597,11 @@ return {
                 "name": "series",
                 "plural": false,
                 "selections": [
-                  (v27/*: any*/),
                   (v4/*: any*/),
                   (v7/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v3/*: any*/),
-              (v4/*: any*/),
               (v18/*: any*/)
             ],
             "storageKey": null
@@ -624,7 +616,13 @@ return {
             "selections": [
               (v7/*: any*/),
               (v4/*: any*/),
-              (v27/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "title",
+                "storageKey": null
+              },
               (v18/*: any*/)
             ],
             "storageKey": null
@@ -693,7 +691,7 @@ return {
     ]
   },
   "params": {
-    "id": "c28c11b6d4240238b89b1dd3e3e7eab9",
+    "id": "0138ce72e527207c7d5c278617850e14",
     "metadata": {},
     "name": "PublicPostQuery",
     "operationKind": "query",

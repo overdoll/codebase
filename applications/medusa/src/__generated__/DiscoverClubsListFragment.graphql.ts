@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5e2cb84572862702595d9a1286247381>>
+ * @generated SignedSource<<e816f226532708ed9440ab7ba7c8f851>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,8 +10,8 @@
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type SuggestedClubsFragment$data = {
-  readonly clubs: {
+export type DiscoverClubsListFragment$data = {
+  readonly discoverClubs: {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly slug: string;
@@ -19,16 +19,19 @@ export type SuggestedClubsFragment$data = {
       };
     }>;
   };
-  readonly " $fragmentType": "SuggestedClubsFragment";
+  readonly viewer: {
+    readonly " $fragmentSpreads": FragmentRefs<"JoinClubFromTileViewerFragment">;
+  } | null;
+  readonly " $fragmentType": "DiscoverClubsListFragment";
 };
-export type SuggestedClubsFragment$key = {
-  readonly " $data"?: SuggestedClubsFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"SuggestedClubsFragment">;
+export type DiscoverClubsListFragment$key = {
+  readonly " $data"?: DiscoverClubsListFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"DiscoverClubsListFragment">;
 };
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "clubs"
+  "discoverClubs"
 ];
 return {
   "argumentDefinitions": [
@@ -41,10 +44,6 @@ return {
       "defaultValue": 11,
       "kind": "LocalArgument",
       "name": "first"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "search"
     }
   ],
   "kind": "Fragment",
@@ -67,28 +66,17 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./SuggestedClubsPaginationQuery.graphql')
+      "operation": require('./DiscoverClubsPaginationQuery.graphql')
     }
   },
-  "name": "SuggestedClubsFragment",
+  "name": "DiscoverClubsListFragment",
   "selections": [
     {
-      "alias": "clubs",
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "name",
-          "variableName": "search"
-        },
-        {
-          "kind": "Literal",
-          "name": "terminated",
-          "value": false
-        }
-      ],
+      "alias": "discoverClubs",
+      "args": null,
       "concreteType": "ClubConnection",
       "kind": "LinkedField",
-      "name": "__SuggestedClubs_clubs_connection",
+      "name": "__DiscoverClubs_discoverClubs_connection",
       "plural": false,
       "selections": [
         {
@@ -171,6 +159,22 @@ return {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Account",
+      "kind": "LinkedField",
+      "name": "viewer",
+      "plural": false,
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "JoinClubFromTileViewerFragment"
+        }
+      ],
+      "storageKey": null
     }
   ],
   "type": "Query",
@@ -178,6 +182,6 @@ return {
 };
 })();
 
-(node as any).hash = "ae61998b5235311fc0811fbcbf622ef6";
+(node as any).hash = "344a203606f1210684e026257992f2f4";
 
 export default node;

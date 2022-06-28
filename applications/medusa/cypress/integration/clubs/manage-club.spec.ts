@@ -72,7 +72,7 @@ describe('Manage Club', () => {
      */
     cy.visit(`/club/${newClubName}/home`)
     cy.findAllByText(/Members/iu).should('exist')
-    cy.findByText(/Cannot Collect Subscriptions/iu).should('be.visible')
+    cy.findByText(/Not Collecting Subscriptions/iu).should('be.visible')
     cy.findByText(/Payouts Not Setup/iu).should('be.visible')
 
     /**

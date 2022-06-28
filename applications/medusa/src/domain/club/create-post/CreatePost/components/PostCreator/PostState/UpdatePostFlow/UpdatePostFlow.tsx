@@ -5,7 +5,7 @@ import type { UpdatePostFlowFragment$key } from '@//:artifacts/UpdatePostFlowFra
 import UploadAudienceStep from './UploadFlowSteps/UploadAudienceStep/UploadAudienceStep'
 import UploadCategoryStep from './UploadFlowSteps/UploadCategoryStep/UploadCategoryStep'
 import UploadArrangeStep from './UploadFlowSteps/UploadArrangeStep/UploadArrangeStep'
-import UploadReviewStep from './UploadFlowSteps/UploadReviewStep/UploadReviewStep'
+import UploadReviewStep, { hasSupporterContent } from './UploadFlowSteps/UploadReviewStep/UploadReviewStep'
 import { CategoryIdentifier, CharacterIdentifier, ClubMembers, HeartFull } from '@//:assets/icons/interface'
 import { FileMultiple } from '@//:assets/icons/navigation'
 import { FlowBuilder, FlowBuilderBody, FlowBuilderFooter } from '@//:modules/content/PageLayout'
@@ -21,10 +21,6 @@ interface Props {
 
 const Fragment = graphql`
   fragment UpdatePostFlowFragment on Post {
-    ...UploadFlowHeaderFragment
-    ...UploadFlowFooterFragment
-    ...UploadReviewStepFragment
-    ...UploadArrangeStepFragment
     content {
       id
       isSupporterOnly
@@ -45,6 +41,10 @@ const Fragment = graphql`
       id
       title
     }
+    ...UploadFlowHeaderFragment
+    ...UploadFlowFooterFragment
+    ...UploadReviewStepFragment
+    ...UploadArrangeStepFragment
   }
 `
 

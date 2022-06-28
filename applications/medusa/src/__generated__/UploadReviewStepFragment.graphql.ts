@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0e02a2b79ac0ebfe0ebed56eea0d8311>>
+ * @generated SignedSource<<badccce1a01cacb9aa0edcce2ef23a6b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,12 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type UploadReviewStepFragment$data = {
+  readonly club: {
+    readonly canCreateSupporterOnlyPosts: boolean;
+  };
+  readonly content: ReadonlyArray<{
+    readonly isSupporterOnly: boolean;
+  }>;
   readonly " $fragmentSpreads": FragmentRefs<"PostReviewFragment">;
   readonly " $fragmentType": "UploadReviewStepFragment";
 };
@@ -26,6 +32,42 @@ const node: ReaderFragment = {
   "name": "UploadReviewStepFragment",
   "selections": [
     {
+      "alias": null,
+      "args": null,
+      "concreteType": "PostContent",
+      "kind": "LinkedField",
+      "name": "content",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "isSupporterOnly",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Club",
+      "kind": "LinkedField",
+      "name": "club",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "canCreateSupporterOnlyPosts",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "PostReviewFragment"
@@ -35,6 +77,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "3e7db1d436ca4c4b8aca74a7b8568c6b";
+(node as any).hash = "01120b654be8ba28bfd1d4f4613d710c";
 
 export default node;

@@ -1,10 +1,18 @@
-import { Flex, Stack, Wrap, WrapItem } from '@chakra-ui/react'
+import { Heading, HStack, Wrap, WrapItem } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay'
-import type { PostClickableCharactersFragment$key } from '@//:artifacts/PostClickableCharactersFragment.graphql'
-import { ResourceIcon, SmallBackgroundBox } from '../../../../PageLayout'
+import type {
+  PostClickableCharactersFragment$data,
+  PostClickableCharactersFragment$key
+} from '@//:artifacts/PostClickableCharactersFragment.graphql'
+import { ClickableBox, Icon, ResourceIcon, SmallBackgroundBox } from '../../../../PageLayout'
+import { encodeQueryParams } from 'serialize-query-params'
+import { configMap } from '../../PostNavigation/PostsSearch/constants'
+import { stringify } from 'query-string'
+import { useRouter } from 'next/router'
+import { useLimiter } from '../../../../HookedComponents/Limiter'
+import { NavigationMenuHorizontal } from '@//:assets/icons'
 import type { ResourceIconFragment$key } from '@//:artifacts/ResourceIconFragment.graphql'
-import ClickCharacter from './ClickCharacter/ClickCharacter'
-import ClickSeries from './ClickSeries/ClickSeries'
+import { DeepWritable } from 'ts-essentials'
 
 interface Props {
   query: PostClickableCharactersFragment$key | null
@@ -14,8 +22,11 @@ const Fragment = graphql`
   fragment PostClickableCharactersFragment on Post {
     characters {
       id
-      ...ClickSeriesFragment
-      ...ClickCharacterFragment
+      name
+      slug
+      series {
+        slug
+      }
       thumbnail {
         ...ResourceIconFragment
       }
@@ -26,27 +37,69 @@ const Fragment = graphql`
 export default function PostClickableCharacters ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
+  const router = useRouter()
+
+  const {
+    constructedData,
+    onExpand,
+    hasExpansion,
+    hiddenData
+  } = useLimiter<DeepWritable<PostClickableCharactersFragment$data['characters']>>({
+    data: data?.characters as DeepWritable<PostClickableCharactersFragment$data['characters']> ?? [],
+    amount: 3
+  })
+
+  const onClick = (node): void => {
+    const encodedQuery = encodeQueryParams(configMap, {
+      characters: {
+        [node.slug]: node.series.slug
+      },
+      sort: 'TOP'
+    })
+
+    void router.push(`/search?${stringify(encodedQuery)}`)
+  }
+
   return (
-    <Wrap>
-      {data?.characters.map((item, index) =>
+    <Wrap overflow='show'>
+      {constructedData.map((item, index) =>
         <WrapItem key={index}>
-          <SmallBackgroundBox p={2} borderRadius='lg'>
-            <Flex align='center' borderRadius='inherit' bg='gray.800'>
-              <ResourceIcon
-                seed={item.id}
-                w={10}
-                h={10}
-                mr={3}
-                query={item.thumbnail as ResourceIconFragment$key}
-              />
-              <Stack spacing={1}>
-                <ClickCharacter query={item} />
-                <ClickSeries query={item} />
-              </Stack>
-            </Flex>
-          </SmallBackgroundBox>
+          <ClickableBox p={0} onClick={() => onClick(item)}>
+            <SmallBackgroundBox p={2} borderRadius='inherit'>
+              <HStack spacing={2} align='center'>
+                <ResourceIcon
+                  seed={item.id}
+                  w={8}
+                  h={8}
+                  mr={2}
+                  query={item.thumbnail as ResourceIconFragment$key}
+                />
+                <Heading noOfLines={1} color='gray.00' fontSize='xl'>
+                  {item.name}
+                </Heading>
+              </HStack>
+            </SmallBackgroundBox>
+          </ClickableBox>
         </WrapItem>
       )}
+      {hasExpansion && (
+        <WrapItem>
+          <ClickableBox p={0} onClick={onExpand}>
+            <SmallBackgroundBox py={2} px={3} borderRadius='md'>
+              <HStack spacing={3} align='center'>
+                <Icon
+                  w={6}
+                  h={6}
+                  fill='gray.100'
+                  icon={NavigationMenuHorizontal}
+                />
+                <Heading color='gray.100' fontSize='lg'>
+                  {hiddenData.length}
+                </Heading>
+              </HStack>
+            </SmallBackgroundBox>
+          </ClickableBox>
+        </WrapItem>)}
     </Wrap>
   )
 }

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<76651d13ee357f45d5e11a37ea061336>>
- * @relayHash a83d0b90e5c6f85900409e520fd53bdf
+ * @generated SignedSource<<31c1b2f646af7281e9385d56c16cbb0b>>
+ * @relayHash a472c57e9b532b9c7679e68335192188
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a83d0b90e5c6f85900409e520fd53bdf
+// @relayRequestID a472c57e9b532b9c7679e68335192188
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -75,7 +75,21 @@ v4 = {
   "name": "id",
   "storageKey": null
 },
-v5 = [
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "type",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "videoDuration",
+  "storageKey": null
+},
+v7 = [
   {
     "alias": null,
     "args": null,
@@ -84,7 +98,7 @@ v5 = [
     "storageKey": null
   }
 ],
-v6 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -194,13 +208,7 @@ return {
                             "name": "resource",
                             "plural": false,
                             "selections": [
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "type",
-                                "storageKey": null
-                              },
+                              (v5/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -208,13 +216,7 @@ return {
                                 "name": "processed",
                                 "storageKey": null
                               },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "videoDuration",
-                                "storageKey": null
-                              },
+                              (v6/*: any*/),
                               (v4/*: any*/),
                               {
                                 "alias": null,
@@ -223,7 +225,7 @@ return {
                                 "kind": "LinkedField",
                                 "name": "urls",
                                 "plural": true,
-                                "selections": (v5/*: any*/),
+                                "selections": (v7/*: any*/),
                                 "storageKey": null
                               },
                               {
@@ -254,9 +256,23 @@ return {
                                 "kind": "LinkedField",
                                 "name": "videoThumbnail",
                                 "plural": false,
-                                "selections": (v5/*: any*/),
+                                "selections": (v7/*: any*/),
                                 "storageKey": null
                               }
+                            ],
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Resource",
+                            "kind": "LinkedField",
+                            "name": "supporterOnlyResource",
+                            "plural": false,
+                            "selections": [
+                              (v5/*: any*/),
+                              (v6/*: any*/),
+                              (v4/*: any*/)
                             ],
                             "storageKey": null
                           }
@@ -290,7 +306,7 @@ return {
                         ],
                         "storageKey": null
                       },
-                      (v6/*: any*/)
+                      (v8/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -364,7 +380,7 @@ return {
             "name": "suspension",
             "plural": false,
             "selections": [
-              (v6/*: any*/),
+              (v8/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -383,7 +399,7 @@ return {
             "name": "termination",
             "plural": false,
             "selections": [
-              (v6/*: any*/)
+              (v8/*: any*/)
             ],
             "storageKey": null
           }
@@ -393,7 +409,7 @@ return {
     ]
   },
   "params": {
-    "id": "a83d0b90e5c6f85900409e520fd53bdf",
+    "id": "a472c57e9b532b9c7679e68335192188",
     "metadata": {},
     "name": "ClubPostsQuery",
     "operationKind": "query",

@@ -40,7 +40,7 @@ export default function ImageError ({ tiny }: Props): JSX.Element {
             Error Loading Image
           </Trans>
         </Heading>
-        <Text textAlign='center' fontSize='xs' color='orange.100'>
+        <Text lineHeight={1.2} textAlign='center' fontSize='xs' color='orange.100'>
           <Trans>
             Try refreshing the page to fix the error
           </Trans>

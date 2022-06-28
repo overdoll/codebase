@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<56336d6708740e1cd48c1da303883d08>>
+ * @generated SignedSource<<fcf09f02990417223796e6657ecea157>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -63,26 +63,6 @@ return {
   "metadata": null,
   "name": "UpdatePostFlowFragment",
   "selections": [
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "UploadFlowHeaderFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "UploadFlowFooterFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "UploadReviewStepFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "UploadArrangeStepFragment"
-    },
     {
       "alias": null,
       "args": null,
@@ -165,6 +145,26 @@ return {
       "plural": true,
       "selections": (v1/*: any*/),
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "UploadFlowHeaderFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "UploadFlowFooterFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "UploadReviewStepFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "UploadArrangeStepFragment"
     }
   ],
   "type": "Post",
@@ -172,6 +172,6 @@ return {
 };
 })();
 
-(node as any).hash = "40e56cf56ae88ddd2c7d37a401c05395";
+(node as any).hash = "3f956802bfaa8d2e01c520d10a85a3c7";
 
 export default node;
