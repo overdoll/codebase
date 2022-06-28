@@ -86,6 +86,35 @@ func (s LoaderGrpc) CopyResourceIntoImage(ctx context.Context, itemId string, re
 	return res[0], nil
 }
 
+func (s LoaderGrpc) UpdateResourcePrivacy(ctx context.Context, itemId string, resourceIds []string, private bool) ([]*resource.Resource, error) {
+
+	var toApply []*loader.ResourceIdentifier
+
+	for _, r := range resourceIds {
+		toApply = append(toApply, &loader.ResourceIdentifier{
+			Id:     r,
+			ItemId: itemId,
+		})
+	}
+
+	md, err := s.client.UpdateResourcePrivacy(ctx, &loader.UpdateResourcePrivacyRequest{
+		Resources: toApply,
+		Private:   private,
+	})
+
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to update resource privacy")
+	}
+
+	unmarshalled, err := s.serializer.UnmarshalResourcesFromProto(ctx, md.Resources)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return unmarshalled, nil
+}
+
 func (s LoaderGrpc) CopyResourcesAndApplyPixelateFilter(ctx context.Context, itemId string, resourceIds []string, pixelate int, private bool) ([]*post.NewResource, error) {
 
 	var toApply []*loader.ResourceIdentifier

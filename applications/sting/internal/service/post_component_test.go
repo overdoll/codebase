@@ -6,11 +6,9 @@ import (
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	sting "overdoll/applications/sting/proto"
-	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/resource/proto"
 	"overdoll/libraries/testing_tools"
@@ -334,9 +332,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.Equal(t, "Standard Audience", updatePostAudience.UpdatePostAudience.Post.Audience.Title)
 
 	// check if post is in account's drafts
-	es := bootstrap.InitializeElasticSearchSession()
-	_, err = es.Refresh(adapters.PostIndexName).Do(context.Background())
-	require.NoError(t, err)
+	refreshPostESIndex(t)
 
 	var accountPosts AccountPosts
 	err = client.Query(context.Background(), &accountPosts, map[string]interface{}{

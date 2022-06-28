@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"math"
+	"overdoll/libraries/cache"
+	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
@@ -14,7 +16,6 @@ import (
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/scan"
 )
 
 type postDocument struct {
@@ -37,7 +38,10 @@ type postDocument struct {
 	PostedAt                        *time.Time        `json:"posted_at"`
 }
 
-const PostIndexName = "sting.posts"
+const PostIndexName = "posts"
+
+var PostReaderIndex = cache.ReadAlias(PostIndexName)
+var postWriterIndex = cache.WriteAlias(PostIndexName)
 
 func (r *PostsCassandraElasticsearchRepository) unmarshalPostDocument(ctx context.Context, hit *elastic.SearchHit) (*post.Post, error) {
 
@@ -156,7 +160,7 @@ func (r PostsCassandraElasticsearchRepository) RefreshPostIndex(ctx context.Cont
 
 	_, err := r.client.
 		Refresh().
-		Index(PostIndexName).
+		Index(PostReaderIndex).
 		Do(ctx)
 
 	if err != nil {
@@ -176,7 +180,7 @@ func (r PostsCassandraElasticsearchRepository) indexPost(ctx context.Context, po
 
 	_, err = r.client.
 		Index().
-		Index(PostIndexName).
+		Index(postWriterIndex).
 		Id(post.ID()).
 		BodyJson(*pst).
 		Do(ctx)
@@ -191,7 +195,7 @@ func (r PostsCassandraElasticsearchRepository) indexPost(ctx context.Context, po
 func (r PostsCassandraElasticsearchRepository) GetTotalLikesForCharacterOperator(ctx context.Context, character *post.Character) (int, error) {
 
 	response, err := r.client.Search().
-		Index(PostIndexName).
+		Index(PostReaderIndex).
 		Query(elastic.NewBoolQuery().
 			Filter(
 				elastic.NewTermsQueryFromStrings("character_ids", character.ID()),
@@ -211,7 +215,7 @@ func (r PostsCassandraElasticsearchRepository) GetTotalLikesForCharacterOperator
 func (r PostsCassandraElasticsearchRepository) GetTotalPostsForCharacterOperator(ctx context.Context, character *post.Character) (int, error) {
 
 	count, err := r.client.Count().
-		Index(PostIndexName).
+		Index(PostReaderIndex).
 		Query(elastic.NewBoolQuery().
 			Filter(
 				elastic.NewTermsQueryFromStrings("character_ids", character.ID()),
@@ -228,7 +232,7 @@ func (r PostsCassandraElasticsearchRepository) GetTotalPostsForCharacterOperator
 func (r PostsCassandraElasticsearchRepository) GetTotalLikesForAudienceOperator(ctx context.Context, audience *post.Audience) (int, error) {
 
 	response, err := r.client.Search().
-		Index(PostIndexName).
+		Index(PostReaderIndex).
 		Query(elastic.NewBoolQuery().
 			Filter(
 				elastic.NewTermsQueryFromStrings("audience_id", audience.ID()),
@@ -248,7 +252,7 @@ func (r PostsCassandraElasticsearchRepository) GetTotalLikesForAudienceOperator(
 func (r PostsCassandraElasticsearchRepository) GetTotalPostsForAudienceOperator(ctx context.Context, audience *post.Audience) (int, error) {
 
 	count, err := r.client.Count().
-		Index(PostIndexName).
+		Index(PostReaderIndex).
 		Query(elastic.NewBoolQuery().
 			Filter(
 				elastic.NewTermsQueryFromStrings("audience_id", audience.ID()),
@@ -265,7 +269,7 @@ func (r PostsCassandraElasticsearchRepository) GetTotalPostsForAudienceOperator(
 func (r PostsCassandraElasticsearchRepository) GetTotalLikesForSeriesOperator(ctx context.Context, series *post.Series) (int, error) {
 
 	response, err := r.client.Search().
-		Index(PostIndexName).
+		Index(PostReaderIndex).
 		Query(elastic.NewBoolQuery().
 			Filter(
 				elastic.NewTermsQueryFromStrings("series_ids", series.ID()),
@@ -285,7 +289,7 @@ func (r PostsCassandraElasticsearchRepository) GetTotalLikesForSeriesOperator(ct
 func (r PostsCassandraElasticsearchRepository) GetTotalPostsForSeriesOperator(ctx context.Context, series *post.Series) (int, error) {
 
 	count, err := r.client.Count().
-		Index(PostIndexName).
+		Index(PostReaderIndex).
 		Query(elastic.NewBoolQuery().
 			Filter(
 				elastic.NewTermsQueryFromStrings("series_ids", series.ID()),
@@ -302,7 +306,7 @@ func (r PostsCassandraElasticsearchRepository) GetTotalPostsForSeriesOperator(ct
 func (r PostsCassandraElasticsearchRepository) GetTotalLikesForCategoryOperator(ctx context.Context, category *post.Category) (int, error) {
 
 	response, err := r.client.Search().
-		Index(PostIndexName).
+		Index(PostReaderIndex).
 		Query(elastic.NewBoolQuery().
 			Filter(
 				elastic.NewTermsQueryFromStrings("category_ids", category.ID()),
@@ -322,7 +326,7 @@ func (r PostsCassandraElasticsearchRepository) GetTotalLikesForCategoryOperator(
 func (r PostsCassandraElasticsearchRepository) GetTotalPostsForCategoryOperator(ctx context.Context, category *post.Category) (int, error) {
 
 	count, err := r.client.Count().
-		Index(PostIndexName).
+		Index(PostReaderIndex).
 		Query(elastic.NewBoolQuery().
 			Filter(
 				elastic.NewTermsQueryFromStrings("category_ids", category.ID()),
@@ -339,7 +343,7 @@ func (r PostsCassandraElasticsearchRepository) GetTotalPostsForCategoryOperator(
 func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, pst *post.Post) ([]*post.Post, error) {
 
 	builder := r.client.Search().
-		Index(PostIndexName)
+		Index(PostReaderIndex)
 
 	if cursor == nil {
 		return nil, paging.ErrCursorNotPresent
@@ -431,7 +435,7 @@ func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.
 func (r PostsCassandraElasticsearchRepository) ClubMembersPostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*post.Post, error) {
 
 	builder := r.client.Search().
-		Index(PostIndexName)
+		Index(PostReaderIndex)
 
 	if cursor == nil {
 		return nil, paging.ErrCursorNotPresent
@@ -487,7 +491,7 @@ func (r PostsCassandraElasticsearchRepository) ClubMembersPostsFeed(ctx context.
 func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.Feed) ([]*post.Post, error) {
 
 	builder := r.client.Search().
-		Index(PostIndexName)
+		Index(PostReaderIndex)
 
 	if cursor == nil {
 		return nil, paging.ErrCursorNotPresent
@@ -573,7 +577,7 @@ func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, re
 func (r PostsCassandraElasticsearchRepository) SearchPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.Filters) ([]*post.Post, error) {
 
 	builder := r.client.Search().
-		Index(PostIndexName)
+		Index(PostReaderIndex)
 
 	if cursor == nil {
 		return nil, paging.ErrCursorNotPresent
@@ -682,8 +686,8 @@ func (r PostsCassandraElasticsearchRepository) SearchPosts(ctx context.Context, 
 
 func (r PostsCassandraElasticsearchRepository) IndexAllPosts(ctx context.Context) error {
 
-	scanner := scan.New(r.session,
-		scan.Config{
+	scanner := database.New(r.session,
+		database.Config{
 			NodesInCluster: 1,
 			CoresInNode:    2,
 			SmudgeFactor:   3,
@@ -724,7 +728,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllPosts(ctx context.Context
 
 			_, err := r.client.
 				Index().
-				Index(PostIndexName).
+				Index(postWriterIndex).
 				Id(p.Id).
 				BodyJson(doc).
 				Do(ctx)
@@ -746,7 +750,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllPosts(ctx context.Context
 
 func (r PostsCassandraElasticsearchRepository) deletePostIndexById(ctx context.Context, id string) error {
 
-	if _, err := r.client.Delete().Index(PostIndexName).Id(id).Do(ctx); err != nil {
+	if _, err := r.client.Delete().Index(postWriterIndex).Id(id).Do(ctx); err != nil {
 		return errors.Wrap(err, "failed to delete post document")
 	}
 

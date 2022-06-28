@@ -77,13 +77,13 @@ func newClub(t *testing.T, accountId string) *club.Club {
 
 func refreshClubESIndex(t *testing.T) {
 	es := bootstrap.InitializeElasticSearchSession()
-	_, err := es.Refresh(adapters.ClubsIndexName).Do(context.Background())
+	_, err := es.Refresh(adapters.ClubsReaderIndex).Do(context.Background())
 	require.NoError(t, err)
 }
 
 func refreshClubMembersESIndex(t *testing.T) {
 	es := bootstrap.InitializeElasticSearchSession()
-	_, err := es.Refresh(adapters.ClubMembersIndexName).Do(context.Background())
+	_, err := es.Refresh(adapters.ClubMembersReaderIndex).Do(context.Background())
 	require.NoError(t, err)
 }
 
@@ -201,7 +201,7 @@ func seedReviewPost(t *testing.T, accountId, clubId string) *post.Post {
 
 func refreshPostESIndex(t *testing.T) {
 	es := bootstrap.InitializeElasticSearchSession()
-	_, err := es.Refresh(adapters.PostIndexName).Do(context.Background())
+	_, err := es.Refresh(adapters.PostReaderIndex).Do(context.Background())
 	require.NoError(t, err)
 }
 

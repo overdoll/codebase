@@ -3,6 +3,8 @@ package adapters
 import (
 	"context"
 	"encoding/json"
+	"overdoll/libraries/cache"
+	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
@@ -14,7 +16,6 @@ import (
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/scan"
 )
 
 type seriesDocument struct {
@@ -28,7 +29,10 @@ type seriesDocument struct {
 	TotalPosts        int               `json:"total_posts"`
 }
 
-const SeriesIndexName = "sting.series"
+const SeriesIndexName = "series"
+
+var SeriesReaderIndex = cache.ReadAlias(SeriesIndexName)
+var seriesWriterIndex = cache.WriteAlias(SeriesIndexName)
 
 func marshalSeriesToDocument(s *post.Series) (*seriesDocument, error) {
 
@@ -85,7 +89,7 @@ func (r PostsCassandraElasticsearchRepository) unmarshalSeriesDocument(ctx conte
 func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Series, error) {
 
 	builder := r.client.Search().
-		Index(SeriesIndexName)
+		Index(SeriesReaderIndex)
 
 	if cursor == nil {
 		return nil, paging.ErrCursorNotPresent
@@ -114,7 +118,7 @@ func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context,
 	if filter.Search() != nil {
 		query.Must(
 			elastic.
-				NewMultiMatchQuery(*filter.Search(), localization.GetESSearchFields("title")...).
+				NewMultiMatchQuery(*filter.Search(), "title.en").
 				Type("best_fields"),
 		)
 	}
@@ -159,7 +163,7 @@ func (r PostsCassandraElasticsearchRepository) indexSeries(ctx context.Context, 
 
 	_, err = r.client.
 		Index().
-		Index(SeriesIndexName).
+		Index(seriesWriterIndex).
 		Id(series.ID()).
 		BodyJson(ss).
 		Do(ctx)
@@ -168,7 +172,7 @@ func (r PostsCassandraElasticsearchRepository) indexSeries(ctx context.Context, 
 		return errors.Wrap(support.ParseElasticError(err), "failed to index series")
 	}
 
-	_, err = r.client.UpdateByQuery(CharacterIndexName).
+	_, err = r.client.UpdateByQuery(characterWriterIndex).
 		Query(elastic.NewNestedQuery("series", elastic.NewTermsQuery("series.id", series.ID()))).
 		Script(elastic.NewScript("ctx._source.series= params.updatedSeries").Param("updatedSeries", ss).Lang("painless")).
 		Do(ctx)
@@ -182,8 +186,8 @@ func (r PostsCassandraElasticsearchRepository) indexSeries(ctx context.Context, 
 
 func (r PostsCassandraElasticsearchRepository) IndexAllSeries(ctx context.Context) error {
 
-	scanner := scan.New(r.session,
-		scan.Config{
+	scanner := database.New(r.session,
+		database.Config{
 			NodesInCluster: 1,
 			CoresInNode:    2,
 			SmudgeFactor:   3,
@@ -209,7 +213,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllSeries(ctx context.Contex
 
 			_, err := r.client.
 				Index().
-				Index(SeriesIndexName).
+				Index(seriesWriterIndex).
 				Id(m.Id).
 				BodyJson(doc).
 				Do(ctx)

@@ -17,6 +17,7 @@ type Commands struct {
 	NewCreateOrGetResourcesFromUploads command.CreateOrGetResourcesFromUploadsHandler
 	DeleteResources                    command.DeleteResourcesHandler
 	CopyResourcesAndApplyFilters       command.CopyResourcesAndApplyFiltersHandler
+	UpdateResourcePrivacy              command.UpdateResourcePrivacyHandler
 }
 
 type Queries struct {

@@ -6,10 +6,11 @@ import (
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
 	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/libraries/cache"
+	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/scan"
 	"overdoll/libraries/support"
 	"time"
 )
@@ -40,7 +41,10 @@ type accountClubSupporterSubscriptionDocument struct {
 	CancellationReasonId   *string   `json:"cancellation_reason_id"`
 }
 
-const SubscriptionsIndexName = "hades.account_club_supporter_subscriptions"
+const AccountClubSupporterSubscriptionsIndexName = "account_club_supporter_subscriptions"
+
+var AccountClubSupporterSubscriptionsReaderIndex = cache.ReadAlias(AccountClubSupporterSubscriptionsIndexName)
+var accountClubSupporterSubscriptionsWriterIndex = cache.WriteAlias(AccountClubSupporterSubscriptionsIndexName)
 
 func unmarshalAccountClubSupporterSubscriptionDocument(hit *elastic.SearchHit) (*billing.AccountClubSupporterSubscription, error) {
 
@@ -121,7 +125,7 @@ func marshalAccountClubSupporterSubscriptionToDocument(subscription *billing.Acc
 func (r BillingCassandraElasticsearchRepository) GetAccountActiveClubSupporterSubscriptionsOperator(ctx context.Context, accountId string) ([]*billing.AccountClubSupporterSubscription, error) {
 
 	builder := r.client.Search().
-		Index(SubscriptionsIndexName)
+		Index(AccountClubSupporterSubscriptionsReaderIndex)
 
 	query := elastic.NewBoolQuery()
 
@@ -162,7 +166,7 @@ func (r BillingCassandraElasticsearchRepository) SearchAccountClubSupporterSubsc
 	}
 
 	builder := r.client.Search().
-		Index(SubscriptionsIndexName)
+		Index(AccountClubSupporterSubscriptionsReaderIndex)
 
 	if cursor == nil {
 		return nil, paging.ErrCursorNotPresent
@@ -224,8 +228,8 @@ func (r BillingCassandraElasticsearchRepository) SearchAccountClubSupporterSubsc
 
 func (r BillingCassandraElasticsearchRepository) IndexAllAccountClubSupporterSubscriptions(ctx context.Context) error {
 
-	scanner := scan.New(r.session,
-		scan.Config{
+	scanner := database.New(r.session,
+		database.Config{
 			NodesInCluster: 1,
 			CoresInNode:    2,
 			SmudgeFactor:   3,
@@ -263,7 +267,7 @@ func (r BillingCassandraElasticsearchRepository) IndexAllAccountClubSupporterSub
 
 			_, err := r.client.
 				Index().
-				Index(SubscriptionsIndexName).
+				Index(accountClubSupporterSubscriptionsWriterIndex).
 				Id(doc.Id).
 				BodyJson(doc).
 				Do(ctx)
@@ -293,7 +297,7 @@ func (r BillingCassandraElasticsearchRepository) indexAccountClubSupporterSubscr
 
 	_, err = r.client.
 		Index().
-		Index(SubscriptionsIndexName).
+		Index(accountClubSupporterSubscriptionsWriterIndex).
 		Id(pst.Id).
 		BodyJson(*pst).
 		Do(ctx)

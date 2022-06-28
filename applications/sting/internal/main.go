@@ -3,8 +3,10 @@ package main
 import (
 	"context"
 	"os"
+	"overdoll/applications/sting/internal/adapters/indexes"
 	"overdoll/applications/sting/internal/adapters/migrations"
 	"overdoll/applications/sting/internal/adapters/seeders"
+	"overdoll/libraries/cache"
 	resource_proto "overdoll/libraries/resource/proto"
 	"time"
 
@@ -27,6 +29,7 @@ func init() {
 	config.Read("applications/sting")
 
 	rootCmd.AddCommand(database.CreateDatabaseCommands(migrations.MigrateConfig, seeders.SeederConfig))
+	rootCmd.AddCommand(cache.CreateCacheCommands(indexes.IndexConfig))
 
 	rootCmd.AddCommand(&cobra.Command{
 		Use: "worker",

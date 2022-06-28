@@ -262,6 +262,109 @@ func (r ResourceCassandraS3Repository) updateResources(ctx context.Context, res 
 	return nil
 }
 
+func (r ResourceCassandraS3Repository) UpdateResourcePrivacy(ctx context.Context, resourceItems []*resource.Resource, private bool) error {
+
+	s3Client := s3.New(r.aws)
+
+	targetBucket := os.Getenv("RESOURCES_BUCKET")
+
+	if private {
+		targetBucket = os.Getenv("PRIVATE_RESOURCES_BUCKET")
+	}
+
+	for _, target := range resourceItems {
+
+		if !target.IsProcessed() {
+			return domainerror.NewValidation("resource not yet processed")
+		}
+
+		bucket := os.Getenv("RESOURCES_BUCKET")
+
+		if target.IsPrivate() {
+			bucket = os.Getenv("PRIVATE_RESOURCES_BUCKET")
+		}
+
+		for _, mime := range target.MimeTypes() {
+
+			format, _ := resource.ExtensionByType(mime)
+			fileId := "/" + target.ItemId() + "/" + target.ProcessedId() + format
+
+			// copy object from original bucket to regular bucket
+			_, err := s3Client.CopyObject(&s3.CopyObjectInput{
+				CopySource: aws.String(bucket + fileId),
+				Bucket:     aws.String(targetBucket),
+				Key:        aws.String(fileId),
+			})
+
+			if err != nil {
+				return errors.Wrap(err, "unable to copy object")
+			}
+
+			if err = s3Client.WaitUntilObjectExists(&s3.HeadObjectInput{
+				Bucket: aws.String(targetBucket),
+				Key:    aws.String(fileId),
+			}); err != nil {
+				return errors.Wrap(err, "failed to wait for file")
+			}
+
+			// delete original file to save on space
+			_, err = s3Client.DeleteObject(&s3.DeleteObjectInput{
+				Bucket: aws.String(bucket),
+				Key:    aws.String(fileId),
+			})
+
+			if err != nil {
+				return errors.Wrap(err, "unable to delete file")
+			}
+		}
+
+		if target.IsVideo() {
+
+			thumbnailType, _ := resource.ExtensionByType(target.VideoThumbnailMimeType())
+			thumbnailFileId := "/" + target.ItemId() + "/" + target.VideoThumbnail() + thumbnailType
+
+			// copy object from original bucket to regular bucket
+			_, err := s3Client.CopyObject(&s3.CopyObjectInput{
+				CopySource: aws.String(bucket + thumbnailFileId),
+				Bucket:     aws.String(targetBucket),
+				Key:        aws.String(thumbnailFileId),
+			})
+
+			if err != nil {
+				return errors.Wrap(err, "unable to copy video thumbnail")
+			}
+
+			if err = s3Client.WaitUntilObjectExists(&s3.HeadObjectInput{
+				Bucket: aws.String(targetBucket),
+				Key:    aws.String(thumbnailFileId),
+			}); err != nil {
+				return errors.Wrap(err, "failed to wait for video thumbnail file")
+			}
+
+			// delete object
+			_, err = s3Client.DeleteObject(&s3.DeleteObjectInput{
+				Bucket: aws.String(bucket),
+				Key:    aws.String(thumbnailFileId),
+			})
+
+			if err != nil {
+				return errors.Wrap(err, "unable to delete video thumbnail file")
+			}
+		}
+
+		if err := r.session.
+			Query(resourcesTable.Update("is_private")).
+			WithContext(ctx).
+			Idempotent(true).
+			BindStruct(resources{ItemId: target.ItemId(), ResourceId: target.ID(), IsPrivate: private}).
+			ExecRelease(); err != nil {
+			return errors.Wrap(support.NewGocqlError(err), "failed to update resources privacy")
+		}
+	}
+
+	return nil
+}
+
 func (r ResourceCassandraS3Repository) DeleteResources(ctx context.Context, resourceItems []*resource.Resource) error {
 
 	s3Client := s3.New(r.aws)

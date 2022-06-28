@@ -4,11 +4,13 @@ import (
 	"context"
 	"google.golang.org/grpc"
 	"os"
+	"overdoll/applications/hades/internal/adapters/indexes"
 	"overdoll/applications/hades/internal/adapters/migrations"
 	"overdoll/applications/hades/internal/adapters/seeders"
 	"overdoll/applications/hades/internal/ports"
 	"overdoll/applications/hades/internal/service"
 	hades "overdoll/applications/hades/proto"
+	"overdoll/libraries/cache"
 	"overdoll/libraries/database"
 	"time"
 
@@ -25,10 +27,13 @@ var rootCmd = &cobra.Command{
 func init() {
 	config.Read("applications/hades")
 
-	rootCmd.AddCommand(database.CreateDatabaseCommands(
-		migrations.MigrateConfig,
-		seeders.SeederConfig,
-	))
+	rootCmd.AddCommand(
+		database.CreateDatabaseCommands(
+			migrations.MigrateConfig,
+			seeders.SeederConfig,
+		),
+	)
+	rootCmd.AddCommand(cache.CreateCacheCommands(indexes.IndexConfig))
 
 	rootCmd.AddCommand(&cobra.Command{
 		Use: "worker",

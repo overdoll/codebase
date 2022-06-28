@@ -66,9 +66,19 @@ message ValidationOptions {
   bool allowVideos = 2;
 }
 
+message UpdateResourcePrivacyRequest {
+  repeated ResourceIdentifier resources = 1;
+  bool private = 2;
+}
+
+message UpdateResourcePrivacyResponse {
+  repeated overdoll.libraries.Resource resources = 1;
+}
+
 service Loader {
   rpc CreateOrGetResourcesFromUploads(CreateOrGetResourcesFromUploadsRequest) returns (CreateOrGetResourcesFromUploadsResponse);
   rpc GetResources(GetResourcesRequest) returns (GetResourcesResponse);
   rpc DeleteResources(DeleteResourcesRequest) returns (DeleteResourcesResponse);
   rpc CopyResourcesAndApplyFilter(CopyResourcesAndApplyFilterRequest) returns (CopyResourcesAndApplyFilterResponse);
+  rpc UpdateResourcePrivacy(UpdateResourcePrivacyRequest) returns (UpdateResourcePrivacyResponse);
 }

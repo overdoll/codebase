@@ -62,7 +62,7 @@ type TestCategory struct {
 
 func refreshCategoryIndex(t *testing.T) {
 	es := bootstrap.InitializeElasticSearchSession()
-	_, err := es.Refresh(adapters.CategoryIndexName).Do(context.Background())
+	_, err := es.Refresh(adapters.CategoryReaderIndex).Do(context.Background())
 	require.NoError(t, err)
 }
 

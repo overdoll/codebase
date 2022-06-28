@@ -6,10 +6,11 @@ import (
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
 	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/libraries/cache"
+	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/scan"
 	"overdoll/libraries/support"
 	"time"
 )
@@ -40,7 +41,10 @@ type accountTransactionDocument struct {
 	Events                      []accountTransactionEventDocument `json:"events"`
 }
 
-const AccountTransactionsIndexName = "hades.account_transactions"
+const AccountTransactionsIndexName = "account_transactions"
+
+var AccountTransactionsReaderIndex = cache.ReadAlias(AccountTransactionsIndexName)
+var accountTransactionsWriterIndex = cache.WriteAlias(AccountTransactionsIndexName)
 
 func unmarshalAccountTransactionDocument(hit *elastic.SearchHit) (*billing.AccountTransaction, error) {
 
@@ -138,7 +142,7 @@ func (r BillingCassandraElasticsearchRepository) GetAccountTransactionsCount(ctx
 	}
 
 	builder := r.client.Count().
-		Index(AccountTransactionsIndexName)
+		Index(AccountTransactionsReaderIndex)
 
 	query := elastic.NewBoolQuery()
 
@@ -182,7 +186,7 @@ func (r BillingCassandraElasticsearchRepository) SearchAccountTransactions(ctx c
 	}
 
 	builder := r.client.Search().
-		Index(AccountTransactionsIndexName)
+		Index(AccountTransactionsReaderIndex)
 
 	if cursor == nil {
 		return nil, paging.ErrCursorNotPresent
@@ -238,8 +242,8 @@ func (r BillingCassandraElasticsearchRepository) SearchAccountTransactions(ctx c
 
 func (r BillingCassandraElasticsearchRepository) IndexAllAccountTransactions(ctx context.Context) error {
 
-	scanner := scan.New(r.session,
-		scan.Config{
+	scanner := database.New(r.session,
+		database.Config{
 			NodesInCluster: 1,
 			CoresInNode:    2,
 			SmudgeFactor:   3,
@@ -291,7 +295,7 @@ func (r BillingCassandraElasticsearchRepository) IndexAllAccountTransactions(ctx
 
 			_, err := r.client.
 				Index().
-				Index(AccountTransactionsIndexName).
+				Index(accountTransactionsWriterIndex).
 				Id(doc.Id).
 				BodyJson(doc).
 				Do(ctx)
@@ -321,7 +325,7 @@ func (r BillingCassandraElasticsearchRepository) indexAccountTransaction(ctx con
 
 	_, err = r.client.
 		Index().
-		Index(AccountTransactionsIndexName).
+		Index(accountTransactionsWriterIndex).
 		Id(pst.Id).
 		BodyJson(*pst).
 		Do(ctx)

@@ -3,6 +3,8 @@ package adapters
 import (
 	"context"
 	"encoding/json"
+	"overdoll/libraries/cache"
+	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
 	resource "overdoll/libraries/resource"
 	"overdoll/libraries/support"
@@ -14,7 +16,6 @@ import (
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/scan"
 )
 
 type audienceDocument struct {
@@ -29,7 +30,10 @@ type audienceDocument struct {
 	UpdatedAt         time.Time         `json:"updated_at"`
 }
 
-const AudienceIndexName = "sting.audience"
+const AudienceIndexName = "audience"
+
+var AudienceReaderIndex = cache.ReadAlias(AudienceIndexName)
+var audienceWriterIndex = cache.WriteAlias(AudienceIndexName)
 
 func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 
@@ -87,7 +91,7 @@ func (r PostsCassandraElasticsearchRepository) unmarshalAudienceDocument(ctx con
 func (r PostsCassandraElasticsearchRepository) SearchAudience(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Audience, error) {
 
 	builder := r.client.Search().
-		Index(AudienceIndexName)
+		Index(AudienceReaderIndex)
 
 	if cursor == nil {
 		return nil, paging.ErrCursorNotPresent
@@ -116,7 +120,7 @@ func (r PostsCassandraElasticsearchRepository) SearchAudience(ctx context.Contex
 	if filter.Search() != nil {
 		query.Must(
 			elastic.
-				NewMultiMatchQuery(*filter.Search(), localization.GetESSearchFields("title")...).
+				NewMultiMatchQuery(*filter.Search(), "title.en").
 				Type("best_fields"),
 		)
 	}
@@ -161,7 +165,7 @@ func (r PostsCassandraElasticsearchRepository) indexAudience(ctx context.Context
 
 	_, err = r.client.
 		Index().
-		Index(AudienceIndexName).
+		Index(audienceWriterIndex).
 		Id(audience.ID()).
 		BodyJson(marshalled).
 		Do(ctx)
@@ -175,8 +179,8 @@ func (r PostsCassandraElasticsearchRepository) indexAudience(ctx context.Context
 
 func (r PostsCassandraElasticsearchRepository) IndexAllAudience(ctx context.Context) error {
 
-	scanner := scan.New(r.session,
-		scan.Config{
+	scanner := database.New(r.session,
+		database.Config{
 			NodesInCluster: 1,
 			CoresInNode:    2,
 			SmudgeFactor:   3,
@@ -202,7 +206,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllAudience(ctx context.Cont
 
 			_, err := r.client.
 				Index().
-				Index(AudienceIndexName).
+				Index(audienceWriterIndex).
 				Id(m.Id).
 				BodyJson(doc).
 				Do(ctx)

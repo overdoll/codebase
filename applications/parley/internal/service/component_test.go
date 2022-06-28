@@ -118,7 +118,7 @@ func refreshReportsIndex(t *testing.T) {
 
 	// refresh transactions index so we get the most up-to-date values
 	es := bootstrap.InitializeElasticSearchSession()
-	_, err := es.Refresh(adapters.PostReportsIndexName).Do(context.Background())
+	_, err := es.Refresh(adapters.PostReportsReaderIndex).Do(context.Background())
 	require.NoError(t, err)
 }
 

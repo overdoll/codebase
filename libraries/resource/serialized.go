@@ -347,6 +347,60 @@ func (c *Serializer) UnmarshalResourcesFromDatabase(ctx context.Context, seriali
 	return targets, nil
 }
 
+func (c *Serializer) createSignedUrl(url string) (string, error) {
+
+	timestamp := time.Now()
+
+	year := timestamp.Year()
+	month := timestamp.Month()
+	day := timestamp.Day()
+
+	loc, err := time.LoadLocation("UTC")
+
+	if err != nil {
+		return "", err
+	}
+
+	if day >= 24 {
+		day = 1
+
+		if month == time.December {
+			month = time.January
+		} else {
+			month += 1
+		}
+
+	}
+
+	dayBucket := 5
+
+	if day >= 5 {
+		dayBucket = 10
+	}
+
+	if day >= 10 {
+		dayBucket = 15
+	}
+
+	if day >= 15 {
+		dayBucket = 20
+	}
+
+	if day >= 20 {
+		dayBucket = 25
+	}
+
+	newTimestamp := time.Date(year, month, dayBucket, 0, 0, 0, 0, loc)
+
+	signedURL, err := c.resourcesSigner.Sign(url, newTimestamp)
+
+	if err != nil {
+		return "", errors.Wrap(err, "could not generate video thumbnail signed url")
+	}
+
+	return signedURL, nil
+}
+
 func (c *Serializer) unmarshalResourceFromDatabaseWithSignedUrls(i serializedResource) (*Resource, error) {
 
 	s3Client := s3.New(c.aws)
@@ -383,7 +437,7 @@ func (c *Serializer) unmarshalResourceFromDatabaseWithSignedUrls(i serializedRes
 
 		if i.IsPrivate && i.Processed {
 
-			signedURL, err := c.resourcesSigner.Sign(os.Getenv("PRIVATE_RESOURCES_URL")+key, time.Now().Add(60*time.Minute))
+			signedURL, err := c.createSignedUrl(os.Getenv("PRIVATE_RESOURCES_URL") + key)
 
 			if err != nil {
 				return nil, errors.Wrap(err, "could not generate signed url")
@@ -430,7 +484,7 @@ func (c *Serializer) unmarshalResourceFromDatabaseWithSignedUrls(i serializedRes
 
 		if i.IsPrivate {
 
-			signedURL, err := c.resourcesSigner.Sign(os.Getenv("PRIVATE_RESOURCES_URL")+"/"+i.ItemId+"/"+i.VideoThumbnail+format, time.Now().Add(60*time.Minute))
+			signedURL, err := c.createSignedUrl(os.Getenv("PRIVATE_RESOURCES_URL") + "/" + i.ItemId + "/" + i.VideoThumbnail + format)
 
 			if err != nil {
 				return nil, errors.Wrap(err, "could not generate video thumbnail signed url")

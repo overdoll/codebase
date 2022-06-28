@@ -62,7 +62,7 @@ type TestSeries struct {
 
 func refreshSeriesIndex(t *testing.T) {
 	es := bootstrap.InitializeElasticSearchSession()
-	_, err := es.Refresh(adapters.SeriesIndexName).Do(context.Background())
+	_, err := es.Refresh(adapters.SeriesReaderIndex).Do(context.Background())
 	require.NoError(t, err)
 }
 

@@ -3,7 +3,6 @@ package command
 import (
 	"context"
 	"os"
-	"overdoll/applications/loader/internal/domain/event"
 	"overdoll/applications/loader/internal/domain/resource"
 	"overdoll/libraries/errors/domainerror"
 )
@@ -22,12 +21,11 @@ type CopyResourcesAndApplyFilters struct {
 }
 
 type CopyResourcesAndApplyFiltersHandler struct {
-	rr    resource.Repository
-	event event.Repository
+	rr resource.Repository
 }
 
-func NewCopyResourcesAndApplyFiltersHandler(rr resource.Repository, event event.Repository) CopyResourcesAndApplyFiltersHandler {
-	return CopyResourcesAndApplyFiltersHandler{rr: rr, event: event}
+func NewCopyResourcesAndApplyFiltersHandler(rr resource.Repository) CopyResourcesAndApplyFiltersHandler {
+	return CopyResourcesAndApplyFiltersHandler{rr: rr}
 }
 
 func (h CopyResourcesAndApplyFiltersHandler) Handle(ctx context.Context, cmd CopyResourcesAndApplyFilters) ([]*resource.FilteredResource, error) {

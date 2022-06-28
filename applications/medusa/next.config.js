@@ -159,19 +159,6 @@ const moduleExports = withBundleAnalyzer({
         // Apply these headers to all routes in your application.
         source: '/:path*',
         headers: securityHeaders
-      },
-      {
-        source: '/service-worker.js',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=43200, immutable'
-          },
-          {
-            key: 'Service-Worker-Allowed',
-            value: '/'
-          }
-        ]
       }
     ]
   },

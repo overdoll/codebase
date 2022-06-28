@@ -67,7 +67,7 @@ type TestAudience struct {
 
 func refreshAudienceIndex(t *testing.T) {
 	es := bootstrap.InitializeElasticSearchSession()
-	_, err := es.Refresh(adapters.AudienceIndexName).Do(context.Background())
+	_, err := es.Refresh(adapters.AudienceReaderIndex).Do(context.Background())
 	require.NoError(t, err)
 }
 

@@ -3,6 +3,8 @@ package adapters
 import (
 	"context"
 	"encoding/json"
+	"overdoll/libraries/cache"
+	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
@@ -14,7 +16,6 @@ import (
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/scan"
 )
 
 type categoryDocument struct {
@@ -28,7 +29,10 @@ type categoryDocument struct {
 	TotalPosts        int               `json:"total_posts"`
 }
 
-const CategoryIndexName = "sting.categories"
+const CategoryIndexName = "categories"
+
+var CategoryReaderIndex = cache.ReadAlias(CategoryIndexName)
+var categoryWriterIndex = cache.WriteAlias(CategoryIndexName)
 
 func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 
@@ -91,7 +95,7 @@ func (r PostsCassandraElasticsearchRepository) indexCategory(ctx context.Context
 
 	_, err = r.client.
 		Index().
-		Index(CategoryIndexName).
+		Index(categoryWriterIndex).
 		Id(category.ID()).
 		BodyJson(cat).
 		Do(ctx)
@@ -106,7 +110,7 @@ func (r PostsCassandraElasticsearchRepository) indexCategory(ctx context.Context
 func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Category, error) {
 
 	builder := r.client.Search().
-		Index(CategoryIndexName).ErrorTrace(true)
+		Index(CategoryReaderIndex).ErrorTrace(true)
 
 	if cursor == nil {
 		return nil, paging.ErrCursorNotPresent
@@ -135,7 +139,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Cont
 	if filter.Search() != nil {
 		query.Must(
 			elastic.
-				NewMultiMatchQuery(*filter.Search(), localization.GetESSearchFields("title")...).
+				NewMultiMatchQuery(*filter.Search(), "title.en").
 				Type("best_fields"),
 		)
 	}
@@ -172,8 +176,8 @@ func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Cont
 
 func (r PostsCassandraElasticsearchRepository) IndexAllCategories(ctx context.Context) error {
 
-	scanner := scan.New(r.session,
-		scan.Config{
+	scanner := database.New(r.session,
+		database.Config{
 			NodesInCluster: 1,
 			CoresInNode:    2,
 			SmudgeFactor:   3,
@@ -198,7 +202,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllCategories(ctx context.Co
 
 			_, err := r.client.
 				Index().
-				Index(CategoryIndexName).
+				Index(categoryWriterIndex).
 				Id(c.Id).
 				BodyJson(doc).
 				Do(ctx)

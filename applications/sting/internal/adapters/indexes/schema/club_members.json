@@ -1,0 +1,25 @@
+{
+  "mappings": {
+    "dynamic": "true",
+    "properties": {
+      "id": {
+        "type": "keyword"
+      },
+      "member_account_id": {
+        "type": "keyword"
+      },
+      "club_id": {
+        "type": "keyword"
+      },
+      "joined_at": {
+        "type": "date"
+      },
+      "is_supporter": {
+        "type": "boolean"
+      },
+      "supporter_since": {
+        "type": "date"
+      }
+    }
+  }
+}

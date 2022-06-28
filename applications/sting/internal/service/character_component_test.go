@@ -63,7 +63,7 @@ type TestCharacter struct {
 
 func refreshCharacterIndex(t *testing.T) {
 	es := bootstrap.InitializeElasticSearchSession()
-	_, err := es.Refresh(adapters.CharacterIndexName).Do(context.Background())
+	_, err := es.Refresh(adapters.CharacterReaderIndex).Do(context.Background())
 	require.NoError(t, err)
 }
 

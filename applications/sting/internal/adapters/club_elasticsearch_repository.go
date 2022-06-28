@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"overdoll/applications/sting/internal/domain/club"
+	"overdoll/libraries/cache"
+	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
@@ -14,7 +16,6 @@ import (
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/scan"
 )
 
 type clubDocument struct {
@@ -37,7 +38,10 @@ type clubDocument struct {
 	UpdatedAt                   time.Time         `json:"updated_at"`
 }
 
-const ClubsIndexName = "sting.clubs"
+const ClubsIndexName = "clubs"
+
+var ClubsReaderIndex = cache.ReadAlias(ClubsIndexName)
+var clubsWriterIndex = cache.WriteAlias(ClubsIndexName)
 
 func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 
@@ -129,7 +133,7 @@ func (r ClubCassandraElasticsearchRepository) indexClub(ctx context.Context, clu
 
 	_, err = r.client.
 		Index().
-		Index(ClubsIndexName).
+		Index(clubsWriterIndex).
 		Id(clb.Id).
 		BodyJson(*clb).
 		Do(ctx)
@@ -143,7 +147,7 @@ func (r ClubCassandraElasticsearchRepository) indexClub(ctx context.Context, clu
 func (r ClubCassandraElasticsearchRepository) DiscoverClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*club.Club, error) {
 
 	builder := r.client.Search().
-		Index(ClubsIndexName)
+		Index(ClubsReaderIndex)
 
 	if cursor == nil {
 		return nil, paging.ErrCursorNotPresent
@@ -195,7 +199,7 @@ func (r ClubCassandraElasticsearchRepository) DiscoverClubs(ctx context.Context,
 func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *club.Filters) ([]*club.Club, error) {
 
 	builder := r.client.Search().
-		Index(ClubsIndexName)
+		Index(ClubsReaderIndex)
 
 	if cursor == nil {
 		return nil, paging.ErrCursorNotPresent
@@ -242,7 +246,7 @@ func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, r
 	if filter.Search() != nil {
 		query.Must(
 			elastic.
-				NewMultiMatchQuery(*filter.Search(), localization.GetESSearchFields("name")...).
+				NewMultiMatchQuery(*filter.Search(), "name.en").
 				Type("best_fields"),
 		)
 	}
@@ -279,8 +283,8 @@ func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, r
 
 func (r ClubCassandraElasticsearchRepository) IndexAllClubs(ctx context.Context) error {
 
-	scanner := scan.New(r.session,
-		scan.Config{
+	scanner := database.New(r.session,
+		database.Config{
 			NodesInCluster: 1,
 			CoresInNode:    2,
 			SmudgeFactor:   3,
@@ -315,7 +319,7 @@ func (r ClubCassandraElasticsearchRepository) IndexAllClubs(ctx context.Context)
 
 			_, err := r.client.
 				Index().
-				Index(ClubsIndexName).
+				Index(clubMembersWriterIndex).
 				Id(m.Id).
 				BodyJson(doc).
 				Do(ctx)

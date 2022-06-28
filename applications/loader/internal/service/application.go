@@ -57,7 +57,8 @@ func createApplication(ctx context.Context, callbackService activities.CallbackS
 			TusComposer:                        command.NewTusComposerHandler(resourceRepo),
 			DeleteResources:                    command.NewDeleteResourcesHandler(eventRepo),
 			NewCreateOrGetResourcesFromUploads: command.NewCreateOrGetResourcesFromUploadsHandler(resourceRepo, eventRepo),
-			CopyResourcesAndApplyFilters:       command.NewCopyResourcesAndApplyFiltersHandler(resourceRepo, eventRepo),
+			CopyResourcesAndApplyFilters:       command.NewCopyResourcesAndApplyFiltersHandler(resourceRepo),
+			UpdateResourcePrivacy:              command.NewUpdateResourcePrivacyHandler(resourceRepo),
 		},
 		Queries: app.Queries{
 			ResourcesByIds: query.NewResourcesByIdsHandler(resourceRepo),

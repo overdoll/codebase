@@ -6,10 +6,11 @@ import (
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
 	"overdoll/applications/parley/internal/domain/report"
+	"overdoll/libraries/cache"
+	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/scan"
 	"overdoll/libraries/support"
 	"time"
 )
@@ -22,7 +23,10 @@ type postReportDocument struct {
 	CreatedAt          time.Time `json:"created_at"`
 }
 
-const PostReportsIndexName = "parley.post_reports"
+const PostReportsIndexName = "post_reports"
+
+var PostReportsReaderIndex = cache.ReadAlias(PostReportsIndexName)
+var postReportsWriterIndex = cache.WriteAlias(PostReportsIndexName)
 
 func marshalPostReportToDocument(cat *report.PostReport) (*postReportDocument, error) {
 	return &postReportDocument{
@@ -41,7 +45,7 @@ func (r ReportCassandraElasticsearchRepository) SearchPostReports(ctx context.Co
 	}
 
 	builder := r.client.Search().
-		Index(PostReportsIndexName)
+		Index(PostReportsReaderIndex)
 
 	if cursor == nil {
 		return nil, paging.ErrCursorNotPresent
@@ -96,7 +100,7 @@ func (r ReportCassandraElasticsearchRepository) indexPostReport(ctx context.Cont
 
 	_, err = r.client.
 		Index().
-		Index(PostReportsIndexName).
+		Index(postReportsWriterIndex).
 		Id(clb.Id).
 		BodyJson(*clb).
 		Do(ctx)
@@ -110,8 +114,8 @@ func (r ReportCassandraElasticsearchRepository) indexPostReport(ctx context.Cont
 
 func (r ReportCassandraElasticsearchRepository) IndexAllPostReports(ctx context.Context) error {
 
-	scanner := scan.New(r.session,
-		scan.Config{
+	scanner := database.New(r.session,
+		database.Config{
 			NodesInCluster: 1,
 			CoresInNode:    2,
 			SmudgeFactor:   3,
@@ -134,7 +138,7 @@ func (r ReportCassandraElasticsearchRepository) IndexAllPostReports(ctx context.
 
 			_, err := r.client.
 				Index().
-				Index(PostReportsIndexName).
+				Index(postReportsWriterIndex).
 				Id(doc.Id).
 				BodyJson(doc).
 				Do(ctx)
@@ -156,7 +160,7 @@ func (r ReportCassandraElasticsearchRepository) IndexAllPostReports(ctx context.
 
 func (r ReportCassandraElasticsearchRepository) deletePostReportsIndexById(ctx context.Context, postId, accountId string) error {
 
-	if _, err := r.client.Delete().Index(PostReportsIndexName).Id(postId + "-" + accountId).Do(ctx); err != nil {
+	if _, err := r.client.Delete().Index(postReportsWriterIndex).Id(postId + "-" + accountId).Do(ctx); err != nil {
 		return errors.Wrap(support.ParseElasticError(err), "deletePostReportsIndexById")
 	}
 

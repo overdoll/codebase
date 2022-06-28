@@ -16,6 +16,7 @@ type LoaderService interface {
 	DeleteResources(context.Context, string, []string) error
 	CopyResourceIntoImage(ctx context.Context, itemId string, resourceId string, private bool) (*post.NewResource, error)
 	CopyResourcesAndApplyPixelateFilter(ctx context.Context, itemId string, resourceIds []string, pixelate int, private bool) ([]*post.NewResource, error)
+	UpdateResourcePrivacy(ctx context.Context, itemId string, resourceIds []string, private bool) ([]*resource.Resource, error)
 }
 
 type CarrierService interface {

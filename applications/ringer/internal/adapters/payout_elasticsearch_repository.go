@@ -6,10 +6,11 @@ import (
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
 	"overdoll/applications/ringer/internal/domain/payout"
+	"overdoll/libraries/cache"
+	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/scan"
 	"overdoll/libraries/support"
 	"time"
 )
@@ -36,7 +37,10 @@ type clubPayoutDocument struct {
 	TemporalWorkflowId string                    `json:"temporal_workflow_id"`
 }
 
-const ClubPayoutsIndexName = "ringer.club_payouts"
+const ClubPayoutsIndexName = "club_payouts"
+
+var ClubPayoutsReaderIndex = cache.ReadAlias(ClubPayoutsIndexName)
+var clubPayoutsWriterIndex = cache.WriteAlias(ClubPayoutsIndexName)
 
 func unmarshalClubPayoutDocument(hit *elastic.SearchHit) (*payout.ClubPayout, error) {
 
@@ -109,7 +113,7 @@ func marshalClubPayoutToDocument(pay *payout.ClubPayout) (*clubPayoutDocument, e
 func (r PayoutCassandraElasticsearchRepository) SearchClubPayouts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *payout.ClubPayoutsFilters) ([]*payout.ClubPayout, error) {
 
 	builder := r.client.Search().
-		Index(ClubPayoutsIndexName)
+		Index(ClubPayoutsReaderIndex)
 
 	if cursor == nil {
 		return nil, paging.ErrCursorNotPresent
@@ -190,8 +194,8 @@ func (r PayoutCassandraElasticsearchRepository) SearchClubPayouts(ctx context.Co
 
 func (r PayoutCassandraElasticsearchRepository) IndexAllClubPayouts(ctx context.Context) error {
 
-	scanner := scan.New(r.session,
-		scan.Config{
+	scanner := database.New(r.session,
+		database.Config{
 			NodesInCluster: 1,
 			CoresInNode:    2,
 			SmudgeFactor:   3,
@@ -239,7 +243,7 @@ func (r PayoutCassandraElasticsearchRepository) IndexAllClubPayouts(ctx context.
 
 			_, err := r.client.
 				Index().
-				Index(ClubPayoutsIndexName).
+				Index(clubPayoutsWriterIndex).
 				Id(doc.Id).
 				BodyJson(doc).
 				Do(ctx)
@@ -269,7 +273,7 @@ func (r PayoutCassandraElasticsearchRepository) indexClubPayout(ctx context.Cont
 
 	_, err = r.client.
 		Index().
-		Index(ClubPayoutsIndexName).
+		Index(clubPayoutsWriterIndex).
 		Id(pst.Id).
 		BodyJson(*pst).
 		Do(ctx)

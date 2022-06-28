@@ -3,6 +3,8 @@ package adapters
 import (
 	"context"
 	"encoding/json"
+	"overdoll/libraries/cache"
+	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
@@ -15,7 +17,6 @@ import (
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/scan"
 )
 
 type characterDocument struct {
@@ -30,7 +31,10 @@ type characterDocument struct {
 	TotalPosts        int               `json:"total_posts"`
 }
 
-const CharacterIndexName = "sting.characters"
+const CharacterIndexName = "characters"
+
+var CharacterReaderIndex = cache.ReadAlias(CharacterIndexName)
+var characterWriterIndex = cache.WriteAlias(CharacterIndexName)
 
 func marshalCharacterToDocument(char *post.Character) (*characterDocument, error) {
 
@@ -115,7 +119,7 @@ func (r PostsCassandraElasticsearchRepository) indexCharacter(ctx context.Contex
 
 	_, err = r.client.
 		Index().
-		Index(CharacterIndexName).
+		Index(characterWriterIndex).
 		Id(character.ID()).
 		BodyJson(char).
 		Do(ctx)
@@ -130,7 +134,7 @@ func (r PostsCassandraElasticsearchRepository) indexCharacter(ctx context.Contex
 func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.CharacterFilters) ([]*post.Character, error) {
 
 	builder := r.client.Search().
-		Index(CharacterIndexName)
+		Index(CharacterReaderIndex)
 
 	if cursor == nil {
 		return nil, paging.ErrCursorNotPresent
@@ -159,7 +163,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Cont
 	if filter.Name() != nil {
 		query.Must(
 			elastic.
-				NewMultiMatchQuery(filter.Name(), localization.GetESSearchFields("name")...).
+				NewMultiMatchQuery(filter.Name(), "name.en").
 				Type("best_fields"),
 		)
 	}
@@ -198,8 +202,8 @@ func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Cont
 
 func (r PostsCassandraElasticsearchRepository) IndexAllCharacters(ctx context.Context) error {
 
-	scanner := scan.New(r.session,
-		scan.Config{
+	scanner := database.New(r.session,
+		database.Config{
 			NodesInCluster: 1,
 			CoresInNode:    2,
 			SmudgeFactor:   3,
@@ -242,7 +246,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllCharacters(ctx context.Co
 
 			_, err := r.client.
 				Index().
-				Index(CharacterIndexName).
+				Index(characterWriterIndex).
 				Id(c.Id).
 				BodyJson(doc).
 				Do(ctx)
