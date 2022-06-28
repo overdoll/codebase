@@ -231,7 +231,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllSeries(ctx context.Contex
 				Index().
 				Index(seriesWriterIndex).
 				OpType("create").
-				Id(m.Id).
+				Id(doc.Id).
 				BodyJson(doc).
 				Do(ctx)
 

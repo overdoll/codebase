@@ -186,14 +186,7 @@ func (r ClubCassandraElasticsearchRepository) IndexAllClubMembers(ctx context.Co
 
 		for iter.StructScan(&m) {
 
-			doc := clubMembersDocument{
-				Id:              m.ClubId + "-" + m.MemberAccountId,
-				ClubId:          m.ClubId,
-				MemberAccountId: m.MemberAccountId,
-				JoinedAt:        m.JoinedAt,
-				IsSupporter:     m.IsSupporter,
-				SupporterSince:  m.SupporterSince,
-			}
+			doc := marshalClubMemberToDocument(unmarshalClubMemberFromDatabase(&m))
 
 			_, err := r.client.
 				Index().

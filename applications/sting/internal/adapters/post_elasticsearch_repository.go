@@ -715,7 +715,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllPosts(ctx context.Context
 			_, err = r.client.
 				Index().
 				Index(postWriterIndex).
-				Id(p.Id).
+				Id(doc.Id).
 				BodyJson(doc).
 				OpType("create").
 				Do(ctx)

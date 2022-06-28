@@ -168,6 +168,41 @@ func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
 	}, nil
 }
 
+func (r ClubCassandraElasticsearchRepository) unmarshalClubFromDatabase(ctx context.Context, b *clubs) (*club.Club, error) {
+
+	unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, b.ThumbnailResource)
+
+	if err != nil {
+		return nil, err
+	}
+
+	unmarshalledBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, b.BannerResource)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return club.UnmarshalClubFromDatabase(
+		b.Id,
+		b.Slug,
+		b.SlugAliases,
+		b.Name,
+		unmarshalled,
+		unmarshalledBanner,
+		b.MembersCount,
+		b.OwnerAccountId,
+		b.Suspended,
+		b.SuspendedUntil,
+		b.NextSupporterPostTime,
+		b.HasCreatedSupporterOnlyPost,
+		b.Terminated,
+		b.TerminatedByAccountId,
+		b.SupporterOnlyPostsDisabled,
+		b.CreatedAt,
+		b.UpdatedAt,
+	), nil
+}
+
 func (r ClubCassandraElasticsearchRepository) CreateClubSuspensionLog(ctx context.Context, suspensionLog *club.SuspensionLog) error {
 
 	var reason *string
@@ -321,37 +356,7 @@ func (r ClubCassandraElasticsearchRepository) GetClubById(ctx context.Context, b
 		return nil, err
 	}
 
-	unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, b.ThumbnailResource)
-
-	if err != nil {
-		return nil, err
-	}
-
-	unmarshalledBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, b.BannerResource)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return club.UnmarshalClubFromDatabase(
-		b.Id,
-		b.Slug,
-		b.SlugAliases,
-		b.Name,
-		unmarshalled,
-		unmarshalledBanner,
-		b.MembersCount,
-		b.OwnerAccountId,
-		b.Suspended,
-		b.SuspendedUntil,
-		b.NextSupporterPostTime,
-		b.HasCreatedSupporterOnlyPost,
-		b.Terminated,
-		b.TerminatedByAccountId,
-		b.SupporterOnlyPostsDisabled,
-		b.CreatedAt,
-		b.UpdatedAt,
-	), nil
+	return r.unmarshalClubFromDatabase(ctx, b)
 }
 
 func (r ClubCassandraElasticsearchRepository) GetClubSupporterMembershipsCount(ctx context.Context, requester *principal.Principal, clubId string) (int64, error) {
@@ -389,37 +394,13 @@ func (r ClubCassandraElasticsearchRepository) GetClubsByIds(ctx context.Context,
 
 	for _, b := range databaseClubs {
 
-		unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, b.ThumbnailResource)
+		unmarshalled, err := r.unmarshalClubFromDatabase(ctx, &b)
 
 		if err != nil {
 			return nil, err
 		}
 
-		unmarshalledBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, b.BannerResource)
-
-		if err != nil {
-			return nil, err
-		}
-
-		clbs = append(clbs, club.UnmarshalClubFromDatabase(
-			b.Id,
-			b.Slug,
-			b.SlugAliases,
-			b.Name,
-			unmarshalled,
-			unmarshalledBanner,
-			b.MembersCount,
-			b.OwnerAccountId,
-			b.Suspended,
-			b.SuspendedUntil,
-			b.NextSupporterPostTime,
-			b.HasCreatedSupporterOnlyPost,
-			b.Terminated,
-			b.TerminatedByAccountId,
-			b.SupporterOnlyPostsDisabled,
-			b.CreatedAt,
-			b.UpdatedAt,
-		))
+		clbs = append(clbs, unmarshalled)
 	}
 
 	return clbs, nil
@@ -655,37 +636,11 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubMembersCount(ctx context
 		return err
 	}
 
-	unmarshalledResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, clb.ThumbnailResource)
+	unmarshalled, err := r.unmarshalClubFromDatabase(ctx, clb)
 
 	if err != nil {
 		return err
 	}
-
-	unmarshalledBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, clb.BannerResource)
-
-	if err != nil {
-		return err
-	}
-
-	unmarshalled := club.UnmarshalClubFromDatabase(
-		clb.Id,
-		clb.Slug,
-		clb.SlugAliases,
-		clb.Name,
-		unmarshalledResource,
-		unmarshalledBanner,
-		clb.MembersCount,
-		clb.OwnerAccountId,
-		clb.Suspended,
-		clb.SuspendedUntil,
-		clb.NextSupporterPostTime,
-		clb.HasCreatedSupporterOnlyPost,
-		clb.Terminated,
-		clb.TerminatedByAccountId,
-		clb.SupporterOnlyPostsDisabled,
-		clb.CreatedAt,
-		clb.UpdatedAt,
-	)
 
 	if err := updateFn(unmarshalled); err != nil {
 		return err

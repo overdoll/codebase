@@ -61,12 +61,6 @@ type seriesSlug struct {
 	Slug     string `db:"slug"`
 }
 
-type charactersSlug struct {
-	SeriesId    string `db:"series_id"`
-	CharacterId string `db:"character_id"`
-	Slug        string `db:"slug"`
-}
-
 func marshalSeriesToDatabase(pending *post.Series) (*series, error) {
 
 	marshalled, err := resource.MarshalResourceToDatabase(pending.ThumbnailResource())
@@ -145,7 +139,7 @@ func (r PostsCassandraElasticsearchRepository) getSeriesBySlug(ctx context.Conte
 
 func (r PostsCassandraElasticsearchRepository) GetSeriesIdsFromSlugs(ctx context.Context, seriesIds []string) ([]string, error) {
 
-	var seriesSlugResults []charactersSlug
+	var seriesSlugResults []characterSlug
 
 	var lowercaseSlugs []string
 

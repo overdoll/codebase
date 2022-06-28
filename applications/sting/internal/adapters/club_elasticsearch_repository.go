@@ -297,32 +297,24 @@ func (r ClubCassandraElasticsearchRepository) IndexAllClubs(ctx context.Context)
 
 		for iter.StructScan(&m) {
 
-			doc := clubDocument{
-				Id:                          m.Id,
-				Slug:                        m.Slug,
-				SlugAliases:                 m.SlugAliases,
-				ThumbnailResource:           m.ThumbnailResource,
-				BannerResource:              m.BannerResource,
-				SupporterOnlyPostsDisabled:  m.SupporterOnlyPostsDisabled,
-				Name:                        m.Name,
-				OwnerAccountId:              m.OwnerAccountId,
-				CreatedAt:                   m.CreatedAt,
-				MembersCount:                m.MembersCount,
-				Suspended:                   m.Suspended,
-				SuspendedUntil:              m.SuspendedUntil,
-				HasCreatedSupporterOnlyPost: m.HasCreatedSupporterOnlyPost,
-				NextSupporterPostTime:       m.NextSupporterPostTime,
-				Terminated:                  m.Terminated,
-				TerminatedByAccountId:       m.TerminatedByAccountId,
-				UpdatedAt:                   m.UpdatedAt,
+			unmarshalled, err := r.unmarshalClubFromDatabase(ctx, &m)
+
+			if err != nil {
+				return err
 			}
 
-			_, err := r.client.
+			marshalled, err := marshalClubToDocument(unmarshalled)
+
+			if err != nil {
+				return err
+			}
+
+			_, err = r.client.
 				Index().
 				Index(clubMembersWriterIndex).
-				Id(m.Id).
+				Id(marshalled.Id).
 				OpType("create").
-				BodyJson(doc).
+				BodyJson(marshalled).
 				Do(ctx)
 
 			if err != nil {

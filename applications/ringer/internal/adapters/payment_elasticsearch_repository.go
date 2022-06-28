@@ -206,29 +206,23 @@ func (r PaymentCassandraElasticsearchRepository) IndexAllClubPayments(ctx contex
 
 		for iter.StructScan(&pay) {
 
-			doc := clubPaymentDocument{
-				Id:                       pay.Id,
-				Source:                   pay.Source,
-				Status:                   pay.Status,
-				SettlementDate:           pay.SettlementDate,
-				SourceAccountId:          pay.SourceAccountId,
-				AccountTransactionId:     pay.AccountTransactionId,
-				DestinationClubId:        pay.DestinationClubId,
-				Currency:                 pay.Currency,
-				BaseAmount:               pay.BaseAmount,
-				PlatformFeeAmount:        pay.PlatformFeeAmount,
-				FinalAmount:              pay.FinalAmount,
-				IsDeduction:              pay.IsDeduction,
-				DeductionSourcePaymentId: pay.DeductionSourcePaymentId,
-				CreatedAt:                pay.CreatedAt,
-				ClubPayoutIds:            pay.ClubPayoutIds,
+			unmarshalled, err := unmarshalPaymentFromDatabase(ctx, &pay)
+
+			if err != nil {
+				return err
 			}
 
-			_, err := r.client.
+			marshalled, err := marshalPaymentToDatabase(ctx, unmarshalled)
+
+			if err != nil {
+				return err
+			}
+
+			_, err = r.client.
 				Index().
 				Index(clubPaymentsWriterIndex).
-				Id(doc.Id).
-				BodyJson(doc).
+				Id(marshalled.Id).
+				BodyJson(marshalled).
 				OpType("create").
 				Do(ctx)
 

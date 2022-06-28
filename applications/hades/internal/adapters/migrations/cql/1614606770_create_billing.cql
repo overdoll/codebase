@@ -39,8 +39,6 @@ CREATE TABLE IF NOT EXISTS account_club_supporter_subscriptions
     primary key ( id )
 );
 
--- CALL create_account_club_supporter_subscriptions_index;
-
 CREATE TABLE IF NOT EXISTS club_active_supporter_subscriptions
 (
     bucket                 int,
@@ -72,13 +70,9 @@ CREATE TABLE IF NOT EXISTS account_saved_payment_methods
 (
     account_id               text,
     id                       text,
-
     currency                 text,
-
     encrypted_payment_method text,
-
     updated_at               timestamp,
-
     ccbill_subscription_id   text,
     primary key ( account_id, id )
 );
@@ -94,33 +88,21 @@ CREATE TABLE IF NOT EXISTS account_transactions
 (
     id                             text,
     account_id                     text,
-
     created_at                     timestamp,
-
     transaction_type               text,
-
     club_supporter_subscription_id text,
-
     encrypted_payment_method       text,
-
     amount                         bigint,
     currency                       text,
-
     voided_at                      timestamp,
     void_reason                    text,
-
     billed_at_date                 date,
     next_billing_date              date,
-
     ccbill_subscription_id         text,
     ccbill_transaction_id          text,
-
     events                         list<text>,
-
     primary key ( id )
 );
-
--- CALL create_account_transactions_index;
 
 CREATE TABLE IF NOT EXISTS account_club_supporter_subscription_lock
 (
@@ -134,29 +116,21 @@ CREATE TABLE IF NOT EXISTS account_club_supporter_subscription_lock
 CREATE TABLE IF NOT EXISTS ccbill_subscription_details
 (
     ccbill_subscription_id                 text,
-
     encrypted_payment_method               text,
-
     supporting_club_id                     text,
     initiator_account_id                   text,
-
     updated_at                             timestamp,
-
     subscription_initial_price             bigint,
     subscription_recurring_price           bigint,
     subscription_currency                  text,
-
     billed_initial_price                   bigint,
     billed_recurring_price                 bigint,
     billed_currency                        text,
-
     accounting_initial_price               bigint,
     accounting_recurring_price             bigint,
     accounting_currency                    text,
-
     account_club_supporter_subscription_id text,
     duplicate                              boolean,
-
     primary key ( ccbill_subscription_id )
 );
 
@@ -171,13 +145,10 @@ CREATE TABLE IF NOT EXISTS acc_active_or_cancelled_supporter_subs
 CREATE TABLE IF NOT EXISTS receipt_files
 (
     id                           text,
-
     account_transaction_id       text,
     account_transaction_event_id text,
-
     file_path                    text,
     temporal_workflow_id         text,
-
     primary key ( id )
 );
 

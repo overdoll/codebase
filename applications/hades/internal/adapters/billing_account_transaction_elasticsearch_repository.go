@@ -256,44 +256,19 @@ func (r BillingCassandraElasticsearchRepository) IndexAllAccountTransactions(ctx
 
 		for iter.StructScan(&transaction) {
 
-			var events []accountTransactionEventDocument
+			unmarshalled, err := unmarshalAccountTransactionFromDatabase(&transaction)
 
-			for _, e := range transaction.Events {
-
-				var unmarshal accountTransactionEvent
-
-				if err := json.Unmarshal([]byte(e), &unmarshal); err != nil {
-					return err
-				}
-
-				events = append(events, accountTransactionEventDocument{
-					Id:        unmarshal.Id,
-					CreatedAt: unmarshal.CreatedAt,
-					Amount:    unmarshal.Amount,
-					Currency:  unmarshal.Currency,
-					Reason:    unmarshal.Reason,
-				})
+			if err != nil {
+				return err
 			}
 
-			doc := accountTransactionDocument{
-				AccountId:                   transaction.AccountId,
-				Id:                          transaction.Id,
-				CreatedAt:                   transaction.CreatedAt,
-				TransactionType:             transaction.TransactionType,
-				ClubSupporterSubscriptionId: transaction.ClubSupporterSubscriptionId,
-				EncryptedPaymentMethod:      transaction.EncryptedPaymentMethod,
-				Amount:                      transaction.Amount,
-				Currency:                    transaction.Currency,
-				VoidedAt:                    transaction.VoidedAt,
-				VoidReason:                  transaction.VoidReason,
-				BilledAtDate:                transaction.BilledAtDate,
-				NextBillingDate:             transaction.NextBillingDate,
-				CCBillSubscriptionId:        transaction.CCBillSubscriptionId,
-				CCBillTransactionId:         transaction.CCBillTransactionId,
-				Events:                      events,
+			doc, err := marshalAccountTransactionToDocument(unmarshalled)
+
+			if err != nil {
+				return err
 			}
 
-			_, err := r.client.
+			_, err = r.client.
 				Index().
 				Index(accountTransactionsWriterIndex).
 				Id(doc.Id).

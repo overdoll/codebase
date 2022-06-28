@@ -128,15 +128,13 @@ func (r ReportCassandraElasticsearchRepository) IndexAllPostReports(ctx context.
 
 		for iter.StructScan(&m) {
 
-			doc := postReportDocument{
-				Id:                 m.PostId + "-" + m.ReportingAccountId,
-				PostId:             m.PostId,
-				ReportingAccountId: m.ReportingAccountId,
-				RuleId:             m.RuleId,
-				CreatedAt:          m.CreatedAt,
+			doc, err := marshalPostReportToDocument(unmarshalPostReportFromDatabase(&m))
+
+			if err != nil {
+				return err
 			}
 
-			_, err := r.client.
+			_, err = r.client.
 				Index().
 				Index(postReportsWriterIndex).
 				Id(doc.Id).

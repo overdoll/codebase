@@ -242,30 +242,19 @@ func (r BillingCassandraElasticsearchRepository) IndexAllAccountClubSupporterSub
 
 		for iter.StructScan(&subscription) {
 
-			doc := accountClubSupporterSubscriptionDocument{
-				AccountId:                   subscription.AccountId,
-				ClubId:                      subscription.ClubId,
-				Status:                      subscription.Status,
-				SupporterSince:              subscription.SupporterSince,
-				LastBillingDate:             subscription.LastBillingDate,
-				NextBillingDate:             subscription.NextBillingDate,
-				BillingAmount:               subscription.BillingAmount,
-				BillingCurrency:             subscription.BillingCurrency,
-				CreatedAt:                   subscription.CreatedAt,
-				CancelledAt:                 subscription.CancelledAt,
-				ExpiredAt:                   subscription.ExpiredAt,
-				FailedAt:                    subscription.FailedAt,
-				CCBillErrorText:             subscription.CCBillErrorText,
-				CCBillErrorCode:             subscription.CCBillErrorCode,
-				BillingFailureNextRetryDate: subscription.BillingFailureNextRetryDate,
-				Id:                          subscription.Id,
-				EncryptedPaymentMethod:      subscription.EncryptedPaymentMethod,
-				CCBillSubscriptionId:        subscription.CCBillSubscriptionId,
-				UpdatedAt:                   subscription.UpdatedAt,
-				CancellationReasonId:        subscription.CancellationReasonId,
+			unmarshalled, err := unmarshalAccountClubSubscriptionFromDatabase(&subscription)
+
+			if err != nil {
+				return err
 			}
 
-			_, err := r.client.
+			doc, err := marshalAccountClubSupporterSubscriptionToDocument(unmarshalled)
+
+			if err != nil {
+				return err
+			}
+
+			_, err = r.client.
 				Index().
 				Index(accountClubSupporterSubscriptionsWriterIndex).
 				Id(doc.Id).

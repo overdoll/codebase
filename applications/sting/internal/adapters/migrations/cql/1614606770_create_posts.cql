@@ -40,8 +40,6 @@ CREATE TABLE IF NOT EXISTS clubs
     primary key ( id )
 );
 
--- CALL create_clubs_index;
-
 CREATE TABLE IF NOT EXISTS clubs_slugs
 (
     slug    text,
@@ -58,8 +56,6 @@ CREATE TABLE IF NOT EXISTS club_members
     supporter_since   timestamp,
     primary key ( (club_id, member_account_id) )
 );
-
--- CALL create_club_members_index;
 
 CREATE TABLE IF NOT EXISTS club_members_by_account
 (
@@ -92,8 +88,6 @@ CREATE TABLE IF NOT EXISTS categories
     primary key ( id )
 );
 
--- CALL create_categories_index;
-
 CREATE TABLE IF NOT EXISTS categories_slugs
 (
     slug        text,
@@ -114,8 +108,6 @@ CREATE TABLE IF NOT EXISTS characters
     updated_at         timestamp,
     primary key ( id )
 );
-
--- CALL create_characters_index;
 
 CREATE TABLE IF NOT EXISTS characters_slugs
 (
@@ -138,8 +130,6 @@ CREATE TABLE IF NOT EXISTS series
     primary key ( id )
 );
 
--- CALL create_series_index;
-
 CREATE TABLE IF NOT EXISTS series_slugs
 (
     slug      text,
@@ -160,8 +150,6 @@ CREATE TABLE IF NOT EXISTS audience
     updated_at         timestamp,
     primary key ( id )
 );
-
--- CALL create_audience_index;
 
 CREATE TABLE IF NOT EXISTS audience_slugs
 (
@@ -192,8 +180,6 @@ CREATE TABLE IF NOT EXISTS posts
     posted_at                           timestamp,
     primary key ( id )
 );
-
--- CALL create_posts_index;
 
 CREATE TABLE IF NOT EXISTS post_likes
 (

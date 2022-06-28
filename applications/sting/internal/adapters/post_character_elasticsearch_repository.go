@@ -260,7 +260,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllCharacters(ctx context.Co
 			_, err = r.client.
 				Index().
 				Index(characterWriterIndex).
-				Id(c.Id).
+				Id(doc.Id).
 				BodyJson(doc).
 				OpType("create").
 				Do(ctx)

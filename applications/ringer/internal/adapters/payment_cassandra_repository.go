@@ -133,6 +133,26 @@ func marshalPaymentToDatabase(ctx context.Context, pay *payment.ClubPayment) (*c
 	}, nil
 }
 
+func unmarshalPaymentFromDatabase(ctx context.Context, clubPay *clubPayment) (*payment.ClubPayment, error) {
+	return payment.UnmarshalClubPaymentFromDatabase(
+		clubPay.Id,
+		clubPay.Source,
+		clubPay.Status,
+		clubPay.SourceAccountId,
+		clubPay.AccountTransactionId,
+		clubPay.DestinationClubId,
+		clubPay.Currency,
+		clubPay.BaseAmount,
+		clubPay.PlatformFeeAmount,
+		clubPay.FinalAmount,
+		clubPay.IsDeduction,
+		clubPay.DeductionSourcePaymentId,
+		clubPay.CreatedAt,
+		clubPay.SettlementDate,
+		clubPay.ClubPayoutIds,
+	), nil
+}
+
 func canViewSensitive(ctx context.Context, requester *principal.Principal, clubId string) error {
 
 	if requester.IsStaff() {
@@ -198,23 +218,7 @@ func (r PaymentCassandraElasticsearchRepository) getClubPaymentById(ctx context.
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get club payment by id")
 	}
 
-	return payment.UnmarshalClubPaymentFromDatabase(
-		clubPay.Id,
-		clubPay.Source,
-		clubPay.Status,
-		clubPay.SourceAccountId,
-		clubPay.AccountTransactionId,
-		clubPay.DestinationClubId,
-		clubPay.Currency,
-		clubPay.BaseAmount,
-		clubPay.PlatformFeeAmount,
-		clubPay.FinalAmount,
-		clubPay.IsDeduction,
-		clubPay.DeductionSourcePaymentId,
-		clubPay.CreatedAt,
-		clubPay.SettlementDate,
-		clubPay.ClubPayoutIds,
-	), nil
+	return unmarshalPaymentFromDatabase(ctx, &clubPay)
 }
 
 func (r PaymentCassandraElasticsearchRepository) GetClubPaymentById(ctx context.Context, requester *principal.Principal, paymentId string) (*payment.ClubPayment, error) {

@@ -208,44 +208,23 @@ func (r PayoutCassandraElasticsearchRepository) IndexAllClubPayouts(ctx context.
 
 		for iter.StructScan(&pay) {
 
-			var events []clubPayoutEventDocument
+			unmarshalled, err := unmarshalClubPayoutFromDatabase(ctx, &pay)
 
-			for _, e := range pay.Events {
-
-				var unmarshal clubPayoutEvent
-
-				if err := json.Unmarshal([]byte(e), &unmarshal); err != nil {
-					return err
-				}
-
-				events = append(events, clubPayoutEventDocument{
-					Id:        unmarshal.Id,
-					CreatedAt: unmarshal.CreatedAt,
-					Error:     unmarshal.Error,
-				})
+			if err != nil {
+				return err
 			}
 
-			doc := clubPayoutDocument{
-				Id:                 pay.Id,
-				Status:             pay.Status,
-				DepositDate:        pay.DepositDate,
-				ClubId:             pay.ClubId,
-				Currency:           pay.Currency,
-				Amount:             pay.Amount,
-				CoverFeeAmount:     pay.CoverFeeAmount,
-				TotalAmount:        pay.TotalAmount,
-				PayoutAccountId:    pay.PayoutAccountId,
-				DepositRequestId:   pay.DepositRequestId,
-				CreatedAt:          pay.CreatedAt,
-				Events:             events,
-				TemporalWorkflowId: pay.TemporalWorkflowId,
+			marshalled, err := marshalClubPayoutToDatabase(ctx, unmarshalled)
+
+			if err != nil {
+				return err
 			}
 
-			_, err := r.client.
+			_, err = r.client.
 				Index().
 				Index(clubPayoutsWriterIndex).
-				Id(doc.Id).
-				BodyJson(doc).
+				Id(marshalled.Id).
+				BodyJson(marshalled).
 				OpType("create").
 				Do(ctx)
 
