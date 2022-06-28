@@ -23,6 +23,7 @@ type Audience struct {
 	slug              string
 	title             *localization.Translation
 	thumbnailResource *resource.Resource
+	bannerResource    *resource.Resource
 
 	totalLikes int
 	totalPosts int
@@ -62,6 +63,7 @@ func NewAudience(requester *principal.Principal, slug, title string, standard bo
 		slug:              slug,
 		title:             lc,
 		thumbnailResource: nil,
+		bannerResource:    nil,
 		totalLikes:        0,
 		totalPosts:        0,
 		standard:          standard,
@@ -92,6 +94,10 @@ func (m *Audience) TotalPosts() int {
 
 func (m *Audience) ThumbnailResource() *resource.Resource {
 	return m.thumbnailResource
+}
+
+func (m *Audience) BannerResource() *resource.Resource {
+	return m.bannerResource
 }
 
 // IsStandard a "standard" audience is an audience that the majority will consume
@@ -153,6 +159,14 @@ func (m *Audience) UpdateThumbnailExisting(thumbnail *resource.Resource) error {
 	return nil
 }
 
+func (m *Audience) UpdateBanner(thumbnail *resource.Resource) error {
+
+	m.bannerResource = thumbnail
+	m.update()
+
+	return nil
+}
+
 func (m *Audience) UpdateThumbnail(requester *principal.Principal, thumbnail *resource.Resource) error {
 
 	if err := m.canUpdate(requester); err != nil {
@@ -189,7 +203,7 @@ func (m *Audience) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalAudienceFromDatabase(id, slug string, title map[string]string, thumbnail *resource.Resource, standard int, totalLikes, totalPosts int, createdAt, updatedAt time.Time) *Audience {
+func UnmarshalAudienceFromDatabase(id, slug string, title map[string]string, thumbnail *resource.Resource, banner *resource.Resource, standard int, totalLikes, totalPosts int, createdAt, updatedAt time.Time) *Audience {
 	return &Audience{
 		id:                id,
 		slug:              slug,
@@ -197,6 +211,7 @@ func UnmarshalAudienceFromDatabase(id, slug string, title map[string]string, thu
 		totalPosts:        totalPosts,
 		title:             localization.UnmarshalTranslationFromDatabase(title),
 		thumbnailResource: thumbnail,
+		bannerResource:    banner,
 		standard:          standard == 1,
 		createdAt:         createdAt,
 		updatedAt:         updatedAt,

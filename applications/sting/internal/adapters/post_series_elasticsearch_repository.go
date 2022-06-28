@@ -22,6 +22,7 @@ type seriesDocument struct {
 	Id                string            `json:"id"`
 	Slug              string            `json:"slug"`
 	ThumbnailResource string            `json:"thumbnail_resource"`
+	BannerResource    string            `json:"banner_resource"`
 	Title             map[string]string `json:"title"`
 	CreatedAt         time.Time         `json:"created_at"`
 	UpdatedAt         time.Time         `json:"updated_at"`
@@ -42,10 +43,17 @@ func marshalSeriesToDocument(s *post.Series) (*seriesDocument, error) {
 		return nil, err
 	}
 
+	marshalledBanner, err := resource.MarshalResourceToDatabase(s.BannerResource())
+
+	if err != nil {
+		return nil, err
+	}
+
 	return &seriesDocument{
 		Id:                s.ID(),
 		Slug:              s.Slug(),
 		ThumbnailResource: marshalled,
+		BannerResource:    marshalledBanner,
 		Title:             localization.MarshalTranslationToDatabase(s.Title()),
 		CreatedAt:         s.CreatedAt(),
 		TotalLikes:        s.TotalLikes(),
@@ -70,11 +78,18 @@ func (r PostsCassandraElasticsearchRepository) unmarshalSeriesDocument(ctx conte
 		return nil, err
 	}
 
+	unmarshalledBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, md.BannerResource)
+
+	if err != nil {
+		return nil, err
+	}
+
 	newMedia := post.UnmarshalSeriesFromDatabase(
 		md.Id,
 		md.Slug,
 		md.Title,
 		unmarshalled,
+		unmarshalledBanner,
 		md.TotalLikes,
 		md.TotalPosts,
 		md.CreatedAt,
@@ -200,20 +215,22 @@ func (r PostsCassandraElasticsearchRepository) IndexAllSeries(ctx context.Contex
 
 		for iter.StructScan(&m) {
 
-			doc := seriesDocument{
-				Id:                m.Id,
-				Slug:              m.Slug,
-				ThumbnailResource: m.ThumbnailResource,
-				Title:             m.Title,
-				CreatedAt:         m.CreatedAt,
-				UpdatedAt:         m.UpdatedAt,
-				TotalLikes:        m.TotalLikes,
-				TotalPosts:        m.TotalPosts,
+			unmarshalled, err := r.unmarshalSeriesFromDatabase(ctx, &m)
+
+			if err != nil {
+				return err
 			}
 
-			_, err := r.client.
+			doc, err := marshalSeriesToDocument(unmarshalled)
+
+			if err != nil {
+				return err
+			}
+
+			_, err = r.client.
 				Index().
 				Index(seriesWriterIndex).
+				OpType("create").
 				Id(m.Id).
 				BodyJson(doc).
 				Do(ctx)

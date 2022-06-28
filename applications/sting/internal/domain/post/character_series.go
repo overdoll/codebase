@@ -23,6 +23,7 @@ type Series struct {
 	slug              string
 	title             *localization.Translation
 	thumbnailResource *resource.Resource
+	bannerResource    *resource.Resource
 
 	totalLikes int
 	totalPosts int
@@ -60,6 +61,7 @@ func NewSeries(requester *principal.Principal, slug, title string) (*Series, err
 		slug:              slug,
 		title:             lc,
 		thumbnailResource: nil,
+		bannerResource:    nil,
 		totalLikes:        0,
 		totalPosts:        0,
 		createdAt:         time.Now(),
@@ -81,6 +83,10 @@ func (m *Series) Title() *localization.Translation {
 
 func (m *Series) ThumbnailResource() *resource.Resource {
 	return m.thumbnailResource
+}
+
+func (m *Series) BannerResource() *resource.Resource {
+	return m.bannerResource
 }
 
 func (m *Series) TotalLikes() int {
@@ -158,6 +164,14 @@ func (m *Series) UpdateThumbnailExisting(thumbnail *resource.Resource) error {
 	return nil
 }
 
+func (m *Series) UpdateBanner(thumbnail *resource.Resource) error {
+
+	m.bannerResource = thumbnail
+	m.update()
+
+	return nil
+}
+
 func (m *Series) canUpdate(requester *principal.Principal) error {
 
 	if !requester.IsStaff() {
@@ -171,12 +185,13 @@ func (m *Series) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalSeriesFromDatabase(id, slug string, title map[string]string, thumbnail *resource.Resource, totalLikes, totalPosts int, createdAt, updatedAt time.Time) *Series {
+func UnmarshalSeriesFromDatabase(id, slug string, title map[string]string, thumbnail, banner *resource.Resource, totalLikes, totalPosts int, createdAt, updatedAt time.Time) *Series {
 	return &Series{
 		id:                id,
 		slug:              slug,
 		title:             localization.UnmarshalTranslationFromDatabase(title),
 		thumbnailResource: thumbnail,
+		bannerResource:    banner,
 		totalLikes:        totalLikes,
 		totalPosts:        totalPosts,
 		createdAt:         createdAt,

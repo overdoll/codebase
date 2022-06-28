@@ -23,6 +23,7 @@ type Category struct {
 	slug              string
 	title             *localization.Translation
 	thumbnailResource *resource.Resource
+	bannerResource    *resource.Resource
 	totalLikes        int
 	totalPosts        int
 
@@ -59,6 +60,7 @@ func NewCategory(requester *principal.Principal, slug, title string) (*Category,
 		slug:              slug,
 		title:             lc,
 		thumbnailResource: nil,
+		bannerResource:    nil,
 		totalLikes:        0,
 		totalPosts:        0,
 		createdAt:         time.Now(),
@@ -80,6 +82,10 @@ func (c *Category) Title() *localization.Translation {
 
 func (c *Category) ThumbnailResource() *resource.Resource {
 	return c.thumbnailResource
+}
+
+func (c *Category) BannerResource() *resource.Resource {
+	return c.bannerResource
 }
 
 func (c *Category) TotalLikes() int {
@@ -155,6 +161,14 @@ func (c *Category) UpdateThumbnailExisting(thumbnail *resource.Resource) error {
 	return nil
 }
 
+func (c *Category) UpdateBanner(thumbnail *resource.Resource) error {
+
+	c.bannerResource = thumbnail
+	c.update()
+
+	return nil
+}
+
 func (c *Category) canUpdate(requester *principal.Principal) error {
 
 	if !requester.IsStaff() {
@@ -168,12 +182,13 @@ func (c *Category) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalCategoryFromDatabase(id, slug string, title map[string]string, thumbnail *resource.Resource, totalLikes, totalPosts int, createdAt, updatedAt time.Time) *Category {
+func UnmarshalCategoryFromDatabase(id, slug string, title map[string]string, thumbnail, banner *resource.Resource, totalLikes, totalPosts int, createdAt, updatedAt time.Time) *Category {
 	return &Category{
 		id:                id,
 		slug:              slug,
 		title:             localization.UnmarshalTranslationFromDatabase(title),
 		thumbnailResource: thumbnail,
+		bannerResource:    banner,
 		totalLikes:        totalLikes,
 		totalPosts:        totalPosts,
 		createdAt:         createdAt,

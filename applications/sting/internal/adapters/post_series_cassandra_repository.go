@@ -24,6 +24,7 @@ var seriesTable = table.New(table.Metadata{
 		"slug",
 		"title",
 		"thumbnail_resource",
+		"banner_resource",
 		"total_likes",
 		"total_posts",
 		"created_at",
@@ -38,6 +39,7 @@ type series struct {
 	Slug              string            `db:"slug"`
 	Title             map[string]string `db:"title"`
 	ThumbnailResource string            `db:"thumbnail_resource"`
+	BannerResource    string            `db:"banner_resource"`
 	TotalLikes        int               `db:"total_likes"`
 	TotalPosts        int               `db:"total_posts"`
 	CreatedAt         time.Time         `db:"created_at"`
@@ -59,9 +61,21 @@ type seriesSlug struct {
 	Slug     string `db:"slug"`
 }
 
+type charactersSlug struct {
+	SeriesId    string `db:"series_id"`
+	CharacterId string `db:"character_id"`
+	Slug        string `db:"slug"`
+}
+
 func marshalSeriesToDatabase(pending *post.Series) (*series, error) {
 
 	marshalled, err := resource.MarshalResourceToDatabase(pending.ThumbnailResource())
+
+	if err != nil {
+		return nil, err
+	}
+
+	marshalledBanner, err := resource.MarshalResourceToDatabase(pending.BannerResource())
 
 	if err != nil {
 		return nil, err
@@ -72,11 +86,39 @@ func marshalSeriesToDatabase(pending *post.Series) (*series, error) {
 		Slug:              pending.Slug(),
 		Title:             localization.MarshalTranslationToDatabase(pending.Title()),
 		ThumbnailResource: marshalled,
+		BannerResource:    marshalledBanner,
 		TotalLikes:        pending.TotalLikes(),
 		TotalPosts:        pending.TotalPosts(),
 		CreatedAt:         pending.CreatedAt(),
 		UpdatedAt:         pending.UpdatedAt(),
 	}, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) unmarshalSeriesFromDatabase(ctx context.Context, med *series) (*post.Series, error) {
+
+	unmarshalledResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, med.ThumbnailResource)
+
+	if err != nil {
+		return nil, err
+	}
+
+	unmarshalledBannerResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, med.BannerResource)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return post.UnmarshalSeriesFromDatabase(
+		med.Id,
+		med.Slug,
+		med.Title,
+		unmarshalledResource,
+		unmarshalledBannerResource,
+		med.TotalLikes,
+		med.TotalPosts,
+		med.CreatedAt,
+		med.UpdatedAt,
+	), nil
 }
 
 func (r PostsCassandraElasticsearchRepository) getSeriesBySlug(ctx context.Context, requester *principal.Principal, slug string) (*seriesSlug, error) {
@@ -103,7 +145,7 @@ func (r PostsCassandraElasticsearchRepository) getSeriesBySlug(ctx context.Conte
 
 func (r PostsCassandraElasticsearchRepository) GetSeriesIdsFromSlugs(ctx context.Context, seriesIds []string) ([]string, error) {
 
-	var seriesSlugResults []seriesSlug
+	var seriesSlugResults []charactersSlug
 
 	var lowercaseSlugs []string
 
@@ -143,10 +185,17 @@ func (r PostsCassandraElasticsearchRepository) GetSeriesBySlug(ctx context.Conte
 }
 
 func (r PostsCassandraElasticsearchRepository) GetSingleSeriesById(ctx context.Context, requester *principal.Principal, seriesId string) (*post.Series, error) {
-	return r.getSingleSeriesById(ctx, seriesId)
+
+	serial, err := r.getSingleSeriesById(ctx, seriesId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return r.unmarshalSeriesFromDatabase(ctx, serial)
 }
 
-func (r PostsCassandraElasticsearchRepository) getSingleSeriesById(ctx context.Context, seriesId string) (*post.Series, error) {
+func (r PostsCassandraElasticsearchRepository) getSingleSeriesById(ctx context.Context, seriesId string) (*series, error) {
 
 	var med series
 
@@ -165,22 +214,7 @@ func (r PostsCassandraElasticsearchRepository) getSingleSeriesById(ctx context.C
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get series by id")
 	}
 
-	unmarshalledResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, med.ThumbnailResource)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return post.UnmarshalSeriesFromDatabase(
-		med.Id,
-		med.Slug,
-		med.Title,
-		unmarshalledResource,
-		med.TotalLikes,
-		med.TotalPosts,
-		med.CreatedAt,
-		med.UpdatedAt,
-	), nil
+	return &med, nil
 }
 
 func (r PostsCassandraElasticsearchRepository) GetSeriesByIds(ctx context.Context, requester *principal.Principal, medi []string) ([]*post.Series, error) {
@@ -207,22 +241,13 @@ func (r PostsCassandraElasticsearchRepository) GetSeriesByIds(ctx context.Contex
 
 	for _, med := range mediaModels {
 
-		unmarshalledResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, med.ThumbnailResource)
+		unmarshalled, err := r.unmarshalSeriesFromDatabase(ctx, med)
 
 		if err != nil {
 			return nil, err
 		}
 
-		medias = append(medias, post.UnmarshalSeriesFromDatabase(
-			med.Id,
-			med.Slug,
-			med.Title,
-			unmarshalledResource,
-			med.TotalLikes,
-			med.TotalPosts,
-			med.CreatedAt,
-			med.UpdatedAt,
-		))
+		medias = append(medias, unmarshalled)
 	}
 
 	return medias, nil
@@ -334,11 +359,17 @@ func (r PostsCassandraElasticsearchRepository) updateSeries(ctx context.Context,
 		return nil, err
 	}
 
-	if err := updateFn(series); err != nil {
+	unmarshalled, err := r.unmarshalSeriesFromDatabase(ctx, series)
+
+	if err != nil {
 		return nil, err
 	}
 
-	pst, err := marshalSeriesToDatabase(series)
+	if err := updateFn(unmarshalled); err != nil {
+		return nil, err
+	}
+
+	pst, err := marshalSeriesToDatabase(unmarshalled)
 
 	if err != nil {
 		return nil, err
@@ -356,9 +387,9 @@ func (r PostsCassandraElasticsearchRepository) updateSeries(ctx context.Context,
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update series")
 	}
 
-	if err := r.indexSeries(ctx, series); err != nil {
+	if err := r.indexSeries(ctx, unmarshalled); err != nil {
 		return nil, err
 	}
 
-	return series, nil
+	return unmarshalled, nil
 }

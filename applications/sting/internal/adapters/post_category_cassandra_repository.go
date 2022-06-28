@@ -24,6 +24,7 @@ var categoryTable = table.New(table.Metadata{
 		"title",
 		"slug",
 		"thumbnail_resource",
+		"banner_resource",
 		"total_likes",
 		"total_posts",
 		"created_at",
@@ -38,6 +39,7 @@ type category struct {
 	Slug              string            `db:"slug"`
 	Title             map[string]string `db:"title"`
 	ThumbnailResource string            `db:"thumbnail_resource"`
+	BannerResource    string            `db:"banner_resource"`
 	TotalLikes        int               `db:"total_likes"`
 	TotalPosts        int               `db:"total_posts"`
 	CreatedAt         time.Time         `db:"created_at"`
@@ -67,16 +69,50 @@ func marshalCategoryToDatabase(pending *post.Category) (*category, error) {
 		return nil, err
 	}
 
+	marshalledBanner, err := resource.MarshalResourceToDatabase(pending.BannerResource())
+
+	if err != nil {
+		return nil, err
+	}
+
 	return &category{
 		Id:                pending.ID(),
 		Slug:              pending.Slug(),
 		Title:             localization.MarshalTranslationToDatabase(pending.Title()),
 		ThumbnailResource: marshalled,
+		BannerResource:    marshalledBanner,
 		TotalLikes:        pending.TotalLikes(),
 		TotalPosts:        pending.TotalPosts(),
 		CreatedAt:         pending.CreatedAt(),
 		UpdatedAt:         pending.UpdatedAt(),
 	}, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) unmarshalCategoryFromDatabase(ctx context.Context, cat *category) (*post.Category, error) {
+
+	unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, cat.ThumbnailResource)
+
+	if err != nil {
+		return nil, err
+	}
+
+	unmarshalledBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, cat.BannerResource)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return post.UnmarshalCategoryFromDatabase(
+		cat.Id,
+		cat.Slug,
+		cat.Title,
+		unmarshalled,
+		unmarshalledBanner,
+		cat.TotalLikes,
+		cat.TotalPosts,
+		cat.CreatedAt,
+		cat.UpdatedAt,
+	), nil
 }
 
 func (r PostsCassandraElasticsearchRepository) GetCategoryIdsFromSlugs(ctx context.Context, categorySlug []string) ([]string, error) {
@@ -154,22 +190,13 @@ func (r PostsCassandraElasticsearchRepository) GetCategoriesByIds(ctx context.Co
 
 	for _, cat := range categoriesModels {
 
-		unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, cat.ThumbnailResource)
+		unmarshalled, err := r.unmarshalCategoryFromDatabase(ctx, &cat)
 
 		if err != nil {
 			return nil, err
 		}
 
-		categories = append(categories, post.UnmarshalCategoryFromDatabase(
-			cat.Id,
-			cat.Slug,
-			cat.Title,
-			unmarshalled,
-			cat.TotalLikes,
-			cat.TotalPosts,
-			cat.CreatedAt,
-			cat.UpdatedAt,
-		))
+		categories = append(categories, unmarshalled)
 	}
 
 	return categories, nil
@@ -335,20 +362,5 @@ func (r PostsCassandraElasticsearchRepository) getCategoryById(ctx context.Conte
 		return nil, errors.Wrap(err, "failed to get category by id")
 	}
 
-	unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, cat.ThumbnailResource)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return post.UnmarshalCategoryFromDatabase(
-		cat.Id,
-		cat.Slug,
-		cat.Title,
-		unmarshalled,
-		cat.TotalLikes,
-		cat.TotalPosts,
-		cat.CreatedAt,
-		cat.UpdatedAt,
-	), nil
+	return r.unmarshalCategoryFromDatabase(ctx, &cat)
 }

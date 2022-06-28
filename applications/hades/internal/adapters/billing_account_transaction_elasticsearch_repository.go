@@ -297,6 +297,7 @@ func (r BillingCassandraElasticsearchRepository) IndexAllAccountTransactions(ctx
 				Index().
 				Index(accountTransactionsWriterIndex).
 				Id(doc.Id).
+				OpType("create").
 				BodyJson(doc).
 				Do(ctx)
 

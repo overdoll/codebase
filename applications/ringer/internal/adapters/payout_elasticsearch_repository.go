@@ -246,6 +246,7 @@ func (r PayoutCassandraElasticsearchRepository) IndexAllClubPayouts(ctx context.
 				Index(clubPayoutsWriterIndex).
 				Id(doc.Id).
 				BodyJson(doc).
+				OpType("create").
 				Do(ctx)
 
 			if err != nil {

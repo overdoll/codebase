@@ -700,37 +700,24 @@ func (r PostsCassandraElasticsearchRepository) IndexAllPosts(ctx context.Context
 
 		for iter.StructScan(&p) {
 
-			var audienceId string
+			unmarshalled, err := r.unmarshalPost(ctx, p)
 
-			if p.AudienceId != nil {
-				audienceId = *p.AudienceId
+			if err != nil {
+				return err
 			}
 
-			doc := postDocument{
-				Id:                              p.Id,
-				State:                           p.State,
-				SupporterOnlyStatus:             p.SupporterOnlyStatus,
-				ContentResourceIds:              p.ContentResourceIds,
-				ContentResources:                p.ContentResources,
-				ContentSupporterOnly:            p.ContentSupporterOnly,
-				ContentSupporterOnlyResourceIds: p.ContentSupporterOnlyResourceIds,
-				Likes:                           p.Likes,
-				ContributorId:                   p.ContributorId,
-				ClubId:                          p.ClubId,
-				AudienceId:                      audienceId,
-				CategoryIds:                     p.CategoryIds,
-				CharacterIds:                    p.CharacterIds,
-				SeriesIds:                       p.SeriesIds,
-				CreatedAt:                       p.CreatedAt,
-				UpdatedAt:                       p.UpdatedAt,
-				PostedAt:                        p.PostedAt,
+			doc, err := marshalPostToDocument(unmarshalled)
+
+			if err != nil {
+				return err
 			}
 
-			_, err := r.client.
+			_, err = r.client.
 				Index().
 				Index(postWriterIndex).
 				Id(p.Id).
 				BodyJson(doc).
+				OpType("create").
 				Do(ctx)
 
 			if err != nil {

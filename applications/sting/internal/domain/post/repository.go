@@ -43,7 +43,6 @@ type Repository interface {
 	UpdateCharacterTotalLikesOperator(ctx context.Context, id string, updateFn func(character *Character) error) (*Character, error)
 
 	CreateAudience(ctx context.Context, requester *principal.Principal, audience *Audience) error
-	GetAudiences(ctx context.Context, requester *principal.Principal) ([]*Audience, error)
 	GetAudienceById(ctx context.Context, requester *principal.Principal, audienceId string) (*Audience, error)
 	GetAudiencesByIds(ctx context.Context, requester *principal.Principal, audienceIds []string) ([]*Audience, error)
 	GetAudienceBySlug(ctx context.Context, requester *principal.Principal, slug string) (*Audience, error)

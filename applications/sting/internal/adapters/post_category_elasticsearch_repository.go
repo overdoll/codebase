@@ -22,6 +22,7 @@ type categoryDocument struct {
 	Id                string            `json:"id"`
 	Slug              string            `json:"slug"`
 	ThumbnailResource string            `json:"thumbnail_resource"`
+	BannerResource    string            `json:"banner_resource"`
 	Title             map[string]string `json:"title"`
 	CreatedAt         time.Time         `json:"created_at"`
 	UpdatedAt         time.Time         `json:"updated_at"`
@@ -42,10 +43,17 @@ func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 		return nil, err
 	}
 
+	marshalledBanner, err := resource.MarshalResourceToDatabase(cat.BannerResource())
+
+	if err != nil {
+		return nil, err
+	}
+
 	return &categoryDocument{
 		Id:                cat.ID(),
 		Slug:              cat.Slug(),
 		ThumbnailResource: marshalled,
+		BannerResource:    marshalledBanner,
 		Title:             localization.MarshalTranslationToDatabase(cat.Title()),
 		CreatedAt:         cat.CreatedAt(),
 		UpdatedAt:         cat.UpdatedAt(),
@@ -70,11 +78,18 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCategoryDocument(ctx con
 		return nil, err
 	}
 
+	unmarshalledBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, pst.BannerResource)
+
+	if err != nil {
+		return nil, err
+	}
+
 	newCategory := post.UnmarshalCategoryFromDatabase(
 		pst.Id,
 		pst.Slug,
 		pst.Title,
 		unmarshalled,
+		unmarshalledBanner,
 		pst.TotalLikes,
 		pst.TotalPosts,
 		pst.CreatedAt,
@@ -190,21 +205,24 @@ func (r PostsCassandraElasticsearchRepository) IndexAllCategories(ctx context.Co
 
 		for iter.StructScan(&c) {
 
-			doc := categoryDocument{
-				Id:                c.Id,
-				Slug:              c.Slug,
-				ThumbnailResource: c.ThumbnailResource,
-				Title:             c.Title,
-				CreatedAt:         c.CreatedAt,
-				UpdatedAt:         c.UpdatedAt,
-				TotalLikes:        c.TotalLikes,
+			unmarshalled, err := r.unmarshalCategoryFromDatabase(ctx, &c)
+
+			if err != nil {
+				return err
 			}
 
-			_, err := r.client.
+			marshalled, err := marshalCategoryToDocument(unmarshalled)
+
+			if err != nil {
+				return err
+			}
+
+			_, err = r.client.
 				Index().
 				Index(categoryWriterIndex).
-				Id(c.Id).
-				BodyJson(doc).
+				Id(marshalled.Id).
+				OpType("create").
+				BodyJson(marshalled).
 				Do(ctx)
 
 			if err != nil {

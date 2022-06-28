@@ -270,6 +270,7 @@ func (r BillingCassandraElasticsearchRepository) IndexAllAccountClubSupporterSub
 				Index(accountClubSupporterSubscriptionsWriterIndex).
 				Id(doc.Id).
 				BodyJson(doc).
+				OpType("create").
 				Do(ctx)
 
 			if err != nil {

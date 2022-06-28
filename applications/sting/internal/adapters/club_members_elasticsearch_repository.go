@@ -198,6 +198,7 @@ func (r ClubCassandraElasticsearchRepository) IndexAllClubMembers(ctx context.Co
 			_, err := r.client.
 				Index().
 				Index(clubMembersWriterIndex).
+				OpType("create").
 				Id(doc.Id).
 				BodyJson(doc).
 				Do(ctx)

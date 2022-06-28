@@ -23,6 +23,7 @@ type characterDocument struct {
 	Id                string            `json:"id"`
 	Slug              string            `json:"slug"`
 	ThumbnailResource string            `json:"thumbnail_resource"`
+	BannerResource    string            `json:"banner_resource"`
 	Name              map[string]string `json:"name"`
 	Series            seriesDocument    `json:"series"`
 	CreatedAt         time.Time         `json:"created_at"`
@@ -44,6 +45,12 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 		return nil, err
 	}
 
+	marshalledBanner, err := resource.MarshalResourceToDatabase(char.BannerResource())
+
+	if err != nil {
+		return nil, err
+	}
+
 	marshalledSeries, err := marshalSeriesToDocument(char.Series())
 
 	if err != nil {
@@ -53,6 +60,7 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 	return &characterDocument{
 		Id:                char.ID(),
 		ThumbnailResource: marshalled,
+		BannerResource:    marshalledBanner,
 		Name:              localization.MarshalTranslationToDatabase(char.Name()),
 		Slug:              char.Slug(),
 		CreatedAt:         char.CreatedAt(),
@@ -79,7 +87,19 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx co
 		return nil, err
 	}
 
+	unmarshalledCharacterBannerResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, chr.BannerResource)
+
+	if err != nil {
+		return nil, err
+	}
+
 	unmarshalledSeriesResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, chr.Series.ThumbnailResource)
+
+	if err != nil {
+		return nil, err
+	}
+
+	unmarshalledSeriesBannerResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, chr.Series.BannerResource)
 
 	if err != nil {
 		return nil, err
@@ -90,6 +110,7 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx co
 		chr.Slug,
 		chr.Name,
 		unmarshalledCharacterResource,
+		unmarshalledCharacterBannerResource,
 		chr.TotalLikes,
 		chr.TotalPosts,
 		chr.CreatedAt,
@@ -99,6 +120,7 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx co
 			chr.Series.Slug,
 			chr.Series.Title,
 			unmarshalledSeriesResource,
+			unmarshalledSeriesBannerResource,
 			chr.Series.TotalLikes,
 			chr.Series.TotalPosts,
 			chr.Series.CreatedAt,
@@ -223,32 +245,24 @@ func (r PostsCassandraElasticsearchRepository) IndexAllCharacters(ctx context.Co
 				return err
 			}
 
-			doc := characterDocument{
-				Id:                c.Id,
-				ThumbnailResource: c.ThumbnailResource,
-				Name:              c.Name,
-				Slug:              c.Slug,
-				CreatedAt:         c.CreatedAt,
-				UpdatedAt:         c.UpdatedAt,
-				TotalLikes:        c.TotalLikes,
-				TotalPosts:        c.TotalPosts,
-				Series: seriesDocument{
-					Id:                m.Id,
-					ThumbnailResource: m.ThumbnailResource,
-					Title:             m.Title,
-					Slug:              m.Slug,
-					CreatedAt:         m.CreatedAt,
-					UpdatedAt:         m.UpdatedAt,
-					TotalLikes:        m.TotalLikes,
-					TotalPosts:        c.TotalPosts,
-				},
+			unmarshalled, err := r.unmarshalCharacterFromDatabase(ctx, &c, &m)
+
+			if err != nil {
+				return err
 			}
 
-			_, err := r.client.
+			doc, err := marshalCharacterToDocument(unmarshalled)
+
+			if err != nil {
+				return err
+			}
+
+			_, err = r.client.
 				Index().
 				Index(characterWriterIndex).
 				Id(c.Id).
 				BodyJson(doc).
+				OpType("create").
 				Do(ctx)
 
 			if err != nil {

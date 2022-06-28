@@ -140,6 +140,7 @@ func (r ReportCassandraElasticsearchRepository) IndexAllPostReports(ctx context.
 				Index().
 				Index(postReportsWriterIndex).
 				Id(doc.Id).
+				OpType("create").
 				BodyJson(doc).
 				Do(ctx)
 

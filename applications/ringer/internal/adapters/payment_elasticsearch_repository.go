@@ -229,6 +229,7 @@ func (r PaymentCassandraElasticsearchRepository) IndexAllClubPayments(ctx contex
 				Index(clubPaymentsWriterIndex).
 				Id(doc.Id).
 				BodyJson(doc).
+				OpType("create").
 				Do(ctx)
 
 			if err != nil {
