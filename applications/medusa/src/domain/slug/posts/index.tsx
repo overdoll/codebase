@@ -1,6 +1,6 @@
 import RootPublicClubPosts from './RootPublicClubPosts/RootPublicClubPosts'
 import PublicClubPostsQuery from '@//:artifacts/PublicClubPostsQuery.graphql'
-import { decodeRouterArguments } from '@//:modules/content/Posts/components/PostNavigation/PostsSearch'
+import decodeSearchArguments from '../../../common/components/PageHeader/SearchButton/support/decodeSearchArguments'
 
 RootPublicClubPosts.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)
@@ -15,7 +15,7 @@ RootPublicClubPosts.getRelayPreloadProps = (ctx) => {
         params: PublicClubPostsQuery.params,
         variables: {
           slug: query.slug,
-          ...decodeRouterArguments(query)
+          ...decodeSearchArguments(query)
         },
         options: {
           fetchPolicy: 'store-or-network'

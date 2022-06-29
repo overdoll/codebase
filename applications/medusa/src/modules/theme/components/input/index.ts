@@ -161,7 +161,8 @@ const variantOutline: PartsStyleFunction<typeof parts> = (props) => {
 const variantFilled: PartsStyleFunction<typeof parts> = (props) => {
   const {
     theme,
-    size
+    size,
+    bg
   } = props
   const {
     focusBorderColor: fc,
@@ -179,7 +180,7 @@ const variantFilled: PartsStyleFunction<typeof parts> = (props) => {
         userSelect: 'all'
       },
       _hover: {
-        bg: mode('gray.100', 'gray.700')(props)
+        bg: mode('gray.100', bg ?? 'gray.700')(props)
       },
       _disabled: {
         opacity: 0.4,
@@ -189,7 +190,7 @@ const variantFilled: PartsStyleFunction<typeof parts> = (props) => {
         borderColor: getColor(theme, ec)
       },
       _focus: {
-        zIndex: 1,
+        bg: mode('gray.100', bg ?? 'gray.700')(props),
         borderColor: getColor(theme, fc),
         _invalid: {
           borderColor: getColor(theme, ec),

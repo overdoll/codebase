@@ -4,15 +4,11 @@ import type {
   PostClickableCharactersFragment$data,
   PostClickableCharactersFragment$key
 } from '@//:artifacts/PostClickableCharactersFragment.graphql'
-import { ClickableBox, Icon, ResourceIcon, SmallBackgroundBox } from '../../../../PageLayout'
-import { encodeQueryParams } from 'serialize-query-params'
-import { configMap } from '../../PostNavigation/PostsSearch/constants'
-import { stringify } from 'query-string'
-import { useRouter } from 'next/router'
+import { ClickableBox, Icon, SmallBackgroundBox } from '../../../../PageLayout'
 import { useLimiter } from '../../../../HookedComponents/Limiter'
 import { NavigationMenuHorizontal } from '@//:assets/icons'
-import type { ResourceIconFragment$key } from '@//:artifacts/ResourceIconFragment.graphql'
 import { DeepWritable } from 'ts-essentials'
+import ClickableCharacter from './ClickableCharacter/ClickableCharacter'
 
 interface Props {
   query: PostClickableCharactersFragment$key | null
@@ -21,23 +17,13 @@ interface Props {
 const Fragment = graphql`
   fragment PostClickableCharactersFragment on Post {
     characters {
-      id
-      name
-      slug
-      series {
-        slug
-      }
-      thumbnail {
-        ...ResourceIconFragment
-      }
+      ...ClickableCharacterFragment
     }
   }
 `
 
 export default function PostClickableCharacters ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
-
-  const router = useRouter()
 
   const {
     constructedData,
@@ -49,37 +35,11 @@ export default function PostClickableCharacters ({ query }: Props): JSX.Element 
     amount: 3
   })
 
-  const onClick = (node): void => {
-    const encodedQuery = encodeQueryParams(configMap, {
-      characters: {
-        [node.slug]: node.series.slug
-      },
-      sort: 'TOP'
-    })
-
-    void router.push(`/search?${stringify(encodedQuery)}`)
-  }
-
   return (
     <Wrap overflow='show'>
       {constructedData.map((item, index) =>
         <WrapItem key={index}>
-          <ClickableBox p={0} onClick={() => onClick(item)}>
-            <SmallBackgroundBox p={2} borderRadius='inherit'>
-              <HStack spacing={2} align='center'>
-                <ResourceIcon
-                  seed={item.id}
-                  w={8}
-                  h={8}
-                  mr={2}
-                  query={item.thumbnail as ResourceIconFragment$key}
-                />
-                <Heading noOfLines={1} color='gray.00' fontSize='xl'>
-                  {item.name}
-                </Heading>
-              </HStack>
-            </SmallBackgroundBox>
-          </ClickableBox>
+          <ClickableCharacter query={item} />
         </WrapItem>
       )}
       {hasExpansion && (

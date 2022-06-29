@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<29d005685615a8d4b75d5549199334bd>>
+ * @generated SignedSource<<bca4cdd91c6b39de24de3f5ec74e8608>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,15 +12,7 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostClickableCharactersFragment$data = {
   readonly characters: ReadonlyArray<{
-    readonly id: string;
-    readonly name: string;
-    readonly series: {
-      readonly slug: string;
-    };
-    readonly slug: string;
-    readonly thumbnail: {
-      readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
-    } | null;
+    readonly " $fragmentSpreads": FragmentRefs<"ClickableCharacterFragment">;
   }>;
   readonly " $fragmentType": "PostClickableCharactersFragment";
 };
@@ -29,15 +21,7 @@ export type PostClickableCharactersFragment$key = {
   readonly " $fragmentSpreads": FragmentRefs<"PostClickableCharactersFragment">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "slug",
-  "storageKey": null
-};
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
@@ -52,47 +36,9 @@ return {
       "plural": true,
       "selections": [
         {
-          "alias": null,
           "args": null,
-          "kind": "ScalarField",
-          "name": "id",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "name",
-          "storageKey": null
-        },
-        (v0/*: any*/),
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "Series",
-          "kind": "LinkedField",
-          "name": "series",
-          "plural": false,
-          "selections": [
-            (v0/*: any*/)
-          ],
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "Resource",
-          "kind": "LinkedField",
-          "name": "thumbnail",
-          "plural": false,
-          "selections": [
-            {
-              "args": null,
-              "kind": "FragmentSpread",
-              "name": "ResourceIconFragment"
-            }
-          ],
-          "storageKey": null
+          "kind": "FragmentSpread",
+          "name": "ClickableCharacterFragment"
         }
       ],
       "storageKey": null
@@ -101,8 +47,7 @@ return {
   "type": "Post",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "366d12d8a18f358abebd5c97fcd7ddad";
+(node as any).hash = "abe977fe9ebb024ad62e215df04a0be2";
 
 export default node;

@@ -81,7 +81,6 @@ export default function SelectRuleButton ({
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        motionPreset='none'
         isCentered
         preserveScrollBarGap
       >

@@ -87,7 +87,7 @@ func marshalCharacterToDatabase(pending *post.Character) (*character, error) {
 
 func (r PostsCassandraElasticsearchRepository) GetCharacterIdsFromSlugs(ctx context.Context, characterSlugs, seriesIds []string) ([]string, error) {
 
-	var characterSlugResults []seriesSlug
+	var characterSlugResults []characterSlug
 
 	var lowercaseSlugs []string
 

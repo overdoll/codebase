@@ -31,9 +31,12 @@ export default function SeriesTileOverlay ({
         seed={data.id}
       />)}
     >
-      <Stack w='100%' h='100%' align='center' justify='center' spacing={0}>
+      <Stack p={2} w='100%' h='100%' align='center' justify='center' spacing={0}>
         <Text
-          fontSize='lg'
+          fontSize={{
+            base: 'sm',
+            md: 'lg'
+          }}
           color='gray.00'
           textAlign='center'
           noOfLines={4}

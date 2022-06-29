@@ -13,20 +13,23 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/club/home/RootClubHome/ClubHome/ClubSupporterHeader/ClubSupporterHeader.tsx:52
-#: src/domain/club/home/RootClubHome/ClubHome/ClubSupporterHeader/ClubSupporterHeader.tsx:75
+#: src/domain/club/home/RootClubHome/ClubHome/ClubSupporterHeader/ClubSupporterHeader.tsx:53
 msgid "Cannot Collect Subscriptions"
 msgstr ""
 
-#: src/domain/club/home/RootClubHome/ClubHome/ClubSupporterHeader/ClubSupporterHeader.tsx:116
+#: src/domain/club/home/RootClubHome/ClubHome/ClubSupporterHeader/ClubSupporterHeader.tsx:121
 msgid "Create Post"
 msgstr ""
 
-#: src/domain/club/home/RootClubHome/ClubHome/ClubSupporterHeader/ClubSupporterHeader.tsx:79
+#: src/domain/club/home/RootClubHome/ClubHome/ClubSupporterHeader/ClubSupporterHeader.tsx:131
+msgid "Creating supporter only posts has been disabled for your club"
+msgstr ""
+
+#: src/domain/club/home/RootClubHome/ClubHome/ClubSupporterHeader/ClubSupporterHeader.tsx:80
 msgid "In order to collect supporter subscription payments, you must post at least one piece of exclusive supporter content"
 msgstr ""
 
-#: src/domain/club/home/RootClubHome/ClubHome/ClubSupporterHeader/ClubSupporterHeader.tsx:56
+#: src/domain/club/home/RootClubHome/ClubHome/ClubSupporterHeader/ClubSupporterHeader.tsx:57
 msgid "In order to collect supporter subscription payments, your club must not be suspended."
 msgstr ""
 
@@ -38,18 +41,22 @@ msgstr ""
 msgid "Members"
 msgstr ""
 
+#: src/domain/club/home/RootClubHome/ClubHome/ClubSupporterHeader/ClubSupporterHeader.tsx:76
+msgid "Not Collecting Subscriptions"
+msgstr ""
+
 #: src/domain/club/home/RootClubHome/ClubHome/ClubBalanceHeader/ClubBalanceHeader.tsx:37
 msgid "Payouts Not Setup"
 msgstr ""
 
-#: src/domain/club/home/RootClubHome/ClubHome/ClubSupporterHeader/ClubSupporterHeader.tsx:104
+#: src/domain/club/home/RootClubHome/ClubHome/ClubSupporterHeader/ClubSupporterHeader.tsx:109
 msgid "Post exclusive content at least once by {nextSupporterPostTime} to keep your supporters"
 msgstr ""
 
-#: src/domain/club/home/RootClubHome/ClubHome/ClubSupporterHeader/ClubSupporterHeader.tsx:93
+#: src/domain/club/home/RootClubHome/ClubHome/ClubSupporterHeader/ClubSupporterHeader.tsx:94
 msgid "Supporters"
 msgstr ""
 
-#: src/domain/club/home/RootClubHome/ClubHome/ClubSupporterHeader/ClubSupporterHeader.tsx:125
+#: src/domain/club/home/RootClubHome/ClubHome/ClubSupporterHeader/ClubSupporterHeader.tsx:143
 msgid "You cannot collect new supporters because your club is suspended"
 msgstr ""

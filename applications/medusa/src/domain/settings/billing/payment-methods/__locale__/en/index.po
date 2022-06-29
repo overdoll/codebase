@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/settings/billing/payment-methods/RootSavedPaymentMethodsSettings/SavedPaymentMethodsSettings/ManageSavedPaymentMethodButton/DeleteSavedPaymentMethodButton/DeleteSavedPaymentMethodButton.tsx:132
+#: src/domain/settings/billing/payment-methods/RootSavedPaymentMethodsSettings/SavedPaymentMethodsSettings/ManageSavedPaymentMethodButton/DeleteSavedPaymentMethodButton/DeleteSavedPaymentMethodButton.tsx:131
 msgid "Are you sure you would like to delete this payment method? You won't be able to use it to support another club and will have to re-enter your payment information the next time you subscribe."
 msgstr ""
 
@@ -21,12 +21,12 @@ msgstr ""
 msgid "Delete Payment Method"
 msgstr ""
 
-#: src/domain/settings/billing/payment-methods/RootSavedPaymentMethodsSettings/SavedPaymentMethodsSettings/ManageSavedPaymentMethodButton/DeleteSavedPaymentMethodButton/DeleteSavedPaymentMethodButton.tsx:109
-#: src/domain/settings/billing/payment-methods/RootSavedPaymentMethodsSettings/SavedPaymentMethodsSettings/ManageSavedPaymentMethodButton/DeleteSavedPaymentMethodButton/DeleteSavedPaymentMethodButton.tsx:150
+#: src/domain/settings/billing/payment-methods/RootSavedPaymentMethodsSettings/SavedPaymentMethodsSettings/ManageSavedPaymentMethodButton/DeleteSavedPaymentMethodButton/DeleteSavedPaymentMethodButton.tsx:108
+#: src/domain/settings/billing/payment-methods/RootSavedPaymentMethodsSettings/SavedPaymentMethodsSettings/ManageSavedPaymentMethodButton/DeleteSavedPaymentMethodButton/DeleteSavedPaymentMethodButton.tsx:149
 msgid "Delete Saved Payment Method"
 msgstr ""
 
-#: src/domain/settings/billing/payment-methods/RootSavedPaymentMethodsSettings/SavedPaymentMethodsSettings/ManageSavedPaymentMethodButton/DeleteSavedPaymentMethodButton/DeleteSavedPaymentMethodButton.tsx:124
+#: src/domain/settings/billing/payment-methods/RootSavedPaymentMethodsSettings/SavedPaymentMethodsSettings/ManageSavedPaymentMethodButton/DeleteSavedPaymentMethodButton/DeleteSavedPaymentMethodButton.tsx:123
 msgid "Deleting a saved payment method does not cancel any associated subscriptions. If you'd like to cancel your subscription, you can do this from the My Subscriptions page."
 msgstr ""
 

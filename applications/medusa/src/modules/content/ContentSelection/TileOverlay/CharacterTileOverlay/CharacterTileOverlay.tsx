@@ -37,7 +37,10 @@ export default function CharacterTileOverlay ({
     >
       <Stack px={1} py={2} w='100%' h='100%' align='center' justify='center' spacing={0}>
         <Text
-          fontSize='lg'
+          fontSize={{
+            base: 'sm',
+            md: 'lg'
+          }}
           color='gray.00'
           textAlign='center'
           noOfLines={2}
@@ -46,7 +49,10 @@ export default function CharacterTileOverlay ({
         </Text>
         <Text
           textAlign='center'
-          fontSize='sm'
+          fontSize={{
+            base: '2xs',
+            md: 'sm'
+          }}
           color='gray.100'
           noOfLines={2}
         >

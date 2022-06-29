@@ -9,6 +9,8 @@ import AccountInformationBanner
   from '../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
 import PublicClubPostsRichObject
   from '../../../../../common/rich-objects/slug/PublicClubPostsRichObject/PublicClubPostsRichObject'
+import { Trans } from '@lingui/macro'
+import PageHeader from '../../../../../common/components/PageHeader/PageHeader'
 
 interface Props {
   query: PreloadedQuery<PublicClubPostsQuery>
@@ -23,6 +25,7 @@ const Query = graphql`
     $supporterOnlyStatus: [SupporterOnlyStatus!]
   ) {
     club(slug: $slug) {
+      name
       ...PublicClubPostsFragment
       ...PublicClubPostsRichObjectFragment
     }
@@ -81,6 +84,7 @@ export default function PublicClubPosts (props: Props): JSX.Element {
     <>
       <PublicClubPostsRichObject clubQuery={queryData.club} />
       <AccountInformationBanner query={queryData.viewer} />
+      <PageHeader title={<Trans>{queryData.club.name}'s Posts</Trans>} hasSort hasSupporter hasSearch />
       <GlobalVideoManagerProvider>
         <PostsInfiniteScroll
           hasNext={hasNext}

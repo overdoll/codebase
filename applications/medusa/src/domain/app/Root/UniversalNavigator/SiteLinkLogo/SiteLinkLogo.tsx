@@ -13,7 +13,7 @@ export default function SiteLinkLogo (): JSX.Element {
             <Heading fontSize='sm' color='primary.400'>
               overdoll
             </Heading>
-            <Text fontSize='2xs' color='orange.300'>
+            <Text lineHeight={1} fontSize='2xs' color='orange.300'>
               beta
             </Text>
           </Flex>

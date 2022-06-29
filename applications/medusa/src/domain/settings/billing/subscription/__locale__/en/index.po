@@ -25,7 +25,7 @@ msgstr ""
 msgid "ACTIVE"
 msgstr ""
 
-#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:184
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:183
 msgid "After cancelling your subscription, you will no longer be billed. You will keep your benefits until {nextBillingDate}. After this date, they will expire."
 msgstr ""
 
@@ -48,8 +48,8 @@ msgid "CCBill Support Center"
 msgstr ""
 
 #: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:155
-#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:169
-#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:216
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:168
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:215
 msgid "Cancel Subscription"
 msgstr ""
 
@@ -111,7 +111,7 @@ msgstr ""
 msgid "Open the CCBill Support Center link using the button below"
 msgstr ""
 
-#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:192
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/CancelSubscriptionButton/CancelSubscriptionButton.tsx:191
 msgid "Please tell us why you would like to cancel the subscription. We'll communicate this to the club so they can continue to improve their content."
 msgstr ""
 
@@ -150,7 +150,7 @@ msgstr ""
 #~ msgid "This club is currently suspended. You cannot access its exclusive content."
 #~ msgstr ""
 
-#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/UpdatePaymentMethodButton.tsx:52
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/UpdatePaymentMethodButton.tsx:53
 #: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionSettings/ManageActiveSubscriptionButton/UpdatePaymentMethodButton/UpdatePaymentMethodButton.tsx:66
 msgid "Update Payment Method"
 msgstr ""

@@ -90,7 +90,8 @@ function getSize (value: string): PartsStyleObject<typeof parts> {
       dialog: {
         maxW: '100vw',
         minH: '100vh',
-        my: 0
+        my: 0,
+        borderRadius: 'none'
       }
     }
   }

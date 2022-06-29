@@ -57,7 +57,6 @@ export default function UpdatePaymentMethodButton ({ query }: Props): JSX.Elemen
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        motionPreset='none'
         isCentered
         preserveScrollBarGap
       >

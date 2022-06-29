@@ -1,7 +1,7 @@
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { DiscoverClubsQuery } from '@//:artifacts/DiscoverClubsQuery.graphql'
 import { graphql } from 'react-relay'
-import { Box, Flex, Heading, HStack, Stack } from '@chakra-ui/react'
+import { Box, Flex, HStack, Stack } from '@chakra-ui/react'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
 import { Trans } from '@lingui/macro'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
@@ -9,8 +9,7 @@ import AccountInformationBanner
   from '../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
 import BackButton from '@//:modules/content/PageLayout/BuildingBlocks/BackButton/BackButton'
 import DiscoverClubsList from './DiscoverClubsList/DiscoverClubsList'
-import PostSearchButton
-  from '../../../../../modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/PostSearchButton'
+import PageHeader from '../../../../../common/components/PageHeader/PageHeader'
 
 interface Props {
   query: PreloadedQuery<DiscoverClubsQuery>
@@ -108,14 +107,7 @@ export default function DiscoverClubs (props: Props): JSX.Element {
             )}
       </Box>
       <Stack spacing={8}>
-        <HStack spacing={2} justify='space-between'>
-          <Heading color='gray.00' fontSize='2xl'>
-            <Trans>
-              Discover Clubs
-            </Trans>
-          </Heading>
-          <PostSearchButton routeTo='/search' />
-        </HStack>
+        <PageHeader title={<Trans>Discover Clubs</Trans>} hasSearch />
         <DiscoverClubsList query={queryData} />
       </Stack>
     </Box>
