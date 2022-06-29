@@ -333,6 +333,10 @@ func (r PostsCassandraElasticsearchRepository) UpdateSeriesThumbnailOperator(ctx
 	return r.updateSeries(ctx, id, updateFn, []string{"thumbnail_resource"})
 }
 
+func (r PostsCassandraElasticsearchRepository) UpdateSeriesBannerOperator(ctx context.Context, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
+	return r.updateSeries(ctx, id, updateFn, []string{"banner_resource"})
+}
+
 func (r PostsCassandraElasticsearchRepository) UpdateSeriesTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
 	return r.updateSeries(ctx, id, updateFn, []string{"title"})
 }

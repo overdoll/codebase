@@ -743,3 +743,82 @@ func (r PostsCassandraElasticsearchRepository) deletePostIndexById(ctx context.C
 
 	return nil
 }
+
+func (r PostsCassandraElasticsearchRepository) GetFirstTopPostWithoutOccupiedResources(ctx context.Context, characterId, categoryId, seriesId, audienceId *string) (*post.Post, error) {
+
+	builder := r.client.Search().
+		Index(PostReaderIndex)
+
+	terminatedClubIds, err := r.getTerminatedClubIds(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// get all occupied resources, so we can exclude them from search
+	postIds, err := r.getPostOccupiedResourcesPostIds(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	builder.Sort("likes", false)
+	builder.Sort("created_at", true)
+
+	query := elastic.NewBoolQuery()
+
+	var filterQueries []elastic.Query
+
+	filterQueries = append(filterQueries, elastic.NewBoolQuery().MustNot(elastic.NewTermsQueryFromStrings("club_id", terminatedClubIds...)))
+	filterQueries = append(filterQueries, elastic.NewBoolQuery().MustNot(elastic.NewTermsQueryFromStrings("id", postIds...)))
+	filterQueries = append(filterQueries, elastic.NewTermQuery("state", post.Published.String()))
+	filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("supporter_only_status", post.None.String()))
+
+	if categoryId != nil {
+		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("category_ids", *categoryId))
+	}
+
+	if characterId != nil {
+		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("character_ids", *characterId))
+	}
+
+	if seriesId != nil {
+		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("series_ids", *seriesId))
+	}
+
+	if audienceId != nil {
+		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("audience_id", *audienceId))
+	}
+
+	if filterQueries != nil {
+		query.Filter(filterQueries...)
+	}
+
+	builder.Size(1)
+	builder.Query(query)
+
+	response, err := builder.Pretty(true).Do(ctx)
+
+	if err != nil {
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed to search posts")
+	}
+
+	var posts []*post.Post
+
+	for _, hit := range response.Hits.Hits {
+
+		createdPost, err := r.unmarshalPostDocument(ctx, hit)
+
+		if err != nil {
+			return nil, err
+		}
+
+		posts = append(posts, createdPost)
+	}
+
+	if len(posts) == 1 {
+		return posts[0], nil
+	}
+
+	return nil, nil
+}

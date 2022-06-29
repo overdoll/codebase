@@ -327,6 +327,10 @@ func (r PostsCassandraElasticsearchRepository) UpdateCategoryThumbnailOperator(c
 	return r.updateCategory(ctx, id, updateFn, []string{"thumbnail_resource"})
 }
 
+func (r PostsCassandraElasticsearchRepository) UpdateCategoryBannerOperator(ctx context.Context, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
+	return r.updateCategory(ctx, id, updateFn, []string{"banner_resource"})
+}
+
 func (r PostsCassandraElasticsearchRepository) UpdateCategoryThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
 	return r.updateCategory(ctx, id, updateFn, []string{"thumbnail_resource"})
 }

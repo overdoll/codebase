@@ -381,19 +381,19 @@ func (c *Serializer) createSignedUrl(url string) (string, error) {
 
 	dayBucket := 5
 
-	if day >= 5 {
+	if day >= 4 {
 		dayBucket = 10
 	}
 
-	if day >= 10 {
+	if day >= 9 {
 		dayBucket = 15
 	}
 
-	if day >= 15 {
+	if day >= 14 {
 		dayBucket = 20
 	}
 
-	if day >= 20 {
+	if day >= 19 {
 		dayBucket = 25
 	}
 

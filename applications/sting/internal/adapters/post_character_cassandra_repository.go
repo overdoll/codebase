@@ -373,6 +373,10 @@ func (r PostsCassandraElasticsearchRepository) UpdateCharacterThumbnail(ctx cont
 	return r.updateCharacter(ctx, id, updateFn, []string{"thumbnail_resource"})
 }
 
+func (r PostsCassandraElasticsearchRepository) UpdateCharacterBannerOperator(ctx context.Context, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
+	return r.updateCharacter(ctx, id, updateFn, []string{"banner_resource"})
+}
+
 func (r PostsCassandraElasticsearchRepository) UpdateCharacterName(ctx context.Context, requester *principal.Principal, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
 	return r.updateCharacter(ctx, id, updateFn, []string{"name"})
 }

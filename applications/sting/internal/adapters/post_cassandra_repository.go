@@ -17,6 +17,23 @@ import (
 	"overdoll/libraries/principal"
 )
 
+var postsOccupiedResourceTable = table.New(table.Metadata{
+	Name: "posts_occupied_resources",
+	Columns: []string{
+		"bucket",
+		"post_id",
+		"resource_id",
+	},
+	PartKey: []string{"bucket"},
+	SortKey: []string{"post_id", "resource_id"},
+})
+
+type postsOccupiedResource struct {
+	Bucket     int    `db:"bucket"`
+	PostId     string `db:"post_id"`
+	ResourceId string `db:"resource_id"`
+}
+
 var postTable = table.New(table.Metadata{
 	Name: "posts",
 	Columns: []string{
@@ -177,6 +194,50 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Contex
 		postPending.UpdatedAt,
 		postPending.PostedAt,
 	), nil
+}
+
+func (r PostsCassandraElasticsearchRepository) getPostOccupiedResourcesPostIds(ctx context.Context) ([]string, error) {
+
+	var postResults []*postsOccupiedResource
+
+	if err := r.session.
+		Query(qb.Select(postsOccupiedResourceTable.Name()).Where(qb.Eq("bucket")).ToCql()).
+		WithContext(ctx).
+		Idempotent(true).
+		BindStruct(postsOccupiedResource{
+			Bucket: 0,
+		}).
+		Consistency(gocql.LocalQuorum).
+		SelectRelease(&postResults); err != nil {
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get post occupied resources")
+	}
+
+	var postIds []string
+
+	for _, result := range postResults {
+		postIds = append(postIds, result.PostId)
+	}
+
+	return postIds, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) AddPostOccupiedResource(ctx context.Context, post *post.Post, resource *resource.Resource) error {
+
+	if err := r.session.
+		Query(postsOccupiedResourceTable.Insert()).
+		WithContext(ctx).
+		Idempotent(true).
+		BindStruct(postsOccupiedResource{
+			Bucket:     0,
+			PostId:     post.ID(),
+			ResourceId: resource.ID(),
+		}).
+		Consistency(gocql.LocalQuorum).
+		ExecRelease(); err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to create post occupied resource")
+	}
+
+	return nil
 }
 
 func (r PostsCassandraElasticsearchRepository) CreatePost(ctx context.Context, pending *post.Post) error {
