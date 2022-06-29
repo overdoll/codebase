@@ -5,7 +5,7 @@ import {
   PageSectionTitle,
   PageSectionWrap
 } from '@//:modules/content/PageLayout'
-import { Stack } from '@chakra-ui/react'
+import { HStack, Stack } from '@chakra-ui/react'
 import SearchInput from '@//:modules/content/HookedComponents/Search/components/SearchInput/SearchInput'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -16,7 +16,7 @@ import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryEr
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import { ChoiceRemovableTags, useChoice } from '@//:modules/content/HookedComponents/Choice'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
-import SuggestPrompt from '../../../../../SuggestPrompt/SuggestPrompt'
+import UploadRewindCategories from './UploadRewindCategories/UploadRewindCategories'
 
 interface SearchProps {
   title: string
@@ -68,10 +68,14 @@ export default function UploadCategoryStep (): JSX.Element {
           </Trans>
         </PageSectionDescription>
       </PageSectionWrap>
-      <SearchInput
-        {...registerSearch('title', 'change')}
-        placeholder={i18n._(t`Search for a category`)}
-      />
+      <HStack spacing={2} justify='space-between'>
+        <SearchInput
+          nullifyOnClear
+          {...registerSearch('title', 'change')}
+          placeholder={i18n._(t`Search for a category`)}
+        />
+        <UploadRewindCategories />
+      </HStack>
       <ChoiceRemovableTags
         titleKey='title'
         values={values}
@@ -87,11 +91,6 @@ export default function UploadCategoryStep (): JSX.Element {
           </Suspense>
         </QueryErrorBoundary>
       </FlowBuilderScrollableContainer>
-      <SuggestPrompt>
-        <Trans>
-          Have a category suggestion? Send us an email at hello@overdoll.com!
-        </Trans>
-      </SuggestPrompt>
     </Stack>
   )
 }

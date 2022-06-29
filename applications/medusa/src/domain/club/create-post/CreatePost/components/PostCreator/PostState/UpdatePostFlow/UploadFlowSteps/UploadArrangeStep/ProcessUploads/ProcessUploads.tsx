@@ -7,15 +7,15 @@ import type { ProcessUploadsMutation } from '@//:artifacts/ProcessUploadsMutatio
 import { useFragment } from 'react-relay'
 import Button from '@//:modules/form/Button/Button'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
-import FilePicker from '../../../../../../FilePicker/FilePicker'
-import { FileUpload, WarningTriangle } from '@//:assets/icons'
+import { WarningTriangle } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import { UppyContext } from '../../../../../../../context'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
-import DragOverFileInput from '../../../../../../DragOverFileInput/DragOverFileInput'
 import { ClickableTile } from '@//:modules/content/ContentSelection'
 import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
+import ArrangeUploadsFilePicker
+  from '@//:modules/content/Interactables/FileUpload/ArrangeUploadsFilePicker/ArrangeUploadsFilePicker'
 
 interface Props {
   query: ProcessUploadsFragment$key
@@ -161,27 +161,7 @@ export default function ProcessUploads ({
     }
 
     return (
-      <FilePicker uppy={uppy}>
-        <DragOverFileInput hasText={false} uppy={uppy}>
-          <ClickableTile>
-            <LargeBackgroundBox w='100%'>
-              <Stack py={4} align='center' justify='center'>
-                <Icon
-                  w={6}
-                  h={6}
-                  icon={FileUpload}
-                  fill='gray.100'
-                />
-                <Heading fontSize='lg' color='gray.100'>
-                  <Trans>
-                    Drag and drop or tap to upload
-                  </Trans>
-                </Heading>
-              </Stack>
-            </LargeBackgroundBox>
-          </ClickableTile>
-        </DragOverFileInput>
-      </FilePicker>
+      <ArrangeUploadsFilePicker uppy={uppy} />
     )
   }
 

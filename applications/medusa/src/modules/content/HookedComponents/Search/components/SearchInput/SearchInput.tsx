@@ -6,13 +6,16 @@ import CloseButton from '../../../../ThemeComponents/CloseButton/CloseButton'
 import { RegisterFunctionReturn } from '../../types'
 import { useDebounce, useUpdateEffect } from 'usehooks-ts'
 
-type Props = InputProps & RegisterFunctionReturn
+interface Props extends Omit<InputProps, 'id'>, RegisterFunctionReturn {
+  nullifyOnClear?: boolean
+}
 
 export default function SearchInput ({
   id,
   onChangeRegister,
   isPending,
   size,
+  nullifyOnClear,
   ...rest
 }: Props): JSX.Element {
   const [searchInput, setSearch] = useState('')
@@ -51,7 +54,7 @@ export default function SearchInput ({
   }
 
   useUpdateEffect(() => {
-    onChangeRegister(debouncedSearchInput !== '' ? debouncedSearchInput : '')
+    onChangeRegister(debouncedSearchInput !== '' ? debouncedSearchInput : (nullifyOnClear === true ? null : ''))
   }, [debouncedSearchInput])
 
   return (

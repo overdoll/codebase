@@ -2,15 +2,14 @@ import UppyInstance from './hooks/uppy/Uppy'
 import type { Uppy, UppyFile } from '@uppy/core'
 import { useEffect, useRef, useState } from 'react'
 import { Flex, Progress, Stack } from '@chakra-ui/react'
-import { Icon, LargeBackgroundBox } from '../../PageLayout'
-import FilePicker from '../../../../domain/club/create-post/CreatePost/components/FilePicker/FilePicker'
-import DragOverFileInput
-  from '../../../../domain/club/create-post/CreatePost/components/DragOverFileInput/DragOverFileInput'
+import { Icon, LargeBackgroundBox } from '../../../PageLayout'
+import FilePicker from '../FilePicker/FilePicker'
+import DragOverFileInput from '../DragOverFileInput/DragOverFileInput'
 import { FileUpload, RemoveCross } from '@//:assets/icons/interface'
 import { Trans } from '@lingui/macro'
-import CloseButton from '../../ThemeComponents/CloseButton/CloseButton'
-import { useToast } from '@//:modules/content/ThemeComponents'
-import Button from '../../../form/Button/Button'
+import CloseButton from '../../../ThemeComponents/CloseButton/CloseButton'
+import { useToast } from '../../../ThemeComponents'
+import Button from '../../../../form/Button/Button'
 
 interface Props {
   onChange: (id) => void

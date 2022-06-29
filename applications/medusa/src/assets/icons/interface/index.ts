@@ -45,3 +45,4 @@ export { default as PaymentMethodIdentifier } from './normal-bold/payment-method
 export { default as PremiumStarHollow } from './normal-bold/premium-star-hollow.svg'
 export { default as ArchiveFile } from './mini-bold/actions/archive-file.svg'
 export { default as ActionUnlock } from './mini-bold/actions/action-unlock.svg'
+export { default as TimeRewind } from './mini-bold/actions/time-rewind.svg'

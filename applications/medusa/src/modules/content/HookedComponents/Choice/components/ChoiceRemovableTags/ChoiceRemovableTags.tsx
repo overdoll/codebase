@@ -1,6 +1,7 @@
 import RemovableTag from '../../../../DataDisplay/RemovableTag/RemovableTag'
 import { Choices, Id, UseChoiceReturnRemoveValue } from '../../types'
-import { HStackScroll } from '../../../../PageLayout'
+import { RenderOnDesktop, RenderOnMobile } from '../../../../PageLayout'
+import { HStack, Wrap, WrapItem } from '@chakra-ui/react'
 
 interface ChoiceRemovableTagsProps {
   values: Choices<any>
@@ -22,16 +23,40 @@ export default function ChoiceRemovableTags ({
   }
 
   return (
-    <HStackScroll
-      spacing={1}
-    >
-      {Object.keys(values).map((item, index) => (
-        <RemovableTag
-          key={index}
-          onRemove={onRemove}
-          id={item}
-          title={values[item][titleKey]}
-        />))}
-    </HStackScroll>
+    <>
+      <RenderOnDesktop>
+        <Wrap spacing={1} overflow='show'>
+          {Object.keys(values).map((item, index) => (
+            <WrapItem key={index}>
+              <RemovableTag
+                onRemove={onRemove}
+                id={item}
+                title={values[item][titleKey]}
+              />
+            </WrapItem>
+          ))}
+        </Wrap>
+      </RenderOnDesktop>
+      <RenderOnMobile>
+        <HStack
+          bg='gray.800'
+          borderRadius='md'
+          pt={1}
+          pb={1}
+          whiteSpace='nowrap'
+          overflowX='auto'
+          display='initial'
+          spacing={1}
+        >
+          {Object.keys(values).map((item, index) => (
+            <RemovableTag
+              key={index}
+              onRemove={onRemove}
+              id={item}
+              title={values[item][titleKey]}
+            />))}
+        </HStack>
+      </RenderOnMobile>
+    </>
   )
 }

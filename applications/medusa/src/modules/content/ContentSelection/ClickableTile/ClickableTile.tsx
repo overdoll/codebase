@@ -33,9 +33,9 @@ const ClickableTile = forwardRef<any, Props>(({
           position='absolute'
           top={0}
           right={0}
-          margin={2}
+          p={1}
         >
-          <Flex bg='dimmers.500' borderRadius='full' p={1}>
+          <Flex p={1} bg='dimmers.500' borderRadius='full'>
             <Spinner size='sm' />
           </Flex>
         </Box>}

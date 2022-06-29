@@ -2,7 +2,7 @@ import type { DragEvent, ReactNode } from 'react'
 import { useState } from 'react'
 import { Flex, Heading, useDisclosure } from '@chakra-ui/react'
 import type { Uppy } from '@uppy/core'
-import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
+import Icon from '../../../PageLayout/Flair/Icon/Icon'
 import { FileUpload } from '@//:assets/icons/interface'
 import { Trans } from '@lingui/macro'
 

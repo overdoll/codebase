@@ -1,15 +1,16 @@
 import type { Uppy as UppyType } from '@uppy/core'
 import Uppy from '@uppy/core'
 import Tus from '@uppy/tus'
-import CanUseDOM from '../../../../../operations/CanUseDOM'
+import CanUseDOM from '../../../../../../operations/CanUseDOM'
 import GoldenRetriever from '@uppy/golden-retriever'
+import { CLUB_ALLOWED_FILE_TYPES, MAX_FILE_SIZE } from '../../../../../../constants/upload'
 
 const U: UppyType = Uppy({
   id: 'single-file-upload',
   restrictions: {
     maxNumberOfFiles: 1,
-    allowedFileTypes: ['image/png'],
-    maxFileSize: 25000000
+    allowedFileTypes: CLUB_ALLOWED_FILE_TYPES,
+    maxFileSize: MAX_FILE_SIZE
   },
   autoProceed: true,
   allowMultipleUploads: false,

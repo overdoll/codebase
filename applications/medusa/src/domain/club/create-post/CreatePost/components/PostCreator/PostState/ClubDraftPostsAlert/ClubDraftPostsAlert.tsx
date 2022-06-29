@@ -1,10 +1,9 @@
 import { ClubDraftPostsAlertFragment$key } from '@//:artifacts/ClubDraftPostsAlertFragment.graphql'
 import { graphql, useFragment } from 'react-relay/hooks'
-import { Icon, LargeBackgroundBox } from '@//:modules/content/PageLayout'
-import { EditView, FileMultiple } from '@//:assets/icons'
-import { Heading, HStack } from '@chakra-ui/react'
+import { FileMultiple } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import { LinkTile } from '@//:modules/content/ContentSelection'
+import InspectableAlert from '../../../../../../../../common/components/InspectableAlert/InspectableAlert'
 
 interface Props {
   query: ClubDraftPostsAlertFragment$key
@@ -41,29 +40,11 @@ export default function ClubDraftPostsAlert ({ query }: Props): JSX.Element {
       }
     }}
     >
-      <LargeBackgroundBox borderLeftWidth={3} borderLeftColor='orange.300'>
-        <HStack align='center' justify='space-between'>
-          <HStack align='center' spacing={3}>
-            <Icon
-              icon={FileMultiple}
-              w={5}
-              h={5}
-              fill='gray.00'
-            />
-            <Heading color='gray.00' fontSize='lg'>
-              <Trans>
-                You have unpublished draft posts
-              </Trans>
-            </Heading>
-          </HStack>
-          <Icon
-            icon={EditView}
-            w={5}
-            h={5}
-            fill='gray.200'
-          />
-        </HStack>
-      </LargeBackgroundBox>
+      <InspectableAlert
+        text={<Trans>You have unpublished draft posts</Trans>}
+        icon={FileMultiple}
+        colorScheme='orange'
+      />
     </LinkTile>
   )
 }

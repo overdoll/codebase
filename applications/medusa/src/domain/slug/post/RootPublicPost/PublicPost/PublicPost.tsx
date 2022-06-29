@@ -13,7 +13,7 @@ import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import AccountInformationBanner
   from '../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
 import PublicPostRichObject from '../../../../../common/rich-objects/slug/PublicPostRichObject/PublicPostRichObject'
-import PageHeader from '../../../../../common/components/PageHeader/PageHeader'
+import SearchButton from '../../../../../common/components/PageHeader/SearchButton/SearchButton'
 
 interface Props {
   query: PreloadedQuery<PublicPostQuery>
@@ -78,7 +78,12 @@ export default function PublicPost (props: Props): JSX.Element {
       <PublicPostRichObject query={queryData.post} />
       <AccountInformationBanner query={queryData.viewer} />
       <Stack spacing={8}>
-        <PageHeader title={<Trans>View Post</Trans>} hasSearch />
+        <HStack spacing={2} justify='space-between'>
+          <Heading color='gray.00' fontSize='2xl'>
+            <Trans>View Post</Trans>
+          </Heading>
+          <SearchButton />
+        </HStack>
         <Stack spacing={24}>
           <GlobalVideoManagerProvider>
             <PublicPostPage query={queryData.post} viewerQuery={queryData.viewer} />

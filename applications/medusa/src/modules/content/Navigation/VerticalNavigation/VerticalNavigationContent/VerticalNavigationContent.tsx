@@ -48,7 +48,7 @@ export default function VerticalNavigationContent (props: Props): JSX.Element {
         mt={4}
       >
         <Flex
-          w={['full', 'sm', 'md', 'lg']}
+          w={['full', 'md', 'lg']}
           pl={[1, 0]}
           pr={[1, 0]}
           direction='column'

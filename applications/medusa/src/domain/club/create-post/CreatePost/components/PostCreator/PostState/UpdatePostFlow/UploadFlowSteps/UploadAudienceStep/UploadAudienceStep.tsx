@@ -40,13 +40,12 @@ export default function UploadAudienceStep (): JSX.Element {
       <PageSectionWrap>
         <PageSectionTitle colorScheme='teal'>
           <Trans>
-            Who is the target audience?
+            What does the content contain?
           </Trans>
         </PageSectionTitle>
         <PageSectionDescription>
           <Trans>
-            The audience is the group of people that you intended this post for. This will determine whether or not a
-            user can see your post based on their set preferences. You can only select one audience.
+            Select the most relevant depiction of your content. You can only select one.
           </Trans>
         </PageSectionDescription>
       </PageSectionWrap>

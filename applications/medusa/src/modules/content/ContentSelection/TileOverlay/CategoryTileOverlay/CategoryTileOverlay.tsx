@@ -31,7 +31,7 @@ export default function CategoryTileOverlay ({
       />
     }
     >
-      <Stack p={2} w='100%' h='100%' align='center' justify='center' spacing={0}>
+      <Stack whiteSpace='pre' p={2} w='100%' h='100%' align='center' justify='center' spacing={0}>
         <Text
           fontSize={{
             base: 'sm',

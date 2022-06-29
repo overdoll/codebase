@@ -2,11 +2,12 @@ import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { ClubsFeedQuery } from '@//:artifacts/ClubsFeedQuery.graphql'
 import { graphql } from 'react-relay'
 import ClubPostsFeed from './ClubPostsFeed/ClubPostsFeed'
-import { Stack } from '@chakra-ui/react'
+import { Heading, HStack, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import AccountInformationBanner
   from '../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
-import PageHeader from '../../../../../common/components/PageHeader/PageHeader'
+import SearchButton from '../../../../../common/components/PageHeader/SearchButton/SearchButton'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 
 interface Props {
   query: PreloadedQuery<ClubsFeedQuery>
@@ -32,7 +33,21 @@ export default function ClubsFeed (props: Props): JSX.Element {
     <>
       <AccountInformationBanner query={queryData.viewer} />
       <Stack spacing={8}>
-        <PageHeader title={<Trans>Your Clubs Feed</Trans>} hasSearch hasDiscover />
+        <Stack spacing={2}>
+          <HStack spacing={2} justify='space-between'>
+            <Heading color='gray.00' fontSize='2xl'>
+              <Trans>Your Clubs Feed</Trans>
+            </Heading>
+            <HStack>
+              <LinkButton size='sm' href='/clubs/discover'>
+                <Trans>
+                  Discover Clubs
+                </Trans>
+              </LinkButton>
+              <SearchButton />
+            </HStack>
+          </HStack>
+        </Stack>
         <ClubPostsFeed
           query={queryData.viewer}
           viewerQuery={queryData.viewer}

@@ -4,11 +4,11 @@ import { graphql, usePaginationFragment } from 'react-relay'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import PostsInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/PostsInfiniteScroll'
-import { Stack } from '@chakra-ui/react'
+import { Heading, HStack, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import AccountInformationBanner from '../../../../common/components/AccountInformationBanner/AccountInformationBanner'
 import CurationProfileAlert from '../CurationProfileAlert/CurationProfileAlert'
-import PageHeader from '../../../../common/components/PageHeader/PageHeader'
+import SearchButton from '../../../../common/components/PageHeader/SearchButton/SearchButton'
 
 interface Props {
   query: PreloadedQuery<HomeQuery>
@@ -63,7 +63,12 @@ export default function Home (props: Props): JSX.Element {
       <AccountInformationBanner query={queryData?.viewer} />
       <CurationProfileAlert query={queryData?.viewer} />
       <Stack spacing={8}>
-        <PageHeader title={<Trans>Home</Trans>} hasSearch />
+        <HStack spacing={2} justify='space-between'>
+          <Heading color='gray.00' fontSize='2xl'>
+            <Trans>Home</Trans>
+          </Heading>
+          <SearchButton />
+        </HStack>
         <GlobalVideoManagerProvider>
           <PostsInfiniteScroll
             hasNext={hasNext}

@@ -10,7 +10,11 @@ import AccountInformationBanner
 import PublicClubPostsRichObject
   from '../../../../../common/rich-objects/slug/PublicClubPostsRichObject/PublicClubPostsRichObject'
 import { Trans } from '@lingui/macro'
-import PageHeader from '../../../../../common/components/PageHeader/PageHeader'
+import { Heading, HStack, Stack } from '@chakra-ui/react'
+import SearchButton from '../../../../../common/components/PageHeader/SearchButton/SearchButton'
+import PostOrderButton from '../../../../../common/components/PageHeader/PostOrderButton/PostOrderButton'
+import PostSupporterStatusButton
+  from '../../../../../common/components/PageHeader/PostSupporterStatusButton/PostSupporterStatusButton'
 
 interface Props {
   query: PreloadedQuery<PublicClubPostsQuery>
@@ -84,7 +88,18 @@ export default function PublicClubPosts (props: Props): JSX.Element {
     <>
       <PublicClubPostsRichObject clubQuery={queryData.club} />
       <AccountInformationBanner query={queryData.viewer} />
-      <PageHeader title={<Trans>{queryData.club.name}'s Posts</Trans>} hasSort hasSupporter hasSearch />
+      <Stack spacing={2}>
+        <HStack spacing={2} justify='space-between'>
+          <Heading color='gray.00' fontSize='2xl'>
+            <Trans>{queryData.club.name}'s Posts</Trans>
+          </Heading>
+          <SearchButton />
+        </HStack>
+        <HStack mt={2} spacing={2}>
+          <PostOrderButton />
+          <PostSupporterStatusButton />
+        </HStack>
+      </Stack>
       <GlobalVideoManagerProvider>
         <PostsInfiniteScroll
           hasNext={hasNext}

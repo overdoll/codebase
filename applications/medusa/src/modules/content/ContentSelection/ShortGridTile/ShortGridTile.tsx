@@ -5,7 +5,7 @@ interface Props extends BoxProps {
   children: ReactNode
 }
 
-export default function GridTile ({
+export default function ShortGridTile ({
   children,
   ...rest
 }: Props): JSX.Element {
@@ -14,7 +14,7 @@ export default function GridTile ({
       position='relative'
       {...rest}
     >
-      <Box pt='132%' />
+      <Box pt='100%' />
       <Box top={0} w='100%' h='100%' position='absolute'>
         {children}
       </Box>

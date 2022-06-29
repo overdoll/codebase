@@ -9,6 +9,9 @@ import { EmptyBoundary, EmptyCharacters } from '@//:modules/content/Placeholder'
 import { ComponentChoiceArguments } from '@//:modules/content/HookedComponents/Choice/types'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
 import { Choice } from '@//:modules/content/HookedComponents/Choice'
+import SuggestPrompt from '../../../../../../SuggestPrompt/SuggestPrompt'
+import { Trans } from '@lingui/macro'
+import { Stack } from '@chakra-ui/react'
 
 interface Props extends ComponentChoiceArguments<any>, ComponentSearchArguments<any> {
 }
@@ -69,10 +72,18 @@ export default function UploadSearchCharactersMultiSelector ({
 
   return (
     <EmptyBoundary
-      fallback={<EmptyCharacters hint={searchArguments.variables.name} />}
+      fallback={(
+        <Stack spacing={2}>
+          <EmptyCharacters hint={searchArguments.variables.name} />
+          <SuggestPrompt>
+            <Trans>
+              Have a character suggestion or want your character listed? Send us an email at hello@overdoll.com!
+            </Trans>
+          </SuggestPrompt>
+        </Stack>)}
       condition={characters.length < 1}
     >
-      <GridWrap justify='center'>
+      <GridWrap>
         {characters.map((item, index) => (
           <GridTile key={index}>
             <Choice {...register(item.id, { name: item.name })}>

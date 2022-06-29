@@ -10,7 +10,6 @@ import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryEr
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import { ChoiceRemovableTags, useChoice } from '@//:modules/content/HookedComponents/Choice'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
-import SuggestPrompt from '../../../../../SuggestPrompt/SuggestPrompt'
 
 interface SearchProps {
   name: string
@@ -63,6 +62,7 @@ export default function UploadCharacterStep (): JSX.Element {
         </PageSectionDescription>
       </PageSectionWrap>
       <SearchInput
+        nullifyOnClear
         {...registerSearch('name', 'change')}
         placeholder={i18n._(t`Search for a character by name`)}
       />
@@ -81,11 +81,6 @@ export default function UploadCharacterStep (): JSX.Element {
           />
         </Suspense>
       </QueryErrorBoundary>
-      <SuggestPrompt>
-        <Trans>
-          Have a character suggestion or want your character listed? Send us an email at hello@overdoll.com!
-        </Trans>
-      </SuggestPrompt>
     </Stack>
   )
 }

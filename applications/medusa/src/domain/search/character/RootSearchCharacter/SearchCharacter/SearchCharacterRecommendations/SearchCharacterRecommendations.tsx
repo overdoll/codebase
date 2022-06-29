@@ -33,7 +33,7 @@ export default function SearchCharacterRecommendations ({ query }: Props): JSX.E
     >
       <SmallBackgroundBox>
         <HStack spacing={2} justify='space-between'>
-          <Heading color='gray.200' fontSize='md'>
+          <Heading color='gray.100' fontSize='md'>
             {data.series.title}
           </Heading>
           <Icon icon={ArrowButtonRight} w={4} h={4} fill='gray.200' />

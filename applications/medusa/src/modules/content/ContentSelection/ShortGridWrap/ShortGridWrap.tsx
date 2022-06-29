@@ -5,15 +5,15 @@ interface Props extends GridProps {
   children: ReactNode
 }
 
-export default function GridWrap ({
+export default function ShortGridWrap ({
   children,
   ...rest
 }: Props): JSX.Element {
   return (
     <Grid
-      rowGap={3}
-      columnGap={3}
-      templateColumns='repeat(auto-fill, minmax(120px, 1fr))'
+      rowGap={1}
+      columnGap={1}
+      templateColumns='repeat(auto-fill, minmax(90px, 1fr))'
       justify='center'
       {...rest}
     >
