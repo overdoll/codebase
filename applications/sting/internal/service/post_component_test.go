@@ -501,7 +501,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		"characterSlugs":      []graphql.String{"AarushHills"},
 		"categorySlugs":       []graphql.String{},
 		"audienceSlugs":       []graphql.String{},
-		"seriesSlugs":         []graphql.String{},
+		"seriesSlugs":         []graphql.String{"CatCanDance"},
 	})
 
 	require.NoError(t, err, "no error searching for character")
