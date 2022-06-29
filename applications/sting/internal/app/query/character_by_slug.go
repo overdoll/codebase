@@ -23,7 +23,7 @@ func NewCharacterBySlugHandler(pr post.Repository) CharacterBySlugHandler {
 
 func (h CharacterBySlugHandler) Handle(ctx context.Context, query CharacterBySlug) (*post.Character, error) {
 
-	result, err := h.pr.GetCharacterBySlug(ctx, query.Principal, query.Slug, query.SeriesSlug)
+	result, err := h.pr.GetCharacterBySlug(ctx, query.Slug, query.SeriesSlug)
 
 	if err != nil {
 		return nil, err

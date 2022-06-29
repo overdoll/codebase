@@ -9,6 +9,31 @@ import (
 	"overdoll/libraries/principal"
 )
 
+func (r *MutationResolver) GenerateCategoryBanner(ctx context.Context, input types.GenerateCategoryBannerInput) (*types.GenerateCategoryBannerPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	category, err := r.App.Commands.GenerateCategoryBanner.
+		Handle(
+			ctx,
+			command.GenerateCategoryBanner{
+				Principal:  principal.FromContext(ctx),
+				CategoryId: input.ID.GetID(),
+				Duration:   int64(input.Duration),
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.GenerateCategoryBannerPayload{
+		Category: types.MarshalCategoryToGraphQL(ctx, category),
+	}, err
+}
+
 func (r *MutationResolver) CreateCategory(ctx context.Context, input types.CreateCategoryInput) (*types.CreateCategoryPayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {

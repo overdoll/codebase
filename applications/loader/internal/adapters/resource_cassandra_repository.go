@@ -44,6 +44,7 @@ var resourcesTable = table.New(table.Metadata{
 		"height",
 		"preview",
 		"resource_token",
+		"failed",
 	},
 	PartKey: []string{"item_id"},
 	SortKey: []string{"resource_id"},
@@ -66,6 +67,7 @@ type resources struct {
 	Height                 int    `db:"height"`
 	Preview                string `db:"preview"`
 	ResourceToken          string `db:"resource_token"`
+	Failed                 bool   `db:"failed"`
 }
 
 type ResourceCassandraS3Repository struct {
@@ -92,6 +94,7 @@ func unmarshalResourceFromDatabase(i resources) *resource.Resource {
 		i.Height,
 		i.Preview,
 		i.ResourceToken,
+		i.Failed,
 	)
 }
 
@@ -122,6 +125,7 @@ func marshalResourceToDatabase(r *resource.Resource) *resources {
 		VideoDuration:          r.VideoDuration(),
 		Preview:                r.Preview(),
 		ResourceToken:          r.Token(),
+		Failed:                 r.Failed(),
 	}
 }
 
@@ -365,13 +369,27 @@ func (r ResourceCassandraS3Repository) UpdateResourcePrivacy(ctx context.Context
 	return nil
 }
 
+func (r ResourceCassandraS3Repository) UpdateResourceFailed(ctx context.Context, resource *resource.Resource) error {
+
+	if err := r.session.
+		Query(resourcesTable.Update("failed")).
+		WithContext(ctx).
+		Idempotent(true).
+		BindStruct(resources{ItemId: resource.ItemId(), ResourceId: resource.ID(), Failed: resource.Failed()}).
+		ExecRelease(); err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to update resources failed")
+	}
+
+	return nil
+}
+
 func (r ResourceCassandraS3Repository) DeleteResources(ctx context.Context, resourceItems []*resource.Resource) error {
 
 	s3Client := s3.New(r.aws)
 
 	for _, target := range resourceItems {
 
-		if !target.IsProcessed() {
+		if !target.IsProcessed() && !target.Failed() {
 			return apperror.NewRecoverableError("resource not yet processed")
 		}
 

@@ -100,6 +100,8 @@ type Audience struct {
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
 	Thumbnail *graphql1.Resource `json:"thumbnail"`
+	// A URL pointing to the object's banner.
+	Banner *graphql1.Resource `json:"banner"`
 	// A title for this audience.
 	//
 	// Optionally pass a locale to display it in a specific language. English by default.
@@ -147,6 +149,8 @@ type Category struct {
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
 	Thumbnail *graphql1.Resource `json:"thumbnail"`
+	// A URL pointing to the object's banner.
+	Banner *graphql1.Resource `json:"banner"`
 	// A title for this category.
 	//
 	// Optionally pass a locale to display it in a specific language. English by default.
@@ -193,6 +197,8 @@ type Character struct {
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
 	Thumbnail *graphql1.Resource `json:"thumbnail"`
+	// A URL pointing to the object's banner.
+	Banner *graphql1.Resource `json:"banner"`
 	// A name for this character.
 	//
 	// Optionally pass a locale to display it in a specific language. English by default.
@@ -544,6 +550,62 @@ type EnableClubSupporterOnlyPostsPayload struct {
 	Club *Club `json:"club"`
 }
 
+// Generate audience banner.
+type GenerateAudienceBannerInput struct {
+	// The audience to update
+	ID relay.ID `json:"id"`
+	// The time, in nanoseconds, to wait for banner generation.
+	Duration int `json:"duration"`
+}
+
+// Payload for updating audience
+type GenerateAudienceBannerPayload struct {
+	// The audience after update
+	Audience *Audience `json:"audience"`
+}
+
+// Generate category banner.
+type GenerateCategoryBannerInput struct {
+	// The category to update
+	ID relay.ID `json:"id"`
+	// The time, in nanoseconds, to wait for banner generation.
+	Duration int `json:"duration"`
+}
+
+// Payload for updating category
+type GenerateCategoryBannerPayload struct {
+	// The category after update
+	Category *Category `json:"category"`
+}
+
+// Generate character banner.
+type GenerateCharacterBannerInput struct {
+	// The character to update
+	ID relay.ID `json:"id"`
+	// The time, in nanoseconds, to wait for banner generation.
+	Duration int `json:"duration"`
+}
+
+// Payload for updating character
+type GenerateCharacterBannerPayload struct {
+	// The character after update
+	Character *Character `json:"character"`
+}
+
+// Generate series banner.
+type GenerateSeriesBannerInput struct {
+	// The series to update
+	ID relay.ID `json:"id"`
+	// The time, in nanoseconds, to wait for banner generation.
+	Duration int `json:"duration"`
+}
+
+// Payload for updating series
+type GenerateSeriesBannerPayload struct {
+	// The category after update
+	Series *Series `json:"series"`
+}
+
 // Join a club input.
 type JoinClubInput struct {
 	// The chosen club ID.
@@ -718,6 +780,8 @@ type Series struct {
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
 	Thumbnail *graphql1.Resource `json:"thumbnail"`
+	// A URL pointing to the object's banner.
+	Banner *graphql1.Resource `json:"banner"`
 	// A title for this series.
 	//
 	// Optionally pass a locale to display it in a specific language. English by default.

@@ -129,6 +129,15 @@ func (m *Audience) UpdateTotalLikes(totalLikes int) error {
 	return nil
 }
 
+func (m *Audience) CanUpdateBanner(requester *principal.Principal) error {
+
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
+
+	return nil
+}
+
 func (m *Audience) UpdateTitle(requester *principal.Principal, title, locale string) error {
 
 	if err := m.canUpdate(requester); err != nil {

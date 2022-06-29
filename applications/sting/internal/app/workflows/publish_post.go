@@ -4,7 +4,9 @@ import (
 	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
+	"math/rand"
 	"overdoll/applications/sting/internal/app/workflows/activities"
+	"time"
 )
 
 type PublishPostInput struct {
@@ -98,5 +100,92 @@ func PublishPost(ctx workflow.Context, input PublishPostInput) error {
 		}
 	}
 
+	var tagsPayload *activities.GetTagsWithoutBannerForPostPayload
+
+	if err := workflow.ExecuteActivity(ctx, a.GetTagsWithoutBannerForPost,
+		activities.GetTagsWithoutBannerForPostInput{
+			PostId: input.PostId,
+		},
+	).Get(ctx, &tagsPayload); err != nil {
+		logger.Error("failed to get tags without banner", "Error", err)
+		return err
+	}
+
+	for _, categoryId := range tagsPayload.CategoryIds {
+		if err := workflow.ExecuteChildWorkflow(
+			workflow.WithChildOptions(ctx, workflow.ChildWorkflowOptions{
+				WorkflowID:        "sting.GenerateCategoryBanner_" + categoryId,
+				ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
+			}),
+			GenerateCategoryBanner,
+			GenerateCategoryBannerInput{
+				CategoryId: categoryId,
+				WaitPeriod: randomTimePeriod(),
+			}).
+			GetChildWorkflowExecution().
+			Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+			logger.Error("failed to update category banner", "Error", err)
+			return err
+		}
+	}
+
+	for _, characterId := range tagsPayload.CharacterIds {
+		if err := workflow.ExecuteChildWorkflow(
+			workflow.WithChildOptions(ctx, workflow.ChildWorkflowOptions{
+				WorkflowID:        "sting.GenerateCharacterBanner_" + characterId,
+				ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
+			}),
+			GenerateCharacterBanner,
+			GenerateCharacterBannerInput{
+				CharacterId: characterId,
+				WaitPeriod:  randomTimePeriod(),
+			}).
+			GetChildWorkflowExecution().
+			Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+			logger.Error("failed to update character banner", "Error", err)
+			return err
+		}
+	}
+
+	for _, seriesId := range tagsPayload.SeriesIds {
+		if err := workflow.ExecuteChildWorkflow(
+			workflow.WithChildOptions(ctx, workflow.ChildWorkflowOptions{
+				WorkflowID:        "sting.GenerateSeriesBanner_" + seriesId,
+				ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
+			}),
+			GenerateSeriesBanner,
+			GenerateSeriesBannerInput{
+				SeriesId:   seriesId,
+				WaitPeriod: randomTimePeriod(),
+			}).
+			GetChildWorkflowExecution().
+			Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+			logger.Error("failed to update series banner", "Error", err)
+			return err
+		}
+	}
+
+	for _, audienceId := range tagsPayload.AudienceIds {
+		if err := workflow.ExecuteChildWorkflow(
+			workflow.WithChildOptions(ctx, workflow.ChildWorkflowOptions{
+				WorkflowID:        "sting.GenerateAudienceBanner_" + audienceId,
+				ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
+			}),
+			GenerateAudienceBanner,
+			GenerateAudienceBannerInput{
+				AudienceId: audienceId,
+				WaitPeriod: randomTimePeriod(),
+			}).
+			GetChildWorkflowExecution().
+			Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+			logger.Error("failed to update audience banner", "Error", err)
+			return err
+		}
+	}
+
 	return nil
+}
+
+func randomTimePeriod() time.Duration {
+	return time.Duration(rand.Intn(10-7)+7)*time.Hour*24 + time.Duration(rand.Intn(10-7)+7)*time.Hour
 }

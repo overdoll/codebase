@@ -19,7 +19,7 @@ func TestPostCategoryRepository_failure(t *testing.T) {
 	categoryId := uuid.New().String()
 	categorySlug := createFakeSlug(t)
 
-	category := post.UnmarshalCategoryFromDatabase(categoryId, categorySlug, map[string]string{"en": "test"}, nil, 0, 0, time.Now(), time.Now())
+	category := post.UnmarshalCategoryFromDatabase(categoryId, categorySlug, map[string]string{"en": "test"}, nil, nil, 0, 0, time.Now(), time.Now())
 
 	ctx := context.Background()
 
@@ -28,9 +28,9 @@ func TestPostCategoryRepository_failure(t *testing.T) {
 	err := postRepo.CreateCategory(ctx, requester, category)
 	require.Error(t, err, "should have received an error while creating the category")
 
-	_, err = postRepo.GetCategoryById(ctx, requester, categoryId)
+	_, err = postRepo.GetCategoryById(ctx, categoryId)
 	require.True(t, apperror.IsNotFoundError(err), "category should not be found by id")
 
-	_, err = postRepo.GetCategoryBySlug(ctx, requester, categorySlug)
+	_, err = postRepo.GetCategoryBySlug(ctx, categorySlug)
 	require.True(t, apperror.IsNotFoundError(err), "category should not be found by slug")
 }

@@ -34,4 +34,9 @@ type Repository interface {
 
 	TerminateClub(ctx context.Context, requester *principal.Principal, clb *club.Club) error
 	UnTerminateClub(ctx context.Context, requester *principal.Principal, clb *club.Club) error
+
+	GenerateCharacterBanner(ctx context.Context, requester *principal.Principal, character *post.Character, duration time.Duration) error
+	GenerateCategoryBanner(ctx context.Context, requester *principal.Principal, category *post.Category, duration time.Duration) error
+	GenerateSeriesBanner(ctx context.Context, requester *principal.Principal, series *post.Series, duration time.Duration) error
+	GenerateAudienceBanner(ctx context.Context, requester *principal.Principal, audience *post.Audience, duration time.Duration) error
 }

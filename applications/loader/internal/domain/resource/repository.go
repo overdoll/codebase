@@ -13,6 +13,7 @@ type Repository interface {
 	DownloadResource(ctx context.Context, resource *Resource) (*os.File, error)
 	DownloadVideoThumbnailForResource(ctx context.Context, resource *Resource) (*os.File, error)
 	UploadProcessedResource(ctx context.Context, move []*Move, resource *Resource) error
+	UpdateResourceFailed(ctx context.Context, resource *Resource) error
 	UploadAndCreateResource(ctx context.Context, file *os.File, target *Resource) error
 	UpdateResourcePrivacy(ctx context.Context, resource []*Resource, private bool) error
 	GetResourcesByIds(ctx context.Context, itemIds, resourceIds []string) ([]*Resource, error)

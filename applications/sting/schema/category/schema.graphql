@@ -11,6 +11,9 @@ type Category implements Node @key(fields: "id") {
   """A URL pointing to the object's thumbnail."""
   thumbnail: Resource
 
+  """A URL pointing to the object's banner."""
+  banner: Resource
+
   """
   A title for this category.
 
@@ -134,6 +137,15 @@ input UpdateCategoryTitleInput {
   locale: BCP47!
 }
 
+"""Generate category banner."""
+input GenerateCategoryBannerInput {
+  """The category to update"""
+  id: ID!
+
+  """The time, in nanoseconds, to wait for banner generation."""
+  duration: Int!
+}
+
 """Update category."""
 input UpdateCategoryThumbnailInput {
   """The category to update"""
@@ -155,6 +167,12 @@ type UpdateCategoryThumbnailPayload {
   category: Category
 }
 
+"""Payload for updating category"""
+type GenerateCategoryBannerPayload {
+  """The category after update"""
+  category: Category
+}
+
 type Mutation {
   """
   Create a new category
@@ -170,4 +188,11 @@ type Mutation {
   Update category thumbnail
   """
   updateCategoryThumbnail(input: UpdateCategoryThumbnailInput!): UpdateCategoryThumbnailPayload
+
+  """
+  Generate category banner.
+
+  Will wait for the specified time, and then look up the top posts and use that as the banner.
+  """
+  generateCategoryBanner(input: GenerateCategoryBannerInput!): GenerateCategoryBannerPayload
 }

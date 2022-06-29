@@ -9,6 +9,32 @@ import (
 	"overdoll/libraries/principal"
 )
 
+func (r *MutationResolver) GenerateAudienceBanner(ctx context.Context, input types.GenerateAudienceBannerInput) (*types.GenerateAudienceBannerPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	audience, err := r.App.Commands.GenerateAudienceBanner.
+		Handle(
+			ctx,
+			command.GenerateAudienceBanner{
+				Principal:  principal.FromContext(ctx),
+				AudienceId: input.ID.GetID(),
+				Duration:   int64(input.Duration),
+			},
+		)
+
+	if err != nil {
+
+		return nil, err
+	}
+
+	return &types.GenerateAudienceBannerPayload{
+		Audience: types.MarshalAudienceToGraphQL(ctx, audience),
+	}, err
+}
+
 func (r *MutationResolver) CreateAudience(ctx context.Context, input types.CreateAudienceInput) (*types.CreateAudiencePayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {

@@ -154,7 +154,7 @@ func (r PostsCassandraElasticsearchRepository) GetAudienceIdsFromSlugs(ctx conte
 	return ids, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) GetAudienceBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Audience, error) {
+func (r PostsCassandraElasticsearchRepository) GetAudienceBySlug(ctx context.Context, slug string) (*post.Audience, error) {
 
 	var b audienceSlug
 
@@ -173,10 +173,10 @@ func (r PostsCassandraElasticsearchRepository) GetAudienceBySlug(ctx context.Con
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get audience by slug")
 	}
 
-	return r.GetAudienceById(ctx, requester, b.AudienceId)
+	return r.GetAudienceById(ctx, b.AudienceId)
 }
 
-func (r PostsCassandraElasticsearchRepository) GetAudiencesByIds(ctx context.Context, requester *principal.Principal, audienceIds []string) ([]*post.Audience, error) {
+func (r PostsCassandraElasticsearchRepository) GetAudiencesByIds(ctx context.Context, audienceIds []string) ([]*post.Audience, error) {
 
 	var audiences []*post.Audience
 
@@ -240,7 +240,7 @@ func (r PostsCassandraElasticsearchRepository) getAudienceById(ctx context.Conte
 	return unmarshalled, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) GetAudienceById(ctx context.Context, requester *principal.Principal, audienceId string) (*post.Audience, error) {
+func (r PostsCassandraElasticsearchRepository) GetAudienceById(ctx context.Context, audienceId string) (*post.Audience, error) {
 	return r.getAudienceById(ctx, audienceId)
 }
 

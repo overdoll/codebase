@@ -115,7 +115,7 @@ func (r PostsCassandraElasticsearchRepository) unmarshalSeriesFromDatabase(ctx c
 	), nil
 }
 
-func (r PostsCassandraElasticsearchRepository) getSeriesBySlug(ctx context.Context, requester *principal.Principal, slug string) (*seriesSlug, error) {
+func (r PostsCassandraElasticsearchRepository) getSeriesBySlug(ctx context.Context, slug string) (*seriesSlug, error) {
 
 	var b seriesSlug
 
@@ -167,18 +167,18 @@ func (r PostsCassandraElasticsearchRepository) GetSeriesIdsFromSlugs(ctx context
 	return ids, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) GetSeriesBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Series, error) {
+func (r PostsCassandraElasticsearchRepository) GetSeriesBySlug(ctx context.Context, slug string) (*post.Series, error) {
 
-	seriesSlug, err := r.getSeriesBySlug(ctx, requester, slug)
+	seriesSlug, err := r.getSeriesBySlug(ctx, slug)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return r.GetSingleSeriesById(ctx, requester, seriesSlug.SeriesId)
+	return r.GetSingleSeriesById(ctx, seriesSlug.SeriesId)
 }
 
-func (r PostsCassandraElasticsearchRepository) GetSingleSeriesById(ctx context.Context, requester *principal.Principal, seriesId string) (*post.Series, error) {
+func (r PostsCassandraElasticsearchRepository) GetSingleSeriesById(ctx context.Context, seriesId string) (*post.Series, error) {
 
 	serial, err := r.getSingleSeriesById(ctx, seriesId)
 
@@ -211,7 +211,7 @@ func (r PostsCassandraElasticsearchRepository) getSingleSeriesById(ctx context.C
 	return &med, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) GetSeriesByIds(ctx context.Context, requester *principal.Principal, medi []string) ([]*post.Series, error) {
+func (r PostsCassandraElasticsearchRepository) GetSeriesByIds(ctx context.Context, medi []string) ([]*post.Series, error) {
 
 	var medias []*post.Series
 
@@ -261,7 +261,7 @@ func (r PostsCassandraElasticsearchRepository) deleteUniqueSeriesSlug(ctx contex
 	return nil
 }
 
-func (r PostsCassandraElasticsearchRepository) CreateSeries(ctx context.Context, requester *principal.Principal, series *post.Series) error {
+func (r PostsCassandraElasticsearchRepository) CreateSeries(ctx context.Context, series *post.Series) error {
 
 	ser, err := marshalSeriesToDatabase(series)
 

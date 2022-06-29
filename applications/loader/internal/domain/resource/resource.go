@@ -82,6 +82,7 @@ type Resource struct {
 	token string
 
 	isPrivate bool
+	failed    bool
 
 	videoThumbnail         string
 	videoThumbnailMimeType string
@@ -109,6 +110,7 @@ func NewImageProcessedResource(itemId, mimeType string, isPrivate bool, height, 
 		processed:    true,
 		height:       height,
 		width:        width,
+		failed:       false,
 	}, nil
 }
 
@@ -151,6 +153,7 @@ func NewResource(itemId, id, mimeType string, isPrivate bool, token string, allo
 		width:         0,
 		videoDuration: 0,
 		preview:       "",
+		failed:        false,
 	}, nil
 }
 
@@ -203,7 +206,9 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 		src, _, err := image.Decode(file)
 
 		if err != nil {
-			return nil, errors.Wrap(err, "failed to decode png")
+			zap.S().Errorw("failed to decode png", zap.Error(err))
+			r.failed = true
+			return nil, nil
 		}
 
 		newFileExtension = ".webp"
@@ -273,7 +278,8 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 			WithOutput(fileThumbnail).
 			Run(); err != nil {
 			zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(ffmpegLogger.Output)))
-			return nil, errors.Wrap(err, "failed to process ffmpeg_go file")
+			r.failed = true
+			return nil, nil
 		}
 
 		videoThumb := "t-" + fileName
@@ -330,7 +336,8 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 		r.preview = preview
 
 	} else {
-		return nil, errors.New(fmt.Sprintf("invalid resource format: %s", kind.MIME.Value))
+		r.failed = true
+		return nil, nil
 	}
 
 	fileKey := r.itemId + "/" + fileName
@@ -370,6 +377,10 @@ func (r *Resource) ItemId() string {
 
 func (r *Resource) IsPrivate() bool {
 	return r.isPrivate
+}
+
+func (r *Resource) Failed() bool {
+	return r.failed
 }
 
 func (r *Resource) MimeTypes() []string {
@@ -434,7 +445,7 @@ func (r *Resource) VideoThumbnail() string {
 	return r.videoThumbnail
 }
 
-func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate bool, mimeTypes []string, processed bool, processedId string, videoDuration int, videoThumbnail, videoThumbnailMimeType string, width, height int, preview, token string) *Resource {
+func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate bool, mimeTypes []string, processed bool, processedId string, videoDuration int, videoThumbnail, videoThumbnailMimeType string, width, height int, preview, token string, failed bool) *Resource {
 
 	typ, _ := resource.TypeFromInt(tp)
 
@@ -453,6 +464,7 @@ func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate 
 		processed:              processed,
 		preview:                preview,
 		token:                  token,
+		failed:                 failed,
 	}
 }
 

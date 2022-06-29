@@ -145,7 +145,7 @@ func (r PostsCassandraElasticsearchRepository) GetCategoryIdsFromSlugs(ctx conte
 	return ids, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) GetCategoryBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Category, error) {
+func (r PostsCassandraElasticsearchRepository) GetCategoryBySlug(ctx context.Context, slug string) (*post.Category, error) {
 
 	var b categorySlugs
 
@@ -164,10 +164,10 @@ func (r PostsCassandraElasticsearchRepository) GetCategoryBySlug(ctx context.Con
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get category by slug")
 	}
 
-	return r.GetCategoryById(ctx, requester, b.CategoryId)
+	return r.GetCategoryById(ctx, b.CategoryId)
 }
 
-func (r PostsCassandraElasticsearchRepository) GetCategoriesByIds(ctx context.Context, requester *principal.Principal, cats []string) ([]*post.Category, error) {
+func (r PostsCassandraElasticsearchRepository) GetCategoriesByIds(ctx context.Context, cats []string) ([]*post.Category, error) {
 
 	var categories []*post.Category
 
@@ -202,7 +202,7 @@ func (r PostsCassandraElasticsearchRepository) GetCategoriesByIds(ctx context.Co
 	return categories, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) GetCategoryById(ctx context.Context, requester *principal.Principal, categoryId string) (*post.Category, error) {
+func (r PostsCassandraElasticsearchRepository) GetCategoryById(ctx context.Context, categoryId string) (*post.Category, error) {
 	return r.getCategoryById(ctx, categoryId)
 }
 

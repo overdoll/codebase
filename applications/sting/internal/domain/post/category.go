@@ -120,6 +120,15 @@ func (c *Category) UpdateTotalLikes(totalLikes int) error {
 	return nil
 }
 
+func (c *Category) CanUpdateBanner(requester *principal.Principal) error {
+
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
+
+	return nil
+}
+
 func (c *Category) UpdateTitle(requester *principal.Principal, title, locale string) error {
 
 	if err := c.canUpdate(requester); err != nil {

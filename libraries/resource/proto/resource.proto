@@ -26,6 +26,7 @@ message Resource {
   ResourceType type = 12;
   string preview = 13;
   string token = 14;
+  bool failed = 15;
 }
 
 

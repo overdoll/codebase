@@ -27,6 +27,8 @@ type Resource struct {
 
 	isPrivate bool
 
+	failed bool
+
 	videoThumbnail         string
 	videoThumbnailMimeType string
 
@@ -51,6 +53,10 @@ func (r *Resource) ItemId() string {
 
 func (r *Resource) IsPrivate() bool {
 	return r.isPrivate
+}
+
+func (r *Resource) Failed() bool {
+	return r.failed
 }
 
 func (r *Resource) MimeTypes() []string {
@@ -125,6 +131,7 @@ func (r *Resource) AsEmpty() *Resource {
 		videoThumbnail:         r.videoThumbnail,
 		videoThumbnailMimeType: r.videoThumbnailMimeType,
 		videoDuration:          r.videoDuration,
+		failed:                 false,
 	}
 }
 

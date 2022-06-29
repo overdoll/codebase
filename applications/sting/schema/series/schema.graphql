@@ -11,6 +11,9 @@ type Series implements Node @key(fields: "id") {
   """A URL pointing to the object's thumbnail."""
   thumbnail: Resource
 
+  """A URL pointing to the object's banner."""
+  banner: Resource
+
   """
   A title for this series.
 
@@ -142,6 +145,15 @@ input UpdateSeriesThumbnailInput {
   thumbnail: String!
 }
 
+"""Generate series banner."""
+input GenerateSeriesBannerInput {
+  """The series to update"""
+  id: ID!
+
+  """The time, in nanoseconds, to wait for banner generation."""
+  duration: Int!
+}
+
 """Payload for updating series"""
 type UpdateSeriesTitlePayload {
   """The series after update"""
@@ -150,6 +162,12 @@ type UpdateSeriesTitlePayload {
 
 """Payload for updating series"""
 type UpdateSeriesThumbnailPayload {
+  """The category after update"""
+  series: Series
+}
+
+"""Payload for updating series"""
+type GenerateSeriesBannerPayload {
   """The category after update"""
   series: Series
 }
@@ -169,4 +187,11 @@ extend type Mutation {
   Update series thumbnail
   """
   updateSeriesThumbnail(input: UpdateSeriesThumbnailInput!): UpdateSeriesThumbnailPayload
+
+  """
+  Generate series banner.
+
+  Will wait for the specified time, and then look up the top posts and use that as the banner.
+  """
+  generateSeriesBanner(input: GenerateSeriesBannerInput!): GenerateSeriesBannerPayload
 }

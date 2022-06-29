@@ -11,6 +11,9 @@ type Audience implements Node @key(fields: "id") {
   """A URL pointing to the object's thumbnail."""
   thumbnail: Resource
 
+  """A URL pointing to the object's banner."""
+  banner: Resource
+
   """
   A title for this audience.
 
@@ -149,6 +152,15 @@ input UpdateAudienceThumbnailInput {
   thumbnail: String!
 }
 
+"""Generate audience banner."""
+input GenerateAudienceBannerInput {
+  """The audience to update"""
+  id: ID!
+
+  """The time, in nanoseconds, to wait for banner generation."""
+  duration: Int!
+}
+
 """Update audience."""
 input UpdateAudienceIsStandardInput {
   """The audience to update"""
@@ -166,6 +178,12 @@ type UpdateAudienceTitlePayload {
 
 """Payload for updating audience"""
 type UpdateAudienceThumbnailPayload {
+  """The audience after update"""
+  audience: Audience
+}
+
+"""Payload for updating audience"""
+type GenerateAudienceBannerPayload {
   """The audience after update"""
   audience: Audience
 }
@@ -196,4 +214,11 @@ extend type Mutation {
   Update audience standard
   """
   updateAudienceIsStandard(input: UpdateAudienceIsStandardInput!): UpdateAudienceIsStandardPayload
+
+  """
+  Generate audience banner.
+
+  Will wait for the specified time, and then look up the top posts and use that as the banner.
+  """
+  generateAudienceBanner(input: GenerateAudienceBannerInput!): GenerateAudienceBannerPayload
 }

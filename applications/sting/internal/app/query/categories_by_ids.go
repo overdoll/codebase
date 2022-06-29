@@ -22,7 +22,7 @@ func NewCategoriesByIdsHandler(pr post.Repository) CategoriesByIdsHandler {
 
 func (h CategoriesByIdsHandler) Handle(ctx context.Context, query CategoriesByIds) ([]*post.Category, error) {
 
-	result, err := h.pr.GetCategoriesByIds(ctx, query.Principal, query.Ids)
+	result, err := h.pr.GetCategoriesByIds(ctx, query.Ids)
 
 	if err != nil {
 		return nil, err

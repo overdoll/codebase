@@ -29,10 +29,10 @@ type Repository interface {
 
 	DeletePost(ctx context.Context, postId string) error
 
-	CreateCharacter(ctx context.Context, requester *principal.Principal, character *Character) error
-	GetCharacterById(ctx context.Context, requester *principal.Principal, characterId string) (*Character, error)
-	GetCharactersByIds(ctx context.Context, requester *principal.Principal, characterIds []string) ([]*Character, error)
-	GetCharacterBySlug(ctx context.Context, requester *principal.Principal, slug, seriesSlug string) (*Character, error)
+	CreateCharacter(ctx context.Context, character *Character) error
+	GetCharacterById(ctx context.Context, characterId string) (*Character, error)
+	GetCharactersByIds(ctx context.Context, characterIds []string) ([]*Character, error)
+	GetCharacterBySlug(ctx context.Context, slug, seriesSlug string) (*Character, error)
 	GetCharacterIdsFromSlugs(ctx context.Context, characterSlugs, seriesIds []string) ([]string, error)
 
 	UpdateCharacterThumbnailOperator(ctx context.Context, id string, updateFn func(character *Character) error) (*Character, error)
@@ -43,9 +43,9 @@ type Repository interface {
 	UpdateCharacterTotalLikesOperator(ctx context.Context, id string, updateFn func(character *Character) error) (*Character, error)
 
 	CreateAudience(ctx context.Context, requester *principal.Principal, audience *Audience) error
-	GetAudienceById(ctx context.Context, requester *principal.Principal, audienceId string) (*Audience, error)
-	GetAudiencesByIds(ctx context.Context, requester *principal.Principal, audienceIds []string) ([]*Audience, error)
-	GetAudienceBySlug(ctx context.Context, requester *principal.Principal, slug string) (*Audience, error)
+	GetAudienceById(ctx context.Context, audienceId string) (*Audience, error)
+	GetAudiencesByIds(ctx context.Context, audienceIds []string) ([]*Audience, error)
+	GetAudienceBySlug(ctx context.Context, slug string) (*Audience, error)
 	GetAudienceIdsFromSlugs(ctx context.Context, audienceSlugs []string) ([]string, error)
 
 	UpdateAudienceThumbnailOperator(ctx context.Context, id string, updateFn func(audience *Audience) error) (*Audience, error)
@@ -56,10 +56,10 @@ type Repository interface {
 	UpdateAudienceTotalPostsOperator(ctx context.Context, id string, updateFn func(audience *Audience) error) (*Audience, error)
 	UpdateAudienceTotalLikesOperator(ctx context.Context, id string, updateFn func(audience *Audience) error) (*Audience, error)
 
-	CreateSeries(ctx context.Context, requester *principal.Principal, series *Series) error
-	GetSeriesByIds(ctx context.Context, requester *principal.Principal, seriesIds []string) ([]*Series, error)
-	GetSingleSeriesById(ctx context.Context, requester *principal.Principal, serialId string) (*Series, error)
-	GetSeriesBySlug(ctx context.Context, requester *principal.Principal, slug string) (*Series, error)
+	CreateSeries(ctx context.Context, series *Series) error
+	GetSeriesByIds(ctx context.Context, seriesIds []string) ([]*Series, error)
+	GetSingleSeriesById(ctx context.Context, serialId string) (*Series, error)
+	GetSeriesBySlug(ctx context.Context, slug string) (*Series, error)
 	GetSeriesIdsFromSlugs(ctx context.Context, seriesIds []string) ([]string, error)
 
 	UpdateSeriesThumbnailOperator(ctx context.Context, id string, updateFn func(series *Series) error) (*Series, error)
@@ -69,9 +69,9 @@ type Repository interface {
 	UpdateSeriesTotalPostsOperator(ctx context.Context, id string, updateFn func(series *Series) error) (*Series, error)
 	UpdateSeriesTotalLikesOperator(ctx context.Context, id string, updateFn func(series *Series) error) (*Series, error)
 
-	GetCategoryById(ctx context.Context, requester *principal.Principal, categoryId string) (*Category, error)
-	GetCategoriesByIds(ctx context.Context, requester *principal.Principal, categoryIds []string) ([]*Category, error)
-	GetCategoryBySlug(ctx context.Context, requester *principal.Principal, slug string) (*Category, error)
+	GetCategoryById(ctx context.Context, categoryId string) (*Category, error)
+	GetCategoriesByIds(ctx context.Context, categoryIds []string) ([]*Category, error)
+	GetCategoryBySlug(ctx context.Context, slug string) (*Category, error)
 	GetCategoryIdsFromSlugs(ctx context.Context, categoryIds []string) ([]string, error)
 
 	CreateCategory(ctx context.Context, requester *principal.Principal, category *Category) error

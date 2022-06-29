@@ -11,6 +11,9 @@ type Character implements Node @key(fields: "id") {
   """A URL pointing to the object's thumbnail."""
   thumbnail: Resource
 
+  """A URL pointing to the object's banner."""
+  banner: Resource
+
   """
   A name for this character.
 
@@ -154,6 +157,15 @@ input UpdateCharacterNameInput {
   locale: BCP47!
 }
 
+"""Generate character banner."""
+input GenerateCharacterBannerInput {
+  """The character to update"""
+  id: ID!
+
+  """The time, in nanoseconds, to wait for banner generation."""
+  duration: Int!
+}
+
 """Update character."""
 input UpdateCharacterThumbnailInput {
   """The character to update"""
@@ -175,6 +187,12 @@ type UpdateCharacterThumbnailPayload {
   character: Character
 }
 
+"""Payload for updating character"""
+type GenerateCharacterBannerPayload {
+  """The character after update"""
+  character: Character
+}
+
 extend type Mutation {
   """
   Create a new character
@@ -190,4 +208,11 @@ extend type Mutation {
   Update character thumbnail
   """
   updateCharacterThumbnail(input: UpdateCharacterThumbnailInput!): UpdateCharacterThumbnailPayload
+
+  """
+  Generate character banner.
+
+  Will wait for the specified time, and then look up the top posts and use that as the banner.
+  """
+  generateCharacterBanner(input: GenerateCharacterBannerInput!): GenerateCharacterBannerPayload
 }

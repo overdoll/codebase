@@ -177,10 +177,10 @@ func (r PostsCassandraElasticsearchRepository) GetCharacterIdsFromSlugs(ctx cont
 	return ids, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) GetCharacterBySlug(ctx context.Context, requester *principal.Principal, slug, seriesSlug string) (*post.Character, error) {
+func (r PostsCassandraElasticsearchRepository) GetCharacterBySlug(ctx context.Context, slug, seriesSlug string) (*post.Character, error) {
 
 	// get series first
-	series, err := r.getSeriesBySlug(ctx, requester, seriesSlug)
+	series, err := r.getSeriesBySlug(ctx, seriesSlug)
 
 	if err != nil {
 		return nil, err
@@ -206,10 +206,10 @@ func (r PostsCassandraElasticsearchRepository) GetCharacterBySlug(ctx context.Co
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get character by slug")
 	}
 
-	return r.GetCharacterById(ctx, requester, b.CharacterId)
+	return r.GetCharacterById(ctx, b.CharacterId)
 }
 
-func (r PostsCassandraElasticsearchRepository) GetCharactersByIds(ctx context.Context, requester *principal.Principal, chars []string) ([]*post.Character, error) {
+func (r PostsCassandraElasticsearchRepository) GetCharactersByIds(ctx context.Context, chars []string) ([]*post.Character, error) {
 
 	var characters []*post.Character
 
@@ -281,7 +281,7 @@ func (r PostsCassandraElasticsearchRepository) GetCharactersByIds(ctx context.Co
 	return characters, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) GetCharacterById(ctx context.Context, requester *principal.Principal, characterId string) (*post.Character, error) {
+func (r PostsCassandraElasticsearchRepository) GetCharacterById(ctx context.Context, characterId string) (*post.Character, error) {
 	return r.getCharacterById(ctx, characterId)
 }
 
@@ -299,7 +299,7 @@ func (r PostsCassandraElasticsearchRepository) deleteUniqueCharacterSlug(ctx con
 	return nil
 }
 
-func (r PostsCassandraElasticsearchRepository) CreateCharacter(ctx context.Context, requester *principal.Principal, character *post.Character) error {
+func (r PostsCassandraElasticsearchRepository) CreateCharacter(ctx context.Context, character *post.Character) error {
 
 	char, err := marshalCharacterToDatabase(character)
 
