@@ -441,7 +441,7 @@ func (r PostsCassandraElasticsearchRepository) ClubMembersPostsFeed(ctx context.
 		return nil, paging.ErrCursorNotPresent
 	}
 
-	if err := cursor.BuildElasticsearch(builder, "created_at", "id", true); err != nil {
+	if err := cursor.BuildElasticsearch(builder, "created_at", "id", false); err != nil {
 		return nil, err
 	}
 

@@ -62,7 +62,7 @@ const moduleExports = withBundleAnalyzer({
   pwa: {
     manifestTransforms: [
       async (manifestEntries) => {
-        const manifest = manifestEntries
+        manifestEntries
           .filter((m) => {
             // dont include .js.map files
             if (m.url.split('.').pop() === 'map') {
@@ -86,7 +86,8 @@ const moduleExports = withBundleAnalyzer({
           })
 
         return {
-          manifest,
+          // TODO: for now, we remove precaching so we avoid bandwidth costs, so include nothing here
+          manifest: [],
           warnings: []
         }
       }

@@ -36,7 +36,7 @@ type SearchHistory struct {
 
 const SearchHistoryIndexName = "search_history"
 
-var searchHistoryReaderIndex = cache.ReadAlias(SearchHistoryIndexName)
+var SearchHistoryReaderIndex = cache.ReadAlias(SearchHistoryIndexName)
 var searchHistoryWriterIndex = cache.WriteAlias(SearchHistoryIndexName)
 
 func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passport *passport.Passport, requester *principal.Principal, cursor *paging.Cursor, qs string) ([]interface{}, error) {
