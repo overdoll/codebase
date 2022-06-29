@@ -4,13 +4,16 @@ import (
 	"context"
 	"github.com/bxcodec/faker/v3"
 	"github.com/shurcooL/graphql"
+	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/internal/adapters"
+	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/bootstrap"
 	graphql2 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/resource/proto"
+	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
 )
@@ -22,6 +25,7 @@ type AudienceModified struct {
 	Slug      string
 	Standard  bool
 	Thumbnail *graphql2.Resource
+	Banner    *graphql2.Resource
 }
 
 type SearchAudience struct {
@@ -52,6 +56,12 @@ type UpdateAudienceThumbnail struct {
 	UpdateAudienceThumbnail *struct {
 		Audience *AudienceModified
 	} `graphql:"updateAudienceThumbnail(input: $input)"`
+}
+
+type GenerateAudienceBanner struct {
+	GenerateAudienceBanner *struct {
+		Audience *AudienceModified
+	} `graphql:"generateAudienceBanner(input: $input)"`
 }
 
 type UpdateAudienceIsStandard struct {
@@ -109,6 +119,8 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 	require.NoError(t, err, "no error creating audience")
 
 	refreshAudienceIndex(t)
+
+	seedPublishedPostWithAudience(t, createAudience.CreateAudience.Audience.Reference)
 
 	audience := getAudienceBySlug(t, client, currentAudienceSlug)
 
@@ -187,6 +199,26 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 
 	require.Equal(t, fake.Title, audience.Title, "title has been updated")
 	require.NotNil(t, audience.Thumbnail, "has a thumbnail")
+	require.Nil(t, audience.Banner, "has no banner")
 	require.True(t, audience.Thumbnail.Processed, "should be processed")
 	require.True(t, audience.Standard, "is standard now")
+
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.GenerateAudienceBanner, mock.Anything)
+
+	var generateAudienceBanner GenerateAudienceBanner
+
+	err = client.Mutate(context.Background(), &generateAudienceBanner, map[string]interface{}{
+		"input": types.GenerateAudienceBannerInput{
+			ID:       audience.Id,
+			Duration: 10000,
+		},
+	})
+
+	require.NoError(t, err, "no error updating audience banner")
+
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+
+	audience = getAudienceBySlug(t, client, currentAudienceSlug)
+	require.NotNil(t, audience, "expected to have found audience")
+	require.NotNil(t, audience.Banner, "has a banner")
 }

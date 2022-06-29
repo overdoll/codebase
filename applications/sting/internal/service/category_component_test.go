@@ -3,12 +3,15 @@ package service_test
 import (
 	"context"
 	"github.com/bxcodec/faker/v3"
+	"github.com/stretchr/testify/mock"
 	"overdoll/applications/sting/internal/adapters"
+	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/bootstrap"
 	graphql2 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/resource/proto"
+	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
 
@@ -21,6 +24,7 @@ type CategoryModified struct {
 	Title     string
 	Reference string
 	Thumbnail *graphql2.Resource
+	Banner    *graphql2.Resource
 }
 
 type SearchCategories struct {
@@ -53,6 +57,12 @@ type UpdateCategoryThumbnail struct {
 	UpdateCategoryThumbnail *struct {
 		Category *CategoryModified
 	} `graphql:"updateCategoryThumbnail(input: $input)"`
+}
+
+type GenerateCategoryBanner struct {
+	GenerateCategoryBanner *struct {
+		Category *CategoryModified
+	} `graphql:"generateCategoryBanner(input: $input)"`
 }
 
 type TestCategory struct {
@@ -102,6 +112,8 @@ func TestCreateCategory_update_and_search(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error creating category")
+
+	seedPublishedPostWithCategory(t, createCategory.CreateCategory.Category.Reference)
 
 	refreshCategoryIndex(t)
 
@@ -172,5 +184,25 @@ func TestCreateCategory_update_and_search(t *testing.T) {
 	require.NotNil(t, category, "found category")
 	require.Equal(t, fake.Title, category.Title, "title has been updated")
 	require.NotNil(t, category.Thumbnail, "has a thumbnail")
+	require.Nil(t, category.Banner, "has no banner")
 	require.True(t, category.Thumbnail.Processed, "thumbnail is processed")
+
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.GenerateCategoryBanner, mock.Anything)
+
+	var generateCategoryBanner GenerateCategoryBanner
+
+	err = client.Mutate(context.Background(), &generateCategoryBanner, map[string]interface{}{
+		"input": types.GenerateCategoryBannerInput{
+			ID:       category.Id,
+			Duration: 10000,
+		},
+	})
+
+	require.NoError(t, err, "no error updating category banner")
+
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+
+	category = getCategoryBySlug(t, client, currentCategorySlug)
+	require.NotNil(t, category, "expected to have found category")
+	require.NotNil(t, category.Banner, "has a banner")
 }

@@ -104,6 +104,123 @@ func seedClub(t *testing.T, accountId string) *club.Club {
 	require.NoError(t, err)
 	return pst
 }
+
+func seedPublishedPostWithCharacter(t *testing.T, characterId, seriesId string) {
+
+	accountId := uuid.New().String()
+	clubId := uuid.New().String()
+
+	prin := testing_tools.NewDefaultPrincipal(accountId)
+	ext, err := principal.NewClubExtension(&sting.GetAccountClubDigestResponse{
+		SupportedClubIds:  nil,
+		ClubMembershipIds: nil,
+		OwnerClubIds:      []string{clubId},
+	})
+
+	require.NoError(t, err)
+
+	err = prin.ExtendWithClubExtension(ext)
+	require.NoError(t, err)
+
+	clb := club.UnmarshalClubFromDatabase(clubId, "", nil, nil, nil, nil, 0, accountId, false, nil, nil, false, false, nil, false, time.Now(), time.Now())
+
+	pst, err := post.NewPost(prin, clb)
+	require.NoError(t, err)
+
+	err = pst.UpdateAudienceRequest(prin, post.UnmarshalAudienceFromDatabase(
+		"1pcKiQL7dgUW8CIN7uO1wqFaMql", "StandardAudience", map[string]string{"en": "Standard Audience"}, nil, nil, 1, 0, 0, time.Now(), time.Now(),
+	))
+
+	err = pst.UpdateCharactersRequest(prin, []*post.Character{post.UnmarshalCharacterFromDatabase(
+		characterId, "StandardCategory", map[string]string{"en": "Standard Audience"}, nil, nil, 1, 0, time.Now(), time.Now(),
+		post.UnmarshalSeriesFromDatabase(
+			seriesId, "StandardCategory", map[string]string{"en": "Standard Audience"}, nil, nil, 1, 0, time.Now(), time.Now(),
+		),
+	)})
+
+	require.NoError(t, err)
+
+	err = pst.SubmitPostRequest(clb, prin)
+
+	require.NoError(t, err)
+
+	seedPost(t, pst)
+}
+
+func seedPublishedPostWithCategory(t *testing.T, categoryId string) {
+
+	accountId := uuid.New().String()
+	clubId := uuid.New().String()
+
+	prin := testing_tools.NewDefaultPrincipal(accountId)
+	ext, err := principal.NewClubExtension(&sting.GetAccountClubDigestResponse{
+		SupportedClubIds:  nil,
+		ClubMembershipIds: nil,
+		OwnerClubIds:      []string{clubId},
+	})
+
+	require.NoError(t, err)
+
+	err = prin.ExtendWithClubExtension(ext)
+	require.NoError(t, err)
+
+	clb := club.UnmarshalClubFromDatabase(clubId, "", nil, nil, nil, nil, 0, accountId, false, nil, nil, false, false, nil, false, time.Now(), time.Now())
+
+	pst, err := post.NewPost(prin, clb)
+	require.NoError(t, err)
+
+	err = pst.UpdateAudienceRequest(prin, post.UnmarshalAudienceFromDatabase(
+		"1pcKiQL7dgUW8CIN7uO1wqFaMql", "StandardAudience", map[string]string{"en": "Standard Audience"}, nil, nil, 1, 0, 0, time.Now(), time.Now(),
+	))
+
+	err = pst.UpdateCategoriesRequest(prin, []*post.Category{post.UnmarshalCategoryFromDatabase(
+		categoryId, "StandardCategory", map[string]string{"en": "Standard Audience"}, nil, nil, 1, 0, time.Now(), time.Now(),
+	)})
+
+	require.NoError(t, err)
+
+	err = pst.SubmitPostRequest(clb, prin)
+
+	require.NoError(t, err)
+
+	seedPost(t, pst)
+}
+
+func seedPublishedPostWithAudience(t *testing.T, audienceId string) {
+
+	accountId := uuid.New().String()
+	clubId := uuid.New().String()
+
+	prin := testing_tools.NewDefaultPrincipal(accountId)
+	ext, err := principal.NewClubExtension(&sting.GetAccountClubDigestResponse{
+		SupportedClubIds:  nil,
+		ClubMembershipIds: nil,
+		OwnerClubIds:      []string{clubId},
+	})
+
+	require.NoError(t, err)
+
+	err = prin.ExtendWithClubExtension(ext)
+	require.NoError(t, err)
+
+	clb := club.UnmarshalClubFromDatabase(clubId, "", nil, nil, nil, nil, 0, accountId, false, nil, nil, false, false, nil, false, time.Now(), time.Now())
+
+	pst, err := post.NewPost(prin, clb)
+	require.NoError(t, err)
+
+	err = pst.UpdateAudienceRequest(prin, post.UnmarshalAudienceFromDatabase(
+		audienceId, "StandardAudience", map[string]string{"en": "Standard Audience"}, nil, nil, 1, 0, 0, time.Now(), time.Now(),
+	))
+
+	require.NoError(t, err)
+
+	err = pst.SubmitPostRequest(clb, prin)
+
+	require.NoError(t, err)
+
+	seedPost(t, pst)
+}
+
 func newPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
 
 	prin := testing_tools.NewDefaultPrincipal(accountId)
@@ -123,7 +240,7 @@ func newPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
 	require.NoError(t, err)
 
 	err = pst.UpdateAudienceRequest(prin, post.UnmarshalAudienceFromDatabase(
-		"1pcKiQL7dgUW8CIN7uO1wqFaMql", "StandardAudience", map[string]string{"en": "Standard Audience"}, nil, 1, 0, 0, time.Now(), time.Now(),
+		"1pcKiQL7dgUW8CIN7uO1wqFaMql", "StandardAudience", map[string]string{"en": "Standard Audience"}, nil, nil, 1, 0, 0, time.Now(), time.Now(),
 	))
 
 	require.NoError(t, err)

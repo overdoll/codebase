@@ -4,12 +4,15 @@ import (
 	"context"
 	"encoding/base64"
 	"github.com/bxcodec/faker/v3"
+	"github.com/stretchr/testify/mock"
 	"overdoll/applications/sting/internal/adapters"
+	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/bootstrap"
 	graphql2 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/resource/proto"
+	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
 
@@ -23,6 +26,7 @@ type SeriesModified struct {
 	Title     string
 	Slug      string
 	Thumbnail *graphql2.Resource
+	Banner    *graphql2.Resource
 }
 
 type SearchSeries struct {
@@ -53,6 +57,12 @@ type UpdateSeriesThumbnail struct {
 	UpdateSeriesThumbnail *struct {
 		Series *SeriesModified
 	} `graphql:"updateSeriesThumbnail(input: $input)"`
+}
+
+type GenerateSeriesBanner struct {
+	GenerateSeriesBanner *struct {
+		Series *SeriesModified
+	} `graphql:"generateSeriesBanner(input: $input)"`
 }
 
 type TestSeries struct {
@@ -101,6 +111,8 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error creating character")
+
+	seedPublishedPostWithCharacter(t, "1q7MJkk5fQGBWWYDqM22iITSjeW", createSeries.CreateSeries.Series.Reference)
 
 	refreshSeriesIndex(t)
 
@@ -172,7 +184,27 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 	require.NotNil(t, series, "expected to have found series")
 	require.Equal(t, fake.Title, series.Title, "title has been updated")
 	require.NotNil(t, series.Thumbnail, "has a thumbnail")
+	require.Nil(t, series.Banner, "has no banner")
 	require.True(t, series.Thumbnail.Processed, "thumbnail is processed")
+
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.GenerateSeriesBanner, mock.Anything)
+
+	var generateSeriesBanner GenerateSeriesBanner
+
+	err = client.Mutate(context.Background(), &generateSeriesBanner, map[string]interface{}{
+		"input": types.GenerateSeriesBannerInput{
+			ID:       series.Id,
+			Duration: 10000,
+		},
+	})
+
+	require.NoError(t, err, "no error updating series banner")
+
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+
+	series = getSeriesBySlug(t, client, currentSeriesSlug)
+	require.NotNil(t, series, "expected to have found series")
+	require.NotNil(t, series.Banner, "has a banner")
 }
 
 func TestCreateCharacter_update_series_and_search_character(t *testing.T) {
