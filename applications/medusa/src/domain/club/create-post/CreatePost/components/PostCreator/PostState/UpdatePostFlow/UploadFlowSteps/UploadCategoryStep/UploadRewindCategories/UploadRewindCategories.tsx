@@ -3,24 +3,169 @@ import { useLingui } from '@lingui/react'
 import { t, Trans } from '@lingui/macro'
 import { Icon } from '@//:modules/content/PageLayout'
 import { TimeRewind } from '@//:assets/icons'
-import { Tooltip } from '@chakra-ui/react'
+import {
+  Box,
+  Flex,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Tooltip,
+  Wrap,
+  WrapItem
+} from '@chakra-ui/react'
+import { useHistoryDisclosure } from '@//:modules/hooks'
+import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
+import { useSearch } from '@//:modules/content/HookedComponents/Search'
+import UploadRewindSingleSelector from './UploadRewindSingleSelector/UploadRewindSingleSelector'
+import SkeletonRectangleGrid
+  from '../../../../../../../../../../../modules/content/Placeholder/Loading/SkeletonRectangleGrid/SkeletonRectangleGrid'
+import { Suspense } from 'react'
+import { QueryErrorBoundary } from '@//:modules/content/Placeholder'
+import { useRouter } from 'next/router'
+import { useChoice } from '@//:modules/content/HookedComponents/Choice'
+import Button from '@//:modules/form/Button/Button'
+import RemovableTag from '@//:modules/content/DataDisplay/RemovableTag/RemovableTag'
+import { Choices, UseChoiceReturnOnChange } from '@//:modules/content/HookedComponents/Choice/types'
+import { UploadSearchCategoriesMultiSelectorProps } from '../UploadCategoryStep'
+import { useToast } from '@//:modules/content/ThemeComponents'
 
-export default function UploadRewindCategories (): JSX.Element {
+interface Props {
+  onChange: UseChoiceReturnOnChange<UploadSearchCategoriesMultiSelectorProps>
+  currentValues: Choices<UploadSearchCategoriesMultiSelectorProps>
+}
+
+interface SearchProps {
+  slug: string
+}
+
+interface ChoiceProps {
+  categories: Array<{ id: string, title: string }>
+}
+
+export default function UploadRewindCategories ({
+  onChange,
+  currentValues
+}: Props): JSX.Element {
   const { i18n } = useLingui()
 
+  const {
+    isOpen,
+    onOpen,
+    onClose
+  } = useHistoryDisclosure()
+
+  const { query: { slug } } = useRouter()
+
+  const notify = useToast()
+
+  const {
+    searchArguments,
+    loadQuery
+  } = useSearch<SearchProps>({
+    defaultValue: {
+      slug: slug as string
+    }
+  })
+
+  const {
+    values,
+    register
+  } = useChoice<ChoiceProps>({
+    max: 1
+  })
+
+  const categories = Object.values(values)?.[0]?.categories ?? []
+
+  const onAddCategories = (): void => {
+    categories.forEach((item) => {
+      if (Object.keys(currentValues).includes(item.id)) return
+      onChange(item.id, { title: item.title })
+    })
+    notify({
+      status: 'info',
+      title: i18n._(t`Added categories from selected post`),
+      isClosable: true
+    })
+    onClose()
+  }
+
   return (
-    <Tooltip
-      label={
-        <Trans>
-          Add categories from previous posts
-        </Trans>
-      }
-    >
-      <IconButton
-        aria-label={i18n._(t`Rewind Categories`)}
+    <>
+      <Tooltip
+        label={
+          <Trans>
+            Add categories from previous posts
+          </Trans>
+        }
+      >
+        <IconButton
+          onClick={onOpen}
+          aria-label={i18n._(t`Rewind Categories`)}
+          size='lg'
+          icon={<Icon w={6} h={6} icon={TimeRewind} fill='gray.200' />}
+        />
+      </Tooltip>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
         size='lg'
-        icon={<Icon w={6} h={6} icon={TimeRewind} fill='gray.200' />}
-      />
-    </Tooltip>
+        isCentered
+        scrollBehavior='inside'
+        preserveScrollBarGap
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>
+            <Trans>
+              Add Categories From Post
+            </Trans>
+          </ModalHeader>
+          <ModalCloseButton
+            size='lg'
+            as={CloseButton}
+          />
+          <ModalBody>
+            <QueryErrorBoundary
+              loadQuery={loadQuery}
+            >
+              <Suspense fallback={<SkeletonRectangleGrid />}>
+                <UploadRewindSingleSelector register={register} searchArguments={searchArguments} />
+              </Suspense>
+            </QueryErrorBoundary>
+          </ModalBody>
+          <ModalFooter>
+            <Box w='100%'>
+              <Wrap mb={2} spacing={1} overflow='show'>
+                {categories.map((item, index) => (
+                  <WrapItem key={index}>
+                    <RemovableTag
+                      generateColor
+                      id={item.id}
+                      title={item.title}
+                    />
+                  </WrapItem>
+                ))}
+              </Wrap>
+              <Flex w='100%' justify='flex-end'>
+                <Button
+                  onClick={onAddCategories}
+                  isDisabled={Object.keys(values).length < 1}
+                  size='lg'
+                  colorScheme='teal'
+                >
+                  <Trans>
+                    Add Categories
+                  </Trans>
+                </Button>
+              </Flex>
+            </Box>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   )
 }

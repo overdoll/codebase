@@ -1,7 +1,6 @@
 import { usePaginationFragment } from 'react-relay'
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import { LoadMoreGridTile } from '@//:modules/content/ContentSelection'
-import removeNode from '@//:modules/support/removeNode'
 import type {
   UploadSearchCategoriesMultiSelectorQuery
 } from '@//:artifacts/UploadSearchCategoriesMultiSelectorQuery.graphql'
@@ -71,7 +70,6 @@ export default function UploadSearchCategoriesMultiSelector ({
     Fragment,
     queryData
   )
-  const categories = removeNode(data.categories.edges)
 
   return (
     <EmptyBoundary
@@ -84,17 +82,17 @@ export default function UploadSearchCategoriesMultiSelector ({
             </Trans>
           </SuggestPrompt>
         </Stack>)}
-      condition={categories.length < 1}
+      condition={data.categories.edges.length < 1}
     >
       <ShortGridWrap>
-        {categories.map((item, index) => (
+        {data.categories.edges.map((item, index) => (
           <ShortGridTile key={index}>
             <Choice
-              {...register(item.id, {
-                title: item.title
+              {...register(item.node.id, {
+                title: item.node.title
               })}
             >
-              <CategoryTileOverlay query={item} />
+              <CategoryTileOverlay query={item.node} />
             </Choice>
           </ShortGridTile>
         )

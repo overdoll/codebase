@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2e5575ca92d7f4168733fb7b12f0437e>>
+ * @generated SignedSource<<f7e1a94a611d1c428e8e1d8b84a945df>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,27 +10,38 @@
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type UploadSearchCharactersMultiSelectorFragment$data = {
-  readonly characters: {
+export type UploadRewindSingleSelectorFragment$data = {
+  readonly id: string;
+  readonly posts: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly categories: ReadonlyArray<{
+          readonly id: string;
+          readonly title: string;
+        }>;
         readonly id: string;
-        readonly name: string;
-        readonly " $fragmentSpreads": FragmentRefs<"CharacterTileOverlayFragment">;
+        readonly " $fragmentSpreads": FragmentRefs<"PostPreviewContentFragment">;
       };
     }>;
   };
-  readonly " $fragmentType": "UploadSearchCharactersMultiSelectorFragment";
+  readonly " $fragmentType": "UploadRewindSingleSelectorFragment";
 };
-export type UploadSearchCharactersMultiSelectorFragment$key = {
-  readonly " $data"?: UploadSearchCharactersMultiSelectorFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"UploadSearchCharactersMultiSelectorFragment">;
+export type UploadRewindSingleSelectorFragment$key = {
+  readonly " $data"?: UploadRewindSingleSelectorFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"UploadRewindSingleSelectorFragment">;
 };
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "characters"
-];
+  "posts"
+],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [
     {
@@ -39,14 +50,9 @@ return {
       "name": "after"
     },
     {
-      "defaultValue": 9,
+      "defaultValue": 7,
       "kind": "LocalArgument",
       "name": "first"
-    },
-    {
-      "defaultValue": null,
-      "kind": "LocalArgument",
-      "name": "name"
     }
   ],
   "kind": "Fragment",
@@ -68,30 +74,33 @@ return {
         "backward": null,
         "path": (v0/*: any*/)
       },
-      "fragmentPathInResult": [],
-      "operation": require('./UploadSearchCharactersMultiSelectorPaginationFragment.graphql')
+      "fragmentPathInResult": [
+        "node"
+      ],
+      "operation": require('./UploadRewindSingleSelectorPaginationFragment.graphql'),
+      "identifierField": "id"
     }
   },
-  "name": "UploadSearchCharactersMultiSelectorFragment",
+  "name": "UploadRewindSingleSelectorFragment",
   "selections": [
     {
-      "alias": "characters",
+      "alias": "posts",
       "args": [
         {
-          "kind": "Variable",
-          "name": "name",
-          "variableName": "name"
+          "kind": "Literal",
+          "name": "sortBy",
+          "value": "NEW"
         }
       ],
-      "concreteType": "CharacterConnection",
+      "concreteType": "PostConnection",
       "kind": "LinkedField",
-      "name": "__UploadSearchCharactersMultiSelector_characters_connection",
+      "name": "__UploadRewindSingleSelector_posts_connection",
       "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
-          "concreteType": "CharacterEdge",
+          "concreteType": "PostEdge",
           "kind": "LinkedField",
           "name": "edges",
           "plural": true,
@@ -99,29 +108,35 @@ return {
             {
               "alias": null,
               "args": null,
-              "concreteType": "Character",
+              "concreteType": "Post",
               "kind": "LinkedField",
               "name": "node",
               "plural": false,
               "selections": [
+                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
-                  "kind": "ScalarField",
-                  "name": "id",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "name",
+                  "concreteType": "Category",
+                  "kind": "LinkedField",
+                  "name": "categories",
+                  "plural": true,
+                  "selections": [
+                    (v1/*: any*/),
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "title",
+                      "storageKey": null
+                    }
+                  ],
                   "storageKey": null
                 },
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "CharacterTileOverlayFragment"
+                  "name": "PostPreviewContentFragment"
                 },
                 {
                   "alias": null,
@@ -169,14 +184,15 @@ return {
           "storageKey": null
         }
       ],
-      "storageKey": null
-    }
+      "storageKey": "__UploadRewindSingleSelector_posts_connection(sortBy:\"NEW\")"
+    },
+    (v1/*: any*/)
   ],
-  "type": "Query",
+  "type": "Club",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "3262bb3c7ae0703a6916d6e48b5f9489";
+(node as any).hash = "e0822ac2623993dac6c2cd04c6bcfd87";
 
 export default node;

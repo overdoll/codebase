@@ -22,7 +22,7 @@ interface SearchProps {
   title: string
 }
 
-interface ChoiceProps {
+export interface UploadSearchCategoriesMultiSelectorProps {
   title: string
 }
 
@@ -43,8 +43,9 @@ export default function UploadCategoryStep (): JSX.Element {
   const {
     values,
     register,
-    removeValue
-  } = useChoice<ChoiceProps>({
+    removeValue,
+    onChange
+  } = useChoice<UploadSearchCategoriesMultiSelectorProps>({
     defaultValue: state.categories,
     onChange: (props) => dispatch({
       type: 'categories',
@@ -74,7 +75,7 @@ export default function UploadCategoryStep (): JSX.Element {
           {...registerSearch('title', 'change')}
           placeholder={i18n._(t`Search for a category`)}
         />
-        <UploadRewindCategories />
+        <UploadRewindCategories currentValues={values} onChange={onChange} />
       </HStack>
       <ChoiceRemovableTags
         titleKey='title'
