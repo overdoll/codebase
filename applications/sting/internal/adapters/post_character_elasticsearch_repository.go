@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"encoding/json"
+	"go.uber.org/zap"
 	"overdoll/libraries/cache"
 	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
@@ -34,8 +35,8 @@ type characterDocument struct {
 
 const CharacterIndexName = "characters"
 
-var CharacterReaderIndex = cache.ReadAlias(CharacterIndexName)
-var characterWriterIndex = cache.WriteAlias(CharacterIndexName)
+var CharacterReaderIndex = cache.ReadAlias(CachePrefix, CharacterIndexName)
+var characterWriterIndex = cache.WriteAlias(CachePrefix, CharacterIndexName)
 
 func marshalCharacterToDocument(char *post.Character) (*characterDocument, error) {
 
@@ -266,7 +267,12 @@ func (r PostsCassandraElasticsearchRepository) IndexAllCharacters(ctx context.Co
 				Do(ctx)
 
 			if err != nil {
-				return errors.Wrap(support.ParseElasticError(err), "failed to index characters")
+				e, ok := err.(*elastic.Error)
+				if ok && e.Details.Type == "version_conflict_engine_exception" {
+					zap.S().Infof("skipping document [%s] due to conflict", doc.Id)
+				} else {
+					return errors.Wrap(support.ParseElasticError(err), "failed to index characters")
+				}
 			}
 		}
 

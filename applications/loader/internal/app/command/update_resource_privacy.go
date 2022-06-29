@@ -21,7 +21,7 @@ func NewUpdateResourcePrivacyHandler(rr resource.Repository) UpdateResourcePriva
 	return UpdateResourcePrivacyHandler{rr: rr}
 }
 
-func (h UpdateResourcePrivacyHandler) Handle(ctx context.Context, cmd CopyResourcesAndApplyFilters) ([]*resource.Resource, error) {
+func (h UpdateResourcePrivacyHandler) Handle(ctx context.Context, cmd UpdateResourcePrivacy) ([]*resource.Resource, error) {
 
 	var itemIds []string
 	var resourceIds []string

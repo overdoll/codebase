@@ -2,19 +2,12 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "migrations",
-    srcs = [
-        "club_payments.go",
-        "club_payouts.go",
-        "migrations.go",
-    ],
+    srcs = ["migrations.go"],
     importpath = "overdoll/applications/ringer/internal/adapters/migrations",
     visibility = ["//applications/ringer:__subpackages__"],
     deps = [
-        "//applications/ringer/internal/adapters",
         "//applications/ringer/internal/adapters/migrations/cql",
-        "//libraries/bootstrap",
         "//libraries/database",
-        "@com_github_scylladb_gocqlx_v2//:gocqlx",
         "@com_github_scylladb_gocqlx_v2//migrate",
     ],
 )

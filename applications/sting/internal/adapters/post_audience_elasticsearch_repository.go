@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"encoding/json"
+	"go.uber.org/zap"
 	"overdoll/libraries/cache"
 	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
@@ -33,8 +34,8 @@ type audienceDocument struct {
 
 const AudienceIndexName = "audience"
 
-var AudienceReaderIndex = cache.ReadAlias(AudienceIndexName)
-var audienceWriterIndex = cache.WriteAlias(AudienceIndexName)
+var AudienceReaderIndex = cache.ReadAlias(CachePrefix, AudienceIndexName)
+var audienceWriterIndex = cache.WriteAlias(CachePrefix, AudienceIndexName)
 
 func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 
@@ -221,7 +222,10 @@ func (r PostsCassandraElasticsearchRepository) IndexAllAudience(ctx context.Cont
 				BodyJson(marshalled).
 				Do(ctx)
 
-			if err != nil {
+			e, ok := err.(*elastic.Error)
+			if ok && e.Details.Type == "version_conflict_engine_exception" {
+				zap.S().Infof("skipping document [%s] due to conflict", marshalled.Id)
+			} else {
 				return errors.Wrap(support.ParseElasticError(err), "failed to index audience")
 			}
 		}

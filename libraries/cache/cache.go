@@ -1,13 +1,16 @@
 package cache
 
-import "github.com/spf13/cobra"
+import (
+	"github.com/spf13/cobra"
+)
 
 func CreateCacheCommands(indexConfig IndexConfig) *cobra.Command {
-	// set our global prefix for this application
+
 	prefix = indexConfig.Prefix
 
+	// set our global prefix for this application
 	index := &cobra.Command{
-		Use: "index",
+		Use: "cache",
 	}
 
 	// register indexes as part of initial run - similar to what a "migration" command might do in a database

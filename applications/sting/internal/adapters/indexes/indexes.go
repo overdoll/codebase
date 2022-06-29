@@ -9,43 +9,51 @@ import (
 	"overdoll/libraries/resource"
 )
 
-func registerIndexes() cache.IndexRegistry {
-	var reg = cache.IndexRegistry{}
-
+func getPostRepository() adapters.PostsCassandraElasticsearchRepository {
 	serializer := resource.NewSerializer()
 	es := bootstrap.InitializeElasticSearchSession()
 	session := bootstrap.InitializeDatabaseSession()
 
-	clubRepository := adapters.NewClubCassandraElasticsearchRepository(session, es, bootstrap.InitializeRedisSession(), serializer)
+	return adapters.NewPostsCassandraRepository(session, es, serializer)
+}
 
-	repository := adapters.NewPostsCassandraRepository(session, es, serializer)
+func getClubRepository() adapters.ClubCassandraElasticsearchRepository {
+	serializer := resource.NewSerializer()
+	es := bootstrap.InitializeElasticSearchSession()
+	session := bootstrap.InitializeDatabaseSession()
+
+	return adapters.NewClubCassandraElasticsearchRepository(session, es, bootstrap.InitializeRedisSession(), serializer)
+}
+
+func registerIndexes() cache.IndexRegistry {
+	var reg = cache.NewIndexRegistry()
 
 	reg.Add(adapters.PostIndexName, schema.PostsSchema, func(ctx context.Context) error {
-		return repository.IndexAllPosts(ctx)
+		return getPostRepository().IndexAllPosts(ctx)
 	})
 
 	reg.Add(adapters.SeriesIndexName, schema.SeriesSchema, func(ctx context.Context) error {
-		return repository.IndexAllSeries(ctx)
+		return getPostRepository().IndexAllSeries(ctx)
 	})
 
 	reg.Add(adapters.ClubsIndexName, schema.ClubsSchema, func(ctx context.Context) error {
-		return clubRepository.IndexAllClubs(ctx)
+		return getClubRepository().IndexAllClubs(ctx)
 	})
 
 	reg.Add(adapters.ClubMembersIndexName, schema.ClubMembersSchema, func(ctx context.Context) error {
-		return clubRepository.IndexAllClubMembers(ctx)
+		return getClubRepository().IndexAllClubMembers(ctx)
 	})
 
 	reg.Add(adapters.CharacterIndexName, schema.CharactersSchema, func(ctx context.Context) error {
-		return repository.IndexAllCharacters(ctx)
+		return getPostRepository().IndexAllCharacters(ctx)
 	})
 
 	reg.Add(adapters.CategoryIndexName, schema.CategoriesSchema, func(ctx context.Context) error {
-		return repository.IndexAllCategories(ctx)
+		return getPostRepository().IndexAllCategories(ctx)
 	})
 
 	reg.Add(adapters.AudienceIndexName, schema.AudienceSchema, func(ctx context.Context) error {
-		return repository.IndexAllAudience(ctx)
+		return getPostRepository().IndexAllAudience(ctx)
 	})
 
 	reg.Add(adapters.SearchHistoryIndexName, schema.SearchHistorySchema, func(ctx context.Context) error {
@@ -56,6 +64,6 @@ func registerIndexes() cache.IndexRegistry {
 }
 
 var IndexConfig = cache.IndexConfig{
-	Prefix:   "sting",
+	Prefix:   adapters.CachePrefix,
 	Registry: registerIndexes(),
 }

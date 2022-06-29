@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"github.com/spf13/cobra"
 	"os"
 	"overdoll/applications/puppy/internal/ports"
@@ -26,6 +27,7 @@ func init() {
 
 func main() {
 	if err := rootCmd.Execute(); err != nil {
+		fmt.Println(err)
 		os.Exit(1)
 	}
 }

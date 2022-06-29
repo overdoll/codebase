@@ -5,13 +5,13 @@ import (
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 	"overdoll/libraries/bootstrap"
+	"strconv"
 	"time"
 )
 
 func createRegister(config IndexConfig) *cobra.Command {
 	return &cobra.Command{
-		Use:       "register",
-		ValidArgs: []string{},
+		Use: "register",
 		Run: func(cmd *cobra.Command, args []string) {
 
 			ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
@@ -22,46 +22,42 @@ func createRegister(config IndexConfig) *cobra.Command {
 
 			start := time.Now().UTC()
 
-			// get all aliases
-			var allAliases []string
-
-			for indexName, _ := range config.Registry.registry {
-				allAliases = append(allAliases, WriteAlias(indexName))
-				allAliases = append(allAliases, ReadAlias(indexName))
-			}
-
 			aliasesResults, err := client.Aliases().
-				Alias(allAliases...).
 				Do(ctx)
+
 			if err != nil {
 				zap.S().Fatalw("failed to get all aliases", zap.Error(err))
 			}
 
+			registerCount := 0
+
 			for indexName, indexBody := range config.Registry.registry {
 
-				writeAlias := WriteAlias(indexName)
-				readAlias := ReadAlias(indexName)
+				writeAlias := writeLocalAlias(indexName)
+				readAlias := readLocalAlias(indexName)
 
 				// write and read alias does not exist, create the index
 				if len(aliasesResults.IndicesByAlias(writeAlias)) == 0 && len(aliasesResults.IndicesByAlias(readAlias)) == 0 {
 
+					registerCount += 1
 					// create index, with our name and add a timestamp as the prefix
-					result, err := client.CreateIndex(withPrefixAndTimestamp(indexName)).BodyString(indexBody).Do(ctx)
+					result, err := client.CreateIndex(withLocalPrefixAndTimestamp(indexName)).BodyString(indexBody).Do(ctx)
 
 					if err != nil {
-						zap.S().Fatalw("failed to create new index", zap.Error(err))
+						zap.S().Fatalw("failed to create new index", zap.Error(err), zap.String("index", indexName))
 					}
 
-					_, err = client.Alias().Add(writeAlias, result.Index).Add(readAlias, result.Index).Do(ctx)
+					_, err = client.Alias().Add(result.Index, writeAlias).Add(result.Index, readAlias).Do(ctx)
 
 					if err != nil {
-						zap.S().Fatalw("failed to add new aliases", zap.Error(err))
+						zap.S().Fatalw("failed to add new aliases", zap.Error(err), zap.String("index", result.Index))
 					}
 				}
 			}
 
 			zap.S().Infof(
-				"successfully registered indexes in %s!",
+				"successfully registered [%s] indexes in %s!",
+				strconv.Itoa(registerCount),
 				time.Since(start).Truncate(time.Millisecond),
 			)
 		},

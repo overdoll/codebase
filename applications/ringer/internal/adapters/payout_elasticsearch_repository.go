@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
+	"go.uber.org/zap"
 	"overdoll/applications/ringer/internal/domain/payout"
 	"overdoll/libraries/cache"
 	"overdoll/libraries/database"
@@ -39,8 +40,8 @@ type clubPayoutDocument struct {
 
 const ClubPayoutsIndexName = "club_payouts"
 
-var ClubPayoutsReaderIndex = cache.ReadAlias(ClubPayoutsIndexName)
-var clubPayoutsWriterIndex = cache.WriteAlias(ClubPayoutsIndexName)
+var ClubPayoutsReaderIndex = cache.ReadAlias(CachePrefix, ClubPayoutsIndexName)
+var clubPayoutsWriterIndex = cache.WriteAlias(CachePrefix, ClubPayoutsIndexName)
 
 func unmarshalClubPayoutDocument(hit *elastic.SearchHit) (*payout.ClubPayout, error) {
 
@@ -228,8 +229,11 @@ func (r PayoutCassandraElasticsearchRepository) IndexAllClubPayouts(ctx context.
 				OpType("create").
 				Do(ctx)
 
-			if err != nil {
-				return errors.Wrap(support.ParseElasticError(err), "failed to index club payouts")
+			e, ok := err.(*elastic.Error)
+			if ok && e.Details.Type == "version_conflict_engine_exception" {
+				zap.S().Infof("skipping document [%s] due to conflict", marshalled.Id)
+			} else {
+				return errors.Wrap(support.ParseElasticError(err), "failed to index payout")
 			}
 		}
 

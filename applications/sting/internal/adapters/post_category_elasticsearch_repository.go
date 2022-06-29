@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"encoding/json"
+	"go.uber.org/zap"
 	"overdoll/libraries/cache"
 	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
@@ -32,8 +33,8 @@ type categoryDocument struct {
 
 const CategoryIndexName = "categories"
 
-var CategoryReaderIndex = cache.ReadAlias(CategoryIndexName)
-var categoryWriterIndex = cache.WriteAlias(CategoryIndexName)
+var CategoryReaderIndex = cache.ReadAlias(CachePrefix, CategoryIndexName)
+var categoryWriterIndex = cache.WriteAlias(CachePrefix, CategoryIndexName)
 
 func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 
@@ -226,7 +227,12 @@ func (r PostsCassandraElasticsearchRepository) IndexAllCategories(ctx context.Co
 				Do(ctx)
 
 			if err != nil {
-				return errors.Wrap(support.ParseElasticError(err), "failed to index categories")
+				e, ok := err.(*elastic.Error)
+				if ok && e.Details.Type == "version_conflict_engine_exception" {
+					zap.S().Infof("skipping document [%s] due to conflict", marshalled.Id)
+				} else {
+					return errors.Wrap(support.ParseElasticError(err), "failed to index categories")
+				}
 			}
 		}
 

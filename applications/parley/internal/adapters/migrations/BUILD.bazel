@@ -2,18 +2,12 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "migrations",
-    srcs = [
-        "migrations.go",
-        "post_reports.go",
-    ],
+    srcs = ["migrations.go"],
     importpath = "overdoll/applications/parley/internal/adapters/migrations",
     visibility = ["//applications/parley:__subpackages__"],
     deps = [
-        "//applications/parley/internal/adapters",
         "//applications/parley/internal/adapters/migrations/cql",
-        "//libraries/bootstrap",
         "//libraries/database",
-        "@com_github_scylladb_gocqlx_v2//:gocqlx",
         "@com_github_scylladb_gocqlx_v2//migrate",
     ],
 )

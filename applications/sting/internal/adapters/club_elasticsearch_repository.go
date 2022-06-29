@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"encoding/json"
+	"go.uber.org/zap"
 	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/libraries/cache"
 	"overdoll/libraries/database"
@@ -40,8 +41,8 @@ type clubDocument struct {
 
 const ClubsIndexName = "clubs"
 
-var ClubsReaderIndex = cache.ReadAlias(ClubsIndexName)
-var clubsWriterIndex = cache.WriteAlias(ClubsIndexName)
+var ClubsReaderIndex = cache.ReadAlias(CachePrefix, ClubsIndexName)
+var clubsWriterIndex = cache.WriteAlias(CachePrefix, ClubsIndexName)
 
 func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 
@@ -317,7 +318,10 @@ func (r ClubCassandraElasticsearchRepository) IndexAllClubs(ctx context.Context)
 				BodyJson(marshalled).
 				Do(ctx)
 
-			if err != nil {
+			e, ok := err.(*elastic.Error)
+			if ok && e.Details.Type == "version_conflict_engine_exception" {
+				zap.S().Infof("skipping document [%s] due to conflict", marshalled.Id)
+			} else {
 				return errors.Wrap(support.ParseElasticError(err), "failed to index clubs")
 			}
 		}

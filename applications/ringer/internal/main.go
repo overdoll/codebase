@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"overdoll/applications/ringer/internal/adapters/indexes"
 	"overdoll/applications/ringer/internal/adapters/migrations"
@@ -47,6 +48,7 @@ func init() {
 
 func main() {
 	if err := rootCmd.Execute(); err != nil {
+		fmt.Println(err)
 		os.Exit(1)
 	}
 }

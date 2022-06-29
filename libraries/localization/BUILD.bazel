@@ -21,7 +21,6 @@ go_library(
 go_library(
     name = "localization",
     srcs = [
-        "elasticsearch_index.go",
         "language.go",
         "supported_locales.go",
         "translated_support.go",

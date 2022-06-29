@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "cache",
+    srcs = [
+        "cache.go",
+        "create.go",
+        "local_alias.go",
+        "register.go",
+        "registry.go",
+        "reindex.go",
+        "swap.go",
+    ],
+    importpath = "overdoll/libraries/cache",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libraries/bootstrap",
+        "@com_github_spf13_cobra//:cobra",
+        "@org_uber_go_zap//:zap",
+    ],
+)

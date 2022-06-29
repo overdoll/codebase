@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
+	"go.uber.org/zap"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/libraries/cache"
 	"overdoll/libraries/database"
@@ -43,8 +44,8 @@ type accountClubSupporterSubscriptionDocument struct {
 
 const AccountClubSupporterSubscriptionsIndexName = "account_club_supporter_subscriptions"
 
-var AccountClubSupporterSubscriptionsReaderIndex = cache.ReadAlias(AccountClubSupporterSubscriptionsIndexName)
-var accountClubSupporterSubscriptionsWriterIndex = cache.WriteAlias(AccountClubSupporterSubscriptionsIndexName)
+var AccountClubSupporterSubscriptionsReaderIndex = cache.ReadAlias(CachePrefix, AccountClubSupporterSubscriptionsIndexName)
+var accountClubSupporterSubscriptionsWriterIndex = cache.WriteAlias(CachePrefix, AccountClubSupporterSubscriptionsIndexName)
 
 func unmarshalAccountClubSupporterSubscriptionDocument(hit *elastic.SearchHit) (*billing.AccountClubSupporterSubscription, error) {
 
@@ -262,7 +263,10 @@ func (r BillingCassandraElasticsearchRepository) IndexAllAccountClubSupporterSub
 				OpType("create").
 				Do(ctx)
 
-			if err != nil {
+			e, ok := err.(*elastic.Error)
+			if ok && e.Details.Type == "version_conflict_engine_exception" {
+				zap.S().Infof("skipping document [%s] due to conflict", doc.Id)
+			} else {
 				return errors.Wrap(support.ParseElasticError(err), "failed to index account club supporter subscription")
 			}
 		}

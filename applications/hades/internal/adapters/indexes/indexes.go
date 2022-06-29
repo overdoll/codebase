@@ -8,23 +8,25 @@ import (
 	"overdoll/libraries/cache"
 )
 
-func registerIndexes() cache.IndexRegistry {
-	var reg = cache.IndexRegistry{}
+func getBillingRepository() adapters.BillingCassandraElasticsearchRepository {
+	return adapters.NewBillingCassandraRepository(bootstrap.InitializeDatabaseSession(), bootstrap.InitializeElasticSearchSession())
+}
 
-	repository := adapters.NewBillingCassandraRepository(bootstrap.InitializeDatabaseSession(), bootstrap.InitializeElasticSearchSession())
+func registerIndexes() cache.IndexRegistry {
+	var reg = cache.NewIndexRegistry()
 
 	reg.Add(adapters.AccountTransactionsIndexName, schema.AccountTransactionsSchema, func(ctx context.Context) error {
-		return repository.IndexAllAccountTransactions(ctx)
+		return getBillingRepository().IndexAllAccountTransactions(ctx)
 	})
 
 	reg.Add(adapters.AccountClubSupporterSubscriptionsIndexName, schema.AccountClubSupporterSubscriptionsSchema, func(ctx context.Context) error {
-		return repository.IndexAllAccountClubSupporterSubscriptions(ctx)
+		return getBillingRepository().IndexAllAccountClubSupporterSubscriptions(ctx)
 	})
 
 	return reg
 }
 
 var IndexConfig = cache.IndexConfig{
-	Prefix:   "hades",
+	Prefix:   adapters.CachePrefix,
 	Registry: registerIndexes(),
 }

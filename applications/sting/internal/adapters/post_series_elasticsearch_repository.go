@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"encoding/json"
+	"go.uber.org/zap"
 	"overdoll/libraries/cache"
 	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
@@ -32,8 +33,8 @@ type seriesDocument struct {
 
 const SeriesIndexName = "series"
 
-var SeriesReaderIndex = cache.ReadAlias(SeriesIndexName)
-var seriesWriterIndex = cache.WriteAlias(SeriesIndexName)
+var SeriesReaderIndex = cache.ReadAlias(CachePrefix, SeriesIndexName)
+var seriesWriterIndex = cache.WriteAlias(CachePrefix, SeriesIndexName)
 
 func marshalSeriesToDocument(s *post.Series) (*seriesDocument, error) {
 
@@ -236,7 +237,12 @@ func (r PostsCassandraElasticsearchRepository) IndexAllSeries(ctx context.Contex
 				Do(ctx)
 
 			if err != nil {
-				return errors.Wrap(support.ParseElasticError(err), "failed to index series")
+				e, ok := err.(*elastic.Error)
+				if ok && e.Details.Type == "version_conflict_engine_exception" {
+					zap.S().Infof("skipping document [%s] due to conflict", doc.Id)
+				} else {
+					return errors.Wrap(support.ParseElasticError(err), "failed to index series")
+				}
 			}
 		}
 

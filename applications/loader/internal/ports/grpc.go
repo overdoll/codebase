@@ -92,6 +92,41 @@ func (s Server) GetResources(ctx context.Context, request *loader.GetResourcesRe
 	return &loader.GetResourcesResponse{Resources: response}, nil
 }
 
+func (s Server) UpdateResourcePrivacy(ctx context.Context, request *loader.UpdateResourcePrivacyRequest) (*loader.UpdateResourcePrivacyResponse, error) {
+
+	data := command.UpdateResourcePrivacy{
+		ResourcePairs: []struct {
+			ItemId     string
+			ResourceId string
+		}{},
+		IsPrivate: request.Private,
+	}
+
+	for _, r := range request.Resources {
+		data.ResourcePairs = append(data.ResourcePairs, struct {
+			ItemId     string
+			ResourceId string
+		}{
+			ItemId:     r.ItemId,
+			ResourceId: r.Id,
+		})
+	}
+
+	filteredResources, err := s.app.Commands.UpdateResourcePrivacy.Handle(ctx, data)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var finalResources []*proto.Resource
+
+	for _, r := range filteredResources {
+		finalResources = append(finalResources, resource.ToProto(r))
+	}
+
+	return &loader.UpdateResourcePrivacyResponse{Resources: finalResources}, nil
+}
+
 func (s Server) CopyResourcesAndApplyFilter(ctx context.Context, request *loader.CopyResourcesAndApplyFilterRequest) (*loader.CopyResourcesAndApplyFilterResponse, error) {
 
 	data := command.CopyResourcesAndApplyFilters{

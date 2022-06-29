@@ -8,9 +8,15 @@ type IndexConfig struct {
 }
 
 type IndexRegistry struct {
-	Prefix   string
 	registry map[string]string
 	reindex  map[string]func(ctx context.Context) error
+}
+
+func NewIndexRegistry() IndexRegistry {
+	return IndexRegistry{
+		registry: make(map[string]string),
+		reindex:  make(map[string]func(ctx context.Context) error),
+	}
 }
 
 func (r IndexRegistry) Add(name, body string, reindex func(ctx context.Context) error) {

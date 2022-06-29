@@ -2,28 +2,12 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "migrations",
-    srcs = [
-        "add_search_history_index.go",
-        "audience.go",
-        "category.go",
-        "character.go",
-        "club_members.go",
-        "clubs.go",
-        "clubs_banner_disable_supporter_only.go",
-        "migrations.go",
-        "posts.go",
-        "series.go",
-    ],
+    srcs = ["migrations.go"],
     importpath = "overdoll/applications/sting/internal/adapters/migrations",
     visibility = ["//applications/sting:__subpackages__"],
     deps = [
-        "//applications/sting/internal/adapters",
         "//applications/sting/internal/adapters/migrations/cql",
-        "//libraries/bootstrap",
         "//libraries/database",
-        "//libraries/errors",
-        "//libraries/localization",
-        "@com_github_scylladb_gocqlx_v2//:gocqlx",
         "@com_github_scylladb_gocqlx_v2//migrate",
     ],
 )

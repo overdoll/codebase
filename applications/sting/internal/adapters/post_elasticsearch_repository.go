@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"encoding/json"
+	"go.uber.org/zap"
 	"math"
 	"overdoll/libraries/cache"
 	"overdoll/libraries/database"
@@ -40,8 +41,8 @@ type postDocument struct {
 
 const PostIndexName = "posts"
 
-var PostReaderIndex = cache.ReadAlias(PostIndexName)
-var postWriterIndex = cache.WriteAlias(PostIndexName)
+var PostReaderIndex = cache.ReadAlias(CachePrefix, PostIndexName)
+var postWriterIndex = cache.WriteAlias(CachePrefix, PostIndexName)
 
 func (r *PostsCassandraElasticsearchRepository) unmarshalPostDocument(ctx context.Context, hit *elastic.SearchHit) (*post.Post, error) {
 
@@ -721,7 +722,12 @@ func (r PostsCassandraElasticsearchRepository) IndexAllPosts(ctx context.Context
 				Do(ctx)
 
 			if err != nil {
-				return errors.Wrap(err, "failed to index post")
+				e, ok := err.(*elastic.Error)
+				if ok && e.Details.Type == "version_conflict_engine_exception" {
+					zap.S().Infof("skipping document [%s] due to conflict", doc.Id)
+				} else {
+					return errors.Wrap(support.ParseElasticError(err), "failed to index post")
+				}
 			}
 		}
 

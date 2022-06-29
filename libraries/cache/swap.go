@@ -55,7 +55,7 @@ func swap(alias string) func(cmd *cobra.Command, args []string) {
 		}
 
 		zap.S().Infof(
-			"successfully swapped alias %s from index %s to index %s in %s!",
+			"successfully swapped alias [%s] from index [%s] to index [%s] in %s!",
 			alias,
 			originalIndex,
 			destinationIndex,
@@ -83,13 +83,13 @@ func createSwap(config IndexConfig) *cobra.Command {
 		writerCmd.AddCommand(&cobra.Command{
 			Use:  indexName,
 			Args: cobra.ExactArgs(1),
-			Run:  swap(WriteAlias(indexName)),
+			Run:  swap(writeLocalAlias(indexName)),
 		})
 
 		readerCmd.AddCommand(&cobra.Command{
 			Use:  indexName,
 			Args: cobra.ExactArgs(1),
-			Run:  swap(ReadAlias(indexName)),
+			Run:  swap(readLocalAlias(indexName)),
 		})
 	}
 

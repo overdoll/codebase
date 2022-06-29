@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
+	"go.uber.org/zap"
 	"overdoll/applications/hades/internal/domain/billing"
 	"overdoll/libraries/cache"
 	"overdoll/libraries/database"
@@ -43,8 +44,8 @@ type accountTransactionDocument struct {
 
 const AccountTransactionsIndexName = "account_transactions"
 
-var AccountTransactionsReaderIndex = cache.ReadAlias(AccountTransactionsIndexName)
-var accountTransactionsWriterIndex = cache.WriteAlias(AccountTransactionsIndexName)
+var AccountTransactionsReaderIndex = cache.ReadAlias(CachePrefix, AccountTransactionsIndexName)
+var accountTransactionsWriterIndex = cache.WriteAlias(CachePrefix, AccountTransactionsIndexName)
 
 func unmarshalAccountTransactionDocument(hit *elastic.SearchHit) (*billing.AccountTransaction, error) {
 
@@ -276,8 +277,11 @@ func (r BillingCassandraElasticsearchRepository) IndexAllAccountTransactions(ctx
 				BodyJson(doc).
 				Do(ctx)
 
-			if err != nil {
-				return errors.Wrap(support.ParseElasticError(err), "failed to index account transactions")
+			e, ok := err.(*elastic.Error)
+			if ok && e.Details.Type == "version_conflict_engine_exception" {
+				zap.S().Infof("skipping document [%s] due to conflict", doc.Id)
+			} else {
+				return errors.Wrap(support.ParseElasticError(err), "failed to index account transaction")
 			}
 		}
 
