@@ -52,8 +52,7 @@ export default function PostGalleryPublicSimple ({
           <SwiperSlide
             key={index}
             style={{
-              backgroundColor: item.resource.preview != null && item.resource.preview !== '' ? item.resource.preview : 'gray.800',
-              height: swiper?.height
+              backgroundColor: item.resource.preview != null && item.resource.preview !== '' ? item.resource.preview : 'gray.800'
             }}
           >
             <Flex
@@ -65,7 +64,7 @@ export default function PostGalleryPublicSimple ({
             >
               <OverflowVisual
                 minH={300}
-                maxH='88vh'
+                maxH={700}
                 align='center'
                 justify='center'
               >
