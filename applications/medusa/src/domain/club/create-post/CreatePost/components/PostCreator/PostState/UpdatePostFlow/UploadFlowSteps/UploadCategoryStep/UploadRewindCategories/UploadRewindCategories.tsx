@@ -33,8 +33,6 @@ import { UploadSearchCategoriesMultiSelectorProps } from '../UploadCategoryStep'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { UploadRewindCategoriesFragment$key } from '@//:artifacts/UploadRewindCategoriesFragment.graphql'
-import SkeletonUploadCategoryGrid
-  from '@//:modules/content/Placeholder/Loading/SkeletonUploadCategoryGrid/SkeletonUploadCategoryGrid'
 
 interface Props {
   onChange: UseChoiceReturnOnChange<UploadSearchCategoriesMultiSelectorProps>

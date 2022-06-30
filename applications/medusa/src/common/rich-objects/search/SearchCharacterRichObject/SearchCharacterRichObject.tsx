@@ -34,10 +34,10 @@ export default function SearchCharacterRichObject ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const TITLE = `${TITLE_SEARCH_PREFIX} ${data.name as string} ${TITLE_FEATURES} ${TITLE_SUFFIX}`
-  const DESCRIPTION = `${DESCRIPTION_PREFIX} ${data.name as string} ${DESCRIPTION_FEATURES} on overdoll.com. ${DESCRIPTION_CONTENT_DISCOVER} of ${data.name as string}.`
+  const TITLE = `${TITLE_SEARCH_PREFIX} ${data.name} ${TITLE_FEATURES} ${TITLE_SUFFIX}`
+  const DESCRIPTION = `${DESCRIPTION_PREFIX} ${data.name} ${DESCRIPTION_FEATURES} on overdoll.com. ${DESCRIPTION_CONTENT_DISCOVER} of ${data.name}.`
 
-  const URL = `https://overdoll.com/search/series/${data.series.slug as string}/${data.slug as string}`
+  const URL = `https://overdoll.com/search/series/${data.series.slug}/${data.slug}`
 
   return (
     <>

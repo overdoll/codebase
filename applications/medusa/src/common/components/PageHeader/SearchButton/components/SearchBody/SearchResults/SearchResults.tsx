@@ -49,6 +49,7 @@ export default function SearchResults ({
           <Heading textAlign='center' color='gray.200' fontSize='lg'>
             <Trans>
               We couldn't find a club, category, character, or series with the
+              {/* eslint-disable-next-line react/prop-types */}
               name {searchArguments.variables.search}
             </Trans>
           </Heading>

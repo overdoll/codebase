@@ -9,7 +9,6 @@ import { HStack, Stack } from '@chakra-ui/react'
 import SearchInput from '@//:modules/content/HookedComponents/Search/components/SearchInput/SearchInput'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import SkeletonRectangleGrid from '@//:modules/content/Placeholder/Loading/SkeletonRectangleGrid/SkeletonRectangleGrid'
 import UploadSearchCategoriesMultiSelector
   from './UploadSearchCategoriesMultiSelector/UploadSearchCategoriesMultiSelector'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'

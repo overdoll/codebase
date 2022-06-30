@@ -431,7 +431,7 @@ msgstr ""
 #~ msgid "Search"
 #~ msgstr ""
 
-#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchResults/SearchResults.tsx:79
+#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchResults/SearchResults.tsx:80
 msgid "Search Results"
 msgstr ""
 
@@ -679,7 +679,11 @@ msgid "View Post"
 msgstr ""
 
 #: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchResults/SearchResults.tsx:50
-msgid "We couldn't find a club, category, character, or series with the name {0}"
+#~ msgid "We couldn't find a club, category, character, or series with the name {0}"
+#~ msgstr ""
+
+#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchResults/SearchResults.tsx:50
+msgid "We couldn't find a club, category, character, or series with the name {1}"
 msgstr ""
 
 #: src/modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/PostsInfiniteScroll.tsx:51
