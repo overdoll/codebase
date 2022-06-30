@@ -21,7 +21,7 @@ msgstr ""
 msgid "Create an account to join clubs and curate a personalized clubs feed!"
 msgstr ""
 
-#: src/domain/clubs/discover/RootDiscoverClubs/DiscoverClubs/DiscoverClubs.tsx:110
+#: src/domain/clubs/discover/RootDiscoverClubs/DiscoverClubs/DiscoverClubs.tsx:112
 msgid "Discover Clubs"
 msgstr ""
 

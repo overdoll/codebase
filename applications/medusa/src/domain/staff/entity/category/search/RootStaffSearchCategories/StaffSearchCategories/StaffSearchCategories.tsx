@@ -63,7 +63,7 @@ export default function StaffSearchCategories ({ searchArguments }: Props): JSX.
       fallback={<EmptyCategories hint={searchArguments.variables.title} />}
       condition={categories.length < 1}
     >
-      <GridWrap justify='center'>
+      <GridWrap>
         {categories.map((item, index) => (
           <GridTile key={index}>
             <LinkTile href={{
