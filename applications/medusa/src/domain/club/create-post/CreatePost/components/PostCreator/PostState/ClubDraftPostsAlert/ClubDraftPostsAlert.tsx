@@ -12,7 +12,7 @@ interface Props {
 const Fragment = graphql`
   fragment ClubDraftPostsAlertFragment on Club {
     slug
-    posts(first: 1, state: DRAFT) {
+    draftPosts: posts(first: 1, state: DRAFT) {
       edges {
         node {
           __typename
@@ -25,7 +25,7 @@ const Fragment = graphql`
 export default function ClubDraftPostsAlert ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const hasDraftPosts = data.posts.edges.length > 0
+  const hasDraftPosts = data.draftPosts.edges.length > 0
 
   if (!hasDraftPosts) {
     return <></>

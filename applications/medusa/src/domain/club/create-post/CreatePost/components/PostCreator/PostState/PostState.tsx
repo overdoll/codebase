@@ -36,6 +36,7 @@ const ClubFragment = graphql`
     id
     ...ClubInformationBannerFragment
     ...ClubDraftPostsAlertFragment
+    ...CreatePostFlowFragment
   }
 `
 
@@ -65,7 +66,7 @@ export default function PostState ({
         <ClubInformationBanner query={clubData} />
         <Stack spacing={4}>
           <ClubDraftPostsAlert query={clubData} />
-          <CreatePostFlow clubId={clubData.id} />
+          <CreatePostFlow query={clubData} />
           <Stack spacing={2}>
             <Heading color='gray.00' fontSize='2xl'>
               <Trans>

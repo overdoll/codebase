@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<93f0af34e01fa7cafe7ef2f5816be60e>>
+ * @generated SignedSource<<b21bb6b7ba327d6c8e30ee87385b4d49>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -8,34 +8,27 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
+import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type UploadRewindSingleSelectorFragment$data = {
+export type CreatePostFlowFragment$data = {
   readonly id: string;
   readonly posts: {
+    readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly categories: ReadonlyArray<{
-          readonly id: string;
-          readonly title: string;
-        }>;
         readonly id: string;
-        readonly " $fragmentSpreads": FragmentRefs<"PostPreviewContentFragment">;
       };
     }>;
   };
-  readonly " $fragmentType": "UploadRewindSingleSelectorFragment";
+  readonly " $fragmentType": "CreatePostFlowFragment";
 };
-export type UploadRewindSingleSelectorFragment$key = {
-  readonly " $data"?: UploadRewindSingleSelectorFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"UploadRewindSingleSelectorFragment">;
+export type CreatePostFlowFragment$key = {
+  readonly " $data"?: CreatePostFlowFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"CreatePostFlowFragment">;
 };
 
 const node: ReaderFragment = (function(){
-var v0 = [
-  "posts"
-],
-v1 = {
+var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -50,13 +43,9 @@ return {
       "name": "after"
     },
     {
-      "defaultValue": 7,
+      "defaultValue": 5,
       "kind": "LocalArgument",
       "name": "first"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "state"
     }
   ],
   "kind": "Fragment",
@@ -66,41 +55,18 @@ return {
         "count": "first",
         "cursor": "after",
         "direction": "forward",
-        "path": (v0/*: any*/)
+        "path": [
+          "posts"
+        ]
       }
-    ],
-    "refetch": {
-      "connection": {
-        "forward": {
-          "count": "first",
-          "cursor": "after"
-        },
-        "backward": null,
-        "path": (v0/*: any*/)
-      },
-      "fragmentPathInResult": [
-        "node"
-      ],
-      "operation": require('./UploadRewindSingleSelectorPaginationFragment.graphql'),
-      "identifierField": "id"
-    }
+    ]
   },
-  "name": "UploadRewindSingleSelectorFragment",
+  "name": "CreatePostFlowFragment",
   "selections": [
+    (v0/*: any*/),
     {
       "alias": "posts",
-      "args": [
-        {
-          "kind": "Literal",
-          "name": "sortBy",
-          "value": "NEW"
-        },
-        {
-          "kind": "Variable",
-          "name": "state",
-          "variableName": "state"
-        }
-      ],
+      "args": null,
       "concreteType": "PostConnection",
       "kind": "LinkedField",
       "name": "__ClubPosts_posts_connection",
@@ -122,31 +88,7 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v1/*: any*/),
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "Category",
-                  "kind": "LinkedField",
-                  "name": "categories",
-                  "plural": true,
-                  "selections": [
-                    (v1/*: any*/),
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "title",
-                      "storageKey": null
-                    }
-                  ],
-                  "storageKey": null
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "PostPreviewContentFragment"
-                },
+                (v0/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -191,17 +133,28 @@ return {
             }
           ],
           "storageKey": null
+        },
+        {
+          "kind": "ClientExtension",
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "__id",
+              "storageKey": null
+            }
+          ]
         }
       ],
       "storageKey": null
-    },
-    (v1/*: any*/)
+    }
   ],
   "type": "Club",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "501b6bff3b81d11957a6325a5c4aeb16";
+(node as any).hash = "ede45c8d87503004e12fbd8c28251bda";
 
 export default node;

@@ -5,16 +5,17 @@ import { ClickableTile } from '../../../ContentSelection'
 import { FileUpload } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import AllowedFileTypesDisplay from '../AllowedFileTypesDisplay/AllowedFileTypesDisplay'
-import { UPLOAD_ALLOWED_FILE_TYPES } from '../../../../constants/upload'
 import FilePicker from '../FilePicker/FilePicker'
 import DragOverFileInput from '../DragOverFileInput/DragOverFileInput'
 
 interface Props {
   uppy: Uppy
+  fileTypes: string[]
 }
 
-export default function ArrangeUploadsFilePicker ({
-  uppy
+export default function GenericFilePicker ({
+  uppy,
+  fileTypes
 }: Props): JSX.Element {
   return (
     <FilePicker uppy={uppy}>
@@ -35,7 +36,7 @@ export default function ArrangeUploadsFilePicker ({
               </Heading>
             </Stack>
             <Flex justify='flex-end'>
-              <AllowedFileTypesDisplay fileTypes={UPLOAD_ALLOWED_FILE_TYPES} />
+              <AllowedFileTypesDisplay fileTypes={fileTypes} />
             </Flex>
           </LargeBackgroundBox>
         </ClickableTile>

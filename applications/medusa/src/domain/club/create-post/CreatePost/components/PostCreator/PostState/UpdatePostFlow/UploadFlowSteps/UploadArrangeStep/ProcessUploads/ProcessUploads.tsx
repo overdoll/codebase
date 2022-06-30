@@ -14,8 +14,8 @@ import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeCom
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import { ClickableTile } from '@//:modules/content/ContentSelection'
 import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
-import ArrangeUploadsFilePicker
-  from '@//:modules/content/Interactables/FileUpload/ArrangeUploadsFilePicker/ArrangeUploadsFilePicker'
+import GenericFilePicker from '@//:modules/content/Interactables/FileUpload/GenericFilePicker/GenericFilePicker'
+import { UPLOAD_ALLOWED_FILE_TYPES } from '@//:modules/constants/upload'
 
 interface Props {
   query: ProcessUploadsFragment$key
@@ -161,7 +161,7 @@ export default function ProcessUploads ({
     }
 
     return (
-      <ArrangeUploadsFilePicker uppy={uppy} />
+      <GenericFilePicker fileTypes={UPLOAD_ALLOWED_FILE_TYPES} uppy={uppy} />
     )
   }
 

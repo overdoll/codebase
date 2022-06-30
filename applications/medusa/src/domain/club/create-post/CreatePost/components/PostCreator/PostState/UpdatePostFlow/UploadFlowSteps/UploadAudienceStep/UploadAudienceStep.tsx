@@ -45,7 +45,7 @@ export default function UploadAudienceStep (): JSX.Element {
         </PageSectionTitle>
         <PageSectionDescription>
           <Trans>
-            Select the most relevant depiction of your content. You can only select one.
+            Select the most relevant description of what is depicted in your content. You can only select one.
           </Trans>
         </PageSectionDescription>
       </PageSectionWrap>

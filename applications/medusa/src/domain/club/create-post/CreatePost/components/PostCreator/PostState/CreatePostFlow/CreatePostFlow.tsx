@@ -1,8 +1,9 @@
 import { useContext, useEffect } from 'react'
 import { Heading, Spinner, Stack } from '@chakra-ui/react'
-import { graphql, useMutation } from 'react-relay/hooks'
+import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { useQueryParam } from 'use-query-params'
 import { PostPlaceholder } from '@//:modules/content/PageLayout'
+import { CreatePostFlowFragment$key } from '@//:artifacts/CreatePostFlowFragment.graphql'
 import { CreatePostFlowMutation$data } from '@//:artifacts/CreatePostFlowMutation.graphql'
 import { t, Trans } from '@lingui/macro'
 import { UppyContext } from '../../../../context'
@@ -11,20 +12,41 @@ import CreatePostFilePicker
   from '@//:modules/content/Interactables/FileUpload/CreatePostFilePicker/CreatePostFilePicker'
 
 interface Props {
-  clubId: string | undefined
+  query: CreatePostFlowFragment$key
 }
 
+const Fragment = graphql`
+  fragment CreatePostFlowFragment on Club @argumentDefinitions(
+    first: {type: Int, defaultValue: 5}
+    after: {type: String}
+  ) {
+    id
+    posts (first: $first, after: $after)
+    @connection(key: "ClubPosts_posts") {
+      __id
+      edges {
+        node {
+          id
+        }
+      }
+    }
+  }
+`
+
 const Mutation = graphql`
-  mutation CreatePostFlowMutation($clubId: ID!) {
+  mutation CreatePostFlowMutation($clubId: ID!, , $connections: [ID!]!) {
     createPost(input: {clubId: $clubId}) {
-      post {
+      post @prependNode(connections: $connections, edgeTypeName: "createPostEdge") {
+        id
         reference
       }
     }
   }
 `
 
-export default function CreatePostFlow ({ clubId }: Props): JSX.Element {
+export default function CreatePostFlow ({ query }: Props): JSX.Element {
+  const data = useFragment(Fragment, query)
+
   const [, setPostReference] = useQueryParam<string | null | undefined>('post')
 
   const uppy = useContext(UppyContext)
@@ -33,10 +55,13 @@ export default function CreatePostFlow ({ clubId }: Props): JSX.Element {
 
   const notify = useToast()
 
+  const connectionId = data.posts.__id
+
   const onCreatePost = (id): void => {
     createPost({
       variables: {
-        clubId: id
+        clubId: id,
+        connections: [connectionId]
       },
       onCompleted (data: CreatePostFlowMutation$data) {
         setPostReference(data?.createPost?.post?.reference as string)
@@ -52,9 +77,9 @@ export default function CreatePostFlow ({ clubId }: Props): JSX.Element {
   // add a state to uppy to keep track of the club that's selected
   useEffect(() => {
     uppy.setMeta({
-      club: clubId
+      club: data.id
     })
-  }, [clubId])
+  }, [data.id])
 
   useEffect(() => {
     const callBackFn = (file): void => {

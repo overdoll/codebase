@@ -25,7 +25,7 @@ const Query = graphql`
 const Fragment = graphql`
   fragment UploadSearchCharactersMultiSelectorFragment on Query
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 9}
+    first: {type: Int, defaultValue: 14}
     after: {type: String},
     name: {type: String}
   )

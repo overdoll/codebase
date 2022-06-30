@@ -4,8 +4,8 @@ import { t, Trans } from '@lingui/macro'
 import { Icon } from '@//:modules/content/PageLayout'
 import { TimeRewind } from '@//:assets/icons'
 import {
-  Box,
   Flex,
+  Heading,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -13,6 +13,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Stack,
   Tooltip,
   Wrap,
   WrapItem
@@ -32,10 +33,13 @@ import RemovableTag from '@//:modules/content/DataDisplay/RemovableTag/Removable
 import { Choices, UseChoiceReturnOnChange } from '@//:modules/content/HookedComponents/Choice/types'
 import { UploadSearchCategoriesMultiSelectorProps } from '../UploadCategoryStep'
 import { useToast } from '@//:modules/content/ThemeComponents'
+import { graphql, useFragment } from 'react-relay/hooks'
+import type { UploadRewindCategoriesFragment$key } from '@//:artifacts/UploadRewindCategoriesFragment.graphql'
 
 interface Props {
   onChange: UseChoiceReturnOnChange<UploadSearchCategoriesMultiSelectorProps>
   currentValues: Choices<UploadSearchCategoriesMultiSelectorProps>
+  query: UploadRewindCategoriesFragment$key
 }
 
 interface SearchProps {
@@ -46,10 +50,19 @@ interface ChoiceProps {
   categories: Array<{ id: string, title: string }>
 }
 
+const Fragment = graphql`
+  fragment UploadRewindCategoriesFragment on Post {
+    ...UploadRewindSingleSelectorPostFragment
+  }
+`
+
 export default function UploadRewindCategories ({
   onChange,
-  currentValues
+  currentValues,
+  query
 }: Props): JSX.Element {
+  const data = useFragment(Fragment, query)
+
   const { i18n } = useLingui()
 
   const {
@@ -133,27 +146,36 @@ export default function UploadRewindCategories ({
               loadQuery={loadQuery}
             >
               <Suspense fallback={<SkeletonRectangleGrid />}>
-                <UploadRewindSingleSelector register={register} searchArguments={searchArguments} />
+                <UploadRewindSingleSelector query={data} register={register} searchArguments={searchArguments} />
               </Suspense>
             </QueryErrorBoundary>
           </ModalBody>
           <ModalFooter>
-            <Box w='100%'>
-              <Wrap mb={2} spacing={1} overflow='show'>
-                {categories.map((item, index) => (
-                  <WrapItem key={index}>
-                    <RemovableTag
-                      generateColor
-                      id={item.id}
-                      title={item.title}
-                    />
-                  </WrapItem>
-                ))}
-              </Wrap>
+            <Stack spacing={2} w='100%'>
+              {categories.length > 0 && (
+                <Wrap mb={2} spacing={1} overflow='show'>
+                  {categories.map((item, index) => (
+                    <WrapItem key={index}>
+                      <RemovableTag
+                        generateColor
+                        id={item.id}
+                        title={item.title}
+                      />
+                    </WrapItem>
+                  ))}
+                </Wrap>
+              )}
+              {(Object.keys(values).length > 0 && categories.length < 1) && (
+                <Heading fontSize='md' color='gray.200'>
+                  <Trans>
+                    The selected post has no categories
+                  </Trans>
+                </Heading>
+              )}
               <Flex w='100%' justify='flex-end'>
                 <Button
                   onClick={onAddCategories}
-                  isDisabled={Object.keys(values).length < 1}
+                  isDisabled={Object.keys(values).length < 1 || categories.length < 1}
                   size='lg'
                   colorScheme='teal'
                 >
@@ -162,7 +184,7 @@ export default function UploadRewindCategories ({
                   </Trans>
                 </Button>
               </Flex>
-            </Box>
+            </Stack>
           </ModalFooter>
         </ModalContent>
       </Modal>

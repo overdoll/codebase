@@ -17,6 +17,12 @@ import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import { ChoiceRemovableTags, useChoice } from '@//:modules/content/HookedComponents/Choice'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import UploadRewindCategories from './UploadRewindCategories/UploadRewindCategories'
+import { graphql, useFragment } from 'react-relay/hooks'
+import type { UploadCategoryStepFragment$key } from '@//:artifacts/UploadCategoryStepFragment.graphql'
+
+interface Props {
+  query: UploadCategoryStepFragment$key
+}
 
 interface SearchProps {
   title: string
@@ -26,7 +32,15 @@ export interface UploadSearchCategoriesMultiSelectorProps {
   title: string
 }
 
-export default function UploadCategoryStep (): JSX.Element {
+const Fragment = graphql`
+  fragment UploadCategoryStepFragment on Post {
+    ...UploadRewindCategoriesFragment
+  }
+`
+
+export default function UploadCategoryStep ({ query }: Props): JSX.Element {
+  const data = useFragment(Fragment, query)
+
   const {
     dispatch,
     state
@@ -75,7 +89,7 @@ export default function UploadCategoryStep (): JSX.Element {
           {...registerSearch('title', 'change')}
           placeholder={i18n._(t`Search for a category`)}
         />
-        <UploadRewindCategories currentValues={values} onChange={onChange} />
+        <UploadRewindCategories query={data} currentValues={values} onChange={onChange} />
       </HStack>
       <ChoiceRemovableTags
         titleKey='title'

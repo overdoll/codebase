@@ -3,13 +3,13 @@ import type { Uppy, UppyFile } from '@uppy/core'
 import { useEffect, useRef, useState } from 'react'
 import { Flex, Progress, Stack } from '@chakra-ui/react'
 import { Icon, LargeBackgroundBox } from '../../../PageLayout'
-import FilePicker from '../FilePicker/FilePicker'
-import DragOverFileInput from '../DragOverFileInput/DragOverFileInput'
-import { FileUpload, RemoveCross } from '@//:assets/icons/interface'
+import { RemoveCross } from '@//:assets/icons/interface'
 import { Trans } from '@lingui/macro'
 import CloseButton from '../../../ThemeComponents/CloseButton/CloseButton'
 import { useToast } from '../../../ThemeComponents'
 import Button from '../../../../form/Button/Button'
+import GenericFilePicker from '../GenericFilePicker/GenericFilePicker'
+import { CLUB_ALLOWED_FILE_TYPES } from '../../../../constants/upload'
 
 interface Props {
   onChange: (id) => void
@@ -21,8 +21,8 @@ interface Props {
 export default function SingleFileImageUpload ({
   onChange,
   isInvalid,
-  size = 'sm',
-  isLoading = false
+  isLoading = false,
+  size
 }: Props): JSX.Element {
   const initialUppy = useRef<Uppy | undefined>(undefined)
   if (initialUppy.current === undefined) {
@@ -112,27 +112,7 @@ export default function SingleFileImageUpload ({
 
   if (file == null) {
     return (
-      <FilePicker uppy={uppy}>
-        <DragOverFileInput hasText={false} uppy={uppy}>
-          <Button
-            colorScheme={isInvalid ? 'orange' : 'gray'}
-            leftIcon={(
-              <Icon
-                w={4}
-                h={4}
-                icon={FileUpload}
-                fill={isInvalid ? 'orange.900' : 'gray.100'}
-              />)}
-            size={size}
-            w='100%'
-            isLoading={isLoading}
-          >
-            <Trans>
-              Drag and drop or tap to upload
-            </Trans>
-          </Button>
-        </DragOverFileInput>
-      </FilePicker>
+      <GenericFilePicker uppy={uppy} fileTypes={CLUB_ALLOWED_FILE_TYPES} />
     )
   }
 

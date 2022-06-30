@@ -5,7 +5,7 @@ import type { UpdatePostFlowFragment$key } from '@//:artifacts/UpdatePostFlowFra
 import UploadAudienceStep from './UploadFlowSteps/UploadAudienceStep/UploadAudienceStep'
 import UploadCategoryStep from './UploadFlowSteps/UploadCategoryStep/UploadCategoryStep'
 import UploadArrangeStep from './UploadFlowSteps/UploadArrangeStep/UploadArrangeStep'
-import UploadReviewStep, { hasSupporterContent } from './UploadFlowSteps/UploadReviewStep/UploadReviewStep'
+import UploadReviewStep from './UploadFlowSteps/UploadReviewStep/UploadReviewStep'
 import { CategoryIdentifier, CharacterIdentifier, ClubMembers, HeartFull } from '@//:assets/icons/interface'
 import { FileMultiple } from '@//:assets/icons/navigation'
 import { FlowBuilder, FlowBuilderBody, FlowBuilderFooter } from '@//:modules/content/PageLayout'
@@ -45,6 +45,7 @@ const Fragment = graphql`
     ...UploadFlowFooterFragment
     ...UploadReviewStepFragment
     ...UploadArrangeStepFragment
+    ...UploadCategoryStepFragment
   }
 `
 
@@ -59,7 +60,7 @@ export default function UpdatePostFlow ({
   const components = {
     arrange: <UploadArrangeStep query={data} />,
     audience: <UploadAudienceStep />,
-    category: <UploadCategoryStep />,
+    category: <UploadCategoryStep query={data} />,
     character: <UploadCharacterStep />,
     review: <UploadReviewStep query={data} />
   }

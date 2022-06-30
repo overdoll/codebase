@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<07e27103def787fae2afa38fcdecd577>>
- * @relayHash af3db525827b57e85ecaec65b25fcbdf
+ * @generated SignedSource<<1c127fc38d88d8cf0f694654c35e0e6c>>
+ * @relayHash 6dcd67597908558a35090a80af694655
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID af3db525827b57e85ecaec65b25fcbdf
+// @relayRequestID 6dcd67597908558a35090a80af694655
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -202,7 +202,14 @@ v19 = {
     (v9/*: any*/)
   ],
   "storageKey": null
-};
+},
+v20 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 5
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -494,7 +501,7 @@ return {
           (v7/*: any*/),
           (v18/*: any*/),
           {
-            "alias": null,
+            "alias": "draftPosts",
             "args": [
               {
                 "kind": "Literal",
@@ -538,6 +545,94 @@ return {
               }
             ],
             "storageKey": "posts(first:1,state:\"DRAFT\")"
+          },
+          {
+            "alias": null,
+            "args": (v20/*: any*/),
+            "concreteType": "PostConnection",
+            "kind": "LinkedField",
+            "name": "posts",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "PostEdge",
+                "kind": "LinkedField",
+                "name": "edges",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Post",
+                    "kind": "LinkedField",
+                    "name": "node",
+                    "plural": false,
+                    "selections": [
+                      (v7/*: any*/),
+                      (v2/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "cursor",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "PageInfo",
+                "kind": "LinkedField",
+                "name": "pageInfo",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "endCursor",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "hasNextPage",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "kind": "ClientExtension",
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "__id",
+                    "storageKey": null
+                  }
+                ]
+              }
+            ],
+            "storageKey": "posts(first:5)"
+          },
+          {
+            "alias": null,
+            "args": (v20/*: any*/),
+            "filters": null,
+            "handle": "connection",
+            "key": "ClubPosts_posts",
+            "kind": "LinkedHandle",
+            "name": "posts"
           }
         ],
         "storageKey": null
@@ -545,7 +640,7 @@ return {
     ]
   },
   "params": {
-    "id": "af3db525827b57e85ecaec65b25fcbdf",
+    "id": "6dcd67597908558a35090a80af694655",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

@@ -1,4 +1,4 @@
-import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
+import { graphql, useFragment, useLazyLoadQuery } from 'react-relay/hooks'
 import type { UploadRewindSingleSelectorQuery } from '@//:artifacts/UploadRewindSingleSelectorQuery.graphql'
 import { usePaginationFragment } from 'react-relay'
 import { GridTile, GridWrap, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
@@ -8,12 +8,16 @@ import PostPreviewContent
   from '../../../../../../../../../../../../modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
 import { Choice } from '@//:modules/content/HookedComponents/Choice'
 import { ComponentChoiceArguments } from '@//:modules/content/HookedComponents/Choice/types'
+import type {
+  UploadRewindSingleSelectorPostFragment$key
+} from '@//:artifacts/UploadRewindSingleSelectorPostFragment.graphql'
 
 interface Props extends ComponentSearchArguments<any>, ComponentChoiceArguments<any> {
+  query: UploadRewindSingleSelectorPostFragment$key
 }
 
 const Query = graphql`
-  query UploadRewindSingleSelectorQuery($slug: String!) {
+  query UploadRewindSingleSelectorQuery($slug: String!, $state: PostState) {
     club(slug: $slug) @required(action: THROW) {
       ...UploadRewindSingleSelectorFragment
     }
@@ -31,8 +35,9 @@ const Fragment = graphql`
     posts (
       first: $first,
       after: $after,
-      sortBy: NEW
-    ) @connection(key: "UploadRewindSingleSelector_posts")
+      sortBy: NEW,
+      state: $state
+    ) @connection(key: "ClubPosts_posts")
     {
       edges {
         node {
@@ -48,9 +53,16 @@ const Fragment = graphql`
   }
 `
 
+const PostFragment = graphql`
+  fragment UploadRewindSingleSelectorPostFragment on Post {
+    id
+  }
+`
+
 export default function UploadRewindSingleSelector ({
   searchArguments,
-  register
+  register,
+  query
 }: Props): JSX.Element {
   const queryData = useLazyLoadQuery<UploadRewindSingleSelectorQuery>(
     Query,
@@ -68,6 +80,8 @@ export default function UploadRewindSingleSelector ({
     queryData.club
   )
 
+  const postData = useFragment(PostFragment, query)
+
   return (
     <>
       <EmptyBoundary
@@ -80,6 +94,7 @@ export default function UploadRewindSingleSelector ({
           {data.posts.edges.map((item, index) => (
             <GridTile key={index}>
               <Choice
+                isDisabled={postData.id === item.node.id}
                 {...register(item.node.id, {
                   categories: item.node.categories
                 })}

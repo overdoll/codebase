@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<40b3d849bb4d29ca20bef4349483a666>>
- * @relayHash f3a9bbbf5809b6d63ad50d77a4c394f9
+ * @generated SignedSource<<9329d37f2cd05d3ff0c7dde84285b6ff>>
+ * @relayHash 00cf9ef8dd7495d62283b0c3a1e65202
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,12 +9,14 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f3a9bbbf5809b6d63ad50d77a4c394f9
+// @relayRequestID 00cf9ef8dd7495d62283b0c3a1e65202
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
+export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "%future added value";
 export type UploadRewindSingleSelectorQuery$variables = {
   slug: string;
+  state?: PostState | null;
 };
 export type UploadRewindSingleSelectorQuery$data = {
   readonly club: {
@@ -32,6 +34,11 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "slug"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "state"
   }
 ],
 v1 = [
@@ -51,6 +58,11 @@ v2 = [
     "kind": "Literal",
     "name": "sortBy",
     "value": "NEW"
+  },
+  {
+    "kind": "Variable",
+    "name": "state",
+    "variableName": "state"
   }
 ],
 v3 = {
@@ -314,16 +326,17 @@ return {
                 "storageKey": null
               }
             ],
-            "storageKey": "posts(first:7,sortBy:\"NEW\")"
+            "storageKey": null
           },
           {
             "alias": null,
             "args": (v2/*: any*/),
             "filters": [
-              "sortBy"
+              "sortBy",
+              "state"
             ],
             "handle": "connection",
-            "key": "UploadRewindSingleSelector_posts",
+            "key": "ClubPosts_posts",
             "kind": "LinkedHandle",
             "name": "posts"
           },
@@ -334,7 +347,7 @@ return {
     ]
   },
   "params": {
-    "id": "f3a9bbbf5809b6d63ad50d77a4c394f9",
+    "id": "00cf9ef8dd7495d62283b0c3a1e65202",
     "metadata": {},
     "name": "UploadRewindSingleSelectorQuery",
     "operationKind": "query",
@@ -343,6 +356,6 @@ return {
 };
 })();
 
-(node as any).hash = "29ebb0054b9d4206fb68b50b1ff0999e";
+(node as any).hash = "937e67aa3416555abb17f0bd0b78cc69";
 
 export default node;

@@ -16,16 +16,16 @@ export default function InspectableAlert ({
   text
 }: Props): JSX.Element {
   return (
-    <LargeBackgroundBox borderLeftWidth={3} borderLeftColor={`${colorScheme}.300`}>
+    <LargeBackgroundBox p={3} borderLeftWidth={3} borderLeftColor={`${colorScheme}.300`}>
       <HStack align='center' justify='space-between'>
-        <HStack align='center' spacing={3}>
+        <HStack align='center' spacing={2}>
           <Icon
             icon={icon}
-            w={5}
-            h={5}
+            w={4}
+            h={4}
             fill='gray.00'
           />
-          <Heading color='gray.00' fontSize='lg'>
+          <Heading lineHeight={1} color='gray.00' fontSize='md'>
             {text}
           </Heading>
         </HStack>

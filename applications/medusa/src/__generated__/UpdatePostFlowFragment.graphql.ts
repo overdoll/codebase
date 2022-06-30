@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fcf09f02990417223796e6657ecea157>>
+ * @generated SignedSource<<966c28581edd908dd1a3bf7d17c0ae76>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -31,7 +31,7 @@ export type UpdatePostFlowFragment$data = {
     };
     readonly viewerCanViewSupporterOnlyContent: boolean;
   }>;
-  readonly " $fragmentSpreads": FragmentRefs<"UploadArrangeStepFragment" | "UploadFlowFooterFragment" | "UploadFlowHeaderFragment" | "UploadReviewStepFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"UploadArrangeStepFragment" | "UploadCategoryStepFragment" | "UploadFlowFooterFragment" | "UploadFlowHeaderFragment" | "UploadReviewStepFragment">;
   readonly " $fragmentType": "UpdatePostFlowFragment";
 };
 export type UpdatePostFlowFragment$key = {
@@ -165,6 +165,11 @@ return {
       "args": null,
       "kind": "FragmentSpread",
       "name": "UploadArrangeStepFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "UploadCategoryStepFragment"
     }
   ],
   "type": "Post",
@@ -172,6 +177,6 @@ return {
 };
 })();
 
-(node as any).hash = "3f956802bfaa8d2e01c520d10a85a3c7";
+(node as any).hash = "0a466d8e3adce7b72b70f7bbbb4f2fd3";
 
 export default node;
