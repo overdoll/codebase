@@ -3,9 +3,6 @@ import { generateUsernameAndEmail } from '../../support/generate'
 
 const club = 'Test Club'
 const rule = 'Rule #1 without infraction'
-const character = 'Susannah Aguilar'
-const series = 'Foreigner On Mars'
-const category = 'Assure'
 
 describe('Post', () => {
   beforeEach(() => {
@@ -31,20 +28,5 @@ describe('Post', () => {
     cy.findByText(/Post report was submitted/iu).should('be.visible')
     cy.get('button[aria-label="Open Menu"]').first().click({ force: true })
     cy.findAllByText(/Reported/iu).should('be.visible')
-  })
-
-  it('click on character', () => {
-    cy.findByText(character).should('not.be.disabled').click({ force: true })
-    cy.url().should('include', '/search')
-  })
-
-  it('click on series', () => {
-    cy.findByText(series).should('not.be.disabled').click({ force: true })
-    cy.url().should('include', '/search')
-  })
-
-  it('click on category', () => {
-    cy.findByText(category).should('not.be.disabled').click({ force: true })
-    cy.url().should('include', '/search')
   })
 })

@@ -19,6 +19,8 @@ import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequenc
 import UploadRewindCategories from './UploadRewindCategories/UploadRewindCategories'
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { UploadCategoryStepFragment$key } from '@//:artifacts/UploadCategoryStepFragment.graphql'
+import SkeletonUploadCategoryGrid
+  from '@//:modules/content/Placeholder/Loading/SkeletonUploadCategoryGrid/SkeletonUploadCategoryGrid'
 
 interface Props {
   query: UploadCategoryStepFragment$key
@@ -98,7 +100,7 @@ export default function UploadCategoryStep ({ query }: Props): JSX.Element {
       />
       <FlowBuilderScrollableContainer>
         <QueryErrorBoundary loadQuery={loadQuery}>
-          <Suspense fallback={<SkeletonRectangleGrid />}>
+          <Suspense fallback={<SkeletonUploadCategoryGrid />}>
             <UploadSearchCategoriesMultiSelector
               searchArguments={searchArguments}
               register={register}

@@ -54,10 +54,9 @@ export default function SearchBody (props: Props): JSX.Element {
               {...register('search', 'set')}
               size='lg'
               variant='filled'
-              bg='gray.900'
               placeholder={i18n._(t`Search for a club, character, category, or series`)}
             />
-            <CloseButton ref={props.closeButtonRef} bg='gray.900' size='lg' onClick={onClose} />
+            <CloseButton ref={props.closeButtonRef} bg='gray.800' size='lg' onClick={onClose} />
           </HStack>
           <Suspense fallback={(
             <SlideSkeleton />

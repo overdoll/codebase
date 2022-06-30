@@ -11,6 +11,8 @@ import { ComponentChoiceArguments } from '@//:modules/content/HookedComponents/C
 import type {
   UploadRewindSingleSelectorPostFragment$key
 } from '@//:artifacts/UploadRewindSingleSelectorPostFragment.graphql'
+import { Heading, Stack } from '@chakra-ui/react'
+import { Trans } from '@lingui/macro'
 
 interface Props extends ComponentSearchArguments<any>, ComponentChoiceArguments<any> {
   query: UploadRewindSingleSelectorPostFragment$key
@@ -83,7 +85,12 @@ export default function UploadRewindSingleSelector ({
   const postData = useFragment(PostFragment, query)
 
   return (
-    <>
+    <Stack spacing={2}>
+      <Heading fontSize='md' color='gray.200'>
+        <Trans>
+          Select a post to see the available categories
+        </Trans>
+      </Heading>
       <EmptyBoundary
         fallback={(
           <EmptyPosts />
@@ -111,6 +118,6 @@ export default function UploadRewindSingleSelector ({
           />
         </GridWrap>
       </EmptyBoundary>
-    </>
+    </Stack>
   )
 }

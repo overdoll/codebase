@@ -65,7 +65,13 @@ describe('Create & Manage Posts', () => {
     isOnStep('arrange')
     cy.findByText(/You'll need to upload at least/iu).should('not.exist')
     waitForProcessing()
-    cy.get('button[aria-label="Supporter Only"]').should('not.be.disabled').first().click()
+    cy.get('button[aria-label="Supporter Only"]').should('not.be.disabled').first().click({ force: true })
+    cy.findByText(/Free content should be/).should('be.visible')
+    cy.get('button[aria-label="Supporter Only"]').should('not.be.disabled').first().click({ force: true })
+    cy.findByText(/Free content should be/).should('not.exist')
+    cy.get('button[aria-label="Supporter Only"]').should('not.be.disabled').first().click({ force: true })
+    cy.findByText(/Free content should be/).should('be.visible').click({ force: true })
+    clickOnButton('Got it')
     gotoNextStep()
 
     /**
@@ -86,7 +92,11 @@ describe('Create & Manage Posts', () => {
     searchForTerm('Search for a category', postCategories[0])
     clickOnTile(postCategories[0])
     // test removing category by the label
-    cy.get('button[aria-label="close"]').should('not.be.disabled').click()
+    cy.get('button[aria-label="Clear Search"]').should('not.be.disabled').click({ force: true })
+    cy.get('button[aria-label="close"]').should('be.visible').should('not.be.disabled').click({
+      force: true,
+      multiple: true
+    })
     cy.get('button[aria-label="close"]').should('not.exist')
     clickOnTile(postCategories[0])
     // test removing category by selecting it again
@@ -106,7 +116,7 @@ describe('Create & Manage Posts', () => {
      * Add character, save character
      */
     isOnStep('character')
-    nextStepIsDisabled()
+    cy.findByRole('button', { name: '0 / 1' }).should('be.disabled')
     searchForTerm('Search for a character by name', postCharacter)
     clickOnTile(postCharacter)
     saveCurrentStep()
@@ -123,11 +133,9 @@ describe('Create & Manage Posts', () => {
     cy.reload()
     // open post from draft
     cy.visit(`/club/${clubName}/posts?state=DRAFT`)
-    cy.get('button[aria-label="Open Menu"]').should('be.visible').click()
-    cy.findAllByText('Edit Draft').should('be.visible').click()
+    cy.get('button[aria-label="Open Menu"]').should('be.visible').click({ force: true })
+    cy.findAllByText('Edit Draft').should('be.visible').click({ force: true })
     isOnStep('arrange')
-    // remove supporter content
-    cy.get('button[aria-label="Supporter Only"]').should('not.be.disabled').first().click()
     gotoNextStep()
     // check audience
     isOnStep('audience')
@@ -153,7 +161,6 @@ describe('Create & Manage Posts', () => {
     // add supporter content so we can test that the subscription button appears
     cy.reload()
     isOnStep('arrange')
-    cy.get('button[aria-label="Supporter Only"]').should('not.be.disabled').first().click()
     gotoNextStep()
     isOnStep('audience')
     gotoNextStep()
@@ -181,17 +188,17 @@ describe('Create & Manage Posts', () => {
      * Upload new files, remove upload, rearrange
      */
     // test drag and drop
-    // TODO: the drag-n-drop breaks the uploader - uploads some sort of incorrect mp4 file that's too large, so processing will never finish
+    // TODO invalid mp4 causes infinite processing - use this to test it?
     cy.findByText(/Upload Files/iu).should('not.be.disabled').get('input[type="file"]').attachFile('test-video.mp4', { subjectType: 'drag-n-drop' })
     // use the upload files button to upload
     cy.findByText(/Upload Files/iu).should('not.be.disabled').get('input[type="file"]').attachFile('test-post.png')
     cy.get('button[aria-label="Remove Upload"]').should('be.visible')
     // test rearrange
     clickOnButton('Rearrange Uploads')
-    cy.get('button[aria-label="Down"]').click()
+    cy.get('button[aria-label="Down"]').click({ force: true })
     clickOnButton('Save Order')
     clickOnButton('Rearrange Uploads')
-    cy.get('button[aria-label="Up"]').click()
+    cy.get('button[aria-label="Up"]').click({ force: true })
     clickOnButton('Cancel')
     clickOnButton('Rearrange Uploads')
     cy.findByRole('button', { name: 'Save Order' }).should('not.exist')
@@ -199,9 +206,22 @@ describe('Create & Manage Posts', () => {
     gotoNextStep()
     gotoPreviousStep()
     // can remove uploads
-    cy.get('button[aria-label="Remove Upload"]').first().click()
+    cy.get('button[aria-label="Remove Upload"]').first().click({ force: true })
+    // can rewind categories from post in review
+    isOnStep('arrange')
+    gotoNextStep()
+    isOnStep('audience')
+    clickOnTile(postAudience)
+    saveCurrentStep()
+    isOnStep('category')
+    cy.get('button[aria-label="Rewind Categories"]').should('not.be.disabled').click({ force: true })
+    cy.findByText('Add Categories From Post').should('be.visible')
+    cy.findByText(/Select a post/).should('be.visible')
+    cy.findAllByRole('button').should('be.visible').eq(2).click()
+    clickOnButton('Add Categories')
+    saveCurrentStep()
     // can exit the flow
-    cy.findByText('Arrange Uploads').parent().get('button[aria-label="Exit Creator"]').click()
+    cy.findByText('Add Character').parent().get('button[aria-label="Exit Creator"]').click({ force: true })
     cy.waitUntil(() => cy.findByRole('button', { name: /Yes, exit/iu }).should('be.visible'))
     clickOnButton(/Yes, exit/iu)
     cy.findByText(/Upload one or more files by/iu).should('be.visible')
@@ -209,9 +229,10 @@ describe('Create & Manage Posts', () => {
     /**
      * Delete draft post
      */
-    cy.visit(`/club/${clubName}/posts?state=DRAFT`)
-    cy.get('button[aria-label="Open Menu"]').should('be.visible').click()
-    cy.findByText('Delete Post').should('be.visible').click()
+    cy.visit(`/club/${clubName}/create-post`)
+    cy.findByText(/You have unpublished/).should('not.be.disabled').click({ force: true })
+    cy.get('button[aria-label="Open Menu"]').should('be.visible').click({ force: true })
+    cy.findByText('Delete Post').should('be.visible').click({ force: true })
     cy.findByText('Delete Post Confirmation').should('be.visible')
     clickOnButton('Delete Post')
     cy.findByText(/Post was deleted/iu).should('be.visible')
@@ -231,11 +252,11 @@ describe('Create & Manage Posts', () => {
     cy.visit(`/club/${clubName}/posts?state=PUBLISHED`)
     cy.reload()
     cy.findAllByText(/PUBLISHED/iu).should('be.visible')
-    cy.get('button[aria-label="Open Menu"]').should('be.visible').click()
-    cy.findByText('Archive Post').should('be.visible').click()
+    cy.get('button[aria-label="Open Menu"]').should('be.visible').click({ force: true })
+    cy.findByText('Archive Post').should('be.visible').click({ force: true })
     cy.findByText(/Post was archived/iu).should('be.visible')
-    cy.get('button[aria-label="Open Menu"]').should('be.visible').click()
-    cy.findByText('Un-Archive Post').should('be.visible').click()
+    cy.get('button[aria-label="Open Menu"]').should('be.visible').click({ force: true })
+    cy.findByText('Un-Archive Post').should('be.visible').click({ force: true })
     cy.findByText(/Post was un-archived/iu).should('be.visible')
 
     /**
@@ -258,8 +279,8 @@ describe('Create & Manage Posts', () => {
      */
     cy.joinWithExistingAccount('0eclipse')
     cy.visit(`/${clubName}/posts?sort=NEW`)
-    cy.get('button[aria-label="Open Menu"]').should('be.visible').click()
-    cy.findByText('Moderate').should('be.visible').click()
+    cy.get('button[aria-label="Open Menu"]').should('be.visible').click({ force: true })
+    cy.findByText('Moderate').should('be.visible').click({ force: true })
     clickOnTab('Actions')
     clickOnButton('Remove Post')
     clickOnButton('Select Rule')

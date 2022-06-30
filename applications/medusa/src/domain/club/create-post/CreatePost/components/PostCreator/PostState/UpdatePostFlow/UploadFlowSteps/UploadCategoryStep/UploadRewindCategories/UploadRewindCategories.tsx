@@ -22,10 +22,8 @@ import { useHistoryDisclosure } from '@//:modules/hooks'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import UploadRewindSingleSelector from './UploadRewindSingleSelector/UploadRewindSingleSelector'
-import SkeletonRectangleGrid
-  from '../../../../../../../../../../../modules/content/Placeholder/Loading/SkeletonRectangleGrid/SkeletonRectangleGrid'
 import { Suspense } from 'react'
-import { QueryErrorBoundary } from '@//:modules/content/Placeholder'
+import { QueryErrorBoundary, SkeletonRectangleGrid } from '@//:modules/content/Placeholder'
 import { useRouter } from 'next/router'
 import { useChoice } from '@//:modules/content/HookedComponents/Choice'
 import Button from '@//:modules/form/Button/Button'
@@ -35,6 +33,8 @@ import { UploadSearchCategoriesMultiSelectorProps } from '../UploadCategoryStep'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { UploadRewindCategoriesFragment$key } from '@//:artifacts/UploadRewindCategoriesFragment.graphql'
+import SkeletonUploadCategoryGrid
+  from '@//:modules/content/Placeholder/Loading/SkeletonUploadCategoryGrid/SkeletonUploadCategoryGrid'
 
 interface Props {
   onChange: UseChoiceReturnOnChange<UploadSearchCategoriesMultiSelectorProps>

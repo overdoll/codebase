@@ -4,12 +4,13 @@ import SearchInput from '@//:modules/content/HookedComponents/Search/components/
 import { Stack } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import SkeletonRectangleGrid from '@//:modules/content/Placeholder/Loading/SkeletonRectangleGrid/SkeletonRectangleGrid'
 import SearchCharacters from './UploadSearchCharactersMultiSelector/UploadSearchCharactersMultiSelector'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import { ChoiceRemovableTags, useChoice } from '@//:modules/content/HookedComponents/Choice'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
+import SkeletonUploadCharacterGrid
+  from '@//:modules/content/Placeholder/Loading/SkeletonUploadCharacterGrid/SkeletonUploadCharacterGrid'
 
 interface SearchProps {
   name: string
@@ -74,7 +75,7 @@ export default function UploadCharacterStep (): JSX.Element {
       <QueryErrorBoundary
         loadQuery={loadQuery}
       >
-        <Suspense fallback={<SkeletonRectangleGrid />}>
+        <Suspense fallback={<SkeletonUploadCharacterGrid />}>
           <SearchCharacters
             searchArguments={searchArguments}
             register={register}
