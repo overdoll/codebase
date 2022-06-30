@@ -17,7 +17,7 @@ msgstr ""
 #~ msgid "Clubs Feed"
 #~ msgstr ""
 
-#: src/domain/clubs/feed/RootClubsFeed/ClubsFeed/ClubsFeed.tsx:45
+#: src/domain/clubs/feed/RootClubsFeed/ClubsFeed/ClubsFeed.tsx:43
 msgid "Discover Clubs"
 msgstr ""
 

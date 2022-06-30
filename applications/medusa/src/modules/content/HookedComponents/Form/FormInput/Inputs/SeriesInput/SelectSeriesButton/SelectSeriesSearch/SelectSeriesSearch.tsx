@@ -69,7 +69,7 @@ export default function SelectSeriesSearch ({
       fallback={<EmptySeries hint={searchArguments.variables.title} />}
       condition={series.length < 1}
     >
-      <GridWrap justify='center'>
+      <GridWrap>
         {series.map((item, index) => (
           <GridTile key={index}>
             <Choice

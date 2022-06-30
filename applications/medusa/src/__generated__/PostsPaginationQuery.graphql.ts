@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b66661b9293c638ec24987ef5726cc26>>
- * @relayHash 900128114a146aaf40d7b390d88ab340
+ * @generated SignedSource<<6d56f1b3fbf1ea44368a75f71673e8fc>>
+ * @relayHash b32e7f1c2772eb868d3806cc5d8278fa
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 900128114a146aaf40d7b390d88ab340
+// @relayRequestID b32e7f1c2772eb868d3806cc5d8278fa
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -312,6 +312,7 @@ return {
                                     "name": "resource",
                                     "plural": false,
                                     "selections": [
+                                      (v10/*: any*/),
                                       (v12/*: any*/),
                                       (v4/*: any*/),
                                       {
@@ -335,7 +336,6 @@ return {
                                       },
                                       (v8/*: any*/),
                                       (v9/*: any*/),
-                                      (v10/*: any*/),
                                       (v11/*: any*/)
                                     ],
                                     "storageKey": null
@@ -472,7 +472,7 @@ return {
     ]
   },
   "params": {
-    "id": "900128114a146aaf40d7b390d88ab340",
+    "id": "b32e7f1c2772eb868d3806cc5d8278fa",
     "metadata": {},
     "name": "PostsPaginationQuery",
     "operationKind": "query",

@@ -1,13 +1,15 @@
-import { Box, Flex, HTMLChakraProps, Stack, Text } from '@chakra-ui/react'
+import { Box, Flex, Stack, Text } from '@chakra-ui/react'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import type { ResourceInfoFragment$key } from '@//:artifacts/ResourceInfoFragment.graphql'
 import ResourceItem from '../ResourceItem/ResourceItem'
 import { Icon } from '../../PageLayout'
-import { ControlPlayButton, PictureIdentifier, PremiumStar } from '@//:assets/icons'
+import { ControlPlayButton, PictureIdentifier } from '@//:assets/icons'
+import { ImageSnippetCoverProps } from '../ImageSnippet/ImageSnippet'
 
-interface Props extends HTMLChakraProps<any> {
+interface Props extends ImageSnippetCoverProps {
   query: ResourceInfoFragment$key
+  cover?: boolean
 }
 
 const Fragment = graphql`
@@ -20,37 +22,45 @@ const Fragment = graphql`
       videoDuration
       ...ResourceItemFragment
     }
+    supporterOnlyResource {
+      type
+      videoDuration
+    }
   }
 `
 
 export default function ResourceInfo ({
-  query
+  query,
+  cover,
+  containCover
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   if (data?.resource == null || !data?.resource?.processed) {
     return (
-      <ResourceItem seed={data?.id} h='100%' query={data?.resource} />
+      <ResourceItem containCover={containCover} cover={cover} seed={data?.id} h='100%' query={data?.resource} />
     )
   }
 
+  const resourceType = (data.isSupporterOnly && data.supporterOnlyResource != null) ? data.supporterOnlyResource.type : data.resource.type
+
   return (
     <Flex w='100%' h='100%' position='relative'>
-      <ResourceItem seed={data.id} query={data.resource} />
+      <ResourceItem containCover={containCover} cover={cover} seed={data.id} query={data.resource} />
       <Flex w='100%' h='100%' align='center' justify='center' position='absolute'>
         <Stack align='center' spacing={1}>
           <Box p={2} borderRadius='full' bg='dimmers.400' w={8} h={8}>
             <Icon
               fill='gray.00'
-              icon={data.isSupporterOnly ? PremiumStar : (data.resource.type === 'VIDEO' ? ControlPlayButton : PictureIdentifier)}
+              icon={resourceType === 'VIDEO' ? ControlPlayButton : PictureIdentifier}
               w='100%'
               h='100%'
             />
           </Box>
-          {data.resource.type === 'VIDEO' && (
+          {resourceType === 'VIDEO' && (
             <Box py={0} px={1} borderRadius='sm' bg='dimmers.400'>
               <Text color='gray.00' fontSize='xs'>
-                {(data.resource.videoDuration / 1000).toFixed(0)}s
+                {((data?.supporterOnlyResource?.videoDuration ?? data.resource.videoDuration) / 1000).toFixed(0)}s
               </Text>
             </Box>)}
         </Stack>

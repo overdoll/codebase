@@ -1,4 +1,4 @@
-import { PageWrapper } from '@//:modules/content/PageLayout'
+import { PagePanelIcon, PagePanelText, PagePanelWrap, PageWrapper } from '@//:modules/content/PageLayout'
 import { PageProps } from '@//:types/app'
 import Button from '@//:modules/form/Button/Button'
 import { Trans } from '@lingui/macro'
@@ -9,6 +9,8 @@ import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButto
 import { OverdollLogo } from '@//:assets/logos'
 import Icon from '../../../../modules/content/PageLayout/Flair/Icon/Icon'
 import InviteOnlyRichObject from '../../../../common/rich-objects/invite-only/InviteOnlyRichObject/InviteOnlyRichObject'
+import { OVERDOLL_ABOUT } from '@//:modules/constants/links'
+import { InfoCircle } from '@//:assets/icons'
 
 const InviteOnly: PageProps<{}> = () => {
   const HEADER_PROPS = {
@@ -118,9 +120,20 @@ const InviteOnly: PageProps<{}> = () => {
                   current offerings just don’t understand the industry.
                 </HighlightInline> Too far often opportunities are
                 ignored here because of the simple fact that it involves adult content. We’re here to change that for
-                good.
+                good. You can also check out the link below for our full vision for the platform.
               </Trans>
             </Text>
+            <PagePanelWrap isExternal href={OVERDOLL_ABOUT}>
+              <PagePanelIcon icon={InfoCircle} colorScheme='primary' />
+              <PagePanelText
+                title={
+                  <Trans>What is overdoll?</Trans>
+                }
+                description={(
+                  <Trans>How the platform helps you</Trans>
+                )}
+              />
+            </PagePanelWrap>
           </Stack>
           <Stack spacing={8}>
             <Stack spacing={1}>
@@ -132,9 +145,7 @@ const InviteOnly: PageProps<{}> = () => {
               <Text {...TEXT_PROPS}>
                 <Trans>
                   Regardless of whether you are a fan or an artist, feel free to create an account and start exploring
-                  the
-                  platform. If you know any interested artists, you may also link them this page to encourage them to
-                  submit an application.
+                  the platform. We're taking your initial feedback at hello@overdoll.com.
                 </Trans>
               </Text>
             </Stack>

@@ -1,60 +1,68 @@
-import { clickOnButton, clickOnTile, searchForTerm } from '../../support/user_actions'
+import { clickOnButton, typeIntoPlaceholder } from '../../support/user_actions'
 
-const series = 'Foreigner On Mars'
-const category = 'Assure'
+const series1 = 'Pilots Of A Star'
+const series2 = 'Heroes And Companions'
+const category1 = 'Assure'
+const category2 = 'Alter'
+const character1 = 'Orion Strong'
+const club = 'Second Test Club'
 
 Cypress.config('defaultCommandTimeout', 10000)
 
+const openSearch = (): void => {
+  cy.get('button[aria-label="Open Search"]').should('not.be.disabled').click({ force: true })
+  cy.findByPlaceholderText(/Search for a club/).should('be.visible')
+}
+
 describe('Search', () => {
-  // const character = 'Orion Strong'
-
-  it('home page search', () => {
+  it('search button', () => {
     cy.visit('/')
-    cy.get('button[aria-label="Open Search"]').should('not.be.disabled')
-
-    cy.get('button[aria-label="Open Search"]').click({ force: true })
-    cy.findByPlaceholderText(/Search for characters/).should('be.visible')
+    openSearch()
 
     // test closing
     clickOnButton('Close')
-    cy.findByPlaceholderText(/Search for characters/).should('not.exist')
+    cy.findByPlaceholderText(/Search for a club/).should('not.exist')
 
-    // test adding all types of tags
-    cy.get('button[aria-label="Open Search"]').click({ force: true })
-    searchForTerm(/Search for characters/, category)
-    clickOnTile(category)
-    cy.get('button[aria-label="close"]').should('not.be.disabled').click()
-    cy.get('button[aria-label="close"]').should('not.exist')
-    clickOnTile(category)
-    cy.findByPlaceholderText(/Search for characters/).clear()
+    // test clicking on a character
+    openSearch()
+    typeIntoPlaceholder(/Search for a club/, character1)
+    cy.findByText('Search Results').should('be.visible')
+    cy.findAllByText(character1).should('not.be.disabled').first().click({ force: true })
+    cy.findByText('Character').should('be.visible')
+    cy.findByText(series1).should('not.be.disabled').click({ force: true })
+    cy.findByText('Series').should('be.visible')
 
-    // TODO add character search when its fixed
+    // test clicking on a category
+    cy.visit('/')
+    openSearch()
+    typeIntoPlaceholder(/Search for a club/, category1)
+    cy.findByText('Search Results').should('be.visible')
+    cy.findAllByText(category1).should('not.be.disabled').first().click({ force: true })
+    cy.findByText('Category').should('be.visible')
+    cy.findByText(category2).should('not.be.disabled').click({ force: true })
+    cy.findByText('Category').should('be.visible')
 
-    searchForTerm(/Search for characters/, series)
-    clickOnTile(series)
-    cy.findByPlaceholderText(/Search for characters/).clear()
+    // test clicking on a series
+    cy.visit('/')
+    openSearch()
+    typeIntoPlaceholder(/Search for a club/, series2)
+    cy.findByText('Search Results').should('be.visible')
+    cy.findAllByText(series2).should('not.be.disabled').first().click({ force: true })
+    cy.findByText('Series').should('be.visible')
 
-    cy.findByPlaceholderText(/Search for characters/).clear()
-    searchForTerm(/Search for characters/, 'ThisWillFindNothing123454321')
-    cy.findByText(/No categories, characters/iu).should('be.visible')
+    // test search bar
+    cy.visit('/')
+    openSearch()
+    typeIntoPlaceholder(/Search for a club/, club)
+    cy.findByText('Search Results').should('be.visible')
+    cy.findAllByText(club).should('not.be.disabled').first().click({ force: true })
+    cy.findByText(club).should('be.visible')
+    cy.url().should('contain', '/SecondTestClub')
 
-    cy.findByRole('button', { name: 'Save' }).should('not.be.disabled').click({ force: true })
-
-    cy.url().should('include', '/search')
-    clickOnButton('Fresh')
-    cy.url().should('include', 'sort=NEW')
-    clickOnButton('Best')
-    cy.url().should('include', 'sort=TOP')
-
-    cy.get('button[aria-label="Open Search"]').click({ force: true })
-    // TODO add the same check for characters when its added as a query type
-    cy.findAllByText(category).should('be.visible')
-    cy.findAllByText(series).should('be.visible')
-  })
-
-  it('club page search', () => {
-    cy.visit('/TestClub/posts?sort=NEW')
-    cy.get('button[aria-label="Supporter Only"]').should('not.be.disabled').click()
-    cy.url().should('include', 'supporter=FULL')
+    // test search bar no results
+    cy.visit('/')
+    openSearch()
+    typeIntoPlaceholder(/Search for a club/, '123123123123123123123')
+    cy.findByText(/We couldn't find a club/).should('be.visible')
   })
 })

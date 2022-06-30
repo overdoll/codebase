@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1f0c5b6b5819a68dc70cc06268fbb922>>
- * @relayHash e3587b3a3ffebe82a9384331d00b4614
+ * @generated SignedSource<<340ee13c9998bc5c9b67fdaa1f1adeed>>
+ * @relayHash 9967e34f0a6c1a94332d44e6cdbc31ad
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e3587b3a3ffebe82a9384331d00b4614
+// @relayRequestID 9967e34f0a6c1a94332d44e6cdbc31ad
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -93,7 +93,21 @@ v7 = [
     "value": "TOP"
   }
 ],
-v8 = [
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "type",
+  "storageKey": null
+},
+v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "videoDuration",
+  "storageKey": null
+},
+v10 = [
   {
     "alias": null,
     "args": null,
@@ -217,13 +231,7 @@ return {
                                 "name": "resource",
                                 "plural": false,
                                 "selections": [
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "type",
-                                    "storageKey": null
-                                  },
+                                  (v8/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -231,13 +239,7 @@ return {
                                     "name": "processed",
                                     "storageKey": null
                                   },
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "videoDuration",
-                                    "storageKey": null
-                                  },
+                                  (v9/*: any*/),
                                   (v5/*: any*/),
                                   {
                                     "alias": null,
@@ -246,7 +248,7 @@ return {
                                     "kind": "LinkedField",
                                     "name": "urls",
                                     "plural": true,
-                                    "selections": (v8/*: any*/),
+                                    "selections": (v10/*: any*/),
                                     "storageKey": null
                                   },
                                   {
@@ -277,9 +279,23 @@ return {
                                     "kind": "LinkedField",
                                     "name": "videoThumbnail",
                                     "plural": false,
-                                    "selections": (v8/*: any*/),
+                                    "selections": (v10/*: any*/),
                                     "storageKey": null
                                   }
+                                ],
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "Resource",
+                                "kind": "LinkedField",
+                                "name": "supporterOnlyResource",
+                                "plural": false,
+                                "selections": [
+                                  (v8/*: any*/),
+                                  (v9/*: any*/),
+                                  (v5/*: any*/)
                                 ],
                                 "storageKey": null
                               }
@@ -354,7 +370,7 @@ return {
     ]
   },
   "params": {
-    "id": "e3587b3a3ffebe82a9384331d00b4614",
+    "id": "9967e34f0a6c1a94332d44e6cdbc31ad",
     "metadata": {},
     "name": "ClubTopPostsPaginationQuery",
     "operationKind": "query",

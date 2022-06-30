@@ -33,6 +33,10 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffClubPosts.tsx:43
+msgid "Add Ability to Create Supporter Posts"
+msgstr ""
+
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayments/StaffClubPaymentsList/StaffClubPaymentsList.tsx:66
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/StaffClubPayoutsList/StaffClubPayoutsList.tsx:66
 msgid "Amount"
@@ -83,6 +87,10 @@ msgstr ""
 msgid "Deposit Date"
 msgstr ""
 
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffDisableClubSupporterOnlyPostsButton/StaffDisableClubSupporterOnlyPostsButton.tsx:86
+msgid "Disable Supporter Only Posts"
+msgstr ""
+
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubInfractions/ClubInfractionHistory/ClubInfractionHistory.tsx:86
 msgid "Duration"
 msgstr ""
@@ -91,12 +99,20 @@ msgstr ""
 msgid "EXPIRED"
 msgstr ""
 
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubSupporterOnlyPostsButton/StaffEnableClubSupporterOnlyPostsButton.tsx:85
+msgid "Enable Supporter Only Posts"
+msgstr ""
+
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/InitiateClubPayoutForm/DepositDateInput/DepositDateInput.tsx:31
 msgid "End of {month}"
 msgstr ""
 
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubSuspensionLogs/StaffClubSuspensionLogs.tsx:81
 msgid "Expires"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffDisableClubSupporterOnlyPostsButton/StaffDisableClubSupporterOnlyPostsButton.tsx:72
+msgid "If the club already posted supporter content, it's encouraged that you have the owner archive the posts with supporter content to avoid confusion. In addition, the club won't be able to take any supporter subscriptions if they were already able to."
 msgstr ""
 
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubTermination.tsx:46
@@ -145,17 +161,17 @@ msgstr ""
 msgid "Now"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:68
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:75
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubOwner/StaffClubOwner.tsx:45
 msgid "Owner"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:83
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:90
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayments/StaffClubPayments.tsx:59
 msgid "Payments"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:78
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:85
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/StaffClubPayouts.tsx:67
 msgid "Payouts"
 msgstr ""
@@ -183,6 +199,14 @@ msgstr ""
 
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubTerminateButton/StaffClubTerminateForm.tsx:108
 msgid "Please type <0>{validString}</0> into the input below to confirm that you would like to terminate the club."
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:70
+msgid "Posts"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffClubPosts.tsx:32
+msgid "Prevent Creation of Supporter Posts"
 msgstr ""
 
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubSuspensionLogs/StaffClubSuspensionLogs.tsx:76
@@ -226,19 +250,27 @@ msgstr ""
 msgid "Start of {month}"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:63
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:65
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayments/StaffClubPaymentsList/StaffClubPaymentsList.tsx:61
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/StaffClubPayoutsList/StaffClubPayoutsList.tsx:61
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptions.tsx:66
 msgid "Status"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:73
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:80
 msgid "Subscriptions"
 msgstr ""
 
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubCancelActiveSupporterSubscriptionsForClub/StaffClubCancelActiveSupporterSubscriptionsForClub.tsx:90
 msgid "Successfully cancelled all active club supporter subscriptions"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffDisableClubSupporterOnlyPostsButton/StaffDisableClubSupporterOnlyPostsButton.tsx:54
+msgid "Successfully disabled supporter only posts for this club"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubSupporterOnlyPostsButton/StaffEnableClubSupporterOnlyPostsButton.tsx:54
+msgid "Successfully enabled supporter only posts for this club"
 msgstr ""
 
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/InitiateClubPayoutForm/InitiateClubPayoutForm.tsx:76
@@ -293,7 +325,7 @@ msgstr ""
 msgid "Suspension Logs"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:88
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:95
 msgid "Suspensions"
 msgstr ""
 
@@ -314,7 +346,7 @@ msgstr ""
 msgid "Terminating a club will make all of its content and public page inaccessible. You must first cancel all supporter subscriptions and wait for them to expire before terminating a club."
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:93
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:100
 msgid "Termination"
 msgstr ""
 
@@ -338,12 +370,24 @@ msgstr ""
 msgid "The club was terminated by {0}. You won't be able to find the club or its posts on the platform."
 msgstr ""
 
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubSupporterOnlyPostsButton/StaffEnableClubSupporterOnlyPostsButton.tsx:72
+msgid "The club will have to post at least one piece of exclusive supporter content in order to be able to collect subscriptions."
+msgstr ""
+
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:87
 msgid "The owner cannot post or collect new subscriptions, but the page and content are still accessible."
 msgstr ""
 
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTermination/StaffClubCancelActiveSupporterSubscriptionsForClub/StaffClubCancelActiveSupporterSubscriptionsForClub.tsx:96
 msgid "There was an error cancelling all active club supporter subscriptions"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffDisableClubSupporterOnlyPostsButton/StaffDisableClubSupporterOnlyPostsButton.tsx:60
+msgid "There was an error disabling supporter only posts for this club"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubSupporterOnlyPostsButton/StaffEnableClubSupporterOnlyPostsButton.tsx:60
+msgid "There was an error enabling supporter only posts for this club"
 msgstr ""
 
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/InitiateClubPayoutForm/InitiateClubPayoutForm.tsx:82

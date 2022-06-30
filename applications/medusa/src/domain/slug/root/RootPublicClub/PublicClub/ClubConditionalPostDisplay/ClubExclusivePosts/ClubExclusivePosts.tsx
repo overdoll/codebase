@@ -4,7 +4,7 @@ import type { ClubExclusivePostsFragment$key } from '@//:artifacts/ClubExclusive
 import { encodeQueryParams } from 'serialize-query-params'
 import { stringify } from 'query-string'
 import PostsHorizontalPreview from '../../PostsHorizontalPreview/PostsHorizontalPreview'
-import { configMap } from '@//:modules/content/Posts/components/PostNavigation/PostsSearch/constants'
+import { configMap } from '../../../../../../../common/components/PageHeader/SearchButton/constants'
 import { PublicClubQuery } from '@//:artifacts/PublicClubQuery.graphql'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'

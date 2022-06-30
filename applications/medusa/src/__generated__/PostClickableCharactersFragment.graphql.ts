@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9539cd8f6c10d14ad50eaf4ad0eed349>>
+ * @generated SignedSource<<bca4cdd91c6b39de24de3f5ec74e8608>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,11 +12,7 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostClickableCharactersFragment$data = {
   readonly characters: ReadonlyArray<{
-    readonly id: string;
-    readonly thumbnail: {
-      readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
-    } | null;
-    readonly " $fragmentSpreads": FragmentRefs<"ClickCharacterFragment" | "ClickSeriesFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ClickableCharacterFragment">;
   }>;
   readonly " $fragmentType": "PostClickableCharactersFragment";
 };
@@ -40,37 +36,9 @@ const node: ReaderFragment = {
       "plural": true,
       "selections": [
         {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "id",
-          "storageKey": null
-        },
-        {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "ClickSeriesFragment"
-        },
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "ClickCharacterFragment"
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "Resource",
-          "kind": "LinkedField",
-          "name": "thumbnail",
-          "plural": false,
-          "selections": [
-            {
-              "args": null,
-              "kind": "FragmentSpread",
-              "name": "ResourceIconFragment"
-            }
-          ],
-          "storageKey": null
+          "name": "ClickableCharacterFragment"
         }
       ],
       "storageKey": null
@@ -80,6 +48,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "b75efa8acb635c17757c30e622cd9195";
+(node as any).hash = "abe977fe9ebb024ad62e215df04a0be2";
 
 export default node;

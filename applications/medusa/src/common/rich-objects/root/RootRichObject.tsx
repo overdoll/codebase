@@ -25,6 +25,10 @@ export default function RootRichObject (): JSX.Element {
           key='description'
           content={`${DESCRIPTION_PREFIX} ${DESCRIPTION_FEATURES} on overdoll.com. ${DESCRIPTION_CONTENT_DISCOVER}.`}
         />
+        <meta name='twitter:card' content='summary_large_image' />
+        <meta name='twitter:site' content='@overdoll_com' />
+        <meta name='twitter:creator' content='@overdoll_com' />
+        <meta name='theme-color' content='#ff2969' />
       </Head>
     </>
   )

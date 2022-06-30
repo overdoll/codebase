@@ -1,12 +1,12 @@
 import { Flex, FlexProps, Spinner } from '@chakra-ui/react'
 import { graphql } from 'react-relay/hooks'
-import ImageSnippet from '../ImageSnippet/ImageSnippet'
+import ImageSnippet, { ImageSnippetCoverProps } from '../ImageSnippet/ImageSnippet'
 import VideoSnippet from '../VideoSnippet/VideoSnippet'
 import { useFragment } from 'react-relay'
 import type { ResourceItemFragment$key } from '@//:artifacts/ResourceItemFragment.graphql'
 import RandomPattern from '../RandomPattern/RandomPattern'
 
-interface Props extends FlexProps {
+interface Props extends FlexProps, ImageSnippetCoverProps {
   query: ResourceItemFragment$key | null
   h?: string | undefined
   w?: string | undefined
@@ -25,6 +25,8 @@ const Fragment = graphql`
 export default function ResourceItem ({
   query,
   seed,
+  cover,
+  containCover,
   ...rest
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
@@ -52,7 +54,7 @@ export default function ResourceItem ({
       {...rest}
     >
       {data.type === 'IMAGE' &&
-        <ImageSnippet cover query={data} />}
+        <ImageSnippet containCover={containCover} cover={cover ?? true} query={data} />}
       {data.type === 'VIDEO' &&
         <VideoSnippet query={data} />}
     </Flex>

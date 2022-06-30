@@ -32,10 +32,6 @@ const GeneralCatalogs = [
     include: ['src/domain/help/']
   },
   {
-    path: 'src/domain/search/__locale__/{locale}/index',
-    include: ['src/domain/search/']
-  },
-  {
     path: 'src/domain/logout/__locale__/{locale}/index',
     include: ['src/domain/logout/']
   },
@@ -206,6 +202,21 @@ const ClubsCatalog = [
   }
 ]
 
+const SearchCatalog = [
+  {
+    path: 'src/domain/search/character/__locale__/{locale}/index',
+    include: ['src/domain/search/character/']
+  },
+  {
+    path: 'src/domain/search/series/__locale__/{locale}/index',
+    include: ['src/domain/search/series/']
+  },
+  {
+    path: 'src/domain/search/category/__locale__/{locale}/index',
+    include: ['src/domain/search/category/']
+  }
+]
+
 const ModerationCatalog = [
   {
     path: 'src/domain/moderation/audit-logs/__locale__/{locale}/index',
@@ -345,6 +356,7 @@ export default {
     ...SettingsCatalogs,
     ...ClubCatalog,
     ...ClubsCatalog,
+    ...SearchCatalog,
     ...ModerationCatalog,
     ...StaffCatalog
   ],

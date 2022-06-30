@@ -3,12 +3,15 @@ import type {
   UploadSearchCharactersMultiSelectorQuery
 } from '@//:artifacts/UploadSearchCharactersMultiSelectorQuery.graphql'
 import { usePaginationFragment } from 'react-relay'
-import removeNode from '@//:modules/support/removeNode'
-import { CharacterTileOverlay, GridTile, GridWrap, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
+import { CharacterTileOverlay, GridTile, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
 import { EmptyBoundary, EmptyCharacters } from '@//:modules/content/Placeholder'
 import { ComponentChoiceArguments } from '@//:modules/content/HookedComponents/Choice/types'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
 import { Choice } from '@//:modules/content/HookedComponents/Choice'
+import SuggestPrompt from '../../../../../../SuggestPrompt/SuggestPrompt'
+import { Trans } from '@lingui/macro'
+import { Stack } from '@chakra-ui/react'
+import ShortGridWrap from '@//:modules/content/ContentSelection/ShortGridWrap/ShortGridWrap'
 
 interface Props extends ComponentChoiceArguments<any>, ComponentSearchArguments<any> {
 }
@@ -22,7 +25,7 @@ const Query = graphql`
 const Fragment = graphql`
   fragment UploadSearchCharactersMultiSelectorFragment on Query
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 5}
+    first: {type: Int, defaultValue: 14}
     after: {type: String},
     name: {type: String}
   )
@@ -65,18 +68,24 @@ export default function UploadSearchCharactersMultiSelector ({
     queryData
   )
 
-  const characters = removeNode(data.characters.edges)
-
   return (
     <EmptyBoundary
-      fallback={<EmptyCharacters hint={searchArguments.variables.name} />}
-      condition={characters.length < 1}
+      fallback={(
+        <Stack spacing={2}>
+          <EmptyCharacters hint={searchArguments.variables.name} />
+          <SuggestPrompt>
+            <Trans>
+              Have a character suggestion or want your character listed? Send us an email at hello@overdoll.com!
+            </Trans>
+          </SuggestPrompt>
+        </Stack>)}
+      condition={data.characters.edges.length < 1}
     >
-      <GridWrap justify='center'>
-        {characters.map((item, index) => (
+      <ShortGridWrap>
+        {data.characters.edges.map((item, index) => (
           <GridTile key={index}>
-            <Choice {...register(item.id, { name: item.name })}>
-              <CharacterTileOverlay query={item} />
+            <Choice {...register(item.node.id, { name: item.node.name })}>
+              <CharacterTileOverlay query={item.node} />
             </Choice>
           </GridTile>
         )
@@ -86,7 +95,7 @@ export default function UploadSearchCharactersMultiSelector ({
           onLoadNext={() => loadNext(5)}
           isLoadingNext={isLoadingNext}
         />
-      </GridWrap>
+      </ShortGridWrap>
     </EmptyBoundary>
   )
 }

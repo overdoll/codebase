@@ -67,7 +67,6 @@ const HorizontalNavigationDropdownMenu = ({
           <Modal
             isOpen={isOpen}
             onClose={onClose}
-            motionPreset='none'
             preserveScrollBarGap
             scrollBehavior='inside'
             blockScrollOnMount={false}

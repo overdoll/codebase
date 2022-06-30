@@ -5,20 +5,13 @@ import type { PublicClubPostsQuery as PublicClubPostsQueryType } from '@//:artif
 import PublicClubPostsQuery from '@//:artifacts/PublicClubPostsQuery.graphql'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
 import PublicClubPosts from './PublicClubPosts/PublicClubPosts'
-import useGeneralSearchArguments
-  from '@//:modules/content/Posts/components/PostNavigation/PostsSearch/support/useGeneralSearchArguments'
-import { PostOrderButton } from '@//:modules/content/Posts/components/PostNavigation/PostsSearch'
-import PostSearchButton
-  from '@//:modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/PostSearchButton'
-import { Heading, HStack, Stack } from '@chakra-ui/react'
-import PostSupporterStatusButton
-  from '@//:modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSupporterStatusButton/PostSupporterStatusButton'
+import { Stack } from '@chakra-ui/react'
 import { PageProps } from '@//:types/app'
 import { useRouter } from 'next/router'
 import { PageWrapper } from '@//:modules/content/PageLayout'
-import { Trans } from '@lingui/macro'
 import RootPublicClubPostsRichObject
   from '../../../../common/rich-objects/slug/RootPublicClubPostsRichObject/RootPublicClubPostsRichObject'
+import useSearchSortArguments from '../../../../common/components/PageHeader/SearchButton/support/useSearchSortArguments'
 
 interface Props {
   queryRefs: {
@@ -34,7 +27,7 @@ const RootPublicClubPosts: PageProps<Props> = (props: Props) => {
 
   const { query: { slug } } = useRouter()
 
-  useGeneralSearchArguments((params) => loadQuery({
+  useSearchSortArguments((params) => loadQuery({
     ...params,
     slug: slug as string
   }))
@@ -44,26 +37,6 @@ const RootPublicClubPosts: PageProps<Props> = (props: Props) => {
       <RootPublicClubPostsRichObject />
       <PageWrapper>
         <Stack spacing={8}>
-          <Stack spacing={2}>
-            <HStack spacing={2} justify='space-between'>
-              <Heading color='gray.00' fontSize='2xl'>
-                <Trans>
-                  Club Posts Search
-                </Trans>
-              </Heading>
-              <PostSearchButton routeTo={{
-                pathname: '[slug]/posts',
-                query: {
-                  slug: slug
-                }
-              }}
-              />
-            </HStack>
-            <HStack spacing={2}>
-              <PostOrderButton />
-              <PostSupporterStatusButton />
-            </HStack>
-          </Stack>
           <QueryErrorBoundary loadQuery={() => loadQuery({
             sortBy: 'TOP',
             slug: slug as string

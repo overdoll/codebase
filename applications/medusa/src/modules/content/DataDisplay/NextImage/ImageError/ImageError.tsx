@@ -1,4 +1,4 @@
-import { Flex, Heading, Stack } from '@chakra-ui/react'
+import { Box, Flex, Heading, Stack, Text } from '@chakra-ui/react'
 import Icon from '../../../PageLayout/Flair/Icon/Icon'
 import { WarningTriangle } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
@@ -34,11 +34,18 @@ export default function ImageError ({ tiny }: Props): JSX.Element {
       spacing={2}
     >
       <Icon icon={WarningTriangle} w={6} h={6} fill='orange.300' />
-      <Heading textAlign='center' fontSize='md' color='orange.300'>
-        <Trans>
-          Error Loading Image
-        </Trans>
-      </Heading>
+      <Box>
+        <Heading textAlign='center' fontSize='md' color='orange.300'>
+          <Trans>
+            Error Loading Image
+          </Trans>
+        </Heading>
+        <Text lineHeight={1.2} textAlign='center' fontSize='xs' color='orange.100'>
+          <Trans>
+            Try refreshing the page to fix the error
+          </Trans>
+        </Text>
+      </Box>
     </Stack>
   )
 }

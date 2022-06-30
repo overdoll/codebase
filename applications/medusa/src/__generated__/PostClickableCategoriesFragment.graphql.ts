@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c17827cbc43a99bcc5acce287ee78df4>>
+ * @generated SignedSource<<2524f43ca9f27334a39650dc07c2eec9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,12 +12,7 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostClickableCategoriesFragment$data = {
   readonly categories: ReadonlyArray<{
-    readonly id: string;
-    readonly slug: string;
-    readonly thumbnail: {
-      readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
-    } | null;
-    readonly title: string;
+    readonly " $fragmentSpreads": FragmentRefs<"ClickableCategoryFragment">;
   }>;
   readonly " $fragmentType": "PostClickableCategoriesFragment";
 };
@@ -41,41 +36,9 @@ const node: ReaderFragment = {
       "plural": true,
       "selections": [
         {
-          "alias": null,
           "args": null,
-          "kind": "ScalarField",
-          "name": "id",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "slug",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "title",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "Resource",
-          "kind": "LinkedField",
-          "name": "thumbnail",
-          "plural": false,
-          "selections": [
-            {
-              "args": null,
-              "kind": "FragmentSpread",
-              "name": "ResourceIconFragment"
-            }
-          ],
-          "storageKey": null
+          "kind": "FragmentSpread",
+          "name": "ClickableCategoryFragment"
         }
       ],
       "storageKey": null
@@ -85,6 +48,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "675676acdad86b75c40c942867d3b404";
+(node as any).hash = "812aa6ee171e3b6c6c5180bb2f63e9fc";
 
 export default node;

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7af2018ed6f38d02fba7e3c734b13b54>>
- * @relayHash 4507276f7be03af7c8648e69f1b14017
+ * @generated SignedSource<<0b65421a28ce3e09f71c8b3bd1050da2>>
+ * @relayHash 1886d65d4f21c5abae88dfc0133d6337
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,15 +9,17 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4507276f7be03af7c8648e69f1b14017
+// @relayRequestID 1886d65d4f21c5abae88dfc0133d6337
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type CreatePostFlowMutation$variables = {
   clubId: string;
+  connections: ReadonlyArray<string>;
 };
 export type CreatePostFlowMutation$data = {
   readonly createPost: {
     readonly post: {
+      readonly id: string;
       readonly reference: string;
     } | null;
   } | null;
@@ -33,6 +35,11 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "clubId"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "connections"
   }
 ],
 v1 = [
@@ -51,8 +58,26 @@ v1 = [
 v2 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "reference",
+  "concreteType": "Post",
+  "kind": "LinkedField",
+  "name": "post",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "reference",
+      "storageKey": null
+    }
+  ],
   "storageKey": null
 };
 return {
@@ -70,18 +95,7 @@ return {
         "name": "createPost",
         "plural": false,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Post",
-            "kind": "LinkedField",
-            "name": "post",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/)
-            ],
-            "storageKey": null
-          }
+          (v2/*: any*/)
         ],
         "storageKey": null
       }
@@ -103,24 +117,27 @@ return {
         "name": "createPost",
         "plural": false,
         "selections": [
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
-            "concreteType": "Post",
-            "kind": "LinkedField",
+            "filters": null,
+            "handle": "prependNode",
+            "key": "",
+            "kind": "LinkedHandle",
             "name": "post",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/),
+            "handleArgs": [
               {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "id",
-                "storageKey": null
+                "kind": "Variable",
+                "name": "connections",
+                "variableName": "connections"
+              },
+              {
+                "kind": "Literal",
+                "name": "edgeTypeName",
+                "value": "createPostEdge"
               }
-            ],
-            "storageKey": null
+            ]
           }
         ],
         "storageKey": null
@@ -128,7 +145,7 @@ return {
     ]
   },
   "params": {
-    "id": "4507276f7be03af7c8648e69f1b14017",
+    "id": "1886d65d4f21c5abae88dfc0133d6337",
     "metadata": {},
     "name": "CreatePostFlowMutation",
     "operationKind": "mutation",
@@ -137,6 +154,6 @@ return {
 };
 })();
 
-(node as any).hash = "a6db6645e4e8be71575635c46dcde872";
+(node as any).hash = "aef646ed81bc7025197c3665b1732bb6";
 
 export default node;

@@ -1,13 +1,15 @@
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { DiscoverClubsQuery } from '@//:artifacts/DiscoverClubsQuery.graphql'
 import { graphql } from 'react-relay'
-import { Box, Flex, HStack } from '@chakra-ui/react'
+import { Box, Flex, Heading, HStack, Stack } from '@chakra-ui/react'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
 import { Trans } from '@lingui/macro'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import AccountInformationBanner
   from '../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
 import BackButton from '@//:modules/content/PageLayout/BuildingBlocks/BackButton/BackButton'
+import DiscoverClubsList from './DiscoverClubsList/DiscoverClubsList'
+import SearchButton from '../../../../../common/components/PageHeader/SearchButton/SearchButton'
 
 interface Props {
   query: PreloadedQuery<DiscoverClubsQuery>
@@ -26,6 +28,7 @@ const Query = graphql`
       }
       ...AccountInformationBannerFragment
     }
+    ...DiscoverClubsListFragment
   }
 `
 
@@ -40,7 +43,7 @@ export default function DiscoverClubs (props: Props): JSX.Element {
   const noFeed = !notLoggedIn && (queryData?.viewer?.clubMembershipsCount < 1 || queryData?.viewer?.clubMembersPostsFeed?.edges.length < 1)
 
   return (
-    <>
+    <Box>
       <AccountInformationBanner query={queryData.viewer} />
       <Box>
         {notLoggedIn
@@ -103,6 +106,15 @@ export default function DiscoverClubs (props: Props): JSX.Element {
             </>
             )}
       </Box>
-    </>
+      <Stack spacing={8}>
+        <HStack spacing={2} justify='space-between'>
+          <Heading color='gray.00' fontSize='2xl'>
+            <Trans>Discover Clubs</Trans>
+          </Heading>
+          <SearchButton />
+        </HStack>
+        <DiscoverClubsList query={queryData} />
+      </Stack>
+    </Box>
   )
 }

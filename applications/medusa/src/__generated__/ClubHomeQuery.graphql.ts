@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<341d4c0b3f1272e2c29bb2f9c50b9f11>>
- * @relayHash 9dcefbc25dbc3c7741359f616e05269e
+ * @generated SignedSource<<cc89a90463dc9b77a32f0ec5a6b47584>>
+ * @relayHash 6aa01925776e236f4e11e5818e1822e2
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9dcefbc25dbc3c7741359f616e05269e
+// @relayRequestID 6aa01925776e236f4e11e5818e1822e2
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -272,6 +272,13 @@ return {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
+            "name": "canCreateSupporterOnlyPosts",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
             "name": "canSupport",
             "storageKey": null
           },
@@ -319,7 +326,7 @@ return {
     ]
   },
   "params": {
-    "id": "9dcefbc25dbc3c7741359f616e05269e",
+    "id": "6aa01925776e236f4e11e5818e1822e2",
     "metadata": {},
     "name": "ClubHomeQuery",
     "operationKind": "query",

@@ -24,6 +24,13 @@ const ClubFragment = graphql`
         }
       }
     }
+    supporterPosts: posts(first: 1, supporterOnlyStatus: [FULL, PARTIAL]) {
+      edges {
+        node {
+          __typename
+        }
+      }
+    }
     ...SupportClubButtonClubFragment
     ...ClubExclusivePostsFragment
     ...ClubTopPostsFragment
@@ -59,7 +66,9 @@ export default function ClubConditionalPostDisplay ({
     <>
       <Stack spacing={2}>
         <SupportClubButton clubQuery={clubData} viewerQuery={viewerData} />
-        <ClubExclusivePosts query={clubData} />
+        {clubData.supporterPosts.edges.length > 0 && (
+          <ClubExclusivePosts query={clubData} />
+        )}
       </Stack>
       <ClubTopPosts query={clubData} />
     </>

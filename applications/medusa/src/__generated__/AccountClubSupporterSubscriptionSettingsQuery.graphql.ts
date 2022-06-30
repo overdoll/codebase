@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6fe8f90686d0fa2aa5e086d45469ff89>>
- * @relayHash 7cbd6262e765b289c3fdadeb6c079fd4
+ * @generated SignedSource<<70abd720aa2815b979a62fb02d74eb25>>
+ * @relayHash 2ac86b629807c35001acbb8ac04b23e7
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7cbd6262e765b289c3fdadeb6c079fd4
+// @relayRequestID 2ac86b629807c35001acbb8ac04b23e7
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -202,6 +202,13 @@ v17 = {
 v18 = {
   "alias": null,
   "args": null,
+  "kind": "ScalarField",
+  "name": "videoDuration",
+  "storageKey": null
+},
+v19 = {
+  "alias": null,
+  "args": null,
   "concreteType": "PageInfo",
   "kind": "LinkedField",
   "name": "pageInfo",
@@ -224,7 +231,7 @@ v18 = {
   ],
   "storageKey": null
 },
-v19 = {
+v20 = {
   "alias": "exclusivePosts",
   "args": (v15/*: any*/),
   "concreteType": "PostConnection",
@@ -285,19 +292,27 @@ v19 = {
                       "name": "processed",
                       "storageKey": null
                     },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "videoDuration",
-                      "storageKey": null
-                    },
+                    (v18/*: any*/),
                     (v4/*: any*/),
                     (v8/*: any*/),
                     (v9/*: any*/),
                     (v10/*: any*/),
                     (v11/*: any*/),
                     (v12/*: any*/)
+                  ],
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "Resource",
+                  "kind": "LinkedField",
+                  "name": "supporterOnlyResource",
+                  "plural": false,
+                  "selections": [
+                    (v13/*: any*/),
+                    (v18/*: any*/),
+                    (v4/*: any*/)
                   ],
                   "storageKey": null
                 }
@@ -323,11 +338,11 @@ v19 = {
       ],
       "storageKey": null
     },
-    (v18/*: any*/)
+    (v19/*: any*/)
   ],
   "storageKey": "posts(first:10,sortBy:\"NEW\",supporterOnlyStatus:[\"FULL\",\"PARTIAL\"])"
 },
-v20 = {
+v21 = {
   "alias": "exclusivePosts",
   "args": (v15/*: any*/),
   "filters": [
@@ -339,7 +354,7 @@ v20 = {
   "kind": "LinkedHandle",
   "name": "posts"
 },
-v21 = {
+v22 = {
   "kind": "InlineFragment",
   "selections": [
     (v4/*: any*/)
@@ -347,7 +362,7 @@ v21 = {
   "type": "Node",
   "abstractKey": "__isNode"
 },
-v22 = [
+v23 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -481,8 +496,8 @@ return {
                     ],
                     "storageKey": null
                   },
-                  (v19/*: any*/),
-                  (v20/*: any*/)
+                  (v20/*: any*/),
+                  (v21/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -592,8 +607,8 @@ return {
                   (v5/*: any*/),
                   (v6/*: any*/),
                   (v14/*: any*/),
-                  (v19/*: any*/),
-                  (v20/*: any*/)
+                  (v20/*: any*/),
+                  (v21/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -608,7 +623,7 @@ return {
             "type": "AccountCancelledClubSupporterSubscription",
             "abstractKey": null
           },
-          (v21/*: any*/)
+          (v22/*: any*/)
         ],
         "storageKey": null
       },
@@ -622,7 +637,7 @@ return {
         "selections": [
           {
             "alias": null,
-            "args": (v22/*: any*/),
+            "args": (v23/*: any*/),
             "concreteType": "AccountClubSupporterSubscriptionConnection",
             "kind": "LinkedField",
             "name": "clubSupporterSubscriptions",
@@ -647,14 +662,14 @@ return {
                     "plural": false,
                     "selections": [
                       (v2/*: any*/),
-                      (v21/*: any*/)
+                      (v22/*: any*/)
                     ],
                     "storageKey": null
                   }
                 ],
                 "storageKey": null
               },
-              (v18/*: any*/),
+              (v19/*: any*/),
               {
                 "kind": "ClientExtension",
                 "selections": [
@@ -672,7 +687,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v22/*: any*/),
+            "args": (v23/*: any*/),
             "filters": [
               "status"
             ],
@@ -688,7 +703,7 @@ return {
     ]
   },
   "params": {
-    "id": "7cbd6262e765b289c3fdadeb6c079fd4",
+    "id": "2ac86b629807c35001acbb8ac04b23e7",
     "metadata": {},
     "name": "AccountClubSupporterSubscriptionSettingsQuery",
     "operationKind": "query",

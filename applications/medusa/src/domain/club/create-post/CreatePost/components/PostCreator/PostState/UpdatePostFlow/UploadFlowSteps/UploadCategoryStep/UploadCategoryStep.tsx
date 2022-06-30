@@ -5,28 +5,43 @@ import {
   PageSectionTitle,
   PageSectionWrap
 } from '@//:modules/content/PageLayout'
-import { Stack } from '@chakra-ui/react'
+import { HStack, Stack } from '@chakra-ui/react'
 import SearchInput from '@//:modules/content/HookedComponents/Search/components/SearchInput/SearchInput'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import SkeletonRectangleGrid from '@//:modules/content/Placeholder/Loading/SkeletonRectangleGrid/SkeletonRectangleGrid'
 import UploadSearchCategoriesMultiSelector
   from './UploadSearchCategoriesMultiSelector/UploadSearchCategoriesMultiSelector'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import { ChoiceRemovableTags, useChoice } from '@//:modules/content/HookedComponents/Choice'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
-import SuggestPrompt from '../../../../../SuggestPrompt/SuggestPrompt'
+import UploadRewindCategories from './UploadRewindCategories/UploadRewindCategories'
+import { graphql, useFragment } from 'react-relay/hooks'
+import type { UploadCategoryStepFragment$key } from '@//:artifacts/UploadCategoryStepFragment.graphql'
+import SkeletonUploadCategoryGrid
+  from '@//:modules/content/Placeholder/Loading/SkeletonUploadCategoryGrid/SkeletonUploadCategoryGrid'
+
+interface Props {
+  query: UploadCategoryStepFragment$key
+}
 
 interface SearchProps {
   title: string
 }
 
-interface ChoiceProps {
+export interface UploadSearchCategoriesMultiSelectorProps {
   title: string
 }
 
-export default function UploadCategoryStep (): JSX.Element {
+const Fragment = graphql`
+  fragment UploadCategoryStepFragment on Post {
+    ...UploadRewindCategoriesFragment
+  }
+`
+
+export default function UploadCategoryStep ({ query }: Props): JSX.Element {
+  const data = useFragment(Fragment, query)
+
   const {
     dispatch,
     state
@@ -43,8 +58,9 @@ export default function UploadCategoryStep (): JSX.Element {
   const {
     values,
     register,
-    removeValue
-  } = useChoice<ChoiceProps>({
+    removeValue,
+    onChange
+  } = useChoice<UploadSearchCategoriesMultiSelectorProps>({
     defaultValue: state.categories,
     onChange: (props) => dispatch({
       type: 'categories',
@@ -68,10 +84,14 @@ export default function UploadCategoryStep (): JSX.Element {
           </Trans>
         </PageSectionDescription>
       </PageSectionWrap>
-      <SearchInput
-        {...registerSearch('title', 'change')}
-        placeholder={i18n._(t`Search for a category`)}
-      />
+      <HStack spacing={2} justify='space-between'>
+        <SearchInput
+          nullifyOnClear
+          {...registerSearch('title', 'change')}
+          placeholder={i18n._(t`Search for a category`)}
+        />
+        <UploadRewindCategories query={data} currentValues={values} onChange={onChange} />
+      </HStack>
       <ChoiceRemovableTags
         titleKey='title'
         values={values}
@@ -79,7 +99,7 @@ export default function UploadCategoryStep (): JSX.Element {
       />
       <FlowBuilderScrollableContainer>
         <QueryErrorBoundary loadQuery={loadQuery}>
-          <Suspense fallback={<SkeletonRectangleGrid />}>
+          <Suspense fallback={<SkeletonUploadCategoryGrid />}>
             <UploadSearchCategoriesMultiSelector
               searchArguments={searchArguments}
               register={register}
@@ -87,11 +107,6 @@ export default function UploadCategoryStep (): JSX.Element {
           </Suspense>
         </QueryErrorBoundary>
       </FlowBuilderScrollableContainer>
-      <SuggestPrompt>
-        <Trans>
-          Have a category suggestion? Send us an email at hello@overdoll.com!
-        </Trans>
-      </SuggestPrompt>
     </Stack>
   )
 }

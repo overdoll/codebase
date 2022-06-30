@@ -64,7 +64,6 @@ export default function StaffSyncSubscriptionButton ({ query }: Props): JSX.Elem
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        motionPreset='none'
         isCentered
         preserveScrollBarGap
       >

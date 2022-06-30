@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<55453c6116506c0a54e32624c4a0017f>>
- * @relayHash 6f9c893589e2307ce58de0fedad9e000
+ * @generated SignedSource<<8415858c5e209d0a8bb72c318f2d1bdf>>
+ * @relayHash abece445879df2b515cb6e7f416d03cf
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6f9c893589e2307ce58de0fedad9e000
+// @relayRequestID abece445879df2b515cb6e7f416d03cf
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -319,6 +319,7 @@ return {
                                     "name": "resource",
                                     "plural": false,
                                     "selections": [
+                                      (v15/*: any*/),
                                       (v17/*: any*/),
                                       (v9/*: any*/),
                                       {
@@ -342,7 +343,6 @@ return {
                                       },
                                       (v13/*: any*/),
                                       (v14/*: any*/),
-                                      (v15/*: any*/),
                                       (v16/*: any*/)
                                     ],
                                     "storageKey": null
@@ -454,7 +454,7 @@ return {
     ]
   },
   "params": {
-    "id": "6f9c893589e2307ce58de0fedad9e000",
+    "id": "abece445879df2b515cb6e7f416d03cf",
     "metadata": {},
     "name": "AuditLogsPaginationQuery",
     "operationKind": "query",

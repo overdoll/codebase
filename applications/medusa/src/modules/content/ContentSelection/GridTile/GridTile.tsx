@@ -1,7 +1,7 @@
-import { Box, HTMLChakraProps } from '@chakra-ui/react'
+import { Box, BoxProps } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 
-interface Props extends HTMLChakraProps<any> {
+interface Props extends BoxProps {
   children: ReactNode
 }
 

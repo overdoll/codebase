@@ -20,6 +20,9 @@ interface Props {
 const ArrangeUploadsFragmentGQL = graphql`
   fragment ArrangeUploadsFragment on Post {
     id
+    club {
+      canCreateSupporterOnlyPosts
+    }
     content {
       id
       isSupporterOnly
@@ -200,6 +203,7 @@ export default function ArrangeUploads ({
       >
         {displayData.map((item, index) => (
           <DraggableContent
+            canSupport={data.club.canCreateSupporterOnlyPosts}
             onDragEnd={onDragEnd}
             dragDisabled={!(state.isRearranging as boolean)}
             isSupportingContent={isSupportingContent}

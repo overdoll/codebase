@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<56336d6708740e1cd48c1da303883d08>>
+ * @generated SignedSource<<966c28581edd908dd1a3bf7d17c0ae76>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -31,7 +31,7 @@ export type UpdatePostFlowFragment$data = {
     };
     readonly viewerCanViewSupporterOnlyContent: boolean;
   }>;
-  readonly " $fragmentSpreads": FragmentRefs<"UploadArrangeStepFragment" | "UploadFlowFooterFragment" | "UploadFlowHeaderFragment" | "UploadReviewStepFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"UploadArrangeStepFragment" | "UploadCategoryStepFragment" | "UploadFlowFooterFragment" | "UploadFlowHeaderFragment" | "UploadReviewStepFragment">;
   readonly " $fragmentType": "UpdatePostFlowFragment";
 };
 export type UpdatePostFlowFragment$key = {
@@ -63,26 +63,6 @@ return {
   "metadata": null,
   "name": "UpdatePostFlowFragment",
   "selections": [
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "UploadFlowHeaderFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "UploadFlowFooterFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "UploadReviewStepFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "UploadArrangeStepFragment"
-    },
     {
       "alias": null,
       "args": null,
@@ -165,6 +145,31 @@ return {
       "plural": true,
       "selections": (v1/*: any*/),
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "UploadFlowHeaderFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "UploadFlowFooterFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "UploadReviewStepFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "UploadArrangeStepFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "UploadCategoryStepFragment"
     }
   ],
   "type": "Post",
@@ -172,6 +177,6 @@ return {
 };
 })();
 
-(node as any).hash = "40e56cf56ae88ddd2c7d37a401c05395";
+(node as any).hash = "0a466d8e3adce7b72b70f7bbbb4f2fd3";
 
 export default node;

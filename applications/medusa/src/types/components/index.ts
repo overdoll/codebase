@@ -1,4 +1,4 @@
-import { ForwardedRef, ReactNode } from 'react'
+import { ForwardedRef, FunctionComponent, ReactNode } from 'react'
 import { ThemeTypings } from '@chakra-ui/styled-system'
 
 export type MaybeRenderProp<P> =
@@ -20,3 +20,5 @@ export interface InputPlaceholder {
 export type Timeout = ReturnType<typeof setTimeout>
 
 export type ColorScheme = ThemeTypings['colorSchemes'] | (string & {})
+
+export type IconType = FunctionComponent<any>

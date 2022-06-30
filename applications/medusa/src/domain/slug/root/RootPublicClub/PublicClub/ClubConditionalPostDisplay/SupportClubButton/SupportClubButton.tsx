@@ -248,7 +248,6 @@ export default function SupportClubButton ({
         closeOnEsc={false}
         closeOnOverlayClick={false}
         size='xl'
-        motionPreset='none'
         isCentered
         scrollBehavior='inside'
         preserveScrollBarGap

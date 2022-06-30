@@ -32,7 +32,7 @@ const baseStyleDialog: SystemStyleFunction = (props) => {
 
   return {
     borderRadius: 'md',
-    bg: mode('white', 'gray.800')(props),
+    bg: mode('white', 'gray.900')(props),
     color: 'inherit',
     my: '3.75rem',
     zIndex: 'modal',
@@ -90,7 +90,8 @@ function getSize (value: string): PartsStyleObject<typeof parts> {
       dialog: {
         maxW: '100vw',
         minH: '100vh',
-        my: 0
+        my: 0,
+        borderRadius: 'none'
       }
     }
   }

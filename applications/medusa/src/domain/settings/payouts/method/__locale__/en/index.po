@@ -21,8 +21,7 @@ msgstr ""
 msgid "Country Not Supported"
 msgstr ""
 
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:38
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:66
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:42
 msgid "Create an account and get verified"
 msgstr ""
 
@@ -35,15 +34,15 @@ msgid "Email"
 msgstr ""
 
 #: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetPaxumAccountPayoutMethodForm/SetPaxumAccountPayoutMethodForm.tsx:103
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:103
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:66
 msgid "Enter your Paxum payments email"
 msgstr ""
 
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:80
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:79
 msgid "I fully understand the information provided to me above and will do my best to follow it"
 msgstr ""
 
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:47
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:46
 msgid "In order to receive payments on the platform (and maintain your ability to do so), you must..."
 msgstr ""
 
@@ -51,28 +50,28 @@ msgstr ""
 #~ msgid "Make sure that the First and Last name you have entered in your Payout Details match the First and Last name on your Paxum account. Otherwise, any payouts we send will fail."
 #~ msgstr ""
 
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:115
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:78
 msgid "Make sure that the First name ({0}) and Last name ({1}) you have entered in your Payout Details match the First name and Last name on your Paxum account. Otherwise, any payouts we send will fail."
 msgstr ""
 
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:53
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:52
 msgid "Never post any content that contains real human beings"
 msgstr ""
 
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:108
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:71
 msgid "Once your account is verified, please enter your Paxum email for receiving payments. Entering an unverified or invalid account email will result in failed payouts and a frozen balance."
 msgstr ""
 
 #: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:53
-msgid "Open Paxum Bank Sign Up Link"
-msgstr ""
+#~ msgid "Open Paxum Bank Sign Up Link"
+#~ msgstr ""
 
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:80
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:57
 msgid "Open Paxum Sign Up Link"
 msgstr ""
 
 #: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/ChoosePayoutMethod/PayoutMethodChoice/PayoutMethodChoice.tsx:19
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:93
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:32
 msgid "Paxum"
 msgstr ""
 
@@ -96,11 +95,11 @@ msgstr ""
 msgid "Payout method deleted"
 msgstr ""
 
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:33
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:32
 msgid "Platform Agreement"
 msgstr ""
 
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:26
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:25
 msgid "Please read the following important information carefully"
 msgstr ""
 
@@ -108,7 +107,7 @@ msgstr ""
 msgid "Please set up payout details before accessing this section"
 msgstr ""
 
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:58
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:57
 msgid "Post at least one new piece of exclusive supporter content every 30 days"
 msgstr ""
 
@@ -116,7 +115,7 @@ msgstr ""
 msgid "Set up payout method"
 msgstr ""
 
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:39
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:38
 msgid "The overdoll platform works with many providers to make it possible to exist. This means that along with you being subject to our guidelines, you are also subject to the ones imposed upon us."
 msgstr ""
 
@@ -129,21 +128,29 @@ msgid "There was an error setting up the payout method"
 msgstr ""
 
 #: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:71
-msgid "To set up Paxum as a payout method, you must create an account and have it verified by providing the necessary documentation through a Know Your Client procedure."
-msgstr ""
+#~ msgid "To set up Paxum as a payout method, you must create an account and have it verified by providing the necessary documentation through a Know Your Client procedure."
+#~ msgstr ""
 
 #: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:43
-msgid "To set up Paxum as a payout method, you must create an account and have it verified by providing the necessary documentation through a Know Your Client procedure. For artists in the United States, the platform through which you sign up is Paxum Bank."
-msgstr ""
+#~ msgid "To set up Paxum as a payout method, you must create an account and have it verified by providing the necessary documentation through a Know Your Client procedure. For artists in the United States, the platform through which you sign up is Paxum Bank."
+#~ msgstr ""
 
 #: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:112
 #~ msgid "To set up Paxum as a payout method, you must create an account and have it verified by providing the necessary documentation through a Know Your Client procedure. If you already have an account, you may skip this step."
 #~ msgstr ""
 
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutCountryNotSupported/PayoutCountryNotSupported.tsx:32
-msgid "Unfortunately, we cannot currently pay out to artists located in the country <0>{0}</0>. This could be because of currently active sanctions or our providers not being able to support it. it."
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/SetupPayoutMethod/SetupPaxumAccountPayoutMethod/SetupPaxumAccountPayoutMethod.tsx:47
+msgid "To set up Paxum as a payout method, you must create an account and have it verified by providing the necessary documentation through a Know Your Client procedure. This process will require you to provide a government-issued ID and a statement for address verification."
 msgstr ""
 
-#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:65
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutCountryNotSupported/PayoutCountryNotSupported.tsx:32
+msgid "Unfortunately, we cannot currently pay out to artists located in the country <0>{0}</0>. This could be because of currently active sanctions or our providers not being able to support it."
+msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutCountryNotSupported/PayoutCountryNotSupported.tsx:32
+#~ msgid "Unfortunately, we cannot currently pay out to artists located in the country <0>{0}</0>. This could be because of currently active sanctions or our providers not being able to support it. it."
+#~ msgstr ""
+
+#: src/domain/settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethodSetupFlow/AgreementPayoutMethod/AgreementPayoutMethod.tsx:64
 msgid "You will never lose the ability to receive payouts. You will permanently lose the ability to collect subscription payments if you violate the guidelines above."
 msgstr ""

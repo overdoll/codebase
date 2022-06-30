@@ -14,5 +14,9 @@ msgstr ""
 "Plural-Forms: \n"
 
 #: src/domain/slug/posts/RootPublicClubPosts/RootPublicClubPosts.tsx:50
-msgid "Club Posts Search"
+#~ msgid "Club Posts Search"
+#~ msgstr ""
+
+#: src/domain/slug/posts/RootPublicClubPosts/PublicClubPosts/PublicClubPosts.tsx:94
+msgid "{0}'s Posts"
 msgstr ""

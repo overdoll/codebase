@@ -55,20 +55,25 @@ export default function PostSupporterContent ({
 
   const SupporterBadge = (
     <HStack
-      mb={3}
+      mt={2}
+      mb={2}
+      py={2}
+      px={3}
       justify='center'
       align='center'
-      spacing={2}
+      spacing={[1, 2]}
+      bg='dimmers.500'
+      borderRadius='md'
     >
       <Icon
         icon={ActionUnlock}
         fill='orange.300'
-        h={4}
-        w={4}
+        h={[2, 4]}
+        w={[2, 4]}
       />
       <Heading
         lineHeight={1}
-        fontSize='md'
+        fontSize={['xs', 'md']}
         color='orange.300'
       >
         <Trans>

@@ -28,16 +28,8 @@ const Query = graphql`
     club(slug: $slug) {
       id
       membersCount
-      backgroundPost: posts(first: 1) {
-        edges {
-          node {
-            content {
-              resource {
-                ...ResourceItemFragment
-              }
-            }
-          }
-        }
+      banner {
+        ...ResourceItemFragment
       }
       ...LargeClubHeaderFragment
       ...JoinClubFromPageFragment
@@ -81,7 +73,7 @@ export default function PublicClub (props: Props): JSX.Element {
             backdrop={(
               <ResourceItem
                 seed={queryData?.club?.id}
-                query={queryData?.club?.backgroundPost?.edges[0]?.node?.content[0].resource ?? null}
+                query={queryData?.club?.banner ?? null}
               />)}
           >
             <Flex p={2} h='100%' w='100%' align='center' justify='center' position='relative'>

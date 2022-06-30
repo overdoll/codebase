@@ -79,7 +79,7 @@ msgstr ""
 #: src/domain/slug/root/RootPublicClub/PublicClub/JoinClubButton/BecomeMemberButton/BecomeMemberButton.tsx:124
 #: src/domain/slug/root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromPage/JoinClubFromPage.tsx:76
 #: src/domain/slug/root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromPage/JoinClubFromPage.tsx:104
-#: src/domain/slug/root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromPost/JoinClubFromPost.tsx:62
+#: src/domain/slug/root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromPost/JoinClubFromPost.tsx:63
 #: src/domain/slug/root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromTile/JoinClubFromTile.tsx:62
 msgid "Join"
 msgstr ""
@@ -101,7 +101,7 @@ msgstr ""
 msgid "Manage Subscription"
 msgstr ""
 
-#: src/domain/slug/root/RootPublicClub/PublicClub/PublicClub.tsx:99
+#: src/domain/slug/root/RootPublicClub/PublicClub/PublicClub.tsx:91
 msgid "Members"
 msgstr ""
 
@@ -183,7 +183,7 @@ msgstr ""
 msgid "Subscribe with CCBill"
 msgstr ""
 
-#: src/domain/slug/root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromPost/JoinClubFromPost.tsx:105
+#: src/domain/slug/root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromPost/JoinClubFromPost.tsx:107
 #: src/domain/slug/root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromTile/JoinClubFromTile.tsx:104
 msgid "Support"
 msgstr ""
@@ -193,7 +193,7 @@ msgstr ""
 msgid "Support this club and get access to all of its exclusive content!"
 msgstr ""
 
-#: src/domain/slug/root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromPost/JoinClubFromPost.tsx:83
+#: src/domain/slug/root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromPost/JoinClubFromPost.tsx:84
 #: src/domain/slug/root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromTile/JoinClubFromTile.tsx:83
 msgid "Supporter"
 msgstr ""
@@ -215,7 +215,7 @@ msgstr ""
 msgid "There was an error subscribing. Please try again later."
 msgstr ""
 
-#: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/ClubConditionalPostDisplay.tsx:50
+#: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/ClubConditionalPostDisplay.tsx:57
 msgid "This club hasn't posted any content yet"
 msgstr ""
 

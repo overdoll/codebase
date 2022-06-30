@@ -1,4 +1,4 @@
-import { Flex, Heading, HTMLChakraProps, Spinner, Stack } from '@chakra-ui/react'
+import { Flex, Heading, HTMLChakraProps, Spinner, Stack, Text } from '@chakra-ui/react'
 import Icon from '../../../../../../../PageLayout/Flair/Icon/Icon'
 import { WarningTriangle } from '@//:assets/icons/interface'
 import { Trans } from '@lingui/macro'
@@ -26,13 +26,21 @@ export default function LoadingSpinner ({
             Error Loading Video
           </Trans>
         </Heading>
-        {canControl !== false && (
-          <Button w='100%' onClick={onRetry} size='md' colorScheme='orange'>
-            <Trans>
-              Retry
-            </Trans>
-          </Button>
-        )}
+        {canControl !== false
+          ? (
+            <Button w='100%' onClick={onRetry} size='md' colorScheme='orange'>
+              <Trans>
+                Retry
+              </Trans>
+            </Button>
+            )
+          : (
+            <Text textAlign='center' fontSize='xs' color='orange.100'>
+              <Trans>
+                Try refreshing the page to fix the error
+              </Trans>
+            </Text>
+            )}
       </Stack>
     )
   }

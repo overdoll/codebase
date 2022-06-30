@@ -21,10 +21,6 @@ interface Props {
 
 const Fragment = graphql`
   fragment UpdatePostFlowFragment on Post {
-    ...UploadFlowHeaderFragment
-    ...UploadFlowFooterFragment
-    ...UploadReviewStepFragment
-    ...UploadArrangeStepFragment
     content {
       id
       isSupporterOnly
@@ -45,6 +41,11 @@ const Fragment = graphql`
       id
       title
     }
+    ...UploadFlowHeaderFragment
+    ...UploadFlowFooterFragment
+    ...UploadReviewStepFragment
+    ...UploadArrangeStepFragment
+    ...UploadCategoryStepFragment
   }
 `
 
@@ -59,7 +60,7 @@ export default function UpdatePostFlow ({
   const components = {
     arrange: <UploadArrangeStep query={data} />,
     audience: <UploadAudienceStep />,
-    category: <UploadCategoryStep />,
+    category: <UploadCategoryStep query={data} />,
     character: <UploadCharacterStep />,
     review: <UploadReviewStep query={data} />
   }
