@@ -42,9 +42,19 @@ func (h UpdateResourcesHandler) Handle(ctx context.Context, cmd UpdateResources)
 	}
 
 	for token, value := range groupedByTokenAndId {
-
 		switch token {
 		case "POST":
+			for itemId, resources := range value {
+				_, err := h.pr.UpdatePostContentOperator(ctx, itemId, func(pending *post.Post) error {
+					return pending.UpdateContentExisting(resources)
+				})
+
+				if err != nil {
+					return err
+				}
+			}
+			break
+		case "POST_PRIVATE_CONTENT":
 			for itemId, resources := range value {
 				_, err := h.pr.UpdatePostContentOperator(ctx, itemId, func(pending *post.Post) error {
 					return pending.UpdateContentExisting(resources)
@@ -66,10 +76,32 @@ func (h UpdateResourcesHandler) Handle(ctx context.Context, cmd UpdateResources)
 				}
 			}
 			break
+		case "AUDIENCE_BANNER":
+			for itemId, resources := range value {
+				_, err := h.pr.UpdateAudienceBannerOperator(ctx, itemId, func(aud *post.Audience) error {
+					return aud.UpdateBannerExisting(resources[0])
+				})
+
+				if err != nil {
+					return err
+				}
+			}
+			break
 		case "CATEGORY":
 			for itemId, resources := range value {
 				_, err := h.pr.UpdateCategoryThumbnailOperator(ctx, itemId, func(aud *post.Category) error {
 					return aud.UpdateThumbnailExisting(resources[0])
+				})
+
+				if err != nil {
+					return err
+				}
+			}
+			break
+		case "CATEGORY_BANNER":
+			for itemId, resources := range value {
+				_, err := h.pr.UpdateCategoryBannerOperator(ctx, itemId, func(aud *post.Category) error {
+					return aud.UpdateBannerExisting(resources[0])
 				})
 
 				if err != nil {
@@ -88,6 +120,17 @@ func (h UpdateResourcesHandler) Handle(ctx context.Context, cmd UpdateResources)
 				}
 			}
 			break
+		case "SERIES_BANNER":
+			for itemId, resources := range value {
+				_, err := h.pr.UpdateSeriesBannerOperator(ctx, itemId, func(aud *post.Series) error {
+					return aud.UpdateBannerExisting(resources[0])
+				})
+
+				if err != nil {
+					return err
+				}
+			}
+			break
 		case "CHARACTER":
 			for itemId, resources := range value {
 				_, err := h.pr.UpdateCharacterThumbnailOperator(ctx, itemId, func(aud *post.Character) error {
@@ -99,10 +142,32 @@ func (h UpdateResourcesHandler) Handle(ctx context.Context, cmd UpdateResources)
 				}
 			}
 			break
+		case "CHARACTER_BANNER":
+			for itemId, resources := range value {
+				_, err := h.pr.UpdateCharacterBannerOperator(ctx, itemId, func(aud *post.Character) error {
+					return aud.UpdateBannerExisting(resources[0])
+				})
+
+				if err != nil {
+					return err
+				}
+			}
+			break
 		case "CLUB":
 			for itemId, resources := range value {
 				_, err := h.cr.UpdateClubThumbnail(ctx, itemId, func(aud *club.Club) error {
 					return aud.UpdateThumbnailExisting(resources[0])
+				})
+
+				if err != nil {
+					return err
+				}
+			}
+			break
+		case "CLUB_BANNER":
+			for itemId, resources := range value {
+				_, err := h.cr.UpdateClubBanner(ctx, itemId, func(aud *club.Club) error {
+					return aud.UpdateBannerExisting(resources[0])
 				})
 
 				if err != nil {

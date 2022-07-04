@@ -158,11 +158,23 @@ func (m *Audience) UpdateTitle(requester *principal.Principal, title, locale str
 
 func (m *Audience) UpdateThumbnailExisting(thumbnail *resource.Resource) error {
 
-	if err := validateExistingThumbnail(m.thumbnailResource, thumbnail); err != nil {
+	if err := validateExistingResource(m.thumbnailResource, thumbnail); err != nil {
 		return err
 	}
 
 	m.thumbnailResource = thumbnail
+	m.update()
+
+	return nil
+}
+
+func (m *Audience) UpdateBannerExisting(thumbnail *resource.Resource) error {
+
+	if err := validateExistingResource(m.bannerResource, thumbnail); err != nil {
+		return err
+	}
+
+	m.bannerResource = thumbnail
 	m.update()
 
 	return nil

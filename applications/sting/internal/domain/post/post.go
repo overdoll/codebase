@@ -1,7 +1,6 @@
 package post
 
 import (
-	"fmt"
 	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
@@ -395,8 +394,6 @@ func (p *Post) UpdateContentExisting(resources []*resource.Resource) error {
 					return err
 				}
 
-				fmt.Println(res.IsPrivate())
-
 				break
 			}
 		}
@@ -672,7 +669,7 @@ func (p *Post) CanView(suspendedClubIds []string, requester *principal.Principal
 	return nil
 }
 
-func validateExistingThumbnail(current *resource.Resource, new *resource.Resource) error {
+func validateExistingResource(current *resource.Resource, new *resource.Resource) error {
 	if current == nil {
 		return resource.ErrResourceNotPresent
 	}

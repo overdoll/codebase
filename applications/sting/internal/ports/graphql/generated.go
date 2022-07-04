@@ -491,6 +491,7 @@ type ComplexityRoot struct {
 	}
 
 	Resource struct {
+		Failed         func(childComplexity int) int
 		Height         func(childComplexity int) int
 		ID             func(childComplexity int) int
 		Preview        func(childComplexity int) int
@@ -3019,6 +3020,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.RemovePostContentPayload.Post(childComplexity), true
+
+	case "Resource.failed":
+		if e.complexity.Resource.Failed == nil {
+			break
+		}
+
+		return e.complexity.Resource.Failed(childComplexity), true
 
 	case "Resource.height":
 		if e.complexity.Resource.Height == nil {
@@ -6034,6 +6042,17 @@ type Resource {
 
   """A hex-code color of the resource that can be used in-place while the resource is loading."""
   preview: String!
+
+  """
+  Whether or not this resource failed to process.
+
+  A failure can happen if:
+  - The supplied image is an unsupported format. This can happen if for example, someone submits a JPEG (unsupported) that was renamed to a PNG (supported)
+  - The supplied image is corrupted.
+  - The supplied video is invalid or corrupted.
+
+  """
+  failed: Boolean!
 }
 `, BuiltIn: false},
 	{Name: "../../../../../libraries/graphql/relay/schema.graphql", Input: `type PageInfo {
@@ -9727,6 +9746,8 @@ func (ec *executionContext) fieldContext_Audience_thumbnail(ctx context.Context,
 				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
+			case "failed":
+				return ec.fieldContext_Resource_failed(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Resource", field.Name)
 		},
@@ -9788,6 +9809,8 @@ func (ec *executionContext) fieldContext_Audience_banner(ctx context.Context, fi
 				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
+			case "failed":
+				return ec.fieldContext_Resource_failed(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Resource", field.Name)
 		},
@@ -10651,6 +10674,8 @@ func (ec *executionContext) fieldContext_Category_thumbnail(ctx context.Context,
 				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
+			case "failed":
+				return ec.fieldContext_Resource_failed(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Resource", field.Name)
 		},
@@ -10712,6 +10737,8 @@ func (ec *executionContext) fieldContext_Category_banner(ctx context.Context, fi
 				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
+			case "failed":
+				return ec.fieldContext_Resource_failed(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Resource", field.Name)
 		},
@@ -11527,6 +11554,8 @@ func (ec *executionContext) fieldContext_Character_thumbnail(ctx context.Context
 				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
+			case "failed":
+				return ec.fieldContext_Resource_failed(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Resource", field.Name)
 		},
@@ -11588,6 +11617,8 @@ func (ec *executionContext) fieldContext_Character_banner(ctx context.Context, f
 				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
+			case "failed":
+				return ec.fieldContext_Resource_failed(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Resource", field.Name)
 		},
@@ -12409,6 +12440,8 @@ func (ec *executionContext) fieldContext_Club_thumbnail(ctx context.Context, fie
 				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
+			case "failed":
+				return ec.fieldContext_Resource_failed(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Resource", field.Name)
 		},
@@ -12470,6 +12503,8 @@ func (ec *executionContext) fieldContext_Club_banner(ctx context.Context, field 
 				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
+			case "failed":
+				return ec.fieldContext_Resource_failed(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Resource", field.Name)
 		},
@@ -20917,6 +20952,8 @@ func (ec *executionContext) fieldContext_PostContent_resource(ctx context.Contex
 				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
+			case "failed":
+				return ec.fieldContext_Resource_failed(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Resource", field.Name)
 		},
@@ -20978,6 +21015,8 @@ func (ec *executionContext) fieldContext_PostContent_supporterOnlyResource(ctx c
 				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
+			case "failed":
+				return ec.fieldContext_Resource_failed(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Resource", field.Name)
 		},
@@ -23334,6 +23373,50 @@ func (ec *executionContext) fieldContext_Resource_preview(ctx context.Context, f
 	return fc, nil
 }
 
+func (ec *executionContext) _Resource_failed(ctx context.Context, field graphql.CollectedField, obj *graphql1.Resource) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Resource_failed(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Failed, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Resource_failed(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Resource",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _ResourceUrl_url(ctx context.Context, field graphql.CollectedField, obj *graphql1.ResourceURL) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_ResourceUrl_url(ctx, field)
 	if err != nil {
@@ -23800,6 +23883,8 @@ func (ec *executionContext) fieldContext_Series_thumbnail(ctx context.Context, f
 				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
+			case "failed":
+				return ec.fieldContext_Resource_failed(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Resource", field.Name)
 		},
@@ -23861,6 +23946,8 @@ func (ec *executionContext) fieldContext_Series_banner(ctx context.Context, fiel
 				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
+			case "failed":
+				return ec.fieldContext_Resource_failed(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Resource", field.Name)
 		},
@@ -33476,6 +33563,13 @@ func (ec *executionContext) _Resource(ctx context.Context, sel ast.SelectionSet,
 		case "preview":
 
 			out.Values[i] = ec._Resource_preview(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "failed":
+
+			out.Values[i] = ec._Resource_failed(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++

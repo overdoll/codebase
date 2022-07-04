@@ -15,6 +15,7 @@ type CreateOrGetResourcesFromUploads struct {
 	Source      string
 	AllowImages bool
 	AllowVideos bool
+	Config      *resource.Config
 }
 
 type CreateOrGetResourcesFromUploadsHandler struct {
@@ -89,7 +90,7 @@ func (h CreateOrGetResourcesFromUploadsHandler) Handle(ctx context.Context, cmd 
 		newResourceIds = append(newResourceIds, r.ID())
 	}
 
-	if err := h.event.ProcessResources(ctx, cmd.ItemId, newResourceIds, cmd.Source); err != nil {
+	if err := h.event.ProcessResources(ctx, cmd.ItemId, newResourceIds, cmd.Source, cmd.Config); err != nil {
 		return nil, err
 	}
 

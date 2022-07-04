@@ -11,6 +11,8 @@ type ProcessResourcesInput struct {
 	ResourceIds []string
 	Source      string
 	IsNotFound  bool
+	Width       uint64
+	Height      uint64
 }
 
 func ProcessResources(ctx workflow.Context, input ProcessResourcesInput) error {
@@ -24,6 +26,8 @@ func ProcessResources(ctx workflow.Context, input ProcessResourcesInput) error {
 		activities.ProcessResourcesInput{
 			ItemId:      input.ItemId,
 			ResourceIds: input.ResourceIds,
+			Width:       input.Width,
+			Height:      input.Height,
 		},
 	).Get(ctx, nil); err != nil {
 		logger.Error("failed to process resources", "Error", err)

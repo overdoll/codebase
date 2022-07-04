@@ -8,6 +8,7 @@ import (
 	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/loader/internal/app/workflows"
+	"overdoll/applications/loader/internal/domain/resource"
 	"overdoll/libraries/errors"
 )
 
@@ -19,7 +20,7 @@ func NewEventTemporalRepository(client client.Client) EventTemporalRepository {
 	return EventTemporalRepository{client: client}
 }
 
-func (r EventTemporalRepository) ProcessResources(ctx context.Context, itemId string, resourceIds []string, source string) error {
+func (r EventTemporalRepository) ProcessResources(ctx context.Context, itemId string, resourceIds []string, source string, config *resource.Config) error {
 
 	processResourcesHash := md5.New()
 	processResourcesHash.Write([]byte(itemId))
@@ -38,6 +39,8 @@ func (r EventTemporalRepository) ProcessResources(ctx context.Context, itemId st
 			ItemId:      itemId,
 			ResourceIds: resourceIds,
 			Source:      source,
+			Width:       config.Width(),
+			Height:      config.Height(),
 		},
 	)
 

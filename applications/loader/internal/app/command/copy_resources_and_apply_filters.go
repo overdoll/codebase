@@ -4,7 +4,6 @@ import (
 	"context"
 	"os"
 	"overdoll/applications/loader/internal/domain/resource"
-	"overdoll/libraries/errors/domainerror"
 )
 
 type CopyResourcesAndApplyFilters struct {
@@ -12,11 +11,9 @@ type CopyResourcesAndApplyFilters struct {
 		ItemId     string
 		ResourceId string
 	}
-	Filters *struct {
-		Pixelate *struct {
-			Size int
-		}
-	}
+	Filters   *resource.ImageFilters
+	Config    *resource.Config
+	Token     string
 	IsPrivate bool
 }
 
@@ -48,10 +45,6 @@ func (h CopyResourcesAndApplyFiltersHandler) Handle(ctx context.Context, cmd Cop
 
 	for _, target := range resources {
 
-		if !target.IsProcessed() {
-			return nil, domainerror.NewValidation("resource not processed yet")
-		}
-
 		var file *os.File
 
 		if target.IsVideo() {
@@ -64,33 +57,14 @@ func (h CopyResourcesAndApplyFiltersHandler) Handle(ctx context.Context, cmd Cop
 			return nil, err
 		}
 
-		var pixelate *int
-
-		if cmd.Filters != nil {
-			if cmd.Filters.Pixelate != nil {
-				pixelate = &cmd.Filters.Pixelate.Size
-			}
-		}
-
-		filters, err := resource.NewImageFilters(pixelate)
-
-		if err != nil {
-			return nil, err
-		}
-
 		// create a new processed resource
-		filtered, err := resource.NewImageProcessedResource(target.ItemId(), "image/png", cmd.IsPrivate, target.Height(), target.Width(), target.Preview())
+		filtered, err := resource.NewImageUnProcessedResource(target.ItemId(), "image/jpeg", cmd.IsPrivate, target.Height(), target.Width(), target.Preview(), cmd.Token)
 
 		if err != nil {
 			return nil, err
 		}
 
-		// apply filters
-		newFile, err := filters.ApplyFilters(file)
-
-		if err != nil {
-			return nil, err
-		}
+		move, err := filtered.ApplyFilters(file, cmd.Config, cmd.Filters)
 
 		filteredResource, err := resource.NewFilteredResource(target, filtered)
 
@@ -98,15 +72,11 @@ func (h CopyResourcesAndApplyFiltersHandler) Handle(ctx context.Context, cmd Cop
 			return nil, err
 		}
 
-		if err := h.rr.UploadAndCreateResource(ctx, newFile, filtered); err != nil {
+		if err := h.rr.UploadProcessedResource(ctx, move, filtered); err != nil {
 			return nil, err
 		}
 
 		filteredResources = append(filteredResources, filteredResource)
-
-		// cleanup files
-		_ = os.Remove(newFile.Name())
-		_ = os.Remove(file.Name())
 	}
 
 	return filteredResources, nil

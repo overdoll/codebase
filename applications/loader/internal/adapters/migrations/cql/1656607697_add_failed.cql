@@ -1,2 +1,2 @@
 ALTER TABLE resources
-    add (failed boolean)
+    add (failed boolean, copied boolean)

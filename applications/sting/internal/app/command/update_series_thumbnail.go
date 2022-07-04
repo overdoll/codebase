@@ -31,7 +31,7 @@ func (h UpdateSeriesThumbnailHandler) Handle(ctx context.Context, cmd UpdateSeri
 			oldResourceId = series.ThumbnailResource().ID()
 		}
 
-		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.SeriesId, []string{cmd.Thumbnail}, false, "SERIES", true)
+		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.SeriesId, []string{cmd.Thumbnail}, false, "SERIES", true, 100, 100)
 
 		if err != nil {
 			return err

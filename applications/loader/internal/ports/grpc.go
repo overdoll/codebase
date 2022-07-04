@@ -32,6 +32,12 @@ func (s Server) CreateOrGetResourcesFromUploads(ctx context.Context, request *lo
 		allowImages = request.ValidationOptions.AllowImages
 	}
 
+	config, err := resource.NewConfig(request.Config.Width, request.Config.Height)
+
+	if err != nil {
+		return nil, err
+	}
+
 	resources, err := s.app.Commands.NewCreateOrGetResourcesFromUploads.Handle(ctx, command.CreateOrGetResourcesFromUploads{
 		ItemId:      request.ItemId,
 		UploadIds:   request.ResourceIds,
@@ -40,6 +46,7 @@ func (s Server) CreateOrGetResourcesFromUploads(ctx context.Context, request *lo
 		Source:      request.Source.String(),
 		AllowVideos: allowVideos,
 		AllowImages: allowImages,
+		Config:      config,
 	})
 
 	if err != nil {
@@ -134,8 +141,8 @@ func (s Server) CopyResourcesAndApplyFilter(ctx context.Context, request *loader
 			ItemId     string
 			ResourceId string
 		}{},
-		Filters:   &struct{ Pixelate *struct{ Size int } }{},
 		IsPrivate: request.Private,
+		Token:     request.Token,
 	}
 
 	for _, r := range request.Resources {
@@ -149,9 +156,27 @@ func (s Server) CopyResourcesAndApplyFilter(ctx context.Context, request *loader
 	}
 
 	if request.Filters != nil {
+
 		if request.Filters.Pixelate != nil {
-			data.Filters.Pixelate = &struct{ Size int }{Size: int(request.Filters.Pixelate.Size)}
+			pixelateSize := int(request.Filters.Pixelate.Size)
+			filters, err := resource.NewImageFilters(&pixelateSize)
+
+			if err != nil {
+				return nil, err
+			}
+
+			data.Filters = filters
 		}
+	}
+
+	if request.Config != nil {
+		config, err := resource.NewConfig(request.Config.Width, request.Config.Height)
+
+		if err != nil {
+			return nil, err
+		}
+
+		data.Config = config
 	}
 
 	filteredResources, err := s.app.Commands.CopyResourcesAndApplyFilters.Handle(ctx, data)

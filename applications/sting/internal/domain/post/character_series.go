@@ -162,11 +162,24 @@ func (m *Series) UpdateThumbnail(requester *principal.Principal, thumbnail *reso
 
 func (m *Series) UpdateThumbnailExisting(thumbnail *resource.Resource) error {
 
-	if err := validateExistingThumbnail(m.thumbnailResource, thumbnail); err != nil {
+	if err := validateExistingResource(m.thumbnailResource, thumbnail); err != nil {
 		return err
 	}
 
 	m.thumbnailResource = thumbnail
+
+	m.update()
+
+	return nil
+}
+
+func (m *Series) UpdateBannerExisting(thumbnail *resource.Resource) error {
+
+	if err := validateExistingResource(m.bannerResource, thumbnail); err != nil {
+		return err
+	}
+
+	m.bannerResource = thumbnail
 
 	m.update()
 

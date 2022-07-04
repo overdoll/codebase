@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"github.com/CapsLock-Studio/go-webpbin"
 	"github.com/EdlinOrg/prominentcolor"
+	"github.com/disintegration/gift"
 	"github.com/h2non/filetype"
+	"github.com/nfnt/resize"
 	ffmpeg_go "github.com/u2takey/ffmpeg-go"
 	"go.uber.org/zap"
 	"image"
@@ -99,20 +101,21 @@ type Resource struct {
 	preview string
 }
 
-func NewImageProcessedResource(itemId, mimeType string, isPrivate bool, height, width int, preview string) (*Resource, error) {
+func NewImageUnProcessedResource(itemId, mimeType string, isPrivate bool, height, width int, preview, token string) (*Resource, error) {
 	id := uuid.New().String()
 	return &Resource{
 		id:           id,
 		itemId:       itemId,
-		processedId:  id,
+		processedId:  "",
 		mimeTypes:    []string{mimeType},
 		resourceType: resource.Image,
 		isPrivate:    isPrivate,
-		processed:    true,
+		processed:    false,
 		height:       height,
 		width:        width,
 		failed:       false,
 		preview:      preview,
+		token:        token,
 	}, nil
 }
 
@@ -159,6 +162,98 @@ func NewResource(itemId, id, mimeType string, isPrivate bool, token string, allo
 	}, nil
 }
 
+func (r *Resource) ApplyFilters(file *os.File, config *Config, filters *ImageFilters) ([]*Move, error) {
+
+	fileName := uuid.New().String()
+
+	defer file.Close()
+	defer os.Remove(file.Name())
+
+	src, _, err := image.Decode(file)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to decode a file for filters")
+	}
+
+	src = resize.Resize(uint(config.Width()), uint(config.Height()), src, resize.Lanczos3)
+
+	// create and apply filters
+	g := gift.New()
+
+	if filters.Pixelate() != nil {
+		g.Add(gift.Pixelate(*filters.Pixelate()))
+	}
+
+	dst := image.NewNRGBA(g.Bounds(src.Bounds()))
+	g.Draw(dst, src)
+
+	webpFileName := fileName + ".webp"
+
+	webpFile, err := os.Create(webpFileName)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := webpbin.NewCWebP().
+		Quality(100).
+		InputImage(src).
+		Output(webpFile).
+		Run(); err != nil {
+		_ = webpFile.Close()
+		return nil, errors.Wrap(err, "failed to convert png to webp")
+	}
+
+	jpegFileName := fileName + ".jpg"
+
+	jpegFile, err := os.Create(jpegFileName)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := jpeg.Encode(jpegFile, src, &jpeg.Options{Quality: 100}); err != nil {
+		return nil, errors.Wrap(err, "failed to encode jpeg")
+	}
+
+	r.resourceType = resource.Image
+
+	// get config
+	cfgSrc, _, err := image.DecodeConfig(jpegFile)
+	if err != nil {
+		return nil, err
+	}
+
+	_, _ = jpegFile.Seek(0, io.SeekStart)
+
+	r.height = cfgSrc.Height
+	r.width = cfgSrc.Width
+
+	_, _ = jpegFile.Seek(0, io.SeekStart)
+	preview, err := createPreviewFromFile(jpegFile)
+
+	if err != nil {
+		return nil, err
+	}
+
+	r.preview = preview
+	r.mimeTypes = []string{"image/webp", "image/jpg"}
+
+	r.processedId = fileName
+	r.processed = true
+
+	return []*Move{
+		{
+			fileName: jpegFileName,
+		},
+		{
+			fileName: webpFileName,
+		},
+	}, nil
+}
+
 func createPreviewFromFile(r io.Reader) (string, error) {
 	img, err := png.Decode(r)
 
@@ -184,7 +279,7 @@ type ffmpegProbeStream struct {
 	} `json:"streams"`
 }
 
-func (r *Resource) processVideo(fileName string, file *os.File) ([]*Move, error) {
+func (r *Resource) processVideo(fileName string, file *os.File, config *Config) ([]*Move, error) {
 
 	newVideoFileName := fileName + ".mp4"
 
@@ -292,17 +387,16 @@ func (r *Resource) processVideo(fileName string, file *os.File) ([]*Move, error)
 
 	return []*Move{
 		{
-			osFileLocation: thumbnailFileName,
+			fileName: thumbnailFileName,
 		},
 		{
-			osFileLocation: newVideoFileName,
+			fileName: newVideoFileName,
 		},
 	}, nil
 }
 
-func (r *Resource) processImage(fileName string, file *os.File) ([]*Move, error) {
+func (r *Resource) processImage(fileName string, file *os.File, config *Config) ([]*Move, error) {
 
-	// image is in an accepted format - convert to webp
 	src, _, err := image.Decode(file)
 
 	if err != nil {
@@ -310,6 +404,9 @@ func (r *Resource) processImage(fileName string, file *os.File) ([]*Move, error)
 		r.failed = true
 		return nil, nil
 	}
+
+	// resize to specified width
+	src = resize.Resize(uint(config.Width()), uint(config.Height()), src, resize.Lanczos3)
 
 	webpFileName := fileName + ".webp"
 
@@ -341,11 +438,12 @@ func (r *Resource) processImage(fileName string, file *os.File) ([]*Move, error)
 	r.resourceType = resource.Image
 
 	// get config
-	_, _ = file.Seek(0, io.SeekStart)
-	cfgSrc, _, err := image.DecodeConfig(file)
+	cfgSrc, _, err := image.DecodeConfig(jpegFile)
 	if err != nil {
 		return nil, err
 	}
+
+	_, _ = jpegFile.Seek(0, io.SeekStart)
 
 	r.height = cfgSrc.Height
 	r.width = cfgSrc.Width
@@ -362,17 +460,17 @@ func (r *Resource) processImage(fileName string, file *os.File) ([]*Move, error)
 
 	return []*Move{
 		{
-			osFileLocation: jpegFileName,
+			fileName: jpegFileName,
 		},
 		{
-			osFileLocation: webpFileName,
+			fileName: webpFileName,
 		},
 	}, nil
 }
 
 // ProcessResource process resource - should be at a new Url and any additional mimetypes that are available
 // must pass the file that needs to be processed (usually the current file, gotten from Url())
-func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
+func (r *Resource) ProcessResource(file *os.File, config *Config) ([]*Move, error) {
 
 	defer os.Remove(file.Name())
 	defer file.Close()
@@ -391,14 +489,19 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 		return nil, errors.Wrap(err, "uknown file type")
 	}
 
-	// seek file so we can read it again (first time we only grab a few bytes)
+	// seek file, so we can read it again (first time we only grab a few bytes)
 	_, _ = file.Seek(0, io.SeekStart)
 
 	fileName := uuid.New().String()
 
+	// in case we are re-processing, keep the same processed ID && override old files
+	if r.processedId != "" {
+		fileName = r.processedId
+	}
+
 	if kind.MIME.Value == "image/png" {
 
-		moveTargets, err = r.processImage(fileName, file)
+		moveTargets, err = r.processImage(fileName, file, config)
 
 		if err != nil {
 			return nil, err
@@ -406,7 +509,7 @@ func (r *Resource) ProcessResource(file *os.File) ([]*Move, error) {
 
 	} else if kind.MIME.Value == "video/mp4" {
 
-		moveTargets, err = r.processVideo(fileName, file)
+		moveTargets, err = r.processVideo(fileName, file, config)
 
 		if err != nil {
 			return nil, err
@@ -459,6 +562,10 @@ func (r *Resource) MakeVideo() error {
 
 func (r *Resource) IsProcessed() bool {
 	return r.processed
+}
+
+func (r *Resource) LastMimeType() string {
+	return r.mimeTypes[len(r.mimeTypes)-1]
 }
 
 func (r *Resource) ProcessedId() string {

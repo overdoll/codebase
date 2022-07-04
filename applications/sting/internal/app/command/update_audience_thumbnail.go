@@ -32,7 +32,7 @@ func (h UpdateAudienceThumbnailHandler) Handle(ctx context.Context, cmd UpdateAu
 		}
 
 		// create resources from content
-		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.AudienceId, []string{cmd.Thumbnail}, false, "AUDIENCE", true)
+		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.AudienceId, []string{cmd.Thumbnail}, false, "AUDIENCE", true, 100, 100)
 
 		if err != nil {
 			return err

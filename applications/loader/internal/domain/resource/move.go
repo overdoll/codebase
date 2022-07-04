@@ -2,9 +2,9 @@ package resource
 
 // Move is a struct that contains the info that would tell a repository where a file is located in the OS
 type Move struct {
-	osFileLocation string
+	fileName string
 }
 
-func (r *Move) OsFileLocation() string {
-	return r.osFileLocation
+func (r *Move) FileName() string {
+	return r.fileName
 }

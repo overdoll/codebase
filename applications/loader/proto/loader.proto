@@ -12,6 +12,11 @@ message PixelateFilter {
   int64 size = 1;
 }
 
+message Config {
+  uint64 width = 1;
+  uint64 height = 2;
+}
+
 message ResourceIdentifier {
   string id = 1;
   string itemId = 2;
@@ -31,6 +36,8 @@ message CopyResourcesAndApplyFilterRequest {
   repeated ResourceIdentifier resources = 1;
   Filters filters = 2;
   bool private = 3;
+  string token = 4;
+  optional Config config = 5;
 }
 
 message CopyResourcesAndApplyFilterResponse {
@@ -44,6 +51,7 @@ message CreateOrGetResourcesFromUploadsRequest {
   overdoll.libraries.SOURCE source = 4;
   string token = 5;
   optional ValidationOptions validationOptions = 6;
+  optional Config config = 7;
 }
 
 message CreateOrGetResourcesFromUploadsResponse {

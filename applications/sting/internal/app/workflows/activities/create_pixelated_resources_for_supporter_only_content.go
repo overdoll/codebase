@@ -27,7 +27,7 @@ func (h *Activities) CreatePixelatedResourcesForSupporterOnlyContent(ctx context
 
 		if len(resourceIds) > 0 {
 
-			newContents, err := h.loader.CopyResourcesAndApplyPixelateFilter(ctx, input.PostId, resourceIds, 100, false)
+			newContents, err := h.loader.CopyResourcesAndApplyPixelateFilter(ctx, input.PostId, resourceIds, 100, false, "POST_PRIVATE_CONTENT")
 
 			if err != nil {
 				return err

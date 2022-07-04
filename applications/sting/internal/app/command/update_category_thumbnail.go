@@ -32,7 +32,7 @@ func (h UpdateCategoryThumbnailHandler) Handle(ctx context.Context, cmd UpdateCa
 		}
 
 		// create resources from content
-		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.CategoryId, []string{cmd.Thumbnail}, false, "CATEGORY", true)
+		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.CategoryId, []string{cmd.Thumbnail}, false, "CATEGORY", true, 100, 100)
 
 		if err != nil {
 			return err

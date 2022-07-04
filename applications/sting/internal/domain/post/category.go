@@ -160,11 +160,23 @@ func (c *Category) UpdateThumbnail(requester *principal.Principal, thumbnail *re
 
 func (c *Category) UpdateThumbnailExisting(thumbnail *resource.Resource) error {
 
-	if err := validateExistingThumbnail(c.thumbnailResource, thumbnail); err != nil {
+	if err := validateExistingResource(c.thumbnailResource, thumbnail); err != nil {
 		return err
 	}
 
 	c.thumbnailResource = thumbnail
+	c.update()
+
+	return nil
+}
+
+func (c *Category) UpdateBannerExisting(thumbnail *resource.Resource) error {
+
+	if err := validateExistingResource(c.bannerResource, thumbnail); err != nil {
+		return err
+	}
+
+	c.bannerResource = thumbnail
 	c.update()
 
 	return nil

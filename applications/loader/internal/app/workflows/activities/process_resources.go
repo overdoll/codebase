@@ -10,6 +10,8 @@ import (
 type ProcessResourcesInput struct {
 	ItemId      string
 	ResourceIds []string
+	Width       uint64
+	Height      uint64
 }
 
 func (h *Activities) ProcessResources(ctx context.Context, input ProcessResourcesInput) error {
@@ -30,8 +32,14 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 		}
 	}
 
+	config, err := resource.NewConfig(input.Width, input.Height)
+
+	if err != nil {
+		return err
+	}
+
 	for _, target := range resourcesNotProcessed {
-		if err := process(h, ctx, target); err != nil {
+		if err := process(h, ctx, target, config); err != nil {
 			return err
 		}
 	}
@@ -40,7 +48,7 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 	return nil
 }
 
-func process(h *Activities, ctx context.Context, target *resource.Resource) error {
+func process(h *Activities, ctx context.Context, target *resource.Resource, config *resource.Config) error {
 
 	// first, we need to download the resource
 	file, err := h.rr.DownloadResource(ctx, target)
@@ -54,7 +62,7 @@ func process(h *Activities, ctx context.Context, target *resource.Resource) erro
 	}
 
 	// process resource, get result of targets that need to be uploaded
-	targetsToMove, err := target.ProcessResource(file)
+	targetsToMove, err := target.ProcessResource(file, config)
 
 	if err != nil {
 		return errors.Wrap(err, "failed to process resource")

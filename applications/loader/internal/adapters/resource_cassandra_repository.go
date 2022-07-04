@@ -23,7 +23,6 @@ import (
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/support"
-	"path/filepath"
 	"strings"
 )
 
@@ -611,24 +610,24 @@ func (r ResourceCassandraS3Repository) downloadResource(ctx context.Context, fil
 	return file, nil
 }
 
-func (r ResourceCassandraS3Repository) UploadAndCreateResource(ctx context.Context, file *os.File, target *resource.Resource) error {
+func (r ResourceCassandraS3Repository) uploadResource(ctx context.Context, moveTarget *resource.Move, target *resource.Resource) error {
 	s3Client := s3.New(r.aws)
 
-	// seek to beginning of files
-	_, _ = file.Seek(0, io.SeekStart)
+	remoteUrlTarget := target.ItemId() + "/" + moveTarget.FileName()
 
-	fileInfo, err := file.Stat()
+	file, err := os.Open(moveTarget.FileName())
 
 	if err != nil {
-		return errors.Wrap(err, "failed to stat file")
+		return err
 	}
 
+	defer file.Close()
+	defer os.Remove(moveTarget.FileName())
+
+	fileInfo, _ := file.Stat()
 	var size = fileInfo.Size()
 	buffer := make([]byte, size)
-
-	if _, err := file.Read(buffer); err != nil {
-		return errors.Wrap(err, "failed to read file")
-	}
+	file.Read(buffer)
 
 	bucket := os.Getenv("RESOURCES_BUCKET")
 
@@ -636,41 +635,32 @@ func (r ResourceCassandraS3Repository) UploadAndCreateResource(ctx context.Conte
 		bucket = os.Getenv("PRIVATE_RESOURCES_BUCKET")
 	}
 
-	url := "/" + target.ItemId() + "/" + target.ProcessedId() + filepath.Ext(fileInfo.Name())
-
 	input := &s3.PutObjectInput{
 		Bucket:        aws.String(bucket),
-		Key:           aws.String(url),
+		Key:           aws.String(remoteUrlTarget),
 		Body:          bytes.NewReader(buffer),
 		ContentLength: aws.Int64(size),
 		ContentType:   aws.String(http.DetectContentType(buffer)),
 	}
 
 	if !target.IsPrivate() {
-		// grant read access to non-public objects
+		// grant read access to non public objects
 		input.ACL = aws.String("public-read")
 	}
 
 	// new file that was created
-	if _, err := s3Client.PutObject(input); err != nil {
+	_, err = s3Client.PutObject(input)
+
+	if err != nil {
 		return errors.Wrap(err, "failed to put file")
 	}
 
 	// wait until file is available in private bucket
-
-	if err := s3Client.WaitUntilObjectExists(&s3.HeadObjectInput{
+	if err = s3Client.WaitUntilObjectExists(&s3.HeadObjectInput{
 		Bucket: aws.String(bucket),
-		Key:    aws.String(url),
+		Key:    aws.String(remoteUrlTarget),
 	}); err != nil {
 		return errors.Wrap(err, "failed to wait for file")
-	}
-
-	// clean up file at the end to free up resources
-	_ = file.Close()
-	_ = os.Remove(file.Name())
-
-	if err := r.createResources(ctx, []*resource.Resource{target}); err != nil {
-		return err
 	}
 
 	return nil
@@ -680,60 +670,11 @@ func (r ResourceCassandraS3Repository) UploadAndCreateResource(ctx context.Conte
 // expects that the resource that was passed into the method is a resource that originates in UploadsBucket, so in our case
 // it was uploaded through TUS
 func (r ResourceCassandraS3Repository) UploadProcessedResource(ctx context.Context, moveTarget []*resource.Move, target *resource.Resource) error {
-	s3Client := s3.New(r.aws)
-
 	// go through each new file from the filesystem (contained by resource) and upload to s3
 	for _, moveTarget := range moveTarget {
-
-		file, err := os.Open(moveTarget.OsFileLocation())
-
-		if err != nil {
+		if err := r.uploadResource(ctx, moveTarget, target); err != nil {
 			return err
 		}
-
-		fileInfo, _ := file.Stat()
-		var size = fileInfo.Size()
-		buffer := make([]byte, size)
-		file.Read(buffer)
-
-		bucket := os.Getenv("RESOURCES_BUCKET")
-
-		if target.IsPrivate() {
-			bucket = os.Getenv("PRIVATE_RESOURCES_BUCKET")
-		}
-
-		input := &s3.PutObjectInput{
-			Bucket:        aws.String(bucket),
-			Key:           aws.String(moveTarget.RemoteUrlTarget()),
-			Body:          bytes.NewReader(buffer),
-			ContentLength: aws.Int64(size),
-			ContentType:   aws.String(http.DetectContentType(buffer)),
-		}
-
-		if !target.IsPrivate() {
-			// grant read access to non public objects
-			input.ACL = aws.String("public-read")
-		}
-
-		// new file that was created
-		_, err = s3Client.PutObject(input)
-
-		if err != nil {
-			return errors.Wrap(err, "failed to put file")
-		}
-
-		// wait until file is available in private bucket
-
-		if err = s3Client.WaitUntilObjectExists(&s3.HeadObjectInput{
-			Bucket: aws.String(bucket),
-			Key:    aws.String(moveTarget.RemoteUrlTarget()),
-		}); err != nil {
-			return errors.Wrap(err, "failed to wait for file")
-		}
-
-		// clean up file at the end to free up resources
-		_ = file.Close()
-		_ = os.Remove(moveTarget.OsFileLocation())
 	}
 
 	if err := r.updateResources(ctx, []*resource.Resource{target}); err != nil {

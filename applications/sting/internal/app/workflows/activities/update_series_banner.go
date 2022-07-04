@@ -37,7 +37,7 @@ func (h *Activities) UpdateSeriesBanner(ctx context.Context, input UpdateSeriesB
 
 	_, err = h.pr.UpdateSeriesBannerOperator(ctx, input.SeriesId, func(series *post.Series) error {
 
-		newResource, err := h.loader.CopyResourceIntoImage(ctx, pst.ID(), selectedContentResource.ID(), false)
+		newResource, err := h.loader.CopyResourceIntoImage(ctx, pst.ID(), selectedContentResource.ID(), false, "SERIES_BANNER", 360, 640)
 
 		if err != nil {
 			return err

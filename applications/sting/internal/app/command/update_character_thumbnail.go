@@ -32,7 +32,7 @@ func (h UpdateCharacterThumbnailHandler) Handle(ctx context.Context, cmd UpdateC
 		}
 
 		// create resources from content
-		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.CharacterId, []string{cmd.Thumbnail}, false, "CHARACTER", true)
+		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.CharacterId, []string{cmd.Thumbnail}, false, "CHARACTER", true, 100, 100)
 
 		if err != nil {
 			return err
