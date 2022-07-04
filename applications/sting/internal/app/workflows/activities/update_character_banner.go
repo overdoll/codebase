@@ -3,6 +3,7 @@ package activities
 import (
 	"context"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/resource"
 )
 
 type UpdateCharacterBannerInput struct {
@@ -21,7 +22,18 @@ func (h *Activities) UpdateCharacterBanner(ctx context.Context, input UpdateChar
 		return nil
 	}
 
-	selectedContentResource := pst.Content()[0].Resource()
+	var selectedContentResource *resource.Resource
+
+	for _, cnt := range pst.Content() {
+		if !cnt.IsSupporterOnly() {
+			selectedContentResource = cnt.Resource()
+			break
+		}
+	}
+
+	if selectedContentResource == nil {
+		return nil
+	}
 
 	_, err = h.pr.UpdateCharacterBannerOperator(ctx, input.CharacterId, func(character *post.Character) error {
 

@@ -79,7 +79,7 @@ func (h CopyResourcesAndApplyFiltersHandler) Handle(ctx context.Context, cmd Cop
 		}
 
 		// create a new processed resource
-		filtered, err := resource.NewImageProcessedResource(target.ItemId(), "image/png", cmd.IsPrivate, target.Height(), target.Width())
+		filtered, err := resource.NewImageProcessedResource(target.ItemId(), "image/png", cmd.IsPrivate, target.Height(), target.Width(), target.Preview())
 
 		if err != nil {
 			return nil, err

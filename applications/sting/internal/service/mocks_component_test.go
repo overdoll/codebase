@@ -10,6 +10,7 @@ import (
 	parley "overdoll/applications/parley/proto"
 	"overdoll/applications/sting/internal/service"
 	"overdoll/libraries/resource/proto"
+	"overdoll/libraries/uuid"
 	"testing"
 )
 
@@ -61,6 +62,28 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 		}
 
 		return &loader.CopyResourcesAndApplyFilterResponse{Resources: res}
+	}, nil)
+
+	application.LoaderClient.On("UpdateResourcePrivacy", mock.Anything, mock.Anything).Return(func(c context.Context, req *loader.UpdateResourcePrivacyRequest, g ...grpc.CallOption) *loader.UpdateResourcePrivacyResponse {
+
+		var res []*proto.Resource
+
+		for _, r := range req.Resources {
+			res = append(res, &proto.Resource{
+				Id:          r.Id,
+				ItemId:      r.ItemId,
+				Type:        proto.ResourceType_IMAGE,
+				Processed:   true,
+				ProcessedId: uuid.New().String(),
+				MimeTypes:   []string{"image/png"},
+				Private:     req.Private,
+				Width:       100,
+				Height:      100,
+				Token:       "POST",
+			})
+		}
+
+		return &loader.UpdateResourcePrivacyResponse{Resources: res}
 	}, nil)
 }
 

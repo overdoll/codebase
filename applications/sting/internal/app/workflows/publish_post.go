@@ -20,15 +20,6 @@ func PublishPost(ctx workflow.Context, input PublishPostInput) error {
 
 	var a *activities.Activities
 
-	if err := workflow.ExecuteActivity(ctx, a.UpdatePostContentResourcePrivacy,
-		activities.UpdatePostContentResourcePrivacyInput{
-			PostId: input.PostId,
-		},
-	).Get(ctx, nil); err != nil {
-		logger.Error("failed to update post content resource privacy", "Error", err)
-		return err
-	}
-
 	if err := workflow.ExecuteActivity(ctx, a.PublishPost,
 		activities.PublishPostInput{
 			PostId: input.PostId,

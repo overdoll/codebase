@@ -370,7 +370,8 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 			Type:        proto.ResourceType_IMAGE,
 			Processed:   true,
 			ProcessedId: uuid.New().String(),
-			Private:     false,
+			MimeTypes:   []string{"image/png"},
+			Private:     true,
 			Width:       100,
 			Height:      100,
 			Token:       "POST",
@@ -443,9 +444,19 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.True(t, post.Post.Content[0].ViewerCanViewSupporterOnlyContent, "can view first content because its free")
 	require.False(t, post.Post.Content[0].IsSupporterOnly, "can view content since its marked as non supporter")
 
+	require.Len(t, post.Post.Content[0].Resource.Urls, 1, "should have 1 url")
+	for _, urls := range post.Post.Content[0].Resource.Urls {
+		require.NotContains(t, urls.URL, "Key-Pair-Id", "should not be private content")
+	}
+
 	require.True(t, post.Post.Content[1].ViewerCanViewSupporterOnlyContent, "can view supporter only because they are a supporter")
 	require.True(t, post.Post.Content[1].IsSupporterOnly, "cant view first content because its supporter only")
 	require.Nil(t, post.Post.Content[1].SupporterOnlyResource, "supporter only resource is nil")
+
+	require.Len(t, post.Post.Content[1].Resource.Urls, 1, "should have 1 url")
+	for _, urls := range post.Post.Content[1].Resource.Urls {
+		require.Contains(t, urls.URL, "Key-Pair-Id", "should be private content")
+	}
 
 	originalId := post.Post.Content[1].Resource.ID
 

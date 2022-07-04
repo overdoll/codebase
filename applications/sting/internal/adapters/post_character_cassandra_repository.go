@@ -146,7 +146,7 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterFromDatabase(ct
 
 func (r PostsCassandraElasticsearchRepository) GetCharacterIdsFromSlugs(ctx context.Context, characterSlugs, seriesIds []string) ([]string, error) {
 
-	var characterSlugResults []seriesSlug
+	var characterSlugResults []characterSlug
 
 	var lowercaseSlugs []string
 
@@ -171,7 +171,7 @@ func (r PostsCassandraElasticsearchRepository) GetCharacterIdsFromSlugs(ctx cont
 	var ids []string
 
 	for _, i := range characterSlugResults {
-		ids = append(ids, i.Slug)
+		ids = append(ids, i.CharacterId)
 	}
 
 	return ids, nil

@@ -102,6 +102,7 @@ func seedClub(t *testing.T, accountId string) *club.Club {
 	require.NoError(t, err)
 	err = adapter.CreateClub(context.Background(), pst)
 	require.NoError(t, err)
+
 	return pst
 }
 
@@ -138,10 +139,22 @@ func seedPublishedPostWithCharacter(t *testing.T, characterId, seriesId string) 
 		),
 	)})
 
+	err = pst.AddContentRequest(prin, []*resource.Resource{
+		resource.UnmarshalResourceFromProto(context.Background(), &resource_proto.Resource{
+			Id:        uuid.New().String(),
+			ItemId:    uuid.New().String(),
+			Private:   true,
+			Processed: true,
+		}),
+	})
+
 	require.NoError(t, err)
 
 	err = pst.SubmitPostRequest(clb, prin)
 
+	require.NoError(t, err)
+
+	err = pst.MakePublish()
 	require.NoError(t, err)
 
 	seedPost(t, pst)
@@ -177,10 +190,22 @@ func seedPublishedPostWithCategory(t *testing.T, categoryId string) {
 		categoryId, "StandardCategory", map[string]string{"en": "Standard Audience"}, nil, nil, 1, 0, time.Now(), time.Now(),
 	)})
 
+	err = pst.AddContentRequest(prin, []*resource.Resource{
+		resource.UnmarshalResourceFromProto(context.Background(), &resource_proto.Resource{
+			Id:        uuid.New().String(),
+			ItemId:    uuid.New().String(),
+			Private:   true,
+			Processed: true,
+		}),
+	})
+
 	require.NoError(t, err)
 
 	err = pst.SubmitPostRequest(clb, prin)
 
+	require.NoError(t, err)
+
+	err = pst.MakePublish()
 	require.NoError(t, err)
 
 	seedPost(t, pst)
@@ -212,10 +237,22 @@ func seedPublishedPostWithAudience(t *testing.T, audienceId string) {
 		audienceId, "StandardAudience", map[string]string{"en": "Standard Audience"}, nil, nil, 1, 0, 0, time.Now(), time.Now(),
 	))
 
+	err = pst.AddContentRequest(prin, []*resource.Resource{
+		resource.UnmarshalResourceFromProto(context.Background(), &resource_proto.Resource{
+			Id:        uuid.New().String(),
+			ItemId:    uuid.New().String(),
+			Private:   true,
+			Processed: true,
+		}),
+	})
+
 	require.NoError(t, err)
 
 	err = pst.SubmitPostRequest(clb, prin)
 
+	require.NoError(t, err)
+
+	err = pst.MakePublish()
 	require.NoError(t, err)
 
 	seedPost(t, pst)
@@ -244,6 +281,15 @@ func newPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
 	))
 
 	require.NoError(t, err)
+
+	err = pst.AddContentRequest(prin, []*resource.Resource{
+		resource.UnmarshalResourceFromProto(context.Background(), &resource_proto.Resource{
+			Id:        uuid.New().String(),
+			ItemId:    uuid.New().String(),
+			Private:   true,
+			Processed: true,
+		}),
+	})
 
 	err = pst.SubmitPostRequest(clb, prin)
 
@@ -363,6 +409,11 @@ func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 	env.RegisterWorkflow(workflows.NewSupporterPost)
 	env.RegisterWorkflow(workflows.ClubSupporterPostNotifications)
 	env.RegisterWorkflow(workflows.AddClubMember)
+
+	env.RegisterWorkflow(workflows.GenerateCategoryBanner)
+	env.RegisterWorkflow(workflows.GenerateSeriesBanner)
+	env.RegisterWorkflow(workflows.GenerateCharacterBanner)
+	env.RegisterWorkflow(workflows.GenerateAudienceBanner)
 
 	return env
 }

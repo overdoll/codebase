@@ -12,6 +12,7 @@ import (
 	"overdoll/libraries/principal"
 	"overdoll/libraries/sentry_support"
 	"overdoll/libraries/support"
+	"strings"
 	"time"
 )
 
@@ -118,9 +119,7 @@ func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passp
 
 	for _, hit := range response.Hits.Hits {
 
-		switch hit.Index {
-		case SeriesReaderIndex:
-
+		if strings.Contains(hit.Index, SeriesIndexName) {
 			result, err := r.unmarshalSeriesDocument(ctx, hit)
 
 			if err != nil {
@@ -134,10 +133,9 @@ func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passp
 			})
 
 			results = append(results, result)
+		}
 
-			break
-		case ClubsReaderIndex:
-
+		if strings.Contains(hit.Index, ClubsIndexName) {
 			result, err := unmarshalClubDocument(ctx, hit, r.resourceSerializer)
 
 			if err != nil {
@@ -151,10 +149,9 @@ func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passp
 			})
 
 			results = append(results, result)
+		}
 
-			break
-		case CharacterReaderIndex:
-
+		if strings.Contains(hit.Index, CharacterIndexName) {
 			result, err := r.unmarshalCharacterDocument(ctx, hit)
 
 			if err != nil {
@@ -168,10 +165,9 @@ func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passp
 			})
 
 			results = append(results, result)
+		}
 
-			break
-		case CategoryReaderIndex:
-
+		if strings.Contains(hit.Index, CategoryIndexName) {
 			result, err := r.unmarshalCategoryDocument(ctx, hit)
 
 			if err != nil {
@@ -185,10 +181,6 @@ func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passp
 			})
 
 			results = append(results, result)
-
-			break
-		default:
-			continue
 		}
 	}
 

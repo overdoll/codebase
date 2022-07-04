@@ -778,7 +778,7 @@ func (r PostsCassandraElasticsearchRepository) GetFirstTopPostWithoutOccupiedRes
 	filterQueries = append(filterQueries, elastic.NewBoolQuery().MustNot(elastic.NewTermsQueryFromStrings("club_id", terminatedClubIds...)))
 	filterQueries = append(filterQueries, elastic.NewBoolQuery().MustNot(elastic.NewTermsQueryFromStrings("id", postIds...)))
 	filterQueries = append(filterQueries, elastic.NewTermQuery("state", post.Published.String()))
-	filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("supporter_only_status", post.None.String()))
+	filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("supporter_only_status", post.Partial.String(), post.None.String()))
 
 	if categoryId != nil {
 		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("category_ids", *categoryId))
@@ -796,9 +796,7 @@ func (r PostsCassandraElasticsearchRepository) GetFirstTopPostWithoutOccupiedRes
 		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("audience_id", *audienceId))
 	}
 
-	if filterQueries != nil {
-		query.Filter(filterQueries...)
-	}
+	query.Filter(filterQueries...)
 
 	builder.Size(1)
 	builder.Query(query)

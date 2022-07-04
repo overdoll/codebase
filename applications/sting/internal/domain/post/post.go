@@ -1,6 +1,7 @@
 package post
 
 import (
+	"fmt"
 	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
@@ -393,6 +394,9 @@ func (p *Post) UpdateContentExisting(resources []*resource.Resource) error {
 				if err := content.UpdateResource(res); err != nil {
 					return err
 				}
+
+				fmt.Println(res.IsPrivate())
+
 				break
 			}
 		}

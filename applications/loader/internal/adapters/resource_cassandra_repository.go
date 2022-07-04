@@ -293,12 +293,18 @@ func (r ResourceCassandraS3Repository) UpdateResourcePrivacy(ctx context.Context
 			format, _ := resource.ExtensionByType(mime)
 			fileId := "/" + target.ItemId() + "/" + target.ProcessedId() + format
 
-			// copy object from original bucket to regular bucket
-			_, err := s3Client.CopyObject(&s3.CopyObjectInput{
+			copyObject := &s3.CopyObjectInput{
 				CopySource: aws.String(bucket + fileId),
 				Bucket:     aws.String(targetBucket),
 				Key:        aws.String(fileId),
-			})
+			}
+
+			if !private {
+				copyObject.ACL = aws.String("public-read")
+			}
+
+			// copy object from original bucket to regular bucket
+			_, err := s3Client.CopyObject(copyObject)
 
 			if err != nil {
 				return errors.Wrap(err, "unable to copy object")
@@ -327,12 +333,18 @@ func (r ResourceCassandraS3Repository) UpdateResourcePrivacy(ctx context.Context
 			thumbnailType, _ := resource.ExtensionByType(target.VideoThumbnailMimeType())
 			thumbnailFileId := "/" + target.ItemId() + "/" + target.VideoThumbnail() + thumbnailType
 
-			// copy object from original bucket to regular bucket
-			_, err := s3Client.CopyObject(&s3.CopyObjectInput{
+			copyObject := &s3.CopyObjectInput{
 				CopySource: aws.String(bucket + thumbnailFileId),
 				Bucket:     aws.String(targetBucket),
 				Key:        aws.String(thumbnailFileId),
-			})
+			}
+
+			if !private {
+				copyObject.ACL = aws.String("public-read")
+			}
+
+			// copy object from original bucket to regular bucket
+			_, err := s3Client.CopyObject(copyObject)
 
 			if err != nil {
 				return errors.Wrap(err, "unable to copy video thumbnail")
@@ -364,6 +376,8 @@ func (r ResourceCassandraS3Repository) UpdateResourcePrivacy(ctx context.Context
 			ExecRelease(); err != nil {
 			return errors.Wrap(support.NewGocqlError(err), "failed to update resources privacy")
 		}
+
+		target.SetPrivate(private)
 	}
 
 	return nil

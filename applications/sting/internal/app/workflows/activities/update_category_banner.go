@@ -3,6 +3,7 @@ package activities
 import (
 	"context"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/resource"
 )
 
 type UpdateCategoryBannerInput struct {
@@ -21,7 +22,18 @@ func (h *Activities) UpdateCategoryBanner(ctx context.Context, input UpdateCateg
 		return nil
 	}
 
-	selectedContentResource := pst.Content()[0].Resource()
+	var selectedContentResource *resource.Resource
+
+	for _, cnt := range pst.Content() {
+		if !cnt.IsSupporterOnly() {
+			selectedContentResource = cnt.Resource()
+			break
+		}
+	}
+
+	if selectedContentResource == nil {
+		return nil
+	}
 
 	_, err = h.pr.UpdateCategoryBannerOperator(ctx, input.CategoryId, func(category *post.Category) error {
 

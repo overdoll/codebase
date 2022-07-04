@@ -3,7 +3,6 @@ package resource
 import (
 	"context"
 	"encoding/json"
-	"github.com/99designs/gqlgen/graphql"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudfront/sign"
@@ -264,7 +263,7 @@ func (c *Serializer) UnmarshalResourceFromDatabase(ctx context.Context, serializ
 		return nil, nil
 	}
 
-	if graphql.HasOperationContext(ctx) {
+	if true {
 
 		target, err := c.unmarshalResources(ctx, []string{serializedResources})
 
@@ -305,7 +304,7 @@ func (c *Serializer) UnmarshalResourcesFromDatabase(ctx context.Context, seriali
 
 	var targets []*Resource
 
-	if graphql.HasOperationContext(ctx) {
+	if true {
 
 		var valueString []string
 

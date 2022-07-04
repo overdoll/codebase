@@ -42,7 +42,7 @@ func TestUploadResourcesAndProcessFailed(t *testing.T) {
 	// start processing of files by calling grpc endpoint
 	res, err := grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{
 		ItemId:      itemId,
-		ResourceIds: []string{imageFileId},
+		ResourceIds: []string{imageFileId, videoFileId},
 		Private:     true,
 		Source:      proto.SOURCE_STING,
 	})
@@ -145,6 +145,9 @@ func TestUploadResourcesAndProcessPrivate_and_update_privacy(t *testing.T) {
 
 	// validate all urls that the files are accessible, and check hashes
 	for _, entity := range unmarshalledResources {
+
+		require.False(t, entity.IsPrivate())
+
 		for _, u := range entity.FullUrls() {
 			assertions += 1
 			require.True(t, testing_tools.FileExists(u.FullUrl()), "file exists in bucket")
@@ -230,6 +233,9 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 
 	var assertions int
 
+	var videoPreviewColor string
+	var imagePreviewColor string
+
 	// validate all urls that the files are accessible
 	for _, entity := range unmarshalledResources {
 
@@ -238,7 +244,12 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 			require.True(t, testing_tools.FileExists(u.FullUrl()), "file exists in bucket")
 		}
 
+		if entity.IsImage() {
+			imagePreviewColor = entity.Preview()
+		}
+
 		if entity.IsVideo() {
+			videoPreviewColor = entity.Preview()
 			assertions += 1
 			require.True(t, testing_tools.FileExists(entity.VideoThumbnailFullUrl().FullUrl()), "video thumbnail file exists in bucket")
 		}
@@ -296,10 +307,13 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 	// validate all urls that the files are accessible, and check hashes
 	for _, entity := range unmarshalledResources {
 
+		require.NotEmpty(t, entity.Preview(), "preview not empty")
+
 		var downloadUrl string
 		var referenceFile string
 
 		if entity.ID() == originalImageFileNewId {
+			require.Equal(t, imagePreviewColor, entity.Preview(), "preview is retained for the filtered resource")
 			for _, u := range entity.FullUrls() {
 				downloadUrl = u.FullUrl()
 				targ, _ := testing_tools.NormalizedPathFromBazelTarget("applications/loader/internal/service/file_fixtures/test_file_1_pixelated.png")
@@ -308,6 +322,7 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 		}
 
 		if entity.ID() == originalVideoFileNewId {
+			require.Equal(t, videoPreviewColor, entity.Preview(), "preview is retained for the filtered resource")
 			for _, u := range entity.FullUrls() {
 				downloadUrl = u.FullUrl()
 				targ, _ := testing_tools.NormalizedPathFromBazelTarget("applications/loader/internal/service/file_fixtures/test_file_2_pixelated.png")
@@ -475,7 +490,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	require.Equal(t, "image/webp", newImageResource.FullUrls()[0].MimeType(), "expected first image to be webp")
 	require.Equal(t, "image/png", newImageResource.FullUrls()[1].MimeType(), "expected second image to be png")
 
-	require.NotEmpty(t, newImageResource.Preview(), "preview is not empty for image")
+	require.Regexp(t, "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", newImageResource.Preview(), "should be a hex code")
 
 	// correct dimensions
 	require.Equal(t, 532, newImageResource.Height(), "should be the correct height")
@@ -494,7 +509,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	require.Equal(t, "video/mp4", newVideoResource.FullUrls()[0].MimeType(), "expected video to be mp4")
 	require.Equal(t, "image/png", newVideoResource.VideoThumbnailMimeType(), "expected video thumbnail to be png")
 
-	require.NotEmpty(t, newVideoResource.Preview(), "preview is not empty for video")
+	require.Regexp(t, "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", newVideoResource.Preview(), "should be a hex code")
 
 	var processedAssertions int
 
@@ -529,8 +544,11 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	})
 	require.NoError(t, err)
 
+	env = getWorkflowEnvironment()
+	env.SetTestTimeout(time.Second * 10)
+
 	// run workflow to delete resources
-	deleteWorkflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+	deleteWorkflowExecution.FindAndExecuteWorkflow(t, env)
 
 	// run grpc and see that we didn't find any resources
 	resources, err = grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{

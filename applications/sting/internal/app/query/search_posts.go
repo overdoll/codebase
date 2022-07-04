@@ -75,6 +75,7 @@ func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*p
 			if err != nil {
 				return nil, err
 			}
+
 		}
 	}
 
