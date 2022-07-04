@@ -44,6 +44,7 @@ var resourcesTable = table.New(table.Metadata{
 		"preview",
 		"resource_token",
 		"failed",
+		"copied_from_id",
 	},
 	PartKey: []string{"item_id"},
 	SortKey: []string{"resource_id"},
@@ -67,6 +68,7 @@ type resources struct {
 	Preview                string `db:"preview"`
 	ResourceToken          string `db:"resource_token"`
 	Failed                 bool   `db:"failed"`
+	CopiedFromId           string `db:"copied_from_id"`
 }
 
 type ResourceCassandraS3Repository struct {
@@ -94,6 +96,7 @@ func unmarshalResourceFromDatabase(i resources) *resource.Resource {
 		i.Preview,
 		i.ResourceToken,
 		i.Failed,
+		i.CopiedFromId,
 	)
 }
 
@@ -125,6 +128,7 @@ func marshalResourceToDatabase(r *resource.Resource) *resources {
 		Preview:                r.Preview(),
 		ResourceToken:          r.Token(),
 		Failed:                 r.Failed(),
+		CopiedFromId:           r.CopiedFromId(),
 	}
 }
 
@@ -148,6 +152,10 @@ func (r ResourceCassandraS3Repository) createResources(ctx context.Context, res 
 	}
 
 	return nil
+}
+
+func (r ResourceCassandraS3Repository) CreateResource(ctx context.Context, res *resource.Resource) error {
+	return r.createResources(ctx, []*resource.Resource{res})
 }
 
 func (r ResourceCassandraS3Repository) getResourcesByIds(ctx context.Context, itemId, resourceIds []string) ([]resources, error) {
@@ -563,6 +571,11 @@ func (r ResourceCassandraS3Repository) DownloadVideoThumbnailForResource(ctx con
 	fileId := "/" + target.ItemId() + "/" + target.VideoThumbnail() + format
 
 	return r.downloadResource(ctx, fileId, target.IsProcessed(), target.IsPrivate())
+}
+
+func (r ResourceCassandraS3Repository) DownloadResourceUpload(ctx context.Context, target *resource.Resource) (*os.File, error) {
+	// only download the upload - useful for running process pipelines again, as long as the originating resource still exists in the upload bucket
+	return r.downloadResource(ctx, strings.Split(target.ID(), "+")[0], false, target.IsPrivate())
 }
 
 func (r ResourceCassandraS3Repository) DownloadResource(ctx context.Context, target *resource.Resource) (*os.File, error) {

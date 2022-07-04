@@ -26,6 +26,7 @@ import (
 	"overdoll/libraries/uuid"
 	"overdoll/libraries/zap_support/zap_adapters"
 	"strconv"
+	"strings"
 )
 
 type ErrorResourceCallbackNotFound struct{}
@@ -87,6 +88,8 @@ type Resource struct {
 	isPrivate bool
 	failed    bool
 
+	copiedFromId string
+
 	videoThumbnail         string
 	videoThumbnailMimeType string
 
@@ -101,7 +104,7 @@ type Resource struct {
 	preview string
 }
 
-func NewImageUnProcessedResource(itemId, mimeType string, isPrivate bool, height, width int, preview, token string) (*Resource, error) {
+func NewImageCopyResource(itemId, mimeType string, isPrivate bool, token string, copiedFromItemId, copiedFromResourceId string) (*Resource, error) {
 	id := uuid.New().String()
 	return &Resource{
 		id:           id,
@@ -111,11 +114,9 @@ func NewImageUnProcessedResource(itemId, mimeType string, isPrivate bool, height
 		resourceType: resource.Image,
 		isPrivate:    isPrivate,
 		processed:    false,
-		height:       height,
-		width:        width,
 		failed:       false,
-		preview:      preview,
 		token:        token,
+		copiedFromId: copiedFromItemId + "-" + copiedFromResourceId,
 	}, nil
 }
 
@@ -542,6 +543,22 @@ func (r *Resource) Failed() bool {
 	return r.failed
 }
 
+func (r *Resource) IsCopied() bool {
+	return r.copiedFromId != ""
+}
+
+func (r *Resource) CopiedItemId() string {
+	return strings.Split(r.copiedFromId, "-")[0]
+}
+
+func (r *Resource) CopiedFromId() string {
+	return r.copiedFromId
+}
+
+func (r *Resource) CopiedId() string {
+	return strings.Split(r.copiedFromId, "-")[1]
+}
+
 func (r *Resource) SetPrivate(private bool) {
 	r.isPrivate = private
 }
@@ -608,7 +625,7 @@ func (r *Resource) VideoThumbnail() string {
 	return r.videoThumbnail
 }
 
-func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate bool, mimeTypes []string, processed bool, processedId string, videoDuration int, videoThumbnail, videoThumbnailMimeType string, width, height int, preview, token string, failed bool) *Resource {
+func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate bool, mimeTypes []string, processed bool, processedId string, videoDuration int, videoThumbnail, videoThumbnailMimeType string, width, height int, preview, token string, failed bool, copiedFromId string) *Resource {
 
 	typ, _ := resource.TypeFromInt(tp)
 
@@ -628,6 +645,7 @@ func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate 
 		preview:                preview,
 		token:                  token,
 		failed:                 failed,
+		copiedFromId:           copiedFromId,
 	}
 }
 

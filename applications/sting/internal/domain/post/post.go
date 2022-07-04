@@ -271,6 +271,7 @@ func (p *Post) MakeArchived() error {
 
 func (p *Post) UpdatePostPostedDate(date time.Time) error {
 	p.postedAt = &date
+	p.state = Submitting
 	p.update()
 	return nil
 }

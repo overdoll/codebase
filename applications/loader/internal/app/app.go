@@ -18,6 +18,7 @@ type Commands struct {
 	DeleteResources                    command.DeleteResourcesHandler
 	CopyResourcesAndApplyFilters       command.CopyResourcesAndApplyFiltersHandler
 	UpdateResourcePrivacy              command.UpdateResourcePrivacyHandler
+	ReprocessResource                  command.ReprocessResourceHandler
 }
 
 type Queries struct {

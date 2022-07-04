@@ -53,7 +53,7 @@ func (s LoaderGrpc) CreateOrGetResourcesFromUploads(ctx context.Context, itemId 
 	return resources, nil
 }
 
-func (s LoaderGrpc) CopyResourceIntoImage(ctx context.Context, itemId string, resourceId string, private bool, width uint64, height uint64) (*post.NewResource, error) {
+func (s LoaderGrpc) CopyResourceIntoImage(ctx context.Context, itemId string, resourceId string, private bool, width uint64, height uint64, newItemId string) (*post.NewResource, error) {
 
 	var toApply []*loader.ResourceIdentifier
 
@@ -66,6 +66,7 @@ func (s LoaderGrpc) CopyResourceIntoImage(ctx context.Context, itemId string, re
 		Resources: toApply,
 		Private:   private,
 		Config:    &loader.Config{Height: height, Width: width},
+		NewItemId: newItemId,
 	})
 
 	if err != nil {
@@ -103,6 +104,7 @@ func (s LoaderGrpc) CopyResourcesAndApplyPixelateFilter(ctx context.Context, ite
 		Filters:   &loader.Filters{Pixelate: &loader.PixelateFilter{Size: int64(pixelate)}},
 		Private:   private,
 		Token:     token,
+		NewItemId: itemId,
 	})
 
 	if err != nil {

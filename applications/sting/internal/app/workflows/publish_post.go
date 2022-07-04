@@ -81,12 +81,19 @@ func PublishPost(ctx workflow.Context, input PublishPostInput) error {
 	}
 
 	if !payload.ClubHasBanner {
-		if err := workflow.ExecuteActivity(ctx, a.UpdateClubBanner,
-			activities.UpdateClubBannerInput{
-				PostId: input.PostId,
-			},
-		).Get(ctx, nil); err != nil {
-			logger.Error("failed to update club banner", "Error", err)
+		childWorkflowOptions = workflow.ChildWorkflowOptions{
+			WorkflowID:        "sting.GenerateClubBannerFromPost_" + payload.ClubId,
+			ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
+		}
+
+		childCtx = workflow.WithChildOptions(ctx, childWorkflowOptions)
+
+		if err := workflow.ExecuteChildWorkflow(childCtx, GenerateClubBannerFromPost, GenerateClubBannerFromPostInput{
+			PostId: input.PostId,
+		}).
+			GetChildWorkflowExecution().
+			Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
+			logger.Error("failed to generate club banner from post", "Error", err)
 			return err
 		}
 	}

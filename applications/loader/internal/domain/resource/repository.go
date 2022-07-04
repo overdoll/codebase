@@ -7,9 +7,11 @@ import (
 )
 
 type Repository interface {
+	CreateResource(ctx context.Context, resource *Resource) error
 	GetAndCreateResources(ctx context.Context, upload *Upload) ([]*Resource, error)
 	DeleteResources(ctx context.Context, resources []*Resource) error
 	GetComposer(ctx context.Context) (*tusd.StoreComposer, error)
+	DownloadResourceUpload(ctx context.Context, resource *Resource) (*os.File, error)
 	DownloadResource(ctx context.Context, resource *Resource) (*os.File, error)
 	DownloadVideoThumbnailForResource(ctx context.Context, resource *Resource) (*os.File, error)
 	UploadProcessedResource(ctx context.Context, move []*Move, resource *Resource) error

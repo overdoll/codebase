@@ -39,4 +39,6 @@ type Repository interface {
 	GenerateCategoryBanner(ctx context.Context, requester *principal.Principal, category *post.Category, duration time.Duration) error
 	GenerateSeriesBanner(ctx context.Context, requester *principal.Principal, series *post.Series, duration time.Duration) error
 	GenerateAudienceBanner(ctx context.Context, requester *principal.Principal, audience *post.Audience, duration time.Duration) error
+
+	SendCompletedPixelatedResources(ctx context.Context, post *post.Post) error
 }

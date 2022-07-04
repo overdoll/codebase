@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"overdoll/applications/sting/internal/domain/club"
+	"overdoll/applications/sting/internal/domain/event"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/resource"
 )
@@ -12,12 +13,13 @@ type UpdateResources struct {
 }
 
 type UpdateResourcesHandler struct {
-	pr post.Repository
-	cr club.Repository
+	pr    post.Repository
+	cr    club.Repository
+	event event.Repository
 }
 
-func NewUpdateResourcesHandler(pr post.Repository, cr club.Repository) UpdateResourcesHandler {
-	return UpdateResourcesHandler{pr: pr, cr: cr}
+func NewUpdateResourcesHandler(pr post.Repository, cr club.Repository, event event.Repository) UpdateResourcesHandler {
+	return UpdateResourcesHandler{pr: pr, cr: cr, event: event}
 }
 
 func (h UpdateResourcesHandler) Handle(ctx context.Context, cmd UpdateResources) error {
@@ -56,11 +58,16 @@ func (h UpdateResourcesHandler) Handle(ctx context.Context, cmd UpdateResources)
 			break
 		case "POST_PRIVATE_CONTENT":
 			for itemId, resources := range value {
-				_, err := h.pr.UpdatePostContentOperator(ctx, itemId, func(pending *post.Post) error {
+				pst, err := h.pr.UpdatePostContentOperator(ctx, itemId, func(pending *post.Post) error {
 					return pending.UpdateContentExisting(resources)
 				})
 
 				if err != nil {
+					return err
+				}
+
+				// send a callback to say that the pixelated resource generation was complete, so we can proceed with post submission
+				if err := h.event.SendCompletedPixelatedResources(ctx, pst); err != nil {
 					return err
 				}
 			}

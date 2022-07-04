@@ -38,6 +38,8 @@ message CopyResourcesAndApplyFilterRequest {
   bool private = 3;
   string token = 4;
   optional Config config = 5;
+  overdoll.libraries.SOURCE source = 6;
+  string newItemId = 7;
 }
 
 message CopyResourcesAndApplyFilterResponse {

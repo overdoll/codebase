@@ -2,7 +2,7 @@ package command
 
 import (
 	"context"
-	"os"
+	"overdoll/applications/loader/internal/domain/event"
 	"overdoll/applications/loader/internal/domain/resource"
 )
 
@@ -11,6 +11,8 @@ type CopyResourcesAndApplyFilters struct {
 		ItemId     string
 		ResourceId string
 	}
+	Source    string
+	NewItemId string
 	Filters   *resource.ImageFilters
 	Config    *resource.Config
 	Token     string
@@ -18,11 +20,12 @@ type CopyResourcesAndApplyFilters struct {
 }
 
 type CopyResourcesAndApplyFiltersHandler struct {
-	rr resource.Repository
+	rr    resource.Repository
+	event event.Repository
 }
 
-func NewCopyResourcesAndApplyFiltersHandler(rr resource.Repository) CopyResourcesAndApplyFiltersHandler {
-	return CopyResourcesAndApplyFiltersHandler{rr: rr}
+func NewCopyResourcesAndApplyFiltersHandler(rr resource.Repository, event event.Repository) CopyResourcesAndApplyFiltersHandler {
+	return CopyResourcesAndApplyFiltersHandler{rr: rr, event: event}
 }
 
 func (h CopyResourcesAndApplyFiltersHandler) Handle(ctx context.Context, cmd CopyResourcesAndApplyFilters) ([]*resource.FilteredResource, error) {
@@ -35,48 +38,42 @@ func (h CopyResourcesAndApplyFiltersHandler) Handle(ctx context.Context, cmd Cop
 		resourceIds = append(resourceIds, item.ResourceId)
 	}
 
-	var filteredResources []*resource.FilteredResource
-
 	resources, err := h.rr.GetResourcesByIds(ctx, itemIds, resourceIds)
 
 	if err != nil {
 		return nil, err
 	}
 
+	var filteredResources []*resource.FilteredResource
+
+	var targetResourceIds []string
+
 	for _, target := range resources {
 
-		var file *os.File
-
-		if target.IsVideo() {
-			file, err = h.rr.DownloadVideoThumbnailForResource(ctx, target)
-		} else {
-			file, err = h.rr.DownloadResource(ctx, target)
-		}
-
-		if err != nil {
-			return nil, err
-		}
-
 		// create a new processed resource
-		filtered, err := resource.NewImageUnProcessedResource(target.ItemId(), "image/jpeg", cmd.IsPrivate, target.Height(), target.Width(), target.Preview(), cmd.Token)
+		cp, err := resource.NewImageCopyResource(cmd.NewItemId, "image/jpeg", cmd.IsPrivate, cmd.Token, target.ItemId(), target.ID())
 
 		if err != nil {
 			return nil, err
 		}
 
-		move, err := filtered.ApplyFilters(file, cmd.Config, cmd.Filters)
+		targetResourceIds = append(targetResourceIds, cp.ID())
 
-		filteredResource, err := resource.NewFilteredResource(target, filtered)
+		filteredResource, err := resource.NewFilteredResource(target, cp)
 
 		if err != nil {
 			return nil, err
 		}
 
-		if err := h.rr.UploadProcessedResource(ctx, move, filtered); err != nil {
+		if err := h.rr.CreateResource(ctx, cp); err != nil {
 			return nil, err
 		}
 
 		filteredResources = append(filteredResources, filteredResource)
+	}
+
+	if err := h.event.ProcessResourcesWithFiltersFromCopy(ctx, cmd.NewItemId, targetResourceIds, cmd.Source, cmd.Config, cmd.Filters); err != nil {
+		return nil, err
 	}
 
 	return filteredResources, nil

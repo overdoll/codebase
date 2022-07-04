@@ -39,7 +39,7 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 	}
 
 	for _, target := range resourcesNotProcessed {
-		if err := process(h, ctx, target, config); err != nil {
+		if err := processResource(h, ctx, target, config); err != nil {
 			return err
 		}
 	}
@@ -48,18 +48,18 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 	return nil
 }
 
-func process(h *Activities, ctx context.Context, target *resource.Resource, config *resource.Config) error {
+func processResource(h *Activities, ctx context.Context, target *resource.Resource, config *resource.Config) error {
 
 	// first, we need to download the resource
-	file, err := h.rr.DownloadResource(ctx, target)
-
-	// make sure we always get rid of the file after we're done
-	defer file.Close()
-	defer os.Remove(file.Name())
+	file, err := h.rr.DownloadResourceUpload(ctx, target)
 
 	if err != nil {
 		return err
 	}
+
+	// make sure we always get rid of the file after we're done
+	defer file.Close()
+	defer os.Remove(file.Name())
 
 	// process resource, get result of targets that need to be uploaded
 	targetsToMove, err := target.ProcessResource(file, config)
