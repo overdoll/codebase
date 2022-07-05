@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<813604451f2b23319c8346d742fdc5fa>>
- * @relayHash 4372ff4292227de547734e476c5dce15
+ * @generated SignedSource<<11c7a9f5ee4016b44fc53aa6e1b57538>>
+ * @relayHash 9d228ce3d5ed4b01e25eb89d77537502
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4372ff4292227de547734e476c5dce15
+// @relayRequestID 9d228ce3d5ed4b01e25eb89d77537502
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -54,9 +54,25 @@ v3 = {
   "name": "url",
   "storageKey": null
 },
-v4 = [
-  (v3/*: any*/)
-],
+v4 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ResourceUrl",
+  "kind": "LinkedField",
+  "name": "urls",
+  "plural": true,
+  "selections": [
+    (v3/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "mimeType",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
 v5 = {
   "alias": null,
   "args": null,
@@ -85,7 +101,9 @@ v8 = {
   "kind": "LinkedField",
   "name": "videoThumbnail",
   "plural": false,
-  "selections": (v4/*: any*/),
+  "selections": [
+    (v3/*: any*/)
+  ],
   "storageKey": null
 },
 v9 = {
@@ -237,16 +255,7 @@ return {
                                 "plural": false,
                                 "selections": [
                                   (v1/*: any*/),
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "concreteType": "ResourceUrl",
-                                    "kind": "LinkedField",
-                                    "name": "urls",
-                                    "plural": true,
-                                    "selections": (v4/*: any*/),
-                                    "storageKey": null
-                                  },
+                                  (v4/*: any*/),
                                   (v5/*: any*/),
                                   (v6/*: any*/),
                                   (v7/*: any*/),
@@ -277,25 +286,7 @@ return {
                                   (v7/*: any*/),
                                   (v9/*: any*/),
                                   (v1/*: any*/),
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "concreteType": "ResourceUrl",
-                                    "kind": "LinkedField",
-                                    "name": "urls",
-                                    "plural": true,
-                                    "selections": [
-                                      (v3/*: any*/),
-                                      {
-                                        "alias": null,
-                                        "args": null,
-                                        "kind": "ScalarField",
-                                        "name": "mimeType",
-                                        "storageKey": null
-                                      }
-                                    ],
-                                    "storageKey": null
-                                  },
+                                  (v4/*: any*/),
                                   (v5/*: any*/),
                                   (v6/*: any*/),
                                   (v8/*: any*/)
@@ -479,7 +470,7 @@ return {
     ]
   },
   "params": {
-    "id": "4372ff4292227de547734e476c5dce15",
+    "id": "9d228ce3d5ed4b01e25eb89d77537502",
     "metadata": {},
     "name": "PostModerationQueueQuery",
     "operationKind": "query",

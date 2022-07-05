@@ -22,8 +22,8 @@ go_library(
     name = "localization",
     srcs = [
         "language.go",
+        "localized_data_tag.go",
         "supported_locales.go",
-        "translated_support.go",
         "translation.go",
     ],
     importpath = "overdoll/libraries/localization",

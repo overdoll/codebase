@@ -30,9 +30,11 @@ import * as Fathom from 'fathom-client'
 import '@fontsource/inter/400.css'
 import '@fontsource/inter/600.css'
 import '@fontsource/source-code-pro/400.css'
+import { ConfigurationProvider } from '@//:modules/configuration'
 
 let securityTokenCache = ''
 let globalRelayEnvironment
+let appHeadersCache
 
 const MyApp = ({
   Component,
@@ -41,7 +43,8 @@ const MyApp = ({
   securityToken,
   environment,
   relayStore,
-  translationProps
+  translationProps,
+  appHeaders
 }: CustomPageAppProps): JSX.Element => {
   if (CanUseDOM) {
     securityTokenCache = securityToken
@@ -123,22 +126,24 @@ const MyApp = ({
         <NextQueryParamProvider>
           <CacheProvider value={emotionCache}>
             <I18nProvider i18n={i18n}>
-              <ChakraProvider theme={theme}>
-                <FlashProvider>
-                  <CookiesProvider>
-                    <ReactRelayContainer
-                      environment={environment}
-                      requestProps={requestProps}
-                    >
-                      {(requestProps) => (
-                        <Root {...requestProps} {...pageProps}>
-                          {getLayout(<Component {...requestProps} {...pageProps} />)}
-                        </Root>
-                      )}
-                    </ReactRelayContainer>
-                  </CookiesProvider>
-                </FlashProvider>
-              </ChakraProvider>
+              <ConfigurationProvider headers={appHeaders}>
+                <ChakraProvider theme={theme}>
+                  <FlashProvider>
+                    <CookiesProvider>
+                      <ReactRelayContainer
+                        environment={environment}
+                        requestProps={requestProps}
+                      >
+                        {(requestProps) => (
+                          <Root {...requestProps} {...pageProps}>
+                            {getLayout(<Component {...requestProps} {...pageProps} />)}
+                          </Root>
+                        )}
+                      </ReactRelayContainer>
+                    </CookiesProvider>
+                  </FlashProvider>
+                </ChakraProvider>
+              </ConfigurationProvider>
             </I18nProvider>
           </CacheProvider>
         </NextQueryParamProvider>
@@ -155,6 +160,9 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
   let securityToken
   let environment
   let relayStore
+  let appHeaders = {
+    Accept: undefined
+  }
 
   if (app.ctx.locale == null) {
     app.ctx.locale = 'en'
@@ -165,11 +173,13 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
       securityToken = await getOrCreateSecurityToken(app.ctx)
     }
 
+    appHeaders.Accept = app.ctx.req.headers.accept
     environment = createEnvironment(serverFetch(app.ctx.req, app.ctx.res), null)
     app.ctx.cookies = new Cookies(app.ctx.req.headers.cookie)
   } else {
     securityToken = securityTokenCache
     environment = globalRelayEnvironment
+    appHeaders = appHeadersCache
     app.ctx.cookies = new Cookies()
   }
 
@@ -243,7 +253,8 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
     securityToken,
     environment,
     relayStore,
-    translationProps
+    translationProps,
+    appHeaders
   }
 
   // do a prepass to collect all queries and wait for them to complete

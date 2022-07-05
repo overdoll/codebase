@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<62ca298c8de1d9288e3e3e05dc90ba60>>
- * @relayHash 1375262ff63017af3d52f462e6b190b7
+ * @generated SignedSource<<02e0d0b964a1a2c6fbc86de5be24952c>>
+ * @relayHash 4002b4bb8807094b4d8423ddb48c60f8
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 1375262ff63017af3d52f462e6b190b7
+// @relayRequestID 4002b4bb8807094b4d8423ddb48c60f8
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -154,27 +154,26 @@ v14 = {
   "name": "preview",
   "storageKey": null
 },
-v15 = [
-  (v10/*: any*/)
-],
-v16 = {
+v15 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
   "kind": "LinkedField",
   "name": "videoThumbnail",
   "plural": false,
-  "selections": (v15/*: any*/),
+  "selections": [
+    (v10/*: any*/)
+  ],
   "storageKey": null
 },
-v17 = {
+v16 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "slug",
   "storageKey": null
 },
-v18 = {
+v17 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
@@ -183,25 +182,16 @@ v18 = {
   "plural": false,
   "selections": [
     (v8/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "ResourceUrl",
-      "kind": "LinkedField",
-      "name": "urls",
-      "plural": true,
-      "selections": (v15/*: any*/),
-      "storageKey": null
-    },
+    (v11/*: any*/),
     (v12/*: any*/),
     (v13/*: any*/),
     (v14/*: any*/),
-    (v16/*: any*/),
+    (v15/*: any*/),
     (v9/*: any*/)
   ],
   "storageKey": null
 },
-v19 = [
+v18 = [
   (v7/*: any*/),
   (v8/*: any*/)
 ];
@@ -347,7 +337,7 @@ return {
                               (v12/*: any*/),
                               (v13/*: any*/),
                               (v14/*: any*/),
-                              (v16/*: any*/)
+                              (v15/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -377,7 +367,7 @@ return {
                         "name": "club",
                         "plural": false,
                         "selections": [
-                          (v17/*: any*/),
+                          (v16/*: any*/),
                           (v8/*: any*/),
                           {
                             "alias": null,
@@ -386,7 +376,7 @@ return {
                             "name": "name",
                             "storageKey": null
                           },
-                          (v18/*: any*/),
+                          (v17/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -430,7 +420,7 @@ return {
                         "kind": "LinkedField",
                         "name": "viewerReport",
                         "plural": false,
-                        "selections": (v19/*: any*/),
+                        "selections": (v18/*: any*/),
                         "storageKey": null
                       },
                       {
@@ -440,7 +430,7 @@ return {
                         "kind": "LinkedField",
                         "name": "viewerLiked",
                         "plural": false,
-                        "selections": (v19/*: any*/),
+                        "selections": (v18/*: any*/),
                         "storageKey": null
                       },
                       {
@@ -496,7 +486,7 @@ return {
             "name": "posts"
           },
           (v8/*: any*/),
-          (v17/*: any*/),
+          (v16/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -574,8 +564,8 @@ return {
                 "selections": [
                   (v8/*: any*/),
                   (v3/*: any*/),
-                  (v17/*: any*/),
-                  (v18/*: any*/)
+                  (v16/*: any*/),
+                  (v17/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -588,7 +578,7 @@ return {
     ]
   },
   "params": {
-    "id": "1375262ff63017af3d52f462e6b190b7",
+    "id": "4002b4bb8807094b4d8423ddb48c60f8",
     "metadata": {},
     "name": "SearchCategoryQuery",
     "operationKind": "query",

@@ -37,6 +37,7 @@ const NavLink = ({
 
   return (
     <Link
+      prefetch
       href={href}
       passHref
       {...rest}

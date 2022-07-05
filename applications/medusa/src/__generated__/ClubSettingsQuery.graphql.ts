@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<df11c5428f0b21f4a72e1a383559f6a4>>
- * @relayHash 23be4fdd7381f9285daa869845e5c309
+ * @generated SignedSource<<5a433d0f9552a3ccd20f8da046b8f355>>
+ * @relayHash 629bade1d15157abefca45657fbf5bb4
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 23be4fdd7381f9285daa869845e5c309
+// @relayRequestID 629bade1d15157abefca45657fbf5bb4
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -76,15 +76,13 @@ v5 = {
   "name": "viewerIsOwner",
   "storageKey": null
 },
-v6 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "url",
-    "storageKey": null
-  }
-],
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
 v7 = {
   "alias": null,
   "args": null,
@@ -172,7 +170,16 @@ return {
                 "kind": "LinkedField",
                 "name": "urls",
                 "plural": true,
-                "selections": (v6/*: any*/),
+                "selections": [
+                  (v6/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "mimeType",
+                    "storageKey": null
+                  }
+                ],
                 "storageKey": null
               },
               {
@@ -203,7 +210,9 @@ return {
                 "kind": "LinkedField",
                 "name": "videoThumbnail",
                 "plural": false,
-                "selections": (v6/*: any*/),
+                "selections": [
+                  (v6/*: any*/)
+                ],
                 "storageKey": null
               },
               {
@@ -254,7 +263,7 @@ return {
     ]
   },
   "params": {
-    "id": "23be4fdd7381f9285daa869845e5c309",
+    "id": "629bade1d15157abefca45657fbf5bb4",
     "metadata": {},
     "name": "ClubSettingsQuery",
     "operationKind": "query",

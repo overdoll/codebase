@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b5ecbfbfc74a81bf15e96996931a1b0d>>
- * @relayHash d6a65edc9adb18adc8a3680a2a656a1f
+ * @generated SignedSource<<ddb994827b085b899fe66e3f925e6867>>
+ * @relayHash 5f4a95df06e30a49801a7cd2b2123156
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d6a65edc9adb18adc8a3680a2a656a1f
+// @relayRequestID 5f4a95df06e30a49801a7cd2b2123156
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -63,15 +63,13 @@ v4 = {
   "name": "supporterSince",
   "storageKey": null
 },
-v5 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "url",
-    "storageKey": null
-  }
-],
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
 v6 = {
   "alias": null,
   "args": null,
@@ -88,7 +86,16 @@ v7 = [
     "kind": "LinkedField",
     "name": "urls",
     "plural": true,
-    "selections": (v5/*: any*/),
+    "selections": [
+      (v5/*: any*/),
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "mimeType",
+        "storageKey": null
+      }
+    ],
     "storageKey": null
   },
   {
@@ -119,7 +126,9 @@ v7 = [
     "kind": "LinkedField",
     "name": "videoThumbnail",
     "plural": false,
-    "selections": (v5/*: any*/),
+    "selections": [
+      (v5/*: any*/)
+    ],
     "storageKey": null
   },
   (v6/*: any*/)
@@ -645,7 +654,7 @@ return {
     ]
   },
   "params": {
-    "id": "d6a65edc9adb18adc8a3680a2a656a1f",
+    "id": "5f4a95df06e30a49801a7cd2b2123156",
     "metadata": {},
     "name": "StaffAccountClubSupporterSubscriptionQuery",
     "operationKind": "query",

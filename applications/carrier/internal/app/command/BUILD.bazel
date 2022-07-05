@@ -15,6 +15,7 @@ go_library(
         "club_supporter_subscription_refunded.go",
         "club_suspended.go",
         "confirm_account_email.go",
+        "moderator_post_in_queue.go",
         "new_club_supporter_subscription.go",
         "new_login_token.go",
         "services.go",

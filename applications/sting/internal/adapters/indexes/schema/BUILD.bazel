@@ -12,6 +12,7 @@ go_library(
         "posts.json",
         "search_history.json",
         "series.json",
+        "topics.json",
     ],
     importpath = "overdoll/applications/sting/internal/adapters/indexes/schema",
     visibility = ["//applications/sting:__subpackages__"],

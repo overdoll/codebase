@@ -3,14 +3,20 @@ import { useFragment } from 'react-relay'
 import type { ImageSnippetFragment$key } from '@//:artifacts/ImageSnippetFragment.graphql'
 import NextImage from '../NextImage/NextImage'
 import { ImageProps } from 'next/image'
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { Box, Flex } from '@chakra-ui/react'
 import ImageError from '../NextImage/ImageError/ImageError'
 import CanUseDOM from '../../../operations/CanUseDOM'
+import { useHasMimeTypeAcceptHeader } from '../../../configuration'
+import { useHydrate } from '../../../hydrate'
 
-interface Props extends Omit<ImageProps, 'src' | 'width' | 'height' | 'layout' | 'alt'> {
-  query: ImageSnippetFragment$key | null
+export interface ImageSnippetCoverProps {
   cover?: boolean
+  containCover?: boolean
+}
+
+interface Props extends Omit<ImageProps, 'src' | 'width' | 'height' | 'layout' | 'alt'>, ImageSnippetCoverProps {
+  query: ImageSnippetFragment$key | null
   tinyError?: boolean
 }
 
@@ -19,6 +25,7 @@ const Fragment = graphql`
     id
     urls {
       url
+      mimeType
     }
     width
     height
@@ -32,6 +39,7 @@ export default function ImageSnippet ({
   query,
   cover,
   tinyError,
+  containCover,
   ...rest
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
@@ -50,24 +58,36 @@ export default function ImageSnippet ({
 
   const tiniestImage = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
 
+  const hasWebp = useHasMimeTypeAcceptHeader('image/webp')
+
   const IMAGE_PROPS = {
     alt: '',
     width: data?.width,
     height: data?.height,
     style: {
       backgroundColor: previewBackground,
-      userSelect: 'none' as any
+      userSelect: 'none' as any,
+      objectFit: determineCover ? (containCover === true ? 'contain' : 'cover') : undefined as any
     }
   }
 
-  const displayUrl = (currentErrorCount): string => {
-    if (currentErrorCount >= errorLimit || data?.urls == null) {
+  const isHydrated = useHydrate()
+
+  const displayUrl = useMemo<string>(() => {
+    if (errorCount >= errorLimit || data?.urls == null) {
       // return tiniest 1x1 base64 image as fallback because nextjs image doesn't like empty src values
       return tiniestImage
     }
 
-    return data?.urls[errorCount].url
-  }
+    let targetUrl = data?.urls[errorCount]
+
+    // display the next url if we don't have webp enabled for this client
+    if (targetUrl.mimeType === 'image/webp' && !hasWebp) {
+      targetUrl = data?.urls[errorCount + 1]
+    }
+
+    return targetUrl.url
+  }, [errorCount])
 
   const onError = (): void => {
     setErrorCount(x => {
@@ -103,7 +123,7 @@ export default function ImageSnippet ({
           h='100%'
         >
           <NextImage
-            loading='lazy'
+            loading={isHydrated ? 'lazy' : 'eager'}
             {...IMAGE_PROPS}
             src={tiniestImage}
             {...rest}
@@ -119,10 +139,10 @@ export default function ImageSnippet ({
   return (
     <Box position={determineCover ? 'relative' : 'static'} w='100%' h='100%' display='block'>
       <NextImage
-        loading='lazy'
+        loading={isHydrated ? 'lazy' : 'eager'}
         ref={ref}
         {...IMAGE_PROPS}
-        src={displayUrl(errorCount)}
+        src={displayUrl}
         onLoadingComplete={onLoadingComplete}
         onError={onError}
         {...rest}

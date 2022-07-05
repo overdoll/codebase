@@ -41,7 +41,6 @@ go_library(
         "un_suspend_club.go",
         "un_terminate_club.go",
         "unmark_club_member_supporter.go",
-        "update_audience_banner.go",
         "update_category_banner.go",
         "update_character_banner.go",
         "update_club_banner.go",

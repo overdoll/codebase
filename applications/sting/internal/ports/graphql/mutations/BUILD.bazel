@@ -12,6 +12,7 @@ go_library(
         "post_like.go",
         "resolvers.go",
         "series.go",
+        "topic.go",
     ],
     importpath = "overdoll/applications/sting/internal/ports/graphql/mutations",
     visibility = ["//visibility:public"],

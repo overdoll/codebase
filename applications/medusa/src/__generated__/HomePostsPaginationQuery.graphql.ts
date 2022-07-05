@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6075fe57880bf87523742fccc36229e8>>
- * @relayHash 923b8ddc16eaaa5f978e77dac8b81361
+ * @generated SignedSource<<64baedbb752dff94447a9ea17097177e>>
+ * @relayHash c0b1f0ee313d5ae59f1414d5059f6a19
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 923b8ddc16eaaa5f978e77dac8b81361
+// @relayRequestID c0b1f0ee313d5ae59f1414d5059f6a19
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -81,27 +81,43 @@ v5 = {
 v6 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "width",
+  "concreteType": "ResourceUrl",
+  "kind": "LinkedField",
+  "name": "urls",
+  "plural": true,
+  "selections": [
+    (v5/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "mimeType",
+      "storageKey": null
+    }
+  ],
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "height",
+  "name": "width",
   "storageKey": null
 },
 v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "height",
+  "storageKey": null
+},
+v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "preview",
   "storageKey": null
 },
-v9 = [
-  (v5/*: any*/)
-],
 v10 = {
   "alias": null,
   "args": null,
@@ -109,7 +125,9 @@ v10 = {
   "kind": "LinkedField",
   "name": "videoThumbnail",
   "plural": false,
-  "selections": (v9/*: any*/),
+  "selections": [
+    (v5/*: any*/)
+  ],
   "storageKey": null
 },
 v11 = [
@@ -197,28 +215,10 @@ return {
                         "selections": [
                           (v4/*: any*/),
                           (v3/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "ResourceUrl",
-                            "kind": "LinkedField",
-                            "name": "urls",
-                            "plural": true,
-                            "selections": [
-                              (v5/*: any*/),
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "mimeType",
-                                "storageKey": null
-                              }
-                            ],
-                            "storageKey": null
-                          },
                           (v6/*: any*/),
                           (v7/*: any*/),
                           (v8/*: any*/),
+                          (v9/*: any*/),
                           (v10/*: any*/)
                         ],
                         "storageKey": null
@@ -273,19 +273,10 @@ return {
                         "plural": false,
                         "selections": [
                           (v3/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "ResourceUrl",
-                            "kind": "LinkedField",
-                            "name": "urls",
-                            "plural": true,
-                            "selections": (v9/*: any*/),
-                            "storageKey": null
-                          },
                           (v6/*: any*/),
                           (v7/*: any*/),
                           (v8/*: any*/),
+                          (v9/*: any*/),
                           (v10/*: any*/),
                           (v4/*: any*/)
                         ],
@@ -400,7 +391,7 @@ return {
     ]
   },
   "params": {
-    "id": "923b8ddc16eaaa5f978e77dac8b81361",
+    "id": "c0b1f0ee313d5ae59f1414d5059f6a19",
     "metadata": {},
     "name": "HomePostsPaginationQuery",
     "operationKind": "query",

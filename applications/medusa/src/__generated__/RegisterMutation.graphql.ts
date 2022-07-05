@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1033a3b6ec10e8b148d061d6d1a065f6>>
- * @relayHash e96af7caa470aee60417c0e5f21bfdab
+ * @generated SignedSource<<0f93a4aa942e5f37f125358f23814133>>
+ * @relayHash 3a0058e9ecb0fe0eddc2de0b201d902d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e96af7caa470aee60417c0e5f21bfdab
+// @relayRequestID 3a0058e9ecb0fe0eddc2de0b201d902d
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -106,15 +106,13 @@ v8 = {
   "name": "isArtist",
   "storageKey": null
 },
-v9 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "url",
-    "storageKey": null
-  }
-];
+v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -221,7 +219,16 @@ return {
                     "kind": "LinkedField",
                     "name": "urls",
                     "plural": true,
-                    "selections": (v9/*: any*/),
+                    "selections": [
+                      (v9/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "mimeType",
+                        "storageKey": null
+                      }
+                    ],
                     "storageKey": null
                   },
                   {
@@ -252,7 +259,9 @@ return {
                     "kind": "LinkedField",
                     "name": "videoThumbnail",
                     "plural": false,
-                    "selections": (v9/*: any*/),
+                    "selections": [
+                      (v9/*: any*/)
+                    ],
                     "storageKey": null
                   },
                   {
@@ -281,7 +290,7 @@ return {
     ]
   },
   "params": {
-    "id": "e96af7caa470aee60417c0e5f21bfdab",
+    "id": "3a0058e9ecb0fe0eddc2de0b201d902d",
     "metadata": {},
     "name": "RegisterMutation",
     "operationKind": "mutation",

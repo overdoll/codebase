@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a19fd11978e90c8e589ef52cb6237496>>
- * @relayHash 15c451256b2d4b35738f1ecdb2085024
+ * @generated SignedSource<<22df724c2510a90c7150159b658d484b>>
+ * @relayHash 458915652ff9e133802432e855f61cf3
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 15c451256b2d4b35738f1ecdb2085024
+// @relayRequestID 458915652ff9e133802432e855f61cf3
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -141,15 +141,13 @@ v11 = {
   "selections": (v9/*: any*/),
   "storageKey": null
 },
-v12 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "url",
-    "storageKey": null
-  }
-];
+v12 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -260,7 +258,16 @@ return {
                     "kind": "LinkedField",
                     "name": "urls",
                     "plural": true,
-                    "selections": (v12/*: any*/),
+                    "selections": [
+                      (v12/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "mimeType",
+                        "storageKey": null
+                      }
+                    ],
                     "storageKey": null
                   },
                   {
@@ -291,7 +298,9 @@ return {
                     "kind": "LinkedField",
                     "name": "videoThumbnail",
                     "plural": false,
-                    "selections": (v12/*: any*/),
+                    "selections": [
+                      (v12/*: any*/)
+                    ],
                     "storageKey": null
                   },
                   {
@@ -320,7 +329,7 @@ return {
     ]
   },
   "params": {
-    "id": "15c451256b2d4b35738f1ecdb2085024",
+    "id": "458915652ff9e133802432e855f61cf3",
     "metadata": {},
     "name": "RecoveryCodeMutation",
     "operationKind": "mutation",

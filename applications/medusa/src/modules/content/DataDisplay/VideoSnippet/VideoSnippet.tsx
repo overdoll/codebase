@@ -4,6 +4,7 @@ import type { VideoSnippetFragment$key } from '@//:artifacts/VideoSnippetFragmen
 import NextImage from '../NextImage/NextImage'
 import { ImageProps } from 'next/image'
 import { Box } from '@chakra-ui/react'
+import { useHydrate } from '../../../hydrate'
 
 interface Props extends Omit<ImageProps, 'src' | 'width' | 'height' | 'layout' | 'alt'> {
   innerRef?: () => void
@@ -25,6 +26,8 @@ export default function VideoSnippet ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
+  const isHydrated = useHydrate()
+
   const previewBackground = data?.preview != null && data?.preview !== '' ? data?.preview : 'gray.800'
 
   return (
@@ -37,7 +40,7 @@ export default function VideoSnippet ({
     >
       <NextImage
         alt=''
-        loading='lazy'
+        loading={isHydrated ? 'lazy' : 'eager'}
         style={{
           backgroundColor: previewBackground,
           userSelect: 'none'
