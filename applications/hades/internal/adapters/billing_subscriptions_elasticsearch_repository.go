@@ -229,8 +229,8 @@ func (r BillingCassandraElasticsearchRepository) SearchAccountClubSupporterSubsc
 
 func (r BillingCassandraElasticsearchRepository) IndexAllAccountClubSupporterSubscriptions(ctx context.Context) error {
 
-	scanner := database.New(r.session,
-		database.Config{
+	scanner := database.NewScan(r.session,
+		database.ScanConfig{
 			NodesInCluster: 1,
 			CoresInNode:    2,
 			SmudgeFactor:   3,

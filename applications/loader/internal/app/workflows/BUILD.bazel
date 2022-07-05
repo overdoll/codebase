@@ -6,6 +6,7 @@ go_library(
         "delete_resources.go",
         "options.go",
         "process_resources.go",
+        "process_resources_with_filters_from_copy.go",
     ],
     importpath = "overdoll/applications/loader/internal/app/workflows",
     visibility = ["//applications/loader:__subpackages__"],

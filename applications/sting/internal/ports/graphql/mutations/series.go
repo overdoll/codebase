@@ -9,31 +9,6 @@ import (
 	"overdoll/libraries/principal"
 )
 
-func (r *MutationResolver) GenerateSeriesBanner(ctx context.Context, input types.GenerateSeriesBannerInput) (*types.GenerateSeriesBannerPayload, error) {
-
-	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return nil, err
-	}
-
-	series, err := r.App.Commands.GenerateSeriesBanner.
-		Handle(
-			ctx,
-			command.GenerateSeriesBanner{
-				Principal: principal.FromContext(ctx),
-				SeriesId:  input.ID.GetID(),
-				Duration:  int64(input.Duration),
-			},
-		)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.GenerateSeriesBannerPayload{
-		Series: types.MarshalSeriesToGraphQL(ctx, series),
-	}, err
-}
-
 func (r *MutationResolver) CreateSeries(ctx context.Context, input types.CreateSeriesInput) (*types.CreateSeriesPayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {

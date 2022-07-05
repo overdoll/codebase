@@ -4,13 +4,10 @@ import (
 	"context"
 	"overdoll/applications/sting/internal/domain/event"
 	"overdoll/applications/sting/internal/domain/post"
-	"overdoll/libraries/principal"
 	"time"
 )
 
 type GenerateAudienceBanner struct {
-	Principal *principal.Principal
-
 	AudienceId string
 	Duration   int64
 }
@@ -24,17 +21,17 @@ func NewGenerateAudienceBannerHandler(pr post.Repository, event event.Repository
 	return GenerateAudienceBannerHandler{pr: pr, event: event}
 }
 
-func (h GenerateAudienceBannerHandler) Handle(ctx context.Context, cmd GenerateAudienceBanner) (*post.Audience, error) {
+func (h GenerateAudienceBannerHandler) Handle(ctx context.Context, cmd GenerateAudienceBanner) error {
 
 	audience, err := h.pr.GetAudienceById(ctx, cmd.AudienceId)
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	if err := h.event.GenerateAudienceBanner(ctx, cmd.Principal, audience, time.Duration(cmd.Duration)); err != nil {
-		return nil, err
+	if err := h.event.GenerateAudienceBanner(ctx, audience, time.Duration(cmd.Duration)); err != nil {
+		return err
 	}
 
-	return audience, nil
+	return nil
 }

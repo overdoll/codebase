@@ -6,6 +6,7 @@ import (
 	"os"
 	"overdoll/applications/loader/internal/adapters/migrations"
 	"overdoll/applications/loader/internal/adapters/seeders"
+	"overdoll/applications/loader/internal/app"
 	"overdoll/applications/loader/internal/ports"
 	"overdoll/applications/loader/internal/service"
 	loader "overdoll/applications/loader/proto"
@@ -28,6 +29,7 @@ func init() {
 	config.Read("applications/loader")
 
 	rootCmd.AddCommand(database.CreateDatabaseCommands(migrations.MigrateConfig, seeders.SeederConfig))
+
 	rootCmd.AddCommand(&cobra.Command{
 		Use: "worker",
 		Run: RunWorker,
@@ -40,6 +42,8 @@ func init() {
 		Use: "grpc",
 		Run: RunGrpc,
 	})
+
+	rootCmd.AddCommand(AddCommands()...)
 }
 
 func main() {
@@ -53,6 +57,13 @@ func Run(cmd *cobra.Command, args []string) {
 	go RunHttp(cmd, args)
 	go RunWorker(cmd, args)
 	RunGrpc(cmd, args)
+}
+
+func AddCommands() []*cobra.Command {
+	return ports.InitializeCommands(func() *app.Application {
+		application, _ := service.NewApplication(context.Background())
+		return application
+	})
 }
 
 func RunWorker(cmd *cobra.Command, args []string) {

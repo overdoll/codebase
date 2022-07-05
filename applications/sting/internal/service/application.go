@@ -92,16 +92,17 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 
 	return &app.Application{
 		Commands: app.Commands{
-			UpdateResources: command.NewUpdateResourcesHandler(postRepo, clubRepo),
-			CreatePost:      command.NewCreatePostHandler(postRepo, clubRepo),
-			PublishPost:     command.NewPublishPostHandler(postRepo, eventRepo),
-			DiscardPost:     command.NewDiscardPostHandler(postRepo, eventRepo),
-			RejectPost:      command.NewRejectPostHandler(postRepo),
-			SubmitPost:      command.NewSubmitPostHandler(postRepo, clubRepo, eventRepo),
-			RemovePost:      command.NewRemovePostHandler(postRepo, eventRepo),
-			DeletePost:      command.NewDeletePostHandler(postRepo, eventRepo),
-			ArchivePost:     command.NewArchivePostHandler(postRepo, eventRepo),
-			UnArchivePost:   command.NewUnArchivePostHandler(postRepo, eventRepo),
+			UpdateResources:    command.NewUpdateResourcesHandler(postRepo, clubRepo, eventRepo),
+			CreatePost:         command.NewCreatePostHandler(postRepo, clubRepo),
+			PublishPost:        command.NewPublishPostHandler(postRepo, eventRepo),
+			DiscardPost:        command.NewDiscardPostHandler(postRepo, eventRepo),
+			RejectPost:         command.NewRejectPostHandler(postRepo),
+			SubmitPost:         command.NewSubmitPostHandler(postRepo, clubRepo, eventRepo),
+			RemovePost:         command.NewRemovePostHandler(postRepo, eventRepo),
+			DeletePost:         command.NewDeletePostHandler(postRepo, eventRepo),
+			ArchivePost:        command.NewArchivePostHandler(postRepo, eventRepo),
+			UnArchivePost:      command.NewUnArchivePostHandler(postRepo, eventRepo),
+			GenerateClubBanner: command.NewGenerateClubBannerHandler(postRepo, eventRepo),
 
 			DisableClubSupporterOnlyPosts: command.NewDisableClubSupporterOnlyPostsHandler(clubRepo),
 			EnableClubSupporterOnlyPosts:  command.NewEnableClubSupporterOnlyPostsHandler(clubRepo),

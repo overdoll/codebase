@@ -24,13 +24,7 @@ func NewUpdateClubThumbnailHandler(cr club.Repository, loader LoaderService) Upd
 
 func (h UpdateClubThumbnailHandler) Handle(ctx context.Context, cmd UpdateClubThumbnail) (*club.Club, error) {
 
-	var oldResourceId string
-
 	clb, err := h.cr.UpdateClubThumbnail(ctx, cmd.ClubId, func(clb *club.Club) error {
-
-		if clb.ThumbnailResource() != nil {
-			oldResourceId = clb.ThumbnailResource().ID()
-		}
 
 		// create resources from content
 		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.ClubId, []string{cmd.Thumbnail}, false, "CLUB", true, 100, 100)
@@ -44,12 +38,6 @@ func (h UpdateClubThumbnailHandler) Handle(ctx context.Context, cmd UpdateClubTh
 
 	if err != nil {
 		return nil, err
-	}
-
-	if oldResourceId != "" {
-		if err := h.loader.DeleteResources(ctx, cmd.ClubId, []string{oldResourceId}); err != nil {
-			return nil, err
-		}
 	}
 
 	return clb, nil

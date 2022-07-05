@@ -75,6 +75,7 @@ type Commands struct {
 	PromoteClubSlugAliasToDefault command.PromoteClubSlugAliasToDefaultHandler
 	JoinClub                      command.JoinClubHandler
 	LeaveClub                     command.LeaveClubHandler
+	GenerateClubBanner            command.GenerateClubBannerHandler
 
 	AddClubSupporter    command.AddClubSupporterHandler
 	RemoveClubSupporter command.RemoveClubSupporterHandler

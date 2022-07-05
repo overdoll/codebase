@@ -173,8 +173,8 @@ func (r ClubCassandraElasticsearchRepository) indexClubMember(ctx context.Contex
 
 func (r ClubCassandraElasticsearchRepository) IndexAllClubMembers(ctx context.Context) error {
 
-	scanner := database.New(r.session,
-		database.Config{
+	scanner := database.NewScan(r.session,
+		database.ScanConfig{
 			NodesInCluster: 1,
 			CoresInNode:    2,
 			SmudgeFactor:   3,

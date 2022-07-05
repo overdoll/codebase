@@ -22,6 +22,7 @@ func NewWorker(app *app.Application) (worker.Worker, func()) {
 
 	w.RegisterWorkflow(workflows.ProcessResources)
 	w.RegisterWorkflow(workflows.DeleteResources)
+	w.RegisterWorkflow(workflows.ProcessResourcesWithFiltersFromCopy)
 
 	// register activities with our struct
 	w.RegisterActivity(app.Activities)

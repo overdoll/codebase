@@ -53,7 +53,7 @@ func (s LoaderGrpc) CreateOrGetResourcesFromUploads(ctx context.Context, itemId 
 	return resources, nil
 }
 
-func (s LoaderGrpc) CopyResourceIntoImage(ctx context.Context, itemId string, resourceId string, private bool, width uint64, height uint64, newItemId string) (*post.NewResource, error) {
+func (s LoaderGrpc) CopyResourceIntoImage(ctx context.Context, itemId string, resourceId string, private bool, token string, width uint64, height uint64, newItemId string) (*post.NewResource, error) {
 
 	var toApply []*loader.ResourceIdentifier
 
@@ -67,6 +67,8 @@ func (s LoaderGrpc) CopyResourceIntoImage(ctx context.Context, itemId string, re
 		Private:   private,
 		Config:    &loader.Config{Height: height, Width: width},
 		NewItemId: newItemId,
+		Token:     token,
+		Source:    proto.SOURCE_STING,
 	})
 
 	if err != nil {

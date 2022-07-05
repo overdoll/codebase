@@ -12,7 +12,7 @@ type ParleyService interface {
 }
 
 type LoaderService interface {
-	CreateOrGetResourcesFromUploads(context.Context, string, []string, bool, string, bool) ([]*resource.Resource, error)
+	CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string, private bool, token string, onlyImages bool, width uint64, height uint64) ([]*resource.Resource, error)
 	DeleteResources(context.Context, string, []string) error
 	CopyResourceIntoImage(ctx context.Context, itemId string, resourceId string, private bool, token string, width, height uint64, newItemId string) (*post.NewResource, error)
 	CopyResourcesAndApplyPixelateFilter(ctx context.Context, itemId string, resourceIds []string, pixelate int, private bool, token string) ([]*post.NewResource, error)

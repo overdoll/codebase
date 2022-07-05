@@ -3,9 +3,10 @@ import { useFragment } from 'react-relay'
 import type { ImageSnippetFragment$key } from '@//:artifacts/ImageSnippetFragment.graphql'
 import NextImage from '../NextImage/NextImage'
 import { ImageProps } from 'next/image'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Box, Flex } from '@chakra-ui/react'
 import ImageError from '../NextImage/ImageError/ImageError'
+import CanUseDOM from '../../../operations/CanUseDOM'
 
 interface Props extends Omit<ImageProps, 'src' | 'width' | 'height' | 'layout' | 'alt'> {
   query: ImageSnippetFragment$key | null
@@ -35,6 +36,8 @@ export default function ImageSnippet ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
+  const ref = useRef(null)
+
   const captureId = data?.id as string
 
   const [errorCount, setErrorCount] = useState(errorCaptureCache.has(captureId) ? errorCaptureCache.get(captureId) as number : 0)
@@ -49,10 +52,8 @@ export default function ImageSnippet ({
 
   const IMAGE_PROPS = {
     alt: '',
-    layout: determineCover ? 'fill' : 'responsive' as any,
-    width: determineCover ? undefined : data?.width,
-    height: determineCover ? undefined : data?.height,
-    objectFit: determineCover ? 'cover' : undefined as any,
+    width: data?.width,
+    height: data?.height,
     style: {
       backgroundColor: previewBackground,
       userSelect: 'none' as any
@@ -68,14 +69,27 @@ export default function ImageSnippet ({
     return data?.urls[errorCount].url
   }
 
-  const onErrorCapture = (): void => {
+  const onError = (): void => {
     setErrorCount(x => {
       const newValue = x + 1
 
       // add to error capture cache so that re-renders of the same image won't try to re-load the image
-      errorCaptureCache.set(captureId, newValue)
+      if (CanUseDOM) {
+        errorCaptureCache.set(captureId, newValue)
+      }
+
       return newValue
     })
+  }
+
+  const onLoadingComplete = ({
+    naturalWidth,
+    naturalHeight
+  }): void => {
+    // if an error occurs on the server-side, do an onError call here
+    if (naturalHeight === 0) {
+      onError()
+    }
   }
 
   if (errorCount >= errorLimit) {
@@ -89,6 +103,7 @@ export default function ImageSnippet ({
           h='100%'
         >
           <NextImage
+            loading='lazy'
             {...IMAGE_PROPS}
             src={tiniestImage}
             {...rest}
@@ -104,9 +119,12 @@ export default function ImageSnippet ({
   return (
     <Box position={determineCover ? 'relative' : 'static'} w='100%' h='100%' display='block'>
       <NextImage
+        loading='lazy'
+        ref={ref}
         {...IMAGE_PROPS}
         src={displayUrl(errorCount)}
-        onErrorCapture={onErrorCapture}
+        onLoadingComplete={onLoadingComplete}
+        onError={onError}
         {...rest}
       />
     </Box>

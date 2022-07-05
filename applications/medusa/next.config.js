@@ -179,10 +179,12 @@ const moduleExports = withBundleAnalyzer({
     locales: ['en'],
     defaultLocale: 'en'
   },
+  output: 'standalone',
   experimental: {
-    runtime: 'nodejs',
-    concurrentFeatures: true,
-    outputStandalone: true
+    images: {
+      unoptimized: true,
+      allowFutureImage: true
+    }
   },
   serverRuntimeConfig: {
     projectRoot: __dirname

@@ -5,4 +5,5 @@ go_library(
     srcs = ["repository.go"],
     importpath = "overdoll/applications/loader/internal/domain/event",
     visibility = ["//applications/loader:__subpackages__"],
+    deps = ["//applications/loader/internal/domain/resource"],
 )

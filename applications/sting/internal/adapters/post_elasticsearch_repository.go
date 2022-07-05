@@ -687,8 +687,8 @@ func (r PostsCassandraElasticsearchRepository) SearchPosts(ctx context.Context, 
 
 func (r PostsCassandraElasticsearchRepository) IndexAllPosts(ctx context.Context) error {
 
-	scanner := database.New(r.session,
-		database.Config{
+	scanner := database.NewScan(r.session,
+		database.ScanConfig{
 			NodesInCluster: 1,
 			CoresInNode:    2,
 			SmudgeFactor:   3,

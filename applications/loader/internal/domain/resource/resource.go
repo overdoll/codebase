@@ -54,6 +54,8 @@ var extensionsMap = map[string]string{
 	"video/mp4":  ".mp4",
 	"image/png":  ".png",
 	"image/webp": ".webp",
+	"image/jpg":  ".jpg",
+	"image/jpeg": ".jpg",
 }
 
 func init() {
@@ -170,7 +172,7 @@ func (r *Resource) ApplyFilters(file *os.File, config *Config, filters *ImageFil
 	defer file.Close()
 	defer os.Remove(file.Name())
 
-	src, _, err := image.Decode(file)
+	src, err := jpeg.Decode(file)
 
 	if err != nil {
 		return nil, err
@@ -221,8 +223,10 @@ func (r *Resource) ApplyFilters(file *os.File, config *Config, filters *ImageFil
 
 	r.resourceType = resource.Image
 
+	_, _ = jpegFile.Seek(0, io.SeekStart)
+
 	// get config
-	cfgSrc, _, err := image.DecodeConfig(jpegFile)
+	cfgSrc, err := jpeg.DecodeConfig(jpegFile)
 	if err != nil {
 		return nil, err
 	}
@@ -256,7 +260,7 @@ func (r *Resource) ApplyFilters(file *os.File, config *Config, filters *ImageFil
 }
 
 func createPreviewFromFile(r io.Reader) (string, error) {
-	img, err := png.Decode(r)
+	img, err := jpeg.Decode(r)
 
 	if err != nil {
 		return "", err
@@ -289,12 +293,13 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 	}
 
 	str, err := ffmpeg_go.Probe(file.Name(), map[string]interface{}{
-		"f":               "mp4",
-		"-show_streams":   "",
-		"-select_streams": "a",
+		"f":              "mp4",
+		"show_streams":   "",
+		"select_streams": "a",
 	})
 
 	if err != nil {
+		zap.S().Errorw("ffmpeg_go probe error", zap.String("message", str))
 		return nil, err
 	}
 
@@ -304,26 +309,21 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 		return nil, err
 	}
 
-	encodingArgs := ffmpeg_go.KwArgs{"c:v": "libx265", "vf": "scale=-1:720", "crf": "18", "preset": "veryslow", "-map_metadata": "-1"}
+	// "vf": "scale=-1:720" - TODO: need to scale down video if video is high resolution
+	encodingArgs := ffmpeg_go.KwArgs{"c:v": "libx264", "crf": "18", "preset": "medium", "map_metadata": "-1"}
 
-	// if there is no audio, strip it
+	// TODO: if there is no audio, strip it
 	if len(probeResult.Streams) == 0 {
-		encodingArgs["-an"] = ""
+		encodingArgs["an"] = ""
 	}
 
 	ffmpegLogger := &zap_adapters.FfmpegGoLogErrorAdapter{
 		Output: *new([]byte),
 	}
 
-	videoFile, err := os.Create(newVideoFileName)
-	if err != nil {
-		return nil, err
-	}
-
 	if err := ffmpeg_go.Input(file.Name(), defaultArgs).
 		Output(newVideoFileName, encodingArgs).
 		WithErrorOutput(ffmpegLogger).
-		WithOutput(videoFile).
 		Run(); err != nil {
 		zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(ffmpegLogger.Output)))
 		r.failed = true
@@ -337,9 +337,11 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 		return nil, err
 	}
 
+	defer fileThumbnail.Close()
+
 	if err := ffmpeg_go.Input(newVideoFileName, defaultArgs).
 		Filter("select", ffmpeg_go.Args{fmt.Sprintf("gte(n,%d)", 5)}).
-		Output("pipe:", ffmpeg_go.KwArgs{"vframes": 1, "format": "image2", "vcodec": "jpeg"}).
+		Output("pipe:", ffmpeg_go.KwArgs{"vframes": 1, "format": "image2"}).
 		WithErrorOutput(ffmpegLogger).
 		WithOutput(fileThumbnail).
 		Run(); err != nil {
@@ -348,11 +350,12 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 		return nil, nil
 	}
 
-	videoThumb := "t-" + file.Name()
+	videoThumb := "t-" + fileName
 
 	str, err = ffmpeg_go.Probe(newVideoFileName, defaultArgs)
 
 	if err != nil {
+		zap.S().Errorw("ffmpeg_go probe error", zap.String("message", str))
 		return nil, err
 	}
 
@@ -398,12 +401,17 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 
 func (r *Resource) processImage(fileName string, file *os.File, config *Config) ([]*Move, error) {
 
-	src, _, err := image.Decode(file)
+	src, err := png.Decode(file)
 
 	if err != nil {
-		zap.S().Errorw("failed to decode png", zap.Error(err))
-		r.failed = true
-		return nil, nil
+
+		if err == image.ErrFormat {
+			zap.S().Errorw("failed to decode png", zap.Error(err))
+			r.failed = true
+			return nil, nil
+		}
+
+		return nil, errors.Wrap(err, "failed to decode png")
 	}
 
 	// resize to specified width
@@ -438,8 +446,10 @@ func (r *Resource) processImage(fileName string, file *os.File, config *Config) 
 
 	r.resourceType = resource.Image
 
+	_, _ = jpegFile.Seek(0, io.SeekStart)
+
 	// get config
-	cfgSrc, _, err := image.DecodeConfig(jpegFile)
+	cfgSrc, err := jpeg.DecodeConfig(jpegFile)
 	if err != nil {
 		return nil, err
 	}
@@ -449,8 +459,8 @@ func (r *Resource) processImage(fileName string, file *os.File, config *Config) 
 	r.height = cfgSrc.Height
 	r.width = cfgSrc.Width
 
-	_, _ = file.Seek(0, io.SeekStart)
-	preview, err := createPreviewFromFile(file)
+	_, _ = jpegFile.Seek(0, io.SeekStart)
+	preview, err := createPreviewFromFile(jpegFile)
 
 	if err != nil {
 		return nil, err
@@ -487,7 +497,8 @@ func (r *Resource) ProcessResource(file *os.File, config *Config) ([]*Move, erro
 	// do a mime type check on the file to make sure its an accepted file and to get our extension
 	kind, _ := filetype.Match(headBuffer)
 	if kind == filetype.Unknown {
-		return nil, errors.Wrap(err, "uknown file type")
+		r.failed = false
+		return nil, nil
 	}
 
 	// seek file, so we can read it again (first time we only grab a few bytes)

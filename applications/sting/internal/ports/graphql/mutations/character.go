@@ -9,31 +9,6 @@ import (
 	"overdoll/libraries/principal"
 )
 
-func (r *MutationResolver) GenerateCharacterBanner(ctx context.Context, input types.GenerateCharacterBannerInput) (*types.GenerateCharacterBannerPayload, error) {
-
-	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return nil, err
-	}
-
-	character, err := r.App.Commands.GenerateCharacterBanner.
-		Handle(
-			ctx,
-			command.GenerateCharacterBanner{
-				Principal:   principal.FromContext(ctx),
-				CharacterId: input.ID.GetID(),
-				Duration:    int64(input.Duration),
-			},
-		)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.GenerateCharacterBannerPayload{
-		Character: types.MarshalCharacterToGraphQL(ctx, character),
-	}, err
-}
-
 func (r *MutationResolver) CreateCharacter(ctx context.Context, input types.CreateCharacterInput) (*types.CreateCharacterPayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {

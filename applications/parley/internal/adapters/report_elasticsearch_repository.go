@@ -115,8 +115,8 @@ func (r ReportCassandraElasticsearchRepository) indexPostReport(ctx context.Cont
 
 func (r ReportCassandraElasticsearchRepository) IndexAllPostReports(ctx context.Context) error {
 
-	scanner := database.New(r.session,
-		database.Config{
+	scanner := database.NewScan(r.session,
+		database.ScanConfig{
 			NodesInCluster: 1,
 			CoresInNode:    2,
 			SmudgeFactor:   3,

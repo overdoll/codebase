@@ -4,13 +4,10 @@ import (
 	"context"
 	"overdoll/applications/sting/internal/domain/event"
 	"overdoll/applications/sting/internal/domain/post"
-	"overdoll/libraries/principal"
 	"time"
 )
 
 type GenerateSeriesBanner struct {
-	Principal *principal.Principal
-
 	SeriesId string
 	Duration int64
 }
@@ -24,17 +21,17 @@ func NewGenerateSeriesBannerHandler(pr post.Repository, event event.Repository) 
 	return GenerateSeriesBannerHandler{pr: pr, event: event}
 }
 
-func (h GenerateSeriesBannerHandler) Handle(ctx context.Context, cmd GenerateSeriesBanner) (*post.Series, error) {
+func (h GenerateSeriesBannerHandler) Handle(ctx context.Context, cmd GenerateSeriesBanner) error {
 
 	series, err := h.pr.GetSingleSeriesById(ctx, cmd.SeriesId)
 
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	if err := h.event.GenerateSeriesBanner(ctx, cmd.Principal, series, time.Duration(cmd.Duration)); err != nil {
-		return nil, err
+	if err := h.event.GenerateSeriesBanner(ctx, series, time.Duration(cmd.Duration)); err != nil {
+		return err
 	}
 
-	return series, nil
+	return nil
 }

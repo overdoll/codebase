@@ -15,17 +15,17 @@ import (
 // taken from: https://www.scylladb.com/2017/02/13/efficient-full-table-scans-with-scylla-1-6/
 
 type Scan struct {
-	config  Config
+	config  ScanConfig
 	session gocqlx.Session
 }
 
-type Config struct {
+type ScanConfig struct {
 	NodesInCluster int
 	CoresInNode    int
 	SmudgeFactor   int
 }
 
-func New(session gocqlx.Session, config Config) *Scan {
+func NewScan(session gocqlx.Session, config ScanConfig) *Scan {
 	return &Scan{config: config, session: session}
 }
 

@@ -36,11 +36,13 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 		channel.Receive(ctx, &signal)
 	})
 
+	var createdPayload *activities.CreatePixelatedResourcesForSupporterOnlyContentPayload
+
 	if err := workflow.ExecuteActivity(ctx, a.CreatePixelatedResourcesForSupporterOnlyContent,
 		activities.CreatePixelatedResourcesForSupporterOnlyContentInput{
 			PostId: input.PostId,
 		},
-	).Get(ctx, nil); err != nil {
+	).Get(ctx, &createdPayload); err != nil {
 		logger.Error("failed to create pixelated resources for supporter only content", "Error", err)
 		return err
 	}
@@ -55,10 +57,13 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 		return err
 	}
 
-	selector.Select(ctx)
+	// only wait for selector if we have created pixelated resources
+	if createdPayload.CreatedResources {
+		selector.Select(ctx)
 
-	if !input.PixelatedResourcesCompleted {
-		return errors.New("pixelated resources not yet completed")
+		if !input.PixelatedResourcesCompleted {
+			return errors.New("pixelated resources not yet completed")
+		}
 	}
 
 	var inReview bool

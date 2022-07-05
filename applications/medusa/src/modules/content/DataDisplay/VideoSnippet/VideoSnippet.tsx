@@ -37,8 +37,7 @@ export default function VideoSnippet ({
     >
       <NextImage
         alt=''
-        layout='fill'
-        objectFit='cover'
+        loading='lazy'
         style={{
           backgroundColor: previewBackground,
           userSelect: 'none'

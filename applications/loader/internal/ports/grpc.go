@@ -143,6 +143,8 @@ func (s Server) CopyResourcesAndApplyFilter(ctx context.Context, request *loader
 		}{},
 		IsPrivate: request.Private,
 		Token:     request.Token,
+		NewItemId: request.NewItemId,
+		Source:    request.Source.String(),
 	}
 
 	for _, r := range request.Resources {
@@ -155,29 +157,38 @@ func (s Server) CopyResourcesAndApplyFilter(ctx context.Context, request *loader
 		})
 	}
 
-	if request.Filters != nil {
+	var pixelate *int
 
+	if request.Filters != nil {
 		if request.Filters.Pixelate != nil {
 			pixelateSize := int(request.Filters.Pixelate.Size)
-			filters, err := resource.NewImageFilters(&pixelateSize)
-
-			if err != nil {
-				return nil, err
-			}
-
-			data.Filters = filters
+			pixelate = &pixelateSize
 		}
 	}
+
+	filters, err := resource.NewImageFilters(pixelate)
+
+	if err != nil {
+		return nil, err
+	}
+
+	data.Filters = filters
+
+	var width uint64
+	var height uint64
 
 	if request.Config != nil {
-		config, err := resource.NewConfig(request.Config.Width, request.Config.Height)
-
-		if err != nil {
-			return nil, err
-		}
-
-		data.Config = config
+		width = request.Config.Width
+		height = request.Config.Height
 	}
+
+	config, err := resource.NewConfig(width, height)
+
+	if err != nil {
+		return nil, err
+	}
+
+	data.Config = config
 
 	filteredResources, err := s.app.Commands.CopyResourcesAndApplyFilters.Handle(ctx, data)
 
