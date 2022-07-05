@@ -145,6 +145,38 @@ func (r ClubCassandraElasticsearchRepository) indexClub(ctx context.Context, clu
 
 	return nil
 }
+
+func (r ClubCassandraElasticsearchRepository) GetClubsByIds(ctx context.Context, clubIds []string) ([]*club.Club, error) {
+
+	var clubs []*club.Club
+
+	if len(clubIds) == 0 {
+		return clubs, nil
+	}
+
+	response, err := r.client.Search().
+		Index(ClubsReaderIndex).
+		Query(elastic.NewBoolQuery().Filter(elastic.NewTermsQueryFromStrings("id", clubIds...))).
+		Do(ctx)
+
+	if err != nil {
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed search clubs")
+	}
+
+	for _, hit := range response.Hits.Hits {
+
+		result, err := unmarshalClubDocument(ctx, hit, r.resourceSerializer)
+
+		if err != nil {
+			return nil, err
+		}
+
+		clubs = append(clubs, result)
+	}
+
+	return clubs, nil
+}
+
 func (r ClubCassandraElasticsearchRepository) DiscoverClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*club.Club, error) {
 
 	builder := r.client.Search().

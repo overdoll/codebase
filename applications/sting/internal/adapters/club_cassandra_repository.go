@@ -374,38 +374,6 @@ func (r ClubCassandraElasticsearchRepository) GetClubSupporterMembershipsCount(c
 	return r.getClubsSupporterMembershipCount(ctx, clubId)
 }
 
-func (r ClubCassandraElasticsearchRepository) GetClubsByIds(ctx context.Context, clubIds []string) ([]*club.Club, error) {
-
-	var databaseClubs []clubs
-
-	if err := qb.
-		Select(clubTable.Name()).
-		Where(qb.In("id")).
-		Query(r.session).
-		WithContext(ctx).
-		Idempotent(true).
-		Consistency(gocql.LocalQuorum).
-		Bind(clubIds).
-		SelectRelease(&databaseClubs); err != nil {
-		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get clubs by ids")
-	}
-
-	var clbs []*club.Club
-
-	for _, b := range databaseClubs {
-
-		unmarshalled, err := r.unmarshalClubFromDatabase(ctx, &b)
-
-		if err != nil {
-			return nil, err
-		}
-
-		clbs = append(clbs, unmarshalled)
-	}
-
-	return clbs, nil
-}
-
 func (r ClubCassandraElasticsearchRepository) UpdateClubSlug(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
 
 	currentClub, err := r.GetClubById(ctx, clubId)

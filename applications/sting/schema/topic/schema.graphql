@@ -69,7 +69,7 @@ type TopicConnection {
   pageInfo: PageInfo!
 }
 
-type Query {
+extend type Query {
   """
   Search all topics.
 
@@ -128,7 +128,7 @@ input CreateTopicInput {
 """Payload for a new topic"""
 type CreateTopicPayload {
   """The topic after creation"""
-  topic: Category
+  topic: Topic
 
   """Validation for creating a new topic"""
   validation: CreateTopicValidation
@@ -215,7 +215,7 @@ type UpdateTopicBannerPayload {
   topic: Topic
 }
 
-type Mutation {
+extend type Mutation {
   """
   Create a new topic
   """

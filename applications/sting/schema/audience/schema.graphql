@@ -158,7 +158,7 @@ input UpdateAudienceBannerInput {
   id: ID!
 
   """The banner"""
-  thumbnail: String!
+  banner: String!
 }
 
 """Update audience."""

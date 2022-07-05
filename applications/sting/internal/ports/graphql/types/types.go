@@ -47,6 +47,24 @@ type Account struct {
 
 func (Account) IsEntity() {}
 
+// Update category.
+type AddCategoryAlternativeTitleInput struct {
+	// The category to update
+	ID relay.ID `json:"id"`
+	// The title to add.
+	//
+	// Validation: Max 25 characters.
+	Title string `json:"title"`
+	// The localization for this title
+	Locale string `json:"locale"`
+}
+
+// Payload for updating category
+type AddCategoryAlternativeTitlePayload struct {
+	// The category after update
+	Category *Category `json:"category"`
+}
+
 // Add alias slug.
 type AddClubSlugAliasInput struct {
 	// The club to update
@@ -157,10 +175,14 @@ type Category struct {
 	Title string `json:"title"`
 	// All translations for this title.
 	TitleTranslations []*graphql1.Translation `json:"titleTranslations"`
+	// Alternative titles for this category.
+	AlternativeTitles []*graphql1.Translation `json:"alternativeTitles"`
 	// Total amount of likes.
 	TotalLikes int `json:"totalLikes"`
 	// Total amount of posts.
 	TotalPosts int `json:"totalPosts"`
+	// The topic linked this category. If no topic is linked, field is null.
+	Topic *Topic `json:"topic"`
 	// Posts belonging to this category
 	Posts *PostConnection `json:"posts"`
 }
@@ -408,6 +430,8 @@ type CreateCategoryInput struct {
 	//
 	// Validation: Max 25 characters.
 	Title string `json:"title"`
+	// Optionally assign a topic to this category.
+	TopicID *relay.ID `json:"topicId"`
 }
 
 // Payload for a new category
@@ -490,6 +514,32 @@ type CreateSeriesPayload struct {
 	Series *Series `json:"series"`
 	// Validation for creating a new series
 	Validation *CreateSeriesValidation `json:"validation"`
+}
+
+// Create a new topic.
+type CreateTopicInput struct {
+	// The chosen slug for the topic.
+	//
+	// Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
+	Slug string `json:"slug"`
+	// The chosen title for the topic.
+	//
+	// Validation: Max 25 characters.
+	Title string `json:"title"`
+	// The chosen description for the topic.
+	//
+	// Validation: Markdown allowed.
+	Description string `json:"description"`
+	// The assigned weight for this topic.
+	Weight int `json:"weight"`
+}
+
+// Payload for a new topic
+type CreateTopicPayload struct {
+	// The topic after creation
+	Topic *Topic `json:"topic"`
+	// Validation for creating a new topic
+	Validation *CreateTopicValidation `json:"validation"`
 }
 
 type CurationProfile struct {
@@ -677,6 +727,20 @@ type PromoteClubSlugAliasToDefaultPayload struct {
 	Club *Club `json:"club"`
 }
 
+// Update category.
+type RemoveCategoryAlternativeTitleInput struct {
+	// The category to update
+	ID relay.ID `json:"id"`
+	// The title to remove.
+	Title string `json:"title"`
+}
+
+// Payload for updating category
+type RemoveCategoryAlternativeTitlePayload struct {
+	// The category after update
+	Category *Category `json:"category"`
+}
+
 // Remove alias slug.
 type RemoveClubSlugAliasInput struct {
 	// The club to update
@@ -792,6 +856,46 @@ type TerminateClubPayload struct {
 	Club *Club `json:"club"`
 }
 
+type Topic struct {
+	// An ID pointing to this topic.
+	ID relay.ID `json:"id"`
+	// An ID that can be used to uniquely-identify this category. Never changes.
+	Reference string `json:"reference"`
+	// A url-friendly ID. Should be used when searching
+	Slug string `json:"slug"`
+	// A URL pointing to the object's banner.
+	Banner *graphql1.Resource `json:"banner"`
+	// A title for this topic.
+	//
+	// Optionally pass a locale to display it in a specific language. English by default.
+	Title string `json:"title"`
+	// All translations for this title.
+	TitleTranslations []*graphql1.Translation `json:"titleTranslations"`
+	// A description for this topic.
+	//
+	// Optionally pass a locale to display it in a specific language. English by default.
+	Description string `json:"description"`
+	// All translations for this topic.
+	DescriptionTranslations []*graphql1.Translation `json:"descriptionTranslations"`
+	// The weight of this topic.
+	Weight int `json:"weight"`
+	// All categories linked to this topic.
+	Categories *CategoryConnection `json:"categories"`
+}
+
+func (Topic) IsNode()   {}
+func (Topic) IsEntity() {}
+
+type TopicConnection struct {
+	Edges    []*TopicEdge    `json:"edges"`
+	PageInfo *relay.PageInfo `json:"pageInfo"`
+}
+
+type TopicEdge struct {
+	Cursor string `json:"cursor"`
+	Node   *Topic `json:"node"`
+}
+
 // Un-Archive post.
 type UnArchivePostInput struct {
 	// The post to un-archive
@@ -838,6 +942,20 @@ type UndoLikePostInput struct {
 type UndoLikePostPayload struct {
 	// The post like that was deleted.
 	PostLikeID *relay.ID `json:"postLikeId"`
+}
+
+// Update audience.
+type UpdateAudienceBannerInput struct {
+	// The audience to update
+	ID relay.ID `json:"id"`
+	// The banner
+	Banner string `json:"banner"`
+}
+
+// Payload for updating audience
+type UpdateAudienceBannerPayload struct {
+	// The audience after update
+	Audience *Audience `json:"audience"`
 }
 
 // Update audience.
@@ -914,6 +1032,20 @@ type UpdateCategoryTitleInput struct {
 
 // Payload for updating category
 type UpdateCategoryTitlePayload struct {
+	// The category after update
+	Category *Category `json:"category"`
+}
+
+// Update category topic.
+type UpdateCategoryTopicInput struct {
+	// The category to update
+	ID relay.ID `json:"id"`
+	// The topic to assign to this category.
+	TopicID relay.ID `json:"topicId"`
+}
+
+// Payload for updating category
+type UpdateCategoryTopicPayload struct {
 	// The category after update
 	Category *Category `json:"category"`
 }
@@ -1134,6 +1266,70 @@ type UpdateSeriesTitleInput struct {
 type UpdateSeriesTitlePayload struct {
 	// The series after update
 	Series *Series `json:"series"`
+}
+
+// Update topic.
+type UpdateTopicBannerInput struct {
+	// The category to update
+	ID relay.ID `json:"id"`
+	// The banner
+	Banner string `json:"banner"`
+}
+
+// Payload for updating topic
+type UpdateTopicBannerPayload struct {
+	// The topic after update
+	Topic *Topic `json:"topic"`
+}
+
+// Update topic.
+type UpdateTopicDescriptionInput struct {
+	// The topic to update
+	ID relay.ID `json:"id"`
+	// The description to update.
+	//
+	// Validation: Markdown allowed.
+	Description string `json:"description"`
+	// The localization for this description
+	Locale string `json:"locale"`
+}
+
+// Payload for updating topic
+type UpdateTopicDescriptionPayload struct {
+	// The topic after update
+	Topic *Topic `json:"topic"`
+}
+
+// Update topic.
+type UpdateTopicTitleInput struct {
+	// The topic to update
+	ID relay.ID `json:"id"`
+	// The title to update.
+	//
+	// Validation: Max 25 characters.
+	Title string `json:"title"`
+	// The localization for this title
+	Locale string `json:"locale"`
+}
+
+// Payload for updating topic
+type UpdateTopicTitlePayload struct {
+	// The topic after update
+	Topic *Topic `json:"topic"`
+}
+
+// Update topic.
+type UpdateTopicWeightInput struct {
+	// The topic to update
+	ID relay.ID `json:"id"`
+	// The weight to update to.
+	Weight int `json:"weight"`
+}
+
+// Payload for updating topic
+type UpdateTopicWeightPayload struct {
+	// The topic after update
+	Topic *Topic `json:"topic"`
 }
 
 // Validation for adding a new slug to a club
@@ -1643,6 +1839,46 @@ func (e *CreateSeriesValidation) UnmarshalGQL(v interface{}) error {
 }
 
 func (e CreateSeriesValidation) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Validation for creating a new topic
+type CreateTopicValidation string
+
+const (
+	CreateTopicValidationSlugTaken CreateTopicValidation = "SLUG_TAKEN"
+)
+
+var AllCreateTopicValidation = []CreateTopicValidation{
+	CreateTopicValidationSlugTaken,
+}
+
+func (e CreateTopicValidation) IsValid() bool {
+	switch e {
+	case CreateTopicValidationSlugTaken:
+		return true
+	}
+	return false
+}
+
+func (e CreateTopicValidation) String() string {
+	return string(e)
+}
+
+func (e *CreateTopicValidation) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = CreateTopicValidation(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid CreateTopicValidation", str)
+	}
+	return nil
+}
+
+func (e CreateTopicValidation) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

@@ -205,6 +205,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 
 			TopicBySlug:  query.NewTopicBySlugHandler(postRepo),
 			SearchTopics: query.NewSearchTopicsHandler(postRepo),
+			TopicsByIds:  query.NewTopicsByIdsHandler(postRepo),
 
 			PostLikeById: query.NewPostLikeByIdHandler(postRepo),
 

@@ -5,6 +5,7 @@ import (
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/query"
+	"overdoll/applications/sting/internal/ports/graphql/dataloader"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/paging"
@@ -58,4 +59,13 @@ func (r CategoryResolver) Posts(ctx context.Context, obj *types.Category, after 
 	}
 
 	return types.MarshalPostToGraphQLConnection(ctx, results, cursor), nil
+}
+
+func (r CategoryResolver) Topic(ctx context.Context, obj *types.Category) (*types.Topic, error) {
+
+	if obj.Topic == nil {
+		return nil, nil
+	}
+
+	return dataloader.For(ctx).GetTopicById(ctx, obj.Topic.ID.GetID())
 }

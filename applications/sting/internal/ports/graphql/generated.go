@@ -53,6 +53,7 @@ type ResolverRoot interface {
 	Post() PostResolver
 	Query() QueryResolver
 	Series() SeriesResolver
+	Topic() TopicResolver
 }
 
 type DirectiveRoot struct {
@@ -72,6 +73,10 @@ type ComplexityRoot struct {
 		HasNonTerminatedClubs func(childComplexity int) int
 		ID                    func(childComplexity int) int
 		Posts                 func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) int
+	}
+
+	AddCategoryAlternativeTitlePayload struct {
+		Category func(childComplexity int) int
 	}
 
 	AddClubSlugAliasPayload struct {
@@ -118,6 +123,7 @@ type ComplexityRoot struct {
 	}
 
 	Category struct {
+		AlternativeTitles func(childComplexity int) int
 		Banner            func(childComplexity int) int
 		ID                func(childComplexity int) int
 		Posts             func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) int
@@ -126,6 +132,7 @@ type ComplexityRoot struct {
 		Thumbnail         func(childComplexity int) int
 		Title             func(childComplexity int, locale *string) int
 		TitleTranslations func(childComplexity int) int
+		Topic             func(childComplexity int) int
 		TotalLikes        func(childComplexity int) int
 		TotalPosts        func(childComplexity int) int
 	}
@@ -286,6 +293,11 @@ type ComplexityRoot struct {
 		Validation func(childComplexity int) int
 	}
 
+	CreateTopicPayload struct {
+		Topic      func(childComplexity int) int
+		Validation func(childComplexity int) int
+	}
+
 	CurationProfile struct {
 		Audience    func(childComplexity int) int
 		Category    func(childComplexity int) int
@@ -322,6 +334,7 @@ type ComplexityRoot struct {
 		FindPostByID       func(childComplexity int, id relay.ID) int
 		FindPostLikeByID   func(childComplexity int, id relay.ID) int
 		FindSeriesByID     func(childComplexity int, id relay.ID) int
+		FindTopicByID      func(childComplexity int, id relay.ID) int
 	}
 
 	JoinClubPayload struct {
@@ -342,6 +355,7 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
+		AddCategoryAlternativeTitle      func(childComplexity int, input types.AddCategoryAlternativeTitleInput) int
 		AddClubSlugAlias                 func(childComplexity int, input types.AddClubSlugAliasInput) int
 		AddPostContent                   func(childComplexity int, input types.AddPostContentInput) int
 		ArchivePost                      func(childComplexity int, input types.ArchivePostInput) int
@@ -351,6 +365,7 @@ type ComplexityRoot struct {
 		CreateClub                       func(childComplexity int, input types.CreateClubInput) int
 		CreatePost                       func(childComplexity int, input types.CreatePostInput) int
 		CreateSeries                     func(childComplexity int, input types.CreateSeriesInput) int
+		CreateTopic                      func(childComplexity int, input types.CreateTopicInput) int
 		DeletePost                       func(childComplexity int, input types.DeletePostInput) int
 		DisableClubSupporterOnlyPosts    func(childComplexity int, input types.DisableClubSupporterOnlyPostsInput) int
 		EnableClubSupporterOnlyPosts     func(childComplexity int, input types.EnableClubSupporterOnlyPostsInput) int
@@ -358,6 +373,7 @@ type ComplexityRoot struct {
 		LeaveClub                        func(childComplexity int, input types.LeaveClubInput) int
 		LikePost                         func(childComplexity int, input types.LikePostInput) int
 		PromoteClubSlugAliasToDefault    func(childComplexity int, input types.PromoteClubSlugAliasToDefaultInput) int
+		RemoveCategoryAlternativeTitle   func(childComplexity int, input types.RemoveCategoryAlternativeTitleInput) int
 		RemoveClubSlugAlias              func(childComplexity int, input types.RemoveClubSlugAliasInput) int
 		RemovePostContent                func(childComplexity int, input types.RemovePostContentInput) int
 		SubmitPost                       func(childComplexity int, input types.SubmitPostInput) int
@@ -367,11 +383,13 @@ type ComplexityRoot struct {
 		UnSuspendClub                    func(childComplexity int, input types.UnSuspendClubInput) int
 		UnTerminateClub                  func(childComplexity int, input types.UnTerminateClubInput) int
 		UndoLikePost                     func(childComplexity int, input types.UndoLikePostInput) int
+		UpdateAudienceBanner             func(childComplexity int, input types.UpdateAudienceBannerInput) int
 		UpdateAudienceIsStandard         func(childComplexity int, input types.UpdateAudienceIsStandardInput) int
 		UpdateAudienceThumbnail          func(childComplexity int, input types.UpdateAudienceThumbnailInput) int
 		UpdateAudienceTitle              func(childComplexity int, input types.UpdateAudienceTitleInput) int
 		UpdateCategoryThumbnail          func(childComplexity int, input types.UpdateCategoryThumbnailInput) int
 		UpdateCategoryTitle              func(childComplexity int, input types.UpdateCategoryTitleInput) int
+		UpdateCategoryTopic              func(childComplexity int, input types.UpdateCategoryTopicInput) int
 		UpdateCharacterName              func(childComplexity int, input types.UpdateCharacterNameInput) int
 		UpdateCharacterThumbnail         func(childComplexity int, input types.UpdateCharacterThumbnailInput) int
 		UpdateClubName                   func(childComplexity int, input types.UpdateClubNameInput) int
@@ -386,6 +404,10 @@ type ComplexityRoot struct {
 		UpdatePostContentOrder           func(childComplexity int, input types.UpdatePostContentOrderInput) int
 		UpdateSeriesThumbnail            func(childComplexity int, input types.UpdateSeriesThumbnailInput) int
 		UpdateSeriesTitle                func(childComplexity int, input types.UpdateSeriesTitleInput) int
+		UpdateTopicBanner                func(childComplexity int, input types.UpdateTopicBannerInput) int
+		UpdateTopicDescription           func(childComplexity int, input types.UpdateTopicDescriptionInput) int
+		UpdateTopicTitle                 func(childComplexity int, input types.UpdateTopicTitleInput) int
+		UpdateTopicWeight                func(childComplexity int, input types.UpdateTopicWeightInput) int
 	}
 
 	PageInfo struct {
@@ -458,8 +480,14 @@ type ComplexityRoot struct {
 		Search             func(childComplexity int, after *string, before *string, first *int, last *int, query string) int
 		Serial             func(childComplexity int, slug string) int
 		Series             func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, title *string, sortBy types.SeriesSort) int
+		Topic              func(childComplexity int, slug string) int
+		Topics             func(childComplexity int, after *string, before *string, first *int, last *int) int
 		__resolve__service func(childComplexity int) int
 		__resolve_entities func(childComplexity int, representations []map[string]interface{}) int
+	}
+
+	RemoveCategoryAlternativeTitlePayload struct {
+		Category func(childComplexity int) int
 	}
 
 	RemoveClubSlugAliasPayload struct {
@@ -533,6 +561,29 @@ type ComplexityRoot struct {
 		Club func(childComplexity int) int
 	}
 
+	Topic struct {
+		Banner                  func(childComplexity int) int
+		Categories              func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, title *string, sortBy types.CategoriesSort) int
+		Description             func(childComplexity int, locale *string) int
+		DescriptionTranslations func(childComplexity int) int
+		ID                      func(childComplexity int) int
+		Reference               func(childComplexity int) int
+		Slug                    func(childComplexity int) int
+		Title                   func(childComplexity int, locale *string) int
+		TitleTranslations       func(childComplexity int) int
+		Weight                  func(childComplexity int) int
+	}
+
+	TopicConnection struct {
+		Edges    func(childComplexity int) int
+		PageInfo func(childComplexity int) int
+	}
+
+	TopicEdge struct {
+		Cursor func(childComplexity int) int
+		Node   func(childComplexity int) int
+	}
+
 	Translation struct {
 		Language func(childComplexity int) int
 		Text     func(childComplexity int) int
@@ -554,6 +605,10 @@ type ComplexityRoot struct {
 		PostLikeID func(childComplexity int) int
 	}
 
+	UpdateAudienceBannerPayload struct {
+		Audience func(childComplexity int) int
+	}
+
 	UpdateAudienceIsStandardPayload struct {
 		Audience func(childComplexity int) int
 	}
@@ -571,6 +626,10 @@ type ComplexityRoot struct {
 	}
 
 	UpdateCategoryTitlePayload struct {
+		Category func(childComplexity int) int
+	}
+
+	UpdateCategoryTopicPayload struct {
 		Category func(childComplexity int) int
 	}
 
@@ -634,6 +693,22 @@ type ComplexityRoot struct {
 		Series func(childComplexity int) int
 	}
 
+	UpdateTopicBannerPayload struct {
+		Topic func(childComplexity int) int
+	}
+
+	UpdateTopicDescriptionPayload struct {
+		Topic func(childComplexity int) int
+	}
+
+	UpdateTopicTitlePayload struct {
+		Topic func(childComplexity int) int
+	}
+
+	UpdateTopicWeightPayload struct {
+		Topic func(childComplexity int) int
+	}
+
 	_Service struct {
 		SDL func(childComplexity int) int
 	}
@@ -662,6 +737,7 @@ type AudienceCurationProfileResolver interface {
 type CategoryResolver interface {
 	Title(ctx context.Context, obj *types.Category, locale *string) (string, error)
 
+	Topic(ctx context.Context, obj *types.Category) (*types.Topic, error)
 	Posts(ctx context.Context, obj *types.Category, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error)
 }
 type CategoryCurationProfileResolver interface {
@@ -696,14 +772,19 @@ type EntityResolver interface {
 	FindPostByID(ctx context.Context, id relay.ID) (*types.Post, error)
 	FindPostLikeByID(ctx context.Context, id relay.ID) (*types.PostLike, error)
 	FindSeriesByID(ctx context.Context, id relay.ID) (*types.Series, error)
+	FindTopicByID(ctx context.Context, id relay.ID) (*types.Topic, error)
 }
 type MutationResolver interface {
 	CreateCategory(ctx context.Context, input types.CreateCategoryInput) (*types.CreateCategoryPayload, error)
 	UpdateCategoryTitle(ctx context.Context, input types.UpdateCategoryTitleInput) (*types.UpdateCategoryTitlePayload, error)
 	UpdateCategoryThumbnail(ctx context.Context, input types.UpdateCategoryThumbnailInput) (*types.UpdateCategoryThumbnailPayload, error)
+	UpdateCategoryTopic(ctx context.Context, input types.UpdateCategoryTopicInput) (*types.UpdateCategoryTopicPayload, error)
+	AddCategoryAlternativeTitle(ctx context.Context, input types.AddCategoryAlternativeTitleInput) (*types.AddCategoryAlternativeTitlePayload, error)
+	RemoveCategoryAlternativeTitle(ctx context.Context, input types.RemoveCategoryAlternativeTitleInput) (*types.RemoveCategoryAlternativeTitlePayload, error)
 	CreateAudience(ctx context.Context, input types.CreateAudienceInput) (*types.CreateAudiencePayload, error)
 	UpdateAudienceTitle(ctx context.Context, input types.UpdateAudienceTitleInput) (*types.UpdateAudienceTitlePayload, error)
 	UpdateAudienceThumbnail(ctx context.Context, input types.UpdateAudienceThumbnailInput) (*types.UpdateAudienceThumbnailPayload, error)
+	UpdateAudienceBanner(ctx context.Context, input types.UpdateAudienceBannerInput) (*types.UpdateAudienceBannerPayload, error)
 	UpdateAudienceIsStandard(ctx context.Context, input types.UpdateAudienceIsStandardInput) (*types.UpdateAudienceIsStandardPayload, error)
 	CreateCharacter(ctx context.Context, input types.CreateCharacterInput) (*types.CreateCharacterPayload, error)
 	UpdateCharacterName(ctx context.Context, input types.UpdateCharacterNameInput) (*types.UpdateCharacterNamePayload, error)
@@ -742,6 +823,11 @@ type MutationResolver interface {
 	CreateSeries(ctx context.Context, input types.CreateSeriesInput) (*types.CreateSeriesPayload, error)
 	UpdateSeriesTitle(ctx context.Context, input types.UpdateSeriesTitleInput) (*types.UpdateSeriesTitlePayload, error)
 	UpdateSeriesThumbnail(ctx context.Context, input types.UpdateSeriesThumbnailInput) (*types.UpdateSeriesThumbnailPayload, error)
+	CreateTopic(ctx context.Context, input types.CreateTopicInput) (*types.CreateTopicPayload, error)
+	UpdateTopicTitle(ctx context.Context, input types.UpdateTopicTitleInput) (*types.UpdateTopicTitlePayload, error)
+	UpdateTopicDescription(ctx context.Context, input types.UpdateTopicDescriptionInput) (*types.UpdateTopicDescriptionPayload, error)
+	UpdateTopicWeight(ctx context.Context, input types.UpdateTopicWeightInput) (*types.UpdateTopicWeightPayload, error)
+	UpdateTopicBanner(ctx context.Context, input types.UpdateTopicBannerInput) (*types.UpdateTopicBannerPayload, error)
 }
 type PostResolver interface {
 	Club(ctx context.Context, obj *types.Post) (*types.Club, error)
@@ -769,11 +855,20 @@ type QueryResolver interface {
 	Posts(ctx context.Context, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error)
 	Series(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, title *string, sortBy types.SeriesSort) (*types.SeriesConnection, error)
 	Serial(ctx context.Context, slug string) (*types.Series, error)
+	Topics(ctx context.Context, after *string, before *string, first *int, last *int) (*types.TopicConnection, error)
+	Topic(ctx context.Context, slug string) (*types.Topic, error)
 }
 type SeriesResolver interface {
 	Title(ctx context.Context, obj *types.Series, locale *string) (string, error)
 
 	Posts(ctx context.Context, obj *types.Series, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error)
+}
+type TopicResolver interface {
+	Title(ctx context.Context, obj *types.Topic, locale *string) (string, error)
+
+	Description(ctx context.Context, obj *types.Topic, locale *string) (string, error)
+
+	Categories(ctx context.Context, obj *types.Topic, after *string, before *string, first *int, last *int, slugs []string, title *string, sortBy types.CategoriesSort) (*types.CategoryConnection, error)
 }
 
 type executableSchema struct {
@@ -887,6 +982,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Account.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["sortBy"].(types.PostsSort)), true
+
+	case "AddCategoryAlternativeTitlePayload.category":
+		if e.complexity.AddCategoryAlternativeTitlePayload.Category == nil {
+			break
+		}
+
+		return e.complexity.AddCategoryAlternativeTitlePayload.Category(childComplexity), true
 
 	case "AddClubSlugAliasPayload.club":
 		if e.complexity.AddClubSlugAliasPayload.Club == nil {
@@ -1052,6 +1154,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AudienceEdge.Node(childComplexity), true
 
+	case "Category.alternativeTitles":
+		if e.complexity.Category.AlternativeTitles == nil {
+			break
+		}
+
+		return e.complexity.Category.AlternativeTitles(childComplexity), true
+
 	case "Category.banner":
 		if e.complexity.Category.Banner == nil {
 			break
@@ -1117,6 +1226,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Category.TitleTranslations(childComplexity), true
+
+	case "Category.topic":
+		if e.complexity.Category.Topic == nil {
+			break
+		}
+
+		return e.complexity.Category.Topic(childComplexity), true
 
 	case "Category.totalLikes":
 		if e.complexity.Category.TotalLikes == nil {
@@ -1724,6 +1840,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CreateSeriesPayload.Validation(childComplexity), true
 
+	case "CreateTopicPayload.topic":
+		if e.complexity.CreateTopicPayload.Topic == nil {
+			break
+		}
+
+		return e.complexity.CreateTopicPayload.Topic(childComplexity), true
+
+	case "CreateTopicPayload.validation":
+		if e.complexity.CreateTopicPayload.Validation == nil {
+			break
+		}
+
+		return e.complexity.CreateTopicPayload.Validation(childComplexity), true
+
 	case "CurationProfile.audience":
 		if e.complexity.CurationProfile.Audience == nil {
 			break
@@ -1909,6 +2039,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Entity.FindSeriesByID(childComplexity, args["id"].(relay.ID)), true
 
+	case "Entity.findTopicByID":
+		if e.complexity.Entity.FindTopicByID == nil {
+			break
+		}
+
+		args, err := ec.field_Entity_findTopicByID_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Entity.FindTopicByID(childComplexity, args["id"].(relay.ID)), true
+
 	case "JoinClubPayload.clubMember":
 		if e.complexity.JoinClubPayload.ClubMember == nil {
 			break
@@ -1943,6 +2085,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.LikePostPayload.PostLike(childComplexity), true
+
+	case "Mutation.addCategoryAlternativeTitle":
+		if e.complexity.Mutation.AddCategoryAlternativeTitle == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_addCategoryAlternativeTitle_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AddCategoryAlternativeTitle(childComplexity, args["input"].(types.AddCategoryAlternativeTitleInput)), true
 
 	case "Mutation.addClubSlugAlias":
 		if e.complexity.Mutation.AddClubSlugAlias == nil {
@@ -2052,6 +2206,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateSeries(childComplexity, args["input"].(types.CreateSeriesInput)), true
 
+	case "Mutation.createTopic":
+		if e.complexity.Mutation.CreateTopic == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createTopic_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateTopic(childComplexity, args["input"].(types.CreateTopicInput)), true
+
 	case "Mutation.deletePost":
 		if e.complexity.Mutation.DeletePost == nil {
 			break
@@ -2135,6 +2301,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.PromoteClubSlugAliasToDefault(childComplexity, args["input"].(types.PromoteClubSlugAliasToDefaultInput)), true
+
+	case "Mutation.removeCategoryAlternativeTitle":
+		if e.complexity.Mutation.RemoveCategoryAlternativeTitle == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_removeCategoryAlternativeTitle_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.RemoveCategoryAlternativeTitle(childComplexity, args["input"].(types.RemoveCategoryAlternativeTitleInput)), true
 
 	case "Mutation.removeClubSlugAlias":
 		if e.complexity.Mutation.RemoveClubSlugAlias == nil {
@@ -2244,6 +2422,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UndoLikePost(childComplexity, args["input"].(types.UndoLikePostInput)), true
 
+	case "Mutation.updateAudienceBanner":
+		if e.complexity.Mutation.UpdateAudienceBanner == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateAudienceBanner_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateAudienceBanner(childComplexity, args["input"].(types.UpdateAudienceBannerInput)), true
+
 	case "Mutation.updateAudienceIsStandard":
 		if e.complexity.Mutation.UpdateAudienceIsStandard == nil {
 			break
@@ -2303,6 +2493,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdateCategoryTitle(childComplexity, args["input"].(types.UpdateCategoryTitleInput)), true
+
+	case "Mutation.updateCategoryTopic":
+		if e.complexity.Mutation.UpdateCategoryTopic == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateCategoryTopic_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateCategoryTopic(childComplexity, args["input"].(types.UpdateCategoryTopicInput)), true
 
 	case "Mutation.updateCharacterName":
 		if e.complexity.Mutation.UpdateCharacterName == nil {
@@ -2471,6 +2673,54 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdateSeriesTitle(childComplexity, args["input"].(types.UpdateSeriesTitleInput)), true
+
+	case "Mutation.updateTopicBanner":
+		if e.complexity.Mutation.UpdateTopicBanner == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateTopicBanner_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateTopicBanner(childComplexity, args["input"].(types.UpdateTopicBannerInput)), true
+
+	case "Mutation.updateTopicDescription":
+		if e.complexity.Mutation.UpdateTopicDescription == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateTopicDescription_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateTopicDescription(childComplexity, args["input"].(types.UpdateTopicDescriptionInput)), true
+
+	case "Mutation.updateTopicTitle":
+		if e.complexity.Mutation.UpdateTopicTitle == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateTopicTitle_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateTopicTitle(childComplexity, args["input"].(types.UpdateTopicTitleInput)), true
+
+	case "Mutation.updateTopicWeight":
+		if e.complexity.Mutation.UpdateTopicWeight == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateTopicWeight_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateTopicWeight(childComplexity, args["input"].(types.UpdateTopicWeightInput)), true
 
 	case "PageInfo.endCursor":
 		if e.complexity.PageInfo.EndCursor == nil {
@@ -2888,6 +3138,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Series(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["title"].(*string), args["sortBy"].(types.SeriesSort)), true
 
+	case "Query.topic":
+		if e.complexity.Query.Topic == nil {
+			break
+		}
+
+		args, err := ec.field_Query_topic_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Topic(childComplexity, args["slug"].(string)), true
+
+	case "Query.topics":
+		if e.complexity.Query.Topics == nil {
+			break
+		}
+
+		args, err := ec.field_Query_topics_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Topics(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
+
 	case "Query._service":
 		if e.complexity.Query.__resolve__service == nil {
 			break
@@ -2906,6 +3180,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.__resolve_entities(childComplexity, args["representations"].([]map[string]interface{})), true
+
+	case "RemoveCategoryAlternativeTitlePayload.category":
+		if e.complexity.RemoveCategoryAlternativeTitlePayload.Category == nil {
+			break
+		}
+
+		return e.complexity.RemoveCategoryAlternativeTitlePayload.Category(childComplexity), true
 
 	case "RemoveClubSlugAliasPayload.club":
 		if e.complexity.RemoveClubSlugAliasPayload.Club == nil {
@@ -3162,6 +3443,119 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TerminateClubPayload.Club(childComplexity), true
 
+	case "Topic.banner":
+		if e.complexity.Topic.Banner == nil {
+			break
+		}
+
+		return e.complexity.Topic.Banner(childComplexity), true
+
+	case "Topic.categories":
+		if e.complexity.Topic.Categories == nil {
+			break
+		}
+
+		args, err := ec.field_Topic_categories_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Topic.Categories(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["title"].(*string), args["sortBy"].(types.CategoriesSort)), true
+
+	case "Topic.description":
+		if e.complexity.Topic.Description == nil {
+			break
+		}
+
+		args, err := ec.field_Topic_description_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Topic.Description(childComplexity, args["locale"].(*string)), true
+
+	case "Topic.descriptionTranslations":
+		if e.complexity.Topic.DescriptionTranslations == nil {
+			break
+		}
+
+		return e.complexity.Topic.DescriptionTranslations(childComplexity), true
+
+	case "Topic.id":
+		if e.complexity.Topic.ID == nil {
+			break
+		}
+
+		return e.complexity.Topic.ID(childComplexity), true
+
+	case "Topic.reference":
+		if e.complexity.Topic.Reference == nil {
+			break
+		}
+
+		return e.complexity.Topic.Reference(childComplexity), true
+
+	case "Topic.slug":
+		if e.complexity.Topic.Slug == nil {
+			break
+		}
+
+		return e.complexity.Topic.Slug(childComplexity), true
+
+	case "Topic.title":
+		if e.complexity.Topic.Title == nil {
+			break
+		}
+
+		args, err := ec.field_Topic_title_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Topic.Title(childComplexity, args["locale"].(*string)), true
+
+	case "Topic.titleTranslations":
+		if e.complexity.Topic.TitleTranslations == nil {
+			break
+		}
+
+		return e.complexity.Topic.TitleTranslations(childComplexity), true
+
+	case "Topic.weight":
+		if e.complexity.Topic.Weight == nil {
+			break
+		}
+
+		return e.complexity.Topic.Weight(childComplexity), true
+
+	case "TopicConnection.edges":
+		if e.complexity.TopicConnection.Edges == nil {
+			break
+		}
+
+		return e.complexity.TopicConnection.Edges(childComplexity), true
+
+	case "TopicConnection.pageInfo":
+		if e.complexity.TopicConnection.PageInfo == nil {
+			break
+		}
+
+		return e.complexity.TopicConnection.PageInfo(childComplexity), true
+
+	case "TopicEdge.cursor":
+		if e.complexity.TopicEdge.Cursor == nil {
+			break
+		}
+
+		return e.complexity.TopicEdge.Cursor(childComplexity), true
+
+	case "TopicEdge.node":
+		if e.complexity.TopicEdge.Node == nil {
+			break
+		}
+
+		return e.complexity.TopicEdge.Node(childComplexity), true
+
 	case "Translation.language":
 		if e.complexity.Translation.Language == nil {
 			break
@@ -3204,6 +3598,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.UndoLikePostPayload.PostLikeID(childComplexity), true
 
+	case "UpdateAudienceBannerPayload.audience":
+		if e.complexity.UpdateAudienceBannerPayload.Audience == nil {
+			break
+		}
+
+		return e.complexity.UpdateAudienceBannerPayload.Audience(childComplexity), true
+
 	case "UpdateAudienceIsStandardPayload.audience":
 		if e.complexity.UpdateAudienceIsStandardPayload.Audience == nil {
 			break
@@ -3238,6 +3639,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.UpdateCategoryTitlePayload.Category(childComplexity), true
+
+	case "UpdateCategoryTopicPayload.category":
+		if e.complexity.UpdateCategoryTopicPayload.Category == nil {
+			break
+		}
+
+		return e.complexity.UpdateCategoryTopicPayload.Category(childComplexity), true
 
 	case "UpdateCharacterNamePayload.character":
 		if e.complexity.UpdateCharacterNamePayload.Character == nil {
@@ -3344,6 +3752,34 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.UpdateSeriesTitlePayload.Series(childComplexity), true
 
+	case "UpdateTopicBannerPayload.topic":
+		if e.complexity.UpdateTopicBannerPayload.Topic == nil {
+			break
+		}
+
+		return e.complexity.UpdateTopicBannerPayload.Topic(childComplexity), true
+
+	case "UpdateTopicDescriptionPayload.topic":
+		if e.complexity.UpdateTopicDescriptionPayload.Topic == nil {
+			break
+		}
+
+		return e.complexity.UpdateTopicDescriptionPayload.Topic(childComplexity), true
+
+	case "UpdateTopicTitlePayload.topic":
+		if e.complexity.UpdateTopicTitlePayload.Topic == nil {
+			break
+		}
+
+		return e.complexity.UpdateTopicTitlePayload.Topic(childComplexity), true
+
+	case "UpdateTopicWeightPayload.topic":
+		if e.complexity.UpdateTopicWeightPayload.Topic == nil {
+			break
+		}
+
+		return e.complexity.UpdateTopicWeightPayload.Topic(childComplexity), true
+
 	case "_Service.sdl":
 		if e.complexity._Service.SDL == nil {
 			break
@@ -3359,6 +3795,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	rc := graphql.GetOperationContext(ctx)
 	ec := executionContext{rc, e}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
+		ec.unmarshalInputAddCategoryAlternativeTitleInput,
 		ec.unmarshalInputAddClubSlugAliasInput,
 		ec.unmarshalInputAddPostContentInput,
 		ec.unmarshalInputArchivePostInput,
@@ -3368,6 +3805,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputCreateClubInput,
 		ec.unmarshalInputCreatePostInput,
 		ec.unmarshalInputCreateSeriesInput,
+		ec.unmarshalInputCreateTopicInput,
 		ec.unmarshalInputDeletePostInput,
 		ec.unmarshalInputDisableClubSupporterOnlyPostsInput,
 		ec.unmarshalInputEnableClubSupporterOnlyPostsInput,
@@ -3375,6 +3813,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputLeaveClubInput,
 		ec.unmarshalInputLikePostInput,
 		ec.unmarshalInputPromoteClubSlugAliasToDefaultInput,
+		ec.unmarshalInputRemoveCategoryAlternativeTitleInput,
 		ec.unmarshalInputRemoveClubSlugAliasInput,
 		ec.unmarshalInputRemovePostContentInput,
 		ec.unmarshalInputSubmitPostInput,
@@ -3384,11 +3823,13 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputUnSuspendClubInput,
 		ec.unmarshalInputUnTerminateClubInput,
 		ec.unmarshalInputUndoLikePostInput,
+		ec.unmarshalInputUpdateAudienceBannerInput,
 		ec.unmarshalInputUpdateAudienceIsStandardInput,
 		ec.unmarshalInputUpdateAudienceThumbnailInput,
 		ec.unmarshalInputUpdateAudienceTitleInput,
 		ec.unmarshalInputUpdateCategoryThumbnailInput,
 		ec.unmarshalInputUpdateCategoryTitleInput,
+		ec.unmarshalInputUpdateCategoryTopicInput,
 		ec.unmarshalInputUpdateCharacterNameInput,
 		ec.unmarshalInputUpdateCharacterThumbnailInput,
 		ec.unmarshalInputUpdateClubNameInput,
@@ -3403,6 +3844,10 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputUpdatePostContentOrderInput,
 		ec.unmarshalInputUpdateSeriesThumbnailInput,
 		ec.unmarshalInputUpdateSeriesTitleInput,
+		ec.unmarshalInputUpdateTopicBannerInput,
+		ec.unmarshalInputUpdateTopicDescriptionInput,
+		ec.unmarshalInputUpdateTopicTitleInput,
+		ec.unmarshalInputUpdateTopicWeightInput,
 	)
 	first := true
 
@@ -3618,6 +4063,15 @@ input UpdateAudienceThumbnailInput {
 }
 
 """Update audience."""
+input UpdateAudienceBannerInput {
+  """The audience to update"""
+  id: ID!
+
+  """The banner"""
+  banner: String!
+}
+
+"""Update audience."""
 input UpdateAudienceIsStandardInput {
   """The audience to update"""
   id: ID!
@@ -3634,6 +4088,12 @@ type UpdateAudienceTitlePayload {
 
 """Payload for updating audience"""
 type UpdateAudienceThumbnailPayload {
+  """The audience after update"""
+  audience: Audience
+}
+
+"""Payload for updating audience"""
+type UpdateAudienceBannerPayload {
   """The audience after update"""
   audience: Audience
 }
@@ -3659,6 +4119,11 @@ extend type Mutation {
   Update audience thumbnail
   """
   updateAudienceThumbnail(input: UpdateAudienceThumbnailInput!): UpdateAudienceThumbnailPayload
+
+  """
+  Update audience banner
+  """
+  updateAudienceBanner(input: UpdateAudienceBannerInput!): UpdateAudienceBannerPayload
 
   """
   Update audience standard
@@ -3692,11 +4157,17 @@ extend type Mutation {
   """All translations for this title."""
   titleTranslations: [Translation!]!
 
+  """Alternative titles for this category."""
+  alternativeTitles: [Translation!]!
+
   """Total amount of likes."""
   totalLikes: Int!
 
   """Total amount of posts."""
   totalPosts: Int!
+
+  """The topic linked this category. If no topic is linked, field is null."""
+  topic: Topic @goField(forceResolver: true)
 }
 
 type CategoryEdge {
@@ -3773,6 +4244,11 @@ input CreateCategoryInput {
   Validation: Max 25 characters.
   """
   title: String!
+
+  """
+  Optionally assign a topic to this category.
+  """
+  topicId: ID
 }
 
 """Payload for a new category"""
@@ -3806,12 +4282,68 @@ input UpdateCategoryTitleInput {
 }
 
 """Update category."""
+input AddCategoryAlternativeTitleInput {
+  """The category to update"""
+  id: ID!
+
+  """
+  The title to add.
+
+  Validation: Max 25 characters.
+  """
+  title: String!
+
+  """The localization for this title"""
+  locale: BCP47!
+}
+
+"""Update category."""
+input RemoveCategoryAlternativeTitleInput {
+  """The category to update"""
+  id: ID!
+
+  """
+  The title to remove.
+  """
+  title: String!
+}
+
+"""Update category topic."""
+input UpdateCategoryTopicInput {
+  """The category to update"""
+  id: ID!
+
+  """
+  The topic to assign to this category.
+  """
+  topicId: ID!
+}
+
+"""Update category."""
 input UpdateCategoryThumbnailInput {
   """The category to update"""
   id: ID!
 
   """The thumbnail"""
   thumbnail: String!
+}
+
+"""Payload for updating category"""
+type UpdateCategoryTopicPayload {
+  """The category after update"""
+  category: Category
+}
+
+"""Payload for updating category"""
+type AddCategoryAlternativeTitlePayload {
+  """The category after update"""
+  category: Category
+}
+
+"""Payload for updating category"""
+type RemoveCategoryAlternativeTitlePayload {
+  """The category after update"""
+  category: Category
 }
 
 """Payload for updating category"""
@@ -3841,6 +4373,21 @@ type Mutation {
   Update category thumbnail
   """
   updateCategoryThumbnail(input: UpdateCategoryThumbnailInput!): UpdateCategoryThumbnailPayload
+
+  """
+  Update the category topic
+  """
+  updateCategoryTopic(input: UpdateCategoryTopicInput!): UpdateCategoryTopicPayload
+
+  """
+  Add an alternative title to the category.
+  """
+  addCategoryAlternativeTitle(input: AddCategoryAlternativeTitleInput!): AddCategoryAlternativeTitlePayload
+
+  """
+  Remove an alternative title from the category.
+  """
+  removeCategoryAlternativeTitle(input: RemoveCategoryAlternativeTitleInput!): RemoveCategoryAlternativeTitlePayload
 }
 `, BuiltIn: false},
 	{Name: "../../../schema/character/schema.graphql", Input: `type Character implements Node @key(fields: "id") {
@@ -5760,6 +6307,250 @@ extend type Mutation {
   updateSeriesThumbnail(input: UpdateSeriesThumbnailInput!): UpdateSeriesThumbnailPayload
 }
 `, BuiltIn: false},
+	{Name: "../../../schema/topic/schema.graphql", Input: `type Topic implements Node @key(fields: "id") {
+  """An ID pointing to this topic."""
+  id: ID!
+
+  """An ID that can be used to uniquely-identify this category. Never changes."""
+  reference: String!
+
+  """A url-friendly ID. Should be used when searching"""
+  slug: String!
+
+  """A URL pointing to the object's banner."""
+  banner: Resource
+
+  """
+  A title for this topic.
+
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  title(locale: BCP47): String! @goField(forceResolver: true)
+
+  """All translations for this title."""
+  titleTranslations: [Translation!]!
+
+  """
+  A description for this topic.
+
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  description(locale: BCP47): String! @goField(forceResolver: true)
+
+  """All translations for this topic."""
+  descriptionTranslations: [Translation!]!
+
+  """The weight of this topic."""
+  weight: Int!
+
+  """All categories linked to this topic."""
+  categories(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Search by category slugs."""
+    slugs: [String!]
+
+    """Filter by the title of the category."""
+    title: String
+
+    """Sorting options for categories."""
+    sortBy: CategoriesSort! = POPULAR
+  ): CategoryConnection! @goField(forceResolver: true)
+}
+
+type TopicEdge {
+  cursor: String!
+  node: Topic!
+}
+
+type TopicConnection {
+  edges: [TopicEdge!]!
+  pageInfo: PageInfo!
+}
+
+extend type Query {
+  """
+  Search all topics.
+
+  Topics are sorted by the "weight" field. Higher weights are displayed at the top, in descending order.
+  """
+  topics(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): TopicConnection!
+
+  """Get a single topic."""
+  topic(
+    """Search by slug of the topic."""
+    slug: String!
+  ): Topic
+}
+
+"""Create a new topic."""
+input CreateTopicInput {
+  """
+  The chosen slug for the topic.
+
+  Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
+  """
+  slug: String!
+
+  """
+  The chosen title for the topic.
+
+  Validation: Max 25 characters.
+  """
+  title: String!
+
+  """
+  The chosen description for the topic.
+
+  Validation: Markdown allowed.
+  """
+  description: String!
+
+  """
+  The assigned weight for this topic.
+  """
+  weight: Int!
+}
+
+"""Payload for a new topic"""
+type CreateTopicPayload {
+  """The topic after creation"""
+  topic: Topic
+
+  """Validation for creating a new topic"""
+  validation: CreateTopicValidation
+}
+
+"""Validation for creating a new topic"""
+enum CreateTopicValidation {
+  SLUG_TAKEN
+}
+
+"""Update topic."""
+input UpdateTopicTitleInput {
+  """The topic to update"""
+  id: ID!
+
+  """
+  The title to update.
+
+  Validation: Max 25 characters.
+  """
+  title: String!
+
+  """The localization for this title"""
+  locale: BCP47!
+}
+
+"""Update topic."""
+input UpdateTopicWeightInput {
+  """The topic to update"""
+  id: ID!
+
+  """
+  The weight to update to.
+  """
+  weight: Int!
+}
+
+"""Update topic."""
+input UpdateTopicDescriptionInput {
+  """The topic to update"""
+  id: ID!
+
+  """
+  The description to update.
+
+  Validation: Markdown allowed.
+  """
+  description: String!
+
+  """The localization for this description"""
+  locale: BCP47!
+}
+
+"""Update topic."""
+input UpdateTopicBannerInput {
+  """The category to update"""
+  id: ID!
+
+  """The banner"""
+  banner: String!
+}
+
+"""Payload for updating topic"""
+type UpdateTopicTitlePayload {
+  """The topic after update"""
+  topic: Topic
+}
+
+"""Payload for updating topic"""
+type UpdateTopicDescriptionPayload {
+  """The topic after update"""
+  topic: Topic
+}
+
+"""Payload for updating topic"""
+type UpdateTopicWeightPayload {
+  """The topic after update"""
+  topic: Topic
+}
+
+"""Payload for updating topic"""
+type UpdateTopicBannerPayload {
+  """The topic after update"""
+  topic: Topic
+}
+
+extend type Mutation {
+  """
+  Create a new topic
+  """
+  createTopic(input: CreateTopicInput!): CreateTopicPayload
+
+  """
+  Update topic title
+  """
+  updateTopicTitle(input: UpdateTopicTitleInput!): UpdateTopicTitlePayload
+
+  """
+  Update topic description
+  """
+  updateTopicDescription(input: UpdateTopicDescriptionInput!): UpdateTopicDescriptionPayload
+
+  """
+  Update topic weight
+  """
+  updateTopicWeight(input: UpdateTopicWeightInput!): UpdateTopicWeightPayload
+
+  """
+  Update topic banner
+  """
+  updateTopicBanner(input: UpdateTopicBannerInput!): UpdateTopicBannerPayload
+}
+`, BuiltIn: false},
 	{Name: "../../../../../libraries/graphql/schema.graphql", Input: `scalar Time
 
 scalar Date
@@ -5891,7 +6682,7 @@ interface Node {
 `, BuiltIn: true},
 	{Name: "../../../federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
-union _Entity = Account | Audience | Category | Character | Club | ClubMember | Post | PostLike | Series
+union _Entity = Account | Audience | Category | Character | Club | ClubMember | Post | PostLike | Series | Topic
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
@@ -5904,6 +6695,7 @@ type Entity {
 	findPostByID(id: ID!,): Post!
 	findPostLikeByID(id: ID!,): PostLike!
 	findSeriesByID(id: ID!,): Series!
+	findTopicByID(id: ID!,): Topic!
 
 }
 
@@ -6880,6 +7672,36 @@ func (ec *executionContext) field_Entity_findSeriesByID_args(ctx context.Context
 	return args, nil
 }
 
+func (ec *executionContext) field_Entity_findTopicByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 relay.ID
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_addCategoryAlternativeTitle_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.AddCategoryAlternativeTitleInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNAddCategoryAlternativeTitleInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddCategoryAlternativeTitleInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_addClubSlugAlias_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -7015,6 +7837,21 @@ func (ec *executionContext) field_Mutation_createSeries_args(ctx context.Context
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_createTopic_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.CreateTopicInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCreateTopicInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateTopicInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_deletePost_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -7112,6 +7949,21 @@ func (ec *executionContext) field_Mutation_promoteClubSlugAliasToDefault_args(ct
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNPromoteClubSlugAliasToDefaultInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPromoteClubSlugAliasToDefaultInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_removeCategoryAlternativeTitle_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.RemoveCategoryAlternativeTitleInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNRemoveCategoryAlternativeTitleInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐRemoveCategoryAlternativeTitleInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -7255,6 +8107,21 @@ func (ec *executionContext) field_Mutation_undoLikePost_args(ctx context.Context
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_updateAudienceBanner_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdateAudienceBannerInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateAudienceBannerInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAudienceBannerInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_updateAudienceIsStandard_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -7322,6 +8189,21 @@ func (ec *executionContext) field_Mutation_updateCategoryTitle_args(ctx context.
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNUpdateCategoryTitleInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCategoryTitleInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateCategoryTopic_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdateCategoryTopicInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateCategoryTopicInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCategoryTopicInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -7532,6 +8414,66 @@ func (ec *executionContext) field_Mutation_updateSeriesTitle_args(ctx context.Co
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNUpdateSeriesTitleInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateSeriesTitleInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateTopicBanner_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdateTopicBannerInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateTopicBannerInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateTopicBannerInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateTopicDescription_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdateTopicDescriptionInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateTopicDescriptionInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateTopicDescriptionInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateTopicTitle_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdateTopicTitleInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateTopicTitleInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateTopicTitleInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateTopicWeight_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdateTopicWeightInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateTopicWeightInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateTopicWeightInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -8323,6 +9265,63 @@ func (ec *executionContext) field_Query_series_args(ctx context.Context, rawArgs
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_topic_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["slug"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slug"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["slug"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_topics_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg3
+	return args, nil
+}
+
 func (ec *executionContext) field_Series_posts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -8420,6 +9419,105 @@ func (ec *executionContext) field_Series_posts_args(ctx context.Context, rawArgs
 }
 
 func (ec *executionContext) field_Series_title_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["locale"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
+		arg0, err = ec.unmarshalOBCP472ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["locale"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Topic_categories_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg3
+	var arg4 []string
+	if tmp, ok := rawArgs["slugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slugs"))
+		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["slugs"] = arg4
+	var arg5 *string
+	if tmp, ok := rawArgs["title"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+		arg5, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["title"] = arg5
+	var arg6 types.CategoriesSort
+	if tmp, ok := rawArgs["sortBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
+		arg6, err = ec.unmarshalNCategoriesSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategoriesSort(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["sortBy"] = arg6
+	return args, nil
+}
+
+func (ec *executionContext) field_Topic_description_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["locale"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
+		arg0, err = ec.unmarshalOBCP472ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["locale"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Topic_title_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 *string
@@ -9031,6 +10129,73 @@ func (ec *executionContext) fieldContext_Account_id(ctx context.Context, field g
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _AddCategoryAlternativeTitlePayload_category(ctx context.Context, field graphql.CollectedField, obj *types.AddCategoryAlternativeTitlePayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_AddCategoryAlternativeTitlePayload_category(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Category, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Category)
+	fc.Result = res
+	return ec.marshalOCategory2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategory(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_AddCategoryAlternativeTitlePayload_category(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "AddCategoryAlternativeTitlePayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Category_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Category_reference(ctx, field)
+			case "slug":
+				return ec.fieldContext_Category_slug(ctx, field)
+			case "thumbnail":
+				return ec.fieldContext_Category_thumbnail(ctx, field)
+			case "banner":
+				return ec.fieldContext_Category_banner(ctx, field)
+			case "title":
+				return ec.fieldContext_Category_title(ctx, field)
+			case "titleTranslations":
+				return ec.fieldContext_Category_titleTranslations(ctx, field)
+			case "alternativeTitles":
+				return ec.fieldContext_Category_alternativeTitles(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Category_totalLikes(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Category_totalPosts(ctx, field)
+			case "topic":
+				return ec.fieldContext_Category_topic(ctx, field)
+			case "posts":
+				return ec.fieldContext_Category_posts(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Category", field.Name)
 		},
 	}
 	return fc, nil
@@ -10599,6 +11764,56 @@ func (ec *executionContext) fieldContext_Category_titleTranslations(ctx context.
 	return fc, nil
 }
 
+func (ec *executionContext) _Category_alternativeTitles(ctx context.Context, field graphql.CollectedField, obj *types.Category) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Category_alternativeTitles(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AlternativeTitles, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*graphql1.Translation)
+	fc.Result = res
+	return ec.marshalNTranslation2ᚕᚖoverdollᚋlibrariesᚋgraphqlᚐTranslationᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Category_alternativeTitles(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Category",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "language":
+				return ec.fieldContext_Translation_language(ctx, field)
+			case "text":
+				return ec.fieldContext_Translation_text(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Translation", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Category_totalLikes(ctx context.Context, field graphql.CollectedField, obj *types.Category) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Category_totalLikes(ctx, field)
 	if err != nil {
@@ -10682,6 +11897,69 @@ func (ec *executionContext) fieldContext_Category_totalPosts(ctx context.Context
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Category_topic(ctx context.Context, field graphql.CollectedField, obj *types.Category) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Category_topic(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Category().Topic(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Topic)
+	fc.Result = res
+	return ec.marshalOTopic2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTopic(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Category_topic(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Category",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Topic_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Topic_reference(ctx, field)
+			case "slug":
+				return ec.fieldContext_Topic_slug(ctx, field)
+			case "banner":
+				return ec.fieldContext_Topic_banner(ctx, field)
+			case "title":
+				return ec.fieldContext_Topic_title(ctx, field)
+			case "titleTranslations":
+				return ec.fieldContext_Topic_titleTranslations(ctx, field)
+			case "description":
+				return ec.fieldContext_Topic_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Topic_descriptionTranslations(ctx, field)
+			case "weight":
+				return ec.fieldContext_Topic_weight(ctx, field)
+			case "categories":
+				return ec.fieldContext_Topic_categories(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Topic", field.Name)
 		},
 	}
 	return fc, nil
@@ -10993,10 +12271,14 @@ func (ec *executionContext) fieldContext_CategoryCurationProfile_categories(ctx 
 				return ec.fieldContext_Category_title(ctx, field)
 			case "titleTranslations":
 				return ec.fieldContext_Category_titleTranslations(ctx, field)
+			case "alternativeTitles":
+				return ec.fieldContext_Category_alternativeTitles(ctx, field)
 			case "totalLikes":
 				return ec.fieldContext_Category_totalLikes(ctx, field)
 			case "totalPosts":
 				return ec.fieldContext_Category_totalPosts(ctx, field)
+			case "topic":
+				return ec.fieldContext_Category_topic(ctx, field)
 			case "posts":
 				return ec.fieldContext_Category_posts(ctx, field)
 			}
@@ -11103,10 +12385,14 @@ func (ec *executionContext) fieldContext_CategoryEdge_node(ctx context.Context, 
 				return ec.fieldContext_Category_title(ctx, field)
 			case "titleTranslations":
 				return ec.fieldContext_Category_titleTranslations(ctx, field)
+			case "alternativeTitles":
+				return ec.fieldContext_Category_alternativeTitles(ctx, field)
 			case "totalLikes":
 				return ec.fieldContext_Category_totalLikes(ctx, field)
 			case "totalPosts":
 				return ec.fieldContext_Category_totalPosts(ctx, field)
+			case "topic":
+				return ec.fieldContext_Category_topic(ctx, field)
 			case "posts":
 				return ec.fieldContext_Category_posts(ctx, field)
 			}
@@ -14545,10 +15831,14 @@ func (ec *executionContext) fieldContext_CreateCategoryPayload_category(ctx cont
 				return ec.fieldContext_Category_title(ctx, field)
 			case "titleTranslations":
 				return ec.fieldContext_Category_titleTranslations(ctx, field)
+			case "alternativeTitles":
+				return ec.fieldContext_Category_alternativeTitles(ctx, field)
 			case "totalLikes":
 				return ec.fieldContext_Category_totalLikes(ctx, field)
 			case "totalPosts":
 				return ec.fieldContext_Category_totalPosts(ctx, field)
+			case "topic":
+				return ec.fieldContext_Category_topic(ctx, field)
 			case "posts":
 				return ec.fieldContext_Category_posts(ctx, field)
 			}
@@ -15003,6 +16293,110 @@ func (ec *executionContext) fieldContext_CreateSeriesPayload_validation(ctx cont
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type CreateSeriesValidation does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CreateTopicPayload_topic(ctx context.Context, field graphql.CollectedField, obj *types.CreateTopicPayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CreateTopicPayload_topic(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Topic, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Topic)
+	fc.Result = res
+	return ec.marshalOTopic2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTopic(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CreateTopicPayload_topic(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CreateTopicPayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Topic_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Topic_reference(ctx, field)
+			case "slug":
+				return ec.fieldContext_Topic_slug(ctx, field)
+			case "banner":
+				return ec.fieldContext_Topic_banner(ctx, field)
+			case "title":
+				return ec.fieldContext_Topic_title(ctx, field)
+			case "titleTranslations":
+				return ec.fieldContext_Topic_titleTranslations(ctx, field)
+			case "description":
+				return ec.fieldContext_Topic_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Topic_descriptionTranslations(ctx, field)
+			case "weight":
+				return ec.fieldContext_Topic_weight(ctx, field)
+			case "categories":
+				return ec.fieldContext_Topic_categories(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Topic", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CreateTopicPayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.CreateTopicPayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CreateTopicPayload_validation(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Validation, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.CreateTopicValidation)
+	fc.Result = res
+	return ec.marshalOCreateTopicValidation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateTopicValidation(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CreateTopicPayload_validation(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CreateTopicPayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type CreateTopicValidation does not have child fields")
 		},
 	}
 	return fc, nil
@@ -15803,10 +17197,14 @@ func (ec *executionContext) fieldContext_Entity_findCategoryByID(ctx context.Con
 				return ec.fieldContext_Category_title(ctx, field)
 			case "titleTranslations":
 				return ec.fieldContext_Category_titleTranslations(ctx, field)
+			case "alternativeTitles":
+				return ec.fieldContext_Category_alternativeTitles(ctx, field)
 			case "totalLikes":
 				return ec.fieldContext_Category_totalLikes(ctx, field)
 			case "totalPosts":
 				return ec.fieldContext_Category_totalPosts(ctx, field)
+			case "topic":
+				return ec.fieldContext_Category_topic(ctx, field)
 			case "posts":
 				return ec.fieldContext_Category_posts(ctx, field)
 			}
@@ -16303,6 +17701,83 @@ func (ec *executionContext) fieldContext_Entity_findSeriesByID(ctx context.Conte
 	return fc, nil
 }
 
+func (ec *executionContext) _Entity_findTopicByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Entity_findTopicByID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Entity().FindTopicByID(rctx, fc.Args["id"].(relay.ID))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Topic)
+	fc.Result = res
+	return ec.marshalNTopic2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTopic(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Entity_findTopicByID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Entity",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Topic_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Topic_reference(ctx, field)
+			case "slug":
+				return ec.fieldContext_Topic_slug(ctx, field)
+			case "banner":
+				return ec.fieldContext_Topic_banner(ctx, field)
+			case "title":
+				return ec.fieldContext_Topic_title(ctx, field)
+			case "titleTranslations":
+				return ec.fieldContext_Topic_titleTranslations(ctx, field)
+			case "description":
+				return ec.fieldContext_Topic_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Topic_descriptionTranslations(ctx, field)
+			case "weight":
+				return ec.fieldContext_Topic_weight(ctx, field)
+			case "categories":
+				return ec.fieldContext_Topic_categories(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Topic", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Entity_findTopicByID_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _JoinClubPayload_clubMember(ctx context.Context, field graphql.CollectedField, obj *types.JoinClubPayload) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_JoinClubPayload_clubMember(ctx, field)
 	if err != nil {
@@ -16711,6 +18186,174 @@ func (ec *executionContext) fieldContext_Mutation_updateCategoryThumbnail(ctx co
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_updateCategoryTopic(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateCategoryTopic(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateCategoryTopic(rctx, fc.Args["input"].(types.UpdateCategoryTopicInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdateCategoryTopicPayload)
+	fc.Result = res
+	return ec.marshalOUpdateCategoryTopicPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCategoryTopicPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateCategoryTopic(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "category":
+				return ec.fieldContext_UpdateCategoryTopicPayload_category(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateCategoryTopicPayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateCategoryTopic_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_addCategoryAlternativeTitle(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_addCategoryAlternativeTitle(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().AddCategoryAlternativeTitle(rctx, fc.Args["input"].(types.AddCategoryAlternativeTitleInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.AddCategoryAlternativeTitlePayload)
+	fc.Result = res
+	return ec.marshalOAddCategoryAlternativeTitlePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddCategoryAlternativeTitlePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_addCategoryAlternativeTitle(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "category":
+				return ec.fieldContext_AddCategoryAlternativeTitlePayload_category(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type AddCategoryAlternativeTitlePayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_addCategoryAlternativeTitle_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_removeCategoryAlternativeTitle(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_removeCategoryAlternativeTitle(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().RemoveCategoryAlternativeTitle(rctx, fc.Args["input"].(types.RemoveCategoryAlternativeTitleInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.RemoveCategoryAlternativeTitlePayload)
+	fc.Result = res
+	return ec.marshalORemoveCategoryAlternativeTitlePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐRemoveCategoryAlternativeTitlePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_removeCategoryAlternativeTitle(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "category":
+				return ec.fieldContext_RemoveCategoryAlternativeTitlePayload_category(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type RemoveCategoryAlternativeTitlePayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_removeCategoryAlternativeTitle_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Mutation_createAudience(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_createAudience(ctx, field)
 	if err != nil {
@@ -16875,6 +18518,62 @@ func (ec *executionContext) fieldContext_Mutation_updateAudienceThumbnail(ctx co
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_updateAudienceThumbnail_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateAudienceBanner(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateAudienceBanner(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateAudienceBanner(rctx, fc.Args["input"].(types.UpdateAudienceBannerInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdateAudienceBannerPayload)
+	fc.Result = res
+	return ec.marshalOUpdateAudienceBannerPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAudienceBannerPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateAudienceBanner(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "audience":
+				return ec.fieldContext_UpdateAudienceBannerPayload_audience(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateAudienceBannerPayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateAudienceBanner_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -19017,6 +20716,288 @@ func (ec *executionContext) fieldContext_Mutation_updateSeriesThumbnail(ctx cont
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_createTopic(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createTopic(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateTopic(rctx, fc.Args["input"].(types.CreateTopicInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.CreateTopicPayload)
+	fc.Result = res
+	return ec.marshalOCreateTopicPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateTopicPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createTopic(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "topic":
+				return ec.fieldContext_CreateTopicPayload_topic(ctx, field)
+			case "validation":
+				return ec.fieldContext_CreateTopicPayload_validation(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CreateTopicPayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createTopic_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateTopicTitle(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateTopicTitle(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateTopicTitle(rctx, fc.Args["input"].(types.UpdateTopicTitleInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdateTopicTitlePayload)
+	fc.Result = res
+	return ec.marshalOUpdateTopicTitlePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateTopicTitlePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateTopicTitle(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "topic":
+				return ec.fieldContext_UpdateTopicTitlePayload_topic(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateTopicTitlePayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateTopicTitle_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateTopicDescription(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateTopicDescription(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateTopicDescription(rctx, fc.Args["input"].(types.UpdateTopicDescriptionInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdateTopicDescriptionPayload)
+	fc.Result = res
+	return ec.marshalOUpdateTopicDescriptionPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateTopicDescriptionPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateTopicDescription(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "topic":
+				return ec.fieldContext_UpdateTopicDescriptionPayload_topic(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateTopicDescriptionPayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateTopicDescription_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateTopicWeight(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateTopicWeight(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateTopicWeight(rctx, fc.Args["input"].(types.UpdateTopicWeightInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdateTopicWeightPayload)
+	fc.Result = res
+	return ec.marshalOUpdateTopicWeightPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateTopicWeightPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateTopicWeight(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "topic":
+				return ec.fieldContext_UpdateTopicWeightPayload_topic(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateTopicWeightPayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateTopicWeight_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateTopicBanner(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateTopicBanner(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateTopicBanner(rctx, fc.Args["input"].(types.UpdateTopicBannerInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdateTopicBannerPayload)
+	fc.Result = res
+	return ec.marshalOUpdateTopicBannerPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateTopicBannerPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateTopicBanner(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "topic":
+				return ec.fieldContext_UpdateTopicBannerPayload_topic(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateTopicBannerPayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateTopicBanner_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _PageInfo_hasNextPage(ctx context.Context, field graphql.CollectedField, obj *relay.PageInfo) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_PageInfo_hasNextPage(ctx, field)
 	if err != nil {
@@ -19839,10 +21820,14 @@ func (ec *executionContext) fieldContext_Post_categories(ctx context.Context, fi
 				return ec.fieldContext_Category_title(ctx, field)
 			case "titleTranslations":
 				return ec.fieldContext_Category_titleTranslations(ctx, field)
+			case "alternativeTitles":
+				return ec.fieldContext_Category_alternativeTitles(ctx, field)
 			case "totalLikes":
 				return ec.fieldContext_Category_totalLikes(ctx, field)
 			case "totalPosts":
 				return ec.fieldContext_Category_totalPosts(ctx, field)
+			case "topic":
+				return ec.fieldContext_Category_topic(ctx, field)
 			case "posts":
 				return ec.fieldContext_Category_posts(ctx, field)
 			}
@@ -20928,10 +22913,14 @@ func (ec *executionContext) fieldContext_Query_category(ctx context.Context, fie
 				return ec.fieldContext_Category_title(ctx, field)
 			case "titleTranslations":
 				return ec.fieldContext_Category_titleTranslations(ctx, field)
+			case "alternativeTitles":
+				return ec.fieldContext_Category_alternativeTitles(ctx, field)
 			case "totalLikes":
 				return ec.fieldContext_Category_totalLikes(ctx, field)
 			case "totalPosts":
 				return ec.fieldContext_Category_totalPosts(ctx, field)
+			case "topic":
+				return ec.fieldContext_Category_topic(ctx, field)
 			case "posts":
 				return ec.fieldContext_Category_posts(ctx, field)
 			}
@@ -21846,6 +23835,141 @@ func (ec *executionContext) fieldContext_Query_serial(ctx context.Context, field
 	return fc, nil
 }
 
+func (ec *executionContext) _Query_topics(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_topics(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Topics(rctx, fc.Args["after"].(*string), fc.Args["before"].(*string), fc.Args["first"].(*int), fc.Args["last"].(*int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.TopicConnection)
+	fc.Result = res
+	return ec.marshalNTopicConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTopicConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_topics(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "edges":
+				return ec.fieldContext_TopicConnection_edges(ctx, field)
+			case "pageInfo":
+				return ec.fieldContext_TopicConnection_pageInfo(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type TopicConnection", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_topics_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_topic(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_topic(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Topic(rctx, fc.Args["slug"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Topic)
+	fc.Result = res
+	return ec.marshalOTopic2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTopic(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_topic(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Topic_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Topic_reference(ctx, field)
+			case "slug":
+				return ec.fieldContext_Topic_slug(ctx, field)
+			case "banner":
+				return ec.fieldContext_Topic_banner(ctx, field)
+			case "title":
+				return ec.fieldContext_Topic_title(ctx, field)
+			case "titleTranslations":
+				return ec.fieldContext_Topic_titleTranslations(ctx, field)
+			case "description":
+				return ec.fieldContext_Topic_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Topic_descriptionTranslations(ctx, field)
+			case "weight":
+				return ec.fieldContext_Topic_weight(ctx, field)
+			case "categories":
+				return ec.fieldContext_Topic_categories(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Topic", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_topic_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Query__entities(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Query__entities(ctx, field)
 	if err != nil {
@@ -22073,6 +24197,73 @@ func (ec *executionContext) fieldContext_Query___schema(ctx context.Context, fie
 				return ec.fieldContext___Schema_directives(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type __Schema", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RemoveCategoryAlternativeTitlePayload_category(ctx context.Context, field graphql.CollectedField, obj *types.RemoveCategoryAlternativeTitlePayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RemoveCategoryAlternativeTitlePayload_category(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Category, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Category)
+	fc.Result = res
+	return ec.marshalOCategory2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategory(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RemoveCategoryAlternativeTitlePayload_category(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RemoveCategoryAlternativeTitlePayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Category_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Category_reference(ctx, field)
+			case "slug":
+				return ec.fieldContext_Category_slug(ctx, field)
+			case "thumbnail":
+				return ec.fieldContext_Category_thumbnail(ctx, field)
+			case "banner":
+				return ec.fieldContext_Category_banner(ctx, field)
+			case "title":
+				return ec.fieldContext_Category_title(ctx, field)
+			case "titleTranslations":
+				return ec.fieldContext_Category_titleTranslations(ctx, field)
+			case "alternativeTitles":
+				return ec.fieldContext_Category_alternativeTitles(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Category_totalLikes(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Category_totalPosts(ctx, field)
+			case "topic":
+				return ec.fieldContext_Category_topic(ctx, field)
+			case "posts":
+				return ec.fieldContext_Category_posts(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Category", field.Name)
 		},
 	}
 	return fc, nil
@@ -23934,6 +26125,730 @@ func (ec *executionContext) fieldContext_TerminateClubPayload_club(ctx context.C
 	return fc, nil
 }
 
+func (ec *executionContext) _Topic_id(ctx context.Context, field graphql.CollectedField, obj *types.Topic) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Topic_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Topic_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Topic",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Topic_reference(ctx context.Context, field graphql.CollectedField, obj *types.Topic) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Topic_reference(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Reference, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Topic_reference(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Topic",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Topic_slug(ctx context.Context, field graphql.CollectedField, obj *types.Topic) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Topic_slug(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Slug, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Topic_slug(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Topic",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Topic_banner(ctx context.Context, field graphql.CollectedField, obj *types.Topic) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Topic_banner(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Banner, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*graphql1.Resource)
+	fc.Result = res
+	return ec.marshalOResource2ᚖoverdollᚋlibrariesᚋgraphqlᚐResource(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Topic_banner(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Topic",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Resource_id(ctx, field)
+			case "type":
+				return ec.fieldContext_Resource_type(ctx, field)
+			case "processed":
+				return ec.fieldContext_Resource_processed(ctx, field)
+			case "urls":
+				return ec.fieldContext_Resource_urls(ctx, field)
+			case "width":
+				return ec.fieldContext_Resource_width(ctx, field)
+			case "height":
+				return ec.fieldContext_Resource_height(ctx, field)
+			case "videoDuration":
+				return ec.fieldContext_Resource_videoDuration(ctx, field)
+			case "videoThumbnail":
+				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
+			case "preview":
+				return ec.fieldContext_Resource_preview(ctx, field)
+			case "failed":
+				return ec.fieldContext_Resource_failed(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Resource", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Topic_title(ctx context.Context, field graphql.CollectedField, obj *types.Topic) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Topic_title(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Topic().Title(rctx, obj, fc.Args["locale"].(*string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Topic_title(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Topic",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Topic_title_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Topic_titleTranslations(ctx context.Context, field graphql.CollectedField, obj *types.Topic) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Topic_titleTranslations(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TitleTranslations, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*graphql1.Translation)
+	fc.Result = res
+	return ec.marshalNTranslation2ᚕᚖoverdollᚋlibrariesᚋgraphqlᚐTranslationᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Topic_titleTranslations(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Topic",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "language":
+				return ec.fieldContext_Translation_language(ctx, field)
+			case "text":
+				return ec.fieldContext_Translation_text(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Translation", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Topic_description(ctx context.Context, field graphql.CollectedField, obj *types.Topic) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Topic_description(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Topic().Description(rctx, obj, fc.Args["locale"].(*string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Topic_description(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Topic",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Topic_description_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Topic_descriptionTranslations(ctx context.Context, field graphql.CollectedField, obj *types.Topic) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Topic_descriptionTranslations(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DescriptionTranslations, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*graphql1.Translation)
+	fc.Result = res
+	return ec.marshalNTranslation2ᚕᚖoverdollᚋlibrariesᚋgraphqlᚐTranslationᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Topic_descriptionTranslations(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Topic",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "language":
+				return ec.fieldContext_Translation_language(ctx, field)
+			case "text":
+				return ec.fieldContext_Translation_text(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Translation", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Topic_weight(ctx context.Context, field graphql.CollectedField, obj *types.Topic) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Topic_weight(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Weight, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Topic_weight(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Topic",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Topic_categories(ctx context.Context, field graphql.CollectedField, obj *types.Topic) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Topic_categories(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Topic().Categories(rctx, obj, fc.Args["after"].(*string), fc.Args["before"].(*string), fc.Args["first"].(*int), fc.Args["last"].(*int), fc.Args["slugs"].([]string), fc.Args["title"].(*string), fc.Args["sortBy"].(types.CategoriesSort))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.CategoryConnection)
+	fc.Result = res
+	return ec.marshalNCategoryConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategoryConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Topic_categories(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Topic",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "edges":
+				return ec.fieldContext_CategoryConnection_edges(ctx, field)
+			case "pageInfo":
+				return ec.fieldContext_CategoryConnection_pageInfo(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CategoryConnection", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Topic_categories_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TopicConnection_edges(ctx context.Context, field graphql.CollectedField, obj *types.TopicConnection) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TopicConnection_edges(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Edges, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.TopicEdge)
+	fc.Result = res
+	return ec.marshalNTopicEdge2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTopicEdgeᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TopicConnection_edges(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TopicConnection",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "cursor":
+				return ec.fieldContext_TopicEdge_cursor(ctx, field)
+			case "node":
+				return ec.fieldContext_TopicEdge_node(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type TopicEdge", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TopicConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *types.TopicConnection) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TopicConnection_pageInfo(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PageInfo, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*relay.PageInfo)
+	fc.Result = res
+	return ec.marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐPageInfo(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TopicConnection_pageInfo(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TopicConnection",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "hasNextPage":
+				return ec.fieldContext_PageInfo_hasNextPage(ctx, field)
+			case "hasPreviousPage":
+				return ec.fieldContext_PageInfo_hasPreviousPage(ctx, field)
+			case "startCursor":
+				return ec.fieldContext_PageInfo_startCursor(ctx, field)
+			case "endCursor":
+				return ec.fieldContext_PageInfo_endCursor(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type PageInfo", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TopicEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *types.TopicEdge) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TopicEdge_cursor(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Cursor, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TopicEdge_cursor(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TopicEdge",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TopicEdge_node(ctx context.Context, field graphql.CollectedField, obj *types.TopicEdge) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TopicEdge_node(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Node, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Topic)
+	fc.Result = res
+	return ec.marshalNTopic2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTopic(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TopicEdge_node(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TopicEdge",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Topic_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Topic_reference(ctx, field)
+			case "slug":
+				return ec.fieldContext_Topic_slug(ctx, field)
+			case "banner":
+				return ec.fieldContext_Topic_banner(ctx, field)
+			case "title":
+				return ec.fieldContext_Topic_title(ctx, field)
+			case "titleTranslations":
+				return ec.fieldContext_Topic_titleTranslations(ctx, field)
+			case "description":
+				return ec.fieldContext_Topic_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Topic_descriptionTranslations(ctx, field)
+			case "weight":
+				return ec.fieldContext_Topic_weight(ctx, field)
+			case "categories":
+				return ec.fieldContext_Topic_categories(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Topic", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Translation_language(ctx context.Context, field graphql.CollectedField, obj *graphql1.Translation) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Translation_language(ctx, field)
 	if err != nil {
@@ -24312,6 +27227,71 @@ func (ec *executionContext) fieldContext_UndoLikePostPayload_postLikeId(ctx cont
 	return fc, nil
 }
 
+func (ec *executionContext) _UpdateAudienceBannerPayload_audience(ctx context.Context, field graphql.CollectedField, obj *types.UpdateAudienceBannerPayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UpdateAudienceBannerPayload_audience(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Audience, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Audience)
+	fc.Result = res
+	return ec.marshalOAudience2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudience(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UpdateAudienceBannerPayload_audience(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UpdateAudienceBannerPayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Audience_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Audience_reference(ctx, field)
+			case "slug":
+				return ec.fieldContext_Audience_slug(ctx, field)
+			case "thumbnail":
+				return ec.fieldContext_Audience_thumbnail(ctx, field)
+			case "banner":
+				return ec.fieldContext_Audience_banner(ctx, field)
+			case "title":
+				return ec.fieldContext_Audience_title(ctx, field)
+			case "standard":
+				return ec.fieldContext_Audience_standard(ctx, field)
+			case "titleTranslations":
+				return ec.fieldContext_Audience_titleTranslations(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Audience_totalLikes(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Audience_totalPosts(ctx, field)
+			case "posts":
+				return ec.fieldContext_Audience_posts(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Audience", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _UpdateAudienceIsStandardPayload_audience(ctx context.Context, field graphql.CollectedField, obj *types.UpdateAudienceIsStandardPayload) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_UpdateAudienceIsStandardPayload_audience(ctx, field)
 	if err != nil {
@@ -24557,10 +27537,14 @@ func (ec *executionContext) fieldContext_UpdateCategoryThumbnailPayload_category
 				return ec.fieldContext_Category_title(ctx, field)
 			case "titleTranslations":
 				return ec.fieldContext_Category_titleTranslations(ctx, field)
+			case "alternativeTitles":
+				return ec.fieldContext_Category_alternativeTitles(ctx, field)
 			case "totalLikes":
 				return ec.fieldContext_Category_totalLikes(ctx, field)
 			case "totalPosts":
 				return ec.fieldContext_Category_totalPosts(ctx, field)
+			case "topic":
+				return ec.fieldContext_Category_topic(ctx, field)
 			case "posts":
 				return ec.fieldContext_Category_posts(ctx, field)
 			}
@@ -24620,10 +27604,81 @@ func (ec *executionContext) fieldContext_UpdateCategoryTitlePayload_category(ctx
 				return ec.fieldContext_Category_title(ctx, field)
 			case "titleTranslations":
 				return ec.fieldContext_Category_titleTranslations(ctx, field)
+			case "alternativeTitles":
+				return ec.fieldContext_Category_alternativeTitles(ctx, field)
 			case "totalLikes":
 				return ec.fieldContext_Category_totalLikes(ctx, field)
 			case "totalPosts":
 				return ec.fieldContext_Category_totalPosts(ctx, field)
+			case "topic":
+				return ec.fieldContext_Category_topic(ctx, field)
+			case "posts":
+				return ec.fieldContext_Category_posts(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Category", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UpdateCategoryTopicPayload_category(ctx context.Context, field graphql.CollectedField, obj *types.UpdateCategoryTopicPayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UpdateCategoryTopicPayload_category(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Category, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Category)
+	fc.Result = res
+	return ec.marshalOCategory2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategory(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UpdateCategoryTopicPayload_category(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UpdateCategoryTopicPayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Category_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Category_reference(ctx, field)
+			case "slug":
+				return ec.fieldContext_Category_slug(ctx, field)
+			case "thumbnail":
+				return ec.fieldContext_Category_thumbnail(ctx, field)
+			case "banner":
+				return ec.fieldContext_Category_banner(ctx, field)
+			case "title":
+				return ec.fieldContext_Category_title(ctx, field)
+			case "titleTranslations":
+				return ec.fieldContext_Category_titleTranslations(ctx, field)
+			case "alternativeTitles":
+				return ec.fieldContext_Category_alternativeTitles(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Category_totalLikes(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Category_totalPosts(ctx, field)
+			case "topic":
+				return ec.fieldContext_Category_topic(ctx, field)
 			case "posts":
 				return ec.fieldContext_Category_posts(ctx, field)
 			}
@@ -25651,6 +28706,258 @@ func (ec *executionContext) fieldContext_UpdateSeriesTitlePayload_series(ctx con
 				return ec.fieldContext_Series_posts(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Series", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UpdateTopicBannerPayload_topic(ctx context.Context, field graphql.CollectedField, obj *types.UpdateTopicBannerPayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UpdateTopicBannerPayload_topic(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Topic, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Topic)
+	fc.Result = res
+	return ec.marshalOTopic2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTopic(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UpdateTopicBannerPayload_topic(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UpdateTopicBannerPayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Topic_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Topic_reference(ctx, field)
+			case "slug":
+				return ec.fieldContext_Topic_slug(ctx, field)
+			case "banner":
+				return ec.fieldContext_Topic_banner(ctx, field)
+			case "title":
+				return ec.fieldContext_Topic_title(ctx, field)
+			case "titleTranslations":
+				return ec.fieldContext_Topic_titleTranslations(ctx, field)
+			case "description":
+				return ec.fieldContext_Topic_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Topic_descriptionTranslations(ctx, field)
+			case "weight":
+				return ec.fieldContext_Topic_weight(ctx, field)
+			case "categories":
+				return ec.fieldContext_Topic_categories(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Topic", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UpdateTopicDescriptionPayload_topic(ctx context.Context, field graphql.CollectedField, obj *types.UpdateTopicDescriptionPayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UpdateTopicDescriptionPayload_topic(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Topic, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Topic)
+	fc.Result = res
+	return ec.marshalOTopic2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTopic(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UpdateTopicDescriptionPayload_topic(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UpdateTopicDescriptionPayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Topic_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Topic_reference(ctx, field)
+			case "slug":
+				return ec.fieldContext_Topic_slug(ctx, field)
+			case "banner":
+				return ec.fieldContext_Topic_banner(ctx, field)
+			case "title":
+				return ec.fieldContext_Topic_title(ctx, field)
+			case "titleTranslations":
+				return ec.fieldContext_Topic_titleTranslations(ctx, field)
+			case "description":
+				return ec.fieldContext_Topic_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Topic_descriptionTranslations(ctx, field)
+			case "weight":
+				return ec.fieldContext_Topic_weight(ctx, field)
+			case "categories":
+				return ec.fieldContext_Topic_categories(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Topic", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UpdateTopicTitlePayload_topic(ctx context.Context, field graphql.CollectedField, obj *types.UpdateTopicTitlePayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UpdateTopicTitlePayload_topic(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Topic, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Topic)
+	fc.Result = res
+	return ec.marshalOTopic2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTopic(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UpdateTopicTitlePayload_topic(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UpdateTopicTitlePayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Topic_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Topic_reference(ctx, field)
+			case "slug":
+				return ec.fieldContext_Topic_slug(ctx, field)
+			case "banner":
+				return ec.fieldContext_Topic_banner(ctx, field)
+			case "title":
+				return ec.fieldContext_Topic_title(ctx, field)
+			case "titleTranslations":
+				return ec.fieldContext_Topic_titleTranslations(ctx, field)
+			case "description":
+				return ec.fieldContext_Topic_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Topic_descriptionTranslations(ctx, field)
+			case "weight":
+				return ec.fieldContext_Topic_weight(ctx, field)
+			case "categories":
+				return ec.fieldContext_Topic_categories(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Topic", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UpdateTopicWeightPayload_topic(ctx context.Context, field graphql.CollectedField, obj *types.UpdateTopicWeightPayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UpdateTopicWeightPayload_topic(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Topic, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Topic)
+	fc.Result = res
+	return ec.marshalOTopic2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTopic(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UpdateTopicWeightPayload_topic(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UpdateTopicWeightPayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Topic_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Topic_reference(ctx, field)
+			case "slug":
+				return ec.fieldContext_Topic_slug(ctx, field)
+			case "banner":
+				return ec.fieldContext_Topic_banner(ctx, field)
+			case "title":
+				return ec.fieldContext_Topic_title(ctx, field)
+			case "titleTranslations":
+				return ec.fieldContext_Topic_titleTranslations(ctx, field)
+			case "description":
+				return ec.fieldContext_Topic_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Topic_descriptionTranslations(ctx, field)
+			case "weight":
+				return ec.fieldContext_Topic_weight(ctx, field)
+			case "categories":
+				return ec.fieldContext_Topic_categories(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Topic", field.Name)
 		},
 	}
 	return fc, nil
@@ -27470,6 +30777,45 @@ func (ec *executionContext) fieldContext___Type_specifiedByURL(ctx context.Conte
 
 // region    **************************** input.gotpl *****************************
 
+func (ec *executionContext) unmarshalInputAddCategoryAlternativeTitleInput(ctx context.Context, obj interface{}) (types.AddCategoryAlternativeTitleInput, error) {
+	var it types.AddCategoryAlternativeTitleInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "title":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+			it.Title, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "locale":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
+			it.Locale, err = ec.unmarshalNBCP472string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputAddClubSlugAliasInput(ctx context.Context, obj interface{}) (types.AddClubSlugAliasInput, error) {
 	var it types.AddClubSlugAliasInput
 	asMap := map[string]interface{}{}
@@ -27619,6 +30965,14 @@ func (ec *executionContext) unmarshalInputCreateCategoryInput(ctx context.Contex
 			if err != nil {
 				return it, err
 			}
+		case "topicId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("topicId"))
+			it.TopicID, err = ec.unmarshalOID2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -27740,6 +31094,53 @@ func (ec *executionContext) unmarshalInputCreateSeriesInput(ctx context.Context,
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
 			it.Title, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputCreateTopicInput(ctx context.Context, obj interface{}) (types.CreateTopicInput, error) {
+	var it types.CreateTopicInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "slug":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slug"))
+			it.Slug, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "title":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+			it.Title, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "description":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
+			it.Description, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "weight":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("weight"))
+			it.Weight, err = ec.unmarshalNInt2int(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -27909,6 +31310,37 @@ func (ec *executionContext) unmarshalInputPromoteClubSlugAliasToDefaultInput(ctx
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slug"))
 			it.Slug, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputRemoveCategoryAlternativeTitleInput(ctx context.Context, obj interface{}) (types.RemoveCategoryAlternativeTitleInput, error) {
+	var it types.RemoveCategoryAlternativeTitleInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "title":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+			it.Title, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -28149,6 +31581,37 @@ func (ec *executionContext) unmarshalInputUndoLikePostInput(ctx context.Context,
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpdateAudienceBannerInput(ctx context.Context, obj interface{}) (types.UpdateAudienceBannerInput, error) {
+	var it types.UpdateAudienceBannerInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "banner":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("banner"))
+			it.Banner, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputUpdateAudienceIsStandardInput(ctx context.Context, obj interface{}) (types.UpdateAudienceIsStandardInput, error) {
 	var it types.UpdateAudienceIsStandardInput
 	asMap := map[string]interface{}{}
@@ -28311,6 +31774,37 @@ func (ec *executionContext) unmarshalInputUpdateCategoryTitleInput(ctx context.C
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
 			it.Locale, err = ec.unmarshalNBCP472string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateCategoryTopicInput(ctx context.Context, obj interface{}) (types.UpdateCategoryTopicInput, error) {
+	var it types.UpdateCategoryTopicInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "topicId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("topicId"))
+			it.TopicID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -28778,6 +32272,146 @@ func (ec *executionContext) unmarshalInputUpdateSeriesTitleInput(ctx context.Con
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpdateTopicBannerInput(ctx context.Context, obj interface{}) (types.UpdateTopicBannerInput, error) {
+	var it types.UpdateTopicBannerInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "banner":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("banner"))
+			it.Banner, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateTopicDescriptionInput(ctx context.Context, obj interface{}) (types.UpdateTopicDescriptionInput, error) {
+	var it types.UpdateTopicDescriptionInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "description":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
+			it.Description, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "locale":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
+			it.Locale, err = ec.unmarshalNBCP472string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateTopicTitleInput(ctx context.Context, obj interface{}) (types.UpdateTopicTitleInput, error) {
+	var it types.UpdateTopicTitleInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "title":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+			it.Title, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "locale":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
+			it.Locale, err = ec.unmarshalNBCP472string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateTopicWeightInput(ctx context.Context, obj interface{}) (types.UpdateTopicWeightInput, error) {
+	var it types.UpdateTopicWeightInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "weight":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("weight"))
+			it.Weight, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
@@ -28865,6 +32499,13 @@ func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj
 			return graphql.Null
 		}
 		return ec._Series(ctx, sel, obj)
+	case types.Topic:
+		return ec._Topic(ctx, sel, &obj)
+	case *types.Topic:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._Topic(ctx, sel, obj)
 	default:
 		panic(fmt.Errorf("unexpected type %T", obj))
 	}
@@ -28974,6 +32615,13 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 			return graphql.Null
 		}
 		return ec._Series(ctx, sel, obj)
+	case types.Topic:
+		return ec._Topic(ctx, sel, &obj)
+	case *types.Topic:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._Topic(ctx, sel, obj)
 	default:
 		panic(fmt.Errorf("unexpected type %T", obj))
 	}
@@ -29200,6 +32848,31 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var addCategoryAlternativeTitlePayloadImplementors = []string{"AddCategoryAlternativeTitlePayload"}
+
+func (ec *executionContext) _AddCategoryAlternativeTitlePayload(ctx context.Context, sel ast.SelectionSet, obj *types.AddCategoryAlternativeTitlePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, addCategoryAlternativeTitlePayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("AddCategoryAlternativeTitlePayload")
+		case "category":
+
+			out.Values[i] = ec._AddCategoryAlternativeTitlePayload_category(ctx, field, obj)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -29599,6 +33272,13 @@ func (ec *executionContext) _Category(ctx context.Context, sel ast.SelectionSet,
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "alternativeTitles":
+
+			out.Values[i] = ec._Category_alternativeTitles(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "totalLikes":
 
 			out.Values[i] = ec._Category_totalLikes(ctx, field, obj)
@@ -29613,6 +33293,23 @@ func (ec *executionContext) _Category(ctx context.Context, sel ast.SelectionSet,
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "topic":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Category_topic(ctx, field, obj)
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "posts":
 			field := field
 
@@ -30803,6 +34500,35 @@ func (ec *executionContext) _CreateSeriesPayload(ctx context.Context, sel ast.Se
 	return out
 }
 
+var createTopicPayloadImplementors = []string{"CreateTopicPayload"}
+
+func (ec *executionContext) _CreateTopicPayload(ctx context.Context, sel ast.SelectionSet, obj *types.CreateTopicPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, createTopicPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CreateTopicPayload")
+		case "topic":
+
+			out.Values[i] = ec._CreateTopicPayload_topic(ctx, field, obj)
+
+		case "validation":
+
+			out.Values[i] = ec._CreateTopicPayload_validation(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var curationProfileImplementors = []string{"CurationProfile"}
 
 func (ec *executionContext) _CurationProfile(ctx context.Context, sel ast.SelectionSet, obj *types.CurationProfile) graphql.Marshaler {
@@ -31199,6 +34925,29 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
+		case "findTopicByID":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Entity_findTopicByID(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -31360,6 +35109,24 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_updateCategoryThumbnail(ctx, field)
 			})
 
+		case "updateCategoryTopic":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateCategoryTopic(ctx, field)
+			})
+
+		case "addCategoryAlternativeTitle":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_addCategoryAlternativeTitle(ctx, field)
+			})
+
+		case "removeCategoryAlternativeTitle":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_removeCategoryAlternativeTitle(ctx, field)
+			})
+
 		case "createAudience":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -31376,6 +35143,12 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateAudienceThumbnail(ctx, field)
+			})
+
+		case "updateAudienceBanner":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateAudienceBanner(ctx, field)
 			})
 
 		case "updateAudienceIsStandard":
@@ -31604,6 +35377,36 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateSeriesThumbnail(ctx, field)
+			})
+
+		case "createTopic":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createTopic(ctx, field)
+			})
+
+		case "updateTopicTitle":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateTopicTitle(ctx, field)
+			})
+
+		case "updateTopicDescription":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateTopicDescription(ctx, field)
+			})
+
+		case "updateTopicWeight":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateTopicWeight(ctx, field)
+			})
+
+		case "updateTopicBanner":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateTopicBanner(ctx, field)
 			})
 
 		default:
@@ -32398,6 +36201,49 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
+		case "topics":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_topics(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "topic":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_topic(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
 		case "_entities":
 			field := field
 
@@ -32455,6 +36301,31 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Query___schema(ctx, field)
 			})
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var removeCategoryAlternativeTitlePayloadImplementors = []string{"RemoveCategoryAlternativeTitlePayload"}
+
+func (ec *executionContext) _RemoveCategoryAlternativeTitlePayload(ctx context.Context, sel ast.SelectionSet, obj *types.RemoveCategoryAlternativeTitlePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, removeCategoryAlternativeTitlePayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("RemoveCategoryAlternativeTitlePayload")
+		case "category":
+
+			out.Values[i] = ec._RemoveCategoryAlternativeTitlePayload_category(ctx, field, obj)
 
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -32966,6 +36837,203 @@ func (ec *executionContext) _TerminateClubPayload(ctx context.Context, sel ast.S
 	return out
 }
 
+var topicImplementors = []string{"Topic", "Node", "_Entity"}
+
+func (ec *executionContext) _Topic(ctx context.Context, sel ast.SelectionSet, obj *types.Topic) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, topicImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Topic")
+		case "id":
+
+			out.Values[i] = ec._Topic_id(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "reference":
+
+			out.Values[i] = ec._Topic_reference(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "slug":
+
+			out.Values[i] = ec._Topic_slug(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "banner":
+
+			out.Values[i] = ec._Topic_banner(ctx, field, obj)
+
+		case "title":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Topic_title(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "titleTranslations":
+
+			out.Values[i] = ec._Topic_titleTranslations(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "description":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Topic_description(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "descriptionTranslations":
+
+			out.Values[i] = ec._Topic_descriptionTranslations(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "weight":
+
+			out.Values[i] = ec._Topic_weight(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "categories":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Topic_categories(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var topicConnectionImplementors = []string{"TopicConnection"}
+
+func (ec *executionContext) _TopicConnection(ctx context.Context, sel ast.SelectionSet, obj *types.TopicConnection) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, topicConnectionImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("TopicConnection")
+		case "edges":
+
+			out.Values[i] = ec._TopicConnection_edges(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "pageInfo":
+
+			out.Values[i] = ec._TopicConnection_pageInfo(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var topicEdgeImplementors = []string{"TopicEdge"}
+
+func (ec *executionContext) _TopicEdge(ctx context.Context, sel ast.SelectionSet, obj *types.TopicEdge) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, topicEdgeImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("TopicEdge")
+		case "cursor":
+
+			out.Values[i] = ec._TopicEdge_cursor(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "node":
+
+			out.Values[i] = ec._TopicEdge_node(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var translationImplementors = []string{"Translation"}
 
 func (ec *executionContext) _Translation(ctx context.Context, sel ast.SelectionSet, obj *graphql1.Translation) graphql.Marshaler {
@@ -33101,6 +37169,31 @@ func (ec *executionContext) _UndoLikePostPayload(ctx context.Context, sel ast.Se
 	return out
 }
 
+var updateAudienceBannerPayloadImplementors = []string{"UpdateAudienceBannerPayload"}
+
+func (ec *executionContext) _UpdateAudienceBannerPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateAudienceBannerPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateAudienceBannerPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateAudienceBannerPayload")
+		case "audience":
+
+			out.Values[i] = ec._UpdateAudienceBannerPayload_audience(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var updateAudienceIsStandardPayloadImplementors = []string{"UpdateAudienceIsStandardPayload"}
 
 func (ec *executionContext) _UpdateAudienceIsStandardPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateAudienceIsStandardPayload) graphql.Marshaler {
@@ -33214,6 +37307,31 @@ func (ec *executionContext) _UpdateCategoryTitlePayload(ctx context.Context, sel
 		case "category":
 
 			out.Values[i] = ec._UpdateCategoryTitlePayload_category(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateCategoryTopicPayloadImplementors = []string{"UpdateCategoryTopicPayload"}
+
+func (ec *executionContext) _UpdateCategoryTopicPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateCategoryTopicPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateCategoryTopicPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateCategoryTopicPayload")
+		case "category":
+
+			out.Values[i] = ec._UpdateCategoryTopicPayload_category(ctx, field, obj)
 
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -33601,6 +37719,106 @@ func (ec *executionContext) _UpdateSeriesTitlePayload(ctx context.Context, sel a
 	return out
 }
 
+var updateTopicBannerPayloadImplementors = []string{"UpdateTopicBannerPayload"}
+
+func (ec *executionContext) _UpdateTopicBannerPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateTopicBannerPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateTopicBannerPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateTopicBannerPayload")
+		case "topic":
+
+			out.Values[i] = ec._UpdateTopicBannerPayload_topic(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateTopicDescriptionPayloadImplementors = []string{"UpdateTopicDescriptionPayload"}
+
+func (ec *executionContext) _UpdateTopicDescriptionPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateTopicDescriptionPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateTopicDescriptionPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateTopicDescriptionPayload")
+		case "topic":
+
+			out.Values[i] = ec._UpdateTopicDescriptionPayload_topic(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateTopicTitlePayloadImplementors = []string{"UpdateTopicTitlePayload"}
+
+func (ec *executionContext) _UpdateTopicTitlePayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateTopicTitlePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateTopicTitlePayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateTopicTitlePayload")
+		case "topic":
+
+			out.Values[i] = ec._UpdateTopicTitlePayload_topic(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateTopicWeightPayloadImplementors = []string{"UpdateTopicWeightPayload"}
+
+func (ec *executionContext) _UpdateTopicWeightPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateTopicWeightPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateTopicWeightPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateTopicWeightPayload")
+		case "topic":
+
+			out.Values[i] = ec._UpdateTopicWeightPayload_topic(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var _ServiceImplementors = []string{"_Service"}
 
 func (ec *executionContext) __Service(ctx context.Context, sel ast.SelectionSet, obj *fedruntime.Service) graphql.Marshaler {
@@ -33956,6 +38174,11 @@ func (ec *executionContext) marshalNAccount2ᚖoverdollᚋapplicationsᚋsting�
 		return graphql.Null
 	}
 	return ec._Account(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNAddCategoryAlternativeTitleInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddCategoryAlternativeTitleInput(ctx context.Context, v interface{}) (types.AddCategoryAlternativeTitleInput, error) {
+	res, err := ec.unmarshalInputAddCategoryAlternativeTitleInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNAddClubSlugAliasInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddClubSlugAliasInput(ctx context.Context, v interface{}) (types.AddClubSlugAliasInput, error) {
@@ -34787,6 +39010,11 @@ func (ec *executionContext) unmarshalNCreateSeriesInput2overdollᚋapplications�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNCreateTopicInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateTopicInput(ctx context.Context, v interface{}) (types.CreateTopicInput, error) {
+	res, err := ec.unmarshalInputCreateTopicInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNCurationProfile2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurationProfile(ctx context.Context, sel ast.SelectionSet, v types.CurationProfile) graphql.Marshaler {
 	return ec._CurationProfile(ctx, sel, &v)
 }
@@ -35090,6 +39318,11 @@ func (ec *executionContext) marshalNPostsSort2overdollᚋapplicationsᚋstingᚋ
 
 func (ec *executionContext) unmarshalNPromoteClubSlugAliasToDefaultInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPromoteClubSlugAliasToDefaultInput(ctx context.Context, v interface{}) (types.PromoteClubSlugAliasToDefaultInput, error) {
 	res, err := ec.unmarshalInputPromoteClubSlugAliasToDefaultInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNRemoveCategoryAlternativeTitleInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐRemoveCategoryAlternativeTitleInput(ctx context.Context, v interface{}) (types.RemoveCategoryAlternativeTitleInput, error) {
+	res, err := ec.unmarshalInputRemoveCategoryAlternativeTitleInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -35434,6 +39667,88 @@ func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel as
 	return res
 }
 
+func (ec *executionContext) marshalNTopic2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTopic(ctx context.Context, sel ast.SelectionSet, v types.Topic) graphql.Marshaler {
+	return ec._Topic(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNTopic2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTopic(ctx context.Context, sel ast.SelectionSet, v *types.Topic) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Topic(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNTopicConnection2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTopicConnection(ctx context.Context, sel ast.SelectionSet, v types.TopicConnection) graphql.Marshaler {
+	return ec._TopicConnection(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNTopicConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTopicConnection(ctx context.Context, sel ast.SelectionSet, v *types.TopicConnection) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._TopicConnection(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNTopicEdge2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTopicEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.TopicEdge) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNTopicEdge2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTopicEdge(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNTopicEdge2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTopicEdge(ctx context.Context, sel ast.SelectionSet, v *types.TopicEdge) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._TopicEdge(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNTranslation2ᚕᚖoverdollᚋlibrariesᚋgraphqlᚐTranslationᚄ(ctx context.Context, sel ast.SelectionSet, v []*graphql1.Translation) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -35518,6 +39833,11 @@ func (ec *executionContext) unmarshalNUndoLikePostInput2overdollᚋapplications�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNUpdateAudienceBannerInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAudienceBannerInput(ctx context.Context, v interface{}) (types.UpdateAudienceBannerInput, error) {
+	res, err := ec.unmarshalInputUpdateAudienceBannerInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNUpdateAudienceIsStandardInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAudienceIsStandardInput(ctx context.Context, v interface{}) (types.UpdateAudienceIsStandardInput, error) {
 	res, err := ec.unmarshalInputUpdateAudienceIsStandardInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -35540,6 +39860,11 @@ func (ec *executionContext) unmarshalNUpdateCategoryThumbnailInput2overdollᚋap
 
 func (ec *executionContext) unmarshalNUpdateCategoryTitleInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCategoryTitleInput(ctx context.Context, v interface{}) (types.UpdateCategoryTitleInput, error) {
 	res, err := ec.unmarshalInputUpdateCategoryTitleInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateCategoryTopicInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCategoryTopicInput(ctx context.Context, v interface{}) (types.UpdateCategoryTopicInput, error) {
+	res, err := ec.unmarshalInputUpdateCategoryTopicInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -35610,6 +39935,26 @@ func (ec *executionContext) unmarshalNUpdateSeriesThumbnailInput2overdollᚋappl
 
 func (ec *executionContext) unmarshalNUpdateSeriesTitleInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateSeriesTitleInput(ctx context.Context, v interface{}) (types.UpdateSeriesTitleInput, error) {
 	res, err := ec.unmarshalInputUpdateSeriesTitleInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateTopicBannerInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateTopicBannerInput(ctx context.Context, v interface{}) (types.UpdateTopicBannerInput, error) {
+	res, err := ec.unmarshalInputUpdateTopicBannerInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateTopicDescriptionInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateTopicDescriptionInput(ctx context.Context, v interface{}) (types.UpdateTopicDescriptionInput, error) {
+	res, err := ec.unmarshalInputUpdateTopicDescriptionInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateTopicTitleInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateTopicTitleInput(ctx context.Context, v interface{}) (types.UpdateTopicTitleInput, error) {
+	res, err := ec.unmarshalInputUpdateTopicTitleInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateTopicWeightInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateTopicWeightInput(ctx context.Context, v interface{}) (types.UpdateTopicWeightInput, error) {
+	res, err := ec.unmarshalInputUpdateTopicWeightInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -35983,6 +40328,13 @@ func (ec *executionContext) marshalOAccount2ᚖoverdollᚋapplicationsᚋsting�
 	return ec._Account(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOAddCategoryAlternativeTitlePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddCategoryAlternativeTitlePayload(ctx context.Context, sel ast.SelectionSet, v *types.AddCategoryAlternativeTitlePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._AddCategoryAlternativeTitlePayload(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOAddClubSlugAliasPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAddClubSlugAliasPayload(ctx context.Context, sel ast.SelectionSet, v *types.AddClubSlugAliasPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -36233,6 +40585,29 @@ func (ec *executionContext) marshalOCreateSeriesValidation2ᚖoverdollᚋapplica
 	return v
 }
 
+func (ec *executionContext) marshalOCreateTopicPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateTopicPayload(ctx context.Context, sel ast.SelectionSet, v *types.CreateTopicPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CreateTopicPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOCreateTopicValidation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateTopicValidation(ctx context.Context, v interface{}) (*types.CreateTopicValidation, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(types.CreateTopicValidation)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOCreateTopicValidation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateTopicValidation(ctx context.Context, sel ast.SelectionSet, v *types.CreateTopicValidation) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
+}
+
 func (ec *executionContext) marshalOCurationProfile2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurationProfile(ctx context.Context, sel ast.SelectionSet, v *types.CurationProfile) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -36349,6 +40724,13 @@ func (ec *executionContext) marshalOPromoteClubSlugAliasToDefaultPayload2ᚖover
 		return graphql.Null
 	}
 	return ec._PromoteClubSlugAliasToDefaultPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalORemoveCategoryAlternativeTitlePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐRemoveCategoryAlternativeTitlePayload(ctx context.Context, sel ast.SelectionSet, v *types.RemoveCategoryAlternativeTitlePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._RemoveCategoryAlternativeTitlePayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalORemoveClubSlugAliasPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐRemoveClubSlugAliasPayload(ctx context.Context, sel ast.SelectionSet, v *types.RemoveClubSlugAliasPayload) graphql.Marshaler {
@@ -36554,6 +40936,13 @@ func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel
 	return res
 }
 
+func (ec *executionContext) marshalOTopic2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTopic(ctx context.Context, sel ast.SelectionSet, v *types.Topic) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Topic(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOUnArchivePostPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUnArchivePostPayload(ctx context.Context, sel ast.SelectionSet, v *types.UnArchivePostPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -36580,6 +40969,13 @@ func (ec *executionContext) marshalOUndoLikePostPayload2ᚖoverdollᚋapplicatio
 		return graphql.Null
 	}
 	return ec._UndoLikePostPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdateAudienceBannerPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAudienceBannerPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateAudienceBannerPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateAudienceBannerPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOUpdateAudienceIsStandardPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAudienceIsStandardPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateAudienceIsStandardPayload) graphql.Marshaler {
@@ -36615,6 +41011,13 @@ func (ec *executionContext) marshalOUpdateCategoryTitlePayload2ᚖoverdollᚋapp
 		return graphql.Null
 	}
 	return ec._UpdateCategoryTitlePayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdateCategoryTopicPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCategoryTopicPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateCategoryTopicPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateCategoryTopicPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOUpdateCharacterNamePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCharacterNamePayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateCharacterNamePayload) graphql.Marshaler {
@@ -36713,6 +41116,34 @@ func (ec *executionContext) marshalOUpdateSeriesTitlePayload2ᚖoverdollᚋappli
 		return graphql.Null
 	}
 	return ec._UpdateSeriesTitlePayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdateTopicBannerPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateTopicBannerPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateTopicBannerPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateTopicBannerPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdateTopicDescriptionPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateTopicDescriptionPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateTopicDescriptionPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateTopicDescriptionPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdateTopicTitlePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateTopicTitlePayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateTopicTitlePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateTopicTitlePayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdateTopicWeightPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateTopicWeightPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateTopicWeightPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateTopicWeightPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalO_Entity2githubᚗcomᚋ99designsᚋgqlgenᚋpluginᚋfederationᚋfedruntimeᚐEntity(ctx context.Context, sel ast.SelectionSet, v fedruntime.Entity) graphql.Marshaler {

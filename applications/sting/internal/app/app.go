@@ -125,6 +125,7 @@ type Queries struct {
 
 	SearchTopics query.SearchTopicsHandler
 	TopicBySlug  query.TopicBySlugHandler
+	TopicsByIds  query.TopicsByIdsHandler
 
 	PostLikeById query.PostLikeByIdHandler
 
