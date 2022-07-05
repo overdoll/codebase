@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/base64"
 	"github.com/bxcodec/faker/v3"
-	"github.com/stretchr/testify/mock"
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
@@ -12,7 +11,6 @@ import (
 	graphql2 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/resource/proto"
-	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
 
@@ -58,12 +56,6 @@ type UpdateCharacterThumbnail struct {
 	UpdateCharacterThumbnail *struct {
 		Character *CharacterModified
 	} `graphql:"updateCharacterThumbnail(input: $input)"`
-}
-
-type GenerateCharacterBanner struct {
-	GenerateCharacterBanner *struct {
-		Character *CharacterModified
-	} `graphql:"generateCharacterBanner(input: $input)"`
 }
 
 type TestCharacter struct {
@@ -194,20 +186,13 @@ func TestCreateCharacter_update_and_search(t *testing.T) {
 	require.Nil(t, character.Banner, "has no banner ter")
 	require.True(t, character.Thumbnail.Processed, "thumbnail is processed")
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.GenerateCharacterBanner, mock.Anything)
+	env := getWorkflowEnvironment()
 
-	var generateCharacterBanner GenerateCharacterBanner
+	env.RegisterWorkflow(workflows.GenerateCharacterBanner)
+	env.ExecuteWorkflow(workflows.GenerateCharacterBanner, workflows.GenerateCharacterBannerInput{CharacterId: character.Reference})
 
-	err = client.Mutate(context.Background(), &generateCharacterBanner, map[string]interface{}{
-		"input": types.GenerateCharacterBannerInput{
-			ID:       character.Id,
-			Duration: 10000,
-		},
-	})
-
-	require.NoError(t, err, "no error updating category banner")
-
-	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+	require.True(t, env.IsWorkflowCompleted(), "generating banner workflow is complete")
+	require.NoError(t, env.GetWorkflowError(), "no error generating banner")
 
 	character = getCharacterBySlug(t, client, currentCharacterSlug)
 	require.NotNil(t, character, "expected to have found character")

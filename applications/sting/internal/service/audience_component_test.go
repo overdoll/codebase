@@ -4,16 +4,13 @@ import (
 	"context"
 	"github.com/bxcodec/faker/v3"
 	"github.com/shurcooL/graphql"
-	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/internal/adapters"
-	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/bootstrap"
 	graphql2 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/resource/proto"
-	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
 )
@@ -58,10 +55,10 @@ type UpdateAudienceThumbnail struct {
 	} `graphql:"updateAudienceThumbnail(input: $input)"`
 }
 
-type GenerateAudienceBanner struct {
-	GenerateAudienceBanner *struct {
+type UpdateAudienceBanner struct {
+	UpdateAudienceBanner *struct {
 		Audience *AudienceModified
-	} `graphql:"generateAudienceBanner(input: $input)"`
+	} `graphql:"updateAudienceBanner(input: $input)"`
 }
 
 type UpdateAudienceIsStandard struct {
@@ -203,22 +200,32 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 	require.True(t, audience.Thumbnail.Processed, "should be processed")
 	require.True(t, audience.Standard, "is standard now")
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.GenerateAudienceBanner, mock.Anything)
+	var updateAudienceBanner UpdateAudienceBanner
 
-	var generateAudienceBanner GenerateAudienceBanner
-
-	err = client.Mutate(context.Background(), &generateAudienceBanner, map[string]interface{}{
-		"input": types.GenerateAudienceBannerInput{
-			ID:       audience.Id,
-			Duration: 10000,
+	err = client.Mutate(context.Background(), &updateAudienceBanner, map[string]interface{}{
+		"input": types.UpdateAudienceBannerInput{
+			ID:     audience.Id,
+			Banner: audienceThumbnailId,
 		},
 	})
 
-	require.NoError(t, err, "no error updating audience banner")
+	require.NoError(t, err, "no error updating audience thumbnail")
+	require.False(t, updateAudienceThumbnail.UpdateAudienceThumbnail.Audience.Banner.Processed, "not yet processed")
 
-	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
+		Id:          audienceThumbnailId,
+		ItemId:      updateAudienceThumbnail.UpdateAudienceThumbnail.Audience.Reference,
+		Processed:   true,
+		Type:        proto.ResourceType_IMAGE,
+		ProcessedId: uuid.New().String(),
+		Private:     false,
+		Width:       100,
+		Height:      100,
+		Token:       "AUDIENCE_BANNER",
+	}}})
+
+	require.NoError(t, err, "no error updating resource")
 
 	audience = getAudienceBySlug(t, client, currentAudienceSlug)
-	require.NotNil(t, audience, "expected to have found audience")
-	require.NotNil(t, audience.Banner, "has a banner")
+	require.True(t, audience.Banner.Processed, "banner should now be processed")
 }

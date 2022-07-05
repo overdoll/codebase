@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/base64"
 	"github.com/bxcodec/faker/v3"
-	"github.com/stretchr/testify/mock"
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
@@ -12,7 +11,6 @@ import (
 	graphql2 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/resource/proto"
-	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
 
@@ -57,12 +55,6 @@ type UpdateSeriesThumbnail struct {
 	UpdateSeriesThumbnail *struct {
 		Series *SeriesModified
 	} `graphql:"updateSeriesThumbnail(input: $input)"`
-}
-
-type GenerateSeriesBanner struct {
-	GenerateSeriesBanner *struct {
-		Series *SeriesModified
-	} `graphql:"generateSeriesBanner(input: $input)"`
 }
 
 type TestSeries struct {
@@ -187,20 +179,13 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 	require.Nil(t, series.Banner, "has no banner")
 	require.True(t, series.Thumbnail.Processed, "thumbnail is processed")
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.GenerateSeriesBanner, mock.Anything)
+	env := getWorkflowEnvironment()
 
-	var generateSeriesBanner GenerateSeriesBanner
+	env.RegisterWorkflow(workflows.GenerateSeriesBanner)
+	env.ExecuteWorkflow(workflows.GenerateSeriesBanner, workflows.GenerateSeriesBannerInput{SeriesId: series.Reference})
 
-	err = client.Mutate(context.Background(), &generateSeriesBanner, map[string]interface{}{
-		"input": types.GenerateSeriesBannerInput{
-			ID:       series.Id,
-			Duration: 10000,
-		},
-	})
-
-	require.NoError(t, err, "no error updating series banner")
-
-	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+	require.True(t, env.IsWorkflowCompleted(), "generating banner workflow is complete")
+	require.NoError(t, env.GetWorkflowError(), "no error generating banner")
 
 	series = getSeriesBySlug(t, client, currentSeriesSlug)
 	require.NotNil(t, series, "expected to have found series")

@@ -187,7 +187,7 @@ func seedPublishedPostWithCategory(t *testing.T, categoryId string) {
 	))
 
 	err = pst.UpdateCategoriesRequest(prin, []*post.Category{post.UnmarshalCategoryFromDatabase(
-		categoryId, "StandardCategory", map[string]string{"en": "Standard Audience"}, nil, nil, 1, 0, time.Now(), time.Now(),
+		categoryId, "StandardCategory", map[string]string{"en": "Standard Audience"}, nil, nil, 1, 0, time.Now(), time.Now(), nil, nil,
 	)})
 
 	err = pst.AddContentRequest(prin, []*resource.Resource{
@@ -413,7 +413,6 @@ func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 	env.RegisterWorkflow(workflows.GenerateCategoryBanner)
 	env.RegisterWorkflow(workflows.GenerateSeriesBanner)
 	env.RegisterWorkflow(workflows.GenerateCharacterBanner)
-	env.RegisterWorkflow(workflows.GenerateAudienceBanner)
 
 	return env
 }

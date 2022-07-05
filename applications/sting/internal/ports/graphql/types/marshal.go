@@ -257,7 +257,7 @@ func MarshalSeriesToGraphQL(ctx context.Context, result *post.Series) *Series {
 
 	var banner *graphql.Resource
 
-	if result.BannerResource() != nil {
+	if result.BannerResource() != nil && result.BannerResource().IsProcessed() {
 		banner = graphql.MarshalResourceToGraphQL(ctx, result.BannerResource())
 	}
 
@@ -295,7 +295,7 @@ func MarshalCategoryToGraphQL(ctx context.Context, result *post.Category) *Categ
 
 	var banner *graphql.Resource
 
-	if result.BannerResource() != nil {
+	if result.BannerResource() != nil && result.BannerResource().IsProcessed() {
 		banner = graphql.MarshalResourceToGraphQL(ctx, result.BannerResource())
 	}
 
@@ -353,7 +353,7 @@ func MarshalCharacterToGraphQL(ctx context.Context, result *post.Character) *Cha
 
 	var banner *graphql.Resource
 
-	if result.BannerResource() != nil {
+	if result.BannerResource() != nil && result.BannerResource().IsProcessed() {
 		banner = graphql.MarshalResourceToGraphQL(ctx, result.BannerResource())
 	}
 
