@@ -176,42 +176,6 @@ func (r PostsCassandraElasticsearchRepository) GetAudienceBySlug(ctx context.Con
 	return r.GetAudienceById(ctx, b.AudienceId)
 }
 
-func (r PostsCassandraElasticsearchRepository) GetAudiencesByIds(ctx context.Context, audienceIds []string) ([]*post.Audience, error) {
-
-	var audiences []*post.Audience
-
-	// if none then we get out or else the query will fail
-	if len(audienceIds) == 0 {
-		return audiences, nil
-	}
-
-	var audienceModels []*audience
-
-	if err := qb.Select(audienceTable.Name()).
-		Where(qb.In("id")).
-		Query(r.session).
-		WithContext(ctx).
-		Idempotent(true).
-		Consistency(gocql.One).
-		Bind(audienceIds).
-		SelectRelease(&audienceModels); err != nil {
-		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get audiences by id")
-	}
-
-	for _, b := range audienceModels {
-
-		unmarshalled, err := r.unmarshalAudienceFromDatabase(ctx, b)
-
-		if err != nil {
-			return nil, err
-		}
-
-		audiences = append(audiences, unmarshalled)
-	}
-
-	return audiences, nil
-}
-
 func (r PostsCassandraElasticsearchRepository) getAudienceById(ctx context.Context, audienceId string) (*post.Audience, error) {
 
 	var b audience

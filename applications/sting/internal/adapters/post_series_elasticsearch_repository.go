@@ -102,6 +102,37 @@ func (r PostsCassandraElasticsearchRepository) unmarshalSeriesDocument(ctx conte
 	return newMedia, nil
 }
 
+func (r PostsCassandraElasticsearchRepository) GetSeriesByIds(ctx context.Context, seriesIds []string) ([]*post.Series, error) {
+
+	var series []*post.Series
+
+	if len(seriesIds) == 0 {
+		return series, nil
+	}
+
+	response, err := r.client.Search().
+		Index(SeriesReaderIndex).
+		Query(elastic.NewBoolQuery().Filter(elastic.NewTermsQueryFromStrings("id", seriesIds...))).
+		Do(ctx)
+
+	if err != nil {
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed search series")
+	}
+
+	for _, hit := range response.Hits.Hits {
+
+		result, err := r.unmarshalSeriesDocument(ctx, hit)
+
+		if err != nil {
+			return nil, err
+		}
+
+		series = append(series, result)
+	}
+
+	return series, nil
+}
+
 func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Series, error) {
 
 	builder := r.client.Search().

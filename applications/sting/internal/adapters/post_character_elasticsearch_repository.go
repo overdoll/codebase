@@ -154,6 +154,37 @@ func (r PostsCassandraElasticsearchRepository) indexCharacter(ctx context.Contex
 	return nil
 }
 
+func (r PostsCassandraElasticsearchRepository) GetCharactersByIds(ctx context.Context, characterIds []string) ([]*post.Character, error) {
+
+	var characters []*post.Character
+
+	if len(characterIds) == 0 {
+		return characters, nil
+	}
+
+	response, err := r.client.Search().
+		Index(CharacterReaderIndex).
+		Query(elastic.NewBoolQuery().Filter(elastic.NewTermsQueryFromStrings("id", characterIds...))).
+		Do(ctx)
+
+	if err != nil {
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed search characters")
+	}
+
+	for _, hit := range response.Hits.Hits {
+
+		result, err := r.unmarshalCharacterDocument(ctx, hit)
+
+		if err != nil {
+			return nil, err
+		}
+
+		characters = append(characters, result)
+	}
+
+	return characters, nil
+}
+
 func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.CharacterFilters) ([]*post.Character, error) {
 
 	builder := r.client.Search().

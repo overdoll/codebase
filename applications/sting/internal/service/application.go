@@ -127,7 +127,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			UpdateAudienceTitle:      command.NewUpdateAudienceTitleHandler(postRepo),
 			UpdateAudienceThumbnail:  command.NewUpdateAudienceThumbnailHandler(postRepo, loader),
 			UpdateAudienceIsStandard: command.NewUpdateAudienceIsStandardHandler(postRepo),
-			GenerateAudienceBanner:   command.NewGenerateAudienceBannerHandler(postRepo, eventRepo),
+			UpdateAudienceBanner:     command.NewUpdateAudienceBannerHandler(postRepo, loader),
 
 			CreateCategory:                 command.NewCreateCategoryHandler(postRepo),
 			UpdateCategoryTopic:            command.NewUpdateCategoryTopicHandler(postRepo),
@@ -151,7 +151,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			UpdateTopicTitle:       command.NewUpdateTopicTitleHandler(postRepo),
 			UpdateTopicWeight:      command.NewUpdateTopicWeightHandler(postRepo),
 			UpdateTopicDescription: command.NewUpdateTopicDescriptionHandler(postRepo),
-			GenerateTopicBanner:    command.NewGenerateTopicBannerHandler(postRepo, eventRepo),
+			UpdateTopicBanner:      command.NewUpdateTopicBannerHandler(postRepo, loader),
 
 			CreateClub:                    command.NewCreateClubHandler(clubRepo, eventRepo),
 			AddClubSlugAlias:              command.NewAddClubSlugAliasHandler(clubRepo),
@@ -202,6 +202,9 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			PostsFeed:             query.NewPostsFeedHandler(personalizationRepo, postRepo),
 			SuggestedPostsForPost: query.NewSuggestedPostsForPostHandler(postRepo),
 			ClubMembersPostsFeed:  query.NewClubMembersPostsFeedHandler(postRepo),
+
+			TopicBySlug:  query.NewTopicBySlugHandler(postRepo),
+			SearchTopics: query.NewSearchTopicsHandler(postRepo),
 
 			PostLikeById: query.NewPostLikeByIdHandler(postRepo),
 

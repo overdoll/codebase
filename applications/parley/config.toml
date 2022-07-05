@@ -3,3 +3,6 @@ keyspace = "parley"
 
 [temporal]
 queue = "parley"
+
+[redis]
+db = 4

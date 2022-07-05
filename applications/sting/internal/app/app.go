@@ -43,7 +43,7 @@ type Commands struct {
 	UpdateAudienceTitle      command.UpdateAudienceTitleHandler
 	UpdateAudienceThumbnail  command.UpdateAudienceThumbnailHandler
 	UpdateAudienceIsStandard command.UpdateAudienceIsStandardHandler
-	GenerateAudienceBanner   command.GenerateAudienceBannerHandler
+	UpdateAudienceBanner     command.UpdateAudienceBannerHandler
 
 	CreateCategory                 command.CreateCategoryHandler
 	UpdateCategoryTitle            command.UpdateCategoryTitleHandler
@@ -67,7 +67,7 @@ type Commands struct {
 	UpdateTopicTitle       command.UpdateTopicTitleHandler
 	UpdateTopicDescription command.UpdateTopicDescriptionHandler
 	UpdateTopicWeight      command.UpdateTopicWeightHandler
-	GenerateTopicBanner    command.GenerateTopicBannerHandler
+	UpdateTopicBanner      command.UpdateTopicBannerHandler
 
 	DeleteAccountData command.DeleteAccountDataHandler
 
@@ -122,6 +122,9 @@ type Queries struct {
 	SearchAudience query.SearchAudienceHandler
 	AudienceBySlug query.AudienceBySlugHandler
 	AudiencesByIds query.AudiencesByIdsHandler
+
+	SearchTopics query.SearchTopicsHandler
+	TopicBySlug  query.TopicBySlugHandler
 
 	PostLikeById query.PostLikeByIdHandler
 

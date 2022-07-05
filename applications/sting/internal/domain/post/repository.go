@@ -77,6 +77,7 @@ type Repository interface {
 	UpdateSeriesTotalLikesOperator(ctx context.Context, id string, updateFn func(series *Series) error) (*Series, error)
 
 	GetTopicById(ctx context.Context, topicId string) (*Topic, error)
+	GetTopicsByIds(ctx context.Context, topicIds []string) ([]*Topic, error)
 	GetTopicBySlug(ctx context.Context, slug string) (*Topic, error)
 	CreateTopic(ctx context.Context, requester *principal.Principal, topic *Topic) error
 	UpdateTopicBanner(ctx context.Context, requester *principal.Principal, id string, updateFn func(topic *Topic) error) (*Topic, error)
@@ -116,11 +117,13 @@ type Repository interface {
 	GetTotalLikesForAudienceOperator(ctx context.Context, audience *Audience) (int, error)
 	GetTotalPostsForAudienceOperator(ctx context.Context, audience *Audience) (int, error)
 
+	SearchTopics(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*Topic, error)
+
 	SearchSeries(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *ObjectFilters) ([]*Series, error)
 	GetTotalLikesForSeriesOperator(ctx context.Context, series *Series) (int, error)
 	GetTotalPostsForSeriesOperator(ctx context.Context, series *Series) (int, error)
 
-	SearchCategories(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *ObjectFilters) ([]*Category, error)
+	SearchCategories(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *CategoryFilters) ([]*Category, error)
 	GetTotalLikesForCategoryOperator(ctx context.Context, category *Category) (int, error)
 	GetTotalPostsForCategoryOperator(ctx context.Context, category *Category) (int, error)
 

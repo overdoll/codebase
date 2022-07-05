@@ -36,6 +36,15 @@ func PutPostIntoModeratorQueue(ctx workflow.Context, input PutPostIntoModeratorQ
 		return err
 	}
 
+	if err := workflow.ExecuteActivity(ctx, a.SendModeratorPostInQueueNotification,
+		activities.SendModeratorPostInQueueNotificationInput{
+			ModeratorId: moderator.ModeratorAccountId,
+		},
+	).Get(ctx, nil); err != nil {
+		logger.Error("failed to send moderator post in queue notification", "Error", err)
+		return err
+	}
+
 	if err := workflow.Sleep(ctx, time.Hour*24); err != nil {
 		return err
 	}

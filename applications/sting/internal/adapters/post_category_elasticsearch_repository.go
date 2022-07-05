@@ -129,7 +129,38 @@ func (r PostsCassandraElasticsearchRepository) indexCategory(ctx context.Context
 	return nil
 }
 
-func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Category, error) {
+func (r PostsCassandraElasticsearchRepository) GetCategoriesByIds(ctx context.Context, categoryIds []string) ([]*post.Category, error) {
+
+	var categories []*post.Category
+
+	if len(categoryIds) == 0 {
+		return categories, nil
+	}
+
+	response, err := r.client.Search().
+		Index(CategoryReaderIndex).
+		Query(elastic.NewBoolQuery().Filter(elastic.NewTermsQueryFromStrings("id", categoryIds...))).
+		Do(ctx)
+
+	if err != nil {
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed search categories")
+	}
+
+	for _, hit := range response.Hits.Hits {
+
+		result, err := r.unmarshalCategoryDocument(ctx, hit)
+
+		if err != nil {
+			return nil, err
+		}
+
+		categories = append(categories, result)
+	}
+
+	return categories, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.CategoryFilters) ([]*post.Category, error) {
 
 	builder := r.client.Search().
 		Index(CategoryReaderIndex).ErrorTrace(true)
@@ -158,12 +189,16 @@ func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Cont
 
 	query := elastic.NewBoolQuery()
 
-	if filter.Search() != nil {
+	if filter.Title() != nil {
 		query.Must(
 			elastic.
-				NewMultiMatchQuery(*filter.Search(), "title.en", "alternative_titles.en").
+				NewMultiMatchQuery(*filter.Title(), "title.en", "alternative_titles.en").
 				Type("best_fields"),
 		)
+	}
+
+	if filter.TopicId() != nil {
+		query.Filter(elastic.NewTermQuery("topic_id", *filter.TopicId()))
 	}
 
 	if len(filter.Slugs()) > 0 {

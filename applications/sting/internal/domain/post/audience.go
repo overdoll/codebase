@@ -180,7 +180,11 @@ func (m *Audience) UpdateBannerExisting(thumbnail *resource.Resource) error {
 	return nil
 }
 
-func (m *Audience) UpdateBanner(thumbnail *resource.Resource) error {
+func (m *Audience) UpdateBanner(requester *principal.Principal, thumbnail *resource.Resource) error {
+
+	if err := m.canUpdate(requester); err != nil {
+		return err
+	}
 
 	m.bannerResource = thumbnail
 	m.update()

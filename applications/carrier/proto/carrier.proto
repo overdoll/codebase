@@ -26,6 +26,8 @@ service Carrier {
 
   rpc ClubOverChargebackThreshold(ClubOverChargebackThresholdRequest) returns (google.protobuf.Empty) {}
   rpc ClubSuspended(ClubSuspendedRequest) returns (google.protobuf.Empty) {}
+
+  rpc ModeratorPostInQueue(ModeratorPostInQueueRequest) returns (google.protobuf.Empty) {}
 }
 
 message ClubSuspendedRequest {
@@ -36,6 +38,10 @@ message ClubSuspendedRequest {
 message ClubOverChargebackThresholdRequest {
   Club club = 1;
   double threshold = 2;
+}
+
+message ModeratorPostInQueueRequest {
+  Account account = 1;
 }
 
 message AccountDeletionReminderRequest {

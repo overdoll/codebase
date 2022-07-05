@@ -1,0 +1,243 @@
+type Topic implements Node @key(fields: "id") {
+  """An ID pointing to this topic."""
+  id: ID!
+
+  """An ID that can be used to uniquely-identify this category. Never changes."""
+  reference: String!
+
+  """A url-friendly ID. Should be used when searching"""
+  slug: String!
+
+  """A URL pointing to the object's banner."""
+  banner: Resource
+
+  """
+  A title for this topic.
+
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  title(locale: BCP47): String! @goField(forceResolver: true)
+
+  """All translations for this title."""
+  titleTranslations: [Translation!]!
+
+  """
+  A description for this topic.
+
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  description(locale: BCP47): String! @goField(forceResolver: true)
+
+  """All translations for this topic."""
+  descriptionTranslations: [Translation!]!
+
+  """The weight of this topic."""
+  weight: Int!
+
+  """All categories linked to this topic."""
+  categories(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Search by category slugs."""
+    slugs: [String!]
+
+    """Filter by the title of the category."""
+    title: String
+
+    """Sorting options for categories."""
+    sortBy: CategoriesSort! = POPULAR
+  ): CategoryConnection! @goField(forceResolver: true)
+}
+
+type TopicEdge {
+  cursor: String!
+  node: Topic!
+}
+
+type TopicConnection {
+  edges: [TopicEdge!]!
+  pageInfo: PageInfo!
+}
+
+type Query {
+  """
+  Search all topics.
+
+  Topics are sorted by the "weight" field. Higher weights are displayed at the top, in descending order.
+  """
+  topics(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): TopicConnection!
+
+  """Get a single topic."""
+  topic(
+    """Search by slug of the topic."""
+    slug: String!
+  ): Topic
+}
+
+"""Create a new topic."""
+input CreateTopicInput {
+  """
+  The chosen slug for the topic.
+
+  Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
+  """
+  slug: String!
+
+  """
+  The chosen title for the topic.
+
+  Validation: Max 25 characters.
+  """
+  title: String!
+
+  """
+  The chosen description for the topic.
+
+  Validation: Markdown allowed.
+  """
+  description: String!
+
+  """
+  The assigned weight for this topic.
+  """
+  weight: Int!
+}
+
+"""Payload for a new topic"""
+type CreateTopicPayload {
+  """The topic after creation"""
+  topic: Category
+
+  """Validation for creating a new topic"""
+  validation: CreateTopicValidation
+}
+
+"""Validation for creating a new topic"""
+enum CreateTopicValidation {
+  SLUG_TAKEN
+}
+
+"""Update topic."""
+input UpdateTopicTitleInput {
+  """The topic to update"""
+  id: ID!
+
+  """
+  The title to update.
+
+  Validation: Max 25 characters.
+  """
+  title: String!
+
+  """The localization for this title"""
+  locale: BCP47!
+}
+
+"""Update topic."""
+input UpdateTopicWeightInput {
+  """The topic to update"""
+  id: ID!
+
+  """
+  The weight to update to.
+  """
+  weight: Int!
+}
+
+"""Update topic."""
+input UpdateTopicDescriptionInput {
+  """The topic to update"""
+  id: ID!
+
+  """
+  The description to update.
+
+  Validation: Markdown allowed.
+  """
+  description: String!
+
+  """The localization for this description"""
+  locale: BCP47!
+}
+
+"""Update topic."""
+input UpdateTopicBannerInput {
+  """The category to update"""
+  id: ID!
+
+  """The banner"""
+  banner: String!
+}
+
+"""Payload for updating topic"""
+type UpdateTopicTitlePayload {
+  """The topic after update"""
+  topic: Topic
+}
+
+"""Payload for updating topic"""
+type UpdateTopicDescriptionPayload {
+  """The topic after update"""
+  topic: Topic
+}
+
+"""Payload for updating topic"""
+type UpdateTopicWeightPayload {
+  """The topic after update"""
+  topic: Topic
+}
+
+"""Payload for updating topic"""
+type UpdateTopicBannerPayload {
+  """The topic after update"""
+  topic: Topic
+}
+
+type Mutation {
+  """
+  Create a new topic
+  """
+  createTopic(input: CreateTopicInput!): CreateTopicPayload
+
+  """
+  Update topic title
+  """
+  updateTopicTitle(input: UpdateTopicTitleInput!): UpdateTopicTitlePayload
+
+  """
+  Update topic description
+  """
+  updateTopicDescription(input: UpdateTopicDescriptionInput!): UpdateTopicDescriptionPayload
+
+  """
+  Update topic weight
+  """
+  updateTopicWeight(input: UpdateTopicWeightInput!): UpdateTopicWeightPayload
+
+  """
+  Update topic banner
+  """
+  updateTopicBanner(input: UpdateTopicBannerInput!): UpdateTopicBannerPayload
+}

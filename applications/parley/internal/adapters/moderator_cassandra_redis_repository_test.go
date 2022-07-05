@@ -70,6 +70,6 @@ func TestSearchModeratorQueue(t *testing.T) {
 	require.Len(t, results, 1, "should have found only the last post moderator")
 }
 
-func newModeratorCassandraRepository(t *testing.T) adapters.ModeratorCassandraRepository {
-	return adapters.NewModeratorCassandraRepository(bootstrap.InitializeDatabaseSession())
+func newModeratorCassandraRepository(t *testing.T) adapters.ModeratorCassandraRedisRepository {
+	return adapters.NewModeratorCassandraRepository(bootstrap.InitializeDatabaseSession(), bootstrap.InitializeRedisSession())
 }

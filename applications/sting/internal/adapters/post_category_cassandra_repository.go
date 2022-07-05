@@ -175,41 +175,6 @@ func (r PostsCassandraElasticsearchRepository) GetCategoryBySlug(ctx context.Con
 	return r.GetCategoryById(ctx, b.CategoryId)
 }
 
-func (r PostsCassandraElasticsearchRepository) GetCategoriesByIds(ctx context.Context, cats []string) ([]*post.Category, error) {
-
-	var categories []*post.Category
-
-	if len(cats) == 0 {
-		return categories, nil
-	}
-
-	var categoriesModels []category
-
-	if err := qb.Select(categoryTable.Name()).
-		Where(qb.In("id")).
-		Query(r.session).
-		WithContext(ctx).
-		Idempotent(true).
-		Consistency(gocql.LocalQuorum).
-		Bind(cats).
-		SelectRelease(&categoriesModels); err != nil {
-		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get categories by id")
-	}
-
-	for _, cat := range categoriesModels {
-
-		unmarshalled, err := r.unmarshalCategoryFromDatabase(ctx, &cat)
-
-		if err != nil {
-			return nil, err
-		}
-
-		categories = append(categories, unmarshalled)
-	}
-
-	return categories, nil
-}
-
 func (r PostsCassandraElasticsearchRepository) GetCategoryById(ctx context.Context, categoryId string) (*post.Category, error) {
 	return r.getCategoryById(ctx, categoryId)
 }

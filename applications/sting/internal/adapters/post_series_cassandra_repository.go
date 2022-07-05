@@ -211,42 +211,6 @@ func (r PostsCassandraElasticsearchRepository) getSingleSeriesById(ctx context.C
 	return &med, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) GetSeriesByIds(ctx context.Context, medi []string) ([]*post.Series, error) {
-
-	var medias []*post.Series
-
-	// if none then we get out or else the query will fail
-	if len(medi) == 0 {
-		return medias, nil
-	}
-
-	var mediaModels []*series
-
-	if err := qb.Select(seriesTable.Name()).
-		Where(qb.In("id")).
-		Query(r.session).
-		WithContext(ctx).
-		Idempotent(true).
-		Consistency(gocql.One).
-		Bind(medi).
-		SelectRelease(&mediaModels); err != nil {
-		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get series by id")
-	}
-
-	for _, med := range mediaModels {
-
-		unmarshalled, err := r.unmarshalSeriesFromDatabase(ctx, med)
-
-		if err != nil {
-			return nil, err
-		}
-
-		medias = append(medias, unmarshalled)
-	}
-
-	return medias, nil
-}
-
 func (r PostsCassandraElasticsearchRepository) deleteUniqueSeriesSlug(ctx context.Context, id, slug string) error {
 
 	if err := r.session.

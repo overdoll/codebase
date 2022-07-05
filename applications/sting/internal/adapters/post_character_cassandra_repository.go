@@ -4,7 +4,6 @@ import (
 	"context"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
-	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
@@ -207,78 +206,6 @@ func (r PostsCassandraElasticsearchRepository) GetCharacterBySlug(ctx context.Co
 	}
 
 	return r.GetCharacterById(ctx, b.CharacterId)
-}
-
-func (r PostsCassandraElasticsearchRepository) GetCharactersByIds(ctx context.Context, chars []string) ([]*post.Character, error) {
-
-	var characters []*post.Character
-
-	// if none then we get out or else the query will fail
-	if len(chars) == 0 {
-		return characters, nil
-	}
-
-	var characterModels []*character
-
-	if err := qb.Select(characterTable.Name()).
-		Where(qb.In("id")).
-		Query(r.session).
-		WithContext(ctx).
-		Idempotent(true).
-		Consistency(gocql.LocalQuorum).
-		Bind(chars).
-		SelectRelease(&characterModels); err != nil {
-		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get characters by id")
-	}
-
-	if len(chars) != len(characterModels) {
-		return nil, domainerror.NewValidation("invalid character found")
-	}
-
-	var mediaIds []string
-
-	for _, cat := range characterModels {
-		mediaIds = append(mediaIds, cat.SeriesId)
-	}
-
-	var mediaModels []*series
-
-	if err := qb.Select(seriesTable.Name()).
-		Where(qb.In("id")).
-		Query(r.session).
-		WithContext(ctx).
-		Idempotent(true).
-		Consistency(gocql.One).
-		Bind(mediaIds).
-		SelectRelease(&mediaModels); err != nil {
-		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get series by id")
-	}
-
-	for _, char := range characterModels {
-
-		var serial *series
-
-		for _, med := range mediaModels {
-			if med.Id == char.SeriesId {
-				serial = med
-				break
-			}
-		}
-
-		if serial == nil {
-			return nil, errors.New("no series found for character")
-		}
-
-		unmarshalled, err := r.unmarshalCharacterFromDatabase(ctx, char, serial)
-
-		if err != nil {
-			return nil, err
-		}
-
-		characters = append(characters, unmarshalled)
-	}
-
-	return characters, nil
 }
 
 func (r PostsCassandraElasticsearchRepository) GetCharacterById(ctx context.Context, characterId string) (*post.Character, error) {

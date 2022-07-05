@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"github.com/go-redis/redis/v8"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/paging"
@@ -13,6 +14,10 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 	moderator "overdoll/applications/parley/internal/domain/moderator"
 	"overdoll/libraries/principal"
+)
+
+const (
+	moderatorNotificationCooldown = "moderatorPostInQueueNotification:"
 )
 
 var accountPostModeratorsQueueTable = table.New(table.Metadata{
@@ -66,12 +71,13 @@ type moderators struct {
 	Bucket       int       `db:"bucket"`
 }
 
-type ModeratorCassandraRepository struct {
+type ModeratorCassandraRedisRepository struct {
 	session gocqlx.Session
+	cache   *redis.Client
 }
 
-func NewModeratorCassandraRepository(session gocqlx.Session) ModeratorCassandraRepository {
-	return ModeratorCassandraRepository{session: session}
+func NewModeratorCassandraRepository(session gocqlx.Session, cache *redis.Client) ModeratorCassandraRedisRepository {
+	return ModeratorCassandraRedisRepository{session: session, cache: cache}
 }
 
 func marshaModeratorToDatabase(mod *moderator.Moderator) *moderators {
@@ -82,7 +88,7 @@ func marshaModeratorToDatabase(mod *moderator.Moderator) *moderators {
 	}
 }
 
-func (r ModeratorCassandraRepository) getModerator(ctx context.Context, id string) (*moderator.Moderator, error) {
+func (r ModeratorCassandraRedisRepository) getModerator(ctx context.Context, id string) (*moderator.Moderator, error) {
 
 	var md moderators
 
@@ -104,7 +110,7 @@ func (r ModeratorCassandraRepository) getModerator(ctx context.Context, id strin
 	return moderator.UnmarshalModeratorFromDatabase(md.AccountId, md.LastSelected), nil
 }
 
-func (r ModeratorCassandraRepository) GetPostModeratorByPostId(ctx context.Context, requester *principal.Principal, postId string) (*moderator.PostModerator, error) {
+func (r ModeratorCassandraRedisRepository) GetPostModeratorByPostId(ctx context.Context, requester *principal.Principal, postId string) (*moderator.PostModerator, error) {
 
 	var postModerator postModerators
 
@@ -127,7 +133,7 @@ func (r ModeratorCassandraRepository) GetPostModeratorByPostId(ctx context.Conte
 	return moderator.UnmarshalPostModeratorFromDatabase(postModerator.AccountId, postModerator.PostId, postModerator.PlacedAt, postModerator.ReassignmentAt), nil
 }
 
-func (r ModeratorCassandraRepository) CreatePostModerator(ctx context.Context, queue *moderator.PostModerator) error {
+func (r ModeratorCassandraRedisRepository) CreatePostModerator(ctx context.Context, queue *moderator.PostModerator) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
@@ -161,7 +167,7 @@ func (r ModeratorCassandraRepository) CreatePostModerator(ctx context.Context, q
 	return nil
 }
 
-func (r ModeratorCassandraRepository) SearchPostModerator(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*moderator.PostModerator, error) {
+func (r ModeratorCassandraRedisRepository) SearchPostModerator(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*moderator.PostModerator, error) {
 
 	if err := moderator.CanViewPostModerator(requester, accountId); err != nil {
 		return nil, err
@@ -199,7 +205,7 @@ func (r ModeratorCassandraRepository) SearchPostModerator(ctx context.Context, r
 	return postQueue, nil
 }
 
-func (r ModeratorCassandraRepository) getPostModeratorByPostId(ctx context.Context, postId string) (*postModerators, error) {
+func (r ModeratorCassandraRedisRepository) getPostModeratorByPostId(ctx context.Context, postId string) (*postModerators, error) {
 
 	var item postModerators
 
@@ -222,7 +228,7 @@ func (r ModeratorCassandraRepository) getPostModeratorByPostId(ctx context.Conte
 	return &item, nil
 }
 
-func (r ModeratorCassandraRepository) GetPostModeratorByPostIdOperator(ctx context.Context, postId string) (*moderator.PostModerator, error) {
+func (r ModeratorCassandraRedisRepository) GetPostModeratorByPostIdOperator(ctx context.Context, postId string) (*moderator.PostModerator, error) {
 
 	item, err := r.getPostModeratorByPostId(ctx, postId)
 
@@ -233,7 +239,7 @@ func (r ModeratorCassandraRepository) GetPostModeratorByPostIdOperator(ctx conte
 	return moderator.UnmarshalPostModeratorFromDatabase(item.AccountId, item.PostId, item.PlacedAt, item.ReassignmentAt), nil
 }
 
-func (r ModeratorCassandraRepository) DeletePostModeratorByPostId(ctx context.Context, postId string) error {
+func (r ModeratorCassandraRedisRepository) DeletePostModeratorByPostId(ctx context.Context, postId string) error {
 
 	postModerator, err := r.getPostModeratorByPostId(ctx, postId)
 
@@ -256,14 +262,54 @@ func (r ModeratorCassandraRepository) DeletePostModeratorByPostId(ctx context.Co
 		postModerator.PostId,
 	)
 
+	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return errors.Wrap(support.NewGocqlError(err), "failed to delete post moderator")
+	}
+
+	// delete cache key if moderator was removed from post
+	_, err = r.cache.WithContext(ctx).Del(ctx, moderatorNotificationCooldown+postModerator.AccountId).Result()
+
+	if err != nil {
+
+		if err == redis.Nil {
+			return nil
+		}
+
+		return errors.Wrap(err, "failed to delete moderator notification cooldown")
 	}
 
 	return nil
 }
 
-func (r ModeratorCassandraRepository) GetModerator(ctx context.Context, requester *principal.Principal, accountId string) (*moderator.Moderator, error) {
+func (r ModeratorCassandraRedisRepository) HasModeratorNotificationCache(ctx context.Context, accountId string) (bool, error) {
+
+	_, err := r.cache.WithContext(ctx).Get(ctx, moderatorNotificationCooldown+accountId).Result()
+
+	if err != nil {
+
+		if err == redis.Nil {
+			return false, nil
+		}
+
+		return false, errors.Wrap(err, "failed to get moderator notification cache")
+	}
+
+	return true, nil
+}
+
+func (r ModeratorCassandraRedisRepository) CreateModeratorNotificationCache(ctx context.Context, accountId string) error {
+	// cache for 24 hours
+	_, err := r.cache.WithContext(ctx).Set(ctx, moderatorNotificationCooldown+accountId, true, time.Hour*24).Result()
+
+	if err != nil {
+		return errors.Wrap(err, "failed to cache moderator notification")
+	}
+
+	return nil
+}
+
+func (r ModeratorCassandraRedisRepository) GetModerator(ctx context.Context, requester *principal.Principal, accountId string) (*moderator.Moderator, error) {
 
 	moderator, err := r.getModerator(ctx, accountId)
 
@@ -278,7 +324,7 @@ func (r ModeratorCassandraRepository) GetModerator(ctx context.Context, requeste
 	return moderator, nil
 }
 
-func (r ModeratorCassandraRepository) GetModerators(ctx context.Context) ([]*moderator.Moderator, error) {
+func (r ModeratorCassandraRedisRepository) GetModerators(ctx context.Context) ([]*moderator.Moderator, error) {
 
 	var dbModerators []moderators
 
@@ -300,7 +346,7 @@ func (r ModeratorCassandraRepository) GetModerators(ctx context.Context) ([]*mod
 	return moderators, nil
 }
 
-func (r ModeratorCassandraRepository) CreateModerator(ctx context.Context, mod *moderator.Moderator) error {
+func (r ModeratorCassandraRedisRepository) CreateModerator(ctx context.Context, mod *moderator.Moderator) error {
 
 	if err := r.session.
 		Query(moderatorTable.Insert()).
@@ -315,7 +361,7 @@ func (r ModeratorCassandraRepository) CreateModerator(ctx context.Context, mod *
 	return nil
 }
 
-func (r ModeratorCassandraRepository) UpdateModerator(ctx context.Context, id string, updateFn func(moderator *moderator.Moderator) error) (*moderator.Moderator, error) {
+func (r ModeratorCassandraRedisRepository) UpdateModerator(ctx context.Context, id string, updateFn func(moderator *moderator.Moderator) error) (*moderator.Moderator, error) {
 
 	currentMod, err := r.getModerator(ctx, id)
 
@@ -342,7 +388,7 @@ func (r ModeratorCassandraRepository) UpdateModerator(ctx context.Context, id st
 	return currentMod, nil
 }
 
-func (r ModeratorCassandraRepository) RemoveModerator(ctx context.Context, requester *principal.Principal, accountId string) error {
+func (r ModeratorCassandraRedisRepository) RemoveModerator(ctx context.Context, requester *principal.Principal, accountId string) error {
 
 	_, err := r.GetModerator(ctx, requester, accountId)
 

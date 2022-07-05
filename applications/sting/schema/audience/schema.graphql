@@ -153,6 +153,15 @@ input UpdateAudienceThumbnailInput {
 }
 
 """Update audience."""
+input UpdateAudienceBannerInput {
+  """The audience to update"""
+  id: ID!
+
+  """The banner"""
+  thumbnail: String!
+}
+
+"""Update audience."""
 input UpdateAudienceIsStandardInput {
   """The audience to update"""
   id: ID!
@@ -169,6 +178,12 @@ type UpdateAudienceTitlePayload {
 
 """Payload for updating audience"""
 type UpdateAudienceThumbnailPayload {
+  """The audience after update"""
+  audience: Audience
+}
+
+"""Payload for updating audience"""
+type UpdateAudienceBannerPayload {
   """The audience after update"""
   audience: Audience
 }
@@ -194,6 +209,11 @@ extend type Mutation {
   Update audience thumbnail
   """
   updateAudienceThumbnail(input: UpdateAudienceThumbnailInput!): UpdateAudienceThumbnailPayload
+
+  """
+  Update audience banner
+  """
+  updateAudienceBanner(input: UpdateAudienceBannerInput!): UpdateAudienceBannerPayload
 
   """
   Update audience standard

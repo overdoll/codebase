@@ -108,6 +108,37 @@ func (r PostsCassandraElasticsearchRepository) indexTopic(ctx context.Context, t
 	return nil
 }
 
+func (r PostsCassandraElasticsearchRepository) GetTopicsByIds(ctx context.Context, topicIds []string) ([]*post.Topic, error) {
+
+	var topics []*post.Topic
+
+	if len(topicIds) == 0 {
+		return topics, nil
+	}
+
+	response, err := r.client.Search().
+		Index(TopicReaderIndex).
+		Query(elastic.NewBoolQuery().Filter(elastic.NewTermsQueryFromStrings("id", topicIds...))).
+		Do(ctx)
+
+	if err != nil {
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed search topics")
+	}
+
+	for _, hit := range response.Hits.Hits {
+
+		result, err := r.unmarshalTopicDocument(ctx, hit)
+
+		if err != nil {
+			return nil, err
+		}
+
+		topics = append(topics, result)
+	}
+
+	return topics, nil
+}
+
 func (r PostsCassandraElasticsearchRepository) SearchTopics(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*post.Topic, error) {
 
 	builder := r.client.Search().

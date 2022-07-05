@@ -1,8 +1,8 @@
 [db]
 keyspace = "eva"
 
-[redis]
-db = 1
-
 [temporal]
 queue = "eva"
+
+[redis]
+db = 1

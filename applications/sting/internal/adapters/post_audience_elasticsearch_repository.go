@@ -71,6 +71,38 @@ func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 	}, nil
 }
 
+func (r PostsCassandraElasticsearchRepository) GetAudiencesByIds(ctx context.Context, audienceIds []string) ([]*post.Audience, error) {
+
+	var audiences []*post.Audience
+
+	// if none then we get out or else the query will fail
+	if len(audienceIds) == 0 {
+		return audiences, nil
+	}
+
+	response, err := r.client.Search().
+		Index(AudienceReaderIndex).
+		Query(elastic.NewBoolQuery().Filter(elastic.NewTermsQueryFromStrings("id", audienceIds...))).
+		Do(ctx)
+
+	if err != nil {
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed search audiences")
+	}
+
+	for _, hit := range response.Hits.Hits {
+
+		result, err := r.unmarshalAudienceDocument(ctx, hit)
+
+		if err != nil {
+			return nil, err
+		}
+
+		audiences = append(audiences, result)
+	}
+
+	return audiences, nil
+}
+
 func (r PostsCassandraElasticsearchRepository) unmarshalAudienceDocument(ctx context.Context, hit *elastic.SearchHit) (*post.Audience, error) {
 
 	var bd audienceDocument
