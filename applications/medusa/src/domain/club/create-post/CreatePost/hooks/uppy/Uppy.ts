@@ -3,13 +3,14 @@ import Uppy from '@uppy/core'
 import Tus from '@uppy/tus'
 import CanUseDOM from '@//:modules/operations/CanUseDOM'
 import GoldenRetriever from '@uppy/golden-retriever'
+import { UPLOAD_ALLOWED_FILE_TYPES, MAX_FILE_SIZE } from '@//:modules/constants/upload'
 
 const U: UppyType = Uppy({
   id: 'posts',
   restrictions: {
     maxNumberOfFiles: 10,
-    allowedFileTypes: ['image/png', 'video/mp4'],
-    maxFileSize: 25000000
+    allowedFileTypes: UPLOAD_ALLOWED_FILE_TYPES,
+    maxFileSize: MAX_FILE_SIZE
   },
   autoProceed: true,
   allowMultipleUploads: true,

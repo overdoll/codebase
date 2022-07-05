@@ -111,6 +111,8 @@ export default function UpdateCharacterButton ({
   }
 
   return (
-    <FlowBuilderNextButton isDisabled={buttonDisabled} />
+    <FlowBuilderNextButton isDisabled={buttonDisabled}>
+      {buttonDisabled as boolean ? `${(Object.keys(state.characters)).length} / 1` : undefined}
+    </FlowBuilderNextButton>
   )
 }

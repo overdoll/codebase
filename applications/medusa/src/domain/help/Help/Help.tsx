@@ -28,7 +28,8 @@ import {
   PAYOUTS_INFORMATION,
   PRIVACY_POLICY,
   SUPPORTER_GUIDELINES,
-  TERMS_OF_SERVICE
+  TERMS_OF_SERVICE,
+  OVERDOLL_ABOUT
 } from '@//:modules/constants/links'
 import Head from 'next/head'
 import { PageProps } from '@//:types/app'
@@ -52,7 +53,7 @@ const Help: PageProps<{}> = () => {
                 </Trans>
               </PageSectionTitle>
               <ListSpacer>
-                <PagePanelWrap isExternal href='https://www.corpodoll.com/about/'>
+                <PagePanelWrap isExternal href={OVERDOLL_ABOUT}>
                   <PagePanelIcon icon={InfoCircle} colorScheme='primary' />
                   <PagePanelText
                     title={

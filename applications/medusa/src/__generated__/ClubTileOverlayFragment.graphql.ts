@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<60b2540617163fcfb5bce9f366861e9a>>
+ * @generated SignedSource<<bbce5718afca8a860d1d122b202134a3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,19 +11,11 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ClubTileOverlayFragment$data = {
+  readonly banner: {
+    readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
+  } | null;
   readonly id: string;
   readonly name: string;
-  readonly posts: {
-    readonly edges: ReadonlyArray<{
-      readonly node: {
-        readonly content: ReadonlyArray<{
-          readonly resource: {
-            readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
-          };
-        }>;
-      };
-    }>;
-  };
   readonly thumbnail: {
     readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
   } | null;
@@ -72,75 +64,25 @@ const node: ReaderFragment = {
     },
     {
       "alias": null,
-      "args": [
-        {
-          "kind": "Literal",
-          "name": "first",
-          "value": 1
-        }
-      ],
-      "concreteType": "PostConnection",
+      "args": null,
+      "concreteType": "Resource",
       "kind": "LinkedField",
-      "name": "posts",
+      "name": "banner",
       "plural": false,
       "selections": [
         {
-          "alias": null,
           "args": null,
-          "concreteType": "PostEdge",
-          "kind": "LinkedField",
-          "name": "edges",
-          "plural": true,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "Post",
-              "kind": "LinkedField",
-              "name": "node",
-              "plural": false,
-              "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "PostContent",
-                  "kind": "LinkedField",
-                  "name": "content",
-                  "plural": true,
-                  "selections": [
-                    {
-                      "alias": null,
-                      "args": null,
-                      "concreteType": "Resource",
-                      "kind": "LinkedField",
-                      "name": "resource",
-                      "plural": false,
-                      "selections": [
-                        {
-                          "args": null,
-                          "kind": "FragmentSpread",
-                          "name": "ResourceItemFragment"
-                        }
-                      ],
-                      "storageKey": null
-                    }
-                  ],
-                  "storageKey": null
-                }
-              ],
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
+          "kind": "FragmentSpread",
+          "name": "ResourceItemFragment"
         }
       ],
-      "storageKey": "posts(first:1)"
+      "storageKey": null
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "f723b4b71736d036e5604084072c1627";
+(node as any).hash = "aa70ba8804ff31a667161dc799f19179";
 
 export default node;

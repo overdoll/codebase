@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b0a04955f0b8f47d1e2dcb6ea41468ff>>
+ * @generated SignedSource<<41af69ef63f159a04494952d8a6f9a4b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,6 +20,10 @@ export type ResourceInfoFragment$data = {
     readonly videoDuration: number;
     readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
   };
+  readonly supporterOnlyResource: {
+    readonly type: ResourceType;
+    readonly videoDuration: number;
+  } | null;
   readonly " $fragmentType": "ResourceInfoFragment";
 };
 export type ResourceInfoFragment$key = {
@@ -27,7 +31,22 @@ export type ResourceInfoFragment$key = {
   readonly " $fragmentSpreads": FragmentRefs<"ResourceInfoFragment">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "type",
+  "storageKey": null
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "videoDuration",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
@@ -55,13 +74,7 @@ const node: ReaderFragment = {
       "name": "resource",
       "plural": false,
       "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "type",
-          "storageKey": null
-        },
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -69,13 +82,7 @@ const node: ReaderFragment = {
           "name": "processed",
           "storageKey": null
         },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "videoDuration",
-          "storageKey": null
-        },
+        (v1/*: any*/),
         {
           "args": null,
           "kind": "FragmentSpread",
@@ -83,12 +90,26 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Resource",
+      "kind": "LinkedField",
+      "name": "supporterOnlyResource",
+      "plural": false,
+      "selections": [
+        (v0/*: any*/),
+        (v1/*: any*/)
+      ],
+      "storageKey": null
     }
   ],
   "type": "PostContent",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "2cfb8ac45f069a4df4fd88e1f94fa276";
+(node as any).hash = "c411cec72768f94d461c2038cc763c07";
 
 export default node;

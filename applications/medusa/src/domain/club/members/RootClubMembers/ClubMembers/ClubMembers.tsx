@@ -85,7 +85,7 @@ export default function ClubMembers ({ query }: Props): JSX.Element {
       </Head>
       <Stack>
         <ClubInformationBanner query={queryData.club} />
-        <GridWrap justify='flex-start'>
+        <GridWrap>
           {data.members.edges.map((item, index) =>
             <ClubMemberTile key={index} query={item.node} />
           )}

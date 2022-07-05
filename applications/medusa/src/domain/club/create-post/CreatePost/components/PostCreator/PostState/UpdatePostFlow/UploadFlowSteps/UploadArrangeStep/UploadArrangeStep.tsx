@@ -8,7 +8,7 @@ import { Trans } from '@lingui/macro'
 import { UppyContext } from '../../../../../../context'
 import { Stack } from '@chakra-ui/react'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
-import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
+import UploadSupporterContentOptimization from './UploadSupporterContentOptimization/UploadSupporterContentOptimization'
 
 interface Props {
   query: UploadArrangeStepFragment$key
@@ -20,6 +20,7 @@ const Fragment = graphql`
       id
       isSupporterOnly
     }
+
     ...ArrangeUploadsFragment
     ...ProcessUploadsFragment
   }
@@ -33,6 +34,8 @@ export default function UploadArrangeStep ({
   const uppy = useContext(UppyContext)
   const { state } = useSequenceContext()
   const contentData = state.content ?? data?.content
+
+  const hasSupporterContentOptimization: boolean = (data?.content?.[0] != null && data.content[0].isSupporterOnly)
 
   // We clear all uploads and re-add them when post content changes
   // so that we can keep the uppy file state and restrict uploads
@@ -74,20 +77,11 @@ export default function UploadArrangeStep ({
           </Trans>
         </PageSectionDescription>
       </PageSectionWrap>
+      {hasSupporterContentOptimization && (
+        <UploadSupporterContentOptimization />
+      )}
       <ArrangeUploads query={data} />
       <ProcessUploads query={data} />
-      {data?.content?.[0] != null && data.content[0].isSupporterOnly && (
-        <Alert status='info'>
-          <AlertIcon />
-          <AlertDescription>
-            <Trans>
-              If uploading supporter only content, it's recommended that you upload two pieces of content to encourage
-              conversions. The first one should be free and a reduced version of the original content and the second
-              should be the original version.
-            </Trans>
-          </AlertDescription>
-        </Alert>
-      )}
     </Stack>
   )
 }

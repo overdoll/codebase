@@ -70,7 +70,7 @@ export default function StaffSearchCharacter ({ searchArguments }: Props): JSX.E
       fallback={<EmptyCharacters hint={searchArguments.variables.name} />}
       condition={characters.length < 1}
     >
-      <GridWrap justify='center'>
+      <GridWrap>
         {characters.map((item, index) => (
           <GridTile key={index}>
             <LinkTile href={{

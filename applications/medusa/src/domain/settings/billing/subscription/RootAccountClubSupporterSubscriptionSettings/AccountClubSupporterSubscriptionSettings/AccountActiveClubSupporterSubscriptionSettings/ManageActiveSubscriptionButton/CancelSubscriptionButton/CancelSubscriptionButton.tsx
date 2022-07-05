@@ -159,7 +159,6 @@ export default function CancelSubscriptionButton ({
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        motionPreset='none'
         isCentered
         preserveScrollBarGap
       >

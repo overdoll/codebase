@@ -204,7 +204,6 @@ export default function CurationProfileSetup (props: Props): JSX.Element | null 
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        motionPreset='none'
         isCentered
         preserveScrollBarGap
       >

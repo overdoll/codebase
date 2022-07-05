@@ -5,11 +5,10 @@ import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import PostsInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/PostsInfiniteScroll'
 import { Heading, HStack, Stack } from '@chakra-ui/react'
-import PostSearchButton
-  from '@//:modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/PostSearchButton'
 import { Trans } from '@lingui/macro'
 import AccountInformationBanner from '../../../../common/components/AccountInformationBanner/AccountInformationBanner'
 import CurationProfileAlert from '../CurationProfileAlert/CurationProfileAlert'
+import SearchButton from '../../../../common/components/PageHeader/SearchButton/SearchButton'
 
 interface Props {
   query: PreloadedQuery<HomeQuery>
@@ -66,11 +65,9 @@ export default function Home (props: Props): JSX.Element {
       <Stack spacing={8}>
         <HStack spacing={2} justify='space-between'>
           <Heading color='gray.00' fontSize='2xl'>
-            <Trans>
-              Home
-            </Trans>
+            <Trans>Home</Trans>
           </Heading>
-          <PostSearchButton routeTo='/search' />
+          <SearchButton />
         </HStack>
         <GlobalVideoManagerProvider>
           <PostsInfiniteScroll

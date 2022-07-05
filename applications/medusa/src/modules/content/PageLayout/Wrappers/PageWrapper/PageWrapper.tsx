@@ -15,7 +15,7 @@ export default function PageWrapper ({
     }}
     >
       <Box
-        w={['full', 'sm', 'md', 'lg']}
+        w={['full', 'md', 'lg']}
         pl={[1, 0]}
         pr={[1, 0]}
         mb={{

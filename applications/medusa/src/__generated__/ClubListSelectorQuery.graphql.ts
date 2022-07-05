@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<4604a83a0f98b156fd5cecb8b90cfa26>>
- * @relayHash 0a25f24b7f123143852cebde650ce40a
+ * @generated SignedSource<<5e95087c5f1c77287f6531c36d2f897b>>
+ * @relayHash 7eaf23914d6717848124a003ddc8201e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0a25f24b7f123143852cebde650ce40a
+// @relayRequestID 7eaf23914d6717848124a003ddc8201e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -196,80 +196,28 @@ return {
                       },
                       {
                         "alias": null,
-                        "args": [
-                          {
-                            "kind": "Literal",
-                            "name": "first",
-                            "value": 1
-                          }
-                        ],
-                        "concreteType": "PostConnection",
+                        "args": null,
+                        "concreteType": "Resource",
                         "kind": "LinkedField",
-                        "name": "posts",
+                        "name": "banner",
                         "plural": false,
                         "selections": [
+                          (v8/*: any*/),
+                          (v1/*: any*/),
+                          (v3/*: any*/),
+                          (v4/*: any*/),
+                          (v5/*: any*/),
+                          (v6/*: any*/),
+                          (v7/*: any*/),
                           {
                             "alias": null,
                             "args": null,
-                            "concreteType": "PostEdge",
-                            "kind": "LinkedField",
-                            "name": "edges",
-                            "plural": true,
-                            "selections": [
-                              {
-                                "alias": null,
-                                "args": null,
-                                "concreteType": "Post",
-                                "kind": "LinkedField",
-                                "name": "node",
-                                "plural": false,
-                                "selections": [
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "concreteType": "PostContent",
-                                    "kind": "LinkedField",
-                                    "name": "content",
-                                    "plural": true,
-                                    "selections": [
-                                      {
-                                        "alias": null,
-                                        "args": null,
-                                        "concreteType": "Resource",
-                                        "kind": "LinkedField",
-                                        "name": "resource",
-                                        "plural": false,
-                                        "selections": [
-                                          (v8/*: any*/),
-                                          (v1/*: any*/),
-                                          (v3/*: any*/),
-                                          (v4/*: any*/),
-                                          (v5/*: any*/),
-                                          (v6/*: any*/),
-                                          (v7/*: any*/),
-                                          {
-                                            "alias": null,
-                                            "args": null,
-                                            "kind": "ScalarField",
-                                            "name": "processed",
-                                            "storageKey": null
-                                          }
-                                        ],
-                                        "storageKey": null
-                                      },
-                                      (v1/*: any*/)
-                                    ],
-                                    "storageKey": null
-                                  },
-                                  (v1/*: any*/)
-                                ],
-                                "storageKey": null
-                              }
-                            ],
+                            "kind": "ScalarField",
+                            "name": "processed",
                             "storageKey": null
                           }
                         ],
-                        "storageKey": "posts(first:1)"
+                        "storageKey": null
                       },
                       {
                         "alias": null,
@@ -337,7 +285,7 @@ return {
     ]
   },
   "params": {
-    "id": "0a25f24b7f123143852cebde650ce40a",
+    "id": "7eaf23914d6717848124a003ddc8201e",
     "metadata": {},
     "name": "ClubListSelectorQuery",
     "operationKind": "query",

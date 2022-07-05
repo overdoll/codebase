@@ -7,14 +7,20 @@ RootClubPosts.getTranslationProps = async (ctx) => ({
 })
 
 RootClubPosts.getRelayPreloadProps = (ctx) => {
-  const { query: { slug } } = ctx
+  const {
+    query: {
+      slug,
+      state
+    }
+  } = ctx
 
   return {
     queries: {
       clubPostsQuery: {
         params: ClubPostsQuery.params,
         variables: {
-          slug: slug
+          slug: slug,
+          state: state ?? null
         }
       }
     }

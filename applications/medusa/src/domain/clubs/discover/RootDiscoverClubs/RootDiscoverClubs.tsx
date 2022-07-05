@@ -1,5 +1,4 @@
 import { PageProps } from '@//:types/app'
-import SearchSuggestedClubs from './SearchSuggestedClubs/SearchSuggestedClubs'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import { Suspense } from 'react'
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
@@ -31,7 +30,6 @@ const RootDiscoverClubs: PageProps<Props> = (props: Props) => {
             <DiscoverClubs query={queryRef as PreloadedQuery<DiscoverClubsQueryType>} />
           </Suspense>
         </QueryErrorBoundary>
-        <SearchSuggestedClubs />
       </PageWrapper>
     </>
   )

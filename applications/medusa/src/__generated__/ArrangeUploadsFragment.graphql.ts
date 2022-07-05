@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c2e96de8a0b4cfb780ed97ff5f9058a3>>
+ * @generated SignedSource<<c6a5de70c624908af84002483a95492e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,9 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ArrangeUploadsFragment$data = {
+  readonly club: {
+    readonly canCreateSupporterOnlyPosts: boolean;
+  };
   readonly content: ReadonlyArray<{
     readonly id: string;
     readonly isSupporterOnly: boolean;
@@ -46,6 +49,24 @@ return {
   "name": "ArrangeUploadsFragment",
   "selections": [
     (v0/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Club",
+      "kind": "LinkedField",
+      "name": "club",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "canCreateSupporterOnlyPosts",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -111,6 +132,6 @@ return {
 };
 })();
 
-(node as any).hash = "9eaec398ddb5dca9155345505ff939c2";
+(node as any).hash = "a4d7f8a2c88f3abf7dfe5d478bd9a3d2";
 
 export default node;

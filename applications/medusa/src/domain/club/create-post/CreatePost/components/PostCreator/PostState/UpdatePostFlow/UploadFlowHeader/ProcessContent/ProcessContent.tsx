@@ -46,21 +46,24 @@ export default function ProcessContent ({
   })
 
   useEffect(() => {
+    let refreshTime = 1000
     if (state.isProcessing === false) {
       if (timeoutRef.current != null) {
         clearTimeout(timeoutRef.current)
         timeoutRef.current = null
       }
-
       return
     }
 
+    if (timeoutRef.current != null) return
     const refreshLoop = (): void => {
       loadQuery()
-      timeoutRef.current = setTimeout(refreshLoop, 5000)
+
+      refreshTime = refreshTime === 5000 ? 5000 : refreshTime + 1000
+      timeoutRef.current = setTimeout(refreshLoop, refreshTime)
     }
 
-    timeoutRef.current = setTimeout(refreshLoop, 5000)
+    timeoutRef.current = setTimeout(refreshLoop, refreshTime)
   }, [state.isProcessing])
 
   return (

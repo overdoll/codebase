@@ -112,7 +112,12 @@ export default function UpdateAccountDetails ({ query }: Props): JSX.Element {
         const viewer = store.getRoot().getLinkedRecord('viewer')
         if (viewer != null) {
           const payload = store.getRootField('updateAccountDetails').getLinkedRecord('accountDetails')
-          viewer.getOrCreateLinkedRecord('details', 'AccountDetails').copyFieldsFrom(payload)
+          const details = viewer.getLinkedRecord('details')
+          if (details == null) {
+            viewer.getOrCreateLinkedRecord('details', 'AccountDetails').copyFieldsFrom(payload)
+            return
+          }
+          viewer.setLinkedRecord(payload, 'details')
         }
       }
     })

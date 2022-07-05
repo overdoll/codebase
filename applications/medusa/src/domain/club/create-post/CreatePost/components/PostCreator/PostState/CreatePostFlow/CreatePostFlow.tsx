@@ -1,32 +1,52 @@
 import { useContext, useEffect } from 'react'
-import { Box, Heading, Spinner, Stack, Text } from '@chakra-ui/react'
-import { graphql, useMutation } from 'react-relay/hooks'
+import { Heading, Spinner, Stack } from '@chakra-ui/react'
+import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { useQueryParam } from 'use-query-params'
 import { PostPlaceholder } from '@//:modules/content/PageLayout'
-import DragOverFileInput from '../../../DragOverFileInput/DragOverFileInput'
-import FilePicker from '../../../FilePicker/FilePicker'
-import { FileUpload } from '@//:assets/icons/interface'
-import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
+import { CreatePostFlowFragment$key } from '@//:artifacts/CreatePostFlowFragment.graphql'
 import { CreatePostFlowMutation$data } from '@//:artifacts/CreatePostFlowMutation.graphql'
 import { t, Trans } from '@lingui/macro'
 import { UppyContext } from '../../../../context'
 import { useToast } from '@//:modules/content/ThemeComponents'
+import CreatePostFilePicker
+  from '@//:modules/content/Interactables/FileUpload/CreatePostFilePicker/CreatePostFilePicker'
 
 interface Props {
-  clubId: string | undefined
+  query: CreatePostFlowFragment$key
 }
 
+const Fragment = graphql`
+  fragment CreatePostFlowFragment on Club @argumentDefinitions(
+    first: {type: Int, defaultValue: 5}
+    after: {type: String}
+  ) {
+    id
+    posts (first: $first, after: $after)
+    @connection(key: "ClubPosts_posts") {
+      __id
+      edges {
+        node {
+          id
+        }
+      }
+    }
+  }
+`
+
 const Mutation = graphql`
-  mutation CreatePostFlowMutation($clubId: ID!) {
+  mutation CreatePostFlowMutation($clubId: ID!, , $connections: [ID!]!) {
     createPost(input: {clubId: $clubId}) {
-      post {
+      post @prependNode(connections: $connections, edgeTypeName: "createPostEdge") {
+        id
         reference
       }
     }
   }
 `
 
-export default function CreatePostFlow ({ clubId }: Props): JSX.Element {
+export default function CreatePostFlow ({ query }: Props): JSX.Element {
+  const data = useFragment(Fragment, query)
+
   const [, setPostReference] = useQueryParam<string | null | undefined>('post')
 
   const uppy = useContext(UppyContext)
@@ -35,10 +55,13 @@ export default function CreatePostFlow ({ clubId }: Props): JSX.Element {
 
   const notify = useToast()
 
+  const connectionId = data.posts.__id
+
   const onCreatePost = (id): void => {
     createPost({
       variables: {
-        clubId: id
+        clubId: id,
+        connections: [connectionId]
       },
       onCompleted (data: CreatePostFlowMutation$data) {
         setPostReference(data?.createPost?.post?.reference as string)
@@ -54,9 +77,9 @@ export default function CreatePostFlow ({ clubId }: Props): JSX.Element {
   // add a state to uppy to keep track of the club that's selected
   useEffect(() => {
     uppy.setMeta({
-      club: clubId
+      club: data.id
     })
-  }, [clubId])
+  }, [data.id])
 
   useEffect(() => {
     const callBackFn = (file): void => {
@@ -78,40 +101,15 @@ export default function CreatePostFlow ({ clubId }: Props): JSX.Element {
   if (isCreatingPost) {
     return (
       <PostPlaceholder>
-        <Stack spacing={6}>
-          <Spinner thickness='4px' w={12} h={12} color='primary.500' />
-          <Text color='gray.100'><Trans>Creating your post...</Trans></Text>
+        <Stack align='center' spacing={6}>
+          <Spinner thickness='6px' w={12} h={12} color='teal.300' />
+          <Heading fontSize='4xl' color='gray.00'><Trans>Creating Your Post</Trans></Heading>
         </Stack>
       </PostPlaceholder>
     )
   }
 
   return (
-    <FilePicker uppy={uppy}>
-      <DragOverFileInput uppy={uppy}>
-        <PostPlaceholder>
-          <Stack spacing={6}>
-            <Icon
-              w={12}
-              h={12}
-              icon={FileUpload}
-              fill='teal.300'
-            />
-            <Box>
-              <Heading color='gray.00' fontSize='4xl'>
-                <Trans>
-                  Upload Files
-                </Trans>
-              </Heading>
-              <Text color='gray.200'>
-                <Trans>
-                  Upload one or more files by dragging and dropping them or by tapping here
-                </Trans>
-              </Text>
-            </Box>
-          </Stack>
-        </PostPlaceholder>
-      </DragOverFileInput>
-    </FilePicker>
+    <CreatePostFilePicker uppy={uppy} />
   )
 }

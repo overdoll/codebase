@@ -37,11 +37,11 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContent.tsx:117
+#: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContent.tsx:122
 msgid "Become a Supporter"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostNavigation/PostsSearch/components/PostOrderButton/PostOrderButton.tsx:23
+#: src/common/components/PageHeader/PostOrderButton/PostOrderButton.tsx:25
 msgid "Best"
 msgstr ""
 
@@ -53,13 +53,21 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Search/components/SearchInput/SearchInput.tsx:52
+#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:79
+msgid "Categories"
+msgstr ""
+
+#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:59
+msgid "Characters"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Search/components/SearchInput/SearchInput.tsx:41
 msgid "Clear Search"
 msgstr ""
 
 #: src/modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/GeneralSearch/SearchChoices/SaveGeneralSearchButton/SaveGeneralSearchButton.tsx:77
-msgid "Close"
-msgstr ""
+#~ msgid "Close"
+#~ msgstr ""
 
 #: src/common/components/ClubInformationBanner/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:71
 msgid "Club Locked"
@@ -115,11 +123,19 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
-#: src/modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload.tsx:131
+#: src/common/components/PageHeader/PageHeader.tsx:35
+#~ msgid "Discover Clubs"
+#~ msgstr ""
+
+#: src/modules/content/Interactables/FileUpload/GenericFilePicker/GenericFilePicker.tsx:33
 msgid "Drag and drop or tap to upload"
 msgstr ""
 
-#: src/modules/content/DataDisplay/NextImage/ImageError/ImageError.tsx:20
+#: src/modules/content/Interactables/FileUpload/DragOverFileInput/DragOverFileInput.tsx:106
+msgid "Drop your files to upload them"
+msgstr ""
+
+#: src/modules/content/DataDisplay/NextImage/ImageError/ImageError.tsx:39
 msgid "Error Loading Image"
 msgstr ""
 
@@ -135,11 +151,11 @@ msgstr ""
 #~ msgid "Exclusive Supporter Content"
 #~ msgstr ""
 
-#: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContent.tsx:74
+#: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContent.tsx:79
 msgid "Exclusive Supporter Content Unlocked"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostNavigation/PostsSearch/components/PostOrderButton/PostOrderButton.tsx:31
+#: src/common/components/PageHeader/PostOrderButton/PostOrderButton.tsx:33
 msgid "Fresh"
 msgstr ""
 
@@ -181,16 +197,16 @@ msgid "Load More"
 msgstr ""
 
 #: src/modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/GeneralSearch/SearchChoices/GeneralSearchCategories/GeneralSearchCategories.tsx:81
-msgid "Load More Categories"
-msgstr ""
+#~ msgid "Load More Categories"
+#~ msgstr ""
 
 #: src/modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/GeneralSearch/SearchChoices/GeneralSearchCharacters/GeneralSearchCharacters.tsx:87
-msgid "Load More Characters"
-msgstr ""
+#~ msgid "Load More Characters"
+#~ msgstr ""
 
 #: src/modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/GeneralSearch/SearchChoices/GeneralSearchSeries/GeneralSearchSeries.tsx:79
-msgid "Load More Series"
-msgstr ""
+#~ msgid "Load More Series"
+#~ msgstr ""
 
 #: src/modules/validation/Locale.ts:13
 msgid "Locale does not match BCP47 pattern"
@@ -285,7 +301,7 @@ msgstr ""
 msgid "Open Menu"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/PostSearchButton.tsx:27
+#: src/common/components/PageHeader/SearchButton/SearchButton.tsx:28
 msgid "Open Search"
 msgstr ""
 
@@ -381,13 +397,13 @@ msgstr ""
 msgid "Profile"
 msgstr ""
 
-#: src/modules/content/Interactables/SingleFileImageUpload/SingleFileImageUpload.tsx:157
+#: src/modules/content/Interactables/FileUpload/SingleFileImageUpload/SingleFileImageUpload.tsx:136
 msgid "Remove Upload"
 msgstr ""
 
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:153
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:172
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:191
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:190
 msgid "Report Post"
 msgstr ""
 
@@ -399,7 +415,7 @@ msgstr ""
 msgid "Reported"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostPlayback/ControlledVideo/components/ControlVideo/LoadingSpinner/LoadingSpinner.tsx:31
+#: src/modules/content/Posts/components/PostPlayback/ControlledVideo/components/ControlVideo/LoadingSpinner/LoadingSpinner.tsx:32
 msgid "Retry"
 msgstr ""
 
@@ -408,20 +424,35 @@ msgid "Revenue"
 msgstr ""
 
 #: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderSaveButton/FlowBuilderSaveButton.tsx:13
-#: src/modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/GeneralSearch/SearchChoices/SaveGeneralSearchButton/SaveGeneralSearchButton.tsx:91
 msgid "Save"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Form/FormInput/Inputs/SeriesInput/SelectSeriesButton/SelectSeriesButton.tsx:111
+#: src/common/components/PageHeader/PageHeader.tsx:10
+#~ msgid "Search"
+#~ msgstr ""
+
+#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchResults/SearchResults.tsx:80
+msgid "Search Results"
+msgstr ""
+
+#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchBody.tsx:57
+msgid "Search for a club, character, category, or series"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/SeriesInput/SelectSeriesButton/SelectSeriesButton.tsx:110
 msgid "Search for a series"
 msgstr ""
 
 #: src/modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/GeneralSearch/GeneralSearch.tsx:63
-msgid "Search for characters, categories, or series"
-msgstr ""
+#~ msgid "Search for characters, categories, or series"
+#~ msgstr ""
 
 #: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:35
 msgid "Security"
+msgstr ""
+
+#: src/modules/content/Posts/components/PostData/PostGalleryPublicSimple/OverflowVisual/OverflowVisual.tsx:41
+msgid "See Full Size"
 msgstr ""
 
 #: src/modules/content/HookedComponents/Form/FormInput/Inputs/RuleInput/SelectRuleButton/SelectRuleButton.tsx:76
@@ -436,12 +467,16 @@ msgstr ""
 msgid "Select a country"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Form/FormInput/Inputs/RuleInput/SelectRuleButton/SelectRuleButton.tsx:91
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/RuleInput/SelectRuleButton/SelectRuleButton.tsx:90
 msgid "Select a rule"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Form/FormInput/Inputs/SeriesInput/SelectSeriesButton/SelectSeriesButton.tsx:98
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/SeriesInput/SelectSeriesButton/SelectSeriesButton.tsx:97
 msgid "Select a series"
+msgstr ""
+
+#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:99
+msgid "Series"
 msgstr ""
 
 #: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:138
@@ -464,7 +499,7 @@ msgstr ""
 msgid "Sorry, this username is already taken"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:217
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:216
 msgid "Submit Report"
 msgstr ""
 
@@ -472,7 +507,7 @@ msgstr ""
 msgid "Supporter"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSupporterStatusButton/PostSupporterStatusButton.tsx:26
+#: src/common/components/PageHeader/PostSupporterStatusButton/PostSupporterStatusButton.tsx:26
 msgid "Supporter Only"
 msgstr ""
 
@@ -548,6 +583,14 @@ msgstr ""
 msgid "This account was not found"
 msgstr ""
 
+#: src/modules/content/Placeholder/NotFound/NotFoundCategory/NotFoundCategory.tsx:10
+msgid "This category was not found"
+msgstr ""
+
+#: src/modules/content/Placeholder/NotFound/NotFoundCharacter/NotFoundCharacter.tsx:10
+msgid "This character was not found"
+msgstr ""
+
 #: src/modules/content/Placeholder/NotFound/NotFoundClub/NotFoundClub.tsx:10
 msgid "This club was not found"
 msgstr ""
@@ -561,7 +604,7 @@ msgstr ""
 msgid "This code is either invalid or has expired"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContent.tsx:98
+#: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContent.tsx:103
 msgid "This content can only be seen if you are a supporter of the club"
 msgstr ""
 
@@ -577,12 +620,21 @@ msgstr ""
 msgid "This recovery code is invalid"
 msgstr ""
 
+#: src/modules/content/Placeholder/NotFound/NotFoundSerial/NotFoundSerial.tsx:10
+msgid "This series was not found"
+msgstr ""
+
 #: src/modules/content/Placeholder/NotFound/NotFoundSubscription/NotFoundSubscription.tsx:10
 msgid "This subscription was not found"
 msgstr ""
 
 #: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:41
 msgid "Today"
+msgstr ""
+
+#: src/modules/content/DataDisplay/NextImage/ImageError/ImageError.tsx:44
+#: src/modules/content/Posts/components/PostPlayback/ControlledVideo/components/ControlVideo/LoadingSpinner/LoadingSpinner.tsx:39
+msgid "Try refreshing the page to fix the error"
 msgstr ""
 
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostUnArchiveButton/PostUnArchiveButton.tsx:66
@@ -595,6 +647,14 @@ msgstr ""
 
 #: src/common/components/AccountInformationBanner/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:114
 msgid "Unlock Account"
+msgstr ""
+
+#: src/modules/content/Interactables/FileUpload/CreatePostFilePicker/CreatePostFilePicker.tsx:35
+msgid "Upload Files"
+msgstr ""
+
+#: src/modules/content/Interactables/FileUpload/CreatePostFilePicker/CreatePostFilePicker.tsx:40
+msgid "Upload one or more files by dragging and dropping them or by tapping here"
 msgstr ""
 
 #: src/modules/validation/Username.ts:16
@@ -616,6 +676,14 @@ msgstr ""
 
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostViewButton/PostViewButton.tsx:37
 msgid "View Post"
+msgstr ""
+
+#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchResults/SearchResults.tsx:50
+#~ msgid "We couldn't find a club, category, character, or series with the name {0}"
+#~ msgstr ""
+
+#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchResults/SearchResults.tsx:50
+msgid "We couldn't find a club, category, character, or series with the name {1}"
 msgstr ""
 
 #: src/modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/PostsInfiniteScroll.tsx:51

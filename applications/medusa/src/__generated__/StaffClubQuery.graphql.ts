@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0fbc396c47201052eafde84706b23809>>
- * @relayHash b1ca0a8ca43535c42892b5c9d40c00b8
+ * @generated SignedSource<<5435075f18eee40dbc2203e70c0bf68f>>
+ * @relayHash 45780d72cb5460637ef74b7ddca91858
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b1ca0a8ca43535c42892b5c9d40c00b8
+// @relayRequestID 45780d72cb5460637ef74b7ddca91858
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -19,7 +19,7 @@ export type StaffClubQuery$variables = {
 export type StaffClubQuery$data = {
   readonly club: {
     readonly __typename: "Club";
-    readonly " $fragmentSpreads": FragmentRefs<"ClubPageButtonFragment" | "LargeClubHeaderFragment" | "StaffClubInfractionsFragment" | "StaffClubOwnerFragment" | "StaffClubPaymentsFragment" | "StaffClubPayoutsFragment" | "StaffClubStatusFragment" | "StaffClubSupporterSubscriptionsFragment" | "StaffClubSuspensionsFragment" | "StaffClubTerminationFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ClubPageButtonFragment" | "LargeClubHeaderFragment" | "StaffClubInfractionsFragment" | "StaffClubOwnerFragment" | "StaffClubPaymentsFragment" | "StaffClubPayoutsFragment" | "StaffClubPostsFragment" | "StaffClubStatusFragment" | "StaffClubSupporterSubscriptionsFragment" | "StaffClubSuspensionsFragment" | "StaffClubTerminationFragment">;
   } | null;
 };
 export type StaffClubQuery = {
@@ -297,6 +297,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "StaffClubSupporterSubscriptionsFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "StaffClubPostsFragment"
           }
         ],
         "storageKey": null
@@ -1036,6 +1041,13 @@ return {
             "key": "StaffClubSupporterSubscriptions_supporterSubscriptions",
             "kind": "LinkedHandle",
             "name": "supporterSubscriptions"
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "canCreateSupporterOnlyPosts",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -1043,7 +1055,7 @@ return {
     ]
   },
   "params": {
-    "id": "b1ca0a8ca43535c42892b5c9d40c00b8",
+    "id": "45780d72cb5460637ef74b7ddca91858",
     "metadata": {},
     "name": "StaffClubQuery",
     "operationKind": "query",
@@ -1052,6 +1064,6 @@ return {
 };
 })();
 
-(node as any).hash = "4af6f2f1143996568cfe1445bae566f7";
+(node as any).hash = "2d94c1f20ade6539ada95c454dc37d59";
 
 export default node;

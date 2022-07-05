@@ -4,11 +4,10 @@ import { graphql } from 'react-relay'
 import ClubPostsFeed from './ClubPostsFeed/ClubPostsFeed'
 import { Heading, HStack, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
-import PostSearchButton
-  from '../../../../../modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/PostSearchButton'
-import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import AccountInformationBanner
   from '../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
+import SearchButton from '../../../../../common/components/PageHeader/SearchButton/SearchButton'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 
 interface Props {
   query: PreloadedQuery<ClubsFeedQuery>
@@ -34,22 +33,21 @@ export default function ClubsFeed (props: Props): JSX.Element {
     <>
       <AccountInformationBanner query={queryData.viewer} />
       <Stack spacing={8}>
-        <HStack spacing={2} justify='space-between'>
-          <Heading color='gray.00' fontSize='2xl'>
-            <Trans>
-              Your Clubs Feed
-            </Trans>
-          </Heading>
-          <HStack spacing={2}>
-            <LinkButton size='sm' href='/clubs/discover'>
-              <Trans>
-                Discover Clubs
-              </Trans>
-            </LinkButton>
-            <PostSearchButton routeTo='/search' />
+        <Stack spacing={2}>
+          <HStack spacing={2} justify='space-between'>
+            <Heading color='gray.00' fontSize='2xl'>
+              <Trans>Your Clubs Feed</Trans>
+            </Heading>
+            <HStack>
+              <LinkButton size='sm' href='/clubs/discover'>
+                <Trans>
+                  Discover Clubs
+                </Trans>
+              </LinkButton>
+              <SearchButton />
+            </HStack>
           </HStack>
-
-        </HStack>
+        </Stack>
         <ClubPostsFeed
           query={queryData.viewer}
           viewerQuery={queryData.viewer}

@@ -181,7 +181,6 @@ export default function PostReportButton ({
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        motionPreset='none'
         isCentered
         scrollBehavior='inside'
       >

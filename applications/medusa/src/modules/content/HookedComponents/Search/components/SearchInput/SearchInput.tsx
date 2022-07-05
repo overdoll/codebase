@@ -6,12 +6,16 @@ import CloseButton from '../../../../ThemeComponents/CloseButton/CloseButton'
 import { RegisterFunctionReturn } from '../../types'
 import { useDebounce, useUpdateEffect } from 'usehooks-ts'
 
-type Props = InputProps & RegisterFunctionReturn
+interface Props extends Omit<InputProps, 'id'>, RegisterFunctionReturn {
+  nullifyOnClear?: boolean
+}
 
 export default function SearchInput ({
   id,
   onChangeRegister,
   isPending,
+  size,
+  nullifyOnClear,
   ...rest
 }: Props): JSX.Element {
   const [searchInput, setSearch] = useState('')
@@ -19,6 +23,27 @@ export default function SearchInput ({
   const debouncedSearchInput = useDebounce(searchInput, 300)
 
   const { i18n } = useLingui()
+
+  const showRightElement = isPending || searchInput !== ''
+
+  const SearchInputRightElement = (): JSX.Element => {
+    if (!showRightElement) return <></>
+
+    return (
+      <InputRightElement mr={2} h='100%'>
+        {isPending
+          ? (<Spinner color='gray.200' w={6} h={6} size={size ?? 'lg'} />)
+          : searchInput !== '' && (
+            <CloseButton
+              color='gray.200'
+              h='80%'
+              size={size ?? 'lg'}
+              aria-label={i18n._(t`Clear Search`)}
+              onClick={clearSearch}
+            />)}
+      </InputRightElement>
+    )
+  }
 
   const clearSearch = (): void => {
     setSearch('')
@@ -29,7 +54,7 @@ export default function SearchInput ({
   }
 
   useUpdateEffect(() => {
-    onChangeRegister(debouncedSearchInput !== '' ? debouncedSearchInput : null)
+    onChangeRegister(debouncedSearchInput !== '' ? debouncedSearchInput : (nullifyOnClear === true ? null : ''))
   }, [debouncedSearchInput])
 
   return (
@@ -37,23 +62,13 @@ export default function SearchInput ({
       <InputGroup>
         <Input
           id={id}
-          size='lg'
+          size={size ?? 'lg'}
           value={searchInput}
           onChange={(e) => onChangeInput(e.target.value)}
           variant='filled'
           {...rest}
         />
-        <InputRightElement mr={1} h='100%'>
-          {isPending
-            ? (<Spinner size='sm' />)
-            : (
-              <CloseButton
-                size='md'
-                aria-label={i18n._(t`Clear Search`)}
-                hidden={searchInput === ''}
-                onClick={clearSearch}
-              />)}
-        </InputRightElement>
+        <SearchInputRightElement />
       </InputGroup>
     </>
   )

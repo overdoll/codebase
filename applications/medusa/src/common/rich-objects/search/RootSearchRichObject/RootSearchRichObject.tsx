@@ -13,8 +13,6 @@ export default function RootSearchRichObject (): JSX.Element {
   const TITLE = `${TITLE_SEARCH_PREFIX} ${TITLE_FEATURES} ${TITLE_SUFFIX}`
   const DESCRIPTION = `${DESCRIPTION_PREFIX} ${DESCRIPTION_FEATURES} on overdoll.com. ${DESCRIPTION_CONTENT_DISCOVER}.`
 
-  // TODO create populated search for non root with keywords
-
   return (
     <>
       <Head>

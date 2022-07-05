@@ -1,11 +1,15 @@
 import { graphql, useFragment } from 'react-relay'
 import { Box, Flex } from '@chakra-ui/react'
 import { Swiper, SwiperSlide } from 'swiper/react'
+import SwiperType from 'swiper'
 import { PostGalleryPublicSimpleFragment$key } from '@//:artifacts/PostGalleryPublicSimpleFragment.graphql'
+import PostSlideIndex from '../../PostInteraction/PostSlideIndex/PostSlideIndex'
+import { useState } from 'react'
+
 import PostSupporterContent from '../PostSupporterContent/PostSupporterContent'
 import { Link } from '../../../../../routing'
 import PostMedia from '../../PostPlayback/PostMedia/PostMedia'
-import PostSlideIndex from '../../PostInteraction/PostSlideIndex/PostSlideIndex'
+import OverflowVisual from './OverflowVisual/OverflowVisual'
 
 interface Props {
   query: PostGalleryPublicSimpleFragment$key
@@ -17,6 +21,7 @@ const Fragment = graphql`
     content {
       resource {
         ...PostMediaFragment
+        preview
       }
       ...PostSupporterContentFragment
     }
@@ -33,51 +38,63 @@ export default function PostGalleryPublicSimple ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
+  const [swiper, setSwiper] = useState<null | SwiperType>(null)
+
   return (
     <Box>
       <Swiper
         grabCursor
         spaceBetween={20}
         speed={100}
+        onSwiper={(swiper) => setSwiper(swiper)}
       >
-        <PostSlideIndex query={data} />
         {data?.content.map((item, index) =>
           <SwiperSlide
             key={index}
+            style={{
+              backgroundColor: item.resource.preview != null && item.resource.preview !== '' ? item.resource.preview : 'gray.800',
+              height: swiper?.height
+            }}
           >
             <Flex
-              direction='column'
+              h='100%'
               w='100%'
-              cursor='pointer'
               align='center'
               justify='center'
-              minH={300}
-              maxH={800}
+              cursor='pointer'
             >
-              <PostSupporterContent
-                query={item}
-                clubQuery={data.club}
+              <OverflowVisual
+                minH={300}
+                maxH='88vh'
+                align='center'
+                justify='center'
               >
-                <Link
-                  href={{
-                    pathname: '/[slug]/post/[reference]',
-                    query: {
-                      slug: data.club.slug,
-                      reference: data?.reference,
-                      ...(index > 0 && { slide: index })
-                    }
-                  }}
-                  passHref
+                <PostSupporterContent
+                  query={item}
+                  clubQuery={data.club}
                 >
-                  <Box w='100%' h='100%' as='a'>
-                    <PostMedia controls={{ canControl: false }} query={item.resource} />
-                  </Box>
-                </Link>
-              </PostSupporterContent>
+                  <Link
+                    href={{
+                      pathname: '/[slug]/post/[reference]',
+                      query: {
+                        slug: data.club.slug,
+                        reference: data?.reference,
+                        ...(index > 0 && { slide: index })
+                      }
+                    }}
+                    passHref
+                  >
+                    <Box w='100%' h='100%' as='a'>
+                      <PostMedia controls={{ canControl: false }} query={item.resource} />
+                    </Box>
+                  </Link>
+                </PostSupporterContent>
+              </OverflowVisual>
             </Flex>
           </SwiperSlide>
         )}
       </Swiper>
+      {swiper != null && <PostSlideIndex swiper={swiper} query={data} />}
     </Box>
   )
 }

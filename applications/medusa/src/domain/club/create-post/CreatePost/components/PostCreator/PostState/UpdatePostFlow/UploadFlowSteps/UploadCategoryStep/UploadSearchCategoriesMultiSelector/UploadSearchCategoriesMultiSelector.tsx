@@ -1,7 +1,6 @@
 import { usePaginationFragment } from 'react-relay'
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
-import { GridTile, GridWrap, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
-import removeNode from '@//:modules/support/removeNode'
+import { LoadMoreGridTile } from '@//:modules/content/ContentSelection'
 import type {
   UploadSearchCategoriesMultiSelectorQuery
 } from '@//:artifacts/UploadSearchCategoriesMultiSelectorQuery.graphql'
@@ -11,6 +10,11 @@ import { EmptyBoundary, EmptyCategories } from '@//:modules/content/Placeholder'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
 import { ComponentChoiceArguments } from '@//:modules/content/HookedComponents/Choice/types'
 import { Choice } from '@//:modules/content/HookedComponents/Choice'
+import { Stack } from '@chakra-ui/react'
+import { Trans } from '@lingui/macro'
+import SuggestPrompt from '../../../../../../SuggestPrompt/SuggestPrompt'
+import ShortGridWrap from '@//:modules/content/ContentSelection/ShortGridWrap/ShortGridWrap'
+import ShortGridTile from '@//:modules/content/ContentSelection/ShortGridTile/ShortGridTile'
 
 interface Props extends ComponentSearchArguments<any>, ComponentChoiceArguments<any> {
 }
@@ -24,7 +28,7 @@ const Query = graphql`
 const Fragment = graphql`
   fragment UploadSearchCategoriesMultiSelectorFragment on Query
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 5}
+    first: {type: Int, defaultValue: 19}
     after: {type: String},
     title: {type: String}
   )
@@ -66,32 +70,39 @@ export default function UploadSearchCategoriesMultiSelector ({
     Fragment,
     queryData
   )
-  const categories = removeNode(data.categories.edges)
 
   return (
     <EmptyBoundary
-      fallback={<EmptyCategories hint={searchArguments.variables.title} />}
-      condition={categories.length < 1}
+      fallback={(
+        <Stack spacing={2}>
+          <EmptyCategories hint={searchArguments.variables.title} />
+          <SuggestPrompt>
+            <Trans>
+              Have a category suggestion? Send us an email at hello@overdoll.com!
+            </Trans>
+          </SuggestPrompt>
+        </Stack>)}
+      condition={data.categories.edges.length < 1}
     >
-      <GridWrap justify='center'>
-        {categories.map((item, index) => (
-          <GridTile key={index}>
+      <ShortGridWrap>
+        {data.categories.edges.map((item, index) => (
+          <ShortGridTile key={index}>
             <Choice
-              {...register(item.id, {
-                title: item.title
+              {...register(item.node.id, {
+                title: item.node.title
               })}
             >
-              <CategoryTileOverlay query={item} />
+              <CategoryTileOverlay query={item.node} />
             </Choice>
-          </GridTile>
+          </ShortGridTile>
         )
         )}
         <LoadMoreGridTile
           hasNext={hasNext}
-          onLoadNext={() => loadNext(5)}
+          onLoadNext={() => loadNext(15)}
           isLoadingNext={isLoadingNext}
         />
-      </GridWrap>
+      </ShortGridWrap>
     </EmptyBoundary>
   )
 }

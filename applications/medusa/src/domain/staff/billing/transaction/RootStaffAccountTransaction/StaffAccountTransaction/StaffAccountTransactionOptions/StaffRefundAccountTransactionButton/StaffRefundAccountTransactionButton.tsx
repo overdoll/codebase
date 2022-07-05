@@ -57,7 +57,6 @@ export default function StaffRefundAccountTransactionButton ({ query }: Props): 
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        motionPreset='none'
         isCentered
         size='xl'
         preserveScrollBarGap

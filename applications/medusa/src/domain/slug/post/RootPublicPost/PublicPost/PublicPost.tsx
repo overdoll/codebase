@@ -8,13 +8,12 @@ import { useQueryParam } from 'use-query-params'
 import React, { useEffect } from 'react'
 import PublicPostPage from './PublicPostPage/PublicPostPage'
 import { useRouter } from 'next/router'
-import PostSearchButton
-  from '../../../../../modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/PostSearchButton'
 import { Trans } from '@lingui/macro'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import AccountInformationBanner
   from '../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
 import PublicPostRichObject from '../../../../../common/rich-objects/slug/PublicPostRichObject/PublicPostRichObject'
+import SearchButton from '../../../../../common/components/PageHeader/SearchButton/SearchButton'
 
 interface Props {
   query: PreloadedQuery<PublicPostQuery>
@@ -78,14 +77,12 @@ export default function PublicPost (props: Props): JSX.Element {
     <>
       <PublicPostRichObject query={queryData.post} />
       <AccountInformationBanner query={queryData.viewer} />
-      <Stack spacing={4}>
+      <Stack spacing={8}>
         <HStack spacing={2} justify='space-between'>
           <Heading color='gray.00' fontSize='2xl'>
-            <Trans>
-              View Post
-            </Trans>
+            <Trans>View Post</Trans>
           </Heading>
-          <PostSearchButton routeTo='/search' />
+          <SearchButton />
         </HStack>
         <Stack spacing={24}>
           <GlobalVideoManagerProvider>

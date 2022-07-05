@@ -99,7 +99,6 @@ export default function DeleteSavedPaymentMethodButton ({
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        motionPreset='none'
         isCentered
         preserveScrollBarGap
       >

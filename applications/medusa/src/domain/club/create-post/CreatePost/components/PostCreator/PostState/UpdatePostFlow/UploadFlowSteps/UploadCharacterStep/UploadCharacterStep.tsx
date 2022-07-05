@@ -4,13 +4,13 @@ import SearchInput from '@//:modules/content/HookedComponents/Search/components/
 import { Stack } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import SkeletonRectangleGrid from '@//:modules/content/Placeholder/Loading/SkeletonRectangleGrid/SkeletonRectangleGrid'
 import SearchCharacters from './UploadSearchCharactersMultiSelector/UploadSearchCharactersMultiSelector'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import { ChoiceRemovableTags, useChoice } from '@//:modules/content/HookedComponents/Choice'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
-import SuggestPrompt from '../../../../../SuggestPrompt/SuggestPrompt'
+import SkeletonUploadCharacterGrid
+  from '@//:modules/content/Placeholder/Loading/SkeletonUploadCharacterGrid/SkeletonUploadCharacterGrid'
 
 interface SearchProps {
   name: string
@@ -57,12 +57,13 @@ export default function UploadCharacterStep (): JSX.Element {
         </PageSectionTitle>
         <PageSectionDescription>
           <Trans>
-            Select the character(s) that are the primary focus in your content. You must select at least one to
+            Select one or more characters that appear in all of the slides. You must select at least one to
             continue.
           </Trans>
         </PageSectionDescription>
       </PageSectionWrap>
       <SearchInput
+        nullifyOnClear
         {...registerSearch('name', 'change')}
         placeholder={i18n._(t`Search for a character by name`)}
       />
@@ -74,18 +75,13 @@ export default function UploadCharacterStep (): JSX.Element {
       <QueryErrorBoundary
         loadQuery={loadQuery}
       >
-        <Suspense fallback={<SkeletonRectangleGrid />}>
+        <Suspense fallback={<SkeletonUploadCharacterGrid />}>
           <SearchCharacters
             searchArguments={searchArguments}
             register={register}
           />
         </Suspense>
       </QueryErrorBoundary>
-      <SuggestPrompt>
-        <Trans>
-          Have a character suggestion or want your character listed? Send us an email at hello@overdoll.com!
-        </Trans>
-      </SuggestPrompt>
     </Stack>
   )
 }

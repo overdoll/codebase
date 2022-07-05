@@ -1,6 +1,7 @@
 import RemovableTag from '../../../../DataDisplay/RemovableTag/RemovableTag'
 import { Choices, Id, UseChoiceReturnRemoveValue } from '../../types'
-import { HStackScroll } from '../../../../PageLayout'
+import { RenderOnDesktop, RenderOnMobile } from '../../../../PageLayout'
+import { Collapse, HStack, Wrap } from '@chakra-ui/react'
 
 interface ChoiceRemovableTagsProps {
   values: Choices<any>
@@ -17,21 +18,43 @@ export default function ChoiceRemovableTags ({
     removeValue(id)
   }
 
-  if (Object.keys(values).length < 1) {
-    return <></>
+  const Tags = (): JSX.Element => {
+    return (
+      <>
+        {Object.keys(values).map((item, index) => (
+          <RemovableTag
+            key={index}
+            generateColor
+            onRemove={onRemove}
+            id={item}
+            title={values[item][titleKey]}
+          />
+        ))}
+      </>
+    )
   }
 
   return (
-    <HStackScroll
-      spacing={1}
-    >
-      {Object.keys(values).map((item, index) => (
-        <RemovableTag
-          key={index}
-          onRemove={onRemove}
-          id={item}
-          title={values[item][titleKey]}
-        />))}
-    </HStackScroll>
+    <Collapse in={Object.keys(values).length > 0}>
+      <RenderOnDesktop>
+        <Wrap spacing={1} overflow='show'>
+          <Tags />
+        </Wrap>
+      </RenderOnDesktop>
+      <RenderOnMobile>
+        <HStack
+          bg='gray.800'
+          borderRadius='md'
+          pt={1}
+          pb={1}
+          whiteSpace='nowrap'
+          overflowX='auto'
+          display='block'
+          spacing={1}
+        >
+          <Tags />
+        </HStack>
+      </RenderOnMobile>
+    </Collapse>
   )
 }

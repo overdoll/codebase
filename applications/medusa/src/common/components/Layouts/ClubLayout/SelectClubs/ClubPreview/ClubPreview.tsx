@@ -32,6 +32,8 @@ export default function ClubPreview ({
     >
       <ResourceIcon
         seed={data.id}
+        w={10}
+        h={10}
         mr={3}
         query={data?.thumbnail as ResourceIconFragment$key}
       />

@@ -23,6 +23,7 @@ const ClubFragment = graphql`
     viewerMember {
       isSupporter
     }
+    canSupport
     slug
   }
 `
@@ -90,22 +91,24 @@ export default function JoinClubFromPost ({
   if (isClubMember) {
     return (
       <HStack spacing={2}>
-        <LinkButton
-          href={`/${clubData.slug}?support=true`}
-          leftIcon={(
-            <Icon
-              icon={PremiumStar}
-              fill='orange.900'
-              h={4}
-              w={4}
-            />)}
-          colorScheme='orange'
-          {...rest}
-        >
-          <Trans>
-            Support
-          </Trans>
-        </LinkButton>
+        {clubData.canSupport && (
+          <LinkButton
+            href={`/${clubData.slug}?support=true`}
+            leftIcon={(
+              <Icon
+                icon={PremiumStar}
+                fill='orange.900'
+                h={4}
+                w={4}
+              />)}
+            colorScheme='orange'
+            {...rest}
+          >
+            <Trans>
+              Support
+            </Trans>
+          </LinkButton>
+        )}
         <WithdrawMembershipButton
           clubQuery={clubData}
           p={0}

@@ -9,6 +9,7 @@ import { useContext } from 'react'
 import { UppyContext } from '../../../../../../context'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
+import { hasSupporterContent } from '../../UploadFlowSteps/UploadReviewStep/UploadReviewStep'
 
 interface Props {
   query: SubmitPostButtonFragment$key
@@ -17,6 +18,12 @@ interface Props {
 const Fragment = graphql`
   fragment SubmitPostButtonFragment on Post {
     id
+    content {
+      isSupporterOnly
+    }
+    club {
+      canCreateSupporterOnlyPosts
+    }
   }
 `
 
@@ -45,6 +52,8 @@ export default function SubmitPostButton ({
   const [submitPost, isSubmittingPost] = useMutation<SubmitPostButtonMutation>(Mutation)
 
   const [, setPostReference] = useQueryParam<string | null | undefined>('post')
+
+  const supportingDisabledAndPostHasSupporterContent = hasSupporterContent(data.content) && !data.club.canCreateSupporterOnlyPosts
 
   const notify = useToast()
 
@@ -83,6 +92,7 @@ export default function SubmitPostButton ({
     <Button
       colorScheme='teal'
       size='lg'
+      isDisabled={supportingDisabledAndPostHasSupporterContent}
       isLoading={isSubmittingPost}
       onClick={onSubmitPost}
     >

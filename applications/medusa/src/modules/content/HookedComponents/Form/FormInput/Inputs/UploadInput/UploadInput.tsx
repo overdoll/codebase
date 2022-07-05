@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { FormInputContext } from '../../FormInput'
 import { Controller, useFormContext } from 'react-hook-form'
 import { HStack } from '@chakra-ui/react'
-import SingleFileImageUpload from '../../../../../Interactables/SingleFileImageUpload/SingleFileImageUpload'
+import SingleFileImageUpload from '../../../../../Interactables/FileUpload/SingleFileImageUpload/SingleFileImageUpload'
 
 export default function UploadInput (): JSX.Element {
   const {

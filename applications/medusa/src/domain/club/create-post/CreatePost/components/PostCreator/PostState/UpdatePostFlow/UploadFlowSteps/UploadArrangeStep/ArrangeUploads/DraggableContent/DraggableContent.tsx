@@ -14,6 +14,7 @@ type OnDragEndFunction = (result) => void
 interface Props {
   onRemove: (string) => void
   onSupport: (id, isSupporterOnly) => void
+  canSupport: boolean
   index: number
   dragDisabled: boolean
   query: DraggableContentFragment$key
@@ -42,7 +43,8 @@ export default function DraggableContent ({
   h,
   isSupportingContent,
   onDragEnd,
-  total
+  total,
+  canSupport
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
@@ -113,24 +115,13 @@ export default function DraggableContent ({
     )
   }
 
-  return (
-    <Flex
-      h={h}
-      bg='gray.800'
-      borderRadius='md'
-      overflow='hidden'
-    >
-      <Flex align='center' w='12%' justify='center'>
-        <Flex borderRadius='full' bg='gray.600' w={10} h={10} align='center' justify='center'>
-          <Heading fontSize='xl'>
-            {index + 1}
-          </Heading>
-        </Flex>
-      </Flex>
-      <Flex align='center' justify='center' w='38%'>
-        <ResourceInfo query={data} />
-      </Flex>
-      <Flex align='center' justify='center' w='38%'>
+  const SupporterContentButton = (): JSX.Element => {
+    if (!canSupport && !data.isSupporterOnly) {
+      return <></>
+    }
+
+    return (
+      <>
         {dragDisabled && (
           <Tooltip
             placement='bottom'
@@ -163,6 +154,31 @@ export default function DraggableContent ({
             />
           </Tooltip>
         )}
+      </>
+    )
+  }
+
+  return (
+    <Flex
+      h={h}
+      bg='gray.800'
+      borderRadius='md'
+      overflow='hidden'
+    >
+      <Flex align='center' w='12%' justify='center'>
+        <Flex borderRadius='full' bg='gray.600' w={10} h={10} align='center' justify='center'>
+          <Heading fontSize='xl'>
+            {index + 1}
+          </Heading>
+        </Flex>
+      </Flex>
+      <Flex p={2} align='center' justify='center' w='38%'>
+        <Flex overflow='hidden' w='100%' h='100%' borderRadius='md'>
+          <ResourceInfo containCover query={data} />
+        </Flex>
+      </Flex>
+      <Flex align='center' justify='center' w='38%'>
+        <SupporterContentButton />
       </Flex>
       <Flex align='center' bg='gray.700' w='12%' justify='center'>
         {dragDisabled

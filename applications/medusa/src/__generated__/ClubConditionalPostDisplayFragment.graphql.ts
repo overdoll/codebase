@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1d7709898c5cd8eefe5fdd55c6fddac7>>
+ * @generated SignedSource<<b520740a43f0c0fb6318fe87d2a940bb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,6 +18,13 @@ export type ClubConditionalPostDisplayFragment$data = {
       };
     }>;
   };
+  readonly supporterPosts: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly __typename: "Post";
+      };
+    }>;
+  };
   readonly " $fragmentSpreads": FragmentRefs<"ClubExclusivePostsFragment" | "ClubTopPostsFragment" | "SupportClubButtonClubFragment">;
   readonly " $fragmentType": "ClubConditionalPostDisplayFragment";
 };
@@ -26,7 +33,44 @@ export type ClubConditionalPostDisplayFragment$key = {
   readonly " $fragmentSpreads": FragmentRefs<"ClubConditionalPostDisplayFragment">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "kind": "Literal",
+  "name": "first",
+  "value": 1
+},
+v1 = [
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "PostEdge",
+    "kind": "LinkedField",
+    "name": "edges",
+    "plural": true,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Post",
+        "kind": "LinkedField",
+        "name": "node",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "__typename",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  }
+];
+return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
@@ -35,48 +79,34 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": [
+        (v0/*: any*/)
+      ],
+      "concreteType": "PostConnection",
+      "kind": "LinkedField",
+      "name": "posts",
+      "plural": false,
+      "selections": (v1/*: any*/),
+      "storageKey": "posts(first:1)"
+    },
+    {
+      "alias": "supporterPosts",
+      "args": [
+        (v0/*: any*/),
         {
           "kind": "Literal",
-          "name": "first",
-          "value": 1
+          "name": "supporterOnlyStatus",
+          "value": [
+            "FULL",
+            "PARTIAL"
+          ]
         }
       ],
       "concreteType": "PostConnection",
       "kind": "LinkedField",
       "name": "posts",
       "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "PostEdge",
-          "kind": "LinkedField",
-          "name": "edges",
-          "plural": true,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "Post",
-              "kind": "LinkedField",
-              "name": "node",
-              "plural": false,
-              "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "__typename",
-                  "storageKey": null
-                }
-              ],
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        }
-      ],
-      "storageKey": "posts(first:1)"
+      "selections": (v1/*: any*/),
+      "storageKey": "posts(first:1,supporterOnlyStatus:[\"FULL\",\"PARTIAL\"])"
     },
     {
       "args": null,
@@ -97,7 +127,8 @@ const node: ReaderFragment = {
   "type": "Club",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "b1fb63e6c9b2ad5dea9b823e54ba588d";
+(node as any).hash = "3ad2e48874193d3c1d9c18ccfb1ded5b";
 
 export default node;

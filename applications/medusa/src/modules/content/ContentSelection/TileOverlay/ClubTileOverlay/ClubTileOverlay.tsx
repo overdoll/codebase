@@ -16,16 +16,8 @@ const Fragment = graphql`
     thumbnail {
       ...ResourceIconFragment
     }
-    posts(first: 1) {
-      edges {
-        node {
-          content {
-            resource {
-              ...ResourceItemFragment
-            }
-          }
-        }
-      }
+    banner {
+      ...ResourceItemFragment
     }
   }
 `
@@ -38,16 +30,33 @@ export default function ClubTileOverlay ({
   return (
     <TileOverlay
       backdrop={
-        <ResourceItem seed={data.id} h='100%' query={data.posts?.edges[0]?.node?.content[0].resource} />
+        <ResourceItem seed={data.id} h='100%' query={data.banner} />
       }
     >
-      <Stack w='100%' spacing={4} h='100%' align='center' justify='center'>
-        <Stack w='100%' align='center' justify='center' spacing={2}>
-          <ResourceIcon seed={data.id} h={12} w={12} query={data.thumbnail} />
-          <Heading textAlign='center' color='gray.00' fontSize='md'>
-            {data.name}
-          </Heading>
-        </Stack>
+      <Stack p={2} w='100%' spacing={2} h='100%' align='center' justify='center'>
+        <ResourceIcon
+          seed={data.id}
+          h={{
+            base: 8,
+            md: 12
+          }}
+          w={{
+            base: 8,
+            md: 12
+          }}
+          query={data.thumbnail}
+        />
+        <Heading
+          textAlign='center'
+          color='gray.00'
+          noOfLines={3}
+          fontSize={{
+            base: 'sm',
+            md: 'md'
+          }}
+        >
+          {data.name}
+        </Heading>
       </Stack>
     </TileOverlay>
   )

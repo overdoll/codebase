@@ -42,7 +42,7 @@ msgstr ""
 msgid "Events"
 msgstr ""
 
-#: src/domain/staff/billing/transaction/RootStaffAccountTransaction/StaffAccountTransaction/StaffAccountTransactionOptions/StaffRefundAccountTransactionButton/StaffRefundAccountTransactionButton.tsx:83
+#: src/domain/staff/billing/transaction/RootStaffAccountTransaction/StaffAccountTransaction/StaffAccountTransactionOptions/StaffRefundAccountTransactionButton/StaffRefundAccountTransactionButton.tsx:82
 msgid "Issuing a refund will cancel the original subscription"
 msgstr ""
 
@@ -64,7 +64,7 @@ msgstr ""
 
 #: src/domain/staff/billing/transaction/RootStaffAccountTransaction/StaffAccountTransaction/StaffAccountTransactionOptions/StaffRefundAccountTransactionButton/StaffRefundAccountTransaction/StaffRefundAccountTransactionForm.tsx:153
 #: src/domain/staff/billing/transaction/RootStaffAccountTransaction/StaffAccountTransaction/StaffAccountTransactionOptions/StaffRefundAccountTransactionButton/StaffRefundAccountTransactionButton.tsx:53
-#: src/domain/staff/billing/transaction/RootStaffAccountTransaction/StaffAccountTransaction/StaffAccountTransactionOptions/StaffRefundAccountTransactionButton/StaffRefundAccountTransactionButton.tsx:68
+#: src/domain/staff/billing/transaction/RootStaffAccountTransaction/StaffAccountTransaction/StaffAccountTransactionOptions/StaffRefundAccountTransactionButton/StaffRefundAccountTransactionButton.tsx:67
 msgid "Refund Transaction"
 msgstr ""
 
