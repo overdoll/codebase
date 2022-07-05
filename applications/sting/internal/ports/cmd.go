@@ -53,19 +53,6 @@ func InitializeCommands(app func() *app.Application) []*cobra.Command {
 	})
 
 	generateBannerRootCmd.AddCommand(&cobra.Command{
-		Use:  "audience [audience_id]",
-		Args: cobra.ExactArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
-			if err := app().Commands.GenerateAudienceBanner.Handle(context.Background(), command.GenerateAudienceBanner{
-				AudienceId: args[0],
-				Duration:   0,
-			}); err != nil {
-				zap.S().Fatalw("failed to generate audience banner", zap.Error(err))
-			}
-		},
-	})
-
-	generateBannerRootCmd.AddCommand(&cobra.Command{
 		Use:  "category [category_id]",
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {

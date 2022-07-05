@@ -14,6 +14,7 @@ go_library(
         "//applications/sting/internal/adapters/indexes",
         "//applications/sting/internal/adapters/migrations",
         "//applications/sting/internal/adapters/seeders",
+        "//applications/sting/internal/app",
         "//applications/sting/internal/ports",
         "//applications/sting/internal/service",
         "//applications/sting/proto:v1_go_proto",

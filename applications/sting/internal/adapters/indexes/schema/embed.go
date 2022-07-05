@@ -27,3 +27,6 @@ var SearchHistorySchema string
 
 //go:embed series.json
 var SeriesSchema string
+
+//go:embed topics.json
+var TopicsSchema string

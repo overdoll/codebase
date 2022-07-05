@@ -163,24 +163,6 @@ func PublishPost(ctx workflow.Context, input PublishPostInput) error {
 		}
 	}
 
-	for _, audienceId := range tagsPayload.AudienceIds {
-		if err := workflow.ExecuteChildWorkflow(
-			workflow.WithChildOptions(ctx, workflow.ChildWorkflowOptions{
-				WorkflowID:        "sting.GenerateAudienceBanner_" + audienceId,
-				ParentClosePolicy: enums.PARENT_CLOSE_POLICY_ABANDON,
-			}),
-			GenerateAudienceBanner,
-			GenerateAudienceBannerInput{
-				AudienceId: audienceId,
-				WaitPeriod: randomTimePeriod(),
-			}).
-			GetChildWorkflowExecution().
-			Get(ctx, nil); err != nil && !temporal.IsWorkflowExecutionAlreadyStartedError(err) {
-			logger.Error("failed to update audience banner", "Error", err)
-			return err
-		}
-	}
-
 	return nil
 }
 

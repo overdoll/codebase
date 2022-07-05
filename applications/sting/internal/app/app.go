@@ -45,10 +45,13 @@ type Commands struct {
 	UpdateAudienceIsStandard command.UpdateAudienceIsStandardHandler
 	GenerateAudienceBanner   command.GenerateAudienceBannerHandler
 
-	CreateCategory          command.CreateCategoryHandler
-	UpdateCategoryTitle     command.UpdateCategoryTitleHandler
-	UpdateCategoryThumbnail command.UpdateCategoryThumbnailHandler
-	GenerateCategoryBanner  command.GenerateCategoryBannerHandler
+	CreateCategory                 command.CreateCategoryHandler
+	UpdateCategoryTitle            command.UpdateCategoryTitleHandler
+	UpdateCategoryTopic            command.UpdateCategoryTopicHandler
+	UpdateCategoryThumbnail        command.UpdateCategoryThumbnailHandler
+	GenerateCategoryBanner         command.GenerateCategoryBannerHandler
+	AddCategoryAlternativeTitle    command.AddCategoryAlternativeTitleHandler
+	RemoveCategoryAlternativeTitle command.RemoveCategoryAlternativeTitleHandler
 
 	CreateCharacter          command.CreateCharacterHandler
 	UpdateCharacterName      command.UpdateCharacterNameHandler
@@ -59,6 +62,12 @@ type Commands struct {
 	UpdateSeriesTitle     command.UpdateSeriesTitleHandler
 	UpdateSeriesThumbnail command.UpdateSeriesThumbnailHandler
 	GenerateSeriesBanner  command.GenerateSeriesBannerHandler
+
+	CreateTopic            command.CreateTopicHandler
+	UpdateTopicTitle       command.UpdateTopicTitleHandler
+	UpdateTopicDescription command.UpdateTopicDescriptionHandler
+	UpdateTopicWeight      command.UpdateTopicWeightHandler
+	GenerateTopicBanner    command.GenerateTopicBannerHandler
 
 	DeleteAccountData command.DeleteAccountDataHandler
 

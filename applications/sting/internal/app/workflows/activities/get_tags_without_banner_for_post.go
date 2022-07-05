@@ -12,7 +12,6 @@ type GetTagsWithoutBannerForPostPayload struct {
 	CategoryIds  []string
 	CharacterIds []string
 	SeriesIds    []string
-	AudienceIds  []string
 }
 
 func (h *Activities) GetTagsWithoutBannerForPost(ctx context.Context, input GetTagsWithoutBannerForPostInput) (*GetTagsWithoutBannerForPostPayload, error) {
@@ -59,16 +58,6 @@ func (h *Activities) GetTagsWithoutBannerForPost(ctx context.Context, input GetT
 		if cat.BannerResource() == nil {
 			payload.CategoryIds = append(payload.CategoryIds, cat.ID())
 		}
-	}
-
-	audience, err := h.pr.GetAudienceById(ctx, *pst.AudienceId())
-
-	if err != nil {
-		return nil, err
-	}
-
-	if audience.BannerResource() == nil {
-		payload.AudienceIds = []string{audience.ID()}
 	}
 
 	return payload, nil

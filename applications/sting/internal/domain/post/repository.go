@@ -76,6 +76,15 @@ type Repository interface {
 	UpdateSeriesTotalPostsOperator(ctx context.Context, id string, updateFn func(series *Series) error) (*Series, error)
 	UpdateSeriesTotalLikesOperator(ctx context.Context, id string, updateFn func(series *Series) error) (*Series, error)
 
+	GetTopicById(ctx context.Context, topicId string) (*Topic, error)
+	GetTopicBySlug(ctx context.Context, slug string) (*Topic, error)
+	CreateTopic(ctx context.Context, requester *principal.Principal, topic *Topic) error
+	UpdateTopicBanner(ctx context.Context, requester *principal.Principal, id string, updateFn func(topic *Topic) error) (*Topic, error)
+	UpdateTopicBannerOperator(ctx context.Context, id string, updateFn func(topic *Topic) error) (*Topic, error)
+	UpdateTopicTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(topic *Topic) error) (*Topic, error)
+	UpdateTopicDescription(ctx context.Context, requester *principal.Principal, id string, updateFn func(topic *Topic) error) (*Topic, error)
+	UpdateTopicWeight(ctx context.Context, requester *principal.Principal, id string, updateFn func(topic *Topic) error) (*Topic, error)
+
 	GetCategoryById(ctx context.Context, categoryId string) (*Category, error)
 	GetCategoriesByIds(ctx context.Context, categoryIds []string) ([]*Category, error)
 	GetCategoryBySlug(ctx context.Context, slug string) (*Category, error)
@@ -86,6 +95,8 @@ type Repository interface {
 	UpdateCategoryThumbnailOperator(ctx context.Context, id string, updateFn func(category *Category) error) (*Category, error)
 	UpdateCategoryThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *Category) error) (*Category, error)
 	UpdateCategoryTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *Category) error) (*Category, error)
+	UpdateCategoryTopic(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *Category) error) (*Category, error)
+	UpdateCategoryAlternativeTitles(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *Category) error) (*Category, error)
 
 	UpdateCategoryTotalPostsOperator(ctx context.Context, id string, updateFn func(category *Category) error) (*Category, error)
 	UpdateCategoryTotalLikesOperator(ctx context.Context, id string, updateFn func(category *Category) error) (*Category, error)

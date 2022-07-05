@@ -38,7 +38,6 @@ type Repository interface {
 	GenerateCharacterBanner(ctx context.Context, character *post.Character, duration time.Duration) error
 	GenerateCategoryBanner(ctx context.Context, category *post.Category, duration time.Duration) error
 	GenerateSeriesBanner(ctx context.Context, series *post.Series, duration time.Duration) error
-	GenerateAudienceBanner(ctx context.Context, audience *post.Audience, duration time.Duration) error
 	GenerateClubBannerFromPost(ctx context.Context, post *post.Post) error
 
 	SendCompletedPixelatedResources(ctx context.Context, post *post.Post) error

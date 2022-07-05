@@ -22,7 +22,9 @@ var categoryTable = table.New(table.Metadata{
 	Columns: []string{
 		"id",
 		"title",
+		"alternative_titles",
 		"slug",
+		"topic_id",
 		"thumbnail_resource",
 		"banner_resource",
 		"total_likes",
@@ -35,15 +37,17 @@ var categoryTable = table.New(table.Metadata{
 })
 
 type category struct {
-	Id                string            `db:"id"`
-	Slug              string            `db:"slug"`
-	Title             map[string]string `db:"title"`
-	ThumbnailResource string            `db:"thumbnail_resource"`
-	BannerResource    string            `db:"banner_resource"`
-	TotalLikes        int               `db:"total_likes"`
-	TotalPosts        int               `db:"total_posts"`
-	CreatedAt         time.Time         `db:"created_at"`
-	UpdatedAt         time.Time         `db:"updated_at"`
+	Id                string              `db:"id"`
+	Slug              string              `db:"slug"`
+	TopicId           *string             `db:"topic_id"`
+	Title             map[string]string   `db:"title"`
+	AlternativeTitles []map[string]string `db:"alternative_titles"`
+	ThumbnailResource string              `db:"thumbnail_resource"`
+	BannerResource    string              `db:"banner_resource"`
+	TotalLikes        int                 `db:"total_likes"`
+	TotalPosts        int                 `db:"total_posts"`
+	CreatedAt         time.Time           `db:"created_at"`
+	UpdatedAt         time.Time           `db:"updated_at"`
 }
 
 var categorySlugTable = table.New(table.Metadata{
@@ -78,7 +82,9 @@ func marshalCategoryToDatabase(pending *post.Category) (*category, error) {
 	return &category{
 		Id:                pending.ID(),
 		Slug:              pending.Slug(),
+		TopicId:           pending.TopicId(),
 		Title:             localization.MarshalTranslationToDatabase(pending.Title()),
+		AlternativeTitles: localization.MarshalLocalizedDataTagsToDatabase(pending.AlternativeTitles()),
 		ThumbnailResource: marshalled,
 		BannerResource:    marshalledBanner,
 		TotalLikes:        pending.TotalLikes(),
@@ -112,6 +118,8 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCategoryFromDatabase(ctx
 		cat.TotalPosts,
 		cat.CreatedAt,
 		cat.UpdatedAt,
+		cat.TopicId,
+		cat.AlternativeTitles,
 	), nil
 }
 
@@ -306,7 +314,7 @@ func (r PostsCassandraElasticsearchRepository) updateCategory(ctx context.Contex
 
 	if err := r.session.
 		Query(categoryTable.Update(
-			columns...,
+			append(columns, "updated_at")...,
 		)).
 		WithContext(ctx).
 		Idempotent(true).
@@ -337,6 +345,14 @@ func (r PostsCassandraElasticsearchRepository) UpdateCategoryThumbnail(ctx conte
 
 func (r PostsCassandraElasticsearchRepository) UpdateCategoryTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
 	return r.updateCategory(ctx, id, updateFn, []string{"title"})
+}
+
+func (r PostsCassandraElasticsearchRepository) UpdateCategoryAlternativeTitles(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
+	return r.updateCategory(ctx, id, updateFn, []string{"alternative_titles"})
+}
+
+func (r PostsCassandraElasticsearchRepository) UpdateCategoryTopic(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
+	return r.updateCategory(ctx, id, updateFn, []string{"topic_id"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateCategoryTotalPostsOperator(ctx context.Context, id string, updateFn func(category *post.Category) error) (*post.Category, error) {

@@ -324,22 +324,6 @@ type ComplexityRoot struct {
 		FindSeriesByID     func(childComplexity int, id relay.ID) int
 	}
 
-	GenerateAudienceBannerPayload struct {
-		Audience func(childComplexity int) int
-	}
-
-	GenerateCategoryBannerPayload struct {
-		Category func(childComplexity int) int
-	}
-
-	GenerateCharacterBannerPayload struct {
-		Character func(childComplexity int) int
-	}
-
-	GenerateSeriesBannerPayload struct {
-		Series func(childComplexity int) int
-	}
-
 	JoinClubPayload struct {
 		ClubMember func(childComplexity int) int
 	}
@@ -370,10 +354,6 @@ type ComplexityRoot struct {
 		DeletePost                       func(childComplexity int, input types.DeletePostInput) int
 		DisableClubSupporterOnlyPosts    func(childComplexity int, input types.DisableClubSupporterOnlyPostsInput) int
 		EnableClubSupporterOnlyPosts     func(childComplexity int, input types.EnableClubSupporterOnlyPostsInput) int
-		GenerateAudienceBanner           func(childComplexity int, input types.GenerateAudienceBannerInput) int
-		GenerateCategoryBanner           func(childComplexity int, input types.GenerateCategoryBannerInput) int
-		GenerateCharacterBanner          func(childComplexity int, input types.GenerateCharacterBannerInput) int
-		GenerateSeriesBanner             func(childComplexity int, input types.GenerateSeriesBannerInput) int
 		JoinClub                         func(childComplexity int, input types.JoinClubInput) int
 		LeaveClub                        func(childComplexity int, input types.LeaveClubInput) int
 		LikePost                         func(childComplexity int, input types.LikePostInput) int
@@ -721,16 +701,13 @@ type MutationResolver interface {
 	CreateCategory(ctx context.Context, input types.CreateCategoryInput) (*types.CreateCategoryPayload, error)
 	UpdateCategoryTitle(ctx context.Context, input types.UpdateCategoryTitleInput) (*types.UpdateCategoryTitlePayload, error)
 	UpdateCategoryThumbnail(ctx context.Context, input types.UpdateCategoryThumbnailInput) (*types.UpdateCategoryThumbnailPayload, error)
-	GenerateCategoryBanner(ctx context.Context, input types.GenerateCategoryBannerInput) (*types.GenerateCategoryBannerPayload, error)
 	CreateAudience(ctx context.Context, input types.CreateAudienceInput) (*types.CreateAudiencePayload, error)
 	UpdateAudienceTitle(ctx context.Context, input types.UpdateAudienceTitleInput) (*types.UpdateAudienceTitlePayload, error)
 	UpdateAudienceThumbnail(ctx context.Context, input types.UpdateAudienceThumbnailInput) (*types.UpdateAudienceThumbnailPayload, error)
 	UpdateAudienceIsStandard(ctx context.Context, input types.UpdateAudienceIsStandardInput) (*types.UpdateAudienceIsStandardPayload, error)
-	GenerateAudienceBanner(ctx context.Context, input types.GenerateAudienceBannerInput) (*types.GenerateAudienceBannerPayload, error)
 	CreateCharacter(ctx context.Context, input types.CreateCharacterInput) (*types.CreateCharacterPayload, error)
 	UpdateCharacterName(ctx context.Context, input types.UpdateCharacterNameInput) (*types.UpdateCharacterNamePayload, error)
 	UpdateCharacterThumbnail(ctx context.Context, input types.UpdateCharacterThumbnailInput) (*types.UpdateCharacterThumbnailPayload, error)
-	GenerateCharacterBanner(ctx context.Context, input types.GenerateCharacterBannerInput) (*types.GenerateCharacterBannerPayload, error)
 	JoinClub(ctx context.Context, input types.JoinClubInput) (*types.JoinClubPayload, error)
 	LeaveClub(ctx context.Context, input types.LeaveClubInput) (*types.LeaveClubPayload, error)
 	CreateClub(ctx context.Context, input types.CreateClubInput) (*types.CreateClubPayload, error)
@@ -765,7 +742,6 @@ type MutationResolver interface {
 	CreateSeries(ctx context.Context, input types.CreateSeriesInput) (*types.CreateSeriesPayload, error)
 	UpdateSeriesTitle(ctx context.Context, input types.UpdateSeriesTitleInput) (*types.UpdateSeriesTitlePayload, error)
 	UpdateSeriesThumbnail(ctx context.Context, input types.UpdateSeriesThumbnailInput) (*types.UpdateSeriesThumbnailPayload, error)
-	GenerateSeriesBanner(ctx context.Context, input types.GenerateSeriesBannerInput) (*types.GenerateSeriesBannerPayload, error)
 }
 type PostResolver interface {
 	Club(ctx context.Context, obj *types.Post) (*types.Club, error)
@@ -1933,34 +1909,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Entity.FindSeriesByID(childComplexity, args["id"].(relay.ID)), true
 
-	case "GenerateAudienceBannerPayload.audience":
-		if e.complexity.GenerateAudienceBannerPayload.Audience == nil {
-			break
-		}
-
-		return e.complexity.GenerateAudienceBannerPayload.Audience(childComplexity), true
-
-	case "GenerateCategoryBannerPayload.category":
-		if e.complexity.GenerateCategoryBannerPayload.Category == nil {
-			break
-		}
-
-		return e.complexity.GenerateCategoryBannerPayload.Category(childComplexity), true
-
-	case "GenerateCharacterBannerPayload.character":
-		if e.complexity.GenerateCharacterBannerPayload.Character == nil {
-			break
-		}
-
-		return e.complexity.GenerateCharacterBannerPayload.Character(childComplexity), true
-
-	case "GenerateSeriesBannerPayload.series":
-		if e.complexity.GenerateSeriesBannerPayload.Series == nil {
-			break
-		}
-
-		return e.complexity.GenerateSeriesBannerPayload.Series(childComplexity), true
-
 	case "JoinClubPayload.clubMember":
 		if e.complexity.JoinClubPayload.ClubMember == nil {
 			break
@@ -2139,54 +2087,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.EnableClubSupporterOnlyPosts(childComplexity, args["input"].(types.EnableClubSupporterOnlyPostsInput)), true
-
-	case "Mutation.generateAudienceBanner":
-		if e.complexity.Mutation.GenerateAudienceBanner == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_generateAudienceBanner_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.GenerateAudienceBanner(childComplexity, args["input"].(types.GenerateAudienceBannerInput)), true
-
-	case "Mutation.generateCategoryBanner":
-		if e.complexity.Mutation.GenerateCategoryBanner == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_generateCategoryBanner_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.GenerateCategoryBanner(childComplexity, args["input"].(types.GenerateCategoryBannerInput)), true
-
-	case "Mutation.generateCharacterBanner":
-		if e.complexity.Mutation.GenerateCharacterBanner == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_generateCharacterBanner_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.GenerateCharacterBanner(childComplexity, args["input"].(types.GenerateCharacterBannerInput)), true
-
-	case "Mutation.generateSeriesBanner":
-		if e.complexity.Mutation.GenerateSeriesBanner == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_generateSeriesBanner_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.GenerateSeriesBanner(childComplexity, args["input"].(types.GenerateSeriesBannerInput)), true
 
 	case "Mutation.joinClub":
 		if e.complexity.Mutation.JoinClub == nil {
@@ -3471,10 +3371,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputDeletePostInput,
 		ec.unmarshalInputDisableClubSupporterOnlyPostsInput,
 		ec.unmarshalInputEnableClubSupporterOnlyPostsInput,
-		ec.unmarshalInputGenerateAudienceBannerInput,
-		ec.unmarshalInputGenerateCategoryBannerInput,
-		ec.unmarshalInputGenerateCharacterBannerInput,
-		ec.unmarshalInputGenerateSeriesBannerInput,
 		ec.unmarshalInputJoinClubInput,
 		ec.unmarshalInputLeaveClubInput,
 		ec.unmarshalInputLikePostInput,
@@ -3721,15 +3617,6 @@ input UpdateAudienceThumbnailInput {
   thumbnail: String!
 }
 
-"""Generate audience banner."""
-input GenerateAudienceBannerInput {
-  """The audience to update"""
-  id: ID!
-
-  """The time, in nanoseconds, to wait for banner generation."""
-  duration: Int!
-}
-
 """Update audience."""
 input UpdateAudienceIsStandardInput {
   """The audience to update"""
@@ -3747,12 +3634,6 @@ type UpdateAudienceTitlePayload {
 
 """Payload for updating audience"""
 type UpdateAudienceThumbnailPayload {
-  """The audience after update"""
-  audience: Audience
-}
-
-"""Payload for updating audience"""
-type GenerateAudienceBannerPayload {
   """The audience after update"""
   audience: Audience
 }
@@ -3783,13 +3664,6 @@ extend type Mutation {
   Update audience standard
   """
   updateAudienceIsStandard(input: UpdateAudienceIsStandardInput!): UpdateAudienceIsStandardPayload
-
-  """
-  Generate audience banner.
-
-  Will wait for the specified time, and then look up the top posts and use that as the banner.
-  """
-  generateAudienceBanner(input: GenerateAudienceBannerInput!): GenerateAudienceBannerPayload
 }
 `, BuiltIn: false},
 	{Name: "../../../schema/category/schema.graphql", Input: `type Category implements Node @key(fields: "id") {
@@ -3931,15 +3805,6 @@ input UpdateCategoryTitleInput {
   locale: BCP47!
 }
 
-"""Generate category banner."""
-input GenerateCategoryBannerInput {
-  """The category to update"""
-  id: ID!
-
-  """The time, in nanoseconds, to wait for banner generation."""
-  duration: Int!
-}
-
 """Update category."""
 input UpdateCategoryThumbnailInput {
   """The category to update"""
@@ -3961,12 +3826,6 @@ type UpdateCategoryThumbnailPayload {
   category: Category
 }
 
-"""Payload for updating category"""
-type GenerateCategoryBannerPayload {
-  """The category after update"""
-  category: Category
-}
-
 type Mutation {
   """
   Create a new category
@@ -3982,13 +3841,6 @@ type Mutation {
   Update category thumbnail
   """
   updateCategoryThumbnail(input: UpdateCategoryThumbnailInput!): UpdateCategoryThumbnailPayload
-
-  """
-  Generate category banner.
-
-  Will wait for the specified time, and then look up the top posts and use that as the banner.
-  """
-  generateCategoryBanner(input: GenerateCategoryBannerInput!): GenerateCategoryBannerPayload
 }
 `, BuiltIn: false},
 	{Name: "../../../schema/character/schema.graphql", Input: `type Character implements Node @key(fields: "id") {
@@ -4150,15 +4002,6 @@ input UpdateCharacterNameInput {
   locale: BCP47!
 }
 
-"""Generate character banner."""
-input GenerateCharacterBannerInput {
-  """The character to update"""
-  id: ID!
-
-  """The time, in nanoseconds, to wait for banner generation."""
-  duration: Int!
-}
-
 """Update character."""
 input UpdateCharacterThumbnailInput {
   """The character to update"""
@@ -4180,12 +4023,6 @@ type UpdateCharacterThumbnailPayload {
   character: Character
 }
 
-"""Payload for updating character"""
-type GenerateCharacterBannerPayload {
-  """The character after update"""
-  character: Character
-}
-
 extend type Mutation {
   """
   Create a new character
@@ -4201,13 +4038,6 @@ extend type Mutation {
   Update character thumbnail
   """
   updateCharacterThumbnail(input: UpdateCharacterThumbnailInput!): UpdateCharacterThumbnailPayload
-
-  """
-  Generate character banner.
-
-  Will wait for the specified time, and then look up the top posts and use that as the banner.
-  """
-  generateCharacterBanner(input: GenerateCharacterBannerInput!): GenerateCharacterBannerPayload
 }
 `, BuiltIn: false},
 	{Name: "../../../schema/club/schema.graphql", Input: `type Club implements Node @key(fields: "id") {
@@ -5901,15 +5731,6 @@ input UpdateSeriesThumbnailInput {
   thumbnail: String!
 }
 
-"""Generate series banner."""
-input GenerateSeriesBannerInput {
-  """The series to update"""
-  id: ID!
-
-  """The time, in nanoseconds, to wait for banner generation."""
-  duration: Int!
-}
-
 """Payload for updating series"""
 type UpdateSeriesTitlePayload {
   """The series after update"""
@@ -5918,12 +5739,6 @@ type UpdateSeriesTitlePayload {
 
 """Payload for updating series"""
 type UpdateSeriesThumbnailPayload {
-  """The category after update"""
-  series: Series
-}
-
-"""Payload for updating series"""
-type GenerateSeriesBannerPayload {
   """The category after update"""
   series: Series
 }
@@ -5943,13 +5758,6 @@ extend type Mutation {
   Update series thumbnail
   """
   updateSeriesThumbnail(input: UpdateSeriesThumbnailInput!): UpdateSeriesThumbnailPayload
-
-  """
-  Generate series banner.
-
-  Will wait for the specified time, and then look up the top posts and use that as the banner.
-  """
-  generateSeriesBanner(input: GenerateSeriesBannerInput!): GenerateSeriesBannerPayload
 }
 `, BuiltIn: false},
 	{Name: "../../../../../libraries/graphql/schema.graphql", Input: `scalar Time
@@ -7244,66 +7052,6 @@ func (ec *executionContext) field_Mutation_enableClubSupporterOnlyPosts_args(ctx
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNEnableClubSupporterOnlyPostsInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐEnableClubSupporterOnlyPostsInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_generateAudienceBanner_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 types.GenerateAudienceBannerInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNGenerateAudienceBannerInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateAudienceBannerInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_generateCategoryBanner_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 types.GenerateCategoryBannerInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNGenerateCategoryBannerInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateCategoryBannerInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_generateCharacterBanner_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 types.GenerateCharacterBannerInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNGenerateCharacterBannerInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateCharacterBannerInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_generateSeriesBanner_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 types.GenerateSeriesBannerInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNGenerateSeriesBannerInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateSeriesBannerInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -16555,262 +16303,6 @@ func (ec *executionContext) fieldContext_Entity_findSeriesByID(ctx context.Conte
 	return fc, nil
 }
 
-func (ec *executionContext) _GenerateAudienceBannerPayload_audience(ctx context.Context, field graphql.CollectedField, obj *types.GenerateAudienceBannerPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GenerateAudienceBannerPayload_audience(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Audience, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.Audience)
-	fc.Result = res
-	return ec.marshalOAudience2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudience(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_GenerateAudienceBannerPayload_audience(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "GenerateAudienceBannerPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Audience_id(ctx, field)
-			case "reference":
-				return ec.fieldContext_Audience_reference(ctx, field)
-			case "slug":
-				return ec.fieldContext_Audience_slug(ctx, field)
-			case "thumbnail":
-				return ec.fieldContext_Audience_thumbnail(ctx, field)
-			case "banner":
-				return ec.fieldContext_Audience_banner(ctx, field)
-			case "title":
-				return ec.fieldContext_Audience_title(ctx, field)
-			case "standard":
-				return ec.fieldContext_Audience_standard(ctx, field)
-			case "titleTranslations":
-				return ec.fieldContext_Audience_titleTranslations(ctx, field)
-			case "totalLikes":
-				return ec.fieldContext_Audience_totalLikes(ctx, field)
-			case "totalPosts":
-				return ec.fieldContext_Audience_totalPosts(ctx, field)
-			case "posts":
-				return ec.fieldContext_Audience_posts(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Audience", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _GenerateCategoryBannerPayload_category(ctx context.Context, field graphql.CollectedField, obj *types.GenerateCategoryBannerPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GenerateCategoryBannerPayload_category(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Category, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.Category)
-	fc.Result = res
-	return ec.marshalOCategory2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategory(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_GenerateCategoryBannerPayload_category(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "GenerateCategoryBannerPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Category_id(ctx, field)
-			case "reference":
-				return ec.fieldContext_Category_reference(ctx, field)
-			case "slug":
-				return ec.fieldContext_Category_slug(ctx, field)
-			case "thumbnail":
-				return ec.fieldContext_Category_thumbnail(ctx, field)
-			case "banner":
-				return ec.fieldContext_Category_banner(ctx, field)
-			case "title":
-				return ec.fieldContext_Category_title(ctx, field)
-			case "titleTranslations":
-				return ec.fieldContext_Category_titleTranslations(ctx, field)
-			case "totalLikes":
-				return ec.fieldContext_Category_totalLikes(ctx, field)
-			case "totalPosts":
-				return ec.fieldContext_Category_totalPosts(ctx, field)
-			case "posts":
-				return ec.fieldContext_Category_posts(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Category", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _GenerateCharacterBannerPayload_character(ctx context.Context, field graphql.CollectedField, obj *types.GenerateCharacterBannerPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GenerateCharacterBannerPayload_character(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Character, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.Character)
-	fc.Result = res
-	return ec.marshalOCharacter2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacter(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_GenerateCharacterBannerPayload_character(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "GenerateCharacterBannerPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Character_id(ctx, field)
-			case "reference":
-				return ec.fieldContext_Character_reference(ctx, field)
-			case "slug":
-				return ec.fieldContext_Character_slug(ctx, field)
-			case "thumbnail":
-				return ec.fieldContext_Character_thumbnail(ctx, field)
-			case "banner":
-				return ec.fieldContext_Character_banner(ctx, field)
-			case "name":
-				return ec.fieldContext_Character_name(ctx, field)
-			case "nameTranslations":
-				return ec.fieldContext_Character_nameTranslations(ctx, field)
-			case "totalLikes":
-				return ec.fieldContext_Character_totalLikes(ctx, field)
-			case "totalPosts":
-				return ec.fieldContext_Character_totalPosts(ctx, field)
-			case "series":
-				return ec.fieldContext_Character_series(ctx, field)
-			case "posts":
-				return ec.fieldContext_Character_posts(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Character", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _GenerateSeriesBannerPayload_series(ctx context.Context, field graphql.CollectedField, obj *types.GenerateSeriesBannerPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GenerateSeriesBannerPayload_series(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Series, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.Series)
-	fc.Result = res
-	return ec.marshalOSeries2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeries(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_GenerateSeriesBannerPayload_series(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "GenerateSeriesBannerPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Series_id(ctx, field)
-			case "reference":
-				return ec.fieldContext_Series_reference(ctx, field)
-			case "slug":
-				return ec.fieldContext_Series_slug(ctx, field)
-			case "thumbnail":
-				return ec.fieldContext_Series_thumbnail(ctx, field)
-			case "banner":
-				return ec.fieldContext_Series_banner(ctx, field)
-			case "title":
-				return ec.fieldContext_Series_title(ctx, field)
-			case "titleTranslations":
-				return ec.fieldContext_Series_titleTranslations(ctx, field)
-			case "totalLikes":
-				return ec.fieldContext_Series_totalLikes(ctx, field)
-			case "totalPosts":
-				return ec.fieldContext_Series_totalPosts(ctx, field)
-			case "posts":
-				return ec.fieldContext_Series_posts(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Series", field.Name)
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _JoinClubPayload_clubMember(ctx context.Context, field graphql.CollectedField, obj *types.JoinClubPayload) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_JoinClubPayload_clubMember(ctx, field)
 	if err != nil {
@@ -17219,62 +16711,6 @@ func (ec *executionContext) fieldContext_Mutation_updateCategoryThumbnail(ctx co
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_generateCategoryBanner(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_generateCategoryBanner(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().GenerateCategoryBanner(rctx, fc.Args["input"].(types.GenerateCategoryBannerInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.GenerateCategoryBannerPayload)
-	fc.Result = res
-	return ec.marshalOGenerateCategoryBannerPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateCategoryBannerPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_generateCategoryBanner(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "category":
-				return ec.fieldContext_GenerateCategoryBannerPayload_category(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type GenerateCategoryBannerPayload", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_generateCategoryBanner_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Mutation_createAudience(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_createAudience(ctx, field)
 	if err != nil {
@@ -17501,62 +16937,6 @@ func (ec *executionContext) fieldContext_Mutation_updateAudienceIsStandard(ctx c
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_generateAudienceBanner(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_generateAudienceBanner(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().GenerateAudienceBanner(rctx, fc.Args["input"].(types.GenerateAudienceBannerInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.GenerateAudienceBannerPayload)
-	fc.Result = res
-	return ec.marshalOGenerateAudienceBannerPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateAudienceBannerPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_generateAudienceBanner(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "audience":
-				return ec.fieldContext_GenerateAudienceBannerPayload_audience(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type GenerateAudienceBannerPayload", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_generateAudienceBanner_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Mutation_createCharacter(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_createCharacter(ctx, field)
 	if err != nil {
@@ -17721,62 +17101,6 @@ func (ec *executionContext) fieldContext_Mutation_updateCharacterThumbnail(ctx c
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_updateCharacterThumbnail_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Mutation_generateCharacterBanner(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_generateCharacterBanner(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().GenerateCharacterBanner(rctx, fc.Args["input"].(types.GenerateCharacterBannerInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.GenerateCharacterBannerPayload)
-	fc.Result = res
-	return ec.marshalOGenerateCharacterBannerPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateCharacterBannerPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_generateCharacterBanner(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "character":
-				return ec.fieldContext_GenerateCharacterBannerPayload_character(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type GenerateCharacterBannerPayload", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_generateCharacterBanner_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -19687,62 +19011,6 @@ func (ec *executionContext) fieldContext_Mutation_updateSeriesThumbnail(ctx cont
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_updateSeriesThumbnail_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Mutation_generateSeriesBanner(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_generateSeriesBanner(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().GenerateSeriesBanner(rctx, fc.Args["input"].(types.GenerateSeriesBannerInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.GenerateSeriesBannerPayload)
-	fc.Result = res
-	return ec.marshalOGenerateSeriesBannerPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateSeriesBannerPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_generateSeriesBanner(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "series":
-				return ec.fieldContext_GenerateSeriesBannerPayload_series(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type GenerateSeriesBannerPayload", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_generateSeriesBanner_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -28550,130 +27818,6 @@ func (ec *executionContext) unmarshalInputEnableClubSupporterOnlyPostsInput(ctx 
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputGenerateAudienceBannerInput(ctx context.Context, obj interface{}) (types.GenerateAudienceBannerInput, error) {
-	var it types.GenerateAudienceBannerInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "duration":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("duration"))
-			it.Duration, err = ec.unmarshalNInt2int(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputGenerateCategoryBannerInput(ctx context.Context, obj interface{}) (types.GenerateCategoryBannerInput, error) {
-	var it types.GenerateCategoryBannerInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "duration":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("duration"))
-			it.Duration, err = ec.unmarshalNInt2int(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputGenerateCharacterBannerInput(ctx context.Context, obj interface{}) (types.GenerateCharacterBannerInput, error) {
-	var it types.GenerateCharacterBannerInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "duration":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("duration"))
-			it.Duration, err = ec.unmarshalNInt2int(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputGenerateSeriesBannerInput(ctx context.Context, obj interface{}) (types.GenerateSeriesBannerInput, error) {
-	var it types.GenerateSeriesBannerInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "duration":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("duration"))
-			it.Duration, err = ec.unmarshalNInt2int(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputJoinClubInput(ctx context.Context, obj interface{}) (types.JoinClubInput, error) {
 	var it types.JoinClubInput
 	asMap := map[string]interface{}{}
@@ -32066,106 +31210,6 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 	return out
 }
 
-var generateAudienceBannerPayloadImplementors = []string{"GenerateAudienceBannerPayload"}
-
-func (ec *executionContext) _GenerateAudienceBannerPayload(ctx context.Context, sel ast.SelectionSet, obj *types.GenerateAudienceBannerPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, generateAudienceBannerPayloadImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("GenerateAudienceBannerPayload")
-		case "audience":
-
-			out.Values[i] = ec._GenerateAudienceBannerPayload_audience(ctx, field, obj)
-
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var generateCategoryBannerPayloadImplementors = []string{"GenerateCategoryBannerPayload"}
-
-func (ec *executionContext) _GenerateCategoryBannerPayload(ctx context.Context, sel ast.SelectionSet, obj *types.GenerateCategoryBannerPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, generateCategoryBannerPayloadImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("GenerateCategoryBannerPayload")
-		case "category":
-
-			out.Values[i] = ec._GenerateCategoryBannerPayload_category(ctx, field, obj)
-
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var generateCharacterBannerPayloadImplementors = []string{"GenerateCharacterBannerPayload"}
-
-func (ec *executionContext) _GenerateCharacterBannerPayload(ctx context.Context, sel ast.SelectionSet, obj *types.GenerateCharacterBannerPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, generateCharacterBannerPayloadImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("GenerateCharacterBannerPayload")
-		case "character":
-
-			out.Values[i] = ec._GenerateCharacterBannerPayload_character(ctx, field, obj)
-
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var generateSeriesBannerPayloadImplementors = []string{"GenerateSeriesBannerPayload"}
-
-func (ec *executionContext) _GenerateSeriesBannerPayload(ctx context.Context, sel ast.SelectionSet, obj *types.GenerateSeriesBannerPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, generateSeriesBannerPayloadImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("GenerateSeriesBannerPayload")
-		case "series":
-
-			out.Values[i] = ec._GenerateSeriesBannerPayload_series(ctx, field, obj)
-
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
 var joinClubPayloadImplementors = []string{"JoinClubPayload"}
 
 func (ec *executionContext) _JoinClubPayload(ctx context.Context, sel ast.SelectionSet, obj *types.JoinClubPayload) graphql.Marshaler {
@@ -32316,12 +31360,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_updateCategoryThumbnail(ctx, field)
 			})
 
-		case "generateCategoryBanner":
-
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_generateCategoryBanner(ctx, field)
-			})
-
 		case "createAudience":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -32346,12 +31384,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_updateAudienceIsStandard(ctx, field)
 			})
 
-		case "generateAudienceBanner":
-
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_generateAudienceBanner(ctx, field)
-			})
-
 		case "createCharacter":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -32368,12 +31400,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateCharacterThumbnail(ctx, field)
-			})
-
-		case "generateCharacterBanner":
-
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_generateCharacterBanner(ctx, field)
 			})
 
 		case "joinClub":
@@ -32578,12 +31604,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateSeriesThumbnail(ctx, field)
-			})
-
-		case "generateSeriesBanner":
-
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_generateSeriesBanner(ctx, field)
 			})
 
 		default:
@@ -35806,26 +34826,6 @@ func (ec *executionContext) unmarshalNEnableClubSupporterOnlyPostsInput2overdoll
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNGenerateAudienceBannerInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateAudienceBannerInput(ctx context.Context, v interface{}) (types.GenerateAudienceBannerInput, error) {
-	res, err := ec.unmarshalInputGenerateAudienceBannerInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNGenerateCategoryBannerInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateCategoryBannerInput(ctx context.Context, v interface{}) (types.GenerateCategoryBannerInput, error) {
-	res, err := ec.unmarshalInputGenerateCategoryBannerInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNGenerateCharacterBannerInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateCharacterBannerInput(ctx context.Context, v interface{}) (types.GenerateCharacterBannerInput, error) {
-	res, err := ec.unmarshalInputGenerateCharacterBannerInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNGenerateSeriesBannerInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateSeriesBannerInput(ctx context.Context, v interface{}) (types.GenerateSeriesBannerInput, error) {
-	res, err := ec.unmarshalInputGenerateSeriesBannerInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx context.Context, v interface{}) (relay.ID, error) {
 	var res relay.ID
 	err := res.UnmarshalGQL(v)
@@ -37259,34 +36259,6 @@ func (ec *executionContext) marshalOEnableClubSupporterOnlyPostsPayload2ᚖoverd
 		return graphql.Null
 	}
 	return ec._EnableClubSupporterOnlyPostsPayload(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOGenerateAudienceBannerPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateAudienceBannerPayload(ctx context.Context, sel ast.SelectionSet, v *types.GenerateAudienceBannerPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._GenerateAudienceBannerPayload(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOGenerateCategoryBannerPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateCategoryBannerPayload(ctx context.Context, sel ast.SelectionSet, v *types.GenerateCategoryBannerPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._GenerateCategoryBannerPayload(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOGenerateCharacterBannerPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateCharacterBannerPayload(ctx context.Context, sel ast.SelectionSet, v *types.GenerateCharacterBannerPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._GenerateCharacterBannerPayload(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOGenerateSeriesBannerPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGenerateSeriesBannerPayload(ctx context.Context, sel ast.SelectionSet, v *types.GenerateSeriesBannerPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._GenerateSeriesBannerPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOID2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx context.Context, v interface{}) (*relay.ID, error) {

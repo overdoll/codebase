@@ -108,26 +108,6 @@ func (r EventTemporalRepository) GenerateSeriesBanner(ctx context.Context, serie
 	return nil
 }
 
-func (r EventTemporalRepository) GenerateAudienceBanner(ctx context.Context, audience *post.Audience, duration time.Duration) error {
-
-	options := client.StartWorkflowOptions{
-		TaskQueue:             viper.GetString("temporal.queue"),
-		ID:                    "sting.GenerateAudienceBanner_" + audience.ID(),
-		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_TERMINATE_IF_RUNNING,
-	}
-
-	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.GenerateAudienceBanner, workflows.GenerateAudienceBannerInput{
-		AudienceId: audience.ID(),
-		WaitPeriod: duration,
-	})
-
-	if err != nil {
-		return errors.Wrap(err, "failed to run update audience banner")
-	}
-
-	return nil
-}
-
 func (r EventTemporalRepository) PublishPost(ctx context.Context, postId string) error {
 
 	options := client.StartWorkflowOptions{

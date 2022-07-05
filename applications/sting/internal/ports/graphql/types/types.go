@@ -550,62 +550,6 @@ type EnableClubSupporterOnlyPostsPayload struct {
 	Club *Club `json:"club"`
 }
 
-// Generate audience banner.
-type GenerateAudienceBannerInput struct {
-	// The audience to update
-	ID relay.ID `json:"id"`
-	// The time, in nanoseconds, to wait for banner generation.
-	Duration int `json:"duration"`
-}
-
-// Payload for updating audience
-type GenerateAudienceBannerPayload struct {
-	// The audience after update
-	Audience *Audience `json:"audience"`
-}
-
-// Generate category banner.
-type GenerateCategoryBannerInput struct {
-	// The category to update
-	ID relay.ID `json:"id"`
-	// The time, in nanoseconds, to wait for banner generation.
-	Duration int `json:"duration"`
-}
-
-// Payload for updating category
-type GenerateCategoryBannerPayload struct {
-	// The category after update
-	Category *Category `json:"category"`
-}
-
-// Generate character banner.
-type GenerateCharacterBannerInput struct {
-	// The character to update
-	ID relay.ID `json:"id"`
-	// The time, in nanoseconds, to wait for banner generation.
-	Duration int `json:"duration"`
-}
-
-// Payload for updating character
-type GenerateCharacterBannerPayload struct {
-	// The character after update
-	Character *Character `json:"character"`
-}
-
-// Generate series banner.
-type GenerateSeriesBannerInput struct {
-	// The series to update
-	ID relay.ID `json:"id"`
-	// The time, in nanoseconds, to wait for banner generation.
-	Duration int `json:"duration"`
-}
-
-// Payload for updating series
-type GenerateSeriesBannerPayload struct {
-	// The category after update
-	Series *Series `json:"series"`
-}
-
 // Join a club input.
 type JoinClubInput struct {
 	// The chosen club ID.

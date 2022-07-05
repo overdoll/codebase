@@ -129,10 +129,13 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			UpdateAudienceIsStandard: command.NewUpdateAudienceIsStandardHandler(postRepo),
 			GenerateAudienceBanner:   command.NewGenerateAudienceBannerHandler(postRepo, eventRepo),
 
-			CreateCategory:          command.NewCreateCategoryHandler(postRepo),
-			UpdateCategoryThumbnail: command.NewUpdateCategoryThumbnailHandler(postRepo, loader),
-			UpdateCategoryTitle:     command.NewUpdateCategoryTitleHandler(postRepo),
-			GenerateCategoryBanner:  command.NewGenerateCategoryBannerHandler(postRepo, eventRepo),
+			CreateCategory:                 command.NewCreateCategoryHandler(postRepo),
+			UpdateCategoryTopic:            command.NewUpdateCategoryTopicHandler(postRepo),
+			AddCategoryAlternativeTitle:    command.NewAddCategoryAlternativeTitleHandler(postRepo),
+			RemoveCategoryAlternativeTitle: command.NewRemoveCategoryAlternativeTitleHandler(postRepo),
+			UpdateCategoryThumbnail:        command.NewUpdateCategoryThumbnailHandler(postRepo, loader),
+			UpdateCategoryTitle:            command.NewUpdateCategoryTitleHandler(postRepo),
+			GenerateCategoryBanner:         command.NewGenerateCategoryBannerHandler(postRepo, eventRepo),
 
 			CreateCharacter:          command.NewCreateCharacterHandler(postRepo),
 			UpdateCharacterName:      command.NewUpdateCharacterNameHandler(postRepo),
@@ -143,6 +146,12 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			UpdateSeriesTitle:     command.NewUpdateSeriesTitleHandler(postRepo),
 			UpdateSeriesThumbnail: command.NewUpdateSeriesThumbnailHandler(postRepo, loader),
 			GenerateSeriesBanner:  command.NewGenerateSeriesBannerHandler(postRepo, eventRepo),
+
+			CreateTopic:            command.NewCreateTopicHandler(postRepo),
+			UpdateTopicTitle:       command.NewUpdateTopicTitleHandler(postRepo),
+			UpdateTopicWeight:      command.NewUpdateTopicWeightHandler(postRepo),
+			UpdateTopicDescription: command.NewUpdateTopicDescriptionHandler(postRepo),
+			GenerateTopicBanner:    command.NewGenerateTopicBannerHandler(postRepo, eventRepo),
 
 			CreateClub:                    command.NewCreateClubHandler(clubRepo, eventRepo),
 			AddClubSlugAlias:              command.NewAddClubSlugAliasHandler(clubRepo),

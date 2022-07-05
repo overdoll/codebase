@@ -76,7 +76,7 @@ func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passp
 
 	query.Should(elastic.NewBoolQuery().Must(
 		elastic.
-			NewMultiMatchQuery(qs, "title.en").
+			NewMultiMatchQuery(qs, "title.en", "alternative_titles.en").
 			Type("best_fields"),
 	).
 		Must(elastic.NewTermQuery("_index", CategoryReaderIndex)))

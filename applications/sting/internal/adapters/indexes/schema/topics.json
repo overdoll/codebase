@@ -46,7 +46,7 @@
           }
         }
       },
-      "alternative_titles": {
+      "description": {
         "properties": {
           "language": {
             "type": "keyword"
@@ -55,28 +55,17 @@
             "type": "boolean"
           },
           "en": {
-            "type": "text",
-            "analyzer": "autocomplete",
-            "search_analyzer": "autocomplete_search"
+            "type": "text"
           }
         }
       },
       "slug": {
         "type": "keyword"
       },
-      "thumbnail_resource": {
-        "type": "keyword"
-      },
       "banner_resource": {
         "type": "keyword"
       },
-      "topic_id": {
-        "type": "keyword"
-      },
-      "total_likes": {
-        "type": "integer"
-      },
-      "total_posts": {
+      "weight": {
         "type": "integer"
       },
       "created_at": {

@@ -20,15 +20,17 @@ import (
 )
 
 type categoryDocument struct {
-	Id                string            `json:"id"`
-	Slug              string            `json:"slug"`
-	ThumbnailResource string            `json:"thumbnail_resource"`
-	BannerResource    string            `json:"banner_resource"`
-	Title             map[string]string `json:"title"`
-	CreatedAt         time.Time         `json:"created_at"`
-	UpdatedAt         time.Time         `json:"updated_at"`
-	TotalLikes        int               `json:"total_likes"`
-	TotalPosts        int               `json:"total_posts"`
+	Id                string              `json:"id"`
+	Slug              string              `json:"slug"`
+	TopicId           *string             `json:"topic_id"`
+	AlternativeTitles []map[string]string `json:"alternative_titles"`
+	ThumbnailResource string              `json:"thumbnail_resource"`
+	BannerResource    string              `json:"banner_resource"`
+	Title             map[string]string   `json:"title"`
+	CreatedAt         time.Time           `json:"created_at"`
+	UpdatedAt         time.Time           `json:"updated_at"`
+	TotalLikes        int                 `json:"total_likes"`
+	TotalPosts        int                 `json:"total_posts"`
 }
 
 const CategoryIndexName = "categories"
@@ -52,9 +54,11 @@ func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 
 	return &categoryDocument{
 		Id:                cat.ID(),
+		TopicId:           cat.TopicId(),
 		Slug:              cat.Slug(),
 		ThumbnailResource: marshalled,
 		BannerResource:    marshalledBanner,
+		AlternativeTitles: localization.MarshalLocalizedDataTagsToDatabase(cat.AlternativeTitles()),
 		Title:             localization.MarshalTranslationToDatabase(cat.Title()),
 		CreatedAt:         cat.CreatedAt(),
 		UpdatedAt:         cat.UpdatedAt(),
@@ -95,6 +99,8 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCategoryDocument(ctx con
 		pst.TotalPosts,
 		pst.CreatedAt,
 		pst.UpdatedAt,
+		pst.TopicId,
+		pst.AlternativeTitles,
 	)
 	newCategory.Node = paging.NewNode(hit.Sort)
 
@@ -155,7 +161,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Cont
 	if filter.Search() != nil {
 		query.Must(
 			elastic.
-				NewMultiMatchQuery(*filter.Search(), "title.en").
+				NewMultiMatchQuery(*filter.Search(), "title.en", "alternative_titles.en").
 				Type("best_fields"),
 		)
 	}

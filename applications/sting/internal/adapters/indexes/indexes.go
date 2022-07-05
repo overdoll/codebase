@@ -40,6 +40,10 @@ func registerIndexes() cache.IndexRegistry {
 		return getClubRepository().IndexAllClubs(ctx)
 	})
 
+	reg.Add(adapters.TopicIndexName, schema.TopicsSchema, func(ctx context.Context) error {
+		return getPostRepository().IndexAllTopics(ctx)
+	})
+
 	reg.Add(adapters.ClubMembersIndexName, schema.ClubMembersSchema, func(ctx context.Context) error {
 		return getClubRepository().IndexAllClubMembers(ctx)
 	})
