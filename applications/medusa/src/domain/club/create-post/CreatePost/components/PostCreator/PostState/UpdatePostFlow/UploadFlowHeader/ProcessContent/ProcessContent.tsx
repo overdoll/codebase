@@ -7,6 +7,7 @@ import { Collapse } from '@chakra-ui/react'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
+import { Timeout } from '@//:types/components'
 
 interface Props {
   query: ProcessContentFragment$key
@@ -34,7 +35,7 @@ export default function ProcessContent ({
 
   const { state } = useSequenceContext()
 
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const timeoutRef = useRef<Timeout | null>(null)
 
   const {
     searchArguments,
