@@ -299,9 +299,12 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 
 	// first, check integrity of mp4 file before proceeding to process the video
 	if err := ffmpeg_go.Input(file.Name(), defaultArgs).
-		WithOutput(ffmpegLogger, ffmpegLogger).
-		Output("null").
-		Run(); err != nil {
+		Output("pipe:", ffmpeg_go.KwArgs{
+			"format": "rawvideo",
+		}).
+		WithOutput(ioutil.Discard).
+		WithErrorOutput(ffmpegLogger).
+		Run(); err != nil && len(ffmpegLogger.Output) > 0 {
 		zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(ffmpegLogger.Output)))
 		r.failed = true
 		return nil, nil

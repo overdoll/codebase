@@ -16,6 +16,8 @@ import (
 	"time"
 )
 
+const previewRegex = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
+
 func TestUploadResourcesAndProcessFailed(t *testing.T) {
 	t.Parallel()
 
@@ -301,9 +303,6 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 
 	var assertions int
 
-	var videoPreviewColor string
-	var imagePreviewColor string
-
 	// validate all urls that the files are accessible
 	for _, entity := range unmarshalledResources {
 
@@ -313,11 +312,9 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 		}
 
 		if entity.IsImage() {
-			imagePreviewColor = entity.Preview()
 		}
 
 		if entity.IsVideo() {
-			videoPreviewColor = entity.Preview()
 			assertions += 1
 			require.True(t, testing_tools.FileExists(entity.VideoThumbnailFullUrl().FullUrl()), "video thumbnail file exists in bucket")
 		}
@@ -392,14 +389,14 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 		require.NotEmpty(t, entity.Preview(), "preview not empty")
 
 		if entity.ID() == originalImageFileNewId {
-			require.Equal(t, imagePreviewColor, entity.Preview(), "preview is retained for the filtered resource")
+			require.Regexp(t, previewRegex, entity.Preview(), "should be a hex code")
 			for _, u := range entity.FullUrls() {
 				checkImageHash(t, u.FullUrl(), u.MimeType(), "applications/loader/internal/service/file_fixtures/test_file_1_pixelated.webp", "applications/loader/internal/service/file_fixtures/test_file_1_pixelated.jpg")
 			}
 		}
 
 		if entity.ID() == originalVideoFileNewId {
-			require.Equal(t, videoPreviewColor, entity.Preview(), "preview is retained for the filtered resource")
+			require.Regexp(t, previewRegex, entity.Preview(), "should be a hex code")
 			for _, u := range entity.FullUrls() {
 				checkImageHash(t, u.FullUrl(), u.MimeType(), "applications/loader/internal/service/file_fixtures/test_file_2_pixelated.webp", "applications/loader/internal/service/file_fixtures/test_file_2_pixelated.jpg")
 			}
@@ -537,7 +534,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	require.Equal(t, "image/webp", newImageResource.FullUrls()[0].MimeType(), "expected first image to be webp")
 	require.Equal(t, "image/jpg", newImageResource.FullUrls()[1].MimeType(), "expected second image to be jpg")
 
-	require.Regexp(t, "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", newImageResource.Preview(), "should be a hex code")
+	require.Regexp(t, previewRegex, newImageResource.Preview(), "should be a hex code")
 
 	// correct dimensions
 	require.Equal(t, 532, newImageResource.Height(), "should be the correct height")
@@ -556,7 +553,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	require.Equal(t, "video/mp4", newVideoResource.FullUrls()[0].MimeType(), "expected video to be mp4")
 	require.Equal(t, "image/jpg", newVideoResource.VideoThumbnailMimeType(), "expected video thumbnail to be jpg")
 
-	require.Regexp(t, "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", newVideoResource.Preview(), "should be a hex code")
+	require.Regexp(t, previewRegex, newVideoResource.Preview(), "should be a hex code")
 
 	var processedAssertions int
 
