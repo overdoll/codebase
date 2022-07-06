@@ -1,19 +1,26 @@
 package service_test
 
 import (
+	"bytes"
 	"context"
 	"github.com/CapsLock-Studio/go-webpbin"
 	"github.com/bazelbuild/rules_go/go/tools/bazel"
+	"github.com/corona10/goimagehash"
 	"github.com/eventials/go-tus"
 	"github.com/stretchr/testify/require"
 	"go.temporal.io/sdk/testsuite"
+	"golang.org/x/image/webp"
 	"google.golang.org/grpc"
+	"image"
+	"image/jpeg"
+	"io"
 	"log"
 	"mime"
 	"os"
 	"overdoll/applications/loader/internal/ports"
 	"overdoll/applications/loader/internal/service"
 	loader "overdoll/applications/loader/proto"
+	"overdoll/libraries/uuid"
 	"path"
 	"path/filepath"
 	"strings"
@@ -78,6 +85,112 @@ func uploadFileWithTus(t *testing.T, tusClient *tus.Client, filePath string) str
 
 	// get last part of url = ID of the upload
 	return split[len(split)-1]
+}
+
+const chunkSize = 64000
+
+func checkVideoHash(t *testing.T, url, fixture string) {
+
+	require.True(t, testing_tools.FileExists(url), "file exists in bucket")
+
+	// now, perform hash checks against each file
+	fileName := uuid.New().String()
+	err := testing_tools.DownloadFile(fileName, url)
+
+	f1, err := os.Open(fileName)
+	require.NoError(t, err)
+	defer f1.Close()
+
+	normalized, _ := testing_tools.NormalizedPathFromBazelTarget(fixture)
+
+	f2, err := os.Open(normalized)
+	require.NoError(t, err)
+
+	defer f2.Close()
+
+	for {
+		b1 := make([]byte, chunkSize)
+		_, err1 := f1.Read(b1)
+
+		b2 := make([]byte, chunkSize)
+		_, err2 := f2.Read(b2)
+
+		if err1 != nil || err2 != nil {
+			if err1 == io.EOF && err2 == io.EOF {
+				return
+			} else if err1 == io.EOF || err2 == io.EOF {
+				require.False(t, true, "files not identical")
+			} else {
+				require.NoError(t, err1, "no error reading first")
+				require.NoError(t, err1, "no error reading second")
+			}
+		}
+
+		require.True(t, bytes.Equal(b1, b2), "should be identical bytes")
+	}
+}
+
+func checkImageHash(t *testing.T, url, mimeType, webpFixture, jpegFixture string) {
+	t.Helper()
+
+	downloadUrl := url
+
+	var referenceFile string
+
+	if mimeType == "image/webp" {
+		targ, _ := testing_tools.NormalizedPathFromBazelTarget(webpFixture)
+		referenceFile = targ
+	} else {
+		targ, _ := testing_tools.NormalizedPathFromBazelTarget(jpegFixture)
+		referenceFile = targ
+	}
+
+	require.True(t, testing_tools.FileExists(downloadUrl), "filtered file exists in bucket and is accessible")
+
+	// now, perform hash checks against each file
+	fileName := uuid.New().String()
+	err := testing_tools.DownloadFile(fileName, downloadUrl)
+	require.NoError(t, err, "no error downloading the file")
+
+	file1, err := os.Open(referenceFile)
+	require.NoError(t, err, "no error opening reference file")
+
+	defer file1.Close()
+	defer os.Remove(file1.Name())
+
+	file2, err := os.Open(fileName)
+	require.NoError(t, err, "no error opening target file")
+
+	defer file2.Close()
+	defer os.Remove(file2.Name())
+
+	var img1 image.Image
+	var img2 image.Image
+
+	if mimeType == "image/webp" {
+		img1, err = webp.Decode(file1)
+		require.NoError(t, err, "no error decoding reference file")
+
+		img2, err = webp.Decode(file2)
+		require.NoError(t, err, "no error decoding target file")
+	} else {
+		img1, err = jpeg.Decode(file1)
+		require.NoError(t, err, "no error decoding reference file")
+
+		img2, err = jpeg.Decode(file2)
+		require.NoError(t, err, "no error decoding target file")
+	}
+
+	hash1, err := goimagehash.AverageHash(img1)
+	require.NoError(t, err, "no error generating hash of reference file")
+
+	hash2, err := goimagehash.AverageHash(img2)
+	require.NoError(t, err, "no error generating hash of target files")
+
+	distance, err := hash1.Distance(hash2)
+	require.NoError(t, err, "no error grabbing distance between files")
+
+	require.Equal(t, 0, distance, "should have 0 differences with files")
 }
 
 func getGrpcClient(t *testing.T) loader.LoaderClient {

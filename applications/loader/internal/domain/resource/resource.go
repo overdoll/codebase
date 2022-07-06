@@ -191,8 +191,8 @@ func (r *Resource) ApplyFilters(file *os.File, config *Config, filters *ImageFil
 		g.Add(gift.Pixelate(*filters.Pixelate()))
 	}
 
-	dst := image.NewNRGBA(g.Bounds(src.Bounds()))
-	g.Draw(dst, src)
+	pixelatedSrc := image.NewNRGBA(g.Bounds(src.Bounds()))
+	g.Draw(pixelatedSrc, src)
 
 	webpFileName := fileName + ".webp"
 
@@ -203,7 +203,7 @@ func (r *Resource) ApplyFilters(file *os.File, config *Config, filters *ImageFil
 
 	if err := webpbin.NewCWebP().
 		Quality(100).
-		InputImage(src).
+		InputImage(pixelatedSrc).
 		Output(webpFile).
 		Run(); err != nil {
 		_ = webpFile.Close()
@@ -217,7 +217,7 @@ func (r *Resource) ApplyFilters(file *os.File, config *Config, filters *ImageFil
 		return nil, err
 	}
 
-	if err := jpeg.Encode(jpegFile, src, &jpeg.Options{Quality: 100}); err != nil {
+	if err := jpeg.Encode(jpegFile, pixelatedSrc, &jpeg.Options{Quality: 100}); err != nil {
 		return nil, errors.Wrap(err, "failed to encode jpeg")
 	}
 
@@ -290,44 +290,32 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 
 	defaultArgs := map[string]interface{}{
 		"f": "mp4",
-	}
-
-	str, err := ffmpeg_go.Probe(file.Name(), map[string]interface{}{
-		"f":              "mp4",
-		"show_streams":   "",
-		"select_streams": "a",
-	})
-
-	if err != nil {
-		zap.S().Errorw("ffmpeg_go probe error", zap.String("message", str))
-		return nil, err
-	}
-
-	var probeResult *ffmpegProbeStream
-
-	if err := json.Unmarshal([]byte(str), &probeResult); err != nil {
-		return nil, err
-	}
-
-	// "vf": "scale=-1:720" - TODO: need to scale down video if video is high resolution
-	encodingArgs := ffmpeg_go.KwArgs{"c:v": "libx264", "crf": "18", "preset": "medium", "map_metadata": "-1"}
-
-	// TODO: if there is no audio, strip it
-	if len(probeResult.Streams) == 0 {
-		encodingArgs["an"] = ""
+		"v": "error",
 	}
 
 	ffmpegLogger := &zap_adapters.FfmpegGoLogErrorAdapter{
 		Output: *new([]byte),
 	}
 
+	// first, check integrity of mp4 file before proceeding to process the video
+	if err := ffmpeg_go.Input(file.Name(), defaultArgs).
+		WithOutput(ffmpegLogger, ffmpegLogger).
+		Output("null").
+		Run(); err != nil {
+		zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(ffmpegLogger.Output)))
+		r.failed = true
+		return nil, nil
+	}
+
+	// "vf": "scale=-1:720" - TODO: need to scale down video if video is high resolution
+	encodingArgs := ffmpeg_go.KwArgs{"c:v": "libx264", "crf": "18", "preset": "medium", "map_metadata": "-1"}
+
 	if err := ffmpeg_go.Input(file.Name(), defaultArgs).
 		Output(newVideoFileName, encodingArgs).
 		WithErrorOutput(ffmpegLogger).
 		Run(); err != nil {
 		zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(ffmpegLogger.Output)))
-		r.failed = true
-		return nil, nil
+		return nil, err
 	}
 
 	thumbnailFileName := "t-" + fileName + ".jpg"
@@ -346,18 +334,19 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 		WithOutput(fileThumbnail).
 		Run(); err != nil {
 		zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(ffmpegLogger.Output)))
-		r.failed = true
-		return nil, nil
+		return nil, err
 	}
 
 	videoThumb := "t-" + fileName
 
-	str, err = ffmpeg_go.Probe(newVideoFileName, defaultArgs)
+	str, err := ffmpeg_go.Probe(newVideoFileName, defaultArgs)
 
 	if err != nil {
 		zap.S().Errorw("ffmpeg_go probe error", zap.String("message", str))
 		return nil, err
 	}
+
+	var probeResult *ffmpegProbeStream
 
 	if err := json.Unmarshal([]byte(str), &probeResult); err != nil {
 		return nil, err
