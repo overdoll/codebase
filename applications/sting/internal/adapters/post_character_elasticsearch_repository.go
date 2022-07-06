@@ -72,11 +72,11 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 	}, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx context.Context, hit *elastic.SearchHit) (*post.Character, error) {
+func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx context.Context, source json.RawMessage, sort []interface{}) (*post.Character, error) {
 
 	var chr characterDocument
 
-	err := json.Unmarshal(hit.Source, &chr)
+	err := json.Unmarshal(source, &chr)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to unmarshal character document")
@@ -127,7 +127,10 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx co
 			chr.Series.CreatedAt,
 			chr.Series.UpdatedAt,
 		))
-	newCharacter.Node = paging.NewNode(hit.Sort)
+
+	if sort != nil {
+		newCharacter.Node = paging.NewNode(sort)
+	}
 
 	return newCharacter, nil
 }
@@ -162,18 +165,21 @@ func (r PostsCassandraElasticsearchRepository) GetCharactersByIds(ctx context.Co
 		return characters, nil
 	}
 
-	response, err := r.client.Search().
-		Index(CharacterReaderIndex).
-		Query(elastic.NewBoolQuery().Filter(elastic.NewTermsQueryFromStrings("id", characterIds...))).
-		Do(ctx)
+	builder := r.client.MultiGet()
+
+	for _, characterId := range characterIds {
+		builder.Add(elastic.NewMultiGetItem().Id(characterId).Index(CharacterReaderIndex))
+	}
+
+	response, err := builder.Do(ctx)
 
 	if err != nil {
 		return nil, errors.Wrap(support.ParseElasticError(err), "failed search characters")
 	}
 
-	for _, hit := range response.Hits.Hits {
+	for _, hit := range response.Docs {
 
-		result, err := r.unmarshalCharacterDocument(ctx, hit)
+		result, err := r.unmarshalCharacterDocument(ctx, hit.Source, nil)
 
 		if err != nil {
 			return nil, err
@@ -242,7 +248,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Cont
 
 	for _, hit := range response.Hits.Hits {
 
-		result, err := r.unmarshalCharacterDocument(ctx, hit)
+		result, err := r.unmarshalCharacterDocument(ctx, hit.Source, hit.Sort)
 
 		if err != nil {
 			return nil, err

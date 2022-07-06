@@ -210,11 +210,11 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error updating audience thumbnail")
-	require.False(t, updateAudienceThumbnail.UpdateAudienceThumbnail.Audience.Banner.Processed, "not yet processed")
+	require.False(t, updateAudienceBanner.UpdateAudienceBanner.Audience.Banner.Processed, "not yet processed")
 
 	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
 		Id:          audienceThumbnailId,
-		ItemId:      updateAudienceThumbnail.UpdateAudienceThumbnail.Audience.Reference,
+		ItemId:      updateAudienceBanner.UpdateAudienceBanner.Audience.Reference,
 		Processed:   true,
 		Type:        proto.ResourceType_IMAGE,
 		ProcessedId: uuid.New().String(),

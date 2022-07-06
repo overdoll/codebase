@@ -79,10 +79,10 @@ func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 	}, nil
 }
 
-func unmarshalClubDocument(ctx context.Context, hit *elastic.SearchHit, resourceSerializer *resource.Serializer) (*club.Club, error) {
+func unmarshalClubDocument(ctx context.Context, source json.RawMessage, sort []interface{}, resourceSerializer *resource.Serializer) (*club.Club, error) {
 	var bd clubDocument
 
-	err := json.Unmarshal(hit.Source, &bd)
+	err := json.Unmarshal(source, &bd)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed search clubs - unmarshal")
@@ -119,7 +119,10 @@ func unmarshalClubDocument(ctx context.Context, hit *elastic.SearchHit, resource
 		bd.CreatedAt,
 		bd.UpdatedAt,
 	)
-	newBrand.Node = paging.NewNode(hit.Sort)
+
+	if sort != nil {
+		newBrand.Node = paging.NewNode(sort)
+	}
 
 	return newBrand, nil
 }
@@ -154,18 +157,21 @@ func (r ClubCassandraElasticsearchRepository) GetClubsByIds(ctx context.Context,
 		return clubs, nil
 	}
 
-	response, err := r.client.Search().
-		Index(ClubsReaderIndex).
-		Query(elastic.NewBoolQuery().Filter(elastic.NewTermsQueryFromStrings("id", clubIds...))).
-		Do(ctx)
+	builder := r.client.MultiGet()
+
+	for _, clubId := range clubIds {
+		builder.Add(elastic.NewMultiGetItem().Id(clubId).Index(ClubsReaderIndex))
+	}
+
+	response, err := builder.Do(ctx)
 
 	if err != nil {
 		return nil, errors.Wrap(support.ParseElasticError(err), "failed search clubs")
 	}
 
-	for _, hit := range response.Hits.Hits {
+	for _, hit := range response.Docs {
 
-		result, err := unmarshalClubDocument(ctx, hit, r.resourceSerializer)
+		result, err := unmarshalClubDocument(ctx, hit.Source, nil, r.resourceSerializer)
 
 		if err != nil {
 			return nil, err
@@ -217,7 +223,7 @@ func (r ClubCassandraElasticsearchRepository) DiscoverClubs(ctx context.Context,
 
 	for _, hit := range response.Hits.Hits {
 
-		newBrand, err := unmarshalClubDocument(ctx, hit, r.resourceSerializer)
+		newBrand, err := unmarshalClubDocument(ctx, hit.Source, hit.Sort, r.resourceSerializer)
 
 		if err != nil {
 			return nil, err
@@ -302,7 +308,7 @@ func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, r
 
 	for _, hit := range response.Hits.Hits {
 
-		newBrand, err := unmarshalClubDocument(ctx, hit, r.resourceSerializer)
+		newBrand, err := unmarshalClubDocument(ctx, hit.Source, hit.Sort, r.resourceSerializer)
 
 		if err != nil {
 			return nil, err

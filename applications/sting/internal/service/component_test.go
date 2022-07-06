@@ -87,6 +87,82 @@ func refreshClubMembersESIndex(t *testing.T) {
 	require.NoError(t, err)
 }
 
+func getSeriesFromAdapter(t *testing.T, seriesId string) *post.Series {
+
+	session := bootstrap.InitializeDatabaseSession()
+	es := bootstrap.InitializeElasticSearchSession()
+
+	serializer := resource.NewSerializer()
+
+	adapter := adapters.NewPostsCassandraRepository(session, es, serializer)
+
+	pst, err := adapter.GetSingleSeriesById(context.Background(), seriesId)
+	require.NoError(t, err)
+
+	return pst
+}
+
+func getClubFromAdapter(t *testing.T, clubId string) *club.Club {
+
+	session := bootstrap.InitializeDatabaseSession()
+	es := bootstrap.InitializeElasticSearchSession()
+	redis := bootstrap.InitializeRedisSession()
+
+	serializer := resource.NewSerializer()
+
+	adapter := adapters.NewClubCassandraElasticsearchRepository(session, es, redis, serializer)
+
+	pst, err := adapter.GetClubById(context.Background(), clubId)
+	require.NoError(t, err)
+
+	return pst
+}
+
+func getCharacterFromAdapter(t *testing.T, characterId string) *post.Character {
+
+	session := bootstrap.InitializeDatabaseSession()
+	es := bootstrap.InitializeElasticSearchSession()
+
+	serializer := resource.NewSerializer()
+
+	adapter := adapters.NewPostsCassandraRepository(session, es, serializer)
+
+	pst, err := adapter.GetCharacterById(context.Background(), characterId)
+	require.NoError(t, err)
+
+	return pst
+}
+
+func getCategoryFromAdapter(t *testing.T, categoryId string) *post.Category {
+
+	session := bootstrap.InitializeDatabaseSession()
+	es := bootstrap.InitializeElasticSearchSession()
+
+	serializer := resource.NewSerializer()
+
+	adapter := adapters.NewPostsCassandraRepository(session, es, serializer)
+
+	pst, err := adapter.GetCategoryById(context.Background(), categoryId)
+	require.NoError(t, err)
+
+	return pst
+}
+
+func getPostFromAdapter(t *testing.T, postId string) *post.Post {
+
+	session := bootstrap.InitializeDatabaseSession()
+	es := bootstrap.InitializeElasticSearchSession()
+
+	serializer := resource.NewSerializer()
+
+	adapter := adapters.NewPostsCassandraRepository(session, es, serializer)
+
+	pst, err := adapter.GetPostByIdOperator(context.Background(), postId)
+	require.NoError(t, err)
+
+	return pst
+}
+
 // helper which seeds a new post in the database
 func seedClub(t *testing.T, accountId string) *club.Club {
 	pst := newClub(t, accountId)
@@ -413,6 +489,7 @@ func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 	env.RegisterWorkflow(workflows.GenerateCategoryBanner)
 	env.RegisterWorkflow(workflows.GenerateSeriesBanner)
 	env.RegisterWorkflow(workflows.GenerateCharacterBanner)
+	env.RegisterWorkflow(workflows.GenerateClubBannerFromPost)
 
 	return env
 }

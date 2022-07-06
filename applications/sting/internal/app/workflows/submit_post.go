@@ -60,7 +60,6 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 	// only wait for selector if we have created pixelated resources
 	if createdPayload.CreatedResources {
 		selector.Select(ctx)
-
 		if !input.PixelatedResourcesCompleted {
 			return errors.New("pixelated resources not yet completed")
 		}

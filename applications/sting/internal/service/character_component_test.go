@@ -188,11 +188,28 @@ func TestCreateCharacter_update_and_search(t *testing.T) {
 
 	env := getWorkflowEnvironment()
 
-	env.RegisterWorkflow(workflows.GenerateCharacterBanner)
+	refreshCharacterIndex(t)
+
 	env.ExecuteWorkflow(workflows.GenerateCharacterBanner, workflows.GenerateCharacterBannerInput{CharacterId: character.Reference})
 
 	require.True(t, env.IsWorkflowCompleted(), "generating banner workflow is complete")
 	require.NoError(t, env.GetWorkflowError(), "no error generating banner")
+
+	cat := getCharacterFromAdapter(t, character.Reference)
+
+	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
+		Id:          cat.BannerResource().ID(),
+		ItemId:      character.Reference,
+		Processed:   true,
+		Type:        proto.ResourceType_IMAGE,
+		ProcessedId: uuid.New().String(),
+		Private:     false,
+		Width:       100,
+		Height:      100,
+		Token:       "CHARACTER_BANNER",
+	}}})
+
+	require.NoError(t, err, "no error updating character banner")
 
 	character = getCharacterBySlug(t, client, currentCharacterSlug)
 	require.NotNil(t, character, "expected to have found character")

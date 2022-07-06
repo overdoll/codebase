@@ -80,18 +80,21 @@ func (r PostsCassandraElasticsearchRepository) GetAudiencesByIds(ctx context.Con
 		return audiences, nil
 	}
 
-	response, err := r.client.Search().
-		Index(AudienceReaderIndex).
-		Query(elastic.NewBoolQuery().Filter(elastic.NewTermsQueryFromStrings("id", audienceIds...))).
-		Do(ctx)
+	builder := r.client.MultiGet()
+
+	for _, categoryId := range audienceIds {
+		builder.Add(elastic.NewMultiGetItem().Id(categoryId).Index(AudienceReaderIndex))
+	}
+
+	response, err := builder.Do(ctx)
 
 	if err != nil {
 		return nil, errors.Wrap(support.ParseElasticError(err), "failed search audiences")
 	}
 
-	for _, hit := range response.Hits.Hits {
+	for _, hit := range response.Docs {
 
-		result, err := r.unmarshalAudienceDocument(ctx, hit)
+		result, err := r.unmarshalAudienceDocument(ctx, hit.Source, nil)
 
 		if err != nil {
 			return nil, err
@@ -103,11 +106,11 @@ func (r PostsCassandraElasticsearchRepository) GetAudiencesByIds(ctx context.Con
 	return audiences, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) unmarshalAudienceDocument(ctx context.Context, hit *elastic.SearchHit) (*post.Audience, error) {
+func (r PostsCassandraElasticsearchRepository) unmarshalAudienceDocument(ctx context.Context, source json.RawMessage, sort []interface{}) (*post.Audience, error) {
 
 	var bd audienceDocument
 
-	if err := json.Unmarshal(hit.Source, &bd); err != nil {
+	if err := json.Unmarshal(source, &bd); err != nil {
 		return nil, errors.Wrap(err, "failed search audience - unmarshal")
 	}
 
@@ -124,7 +127,10 @@ func (r PostsCassandraElasticsearchRepository) unmarshalAudienceDocument(ctx con
 	}
 
 	newAudience := post.UnmarshalAudienceFromDatabase(bd.Id, bd.Slug, bd.Title, unmarshalled, unmarshalledBanner, bd.Standard, bd.TotalLikes, bd.TotalPosts, bd.CreatedAt, bd.UpdatedAt)
-	newAudience.Node = paging.NewNode(hit.Sort)
+
+	if sort != nil {
+		newAudience.Node = paging.NewNode(sort)
+	}
 
 	return newAudience, nil
 }
@@ -184,7 +190,7 @@ func (r PostsCassandraElasticsearchRepository) SearchAudience(ctx context.Contex
 
 	for _, hit := range response.Hits.Hits {
 
-		result, err := r.unmarshalAudienceDocument(ctx, hit)
+		result, err := r.unmarshalAudienceDocument(ctx, hit.Source, hit.Sort)
 
 		if err != nil {
 			return nil, err

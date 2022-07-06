@@ -23,7 +23,7 @@ func NewUpdateAudienceBannerHandler(pr post.Repository, loader LoaderService) Up
 
 func (h UpdateAudienceBannerHandler) Handle(ctx context.Context, cmd UpdateAudienceBanner) (*post.Audience, error) {
 
-	aud, err := h.pr.UpdateAudienceThumbnail(ctx, cmd.Principal, cmd.AudienceId, func(audience *post.Audience) error {
+	aud, err := h.pr.UpdateAudienceBanner(ctx, cmd.Principal, cmd.AudienceId, func(audience *post.Audience) error {
 
 		// create resources from content
 		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.AudienceId, []string{cmd.Banner}, false, "AUDIENCE_BANNER", true, 480, 640)

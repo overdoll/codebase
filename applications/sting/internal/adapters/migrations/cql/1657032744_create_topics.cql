@@ -13,3 +13,10 @@ CREATE TABLE IF NOT EXISTS topics
     updated_at      timestamp,
     primary key ( id )
 );
+
+CREATE TABLE IF NOT EXISTS topics_slugs
+(
+    slug     text,
+    topic_id text,
+    primary key ( slug )
+);

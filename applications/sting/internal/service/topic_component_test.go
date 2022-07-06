@@ -20,7 +20,6 @@ type TopicModified struct {
 	Reference   string
 	Weight      int
 	Banner      *graphql2.Resource
-	Topic       *TopicModified
 }
 
 type SearchTopics struct {
@@ -119,12 +118,10 @@ func TestCreatTopic_update_and_search(t *testing.T) {
 
 	var searchTopics SearchTopics
 
-	err = client.Query(context.Background(), &searchTopics, map[string]interface{}{
-		"title": graphql.String(fake.Title),
-	})
+	err = client.Query(context.Background(), &searchTopics, nil)
 
 	require.NoError(t, err)
-	require.GreaterOrEqual(t, searchTopics.Topics.Edges, 2, "multiple topic results")
+	require.GreaterOrEqual(t, len(searchTopics.Topics.Edges), 2, "multiple topic results")
 	require.Equal(t, "Single Topic", searchTopics.Topics.Edges[0].Node.Title, "found the correct topic")
 
 	// generate a new set for topic
@@ -204,7 +201,7 @@ func TestCreatTopic_update_and_search(t *testing.T) {
 
 	require.NotNil(t, topic, "found topic")
 	require.Equal(t, fake.Title, topic.Title, "title has been updated")
-	require.Equal(t, fake.Description, topic.Description, "title has been updated")
+	require.Equal(t, fake.Description, topic.Description, "description has been updated")
 	require.True(t, topic.Banner.Processed, "banner is now processed")
 	require.Equal(t, newWeight, topic.Weight, "topic weight is updated")
 }
@@ -215,7 +212,7 @@ type TopicWithCategoriesModified struct {
 		Edges []struct {
 			Node CategoryModified
 		}
-	} `graphql:"categories(name: $name)"`
+	} `graphql:"categories(first: 10)"`
 }
 
 type TopicWithCategory struct {

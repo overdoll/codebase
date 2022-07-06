@@ -120,7 +120,7 @@ func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passp
 	for _, hit := range response.Hits.Hits {
 
 		if strings.Contains(hit.Index, SeriesIndexName) {
-			result, err := r.unmarshalSeriesDocument(ctx, hit)
+			result, err := r.unmarshalSeriesDocument(ctx, hit.Source, nil)
 
 			if err != nil {
 				return nil, err
@@ -136,7 +136,7 @@ func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passp
 		}
 
 		if strings.Contains(hit.Index, ClubsIndexName) {
-			result, err := unmarshalClubDocument(ctx, hit, r.resourceSerializer)
+			result, err := unmarshalClubDocument(ctx, hit.Source, nil, r.resourceSerializer)
 
 			if err != nil {
 				return nil, err
@@ -152,7 +152,7 @@ func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passp
 		}
 
 		if strings.Contains(hit.Index, CharacterIndexName) {
-			result, err := r.unmarshalCharacterDocument(ctx, hit)
+			result, err := r.unmarshalCharacterDocument(ctx, hit.Source, nil)
 
 			if err != nil {
 				return nil, err
@@ -168,7 +168,7 @@ func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passp
 		}
 
 		if strings.Contains(hit.Index, CategoryIndexName) {
-			result, err := r.unmarshalCategoryDocument(ctx, hit)
+			result, err := r.unmarshalCategoryDocument(ctx, hit.Source, nil)
 
 			if err != nil {
 				return nil, err

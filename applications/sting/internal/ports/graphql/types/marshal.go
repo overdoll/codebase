@@ -226,7 +226,7 @@ func MarshalTopicToGraphQL(ctx context.Context, result *post.Topic) *Topic {
 
 	var descriptionTranslations []*graphql.Translation
 
-	for _, val := range result.Title().Translations() {
+	for _, val := range result.Description().Translations() {
 		descriptionTranslations = append(descriptionTranslations, &graphql.Translation{
 			Language: &graphql.Language{
 				Locale: val.Locale(),
@@ -314,7 +314,7 @@ func MarshalCategoryToGraphQL(ctx context.Context, result *post.Category) *Categ
 	var alternativeTitles []*graphql.Translation
 
 	for _, val := range result.AlternativeTitles() {
-		titleTranslations = append(titleTranslations, &graphql.Translation{
+		alternativeTitles = append(alternativeTitles, &graphql.Translation{
 			Language: &graphql.Language{
 				Locale: val.Locale(),
 				Name:   val.Name(),

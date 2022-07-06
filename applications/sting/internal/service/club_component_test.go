@@ -389,7 +389,7 @@ func TestCreateClub_edit_banner(t *testing.T) {
 
 	env := getWorkflowEnvironment()
 
-	env.RegisterWorkflow(workflows.GenerateClubBannerFromPost)
+	refreshPostESIndex(t)
 	env.ExecuteWorkflow(workflows.GenerateClubBannerFromPost, workflows.GenerateClubBannerFromPostInput{PostId: pst.ID()})
 
 	require.True(t, env.IsWorkflowCompleted(), "generating banner workflow is complete")
@@ -400,9 +400,11 @@ func TestCreateClub_edit_banner(t *testing.T) {
 
 	grpcClient := getGrpcCallbackClient(t)
 
+	cat := getClubFromAdapter(t, clb.ID())
+
 	_, err := grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
 		// we know which resource to access since it will always use the first one
-		Id:          pst.Content()[0].Resource().ID(),
+		Id:          cat.BannerResource().ID(),
 		ItemId:      clb.ID(),
 		Processed:   true,
 		Type:        proto.ResourceType_IMAGE,

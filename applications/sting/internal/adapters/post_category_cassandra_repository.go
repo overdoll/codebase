@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"encoding/json"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/localization"
@@ -37,17 +38,17 @@ var categoryTable = table.New(table.Metadata{
 })
 
 type category struct {
-	Id                string              `db:"id"`
-	Slug              string              `db:"slug"`
-	TopicId           *string             `db:"topic_id"`
-	Title             map[string]string   `db:"title"`
-	AlternativeTitles []map[string]string `db:"alternative_titles"`
-	ThumbnailResource string              `db:"thumbnail_resource"`
-	BannerResource    string              `db:"banner_resource"`
-	TotalLikes        int                 `db:"total_likes"`
-	TotalPosts        int                 `db:"total_posts"`
-	CreatedAt         time.Time           `db:"created_at"`
-	UpdatedAt         time.Time           `db:"updated_at"`
+	Id                string            `db:"id"`
+	Slug              string            `db:"slug"`
+	TopicId           *string           `db:"topic_id"`
+	Title             map[string]string `db:"title"`
+	AlternativeTitles []string          `db:"alternative_titles"`
+	ThumbnailResource string            `db:"thumbnail_resource"`
+	BannerResource    string            `db:"banner_resource"`
+	TotalLikes        int               `db:"total_likes"`
+	TotalPosts        int               `db:"total_posts"`
+	CreatedAt         time.Time         `db:"created_at"`
+	UpdatedAt         time.Time         `db:"updated_at"`
 }
 
 var categorySlugTable = table.New(table.Metadata{
@@ -79,12 +80,27 @@ func marshalCategoryToDatabase(pending *post.Category) (*category, error) {
 		return nil, err
 	}
 
+	var alternativeTitles []string
+
+	marshalledTitles := localization.MarshalLocalizedDataTagsToDatabase(pending.AlternativeTitles())
+
+	for _, s := range marshalledTitles {
+
+		res, err := json.Marshal(s)
+
+		if err != nil {
+			return nil, err
+		}
+
+		alternativeTitles = append(alternativeTitles, string(res))
+	}
+
 	return &category{
 		Id:                pending.ID(),
 		Slug:              pending.Slug(),
 		TopicId:           pending.TopicId(),
 		Title:             localization.MarshalTranslationToDatabase(pending.Title()),
-		AlternativeTitles: localization.MarshalLocalizedDataTagsToDatabase(pending.AlternativeTitles()),
+		AlternativeTitles: alternativeTitles,
 		ThumbnailResource: marshalled,
 		BannerResource:    marshalledBanner,
 		TotalLikes:        pending.TotalLikes(),
@@ -108,6 +124,19 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCategoryFromDatabase(ctx
 		return nil, err
 	}
 
+	alternativeTitles := make([]map[string]string, len(cat.AlternativeTitles))
+
+	for _, s := range cat.AlternativeTitles {
+
+		var tag map[string]string
+
+		if err := json.Unmarshal([]byte(s), &tag); err != nil {
+			return nil, err
+		}
+
+		alternativeTitles = append(alternativeTitles, tag)
+	}
+
 	return post.UnmarshalCategoryFromDatabase(
 		cat.Id,
 		cat.Slug,
@@ -119,7 +148,7 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCategoryFromDatabase(ctx
 		cat.CreatedAt,
 		cat.UpdatedAt,
 		cat.TopicId,
-		cat.AlternativeTitles,
+		alternativeTitles,
 	), nil
 }
 

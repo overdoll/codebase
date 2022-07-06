@@ -51,7 +51,7 @@ func categoriesByIds(app *app.Application) *dataloader.Loader {
 
 			// return results
 			return results
-		}, dataloader.WithWait(time.Millisecond*1))
+		}, dataloader.WithWait(time.Millisecond*10))
 }
 
 func (i *DataLoader) GetCategoryById(ctx context.Context, id string) (*types.Category, error) {

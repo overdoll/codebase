@@ -63,11 +63,11 @@ func marshalSeriesToDocument(s *post.Series) (*seriesDocument, error) {
 	}, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) unmarshalSeriesDocument(ctx context.Context, hit *elastic.SearchHit) (*post.Series, error) {
+func (r PostsCassandraElasticsearchRepository) unmarshalSeriesDocument(ctx context.Context, source json.RawMessage, sort []interface{}) (*post.Series, error) {
 
 	var md seriesDocument
 
-	err := json.Unmarshal(hit.Source, &md)
+	err := json.Unmarshal(source, &md)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed search series - unmarshal")
@@ -97,7 +97,9 @@ func (r PostsCassandraElasticsearchRepository) unmarshalSeriesDocument(ctx conte
 		md.UpdatedAt,
 	)
 
-	newMedia.Node = paging.NewNode(hit.Sort)
+	if sort != nil {
+		newMedia.Node = paging.NewNode(sort)
+	}
 
 	return newMedia, nil
 }
@@ -110,18 +112,21 @@ func (r PostsCassandraElasticsearchRepository) GetSeriesByIds(ctx context.Contex
 		return series, nil
 	}
 
-	response, err := r.client.Search().
-		Index(SeriesReaderIndex).
-		Query(elastic.NewBoolQuery().Filter(elastic.NewTermsQueryFromStrings("id", seriesIds...))).
-		Do(ctx)
+	builder := r.client.MultiGet()
+
+	for _, seriesId := range seriesIds {
+		builder.Add(elastic.NewMultiGetItem().Id(seriesId).Index(SeriesReaderIndex))
+	}
+
+	response, err := builder.Do(ctx)
 
 	if err != nil {
 		return nil, errors.Wrap(support.ParseElasticError(err), "failed search series")
 	}
 
-	for _, hit := range response.Hits.Hits {
+	for _, hit := range response.Docs {
 
-		result, err := r.unmarshalSeriesDocument(ctx, hit)
+		result, err := r.unmarshalSeriesDocument(ctx, hit.Source, nil)
 
 		if err != nil {
 			return nil, err
@@ -188,7 +193,7 @@ func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context,
 
 	for _, hit := range response.Hits.Hits {
 
-		newMedia, err := r.unmarshalSeriesDocument(ctx, hit)
+		newMedia, err := r.unmarshalSeriesDocument(ctx, hit.Source, hit.Sort)
 
 		if err != nil {
 			return nil, err

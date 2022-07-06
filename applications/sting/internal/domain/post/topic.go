@@ -167,7 +167,7 @@ func (c *Topic) UpdateDescription(requester *principal.Principal, description, l
 		return err
 	}
 
-	if err := c.title.UpdateTranslation(description, locale); err != nil {
+	if err := c.description.UpdateTranslation(description, locale); err != nil {
 		return err
 	}
 	c.update()
@@ -229,7 +229,7 @@ func validateTopicDescription(description string) error {
 
 func validateTopicTitle(name string) error {
 
-	err := validator.New().Var(name, "required,max=25")
+	err := validator.New().Var(name, "required,max=50")
 
 	if err != nil {
 		return domainerror.NewValidation(err.Error())

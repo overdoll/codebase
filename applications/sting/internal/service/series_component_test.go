@@ -181,11 +181,26 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 
 	env := getWorkflowEnvironment()
 
-	env.RegisterWorkflow(workflows.GenerateSeriesBanner)
 	env.ExecuteWorkflow(workflows.GenerateSeriesBanner, workflows.GenerateSeriesBannerInput{SeriesId: series.Reference})
 
 	require.True(t, env.IsWorkflowCompleted(), "generating banner workflow is complete")
 	require.NoError(t, env.GetWorkflowError(), "no error generating banner")
+
+	ser := getSeriesFromAdapter(t, series.Reference)
+
+	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
+		Id:          ser.BannerResource().ID(),
+		ItemId:      updateSeriesThumbnail.UpdateSeriesThumbnail.Series.Reference,
+		Processed:   true,
+		Type:        proto.ResourceType_IMAGE,
+		ProcessedId: uuid.New().String(),
+		Private:     false,
+		Width:       100,
+		Height:      100,
+		Token:       "SERIES_BANNER",
+	}}})
+
+	require.NoError(t, err, "no error updating series banner")
 
 	series = getSeriesBySlug(t, client, currentSeriesSlug)
 	require.NotNil(t, series, "expected to have found series")

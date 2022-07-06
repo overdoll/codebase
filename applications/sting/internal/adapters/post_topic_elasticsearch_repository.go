@@ -55,11 +55,11 @@ func marshalTopicToDocument(topic *post.Topic) (*topicDocument, error) {
 	}, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) unmarshalTopicDocument(ctx context.Context, hit *elastic.SearchHit) (*post.Topic, error) {
+func (r PostsCassandraElasticsearchRepository) unmarshalTopicDocument(ctx context.Context, source json.RawMessage, sort []interface{}) (*post.Topic, error) {
 
 	var topic topicDocument
 
-	err := json.Unmarshal(hit.Source, &topic)
+	err := json.Unmarshal(source, &topic)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to unmarshal topic document")
@@ -81,7 +81,10 @@ func (r PostsCassandraElasticsearchRepository) unmarshalTopicDocument(ctx contex
 		topic.CreatedAt,
 		topic.UpdatedAt,
 	)
-	newTopic.Node = paging.NewNode(hit.Sort)
+
+	if sort != nil {
+		newTopic.Node = paging.NewNode(sort)
+	}
 
 	return newTopic, nil
 }
@@ -116,18 +119,21 @@ func (r PostsCassandraElasticsearchRepository) GetTopicsByIds(ctx context.Contex
 		return topics, nil
 	}
 
-	response, err := r.client.Search().
-		Index(TopicReaderIndex).
-		Query(elastic.NewBoolQuery().Filter(elastic.NewTermsQueryFromStrings("id", topicIds...))).
-		Do(ctx)
+	builder := r.client.MultiGet()
+
+	for _, topicId := range topicIds {
+		builder.Add(elastic.NewMultiGetItem().Id(topicId).Index(TopicReaderIndex))
+	}
+
+	response, err := builder.Do(ctx)
 
 	if err != nil {
 		return nil, errors.Wrap(support.ParseElasticError(err), "failed search topics")
 	}
 
-	for _, hit := range response.Hits.Hits {
+	for _, hit := range response.Docs {
 
-		result, err := r.unmarshalTopicDocument(ctx, hit)
+		result, err := r.unmarshalTopicDocument(ctx, hit.Source, nil)
 
 		if err != nil {
 			return nil, err
@@ -166,7 +172,7 @@ func (r PostsCassandraElasticsearchRepository) SearchTopics(ctx context.Context,
 
 	for _, hit := range response.Hits.Hits {
 
-		newCategory, err := r.unmarshalTopicDocument(ctx, hit)
+		newCategory, err := r.unmarshalTopicDocument(ctx, hit.Source, hit.Sort)
 
 		if err != nil {
 			return nil, err
@@ -188,7 +194,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllTopics(ctx context.Contex
 		},
 	)
 
-	err := scanner.RunIterator(ctx, categoryTable, func(iter *gocqlx.Iterx) error {
+	err := scanner.RunIterator(ctx, topicsTable, func(iter *gocqlx.Iterx) error {
 
 		var c topics
 

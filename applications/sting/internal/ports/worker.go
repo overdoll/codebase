@@ -46,7 +46,6 @@ func NewWorker(app *app.Application) (worker.Worker, func()) {
 	w.RegisterWorkflow(workflows.CreateClub)
 
 	w.RegisterWorkflow(workflows.GenerateSeriesBanner)
-	w.RegisterWorkflow(workflows.GenerateAudienceBanner)
 	w.RegisterWorkflow(workflows.GenerateCharacterBanner)
 	w.RegisterWorkflow(workflows.GenerateCategoryBanner)
 	w.RegisterWorkflow(workflows.GenerateClubBannerFromPost)

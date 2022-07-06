@@ -44,11 +44,11 @@ const PostIndexName = "posts"
 var PostReaderIndex = cache.ReadAlias(CachePrefix, PostIndexName)
 var postWriterIndex = cache.WriteAlias(CachePrefix, PostIndexName)
 
-func (r *PostsCassandraElasticsearchRepository) unmarshalPostDocument(ctx context.Context, hit *elastic.SearchHit) (*post.Post, error) {
+func (r *PostsCassandraElasticsearchRepository) unmarshalPostDocument(ctx context.Context, source json.RawMessage, sort []interface{}) (*post.Post, error) {
 
 	var pst postDocument
 
-	err := json.Unmarshal(hit.Source, &pst)
+	err := json.Unmarshal(source, &pst)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to unmarshal post")
@@ -92,7 +92,9 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPostDocument(ctx contex
 		pst.PostedAt,
 	)
 
-	createdPost.Node = paging.NewNode(hit.Sort)
+	if sort != nil {
+		createdPost.Node = paging.NewNode(sort)
+	}
 
 	return createdPost, nil
 }
@@ -341,6 +343,40 @@ func (r PostsCassandraElasticsearchRepository) GetTotalPostsForCategoryOperator(
 	return int(count), nil
 }
 
+func (r PostsCassandraElasticsearchRepository) GetPostsByIds(ctx context.Context, requester *principal.Principal, postIds []string) ([]*post.Post, error) {
+
+	var posts []*post.Post
+
+	if len(postIds) == 0 {
+		return posts, nil
+	}
+
+	builder := r.client.MultiGet()
+
+	for _, postId := range postIds {
+		builder.Add(elastic.NewMultiGetItem().Id(postId).Index(PostReaderIndex))
+	}
+
+	response, err := builder.Do(ctx)
+
+	if err != nil {
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed search posts")
+	}
+
+	for _, hit := range response.Docs {
+
+		result, err := r.unmarshalPostDocument(ctx, hit.Source, nil)
+
+		if err != nil {
+			return nil, err
+		}
+
+		posts = append(posts, result)
+	}
+
+	return posts, nil
+}
+
 func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, pst *post.Post) ([]*post.Post, error) {
 
 	builder := r.client.Search().
@@ -421,7 +457,7 @@ func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.
 
 	for _, hit := range response.Hits.Hits {
 
-		createdPost, err := r.unmarshalPostDocument(ctx, hit)
+		createdPost, err := r.unmarshalPostDocument(ctx, hit.Source, hit.Sort)
 
 		if err != nil {
 			return nil, err
@@ -477,7 +513,7 @@ func (r PostsCassandraElasticsearchRepository) ClubMembersPostsFeed(ctx context.
 
 	for _, hit := range response.Hits.Hits {
 
-		createdPost, err := r.unmarshalPostDocument(ctx, hit)
+		createdPost, err := r.unmarshalPostDocument(ctx, hit.Source, hit.Sort)
 
 		if err != nil {
 			return nil, err
@@ -563,7 +599,7 @@ func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, re
 
 	for _, hit := range response.Hits.Hits {
 
-		createdPost, err := r.unmarshalPostDocument(ctx, hit)
+		createdPost, err := r.unmarshalPostDocument(ctx, hit.Source, hit.Sort)
 
 		if err != nil {
 			return nil, err
@@ -673,7 +709,7 @@ func (r PostsCassandraElasticsearchRepository) SearchPosts(ctx context.Context, 
 
 	for _, hit := range response.Hits.Hits {
 
-		createdPost, err := r.unmarshalPostDocument(ctx, hit)
+		createdPost, err := r.unmarshalPostDocument(ctx, hit.Source, hit.Sort)
 
 		if err != nil {
 			return nil, err
@@ -811,7 +847,7 @@ func (r PostsCassandraElasticsearchRepository) GetFirstTopPostWithoutOccupiedRes
 
 	for _, hit := range response.Hits.Hits {
 
-		createdPost, err := r.unmarshalPostDocument(ctx, hit)
+		createdPost, err := r.unmarshalPostDocument(ctx, hit.Source, hit.Sort)
 
 		if err != nil {
 			return nil, err

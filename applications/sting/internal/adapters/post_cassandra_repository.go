@@ -296,42 +296,6 @@ func (r PostsCassandraElasticsearchRepository) DeletePost(ctx context.Context, i
 	return nil
 }
 
-func (r PostsCassandraElasticsearchRepository) GetPostsByIds(ctx context.Context, requester *principal.Principal, postIds []string) ([]*post.Post, error) {
-
-	var postResults []*post.Post
-
-	// if none then we get out or else the query will fail
-	if len(postIds) == 0 {
-		return postResults, nil
-	}
-
-	var postsModels []*posts
-
-	if err := qb.Select(postTable.Name()).
-		Where(qb.In("id")).
-		Query(r.session).
-		WithContext(ctx).
-		Idempotent(true).
-		Consistency(gocql.LocalQuorum).
-		Bind(postIds).
-		SelectRelease(&postsModels); err != nil {
-		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get posts by ids")
-	}
-
-	for _, b := range postsModels {
-
-		unmarshalled, err := r.unmarshalPost(ctx, *b)
-
-		if err != nil {
-			return nil, err
-		}
-
-		postResults = append(postResults, unmarshalled)
-	}
-
-	return postResults, nil
-}
-
 func (r PostsCassandraElasticsearchRepository) getPostById(ctx context.Context, id string) (*posts, error) {
 
 	var postPending posts

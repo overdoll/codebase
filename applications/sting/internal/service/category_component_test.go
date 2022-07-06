@@ -18,12 +18,13 @@ import (
 )
 
 type CategoryModified struct {
-	Id        relay.ID
-	Title     string
-	Reference string
-	Thumbnail *graphql2.Resource
-	Banner    *graphql2.Resource
-	Topic     *TopicModified
+	Id                relay.ID
+	Title             string
+	Reference         string
+	AlternativeTitles []*graphql2.Translation
+	Thumbnail         *graphql2.Resource
+	Banner            *graphql2.Resource
+	Topic             *TopicModified
 }
 
 type SearchCategories struct {
@@ -162,6 +163,9 @@ func TestCreateCategory_update_and_search(t *testing.T) {
 
 	require.NoError(t, err, "no error adding alternative title to category")
 
+	require.Equal(t, len(addCategoryAlternativeTitle.AddCategoryAlternativeTitle.Category.AlternativeTitles), 1, "should have 1 alternative title")
+	require.Equal(t, fake.Title, addCategoryAlternativeTitle.AddCategoryAlternativeTitle.Category.AlternativeTitles[0].Text, "should have correct alternative title")
+
 	refreshCategoryIndex(t)
 
 	// when adding our alternative title, we should have found the same category with the new title
@@ -246,11 +250,26 @@ func TestCreateCategory_update_and_search(t *testing.T) {
 
 	env := getWorkflowEnvironment()
 
-	env.RegisterWorkflow(workflows.GenerateCategoryBanner)
 	env.ExecuteWorkflow(workflows.GenerateCategoryBanner, workflows.GenerateCategoryBannerInput{CategoryId: category.Reference})
 
 	require.True(t, env.IsWorkflowCompleted(), "generating banner workflow is complete")
 	require.NoError(t, env.GetWorkflowError(), "no error generating banner")
+
+	cat := getCategoryFromAdapter(t, category.Reference)
+
+	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
+		Id:          cat.BannerResource().ID(),
+		ItemId:      category.Reference,
+		Processed:   true,
+		Type:        proto.ResourceType_IMAGE,
+		ProcessedId: uuid.New().String(),
+		Private:     false,
+		Width:       100,
+		Height:      100,
+		Token:       "CATEGORY_BANNER",
+	}}})
+
+	require.NoError(t, err, "no error updating category banner")
 
 	category = getCategoryBySlug(t, client, currentCategorySlug)
 	require.NotNil(t, category, "expected to have found category")

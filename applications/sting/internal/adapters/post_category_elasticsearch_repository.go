@@ -67,11 +67,11 @@ func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 	}, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) unmarshalCategoryDocument(ctx context.Context, hit *elastic.SearchHit) (*post.Category, error) {
+func (r PostsCassandraElasticsearchRepository) unmarshalCategoryDocument(ctx context.Context, source json.RawMessage, sort []interface{}) (*post.Category, error) {
 
 	var pst categoryDocument
 
-	err := json.Unmarshal(hit.Source, &pst)
+	err := json.Unmarshal(source, &pst)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to unmarshal category document")
@@ -102,7 +102,10 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCategoryDocument(ctx con
 		pst.TopicId,
 		pst.AlternativeTitles,
 	)
-	newCategory.Node = paging.NewNode(hit.Sort)
+
+	if sort != nil {
+		newCategory.Node = paging.NewNode(sort)
+	}
 
 	return newCategory, nil
 }
@@ -137,18 +140,21 @@ func (r PostsCassandraElasticsearchRepository) GetCategoriesByIds(ctx context.Co
 		return categories, nil
 	}
 
-	response, err := r.client.Search().
-		Index(CategoryReaderIndex).
-		Query(elastic.NewBoolQuery().Filter(elastic.NewTermsQueryFromStrings("id", categoryIds...))).
-		Do(ctx)
+	builder := r.client.MultiGet()
+
+	for _, categoryId := range categoryIds {
+		builder.Add(elastic.NewMultiGetItem().Id(categoryId).Index(CategoryReaderIndex))
+	}
+
+	response, err := builder.Do(ctx)
 
 	if err != nil {
 		return nil, errors.Wrap(support.ParseElasticError(err), "failed search categories")
 	}
 
-	for _, hit := range response.Hits.Hits {
+	for _, hit := range response.Docs {
 
-		result, err := r.unmarshalCategoryDocument(ctx, hit)
+		result, err := r.unmarshalCategoryDocument(ctx, hit.Source, nil)
 
 		if err != nil {
 			return nil, err
@@ -219,7 +225,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Cont
 
 	for _, hit := range response.Hits.Hits {
 
-		newCategory, err := r.unmarshalCategoryDocument(ctx, hit)
+		newCategory, err := r.unmarshalCategoryDocument(ctx, hit.Source, hit.Sort)
 
 		if err != nil {
 			return nil, err

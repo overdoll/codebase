@@ -16,7 +16,7 @@ import (
 	"overdoll/libraries/principal"
 )
 
-var topicTable = table.New(table.Metadata{
+var topicsTable = table.New(table.Metadata{
 	Name: "topics",
 	Columns: []string{
 		"id",
@@ -119,8 +119,8 @@ func (r PostsCassandraElasticsearchRepository) GetTopicBySlug(ctx context.Contex
 	return r.GetTopicById(ctx, b.TopicId)
 }
 
-func (r PostsCassandraElasticsearchRepository) GetTopicById(ctx context.Context, categoryId string) (*post.Topic, error) {
-	return r.getTopicById(ctx, categoryId)
+func (r PostsCassandraElasticsearchRepository) GetTopicById(ctx context.Context, topicId string) (*post.Topic, error) {
+	return r.getTopicById(ctx, topicId)
 }
 
 func (r PostsCassandraElasticsearchRepository) deleteUniqueTopicSlug(ctx context.Context, topicId, slug string) error {
@@ -164,7 +164,7 @@ func (r PostsCassandraElasticsearchRepository) CreateTopic(ctx context.Context, 
 	}
 
 	if err := r.session.
-		Query(topicTable.Insert()).
+		Query(topicsTable.Insert()).
 		WithContext(ctx).
 		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
@@ -188,7 +188,7 @@ func (r PostsCassandraElasticsearchRepository) CreateTopic(ctx context.Context, 
 
 		// failed to index topic - delete topic record
 		if err := r.session.
-			Query(topicTable.Delete()).
+			Query(topicsTable.Delete()).
 			WithContext(ctx).
 			Idempotent(true).
 			Consistency(gocql.LocalQuorum).
@@ -222,7 +222,7 @@ func (r PostsCassandraElasticsearchRepository) updateTopic(ctx context.Context, 
 	}
 
 	if err := r.session.
-		Query(topicTable.Update(
+		Query(topicsTable.Update(
 			append(columns, "updated_at")...,
 		)).
 		WithContext(ctx).
@@ -265,7 +265,7 @@ func (r PostsCassandraElasticsearchRepository) getTopicById(ctx context.Context,
 	var topic topics
 
 	if err := r.session.
-		Query(categoryTable.Get()).
+		Query(topicsTable.Get()).
 		WithContext(ctx).
 		Idempotent(true).
 		Consistency(gocql.LocalQuorum).

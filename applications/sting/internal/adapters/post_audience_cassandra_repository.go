@@ -291,6 +291,10 @@ func (r PostsCassandraElasticsearchRepository) UpdateAudienceThumbnailOperator(c
 	return r.updateAudience(ctx, id, updateFn, []string{"thumbnail_resource"})
 }
 
+func (r PostsCassandraElasticsearchRepository) UpdateAudienceBanner(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
+	return r.updateAudience(ctx, id, updateFn, []string{"banner_resource"})
+}
+
 func (r PostsCassandraElasticsearchRepository) UpdateAudienceThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
 	return r.updateAudience(ctx, id, updateFn, []string{"thumbnail_resource"})
 }

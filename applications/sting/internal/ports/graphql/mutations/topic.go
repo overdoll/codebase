@@ -54,6 +54,7 @@ func (r *MutationResolver) UpdateTopicTitle(ctx context.Context, input types.Upd
 		Handle(
 			ctx,
 			command.UpdateTopicTitle{
+				TopicId:   input.ID.GetID(),
 				Principal: principal.FromContext(ctx),
 				Title:     input.Title,
 				Locale:    input.Locale,
@@ -80,6 +81,7 @@ func (r *MutationResolver) UpdateTopicDescription(ctx context.Context, input typ
 			ctx,
 			command.UpdateTopicDescription{
 				Principal:   principal.FromContext(ctx),
+				TopicId:     input.ID.GetID(),
 				Description: input.Description,
 				Locale:      input.Locale,
 			},

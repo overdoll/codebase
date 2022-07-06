@@ -19,7 +19,7 @@ func TestPostCategoryRepository_failure(t *testing.T) {
 	categoryId := uuid.New().String()
 	categorySlug := createFakeSlug(t)
 
-	category := post.UnmarshalCategoryFromDatabase(categoryId, categorySlug, map[string]string{"en": "test"}, nil, nil, 0, 0, time.Now(), time.Now())
+	category := post.UnmarshalCategoryFromDatabase(categoryId, categorySlug, map[string]string{"en": "test"}, nil, nil, 0, 0, time.Now(), time.Now(), nil, nil)
 
 	ctx := context.Background()
 

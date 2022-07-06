@@ -182,6 +182,17 @@ func (h UpdateResourcesHandler) Handle(ctx context.Context, cmd UpdateResources)
 				}
 			}
 			break
+		case "TOPIC_BANNER":
+			for itemId, resources := range value {
+				_, err := h.pr.UpdateTopicBannerOperator(ctx, itemId, func(aud *post.Topic) error {
+					return aud.UpdateBannerExisting(resources[0])
+				})
+
+				if err != nil {
+					return err
+				}
+			}
+			break
 		}
 
 	}

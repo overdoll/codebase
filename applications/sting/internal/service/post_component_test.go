@@ -297,8 +297,8 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	// properly identify the content and stuff
 	require.Len(t, updatePostCategories.UpdatePostCategories.Post.Categories, 3)
-	require.Equal(t, "Alter", updatePostCategories.UpdatePostCategories.Post.Categories[0].Title)
-	require.Equal(t, "Transmit", updatePostCategories.UpdatePostCategories.Post.Categories[1].Title)
+	require.Equal(t, "Transmit", updatePostCategories.UpdatePostCategories.Post.Categories[0].Title)
+	require.Equal(t, "Alter", updatePostCategories.UpdatePostCategories.Post.Categories[1].Title)
 	require.Equal(t, "Convict", updatePostCategories.UpdatePostCategories.Post.Categories[2].Title)
 
 	// update with new characters
@@ -398,6 +398,35 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	env := getWorkflowEnvironment()
 
+	// signal workflow that resources were processed
+	application.TemporalClient.On("SignalWorkflow", mock.Anything, mock.Anything, "", workflows.SubmitPostSignalChannel, true).
+		Run(
+			func(args mock.Arguments) {
+				env.SignalWorkflow(workflows.SubmitPostSignalChannel, true)
+			},
+		).
+		Return(nil).
+		Once()
+
+	// update callback
+	env.RegisterDelayedCallback(func() {
+		pst := getPostFromAdapter(t, postId)
+		_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{
+			{
+				Id:          pst.Content()[1].ResourceHidden().ID(),
+				ItemId:      submitPost.SubmitPost.Post.Reference,
+				Processed:   true,
+				Type:        proto.ResourceType_IMAGE,
+				ProcessedId: uuid.New().String(),
+				Private:     false,
+				Width:       100,
+				Height:      100,
+				Token:       "POST_PRIVATE_CONTENT",
+			},
+		}})
+		require.NoError(t, err, "no error updating resource")
+	}, time.Millisecond)
+
 	env.OnRequestCancelExternalWorkflow(mock.Anything, mock.Anything, mock.Anything).
 		Run(
 			func(args mock.Arguments) {
@@ -446,7 +475,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	require.Len(t, post.Post.Content[0].Resource.Urls, 1, "should have 1 url")
 	for _, urls := range post.Post.Content[0].Resource.Urls {
-		require.NotContains(t, urls.URL, "Key-Pair-Id", "should not be private content")
+		require.Contains(t, urls.URL, "Key-Pair-Id", "should be private content")
 	}
 
 	require.True(t, post.Post.Content[1].ViewerCanViewSupporterOnlyContent, "can view supporter only because they are a supporter")

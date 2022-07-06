@@ -47,10 +47,11 @@ func NewLocalizedDataTag(name string, locale string) (*LocalizedDataTag, error) 
 }
 
 func MarshalLocalizedDataTagsToDatabase(t []*LocalizedDataTag) []map[string]string {
-	tran := make([]map[string]string, len(t))
+
+	tran := make([]map[string]string, 0)
 
 	for _, ts := range t {
-		tran = append(tran, map[string]string{ts.Name(): ts.Data()})
+		tran = append(tran, map[string]string{ts.Locale(): ts.Data()})
 	}
 
 	return tran
@@ -61,9 +62,7 @@ func UnmarshalLocalizedDataTagsFromDatabase(dataTags []map[string]string) []*Loc
 	var localizedDataTags []*LocalizedDataTag
 
 	for _, tag := range dataTags {
-
 		for key, value := range tag {
-
 			res, err := unmarshalLocalizedDataTagFromDatabase(key, value)
 
 			if err == nil {
