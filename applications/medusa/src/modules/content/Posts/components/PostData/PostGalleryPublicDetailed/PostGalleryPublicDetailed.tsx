@@ -57,7 +57,8 @@ export default function PostGalleryPublicDetailed ({
           <SwiperSlide
             key={index}
             style={{
-              backgroundColor: item.resource.preview != null && item.resource.preview !== '' ? item.resource.preview : 'gray.800'
+              backgroundColor: item.resource.preview != null && item.resource.preview !== '' ? item.resource.preview : 'gray.800',
+              height: swiper?.height
             }}
           >
             <Flex
