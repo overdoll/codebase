@@ -80,7 +80,7 @@ func (r PostsCassandraElasticsearchRepository) GetAudiencesByIds(ctx context.Con
 		return audiences, nil
 	}
 
-	builder := r.client.MultiGet()
+	builder := r.client.MultiGet().Realtime(false)
 
 	for _, categoryId := range audienceIds {
 		builder.Add(elastic.NewMultiGetItem().Id(categoryId).Index(AudienceReaderIndex))

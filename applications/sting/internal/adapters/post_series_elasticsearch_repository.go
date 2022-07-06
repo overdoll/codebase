@@ -112,7 +112,7 @@ func (r PostsCassandraElasticsearchRepository) GetSeriesByIds(ctx context.Contex
 		return series, nil
 	}
 
-	builder := r.client.MultiGet()
+	builder := r.client.MultiGet().Realtime(false)
 
 	for _, seriesId := range seriesIds {
 		builder.Add(elastic.NewMultiGetItem().Id(seriesId).Index(SeriesReaderIndex))

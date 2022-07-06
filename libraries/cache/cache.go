@@ -23,7 +23,7 @@ func CreateCacheCommands(indexConfig IndexConfig) *cobra.Command {
 	index.AddCommand(createSwap(indexConfig))
 
 	// use this command to perform re-indexing after swapping the writer.
-	index.AddCommand(createReindex(indexConfig))
+	index.AddCommand(createIndex(indexConfig))
 
 	return index
 }

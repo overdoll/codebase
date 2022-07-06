@@ -119,7 +119,7 @@ func (r PostsCassandraElasticsearchRepository) GetTopicsByIds(ctx context.Contex
 		return topics, nil
 	}
 
-	builder := r.client.MultiGet()
+	builder := r.client.MultiGet().Realtime(false)
 
 	for _, topicId := range topicIds {
 		builder.Add(elastic.NewMultiGetItem().Id(topicId).Index(TopicReaderIndex))

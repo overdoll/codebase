@@ -351,7 +351,7 @@ func (r PostsCassandraElasticsearchRepository) GetPostsByIds(ctx context.Context
 		return posts, nil
 	}
 
-	builder := r.client.MultiGet()
+	builder := r.client.MultiGet().Realtime(false)
 
 	for _, postId := range postIds {
 		builder.Add(elastic.NewMultiGetItem().Id(postId).Index(PostReaderIndex))

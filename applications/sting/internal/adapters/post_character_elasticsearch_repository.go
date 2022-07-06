@@ -165,7 +165,7 @@ func (r PostsCassandraElasticsearchRepository) GetCharactersByIds(ctx context.Co
 		return characters, nil
 	}
 
-	builder := r.client.MultiGet()
+	builder := r.client.MultiGet().Realtime(false)
 
 	for _, characterId := range characterIds {
 		builder.Add(elastic.NewMultiGetItem().Id(characterId).Index(CharacterReaderIndex))

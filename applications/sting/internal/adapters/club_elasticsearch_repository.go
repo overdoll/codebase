@@ -157,7 +157,7 @@ func (r ClubCassandraElasticsearchRepository) GetClubsByIds(ctx context.Context,
 		return clubs, nil
 	}
 
-	builder := r.client.MultiGet()
+	builder := r.client.MultiGet().Realtime(false)
 
 	for _, clubId := range clubIds {
 		builder.Add(elastic.NewMultiGetItem().Id(clubId).Index(ClubsReaderIndex))

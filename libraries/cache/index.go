@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func reindex(config IndexConfig, args []string) {
+func index(config IndexConfig, args []string) {
 	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancelFn()
 
@@ -18,7 +18,7 @@ func reindex(config IndexConfig, args []string) {
 
 		start := time.Now().UTC()
 
-		targetFunc := config.Registry.reindex[index]
+		targetFunc := config.Registry.index[index]
 
 		if err := targetFunc(ctx); err != nil {
 			zap.S().Fatalw("failed to run re-index", zap.Error(err))
@@ -32,19 +32,19 @@ func reindex(config IndexConfig, args []string) {
 	}
 }
 
-func createReindex(config IndexConfig) *cobra.Command {
+func createIndex(config IndexConfig) *cobra.Command {
 
 	var indexNames []string
 
-	for indexName, _ := range config.Registry.reindex {
+	for indexName, _ := range config.Registry.index {
 		indexNames = append(indexNames, indexName)
 	}
 
 	rootIndexCmd := &cobra.Command{
-		Use:   "reindex",
-		Short: "re-index all indexes, or pass 1 to index only 1 index",
+		Use:   "index",
+		Short: "index all indexes, or pass 1 to index only 1 index",
 		Run: func(cmd *cobra.Command, args []string) {
-			reindex(config, indexNames)
+			index(config, indexNames)
 		},
 	}
 
@@ -52,7 +52,7 @@ func createReindex(config IndexConfig) *cobra.Command {
 		rootIndexCmd.AddCommand(&cobra.Command{
 			Use: indexName,
 			Run: func(cmd *cobra.Command, args []string) {
-				reindex(config, []string{cmd.Use})
+				index(config, []string{cmd.Use})
 			}},
 		)
 	}

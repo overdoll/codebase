@@ -23,15 +23,19 @@ func categoriesByIds(app *app.Application) *dataloader.Loader {
 				keyOrder[key.String()] = ix
 			}
 
+			// construct an output array of dataloader results
+			results := make([]*dataloader.Result, len(keys))
+
 			res, err := app.Queries.CategoriesByIds.Handle(ctx, query.CategoriesByIds{
 				Ids: keyIds,
 			})
 
 			if err != nil {
-				return []*dataloader.Result{{Data: nil, Error: err}}
+				for _, ix := range keyOrder {
+					results[ix] = &dataloader.Result{Data: nil, Error: err}
+				}
+				return results
 			}
-			// construct an output array of dataloader results
-			results := make([]*dataloader.Result, len(keys))
 
 			// enumerate records, put into output
 			for _, record := range res {
@@ -51,7 +55,7 @@ func categoriesByIds(app *app.Application) *dataloader.Loader {
 
 			// return results
 			return results
-		}, dataloader.WithWait(time.Millisecond*10))
+		}, dataloader.WithWait(time.Millisecond*1))
 }
 
 func (i *DataLoader) GetCategoryById(ctx context.Context, id string) (*types.Category, error) {
