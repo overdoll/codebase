@@ -290,8 +290,7 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 	// map_metadata removes all metadata
 	// sn removes subtitles
 	// map 0:v:0 selects only the first video track
-	encodingArgs := ffmpeg_go.KwArgs{"c:v": "libx264", "crf": "18", "preset": "medium", "map_metadata": "-1", "sn": "", "map": "0:v:0"}
-	additionalArgs := ffmpeg_go.KwArgs{}
+	encodingArgs := ffmpeg_go.KwArgs{"c:v": "libx264", "crf": "24", "preset": "slow", "map_metadata": "-1", "sn": "", "map": []string{"0:v:0"}}
 
 	newVideoFileName := fileName + ".mp4"
 
@@ -318,7 +317,7 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 	}
 
 	// probe for audio streams
-	str, err := ffmpeg_go.Probe(newVideoFileName, map[string]interface{}{
+	str, err := ffmpeg_go.Probe(file.Name(), map[string]interface{}{
 		"select_streams": "a",
 		"show_streams":   "",
 	})
@@ -336,8 +335,8 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 	if len(audioStreamProbeResult.Streams) > 0 {
 		bytes := bytes2.NewBuffer(nil)
 		// found audio streams - get first audio stream and check if it's silent
-		if err := ffmpeg_go.Input(file.Name(), ffmpeg_go.KwArgs{"loglevel": "quiet", "map": "0:a:0", "af": "astats=metadata=1:reset=0,ametadata=print:file=-:key=lavfi.astats.Overall.RMS_level"}).
-			Output("pipe:").
+		if err := ffmpeg_go.Input(file.Name(), ffmpeg_go.KwArgs{"loglevel": "error"}).
+			Output("-", ffmpeg_go.KwArgs{"map": "0:a:0", "af": "astats=metadata=1:reset=0,ametadata=print:file=-:key=lavfi.astats.Overall.RMS_level", "f": "null"}).
 			WithErrorOutput(ffmpegLogger).
 			WithOutput(bytes).
 			Run(); err != nil {
@@ -379,7 +378,7 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 			r.videoNoAudio = true
 		} else {
 			// otherwise, only select the first audio stream for our encoding
-			additionalArgs["map"] = "0:a:0"
+			encodingArgs["map"] = append(encodingArgs["map"].([]string), "0:a:0")
 		}
 	} else {
 		// no audio streams are on this audio track, add a flag to remove it just in case
@@ -388,7 +387,7 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 	}
 
 	// probe for video streams
-	str, err = ffmpeg_go.Probe(newVideoFileName, map[string]interface{}{
+	str, err = ffmpeg_go.Probe(file.Name(), map[string]interface{}{
 		"select_streams": "v:0",
 		"show_entries":   "stream=width,height",
 	})
@@ -410,30 +409,30 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 		// width > height, landscape
 		if firstStream.Width > firstStream.Height {
 			if (firstStream.Height) > 720 {
-				encodingArgs["vf"] = "scale=720:-1"
+				encodingArgs["vf"] = "scale=-2:720"
 			}
 			// height > width, portrait
 		} else if firstStream.Width < firstStream.Height {
 			if (firstStream.Width) > 720 {
-				encodingArgs["vf"] = "scale=-1:720"
+				encodingArgs["vf"] = "scale=720:-2"
 			}
 		} else {
 			// otherwise, it's a square
 			if (firstStream.Width) > 720 {
-				encodingArgs["vf"] = "scale=-1:720"
+				encodingArgs["vf"] = "scale=-2:720"
 			}
 		}
 	}
 
 	if err := ffmpeg_go.Input(file.Name(), defaultArgs).
-		Output(newVideoFileName, encodingArgs, additionalArgs).
+		Output(newVideoFileName, encodingArgs).
 		WithErrorOutput(ffmpegLogger).
 		Run(); err != nil {
 		zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(ffmpegLogger.Output)))
 		return nil, err
 	}
 
-	thumbnailFileName := "t-" + fileName + ".jpg"
+	thumbnailFileName := fileName + ".jpg"
 
 	fileThumbnail, err := os.Create(thumbnailFileName)
 	if err != nil {
@@ -452,7 +451,7 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 		return nil, err
 	}
 
-	videoThumb := "t-" + fileName
+	videoThumb := fileName
 
 	str, err = ffmpeg_go.Probe(newVideoFileName, defaultArgs)
 
