@@ -552,6 +552,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 
 	require.Equal(t, "video/mp4", newVideoResource.FullUrls()[0].MimeType(), "expected video to be mp4")
 	require.Equal(t, "image/jpg", newVideoResource.VideoThumbnailMimeType(), "expected video thumbnail to be jpg")
+	require.True(t, newVideoResource.VideoNoAudio(), "expected video to have no audio track")
 
 	require.Regexp(t, previewRegex, newVideoResource.Preview(), "should be a hex code")
 

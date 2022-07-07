@@ -45,6 +45,7 @@ var resourcesTable = table.New(table.Metadata{
 		"resource_token",
 		"failed",
 		"copied_from_id",
+		"video_no_audio",
 	},
 	PartKey: []string{"item_id"},
 	SortKey: []string{"resource_id"},
@@ -69,6 +70,7 @@ type resources struct {
 	ResourceToken          string `db:"resource_token"`
 	Failed                 bool   `db:"failed"`
 	CopiedFromId           string `db:"copied_from_id"`
+	VideoNoAudio           bool   `db:"video_no_audio"`
 }
 
 type ResourceCassandraS3Repository struct {
@@ -97,6 +99,7 @@ func unmarshalResourceFromDatabase(i resources) *resource.Resource {
 		i.ResourceToken,
 		i.Failed,
 		i.CopiedFromId,
+		i.VideoNoAudio,
 	)
 }
 
@@ -129,6 +132,7 @@ func marshalResourceToDatabase(r *resource.Resource) *resources {
 		ResourceToken:          r.Token(),
 		Failed:                 r.Failed(),
 		CopiedFromId:           r.CopiedFromId(),
+		VideoNoAudio:           r.VideoNoAudio(),
 	}
 }
 
@@ -253,6 +257,7 @@ func (r ResourceCassandraS3Repository) updateResources(ctx context.Context, res 
 			"video_duration",
 			"video_thumbnail",
 			"video_thumbnail_mime_type",
+			"video_no_audio",
 			"width",
 			"height",
 			"preview",

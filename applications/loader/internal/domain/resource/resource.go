@@ -1,6 +1,8 @@
 package resource
 
 import (
+	"bufio"
+	bytes2 "bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/CapsLock-Studio/go-webpbin"
@@ -94,6 +96,8 @@ type Resource struct {
 
 	videoThumbnail         string
 	videoThumbnailMimeType string
+
+	videoNoAudio bool
 
 	width  int
 	height int
@@ -281,6 +285,14 @@ type ffmpegProbeStream struct {
 
 func (r *Resource) processVideo(fileName string, file *os.File, config *Config) ([]*Move, error) {
 
+	// arguments we wil use to encode our video
+	// h.264 codec, with crf=18 (good quality, indistinguishable from original)
+	// map_metadata removes all metadata
+	// sn removes subtitles
+	// map 0:v:0 selects only the first video track
+	encodingArgs := ffmpeg_go.KwArgs{"c:v": "libx264", "crf": "18", "preset": "medium", "map_metadata": "-1", "sn": "", "map": "0:v:0"}
+	additionalArgs := ffmpeg_go.KwArgs{}
+
 	newVideoFileName := fileName + ".mp4"
 
 	defaultArgs := map[string]interface{}{
@@ -305,11 +317,116 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 		return nil, nil
 	}
 
-	// "vf": "scale=-1:720" - TODO: need to scale down video if video is high resolution
-	encodingArgs := ffmpeg_go.KwArgs{"c:v": "libx264", "crf": "18", "preset": "medium", "map_metadata": "-1"}
+	// probe for audio streams
+	str, err := ffmpeg_go.Probe(newVideoFileName, map[string]interface{}{
+		"select_streams": "a",
+		"show_streams":   "",
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	var audioStreamProbeResult *ffmpegProbeStream
+
+	if err := json.Unmarshal([]byte(str), &audioStreamProbeResult); err != nil {
+		return nil, err
+	}
+
+	if len(audioStreamProbeResult.Streams) > 0 {
+		bytes := bytes2.NewBuffer(nil)
+		// found audio streams - get first audio stream and check if it's silent
+		if err := ffmpeg_go.Input(file.Name(), ffmpeg_go.KwArgs{"loglevel": "quiet", "map": "0:a:0", "af": "astats=metadata=1:reset=0,ametadata=print:file=-:key=lavfi.astats.Overall.RMS_level"}).
+			Output("pipe:").
+			WithErrorOutput(ffmpegLogger).
+			WithOutput(bytes).
+			Run(); err != nil {
+			zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(ffmpegLogger.Output)))
+			return nil, err
+		}
+
+		var buffLine []byte
+
+		reader := bufio.NewReader(bytes)
+
+		// from our ffmpeg output, read all lines until we are at the end
+		for {
+			line, _, err := reader.ReadLine()
+
+			if err == io.EOF {
+				break
+			}
+
+			buffLine = line
+		}
+
+		hasSilentAudioStream := false
+
+		// now, check our final line
+		if buffLine != nil {
+			result := strings.Split(string(buffLine), "=")
+			if len(result) > 1 {
+				// if on our final line, the overall RMS_level is -inf, then the audio stream is silent
+				if result[1] == "-inf" {
+					hasSilentAudioStream = true
+				}
+			}
+		}
+
+		// silent audio stream, remove it
+		if hasSilentAudioStream {
+			encodingArgs["an"] = ""
+			r.videoNoAudio = true
+		} else {
+			// otherwise, only select the first audio stream for our encoding
+			additionalArgs["map"] = "0:a:0"
+		}
+	} else {
+		// no audio streams are on this audio track, add a flag to remove it just in case
+		encodingArgs["an"] = ""
+		r.videoNoAudio = true
+	}
+
+	// probe for video streams
+	str, err = ffmpeg_go.Probe(newVideoFileName, map[string]interface{}{
+		"select_streams": "v:0",
+		"show_entries":   "stream=width,height",
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	var videoStreamProbeResult *ffmpegProbeStream
+
+	if err := json.Unmarshal([]byte(str), &videoStreamProbeResult); err != nil {
+		return nil, err
+	}
+
+	// logic for scaling down the video resolution if it's too large
+	if len(videoStreamProbeResult.Streams) > 0 {
+		firstStream := videoStreamProbeResult.Streams[0]
+
+		// width > height, landscape
+		if firstStream.Width > firstStream.Height {
+			if (firstStream.Height) > 720 {
+				encodingArgs["vf"] = "scale=720:-1"
+			}
+			// height > width, portrait
+		} else if firstStream.Width < firstStream.Height {
+			if (firstStream.Width) > 720 {
+				encodingArgs["vf"] = "scale=-1:720"
+			}
+		} else {
+			// otherwise, it's a square
+			if (firstStream.Width) > 720 {
+				encodingArgs["vf"] = "scale=-1:720"
+			}
+		}
+	}
 
 	if err := ffmpeg_go.Input(file.Name(), defaultArgs).
-		Output(newVideoFileName, encodingArgs).
+		Output(newVideoFileName, encodingArgs, additionalArgs).
 		WithErrorOutput(ffmpegLogger).
 		Run(); err != nil {
 		zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(ffmpegLogger.Output)))
@@ -337,10 +454,9 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 
 	videoThumb := "t-" + fileName
 
-	str, err := ffmpeg_go.Probe(newVideoFileName, defaultArgs)
+	str, err = ffmpeg_go.Probe(newVideoFileName, defaultArgs)
 
 	if err != nil {
-		zap.S().Errorw("ffmpeg_go probe error", zap.String("message", str))
 		return nil, err
 	}
 
@@ -535,6 +651,10 @@ func (r *Resource) IsCopied() bool {
 	return r.copiedFromId != ""
 }
 
+func (r *Resource) VideoNoAudio() bool {
+	return r.videoNoAudio
+}
+
 func (r *Resource) CopiedItemId() string {
 	return strings.Split(r.copiedFromId, "-")[0]
 }
@@ -613,7 +733,7 @@ func (r *Resource) VideoThumbnail() string {
 	return r.videoThumbnail
 }
 
-func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate bool, mimeTypes []string, processed bool, processedId string, videoDuration int, videoThumbnail, videoThumbnailMimeType string, width, height int, preview, token string, failed bool, copiedFromId string) *Resource {
+func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate bool, mimeTypes []string, processed bool, processedId string, videoDuration int, videoThumbnail, videoThumbnailMimeType string, width, height int, preview, token string, failed bool, copiedFromId string, videoNoAudio bool) *Resource {
 
 	typ, _ := resource.TypeFromInt(tp)
 
@@ -634,6 +754,7 @@ func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate 
 		token:                  token,
 		failed:                 failed,
 		copiedFromId:           copiedFromId,
+		videoNoAudio:           videoNoAudio,
 	}
 }
 
@@ -663,5 +784,6 @@ func ToProto(res *Resource) *proto.Resource {
 		Preview:                res.Preview(),
 		Token:                  res.Token(),
 		Failed:                 res.Failed(),
+		VideoNoAudio:           res.VideoNoAudio(),
 	}
 }

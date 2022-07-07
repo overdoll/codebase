@@ -28,6 +28,7 @@ type serializedResource struct {
 	VideoDuration          int      `json:"video_duration"`
 	VideoThumbnail         string   `json:"video_thumbnail"`
 	VideoThumbnailMimeType string   `json:"video_thumbnail_mime_type"`
+	VideoNoAudio           bool     `json:"video_no_audio"`
 	Width                  int      `json:"width"`
 	Height                 int      `json:"height"`
 	Preview                string   `json:"preview"`
@@ -57,7 +58,7 @@ func NewSerializer() *Serializer {
 	}
 }
 
-func unmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate bool, mimeTypes []string, processed bool, processedId string, videoDuration int, videoThumbnail, videoThumbnailMimeType string, width, height int, urls []*Url, videoThumbnailUrl *Url, preview string, failed bool) *Resource {
+func unmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate bool, mimeTypes []string, processed bool, processedId string, videoDuration int, videoThumbnail, videoThumbnailMimeType string, width, height int, urls []*Url, videoThumbnailUrl *Url, preview string, failed bool, videoNoAudio bool) *Resource {
 	typ, _ := TypeFromInt(tp)
 	return &Resource{
 		id:                     resourceId,
@@ -76,6 +77,7 @@ func unmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate 
 		videoThumbnailUrl:      videoThumbnailUrl,
 		preview:                preview,
 		failed:                 failed,
+		videoNoAudio:           videoNoAudio,
 	}
 }
 
@@ -100,6 +102,7 @@ func MarshalResourceToDatabase(resources *Resource) (string, error) {
 		Height:                 resources.height,
 		Preview:                resources.preview,
 		Failed:                 resources.failed,
+		VideoNoAudio:           resources.videoNoAudio,
 	})
 
 	if err != nil {
@@ -201,6 +204,7 @@ func UnmarshalResourceFromProto(ctx context.Context, resource *proto.Resource) *
 		preview:                resource.Preview,
 		token:                  resource.Token,
 		failed:                 resource.Failed,
+		videoNoAudio:           resource.VideoNoAudio,
 	}
 }
 
@@ -245,6 +249,7 @@ func (c *Serializer) UnmarshalResourcesFromProto(ctx context.Context, resource [
 			Height:                 int(item.Height),
 			Preview:                item.Preview,
 			Failed:                 item.Failed,
+			VideoNoAudio:           item.VideoNoAudio,
 		})
 
 		if err != nil {
@@ -297,6 +302,7 @@ func (c *Serializer) UnmarshalResourceFromDatabase(ctx context.Context, serializ
 		nil,
 		i.Preview,
 		i.Failed,
+		i.VideoNoAudio,
 	), nil
 }
 
@@ -346,6 +352,7 @@ func (c *Serializer) UnmarshalResourcesFromDatabase(ctx context.Context, seriali
 				nil,
 				i.Preview,
 				i.Failed,
+				i.VideoNoAudio,
 			))
 		}
 	}
@@ -526,5 +533,6 @@ func (c *Serializer) unmarshalResourceFromDatabaseWithSignedUrls(i serializedRes
 		videoThumbnail,
 		i.Preview,
 		i.Failed,
+		i.VideoNoAudio,
 	), nil
 }
