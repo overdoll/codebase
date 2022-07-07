@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"context"
-	"fmt"
 	graphql2 "github.com/99designs/gqlgen/graphql"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -323,7 +322,7 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 
 	require.Equal(t, 4, assertions, "should have checked 3 urls in total")
 
-	pixelate := 100
+	pixelate := 20
 
 	workflowExecution = testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResourcesWithFiltersFromCopy, mock.Anything)
 
@@ -570,8 +569,6 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 
 	// second video
 	require.Len(t, newVideoResource2.FullUrls(), 1)
-
-	fmt.Println(itemId)
 
 	// correct dimensions
 	require.Equal(t, 720, newVideoResource2.Height(), "should be the correct height")

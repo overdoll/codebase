@@ -204,9 +204,8 @@ func (r *Resource) ApplyFilters(file *os.File, config *Config, filters *ImageFil
 		// in order to have a consistent pixelation filter, regardless of how large the image is,
 		// we take the total amount of pixels in the image (w * h) and multiply by the percentage
 		// this will be the # of pixels left
-		totalPixels := float64(src.Bounds().Dx()*src.Bounds().Dy()) * float64(pixelateAmount/100)
-		pixelateValue := int(math.Floor(totalPixels*100) / 100)
-		fmt.Println(pixelateValue)
+		totalPixels := float64(src.Bounds().Dx()) * float64(pixelateAmount) / float64(100)
+		pixelateValue := int(math.Floor(totalPixels))
 		g.Add(gift.Pixelate(pixelateValue))
 	}
 

@@ -25,5 +25,11 @@ func CreateCacheCommands(indexConfig IndexConfig) *cobra.Command {
 	// use this command to perform re-indexing after swapping the writer.
 	index.AddCommand(createIndex(indexConfig))
 
+	// use this command to list the assigned reader + writer aliases and their indexes
+	index.AddCommand(createList(indexConfig))
+
+	// use this command to delete an index. will check if any aliases are assigned before allowing it to occur
+	index.AddCommand(createDeleteIndex(indexConfig))
+
 	return index
 }

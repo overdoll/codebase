@@ -80,7 +80,7 @@ func RunWorker(cmd *cobra.Command, args []string) {
 }
 
 func RunHttp(cmd *cobra.Command, args []string) {
-	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
+	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*20)
 	defer cancelFn()
 
 	app, cleanup := service.NewApplication(ctx)

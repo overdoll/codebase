@@ -47,8 +47,8 @@ func swap(alias string) func(cmd *cobra.Command, args []string) {
 			zap.S().Fatalw("index not found", zap.String("index", destinationIndex))
 		}
 
-		// add index to writer alias, and keep our old one, just in case
-		_, err = client.Alias().Add(destinationIndex, alias).Do(ctx)
+		// add index to writer alias, and remove our old one
+		_, err = client.Alias().Add(destinationIndex, alias).Remove(writerIndexesByAlias[0], alias).Do(ctx)
 
 		if err != nil {
 			zap.S().Fatalw("could not alias index", zap.Error(err), zap.String("index", destinationIndex), zap.String("alias", alias))

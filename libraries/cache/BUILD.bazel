@@ -5,7 +5,9 @@ go_library(
     srcs = [
         "cache.go",
         "create.go",
+        "delete_index.go",
         "index.go",
+        "list.go",
         "local_alias.go",
         "register.go",
         "registry.go",
