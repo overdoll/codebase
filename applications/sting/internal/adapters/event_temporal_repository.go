@@ -10,6 +10,7 @@ import (
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/principal"
+	"strings"
 	"time"
 )
 
@@ -24,6 +25,11 @@ func NewEventTemporalRepository(client client.Client) EventTemporalRepository {
 func (r EventTemporalRepository) SendCompletedPixelatedResources(ctx context.Context, post *post.Post) error {
 
 	if err := r.client.SignalWorkflow(ctx, "sting.SubmitPost_"+post.ID(), "", workflows.SubmitPostSignalChannel, true); err != nil {
+
+		if strings.Contains(err.Error(), "workflow execution already completed") {
+			return nil
+		}
+
 		return errors.Wrap(err, "failed to signal submit post workflow")
 	}
 

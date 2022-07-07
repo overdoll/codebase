@@ -708,11 +708,11 @@ func (r ResourceCassandraS3Repository) GetComposer(ctx context.Context) (*tusd.S
 	store := &s3store.S3Store{
 		Bucket:             os.Getenv("UPLOADS_BUCKET"),
 		Service:            s3Client,
-		MaxPartSize:        5 * 1024 * 1024 * 1024,
+		MaxPartSize:        50 * 1024 * 1024,
 		MinPartSize:        5 * 1024 * 1024,
-		PreferredPartSize:  50 * 1024 * 1024,
+		PreferredPartSize:  10 * 1024 * 1024,
 		MaxMultipartParts:  10000,
-		MaxObjectSize:      5 * 1024 * 1024 * 1024 * 1024,
+		MaxObjectSize:      1024 * 1024 * 1024,
 		MaxBufferedParts:   20,
 		TemporaryDirectory: "",
 	}

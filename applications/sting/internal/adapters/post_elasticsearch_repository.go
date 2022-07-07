@@ -570,17 +570,17 @@ func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, re
 			NewGaussDecayFunction().
 			FieldName("posted_at").
 			Scale("1d").
-			Decay(0.5),
+			Decay(0),
 	)
 
 	// multiply by likes for this post
-	scoreQuery.AddScoreFunc(
-		elastic.
-			NewFieldValueFactorFunction().
-			Field("likes").
-			Factor(0).
-			Modifier("none"),
-	)
+	//scoreQuery.AddScoreFunc(
+	//	elastic.
+	//		NewFieldValueFactorFunction().
+	//		Field("likes").
+	//		Factor(0).
+	//		Modifier("none"),
+	//)
 
 	query.Must(scoreQuery)
 

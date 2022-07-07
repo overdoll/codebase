@@ -21,11 +21,11 @@ func index(config IndexConfig, args []string) {
 		targetFunc := config.Registry.index[index]
 
 		if err := targetFunc(ctx); err != nil {
-			zap.S().Fatalw("failed to run re-index", zap.Error(err))
+			zap.S().Fatalw("failed to run index", zap.Error(err))
 		}
 
 		zap.S().Infof(
-			"successfully re-indexed [%s] in %s!",
+			"successfully indexed [%s] in %s!",
 			index,
 			time.Since(start).Truncate(time.Millisecond),
 		)

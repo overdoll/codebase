@@ -205,7 +205,9 @@ func (r *Resource) ApplyFilters(file *os.File, config *Config, filters *ImageFil
 		// we take the total amount of pixels in the image (w * h) and multiply by the percentage
 		// this will be the # of pixels left
 		totalPixels := float64(src.Bounds().Dx()*src.Bounds().Dy()) * float64(pixelateAmount/100)
-		g.Add(gift.Pixelate(int(math.Floor(totalPixels*100) / 100)))
+		pixelateValue := int(math.Floor(totalPixels*100) / 100)
+		fmt.Println(pixelateValue)
+		g.Add(gift.Pixelate(pixelateValue))
 	}
 
 	pixelatedSrc := image.NewNRGBA(g.Bounds(src.Bounds()))
