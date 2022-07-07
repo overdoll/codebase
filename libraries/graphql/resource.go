@@ -39,6 +39,9 @@ type Resource struct {
 	//  - The supplied image is corrupted.
 	//  - The supplied video is invalid or corrupted.
 	Failed bool `json:"failed"`
+
+	// Whether or not the video has audio.
+	VideoNoAudio bool `json:"videoNoAudio"`
 }
 
 // A type representing a url to the resource and the mimetype
@@ -136,5 +139,6 @@ func MarshalResourceToGraphQL(ctx context.Context, res *resource.Resource) *Reso
 		VideoThumbnail: videoUrl,
 		Preview:        res.Preview(),
 		Failed:         res.Failed(),
+		VideoNoAudio:   res.VideoNoAudio(),
 	}
 }

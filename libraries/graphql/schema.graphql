@@ -86,6 +86,9 @@ type Resource {
   """Video thumbnail, if video."""
   videoThumbnail: ResourceUrl
 
+  """Whether or not the video has audio."""
+  videoNoAudio: Boolean!
+
   """A hex-code color of the resource that can be used in-place while the resource is loading."""
   preview: String!
 

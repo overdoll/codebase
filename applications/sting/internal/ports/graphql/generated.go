@@ -507,6 +507,7 @@ type ComplexityRoot struct {
 		Type           func(childComplexity int) int
 		Urls           func(childComplexity int) int
 		VideoDuration  func(childComplexity int) int
+		VideoNoAudio   func(childComplexity int) int
 		VideoThumbnail func(childComplexity int) int
 		Width          func(childComplexity int) int
 	}
@@ -3257,6 +3258,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Resource.VideoDuration(childComplexity), true
+
+	case "Resource.videoNoAudio":
+		if e.complexity.Resource.VideoNoAudio == nil {
+			break
+		}
+
+		return e.complexity.Resource.VideoNoAudio(childComplexity), true
 
 	case "Resource.videoThumbnail":
 		if e.complexity.Resource.VideoThumbnail == nil {
@@ -6638,6 +6646,9 @@ type Resource {
 
   """Video thumbnail, if video."""
   videoThumbnail: ResourceUrl
+
+  """Whether or not the video has audio."""
+  videoNoAudio: Boolean!
 
   """A hex-code color of the resource that can be used in-place while the resource is loading."""
   preview: String!
@@ -10657,6 +10668,8 @@ func (ec *executionContext) fieldContext_Audience_thumbnail(ctx context.Context,
 				return ec.fieldContext_Resource_videoDuration(ctx, field)
 			case "videoThumbnail":
 				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
+			case "videoNoAudio":
+				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
 			case "failed":
@@ -10720,6 +10733,8 @@ func (ec *executionContext) fieldContext_Audience_banner(ctx context.Context, fi
 				return ec.fieldContext_Resource_videoDuration(ctx, field)
 			case "videoThumbnail":
 				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
+			case "videoNoAudio":
+				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
 			case "failed":
@@ -11585,6 +11600,8 @@ func (ec *executionContext) fieldContext_Category_thumbnail(ctx context.Context,
 				return ec.fieldContext_Resource_videoDuration(ctx, field)
 			case "videoThumbnail":
 				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
+			case "videoNoAudio":
+				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
 			case "failed":
@@ -11648,6 +11665,8 @@ func (ec *executionContext) fieldContext_Category_banner(ctx context.Context, fi
 				return ec.fieldContext_Resource_videoDuration(ctx, field)
 			case "videoThumbnail":
 				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
+			case "videoNoAudio":
+				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
 			case "failed":
@@ -12586,6 +12605,8 @@ func (ec *executionContext) fieldContext_Character_thumbnail(ctx context.Context
 				return ec.fieldContext_Resource_videoDuration(ctx, field)
 			case "videoThumbnail":
 				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
+			case "videoNoAudio":
+				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
 			case "failed":
@@ -12649,6 +12670,8 @@ func (ec *executionContext) fieldContext_Character_banner(ctx context.Context, f
 				return ec.fieldContext_Resource_videoDuration(ctx, field)
 			case "videoThumbnail":
 				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
+			case "videoNoAudio":
+				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
 			case "failed":
@@ -13472,6 +13495,8 @@ func (ec *executionContext) fieldContext_Club_thumbnail(ctx context.Context, fie
 				return ec.fieldContext_Resource_videoDuration(ctx, field)
 			case "videoThumbnail":
 				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
+			case "videoNoAudio":
+				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
 			case "failed":
@@ -13535,6 +13560,8 @@ func (ec *executionContext) fieldContext_Club_banner(ctx context.Context, field 
 				return ec.fieldContext_Resource_videoDuration(ctx, field)
 			case "videoThumbnail":
 				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
+			case "videoNoAudio":
+				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
 			case "failed":
@@ -22203,6 +22230,8 @@ func (ec *executionContext) fieldContext_PostContent_resource(ctx context.Contex
 				return ec.fieldContext_Resource_videoDuration(ctx, field)
 			case "videoThumbnail":
 				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
+			case "videoNoAudio":
+				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
 			case "failed":
@@ -22266,6 +22295,8 @@ func (ec *executionContext) fieldContext_PostContent_supporterOnlyResource(ctx c
 				return ec.fieldContext_Resource_videoDuration(ctx, field)
 			case "videoThumbnail":
 				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
+			case "videoNoAudio":
+				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
 			case "failed":
@@ -24788,6 +24819,50 @@ func (ec *executionContext) fieldContext_Resource_videoThumbnail(ctx context.Con
 	return fc, nil
 }
 
+func (ec *executionContext) _Resource_videoNoAudio(ctx context.Context, field graphql.CollectedField, obj *graphql1.Resource) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Resource_videoNoAudio(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.VideoNoAudio, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Resource_videoNoAudio(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Resource",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Resource_preview(ctx context.Context, field graphql.CollectedField, obj *graphql1.Resource) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Resource_preview(ctx, field)
 	if err != nil {
@@ -25340,6 +25415,8 @@ func (ec *executionContext) fieldContext_Series_thumbnail(ctx context.Context, f
 				return ec.fieldContext_Resource_videoDuration(ctx, field)
 			case "videoThumbnail":
 				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
+			case "videoNoAudio":
+				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
 			case "failed":
@@ -25403,6 +25480,8 @@ func (ec *executionContext) fieldContext_Series_banner(ctx context.Context, fiel
 				return ec.fieldContext_Resource_videoDuration(ctx, field)
 			case "videoThumbnail":
 				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
+			case "videoNoAudio":
+				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
 			case "failed":
@@ -26309,6 +26388,8 @@ func (ec *executionContext) fieldContext_Topic_banner(ctx context.Context, field
 				return ec.fieldContext_Resource_videoDuration(ctx, field)
 			case "videoThumbnail":
 				return ec.fieldContext_Resource_videoThumbnail(ctx, field)
+			case "videoNoAudio":
+				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
 			case "failed":
@@ -36451,6 +36532,13 @@ func (ec *executionContext) _Resource(ctx context.Context, sel ast.SelectionSet,
 
 			out.Values[i] = ec._Resource_videoThumbnail(ctx, field, obj)
 
+		case "videoNoAudio":
+
+			out.Values[i] = ec._Resource_videoNoAudio(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "preview":
 
 			out.Values[i] = ec._Resource_preview(ctx, field, obj)

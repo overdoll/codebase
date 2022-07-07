@@ -186,7 +186,15 @@ func (r *Resource) ApplyFilters(file *os.File, config *Config, filters *ImageFil
 		return nil, errors.Wrap(err, "failed to decode a file for filters")
 	}
 
-	src = resize.Resize(uint(config.Width()), uint(config.Height()), src, resize.Lanczos3)
+	// if we ask to resize width, to prevent distorting the image, we only resize if the width of the image is larger than the requested width
+	// we also check width
+	if config.Width() > 0 && config.Height() == 0 {
+		if uint64(src.Bounds().Dx()) > config.Width() {
+			src = resize.Resize(uint(config.Width()), uint(config.Height()), src, resize.Lanczos3)
+		}
+	} else {
+		src = resize.Resize(uint(config.Width()), uint(config.Height()), src, resize.Lanczos3)
+	}
 
 	// create and apply filters
 	g := gift.New()
