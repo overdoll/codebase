@@ -3,12 +3,9 @@ import { useFragment } from 'react-relay'
 import type { ImageSnippetFragment$key } from '@//:artifacts/ImageSnippetFragment.graphql'
 import NextImage from '../NextImage/NextImage'
 import { ImageProps } from 'next/image'
-import { useMemo, useRef, useState } from 'react'
+import { useState } from 'react'
 import { Box, Flex } from '@chakra-ui/react'
 import ImageError from '../NextImage/ImageError/ImageError'
-import CanUseDOM from '../../../operations/CanUseDOM'
-import { useHasMimeTypeAcceptHeader } from '../../../configuration'
-import { useHydrate } from '../../../hydrate'
 
 export interface ImageSnippetCoverProps {
   cover?: boolean
@@ -25,7 +22,6 @@ const Fragment = graphql`
     id
     urls {
       url
-      mimeType
     }
     width
     height
@@ -38,17 +34,15 @@ const errorCaptureCache = new Map<string, number>()
 export default function ImageSnippet ({
   query,
   cover,
-  tinyError,
   containCover,
+  tinyError,
   ...rest
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const ref = useRef(null)
-
   const captureId = data?.id as string
 
-  const [errorCount, setErrorCount] = useState(errorCaptureCache.has(captureId) ? errorCaptureCache.get(captureId) as number : 0)
+  const [errorCount, setErrorCount] = useState(errorCaptureCache.has(captureId) ? data?.urls.length as number : 0)
 
   const errorLimit = data?.urls.length ?? 0
 
@@ -58,58 +52,35 @@ export default function ImageSnippet ({
 
   const tiniestImage = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
 
-  const hasWebp = useHasMimeTypeAcceptHeader('image/webp')
-
   const IMAGE_PROPS = {
     alt: '',
-    width: data?.width,
-    height: data?.height,
+    layout: determineCover ? 'fill' : 'responsive' as any,
+    width: determineCover ? undefined : data?.width,
+    height: determineCover ? undefined : data?.height,
+    objectFit: determineCover ? (containCover === true ? 'contain' : 'cover') : undefined as any,
     style: {
       backgroundColor: previewBackground,
-      userSelect: 'none' as any,
-      objectFit: determineCover ? (containCover === true ? 'contain' : 'cover') : undefined as any
+      userSelect: 'none' as any
     }
   }
 
-  const isHydrated = useHydrate()
-
-  const displayUrl = useMemo<string>(() => {
-    if (errorCount >= errorLimit || data?.urls == null) {
+  const displayUrl = (currentErrorCount): string => {
+    if (currentErrorCount >= errorLimit || data?.urls == null) {
       // return tiniest 1x1 base64 image as fallback because nextjs image doesn't like empty src values
       return tiniestImage
     }
 
-    let targetUrl = data?.urls[errorCount]
+    return data?.urls[errorCount].url
+  }
 
-    // display the next url if we don't have webp enabled for this client
-    if (targetUrl.mimeType === 'image/webp' && !hasWebp) {
-      targetUrl = data?.urls[errorCount + 1]
-    }
-
-    return targetUrl.url
-  }, [errorCount])
-
-  const onError = (): void => {
+  const onErrorCapture = (): void => {
     setErrorCount(x => {
       const newValue = x + 1
 
       // add to error capture cache so that re-renders of the same image won't try to re-load the image
-      if (CanUseDOM) {
-        errorCaptureCache.set(captureId, newValue)
-      }
-
+      errorCaptureCache.set(captureId, newValue)
       return newValue
     })
-  }
-
-  const onLoadingComplete = ({
-    naturalWidth,
-    naturalHeight
-  }): void => {
-    // if an error occurs on the server-side, do an onError call here
-    if (naturalHeight === 0) {
-      onError()
-    }
   }
 
   if (errorCount >= errorLimit) {
@@ -123,7 +94,6 @@ export default function ImageSnippet ({
           h='100%'
         >
           <NextImage
-            loading={isHydrated ? 'lazy' : 'eager'}
             {...IMAGE_PROPS}
             src={tiniestImage}
             {...rest}
@@ -136,15 +106,14 @@ export default function ImageSnippet ({
     )
   }
 
+  // TODO having the priority tag will not trigger the error callback sometimes, which is probably fine since they wont happen very often
+
   return (
     <Box position={determineCover ? 'relative' : 'static'} w='100%' h='100%' display='block'>
       <NextImage
-        loading={isHydrated ? 'lazy' : 'eager'}
-        ref={ref}
         {...IMAGE_PROPS}
-        src={displayUrl}
-        onLoadingComplete={onLoadingComplete}
-        onError={onError}
+        src={displayUrl(errorCount)}
+        onErrorCapture={onErrorCapture}
         {...rest}
       />
     </Box>
