@@ -64,7 +64,7 @@ export default function ResourceItem ({
       position='relative'
       {...rest}
     >
-      {showBorder && <Flex w='100%' h='100%' borderRadius='inherit' {...iconBorder} position='absolute' />}
+      {showBorder && <Flex zIndex={1} w='100%' h='100%' borderRadius='inherit' {...iconBorder} position='absolute' />}
       {data.type === 'IMAGE' &&
         <ImageSnippet containCover={containCover} cover={cover ?? true} query={data} />}
       {data.type === 'VIDEO' &&

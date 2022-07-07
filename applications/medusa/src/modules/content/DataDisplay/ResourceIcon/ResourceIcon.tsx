@@ -75,7 +75,7 @@ export default function ResourceIcon ({
       h={DEFAULT_SIZE}
       {...rest}
     >
-      {showBorder && <Flex w='100%' h='100%' borderRadius='inherit' {...iconBorder} position='absolute' />}
+      {showBorder && <Flex zIndex={1} w='100%' h='100%' borderRadius='inherit' {...iconBorder} position='absolute' />}
       {data.type === 'IMAGE' &&
         <ImageSnippet tinyError cover query={data} />}
       {data.type === 'VIDEO' &&

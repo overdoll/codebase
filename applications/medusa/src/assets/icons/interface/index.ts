@@ -46,3 +46,5 @@ export { default as PremiumStarHollow } from './normal-bold/premium-star-hollow.
 export { default as ArchiveFile } from './mini-bold/actions/archive-file.svg'
 export { default as ActionUnlock } from './mini-bold/actions/action-unlock.svg'
 export { default as TimeRewind } from './mini-bold/actions/time-rewind.svg'
+export { default as UploadMultiple } from './normal-bold/upload-multiple.svg'
+export { default as UploadSize } from './normal-bold/upload-size.svg'

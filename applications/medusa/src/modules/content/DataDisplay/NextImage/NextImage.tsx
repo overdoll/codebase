@@ -9,6 +9,5 @@ export default function NextImage (props: Props): JSX.Element {
       unoptimized
       {...props}
     />
-
   )
 }
