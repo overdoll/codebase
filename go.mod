@@ -7,7 +7,7 @@ require (
 	github.com/CapsLock-Studio/go-webpbin v0.0.0-20210717145055-bd2f105d3ee0
 	github.com/EdlinOrg/prominentcolor v1.0.0
 	github.com/PuerkitoBio/goquery v1.8.0
-	github.com/aws/aws-sdk-go v1.42.52
+	github.com/aws/aws-sdk-go v1.43.31
 	github.com/bazelbuild/rules_go v0.27.0
 	github.com/biter777/countries v1.3.4
 	github.com/bxcodec/faker/v3 v3.6.0
@@ -42,7 +42,7 @@ require (
 	github.com/stretchr/testify v1.7.1
 	github.com/tidwall/gjson v1.12.1
 	github.com/tidwall/sjson v1.2.3
-	github.com/tus/tusd v1.6.0
+	github.com/tus/tusd v1.9.0
 	github.com/u2takey/ffmpeg-go v0.4.0
 	github.com/vektah/gqlparser/v2 v2.4.4
 	github.com/yuin/goldmark v1.4.4
