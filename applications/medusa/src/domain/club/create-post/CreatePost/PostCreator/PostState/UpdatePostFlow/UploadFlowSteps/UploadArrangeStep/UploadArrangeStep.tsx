@@ -8,7 +8,7 @@ import { Trans } from '@lingui/macro'
 import { Stack } from '@chakra-ui/react'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import UploadSupporterContentOptimization from './UploadSupporterContentOptimization/UploadSupporterContentOptimization'
-import { useUppyContext } from '@//:modules/content/Interactables/Upload'
+import { useUppyContext } from '@//:modules/content/HookedComponents/Upload'
 
 interface Props {
   query: UploadArrangeStepFragment$key

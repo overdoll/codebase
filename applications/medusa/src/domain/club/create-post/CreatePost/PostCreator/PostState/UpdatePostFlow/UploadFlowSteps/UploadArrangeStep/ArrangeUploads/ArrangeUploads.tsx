@@ -12,7 +12,7 @@ import ArrangeButton from './ArrangeButton/ArrangeButton'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { t } from '@lingui/macro'
 import { useUpdateEffect } from 'usehooks-ts'
-import { useUppyContext } from '@//:modules/content/Interactables/Upload'
+import { useUppyContext } from '@//:modules/content/HookedComponents/Upload'
 
 interface Props {
   query: ArrangeUploadsFragment$key

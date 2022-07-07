@@ -5,7 +5,7 @@ import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseBu
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
-import { useUppyContext } from '@//:modules/content/Interactables/Upload'
+import { useUppyContext } from '@//:modules/content/HookedComponents/Upload'
 
 interface Props {
   file: UppyFile
@@ -18,8 +18,7 @@ export default function File ({
 }: Props): JSX.Element {
   const uppy = useUppyContext()
   const {
-    state,
-    dispatch
+    state
   } = useSequenceContext()
 
   const { i18n } = useLingui()
@@ -31,21 +30,6 @@ export default function File ({
 
   const onRemoveFile = (id: string): void => {
     uppy.removeFile(id)
-    dispatch({
-      type: 'files',
-      value: [{ id: id }],
-      transform: 'REMOVE'
-    })
-    dispatch({
-      type: 'progress',
-      value: { [id]: state.progress[id] },
-      transform: 'REMOVE'
-    })
-    dispatch({
-      type: 'urls',
-      value: { [id]: state.urls[id] },
-      transform: 'REMOVE'
-    })
   }
 
   const FileMessage = (): JSX.Element => {

@@ -10,7 +10,7 @@ import { UppyContext } from '../../../../../../context'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import { hasSupporterContent } from '../../UploadFlowSteps/UploadReviewStep/UploadReviewStep'
-import { useUppyContext } from '@//:modules/content/Interactables/Upload'
+import { useUppyContext } from '@//:modules/content/HookedComponents/Upload'
 
 interface Props {
   query: SubmitPostButtonFragment$key

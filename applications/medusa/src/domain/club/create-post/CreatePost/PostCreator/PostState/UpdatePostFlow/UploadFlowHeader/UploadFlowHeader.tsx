@@ -24,7 +24,7 @@ import ProcessContent from './ProcessContent/ProcessContent'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { useLingui } from '@lingui/react'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
-import { useUppyContext } from '@//:modules/content/Interactables/Upload'
+import { useUppyContext } from '@//:modules/content/HookedComponents/Upload'
 
 interface Props {
   query: UploadFlowHeaderFragment$key

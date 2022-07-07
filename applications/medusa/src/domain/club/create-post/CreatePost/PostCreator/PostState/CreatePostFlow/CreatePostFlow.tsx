@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Heading, Spinner, Stack } from '@chakra-ui/react'
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { useQueryParam } from 'use-query-params'
@@ -8,8 +8,8 @@ import { CreatePostFlowMutation$data } from '@//:artifacts/CreatePostFlowMutatio
 import { t, Trans } from '@lingui/macro'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import CreatePostFilePicker
-  from '@//:modules/content/Interactables/Upload/components/CreatePostFilePicker/CreatePostFilePicker'
-import { useUppyContext } from '@//:modules/content/Interactables/Upload'
+  from '@//:modules/content/HookedComponents/Upload/components/CreatePostFilePicker/CreatePostFilePicker'
+import { useUppyContext } from '@//:modules/content/HookedComponents/Upload'
 
 interface Props {
   query: CreatePostFlowFragment$key
@@ -55,6 +55,8 @@ export default function CreatePostFlow ({ query }: Props): JSX.Element {
 
   const notify = useToast()
 
+  const [created, setCreated] = useState(false)
+
   const connectionId = data.posts.__id
 
   const onCreatePost = (id): void => {
@@ -64,6 +66,7 @@ export default function CreatePostFlow ({ query }: Props): JSX.Element {
         connections: [connectionId]
       },
       onCompleted (data: CreatePostFlowMutation$data) {
+        setCreated(true)
         setPostReference(data?.createPost?.post?.reference as string)
       },
       onError () {
@@ -96,6 +99,17 @@ export default function CreatePostFlow ({ query }: Props): JSX.Element {
       uppy.off('file-added', callBackFn)
     }
   }, [uppy])
+
+  if (created) {
+    return (
+      <PostPlaceholder>
+        <Stack align='center' spacing={6}>
+          <Spinner thickness='6px' w={12} h={12} color='teal.300' />
+          <Heading fontSize='4xl' color='gray.00'><Trans>Opening Post</Trans></Heading>
+        </Stack>
+      </PostPlaceholder>
+    )
+  }
 
   if (isCreatingPost) {
     return (

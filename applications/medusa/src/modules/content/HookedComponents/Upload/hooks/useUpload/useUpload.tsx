@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { useToast } from '@//:modules/content/ThemeComponents'
+import { useToast } from '../../../../ThemeComponents'
 import { Uppy } from '@uppy/core'
 import { UseUploadProps, UseUploadReturnType } from '../../types'
 
@@ -8,7 +8,10 @@ export default function useUpload (props: UseUploadProps): UseUploadReturnType {
     uppy: InitialUppy,
     onFileAdded,
     onUploadSuccess,
-    onUploadProgress
+    onUploadProgress,
+    onFileRemoved,
+    onUploadError,
+    onUploadRetry
   } = props
 
   const notify = useToast()
@@ -56,6 +59,17 @@ export default function useUpload (props: UseUploadProps): UseUploadReturnType {
     }
   }, [uppy])
 
+  useEffect(() => {
+    const callBackFn = (file, reason): void => {
+      onFileRemoved?.(file, reason)
+    }
+
+    uppy.on('file-removed', callBackFn)
+    return () => {
+      uppy.off('file-removed', callBackFn)
+    }
+  }, [uppy])
+
   // Event for errors
   useEffect(() => {
     const callBackFn = (): void => {
@@ -75,6 +89,12 @@ export default function useUpload (props: UseUploadProps): UseUploadReturnType {
 
     return () => {
       uppy.off('info-visible', callBackFn)
+    }
+  }, [uppy])
+
+  useEffect(() => {
+    return () => {
+      uppy.reset()
     }
   }, [uppy])
 

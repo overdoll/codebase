@@ -112,7 +112,7 @@ export default function ChangeClubThumbnailForm ({
           size='md'
         >
           <Trans>
-            Submit
+            Submit Thumbnail
           </Trans>
         </FormSubmitButton>
       </Stack>

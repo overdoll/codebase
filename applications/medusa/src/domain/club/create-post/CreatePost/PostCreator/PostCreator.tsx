@@ -1,18 +1,17 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { PostCreatorQuery } from '@//:artifacts/PostCreatorQuery.graphql'
 import PostState from './PostState/PostState'
-import { useEffect } from 'react'
-import getIdFromUppyUrl
-  from '@//:modules/content/Interactables/Upload/support/getIdFromUppyUrl/getIdFromUppyUrl'
+import getIdFromUppyUrl from '@//:modules/content/HookedComponents/Upload/support/getIdFromUppyUrl/getIdFromUppyUrl'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
 import ClubRestricted from '../ClubRestricted/ClubRestricted'
-import { CreatePostUppy, UppyProvider, useUpload } from '@//:modules/content/Interactables/Upload'
+import { CreatePostUppy, UppyProvider, useUpload } from '@//:modules/content/HookedComponents/Upload'
 import {
   OnFileAddedType,
+  OnFileRemovedType,
   OnUploadProgressType,
   OnUploadSuccessType
-} from '@//:modules/content/Interactables/Upload/types'
+} from '@//:modules/content/HookedComponents/Upload/types'
 
 interface Props {
   query: PreloadedQuery<PostCreatorQuery>
@@ -46,7 +45,10 @@ export default function PostCreator ({ query }: Props): JSX.Element {
     query
   )
 
-  const { dispatch } = useSequenceContext()
+  const {
+    state,
+    dispatch
+  } = useSequenceContext()
 
   const onFileAdded: OnFileAddedType = (file) => {
     if (file.source !== 'already-uploaded') {
@@ -87,18 +89,31 @@ export default function PostCreator ({ query }: Props): JSX.Element {
     }
   }
 
+  const onFileRemoved: OnFileRemovedType = (file, reason) => {
+    dispatch({
+      type: 'files',
+      value: [{ id: file.id }],
+      transform: 'REMOVE'
+    })
+    dispatch({
+      type: 'progress',
+      value: { [file.id]: state.progress[file.id] },
+      transform: 'REMOVE'
+    })
+    dispatch({
+      type: 'urls',
+      value: { [file.id]: state.urls[file.id] },
+      transform: 'REMOVE'
+    })
+  }
+
   const uppy = useUpload({
     uppy: CreatePostUppy,
     onUploadSuccess: onUploadSuccess,
     onUploadProgress: onUploadProgress,
-    onFileAdded: onFileAdded
+    onFileAdded: onFileAdded,
+    onFileRemoved: onFileRemoved
   })
-
-  useEffect(() => {
-    return () => {
-      uppy.reset()
-    }
-  }, [uppy])
 
   if (data?.club?.viewerIsOwner === false) {
     return <NotFoundClub />

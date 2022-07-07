@@ -14,8 +14,8 @@ import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeCom
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import { ClickableTile } from '@//:modules/content/ContentSelection'
 import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
-import GenericFilePicker from '@//:modules/content/Interactables/Upload/components/GenericFilePicker/GenericFilePicker'
-import { useUppyContext } from '@//:modules/content/Interactables/Upload'
+import GenericFilePicker from '@//:modules/content/HookedComponents/Upload/components/GenericFilePicker/GenericFilePicker'
+import { useUppyContext } from '@//:modules/content/HookedComponents/Upload'
 
 interface Props {
   query: ProcessUploadsFragment$key
