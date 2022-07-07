@@ -85,10 +85,6 @@ const MyApp = ({
 
   environment = useMemo(() => CanUseDOM ? createEnvironment(clientFetch(securityTokenCache), relayStore) : environment, [])
 
-  if (CanUseDOM) {
-    globalRelayEnvironment = environment
-  }
-
   // fathom setup for tracking users
   useEffect(() => {
     const trackingCode: string = process.env.NEXT_PUBLIC_FATHOM_TRACKING_CODE as string
@@ -113,6 +109,12 @@ const MyApp = ({
       router.events.off('routeChangeComplete', onRouteChangeComplete)
     }
   }, [])
+
+  // cache for later
+  if (CanUseDOM) {
+    globalRelayEnvironment = environment
+    appHeadersCache = appHeaders
+  }
 
   return (
     <>
@@ -173,7 +175,7 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
       securityToken = await getOrCreateSecurityToken(app.ctx)
     }
 
-    appHeaders.Accept = app.ctx.req.headers.accept
+    appHeaders.Accept = app.ctx.req.headers.accept.split(',')
     environment = createEnvironment(serverFetch(app.ctx.req, app.ctx.res), null)
     app.ctx.cookies = new Cookies(app.ctx.req.headers.cookie)
   } else {

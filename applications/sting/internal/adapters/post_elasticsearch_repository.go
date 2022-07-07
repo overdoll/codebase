@@ -578,7 +578,7 @@ func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, re
 		elastic.
 			NewFieldValueFactorFunction().
 			Field("likes").
-			Factor(1).
+			Factor(0).
 			Modifier("none"),
 	)
 

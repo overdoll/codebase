@@ -5,10 +5,10 @@ go_library(
     srcs = [
         "cache.go",
         "create.go",
+        "index.go",
         "local_alias.go",
         "register.go",
         "registry.go",
-        "reindex.go",
         "swap.go",
     ],
     importpath = "overdoll/libraries/cache",

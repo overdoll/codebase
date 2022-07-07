@@ -232,7 +232,9 @@ func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Cont
 		for _, id := range filter.Slugs() {
 			query.Filter(elastic.NewTermQuery("slug", id))
 		}
+	}
 
+	if filter.SeriesSlug() != nil {
 		query.Filter(elastic.NewTermQuery("series.slug", *filter.SeriesSlug()))
 	}
 

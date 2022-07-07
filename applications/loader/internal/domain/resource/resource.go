@@ -188,7 +188,12 @@ func (r *Resource) ApplyFilters(file *os.File, config *Config, filters *ImageFil
 	g := gift.New()
 
 	if filters.Pixelate() != nil {
-		g.Add(gift.Pixelate(*filters.Pixelate()))
+		pixelateAmount := *filters.Pixelate()
+		// in order to have a consistent pixelation filter, regardless of how large the image is,
+		// we take the total amount of pixels in the image (w * h) and multiply by the percentage
+		// this will be the # of pixels left
+		totalPixels := float64(src.Bounds().Dx()*src.Bounds().Dy()) * float64(pixelateAmount/100)
+		g.Add(gift.Pixelate(int(math.Floor(totalPixels*100) / 100)))
 	}
 
 	pixelatedSrc := image.NewNRGBA(g.Bounds(src.Bounds()))
@@ -223,18 +228,8 @@ func (r *Resource) ApplyFilters(file *os.File, config *Config, filters *ImageFil
 
 	r.resourceType = resource.Image
 
-	_, _ = jpegFile.Seek(0, io.SeekStart)
-
-	// get config
-	cfgSrc, err := jpeg.DecodeConfig(jpegFile)
-	if err != nil {
-		return nil, err
-	}
-
-	_, _ = jpegFile.Seek(0, io.SeekStart)
-
-	r.height = cfgSrc.Height
-	r.width = cfgSrc.Width
+	r.height = pixelatedSrc.Bounds().Dy()
+	r.width = pixelatedSrc.Bounds().Dx()
 
 	_, _ = jpegFile.Seek(0, io.SeekStart)
 	preview, err := createPreviewFromFile(jpegFile)
@@ -438,18 +433,8 @@ func (r *Resource) processImage(fileName string, file *os.File, config *Config) 
 
 	r.resourceType = resource.Image
 
-	_, _ = jpegFile.Seek(0, io.SeekStart)
-
-	// get config
-	cfgSrc, err := jpeg.DecodeConfig(jpegFile)
-	if err != nil {
-		return nil, err
-	}
-
-	_, _ = jpegFile.Seek(0, io.SeekStart)
-
-	r.height = cfgSrc.Height
-	r.width = cfgSrc.Width
+	r.height = src.Bounds().Dy()
+	r.width = src.Bounds().Dx()
 
 	_, _ = jpegFile.Seek(0, io.SeekStart)
 	preview, err := createPreviewFromFile(jpegFile)

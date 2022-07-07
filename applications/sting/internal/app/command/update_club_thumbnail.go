@@ -27,7 +27,7 @@ func (h UpdateClubThumbnailHandler) Handle(ctx context.Context, cmd UpdateClubTh
 	clb, err := h.cr.UpdateClubThumbnail(ctx, cmd.ClubId, func(clb *club.Club) error {
 
 		// create resources from content
-		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.ClubId, []string{cmd.Thumbnail}, false, "CLUB", true, 200, 200)
+		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.ClubId, []string{cmd.Thumbnail}, false, "CLUB", true, 200, 0)
 
 		if err != nil {
 			return err
