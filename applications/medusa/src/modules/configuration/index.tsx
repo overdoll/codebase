@@ -24,7 +24,7 @@ export function ConfigurationProvider ({
 
 function useConfiguration (): Configuration {
   const context = useContext(ConfigurationContext)
-  
+
   if (context === undefined) {
     throw new Error('useConfiguration must be used within a ConfigurationProvider')
   }
