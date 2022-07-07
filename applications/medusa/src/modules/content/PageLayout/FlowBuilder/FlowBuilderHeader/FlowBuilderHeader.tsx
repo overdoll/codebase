@@ -33,11 +33,21 @@ export default function FlowBuilderHeader ({ children }: Props): JSX.Element {
 
   if (children == null) {
     return (
-      <HStack spacing={4}>
+      <HStack spacing={{
+        base: 2,
+        md: 4
+      }}
+      >
         <Flex
           p={2}
-          h={12}
-          w={12}
+          h={{
+            base: 8,
+            md: 12
+          }}
+          w={{
+            base: 8,
+            md: 12
+          }}
           borderRadius='md'
           bg={`${colorScheme as string}.300`}
           align='center'
@@ -49,10 +59,10 @@ export default function FlowBuilderHeader ({ children }: Props): JSX.Element {
           />
         </Flex>
         <Heading
-          whiteSpace='nowrap'
-          textOverflow='ellipsis'
-          overflow='hidden'
-          fontSize='3xl'
+          fontSize={{
+            base: '2xl',
+            md: '3xl'
+          }}
           color='gray.00'
         >
           {i18n._(title)}

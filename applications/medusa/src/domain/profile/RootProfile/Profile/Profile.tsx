@@ -66,6 +66,7 @@ export default function Profile (props: Props): JSX.Element {
           <TileOverlay
             backdrop={(
               <ResourceItem
+                showBorder
                 seed={queryData.account.id}
                 query={null}
               />)}
@@ -73,6 +74,7 @@ export default function Profile (props: Props): JSX.Element {
             <Flex p={2} h='100%' w='100%' align='center' justify='center' position='relative'>
               <Stack align='center' p={4} spacing={2}>
                 <ResourceIcon
+                  showBorder
                   seed={queryData?.account?.id}
                   w={16}
                   h={16}

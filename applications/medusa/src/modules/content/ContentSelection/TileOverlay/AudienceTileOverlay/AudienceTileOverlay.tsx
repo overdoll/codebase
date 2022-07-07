@@ -27,6 +27,7 @@ export default function AudienceTileOverlay ({
     <TileOverlay
       backdrop={
         <ResourceItem
+          showBorder
           seed={data.id}
           query={data.thumbnail}
         />
@@ -37,7 +38,7 @@ export default function AudienceTileOverlay ({
           fontSize='lg'
           color='gray.00'
           textAlign='center'
-          noOfLines={2}
+          noOfLines={4}
         >
           {data.title}
         </Text>

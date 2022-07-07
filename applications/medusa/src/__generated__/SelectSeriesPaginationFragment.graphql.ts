@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fb3d8a019de653fbf9d2c7235399b658>>
- * @relayHash c67f7ed6582bb43d0d5f00c3db3d04b1
+ * @generated SignedSource<<0f25c7f53242d4372678150cefe541de>>
+ * @relayHash bc5c08da254aff5e54e3a547377ddbeb
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c67f7ed6582bb43d0d5f00c3db3d04b1
+// @relayRequestID bc5c08da254aff5e54e3a547377ddbeb
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -265,7 +265,7 @@ return {
     ]
   },
   "params": {
-    "id": "c67f7ed6582bb43d0d5f00c3db3d04b1",
+    "id": "bc5c08da254aff5e54e3a547377ddbeb",
     "metadata": {},
     "name": "SelectSeriesPaginationFragment",
     "operationKind": "query",

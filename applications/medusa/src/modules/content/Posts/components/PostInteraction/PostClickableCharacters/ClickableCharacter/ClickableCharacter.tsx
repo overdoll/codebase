@@ -40,6 +40,7 @@ export default function ClickableCharacter ({ query }: Props): JSX.Element {
       <SmallBackgroundBox p={2} borderRadius='inherit'>
         <HStack spacing={2} align='center'>
           <ResourceIcon
+            showBorder
             seed={data.id}
             w={8}
             h={8}

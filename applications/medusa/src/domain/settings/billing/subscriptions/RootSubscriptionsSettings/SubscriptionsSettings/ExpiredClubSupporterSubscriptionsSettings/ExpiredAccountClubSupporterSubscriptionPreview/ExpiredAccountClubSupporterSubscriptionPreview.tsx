@@ -59,6 +59,7 @@ export default function ExpiredAccountClubSupporterSubscriptionPreview ({ query 
           <LinkTile href={`/${data.club.slug}`}>
             <HStack spacing={3}>
               <ResourceIcon
+                showBorder
                 seed={data?.club.id}
                 h={10}
                 w={10}

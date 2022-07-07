@@ -24,11 +24,14 @@ export default function TotpQrCodeStep ({
           bg='gray.00'
         >
           <NextImage
-            height={128}
-            width={128}
+            height={180}
+            width={180}
             priority
             alt='thumbnail'
             src={image ?? ''}
+            style={{
+              imageRendering: 'pixelated'
+            }}
           />
         </Flex>
       </Flex>

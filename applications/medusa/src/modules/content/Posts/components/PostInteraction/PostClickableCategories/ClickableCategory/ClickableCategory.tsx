@@ -34,7 +34,7 @@ export default function ClickableCategory ({ query }: Props): JSX.Element {
     >
       <SmallBackgroundBox borderRadius='inherit' align='center' p={1}>
         <HStack align='center' mr={1} spacing={2}>
-          <ResourceIcon w={6} h={6} seed={data.id} query={data.thumbnail} />
+          <ResourceIcon showBorder w={6} h={6} seed={data.id} query={data.thumbnail} />
           <Heading color='gray.100' fontSize='md'>{data.title}</Heading>
         </HStack>
       </SmallBackgroundBox>

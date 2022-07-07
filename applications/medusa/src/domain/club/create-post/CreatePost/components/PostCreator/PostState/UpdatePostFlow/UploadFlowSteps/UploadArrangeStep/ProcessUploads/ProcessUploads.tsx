@@ -142,16 +142,16 @@ export default function ProcessUploads ({
       return (
         <ClickableTile isDisabled>
           <LargeBackgroundBox>
-            <Stack py={4} align='center' justify='center'>
+            <Stack py={2} align='center' justify='center'>
               <Icon
                 w={6}
                 h={6}
                 icon={WarningTriangle}
                 fill='orange.300'
               />
-              <Heading fontSize='lg' color='orange.300'>
+              <Heading textAlign='center' fontSize='lg' color='orange.300'>
                 <Trans>
-                  Cannot upload while rearranging
+                  Upload Restricted While Rearranging
                 </Trans>
               </Heading>
             </Stack>

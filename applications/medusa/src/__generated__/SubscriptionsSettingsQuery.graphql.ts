@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1836d0c50e1081d2a9221260127dfcdc>>
- * @relayHash 9765765305f0d3ccd4eee042e52afcbd
+ * @generated SignedSource<<3ce8ff35baf36cd21fe3ca992714476b>>
+ * @relayHash 7977b4680dde9d2221af2c7e91f271ad
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9765765305f0d3ccd4eee042e52afcbd
+// @relayRequestID 7977b4680dde9d2221af2c7e91f271ad
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -504,7 +504,7 @@ return {
     ]
   },
   "params": {
-    "id": "9765765305f0d3ccd4eee042e52afcbd",
+    "id": "7977b4680dde9d2221af2c7e91f271ad",
     "metadata": {},
     "name": "SubscriptionsSettingsQuery",
     "operationKind": "query",

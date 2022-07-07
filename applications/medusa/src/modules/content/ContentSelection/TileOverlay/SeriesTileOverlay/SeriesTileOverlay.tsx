@@ -27,6 +27,7 @@ export default function SeriesTileOverlay ({
   return (
     <TileOverlay backdrop={(
       <ResourceItem
+        showBorder
         query={data.thumbnail}
         seed={data.id}
       />)}

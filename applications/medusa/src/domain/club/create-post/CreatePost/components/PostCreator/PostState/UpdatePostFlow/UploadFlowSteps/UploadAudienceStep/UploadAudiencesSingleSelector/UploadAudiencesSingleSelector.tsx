@@ -1,20 +1,20 @@
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import type { UploadAudiencesSingleSelectorQuery } from '@//:artifacts/UploadAudiencesSingleSelectorQuery.graphql'
-import { StackTile } from '@//:modules/content/ContentSelection'
-import { ListSpacer } from '@//:modules/content/PageLayout'
 import AudienceTileOverlay
   from '@//:modules/content/ContentSelection/TileOverlay/AudienceTileOverlay/AudienceTileOverlay'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
 import { ComponentChoiceArguments } from '@//:modules/content/HookedComponents/Choice/types'
 import { Choice } from '@//:modules/content/HookedComponents/Choice'
 import { EmptyAudiences, EmptyBoundary } from '@//:modules/content/Placeholder'
+import ShortGridTile from '@//:modules/content/ContentSelection/ShortGridTile/ShortGridTile'
+import { GridWrap } from '@//:modules/content/ContentSelection'
 
 interface Props extends ComponentSearchArguments<any>, ComponentChoiceArguments<any> {
 }
 
 const Query = graphql`
   query UploadAudiencesSingleSelectorQuery {
-    audiences {
+    audiences(first: 100) {
       edges {
         node {
           id
@@ -41,18 +41,18 @@ export default function UploadAudiencesSingleSelector ({
       fallback={<EmptyAudiences />}
       condition={data.audiences.edges.length < 1}
     >
-      <ListSpacer>
+      <GridWrap>
         {data.audiences.edges.map((item, index) => (
-          <StackTile key={index}>
+          <ShortGridTile key={index}>
             <Choice
               {...register(item.node.id, { title: item.node.title })}
             >
               <AudienceTileOverlay query={item.node} />
             </Choice>
-          </StackTile>
+          </ShortGridTile>
         )
         )}
-      </ListSpacer>
+      </GridWrap>
     </EmptyBoundary>
   )
 }

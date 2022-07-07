@@ -48,7 +48,7 @@ export default function ImageSnippet ({
 
   const determineCover = cover === true || (data?.width == null && data?.height == null)
 
-  const previewBackground = data?.preview != null && data?.preview !== '' ? data?.preview : 'gray.800'
+  const previewBackground = data?.preview != null && data?.preview !== '' ? data?.preview : 'gray.700'
 
   const tiniestImage = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
 

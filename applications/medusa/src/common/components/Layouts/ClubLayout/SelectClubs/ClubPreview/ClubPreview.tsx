@@ -31,6 +31,7 @@ export default function ClubPreview ({
       align='center'
     >
       <ResourceIcon
+        showBorder
         seed={data.id}
         w={10}
         h={10}

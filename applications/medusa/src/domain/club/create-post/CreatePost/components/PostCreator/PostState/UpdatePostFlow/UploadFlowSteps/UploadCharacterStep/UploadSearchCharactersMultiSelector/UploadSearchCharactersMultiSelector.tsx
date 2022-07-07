@@ -11,7 +11,7 @@ import { Choice } from '@//:modules/content/HookedComponents/Choice'
 import SuggestPrompt from '../../../../../../SuggestPrompt/SuggestPrompt'
 import { Trans } from '@lingui/macro'
 import { Stack } from '@chakra-ui/react'
-import ShortGridWrap from '@//:modules/content/ContentSelection/ShortGridWrap/ShortGridWrap'
+import MediumGridWrap from '@//:modules/content/ContentSelection/MediumGridWrap/MediumGridWrap'
 
 interface Props extends ComponentChoiceArguments<any>, ComponentSearchArguments<any> {
 }
@@ -81,7 +81,7 @@ export default function UploadSearchCharactersMultiSelector ({
         </Stack>)}
       condition={data.characters.edges.length < 1}
     >
-      <ShortGridWrap>
+      <MediumGridWrap>
         {data.characters.edges.map((item, index) => (
           <GridTile key={index}>
             <Choice {...register(item.node.id, { name: item.node.name })}>
@@ -95,7 +95,7 @@ export default function UploadSearchCharactersMultiSelector ({
           onLoadNext={() => loadNext(5)}
           isLoadingNext={isLoadingNext}
         />
-      </ShortGridWrap>
+      </MediumGridWrap>
     </EmptyBoundary>
   )
 }

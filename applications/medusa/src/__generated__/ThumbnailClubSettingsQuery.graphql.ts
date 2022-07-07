@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<615f958d608d392b5242b736485b07e1>>
- * @relayHash fc2f407663a48e983e10e073e01868f0
+ * @generated SignedSource<<e7cbc3794e8f82f2d640fcfc9c58bdd0>>
+ * @relayHash 7537ae93717088fdfd3f3efe306d53e9
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID fc2f407663a48e983e10e073e01868f0
+// @relayRequestID 7537ae93717088fdfd3f3efe306d53e9
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -186,7 +186,7 @@ return {
     ]
   },
   "params": {
-    "id": "fc2f407663a48e983e10e073e01868f0",
+    "id": "7537ae93717088fdfd3f3efe306d53e9",
     "metadata": {},
     "name": "ThumbnailClubSettingsQuery",
     "operationKind": "query",

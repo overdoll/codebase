@@ -36,6 +36,7 @@ export default function DropdownMenuButtonProfile ({ queryRef }: Props): JSX.Ele
           align='center'
         >
           <ResourceIcon
+            showBorder
             seed={data?.id}
             w='60px'
             pointerEvents='none'
@@ -65,6 +66,7 @@ export default function DropdownMenuButtonProfile ({ queryRef }: Props): JSX.Ele
       <RenderOnMobile>
         <Flex direction='column' align='center'>
           <ResourceIcon
+            showBorder
             seed={data?.id}
             w={8}
             h={8}

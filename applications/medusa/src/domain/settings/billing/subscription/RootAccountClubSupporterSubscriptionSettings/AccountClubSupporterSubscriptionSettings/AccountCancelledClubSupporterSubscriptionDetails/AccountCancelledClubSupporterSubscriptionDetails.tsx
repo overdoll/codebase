@@ -56,6 +56,7 @@ export default function AccountCancelledClubSupporterSubscriptionDetails ({
       <HStack spacing={2} justify='space-between'>
         <HStack spacing={3}>
           <ResourceIcon
+            showBorder
             seed={data?.club.id}
             h={10}
             w={10}

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<5c42699af2149089a986239e10a9ae06>>
- * @relayHash 307a023355f329dcf0bc2efb1eed875e
+ * @generated SignedSource<<8253af5f0e31beb2b78199ff14fa00aa>>
+ * @relayHash aa5516fc190b5944d5456db2327b2b71
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 307a023355f329dcf0bc2efb1eed875e
+// @relayRequestID aa5516fc190b5944d5456db2327b2b71
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -408,7 +408,7 @@ return {
     ]
   },
   "params": {
-    "id": "307a023355f329dcf0bc2efb1eed875e",
+    "id": "aa5516fc190b5944d5456db2327b2b71",
     "metadata": {},
     "name": "SearchRecommendationsQuery",
     "operationKind": "query",
