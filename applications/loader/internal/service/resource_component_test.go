@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"context"
-	"fmt"
 	graphql2 "github.com/99designs/gqlgen/graphql"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -603,8 +602,6 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 			resourceUrlsTo404 = append(resourceUrlsTo404, downloadUrl)
 			processedAssertions += 1
 		}
-
-		fmt.Println(itemId)
 
 		// check hashes of both video thumbnail + images for processed
 		if entity.IsVideo() {
