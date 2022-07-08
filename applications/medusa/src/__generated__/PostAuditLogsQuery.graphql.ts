@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<29b39ef303c5e9d3ff8015675794a19e>>
- * @relayHash beb1bbf8609f1775b7bdb5b19eede82d
+ * @generated SignedSource<<f1b1c719ed92b5e7269894c5e35d4bff>>
+ * @relayHash 9eb3416c8db91e8a970e1d95ca81ae52
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID beb1bbf8609f1775b7bdb5b19eede82d
+// @relayRequestID 9eb3416c8db91e8a970e1d95ca81ae52
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -262,7 +262,6 @@ return {
                                 "name": "resource",
                                 "plural": false,
                                 "selections": [
-                                  (v7/*: any*/),
                                   (v9/*: any*/),
                                   (v2/*: any*/),
                                   {
@@ -286,6 +285,7 @@ return {
                                   },
                                   (v5/*: any*/),
                                   (v6/*: any*/),
+                                  (v7/*: any*/),
                                   (v8/*: any*/)
                                 ],
                                 "storageKey": null
@@ -400,7 +400,7 @@ return {
     ]
   },
   "params": {
-    "id": "beb1bbf8609f1775b7bdb5b19eede82d",
+    "id": "9eb3416c8db91e8a970e1d95ca81ae52",
     "metadata": {},
     "name": "PostAuditLogsQuery",
     "operationKind": "query",

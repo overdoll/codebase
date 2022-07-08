@@ -8,6 +8,8 @@ import PostSlideIndex from '../../PostInteraction/PostSlideIndex/PostSlideIndex'
 import { NumberParam, useQueryParam } from 'use-query-params'
 import { useState } from 'react'
 import SwiperType from 'swiper'
+import PostSlideBackground from '../PostSlideBackground/PostSlideBackground'
+import { SWIPER_PROPS } from '../../../constants'
 
 interface Props {
   query: PostGalleryPublicDetailedFragment$key
@@ -20,10 +22,10 @@ const Fragment = graphql`
     }
     content {
       resource {
-        preview
         ...PostMediaFragment
       }
       ...PostSupporterContentFragment
+      ...PostSlideBackgroundFragment
     }
     ...PostSlideIndexFragment
   }
@@ -47,9 +49,7 @@ export default function PostGalleryPublicDetailed ({
   return (
     <Box>
       <Swiper
-        grabCursor
-        spaceBetween={20}
-        speed={100}
+        {...SWIPER_PROPS}
         onSwiper={(swiper) => setSwiper(swiper)}
         onAfterInit={(swiper) => slideTo(swiper)}
       >
@@ -57,19 +57,14 @@ export default function PostGalleryPublicDetailed ({
           <SwiperSlide
             key={index}
             style={{
-              backgroundColor: item.resource.preview != null && item.resource.preview !== '' ? item.resource.preview : 'gray.800',
-              height: swiper?.height
+              height: 'auto',
+              alignSelf: 'stretch'
             }}
           >
-            <Flex
-              h='100%'
-              w='100%'
-              align='center'
-              justify='center'
-            >
+            <PostSlideBackground query={item}>
               <Flex
                 direction='column'
-                minH={300}
+                minH={100}
                 w='100%'
                 align='center'
                 justify='center'
@@ -87,7 +82,7 @@ export default function PostGalleryPublicDetailed ({
                   />
                 </PostSupporterContent>
               </Flex>
-            </Flex>
+            </PostSlideBackground>
           </SwiperSlide>)}
       </Swiper>
       {swiper != null && <PostSlideIndex swiper={swiper} query={data} />}

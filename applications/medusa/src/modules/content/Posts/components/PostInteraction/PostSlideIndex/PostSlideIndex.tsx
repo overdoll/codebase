@@ -62,7 +62,6 @@ export default function PostSlideIndex ({
     <HStack
       w='100%'
       pt={2}
-      px={1}
       spacing={2}
       align='center'
       justify='center'

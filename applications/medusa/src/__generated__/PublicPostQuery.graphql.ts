@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1d5f56f23df6e2a9f8b7863bffe9a211>>
- * @relayHash ed7b4af74305b4ee1de9e73caa2c2ee0
+ * @generated SignedSource<<0ee7a57e38a329e406f9b9c4bfedc8a4>>
+ * @relayHash e2d4c7558d0e15e5904d2f269354a011
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ed7b4af74305b4ee1de9e73caa2c2ee0
+// @relayRequestID e2d4c7558d0e15e5904d2f269354a011
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -108,71 +108,100 @@ v9 = {
 v10 = {
   "alias": null,
   "args": null,
-  "concreteType": "ResourceUrl",
-  "kind": "LinkedField",
-  "name": "urls",
-  "plural": true,
-  "selections": [
-    (v9/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "mimeType",
-      "storageKey": null
-    }
-  ],
+  "kind": "ScalarField",
+  "name": "width",
   "storageKey": null
 },
 v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "width",
+  "name": "height",
   "storageKey": null
 },
 v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "height",
-  "storageKey": null
-},
-v13 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "preview",
   "storageKey": null
 },
-v14 = [
+v13 = [
   (v9/*: any*/)
 ],
-v15 = {
+v14 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
   "kind": "LinkedField",
   "name": "videoThumbnail",
   "plural": false,
-  "selections": (v14/*: any*/),
+  "selections": (v13/*: any*/),
+  "storageKey": null
+},
+v15 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "PostContent",
+  "kind": "LinkedField",
+  "name": "content",
+  "plural": true,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Resource",
+      "kind": "LinkedField",
+      "name": "resource",
+      "plural": false,
+      "selections": [
+        (v8/*: any*/),
+        (v7/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "ResourceUrl",
+          "kind": "LinkedField",
+          "name": "urls",
+          "plural": true,
+          "selections": [
+            (v9/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "mimeType",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        (v10/*: any*/),
+        (v11/*: any*/),
+        (v12/*: any*/),
+        (v14/*: any*/)
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "viewerCanViewSupporterOnlyContent",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "isSupporterOnly",
+      "storageKey": null
+    },
+    (v7/*: any*/)
+  ],
   "storageKey": null
 },
 v16 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "viewerCanViewSupporterOnlyContent",
-  "storageKey": null
-},
-v17 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "isSupporterOnly",
-  "storageKey": null
-},
-v18 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
@@ -188,25 +217,25 @@ v18 = {
       "kind": "LinkedField",
       "name": "urls",
       "plural": true,
-      "selections": (v14/*: any*/),
+      "selections": (v13/*: any*/),
       "storageKey": null
     },
+    (v10/*: any*/),
     (v11/*: any*/),
     (v12/*: any*/),
-    (v13/*: any*/),
-    (v15/*: any*/),
+    (v14/*: any*/),
     (v8/*: any*/)
   ],
   "storageKey": null
 },
-v19 = {
+v17 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "viewerIsOwner",
   "storageKey": null
 },
-v20 = {
+v18 = {
   "alias": null,
   "args": null,
   "concreteType": "ClubMember",
@@ -225,45 +254,45 @@ v20 = {
   ],
   "storageKey": null
 },
-v21 = {
+v19 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "canSupport",
   "storageKey": null
 },
-v22 = [
+v20 = [
   (v6/*: any*/),
   (v7/*: any*/)
 ],
-v23 = {
+v21 = {
   "alias": null,
   "args": null,
   "concreteType": "PostReport",
   "kind": "LinkedField",
   "name": "viewerReport",
   "plural": false,
-  "selections": (v22/*: any*/),
+  "selections": (v20/*: any*/),
   "storageKey": null
 },
-v24 = {
+v22 = {
   "alias": null,
   "args": null,
   "concreteType": "PostLike",
   "kind": "LinkedField",
   "name": "viewerLiked",
   "plural": false,
-  "selections": (v22/*: any*/),
+  "selections": (v20/*: any*/),
   "storageKey": null
 },
-v25 = {
+v23 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "likes",
   "storageKey": null
 },
-v26 = {
+v24 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -397,38 +426,7 @@ return {
                       (v6/*: any*/),
                       (v7/*: any*/),
                       (v2/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "PostContent",
-                        "kind": "LinkedField",
-                        "name": "content",
-                        "plural": true,
-                        "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "Resource",
-                            "kind": "LinkedField",
-                            "name": "resource",
-                            "plural": false,
-                            "selections": [
-                              (v8/*: any*/),
-                              (v7/*: any*/),
-                              (v10/*: any*/),
-                              (v11/*: any*/),
-                              (v12/*: any*/),
-                              (v13/*: any*/),
-                              (v15/*: any*/)
-                            ],
-                            "storageKey": null
-                          },
-                          (v16/*: any*/),
-                          (v17/*: any*/),
-                          (v7/*: any*/)
-                        ],
-                        "storageKey": null
-                      },
+                      (v15/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -440,16 +438,16 @@ return {
                           (v4/*: any*/),
                           (v7/*: any*/),
                           (v3/*: any*/),
+                          (v16/*: any*/),
+                          (v17/*: any*/),
                           (v18/*: any*/),
-                          (v19/*: any*/),
-                          (v20/*: any*/),
-                          (v21/*: any*/)
+                          (v19/*: any*/)
                         ],
                         "storageKey": null
                       },
-                      (v23/*: any*/),
-                      (v24/*: any*/),
-                      (v25/*: any*/)
+                      (v21/*: any*/),
+                      (v22/*: any*/),
+                      (v23/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -513,7 +511,7 @@ return {
                 "name": "suspension",
                 "plural": false,
                 "selections": [
-                  (v26/*: any*/)
+                  (v24/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -529,10 +527,10 @@ return {
                 ],
                 "storageKey": null
               },
+              (v16/*: any*/),
               (v18/*: any*/),
-              (v20/*: any*/),
-              (v21/*: any*/),
-              (v19/*: any*/)
+              (v19/*: any*/),
+              (v17/*: any*/)
             ],
             "storageKey": null
           },
@@ -543,41 +541,10 @@ return {
             "name": "state",
             "storageKey": null
           },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "PostContent",
-            "kind": "LinkedField",
-            "name": "content",
-            "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Resource",
-                "kind": "LinkedField",
-                "name": "resource",
-                "plural": false,
-                "selections": [
-                  (v13/*: any*/),
-                  (v8/*: any*/),
-                  (v7/*: any*/),
-                  (v10/*: any*/),
-                  (v11/*: any*/),
-                  (v12/*: any*/),
-                  (v15/*: any*/)
-                ],
-                "storageKey": null
-              },
-              (v16/*: any*/),
-              (v17/*: any*/),
-              (v7/*: any*/)
-            ],
-            "storageKey": null
-          },
+          (v15/*: any*/),
+          (v21/*: any*/),
+          (v22/*: any*/),
           (v23/*: any*/),
-          (v24/*: any*/),
-          (v25/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -602,7 +569,7 @@ return {
                 ],
                 "storageKey": null
               },
-              (v18/*: any*/)
+              (v16/*: any*/)
             ],
             "storageKey": null
           },
@@ -623,7 +590,7 @@ return {
                 "storageKey": null
               },
               (v4/*: any*/),
-              (v18/*: any*/)
+              (v16/*: any*/)
             ],
             "storageKey": null
           }
@@ -662,7 +629,7 @@ return {
             "plural": false,
             "selections": [
               (v6/*: any*/),
-              (v26/*: any*/)
+              (v24/*: any*/)
             ],
             "storageKey": null
           },
@@ -691,7 +658,7 @@ return {
     ]
   },
   "params": {
-    "id": "ed7b4af74305b4ee1de9e73caa2c2ee0",
+    "id": "e2d4c7558d0e15e5904d2f269354a011",
     "metadata": {},
     "name": "PublicPostQuery",
     "operationKind": "query",

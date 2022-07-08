@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useRef, useState } from 'react'
-import { Fade, Flex, Heading, HStack, keyframes } from '@chakra-ui/react'
+import { Fade, Flex, Heading, HStack } from '@chakra-ui/react'
 import { useSwiperSlide } from 'swiper/react'
 import { Timeout } from '@//:types/components'
 import { Icon } from '../../../../../PageLayout'
@@ -19,6 +19,8 @@ export default function PostSupporterContentUnlocked ({
 
   const { isActive } = useSwiperSlide()
 
+  /*
+
   const animateGlow = keyframes`
     0% {
       background-position: 0% 50%;
@@ -33,8 +35,10 @@ export default function PostSupporterContentUnlocked ({
     backgroundSize: '200% 200%',
     animation: `${animateGlow} 10s linear infinite`,
     transform: 'scale(0.96) translateZ(0)',
-    filter: 'blur(8px)'
+    filter: 'blur(12px)'
   }
+
+   */
 
   const SupporterBadge = (
     <HStack
@@ -92,11 +96,12 @@ export default function PostSupporterContentUnlocked ({
 
   return (
     <Flex h='100%' w='100%' position='relative'>
-      <Flex align='center' justify='center' h='100%' top={0} w='100%' position='absolute'>
-        {SupporterBadge}
-        <Fade in />
-      </Flex>
       {children}
+      <Flex top={4} align='center' justify='center' w='100%' position='absolute'>
+        <Fade unmountOnExit in={showNotice}>
+          {SupporterBadge}
+        </Fade>
+      </Flex>
     </Flex>
   )
 }

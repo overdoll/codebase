@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6be809a436e6e6222103516b5b391f0f>>
- * @relayHash 8e1acf6342f3bc713342d242c13efd2c
+ * @generated SignedSource<<2e3255c41a5a366b6fb2aa1244900df7>>
+ * @relayHash 6d7eeedbf00b0d5e3c096ce60607a8a9
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8e1acf6342f3bc713342d242c13efd2c
+// @relayRequestID 6d7eeedbf00b0d5e3c096ce60607a8a9
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -274,7 +274,6 @@ return {
                                 "name": "resource",
                                 "plural": false,
                                 "selections": [
-                                  (v7/*: any*/),
                                   (v9/*: any*/),
                                   (v1/*: any*/),
                                   {
@@ -298,6 +297,7 @@ return {
                                   },
                                   (v5/*: any*/),
                                   (v6/*: any*/),
+                                  (v7/*: any*/),
                                   (v8/*: any*/)
                                 ],
                                 "storageKey": null
@@ -479,7 +479,7 @@ return {
     ]
   },
   "params": {
-    "id": "8e1acf6342f3bc713342d242c13efd2c",
+    "id": "6d7eeedbf00b0d5e3c096ce60607a8a9",
     "metadata": {},
     "name": "PostModerationQueueQuery",
     "operationKind": "query",
