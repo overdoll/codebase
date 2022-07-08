@@ -34,6 +34,7 @@ export default function DragDropOverlay ({ isOpen }: Props): JSX.Element {
         backdropBlur='3px'
         filter='blur(5px)'
         bg='dimmers.500'
+        pointerEvents='none'
         display={isOpen ? 'flex' : 'none'}
       />
       <Flex
@@ -46,11 +47,17 @@ export default function DragDropOverlay ({ isOpen }: Props): JSX.Element {
         justify='center'
         display={isOpen ? 'flex' : 'none'}
         overflow='hidden'
+        pointerEvents='none'
       >
-        <Box zIndex={1} animation={`${animateBounce} cubic-bezier(0.280, 0.840, 0.420, 1) 2s infinite`}>
+        <Box
+          pointerEvents='none'
+          zIndex={1}
+          animation={`${animateBounce} cubic-bezier(0.280, 0.840, 0.420, 1) 2s infinite`}
+        >
           <Icon icon={DownloadArrow} w={16} h={16} fill='gray.00' />
         </Box>
         <Box
+          pointerEvents='none'
           animation={`${animateGrow} cubic-bezier(0.280, 0.840, 0.420, 1) 2s infinite`}
           transform='auto'
           bg='gray.50'

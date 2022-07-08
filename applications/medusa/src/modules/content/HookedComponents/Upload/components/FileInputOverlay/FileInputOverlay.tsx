@@ -126,7 +126,6 @@ export default function FileInputOverlay ({
         borderRadius='inherit'
         w='100%'
         h='100%'
-        pointerEvents='none'
       >
         <input
           name={id}
