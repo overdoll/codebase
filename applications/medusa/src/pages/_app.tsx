@@ -163,7 +163,7 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
   let environment
   let relayStore
   let appHeaders = {
-    Accept: undefined
+    Accept: []
   }
 
   if (app.ctx.locale == null) {
@@ -175,7 +175,10 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
       securityToken = await getOrCreateSecurityToken(app.ctx)
     }
 
-    appHeaders.Accept = app.ctx.req.headers.accept.split(',')
+    if (app.ctx.req.headers.accept != null) {
+      appHeaders.Accept = app.ctx.req.headers.accept.split(',')
+    }
+
     environment = createEnvironment(serverFetch(app.ctx.req, app.ctx.res), null)
     app.ctx.cookies = new Cookies(app.ctx.req.headers.cookie)
   } else {
