@@ -1,6 +1,6 @@
 {
   "mappings": {
-    "dynamic": "strict",
+    "dynamic": "true",
     "properties": {
       "account_id": {
         "type": "keyword"

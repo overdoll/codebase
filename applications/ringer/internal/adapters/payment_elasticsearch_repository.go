@@ -213,7 +213,7 @@ func (r PaymentCassandraElasticsearchRepository) IndexAllClubPayments(ctx contex
 				return err
 			}
 
-			marshalled, err := marshalPaymentToDatabase(ctx, unmarshalled)
+			marshalled := marshalClubPaymentToDocument(unmarshalled)
 
 			if err != nil {
 				return err

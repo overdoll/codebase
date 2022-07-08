@@ -215,7 +215,7 @@ func (r PayoutCassandraElasticsearchRepository) IndexAllClubPayouts(ctx context.
 				return err
 			}
 
-			marshalled, err := marshalClubPayoutToDatabase(ctx, unmarshalled)
+			marshalled, err := marshalClubPayoutToDocument(unmarshalled)
 
 			if err != nil {
 				return err
