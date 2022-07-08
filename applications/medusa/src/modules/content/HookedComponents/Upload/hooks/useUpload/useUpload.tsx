@@ -70,6 +70,28 @@ export default function useUpload (props: UseUploadProps): UseUploadReturnType {
     }
   }, [uppy])
 
+  useEffect(() => {
+    const callBackFn = (file, error, response): void => {
+      onUploadError?.(file, error, response)
+    }
+
+    uppy.on('upload-error', callBackFn)
+    return () => {
+      uppy.off('upload-error', callBackFn)
+    }
+  }, [uppy])
+
+  useEffect(() => {
+    const callBackFn = (fileId): void => {
+      onUploadRetry?.(fileId)
+    }
+
+    uppy.on('upload-retry', callBackFn)
+    return () => {
+      uppy.off('upload-retry', callBackFn)
+    }
+  }, [uppy])
+
   // Event for errors
   useEffect(() => {
     const callBackFn = (): void => {
