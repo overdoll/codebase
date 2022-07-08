@@ -246,7 +246,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllAudience(ctx context.Cont
 				return err
 			}
 
-			marshalled, err := marshalAudienceToDatabase(unmarshalled)
+			marshalled, err := marshalAudienceToDocument(unmarshalled)
 
 			if err != nil {
 				return err
