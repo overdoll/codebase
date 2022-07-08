@@ -2,6 +2,7 @@ package service_test
 
 import (
 	"context"
+	"fmt"
 	graphql2 "github.com/99designs/gqlgen/graphql"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -262,6 +263,8 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 	imageId := strings.Split(imageFileId, "+")[0]
 	videoId := strings.Split(videoFileId, "+")[0]
 
+	fmt.Println(itemId)
+
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceIds: []string{
 		imageId,
 		videoId,
@@ -494,7 +497,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	require.Equal(t, 3, assertions, "expected to have checked 3 files")
 
 	env := getWorkflowEnvironment()
-	env.SetTestTimeout(time.Second * 20)
+	env.SetTestTimeout(time.Second * 40)
 
 	workflowExecution.FindAndExecuteWorkflow(t, env)
 
@@ -635,7 +638,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	require.NoError(t, err)
 
 	env = getWorkflowEnvironment()
-	env.SetTestTimeout(time.Second * 10)
+	env.SetTestTimeout(time.Second * 20)
 
 	// run workflow to delete resources
 	deleteWorkflowExecution.FindAndExecuteWorkflow(t, env)
