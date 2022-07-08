@@ -1,6 +1,6 @@
 import type { DragEvent, ReactNode } from 'react'
 import { ChangeEvent, useRef } from 'react'
-import { Flex, useDisclosure } from '@chakra-ui/react'
+import { Box, Flex, useDisclosure } from '@chakra-ui/react'
 import { Timeout } from '@//:types/components'
 import { UppyType } from '../../types'
 import { ClickableTile } from '../../../../ContentSelection'
@@ -126,18 +126,20 @@ export default function FileInputOverlay ({
         borderRadius='inherit'
         w='100%'
         h='100%'
+        pointerEvents='none'
       >
         <input
           name={id}
           ref={inputRef}
-          data-testid='file-picker'
           hidden
           type='file'
           onChange={onChange}
           multiple={restrictions.maxNumberOfFiles !== 1}
           accept={restrictions.allowedFileTypes}
         />
-        {children}
+        <Box h='100%' w='100%' pointerEvents='auto'>
+          {children}
+        </Box>
         <DragDropOverlay isOpen={isOpen} />
       </Flex>
     </ClickableTile>
