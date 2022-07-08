@@ -299,7 +299,7 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 	// map_metadata removes all metadata
 	// sn removes subtitles
 	// map 0:v:0 selects only the first video track
-	encodingArgs := ffmpeg_go.KwArgs{"c:v": "libx264", "crf": "21", "preset": "slow", "map_metadata": "-1", "sn": "", "map": []string{"0:v:0"}}
+	encodingArgs := ffmpeg_go.KwArgs{"c:v": "libx264", "crf": "23", "preset": "slow", "map_metadata": "-1", "sn": "", "map": []string{"0:v:0"}}
 
 	newVideoFileName := fileName + ".mp4"
 
