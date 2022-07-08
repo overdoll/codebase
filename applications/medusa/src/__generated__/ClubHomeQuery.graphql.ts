@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<9ce9369b14f2e251cdec9248b19faa49>>
- * @relayHash 8a72e67956c952b8e30aa5ca60d2cc62
+ * @generated SignedSource<<cc89a90463dc9b77a32f0ec5a6b47584>>
+ * @relayHash 6aa01925776e236f4e11e5818e1822e2
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8a72e67956c952b8e30aa5ca60d2cc62
+// @relayRequestID 6aa01925776e236f4e11e5818e1822e2
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -72,13 +72,15 @@ v5 = {
   "name": "id",
   "storageKey": null
 },
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
-},
+v6 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  }
+],
 v7 = {
   "alias": null,
   "args": null,
@@ -165,16 +167,7 @@ return {
                 "kind": "LinkedField",
                 "name": "urls",
                 "plural": true,
-                "selections": [
-                  (v6/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "mimeType",
-                    "storageKey": null
-                  }
-                ],
+                "selections": (v6/*: any*/),
                 "storageKey": null
               },
               {
@@ -205,9 +198,7 @@ return {
                 "kind": "LinkedField",
                 "name": "videoThumbnail",
                 "plural": false,
-                "selections": [
-                  (v6/*: any*/)
-                ],
+                "selections": (v6/*: any*/),
                 "storageKey": null
               },
               {
@@ -335,7 +326,7 @@ return {
     ]
   },
   "params": {
-    "id": "8a72e67956c952b8e30aa5ca60d2cc62",
+    "id": "6aa01925776e236f4e11e5818e1822e2",
     "metadata": {},
     "name": "ClubHomeQuery",
     "operationKind": "query",

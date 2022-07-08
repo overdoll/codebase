@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<5e884a2fde9fe368904e2ef3420fa193>>
- * @relayHash a7b99fb2ab3bcbea30cb460fe3321d96
+ * @generated SignedSource<<c77905bab1869b2cfcf89a6e11c0cb79>>
+ * @relayHash c77685175c1c2899ccf5d42476941616
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a7b99fb2ab3bcbea30cb460fe3321d96
+// @relayRequestID c77685175c1c2899ccf5d42476941616
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -68,13 +68,15 @@ v4 = {
   "name": "username",
   "storageKey": null
 },
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
-};
+v5 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -154,16 +156,7 @@ return {
                 "kind": "LinkedField",
                 "name": "urls",
                 "plural": true,
-                "selections": [
-                  (v5/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "mimeType",
-                    "storageKey": null
-                  }
-                ],
+                "selections": (v5/*: any*/),
                 "storageKey": null
               },
               {
@@ -194,9 +187,7 @@ return {
                 "kind": "LinkedField",
                 "name": "videoThumbnail",
                 "plural": false,
-                "selections": [
-                  (v5/*: any*/)
-                ],
+                "selections": (v5/*: any*/),
                 "storageKey": null
               },
               {
@@ -215,7 +206,7 @@ return {
     ]
   },
   "params": {
-    "id": "a7b99fb2ab3bcbea30cb460fe3321d96",
+    "id": "c77685175c1c2899ccf5d42476941616",
     "metadata": {},
     "name": "ProfileQuery",
     "operationKind": "query",

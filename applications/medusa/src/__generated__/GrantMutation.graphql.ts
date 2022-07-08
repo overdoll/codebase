@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0c007f62e256ffcf4af720d3eea5d2cd>>
- * @relayHash a2a4d702d65560df526a14caa2c60045
+ * @generated SignedSource<<b03ad2f69064da279bcdf4dd228b8d5d>>
+ * @relayHash 18ffc18c9641ca853b9f7d1b1191feaa
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a2a4d702d65560df526a14caa2c60045
+// @relayRequestID 18ffc18c9641ca853b9f7d1b1191feaa
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -140,13 +140,15 @@ v11 = {
   "selections": (v9/*: any*/),
   "storageKey": null
 },
-v12 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
-};
+v12 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -257,16 +259,7 @@ return {
                     "kind": "LinkedField",
                     "name": "urls",
                     "plural": true,
-                    "selections": [
-                      (v12/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "mimeType",
-                        "storageKey": null
-                      }
-                    ],
+                    "selections": (v12/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -297,9 +290,7 @@ return {
                     "kind": "LinkedField",
                     "name": "videoThumbnail",
                     "plural": false,
-                    "selections": [
-                      (v12/*: any*/)
-                    ],
+                    "selections": (v12/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -328,7 +319,7 @@ return {
     ]
   },
   "params": {
-    "id": "a2a4d702d65560df526a14caa2c60045",
+    "id": "18ffc18c9641ca853b9f7d1b1191feaa",
     "metadata": {},
     "name": "GrantMutation",
     "operationKind": "mutation",

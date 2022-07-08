@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d93af1e0bbf67779d2a6d0b32770fa21>>
- * @relayHash db253522cc376a6134c53b2731f534b8
+ * @generated SignedSource<<d80bbfba4f0f5d18b4ef4228fa77dc47>>
+ * @relayHash 0a9de06aa6f9f1cfdfb15c1d65709b2f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID db253522cc376a6134c53b2731f534b8
+// @relayRequestID 0a9de06aa6f9f1cfdfb15c1d65709b2f
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -64,13 +64,15 @@ v4 = {
   "name": "id",
   "storageKey": null
 },
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
-};
+v5 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": [
@@ -178,16 +180,7 @@ return {
                 "kind": "LinkedField",
                 "name": "urls",
                 "plural": true,
-                "selections": [
-                  (v5/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "mimeType",
-                    "storageKey": null
-                  }
-                ],
+                "selections": (v5/*: any*/),
                 "storageKey": null
               },
               {
@@ -218,9 +211,7 @@ return {
                 "kind": "LinkedField",
                 "name": "videoThumbnail",
                 "plural": false,
-                "selections": [
-                  (v5/*: any*/)
-                ],
+                "selections": (v5/*: any*/),
                 "storageKey": null
               },
               {
@@ -239,7 +230,7 @@ return {
     ]
   },
   "params": {
-    "id": "db253522cc376a6134c53b2731f534b8",
+    "id": "0a9de06aa6f9f1cfdfb15c1d65709b2f",
     "metadata": {},
     "name": "StaffViewCharacterQuery",
     "operationKind": "query",

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3090a5059ec21f261f9fb6a5ff93329d>>
- * @relayHash df6138491d00c38846109037378bf383
+ * @generated SignedSource<<6d56f1b3fbf1ea44368a75f71673e8fc>>
+ * @relayHash b32e7f1c2772eb868d3806cc5d8278fa
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID df6138491d00c38846109037378bf383
+// @relayRequestID b32e7f1c2772eb868d3806cc5d8278fa
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -93,25 +93,9 @@ v6 = {
   "name": "url",
   "storageKey": null
 },
-v7 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "ResourceUrl",
-  "kind": "LinkedField",
-  "name": "urls",
-  "plural": true,
-  "selections": [
-    (v6/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "mimeType",
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-},
+v7 = [
+  (v6/*: any*/)
+],
 v8 = {
   "alias": null,
   "args": null,
@@ -140,9 +124,7 @@ v11 = {
   "kind": "LinkedField",
   "name": "videoThumbnail",
   "plural": false,
-  "selections": [
-    (v6/*: any*/)
-  ],
+  "selections": (v7/*: any*/),
   "storageKey": null
 },
 v12 = {
@@ -293,7 +275,16 @@ return {
                                     "plural": false,
                                     "selections": [
                                       (v4/*: any*/),
-                                      (v7/*: any*/),
+                                      {
+                                        "alias": null,
+                                        "args": null,
+                                        "concreteType": "ResourceUrl",
+                                        "kind": "LinkedField",
+                                        "name": "urls",
+                                        "plural": true,
+                                        "selections": (v7/*: any*/),
+                                        "storageKey": null
+                                      },
                                       (v8/*: any*/),
                                       (v9/*: any*/),
                                       (v10/*: any*/),
@@ -324,7 +315,25 @@ return {
                                       (v10/*: any*/),
                                       (v12/*: any*/),
                                       (v4/*: any*/),
-                                      (v7/*: any*/),
+                                      {
+                                        "alias": null,
+                                        "args": null,
+                                        "concreteType": "ResourceUrl",
+                                        "kind": "LinkedField",
+                                        "name": "urls",
+                                        "plural": true,
+                                        "selections": [
+                                          (v6/*: any*/),
+                                          {
+                                            "alias": null,
+                                            "args": null,
+                                            "kind": "ScalarField",
+                                            "name": "mimeType",
+                                            "storageKey": null
+                                          }
+                                        ],
+                                        "storageKey": null
+                                      },
                                       (v8/*: any*/),
                                       (v9/*: any*/),
                                       (v11/*: any*/)
@@ -463,7 +472,7 @@ return {
     ]
   },
   "params": {
-    "id": "df6138491d00c38846109037378bf383",
+    "id": "b32e7f1c2772eb868d3806cc5d8278fa",
     "metadata": {},
     "name": "PostsPaginationQuery",
     "operationKind": "query",

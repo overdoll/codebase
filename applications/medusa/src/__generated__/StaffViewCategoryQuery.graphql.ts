@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0177e382208c303fecc7b8cc65cfcb33>>
- * @relayHash bb4b40dfdbc174d11e5cdb578f52fa4b
+ * @generated SignedSource<<4ae119df1bb20dc7f3a3ce9309fa7aff>>
+ * @relayHash b10d2c6cd31e3c1d505999c267718c2d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID bb4b40dfdbc174d11e5cdb578f52fa4b
+// @relayRequestID b10d2c6cd31e3c1d505999c267718c2d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -48,13 +48,15 @@ v2 = {
   "name": "id",
   "storageKey": null
 },
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
-};
+v3 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -168,16 +170,7 @@ return {
                 "kind": "LinkedField",
                 "name": "urls",
                 "plural": true,
-                "selections": [
-                  (v3/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "mimeType",
-                    "storageKey": null
-                  }
-                ],
+                "selections": (v3/*: any*/),
                 "storageKey": null
               },
               {
@@ -208,9 +201,7 @@ return {
                 "kind": "LinkedField",
                 "name": "videoThumbnail",
                 "plural": false,
-                "selections": [
-                  (v3/*: any*/)
-                ],
+                "selections": (v3/*: any*/),
                 "storageKey": null
               },
               {
@@ -229,7 +220,7 @@ return {
     ]
   },
   "params": {
-    "id": "bb4b40dfdbc174d11e5cdb578f52fa4b",
+    "id": "b10d2c6cd31e3c1d505999c267718c2d",
     "metadata": {},
     "name": "StaffViewCategoryQuery",
     "operationKind": "query",

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<93b57f6b8f964a2daa010f0e719d5071>>
- * @relayHash 0278142c6a8f2d9debaaa1d75271403e
+ * @generated SignedSource<<98abc7b3d845f9a807f65b4d273c9505>>
+ * @relayHash 30d9832e21078f5dd8f518309db54212
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0278142c6a8f2d9debaaa1d75271403e
+// @relayRequestID 30d9832e21078f5dd8f518309db54212
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -141,13 +141,15 @@ v11 = {
   "selections": (v9/*: any*/),
   "storageKey": null
 },
-v12 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
-};
+v12 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -258,16 +260,7 @@ return {
                     "kind": "LinkedField",
                     "name": "urls",
                     "plural": true,
-                    "selections": [
-                      (v12/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "mimeType",
-                        "storageKey": null
-                      }
-                    ],
+                    "selections": (v12/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -298,9 +291,7 @@ return {
                     "kind": "LinkedField",
                     "name": "videoThumbnail",
                     "plural": false,
-                    "selections": [
-                      (v12/*: any*/)
-                    ],
+                    "selections": (v12/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -329,7 +320,7 @@ return {
     ]
   },
   "params": {
-    "id": "0278142c6a8f2d9debaaa1d75271403e",
+    "id": "30d9832e21078f5dd8f518309db54212",
     "metadata": {},
     "name": "TotpSubmissionMutation",
     "operationKind": "mutation",
