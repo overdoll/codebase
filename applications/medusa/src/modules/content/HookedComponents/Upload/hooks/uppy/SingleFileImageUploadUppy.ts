@@ -30,6 +30,10 @@ if (CanUseDOM) {
 }
 
 // Resume-able uploads on the API
-U.use(Tus, { endpoint: '/api/upload/' })
+U.use(Tus, {
+  endpoint: '/api/upload/',
+  retryDelays: [0, 1000, 3000, 5000],
+  chunkSize: 10485760
+})
 
 export default U
