@@ -2,9 +2,12 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
+	"overdoll/applications/parley/internal/adapters/indexes"
 	"overdoll/applications/parley/internal/adapters/migrations"
 	"overdoll/applications/parley/internal/adapters/seeders"
+	"overdoll/libraries/cache"
 	"overdoll/libraries/database"
 	"time"
 
@@ -26,6 +29,8 @@ func init() {
 	config.Read("applications/parley")
 
 	rootCmd.AddCommand(database.CreateDatabaseCommands(migrations.MigrateConfig, seeders.SeederConfig))
+	rootCmd.AddCommand(cache.CreateCacheCommands(indexes.IndexConfig))
+
 	rootCmd.AddCommand(&cobra.Command{
 		Use: "http",
 		Run: RunHttp,
@@ -42,6 +47,7 @@ func init() {
 
 func main() {
 	if err := rootCmd.Execute(); err != nil {
+		fmt.Println(err)
 		os.Exit(1)
 	}
 }

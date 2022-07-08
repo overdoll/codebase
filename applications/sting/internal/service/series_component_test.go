@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"github.com/bxcodec/faker/v3"
 	"overdoll/applications/sting/internal/adapters"
+	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/bootstrap"
 	graphql2 "overdoll/libraries/graphql"
@@ -23,6 +24,7 @@ type SeriesModified struct {
 	Title     string
 	Slug      string
 	Thumbnail *graphql2.Resource
+	Banner    *graphql2.Resource
 }
 
 type SearchSeries struct {
@@ -62,7 +64,7 @@ type TestSeries struct {
 
 func refreshSeriesIndex(t *testing.T) {
 	es := bootstrap.InitializeElasticSearchSession()
-	_, err := es.Refresh(adapters.SeriesIndexName).Do(context.Background())
+	_, err := es.Refresh(adapters.SeriesReaderIndex).Do(context.Background())
 	require.NoError(t, err)
 }
 
@@ -101,6 +103,8 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error creating character")
+
+	seedPublishedPostWithCharacter(t, "1q7MJkk5fQGBWWYDqM22iITSjeW", createSeries.CreateSeries.Series.Reference)
 
 	refreshSeriesIndex(t)
 
@@ -172,7 +176,35 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 	require.NotNil(t, series, "expected to have found series")
 	require.Equal(t, fake.Title, series.Title, "title has been updated")
 	require.NotNil(t, series.Thumbnail, "has a thumbnail")
+	require.Nil(t, series.Banner, "has no banner")
 	require.True(t, series.Thumbnail.Processed, "thumbnail is processed")
+
+	env := getWorkflowEnvironment()
+
+	env.ExecuteWorkflow(workflows.GenerateSeriesBanner, workflows.GenerateSeriesBannerInput{SeriesId: series.Reference})
+
+	require.True(t, env.IsWorkflowCompleted(), "generating banner workflow is complete")
+	require.NoError(t, env.GetWorkflowError(), "no error generating banner")
+
+	ser := getSeriesFromAdapter(t, series.Reference)
+
+	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
+		Id:          ser.BannerResource().ID(),
+		ItemId:      updateSeriesThumbnail.UpdateSeriesThumbnail.Series.Reference,
+		Processed:   true,
+		Type:        proto.ResourceType_IMAGE,
+		ProcessedId: uuid.New().String(),
+		Private:     false,
+		Width:       100,
+		Height:      100,
+		Token:       "SERIES_BANNER",
+	}}})
+
+	require.NoError(t, err, "no error updating series banner")
+
+	series = getSeriesBySlug(t, client, currentSeriesSlug)
+	require.NotNil(t, series, "expected to have found series")
+	require.NotNil(t, series.Banner, "has a banner")
 }
 
 func TestCreateCharacter_update_series_and_search_character(t *testing.T) {

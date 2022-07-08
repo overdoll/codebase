@@ -19,7 +19,7 @@ func TestPostAudienceRepository_failure(t *testing.T) {
 	audienceId := uuid.New().String()
 	audienceSlug := createFakeSlug(t)
 
-	audience := post.UnmarshalAudienceFromDatabase(audienceId, audienceSlug, map[string]string{"en": "test"}, nil, 0, 0, 0, time.Now(), time.Now())
+	audience := post.UnmarshalAudienceFromDatabase(audienceId, audienceSlug, map[string]string{"en": "test"}, nil, nil, 0, 0, 0, time.Now(), time.Now())
 
 	ctx := context.Background()
 
@@ -28,9 +28,9 @@ func TestPostAudienceRepository_failure(t *testing.T) {
 	err := postRepo.CreateAudience(ctx, requester, audience)
 	require.Error(t, err, "should have received an error while creating the audience")
 
-	_, err = postRepo.GetAudienceById(ctx, requester, audienceId)
+	_, err = postRepo.GetAudienceById(ctx, audienceId)
 	require.True(t, apperror.IsNotFoundError(err), "audience should not be found by id")
 
-	_, err = postRepo.GetAudienceBySlug(ctx, requester, audienceSlug)
+	_, err = postRepo.GetAudienceBySlug(ctx, audienceSlug)
 	require.True(t, apperror.IsNotFoundError(err), "audience should not be found by slug")
 }

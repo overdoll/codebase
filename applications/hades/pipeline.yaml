@@ -16,7 +16,9 @@ steps:
   integration_test:
     pre_hook:
       - //applications/hades/internal:internal -- db migrate keyspace
+      - //applications/hades/internal:internal -- cache register
       - //applications/hades/internal:internal -- db seed
+      - //applications/hades/internal:internal -- cache index
     coverage:
       - name: hades.integration
         paths:

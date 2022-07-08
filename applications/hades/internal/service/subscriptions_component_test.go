@@ -162,7 +162,7 @@ func refreshAccountTransactionIndex(t *testing.T) {
 
 	// refresh transactions index so we get the most up-to-date values
 	es := bootstrap.InitializeElasticSearchSession()
-	_, err := es.Refresh(adapters.AccountTransactionsIndexName).Do(context.Background())
+	_, err := es.Refresh(adapters.AccountTransactionsReaderIndex).Do(context.Background())
 	require.NoError(t, err)
 }
 

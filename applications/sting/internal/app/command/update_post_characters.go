@@ -26,7 +26,7 @@ func (h UpdatePostCharactersHandler) Handle(ctx context.Context, cmd UpdatePostC
 
 	pendingPost, err := h.pr.UpdatePostCharacters(ctx, cmd.Principal, cmd.PostId, func(post *post.Post) error {
 
-		chars, err := h.pr.GetCharactersByIds(ctx, cmd.Principal, cmd.CharacterIds)
+		chars, err := h.pr.GetCharactersByIds(ctx, cmd.CharacterIds)
 
 		if err != nil {
 			return err

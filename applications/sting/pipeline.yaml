@@ -16,7 +16,9 @@ steps:
   integration_test:
     pre_hook:
       - //applications/sting/internal:internal -- db migrate keyspace
+      - //applications/sting/internal:internal -- cache register
       - //applications/sting/internal:internal -- db seed
+      - //applications/sting/internal:internal -- cache index
     coverage:
       - name: sting.integration
         paths:

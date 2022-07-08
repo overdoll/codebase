@@ -14,6 +14,7 @@ type DataLoader struct {
 	categoriesByIds *dataloader.Loader
 	seriesByIds     *dataloader.Loader
 	clubsByIds      *dataloader.Loader
+	topicsByIds     *dataloader.Loader
 }
 
 func NewDataLoader(app *app.Application) *DataLoader {
@@ -24,6 +25,7 @@ func NewDataLoader(app *app.Application) *DataLoader {
 		categoriesByIds: categoriesByIds(app),
 		seriesByIds:     seriesByIds(app),
 		clubsByIds:      clubsByIds(app),
+		topicsByIds:     topicsByIds(app),
 	}
 }
 

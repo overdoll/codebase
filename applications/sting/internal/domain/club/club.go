@@ -458,6 +458,23 @@ func (m *Club) UpdateBanner(thumbnail *resource.Resource) error {
 	return nil
 }
 
+func (m *Club) UpdateBannerExisting(thumbnail *resource.Resource) error {
+
+	if m.bannerResource == nil {
+		return resource.ErrResourceNotPresent
+	}
+
+	if m.bannerResource.ID() != thumbnail.ID() {
+		return resource.ErrResourceNotPresent
+	}
+
+	m.bannerResource = thumbnail
+
+	m.update()
+
+	return nil
+}
+
 func (m *Club) UpdateThumbnailExisting(thumbnail *resource.Resource) error {
 
 	if m.thumbnailResource == nil {

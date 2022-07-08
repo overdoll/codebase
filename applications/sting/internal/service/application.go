@@ -92,16 +92,17 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 
 	return &app.Application{
 		Commands: app.Commands{
-			UpdateResources: command.NewUpdateResourcesHandler(postRepo, clubRepo),
-			CreatePost:      command.NewCreatePostHandler(postRepo, clubRepo),
-			PublishPost:     command.NewPublishPostHandler(postRepo, eventRepo),
-			DiscardPost:     command.NewDiscardPostHandler(postRepo, eventRepo),
-			RejectPost:      command.NewRejectPostHandler(postRepo),
-			SubmitPost:      command.NewSubmitPostHandler(postRepo, clubRepo, eventRepo),
-			RemovePost:      command.NewRemovePostHandler(postRepo, eventRepo),
-			DeletePost:      command.NewDeletePostHandler(postRepo, eventRepo),
-			ArchivePost:     command.NewArchivePostHandler(postRepo, eventRepo),
-			UnArchivePost:   command.NewUnArchivePostHandler(postRepo, eventRepo),
+			UpdateResources:    command.NewUpdateResourcesHandler(postRepo, clubRepo, eventRepo),
+			CreatePost:         command.NewCreatePostHandler(postRepo, clubRepo),
+			PublishPost:        command.NewPublishPostHandler(postRepo, eventRepo),
+			DiscardPost:        command.NewDiscardPostHandler(postRepo, eventRepo),
+			RejectPost:         command.NewRejectPostHandler(postRepo),
+			SubmitPost:         command.NewSubmitPostHandler(postRepo, clubRepo, eventRepo),
+			RemovePost:         command.NewRemovePostHandler(postRepo, eventRepo),
+			DeletePost:         command.NewDeletePostHandler(postRepo, eventRepo),
+			ArchivePost:        command.NewArchivePostHandler(postRepo, eventRepo),
+			UnArchivePost:      command.NewUnArchivePostHandler(postRepo, eventRepo),
+			GenerateClubBanner: command.NewGenerateClubBannerHandler(postRepo, eventRepo),
 
 			DisableClubSupporterOnlyPosts: command.NewDisableClubSupporterOnlyPostsHandler(clubRepo),
 			EnableClubSupporterOnlyPosts:  command.NewEnableClubSupporterOnlyPostsHandler(clubRepo),
@@ -126,18 +127,31 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			UpdateAudienceTitle:      command.NewUpdateAudienceTitleHandler(postRepo),
 			UpdateAudienceThumbnail:  command.NewUpdateAudienceThumbnailHandler(postRepo, loader),
 			UpdateAudienceIsStandard: command.NewUpdateAudienceIsStandardHandler(postRepo),
+			UpdateAudienceBanner:     command.NewUpdateAudienceBannerHandler(postRepo, loader),
 
-			CreateCategory:          command.NewCreateCategoryHandler(postRepo),
-			UpdateCategoryThumbnail: command.NewUpdateCategoryThumbnailHandler(postRepo, loader),
-			UpdateCategoryTitle:     command.NewUpdateCategoryTitleHandler(postRepo),
+			CreateCategory:                 command.NewCreateCategoryHandler(postRepo),
+			UpdateCategoryTopic:            command.NewUpdateCategoryTopicHandler(postRepo),
+			AddCategoryAlternativeTitle:    command.NewAddCategoryAlternativeTitleHandler(postRepo),
+			RemoveCategoryAlternativeTitle: command.NewRemoveCategoryAlternativeTitleHandler(postRepo),
+			UpdateCategoryThumbnail:        command.NewUpdateCategoryThumbnailHandler(postRepo, loader),
+			UpdateCategoryTitle:            command.NewUpdateCategoryTitleHandler(postRepo),
+			GenerateCategoryBanner:         command.NewGenerateCategoryBannerHandler(postRepo, eventRepo),
 
 			CreateCharacter:          command.NewCreateCharacterHandler(postRepo),
 			UpdateCharacterName:      command.NewUpdateCharacterNameHandler(postRepo),
 			UpdateCharacterThumbnail: command.NewUpdateCharacterThumbnailHandler(postRepo, loader),
+			GenerateCharacterBanner:  command.NewGenerateCharacterBannerHandler(postRepo, eventRepo),
 
 			CreateSeries:          command.NewCreateSeriesHandler(postRepo),
 			UpdateSeriesTitle:     command.NewUpdateSeriesTitleHandler(postRepo),
 			UpdateSeriesThumbnail: command.NewUpdateSeriesThumbnailHandler(postRepo, loader),
+			GenerateSeriesBanner:  command.NewGenerateSeriesBannerHandler(postRepo, eventRepo),
+
+			CreateTopic:            command.NewCreateTopicHandler(postRepo),
+			UpdateTopicTitle:       command.NewUpdateTopicTitleHandler(postRepo),
+			UpdateTopicWeight:      command.NewUpdateTopicWeightHandler(postRepo),
+			UpdateTopicDescription: command.NewUpdateTopicDescriptionHandler(postRepo),
+			UpdateTopicBanner:      command.NewUpdateTopicBannerHandler(postRepo, loader),
 
 			CreateClub:                    command.NewCreateClubHandler(clubRepo, eventRepo),
 			AddClubSlugAlias:              command.NewAddClubSlugAliasHandler(clubRepo),
@@ -188,6 +202,10 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			PostsFeed:             query.NewPostsFeedHandler(personalizationRepo, postRepo),
 			SuggestedPostsForPost: query.NewSuggestedPostsForPostHandler(postRepo),
 			ClubMembersPostsFeed:  query.NewClubMembersPostsFeedHandler(postRepo),
+
+			TopicBySlug:  query.NewTopicBySlugHandler(postRepo),
+			SearchTopics: query.NewSearchTopicsHandler(postRepo),
+			TopicsByIds:  query.NewTopicsByIdsHandler(postRepo),
 
 			PostLikeById: query.NewPostLikeByIdHandler(postRepo),
 

@@ -16,7 +16,9 @@ steps:
   integration_test:
     pre_hook:
       - //applications/ringer/internal:internal -- db migrate keyspace
+      - //applications/ringer/internal:internal -- cache register
       - //applications/ringer/internal:internal -- db seed
+      - //applications/ringer/internal:internal -- cache index
     coverage:
       - name: ringer.integration
         paths:

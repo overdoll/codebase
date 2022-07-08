@@ -57,7 +57,7 @@ func refreshSubscriptionsIndex(t *testing.T) {
 
 	// refresh transactions index so we get the most up-to-date values
 	es := bootstrap.InitializeElasticSearchSession()
-	_, err := es.Refresh(adapters.SubscriptionsIndexName).Do(context.Background())
+	_, err := es.Refresh(adapters.AccountClubSupporterSubscriptionsReaderIndex).Do(context.Background())
 	require.NoError(t, err)
 }
 

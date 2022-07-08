@@ -5,11 +5,13 @@ import (
 	"encoding/json"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
+	"go.uber.org/zap"
 	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/libraries/cache"
+	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/scan"
 	"overdoll/libraries/support"
 	"time"
 )
@@ -40,7 +42,10 @@ type accountClubSupporterSubscriptionDocument struct {
 	CancellationReasonId   *string   `json:"cancellation_reason_id"`
 }
 
-const SubscriptionsIndexName = "hades.account_club_supporter_subscriptions"
+const AccountClubSupporterSubscriptionsIndexName = "account_club_supporter_subscriptions"
+
+var AccountClubSupporterSubscriptionsReaderIndex = cache.ReadAlias(CachePrefix, AccountClubSupporterSubscriptionsIndexName)
+var accountClubSupporterSubscriptionsWriterIndex = cache.WriteAlias(CachePrefix, AccountClubSupporterSubscriptionsIndexName)
 
 func unmarshalAccountClubSupporterSubscriptionDocument(hit *elastic.SearchHit) (*billing.AccountClubSupporterSubscription, error) {
 
@@ -121,7 +126,7 @@ func marshalAccountClubSupporterSubscriptionToDocument(subscription *billing.Acc
 func (r BillingCassandraElasticsearchRepository) GetAccountActiveClubSupporterSubscriptionsOperator(ctx context.Context, accountId string) ([]*billing.AccountClubSupporterSubscription, error) {
 
 	builder := r.client.Search().
-		Index(SubscriptionsIndexName)
+		Index(AccountClubSupporterSubscriptionsReaderIndex)
 
 	query := elastic.NewBoolQuery()
 
@@ -162,7 +167,7 @@ func (r BillingCassandraElasticsearchRepository) SearchAccountClubSupporterSubsc
 	}
 
 	builder := r.client.Search().
-		Index(SubscriptionsIndexName)
+		Index(AccountClubSupporterSubscriptionsReaderIndex)
 
 	if cursor == nil {
 		return nil, paging.ErrCursorNotPresent
@@ -224,8 +229,8 @@ func (r BillingCassandraElasticsearchRepository) SearchAccountClubSupporterSubsc
 
 func (r BillingCassandraElasticsearchRepository) IndexAllAccountClubSupporterSubscriptions(ctx context.Context) error {
 
-	scanner := scan.New(r.session,
-		scan.Config{
+	scanner := database.NewScan(r.session,
+		database.ScanConfig{
 			NodesInCluster: 1,
 			CoresInNode:    2,
 			SmudgeFactor:   3,
@@ -238,37 +243,30 @@ func (r BillingCassandraElasticsearchRepository) IndexAllAccountClubSupporterSub
 
 		for iter.StructScan(&subscription) {
 
-			doc := accountClubSupporterSubscriptionDocument{
-				AccountId:                   subscription.AccountId,
-				ClubId:                      subscription.ClubId,
-				Status:                      subscription.Status,
-				SupporterSince:              subscription.SupporterSince,
-				LastBillingDate:             subscription.LastBillingDate,
-				NextBillingDate:             subscription.NextBillingDate,
-				BillingAmount:               subscription.BillingAmount,
-				BillingCurrency:             subscription.BillingCurrency,
-				CreatedAt:                   subscription.CreatedAt,
-				CancelledAt:                 subscription.CancelledAt,
-				ExpiredAt:                   subscription.ExpiredAt,
-				FailedAt:                    subscription.FailedAt,
-				CCBillErrorText:             subscription.CCBillErrorText,
-				CCBillErrorCode:             subscription.CCBillErrorCode,
-				BillingFailureNextRetryDate: subscription.BillingFailureNextRetryDate,
-				Id:                          subscription.Id,
-				EncryptedPaymentMethod:      subscription.EncryptedPaymentMethod,
-				CCBillSubscriptionId:        subscription.CCBillSubscriptionId,
-				UpdatedAt:                   subscription.UpdatedAt,
-				CancellationReasonId:        subscription.CancellationReasonId,
-			}
-
-			_, err := r.client.
-				Index().
-				Index(SubscriptionsIndexName).
-				Id(doc.Id).
-				BodyJson(doc).
-				Do(ctx)
+			unmarshalled, err := unmarshalAccountClubSubscriptionFromDatabase(&subscription)
 
 			if err != nil {
+				return err
+			}
+
+			doc, err := marshalAccountClubSupporterSubscriptionToDocument(unmarshalled)
+
+			if err != nil {
+				return err
+			}
+
+			_, err = r.client.
+				Index().
+				Index(accountClubSupporterSubscriptionsWriterIndex).
+				Id(doc.Id).
+				BodyJson(doc).
+				OpType("create").
+				Do(ctx)
+
+			e, ok := err.(*elastic.Error)
+			if ok && e.Details.Type == "version_conflict_engine_exception" {
+				zap.S().Infof("skipping document [%s] due to conflict", doc.Id)
+			} else {
 				return errors.Wrap(support.ParseElasticError(err), "failed to index account club supporter subscription")
 			}
 		}
@@ -293,7 +291,7 @@ func (r BillingCassandraElasticsearchRepository) indexAccountClubSupporterSubscr
 
 	_, err = r.client.
 		Index().
-		Index(SubscriptionsIndexName).
+		Index(accountClubSupporterSubscriptionsWriterIndex).
 		Id(pst.Id).
 		BodyJson(*pst).
 		Do(ctx)

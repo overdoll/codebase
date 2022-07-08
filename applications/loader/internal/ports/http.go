@@ -31,6 +31,7 @@ func NewHttpServer(app *app.Application) http.Handler {
 		BasePath:                "/api/upload/",
 		StoreComposer:           composer,
 		RespectForwardedHeaders: true,
+		MaxSize:                 52428800,
 		//Logger:                  logger,
 	})
 

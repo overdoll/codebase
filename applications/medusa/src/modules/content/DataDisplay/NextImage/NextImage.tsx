@@ -1,13 +1,15 @@
 import Image, { ImageProps } from 'next/image'
+import { forwardRef } from 'react'
 
 interface Props extends ImageProps {
 }
 
-export default function NextImage (props: Props): JSX.Element {
+const NextImage = forwardRef<any, Props>((props: Props, forwardRef): JSX.Element => {
   return (
     <Image
-      unoptimized
       {...props}
     />
   )
-}
+})
+
+export default NextImage

@@ -5,11 +5,13 @@ import (
 	"encoding/json"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
+	"go.uber.org/zap"
 	"overdoll/applications/ringer/internal/domain/payout"
+	"overdoll/libraries/cache"
+	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/scan"
 	"overdoll/libraries/support"
 	"time"
 )
@@ -36,7 +38,10 @@ type clubPayoutDocument struct {
 	TemporalWorkflowId string                    `json:"temporal_workflow_id"`
 }
 
-const ClubPayoutsIndexName = "ringer.club_payouts"
+const ClubPayoutsIndexName = "club_payouts"
+
+var ClubPayoutsReaderIndex = cache.ReadAlias(CachePrefix, ClubPayoutsIndexName)
+var clubPayoutsWriterIndex = cache.WriteAlias(CachePrefix, ClubPayoutsIndexName)
 
 func unmarshalClubPayoutDocument(hit *elastic.SearchHit) (*payout.ClubPayout, error) {
 
@@ -109,7 +114,7 @@ func marshalClubPayoutToDocument(pay *payout.ClubPayout) (*clubPayoutDocument, e
 func (r PayoutCassandraElasticsearchRepository) SearchClubPayouts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *payout.ClubPayoutsFilters) ([]*payout.ClubPayout, error) {
 
 	builder := r.client.Search().
-		Index(ClubPayoutsIndexName)
+		Index(ClubPayoutsReaderIndex)
 
 	if cursor == nil {
 		return nil, paging.ErrCursorNotPresent
@@ -190,8 +195,8 @@ func (r PayoutCassandraElasticsearchRepository) SearchClubPayouts(ctx context.Co
 
 func (r PayoutCassandraElasticsearchRepository) IndexAllClubPayouts(ctx context.Context) error {
 
-	scanner := scan.New(r.session,
-		scan.Config{
+	scanner := database.NewScan(r.session,
+		database.ScanConfig{
 			NodesInCluster: 1,
 			CoresInNode:    2,
 			SmudgeFactor:   3,
@@ -204,48 +209,31 @@ func (r PayoutCassandraElasticsearchRepository) IndexAllClubPayouts(ctx context.
 
 		for iter.StructScan(&pay) {
 
-			var events []clubPayoutEventDocument
-
-			for _, e := range pay.Events {
-
-				var unmarshal clubPayoutEvent
-
-				if err := json.Unmarshal([]byte(e), &unmarshal); err != nil {
-					return err
-				}
-
-				events = append(events, clubPayoutEventDocument{
-					Id:        unmarshal.Id,
-					CreatedAt: unmarshal.CreatedAt,
-					Error:     unmarshal.Error,
-				})
-			}
-
-			doc := clubPayoutDocument{
-				Id:                 pay.Id,
-				Status:             pay.Status,
-				DepositDate:        pay.DepositDate,
-				ClubId:             pay.ClubId,
-				Currency:           pay.Currency,
-				Amount:             pay.Amount,
-				CoverFeeAmount:     pay.CoverFeeAmount,
-				TotalAmount:        pay.TotalAmount,
-				PayoutAccountId:    pay.PayoutAccountId,
-				DepositRequestId:   pay.DepositRequestId,
-				CreatedAt:          pay.CreatedAt,
-				Events:             events,
-				TemporalWorkflowId: pay.TemporalWorkflowId,
-			}
-
-			_, err := r.client.
-				Index().
-				Index(ClubPayoutsIndexName).
-				Id(doc.Id).
-				BodyJson(doc).
-				Do(ctx)
+			unmarshalled, err := unmarshalClubPayoutFromDatabase(ctx, &pay)
 
 			if err != nil {
-				return errors.Wrap(support.ParseElasticError(err), "failed to index club payouts")
+				return err
+			}
+
+			marshalled, err := marshalClubPayoutToDatabase(ctx, unmarshalled)
+
+			if err != nil {
+				return err
+			}
+
+			_, err = r.client.
+				Index().
+				Index(clubPayoutsWriterIndex).
+				Id(marshalled.Id).
+				BodyJson(marshalled).
+				OpType("create").
+				Do(ctx)
+
+			e, ok := err.(*elastic.Error)
+			if ok && e.Details.Type == "version_conflict_engine_exception" {
+				zap.S().Infof("skipping document [%s] due to conflict", marshalled.Id)
+			} else {
+				return errors.Wrap(support.ParseElasticError(err), "failed to index payout")
 			}
 		}
 
@@ -269,7 +257,7 @@ func (r PayoutCassandraElasticsearchRepository) indexClubPayout(ctx context.Cont
 
 	_, err = r.client.
 		Index().
-		Index(ClubPayoutsIndexName).
+		Index(clubPayoutsWriterIndex).
 		Id(pst.Id).
 		BodyJson(*pst).
 		Do(ctx)

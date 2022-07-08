@@ -5,11 +5,13 @@ import (
 	"encoding/json"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
+	"go.uber.org/zap"
 	"overdoll/applications/hades/internal/domain/billing"
+	"overdoll/libraries/cache"
+	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/scan"
 	"overdoll/libraries/support"
 	"time"
 )
@@ -40,7 +42,10 @@ type accountTransactionDocument struct {
 	Events                      []accountTransactionEventDocument `json:"events"`
 }
 
-const AccountTransactionsIndexName = "hades.account_transactions"
+const AccountTransactionsIndexName = "account_transactions"
+
+var AccountTransactionsReaderIndex = cache.ReadAlias(CachePrefix, AccountTransactionsIndexName)
+var accountTransactionsWriterIndex = cache.WriteAlias(CachePrefix, AccountTransactionsIndexName)
 
 func unmarshalAccountTransactionDocument(hit *elastic.SearchHit) (*billing.AccountTransaction, error) {
 
@@ -138,7 +143,7 @@ func (r BillingCassandraElasticsearchRepository) GetAccountTransactionsCount(ctx
 	}
 
 	builder := r.client.Count().
-		Index(AccountTransactionsIndexName)
+		Index(AccountTransactionsReaderIndex)
 
 	query := elastic.NewBoolQuery()
 
@@ -182,7 +187,7 @@ func (r BillingCassandraElasticsearchRepository) SearchAccountTransactions(ctx c
 	}
 
 	builder := r.client.Search().
-		Index(AccountTransactionsIndexName)
+		Index(AccountTransactionsReaderIndex)
 
 	if cursor == nil {
 		return nil, paging.ErrCursorNotPresent
@@ -238,8 +243,8 @@ func (r BillingCassandraElasticsearchRepository) SearchAccountTransactions(ctx c
 
 func (r BillingCassandraElasticsearchRepository) IndexAllAccountTransactions(ctx context.Context) error {
 
-	scanner := scan.New(r.session,
-		scan.Config{
+	scanner := database.NewScan(r.session,
+		database.ScanConfig{
 			NodesInCluster: 1,
 			CoresInNode:    2,
 			SmudgeFactor:   3,
@@ -252,52 +257,31 @@ func (r BillingCassandraElasticsearchRepository) IndexAllAccountTransactions(ctx
 
 		for iter.StructScan(&transaction) {
 
-			var events []accountTransactionEventDocument
+			unmarshalled, err := unmarshalAccountTransactionFromDatabase(&transaction)
 
-			for _, e := range transaction.Events {
-
-				var unmarshal accountTransactionEvent
-
-				if err := json.Unmarshal([]byte(e), &unmarshal); err != nil {
-					return err
-				}
-
-				events = append(events, accountTransactionEventDocument{
-					Id:        unmarshal.Id,
-					CreatedAt: unmarshal.CreatedAt,
-					Amount:    unmarshal.Amount,
-					Currency:  unmarshal.Currency,
-					Reason:    unmarshal.Reason,
-				})
+			if err != nil {
+				return err
 			}
 
-			doc := accountTransactionDocument{
-				AccountId:                   transaction.AccountId,
-				Id:                          transaction.Id,
-				CreatedAt:                   transaction.CreatedAt,
-				TransactionType:             transaction.TransactionType,
-				ClubSupporterSubscriptionId: transaction.ClubSupporterSubscriptionId,
-				EncryptedPaymentMethod:      transaction.EncryptedPaymentMethod,
-				Amount:                      transaction.Amount,
-				Currency:                    transaction.Currency,
-				VoidedAt:                    transaction.VoidedAt,
-				VoidReason:                  transaction.VoidReason,
-				BilledAtDate:                transaction.BilledAtDate,
-				NextBillingDate:             transaction.NextBillingDate,
-				CCBillSubscriptionId:        transaction.CCBillSubscriptionId,
-				CCBillTransactionId:         transaction.CCBillTransactionId,
-				Events:                      events,
+			doc, err := marshalAccountTransactionToDocument(unmarshalled)
+
+			if err != nil {
+				return err
 			}
 
-			_, err := r.client.
+			_, err = r.client.
 				Index().
-				Index(AccountTransactionsIndexName).
+				Index(accountTransactionsWriterIndex).
 				Id(doc.Id).
+				OpType("create").
 				BodyJson(doc).
 				Do(ctx)
 
-			if err != nil {
-				return errors.Wrap(support.ParseElasticError(err), "failed to index account transactions")
+			e, ok := err.(*elastic.Error)
+			if ok && e.Details.Type == "version_conflict_engine_exception" {
+				zap.S().Infof("skipping document [%s] due to conflict", doc.Id)
+			} else {
+				return errors.Wrap(support.ParseElasticError(err), "failed to index account transaction")
 			}
 		}
 
@@ -321,7 +305,7 @@ func (r BillingCassandraElasticsearchRepository) indexAccountTransaction(ctx con
 
 	_, err = r.client.
 		Index().
-		Index(AccountTransactionsIndexName).
+		Index(accountTransactionsWriterIndex).
 		Id(pst.Id).
 		BodyJson(*pst).
 		Do(ctx)

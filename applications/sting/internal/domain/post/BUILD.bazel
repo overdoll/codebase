@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "audience.go",
         "category.go",
+        "category_filters.go",
         "character.go",
         "character_filters.go",
         "character_series.go",
@@ -20,6 +21,7 @@ go_library(
         "repository.go",
         "slug_validation.go",
         "sorting.go",
+        "topic.go",
     ],
     importpath = "overdoll/applications/sting/internal/domain/post",
     visibility = ["//applications/sting:__subpackages__"],
@@ -35,6 +37,7 @@ go_library(
         "//libraries/resource",
         "//libraries/uuid",
         "@com_github_go_playground_validator_v10//:validator",
+        "@com_github_yuin_goldmark//:goldmark",
     ],
 )
 

@@ -33,6 +33,7 @@ go_test(
         "internal_emails_test.go",
         "mail_component_test.go",
         "mocks_component_test.go",
+        "moderator_post_in_queue_test.go",
         "new_club_supporter_subscription_test.go",
         "new_login_token_email_test.go",
         "upcoming_club_supporter_subscription_renewals_test.go",
@@ -71,6 +72,8 @@ go_test(
         "file_fixtures/club_supporter_subscription_duplicate_test.txt",
         "file_fixtures/club_supporter_subscription_payment_failure.html",
         "file_fixtures/club_supporter_subscription_payment_failure.txt",
+        "file_fixtures/moderator_post_in_queue.html",
+        "file_fixtures/moderator_post_in_queue.txt",
     ],
     deps = [
         ":service",

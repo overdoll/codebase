@@ -3,6 +3,9 @@ package adapters
 import (
 	"context"
 	"encoding/json"
+	"go.uber.org/zap"
+	"overdoll/libraries/cache"
+	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
 	resource "overdoll/libraries/resource"
 	"overdoll/libraries/support"
@@ -14,7 +17,6 @@ import (
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/scan"
 )
 
 type audienceDocument struct {
@@ -22,6 +24,7 @@ type audienceDocument struct {
 	Slug              string            `json:"slug"`
 	Title             map[string]string `json:"title"`
 	ThumbnailResource string            `json:"thumbnail_resource"`
+	BannerResource    string            `json:"banner_resource"`
 	Standard          int               `json:"standard"`
 	TotalLikes        int               `json:"total_likes"`
 	TotalPosts        int               `json:"total_posts"`
@@ -29,7 +32,10 @@ type audienceDocument struct {
 	UpdatedAt         time.Time         `json:"updated_at"`
 }
 
-const AudienceIndexName = "sting.audience"
+const AudienceIndexName = "audience"
+
+var AudienceReaderIndex = cache.ReadAlias(CachePrefix, AudienceIndexName)
+var audienceWriterIndex = cache.WriteAlias(CachePrefix, AudienceIndexName)
 
 func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 
@@ -39,22 +45,23 @@ func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 		stnd = 1
 	}
 
-	var res string
+	marshalledThumbnail, err := resource.MarshalResourceToDatabase(cat.ThumbnailResource())
 
-	if cat.ThumbnailResource() != nil {
-		marshalled, err := resource.MarshalResourceToDatabase(cat.ThumbnailResource())
+	if err != nil {
+		return nil, err
+	}
 
-		if err != nil {
-			return nil, err
-		}
+	marshalledBanner, err := resource.MarshalResourceToDatabase(cat.BannerResource())
 
-		res = marshalled
+	if err != nil {
+		return nil, err
 	}
 
 	return &audienceDocument{
 		Id:                cat.ID(),
 		Slug:              cat.Slug(),
-		ThumbnailResource: res,
+		ThumbnailResource: marshalledThumbnail,
+		BannerResource:    marshalledBanner,
 		Title:             localization.MarshalTranslationToDatabase(cat.Title()),
 		CreatedAt:         cat.CreatedAt(),
 		Standard:          stnd,
@@ -64,11 +71,46 @@ func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 	}, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) unmarshalAudienceDocument(ctx context.Context, hit *elastic.SearchHit) (*post.Audience, error) {
+func (r PostsCassandraElasticsearchRepository) GetAudiencesByIds(ctx context.Context, audienceIds []string) ([]*post.Audience, error) {
+
+	var audiences []*post.Audience
+
+	// if none then we get out or else the query will fail
+	if len(audienceIds) == 0 {
+		return audiences, nil
+	}
+
+	builder := r.client.MultiGet().Realtime(false)
+
+	for _, categoryId := range audienceIds {
+		builder.Add(elastic.NewMultiGetItem().Id(categoryId).Index(AudienceReaderIndex))
+	}
+
+	response, err := builder.Do(ctx)
+
+	if err != nil {
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed search audiences")
+	}
+
+	for _, hit := range response.Docs {
+
+		result, err := r.unmarshalAudienceDocument(ctx, hit.Source, nil)
+
+		if err != nil {
+			return nil, err
+		}
+
+		audiences = append(audiences, result)
+	}
+
+	return audiences, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) unmarshalAudienceDocument(ctx context.Context, source json.RawMessage, sort []interface{}) (*post.Audience, error) {
 
 	var bd audienceDocument
 
-	if err := json.Unmarshal(hit.Source, &bd); err != nil {
+	if err := json.Unmarshal(source, &bd); err != nil {
 		return nil, errors.Wrap(err, "failed search audience - unmarshal")
 	}
 
@@ -78,8 +120,17 @@ func (r PostsCassandraElasticsearchRepository) unmarshalAudienceDocument(ctx con
 		return nil, err
 	}
 
-	newAudience := post.UnmarshalAudienceFromDatabase(bd.Id, bd.Slug, bd.Title, unmarshalled, bd.Standard, bd.TotalLikes, bd.TotalPosts, bd.CreatedAt, bd.UpdatedAt)
-	newAudience.Node = paging.NewNode(hit.Sort)
+	unmarshalledBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, bd.BannerResource)
+
+	if err != nil {
+		return nil, err
+	}
+
+	newAudience := post.UnmarshalAudienceFromDatabase(bd.Id, bd.Slug, bd.Title, unmarshalled, unmarshalledBanner, bd.Standard, bd.TotalLikes, bd.TotalPosts, bd.CreatedAt, bd.UpdatedAt)
+
+	if sort != nil {
+		newAudience.Node = paging.NewNode(sort)
+	}
 
 	return newAudience, nil
 }
@@ -87,7 +138,7 @@ func (r PostsCassandraElasticsearchRepository) unmarshalAudienceDocument(ctx con
 func (r PostsCassandraElasticsearchRepository) SearchAudience(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Audience, error) {
 
 	builder := r.client.Search().
-		Index(AudienceIndexName)
+		Index(AudienceReaderIndex)
 
 	if cursor == nil {
 		return nil, paging.ErrCursorNotPresent
@@ -116,7 +167,7 @@ func (r PostsCassandraElasticsearchRepository) SearchAudience(ctx context.Contex
 	if filter.Search() != nil {
 		query.Must(
 			elastic.
-				NewMultiMatchQuery(*filter.Search(), localization.GetESSearchFields("title")...).
+				NewMultiMatchQuery(*filter.Search(), "title.en").
 				Type("best_fields"),
 		)
 	}
@@ -139,7 +190,7 @@ func (r PostsCassandraElasticsearchRepository) SearchAudience(ctx context.Contex
 
 	for _, hit := range response.Hits.Hits {
 
-		result, err := r.unmarshalAudienceDocument(ctx, hit)
+		result, err := r.unmarshalAudienceDocument(ctx, hit.Source, hit.Sort)
 
 		if err != nil {
 			return nil, err
@@ -161,7 +212,7 @@ func (r PostsCassandraElasticsearchRepository) indexAudience(ctx context.Context
 
 	_, err = r.client.
 		Index().
-		Index(AudienceIndexName).
+		Index(audienceWriterIndex).
 		Id(audience.ID()).
 		BodyJson(marshalled).
 		Do(ctx)
@@ -175,8 +226,8 @@ func (r PostsCassandraElasticsearchRepository) indexAudience(ctx context.Context
 
 func (r PostsCassandraElasticsearchRepository) IndexAllAudience(ctx context.Context) error {
 
-	scanner := scan.New(r.session,
-		scan.Config{
+	scanner := database.NewScan(r.session,
+		database.ScanConfig{
 			NodesInCluster: 1,
 			CoresInNode:    2,
 			SmudgeFactor:   3,
@@ -189,25 +240,30 @@ func (r PostsCassandraElasticsearchRepository) IndexAllAudience(ctx context.Cont
 
 		for iter.StructScan(&m) {
 
-			doc := audienceDocument{
-				Id:                m.Id,
-				Slug:              m.Slug,
-				ThumbnailResource: m.ThumbnailResource,
-				Title:             m.Title,
-				Standard:          m.Standard,
-				CreatedAt:         m.CreatedAt,
-				TotalLikes:        m.TotalLikes,
-				UpdatedAt:         m.UpdatedAt,
-			}
-
-			_, err := r.client.
-				Index().
-				Index(AudienceIndexName).
-				Id(m.Id).
-				BodyJson(doc).
-				Do(ctx)
+			unmarshalled, err := r.unmarshalAudienceFromDatabase(ctx, &m)
 
 			if err != nil {
+				return err
+			}
+
+			marshalled, err := marshalAudienceToDatabase(unmarshalled)
+
+			if err != nil {
+				return err
+			}
+
+			_, err = r.client.
+				Index().
+				Index(audienceWriterIndex).
+				Id(marshalled.Id).
+				OpType("create").
+				BodyJson(marshalled).
+				Do(ctx)
+
+			e, ok := err.(*elastic.Error)
+			if ok && e.Details.Type == "version_conflict_engine_exception" {
+				zap.S().Infof("skipping document [%s] due to conflict", marshalled.Id)
+			} else {
 				return errors.Wrap(support.ParseElasticError(err), "failed to index audience")
 			}
 		}

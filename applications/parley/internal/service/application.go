@@ -21,14 +21,17 @@ func NewApplication(ctx context.Context) (*app.Application, func()) {
 
 	evaClient, cleanup := clients.NewEvaClient(ctx, os.Getenv("EVA_SERVICE"))
 	stingClient, cleanup2 := clients.NewStingClient(ctx, os.Getenv("STING_SERVICE"))
+	carrierClient, cleanup3 := clients.NewCarrierClient(ctx, os.Getenv("CARRIER_SERVICE"))
 
 	return createApplication(ctx,
 			adapters.NewEvaGrpc(evaClient),
 			adapters.NewStingGrpc(stingClient),
+			adapters.NewCarrierGrpc(carrierClient),
 			clients.NewTemporalClient(ctx)),
 		func() {
 			cleanup()
 			cleanup2()
+			cleanup3()
 		}
 }
 
@@ -37,6 +40,7 @@ type ComponentTestApplication struct {
 	TemporalClient *temporalmocks.Client
 	EvaClient      *mocks.MockEvaClient
 	StingClient    *mocks.MockStingClient
+	CarrierClient  *mocks.MockCarrierClient
 }
 
 func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication {
@@ -46,29 +50,33 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 
 	evaClient := &mocks.MockEvaClient{}
 	stingClient := &mocks.MockStingClient{}
+	carrierClient := &mocks.MockCarrierClient{}
 
 	return &ComponentTestApplication{
 		App: createApplication(
 			ctx,
 			adapters.NewEvaGrpc(evaClient),
 			adapters.NewStingGrpc(stingClient),
+			adapters.NewCarrierGrpc(carrierClient),
 			temporalClient,
 		),
 		TemporalClient: temporalClient,
 		EvaClient:      evaClient,
 		StingClient:    stingClient,
+		CarrierClient:  carrierClient,
 	}
 }
 
-func createApplication(ctx context.Context, eva command.EvaService, sting command.StingService, client client.Client) *app.Application {
+func createApplication(ctx context.Context, eva command.EvaService, sting command.StingService, carrier activities.CarrierService, client client.Client) *app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 	esClient := bootstrap.InitializeElasticSearchSession()
+	redis := bootstrap.InitializeRedisSession()
 
 	clubInfractionRepo := adapters.NewClubInfractionCassandraRepository(session)
 	postAuditLogRepo := adapters.NewPostAuditLogCassandraRepository(session)
 
-	moderatorRepo := adapters.NewModeratorCassandraRepository(session)
+	moderatorRepo := adapters.NewModeratorCassandraRepository(session, redis)
 	reportRepo := adapters.NewReportCassandraElasticsearchRepository(session, esClient)
 	eventRepo := adapters.NewEventTemporalRepository(client)
 
@@ -114,6 +122,6 @@ func createApplication(ctx context.Context, eva command.EvaService, sting comman
 			PostAuditLogById:          query.NewPostAuditLogByIdHandler(postAuditLogRepo),
 			ModeratorById:             query.NewModeratorByIdHandler(moderatorRepo),
 		},
-		Activities: activities.NewActivitiesHandler(moderatorRepo, reportRepo, postAuditLogRepo, ruleRepo, clubInfractionRepo, sting),
+		Activities: activities.NewActivitiesHandler(moderatorRepo, reportRepo, postAuditLogRepo, ruleRepo, clubInfractionRepo, sting, carrier),
 	}
 }

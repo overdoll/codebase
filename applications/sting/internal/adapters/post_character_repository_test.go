@@ -5,7 +5,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/errors/apperror"
-	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
 	"time"
@@ -21,19 +20,17 @@ func TestPostCharacterRepository_failure(t *testing.T) {
 	characterSlug := createFakeSlug(t)
 	seriesSlug := "foreigneronmars"
 
-	character := post.UnmarshalCharacterFromDatabase(characterId, characterSlug, map[string]string{"en": "test"}, nil, 0, 0, time.Now(), time.Now(),
-		post.UnmarshalSeriesFromDatabase("1pcKiQL7dgUW8CIN7uO1wqFaMql", "foreigneronmars", map[string]string{"en": "test"}, nil, 0, 0, time.Now(), time.Now()))
+	character := post.UnmarshalCharacterFromDatabase(characterId, characterSlug, map[string]string{"en": "test"}, nil, nil, 0, 0, time.Now(), time.Now(),
+		post.UnmarshalSeriesFromDatabase("1pcKiQL7dgUW8CIN7uO1wqFaMql", "foreigneronmars", map[string]string{"en": "test"}, nil, nil, 0, 0, time.Now(), time.Now()))
 
 	ctx := context.Background()
 
-	requester := testing_tools.NewStaffPrincipal(uuid.New().String())
-
-	err := postRepo.CreateCharacter(ctx, requester, character)
+	err := postRepo.CreateCharacter(ctx, character)
 	require.Error(t, err, "should have received an error while creating the character")
 
-	_, err = postRepo.GetCharacterById(ctx, requester, characterId)
+	_, err = postRepo.GetCharacterById(ctx, characterId)
 	require.True(t, apperror.IsNotFoundError(err), "character should not be found by id")
 
-	_, err = postRepo.GetCharacterBySlug(ctx, requester, characterSlug, seriesSlug)
+	_, err = postRepo.GetCharacterBySlug(ctx, characterSlug, seriesSlug)
 	require.True(t, apperror.IsNotFoundError(err), "character should not be found by slug")
 }

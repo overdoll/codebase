@@ -24,7 +24,7 @@ func NewCreateCharacterHandler(pr post.Repository) CreateCharacterHandler {
 
 func (h CreateCharacterHandler) Handle(ctx context.Context, cmd CreateCharacter) (*post.Character, error) {
 
-	series, err := h.pr.GetSingleSeriesById(ctx, cmd.Principal, cmd.SeriesId)
+	series, err := h.pr.GetSingleSeriesById(ctx, cmd.SeriesId)
 
 	if err != nil {
 		return nil, err
@@ -36,7 +36,7 @@ func (h CreateCharacterHandler) Handle(ctx context.Context, cmd CreateCharacter)
 		return nil, err
 	}
 
-	if err := h.pr.CreateCharacter(ctx, cmd.Principal, char); err != nil {
+	if err := h.pr.CreateCharacter(ctx, char); err != nil {
 		return nil, err
 	}
 

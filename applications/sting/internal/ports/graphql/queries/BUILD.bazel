@@ -10,6 +10,7 @@ go_library(
         "post.go",
         "resolvers.go",
         "series.go",
+        "topic.go",
     ],
     importpath = "overdoll/applications/sting/internal/ports/graphql/queries",
     visibility = ["//visibility:public"],

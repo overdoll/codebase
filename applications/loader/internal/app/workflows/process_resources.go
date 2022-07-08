@@ -11,6 +11,9 @@ type ProcessResourcesInput struct {
 	ResourceIds []string
 	Source      string
 	IsNotFound  bool
+	AlreadySent bool
+	Width       uint64
+	Height      uint64
 }
 
 func ProcessResources(ctx workflow.Context, input ProcessResourcesInput) error {
@@ -24,6 +27,8 @@ func ProcessResources(ctx workflow.Context, input ProcessResourcesInput) error {
 		activities.ProcessResourcesInput{
 			ItemId:      input.ItemId,
 			ResourceIds: input.ResourceIds,
+			Width:       input.Width,
+			Height:      input.Height,
 		},
 	).Get(ctx, nil); err != nil {
 		logger.Error("failed to process resources", "Error", err)
@@ -34,16 +39,16 @@ func ProcessResources(ctx workflow.Context, input ProcessResourcesInput) error {
 
 	for i := 0; i < totalTimes; i++ {
 
+		if input.IsNotFound || input.AlreadySent {
+			break
+		}
+
 		if i == 1 {
 			// first error, we sleep
 			if err := workflow.Sleep(ctx, time.Second*10); err != nil {
 				logger.Error("failed to sleep", "Error", err)
 				return err
 			}
-		}
-
-		if input.IsNotFound {
-			break
 		}
 
 		var sendCallbackPayload *activities.SendCallbackPayload
@@ -63,6 +68,8 @@ func ProcessResources(ctx workflow.Context, input ProcessResourcesInput) error {
 			if i == 1 {
 				input.IsNotFound = true
 			}
+		} else {
+			input.AlreadySent = true
 		}
 	}
 

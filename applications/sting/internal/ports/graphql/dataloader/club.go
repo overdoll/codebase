@@ -23,19 +23,22 @@ func clubsByIds(app *app.Application) *dataloader.Loader {
 				keyOrder[key.String()] = ix
 			}
 
+			// construct an output array of dataloader results
+			results := make([]*dataloader.Result, len(keys))
+
 			res, err := app.Queries.ClubsByIds.Handle(ctx, query.ClubsByIds{
 				ClubIds: keyIds,
 			})
 
 			if err != nil {
-				return []*dataloader.Result{{Data: nil, Error: err}}
+				for _, ix := range keyOrder {
+					results[ix] = &dataloader.Result{Data: nil, Error: err}
+				}
+				return results
 			}
-			// construct an output array of dataloader results
-			results := make([]*dataloader.Result, len(keys))
 
 			// enumerate records, put into output
 			for _, record := range res {
-
 				ix, ok := keyOrder[record.ID()]
 				// if found, remove from index lookup map so we know elements were found
 				if ok {

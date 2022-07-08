@@ -6,11 +6,8 @@ go_library(
     importpath = "overdoll/applications/sting/internal/adapters/seeders",
     visibility = ["//applications/sting:__subpackages__"],
     deps = [
-        "//applications/sting/internal/adapters",
         "//applications/sting/internal/adapters/seeders/data",
-        "//libraries/bootstrap",
         "//libraries/database",
-        "//libraries/resource",
         "@com_github_scylladb_gocqlx_v2//:gocqlx",
     ],
 )

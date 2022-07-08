@@ -22,7 +22,7 @@ func NewCharactersByIdsHandler(pr post.Repository) CharactersByIdsHandler {
 
 func (h CharactersByIdsHandler) Handle(ctx context.Context, query CharactersByIds) ([]*post.Character, error) {
 
-	result, err := h.pr.GetCharactersByIds(ctx, query.Principal, query.Ids)
+	result, err := h.pr.GetCharactersByIds(ctx, query.Ids)
 
 	if err != nil {
 		return nil, err

@@ -7,12 +7,7 @@ import (
 )
 
 func registerCallbacks() migrate.CallbackRegister {
-	var reg = migrate.CallbackRegister{}
-
-	reg.Add(migrate.CallComment, "create_account_club_supporter_subscriptions_index", createAccountClubSupporterSubscriptionsIndex)
-	reg.Add(migrate.CallComment, "create_account_transactions_index", createAccountTransactionsIndex)
-
-	return reg
+	return migrate.CallbackRegister{}
 }
 
 var MigrateConfig = database.MigrateConfig{

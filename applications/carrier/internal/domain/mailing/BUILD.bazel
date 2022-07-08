@@ -39,6 +39,8 @@ go_library(
         "views/templates/club_suspended/subject.gotmpl",
         "views/templates/club_supporter_subscription_duplicate/email.gohtml",
         "views/templates/club_supporter_subscription_duplicate/subject.gotmpl",
+        "views/templates/moderator_post_in_queue/subject.gotmpl",
+        "views/templates/moderator_post_in_queue/email.gohtml",
     ],
     importpath = "overdoll/applications/carrier/internal/domain/mailing",
     visibility = ["//applications/carrier:__subpackages__"],

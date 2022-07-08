@@ -22,6 +22,7 @@ type AudienceModified struct {
 	Slug      string
 	Standard  bool
 	Thumbnail *graphql2.Resource
+	Banner    *graphql2.Resource
 }
 
 type SearchAudience struct {
@@ -54,6 +55,12 @@ type UpdateAudienceThumbnail struct {
 	} `graphql:"updateAudienceThumbnail(input: $input)"`
 }
 
+type UpdateAudienceBanner struct {
+	UpdateAudienceBanner *struct {
+		Audience *AudienceModified
+	} `graphql:"updateAudienceBanner(input: $input)"`
+}
+
 type UpdateAudienceIsStandard struct {
 	UpdateAudienceIsStandard *struct {
 		Audience *AudienceModified
@@ -67,7 +74,7 @@ type TestAudience struct {
 
 func refreshAudienceIndex(t *testing.T) {
 	es := bootstrap.InitializeElasticSearchSession()
-	_, err := es.Refresh(adapters.AudienceIndexName).Do(context.Background())
+	_, err := es.Refresh(adapters.AudienceReaderIndex).Do(context.Background())
 	require.NoError(t, err)
 }
 
@@ -109,6 +116,8 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 	require.NoError(t, err, "no error creating audience")
 
 	refreshAudienceIndex(t)
+
+	seedPublishedPostWithAudience(t, createAudience.CreateAudience.Audience.Reference)
 
 	audience := getAudienceBySlug(t, client, currentAudienceSlug)
 
@@ -187,6 +196,36 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 
 	require.Equal(t, fake.Title, audience.Title, "title has been updated")
 	require.NotNil(t, audience.Thumbnail, "has a thumbnail")
+	require.Nil(t, audience.Banner, "has no banner")
 	require.True(t, audience.Thumbnail.Processed, "should be processed")
 	require.True(t, audience.Standard, "is standard now")
+
+	var updateAudienceBanner UpdateAudienceBanner
+
+	err = client.Mutate(context.Background(), &updateAudienceBanner, map[string]interface{}{
+		"input": types.UpdateAudienceBannerInput{
+			ID:     audience.Id,
+			Banner: audienceThumbnailId,
+		},
+	})
+
+	require.NoError(t, err, "no error updating audience thumbnail")
+	require.False(t, updateAudienceBanner.UpdateAudienceBanner.Audience.Banner.Processed, "not yet processed")
+
+	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
+		Id:          audienceThumbnailId,
+		ItemId:      updateAudienceBanner.UpdateAudienceBanner.Audience.Reference,
+		Processed:   true,
+		Type:        proto.ResourceType_IMAGE,
+		ProcessedId: uuid.New().String(),
+		Private:     false,
+		Width:       100,
+		Height:      100,
+		Token:       "AUDIENCE_BANNER",
+	}}})
+
+	require.NoError(t, err, "no error updating resource")
+
+	audience = getAudienceBySlug(t, client, currentAudienceSlug)
+	require.True(t, audience.Banner.Processed, "banner should now be processed")
 }

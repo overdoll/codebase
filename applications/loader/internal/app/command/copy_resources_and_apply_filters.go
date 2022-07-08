@@ -2,10 +2,8 @@ package command
 
 import (
 	"context"
-	"os"
 	"overdoll/applications/loader/internal/domain/event"
 	"overdoll/applications/loader/internal/domain/resource"
-	"overdoll/libraries/errors/domainerror"
 )
 
 type CopyResourcesAndApplyFilters struct {
@@ -13,11 +11,11 @@ type CopyResourcesAndApplyFilters struct {
 		ItemId     string
 		ResourceId string
 	}
-	Filters *struct {
-		Pixelate *struct {
-			Size int
-		}
-	}
+	Source    string
+	NewItemId string
+	Filters   *resource.ImageFilters
+	Config    *resource.Config
+	Token     string
 	IsPrivate bool
 }
 
@@ -40,75 +38,42 @@ func (h CopyResourcesAndApplyFiltersHandler) Handle(ctx context.Context, cmd Cop
 		resourceIds = append(resourceIds, item.ResourceId)
 	}
 
-	var filteredResources []*resource.FilteredResource
-
 	resources, err := h.rr.GetResourcesByIds(ctx, itemIds, resourceIds)
 
 	if err != nil {
 		return nil, err
 	}
 
+	var filteredResources []*resource.FilteredResource
+
+	var targetResourceIds []string
+
 	for _, target := range resources {
 
-		if !target.IsProcessed() {
-			return nil, domainerror.NewValidation("resource not processed yet")
-		}
-
-		var file *os.File
-
-		if target.IsVideo() {
-			file, err = h.rr.DownloadVideoThumbnailForResource(ctx, target)
-		} else {
-			file, err = h.rr.DownloadResource(ctx, target)
-		}
-
-		if err != nil {
-			return nil, err
-		}
-
-		var pixelate *int
-
-		if cmd.Filters != nil {
-			if cmd.Filters.Pixelate != nil {
-				pixelate = &cmd.Filters.Pixelate.Size
-			}
-		}
-
-		filters, err := resource.NewImageFilters(pixelate)
-
-		if err != nil {
-			return nil, err
-		}
-
 		// create a new processed resource
-		filtered, err := resource.NewImageProcessedResource(target.ItemId(), "image/png", cmd.IsPrivate, target.Height(), target.Width())
+		cp, err := resource.NewImageCopyResource(cmd.NewItemId, "image/jpeg", cmd.IsPrivate, cmd.Token, target.ItemId(), target.ID())
 
 		if err != nil {
 			return nil, err
 		}
 
-		// apply filters
-		newFile, err := filters.ApplyFilters(file)
+		targetResourceIds = append(targetResourceIds, cp.ID())
+
+		filteredResource, err := resource.NewFilteredResource(target, cp)
 
 		if err != nil {
 			return nil, err
 		}
 
-		filteredResource, err := resource.NewFilteredResource(target, filtered)
-
-		if err != nil {
-			return nil, err
-		}
-
-		if err := h.rr.UploadAndCreateResource(ctx, newFile, filtered); err != nil {
+		if err := h.rr.CreateResource(ctx, cp); err != nil {
 			return nil, err
 		}
 
 		filteredResources = append(filteredResources, filteredResource)
+	}
 
-		// cleanup files
-		_ = os.Remove(newFile.Name())
-		_ = os.Remove(file.Name())
+	if err := h.event.ProcessResourcesWithFiltersFromCopy(ctx, cmd.NewItemId, targetResourceIds, cmd.Source, cmd.Config, cmd.Filters); err != nil {
+		return nil, err
 	}
 
 	return filteredResources, nil

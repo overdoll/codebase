@@ -43,13 +43,9 @@ var accountSavedPaymentMethodTable = table.New(table.Metadata{
 	Columns: []string{
 		"account_id",
 		"id",
-
 		"encrypted_payment_method",
-
 		"currency",
-
 		"ccbill_subscription_id",
-
 		"updated_at",
 	},
 	PartKey: []string{"account_id"},
@@ -434,6 +430,84 @@ func marshalAccountClubSubscriptionToDatabase(accountClubSupp *billing.AccountCl
 		CCBillErrorCode:             accountClubSupp.CCBillErrorCode(),
 		BillingFailureNextRetryDate: accountClubSupp.BillingFailureNextRetryDate(),
 	}, nil
+}
+
+func unmarshalAccountClubSubscriptionFromDatabase(accountClubSupported *accountClubSupporterSubscription) (*billing.AccountClubSupporterSubscription, error) {
+
+	decrypt, err := decryptPaymentMethod(accountClubSupported.EncryptedPaymentMethod)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return billing.UnmarshalAccountClubSupporterSubscriptionFromDatabase(
+		accountClubSupported.Id,
+		accountClubSupported.AccountId,
+		accountClubSupported.ClubId,
+		accountClubSupported.Status,
+		accountClubSupported.SupporterSince,
+		accountClubSupported.LastBillingDate,
+		accountClubSupported.NextBillingDate,
+		accountClubSupported.BillingAmount,
+		accountClubSupported.BillingCurrency,
+		decrypt,
+		accountClubSupported.CCBillSubscriptionId,
+		accountClubSupported.CancelledAt,
+		accountClubSupported.CreatedAt,
+		accountClubSupported.UpdatedAt,
+		accountClubSupported.CancellationReasonId,
+		accountClubSupported.ExpiredAt,
+		accountClubSupported.FailedAt,
+		accountClubSupported.CCBillErrorText,
+		accountClubSupported.CCBillErrorCode,
+		accountClubSupported.BillingFailureNextRetryDate,
+	), nil
+}
+
+func unmarshalAccountTransactionFromDatabase(transaction *accountTransactions) (*billing.AccountTransaction, error) {
+
+	decrypt, err := decryptPaymentMethod(transaction.EncryptedPaymentMethod)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var events []*billing.AccountTransactionEvent
+
+	for _, e := range transaction.Events {
+
+		var unmarshal accountTransactionEvent
+
+		if err := json.Unmarshal([]byte(e), &unmarshal); err != nil {
+			return nil, errors.Wrap(err, "failed to unmarshal account transaction event")
+		}
+
+		events = append(events, billing.UnmarshalAccountTransactionEventFromDatabase(
+			unmarshal.Id,
+			unmarshal.CreatedAt,
+			unmarshal.Amount,
+			unmarshal.Currency,
+			unmarshal.Reason,
+		))
+	}
+
+	return billing.UnmarshalAccountTransactionFromDatabase(
+		transaction.AccountId,
+		transaction.Id,
+		transaction.CreatedAt,
+		transaction.TransactionType,
+		decrypt,
+		transaction.Amount,
+		transaction.Currency,
+		transaction.BilledAtDate,
+		transaction.NextBillingDate,
+		transaction.CCBillSubscriptionId,
+		transaction.CCBillTransactionId,
+		transaction.ClubSupporterSubscriptionId,
+		transaction.VoidedAt,
+		transaction.VoidReason,
+		events,
+	), nil
 }
 
 func marshalCCBillSubscriptionToDatabase(subscription *billing.CCBillSubscriptionDetails) (*ccbillSubscriptionDetails, error) {
@@ -850,34 +924,13 @@ func (r BillingCassandraElasticsearchRepository) GetAccountClubSupporterSubscrip
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get account club support by id")
 	}
 
-	decrypt, err := decryptPaymentMethod(accountClubSupported.EncryptedPaymentMethod)
+	unmarshalled, err := unmarshalAccountClubSubscriptionFromDatabase(&accountClubSupported)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return billing.UnmarshalAccountClubSupporterSubscriptionFromDatabase(
-		accountClubSupported.Id,
-		accountClubSupported.AccountId,
-		accountClubSupported.ClubId,
-		accountClubSupported.Status,
-		accountClubSupported.SupporterSince,
-		accountClubSupported.LastBillingDate,
-		accountClubSupported.NextBillingDate,
-		accountClubSupported.BillingAmount,
-		accountClubSupported.BillingCurrency,
-		decrypt,
-		accountClubSupported.CCBillSubscriptionId,
-		accountClubSupported.CancelledAt,
-		accountClubSupported.CreatedAt,
-		accountClubSupported.UpdatedAt,
-		accountClubSupported.CancellationReasonId,
-		accountClubSupported.ExpiredAt,
-		accountClubSupported.FailedAt,
-		accountClubSupported.CCBillErrorText,
-		accountClubSupported.CCBillErrorCode,
-		accountClubSupported.BillingFailureNextRetryDate,
-	), nil
+	return unmarshalled, nil
 }
 
 func (r BillingCassandraElasticsearchRepository) GetAccountClubSupporterSubscriptionById(ctx context.Context, requester *principal.Principal, id string) (*billing.AccountClubSupporterSubscription, error) {
@@ -1314,48 +1367,13 @@ func (r BillingCassandraElasticsearchRepository) GetAccountTransactionByIdOperat
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to account transaction by id")
 	}
 
-	decrypt, err := decryptPaymentMethod(transaction.EncryptedPaymentMethod)
+	unmarshalled, err := unmarshalAccountTransactionFromDatabase(&transaction)
 
 	if err != nil {
 		return nil, err
 	}
 
-	var events []*billing.AccountTransactionEvent
-
-	for _, e := range transaction.Events {
-
-		var unmarshal accountTransactionEvent
-
-		if err := json.Unmarshal([]byte(e), &unmarshal); err != nil {
-			return nil, errors.Wrap(err, "failed to unmarshal account transaction event")
-		}
-
-		events = append(events, billing.UnmarshalAccountTransactionEventFromDatabase(
-			unmarshal.Id,
-			unmarshal.CreatedAt,
-			unmarshal.Amount,
-			unmarshal.Currency,
-			unmarshal.Reason,
-		))
-	}
-
-	return billing.UnmarshalAccountTransactionFromDatabase(
-		transaction.AccountId,
-		transaction.Id,
-		transaction.CreatedAt,
-		transaction.TransactionType,
-		decrypt,
-		transaction.Amount,
-		transaction.Currency,
-		transaction.BilledAtDate,
-		transaction.NextBillingDate,
-		transaction.CCBillSubscriptionId,
-		transaction.CCBillTransactionId,
-		transaction.ClubSupporterSubscriptionId,
-		transaction.VoidedAt,
-		transaction.VoidReason,
-		events,
-	), nil
+	return unmarshalled, nil
 }
 
 func (r BillingCassandraElasticsearchRepository) CreateAccountTransactionOperator(ctx context.Context, transaction *billing.AccountTransaction) error {

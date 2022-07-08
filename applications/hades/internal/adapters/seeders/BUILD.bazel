@@ -6,9 +6,7 @@ go_library(
     importpath = "overdoll/applications/hades/internal/adapters/seeders",
     visibility = ["//applications/hades:__subpackages__"],
     deps = [
-        "//applications/hades/internal/adapters",
         "//applications/hades/internal/adapters/seeders/data",
-        "//libraries/bootstrap",
         "//libraries/database",
         "@com_github_scylladb_gocqlx_v2//:gocqlx",
     ],

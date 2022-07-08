@@ -10,6 +10,7 @@ go_library(
         "dataloader.go",
         "post.go",
         "series.go",
+        "topic.go",
     ],
     importpath = "overdoll/applications/sting/internal/ports/graphql/dataloader",
     visibility = ["//applications/sting:__subpackages__"],

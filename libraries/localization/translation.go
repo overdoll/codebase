@@ -7,10 +7,10 @@ import (
 
 // support carries all translations for a specific thing
 type Translation struct {
-	translations []*TranslatedSupport
+	translations []*LocalizedDataTag
 }
 
-func (t *Translation) Translations() []*TranslatedSupport {
+func (t *Translation) Translations() []*LocalizedDataTag {
 	return t.translations
 }
 
@@ -67,7 +67,7 @@ func (t *Translation) UpdateTranslation(data, locale string) error {
 			t.translations = append(t.translations[:v], t.translations[v+1:]...)
 
 			// change translation
-			t.translations = append(t.translations, &TranslatedSupport{
+			t.translations = append(t.translations, &LocalizedDataTag{
 				tag:  defaultLanguage,
 				data: data,
 			})
@@ -86,7 +86,7 @@ func (t *Translation) UpdateDefaultTranslation(data string) error {
 			t.translations = append(t.translations[:v], t.translations[v+1:]...)
 
 			// add a new default translation
-			t.translations = append(t.translations, &TranslatedSupport{
+			t.translations = append(t.translations, &LocalizedDataTag{
 				tag:  defaultLanguage,
 				data: data,
 			})
@@ -109,10 +109,10 @@ func MarshalTranslationToDatabase(t *Translation) map[string]string {
 
 func UnmarshalTranslationFromDatabase(translations map[string]string) *Translation {
 
-	var trans []*TranslatedSupport
+	var trans []*LocalizedDataTag
 
 	for locale, data := range translations {
-		res, err := unmarshalTranslatedSupportFromDatabase(locale, data)
+		res, err := unmarshalLocalizedDataTagFromDatabase(locale, data)
 
 		// if invalid translation object, log and continue
 		if err != nil {
@@ -128,9 +128,9 @@ func UnmarshalTranslationFromDatabase(translations map[string]string) *Translati
 
 func NewDefaultTranslation(name string) (*Translation, error) {
 
-	var trans []*TranslatedSupport
+	var trans []*LocalizedDataTag
 
-	res, err := unmarshalTranslatedSupportFromDatabase(defaultLanguage.String(), name)
+	res, err := unmarshalLocalizedDataTagFromDatabase(defaultLanguage.String(), name)
 
 	if err != nil {
 		return nil, err

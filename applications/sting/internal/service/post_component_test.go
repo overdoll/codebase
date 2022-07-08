@@ -6,11 +6,9 @@ import (
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
-	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	sting "overdoll/applications/sting/proto"
-	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/resource/proto"
 	"overdoll/libraries/testing_tools"
@@ -299,8 +297,8 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	// properly identify the content and stuff
 	require.Len(t, updatePostCategories.UpdatePostCategories.Post.Categories, 3)
-	require.Equal(t, "Alter", updatePostCategories.UpdatePostCategories.Post.Categories[0].Title)
-	require.Equal(t, "Transmit", updatePostCategories.UpdatePostCategories.Post.Categories[1].Title)
+	require.Equal(t, "Transmit", updatePostCategories.UpdatePostCategories.Post.Categories[0].Title)
+	require.Equal(t, "Alter", updatePostCategories.UpdatePostCategories.Post.Categories[1].Title)
 	require.Equal(t, "Convict", updatePostCategories.UpdatePostCategories.Post.Categories[2].Title)
 
 	// update with new characters
@@ -334,9 +332,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.Equal(t, "Standard Audience", updatePostAudience.UpdatePostAudience.Post.Audience.Title)
 
 	// check if post is in account's drafts
-	es := bootstrap.InitializeElasticSearchSession()
-	_, err = es.Refresh(adapters.PostIndexName).Do(context.Background())
-	require.NoError(t, err)
+	refreshPostESIndex(t)
 
 	var accountPosts AccountPosts
 	err = client.Query(context.Background(), &accountPosts, map[string]interface{}{
@@ -374,7 +370,8 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 			Type:        proto.ResourceType_IMAGE,
 			Processed:   true,
 			ProcessedId: uuid.New().String(),
-			Private:     false,
+			MimeTypes:   []string{"image/png"},
+			Private:     true,
 			Width:       100,
 			Height:      100,
 			Token:       "POST",
@@ -400,6 +397,35 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	postId := submitPost.SubmitPost.Post.Reference
 
 	env := getWorkflowEnvironment()
+
+	// signal workflow that resources were processed
+	application.TemporalClient.On("SignalWorkflow", mock.Anything, mock.Anything, "", workflows.SubmitPostSignalChannel, true).
+		Run(
+			func(args mock.Arguments) {
+				env.SignalWorkflow(workflows.SubmitPostSignalChannel, true)
+			},
+		).
+		Return(nil).
+		Once()
+
+	// update callback
+	env.RegisterDelayedCallback(func() {
+		pst := getPostFromAdapter(t, postId)
+		_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{
+			{
+				Id:          pst.Content()[1].ResourceHidden().ID(),
+				ItemId:      submitPost.SubmitPost.Post.Reference,
+				Processed:   true,
+				Type:        proto.ResourceType_IMAGE,
+				ProcessedId: uuid.New().String(),
+				Private:     false,
+				Width:       100,
+				Height:      100,
+				Token:       "POST_PRIVATE_CONTENT",
+			},
+		}})
+		require.NoError(t, err, "no error updating resource")
+	}, time.Millisecond)
 
 	env.OnRequestCancelExternalWorkflow(mock.Anything, mock.Anything, mock.Anything).
 		Run(
@@ -447,9 +473,19 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.True(t, post.Post.Content[0].ViewerCanViewSupporterOnlyContent, "can view first content because its free")
 	require.False(t, post.Post.Content[0].IsSupporterOnly, "can view content since its marked as non supporter")
 
+	require.Len(t, post.Post.Content[0].Resource.Urls, 1, "should have 1 url")
+	for _, urls := range post.Post.Content[0].Resource.Urls {
+		require.Contains(t, urls.URL, "Key-Pair-Id", "should be private content")
+	}
+
 	require.True(t, post.Post.Content[1].ViewerCanViewSupporterOnlyContent, "can view supporter only because they are a supporter")
 	require.True(t, post.Post.Content[1].IsSupporterOnly, "cant view first content because its supporter only")
 	require.Nil(t, post.Post.Content[1].SupporterOnlyResource, "supporter only resource is nil")
+
+	require.Len(t, post.Post.Content[1].Resource.Urls, 1, "should have 1 url")
+	for _, urls := range post.Post.Content[1].Resource.Urls {
+		require.Contains(t, urls.URL, "Key-Pair-Id", "should be private content")
+	}
 
 	originalId := post.Post.Content[1].Resource.ID
 
@@ -505,7 +541,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		"characterSlugs":      []graphql.String{"AarushHills"},
 		"categorySlugs":       []graphql.String{},
 		"audienceSlugs":       []graphql.String{},
-		"seriesSlugs":         []graphql.String{},
+		"seriesSlugs":         []graphql.String{"CatCanDance"},
 	})
 
 	require.NoError(t, err, "no error searching for character")

@@ -1,6 +1,7 @@
 package workflows
 
 import (
+	"errors"
 	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/sdk/temporal"
 	"time"
@@ -10,9 +11,12 @@ import (
 )
 
 type SubmitPostInput struct {
-	PostId   string
-	PostDate time.Time
+	PostId                      string
+	PostDate                    time.Time
+	PixelatedResourcesCompleted bool
 }
+
+const SubmitPostSignalChannel = "submit-post-pixelated-resources"
 
 func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 
@@ -21,11 +25,24 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 
 	var a *activities.Activities
 
+	var signal bool
+
+	signalChan := workflow.GetSignalChannel(ctx, SubmitPostSignalChannel)
+	selector := workflow.NewSelector(ctx)
+
+	// here we wait until pixelated resources were called with a callback - since we need to wait for them to generate
+	selector.AddReceive(signalChan, func(channel workflow.ReceiveChannel, more bool) {
+		input.PixelatedResourcesCompleted = true
+		channel.Receive(ctx, &signal)
+	})
+
+	var createdPayload *activities.CreatePixelatedResourcesForSupporterOnlyContentPayload
+
 	if err := workflow.ExecuteActivity(ctx, a.CreatePixelatedResourcesForSupporterOnlyContent,
 		activities.CreatePixelatedResourcesForSupporterOnlyContentInput{
 			PostId: input.PostId,
 		},
-	).Get(ctx, nil); err != nil {
+	).Get(ctx, &createdPayload); err != nil {
 		logger.Error("failed to create pixelated resources for supporter only content", "Error", err)
 		return err
 	}
@@ -38,6 +55,14 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 	).Get(ctx, nil); err != nil {
 		logger.Error("failed to submit post", "Error", err)
 		return err
+	}
+
+	// only wait for selector if we have created pixelated resources
+	if createdPayload.CreatedResources {
+		selector.Select(ctx)
+		if !input.PixelatedResourcesCompleted {
+			return errors.New("pixelated resources not yet completed")
+		}
 	}
 
 	var inReview bool

@@ -23,16 +23,9 @@ func NewUpdateCharacterThumbnailHandler(pr post.Repository, loader LoaderService
 
 func (h UpdateCharacterThumbnailHandler) Handle(ctx context.Context, cmd UpdateCharacterThumbnail) (*post.Character, error) {
 
-	var oldResourceId string
-
 	char, err := h.pr.UpdateCharacterThumbnail(ctx, cmd.Principal, cmd.CharacterId, func(character *post.Character) error {
-
-		if character.ThumbnailResource() != nil {
-			oldResourceId = character.ThumbnailResource().ID()
-		}
-
 		// create resources from content
-		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.CharacterId, []string{cmd.Thumbnail}, false, "CHARACTER", true)
+		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.CharacterId, []string{cmd.Thumbnail}, false, "CHARACTER", true, 100, 0)
 
 		if err != nil {
 			return err
@@ -40,12 +33,6 @@ func (h UpdateCharacterThumbnailHandler) Handle(ctx context.Context, cmd UpdateC
 
 		return character.UpdateThumbnail(cmd.Principal, resourceIds[0])
 	})
-
-	if oldResourceId != "" {
-		if err := h.loader.DeleteResources(ctx, cmd.CharacterId, []string{oldResourceId}); err != nil {
-			return nil, err
-		}
-	}
 
 	if err != nil {
 		return nil, err

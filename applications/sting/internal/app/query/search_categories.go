@@ -11,6 +11,7 @@ type SearchCategories struct {
 	Principal *principal.Principal
 	Cursor    *paging.Cursor
 	Title     *string
+	TopicId   *string
 	Slugs     []string
 	SortBy    string
 }
@@ -25,10 +26,11 @@ func NewSearchCategoriesHandler(pr post.Repository) SearchCategoriesHandler {
 
 func (h SearchCategoriesHandler) Handle(ctx context.Context, query SearchCategories) ([]*post.Category, error) {
 
-	filters, err := post.NewObjectFilters(
+	filters, err := post.NewCategoryFilters(
 		query.Title,
 		query.SortBy,
 		query.Slugs,
+		query.TopicId,
 	)
 
 	if err != nil {

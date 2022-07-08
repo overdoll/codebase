@@ -13,6 +13,7 @@ go_library(
     deps = [
         "//applications/loader/internal/adapters/migrations",
         "//applications/loader/internal/adapters/seeders",
+        "//applications/loader/internal/app",
         "//applications/loader/internal/ports",
         "//applications/loader/internal/service",
         "//applications/loader/proto:v1_go_proto",

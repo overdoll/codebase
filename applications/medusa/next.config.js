@@ -86,7 +86,7 @@ const moduleExports = withBundleAnalyzer({
           })
 
         return {
-          // remove manifest for now
+          // TODO: for now, we remove precaching so we avoid bandwidth costs, so include nothing here
           manifest: [],
           warnings: []
         }
@@ -160,19 +160,6 @@ const moduleExports = withBundleAnalyzer({
         // Apply these headers to all routes in your application.
         source: '/:path*',
         headers: securityHeaders
-      },
-      {
-        source: '/service-worker.js',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=43200, immutable'
-          },
-          {
-            key: 'Service-Worker-Allowed',
-            value: '/'
-          }
-        ]
       }
     ]
   },
@@ -192,10 +179,12 @@ const moduleExports = withBundleAnalyzer({
     locales: ['en'],
     defaultLocale: 'en'
   },
+  output: 'standalone',
   experimental: {
-    runtime: 'nodejs',
-    concurrentFeatures: true,
-    outputStandalone: true
+    images: {
+      unoptimized: true,
+      allowFutureImage: true
+    }
   },
   serverRuntimeConfig: {
     projectRoot: __dirname

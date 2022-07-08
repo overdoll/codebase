@@ -15,6 +15,10 @@ type EntityResolver struct {
 	App *app.Application
 }
 
+func (r EntityResolver) FindTopicByID(ctx context.Context, id relay.ID) (*types.Topic, error) {
+	return dataloader.For(ctx).GetTopicById(ctx, id.GetID())
+}
+
 func (r EntityResolver) FindClubByID(ctx context.Context, id relay.ID) (*types.Club, error) {
 	return dataloader.For(ctx).GetClubById(ctx, id.GetID())
 }

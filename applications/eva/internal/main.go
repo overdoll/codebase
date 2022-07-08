@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	_ "embed"
+	"fmt"
 	"os"
 	"overdoll/applications/eva/internal/adapters/migrations"
 	"overdoll/applications/eva/internal/adapters/seeders"
@@ -43,6 +44,7 @@ func init() {
 
 func main() {
 	if err := rootCmd.Execute(); err != nil {
+		fmt.Println(err)
 		os.Exit(1)
 	}
 }

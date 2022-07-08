@@ -11,6 +11,9 @@ type Character implements Node @key(fields: "id") {
   """A URL pointing to the object's thumbnail."""
   thumbnail: Resource
 
+  """A URL pointing to the object's banner."""
+  banner: Resource
+
   """
   A name for this character.
 

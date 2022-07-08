@@ -43,18 +43,31 @@ type Commands struct {
 	UpdateAudienceTitle      command.UpdateAudienceTitleHandler
 	UpdateAudienceThumbnail  command.UpdateAudienceThumbnailHandler
 	UpdateAudienceIsStandard command.UpdateAudienceIsStandardHandler
+	UpdateAudienceBanner     command.UpdateAudienceBannerHandler
 
-	CreateCategory          command.CreateCategoryHandler
-	UpdateCategoryTitle     command.UpdateCategoryTitleHandler
-	UpdateCategoryThumbnail command.UpdateCategoryThumbnailHandler
+	CreateCategory                 command.CreateCategoryHandler
+	UpdateCategoryTitle            command.UpdateCategoryTitleHandler
+	UpdateCategoryTopic            command.UpdateCategoryTopicHandler
+	UpdateCategoryThumbnail        command.UpdateCategoryThumbnailHandler
+	GenerateCategoryBanner         command.GenerateCategoryBannerHandler
+	AddCategoryAlternativeTitle    command.AddCategoryAlternativeTitleHandler
+	RemoveCategoryAlternativeTitle command.RemoveCategoryAlternativeTitleHandler
 
 	CreateCharacter          command.CreateCharacterHandler
 	UpdateCharacterName      command.UpdateCharacterNameHandler
 	UpdateCharacterThumbnail command.UpdateCharacterThumbnailHandler
+	GenerateCharacterBanner  command.GenerateCharacterBannerHandler
 
 	CreateSeries          command.CreateSeriesHandler
 	UpdateSeriesTitle     command.UpdateSeriesTitleHandler
 	UpdateSeriesThumbnail command.UpdateSeriesThumbnailHandler
+	GenerateSeriesBanner  command.GenerateSeriesBannerHandler
+
+	CreateTopic            command.CreateTopicHandler
+	UpdateTopicTitle       command.UpdateTopicTitleHandler
+	UpdateTopicDescription command.UpdateTopicDescriptionHandler
+	UpdateTopicWeight      command.UpdateTopicWeightHandler
+	UpdateTopicBanner      command.UpdateTopicBannerHandler
 
 	DeleteAccountData command.DeleteAccountDataHandler
 
@@ -71,6 +84,7 @@ type Commands struct {
 	PromoteClubSlugAliasToDefault command.PromoteClubSlugAliasToDefaultHandler
 	JoinClub                      command.JoinClubHandler
 	LeaveClub                     command.LeaveClubHandler
+	GenerateClubBanner            command.GenerateClubBannerHandler
 
 	AddClubSupporter    command.AddClubSupporterHandler
 	RemoveClubSupporter command.RemoveClubSupporterHandler
@@ -108,6 +122,10 @@ type Queries struct {
 	SearchAudience query.SearchAudienceHandler
 	AudienceBySlug query.AudienceBySlugHandler
 	AudiencesByIds query.AudiencesByIdsHandler
+
+	SearchTopics query.SearchTopicsHandler
+	TopicBySlug  query.TopicBySlugHandler
+	TopicsByIds  query.TopicsByIdsHandler
 
 	PostLikeById query.PostLikeByIdHandler
 

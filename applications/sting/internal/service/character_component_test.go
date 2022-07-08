@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"github.com/bxcodec/faker/v3"
 	"overdoll/applications/sting/internal/adapters"
+	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/bootstrap"
 	graphql2 "overdoll/libraries/graphql"
@@ -24,6 +25,7 @@ type CharacterModified struct {
 	Slug      string
 	Series    SeriesModified
 	Thumbnail *graphql2.Resource
+	Banner    *graphql2.Resource
 }
 
 type SearchCharacters struct {
@@ -63,7 +65,7 @@ type TestCharacter struct {
 
 func refreshCharacterIndex(t *testing.T) {
 	es := bootstrap.InitializeElasticSearchSession()
-	_, err := es.Refresh(adapters.CharacterIndexName).Do(context.Background())
+	_, err := es.Refresh(adapters.CharacterReaderIndex).Do(context.Background())
 	require.NoError(t, err)
 }
 
@@ -94,17 +96,21 @@ func TestCreateCharacter_update_and_search(t *testing.T) {
 	require.NoError(t, err, "no error creating fake category")
 	currentCharacterSlug := fake.Slug
 
+	seriesId := "1pcKiQL7dgUW8CIN7uO1wqFaMql"
+
 	var createCharacter CreateCharacter
 
 	err = client.Mutate(context.Background(), &createCharacter, map[string]interface{}{
 		"input": types.CreateCharacterInput{
-			SeriesID: relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Series{}, "1pcKiQL7dgUW8CIN7uO1wqFaMql")))),
+			SeriesID: relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Series{}, seriesId)))),
 			Slug:     currentCharacterSlug,
 			Name:     fake.Name,
 		},
 	})
 
 	require.NoError(t, err, "no error creating character")
+
+	seedPublishedPostWithCharacter(t, createCharacter.CreateCharacter.Character.Reference, seriesId)
 
 	refreshCharacterIndex(t)
 
@@ -177,5 +183,35 @@ func TestCreateCharacter_update_and_search(t *testing.T) {
 
 	require.Equal(t, fake.Name, character.Name, "title has been updated")
 	require.NotNil(t, character.Thumbnail, "has a thumbnail")
+	require.Nil(t, character.Banner, "has no banner ter")
 	require.True(t, character.Thumbnail.Processed, "thumbnail is processed")
+
+	env := getWorkflowEnvironment()
+
+	refreshCharacterIndex(t)
+
+	env.ExecuteWorkflow(workflows.GenerateCharacterBanner, workflows.GenerateCharacterBannerInput{CharacterId: character.Reference})
+
+	require.True(t, env.IsWorkflowCompleted(), "generating banner workflow is complete")
+	require.NoError(t, env.GetWorkflowError(), "no error generating banner")
+
+	cat := getCharacterFromAdapter(t, character.Reference)
+
+	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
+		Id:          cat.BannerResource().ID(),
+		ItemId:      character.Reference,
+		Processed:   true,
+		Type:        proto.ResourceType_IMAGE,
+		ProcessedId: uuid.New().String(),
+		Private:     false,
+		Width:       100,
+		Height:      100,
+		Token:       "CHARACTER_BANNER",
+	}}})
+
+	require.NoError(t, err, "no error updating character banner")
+
+	character = getCharacterBySlug(t, client, currentCharacterSlug)
+	require.NotNil(t, character, "expected to have found character")
+	require.NotNil(t, character.Banner, "has a banner")
 }

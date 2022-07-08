@@ -23,16 +23,10 @@ func NewUpdateAudienceThumbnailHandler(pr post.Repository, loader LoaderService)
 
 func (h UpdateAudienceThumbnailHandler) Handle(ctx context.Context, cmd UpdateAudienceThumbnail) (*post.Audience, error) {
 
-	var oldResourceId string
-
 	aud, err := h.pr.UpdateAudienceThumbnail(ctx, cmd.Principal, cmd.AudienceId, func(audience *post.Audience) error {
 
-		if audience.ThumbnailResource() != nil {
-			oldResourceId = audience.ThumbnailResource().ID()
-		}
-
 		// create resources from content
-		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.AudienceId, []string{cmd.Thumbnail}, false, "AUDIENCE", true)
+		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.AudienceId, []string{cmd.Thumbnail}, false, "AUDIENCE", true, 100, 0)
 
 		if err != nil {
 			return err
@@ -40,12 +34,6 @@ func (h UpdateAudienceThumbnailHandler) Handle(ctx context.Context, cmd UpdateAu
 
 		return audience.UpdateThumbnail(cmd.Principal, resourceIds[0])
 	})
-
-	if oldResourceId != "" {
-		if err := h.loader.DeleteResources(ctx, cmd.AudienceId, []string{oldResourceId}); err != nil {
-			return nil, err
-		}
-	}
 
 	if err != nil {
 		return nil, err

@@ -45,6 +45,11 @@ func NewWorker(app *app.Application) (worker.Worker, func()) {
 	w.RegisterWorkflow(workflows.UnSuspendClub)
 	w.RegisterWorkflow(workflows.CreateClub)
 
+	w.RegisterWorkflow(workflows.GenerateSeriesBanner)
+	w.RegisterWorkflow(workflows.GenerateCharacterBanner)
+	w.RegisterWorkflow(workflows.GenerateCategoryBanner)
+	w.RegisterWorkflow(workflows.GenerateClubBannerFromPost)
+
 	// register activities with our struct
 	w.RegisterActivity(app.Activities)
 

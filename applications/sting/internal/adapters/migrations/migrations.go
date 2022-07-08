@@ -7,19 +7,7 @@ import (
 )
 
 func registerCallbacks() migrate.CallbackRegister {
-	var reg = migrate.CallbackRegister{}
-
-	reg.Add(migrate.CallComment, "create_categories_index", createCategoryIndex)
-	reg.Add(migrate.CallComment, "create_audience_index", createAudienceIndex)
-	reg.Add(migrate.CallComment, "create_characters_index", createCharacterIndex)
-	reg.Add(migrate.CallComment, "create_series_index", createSeriesIndex)
-	reg.Add(migrate.CallComment, "create_posts_index", createPostsIndex)
-	reg.Add(migrate.CallComment, "create_clubs_index", createClubsIndex)
-	reg.Add(migrate.CallComment, "create_club_members_index", createClubMembersIndex)
-	reg.Add(migrate.CallComment, "add_clubs_banner_disable_supporter_only_posts_index", addClubsBannerToIndex)
-	reg.Add(migrate.CallComment, "add_search_history_index", addSearchHistoryIndex)
-
-	return reg
+	return migrate.CallbackRegister{}
 }
 
 var MigrateConfig = database.MigrateConfig{

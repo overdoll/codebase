@@ -10,6 +10,7 @@ import (
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/principal"
+	"strings"
 	"time"
 )
 
@@ -19,6 +20,98 @@ type EventTemporalRepository struct {
 
 func NewEventTemporalRepository(client client.Client) EventTemporalRepository {
 	return EventTemporalRepository{client: client}
+}
+
+func (r EventTemporalRepository) SendCompletedPixelatedResources(ctx context.Context, post *post.Post) error {
+
+	if err := r.client.SignalWorkflow(ctx, "sting.SubmitPost_"+post.ID(), "", workflows.SubmitPostSignalChannel, true); err != nil {
+
+		if strings.Contains(err.Error(), "workflow execution already completed") {
+			return nil
+		}
+
+		return errors.Wrap(err, "failed to signal submit post workflow")
+	}
+
+	return nil
+}
+
+func (r EventTemporalRepository) GenerateCharacterBanner(ctx context.Context, character *post.Character, duration time.Duration) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue:             viper.GetString("temporal.queue"),
+		ID:                    "sting.GenerateCharacterBanner_" + character.ID(),
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_TERMINATE_IF_RUNNING,
+	}
+
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.GenerateCharacterBanner, workflows.GenerateCharacterBannerInput{
+		CharacterId: character.ID(),
+		WaitPeriod:  duration,
+	})
+
+	if err != nil {
+		return errors.Wrap(err, "failed to run update character banner")
+	}
+
+	return nil
+}
+
+func (r EventTemporalRepository) GenerateClubBannerFromPost(ctx context.Context, post *post.Post) error {
+	options := client.StartWorkflowOptions{
+		TaskQueue:             viper.GetString("temporal.queue"),
+		ID:                    "sting.GenerateClubBannerFromPost_" + post.ClubId(),
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_TERMINATE_IF_RUNNING,
+	}
+
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.GenerateClubBannerFromPost, workflows.GenerateClubBannerFromPostInput{
+		PostId: post.ID(),
+	})
+
+	if err != nil {
+		return errors.Wrap(err, "failed to run generate club banner from post")
+	}
+
+	return nil
+}
+
+func (r EventTemporalRepository) GenerateCategoryBanner(ctx context.Context, category *post.Category, duration time.Duration) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue:             viper.GetString("temporal.queue"),
+		ID:                    "sting.GenerateCategoryBanner_" + category.ID(),
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_TERMINATE_IF_RUNNING,
+	}
+
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.GenerateCategoryBanner, workflows.GenerateCategoryBannerInput{
+		CategoryId: category.ID(),
+		WaitPeriod: duration,
+	})
+
+	if err != nil {
+		return errors.Wrap(err, "failed to run update category banner")
+	}
+
+	return nil
+}
+
+func (r EventTemporalRepository) GenerateSeriesBanner(ctx context.Context, series *post.Series, duration time.Duration) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue:             viper.GetString("temporal.queue"),
+		ID:                    "sting.GenerateSeriesBanner_" + series.ID(),
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_TERMINATE_IF_RUNNING,
+	}
+
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.GenerateSeriesBanner, workflows.GenerateSeriesBannerInput{
+		SeriesId:   series.ID(),
+		WaitPeriod: duration,
+	})
+
+	if err != nil {
+		return errors.Wrap(err, "failed to run update series banner")
+	}
+
+	return nil
 }
 
 func (r EventTemporalRepository) PublishPost(ctx context.Context, postId string) error {

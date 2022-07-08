@@ -53,7 +53,7 @@ describe('Join', () => {
      * Cancel join in lobby and check state
      */
     cy.get('button[aria-label="Close"]').should('be.visible').should('not.be.disabled').click({ force: true })
-    cy.findByText(/Confirm Join Cancellation/iu).should('be.visible')
+    cy.waitUntil(() => cy.findByText(/Confirm Join Cancellation/iu).should('be.visible'))
     clickOnButton(/Yes, cancel/iu)
     clickOnButton(/Continue/iu)
     typeIntoPlaceholder(/Enter an email/iu, email)
@@ -76,7 +76,7 @@ describe('Join', () => {
     join(email)
     cy.findByText(/Enter the 6-digit code/iu).should('be.visible')
     cy.get('button[aria-label="Close"]').should('be.visible').should('not.be.disabled').click({ force: true })
-    cy.findByText(/Confirm Join Cancellation/iu).should('be.visible')
+    cy.waitUntil(() => cy.findByText(/Confirm Join Cancellation/iu).should('be.visible'))
     clickOnButton(/Yes, cancel/iu)
     cy.findByRole('button', { name: /Continue/iu }).should('not.be.disabled')
   })

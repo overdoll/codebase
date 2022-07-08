@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "indexes",
+    srcs = ["indexes.go"],
+    importpath = "overdoll/applications/hades/internal/adapters/indexes",
+    visibility = ["//applications/hades:__subpackages__"],
+    deps = [
+        "//applications/hades/internal/adapters",
+        "//applications/hades/internal/adapters/indexes/schema",
+        "//libraries/bootstrap",
+        "//libraries/cache",
+    ],
+)

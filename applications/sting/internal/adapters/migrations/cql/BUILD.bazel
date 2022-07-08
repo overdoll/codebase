@@ -6,6 +6,8 @@ go_library(
     embedsrcs = [
         "1614606770_create_posts.cql",
         "1655917417_modify_clubs.cql",
+        "1656433052_add_banners.cql",
+        "1657032744_create_topics.cql",
     ],
     importpath = "overdoll/applications/sting/internal/adapters/migrations/cql",
     visibility = ["//applications/sting:__subpackages__"],

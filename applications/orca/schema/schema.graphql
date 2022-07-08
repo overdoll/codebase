@@ -961,6 +961,28 @@ enum AddAccountEmailValidation {
   INVALID_EMAIL
 }
 
+"""Update category."""
+input AddCategoryAlternativeTitleInput {
+  """The category to update"""
+  id: ID!
+
+  """The localization for this title"""
+  locale: BCP47!
+
+  """
+  The title to add.
+  
+  Validation: Max 25 characters.
+  """
+  title: String!
+}
+
+"""Payload for updating category"""
+type AddCategoryAlternativeTitlePayload {
+  """The category after update"""
+  category: Category
+}
+
 """Add alias slug."""
 input AddClubSlugAliasInput {
   """The club to update"""
@@ -1079,6 +1101,9 @@ type Audience implements Node
   @join__owner(graph: STING)
   @join__type(graph: STING, key: "id")
 {
+  """A URL pointing to the object's banner."""
+  banner: Resource @join__field(graph: STING)
+
   """An ID pointing to this audience."""
   id: ID! @join__field(graph: STING)
 
@@ -1542,6 +1567,12 @@ type Category implements Node
   @join__owner(graph: STING)
   @join__type(graph: STING, key: "id")
 {
+  """Alternative titles for this category."""
+  alternativeTitles: [Translation!]! @join__field(graph: STING)
+
+  """A URL pointing to the object's banner."""
+  banner: Resource @join__field(graph: STING)
+
   """An ID pointing to this category."""
   id: ID! @join__field(graph: STING)
 
@@ -1601,6 +1632,9 @@ type Category implements Node
   """All translations for this title."""
   titleTranslations: [Translation!]! @join__field(graph: STING)
 
+  """The topic linked this category. If no topic is linked, field is null."""
+  topic: Topic @join__field(graph: STING)
+
   """Total amount of likes."""
   totalLikes: Int! @join__field(graph: STING)
 
@@ -1633,6 +1667,9 @@ type Character implements Node
   @join__owner(graph: STING)
   @join__type(graph: STING, key: "id")
 {
+  """A URL pointing to the object's banner."""
+  banner: Resource @join__field(graph: STING)
+
   """An ID pointing to this character."""
   id: ID! @join__field(graph: STING)
 
@@ -2575,6 +2612,9 @@ input CreateCategoryInput {
   Validation: Max 25 characters.
   """
   title: String!
+
+  """Optionally assign a topic to this category."""
+  topicId: ID
 }
 
 """Payload for a new category"""
@@ -2722,6 +2762,47 @@ type CreateSeriesPayload {
 
 """Validation for creating a new series"""
 enum CreateSeriesValidation {
+  SLUG_TAKEN
+}
+
+"""Create a new topic."""
+input CreateTopicInput {
+  """
+  The chosen description for the topic.
+  
+  Validation: Markdown allowed.
+  """
+  description: String!
+
+  """
+  The chosen slug for the topic.
+  
+  Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
+  """
+  slug: String!
+
+  """
+  The chosen title for the topic.
+  
+  Validation: Max 25 characters.
+  """
+  title: String!
+
+  """The assigned weight for this topic."""
+  weight: Int!
+}
+
+"""Payload for a new topic"""
+type CreateTopicPayload {
+  """The topic after creation"""
+  topic: Topic
+
+  """Validation for creating a new topic"""
+  validation: CreateTopicValidation
+}
+
+"""Validation for creating a new topic"""
+enum CreateTopicValidation {
   SLUG_TAKEN
 }
 
@@ -3406,6 +3487,9 @@ type Mutation {
   """Add an email to the account, will need to be confirmed"""
   addAccountEmail(input: AddAccountEmailInput!): AddAccountEmailPayload @join__field(graph: EVA)
 
+  """Add an alternative title to the category."""
+  addCategoryAlternativeTitle(input: AddCategoryAlternativeTitleInput!): AddCategoryAlternativeTitlePayload @join__field(graph: STING)
+
   """Add an alternative slug to the club"""
   addClubSlugAlias(input: AddClubSlugAliasInput!): AddClubSlugAliasPayload @join__field(graph: STING)
 
@@ -3490,6 +3574,9 @@ type Mutation {
 
   """Create a new series"""
   createSeries(input: CreateSeriesInput!): CreateSeriesPayload @join__field(graph: STING)
+
+  """Create a new topic"""
+  createTopic(input: CreateTopicInput!): CreateTopicPayload @join__field(graph: STING)
 
   """
   Delete an account.
@@ -3665,6 +3752,9 @@ type Mutation {
   """
   rejectPost(input: RejectPostInput!): RejectPostPayload @join__field(graph: PARLEY)
 
+  """Remove an alternative title from the category."""
+  removeCategoryAlternativeTitle(input: RemoveCategoryAlternativeTitleInput!): RemoveCategoryAlternativeTitlePayload @join__field(graph: STING)
+
   """
   In case of a false infraction, you can remove it from the club's history.
   
@@ -3794,6 +3884,9 @@ type Mutation {
   """
   updateAccountUsername(input: UpdateAccountUsernameInput!): UpdateAccountUsernamePayload @join__field(graph: EVA)
 
+  """Update audience banner"""
+  updateAudienceBanner(input: UpdateAudienceBannerInput!): UpdateAudienceBannerPayload @join__field(graph: STING)
+
   """Update audience standard"""
   updateAudienceIsStandard(input: UpdateAudienceIsStandardInput!): UpdateAudienceIsStandardPayload @join__field(graph: STING)
 
@@ -3814,6 +3907,9 @@ type Mutation {
 
   """Update category title"""
   updateCategoryTitle(input: UpdateCategoryTitleInput!): UpdateCategoryTitlePayload @join__field(graph: STING)
+
+  """Update the category topic"""
+  updateCategoryTopic(input: UpdateCategoryTopicInput!): UpdateCategoryTopicPayload @join__field(graph: STING)
 
   """Update character title"""
   updateCharacterName(input: UpdateCharacterNameInput!): UpdateCharacterNamePayload @join__field(graph: STING)
@@ -3896,6 +3992,18 @@ type Mutation {
 
   """Update series title"""
   updateSeriesTitle(input: UpdateSeriesTitleInput!): UpdateSeriesTitlePayload @join__field(graph: STING)
+
+  """Update topic banner"""
+  updateTopicBanner(input: UpdateTopicBannerInput!): UpdateTopicBannerPayload @join__field(graph: STING)
+
+  """Update topic description"""
+  updateTopicDescription(input: UpdateTopicDescriptionInput!): UpdateTopicDescriptionPayload @join__field(graph: STING)
+
+  """Update topic title"""
+  updateTopicTitle(input: UpdateTopicTitleInput!): UpdateTopicTitlePayload @join__field(graph: STING)
+
+  """Update topic weight"""
+  updateTopicWeight(input: UpdateTopicWeightInput!): UpdateTopicWeightPayload @join__field(graph: STING)
 
   """
   Will verify the authentication token. Requires the secret (sent in an email)
@@ -4710,6 +4818,33 @@ type Query {
     title: String
   ): SeriesConnection! @join__field(graph: STING)
 
+  """Get a single topic."""
+  topic(
+    """Search by slug of the topic."""
+    slug: String!
+  ): Topic @join__field(graph: STING)
+
+  """
+  Search all topics.
+  
+  Topics are sorted by the "weight" field. Higher weights are displayed at the top, in descending order.
+  """
+  topics(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): TopicConnection! @join__field(graph: STING)
+
   """
   Get the status of the authentication token - whether or not it is redeemed, account status, etc..
   
@@ -4776,6 +4911,21 @@ input RejectPostInput {
 type RejectPostPayload {
   """The resulting post"""
   post: Post
+}
+
+"""Update category."""
+input RemoveCategoryAlternativeTitleInput {
+  """The category to update"""
+  id: ID!
+
+  """The title to remove."""
+  title: String!
+}
+
+"""Payload for updating category"""
+type RemoveCategoryAlternativeTitlePayload {
+  """The category after update"""
+  category: Category
 }
 
 """Remove a club infraction."""
@@ -4872,6 +5022,16 @@ and urls to access the resources. We have many urls in order to provide a fallba
 We also identify the type of resource (image or video) to make it easy to distinguish them
 """
 type Resource {
+  """
+  Whether or not this resource failed to process.
+  
+  A failure can happen if:
+  - The supplied image is an unsupported format. This can happen if for example, someone submits a JPEG (unsupported) that was renamed to a PNG (supported)
+  - The supplied image is corrupted.
+  - The supplied video is invalid or corrupted.
+  """
+  failed: Boolean!
+
   """The height."""
   height: Int!
 
@@ -4896,6 +5056,9 @@ type Resource {
 
   """Duration, if video."""
   videoDuration: Int!
+
+  """Whether or not the video has audio."""
+  videoNoAudio: Boolean!
 
   """Video thumbnail, if video."""
   videoThumbnail: ResourceUrl
@@ -5067,6 +5230,9 @@ type Series implements Node
   @join__owner(graph: STING)
   @join__type(graph: STING, key: "id")
 {
+  """A URL pointing to the object's banner."""
+  banner: Resource @join__field(graph: STING)
+
   """An ID pointing to this series."""
   id: ID! @join__field(graph: STING)
 
@@ -5221,6 +5387,84 @@ type TerminateClubPayload {
 
 scalar Time
 
+type Topic implements Node
+  @join__owner(graph: STING)
+  @join__type(graph: STING, key: "id")
+{
+  """A URL pointing to the object's banner."""
+  banner: Resource @join__field(graph: STING)
+
+  """All categories linked to this topic."""
+  categories(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Search by category slugs."""
+    slugs: [String!]
+
+    """Sorting options for categories."""
+    sortBy: CategoriesSort! = POPULAR
+
+    """Filter by the title of the category."""
+    title: String
+  ): CategoryConnection! @join__field(graph: STING)
+
+  """
+  A description for this topic.
+  
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  description(locale: BCP47): String! @join__field(graph: STING)
+
+  """All translations for this topic."""
+  descriptionTranslations: [Translation!]! @join__field(graph: STING)
+
+  """An ID pointing to this topic."""
+  id: ID! @join__field(graph: STING)
+
+  """
+  An ID that can be used to uniquely-identify this category. Never changes.
+  """
+  reference: String! @join__field(graph: STING)
+
+  """A url-friendly ID. Should be used when searching"""
+  slug: String! @join__field(graph: STING)
+
+  """
+  A title for this topic.
+  
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  title(locale: BCP47): String! @join__field(graph: STING)
+
+  """All translations for this title."""
+  titleTranslations: [Translation!]! @join__field(graph: STING)
+
+  """The weight of this topic."""
+  weight: Int! @join__field(graph: STING)
+}
+
+type TopicConnection {
+  edges: [TopicEdge!]!
+  pageInfo: PageInfo!
+}
+
+type TopicEdge {
+  cursor: String!
+  node: Topic!
+}
+
 type Translation {
   """The language linked to this translation."""
   language: Language!
@@ -5346,6 +5590,21 @@ enum UpdateAccountUsernameValidation {
 }
 
 """Update audience."""
+input UpdateAudienceBannerInput {
+  """The banner"""
+  banner: String!
+
+  """The audience to update"""
+  id: ID!
+}
+
+"""Payload for updating audience"""
+type UpdateAudienceBannerPayload {
+  """The audience after update"""
+  audience: Audience
+}
+
+"""Update audience."""
 input UpdateAudienceIsStandardInput {
   """The audience to update"""
   id: ID!
@@ -5463,6 +5722,21 @@ input UpdateCategoryTitleInput {
 
 """Payload for updating category"""
 type UpdateCategoryTitlePayload {
+  """The category after update"""
+  category: Category
+}
+
+"""Update category topic."""
+input UpdateCategoryTopicInput {
+  """The category to update"""
+  id: ID!
+
+  """The topic to assign to this category."""
+  topicId: ID!
+}
+
+"""Payload for updating category"""
+type UpdateCategoryTopicPayload {
   """The category after update"""
   category: Category
 }
@@ -5814,6 +6088,80 @@ input UpdateSeriesTitleInput {
 type UpdateSeriesTitlePayload {
   """The series after update"""
   series: Series
+}
+
+"""Update topic."""
+input UpdateTopicBannerInput {
+  """The banner"""
+  banner: String!
+
+  """The category to update"""
+  id: ID!
+}
+
+"""Payload for updating topic"""
+type UpdateTopicBannerPayload {
+  """The topic after update"""
+  topic: Topic
+}
+
+"""Update topic."""
+input UpdateTopicDescriptionInput {
+  """
+  The description to update.
+  
+  Validation: Markdown allowed.
+  """
+  description: String!
+
+  """The topic to update"""
+  id: ID!
+
+  """The localization for this description"""
+  locale: BCP47!
+}
+
+"""Payload for updating topic"""
+type UpdateTopicDescriptionPayload {
+  """The topic after update"""
+  topic: Topic
+}
+
+"""Update topic."""
+input UpdateTopicTitleInput {
+  """The topic to update"""
+  id: ID!
+
+  """The localization for this title"""
+  locale: BCP47!
+
+  """
+  The title to update.
+  
+  Validation: Max 25 characters.
+  """
+  title: String!
+}
+
+"""Payload for updating topic"""
+type UpdateTopicTitlePayload {
+  """The topic after update"""
+  topic: Topic
+}
+
+"""Update topic."""
+input UpdateTopicWeightInput {
+  """The topic to update"""
+  id: ID!
+
+  """The weight to update to."""
+  weight: Int!
+}
+
+"""Payload for updating topic"""
+type UpdateTopicWeightPayload {
+  """The topic after update"""
+  topic: Topic
 }
 
 """Input for verifying authentication token"""

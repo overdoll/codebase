@@ -24,6 +24,9 @@ export default function TotpQrCodeStep ({
           bg='gray.00'
         >
           <NextImage
+            height={128}
+            width={128}
+            loading='eager'
             height={180}
             width={180}
             priority

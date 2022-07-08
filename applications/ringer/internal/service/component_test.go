@@ -179,7 +179,7 @@ func refreshPayoutsIndex(t *testing.T) {
 
 	// refresh transactions index so we get the most up-to-date values
 	es := bootstrap.InitializeElasticSearchSession()
-	_, err := es.Refresh(adapters.ClubPayoutsIndexName).Do(context.Background())
+	_, err := es.Refresh(adapters.ClubPayoutsReaderIndex).Do(context.Background())
 	require.NoError(t, err)
 }
 
@@ -187,7 +187,7 @@ func refreshPaymentsIndex(t *testing.T) {
 
 	// refresh transactions index so we get the most up-to-date values
 	es := bootstrap.InitializeElasticSearchSession()
-	_, err := es.Refresh(adapters.ClubPaymentsIndexName).Do(context.Background())
+	_, err := es.Refresh(adapters.ClubPaymentsReaderIndex).Do(context.Background())
 	require.NoError(t, err)
 }
 

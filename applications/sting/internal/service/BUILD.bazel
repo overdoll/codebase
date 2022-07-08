@@ -38,6 +38,7 @@ go_test(
         "series_component_test.go",
         "suspend_club_component_test.go",
         "terminate_club_component_test.go",
+        "topic_component_test.go",
     ],
     data = [
         "//applications/sting:config.toml",

@@ -23,15 +23,9 @@ func NewUpdateSeriesThumbnailHandler(pr post.Repository, loader LoaderService) U
 
 func (h UpdateSeriesThumbnailHandler) Handle(ctx context.Context, cmd UpdateSeriesThumbnail) (*post.Series, error) {
 
-	var oldResourceId string
-
 	series, err := h.pr.UpdateSeriesThumbnail(ctx, cmd.Principal, cmd.SeriesId, func(series *post.Series) error {
 
-		if series.ThumbnailResource() != nil {
-			oldResourceId = series.ThumbnailResource().ID()
-		}
-
-		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.SeriesId, []string{cmd.Thumbnail}, false, "SERIES", true)
+		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.SeriesId, []string{cmd.Thumbnail}, false, "SERIES", true, 100, 0)
 
 		if err != nil {
 			return err
@@ -39,12 +33,6 @@ func (h UpdateSeriesThumbnailHandler) Handle(ctx context.Context, cmd UpdateSeri
 
 		return series.UpdateThumbnail(cmd.Principal, resourceIds[0])
 	})
-
-	if oldResourceId != "" {
-		if err := h.loader.DeleteResources(ctx, cmd.SeriesId, []string{oldResourceId}); err != nil {
-			return nil, err
-		}
-	}
 
 	if err != nil {
 		return nil, err

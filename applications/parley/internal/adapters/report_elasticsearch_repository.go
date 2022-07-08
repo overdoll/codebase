@@ -5,11 +5,13 @@ import (
 	"encoding/json"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
+	"go.uber.org/zap"
 	"overdoll/applications/parley/internal/domain/report"
+	"overdoll/libraries/cache"
+	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/scan"
 	"overdoll/libraries/support"
 	"time"
 )
@@ -22,7 +24,10 @@ type postReportDocument struct {
 	CreatedAt          time.Time `json:"created_at"`
 }
 
-const PostReportsIndexName = "parley.post_reports"
+const PostReportsIndexName = "post_reports"
+
+var PostReportsReaderIndex = cache.ReadAlias(CachePrefix, PostReportsIndexName)
+var postReportsWriterIndex = cache.WriteAlias(CachePrefix, PostReportsIndexName)
 
 func marshalPostReportToDocument(cat *report.PostReport) (*postReportDocument, error) {
 	return &postReportDocument{
@@ -41,7 +46,7 @@ func (r ReportCassandraElasticsearchRepository) SearchPostReports(ctx context.Co
 	}
 
 	builder := r.client.Search().
-		Index(PostReportsIndexName)
+		Index(PostReportsReaderIndex)
 
 	if cursor == nil {
 		return nil, paging.ErrCursorNotPresent
@@ -96,7 +101,7 @@ func (r ReportCassandraElasticsearchRepository) indexPostReport(ctx context.Cont
 
 	_, err = r.client.
 		Index().
-		Index(PostReportsIndexName).
+		Index(postReportsWriterIndex).
 		Id(clb.Id).
 		BodyJson(*clb).
 		Do(ctx)
@@ -110,8 +115,8 @@ func (r ReportCassandraElasticsearchRepository) indexPostReport(ctx context.Cont
 
 func (r ReportCassandraElasticsearchRepository) IndexAllPostReports(ctx context.Context) error {
 
-	scanner := scan.New(r.session,
-		scan.Config{
+	scanner := database.NewScan(r.session,
+		database.ScanConfig{
 			NodesInCluster: 1,
 			CoresInNode:    2,
 			SmudgeFactor:   3,
@@ -124,23 +129,25 @@ func (r ReportCassandraElasticsearchRepository) IndexAllPostReports(ctx context.
 
 		for iter.StructScan(&m) {
 
-			doc := postReportDocument{
-				Id:                 m.PostId + "-" + m.ReportingAccountId,
-				PostId:             m.PostId,
-				ReportingAccountId: m.ReportingAccountId,
-				RuleId:             m.RuleId,
-				CreatedAt:          m.CreatedAt,
+			doc, err := marshalPostReportToDocument(unmarshalPostReportFromDatabase(&m))
+
+			if err != nil {
+				return err
 			}
 
-			_, err := r.client.
+			_, err = r.client.
 				Index().
-				Index(PostReportsIndexName).
+				Index(postReportsWriterIndex).
 				Id(doc.Id).
+				OpType("create").
 				BodyJson(doc).
 				Do(ctx)
 
-			if err != nil {
-				return errors.Wrap(support.ParseElasticError(err), "IndexAllPostReports")
+			e, ok := err.(*elastic.Error)
+			if ok && e.Details.Type == "version_conflict_engine_exception" {
+				zap.S().Infof("skipping document [%s] due to conflict", doc.Id)
+			} else {
+				return errors.Wrap(support.ParseElasticError(err), "failed to index post report")
 			}
 		}
 
@@ -156,7 +163,7 @@ func (r ReportCassandraElasticsearchRepository) IndexAllPostReports(ctx context.
 
 func (r ReportCassandraElasticsearchRepository) deletePostReportsIndexById(ctx context.Context, postId, accountId string) error {
 
-	if _, err := r.client.Delete().Index(PostReportsIndexName).Id(postId + "-" + accountId).Do(ctx); err != nil {
+	if _, err := r.client.Delete().Index(postReportsWriterIndex).Id(postId + "-" + accountId).Do(ctx); err != nil {
 		return errors.Wrap(support.ParseElasticError(err), "deletePostReportsIndexById")
 	}
 

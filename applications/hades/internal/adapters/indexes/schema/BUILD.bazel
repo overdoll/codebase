@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "schema",
+    srcs = ["embed.go"],
+    embedsrcs = [
+        "account_club_supporter_subscriptions.json",
+        "account_transactions.json",
+    ],
+    importpath = "overdoll/applications/hades/internal/adapters/indexes/schema",
+    visibility = ["//applications/hades:__subpackages__"],
+)

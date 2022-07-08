@@ -6,9 +6,7 @@ go_library(
     importpath = "overdoll/applications/ringer/internal/adapters/seeders",
     visibility = ["//applications/ringer:__subpackages__"],
     deps = [
-        "//applications/ringer/internal/adapters",
         "//applications/ringer/internal/adapters/seeders/data",
-        "//libraries/bootstrap",
         "//libraries/database",
         "@com_github_scylladb_gocqlx_v2//:gocqlx",
     ],

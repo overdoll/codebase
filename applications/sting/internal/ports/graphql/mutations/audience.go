@@ -94,6 +94,31 @@ func (r *MutationResolver) UpdateAudienceThumbnail(ctx context.Context, input ty
 	}, err
 }
 
+func (r *MutationResolver) UpdateAudienceBanner(ctx context.Context, input types.UpdateAudienceBannerInput) (*types.UpdateAudienceBannerPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	audience, err := r.App.Commands.UpdateAudienceBanner.
+		Handle(
+			ctx,
+			command.UpdateAudienceBanner{
+				Principal:  principal.FromContext(ctx),
+				AudienceId: input.ID.GetID(),
+				Banner:     input.Banner,
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.UpdateAudienceBannerPayload{
+		Audience: types.MarshalAudienceToGraphQL(ctx, audience),
+	}, err
+}
+
 func (r *MutationResolver) UpdateAudienceIsStandard(ctx context.Context, input types.UpdateAudienceIsStandardInput) (*types.UpdateAudienceIsStandardPayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {

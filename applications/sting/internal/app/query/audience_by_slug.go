@@ -22,7 +22,7 @@ func NewAudienceBySlugHandler(pr post.Repository) AudienceBySlugHandler {
 
 func (h AudienceBySlugHandler) Handle(ctx context.Context, query AudienceBySlug) (*post.Audience, error) {
 
-	result, err := h.pr.GetAudienceBySlug(ctx, query.Principal, query.Slug)
+	result, err := h.pr.GetAudienceBySlug(ctx, query.Slug)
 
 	if err != nil {
 		return nil, err
