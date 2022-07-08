@@ -5,8 +5,7 @@ import type {
   ArrangeUploadsFragment$key
 } from '@//:artifacts/ArrangeUploadsFragment.graphql'
 import DraggableContent from './DraggableContent/DraggableContent'
-import { useContext, useEffect, useState } from 'react'
-import { UppyContext } from '../../../../../../../context'
+import { useEffect, useState } from 'react'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import ArrangeButton from './ArrangeButton/ArrangeButton'
 import { useToast } from '@//:modules/content/ThemeComponents'

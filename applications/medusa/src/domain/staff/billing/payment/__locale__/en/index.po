@@ -21,11 +21,11 @@ msgstr ""
 msgid "Club"
 msgstr ""
 
-#: src/domain/staff/billing/payment/RootStaffPayment/StaffPayment/StaffPaymentOptions/StaffPaymentOptions.tsx:95
+#: src/domain/staff/billing/payment/RootStaffPayment/StaffPayment/StaffPaymentOptions/StaffPaymentOptions.tsx:93
 msgid "Final Amount"
 msgstr ""
 
-#: src/domain/staff/billing/payment/RootStaffPayment/StaffPayment/StaffPaymentOptions/StaffPaymentOptions.tsx:109
+#: src/domain/staff/billing/payment/RootStaffPayment/StaffPayment/StaffPaymentOptions/StaffPaymentOptions.tsx:105
 msgid "Is Deduction"
 msgstr ""
 
@@ -33,7 +33,7 @@ msgstr ""
 msgid "Payment"
 msgstr ""
 
-#: src/domain/staff/billing/payment/RootStaffPayment/StaffPayment/StaffPaymentOptions/StaffPaymentOptions.tsx:83
+#: src/domain/staff/billing/payment/RootStaffPayment/StaffPayment/StaffPaymentOptions/StaffPaymentOptions.tsx:81
 msgid "Platform Fee"
 msgstr ""
 
@@ -46,9 +46,9 @@ msgid "Transaction"
 msgstr ""
 
 #: src/domain/staff/billing/payment/RootStaffPayment/StaffPayment/StaffPaymentOptions/StaffPaymentOptions.tsx:75
-msgid "{baseAmount}"
-msgstr ""
+#~ msgid "{baseAmount}"
+#~ msgstr ""
 
 #: src/domain/staff/billing/payment/RootStaffPayment/StaffPayment/StaffPaymentOptions/StaffPaymentOptions.tsx:101
-msgid "{finalAmount}"
-msgstr ""
+#~ msgid "{finalAmount}"
+#~ msgstr ""

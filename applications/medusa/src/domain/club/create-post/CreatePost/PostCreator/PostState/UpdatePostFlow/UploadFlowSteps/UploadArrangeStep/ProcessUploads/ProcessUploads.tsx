@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Flex, Heading, Stack } from '@chakra-ui/react'
 import File from './File/File'
 import { graphql, useMutation } from 'react-relay/hooks'
@@ -9,12 +9,12 @@ import Button from '@//:modules/form/Button/Button'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { WarningTriangle } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
-import { UppyContext } from '../../../../../../../context'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import { ClickableTile } from '@//:modules/content/ContentSelection'
 import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
-import GenericFilePicker from '@//:modules/content/HookedComponents/Upload/components/GenericFilePicker/GenericFilePicker'
+import GenericFilePicker
+  from '@//:modules/content/HookedComponents/Upload/components/GenericFilePicker/GenericFilePicker'
 import { useUppyContext } from '@//:modules/content/HookedComponents/Upload'
 
 interface Props {

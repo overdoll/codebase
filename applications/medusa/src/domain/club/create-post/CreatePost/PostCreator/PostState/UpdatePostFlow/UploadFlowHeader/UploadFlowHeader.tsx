@@ -1,4 +1,4 @@
-import { useContext, useRef } from 'react'
+import { useRef } from 'react'
 import {
   AlertDialog,
   AlertDialogBody,
@@ -18,7 +18,6 @@ import { useFragment } from 'react-relay'
 import { useHistoryDisclosure } from '@//:modules/hooks'
 import Button from '@//:modules/form/Button/Button'
 import { t, Trans } from '@lingui/macro'
-import { UppyContext } from '../../../../../context'
 import { FlowBuilderHeader, FlowBuilderProgress } from '@//:modules/content/PageLayout'
 import ProcessContent from './ProcessContent/ProcessContent'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'

@@ -17,11 +17,11 @@ msgstr ""
 msgid "Amount"
 msgstr ""
 
-#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestOptions/StaffDepositRequestOptions.tsx:94
+#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestOptions/StaffDepositRequestOptions.tsx:92
 msgid "Base Amount"
 msgstr ""
 
-#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestOptions/StaffDepositRequestOptions.tsx:118
+#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestOptions/StaffDepositRequestOptions.tsx:116
 msgid "Created At"
 msgstr ""
 
@@ -29,15 +29,15 @@ msgstr ""
 msgid "Deposit Request"
 msgstr ""
 
-#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestOptions/StaffDepositRequestOptions.tsx:106
+#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestOptions/StaffDepositRequestOptions.tsx:104
 msgid "Estimated Fee Amount"
 msgstr ""
 
-#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestOptions/StaffDepositRequestOptions.tsx:82
+#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestOptions/StaffDepositRequestOptions.tsx:80
 msgid "Last Date for Deposit"
 msgstr ""
 
-#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestOptions/StaffDepositRequestOptions.tsx:70
+#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestOptions/StaffDepositRequestOptions.tsx:68
 msgid "Payout Method"
 msgstr ""
 
@@ -58,5 +58,5 @@ msgid "Total Amount"
 msgstr ""
 
 #: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestOptions/StaffDepositRequestOptions.tsx:62
-msgid "{totalAmount}"
-msgstr ""
+#~ msgid "{totalAmount}"
+#~ msgstr ""

@@ -17,6 +17,6 @@ msgstr ""
 msgid "Search Categories"
 msgstr ""
 
-#: src/domain/staff/entity/category/search/RootStaffSearchCategories/RootStaffSearchCategories.tsx:43
+#: src/domain/staff/entity/category/search/RootStaffSearchCategories/RootStaffSearchCategories.tsx:44
 msgid "Search for a category"
 msgstr ""

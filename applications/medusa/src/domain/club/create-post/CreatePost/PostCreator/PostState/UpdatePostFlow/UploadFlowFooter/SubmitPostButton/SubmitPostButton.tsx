@@ -5,8 +5,6 @@ import type { SubmitPostButtonFragment$key } from '@//:artifacts/SubmitPostButto
 import type { SubmitPostButtonMutation } from '@//:artifacts/SubmitPostButtonMutation.graphql'
 import Button from '@//:modules/form/Button/Button'
 import { t, Trans } from '@lingui/macro'
-import { useContext } from 'react'
-import { UppyContext } from '../../../../../../context'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import { hasSupporterContent } from '../../UploadFlowSteps/UploadReviewStep/UploadReviewStep'

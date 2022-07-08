@@ -17,6 +17,6 @@ msgstr ""
 msgid "Search Series"
 msgstr ""
 
-#: src/domain/staff/entity/series/search/RootStaffSearchSeries/RootStaffSearchSeries.tsx:43
+#: src/domain/staff/entity/series/search/RootStaffSearchSeries/RootStaffSearchSeries.tsx:44
 msgid "Search for a series"
 msgstr ""
