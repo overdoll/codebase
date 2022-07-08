@@ -282,7 +282,7 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 	require.NoError(t, err, "no error creating new resources from uploads")
 
 	env := getWorkflowEnvironment()
-	env.SetTestTimeout(time.Second * 10)
+	env.SetTestTimeout(time.Second * 20)
 
 	workflowExecution.FindAndExecuteWorkflow(t, env)
 
@@ -352,7 +352,7 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 	)
 
 	env = getWorkflowEnvironment()
-	env.SetTestTimeout(time.Second * 10)
+	env.SetTestTimeout(time.Second * 20)
 
 	workflowExecution.FindAndExecuteWorkflow(t, env)
 
