@@ -7,7 +7,6 @@ import {
   DESCRIPTION_FEATURES,
   DESCRIPTION_PREFIX,
   TITLE_FEATURES,
-  TITLE_SEARCH_PREFIX,
   TITLE_SUFFIX
 } from '@//:modules/constants/rich-objects'
 import ResourceRichObject from '../SearchCategoryRichObject/ResourceRichObject/ResourceRichObject'
@@ -34,7 +33,7 @@ export default function SearchCharacterRichObject ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const TITLE = `${TITLE_SEARCH_PREFIX} ${data.name} ${TITLE_FEATURES} ${TITLE_SUFFIX}`
+  const TITLE = `${data.name} ${TITLE_FEATURES} ${TITLE_SUFFIX}`
   const DESCRIPTION = `${DESCRIPTION_PREFIX} ${data.name} ${DESCRIPTION_FEATURES} on overdoll.com. ${DESCRIPTION_CONTENT_DISCOVER} of ${data.name}.`
 
   const URL = `https://overdoll.com/search/series/${data.series.slug}/${data.slug}`
