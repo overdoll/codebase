@@ -94,9 +94,7 @@ export default function AccountCancelledClubSupporterSubscriptionDetails ({
             </Trans>
           </Text>
           <Text {...descriptionProps}>
-            <Trans>
-              {cancelledAt}
-            </Trans>
+            {cancelledAt}
           </Text>
         </HStack>
       </Stack>

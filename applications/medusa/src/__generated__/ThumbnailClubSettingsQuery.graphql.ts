@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e7cbc3794e8f82f2d640fcfc9c58bdd0>>
- * @relayHash 7537ae93717088fdfd3f3efe306d53e9
+ * @generated SignedSource<<323c60ff1be9927c549588a20b53c8fa>>
+ * @relayHash adaa5ba2bb898437d46c550c63bfc162
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7537ae93717088fdfd3f3efe306d53e9
+// @relayRequestID adaa5ba2bb898437d46c550c63bfc162
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -52,15 +52,13 @@ v2 = {
   "name": "id",
   "storageKey": null
 },
-v3 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "url",
-    "storageKey": null
-  }
-];
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -136,7 +134,16 @@ return {
                 "kind": "LinkedField",
                 "name": "urls",
                 "plural": true,
-                "selections": (v3/*: any*/),
+                "selections": [
+                  (v3/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "mimeType",
+                    "storageKey": null
+                  }
+                ],
                 "storageKey": null
               },
               {
@@ -167,7 +174,9 @@ return {
                 "kind": "LinkedField",
                 "name": "videoThumbnail",
                 "plural": false,
-                "selections": (v3/*: any*/),
+                "selections": [
+                  (v3/*: any*/)
+                ],
                 "storageKey": null
               },
               {
@@ -186,7 +195,7 @@ return {
     ]
   },
   "params": {
-    "id": "7537ae93717088fdfd3f3efe306d53e9",
+    "id": "adaa5ba2bb898437d46c550c63bfc162",
     "metadata": {},
     "name": "ThumbnailClubSettingsQuery",
     "operationKind": "query",

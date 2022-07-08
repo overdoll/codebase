@@ -35,7 +35,7 @@ const Mutation = graphql`
     updateAudienceThumbnail(input: $input) {
       audience {
         id
-        thumbnail {
+        banner {
           type
           urls {
             url

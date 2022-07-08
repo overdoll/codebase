@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e952a4cdd6f24b06ea4b3a4ad874c5b7>>
+ * @generated SignedSource<<cac588fea93867c1cc9d787222e60b9f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type ImageSnippetFragment$data = {
   readonly id: string;
   readonly preview: string;
   readonly urls: ReadonlyArray<{
+    readonly mimeType: string;
     readonly url: string;
   }>;
   readonly width: number;
@@ -52,6 +53,13 @@ const node: ReaderFragment = {
           "kind": "ScalarField",
           "name": "url",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "mimeType",
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -82,6 +90,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "8f4f28ea11488813016e1c498329df34";
+(node as any).hash = "c1b1aea60ab8b5b0cb85b30bd2b21883";
 
 export default node;

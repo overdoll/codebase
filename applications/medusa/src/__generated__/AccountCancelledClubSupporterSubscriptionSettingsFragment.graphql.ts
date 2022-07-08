@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<085db0c89e59e61fabfe89cd60cae13c>>
+ * @generated SignedSource<<8f3ae64e309dc5d51d592ae16587a497>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,7 @@ export type AccountCancelledClubSupporterSubscriptionSettingsFragment$data = {
     readonly slug: string;
     readonly " $fragmentSpreads": FragmentRefs<"ClubExclusivePostsFragment">;
   };
-  readonly reference: string;
+  readonly id: string;
   readonly " $fragmentSpreads": FragmentRefs<"AccountCancelledClubSupporterSubscriptionDetailsFragment" | "ManageCancelledSubscriptionButtonFragment">;
   readonly " $fragmentType": "AccountCancelledClubSupporterSubscriptionSettingsFragment";
 };
@@ -34,18 +34,8 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "reference",
+      "name": "id",
       "storageKey": null
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "AccountCancelledClubSupporterSubscriptionDetailsFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "ManageCancelledSubscriptionButtonFragment"
     },
     {
       "alias": null,
@@ -69,12 +59,22 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "AccountCancelledClubSupporterSubscriptionDetailsFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "ManageCancelledSubscriptionButtonFragment"
     }
   ],
   "type": "AccountCancelledClubSupporterSubscription",
   "abstractKey": null
 };
 
-(node as any).hash = "64a43f0922fa0c6cec7216b91c9fd72b";
+(node as any).hash = "982f99004bc114bc1a5bceef89153b57";
 
 export default node;

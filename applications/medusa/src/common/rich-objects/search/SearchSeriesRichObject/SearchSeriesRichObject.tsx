@@ -19,7 +19,7 @@ const Fragment = graphql`
   fragment SearchSeriesRichObjectFragment on Series {
     slug
     title
-    thumbnail {
+    banner {
       ...ResourceRichObjectFragment
     }
   }
@@ -62,7 +62,7 @@ export default function SearchSeriesRichObject ({
           content={URL}
         />
       </Head>
-      <ResourceRichObject query={data.thumbnail} />
+      <ResourceRichObject query={data.banner} />
     </>
   )
 }

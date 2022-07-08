@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<335abc73ebc39bd18502fe6942801679>>
- * @relayHash 146c8a879a9dbc1a95456dc223278c0d
+ * @generated SignedSource<<80a69121c1b13c8f1594d39a8da0f046>>
+ * @relayHash 8cacb129d03a0c987387d906cd5ba2fd
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 146c8a879a9dbc1a95456dc223278c0d
+// @relayRequestID 8cacb129d03a0c987387d906cd5ba2fd
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
@@ -23,14 +23,14 @@ export type ChangeAudienceThumbnailFormMutation$variables = {
 export type ChangeAudienceThumbnailFormMutation$data = {
   readonly updateAudienceThumbnail: {
     readonly audience: {
-      readonly id: string;
-      readonly thumbnail: {
+      readonly banner: {
         readonly type: ResourceType;
         readonly urls: ReadonlyArray<{
           readonly mimeType: string;
           readonly url: string;
         }>;
       } | null;
+      readonly id: string;
     } | null;
   } | null;
 };
@@ -122,7 +122,7 @@ return {
                 "args": null,
                 "concreteType": "Resource",
                 "kind": "LinkedField",
-                "name": "thumbnail",
+                "name": "banner",
                 "plural": false,
                 "selections": [
                   (v3/*: any*/),
@@ -168,7 +168,7 @@ return {
                 "args": null,
                 "concreteType": "Resource",
                 "kind": "LinkedField",
-                "name": "thumbnail",
+                "name": "banner",
                 "plural": false,
                 "selections": [
                   (v3/*: any*/),
@@ -186,7 +186,7 @@ return {
     ]
   },
   "params": {
-    "id": "146c8a879a9dbc1a95456dc223278c0d",
+    "id": "8cacb129d03a0c987387d906cd5ba2fd",
     "metadata": {},
     "name": "ChangeAudienceThumbnailFormMutation",
     "operationKind": "mutation",
@@ -195,6 +195,6 @@ return {
 };
 })();
 
-(node as any).hash = "6d177d2bca68d32238373d29dea19f95";
+(node as any).hash = "08f17c32fb299cf3ae0ac8991912ecf3";
 
 export default node;

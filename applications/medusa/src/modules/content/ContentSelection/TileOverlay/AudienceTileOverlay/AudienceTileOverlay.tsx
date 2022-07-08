@@ -12,7 +12,7 @@ const Fragment = graphql`
   fragment AudienceTileOverlayFragment on Audience {
     id
     title
-    thumbnail {
+    banner {
       ...ResourceItemFragment
     }
   }
@@ -29,7 +29,7 @@ export default function AudienceTileOverlay ({
         <ResourceItem
           showBorder
           seed={data.id}
-          query={data.thumbnail}
+          query={data.banner}
         />
       }
     >

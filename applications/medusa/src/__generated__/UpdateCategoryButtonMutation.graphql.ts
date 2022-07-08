@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<52d4fa12e417cf87fe66409ee71b4ce6>>
- * @relayHash 5ad5fb0fd15f89acb4a7f9867a3f7a74
+ * @generated SignedSource<<e5cfdb1c7387e846f258ea2f2cc15883>>
+ * @relayHash bd35b9385eac506b2ac4b3b1ae744f15
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 5ad5fb0fd15f89acb4a7f9867a3f7a74
+// @relayRequestID bd35b9385eac506b2ac4b3b1ae744f15
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
@@ -24,15 +24,15 @@ export type UpdateCategoryButtonMutation$data = {
   readonly updatePostCategories: {
     readonly post: {
       readonly categories: ReadonlyArray<{
-        readonly id: string;
-        readonly slug: string;
-        readonly thumbnail: {
+        readonly banner: {
           readonly type: ResourceType;
           readonly urls: ReadonlyArray<{
             readonly mimeType: string;
             readonly url: string;
           }>;
         } | null;
+        readonly id: string;
+        readonly slug: string;
         readonly title: string;
       }>;
       readonly id: string;
@@ -152,7 +152,7 @@ return {
                     "args": null,
                     "concreteType": "Resource",
                     "kind": "LinkedField",
-                    "name": "thumbnail",
+                    "name": "banner",
                     "plural": false,
                     "selections": [
                       (v5/*: any*/),
@@ -212,7 +212,7 @@ return {
                     "args": null,
                     "concreteType": "Resource",
                     "kind": "LinkedField",
-                    "name": "thumbnail",
+                    "name": "banner",
                     "plural": false,
                     "selections": [
                       (v5/*: any*/),
@@ -233,7 +233,7 @@ return {
     ]
   },
   "params": {
-    "id": "5ad5fb0fd15f89acb4a7f9867a3f7a74",
+    "id": "bd35b9385eac506b2ac4b3b1ae744f15",
     "metadata": {},
     "name": "UpdateCategoryButtonMutation",
     "operationKind": "mutation",
@@ -242,6 +242,6 @@ return {
 };
 })();
 
-(node as any).hash = "465c37370b5643dc645a71dbce126c0c";
+(node as any).hash = "6dc4fbd6e490f1b4168493cc8dc1b10f";
 
 export default node;

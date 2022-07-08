@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f054b358d83fc17503297ad5f3bb75f7>>
- * @relayHash e5d7a74aca7206bf5a6d91f38790d02e
+ * @generated SignedSource<<5f64160a6c0dc5b612355b6e49c7465b>>
+ * @relayHash 0ede0544e60846965ade1ae01069c2e8
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e5d7a74aca7206bf5a6d91f38790d02e
+// @relayRequestID 0ede0544e60846965ade1ae01069c2e8
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -94,9 +94,25 @@ v7 = {
   "name": "url",
   "storageKey": null
 },
-v8 = [
-  (v7/*: any*/)
-],
+v8 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ResourceUrl",
+  "kind": "LinkedField",
+  "name": "urls",
+  "plural": true,
+  "selections": [
+    (v7/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "mimeType",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
 v9 = {
   "alias": null,
   "args": null,
@@ -125,7 +141,9 @@ v12 = {
   "kind": "LinkedField",
   "name": "videoThumbnail",
   "plural": false,
-  "selections": (v8/*: any*/),
+  "selections": [
+    (v7/*: any*/)
+  ],
   "storageKey": null
 },
 v13 = {
@@ -137,16 +155,7 @@ v13 = {
 },
 v14 = [
   (v6/*: any*/),
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "ResourceUrl",
-    "kind": "LinkedField",
-    "name": "urls",
-    "plural": true,
-    "selections": (v8/*: any*/),
-    "storageKey": null
-  },
+  (v8/*: any*/),
   (v9/*: any*/),
   (v10/*: any*/),
   (v11/*: any*/),
@@ -356,25 +365,7 @@ return {
                 "selections": [
                   (v13/*: any*/),
                   (v6/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "ResourceUrl",
-                    "kind": "LinkedField",
-                    "name": "urls",
-                    "plural": true,
-                    "selections": [
-                      (v7/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "mimeType",
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": null
-                  },
+                  (v8/*: any*/),
                   (v9/*: any*/),
                   (v10/*: any*/),
                   (v11/*: any*/),
@@ -450,7 +441,7 @@ return {
     ]
   },
   "params": {
-    "id": "e5d7a74aca7206bf5a6d91f38790d02e",
+    "id": "0ede0544e60846965ade1ae01069c2e8",
     "metadata": {},
     "name": "StaffPostQuery",
     "operationKind": "query",

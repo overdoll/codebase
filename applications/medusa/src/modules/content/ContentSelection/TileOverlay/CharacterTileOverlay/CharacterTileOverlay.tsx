@@ -15,7 +15,7 @@ const Fragment = graphql`
     series {
       title
     }
-    thumbnail {
+    banner {
       ...ResourceItemFragment
     }
 
@@ -32,7 +32,7 @@ export default function CharacterTileOverlay ({
       <ResourceItem
         showBorder
         seed={data.id}
-        query={data.thumbnail}
+        query={data.banner}
       />
     }
     >

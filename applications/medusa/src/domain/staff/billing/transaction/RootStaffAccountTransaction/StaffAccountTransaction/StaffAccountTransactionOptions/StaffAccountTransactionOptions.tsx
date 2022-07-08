@@ -72,9 +72,7 @@ export default function StaffAccountTransactionOptions ({ query }: Props): JSX.E
           </PageSectionTitle>
         </PageSectionWrap>
         <SmallBackgroundBox>
-          <Trans>
-            {price}
-          </Trans>
+          {price}
         </SmallBackgroundBox>
       </Box>
       <Box>

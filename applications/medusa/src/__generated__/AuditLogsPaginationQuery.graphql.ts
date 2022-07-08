@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ef4337b5de8e037d69c903e87c55f2a0>>
- * @relayHash 4177484df312b395b602fb51262905b5
+ * @generated SignedSource<<d1ddd8807ec188b96b1a7dc30b7f8998>>
+ * @relayHash 86894a284a4bb6fcad9faa953e6e6bab
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4177484df312b395b602fb51262905b5
+// @relayRequestID 86894a284a4bb6fcad9faa953e6e6bab
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -108,9 +108,25 @@ v11 = {
   "name": "url",
   "storageKey": null
 },
-v12 = [
-  (v11/*: any*/)
-],
+v12 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ResourceUrl",
+  "kind": "LinkedField",
+  "name": "urls",
+  "plural": true,
+  "selections": [
+    (v11/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "mimeType",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
 v13 = {
   "alias": null,
   "args": null,
@@ -139,7 +155,9 @@ v16 = {
   "kind": "LinkedField",
   "name": "videoThumbnail",
   "plural": false,
-  "selections": (v12/*: any*/),
+  "selections": [
+    (v11/*: any*/)
+  ],
   "storageKey": null
 },
 v17 = {
@@ -281,16 +299,7 @@ return {
                                     "plural": false,
                                     "selections": [
                                       (v9/*: any*/),
-                                      {
-                                        "alias": null,
-                                        "args": null,
-                                        "concreteType": "ResourceUrl",
-                                        "kind": "LinkedField",
-                                        "name": "urls",
-                                        "plural": true,
-                                        "selections": (v12/*: any*/),
-                                        "storageKey": null
-                                      },
+                                      (v12/*: any*/),
                                       (v13/*: any*/),
                                       (v14/*: any*/),
                                       (v15/*: any*/),
@@ -321,25 +330,7 @@ return {
                                     "selections": [
                                       (v17/*: any*/),
                                       (v9/*: any*/),
-                                      {
-                                        "alias": null,
-                                        "args": null,
-                                        "concreteType": "ResourceUrl",
-                                        "kind": "LinkedField",
-                                        "name": "urls",
-                                        "plural": true,
-                                        "selections": [
-                                          (v11/*: any*/),
-                                          {
-                                            "alias": null,
-                                            "args": null,
-                                            "kind": "ScalarField",
-                                            "name": "mimeType",
-                                            "storageKey": null
-                                          }
-                                        ],
-                                        "storageKey": null
-                                      },
+                                      (v12/*: any*/),
                                       (v13/*: any*/),
                                       (v14/*: any*/),
                                       (v15/*: any*/),
@@ -454,7 +445,7 @@ return {
     ]
   },
   "params": {
-    "id": "4177484df312b395b602fb51262905b5",
+    "id": "86894a284a4bb6fcad9faa953e6e6bab",
     "metadata": {},
     "name": "AuditLogsPaginationQuery",
     "operationKind": "query",

@@ -105,6 +105,7 @@ export default function SelectSeriesButton ({
           <ModalBody>
             <Stack spacing={4}>
               <SearchInput
+                nullifyOnClear
                 {...registerSearch('title', 'change')}
                 variant='outline'
                 placeholder={i18n._(t`Search for a series`)}

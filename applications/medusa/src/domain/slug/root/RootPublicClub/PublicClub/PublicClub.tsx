@@ -51,7 +51,7 @@ const Query = graphql`
 export default function PublicClub (props: Props): JSX.Element {
   const queryData = usePreloadedQuery<PublicClubQuery>(
     Query,
-    props.query
+    props.query,
   )
 
   const { i18n } = useLingui()

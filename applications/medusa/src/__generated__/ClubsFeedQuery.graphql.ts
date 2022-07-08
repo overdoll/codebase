@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<4ee3552129ce9783d9b9e076ec89e392>>
- * @relayHash 8a9ed950651fe0f72b170e9d2cdb68b0
+ * @generated SignedSource<<8335fc7d56dfe8fafbf038921aa8505f>>
+ * @relayHash 541b120ecd214452ecc89d770bcf3972
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8a9ed950651fe0f72b170e9d2cdb68b0
+// @relayRequestID 541b120ecd214452ecc89d770bcf3972
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -63,27 +63,43 @@ v4 = {
 v5 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "width",
+  "concreteType": "ResourceUrl",
+  "kind": "LinkedField",
+  "name": "urls",
+  "plural": true,
+  "selections": [
+    (v4/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "mimeType",
+      "storageKey": null
+    }
+  ],
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "height",
+  "name": "width",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "height",
+  "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "preview",
   "storageKey": null
 },
-v8 = [
-  (v4/*: any*/)
-],
 v9 = {
   "alias": null,
   "args": null,
@@ -91,7 +107,9 @@ v9 = {
   "kind": "LinkedField",
   "name": "videoThumbnail",
   "plural": false,
-  "selections": (v8/*: any*/),
+  "selections": [
+    (v4/*: any*/)
+  ],
   "storageKey": null
 },
 v10 = [
@@ -208,28 +226,10 @@ return {
                             "selections": [
                               (v3/*: any*/),
                               (v2/*: any*/),
-                              {
-                                "alias": null,
-                                "args": null,
-                                "concreteType": "ResourceUrl",
-                                "kind": "LinkedField",
-                                "name": "urls",
-                                "plural": true,
-                                "selections": [
-                                  (v4/*: any*/),
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "mimeType",
-                                    "storageKey": null
-                                  }
-                                ],
-                                "storageKey": null
-                              },
                               (v5/*: any*/),
                               (v6/*: any*/),
                               (v7/*: any*/),
+                              (v8/*: any*/),
                               (v9/*: any*/)
                             ],
                             "storageKey": null
@@ -284,19 +284,10 @@ return {
                             "plural": false,
                             "selections": [
                               (v2/*: any*/),
-                              {
-                                "alias": null,
-                                "args": null,
-                                "concreteType": "ResourceUrl",
-                                "kind": "LinkedField",
-                                "name": "urls",
-                                "plural": true,
-                                "selections": (v8/*: any*/),
-                                "storageKey": null
-                              },
                               (v5/*: any*/),
                               (v6/*: any*/),
                               (v7/*: any*/),
+                              (v8/*: any*/),
                               (v9/*: any*/),
                               (v3/*: any*/)
                             ],
@@ -467,7 +458,7 @@ return {
     ]
   },
   "params": {
-    "id": "8a9ed950651fe0f72b170e9d2cdb68b0",
+    "id": "541b120ecd214452ecc89d770bcf3972",
     "metadata": {},
     "name": "ClubsFeedQuery",
     "operationKind": "query",

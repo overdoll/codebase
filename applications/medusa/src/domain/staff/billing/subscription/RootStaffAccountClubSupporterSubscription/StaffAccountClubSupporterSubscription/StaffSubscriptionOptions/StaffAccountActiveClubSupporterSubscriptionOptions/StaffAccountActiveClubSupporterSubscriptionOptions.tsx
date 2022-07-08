@@ -11,10 +11,8 @@ import displayPrice from '@//:modules/support/displayPrice'
 import format from 'date-fns/format'
 import { dateFormat } from '@//:modules/constants/format'
 import Button from '@//:modules/form/Button/Button'
-import StaffSyncSubscriptionButton
-  from '../StaffSyncSubscriptionButton/StaffSyncSubscriptionButton'
-import CopyCodeToClipboard
-  from '@//:modules/content/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
+import StaffSyncSubscriptionButton from '../StaffSyncSubscriptionButton/StaffSyncSubscriptionButton'
+import CopyCodeToClipboard from '@//:modules/content/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
 import StaffCancelSubscriptionButton from '../StaffCancelSubscriptionButton/StaffCancelSubscriptionButton'
 
 interface Props {
@@ -75,9 +73,7 @@ export default function StaffAccountActiveClubSupporterSubscriptionOptions ({ qu
           </PageSectionTitle>
         </PageSectionWrap>
         <SmallBackgroundBox>
-          <Trans>
-            {price}/mo
-          </Trans>
+          {price}/mo
         </SmallBackgroundBox>
       </Box>
       <Box>

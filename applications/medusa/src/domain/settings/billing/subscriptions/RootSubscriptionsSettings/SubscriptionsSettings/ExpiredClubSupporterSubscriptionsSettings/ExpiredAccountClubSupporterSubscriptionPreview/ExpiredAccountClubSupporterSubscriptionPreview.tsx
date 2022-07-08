@@ -100,9 +100,7 @@ export default function ExpiredAccountClubSupporterSubscriptionPreview ({ query 
               </Trans>
             </Text>
             <Text {...descriptionProps}>
-              <Trans>
-                {expiredAt}
-              </Trans>
+              {expiredAt}
             </Text>
           </HStack>
         </Stack>

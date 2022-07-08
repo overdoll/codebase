@@ -39,6 +39,7 @@ const RootStaffSearchAudiences: PageProps<{}> = () => {
             </Trans>
           </PageSectionTitle>
           <SearchInput
+            nullifyOnClear
             {...register('title', 'change')}
             placeholder={i18n._(t`Search for an audience`)}
           />

@@ -13,7 +13,7 @@ interface Props {
 const Fragment = graphql`
   fragment ChangeSeriesThumbnailFragment on Series {
     id
-    thumbnail {
+    banner {
       ...ResourceIconFragment
     }
     ...ChangeSeriesThumbnailFormFragment
@@ -39,7 +39,7 @@ export default function ChangeSeriesThumbnail ({ query }: Props): JSX.Element {
             seed={data.id}
             w={16}
             h={16}
-            query={data.thumbnail}
+            query={data.banner}
           />
         </Flex>
         <Collapse>

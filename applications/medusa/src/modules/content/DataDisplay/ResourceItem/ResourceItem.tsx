@@ -60,15 +60,15 @@ export default function ResourceItem ({
     <Flex
       w='100%'
       h='100%'
-      borderRadius='inherit'
+      borderRadius='md'
       position='relative'
       {...rest}
     >
-      {showBorder && <Flex zIndex={1} w='100%' h='100%' borderRadius='inherit' {...iconBorder} position='absolute' />}
       {data.type === 'IMAGE' &&
         <ImageSnippet containCover={containCover} cover={cover ?? true} query={data} />}
       {data.type === 'VIDEO' &&
         <VideoSnippet query={data} />}
+      {showBorder && <Flex zIndex={1} w='100%' h='100%' borderRadius='inherit' {...iconBorder} position='absolute' />}
     </Flex>
   )
 }

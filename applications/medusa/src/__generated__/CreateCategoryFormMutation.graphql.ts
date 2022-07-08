@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ce834583a74d490fbfd15e0c6029f028>>
+ * @generated SignedSource<<723f86b8fff99915ba2da63c286af355>>
  * @relayHash 23dfc3141aebab39a7ff92c5c057114f
  * @lightSyntaxTransform
  * @nogrep
@@ -16,6 +16,7 @@ export type CreateCategoryValidation = "SLUG_TAKEN" | "%future added value";
 export type CreateCategoryInput = {
   slug: string;
   title: string;
+  topicId?: string | null;
 };
 export type CreateCategoryFormMutation$variables = {
   connections: ReadonlyArray<string>;

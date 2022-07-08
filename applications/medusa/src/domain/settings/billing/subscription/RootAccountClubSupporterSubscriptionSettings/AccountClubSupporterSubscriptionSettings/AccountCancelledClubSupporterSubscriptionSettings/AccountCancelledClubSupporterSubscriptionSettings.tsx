@@ -18,13 +18,13 @@ interface Props {
 
 const Fragment = graphql`
   fragment AccountCancelledClubSupporterSubscriptionSettingsFragment on AccountCancelledClubSupporterSubscription {
-    reference
-    ...AccountCancelledClubSupporterSubscriptionDetailsFragment
-    ...ManageCancelledSubscriptionButtonFragment
+    id
     club {
       slug
       ...ClubExclusivePostsFragment
     }
+    ...AccountCancelledClubSupporterSubscriptionDetailsFragment
+    ...ManageCancelledSubscriptionButtonFragment
   }
 `
 
@@ -53,7 +53,7 @@ export default function AccountCancelledClubSupporterSubscriptionSettings ({
             </LinkButton>
             <Text fontSize='sm' color='gray.200'>
               <Trans>
-                Subscription #{data.reference}
+                Subscription # {data.id}
               </Trans>
             </Text>
           </Stack>

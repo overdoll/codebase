@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<13fff77d4c1de6b855e8d3fa6a409c5d>>
- * @relayHash 5a99917929f6a882812c838de8fb5b5d
+ * @generated SignedSource<<82ec3d1a7914d04e20f23ad044b2be37>>
+ * @relayHash 84aed364105bd3173d3c98aa29e21e27
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 5a99917929f6a882812c838de8fb5b5d
+// @relayRequestID 84aed364105bd3173d3c98aa29e21e27
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -52,15 +52,13 @@ v3 = {
   "name": "id",
   "storageKey": null
 },
-v4 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "url",
-    "storageKey": null
-  }
-];
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -140,7 +138,16 @@ return {
                         "kind": "LinkedField",
                         "name": "urls",
                         "plural": true,
-                        "selections": (v4/*: any*/),
+                        "selections": [
+                          (v4/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "mimeType",
+                            "storageKey": null
+                          }
+                        ],
                         "storageKey": null
                       },
                       {
@@ -171,7 +178,9 @@ return {
                         "kind": "LinkedField",
                         "name": "videoThumbnail",
                         "plural": false,
-                        "selections": (v4/*: any*/),
+                        "selections": [
+                          (v4/*: any*/)
+                        ],
                         "storageKey": null
                       },
                       {
@@ -246,7 +255,7 @@ return {
     ]
   },
   "params": {
-    "id": "5a99917929f6a882812c838de8fb5b5d",
+    "id": "84aed364105bd3173d3c98aa29e21e27",
     "metadata": {},
     "name": "UploadSearchCategoriesMultiSelectorQuery",
     "operationKind": "query",

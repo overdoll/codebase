@@ -13,7 +13,7 @@ interface Props {
 const Fragment = graphql`
   fragment ChangeAudienceThumbnailFragment on Audience {
     id
-    thumbnail {
+    banner {
       ...ResourceIconFragment
     }
     ...ChangeAudienceThumbnailFormFragment
@@ -39,7 +39,7 @@ export default function ChangeAudienceThumbnail ({ query }: Props): JSX.Element 
             seed={data.id}
             w={16}
             h={16}
-            query={data.thumbnail}
+            query={data.banner}
           />
         </Flex>
         <Collapse>

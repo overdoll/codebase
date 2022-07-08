@@ -31,7 +31,7 @@ const Mutation = graphql`
           id
           title
           slug
-          thumbnail {
+          banner {
             type
             urls {
               mimeType

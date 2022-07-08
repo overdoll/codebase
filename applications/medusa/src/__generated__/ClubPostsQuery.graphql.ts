@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<9443370e983f55d3670f182c77110f41>>
- * @relayHash 3a7017c9cddff5ffe6841711fa02f5c1
+ * @generated SignedSource<<45a82ce7c555d9754417429a5aaae370>>
+ * @relayHash c9d7b38b4cd4dc3fc79be976bd53f256
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3a7017c9cddff5ffe6841711fa02f5c1
+// @relayRequestID c9d7b38b4cd4dc3fc79be976bd53f256
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -89,15 +89,13 @@ v6 = {
   "name": "videoDuration",
   "storageKey": null
 },
-v7 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "url",
-    "storageKey": null
-  }
-],
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
 v8 = {
   "alias": null,
   "args": null,
@@ -225,7 +223,16 @@ return {
                                 "kind": "LinkedField",
                                 "name": "urls",
                                 "plural": true,
-                                "selections": (v7/*: any*/),
+                                "selections": [
+                                  (v7/*: any*/),
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "mimeType",
+                                    "storageKey": null
+                                  }
+                                ],
                                 "storageKey": null
                               },
                               {
@@ -256,7 +263,9 @@ return {
                                 "kind": "LinkedField",
                                 "name": "videoThumbnail",
                                 "plural": false,
-                                "selections": (v7/*: any*/),
+                                "selections": [
+                                  (v7/*: any*/)
+                                ],
                                 "storageKey": null
                               }
                             ],
@@ -409,7 +418,7 @@ return {
     ]
   },
   "params": {
-    "id": "3a7017c9cddff5ffe6841711fa02f5c1",
+    "id": "c9d7b38b4cd4dc3fc79be976bd53f256",
     "metadata": {},
     "name": "ClubPostsQuery",
     "operationKind": "query",

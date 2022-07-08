@@ -75,7 +75,7 @@ export default function ClubTransactionMetric ({ query }: Props): JSX.Element {
         <Stack spacing={1}>
           <Heading fontSize='sm' color='purple.300'>
             <Trans>
-              {`Refunds (target is <${REFUNDS_TARGET_RATIO * 100}%)`}
+              Refunds (target is {'<'}{REFUNDS_TARGET_RATIO * 100}%)
             </Trans>
           </Heading>
           <GraphTransactionMetric
@@ -89,7 +89,7 @@ export default function ClubTransactionMetric ({ query }: Props): JSX.Element {
         <Stack spacing={1}>
           <Heading fontSize='sm' color='orange.300'>
             <Trans>
-              {`Chargebacks (suspension at >${CHARGEBACKS_TARGET_RATIO * 100}%)`}
+              Chargebacks (suspension at {'>'}{CHARGEBACKS_TARGET_RATIO * 100}%)
             </Trans>
           </Heading>
           <GraphTransactionMetric

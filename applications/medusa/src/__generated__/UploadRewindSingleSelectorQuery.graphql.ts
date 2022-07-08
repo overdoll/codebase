@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f16528095c95ac6762df15906ec8c38b>>
- * @relayHash 64a9178c16b2d55c2e8d7d396130dfa9
+ * @generated SignedSource<<1d4509828bf381b7f1243905a423f846>>
+ * @relayHash b399a7e48935f590b69394dc7ea817cc
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 64a9178c16b2d55c2e8d7d396130dfa9
+// @relayRequestID b399a7e48935f590b69394dc7ea817cc
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -86,15 +86,13 @@ v5 = {
   "name": "videoDuration",
   "storageKey": null
 },
-v6 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "url",
-    "storageKey": null
-  }
-];
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -226,7 +224,16 @@ return {
                                 "kind": "LinkedField",
                                 "name": "urls",
                                 "plural": true,
-                                "selections": (v6/*: any*/),
+                                "selections": [
+                                  (v6/*: any*/),
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "mimeType",
+                                    "storageKey": null
+                                  }
+                                ],
                                 "storageKey": null
                               },
                               {
@@ -257,7 +264,9 @@ return {
                                 "kind": "LinkedField",
                                 "name": "videoThumbnail",
                                 "plural": false,
-                                "selections": (v6/*: any*/),
+                                "selections": [
+                                  (v6/*: any*/)
+                                ],
                                 "storageKey": null
                               }
                             ],
@@ -347,7 +356,7 @@ return {
     ]
   },
   "params": {
-    "id": "64a9178c16b2d55c2e8d7d396130dfa9",
+    "id": "b399a7e48935f590b69394dc7ea817cc",
     "metadata": {},
     "name": "UploadRewindSingleSelectorQuery",
     "operationKind": "query",

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a62389d4597a7b710f59047218d4c867>>
- * @relayHash d78bdf6063db2073170144c745fd3aea
+ * @generated SignedSource<<93b8f833d7fb001086f3c60b19122d0b>>
+ * @relayHash 99f4d2b665f548fa1b3a27cfce21dc2c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d78bdf6063db2073170144c745fd3aea
+// @relayRequestID 99f4d2b665f548fa1b3a27cfce21dc2c
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
@@ -24,19 +24,19 @@ export type UpdateCharacterButtonMutation$data = {
   readonly updatePostCharacters: {
     readonly post: {
       readonly characters: ReadonlyArray<{
-        readonly id: string;
-        readonly name: string;
-        readonly series: {
-          readonly title: string;
-        };
-        readonly slug: string;
-        readonly thumbnail: {
+        readonly banner: {
           readonly type: ResourceType;
           readonly urls: ReadonlyArray<{
             readonly mimeType: string;
             readonly url: string;
           }>;
         } | null;
+        readonly id: string;
+        readonly name: string;
+        readonly series: {
+          readonly title: string;
+        };
+        readonly slug: string;
       }>;
       readonly id: string;
     } | null;
@@ -174,7 +174,7 @@ return {
                     "args": null,
                     "concreteType": "Resource",
                     "kind": "LinkedField",
-                    "name": "thumbnail",
+                    "name": "banner",
                     "plural": false,
                     "selections": [
                       (v6/*: any*/),
@@ -247,7 +247,7 @@ return {
                     "args": null,
                     "concreteType": "Resource",
                     "kind": "LinkedField",
-                    "name": "thumbnail",
+                    "name": "banner",
                     "plural": false,
                     "selections": [
                       (v6/*: any*/),
@@ -268,7 +268,7 @@ return {
     ]
   },
   "params": {
-    "id": "d78bdf6063db2073170144c745fd3aea",
+    "id": "99f4d2b665f548fa1b3a27cfce21dc2c",
     "metadata": {},
     "name": "UpdateCharacterButtonMutation",
     "operationKind": "mutation",
@@ -277,6 +277,6 @@ return {
 };
 })();
 
-(node as any).hash = "b52af5884c305bbb6a6e50d99229e3e0";
+(node as any).hash = "f190cdcfd03b78001c4dfe7dfbf71fba";
 
 export default node;

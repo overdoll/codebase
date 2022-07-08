@@ -59,9 +59,7 @@ export default function StaffDepositRequestOptions ({ query }: Props): JSX.Eleme
           </PageSectionTitle>
         </PageSectionWrap>
         <SmallBackgroundBox>
-          <Trans>
-            {totalAmount}
-          </Trans>
+          {totalAmount}
         </SmallBackgroundBox>
       </Box>
       <Box>
