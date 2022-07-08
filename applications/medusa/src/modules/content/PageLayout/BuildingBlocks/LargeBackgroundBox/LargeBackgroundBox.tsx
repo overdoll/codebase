@@ -7,7 +7,10 @@ export default function LargeBackgroundBox ({
   return (
     <Box
       bg='gray.800'
-      p={4}
+      p={{
+        base: 3,
+        md: 4
+      }}
       borderRadius='semi'
       {...rest}
     >

@@ -14,19 +14,19 @@ const nextStepIsDisabled = (): void => {
 const isOnStep = (step: string): void => {
   switch (step) {
     case 'arrange':
-      cy.findByText('Arrange Uploads').should('exist')
+      cy.findByText('Arrange Uploads').should('be.visible')
       break
     case 'audience':
-      cy.findByText(/Select Audience/iu).should('exist')
+      cy.findByText(/Select Audience/iu).should('be.visible')
       break
     case 'category':
-      cy.findByText(/Add Categories/iu).should('exist')
+      cy.findByText(/Add Categories/iu).should('be.visible')
       break
     case 'character':
-      cy.findByText(/Add Character/iu).should('exist')
+      cy.findByText(/Add Character/iu).should('be.visible')
       break
     case 'review':
-      cy.findByText(/Review Post/iu).should('exist')
+      cy.findByText(/Review Post/iu).should('be.visible')
       break
     default:
       break
@@ -61,7 +61,7 @@ describe('Create & Manage Posts', () => {
      * Upload two files, wait for processing and go to next step
      */
     gotoClubCreatePost(clubName)
-    cy.findByText(/Upload Files/iu).should('not.be.disabled').get('input[type="file"]').attachFile(['test-post.png', 'test-post.png'])
+    cy.findByText(/Upload Files/iu).should('be.visible').parent().parent().parent().get('input[type="file"]').attachFile(['test-post.png', 'test-post.png'])
     isOnStep('arrange')
     cy.findByText(/You'll need to upload at least/iu).should('not.exist')
     waitForProcessing()
@@ -189,11 +189,12 @@ describe('Create & Manage Posts', () => {
      */
     // test drag and drop
     // TODO invalid mp4 causes infinite processing - use this to test it?
-    cy.findByText(/Upload Files/iu).should('not.be.disabled').get('input[type="file"]').attachFile('test-video.mp4', { subjectType: 'drag-n-drop' })
+    cy.findByText(/Upload Files/iu).should('not.be.disabled').parent().parent().get('input[type="file"]').attachFile('test-video.mp4', { subjectType: 'drag-n-drop' })
     // use the upload files button to upload
-    cy.findByText(/Upload Files/iu).should('not.be.disabled').get('input[type="file"]').attachFile('test-post.png')
+    cy.findByText('Drop').should('not.be.disabled').parent().parent().get('input[type="file"]').attachFile('test-post.png')
     cy.get('button[aria-label="Remove Upload"]').should('be.visible')
     // test rearrange
+    cy.findByText(/Posting 2 media/iu).should('be.visible')
     clickOnButton('Rearrange Uploads')
     cy.get('button[aria-label="Down"]').click({ force: true })
     clickOnButton('Save Order')

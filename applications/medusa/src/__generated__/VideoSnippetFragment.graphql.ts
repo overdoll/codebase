@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d794e2cf327c96f2c34e58779b982283>>
+ * @generated SignedSource<<66974bd78c3cff5da0dc3453f3ba54e9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,10 +11,12 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type VideoSnippetFragment$data = {
+  readonly height: number;
   readonly preview: string;
   readonly videoThumbnail: {
     readonly url: string;
   } | null;
+  readonly width: number;
   readonly " $fragmentType": "VideoSnippetFragment";
 };
 export type VideoSnippetFragment$key = {
@@ -52,12 +54,26 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "preview",
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "width",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "height",
+      "storageKey": null
     }
   ],
   "type": "Resource",
   "abstractKey": null
 };
 
-(node as any).hash = "1be50f672b3eefbbe06b7bb0cee3278c";
+(node as any).hash = "1d22d6cb8adac75174a84cdacfe3abd9";
 
 export default node;

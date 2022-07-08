@@ -30,11 +30,11 @@ msgstr ""
 msgid "Club"
 msgstr ""
 
-#: src/domain/staff/billing/payout/RootStaffPayout/StaffPayout/StaffPayoutOptions/StaffPayoutOptions.tsx:110
+#: src/domain/staff/billing/payout/RootStaffPayout/StaffPayout/StaffPayoutOptions/StaffPayoutOptions.tsx:108
 msgid "Cover Fee Amount"
 msgstr ""
 
-#: src/domain/staff/billing/payout/RootStaffPayout/StaffPayout/StaffPayoutOptions/StaffPayoutOptions.tsx:125
+#: src/domain/staff/billing/payout/RootStaffPayout/StaffPayout/StaffPayoutOptions/StaffPayoutOptions.tsx:121
 msgid "Deposit Date"
 msgstr ""
 
@@ -103,15 +103,15 @@ msgstr ""
 msgid "Timestamp"
 msgstr ""
 
-#: src/domain/staff/billing/payout/RootStaffPayout/StaffPayout/StaffPayoutOptions/StaffPayoutOptions.tsx:137
+#: src/domain/staff/billing/payout/RootStaffPayout/StaffPayout/StaffPayoutOptions/StaffPayoutOptions.tsx:133
 #: src/domain/staff/billing/payout/RootStaffPayout/StaffPayout/StaffPayoutOptions/UpdateClubPayoutDepositDateForm/UpdateClubPayoutDepositDateForm.tsx:109
 msgid "Update Deposit Date"
 msgstr ""
 
 #: src/domain/staff/billing/payout/RootStaffPayout/StaffPayout/StaffPayoutOptions/StaffPayoutOptions.tsx:102
-msgid "{amount}"
-msgstr ""
+#~ msgid "{amount}"
+#~ msgstr ""
 
 #: src/domain/staff/billing/payout/RootStaffPayout/StaffPayout/StaffPayoutOptions/StaffPayoutOptions.tsx:116
-msgid "{coverFeeAmount}"
-msgstr ""
+#~ msgid "{coverFeeAmount}"
+#~ msgstr ""

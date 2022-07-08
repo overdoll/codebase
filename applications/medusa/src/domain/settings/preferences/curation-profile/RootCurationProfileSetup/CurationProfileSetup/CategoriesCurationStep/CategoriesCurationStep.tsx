@@ -64,6 +64,7 @@ export default function CategoriesCurationStep (): JSX.Element {
           titleKey='title'
         />
         <SearchInput
+          nullifyOnClear
           {...registerSearch('title', 'change')}
           placeholder={i18n._(t`Search for a category`)}
         />

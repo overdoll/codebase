@@ -24,7 +24,7 @@ export default function ResourceRichObject ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  if (data == null) {
+  if (data == null || data.urls.length < 1) {
     return <></>
   }
 

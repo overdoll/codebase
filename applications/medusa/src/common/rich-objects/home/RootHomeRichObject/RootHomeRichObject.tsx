@@ -6,15 +6,13 @@ export default function RootHomeRichObject (): JSX.Element {
   const TITLE = `overdoll.com - ${TITLE_FEATURES}`
 
   return (
-    <>
-      <Head>
-        <title>{TITLE}</title>
-      </Head>
+    <Head>
+      <title>{TITLE}</title>
       <meta
         name='og:title'
         key='og:title'
         content={TITLE}
       />
-    </>
+    </Head>
   )
 }

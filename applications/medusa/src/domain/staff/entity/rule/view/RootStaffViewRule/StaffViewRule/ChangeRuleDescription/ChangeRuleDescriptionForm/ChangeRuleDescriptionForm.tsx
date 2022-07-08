@@ -79,7 +79,7 @@ export default function ChangeRuleDescriptionForm ({
     commit({
       variables: {
         input: {
-          id: data.id,
+          ruleId: data.id,
           ...formValues
         }
       },

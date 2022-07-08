@@ -11,6 +11,7 @@ export default function GridWrap ({
 }: Props): JSX.Element {
   return (
     <Grid
+      overflow='visible'
       rowGap={3}
       columnGap={3}
       templateColumns='repeat(auto-fill, minmax(120px, 1fr))'

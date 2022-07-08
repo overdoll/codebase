@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<04dffa6acf92686b22ff64623779ab89>>
- * @relayHash b00bec63fb6406f6fa7d202cf8f0c12e
+ * @generated SignedSource<<f03b4452a9790986a3e00fb4a7e21c4f>>
+ * @relayHash f95c0cdce86d4795df09819852a9a76c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b00bec63fb6406f6fa7d202cf8f0c12e
+// @relayRequestID f95c0cdce86d4795df09819852a9a76c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -46,15 +46,13 @@ v2 = {
   "name": "id",
   "storageKey": null
 },
-v3 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "url",
-    "storageKey": null
-  }
-],
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
 v4 = {
   "alias": null,
   "args": null,
@@ -209,7 +207,16 @@ return {
                                         "kind": "LinkedField",
                                         "name": "urls",
                                         "plural": true,
-                                        "selections": (v3/*: any*/),
+                                        "selections": [
+                                          (v3/*: any*/),
+                                          {
+                                            "alias": null,
+                                            "args": null,
+                                            "kind": "ScalarField",
+                                            "name": "mimeType",
+                                            "storageKey": null
+                                          }
+                                        ],
                                         "storageKey": null
                                       },
                                       {
@@ -240,7 +247,9 @@ return {
                                         "kind": "LinkedField",
                                         "name": "videoThumbnail",
                                         "plural": false,
-                                        "selections": (v3/*: any*/),
+                                        "selections": [
+                                          (v3/*: any*/)
+                                        ],
                                         "storageKey": null
                                       },
                                       (v4/*: any*/)
@@ -405,7 +414,7 @@ return {
     ]
   },
   "params": {
-    "id": "b00bec63fb6406f6fa7d202cf8f0c12e",
+    "id": "f95c0cdce86d4795df09819852a9a76c",
     "metadata": {},
     "name": "TransactionsSettingsQuery",
     "operationKind": "query",

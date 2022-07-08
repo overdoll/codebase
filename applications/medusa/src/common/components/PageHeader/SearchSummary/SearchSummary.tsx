@@ -16,28 +16,47 @@ export default function SearchSummary ({
   totalPosts,
   totalLikes
 }: Props): JSX.Element {
+  const responsiveSize = {
+    base: 4,
+    md: 6
+  }
+
+  const responsiveFont = {
+    base: 'lg',
+    md: '2xl'
+  }
+
+  const responsiveSpacing = {
+    base: 1,
+    md: 2
+  }
+
   return (
     <LargeBackgroundBox>
       <HStack>
         <HStack align='center' w='100%' spacing={2} justify='space-between'>
           <Box>
-            <Heading fontSize='2xl' color='gray.100'>
+            <Heading
+              noOfLines={2}
+              fontSize={responsiveFont}
+              color='gray.100'
+            >
               {title}
             </Heading>
-            <Heading lineHeight={1} fontSize='sm' color='gray.200'>
+            <Heading noOfLines={1} lineHeight={1} fontSize='sm' color='gray.200'>
               {type}
             </Heading>
           </Box>
-          <HStack spacing={6}>
-            <HStack spacing={2} align='center'>
-              <Icon icon={FileMultiple} w={6} h={6} fill='gray.200' />
-              <Heading fontSize='2xl' color='gray.200'>
+          <HStack spacing={4}>
+            <HStack spacing={responsiveSpacing} align='center'>
+              <Icon icon={FileMultiple} w={responsiveSize} h={responsiveSize} fill='gray.200' />
+              <Heading fontSize={responsiveFont} color='gray.200'>
                 {totalPosts}
               </Heading>
             </HStack>
-            <HStack spacing={2} align='center'>
-              <Icon icon={HeartFull} w={6} h={6} fill='gray.200' />
-              <Heading fontSize='2xl' color='gray.200'>
+            <HStack spacing={responsiveSpacing} align='center'>
+              <Icon icon={HeartFull} w={responsiveSize} h={responsiveSize} fill='gray.200' />
+              <Heading fontSize={responsiveFont} color='gray.200'>
                 {totalLikes}
               </Heading>
             </HStack>

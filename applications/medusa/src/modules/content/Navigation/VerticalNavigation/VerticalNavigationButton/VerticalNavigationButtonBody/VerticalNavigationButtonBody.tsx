@@ -44,6 +44,7 @@ const VerticalNavigationButtonBody = forwardRef<any, Props>(({
 
   return (
     <ClickableBox
+      p={2}
       ref={forwardedRef}
       h={10}
       borderRadius='md'

@@ -37,6 +37,7 @@ export default function ThumbnailClubSettings ({ query }: Props): JSX.Element {
     <Stack spacing={4}>
       <Flex w='100%' align='center' justify='center'>
         <ResourceIcon
+          showBorder
           seed={queryData.club.id}
           w={16}
           h={16}

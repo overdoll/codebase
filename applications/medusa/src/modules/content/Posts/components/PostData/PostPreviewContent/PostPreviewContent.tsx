@@ -41,7 +41,7 @@ export default function PostPreviewContent ({
       justify='center'
       align='center'
     >
-      <ResourceInfo query={firstContent} />
+      <ResourceInfo showBorder query={firstContent} />
       {hasMoreThanOne &&
         <HStack
           align='center'

@@ -53,7 +53,7 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: src/domain/settings/preferences/curation-profile/RootCurationProfileSetup/CurationProfileSetup/CategoriesCurationStep/CategoriesCurationStep.tsx:68
+#: src/domain/settings/preferences/curation-profile/RootCurationProfileSetup/CurationProfileSetup/CategoriesCurationStep/CategoriesCurationStep.tsx:69
 msgid "Search for a category"
 msgstr ""
 

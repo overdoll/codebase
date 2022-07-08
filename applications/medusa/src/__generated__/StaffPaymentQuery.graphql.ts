@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f501d1c04b3a46503012bc913f11b6b4>>
- * @relayHash 0945d6c0b4294ff659cfe95e52ef797c
+ * @generated SignedSource<<2c371a9768a2900508d4ae08c1d5b88d>>
+ * @relayHash af4f91b6efd6e80ce8d5fddf2bf6452b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0945d6c0b4294ff659cfe95e52ef797c
+// @relayRequestID af4f91b6efd6e80ce8d5fddf2bf6452b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -69,15 +69,13 @@ v5 = {
   "name": "id",
   "storageKey": null
 },
-v6 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "url",
-    "storageKey": null
-  }
-];
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -284,7 +282,16 @@ return {
                     "kind": "LinkedField",
                     "name": "urls",
                     "plural": true,
-                    "selections": (v6/*: any*/),
+                    "selections": [
+                      (v6/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "mimeType",
+                        "storageKey": null
+                      }
+                    ],
                     "storageKey": null
                   },
                   {
@@ -315,7 +322,9 @@ return {
                     "kind": "LinkedField",
                     "name": "videoThumbnail",
                     "plural": false,
-                    "selections": (v6/*: any*/),
+                    "selections": [
+                      (v6/*: any*/)
+                    ],
                     "storageKey": null
                   },
                   (v3/*: any*/)
@@ -339,7 +348,7 @@ return {
     ]
   },
   "params": {
-    "id": "0945d6c0b4294ff659cfe95e52ef797c",
+    "id": "af4f91b6efd6e80ce8d5fddf2bf6452b",
     "metadata": {},
     "name": "StaffPaymentQuery",
     "operationKind": "query",

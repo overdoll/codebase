@@ -1,15 +1,19 @@
-import { Flex, FlexProps, Spinner } from '@chakra-ui/react'
+import { Flex, FlexProps } from '@chakra-ui/react'
 import { graphql } from 'react-relay/hooks'
 import ImageSnippet, { ImageSnippetCoverProps } from '../ImageSnippet/ImageSnippet'
 import VideoSnippet from '../VideoSnippet/VideoSnippet'
 import { useFragment } from 'react-relay'
 import type { ResourceItemFragment$key } from '@//:artifacts/ResourceItemFragment.graphql'
 import RandomPattern from '../RandomPattern/RandomPattern'
+import { Icon } from '../../PageLayout'
+import { TimeHourGlass } from '@//:assets/icons'
 
-interface Props extends FlexProps, ImageSnippetCoverProps {
+export interface ResourceItemBorderProp {
+  showBorder?: boolean
+}
+
+interface Props extends FlexProps, ImageSnippetCoverProps, ResourceItemBorderProp {
   query: ResourceItemFragment$key | null
-  h?: string | undefined
-  w?: string | undefined
   seed: string | undefined
 }
 
@@ -19,6 +23,7 @@ const Fragment = graphql`
     ...ImageSnippetFragment
     ...VideoSnippetFragment
     processed
+    preview
   }
 `
 
@@ -27,6 +32,7 @@ export default function ResourceItem ({
   seed,
   cover,
   containCover,
+  showBorder = false,
   ...rest
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
@@ -42,21 +48,27 @@ export default function ResourceItem ({
   if (!data.processed) {
     return (
       <Flex w='100%' p={4} align='center' justify='center' h='100%' {...rest}>
-        <Spinner />
+        <Icon icon={TimeHourGlass} fill='gray.500' w={6} h={6} />
       </Flex>
     )
+  }
+  const iconBorder = {
+    boxShadow: `inset 0 0 0 3px ${data.preview}70`
   }
 
   return (
     <Flex
       w='100%'
       h='100%'
+      borderRadius='md'
+      position='relative'
       {...rest}
     >
       {data.type === 'IMAGE' &&
         <ImageSnippet containCover={containCover} cover={cover ?? true} query={data} />}
       {data.type === 'VIDEO' &&
         <VideoSnippet query={data} />}
+      {showBorder && <Flex zIndex={1} w='100%' h='100%' borderRadius='inherit' {...iconBorder} position='absolute' />}
     </Flex>
   )
 }

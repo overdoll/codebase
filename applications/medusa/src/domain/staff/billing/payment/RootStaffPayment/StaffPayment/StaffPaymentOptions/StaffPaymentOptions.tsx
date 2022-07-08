@@ -72,9 +72,7 @@ export default function StaffPaymentOptions ({ query }: Props): JSX.Element {
           </PageSectionTitle>
         </PageSectionWrap>
         <SmallBackgroundBox>
-          <Trans>
-            {baseAmount}
-          </Trans>
+          {baseAmount}
         </SmallBackgroundBox>
       </Box>
       <Box>
@@ -98,9 +96,7 @@ export default function StaffPaymentOptions ({ query }: Props): JSX.Element {
           </PageSectionTitle>
         </PageSectionWrap>
         <SmallBackgroundBox>
-          <Trans>
-            {finalAmount}
-          </Trans>
+          {finalAmount}
         </SmallBackgroundBox>
       </Box>
       <Box>

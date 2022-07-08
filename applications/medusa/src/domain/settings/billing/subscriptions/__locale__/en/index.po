@@ -25,7 +25,7 @@ msgstr ""
 msgid "Current"
 msgstr ""
 
-#: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/SubscriptionsSettings/ExpiredClubSupporterSubscriptionsSettings/ExpiredAccountClubSupporterSubscriptionPreview/ExpiredAccountClubSupporterSubscriptionPreview.tsx:79
+#: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/SubscriptionsSettings/ExpiredClubSupporterSubscriptionsSettings/ExpiredAccountClubSupporterSubscriptionPreview/ExpiredAccountClubSupporterSubscriptionPreview.tsx:80
 msgid "EXPIRED"
 msgstr ""
 
@@ -33,7 +33,7 @@ msgstr ""
 msgid "Expired"
 msgstr ""
 
-#: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/SubscriptionsSettings/ExpiredClubSupporterSubscriptionsSettings/ExpiredAccountClubSupporterSubscriptionPreview/ExpiredAccountClubSupporterSubscriptionPreview.tsx:97
+#: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/SubscriptionsSettings/ExpiredClubSupporterSubscriptionsSettings/ExpiredAccountClubSupporterSubscriptionPreview/ExpiredAccountClubSupporterSubscriptionPreview.tsx:98
 msgid "Expired on"
 msgstr ""
 
@@ -49,10 +49,10 @@ msgstr ""
 msgid "My Subscriptions"
 msgstr ""
 
-#: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/SubscriptionsSettings/ExpiredClubSupporterSubscriptionsSettings/ExpiredAccountClubSupporterSubscriptionPreview/ExpiredAccountClubSupporterSubscriptionPreview.tsx:87
+#: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/SubscriptionsSettings/ExpiredClubSupporterSubscriptionsSettings/ExpiredAccountClubSupporterSubscriptionPreview/ExpiredAccountClubSupporterSubscriptionPreview.tsx:88
 msgid "Supporter since"
 msgstr ""
 
 #: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/SubscriptionsSettings/ExpiredClubSupporterSubscriptionsSettings/ExpiredAccountClubSupporterSubscriptionPreview/ExpiredAccountClubSupporterSubscriptionPreview.tsx:102
-msgid "{expiredAt}"
-msgstr ""
+#~ msgid "{expiredAt}"
+#~ msgstr ""

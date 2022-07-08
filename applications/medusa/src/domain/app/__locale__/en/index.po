@@ -37,7 +37,7 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContent.tsx:122
+#: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContentLocked/PostSupporterContentLocked.tsx:64
 msgid "Become a Supporter"
 msgstr ""
 
@@ -128,12 +128,16 @@ msgstr ""
 #~ msgstr ""
 
 #: src/modules/content/Interactables/FileUpload/GenericFilePicker/GenericFilePicker.tsx:33
-msgid "Drag and drop or tap to upload"
+#~ msgid "Drag and drop or tap to upload"
+#~ msgstr ""
+
+#: src/modules/content/HookedComponents/Upload/components/GenericFilePicker/GenericFilePicker.tsx:39
+msgid "Drop"
 msgstr ""
 
 #: src/modules/content/Interactables/FileUpload/DragOverFileInput/DragOverFileInput.tsx:106
-msgid "Drop your files to upload them"
-msgstr ""
+#~ msgid "Drop your files to upload them"
+#~ msgstr ""
 
 #: src/modules/content/DataDisplay/NextImage/ImageError/ImageError.tsx:39
 msgid "Error Loading Image"
@@ -151,7 +155,7 @@ msgstr ""
 #~ msgid "Exclusive Supporter Content"
 #~ msgstr ""
 
-#: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContent.tsx:79
+#: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContentUnlocked/PostSupporterContentUnlocked.tsx:66
 msgid "Exclusive Supporter Content Unlocked"
 msgstr ""
 
@@ -397,7 +401,7 @@ msgstr ""
 msgid "Profile"
 msgstr ""
 
-#: src/modules/content/Interactables/FileUpload/SingleFileImageUpload/SingleFileImageUpload.tsx:136
+#: src/modules/content/HookedComponents/Upload/components/SingleFileImageUpload/DisplaySingleFileImageUpload/DisplaySingleFileImageUpload.tsx:46
 msgid "Remove Upload"
 msgstr ""
 
@@ -439,7 +443,7 @@ msgstr ""
 msgid "Search for a club, character, category, or series"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Form/FormInput/Inputs/SeriesInput/SelectSeriesButton/SelectSeriesButton.tsx:110
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/SeriesInput/SelectSeriesButton/SelectSeriesButton.tsx:111
 msgid "Search for a series"
 msgstr ""
 
@@ -513,6 +517,10 @@ msgstr ""
 
 #: src/common/components/Layouts/ClubLayout/SelectClubs/MultipleClubsModal/MultipleClubsModal.tsx:45
 msgid "Switch to club"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Upload/components/GenericFilePicker/GenericFilePicker.tsx:52
+msgid "Tap"
 msgstr ""
 
 #: src/modules/validation/ClubSlug.ts:38
@@ -604,7 +612,7 @@ msgstr ""
 msgid "This code is either invalid or has expired"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContent.tsx:103
+#: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContentLocked/PostSupporterContentLocked.tsx:45
 msgid "This content can only be seen if you are a supporter of the club"
 msgstr ""
 
@@ -649,11 +657,11 @@ msgstr ""
 msgid "Unlock Account"
 msgstr ""
 
-#: src/modules/content/Interactables/FileUpload/CreatePostFilePicker/CreatePostFilePicker.tsx:35
+#: src/modules/content/HookedComponents/Upload/components/CreatePostFilePicker/CreatePostFilePicker.tsx:32
 msgid "Upload Files"
 msgstr ""
 
-#: src/modules/content/Interactables/FileUpload/CreatePostFilePicker/CreatePostFilePicker.tsx:40
+#: src/modules/content/HookedComponents/Upload/components/CreatePostFilePicker/CreatePostFilePicker.tsx:37
 msgid "Upload one or more files by dragging and dropping them or by tapping here"
 msgstr ""
 

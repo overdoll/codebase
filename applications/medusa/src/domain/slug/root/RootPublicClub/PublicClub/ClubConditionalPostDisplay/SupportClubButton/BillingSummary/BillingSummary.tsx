@@ -61,32 +61,32 @@ export default function BillingSummary ({
     <Stack spacing={4}>
       <Box>
         <LargeClubHeader query={data} />
-        <Text fontSize='sm' color='gray.300'>
+        <Heading fontSize='sm' color='gray.200'>
           <Trans>
             Your contribution directly supports this creator and unlocks access to their exclusive content.
           </Trans>
-        </Text>
+        </Heading>
       </Box>
-      <Box>
-        <LargeBackgroundBox bg='gray.900'>
+      <Stack spacing={1}>
+        <LargeBackgroundBox bg='gray.800'>
           <Center>
             <Heading alignSelf='center' fontSize='2xl' color='gray.00'>
               {price} per month
             </Heading>
           </Center>
         </LargeBackgroundBox>
-        <Text fontSize='sm' color='gray.300'>
+        <Text fontSize='sm' color='gray.200'>
           <Trans>
             Billed every 30 days, starting from the day you subscribe. You can cancel at any time from your
             Billing page, which is located in your Account Settings.
           </Trans>
         </Text>
-        <Text fontSize='sm' color='gray.300'>
+        <Text fontSize='sm' color='gray.200'>
           <Trans>
             If requested, refunds may be considered on a case-by-case basis.
           </Trans>
         </Text>
-      </Box>
+      </Stack>
     </Stack>
   )
 }

@@ -10,8 +10,9 @@ const baseStyle: SystemStyleFunction = (props) => {
     '--popper-arrow-bg': 'var(--tooltip-bg)',
     color: mode('whiteAlpha.900', 'gray.100')(props),
     borderRadius: 'sm',
-    fontWeight: 'medium',
+    fontWeight: 'semibold',
     fontSize: 'sm',
+    letterSpacing: 'wider',
     boxShadow: 'md',
     maxW: '320px',
     zIndex: 'tooltip'

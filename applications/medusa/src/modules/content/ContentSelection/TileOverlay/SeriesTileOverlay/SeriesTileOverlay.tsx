@@ -12,10 +12,9 @@ const Fragment = graphql`
   fragment SeriesTileOverlayFragment on Series {
     id
     title
-    thumbnail {
+    banner {
       ...ResourceItemFragment
     }
-
   }
 `
 
@@ -27,7 +26,8 @@ export default function SeriesTileOverlay ({
   return (
     <TileOverlay backdrop={(
       <ResourceItem
-        query={data.thumbnail}
+        showBorder
+        query={data.banner}
         seed={data.id}
       />)}
     >

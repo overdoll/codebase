@@ -78,6 +78,7 @@ export default function ClubSettings ({ query }: Props): JSX.Element {
       }}
       >
         <ResourceIcon
+          showBorder
           seed={queryData.club.id}
           h={10}
           w={10}

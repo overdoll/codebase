@@ -17,7 +17,7 @@ msgstr ""
 msgid "Back to Club Settings"
 msgstr ""
 
-#: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/ThumbnailClubSettings/ThumbnailClubSettings.tsx:48
+#: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/ThumbnailClubSettings/ThumbnailClubSettings.tsx:49
 msgid "Change Club Thumbnail"
 msgstr ""
 
@@ -27,7 +27,11 @@ msgid "Club Thumbnail"
 msgstr ""
 
 #: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/ThumbnailClubSettings/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:114
-msgid "Submit"
+#~ msgid "Submit"
+#~ msgstr ""
+
+#: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/ThumbnailClubSettings/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:114
+msgid "Submit Thumbnail"
 msgstr ""
 
 #: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/ThumbnailClubSettings/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:78
