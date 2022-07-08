@@ -179,6 +179,8 @@ func seedClub(t *testing.T, accountId string) *club.Club {
 	err = adapter.CreateClub(context.Background(), pst)
 	require.NoError(t, err)
 
+	refreshClubESIndex(t)
+
 	return pst
 }
 

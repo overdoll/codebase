@@ -8,6 +8,7 @@ import (
 	"overdoll/libraries/cache"
 	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"time"
@@ -170,6 +171,10 @@ func (r ClubCassandraElasticsearchRepository) GetClubsByIds(ctx context.Context,
 	}
 
 	for _, hit := range response.Docs {
+
+		if !hit.Found {
+			return nil, apperror.NewNotFoundError("club", hit.Id)
+		}
 
 		result, err := unmarshalClubDocument(ctx, hit.Source, nil, r.resourceSerializer)
 
