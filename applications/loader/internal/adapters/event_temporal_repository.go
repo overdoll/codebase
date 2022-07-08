@@ -5,7 +5,6 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"github.com/spf13/viper"
-	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/loader/internal/app/workflows"
 	"overdoll/applications/loader/internal/domain/resource"
@@ -29,9 +28,8 @@ func (r EventTemporalRepository) ProcessResourcesWithFiltersFromCopy(ctx context
 	}
 
 	options := client.StartWorkflowOptions{
-		TaskQueue:             viper.GetString("temporal.queue"),
-		ID:                    "loader.ProcessResourcesWithFiltersFromCopy_" + hex.EncodeToString(processResourcesHash.Sum(nil)[:]),
-		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "loader.ProcessResourcesWithFiltersFromCopy_" + hex.EncodeToString(processResourcesHash.Sum(nil)[:]),
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ProcessResourcesWithFiltersFromCopy,
@@ -61,9 +59,8 @@ func (r EventTemporalRepository) ProcessResources(ctx context.Context, itemId st
 	}
 
 	options := client.StartWorkflowOptions{
-		TaskQueue:             viper.GetString("temporal.queue"),
-		ID:                    "loader.ProcessResourcesForUpload_" + hex.EncodeToString(processResourcesHash.Sum(nil)[:]),
-		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "loader.ProcessResourcesForUpload_" + hex.EncodeToString(processResourcesHash.Sum(nil)[:]),
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ProcessResources,
@@ -92,9 +89,8 @@ func (r EventTemporalRepository) DeleteResources(ctx context.Context, itemId str
 	}
 
 	options := client.StartWorkflowOptions{
-		TaskQueue:             viper.GetString("temporal.queue"),
-		ID:                    "loader.DeleteProcessedResources_" + hex.EncodeToString(deleteResourcesHash.Sum(nil)[:]),
-		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "loader.DeleteProcessedResources_" + hex.EncodeToString(deleteResourcesHash.Sum(nil)[:]),
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.DeleteResources,

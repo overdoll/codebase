@@ -38,6 +38,8 @@ func (h ReprocessResourceHandler) Handle(ctx context.Context, cmd ReprocessResou
 		if target.IsCopied() {
 			return errors.New("one or more resources are copied, not allowed")
 		}
+
+		newResourceIds = append(newResourceIds, target.ID())
 	}
 
 	config, err := resource.NewConfig(cmd.Width, cmd.Height)

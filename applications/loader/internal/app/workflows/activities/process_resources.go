@@ -27,9 +27,7 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 
 	// gather all resources that are processed = false
 	for _, res := range resourcesFromIds {
-		if !res.IsProcessed() {
-			resourcesNotProcessed = append(resourcesNotProcessed, res)
-		}
+		resourcesNotProcessed = append(resourcesNotProcessed, res)
 	}
 
 	config, err := resource.NewConfig(input.Width, input.Height)

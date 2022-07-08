@@ -14,6 +14,7 @@ type ProcessResourcesWithFiltersFromCopyInput struct {
 	Width       uint64
 	Height      uint64
 	Pixelate    *int
+	AlreadySent bool
 }
 
 func ProcessResourcesWithFiltersFromCopy(ctx workflow.Context, input ProcessResourcesWithFiltersFromCopyInput) error {
@@ -40,16 +41,16 @@ func ProcessResourcesWithFiltersFromCopy(ctx workflow.Context, input ProcessReso
 
 	for i := 0; i < totalTimes; i++ {
 
+		if input.IsNotFound || input.AlreadySent {
+			break
+		}
+
 		if i == 1 {
 			// first error, we sleep
 			if err := workflow.Sleep(ctx, time.Second*10); err != nil {
 				logger.Error("failed to sleep", "Error", err)
 				return err
 			}
-		}
-
-		if input.IsNotFound {
-			break
 		}
 
 		var sendCallbackPayload *activities.SendCallbackPayload
@@ -69,6 +70,8 @@ func ProcessResourcesWithFiltersFromCopy(ctx workflow.Context, input ProcessReso
 			if i == 1 {
 				input.IsNotFound = true
 			}
+		} else {
+			input.AlreadySent = true
 		}
 	}
 

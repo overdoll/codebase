@@ -37,7 +37,7 @@ func (h *Activities) UpdateCharacterBanner(ctx context.Context, input UpdateChar
 
 	_, err = h.pr.UpdateCharacterBannerOperator(ctx, input.CharacterId, func(character *post.Character) error {
 
-		newResource, err := h.loader.CopyResourceIntoImage(ctx, pst.ID(), selectedContentResource.ID(), false, "CHARACTER_BANNER", 480, 0, character.ID())
+		newResource, err := h.loader.CopyResourceIntoImage(ctx, pst.ID(), selectedContentResource.ID(), false, "CHARACTER_BANNER", 360, 0, character.ID())
 
 		if err != nil {
 			return err

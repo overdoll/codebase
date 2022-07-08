@@ -220,7 +220,7 @@ func (r *Resource) ApplyFilters(file *os.File, config *Config, filters *ImageFil
 	}
 
 	if err := webpbin.NewCWebP().
-		Quality(100).
+		Quality(80).
 		InputImage(pixelatedSrc).
 		Output(webpFile).
 		Run(); err != nil {
@@ -235,7 +235,7 @@ func (r *Resource) ApplyFilters(file *os.File, config *Config, filters *ImageFil
 		return nil, err
 	}
 
-	if err := jpeg.Encode(jpegFile, pixelatedSrc, &jpeg.Options{Quality: 100}); err != nil {
+	if err := jpeg.Encode(jpegFile, pixelatedSrc, &jpeg.Options{Quality: 80}); err != nil {
 		return nil, errors.Wrap(err, "failed to encode jpeg")
 	}
 
