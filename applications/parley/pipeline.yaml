@@ -16,7 +16,9 @@ steps:
   integration_test:
     pre_hook:
       - //applications/parley/internal:internal -- db migrate keyspace
+      - //applications/parley/internal:internal -- cache register
       - //applications/parley/internal:internal -- db seed
+      - //applications/parley/internal:internal -- cache index
     coverage:
       - name: parley.integration
         paths:

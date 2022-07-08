@@ -3,7 +3,7 @@ services:
   hades:
     image: $CONTAINER_REGISTRY/hades/dev:$BUILDKITE_COMMIT
     entrypoint: ""
-    command: /bin/sh -c "/app/applications/hades/internal/image.binary db migrate keyspace && /app/applications/hades/internal/image.binary db seed && /app/applications/hades/internal/image.binary"
+    command: /bin/sh -c "/app/applications/hades/internal/image.binary db migrate keyspace && /app/applications/hades/internal/image.binary cache register && /app/applications/hades/internal/image.binary db seed && /app/applications/hades/internal/image.binary cache index && /app/applications/hades/internal/image.binary"
     env_file: ../../applications/hades/.env.ci
     depends_on:
       - temporal

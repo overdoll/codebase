@@ -85,7 +85,7 @@ func clearModeratorsTableAndSeedModerator(t *testing.T, accountId string) {
 
 	m, err := moderator.NewModerator(testing_tools.NewModeratorPrincipal(accountId), accountId)
 	require.NoError(t, err)
-	adapter := adapters.NewModeratorCassandraRepository(session)
+	adapter := adapters.NewModeratorCassandraRepository(session, bootstrap.InitializeRedisSession())
 	err = adapter.CreateModerator(context.Background(), m)
 }
 
@@ -95,7 +95,7 @@ func seedPostModerator(t *testing.T, accountId, postId string) *moderator.PostMo
 
 	session := bootstrap.InitializeDatabaseSession()
 
-	adapter := adapters.NewModeratorCassandraRepository(session)
+	adapter := adapters.NewModeratorCassandraRepository(session, bootstrap.InitializeRedisSession())
 	err = adapter.CreatePostModerator(context.Background(), pst)
 	require.NoError(t, err)
 
