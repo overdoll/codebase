@@ -536,7 +536,7 @@ func (r *Resource) processImage(fileName string, file *os.File, config *Config) 
 	}
 
 	if err := webpbin.NewCWebP().
-		Quality(80).
+		Quality(100).
 		InputImage(src).
 		Output(webpFile).
 		Run(); err != nil {
@@ -551,7 +551,7 @@ func (r *Resource) processImage(fileName string, file *os.File, config *Config) 
 		return nil, err
 	}
 
-	if err := jpeg.Encode(jpegFile, src, &jpeg.Options{Quality: 80}); err != nil {
+	if err := jpeg.Encode(jpegFile, src, &jpeg.Options{Quality: 100}); err != nil {
 		return nil, errors.Wrap(err, "failed to encode jpeg")
 	}
 
