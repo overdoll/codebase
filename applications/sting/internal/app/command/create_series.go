@@ -29,7 +29,7 @@ func (h CreateSeriesHandler) Handle(ctx context.Context, cmd CreateSeries) (*pos
 		return nil, err
 	}
 
-	if err := h.pr.CreateSeries(ctx, cmd.Principal, ser); err != nil {
+	if err := h.pr.CreateSeries(ctx, ser); err != nil {
 		return nil, err
 	}
 

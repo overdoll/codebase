@@ -21,10 +21,10 @@ func NewLoaderGrpc(client loader.LoaderClient, serializer *resource.Serializer) 
 	return LoaderGrpc{client: client, serializer: serializer}
 }
 
-func (s LoaderGrpc) CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string, private bool, token string, onlyImages bool) ([]*resource.Resource, error) {
+func (s LoaderGrpc) CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string, private bool, token string, onlyImages bool, width uint64, height uint64) ([]*resource.Resource, error) {
 
 	req := &loader.CreateOrGetResourcesFromUploadsRequest{
-		ItemId: itemId, ResourceIds: resourceIds, Private: private, Token: token, Source: proto.SOURCE_STING,
+		ItemId: itemId, ResourceIds: resourceIds, Private: private, Token: token, Source: proto.SOURCE_STING, Config: &loader.Config{Height: height, Width: width},
 	}
 
 	if onlyImages {
@@ -53,7 +53,7 @@ func (s LoaderGrpc) CreateOrGetResourcesFromUploads(ctx context.Context, itemId 
 	return resources, nil
 }
 
-func (s LoaderGrpc) CopyResourceIntoImage(ctx context.Context, itemId string, resourceId string, private bool) (*post.NewResource, error) {
+func (s LoaderGrpc) CopyResourceIntoImage(ctx context.Context, itemId string, resourceId string, private bool, token string, width uint64, height uint64, newItemId string) (*post.NewResource, error) {
 
 	var toApply []*loader.ResourceIdentifier
 
@@ -65,6 +65,10 @@ func (s LoaderGrpc) CopyResourceIntoImage(ctx context.Context, itemId string, re
 	md, err := s.client.CopyResourcesAndApplyFilter(ctx, &loader.CopyResourcesAndApplyFilterRequest{
 		Resources: toApply,
 		Private:   private,
+		Config:    &loader.Config{Height: height, Width: width},
+		NewItemId: newItemId,
+		Token:     token,
+		Source:    proto.SOURCE_STING,
 	})
 
 	if err != nil {
@@ -86,7 +90,7 @@ func (s LoaderGrpc) CopyResourceIntoImage(ctx context.Context, itemId string, re
 	return res[0], nil
 }
 
-func (s LoaderGrpc) CopyResourcesAndApplyPixelateFilter(ctx context.Context, itemId string, resourceIds []string, pixelate int, private bool) ([]*post.NewResource, error) {
+func (s LoaderGrpc) CopyResourcesAndApplyPixelateFilter(ctx context.Context, itemId string, resourceIds []string, pixelate int, private bool, token string) ([]*post.NewResource, error) {
 
 	var toApply []*loader.ResourceIdentifier
 
@@ -101,6 +105,8 @@ func (s LoaderGrpc) CopyResourcesAndApplyPixelateFilter(ctx context.Context, ite
 		Resources: toApply,
 		Filters:   &loader.Filters{Pixelate: &loader.PixelateFilter{Size: int64(pixelate)}},
 		Private:   private,
+		Token:     token,
+		NewItemId: itemId,
 	})
 
 	if err != nil {

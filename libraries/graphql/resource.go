@@ -32,6 +32,16 @@ type Resource struct {
 	VideoThumbnail *ResourceURL `json:"videoThumbnail"`
 	// The additional 10x10 base64-encoded image that can be used as a preview.
 	Preview string `json:"preview"`
+	//  Whether or not this resource failed to process.
+	//
+	//  A failure can happen if:
+	//  - The supplied image is an unsupported format. This can happen if for example, someone submits a JPEG (unsupported) that was renamed to a PNG (supported)
+	//  - The supplied image is corrupted.
+	//  - The supplied video is invalid or corrupted.
+	Failed bool `json:"failed"`
+
+	// Whether or not the video has audio.
+	VideoNoAudio bool `json:"videoNoAudio"`
 }
 
 // A type representing a url to the resource and the mimetype
@@ -128,5 +138,7 @@ func MarshalResourceToGraphQL(ctx context.Context, res *resource.Resource) *Reso
 		VideoDuration:  res.VideoDuration(),
 		VideoThumbnail: videoUrl,
 		Preview:        res.Preview(),
+		Failed:         res.Failed(),
+		VideoNoAudio:   res.VideoNoAudio(),
 	}
 }

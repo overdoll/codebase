@@ -22,7 +22,7 @@ func NewSeriesByIdsHandler(pr post.Repository) SeriesByIdsHandler {
 
 func (h SeriesByIdsHandler) Handle(ctx context.Context, query SeriesByIds) ([]*post.Series, error) {
 
-	result, err := h.pr.GetSeriesByIds(ctx, query.Principal, query.Ids)
+	result, err := h.pr.GetSeriesByIds(ctx, query.Ids)
 
 	if err != nil {
 		return nil, err

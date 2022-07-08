@@ -205,6 +205,40 @@ func marshalClubPayoutToDatabase(ctx context.Context, pay *payout.ClubPayout) (*
 	}, nil
 }
 
+func unmarshalClubPayoutFromDatabase(ctx context.Context, clubPay *clubPayout) (*payout.ClubPayout, error) {
+	var events []*payout.ClubPayoutEvent
+
+	for _, event := range clubPay.Events {
+		var unmarshal clubPayoutEvent
+
+		if err := json.Unmarshal([]byte(event), &unmarshal); err != nil {
+			return nil, errors.Wrap(err, "failed to unmarshal club payout event")
+		}
+
+		events = append(events, payout.UnmarshalClubPayoutEventFromDatabase(
+			unmarshal.Id,
+			unmarshal.CreatedAt,
+			unmarshal.Error,
+		))
+	}
+
+	return payout.UnmarshalClubPayoutFromDatabase(
+		clubPay.Id,
+		clubPay.Status,
+		clubPay.ClubId,
+		clubPay.Currency,
+		clubPay.Amount,
+		clubPay.CoverFeeAmount,
+		clubPay.TotalAmount,
+		clubPay.DepositDate,
+		clubPay.PayoutAccountId,
+		clubPay.DepositRequestId,
+		clubPay.CreatedAt,
+		events,
+		clubPay.TemporalWorkflowId,
+	), nil
+}
+
 func (r PayoutCassandraElasticsearchRepository) UpdateAccountPayoutMethod(ctx context.Context, pay *payout.AccountPayoutMethod) error {
 
 	if err := r.session.Query(accountPayoutMethodTable.Insert()).
@@ -386,37 +420,13 @@ func (r PayoutCassandraElasticsearchRepository) GetClubPayoutByIdOperator(ctx co
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get club payout by id")
 	}
 
-	var events []*payout.ClubPayoutEvent
+	unmarshalled, err := unmarshalClubPayoutFromDatabase(ctx, &clubPay)
 
-	for _, event := range clubPay.Events {
-		var unmarshal clubPayoutEvent
-
-		if err := json.Unmarshal([]byte(event), &unmarshal); err != nil {
-			return nil, errors.Wrap(err, "failed to unmarshal club payout event")
-		}
-
-		events = append(events, payout.UnmarshalClubPayoutEventFromDatabase(
-			unmarshal.Id,
-			unmarshal.CreatedAt,
-			unmarshal.Error,
-		))
+	if err != nil {
+		return nil, err
 	}
 
-	return payout.UnmarshalClubPayoutFromDatabase(
-		clubPay.Id,
-		clubPay.Status,
-		clubPay.ClubId,
-		clubPay.Currency,
-		clubPay.Amount,
-		clubPay.CoverFeeAmount,
-		clubPay.TotalAmount,
-		clubPay.DepositDate,
-		clubPay.PayoutAccountId,
-		clubPay.DepositRequestId,
-		clubPay.CreatedAt,
-		events,
-		clubPay.TemporalWorkflowId,
-	), nil
+	return unmarshalled, nil
 }
 
 func (r PayoutCassandraElasticsearchRepository) updateClubPayout(ctx context.Context, payoutId string, updateFn func(pay *payout.ClubPayout) error, columns []string) (*payout.ClubPayout, error) {
@@ -635,6 +645,7 @@ func (r PayoutCassandraElasticsearchRepository) getDepositRequestBuckets(ctx con
 }
 
 func (r PayoutCassandraElasticsearchRepository) GetDepositRequestByIdOperator(ctx context.Context, id string) (*payout.DepositRequest, error) {
+
 	deposit, err := r.getDepositRequestById(ctx, id)
 
 	if err != nil {

@@ -48,10 +48,10 @@ func TestSearchAndGetSavedResults(t *testing.T) {
 	require.Len(t, results, 0, "no results for an empty search")
 
 	es := bootstrap.InitializeElasticSearchSession()
-	_, err = es.Refresh(adapters.SearchHistoryIndexName).Do(ctx)
+	_, err = es.Refresh(adapters.SearchHistoryReaderIndex).Do(ctx)
 	require.NoError(t, err, "no error refreshing")
 
-	response, err := es.Search(adapters.SearchHistoryIndexName).Query(elastic.NewMatchQuery("device_id", pass.DeviceID())).Do(ctx)
+	response, err := es.Search(adapters.SearchHistoryReaderIndex).Query(elastic.NewMatchQuery("device_id", pass.DeviceID())).Do(ctx)
 	require.NoError(t, err, "no error searching history")
 
 	require.Equal(t, int64(1), response.Hits.TotalHits.Value, "should have found 1 search result")

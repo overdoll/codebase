@@ -23,7 +23,6 @@ import (
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/support"
-	"path/filepath"
 	"strings"
 )
 
@@ -44,6 +43,9 @@ var resourcesTable = table.New(table.Metadata{
 		"height",
 		"preview",
 		"resource_token",
+		"failed",
+		"copied_from_id",
+		"video_no_audio",
 	},
 	PartKey: []string{"item_id"},
 	SortKey: []string{"resource_id"},
@@ -66,6 +68,9 @@ type resources struct {
 	Height                 int    `db:"height"`
 	Preview                string `db:"preview"`
 	ResourceToken          string `db:"resource_token"`
+	Failed                 bool   `db:"failed"`
+	CopiedFromId           string `db:"copied_from_id"`
+	VideoNoAudio           bool   `db:"video_no_audio"`
 }
 
 type ResourceCassandraS3Repository struct {
@@ -92,6 +97,9 @@ func unmarshalResourceFromDatabase(i resources) *resource.Resource {
 		i.Height,
 		i.Preview,
 		i.ResourceToken,
+		i.Failed,
+		i.CopiedFromId,
+		i.VideoNoAudio,
 	)
 }
 
@@ -122,6 +130,9 @@ func marshalResourceToDatabase(r *resource.Resource) *resources {
 		VideoDuration:          r.VideoDuration(),
 		Preview:                r.Preview(),
 		ResourceToken:          r.Token(),
+		Failed:                 r.Failed(),
+		CopiedFromId:           r.CopiedFromId(),
+		VideoNoAudio:           r.VideoNoAudio(),
 	}
 }
 
@@ -145,6 +156,10 @@ func (r ResourceCassandraS3Repository) createResources(ctx context.Context, res 
 	}
 
 	return nil
+}
+
+func (r ResourceCassandraS3Repository) CreateResource(ctx context.Context, res *resource.Resource) error {
+	return r.createResources(ctx, []*resource.Resource{res})
 }
 
 func (r ResourceCassandraS3Repository) getResourcesByIds(ctx context.Context, itemId, resourceIds []string) ([]resources, error) {
@@ -242,6 +257,7 @@ func (r ResourceCassandraS3Repository) updateResources(ctx context.Context, res 
 			"video_duration",
 			"video_thumbnail",
 			"video_thumbnail_mime_type",
+			"video_no_audio",
 			"width",
 			"height",
 			"preview",
@@ -262,13 +278,144 @@ func (r ResourceCassandraS3Repository) updateResources(ctx context.Context, res 
 	return nil
 }
 
+func (r ResourceCassandraS3Repository) UpdateResourcePrivacy(ctx context.Context, resourceItems []*resource.Resource, private bool) error {
+
+	s3Client := s3.New(r.aws)
+
+	targetBucket := os.Getenv("RESOURCES_BUCKET")
+
+	if private {
+		targetBucket = os.Getenv("PRIVATE_RESOURCES_BUCKET")
+	}
+
+	for _, target := range resourceItems {
+
+		if !target.IsProcessed() {
+			return domainerror.NewValidation("resource not yet processed")
+		}
+
+		bucket := os.Getenv("RESOURCES_BUCKET")
+
+		if target.IsPrivate() {
+			bucket = os.Getenv("PRIVATE_RESOURCES_BUCKET")
+		}
+
+		for _, mime := range target.MimeTypes() {
+
+			format, _ := resource.ExtensionByType(mime)
+			fileId := "/" + target.ItemId() + "/" + target.ProcessedId() + format
+
+			copyObject := &s3.CopyObjectInput{
+				CopySource: aws.String(bucket + fileId),
+				Bucket:     aws.String(targetBucket),
+				Key:        aws.String(fileId),
+			}
+
+			if !private {
+				copyObject.ACL = aws.String("public-read")
+			}
+
+			// copy object from original bucket to regular bucket
+			_, err := s3Client.CopyObject(copyObject)
+
+			if err != nil {
+				return errors.Wrap(err, "unable to copy object")
+			}
+
+			if err = s3Client.WaitUntilObjectExists(&s3.HeadObjectInput{
+				Bucket: aws.String(targetBucket),
+				Key:    aws.String(fileId),
+			}); err != nil {
+				return errors.Wrap(err, "failed to wait for file")
+			}
+
+			// delete original file to save on space
+			_, err = s3Client.DeleteObject(&s3.DeleteObjectInput{
+				Bucket: aws.String(bucket),
+				Key:    aws.String(fileId),
+			})
+
+			if err != nil {
+				return errors.Wrap(err, "unable to delete file")
+			}
+		}
+
+		if target.IsVideo() {
+
+			thumbnailType, _ := resource.ExtensionByType(target.VideoThumbnailMimeType())
+			thumbnailFileId := "/" + target.ItemId() + "/" + target.VideoThumbnail() + thumbnailType
+
+			copyObject := &s3.CopyObjectInput{
+				CopySource: aws.String(bucket + thumbnailFileId),
+				Bucket:     aws.String(targetBucket),
+				Key:        aws.String(thumbnailFileId),
+			}
+
+			if !private {
+				copyObject.ACL = aws.String("public-read")
+			}
+
+			// copy object from original bucket to regular bucket
+			_, err := s3Client.CopyObject(copyObject)
+
+			if err != nil {
+				return errors.Wrap(err, "unable to copy video thumbnail")
+			}
+
+			if err = s3Client.WaitUntilObjectExists(&s3.HeadObjectInput{
+				Bucket: aws.String(targetBucket),
+				Key:    aws.String(thumbnailFileId),
+			}); err != nil {
+				return errors.Wrap(err, "failed to wait for video thumbnail file")
+			}
+
+			// delete object
+			_, err = s3Client.DeleteObject(&s3.DeleteObjectInput{
+				Bucket: aws.String(bucket),
+				Key:    aws.String(thumbnailFileId),
+			})
+
+			if err != nil {
+				return errors.Wrap(err, "unable to delete video thumbnail file")
+			}
+		}
+
+		if err := r.session.
+			Query(resourcesTable.Update("is_private")).
+			WithContext(ctx).
+			Idempotent(true).
+			BindStruct(resources{ItemId: target.ItemId(), ResourceId: target.ID(), IsPrivate: private}).
+			ExecRelease(); err != nil {
+			return errors.Wrap(support.NewGocqlError(err), "failed to update resources privacy")
+		}
+
+		target.SetPrivate(private)
+	}
+
+	return nil
+}
+
+func (r ResourceCassandraS3Repository) UpdateResourceFailed(ctx context.Context, resource *resource.Resource) error {
+
+	if err := r.session.
+		Query(resourcesTable.Update("failed")).
+		WithContext(ctx).
+		Idempotent(true).
+		BindStruct(resources{ItemId: resource.ItemId(), ResourceId: resource.ID(), Failed: resource.Failed()}).
+		ExecRelease(); err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to update resources failed")
+	}
+
+	return nil
+}
+
 func (r ResourceCassandraS3Repository) DeleteResources(ctx context.Context, resourceItems []*resource.Resource) error {
 
 	s3Client := s3.New(r.aws)
 
 	for _, target := range resourceItems {
 
-		if !target.IsProcessed() {
+		if !target.IsProcessed() && !target.Failed() {
 			return apperror.NewRecoverableError("resource not yet processed")
 		}
 
@@ -431,6 +578,11 @@ func (r ResourceCassandraS3Repository) DownloadVideoThumbnailForResource(ctx con
 	return r.downloadResource(ctx, fileId, target.IsProcessed(), target.IsPrivate())
 }
 
+func (r ResourceCassandraS3Repository) DownloadResourceUpload(ctx context.Context, target *resource.Resource) (*os.File, error) {
+	// only download the upload - useful for running process pipelines again, as long as the originating resource still exists in the upload bucket
+	return r.downloadResource(ctx, strings.Split(target.ID(), "+")[0], false, target.IsPrivate())
+}
+
 func (r ResourceCassandraS3Repository) DownloadResource(ctx context.Context, target *resource.Resource) (*os.File, error) {
 	fileId := strings.Split(target.ID(), "+")[0]
 
@@ -476,24 +628,24 @@ func (r ResourceCassandraS3Repository) downloadResource(ctx context.Context, fil
 	return file, nil
 }
 
-func (r ResourceCassandraS3Repository) UploadAndCreateResource(ctx context.Context, file *os.File, target *resource.Resource) error {
+func (r ResourceCassandraS3Repository) uploadResource(ctx context.Context, moveTarget *resource.Move, target *resource.Resource) error {
 	s3Client := s3.New(r.aws)
 
-	// seek to beginning of files
-	_, _ = file.Seek(0, io.SeekStart)
+	remoteUrlTarget := target.ItemId() + "/" + moveTarget.FileName()
 
-	fileInfo, err := file.Stat()
+	file, err := os.Open(moveTarget.FileName())
 
 	if err != nil {
-		return errors.Wrap(err, "failed to stat file")
+		return err
 	}
 
+	defer file.Close()
+	defer os.Remove(moveTarget.FileName())
+
+	fileInfo, _ := file.Stat()
 	var size = fileInfo.Size()
 	buffer := make([]byte, size)
-
-	if _, err := file.Read(buffer); err != nil {
-		return errors.Wrap(err, "failed to read file")
-	}
+	file.Read(buffer)
 
 	bucket := os.Getenv("RESOURCES_BUCKET")
 
@@ -501,41 +653,32 @@ func (r ResourceCassandraS3Repository) UploadAndCreateResource(ctx context.Conte
 		bucket = os.Getenv("PRIVATE_RESOURCES_BUCKET")
 	}
 
-	url := "/" + target.ItemId() + "/" + target.ProcessedId() + filepath.Ext(fileInfo.Name())
-
 	input := &s3.PutObjectInput{
 		Bucket:        aws.String(bucket),
-		Key:           aws.String(url),
+		Key:           aws.String(remoteUrlTarget),
 		Body:          bytes.NewReader(buffer),
 		ContentLength: aws.Int64(size),
 		ContentType:   aws.String(http.DetectContentType(buffer)),
 	}
 
 	if !target.IsPrivate() {
-		// grant read access to non-public objects
+		// grant read access to non public objects
 		input.ACL = aws.String("public-read")
 	}
 
 	// new file that was created
-	if _, err := s3Client.PutObject(input); err != nil {
+	_, err = s3Client.PutObject(input)
+
+	if err != nil {
 		return errors.Wrap(err, "failed to put file")
 	}
 
 	// wait until file is available in private bucket
-
-	if err := s3Client.WaitUntilObjectExists(&s3.HeadObjectInput{
+	if err = s3Client.WaitUntilObjectExists(&s3.HeadObjectInput{
 		Bucket: aws.String(bucket),
-		Key:    aws.String(url),
+		Key:    aws.String(remoteUrlTarget),
 	}); err != nil {
 		return errors.Wrap(err, "failed to wait for file")
-	}
-
-	// clean up file at the end to free up resources
-	_ = file.Close()
-	_ = os.Remove(file.Name())
-
-	if err := r.createResources(ctx, []*resource.Resource{target}); err != nil {
-		return err
 	}
 
 	return nil
@@ -545,60 +688,11 @@ func (r ResourceCassandraS3Repository) UploadAndCreateResource(ctx context.Conte
 // expects that the resource that was passed into the method is a resource that originates in UploadsBucket, so in our case
 // it was uploaded through TUS
 func (r ResourceCassandraS3Repository) UploadProcessedResource(ctx context.Context, moveTarget []*resource.Move, target *resource.Resource) error {
-	s3Client := s3.New(r.aws)
-
 	// go through each new file from the filesystem (contained by resource) and upload to s3
 	for _, moveTarget := range moveTarget {
-
-		file, err := os.Open(moveTarget.OsFileLocation())
-
-		if err != nil {
+		if err := r.uploadResource(ctx, moveTarget, target); err != nil {
 			return err
 		}
-
-		fileInfo, _ := file.Stat()
-		var size = fileInfo.Size()
-		buffer := make([]byte, size)
-		file.Read(buffer)
-
-		bucket := os.Getenv("RESOURCES_BUCKET")
-
-		if target.IsPrivate() {
-			bucket = os.Getenv("PRIVATE_RESOURCES_BUCKET")
-		}
-
-		input := &s3.PutObjectInput{
-			Bucket:        aws.String(bucket),
-			Key:           aws.String(moveTarget.RemoteUrlTarget()),
-			Body:          bytes.NewReader(buffer),
-			ContentLength: aws.Int64(size),
-			ContentType:   aws.String(http.DetectContentType(buffer)),
-		}
-
-		if !target.IsPrivate() {
-			// grant read access to non public objects
-			input.ACL = aws.String("public-read")
-		}
-
-		// new file that was created
-		_, err = s3Client.PutObject(input)
-
-		if err != nil {
-			return errors.Wrap(err, "failed to put file")
-		}
-
-		// wait until file is available in private bucket
-
-		if err = s3Client.WaitUntilObjectExists(&s3.HeadObjectInput{
-			Bucket: aws.String(bucket),
-			Key:    aws.String(moveTarget.RemoteUrlTarget()),
-		}); err != nil {
-			return errors.Wrap(err, "failed to wait for file")
-		}
-
-		// clean up file at the end to free up resources
-		_ = file.Close()
-		_ = os.Remove(moveTarget.OsFileLocation())
 	}
 
 	if err := r.updateResources(ctx, []*resource.Resource{target}); err != nil {
@@ -614,11 +708,11 @@ func (r ResourceCassandraS3Repository) GetComposer(ctx context.Context) (*tusd.S
 	store := &s3store.S3Store{
 		Bucket:             os.Getenv("UPLOADS_BUCKET"),
 		Service:            s3Client,
-		MaxPartSize:        5 * 1024 * 1024 * 1024,
+		MaxPartSize:        50 * 1024 * 1024,
 		MinPartSize:        5 * 1024 * 1024,
-		PreferredPartSize:  50 * 1024 * 1024,
+		PreferredPartSize:  10 * 1024 * 1024,
 		MaxMultipartParts:  10000,
-		MaxObjectSize:      5 * 1024 * 1024 * 1024 * 1024,
+		MaxObjectSize:      1024 * 1024 * 1024,
 		MaxBufferedParts:   20,
 		TemporaryDirectory: "",
 	}

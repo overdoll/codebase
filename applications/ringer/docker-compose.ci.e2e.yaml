@@ -3,7 +3,7 @@ services:
   ringer:
     image: $CONTAINER_REGISTRY/ringer/dev:$BUILDKITE_COMMIT
     entrypoint: ""
-    command: /bin/sh -c "/app/applications/ringer/internal/image.binary db migrate keyspace && /app/applications/ringer/internal/image.binary db seed && /app/applications/ringer/internal/image.binary"
+    command: /bin/sh -c "/app/applications/ringer/internal/image.binary db migrate keyspace && /app/applications/ringer/internal/image.binary cache register && /app/applications/ringer/internal/image.binary db seed && /app/applications/ringer/internal/image.binary cache index && /app/applications/ringer/internal/image.binary"
     env_file: ../../applications/ringer/.env.ci
     depends_on:
       - temporal

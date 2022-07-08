@@ -20,6 +20,18 @@ func NewGrpcServer(application *app.Application) *Server {
 	}
 }
 
+func (s Server) ModeratorPostInQueue(ctx context.Context, request *carrier.ModeratorPostInQueueRequest) (*emptypb.Empty, error) {
+	if err := s.app.Commands.ModeratorPostInQueue.Handle(ctx,
+		command.ModeratorPostInQueue{
+			AccountId: request.Account.Id,
+		},
+	); err != nil {
+		return nil, err
+	}
+
+	return &empty.Empty{}, nil
+}
+
 func (s Server) ConfirmAccountEmail(ctx context.Context, request *carrier.ConfirmAccountEmailRequest) (*empty.Empty, error) {
 
 	if err := s.app.Commands.ConfirmAccountEmail.Handle(ctx,

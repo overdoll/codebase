@@ -19,10 +19,15 @@ var (
 type Category struct {
 	*paging.Node
 
-	id                string
-	slug              string
+	id   string
+	slug string
+
+	topicId *string
+
 	title             *localization.Translation
+	alternativeTitles []*localization.LocalizedDataTag
 	thumbnailResource *resource.Resource
+	bannerResource    *resource.Resource
 	totalLikes        int
 	totalPosts        int
 
@@ -30,7 +35,7 @@ type Category struct {
 	updatedAt time.Time
 }
 
-func NewCategory(requester *principal.Principal, slug, title string) (*Category, error) {
+func NewCategory(requester *principal.Principal, slug, title string, topic *Topic) (*Category, error) {
 
 	if !requester.IsStaff() {
 		return nil, principal.ErrNotAuthorized
@@ -54,11 +59,20 @@ func NewCategory(requester *principal.Principal, slug, title string) (*Category,
 		return nil, err
 	}
 
+	var topicId *string
+
+	if topic != nil {
+		id := topic.ID()
+		topicId = &id
+	}
+
 	return &Category{
 		id:                uuid.New().String(),
 		slug:              slug,
 		title:             lc,
+		topicId:           topicId,
 		thumbnailResource: nil,
+		bannerResource:    nil,
 		totalLikes:        0,
 		totalPosts:        0,
 		createdAt:         time.Now(),
@@ -74,12 +88,24 @@ func (c *Category) Slug() string {
 	return c.slug
 }
 
+func (c *Category) TopicId() *string {
+	return c.topicId
+}
+
 func (c *Category) Title() *localization.Translation {
 	return c.title
 }
 
+func (c *Category) AlternativeTitles() []*localization.LocalizedDataTag {
+	return c.alternativeTitles
+}
+
 func (c *Category) ThumbnailResource() *resource.Resource {
 	return c.thumbnailResource
+}
+
+func (c *Category) BannerResource() *resource.Resource {
+	return c.bannerResource
 }
 
 func (c *Category) TotalLikes() int {
@@ -114,6 +140,73 @@ func (c *Category) UpdateTotalLikes(totalLikes int) error {
 	return nil
 }
 
+func (c *Category) CanUpdateBanner(requester *principal.Principal) error {
+
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
+
+	return nil
+}
+
+func (c *Category) UpdateTopic(requester *principal.Principal, topic *Topic) error {
+
+	if err := c.canUpdate(requester); err != nil {
+		return err
+	}
+
+	id := topic.ID()
+
+	c.topicId = &id
+	c.update()
+
+	return nil
+}
+
+func (c *Category) AddAlternativeTitle(requester *principal.Principal, title, locale string) error {
+
+	if err := c.canUpdate(requester); err != nil {
+		return err
+	}
+
+	if err := validateCategoryTitle(title); err != nil {
+		return err
+	}
+
+	translation, err := localization.NewLocalizedDataTag(title, locale)
+
+	if err != nil {
+		return err
+	}
+
+	c.alternativeTitles = append(c.alternativeTitles, translation)
+
+	c.update()
+
+	return nil
+}
+
+func (c *Category) RemoveAlternativeTitle(requester *principal.Principal, title string) error {
+
+	if err := c.canUpdate(requester); err != nil {
+		return err
+	}
+
+	var alternativeTitles []*localization.LocalizedDataTag
+
+	for _, titles := range c.alternativeTitles {
+		if titles.Data() != title {
+			alternativeTitles = append(alternativeTitles, titles)
+		}
+	}
+
+	c.alternativeTitles = alternativeTitles
+
+	c.update()
+
+	return nil
+}
+
 func (c *Category) UpdateTitle(requester *principal.Principal, title, locale string) error {
 
 	if err := c.canUpdate(requester); err != nil {
@@ -145,11 +238,31 @@ func (c *Category) UpdateThumbnail(requester *principal.Principal, thumbnail *re
 
 func (c *Category) UpdateThumbnailExisting(thumbnail *resource.Resource) error {
 
-	if err := validateExistingThumbnail(c.thumbnailResource, thumbnail); err != nil {
+	if err := validateExistingResource(c.thumbnailResource, thumbnail); err != nil {
 		return err
 	}
 
 	c.thumbnailResource = thumbnail
+	c.update()
+
+	return nil
+}
+
+func (c *Category) UpdateBannerExisting(thumbnail *resource.Resource) error {
+
+	if err := validateExistingResource(c.bannerResource, thumbnail); err != nil {
+		return err
+	}
+
+	c.bannerResource = thumbnail
+	c.update()
+
+	return nil
+}
+
+func (c *Category) UpdateBanner(thumbnail *resource.Resource) error {
+
+	c.bannerResource = thumbnail
 	c.update()
 
 	return nil
@@ -168,16 +281,19 @@ func (c *Category) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalCategoryFromDatabase(id, slug string, title map[string]string, thumbnail *resource.Resource, totalLikes, totalPosts int, createdAt, updatedAt time.Time) *Category {
+func UnmarshalCategoryFromDatabase(id, slug string, title map[string]string, thumbnail, banner *resource.Resource, totalLikes, totalPosts int, createdAt, updatedAt time.Time, topicId *string, alternativeTitles []map[string]string) *Category {
 	return &Category{
 		id:                id,
 		slug:              slug,
 		title:             localization.UnmarshalTranslationFromDatabase(title),
+		alternativeTitles: localization.UnmarshalLocalizedDataTagsFromDatabase(alternativeTitles),
 		thumbnailResource: thumbnail,
+		bannerResource:    banner,
 		totalLikes:        totalLikes,
 		totalPosts:        totalPosts,
 		createdAt:         createdAt,
 		updatedAt:         updatedAt,
+		topicId:           topicId,
 	}
 }
 

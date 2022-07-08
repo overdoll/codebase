@@ -1,0 +1,79 @@
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "autocomplete": {
+          "tokenizer": "autocomplete",
+          "filter": [
+            "lowercase",
+            "truncate"
+          ]
+        },
+        "autocomplete_search": {
+          "tokenizer": "lowercase"
+        }
+      },
+      "tokenizer": {
+        "autocomplete": {
+          "type": "edge_ngram",
+          "min_gram": 2,
+          "max_gram": 25,
+          "token_chars": [
+            "letter"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "dynamic": "true",
+    "properties": {
+      "id": {
+        "type": "keyword"
+      },
+      "title": {
+        "properties": {
+          "language": {
+            "type": "keyword"
+          },
+          "supported": {
+            "type": "boolean"
+          },
+          "en": {
+            "type": "text",
+            "analyzer": "autocomplete",
+            "search_analyzer": "autocomplete_search"
+          }
+        }
+      },
+      "description": {
+        "properties": {
+          "language": {
+            "type": "keyword"
+          },
+          "supported": {
+            "type": "boolean"
+          },
+          "en": {
+            "type": "text"
+          }
+        }
+      },
+      "slug": {
+        "type": "keyword"
+      },
+      "banner_resource": {
+        "type": "keyword"
+      },
+      "weight": {
+        "type": "integer"
+      },
+      "created_at": {
+        "type": "date"
+      },
+      "updated_at": {
+        "type": "date"
+      }
+    }
+  }
+}

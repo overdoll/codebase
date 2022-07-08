@@ -1,0 +1,24 @@
+[
+  {
+    "id": "1q7MJ9eXjRsgWJNIbOMJ9qzg2S3",
+    "slug": "SingleTopic",
+    "title": {
+      "en": "Single Topic"
+    },
+    "description": {
+      "en": "A Single Topic"
+    },
+    "weight": 100
+  },
+  {
+    "id": "1q7MJFMVgDPo4mFjsfNag6rRwRy",
+    "slug": "DoubleTopic",
+    "title": {
+      "en": "Double Topic"
+    },
+    "description": {
+      "en": "A Double Topic"
+    },
+    "weight": 50
+  }
+]

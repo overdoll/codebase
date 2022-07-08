@@ -173,6 +173,12 @@ func MarshalAudienceToGraphQL(ctx context.Context, result *post.Audience) *Audie
 		res = graphql.MarshalResourceToGraphQL(ctx, result.ThumbnailResource())
 	}
 
+	var banner *graphql.Resource
+
+	if result.BannerResource() != nil {
+		banner = graphql.MarshalResourceToGraphQL(ctx, result.BannerResource())
+	}
+
 	var titleTranslations []*graphql.Translation
 
 	for _, val := range result.Title().Translations() {
@@ -191,8 +197,53 @@ func MarshalAudienceToGraphQL(ctx context.Context, result *post.Audience) *Audie
 		TitleTranslations: titleTranslations,
 		Slug:              result.Slug(),
 		Thumbnail:         res,
+		Banner:            banner,
 		Standard:          result.IsStandard(),
 		TotalLikes:        result.TotalLikes(),
+		TotalPosts:        result.TotalPosts(),
+	}
+}
+
+func MarshalTopicToGraphQL(ctx context.Context, result *post.Topic) *Topic {
+
+	var banner *graphql.Resource
+
+	if result.BannerResource() != nil {
+		banner = graphql.MarshalResourceToGraphQL(ctx, result.BannerResource())
+	}
+
+	var titleTranslations []*graphql.Translation
+
+	for _, val := range result.Title().Translations() {
+		titleTranslations = append(titleTranslations, &graphql.Translation{
+			Language: &graphql.Language{
+				Locale: val.Locale(),
+				Name:   val.Name(),
+			},
+			Text: val.Data(),
+		})
+	}
+
+	var descriptionTranslations []*graphql.Translation
+
+	for _, val := range result.Description().Translations() {
+		descriptionTranslations = append(descriptionTranslations, &graphql.Translation{
+			Language: &graphql.Language{
+				Locale: val.Locale(),
+				Name:   val.Name(),
+			},
+			Text: val.Data(),
+		})
+	}
+
+	return &Topic{
+		ID:                      relay.NewID(Topic{}, result.ID()),
+		Reference:               result.ID(),
+		Slug:                    result.Slug(),
+		Banner:                  banner,
+		TitleTranslations:       titleTranslations,
+		DescriptionTranslations: descriptionTranslations,
+		Weight:                  result.Weight(),
 	}
 }
 
@@ -202,6 +253,12 @@ func MarshalSeriesToGraphQL(ctx context.Context, result *post.Series) *Series {
 
 	if result.ThumbnailResource() != nil {
 		res = graphql.MarshalResourceToGraphQL(ctx, result.ThumbnailResource())
+	}
+
+	var banner *graphql.Resource
+
+	if result.BannerResource() != nil && result.BannerResource().IsProcessed() {
+		banner = graphql.MarshalResourceToGraphQL(ctx, result.BannerResource())
 	}
 
 	var titleTranslations []*graphql.Translation
@@ -222,7 +279,9 @@ func MarshalSeriesToGraphQL(ctx context.Context, result *post.Series) *Series {
 		Slug:              result.Slug(),
 		TitleTranslations: titleTranslations,
 		Thumbnail:         res,
+		Banner:            banner,
 		TotalLikes:        result.TotalLikes(),
+		TotalPosts:        result.TotalPosts(),
 	}
 }
 
@@ -232,6 +291,12 @@ func MarshalCategoryToGraphQL(ctx context.Context, result *post.Category) *Categ
 
 	if result.ThumbnailResource() != nil {
 		res = graphql.MarshalResourceToGraphQL(ctx, result.ThumbnailResource())
+	}
+
+	var banner *graphql.Resource
+
+	if result.BannerResource() != nil && result.BannerResource().IsProcessed() {
+		banner = graphql.MarshalResourceToGraphQL(ctx, result.BannerResource())
 	}
 
 	var titleTranslations []*graphql.Translation
@@ -246,13 +311,35 @@ func MarshalCategoryToGraphQL(ctx context.Context, result *post.Category) *Categ
 		})
 	}
 
+	var alternativeTitles []*graphql.Translation
+
+	for _, val := range result.AlternativeTitles() {
+		alternativeTitles = append(alternativeTitles, &graphql.Translation{
+			Language: &graphql.Language{
+				Locale: val.Locale(),
+				Name:   val.Name(),
+			},
+			Text: val.Data(),
+		})
+	}
+
+	var topic *Topic
+
+	if result.TopicId() != nil {
+		topic = &Topic{ID: relay.NewID(Topic{}, *result.TopicId())}
+	}
+
 	return &Category{
 		ID:                relay.NewID(Category{}, result.ID()),
 		Reference:         result.ID(),
 		Thumbnail:         res,
+		Banner:            banner,
 		Slug:              result.Slug(),
+		Topic:             topic,
 		TitleTranslations: titleTranslations,
+		AlternativeTitles: alternativeTitles,
 		TotalLikes:        result.TotalLikes(),
+		TotalPosts:        result.TotalPosts(),
 	}
 }
 
@@ -262,6 +349,12 @@ func MarshalCharacterToGraphQL(ctx context.Context, result *post.Character) *Cha
 
 	if result.ThumbnailResource() != nil {
 		res = graphql.MarshalResourceToGraphQL(ctx, result.ThumbnailResource())
+	}
+
+	var banner *graphql.Resource
+
+	if result.BannerResource() != nil && result.BannerResource().IsProcessed() {
+		banner = graphql.MarshalResourceToGraphQL(ctx, result.BannerResource())
 	}
 
 	var nameTranslations []*graphql.Translation
@@ -281,10 +374,71 @@ func MarshalCharacterToGraphQL(ctx context.Context, result *post.Character) *Cha
 		Reference:        result.ID(),
 		Slug:             result.Slug(),
 		Thumbnail:        res,
+		Banner:           banner,
 		NameTranslations: nameTranslations,
 		Series:           MarshalSeriesToGraphQL(ctx, result.Series()),
 		TotalLikes:       result.TotalLikes(),
+		TotalPosts:       result.TotalPosts(),
 	}
+}
+
+func MarshalTopicsToGraphQLConnection(ctx context.Context, results []*post.Topic, cursor *paging.Cursor) *TopicConnection {
+
+	var topics []*TopicEdge
+
+	conn := &TopicConnection{
+		PageInfo: &relay.PageInfo{
+			HasNextPage:     false,
+			HasPreviousPage: false,
+			StartCursor:     nil,
+			EndCursor:       nil,
+		},
+		Edges: topics,
+	}
+
+	limit := cursor.GetLimit()
+
+	if len(results) == 0 {
+		return conn
+	}
+
+	if len(results) == limit {
+		conn.PageInfo.HasNextPage = cursor.First() != nil
+		conn.PageInfo.HasPreviousPage = cursor.Last() != nil
+		results = results[:len(results)-1]
+	}
+
+	var nodeAt func(int) *post.Topic
+
+	if cursor != nil && cursor.Last() != nil {
+		n := len(results) - 1
+		nodeAt = func(i int) *post.Topic {
+			return results[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *post.Topic {
+			return results[i]
+		}
+	}
+
+	for i := range results {
+		node := nodeAt(i)
+		topics = append(topics, &TopicEdge{
+			Node:   MarshalTopicToGraphQL(ctx, node),
+			Cursor: node.Cursor(),
+		})
+	}
+
+	conn.Edges = topics
+
+	if len(results) > 0 {
+		res := results[0].Cursor()
+		conn.PageInfo.StartCursor = &res
+		res = results[len(results)-1].Cursor()
+		conn.PageInfo.EndCursor = &res
+	}
+
+	return conn
 }
 
 func MarshalCategoryToGraphQLConnection(ctx context.Context, results []*post.Category, cursor *paging.Cursor) *CategoryConnection {

@@ -54,14 +54,38 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 					ItemId: r.ItemId,
 				},
 				NewResource: &proto.Resource{
-					ItemId: r.ItemId,
-					Id:     r.Id + "_FILTERED",
+					ItemId:    r.ItemId,
+					Processed: false,
+					Id:        r.Id + "_FILTERED",
 				},
 			})
 		}
 
 		return &loader.CopyResourcesAndApplyFilterResponse{Resources: res}
 	}, nil)
+
+	// not in use ATM
+	//application.LoaderClient.On("UpdateResourcePrivacy", mock.Anything, mock.Anything).Return(func(c context.Context, req *loader.UpdateResourcePrivacyRequest, g ...grpc.CallOption) *loader.UpdateResourcePrivacyResponse {
+	//
+	//	var res []*proto.Resource
+	//
+	//	for _, r := range req.Resources {
+	//		res = append(res, &proto.Resource{
+	//			Id:          r.Id,
+	//			ItemId:      r.ItemId,
+	//			Type:        proto.ResourceType_IMAGE,
+	//			Processed:   true,
+	//			ProcessedId: uuid.New().String(),
+	//			MimeTypes:   []string{"image/png"},
+	//			Private:     req.Private,
+	//			Width:       100,
+	//			Height:      100,
+	//			Token:       "POST",
+	//		})
+	//	}
+	//
+	//	return &loader.UpdateResourcePrivacyResponse{Resources: res}
+	//}, nil)
 }
 
 func mockAccountStaff(t *testing.T, accountId string) {

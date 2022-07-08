@@ -10,6 +10,8 @@ import (
 type ProcessResourcesInput struct {
 	ItemId      string
 	ResourceIds []string
+	Width       uint64
+	Height      uint64
 }
 
 func (h *Activities) ProcessResources(ctx context.Context, input ProcessResourcesInput) error {
@@ -25,37 +27,54 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 
 	// gather all resources that are processed = false
 	for _, res := range resourcesFromIds {
-		if !res.IsProcessed() {
-			resourcesNotProcessed = append(resourcesNotProcessed, res)
-		}
+		resourcesNotProcessed = append(resourcesNotProcessed, res)
+	}
+
+	config, err := resource.NewConfig(input.Width, input.Height)
+
+	if err != nil {
+		return err
 	}
 
 	for _, target := range resourcesNotProcessed {
-
-		// first, we need to download the resource
-		file, err := h.rr.DownloadResource(ctx, target)
-
-		if err != nil {
+		if err := processResource(h, ctx, target, config); err != nil {
 			return err
 		}
-
-		// process resource, get result of targets that need to be uploaded
-		targetsToMove, err := target.ProcessResource(file)
-
-		if err != nil {
-			return errors.Wrap(err, "failed to process resource")
-		}
-
-		// upload the new resource
-		if err := h.rr.UploadProcessedResource(ctx, targetsToMove, target); err != nil {
-			return err
-		}
-
-		// cleanup file
-		_ = file.Close()
-		_ = os.Remove(file.Name())
 	}
 
 	// update database entries for resources
+	return nil
+}
+
+func processResource(h *Activities, ctx context.Context, target *resource.Resource, config *resource.Config) error {
+
+	// first, we need to download the resource
+	file, err := h.rr.DownloadResourceUpload(ctx, target)
+
+	if err != nil {
+		return err
+	}
+
+	// make sure we always get rid of the file after we're done
+	defer file.Close()
+	defer os.Remove(file.Name())
+
+	// process resource, get result of targets that need to be uploaded
+	targetsToMove, err := target.ProcessResource(file, config)
+
+	if err != nil {
+		return errors.Wrap(err, "failed to process resource")
+	}
+
+	// if the resource failed to process, update && return
+	if target.Failed() {
+		return h.rr.UpdateResourceFailed(ctx, target)
+	}
+
+	// upload the new resource
+	if err := h.rr.UploadProcessedResource(ctx, targetsToMove, target); err != nil {
+		return err
+	}
+
 	return nil
 }

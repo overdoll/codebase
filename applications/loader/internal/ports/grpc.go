@@ -32,6 +32,12 @@ func (s Server) CreateOrGetResourcesFromUploads(ctx context.Context, request *lo
 		allowImages = request.ValidationOptions.AllowImages
 	}
 
+	config, err := resource.NewConfig(request.Config.Width, request.Config.Height)
+
+	if err != nil {
+		return nil, err
+	}
+
 	resources, err := s.app.Commands.NewCreateOrGetResourcesFromUploads.Handle(ctx, command.CreateOrGetResourcesFromUploads{
 		ItemId:      request.ItemId,
 		UploadIds:   request.ResourceIds,
@@ -40,6 +46,7 @@ func (s Server) CreateOrGetResourcesFromUploads(ctx context.Context, request *lo
 		Source:      request.Source.String(),
 		AllowVideos: allowVideos,
 		AllowImages: allowImages,
+		Config:      config,
 	})
 
 	if err != nil {
@@ -92,14 +99,13 @@ func (s Server) GetResources(ctx context.Context, request *loader.GetResourcesRe
 	return &loader.GetResourcesResponse{Resources: response}, nil
 }
 
-func (s Server) CopyResourcesAndApplyFilter(ctx context.Context, request *loader.CopyResourcesAndApplyFilterRequest) (*loader.CopyResourcesAndApplyFilterResponse, error) {
+func (s Server) UpdateResourcePrivacy(ctx context.Context, request *loader.UpdateResourcePrivacyRequest) (*loader.UpdateResourcePrivacyResponse, error) {
 
-	data := command.CopyResourcesAndApplyFilters{
+	data := command.UpdateResourcePrivacy{
 		ResourcePairs: []struct {
 			ItemId     string
 			ResourceId string
 		}{},
-		Filters:   &struct{ Pixelate *struct{ Size int } }{},
 		IsPrivate: request.Private,
 	}
 
@@ -113,11 +119,76 @@ func (s Server) CopyResourcesAndApplyFilter(ctx context.Context, request *loader
 		})
 	}
 
+	filteredResources, err := s.app.Commands.UpdateResourcePrivacy.Handle(ctx, data)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var finalResources []*proto.Resource
+
+	for _, r := range filteredResources {
+		finalResources = append(finalResources, resource.ToProto(r))
+	}
+
+	return &loader.UpdateResourcePrivacyResponse{Resources: finalResources}, nil
+}
+
+func (s Server) CopyResourcesAndApplyFilter(ctx context.Context, request *loader.CopyResourcesAndApplyFilterRequest) (*loader.CopyResourcesAndApplyFilterResponse, error) {
+
+	data := command.CopyResourcesAndApplyFilters{
+		ResourcePairs: []struct {
+			ItemId     string
+			ResourceId string
+		}{},
+		IsPrivate: request.Private,
+		Token:     request.Token,
+		NewItemId: request.NewItemId,
+		Source:    request.Source.String(),
+	}
+
+	for _, r := range request.Resources {
+		data.ResourcePairs = append(data.ResourcePairs, struct {
+			ItemId     string
+			ResourceId string
+		}{
+			ItemId:     r.ItemId,
+			ResourceId: r.Id,
+		})
+	}
+
+	var pixelate *int
+
 	if request.Filters != nil {
 		if request.Filters.Pixelate != nil {
-			data.Filters.Pixelate = &struct{ Size int }{Size: int(request.Filters.Pixelate.Size)}
+			pixelateSize := int(request.Filters.Pixelate.Size)
+			pixelate = &pixelateSize
 		}
 	}
+
+	filters, err := resource.NewImageFilters(pixelate)
+
+	if err != nil {
+		return nil, err
+	}
+
+	data.Filters = filters
+
+	var width uint64
+	var height uint64
+
+	if request.Config != nil {
+		width = request.Config.Width
+		height = request.Config.Height
+	}
+
+	config, err := resource.NewConfig(width, height)
+
+	if err != nil {
+		return nil, err
+	}
+
+	data.Config = config
 
 	filteredResources, err := s.app.Commands.CopyResourcesAndApplyFilters.Handle(ctx, data)
 

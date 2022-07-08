@@ -1,0 +1,19 @@
+<mjml>
+    <mj-include path="../../support/head.mjml"/>
+    <mj-body>
+        <mj-include path="../../support/email-header.mjml"/>
+        <mj-section>
+            <mj-column>
+                <mj-text>
+                    <h2>Moderator Post in Queue</h2>
+                    <p>Hello {{.Username}}!</p>
+                    <p>You currently have post(s) awaiting moderation.</p>
+                </mj-text>
+                <mj-button css-class="large primary" href="{{.ModeratorQueueLink}}">
+                    View Posts
+                </mj-button>
+            </mj-column>
+        </mj-section>
+        <mj-include path="../../support/email-footer.mjml"/>
+    </mj-body>
+</mjml>

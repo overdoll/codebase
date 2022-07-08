@@ -6,6 +6,7 @@ go_library(
         "activities.go",
         "delete_resources.go",
         "process_resources.go",
+        "process_resources_with_filters_from_copy.go",
         "send_callback.go",
         "services.go",
     ],

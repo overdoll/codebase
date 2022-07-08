@@ -50,8 +50,6 @@ CREATE TABLE IF NOT EXISTS club_payments
     primary key ( id ),
 );
 
--- CALL create_club_payments_index;
-
 CREATE TABLE IF NOT EXISTS club_payments_by_payout
 (
     payout_id  text,
@@ -94,8 +92,6 @@ CREATE TABLE IF NOT EXISTS club_payouts
     temporal_workflow_id text,
     primary key ( id ),
 );
-
--- CALL create_club_payouts_index;
 
 CREATE TABLE IF NOT EXISTS club_locked_payout
 (

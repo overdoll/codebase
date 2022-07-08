@@ -23,15 +23,19 @@ func charactersByIds(app *app.Application) *dataloader.Loader {
 				keyOrder[key.String()] = ix
 			}
 
+			// construct an output array of dataloader results
+			results := make([]*dataloader.Result, len(keys))
+
 			res, err := app.Queries.CharactersByIds.Handle(ctx, query.CharactersByIds{
 				Ids: keyIds,
 			})
 
 			if err != nil {
-				return []*dataloader.Result{{Data: nil, Error: err}}
+				for _, ix := range keyOrder {
+					results[ix] = &dataloader.Result{Data: nil, Error: err}
+				}
+				return results
 			}
-			// construct an output array of dataloader results
-			results := make([]*dataloader.Result, len(keys))
 
 			// enumerate records, put into output
 			for _, record := range res {

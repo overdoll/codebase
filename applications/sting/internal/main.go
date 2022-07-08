@@ -3,8 +3,11 @@ package main
 import (
 	"context"
 	"os"
+	"overdoll/applications/sting/internal/adapters/indexes"
 	"overdoll/applications/sting/internal/adapters/migrations"
 	"overdoll/applications/sting/internal/adapters/seeders"
+	"overdoll/applications/sting/internal/app"
+	"overdoll/libraries/cache"
 	resource_proto "overdoll/libraries/resource/proto"
 	"time"
 
@@ -27,6 +30,7 @@ func init() {
 	config.Read("applications/sting")
 
 	rootCmd.AddCommand(database.CreateDatabaseCommands(migrations.MigrateConfig, seeders.SeederConfig))
+	rootCmd.AddCommand(cache.CreateCacheCommands(indexes.IndexConfig))
 
 	rootCmd.AddCommand(&cobra.Command{
 		Use: "worker",
@@ -40,6 +44,8 @@ func init() {
 		Use: "grpc",
 		Run: RunGrpc,
 	})
+
+	rootCmd.AddCommand(AddCommands()...)
 }
 
 func main() {
@@ -52,6 +58,13 @@ func Run(cmd *cobra.Command, args []string) {
 	go RunHttp(cmd, args)
 	go RunWorker(cmd, args)
 	RunGrpc(cmd, args)
+}
+
+func AddCommands() []*cobra.Command {
+	return ports.InitializeCommands(func() *app.Application {
+		application, _ := service.NewApplication(context.Background())
+		return application
+	})
 }
 
 func RunWorker(cmd *cobra.Command, args []string) {

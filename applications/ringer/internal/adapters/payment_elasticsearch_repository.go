@@ -6,11 +6,13 @@ import (
 	"fmt"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
+	"go.uber.org/zap"
 	"overdoll/applications/ringer/internal/domain/payment"
+	"overdoll/libraries/cache"
+	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/scan"
 	"overdoll/libraries/support"
 	"time"
 )
@@ -33,7 +35,10 @@ type clubPaymentDocument struct {
 	ClubPayoutIds            []string  `json:"club_payout_ids"`
 }
 
-const ClubPaymentsIndexName = "ringer.club_payments"
+const ClubPaymentsIndexName = "club_payments"
+
+var ClubPaymentsReaderIndex = cache.ReadAlias(CachePrefix, ClubPaymentsIndexName)
+var clubPaymentsWriterIndex = cache.WriteAlias(CachePrefix, ClubPaymentsIndexName)
 
 func unmarshalClubPaymentDocument(hit *elastic.SearchHit) (*payment.ClubPayment, error) {
 
@@ -91,7 +96,7 @@ func marshalClubPaymentToDocument(pay *payment.ClubPayment) *clubPaymentDocument
 func (r PaymentCassandraElasticsearchRepository) SearchClubPayments(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *payment.ClubPaymentsFilters) ([]*payment.ClubPayment, error) {
 
 	builder := r.client.Search().
-		Index(ClubPaymentsIndexName)
+		Index(ClubPaymentsReaderIndex)
 
 	if cursor == nil {
 		return nil, paging.ErrCursorNotPresent
@@ -164,7 +169,7 @@ func (r PaymentCassandraElasticsearchRepository) SearchClubPayments(ctx context.
 }
 
 func (r PaymentCassandraElasticsearchRepository) updateIndexPaymentPayoutId(ctx context.Context, payoutId string, paymentIds []string) error {
-	_, err := r.client.UpdateByQuery(ClubPaymentsIndexName).
+	_, err := r.client.UpdateByQuery(clubPaymentsWriterIndex).
 		Query(elastic.NewTermsQueryFromStrings("id", paymentIds...)).
 		Script(elastic.NewScript(`
 
@@ -188,8 +193,8 @@ func (r PaymentCassandraElasticsearchRepository) updateIndexPaymentPayoutId(ctx 
 
 func (r PaymentCassandraElasticsearchRepository) IndexAllClubPayments(ctx context.Context) error {
 
-	scanner := scan.New(r.session,
-		scan.Config{
+	scanner := database.NewScan(r.session,
+		database.ScanConfig{
 			NodesInCluster: 1,
 			CoresInNode:    2,
 			SmudgeFactor:   3,
@@ -202,33 +207,31 @@ func (r PaymentCassandraElasticsearchRepository) IndexAllClubPayments(ctx contex
 
 		for iter.StructScan(&pay) {
 
-			doc := clubPaymentDocument{
-				Id:                       pay.Id,
-				Source:                   pay.Source,
-				Status:                   pay.Status,
-				SettlementDate:           pay.SettlementDate,
-				SourceAccountId:          pay.SourceAccountId,
-				AccountTransactionId:     pay.AccountTransactionId,
-				DestinationClubId:        pay.DestinationClubId,
-				Currency:                 pay.Currency,
-				BaseAmount:               pay.BaseAmount,
-				PlatformFeeAmount:        pay.PlatformFeeAmount,
-				FinalAmount:              pay.FinalAmount,
-				IsDeduction:              pay.IsDeduction,
-				DeductionSourcePaymentId: pay.DeductionSourcePaymentId,
-				CreatedAt:                pay.CreatedAt,
-				ClubPayoutIds:            pay.ClubPayoutIds,
-			}
-
-			_, err := r.client.
-				Index().
-				Index(ClubPaymentsIndexName).
-				Id(doc.Id).
-				BodyJson(doc).
-				Do(ctx)
+			unmarshalled, err := unmarshalPaymentFromDatabase(ctx, &pay)
 
 			if err != nil {
-				return errors.Wrap(support.ParseElasticError(err), "failed to index club payments")
+				return err
+			}
+
+			marshalled, err := marshalPaymentToDatabase(ctx, unmarshalled)
+
+			if err != nil {
+				return err
+			}
+
+			_, err = r.client.
+				Index().
+				Index(clubPaymentsWriterIndex).
+				Id(marshalled.Id).
+				BodyJson(marshalled).
+				OpType("create").
+				Do(ctx)
+
+			e, ok := err.(*elastic.Error)
+			if ok && e.Details.Type == "version_conflict_engine_exception" {
+				zap.S().Infof("skipping document [%s] due to conflict", marshalled.Id)
+			} else {
+				return errors.Wrap(support.ParseElasticError(err), "failed to index payment")
 			}
 		}
 
@@ -248,7 +251,7 @@ func (r PaymentCassandraElasticsearchRepository) indexClubPayment(ctx context.Co
 
 	_, err := r.client.
 		Index().
-		Index(ClubPaymentsIndexName).
+		Index(clubPaymentsWriterIndex).
 		Id(pst.Id).
 		BodyJson(*pst).
 		Do(ctx)
@@ -262,7 +265,7 @@ func (r PaymentCassandraElasticsearchRepository) indexClubPayment(ctx context.Co
 
 func (r PaymentCassandraElasticsearchRepository) updateIndexClubPaymentsCompleted(ctx context.Context, paymentIds []string) error {
 
-	_, err := r.client.UpdateByQuery(ClubPaymentsIndexName).
+	_, err := r.client.UpdateByQuery(clubPaymentsWriterIndex).
 		Query(elastic.NewTermsQueryFromStrings("id", paymentIds...)).
 		Script(elastic.NewScript("ctx._source.status= params.updatedStatus").Param("updatedStatus", payment.Complete.String()).Lang("painless")).
 		Do(ctx)

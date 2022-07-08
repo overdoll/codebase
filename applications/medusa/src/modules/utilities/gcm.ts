@@ -34,15 +34,13 @@ export default {
       textUtf8
     )
 
-    const buf = Buffer.alloc(encrypted.byteLength)
+    const buf = new Uint8Array(encrypted.byteLength)
     const view = new Uint8Array(encrypted)
     for (let i = 0; i < buf.length; ++i) {
       buf[i] = view[i]
     }
 
-    return Buffer.concat([iv, buf]).toString(
-      'hex'
-    )
+    return bytesToHex(new Uint8Array([...iv, ...buf]))
   },
 
   /**
@@ -61,15 +59,29 @@ export default {
       cryptLib = require('crypto').webcrypto
     }
 
-    const inputBuffer = Buffer.from(input, 'hex')
+    const inputBuffer = hexToBytes(input)
 
-    const iv = Buffer.allocUnsafe(12)
-    const tag = Buffer.allocUnsafe(16)
-    const data = Buffer.alloc(inputBuffer.length - 28, 0)
+    const iv = new Uint8Array(12)
+    const tag = new Uint8Array(16)
+    const data = (new Uint8Array(inputBuffer.length - 28)).fill(0)
 
-    inputBuffer.copy(iv, 0, 0, 12)
-    inputBuffer.copy(tag, 0, inputBuffer.length - 16)
-    inputBuffer.copy(data, 0, 12)
+    Uint8Array.prototype.set.call(
+      iv,
+      inputBuffer.subarray(0, 12),
+      0
+    )
+
+    Uint8Array.prototype.set.call(
+      tag,
+      inputBuffer.subarray(inputBuffer.length - 16, inputBuffer.length),
+      0
+    )
+
+    Uint8Array.prototype.set.call(
+      data,
+      inputBuffer.subarray(12, inputBuffer.length - 16),
+      0
+    )
 
     const pwUtf8 = new TextEncoder().encode(masterKey)
 
@@ -81,9 +93,24 @@ export default {
         iv: iv
       },
       key,
-      Buffer.concat([data, tag])
+      new Uint8Array([...data, ...tag])
     )
 
     return new TextDecoder('utf8').decode(decrypted)
   }
+}
+
+const bytesToHex = (bytes: Uint8Array): string => {
+  return Array.from(
+    bytes,
+    byte => byte.toString(16).padStart(2, '0')
+  ).join('')
+}
+
+const hexToBytes = (hex: string): Uint8Array => {
+  const bytes = new Uint8Array(hex.length / 2)
+  for (let i = 0; i !== bytes.length; i++) {
+    bytes[i] = parseInt(hex.substr(i * 2, 2), 16)
+  }
+  return bytes
 }

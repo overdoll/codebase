@@ -3,6 +3,9 @@ package adapters
 import (
 	"context"
 	"encoding/json"
+	"go.uber.org/zap"
+	"overdoll/libraries/cache"
+	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
@@ -15,13 +18,13 @@ import (
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/scan"
 )
 
 type characterDocument struct {
 	Id                string            `json:"id"`
 	Slug              string            `json:"slug"`
 	ThumbnailResource string            `json:"thumbnail_resource"`
+	BannerResource    string            `json:"banner_resource"`
 	Name              map[string]string `json:"name"`
 	Series            seriesDocument    `json:"series"`
 	CreatedAt         time.Time         `json:"created_at"`
@@ -30,11 +33,20 @@ type characterDocument struct {
 	TotalPosts        int               `json:"total_posts"`
 }
 
-const CharacterIndexName = "sting.characters"
+const CharacterIndexName = "characters"
+
+var CharacterReaderIndex = cache.ReadAlias(CachePrefix, CharacterIndexName)
+var characterWriterIndex = cache.WriteAlias(CachePrefix, CharacterIndexName)
 
 func marshalCharacterToDocument(char *post.Character) (*characterDocument, error) {
 
 	marshalled, err := resource.MarshalResourceToDatabase(char.ThumbnailResource())
+
+	if err != nil {
+		return nil, err
+	}
+
+	marshalledBanner, err := resource.MarshalResourceToDatabase(char.BannerResource())
 
 	if err != nil {
 		return nil, err
@@ -49,6 +61,7 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 	return &characterDocument{
 		Id:                char.ID(),
 		ThumbnailResource: marshalled,
+		BannerResource:    marshalledBanner,
 		Name:              localization.MarshalTranslationToDatabase(char.Name()),
 		Slug:              char.Slug(),
 		CreatedAt:         char.CreatedAt(),
@@ -59,11 +72,11 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 	}, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx context.Context, hit *elastic.SearchHit) (*post.Character, error) {
+func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx context.Context, source json.RawMessage, sort []interface{}) (*post.Character, error) {
 
 	var chr characterDocument
 
-	err := json.Unmarshal(hit.Source, &chr)
+	err := json.Unmarshal(source, &chr)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to unmarshal character document")
@@ -75,7 +88,19 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx co
 		return nil, err
 	}
 
+	unmarshalledCharacterBannerResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, chr.BannerResource)
+
+	if err != nil {
+		return nil, err
+	}
+
 	unmarshalledSeriesResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, chr.Series.ThumbnailResource)
+
+	if err != nil {
+		return nil, err
+	}
+
+	unmarshalledSeriesBannerResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, chr.Series.BannerResource)
 
 	if err != nil {
 		return nil, err
@@ -86,6 +111,7 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx co
 		chr.Slug,
 		chr.Name,
 		unmarshalledCharacterResource,
+		unmarshalledCharacterBannerResource,
 		chr.TotalLikes,
 		chr.TotalPosts,
 		chr.CreatedAt,
@@ -95,12 +121,16 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx co
 			chr.Series.Slug,
 			chr.Series.Title,
 			unmarshalledSeriesResource,
+			unmarshalledSeriesBannerResource,
 			chr.Series.TotalLikes,
 			chr.Series.TotalPosts,
 			chr.Series.CreatedAt,
 			chr.Series.UpdatedAt,
 		))
-	newCharacter.Node = paging.NewNode(hit.Sort)
+
+	if sort != nil {
+		newCharacter.Node = paging.NewNode(sort)
+	}
 
 	return newCharacter, nil
 }
@@ -115,7 +145,7 @@ func (r PostsCassandraElasticsearchRepository) indexCharacter(ctx context.Contex
 
 	_, err = r.client.
 		Index().
-		Index(CharacterIndexName).
+		Index(characterWriterIndex).
 		Id(character.ID()).
 		BodyJson(char).
 		Do(ctx)
@@ -127,10 +157,44 @@ func (r PostsCassandraElasticsearchRepository) indexCharacter(ctx context.Contex
 	return nil
 }
 
+func (r PostsCassandraElasticsearchRepository) GetCharactersByIds(ctx context.Context, characterIds []string) ([]*post.Character, error) {
+
+	var characters []*post.Character
+
+	if len(characterIds) == 0 {
+		return characters, nil
+	}
+
+	builder := r.client.MultiGet().Realtime(false)
+
+	for _, characterId := range characterIds {
+		builder.Add(elastic.NewMultiGetItem().Id(characterId).Index(CharacterReaderIndex))
+	}
+
+	response, err := builder.Do(ctx)
+
+	if err != nil {
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed search characters")
+	}
+
+	for _, hit := range response.Docs {
+
+		result, err := r.unmarshalCharacterDocument(ctx, hit.Source, nil)
+
+		if err != nil {
+			return nil, err
+		}
+
+		characters = append(characters, result)
+	}
+
+	return characters, nil
+}
+
 func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.CharacterFilters) ([]*post.Character, error) {
 
 	builder := r.client.Search().
-		Index(CharacterIndexName)
+		Index(CharacterReaderIndex)
 
 	if cursor == nil {
 		return nil, paging.ErrCursorNotPresent
@@ -159,7 +223,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Cont
 	if filter.Name() != nil {
 		query.Must(
 			elastic.
-				NewMultiMatchQuery(filter.Name(), localization.GetESSearchFields("name")...).
+				NewMultiMatchQuery(filter.Name(), "name.en").
 				Type("best_fields"),
 		)
 	}
@@ -168,7 +232,9 @@ func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Cont
 		for _, id := range filter.Slugs() {
 			query.Filter(elastic.NewTermQuery("slug", id))
 		}
+	}
 
+	if filter.SeriesSlug() != nil {
 		query.Filter(elastic.NewTermQuery("series.slug", *filter.SeriesSlug()))
 	}
 
@@ -184,7 +250,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Cont
 
 	for _, hit := range response.Hits.Hits {
 
-		result, err := r.unmarshalCharacterDocument(ctx, hit)
+		result, err := r.unmarshalCharacterDocument(ctx, hit.Source, hit.Sort)
 
 		if err != nil {
 			return nil, err
@@ -198,8 +264,8 @@ func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Cont
 
 func (r PostsCassandraElasticsearchRepository) IndexAllCharacters(ctx context.Context) error {
 
-	scanner := scan.New(r.session,
-		scan.Config{
+	scanner := database.NewScan(r.session,
+		database.ScanConfig{
 			NodesInCluster: 1,
 			CoresInNode:    2,
 			SmudgeFactor:   3,
@@ -219,36 +285,33 @@ func (r PostsCassandraElasticsearchRepository) IndexAllCharacters(ctx context.Co
 				return err
 			}
 
-			doc := characterDocument{
-				Id:                c.Id,
-				ThumbnailResource: c.ThumbnailResource,
-				Name:              c.Name,
-				Slug:              c.Slug,
-				CreatedAt:         c.CreatedAt,
-				UpdatedAt:         c.UpdatedAt,
-				TotalLikes:        c.TotalLikes,
-				TotalPosts:        c.TotalPosts,
-				Series: seriesDocument{
-					Id:                m.Id,
-					ThumbnailResource: m.ThumbnailResource,
-					Title:             m.Title,
-					Slug:              m.Slug,
-					CreatedAt:         m.CreatedAt,
-					UpdatedAt:         m.UpdatedAt,
-					TotalLikes:        m.TotalLikes,
-					TotalPosts:        c.TotalPosts,
-				},
+			unmarshalled, err := r.unmarshalCharacterFromDatabase(ctx, &c, &m)
+
+			if err != nil {
+				return err
 			}
 
-			_, err := r.client.
+			doc, err := marshalCharacterToDocument(unmarshalled)
+
+			if err != nil {
+				return err
+			}
+
+			_, err = r.client.
 				Index().
-				Index(CharacterIndexName).
-				Id(c.Id).
+				Index(characterWriterIndex).
+				Id(doc.Id).
 				BodyJson(doc).
+				OpType("create").
 				Do(ctx)
 
 			if err != nil {
-				return errors.Wrap(support.ParseElasticError(err), "failed to index characters")
+				e, ok := err.(*elastic.Error)
+				if ok && e.Details.Type == "version_conflict_engine_exception" {
+					zap.S().Infof("skipping document [%s] due to conflict", doc.Id)
+				} else {
+					return errors.Wrap(support.ParseElasticError(err), "failed to index characters")
+				}
 			}
 		}
 

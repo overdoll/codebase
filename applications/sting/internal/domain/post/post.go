@@ -271,6 +271,7 @@ func (p *Post) MakeArchived() error {
 
 func (p *Post) UpdatePostPostedDate(date time.Time) error {
 	p.postedAt = &date
+	p.state = Submitting
 	p.update()
 	return nil
 }
@@ -388,6 +389,18 @@ func (p *Post) UpdateContentExisting(resources []*resource.Resource) error {
 
 	for _, content := range p.Content() {
 		for _, res := range resources {
+
+			if content.ResourceHidden() != nil {
+				if res.ID() == content.ResourceHidden().ID() {
+					foundCount += 1
+					if err := content.UpdateResourceHidden(res); err != nil {
+						return err
+					}
+
+					break
+				}
+			}
+
 			if res.ID() == content.Resource().ID() {
 				foundCount += 1
 				if err := content.UpdateResource(res); err != nil {
@@ -668,7 +681,7 @@ func (p *Post) CanView(suspendedClubIds []string, requester *principal.Principal
 	return nil
 }
 
-func validateExistingThumbnail(current *resource.Resource, new *resource.Resource) error {
+func validateExistingResource(current *resource.Resource, new *resource.Resource) error {
 	if current == nil {
 		return resource.ErrResourceNotPresent
 	}

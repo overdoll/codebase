@@ -17,7 +17,6 @@ go_library(
         "//libraries/errors/domainerror",
         "//libraries/resource/proto:libraries_go_proto",
         "//libraries/support",
-        "@com_github_99designs_gqlgen//graphql",
         "@com_github_aws_aws_sdk_go//aws",
         "@com_github_aws_aws_sdk_go//aws/session",
         "@com_github_aws_aws_sdk_go//service/cloudfront/sign",

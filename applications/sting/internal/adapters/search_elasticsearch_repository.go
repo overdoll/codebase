@@ -5,13 +5,14 @@ import (
 	"fmt"
 	"github.com/olivere/elastic/v7"
 	"go.uber.org/zap"
+	"overdoll/libraries/cache"
 	"overdoll/libraries/errors"
-	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/sentry_support"
 	"overdoll/libraries/support"
+	"strings"
 	"time"
 )
 
@@ -34,32 +35,35 @@ type SearchHistory struct {
 	Timestamp  time.Time             `json:"timestamp"`
 }
 
-const SearchHistoryIndexName = "sting.search_history"
+const SearchHistoryIndexName = "search_history"
+
+var SearchHistoryReaderIndex = cache.ReadAlias(CachePrefix, SearchHistoryIndexName)
+var searchHistoryWriterIndex = cache.WriteAlias(CachePrefix, SearchHistoryIndexName)
 
 func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passport *passport.Passport, requester *principal.Principal, cursor *paging.Cursor, qs string) ([]interface{}, error) {
 
 	builder := elastic.NewSearchSource().
 		IndexBoosts(
 			elastic.IndexBoost{
-				Index: CategoryIndexName,
+				Index: CategoryReaderIndex,
 				Boost: 5,
 			},
 		).
 		IndexBoosts(
 			elastic.IndexBoost{
-				Index: CharacterIndexName,
+				Index: CharacterReaderIndex,
 				Boost: 4,
 			},
 		).
 		IndexBoosts(
 			elastic.IndexBoost{
-				Index: SeriesIndexName,
+				Index: SeriesReaderIndex,
 				Boost: 3,
 			},
 		).
 		IndexBoosts(
 			elastic.IndexBoost{
-				Index: ClubsIndexName,
+				Index: ClubsReaderIndex,
 				Boost: 0.5,
 			},
 		)
@@ -72,31 +76,31 @@ func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passp
 
 	query.Should(elastic.NewBoolQuery().Must(
 		elastic.
-			NewMultiMatchQuery(qs, localization.GetESSearchFields("title")...).
+			NewMultiMatchQuery(qs, "title.en", "alternative_titles.en").
 			Type("best_fields"),
 	).
-		Must(elastic.NewTermQuery("_index", CategoryIndexName)))
+		Must(elastic.NewTermQuery("_index", CategoryReaderIndex)))
 
 	query.Should(elastic.NewBoolQuery().Must(
 		elastic.
-			NewMultiMatchQuery(qs, localization.GetESSearchFields("name")...).
+			NewMultiMatchQuery(qs, "name.en").
 			Type("best_fields"),
 	).
-		Must(elastic.NewTermQuery("_index", CharacterIndexName)))
+		Must(elastic.NewTermQuery("_index", CharacterReaderIndex)))
 
 	query.Should(elastic.NewBoolQuery().Must(
 		elastic.
-			NewMultiMatchQuery(qs, localization.GetESSearchFields("title")...).
+			NewMultiMatchQuery(qs, "title.en").
 			Type("best_fields"),
 	).
-		Must(elastic.NewTermQuery("_index", SeriesIndexName)))
+		Must(elastic.NewTermQuery("_index", SeriesReaderIndex)))
 
 	query.Should(elastic.NewBoolQuery().Must(
 		elastic.
-			NewMultiMatchQuery(qs, localization.GetESSearchFields("name")...).
+			NewMultiMatchQuery(qs, "name.en").
 			Type("best_fields"),
 	).
-		Must(elastic.NewTermQuery("_index", ClubsIndexName)))
+		Must(elastic.NewTermQuery("_index", ClubsReaderIndex)))
 
 	builder.Query(query)
 
@@ -115,10 +119,8 @@ func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passp
 
 	for _, hit := range response.Hits.Hits {
 
-		switch hit.Index {
-		case SeriesIndexName:
-
-			result, err := r.unmarshalSeriesDocument(ctx, hit)
+		if strings.Contains(hit.Index, SeriesIndexName) {
+			result, err := r.unmarshalSeriesDocument(ctx, hit.Source, nil)
 
 			if err != nil {
 				return nil, err
@@ -131,11 +133,10 @@ func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passp
 			})
 
 			results = append(results, result)
+		}
 
-			break
-		case ClubsIndexName:
-
-			result, err := unmarshalClubDocument(ctx, hit, r.resourceSerializer)
+		if strings.Contains(hit.Index, ClubsIndexName) {
+			result, err := unmarshalClubDocument(ctx, hit.Source, nil, r.resourceSerializer)
 
 			if err != nil {
 				return nil, err
@@ -148,11 +149,10 @@ func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passp
 			})
 
 			results = append(results, result)
+		}
 
-			break
-		case CharacterIndexName:
-
-			result, err := r.unmarshalCharacterDocument(ctx, hit)
+		if strings.Contains(hit.Index, CharacterIndexName) {
+			result, err := r.unmarshalCharacterDocument(ctx, hit.Source, nil)
 
 			if err != nil {
 				return nil, err
@@ -165,11 +165,10 @@ func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passp
 			})
 
 			results = append(results, result)
+		}
 
-			break
-		case CategoryIndexName:
-
-			result, err := r.unmarshalCategoryDocument(ctx, hit)
+		if strings.Contains(hit.Index, CategoryIndexName) {
+			result, err := r.unmarshalCategoryDocument(ctx, hit.Source, nil)
 
 			if err != nil {
 				return nil, err
@@ -182,16 +181,12 @@ func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passp
 			})
 
 			results = append(results, result)
-
-			break
-		default:
-			continue
 		}
 	}
 
 	_, err = r.client.
 		Index().
-		Index(SearchHistoryIndexName).
+		Index(searchHistoryWriterIndex).
 		BodyJson(&SearchHistory{
 			DeviceId:   passport.DeviceID(),
 			Query:      qs,

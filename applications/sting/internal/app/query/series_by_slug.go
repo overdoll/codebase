@@ -22,7 +22,7 @@ func NewSeriesBySlugHandler(pr post.Repository) SeriesBySlugHandler {
 
 func (h SeriesBySlugHandler) Handle(ctx context.Context, query SeriesBySlug) (*post.Series, error) {
 
-	result, err := h.pr.GetSeriesBySlug(ctx, query.Principal, query.Slug)
+	result, err := h.pr.GetSeriesBySlug(ctx, query.Slug)
 
 	if err != nil {
 		return nil, err

@@ -3,7 +3,6 @@ package resource
 import (
 	"context"
 	"encoding/json"
-	"github.com/99designs/gqlgen/graphql"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudfront/sign"
@@ -29,9 +28,11 @@ type serializedResource struct {
 	VideoDuration          int      `json:"video_duration"`
 	VideoThumbnail         string   `json:"video_thumbnail"`
 	VideoThumbnailMimeType string   `json:"video_thumbnail_mime_type"`
+	VideoNoAudio           bool     `json:"video_no_audio"`
 	Width                  int      `json:"width"`
 	Height                 int      `json:"height"`
 	Preview                string   `json:"preview"`
+	Failed                 bool     `json:"failed"`
 }
 
 type Serializer struct {
@@ -57,7 +58,7 @@ func NewSerializer() *Serializer {
 	}
 }
 
-func unmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate bool, mimeTypes []string, processed bool, processedId string, videoDuration int, videoThumbnail, videoThumbnailMimeType string, width, height int, urls []*Url, videoThumbnailUrl *Url, preview string) *Resource {
+func unmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate bool, mimeTypes []string, processed bool, processedId string, videoDuration int, videoThumbnail, videoThumbnailMimeType string, width, height int, urls []*Url, videoThumbnailUrl *Url, preview string, failed bool, videoNoAudio bool) *Resource {
 	typ, _ := TypeFromInt(tp)
 	return &Resource{
 		id:                     resourceId,
@@ -75,6 +76,8 @@ func unmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate 
 		urls:                   urls,
 		videoThumbnailUrl:      videoThumbnailUrl,
 		preview:                preview,
+		failed:                 failed,
+		videoNoAudio:           videoNoAudio,
 	}
 }
 
@@ -98,6 +101,8 @@ func MarshalResourceToDatabase(resources *Resource) (string, error) {
 		Width:                  resources.width,
 		Height:                 resources.height,
 		Preview:                resources.preview,
+		Failed:                 resources.failed,
+		VideoNoAudio:           resources.videoNoAudio,
 	})
 
 	if err != nil {
@@ -198,6 +203,8 @@ func UnmarshalResourceFromProto(ctx context.Context, resource *proto.Resource) *
 		resourceType:           tp,
 		preview:                resource.Preview,
 		token:                  resource.Token,
+		failed:                 resource.Failed,
+		videoNoAudio:           resource.VideoNoAudio,
 	}
 }
 
@@ -241,6 +248,8 @@ func (c *Serializer) UnmarshalResourcesFromProto(ctx context.Context, resource [
 			Width:                  int(item.Width),
 			Height:                 int(item.Height),
 			Preview:                item.Preview,
+			Failed:                 item.Failed,
+			VideoNoAudio:           item.VideoNoAudio,
 		})
 
 		if err != nil {
@@ -259,7 +268,7 @@ func (c *Serializer) UnmarshalResourceFromDatabase(ctx context.Context, serializ
 		return nil, nil
 	}
 
-	if graphql.HasOperationContext(ctx) {
+	if true {
 
 		target, err := c.unmarshalResources(ctx, []string{serializedResources})
 
@@ -292,6 +301,8 @@ func (c *Serializer) UnmarshalResourceFromDatabase(ctx context.Context, serializ
 		nil,
 		nil,
 		i.Preview,
+		i.Failed,
+		i.VideoNoAudio,
 	), nil
 }
 
@@ -299,7 +310,7 @@ func (c *Serializer) UnmarshalResourcesFromDatabase(ctx context.Context, seriali
 
 	var targets []*Resource
 
-	if graphql.HasOperationContext(ctx) {
+	if true {
 
 		var valueString []string
 
@@ -340,11 +351,67 @@ func (c *Serializer) UnmarshalResourcesFromDatabase(ctx context.Context, seriali
 				nil,
 				nil,
 				i.Preview,
+				i.Failed,
+				i.VideoNoAudio,
 			))
 		}
 	}
 
 	return targets, nil
+}
+
+func (c *Serializer) createSignedUrl(url string) (string, error) {
+
+	timestamp := time.Now()
+
+	year := timestamp.Year()
+	month := timestamp.Month()
+	day := timestamp.Day()
+
+	loc, err := time.LoadLocation("UTC")
+
+	if err != nil {
+		return "", err
+	}
+
+	if day >= 24 {
+		day = 1
+
+		if month == time.December {
+			month = time.January
+		} else {
+			month += 1
+		}
+
+	}
+
+	dayBucket := 5
+
+	if day >= 4 {
+		dayBucket = 10
+	}
+
+	if day >= 9 {
+		dayBucket = 15
+	}
+
+	if day >= 14 {
+		dayBucket = 20
+	}
+
+	if day >= 19 {
+		dayBucket = 25
+	}
+
+	newTimestamp := time.Date(year, month, dayBucket, 0, 0, 0, 0, loc)
+
+	signedURL, err := c.resourcesSigner.Sign(url, newTimestamp)
+
+	if err != nil {
+		return "", errors.Wrap(err, "could not generate video thumbnail signed url")
+	}
+
+	return signedURL, nil
 }
 
 func (c *Serializer) unmarshalResourceFromDatabaseWithSignedUrls(i serializedResource) (*Resource, error) {
@@ -383,7 +450,7 @@ func (c *Serializer) unmarshalResourceFromDatabaseWithSignedUrls(i serializedRes
 
 		if i.IsPrivate && i.Processed {
 
-			signedURL, err := c.resourcesSigner.Sign(os.Getenv("PRIVATE_RESOURCES_URL")+key, time.Now().Add(60*time.Minute))
+			signedURL, err := c.createSignedUrl(os.Getenv("PRIVATE_RESOURCES_URL") + key)
 
 			if err != nil {
 				return nil, errors.Wrap(err, "could not generate signed url")
@@ -430,7 +497,7 @@ func (c *Serializer) unmarshalResourceFromDatabaseWithSignedUrls(i serializedRes
 
 		if i.IsPrivate {
 
-			signedURL, err := c.resourcesSigner.Sign(os.Getenv("PRIVATE_RESOURCES_URL")+"/"+i.ItemId+"/"+i.VideoThumbnail+format, time.Now().Add(60*time.Minute))
+			signedURL, err := c.createSignedUrl(os.Getenv("PRIVATE_RESOURCES_URL") + "/" + i.ItemId + "/" + i.VideoThumbnail + format)
 
 			if err != nil {
 				return nil, errors.Wrap(err, "could not generate video thumbnail signed url")
@@ -465,5 +532,7 @@ func (c *Serializer) unmarshalResourceFromDatabaseWithSignedUrls(i serializedRes
 		urls,
 		videoThumbnail,
 		i.Preview,
+		i.Failed,
+		i.VideoNoAudio,
 	), nil
 }

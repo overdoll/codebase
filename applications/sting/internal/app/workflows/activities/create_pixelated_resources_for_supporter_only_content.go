@@ -9,7 +9,13 @@ type CreatePixelatedResourcesForSupporterOnlyContentInput struct {
 	PostId string
 }
 
-func (h *Activities) CreatePixelatedResourcesForSupporterOnlyContent(ctx context.Context, input CreatePixelatedResourcesForSupporterOnlyContentInput) error {
+type CreatePixelatedResourcesForSupporterOnlyContentPayload struct {
+	CreatedResources bool
+}
+
+func (h *Activities) CreatePixelatedResourcesForSupporterOnlyContent(ctx context.Context, input CreatePixelatedResourcesForSupporterOnlyContentInput) (*CreatePixelatedResourcesForSupporterOnlyContentPayload, error) {
+
+	res := &CreatePixelatedResourcesForSupporterOnlyContentPayload{CreatedResources: false}
 
 	_, err := h.pr.UpdatePostContentOperator(ctx, input.PostId, func(pending *post.Post) error {
 
@@ -27,7 +33,9 @@ func (h *Activities) CreatePixelatedResourcesForSupporterOnlyContent(ctx context
 
 		if len(resourceIds) > 0 {
 
-			newContents, err := h.loader.CopyResourcesAndApplyPixelateFilter(ctx, input.PostId, resourceIds, 100, false)
+			res.CreatedResources = true
+
+			newContents, err := h.loader.CopyResourcesAndApplyPixelateFilter(ctx, input.PostId, resourceIds, 20, false, "POST_PRIVATE_CONTENT")
 
 			if err != nil {
 				return err
@@ -50,8 +58,8 @@ func (h *Activities) CreatePixelatedResourcesForSupporterOnlyContent(ctx context
 	})
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return res, nil
 }

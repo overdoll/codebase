@@ -22,7 +22,7 @@ func NewCategoryBySlugHandler(pr post.Repository) CategoryBySlugHandler {
 
 func (h CategoryBySlugHandler) Handle(ctx context.Context, query CategoryBySlug) (*post.Category, error) {
 
-	result, err := h.pr.GetCategoryBySlug(ctx, query.Principal, query.Slug)
+	result, err := h.pr.GetCategoryBySlug(ctx, query.Slug)
 
 	if err != nil {
 		return nil, err

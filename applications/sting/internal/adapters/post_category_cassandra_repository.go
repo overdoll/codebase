@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"encoding/json"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/localization"
@@ -22,8 +23,11 @@ var categoryTable = table.New(table.Metadata{
 	Columns: []string{
 		"id",
 		"title",
+		"alternative_titles",
 		"slug",
+		"topic_id",
 		"thumbnail_resource",
+		"banner_resource",
 		"total_likes",
 		"total_posts",
 		"created_at",
@@ -36,8 +40,11 @@ var categoryTable = table.New(table.Metadata{
 type category struct {
 	Id                string            `db:"id"`
 	Slug              string            `db:"slug"`
+	TopicId           *string           `db:"topic_id"`
 	Title             map[string]string `db:"title"`
+	AlternativeTitles []string          `db:"alternative_titles"`
 	ThumbnailResource string            `db:"thumbnail_resource"`
+	BannerResource    string            `db:"banner_resource"`
 	TotalLikes        int               `db:"total_likes"`
 	TotalPosts        int               `db:"total_posts"`
 	CreatedAt         time.Time         `db:"created_at"`
@@ -67,16 +74,82 @@ func marshalCategoryToDatabase(pending *post.Category) (*category, error) {
 		return nil, err
 	}
 
+	marshalledBanner, err := resource.MarshalResourceToDatabase(pending.BannerResource())
+
+	if err != nil {
+		return nil, err
+	}
+
+	var alternativeTitles []string
+
+	marshalledTitles := localization.MarshalLocalizedDataTagsToDatabase(pending.AlternativeTitles())
+
+	for _, s := range marshalledTitles {
+
+		res, err := json.Marshal(s)
+
+		if err != nil {
+			return nil, err
+		}
+
+		alternativeTitles = append(alternativeTitles, string(res))
+	}
+
 	return &category{
 		Id:                pending.ID(),
 		Slug:              pending.Slug(),
+		TopicId:           pending.TopicId(),
 		Title:             localization.MarshalTranslationToDatabase(pending.Title()),
+		AlternativeTitles: alternativeTitles,
 		ThumbnailResource: marshalled,
+		BannerResource:    marshalledBanner,
 		TotalLikes:        pending.TotalLikes(),
 		TotalPosts:        pending.TotalPosts(),
 		CreatedAt:         pending.CreatedAt(),
 		UpdatedAt:         pending.UpdatedAt(),
 	}, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) unmarshalCategoryFromDatabase(ctx context.Context, cat *category) (*post.Category, error) {
+
+	unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, cat.ThumbnailResource)
+
+	if err != nil {
+		return nil, err
+	}
+
+	unmarshalledBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, cat.BannerResource)
+
+	if err != nil {
+		return nil, err
+	}
+
+	alternativeTitles := make([]map[string]string, len(cat.AlternativeTitles))
+
+	for _, s := range cat.AlternativeTitles {
+
+		var tag map[string]string
+
+		if err := json.Unmarshal([]byte(s), &tag); err != nil {
+			return nil, err
+		}
+
+		alternativeTitles = append(alternativeTitles, tag)
+	}
+
+	return post.UnmarshalCategoryFromDatabase(
+		cat.Id,
+		cat.Slug,
+		cat.Title,
+		unmarshalled,
+		unmarshalledBanner,
+		cat.TotalLikes,
+		cat.TotalPosts,
+		cat.CreatedAt,
+		cat.UpdatedAt,
+		cat.TopicId,
+		alternativeTitles,
+	), nil
 }
 
 func (r PostsCassandraElasticsearchRepository) GetCategoryIdsFromSlugs(ctx context.Context, categorySlug []string) ([]string, error) {
@@ -109,7 +182,7 @@ func (r PostsCassandraElasticsearchRepository) GetCategoryIdsFromSlugs(ctx conte
 	return ids, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) GetCategoryBySlug(ctx context.Context, requester *principal.Principal, slug string) (*post.Category, error) {
+func (r PostsCassandraElasticsearchRepository) GetCategoryBySlug(ctx context.Context, slug string) (*post.Category, error) {
 
 	var b categorySlugs
 
@@ -128,54 +201,10 @@ func (r PostsCassandraElasticsearchRepository) GetCategoryBySlug(ctx context.Con
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get category by slug")
 	}
 
-	return r.GetCategoryById(ctx, requester, b.CategoryId)
+	return r.GetCategoryById(ctx, b.CategoryId)
 }
 
-func (r PostsCassandraElasticsearchRepository) GetCategoriesByIds(ctx context.Context, requester *principal.Principal, cats []string) ([]*post.Category, error) {
-
-	var categories []*post.Category
-
-	if len(cats) == 0 {
-		return categories, nil
-	}
-
-	var categoriesModels []category
-
-	if err := qb.Select(categoryTable.Name()).
-		Where(qb.In("id")).
-		Query(r.session).
-		WithContext(ctx).
-		Idempotent(true).
-		Consistency(gocql.LocalQuorum).
-		Bind(cats).
-		SelectRelease(&categoriesModels); err != nil {
-		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get categories by id")
-	}
-
-	for _, cat := range categoriesModels {
-
-		unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, cat.ThumbnailResource)
-
-		if err != nil {
-			return nil, err
-		}
-
-		categories = append(categories, post.UnmarshalCategoryFromDatabase(
-			cat.Id,
-			cat.Slug,
-			cat.Title,
-			unmarshalled,
-			cat.TotalLikes,
-			cat.TotalPosts,
-			cat.CreatedAt,
-			cat.UpdatedAt,
-		))
-	}
-
-	return categories, nil
-}
-
-func (r PostsCassandraElasticsearchRepository) GetCategoryById(ctx context.Context, requester *principal.Principal, categoryId string) (*post.Category, error) {
+func (r PostsCassandraElasticsearchRepository) GetCategoryById(ctx context.Context, categoryId string) (*post.Category, error) {
 	return r.getCategoryById(ctx, categoryId)
 }
 
@@ -279,7 +308,7 @@ func (r PostsCassandraElasticsearchRepository) updateCategory(ctx context.Contex
 
 	if err := r.session.
 		Query(categoryTable.Update(
-			columns...,
+			append(columns, "updated_at")...,
 		)).
 		WithContext(ctx).
 		Idempotent(true).
@@ -300,12 +329,24 @@ func (r PostsCassandraElasticsearchRepository) UpdateCategoryThumbnailOperator(c
 	return r.updateCategory(ctx, id, updateFn, []string{"thumbnail_resource"})
 }
 
+func (r PostsCassandraElasticsearchRepository) UpdateCategoryBannerOperator(ctx context.Context, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
+	return r.updateCategory(ctx, id, updateFn, []string{"banner_resource"})
+}
+
 func (r PostsCassandraElasticsearchRepository) UpdateCategoryThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
 	return r.updateCategory(ctx, id, updateFn, []string{"thumbnail_resource"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateCategoryTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
 	return r.updateCategory(ctx, id, updateFn, []string{"title"})
+}
+
+func (r PostsCassandraElasticsearchRepository) UpdateCategoryAlternativeTitles(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
+	return r.updateCategory(ctx, id, updateFn, []string{"alternative_titles"})
+}
+
+func (r PostsCassandraElasticsearchRepository) UpdateCategoryTopic(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
+	return r.updateCategory(ctx, id, updateFn, []string{"topic_id"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateCategoryTotalPostsOperator(ctx context.Context, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
@@ -335,20 +376,5 @@ func (r PostsCassandraElasticsearchRepository) getCategoryById(ctx context.Conte
 		return nil, errors.Wrap(err, "failed to get category by id")
 	}
 
-	unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, cat.ThumbnailResource)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return post.UnmarshalCategoryFromDatabase(
-		cat.Id,
-		cat.Slug,
-		cat.Title,
-		unmarshalled,
-		cat.TotalLikes,
-		cat.TotalPosts,
-		cat.CreatedAt,
-		cat.UpdatedAt,
-	), nil
+	return r.unmarshalCategoryFromDatabase(ctx, &cat)
 }

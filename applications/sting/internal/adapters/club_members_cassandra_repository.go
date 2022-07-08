@@ -62,6 +62,10 @@ type clubMembersByAccount struct {
 	MemberAccountId string `db:"member_account_id"`
 }
 
+func unmarshalClubMemberFromDatabase(clb *clubMember) *club.Member {
+	return club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt, clb.IsSupporter, clb.SupporterSince)
+}
+
 func (r ClubCassandraElasticsearchRepository) addDeleteInitialClubMemberToBatch(ctx context.Context, batch *gocql.Batch, clubId, accountId string) error {
 	stmt, names := clubMembersTable.Delete()
 	support.BindStructToBatchStatement(
@@ -300,7 +304,7 @@ func (r ClubCassandraElasticsearchRepository) GetClubMemberByIdOperator(ctx cont
 		return nil, err
 	}
 
-	return club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt, clb.IsSupporter, clb.SupporterSince), nil
+	return unmarshalClubMemberFromDatabase(clb), nil
 }
 
 func (r ClubCassandraElasticsearchRepository) GetClubMemberById(ctx context.Context, requester *principal.Principal, clubId, accountId string) (*club.Member, error) {
@@ -311,7 +315,7 @@ func (r ClubCassandraElasticsearchRepository) GetClubMemberById(ctx context.Cont
 		return nil, err
 	}
 
-	return club.UnmarshalMemberFromDatabase(clb.MemberAccountId, clb.ClubId, clb.JoinedAt, clb.IsSupporter, clb.SupporterSince), nil
+	return unmarshalClubMemberFromDatabase(clb), nil
 }
 
 func (r ClubCassandraElasticsearchRepository) DeleteClubMember(ctx context.Context, member *club.Member) error {

@@ -1,2 +1,2 @@
 echo "ringer: running setup commands"
-kubectl exec -it deployments.apps/ringer -n default -- /bin/bash -c "./applications/ringer/internal/local-image.binary_/local-image.binary db migrate && ./applications/ringer/internal/local-image.binary_/local-image.binary db seed"
+kubectl exec -it deployments.apps/ringer -n default -- /bin/bash -c "./applications/ringer/internal/local-image.binary_/local-image.binary db migrate && ./applications/ringer/internal/local-image.binary_/local-image.binary cache register && ./applications/ringer/internal/local-image.binary_/local-image.binary db seed && ./applications/ringer/internal/local-image.binary_/local-image.binary cache index"

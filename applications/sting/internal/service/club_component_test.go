@@ -375,3 +375,46 @@ func TestCreateClub_edit_thumbnail(t *testing.T) {
 	updatedClb = getClub(t, client, clb.Slug())
 	require.True(t, updatedClb.Club.Thumbnail.Processed, "thumbnail is should be processed now")
 }
+
+// TestCreateClub_edit_banner - create a club and edit the banner
+func TestCreateClub_edit_banner(t *testing.T) {
+	t.Parallel()
+
+	testingAccountId := newFakeAccount(t)
+	mockAccountNormal(t, testingAccountId)
+
+	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
+	clb := seedClub(t, testingAccountId)
+	pst := seedPublishedPost(t, testingAccountId, clb.ID())
+
+	env := getWorkflowEnvironment()
+
+	refreshPostESIndex(t)
+	env.ExecuteWorkflow(workflows.GenerateClubBannerFromPost, workflows.GenerateClubBannerFromPostInput{PostId: pst.ID()})
+
+	require.True(t, env.IsWorkflowCompleted(), "generating banner workflow is complete")
+	require.NoError(t, env.GetWorkflowError(), "no error generating banner")
+
+	updatedClb := getClub(t, client, clb.Slug())
+	require.False(t, updatedClb.Club.Banner.Processed, "banner not yet processed initially")
+
+	grpcClient := getGrpcCallbackClient(t)
+
+	cat := getClubFromAdapter(t, clb.ID())
+
+	_, err := grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
+		// we know which resource to access since it will always use the first one
+		Id:          cat.BannerResource().ID(),
+		ItemId:      clb.ID(),
+		Processed:   true,
+		Type:        proto.ResourceType_IMAGE,
+		ProcessedId: uuid.New().String(),
+		Private:     false,
+		Token:       "CLUB_BANNER",
+	}}})
+
+	require.NoError(t, err, "no error updating resource")
+
+	updatedClb = getClub(t, client, clb.Slug())
+	require.True(t, updatedClb.Club.Banner.Processed, "banner should be processed now")
+}

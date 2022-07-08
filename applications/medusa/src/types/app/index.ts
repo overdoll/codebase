@@ -55,6 +55,7 @@ export interface CustomAppProps extends AppInitialProps {
   securityToken: string
   translationProps: any
   relayStore: any
+  appHeaders: any
 }
 
 export interface CustomPageAppProps extends AppProps {
@@ -64,6 +65,7 @@ export interface CustomPageAppProps extends AppProps {
   translationProps: any
   securityToken: string
   relayStore: any
+  appHeaders: any
 }
 
 export type GetRelayPreloadPropsReturn = Partial<{

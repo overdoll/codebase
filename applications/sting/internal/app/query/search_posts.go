@@ -13,6 +13,8 @@ type SearchPosts struct {
 	ContributorId *string
 	ClubIds       []string
 
+	CharacterIds []string
+
 	AudienceSlugs  []string
 	CategorySlugs  []string
 	CharacterSlugs []string
@@ -75,7 +77,12 @@ func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*p
 			if err != nil {
 				return nil, err
 			}
+
 		}
+	}
+
+	if len(query.CharacterIds) > 0 {
+		characterIds = query.CharacterIds
 	}
 
 	filters, err := post.NewPostFilters(

@@ -3,6 +3,9 @@ package adapters
 import (
 	"context"
 	"encoding/json"
+	"go.uber.org/zap"
+	"overdoll/libraries/cache"
+	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
@@ -14,21 +17,26 @@ import (
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/scan"
 )
 
 type categoryDocument struct {
-	Id                string            `json:"id"`
-	Slug              string            `json:"slug"`
-	ThumbnailResource string            `json:"thumbnail_resource"`
-	Title             map[string]string `json:"title"`
-	CreatedAt         time.Time         `json:"created_at"`
-	UpdatedAt         time.Time         `json:"updated_at"`
-	TotalLikes        int               `json:"total_likes"`
-	TotalPosts        int               `json:"total_posts"`
+	Id                string              `json:"id"`
+	Slug              string              `json:"slug"`
+	TopicId           *string             `json:"topic_id"`
+	AlternativeTitles []map[string]string `json:"alternative_titles"`
+	ThumbnailResource string              `json:"thumbnail_resource"`
+	BannerResource    string              `json:"banner_resource"`
+	Title             map[string]string   `json:"title"`
+	CreatedAt         time.Time           `json:"created_at"`
+	UpdatedAt         time.Time           `json:"updated_at"`
+	TotalLikes        int                 `json:"total_likes"`
+	TotalPosts        int                 `json:"total_posts"`
 }
 
-const CategoryIndexName = "sting.categories"
+const CategoryIndexName = "categories"
+
+var CategoryReaderIndex = cache.ReadAlias(CachePrefix, CategoryIndexName)
+var categoryWriterIndex = cache.WriteAlias(CachePrefix, CategoryIndexName)
 
 func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 
@@ -38,10 +46,19 @@ func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 		return nil, err
 	}
 
+	marshalledBanner, err := resource.MarshalResourceToDatabase(cat.BannerResource())
+
+	if err != nil {
+		return nil, err
+	}
+
 	return &categoryDocument{
 		Id:                cat.ID(),
+		TopicId:           cat.TopicId(),
 		Slug:              cat.Slug(),
 		ThumbnailResource: marshalled,
+		BannerResource:    marshalledBanner,
+		AlternativeTitles: localization.MarshalLocalizedDataTagsToDatabase(cat.AlternativeTitles()),
 		Title:             localization.MarshalTranslationToDatabase(cat.Title()),
 		CreatedAt:         cat.CreatedAt(),
 		UpdatedAt:         cat.UpdatedAt(),
@@ -50,11 +67,11 @@ func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 	}, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) unmarshalCategoryDocument(ctx context.Context, hit *elastic.SearchHit) (*post.Category, error) {
+func (r PostsCassandraElasticsearchRepository) unmarshalCategoryDocument(ctx context.Context, source json.RawMessage, sort []interface{}) (*post.Category, error) {
 
 	var pst categoryDocument
 
-	err := json.Unmarshal(hit.Source, &pst)
+	err := json.Unmarshal(source, &pst)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to unmarshal category document")
@@ -66,17 +83,29 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCategoryDocument(ctx con
 		return nil, err
 	}
 
+	unmarshalledBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, pst.BannerResource)
+
+	if err != nil {
+		return nil, err
+	}
+
 	newCategory := post.UnmarshalCategoryFromDatabase(
 		pst.Id,
 		pst.Slug,
 		pst.Title,
 		unmarshalled,
+		unmarshalledBanner,
 		pst.TotalLikes,
 		pst.TotalPosts,
 		pst.CreatedAt,
 		pst.UpdatedAt,
+		pst.TopicId,
+		pst.AlternativeTitles,
 	)
-	newCategory.Node = paging.NewNode(hit.Sort)
+
+	if sort != nil {
+		newCategory.Node = paging.NewNode(sort)
+	}
 
 	return newCategory, nil
 }
@@ -91,7 +120,7 @@ func (r PostsCassandraElasticsearchRepository) indexCategory(ctx context.Context
 
 	_, err = r.client.
 		Index().
-		Index(CategoryIndexName).
+		Index(categoryWriterIndex).
 		Id(category.ID()).
 		BodyJson(cat).
 		Do(ctx)
@@ -103,10 +132,44 @@ func (r PostsCassandraElasticsearchRepository) indexCategory(ctx context.Context
 	return nil
 }
 
-func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Category, error) {
+func (r PostsCassandraElasticsearchRepository) GetCategoriesByIds(ctx context.Context, categoryIds []string) ([]*post.Category, error) {
+
+	var categories []*post.Category
+
+	if len(categoryIds) == 0 {
+		return categories, nil
+	}
+
+	builder := r.client.MultiGet().Realtime(false)
+
+	for _, categoryId := range categoryIds {
+		builder.Add(elastic.NewMultiGetItem().Id(categoryId).Index(CategoryReaderIndex))
+	}
+
+	response, err := builder.Do(ctx)
+
+	if err != nil {
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed search categories")
+	}
+
+	for _, hit := range response.Docs {
+
+		result, err := r.unmarshalCategoryDocument(ctx, hit.Source, nil)
+
+		if err != nil {
+			return nil, err
+		}
+
+		categories = append(categories, result)
+	}
+
+	return categories, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.CategoryFilters) ([]*post.Category, error) {
 
 	builder := r.client.Search().
-		Index(CategoryIndexName).ErrorTrace(true)
+		Index(CategoryReaderIndex).ErrorTrace(true)
 
 	if cursor == nil {
 		return nil, paging.ErrCursorNotPresent
@@ -132,12 +195,16 @@ func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Cont
 
 	query := elastic.NewBoolQuery()
 
-	if filter.Search() != nil {
+	if filter.Title() != nil {
 		query.Must(
 			elastic.
-				NewMultiMatchQuery(*filter.Search(), localization.GetESSearchFields("title")...).
+				NewMultiMatchQuery(*filter.Title(), "title.en", "alternative_titles.en").
 				Type("best_fields"),
 		)
+	}
+
+	if filter.TopicId() != nil {
+		query.Filter(elastic.NewTermQuery("topic_id", *filter.TopicId()))
 	}
 
 	if len(filter.Slugs()) > 0 {
@@ -158,7 +225,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Cont
 
 	for _, hit := range response.Hits.Hits {
 
-		newCategory, err := r.unmarshalCategoryDocument(ctx, hit)
+		newCategory, err := r.unmarshalCategoryDocument(ctx, hit.Source, hit.Sort)
 
 		if err != nil {
 			return nil, err
@@ -172,8 +239,8 @@ func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Cont
 
 func (r PostsCassandraElasticsearchRepository) IndexAllCategories(ctx context.Context) error {
 
-	scanner := scan.New(r.session,
-		scan.Config{
+	scanner := database.NewScan(r.session,
+		database.ScanConfig{
 			NodesInCluster: 1,
 			CoresInNode:    2,
 			SmudgeFactor:   3,
@@ -186,25 +253,33 @@ func (r PostsCassandraElasticsearchRepository) IndexAllCategories(ctx context.Co
 
 		for iter.StructScan(&c) {
 
-			doc := categoryDocument{
-				Id:                c.Id,
-				Slug:              c.Slug,
-				ThumbnailResource: c.ThumbnailResource,
-				Title:             c.Title,
-				CreatedAt:         c.CreatedAt,
-				UpdatedAt:         c.UpdatedAt,
-				TotalLikes:        c.TotalLikes,
+			unmarshalled, err := r.unmarshalCategoryFromDatabase(ctx, &c)
+
+			if err != nil {
+				return err
 			}
 
-			_, err := r.client.
+			marshalled, err := marshalCategoryToDocument(unmarshalled)
+
+			if err != nil {
+				return err
+			}
+
+			_, err = r.client.
 				Index().
-				Index(CategoryIndexName).
-				Id(c.Id).
-				BodyJson(doc).
+				Index(categoryWriterIndex).
+				Id(marshalled.Id).
+				OpType("create").
+				BodyJson(marshalled).
 				Do(ctx)
 
 			if err != nil {
-				return errors.Wrap(support.ParseElasticError(err), "failed to index categories")
+				e, ok := err.(*elastic.Error)
+				if ok && e.Details.Type == "version_conflict_engine_exception" {
+					zap.S().Infof("skipping document [%s] due to conflict", marshalled.Id)
+				} else {
+					return errors.Wrap(support.ParseElasticError(err), "failed to index categories")
+				}
 			}
 		}
 

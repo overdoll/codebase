@@ -3,7 +3,7 @@ import Uppy from '@uppy/core'
 import Tus from '@uppy/tus'
 import CanUseDOM from '@//:modules/operations/CanUseDOM'
 import GoldenRetriever from '@uppy/golden-retriever'
-import { UPLOAD_ALLOWED_FILE_TYPES, MAX_FILE_SIZE } from '@//:modules/constants/upload'
+import { MAX_FILE_SIZE, UPLOAD_ALLOWED_FILE_TYPES } from '@//:modules/constants/upload'
 
 const U: UppyType = Uppy({
   id: 'posts',
@@ -30,6 +30,10 @@ if (CanUseDOM) {
 }
 
 // Resume-able uploads on the API
-U.use(Tus, { endpoint: '/api/upload/' })
+U.use(Tus, {
+  endpoint: '/api/upload/',
+  retryDelays: [0, 1000, 3000, 5000],
+  chunkSize: 10485760
+})
 
 export default U

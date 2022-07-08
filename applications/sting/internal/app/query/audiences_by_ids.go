@@ -2,7 +2,6 @@ package query
 
 import (
 	"context"
-
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/principal"
 )
@@ -22,7 +21,7 @@ func NewAudiencesByIdsHandler(pr post.Repository) AudiencesByIdsHandler {
 
 func (h AudiencesByIdsHandler) Handle(ctx context.Context, query AudiencesByIds) ([]*post.Audience, error) {
 
-	result, err := h.pr.GetAudiencesByIds(ctx, query.Principal, query.Ids)
+	result, err := h.pr.GetAudiencesByIds(ctx, query.Ids)
 
 	if err != nil {
 		return nil, err

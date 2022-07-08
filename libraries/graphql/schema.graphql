@@ -86,6 +86,20 @@ type Resource {
   """Video thumbnail, if video."""
   videoThumbnail: ResourceUrl
 
+  """Whether or not the video has audio."""
+  videoNoAudio: Boolean!
+
   """A hex-code color of the resource that can be used in-place while the resource is loading."""
   preview: String!
+
+  """
+  Whether or not this resource failed to process.
+
+  A failure can happen if:
+  - The supplied image is an unsupported format. This can happen if for example, someone submits a JPEG (unsupported) that was renamed to a PNG (supported)
+  - The supplied image is corrupted.
+  - The supplied video is invalid or corrupted.
+
+  """
+  failed: Boolean!
 }

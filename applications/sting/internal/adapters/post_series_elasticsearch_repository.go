@@ -3,6 +3,9 @@ package adapters
 import (
 	"context"
 	"encoding/json"
+	"go.uber.org/zap"
+	"overdoll/libraries/cache"
+	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
@@ -14,13 +17,13 @@ import (
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/scan"
 )
 
 type seriesDocument struct {
 	Id                string            `json:"id"`
 	Slug              string            `json:"slug"`
 	ThumbnailResource string            `json:"thumbnail_resource"`
+	BannerResource    string            `json:"banner_resource"`
 	Title             map[string]string `json:"title"`
 	CreatedAt         time.Time         `json:"created_at"`
 	UpdatedAt         time.Time         `json:"updated_at"`
@@ -28,7 +31,10 @@ type seriesDocument struct {
 	TotalPosts        int               `json:"total_posts"`
 }
 
-const SeriesIndexName = "sting.series"
+const SeriesIndexName = "series"
+
+var SeriesReaderIndex = cache.ReadAlias(CachePrefix, SeriesIndexName)
+var seriesWriterIndex = cache.WriteAlias(CachePrefix, SeriesIndexName)
 
 func marshalSeriesToDocument(s *post.Series) (*seriesDocument, error) {
 
@@ -38,10 +44,17 @@ func marshalSeriesToDocument(s *post.Series) (*seriesDocument, error) {
 		return nil, err
 	}
 
+	marshalledBanner, err := resource.MarshalResourceToDatabase(s.BannerResource())
+
+	if err != nil {
+		return nil, err
+	}
+
 	return &seriesDocument{
 		Id:                s.ID(),
 		Slug:              s.Slug(),
 		ThumbnailResource: marshalled,
+		BannerResource:    marshalledBanner,
 		Title:             localization.MarshalTranslationToDatabase(s.Title()),
 		CreatedAt:         s.CreatedAt(),
 		TotalLikes:        s.TotalLikes(),
@@ -50,11 +63,11 @@ func marshalSeriesToDocument(s *post.Series) (*seriesDocument, error) {
 	}, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) unmarshalSeriesDocument(ctx context.Context, hit *elastic.SearchHit) (*post.Series, error) {
+func (r PostsCassandraElasticsearchRepository) unmarshalSeriesDocument(ctx context.Context, source json.RawMessage, sort []interface{}) (*post.Series, error) {
 
 	var md seriesDocument
 
-	err := json.Unmarshal(hit.Source, &md)
+	err := json.Unmarshal(source, &md)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed search series - unmarshal")
@@ -66,26 +79,69 @@ func (r PostsCassandraElasticsearchRepository) unmarshalSeriesDocument(ctx conte
 		return nil, err
 	}
 
+	unmarshalledBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, md.BannerResource)
+
+	if err != nil {
+		return nil, err
+	}
+
 	newMedia := post.UnmarshalSeriesFromDatabase(
 		md.Id,
 		md.Slug,
 		md.Title,
 		unmarshalled,
+		unmarshalledBanner,
 		md.TotalLikes,
 		md.TotalPosts,
 		md.CreatedAt,
 		md.UpdatedAt,
 	)
 
-	newMedia.Node = paging.NewNode(hit.Sort)
+	if sort != nil {
+		newMedia.Node = paging.NewNode(sort)
+	}
 
 	return newMedia, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) GetSeriesByIds(ctx context.Context, seriesIds []string) ([]*post.Series, error) {
+
+	var series []*post.Series
+
+	if len(seriesIds) == 0 {
+		return series, nil
+	}
+
+	builder := r.client.MultiGet().Realtime(false)
+
+	for _, seriesId := range seriesIds {
+		builder.Add(elastic.NewMultiGetItem().Id(seriesId).Index(SeriesReaderIndex))
+	}
+
+	response, err := builder.Do(ctx)
+
+	if err != nil {
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed search series")
+	}
+
+	for _, hit := range response.Docs {
+
+		result, err := r.unmarshalSeriesDocument(ctx, hit.Source, nil)
+
+		if err != nil {
+			return nil, err
+		}
+
+		series = append(series, result)
+	}
+
+	return series, nil
 }
 
 func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Series, error) {
 
 	builder := r.client.Search().
-		Index(SeriesIndexName)
+		Index(SeriesReaderIndex)
 
 	if cursor == nil {
 		return nil, paging.ErrCursorNotPresent
@@ -114,7 +170,7 @@ func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context,
 	if filter.Search() != nil {
 		query.Must(
 			elastic.
-				NewMultiMatchQuery(*filter.Search(), localization.GetESSearchFields("title")...).
+				NewMultiMatchQuery(*filter.Search(), "title.en").
 				Type("best_fields"),
 		)
 	}
@@ -137,7 +193,7 @@ func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context,
 
 	for _, hit := range response.Hits.Hits {
 
-		newMedia, err := r.unmarshalSeriesDocument(ctx, hit)
+		newMedia, err := r.unmarshalSeriesDocument(ctx, hit.Source, hit.Sort)
 
 		if err != nil {
 			return nil, err
@@ -159,7 +215,7 @@ func (r PostsCassandraElasticsearchRepository) indexSeries(ctx context.Context, 
 
 	_, err = r.client.
 		Index().
-		Index(SeriesIndexName).
+		Index(seriesWriterIndex).
 		Id(series.ID()).
 		BodyJson(ss).
 		Do(ctx)
@@ -168,7 +224,7 @@ func (r PostsCassandraElasticsearchRepository) indexSeries(ctx context.Context, 
 		return errors.Wrap(support.ParseElasticError(err), "failed to index series")
 	}
 
-	_, err = r.client.UpdateByQuery(CharacterIndexName).
+	_, err = r.client.UpdateByQuery(characterWriterIndex).
 		Query(elastic.NewNestedQuery("series", elastic.NewTermsQuery("series.id", series.ID()))).
 		Script(elastic.NewScript("ctx._source.series= params.updatedSeries").Param("updatedSeries", ss).Lang("painless")).
 		Do(ctx)
@@ -182,8 +238,8 @@ func (r PostsCassandraElasticsearchRepository) indexSeries(ctx context.Context, 
 
 func (r PostsCassandraElasticsearchRepository) IndexAllSeries(ctx context.Context) error {
 
-	scanner := scan.New(r.session,
-		scan.Config{
+	scanner := database.NewScan(r.session,
+		database.ScanConfig{
 			NodesInCluster: 1,
 			CoresInNode:    2,
 			SmudgeFactor:   3,
@@ -196,26 +252,33 @@ func (r PostsCassandraElasticsearchRepository) IndexAllSeries(ctx context.Contex
 
 		for iter.StructScan(&m) {
 
-			doc := seriesDocument{
-				Id:                m.Id,
-				Slug:              m.Slug,
-				ThumbnailResource: m.ThumbnailResource,
-				Title:             m.Title,
-				CreatedAt:         m.CreatedAt,
-				UpdatedAt:         m.UpdatedAt,
-				TotalLikes:        m.TotalLikes,
-				TotalPosts:        m.TotalPosts,
+			unmarshalled, err := r.unmarshalSeriesFromDatabase(ctx, &m)
+
+			if err != nil {
+				return err
 			}
 
-			_, err := r.client.
+			doc, err := marshalSeriesToDocument(unmarshalled)
+
+			if err != nil {
+				return err
+			}
+
+			_, err = r.client.
 				Index().
-				Index(SeriesIndexName).
-				Id(m.Id).
+				Index(seriesWriterIndex).
+				OpType("create").
+				Id(doc.Id).
 				BodyJson(doc).
 				Do(ctx)
 
 			if err != nil {
-				return errors.Wrap(support.ParseElasticError(err), "failed to index series")
+				e, ok := err.(*elastic.Error)
+				if ok && e.Details.Type == "version_conflict_engine_exception" {
+					zap.S().Infof("skipping document [%s] due to conflict", doc.Id)
+				} else {
+					return errors.Wrap(support.ParseElasticError(err), "failed to index series")
+				}
 			}
 		}
 

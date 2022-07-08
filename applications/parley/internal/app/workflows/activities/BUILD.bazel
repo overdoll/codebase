@@ -20,6 +20,7 @@ go_library(
         "reject_post.go",
         "remove_post.go",
         "remove_post_from_moderator_queue.go",
+        "send_moderator_post_in_queue_notification.go",
         "services.go",
         "suspend_club.go",
     ],

@@ -1,0 +1,96 @@
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "autocomplete": {
+          "tokenizer": "autocomplete",
+          "filter": [
+            "lowercase",
+            "truncate"
+          ]
+        },
+        "autocomplete_search": {
+          "tokenizer": "lowercase"
+        }
+      },
+      "tokenizer": {
+        "autocomplete": {
+          "type": "edge_ngram",
+          "min_gram": 2,
+          "max_gram": 25,
+          "token_chars": [
+            "letter"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "dynamic": "true",
+    "properties": {
+      "id": {
+        "type": "keyword"
+      },
+      "slug": {
+        "type": "keyword"
+      },
+      "slug_aliases": {
+        "type": "keyword"
+      },
+      "thumbnail_resource": {
+        "type": "keyword"
+      },
+      "name": {
+        "properties": {
+          "language": {
+            "type": "keyword"
+          },
+          "supported": {
+            "type": "boolean"
+          },
+          "en": {
+            "type": "text",
+            "analyzer": "autocomplete",
+            "search_analyzer": "autocomplete_search"
+          }
+        }
+      },
+      "members_count": {
+        "type": "integer"
+      },
+      "owner_account_id": {
+        "type": "keyword"
+      },
+      "suspended": {
+        "type": "boolean"
+      },
+      "suspended_until": {
+        "type": "date"
+      },
+      "banner_resource": {
+        "type": "keyword"
+      },
+      "supporter_only_posts_disabled": {
+        "type": "boolean"
+      },
+      "next_supporter_post_time": {
+        "type": "date"
+      },
+      "has_created_supporter_only_post": {
+        "type": "boolean"
+      },
+      "terminated": {
+        "type": "boolean"
+      },
+      "terminated_by_account_id": {
+        "type": "keyword"
+      },
+      "created_at": {
+        "type": "date"
+      },
+      "updated_at": {
+        "type": "date"
+      }
+    }
+  }
+}

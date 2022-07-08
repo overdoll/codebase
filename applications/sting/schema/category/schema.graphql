@@ -11,6 +11,9 @@ type Category implements Node @key(fields: "id") {
   """A URL pointing to the object's thumbnail."""
   thumbnail: Resource
 
+  """A URL pointing to the object's banner."""
+  banner: Resource
+
   """
   A title for this category.
 
@@ -21,11 +24,17 @@ type Category implements Node @key(fields: "id") {
   """All translations for this title."""
   titleTranslations: [Translation!]!
 
+  """Alternative titles for this category."""
+  alternativeTitles: [Translation!]!
+
   """Total amount of likes."""
   totalLikes: Int!
 
   """Total amount of posts."""
   totalPosts: Int!
+
+  """The topic linked this category. If no topic is linked, field is null."""
+  topic: Topic @goField(forceResolver: true)
 }
 
 type CategoryEdge {
@@ -102,6 +111,11 @@ input CreateCategoryInput {
   Validation: Max 25 characters.
   """
   title: String!
+
+  """
+  Optionally assign a topic to this category.
+  """
+  topicId: ID
 }
 
 """Payload for a new category"""
@@ -135,12 +149,68 @@ input UpdateCategoryTitleInput {
 }
 
 """Update category."""
+input AddCategoryAlternativeTitleInput {
+  """The category to update"""
+  id: ID!
+
+  """
+  The title to add.
+
+  Validation: Max 25 characters.
+  """
+  title: String!
+
+  """The localization for this title"""
+  locale: BCP47!
+}
+
+"""Update category."""
+input RemoveCategoryAlternativeTitleInput {
+  """The category to update"""
+  id: ID!
+
+  """
+  The title to remove.
+  """
+  title: String!
+}
+
+"""Update category topic."""
+input UpdateCategoryTopicInput {
+  """The category to update"""
+  id: ID!
+
+  """
+  The topic to assign to this category.
+  """
+  topicId: ID!
+}
+
+"""Update category."""
 input UpdateCategoryThumbnailInput {
   """The category to update"""
   id: ID!
 
   """The thumbnail"""
   thumbnail: String!
+}
+
+"""Payload for updating category"""
+type UpdateCategoryTopicPayload {
+  """The category after update"""
+  category: Category
+}
+
+"""Payload for updating category"""
+type AddCategoryAlternativeTitlePayload {
+  """The category after update"""
+  category: Category
+}
+
+"""Payload for updating category"""
+type RemoveCategoryAlternativeTitlePayload {
+  """The category after update"""
+  category: Category
 }
 
 """Payload for updating category"""
@@ -170,4 +240,19 @@ type Mutation {
   Update category thumbnail
   """
   updateCategoryThumbnail(input: UpdateCategoryThumbnailInput!): UpdateCategoryThumbnailPayload
+
+  """
+  Update the category topic
+  """
+  updateCategoryTopic(input: UpdateCategoryTopicInput!): UpdateCategoryTopicPayload
+
+  """
+  Add an alternative title to the category.
+  """
+  addCategoryAlternativeTitle(input: AddCategoryAlternativeTitleInput!): AddCategoryAlternativeTitlePayload
+
+  """
+  Remove an alternative title from the category.
+  """
+  removeCategoryAlternativeTitle(input: RemoveCategoryAlternativeTitleInput!): RemoveCategoryAlternativeTitlePayload
 }

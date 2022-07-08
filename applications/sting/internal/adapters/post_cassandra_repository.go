@@ -17,6 +17,23 @@ import (
 	"overdoll/libraries/principal"
 )
 
+var postsOccupiedResourceTable = table.New(table.Metadata{
+	Name: "posts_occupied_resources",
+	Columns: []string{
+		"bucket",
+		"post_id",
+		"resource_id",
+	},
+	PartKey: []string{"bucket"},
+	SortKey: []string{"post_id", "resource_id"},
+})
+
+type postsOccupiedResource struct {
+	Bucket     int    `db:"bucket"`
+	PostId     string `db:"post_id"`
+	ResourceId string `db:"resource_id"`
+}
+
 var postTable = table.New(table.Metadata{
 	Name: "posts",
 	Columns: []string{
@@ -179,6 +196,50 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Contex
 	), nil
 }
 
+func (r PostsCassandraElasticsearchRepository) getPostOccupiedResourcesPostIds(ctx context.Context) ([]string, error) {
+
+	var postResults []*postsOccupiedResource
+
+	if err := r.session.
+		Query(qb.Select(postsOccupiedResourceTable.Name()).Where(qb.Eq("bucket")).ToCql()).
+		WithContext(ctx).
+		Idempotent(true).
+		BindStruct(postsOccupiedResource{
+			Bucket: 0,
+		}).
+		Consistency(gocql.LocalQuorum).
+		SelectRelease(&postResults); err != nil {
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get post occupied resources")
+	}
+
+	var postIds []string
+
+	for _, result := range postResults {
+		postIds = append(postIds, result.PostId)
+	}
+
+	return postIds, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) AddPostOccupiedResource(ctx context.Context, post *post.Post, resource *resource.Resource) error {
+
+	if err := r.session.
+		Query(postsOccupiedResourceTable.Insert()).
+		WithContext(ctx).
+		Idempotent(true).
+		BindStruct(postsOccupiedResource{
+			Bucket:     0,
+			PostId:     post.ID(),
+			ResourceId: resource.ID(),
+		}).
+		Consistency(gocql.LocalQuorum).
+		ExecRelease(); err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to create post occupied resource")
+	}
+
+	return nil
+}
+
 func (r PostsCassandraElasticsearchRepository) CreatePost(ctx context.Context, pending *post.Post) error {
 
 	pst, err := marshalPostToDatabase(pending)
@@ -233,42 +294,6 @@ func (r PostsCassandraElasticsearchRepository) DeletePost(ctx context.Context, i
 	}
 
 	return nil
-}
-
-func (r PostsCassandraElasticsearchRepository) GetPostsByIds(ctx context.Context, requester *principal.Principal, postIds []string) ([]*post.Post, error) {
-
-	var postResults []*post.Post
-
-	// if none then we get out or else the query will fail
-	if len(postIds) == 0 {
-		return postResults, nil
-	}
-
-	var postsModels []*posts
-
-	if err := qb.Select(postTable.Name()).
-		Where(qb.In("id")).
-		Query(r.session).
-		WithContext(ctx).
-		Idempotent(true).
-		Consistency(gocql.LocalQuorum).
-		Bind(postIds).
-		SelectRelease(&postsModels); err != nil {
-		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get posts by ids")
-	}
-
-	for _, b := range postsModels {
-
-		unmarshalled, err := r.unmarshalPost(ctx, *b)
-
-		if err != nil {
-			return nil, err
-		}
-
-		postResults = append(postResults, unmarshalled)
-	}
-
-	return postResults, nil
 }
 
 func (r PostsCassandraElasticsearchRepository) getPostById(ctx context.Context, id string) (*posts, error) {

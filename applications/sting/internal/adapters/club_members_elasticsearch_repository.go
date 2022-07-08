@@ -5,12 +5,14 @@ import (
 	"encoding/json"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2"
+	"go.uber.org/zap"
 	"overdoll/applications/sting/internal/domain/club"
+	"overdoll/libraries/cache"
+	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/scan"
 	"overdoll/libraries/support"
 	"time"
 )
@@ -24,7 +26,10 @@ type clubMembersDocument struct {
 	SupporterSince  *time.Time `json:"supporter_since"`
 }
 
-const ClubMembersIndexName = "sting.club_members"
+const ClubMembersIndexName = "club_members"
+
+var ClubMembersReaderIndex = cache.ReadAlias(CachePrefix, ClubMembersIndexName)
+var clubMembersWriterIndex = cache.WriteAlias(CachePrefix, ClubMembersIndexName)
 
 func marshalClubMemberToDocument(cat *club.Member) *clubMembersDocument {
 	return &clubMembersDocument{
@@ -39,7 +44,7 @@ func marshalClubMemberToDocument(cat *club.Member) *clubMembersDocument {
 
 func (r ClubCassandraElasticsearchRepository) getClubsSupporterMembershipCount(ctx context.Context, clubId string) (int64, error) {
 	builder := r.client.Count().
-		Index(ClubMembersIndexName)
+		Index(ClubMembersReaderIndex)
 
 	query := elastic.NewBoolQuery()
 
@@ -60,7 +65,7 @@ func (r ClubCassandraElasticsearchRepository) getClubsSupporterMembershipCount(c
 func (r ClubCassandraElasticsearchRepository) SearchClubMembers(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *club.MemberFilters) ([]*club.Member, error) {
 
 	builder := r.client.Search().
-		Index(ClubMembersIndexName)
+		Index(ClubMembersReaderIndex)
 
 	if cursor == nil {
 		return nil, paging.ErrCursorNotPresent
@@ -154,7 +159,7 @@ func (r ClubCassandraElasticsearchRepository) indexClubMember(ctx context.Contex
 
 	_, err := r.client.
 		Index().
-		Index(ClubMembersIndexName).
+		Index(clubMembersWriterIndex).
 		Id(clb.Id).
 		BodyJson(*clb).
 		Do(ctx)
@@ -168,8 +173,8 @@ func (r ClubCassandraElasticsearchRepository) indexClubMember(ctx context.Contex
 
 func (r ClubCassandraElasticsearchRepository) IndexAllClubMembers(ctx context.Context) error {
 
-	scanner := scan.New(r.session,
-		scan.Config{
+	scanner := database.NewScan(r.session,
+		database.ScanConfig{
 			NodesInCluster: 1,
 			CoresInNode:    2,
 			SmudgeFactor:   3,
@@ -182,23 +187,20 @@ func (r ClubCassandraElasticsearchRepository) IndexAllClubMembers(ctx context.Co
 
 		for iter.StructScan(&m) {
 
-			doc := clubMembersDocument{
-				Id:              m.ClubId + "-" + m.MemberAccountId,
-				ClubId:          m.ClubId,
-				MemberAccountId: m.MemberAccountId,
-				JoinedAt:        m.JoinedAt,
-				IsSupporter:     m.IsSupporter,
-				SupporterSince:  m.SupporterSince,
-			}
+			doc := marshalClubMemberToDocument(unmarshalClubMemberFromDatabase(&m))
 
 			_, err := r.client.
 				Index().
-				Index(ClubMembersIndexName).
+				Index(clubMembersWriterIndex).
+				OpType("create").
 				Id(doc.Id).
 				BodyJson(doc).
 				Do(ctx)
 
-			if err != nil {
+			e, ok := err.(*elastic.Error)
+			if ok && e.Details.Type == "version_conflict_engine_exception" {
+				zap.S().Infof("skipping document [%s] due to conflict", doc.Id)
+			} else {
 				return errors.Wrap(support.ParseElasticError(err), "failed to index club members")
 			}
 		}
@@ -215,7 +217,7 @@ func (r ClubCassandraElasticsearchRepository) IndexAllClubMembers(ctx context.Co
 
 func (r ClubCassandraElasticsearchRepository) deleteClubMemberIndexById(ctx context.Context, clubId, accountId string) error {
 
-	if _, err := r.client.Delete().Index(ClubMembersIndexName).Id(clubId + "-" + accountId).Do(ctx); err != nil {
+	if _, err := r.client.Delete().Index(clubMembersWriterIndex).Id(clubId + "-" + accountId).Do(ctx); err != nil {
 		return errors.Wrap(support.ParseElasticError(err), "failed to delete club member document")
 	}
 

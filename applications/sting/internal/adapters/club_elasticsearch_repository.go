@@ -3,8 +3,12 @@ package adapters
 import (
 	"context"
 	"encoding/json"
+	"go.uber.org/zap"
 	"overdoll/applications/sting/internal/domain/club"
+	"overdoll/libraries/cache"
+	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"time"
@@ -14,7 +18,6 @@ import (
 	"overdoll/libraries/localization"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/scan"
 )
 
 type clubDocument struct {
@@ -37,7 +40,10 @@ type clubDocument struct {
 	UpdatedAt                   time.Time         `json:"updated_at"`
 }
 
-const ClubsIndexName = "sting.clubs"
+const ClubsIndexName = "clubs"
+
+var ClubsReaderIndex = cache.ReadAlias(CachePrefix, ClubsIndexName)
+var clubsWriterIndex = cache.WriteAlias(CachePrefix, ClubsIndexName)
 
 func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 
@@ -74,10 +80,10 @@ func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 	}, nil
 }
 
-func unmarshalClubDocument(ctx context.Context, hit *elastic.SearchHit, resourceSerializer *resource.Serializer) (*club.Club, error) {
+func unmarshalClubDocument(ctx context.Context, source json.RawMessage, sort []interface{}, resourceSerializer *resource.Serializer) (*club.Club, error) {
 	var bd clubDocument
 
-	err := json.Unmarshal(hit.Source, &bd)
+	err := json.Unmarshal(source, &bd)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed search clubs - unmarshal")
@@ -114,7 +120,10 @@ func unmarshalClubDocument(ctx context.Context, hit *elastic.SearchHit, resource
 		bd.CreatedAt,
 		bd.UpdatedAt,
 	)
-	newBrand.Node = paging.NewNode(hit.Sort)
+
+	if sort != nil {
+		newBrand.Node = paging.NewNode(sort)
+	}
 
 	return newBrand, nil
 }
@@ -129,7 +138,7 @@ func (r ClubCassandraElasticsearchRepository) indexClub(ctx context.Context, clu
 
 	_, err = r.client.
 		Index().
-		Index(ClubsIndexName).
+		Index(clubsWriterIndex).
 		Id(clb.Id).
 		BodyJson(*clb).
 		Do(ctx)
@@ -140,10 +149,49 @@ func (r ClubCassandraElasticsearchRepository) indexClub(ctx context.Context, clu
 
 	return nil
 }
+
+func (r ClubCassandraElasticsearchRepository) GetClubsByIds(ctx context.Context, clubIds []string) ([]*club.Club, error) {
+
+	var clubs []*club.Club
+
+	if len(clubIds) == 0 {
+		return clubs, nil
+	}
+
+	builder := r.client.MultiGet().Realtime(false)
+
+	for _, clubId := range clubIds {
+		builder.Add(elastic.NewMultiGetItem().Id(clubId).Index(ClubsReaderIndex))
+	}
+
+	response, err := builder.Do(ctx)
+
+	if err != nil {
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed search clubs")
+	}
+
+	for _, hit := range response.Docs {
+
+		if !hit.Found {
+			return nil, apperror.NewNotFoundError("club", hit.Id)
+		}
+
+		result, err := unmarshalClubDocument(ctx, hit.Source, nil, r.resourceSerializer)
+
+		if err != nil {
+			return nil, err
+		}
+
+		clubs = append(clubs, result)
+	}
+
+	return clubs, nil
+}
+
 func (r ClubCassandraElasticsearchRepository) DiscoverClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*club.Club, error) {
 
 	builder := r.client.Search().
-		Index(ClubsIndexName)
+		Index(ClubsReaderIndex)
 
 	if cursor == nil {
 		return nil, paging.ErrCursorNotPresent
@@ -180,7 +228,7 @@ func (r ClubCassandraElasticsearchRepository) DiscoverClubs(ctx context.Context,
 
 	for _, hit := range response.Hits.Hits {
 
-		newBrand, err := unmarshalClubDocument(ctx, hit, r.resourceSerializer)
+		newBrand, err := unmarshalClubDocument(ctx, hit.Source, hit.Sort, r.resourceSerializer)
 
 		if err != nil {
 			return nil, err
@@ -195,7 +243,7 @@ func (r ClubCassandraElasticsearchRepository) DiscoverClubs(ctx context.Context,
 func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *club.Filters) ([]*club.Club, error) {
 
 	builder := r.client.Search().
-		Index(ClubsIndexName)
+		Index(ClubsReaderIndex)
 
 	if cursor == nil {
 		return nil, paging.ErrCursorNotPresent
@@ -242,7 +290,7 @@ func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, r
 	if filter.Search() != nil {
 		query.Must(
 			elastic.
-				NewMultiMatchQuery(*filter.Search(), localization.GetESSearchFields("name")...).
+				NewMultiMatchQuery(*filter.Search(), "name.en").
 				Type("best_fields"),
 		)
 	}
@@ -265,7 +313,7 @@ func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, r
 
 	for _, hit := range response.Hits.Hits {
 
-		newBrand, err := unmarshalClubDocument(ctx, hit, r.resourceSerializer)
+		newBrand, err := unmarshalClubDocument(ctx, hit.Source, hit.Sort, r.resourceSerializer)
 
 		if err != nil {
 			return nil, err
@@ -279,8 +327,8 @@ func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, r
 
 func (r ClubCassandraElasticsearchRepository) IndexAllClubs(ctx context.Context) error {
 
-	scanner := scan.New(r.session,
-		scan.Config{
+	scanner := database.NewScan(r.session,
+		database.ScanConfig{
 			NodesInCluster: 1,
 			CoresInNode:    2,
 			SmudgeFactor:   3,
@@ -293,34 +341,30 @@ func (r ClubCassandraElasticsearchRepository) IndexAllClubs(ctx context.Context)
 
 		for iter.StructScan(&m) {
 
-			doc := clubDocument{
-				Id:                          m.Id,
-				Slug:                        m.Slug,
-				SlugAliases:                 m.SlugAliases,
-				ThumbnailResource:           m.ThumbnailResource,
-				BannerResource:              m.BannerResource,
-				SupporterOnlyPostsDisabled:  m.SupporterOnlyPostsDisabled,
-				Name:                        m.Name,
-				OwnerAccountId:              m.OwnerAccountId,
-				CreatedAt:                   m.CreatedAt,
-				MembersCount:                m.MembersCount,
-				Suspended:                   m.Suspended,
-				SuspendedUntil:              m.SuspendedUntil,
-				HasCreatedSupporterOnlyPost: m.HasCreatedSupporterOnlyPost,
-				NextSupporterPostTime:       m.NextSupporterPostTime,
-				Terminated:                  m.Terminated,
-				TerminatedByAccountId:       m.TerminatedByAccountId,
-				UpdatedAt:                   m.UpdatedAt,
-			}
-
-			_, err := r.client.
-				Index().
-				Index(ClubsIndexName).
-				Id(m.Id).
-				BodyJson(doc).
-				Do(ctx)
+			unmarshalled, err := r.unmarshalClubFromDatabase(ctx, &m)
 
 			if err != nil {
+				return err
+			}
+
+			marshalled, err := marshalClubToDocument(unmarshalled)
+
+			if err != nil {
+				return err
+			}
+
+			_, err = r.client.
+				Index().
+				Index(clubsWriterIndex).
+				Id(marshalled.Id).
+				OpType("create").
+				BodyJson(marshalled).
+				Do(ctx)
+
+			e, ok := err.(*elastic.Error)
+			if ok && e.Details.Type == "version_conflict_engine_exception" {
+				zap.S().Infof("skipping document [%s] due to conflict", marshalled.Id)
+			} else {
 				return errors.Wrap(support.ParseElasticError(err), "failed to index clubs")
 			}
 		}

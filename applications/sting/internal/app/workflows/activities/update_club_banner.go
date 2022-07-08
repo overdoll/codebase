@@ -31,7 +31,7 @@ func (h *Activities) UpdateClubBanner(ctx context.Context, input UpdateClubBanne
 		return nil
 	}
 
-	newContent, err := h.loader.CopyResourceIntoImage(ctx, input.PostId, chosenResource.ID(), false)
+	newContent, err := h.loader.CopyResourceIntoImage(ctx, input.PostId, chosenResource.ID(), false, "CLUB_BANNER", 360, 0, pst.ClubId())
 
 	if err != nil {
 		return err
@@ -45,5 +45,5 @@ func (h *Activities) UpdateClubBanner(ctx context.Context, input UpdateClubBanne
 		return err
 	}
 
-	return nil
+	return h.pr.AddPostOccupiedResource(ctx, pst, chosenResource)
 }

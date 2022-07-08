@@ -23,6 +23,7 @@ type Audience struct {
 	slug              string
 	title             *localization.Translation
 	thumbnailResource *resource.Resource
+	bannerResource    *resource.Resource
 
 	totalLikes int
 	totalPosts int
@@ -62,6 +63,7 @@ func NewAudience(requester *principal.Principal, slug, title string, standard bo
 		slug:              slug,
 		title:             lc,
 		thumbnailResource: nil,
+		bannerResource:    nil,
 		totalLikes:        0,
 		totalPosts:        0,
 		standard:          standard,
@@ -94,6 +96,10 @@ func (m *Audience) ThumbnailResource() *resource.Resource {
 	return m.thumbnailResource
 }
 
+func (m *Audience) BannerResource() *resource.Resource {
+	return m.bannerResource
+}
+
 // IsStandard a "standard" audience is an audience that the majority will consume
 func (m *Audience) IsStandard() bool {
 	return m.standard
@@ -123,6 +129,15 @@ func (m *Audience) UpdateTotalLikes(totalLikes int) error {
 	return nil
 }
 
+func (m *Audience) CanUpdateBanner(requester *principal.Principal) error {
+
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
+
+	return nil
+}
+
 func (m *Audience) UpdateTitle(requester *principal.Principal, title, locale string) error {
 
 	if err := m.canUpdate(requester); err != nil {
@@ -143,11 +158,35 @@ func (m *Audience) UpdateTitle(requester *principal.Principal, title, locale str
 
 func (m *Audience) UpdateThumbnailExisting(thumbnail *resource.Resource) error {
 
-	if err := validateExistingThumbnail(m.thumbnailResource, thumbnail); err != nil {
+	if err := validateExistingResource(m.thumbnailResource, thumbnail); err != nil {
 		return err
 	}
 
 	m.thumbnailResource = thumbnail
+	m.update()
+
+	return nil
+}
+
+func (m *Audience) UpdateBannerExisting(thumbnail *resource.Resource) error {
+
+	if err := validateExistingResource(m.bannerResource, thumbnail); err != nil {
+		return err
+	}
+
+	m.bannerResource = thumbnail
+	m.update()
+
+	return nil
+}
+
+func (m *Audience) UpdateBanner(requester *principal.Principal, thumbnail *resource.Resource) error {
+
+	if err := m.canUpdate(requester); err != nil {
+		return err
+	}
+
+	m.bannerResource = thumbnail
 	m.update()
 
 	return nil
@@ -189,7 +228,7 @@ func (m *Audience) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalAudienceFromDatabase(id, slug string, title map[string]string, thumbnail *resource.Resource, standard int, totalLikes, totalPosts int, createdAt, updatedAt time.Time) *Audience {
+func UnmarshalAudienceFromDatabase(id, slug string, title map[string]string, thumbnail *resource.Resource, banner *resource.Resource, standard int, totalLikes, totalPosts int, createdAt, updatedAt time.Time) *Audience {
 	return &Audience{
 		id:                id,
 		slug:              slug,
@@ -197,6 +236,7 @@ func UnmarshalAudienceFromDatabase(id, slug string, title map[string]string, thu
 		totalPosts:        totalPosts,
 		title:             localization.UnmarshalTranslationFromDatabase(title),
 		thumbnailResource: thumbnail,
+		bannerResource:    banner,
 		standard:          standard == 1,
 		createdAt:         createdAt,
 		updatedAt:         updatedAt,

@@ -48,7 +48,16 @@ export default function FilePicker ({
   return (
     <Flex w='100%' onClick={uploadClick} cursor='pointer' {...rest}>
       {children}
-      <input id='file' ref={fileInput} data-testid='file' hidden type='file' multiple onChange={onChange} />
+      <input
+        id='file'
+        accept='video/mp4,image/png'
+        ref={fileInput}
+        data-testid='file'
+        hidden
+        type='file'
+        multiple
+        onChange={onChange}
+      />
     </Flex>
   )
 }

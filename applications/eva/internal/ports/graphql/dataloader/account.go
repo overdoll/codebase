@@ -22,14 +22,17 @@ func accountsByIds(app *app.Application) *dataloader.Loader {
 				keyIds = append(keyIds, key.String())
 				keyOrder[key.String()] = ix
 			}
+			// construct an output array of dataloader results
+			results := make([]*dataloader.Result, len(keys))
 
 			res, err := app.Queries.AccountsByIds.Handle(context.Background(), query.AccountsByIds{AccountIds: keyIds})
 
 			if err != nil {
-				return []*dataloader.Result{{Data: nil, Error: err}}
+				for _, ix := range keyOrder {
+					results[ix] = &dataloader.Result{Data: nil, Error: err}
+				}
+				return results
 			}
-			// construct an output array of dataloader results
-			results := make([]*dataloader.Result, len(keys))
 
 			// enumerate records, put into output
 			for _, record := range res {

@@ -1,0 +1,90 @@
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "autocomplete": {
+          "tokenizer": "autocomplete",
+          "filter": [
+            "lowercase",
+            "truncate"
+          ]
+        },
+        "autocomplete_search": {
+          "tokenizer": "lowercase"
+        }
+      },
+      "tokenizer": {
+        "autocomplete": {
+          "type": "edge_ngram",
+          "min_gram": 2,
+          "max_gram": 25,
+          "token_chars": [
+            "letter"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "dynamic": "true",
+    "properties": {
+      "id": {
+        "type": "keyword"
+      },
+      "title": {
+        "properties": {
+          "language": {
+            "type": "keyword"
+          },
+          "supported": {
+            "type": "boolean"
+          },
+          "en": {
+            "type": "text",
+            "analyzer": "autocomplete",
+            "search_analyzer": "autocomplete_search"
+          }
+        }
+      },
+      "alternative_titles": {
+        "properties": {
+          "language": {
+            "type": "keyword"
+          },
+          "supported": {
+            "type": "boolean"
+          },
+          "en": {
+            "type": "text",
+            "analyzer": "autocomplete",
+            "search_analyzer": "autocomplete_search"
+          }
+        }
+      },
+      "slug": {
+        "type": "keyword"
+      },
+      "thumbnail_resource": {
+        "type": "keyword"
+      },
+      "banner_resource": {
+        "type": "keyword"
+      },
+      "topic_id": {
+        "type": "keyword"
+      },
+      "total_likes": {
+        "type": "integer"
+      },
+      "total_posts": {
+        "type": "integer"
+      },
+      "created_at": {
+        "type": "date"
+      },
+      "updated_at": {
+        "type": "date"
+      }
+    }
+  }
+}

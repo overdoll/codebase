@@ -78,6 +78,15 @@ func marshalPostReportToDatabase(report *report.PostReport) *postReport {
 	}
 }
 
+func unmarshalPostReportFromDatabase(postRep *postReport) *report.PostReport {
+	return report.UnmarshalPostReportFromDatabase(
+		postRep.PostId,
+		postRep.ReportingAccountId,
+		postRep.RuleId,
+		postRep.CreatedAt,
+	)
+}
+
 func (r ReportCassandraElasticsearchRepository) CreatePostReport(ctx context.Context, report *report.PostReport) error {
 
 	marshalledPostReport := marshalPostReportToDatabase(report)
@@ -139,12 +148,7 @@ func (r ReportCassandraElasticsearchRepository) GetPostReportById(ctx context.Co
 		return nil, errors.Wrap(support.NewGocqlError(err), "GetPostReportById")
 	}
 
-	rep := report.UnmarshalPostReportFromDatabase(
-		postRep.PostId,
-		postRep.ReportingAccountId,
-		postRep.RuleId,
-		postRep.CreatedAt,
-	)
+	rep := unmarshalPostReportFromDatabase(&postRep)
 
 	if err := rep.CanView(requester); err != nil {
 		return nil, err

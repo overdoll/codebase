@@ -26,7 +26,7 @@ export default function TotpQrCodeStep ({
           <NextImage
             height={128}
             width={128}
-            priority
+            loading='eager'
             alt='thumbnail'
             src={image ?? ''}
           />

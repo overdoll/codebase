@@ -7,6 +7,7 @@ go_library(
         "club.go",
         "confirm_email.go",
         "manage_subscription.go",
+        "moderator.go",
         "transaction_details.go",
         "verify_token.go",
     ],

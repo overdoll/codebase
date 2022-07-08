@@ -93,3 +93,9 @@ func (r *Resolver) ClubMember() ClubMemberResolver {
 		App: r.app,
 	}
 }
+
+func (r *Resolver) Topic() TopicResolver {
+	return &resolvers.TopicResolver{
+		App: r.app,
+	}
+}

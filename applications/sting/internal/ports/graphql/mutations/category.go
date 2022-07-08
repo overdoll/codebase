@@ -9,6 +9,82 @@ import (
 	"overdoll/libraries/principal"
 )
 
+func (r *MutationResolver) UpdateCategoryTopic(ctx context.Context, input types.UpdateCategoryTopicInput) (*types.UpdateCategoryTopicPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	category, err := r.App.Commands.UpdateCategoryTopic.
+		Handle(
+			ctx,
+			command.UpdateCategoryTopic{
+				Principal:  principal.FromContext(ctx),
+				CategoryId: input.ID.GetID(),
+				TopicId:    input.TopicID.GetID(),
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.UpdateCategoryTopicPayload{
+		Category: types.MarshalCategoryToGraphQL(ctx, category),
+	}, err
+}
+
+func (r *MutationResolver) AddCategoryAlternativeTitle(ctx context.Context, input types.AddCategoryAlternativeTitleInput) (*types.AddCategoryAlternativeTitlePayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	category, err := r.App.Commands.AddCategoryAlternativeTitle.
+		Handle(
+			ctx,
+			command.AddCategoryAlternativeTitle{
+				Principal:  principal.FromContext(ctx),
+				CategoryId: input.ID.GetID(),
+				Title:      input.Title,
+				Locale:     input.Locale,
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.AddCategoryAlternativeTitlePayload{
+		Category: types.MarshalCategoryToGraphQL(ctx, category),
+	}, err
+}
+
+func (r *MutationResolver) RemoveCategoryAlternativeTitle(ctx context.Context, input types.RemoveCategoryAlternativeTitleInput) (*types.RemoveCategoryAlternativeTitlePayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	category, err := r.App.Commands.RemoveCategoryAlternativeTitle.
+		Handle(
+			ctx,
+			command.RemoveCategoryAlternativeTitle{
+				Principal:  principal.FromContext(ctx),
+				CategoryId: input.ID.GetID(),
+				Title:      input.Title,
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.RemoveCategoryAlternativeTitlePayload{
+		Category: types.MarshalCategoryToGraphQL(ctx, category),
+	}, err
+}
+
 func (r *MutationResolver) CreateCategory(ctx context.Context, input types.CreateCategoryInput) (*types.CreateCategoryPayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
