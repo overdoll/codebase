@@ -166,6 +166,7 @@ def push_all_queries():
 
     for i in data:
         r.mset({"query:" + i: data[i]})
+        terminal_print.eprint("pushed query with id {}".format(i))
 
     f.close()
 

@@ -60,14 +60,11 @@ export const serverMiddlewareFetch = (req) => {
       headers[key] = value
     })
 
-    let existingSecurity = req.cookies.get('od.security')
+    const existingSecurity = req.cookies.get('od.security')
 
     let token: string
 
     if (existingSecurity != null) {
-      existingSecurity = existingSecurity.split(';')[0]
-      existingSecurity = existingSecurity.split('=')[1]
-
       token = await gcm.decrypt(existingSecurity, process.env.SECURITY_SECRET, true)
     } else {
       const bytes = new Uint8Array(32)
