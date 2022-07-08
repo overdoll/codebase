@@ -9,7 +9,7 @@ import (
 )
 
 func index(config IndexConfig, args []string) {
-	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
+	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*30)
 	defer cancelFn()
 
 	bootstrap.NewBootstrap()
