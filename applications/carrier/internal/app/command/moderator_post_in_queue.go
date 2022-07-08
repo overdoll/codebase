@@ -35,7 +35,7 @@ func (h ModeratorPostInQueueHandler) Handle(ctx context.Context, cmd ModeratorPo
 	}
 
 	template, err := mailing.NewTemplate(
-		"new_club_supporter_subscription",
+		"moderator_post_in_queue",
 		map[string]interface{}{
 			"Username":           acc.Username(),
 			"ModeratorQueueLink": postQueueLink,

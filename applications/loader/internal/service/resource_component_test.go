@@ -108,7 +108,7 @@ func TestUploadResourcesAndProcessPrivate_and_update_privacy(t *testing.T) {
 	require.NoError(t, err, "no error creating new resources from uploads")
 
 	env := getWorkflowEnvironment()
-	env.SetTestTimeout(time.Second * 10)
+	env.SetTestTimeout(time.Second * 20)
 
 	workflowExecution.FindAndExecuteWorkflow(t, env)
 

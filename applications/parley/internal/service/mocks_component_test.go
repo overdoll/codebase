@@ -16,6 +16,8 @@ var application *service.ComponentTestApplication
 func mockServices(testApplication *service.ComponentTestApplication) {
 	application = testApplication
 
+	application.CarrierClient.On("ModeratorPostInQueue", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
+
 	application.StingClient.On("PublishPost", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
 	application.StingClient.On("RejectPost", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
 	application.StingClient.On("DiscardPost", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)

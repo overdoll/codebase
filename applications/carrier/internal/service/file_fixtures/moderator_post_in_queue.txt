@@ -4,17 +4,15 @@ overdoll
 
 Home ( https://overdoll.com/home ) Discover Clubs ( https://overdoll.com/clubs/discover )
 
----------------
-Account Deleted
----------------
+-----------------------
+Moderator Post in Queue
+-----------------------
 
 Hello test user!
 
-As requested, your account and all associated data has been deleted.
+You currently have post(s) awaiting moderation.
 
-We're sorry to see you go. This is the last email we will send you.
-
-Goodbye.
+View Posts ( https://ci.overdoll.dev/moderation/post-queue )
 
 Terms of Service ( https://www.corpodoll.com/tos/ )
 
