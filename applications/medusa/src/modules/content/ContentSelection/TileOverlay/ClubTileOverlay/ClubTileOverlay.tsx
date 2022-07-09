@@ -30,11 +30,12 @@ export default function ClubTileOverlay ({
   return (
     <TileOverlay
       backdrop={
-        <ResourceItem seed={data.id} h='100%' query={data.banner} />
+        <ResourceItem showBorder seed={data.id} h='100%' query={data.banner} />
       }
     >
       <Stack p={2} w='100%' spacing={2} h='100%' align='center' justify='center'>
         <ResourceIcon
+          showBorder
           seed={data.id}
           h={{
             base: 8,

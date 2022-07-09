@@ -33,6 +33,7 @@ export default function PostHeaderContributor ({ query }: Props): JSX.Element {
       <ClickableBox bg='transparent' p={0}>
         <Flex align='center'>
           <ResourceIcon
+            showBorder
             seed={data.contributor.id}
             mr={3}
             query={data.contributor.avatar}

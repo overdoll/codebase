@@ -1,9 +1,7 @@
 import { graphql, useFragment } from 'react-relay'
 import { useContext, useState } from 'react'
 import { PostVideoMediaFragment$key } from '@//:artifacts/PostVideoMediaFragment.graphql'
-import ControlledVideo, {
-  ControlledVideoProps
-} from '../../ControlledVideo/ControlledVideo'
+import ControlledVideo, { ControlledVideoProps } from '../../ControlledVideo/ControlledVideo'
 import { GlobalVideoManagerContext } from '../../../../index'
 import ObserveVideo from '../../ObserveVideo/ObserveVideo'
 

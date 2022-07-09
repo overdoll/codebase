@@ -1,13 +1,11 @@
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import { Suspense, useEffect } from 'react'
-import PostCreator from './components/PostCreator/PostCreator'
-import { UppyContext } from './context'
+import PostCreator from './PostCreator/PostCreator'
 import { useQueryParam } from 'use-query-params'
 import { PreloadableConcreteRequest, PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import PostCreatorQuery, { PostCreatorQuery as PostCreatorQueryType } from '@//:artifacts/PostCreatorQuery.graphql'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
-import useUpload from './hooks/useUpload'
 import {
   ArrayResolver,
   ObjectResolver,
@@ -86,8 +84,6 @@ const resolver: SequenceResolver<SequenceProps> = {
 }
 
 const CreatePost: PageProps<Props> = (props: Props) => {
-  const uppy = useUpload()
-
   const methods = useSequence<SequenceProps>({
     defaultValue: defaultValue,
     resolver: resolver
@@ -119,17 +115,15 @@ const CreatePost: PageProps<Props> = (props: Props) => {
       </Head>
       <PageWrapper>
         <SequenceProvider {...methods}>
-          <UppyContext.Provider value={uppy}>
-            <QueryErrorBoundary loadQuery={() => loadQuery({
-              reference: postReference ?? '',
-              slug: slug as string
-            })}
-            >
-              <Suspense fallback={<SkeletonPost />}>
-                <PostCreator query={queryRef as PreloadedQuery<PostCreatorQueryType>} />
-              </Suspense>
-            </QueryErrorBoundary>
-          </UppyContext.Provider>
+          <QueryErrorBoundary loadQuery={() => loadQuery({
+            reference: postReference ?? '',
+            slug: slug as string
+          })}
+          >
+            <Suspense fallback={<SkeletonPost />}>
+              <PostCreator query={queryRef as PreloadedQuery<PostCreatorQueryType>} />
+            </Suspense>
+          </QueryErrorBoundary>
         </SequenceProvider>
       </PageWrapper>
     </>

@@ -13,13 +13,14 @@ export default function PageSectionTitle ({
   return (
     <Flex my={1} h={6} align='center'>
       {colorScheme != null && (
-        <Box h='100%' bg={`${colorScheme}.300`} mr={2} borderRadius='sm' w={2} />
+        <Box my={1} h='100%' bg={`${colorScheme}.300`} mr={2} borderRadius='sm' w={2} />
       )}
       <Heading
-        whiteSpace='nowrap'
-        overflow='hidden'
-        textOverflow='ellipsis'
-        fontSize='2xl'
+        noOfLines={1}
+        fontSize={{
+          base: 'lg',
+          md: '2xl'
+        }}
         color='gray.00'
       >
         {children}

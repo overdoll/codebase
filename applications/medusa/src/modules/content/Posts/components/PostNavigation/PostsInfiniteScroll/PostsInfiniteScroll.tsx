@@ -67,10 +67,9 @@ export default function PostsInfiniteScroll ({
           <LoadMoreObserver loadNext={loadNext} />
           {SpinnerComponent}
         </Box>
-
       )
     }
-    return <></>
+    return <Box h={100} w='100%' />
   }
 
   return (

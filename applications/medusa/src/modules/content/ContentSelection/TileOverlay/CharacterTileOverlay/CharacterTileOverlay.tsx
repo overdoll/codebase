@@ -15,7 +15,7 @@ const Fragment = graphql`
     series {
       title
     }
-    thumbnail {
+    banner {
       ...ResourceItemFragment
     }
 
@@ -30,8 +30,9 @@ export default function CharacterTileOverlay ({
   return (
     <TileOverlay backdrop={
       <ResourceItem
+        showBorder
         seed={data.id}
-        query={data.thumbnail}
+        query={data.banner}
       />
     }
     >
@@ -44,6 +45,8 @@ export default function CharacterTileOverlay ({
           color='gray.00'
           textAlign='center'
           noOfLines={2}
+          whiteSpace='normal'
+          wordBreak='break-word'
         >
           {data.name}
         </Text>
@@ -55,6 +58,8 @@ export default function CharacterTileOverlay ({
           }}
           color='gray.100'
           noOfLines={2}
+          whiteSpace='normal'
+          wordBreak='break-word'
         >
           {data.series.title}
         </Text>

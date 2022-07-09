@@ -68,6 +68,7 @@ export default function TransactionSettingsCard ({
     <Stack spacing={2}>
       <HStack spacing={2}>
         <ResourceIcon
+          showBorder
           seed={data?.clubSupporterSubscription?.club?.id}
           h={9}
           w={9}

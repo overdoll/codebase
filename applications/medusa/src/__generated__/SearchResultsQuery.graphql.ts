@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8793ae3dbcaa4e9b5efd861909654061>>
- * @relayHash c89a38ac5e13ac14886fff3ce62e0626
+ * @generated SignedSource<<9b8b54f6b0a6148bca7d6eca1e8de661>>
+ * @relayHash 9d5a7813d9d8d17f7e76d1cff7c4c48c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c89a38ac5e13ac14886fff3ce62e0626
+// @relayRequestID 9d5a7813d9d8d17f7e76d1cff7c4c48c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -85,15 +85,13 @@ v6 = {
   "name": "type",
   "storageKey": null
 },
-v7 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "url",
-    "storageKey": null
-  }
-],
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
 v8 = {
   "alias": null,
   "args": null,
@@ -101,7 +99,16 @@ v8 = {
   "kind": "LinkedField",
   "name": "urls",
   "plural": true,
-  "selections": (v7/*: any*/),
+  "selections": [
+    (v7/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "mimeType",
+      "storageKey": null
+    }
+  ],
   "storageKey": null
 },
 v9 = {
@@ -132,7 +139,9 @@ v12 = {
   "kind": "LinkedField",
   "name": "videoThumbnail",
   "plural": false,
-  "selections": (v7/*: any*/),
+  "selections": [
+    (v7/*: any*/)
+  ],
   "storageKey": null
 },
 v13 = [
@@ -156,17 +165,11 @@ v14 = {
   "args": null,
   "concreteType": "Resource",
   "kind": "LinkedField",
-  "name": "thumbnail",
+  "name": "banner",
   "plural": false,
   "selections": (v13/*: any*/),
   "storageKey": null
-},
-v15 = [
-  (v2/*: any*/),
-  (v3/*: any*/),
-  (v4/*: any*/),
-  (v14/*: any*/)
-];
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -284,7 +287,12 @@ return {
                   },
                   {
                     "kind": "InlineFragment",
-                    "selections": (v15/*: any*/),
+                    "selections": [
+                      (v2/*: any*/),
+                      (v3/*: any*/),
+                      (v4/*: any*/),
+                      (v14/*: any*/)
+                    ],
                     "type": "Series",
                     "abstractKey": null
                   },
@@ -312,23 +320,28 @@ return {
                         ],
                         "storageKey": null
                       },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "Resource",
-                        "kind": "LinkedField",
-                        "name": "banner",
-                        "plural": false,
-                        "selections": (v13/*: any*/),
-                        "storageKey": null
-                      }
+                      (v14/*: any*/)
                     ],
                     "type": "Club",
                     "abstractKey": null
                   },
                   {
                     "kind": "InlineFragment",
-                    "selections": (v15/*: any*/),
+                    "selections": [
+                      (v2/*: any*/),
+                      (v3/*: any*/),
+                      (v4/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Resource",
+                        "kind": "LinkedField",
+                        "name": "thumbnail",
+                        "plural": false,
+                        "selections": (v13/*: any*/),
+                        "storageKey": null
+                      }
+                    ],
                     "type": "Category",
                     "abstractKey": null
                   },
@@ -352,7 +365,7 @@ return {
     ]
   },
   "params": {
-    "id": "c89a38ac5e13ac14886fff3ce62e0626",
+    "id": "9d5a7813d9d8d17f7e76d1cff7c4c48c",
     "metadata": {},
     "name": "SearchResultsQuery",
     "operationKind": "query",

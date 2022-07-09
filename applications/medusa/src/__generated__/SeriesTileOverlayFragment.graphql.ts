@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dcd295a1e83d0b1d0728812481db19e1>>
+ * @generated SignedSource<<02ec150414b017a76601098713306018>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,10 +11,10 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SeriesTileOverlayFragment$data = {
-  readonly id: string;
-  readonly thumbnail: {
+  readonly banner: {
     readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
   } | null;
+  readonly id: string;
   readonly title: string;
   readonly " $fragmentType": "SeriesTileOverlayFragment";
 };
@@ -48,7 +48,7 @@ const node: ReaderFragment = {
       "args": null,
       "concreteType": "Resource",
       "kind": "LinkedField",
-      "name": "thumbnail",
+      "name": "banner",
       "plural": false,
       "selections": [
         {
@@ -64,6 +64,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "986d0d7bae1227d80148e5d384549de2";
+(node as any).hash = "bcac93a6b12af70c4e2db0225d5ca30c";
 
 export default node;

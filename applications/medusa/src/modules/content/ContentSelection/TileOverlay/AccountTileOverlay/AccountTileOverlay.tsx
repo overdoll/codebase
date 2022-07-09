@@ -34,7 +34,7 @@ export default function AccountTileOverlay ({
     }
     >
       <Stack p={2} h='100%' w='100%' spacing={2} align='center' justify='center'>
-        <ResourceIcon w={10} h={10} seed={data.id} query={data.avatar} />
+        <ResourceIcon showBorder w={10} h={10} seed={data.id} query={data.avatar} />
         <Text fontFamily='mono' fontSize='md' color='gray.00'>
           {data.username}
         </Text>

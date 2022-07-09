@@ -17,7 +17,7 @@ msgstr ""
 msgid "Activate"
 msgstr ""
 
-#: src/domain/settings/security/totp/RootMultiFactorTotpSetup/MultiFactorTotpFlow/TotpQrCodeStep/TotpQrCodeStep.tsx:47
+#: src/domain/settings/security/totp/RootMultiFactorTotpSetup/MultiFactorTotpFlow/TotpQrCodeStep/TotpQrCodeStep.tsx:51
 msgid "Alternatively, you can enter the following secret code into the app"
 msgstr ""
 
@@ -70,7 +70,7 @@ msgstr ""
 msgid "Install an authenticator app for your mobile device. This app will be used to login to your account. We recommend using the following apps"
 msgstr ""
 
-#: src/domain/settings/security/totp/RootMultiFactorTotpSetup/MultiFactorTotpFlow/TotpQrCodeStep/TotpQrCodeStep.tsx:42
+#: src/domain/settings/security/totp/RootMultiFactorTotpSetup/MultiFactorTotpFlow/TotpQrCodeStep/TotpQrCodeStep.tsx:46
 msgid "Open the authenticator app and scan the image. You must scan the code through the app or it won't work."
 msgstr ""
 
@@ -78,7 +78,7 @@ msgstr ""
 msgid "Please ensure that you have also saved your recovery codes as losing your two-factor device and not having access to the recovery codes means you will be locked out of your account."
 msgstr ""
 
-#: src/domain/settings/security/totp/RootMultiFactorTotpSetup/MultiFactorTotpFlow/TotpQrCodeStep/TotpQrCodeStep.tsx:37
+#: src/domain/settings/security/totp/RootMultiFactorTotpSetup/MultiFactorTotpFlow/TotpQrCodeStep/TotpQrCodeStep.tsx:41
 msgid "Scan the QR Code"
 msgstr ""
 

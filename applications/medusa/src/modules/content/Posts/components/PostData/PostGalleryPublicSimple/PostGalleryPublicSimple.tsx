@@ -1,5 +1,5 @@
 import { graphql, useFragment } from 'react-relay'
-import { Box, Flex } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import SwiperType from 'swiper'
 import { PostGalleryPublicSimpleFragment$key } from '@//:artifacts/PostGalleryPublicSimpleFragment.graphql'
@@ -10,6 +10,8 @@ import PostSupporterContent from '../PostSupporterContent/PostSupporterContent'
 import { Link } from '../../../../../routing'
 import PostMedia from '../../PostPlayback/PostMedia/PostMedia'
 import OverflowVisual from './OverflowVisual/OverflowVisual'
+import PostSlideBackground from '../PostSlideBackground/PostSlideBackground'
+import { SWIPER_PROPS } from '../../../constants'
 
 interface Props {
   query: PostGalleryPublicSimpleFragment$key
@@ -21,9 +23,9 @@ const Fragment = graphql`
     content {
       resource {
         ...PostMediaFragment
-        preview
       }
       ...PostSupporterContentFragment
+      ...PostSlideBackgroundFragment
     }
     club {
       slug
@@ -43,29 +45,21 @@ export default function PostGalleryPublicSimple ({
   return (
     <Box>
       <Swiper
-        grabCursor
-        spaceBetween={20}
-        speed={100}
+        {...SWIPER_PROPS}
         onSwiper={(swiper) => setSwiper(swiper)}
       >
         {data?.content.map((item, index) =>
           <SwiperSlide
             key={index}
             style={{
-              backgroundColor: item.resource.preview != null && item.resource.preview !== '' ? item.resource.preview : 'gray.800',
-              height: swiper?.height
+              height: 'auto',
+              alignSelf: 'stretch'
             }}
           >
-            <Flex
-              h='100%'
-              w='100%'
-              align='center'
-              justify='center'
-              cursor='pointer'
-            >
+            <PostSlideBackground query={item}>
               <OverflowVisual
-                minH={300}
-                maxH='88vh'
+                minH={100}
+                maxH={700}
                 align='center'
                 justify='center'
               >
@@ -90,7 +84,7 @@ export default function PostGalleryPublicSimple ({
                   </Link>
                 </PostSupporterContent>
               </OverflowVisual>
-            </Flex>
+            </PostSlideBackground>
           </SwiperSlide>
         )}
       </Swiper>

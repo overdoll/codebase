@@ -2,12 +2,11 @@ import { useContext } from 'react'
 import { FormInputContext } from '../../FormInput'
 import { Controller, useFormContext } from 'react-hook-form'
 import { HStack } from '@chakra-ui/react'
-import SingleFileImageUpload from '../../../../../Interactables/FileUpload/SingleFileImageUpload/SingleFileImageUpload'
+import SingleFileImageUpload from '../../../../Upload/components/SingleFileImageUpload/SingleFileImageUpload'
 
 export default function UploadInput (): JSX.Element {
   const {
-    id,
-    size
+    id
   } = useContext(FormInputContext)
 
   const {
@@ -28,7 +27,6 @@ export default function UploadInput (): JSX.Element {
           }
         }) => (
           <SingleFileImageUpload
-            size={size}
             isInvalid={invalid}
             onChange={onChange}
           />

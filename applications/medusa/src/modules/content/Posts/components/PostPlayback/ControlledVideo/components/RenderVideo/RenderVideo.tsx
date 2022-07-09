@@ -48,6 +48,8 @@ const RenderVideo = forwardRef<any, Props>(({
     >
       {data.urls.map((item, index) => (
         <source
+          width={data.width}
+          height={data.height}
           key={index}
           src={item.url}
           type={item.mimeType}

@@ -44,7 +44,7 @@ msgstr ""
 msgid "Change Standard"
 msgstr ""
 
-#: src/domain/staff/entity/audience/view/RootStaffViewAudience/StaffViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnail.tsx:46
+#: src/domain/staff/entity/audience/view/RootStaffViewAudience/StaffViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnail.tsx:47
 msgid "Change Thumbnail"
 msgstr ""
 

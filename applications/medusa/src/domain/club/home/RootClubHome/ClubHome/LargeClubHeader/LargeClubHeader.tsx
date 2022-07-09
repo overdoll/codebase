@@ -24,6 +24,7 @@ export default function LargeClubHeader ({ query }: Props): JSX.Element {
   return (
     <Flex h={16} align='center'>
       <ResourceIcon
+        showBorder
         seed={data?.id}
         mr={4}
         h={14}
@@ -31,9 +32,7 @@ export default function LargeClubHeader ({ query }: Props): JSX.Element {
         query={data?.thumbnail}
       />
       <Heading
-        whiteSpace='nowrap'
-        textOverflow='ellipsis'
-        overflow='hidden'
+        noOfLines={1}
         fontSize='3xl'
         color='gray.00'
       >

@@ -24,6 +24,7 @@ export default function LargeAccountHeader ({ query }: Props): JSX.Element {
   return (
     <Flex h={16} align='center'>
       <ResourceIcon
+        showBorder
         seed={data.id}
         mr={4}
         h={14}

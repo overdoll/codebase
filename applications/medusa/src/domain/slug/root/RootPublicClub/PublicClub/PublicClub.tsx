@@ -72,6 +72,7 @@ export default function PublicClub (props: Props): JSX.Element {
           <TileOverlay
             backdrop={(
               <ResourceItem
+                showBorder
                 seed={queryData?.club?.id}
                 query={queryData?.club?.banner ?? null}
               />)}

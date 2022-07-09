@@ -40,6 +40,7 @@ export default function QuickAccessButtonProfile ({ queryRef }: Props): JSX.Elem
         justify='center'
       >
         <ResourceIcon
+          showBorder
           seed={data?.id}
           h='38px'
           w='38px'

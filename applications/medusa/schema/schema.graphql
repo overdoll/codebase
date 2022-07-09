@@ -924,6 +924,28 @@ enum AddAccountEmailValidation {
   INVALID_EMAIL
 }
 
+"""Update category."""
+input AddCategoryAlternativeTitleInput {
+  """The category to update"""
+  id: ID!
+
+  """The localization for this title"""
+  locale: BCP47!
+
+  """
+  The title to add.
+  
+  Validation: Max 25 characters.
+  """
+  title: String!
+}
+
+"""Payload for updating category"""
+type AddCategoryAlternativeTitlePayload {
+  """The category after update"""
+  category: Category
+}
+
 """Add alias slug."""
 input AddClubSlugAliasInput {
   """The club to update"""
@@ -1039,6 +1061,9 @@ type AssignAccountStaffRolePayload {
 }
 
 type Audience implements Node {
+  """A URL pointing to the object's banner."""
+  banner: Resource
+
   """An ID pointing to this audience."""
   id: ID!
 
@@ -1360,6 +1385,12 @@ enum CategoriesSort {
 }
 
 type Category implements Node {
+  """Alternative titles for this category."""
+  alternativeTitles: [Translation!]!
+
+  """A URL pointing to the object's banner."""
+  banner: Resource
+
   """An ID pointing to this category."""
   id: ID!
 
@@ -1418,6 +1449,9 @@ type Category implements Node {
 
   """All translations for this title."""
   titleTranslations: [Translation!]!
+
+  """The topic linked this category. If no topic is linked, field is null."""
+  topic: Topic
 
   """Total amount of likes."""
   totalLikes: Int!
@@ -1586,6 +1620,9 @@ type CCBillTransactionDetails {
 }
 
 type Character implements Node {
+  """A URL pointing to the object's banner."""
+  banner: Resource
+
   """An ID pointing to this character."""
   id: ID!
 
@@ -2513,6 +2550,9 @@ input CreateCategoryInput {
   Validation: Max 25 characters.
   """
   title: String!
+
+  """Optionally assign a topic to this category."""
+  topicId: ID
 }
 
 """Payload for a new category"""
@@ -2660,6 +2700,47 @@ type CreateSeriesPayload {
 
 """Validation for creating a new series"""
 enum CreateSeriesValidation {
+  SLUG_TAKEN
+}
+
+"""Create a new topic."""
+input CreateTopicInput {
+  """
+  The chosen description for the topic.
+  
+  Validation: Markdown allowed.
+  """
+  description: String!
+
+  """
+  The chosen slug for the topic.
+  
+  Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
+  """
+  slug: String!
+
+  """
+  The chosen title for the topic.
+  
+  Validation: Max 25 characters.
+  """
+  title: String!
+
+  """The assigned weight for this topic."""
+  weight: Int!
+}
+
+"""Payload for a new topic"""
+type CreateTopicPayload {
+  """The topic after creation"""
+  topic: Topic
+
+  """Validation for creating a new topic"""
+  validation: CreateTopicValidation
+}
+
+"""Validation for creating a new topic"""
+enum CreateTopicValidation {
   SLUG_TAKEN
 }
 
@@ -3344,6 +3425,9 @@ type Mutation {
   """Add an email to the account, will need to be confirmed"""
   addAccountEmail(input: AddAccountEmailInput!): AddAccountEmailPayload
 
+  """Add an alternative title to the category."""
+  addCategoryAlternativeTitle(input: AddCategoryAlternativeTitleInput!): AddCategoryAlternativeTitlePayload
+
   """Add an alternative slug to the club"""
   addClubSlugAlias(input: AddClubSlugAliasInput!): AddClubSlugAliasPayload
 
@@ -3428,6 +3512,9 @@ type Mutation {
 
   """Create a new series"""
   createSeries(input: CreateSeriesInput!): CreateSeriesPayload
+
+  """Create a new topic"""
+  createTopic(input: CreateTopicInput!): CreateTopicPayload
 
   """
   Delete an account.
@@ -3608,6 +3695,9 @@ type Mutation {
   """
   rejectPost(input: RejectPostInput!): RejectPostPayload
 
+  """Remove an alternative title from the category."""
+  removeCategoryAlternativeTitle(input: RemoveCategoryAlternativeTitleInput!): RemoveCategoryAlternativeTitlePayload
+
   """
   In case of a false infraction, you can remove it from the club's history.
   
@@ -3737,6 +3827,9 @@ type Mutation {
   """
   updateAccountUsername(input: UpdateAccountUsernameInput!): UpdateAccountUsernamePayload
 
+  """Update audience banner"""
+  updateAudienceBanner(input: UpdateAudienceBannerInput!): UpdateAudienceBannerPayload
+
   """Update audience standard"""
   updateAudienceIsStandard(input: UpdateAudienceIsStandardInput!): UpdateAudienceIsStandardPayload
 
@@ -3757,6 +3850,9 @@ type Mutation {
 
   """Update category title"""
   updateCategoryTitle(input: UpdateCategoryTitleInput!): UpdateCategoryTitlePayload
+
+  """Update the category topic"""
+  updateCategoryTopic(input: UpdateCategoryTopicInput!): UpdateCategoryTopicPayload
 
   """Update character title"""
   updateCharacterName(input: UpdateCharacterNameInput!): UpdateCharacterNamePayload
@@ -3839,6 +3935,18 @@ type Mutation {
 
   """Update series title"""
   updateSeriesTitle(input: UpdateSeriesTitleInput!): UpdateSeriesTitlePayload
+
+  """Update topic banner"""
+  updateTopicBanner(input: UpdateTopicBannerInput!): UpdateTopicBannerPayload
+
+  """Update topic description"""
+  updateTopicDescription(input: UpdateTopicDescriptionInput!): UpdateTopicDescriptionPayload
+
+  """Update topic title"""
+  updateTopicTitle(input: UpdateTopicTitleInput!): UpdateTopicTitlePayload
+
+  """Update topic weight"""
+  updateTopicWeight(input: UpdateTopicWeightInput!): UpdateTopicWeightPayload
 
   """
   Will verify the authentication token. Requires the secret (sent in an email)
@@ -4645,6 +4753,33 @@ type Query {
     title: String
   ): SeriesConnection!
 
+  """Get a single topic."""
+  topic(
+    """Search by slug of the topic."""
+    slug: String!
+  ): Topic
+
+  """
+  Search all topics.
+  
+  Topics are sorted by the "weight" field. Higher weights are displayed at the top, in descending order.
+  """
+  topics(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): TopicConnection!
+
   """
   Get the status of the authentication token - whether or not it is redeemed, account status, etc..
   
@@ -4712,6 +4847,21 @@ input RejectPostInput {
 type RejectPostPayload {
   """The resulting post"""
   post: Post
+}
+
+"""Update category."""
+input RemoveCategoryAlternativeTitleInput {
+  """The category to update"""
+  id: ID!
+
+  """The title to remove."""
+  title: String!
+}
+
+"""Payload for updating category"""
+type RemoveCategoryAlternativeTitlePayload {
+  """The category after update"""
+  category: Category
 }
 
 """Remove a club infraction."""
@@ -4808,6 +4958,17 @@ and urls to access the resources. We have many urls in order to provide a fallba
 We also identify the type of resource (image or video) to make it easy to distinguish them
 """
 type Resource {
+  """
+  Whether or not this resource failed to process.
+  
+  A failure can happen if:
+  - The supplied image is an unsupported format. This can happen if for example,
+  someone submits a JPEG (unsupported) that was renamed to a PNG (supported)
+  - The supplied image is corrupted.
+  - The supplied video is invalid or corrupted.
+  """
+  failed: Boolean!
+
   """The height."""
   height: Int!
 
@@ -4832,6 +4993,9 @@ type Resource {
 
   """Duration, if video."""
   videoDuration: Int!
+
+  """Whether or not the video has audio."""
+  videoNoAudio: Boolean!
 
   """Video thumbnail, if video."""
   videoThumbnail: ResourceUrl
@@ -4997,6 +5161,9 @@ type SearchEdge {
 }
 
 type Series implements Node {
+  """A URL pointing to the object's banner."""
+  banner: Resource
+
   """An ID pointing to this series."""
   id: ID!
 
@@ -5151,6 +5318,81 @@ type TerminateClubPayload {
 
 scalar Time
 
+type Topic implements Node {
+  """A URL pointing to the object's banner."""
+  banner: Resource
+
+  """All categories linked to this topic."""
+  categories(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Search by category slugs."""
+    slugs: [String!]
+
+    """Sorting options for categories."""
+    sortBy: CategoriesSort! = POPULAR
+
+    """Filter by the title of the category."""
+    title: String
+  ): CategoryConnection!
+
+  """
+  A description for this topic.
+  
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  description(locale: BCP47): String!
+
+  """All translations for this topic."""
+  descriptionTranslations: [Translation!]!
+
+  """An ID pointing to this topic."""
+  id: ID!
+
+  """
+  An ID that can be used to uniquely-identify this category. Never changes.
+  """
+  reference: String!
+
+  """A url-friendly ID. Should be used when searching"""
+  slug: String!
+
+  """
+  A title for this topic.
+  
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  title(locale: BCP47): String!
+
+  """All translations for this title."""
+  titleTranslations: [Translation!]!
+
+  """The weight of this topic."""
+  weight: Int!
+}
+
+type TopicConnection {
+  edges: [TopicEdge!]!
+  pageInfo: PageInfo!
+}
+
+type TopicEdge {
+  cursor: String!
+  node: Topic!
+}
+
 type Translation {
   """The language linked to this translation."""
   language: Language!
@@ -5273,6 +5515,21 @@ enum UpdateAccountUsernameValidation {
 }
 
 """Update audience."""
+input UpdateAudienceBannerInput {
+  """The banner"""
+  banner: String!
+
+  """The audience to update"""
+  id: ID!
+}
+
+"""Payload for updating audience"""
+type UpdateAudienceBannerPayload {
+  """The audience after update"""
+  audience: Audience
+}
+
+"""Update audience."""
 input UpdateAudienceIsStandardInput {
   """The audience to update"""
   id: ID!
@@ -5390,6 +5647,21 @@ input UpdateCategoryTitleInput {
 
 """Payload for updating category"""
 type UpdateCategoryTitlePayload {
+  """The category after update"""
+  category: Category
+}
+
+"""Update category topic."""
+input UpdateCategoryTopicInput {
+  """The category to update"""
+  id: ID!
+
+  """The topic to assign to this category."""
+  topicId: ID!
+}
+
+"""Payload for updating category"""
+type UpdateCategoryTopicPayload {
   """The category after update"""
   category: Category
 }
@@ -5741,6 +6013,80 @@ input UpdateSeriesTitleInput {
 type UpdateSeriesTitlePayload {
   """The series after update"""
   series: Series
+}
+
+"""Update topic."""
+input UpdateTopicBannerInput {
+  """The banner"""
+  banner: String!
+
+  """The category to update"""
+  id: ID!
+}
+
+"""Payload for updating topic"""
+type UpdateTopicBannerPayload {
+  """The topic after update"""
+  topic: Topic
+}
+
+"""Update topic."""
+input UpdateTopicDescriptionInput {
+  """
+  The description to update.
+  
+  Validation: Markdown allowed.
+  """
+  description: String!
+
+  """The topic to update"""
+  id: ID!
+
+  """The localization for this description"""
+  locale: BCP47!
+}
+
+"""Payload for updating topic"""
+type UpdateTopicDescriptionPayload {
+  """The topic after update"""
+  topic: Topic
+}
+
+"""Update topic."""
+input UpdateTopicTitleInput {
+  """The topic to update"""
+  id: ID!
+
+  """The localization for this title"""
+  locale: BCP47!
+
+  """
+  The title to update.
+  
+  Validation: Max 25 characters.
+  """
+  title: String!
+}
+
+"""Payload for updating topic"""
+type UpdateTopicTitlePayload {
+  """The topic after update"""
+  topic: Topic
+}
+
+"""Update topic."""
+input UpdateTopicWeightInput {
+  """The topic to update"""
+  id: ID!
+
+  """The weight to update to."""
+  weight: Int!
+}
+
+"""Payload for updating topic"""
+type UpdateTopicWeightPayload {
+  """The topic after update"""
+  topic: Topic
 }
 
 """An RFC 3986, RFC 3987, and RFC 6570 (level 4) compliant URI string."""

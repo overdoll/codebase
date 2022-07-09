@@ -7,7 +7,6 @@ import {
   DESCRIPTION_FEATURES,
   DESCRIPTION_PREFIX,
   TITLE_FEATURES,
-  TITLE_SEARCH_PREFIX,
   TITLE_SUFFIX
 } from '@//:modules/constants/rich-objects'
 import ResourceRichObject from '../SearchCategoryRichObject/ResourceRichObject/ResourceRichObject'
@@ -20,7 +19,7 @@ const Fragment = graphql`
   fragment SearchSeriesRichObjectFragment on Series {
     slug
     title
-    thumbnail {
+    banner {
       ...ResourceRichObjectFragment
     }
   }
@@ -31,7 +30,7 @@ export default function SearchSeriesRichObject ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const TITLE = `${TITLE_SEARCH_PREFIX} ${data.title} ${TITLE_FEATURES} ${TITLE_SUFFIX}`
+  const TITLE = `${data.title} ${TITLE_FEATURES} ${TITLE_SUFFIX}`
   const DESCRIPTION = `${DESCRIPTION_PREFIX} ${data.title} ${DESCRIPTION_FEATURES} on overdoll.com. ${DESCRIPTION_CONTENT_DISCOVER} of ${data.title}.`
 
   const URL = `https://overdoll.com/search/series/${data.slug}`
@@ -63,7 +62,7 @@ export default function SearchSeriesRichObject ({
           content={URL}
         />
       </Head>
-      <ResourceRichObject query={data.thumbnail} />
+      <ResourceRichObject query={data.banner} />
     </>
   )
 }

@@ -74,9 +74,7 @@ export default function StaffAccountCancelledClubSupporterSubscriptionOptions ({
           </PageSectionTitle>
         </PageSectionWrap>
         <SmallBackgroundBox>
-          <Trans>
-            {price}/mo
-          </Trans>
+          {price}/mo
         </SmallBackgroundBox>
       </Box>
       <Box>

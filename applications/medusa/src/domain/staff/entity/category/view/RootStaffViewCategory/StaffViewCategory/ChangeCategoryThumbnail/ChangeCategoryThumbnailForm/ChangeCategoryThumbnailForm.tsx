@@ -29,7 +29,7 @@ const Mutation = graphql`
     updateCategoryThumbnail(input: $input) {
       category {
         id
-        thumbnail {
+        banner {
           type
           urls {
             url

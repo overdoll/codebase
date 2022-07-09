@@ -123,14 +123,14 @@ export default function ControlVideo ({
           </Fade>
           <Fade unmountOnExit in={!isOpen}>
             <Flex
-              bottom={0}
+              bottom='1px'
               position='absolute'
               w='100%'
               align='center'
               justify='center'
             >
               <Slider isDisabled value={time} min={0} max={totalTime} step={0.1}>
-                <SliderTrack h='2px' bg='whiteAlpha.100'>
+                <SliderTrack borderRadius='none' h='2px' bg='whiteAlpha.100'>
                   <SliderFilledTrack bg='whiteAlpha.700' />
                 </SliderTrack>
               </Slider>

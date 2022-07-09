@@ -26,6 +26,7 @@ export default function CategoryTileOverlay ({
   return (
     <TileOverlay backdrop={
       <ResourceItem
+        showBorder
         seed={data.id}
         query={data.thumbnail}
       />

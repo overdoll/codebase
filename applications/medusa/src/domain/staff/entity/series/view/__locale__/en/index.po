@@ -29,7 +29,7 @@ msgstr ""
 msgid "Change Series Title"
 msgstr ""
 
-#: src/domain/staff/entity/series/view/RootStaffViewSeries/StaffViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnail.tsx:46
+#: src/domain/staff/entity/series/view/RootStaffViewSeries/StaffViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnail.tsx:47
 msgid "Change Thumbnail"
 msgstr ""
 

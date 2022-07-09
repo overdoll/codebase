@@ -101,7 +101,7 @@ msgstr ""
 msgid "Manage Subscription"
 msgstr ""
 
-#: src/domain/slug/root/RootPublicClub/PublicClub/PublicClub.tsx:91
+#: src/domain/slug/root/RootPublicClub/PublicClub/PublicClub.tsx:92
 msgid "Members"
 msgstr ""
 

@@ -38,6 +38,7 @@ const RootStaffSearchCharacter: PageProps<{}> = () => {
             </Trans>
           </PageSectionTitle>
           <SearchInput
+            nullifyOnClear
             {...register('name', 'change')}
             placeholder={i18n._(t`Search for a character`)}
           />

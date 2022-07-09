@@ -26,9 +26,10 @@ export default function PostHeaderClub ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   return (
-    <LinkTile href={`/${data?.club?.slug as string}`}>
+    <LinkTile borderRadius='base' href={`/${data?.club?.slug as string}`}>
       <Flex align='center'>
         <ResourceIcon
+          showBorder
           h={8}
           w={8}
           mr={3}

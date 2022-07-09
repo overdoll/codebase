@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a3e23988fe7c4919ede3dd351387cc98>>
- * @relayHash b95e9e9830b0ffbdeb35faa56f3073a2
+ * @generated SignedSource<<837e3846431932a3c62bdfa3b3a2bf4b>>
+ * @relayHash 3e4e1c4bdcbce3e0aa2f7ce6327a412e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b95e9e9830b0ffbdeb35faa56f3073a2
+// @relayRequestID 3e4e1c4bdcbce3e0aa2f7ce6327a412e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -87,15 +87,13 @@ v5 = {
   ],
   "storageKey": null
 },
-v6 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "url",
-    "storageKey": null
-  }
-];
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -171,7 +169,16 @@ return {
                 "kind": "LinkedField",
                 "name": "urls",
                 "plural": true,
-                "selections": (v6/*: any*/),
+                "selections": [
+                  (v6/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "mimeType",
+                    "storageKey": null
+                  }
+                ],
                 "storageKey": null
               },
               {
@@ -202,7 +209,9 @@ return {
                 "kind": "LinkedField",
                 "name": "videoThumbnail",
                 "plural": false,
-                "selections": (v6/*: any*/),
+                "selections": [
+                  (v6/*: any*/)
+                ],
                 "storageKey": null
               },
               {
@@ -240,7 +249,7 @@ return {
     ]
   },
   "params": {
-    "id": "b95e9e9830b0ffbdeb35faa56f3073a2",
+    "id": "3e4e1c4bdcbce3e0aa2f7ce6327a412e",
     "metadata": {},
     "name": "SelectClubsQuery",
     "operationKind": "query",

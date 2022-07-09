@@ -7,7 +7,6 @@ import {
   useSubscribeToInvalidationState
 } from 'react-relay/hooks'
 import type { RootQuery as RootQueryType } from '@//:artifacts/RootQuery.graphql'
-
 import AccountAuthorizer from './AccountAuthorizer/AccountAuthorizer'
 import PageContents from './PageContents/PageContents'
 import UniversalNavigator from './UniversalNavigator/UniversalNavigator'
@@ -46,7 +45,6 @@ const Root: PageProps<Props> = (props: Props): JSX.Element => {
 
   return (
     <>
-      <RootRichObject />
       <AccountAuthorizer queryRef={data.viewer}>
         <UniversalNavigator queryRef={data.viewer} />
         <PageContents>
@@ -54,6 +52,7 @@ const Root: PageProps<Props> = (props: Props): JSX.Element => {
         </PageContents>
         <NoScript />
       </AccountAuthorizer>
+      <RootRichObject />
     </>
 
   )

@@ -19,13 +19,13 @@ interface Props extends ConnectionProp {
 
 const Fragment = graphql`
   fragment AccountActiveClubSupporterSubscriptionSettingsFragment on AccountActiveClubSupporterSubscription {
-    ...AccountActiveClubSupporterSubscriptionDetailsFragment
-    ...ManageActiveSubscriptionButtonFragment
-    reference
+    id
     club {
       slug
       ...ClubExclusivePostsFragment
     }
+    ...AccountActiveClubSupporterSubscriptionDetailsFragment
+    ...ManageActiveSubscriptionButtonFragment
   }
 `
 
@@ -55,7 +55,7 @@ export default function AccountActiveClubSupporterSubscriptionSettings ({
             </LinkButton>
             <Text fontSize='sm' color='gray.200'>
               <Trans>
-                Subscription #{data.reference}
+                Subscription # {data.id}
               </Trans>
             </Text>
           </Stack>

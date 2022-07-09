@@ -17,7 +17,7 @@ const Fragment = graphql`
     series {
       slug
     }
-    thumbnail {
+    banner {
       ...ResourceIconFragment
     }
   }
@@ -40,10 +40,11 @@ export default function ClickableCharacter ({ query }: Props): JSX.Element {
       <SmallBackgroundBox p={2} borderRadius='inherit'>
         <HStack spacing={2} align='center'>
           <ResourceIcon
+            showBorder
             seed={data.id}
             w={8}
             h={8}
-            query={data.thumbnail as ResourceIconFragment$key}
+            query={data.banner as ResourceIconFragment$key}
           />
           <Heading noOfLines={1} color='gray.100' fontSize='xl'>
             {data.name}

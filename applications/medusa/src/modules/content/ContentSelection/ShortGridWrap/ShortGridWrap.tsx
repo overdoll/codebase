@@ -11,6 +11,7 @@ export default function ShortGridWrap ({
 }: Props): JSX.Element {
   return (
     <Grid
+      overflow='visible'
       rowGap={1}
       columnGap={1}
       templateColumns='repeat(auto-fill, minmax(90px, 1fr))'

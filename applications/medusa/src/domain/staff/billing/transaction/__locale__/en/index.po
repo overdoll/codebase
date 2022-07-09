@@ -22,11 +22,11 @@ msgstr ""
 msgid "Amount"
 msgstr ""
 
-#: src/domain/staff/billing/transaction/RootStaffAccountTransaction/StaffAccountTransaction/StaffAccountTransactionOptions/StaffAccountTransactionOptions.tsx:83
+#: src/domain/staff/billing/transaction/RootStaffAccountTransaction/StaffAccountTransaction/StaffAccountTransactionOptions/StaffAccountTransactionOptions.tsx:81
 msgid "Billed At Date"
 msgstr ""
 
-#: src/domain/staff/billing/transaction/RootStaffAccountTransaction/StaffAccountTransaction/StaffAccountTransactionOptions/StaffAccountTransactionOptions.tsx:95
+#: src/domain/staff/billing/transaction/RootStaffAccountTransaction/StaffAccountTransaction/StaffAccountTransactionOptions/StaffAccountTransactionOptions.tsx:93
 msgid "CCBill Transaction ID"
 msgstr ""
 
@@ -46,7 +46,7 @@ msgstr ""
 msgid "Issuing a refund will cancel the original subscription"
 msgstr ""
 
-#: src/domain/staff/billing/transaction/RootStaffAccountTransaction/StaffAccountTransaction/StaffAccountTransactionOptions/StaffAccountTransactionOptions.tsx:114
+#: src/domain/staff/billing/transaction/RootStaffAccountTransaction/StaffAccountTransaction/StaffAccountTransactionOptions/StaffAccountTransactionOptions.tsx:112
 msgid "Manage Transaction"
 msgstr ""
 
@@ -109,8 +109,8 @@ msgid "{maximumAmountPrice} - Maximum Amount"
 msgstr ""
 
 #: src/domain/staff/billing/transaction/RootStaffAccountTransaction/StaffAccountTransaction/StaffAccountTransactionOptions/StaffAccountTransactionOptions.tsx:75
-msgid "{price}"
-msgstr ""
+#~ msgid "{price}"
+#~ msgstr ""
 
 #: src/domain/staff/billing/transaction/RootStaffAccountTransaction/StaffAccountTransaction/StaffAccountTransactionOptions/StaffRefundAccountTransactionButton/StaffRefundAccountTransaction/StaffGenerateRefundAmountForAccountTransactionInput/StaffGenerateRefundAmountForAccountTransactionInput.tsx:93
 msgid "{proratedAmountPrice} - Prorated Amount"

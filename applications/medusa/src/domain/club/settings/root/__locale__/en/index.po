@@ -17,7 +17,7 @@ msgstr ""
 msgid "Club Guidelines"
 msgstr ""
 
-#: src/domain/club/settings/root/RootClubSettings/ClubSettings/ClubSettings.tsx:89
+#: src/domain/club/settings/root/RootClubSettings/ClubSettings/ClubSettings.tsx:90
 msgid "Club Thumbnail"
 msgstr ""
 
@@ -41,6 +41,6 @@ msgstr ""
 msgid "Update Name"
 msgstr ""
 
-#: src/domain/club/settings/root/RootClubSettings/ClubSettings/ClubSettings.tsx:91
+#: src/domain/club/settings/root/RootClubSettings/ClubSettings/ClubSettings.tsx:92
 msgid "Update your club thumbnail"
 msgstr ""

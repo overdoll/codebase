@@ -21,6 +21,6 @@ msgstr ""
 #~ msgid "Search Series"
 #~ msgstr ""
 
-#: src/domain/staff/entity/character/search/RootStaffSearchCharacter/RootStaffSearchCharacter.tsx:42
+#: src/domain/staff/entity/character/search/RootStaffSearchCharacter/RootStaffSearchCharacter.tsx:43
 msgid "Search for a character"
 msgstr ""
