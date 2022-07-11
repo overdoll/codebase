@@ -26,7 +26,7 @@ func (h UpdateTopicBannerHandler) Handle(ctx context.Context, cmd UpdateTopicBan
 	topic, err := h.pr.UpdateTopicBanner(ctx, cmd.Principal, cmd.TopicId, func(topic *post.Topic) error {
 
 		// create resources from content
-		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.TopicId, []string{cmd.Banner}, false, "TOPIC_BANNER", true, 360, 0)
+		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.TopicId, []string{cmd.Banner}, false, "TOPIC_BANNER", true, 480, 0)
 
 		if err != nil {
 			return err

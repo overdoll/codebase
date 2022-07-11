@@ -299,7 +299,7 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 	// map_metadata removes all metadata
 	// sn removes subtitles
 	// map 0:v:0 selects only the first video track
-	encodingArgs := ffmpeg_go.KwArgs{"c:v": "libx264", "crf": "23", "preset": "slow", "map_metadata": "-1", "sn": "", "map": []string{"0:v:0"}}
+	encodingArgs := ffmpeg_go.KwArgs{"c:v": "libx264", "crf": "22", "preset": "slow", "map_metadata": "-1", "sn": "", "map": []string{"0:v:0"}}
 
 	newVideoFileName := fileName + ".mp4"
 
@@ -526,7 +526,13 @@ func (r *Resource) processImage(fileName string, file *os.File, config *Config) 
 	}
 
 	// resize to specified width
-	src = resize.Resize(uint(config.Width()), uint(config.Height()), src, resize.Lanczos3)
+	if config.Width() > 0 && config.Height() == 0 {
+		if uint64(src.Bounds().Dx()) > config.Width() {
+			src = resize.Resize(uint(config.Width()), uint(config.Height()), src, resize.Lanczos3)
+		}
+	} else {
+		src = resize.Resize(uint(config.Width()), uint(config.Height()), src, resize.Lanczos3)
+	}
 
 	webpFileName := fileName + ".webp"
 
@@ -536,7 +542,7 @@ func (r *Resource) processImage(fileName string, file *os.File, config *Config) 
 	}
 
 	if err := webpbin.NewCWebP().
-		Quality(100).
+		Quality(90).
 		InputImage(src).
 		Output(webpFile).
 		Run(); err != nil {
@@ -551,7 +557,7 @@ func (r *Resource) processImage(fileName string, file *os.File, config *Config) 
 		return nil, err
 	}
 
-	if err := jpeg.Encode(jpegFile, src, &jpeg.Options{Quality: 100}); err != nil {
+	if err := jpeg.Encode(jpegFile, src, &jpeg.Options{Quality: 90}); err != nil {
 		return nil, errors.Wrap(err, "failed to encode jpeg")
 	}
 
