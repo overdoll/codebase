@@ -312,18 +312,24 @@ function matchQueryMiddleware (req, res, next): void {
 
 const PATH = '/api/graphql'
 
+let server
+
+process.on('SIGTERM', async () => {
+  logger.info('shutting down http server')
+
+  if (server != null) {
+    await server.stop().catch()
+  }
+
+  process.exit(0)
+})
+
 void (async () => {
 
   const app = express()
   const httpServer = http.createServer(app)
 
-  process.on('SIGTERM', () => {
-    httpServer.close(() => {
-      logger.info('http server closed')
-    })
-  })
-
-  const server = new ApolloServer({
+  server = new ApolloServer({
     gateway,
     // @ts-expect-error
     subscriptions: false,
@@ -336,6 +342,7 @@ void (async () => {
     }),
     // disable playground, add middleware for a custom playground
     playground: false,
+    stopOnTerminationSignals: false,
     plugins: [
       ApolloServerPluginDrainHttpServer({ httpServer })
     ],
@@ -390,4 +397,3 @@ void (async () => {
 
   logger.info('http server starting on 0.0.0.0:8000')
 })()
-

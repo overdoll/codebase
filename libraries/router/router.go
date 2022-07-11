@@ -5,7 +5,6 @@ import (
 	"go.uber.org/zap"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/probe"
 	"overdoll/libraries/sentry_support"
 )
 
@@ -34,7 +33,7 @@ func NewRawGinRouter() *gin.Engine {
 	router.Use(sentry_support.SentryGinMiddleware())
 
 	// readyz probe
-	router.GET("/readyz", probe.ReadyZ())
+	router.GET("/readyz", probeReadyZ())
 
 	return router
 }
