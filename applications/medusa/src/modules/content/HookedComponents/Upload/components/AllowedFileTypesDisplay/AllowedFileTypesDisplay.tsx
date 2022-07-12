@@ -1,15 +1,10 @@
 import { HStack } from '@chakra-ui/react'
-import { FileMp4, FilePng } from '@//:assets/logos'
 import { Icon } from '../../../../PageLayout'
 import { UppyType } from '../../types'
+import { FILE_ICONS } from '../../constants/upload'
 
 interface Props {
   uppy: UppyType
-}
-
-const FILE_ICONS = {
-  'image/png': FilePng,
-  'video/mp4': FileMp4
 }
 
 export default function AllowedFileTypesDisplay ({

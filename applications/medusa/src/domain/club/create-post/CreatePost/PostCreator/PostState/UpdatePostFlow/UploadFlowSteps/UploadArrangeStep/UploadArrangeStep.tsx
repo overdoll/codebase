@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { UploadArrangeStepFragment$key } from '@//:artifacts/UploadArrangeStepFragment.graphql'
 import ProcessUploads from './ProcessUploads/ProcessUploads'
@@ -8,7 +7,6 @@ import { Trans } from '@lingui/macro'
 import { Stack } from '@chakra-ui/react'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import UploadSupporterContentOptimization from './UploadSupporterContentOptimization/UploadSupporterContentOptimization'
-import { useUppyContext } from '@//:modules/content/HookedComponents/Upload'
 
 interface Props {
   query: UploadArrangeStepFragment$key
@@ -20,7 +18,6 @@ const Fragment = graphql`
       id
       isSupporterOnly
     }
-
     ...ArrangeUploadsFragment
     ...ProcessUploadsFragment
   }
@@ -31,7 +28,6 @@ export default function UploadArrangeStep ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const uppy = useUppyContext()
   const { state } = useSequenceContext()
   const contentData = state.content ?? data?.content
 
@@ -39,29 +35,6 @@ export default function UploadArrangeStep ({
 
   // We clear all uploads and re-add them when post content changes
   // so that we can keep the uppy file state and restrict uploads
-
-  useEffect(() => {
-    if (state.files.length < 1 && Object.keys(state.urls).length < 1) {
-      uppy.cancelAll()
-      data.content.forEach(file => {
-        const uppyFileId = uppy.addFile({
-          id: file.id,
-          name: file.id,
-          type: 'image/png',
-          data: new Blob(),
-          source: 'already-uploaded'
-        })
-
-        const fileFromUppy = uppy.getFile(uppyFileId)
-        uppy.emit('upload-started', fileFromUppy)
-        uppy.emit('upload-progress', fileFromUppy, {
-          bytesUploaded: 1,
-          bytesTotal: 1
-        })
-        uppy.emit('upload-success', fileFromUppy, 'success')
-      })
-    }
-  }, [data.content])
 
   return (
     <Stack spacing={2}>

@@ -17,6 +17,8 @@ import { SequenceResolver } from '@//:modules/content/HookedComponents/Sequence/
 import Head from 'next/head'
 import { PageProps } from '@//:types/app'
 import { useRouter } from 'next/router'
+import { UppyFile } from '@uppy/core'
+import { FileErrorType } from '@//:modules/content/HookedComponents/Upload/types'
 
 interface Props {
   queryRefs: {
@@ -25,13 +27,12 @@ interface Props {
 }
 
 interface SequenceProps {
-  progress: {
-    [id: string]: {
-      0: string
-      1: string
-    }
+  files: {
+    [id: string]: UppyFile
   }
-  files: Array<{ id: string, type: string }>
+  errors: {
+    [id: string]: FileErrorType
+  }
   urls: {
     [id: string]: string
   }
@@ -56,13 +57,13 @@ interface SequenceProps {
 }
 
 const defaultValue: SequenceProps = {
-  progress: {},
-  files: [],
+  files: {},
   urls: {},
   content: [],
   audience: {},
   characters: {},
   categories: {},
+  errors: {},
   isProcessing: false,
   isInReview: false,
   isSubmitted: false,
@@ -70,9 +71,9 @@ const defaultValue: SequenceProps = {
 }
 
 const resolver: SequenceResolver<SequenceProps> = {
-  progress: ObjectResolver(),
-  files: ArrayResolver(),
+  files: ObjectResolver(),
   urls: ObjectResolver(),
+  errors: ObjectResolver(),
   content: ArrayResolver(),
   audience: ObjectResolver(),
   characters: ObjectResolver(),

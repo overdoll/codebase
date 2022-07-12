@@ -9,9 +9,12 @@ import { CreatePostUppy, UppyProvider, useUpload } from '@//:modules/content/Hoo
 import {
   OnFileAddedType,
   OnFileRemovedType,
+  OnUploadErrorType,
   OnUploadProgressType,
+  OnUploadRetryType,
   OnUploadSuccessType
 } from '@//:modules/content/HookedComponents/Upload/types'
+import { useUpdateEffect } from '@chakra-ui/react'
 
 interface Props {
   query: PreloadedQuery<PostCreatorQuery>
@@ -21,6 +24,7 @@ const Query = graphql`
   query PostCreatorQuery ($reference: String!, $slug: String!) {
     post (reference: $reference) {
       __typename
+      id
       ...PostStateFragment
     }
     club (slug: $slug) {
@@ -54,25 +58,17 @@ export default function PostCreator ({ query }: Props): JSX.Element {
     if (file.source !== 'already-uploaded') {
       dispatch({
         type: 'files',
-        value: [{
-          id: file.id,
-          type: file.type
-        }],
+        value: { [file.id]: file },
         transform: 'ADD'
       })
     }
   }
 
-  const onUploadProgress: OnUploadProgressType = (file, progress) => {
+  const onUploadProgress: OnUploadProgressType = (file) => {
     if (file.source !== 'already-uploaded') {
       dispatch({
-        type: 'progress',
-        value: {
-          [file.id]: {
-            0: progress.bytesUploaded,
-            1: progress.bytesTotal
-          }
-        },
+        type: 'files',
+        value: { [file.id]: file },
         transform: 'ADD'
       })
     }
@@ -92,12 +88,7 @@ export default function PostCreator ({ query }: Props): JSX.Element {
   const onFileRemoved: OnFileRemovedType = (file, reason) => {
     dispatch({
       type: 'files',
-      value: [{ id: file.id }],
-      transform: 'REMOVE'
-    })
-    dispatch({
-      type: 'progress',
-      value: { [file.id]: state.progress[file.id] },
+      value: { [file.id]: file },
       transform: 'REMOVE'
     })
     dispatch({
@@ -105,15 +96,59 @@ export default function PostCreator ({ query }: Props): JSX.Element {
       value: { [file.id]: state.urls[file.id] },
       transform: 'REMOVE'
     })
+    dispatch({
+      type: 'errors',
+      value: {
+        [file.id]: {
+          error: undefined,
+          response: undefined
+        }
+      },
+      transform: 'REMOVE'
+    })
+  }
+
+  const onUploadError: OnUploadErrorType = (file, error, response) => {
+    if (file.source !== 'already-uploaded') {
+      dispatch({
+        type: 'errors',
+        value: {
+          [file.id]: {
+            error: error,
+            response: response
+          }
+        },
+        transform: 'ADD'
+      })
+    }
+  }
+
+  const onUploadRetry: OnUploadRetryType = (fileId) => {
+    dispatch({
+      type: 'errors',
+      value: {
+        [fileId]: {
+          error: undefined,
+          response: undefined
+        }
+      },
+      transform: 'REMOVE'
+    })
   }
 
   const uppy = useUpload({
     uppy: CreatePostUppy,
-    onUploadSuccess: onUploadSuccess,
-    onUploadProgress: onUploadProgress,
-    onFileAdded: onFileAdded,
-    onFileRemoved: onFileRemoved
+    onUploadSuccess,
+    onUploadProgress,
+    onFileAdded,
+    onFileRemoved,
+    onUploadError,
+    onUploadRetry
   })
+
+  useUpdateEffect(() => {
+    uppy.reset()
+  }, [data?.post?.id])
 
   if (data?.club?.viewerIsOwner === false) {
     return <NotFoundClub />

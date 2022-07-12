@@ -20,6 +20,7 @@ interface Props {
 const ArrangeUploadsFragmentGQL = graphql`
   fragment ArrangeUploadsFragment on Post {
     id
+    reference
     club {
       canCreateSupporterOnlyPosts
     }
@@ -110,7 +111,7 @@ export default function ArrangeUploads ({
 
   const notify = useToast()
 
-  const onRemoveContent = (id: string): void => {
+  const onRemoveContent = (id: string, index): void => {
     removeContent({
       variables: {
         input: {
@@ -119,7 +120,7 @@ export default function ArrangeUploads ({
         }
       },
       onCompleted () {
-        uppy.removeFile(id)
+        uppy.removeFile(`${id}_${index}`)
       },
       onError () {
         notify({
@@ -188,6 +189,10 @@ export default function ArrangeUploads ({
       setDisplayData(data.content)
     }
   }, [data.content, state.isRearranging])
+
+  useEffect(() => {
+    console.log(uppy.getFiles())
+  }, [uppy])
 
   if (displayData.length < 1) {
     return (

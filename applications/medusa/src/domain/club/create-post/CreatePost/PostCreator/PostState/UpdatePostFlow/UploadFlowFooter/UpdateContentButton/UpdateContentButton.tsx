@@ -10,7 +10,7 @@ export default function UpdateContentButton (): JSX.Element {
     if (state.isRearranging === true) {
       return true
     }
-    if ((state.files.length !== (Object.keys(state.urls)).length) || (state.files.length > 0)) {
+    if ((Object.values(state.files).length !== (Object.keys(state.urls)).length) || (Object.values(state.files).length > 0)) {
       return true
     }
 

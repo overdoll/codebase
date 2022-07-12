@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<374ce9719b16f90909530e323e08c08e>>
+ * @generated SignedSource<<e863157f3bafeb99fffaadd689054838>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,9 +13,11 @@ import { FragmentRefs } from "relay-runtime";
 export type ProcessUploadsFragment$data = {
   readonly content: ReadonlyArray<{
     readonly id: string;
+    readonly resource: {
+      readonly id: string;
+    };
   }>;
   readonly id: string;
-  readonly reference: string;
   readonly " $fragmentType": "ProcessUploadsFragment";
 };
 export type ProcessUploadsFragment$key = {
@@ -41,19 +43,24 @@ return {
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "reference",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
       "concreteType": "PostContent",
       "kind": "LinkedField",
       "name": "content",
       "plural": true,
       "selections": [
-        (v0/*: any*/)
+        (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "Resource",
+          "kind": "LinkedField",
+          "name": "resource",
+          "plural": false,
+          "selections": [
+            (v0/*: any*/)
+          ],
+          "storageKey": null
+        }
       ],
       "storageKey": null
     }
@@ -63,6 +70,6 @@ return {
 };
 })();
 
-(node as any).hash = "983d5e0896ebc2989e394cd0122eb215";
+(node as any).hash = "17c5d82c70e1ccd15cd7427d1ff9cf20";
 
 export default node;

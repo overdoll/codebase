@@ -1,11 +1,11 @@
 import { forwardRef } from 'react'
-import { CloseButtonProps } from '@chakra-ui/react'
+import { IconButtonProps } from '@chakra-ui/react'
 import IconButton from '../../../form/IconButton/IconButton'
 import { Icon } from '../../PageLayout'
 import { RemoveCross } from '@//:assets/icons'
 import { ForwardRefProp } from '@//:types/components'
 
-type Props = CloseButtonProps & ForwardRefProp
+type Props = Omit<IconButtonProps, 'aria-label'> & ForwardRefProp
 
 const CloseButton = forwardRef<any, Props>(({
   size = 'sm',
@@ -14,9 +14,9 @@ const CloseButton = forwardRef<any, Props>(({
 }: Props, forwardRef) => {
   return (
     <IconButton
+      aria-label='Close'
       variant='ghost'
       size={size}
-      borderRadius='xl'
       icon={<Icon
         fill={color as string}
         h='1em'
@@ -24,7 +24,6 @@ const CloseButton = forwardRef<any, Props>(({
         icon={RemoveCross}
             />}
       ref={forwardRef}
-      aria-label='Close'
       {...rest}
     />
   )

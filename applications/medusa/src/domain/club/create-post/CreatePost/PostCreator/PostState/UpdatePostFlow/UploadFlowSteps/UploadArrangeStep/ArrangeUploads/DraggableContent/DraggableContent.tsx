@@ -12,7 +12,7 @@ import IconButton from '@//:modules/form/IconButton/IconButton'
 type OnDragEndFunction = (result) => void
 
 interface Props {
-  onRemove: (string) => void
+  onRemove: (string, index) => void
   onSupport: (id, isSupporterOnly) => void
   canSupport: boolean
   index: number
@@ -188,7 +188,7 @@ export default function DraggableContent ({
               size='md'
               aria-label={i18n._(t`Remove Upload`)}
               m={2}
-              onClick={() => onRemove(data.resource.id)}
+              onClick={() => onRemove(data.resource.id, index)}
             />)
           : (
             <ArrangeButtons />
