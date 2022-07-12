@@ -75,7 +75,7 @@ export default function FullDetailedPost ({
   }
 
   return (
-    <Stack spacing={8}>
+    <Stack spacing={4}>
       <Stack h='100%' justify='space-between' spacing={2}>
         <HStack spacing={3} justify='space-between' align='center'>
           <PostHeaderClub query={data} />

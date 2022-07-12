@@ -1,7 +1,7 @@
 import type { ClosePaymentModalButtonFragment$key } from '@//:artifacts/ClosePaymentModalButtonFragment.graphql'
 import { graphql } from 'react-relay'
 import { useFragment } from 'react-relay/hooks'
-import { useContext } from 'react'
+import { ForwardedRef, useContext } from 'react'
 import useHistoryDisclosureContext
   from '@//:modules/content/HookedComponents/HistoryDisclosure/hooks/useHistoryDisclosureContext'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
@@ -9,6 +9,7 @@ import { FlowContext } from '@//:modules/content/PageLayout/FlowBuilder/FlowBuil
 
 interface Props {
   query: ClosePaymentModalButtonFragment$key
+  closeButtonRef: ForwardedRef<any>
 }
 
 const Fragment = graphql`
@@ -23,7 +24,10 @@ const Fragment = graphql`
   }
 `
 
-export default function ClosePaymentModalButton ({ query }: Props): JSX.Element {
+export default function ClosePaymentModalButton ({
+  query,
+  closeButtonRef
+}: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   const { onClose } = useHistoryDisclosureContext()
@@ -40,6 +44,6 @@ export default function ClosePaymentModalButton ({ query }: Props): JSX.Element 
   }
 
   return (
-    <CloseButton size='sm' onClick={onClick} />
+    <CloseButton ref={closeButtonRef} bg='gray.800' size='lg' onClick={onClick} />
   )
 }

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<84c8136f2d956acecd0d2f8952678a2a>>
- * @relayHash 5de03393df78897a9e14b61372f5e338
+ * @generated SignedSource<<3b776e1ea6f6de10e4dc6fdc65f1e21a>>
+ * @relayHash 777e863d14e83a880edd655f46ca5b0a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 5de03393df78897a9e14b61372f5e338
+// @relayRequestID 777e863d14e83a880edd655f46ca5b0a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -277,6 +277,13 @@ return {
                                   (v5/*: any*/),
                                   (v6/*: any*/),
                                   (v7/*: any*/),
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "videoNoAudio",
+                                    "storageKey": null
+                                  },
                                   (v8/*: any*/)
                                 ],
                                 "storageKey": null
@@ -391,7 +398,7 @@ return {
     ]
   },
   "params": {
-    "id": "5de03393df78897a9e14b61372f5e338",
+    "id": "777e863d14e83a880edd655f46ca5b0a",
     "metadata": {},
     "name": "PostAuditLogsQuery",
     "operationKind": "query",

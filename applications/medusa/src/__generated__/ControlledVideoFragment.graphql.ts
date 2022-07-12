@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ff9245318e16f3e2dc0b16cff04eee36>>
+ * @generated SignedSource<<4ed76a5baf32c8adde78b2adb35d3b2f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ControlledVideoFragment$data = {
+  readonly videoNoAudio: boolean;
   readonly " $fragmentSpreads": FragmentRefs<"RenderVideoFragment">;
   readonly " $fragmentType": "ControlledVideoFragment";
 };
@@ -26,6 +27,13 @@ const node: ReaderFragment = {
   "name": "ControlledVideoFragment",
   "selections": [
     {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "videoNoAudio",
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "RenderVideoFragment"
@@ -35,6 +43,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "d0f0048a7445ac40dafd8ddc6c920783";
+(node as any).hash = "62574abd803f6e9bf8ca33066e4b8c79";
 
 export default node;

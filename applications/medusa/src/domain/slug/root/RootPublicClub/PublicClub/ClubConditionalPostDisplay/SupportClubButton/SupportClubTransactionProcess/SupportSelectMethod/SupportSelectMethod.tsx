@@ -8,10 +8,12 @@ import SelectMethodChoice from './SelectMethodChoice/SelectMethodChoice'
 import NewPaymentMethod from './NewPaymentMethod/NewPaymentMethod'
 import SavedPaymentMethod from './SavedPaymentMethod/SavedPaymentMethod'
 import { SequenceProvider, useSequence, ValueResolver } from '@//:modules/content/HookedComponents/Sequence'
+import { ForwardedRef } from 'react'
 
 interface Props {
   clubQuery: SupportSelectMethodFragment$key
   viewerQuery: SupportSelectMethodViewerFragment$key
+  closeButtonRef: ForwardedRef<any>
 }
 
 interface SequenceProps {
@@ -50,7 +52,8 @@ const ViewerFragment = graphql`
 
 export default function SupportSelectMethod ({
   clubQuery,
-  viewerQuery
+  viewerQuery,
+  closeButtonRef
 }: Props): JSX.Element {
   const clubData = useFragment(ClubFragment, clubQuery)
 
@@ -74,16 +77,19 @@ export default function SupportSelectMethod ({
     select_payment: (
       <SelectMethodChoice
         viewerQuery={viewerData}
+        closeButtonRef={closeButtonRef}
       />),
     new_payment: (
       <NewPaymentMethod
         clubQuery={clubData}
         viewerQuery={viewerData}
+        closeButtonRef={closeButtonRef}
       />),
     existing_payment: (
       <SavedPaymentMethod
         clubQuery={clubData}
         viewerQuery={viewerData}
+        closeButtonRef={closeButtonRef}
       />)
   }
   const headers = {

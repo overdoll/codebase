@@ -2,8 +2,7 @@ import type { ChooseCurrencyFragment$key } from '@//:artifacts/ChooseCurrencyFra
 import { graphql } from 'react-relay'
 import { useFragment } from 'react-relay/hooks'
 import Select from '@//:modules/form/Select/Select'
-import { Heading, HStack } from '@chakra-ui/react'
-import { Trans } from '@lingui/macro'
+import { HStack } from '@chakra-ui/react'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 
 interface Props {
@@ -38,15 +37,10 @@ export default function ChooseCurrency ({
   }
 
   return (
-    <HStack w='100%' spacing={3} justify='space-between'>
-      <Heading w='100%' fontSize='lg' color='gray.00'>
-        <Trans>
-          Preferred Billing Currency
-        </Trans>
-      </Heading>
+    <HStack w='100%' spacing={3} justify='flex-start'>
       <Select
-        variant='outline'
-        size='md'
+        variant='filled'
+        size='lg'
         w={140}
         defaultValue={state.currency}
         onChange={onChangeCurrency}

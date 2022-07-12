@@ -11,7 +11,7 @@ import { Link } from '../../../../../routing'
 import PostMedia from '../../PostPlayback/PostMedia/PostMedia'
 import OverflowVisual from './OverflowVisual/OverflowVisual'
 import PostSlideBackground from '../PostSlideBackground/PostSlideBackground'
-import { SWIPER_PROPS } from '../../../constants'
+import { POST_SWIPER_PROPS } from '../../../constants'
 
 interface Props {
   query: PostGalleryPublicSimpleFragment$key
@@ -45,7 +45,7 @@ export default function PostGalleryPublicSimple ({
   return (
     <Box>
       <Swiper
-        {...SWIPER_PROPS}
+        {...POST_SWIPER_PROPS}
         onSwiper={(swiper) => setSwiper(swiper)}
       >
         {data?.content.map((item, index) =>

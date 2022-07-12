@@ -63,7 +63,7 @@ export default function BillingSummary ({
         <LargeClubHeader query={data} />
         <Heading fontSize='sm' color='gray.200'>
           <Trans>
-            Your contribution directly supports this creator and unlocks access to their exclusive content.
+            Your contribution directly supports this creator and unlocks access to their exclusive content
           </Trans>
         </Heading>
       </Box>

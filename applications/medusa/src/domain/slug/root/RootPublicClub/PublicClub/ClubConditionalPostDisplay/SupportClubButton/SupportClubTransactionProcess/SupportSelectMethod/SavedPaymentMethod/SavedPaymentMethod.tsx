@@ -8,10 +8,12 @@ import BillingSummary from '../../../BillingSummary/BillingSummary'
 import { HStack, Stack } from '@chakra-ui/react'
 import CCBillSelectSavedPaymentForm from './CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm'
 import ClosePaymentModalButton from '../../../ClosePaymentModalButton/ClosePaymentModalButton'
+import { ForwardedRef } from 'react'
 
 interface Props {
   clubQuery: SavedPaymentMethodFragment$key
   viewerQuery: SavedPaymentMethodViewerFragment$key
+  closeButtonRef: ForwardedRef<any>
 }
 
 const ClubFragment = graphql`
@@ -31,7 +33,8 @@ const ViewerFragment = graphql`
 
 export default function SavedPaymentMethod ({
   clubQuery,
-  viewerQuery
+  viewerQuery,
+  closeButtonRef
 }: Props): JSX.Element {
   const clubData = useFragment(ClubFragment, clubQuery)
   const viewerData = useFragment(ViewerFragment, viewerQuery)
@@ -40,7 +43,10 @@ export default function SavedPaymentMethod ({
     <Stack spacing={8}>
       <HStack spacing={2} justify='space-between'>
         <ChooseCurrency query={clubData} />
-        <ClosePaymentModalButton query={viewerData} />
+        <ClosePaymentModalButton
+          closeButtonRef={closeButtonRef}
+          query={viewerData}
+        />
       </HStack>
       <BillingSummary query={clubData} />
       <CCBillSelectSavedPaymentForm

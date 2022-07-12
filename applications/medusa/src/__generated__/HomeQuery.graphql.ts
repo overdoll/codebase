@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1142af9d29413eef730313a353cd3bb1>>
- * @relayHash 515684c5b0d95c52aa4c85684e77b62a
+ * @generated SignedSource<<77abc35ab1f46954daf32428487646e6>>
+ * @relayHash f56fc827902a0519c29be445a60eae19
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 515684c5b0d95c52aa4c85684e77b62a
+// @relayRequestID f56fc827902a0519c29be445a60eae19
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -228,6 +228,13 @@ return {
                           (v6/*: any*/),
                           (v7/*: any*/),
                           (v8/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "videoNoAudio",
+                            "storageKey": null
+                          },
                           (v9/*: any*/)
                         ],
                         "storageKey": null
@@ -484,7 +491,7 @@ return {
     ]
   },
   "params": {
-    "id": "515684c5b0d95c52aa4c85684e77b62a",
+    "id": "f56fc827902a0519c29be445a60eae19",
     "metadata": {},
     "name": "HomeQuery",
     "operationKind": "query",

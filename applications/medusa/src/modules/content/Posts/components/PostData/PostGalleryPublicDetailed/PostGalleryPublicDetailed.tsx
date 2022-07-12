@@ -9,7 +9,7 @@ import { NumberParam, useQueryParam } from 'use-query-params'
 import { useState } from 'react'
 import SwiperType from 'swiper'
 import PostSlideBackground from '../PostSlideBackground/PostSlideBackground'
-import { SWIPER_PROPS } from '../../../constants'
+import { POST_SWIPER_PROPS } from '../../../constants'
 
 interface Props {
   query: PostGalleryPublicDetailedFragment$key
@@ -49,7 +49,7 @@ export default function PostGalleryPublicDetailed ({
   return (
     <Box>
       <Swiper
-        {...SWIPER_PROPS}
+        {...POST_SWIPER_PROPS}
         onSwiper={(swiper) => setSwiper(swiper)}
         onAfterInit={(swiper) => slideTo(swiper)}
       >

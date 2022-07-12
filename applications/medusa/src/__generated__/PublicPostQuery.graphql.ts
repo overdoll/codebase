@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3c74efde1b713fddca67792c99bc4a69>>
- * @relayHash ab0d9ac11cbe05bc5a82d75e73cff6b7
+ * @generated SignedSource<<6aa3bfc5ff93edf243d7a2c9f22427e9>>
+ * @relayHash c663e6452b4b40c0fd4b306f922d9dd1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ab0d9ac11cbe05bc5a82d75e73cff6b7
+// @relayRequestID c663e6452b4b40c0fd4b306f922d9dd1
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -179,6 +179,13 @@ v15 = {
         (v11/*: any*/),
         (v12/*: any*/),
         (v13/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "videoNoAudio",
+          "storageKey": null
+        },
         (v14/*: any*/)
       ],
       "storageKey": null
@@ -660,7 +667,7 @@ return {
     ]
   },
   "params": {
-    "id": "ab0d9ac11cbe05bc5a82d75e73cff6b7",
+    "id": "c663e6452b4b40c0fd4b306f922d9dd1",
     "metadata": {},
     "name": "PublicPostQuery",
     "operationKind": "query",

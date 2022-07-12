@@ -18,10 +18,12 @@ interface Props {
 
 const Fragment = graphql`
   fragment AccountCancelledClubSupporterSubscriptionSettingsFragment on AccountCancelledClubSupporterSubscription {
-    id
     club {
       slug
       ...ClubExclusivePostsFragment
+    }
+    ccbillSubscription {
+      ccbillSubscriptionId
     }
     ...AccountCancelledClubSupporterSubscriptionDetailsFragment
     ...ManageCancelledSubscriptionButtonFragment
@@ -53,7 +55,7 @@ export default function AccountCancelledClubSupporterSubscriptionSettings ({
             </LinkButton>
             <Text fontSize='sm' color='gray.200'>
               <Trans>
-                Subscription # {data.id}
+                Subscription # {data?.ccbillSubscription?.ccbillSubscriptionId}
               </Trans>
             </Text>
           </Stack>

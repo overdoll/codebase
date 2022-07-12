@@ -4,7 +4,7 @@ import { graphql } from 'react-relay'
 import { useFragment } from 'react-relay/hooks'
 import { Box, Center, Heading, HStack, Stack, Text } from '@chakra-ui/react'
 import { FlowContext } from '@//:modules/content/PageLayout/FlowBuilder/FlowBuilder'
-import { useContext } from 'react'
+import { ForwardedRef, useContext } from 'react'
 import Button from '@//:modules/form/Button/Button'
 import { Trans } from '@lingui/macro'
 import { Choice, useChoice } from '@//:modules/content/HookedComponents/Choice'
@@ -18,6 +18,7 @@ import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButto
 
 interface Props {
   viewerQuery: SelectMethodChoiceViewerFragment$key
+  closeButtonRef: ForwardedRef<any>
 }
 
 const ViewerFragment = graphql`
@@ -35,7 +36,8 @@ const ViewerFragment = graphql`
 `
 
 export default function SelectMethodChoice ({
-  viewerQuery
+  viewerQuery,
+  closeButtonRef
 }: Props): JSX.Element {
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
@@ -66,7 +68,7 @@ export default function SelectMethodChoice ({
             How will you pay?
           </Trans>
         </Heading>
-        <CloseButton size='sm' onClick={onClose} />
+        <CloseButton ref={closeButtonRef} size='sm' onClick={onClose} />
       </HStack>
       <Stack spacing={4}>
         <Box>

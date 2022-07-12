@@ -127,7 +127,7 @@ export default function PostLikeButton ({
       {allowed => (
         <Flex align='center'>
           <IconButton
-            aria-label={i18n._(t`Like`)}
+            aria-label={hasLiked ? i18n._(t`Remove Like`) : i18n._(t`Like`)}
             borderRadius='xl'
             isDisabled={allowed === false}
             mr={1}
@@ -142,9 +142,11 @@ export default function PostLikeButton ({
             onClick={isLoggedIn ? (hasLiked ? () => onUndoLike() : () => onLikePost()) : async () => await router.push(redirect)}
             {...rest}
           />
-          <Heading color={hasLiked ? 'primary.300' : 'gray.200'} fontSize='xl'>
-            {likes}
-          </Heading>
+          <Can I='staff' a='Post'>
+            <Heading color={hasLiked ? 'primary.300' : 'gray.200'} fontSize='xl'>
+              {likes}
+            </Heading>
+          </Can>
         </Flex>
       )}
     </Can>

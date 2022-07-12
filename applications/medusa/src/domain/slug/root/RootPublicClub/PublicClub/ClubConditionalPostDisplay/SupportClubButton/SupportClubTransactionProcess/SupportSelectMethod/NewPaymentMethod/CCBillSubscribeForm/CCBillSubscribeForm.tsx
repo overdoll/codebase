@@ -13,6 +13,8 @@ import { useToast } from '@//:modules/content/ThemeComponents'
 import { Dispatch, MutableRefObject, SetStateAction } from 'react'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import SupporterGuidelinesAgreement from '../../../../SupporterGuidelinesAgreement/SupporterGuidelinesAgreement'
+import { Icon } from '@//:modules/content/PageLayout'
+import { PaymentMethodIdentifier } from '@//:assets/icons'
 
 interface Props {
   query: CCBillSubscribeFormFragment$key
@@ -133,7 +135,10 @@ export default function CCBillSubscribeForm ({
         >
           <HStack spacing={2}>
             <SwitchInput colorScheme='teal' />
-            <Text fontSize='md' color='gray.00'>
+            <Text
+              fontSize='md'
+              color='gray.00'
+            >
               <Trans>
                 Remember this payment method
               </Trans>
@@ -144,6 +149,7 @@ export default function CCBillSubscribeForm ({
           isLoading={isInFlight}
           colorScheme='teal'
           size='lg'
+          leftIcon={<Icon icon={PaymentMethodIdentifier} w={5} h={5} fill='teal.900' />}
         >
           <Trans>
             Subscribe with CCBill

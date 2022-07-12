@@ -6,13 +6,14 @@ import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { CheckMark, InfoCircle, RemoveCross, WarningTriangle } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import Button from '@//:modules/form/Button/Button'
-import { useEffect, useState } from 'react'
+import { ForwardedRef, useEffect, useState } from 'react'
 import { useQueryParam } from 'use-query-params'
 import useHistoryDisclosureContext
   from '@//:modules/content/HookedComponents/HistoryDisclosure/hooks/useHistoryDisclosureContext'
 
 interface Props extends ComponentSearchArguments<any> {
   loadQuery: () => void
+  closeButtonRef: ForwardedRef<any>
 }
 
 const Query = graphql`
@@ -56,7 +57,8 @@ const TIMEOUT_LIMIT = 20
 
 export default function CCBillDisplayTransaction ({
   searchArguments,
-  loadQuery
+  loadQuery,
+  closeButtonRef
 }: Props): JSX.Element {
   const queryData = useLazyLoadQuery<CCBillDisplayTransactionQuery>(
     Query,
@@ -126,7 +128,7 @@ export default function CCBillDisplayTransaction ({
             </Trans>
           </Text>
         </Box>
-        <Button onClick={onCancel} size='lg' colorScheme='teal'>
+        <Button ref={closeButtonRef} onClick={onCancel} size='lg' colorScheme='teal'>
           <Trans>
             Back
           </Trans>
@@ -200,7 +202,7 @@ export default function CCBillDisplayTransaction ({
             </Text>
           </Stack>
         </Box>
-        <Button onClick={onCancel} size='lg' colorScheme='orange'>
+        <Button ref={closeButtonRef} onClick={onCancel} size='lg' colorScheme='orange'>
           <Trans>
             Back
           </Trans>
@@ -241,7 +243,7 @@ export default function CCBillDisplayTransaction ({
             Please email hello@overdoll.com if you continue to experience issues with receiving your club benefits
           </Trans>
         </Text>
-        <Button onClick={onComplete} size='lg' colorScheme='orange'>
+        <Button ref={closeButtonRef} onClick={onComplete} size='lg' colorScheme='orange'>
           <Trans>
             Close
           </Trans>
@@ -299,7 +301,7 @@ export default function CCBillDisplayTransaction ({
           </Trans>
         </Text>
       </Box>
-      <Button onClick={onComplete} size='lg' colorScheme='green'>
+      <Button ref={closeButtonRef} onClick={onComplete} size='lg' colorScheme='green'>
         <Trans>
           Close
         </Trans>

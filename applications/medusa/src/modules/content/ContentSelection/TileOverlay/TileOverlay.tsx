@@ -26,7 +26,7 @@ export default function TileOverlay ({
         w='100%'
         h='100%'
         bg='dimmers.300'
-        zIndex={1}
+        zIndex={2}
       >
         {children}
       </Box>

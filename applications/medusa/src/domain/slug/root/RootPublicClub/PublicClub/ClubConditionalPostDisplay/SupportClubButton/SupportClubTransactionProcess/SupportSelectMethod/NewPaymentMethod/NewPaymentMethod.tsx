@@ -6,7 +6,7 @@ import { useFragment } from 'react-relay/hooks'
 import ChooseCurrency from '../../../ChooseCurrency/ChooseCurrency'
 import BillingSummary from '../../../BillingSummary/BillingSummary'
 import CCBillSubscribeForm from './CCBillSubscribeForm/CCBillSubscribeForm'
-import { useRef, useState } from 'react'
+import { ForwardedRef, useRef, useState } from 'react'
 import CCBillWindowListener from './CCBillWindowListener/CCBillWindowListener'
 import { HStack, Stack } from '@chakra-ui/react'
 import ClosePaymentModalButton from '../../../ClosePaymentModalButton/ClosePaymentModalButton'
@@ -14,6 +14,7 @@ import ClosePaymentModalButton from '../../../ClosePaymentModalButton/ClosePayme
 interface Props {
   clubQuery: NewPaymentMethodFragment$key
   viewerQuery: NewPaymentMethodViewerFragment$key
+  closeButtonRef: ForwardedRef<any>
 }
 
 const ClubFragment = graphql`
@@ -32,7 +33,8 @@ const ViewerFragment = graphql`
 
 export default function NewPaymentMethod ({
   clubQuery,
-  viewerQuery
+  viewerQuery,
+  closeButtonRef
 }: Props): JSX.Element {
   const clubData = useFragment(ClubFragment, clubQuery)
   const viewerData = useFragment(ViewerFragment, viewerQuery)
@@ -54,7 +56,7 @@ export default function NewPaymentMethod ({
     <Stack spacing={8}>
       <HStack spacing={2} justify='space-between'>
         <ChooseCurrency query={clubData} />
-        <ClosePaymentModalButton query={viewerData} />
+        <ClosePaymentModalButton closeButtonRef={closeButtonRef} query={viewerData} />
       </HStack>
       <BillingSummary query={clubData} />
       <CCBillSubscribeForm

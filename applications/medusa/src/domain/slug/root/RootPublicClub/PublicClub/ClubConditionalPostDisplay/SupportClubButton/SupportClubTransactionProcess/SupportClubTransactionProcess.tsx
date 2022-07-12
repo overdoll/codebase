@@ -9,9 +9,8 @@ import { useFragment } from 'react-relay/hooks'
 import { useQueryParam } from 'use-query-params'
 import SupportSelectMethod from './SupportSelectMethod/SupportSelectMethod'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
-import QueryErrorBoundary
-  from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
-import { Suspense } from 'react'
+import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
+import { ForwardedRef, Suspense } from 'react'
 import { SkeletonStack } from '@//:modules/content/Placeholder'
 import CCBillDisplayTransaction from './CCBillDisplayTransaction/CCBillDisplayTransaction'
 import { useUpdateEffect } from 'usehooks-ts'
@@ -19,6 +18,7 @@ import { useUpdateEffect } from 'usehooks-ts'
 interface Props {
   clubQuery: SupportClubTransactionProcessFragment$key
   viewerQuery: SupportClubTransactionProcessViewerFragment$key
+  closeButtonRef: ForwardedRef<any>
 }
 
 interface SearchProps {
@@ -39,7 +39,8 @@ const ViewerFragment = graphql`
 
 export default function SupportClubTransactionProcess ({
   clubQuery,
-  viewerQuery
+  viewerQuery,
+  closeButtonRef
 }: Props): JSX.Element {
   const clubData = useFragment(ClubFragment, clubQuery)
 
@@ -70,6 +71,7 @@ export default function SupportClubTransactionProcess ({
       <QueryErrorBoundary loadQuery={loadQuery}>
         <Suspense fallback={<SkeletonStack />}>
           <CCBillDisplayTransaction
+            closeButtonRef={closeButtonRef}
             loadQuery={loadQuery}
             searchArguments={searchArguments}
           />
@@ -79,6 +81,6 @@ export default function SupportClubTransactionProcess ({
   }
 
   return (
-    <SupportSelectMethod clubQuery={clubData} viewerQuery={viewerData} />
+    <SupportSelectMethod closeButtonRef={closeButtonRef} clubQuery={clubData} viewerQuery={viewerData} />
   )
 }
