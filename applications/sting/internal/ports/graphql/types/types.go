@@ -650,6 +650,12 @@ type Post struct {
 	Club *Club `json:"club"`
 	// Content belonging to this post
 	Content []*PostContent `json:"content"`
+	// A description for this post.
+	//
+	// Optionally pass a locale to display it in a specific language. English by default.
+	Description string `json:"description"`
+	// All translations for this description.
+	DescriptionTranslations []*graphql1.Translation `json:"descriptionTranslations"`
 	// The date and time of when this post was created
 	CreatedAt time.Time `json:"createdAt"`
 	// The date and time of when this post was posted
@@ -1230,6 +1236,26 @@ type UpdatePostContentOrderInput struct {
 
 // Payload for updating a post
 type UpdatePostContentOrderPayload struct {
+	// The post after the update
+	Post *Post `json:"post"`
+}
+
+// Update post.
+type UpdatePostDescriptionInput struct {
+	// The post to update
+	ID relay.ID `json:"id"`
+	// The description to update.
+	//
+	// Validation: Max 280 characters. No links allowed.
+	Description string `json:"description"`
+	// The localization for this description.
+	//
+	// Locale must be one from the languages query, or else the locale won't be accepted.
+	Locale string `json:"locale"`
+}
+
+// Payload for updating a post description
+type UpdatePostDescriptionPayload struct {
 	// The post after the update
 	Post *Post `json:"post"`
 }

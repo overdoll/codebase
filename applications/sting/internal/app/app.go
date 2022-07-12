@@ -28,9 +28,10 @@ type Commands struct {
 	UpdatePostContentOrder           command.UpdatePostContentOrderHandler
 	UpdatePostContentIsSupporterOnly command.UpdatePostContentIsSupporterOnlyHandler
 
-	UpdatePostCategories command.UpdatePostCategoriesHandler
-	UpdatePostCharacters command.UpdatePostCharactersHandler
-	UpdatePostAudience   command.UpdatePostAudienceHandler
+	UpdatePostDescription command.UpdatePostDescriptionHandler
+	UpdatePostCategories  command.UpdatePostCategoriesHandler
+	UpdatePostCharacters  command.UpdatePostCharactersHandler
+	UpdatePostAudience    command.UpdatePostAudienceHandler
 
 	LikePost     command.LikePostHandler
 	UndoLikePost command.UndoLikePostHandler

@@ -6,6 +6,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
+	"overdoll/libraries/localization"
 	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"time"
@@ -47,6 +48,7 @@ var postTable = table.New(table.Metadata{
 		"content_supporter_only",
 		"content_supporter_only_resource_ids",
 		"contributor_account_id",
+		"description",
 		"club_id",
 		"audience_id",
 		"category_ids",
@@ -64,6 +66,7 @@ type posts struct {
 	Id                              string            `db:"id"`
 	State                           string            `db:"state"`
 	Likes                           int               `db:"likes"`
+	Description                     map[string]string `db:"description"`
 	LikesLastUpdateId               gocql.UUID        `db:"likes_last_update_id"`
 	SupporterOnlyStatus             string            `db:"supporter_only_status"`
 	ContentResourceIds              []string          `db:"content_resource_ids"`
@@ -144,6 +147,7 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 		State:                           pending.State().String(),
 		SupporterOnlyStatus:             pending.SupporterOnlyStatus().String(),
 		Likes:                           pending.Likes(),
+		Description:                     localization.MarshalTranslationToDatabase(pending.Description()),
 		LikesLastUpdateId:               gocql.TimeUUID(),
 		ClubId:                          pending.ClubId(),
 		AudienceId:                      pending.AudienceId(),
@@ -193,6 +197,7 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Contex
 		postPending.CreatedAt,
 		postPending.UpdatedAt,
 		postPending.PostedAt,
+		postPending.Description,
 	), nil
 }
 
@@ -519,6 +524,10 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContent(ctx context.Con
 
 func (r PostsCassandraElasticsearchRepository) UpdatePostAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"audience_id"})
+}
+
+func (r PostsCassandraElasticsearchRepository) UpdatePostDescription(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"description"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdatePostCharacters(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {

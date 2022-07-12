@@ -101,20 +101,33 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 		supporterOnlyStatus = SupporterOnlyStatusPartial
 	}
 
+	var descriptionTranslations []*graphql.Translation
+
+	for _, val := range result.Description().Translations() {
+		descriptionTranslations = append(descriptionTranslations, &graphql.Translation{
+			Language: &graphql.Language{
+				Locale: val.Locale(),
+				Name:   val.Name(),
+			},
+			Text: val.Data(),
+		})
+	}
+
 	return &Post{
-		ID:                  relay.NewID(Post{}, result.ID()),
-		SupporterOnlyStatus: supporterOnlyStatus,
-		Reference:           result.ID(),
-		Contributor:         &Account{ID: relay.NewID(Account{}, result.ContributorId())},
-		Club:                &Club{ID: relay.NewID(Club{}, result.ClubId())},
-		Audience:            audience,
-		State:               state,
-		Content:             content,
-		Categories:          categories,
-		Characters:          characters,
-		CreatedAt:           result.CreatedAt(),
-		PostedAt:            result.PostedAt(),
-		Likes:               result.Likes(),
+		ID:                      relay.NewID(Post{}, result.ID()),
+		SupporterOnlyStatus:     supporterOnlyStatus,
+		Reference:               result.ID(),
+		DescriptionTranslations: descriptionTranslations,
+		Contributor:             &Account{ID: relay.NewID(Account{}, result.ContributorId())},
+		Club:                    &Club{ID: relay.NewID(Club{}, result.ClubId())},
+		Audience:                audience,
+		State:                   state,
+		Content:                 content,
+		Categories:              categories,
+		Characters:              characters,
+		CreatedAt:               result.CreatedAt(),
+		PostedAt:                result.PostedAt(),
+		Likes:                   result.Likes(),
 	}
 }
 

@@ -8,6 +8,7 @@ import (
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/applications/sting/internal/ports/graphql/dataloader"
 	"overdoll/applications/sting/internal/ports/graphql/types"
+	"overdoll/libraries/graphql"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
@@ -15,6 +16,10 @@ import (
 
 type PostResolver struct {
 	App *app.Application
+}
+
+func (r PostResolver) Description(ctx context.Context, obj *types.Post, locale *string) (string, error) {
+	return graphql.GetTranslationFromTranslationsAndLanguage(obj.DescriptionTranslations, locale)
 }
 
 func (r PostResolver) Categories(ctx context.Context, obj *types.Post) ([]*types.Category, error) {

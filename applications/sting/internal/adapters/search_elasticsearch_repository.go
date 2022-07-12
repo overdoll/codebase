@@ -95,12 +95,16 @@ func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passp
 	).
 		Must(elastic.NewTermQuery("_index", SeriesReaderIndex)))
 
-	query.Should(elastic.NewBoolQuery().Must(
+	clubsQuery := elastic.NewBoolQuery().Must(
 		elastic.
 			NewMultiMatchQuery(qs, "name.en").
 			Type("best_fields"),
 	).
-		Must(elastic.NewTermQuery("_index", ClubsReaderIndex)))
+		Must(elastic.NewTermQuery("_index", ClubsReaderIndex))
+
+	clubsQuery.Filter(elastic.NewTermQuery("terminated", false))
+
+	query.Should(clubsQuery)
 
 	builder.Query(query)
 

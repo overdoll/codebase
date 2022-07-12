@@ -8,6 +8,19 @@
       "state": {
         "type": "keyword"
       },
+      "description": {
+        "properties": {
+          "language": {
+            "type": "keyword"
+          },
+          "supported": {
+            "type": "boolean"
+          },
+          "en": {
+            "type": "text"
+          }
+        }
+      },
       "supporter_only_status": {
         "type": "keyword"
       },

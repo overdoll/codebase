@@ -402,6 +402,7 @@ type ComplexityRoot struct {
 		UpdatePostCharacters             func(childComplexity int, input types.UpdatePostCharactersInput) int
 		UpdatePostContentIsSupporterOnly func(childComplexity int, input types.UpdatePostContentIsSupporterOnlyInput) int
 		UpdatePostContentOrder           func(childComplexity int, input types.UpdatePostContentOrderInput) int
+		UpdatePostDescription            func(childComplexity int, input types.UpdatePostDescriptionInput) int
 		UpdateSeriesThumbnail            func(childComplexity int, input types.UpdateSeriesThumbnailInput) int
 		UpdateSeriesTitle                func(childComplexity int, input types.UpdateSeriesTitleInput) int
 		UpdateTopicBanner                func(childComplexity int, input types.UpdateTopicBannerInput) int
@@ -418,21 +419,23 @@ type ComplexityRoot struct {
 	}
 
 	Post struct {
-		Audience            func(childComplexity int) int
-		Categories          func(childComplexity int) int
-		Characters          func(childComplexity int) int
-		Club                func(childComplexity int) int
-		Content             func(childComplexity int) int
-		Contributor         func(childComplexity int) int
-		CreatedAt           func(childComplexity int) int
-		ID                  func(childComplexity int) int
-		Likes               func(childComplexity int) int
-		PostedAt            func(childComplexity int) int
-		Reference           func(childComplexity int) int
-		State               func(childComplexity int) int
-		SuggestedPosts      func(childComplexity int, after *string, before *string, first *int, last *int) int
-		SupporterOnlyStatus func(childComplexity int) int
-		ViewerLiked         func(childComplexity int) int
+		Audience                func(childComplexity int) int
+		Categories              func(childComplexity int) int
+		Characters              func(childComplexity int) int
+		Club                    func(childComplexity int) int
+		Content                 func(childComplexity int) int
+		Contributor             func(childComplexity int) int
+		CreatedAt               func(childComplexity int) int
+		Description             func(childComplexity int, locale *string) int
+		DescriptionTranslations func(childComplexity int) int
+		ID                      func(childComplexity int) int
+		Likes                   func(childComplexity int) int
+		PostedAt                func(childComplexity int) int
+		Reference               func(childComplexity int) int
+		State                   func(childComplexity int) int
+		SuggestedPosts          func(childComplexity int, after *string, before *string, first *int, last *int) int
+		SupporterOnlyStatus     func(childComplexity int) int
+		ViewerLiked             func(childComplexity int) int
 	}
 
 	PostConnection struct {
@@ -686,6 +689,10 @@ type ComplexityRoot struct {
 		Post func(childComplexity int) int
 	}
 
+	UpdatePostDescriptionPayload struct {
+		Post func(childComplexity int) int
+	}
+
 	UpdateSeriesThumbnailPayload struct {
 		Series func(childComplexity int) int
 	}
@@ -817,6 +824,7 @@ type MutationResolver interface {
 	UpdatePostContentIsSupporterOnly(ctx context.Context, input types.UpdatePostContentIsSupporterOnlyInput) (*types.UpdatePostContentIsSupporterOnlyPayload, error)
 	UpdatePostCharacters(ctx context.Context, input types.UpdatePostCharactersInput) (*types.UpdatePostCharactersPayload, error)
 	UpdatePostCategories(ctx context.Context, input types.UpdatePostCategoriesInput) (*types.UpdatePostCategoriesPayload, error)
+	UpdatePostDescription(ctx context.Context, input types.UpdatePostDescriptionInput) (*types.UpdatePostDescriptionPayload, error)
 	SubmitPost(ctx context.Context, input types.SubmitPostInput) (*types.SubmitPostPayload, error)
 	DeletePost(ctx context.Context, input types.DeletePostInput) (*types.DeletePostPayload, error)
 	ArchivePost(ctx context.Context, input types.ArchivePostInput) (*types.ArchivePostPayload, error)
@@ -832,6 +840,8 @@ type MutationResolver interface {
 }
 type PostResolver interface {
 	Club(ctx context.Context, obj *types.Post) (*types.Club, error)
+
+	Description(ctx context.Context, obj *types.Post, locale *string) (string, error)
 
 	SuggestedPosts(ctx context.Context, obj *types.Post, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
 	Audience(ctx context.Context, obj *types.Post) (*types.Audience, error)
@@ -2651,6 +2661,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdatePostContentOrder(childComplexity, args["input"].(types.UpdatePostContentOrderInput)), true
 
+	case "Mutation.updatePostDescription":
+		if e.complexity.Mutation.UpdatePostDescription == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updatePostDescription_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdatePostDescription(childComplexity, args["input"].(types.UpdatePostDescriptionInput)), true
+
 	case "Mutation.updateSeriesThumbnail":
 		if e.complexity.Mutation.UpdateSeriesThumbnail == nil {
 			break
@@ -2799,6 +2821,25 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Post.CreatedAt(childComplexity), true
+
+	case "Post.description":
+		if e.complexity.Post.Description == nil {
+			break
+		}
+
+		args, err := ec.field_Post_description_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Post.Description(childComplexity, args["locale"].(*string)), true
+
+	case "Post.descriptionTranslations":
+		if e.complexity.Post.DescriptionTranslations == nil {
+			break
+		}
+
+		return e.complexity.Post.DescriptionTranslations(childComplexity), true
 
 	case "Post.id":
 		if e.complexity.Post.ID == nil {
@@ -3746,6 +3787,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.UpdatePostContentOrderPayload.Post(childComplexity), true
 
+	case "UpdatePostDescriptionPayload.post":
+		if e.complexity.UpdatePostDescriptionPayload.Post == nil {
+			break
+		}
+
+		return e.complexity.UpdatePostDescriptionPayload.Post(childComplexity), true
+
 	case "UpdateSeriesThumbnailPayload.series":
 		if e.complexity.UpdateSeriesThumbnailPayload.Series == nil {
 			break
@@ -3850,6 +3898,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputUpdatePostCharactersInput,
 		ec.unmarshalInputUpdatePostContentIsSupporterOnlyInput,
 		ec.unmarshalInputUpdatePostContentOrderInput,
+		ec.unmarshalInputUpdatePostDescriptionInput,
 		ec.unmarshalInputUpdateSeriesThumbnailInput,
 		ec.unmarshalInputUpdateSeriesTitleInput,
 		ec.unmarshalInputUpdateTopicBannerInput,
@@ -5516,6 +5565,16 @@ type Post implements Node @key(fields: "id") {
   """Content belonging to this post"""
   content: [PostContent!]!
 
+  """
+  A description for this post.
+
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  description(locale: BCP47): String! @goField(forceResolver: true)
+
+  """All translations for this description."""
+  descriptionTranslations: [Translation!]!
+
   """The date and time of when this post was created"""
   createdAt: Time!
 
@@ -5733,6 +5792,32 @@ type UnArchivePostPayload {
   post: Post
 }
 
+"""Update post."""
+input UpdatePostDescriptionInput {
+  """The post to update"""
+  id: ID!
+
+  """
+  The description to update.
+
+  Validation: Max 280 characters. No links allowed.
+  """
+  description: String!
+
+  """
+  The localization for this description.
+
+  Locale must be one from the languages query, or else the locale won't be accepted.
+  """
+  locale: BCP47!
+}
+
+"""Payload for updating a post description"""
+type UpdatePostDescriptionPayload {
+  """The post after the update"""
+  post: Post
+}
+
 type PostEdge {
   cursor: String!
   node: Post!
@@ -5861,6 +5946,11 @@ extend type Mutation {
   Update a post in draft status - categories
   """
   updatePostCategories(input: UpdatePostCategoriesInput!): UpdatePostCategoriesPayload
+
+  """
+  Update a post in draft status - description
+  """
+  updatePostDescription(input: UpdatePostDescriptionInput!): UpdatePostDescriptionPayload
 
   """
   Submit a post.
@@ -8403,6 +8493,21 @@ func (ec *executionContext) field_Mutation_updatePostContentOrder_args(ctx conte
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_updatePostDescription_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdatePostDescriptionInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdatePostDescriptionInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostDescriptionInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_updateSeriesThumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -8490,6 +8595,21 @@ func (ec *executionContext) field_Mutation_updateTopicWeight_args(ctx context.Co
 		}
 	}
 	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Post_description_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["locale"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
+		arg0, err = ec.unmarshalOBCP472ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["locale"] = arg0
 	return args, nil
 }
 
@@ -10388,6 +10508,10 @@ func (ec *executionContext) fieldContext_AddPostContentPayload_post(ctx context.
 				return ec.fieldContext_Post_club(ctx, field)
 			case "content":
 				return ec.fieldContext_Post_content(ctx, field)
+			case "description":
+				return ec.fieldContext_Post_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Post_descriptionTranslations(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Post_createdAt(ctx, field)
 			case "postedAt":
@@ -10461,6 +10585,10 @@ func (ec *executionContext) fieldContext_ArchivePostPayload_post(ctx context.Con
 				return ec.fieldContext_Post_club(ctx, field)
 			case "content":
 				return ec.fieldContext_Post_content(ctx, field)
+			case "description":
+				return ec.fieldContext_Post_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Post_descriptionTranslations(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Post_createdAt(ctx, field)
 			case "postedAt":
@@ -16198,6 +16326,10 @@ func (ec *executionContext) fieldContext_CreatePostPayload_post(ctx context.Cont
 				return ec.fieldContext_Post_club(ctx, field)
 			case "content":
 				return ec.fieldContext_Post_content(ctx, field)
+			case "description":
+				return ec.fieldContext_Post_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Post_descriptionTranslations(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Post_createdAt(ctx, field)
 			case "postedAt":
@@ -17552,6 +17684,10 @@ func (ec *executionContext) fieldContext_Entity_findPostByID(ctx context.Context
 				return ec.fieldContext_Post_club(ctx, field)
 			case "content":
 				return ec.fieldContext_Post_content(ctx, field)
+			case "description":
+				return ec.fieldContext_Post_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Post_descriptionTranslations(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Post_createdAt(ctx, field)
 			case "postedAt":
@@ -20349,6 +20485,62 @@ func (ec *executionContext) fieldContext_Mutation_updatePostCategories(ctx conte
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_updatePostDescription(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updatePostDescription(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdatePostDescription(rctx, fc.Args["input"].(types.UpdatePostDescriptionInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdatePostDescriptionPayload)
+	fc.Result = res
+	return ec.marshalOUpdatePostDescriptionPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostDescriptionPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updatePostDescription(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "post":
+				return ec.fieldContext_UpdatePostDescriptionPayload_post(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdatePostDescriptionPayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updatePostDescription_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Mutation_submitPost(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_submitPost(ctx, field)
 	if err != nil {
@@ -21583,6 +21775,111 @@ func (ec *executionContext) fieldContext_Post_content(ctx context.Context, field
 	return fc, nil
 }
 
+func (ec *executionContext) _Post_description(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Post_description(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Post().Description(rctx, obj, fc.Args["locale"].(*string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Post_description(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Post",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Post_description_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Post_descriptionTranslations(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Post_descriptionTranslations(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DescriptionTranslations, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*graphql1.Translation)
+	fc.Result = res
+	return ec.marshalNTranslation2ᚕᚖoverdollᚋlibrariesᚋgraphqlᚐTranslationᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Post_descriptionTranslations(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Post",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "language":
+				return ec.fieldContext_Translation_language(ctx, field)
+			case "text":
+				return ec.fieldContext_Translation_text(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Translation", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Post_createdAt(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Post_createdAt(ctx, field)
 	if err != nil {
@@ -22493,6 +22790,10 @@ func (ec *executionContext) fieldContext_PostEdge_node(ctx context.Context, fiel
 				return ec.fieldContext_Post_club(ctx, field)
 			case "content":
 				return ec.fieldContext_Post_content(ctx, field)
+			case "description":
+				return ec.fieldContext_Post_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Post_descriptionTranslations(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Post_createdAt(ctx, field)
 			case "postedAt":
@@ -22657,6 +22958,10 @@ func (ec *executionContext) fieldContext_PostLike_post(ctx context.Context, fiel
 				return ec.fieldContext_Post_club(ctx, field)
 			case "content":
 				return ec.fieldContext_Post_content(ctx, field)
+			case "description":
+				return ec.fieldContext_Post_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Post_descriptionTranslations(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Post_createdAt(ctx, field)
 			case "postedAt":
@@ -23636,6 +23941,10 @@ func (ec *executionContext) fieldContext_Query_post(ctx context.Context, field g
 				return ec.fieldContext_Post_club(ctx, field)
 			case "content":
 				return ec.fieldContext_Post_content(ctx, field)
+			case "description":
+				return ec.fieldContext_Post_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Post_descriptionTranslations(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Post_createdAt(ctx, field)
 			case "postedAt":
@@ -24435,6 +24744,10 @@ func (ec *executionContext) fieldContext_RemovePostContentPayload_post(ctx conte
 				return ec.fieldContext_Post_club(ctx, field)
 			case "content":
 				return ec.fieldContext_Post_content(ctx, field)
+			case "description":
+				return ec.fieldContext_Post_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Post_descriptionTranslations(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Post_createdAt(ctx, field)
 			case "postedAt":
@@ -26011,6 +26324,10 @@ func (ec *executionContext) fieldContext_SubmitPostPayload_post(ctx context.Cont
 				return ec.fieldContext_Post_club(ctx, field)
 			case "content":
 				return ec.fieldContext_Post_content(ctx, field)
+			case "description":
+				return ec.fieldContext_Post_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Post_descriptionTranslations(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Post_createdAt(ctx, field)
 			case "postedAt":
@@ -27074,6 +27391,10 @@ func (ec *executionContext) fieldContext_UnArchivePostPayload_post(ctx context.C
 				return ec.fieldContext_Post_club(ctx, field)
 			case "content":
 				return ec.fieldContext_Post_content(ctx, field)
+			case "description":
+				return ec.fieldContext_Post_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Post_descriptionTranslations(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Post_createdAt(ctx, field)
 			case "postedAt":
@@ -28278,6 +28599,10 @@ func (ec *executionContext) fieldContext_UpdatePostAudiencePayload_post(ctx cont
 				return ec.fieldContext_Post_club(ctx, field)
 			case "content":
 				return ec.fieldContext_Post_content(ctx, field)
+			case "description":
+				return ec.fieldContext_Post_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Post_descriptionTranslations(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Post_createdAt(ctx, field)
 			case "postedAt":
@@ -28351,6 +28676,10 @@ func (ec *executionContext) fieldContext_UpdatePostCategoriesPayload_post(ctx co
 				return ec.fieldContext_Post_club(ctx, field)
 			case "content":
 				return ec.fieldContext_Post_content(ctx, field)
+			case "description":
+				return ec.fieldContext_Post_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Post_descriptionTranslations(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Post_createdAt(ctx, field)
 			case "postedAt":
@@ -28424,6 +28753,10 @@ func (ec *executionContext) fieldContext_UpdatePostCharactersPayload_post(ctx co
 				return ec.fieldContext_Post_club(ctx, field)
 			case "content":
 				return ec.fieldContext_Post_content(ctx, field)
+			case "description":
+				return ec.fieldContext_Post_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Post_descriptionTranslations(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Post_createdAt(ctx, field)
 			case "postedAt":
@@ -28497,6 +28830,10 @@ func (ec *executionContext) fieldContext_UpdatePostClubPayload_post(ctx context.
 				return ec.fieldContext_Post_club(ctx, field)
 			case "content":
 				return ec.fieldContext_Post_content(ctx, field)
+			case "description":
+				return ec.fieldContext_Post_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Post_descriptionTranslations(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Post_createdAt(ctx, field)
 			case "postedAt":
@@ -28570,6 +28907,10 @@ func (ec *executionContext) fieldContext_UpdatePostContentIsSupporterOnlyPayload
 				return ec.fieldContext_Post_club(ctx, field)
 			case "content":
 				return ec.fieldContext_Post_content(ctx, field)
+			case "description":
+				return ec.fieldContext_Post_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Post_descriptionTranslations(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Post_createdAt(ctx, field)
 			case "postedAt":
@@ -28643,6 +28984,87 @@ func (ec *executionContext) fieldContext_UpdatePostContentOrderPayload_post(ctx 
 				return ec.fieldContext_Post_club(ctx, field)
 			case "content":
 				return ec.fieldContext_Post_content(ctx, field)
+			case "description":
+				return ec.fieldContext_Post_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Post_descriptionTranslations(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Post_createdAt(ctx, field)
+			case "postedAt":
+				return ec.fieldContext_Post_postedAt(ctx, field)
+			case "suggestedPosts":
+				return ec.fieldContext_Post_suggestedPosts(ctx, field)
+			case "audience":
+				return ec.fieldContext_Post_audience(ctx, field)
+			case "categories":
+				return ec.fieldContext_Post_categories(ctx, field)
+			case "characters":
+				return ec.fieldContext_Post_characters(ctx, field)
+			case "likes":
+				return ec.fieldContext_Post_likes(ctx, field)
+			case "viewerLiked":
+				return ec.fieldContext_Post_viewerLiked(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Post", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UpdatePostDescriptionPayload_post(ctx context.Context, field graphql.CollectedField, obj *types.UpdatePostDescriptionPayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UpdatePostDescriptionPayload_post(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Post, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Post)
+	fc.Result = res
+	return ec.marshalOPost2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPost(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UpdatePostDescriptionPayload_post(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UpdatePostDescriptionPayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Post_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Post_reference(ctx, field)
+			case "state":
+				return ec.fieldContext_Post_state(ctx, field)
+			case "supporterOnlyStatus":
+				return ec.fieldContext_Post_supporterOnlyStatus(ctx, field)
+			case "contributor":
+				return ec.fieldContext_Post_contributor(ctx, field)
+			case "club":
+				return ec.fieldContext_Post_club(ctx, field)
+			case "content":
+				return ec.fieldContext_Post_content(ctx, field)
+			case "description":
+				return ec.fieldContext_Post_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Post_descriptionTranslations(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Post_createdAt(ctx, field)
 			case "postedAt":
@@ -32283,6 +32705,45 @@ func (ec *executionContext) unmarshalInputUpdatePostContentOrderInput(ctx contex
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpdatePostDescriptionInput(ctx context.Context, obj interface{}) (types.UpdatePostDescriptionInput, error) {
+	var it types.UpdatePostDescriptionInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "description":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
+			it.Description, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "locale":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
+			it.Locale, err = ec.unmarshalNBCP472string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputUpdateSeriesThumbnailInput(ctx context.Context, obj interface{}) (types.UpdateSeriesThumbnailInput, error) {
 	var it types.UpdateSeriesThumbnailInput
 	asMap := map[string]interface{}{}
@@ -35418,6 +35879,12 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_updatePostCategories(ctx, field)
 			})
 
+		case "updatePostDescription":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updatePostDescription(ctx, field)
+			})
+
 		case "submitPost":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -35612,6 +36079,33 @@ func (ec *executionContext) _Post(ctx context.Context, sel ast.SelectionSet, obj
 		case "content":
 
 			out.Values[i] = ec._Post_content(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "description":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Post_description(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "descriptionTranslations":
+
+			out.Values[i] = ec._Post_descriptionTranslations(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
@@ -37745,6 +38239,31 @@ func (ec *executionContext) _UpdatePostContentOrderPayload(ctx context.Context, 
 		case "post":
 
 			out.Values[i] = ec._UpdatePostContentOrderPayload_post(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updatePostDescriptionPayloadImplementors = []string{"UpdatePostDescriptionPayload"}
+
+func (ec *executionContext) _UpdatePostDescriptionPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdatePostDescriptionPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updatePostDescriptionPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdatePostDescriptionPayload")
+		case "post":
+
+			out.Values[i] = ec._UpdatePostDescriptionPayload_post(ctx, field, obj)
 
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -40016,6 +40535,11 @@ func (ec *executionContext) unmarshalNUpdatePostContentOrderInput2overdollᚋapp
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNUpdatePostDescriptionInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostDescriptionInput(ctx context.Context, v interface{}) (types.UpdatePostDescriptionInput, error) {
+	res, err := ec.unmarshalInputUpdatePostDescriptionInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNUpdateSeriesThumbnailInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateSeriesThumbnailInput(ctx context.Context, v interface{}) (types.UpdateSeriesThumbnailInput, error) {
 	res, err := ec.unmarshalInputUpdateSeriesThumbnailInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -41190,6 +41714,13 @@ func (ec *executionContext) marshalOUpdatePostContentOrderPayload2ᚖoverdollᚋ
 		return graphql.Null
 	}
 	return ec._UpdatePostContentOrderPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdatePostDescriptionPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostDescriptionPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdatePostDescriptionPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdatePostDescriptionPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOUpdateSeriesThumbnailPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateSeriesThumbnailPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateSeriesThumbnailPayload) graphql.Marshaler {

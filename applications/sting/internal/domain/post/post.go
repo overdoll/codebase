@@ -1,11 +1,14 @@
 package post
 
 import (
+	"github.com/go-playground/validator/v10"
 	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/localization"
 	"overdoll/libraries/resource"
+	"regexp"
 	"time"
 
 	"overdoll/libraries/paging"
@@ -23,6 +26,8 @@ type Post struct {
 	id string
 
 	state State
+
+	description *localization.Translation
 
 	supporterOnlyStatus SupporterOnlyStatus
 
@@ -67,7 +72,7 @@ func NewPost(requester *principal.Principal, club *club.Club) (*Post, error) {
 	}, nil
 }
 
-func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int, contributorId string, contentResourceIds []string, contentResources []*resource.Resource, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt, updatedAt time.Time, postedAt *time.Time) *Post {
+func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int, contributorId string, contentResourceIds []string, contentResources []*resource.Resource, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt, updatedAt time.Time, postedAt *time.Time, description map[string]string) *Post {
 
 	ps, _ := StateFromString(state)
 	so, _ := SupporterOnlyStatusFromString(supporterOnlyStatus)
@@ -115,6 +120,7 @@ func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int,
 		state:               ps,
 		supporterOnlyStatus: so,
 		clubId:              clubId,
+		description:         localization.UnmarshalTranslationFromDatabase(description),
 		likes:               likes,
 		audienceId:          audienceId,
 		contributorId:       contributorId,
@@ -146,6 +152,10 @@ func (p *Post) ClubId() string {
 
 func (p *Post) Likes() int {
 	return p.likes
+}
+
+func (p *Post) Description() *localization.Translation {
+	return p.description
 }
 
 func (p *Post) State() State {
@@ -273,6 +283,25 @@ func (p *Post) UpdatePostPostedDate(date time.Time) error {
 	p.postedAt = &date
 	p.state = Submitting
 	p.update()
+	return nil
+}
+
+func (p *Post) UpdateDescription(requester *principal.Principal, description, locale string) error {
+
+	if err := p.CanUpdate(requester); err != nil {
+		return err
+	}
+
+	if err := validatePostDescription(description); err != nil {
+		return err
+	}
+
+	if err := p.description.UpdateTranslation(description, locale); err != nil {
+		return err
+	}
+
+	p.update()
+
 	return nil
 }
 
@@ -688,6 +717,26 @@ func validateExistingResource(current *resource.Resource, new *resource.Resource
 
 	if current.ID() != new.ID() {
 		return resource.ErrResourceNotPresent
+	}
+
+	return nil
+}
+
+// checking for links within a post description
+var aRx = regexp.MustCompile(`(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])`)
+
+func validatePostDescription(name string) error {
+
+	err := validator.New().Var(name, "required,max=280")
+
+	if err != nil {
+		return domainerror.NewValidation(err.Error())
+	}
+
+	mv := aRx.FindAllStringSubmatch(name, -1)
+
+	if len(mv) != 0 {
+		return domainerror.NewValidation("no links are allowed within a description")
 	}
 
 	return nil
