@@ -79,6 +79,7 @@ require (
 	github.com/gogo/status v1.1.0 // indirect
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
+	github.com/graph-gophers/dataloader/v7 v7.0.0 // indirect
 	github.com/hailocab/go-hostpool v0.0.0-20160125115350-e80d13ce29ed // indirect
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
@@ -120,7 +121,7 @@ require (
 	github.com/ugorji/go/codec v1.1.7 // indirect
 	github.com/ulikunitz/xz v0.5.10 // indirect
 	github.com/xi2/xz v0.0.0-20171230120015-48954b6210f8 // indirect
-	go.opentelemetry.io/otel v1.4.0 // indirect
+	go.opentelemetry.io/otel v1.6.3 // indirect
 	go.opentelemetry.io/otel/internal/metric v0.27.0 // indirect
 	go.opentelemetry.io/otel/metric v0.27.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect

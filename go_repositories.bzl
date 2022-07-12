@@ -544,8 +544,8 @@ def go_repositories():
         name = "com_github_fatih_color",
         build_file_proto_mode = "disable",
         importpath = "github.com/fatih/color",
-        sum = "h1:8LOYc1KYPPmyKMuN8QV2DNRWNbLo6LZ0iLs8+mlH53w=",
-        version = "v1.13.0",
+        sum = "h1:DkWD4oS2D8LGGgTQ6IvwJJXSL5Vp2ffcQg58nFV38Ys=",
+        version = "v1.7.0",
     )
     go_repository(
         name = "com_github_fatih_structs",
@@ -663,8 +663,8 @@ def go_repositories():
         name = "com_github_go_logr_logr",
         build_file_proto_mode = "disable",
         importpath = "github.com/go-logr/logr",
-        sum = "h1:ahHml/yUpnlb96Rp8HCvtYVPY8ZYpxq3g7UYchIYwbs=",
-        version = "v1.2.2",
+        sum = "h1:2DntVwHkVopvECVRSlL5PSo9eG+cAkDCuckLubN+rq0=",
+        version = "v1.2.3",
     )
     go_repository(
         name = "com_github_go_logr_stdr",
@@ -905,6 +905,13 @@ def go_repositories():
         sum = "h1:R+yjsbrNq1Mo3aPG+Z/EKYrXrXXUNJHOgbRt+U6jOug=",
         version = "v5.0.0+incompatible",
     )
+    go_repository(
+        name = "com_github_graph_gophers_dataloader_v7",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/graph-gophers/dataloader/v7",
+        sum = "h1:vD37Fk4Nm5P3lgJkUaGEUGlKglAB5wT0lfFgtM+zK7E=",
+        version = "v7.0.0",
+    )
 
     go_repository(
         name = "com_github_grpc_ecosystem_go_grpc_middleware",
@@ -978,13 +985,6 @@ def go_repositories():
         sum = "h1:dH3aiDG9Jvb5r5+bYHsikaOUIpcM0xvgMXVoDkXMzJM=",
         version = "v0.5.1",
     )
-    go_repository(
-        name = "com_github_hashicorp_go_hclog",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/hashicorp/go-hclog",
-        sum = "h1:La19f8d7WIlm4ogzNHB0JGqs5AUDAZ2UfCY4sJXcJdM=",
-        version = "v1.2.0",
-    )
 
     go_repository(
         name = "com_github_hashicorp_go_immutable_radix",
@@ -1014,13 +1014,6 @@ def go_repositories():
         importpath = "github.com/hashicorp/go.net",
         sum = "h1:sNCoNyDEvN1xa+X0baata4RdcpKwcMS6DH+xwfqPgjw=",
         version = "v0.0.1",
-    )
-    go_repository(
-        name = "com_github_hashicorp_go_plugin",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/hashicorp/go-plugin",
-        sum = "h1:NVdrSdFRt3SkZtNckJ6tog7gbpRrcbOjQi/rgF7JYWQ=",
-        version = "v1.4.4",
     )
 
     go_repository(
@@ -1096,13 +1089,6 @@ def go_repositories():
         sum = "h1:YZ7UKsJv+hKjqGVUUbtE3HNj79Eln2oQ75tniF6iPt0=",
         version = "v0.8.2",
     )
-    go_repository(
-        name = "com_github_hashicorp_yamux",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/hashicorp/yamux",
-        sum = "h1:xixZ2bWeofWV68J+x6AzmKuVM/JWCQwkWm6GW/MUR6I=",
-        version = "v0.0.0-20211028200310-0bc27b27de87",
-    )
 
     go_repository(
         name = "com_github_hpcloud_tail",
@@ -1161,14 +1147,6 @@ def go_repositories():
         importpath = "github.com/iris-contrib/schema",
         sum = "h1:10g/WnoRR+U+XXHWKBHeNy/+tZmM2kcAVGLOsz+yaDA=",
         version = "v0.0.1",
-    )
-
-    go_repository(
-        name = "com_github_jhump_protoreflect",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/jhump/protoreflect",
-        sum = "h1:h5jfMVslIg6l29nsMs0D8Wj17RDVdNYti0vDN/PZZoE=",
-        version = "v1.6.0",
     )
 
     go_repository(
@@ -1497,8 +1475,8 @@ def go_repositories():
         name = "com_github_mitchellh_go_testing_interface",
         build_file_proto_mode = "disable",
         importpath = "github.com/mitchellh/go-testing-interface",
-        sum = "h1:jrgshOhYAUVNMAJiKbEu7EqAwgJJ2JqpQmpLJOu07cU=",
-        version = "v1.14.1",
+        sum = "h1:fzU/JVNcaqHQEcVFAKeR41fkiLdIPrefOvVG1VZ96U0=",
+        version = "v1.0.0",
     )
 
     go_repository(
@@ -1599,13 +1577,6 @@ def go_repositories():
         sum = "h1:DQuhQpB1tVlglWS2hLQ5OV6B5r8aGxSrPc5Qo6uTN78=",
         version = "v1.4.4",
     )
-    go_repository(
-        name = "com_github_oklog_run",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/oklog/run",
-        sum = "h1:GEenZ1cK0+q0+wsJew9qUg/DyD8k3JzYsZAi5gYi2mA=",
-        version = "v1.1.0",
-    )
 
     go_repository(
         name = "com_github_oklog_ulid",
@@ -1701,6 +1672,13 @@ def go_repositories():
         importpath = "github.com/pascaldekloe/goe",
         sum = "h1:Lgl0gzECD8GnQ5QCWA8o6BtfL6mDH5rQgM4/fX3avOs=",
         version = "v0.0.0-20180627143212-57f6aae5913c",
+    )
+    go_repository(
+        name = "com_github_patrickmn_go_cache",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/patrickmn/go-cache",
+        sum = "h1:HRMgzkcYKYpi3C8ajMPV8OFXaaRUnok+kx1WdO15EQc=",
+        version = "v2.1.0+incompatible",
     )
 
     go_repository(
@@ -2472,8 +2450,8 @@ def go_repositories():
         name = "io_opentelemetry_go_otel",
         build_file_proto_mode = "disable",
         importpath = "go.opentelemetry.io/otel",
-        sum = "h1:7ESuKPq6zpjRaY5nvVDGiuwK7VAJ8MwkKnmNJ9whNZ4=",
-        version = "v1.4.0",
+        sum = "h1:FLOfo8f9JzFVFVyU+MSRJc2HdEAXQgm7pIv2uFKRSZE=",
+        version = "v1.6.3",
     )
 
     go_repository(
@@ -2503,8 +2481,8 @@ def go_repositories():
         name = "io_opentelemetry_go_otel_trace",
         build_file_proto_mode = "disable",
         importpath = "go.opentelemetry.io/otel/trace",
-        sum = "h1:4OOUrPZdVFQkbzl/JSdvGCWIdw5ONXXxzHlaLlWppmo=",
-        version = "v1.4.0",
+        sum = "h1:IqN4L+5b0mPNjdXIiZ90Ni4Bl5BRkDQywePLWemd9bc=",
+        version = "v1.6.3",
     )
     go_repository(
         name = "io_opentelemetry_go_proto_otlp",

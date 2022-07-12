@@ -2,69 +2,50 @@ package dataloader
 
 import (
 	"context"
-	"github.com/graph-gophers/dataloader"
+	"github.com/graph-gophers/dataloader/v7"
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/query"
 	"overdoll/applications/sting/internal/ports/graphql/types"
-	"overdoll/libraries/errors/apperror"
+	"overdoll/libraries/graphql"
 	"time"
 )
 
-func clubsByIds(app *app.Application) *dataloader.Loader {
-	return dataloader.NewBatchedLoader(
-		func(ctx context.Context, keys dataloader.Keys) []*dataloader.Result {
-			// create a map for remembering the order of keys passed in
-			keyOrder := make(map[string]int, len(keys))
+func clubsByIds(app *app.Application) *dataloader.Loader[string, *types.Club] {
+	return dataloader.NewBatchedLoader[string, *types.Club](
+		func(ctx context.Context, keys []string) []*dataloader.Result[*types.Club] {
+			return graphql.DataloaderHelper[*types.Club](
+				"club",
+				func(keys []string) ([]graphql.Mapping, error) {
+					results, err := app.Queries.ClubsByIds.Handle(ctx, query.ClubsByIds{
+						ClubIds: keys,
+					})
 
-			// collect the keys to search for
-			var keyIds []string
-			for ix, key := range keys {
-				keyIds = append(keyIds, key.String())
-				keyOrder[key.String()] = ix
-			}
+					if err != nil {
+						return nil, err
+					}
 
-			// construct an output array of dataloader results
-			results := make([]*dataloader.Result, len(keys))
+					var mapping []graphql.Mapping
 
-			res, err := app.Queries.ClubsByIds.Handle(ctx, query.ClubsByIds{
-				ClubIds: keyIds,
-			})
+					for _, result := range results {
+						mapping = append(mapping, graphql.Mapping{
+							Data: types.MarshalClubToGraphQL(ctx, result),
+							Id:   result.ID(),
+						})
+					}
 
-			if err != nil {
-				for _, ix := range keyOrder {
-					results[ix] = &dataloader.Result{Data: nil, Error: err}
-				}
-				return results
-			}
-
-			// enumerate records, put into output
-			for _, record := range res {
-				ix, ok := keyOrder[record.ID()]
-				// if found, remove from index lookup map so we know elements were found
-				if ok {
-					results[ix] = &dataloader.Result{Data: types.MarshalClubToGraphQL(ctx, record), Error: nil}
-					delete(keyOrder, record.ID())
-				}
-			}
-
-			// fill array positions with errors where not found in DB
-			for v, ix := range keyOrder {
-				results[ix] = &dataloader.Result{Data: nil, Error: apperror.NewNotFoundError("club", v)}
-			}
-
-			// return results
-			return results
-		}, dataloader.WithWait(time.Millisecond*1))
+					return mapping, nil
+				}, ctx, keys)
+		}, dataloader.WithWait[string, *types.Club](time.Millisecond*5))
 }
 
 func (i *DataLoader) GetClubById(ctx context.Context, id string) (*types.Club, error) {
 
-	thunk := i.clubsByIds.Load(ctx, dataloader.StringKey(id))
+	thunk := i.clubsByIds.Load(ctx, id)
 	result, err := thunk()
 
 	if err != nil {
 		return nil, err
 	}
 
-	return result.(*types.Club), nil
+	return result, nil
 }

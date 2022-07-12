@@ -995,6 +995,7 @@ func MarshalSearchToGraphQLConnection(ctx context.Context, results []interface{}
 }
 
 func MarshalClubsToGraphQLConnection(ctx context.Context, results []*club.Club, cursor *paging.Cursor) *ClubConnection {
+
 	var clubs []*ClubEdge
 
 	conn := &ClubConnection{
