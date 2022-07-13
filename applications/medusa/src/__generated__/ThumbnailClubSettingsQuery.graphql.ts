@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<323c60ff1be9927c549588a20b53c8fa>>
- * @relayHash adaa5ba2bb898437d46c550c63bfc162
+ * @generated SignedSource<<e0b893c77b0f75abf88226f7fd64d518>>
+ * @relayHash 3bff3977b5f595c5aa2175fd3cd4887b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID adaa5ba2bb898437d46c550c63bfc162
+// @relayRequestID 3bff3977b5f595c5aa2175fd3cd4887b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -22,7 +22,7 @@ export type ThumbnailClubSettingsQuery$data = {
     readonly thumbnail: {
       readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
     } | null;
-    readonly " $fragmentSpreads": FragmentRefs<"ChangeClubThumbnailFormFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ChangeClubThumbnailUploadFragment">;
   } | null;
 };
 export type ThumbnailClubSettingsQuery = {
@@ -94,7 +94,7 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "ChangeClubThumbnailFormFragment"
+            "name": "ChangeClubThumbnailUploadFragment"
           }
         ],
         "storageKey": null
@@ -195,7 +195,7 @@ return {
     ]
   },
   "params": {
-    "id": "adaa5ba2bb898437d46c550c63bfc162",
+    "id": "3bff3977b5f595c5aa2175fd3cd4887b",
     "metadata": {},
     "name": "ThumbnailClubSettingsQuery",
     "operationKind": "query",
@@ -204,6 +204,6 @@ return {
 };
 })();
 
-(node as any).hash = "df6da13552dc36153af2b8d70f6d6c12";
+(node as any).hash = "a7ef762a60a20596a48d7bda5f566cce";
 
 export default node;

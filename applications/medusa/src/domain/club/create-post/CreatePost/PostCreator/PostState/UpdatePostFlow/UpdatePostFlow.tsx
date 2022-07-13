@@ -27,6 +27,7 @@ const Fragment = graphql`
       viewerCanViewSupporterOnlyContent
       resource {
         processed
+        failed
       }
     }
     audience {

@@ -1,7 +1,7 @@
 import type { ProcessContentFragment$key } from '@//:artifacts/ProcessContentFragment.graphql'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
-import RefreshProcessContent from './RefreshProcessContent/RefreshProcessContent'
+import RefreshProcessContent, { isFailed } from './RefreshProcessContent/RefreshProcessContent'
 import { Suspense, useEffect, useRef } from 'react'
 import { Collapse } from '@chakra-ui/react'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
@@ -23,6 +23,7 @@ const Fragment = graphql`
     content {
       resource {
         processed
+        failed
       }
     }
   }
@@ -46,9 +47,11 @@ export default function ProcessContent ({
     }
   })
 
+  const contentFailed = isFailed(data.content)
+
   useEffect(() => {
     let refreshTime = 1000
-    if (state.isProcessing === false) {
+    if (state.isProcessing === false || contentFailed) {
       if (timeoutRef.current != null) {
         clearTimeout(timeoutRef.current)
         timeoutRef.current = null
@@ -56,7 +59,6 @@ export default function ProcessContent ({
       return
     }
 
-    if (timeoutRef.current != null) return
     const refreshLoop = (): void => {
       loadQuery()
 
@@ -65,10 +67,10 @@ export default function ProcessContent ({
     }
 
     timeoutRef.current = setTimeout(refreshLoop, refreshTime)
-  }, [state.isProcessing])
+  }, [state.isProcessing, contentFailed])
 
   return (
-    <Collapse in={state.isProcessing === true}>
+    <Collapse style={{ overflow: 'visible' }} unmountOnExit in={state.isProcessing === true || contentFailed}>
       <QueryErrorBoundary loadQuery={loadQuery}>
         <Suspense fallback={<></>}>
           <RefreshProcessContent searchArguments={searchArguments} />

@@ -92,7 +92,7 @@ export default function UpdateCharacterButton ({
 
   if (state.isProcessing === true) {
     return (
-      <Button isLoading size='lg'>
+      <Button isDisabled size='lg'>
         <Trans>
           Processing
         </Trans>

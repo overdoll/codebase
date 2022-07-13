@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c41743c4b5481e63afe291abf8acf57c>>
+ * @generated SignedSource<<c6a5de70c624908af84002483a95492e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,7 +26,6 @@ export type ArrangeUploadsFragment$data = {
     readonly " $fragmentSpreads": FragmentRefs<"DraggableContentFragment">;
   }>;
   readonly id: string;
-  readonly reference: string;
   readonly " $fragmentSpreads": FragmentRefs<"ArrangeButtonFragment">;
   readonly " $fragmentType": "ArrangeUploadsFragment";
 };
@@ -50,13 +49,6 @@ return {
   "name": "ArrangeUploadsFragment",
   "selections": [
     (v0/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "reference",
-      "storageKey": null
-    },
     {
       "alias": null,
       "args": null,
@@ -140,6 +132,6 @@ return {
 };
 })();
 
-(node as any).hash = "46ab7db1598a946d0c96501416c9aadc";
+(node as any).hash = "a4d7f8a2c88f3abf7dfe5d478bd9a3d2";
 
 export default node;

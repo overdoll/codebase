@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<04912687f769492cf1f9006289e42922>>
+ * @generated SignedSource<<39c70874be64486df83144f5263324ce>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type ProcessContentFragment$data = {
   readonly content: ReadonlyArray<{
     readonly resource: {
+      readonly failed: boolean;
       readonly processed: boolean;
     };
   }>;
@@ -59,6 +60,13 @@ const node: ReaderFragment = {
               "kind": "ScalarField",
               "name": "processed",
               "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "failed",
+              "storageKey": null
             }
           ],
           "storageKey": null
@@ -71,6 +79,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "5349f96bdfc0b1b4fc7586e81fc35d8d";
+(node as any).hash = "1bb103806ac247fca106c3f7f6c9b1b8";
 
 export default node;

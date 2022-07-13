@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<966c28581edd908dd1a3bf7d17c0ae76>>
+ * @generated SignedSource<<f39889653142d1d66990d9a925997786>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -27,6 +27,7 @@ export type UpdatePostFlowFragment$data = {
     readonly id: string;
     readonly isSupporterOnly: boolean;
     readonly resource: {
+      readonly failed: boolean;
       readonly processed: boolean;
     };
     readonly viewerCanViewSupporterOnlyContent: boolean;
@@ -99,6 +100,13 @@ return {
               "args": null,
               "kind": "ScalarField",
               "name": "processed",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "failed",
               "storageKey": null
             }
           ],
@@ -177,6 +185,6 @@ return {
 };
 })();
 
-(node as any).hash = "0a466d8e3adce7b72b70f7bbbb4f2fd3";
+(node as any).hash = "c4fd6f4435d749aaec73aa5aeb7d5400";
 
 export default node;

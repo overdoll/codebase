@@ -20,7 +20,6 @@ interface Props {
 const ArrangeUploadsFragmentGQL = graphql`
   fragment ArrangeUploadsFragment on Post {
     id
-    reference
     club {
       canCreateSupporterOnlyPosts
     }
@@ -39,48 +38,6 @@ const ArrangeUploadsFragmentGQL = graphql`
   }
 `
 
-const ArrangeUploadsMutationGQL = graphql`
-  mutation ArrangeUploadsMutation($input: RemovePostContentInput!) {
-    removePostContent(input: $input) {
-      post {
-        id
-        reference
-        content {
-          resource {
-            id
-            type
-            processed
-            urls {
-              url
-              mimeType
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
-const SupporterUploadsMutationGQL = graphql`
-  mutation ArrangeUploadsSupporterMutation($input: UpdatePostContentIsSupporterOnlyInput!) {
-    updatePostContentIsSupporterOnly(input: $input) {
-      post {
-        id
-        reference
-        content {
-          viewerCanViewSupporterOnlyContent
-          isSupporterOnly
-          resource {
-            id
-          }
-        }
-      }
-    }
-  }
-`
-
-// TODO find an alternative to the draggable library and replace as it doesn't support react 18
-
 const reorder = (
   list: ArrangeUploadsFragment$data['content'],
   startIndex: number,
@@ -98,10 +55,6 @@ export default function ArrangeUploads ({
 }: Props): JSX.Element {
   const data = useFragment(ArrangeUploadsFragmentGQL, query)
 
-  const [removeContent, isRemovingContent] = useMutation(ArrangeUploadsMutationGQL)
-  const [supporterContent, isSupportingContent] = useMutation(SupporterUploadsMutationGQL)
-
-  const uppy = useUppyContext()
   const {
     state,
     dispatch
@@ -110,44 +63,6 @@ export default function ArrangeUploads ({
   const [displayData, setDisplayData] = useState(data.content)
 
   const notify = useToast()
-
-  const onRemoveContent = (id: string, index): void => {
-    removeContent({
-      variables: {
-        input: {
-          id: data.id,
-          contentIds: [id]
-        }
-      },
-      onCompleted () {
-        uppy.removeFile(`${id}_${index}`)
-      },
-      onError () {
-        notify({
-          status: 'error',
-          title: t`Error removing content ${id}`
-        })
-      }
-    })
-  }
-
-  const onSupporterContent = (id: string, isSupporterOnly: boolean): void => {
-    supporterContent({
-      variables: {
-        input: {
-          id: data.id,
-          contentIds: [id],
-          isSupporterOnly: isSupporterOnly
-        }
-      },
-      onError () {
-        notify({
-          status: 'error',
-          title: t`Error marking content ${id} as supporter only`
-        })
-      }
-    })
-  }
 
   const onDragEnd = (result): void => {
     // dropped outside the list
@@ -162,16 +77,6 @@ export default function ArrangeUploads ({
     )
 
     setDisplayData(content)
-  }
-
-  const getHeight = (): number => {
-    if (displayData.length <= 1) {
-      return 150
-    } else if (displayData.length < 6) {
-      return 100
-    } else {
-      return 75
-    }
   }
 
   useEffect(() => {
@@ -190,10 +95,6 @@ export default function ArrangeUploads ({
     }
   }, [data.content, state.isRearranging])
 
-  useEffect(() => {
-    console.log(uppy.getFiles())
-  }, [uppy])
-
   if (displayData.length < 1) {
     return (
       <></>
@@ -202,7 +103,7 @@ export default function ArrangeUploads ({
 
   return (
     <Stack spacing={2}>
-      <ArrangeButton isDisabled={isRemovingContent || isSupportingContent} query={data} />
+      <ArrangeButton query={data} />
       <Stack
         spacing={2}
       >

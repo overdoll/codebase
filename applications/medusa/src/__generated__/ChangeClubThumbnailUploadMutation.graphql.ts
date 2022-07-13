@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f04ffd5e9d50dc96dff2b5ee2fae9905>>
- * @relayHash 2e5736441f273e01d7cbb8ea374de26b
+ * @generated SignedSource<<d923d6dd91b6bbf2930ab26f530776fa>>
+ * @relayHash f0070a9c6a0a7c45764ea9ae3db13767
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,41 +9,40 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 2e5736441f273e01d7cbb8ea374de26b
+// @relayRequestID f0070a9c6a0a7c45764ea9ae3db13767
 
-import { ConcreteRequest, Query } from 'relay-runtime';
-export type RefreshProcessContentQuery$variables = {
-  reference: string;
+import { ConcreteRequest, Mutation } from 'relay-runtime';
+import { FragmentRefs } from "relay-runtime";
+export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
+export type UpdateClubThumbnailInput = {
+  id: string;
+  thumbnail: string;
 };
-export type RefreshProcessContentQuery$data = {
-  readonly post: {
-    readonly content: ReadonlyArray<{
+export type ChangeClubThumbnailUploadMutation$variables = {
+  input: UpdateClubThumbnailInput;
+};
+export type ChangeClubThumbnailUploadMutation$data = {
+  readonly updateClubThumbnail: {
+    readonly club: {
       readonly id: string;
-      readonly isSupporterOnly: boolean;
-      readonly resource: {
-        readonly failed: boolean;
+      readonly name: string;
+      readonly thumbnail: {
         readonly height: number;
         readonly preview: string;
-        readonly processed: boolean;
+        readonly type: ResourceType;
         readonly urls: ReadonlyArray<{
           readonly mimeType: string;
           readonly url: string;
         }>;
-        readonly videoDuration: number;
-        readonly videoThumbnail: {
-          readonly url: string;
-        } | null;
         readonly width: number;
-      };
-      readonly viewerCanViewSupporterOnlyContent: boolean;
-    }>;
-    readonly id: string;
-    readonly reference: string;
+        readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment" | "ResourceItemFragment">;
+      } | null;
+    } | null;
   } | null;
 };
-export type RefreshProcessContentQuery = {
-  response: RefreshProcessContentQuery$data;
-  variables: RefreshProcessContentQuery$variables;
+export type ChangeClubThumbnailUploadMutation = {
+  response: ChangeClubThumbnailUploadMutation$data;
+  variables: ChangeClubThumbnailUploadMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -51,14 +50,14 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "reference"
+    "name": "input"
   }
 ],
 v1 = [
   {
     "kind": "Variable",
-    "name": "reference",
-    "variableName": "reference"
+    "name": "input",
+    "variableName": "input"
   }
 ],
 v2 = {
@@ -72,64 +71,24 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "reference",
+  "name": "name",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "viewerCanViewSupporterOnlyContent",
+  "name": "type",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "isSupporterOnly",
-  "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "failed",
-  "storageKey": null
-},
-v7 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "processed",
-  "storageKey": null
-},
-v8 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "videoDuration",
-  "storageKey": null
-},
-v9 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "url",
   "storageKey": null
 },
-v10 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "ResourceUrl",
-  "kind": "LinkedField",
-  "name": "videoThumbnail",
-  "plural": false,
-  "selections": [
-    (v9/*: any*/)
-  ],
-  "storageKey": null
-},
-v11 = {
+v6 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -137,36 +96,36 @@ v11 = {
   "name": "urls",
   "plural": true,
   "selections": [
+    (v5/*: any*/),
     {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
       "name": "mimeType",
       "storageKey": null
-    },
-    (v9/*: any*/)
+    }
   ],
   "storageKey": null
 },
-v12 = {
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "preview",
+  "storageKey": null
+},
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "width",
   "storageKey": null
 },
-v13 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "height",
-  "storageKey": null
-},
-v14 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "preview",
   "storageKey": null
 };
 return {
@@ -174,45 +133,49 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "RefreshProcessContentQuery",
+    "name": "ChangeClubThumbnailUploadMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "Post",
+        "concreteType": "UpdateClubThumbnailPayload",
         "kind": "LinkedField",
-        "name": "post",
+        "name": "updateClubThumbnail",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
-          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
-            "concreteType": "PostContent",
+            "concreteType": "Club",
             "kind": "LinkedField",
-            "name": "content",
-            "plural": true,
+            "name": "club",
+            "plural": false,
             "selections": [
               (v2/*: any*/),
-              (v4/*: any*/),
-              (v5/*: any*/),
+              (v3/*: any*/),
               {
                 "alias": null,
                 "args": null,
                 "concreteType": "Resource",
                 "kind": "LinkedField",
-                "name": "resource",
+                "name": "thumbnail",
                 "plural": false,
                 "selections": [
+                  (v4/*: any*/),
                   (v6/*: any*/),
                   (v7/*: any*/),
                   (v8/*: any*/),
-                  (v10/*: any*/),
-                  (v11/*: any*/),
-                  (v12/*: any*/),
-                  (v13/*: any*/),
-                  (v14/*: any*/)
+                  (v9/*: any*/),
+                  {
+                    "args": null,
+                    "kind": "FragmentSpread",
+                    "name": "ResourceIconFragment"
+                  },
+                  {
+                    "args": null,
+                    "kind": "FragmentSpread",
+                    "name": "ResourceItemFragment"
+                  }
                 ],
                 "storageKey": null
               }
@@ -223,53 +186,66 @@ return {
         "storageKey": null
       }
     ],
-    "type": "Query",
+    "type": "Mutation",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "RefreshProcessContentQuery",
+    "name": "ChangeClubThumbnailUploadMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "Post",
+        "concreteType": "UpdateClubThumbnailPayload",
         "kind": "LinkedField",
-        "name": "post",
+        "name": "updateClubThumbnail",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
-          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
-            "concreteType": "PostContent",
+            "concreteType": "Club",
             "kind": "LinkedField",
-            "name": "content",
-            "plural": true,
+            "name": "club",
+            "plural": false,
             "selections": [
               (v2/*: any*/),
-              (v4/*: any*/),
-              (v5/*: any*/),
+              (v3/*: any*/),
               {
                 "alias": null,
                 "args": null,
                 "concreteType": "Resource",
                 "kind": "LinkedField",
-                "name": "resource",
+                "name": "thumbnail",
                 "plural": false,
                 "selections": [
+                  (v4/*: any*/),
                   (v6/*: any*/),
                   (v7/*: any*/),
                   (v8/*: any*/),
-                  (v10/*: any*/),
-                  (v11/*: any*/),
-                  (v12/*: any*/),
-                  (v13/*: any*/),
-                  (v14/*: any*/),
-                  (v2/*: any*/)
+                  (v9/*: any*/),
+                  (v2/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "ResourceUrl",
+                    "kind": "LinkedField",
+                    "name": "videoThumbnail",
+                    "plural": false,
+                    "selections": [
+                      (v5/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "processed",
+                    "storageKey": null
+                  }
                 ],
                 "storageKey": null
               }
@@ -282,15 +258,15 @@ return {
     ]
   },
   "params": {
-    "id": "2e5736441f273e01d7cbb8ea374de26b",
+    "id": "f0070a9c6a0a7c45764ea9ae3db13767",
     "metadata": {},
-    "name": "RefreshProcessContentQuery",
-    "operationKind": "query",
+    "name": "ChangeClubThumbnailUploadMutation",
+    "operationKind": "mutation",
     "text": null
   }
 };
 })();
 
-(node as any).hash = "d83cdd4659909931eb32f5094f3053a5";
+(node as any).hash = "38449f3351b1e84876fcef6d99578d23";
 
 export default node;

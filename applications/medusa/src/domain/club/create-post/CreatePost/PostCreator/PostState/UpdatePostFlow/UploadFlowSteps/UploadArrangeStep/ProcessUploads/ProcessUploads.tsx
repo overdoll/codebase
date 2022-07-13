@@ -51,6 +51,7 @@ const ProcessUploadsMutationGQL = graphql`
               mimeType
             }
             preview
+            failed
             width
             height
           }
@@ -123,7 +124,6 @@ export default function ProcessUploads ({
     if (Object.values(state.files).length < 1 && Object.keys(state.urls).length < 1) {
       uppy.cancelAll()
       data.content.forEach((file, index) => {
-        uppy.removeFile(file.resource.id)
         const uppyFileId = uppy.addFile({
           id: `${file.resource.id}_${index}`,
           name: `${file.resource.id}_${index}`,

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d95eb1167abcc2a23fb4d805e56e7d3b>>
- * @relayHash 0f10b72e384432782bbd108cfb87ec1b
+ * @generated SignedSource<<b6dfa2e8a5192a8a433a4e23a1066baf>>
+ * @relayHash c44a8e8eb121551f8c70212a6a86613f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,38 +9,35 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0f10b72e384432782bbd108cfb87ec1b
+// @relayRequestID c44a8e8eb121551f8c70212a6a86613f
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
-export type UpdateClubThumbnailInput = {
+export type UpdatePostContentIsSupporterOnlyInput = {
+  contentIds: ReadonlyArray<string>;
   id: string;
-  thumbnail: string;
+  isSupporterOnly: boolean;
 };
-export type ChangeClubThumbnailFormMutation$variables = {
-  input: UpdateClubThumbnailInput;
+export type SupporterPostContentUploadButtonMutation$variables = {
+  input: UpdatePostContentIsSupporterOnlyInput;
 };
-export type ChangeClubThumbnailFormMutation$data = {
-  readonly updateClubThumbnail: {
-    readonly club: {
+export type SupporterPostContentUploadButtonMutation$data = {
+  readonly updatePostContentIsSupporterOnly: {
+    readonly post: {
+      readonly content: ReadonlyArray<{
+        readonly isSupporterOnly: boolean;
+        readonly resource: {
+          readonly id: string;
+        };
+        readonly viewerCanViewSupporterOnlyContent: boolean;
+      }>;
       readonly id: string;
-      readonly name: string;
-      readonly thumbnail: {
-        readonly height: number;
-        readonly preview: string;
-        readonly type: ResourceType;
-        readonly urls: ReadonlyArray<{
-          readonly mimeType: string;
-          readonly url: string;
-        }>;
-        readonly width: number;
-      } | null;
+      readonly reference: string;
     } | null;
   } | null;
 };
-export type ChangeClubThumbnailFormMutation = {
-  response: ChangeClubThumbnailFormMutation$data;
-  variables: ChangeClubThumbnailFormMutation$variables;
+export type SupporterPostContentUploadButtonMutation = {
+  response: SupporterPostContentUploadButtonMutation$data;
+  variables: SupporterPostContentUploadButtonMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -69,60 +66,33 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "reference",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "type",
+  "name": "viewerCanViewSupporterOnlyContent",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
-  "concreteType": "ResourceUrl",
-  "kind": "LinkedField",
-  "name": "urls",
-  "plural": true,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "url",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "mimeType",
-      "storageKey": null
-    }
-  ],
+  "kind": "ScalarField",
+  "name": "isSupporterOnly",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "preview",
-  "storageKey": null
-},
-v7 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "width",
-  "storageKey": null
-},
-v8 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "height",
+  "concreteType": "Resource",
+  "kind": "LinkedField",
+  "name": "resource",
+  "plural": false,
+  "selections": [
+    (v2/*: any*/)
+  ],
   "storageKey": null
 };
 return {
@@ -130,22 +100,22 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "ChangeClubThumbnailFormMutation",
+    "name": "SupporterPostContentUploadButtonMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "UpdateClubThumbnailPayload",
+        "concreteType": "UpdatePostContentIsSupporterOnlyPayload",
         "kind": "LinkedField",
-        "name": "updateClubThumbnail",
+        "name": "updatePostContentIsSupporterOnly",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "Club",
+            "concreteType": "Post",
             "kind": "LinkedField",
-            "name": "club",
+            "name": "post",
             "plural": false,
             "selections": [
               (v2/*: any*/),
@@ -153,16 +123,14 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "Resource",
+                "concreteType": "PostContent",
                 "kind": "LinkedField",
-                "name": "thumbnail",
-                "plural": false,
+                "name": "content",
+                "plural": true,
                 "selections": [
                   (v4/*: any*/),
                   (v5/*: any*/),
-                  (v6/*: any*/),
-                  (v7/*: any*/),
-                  (v8/*: any*/)
+                  (v6/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -180,22 +148,22 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "ChangeClubThumbnailFormMutation",
+    "name": "SupporterPostContentUploadButtonMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "UpdateClubThumbnailPayload",
+        "concreteType": "UpdatePostContentIsSupporterOnlyPayload",
         "kind": "LinkedField",
-        "name": "updateClubThumbnail",
+        "name": "updatePostContentIsSupporterOnly",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "Club",
+            "concreteType": "Post",
             "kind": "LinkedField",
-            "name": "club",
+            "name": "post",
             "plural": false,
             "selections": [
               (v2/*: any*/),
@@ -203,16 +171,14 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "Resource",
+                "concreteType": "PostContent",
                 "kind": "LinkedField",
-                "name": "thumbnail",
-                "plural": false,
+                "name": "content",
+                "plural": true,
                 "selections": [
                   (v4/*: any*/),
                   (v5/*: any*/),
                   (v6/*: any*/),
-                  (v7/*: any*/),
-                  (v8/*: any*/),
                   (v2/*: any*/)
                 ],
                 "storageKey": null
@@ -226,15 +192,15 @@ return {
     ]
   },
   "params": {
-    "id": "0f10b72e384432782bbd108cfb87ec1b",
+    "id": "c44a8e8eb121551f8c70212a6a86613f",
     "metadata": {},
-    "name": "ChangeClubThumbnailFormMutation",
+    "name": "SupporterPostContentUploadButtonMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
 
-(node as any).hash = "da6d148f7afd1a75a733efa12b41f443";
+(node as any).hash = "5c353cf023be3151aa458616a6987bbb";
 
 export default node;
