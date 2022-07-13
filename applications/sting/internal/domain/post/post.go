@@ -399,12 +399,24 @@ func (p *Post) AddContentRequest(requester *principal.Principal, resources []*re
 			return errors.New("only private content is allowed for posts")
 		}
 
-		newContent = append(newContent, &Content{
-			resource:        contentId,
-			resourceHidden:  nil,
-			isSupporterOnly: false,
-			post:            p,
-		})
+		found := false
+
+		// only add content if the resource ID is not identical, otherwise we could get issues, i.e. adding the same content twice
+		for _, current := range p.content {
+			if current.resource.ID() == contentId.ID() {
+				found = true
+				break
+			}
+		}
+
+		if !found {
+			newContent = append(newContent, &Content{
+				resource:        contentId,
+				resourceHidden:  nil,
+				isSupporterOnly: false,
+				post:            p,
+			})
+		}
 	}
 
 	p.content = append(p.content, newContent...)

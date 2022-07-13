@@ -231,8 +231,10 @@ type Character struct {
 	TotalLikes int `json:"totalLikes"`
 	// Total amount of posts.
 	TotalPosts int `json:"totalPosts"`
-	// The series linked to this character.
+	// The series linked to this character, if it's a series character.
 	Series *Series `json:"series"`
+	// The club linked to this character, if it was created by a club.
+	Club *Club `json:"club"`
 	// Posts belonging to this character
 	Posts *PostConnection `json:"posts"`
 }
@@ -302,6 +304,14 @@ type Club struct {
 	MembersCount int `json:"membersCount"`
 	// Club members.
 	Members *ClubMemberConnection `json:"members"`
+	// Whether or not characters are enabled for this club.
+	CharactersEnabled bool `json:"charactersEnabled"`
+	// The amount of characters that this club can create.
+	CharactersLimit int `json:"charactersLimit"`
+	// The total amount of characters that this club has created.
+	CharactersCount int `json:"charactersCount"`
+	// Get or search all characters for this club.
+	Characters *CharacterConnection `json:"characters"`
 	// Posts belonging to this club
 	Posts *PostConnection `json:"posts"`
 }
@@ -445,7 +455,9 @@ type CreateCategoryPayload struct {
 // Create a new character.
 type CreateCharacterInput struct {
 	// The chosen series for the character.
-	SeriesID relay.ID `json:"seriesId"`
+	SeriesID *relay.ID `json:"seriesId"`
+	// The chosen club for the character.
+	ClubID *relay.ID `json:"clubId"`
 	// The chosen slug for the character.
 	//
 	// Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
@@ -576,6 +588,18 @@ type DeletePostPayload struct {
 	PostID *relay.ID `json:"postId"`
 }
 
+// Disable club characters.
+type DisableClubCharactersInput struct {
+	// The club to disable characters for.
+	ClubID relay.ID `json:"clubId"`
+}
+
+// Disable club characters payload.
+type DisableClubCharactersPayload struct {
+	// The new club after disabling club characters.
+	Club *Club `json:"club"`
+}
+
 // Disable club supporter-only posts.
 type DisableClubSupporterOnlyPostsInput struct {
 	// The club to disable supporter-only posts for.
@@ -585,6 +609,22 @@ type DisableClubSupporterOnlyPostsInput struct {
 // Disable club supporter-only posts payload.
 type DisableClubSupporterOnlyPostsPayload struct {
 	// The new club after supporter-only posts are disabled.
+	Club *Club `json:"club"`
+}
+
+// Enable club characters.
+type EnableClubCharactersInput struct {
+	// The club to enable club characters for.
+	ClubID relay.ID `json:"clubId"`
+	// The amount of characters the club will be able to create.
+	//
+	// Validation: Limit to 200.
+	CharactersLimit int `json:"charactersLimit"`
+}
+
+// Enable club characters payload.
+type EnableClubCharactersPayload struct {
+	// The new club after enabling club characters.
 	Club *Club `json:"club"`
 }
 
@@ -1088,6 +1128,22 @@ type UpdateCharacterThumbnailInput struct {
 type UpdateCharacterThumbnailPayload struct {
 	// The character after update
 	Character *Character `json:"character"`
+}
+
+// Update club characters limit.
+type UpdateClubCharactersLimitInput struct {
+	// The club to update club characters limit for.
+	ClubID relay.ID `json:"clubId"`
+	// The amount of characters the club will be able to create.
+	//
+	// Validation: Limit to 200.
+	CharactersLimit int `json:"charactersLimit"`
+}
+
+// Update club characters limit payload.
+type UpdateClubCharactersLimitPayload struct {
+	// The club after updating the characters limit.
+	Club *Club `json:"club"`
 }
 
 // Update club name.

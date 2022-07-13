@@ -9,12 +9,14 @@ import (
 )
 
 type SearchCharacters struct {
-	Principal  *principal.Principal
-	Cursor     *paging.Cursor
-	Slugs      []string
-	SortBy     string
-	Name       *string
-	SeriesSlug *string
+	Principal      *principal.Principal
+	Cursor         *paging.Cursor
+	Slugs          []string
+	SortBy         string
+	Name           *string
+	SeriesSlug     *string
+	ClubSlug       *string
+	ClubCharacters *bool
 }
 
 type SearchCharactersHandler struct {
@@ -32,6 +34,8 @@ func (h SearchCharactersHandler) Handle(ctx context.Context, query SearchCharact
 		query.SortBy,
 		query.Slugs,
 		query.SeriesSlug,
+		query.ClubSlug,
+		query.ClubCharacters,
 	)
 
 	if err != nil {

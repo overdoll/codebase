@@ -381,15 +381,27 @@ func MarshalCharacterToGraphQL(ctx context.Context, result *post.Character) *Cha
 			Text: val.Data(),
 		})
 	}
+	var series *Series
+
+	if result.Series() != nil {
+		series = MarshalSeriesToGraphQL(ctx, result.Series())
+	}
+
+	var clb *Club
+
+	if result.ClubId() != nil {
+		clb = &Club{ID: relay.NewID(Club{}, *result.ClubId())}
+	}
 
 	return &Character{
 		ID:               relay.NewID(Character{}, result.ID()),
 		Reference:        result.ID(),
 		Slug:             result.Slug(),
+		Club:             clb,
 		Thumbnail:        res,
 		Banner:           banner,
 		NameTranslations: nameTranslations,
-		Series:           MarshalSeriesToGraphQL(ctx, result.Series()),
+		Series:           series,
 		TotalLikes:       result.TotalLikes(),
 		TotalPosts:       result.TotalPosts(),
 	}
@@ -829,6 +841,8 @@ func MarshalClubToGraphQL(ctx context.Context, result *club.Club) *Club {
 		ID:                          relay.NewID(Club{}, result.ID()),
 		Reference:                   result.ID(),
 		CanCreateSupporterOnlyPosts: result.CanCreateSupporterOnlyPosts(),
+		CharactersLimit:             result.CharactersLimit(),
+		CharactersEnabled:           result.CharactersEnabled(),
 		Name:                        result.Name().TranslateDefault(""),
 		Slug:                        result.Slug(),
 		SlugAliases:                 slugAliases,

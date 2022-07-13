@@ -64,6 +64,9 @@
       "total_posts": {
         "type": "integer"
       },
+      "club_id": {
+        "type": "keyword"
+      },
       "series": {
         "type": "nested",
         "properties": {

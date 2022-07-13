@@ -27,6 +27,8 @@ type clubDocument struct {
 	ThumbnailResource           string            `json:"thumbnail_resource"`
 	BannerResource              string            `json:"banner_resource"`
 	SupporterOnlyPostsDisabled  bool              `json:"supporter_only_posts_disabled"`
+	CharactersEnabled           bool              `json:"characters_enabled"`
+	CharactersLimit             int               `json:"characters_limit"`
 	Name                        map[string]string `json:"name"`
 	CreatedAt                   time.Time         `json:"created_at"`
 	MembersCount                int               `json:"members_count"`
@@ -77,6 +79,8 @@ func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 		HasCreatedSupporterOnlyPost: cat.HasCreatedSupporterOnlyPost(),
 		Terminated:                  cat.Terminated(),
 		TerminatedByAccountId:       cat.TerminatedByAccountId(),
+		CharactersLimit:             cat.CharactersLimit(),
+		CharactersEnabled:           cat.CharactersEnabled(),
 	}, nil
 }
 
@@ -119,6 +123,8 @@ func unmarshalClubDocument(ctx context.Context, source json.RawMessage, sort []i
 		bd.SupporterOnlyPostsDisabled,
 		bd.CreatedAt,
 		bd.UpdatedAt,
+		bd.CharactersEnabled,
+		bd.CharactersLimit,
 	)
 
 	if sort != nil {

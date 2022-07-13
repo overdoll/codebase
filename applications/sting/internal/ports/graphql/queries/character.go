@@ -10,7 +10,7 @@ import (
 	"overdoll/libraries/principal"
 )
 
-func (r *QueryResolver) Characters(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, seriesSlug, name *string, sortBy types.CharactersSort) (*types.CharacterConnection, error) {
+func (r *QueryResolver) Characters(ctx context.Context, after *string, before *string, first *int, last *int, clubCharacters *bool, slugs []string, seriesSlug, clubSlug, name *string, sortBy types.CharactersSort) (*types.CharacterConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -19,12 +19,14 @@ func (r *QueryResolver) Characters(ctx context.Context, after *string, before *s
 	}
 
 	results, err := r.App.Queries.SearchCharacters.Handle(ctx, query.SearchCharacters{
-		Principal:  principal.FromContext(ctx),
-		Cursor:     cursor,
-		Slugs:      slugs,
-		SortBy:     sortBy.String(),
-		Name:       name,
-		SeriesSlug: seriesSlug,
+		Principal:      principal.FromContext(ctx),
+		Cursor:         cursor,
+		Slugs:          slugs,
+		SortBy:         sortBy.String(),
+		Name:           name,
+		SeriesSlug:     seriesSlug,
+		ClubSlug:       clubSlug,
+		ClubCharacters: clubCharacters,
 	})
 
 	if err != nil {
@@ -34,12 +36,13 @@ func (r *QueryResolver) Characters(ctx context.Context, after *string, before *s
 	return types.MarshalCharacterToGraphQLConnection(ctx, results, cursor), nil
 }
 
-func (r *QueryResolver) Character(ctx context.Context, slug, seriesSlug string) (*types.Character, error) {
+func (r *QueryResolver) Character(ctx context.Context, slug string, seriesSlug *string, clubSlug *string) (*types.Character, error) {
 
 	character, err := r.App.Queries.CharacterBySlug.Handle(ctx, query.CharacterBySlug{
 		Principal:  principal.FromContext(ctx),
 		Slug:       slug,
 		SeriesSlug: seriesSlug,
+		ClubSlug:   clubSlug,
 	})
 
 	if err != nil {

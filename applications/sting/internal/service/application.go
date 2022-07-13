@@ -139,7 +139,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			UpdateCategoryTitle:            command.NewUpdateCategoryTitleHandler(postRepo),
 			GenerateCategoryBanner:         command.NewGenerateCategoryBannerHandler(postRepo, eventRepo),
 
-			CreateCharacter:          command.NewCreateCharacterHandler(postRepo),
+			CreateCharacter:          command.NewCreateCharacterHandler(postRepo, clubRepo),
 			UpdateCharacterName:      command.NewUpdateCharacterNameHandler(postRepo),
 			UpdateCharacterThumbnail: command.NewUpdateCharacterThumbnailHandler(postRepo, loader),
 			GenerateCharacterBanner:  command.NewGenerateCharacterBannerHandler(postRepo, eventRepo),
@@ -169,6 +169,9 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			AddClubSupporter:              command.NewAddClubSupporterHandler(eventRepo),
 			RemoveClubSupporter:           command.NewRemoveClubSupporterHandler(eventRepo),
 			DeleteAccountData:             command.NewDeleteAccountDataHandler(eventRepo),
+			EnableClubCharacters:          command.NewEnableClubCharactersHandler(clubRepo),
+			DisableClubCharacters:         command.NewDisableClubCharactersHandler(clubRepo),
+			UpdateClubCharactersLimit:     command.NewUpdateClubCharactersLimitHandler(clubRepo),
 
 			TerminateClub:   command.NewTerminateClubHandler(clubRepo, eventRepo),
 			UnTerminateClub: command.NewUnTerminateClubHandler(clubRepo, eventRepo),
@@ -176,6 +179,8 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 		Queries: app.Queries{
 			DiscoverClubs: query.NewDiscoverClubsHandler(clubRepo),
 			Search:        query.NewSearchHandler(postRepo),
+
+			ClubCharactersCount: query.NewClubCharactersCountHandler(clubRepo),
 
 			PrincipalById:    query.NewPrincipalByIdHandler(eva, clubRepo),
 			SearchCharacters: query.NewSearchCharactersHandler(postRepo),

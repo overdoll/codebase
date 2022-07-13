@@ -140,15 +140,6 @@ func (c *Category) UpdateTotalLikes(totalLikes int) error {
 	return nil
 }
 
-func (c *Category) CanUpdateBanner(requester *principal.Principal) error {
-
-	if !requester.IsStaff() {
-		return principal.ErrNotAuthorized
-	}
-
-	return nil
-}
-
 func (c *Category) UpdateTopic(requester *principal.Principal, topic *Topic) error {
 
 	if err := c.canUpdate(requester); err != nil {

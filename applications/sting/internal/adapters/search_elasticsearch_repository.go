@@ -81,12 +81,14 @@ func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passp
 	).
 		Must(elastic.NewTermQuery("_index", CategoryReaderIndex)))
 
-	query.Should(elastic.NewBoolQuery().Must(
+	charactersQuery := elastic.NewBoolQuery().Must(
 		elastic.
 			NewMultiMatchQuery(qs, "name.en").
 			Type("best_fields"),
 	).
-		Must(elastic.NewTermQuery("_index", CharacterReaderIndex)))
+		Must(elastic.NewTermQuery("_index", CharacterReaderIndex))
+
+	query.Should(charactersQuery)
 
 	query.Should(elastic.NewBoolQuery().Must(
 		elastic.

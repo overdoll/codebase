@@ -115,6 +115,28 @@ func (r PostsCassandraElasticsearchRepository) unmarshalSeriesFromDatabase(ctx c
 	), nil
 }
 
+func (r PostsCassandraElasticsearchRepository) getClubBySlug(ctx context.Context, slug string) (*clubSlugs, error) {
+
+	var b clubSlugs
+
+	if err := r.session.
+		Query(clubSlugTable.Get()).
+		WithContext(ctx).
+		Idempotent(true).
+		Consistency(gocql.One).
+		BindStruct(clubSlugs{Slug: strings.ToLower(slug)}).
+		GetRelease(&b); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, apperror.NewNotFoundError("club", slug)
+		}
+
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get club by slug")
+	}
+
+	return &b, nil
+}
+
 func (r PostsCassandraElasticsearchRepository) getSeriesBySlug(ctx context.Context, slug string) (*seriesSlug, error) {
 
 	var b seriesSlug
@@ -161,7 +183,7 @@ func (r PostsCassandraElasticsearchRepository) GetSeriesIdsFromSlugs(ctx context
 	var ids []string
 
 	for _, i := range seriesSlugResults {
-		ids = append(ids, i.SeriesId)
+		ids = append(ids, i.SeriesOrClubId)
 	}
 
 	return ids, nil

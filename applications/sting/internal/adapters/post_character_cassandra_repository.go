@@ -26,6 +26,7 @@ var characterTable = table.New(table.Metadata{
 		"thumbnail_resource",
 		"banner_resource",
 		"series_id",
+		"club_id",
 		"total_likes",
 		"total_posts",
 		"created_at",
@@ -41,7 +42,8 @@ type character struct {
 	Name              map[string]string `db:"name"`
 	ThumbnailResource string            `db:"thumbnail_resource"`
 	BannerResource    string            `db:"banner_resource"`
-	SeriesId          string            `db:"series_id"`
+	SeriesId          *string           `db:"series_id"`
+	ClubId            *string           `db:"club_id"`
 	TotalLikes        int               `db:"total_likes"`
 	TotalPosts        int               `db:"total_posts"`
 	CreatedAt         time.Time         `db:"created_at"`
@@ -52,17 +54,19 @@ var charactersSlugTable = table.New(table.Metadata{
 	Name: "characters_slugs",
 	Columns: []string{
 		"character_id",
-		"series_id",
+		"series_or_club_id",
+		"is_club_id",
 		"slug",
 	},
-	PartKey: []string{"slug", "series_id"},
+	PartKey: []string{"slug", "series_or_club_id"},
 	SortKey: []string{},
 })
 
 type characterSlug struct {
-	SeriesId    string `db:"series_id"`
-	CharacterId string `db:"character_id"`
-	Slug        string `db:"slug"`
+	SeriesOrClubId string `db:"series_or_club_id"`
+	IsClubId       bool   `db:"is_club_id"`
+	CharacterId    string `db:"character_id"`
+	Slug           string `db:"slug"`
 }
 
 func marshalCharacterToDatabase(pending *post.Character) (*character, error) {
@@ -87,7 +91,8 @@ func marshalCharacterToDatabase(pending *post.Character) (*character, error) {
 		BannerResource:    marshalledBanner,
 		TotalLikes:        pending.TotalLikes(),
 		TotalPosts:        pending.TotalPosts(),
-		SeriesId:          pending.Series().ID(),
+		SeriesId:          pending.SeriesId(),
+		ClubId:            pending.ClubId(),
 		CreatedAt:         pending.CreatedAt(),
 		UpdatedAt:         pending.UpdatedAt(),
 	}, nil
@@ -119,6 +124,22 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterFromDatabase(ct
 		return nil, err
 	}
 
+	var series *post.Series
+
+	if serial != nil {
+		series = post.UnmarshalSeriesFromDatabase(
+			serial.Id,
+			serial.Slug,
+			serial.Title,
+			unmarshalledSeries,
+			unmarshalledSeriesBanner,
+			serial.TotalLikes,
+			serial.TotalPosts,
+			serial.CreatedAt,
+			serial.UpdatedAt,
+		)
+	}
+
 	return post.UnmarshalCharacterFromDatabase(
 		char.Id,
 		char.Slug,
@@ -129,21 +150,12 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterFromDatabase(ct
 		char.TotalPosts,
 		char.CreatedAt,
 		char.UpdatedAt,
-		post.UnmarshalSeriesFromDatabase(
-			serial.Id,
-			serial.Slug,
-			serial.Title,
-			unmarshalledSeries,
-			unmarshalledSeriesBanner,
-			serial.TotalLikes,
-			serial.TotalPosts,
-			serial.CreatedAt,
-			serial.UpdatedAt,
-		),
+		series,
+		char.ClubId,
 	), nil
 }
 
-func (r PostsCassandraElasticsearchRepository) GetCharacterIdsFromSlugs(ctx context.Context, characterSlugs, seriesIds []string) ([]string, error) {
+func (r PostsCassandraElasticsearchRepository) GetCharacterIdsFromSlugs(ctx context.Context, characterSlugs, seriesOrClubIds []string) ([]string, error) {
 
 	var characterSlugResults []characterSlug
 
@@ -154,14 +166,14 @@ func (r PostsCassandraElasticsearchRepository) GetCharacterIdsFromSlugs(ctx cont
 	}
 
 	if err := qb.Select(charactersSlugTable.Name()).
-		Where(qb.In("slug"), qb.In("series_id")).
+		Where(qb.In("slug"), qb.In("series_or_club_id")).
 		Query(r.session).
 		WithContext(ctx).
 		Idempotent(true).
 		Consistency(gocql.One).
 		BindMap(map[string]interface{}{
-			"slug":      lowercaseSlugs,
-			"series_id": seriesIds,
+			"slug":              lowercaseSlugs,
+			"series_or_club_id": seriesOrClubIds,
 		}).
 		SelectRelease(&characterSlugResults); err != nil {
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get character slugs")
@@ -176,13 +188,30 @@ func (r PostsCassandraElasticsearchRepository) GetCharacterIdsFromSlugs(ctx cont
 	return ids, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) GetCharacterBySlug(ctx context.Context, slug, seriesSlug string) (*post.Character, error) {
+func (r PostsCassandraElasticsearchRepository) GetCharacterBySlug(ctx context.Context, slug string, seriesSlug, clubSlug *string) (*post.Character, error) {
 
-	// get series first
-	series, err := r.getSeriesBySlug(ctx, seriesSlug)
+	var id string
 
-	if err != nil {
-		return nil, err
+	if seriesSlug != nil {
+		// get series first
+		series, err := r.getSeriesBySlug(ctx, *seriesSlug)
+
+		if err != nil {
+			return nil, err
+		}
+
+		id = series.SeriesId
+	}
+
+	if clubSlug != nil {
+		// get series first
+		clb, err := r.getClubBySlug(ctx, *clubSlug)
+
+		if err != nil {
+			return nil, err
+		}
+
+		id = clb.ClubId
 	}
 
 	var b characterSlug
@@ -193,8 +222,8 @@ func (r PostsCassandraElasticsearchRepository) GetCharacterBySlug(ctx context.Co
 		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(characterSlug{
-			Slug:     strings.ToLower(slug),
-			SeriesId: series.SeriesId,
+			Slug:           strings.ToLower(slug),
+			SeriesOrClubId: id,
 		}).
 		GetRelease(&b); err != nil {
 
@@ -218,7 +247,7 @@ func (r PostsCassandraElasticsearchRepository) deleteUniqueCharacterSlug(ctx con
 		Query(charactersSlugTable.DeleteBuilder().Existing().ToCql()).
 		WithContext(ctx).
 		Idempotent(true).
-		BindStruct(characterSlug{Slug: strings.ToLower(slug), CharacterId: id, SeriesId: seriesId}).
+		BindStruct(characterSlug{Slug: strings.ToLower(slug), CharacterId: id, SeriesOrClubId: seriesId}).
 		ExecRelease(); err != nil {
 		return errors.Wrap(support.NewGocqlError(err), "failed to release character slug")
 	}
@@ -234,6 +263,16 @@ func (r PostsCassandraElasticsearchRepository) CreateCharacter(ctx context.Conte
 		return err
 	}
 
+	var id string
+
+	if char.SeriesId != nil {
+		id = *char.SeriesId
+	}
+
+	if char.ClubId != nil {
+		id = *char.ClubId
+	}
+
 	// first, do a unique insert of club to ensure we reserve a unique slug
 	applied, err := charactersSlugTable.
 		InsertBuilder().
@@ -241,7 +280,7 @@ func (r PostsCassandraElasticsearchRepository) CreateCharacter(ctx context.Conte
 		Query(r.session).
 		WithContext(ctx).
 		SerialConsistency(gocql.Serial).
-		BindStruct(characterSlug{Slug: strings.ToLower(char.Slug), CharacterId: char.Id, SeriesId: char.SeriesId}).
+		BindStruct(characterSlug{Slug: strings.ToLower(char.Slug), CharacterId: char.Id, SeriesOrClubId: id, IsClubId: char.ClubId != nil}).
 		ExecCASRelease()
 
 	if err != nil {
@@ -261,17 +300,36 @@ func (r PostsCassandraElasticsearchRepository) CreateCharacter(ctx context.Conte
 		ExecRelease(); err != nil {
 
 		// release the slug
-		if err := r.deleteUniqueCharacterSlug(ctx, char.SeriesId, char.Id, char.Slug); err != nil {
+		if err := r.deleteUniqueCharacterSlug(ctx, id, char.Id, char.Slug); err != nil {
 			return err
 		}
 
 		return err
 	}
 
+	// add to club's characters list
+	if char.ClubId != nil {
+		if err := r.session.
+			Query(clubCharactersTable.Insert()).
+			WithContext(ctx).
+			Idempotent(true).
+			Consistency(gocql.LocalQuorum).
+			BindStruct(clubCharacters{CharacterId: char.Id, ClubId: *char.ClubId}).
+			ExecRelease(); err != nil {
+
+			// release the slug
+			if err := r.deleteUniqueCharacterSlug(ctx, id, char.Id, char.Slug); err != nil {
+				return err
+			}
+
+			return err
+		}
+	}
+
 	if err := r.indexCharacter(ctx, character); err != nil {
 
 		// release the slug
-		if err := r.deleteUniqueCharacterSlug(ctx, char.SeriesId, char.Id, char.Slug); err != nil {
+		if err := r.deleteUniqueCharacterSlug(ctx, id, char.Id, char.Slug); err != nil {
 			return err
 		}
 
@@ -372,10 +430,15 @@ func (r PostsCassandraElasticsearchRepository) getCharacterById(ctx context.Cont
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get characters by id")
 	}
 
-	media, err := r.getSingleSeriesById(ctx, char.SeriesId)
+	var media *series
+	var err error
 
-	if err != nil {
-		return nil, err
+	if char.SeriesId != nil {
+		media, err = r.getSingleSeriesById(ctx, *char.SeriesId)
+
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	unmarshalled, err := r.unmarshalCharacterFromDatabase(ctx, &char, media)

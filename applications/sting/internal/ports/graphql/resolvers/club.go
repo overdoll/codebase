@@ -16,6 +16,47 @@ type ClubResolver struct {
 	App *app.Application
 }
 
+func (r ClubResolver) CharactersCount(ctx context.Context, obj *types.Club) (int, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return 0, err
+	}
+
+	count, err := r.App.Queries.ClubCharactersCount.Handle(ctx, query.ClubCharactersCount{
+		ClubId:    obj.ID.GetID(),
+		Principal: principal.FromContext(ctx),
+	})
+
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
+func (r ClubResolver) Characters(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, slugs []string, name *string, sortBy types.CharactersSort) (*types.CharacterConnection, error) {
+
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
+	}
+
+	results, err := r.App.Queries.SearchCharacters.Handle(ctx, query.SearchCharacters{
+		Principal: principal.FromContext(ctx),
+		Cursor:    cursor,
+		Slugs:     slugs,
+		SortBy:    sortBy.String(),
+		Name:      name,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalCharacterToGraphQLConnection(ctx, results, cursor), nil
+}
+
 func (r ClubResolver) Posts(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)

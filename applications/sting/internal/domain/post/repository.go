@@ -37,7 +37,7 @@ type Repository interface {
 	CreateCharacter(ctx context.Context, character *Character) error
 	GetCharacterById(ctx context.Context, characterId string) (*Character, error)
 	GetCharactersByIds(ctx context.Context, characterIds []string) ([]*Character, error)
-	GetCharacterBySlug(ctx context.Context, slug, seriesSlug string) (*Character, error)
+	GetCharacterBySlug(ctx context.Context, slug string, seriesSlug, clubSlug *string) (*Character, error)
 	GetCharacterIdsFromSlugs(ctx context.Context, characterSlugs, seriesIds []string) ([]string, error)
 
 	UpdateCharacterBannerOperator(ctx context.Context, id string, updateFn func(character *Character) error) (*Character, error)

@@ -38,6 +38,10 @@ var seriesWriterIndex = cache.WriteAlias(CachePrefix, SeriesIndexName)
 
 func marshalSeriesToDocument(s *post.Series) (*seriesDocument, error) {
 
+	if s == nil {
+		return nil, nil
+	}
+
 	marshalled, err := resource.MarshalResourceToDatabase(s.ThumbnailResource())
 
 	if err != nil {
