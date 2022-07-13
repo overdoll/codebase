@@ -1,5 +1,5 @@
 import { Stack } from '@chakra-ui/react'
-import { graphql, useFragment, useMutation } from 'react-relay/hooks'
+import { graphql, useFragment } from 'react-relay/hooks'
 import type {
   ArrangeUploadsFragment$data,
   ArrangeUploadsFragment$key
@@ -9,9 +9,7 @@ import { useEffect, useState } from 'react'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import ArrangeButton from './ArrangeButton/ArrangeButton'
 import { useToast } from '@//:modules/content/ThemeComponents'
-import { t } from '@lingui/macro'
 import { useUpdateEffect } from 'usehooks-ts'
-import { useUppyContext } from '@//:modules/content/HookedComponents/Upload'
 
 interface Props {
   query: ArrangeUploadsFragment$key
