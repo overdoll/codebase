@@ -899,13 +899,6 @@ def go_repositories():
     )
 
     go_repository(
-        name = "com_github_graph_gophers_dataloader",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/graph-gophers/dataloader",
-        sum = "h1:R+yjsbrNq1Mo3aPG+Z/EKYrXrXXUNJHOgbRt+U6jOug=",
-        version = "v5.0.0+incompatible",
-    )
-    go_repository(
         name = "com_github_graph_gophers_dataloader_v7",
         build_file_proto_mode = "disable",
         importpath = "github.com/graph-gophers/dataloader/v7",

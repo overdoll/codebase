@@ -24,6 +24,7 @@ type PostModified struct {
 		Id string
 	}
 	State               types.PostState
+	Description         string
 	Characters          []CharacterModified
 	Audience            *AudienceModified
 	Categories          []CategoryModified
@@ -78,6 +79,12 @@ type UpdatePostContentIsSupporterOnly struct {
 	UpdatePostContentIsSupporterOnly *struct {
 		Post *PostModified
 	} `graphql:"updatePostContentIsSupporterOnly(input: $input)"`
+}
+
+type UpdatePostDescription struct {
+	UpdatePostDescription *struct {
+		Post *PostModified
+	} `graphql:"updatePostDescription(input: $input)"`
 }
 
 type RemovePostContent struct {
@@ -283,6 +290,21 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	require.Len(t, removePostContent.RemovePostContent.Post.Content, 2, "should have 2 content")
 
+	description := "test description for the post 😀 😃 😄 😁 😆 😅 😂 🤣"
+
+	// update the post description
+	var updatePostDescription UpdatePostCharacters
+
+	err = client.Mutate(context.Background(), &updatePostDescription, map[string]interface{}{
+		"input": types.UpdatePostDescriptionInput{
+			ID:          newPostId,
+			Description: description,
+			Locale:      "en",
+		},
+	})
+
+	require.NoError(t, err)
+
 	// update with new categories
 	var updatePostCategories UpdatePostCategories
 
@@ -486,6 +508,8 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	for _, urls := range post.Post.Content[1].Resource.Urls {
 		require.Contains(t, urls.URL, "Key-Pair-Id", "should be private content")
 	}
+
+	require.Equal(t, description, post.Post.Description, "should have the correct post description")
 
 	originalId := post.Post.Content[1].Resource.ID
 
