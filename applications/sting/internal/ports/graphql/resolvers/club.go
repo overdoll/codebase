@@ -42,12 +42,15 @@ func (r ClubResolver) Characters(ctx context.Context, obj *types.Club, after *st
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
+	clubId := obj.ID.GetID()
+
 	results, err := r.App.Queries.SearchCharacters.Handle(ctx, query.SearchCharacters{
 		Principal: principal.FromContext(ctx),
 		Cursor:    cursor,
 		Slugs:     slugs,
 		SortBy:    sortBy.String(),
 		Name:      name,
+		ClubId:    &clubId,
 	})
 
 	if err != nil {

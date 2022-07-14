@@ -267,9 +267,13 @@ type UpdateClubCharactersLimit struct {
 	} `graphql:"updateClubCharactersLimit(input: $input)"`
 }
 
-func getCharacterClub(t *testing.T, client *graphql.Client, id string) ClubWithCharacterModified {
+type ClubCharacter struct {
+	Club *ClubWithCharacterModified `graphql:"club(slug: $slug)"`
+}
 
-	var club ClubWithCharacterModified
+func getCharacterClub(t *testing.T, client *graphql.Client, id string) *ClubWithCharacterModified {
+
+	var club ClubCharacter
 
 	err := client.Query(context.Background(), &club, map[string]interface{}{
 		"slug": graphql.String(id),
@@ -277,7 +281,7 @@ func getCharacterClub(t *testing.T, client *graphql.Client, id string) ClubWithC
 
 	require.NoError(t, err)
 
-	return club
+	return club.Club
 }
 
 // create a club character
@@ -291,6 +295,7 @@ func TestCreateClubCharacter_update_and_search(t *testing.T) {
 	accountIdStaff := uuid.New().String()
 	mockAccountStaff(t, accountIdStaff)
 
+	clubRelayId := convertClubIdToRelayId(clb.ID())
 	staffClient := getGraphqlClientWithAuthenticatedAccount(t, accountIdStaff)
 	// first, enable club characters for this club
 
@@ -298,7 +303,7 @@ func TestCreateClubCharacter_update_and_search(t *testing.T) {
 
 	err := staffClient.Mutate(context.Background(), &enableClubCharacters, map[string]interface{}{
 		"input": types.EnableClubCharactersInput{
-			ClubID:          convertClubIdToRelayId(clb.ID()),
+			ClubID:          clubRelayId,
 			CharactersLimit: 25,
 		},
 	})
@@ -316,12 +321,13 @@ func TestCreateClubCharacter_update_and_search(t *testing.T) {
 	require.NoError(t, err, "no error creating fake character")
 	currentCharacterSlug := fake.Slug
 
+	refreshClubESIndex(t)
+
 	var createCharacter CreateCharacter
 
-	clubIdRelay := convertClubIdToRelayId(clb.ID())
 	err = client.Mutate(context.Background(), &createCharacter, map[string]interface{}{
 		"input": types.CreateCharacterInput{
-			ClubID: &clubIdRelay,
+			ClubID: &clubRelayId,
 			Slug:   currentCharacterSlug,
 			Name:   fake.Name,
 		},
@@ -339,7 +345,7 @@ func TestCreateClubCharacter_update_and_search(t *testing.T) {
 
 	err = staffClient.Mutate(context.Background(), &updateClubCharactersLimit, map[string]interface{}{
 		"input": types.UpdateClubCharactersLimitInput{
-			ClubID:          convertClubIdToRelayId(clb.ID()),
+			ClubID:          clubRelayId,
 			CharactersLimit: 50,
 		},
 	})
@@ -360,7 +366,7 @@ func TestCreateClubCharacter_update_and_search(t *testing.T) {
 
 	err = staffClient.Mutate(context.Background(), &disableClubCharacters, map[string]interface{}{
 		"input": types.DisableClubCharactersInput{
-			ClubID: convertClubIdToRelayId(clb.ID()),
+			ClubID: clubRelayId,
 		},
 	})
 

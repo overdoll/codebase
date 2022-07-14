@@ -38,6 +38,7 @@ func TestPostRepository_failure(t *testing.T) {
 			time.Now(),
 			time.Now(),
 			nil,
+			nil,
 		)
 
 	ctx := context.Background()

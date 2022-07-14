@@ -65,15 +65,15 @@ func (t *Translation) UpdateTranslation(data, locale string) error {
 		if item.tag == tag {
 			// remove translation
 			t.translations = append(t.translations[:v], t.translations[v+1:]...)
-
-			// change translation
-			t.translations = append(t.translations, &LocalizedDataTag{
-				tag:  defaultLanguage,
-				data: data,
-			})
 			break
 		}
 	}
+
+	// change translation
+	t.translations = append(t.translations, &LocalizedDataTag{
+		tag:  defaultLanguage,
+		data: data,
+	})
 
 	return nil
 }

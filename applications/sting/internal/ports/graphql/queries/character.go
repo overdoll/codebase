@@ -25,7 +25,7 @@ func (r *QueryResolver) Characters(ctx context.Context, after *string, before *s
 		SortBy:         sortBy.String(),
 		Name:           name,
 		SeriesSlug:     seriesSlug,
-		ClubSlug:       clubSlug,
+		ClubId:         clubSlug,
 		ClubCharacters: clubCharacters,
 	})
 

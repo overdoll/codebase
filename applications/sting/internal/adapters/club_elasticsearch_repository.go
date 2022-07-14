@@ -217,7 +217,7 @@ func (r ClubCassandraElasticsearchRepository) DiscoverClubs(ctx context.Context,
 
 	query.Filter(elastic.NewBoolQuery().
 		// don't include clubs in the discovery if you are already a member of that club
-		MustNot(elastic.NewTermsQueryFromStrings("club_id", clubMembershipIds...)),
+		MustNot(elastic.NewTermsQueryFromStrings("id", clubMembershipIds...)),
 	)
 
 	query.Filter(elastic.NewTermQuery("terminated", false))

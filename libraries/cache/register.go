@@ -79,7 +79,14 @@ func createRegister(config IndexConfig) *cobra.Command {
 							// we should also ensure that if a field has a custom analyzer, and the analyzer is not defined in "settings",
 							// we will warn about the custom analyzer not present and default to a "keyword" analyzer to ensure no errors occur
 							if !gjson.Get(string(res), "mappings.properties."+key.Str).Exists() {
-								newMappings[key.Str] = value.Str
+
+								var val map[string]interface{}
+
+								if err := json.Unmarshal([]byte(value.Raw), &val); err != nil {
+									zap.S().Fatalw("failed to unmarshal json", zap.Error(err))
+								}
+
+								newMappings[key.Str] = val
 							}
 
 							return true
@@ -87,7 +94,11 @@ func createRegister(config IndexConfig) *cobra.Command {
 					}
 
 					if len(newMappings) > 0 {
-						_, err := client.PutMapping().Index(writeAlias).BodyJson(newMappings).
+
+						mappingFinal := make(map[string]interface{})
+						mappingFinal["properties"] = newMappings
+
+						_, err := client.PutMapping().Index(writeAlias).BodyJson(mappingFinal).
 							Do(ctx)
 
 						if err != nil {
@@ -103,11 +114,13 @@ func createRegister(config IndexConfig) *cobra.Command {
 				}
 			}
 
-			zap.S().Infof(
-				"successfully registered [%s] indexes in %s!",
-				strconv.Itoa(registerCount),
-				time.Since(start).Truncate(time.Millisecond),
-			)
+			if registerCount > 0 {
+				zap.S().Infof(
+					"successfully registered [%s] indexes in %s!",
+					strconv.Itoa(registerCount),
+					time.Since(start).Truncate(time.Millisecond),
+				)
+			}
 		},
 	}
 }

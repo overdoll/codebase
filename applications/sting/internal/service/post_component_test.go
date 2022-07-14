@@ -303,7 +303,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		},
 	})
 
-	require.NoError(t, err)
+	require.NoError(t, err, "no error updating the post description")
 
 	// update with new categories
 	var updatePostCategories UpdatePostCategories

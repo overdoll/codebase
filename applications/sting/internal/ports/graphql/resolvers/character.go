@@ -21,7 +21,7 @@ func (r CharacterResolver) Club(ctx context.Context, obj *types.Character) (*typ
 		return nil, nil
 	}
 
-	return dataloader.For(ctx).GetClubById(ctx, obj.ID.GetID())
+	return dataloader.For(ctx).GetClubById(ctx, obj.Club.ID.GetID())
 }
 
 func (r CharacterResolver) Name(ctx context.Context, obj *types.Character, locale *string) (string, error) {

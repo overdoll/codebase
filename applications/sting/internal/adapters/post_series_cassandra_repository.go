@@ -161,7 +161,7 @@ func (r PostsCassandraElasticsearchRepository) getSeriesBySlug(ctx context.Conte
 
 func (r PostsCassandraElasticsearchRepository) GetSeriesIdsFromSlugs(ctx context.Context, seriesIds []string) ([]string, error) {
 
-	var seriesSlugResults []characterSlug
+	var seriesSlugResults []seriesSlug
 
 	var lowercaseSlugs []string
 
@@ -183,7 +183,7 @@ func (r PostsCassandraElasticsearchRepository) GetSeriesIdsFromSlugs(ctx context
 	var ids []string
 
 	for _, i := range seriesSlugResults {
-		ids = append(ids, i.SeriesOrClubId)
+		ids = append(ids, i.SeriesId)
 	}
 
 	return ids, nil

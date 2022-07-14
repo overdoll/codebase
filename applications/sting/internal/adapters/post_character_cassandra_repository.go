@@ -112,21 +112,22 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterFromDatabase(ct
 		return nil, err
 	}
 
-	unmarshalledSeries, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, serial.ThumbnailResource)
-
-	if err != nil {
-		return nil, err
-	}
-
-	unmarshalledSeriesBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, serial.BannerResource)
-
-	if err != nil {
-		return nil, err
-	}
-
 	var series *post.Series
 
 	if serial != nil {
+
+		unmarshalledSeries, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, serial.ThumbnailResource)
+
+		if err != nil {
+			return nil, err
+		}
+
+		unmarshalledSeriesBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, serial.BannerResource)
+
+		if err != nil {
+			return nil, err
+		}
+
 		series = post.UnmarshalSeriesFromDatabase(
 			serial.Id,
 			serial.Slug,
