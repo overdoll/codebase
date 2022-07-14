@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<5e54b6aefc81ddd2ccaa341a8781f9f5>>
- * @relayHash baea661d901e1f9072ad0071debc672a
+ * @generated SignedSource<<1b6d5329662d55b0b09843e2677b569d>>
+ * @relayHash 11d0bb28600551b7c803191eacfae263
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID baea661d901e1f9072ad0071debc672a
+// @relayRequestID 11d0bb28600551b7c803191eacfae263
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -34,7 +34,7 @@ var v0 = [
     "name": "after"
   },
   {
-    "defaultValue": 10,
+    "defaultValue": 9,
     "kind": "LocalArgument",
     "name": "first"
   },
@@ -134,7 +134,7 @@ return {
                     "args": null,
                     "concreteType": "Resource",
                     "kind": "LinkedField",
-                    "name": "thumbnail",
+                    "name": "banner",
                     "plural": false,
                     "selections": [
                       {
@@ -276,7 +276,7 @@ return {
     ]
   },
   "params": {
-    "id": "baea661d901e1f9072ad0071debc672a",
+    "id": "11d0bb28600551b7c803191eacfae263",
     "metadata": {},
     "name": "UploadSearchCategoriesMultiSelectorPaginationFragment",
     "operationKind": "query",
@@ -285,6 +285,6 @@ return {
 };
 })();
 
-(node as any).hash = "435090a21d445c9425a3c375d22b256e";
+(node as any).hash = "dc718d71ad5843e854f40d7ecb2b4c27";
 
 export default node;

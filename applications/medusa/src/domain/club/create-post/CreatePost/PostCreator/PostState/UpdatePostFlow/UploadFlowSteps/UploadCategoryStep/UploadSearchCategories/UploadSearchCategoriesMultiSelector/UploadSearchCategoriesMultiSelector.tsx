@@ -6,15 +6,13 @@ import type {
 } from '@//:artifacts/UploadSearchCategoriesMultiSelectorQuery.graphql'
 import CategoryTileOverlay
   from '@//:modules/content/ContentSelection/TileOverlay/CategoryTileOverlay/CategoryTileOverlay'
-import { EmptyBoundary, EmptyCategories } from '@//:modules/content/Placeholder'
+import { EmptyBoundary } from '@//:modules/content/Placeholder'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
 import { ComponentChoiceArguments } from '@//:modules/content/HookedComponents/Choice/types'
 import { Choice } from '@//:modules/content/HookedComponents/Choice'
-import { Stack } from '@chakra-ui/react'
-import { Trans } from '@lingui/macro'
-import SuggestPrompt from '../../../../../../SuggestPrompt/SuggestPrompt'
 import ShortGridWrap from '@//:modules/content/ContentSelection/ShortGridWrap/ShortGridWrap'
 import ShortGridTile from '@//:modules/content/ContentSelection/ShortGridTile/ShortGridTile'
+import UploadEmptyCategories from '../UploadEmptyCategories/UploadEmptyCategories'
 
 interface Props extends ComponentSearchArguments<any>, ComponentChoiceArguments<any> {
 }
@@ -28,7 +26,7 @@ const Query = graphql`
 const Fragment = graphql`
   fragment UploadSearchCategoriesMultiSelectorFragment on Query
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 10}
+    first: {type: Int, defaultValue: 9}
     after: {type: String},
     title: {type: String}
   )
@@ -74,14 +72,7 @@ export default function UploadSearchCategoriesMultiSelector ({
   return (
     <EmptyBoundary
       fallback={(
-        <Stack spacing={2}>
-          <EmptyCategories hint={searchArguments.variables.title} />
-          <SuggestPrompt>
-            <Trans>
-              Have a category suggestion? Send us an email at hello@overdoll.com!
-            </Trans>
-          </SuggestPrompt>
-        </Stack>)}
+        <UploadEmptyCategories hint={searchArguments.variables.title} />)}
       condition={data.categories.edges.length < 1}
     >
       <ShortGridWrap>

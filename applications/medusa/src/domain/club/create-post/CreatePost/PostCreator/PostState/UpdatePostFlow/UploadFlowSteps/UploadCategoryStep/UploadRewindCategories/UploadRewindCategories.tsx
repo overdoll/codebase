@@ -30,7 +30,6 @@ import Button from '@//:modules/form/Button/Button'
 import RemovableTag from '@//:modules/content/DataDisplay/RemovableTag/RemovableTag'
 import { Choices, UseChoiceReturnOnChange } from '@//:modules/content/HookedComponents/Choice/types'
 import { UploadSearchCategoriesMultiSelectorProps } from '../UploadCategoryStep'
-import { useToast } from '@//:modules/content/ThemeComponents'
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { UploadRewindCategoriesFragment$key } from '@//:artifacts/UploadRewindCategoriesFragment.graphql'
 
@@ -70,8 +69,6 @@ export default function UploadRewindCategories ({
   } = useHistoryDisclosure()
 
   const { query: { slug } } = useRouter()
-
-  const notify = useToast()
 
   const {
     searchArguments,

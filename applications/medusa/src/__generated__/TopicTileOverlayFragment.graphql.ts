@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3f1654eaaebead3a1ae5c5d5d0fdb5a3>>
+ * @generated SignedSource<<383d89745be7576031aa47112691fb46>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,24 +10,24 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type CategoryTileOverlayFragment$data = {
+export type TopicTileOverlayFragment$data = {
   readonly banner: {
     readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
   } | null;
   readonly id: string;
   readonly title: string;
-  readonly " $fragmentType": "CategoryTileOverlayFragment";
+  readonly " $fragmentType": "TopicTileOverlayFragment";
 };
-export type CategoryTileOverlayFragment$key = {
-  readonly " $data"?: CategoryTileOverlayFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"CategoryTileOverlayFragment">;
+export type TopicTileOverlayFragment$key = {
+  readonly " $data"?: TopicTileOverlayFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"TopicTileOverlayFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "CategoryTileOverlayFragment",
+  "name": "TopicTileOverlayFragment",
   "selections": [
     {
       "alias": null,
@@ -60,10 +60,10 @@ const node: ReaderFragment = {
       "storageKey": null
     }
   ],
-  "type": "Category",
+  "type": "Topic",
   "abstractKey": null
 };
 
-(node as any).hash = "c94efcada272c0c39bdee7e6a944bd27";
+(node as any).hash = "2bc0d0d6e02a159c6af899ae74afa6b9";
 
 export default node;

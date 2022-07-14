@@ -1,6 +1,6 @@
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import { t } from '@lingui/macro'
-import { ClubPeopleGroup } from '@//:assets/icons/navigation'
+import { ClubPeopleGroup, DiscoverGlobe } from '@//:assets/icons'
 import { MainMenuButtonClubsQuery } from '@//:artifacts/MainMenuButtonClubsQuery.graphql'
 import HorizontalNavigation from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigation'
 import { useLingui } from '@lingui/react'
@@ -31,7 +31,7 @@ export default function MainMenuButtonClubs (): JSX.Element {
         exact
         colorScheme='primary'
         href='/clubs/discover'
-        icon={ClubPeopleGroup}
+        icon={DiscoverGlobe}
         label={i18n._(t`Discover Clubs`)}
       />
     )

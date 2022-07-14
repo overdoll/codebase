@@ -40,7 +40,8 @@ export const SUPPORT_BUTTON_PROPS = {
 }
 
 const SupportClubPriceButton = forwardRef<any, Props>(({
-  query, ...rest
+  query,
+  ...rest
 }: Props, forwardRef): JSX.Element => {
   const data = useFragment(Fragment, query)
 
@@ -60,7 +61,7 @@ const SupportClubPriceButton = forwardRef<any, Props>(({
       {...rest}
     >
       <Trans>
-        Become a supporter {price}
+        Become a Supporter {price}
       </Trans>
     </Button>
   )

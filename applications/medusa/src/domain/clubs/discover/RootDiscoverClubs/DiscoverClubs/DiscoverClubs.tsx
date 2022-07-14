@@ -106,7 +106,7 @@ export default function DiscoverClubs (props: Props): JSX.Element {
             </>
             )}
       </Box>
-      <Stack spacing={8}>
+      <Stack spacing={2}>
         <HStack spacing={2} justify='space-between'>
           <Heading color='gray.00' fontSize='2xl'>
             <Trans>Discover Clubs</Trans>

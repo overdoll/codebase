@@ -43,10 +43,6 @@ export default function ChoiceRemovableTags ({
       </RenderOnDesktop>
       <RenderOnMobile>
         <HStack
-          bg='gray.800'
-          borderRadius='md'
-          pt={1}
-          pb={1}
           whiteSpace='nowrap'
           overflowX='auto'
           display='block'

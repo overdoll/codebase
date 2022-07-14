@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0a4dfc3f49fa4a1060add2b11c5f6e8b>>
+ * @generated SignedSource<<d13f63f3063e2a7253ed97740f4d412e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,26 +10,25 @@
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type UploadSearchCategoriesMultiSelectorFragment$data = {
-  readonly categories: {
+export type UploadSearchTopicsSelectorFragment$data = {
+  readonly topics: {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
-        readonly title: string;
-        readonly " $fragmentSpreads": FragmentRefs<"CategoryTileOverlayFragment">;
+        readonly " $fragmentSpreads": FragmentRefs<"TopicTileOverlayFragment" | "UploadSearchTopicCategoriesFragment">;
       };
     }>;
   };
-  readonly " $fragmentType": "UploadSearchCategoriesMultiSelectorFragment";
+  readonly " $fragmentType": "UploadSearchTopicsSelectorFragment";
 };
-export type UploadSearchCategoriesMultiSelectorFragment$key = {
-  readonly " $data"?: UploadSearchCategoriesMultiSelectorFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"UploadSearchCategoriesMultiSelectorFragment">;
+export type UploadSearchTopicsSelectorFragment$key = {
+  readonly " $data"?: UploadSearchTopicsSelectorFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"UploadSearchTopicsSelectorFragment">;
 };
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "categories"
+  "topics"
 ];
 return {
   "argumentDefinitions": [
@@ -39,14 +38,9 @@ return {
       "name": "after"
     },
     {
-      "defaultValue": 9,
+      "defaultValue": 13,
       "kind": "LocalArgument",
       "name": "first"
-    },
-    {
-      "defaultValue": null,
-      "kind": "LocalArgument",
-      "name": "title"
     }
   ],
   "kind": "Fragment",
@@ -69,29 +63,23 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./UploadSearchCategoriesMultiSelectorPaginationFragment.graphql')
+      "operation": require('./UploadSearchTopicsSelectorFragmentPaginationFragment.graphql')
     }
   },
-  "name": "UploadSearchCategoriesMultiSelectorFragment",
+  "name": "UploadSearchTopicsSelectorFragment",
   "selections": [
     {
-      "alias": "categories",
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "title",
-          "variableName": "title"
-        }
-      ],
-      "concreteType": "CategoryConnection",
+      "alias": "topics",
+      "args": null,
+      "concreteType": "TopicConnection",
       "kind": "LinkedField",
-      "name": "__UploadSearchCategoriesMultiSelector_categories_connection",
+      "name": "__UploadSearchTopicsSelectorFragment_topics_connection",
       "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
-          "concreteType": "CategoryEdge",
+          "concreteType": "TopicEdge",
           "kind": "LinkedField",
           "name": "edges",
           "plural": true,
@@ -99,7 +87,7 @@ return {
             {
               "alias": null,
               "args": null,
-              "concreteType": "Category",
+              "concreteType": "Topic",
               "kind": "LinkedField",
               "name": "node",
               "plural": false,
@@ -112,16 +100,14 @@ return {
                   "storageKey": null
                 },
                 {
-                  "alias": null,
                   "args": null,
-                  "kind": "ScalarField",
-                  "name": "title",
-                  "storageKey": null
+                  "kind": "FragmentSpread",
+                  "name": "TopicTileOverlayFragment"
                 },
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "CategoryTileOverlayFragment"
+                  "name": "UploadSearchTopicCategoriesFragment"
                 },
                 {
                   "alias": null,
@@ -177,6 +163,6 @@ return {
 };
 })();
 
-(node as any).hash = "dc718d71ad5843e854f40d7ecb2b4c27";
+(node as any).hash = "5b58617bdb9f3eecf1c4e6197f57ec14";
 
 export default node;

@@ -12,7 +12,8 @@ import {
   CharacterIdentifier,
   ClubPeopleGroup,
   FlagReport,
-  SeriesIdentifier
+  SeriesIdentifier,
+  TopicIdentifier
 } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import { Box, Stack } from '@chakra-ui/react'
@@ -124,6 +125,39 @@ const RootStaffEntity: PageProps<{}> = () => {
                       }
                       description={(
                         <Trans>Search or manage categories</Trans>
+                      )}
+                    />
+                  </PagePanelWrap>
+                </Stack>
+              </PageSectionWrap>
+            </Box>
+            <Box>
+              <PageSectionWrap>
+                <PageSectionTitle>
+                  <Trans>
+                    Topics
+                  </Trans>
+                </PageSectionTitle>
+                <Stack spacing={2}>
+                  <PagePanelWrap href='/staff/entity/topic/create'>
+                    <PagePanelIcon icon={AddPlus} colorScheme='teal' />
+                    <PagePanelText
+                      title={
+                        <Trans>Create Topic</Trans>
+                      }
+                      description={(
+                        <Trans>Create a topic</Trans>
+                      )}
+                    />
+                  </PagePanelWrap>
+                  <PagePanelWrap href='/staff/entity/topic/search'>
+                    <PagePanelIcon icon={TopicIdentifier} colorScheme='purple' />
+                    <PagePanelText
+                      title={
+                        <Trans>Search Topics</Trans>
+                      }
+                      description={(
+                        <Trans>Search or manage topics</Trans>
                       )}
                     />
                   </PagePanelWrap>
