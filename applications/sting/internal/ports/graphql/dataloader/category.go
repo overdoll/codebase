@@ -15,7 +15,7 @@ func categoriesByIds(app *app.Application) *dataloader.Loader[string, *types.Cat
 		func(ctx context.Context, keys []string) []*dataloader.Result[*types.Category] {
 			return graphql.DataloaderHelper[*types.Category](
 				"category",
-				func(keys []string) ([]graphql.Mapping, error) {
+				func(keys []string) ([]graphql.Mapping[*types.Category], error) {
 					results, err := app.Queries.CategoriesByIds.Handle(ctx, query.CategoriesByIds{
 						Ids: keys,
 					})
@@ -24,10 +24,10 @@ func categoriesByIds(app *app.Application) *dataloader.Loader[string, *types.Cat
 						return nil, err
 					}
 
-					var mapping []graphql.Mapping
+					var mapping []graphql.Mapping[*types.Category]
 
 					for _, result := range results {
-						mapping = append(mapping, graphql.Mapping{
+						mapping = append(mapping, graphql.Mapping[*types.Category]{
 							Data: types.MarshalCategoryToGraphQL(ctx, result),
 							Id:   result.ID(),
 						})

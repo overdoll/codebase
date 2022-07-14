@@ -15,7 +15,7 @@ func seriesByIds(app *app.Application) *dataloader.Loader[string, *types.Series]
 		func(ctx context.Context, keys []string) []*dataloader.Result[*types.Series] {
 			return graphql.DataloaderHelper[*types.Series](
 				"series",
-				func(keys []string) ([]graphql.Mapping, error) {
+				func(keys []string) ([]graphql.Mapping[*types.Series], error) {
 					results, err := app.Queries.SeriesByIds.Handle(ctx, query.SeriesByIds{
 						Ids: keys,
 					})
@@ -24,10 +24,10 @@ func seriesByIds(app *app.Application) *dataloader.Loader[string, *types.Series]
 						return nil, err
 					}
 
-					var mapping []graphql.Mapping
+					var mapping []graphql.Mapping[*types.Series]
 
 					for _, result := range results {
-						mapping = append(mapping, graphql.Mapping{
+						mapping = append(mapping, graphql.Mapping[*types.Series]{
 							Data: types.MarshalSeriesToGraphQL(ctx, result),
 							Id:   result.ID(),
 						})

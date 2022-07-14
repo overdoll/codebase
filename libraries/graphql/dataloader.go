@@ -8,12 +8,12 @@ import (
 
 const DataLoaderKey = "dataloaders"
 
-type Mapping struct {
-	Data any
+type Mapping[V any] struct {
+	Data V
 	Id   string
 }
 
-func DataloaderHelper[V any](notFoundKey string, getData func(keys []string) ([]Mapping, error), ctx context.Context, keys []string) []*dataloader.Result[V] {
+func DataloaderHelper[V any](notFoundKey string, getData func(keys []string) ([]Mapping[V], error), ctx context.Context, keys []string) []*dataloader.Result[V] {
 	// create a map for remembering the order of keys passed in
 	keyOrder := make(map[string]int, len(keys))
 
@@ -31,7 +31,7 @@ func DataloaderHelper[V any](notFoundKey string, getData func(keys []string) ([]
 
 	if err != nil {
 		for _, ix := range keyOrder {
-			results[ix] = &dataloader.Result[V]{Data: nil, Error: err}
+			results[ix] = &dataloader.Result[V]{Error: err}
 		}
 		return results
 	}
@@ -40,7 +40,7 @@ func DataloaderHelper[V any](notFoundKey string, getData func(keys []string) ([]
 	for _, record := range res {
 
 		ix, ok := keyOrder[record.Id]
-		// if found, remove from index lookup map so we know elements were found
+		// if found, remove from index lookup map, so we know elements were found
 		if ok {
 			results[ix] = &dataloader.Result[V]{Data: record.Data, Error: nil}
 			delete(keyOrder, record.Id)
@@ -49,7 +49,7 @@ func DataloaderHelper[V any](notFoundKey string, getData func(keys []string) ([]
 
 	// fill array positions with errors where not found in DB
 	for v, ix := range keyOrder {
-		results[ix] = &dataloader.Result[V]{Data: nil, Error: apperror.NewNotFoundError(notFoundKey, v)}
+		results[ix] = &dataloader.Result[V]{Error: apperror.NewNotFoundError(notFoundKey, v)}
 	}
 
 	// return results

@@ -15,7 +15,7 @@ func accountsByIds(app *app.Application) *dataloader.Loader[string, *types.Accou
 		func(ctx context.Context, keys []string) []*dataloader.Result[*types.Account] {
 			return graphql.DataloaderHelper[*types.Account](
 				"account",
-				func(keys []string) ([]graphql.Mapping, error) {
+				func(keys []string) ([]graphql.Mapping[*types.Account], error) {
 					results, err := app.Queries.AccountsByIds.Handle(ctx, query.AccountsByIds{
 						AccountIds: keys,
 					})
@@ -24,10 +24,10 @@ func accountsByIds(app *app.Application) *dataloader.Loader[string, *types.Accou
 						return nil, err
 					}
 
-					var mapping []graphql.Mapping
+					var mapping []graphql.Mapping[*types.Account]
 
 					for _, result := range results {
-						mapping = append(mapping, graphql.Mapping{
+						mapping = append(mapping, graphql.Mapping[*types.Account]{
 							Data: types.MarshalAccountToGraphQL(ctx, result),
 							Id:   result.ID(),
 						})

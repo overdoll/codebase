@@ -15,7 +15,7 @@ func audiencesByIds(app *app.Application) *dataloader.Loader[string, *types.Audi
 		func(ctx context.Context, keys []string) []*dataloader.Result[*types.Audience] {
 			return graphql.DataloaderHelper[*types.Audience](
 				"audience",
-				func(keys []string) ([]graphql.Mapping, error) {
+				func(keys []string) ([]graphql.Mapping[*types.Audience], error) {
 					results, err := app.Queries.AudiencesByIds.Handle(ctx, query.AudiencesByIds{
 						Ids: keys,
 					})
@@ -24,10 +24,10 @@ func audiencesByIds(app *app.Application) *dataloader.Loader[string, *types.Audi
 						return nil, err
 					}
 
-					var mapping []graphql.Mapping
+					var mapping []graphql.Mapping[*types.Audience]
 
 					for _, result := range results {
-						mapping = append(mapping, graphql.Mapping{
+						mapping = append(mapping, graphql.Mapping[*types.Audience]{
 							Data: types.MarshalAudienceToGraphQL(ctx, result),
 							Id:   result.ID(),
 						})

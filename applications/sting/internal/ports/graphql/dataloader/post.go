@@ -15,7 +15,7 @@ func postsByIds(app *app.Application) *dataloader.Loader[string, *types.Post] {
 		func(ctx context.Context, keys []string) []*dataloader.Result[*types.Post] {
 			return graphql.DataloaderHelper[*types.Post](
 				"post",
-				func(keys []string) ([]graphql.Mapping, error) {
+				func(keys []string) ([]graphql.Mapping[*types.Post], error) {
 					results, err := app.Queries.PostsByIds.Handle(ctx, query.PostsByIds{
 						Ids: keys,
 					})
@@ -24,10 +24,10 @@ func postsByIds(app *app.Application) *dataloader.Loader[string, *types.Post] {
 						return nil, err
 					}
 
-					var mapping []graphql.Mapping
+					var mapping []graphql.Mapping[*types.Post]
 
 					for _, result := range results {
-						mapping = append(mapping, graphql.Mapping{
+						mapping = append(mapping, graphql.Mapping[*types.Post]{
 							Data: types.MarshalPostToGraphQL(ctx, result),
 							Id:   result.ID(),
 						})

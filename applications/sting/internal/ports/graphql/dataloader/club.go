@@ -15,7 +15,7 @@ func clubsByIds(app *app.Application) *dataloader.Loader[string, *types.Club] {
 		func(ctx context.Context, keys []string) []*dataloader.Result[*types.Club] {
 			return graphql.DataloaderHelper[*types.Club](
 				"club",
-				func(keys []string) ([]graphql.Mapping, error) {
+				func(keys []string) ([]graphql.Mapping[*types.Club], error) {
 					results, err := app.Queries.ClubsByIds.Handle(ctx, query.ClubsByIds{
 						ClubIds: keys,
 					})
@@ -24,10 +24,10 @@ func clubsByIds(app *app.Application) *dataloader.Loader[string, *types.Club] {
 						return nil, err
 					}
 
-					var mapping []graphql.Mapping
+					var mapping []graphql.Mapping[*types.Club]
 
 					for _, result := range results {
-						mapping = append(mapping, graphql.Mapping{
+						mapping = append(mapping, graphql.Mapping[*types.Club]{
 							Data: types.MarshalClubToGraphQL(ctx, result),
 							Id:   result.ID(),
 						})

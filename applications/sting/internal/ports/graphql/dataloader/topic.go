@@ -15,7 +15,7 @@ func topicsByIds(app *app.Application) *dataloader.Loader[string, *types.Topic] 
 		func(ctx context.Context, keys []string) []*dataloader.Result[*types.Topic] {
 			return graphql.DataloaderHelper[*types.Topic](
 				"topic",
-				func(keys []string) ([]graphql.Mapping, error) {
+				func(keys []string) ([]graphql.Mapping[*types.Topic], error) {
 					results, err := app.Queries.TopicsByIds.Handle(ctx, query.TopicsByIds{
 						Ids: keys,
 					})
@@ -24,10 +24,10 @@ func topicsByIds(app *app.Application) *dataloader.Loader[string, *types.Topic] 
 						return nil, err
 					}
 
-					var mapping []graphql.Mapping
+					var mapping []graphql.Mapping[*types.Topic]
 
 					for _, result := range results {
-						mapping = append(mapping, graphql.Mapping{
+						mapping = append(mapping, graphql.Mapping[*types.Topic]{
 							Data: types.MarshalTopicToGraphQL(ctx, result),
 							Id:   result.ID(),
 						})

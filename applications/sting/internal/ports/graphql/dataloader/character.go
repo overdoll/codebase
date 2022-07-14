@@ -15,7 +15,7 @@ func charactersByIds(app *app.Application) *dataloader.Loader[string, *types.Cha
 		func(ctx context.Context, keys []string) []*dataloader.Result[*types.Character] {
 			return graphql.DataloaderHelper[*types.Character](
 				"character",
-				func(keys []string) ([]graphql.Mapping, error) {
+				func(keys []string) ([]graphql.Mapping[*types.Character], error) {
 					results, err := app.Queries.CharactersByIds.Handle(ctx, query.CharactersByIds{
 						Ids: keys,
 					})
@@ -24,10 +24,10 @@ func charactersByIds(app *app.Application) *dataloader.Loader[string, *types.Cha
 						return nil, err
 					}
 
-					var mapping []graphql.Mapping
+					var mapping []graphql.Mapping[*types.Character]
 
 					for _, result := range results {
-						mapping = append(mapping, graphql.Mapping{
+						mapping = append(mapping, graphql.Mapping[*types.Character]{
 							Data: types.MarshalCharacterToGraphQL(ctx, result),
 							Id:   result.ID(),
 						})

@@ -38,14 +38,6 @@ spec:
       containers:
         - name: {{ include "default-service.fullname" . }}
           image: "{{ .Values.image.repository }}"
-          lifecycle:
-            preStop:
-              exec:
-                command: [ "sleep", "10s" ]
-          readinessProbe:
-            httpGet:
-              path: /readyz
-              port: 8000
           ports:
             {{- if .Values.grpc }}
             - name: grpc
