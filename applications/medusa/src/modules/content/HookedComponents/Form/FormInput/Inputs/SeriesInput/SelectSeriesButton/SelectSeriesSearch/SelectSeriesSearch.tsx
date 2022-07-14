@@ -25,7 +25,7 @@ const Fragment = graphql`
     first: {type: Int, defaultValue: 5}
     after: {type: String}
   )
-  @refetchable(queryName: "SelectSeriesPaginationFragment" )
+  @refetchable(queryName: "SelectSeriesSearchPaginationFragment" )
   {
     series (
       first: $first,

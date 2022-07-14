@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fd84adb7445a01eb7a4d914617c128ed>>
- * @relayHash b32d7ef75b922600054d17012313ceb4
+ * @generated SignedSource<<acb5b491d51905faeddd3c5866160541>>
+ * @relayHash f9dcf2486ac7405012b95db5bb042753
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b32d7ef75b922600054d17012313ceb4
+// @relayRequestID f9dcf2486ac7405012b95db5bb042753
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -21,7 +21,7 @@ export type StaffViewCharacterQuery$data = {
   readonly character: {
     readonly series: {
       readonly title: string;
-    };
+    } | null;
     readonly " $fragmentSpreads": FragmentRefs<"ChangeCharacterNameFragment" | "ChangeCharacterThumbnailFragment">;
   } | null;
 };
@@ -274,7 +274,7 @@ return {
     ]
   },
   "params": {
-    "id": "b32d7ef75b922600054d17012313ceb4",
+    "id": "f9dcf2486ac7405012b95db5bb042753",
     "metadata": {},
     "name": "StaffViewCharacterQuery",
     "operationKind": "query",
@@ -283,6 +283,6 @@ return {
 };
 })();
 
-(node as any).hash = "0362b3986151841aa6aa9cc593eee429";
+(node as any).hash = "e96ff3158fd02c82f7464034aa997d7f";
 
 export default node;

@@ -62,7 +62,7 @@ export default function UploadSearchTopicCategories ({
 
   return (
     <Stack spacing={2}>
-      <LargeBackgroundBox p={2}>
+      <LargeBackgroundBox p={3}>
         <Heading fontSize='lg' color='gray.100'>
           {data.title}
         </Heading>
