@@ -103,14 +103,16 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 
 	var descriptionTranslations []*graphql.Translation
 
-	for _, val := range result.Description().Translations() {
-		descriptionTranslations = append(descriptionTranslations, &graphql.Translation{
-			Language: &graphql.Language{
-				Locale: val.Locale(),
-				Name:   val.Name(),
-			},
-			Text: val.Data(),
-		})
+	if result.Description() != nil {
+		for _, val := range result.Description().Translations() {
+			descriptionTranslations = append(descriptionTranslations, &graphql.Translation{
+				Language: &graphql.Language{
+					Locale: val.Locale(),
+					Name:   val.Name(),
+				},
+				Text: val.Data(),
+			})
+		}
 	}
 
 	return &Post{

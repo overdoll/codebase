@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<05bccca4504442a9e6413d2230681c06>>
+ * @generated SignedSource<<70a8e1a1bcf6e62f4ef26bc5dd4f838a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type ClickableCharacterFragment$data = {
   readonly name: string;
   readonly series: {
     readonly slug: string;
-  };
+  } | null;
   readonly slug: string;
   readonly " $fragmentType": "ClickableCharacterFragment";
 };

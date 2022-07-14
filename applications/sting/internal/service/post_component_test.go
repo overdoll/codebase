@@ -293,7 +293,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	description := "test description for the post 😀 😃 😄 😁 😆 😅 😂 🤣"
 
 	// update the post description
-	var updatePostDescription UpdatePostCharacters
+	var updatePostDescription UpdatePostDescription
 
 	err = client.Mutate(context.Background(), &updatePostDescription, map[string]interface{}{
 		"input": types.UpdatePostDescriptionInput{

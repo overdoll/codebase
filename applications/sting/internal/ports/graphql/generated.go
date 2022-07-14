@@ -381,6 +381,7 @@ type ComplexityRoot struct {
 		CreateTopic                      func(childComplexity int, input types.CreateTopicInput) int
 		DeletePost                       func(childComplexity int, input types.DeletePostInput) int
 		DisableClubCharacters            func(childComplexity int, input types.DisableClubCharactersInput) int
+		DisableClubSupporterOnlyPosts    func(childComplexity int, input types.DisableClubSupporterOnlyPostsInput) int
 		EnableClubCharacters             func(childComplexity int, input types.EnableClubCharactersInput) int
 		EnableClubSupporterOnlyPosts     func(childComplexity int, input types.EnableClubSupporterOnlyPostsInput) int
 		JoinClub                         func(childComplexity int, input types.JoinClubInput) int
@@ -833,6 +834,7 @@ type MutationResolver interface {
 	TerminateClub(ctx context.Context, input types.TerminateClubInput) (*types.TerminateClubPayload, error)
 	UnTerminateClub(ctx context.Context, input types.UnTerminateClubInput) (*types.UnTerminateClubPayload, error)
 	EnableClubSupporterOnlyPosts(ctx context.Context, input types.EnableClubSupporterOnlyPostsInput) (*types.EnableClubSupporterOnlyPostsPayload, error)
+	DisableClubSupporterOnlyPosts(ctx context.Context, input types.DisableClubSupporterOnlyPostsInput) (*types.DisableClubSupporterOnlyPostsPayload, error)
 	DisableClubCharacters(ctx context.Context, input types.DisableClubCharactersInput) (*types.DisableClubCharactersPayload, error)
 	EnableClubCharacters(ctx context.Context, input types.EnableClubCharactersInput) (*types.EnableClubCharactersPayload, error)
 	UpdateClubCharactersLimit(ctx context.Context, input types.UpdateClubCharactersLimitInput) (*types.UpdateClubCharactersLimitPayload, error)
@@ -2331,6 +2333,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.DisableClubCharacters(childComplexity, args["input"].(types.DisableClubCharactersInput)), true
+
+	case "Mutation.disableClubSupporterOnlyPosts":
+		if e.complexity.Mutation.DisableClubSupporterOnlyPosts == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_disableClubSupporterOnlyPosts_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DisableClubSupporterOnlyPosts(childComplexity, args["input"].(types.DisableClubSupporterOnlyPostsInput)), true
 
 	case "Mutation.enableClubCharacters":
 		if e.complexity.Mutation.EnableClubCharacters == nil {
@@ -5424,6 +5438,17 @@ extend type Mutation {
   enableClubSupporterOnlyPosts(input: EnableClubSupporterOnlyPostsInput!): EnableClubSupporterOnlyPostsPayload
 
   """
+  Disable club supporter-only posts.
+
+  When this mutation is ran, the club will no longer be able to create supporter-only posts, and their supporter timer will reset, as well as removing the ability to collect subscriptions.
+
+  In order to be able to collect subscriptions again, the enableClubSupporterOnlyPosts mutation should be ran, and the club owner should create a post with supporter-only content.
+
+  Staff+ only.
+  """
+  disableClubSupporterOnlyPosts(input: DisableClubSupporterOnlyPostsInput!): DisableClubSupporterOnlyPostsPayload
+
+  """
   Disable club characters.
 
   Will disable character creation for the club.
@@ -8288,6 +8313,21 @@ func (ec *executionContext) field_Mutation_disableClubCharacters_args(ctx contex
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNDisableClubCharactersInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐDisableClubCharactersInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_disableClubSupporterOnlyPosts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.DisableClubSupporterOnlyPostsInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNDisableClubSupporterOnlyPostsInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐDisableClubSupporterOnlyPostsInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -20596,6 +20636,62 @@ func (ec *executionContext) fieldContext_Mutation_enableClubSupporterOnlyPosts(c
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_enableClubSupporterOnlyPosts_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_disableClubSupporterOnlyPosts(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_disableClubSupporterOnlyPosts(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DisableClubSupporterOnlyPosts(rctx, fc.Args["input"].(types.DisableClubSupporterOnlyPostsInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.DisableClubSupporterOnlyPostsPayload)
+	fc.Result = res
+	return ec.marshalODisableClubSupporterOnlyPostsPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐDisableClubSupporterOnlyPostsPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_disableClubSupporterOnlyPosts(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "club":
+				return ec.fieldContext_DisableClubSupporterOnlyPostsPayload_club(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type DisableClubSupporterOnlyPostsPayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_disableClubSupporterOnlyPosts_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -37200,6 +37296,12 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_enableClubSupporterOnlyPosts(ctx, field)
 			})
 
+		case "disableClubSupporterOnlyPosts":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_disableClubSupporterOnlyPosts(ctx, field)
+			})
+
 		case "disableClubCharacters":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -41098,6 +41200,11 @@ func (ec *executionContext) unmarshalNDisableClubCharactersInput2overdollᚋappl
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNDisableClubSupporterOnlyPostsInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐDisableClubSupporterOnlyPostsInput(ctx context.Context, v interface{}) (types.DisableClubSupporterOnlyPostsInput, error) {
+	res, err := ec.unmarshalInputDisableClubSupporterOnlyPostsInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNEnableClubCharactersInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐEnableClubCharactersInput(ctx context.Context, v interface{}) (types.EnableClubCharactersInput, error) {
 	res, err := ec.unmarshalInputEnableClubCharactersInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -42691,6 +42798,13 @@ func (ec *executionContext) marshalODisableClubCharactersPayload2ᚖoverdollᚋa
 		return graphql.Null
 	}
 	return ec._DisableClubCharactersPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalODisableClubSupporterOnlyPostsPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐDisableClubSupporterOnlyPostsPayload(ctx context.Context, sel ast.SelectionSet, v *types.DisableClubSupporterOnlyPostsPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._DisableClubSupporterOnlyPostsPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOEnableClubCharactersPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐEnableClubCharactersPayload(ctx context.Context, sel ast.SelectionSet, v *types.EnableClubCharactersPayload) graphql.Marshaler {

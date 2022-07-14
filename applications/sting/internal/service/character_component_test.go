@@ -305,7 +305,7 @@ func TestCreateClubCharacter_update_and_search(t *testing.T) {
 
 	require.NoError(t, err, "no error enabling characters for club")
 
-	require.Equal(t, 25, enableClubCharacters.EnableClubCharacters.Club.CharactersEnabled, "25 limit")
+	require.Equal(t, 25, enableClubCharacters.EnableClubCharacters.Club.CharactersLimit, "25 limit")
 	require.Equal(t, 0, enableClubCharacters.EnableClubCharacters.Club.CharactersCount, "0 characters")
 	require.True(t, enableClubCharacters.EnableClubCharacters.Club.CharactersEnabled, "characters are enabled")
 

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<91a7e481eaf43958d855994c49202f44>>
- * @relayHash a8e6128b147a058bad4535406e3dbcd2
+ * @generated SignedSource<<093ffa79431768446d8643706ac0c7c8>>
+ * @relayHash 95d1102b0401cd07424ed906b7f0652e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,14 +9,14 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a8e6128b147a058bad4535406e3dbcd2
+// @relayRequestID 95d1102b0401cd07424ed906b7f0652e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostsSort = "NEW" | "TOP" | "%future added value";
 export type SearchCharacterQuery$variables = {
   characterSlug: string;
-  seriesSlug: string;
+  seriesSlug?: string | null;
   sortBy: PostsSort;
 };
 export type SearchCharacterQuery$data = {
@@ -560,7 +560,7 @@ return {
     ]
   },
   "params": {
-    "id": "a8e6128b147a058bad4535406e3dbcd2",
+    "id": "95d1102b0401cd07424ed906b7f0652e",
     "metadata": {},
     "name": "SearchCharacterQuery",
     "operationKind": "query",
@@ -569,7 +569,7 @@ return {
 };
 })();
 
-(node as any).hash = "0977afae9a481e2103f2828146f0a27e";
+(node as any).hash = "3f77d789866ea6c107232d4bd37f809f";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

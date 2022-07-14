@@ -226,7 +226,7 @@ func TestCreateCharacter_update_series_and_search_character(t *testing.T) {
 
 	err = client.Mutate(context.Background(), &createCharacter, map[string]interface{}{
 		"input": types.CreateCharacterInput{
-			SeriesID: relaySeriesId,
+			SeriesID: &relaySeriesId,
 			Slug:     currentCharacterSlug,
 			Name:     fake.Name,
 		},

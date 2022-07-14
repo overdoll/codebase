@@ -3705,6 +3705,17 @@ type Mutation {
   disableClubCharacters(input: DisableClubCharactersInput!): DisableClubCharactersPayload @join__field(graph: STING)
 
   """
+  Disable club supporter-only posts.
+  
+  When this mutation is ran, the club will no longer be able to create supporter-only posts, and their supporter timer will reset, as well as removing the ability to collect subscriptions.
+  
+  In order to be able to collect subscriptions again, the enableClubSupporterOnlyPosts mutation should be ran, and the club owner should create a post with supporter-only content.
+  
+  Staff+ only.
+  """
+  disableClubSupporterOnlyPosts(input: DisableClubSupporterOnlyPostsInput!): DisableClubSupporterOnlyPostsPayload @join__field(graph: STING)
+
+  """
   Enable club characters.
   
   Will enable club characters. Requires a limit to be set as well.

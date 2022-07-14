@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<183320b15209de639fd052c47550feb2>>
+ * @generated SignedSource<<41dbcaaaebdf7851b17d0796c243a0ee>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type StaffSearchCharacterFragment$data = {
       readonly node: {
         readonly series: {
           readonly slug: string;
-        };
+        } | null;
         readonly slug: string;
         readonly " $fragmentSpreads": FragmentRefs<"CharacterTileOverlayFragment">;
       };

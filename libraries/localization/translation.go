@@ -100,8 +100,10 @@ func (t *Translation) UpdateDefaultTranslation(data string) error {
 func MarshalTranslationToDatabase(t *Translation) map[string]string {
 	tran := make(map[string]string)
 
-	for _, ts := range t.translations {
-		tran[ts.Locale()] = ts.data
+	if t != nil {
+		for _, ts := range t.translations {
+			tran[ts.Locale()] = ts.data
+		}
 	}
 
 	return tran

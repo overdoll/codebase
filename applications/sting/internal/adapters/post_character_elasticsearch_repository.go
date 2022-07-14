@@ -301,7 +301,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllCharacters(ctx context.Co
 
 		for iter.StructScan(&c) {
 
-			var m *series
+			var m series
 
 			if c.SeriesId != nil {
 				// get media connected to this character document
@@ -310,7 +310,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllCharacters(ctx context.Co
 				}
 			}
 
-			unmarshalled, err := r.unmarshalCharacterFromDatabase(ctx, &c, m)
+			unmarshalled, err := r.unmarshalCharacterFromDatabase(ctx, &c, &m)
 
 			if err != nil {
 				return err

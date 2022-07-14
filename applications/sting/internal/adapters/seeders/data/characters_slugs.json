@@ -1,52 +1,62 @@
 [
   {
     "slug": "susannahaguilar",
-    "series_id": "1pcKiQL7dgUW8CIN7uO1wqFaMql",
-    "character_id": "1q7MJfxuQNRslgmHqOdj35SWgrP"
+    "series_or_club_id": "1pcKiQL7dgUW8CIN7uO1wqFaMql",
+    "character_id": "1q7MJfxuQNRslgmHqOdj35SWgrP",
+    "is_club_id": false
   },
   {
     "slug": "margaretlee",
-    "series_id": "1pcKiQL7dgUW8CIN7uO1wqFaMql",
-    "character_id": "1q7MJkk5fQGBWWYDqM22iITSjeW"
+    "series_or_club_id": "1pcKiQL7dgUW8CIN7uO1wqFaMql",
+    "character_id": "1q7MJkk5fQGBWWYDqM22iITSjeW",
+    "is_club_id": false
   },
   {
     "slug": "aarushhills",
-    "series_id": "1pcKibRoqTAUgmOiNpGLIrztM9R",
+    "series_or_club_id": "1pcKibRoqTAUgmOiNpGLIrztM9R",
+    "is_club_id": false,
     "character_id": "1q7MJnQXAtxer0fboBMHtlC0JMe"
   },
   {
     "slug": "mariannehogan",
-    "series_id": "1pcKixJLZFPfPbQ3eF7Nc21DR7m",
-    "character_id": "1q7MJvJSqaUlTnqHOPav3hNZqFg"
+    "series_or_club_id": "1pcKixJLZFPfPbQ3eF7Nc21DR7m",
+    "character_id": "1q7MJvJSqaUlTnqHOPav3hNZqFg",
+    "is_club_id": false
   },
   {
     "slug": "orionstrong",
-    "series_id": "1pcKj395CsMusRZlJviwIG4qRCh",
-    "character_id": "1q7MJzOppSUvaS2dIKsAjDj1G2G"
+    "series_or_club_id": "1pcKj395CsMusRZlJviwIG4qRCh",
+    "character_id": "1q7MJzOppSUvaS2dIKsAjDj1G2G",
+    "is_club_id": false
   },
   {
     "slug": "ronniedurham",
-    "series_id": "1pcKixJLZFPfPbQ3eF7Nc21DR7m",
-    "character_id": "1q7MJwBKmIki8ogV0RzbFyH4CNz"
+    "series_or_club_id": "1pcKixJLZFPfPbQ3eF7Nc21DR7m",
+    "character_id": "1q7MJwBKmIki8ogV0RzbFyH4CNz",
+    "is_club_id": false
   },
   {
     "slug": "frankyspears",
-    "series_id": "1pcKiWXTyFUY0xHlNJjIz2x1pVP",
-    "character_id": "1q7MKCL8EUAtVyB9Xe0wPbHMFVI"
+    "series_or_club_id": "1pcKiWXTyFUY0xHlNJjIz2x1pVP",
+    "character_id": "1q7MKCL8EUAtVyB9Xe0wPbHMFVI",
+    "is_club_id": false
   },
   {
     "slug": "umerdixon",
-    "series_id": "1pcKiTRBqURVEdcw1cKhyiejFp7",
-    "character_id": "1q7MfC2Y6gdEuJYeIdnL4VduYGO"
+    "series_or_club_id": "1pcKiTRBqURVEdcw1cKhyiejFp7",
+    "character_id": "1q7MfC2Y6gdEuJYeIdnL4VduYGO",
+    "is_club_id": false
   },
   {
     "slug": "haiderwoodley",
-    "series_id": "1pcKiTRBqURVEdcw1cKhyiejFp7",
-    "character_id": "1q7MfGasemHylVBXDbOijLoIvhT"
+    "series_or_club_id": "1pcKiTRBqURVEdcw1cKhyiejFp7",
+    "character_id": "1q7MfGasemHylVBXDbOijLoIvhT",
+    "is_club_id": false
   },
   {
     "slug": "lylahbarrett",
-    "series_id": "1pcKiTRBqURVEdcw1cKhyiejFp7",
-    "character_id": "1q7MfIULfXfCXXzRO2ddDfLUAJw"
+    "series_or_club_id": "1pcKiTRBqURVEdcw1cKhyiejFp7",
+    "character_id": "1q7MfIULfXfCXXzRO2ddDfLUAJw",
+    "is_club_id": false
   }
 ]
