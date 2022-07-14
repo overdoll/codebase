@@ -579,6 +579,13 @@ func (p *Post) UpdateCharactersRequest(requester *principal.Principal, character
 	visitedSeries := make(map[string]bool)
 
 	for _, c := range characters {
+
+		if c.clubId != nil {
+			if err := requester.CheckClubOwner(*c.clubId); err != nil {
+				return domainerror.NewValidation("cannot use club character if you are not owner of club")
+			}
+		}
+
 		characterIds = append(characterIds, c.id)
 
 		if _, ok := visitedSeries[c.series.id]; !ok {
