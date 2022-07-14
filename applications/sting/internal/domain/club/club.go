@@ -48,6 +48,9 @@ type Club struct {
 
 	newClubMembers []string
 
+	charactersEnabled bool
+	charactersLimit   int
+
 	membersCount   int
 	ownerAccountId string
 
@@ -127,7 +130,7 @@ func NewClub(requester *principal.Principal, slug, name string, currentClubCount
 	}, nil
 }
 
-func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail *resource.Resource, banner *resource.Resource, membersCount int, ownerAccountId string, suspended bool, suspendedUntil, nextSupporterPostTime *time.Time, hasCreatedSupporterOnlyPost bool, terminated bool, terminatedByAccountId *string, supporterOnlyPostsDisabled bool, createdAt, updatedAt time.Time) *Club {
+func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail *resource.Resource, banner *resource.Resource, membersCount int, ownerAccountId string, suspended bool, suspendedUntil, nextSupporterPostTime *time.Time, hasCreatedSupporterOnlyPost bool, terminated bool, terminatedByAccountId *string, supporterOnlyPostsDisabled bool, createdAt, updatedAt time.Time, charactersEnabled bool, charactersLimit int) *Club {
 	return &Club{
 		id:                          id,
 		slug:                        slug,
@@ -146,6 +149,8 @@ func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name 
 		createdAt:                   createdAt,
 		updatedAt:                   updatedAt,
 		supporterOnlyPostsDisabled:  supporterOnlyPostsDisabled,
+		charactersEnabled:           charactersEnabled,
+		charactersLimit:             charactersLimit,
 	}
 }
 
@@ -175,6 +180,14 @@ func (m *Club) BannerResource() *resource.Resource {
 
 func (m *Club) MembersCount() int {
 	return m.membersCount
+}
+
+func (m *Club) CharactersEnabled() bool {
+	return m.charactersEnabled
+}
+
+func (m *Club) CharactersLimit() int {
+	return m.charactersLimit
 }
 
 func (m *Club) NewClubMembers() []string {
@@ -266,6 +279,49 @@ func (m *Club) UpdateEnableSupporterOnlyPosts(requester *principal.Principal) er
 		return principal.ErrNotAuthorized
 	}
 	m.supporterOnlyPostsDisabled = false
+
+	return nil
+}
+
+func (m *Club) UpdateClubCharactersLimit(requester *principal.Principal, limit int) error {
+
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
+
+	if limit > 200 {
+		return domainerror.NewValidation("club characters limit too large")
+	}
+
+	m.charactersLimit = limit
+
+	return nil
+}
+
+func (m *Club) UpdateEnableClubCharacters(requester *principal.Principal, limit int) error {
+
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
+
+	if limit > 200 {
+		return domainerror.NewValidation("club characters limit too large")
+	}
+
+	m.charactersEnabled = true
+	m.charactersLimit = limit
+
+	return nil
+}
+
+func (m *Club) UpdateDisableClubCharacters(requester *principal.Principal) error {
+
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
+
+	m.charactersEnabled = false
+	m.charactersLimit = 0
 
 	return nil
 }
@@ -574,6 +630,19 @@ func IsAccountClubsLimitReached(requester *principal.Principal, accountId string
 	}
 
 	return false, nil
+}
+
+func ViewClubCharactersCount(requester *principal.Principal, clubId string) error {
+
+	if requester.IsStaff() {
+		return nil
+	}
+
+	if err := requester.CheckClubOwner(clubId); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func ViewClubSlugLimit(requester *principal.Principal, accountId string) (int, error) {

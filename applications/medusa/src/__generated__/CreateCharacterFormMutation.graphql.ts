@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<07484e17e6ef28206d4fc5cf01da92d8>>
+ * @generated SignedSource<<00931c6fd4a149c2148ebc1ef2f5e5c0>>
  * @relayHash fa7344770216d9d966352df15e03aabc
  * @lightSyntaxTransform
  * @nogrep
@@ -14,8 +14,9 @@
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type CreateCharacterValidation = "SLUG_TAKEN" | "%future added value";
 export type CreateCharacterInput = {
+  clubId?: string | null;
   name: string;
-  seriesId: string;
+  seriesId?: string | null;
   slug: string;
 };
 export type CreateCharacterFormMutation$variables = {

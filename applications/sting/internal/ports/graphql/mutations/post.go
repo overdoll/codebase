@@ -128,6 +128,32 @@ func (r *MutationResolver) UnArchivePost(ctx context.Context, input types.UnArch
 	}, nil
 }
 
+func (r *MutationResolver) UpdatePostDescription(ctx context.Context, input types.UpdatePostDescriptionInput) (*types.UpdatePostDescriptionPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	pst, err := r.App.Commands.UpdatePostDescription.
+		Handle(
+			ctx,
+			command.UpdatePostDescription{
+				Principal:   principal.FromContext(ctx),
+				PostId:      input.ID.GetID(),
+				Description: input.Description,
+				Locale:      input.Locale,
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.UpdatePostDescriptionPayload{
+		Post: types.MarshalPostToGraphQL(ctx, pst),
+	}, nil
+}
+
 func (r *MutationResolver) UpdatePostAudience(ctx context.Context, input types.UpdatePostAudienceInput) (*types.UpdatePostAudiencePayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {

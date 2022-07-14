@@ -10,7 +10,7 @@ interface Props {
 }
 
 const Query = graphql`
-  query StaffViewCharacterQuery($slug: String!, $seriesSlug: String!) {
+  query StaffViewCharacterQuery($slug: String!, $seriesSlug: String) {
     character(slug: $slug, seriesSlug: $seriesSlug) {
       ...ChangeCharacterNameFragment
       ...ChangeCharacterThumbnailFragment

@@ -2,7 +2,6 @@ package query
 
 import (
 	"context"
-
 	"overdoll/applications/eva/internal/domain/account"
 )
 

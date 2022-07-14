@@ -10,7 +10,8 @@ import (
 type CharacterBySlug struct {
 	Principal  *principal.Principal
 	Slug       string
-	SeriesSlug string
+	SeriesSlug *string
+	ClubSlug   *string
 }
 
 type CharacterBySlugHandler struct {
@@ -23,7 +24,7 @@ func NewCharacterBySlugHandler(pr post.Repository) CharacterBySlugHandler {
 
 func (h CharacterBySlugHandler) Handle(ctx context.Context, query CharacterBySlug) (*post.Character, error) {
 
-	result, err := h.pr.GetCharacterBySlug(ctx, query.Slug, query.SeriesSlug)
+	result, err := h.pr.GetCharacterBySlug(ctx, query.Slug, query.SeriesSlug, query.ClubSlug)
 
 	if err != nil {
 		return nil, err

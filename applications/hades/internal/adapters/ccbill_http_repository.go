@@ -94,7 +94,7 @@ func (r CCBillHttpRepository) ViewSubscriptionStatus(ctx context.Context, ccbill
 		}
 
 		if result < 1 {
-			return nil, errors.New(fmt.Sprintf("failed to charge by previous: ccbill error: %s", strconv.Itoa(int(result))))
+			return nil, errors.New(fmt.Sprintf("failed to view subscription: ccbill error: %s", strconv.Itoa(int(result))))
 		}
 	}
 

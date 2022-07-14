@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<638e418630b51a3e986c57eb615f3e03>>
+ * @generated SignedSource<<32a4abacfc7bbb71c501e56136cb8d77>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,7 @@ export type PostStaticCharactersFragment$data = {
     readonly name: string;
     readonly series: {
       readonly title: string;
-    };
+    } | null;
   }>;
   readonly " $fragmentType": "PostStaticCharactersFragment";
 };

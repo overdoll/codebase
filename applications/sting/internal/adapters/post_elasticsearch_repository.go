@@ -8,6 +8,7 @@ import (
 	"overdoll/libraries/cache"
 	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/localization"
 	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"time"
@@ -22,6 +23,7 @@ import (
 type postDocument struct {
 	Id                              string            `json:"id"`
 	State                           string            `json:"state"`
+	Description                     map[string]string `json:"description"`
 	SupporterOnlyStatus             string            `json:"supporter_only_status"`
 	ContentResourceIds              []string          `json:"content_resource_ids"`
 	ContentResources                map[string]string `json:"content_resources"`
@@ -90,6 +92,7 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPostDocument(ctx contex
 		pst.CreatedAt,
 		pst.UpdatedAt,
 		pst.PostedAt,
+		pst.Description,
 	)
 
 	if sort != nil {
@@ -156,6 +159,7 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 		CreatedAt:                       pst.CreatedAt(),
 		UpdatedAt:                       pst.UpdatedAt(),
 		PostedAt:                        pst.PostedAt(),
+		Description:                     localization.MarshalTranslationToDatabase(pst.Description()),
 	}, nil
 }
 

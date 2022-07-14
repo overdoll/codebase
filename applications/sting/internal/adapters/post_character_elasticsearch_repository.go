@@ -26,7 +26,8 @@ type characterDocument struct {
 	ThumbnailResource string            `json:"thumbnail_resource"`
 	BannerResource    string            `json:"banner_resource"`
 	Name              map[string]string `json:"name"`
-	Series            seriesDocument    `json:"series"`
+	Series            *seriesDocument   `json:"series"`
+	ClubId            *string           `json:"club_id"`
 	CreatedAt         time.Time         `json:"created_at"`
 	UpdatedAt         time.Time         `json:"updated_at"`
 	TotalLikes        int               `json:"total_likes"`
@@ -63,12 +64,13 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 		ThumbnailResource: marshalled,
 		BannerResource:    marshalledBanner,
 		Name:              localization.MarshalTranslationToDatabase(char.Name()),
+		ClubId:            char.ClubId(),
 		Slug:              char.Slug(),
 		CreatedAt:         char.CreatedAt(),
 		UpdatedAt:         char.UpdatedAt(),
 		TotalLikes:        char.TotalLikes(),
 		TotalPosts:        char.TotalPosts(),
-		Series:            *marshalledSeries,
+		Series:            marshalledSeries,
 	}, nil
 }
 
@@ -94,16 +96,33 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx co
 		return nil, err
 	}
 
-	unmarshalledSeriesResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, chr.Series.ThumbnailResource)
+	var series *post.Series
 
-	if err != nil {
-		return nil, err
-	}
+	if chr.Series != nil {
 
-	unmarshalledSeriesBannerResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, chr.Series.BannerResource)
+		unmarshalledSeriesResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, chr.Series.ThumbnailResource)
 
-	if err != nil {
-		return nil, err
+		if err != nil {
+			return nil, err
+		}
+
+		unmarshalledSeriesBannerResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, chr.Series.BannerResource)
+
+		if err != nil {
+			return nil, err
+		}
+
+		series = post.UnmarshalSeriesFromDatabase(
+			chr.Series.Id,
+			chr.Series.Slug,
+			chr.Series.Title,
+			unmarshalledSeriesResource,
+			unmarshalledSeriesBannerResource,
+			chr.Series.TotalLikes,
+			chr.Series.TotalPosts,
+			chr.Series.CreatedAt,
+			chr.Series.UpdatedAt,
+		)
 	}
 
 	newCharacter := post.UnmarshalCharacterFromDatabase(
@@ -116,17 +135,9 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx co
 		chr.TotalPosts,
 		chr.CreatedAt,
 		chr.UpdatedAt,
-		post.UnmarshalSeriesFromDatabase(
-			chr.Series.Id,
-			chr.Series.Slug,
-			chr.Series.Title,
-			unmarshalledSeriesResource,
-			unmarshalledSeriesBannerResource,
-			chr.Series.TotalLikes,
-			chr.Series.TotalPosts,
-			chr.Series.CreatedAt,
-			chr.Series.UpdatedAt,
-		))
+		series,
+		chr.ClubId,
+	)
 
 	if sort != nil {
 		newCharacter.Node = paging.NewNode(sort)
@@ -220,6 +231,14 @@ func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Cont
 
 	query := elastic.NewBoolQuery()
 
+	if filter.ClubCharacters() != nil {
+		if *filter.ClubCharacters() {
+			query.Filter(elastic.NewExistsQuery("club_id"))
+		} else {
+			query.Filter(elastic.NewExistsQuery("series"))
+		}
+	}
+
 	if filter.Name() != nil {
 		query.Must(
 			elastic.
@@ -236,6 +255,10 @@ func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Cont
 
 	if filter.SeriesSlug() != nil {
 		query.Filter(elastic.NewTermQuery("series.slug", *filter.SeriesSlug()))
+	}
+
+	if filter.ClubId() != nil {
+		query.Filter(elastic.NewTermQuery("club_id", *filter.ClubId()))
 	}
 
 	builder.Query(query)
@@ -280,9 +303,11 @@ func (r PostsCassandraElasticsearchRepository) IndexAllCharacters(ctx context.Co
 
 			var m series
 
-			// get media connected to this character document
-			if err := r.session.Query(seriesTable.Get()).Consistency(gocql.One).Bind(c.SeriesId).Get(&m); err != nil {
-				return err
+			if c.SeriesId != nil {
+				// get media connected to this character document
+				if err := r.session.Query(seriesTable.Get()).Consistency(gocql.One).Bind(*c.SeriesId).Get(&m); err != nil {
+					return err
+				}
 			}
 
 			unmarshalled, err := r.unmarshalCharacterFromDatabase(ctx, &c, &m)

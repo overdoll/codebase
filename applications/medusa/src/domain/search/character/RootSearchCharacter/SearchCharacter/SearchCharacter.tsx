@@ -21,7 +21,7 @@ interface Props {
 const Query = graphql`
   query SearchCharacterQuery(
     $sortBy: PostsSort!,
-    $seriesSlug: String!,
+    $seriesSlug: String,
     $characterSlug: String!,
   ) @preloadable {
     character(seriesSlug: $seriesSlug, slug: $characterSlug) {

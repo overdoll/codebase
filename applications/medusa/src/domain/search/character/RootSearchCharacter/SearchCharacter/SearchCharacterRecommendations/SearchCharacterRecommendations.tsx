@@ -27,14 +27,14 @@ export default function SearchCharacterRecommendations ({ query }: Props): JSX.E
     <LinkTile href={{
       pathname: '/search/series/[seriesSlug]',
       query: {
-        seriesSlug: data.series.slug
+        seriesSlug: data.series?.slug
       }
     }}
     >
       <SmallBackgroundBox>
         <HStack spacing={2} justify='space-between'>
           <Heading color='gray.100' fontSize='md'>
-            {data.series.title}
+            {data.series?.title}
           </Heading>
           <Icon icon={ArrowButtonRight} w={4} h={4} fill='gray.200' />
         </HStack>

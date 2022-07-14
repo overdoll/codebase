@@ -2,66 +2,50 @@ package dataloader
 
 import (
 	"context"
-	"github.com/graph-gophers/dataloader"
+	"github.com/graph-gophers/dataloader/v7"
 	"overdoll/applications/eva/internal/app"
 	"overdoll/applications/eva/internal/app/query"
 	"overdoll/applications/eva/internal/ports/graphql/types"
-	"overdoll/libraries/errors/apperror"
+	"overdoll/libraries/graphql"
 	"time"
 )
 
-func accountsByIds(app *app.Application) *dataloader.Loader {
-	return dataloader.NewBatchedLoader(
-		func(ctx context.Context, keys dataloader.Keys) []*dataloader.Result {
-			// create a map for remembering the order of keys passed in
-			keyOrder := make(map[string]int, len(keys))
+func accountsByIds(app *app.Application) *dataloader.Loader[string, *types.Account] {
+	return dataloader.NewBatchedLoader[string, *types.Account](
+		func(ctx context.Context, keys []string) []*dataloader.Result[*types.Account] {
+			return graphql.DataloaderHelper[*types.Account](
+				"account",
+				func(keys []string) ([]graphql.Mapping[*types.Account], error) {
+					results, err := app.Queries.AccountsByIds.Handle(ctx, query.AccountsByIds{
+						AccountIds: keys,
+					})
 
-			// collect the keys to search for
-			var keyIds []string
-			for ix, key := range keys {
-				keyIds = append(keyIds, key.String())
-				keyOrder[key.String()] = ix
-			}
-			// construct an output array of dataloader results
-			results := make([]*dataloader.Result, len(keys))
+					if err != nil {
+						return nil, err
+					}
 
-			res, err := app.Queries.AccountsByIds.Handle(context.Background(), query.AccountsByIds{AccountIds: keyIds})
+					var mapping []graphql.Mapping[*types.Account]
 
-			if err != nil {
-				for _, ix := range keyOrder {
-					results[ix] = &dataloader.Result{Data: nil, Error: err}
-				}
-				return results
-			}
+					for _, result := range results {
+						mapping = append(mapping, graphql.Mapping[*types.Account]{
+							Data: types.MarshalAccountToGraphQL(ctx, result),
+							Id:   result.ID(),
+						})
+					}
 
-			// enumerate records, put into output
-			for _, record := range res {
-				ix, ok := keyOrder[record.ID()]
-				// if found, remove from index lookup map so we know elements were found
-				if ok {
-					results[ix] = &dataloader.Result{Data: types.MarshalAccountToGraphQL(ctx, record), Error: nil}
-					delete(keyOrder, record.ID())
-				}
-			}
-
-			// fill array positions with errors where not found in DB
-			for v, ix := range keyOrder {
-				results[ix] = &dataloader.Result{Data: nil, Error: apperror.NewNotFoundError("account", v)}
-			}
-
-			// return results
-			return results
-		}, dataloader.WithWait(time.Millisecond*1))
+					return mapping, nil
+				}, ctx, keys)
+		}, dataloader.WithWait[string, *types.Account](time.Millisecond*5))
 }
 
 func (i *DataLoader) GetAccountById(ctx context.Context, id string) (*types.Account, error) {
 
-	thunk := i.accountsByIds.Load(ctx, dataloader.StringKey(id))
+	thunk := i.accountsByIds.Load(ctx, id)
 	result, err := thunk()
 
 	if err != nil {
 		return nil, err
 	}
 
-	return result.(*types.Account), nil
+	return result, nil
 }

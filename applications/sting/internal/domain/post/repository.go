@@ -27,6 +27,7 @@ type Repository interface {
 	UpdatePostCategories(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostCharacters(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
+	UpdatePostDescription(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostContentAndState(ctx context.Context, id string, updateFn func(pending *Post) error) error
 	UpdatePostContentOperator(ctx context.Context, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostLikesOperator(ctx context.Context, id string, updateFn func(pending *Post) error) (*Post, error)
@@ -36,7 +37,7 @@ type Repository interface {
 	CreateCharacter(ctx context.Context, character *Character) error
 	GetCharacterById(ctx context.Context, characterId string) (*Character, error)
 	GetCharactersByIds(ctx context.Context, characterIds []string) ([]*Character, error)
-	GetCharacterBySlug(ctx context.Context, slug, seriesSlug string) (*Character, error)
+	GetCharacterBySlug(ctx context.Context, slug string, seriesSlug, clubSlug *string) (*Character, error)
 	GetCharacterIdsFromSlugs(ctx context.Context, characterSlugs, seriesIds []string) ([]string, error)
 
 	UpdateCharacterBannerOperator(ctx context.Context, id string, updateFn func(character *Character) error) (*Character, error)

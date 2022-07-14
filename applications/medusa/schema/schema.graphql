@@ -1623,6 +1623,9 @@ type Character implements Node {
   """A URL pointing to the object's banner."""
   banner: Resource
 
+  """The club linked to this character, if it was created by a club."""
+  club: Club
+
   """An ID pointing to this character."""
   id: ID!
 
@@ -1673,8 +1676,8 @@ type Character implements Node {
   """
   reference: String!
 
-  """The series linked to this character."""
-  series: Series!
+  """The series linked to this character, if it's a series character."""
+  series: Series
 
   """A url-friendly ID. Should be used when searching"""
   slug: String!
@@ -1730,6 +1733,41 @@ type Club implements Node {
 
   """Whether or not you can become a supporter of this club."""
   canSupport: Boolean!
+
+  """Get or search all characters for this club."""
+  characters(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the name of the character."""
+    name: String
+
+    """Search by character slugs."""
+    slugs: [String!]
+
+    """Sorting options for characters."""
+    sortBy: CharactersSort! = POPULAR
+  ): CharacterConnection!
+
+  """The total amount of characters that this club has created."""
+  charactersCount: Int!
+
+  """Whether or not characters are enabled for this club."""
+  charactersEnabled: Boolean!
+
+  """The amount of characters that this club can create."""
+  charactersLimit: Int!
 
   """An ID pointing to this club."""
   id: ID!
@@ -2571,6 +2609,9 @@ enum CreateCategoryValidation {
 
 """Create a new character."""
 input CreateCharacterInput {
+  """The chosen club for the character."""
+  clubId: ID
+
   """
   The chosen name for the character.
   
@@ -2579,7 +2620,7 @@ input CreateCharacterInput {
   name: String!
 
   """The chosen series for the character."""
-  seriesId: ID!
+  seriesId: ID
 
   """
   The chosen slug for the character.
@@ -2923,6 +2964,18 @@ type DisableAccountMultiFactorPayload {
   account: Account
 }
 
+"""Disable club characters."""
+input DisableClubCharactersInput {
+  """The club to disable characters for."""
+  clubId: ID!
+}
+
+"""Disable club characters payload."""
+type DisableClubCharactersPayload {
+  """The new club after disabling club characters."""
+  club: Club
+}
+
 """Disable club supporter-only posts."""
 input DisableClubSupporterOnlyPostsInput {
   """The club to disable supporter-only posts for."""
@@ -2932,6 +2985,25 @@ input DisableClubSupporterOnlyPostsInput {
 """Disable club supporter-only posts payload."""
 type DisableClubSupporterOnlyPostsPayload {
   """The new club after supporter-only posts are disabled."""
+  club: Club
+}
+
+"""Enable club characters."""
+input EnableClubCharactersInput {
+  """
+  The amount of characters the club will be able to create.
+  
+  Validation: Limit to 200.
+  """
+  charactersLimit: Int!
+
+  """The club to enable club characters for."""
+  clubId: ID!
+}
+
+"""Enable club characters payload."""
+type EnableClubCharactersPayload {
+  """The new club after enabling club characters."""
   club: Club
 }
 
@@ -3498,7 +3570,14 @@ type Mutation {
   """Create a new category"""
   createCategory(input: CreateCategoryInput!): CreateCategoryPayload
 
-  """Create a new character"""
+  """
+  Create a new character.
+  
+  Must either enter a seriesId for a series character or a clubId for a club character.
+  
+  If entering a SeriesId, the authorization is Staff+ only.
+  If entering a ClubId, you must be the owner of the club.
+  """
   createCharacter(input: CreateCharacterInput!): CreateCharacterPayload
 
   """Create a new club"""
@@ -3555,6 +3634,15 @@ type Mutation {
   disableAccountMultiFactor: DisableAccountMultiFactorPayload
 
   """
+  Disable club characters.
+  
+  Will disable character creation for the club.
+  
+  Staff+ only.
+  """
+  disableClubCharacters(input: DisableClubCharactersInput!): DisableClubCharactersPayload
+
+  """
   Disable club supporter-only posts.
   
   When this mutation is ran, the club will no longer be able to create
@@ -3568,6 +3656,15 @@ type Mutation {
   Staff+ only.
   """
   disableClubSupporterOnlyPosts(input: DisableClubSupporterOnlyPostsInput!): DisableClubSupporterOnlyPostsPayload
+
+  """
+  Enable club characters.
+  
+  Will enable club characters. Requires a limit to be set as well.
+  
+  Staff+ only.
+  """
+  enableClubCharacters(input: EnableClubCharactersInput!): EnableClubCharactersPayload
 
   """
   Enable club supporter-only posts, if previously disabled.
@@ -3775,7 +3872,7 @@ type Mutation {
   """
   Terminate the club.
   
-  Terminating a club will remove it from public visibility and cancel all subscriptions.
+  Terminating a club will remove it from public visibility. Subscriptions will not be cancelled.
   
   Staff+ only.
   """
@@ -3857,10 +3954,21 @@ type Mutation {
   """Update character title"""
   updateCharacterName(input: UpdateCharacterNameInput!): UpdateCharacterNamePayload
 
-  """Update character thumbnail"""
+  """
+  Update character thumbnail
+  
+  Note that this is Staff+ only for now - even if the character is a club character.
+  """
   updateCharacterThumbnail(input: UpdateCharacterThumbnailInput!): UpdateCharacterThumbnailPayload
 
-  """Update the club's name (english-only for now)"""
+  """
+  Set the amount of characters that a club can create.
+  
+  Staff+ only.
+  """
+  updateClubCharactersLimit(input: UpdateClubCharactersLimitInput!): UpdateClubCharactersLimitPayload
+
+  """Update the club's name (english-only for now)."""
   updateClubName(input: UpdateClubNameInput!): UpdateClubNamePayload
 
   """
@@ -3917,6 +4025,9 @@ type Mutation {
   Update a post in draft status - update post content order - need to send exact same IDs
   """
   updatePostContentOrder(input: UpdatePostContentOrderInput!): UpdatePostContentOrderPayload
+
+  """Update a post in draft status - description"""
+  updatePostDescription(input: UpdatePostDescriptionInput!): UpdatePostDescriptionPayload
 
   """Update a rule deprecation."""
   updateRuleDeprecated(input: UpdateRuleDeprecatedInput!): UpdateRuleDeprecatedPayload
@@ -4019,6 +4130,16 @@ type Post implements Node {
 
   """The date and time of when this post was created"""
   createdAt: Time!
+
+  """
+  A description for this post.
+  
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  description(locale: BCP47): String!
+
+  """All translations for this description."""
+  descriptionTranslations: [Translation!]!
   id: ID!
 
   """The amount of likes on this post."""
@@ -4405,8 +4526,15 @@ type Query {
 
   """Get a single character."""
   character(
-    """A series slug is required since character slugs are unique-per-series."""
-    seriesSlug: String!
+    """
+    A club slug is required since character slugs are unique-per-series. Must enter either a series slug, or a club slug.
+    """
+    clubSlug: String
+
+    """
+    A series slug is required since character slugs are unique-per-series. Must enter either a series slug, or a club slug.
+    """
+    seriesSlug: String
 
     """Search by slug of the character."""
     slug: String!
@@ -4422,6 +4550,22 @@ type Query {
     """
     before: String
 
+    """
+    Whether or not to show characters that were created by a club.
+    
+    By default, shows all characters.
+    
+    Otherwise, if true, shows all characters that were created by a club. If false, shows only series characters.
+    """
+    clubCharacters: Boolean
+
+    """
+    When searching for a character by slug, you need to include the club' slug since slugs are unique-per-series.
+    
+    Only one slug is allowed for now since you don't want inaccurate results.
+    """
+    clubSlug: String
+
     """Returns the first _n_ elements from the list."""
     first: Int
 
@@ -4434,7 +4578,7 @@ type Query {
     """
     When searching for a character by slug, you need to include the series' slug since slugs are unique-per-series.
     
-    Only one slug is allowed for now since you don't want inaccurate results
+    Only one slug is allowed for now since you don't want inaccurate results.
     """
     seriesSlug: String
 
@@ -5707,6 +5851,25 @@ type UpdateCharacterThumbnailPayload {
   character: Character
 }
 
+"""Update club characters limit."""
+input UpdateClubCharactersLimitInput {
+  """
+  The amount of characters the club will be able to create.
+  
+  Validation: Limit to 200.
+  """
+  charactersLimit: Int!
+
+  """The club to update club characters limit for."""
+  clubId: ID!
+}
+
+"""Update club characters limit payload."""
+type UpdateClubCharactersLimitPayload {
+  """The club after updating the characters limit."""
+  club: Club
+}
+
 """Update club name."""
 input UpdateClubNameInput {
   """The club to update"""
@@ -5896,6 +6059,32 @@ input UpdatePostContentOrderInput {
 
 """Payload for updating a post"""
 type UpdatePostContentOrderPayload {
+  """The post after the update"""
+  post: Post
+}
+
+"""Update post."""
+input UpdatePostDescriptionInput {
+  """
+  The description to update.
+  
+  Validation: Max 280 characters. No links allowed.
+  """
+  description: String!
+
+  """The post to update"""
+  id: ID!
+
+  """
+  The localization for this description.
+  
+  Locale must be one from the languages query, or else the locale won't be accepted.
+  """
+  locale: BCP47!
+}
+
+"""Payload for updating a post description"""
+type UpdatePostDescriptionPayload {
   """The post after the update"""
   post: Post
 }

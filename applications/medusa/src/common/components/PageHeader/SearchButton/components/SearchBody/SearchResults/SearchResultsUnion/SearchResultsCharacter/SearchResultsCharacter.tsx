@@ -31,7 +31,7 @@ export default function SearchResultsCharacter ({
       href={{
         pathname: '/search/series/[seriesSlug]/[characterSlug]',
         query: {
-          seriesSlug: data.series.slug,
+          seriesSlug: data.series?.slug,
           characterSlug: data.slug
         }
       }}

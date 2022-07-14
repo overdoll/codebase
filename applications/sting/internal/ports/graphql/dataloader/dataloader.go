@@ -2,19 +2,20 @@ package dataloader
 
 import (
 	"context"
-	"github.com/graph-gophers/dataloader"
+	"github.com/graph-gophers/dataloader/v7"
 	"overdoll/applications/sting/internal/app"
+	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/graphql"
 )
 
 type DataLoader struct {
-	postsByIds      *dataloader.Loader
-	charactersByIds *dataloader.Loader
-	audiencesByIds  *dataloader.Loader
-	categoriesByIds *dataloader.Loader
-	seriesByIds     *dataloader.Loader
-	clubsByIds      *dataloader.Loader
-	topicsByIds     *dataloader.Loader
+	postsByIds      *dataloader.Loader[string, *types.Post]
+	charactersByIds *dataloader.Loader[string, *types.Character]
+	audiencesByIds  *dataloader.Loader[string, *types.Audience]
+	categoriesByIds *dataloader.Loader[string, *types.Category]
+	seriesByIds     *dataloader.Loader[string, *types.Series]
+	clubsByIds      *dataloader.Loader[string, *types.Club]
+	topicsByIds     *dataloader.Loader[string, *types.Topic]
 }
 
 func NewDataLoader(app *app.Application) *DataLoader {

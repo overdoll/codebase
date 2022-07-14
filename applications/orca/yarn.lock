@@ -119,15 +119,22 @@
   dependencies:
     xss "^1.0.8"
 
-"@bazel/typescript@^3.4.2":
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/@bazel/typescript/-/typescript-3.8.0.tgz#725d51a1c25e314a1d8cddb8b880ac05ba97acd4"
-  integrity sha512-4C1pLe4V7aidWqcPsWNqXFS7uHAB1nH5SUKG5uWoVv4JT9XhkNSvzzQIycMwXs2tZeCylX4KYNeNvfKrmkyFlw==
+"@bazel/typescript@^5.5.2":
+  version "5.5.2"
+  resolved "https://registry.yarnpkg.com/@bazel/typescript/-/typescript-5.5.2.tgz#dc7464577a99e4586e9a26c4be6f6c7e898d738f"
+  integrity sha512-E5JQoBueGZO83sA86ygKOnCAUZH3FNKOGPJe9mAnZ/4ME2w+lE4FJ+amxoCKVAS8qC95Tn5MIVEbCmWmMSB07g==
   dependencies:
-    protobufjs "6.8.8"
+    "@bazel/worker" "5.5.2"
     semver "5.6.0"
     source-map-support "0.5.9"
-    tsutils "2.27.2"
+    tsutils "3.21.0"
+
+"@bazel/worker@5.5.2":
+  version "5.5.2"
+  resolved "https://registry.yarnpkg.com/@bazel/worker/-/worker-5.5.2.tgz#192bf8809e8a74095f41c3ee580c4fe9d362ff58"
+  integrity sha512-YLmgESJZWrGlEZWJ8gKUOpI8GIB91Jzuru6NULJ+64xUX1S3nQicHp9hBG34GOPGfd8DFB+fgC5m0HdA3F7QYQ==
+  dependencies:
+    google-protobuf "^3.6.1"
 
 "@gar/promisify@^1.0.1":
   version "1.1.3"
@@ -1079,6 +1086,11 @@ glob@^7.1.3, glob@^7.1.4:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
+google-protobuf@^3.6.1:
+  version "3.20.1"
+  resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-3.20.1.tgz#1b255c2b59bcda7c399df46c65206aa3c7a0ce8b"
+  integrity sha512-XMf1+O32FjYIV3CYu6Tuh5PNbfNEU5Xu22X+Xkdb/DUexFlCzhvv7d5Iirm4AOwn8lv4al1YvIhzGrg2j9Zfzw==
+
 graphql-tag@^2.11.0:
   version "2.12.6"
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.12.6.tgz#d441a569c1d2537ef10ca3d1633b48725329b5f1"
@@ -1732,25 +1744,6 @@ promise-retry@^2.0.1:
     err-code "^2.0.2"
     retry "^0.12.0"
 
-protobufjs@6.8.8:
-  version "6.8.8"
-  resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-6.8.8.tgz#c8b4f1282fd7a90e6f5b109ed11c84af82908e7c"
-  integrity sha512-AAmHtD5pXgZfi7GMpllpO3q1Xw1OYldr+dMUlAnffGTAhqkg72WdmSY71uKBF/JuyiKs8psYbtKrhi0ASCD8qw==
-  dependencies:
-    "@protobufjs/aspromise" "^1.1.2"
-    "@protobufjs/base64" "^1.1.2"
-    "@protobufjs/codegen" "^2.0.4"
-    "@protobufjs/eventemitter" "^1.1.0"
-    "@protobufjs/fetch" "^1.1.0"
-    "@protobufjs/float" "^1.0.2"
-    "@protobufjs/inquire" "^1.1.0"
-    "@protobufjs/path" "^1.1.2"
-    "@protobufjs/pool" "^1.1.0"
-    "@protobufjs/utf8" "^1.1.0"
-    "@types/long" "^4.0.0"
-    "@types/node" "^10.1.0"
-    long "^4.0.0"
-
 proxy-addr@~2.0.7:
   version "2.0.7"
   resolved "https://registry.yarnpkg.com/proxy-addr/-/proxy-addr-2.0.7.tgz#f19fe69ceab311eeb94b42e70e8c2070f9ba1025"
@@ -2080,10 +2073,10 @@ tslib@^2.1.0, tslib@~2.4.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.0.tgz#7cecaa7f073ce680a05847aa77be941098f36dc3"
   integrity sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==
 
-tsutils@2.27.2:
-  version "2.27.2"
-  resolved "https://registry.yarnpkg.com/tsutils/-/tsutils-2.27.2.tgz#60ba88a23d6f785ec4b89c6e8179cac9b431f1c7"
-  integrity sha512-qf6rmT84TFMuxAKez2pIfR8UCai49iQsfB7YWVjV1bKpy/d0PWT5rEOSM6La9PiHZ0k1RRZQiwVdVJfQ3BPHgg==
+tsutils@3.21.0:
+  version "3.21.0"
+  resolved "https://registry.yarnpkg.com/tsutils/-/tsutils-3.21.0.tgz#b48717d394cea6c1e096983eed58e9d61715b623"
+  integrity sha512-mHKK3iUXL+3UF6xL5k0PEhKRUBKPBCv/+RkEOpjRWxxx27KKRBmmA60A9pgOUvMi8GKhRMPEmjBRPzs2W7O1OA==
   dependencies:
     tslib "^1.8.1"
 

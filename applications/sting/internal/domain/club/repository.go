@@ -22,6 +22,10 @@ type Repository interface {
 	UpdateClubMembersCount(ctx context.Context, clubId string, updateFn func(cl *Club) error) error
 	UpdateClubName(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
 	UpdateClubSupporterOnlyPostsDisabled(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
+
+	UpdateClubCharacters(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
+	GetClubCharactersCount(ctx context.Context, requester *principal.Principal, clubId string) (int, error)
+
 	UpdateClubSlugAliases(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
 	UpdateClubSlug(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
 	UpdateClubSuspensionStatus(ctx context.Context, clubId string, updateFn func(club *Club) error) (*Club, error)

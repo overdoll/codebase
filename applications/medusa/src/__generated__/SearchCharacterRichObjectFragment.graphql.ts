@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d71bd421c27e61db4ded42713cdb6726>>
+ * @generated SignedSource<<e1064873bf3f3e8b66c84060f287fe92>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,7 @@ export type SearchCharacterRichObjectFragment$data = {
   readonly name: string;
   readonly series: {
     readonly slug: string;
-  };
+  } | null;
   readonly slug: string;
   readonly " $fragmentType": "SearchCharacterRichObjectFragment";
 };

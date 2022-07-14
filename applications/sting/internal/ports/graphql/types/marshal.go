@@ -101,20 +101,35 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 		supporterOnlyStatus = SupporterOnlyStatusPartial
 	}
 
+	var descriptionTranslations []*graphql.Translation
+
+	if result.Description() != nil {
+		for _, val := range result.Description().Translations() {
+			descriptionTranslations = append(descriptionTranslations, &graphql.Translation{
+				Language: &graphql.Language{
+					Locale: val.Locale(),
+					Name:   val.Name(),
+				},
+				Text: val.Data(),
+			})
+		}
+	}
+
 	return &Post{
-		ID:                  relay.NewID(Post{}, result.ID()),
-		SupporterOnlyStatus: supporterOnlyStatus,
-		Reference:           result.ID(),
-		Contributor:         &Account{ID: relay.NewID(Account{}, result.ContributorId())},
-		Club:                &Club{ID: relay.NewID(Club{}, result.ClubId())},
-		Audience:            audience,
-		State:               state,
-		Content:             content,
-		Categories:          categories,
-		Characters:          characters,
-		CreatedAt:           result.CreatedAt(),
-		PostedAt:            result.PostedAt(),
-		Likes:               result.Likes(),
+		ID:                      relay.NewID(Post{}, result.ID()),
+		SupporterOnlyStatus:     supporterOnlyStatus,
+		Reference:               result.ID(),
+		DescriptionTranslations: descriptionTranslations,
+		Contributor:             &Account{ID: relay.NewID(Account{}, result.ContributorId())},
+		Club:                    &Club{ID: relay.NewID(Club{}, result.ClubId())},
+		Audience:                audience,
+		State:                   state,
+		Content:                 content,
+		Categories:              categories,
+		Characters:              characters,
+		CreatedAt:               result.CreatedAt(),
+		PostedAt:                result.PostedAt(),
+		Likes:                   result.Likes(),
 	}
 }
 
@@ -368,15 +383,27 @@ func MarshalCharacterToGraphQL(ctx context.Context, result *post.Character) *Cha
 			Text: val.Data(),
 		})
 	}
+	var series *Series
+
+	if result.Series() != nil {
+		series = MarshalSeriesToGraphQL(ctx, result.Series())
+	}
+
+	var clb *Club
+
+	if result.ClubId() != nil {
+		clb = &Club{ID: relay.NewID(Club{}, *result.ClubId())}
+	}
 
 	return &Character{
 		ID:               relay.NewID(Character{}, result.ID()),
 		Reference:        result.ID(),
 		Slug:             result.Slug(),
+		Club:             clb,
 		Thumbnail:        res,
 		Banner:           banner,
 		NameTranslations: nameTranslations,
-		Series:           MarshalSeriesToGraphQL(ctx, result.Series()),
+		Series:           series,
 		TotalLikes:       result.TotalLikes(),
 		TotalPosts:       result.TotalPosts(),
 	}
@@ -816,6 +843,8 @@ func MarshalClubToGraphQL(ctx context.Context, result *club.Club) *Club {
 		ID:                          relay.NewID(Club{}, result.ID()),
 		Reference:                   result.ID(),
 		CanCreateSupporterOnlyPosts: result.CanCreateSupporterOnlyPosts(),
+		CharactersLimit:             result.CharactersLimit(),
+		CharactersEnabled:           result.CharactersEnabled(),
 		Name:                        result.Name().TranslateDefault(""),
 		Slug:                        result.Slug(),
 		SlugAliases:                 slugAliases,
@@ -995,6 +1024,7 @@ func MarshalSearchToGraphQLConnection(ctx context.Context, results []interface{}
 }
 
 func MarshalClubsToGraphQLConnection(ctx context.Context, results []*club.Club, cursor *paging.Cursor) *ClubConnection {
+
 	var clubs []*ClubEdge
 
 	conn := &ClubConnection{

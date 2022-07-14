@@ -28,9 +28,10 @@ type Commands struct {
 	UpdatePostContentOrder           command.UpdatePostContentOrderHandler
 	UpdatePostContentIsSupporterOnly command.UpdatePostContentIsSupporterOnlyHandler
 
-	UpdatePostCategories command.UpdatePostCategoriesHandler
-	UpdatePostCharacters command.UpdatePostCharactersHandler
-	UpdatePostAudience   command.UpdatePostAudienceHandler
+	UpdatePostDescription command.UpdatePostDescriptionHandler
+	UpdatePostCategories  command.UpdatePostCategoriesHandler
+	UpdatePostCharacters  command.UpdatePostCharactersHandler
+	UpdatePostAudience    command.UpdatePostAudienceHandler
 
 	LikePost     command.LikePostHandler
 	UndoLikePost command.UndoLikePostHandler
@@ -85,6 +86,9 @@ type Commands struct {
 	JoinClub                      command.JoinClubHandler
 	LeaveClub                     command.LeaveClubHandler
 	GenerateClubBanner            command.GenerateClubBannerHandler
+	UpdateClubCharactersLimit     command.UpdateClubCharactersLimitHandler
+	EnableClubCharacters          command.EnableClubCharactersHandler
+	DisableClubCharacters         command.DisableClubCharactersHandler
 
 	AddClubSupporter    command.AddClubSupporterHandler
 	RemoveClubSupporter command.RemoveClubSupporterHandler
@@ -104,6 +108,8 @@ type Queries struct {
 	SearchPosts query.SearchPostsHandler
 	PostById    query.PostByIdHandler
 	PostsByIds  query.PostsByIdsHandler
+
+	ClubCharactersCount query.ClubCharactersCountHandler
 
 	PostByIdOperator query.PostByIdOperatorHandler
 
