@@ -369,3 +369,77 @@ func (r *MutationResolver) UnTerminateClub(ctx context.Context, input types.UnTe
 		Club: types.MarshalClubToGraphQL(ctx, result),
 	}, nil
 }
+
+func (r *MutationResolver) DisableClubCharacters(ctx context.Context, input types.DisableClubCharactersInput) (*types.DisableClubCharactersPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	result, err := r.App.Commands.DisableClubCharacters.
+		Handle(
+			ctx,
+			command.DisableClubCharacters{
+				Principal: principal.FromContext(ctx),
+				ClubId:    input.ClubID.GetID(),
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.DisableClubCharactersPayload{
+		Club: types.MarshalClubToGraphQL(ctx, result),
+	}, nil
+}
+
+func (r *MutationResolver) EnableClubCharacters(ctx context.Context, input types.EnableClubCharactersInput) (*types.EnableClubCharactersPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	result, err := r.App.Commands.EnableClubCharacters.
+		Handle(
+			ctx,
+			command.EnableClubCharacters{
+				Principal:       principal.FromContext(ctx),
+				ClubId:          input.ClubID.GetID(),
+				CharactersLimit: input.CharactersLimit,
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.EnableClubCharactersPayload{
+		Club: types.MarshalClubToGraphQL(ctx, result),
+	}, nil
+}
+
+func (r *MutationResolver) UpdateClubCharactersLimit(ctx context.Context, input types.UpdateClubCharactersLimitInput) (*types.UpdateClubCharactersLimitPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	result, err := r.App.Commands.UpdateClubCharactersLimit.
+		Handle(
+			ctx,
+			command.UpdateClubCharactersLimit{
+				Principal:       principal.FromContext(ctx),
+				ClubId:          input.ClubID.GetID(),
+				CharactersLimit: input.CharactersLimit,
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.UpdateClubCharactersLimitPayload{
+		Club: types.MarshalClubToGraphQL(ctx, result),
+	}, nil
+}

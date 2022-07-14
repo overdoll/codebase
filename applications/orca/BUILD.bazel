@@ -55,6 +55,8 @@ nodejs_binary(
 nodejs_image(
     name = "image",
     binary = ":internal",
+    include_node_repo_args = False,
+    node_repository_name = "nodejs_linux_amd64",
 )
 
 container_push(

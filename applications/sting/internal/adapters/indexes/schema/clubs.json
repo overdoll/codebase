@@ -26,7 +26,7 @@
     }
   },
   "mappings": {
-    "dynamic": "true",
+    "dynamic": "strict",
     "properties": {
       "id": {
         "type": "keyword"
@@ -56,6 +56,12 @@
         }
       },
       "members_count": {
+        "type": "integer"
+      },
+      "characters_enabled": {
+        "type": "boolean"
+      },
+      "characters_limit": {
         "type": "integer"
       },
       "owner_account_id": {

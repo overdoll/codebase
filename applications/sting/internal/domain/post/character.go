@@ -2,6 +2,7 @@ package post
 
 import (
 	"github.com/go-playground/validator/v10"
+	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/resource"
@@ -25,6 +26,7 @@ type Character struct {
 	thumbnailResource *resource.Resource
 	bannerResource    *resource.Resource
 	series            *Series
+	clubId            *string
 
 	totalLikes int
 	totalPosts int
@@ -33,14 +35,27 @@ type Character struct {
 	updatedAt time.Time
 }
 
-func NewCharacter(requester *principal.Principal, slug, name string, series *Series) (*Character, error) {
-
-	if !requester.IsStaff() {
-		return nil, principal.ErrNotAuthorized
-	}
+func NewCharacter(requester *principal.Principal, slug, name string, series *Series, club *club.Club) (*Character, error) {
 
 	if requester.IsLocked() {
 		return nil, principal.ErrLocked
+	}
+
+	if series != nil {
+		if !requester.IsStaff() {
+			return nil, principal.ErrNotAuthorized
+		}
+	}
+
+	if club != nil {
+
+		if !club.CharactersEnabled() {
+			return nil, domainerror.NewValidation("characters are not enabled for this club")
+		}
+
+		if err := requester.CheckClubOwner(club.ID()); err != nil {
+			return nil, err
+		}
 	}
 
 	lc, err := localization.NewDefaultTranslation(name)
@@ -57,12 +72,20 @@ func NewCharacter(requester *principal.Principal, slug, name string, series *Ser
 		return nil, err
 	}
 
+	var clubId *string
+
+	if club != nil {
+		id := club.ID()
+		clubId = &id
+	}
+
 	return &Character{
 		id:                uuid.New().String(),
 		slug:              slug,
 		name:              lc,
 		series:            series,
 		thumbnailResource: nil,
+		clubId:            clubId,
 		bannerResource:    nil,
 		totalLikes:        0,
 		totalPosts:        0,
@@ -85,6 +108,20 @@ func (c *Character) Name() *localization.Translation {
 
 func (c *Character) Series() *Series {
 	return c.series
+}
+
+func (c *Character) SeriesId() *string {
+
+	if c.series == nil {
+		return nil
+	}
+
+	id := c.series.ID()
+	return &id
+}
+
+func (c *Character) ClubId() *string {
+	return c.clubId
 }
 
 func (c *Character) CreatedAt() time.Time {
@@ -127,15 +164,6 @@ func (c *Character) UpdateTotalLikes(totalLikes int) error {
 	return nil
 }
 
-func (c *Character) CanUpdateBanner(requester *principal.Principal) error {
-
-	if !requester.IsStaff() {
-		return principal.ErrNotAuthorized
-	}
-
-	return nil
-}
-
 func (c *Character) UpdateName(requester *principal.Principal, name, locale string) error {
 
 	if err := c.canUpdate(requester); err != nil {
@@ -156,6 +184,11 @@ func (c *Character) UpdateName(requester *principal.Principal, name, locale stri
 }
 
 func (c *Character) UpdateThumbnail(requester *principal.Principal, thumbnail *resource.Resource) error {
+
+	// thumbnail updating is staff-only for now
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
 
 	if err := c.canUpdate(requester); err != nil {
 		return err
@@ -202,8 +235,17 @@ func (c *Character) UpdateBanner(thumbnail *resource.Resource) error {
 
 func (c *Character) canUpdate(requester *principal.Principal) error {
 
-	if !requester.IsStaff() {
-		return principal.ErrNotAuthorized
+	if c.clubId != nil {
+		if err := requester.CheckClubOwner(*c.clubId); err != nil {
+			return err
+		}
+	}
+
+	if c.series != nil {
+		if !requester.IsStaff() {
+			return principal.ErrNotAuthorized
+		}
+
 	}
 
 	if requester.IsLocked() {
@@ -213,7 +255,7 @@ func (c *Character) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalCharacterFromDatabase(id, slug string, name map[string]string, thumbnail, banner *resource.Resource, totalLikes, totalPosts int, createdAt, updatedAt time.Time, media *Series) *Character {
+func UnmarshalCharacterFromDatabase(id, slug string, name map[string]string, thumbnail, banner *resource.Resource, totalLikes, totalPosts int, createdAt, updatedAt time.Time, media *Series, clubId *string) *Character {
 	return &Character{
 		id:                id,
 		slug:              slug,
@@ -221,6 +263,7 @@ func UnmarshalCharacterFromDatabase(id, slug string, name map[string]string, thu
 		thumbnailResource: thumbnail,
 		bannerResource:    banner,
 		series:            media,
+		clubId:            clubId,
 		totalLikes:        totalLikes,
 		totalPosts:        totalPosts,
 		createdAt:         createdAt,

@@ -2,7 +2,9 @@ package cache
 
 import (
 	"context"
+	"encoding/json"
 	"github.com/spf13/cobra"
+	"github.com/tidwall/gjson"
 	"go.uber.org/zap"
 	"overdoll/libraries/bootstrap"
 	"strconv"
@@ -52,14 +54,73 @@ func createRegister(config IndexConfig) *cobra.Command {
 					if err != nil {
 						zap.S().Fatalw("failed to add new aliases", zap.Error(err), zap.String("index", result.Index))
 					}
+				} else {
+					// index does exist, check if we need to update mappings
+					mappings, err := client.GetMapping().Index(writeAlias).
+						Do(ctx)
+
+					if err != nil {
+						zap.S().Fatalw("failed to get all aliases", zap.Error(err))
+					}
+
+					newMappings := make(map[string]interface{})
+
+					for _, index := range mappings {
+
+						res, err := json.Marshal(index)
+
+						if err != nil {
+							zap.S().Fatalw("failed to marshal json", zap.Error(err))
+						}
+
+						gjson.Get(indexBody, "mappings.properties").ForEach(func(key, value gjson.Result) bool {
+							// if a new mapping property doesn't exist, we will add it
+							// we only check 1 level deep - maybe check recursively for updated "properties" fields too?
+							// we should also ensure that if a field has a custom analyzer, and the analyzer is not defined in "settings",
+							// we will warn about the custom analyzer not present and default to a "keyword" analyzer to ensure no errors occur
+							if !gjson.Get(string(res), "mappings.properties."+key.Str).Exists() {
+
+								var val map[string]interface{}
+
+								if err := json.Unmarshal([]byte(value.Raw), &val); err != nil {
+									zap.S().Fatalw("failed to unmarshal json", zap.Error(err))
+								}
+
+								newMappings[key.Str] = val
+							}
+
+							return true
+						})
+					}
+
+					if len(newMappings) > 0 {
+
+						mappingFinal := make(map[string]interface{})
+						mappingFinal["properties"] = newMappings
+
+						_, err := client.PutMapping().Index(writeAlias).BodyJson(mappingFinal).
+							Do(ctx)
+
+						if err != nil {
+							zap.S().Fatalw("failed to put mapping", zap.Error(err))
+						}
+
+						zap.S().Infof(
+							"updated mappings for index [%s] in %s!",
+							indexName,
+							time.Since(start).Truncate(time.Millisecond),
+						)
+					}
 				}
 			}
 
-			zap.S().Infof(
-				"successfully registered [%s] indexes in %s!",
-				strconv.Itoa(registerCount),
-				time.Since(start).Truncate(time.Millisecond),
-			)
+			if registerCount > 0 {
+				zap.S().Infof(
+					"successfully registered [%s] indexes in %s!",
+					strconv.Itoa(registerCount),
+					time.Since(start).Truncate(time.Millisecond),
+				)
+			}
 		},
 	}
 }

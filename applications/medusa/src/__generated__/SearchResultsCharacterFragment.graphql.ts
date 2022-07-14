@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f7a5671eed0e7ae873394b628ae0cfd9>>
+ * @generated SignedSource<<a5101c7fc6cd75c5c93cd2a6260c960c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type SearchResultsCharacterFragment$data = {
   readonly series: {
     readonly slug: string;
-  };
+  } | null;
   readonly slug: string;
   readonly " $fragmentSpreads": FragmentRefs<"CharacterTileOverlayFragment">;
   readonly " $fragmentType": "SearchResultsCharacterFragment";

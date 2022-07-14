@@ -18,8 +18,7 @@ go_library(
         "//applications/sting/internal/app",
         "//applications/sting/internal/app/query",
         "//applications/sting/internal/ports/graphql/types",
-        "//libraries/errors/apperror",
         "//libraries/graphql",
-        "@com_github_graph_gophers_dataloader//:dataloader",
+        "@com_github_graph_gophers_dataloader_v7//:dataloader",
     ],
 )

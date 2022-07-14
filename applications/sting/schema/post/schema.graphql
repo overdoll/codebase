@@ -43,6 +43,16 @@ type Post implements Node @key(fields: "id") {
   """Content belonging to this post"""
   content: [PostContent!]!
 
+  """
+  A description for this post.
+
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  description(locale: BCP47): String! @goField(forceResolver: true)
+
+  """All translations for this description."""
+  descriptionTranslations: [Translation!]!
+
   """The date and time of when this post was created"""
   createdAt: Time!
 
@@ -260,6 +270,32 @@ type UnArchivePostPayload {
   post: Post
 }
 
+"""Update post."""
+input UpdatePostDescriptionInput {
+  """The post to update"""
+  id: ID!
+
+  """
+  The description to update.
+
+  Validation: Max 280 characters. No links allowed.
+  """
+  description: String!
+
+  """
+  The localization for this description.
+
+  Locale must be one from the languages query, or else the locale won't be accepted.
+  """
+  locale: BCP47!
+}
+
+"""Payload for updating a post description"""
+type UpdatePostDescriptionPayload {
+  """The post after the update"""
+  post: Post
+}
+
 type PostEdge {
   cursor: String!
   node: Post!
@@ -388,6 +424,11 @@ extend type Mutation {
   Update a post in draft status - categories
   """
   updatePostCategories(input: UpdatePostCategoriesInput!): UpdatePostCategoriesPayload
+
+  """
+  Update a post in draft status - description
+  """
+  updatePostDescription(input: UpdatePostDescriptionInput!): UpdatePostDescriptionPayload
 
   """
   Submit a post.

@@ -18,6 +18,7 @@ go_library(
     deps = [
         "//libraries/bootstrap",
         "@com_github_spf13_cobra//:cobra",
+        "@com_github_tidwall_gjson//:gjson",
         "@org_uber_go_zap//:zap",
     ],
 )

@@ -30,8 +30,11 @@ type Character implements Node @key(fields: "id") {
   """Total amount of posts."""
   totalPosts: Int!
 
-  """The series linked to this character."""
-  series: Series!
+  """The series linked to this character, if it's a series character."""
+  series: Series
+
+  """The club linked to this character, if it was created by a club."""
+  club: Club @goField(forceResolver: true)
 }
 
 type CharacterEdge {
@@ -56,8 +59,8 @@ enum CharactersSort {
   POPULAR
 }
 
-extend type Query {
-  """Get or search all characters"""
+extend type Club {
+  """Get or search all characters for this club."""
   characters(
     """Returns the elements in the list that come after the specified cursor."""
     after: String
@@ -74,12 +77,54 @@ extend type Query {
     """Search by character slugs."""
     slugs: [String!]
 
+    """Filter by the name of the character."""
+    name: String
+
+    """Sorting options for characters."""
+    sortBy: CharactersSort! = POPULAR
+  ): CharacterConnection! @goField(forceResolver: true)
+}
+
+extend type Query {
+  """Get or search all characters"""
+  characters(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """
+    Whether or not to show characters that were created by a club.
+
+    By default, shows all characters.
+
+    Otherwise, if true, shows all characters that were created by a club. If false, shows only series characters.
+    """
+    clubCharacters: Boolean
+
+    """Search by character slugs."""
+    slugs: [String!]
+
     """
     When searching for a character by slug, you need to include the series' slug since slugs are unique-per-series.
 
-    Only one slug is allowed for now since you don't want inaccurate results
+    Only one slug is allowed for now since you don't want inaccurate results.
     """
     seriesSlug: String
+
+    """
+    When searching for a character by slug, you need to include the club' slug since slugs are unique-per-series.
+
+    Only one slug is allowed for now since you don't want inaccurate results.
+    """
+    clubSlug: String
 
     """Filter by the name of the character."""
     name: String
@@ -93,8 +138,11 @@ extend type Query {
     """Search by slug of the character."""
     slug: String!
 
-    """A series slug is required since character slugs are unique-per-series."""
-    seriesSlug: String!
+    """A series slug is required since character slugs are unique-per-series. Must enter either a series slug, or a club slug."""
+    seriesSlug: String
+
+    """A club slug is required since character slugs are unique-per-series. Must enter either a series slug, or a club slug."""
+    clubSlug: String
   ): Character
 }
 
@@ -106,7 +154,10 @@ extend type Post {
 """Create a new character."""
 input CreateCharacterInput {
   """The chosen series for the character."""
-  seriesId: ID!
+  seriesId: ID
+
+  """The chosen club for the character."""
+  clubId: ID
 
   """
   The chosen slug for the character.
@@ -180,7 +231,12 @@ type UpdateCharacterThumbnailPayload {
 
 extend type Mutation {
   """
-  Create a new character
+  Create a new character.
+
+  Must either enter a seriesId for a series character or a clubId for a club character.
+
+  If entering a SeriesId, the authorization is Staff+ only.
+  If entering a ClubId, you must be the owner of the club.
   """
   createCharacter(input: CreateCharacterInput!): CreateCharacterPayload
 
@@ -191,6 +247,8 @@ extend type Mutation {
 
   """
   Update character thumbnail
+
+  Note that this is Staff+ only for now - even if the character is a club character.
   """
   updateCharacterThumbnail(input: UpdateCharacterThumbnailInput!): UpdateCharacterThumbnailPayload
 }

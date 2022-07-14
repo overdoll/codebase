@@ -14,6 +14,7 @@ go_library(
     importpath = "overdoll/libraries/graphql",
     visibility = ["//visibility:public"],
     deps = [
+        "//libraries/errors/apperror",
         "//libraries/graphql/relay",
         "//libraries/money",
         "//libraries/resource",
@@ -25,5 +26,6 @@ go_library(
         "@com_github_99designs_gqlgen//graphql/handler/lru",
         "@com_github_99designs_gqlgen//graphql/handler/transport",
         "@com_github_gin_gonic_gin//:gin",
+        "@com_github_graph_gophers_dataloader_v7//:dataloader",
     ],
 )

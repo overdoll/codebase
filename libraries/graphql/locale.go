@@ -36,6 +36,11 @@ func GetTranslationFromTranslationsAndLanguage(translations []*Translation, loca
 	}
 
 	if locale == nil {
+
+		if defaultLocale == nil {
+			return "", nil
+		}
+
 		return defaultLocale.Text, nil
 	}
 

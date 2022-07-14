@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<93b8f833d7fb001086f3c60b19122d0b>>
+ * @generated SignedSource<<532235ad1fd52749426885173c3168fa>>
  * @relayHash 99f4d2b665f548fa1b3a27cfce21dc2c
  * @lightSyntaxTransform
  * @nogrep
@@ -35,7 +35,7 @@ export type UpdateCharacterButtonMutation$data = {
         readonly name: string;
         readonly series: {
           readonly title: string;
-        };
+        } | null;
         readonly slug: string;
       }>;
       readonly id: string;

@@ -21,7 +21,7 @@ func TestPostCharacterRepository_failure(t *testing.T) {
 	seriesSlug := "foreigneronmars"
 
 	character := post.UnmarshalCharacterFromDatabase(characterId, characterSlug, map[string]string{"en": "test"}, nil, nil, 0, 0, time.Now(), time.Now(),
-		post.UnmarshalSeriesFromDatabase("1pcKiQL7dgUW8CIN7uO1wqFaMql", "foreigneronmars", map[string]string{"en": "test"}, nil, nil, 0, 0, time.Now(), time.Now()))
+		post.UnmarshalSeriesFromDatabase("1pcKiQL7dgUW8CIN7uO1wqFaMql", "foreigneronmars", map[string]string{"en": "test"}, nil, nil, 0, 0, time.Now(), time.Now()), nil)
 
 	ctx := context.Background()
 
@@ -31,6 +31,6 @@ func TestPostCharacterRepository_failure(t *testing.T) {
 	_, err = postRepo.GetCharacterById(ctx, characterId)
 	require.True(t, apperror.IsNotFoundError(err), "character should not be found by id")
 
-	_, err = postRepo.GetCharacterBySlug(ctx, characterSlug, seriesSlug)
+	_, err = postRepo.GetCharacterBySlug(ctx, characterSlug, &seriesSlug, nil)
 	require.True(t, apperror.IsNotFoundError(err), "character should not be found by slug")
 }

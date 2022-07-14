@@ -61,7 +61,7 @@ export default function CharacterTileOverlay ({
           whiteSpace='normal'
           wordBreak='break-word'
         >
-          {data.series.title}
+          {data.series?.title}
         </Text>
       </Stack>
     </TileOverlay>

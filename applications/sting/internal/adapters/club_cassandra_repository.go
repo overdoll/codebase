@@ -30,6 +30,8 @@ var clubTable = table.New(table.Metadata{
 		"name",
 		"thumbnail_resource",
 		"banner_resource",
+		"characters_enabled",
+		"characters_limit",
 		"members_count",
 		"members_count_last_update_id",
 		"owner_account_id",
@@ -54,6 +56,8 @@ type clubs struct {
 	Name                        map[string]string `db:"name"`
 	ThumbnailResource           string            `db:"thumbnail_resource"`
 	BannerResource              string            `db:"banner_resource"`
+	CharactersEnabled           bool              `db:"characters_enabled"`
+	CharactersLimit             int               `db:"characters_limit"`
 	MembersCount                int               `db:"members_count"`
 	MembersCountLastUpdateId    gocql.UUID        `db:"members_count_last_update_id"`
 	OwnerAccountId              string            `db:"owner_account_id"`
@@ -121,6 +125,21 @@ type clubSuspensionLog struct {
 	SuspendedUntil      *time.Time `db:"suspended_until"`
 }
 
+var clubCharactersTable = table.New(table.Metadata{
+	Name: "club_characters",
+	Columns: []string{
+		"club_id",
+		"character_id",
+	},
+	PartKey: []string{"club_id"},
+	SortKey: []string{"character_id"},
+})
+
+type clubCharacters struct {
+	ClubId      string `db:"club_id"`
+	CharacterId string `db:"character_id"`
+}
+
 type ClubCassandraElasticsearchRepository struct {
 	session            gocqlx.Session
 	client             *elastic.Client
@@ -155,6 +174,8 @@ func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
 		BannerResource:              marshalledBanner,
 		SupporterOnlyPostsDisabled:  cl.SupporterOnlyPostsDisabled(),
 		MembersCount:                cl.MembersCount(),
+		CharactersLimit:             cl.CharactersLimit(),
+		CharactersEnabled:           cl.CharactersEnabled(),
 		MembersCountLastUpdateId:    gocql.TimeUUID(),
 		OwnerAccountId:              cl.OwnerAccountId(),
 		Suspended:                   cl.Suspended(),
@@ -200,6 +221,8 @@ func (r ClubCassandraElasticsearchRepository) unmarshalClubFromDatabase(ctx cont
 		b.SupporterOnlyPostsDisabled,
 		b.CreatedAt,
 		b.UpdatedAt,
+		b.CharactersEnabled,
+		b.CharactersLimit,
 	), nil
 }
 
@@ -568,6 +591,10 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubSlugAliases(ctx context.
 	return currentClub, nil
 }
 
+func (r ClubCassandraElasticsearchRepository) UpdateClubCharacters(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
+	return r.updateClubRequest(ctx, clubId, updateFn, []string{"characters_limit", "characters_enabled"})
+}
+
 func (r ClubCassandraElasticsearchRepository) UpdateClubName(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
 	return r.updateClubRequest(ctx, clubId, updateFn, []string{"name"})
 }
@@ -666,6 +693,35 @@ func (r ClubCassandraElasticsearchRepository) updateClubRequest(ctx context.Cont
 	}
 
 	return currentClub, nil
+}
+
+func (r ClubCassandraElasticsearchRepository) GetClubCharactersCount(ctx context.Context, requester *principal.Principal, clubId string) (int, error) {
+
+	if err := club.ViewClubCharactersCount(requester, clubId); err != nil {
+		return 0, err
+	}
+
+	type clubCharactersCount struct {
+		Count int `db:"count"`
+	}
+
+	var clubCharacter clubCharactersCount
+
+	if err := clubCharactersTable.
+		SelectBuilder().
+		CountAll().
+		Query(r.session).
+		WithContext(ctx).
+		Idempotent(true).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(clubCharacters{
+			ClubId: clubId,
+		}).
+		GetRelease(&clubCharacter); err != nil {
+		return 0, errors.Wrap(support.NewGocqlError(err), "failed to get club characters count")
+	}
+
+	return clubCharacter.Count, nil
 }
 
 func (r ClubCassandraElasticsearchRepository) getAccountClubsCount(ctx context.Context, accountId string) (int, error) {

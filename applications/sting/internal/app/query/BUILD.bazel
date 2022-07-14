@@ -17,6 +17,7 @@ go_library(
         "characters_by_ids.go",
         "club_by_id.go",
         "club_by_slug.go",
+        "club_characters_count.go",
         "club_member_by_id.go",
         "club_members_posts_feed.go",
         "club_slug_aliases_limit.go",

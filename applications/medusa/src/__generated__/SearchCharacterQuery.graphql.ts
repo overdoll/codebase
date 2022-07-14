@@ -16,7 +16,7 @@ import { FragmentRefs } from "relay-runtime";
 export type PostsSort = "NEW" | "TOP" | "%future added value";
 export type SearchCharacterQuery$variables = {
   characterSlug: string;
-  seriesSlug: string;
+  seriesSlug?: string | null;
   sortBy: PostsSort;
 };
 export type SearchCharacterQuery$data = {
@@ -576,7 +576,7 @@ return {
 };
 })();
 
-(node as any).hash = "0977afae9a481e2103f2828146f0a27e";
+(node as any).hash = "3f77d789866ea6c107232d4bd37f809f";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

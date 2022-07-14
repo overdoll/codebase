@@ -14,7 +14,7 @@
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type StaffViewCharacterQuery$variables = {
-  seriesSlug: string;
+  seriesSlug?: string | null;
   slug: string;
 };
 export type StaffViewCharacterQuery$data = {

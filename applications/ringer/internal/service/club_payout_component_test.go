@@ -491,14 +491,11 @@ func TestClubPayout_update_deposit_date(t *testing.T) {
 
 	newTime := time.Now().Add(time.Hour * 1)
 
-	payoutId := ""
-
 	env.RegisterDelayedCallback(func() {
 
 		payments := getPayoutsForClub(t, gClient, clubId)
 
 		payoutRelayId := payments.Entities[0].Club.Payouts.Edges[0].Node.Id
-		payoutId = payments.Entities[0].Club.Payouts.Edges[0].Node.Reference
 
 		application.TemporalClient.On("SignalWorkflow", mock.Anything, mock.Anything, "", workflows.UpdatePayoutDateSignal, mock.Anything).
 			Run(

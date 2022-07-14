@@ -15,6 +15,19 @@ func (r *MutationResolver) CreateCharacter(ctx context.Context, input types.Crea
 		return nil, err
 	}
 
+	var seriesId *string
+	var clubId *string
+
+	if input.SeriesID != nil {
+		id := input.SeriesID.GetID()
+		seriesId = &id
+	}
+
+	if input.ClubID != nil {
+		id := input.ClubID.GetID()
+		clubId = &id
+	}
+
 	character, err := r.App.Commands.CreateCharacter.
 		Handle(
 			ctx,
@@ -22,7 +35,8 @@ func (r *MutationResolver) CreateCharacter(ctx context.Context, input types.Crea
 				Principal: principal.FromContext(ctx),
 				Slug:      input.Slug,
 				Name:      input.Name,
-				SeriesId:  input.SeriesID.GetID(),
+				SeriesId:  seriesId,
+				ClubId:    clubId,
 			},
 		)
 

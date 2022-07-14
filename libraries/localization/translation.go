@@ -65,43 +65,32 @@ func (t *Translation) UpdateTranslation(data, locale string) error {
 		if item.tag == tag {
 			// remove translation
 			t.translations = append(t.translations[:v], t.translations[v+1:]...)
-
-			// change translation
-			t.translations = append(t.translations, &LocalizedDataTag{
-				tag:  defaultLanguage,
-				data: data,
-			})
 			break
 		}
+	}
+
+	if data != "" {
+		// change translation
+		t.translations = append(t.translations, &LocalizedDataTag{
+			tag:  defaultLanguage,
+			data: data,
+		})
 	}
 
 	return nil
 }
 
 func (t *Translation) UpdateDefaultTranslation(data string) error {
-
-	for v, item := range t.translations {
-		if item.tag == defaultLanguage {
-			// remove default translation
-			t.translations = append(t.translations[:v], t.translations[v+1:]...)
-
-			// add a new default translation
-			t.translations = append(t.translations, &LocalizedDataTag{
-				tag:  defaultLanguage,
-				data: data,
-			})
-			break
-		}
-	}
-
-	return nil
+	return t.UpdateTranslation(data, defaultLanguage.String())
 }
 
 func MarshalTranslationToDatabase(t *Translation) map[string]string {
 	tran := make(map[string]string)
 
-	for _, ts := range t.translations {
-		tran[ts.Locale()] = ts.data
+	if t != nil {
+		for _, ts := range t.translations {
+			tran[ts.Locale()] = ts.data
+		}
 	}
 
 	return tran

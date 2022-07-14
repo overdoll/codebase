@@ -5,6 +5,7 @@ import (
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/query"
+	"overdoll/applications/sting/internal/ports/graphql/dataloader"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/paging"
@@ -13,6 +14,14 @@ import (
 
 type CharacterResolver struct {
 	App *app.Application
+}
+
+func (r CharacterResolver) Club(ctx context.Context, obj *types.Character) (*types.Club, error) {
+	if obj.Club == nil {
+		return nil, nil
+	}
+
+	return dataloader.For(ctx).GetClubById(ctx, obj.Club.ID.GetID())
 }
 
 func (r CharacterResolver) Name(ctx context.Context, obj *types.Character, locale *string) (string, error) {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4ff586b5ee643394c4a7852e2ded1529>>
+ * @generated SignedSource<<ec6eaa0d87e0651af9a249b9c69228b9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type SearchCharacterRecommendationsFragment$data = {
   readonly series: {
     readonly slug: string;
     readonly title: string;
-  };
+  } | null;
   readonly " $fragmentType": "SearchCharacterRecommendationsFragment";
 };
 export type SearchCharacterRecommendationsFragment$key = {

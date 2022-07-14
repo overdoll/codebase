@@ -114,6 +114,15 @@ type Club implements Node @key(fields: "id") {
     """sorting options for club members."""
     sortBy: ClubMembersSort! = NEWEST
   ): ClubMemberConnection! @goField(forceResolver: true)
+
+  """Whether or not characters are enabled for this club."""
+  charactersEnabled: Boolean!
+
+  """The amount of characters that this club can create."""
+  charactersLimit: Int!
+
+  """The total amount of characters that this club has created."""
+  charactersCount: Int! @goField(forceResolver: true)
 }
 
 type ClubSuspension {
@@ -423,6 +432,38 @@ input EnableClubSupporterOnlyPostsInput {
   clubId: ID!
 }
 
+"""Enable club characters."""
+input EnableClubCharactersInput {
+  """The club to enable club characters for."""
+  clubId: ID!
+
+  """
+  The amount of characters the club will be able to create.
+
+  Validation: Limit to 200.
+  """
+  charactersLimit: Int!
+}
+
+"""Disable club characters."""
+input DisableClubCharactersInput {
+  """The club to disable characters for."""
+  clubId: ID!
+}
+
+"""Update club characters limit."""
+input UpdateClubCharactersLimitInput {
+  """The club to update club characters limit for."""
+  clubId: ID!
+
+  """
+  The amount of characters the club will be able to create.
+
+  Validation: Limit to 200.
+  """
+  charactersLimit: Int!
+}
+
 """Disable club supporter-only posts."""
 input DisableClubSupporterOnlyPostsInput {
   """The club to disable supporter-only posts for."""
@@ -438,6 +479,24 @@ type DisableClubSupporterOnlyPostsPayload {
 """Enable club supporter-only posts payload."""
 type EnableClubSupporterOnlyPostsPayload {
   """The new club after supporter-only posts are enabled."""
+  club: Club
+}
+
+"""Enable club characters payload."""
+type EnableClubCharactersPayload {
+  """The new club after enabling club characters."""
+  club: Club
+}
+
+"""Disable club characters payload."""
+type DisableClubCharactersPayload {
+  """The new club after disabling club characters."""
+  club: Club
+}
+
+"""Update club characters limit payload."""
+type UpdateClubCharactersLimitPayload {
+  """The club after updating the characters limit."""
   club: Club
 }
 
@@ -499,7 +558,7 @@ extend type Mutation {
   promoteClubSlugAliasToDefault(input: PromoteClubSlugAliasToDefaultInput!): PromoteClubSlugAliasToDefaultPayload
 
   """
-  Update the club's name (english-only for now)
+  Update the club's name (english-only for now).
   """
   updateClubName(input: UpdateClubNameInput!): UpdateClubNamePayload
 
@@ -525,7 +584,7 @@ extend type Mutation {
   """
   Terminate the club.
 
-  Terminating a club will remove it from public visibility and cancel all subscriptions.
+  Terminating a club will remove it from public visibility. Subscriptions will not be cancelled.
 
   Staff+ only.
   """
@@ -557,6 +616,31 @@ extend type Mutation {
   Staff+ only.
   """
   disableClubSupporterOnlyPosts(input: DisableClubSupporterOnlyPostsInput!): DisableClubSupporterOnlyPostsPayload
+
+  """
+  Disable club characters.
+
+  Will disable character creation for the club.
+
+  Staff+ only.
+  """
+  disableClubCharacters(input: DisableClubCharactersInput!): DisableClubCharactersPayload
+
+  """
+  Enable club characters.
+
+  Will enable club characters. Requires a limit to be set as well.
+
+  Staff+ only.
+  """
+  enableClubCharacters(input: EnableClubCharactersInput!): EnableClubCharactersPayload
+
+  """
+  Set the amount of characters that a club can create.
+
+  Staff+ only.
+  """
+  updateClubCharactersLimit(input: UpdateClubCharactersLimitInput!): UpdateClubCharactersLimitPayload
 }
 
 extend type Query {
