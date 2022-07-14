@@ -91,6 +91,13 @@ func (r *MutationResolver) CreateCategory(ctx context.Context, input types.Creat
 		return nil, err
 	}
 
+	var topicId *string
+
+	if input.TopicID != nil {
+		id := input.TopicID.GetID()
+		topicId = &id
+	}
+
 	category, err := r.App.Commands.CreateCategory.
 		Handle(
 			ctx,
@@ -98,6 +105,7 @@ func (r *MutationResolver) CreateCategory(ctx context.Context, input types.Creat
 				Principal: principal.FromContext(ctx),
 				Slug:      input.Slug,
 				Title:     input.Title,
+				TopicId:   topicId,
 			},
 		)
 
