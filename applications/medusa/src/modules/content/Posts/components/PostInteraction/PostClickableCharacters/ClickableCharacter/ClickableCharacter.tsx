@@ -32,7 +32,7 @@ export default function ClickableCharacter ({ query }: Props): JSX.Element {
         pathname: '/search/series/[seriesSlug]/[characterSlug]',
         query: {
           characterSlug: data.slug,
-          seriesSlug: data.series.slug
+          seriesSlug: data.series?.slug
         }
       }}
       p={0}

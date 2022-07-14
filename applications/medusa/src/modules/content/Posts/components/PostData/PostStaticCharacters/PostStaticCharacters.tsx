@@ -26,7 +26,7 @@ export default function PostStaticCharacters ({ query }: Props): JSX.Element {
       {data.characters.map((item, index) =>
         <WrapItem key={index}>
           <Tag size='lg' variant='outline' colorScheme='gray' borderRadius='full'>
-            <TagLabel>{item.name} ({item.series.title})</TagLabel>
+            <TagLabel>{item.name} ({item.series?.title})</TagLabel>
           </Tag>
         </WrapItem>
       )}
