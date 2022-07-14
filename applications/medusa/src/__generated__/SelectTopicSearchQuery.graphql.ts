@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<5fa939f8e0b06ca2ee7b3fac29a2376c>>
- * @relayHash b6c373f4f2b8e79859e4d377b7e0d1c1
+ * @generated SignedSource<<c3e50e73b4121ba26a86dd15d3435b74>>
+ * @relayHash 82883a8fc33e656e1b72159efb16104a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,55 +9,35 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b6c373f4f2b8e79859e4d377b7e0d1c1
+// @relayRequestID 82883a8fc33e656e1b72159efb16104a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type SelectSeriesPaginationFragment$variables = {
-  after?: string | null;
-  first?: number | null;
-};
-export type SelectSeriesPaginationFragment$data = {
+export type SelectTopicSearchQuery$variables = {};
+export type SelectTopicSearchQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"SelectTopicSearchFragment">;
 };
-export type SelectSeriesPaginationFragment = {
-  response: SelectSeriesPaginationFragment$data;
-  variables: SelectSeriesPaginationFragment$variables;
+export type SelectTopicSearchQuery = {
+  response: SelectTopicSearchQuery$data;
+  variables: SelectTopicSearchQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "after"
-  },
-  {
-    "defaultValue": 12,
-    "kind": "LocalArgument",
-    "name": "first"
-  }
-],
-v1 = [
-  {
-    "kind": "Variable",
-    "name": "after",
-    "variableName": "after"
-  },
-  {
-    "kind": "Variable",
+    "kind": "Literal",
     "name": "first",
-    "variableName": "first"
+    "value": 12
   }
 ],
-v2 = {
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v3 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -66,13 +46,13 @@ v3 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "SelectSeriesPaginationFragment",
+    "name": "SelectTopicSearchQuery",
     "selections": [
       {
-        "args": (v1/*: any*/),
+        "args": null,
         "kind": "FragmentSpread",
         "name": "SelectTopicSearchFragment"
       }
@@ -82,13 +62,13 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "SelectSeriesPaginationFragment",
+    "name": "SelectTopicSearchQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v0/*: any*/),
         "concreteType": "TopicConnection",
         "kind": "LinkedField",
         "name": "topics",
@@ -110,7 +90,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v2/*: any*/),
+                  (v1/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -133,7 +113,7 @@ return {
                         "name": "type",
                         "storageKey": null
                       },
-                      (v2/*: any*/),
+                      (v1/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -142,7 +122,7 @@ return {
                         "name": "urls",
                         "plural": true,
                         "selections": [
-                          (v3/*: any*/),
+                          (v2/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -182,7 +162,7 @@ return {
                         "name": "videoThumbnail",
                         "plural": false,
                         "selections": [
-                          (v3/*: any*/)
+                          (v2/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -249,11 +229,11 @@ return {
             "storageKey": null
           }
         ],
-        "storageKey": null
+        "storageKey": "topics(first:12)"
       },
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v0/*: any*/),
         "filters": null,
         "handle": "connection",
         "key": "StaffTopicsConnection_topics",
@@ -263,15 +243,15 @@ return {
     ]
   },
   "params": {
-    "id": "b6c373f4f2b8e79859e4d377b7e0d1c1",
+    "id": "82883a8fc33e656e1b72159efb16104a",
     "metadata": {},
-    "name": "SelectSeriesPaginationFragment",
+    "name": "SelectTopicSearchQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 
-(node as any).hash = "ad2780ab0733ec9daf1556b84b220148";
+(node as any).hash = "1dbd6b4020a6d4baa43ad484c69cab4e";
 
 export default node;

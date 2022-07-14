@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c05393a6709daa6f4c1319abb0dcd819>>
- * @relayHash 4ac7165e15ba7ac0ae7dfcf779748890
+ * @generated SignedSource<<05a57edde758939aab253a4509f11755>>
+ * @relayHash 56c292214526b05384a13795affeaff1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,36 +9,34 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4ac7165e15ba7ac0ae7dfcf779748890
+// @relayRequestID 56c292214526b05384a13795affeaff1
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-export type CreateCategoryValidation = "SLUG_TAKEN" | "%future added value";
-export type CreateCategoryInput = {
+export type CreateTopicValidation = "SLUG_TAKEN" | "%future added value";
+export type CreateTopicInput = {
+  description: string;
   slug: string;
   title: string;
-  topicId?: string | null;
+  weight: number;
 };
-export type CreateCategoryFormMutation$variables = {
+export type CreateTopicFormMutation$variables = {
   connections: ReadonlyArray<string>;
-  input: CreateCategoryInput;
+  input: CreateTopicInput;
 };
-export type CreateCategoryFormMutation$data = {
-  readonly createCategory: {
-    readonly category: {
+export type CreateTopicFormMutation$data = {
+  readonly createTopic: {
+    readonly topic: {
+      readonly description: string;
       readonly id: string;
-      readonly slug: string;
       readonly title: string;
-      readonly topic: {
-        readonly id: string;
-        readonly title: string;
-      } | null;
+      readonly weight: number;
     } | null;
-    readonly validation: CreateCategoryValidation | null;
+    readonly validation: CreateTopicValidation | null;
   } | null;
 };
-export type CreateCategoryFormMutation = {
-  response: CreateCategoryFormMutation$data;
-  variables: CreateCategoryFormMutation$variables;
+export type CreateTopicFormMutation = {
+  response: CreateTopicFormMutation$data;
+  variables: CreateTopicFormMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -62,51 +60,43 @@ v2 = [
 v3 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "title",
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "Category",
+  "concreteType": "Topic",
   "kind": "LinkedField",
-  "name": "category",
+  "name": "topic",
   "plural": false,
   "selections": [
-    (v3/*: any*/),
-    (v4/*: any*/),
     {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "slug",
+      "name": "id",
       "storageKey": null
     },
     {
       "alias": null,
       "args": null,
-      "concreteType": "Topic",
-      "kind": "LinkedField",
-      "name": "topic",
-      "plural": false,
-      "selections": [
-        (v3/*: any*/),
-        (v4/*: any*/)
-      ],
+      "kind": "ScalarField",
+      "name": "title",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "description",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "weight",
       "storageKey": null
     }
   ],
   "storageKey": null
 },
-v6 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -121,18 +111,18 @@ return {
     ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "CreateCategoryFormMutation",
+    "name": "CreateTopicFormMutation",
     "selections": [
       {
         "alias": null,
         "args": (v2/*: any*/),
-        "concreteType": "CreateCategoryPayload",
+        "concreteType": "CreateTopicPayload",
         "kind": "LinkedField",
-        "name": "createCategory",
+        "name": "createTopic",
         "plural": false,
         "selections": [
-          (v5/*: any*/),
-          (v6/*: any*/)
+          (v3/*: any*/),
+          (v4/*: any*/)
         ],
         "storageKey": null
       }
@@ -147,17 +137,17 @@ return {
       (v0/*: any*/)
     ],
     "kind": "Operation",
-    "name": "CreateCategoryFormMutation",
+    "name": "CreateTopicFormMutation",
     "selections": [
       {
         "alias": null,
         "args": (v2/*: any*/),
-        "concreteType": "CreateCategoryPayload",
+        "concreteType": "CreateTopicPayload",
         "kind": "LinkedField",
-        "name": "createCategory",
+        "name": "createTopic",
         "plural": false,
         "selections": [
-          (v5/*: any*/),
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -165,7 +155,7 @@ return {
             "handle": "appendNode",
             "key": "",
             "kind": "LinkedHandle",
-            "name": "category",
+            "name": "topic",
             "handleArgs": [
               {
                 "kind": "Variable",
@@ -175,26 +165,26 @@ return {
               {
                 "kind": "Literal",
                 "name": "edgeTypeName",
-                "value": "createCategoryEdge"
+                "value": "createTopicEdge"
               }
             ]
           },
-          (v6/*: any*/)
+          (v4/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "4ac7165e15ba7ac0ae7dfcf779748890",
+    "id": "56c292214526b05384a13795affeaff1",
     "metadata": {},
-    "name": "CreateCategoryFormMutation",
+    "name": "CreateTopicFormMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
 
-(node as any).hash = "cbc6e61f5868ebbd7cc98a9a8376fa3a";
+(node as any).hash = "8f00ea98eb989610e2b2b6da560fd091";
 
 export default node;

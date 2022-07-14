@@ -5,14 +5,12 @@ import Joi from 'joi'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import { graphql, useMutation } from 'react-relay/hooks'
-import { CreateCategoryFormMutation } from '@//:artifacts/CreateCategoryFormMutation.graphql'
-import translateValidation from '@//:modules/validation/translateValidation'
+import { CreateTopicFormMutation } from '@//:artifacts/CreateTopicFormMutation.graphql'
 import { ConnectionProp } from '@//:types/components'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import GenericTagTitle from '../../../../../../../../common/validation/GenericTagTitle'
-import GenericTagSlug from '../../../../../../../../common/validation/GenericTagSlug'
-import { TagSlug, TagTitle, TagTopicId } from '@//:types/form'
-import useSlugSubscribe from '../../../../../../../../common/support/useSlugSubscribe'
+import { TagDescription, TagSlug, TagTitle, TagWeight } from '@//:types/form'
+import GenericTagDescription from '../../../../../../../../common/validation/GenericTagDescription'
 import {
   Form,
   FormInput,
@@ -21,36 +19,37 @@ import {
   InputFeedback,
   InputFooter,
   InputHeader,
+  TextareaInput,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
-import TopicInput from '@//:modules/content/HookedComponents/Form/FormInput/Inputs/TopicInput/TopicInput'
-import GenericTagOptionalId from '../../../../../../../../common/validation/GenericTagOptionalId'
+import GenericTagSlug from '../../../../../../../../common/validation/GenericTagSlug'
+import GenericTagWeight from '../../../../../../../../common/validation/GenericTagWeight'
+import WeightInput from '@//:modules/content/HookedComponents/Form/FormInput/Inputs/WeightInput/WeightInput'
+import useSlugSubscribe from '../../../../../../../../common/support/useSlugSubscribe'
+import translateValidation from '@//:modules/validation/translateValidation'
 
 type Props = ConnectionProp
 
-type CategoryValues = TagTitle & TagSlug & TagTopicId
+type TopicValues = TagTitle & TagDescription & TagWeight & TagSlug
 
 const Mutation = graphql`
-  mutation CreateCategoryFormMutation($input: CreateCategoryInput!, $connections: [ID!]!) {
-    createCategory(input: $input) {
-      category @appendNode(connections: $connections, edgeTypeName: "createCategoryEdge") {
+  mutation CreateTopicFormMutation($input: CreateTopicInput!, $connections: [ID!]!) {
+    createTopic(input: $input) {
+      topic @appendNode(connections: $connections, edgeTypeName: "createTopicEdge") {
         id
         title
-        slug
-        topic {
-          id
-          title
-        }
+        description
+        weight
       }
       validation
     }
   }
 `
 
-export default function CreateCategoryForm ({
+export default function CreateTopicForm ({
   connectionId
 }: Props): JSX.Element {
-  const [commit, isInFlight] = useMutation<CreateCategoryFormMutation>(
+  const [commit, isInFlight] = useMutation<CreateTopicFormMutation>(
     Mutation
   )
 
@@ -61,18 +60,20 @@ export default function CreateCategoryForm ({
   const schema = Joi.object({
     title: GenericTagTitle(),
     slug: GenericTagSlug(),
-    topicId: GenericTagOptionalId()
+    description: GenericTagDescription(),
+    weight: GenericTagWeight()
   })
 
-  const methods = useForm<CategoryValues>({
+  const methods = useForm<TopicValues>({
     resolver: joiResolver(
       schema
-    )
+    ),
+    defaultValues: {
+      weight: 0
+    }
   })
 
-  const {
-    setError
-  } = methods
+  const { setError } = methods
 
   const onSubmit = (formValues): void => {
     commit({
@@ -81,22 +82,22 @@ export default function CreateCategoryForm ({
         connections: [connectionId]
       },
       onCompleted (data) {
-        if (data?.createCategory?.validation != null) {
+        if (data?.createTopic?.validation != null) {
           setError('slug', {
             type: 'mutation',
-            message: i18n._(translateValidation(data.createCategory.validation))
+            message: i18n._(translateValidation(data.createTopic.validation))
           })
           return
         }
         notify({
           status: 'success',
-          title: t`Category "${formValues.title}" was created successfully`
+          title: t`Topic "${formValues.title}" was created successfully`
         })
       },
       onError (data) {
         notify({
           status: 'error',
-          title: t`Error creating category ${data.message}`
+          title: t`Error creating topic ${data.message}`
         })
       }
     })
@@ -118,11 +119,11 @@ export default function CreateCategoryForm ({
         >
           <InputHeader>
             <Trans>
-              Category Title
+              Topic Title
             </Trans>
           </InputHeader>
           <InputBody>
-            <TextInput placeholder={i18n._(t`Enter a category title`)} />
+            <TextInput placeholder={i18n._(t`Enter a topic title`)} />
             <InputFeedback />
           </InputBody>
           <InputFooter />
@@ -132,24 +133,35 @@ export default function CreateCategoryForm ({
         >
           <InputHeader>
             <Trans>
-              Category Slug
+              Topic Slug
             </Trans>
           </InputHeader>
           <InputBody>
-            <TextInput placeholder={i18n._(t`Enter a category slug`)} />
+            <TextInput placeholder={i18n._(t`Enter a topic slug`)} />
             <InputFeedback />
           </InputBody>
           <InputFooter />
         </FormInput>
         <FormInput
-          id='topicId'
+          id='description'
         >
           <InputHeader>
             <Trans>
-              Category Topic
+              Topic Description
             </Trans>
           </InputHeader>
-          <TopicInput />
+          <TextareaInput placeholder={i18n._(t`Enter a topic description`)} />
+          <InputFooter />
+        </FormInput>
+        <FormInput
+          id='weight'
+        >
+          <InputHeader>
+            <Trans>
+              Topic Weight
+            </Trans>
+          </InputHeader>
+          <WeightInput />
           <InputFooter />
         </FormInput>
         <FormSubmitButton
@@ -158,7 +170,7 @@ export default function CreateCategoryForm ({
           size='lg'
         >
           <Trans>
-            Create Category
+            Create Rule
           </Trans>
         </FormSubmitButton>
       </Stack>

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fd84adb7445a01eb7a4d914617c128ed>>
- * @relayHash b32d7ef75b922600054d17012313ceb4
+ * @generated SignedSource<<8e9546e68ad6407be28a759f115d66ae>>
+ * @relayHash 6380d4d0a7d028d7e9c2abe21bf22134
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,72 +9,80 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b32d7ef75b922600054d17012313ceb4
+// @relayRequestID 6380d4d0a7d028d7e9c2abe21bf22134
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type StaffViewCharacterQuery$variables = {
-  seriesSlug: string;
+export type StaffViewTopicQuery$variables = {
   slug: string;
 };
-export type StaffViewCharacterQuery$data = {
-  readonly character: {
-    readonly series: {
-      readonly title: string;
-    };
-    readonly " $fragmentSpreads": FragmentRefs<"ChangeCharacterNameFragment" | "ChangeCharacterThumbnailFragment">;
+export type StaffViewTopicQuery$data = {
+  readonly topic: {
+    readonly " $fragmentSpreads": FragmentRefs<"ChangeTopicBannerFragment" | "ChangeTopicDescriptionFragment" | "ChangeTopicTitleFragment" | "ChangeTopicWeightFragment">;
   } | null;
 };
-export type StaffViewCharacterQuery = {
-  response: StaffViewCharacterQuery$data;
-  variables: StaffViewCharacterQuery$variables;
+export type StaffViewTopicQuery = {
+  response: StaffViewTopicQuery$data;
+  variables: StaffViewTopicQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "seriesSlug"
-},
-v1 = {
-  "defaultValue": null,
-  "kind": "LocalArgument",
-  "name": "slug"
-},
-v2 = [
+var v0 = [
   {
-    "kind": "Variable",
-    "name": "seriesSlug",
-    "variableName": "seriesSlug"
-  },
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "slug"
+  }
+],
+v1 = [
   {
     "kind": "Variable",
     "name": "slug",
     "variableName": "slug"
   }
 ],
+v2 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "text",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "Language",
+    "kind": "LinkedField",
+    "name": "language",
+    "plural": false,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "locale",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "name",
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  }
+],
 v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "title",
-  "storageKey": null
-},
-v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v6 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -83,43 +91,38 @@ v6 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": [
-      (v0/*: any*/),
-      (v1/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "StaffViewCharacterQuery",
+    "name": "StaffViewTopicQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v2/*: any*/),
-        "concreteType": "Character",
+        "args": (v1/*: any*/),
+        "concreteType": "Topic",
         "kind": "LinkedField",
-        "name": "character",
+        "name": "topic",
         "plural": false,
         "selections": [
           {
-            "alias": null,
             "args": null,
-            "concreteType": "Series",
-            "kind": "LinkedField",
-            "name": "series",
-            "plural": false,
-            "selections": [
-              (v3/*: any*/)
-            ],
-            "storageKey": null
+            "kind": "FragmentSpread",
+            "name": "ChangeTopicTitleFragment"
           },
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "ChangeCharacterNameFragment"
+            "name": "ChangeTopicDescriptionFragment"
           },
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "ChangeCharacterThumbnailFragment"
+            "name": "ChangeTopicWeightFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ChangeTopicBannerFragment"
           }
         ],
         "storageKey": null
@@ -130,73 +133,60 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [
-      (v1/*: any*/),
-      (v0/*: any*/)
-    ],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "StaffViewCharacterQuery",
+    "name": "StaffViewTopicQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v2/*: any*/),
-        "concreteType": "Character",
+        "args": (v1/*: any*/),
+        "concreteType": "Topic",
         "kind": "LinkedField",
-        "name": "character",
+        "name": "topic",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "Series",
-            "kind": "LinkedField",
-            "name": "series",
-            "plural": false,
-            "selections": [
-              (v3/*: any*/),
-              (v4/*: any*/)
-            ],
+            "kind": "ScalarField",
+            "name": "title",
             "storageKey": null
           },
-          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
             "concreteType": "Translation",
             "kind": "LinkedField",
-            "name": "nameTranslations",
+            "name": "titleTranslations",
             "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "text",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Language",
-                "kind": "LinkedField",
-                "name": "language",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "locale",
-                    "storageKey": null
-                  },
-                  (v5/*: any*/)
-                ],
-                "storageKey": null
-              }
-            ],
+            "selections": (v2/*: any*/),
             "storageKey": null
           },
-          (v4/*: any*/),
+          (v3/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "description",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Translation",
+            "kind": "LinkedField",
+            "name": "descriptionTranslations",
+            "plural": true,
+            "selections": (v2/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "weight",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -205,7 +195,7 @@ return {
             "name": "banner",
             "plural": false,
             "selections": [
-              (v4/*: any*/),
+              (v3/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -214,7 +204,7 @@ return {
                 "name": "urls",
                 "plural": true,
                 "selections": [
-                  (v6/*: any*/),
+                  (v4/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -254,7 +244,7 @@ return {
                 "name": "videoThumbnail",
                 "plural": false,
                 "selections": [
-                  (v6/*: any*/)
+                  (v4/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -274,15 +264,15 @@ return {
     ]
   },
   "params": {
-    "id": "b32d7ef75b922600054d17012313ceb4",
+    "id": "6380d4d0a7d028d7e9c2abe21bf22134",
     "metadata": {},
-    "name": "StaffViewCharacterQuery",
+    "name": "StaffViewTopicQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 
-(node as any).hash = "0362b3986151841aa6aa9cc593eee429";
+(node as any).hash = "0e2dd465b3e5985ef34c3636d4017fd6";
 
 export default node;

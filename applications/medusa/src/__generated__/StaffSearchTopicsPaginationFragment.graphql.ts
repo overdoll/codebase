@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<5fa939f8e0b06ca2ee7b3fac29a2376c>>
- * @relayHash b6c373f4f2b8e79859e4d377b7e0d1c1
+ * @generated SignedSource<<a690af37d91016e7aede649398aa106b>>
+ * @relayHash e39a894ced9e4a290039ec4d206bff42
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,20 +9,20 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b6c373f4f2b8e79859e4d377b7e0d1c1
+// @relayRequestID e39a894ced9e4a290039ec4d206bff42
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type SelectSeriesPaginationFragment$variables = {
+export type StaffSearchTopicsPaginationFragment$variables = {
   after?: string | null;
   first?: number | null;
 };
-export type SelectSeriesPaginationFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"SelectTopicSearchFragment">;
+export type StaffSearchTopicsPaginationFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"StaffSearchTopicsFragment">;
 };
-export type SelectSeriesPaginationFragment = {
-  response: SelectSeriesPaginationFragment$data;
-  variables: SelectSeriesPaginationFragment$variables;
+export type StaffSearchTopicsPaginationFragment = {
+  response: StaffSearchTopicsPaginationFragment$data;
+  variables: StaffSearchTopicsPaginationFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -33,7 +33,7 @@ var v0 = [
     "name": "after"
   },
   {
-    "defaultValue": 12,
+    "defaultValue": null,
     "kind": "LocalArgument",
     "name": "first"
   }
@@ -69,12 +69,12 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "SelectSeriesPaginationFragment",
+    "name": "StaffSearchTopicsPaginationFragment",
     "selections": [
       {
         "args": (v1/*: any*/),
         "kind": "FragmentSpread",
-        "name": "SelectTopicSearchFragment"
+        "name": "StaffSearchTopicsFragment"
       }
     ],
     "type": "Query",
@@ -84,7 +84,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "SelectSeriesPaginationFragment",
+    "name": "StaffSearchTopicsPaginationFragment",
     "selections": [
       {
         "alias": null,
@@ -110,6 +110,13 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "reference",
+                    "storageKey": null
+                  },
                   (v2/*: any*/),
                   {
                     "alias": null,
@@ -263,15 +270,15 @@ return {
     ]
   },
   "params": {
-    "id": "b6c373f4f2b8e79859e4d377b7e0d1c1",
+    "id": "e39a894ced9e4a290039ec4d206bff42",
     "metadata": {},
-    "name": "SelectSeriesPaginationFragment",
+    "name": "StaffSearchTopicsPaginationFragment",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 
-(node as any).hash = "ad2780ab0733ec9daf1556b84b220148";
+(node as any).hash = "9e1e9490f4d4e44ec09e50e481cc4a22";
 
 export default node;

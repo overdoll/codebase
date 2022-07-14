@@ -4,6 +4,7 @@ import { Box, Stack } from '@chakra-ui/react'
 import { NotFoundGeneric } from '@//:modules/content/Placeholder'
 import ChangeCategoryTitle from './ChangeCategoryTitle/ChangeCategoryTitle'
 import ChangeCategoryThumbnail from './ChangeCategoryThumbnail/ChangeCategoryThumbnail'
+import ChangeCategoryTopic from './ChangeCategoryTopic/ChangeCategoryTopic'
 
 interface Props {
   query: PreloadedQuery<StaffViewCategoryQuery>
@@ -14,6 +15,7 @@ const Query = graphql`
     category(slug: $slug) {
       ...ChangeCategoryTitleFragment
       ...ChangeCategoryThumbnailFragment
+      ...ChangeCategoryTopicFragment
     }
   }
 `
@@ -31,10 +33,13 @@ export default function StaffViewCategory ({ query }: Props): JSX.Element {
   return (
     <Stack spacing={8}>
       <Box>
-        <ChangeCategoryTitle query={queryData?.category} />
+        <ChangeCategoryTitle query={queryData.category} />
       </Box>
       <Box>
-        <ChangeCategoryThumbnail query={queryData?.category} />
+        <ChangeCategoryThumbnail query={queryData.category} />
+      </Box>
+      <Box>
+        <ChangeCategoryTopic query={queryData.category} />
       </Box>
     </Stack>
   )
