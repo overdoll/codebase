@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<accb5fe1141358c3320bf76ad06fc336>>
- * @relayHash b4689a48daef79cdde5f9dbc84bfef27
+ * @generated SignedSource<<a1183601e8b342cb84ccd477603eac62>>
+ * @relayHash da3ca1bd84d1dcf26bb3a3281149ae89
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b4689a48daef79cdde5f9dbc84bfef27
+// @relayRequestID da3ca1bd84d1dcf26bb3a3281149ae89
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -216,6 +216,13 @@ return {
                         "kind": "ScalarField",
                         "name": "processed",
                         "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "failed",
+                        "storageKey": null
                       }
                     ],
                     "storageKey": null
@@ -232,7 +239,7 @@ return {
     ]
   },
   "params": {
-    "id": "b4689a48daef79cdde5f9dbc84bfef27",
+    "id": "da3ca1bd84d1dcf26bb3a3281149ae89",
     "metadata": {},
     "name": "UploadAudiencesSingleSelectorQuery",
     "operationKind": "query",

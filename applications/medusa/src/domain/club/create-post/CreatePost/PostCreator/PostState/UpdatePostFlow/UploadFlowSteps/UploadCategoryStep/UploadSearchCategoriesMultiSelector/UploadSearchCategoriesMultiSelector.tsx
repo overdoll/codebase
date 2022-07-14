@@ -28,7 +28,7 @@ const Query = graphql`
 const Fragment = graphql`
   fragment UploadSearchCategoriesMultiSelectorFragment on Query
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 19}
+    first: {type: Int, defaultValue: 10}
     after: {type: String},
     title: {type: String}
   )

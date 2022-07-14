@@ -7,9 +7,7 @@ import { CheckMark, WarningTriangle } from '@//:assets/icons/interface'
 import { Heading, HStack, Spinner } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { Icon, LargeBackgroundBox } from '@//:modules/content/PageLayout'
-import { useUpdateEffect } from 'usehooks-ts'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
-import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import { ClickableTile } from '@//:modules/content/ContentSelection'
 import { ArrowButtonRight } from '@//:assets/icons'
 import { useContext } from 'react'
@@ -65,8 +63,6 @@ export default function RefreshProcessContent ({
     searchArguments.variables,
     searchArguments.options
   )
-
-  const { dispatch } = useSequenceContext()
 
   const { skipToStep } = useContext(FlowContext)
 
@@ -128,16 +124,8 @@ export default function RefreshProcessContent ({
     )
   }
 
-  useUpdateEffect(() => {
-    dispatch({
-      type: 'isProcessing',
-      value: !contentIsProcessed,
-      transform: 'SET'
-    })
-  }, [contentIsProcessed])
-
   return (
-    <ClickableTile onClick={() => skipToStep('arrange')}>
+    <ClickableTile onClick={() => skipToStep('content')}>
       <LargeBackgroundBox borderRadius='inherit' p={3}>
         <HStack justify='space-between'>
           <HStack spacing={2}>

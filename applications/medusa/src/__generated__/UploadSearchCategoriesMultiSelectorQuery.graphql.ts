@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<82ec3d1a7914d04e20f23ad044b2be37>>
- * @relayHash 84aed364105bd3173d3c98aa29e21e27
+ * @generated SignedSource<<d3830ee9413a79922743725e224a1a7e>>
+ * @relayHash 09f204ff7e6de5b69bf7ac2d7dd50c0b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 84aed364105bd3173d3c98aa29e21e27
+// @relayRequestID 09f204ff7e6de5b69bf7ac2d7dd50c0b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -41,7 +41,7 @@ v2 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 19
+    "value": 10
   },
   (v1/*: any*/)
 ],
@@ -189,6 +189,13 @@ return {
                         "kind": "ScalarField",
                         "name": "processed",
                         "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "failed",
+                        "storageKey": null
                       }
                     ],
                     "storageKey": null
@@ -255,7 +262,7 @@ return {
     ]
   },
   "params": {
-    "id": "84aed364105bd3173d3c98aa29e21e27",
+    "id": "09f204ff7e6de5b69bf7ac2d7dd50c0b",
     "metadata": {},
     "name": "UploadSearchCategoriesMultiSelectorQuery",
     "operationKind": "query",

@@ -23,9 +23,9 @@ export default function InspectableAlert ({
             icon={icon}
             w={4}
             h={4}
-            fill='gray.00'
+            fill='gray.100'
           />
-          <Heading lineHeight={1} color='gray.00' fontSize='md'>
+          <Heading lineHeight={1} color='gray.100' fontSize='md'>
             {text}
           </Heading>
         </HStack>

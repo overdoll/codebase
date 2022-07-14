@@ -25,7 +25,21 @@ export default function useUpload (props: UseUploadProps): UseUploadReturnType {
 
   useEffect(() => {
     const callBackFn = (file, response): void => {
-      onUploadSuccess?.(file, response)
+      const mutateFile = (): UppyFile => {
+        const mutatedProgress: UppyFile['progress'] = {
+          bytesUploaded: file.size,
+          bytesTotal: file.size,
+          uploadStarted: Date.now(),
+          uploadComplete: true,
+          percentage: 100
+        }
+
+        return {
+          ...file,
+          progress: mutatedProgress
+        }
+      }
+      onUploadSuccess?.(mutateFile(), response)
     }
 
     uppy.on('upload-success', callBackFn)
@@ -43,7 +57,7 @@ export default function useUpload (props: UseUploadProps): UseUploadReturnType {
           bytesUploaded: progress.bytesUploaded,
           bytesTotal: progress.bytesTotal,
           uploadStarted: Date.now(),
-          uploadComplete: progress.bytesUploaded === progress.bytesTotal,
+          uploadComplete: false,
           percentage: (progress.bytesUploaded / progress.bytesTotal) * 100
         }
 

@@ -7,7 +7,6 @@ import PostCreatorQuery, { PostCreatorQuery as PostCreatorQueryType } from '@//:
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
 import {
-  ArrayResolver,
   ObjectResolver,
   SequenceProvider,
   useSequence,
@@ -36,7 +35,6 @@ interface SequenceProps {
   urls: {
     [id: string]: string
   }
-  content: string[]
   audience: {
     [id: string]: string
   }
@@ -50,38 +48,30 @@ interface SequenceProps {
       title: string
     }
   }
-  isProcessing: boolean
   isInReview: boolean
   isSubmitted: boolean
-  isRearranging: boolean
 }
 
 const defaultValue: SequenceProps = {
   files: {},
   urls: {},
-  content: [],
   audience: {},
   characters: {},
   categories: {},
   errors: {},
-  isProcessing: false,
   isInReview: false,
-  isSubmitted: false,
-  isRearranging: false
+  isSubmitted: false
 }
 
 const resolver: SequenceResolver<SequenceProps> = {
   files: ObjectResolver(),
   urls: ObjectResolver(),
   errors: ObjectResolver(),
-  content: ArrayResolver(),
   audience: ObjectResolver(),
   characters: ObjectResolver(),
   categories: ObjectResolver(),
-  isProcessing: ValueResolver(),
   isInReview: ValueResolver(),
-  isSubmitted: ValueResolver(),
-  isRearranging: ValueResolver()
+  isSubmitted: ValueResolver()
 }
 
 const CreatePost: PageProps<Props> = (props: Props) => {

@@ -18,10 +18,11 @@ interface Props {
 
 const Fragment = graphql`
   fragment UploadFlowFooterFragment on Post {
-    ...UpdateAudienceButton
+    ...UpdateAudienceButtonFragment
     ...UpdateCategoryButtonFragment
     ...UpdateCharacterButtonFragment
     ...SubmitPostButtonFragment
+    ...UpdateContentButtonFragment
   }
 `
 
@@ -35,9 +36,9 @@ export default function UploadFlowFooter ({
 
   const NextButton = (): JSX.Element => {
     switch (step) {
-      case 'arrange':
+      case 'content':
         return (
-          <UpdateContentButton />
+          <UpdateContentButton query={data} />
         )
       case 'audience':
         return (

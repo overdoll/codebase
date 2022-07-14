@@ -1,6 +1,6 @@
 import { graphql, useMutation } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
-import type { UpdateAudienceButton$key } from '@//:artifacts/UpdateAudienceButton.graphql'
+import type { UpdateAudienceButtonFragment$key } from '@//:artifacts/UpdateAudienceButtonFragment.graphql'
 import type { UpdateAudienceButtonMutation } from '@//:artifacts/UpdateAudienceButtonMutation.graphql'
 import { t } from '@lingui/macro'
 import { FlowBuilderNextButton, FlowBuilderSaveButton } from '@//:modules/content/PageLayout'
@@ -8,12 +8,12 @@ import { useToast } from '@//:modules/content/ThemeComponents'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 
 interface Props {
-  query: UpdateAudienceButton$key
+  query: UpdateAudienceButtonFragment$key
   nextStep: () => void
 }
 
 const Fragment = graphql`
-  fragment UpdateAudienceButton on Post {
+  fragment UpdateAudienceButtonFragment on Post {
     id
     audience {
       id

@@ -1,12 +1,11 @@
 import type { ProcessContentFragment$key } from '@//:artifacts/ProcessContentFragment.graphql'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
-import RefreshProcessContent, { isFailed } from './RefreshProcessContent/RefreshProcessContent'
+import RefreshProcessContent, { isFailed, isProcessed } from './RefreshProcessContent/RefreshProcessContent'
 import { Suspense, useEffect, useRef } from 'react'
 import { Collapse } from '@chakra-ui/react'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
-import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import { Timeout } from '@//:types/components'
 
 interface Props {
@@ -34,8 +33,6 @@ export default function ProcessContent ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const { state } = useSequenceContext()
-
   const timeoutRef = useRef<Timeout | null>(null)
 
   const {
@@ -47,11 +44,12 @@ export default function ProcessContent ({
     }
   })
 
+  const contentProcessed = isProcessed(data.content)
   const contentFailed = isFailed(data.content)
 
   useEffect(() => {
     let refreshTime = 1000
-    if (state.isProcessing === false || contentFailed) {
+    if (contentProcessed || contentFailed) {
       if (timeoutRef.current != null) {
         clearTimeout(timeoutRef.current)
         timeoutRef.current = null
@@ -61,16 +59,15 @@ export default function ProcessContent ({
 
     const refreshLoop = (): void => {
       loadQuery()
-
       refreshTime = refreshTime === 5000 ? 5000 : refreshTime + 1000
       timeoutRef.current = setTimeout(refreshLoop, refreshTime)
     }
 
     timeoutRef.current = setTimeout(refreshLoop, refreshTime)
-  }, [state.isProcessing, contentFailed])
+  }, [contentProcessed, contentFailed])
 
   return (
-    <Collapse style={{ overflow: 'visible' }} unmountOnExit in={state.isProcessing === true || contentFailed}>
+    <Collapse style={{ overflow: 'visible' }} unmountOnExit in={!contentProcessed || contentFailed}>
       <QueryErrorBoundary loadQuery={loadQuery}>
         <Suspense fallback={<></>}>
           <RefreshProcessContent searchArguments={searchArguments} />

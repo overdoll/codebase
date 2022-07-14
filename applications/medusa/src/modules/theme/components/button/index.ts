@@ -89,16 +89,16 @@ const variantGhost: SystemStyleFunction = (props) => {
   }
 
   return {
-    color: mode(`${c}.600`, `${c}.400`)(props),
-    bg: 'dimmers.400',
+    color: mode(`${c}.600`, `${c}.300`)(props),
+    bg: 'transparent',
     _hover: {
-      bg: 'dimmers.500',
-      color: mode(`${c}.50`, `${c}.500`)(props)
+      bg: 'dimmers.100',
+      color: mode(`${c}.50`, `${c}.300`)(props)
     },
     _active: {
-      bg: 'dimmers.400',
-      boxShadow: `0 0 0 3px ${getColor(theme, transparentize(`${c}.400`, 0.25)(theme)) as string}`,
-      color: mode(`${c}.50`, `${c}.400`)(props)
+      bg: 'dimmers.100',
+      boxShadow: `0 0 0 3px ${getColor(theme, transparentize(`${c}.300`, 0.25)(theme)) as string}`,
+      color: mode(`${c}.50`, `${c}.300`)(props)
     }
   }
 }

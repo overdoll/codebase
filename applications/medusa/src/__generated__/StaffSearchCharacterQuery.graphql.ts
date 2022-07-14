@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b87cb830e0ce3d1278a9cea83c4e9151>>
- * @relayHash a60199ba9b99ec96063fd9bccc79c333
+ * @generated SignedSource<<7bcd13feec72dc8699dd0a7931b42a64>>
+ * @relayHash a8795963f89467d3cd66db0cb04079bb
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a60199ba9b99ec96063fd9bccc79c333
+// @relayRequestID a8795963f89467d3cd66db0cb04079bb
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -214,6 +214,13 @@ return {
                         "kind": "ScalarField",
                         "name": "processed",
                         "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "failed",
+                        "storageKey": null
                       }
                     ],
                     "storageKey": null
@@ -280,7 +287,7 @@ return {
     ]
   },
   "params": {
-    "id": "a60199ba9b99ec96063fd9bccc79c333",
+    "id": "a8795963f89467d3cd66db0cb04079bb",
     "metadata": {},
     "name": "StaffSearchCharacterQuery",
     "operationKind": "query",

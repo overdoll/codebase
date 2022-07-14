@@ -82,6 +82,11 @@ export default function PostCreator ({ query }: Props): JSX.Element {
         value: { [file.id]: getIdFromUppyUrl(url) },
         transform: 'ADD'
       })
+      dispatch({
+        type: 'files',
+        value: { [file.id]: file },
+        transform: 'ADD'
+      })
     }
   }
 
@@ -93,7 +98,7 @@ export default function PostCreator ({ query }: Props): JSX.Element {
     })
     dispatch({
       type: 'urls',
-      value: { [file.id]: state.urls[file.id] },
+      value: { [file.id]: file.id },
       transform: 'REMOVE'
     })
     dispatch({
@@ -147,7 +152,9 @@ export default function PostCreator ({ query }: Props): JSX.Element {
   })
 
   useUpdateEffect(() => {
-    uppy.reset()
+    if (data?.post?.id == null) {
+      uppy.reset()
+    }
   }, [data?.post?.id])
 
   if (data?.club?.viewerIsOwner === false) {

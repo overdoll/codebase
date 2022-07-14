@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e56febb67996befa15dbc64cd01e2a7f>>
- * @relayHash 887e476f934339d50e54cd025c2b2abc
+ * @generated SignedSource<<75126e32bb666ac12379544cb3552a08>>
+ * @relayHash da8def72ca8473bc1e9d221f6ebd2c40
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 887e476f934339d50e54cd025c2b2abc
+// @relayRequestID da8def72ca8473bc1e9d221f6ebd2c40
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -208,6 +208,13 @@ return {
                         "kind": "ScalarField",
                         "name": "processed",
                         "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "failed",
+                        "storageKey": null
                       }
                     ],
                     "storageKey": null
@@ -274,7 +281,7 @@ return {
     ]
   },
   "params": {
-    "id": "887e476f934339d50e54cd025c2b2abc",
+    "id": "da8def72ca8473bc1e9d221f6ebd2c40",
     "metadata": {},
     "name": "SelectSeriesPaginationFragment",
     "operationKind": "query",

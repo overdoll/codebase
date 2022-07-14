@@ -96,11 +96,6 @@ export default function UploadRewindCategories ({
       if (Object.keys(currentValues).includes(item.id)) return
       onChange(item.id, { title: item.title })
     })
-    notify({
-      status: 'info',
-      title: i18n._(t`Added categories from selected post`),
-      isClosable: true
-    })
     onClose()
   }
 

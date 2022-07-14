@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<20980967fc8e3906b1244b15140d3ac6>>
- * @relayHash 74482fdb6de19e966d914afb8514ee3a
+ * @generated SignedSource<<6af6af5e1d759dd15b0e6dbbd5f6be00>>
+ * @relayHash 8d7f243f6a15bf6dc839ac519b5cf017
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 74482fdb6de19e966d914afb8514ee3a
+// @relayRequestID 8d7f243f6a15bf6dc839ac519b5cf017
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -105,17 +105,31 @@ v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "type",
+  "name": "title",
   "storageKey": null
 },
 v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "name",
   "storageKey": null
 },
 v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "slug",
+  "storageKey": null
+},
+v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v12 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -123,7 +137,7 @@ v10 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v9/*: any*/),
+    (v11/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -134,28 +148,28 @@ v10 = {
   ],
   "storageKey": null
 },
-v11 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "width",
   "storageKey": null
 },
-v12 = {
+v14 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "height",
   "storageKey": null
 },
-v13 = {
+v15 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "preview",
   "storageKey": null
 },
-v14 = {
+v16 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -163,55 +177,41 @@ v14 = {
   "name": "videoThumbnail",
   "plural": false,
   "selections": [
-    (v9/*: any*/)
+    (v11/*: any*/)
   ],
-  "storageKey": null
-},
-v15 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "videoDuration",
-  "storageKey": null
-},
-v16 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "title",
   "storageKey": null
 },
 v17 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "type",
   "storageKey": null
 },
-v18 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "slug",
-  "storageKey": null
-},
-v19 = [
+v18 = [
   (v3/*: any*/),
-  (v10/*: any*/),
-  (v11/*: any*/),
   (v12/*: any*/),
   (v13/*: any*/),
   (v14/*: any*/),
-  (v8/*: any*/)
+  (v15/*: any*/),
+  (v16/*: any*/),
+  (v17/*: any*/)
 ],
-v20 = {
+v19 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
   "kind": "LinkedField",
   "name": "banner",
   "plural": false,
-  "selections": (v19/*: any*/),
+  "selections": (v18/*: any*/),
+  "storageKey": null
+},
+v20 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "videoDuration",
   "storageKey": null
 },
 v21 = [
@@ -310,26 +310,74 @@ return {
           {
             "alias": null,
             "args": null,
+            "concreteType": "Audience",
+            "kind": "LinkedField",
+            "name": "audience",
+            "plural": false,
+            "selections": [
+              (v3/*: any*/),
+              (v8/*: any*/)
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Character",
+            "kind": "LinkedField",
+            "name": "characters",
+            "plural": true,
+            "selections": [
+              (v3/*: any*/),
+              (v9/*: any*/),
+              (v10/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Series",
+                "kind": "LinkedField",
+                "name": "series",
+                "plural": false,
+                "selections": [
+                  (v10/*: any*/),
+                  (v3/*: any*/)
+                ],
+                "storageKey": null
+              },
+              (v19/*: any*/)
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Category",
+            "kind": "LinkedField",
+            "name": "categories",
+            "plural": true,
+            "selections": [
+              (v3/*: any*/),
+              (v8/*: any*/),
+              (v10/*: any*/),
+              (v19/*: any*/)
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "reference",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "PostContent",
             "kind": "LinkedField",
             "name": "content",
             "plural": true,
             "selections": [
-              (v3/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "isSupporterOnly",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "viewerCanViewSupporterOnlyContent",
-                "storageKey": null
-              },
               {
                 "alias": null,
                 "args": null,
@@ -353,11 +401,11 @@ return {
                     "storageKey": null
                   },
                   (v3/*: any*/),
-                  (v8/*: any*/),
-                  (v10/*: any*/),
-                  (v11/*: any*/),
+                  (v17/*: any*/),
                   (v12/*: any*/),
                   (v13/*: any*/),
+                  (v14/*: any*/),
+                  (v15/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -365,9 +413,25 @@ return {
                     "name": "videoNoAudio",
                     "storageKey": null
                   },
-                  (v14/*: any*/),
-                  (v15/*: any*/)
+                  (v16/*: any*/),
+                  (v20/*: any*/)
                 ],
+                "storageKey": null
+              },
+              (v3/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "isSupporterOnly",
+                "storageKey": null
+              },
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "viewerCanViewSupporterOnlyContent",
                 "storageKey": null
               },
               {
@@ -378,77 +442,13 @@ return {
                 "name": "supporterOnlyResource",
                 "plural": false,
                 "selections": [
-                  (v8/*: any*/),
-                  (v15/*: any*/),
+                  (v17/*: any*/),
+                  (v20/*: any*/),
                   (v3/*: any*/)
                 ],
                 "storageKey": null
-              },
-              (v2/*: any*/)
+              }
             ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Audience",
-            "kind": "LinkedField",
-            "name": "audience",
-            "plural": false,
-            "selections": [
-              (v3/*: any*/),
-              (v16/*: any*/)
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Character",
-            "kind": "LinkedField",
-            "name": "characters",
-            "plural": true,
-            "selections": [
-              (v3/*: any*/),
-              (v17/*: any*/),
-              (v18/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Series",
-                "kind": "LinkedField",
-                "name": "series",
-                "plural": false,
-                "selections": [
-                  (v18/*: any*/),
-                  (v3/*: any*/)
-                ],
-                "storageKey": null
-              },
-              (v20/*: any*/)
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Category",
-            "kind": "LinkedField",
-            "name": "categories",
-            "plural": true,
-            "selections": [
-              (v3/*: any*/),
-              (v16/*: any*/),
-              (v18/*: any*/),
-              (v20/*: any*/)
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "reference",
             "storageKey": null
           },
           {
@@ -467,8 +467,8 @@ return {
                 "storageKey": null
               },
               (v3/*: any*/),
-              (v18/*: any*/),
-              (v17/*: any*/),
+              (v10/*: any*/),
+              (v9/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -476,7 +476,7 @@ return {
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v19/*: any*/),
+                "selections": (v18/*: any*/),
                 "storageKey": null
               }
             ],
@@ -516,7 +516,7 @@ return {
           (v6/*: any*/),
           (v7/*: any*/),
           (v3/*: any*/),
-          (v18/*: any*/),
+          (v10/*: any*/),
           {
             "alias": "draftPosts",
             "args": [
@@ -657,7 +657,7 @@ return {
     ]
   },
   "params": {
-    "id": "74482fdb6de19e966d914afb8514ee3a",
+    "id": "8d7f243f6a15bf6dc839ac519b5cf017",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

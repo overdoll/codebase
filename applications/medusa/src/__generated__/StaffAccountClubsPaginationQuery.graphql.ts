@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<315780e83871b32dd67f110d71aa4edf>>
- * @relayHash faca552b2728d537d1c04f3a3b368393
+ * @generated SignedSource<<d9418e770c5dd0a420b9889ac6b60200>>
+ * @relayHash 1286d1b2fbb08f4c6e41c65af53e5681
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID faca552b2728d537d1c04f3a3b368393
+// @relayRequestID 1286d1b2fbb08f4c6e41c65af53e5681
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -269,6 +269,13 @@ return {
                                 "kind": "ScalarField",
                                 "name": "processed",
                                 "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "failed",
+                                "storageKey": null
                               }
                             ],
                             "storageKey": null
@@ -334,7 +341,7 @@ return {
     ]
   },
   "params": {
-    "id": "faca552b2728d537d1c04f3a3b368393",
+    "id": "1286d1b2fbb08f4c6e41c65af53e5681",
     "metadata": {},
     "name": "StaffAccountClubsPaginationQuery",
     "operationKind": "query",

@@ -6,7 +6,7 @@ import { useFragment } from 'react-relay'
 import type { ResourceItemFragment$key } from '@//:artifacts/ResourceItemFragment.graphql'
 import RandomPattern from '../RandomPattern/RandomPattern'
 import { Icon } from '../../PageLayout'
-import { TimeHourGlass } from '@//:assets/icons'
+import { TimeHourGlass, WarningTriangle } from '@//:assets/icons'
 
 export interface ResourceItemBorderProp {
   showBorder?: boolean
@@ -24,6 +24,7 @@ const Fragment = graphql`
     ...VideoSnippetFragment
     processed
     preview
+    failed
   }
 `
 
@@ -41,6 +42,14 @@ export default function ResourceItem ({
     return (
       <Flex bg='gray.800' h='100%' w='100%' direction='column' justify='center' align='center' {...rest}>
         <RandomPattern seed={seed} />
+      </Flex>
+    )
+  }
+
+  if (data.failed) {
+    return (
+      <Flex w='100%' p={4} align='center' justify='center' h='100%' {...rest}>
+        <Icon icon={WarningTriangle} fill='gray.500' w={6} h={6} />
       </Flex>
     )
   }

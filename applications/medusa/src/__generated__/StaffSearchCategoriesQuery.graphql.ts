@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6b8accc86bd09fa9a5f7cb5201591e05>>
- * @relayHash a1c3dc330690217ca0bbc216ec7d09b5
+ * @generated SignedSource<<ea724791ce3aefc65af3f8c2dccd2d71>>
+ * @relayHash f198e7c1305f4c6a0f826ad051012c37
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a1c3dc330690217ca0bbc216ec7d09b5
+// @relayRequestID f198e7c1305f4c6a0f826ad051012c37
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -193,6 +193,13 @@ return {
                         "kind": "ScalarField",
                         "name": "processed",
                         "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "failed",
+                        "storageKey": null
                       }
                     ],
                     "storageKey": null
@@ -259,7 +266,7 @@ return {
     ]
   },
   "params": {
-    "id": "a1c3dc330690217ca0bbc216ec7d09b5",
+    "id": "f198e7c1305f4c6a0f826ad051012c37",
     "metadata": {},
     "name": "StaffSearchCategoriesQuery",
     "operationKind": "query",

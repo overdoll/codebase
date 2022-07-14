@@ -1,4 +1,4 @@
-import { Box, Flex, Stack, Text } from '@chakra-ui/react'
+import { Flex, Text } from '@chakra-ui/react'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import type { ResourceInfoFragment$key } from '@//:artifacts/ResourceInfoFragment.graphql'
@@ -45,24 +45,21 @@ export default function ResourceInfo ({
 
   return (
     <Flex w='100%' h='100%' position='relative'>
-      <ResourceItem seed={data.id} query={data.resource} {...rest} />
+      <ResourceItem showBorder seed={data.id} query={data.resource} {...rest} />
       <Flex w='100%' h='100%' align='center' justify='center' position='absolute'>
-        <Stack align='center' spacing={1}>
-          <Box p={2} borderRadius='full' bg='dimmers.400' w={8} h={8}>
-            <Icon
-              fill='gray.00'
-              icon={resourceType === 'VIDEO' ? ControlPlayButton : PictureIdentifier}
-              w='100%'
-              h='100%'
-            />
-          </Box>
+        <Flex align='center' justify='center' p={2} borderRadius='lg' bg='dimmers.400'>
+          <Icon
+            fill='gray.00'
+            icon={resourceType === 'VIDEO' ? ControlPlayButton : PictureIdentifier}
+            w={4}
+            h={4}
+            flexShrink={0}
+          />
           {resourceType === 'VIDEO' && (
-            <Box py={0} px={1} borderRadius='sm' bg='dimmers.400'>
-              <Text color='gray.00' fontSize='xs'>
-                {((data?.supporterOnlyResource?.videoDuration ?? data.resource.videoDuration) / 1000).toFixed(0)}s
-              </Text>
-            </Box>)}
-        </Stack>
+            <Text ml={2} noOfLines={1} color='gray.00' fontSize='xs'>
+              {((data?.supporterOnlyResource?.videoDuration ?? data.resource.videoDuration) / 1000).toFixed(0)}s
+            </Text>)}
+        </Flex>
       </Flex>
     </Flex>
   )

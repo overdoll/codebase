@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1d4509828bf381b7f1243905a423f846>>
- * @relayHash b399a7e48935f590b69394dc7ea817cc
+ * @generated SignedSource<<0da672e2716742832b4d5f0e335f64fe>>
+ * @relayHash 12410e384d6ef272fdb4a90f6d4688eb
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b399a7e48935f590b69394dc7ea817cc
+// @relayRequestID 12410e384d6ef272fdb4a90f6d4688eb
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -268,6 +268,13 @@ return {
                                   (v6/*: any*/)
                                 ],
                                 "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "failed",
+                                "storageKey": null
                               }
                             ],
                             "storageKey": null
@@ -356,7 +363,7 @@ return {
     ]
   },
   "params": {
-    "id": "b399a7e48935f590b69394dc7ea817cc",
+    "id": "12410e384d6ef272fdb4a90f6d4688eb",
     "metadata": {},
     "name": "UploadRewindSingleSelectorQuery",
     "operationKind": "query",

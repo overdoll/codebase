@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<04ce21f362daf207d901dfcb6f03cdb4>>
- * @relayHash 0d052958d3d1cc6fdc18f7989b57c484
+ * @generated SignedSource<<1d442d8eb71e4ebaf189b4daaea6ce70>>
+ * @relayHash a7c309a100a157e27bed364b53dc7b20
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0d052958d3d1cc6fdc18f7989b57c484
+// @relayRequestID a7c309a100a157e27bed364b53dc7b20
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -274,7 +274,14 @@ v16 = {
                     (v11/*: any*/),
                     (v12/*: any*/),
                     (v13/*: any*/),
-                    (v14/*: any*/)
+                    (v14/*: any*/),
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "failed",
+                      "storageKey": null
+                    }
                   ],
                   "storageKey": null
                 },
@@ -722,7 +729,7 @@ return {
     ]
   },
   "params": {
-    "id": "0d052958d3d1cc6fdc18f7989b57c484",
+    "id": "a7c309a100a157e27bed364b53dc7b20",
     "metadata": {},
     "name": "AccountClubSupporterSubscriptionSettingsQuery",
     "operationKind": "query",

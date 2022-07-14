@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f2d8e9ffd17371363443702465634994>>
- * @relayHash 3fb1970ec188b8eeddc396329e7f97a4
+ * @generated SignedSource<<cd0e18897152e6a35771fc9044d622fe>>
+ * @relayHash 1abaeae9fb71327683a21df3dad5f5af
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3fb1970ec188b8eeddc396329e7f97a4
+// @relayRequestID 1abaeae9fb71327683a21df3dad5f5af
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -305,6 +305,13 @@ return {
                                       (v12/*: any*/)
                                     ],
                                     "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "failed",
+                                    "storageKey": null
                                   }
                                 ],
                                 "storageKey": null
@@ -390,7 +397,7 @@ return {
     ]
   },
   "params": {
-    "id": "3fb1970ec188b8eeddc396329e7f97a4",
+    "id": "1abaeae9fb71327683a21df3dad5f5af",
     "metadata": {},
     "name": "UploadRewindSingleSelectorPaginationFragment",
     "operationKind": "query",

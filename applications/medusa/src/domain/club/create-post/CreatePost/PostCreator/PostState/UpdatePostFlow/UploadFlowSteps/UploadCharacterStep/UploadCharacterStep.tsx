@@ -57,8 +57,7 @@ export default function UploadCharacterStep (): JSX.Element {
         </PageSectionTitle>
         <PageSectionDescription>
           <Trans>
-            Select one or more characters that appear in all of the slides. You must select at least one to
-            continue.
+            Select one or more characters that appear in all of the content
           </Trans>
         </PageSectionDescription>
       </PageSectionWrap>
