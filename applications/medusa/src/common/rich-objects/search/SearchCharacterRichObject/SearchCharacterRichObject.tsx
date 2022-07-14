@@ -36,7 +36,7 @@ export default function SearchCharacterRichObject ({
   const TITLE = `${data.name} ${TITLE_FEATURES} ${TITLE_SUFFIX}`
   const DESCRIPTION = `${DESCRIPTION_PREFIX} ${data.name} ${DESCRIPTION_FEATURES} on overdoll.com. ${DESCRIPTION_CONTENT_DISCOVER} of ${data.name}.`
 
-  const URL = `https://overdoll.com/search/series/${data.series?.slug}/${data.slug}`
+  const URL = `https://overdoll.com/search/series/${data.series?.slug as string}/${data.slug}`
 
   return (
     <>
