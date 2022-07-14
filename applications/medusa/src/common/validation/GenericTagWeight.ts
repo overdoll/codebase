@@ -5,13 +5,13 @@ import { t } from '@lingui/macro'
 export default function GenericTagWeight (): Joi.Schema {
   const { i18n } = useLingui()
   return Joi
-    .string()
+    .number()
     .required()
-    .min(3)
-    .max(70)
+    .min(0)
+    .max(9999)
     .messages({
-      'string.empty': i18n._(t`Please enter a title`),
-      'string.min': i18n._(t`The title must be at least 3 characters`),
-      'string.max': i18n._(t`The title cannot exceed 70 characters`)
+      'number.empty': i18n._(t`Please enter a weight number`),
+      'number.min': i18n._(t`The weight must be at least 0`),
+      'number.max': i18n._(t`The weight cannot exceed 9999`)
     })
 }

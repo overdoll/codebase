@@ -4,8 +4,8 @@ import { StaffSearchTopicsQuery } from '@//:artifacts/StaffSearchTopicsQuery.gra
 import { GridWrap, LinkTile, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
 import { EmptyBoundary } from '@//:modules/content/Placeholder'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
-import ShortGridWrap from '@//:modules/content/ContentSelection/ShortGridWrap/ShortGridWrap'
 import TopicTileOverlay from '@//:modules/content/ContentSelection/TileOverlay/TopicTileOverlay/TopicTileOverlay'
+import ShortGridTile from '@//:modules/content/ContentSelection/ShortGridTile/ShortGridTile'
 
 interface Props extends ComponentSearchArguments<any> {
 }
@@ -31,7 +31,7 @@ const Fragment = graphql`
     {
       edges {
         node {
-          reference
+          slug
           ...TopicTileOverlayFragment
         }
       }
@@ -63,15 +63,15 @@ export default function StaffSearchTopics ({ searchArguments }: Props): JSX.Elem
     >
       <GridWrap>
         {data.topics.edges.map((item, index) => (
-          <ShortGridWrap key={index}>
+          <ShortGridTile key={index}>
             <LinkTile href={{
-              pathname: '/staff/entity/topic/[reference]',
-              query: { reference: item.node.reference }
+              pathname: '/staff/entity/topic/[slug]',
+              query: { slug: item.node.slug }
             }}
             >
               <TopicTileOverlay query={item.node} />
             </LinkTile>
-          </ShortGridWrap>
+          </ShortGridTile>
         )
         )}
         <LoadMoreGridTile

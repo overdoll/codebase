@@ -8,15 +8,7 @@ import { useToast } from '@//:modules/content/ThemeComponents'
 import { TagWeight } from '@//:types/form'
 import { ChangeTopicWeightFormMutation } from '@//:artifacts/ChangeTopicWeightFormMutation.graphql'
 import { ChangeTopicWeightFormFragment$key } from '@//:artifacts/ChangeTopicWeightFormFragment.graphql'
-import {
-  Form,
-  FormInput,
-  FormSubmitButton,
-  InputBody,
-  InputFeedback,
-  InputFooter,
-  InputHeader
-} from '@//:modules/content/HookedComponents/Form'
+import { Form, FormInput, FormSubmitButton, InputFooter, InputHeader } from '@//:modules/content/HookedComponents/Form'
 import GenericTagWeight from '../../../../../../../../../common/validation/GenericTagWeight'
 import WeightInput from '@//:modules/content/HookedComponents/Form/FormInput/Inputs/WeightInput/WeightInput'
 
@@ -100,10 +92,7 @@ export default function ChangeTopicWeightForm ({
               Topic Weight
             </Trans>
           </InputHeader>
-          <InputBody>
-            <WeightInput />
-            <InputFeedback />
-          </InputBody>
+          <WeightInput />
           <InputFooter />
         </FormInput>
         <FormSubmitButton
