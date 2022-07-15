@@ -5,6 +5,8 @@ import { clickOnButton, clickOnTab, clickOnTile, searchForTerm, typeIntoPlacehol
 const postAudience = 'Standard Audience'
 const postCategories = ['Alter', 'Assure', 'Transmit']
 const postCharacter = 'Haider Woodley'
+const postTopic = 'Single Topic'
+const postTopicDescription = 'A Single Topic'
 const rule = 'Rule #1 without infraction'
 
 const nextStepIsDisabled = (): void => {
@@ -13,8 +15,8 @@ const nextStepIsDisabled = (): void => {
 
 const isOnStep = (step: string): void => {
   switch (step) {
-    case 'arrange':
-      cy.findByText('Arrange Uploads').should('be.visible')
+    case 'content':
+      cy.findByText('Modify Content').should('be.visible')
       break
     case 'audience':
       cy.findByText(/Select Audience/iu).should('be.visible')
@@ -35,10 +37,11 @@ const isOnStep = (step: string): void => {
 
 const gotoClubCreatePost = (clubName): void => {
   cy.visit(`/club/${clubName as string}/create-post`)
-  cy.findByText(/Upload Files/).should('exist')
+  cy.findByText(/Upload Files/).should('not.be.disabled')
 }
 
 const waitForProcessing = (): void => {
+  cy.findByText(/Processing Post Content/iu).should('exist')
   cy.findByText(/Processing Post Content/iu, { timeout: 30000 }).should('not.exist')
 }
 
@@ -61,15 +64,15 @@ describe('Create & Manage Posts', () => {
      * Upload two files, wait for processing and go to next step
      */
     gotoClubCreatePost(clubName)
-    cy.findByText(/Upload Files/iu).should('be.visible').parent().parent().parent().get('input[type="file"]').attachFile(['test-post.png', 'test-post.png'])
-    isOnStep('arrange')
-    cy.findByText(/You'll need to upload at least/iu).should('not.exist')
+    // TODO this doesnt always fire off - detached?
+    cy.findByText(/Upload Files/iu).should('not.be.disabled').parent().parent().parent().get('input[type="file"]').attachFile(['test-post.png', 'test-post2.png'], { force: true })
+    isOnStep('content')
     waitForProcessing()
-    cy.get('button[aria-label="Supporter Only"]').should('not.be.disabled').first().click({ force: true })
+    cy.get('button[aria-label="Set Supporter Only"]').should('not.be.disabled').first().click({ force: true })
     cy.findByText(/Free content should be/).should('be.visible')
-    cy.get('button[aria-label="Supporter Only"]').should('not.be.disabled').first().click({ force: true })
+    cy.get('button[aria-label="Set Free"]').should('not.be.disabled').first().click({ force: true })
     cy.findByText(/Free content should be/).should('not.exist')
-    cy.get('button[aria-label="Supporter Only"]').should('not.be.disabled').first().click({ force: true })
+    cy.get('button[aria-label="Set Supporter Only"]').should('not.be.disabled').first().click({ force: true })
     cy.findByText(/Free content should be/).should('be.visible').click({ force: true })
     clickOnButton('Got it')
     gotoNextStep()
@@ -98,16 +101,21 @@ describe('Create & Manage Posts', () => {
       multiple: true
     })
     cy.get('button[aria-label="close"]').should('not.exist')
+    searchForTerm('Search for a category', postCategories[0])
     clickOnTile(postCategories[0])
     // test removing category by selecting it again
     cy.findByRole('button', { name: postCategories[0] }).click()
     cy.get('button[aria-label="close"]').should('not.exist')
     clickOnTile(postCategories[0])
-    // add second category
-    searchForTerm('Search for a category', postCategories[1])
+    // add second category via topic
+    clickOnTile(postTopic)
+    cy.findByText(postTopicDescription).should('be.visible')
     clickOnTile(postCategories[1])
+    // go back to topic
+    clickOnTile('Back To Topics')
+    cy.findByText(postTopicDescription).should('not.exist')
     // add third category
-    searchForTerm('Search for a category', postCategories[2])
+    clickOnTile(postTopic)
     clickOnTile(postCategories[2])
     // button is enabled after 3 categories added
     saveCurrentStep()
@@ -135,7 +143,7 @@ describe('Create & Manage Posts', () => {
     cy.visit(`/club/${clubName}/posts?state=DRAFT`)
     cy.get('button[aria-label="Open Menu"]').should('be.visible').click({ force: true })
     cy.findAllByText('Edit Draft').should('be.visible').click({ force: true })
-    isOnStep('arrange')
+    isOnStep('content')
     gotoNextStep()
     // check audience
     isOnStep('audience')
@@ -160,8 +168,9 @@ describe('Create & Manage Posts', () => {
     cy.findByText(postCharacter).should('exist')
     // add supporter content so we can test that the subscription button appears
     cy.reload()
-    isOnStep('arrange')
-    gotoNextStep()
+    isOnStep('content')
+    // TODO this doesn't want to fire off because it's detached
+    cy.findByRole('button', { name: 'Next' }).should('not.be.disabled').click()
     isOnStep('audience')
     gotoNextStep()
     isOnStep('category')
@@ -187,30 +196,31 @@ describe('Create & Manage Posts', () => {
     /**
      * Upload new files, remove upload, rearrange
      */
-    // test drag and drop
-    // TODO invalid mp4 causes infinite processing - use this to test it?
-    cy.findByText(/Upload Files/iu).should('not.be.disabled').parent().parent().get('input[type="file"]').attachFile('test-video.mp4', { subjectType: 'drag-n-drop' })
+    // TODO add tests for invalid uploads
+    // TODO add tests for drag and drop
+    // test drag and drop with file that will fail processing
+    cy.findByText(/Upload Files/iu).should('not.be.disabled').parent().parent().parent().get('input[type="file"]').attachFile('test-video.mp4', {
+      force: true
+    })
+    cy.findByText(/This content failed to/).should('be.visible')
+    clickOnButton('Remove Content')
+    cy.findByText('Processing Failed').should('not.exist')
     // use the upload files button to upload
-    cy.findByText('Drop').should('not.be.disabled').parent().parent().get('input[type="file"]').attachFile('test-post.png')
-    cy.get('button[aria-label="Remove Upload"]').should('be.visible')
+    cy.findByText('Add Content').should('not.be.disabled').parent().parent().get('input[type="file"]').attachFile(['test-post.png', 'test-post2.png'], { force: true })
+    waitForProcessing()
     // test rearrange
-    cy.findByText(/Posting 2 media/iu).should('be.visible')
-    clickOnButton('Rearrange Uploads')
-    cy.get('button[aria-label="Down"]').click({ force: true })
-    clickOnButton('Save Order')
-    clickOnButton('Rearrange Uploads')
-    cy.get('button[aria-label="Up"]').click({ force: true })
-    clickOnButton('Cancel')
-    clickOnButton('Rearrange Uploads')
-    cy.findByRole('button', { name: 'Save Order' }).should('not.exist')
-    clickOnButton('Cancel')
+    cy.get('button[aria-label="Set Supporter Only"]').should('not.be.disabled').first().click({ force: true })
+    cy.get('button[aria-label="Content Menu"]').first().click({ force: true }).parent().findByText(/Move Down/iu).should('be.visible').click({ force: true })
+    cy.findByText(/Free content should be/).should('not.exist')
+    cy.get('button[aria-label="Content Menu"]').last().click({ force: true }).parent().findByText(/Move Up/iu).should('be.visible').click({ force: true })
+    cy.findByText(/Free content should be/).should('be.visible')
     gotoNextStep()
     gotoPreviousStep()
     // can remove uploads
-    cy.get('button[aria-label="Remove Upload"]').first().click({ force: true })
+    cy.get('button[aria-label="Content Menu"]').first().click({ force: true }).parent().findByText(/Remove Content/iu).should('be.visible').click({ force: true })
     // can rewind categories from post in review
-    isOnStep('arrange')
-    gotoNextStep()
+    isOnStep('content')
+    cy.findByRole('button', { name: 'Next' }).should('not.be.disabled').click({ force: true })
     isOnStep('audience')
     clickOnTile(postAudience)
     saveCurrentStep()
@@ -221,14 +231,13 @@ describe('Create & Manage Posts', () => {
     cy.findAllByRole('button').should('be.visible').eq(2).click()
     clickOnButton('Add Categories')
     saveCurrentStep()
-    // can exit the flow
-    cy.findByText('Add Character').parent().get('button[aria-label="Exit Creator"]').click({ force: true })
+    // can exit the .findByText('Add Character').parent().get('button[aria-label="Exit Creator"]').click({ force: true })
     cy.waitUntil(() => cy.findByRole('button', { name: /Yes, exit/iu }).should('be.visible'))
     clickOnButton(/Yes, exit/iu)
     cy.findByText(/Upload one or more files by/iu).should('be.visible')
 
     /**
-     * Delete draft post
+     * Delete draft post flow
      */
     cy.visit(`/club/${clubName}/create-post`)
     cy.findByText(/You have unpublished/).should('not.be.disabled').click({ force: true })

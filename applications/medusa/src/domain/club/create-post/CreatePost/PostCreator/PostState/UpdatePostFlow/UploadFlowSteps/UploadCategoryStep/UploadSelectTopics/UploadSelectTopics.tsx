@@ -3,14 +3,14 @@ import { Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
-import SkeletonUploadCategoryGrid
-  from '@//:modules/content/Placeholder/Loading/SkeletonUploadCategoryGrid/SkeletonUploadCategoryGrid'
 import { TopicIdentifier } from '@//:assets/icons'
 import SearchHeader
   from '../../../../../../../../../../common/components/PageHeader/SearchButton/components/SearchBody/SearchHeader/SearchHeader'
 import { ComponentChoiceArguments } from '@//:modules/content/HookedComponents/Choice/types'
 import { UploadSearchCategoriesMultiSelectorProps } from '../UploadCategoryStep'
 import UploadSearchTopicsSelector from './UploadSearchTopicsSelector/UploadSearchTopicsSelector'
+import SkeletonUploadAudienceGrid
+  from '@//:modules/content/Placeholder/Loading/SkeletonUploadAudienceGrid/SkeletonUploadAudienceGrid'
 
 interface Props extends ComponentChoiceArguments<UploadSearchCategoriesMultiSelectorProps> {
 }
@@ -31,7 +31,7 @@ export default function UploadSelectTopics ({
         </Trans>
       </SearchHeader>
       <QueryErrorBoundary loadQuery={loadQuery}>
-        <Suspense fallback={<SkeletonUploadCategoryGrid />}>
+        <Suspense fallback={<SkeletonUploadAudienceGrid />}>
           <UploadSearchTopicsSelector
             searchArguments={searchArguments}
             register={register}

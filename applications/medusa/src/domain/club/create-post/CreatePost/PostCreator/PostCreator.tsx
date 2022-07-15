@@ -50,7 +50,6 @@ export default function PostCreator ({ query }: Props): JSX.Element {
   )
 
   const {
-    state,
     dispatch
   } = useSequenceContext()
 

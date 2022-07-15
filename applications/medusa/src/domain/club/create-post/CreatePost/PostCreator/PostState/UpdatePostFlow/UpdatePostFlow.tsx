@@ -10,9 +10,11 @@ import { FileMultiple } from '@//:assets/icons/navigation'
 import { FlowBuilder, FlowBuilderBody, FlowBuilderFooter } from '@//:modules/content/PageLayout'
 import UploadFlowFooter from './UploadFlowFooter/UploadFlowFooter'
 import UploadCharacterStep from './UploadFlowSteps/UploadCharacterStep/UploadCharacterStep'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import UploadContentStep from './UploadFlowSteps/UploadContentStep/UploadContentStep'
+import { useUppyContext } from '@//:modules/content/HookedComponents/Upload'
+import CreatePostOpening from '../CreatePostOpening/CreatePostOpening'
 
 interface Props {
   query: UpdatePostFlowFragment$key
@@ -44,6 +46,10 @@ export default function UpdatePostFlow ({
   query
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
+
+  const uppy = useUppyContext()
+
+  const [loaded, setLoaded] = useState(false)
 
   const { dispatch } = useSequenceContext()
 
@@ -105,7 +111,19 @@ export default function UpdatePostFlow ({
       }), {}),
       transform: 'SET'
     })
+    setLoaded(true)
   }, [])
+
+  useEffect(() => {
+    return () => {
+      uppy.reset()
+    }
+  }, [])
+
+  // we check for this state otherwise upon refresh, the dom will dismount and cause test errors
+  if (!loaded) {
+    return <CreatePostOpening />
+  }
 
   return (
     <FlowBuilder
