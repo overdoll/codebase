@@ -32,9 +32,5 @@ func (h RemovePostContentHandler) Handle(ctx context.Context, cmd RemovePostCont
 		return nil, err
 	}
 
-	if err := h.loader.DeleteResources(ctx, cmd.PostId, cmd.ContentIds); err != nil {
-		return nil, err
-	}
-
 	return pendingPost, nil
 }
