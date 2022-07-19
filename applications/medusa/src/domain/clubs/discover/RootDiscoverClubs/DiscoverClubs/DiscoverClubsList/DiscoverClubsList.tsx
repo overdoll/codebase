@@ -4,7 +4,7 @@ import { Box } from '@chakra-ui/react'
 import { DiscoverClubsListFragment$key } from '@//:artifacts/DiscoverClubsListFragment.graphql'
 import { EmptyBoundary, EmptyClubs } from '@//:modules/content/Placeholder'
 import JoinClubFromTile
-  from '../../../../../slug/root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromTile/JoinClubFromTile'
+  from '../../../../../slug/club/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromTile/JoinClubFromTile'
 import type { DiscoverClubsQuery } from '@//:artifacts/DiscoverClubsQuery.graphql'
 
 interface Props {

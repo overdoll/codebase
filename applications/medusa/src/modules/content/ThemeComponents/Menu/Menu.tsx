@@ -17,6 +17,7 @@ import { forwardRef, FunctionComponent, ReactNode } from 'react'
 import { Link } from '../../../routing'
 import { useLingui } from '@lingui/react'
 import { UrlObject } from 'url'
+import { IconType } from '@//:types/components'
 
 interface MenuProps extends ButtonProps {
   children: ReactNode
@@ -25,7 +26,7 @@ interface MenuProps extends ButtonProps {
 interface MenuItemProps extends ButtonProps {
   text: ReactNode
   colorScheme?: string | undefined
-  icon: FunctionComponent<any>
+  icon: IconType
 }
 
 interface MenuLinkItemProps extends MenuItemProps {

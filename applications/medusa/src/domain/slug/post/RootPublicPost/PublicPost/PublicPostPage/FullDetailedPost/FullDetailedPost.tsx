@@ -15,7 +15,7 @@ import PostCopyLinkButton
 import PostModerateButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
 import JoinClubFromPost
-  from '../../../../../root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromPost/JoinClubFromPost'
+  from '../../../../../club/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromPost/JoinClubFromPost'
 import PostArchiveButton
   from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostArchiveButton/PostArchiveButton'
 import PostUnArchiveButton

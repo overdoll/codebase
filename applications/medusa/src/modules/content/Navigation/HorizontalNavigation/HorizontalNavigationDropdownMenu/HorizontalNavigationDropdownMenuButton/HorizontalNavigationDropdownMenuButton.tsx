@@ -5,10 +5,11 @@ import HorizontalNavigationDropdownMenuButtonBody
   from './HorizontalNavigationDropdownMenuButtonBody/HorizontalNavigationDropdownMenuButtonBody'
 import { LinkProps } from 'next/link'
 import { Box } from '@chakra-ui/react'
+import { IconType } from '@//:types/components'
 
 interface Props extends LinkProps {
   label?: ReactNode
-  icon?: FunctionComponent<any>
+  icon?: IconType
   to?: string
   onClick?: () => void
   isDisabled?: boolean

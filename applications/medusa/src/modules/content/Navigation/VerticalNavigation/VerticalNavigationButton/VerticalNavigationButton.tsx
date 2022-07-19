@@ -3,10 +3,11 @@ import NavLink from '../../../../routing/NavLink'
 import VerticalNavigationButtonBody from './VerticalNavigationButtonBody/VerticalNavigationButtonBody'
 import { LinkProps } from 'next/link'
 import { Box } from '@chakra-ui/react'
+import { IconType } from '@//:types/components'
 
 interface Props extends LinkProps {
   title: ReactNode
-  icon?: FunctionComponent<any> | undefined
+  icon?: IconType | undefined
   colorScheme?: string
   buttonType?: 'primary' | 'secondary'
   isExternal?: boolean

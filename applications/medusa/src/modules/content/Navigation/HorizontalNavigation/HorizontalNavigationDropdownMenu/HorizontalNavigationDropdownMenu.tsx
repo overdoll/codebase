@@ -20,11 +20,12 @@ import {
 } from '@chakra-ui/react'
 import HorizontalNavigation from '../HorizontalNavigation'
 import SiteLinkLogo from '../../../../../domain/app/Root/UniversalNavigator/SiteLinkLogo/SiteLinkLogo'
+import { IconType } from '@//:types/components'
 
 interface Props {
   children: ReactNode
   label: string
-  icon: FunctionComponent<any>
+  icon: IconType
 }
 
 const HorizontalNavigationDropdownMenu = ({

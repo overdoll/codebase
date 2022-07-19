@@ -9,7 +9,7 @@ import PostModerateButton from '../../../PostInteraction/PostMenu/PostModerateBu
 import PostReportButton from '../../../PostInteraction/PostMenu/PostReportButton/PostReportButton'
 import PostViewButton from '../../../PostInteraction/PostMenu/PostViewButton/PostViewButton'
 import JoinClubFromPost
-  from '../../../../../../../domain/slug/root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromPost/JoinClubFromPost'
+  from '../../../../../../../domain/slug/club/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromPost/JoinClubFromPost'
 import PostArchiveButton from '../../../PostInteraction/PostMenu/PostArchiveButton/PostArchiveButton'
 
 interface Props {

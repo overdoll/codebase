@@ -3,14 +3,14 @@ import Uppy from '@uppy/core'
 import Tus from '@uppy/tus'
 import CanUseDOM from '../../../../../operations/CanUseDOM'
 import GoldenRetriever from '@uppy/golden-retriever'
-import { CLUB_ALLOWED_FILE_TYPES, MAX_FILE_SIZE, TUS_OPTIONS } from '../../constants/upload'
+import { CLUB_ALLOWED_FILE_TYPES, GENERIC_MAX_FILE_SIZE, TUS_OPTIONS } from '../../constants/upload'
 
 const U: UppyType = Uppy({
   id: 'single-file-upload',
   restrictions: {
     maxNumberOfFiles: 1,
     allowedFileTypes: CLUB_ALLOWED_FILE_TYPES,
-    maxFileSize: MAX_FILE_SIZE
+    maxFileSize: GENERIC_MAX_FILE_SIZE
   },
   autoProceed: true,
   allowMultipleUploads: false

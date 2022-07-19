@@ -3,9 +3,10 @@ import { Icon } from '../../../../PageLayout'
 import { forwardRef, FunctionComponent, ReactNode } from 'react'
 import Button from '../../../../../form/Button/Button'
 import IconButton from '../../../../../form/IconButton/IconButton'
+import { IconType } from '@//:types/components'
 
 interface Props extends ButtonProps {
-  icon?: FunctionComponent<any>
+  icon?: IconType
   label: ReactNode
   colorScheme?: string
   children?: ReactNode

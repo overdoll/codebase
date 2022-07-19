@@ -1,9 +1,10 @@
 import { MenuItem, Text } from '@chakra-ui/react'
 import { FunctionComponent, ReactNode } from 'react'
 import { Icon } from '../../PageLayout'
+import { IconType } from '@//:types/components'
 
 interface Props {
-  icon: FunctionComponent<any>
+  icon: IconType
   text: ReactNode
   onClick?: () => void
   isDisabled?: boolean

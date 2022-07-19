@@ -5,7 +5,7 @@ import type { PublicPostPageViewerFragment$key } from '@//:artifacts/PublicPostP
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
 import { Box, HStack } from '@chakra-ui/react'
 import ClubSuspendedStaffAlert
-  from '../../../../root/RootPublicClub/PublicClub/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert'
+  from '../../../../club/RootPublicClub/PublicClub/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert'
 import FullDetailedPost from './FullDetailedPost/FullDetailedPost'
 
 interface Props {

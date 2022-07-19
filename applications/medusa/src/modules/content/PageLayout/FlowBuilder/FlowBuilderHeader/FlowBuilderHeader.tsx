@@ -3,12 +3,12 @@ import { FunctionComponent, ReactNode, useContext } from 'react'
 import { FlowContext } from '../FlowBuilder'
 import Icon from '../../Flair/Icon/Icon'
 import { useLingui } from '@lingui/react'
-import { MaybeRenderProp } from '@//:types/components'
+import { IconType, MaybeRenderProp } from '@//:types/components'
 import runIfFunction from '../../../../support/runIfFunction'
 
 interface ChildrenCallable {
   currentTitle: ReactNode
-  currentIcon: FunctionComponent<any>
+  currentIcon: IconType
 }
 
 interface Props {
