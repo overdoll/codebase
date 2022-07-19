@@ -544,7 +544,7 @@ func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, re
 		return nil, err
 	}
 
-	if err := cursor.BuildElasticsearch(builder, "_score", "id", false); err != nil {
+	if err := cursor.BuildElasticsearch(builder, "posted_at", "id", false); err != nil {
 		return nil, err
 	}
 
@@ -566,16 +566,16 @@ func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, re
 		query.Filter(filterQueries...)
 	}
 
-	scoreQuery := elastic.NewFunctionScoreQuery()
+	//scoreQuery := elastic.NewFunctionScoreQuery()
 
 	// decay from initial post time
-	scoreQuery.AddScoreFunc(
-		elastic.
-			NewGaussDecayFunction().
-			FieldName("posted_at").
-			Scale("1d").
-			Decay(0),
-	)
+	//scoreQuery.AddScoreFunc(
+	//	elastic.
+	//		NewGaussDecayFunction().
+	//		FieldName("posted_at").
+	//		Scale("1d").
+	//		Decay(0),
+	//)
 
 	// multiply by likes for this post
 	//scoreQuery.AddScoreFunc(
@@ -586,10 +586,10 @@ func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, re
 	//		Modifier("none"),
 	//)
 
-	query.Must(scoreQuery)
-
-	// multiply results
-	scoreQuery.ScoreMode("multiply")
+	//query.Must(scoreQuery)
+	//
+	//// multiply results
+	//scoreQuery.ScoreMode("multiply")
 
 	builder.Query(query)
 

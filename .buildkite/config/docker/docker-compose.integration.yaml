@@ -23,7 +23,7 @@ services:
       - redis
 
   bazel.remote:
-    image: "buchgr/bazel-remote-cache"
+    image: "buchgr/bazel-remote-cache:v2.3.7"
     user: 0:0
     environment:
       - BAZEL_REMOTE_S3_AUTH_METHOD=access_key
