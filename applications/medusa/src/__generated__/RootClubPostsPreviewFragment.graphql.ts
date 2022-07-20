@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6ab05334b837a9d2b7c4e61879ca7180>>
+ * @generated SignedSource<<cfec84d7679f56a7cc9bf86b510125b6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,35 +10,79 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ClubPublicPostsFragment$data = {
-  readonly posts: {
+export type RootClubPostsPreviewFragment$data = {
+  readonly slug: string;
+  readonly supporterPosts: {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly __typename: "Post";
       };
     }>;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"ClubEmptyPostsFragment" | "RootClubPostsPreviewFragment">;
-  readonly " $fragmentType": "ClubPublicPostsFragment";
+  readonly viewerIsOwner: boolean;
+  readonly viewerMember: {
+    readonly isSupporter: boolean;
+  } | null;
+  readonly " $fragmentType": "RootClubPostsPreviewFragment";
 };
-export type ClubPublicPostsFragment$key = {
-  readonly " $data"?: ClubPublicPostsFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"ClubPublicPostsFragment">;
+export type RootClubPostsPreviewFragment$key = {
+  readonly " $data"?: RootClubPostsPreviewFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"RootClubPostsPreviewFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "ClubPublicPostsFragment",
+  "name": "RootClubPostsPreviewFragment",
   "selections": [
     {
       "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "slug",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ClubMember",
+      "kind": "LinkedField",
+      "name": "viewerMember",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "isSupporter",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "viewerIsOwner",
+      "storageKey": null
+    },
+    {
+      "alias": "supporterPosts",
       "args": [
         {
           "kind": "Literal",
           "name": "first",
           "value": 1
+        },
+        {
+          "kind": "Literal",
+          "name": "supporterOnlyStatus",
+          "value": [
+            "FULL",
+            "PARTIAL"
+          ]
         }
       ],
       "concreteType": "PostConnection",
@@ -76,23 +120,13 @@ const node: ReaderFragment = {
           "storageKey": null
         }
       ],
-      "storageKey": "posts(first:1)"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "ClubEmptyPostsFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "RootClubPostsPreviewFragment"
+      "storageKey": "posts(first:1,supporterOnlyStatus:[\"FULL\",\"PARTIAL\"])"
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "841198940b5bfb1fc604b1e2dab4adbd";
+(node as any).hash = "5504457479b07a5c82f90a7383791a85";
 
 export default node;

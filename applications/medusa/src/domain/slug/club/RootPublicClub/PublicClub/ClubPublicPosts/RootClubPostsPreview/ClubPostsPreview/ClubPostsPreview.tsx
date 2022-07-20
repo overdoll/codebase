@@ -1,15 +1,22 @@
 import { graphql, usePaginationFragment } from 'react-relay'
-import type { ClubPostsPreviewFragment$key } from '@//:artifacts/ClubPostsPreviewFragment.graphql'
 import type { ClubPostsPreviewViewerFragment$key } from '@//:artifacts/ClubPostsPreviewViewerFragment.graphql'
-import { PublicClubQuery } from '@//:artifacts/PublicClubQuery.graphql'
 import PostsInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/PostsInfiniteScroll'
-import { useFragment } from 'react-relay/hooks'
+import { useFragment, useLazyLoadQuery } from 'react-relay/hooks'
+import { ClubPostsPreviewQuery } from '@//:artifacts/ClubPostsPreviewQuery.graphql'
+import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
 
-interface Props {
-  query: ClubPostsPreviewFragment$key
+interface Props extends ComponentSearchArguments<any> {
   viewerQuery: ClubPostsPreviewViewerFragment$key | null
 }
+
+const Query = graphql`
+  query ClubPostsPreviewQuery($slug: String!, $sort: PostsSort!, $supporter: [SupporterOnlyStatus!]) {
+    club (slug: $slug) @required(action: THROW) {
+      ...ClubPostsPreviewFragment
+    }
+  }
+`
 
 const Fragment = graphql`
   fragment ClubPostsPreviewFragment on Club
@@ -18,7 +25,7 @@ const Fragment = graphql`
     after: {type: String}
   )
   @refetchable(queryName: "ClubPostsPreviewPaginationQuery" ) {
-    clubPosts: posts(first: $first, after: $after, sortBy: TOP)
+    clubPosts: posts(first: $first, after: $after, sortBy: $sort, supporterOnlyStatus: $supporter)
     @connection (key: "ClubPostsPreview_clubPosts") {
       edges {
         __typename
@@ -35,17 +42,23 @@ const ViewerFragment = graphql`
 `
 
 export default function ClubPostsPreview ({
-  query,
+  searchArguments,
   viewerQuery
 }: Props): JSX.Element {
+  const queryData = useLazyLoadQuery<ClubPostsPreviewQuery>(
+    Query,
+    searchArguments.variables,
+    searchArguments.options
+  )
+
   const {
     data,
     hasNext,
     loadNext,
     isLoadingNext
-  } = usePaginationFragment<PublicClubQuery, any>(
+  } = usePaginationFragment<ClubPostsPreviewQuery, any>(
     Fragment,
-    query
+    queryData.club
   )
 
   const viewerData = useFragment(ViewerFragment, viewerQuery)

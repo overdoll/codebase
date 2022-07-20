@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1c927cab7b1fe8ece6f0c8c659614187>>
+ * @generated SignedSource<<01fc9b62093ce95be7c2e83dae50ea1c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -47,6 +47,14 @@ return {
       "defaultValue": 10,
       "kind": "LocalArgument",
       "name": "first"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "sort"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "supporter"
     }
   ],
   "kind": "Fragment",
@@ -81,9 +89,14 @@ return {
       "alias": "clubPosts",
       "args": [
         {
-          "kind": "Literal",
+          "kind": "Variable",
           "name": "sortBy",
-          "value": "TOP"
+          "variableName": "sort"
+        },
+        {
+          "kind": "Variable",
+          "name": "supporterOnlyStatus",
+          "variableName": "supporter"
         }
       ],
       "concreteType": "PostConnection",
@@ -153,7 +166,7 @@ return {
           "storageKey": null
         }
       ],
-      "storageKey": "__ClubPostsPreview_clubPosts_connection(sortBy:\"TOP\")"
+      "storageKey": null
     },
     {
       "alias": null,
@@ -168,6 +181,6 @@ return {
 };
 })();
 
-(node as any).hash = "9d5d102d6a1e32101f5298db4ba7c5de";
+(node as any).hash = "81c57ecafae42285d55a14d3bcc6406f";
 
 export default node;

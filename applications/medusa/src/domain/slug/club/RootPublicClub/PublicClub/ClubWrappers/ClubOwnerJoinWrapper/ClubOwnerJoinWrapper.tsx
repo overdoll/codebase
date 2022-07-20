@@ -21,7 +21,7 @@ export default function ClubOwnerJoinWrapper ({ children }: Props): JSX.Element 
         <PopoverTrigger>
           {children}
         </PopoverTrigger>
-        <PopoverContent>
+        <PopoverContent zIndex={2}>
           <PopoverCloseButton />
           <PopoverHeader fontWeight='semibold'>
             <Trans>You are the owner</Trans>

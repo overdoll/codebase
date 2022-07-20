@@ -40,7 +40,7 @@ export default function ResourceItem ({
 
   if (data == null) {
     return (
-      <Flex bg='gray.800' h='100%' w='100%' direction='column' justify='center' align='center' {...rest}>
+      <Flex h='100%' w='100%' justify='center' align='center' {...rest}>
         <RandomPattern seed={seed} />
       </Flex>
     )
@@ -79,5 +79,6 @@ export default function ResourceItem ({
         <VideoSnippet query={data} />}
       {showBorder && <Flex zIndex={1} w='100%' h='100%' borderRadius='inherit' {...iconBorder} position='absolute' />}
     </Flex>
+
   )
 }

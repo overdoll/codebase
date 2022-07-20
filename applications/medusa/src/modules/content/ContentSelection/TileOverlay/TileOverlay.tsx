@@ -14,28 +14,31 @@ export default function TileOverlay ({
   return (
     <Flex
       borderRadius='md'
-      overflow='hidden'
       align='center'
       justify='center'
       h='100%'
       w='100%'
       position='relative'
+      bg='gray.800'
       {...rest}
     >
+
       <Box
-        w='100%'
-        h='100%'
-        bg='dimmers.300'
-        zIndex={2}
-      >
-        {children}
-      </Box>
-      <Box
+        overflow='hidden'
         w='100%'
         h='100%'
         position='absolute'
+        borderRadius='inherit'
       >
         {backdrop}
+      </Box>
+      <Box
+        borderRadius='inherit'
+        w='100%'
+        h='100%'
+        bg='dimmers.300'
+      >
+        {children}
       </Box>
     </Flex>
   )

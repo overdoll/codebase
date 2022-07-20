@@ -25,6 +25,6 @@ export const configMap = {
 }
 
 export interface SearchProps {
-  supporterOnlyStatus?: string[] | null
-  sortBy: string
+  supporter?: string[] | null
+  sort: string
 }
