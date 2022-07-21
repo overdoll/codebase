@@ -99,7 +99,7 @@ export default function CCBillDisplayTransaction ({
 
   if (queryData?.ccbillTransactionDetails == null) {
     return (
-      <Stack spacing={8}>
+      <Stack w='100%' spacing={8}>
         <Icon
           icon={InfoCircle}
           w={20}
@@ -139,7 +139,7 @@ export default function CCBillDisplayTransaction ({
 
   if (!queryData.ccbillTransactionDetails.approved) {
     return (
-      <Stack spacing={4}>
+      <Stack w='100%' spacing={4}>
         <Icon
           icon={RemoveCross}
           w={20}
@@ -213,7 +213,7 @@ export default function CCBillDisplayTransaction ({
 
   if (timeoutCount >= TIMEOUT_LIMIT && isVerifying) {
     return (
-      <Stack spacing={4}>
+      <Stack w='100%' spacing={4}>
         <Icon
           icon={WarningTriangle}
           w={20}
@@ -254,7 +254,7 @@ export default function CCBillDisplayTransaction ({
 
   if (isVerifying) {
     return (
-      <Stack align='center' spacing={4}>
+      <Stack w='100%' align='center' spacing={4}>
         <Spinner thickness='4px' w={20} h={20} color='green.300' />
         <Box>
           <Heading textAlign='center' fontSize='2xl' color='gray.00'>
@@ -280,7 +280,7 @@ export default function CCBillDisplayTransaction ({
   }
 
   return (
-    <Stack spacing={4}>
+    <Stack w='100%' spacing={4}>
       <Icon
         icon={CheckMark}
         w={20}

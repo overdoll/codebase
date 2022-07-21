@@ -39,12 +39,16 @@ export default function ClubSupportBanner ({
   const clubData = useFragment(ClubFragment, clubQuery)
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
-  if (!clubData.canSupport) {
-    return <></>
-  }
+  const DisplayButton = (props): JSX.Element => {
+    if (!clubData.canSupport) {
+      return <></>
+    }
 
-  if (((clubData?.viewerMember?.isSupporter) === true) && !clubData.viewerIsOwner) {
-    return <></>
+    if (((clubData?.viewerMember?.isSupporter) === true) && !clubData.viewerIsOwner) {
+      return <></>
+    }
+
+    return <ClubSupporterSubscriptionPriceButton w='100%' query={clubData} {...props} />
   }
 
   return (
@@ -55,9 +59,7 @@ export default function ClubSupportBanner ({
       seed={clubData.id}
     >
       <ClubSupportConditionWrapper clubQuery={clubData} viewerQuery={viewerData}>
-        {props => (
-          <ClubSupporterSubscriptionPriceButton w='100%' query={clubData} {...props} />
-        )}
+        {props => DisplayButton(props)}
       </ClubSupportConditionWrapper>
     </ClubIconBanner>
   )

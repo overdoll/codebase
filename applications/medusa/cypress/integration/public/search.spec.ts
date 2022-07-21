@@ -7,7 +7,7 @@ const category2 = 'Alter'
 const character1 = 'Orion Strong'
 const club = 'Second Test Club'
 
-Cypress.config('defaultCommandTimeout', 10000)
+Cypress.config('defaultCommandTimeout', 20000)
 
 const openSearch = (): void => {
   cy.get('button[aria-label="Open Search"]').should('be.visible').should('not.be.disabled').click({ force: true })
@@ -53,10 +53,9 @@ describe('Search', () => {
     // test search bar
     cy.visit('/')
     openSearch()
-    typeIntoPlaceholder(/Search for a club/, club)
+    typeIntoPlaceholder(/Search for a club/, 'Second Test Club')
     cy.findByText('Search Results').should('be.visible')
     cy.findAllByText(club).should('not.be.disabled').first().click({ force: true })
-    cy.findByText(club).should('be.visible')
     cy.url().should('contain', '/SecondTestClub')
 
     // test search bar no results
