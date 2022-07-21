@@ -246,33 +246,25 @@ func (r ResourceCassandraS3Repository) GetResourceById(ctx context.Context, item
 
 func (r ResourceCassandraS3Repository) updateResources(ctx context.Context, res []*resource.Resource) error {
 
-	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
-
-	for _, r := range res {
-
-		stmt, names := resourcesTable.Update(
-			"mime_types",
-			"processed",
-			"processed_id",
-			"video_duration",
-			"video_thumbnail",
-			"video_thumbnail_mime_type",
-			"video_no_audio",
-			"width",
-			"height",
-			"preview",
-		)
-
-		support.BindStructToBatchStatement(
-			batch,
-			stmt, names,
-			marshalResourceToDatabase(r),
-		)
-	}
-
-	support.MarkBatchIdempotent(batch)
-	if err := r.session.ExecuteBatch(batch); err != nil {
-		return errors.Wrap(support.NewGocqlError(err), "failed to update resources")
+	for _, res := range res {
+		if err := r.session.
+			Query(resourcesTable.Update("mime_types",
+				"processed",
+				"processed_id",
+				"video_duration",
+				"video_thumbnail",
+				"video_thumbnail_mime_type",
+				"video_no_audio",
+				"width",
+				"height",
+				"preview",
+			)).
+			WithContext(ctx).
+			Idempotent(true).
+			BindStruct(marshalResourceToDatabase(res)).
+			ExecRelease(); err != nil {
+			return errors.Wrap(support.NewGocqlError(err), "failed to update resource")
+		}
 	}
 
 	return nil
