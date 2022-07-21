@@ -14,5 +14,9 @@ msgstr ""
 "Plural-Forms: \n"
 
 #: src/domain/staff/entity/rule/search/RootStaffSearchRules/RootStaffSearchRules.tsx:28
-msgid "Search Rules"
+#~ msgid "Search Rules"
+#~ msgstr ""
+
+#: src/domain/staff/entity/topic/search/RootStaffSearchTopics/RootStaffSearchTopics.tsx:28
+msgid "Search Topics"
 msgstr ""

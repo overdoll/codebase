@@ -13,109 +13,180 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleDescription/ChangeRuleDescriptionForm/ChangeRuleDescriptionForm.tsx:128
-#: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleTitle/ChangeRuleTitleForm/ChangeRuleTitleForm.tsx:127
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicDescription/ChangeTopicDescriptionForm/ChangeTopicDescriptionForm.tsx:128
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicTitle/ChangeTopicTitleForm/ChangeTopicTitleForm.tsx:127
 msgid "BCP 47 Locale Code"
 msgstr ""
 
-#: src/domain/staff/entity/rule/view/RootStaffViewRule/RootStaffViewRule.tsx:41
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/RootStaffViewTopic.tsx:41
 msgid "Back to search"
 msgstr ""
 
-#: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleDeprecated/ChangeRuleDeprecated.tsx:37
-msgid "Change Deprecated"
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicBanner/ChangeTopicBanner.tsx:47
+msgid "Change Banner"
 msgstr ""
+
+#: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleDeprecated/ChangeRuleDeprecated.tsx:37
+#~ msgid "Change Deprecated"
+#~ msgstr ""
 
 #: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleInfraction/ChangeRuleInfraction.tsx:37
-msgid "Change Infraction"
-msgstr ""
+#~ msgid "Change Infraction"
+#~ msgstr ""
 
 #: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleDescription/ChangeRuleDescription.tsx:58
-msgid "Change Rule Description"
-msgstr ""
+#~ msgid "Change Rule Description"
+#~ msgstr ""
 
 #: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleTitle/ChangeRuleTitle.tsx:57
-msgid "Change Rule Title"
+#~ msgid "Change Rule Title"
+#~ msgstr ""
+
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicDescription/ChangeTopicDescription.tsx:58
+msgid "Change Topic Description"
+msgstr ""
+
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicTitle/ChangeTopicTitle.tsx:57
+msgid "Change Topic Title"
+msgstr ""
+
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicWeight/ChangeTopicWeight.tsx:39
+msgid "Change Topic Weight"
 msgstr ""
 
 #: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:109
 #: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:109
-msgid "Deprecated"
-msgstr ""
+#~ msgid "Deprecated"
+#~ msgstr ""
 
-#: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleDescription/ChangeRuleDescriptionForm/ChangeRuleDescriptionForm.tsx:118
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicDescription/ChangeTopicDescriptionForm/ChangeTopicDescriptionForm.tsx:118
 msgid "Enter a description"
 msgstr ""
 
-#: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleTitle/ChangeRuleTitleForm/ChangeRuleTitleForm.tsx:117
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicTitle/ChangeTopicTitleForm/ChangeTopicTitleForm.tsx:117
 msgid "Enter a title"
 msgstr ""
 
 #: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleDescription/ChangeRuleDescriptionForm/ChangeRuleDescriptionForm.tsx:95
-msgid "Error updating rule description"
-msgstr ""
+#~ msgid "Error updating rule description"
+#~ msgstr ""
 
 #: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleTitle/ChangeRuleTitleForm/ChangeRuleTitleForm.tsx:94
-msgid "Error updating rule title"
+#~ msgid "Error updating rule title"
+#~ msgstr ""
+
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicDescription/ChangeTopicDescriptionForm/ChangeTopicDescriptionForm.tsx:95
+msgid "Error updating topic description"
 msgstr ""
 
-#: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleDescription/ChangeRuleDescriptionForm/ChangeRuleDescriptionForm.tsx:133
-#: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleTitle/ChangeRuleTitleForm/ChangeRuleTitleForm.tsx:132
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicTitle/ChangeTopicTitleForm/ChangeTopicTitleForm.tsx:94
+msgid "Error updating topic title"
+msgstr ""
+
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicWeight/ChangeTopicWeightForm/ChangeTopicWeightForm.tsx:74
+msgid "Error updating topic weight"
+msgstr ""
+
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicDescription/ChangeTopicDescriptionForm/ChangeTopicDescriptionForm.tsx:133
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicTitle/ChangeTopicTitleForm/ChangeTopicTitleForm.tsx:132
 msgid "Locale"
 msgstr ""
 
 #: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleDeprecated/ChangeRuleDeprecated.tsx:28
 #: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:102
-msgid "Rule Deprecated"
-msgstr ""
+#~ msgid "Rule Deprecated"
+#~ msgstr ""
 
 #: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleDescription/ChangeRuleDescription.tsx:31
 #: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleDescription/ChangeRuleDescriptionForm/ChangeRuleDescriptionForm.tsx:113
-msgid "Rule Description"
-msgstr ""
+#~ msgid "Rule Description"
+#~ msgstr ""
 
 #: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleInfraction/ChangeRuleInfraction.tsx:28
 #: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:102
-msgid "Rule Infraction"
-msgstr ""
+#~ msgid "Rule Infraction"
+#~ msgstr ""
 
 #: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleTitle/ChangeRuleTitle.tsx:32
 #: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleTitle/ChangeRuleTitleForm/ChangeRuleTitleForm.tsx:112
-msgid "Rule Title"
-msgstr ""
+#~ msgid "Rule Title"
+#~ msgstr ""
 
-#: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:121
-#: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleDescription/ChangeRuleDescriptionForm/ChangeRuleDescriptionForm.tsx:144
-#: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:121
-#: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleTitle/ChangeRuleTitleForm/ChangeRuleTitleForm.tsx:143
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicBanner/ChangeTopicBannerForm/ChangeTopicBannerForm.tsx:116
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicDescription/ChangeTopicDescriptionForm/ChangeTopicDescriptionForm.tsx:144
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicTitle/ChangeTopicTitleForm/ChangeTopicTitleForm.tsx:143
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicWeight/ChangeTopicWeightForm/ChangeTopicWeightForm.tsx:103
 msgid "Submit"
 msgstr ""
 
 #: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:78
-msgid "Successfully updated rule deprecated"
-msgstr ""
+#~ msgid "Successfully updated rule deprecated"
+#~ msgstr ""
 
 #: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:78
-msgid "Successfully updated rule infraction"
+#~ msgid "Successfully updated rule infraction"
+#~ msgstr ""
+
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicBanner/ChangeTopicBannerForm/ChangeTopicBannerForm.tsx:80
+msgid "Successfully updated topic thumbnail"
 msgstr ""
 
 #: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleDeprecated/ChangeRuleDeprecatedForm/ChangeRuleDeprecatedForm.tsx:84
-msgid "There was an error updating rule deprecated"
-msgstr ""
+#~ msgid "There was an error updating rule deprecated"
+#~ msgstr ""
 
 #: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleInfraction/ChangeRuleInfractionForm/ChangeRuleInfractionForm.tsx:84
-msgid "There was an error updating rule infraction"
+#~ msgid "There was an error updating rule infraction"
+#~ msgstr ""
+
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicBanner/ChangeTopicBannerForm/ChangeTopicBannerForm.tsx:86
+msgid "There was an error updating the topic thumbnail"
+msgstr ""
+
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicBanner/ChangeTopicBanner.tsx:30
+msgid "Topic Banner"
+msgstr ""
+
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicDescription/ChangeTopicDescription.tsx:31
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicDescription/ChangeTopicDescriptionForm/ChangeTopicDescriptionForm.tsx:113
+msgid "Topic Description"
+msgstr ""
+
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicBanner/ChangeTopicBannerForm/ChangeTopicBannerForm.tsx:104
+msgid "Topic Thumbnail"
+msgstr ""
+
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicTitle/ChangeTopicTitle.tsx:32
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicTitle/ChangeTopicTitleForm/ChangeTopicTitleForm.tsx:112
+msgid "Topic Title"
+msgstr ""
+
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicWeight/ChangeTopicWeight.tsx:28
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicWeight/ChangeTopicWeightForm/ChangeTopicWeightForm.tsx:91
+msgid "Topic Weight"
 msgstr ""
 
 #: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleDescription/ChangeRuleDescriptionForm/ChangeRuleDescriptionForm.tsx:89
-msgid "Updated rule description for {0}"
-msgstr ""
+#~ msgid "Updated rule description for {0}"
+#~ msgstr ""
 
 #: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleTitle/ChangeRuleTitleForm/ChangeRuleTitleForm.tsx:88
-msgid "Updated rule title to {0} for {1}"
+#~ msgid "Updated rule title to {0} for {1}"
+#~ msgstr ""
+
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicDescription/ChangeTopicDescriptionForm/ChangeTopicDescriptionForm.tsx:89
+msgid "Updated topic description for {0}"
 msgstr ""
 
-#: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleDescription/ChangeRuleDescription.tsx:44
-#: src/domain/staff/entity/rule/view/RootStaffViewRule/StaffViewRule/ChangeRuleTitle/ChangeRuleTitle.tsx:43
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicTitle/ChangeTopicTitleForm/ChangeTopicTitleForm.tsx:88
+msgid "Updated topic title to {0} for {1}"
+msgstr ""
+
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicWeight/ChangeTopicWeightForm/ChangeTopicWeightForm.tsx:68
+msgid "Updated topic weight to {0}"
+msgstr ""
+
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicDescription/ChangeTopicDescription.tsx:44
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicTitle/ChangeTopicTitle.tsx:43
 msgid "View Translations"
 msgstr ""

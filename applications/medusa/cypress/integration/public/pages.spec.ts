@@ -8,6 +8,7 @@ describe('Pages', () => {
     cy.findAllByText(/overdoll is invite-only/iu)
   })
 
+  // TODO add tests for joining club from discover page as logged in, not logged in
   it('go to the clubs discover page as not logged in', () => {
     cy.visit('/clubs/discover')
     cy.findByText(/Create an account/iu)

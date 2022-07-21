@@ -51,7 +51,7 @@ export default function StaffViewCharacter ({ query }: Props): JSX.Element {
           </PageSectionTitle>
         </PageSectionWrap>
         <TagBadgeHeader>
-          {queryData.character.series.title}
+          {queryData?.character?.series?.title}
         </TagBadgeHeader>
       </Box>
     </Stack>

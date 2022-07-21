@@ -189,8 +189,8 @@ const ClubsCatalog = [
     include: ['src/domain/clubs/invite-only/']
   },
   {
-    path: 'src/domain/slug/root/__locale__/{locale}/index',
-    include: ['src/domain/slug/root/']
+    path: 'src/domain/slug/club/__locale__/{locale}/index',
+    include: ['src/domain/slug/club/']
   },
   {
     path: 'src/domain/slug/post/__locale__/{locale}/index',
@@ -344,6 +344,18 @@ const StaffCatalog = [
   {
     path: 'src/domain/staff/entity/series/view/__locale__/{locale}/index',
     include: ['src/domain/staff/entity/series/view/']
+  },
+  {
+    path: 'src/domain/staff/entity/topic/create/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/topic/create/']
+  },
+  {
+    path: 'src/domain/staff/entity/topic/search/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/topic/search/']
+  },
+  {
+    path: 'src/domain/staff/entity/topic/view/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/topic/view/']
   }
 ]
 
