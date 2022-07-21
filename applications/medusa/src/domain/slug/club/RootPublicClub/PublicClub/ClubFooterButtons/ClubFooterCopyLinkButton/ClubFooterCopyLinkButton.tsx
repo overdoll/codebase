@@ -1,11 +1,12 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { ClubFooterCopyLinkButtonFragment$key } from '@//:artifacts/ClubFooterCopyLinkButtonFragment.graphql'
-import { Trans } from '@lingui/macro'
+import { t } from '@lingui/macro'
 import { CopyLink } from '@//:assets/icons'
 import ClubFooterButton from '../ClubFooterButton/ClubFooterButton'
 import { useRouter } from 'next/router'
 import { resolveHref } from 'next/dist/shared/lib/router/router'
 import { useCopyToClipboardWrapper } from '@//:modules/hooks'
+import { useLingui } from '@lingui/react'
 
 interface Props {
   query: ClubFooterCopyLinkButtonFragment$key
@@ -22,6 +23,8 @@ export default function ClubFooterCopyLinkButton ({ query }: Props): JSX.Element
 
   const router = useRouter()
 
+  const { i18n } = useLingui()
+
   const [, resolved] = resolveHref(router, {
     pathname: '/[slug]',
     query: {
@@ -37,9 +40,7 @@ export default function ClubFooterCopyLinkButton ({ query }: Props): JSX.Element
       isIcon
       icon={CopyLink}
     >
-      <Trans>
-        Copy Link
-      </Trans>
+      {i18n._(t`Copy Link`)}
     </ClubFooterButton>
   )
 }

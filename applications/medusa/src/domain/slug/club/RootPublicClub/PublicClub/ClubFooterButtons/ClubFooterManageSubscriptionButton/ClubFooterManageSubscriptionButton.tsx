@@ -2,9 +2,10 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type {
   ClubFooterManageSubscriptionButtonFragment$key
 } from '@//:artifacts/ClubFooterManageSubscriptionButtonFragment.graphql'
-import { Trans } from '@lingui/macro'
+import { t } from '@lingui/macro'
 import { SubscriptionIdentifier } from '@//:assets/icons'
 import ClubFooterButton from '../ClubFooterButton/ClubFooterButton'
+import { useLingui } from '@lingui/react'
 
 interface Props {
   query: ClubFooterManageSubscriptionButtonFragment$key
@@ -27,11 +28,17 @@ const Fragment = graphql`
 export default function ClubFooterManageSubscriptionButton ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
+  const { i18n } = useLingui()
+
   if (data.viewerIsOwner) {
     return <></>
   }
 
-  if (!data?.viewerMember?.isSupporter) {
+  if (data.viewerMember == null) {
+    return <></>
+  }
+
+  if (!data.viewerMember?.isSupporter) {
     return <></>
   }
 
@@ -49,9 +56,7 @@ export default function ClubFooterManageSubscriptionButton ({ query }: Props): J
         ? manageSubscriptionLink
         : mySubscriptionsLink}
     >
-      <Trans>
-        Manage Subscription
-      </Trans>
+      {i18n._(t`Manage Subscription`)}
     </ClubFooterButton>
   )
 }

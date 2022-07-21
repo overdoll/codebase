@@ -31,7 +31,6 @@ const ClubFragment = graphql`
     }
     canSupport
     ...SupportClubTransactionProcessFragment
-    ...SupportClubPriceButtonFragment
   }
 `
 

@@ -96,18 +96,5 @@ describe('Manage Club', () => {
     cy.findByText('Delete Account').should('be.visible').click()
     cy.url().should('include', '/settings/profile/delete-account')
     cy.findByText(/You cannot delete your account because you currently own a club/iu).should('be.visible')
-
-    /**
-     * Join the club with a new different account
-     */
-    const [newUsername] = generateUsernameAndEmail()
-    cy.joinWithNewAccount(newUsername)
-    cy.visit(`/${newClubName}`)
-    cy.findByText(newClubName).should('exist')
-    clickOnButton(/Join/iu)
-    cy.findByText(/You are now a member of/iu).should('be.visible')
-    clickOnButton(/Leave/iu)
-    cy.findByRole('button', { name: /Join/iu }).should('exist')
-    cy.findByText(/This club hasn't posted/iu).should('be.visible')
   })
 })

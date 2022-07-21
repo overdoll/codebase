@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/macro'
+import { t } from '@lingui/macro'
 import { graphql } from 'react-relay'
 import { PostCopyLinkButtonFragment$key } from '@//:artifacts/PostCopyLinkButtonFragment.graphql'
 import { useFragment } from 'react-relay/hooks'
@@ -7,6 +7,7 @@ import { useCopyToClipboardWrapper } from '../../../../../../hooks'
 import { useRouter } from 'next/router'
 import { resolveHref } from 'next/dist/shared/lib/router/router'
 import PostFooterButton from '../PostFooterButton/PostFooterButton'
+import { useLingui } from '@lingui/react'
 
 interface Props {
   query: PostCopyLinkButtonFragment$key
@@ -26,6 +27,8 @@ export default function PostCopyLinkButton ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
+  const { i18n } = useLingui()
+
   const router = useRouter()
 
   const [, resolved] = resolveHref(router, {
@@ -40,7 +43,7 @@ export default function PostCopyLinkButton ({
 
   return (
     <PostFooterButton isIcon onClick={onCopy} icon={CopyLink}>
-      <Trans>Copy Link</Trans>
+      {i18n._(t`Copy Link`)}
     </PostFooterButton>
   )
 }

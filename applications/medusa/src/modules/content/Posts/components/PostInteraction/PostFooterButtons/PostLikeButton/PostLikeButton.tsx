@@ -4,10 +4,11 @@ import { PostLikeButtonViewerFragment$key } from '@//:artifacts/PostLikeButtonVi
 import { HeartFull, HeartOutline } from '@//:assets/icons/interface'
 import { ButtonProps } from '@chakra-ui/react'
 import Can from '../../../../../../authorization/Can'
-import { Trans } from '@lingui/macro'
+import { t } from '@lingui/macro'
 import encodeJoinRedirect from '../../../../../../support/encodeJoinRedirect'
 import PostFooterButton from '../PostFooterButton/PostFooterButton'
 import PostLikeWrapper from '../../../PostWrappers/PostLikeWrapper/PostLikeWrapper'
+import { useLingui } from '@lingui/react'
 
 interface Props extends ButtonProps {
   postQuery: PostLikeButtonFragment$key
@@ -37,6 +38,8 @@ export default function PostLikeButton ({
   const postData = useFragment(PostFragment, postQuery)
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
+  const { i18n } = useLingui()
+
   const redirect = encodeJoinRedirect({
     pathname: '/[slug]/post/[reference]',
     query: {
@@ -48,9 +51,7 @@ export default function PostLikeButton ({
   if (viewerData == null) {
     return (
       <PostFooterButton isIcon href={redirect} icon={HeartOutline}>
-        <Trans>
-          Like
-        </Trans>
+        {i18n._(t`Like`)}
       </PostFooterButton>
     )
   }
@@ -74,9 +75,7 @@ export default function PostLikeButton ({
                   isLoading={isLikingPost}
                   icon={HeartFull}
                 >
-                  <Trans>
-                    Remove Like
-                  </Trans>
+                  {i18n._(t`Remove Like`)}
                 </PostFooterButton>
               )
             }
@@ -88,9 +87,7 @@ export default function PostLikeButton ({
                 isLoading={isLikingPost}
                 icon={HeartOutline}
               >
-                <Trans>
-                  Like
-                </Trans>
+                {i18n._(t`Like`)}
               </PostFooterButton>
             )
           }}
