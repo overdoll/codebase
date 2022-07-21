@@ -104,6 +104,8 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			UnArchivePost:      command.NewUnArchivePostHandler(postRepo, eventRepo),
 			GenerateClubBanner: command.NewGenerateClubBannerHandler(postRepo, eventRepo),
 
+			GenerateSitemap: command.NewGenerateSitemapHandler(eventRepo),
+
 			UpdatePostDescription: command.NewUpdatePostDescriptionHandler(postRepo),
 
 			DisableClubSupporterOnlyPosts: command.NewDisableClubSupporterOnlyPostsHandler(clubRepo),

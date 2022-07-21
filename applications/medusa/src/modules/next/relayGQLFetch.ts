@@ -28,7 +28,7 @@ export const clientFetch = (securityToken) => {
     if (Array.isArray(result.errors) && kind === 'query') {
       const error = new Error(JSON.stringify(result.errors))
       console.error('Query Error ::', error)
-      // we filter out the viewer if there a query error so it doesn't mess with the internal store
+      // we filter out the viewer if there is a query error, so it doesn't mess with the internal store
       if (result?.data?.viewer === null) {
         const {
           data: queryData,
