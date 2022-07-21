@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<843740bbf8954e252e2b46d740bad474>>
+ * @generated SignedSource<<670fea0307c9d4a551b2c29d6378a007>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,11 +11,13 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type AccountActiveClubSupporterSubscriptionSettingsFragment$data = {
+  readonly ccbillSubscription: {
+    readonly ccbillSubscriptionId: string;
+  } | null;
   readonly club: {
     readonly slug: string;
     readonly " $fragmentSpreads": FragmentRefs<"ClubExclusivePostsFragment">;
   };
-  readonly id: string;
   readonly " $fragmentSpreads": FragmentRefs<"AccountActiveClubSupporterSubscriptionDetailsFragment" | "ManageActiveSubscriptionButtonFragment">;
   readonly " $fragmentType": "AccountActiveClubSupporterSubscriptionSettingsFragment";
 };
@@ -30,13 +32,6 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "AccountActiveClubSupporterSubscriptionSettingsFragment",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
     {
       "alias": null,
       "args": null,
@@ -61,6 +56,24 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "concreteType": "CCBillSubscription",
+      "kind": "LinkedField",
+      "name": "ccbillSubscription",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "ccbillSubscriptionId",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "AccountActiveClubSupporterSubscriptionDetailsFragment"
@@ -75,6 +88,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "6309cd73995d469b7d4bece9f823e266";
+(node as any).hash = "604361404b748a024f33d8ddd2444157";
 
 export default node;

@@ -7,9 +7,10 @@ import { CreatePostFlowFragment$key } from '@//:artifacts/CreatePostFlowFragment
 import { CreatePostFlowMutation$data } from '@//:artifacts/CreatePostFlowMutation.graphql'
 import { t, Trans } from '@lingui/macro'
 import { useToast } from '@//:modules/content/ThemeComponents'
-import CreatePostFilePicker
-  from '@//:modules/content/HookedComponents/Upload/components/CreatePostFilePicker/CreatePostFilePicker'
+import CreatePostNewFilePicker
+  from '@//:modules/content/HookedComponents/Upload/components/CreatePostNewFilePicker/CreatePostNewFilePicker'
 import { useUppyContext } from '@//:modules/content/HookedComponents/Upload'
+import CreatePostOpening from '../CreatePostOpening/CreatePostOpening'
 
 interface Props {
   query: CreatePostFlowFragment$key
@@ -102,12 +103,7 @@ export default function CreatePostFlow ({ query }: Props): JSX.Element {
 
   if (created) {
     return (
-      <PostPlaceholder>
-        <Stack align='center' spacing={6}>
-          <Spinner thickness='6px' w={12} h={12} color='teal.300' />
-          <Heading fontSize='4xl' color='gray.00'><Trans>Opening Post</Trans></Heading>
-        </Stack>
-      </PostPlaceholder>
+      <CreatePostOpening />
     )
   }
 
@@ -123,6 +119,6 @@ export default function CreatePostFlow ({ query }: Props): JSX.Element {
   }
 
   return (
-    <CreatePostFilePicker uppy={uppy} />
+    <CreatePostNewFilePicker uppy={uppy} />
   )
 }

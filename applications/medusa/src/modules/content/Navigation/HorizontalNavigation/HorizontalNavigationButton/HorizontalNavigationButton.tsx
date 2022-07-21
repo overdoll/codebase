@@ -1,11 +1,12 @@
-import { forwardRef, FunctionComponent, ReactNode } from 'react'
+import { forwardRef, ReactNode } from 'react'
 import NavLink from '../../../../routing/NavLink'
 import HorizontalNavigationButtonBody from './HorizontalNavigationButtonBody/HorizontalNavigationButtonBody'
 import { UrlObject } from 'url'
 import { Box, ButtonProps } from '@chakra-ui/react'
+import { IconType } from '@//:types/components'
 
 interface Props extends ButtonProps {
-  icon?: FunctionComponent<any>
+  icon?: IconType
   label: ReactNode
   exact?: boolean
   children?: ReactNode

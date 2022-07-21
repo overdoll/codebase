@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<00ea45920d0cc23bb6461b174092e3a0>>
- * @relayHash aed2aa732f27bb3e1b28269ea79896f5
+ * @generated SignedSource<<dc6ec88fe78124667c4f3e246a7348b1>>
+ * @relayHash 726ec0323ea0a51e30f3ed17226c66ee
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID aed2aa732f27bb3e1b28269ea79896f5
+// @relayRequestID 726ec0323ea0a51e30f3ed17226c66ee
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -209,6 +209,13 @@ return {
                         "kind": "ScalarField",
                         "name": "processed",
                         "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "failed",
+                        "storageKey": null
                       }
                     ],
                     "storageKey": null
@@ -225,7 +232,7 @@ return {
     ]
   },
   "params": {
-    "id": "aed2aa732f27bb3e1b28269ea79896f5",
+    "id": "726ec0323ea0a51e30f3ed17226c66ee",
     "metadata": {},
     "name": "AudienceMultiSelectorQuery",
     "operationKind": "query",

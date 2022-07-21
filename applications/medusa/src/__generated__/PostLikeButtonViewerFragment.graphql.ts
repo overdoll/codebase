@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5edb36ff1a38f7093ecc33942ed8c5cc>>
+ * @generated SignedSource<<d45f9047e3431828fde724aff96a656e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,12 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostLikeButtonViewerFragment$data = {
-  readonly id: string;
+  readonly __typename: "Account";
+  readonly " $fragmentType": "PostLikeButtonViewerFragment";
+} | {
+  // This will never be '%other', but we need some
+  // value in case none of the concrete values match.
+  readonly __typename: "%other";
   readonly " $fragmentType": "PostLikeButtonViewerFragment";
 };
 export type PostLikeButtonViewerFragment$key = {
@@ -29,7 +34,7 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "id",
+      "name": "__typename",
       "storageKey": null
     }
   ],
@@ -37,6 +42,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "842bfd7c0d2a945807c4a930d34b180d";
+(node as any).hash = "e3233293d702dd3d331ebbdb2b1e59fa";
 
 export default node;

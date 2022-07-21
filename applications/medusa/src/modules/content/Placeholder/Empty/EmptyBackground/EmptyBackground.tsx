@@ -1,6 +1,7 @@
 import { Heading, Stack } from '@chakra-ui/react'
-import { FunctionComponent, ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { Icon } from '../../../PageLayout'
+import { IconType } from '@//:types/components'
 
 export interface HintProp {
   hint?: string | undefined | null
@@ -8,7 +9,7 @@ export interface HintProp {
 
 interface Props {
   children: ReactNode
-  icon: FunctionComponent<any>
+  icon: IconType
 }
 
 export default function EmptyBackground ({

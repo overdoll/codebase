@@ -13,16 +13,20 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/staff/entity/category/create/RootStaffCreateCategory/StaffCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:86
+#: src/domain/staff/entity/category/create/RootStaffCreateCategory/StaffCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:93
 msgid "Category \"{0}\" was created successfully"
 msgstr ""
 
-#: src/domain/staff/entity/category/create/RootStaffCreateCategory/StaffCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:127
+#: src/domain/staff/entity/category/create/RootStaffCreateCategory/StaffCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:134
 msgid "Category Slug"
 msgstr ""
 
-#: src/domain/staff/entity/category/create/RootStaffCreateCategory/StaffCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:113
+#: src/domain/staff/entity/category/create/RootStaffCreateCategory/StaffCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:120
 msgid "Category Title"
+msgstr ""
+
+#: src/domain/staff/entity/category/create/RootStaffCreateCategory/StaffCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:148
+msgid "Category Topic"
 msgstr ""
 
 #: src/domain/staff/entity/category/create/RootStaffCreateCategory/StaffCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:86
@@ -30,18 +34,18 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/staff/entity/category/create/RootStaffCreateCategory/RootStaffCreateCategory.tsx:35
-#: src/domain/staff/entity/category/create/RootStaffCreateCategory/StaffCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:142
+#: src/domain/staff/entity/category/create/RootStaffCreateCategory/StaffCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:160
 msgid "Create Category"
 msgstr ""
 
-#: src/domain/staff/entity/category/create/RootStaffCreateCategory/StaffCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:132
+#: src/domain/staff/entity/category/create/RootStaffCreateCategory/StaffCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:139
 msgid "Enter a category slug"
 msgstr ""
 
-#: src/domain/staff/entity/category/create/RootStaffCreateCategory/StaffCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:118
+#: src/domain/staff/entity/category/create/RootStaffCreateCategory/StaffCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:125
 msgid "Enter a category title"
 msgstr ""
 
-#: src/domain/staff/entity/category/create/RootStaffCreateCategory/StaffCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:92
+#: src/domain/staff/entity/category/create/RootStaffCreateCategory/StaffCreateCategory/CreateCategoryForm/CreateCategoryForm.tsx:99
 msgid "Error creating category {0}"
 msgstr ""

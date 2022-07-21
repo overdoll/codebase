@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<093ffa79431768446d8643706ac0c7c8>>
- * @relayHash 95d1102b0401cd07424ed906b7f0652e
+ * @generated SignedSource<<0bd5cb9cc278672939233ed6655301c5>>
+ * @relayHash 7ceebda5e53c633ad068cd1b7e84b50c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 95d1102b0401cd07424ed906b7f0652e
+// @relayRequestID 7ceebda5e53c633ad068cd1b7e84b50c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -351,6 +351,13 @@ return {
                               (v14/*: any*/),
                               (v15/*: any*/),
                               (v16/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "videoNoAudio",
+                                "storageKey": null
+                              },
                               (v17/*: any*/)
                             ],
                             "storageKey": null
@@ -382,26 +389,6 @@ return {
                         "plural": false,
                         "selections": [
                           (v7/*: any*/),
-                          (v8/*: any*/),
-                          (v4/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "Resource",
-                            "kind": "LinkedField",
-                            "name": "thumbnail",
-                            "plural": false,
-                            "selections": [
-                              (v8/*: any*/),
-                              (v13/*: any*/),
-                              (v14/*: any*/),
-                              (v15/*: any*/),
-                              (v16/*: any*/),
-                              (v17/*: any*/),
-                              (v11/*: any*/)
-                            ],
-                            "storageKey": null
-                          },
                           {
                             "alias": null,
                             "args": null,
@@ -409,6 +396,51 @@ return {
                             "name": "viewerIsOwner",
                             "storageKey": null
                           },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "canSupport",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "LocalizedPricingPoint",
+                            "kind": "LinkedField",
+                            "name": "supporterSubscriptionPrice",
+                            "plural": false,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "Price",
+                                "kind": "LinkedField",
+                                "name": "localizedPrice",
+                                "plural": false,
+                                "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "amount",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "currency",
+                                    "storageKey": null
+                                  }
+                                ],
+                                "storageKey": null
+                              }
+                            ],
+                            "storageKey": null
+                          },
+                          (v8/*: any*/),
+                          (v4/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -431,11 +463,29 @@ return {
                           {
                             "alias": null,
                             "args": null,
-                            "kind": "ScalarField",
-                            "name": "canSupport",
+                            "concreteType": "Resource",
+                            "kind": "LinkedField",
+                            "name": "thumbnail",
+                            "plural": false,
+                            "selections": [
+                              (v8/*: any*/),
+                              (v13/*: any*/),
+                              (v14/*: any*/),
+                              (v15/*: any*/),
+                              (v16/*: any*/),
+                              (v17/*: any*/),
+                              (v11/*: any*/)
+                            ],
                             "storageKey": null
                           }
                         ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "state",
                         "storageKey": null
                       },
                       {
@@ -456,13 +506,6 @@ return {
                         "name": "viewerLiked",
                         "plural": false,
                         "selections": (v18/*: any*/),
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "likes",
                         "storageKey": null
                       }
                     ],
@@ -539,7 +582,6 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v8/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -553,14 +595,16 @@ return {
             "kind": "ScalarField",
             "name": "clubMembershipsCount",
             "storageKey": null
-          }
+          },
+          (v10/*: any*/),
+          (v8/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "95d1102b0401cd07424ed906b7f0652e",
+    "id": "7ceebda5e53c633ad068cd1b7e84b50c",
     "metadata": {},
     "name": "SearchCharacterQuery",
     "operationKind": "query",

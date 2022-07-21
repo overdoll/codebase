@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<723f86b8fff99915ba2da63c286af355>>
- * @relayHash 23dfc3141aebab39a7ff92c5c057114f
+ * @generated SignedSource<<c05393a6709daa6f4c1319abb0dcd819>>
+ * @relayHash 4ac7165e15ba7ac0ae7dfcf779748890
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 23dfc3141aebab39a7ff92c5c057114f
+// @relayRequestID 4ac7165e15ba7ac0ae7dfcf779748890
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type CreateCategoryValidation = "SLUG_TAKEN" | "%future added value";
@@ -28,6 +28,10 @@ export type CreateCategoryFormMutation$data = {
       readonly id: string;
       readonly slug: string;
       readonly title: string;
+      readonly topic: {
+        readonly id: string;
+        readonly title: string;
+      } | null;
     } | null;
     readonly validation: CreateCategoryValidation | null;
   } | null;
@@ -58,36 +62,51 @@ v2 = [
 v3 = {
   "alias": null,
   "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "title",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
   "concreteType": "Category",
   "kind": "LinkedField",
   "name": "category",
   "plural": false,
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "title",
-      "storageKey": null
-    },
+    (v3/*: any*/),
+    (v4/*: any*/),
     {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
       "name": "slug",
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Topic",
+      "kind": "LinkedField",
+      "name": "topic",
+      "plural": false,
+      "selections": [
+        (v3/*: any*/),
+        (v4/*: any*/)
+      ],
+      "storageKey": null
     }
   ],
   "storageKey": null
 },
-v4 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -112,8 +131,8 @@ return {
         "name": "createCategory",
         "plural": false,
         "selections": [
-          (v3/*: any*/),
-          (v4/*: any*/)
+          (v5/*: any*/),
+          (v6/*: any*/)
         ],
         "storageKey": null
       }
@@ -138,7 +157,7 @@ return {
         "name": "createCategory",
         "plural": false,
         "selections": [
-          (v3/*: any*/),
+          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -160,14 +179,14 @@ return {
               }
             ]
           },
-          (v4/*: any*/)
+          (v6/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "23dfc3141aebab39a7ff92c5c057114f",
+    "id": "4ac7165e15ba7ac0ae7dfcf779748890",
     "metadata": {},
     "name": "CreateCategoryFormMutation",
     "operationKind": "mutation",
@@ -176,6 +195,6 @@ return {
 };
 })();
 
-(node as any).hash = "646499943cb8db24beea16f824e248db";
+(node as any).hash = "cbc6e61f5868ebbd7cc98a9a8376fa3a";
 
 export default node;

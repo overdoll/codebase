@@ -40,11 +40,11 @@ export default function PostContentRichObject ({
         const type = content.resource.type === 'IMAGE' ? 'image' : 'video'
         return (
           <ReactFragment key={index}>
-            <meta property={`og:${type}`} content={item.url} />
-            <meta property={`og:${type}:secure_url`} content={item.url} />
-            <meta property={`og:${type}:type`} content={item.mimeType} />
-            <meta property={`og:${type}:width`} content={`${content.resource.width}`} />
-            <meta property={`og:${type}:height`} content={`${content.resource.height}`} />
+            <meta property={`og:${type}`} key='og-image' content={item.url} />
+            <meta property={`og:${type}:secure_url`} key='og-secure-url' content={item.url} />
+            <meta property={`og:${type}:type`} key='og-type' content={item.mimeType} />
+            <meta property={`og:${type}:width`} key='og-width' content={`${content.resource.width}`} />
+            <meta property={`og:${type}:height`} key='og-height' content={`${content.resource.height}`} />
           </ReactFragment>
         )
       })}

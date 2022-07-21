@@ -1,10 +1,8 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { ThumbnailClubSettingsQuery } from '@//:artifacts/ThumbnailClubSettingsQuery.graphql'
-import { Flex, Stack } from '@chakra-ui/react'
+import { HStack, Stack } from '@chakra-ui/react'
 import { ResourceIcon } from '@//:modules/content/PageLayout'
-import { Trans } from '@lingui/macro'
-import { Collapse, CollapseBody, CollapseButton } from '@//:modules/content/ThemeComponents/Collapse/Collapse'
-import ChangeClubThumbnailForm from './ChangeClubThumbnailForm/ChangeClubThumbnailForm'
+import ChangeClubThumbnailUpload from './ChangeClubThumbnailUpload/ChangeClubThumbnailUpload'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
 
 interface Props {
@@ -18,7 +16,7 @@ const Query = graphql`
       thumbnail {
         ...ResourceIconFragment
       }
-      ...ChangeClubThumbnailFormFragment
+      ...ChangeClubThumbnailUploadFragment
     }
   }
 `
@@ -35,7 +33,14 @@ export default function ThumbnailClubSettings ({ query }: Props): JSX.Element {
 
   return (
     <Stack spacing={4}>
-      <Flex w='100%' align='center' justify='center'>
+      <HStack spacing={8} align='flex-end' justify='center'>
+        <ResourceIcon
+          showBorder
+          seed={queryData.club.id}
+          w={24}
+          h={24}
+          query={queryData.club.thumbnail}
+        />
         <ResourceIcon
           showBorder
           seed={queryData.club.id}
@@ -43,17 +48,15 @@ export default function ThumbnailClubSettings ({ query }: Props): JSX.Element {
           h={16}
           query={queryData.club.thumbnail}
         />
-      </Flex>
-      <Collapse>
-        <CollapseButton size='md'>
-          <Trans>
-            Change Club Thumbnail
-          </Trans>
-        </CollapseButton>
-        <CollapseBody>
-          <ChangeClubThumbnailForm query={queryData.club} />
-        </CollapseBody>
-      </Collapse>
+        <ResourceIcon
+          showBorder
+          seed={queryData.club.id}
+          w={8}
+          h={8}
+          query={queryData.club.thumbnail}
+        />
+      </HStack>
+      <ChangeClubThumbnailUpload query={queryData.club} />
     </Stack>
   )
 }

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useToast } from '../../../../ThemeComponents'
-import { Uppy } from '@uppy/core'
-import { UseUploadProps, UseUploadReturnType } from '../../types'
+import { Uppy, UppyFile } from '@uppy/core'
+import { UppyType, UseUploadProps, UseUploadReturnType } from '../../types'
 
 export default function useUpload (props: UseUploadProps): UseUploadReturnType {
   const {
@@ -21,11 +21,25 @@ export default function useUpload (props: UseUploadProps): UseUploadReturnType {
     initialUppy.current = InitialUppy
   }
 
-  const uppy = initialUppy.current
+  const uppy = initialUppy.current as UppyType
 
   useEffect(() => {
     const callBackFn = (file, response): void => {
-      onUploadSuccess?.(file, response)
+      const mutateFile = (): UppyFile => {
+        const mutatedProgress: UppyFile['progress'] = {
+          bytesUploaded: file.size,
+          bytesTotal: file.size,
+          uploadStarted: Date.now(),
+          uploadComplete: true,
+          percentage: 100
+        }
+
+        return {
+          ...file,
+          progress: mutatedProgress
+        }
+      }
+      onUploadSuccess?.(mutateFile(), response)
     }
 
     uppy.on('upload-success', callBackFn)
@@ -38,8 +52,23 @@ export default function useUpload (props: UseUploadProps): UseUploadReturnType {
   // Upload progress - when a file reports progress, update state so user can see
   useEffect(() => {
     const callBackFn = (file, progress): void => {
-      onUploadProgress?.(file, progress)
+      const mutateFile = (): UppyFile => {
+        const mutatedProgress: UppyFile['progress'] = {
+          bytesUploaded: progress.bytesUploaded,
+          bytesTotal: progress.bytesTotal,
+          uploadStarted: Date.now(),
+          uploadComplete: false,
+          percentage: (progress.bytesUploaded / progress.bytesTotal) * 100
+        }
+
+        return {
+          ...file,
+          progress: mutatedProgress
+        }
+      }
+      onUploadProgress?.(mutateFile(), progress)
     }
+
     uppy.on('upload-progress', callBackFn)
 
     return () => {

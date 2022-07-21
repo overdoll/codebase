@@ -2,15 +2,10 @@ import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { FullSimplePostFragment$key } from '@//:artifacts/FullSimplePostFragment.graphql'
 import { FullSimplePostViewerFragment$key } from '@//:artifacts/FullSimplePostViewerFragment.graphql'
-import { HStack, Stack } from '@chakra-ui/react'
-import { PostFooter, PostGalleryPublicSimple, PostHeaderClub, PostLikeButton, PostMenu } from '../../../../index'
-import PostCopyLinkButton from '../../../PostInteraction/PostMenu/PostCopyLinkButton/PostCopyLinkButton'
-import PostModerateButton from '../../../PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
-import PostReportButton from '../../../PostInteraction/PostMenu/PostReportButton/PostReportButton'
-import PostViewButton from '../../../PostInteraction/PostMenu/PostViewButton/PostViewButton'
-import JoinClubFromPost
-  from '../../../../../../../domain/slug/root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromPost/JoinClubFromPost'
-import PostArchiveButton from '../../../PostInteraction/PostMenu/PostArchiveButton/PostArchiveButton'
+import { Stack } from '@chakra-ui/react'
+import { PostGalleryPublicSimple } from '../../../../index'
+import PostHeader from '../../../PostInteraction/PostHeader/PostHeader'
+import PostFooterButtons from '../../../PostInteraction/PostFooterButtons/PostFooterButtons'
 
 interface Props {
   query: FullSimplePostFragment$key
@@ -20,25 +15,16 @@ interface Props {
 const PostFragment = graphql`
   fragment FullSimplePostFragment on Post {
     ...PostGalleryPublicSimpleFragment
-    ...PostViewButtonFragment
-    ...PostModerateButtonFragment
-    ...PostCopyLinkButtonFragment
-    ...PostReportButtonFragment
-    ...PostLikeButtonFragment
-    ...PostHeaderClubFragment
-    ...PostArchiveButtonFragment
-    club @required(action: THROW) {
-      viewerIsOwner
-      ...JoinClubFromPostFragment
-    }
+    ...PostHeaderFragment
+    ...PostFooterButtonsFragment
   }
 `
 
 const ViewerFragment = graphql`
   fragment FullSimplePostViewerFragment on Account {
-    ...PostLikeButtonViewerFragment
-    ...JoinClubFromPostViewerFragment
-    ...PostReportButtonViewerFragment
+    ...PostHeaderViewerFragment
+    ...PostGalleryPublicSimpleViewerFragment
+    ...PostFooterButtonsViewerFragment
   }
 `
 
@@ -50,26 +36,10 @@ export default function FullSimplePost ({
   const viewerData = useFragment<FullSimplePostViewerFragment$key>(ViewerFragment, viewerQuery)
 
   return (
-    <Stack h='100%' justify='space-between' spacing={2}>
-      <HStack spacing={3} justify='space-between' align='center'>
-        <PostHeaderClub query={data} />
-        <JoinClubFromPost size='sm' clubQuery={data?.club} viewerQuery={viewerData} />
-      </HStack>
-      <PostGalleryPublicSimple query={data} />
-      <PostFooter
-        leftItem={(
-          <PostLikeButton size='sm' query={data} viewerQuery={viewerData} />
-        )}
-        rightItem={(
-          <PostMenu variant='ghost' size='sm'>
-            <PostViewButton query={data} />
-            <PostCopyLinkButton query={data} />
-            {data?.club?.viewerIsOwner
-              ? <PostArchiveButton query={data} />
-              : <PostReportButton query={data} viewerQuery={viewerData} />}
-            <PostModerateButton query={data} />
-          </PostMenu>)}
-      />
+    <Stack spacing={2}>
+      <PostHeader postQuery={data} viewerQuery={viewerData} />
+      <PostGalleryPublicSimple postQuery={data} viewerQuery={viewerData} />
+      <PostFooterButtons postQuery={data} viewerQuery={viewerData} />
     </Stack>
   )
 }

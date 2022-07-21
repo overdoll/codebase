@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5a57d47ad0a7bba1c1dc1b82a6a6d4da>>
+ * @generated SignedSource<<691588b424013667ac31881290a2ced5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,11 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type FullSimplePostFragment$data = {
-  readonly club: {
-    readonly viewerIsOwner: boolean;
-    readonly " $fragmentSpreads": FragmentRefs<"JoinClubFromPostFragment">;
-  };
-  readonly " $fragmentSpreads": FragmentRefs<"PostArchiveButtonFragment" | "PostCopyLinkButtonFragment" | "PostGalleryPublicSimpleFragment" | "PostHeaderClubFragment" | "PostLikeButtonFragment" | "PostModerateButtonFragment" | "PostReportButtonFragment" | "PostViewButtonFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"PostFooterButtonsFragment" | "PostGalleryPublicSimpleFragment" | "PostHeaderFragment">;
   readonly " $fragmentType": "FullSimplePostFragment";
 };
 export type FullSimplePostFragment$key = {
@@ -37,71 +33,18 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "PostViewButtonFragment"
+      "name": "PostHeaderFragment"
     },
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "PostModerateButtonFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "PostCopyLinkButtonFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "PostReportButtonFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "PostLikeButtonFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "PostHeaderClubFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "PostArchiveButtonFragment"
-    },
-    {
-      "kind": "RequiredField",
-      "field": {
-        "alias": null,
-        "args": null,
-        "concreteType": "Club",
-        "kind": "LinkedField",
-        "name": "club",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "viewerIsOwner",
-            "storageKey": null
-          },
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "JoinClubFromPostFragment"
-          }
-        ],
-        "storageKey": null
-      },
-      "action": "THROW",
-      "path": "club"
+      "name": "PostFooterButtonsFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 
-(node as any).hash = "e7ac2fdcfaadf3fcf83d9f2fa4bd0c4a";
+(node as any).hash = "cd9b8ef6c5d71a90803759b6cb7b72ad";
 
 export default node;

@@ -28,6 +28,7 @@ export interface ControlledVideoProps extends HTMLChakraProps<any> {
 
 const Fragment = graphql`
   fragment ControlledVideoFragment on Resource {
+    videoNoAudio
     ...RenderVideoFragment
   }
 `
@@ -54,8 +55,9 @@ const ControlledVideo = forwardRef<any, ControlledVideoProps>(({
   const [isMuted, setMuted] = useState(isDefaultMuted)
   const [isPaused, setPaused] = useState(true)
   const [isLoaded, setLoaded] = useState(true)
-  const [hasAudio, setHasAudio] = useState(true)
   const [hasError, setHasError] = useState(false)
+
+  const hasAudio = !data.videoNoAudio
 
   const {
     isOpen,
@@ -104,10 +106,6 @@ const ControlledVideo = forwardRef<any, ControlledVideoProps>(({
 
   const onLoadedData = (e): void => {
     setLoaded(true)
-    // This is a guess - it's not always going to be right
-    if (e.target.webkitAudioDecodedByteCount === 0) {
-      setHasAudio(false)
-    }
   }
 
   const onLoadedMetadata = (e): void => {

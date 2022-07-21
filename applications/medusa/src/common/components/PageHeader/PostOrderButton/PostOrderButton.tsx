@@ -5,12 +5,13 @@ import { Trans } from '@lingui/macro'
 import { Icon } from '@//:modules/content/PageLayout'
 import { FreshLeaf, RisingGraph } from '@//:assets/icons'
 import Button from '@//:modules/form/Button/Button'
-import { FunctionComponent, ReactNode } from 'react'
+import { ReactNode } from 'react'
+import { IconType } from '@//:types/components'
 
 interface OrderButtonProps {
   children: ReactNode
   param: string
-  icon: FunctionComponent<any>
+  icon: IconType
   defaultActive?: boolean
 }
 

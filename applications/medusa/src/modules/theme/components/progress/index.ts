@@ -23,7 +23,9 @@ function filledStyle (props: StyleFunctionProps): SystemStyleObject {
     generateStripe('1rem', 'rgba(0,0,0,0.1)')
   )(props)
 
-  const bgColor = mode(`${c}.500`, `${c}.500`)(props)
+  const getValidColor = c === 'primary' ? `${c}.500` : `${c}.300`
+
+  const bgColor = mode(`${c}.500`, getValidColor)(props)
 
   const gradient = `linear-gradient(
     to right,

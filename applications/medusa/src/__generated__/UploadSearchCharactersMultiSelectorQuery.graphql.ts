@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ec2740efb92f1c0d4bb8862b8c49cd3f>>
- * @relayHash 91152756464e5d2a24b8037bff4db435
+ * @generated SignedSource<<086fcd1a0788103967cb74dca4a0c5de>>
+ * @relayHash 6009dab69c601b3de7131b139241be26
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 91152756464e5d2a24b8037bff4db435
+// @relayRequestID 6009dab69c601b3de7131b139241be26
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -208,6 +208,13 @@ return {
                         "kind": "ScalarField",
                         "name": "processed",
                         "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "failed",
+                        "storageKey": null
                       }
                     ],
                     "storageKey": null
@@ -274,7 +281,7 @@ return {
     ]
   },
   "params": {
-    "id": "91152756464e5d2a24b8037bff4db435",
+    "id": "6009dab69c601b3de7131b139241be26",
     "metadata": {},
     "name": "UploadSearchCharactersMultiSelectorQuery",
     "operationKind": "query",

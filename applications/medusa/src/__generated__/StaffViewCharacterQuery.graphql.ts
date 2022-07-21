@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<bd6a656a0c49455e1663aa62b0b38fe2>>
- * @relayHash d6488bf487f7dc88468fcb5ab10f6a67
+ * @generated SignedSource<<acb5b491d51905faeddd3c5866160541>>
+ * @relayHash f9dcf2486ac7405012b95db5bb042753
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d6488bf487f7dc88468fcb5ab10f6a67
+// @relayRequestID f9dcf2486ac7405012b95db5bb042753
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -19,6 +19,9 @@ export type StaffViewCharacterQuery$variables = {
 };
 export type StaffViewCharacterQuery$data = {
   readonly character: {
+    readonly series: {
+      readonly title: string;
+    } | null;
     readonly " $fragmentSpreads": FragmentRefs<"ChangeCharacterNameFragment" | "ChangeCharacterThumbnailFragment">;
   } | null;
 };
@@ -54,7 +57,7 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "title",
   "storageKey": null
 },
 v4 = {
@@ -65,6 +68,13 @@ v4 = {
   "storageKey": null
 },
 v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -89,6 +99,18 @@ return {
         "name": "character",
         "plural": false,
         "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Series",
+            "kind": "LinkedField",
+            "name": "series",
+            "plural": false,
+            "selections": [
+              (v3/*: any*/)
+            ],
+            "storageKey": null
+          },
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -123,7 +145,20 @@ return {
         "name": "character",
         "plural": false,
         "selections": [
-          (v3/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Series",
+            "kind": "LinkedField",
+            "name": "series",
+            "plural": false,
+            "selections": [
+              (v3/*: any*/),
+              (v4/*: any*/)
+            ],
+            "storageKey": null
+          },
+          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -154,7 +189,7 @@ return {
                     "name": "locale",
                     "storageKey": null
                   },
-                  (v3/*: any*/)
+                  (v5/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -179,7 +214,7 @@ return {
                 "name": "urls",
                 "plural": true,
                 "selections": [
-                  (v5/*: any*/),
+                  (v6/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -219,7 +254,7 @@ return {
                 "name": "videoThumbnail",
                 "plural": false,
                 "selections": [
-                  (v5/*: any*/)
+                  (v6/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -239,7 +274,7 @@ return {
     ]
   },
   "params": {
-    "id": "d6488bf487f7dc88468fcb5ab10f6a67",
+    "id": "f9dcf2486ac7405012b95db5bb042753",
     "metadata": {},
     "name": "StaffViewCharacterQuery",
     "operationKind": "query",
@@ -248,6 +283,6 @@ return {
 };
 })();
 
-(node as any).hash = "fb36eeb7a7fb0938865974f3ac847f1b";
+(node as any).hash = "e96ff3158fd02c82f7464034aa997d7f";
 
 export default node;

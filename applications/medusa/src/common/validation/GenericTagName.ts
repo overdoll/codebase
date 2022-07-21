@@ -7,11 +7,11 @@ export default function GenericTagName (): Joi.Schema {
   return Joi
     .string()
     .required()
-    .min(2)
+    .min(1)
     .max(70)
     .messages({
       'string.empty': i18n._(t`Please enter a name`),
-      'string.min': i18n._(t`The name must be at least 3 characters`),
+      'string.min': i18n._(t`The name must be at least 1 character`),
       'string.max': i18n._(t`The name cannot exceed 70 characters`)
     })
 }

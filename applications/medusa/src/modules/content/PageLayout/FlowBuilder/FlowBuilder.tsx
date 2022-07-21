@@ -1,8 +1,9 @@
 import { Stack } from '@chakra-ui/react'
-import { createContext, FunctionComponent, ReactNode, useState } from 'react'
+import { createContext, ReactNode, useState } from 'react'
 import { defineMessage } from '@lingui/macro'
 import { useQueryParam } from 'use-query-params'
 import { useUpdateEffect } from 'usehooks-ts'
+import { IconType } from '@//:types/components'
 
 interface BuilderProps {
   stepsArray: string[]
@@ -28,7 +29,7 @@ interface ContextProps extends BuilderProps {
 interface HeaderProps {
   [step: string]: {
     title: string
-    icon: FunctionComponent<any>
+    icon: IconType
   }
 }
 

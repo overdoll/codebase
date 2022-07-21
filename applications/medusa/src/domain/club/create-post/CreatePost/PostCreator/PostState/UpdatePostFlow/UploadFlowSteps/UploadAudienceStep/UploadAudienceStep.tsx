@@ -3,12 +3,13 @@ import { Flex, Stack, Text } from '@chakra-ui/react'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import RequiredPrompt from '../../../../../RequiredPrompt/RequiredPrompt'
 import { Trans } from '@lingui/macro'
-import SkeletonStack from '@//:modules/content/Placeholder/Loading/SkeletonStack/SkeletonStack'
 import UploadAudiencesSingleSelector from './UploadAudiencesSingleSelector/UploadAudiencesSingleSelector'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import { useChoice } from '@//:modules/content/HookedComponents/Choice'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
+import SkeletonUploadAudienceGrid
+  from '@//:modules/content/Placeholder/Loading/SkeletonUploadAudienceGrid/SkeletonUploadAudienceGrid'
 
 interface ChoiceProps {
   title: string
@@ -50,7 +51,7 @@ export default function UploadAudienceStep (): JSX.Element {
         </PageSectionDescription>
       </PageSectionWrap>
       <QueryErrorBoundary loadQuery={loadQuery}>
-        <Suspense fallback={<SkeletonStack />}>
+        <Suspense fallback={<SkeletonUploadAudienceGrid />}>
           <UploadAudiencesSingleSelector
             searchArguments={searchArguments}
             register={register}

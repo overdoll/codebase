@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<2a352f96b92734674aca1a321ec63e8c>>
- * @relayHash 12d35f8db2edc6ca5407dd3713b3a5c4
+ * @generated SignedSource<<6ccd513a6bad9c2715b68c67669acc96>>
+ * @relayHash 978e4c5799933cc1365c25f5f6535b4d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 12d35f8db2edc6ca5407dd3713b3a5c4
+// @relayRequestID 978e4c5799933cc1365c25f5f6535b4d
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -316,6 +316,13 @@ return {
                     "kind": "ScalarField",
                     "name": "processed",
                     "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "failed",
+                    "storageKey": null
                   }
                 ],
                 "storageKey": null
@@ -329,7 +336,7 @@ return {
     ]
   },
   "params": {
-    "id": "12d35f8db2edc6ca5407dd3713b3a5c4",
+    "id": "978e4c5799933cc1365c25f5f6535b4d",
     "metadata": {},
     "name": "RecoveryCodeMutation",
     "operationKind": "mutation",

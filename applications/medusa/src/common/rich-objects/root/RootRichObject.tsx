@@ -43,6 +43,11 @@ export default function RootRichObject (): JSX.Element {
       <meta name='twitter:site' content='@overdoll_com' />
       <meta name='twitter:creator' content='@overdoll_com' />
       <meta name='theme-color' content='#ff2969' />
+      <meta
+        property='og:image'
+        key='og-image'
+        content='https://static.dollycdn.net/manifest/android-chrome-512x512.png'
+      />
     </Head>
   )
 }

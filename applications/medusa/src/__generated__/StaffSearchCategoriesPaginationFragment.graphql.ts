@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<cfe9606bb55e20dd8c26f5cd2bb30b9b>>
- * @relayHash d4fd0dfb26dc93561700789fe332e022
+ * @generated SignedSource<<5785ae6641e9798cdd0aa9edab3f3de3>>
+ * @relayHash 57bd1becebd3a9c447482f79d5193685
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d4fd0dfb26dc93561700789fe332e022
+// @relayRequestID 57bd1becebd3a9c447482f79d5193685
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -146,7 +146,7 @@ return {
                     "args": null,
                     "concreteType": "Resource",
                     "kind": "LinkedField",
-                    "name": "thumbnail",
+                    "name": "banner",
                     "plural": false,
                     "selections": [
                       {
@@ -215,6 +215,13 @@ return {
                         "kind": "ScalarField",
                         "name": "processed",
                         "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "failed",
+                        "storageKey": null
                       }
                     ],
                     "storageKey": null
@@ -281,7 +288,7 @@ return {
     ]
   },
   "params": {
-    "id": "d4fd0dfb26dc93561700789fe332e022",
+    "id": "57bd1becebd3a9c447482f79d5193685",
     "metadata": {},
     "name": "StaffSearchCategoriesPaginationFragment",
     "operationKind": "query",

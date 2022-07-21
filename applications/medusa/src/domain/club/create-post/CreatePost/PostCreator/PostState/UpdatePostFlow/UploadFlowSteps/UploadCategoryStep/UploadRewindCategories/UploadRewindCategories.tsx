@@ -30,7 +30,6 @@ import Button from '@//:modules/form/Button/Button'
 import RemovableTag from '@//:modules/content/DataDisplay/RemovableTag/RemovableTag'
 import { Choices, UseChoiceReturnOnChange } from '@//:modules/content/HookedComponents/Choice/types'
 import { UploadSearchCategoriesMultiSelectorProps } from '../UploadCategoryStep'
-import { useToast } from '@//:modules/content/ThemeComponents'
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { UploadRewindCategoriesFragment$key } from '@//:artifacts/UploadRewindCategoriesFragment.graphql'
 
@@ -71,8 +70,6 @@ export default function UploadRewindCategories ({
 
   const { query: { slug } } = useRouter()
 
-  const notify = useToast()
-
   const {
     searchArguments,
     loadQuery
@@ -95,11 +92,6 @@ export default function UploadRewindCategories ({
     categories.forEach((item) => {
       if (Object.keys(currentValues).includes(item.id)) return
       onChange(item.id, { title: item.title })
-    })
-    notify({
-      status: 'info',
-      title: i18n._(t`Added categories from selected post`),
-      isClosable: true
     })
     onClose()
   }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e816f226532708ed9440ab7ba7c8f851>>
+ * @generated SignedSource<<4828c94e0d84271111ac6939426f5beb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,13 +14,12 @@ export type DiscoverClubsListFragment$data = {
   readonly discoverClubs: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly slug: string;
-        readonly " $fragmentSpreads": FragmentRefs<"ClubTileOverlayFragment" | "JoinClubFromTileFragment">;
+        readonly " $fragmentSpreads": FragmentRefs<"ClubJoinTileFragment">;
       };
     }>;
   };
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"JoinClubFromTileViewerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ClubJoinTileViewerFragment">;
   } | null;
   readonly " $fragmentType": "DiscoverClubsListFragment";
 };
@@ -96,21 +95,9 @@ return {
               "plural": false,
               "selections": [
                 {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "slug",
-                  "storageKey": null
-                },
-                {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "JoinClubFromTileFragment"
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "ClubTileOverlayFragment"
+                  "name": "ClubJoinTileFragment"
                 },
                 {
                   "alias": null,
@@ -171,7 +158,7 @@ return {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "JoinClubFromTileViewerFragment"
+          "name": "ClubJoinTileViewerFragment"
         }
       ],
       "storageKey": null
@@ -182,6 +169,6 @@ return {
 };
 })();
 
-(node as any).hash = "344a203606f1210684e026257992f2f4";
+(node as any).hash = "fcc18e6a285d4125163688f37bd5b869";
 
 export default node;

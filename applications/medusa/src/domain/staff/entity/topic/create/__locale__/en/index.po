@@ -1,0 +1,94 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-04-14 17:29-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/domain/staff/entity/rule/create/RootStaffCreateRule/StaffCreateRule/CreateRuleForm/CreateRuleForm.tsx:136
+#~ msgid "Causes an infraction"
+#~ msgstr ""
+
+#: src/domain/staff/entity/topic/create/RootStaffCreateTopic/StaffCreateTopic/CreateTopicForm/CreateTopicForm.tsx:172
+msgid "Create Rule"
+msgstr ""
+
+#: src/domain/staff/entity/topic/create/RootStaffCreateTopic/RootStaffCreateTopic.tsx:35
+msgid "Create Topic"
+msgstr ""
+
+#: src/domain/staff/entity/rule/create/RootStaffCreateRule/StaffCreateRule/CreateRuleForm/CreateRuleForm.tsx:121
+#~ msgid "Enter a description for the rule"
+#~ msgstr ""
+
+#: src/domain/staff/entity/rule/create/RootStaffCreateRule/StaffCreateRule/CreateRuleForm/CreateRuleForm.tsx:106
+#~ msgid "Enter a rule title"
+#~ msgstr ""
+
+#: src/domain/staff/entity/topic/create/RootStaffCreateTopic/StaffCreateTopic/CreateTopicForm/CreateTopicForm.tsx:153
+msgid "Enter a topic description"
+msgstr ""
+
+#: src/domain/staff/entity/topic/create/RootStaffCreateTopic/StaffCreateTopic/CreateTopicForm/CreateTopicForm.tsx:140
+msgid "Enter a topic slug"
+msgstr ""
+
+#: src/domain/staff/entity/topic/create/RootStaffCreateTopic/StaffCreateTopic/CreateTopicForm/CreateTopicForm.tsx:126
+msgid "Enter a topic title"
+msgstr ""
+
+#: src/domain/staff/entity/rule/create/RootStaffCreateRule/StaffCreateRule/CreateRuleForm/CreateRuleForm.tsx:85
+#~ msgid "Error creating rule {0}"
+#~ msgstr ""
+
+#: src/domain/staff/entity/topic/create/RootStaffCreateTopic/StaffCreateTopic/CreateTopicForm/CreateTopicForm.tsx:100
+msgid "Error creating topic {0}"
+msgstr ""
+
+#: src/domain/staff/entity/rule/create/RootStaffCreateRule/StaffCreateRule/CreateRuleForm/CreateRuleForm.tsx:79
+#~ msgid "Rule \"{0}\" was created successfully"
+#~ msgstr ""
+
+#: src/domain/staff/entity/rule/create/RootStaffCreateRule/StaffCreateRule/CreateRuleForm/CreateRuleForm.tsx:115
+#~ msgid "Rule Description"
+#~ msgstr ""
+
+#: src/domain/staff/entity/rule/create/RootStaffCreateRule/StaffCreateRule/CreateRuleForm/CreateRuleForm.tsx:129
+#~ msgid "Rule Infraction"
+#~ msgstr ""
+
+#: src/domain/staff/entity/rule/create/RootStaffCreateRule/StaffCreateRule/CreateRuleForm/CreateRuleForm.tsx:101
+#~ msgid "Rule Title"
+#~ msgstr ""
+
+#: src/domain/staff/entity/rule/create/RootStaffCreateRule/StaffCreateRule/CreateRuleForm/CreateRuleForm.tsx:79
+#~ msgid "Rule {0} was created successfully"
+#~ msgstr ""
+
+#: src/domain/staff/entity/topic/create/RootStaffCreateTopic/StaffCreateTopic/CreateTopicForm/CreateTopicForm.tsx:94
+msgid "Topic \"{0}\" was created successfully"
+msgstr ""
+
+#: src/domain/staff/entity/topic/create/RootStaffCreateTopic/StaffCreateTopic/CreateTopicForm/CreateTopicForm.tsx:149
+msgid "Topic Description"
+msgstr ""
+
+#: src/domain/staff/entity/topic/create/RootStaffCreateTopic/StaffCreateTopic/CreateTopicForm/CreateTopicForm.tsx:135
+msgid "Topic Slug"
+msgstr ""
+
+#: src/domain/staff/entity/topic/create/RootStaffCreateTopic/StaffCreateTopic/CreateTopicForm/CreateTopicForm.tsx:121
+msgid "Topic Title"
+msgstr ""
+
+#: src/domain/staff/entity/topic/create/RootStaffCreateTopic/StaffCreateTopic/CreateTopicForm/CreateTopicForm.tsx:160
+msgid "Topic Weight"
+msgstr ""

@@ -11,7 +11,7 @@ import { ConnectionProp } from '@//:types/components'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import GenericTagTitle from '../../../../../../../../common/validation/GenericTagTitle'
 import GenericTagSlug from '../../../../../../../../common/validation/GenericTagSlug'
-import { TagSlug, TagTitle } from '@//:types/form'
+import { TagSlug, TagTitle, TagTopicId } from '@//:types/form'
 import useSlugSubscribe from '../../../../../../../../common/support/useSlugSubscribe'
 import {
   Form,
@@ -23,10 +23,12 @@ import {
   InputHeader,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
+import TopicInput from '@//:modules/content/HookedComponents/Form/FormInput/Inputs/TopicInput/TopicInput'
+import GenericTagOptionalId from '../../../../../../../../common/validation/GenericTagOptionalId'
 
 type Props = ConnectionProp
 
-type CategoryValues = TagTitle & TagSlug
+type CategoryValues = TagTitle & TagSlug & TagTopicId
 
 const Mutation = graphql`
   mutation CreateCategoryFormMutation($input: CreateCategoryInput!, $connections: [ID!]!) {
@@ -35,6 +37,10 @@ const Mutation = graphql`
         id
         title
         slug
+        topic {
+          id
+          title
+        }
       }
       validation
     }
@@ -54,7 +60,8 @@ export default function CreateCategoryForm ({
 
   const schema = Joi.object({
     title: GenericTagTitle(),
-    slug: GenericTagSlug()
+    slug: GenericTagSlug(),
+    topicId: GenericTagOptionalId()
   })
 
   const methods = useForm<CategoryValues>({
@@ -132,6 +139,17 @@ export default function CreateCategoryForm ({
             <TextInput placeholder={i18n._(t`Enter a category slug`)} />
             <InputFeedback />
           </InputBody>
+          <InputFooter />
+        </FormInput>
+        <FormInput
+          id='topicId'
+        >
+          <InputHeader>
+            <Trans>
+              Category Topic
+            </Trans>
+          </InputHeader>
+          <TopicInput />
           <InputFooter />
         </FormInput>
         <FormSubmitButton

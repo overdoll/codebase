@@ -28,7 +28,6 @@ const PostFragment = graphql`
 const ClubFragment = graphql`
   fragment PostStateClubFragment on Club {
     __typename
-    id
     ...ClubInformationBannerFragment
     ...ClubDraftPostsAlertFragment
     ...CreatePostFlowFragment

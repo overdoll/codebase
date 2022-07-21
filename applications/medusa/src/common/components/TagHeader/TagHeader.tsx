@@ -1,8 +1,9 @@
 import { Text } from '@chakra-ui/react'
 import { SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import { ReactNode } from 'react'
 
 interface Props {
-  children: string
+  children: ReactNode
 }
 
 export default function TagHeader ({

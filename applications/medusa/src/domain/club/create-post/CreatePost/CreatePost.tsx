@@ -7,7 +7,6 @@ import PostCreatorQuery, { PostCreatorQuery as PostCreatorQueryType } from '@//:
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
 import {
-  ArrayResolver,
   ObjectResolver,
   SequenceProvider,
   useSequence,
@@ -17,6 +16,8 @@ import { SequenceResolver } from '@//:modules/content/HookedComponents/Sequence/
 import Head from 'next/head'
 import { PageProps } from '@//:types/app'
 import { useRouter } from 'next/router'
+import { UppyFile } from '@uppy/core'
+import { FileErrorType } from '@//:modules/content/HookedComponents/Upload/types'
 
 interface Props {
   queryRefs: {
@@ -25,17 +26,15 @@ interface Props {
 }
 
 interface SequenceProps {
-  progress: {
-    [id: string]: {
-      0: string
-      1: string
-    }
+  files: {
+    [id: string]: UppyFile
   }
-  files: Array<{ id: string, type: string }>
+  errors: {
+    [id: string]: FileErrorType
+  }
   urls: {
     [id: string]: string
   }
-  content: string[]
   audience: {
     [id: string]: string
   }
@@ -49,38 +48,30 @@ interface SequenceProps {
       title: string
     }
   }
-  isProcessing: boolean
   isInReview: boolean
   isSubmitted: boolean
-  isRearranging: boolean
 }
 
 const defaultValue: SequenceProps = {
-  progress: {},
-  files: [],
+  files: {},
   urls: {},
-  content: [],
   audience: {},
   characters: {},
   categories: {},
-  isProcessing: false,
+  errors: {},
   isInReview: false,
-  isSubmitted: false,
-  isRearranging: false
+  isSubmitted: false
 }
 
 const resolver: SequenceResolver<SequenceProps> = {
-  progress: ObjectResolver(),
-  files: ArrayResolver(),
+  files: ObjectResolver(),
   urls: ObjectResolver(),
-  content: ArrayResolver(),
+  errors: ObjectResolver(),
   audience: ObjectResolver(),
   characters: ObjectResolver(),
   categories: ObjectResolver(),
-  isProcessing: ValueResolver(),
   isInReview: ValueResolver(),
-  isSubmitted: ValueResolver(),
-  isRearranging: ValueResolver()
+  isSubmitted: ValueResolver()
 }
 
 const CreatePost: PageProps<Props> = (props: Props) => {

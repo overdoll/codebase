@@ -12,7 +12,7 @@ const Fragment = graphql`
   fragment CategoryTileOverlayFragment on Category {
     id
     title
-    thumbnail {
+    banner {
       ...ResourceItemFragment
     }
   }
@@ -28,7 +28,7 @@ export default function CategoryTileOverlay ({
       <ResourceItem
         showBorder
         seed={data.id}
-        query={data.thumbnail}
+        query={data.banner}
       />
     }
     >

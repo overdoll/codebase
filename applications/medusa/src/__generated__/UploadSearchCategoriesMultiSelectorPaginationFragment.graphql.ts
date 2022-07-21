@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8d8796fc72ef7113c470b8f91d2f1b30>>
- * @relayHash 0ddc5f8463273f1d0c1cdd01de833dab
+ * @generated SignedSource<<1b6d5329662d55b0b09843e2677b569d>>
+ * @relayHash 11d0bb28600551b7c803191eacfae263
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0ddc5f8463273f1d0c1cdd01de833dab
+// @relayRequestID 11d0bb28600551b7c803191eacfae263
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -34,7 +34,7 @@ var v0 = [
     "name": "after"
   },
   {
-    "defaultValue": 19,
+    "defaultValue": 9,
     "kind": "LocalArgument",
     "name": "first"
   },
@@ -134,7 +134,7 @@ return {
                     "args": null,
                     "concreteType": "Resource",
                     "kind": "LinkedField",
-                    "name": "thumbnail",
+                    "name": "banner",
                     "plural": false,
                     "selections": [
                       {
@@ -203,6 +203,13 @@ return {
                         "kind": "ScalarField",
                         "name": "processed",
                         "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "failed",
+                        "storageKey": null
                       }
                     ],
                     "storageKey": null
@@ -269,7 +276,7 @@ return {
     ]
   },
   "params": {
-    "id": "0ddc5f8463273f1d0c1cdd01de833dab",
+    "id": "11d0bb28600551b7c803191eacfae263",
     "metadata": {},
     "name": "UploadSearchCategoriesMultiSelectorPaginationFragment",
     "operationKind": "query",
@@ -278,6 +285,6 @@ return {
 };
 })();
 
-(node as any).hash = "81240dd5b02a5670e01734f3f657894f";
+(node as any).hash = "dc718d71ad5843e854f40d7ecb2b4c27";
 
 export default node;

@@ -70,8 +70,6 @@ export default function CreateAudienceForm ({
     }
   })
 
-  console.log(methods.getValues())
-
   const {
     setError
   } = methods

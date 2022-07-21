@@ -31,8 +31,16 @@ msgstr ""
 msgid "Category Title"
 msgstr ""
 
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTopic/ChangeCategoryTopic.tsx:31
+msgid "Category Topic"
+msgstr ""
+
 #: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitle.tsx:57
 msgid "Change Category Title"
+msgstr ""
+
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTopic/ChangeCategoryTopic.tsx:50
+msgid "Change Category Topic"
 msgstr ""
 
 #: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnail.tsx:41
@@ -47,12 +55,21 @@ msgstr ""
 msgid "Error updating category title"
 msgstr ""
 
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTopic/ChangeCategoryTopicForm/ChangeCategoryTopicForm.tsx:76
+msgid "Error updating category topic"
+msgstr ""
+
 #: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:131
 msgid "Locale"
 msgstr ""
 
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTopic/ChangeCategoryTopic.tsx:40
+msgid "No topic"
+msgstr ""
+
 #: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnailForm/ChangeCategoryThumbnailForm.tsx:110
 #: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:142
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTopic/ChangeCategoryTopicForm/ChangeCategoryTopicForm.tsx:100
 msgid "Submit"
 msgstr ""
 
@@ -66,6 +83,10 @@ msgstr ""
 
 #: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:87
 msgid "Updated category title to {0} for {1}"
+msgstr ""
+
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTopic/ChangeCategoryTopicForm/ChangeCategoryTopicForm.tsx:70
+msgid "Updated category topic"
 msgstr ""
 
 #: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitle.tsx:43

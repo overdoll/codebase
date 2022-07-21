@@ -37,3 +37,11 @@ export interface TagInfraction {
 export interface TagDeprecated {
   deprecated: boolean
 }
+
+export interface TagWeight {
+  weight: number
+}
+
+export interface TagTopicId {
+  topicId?: string
+}

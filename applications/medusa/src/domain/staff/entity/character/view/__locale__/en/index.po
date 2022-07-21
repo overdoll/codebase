@@ -34,6 +34,10 @@ msgstr ""
 msgid "Character Name"
 msgstr ""
 
+#: src/domain/staff/entity/character/view/RootStaffViewCharacter/StaffViewCharacter/StaffViewCharacter.tsx:48
+msgid "Character Series"
+msgstr ""
+
 #: src/domain/staff/entity/character/view/RootStaffViewCharacter/StaffViewCharacter/ChangeCharacterThumbnail/ChangeCharacterThumbnail.tsx:30
 #: src/domain/staff/entity/character/view/RootStaffViewCharacter/StaffViewCharacter/ChangeCharacterThumbnail/ChangeCharacterThumbnailForm/ChangeCharacterThumbnailForm.tsx:104
 msgid "Character Thumbnail"

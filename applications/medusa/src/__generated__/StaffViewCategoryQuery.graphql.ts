@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<591af25bcf9a052131797c4ce34c3679>>
- * @relayHash 3291c5a9ca7d88dd711b514172e29a0d
+ * @generated SignedSource<<2f6088b7c2db5a524b745218eef7de95>>
+ * @relayHash 3494b38d6e451d71230d041ef7af0370
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3291c5a9ca7d88dd711b514172e29a0d
+// @relayRequestID 3494b38d6e451d71230d041ef7af0370
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,7 +18,7 @@ export type StaffViewCategoryQuery$variables = {
 };
 export type StaffViewCategoryQuery$data = {
   readonly category: {
-    readonly " $fragmentSpreads": FragmentRefs<"ChangeCategoryThumbnailFragment" | "ChangeCategoryTitleFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ChangeCategoryThumbnailFragment" | "ChangeCategoryTitleFragment" | "ChangeCategoryTopicFragment">;
   } | null;
 };
 export type StaffViewCategoryQuery = {
@@ -45,10 +45,17 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "title",
   "storageKey": null
 },
 v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -79,6 +86,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "ChangeCategoryThumbnailFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ChangeCategoryTopicFragment"
           }
         ],
         "storageKey": null
@@ -101,13 +113,7 @@ return {
         "name": "category",
         "plural": false,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "title",
-            "storageKey": null
-          },
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -151,7 +157,7 @@ return {
             ],
             "storageKey": null
           },
-          (v2/*: any*/),
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -160,7 +166,7 @@ return {
             "name": "banner",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
+              (v3/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -169,7 +175,7 @@ return {
                 "name": "urls",
                 "plural": true,
                 "selections": [
-                  (v3/*: any*/),
+                  (v4/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -209,7 +215,7 @@ return {
                 "name": "videoThumbnail",
                 "plural": false,
                 "selections": [
-                  (v3/*: any*/)
+                  (v4/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -222,6 +228,19 @@ return {
               }
             ],
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Topic",
+            "kind": "LinkedField",
+            "name": "topic",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              (v3/*: any*/)
+            ],
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -229,7 +248,7 @@ return {
     ]
   },
   "params": {
-    "id": "3291c5a9ca7d88dd711b514172e29a0d",
+    "id": "3494b38d6e451d71230d041ef7af0370",
     "metadata": {},
     "name": "StaffViewCategoryQuery",
     "operationKind": "query",
@@ -238,7 +257,7 @@ return {
 };
 })();
 
-(node as any).hash = "191a5529288888ce5137bdfac2002957";
+(node as any).hash = "0fe49a3101e2a600633b5a35b0884281";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b5fd1cd81e6679d620ae0f97508d7492>>
+ * @generated SignedSource<<911464019ddacbfd33671544b0d88908>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostHeaderFragment$data = {
   readonly club: {
-    readonly " $fragmentSpreads": FragmentRefs<"JoinClubFromPostFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"PostJoinClubFragment">;
   };
   readonly " $fragmentSpreads": FragmentRefs<"PostHeaderClubFragment">;
   readonly " $fragmentType": "PostHeaderFragment";
@@ -39,7 +39,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "JoinClubFromPostFragment"
+          "name": "PostJoinClubFragment"
         }
       ],
       "storageKey": null
@@ -54,6 +54,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "775e86f43cc9fa6a3f2fbe510dc2f2b6";
+(node as any).hash = "1953699b7f76b31634bbd04ae1d70fa4";
 
 export default node;

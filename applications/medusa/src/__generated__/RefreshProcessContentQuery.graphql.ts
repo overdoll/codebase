@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b4b28793be3cb413a793a3efd2770238>>
- * @relayHash d412829d7ff3a6a2d23f98a30dfd9567
+ * @generated SignedSource<<f04ffd5e9d50dc96dff2b5ee2fae9905>>
+ * @relayHash 2e5736441f273e01d7cbb8ea374de26b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d412829d7ff3a6a2d23f98a30dfd9567
+// @relayRequestID 2e5736441f273e01d7cbb8ea374de26b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type RefreshProcessContentQuery$variables = {
@@ -21,6 +21,7 @@ export type RefreshProcessContentQuery$data = {
       readonly id: string;
       readonly isSupporterOnly: boolean;
       readonly resource: {
+        readonly failed: boolean;
         readonly height: number;
         readonly preview: string;
         readonly processed: boolean;
@@ -92,24 +93,31 @@ v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "processed",
+  "name": "failed",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "videoDuration",
+  "name": "processed",
   "storageKey": null
 },
 v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "videoDuration",
   "storageKey": null
 },
 v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v10 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -117,11 +125,11 @@ v9 = {
   "name": "videoThumbnail",
   "plural": false,
   "selections": [
-    (v8/*: any*/)
+    (v9/*: any*/)
   ],
   "storageKey": null
 },
-v10 = {
+v11 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -136,25 +144,25 @@ v10 = {
       "name": "mimeType",
       "storageKey": null
     },
-    (v8/*: any*/)
+    (v9/*: any*/)
   ],
-  "storageKey": null
-},
-v11 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "width",
   "storageKey": null
 },
 v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "height",
+  "name": "width",
   "storageKey": null
 },
 v13 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "height",
+  "storageKey": null
+},
+v14 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -199,11 +207,12 @@ return {
                 "selections": [
                   (v6/*: any*/),
                   (v7/*: any*/),
-                  (v9/*: any*/),
+                  (v8/*: any*/),
                   (v10/*: any*/),
                   (v11/*: any*/),
                   (v12/*: any*/),
-                  (v13/*: any*/)
+                  (v13/*: any*/),
+                  (v14/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -254,11 +263,12 @@ return {
                 "selections": [
                   (v6/*: any*/),
                   (v7/*: any*/),
-                  (v9/*: any*/),
+                  (v8/*: any*/),
                   (v10/*: any*/),
                   (v11/*: any*/),
                   (v12/*: any*/),
                   (v13/*: any*/),
+                  (v14/*: any*/),
                   (v2/*: any*/)
                 ],
                 "storageKey": null
@@ -272,7 +282,7 @@ return {
     ]
   },
   "params": {
-    "id": "d412829d7ff3a6a2d23f98a30dfd9567",
+    "id": "2e5736441f273e01d7cbb8ea374de26b",
     "metadata": {},
     "name": "RefreshProcessContentQuery",
     "operationKind": "query",
@@ -281,6 +291,6 @@ return {
 };
 })();
 
-(node as any).hash = "7d89692d967443d455846658d6eef47d";
+(node as any).hash = "d83cdd4659909931eb32f5094f3053a5";
 
 export default node;

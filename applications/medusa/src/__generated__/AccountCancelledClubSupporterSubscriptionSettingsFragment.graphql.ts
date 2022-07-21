@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8f3ae64e309dc5d51d592ae16587a497>>
+ * @generated SignedSource<<296468b921817e01902ace4b1a25f508>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,11 +11,13 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type AccountCancelledClubSupporterSubscriptionSettingsFragment$data = {
+  readonly ccbillSubscription: {
+    readonly ccbillSubscriptionId: string;
+  } | null;
   readonly club: {
     readonly slug: string;
     readonly " $fragmentSpreads": FragmentRefs<"ClubExclusivePostsFragment">;
   };
-  readonly id: string;
   readonly " $fragmentSpreads": FragmentRefs<"AccountCancelledClubSupporterSubscriptionDetailsFragment" | "ManageCancelledSubscriptionButtonFragment">;
   readonly " $fragmentType": "AccountCancelledClubSupporterSubscriptionSettingsFragment";
 };
@@ -30,13 +32,6 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "AccountCancelledClubSupporterSubscriptionSettingsFragment",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
     {
       "alias": null,
       "args": null,
@@ -61,6 +56,24 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "concreteType": "CCBillSubscription",
+      "kind": "LinkedField",
+      "name": "ccbillSubscription",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "ccbillSubscriptionId",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "AccountCancelledClubSupporterSubscriptionDetailsFragment"
@@ -75,6 +88,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "982f99004bc114bc1a5bceef89153b57";
+(node as any).hash = "351f3ce851fb63b83ddc26155ddc5e68";
 
 export default node;

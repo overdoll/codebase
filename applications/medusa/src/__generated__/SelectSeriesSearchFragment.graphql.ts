@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3f5e7c6a5035078d11a433d912269591>>
+ * @generated SignedSource<<aef06557ceeee72195b9dd92d274889c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -68,7 +68,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./SelectSeriesPaginationFragment.graphql')
+      "operation": require('./SelectSeriesSearchPaginationFragment.graphql')
     }
   },
   "name": "SelectSeriesSearchFragment",
@@ -176,6 +176,6 @@ return {
 };
 })();
 
-(node as any).hash = "940fce9b654e784856987e513ef7843e";
+(node as any).hash = "7da5fab8e855a7d4ed74bb3fd0f08ef3";
 
 export default node;

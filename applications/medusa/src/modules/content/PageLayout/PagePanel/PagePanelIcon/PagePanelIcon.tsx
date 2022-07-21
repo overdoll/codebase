@@ -1,9 +1,9 @@
-import { FunctionComponent } from 'react'
 import { Flex } from '@chakra-ui/react'
 import { Icon } from '../../index'
+import { IconType } from '@//:types/components'
 
 interface Props {
-  icon: FunctionComponent<any>
+  icon: IconType
   colorScheme: string
 }
 

@@ -1,11 +1,12 @@
 import { ButtonProps, Flex, Heading } from '@chakra-ui/react'
 import Icon from '../../../../../PageLayout/Flair/Icon/Icon'
 import { ClickableBox } from '../../../../../PageLayout'
-import { forwardRef, FunctionComponent, ReactNode } from 'react'
+import { forwardRef, ReactNode } from 'react'
+import { IconType } from '@//:types/components'
 
 interface Props extends Omit<ButtonProps, 'label'> {
   label?: ReactNode
-  icon?: FunctionComponent<any>
+  icon?: IconType
   isActive: boolean
   color?: string
   children?: ReactNode

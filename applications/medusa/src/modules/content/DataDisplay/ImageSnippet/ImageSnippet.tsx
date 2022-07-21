@@ -89,7 +89,7 @@ export default function ImageSnippet ({
     }
 
     return targetUrl.url
-  }, [errorCount])
+  }, [errorCount, data?.urls])
 
   const onError = (): void => {
     setErrorCount(x => {
@@ -131,8 +131,13 @@ export default function ImageSnippet ({
   }
 
   return (
-    <Box bg={previewBackground} w='100%' h='100%'>
+    <Box
+      bg={previewBackground}
+      w='100%'
+      h='100%'
+    >
       <NextImage
+        priority={!isHydrated}
         loading={isHydrated ? 'lazy' : 'eager'}
         ref={ref}
         src={displayUrl}

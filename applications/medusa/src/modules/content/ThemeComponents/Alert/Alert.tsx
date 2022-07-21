@@ -89,6 +89,7 @@ export const AlertCloseButton = ({ ...rest }: CloseButtonProps): JSX.Element => 
   const colorScheme = statusColors[context.status ?? 'info']
   return (
     <CloseButton
+      borderRadius='full'
       position='absolute'
       right={2}
       top={2}

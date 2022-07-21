@@ -1,11 +1,10 @@
 import { graphql, usePaginationFragment } from 'react-relay'
-import { ClubTileOverlay, GridTile, GridWrap, LinkTile, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
-import { Box } from '@chakra-ui/react'
+import { GridTile, GridWrap, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
 import { DiscoverClubsListFragment$key } from '@//:artifacts/DiscoverClubsListFragment.graphql'
 import { EmptyBoundary, EmptyClubs } from '@//:modules/content/Placeholder'
-import JoinClubFromTile
-  from '../../../../../slug/root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromTile/JoinClubFromTile'
 import type { DiscoverClubsQuery } from '@//:artifacts/DiscoverClubsQuery.graphql'
+import ClubJoinTile from './ClubJoinTile/ClubJoinTile'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   query: DiscoverClubsListFragment$key
@@ -22,14 +21,12 @@ const Fragment = graphql`
     @connection (key: "DiscoverClubs_discoverClubs") {
       edges {
         node {
-          slug
-          ...JoinClubFromTileFragment
-          ...ClubTileOverlayFragment
+          ...ClubJoinTileFragment
         }
       }
     }
     viewer {
-      ...JoinClubFromTileViewerFragment
+      ...ClubJoinTileViewerFragment
     }
   }
 `
@@ -55,19 +52,13 @@ export default function DiscoverClubsList ({
         }
         condition={data.discoverClubs.edges.length < 1}
       >
-        <GridWrap>
+        <GridWrap templateColumns='repeat(auto-fill, minmax(150px, 1fr))'>
           {data.discoverClubs.edges.map((item, index) =>
-            <Box key={index} h='100%'>
-              <GridTile key={index}>
-                <LinkTile href={`/${item.node.slug as string}`}>
-                  <ClubTileOverlay query={item.node} />
-                </LinkTile>
-              </GridTile>
-              <Box mt={2}>
-                <JoinClubFromTile w='100%' size='md' clubQuery={item.node} viewerQuery={data?.viewer} />
-              </Box>
-            </Box>)}
+            <GridTile key={index}>
+              <ClubJoinTile clubQuery={item.node} viewerQuery={data.viewer} />
+            </GridTile>)}
           <LoadMoreGridTile
+            text={<Trans>View More Clubs</Trans>}
             hasNext={hasNext}
             onLoadNext={() => loadNext(9)}
             isLoadingNext={isLoadingNext}

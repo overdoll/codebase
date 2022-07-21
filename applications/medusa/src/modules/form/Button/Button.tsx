@@ -1,5 +1,5 @@
-import { forwardRef, ReactNode, useTransition } from 'react'
-import { Button as ChakraButton, ButtonProps } from '@chakra-ui/react'
+import { ReactNode, useTransition } from 'react'
+import { Button as ChakraButton, ButtonProps, forwardRef } from '@chakra-ui/react'
 import { useHydrate } from '../../hydrate'
 
 interface Props extends ButtonProps {
@@ -7,7 +7,7 @@ interface Props extends ButtonProps {
   ignoreTransition?: boolean
 }
 
-const Button = forwardRef<any, Props>(({
+const Button = forwardRef<Props, any>(({
   children,
   type,
   isDisabled,

@@ -1,11 +1,11 @@
-import { Flex, Heading, HStack, Stack } from '@chakra-ui/react'
+import { Flex, HStack, Stack } from '@chakra-ui/react'
 import { Icon, LargeBackgroundBox } from '../../../../PageLayout'
 import { Uppy } from '@uppy/core'
-import { DownloadArrow, FileUpload, TapButton } from '@//:assets/icons'
-import { Trans } from '@lingui/macro'
+import { FileUpload } from '@//:assets/icons'
 import AllowedFileTypesDisplay from '../AllowedFileTypesDisplay/AllowedFileTypesDisplay'
 import MaxFileSizeDisplay from '../MaxFileSizeDisplay/MaxFileSizeDisplay'
 import FileInputOverlay from '../FileInputOverlay/FileInputOverlay'
+import UploadActionsDisplay from '../UploadActionsDisplay/UploadActionsDisplay'
 
 interface Props {
   uppy: Uppy
@@ -27,34 +27,7 @@ export default function GenericFilePicker ({
                 fill='gray.00'
               />
             </Flex>
-            <Stack spacing={2}>
-              <HStack spacing={1}>
-                <Icon
-                  w={5}
-                  h={5}
-                  icon={DownloadArrow}
-                  fill='gray.200'
-                />
-                <Heading fontSize='md' color='gray.200'>
-                  <Trans>
-                    Drop
-                  </Trans>
-                </Heading>
-              </HStack>
-              <HStack spacing={1}>
-                <Icon
-                  w={5}
-                  h={5}
-                  icon={TapButton}
-                  fill='gray.200'
-                />
-                <Heading fontSize='md' color='gray.200'>
-                  <Trans>
-                    Tap
-                  </Trans>
-                </Heading>
-              </HStack>
-            </Stack>
+            <UploadActionsDisplay />
           </HStack>
           <HStack w='100%' justify='space-between' spacing={4}>
             <MaxFileSizeDisplay uppy={uppy} />

@@ -1,12 +1,13 @@
 import { Collapse, Heading, HStack, Stack, useDisclosure } from '@chakra-ui/react'
-import { FunctionComponent, ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { ArrowButtonDown, ArrowButtonUp } from '@//:assets/icons'
 import { ClickableBox, Icon } from '../../../PageLayout'
 import { useRouter } from 'next/router'
+import { IconType } from '@//:types/components'
 
 interface Props {
   title: ReactNode
-  icon: FunctionComponent<any>
+  icon: IconType
   baseUrl: string
   children: ReactNode
 }

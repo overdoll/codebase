@@ -66,7 +66,7 @@ export default function UploadFlowHeader ({
       <Stack spacing={4}>
         <HStack justify='space-between' spacing={2}>
           <FlowBuilderHeader />
-          <CloseButton aria-label={i18n._(t`Exit Creator`)} size='md' onClick={onOpen} />
+          <CloseButton bg='gray.800' aria-label={i18n._(t`Exit Creator`)} size='lg' onClick={onOpen} />
         </HStack>
         <FlowBuilderProgress />
         <ProcessContent query={data} />

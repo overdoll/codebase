@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6682f0cceaed8cf870e6724df59cc438>>
+ * @generated SignedSource<<605a90a174d2ad107fa42d8920468e7b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,6 +12,7 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type ResourceItemFragment$data = {
+  readonly failed: boolean;
   readonly preview: string;
   readonly processed: boolean;
   readonly type: ResourceType;
@@ -59,12 +60,19 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "preview",
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "failed",
+      "storageKey": null
     }
   ],
   "type": "Resource",
   "abstractKey": null
 };
 
-(node as any).hash = "934d671cd2980a4fa5b81ee00608b49b";
+(node as any).hash = "69c54cd56b36ef003cdd4088c3648016";
 
 export default node;

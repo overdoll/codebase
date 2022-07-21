@@ -18,11 +18,10 @@ msgid "Back to Club Settings"
 msgstr ""
 
 #: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/ThumbnailClubSettings/ThumbnailClubSettings.tsx:49
-msgid "Change Club Thumbnail"
-msgstr ""
+#~ msgid "Change Club Thumbnail"
+#~ msgstr ""
 
 #: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/RootThumbnailClubSettings.tsx:49
-#: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/ThumbnailClubSettings/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:102
 msgid "Club Thumbnail"
 msgstr ""
 
@@ -31,13 +30,13 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/ThumbnailClubSettings/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:114
-msgid "Submit Thumbnail"
-msgstr ""
+#~ msgid "Submit Thumbnail"
+#~ msgstr ""
 
-#: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/ThumbnailClubSettings/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:78
+#: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/ThumbnailClubSettings/ChangeClubThumbnailUpload/ChangeClubThumbnailUpload.tsx:63
 msgid "Successfully updated your club thumbnail"
 msgstr ""
 
-#: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/ThumbnailClubSettings/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:84
+#: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/ThumbnailClubSettings/ChangeClubThumbnailUpload/ChangeClubThumbnailUpload.tsx:69
 msgid "There was an error updating your club thumbnail"
 msgstr ""

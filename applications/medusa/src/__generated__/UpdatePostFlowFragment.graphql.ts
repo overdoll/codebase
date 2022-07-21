@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<966c28581edd908dd1a3bf7d17c0ae76>>
+ * @generated SignedSource<<14a9d61b22df487f81dc70fb15ce924c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,15 +23,7 @@ export type UpdatePostFlowFragment$data = {
     readonly id: string;
     readonly name: string;
   }>;
-  readonly content: ReadonlyArray<{
-    readonly id: string;
-    readonly isSupporterOnly: boolean;
-    readonly resource: {
-      readonly processed: boolean;
-    };
-    readonly viewerCanViewSupporterOnlyContent: boolean;
-  }>;
-  readonly " $fragmentSpreads": FragmentRefs<"UploadArrangeStepFragment" | "UploadCategoryStepFragment" | "UploadFlowFooterFragment" | "UploadFlowHeaderFragment" | "UploadReviewStepFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"UploadCategoryStepFragment" | "UploadContentStepFragment" | "UploadFlowFooterFragment" | "UploadFlowHeaderFragment" | "UploadReviewStepFragment">;
   readonly " $fragmentType": "UpdatePostFlowFragment";
 };
 export type UpdatePostFlowFragment$key = {
@@ -63,50 +55,6 @@ return {
   "metadata": null,
   "name": "UpdatePostFlowFragment",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "PostContent",
-      "kind": "LinkedField",
-      "name": "content",
-      "plural": true,
-      "selections": [
-        (v0/*: any*/),
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "isSupporterOnly",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "viewerCanViewSupporterOnlyContent",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "Resource",
-          "kind": "LinkedField",
-          "name": "resource",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "processed",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
     {
       "alias": null,
       "args": null,
@@ -164,7 +112,7 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "UploadArrangeStepFragment"
+      "name": "UploadContentStepFragment"
     },
     {
       "args": null,
@@ -177,6 +125,6 @@ return {
 };
 })();
 
-(node as any).hash = "0a466d8e3adce7b72b70f7bbbb4f2fd3";
+(node as any).hash = "45aad80031564208c8fd4aab1548f6f2";
 
 export default node;

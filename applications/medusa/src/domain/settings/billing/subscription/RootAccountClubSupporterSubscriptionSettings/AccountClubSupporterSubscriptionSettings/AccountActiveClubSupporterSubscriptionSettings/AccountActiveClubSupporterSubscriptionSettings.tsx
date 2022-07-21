@@ -11,7 +11,7 @@ import AccountActiveClubSupporterSubscriptionDetails
   from '../AccountActiveClubSupporterSubscriptionDetails/AccountActiveClubSupporterSubscriptionDetails'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import ClubExclusivePosts
-  from '../../../../../../slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/ClubExclusivePosts/ClubExclusivePosts'
+  from '../../ClubExclusivePosts/ClubExclusivePosts'
 
 interface Props extends ConnectionProp {
   query: AccountActiveClubSupporterSubscriptionSettingsFragment$key
@@ -19,10 +19,12 @@ interface Props extends ConnectionProp {
 
 const Fragment = graphql`
   fragment AccountActiveClubSupporterSubscriptionSettingsFragment on AccountActiveClubSupporterSubscription {
-    id
     club {
       slug
       ...ClubExclusivePostsFragment
+    }
+    ccbillSubscription {
+      ccbillSubscriptionId
     }
     ...AccountActiveClubSupporterSubscriptionDetailsFragment
     ...ManageActiveSubscriptionButtonFragment
@@ -55,7 +57,7 @@ export default function AccountActiveClubSupporterSubscriptionSettings ({
             </LinkButton>
             <Text fontSize='sm' color='gray.200'>
               <Trans>
-                Subscription # {data.id}
+                Subscription # {data?.ccbillSubscription?.ccbillSubscriptionId}
               </Trans>
             </Text>
           </Stack>

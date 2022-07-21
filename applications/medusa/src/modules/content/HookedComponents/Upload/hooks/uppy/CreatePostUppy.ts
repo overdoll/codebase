@@ -3,24 +3,19 @@ import Uppy from '@uppy/core'
 import Tus from '@uppy/tus'
 import CanUseDOM from '../../../../../operations/CanUseDOM'
 import GoldenRetriever from '@uppy/golden-retriever'
-import { MAX_FILE_SIZE, UPLOAD_ALLOWED_FILE_TYPES } from '../../constants/upload'
+import { UPLOAD_MAX_FILE_SIZE, TUS_OPTIONS, UPLOAD_ALLOWED_FILE_TYPES } from '../../constants/upload'
+
+// TODO changing the name of the file to prevent duplicates issue breaks tus
 
 const U: UppyType = Uppy({
   id: 'posts',
   restrictions: {
     maxNumberOfFiles: 10,
     allowedFileTypes: UPLOAD_ALLOWED_FILE_TYPES,
-    maxFileSize: MAX_FILE_SIZE
+    maxFileSize: UPLOAD_MAX_FILE_SIZE
   },
   autoProceed: true,
-  allowMultipleUploads: true,
-  onBeforeFileAdded: (currentFile, files) => {
-    return {
-      ...currentFile,
-      id: `${currentFile.id}__${Date.now()}`,
-      name: `${currentFile.name}__${Date.now()}`
-    }
-  }
+  allowMultipleUploads: true
 }
 )
 
@@ -30,10 +25,6 @@ if (CanUseDOM) {
 }
 
 // Resume-able uploads on the API
-U.use(Tus, {
-  endpoint: '/api/upload/',
-  retryDelays: [0, 1000, 3000, 5000],
-  chunkSize: 10485760
-})
+U.use(Tus, TUS_OPTIONS)
 
 export default U

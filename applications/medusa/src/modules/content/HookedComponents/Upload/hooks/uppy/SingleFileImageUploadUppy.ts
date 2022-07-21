@@ -3,24 +3,17 @@ import Uppy from '@uppy/core'
 import Tus from '@uppy/tus'
 import CanUseDOM from '../../../../../operations/CanUseDOM'
 import GoldenRetriever from '@uppy/golden-retriever'
-import { CLUB_ALLOWED_FILE_TYPES, MAX_FILE_SIZE } from '../../constants/upload'
+import { CLUB_ALLOWED_FILE_TYPES, GENERIC_MAX_FILE_SIZE, TUS_OPTIONS } from '../../constants/upload'
 
 const U: UppyType = Uppy({
   id: 'single-file-upload',
   restrictions: {
     maxNumberOfFiles: 1,
     allowedFileTypes: CLUB_ALLOWED_FILE_TYPES,
-    maxFileSize: MAX_FILE_SIZE
+    maxFileSize: GENERIC_MAX_FILE_SIZE
   },
   autoProceed: true,
-  allowMultipleUploads: false,
-  onBeforeFileAdded: (currentFile, files) => {
-    return {
-      ...currentFile,
-      id: `${currentFile.id}__${Date.now()}`,
-      name: `${currentFile.name}__${Date.now()}`
-    }
-  }
+  allowMultipleUploads: false
 }
 )
 
@@ -30,10 +23,6 @@ if (CanUseDOM) {
 }
 
 // Resume-able uploads on the API
-U.use(Tus, {
-  endpoint: '/api/upload/',
-  retryDelays: [0, 1000, 3000, 5000],
-  chunkSize: 10485760
-})
+U.use(Tus, TUS_OPTIONS)
 
 export default U

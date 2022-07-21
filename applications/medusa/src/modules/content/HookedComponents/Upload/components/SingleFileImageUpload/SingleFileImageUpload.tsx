@@ -3,22 +3,31 @@ import type { UppyFile } from '@uppy/core'
 import { useState } from 'react'
 import DisplaySingleFileImageUpload from './DisplaySingleFileImageUpload/DisplaySingleFileImageUpload'
 import { useUpload } from '../../index'
+import { useUpdateEffect } from '@chakra-ui/react'
+import {
+  FileErrorType,
+  OnFileAddedType,
+  OnFileRemovedType,
+  OnUploadErrorType,
+  OnUploadProgressType,
+  OnUploadRetryType,
+  OnUploadSuccessType
+} from '../../types'
+import getIdFromUppyUrl from '../../support/getIdFromUppyUrl/getIdFromUppyUrl'
 
-type RemoveUploadType = () => void
 type UploadedFile = UppyFile | undefined
-type UploadProgress = number | undefined
-type UploadResponse = string | undefined
+type UploadUrl = string | undefined
+type UploadError = FileErrorType | undefined
 
 export interface DisplayProps {
-  removeUpload: RemoveUploadType
   file: UploadedFile
-  progress: UploadProgress
-  response: UploadResponse
+  url: UploadUrl
+  error?: UploadError
 }
 
 export interface FileInputFormProps {
   isLoading?: boolean
-  isInvalid: boolean
+  isInvalid?: boolean
 }
 
 interface Props extends FileInputFormProps {
@@ -30,51 +39,61 @@ export default function SingleFileImageUpload ({
   isInvalid,
   isLoading
 }: Props): JSX.Element {
-  const [progress, setProgress] = useState<UploadProgress>(undefined)
-
   const [file, setFile] = useState<UploadedFile>(undefined)
+  const [url, setUrl] = useState<UploadUrl>(undefined)
+  const [error, setError] = useState<UploadError>(undefined)
 
-  const [response, setResponse] = useState<UploadResponse>(undefined)
-
-  const onFileAdded = (file): void => {
+  const onFileAdded: OnFileAddedType = (file) => {
     setFile(file)
   }
 
-  const onUploadProgress = (file, progress): void => {
-    setProgress(progress.bytesUploaded / progress.bytesTotal)
+  const onUploadProgress: OnUploadProgressType = (file) => {
+    setFile(file)
   }
 
-  const onUploadSuccess = (file, response): void => {
+  const onUploadSuccess: OnUploadSuccessType = (file, response) => {
     const url = response.uploadURL as string
-    const fileId = url.substring(url.lastIndexOf('/') + 1)
-    setResponse(fileId)
-    setFile(file)
-    onChange(fileId)
-    setProgress(undefined)
+    const fileId = getIdFromUppyUrl(url)
+    setUrl(fileId)
+  }
+
+  const onFileRemoved: OnFileRemovedType = () => {
+    setUrl(undefined)
+    setFile(undefined)
+    uppy?.reset()
+  }
+
+  const onUploadError: OnUploadErrorType = (file, error, response) => {
+    setError({
+      error,
+      response
+    })
+  }
+
+  const onUploadRetry: OnUploadRetryType = () => {
+    setError(undefined)
   }
 
   const uppy = useUpload({
     uppy: SingleFileImageUploadUppy,
-    onUploadSuccess: onUploadSuccess,
-    onUploadProgress: onUploadProgress,
-    onFileAdded: onFileAdded
+    onUploadSuccess,
+    onUploadProgress,
+    onFileAdded,
+    onFileRemoved,
+    onUploadRetry,
+    onUploadError
   })
 
-  const removeUpload: RemoveUploadType = () => {
-    setResponse(undefined)
-    setFile(undefined)
-    setProgress(undefined)
-    onChange('')
-    uppy?.reset()
-  }
+  useUpdateEffect(() => {
+    onChange(url != null ? url : '')
+  }, [url])
 
   return (
     <DisplaySingleFileImageUpload
       uppy={uppy}
-      removeUpload={removeUpload}
       file={file}
-      progress={progress}
-      response={response}
+      url={url}
+      error={error}
       isInvalid={isInvalid}
       isLoading={isLoading}
     />

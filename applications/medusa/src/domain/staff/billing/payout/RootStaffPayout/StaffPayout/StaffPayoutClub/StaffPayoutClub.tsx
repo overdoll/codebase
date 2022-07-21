@@ -4,9 +4,9 @@ import { HStack } from '@chakra-ui/react'
 import { Menu } from '@//:modules/content/ThemeComponents/Menu/Menu'
 import LargeClubHeader from '../../../../../../club/home/RootClubHome/ClubHome/LargeClubHeader/LargeClubHeader'
 import ClubPageButton
-  from '../../../../../../slug/root/RootPublicClub/PublicClub/ClubMenu/ClubPageButton/ClubPageButton'
+  from '../../../../../../../common/components/MenuButtons/ClubPageButton/ClubPageButton'
 import ClubStaffButton
-  from '../../../../../../slug/root/RootPublicClub/PublicClub/ClubMenu/ClubStaffButton/ClubStaffButton'
+  from '../../../../../../../common/components/MenuButtons/ClubStaffButton/ClubStaffButton'
 
 interface Props {
   query: StaffPayoutClubFragment$key
