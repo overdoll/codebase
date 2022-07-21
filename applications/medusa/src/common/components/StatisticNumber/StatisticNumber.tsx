@@ -1,5 +1,5 @@
 import { Box, Flex, Heading, HStack } from '@chakra-ui/react'
-import { FunctionComponent, useMemo } from 'react'
+import { useMemo } from 'react'
 import { Icon } from '@//:modules/content/PageLayout'
 import { Random } from '@//:modules/utilities/random'
 import hash from '@//:modules/utilities/hash'

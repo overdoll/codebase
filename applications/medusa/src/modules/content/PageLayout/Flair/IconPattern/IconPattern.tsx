@@ -1,5 +1,4 @@
 import { chakra, HTMLChakraProps, useId } from '@chakra-ui/react'
-import { FunctionComponent } from 'react'
 import { IconType } from '@//:types/components'
 
 interface Props extends HTMLChakraProps<any> {

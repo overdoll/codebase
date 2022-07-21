@@ -1,6 +1,6 @@
 import { Box, ButtonProps, Tooltip } from '@chakra-ui/react'
 import { Icon } from '../../../../PageLayout'
-import { forwardRef, FunctionComponent, ReactNode } from 'react'
+import { forwardRef, ReactNode } from 'react'
 import Button from '../../../../../form/Button/Button'
 import IconButton from '../../../../../form/IconButton/IconButton'
 import { IconType } from '@//:types/components'

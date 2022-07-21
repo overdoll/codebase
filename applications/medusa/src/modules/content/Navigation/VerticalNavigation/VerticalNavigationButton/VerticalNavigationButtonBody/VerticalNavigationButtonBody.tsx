@@ -1,5 +1,5 @@
 import { ButtonProps, Heading, HStack } from '@chakra-ui/react'
-import { forwardRef, FunctionComponent, ReactNode } from 'react'
+import { forwardRef, ReactNode } from 'react'
 import { ShareExternalLink } from '@//:assets/icons/interface'
 import { ClickableBox, Icon } from '../../../../PageLayout'
 import { IconType } from '@//:types/components'

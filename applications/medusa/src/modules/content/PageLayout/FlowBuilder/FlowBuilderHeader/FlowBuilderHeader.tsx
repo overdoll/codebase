@@ -1,5 +1,5 @@
 import { Flex, Heading, HStack } from '@chakra-ui/react'
-import { FunctionComponent, ReactNode, useContext } from 'react'
+import { ReactNode, useContext } from 'react'
 import { FlowContext } from '../FlowBuilder'
 import Icon from '../../Flair/Icon/Icon'
 import { useLingui } from '@lingui/react'

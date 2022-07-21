@@ -1,5 +1,5 @@
 import { Heading, Stack } from '@chakra-ui/react'
-import { FunctionComponent, ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { Icon } from '../../../PageLayout'
 import { IconType } from '@//:types/components'
 

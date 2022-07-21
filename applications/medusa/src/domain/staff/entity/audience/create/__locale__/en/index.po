@@ -13,19 +13,19 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/staff/entity/audience/create/RootStaffCreateAudience/StaffCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:95
+#: src/domain/staff/entity/audience/create/RootStaffCreateAudience/StaffCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:93
 msgid "Audience \"{0}\" was created successfully"
 msgstr ""
 
-#: src/domain/staff/entity/audience/create/RootStaffCreateAudience/StaffCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:136
+#: src/domain/staff/entity/audience/create/RootStaffCreateAudience/StaffCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:134
 msgid "Audience Slug"
 msgstr ""
 
-#: src/domain/staff/entity/audience/create/RootStaffCreateAudience/StaffCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:150
+#: src/domain/staff/entity/audience/create/RootStaffCreateAudience/StaffCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:148
 msgid "Audience Standard"
 msgstr ""
 
-#: src/domain/staff/entity/audience/create/RootStaffCreateAudience/StaffCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:122
+#: src/domain/staff/entity/audience/create/RootStaffCreateAudience/StaffCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:120
 msgid "Audience Title"
 msgstr ""
 
@@ -34,22 +34,22 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/staff/entity/audience/create/RootStaffCreateAudience/RootStaffCreateAudience.tsx:35
-#: src/domain/staff/entity/audience/create/RootStaffCreateAudience/StaffCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:169
+#: src/domain/staff/entity/audience/create/RootStaffCreateAudience/StaffCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:167
 msgid "Create Audience"
 msgstr ""
 
-#: src/domain/staff/entity/audience/create/RootStaffCreateAudience/StaffCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:141
+#: src/domain/staff/entity/audience/create/RootStaffCreateAudience/StaffCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:139
 msgid "Enter an audience slug"
 msgstr ""
 
-#: src/domain/staff/entity/audience/create/RootStaffCreateAudience/StaffCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:127
+#: src/domain/staff/entity/audience/create/RootStaffCreateAudience/StaffCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:125
 msgid "Enter an audience title"
 msgstr ""
 
-#: src/domain/staff/entity/audience/create/RootStaffCreateAudience/StaffCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:101
+#: src/domain/staff/entity/audience/create/RootStaffCreateAudience/StaffCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:99
 msgid "Error creating audience {0}"
 msgstr ""
 
-#: src/domain/staff/entity/audience/create/RootStaffCreateAudience/StaffCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:157
+#: src/domain/staff/entity/audience/create/RootStaffCreateAudience/StaffCreateAudience/CreateAudienceForm/CreateAudienceForm.tsx:155
 msgid "Standard"
 msgstr ""

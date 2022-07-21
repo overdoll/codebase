@@ -1,4 +1,4 @@
-import { FunctionComponent, ReactNode } from 'react'
+import { ReactNode } from 'react'
 import HorizontalNavigationDropdownMenuButton
   from './HorizontalNavigationDropdownMenuButton/HorizontalNavigationDropdownMenuButton'
 import { useHistoryDisclosure } from '../../../../hooks'

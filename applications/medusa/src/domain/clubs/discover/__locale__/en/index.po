@@ -29,6 +29,10 @@ msgstr ""
 msgid "Go to My Feed"
 msgstr ""
 
+#: src/domain/clubs/discover/RootDiscoverClubs/DiscoverClubs/DiscoverClubsList/ClubJoinTile/ClubJoinTileIconButton/ClubJoinTileIconButton.tsx:51
+msgid "Join {0}"
+msgstr ""
+
 #: src/domain/clubs/discover/RootDiscoverClubs/SearchSuggestedClubs/SuggestedClubs/SuggestedClubs.tsx:68
 #~ msgid "No clubs found"
 #~ msgstr ""
@@ -39,4 +43,8 @@ msgstr ""
 
 #: src/domain/clubs/discover/RootDiscoverClubs/DiscoverClubs/DiscoverClubs.tsx:92
 msgid "Start by joining some clubs and we'll create a personalized feed for you!"
+msgstr ""
+
+#: src/domain/clubs/discover/RootDiscoverClubs/DiscoverClubs/DiscoverClubsList/DiscoverClubsList.tsx:61
+msgid "View More Clubs"
 msgstr ""

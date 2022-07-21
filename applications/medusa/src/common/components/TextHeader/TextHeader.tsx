@@ -1,6 +1,6 @@
 import { Icon, LargeBackgroundBox } from '@//:modules/content/PageLayout'
 import { Heading, HStack, Stack } from '@chakra-ui/react'
-import { FunctionComponent, ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { IconType } from '@//:types/components'
 
 interface Props {

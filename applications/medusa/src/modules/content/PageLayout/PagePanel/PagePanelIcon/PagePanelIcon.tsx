@@ -1,4 +1,3 @@
-import { FunctionComponent } from 'react'
 import { Flex } from '@chakra-ui/react'
 import { Icon } from '../../index'
 import { IconType } from '@//:types/components'

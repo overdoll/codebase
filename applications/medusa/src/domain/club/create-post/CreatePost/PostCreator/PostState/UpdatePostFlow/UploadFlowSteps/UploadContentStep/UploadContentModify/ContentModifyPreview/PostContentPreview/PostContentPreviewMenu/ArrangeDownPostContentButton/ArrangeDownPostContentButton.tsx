@@ -59,7 +59,7 @@ export default function ArrangeDownPostContentButton ({
 
   const notify = useToast()
 
-  const index = postData.content.findIndex(item => item.id === data.id) as number
+  const index = postData.content.findIndex(item => item.id === data.id)
 
   const onArrangeContent = (): void => {
     const arrangedContent = onArrangeDown(index, postData.content)

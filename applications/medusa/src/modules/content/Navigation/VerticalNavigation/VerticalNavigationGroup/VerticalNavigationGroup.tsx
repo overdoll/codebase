@@ -1,5 +1,5 @@
 import { Collapse, Heading, HStack, Stack, useDisclosure } from '@chakra-ui/react'
-import { FunctionComponent, ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { ArrowButtonDown, ArrowButtonUp } from '@//:assets/icons'
 import { ClickableBox, Icon } from '../../../PageLayout'
 import { useRouter } from 'next/router'

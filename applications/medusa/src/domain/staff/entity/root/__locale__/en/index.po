@@ -13,122 +13,142 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:136
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:170
 msgid "Audiences"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:202
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:236
 msgid "Cancellation Reasons"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:103
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:104
 msgid "Categories"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:37
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:38
 msgid "Characters"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:145
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:179
 msgid "Create Audience"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:211
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:245
 msgid "Create Cancellation Reason"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:112
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:113
 msgid "Create Category"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:46
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:47
 msgid "Create Character"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:178
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:212
 msgid "Create Rule"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:79
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:80
 msgid "Create Series"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:214
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:146
+msgid "Create Topic"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:248
 msgid "Create a cancellation reason"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:115
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:116
 msgid "Create a category"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:49
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:50
 msgid "Create a character"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:181
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:215
 msgid "Create a rule"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:82
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:83
 msgid "Create a series"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:148
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:149
+msgid "Create a topic"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:182
 msgid "Create an audience"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:169
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:203
 msgid "Rules"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:156
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:190
 msgid "Search Audiences"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:222
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:256
 msgid "Search Cancellation Reasons"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:123
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:124
 msgid "Search Categories"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:57
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:58
 msgid "Search Characters"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:189
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:223
 msgid "Search Rules"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:90
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:91
 msgid "Search Series"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:159
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:157
+msgid "Search Topics"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:193
 msgid "Search or manage audiences"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:225
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:259
 msgid "Search or manage cancellation reasons"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:126
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:127
 msgid "Search or manage categories"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:60
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:61
 msgid "Search or manage characters"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:192
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:226
 msgid "Search or manage rules"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:93
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:94
 msgid "Search or manage series"
 msgstr ""
 
-#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:70
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:160
+msgid "Search or manage topics"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:71
 msgid "Series"
+msgstr ""
+
+#: src/domain/staff/entity/root/RootStaffEntity/RootStaffEntity.tsx:137
+msgid "Topics"
 msgstr ""

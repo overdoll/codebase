@@ -1,4 +1,4 @@
-import { forwardRef, FunctionComponent, ReactNode } from 'react'
+import { forwardRef, ReactNode } from 'react'
 import NavLink from '../../../../routing/NavLink'
 import HorizontalNavigationButtonBody from './HorizontalNavigationButtonBody/HorizontalNavigationButtonBody'
 import { UrlObject } from 'url'

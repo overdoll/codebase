@@ -1,4 +1,4 @@
-import { FunctionComponent, ReactNode } from 'react'
+import { ReactNode } from 'react'
 import NavLink from '../../../../routing/NavLink'
 import VerticalNavigationButtonBody from './VerticalNavigationButtonBody/VerticalNavigationButtonBody'
 import { LinkProps } from 'next/link'

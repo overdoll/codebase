@@ -1,6 +1,6 @@
 import { Heading, HStack } from '@chakra-ui/react'
 import { Icon } from '@//:modules/content/PageLayout'
-import { FunctionComponent, ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { IconType } from '@//:types/components'
 
 interface Props {

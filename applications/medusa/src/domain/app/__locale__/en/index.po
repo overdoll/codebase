@@ -21,6 +21,14 @@ msgstr ""
 msgid "Account Settings"
 msgstr ""
 
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/WeightInput/NumberInput/NumberInput.tsx:70
+msgid "Add"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Upload/components/CreatePostContentFilePicker/CreatePostContentFilePicker.tsx:33
+msgid "Add Content"
+msgstr ""
+
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostArchiveButton/PostArchiveButton.tsx:66
 msgid "Archive Post"
 msgstr ""
@@ -38,10 +46,10 @@ msgid "Back"
 msgstr ""
 
 #: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContentLocked/PostSupporterContentLocked.tsx:64
-msgid "Become a Supporter"
-msgstr ""
+#~ msgid "Become a Supporter"
+#~ msgstr ""
 
-#: src/common/components/PageHeader/PostOrderButton/PostOrderButton.tsx:25
+#: src/common/components/PageHeader/PostOrderButton/PostOrderButton.tsx:26
 msgid "Best"
 msgstr ""
 
@@ -99,7 +107,11 @@ msgid "Copy"
 msgstr ""
 
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostCopyLinkButton/PostCopyLinkButton.tsx:44
-msgid "Copy Link"
+#~ msgid "Copy Link"
+#~ msgstr ""
+
+#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostCopyLinkButton/PostCopyLinkButton.tsx:46
+msgid "Copy Post Link"
 msgstr ""
 
 #: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:82
@@ -131,13 +143,17 @@ msgstr ""
 #~ msgid "Drag and drop or tap to upload"
 #~ msgstr ""
 
-#: src/modules/content/HookedComponents/Upload/components/GenericFilePicker/GenericFilePicker.tsx:39
+#: src/modules/content/HookedComponents/Upload/components/UploadActionsDisplay/UploadActionsDisplay.tsx:22
 msgid "Drop"
 msgstr ""
 
 #: src/modules/content/Interactables/FileUpload/DragOverFileInput/DragOverFileInput.tsx:106
 #~ msgid "Drop your files to upload them"
 #~ msgstr ""
+
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/WeightInput/NumberInput/NumberInput.tsx:64
+msgid "Enter a weight 0-9999. Higher will show up first."
+msgstr ""
 
 #: src/modules/content/DataDisplay/NextImage/ImageError/ImageError.tsx:39
 msgid "Error Loading Image"
@@ -159,7 +175,7 @@ msgstr ""
 msgid "Exclusive Supporter Content Unlocked"
 msgstr ""
 
-#: src/common/components/PageHeader/PostOrderButton/PostOrderButton.tsx:33
+#: src/common/components/PageHeader/PostOrderButton/PostOrderButton.tsx:34
 msgid "Fresh"
 msgstr ""
 
@@ -180,6 +196,10 @@ msgstr ""
 msgid "I promise to be better and to follow the community guidelines more closely"
 msgstr ""
 
+#: src/modules/content/Posts/components/PostInteraction/PostJoinClub/PostJoinClub.tsx:89
+msgid "Join {0}"
+msgstr ""
+
 #: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:53
 msgid "Last Month"
 msgstr ""
@@ -192,7 +212,8 @@ msgstr ""
 msgid "Last Year"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostLikeButton/PostLikeButton.tsx:130
+#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostLikeButton/PostLikeButton.tsx:54
+#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostLikeButton/PostLikeButton.tsx:90
 msgid "Like"
 msgstr ""
 
@@ -227,6 +248,7 @@ msgid "Looks like you messed up. Something you did here violated our community g
 msgstr ""
 
 #: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:59
+#: src/modules/content/Posts/components/PostInteraction/PostJoinClub/PostJoinClub.tsx:74
 msgid "Manage Club"
 msgstr ""
 
@@ -301,7 +323,7 @@ msgid "Open Lock Info"
 msgstr ""
 
 #: src/modules/content/Interactables/SmallMenuButton/SmallMenuButton.tsx:18
-#: src/modules/content/ThemeComponents/Menu/Menu.tsx:55
+#: src/modules/content/ThemeComponents/Menu/Menu.tsx:57
 msgid "Open Menu"
 msgstr ""
 
@@ -401,9 +423,21 @@ msgstr ""
 msgid "Profile"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Upload/components/SingleFileImageUpload/DisplaySingleFileImageUpload/DisplaySingleFileImageUpload.tsx:46
-msgid "Remove Upload"
+#: src/common/components/MenuButtons/ClubPageButton/ClubPageButton.tsx:24
+msgid "Public Page"
 msgstr ""
+
+#: src/modules/content/HookedComponents/Upload/components/UploadFileDisplay/UploadFileDisplay.tsx:132
+msgid "Remove File"
+msgstr ""
+
+#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostLikeButton/PostLikeButton.tsx:78
+msgid "Remove Like"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Upload/components/SingleFileImageUpload/DisplaySingleFileImageUpload/DisplaySingleFileImageUpload.tsx:46
+#~ msgid "Remove Upload"
+#~ msgstr ""
 
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:153
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:172
@@ -421,6 +455,10 @@ msgstr ""
 
 #: src/modules/content/Posts/components/PostPlayback/ControlledVideo/components/ControlVideo/LoadingSpinner/LoadingSpinner.tsx:32
 msgid "Retry"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Upload/components/UploadFileDisplay/UploadFileDisplay.tsx:125
+msgid "Retry File"
 msgstr ""
 
 #: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:104
@@ -467,6 +505,10 @@ msgstr ""
 msgid "Select Series"
 msgstr ""
 
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/TopicInput/SelectTopicButton/SelectTopicButton.tsx:74
+msgid "Select Topic"
+msgstr ""
+
 #: src/modules/content/HookedComponents/Form/FormInput/Inputs/CountryInput/CountryInput.tsx:47
 msgid "Select a country"
 msgstr ""
@@ -477,6 +519,10 @@ msgstr ""
 
 #: src/modules/content/HookedComponents/Form/FormInput/Inputs/SeriesInput/SelectSeriesButton/SelectSeriesButton.tsx:97
 msgid "Select a series"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/TopicInput/SelectTopicButton/SelectTopicButton.tsx:88
+msgid "Select a topic"
 msgstr ""
 
 #: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:99
@@ -503,8 +549,20 @@ msgstr ""
 msgid "Sorry, this username is already taken"
 msgstr ""
 
+#: src/common/components/MenuButtons/ClubStaffButton/ClubStaffButton.tsx:26
+msgid "Staff"
+msgstr ""
+
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:216
 msgid "Submit Report"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/WeightInput/NumberInput/NumberInput.tsx:49
+msgid "Subtract"
+msgstr ""
+
+#: src/modules/content/Posts/components/PostInteraction/PostJoinClub/PostJoinClub.tsx:121
+msgid "Support"
 msgstr ""
 
 #: src/modules/content/ContentSelection/TileOverlay/AccountTileOverlay/AccountTileOverlay.tsx:44
@@ -519,7 +577,7 @@ msgstr ""
 msgid "Switch to club"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Upload/components/GenericFilePicker/GenericFilePicker.tsx:52
+#: src/modules/content/HookedComponents/Upload/components/UploadActionsDisplay/UploadActionsDisplay.tsx:35
 msgid "Tap"
 msgstr ""
 
@@ -612,7 +670,7 @@ msgstr ""
 msgid "This code is either invalid or has expired"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContentLocked/PostSupporterContentLocked.tsx:45
+#: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContentLocked/PostSupporterContentLocked.tsx:55
 msgid "This content can only be seen if you are a supporter of the club"
 msgstr ""
 
@@ -657,13 +715,13 @@ msgstr ""
 msgid "Unlock Account"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Upload/components/CreatePostFilePicker/CreatePostFilePicker.tsx:32
+#: src/modules/content/HookedComponents/Upload/components/CreatePostNewFilePicker/CreatePostNewFilePicker.tsx:33
 msgid "Upload Files"
 msgstr ""
 
 #: src/modules/content/HookedComponents/Upload/components/CreatePostFilePicker/CreatePostFilePicker.tsx:37
-msgid "Upload one or more files by dragging and dropping them or by tapping here"
-msgstr ""
+#~ msgid "Upload one or more files by dragging and dropping them or by tapping here"
+#~ msgstr ""
 
 #: src/modules/validation/Username.ts:16
 msgid "Username length cannot exceed 15 characters"
@@ -794,6 +852,14 @@ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptySeries/EmptySeries.tsx:16
 msgid "message.placeholder.empty.series.other"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyTopics/EmptyTopics.tsx:7
+msgid "message.placeholder.empty.topics.one"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyTopics/EmptyTopics.tsx:16
+msgid "message.placeholder.empty.topics.other"
 msgstr ""
 
 #: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:78
