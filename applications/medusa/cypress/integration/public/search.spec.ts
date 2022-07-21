@@ -10,7 +10,7 @@ const club = 'Second Test Club'
 Cypress.config('defaultCommandTimeout', 10000)
 
 const openSearch = (): void => {
-  cy.get('button[aria-label="Open Search"]').should('not.be.disabled').click({ force: true })
+  cy.get('button[aria-label="Open Search"]').should('be.visible').should('not.be.disabled').click({ force: true })
   cy.findByPlaceholderText(/Search for a club/).should('be.visible')
 }
 

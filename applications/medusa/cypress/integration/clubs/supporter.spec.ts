@@ -37,9 +37,9 @@ describe('Supporter', () => {
     clickOnButton(/Become a Supporter/iu)
     cy.findByText(/Your contribution directly supports/iu).should('be.visible')
     // change currency
-    cy.findByText(/Preferred Billing Currency/iu).should('exist').parent().get('select').select('CAD')
+    cy.findByText('USD').should('not.be.disabled').parent().get('select').select('CAD')
     cy.findByText(/CA[$]/u).should('be.visible')
-    cy.findByText(/Preferred Billing Currency/iu).should('exist').parent().get('select').select('USD')
+    cy.findByText('CAD').should('not.be.disabled').parent().get('select').select('USD')
 
     // check if agreement blocking works
     clickOnButton(/Subscribe with CCBill/iu)
