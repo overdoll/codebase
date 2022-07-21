@@ -15,6 +15,7 @@ go_library(
         "generate_character_banner.go",
         "generate_club_banner.go",
         "generate_series_banner.go",
+        "generate_sitemap.go",
         "new_post_like.go",
         "new_supporter_post.go",
         "options.go",

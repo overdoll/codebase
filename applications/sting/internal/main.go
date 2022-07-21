@@ -68,7 +68,7 @@ func AddCommands() []*cobra.Command {
 }
 
 func RunWorker(cmd *cobra.Command, args []string) {
-	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
+	ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancelFn()
 
 	app, _ := service.NewApplication(ctx)

@@ -80,6 +80,8 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 
 	session := bootstrap.InitializeDatabaseSession()
 	esClient := bootstrap.InitializeElasticSearchSession()
+	awsSession := bootstrap.InitializeAWSSession()
+
 	eventRepo := adapters.NewEventTemporalRepository(client)
 
 	cache := bootstrap.InitializeRedisSession()
@@ -87,7 +89,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 
 	clubRepo := adapters.NewClubCassandraElasticsearchRepository(session, esClient, cache, resourceSerializer)
 
-	postRepo := adapters.NewPostsCassandraRepository(session, esClient, resourceSerializer)
+	postRepo := adapters.NewPostsCassandraRepository(session, esClient, resourceSerializer, awsSession)
 	personalizationRepo := adapters.NewCurationProfileCassandraRepository(session)
 
 	return &app.Application{
@@ -103,6 +105,8 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			ArchivePost:        command.NewArchivePostHandler(postRepo, eventRepo),
 			UnArchivePost:      command.NewUnArchivePostHandler(postRepo, eventRepo),
 			GenerateClubBanner: command.NewGenerateClubBannerHandler(postRepo, eventRepo),
+
+			GenerateSitemap: command.NewGenerateSitemapHandler(eventRepo),
 
 			UpdatePostDescription: command.NewUpdatePostDescriptionHandler(postRepo),
 

@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/libraries/errors"
@@ -103,10 +104,11 @@ type PostsCassandraElasticsearchRepository struct {
 	session            gocqlx.Session
 	client             *elastic.Client
 	resourceSerializer *resource.Serializer
+	aws                *session.Session
 }
 
-func NewPostsCassandraRepository(session gocqlx.Session, client *elastic.Client, resourcesSerializer *resource.Serializer) PostsCassandraElasticsearchRepository {
-	return PostsCassandraElasticsearchRepository{session: session, client: client, resourceSerializer: resourcesSerializer}
+func NewPostsCassandraRepository(session gocqlx.Session, client *elastic.Client, resourcesSerializer *resource.Serializer, aws *session.Session) PostsCassandraElasticsearchRepository {
+	return PostsCassandraElasticsearchRepository{session: session, client: client, resourceSerializer: resourcesSerializer, aws: aws}
 }
 
 func marshalPostToDatabase(pending *post.Post) (*posts, error) {

@@ -91,10 +91,11 @@ func getSeriesFromAdapter(t *testing.T, seriesId string) *post.Series {
 
 	session := bootstrap.InitializeDatabaseSession()
 	es := bootstrap.InitializeElasticSearchSession()
+	aws := bootstrap.InitializeAWSSession()
 
 	serializer := resource.NewSerializer()
 
-	adapter := adapters.NewPostsCassandraRepository(session, es, serializer)
+	adapter := adapters.NewPostsCassandraRepository(session, es, serializer, aws)
 
 	pst, err := adapter.GetSingleSeriesById(context.Background(), seriesId)
 	require.NoError(t, err)
@@ -122,10 +123,11 @@ func getCharacterFromAdapter(t *testing.T, characterId string) *post.Character {
 
 	session := bootstrap.InitializeDatabaseSession()
 	es := bootstrap.InitializeElasticSearchSession()
+	aws := bootstrap.InitializeAWSSession()
 
 	serializer := resource.NewSerializer()
 
-	adapter := adapters.NewPostsCassandraRepository(session, es, serializer)
+	adapter := adapters.NewPostsCassandraRepository(session, es, serializer, aws)
 
 	pst, err := adapter.GetCharacterById(context.Background(), characterId)
 	require.NoError(t, err)
@@ -137,10 +139,11 @@ func getCategoryFromAdapter(t *testing.T, categoryId string) *post.Category {
 
 	session := bootstrap.InitializeDatabaseSession()
 	es := bootstrap.InitializeElasticSearchSession()
+	aws := bootstrap.InitializeAWSSession()
 
 	serializer := resource.NewSerializer()
 
-	adapter := adapters.NewPostsCassandraRepository(session, es, serializer)
+	adapter := adapters.NewPostsCassandraRepository(session, es, serializer, aws)
 
 	pst, err := adapter.GetCategoryById(context.Background(), categoryId)
 	require.NoError(t, err)
@@ -152,10 +155,11 @@ func getPostFromAdapter(t *testing.T, postId string) *post.Post {
 
 	session := bootstrap.InitializeDatabaseSession()
 	es := bootstrap.InitializeElasticSearchSession()
+	aws := bootstrap.InitializeAWSSession()
 
 	serializer := resource.NewSerializer()
 
-	adapter := adapters.NewPostsCassandraRepository(session, es, serializer)
+	adapter := adapters.NewPostsCassandraRepository(session, es, serializer, aws)
 
 	pst, err := adapter.GetPostByIdOperator(context.Background(), postId)
 	require.NoError(t, err)
@@ -403,10 +407,11 @@ func newFakeAccount(t *testing.T) string {
 func seedPost(t *testing.T, pst *post.Post) *post.Post {
 	session := bootstrap.InitializeDatabaseSession()
 	es := bootstrap.InitializeElasticSearchSession()
+	aws := bootstrap.InitializeAWSSession()
 
 	serializer := resource.NewSerializer()
 
-	adapter := adapters.NewPostsCassandraRepository(session, es, serializer)
+	adapter := adapters.NewPostsCassandraRepository(session, es, serializer, aws)
 	err := adapter.CreatePost(context.Background(), pst)
 	require.NoError(t, err)
 

@@ -65,5 +65,17 @@ func InitializeCommands(app func() *app.Application) []*cobra.Command {
 		},
 	})
 
-	return []*cobra.Command{generateBannerRootCmd}
+	generateSitemap := &cobra.Command{
+		Use: "generate-sitemap",
+		Run: func(cmd *cobra.Command, args []string) {
+			schedule, _ := cmd.Flags().GetString("schedule")
+			if err := app().Commands.GenerateSitemap.Handle(context.Background(), command.GenerateSitemap{Schedule: schedule}); err != nil {
+				zap.S().Fatalw("failed to generate sitemap", zap.Error(err))
+			}
+		},
+	}
+
+	generateSitemap.PersistentFlags().String("schedule", "", "Generate sitemap on a cron schedule.")
+
+	return []*cobra.Command{generateBannerRootCmd, generateSitemap}
 }
