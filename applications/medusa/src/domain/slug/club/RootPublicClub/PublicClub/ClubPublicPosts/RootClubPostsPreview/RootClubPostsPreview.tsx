@@ -74,6 +74,13 @@ export default function RootClubPostsPreview ({
 
   const [params, setParams] = useState<SearchProps>(initialParams)
 
+  const BUTTON_PROPS = {
+    size: {
+      base: 'sm',
+      md: 'md'
+    }
+  }
+
   const {
     searchArguments,
     setArguments,
@@ -128,11 +135,20 @@ export default function RootClubPostsPreview ({
   }, [params])
 
   return (
-    <Stack spacing={4}>
-      <HStack justify='space-between' spacing={1}>
+    <Stack spacing={3}>
+      <HStack
+        overflowX={{
+          base: 'scroll',
+          md: 'visible'
+        }}
+        py={1}
+        justify='space-between'
+        spacing={1}
+      >
         <HStack spacing={2}>
           {hasSupporterPosts && (
             <Button
+              {...BUTTON_PROPS}
               colorScheme={params.supporter != null ? 'orange' : 'gray'}
               onClick={params.supporter != null ? setAllParams : setExclusiveParams}
             >
@@ -141,18 +157,27 @@ export default function RootClubPostsPreview ({
               </Trans>
             </Button>
           )}
-          <Button colorScheme={params.sort === 'TOP' ? 'green' : 'gray'} onClick={setTopParams}>
+          <Button
+            {...BUTTON_PROPS}
+            colorScheme={params.sort === 'TOP' ? 'green' : 'gray'}
+            onClick={setTopParams}
+          >
             <Trans>
               Best
             </Trans>
           </Button>
-          <Button colorScheme={params.sort === 'NEW' ? 'green' : 'gray'} onClick={setNewParams}>
+          <Button
+            {...BUTTON_PROPS}
+            colorScheme={params.sort === 'NEW' ? 'green' : 'gray'}
+            onClick={setNewParams}
+          >
             <Trans>
               Fresh
             </Trans>
           </Button>
         </HStack>
         <LinkButton
+          {...BUTTON_PROPS}
           href={link}
           leftIcon={<Icon icon={SearchSmall} fill='gray.100' w={4} h={4} />}
         >

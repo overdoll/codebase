@@ -8,9 +8,9 @@ import AccountInformationBanner
   from '../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
 import PublicClubRichObject from '../../../../../common/rich-objects/slug/PublicClubRichObject/PublicClubRichObject'
 import ClubFooterButtons from './ClubFooterButtons/ClubFooterButtons'
-import ClubHeaderBanner from './ClubHeaderBanner/ClubHeaderBanner'
-import ClubJoinBanner from './ClubJoinBanner/ClubJoinBanner'
-import ClubSupportBanner from './ClubSupportBanner/ClubSupportBanner'
+import ClubHeaderBanner from './ClubBanners/ClubHeaderBanner/ClubHeaderBanner'
+import ClubJoinBanner from './ClubBanners/ClubJoinBanner/ClubJoinBanner'
+import ClubSupportBanner from './ClubBanners/ClubSupportBanner/ClubSupportBanner'
 import ClubPublicPosts from './ClubPublicPosts/ClubPublicPosts'
 
 interface Props {

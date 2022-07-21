@@ -1,29 +1,39 @@
 import { ReactNode } from 'react'
 import { Box, Heading, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
-import Can from '../../../../../../authorization/Can'
-import LinkButton from '../../../../../ThemeComponents/LinkButton/LinkButton'
-import { Icon } from '../../../../../PageLayout'
-import { ActionUnlock } from '@//:assets/icons'
 import { graphql, useFragment } from 'react-relay'
 import { PostSupporterContentLockedFragment$key } from '@//:artifacts/PostSupporterContentLockedFragment.graphql'
+import {
+  PostSupporterContentLockedViewerFragment$key
+} from '@//:artifacts/PostSupporterContentLockedViewerFragment.graphql'
+
+import PostSupporterContentLockedButton from './PostSupporterContentLockedButton/PostSupporterContentLockedButton'
 
 interface Props {
   children: ReactNode
-  query: PostSupporterContentLockedFragment$key
+  clubQuery: PostSupporterContentLockedFragment$key
+  viewerQuery: PostSupporterContentLockedViewerFragment$key | null
 }
 
-const Fragment = graphql`
+const ClubFragment = graphql`
   fragment PostSupporterContentLockedFragment on Club {
-    slug
+    ...PostSupporterContentLockedButtonFragment
+  }
+`
+
+const ViewerFragment = graphql`
+  fragment PostSupporterContentLockedViewerFragment on Account {
+    ...PostSupporterContentLockedButtonViewerFragment
   }
 `
 
 export default function PostSupporterContentLocked ({
   children,
-  query
+  clubQuery,
+  viewerQuery
 }: Props): JSX.Element {
-  const data = useFragment(Fragment, query)
+  const clubData = useFragment(ClubFragment, clubQuery)
+  const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   return (
     <Box w='100%' h='100%' position='relative'>
@@ -46,27 +56,7 @@ export default function PostSupporterContentLocked ({
             This content can only be seen if you are a supporter of the club
           </Trans>
         </Heading>
-        <Can I='interact' a='Club' passThrough>
-          {allowed => (
-            <LinkButton
-              pointerEvents='auto'
-              href={allowed === false ? `/${data.slug}` : `/${data.slug}?support=true`}
-              leftIcon={(
-                <Icon
-                  icon={ActionUnlock}
-                  fill='orange.900'
-                  h={4}
-                  w={4}
-                />)}
-              size='lg'
-              colorScheme='orange'
-            >
-              <Trans>
-                Become a Supporter
-              </Trans>
-            </LinkButton>
-          )}
-        </Can>
+        <PostSupporterContentLockedButton pointerEvents='auto' clubQuery={clubData} viewerQuery={viewerData} />
       </Stack>
     </Box>
   )

@@ -1,8 +1,10 @@
-import type { ClubSupporterSubscriptionPriceButtonFragment$key } from '@//:artifacts/ClubSupporterSubscriptionPriceButtonFragment.graphql'
+import type {
+  ClubSupporterSubscriptionPriceButtonFragment$key
+} from '@//:artifacts/ClubSupporterSubscriptionPriceButtonFragment.graphql'
 import { graphql } from 'react-relay'
 import { useFragment } from 'react-relay/hooks'
 import { Icon } from '@//:modules/content/PageLayout'
-import { PremiumStar } from '@//:assets/icons'
+import { PremiumStarHollow } from '@//:assets/icons'
 import displayPrice from '@//:modules/support/displayPrice'
 import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
@@ -28,11 +30,14 @@ const Fragment = graphql`
 
 export const SUPPORT_BUTTON_PROPS = {
   colorScheme: 'orange',
-  size: 'lg',
+  size: {
+    base: 'md',
+    md: 'lg'
+  },
   w: '100%',
   leftIcon: (
     <Icon
-      icon={PremiumStar}
+      icon={PremiumStarHollow}
       fill='orange.900'
       h={4}
       w={4}

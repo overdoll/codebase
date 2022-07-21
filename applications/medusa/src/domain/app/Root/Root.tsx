@@ -13,6 +13,7 @@ import UniversalNavigator from './UniversalNavigator/UniversalNavigator'
 import { PageProps } from '@//:types/app'
 import NoScript from './NoScript/NoScript'
 import RootRichObject from '../../../common/rich-objects/root/RootRichObject'
+import SafeModal from './SafeModal/SafeModal'
 
 interface Props {
   children: ReactNode
@@ -49,6 +50,7 @@ const Root: PageProps<Props> = (props: Props): JSX.Element => {
         <UniversalNavigator queryRef={data.viewer} />
         <PageContents>
           {props.children}
+          <SafeModal />
         </PageContents>
         <NoScript />
       </AccountAuthorizer>

@@ -10,26 +10,29 @@ interface Props {
   query: PostReviewFragment$key
 }
 
-const PostFragment = graphql`
+const Fragment = graphql`
   fragment PostReviewFragment on Post {
     ...PostGalleryPublicDetailedFragment
     ...PostHeaderClubFragment
     ...PostClickableCharactersFragment
     ...PostClickableCategoriesFragment
+    contributor {
+      ...PostGalleryPublicDetailedViewerFragment
+    }
   }
 `
 
 export default function PostReview ({
   query
 }: Props): JSX.Element {
-  const data = useFragment<PostReviewFragment$key>(PostFragment, query)
+  const data = useFragment<PostReviewFragment$key>(Fragment, query)
 
   return (
     <Stack spacing={2}>
       <HStack spacing={3} justify='space-between' align='center'>
         <PostHeaderClub query={data} />
       </HStack>
-      <PostGalleryPublicDetailed query={data} />
+      <PostGalleryPublicDetailed postQuery={data} viewerQuery={data.contributor} />
       <PostClickableCharacters query={data} />
       <PostClickableCategories query={data} />
     </Stack>

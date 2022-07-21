@@ -8,8 +8,7 @@ import HistoryDisclosureProvider
   from '@//:modules/content/HookedComponents/HistoryDisclosure/components/HistoryDisclosureProvider/HistoryDisclosureProvider'
 import { useQueryParam } from 'use-query-params'
 import { useUpdateEffect } from 'usehooks-ts'
-import SupportClubTransactionProcess
-  from '../../ClubConditionalPostDisplay/SupportClubButton/SupportClubTransactionProcess/SupportClubTransactionProcess'
+import SupportClubTransactionProcess from './SupportClubTransactionProcess/SupportClubTransactionProcess'
 import { useRef } from 'react'
 import { MaybeRenderProp } from '@//:types/components'
 import runIfFunction from '@//:modules/support/runIfFunction'
@@ -87,7 +86,7 @@ export default function ClubSupportWrapper ({
           md: 'xl'
         }}
         isCentered
-        scrollBehavior='outside'
+        scrollBehavior='inside'
       >
         <ModalOverlay />
         <ModalContent>

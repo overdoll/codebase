@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<457d929bdb996d6e79b5daace054fc1b>>
+ * @generated SignedSource<<ada853258b375741e3d0f7b77af8715d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,12 +14,8 @@ export type PostLikeButtonFragment$data = {
   readonly club: {
     readonly slug: string;
   };
-  readonly id: string;
-  readonly likes: number;
   readonly reference: string;
-  readonly viewerLiked: {
-    readonly __typename: "PostLike";
-  } | null;
+  readonly " $fragmentSpreads": FragmentRefs<"PostLikeWrapperFragment">;
   readonly " $fragmentType": "PostLikeButtonFragment";
 };
 export type PostLikeButtonFragment$key = {
@@ -33,13 +29,6 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "PostLikeButtonFragment",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
     {
       "alias": null,
       "args": null,
@@ -66,35 +55,15 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
-      "alias": null,
       "args": null,
-      "concreteType": "PostLike",
-      "kind": "LinkedField",
-      "name": "viewerLiked",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "__typename",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "likes",
-      "storageKey": null
+      "kind": "FragmentSpread",
+      "name": "PostLikeWrapperFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 
-(node as any).hash = "1ba15028b4da2743260e9a57a02a4536";
+(node as any).hash = "98497dfc651158bb89b482ff58a0e521";
 
 export default node;

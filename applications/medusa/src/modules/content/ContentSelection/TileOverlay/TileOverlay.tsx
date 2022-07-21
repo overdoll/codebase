@@ -22,7 +22,6 @@ export default function TileOverlay ({
       bg='gray.800'
       {...rest}
     >
-
       <Box
         overflow='hidden'
         w='100%'
@@ -37,6 +36,7 @@ export default function TileOverlay ({
         w='100%'
         h='100%'
         bg='dimmers.300'
+        position='relative'
       >
         {children}
       </Box>

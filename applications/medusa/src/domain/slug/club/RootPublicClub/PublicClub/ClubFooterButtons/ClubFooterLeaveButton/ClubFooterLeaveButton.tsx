@@ -38,13 +38,20 @@ export default function ClubFooterLeaveButton ({ query }: Props): JSX.Element {
   return (
     <Can I='interact' a='Club'>
       <ClubLeaveWrapper clubQuery={data}>
-        <ClubFooterButton
-          icon={SafetyExitDoorLeft}
-        >
-          <Trans>
-            Leave
-          </Trans>
-        </ClubFooterButton>
+        {({
+          leaveClub,
+          isLeavingClub
+        }) => (
+          <ClubFooterButton
+            onClick={leaveClub}
+            isLoading={isLeavingClub}
+            icon={SafetyExitDoorLeft}
+          >
+            <Trans>
+              Leave
+            </Trans>
+          </ClubFooterButton>
+        )}
       </ClubLeaveWrapper>
     </Can>
   )

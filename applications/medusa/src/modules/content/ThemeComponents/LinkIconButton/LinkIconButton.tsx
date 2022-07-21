@@ -1,4 +1,4 @@
-import { Box, IconButtonProps } from '@chakra-ui/react'
+import { Box, forwardRef, IconButtonProps } from '@chakra-ui/react'
 import { Link } from '../../../routing'
 import { UrlObject } from 'url'
 import IconButton from '../../../form/IconButton/IconButton'
@@ -7,16 +7,18 @@ interface Props extends IconButtonProps {
   href: string | UrlObject
 }
 
-export default function LinkIconButton ({
+const LinkIconButton = forwardRef<Props, any>(({
   href,
   children,
   ...rest
-}: Props): JSX.Element {
+}: Props, forwardRef): JSX.Element => {
   return (
     <Link passHref href={href}>
       <Box as='a'>
-        <IconButton {...rest} />
+        <IconButton ref={forwardRef} {...rest} />
       </Box>
     </Link>
   )
-}
+})
+
+export default LinkIconButton

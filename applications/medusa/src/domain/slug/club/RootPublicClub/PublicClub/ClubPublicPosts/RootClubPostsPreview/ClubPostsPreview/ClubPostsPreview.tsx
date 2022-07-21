@@ -5,6 +5,7 @@ import PostsInfiniteScroll
 import { useFragment, useLazyLoadQuery } from 'react-relay/hooks'
 import { ClubPostsPreviewQuery } from '@//:artifacts/ClubPostsPreviewQuery.graphql'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
+import { EmptyBoundary, EmptyPosts } from '@//:modules/content/Placeholder'
 
 interface Props extends ComponentSearchArguments<any> {
   viewerQuery: ClubPostsPreviewViewerFragment$key | null
@@ -64,12 +65,17 @@ export default function ClubPostsPreview ({
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   return (
-    <PostsInfiniteScroll
-      query={data.clubPosts}
-      viewerQuery={viewerData}
-      hasNext={hasNext}
-      loadNext={() => loadNext(11)}
-      isLoadingNext={isLoadingNext}
-    />
+    <EmptyBoundary
+      fallback={<EmptyPosts />}
+      condition={data?.clubPosts?.edges.length < 1}
+    >
+      <PostsInfiniteScroll
+        query={data.clubPosts}
+        viewerQuery={viewerData}
+        hasNext={hasNext}
+        loadNext={() => loadNext(11)}
+        isLoadingNext={isLoadingNext}
+      />
+    </EmptyBoundary>
   )
 }

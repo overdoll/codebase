@@ -5,7 +5,8 @@ export const SEARCH_SWIPER_PROPS: SwiperProps = {
   slidesPerView: 'auto',
   spaceBetween: 10,
   speed: 150,
-  touchRatio: 5,
+  touchRatio: 3,
+  resistanceRatio: 0.5,
   style: { overflow: 'visible' }
 }
 

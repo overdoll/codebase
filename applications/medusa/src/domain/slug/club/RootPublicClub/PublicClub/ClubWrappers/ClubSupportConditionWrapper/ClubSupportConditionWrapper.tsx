@@ -9,6 +9,7 @@ import Can from '@//:modules/authorization/Can'
 import ClubSupportWrapper from '../ClubSupportWrapper/ClubSupportWrapper'
 import ClubOwnerSupportWrapper from '../ClubOwnerSupportWrapper/ClubOwnerSupportWrapper'
 import ClubGuestSupportWrapper from '../ClubGuestSupportWrapper/ClubGuestSupportWrapper'
+import ClubRedirectSupportWrapper from '../ClubRedirectSupportWrapper/ClubRedirectSupportWrapper'
 
 interface ChildrenCallable {
   onClick: () => void
@@ -20,6 +21,7 @@ interface Props {
   clubQuery: ClubSupportConditionWrapperFragment$key
   viewerQuery: ClubSupportConditionWrapperViewerFragment$key | null
   children: MaybeRenderProp<ChildrenCallable>
+  redirectSupport?: boolean
 }
 
 const ClubFragment = graphql`
@@ -28,6 +30,7 @@ const ClubFragment = graphql`
     ...ClubGuestJoinWrapperFragment
     ...ClubGuestSupportWrapperFragment
     ...ClubSupportWrapperFragment
+    ...ClubRedirectSupportWrapperFragment
   }
 `
 
@@ -40,7 +43,8 @@ const ViewerFragment = graphql`
 export default function ClubSupportConditionWrapper ({
   clubQuery,
   viewerQuery,
-  children
+  children,
+  redirectSupport = false
 }: Props): JSX.Element {
   const clubData = useFragment(ClubFragment, clubQuery)
   const viewerData = useFragment(ViewerFragment, viewerQuery)
@@ -64,6 +68,24 @@ export default function ClubSupportConditionWrapper ({
   }
 
   if (clubData.viewerIsOwner) {
+    if (redirectSupport) {
+      return (
+        <ClubRedirectSupportWrapper query={clubData}>
+          {({
+            supportClub
+          }) => (
+            <>
+              {runIfFunction(children, {
+                onClick: supportClub,
+                isDisabled: false,
+                isLoading: false
+              })}
+            </>
+          )}
+        </ClubRedirectSupportWrapper>
+      )
+    }
+
     return (
       <ClubOwnerSupportWrapper>
         {runIfFunction(children, {
@@ -78,22 +100,41 @@ export default function ClubSupportConditionWrapper ({
 
   return (
     <Can I='interact' a='Club' passThrough>
-      {allowed => (
-        <ClubSupportWrapper clubQuery={clubData} viewerQuery={viewerData}>
-          {({
-            onSupport,
-            canSupport
-          }) => (
-            <>
-              {runIfFunction(children, {
-                onClick: onSupport,
-                isDisabled: allowed === false ? true : !canSupport,
-                isLoading: false
-              })}
-            </>
-          )}
-        </ClubSupportWrapper>
-      )}
+      {allowed => {
+        if (redirectSupport) {
+          return (
+            <ClubRedirectSupportWrapper query={clubData}>
+              {({
+                supportClub
+              }) => (
+                <>
+                  {runIfFunction(children, {
+                    onClick: supportClub,
+                    isDisabled: allowed === false,
+                    isLoading: false
+                  })}
+                </>
+              )}
+            </ClubRedirectSupportWrapper>
+          )
+        }
+        return (
+          <ClubSupportWrapper clubQuery={clubData} viewerQuery={viewerData}>
+            {({
+              onSupport,
+              canSupport
+            }) => (
+              <>
+                {runIfFunction(children, {
+                  onClick: onSupport,
+                  isDisabled: allowed === false ? true : !canSupport,
+                  isLoading: false
+                })}
+              </>
+            )}
+          </ClubSupportWrapper>
+        )
+      }}
     </Can>
   )
 }

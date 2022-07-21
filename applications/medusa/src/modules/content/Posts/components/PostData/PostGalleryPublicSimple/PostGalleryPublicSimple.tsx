@@ -2,22 +2,23 @@ import { graphql, useFragment } from 'react-relay'
 import { Box } from '@chakra-ui/react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import SwiperType from 'swiper'
-import { PostGalleryPublicSimpleFragment$key } from '@//:artifacts/PostGalleryPublicSimpleFragment.graphql'
 import PostSlideIndex from '../../PostInteraction/PostSlideIndex/PostSlideIndex'
 import { useState } from 'react'
-
 import PostSupporterContent from '../PostSupporterContent/PostSupporterContent'
 import { Link } from '../../../../../routing'
 import PostMedia from '../../PostPlayback/PostMedia/PostMedia'
 import OverflowVisual from './OverflowVisual/OverflowVisual'
 import PostSlideBackground from '../PostSlideBackground/PostSlideBackground'
 import { POST_SWIPER_PROPS } from '../../../constants'
+import { PostGalleryPublicSimpleFragment$key } from '@//:artifacts/PostGalleryPublicSimpleFragment.graphql'
+import { PostGalleryPublicSimpleViewerFragment$key } from '@//:artifacts/PostGalleryPublicSimpleViewerFragment.graphql'
 
 interface Props {
-  query: PostGalleryPublicSimpleFragment$key
+  postQuery: PostGalleryPublicSimpleFragment$key
+  viewerQuery: PostGalleryPublicSimpleViewerFragment$key | null
 }
 
-const Fragment = graphql`
+const PostFragment = graphql`
   fragment PostGalleryPublicSimpleFragment on Post {
     reference
     content {
@@ -35,10 +36,18 @@ const Fragment = graphql`
   }
 `
 
+const ViewerFragment = graphql`
+  fragment PostGalleryPublicSimpleViewerFragment on Account {
+    ...PostSupporterContentViewerFragment
+  }
+`
+
 export default function PostGalleryPublicSimple ({
-  query
+  postQuery,
+  viewerQuery
 }: Props): JSX.Element {
-  const data = useFragment(Fragment, query)
+  const postData = useFragment(PostFragment, postQuery)
+  const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   const [swiper, setSwiper] = useState<null | SwiperType>(null)
 
@@ -48,7 +57,7 @@ export default function PostGalleryPublicSimple ({
         {...POST_SWIPER_PROPS}
         onSwiper={(swiper) => setSwiper(swiper)}
       >
-        {data?.content.map((item, index) =>
+        {postData?.content.map((item, index) =>
           <SwiperSlide
             key={index}
             style={{
@@ -65,14 +74,15 @@ export default function PostGalleryPublicSimple ({
               >
                 <PostSupporterContent
                   query={item}
-                  clubQuery={data.club}
+                  clubQuery={postData.club}
+                  viewerQuery={viewerData}
                 >
                   <Link
                     href={{
                       pathname: '/[slug]/post/[reference]',
                       query: {
-                        slug: data.club.slug,
-                        reference: data?.reference,
+                        slug: postData.club.slug,
+                        reference: postData.reference,
                         ...(index > 0 && { slide: index })
                       }
                     }}
@@ -88,7 +98,7 @@ export default function PostGalleryPublicSimple ({
           </SwiperSlide>
         )}
       </Swiper>
-      {swiper != null && <PostSlideIndex swiper={swiper} query={data} />}
+      {swiper != null && <PostSlideIndex swiper={swiper} query={postData} />}
     </Box>
   )
 }

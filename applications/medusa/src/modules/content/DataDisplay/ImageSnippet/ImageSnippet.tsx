@@ -131,7 +131,11 @@ export default function ImageSnippet ({
   }
 
   return (
-    <Box bg={previewBackground} w='100%' h='100%'>
+    <Box
+      bg={previewBackground}
+      w='100%'
+      h='100%'
+    >
       <NextImage
         priority={!isHydrated}
         loading={isHydrated ? 'lazy' : 'eager'}

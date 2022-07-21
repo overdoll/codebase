@@ -10,7 +10,7 @@ import AccountCancelledClubSupporterSubscriptionDetails
   from '../AccountCancelledClubSupporterSubscriptionDetails/AccountCancelledClubSupporterSubscriptionDetails'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import ClubExclusivePosts
-  from '../../../../../../slug/club/RootPublicClub/PublicClub/ClubConditionalPostDisplay/ClubExclusivePosts/ClubExclusivePosts'
+  from '../../ClubExclusivePosts/ClubExclusivePosts'
 
 interface Props {
   query: AccountCancelledClubSupporterSubscriptionSettingsFragment$key

@@ -1,5 +1,5 @@
-import { forwardRef, ReactNode, useTransition } from 'react'
-import { IconButton as ChakraButton, IconButtonProps } from '@chakra-ui/react'
+import { ReactNode, useTransition } from 'react'
+import { forwardRef, IconButton as ChakraButton, IconButtonProps } from '@chakra-ui/react'
 import { ForwardRefProp } from '@//:types/components'
 import { useHydrate } from '../../hydrate'
 
@@ -7,7 +7,7 @@ interface Props extends IconButtonProps, ForwardRefProp {
   children?: ReactNode
 }
 
-const IconButton = forwardRef<any, Props>(({
+const IconButton = forwardRef<Props, any>(({
   children,
   isDisabled,
   isLoading,

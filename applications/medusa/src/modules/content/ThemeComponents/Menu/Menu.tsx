@@ -1,8 +1,8 @@
 import {
   Box,
   ButtonProps,
+  forwardRef,
   HStack,
-  IconButton,
   Menu as ChakraMenu,
   MenuButton,
   MenuItem as ChakraMenuItem,
@@ -13,11 +13,12 @@ import {
 import { t } from '@lingui/macro'
 import { NavigationMenuHorizontal } from '@//:assets/icons/navigation'
 import { Icon } from '../../PageLayout'
-import { forwardRef, FunctionComponent, ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { Link } from '../../../routing'
 import { useLingui } from '@lingui/react'
 import { UrlObject } from 'url'
 import { IconType } from '@//:types/components'
+import IconButton from '../../../form/IconButton/IconButton'
 
 interface MenuProps extends ButtonProps {
   children: ReactNode
@@ -41,11 +42,11 @@ const ICON_SIZES = {
   xl: 9
 }
 
-const Menu = ({
+const Menu = forwardRef<MenuProps, any>(({
   children,
   size = 'sm',
   ...rest
-}: MenuProps): JSX.Element => {
+}: MenuProps, forwardRef): JSX.Element => {
   const { i18n } = useLingui()
 
   return (
@@ -55,8 +56,6 @@ const Menu = ({
           borderRadius='xl'
           aria-label={i18n._(t`Open Menu`)}
           size={size}
-          as={IconButton}
-          {...rest}
           icon={
             <Icon
               icon={NavigationMenuHorizontal}
@@ -65,6 +64,9 @@ const Menu = ({
               fill='gray.200'
             />
           }
+          as={IconButton}
+          ref={forwardRef}
+          {...rest}
         />
         <MenuList minW='230px' boxShadow='outline'>
           {children}
@@ -72,9 +74,9 @@ const Menu = ({
       </ChakraMenu>
     </Box>
   )
-}
+})
 
-const MenuItem = forwardRef<any, MenuItemProps>(({
+const MenuItem = forwardRef<MenuItemProps, any>(({
   text,
   colorScheme,
   icon,
