@@ -1,5 +1,7 @@
 import { clickOnAriaLabelButton, clickOnButton } from '../../support/user_actions'
-import { generateClubName, generateUsernameAndEmail } from '../../support/generate'
+import { generateUsernameAndEmail } from '../../support/generate'
+
+Cypress.config('defaultCommandTimeout', 10000)
 
 const ClubName = 'Test Club'
 const ClubSlug = 'TestClub'
@@ -7,54 +9,53 @@ const ClubSlug = 'TestClub'
 describe('Club Page', () => {
   it('click club buttons', () => {
     cy.visit(`/${ClubSlug}`)
-    clickOnAriaLabelButton('Copy Link')
+    clickOnAriaLabelButton('Copy Club Link')
     cy.findByText(/Copied to clipboard/iu).should('be.visible')
     clickOnButton('All Posts')
     cy.url().should('contain', `/${ClubSlug}/posts`)
+    cy.findByText(`${ClubName}'s Posts`).should('be.visible')
   })
 
-  it('join a club as not logged in', () => {
+  it('join, support as not logged in', () => {
+    /**
+     * Join from club page
+     */
+
     cy.visit(`/${ClubSlug}`)
-    clickOnButton(`Join ${ClubName}`)
+    cy.findAllByRole('button', { name: `Join ${ClubName}` }).first().should('be.visible').should('not.be.disabled').click({ force: true })
     cy.url().should('include', '/join')
-  })
 
-  it('support a club as not logged in', () => {
+    /**
+     * Support from club page
+     */
     cy.visit(`/${ClubSlug}`)
     clickOnButton(/Become a Supporter/iu)
     cy.url().should('include', '/join')
   })
 
   it('join club as club owner, new account', () => {
-    const [username] = generateUsernameAndEmail()
-    const clubName = generateClubName()
-    cy.joinWithNewAccount(username)
     cy.joinWithExistingAccount('0eclipse')
-    cy.assignArtistRole(username)
-    cy.joinWithNewAccount(username)
-    cy.createClub(clubName)
 
     /**
      * Join/support as club owner
      */
-    cy.visit(`/${clubName}`)
+    cy.visit(`/${ClubSlug}`)
     clickOnButton(`Join ${ClubName}`)
     cy.findByText(/you are already a member/iu).should('be.visible')
     clickOnButton(/Become a Supporter/iu)
     cy.findByText(/you are a supporter/iu).should('be.visible')
-    clickOnButton(/Manage Club/iu)
-    cy.url().should('contain', `/club/${clubName}/home`)
+    cy.findAllByRole('button', { name: /Manage Club/ }).first().should('be.visible').should('not.be.disabled').click({ force: true })
+    cy.url().should('contain', `/club/${ClubSlug}/home`)
 
     /**
      * Join/leave as new account
      */
     const [newUsername] = generateUsernameAndEmail()
     cy.joinWithNewAccount(newUsername)
-    cy.visit(`/${clubName}`)
-    cy.findByText(clubName).should('exist')
-    clickOnButton(`Join ${ClubName}`)
+    cy.visit(`/${ClubSlug}`)
+    cy.findAllByRole('button', { name: `Join ${ClubName}` }).first().should('be.visible').should('not.be.disabled').click({ force: true })
     cy.findByText(/You are now a member of/iu).should('be.visible')
     clickOnButton(/Leave/iu)
-    cy.findByRole('button', { name: `Join ${ClubName}` }).should('not.be.disabled')
+    cy.findByText(/Join this club to see/iu).should('be.visible')
   })
 })

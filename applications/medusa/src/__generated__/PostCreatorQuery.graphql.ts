@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ba44254a18851b809a58c560421b78ea>>
- * @relayHash 7f80e521ba7ee3afdb9285d3ca96bdcb
+ * @generated SignedSource<<51632c6338f81b867c5fd3c5b204ccb6>>
+ * @relayHash fe34cde0a359949e838eff20334ec7bb
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7f80e521ba7ee3afdb9285d3ca96bdcb
+// @relayRequestID fe34cde0a359949e838eff20334ec7bb
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -215,20 +215,8 @@ v20 = {
   "storageKey": null
 },
 v21 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "currency",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "amount",
-    "storageKey": null
-  }
+  (v2/*: any*/),
+  (v3/*: any*/)
 ],
 v22 = [
   {
@@ -488,25 +476,6 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "ClubMember",
-                "kind": "LinkedField",
-                "name": "viewerMember",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "isSupporter",
-                    "storageKey": null
-                  },
-                  (v3/*: any*/)
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
                 "kind": "ScalarField",
                 "name": "canSupport",
                 "storageKey": null
@@ -526,17 +495,22 @@ return {
                     "kind": "LinkedField",
                     "name": "localizedPrice",
                     "plural": false,
-                    "selections": (v21/*: any*/),
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Price",
-                    "kind": "LinkedField",
-                    "name": "prices",
-                    "plural": true,
-                    "selections": (v21/*: any*/),
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "amount",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "currency",
+                        "storageKey": null
+                      }
+                    ],
                     "storageKey": null
                   }
                 ],
@@ -563,89 +537,7 @@ return {
             "kind": "LinkedField",
             "name": "contributor",
             "plural": false,
-            "selections": [
-              (v2/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "AccountSavedPaymentMethodConnection",
-                "kind": "LinkedField",
-                "name": "savedPaymentMethods",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "AccountSavedPaymentMethodEdge",
-                    "kind": "LinkedField",
-                    "name": "edges",
-                    "plural": true,
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "AccountSavedPaymentMethod",
-                        "kind": "LinkedField",
-                        "name": "node",
-                        "plural": false,
-                        "selections": [
-                          (v2/*: any*/),
-                          (v3/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "PaymentMethod",
-                            "kind": "LinkedField",
-                            "name": "paymentMethod",
-                            "plural": false,
-                            "selections": [
-                              {
-                                "alias": null,
-                                "args": null,
-                                "concreteType": "Card",
-                                "kind": "LinkedField",
-                                "name": "card",
-                                "plural": false,
-                                "selections": [
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "last4",
-                                    "storageKey": null
-                                  },
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "expiration",
-                                    "storageKey": null
-                                  },
-                                  (v17/*: any*/)
-                                ],
-                                "storageKey": null
-                              }
-                            ],
-                            "storageKey": null
-                          }
-                        ],
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "isSecure",
-                "storageKey": null
-              },
-              (v3/*: any*/)
-            ],
+            "selections": (v21/*: any*/),
             "storageKey": null
           }
         ],
@@ -717,10 +609,7 @@ return {
                     "kind": "LinkedField",
                     "name": "node",
                     "plural": false,
-                    "selections": [
-                      (v2/*: any*/),
-                      (v3/*: any*/)
-                    ],
+                    "selections": (v21/*: any*/),
                     "storageKey": null
                   }
                 ],
@@ -823,7 +712,7 @@ return {
     ]
   },
   "params": {
-    "id": "7f80e521ba7ee3afdb9285d3ca96bdcb",
+    "id": "fe34cde0a359949e838eff20334ec7bb",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

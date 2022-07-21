@@ -43,7 +43,7 @@ export default function PostCopyLinkButton ({
 
   return (
     <PostFooterButton isIcon onClick={onCopy} icon={CopyLink}>
-      {i18n._(t`Copy Link`)}
+      {i18n._(t`Copy Post Link`)}
     </PostFooterButton>
   )
 }

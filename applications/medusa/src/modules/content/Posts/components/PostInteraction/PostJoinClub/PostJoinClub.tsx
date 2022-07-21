@@ -10,10 +10,10 @@ import IconButton from '../../../../../form/IconButton/IconButton'
 import ClubJoinConditionWrapper
   from '@//:domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubJoinConditionWrapper/ClubJoinConditionWrapper'
 import { useLingui } from '@lingui/react'
-import ClubSupportConditionWrapper
-  from '@//:domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportConditionWrapper/ClubSupportConditionWrapper'
 import Button from '../../../../../form/Button/Button'
 import LinkIconButton from '../../../../ThemeComponents/LinkIconButton/LinkIconButton'
+import ClubSupportPostConditionWrapper
+  from '../../PostWrappers/ClubSupportPostConditionWrapper/ClubSupportPostConditionWrapper'
 
 interface Props {
   clubQuery: PostJoinClubFragment$key
@@ -30,14 +30,14 @@ const ClubFragment = graphql`
     viewerIsOwner
     canSupport
     ...ClubJoinConditionWrapperFragment
-    ...ClubSupportConditionWrapperFragment
+    ...ClubSupportPostConditionWrapperFragment
   }
 `
 
 const ViewerFragment = graphql`
   fragment PostJoinClubViewerFragment on Account {
     ...ClubJoinConditionWrapperViewerFragment
-    ...ClubSupportConditionWrapperViewerFragment
+    ...ClubSupportPostConditionWrapperViewerFragment
   }
 `
 
@@ -107,8 +107,7 @@ export default function PostJoinClub ({
     }
 
     return (
-      <ClubSupportConditionWrapper
-        redirectSupport
+      <ClubSupportPostConditionWrapper
         clubQuery={clubData}
         viewerQuery={viewerData}
       >
@@ -122,7 +121,7 @@ export default function PostJoinClub ({
             <Trans>Support</Trans>
           </Button>
         )}
-      </ClubSupportConditionWrapper>
+      </ClubSupportPostConditionWrapper>
     )
   }
 

@@ -40,7 +40,7 @@ export default function ClubFooterCopyLinkButton ({ query }: Props): JSX.Element
       isIcon
       icon={CopyLink}
     >
-      {i18n._(t`Copy Link`)}
+      {i18n._(t`Copy Club Link`)}
     </ClubFooterButton>
   )
 }

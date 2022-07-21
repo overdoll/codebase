@@ -1,6 +1,8 @@
 import { clickOnButton } from '../../support/user_actions'
 import { generateUsernameAndEmail } from '../../support/generate'
 
+Cypress.config('defaultCommandTimeout', 10000)
+
 const club = 'Test Club'
 const rule = 'Rule #1 without infraction'
 const character = 'Susannah Aguilar'
@@ -19,16 +21,30 @@ describe('Post', () => {
   }
 
   const clickOnPostSupportButton = (): void => {
-    cy.findByRole('button', { name: 'Support' }).first().should('not.be.disabled').click({ force: true })
+    cy.findAllByRole('button', { name: 'Support' }).first().should('be.visible').should('not.be.disabled').click({ force: true })
   }
 
   const clickOnPostJoinButton = (): void => {
-    cy.get(`button[aria-label="Join ${club}"]`).first().should('not.be.disabled').click({ force: true })
+    cy.get(`button[aria-label="Join ${club}"]`).first().should('be.visible').should('not.be.disabled').click({ force: true })
   }
 
   const clickOnPostLikeButton = (): void => {
-    cy.get('button[aria-label="Like"]').first().should('not.be.disabled').click({ force: true })
+    cy.get('button[aria-label="Like"]').first().should('be.visible').should('not.be.disabled').click({ force: true })
   }
+
+  const clickonReportPostMenuItem = (): void => {
+    cy.get('button[aria-label="Open Menu"]').first().should('be.visible').should('not.be.disabled').click({ force: true }).parent().findByText(/Report Post/iu).should('be.visible').click({ force: true })
+  }
+
+  it('visit post as club owner', () => {
+    cy.joinWithExistingAccount('0eclipse')
+    gotoPost()
+    /**
+     * Click on manage club button
+     */
+    cy.findAllByRole('button', { name: /Manage Club/ }).first().should('be.visible').should('not.be.disabled').click({ force: true })
+    cy.url().should('contain', '/club/TestClub/home')
+  })
 
   it('like, join, support, report post as logged in', () => {
     /**
@@ -42,7 +58,7 @@ describe('Post', () => {
     /**
      * Report post
      */
-    cy.get('button[aria-label="Open Menu"]').first().click({ force: true }).parent().findByText(/Report Post/iu).should('be.visible').click({ force: true })
+    clickonReportPostMenuItem()
     cy.findByText(rule).should('not.be.disabled').click({ force: true })
     clickOnButton('Submit Report')
     cy.findByText(/Post report was submitted/iu).should('be.visible')
@@ -88,14 +104,14 @@ describe('Post', () => {
      * Report from post
      */
     gotoPost()
-    cy.get('button[aria-label="Open Menu"]').first().click({ force: true }).parent().findByText(/Report Post/iu).should('be.visible').click({ force: true })
+    clickonReportPostMenuItem()
     cy.url().should('include', '/join')
 
     /**
      * Copy link from post
      */
     gotoPost()
-    cy.get('button[aria-label="Copy Link"]').first().should('not.be.disabled').click({ force: true })
+    cy.get('button[aria-label="Copy Post Link"]').first().should('be.visible').should('not.be.disabled').click({ force: true })
     cy.findByText(/Copied to clipboard/iu).should('be.visible')
   })
 

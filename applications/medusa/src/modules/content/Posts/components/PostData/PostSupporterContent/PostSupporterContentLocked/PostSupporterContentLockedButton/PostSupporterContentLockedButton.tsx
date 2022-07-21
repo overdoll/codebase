@@ -6,11 +6,11 @@ import type {
 } from '@//:artifacts/PostSupporterContentLockedButtonViewerFragment.graphql'
 import { graphql } from 'react-relay'
 import { useFragment } from 'react-relay/hooks'
-import ClubSupportConditionWrapper
-  from '@//:domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportConditionWrapper/ClubSupportConditionWrapper'
 import ClubSupporterSubscriptionPriceButton
   from '@//:domain/slug/club/RootPublicClub/PublicClub/ClubGenericButtons/ClubSupporterSubscriptionPriceButton/ClubSupporterSubscriptionPriceButton'
 import { ButtonProps } from '@chakra-ui/react'
+import ClubSupportPostConditionWrapper
+  from '../../../../PostWrappers/ClubSupportPostConditionWrapper/ClubSupportPostConditionWrapper'
 
 interface Props extends ButtonProps {
   clubQuery: PostSupporterContentLockedButtonFragment$key
@@ -19,14 +19,14 @@ interface Props extends ButtonProps {
 
 const ClubFragment = graphql`
   fragment PostSupporterContentLockedButtonFragment on Club {
-    ...ClubSupportConditionWrapperFragment
+    ...ClubSupportPostConditionWrapperFragment
     ...ClubSupporterSubscriptionPriceButtonFragment
   }
 `
 
 const ViewerFragment = graphql`
   fragment PostSupporterContentLockedButtonViewerFragment on Account {
-    ...ClubSupportConditionWrapperViewerFragment
+    ...ClubSupportPostConditionWrapperViewerFragment
   }
 `
 
@@ -40,14 +40,13 @@ export default function PostSupporterContentLockedButton ({
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   return (
-    <ClubSupportConditionWrapper
-      redirectSupport
+    <ClubSupportPostConditionWrapper
       clubQuery={clubData}
       viewerQuery={viewerData}
     >
       {props => (
         <ClubSupporterSubscriptionPriceButton query={clubData} {...props} {...rest} />
       )}
-    </ClubSupportConditionWrapper>
+    </ClubSupportPostConditionWrapper>
   )
 }

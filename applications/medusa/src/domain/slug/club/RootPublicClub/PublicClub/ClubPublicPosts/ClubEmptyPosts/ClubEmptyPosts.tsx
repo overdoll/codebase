@@ -25,7 +25,7 @@ export default function ClubEmptyPosts ({
   if (clubData.viewerIsOwner) {
     return (
       <LargeBackgroundBox>
-        <Stack>
+        <Stack align='center'>
           <Heading textAlign='center' color='gray.200' fontSize='lg'>
             <Trans>
               You haven't posted any content yet. Start posting by clicking the button below!

@@ -8,11 +8,11 @@ export const clickOnTile = (text: string | RegExp): void => {
 }
 
 export const clickOnButton = (text: string | RegExp): void => {
-  cy.findByRole('button', { name: text }).should('not.be.disabled').click({ force: true })
+  cy.findByRole('button', { name: text }).should('be.visible').should('not.be.disabled').click({ force: true })
 }
 
 export const clickOnAriaLabelButton = (text: string): void => {
-  cy.get(`button[aria-label="${text}"]`).should('not.be.disabled').click({ force: true })
+  cy.get(`button[aria-label="${text}"]`).should('be.visible').should('not.be.disabled').click({ force: true })
 }
 
 export const clickOnToggle = (placeholder: string | RegExp, expect: boolean): void => {
