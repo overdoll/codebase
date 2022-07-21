@@ -1,20 +1,27 @@
 package adapters
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/cloudfront"
-	"github.com/ikeikeikeike/go-sitemap-generator/stm"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/ikeikeikeike/go-sitemap-generator/v2/stm"
 	"github.com/olivere/elastic/v7"
+	"io"
+	"io/ioutil"
+	"log"
 	"os"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/support"
-	"sync"
-	"time"
 )
+
+func init() {
+	// disable useless logging
+	log.SetOutput(ioutil.Discard)
+}
 
 const (
 	pagingLimit = 100
@@ -46,8 +53,7 @@ func (r PostsCassandraElasticsearchRepository) addPosts(ctx context.Context, sm 
 
 	// first, go through all posts and get all clubs associated with posts to generate the sitemap
 	for {
-		builder := r.client.Search().
-			Index(PostReaderIndex)
+		builder := r.client.Search()
 
 		builder.Size(pagingLimit)
 		builder.Sort("posted_at", false)
@@ -125,7 +131,7 @@ func (r PostsCassandraElasticsearchRepository) addPosts(ctx context.Context, sm 
 			clubUrl := "/" + club.Slug + "/post/" + pst.Id
 
 			// add the post URL to the sitemap
-			sm.Add(stm.URL{"loc": clubUrl, "changefreq": "monthly", "priority": "1"})
+			sm.Add(stm.URL{{"loc", clubUrl}, {"changefreq", nil}, {"priority", nil}, {"lastmod", nil}})
 		}
 	}
 
@@ -148,8 +154,7 @@ func (r PostsCassandraElasticsearchRepository) addClubs(ctx context.Context, sm 
 
 	// go through all the clubs
 	for {
-		builder := r.client.Search().
-			Index(ClubsReaderIndex)
+		builder := r.client.Search()
 
 		builder.Size(pagingLimit)
 		builder.Sort("id", false)
@@ -192,7 +197,7 @@ func (r PostsCassandraElasticsearchRepository) addClubs(ctx context.Context, sm 
 
 			clubUrl := "/" + clb.Slug
 
-			sm.Add(stm.URL{"loc": clubUrl, "changefreq": "daily", "priority": "1"})
+			sm.Add(stm.URL{{"loc", clubUrl}, {"changefreq", nil}, {"priority", nil}, {"lastmod", nil}})
 		}
 	}
 
@@ -215,8 +220,7 @@ func (r PostsCassandraElasticsearchRepository) addCategories(ctx context.Context
 
 	// go through all categories
 	for {
-		builder := r.client.Search().
-			Index(CategoryReaderIndex)
+		builder := r.client.Search()
 
 		builder.Size(pagingLimit)
 		builder.Sort("id", false)
@@ -251,7 +255,7 @@ func (r PostsCassandraElasticsearchRepository) addCategories(ctx context.Context
 			}
 
 			categoryUrl := "/search/category/" + category.Slug
-			sm.Add(stm.URL{"loc": categoryUrl, "changefreq": "daily", "priority": "1"})
+			sm.Add(stm.URL{{"loc", categoryUrl}, {"changefreq", nil}, {"priority", nil}, {"lastmod", nil}})
 		}
 	}
 
@@ -274,8 +278,7 @@ func (r PostsCassandraElasticsearchRepository) addCharacters(ctx context.Context
 
 	// go through all characters
 	for {
-		builder := r.client.Search().
-			Index(CharacterReaderIndex)
+		builder := r.client.Search()
 
 		builder.Size(pagingLimit)
 		builder.Sort("id", false)
@@ -316,28 +319,30 @@ func (r PostsCassandraElasticsearchRepository) addCharacters(ctx context.Context
 			}
 		}
 
-		clubBuilder := r.client.MultiGet().Realtime(false)
-
-		for _, clubId := range clubIds {
-			clubBuilder.Add(elastic.NewMultiGetItem().Id(clubId).Index(ClubsReaderIndex))
-		}
-
-		clubResponse, err := clubBuilder.Do(ctx)
-
-		if err != nil {
-			return errors.Wrap(support.ParseElasticError(err), "failed to get clubs")
-		}
-
 		clubMap := make(map[string]clubDocument)
 
-		for _, clubs := range clubResponse.Docs {
-			var bd clubDocument
+		if len(clubIds) > 0 {
+			clubBuilder := r.client.MultiGet().Realtime(false)
 
-			if err := json.Unmarshal(clubs.Source, &bd); err != nil {
-				return err
+			for _, clubId := range clubIds {
+				clubBuilder.Add(elastic.NewMultiGetItem().Id(clubId).Index(ClubsReaderIndex))
 			}
 
-			clubMap[bd.Id] = bd
+			clubResponse, err := clubBuilder.Do(ctx)
+
+			if err != nil {
+				return errors.Wrap(support.ParseElasticError(err), "failed to get clubs")
+			}
+
+			for _, clubs := range clubResponse.Docs {
+				var bd clubDocument
+
+				if err := json.Unmarshal(clubs.Source, &bd); err != nil {
+					return err
+				}
+
+				clubMap[bd.Id] = bd
+			}
 		}
 
 		for _, result := range response.Hits.Hits {
@@ -352,11 +357,11 @@ func (r PostsCassandraElasticsearchRepository) addCharacters(ctx context.Context
 				club := clubMap[*pst.ClubId]
 				clubUrl := "/" + club.Slug + "/characters/" + pst.Slug
 				// add the post URL to the sitemap
-				sm.Add(stm.URL{"loc": clubUrl, "changefreq": "daily", "priority": "1"})
+				sm.Add(stm.URL{{"loc", clubUrl}, {"changefreq", nil}, {"priority", nil}, {"lastmod", nil}})
 			} else {
 				clubUrl := "/search/series/" + pst.Series.Slug + "/" + pst.Slug
 				// add the post URL to the sitemap
-				sm.Add(stm.URL{"loc": clubUrl, "changefreq": "daily", "priority": "1"})
+				sm.Add(stm.URL{{"loc", clubUrl}, {"changefreq", nil}, {"priority", nil}, {"lastmod", nil}})
 			}
 
 		}
@@ -381,8 +386,7 @@ func (r PostsCassandraElasticsearchRepository) addSeries(ctx context.Context, sm
 
 	// go through all series
 	for {
-		builder := r.client.Search().
-			Index(SeriesReaderIndex)
+		builder := r.client.Search()
 
 		builder.Size(pagingLimit)
 		builder.Sort("id", false)
@@ -417,7 +421,7 @@ func (r PostsCassandraElasticsearchRepository) addSeries(ctx context.Context, sm
 			}
 
 			seriesUrl := "/search/series/" + series.Slug
-			sm.Add(stm.URL{"loc": seriesUrl, "changefreq": "daily", "priority": "1"})
+			sm.Add(stm.URL{{"loc", seriesUrl}, {"changefreq", nil}, {"priority", nil}, {"lastmod", nil}})
 		}
 	}
 
@@ -430,22 +434,24 @@ func (r PostsCassandraElasticsearchRepository) addSeries(ctx context.Context, sm
 
 func (r PostsCassandraElasticsearchRepository) GenerateSitemap(ctx context.Context) error {
 
-	svc := cloudfront.New(r.aws)
-
-	sm := stm.NewSitemap()
+	sm := stm.NewSitemap(1)
 	sm.SetDefaultHost(os.Getenv("APP_URL"))
 	sm.SetSitemapsHost(os.Getenv("STATIC_RESOURCES_URL"))
 	sm.SetSitemapsPath("/sitemaps")
-	sm.SetFilename("sitemap.xml")
-	sm.SetCompress(true)
-	sm.SetVerbose(true)
+	sm.SetFilename("sitemap")
+	sm.SetCompress(false)
+	sm.SetVerbose(false)
+	sm.SetAdapter(&s3Adapter{
+		Bucket:  os.Getenv("STATIC_RESOURCES_BUCKET"),
+		Session: r.aws,
+	})
 
 	// add the home page
-	sm.Add(stm.URL{"loc": "/"})
+	sm.Add(stm.URL{{"loc", "/"}, {"changefreq", nil}, {"priority", nil}, {"lastmod", nil}})
 	// add the help page
-	sm.Add(stm.URL{"loc": "/help"})
+	sm.Add(stm.URL{{"loc", "/help"}, {"changefreq", nil}, {"priority", nil}, {"lastmod", nil}})
 	// add the join page
-	sm.Add(stm.URL{"loc": "/join"})
+	sm.Add(stm.URL{{"loc", "/join"}, {"changefreq", nil}, {"priority", nil}, {"lastmod", nil}})
 
 	sm.Create()
 
@@ -469,78 +475,7 @@ func (r PostsCassandraElasticsearchRepository) GenerateSitemap(ctx context.Conte
 		return err
 	}
 
-	sm.Finalize()
-
-	// need to invalidate on cloudfront
-	resp, err := svc.CreateInvalidationWithContext(ctx, &cloudfront.CreateInvalidationInput{
-		DistributionId: aws.String(os.Getenv("STATIC_RESOURCES_CLOUDFRONT_DISTRIBUTION_ID")),
-		InvalidationBatch: &cloudfront.InvalidationBatch{
-			CallerReference: aws.String(
-				fmt.Sprintf("goinvali%s", time.Now().Format("2006/01/02,15:04:05"))),
-			Paths: &cloudfront.Paths{
-				Quantity: aws.Int64(1),
-				Items: []*string{
-					aws.String("/sitemaps/*"),
-				},
-			},
-		},
-	})
-
-	if err != nil {
-		return errors.Wrap(err, "failed to create cloudfront invalidation")
-	}
-
-	getInvalidationInput := &cloudfront.GetInvalidationInput{
-		DistributionId: aws.String(os.Getenv("STATIC_RESOURCES_CLOUDFRONT_DISTRIBUTION_ID")),
-		Id:             resp.Invalidation.Id,
-	}
-
-	maxAttempts := 10
-
-	// here, we wait until our invalidation has finished
-	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		ticker := time.NewTicker(1000 * time.Millisecond)
-
-		for i := 1; ; i++ {
-			if i >= maxAttempts {
-				return
-			}
-
-			select {
-			case <-ctx.Done():
-				return
-
-			case <-ticker.C:
-				invalidationResp, err := svc.GetInvalidationWithContext(ctx, getInvalidationInput)
-
-				if err != nil {
-					return
-				}
-
-				if invalidationResp.Invalidation.Status == aws.String("Completed") {
-					return
-				}
-			}
-		}
-	}()
-
-	wg.Wait()
-
-	invalidationResp, err := svc.GetInvalidationWithContext(ctx, getInvalidationInput)
-
-	if err != nil {
-		return errors.Wrap(err, "failed to get invalidation")
-	}
-
-	if invalidationResp.Invalidation.Status != aws.String("Completed") {
-		return errors.New("invalidation not complete yet")
-	}
-
-	// finally, ping search engines with our new sitemap
-	sm.PingSearchEngines()
+	sm.Finalize().PingSearchEngines()
 
 	return nil
 }
@@ -569,4 +504,28 @@ func (r PostsCassandraElasticsearchRepository) closePointInTime(ctx context.Cont
 	}
 
 	return nil
+}
+
+type s3Adapter struct {
+	Bucket  string
+	Session *session.Session
+}
+
+// Bytes gets written content.
+func (adp *s3Adapter) Bytes() [][]byte {
+	return nil
+}
+
+// Write will create sitemap xml file into the s3.
+func (adp *s3Adapter) Write(loc *stm.Location, data []byte) {
+	var reader io.Reader = bytes.NewReader(data)
+
+	uploader := s3manager.NewUploader(adp.Session)
+	_, _ = uploader.Upload(&s3manager.UploadInput{
+		Bucket:       aws.String(adp.Bucket),
+		Key:          aws.String(loc.PathInPublic()),
+		ContentType:  aws.String("application/xml"),
+		Body:         reader,
+		CacheControl: aws.String("max-age=0,no-cache,no-store"),
+	})
 }

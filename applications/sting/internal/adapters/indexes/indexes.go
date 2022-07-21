@@ -13,8 +13,9 @@ func getPostRepository() adapters.PostsCassandraElasticsearchRepository {
 	serializer := resource.NewSerializer()
 	es := bootstrap.InitializeElasticSearchSession()
 	session := bootstrap.InitializeDatabaseSession()
+	aws := bootstrap.InitializeAWSSession()
 
-	return adapters.NewPostsCassandraRepository(session, es, serializer)
+	return adapters.NewPostsCassandraRepository(session, es, serializer, aws)
 }
 
 func getClubRepository() adapters.ClubCassandraElasticsearchRepository {
