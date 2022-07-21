@@ -332,7 +332,7 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 	})
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to probe for audio stream")
 	}
 
 	var audioStreamProbeResult *ffmpegProbeStream
