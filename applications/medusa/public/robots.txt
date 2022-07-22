@@ -1,4 +1,14 @@
 User-agent: *
 Allow: /
+Disallow: /staff
+Disallow: /logout
+Disallow: /confirm-email
+Disallow: /api
+Disallow: /settings
+Disallow: /verify-token
+Disallow: /moderation
+Disallow: /club
+Disallow: /clubs/create-club
+Disallow: /clubs/feed
 
-Sitemap: https://overdoll.com/sitemap.xml
+Sitemap: https://static.dollycdn.net/sitemaps/sitemap.xml

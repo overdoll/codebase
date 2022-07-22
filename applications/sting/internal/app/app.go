@@ -23,6 +23,8 @@ type Commands struct {
 	ArchivePost   command.ArchivePostHandler
 	UnArchivePost command.UnArchivePostHandler
 
+	GenerateSitemap command.GenerateSitemapHandler
+
 	RemovePostContent                command.RemovePostContentHandler
 	AddPostContent                   command.AddPostContentHandler
 	UpdatePostContentOrder           command.UpdatePostContentOrderHandler

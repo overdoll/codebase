@@ -26,6 +26,7 @@ go_library(
         "generate_character_banner.go",
         "generate_club_banner.go",
         "generate_series_banner.go",
+        "generate_sitemap.go",
         "join_club.go",
         "leave_club.go",
         "like_post.go",

@@ -36,6 +36,28 @@ func (r EventTemporalRepository) SendCompletedPixelatedResources(ctx context.Con
 	return nil
 }
 
+func (r EventTemporalRepository) GenerateSitemap(ctx context.Context, schedule string) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue:                                viper.GetString("temporal.queue"),
+		ID:                                       "sting.GenerateSitemap",
+		WorkflowIDReusePolicy:                    enums.WORKFLOW_ID_REUSE_POLICY_TERMINATE_IF_RUNNING,
+		WorkflowExecutionErrorWhenAlreadyStarted: true,
+	}
+
+	if schedule != "" {
+		options.CronSchedule = schedule
+	}
+
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.GenerateSitemap)
+
+	if err != nil {
+		return errors.Wrap(err, "failed to generate sitemap")
+	}
+
+	return nil
+}
+
 func (r EventTemporalRepository) GenerateCharacterBanner(ctx context.Context, character *post.Character, duration time.Duration) error {
 
 	options := client.StartWorkflowOptions{

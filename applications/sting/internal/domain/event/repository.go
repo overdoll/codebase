@@ -20,6 +20,7 @@ type Repository interface {
 	RemovePostLike(ctx context.Context, like *post.Like) error
 
 	DeleteAccountData(ctx context.Context, postId string) error
+	GenerateSitemap(ctx context.Context, schedule string) error
 
 	AddClubSupporter(ctx context.Context, clubId, accountId string, supportedAt time.Time) error
 	RemoveClubSupporter(ctx context.Context, clubId, accountId string) error

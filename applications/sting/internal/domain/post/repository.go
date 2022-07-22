@@ -133,4 +133,6 @@ type Repository interface {
 	RemoveTerminatedClub(ctx context.Context, clubId string) error
 
 	GetAccountPostLikes(ctx context.Context, accountId string) ([]string, error)
+
+	GenerateSitemap(ctx context.Context) error
 }

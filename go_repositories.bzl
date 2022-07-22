@@ -177,6 +177,14 @@ def go_repositories():
         version = "v0.27.0",
     )
     go_repository(
+        name = "com_github_beevik_etree",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/beevik/etree",
+        sum = "h1:T0xke/WvNtMoCqgzPhkX2r4rjY3GDZFi+FjpRZY2Jbs=",
+        version = "v1.1.0",
+    )
+
+    go_repository(
         name = "com_github_benbjohnson_clock",
         build_file_proto_mode = "disable",
         importpath = "github.com/benbjohnson/clock",
@@ -314,6 +322,13 @@ def go_repositories():
         importpath = "github.com/chzyer/test",
         sum = "h1:q763qf9huN11kDQavWsoZXJNW3xEE4JJyHa5Q25/sd8=",
         version = "v0.0.0-20180213035817-a1ea475d72b1",
+    )
+    go_repository(
+        name = "com_github_clbanning_mxj",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/clbanning/mxj",
+        sum = "h1:2r/KCJi52w2MRz+K+UMa/1d7DdCjnLqYJfnbr7dYNWI=",
+        version = "v1.8.3",
     )
 
     go_repository(
@@ -1096,6 +1111,27 @@ def go_repositories():
         importpath = "github.com/ianlancetaylor/demangle",
         sum = "h1:mV02weKRL81bEnm8A0HT1/CAelMQDBuQIfLw8n+d6xI=",
         version = "v0.0.0-20200824232613-28f6c0f3b639",
+    )
+    go_repository(
+        name = "com_github_ikeikeikeike_go_sitemap_generator",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/ikeikeikeike/go-sitemap-generator",
+        sum = "h1:FbgqCB06MhrT3tzWsosbIERIiKTm91XjmO6DrJKNlLg=",
+        version = "v1.0.2",
+    )
+    go_repository(
+        name = "com_github_ikeikeikeike_go_sitemap_generator_v2",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/ikeikeikeike/go-sitemap-generator/v2",
+        sum = "h1:wIdDEle9HEy7vBPjC6oKz6ejs3Ut+jmsYvuOoAW2pSM=",
+        version = "v2.0.2",
+    )
+    go_repository(
+        name = "com_github_imdario_mergo",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/imdario/mergo",
+        sum = "h1:Y+UAYTZ7gDEuOfhxKWy+dvb5dRQ6rJjFSdX2HZY1/gI=",
+        version = "v0.3.7",
     )
 
     go_repository(

@@ -123,17 +123,17 @@ func DeleteAccount(ctx workflow.Context, input DeleteAccountInput) error {
 		return err
 	}
 
-	// delete all data associated with the account - multi-factor, any emails, etc...
-	if err := workflow.ExecuteActivity(ctx, a.DeleteAccountData, input.AccountId).Get(ctx, nil); err != nil {
-		logger.Error("failed to delete account data", "Error", err)
-		return err
-	}
-
 	// get data for the account, so we can send the final reminder
 	var accountDataPayload *activities.GetAccountDataPayload
 
 	if err := workflow.ExecuteActivity(ctx, a.GetAccountData, input.AccountId).Get(ctx, &accountDataPayload); err != nil {
 		logger.Error("failed to get account data", "Error", err)
+		return err
+	}
+
+	// delete all data associated with the account - multi-factor, any emails, etc...
+	if err := workflow.ExecuteActivity(ctx, a.DeleteAccountData, input.AccountId).Get(ctx, nil); err != nil {
+		logger.Error("failed to delete account data", "Error", err)
 		return err
 	}
 
