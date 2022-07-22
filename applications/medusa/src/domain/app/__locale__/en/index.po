@@ -171,7 +171,7 @@ msgstr ""
 #~ msgid "Exclusive Supporter Content"
 #~ msgstr ""
 
-#: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContentUnlocked/PostSupporterContentUnlocked.tsx:66
+#: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContentUnlocked/PostSupporterContentUnlocked.tsx:69
 msgid "Exclusive Supporter Content Unlocked"
 msgstr ""
 
@@ -713,6 +713,10 @@ msgstr ""
 
 #: src/common/components/AccountInformationBanner/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:114
 msgid "Unlock Account"
+msgstr ""
+
+#: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContentLocked/PostSupporterContentLockedButton/PostSupporterContentLockedButton.tsx:55
+msgid "Unlock Supporter Content"
 msgstr ""
 
 #: src/modules/content/HookedComponents/Upload/components/CreatePostNewFilePicker/CreatePostNewFilePicker.tsx:33

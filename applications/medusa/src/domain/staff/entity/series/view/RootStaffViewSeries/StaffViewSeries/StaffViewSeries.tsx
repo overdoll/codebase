@@ -4,6 +4,7 @@ import { Box, Stack } from '@chakra-ui/react'
 import { NotFoundGeneric } from '@//:modules/content/Placeholder'
 import ChangeSeriesTitle from './ChangeSeriesTitle/ChangeSeriesTitle'
 import ChangeSeriesThumbnail from './ChangeSeriesThumbnail/ChangeSeriesThumbnail'
+import StaffSeriesSearchCharacters from './StaffSeriesSearchCharacters/StaffSeriesSearchCharacters'
 
 interface Props {
   query: PreloadedQuery<StaffViewSeriesQuery>
@@ -15,6 +16,7 @@ const Query = graphql`
       ...ChangeSeriesTitleFragment
       ...ChangeSeriesThumbnailFragment
     }
+    ...StaffSeriesSearchCharactersFragment @arguments(slug: $slug)
   }
 `
 
@@ -35,6 +37,9 @@ export default function StaffViewSeries ({ query }: Props): JSX.Element {
       </Box>
       <Box>
         <ChangeSeriesThumbnail query={queryData?.serial} />
+      </Box>
+      <Box>
+        <StaffSeriesSearchCharacters query={queryData} />
       </Box>
     </Stack>
   )

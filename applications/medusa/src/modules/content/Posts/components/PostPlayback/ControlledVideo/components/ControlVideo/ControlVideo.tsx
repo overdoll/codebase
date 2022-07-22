@@ -1,13 +1,13 @@
 import { Fade, Flex, HStack, Slider, SliderFilledTrack, SliderTrack, Stack } from '@chakra-ui/react'
-import { MutableRefObject } from 'react'
+import { forwardRef, MutableRefObject } from 'react'
 import PlayPauseButton from './PlayPauseButton/PlayPauseButton'
 import VolumeButton from './VolumeButton/VolumeButton'
 import LoadingSpinner from './LoadingSpinner/LoadingSpinner'
 import SeekVideoButton from './SeekVideoButton/SeekVideoButton'
 import FullscreenButton from './FullscreenButton/FullscreenButton'
+import useVideoControls from '../../hooks/useVideoControls/useVideoControls'
 
 interface Props {
-  videoRef: MutableRefObject<HTMLVideoElement | null>
   onMouseHold: () => void
   setTime: (time) => void
   isOpen: boolean
@@ -23,8 +23,7 @@ interface Props {
   canControl?: boolean | undefined
 }
 
-export default function ControlVideo ({
-  videoRef,
+const ControlVideo = forwardRef<HTMLVideoElement, Props>(({
   onMouseHold,
   isOpen,
   isLoaded,
@@ -38,19 +37,25 @@ export default function ControlVideo ({
   canSeek,
   canFullscreen,
   canControl
-}: Props): JSX.Element {
+}: Props, forwardRef): JSX.Element => {
+  const {
+    play,
+    pause,
+    ref
+  } = useVideoControls(forwardRef as MutableRefObject<HTMLVideoElement>)
+
   const onChangeVideo = (): void => {
-    const video = videoRef.current
+    const video = ref.current
     if (video == null) return
     if (video.paused) {
-      void video.play()
+      play()
       return
     }
-    video.pause()
+    pause()
   }
 
   const onChangeMuted = (): void => {
-    const video = videoRef.current
+    const video = ref.current
     if (video == null) return
     if (video.muted) {
       video.muted = false
@@ -60,19 +65,19 @@ export default function ControlVideo ({
   }
 
   const onSeekVideo = (number): void => {
-    const video = videoRef.current
+    const video = ref.current
     if (video == null) return
     video.currentTime = number
   }
 
   const onRetry = (): void => {
-    const video = videoRef.current
+    const video = ref.current
     if (video == null) return
     video.load()
   }
 
   const onFullscreen = (): void => {
-    const video = videoRef.current
+    const video = ref.current
     if (video == null) return
     void video.requestFullscreen()
   }
@@ -150,4 +155,6 @@ export default function ControlVideo ({
       </Flex>
     </>
   )
-}
+})
+
+export default ControlVideo

@@ -1,11 +1,13 @@
 import { graphql, useFragment } from 'react-relay'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useRef } from 'react'
 import { PostVideoMediaFragment$key } from '@//:artifacts/PostVideoMediaFragment.graphql'
 import ControlledVideo, { ControlledVideoProps } from '../../ControlledVideo/ControlledVideo'
 import { GlobalVideoManagerContext } from '../../../../index'
-import ObserveVideo from '../../ObserveVideo/ObserveVideo'
+import { useSwiperSlide } from 'swiper/react'
+import { ObserveContentCallable } from '../../ObserveContent/ObserveContent'
+import useVideoControls from '../../ControlledVideo/hooks/useVideoControls/useVideoControls'
 
-interface Props extends Pick<ControlledVideoProps, 'controls'> {
+interface Props extends Pick<ControlledVideoProps, 'controls'>, ObserveContentCallable {
   query: PostVideoMediaFragment$key
 }
 
@@ -17,9 +19,13 @@ const Fragment = graphql`
 
 export default function PostVideoMedia ({
   query,
-  controls
+  controls,
+  isObserving,
+  isObservingDebounced
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
+
+  const newRef = useRef(null)
 
   const {
     videoMuted,
@@ -28,23 +34,46 @@ export default function PostVideoMedia ({
     changeVideoVolume
   } = useContext(GlobalVideoManagerContext)
 
-  const [video, setVideo] = useState<HTMLVideoElement | null>(null)
+  const {
+    pause,
+    play,
+    ref
+  } = useVideoControls(newRef)
 
-  const onInitialize = (e): void => {
-    setVideo(e)
-  }
+  const slide = useSwiperSlide()
+
+  const isActive = slide.isActive
+
+  useEffect(() => {
+    if (ref?.current == null || ref.current.error != null) return
+    if (isObservingDebounced && isActive && ref.current.paused) {
+      play()
+    }
+  }, [isObservingDebounced, isActive, ref])
+
+  useEffect(() => {
+    if (ref?.current == null || ref.current.error != null) return
+    if (isObserving && !isActive && !ref.current.paused) {
+      pause()
+    }
+  }, [isObserving, isActive, ref])
+
+  useEffect(() => {
+    if (ref?.current == null || ref.current.error != null) return
+    if (!isObserving && !ref.current.paused) {
+      pause()
+    }
+  }, [isObserving, ref])
 
   return (
-    <ObserveVideo video={video}>
-      <ControlledVideo
-        controls={controls}
-        onInitialize={(target) => onInitialize(target)}
-        onVolumeChange={(volume) => changeVideoVolume(volume)}
-        onMute={(muted) => changeVideoMuted(muted)}
-        volume={videoVolume}
-        isMuted={videoMuted}
-        query={data}
-      />
-    </ObserveVideo>
+    <ControlledVideo
+      ref={ref}
+      controls={controls}
+      onVolumeChange={(volume) => changeVideoVolume(volume)}
+      onMute={(muted) => changeVideoMuted(muted)}
+      volume={videoVolume}
+      isMuted={videoMuted}
+      query={data}
+    />
   )
 }

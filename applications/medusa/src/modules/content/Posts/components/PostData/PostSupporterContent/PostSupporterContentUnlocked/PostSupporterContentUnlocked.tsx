@@ -5,13 +5,15 @@ import { Timeout } from '@//:types/components'
 import { Icon } from '../../../../../PageLayout'
 import { ActionUnlock } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
+import { ObserveContentCallable } from '../../../PostPlayback/ObserveContent/ObserveContent'
 
-interface Props {
+interface Props extends Pick<ObserveContentCallable, 'isObservingDebounced'> {
   children: ReactNode
 }
 
 export default function PostSupporterContentUnlocked ({
-  children
+  children,
+  isObservingDebounced
 }: Props): JSX.Element {
   const timeoutRef = useRef<Timeout | null>(null)
 
@@ -51,6 +53,7 @@ export default function PostSupporterContentUnlocked ({
       spacing={[1, 2]}
       bg='dimmers.500'
       borderRadius='md'
+      pointerEvents='none'
     >
       <Icon
         icon={ActionUnlock}
@@ -81,7 +84,7 @@ export default function PostSupporterContentUnlocked ({
       setShowNotice(false)
     }
 
-    if (isActive) {
+    if (isObservingDebounced && isActive) {
       setShowNotice(true)
       timeoutRef.current = setTimeout(timeoutSlide, 500)
       return
@@ -92,7 +95,7 @@ export default function PostSupporterContentUnlocked ({
     return () => {
       clearCurrentTimeout()
     }
-  }, [isActive])
+  }, [isObservingDebounced, isActive])
 
   return (
     <Flex h='100%' w='100%' position='relative'>

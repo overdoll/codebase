@@ -170,7 +170,7 @@ export default function CreateTopicForm ({
           size='lg'
         >
           <Trans>
-            Create Rule
+            Create Topic
           </Trans>
         </FormSubmitButton>
       </Stack>

@@ -7,6 +7,7 @@ import CategoryTileOverlay
   from '@//:modules/content/ContentSelection/TileOverlay/CategoryTileOverlay/CategoryTileOverlay'
 import { EmptyBoundary, EmptyCategories } from '@//:modules/content/Placeholder'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
+import { Badge, Box, Flex } from '@chakra-ui/react'
 
 interface Props extends ComponentSearchArguments<any> {
 }
@@ -34,6 +35,9 @@ const Fragment = graphql`
       edges {
         node {
           slug
+          topic {
+            title
+          }
           ...CategoryTileOverlayFragment
         }
       }
@@ -71,7 +75,16 @@ export default function StaffSearchCategories ({ searchArguments }: Props): JSX.
               query: { slug: item.slug }
             }}
             >
-              <CategoryTileOverlay query={item} />
+              <Flex w='100%' h='100%' position='relative'>
+                <CategoryTileOverlay query={item} />
+                <Box p={2} right={0} bottom={0} position='absolute'>
+                  {item?.topic?.title != null && (
+                    <Badge colorScheme='gray' fontFamily='mono' fontSize='sm'>
+                      {item.topic.title}
+                    </Badge>
+                  )}
+                </Box>
+              </Flex>
             </LinkTile>
           </GridTile>
         )
