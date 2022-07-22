@@ -14,6 +14,14 @@ Sentry.init({
           shouldSend = false
         }
 
+        if (item.value === 'Minified React error #425; visit https://reactjs.org/docs/error-decoder.html?invariant=425 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.') {
+          shouldSend = false
+        }
+
+        if (item.value === 'Minified React error #418; visit https://reactjs.org/docs/error-decoder.html?invariant=418 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.') {
+          shouldSend = false
+        }
+
         if (item.value === 'Minified React error #419; visit https://reactjs.org/docs/error-decoder.html?invariant=419 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.') {
           shouldSend = false
         }
