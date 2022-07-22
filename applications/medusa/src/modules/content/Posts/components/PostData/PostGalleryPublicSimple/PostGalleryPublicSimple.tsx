@@ -70,7 +70,6 @@ export default function PostGalleryPublicSimple ({
                 minH={100}
                 maxH={700}
                 align='center'
-                justify='center'
               >
                 <PostSupporterContent
                   query={item}

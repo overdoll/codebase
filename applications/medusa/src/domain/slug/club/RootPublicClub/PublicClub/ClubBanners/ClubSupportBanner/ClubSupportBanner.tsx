@@ -48,19 +48,21 @@ export default function ClubSupportBanner ({
       return <></>
     }
 
-    return <ClubSupporterSubscriptionPriceButton w='100%' query={clubData} {...props} />
+    return (
+      <ClubIconBanner
+        text={<Trans>Become a Supporter and get access to exclusive content!</Trans>}
+        colorScheme='orange'
+        icon={ClubMembers}
+        seed={clubData.id}
+      >
+        <ClubSupporterSubscriptionPriceButton w='100%' query={clubData} {...props} />
+      </ClubIconBanner>
+    )
   }
 
   return (
-    <ClubIconBanner
-      text={<Trans>Become a Supporter and get access to exclusive content!</Trans>}
-      colorScheme='orange'
-      icon={ClubMembers}
-      seed={clubData.id}
-    >
-      <ClubSupportConditionWrapper clubQuery={clubData} viewerQuery={viewerData}>
-        {props => DisplayButton(props)}
-      </ClubSupportConditionWrapper>
-    </ClubIconBanner>
+    <ClubSupportConditionWrapper clubQuery={clubData} viewerQuery={viewerData}>
+      {props => DisplayButton(props)}
+    </ClubSupportConditionWrapper>
   )
 }
