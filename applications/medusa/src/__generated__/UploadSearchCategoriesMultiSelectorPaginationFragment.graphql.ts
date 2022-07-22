@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1b6d5329662d55b0b09843e2677b569d>>
- * @relayHash 11d0bb28600551b7c803191eacfae263
+ * @generated SignedSource<<2f69f4dad025489a529d86e43936212a>>
+ * @relayHash c37cd3e85bf754338478c6b932c14a46
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 11d0bb28600551b7c803191eacfae263
+// @relayRequestID c37cd3e85bf754338478c6b932c14a46
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -19,7 +19,7 @@ export type UploadSearchCategoriesMultiSelectorPaginationFragment$variables = {
   title?: string | null;
 };
 export type UploadSearchCategoriesMultiSelectorPaginationFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"UploadSearchCategoriesMultiSelectorFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffSeriesSearchCategoriesFragment">;
 };
 export type UploadSearchCategoriesMultiSelectorPaginationFragment = {
   response: UploadSearchCategoriesMultiSelectorPaginationFragment$data;
@@ -85,7 +85,7 @@ return {
       {
         "args": (v1/*: any*/),
         "kind": "FragmentSpread",
-        "name": "UploadSearchCategoriesMultiSelectorFragment"
+        "name": "StaffSeriesSearchCategoriesFragment"
       }
     ],
     "type": "Query",
@@ -276,7 +276,7 @@ return {
     ]
   },
   "params": {
-    "id": "11d0bb28600551b7c803191eacfae263",
+    "id": "c37cd3e85bf754338478c6b932c14a46",
     "metadata": {},
     "name": "UploadSearchCategoriesMultiSelectorPaginationFragment",
     "operationKind": "query",
@@ -285,6 +285,6 @@ return {
 };
 })();
 
-(node as any).hash = "dc718d71ad5843e854f40d7ecb2b4c27";
+(node as any).hash = "d867d671e5ab515a6a3a5975a829edfb";
 
 export default node;

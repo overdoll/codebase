@@ -2,15 +2,10 @@ import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import { usePaginationFragment } from 'react-relay'
 import { StaffSearchSeriesQuery } from '@//:artifacts/StaffSearchSeriesQuery.graphql'
 import removeNode from '@//:modules/support/removeNode'
-import {
-  CharacterTileOverlay,
-  GridTile,
-  GridWrap,
-  LinkTile,
-  LoadMoreGridTile
-} from '@//:modules/content/ContentSelection'
+import { CharacterTileOverlay, GridTile, LinkTile, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
 import { EmptyBoundary, EmptyCharacters } from '@//:modules/content/Placeholder'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
+import ShortGridWrap from '@//:modules/content/ContentSelection/ShortGridWrap/ShortGridWrap'
 
 interface Props extends ComponentSearchArguments<any> {
 }
@@ -24,7 +19,7 @@ const Query = graphql`
 const Fragment = graphql`
   fragment StaffSearchCharacterFragment on Query
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 5}
+    first: {type: Int, defaultValue: 9}
     after: {type: String}
   )
   @refetchable(queryName: "StaffSearchCharacterPaginationFragment" )
@@ -70,7 +65,7 @@ export default function StaffSearchCharacter ({ searchArguments }: Props): JSX.E
       fallback={<EmptyCharacters hint={searchArguments.variables.name} />}
       condition={characters.length < 1}
     >
-      <GridWrap>
+      <ShortGridWrap>
         {characters.map((item, index) => (
           <GridTile key={index}>
             <LinkTile href={{
@@ -91,7 +86,7 @@ export default function StaffSearchCharacter ({ searchArguments }: Props): JSX.E
           onLoadNext={() => loadNext(5)}
           isLoadingNext={isLoadingNext}
         />
-      </GridWrap>
+      </ShortGridWrap>
     </EmptyBoundary>
   )
 }

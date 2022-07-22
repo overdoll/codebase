@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6dfbd243f13a459734b2c599db352160>>
+ * @generated SignedSource<<be2dd77694785165b3bdd3502a80d7a8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,9 @@ export type StaffSearchCategoriesFragment$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly slug: string;
+        readonly topic: {
+          readonly title: string;
+        } | null;
         readonly " $fragmentSpreads": FragmentRefs<"CategoryTileOverlayFragment">;
       };
     }>;
@@ -110,6 +113,24 @@ return {
                   "storageKey": null
                 },
                 {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "Topic",
+                  "kind": "LinkedField",
+                  "name": "topic",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "title",
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
+                },
+                {
                   "args": null,
                   "kind": "FragmentSpread",
                   "name": "CategoryTileOverlayFragment"
@@ -168,6 +189,6 @@ return {
 };
 })();
 
-(node as any).hash = "dca15ea186099bcb7b88956a1d582f3e";
+(node as any).hash = "a0a3b052edcb3172e23b8898b3917b80";
 
 export default node;

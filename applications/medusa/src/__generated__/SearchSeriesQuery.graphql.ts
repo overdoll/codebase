@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<18af80756ae1d774fd8e39670c28875c>>
- * @relayHash 67fefec2306a919056291862902915f8
+ * @generated SignedSource<<557dde2bbdf3d7d2af041a402fce08c0>>
+ * @relayHash 258acc5a7ca2e3df0d7c5c1601e227d9
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 67fefec2306a919056291862902915f8
+// @relayRequestID 258acc5a7ca2e3df0d7c5c1601e227d9
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -387,42 +387,6 @@ return {
                             "name": "canSupport",
                             "storageKey": null
                           },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "LocalizedPricingPoint",
-                            "kind": "LinkedField",
-                            "name": "supporterSubscriptionPrice",
-                            "plural": false,
-                            "selections": [
-                              {
-                                "alias": null,
-                                "args": null,
-                                "concreteType": "Price",
-                                "kind": "LinkedField",
-                                "name": "localizedPrice",
-                                "plural": false,
-                                "selections": [
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "amount",
-                                    "storageKey": null
-                                  },
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "currency",
-                                    "storageKey": null
-                                  }
-                                ],
-                                "storageKey": null
-                              }
-                            ],
-                            "storageKey": null
-                          },
                           (v8/*: any*/),
                           (v17/*: any*/),
                           {
@@ -650,7 +614,7 @@ return {
     ]
   },
   "params": {
-    "id": "67fefec2306a919056291862902915f8",
+    "id": "258acc5a7ca2e3df0d7c5c1601e227d9",
     "metadata": {},
     "name": "SearchSeriesQuery",
     "operationKind": "query",

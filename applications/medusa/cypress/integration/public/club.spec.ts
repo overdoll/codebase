@@ -1,7 +1,7 @@
 import { clickOnAriaLabelButton, clickOnButton } from '../../support/user_actions'
 import { generateUsernameAndEmail } from '../../support/generate'
 
-Cypress.config('defaultCommandTimeout', 10000)
+Cypress.config('defaultCommandTimeout', 20000)
 
 const ClubName = 'Test Club'
 const ClubSlug = 'TestClub'

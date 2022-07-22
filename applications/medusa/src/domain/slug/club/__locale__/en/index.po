@@ -26,7 +26,7 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubBanners/ClubSupportBanner/ClubSupportBanner.tsx:53
+#: src/domain/slug/club/RootPublicClub/PublicClub/ClubBanners/ClubSupportBanner/ClubSupportBanner.tsx:54
 msgid "Become a Supporter and get access to exclusive content!"
 msgstr ""
 
