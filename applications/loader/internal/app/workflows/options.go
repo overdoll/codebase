@@ -9,7 +9,7 @@ import (
 
 var options = workflow.ActivityOptions{
 	// Timeout options specify when to automatically timeout Activity functions.
-	StartToCloseTimeout: time.Minute * 5,
+	StartToCloseTimeout: time.Minute * 20,
 	// Optionally provide a customized RetryPolicy.
 	// Temporal retries failures by default, this is just an example.
 	RetryPolicy: &temporal.RetryPolicy{

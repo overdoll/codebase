@@ -259,7 +259,6 @@ func (r ResourceCassandraS3Repository) updateResources(ctx context.Context, res 
 				"height",
 				"preview",
 			)).
-			WithContext(ctx).
 			Idempotent(true).
 			BindStruct(marshalResourceToDatabase(res)).
 			ExecRelease(); err != nil {
