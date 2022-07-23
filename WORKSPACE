@@ -223,6 +223,14 @@ container_pull(
 )
 
 container_pull(
+    name = "eva_base_image",
+    registry = DOCKER_REGISTRY,
+    repository = "base-images/eva",
+    tag = "v1.0.0",
+    digest = "sha256:34cfce29120611ec8a294bc447e107e51298590c2ef4743501d6dfef6081bb96",
+)
+
+container_pull(
     name = "rust_base_image",
     registry = "docker.io",
     repository = "library/rust",
