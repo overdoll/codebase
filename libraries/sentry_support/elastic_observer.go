@@ -37,17 +37,19 @@ func (t *ElasticObserverTransport) RoundTrip(req *http.Request) (*http.Response,
 	resp, err := http.DefaultTransport.RoundTrip(req)
 
 	if hub := sentry.GetHubFromContext(req.Context()); hub != nil {
-		level := "info"
-		if resp.StatusCode != 200 && resp.StatusCode != 201 {
-			level = "error"
-		}
+		if resp != nil {
+			level := "info"
+			if resp.StatusCode != 200 && resp.StatusCode != 201 {
+				level = "error"
+			}
 
-		hub.Scope().AddBreadcrumb(&sentry.Breadcrumb{
-			Type:     "query",
-			Category: "elastic.request",
-			Message:  fmt.Sprintf("%s %s took %s", req.Method, req.URL.Path, time.Now().Sub(start).String()),
-			Level:    sentry.Level(level),
-		}, 10)
+			hub.Scope().AddBreadcrumb(&sentry.Breadcrumb{
+				Type:     "query",
+				Category: "elastic.request",
+				Message:  fmt.Sprintf("%s %s took %s", req.Method, req.URL.Path, time.Now().Sub(start).String()),
+				Level:    sentry.Level(level),
+			}, 10)
+		}
 	}
 
 	return resp, err
