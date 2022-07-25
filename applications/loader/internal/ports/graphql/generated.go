@@ -239,8 +239,8 @@ var sources = []*ast.Source{
   FINALIZING
 }
 
-extend type ResourceProgress @key(fields: "id") {
-  id: ID! @external
+type ResourceProgress @key(fields: "id") {
+  id: ID!
 
   """The state at which this resource is at."""
   state: ResourceProgressState!

@@ -40,6 +40,8 @@ func ListenProgressSocket(itemId, resourceId string, cb func(progress float64)) 
 		buf := make([]byte, 16)
 
 		for {
+			_, _ = fd.Read(buf)
+
 			select {
 			case <-done:
 				return
@@ -52,10 +54,6 @@ func ListenProgressSocket(itemId, resourceId string, cb func(progress float64)) 
 					cb(s)
 				}
 			}
-
-			_, _ = fd.Read(buf)
-			fmt.Println("last buffer")
-			fmt.Println(buf)
 
 		}
 	}()
