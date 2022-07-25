@@ -19,6 +19,31 @@ func NewEventTemporalRepository(client client.Client) EventTemporalRepository {
 	return EventTemporalRepository{client: client}
 }
 
+func (r EventTemporalRepository) SendProcessResourcesProgress(ctx context.Context, itemId, resourceId string, progress float64) error {
+
+	if err := r.client.SignalWorkflow(ctx, "loader.ProcessResourcesForUpload_"+itemId+"_"+resourceId, "", workflows.ProcessResourcesProgressAppendSignal, progress); err != nil {
+		return errors.Wrap(err, "failed to signal resource progress")
+	}
+
+	return nil
+}
+
+func (r EventTemporalRepository) GetResourceProgress(ctx context.Context, itemId, resourceId string) (*resource.Progress, error) {
+
+	response, err := r.client.QueryWorkflow(context.Background(), "loader.ProcessResourcesForUpload_"+itemId+"_"+resourceId, "", workflows.ProcessResourcesProgressQuery)
+	if err != nil {
+		return nil, err
+	}
+
+	var progress float64
+
+	if err := response.Get(&progress); err != nil {
+		return nil, err
+	}
+
+	return resource.NewProgress(progress), nil
+}
+
 func (r EventTemporalRepository) ProcessResourcesWithFiltersFromCopy(ctx context.Context, itemId string, resourceIds []string, source string, config *resource.Config, filters *resource.ImageFilters) error {
 
 	processResourcesHash := md5.New()
@@ -52,29 +77,25 @@ func (r EventTemporalRepository) ProcessResourcesWithFiltersFromCopy(ctx context
 
 func (r EventTemporalRepository) ProcessResources(ctx context.Context, itemId string, resourceIds []string, source string, config *resource.Config) error {
 
-	processResourcesHash := md5.New()
-	processResourcesHash.Write([]byte(itemId))
-	for _, resource := range resourceIds {
-		processResourcesHash.Write([]byte(resource))
-	}
+	for _, resourceId := range resourceIds {
+		options := client.StartWorkflowOptions{
+			TaskQueue: viper.GetString("temporal.queue"),
+			ID:        "loader.ProcessResourcesForUpload_" + itemId + "_" + resourceId,
+		}
 
-	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "loader.ProcessResourcesForUpload_" + hex.EncodeToString(processResourcesHash.Sum(nil)[:]),
-	}
+		_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ProcessResources,
+			workflows.ProcessResourcesInput{
+				ItemId:     itemId,
+				ResourceId: resourceId,
+				Source:     source,
+				Width:      config.Width(),
+				Height:     config.Height(),
+			},
+		)
 
-	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ProcessResources,
-		workflows.ProcessResourcesInput{
-			ItemId:      itemId,
-			ResourceIds: resourceIds,
-			Source:      source,
-			Width:       config.Width(),
-			Height:      config.Height(),
-		},
-	)
-
-	if err != nil {
-		return errors.Wrap(err, "failed to run process resources workflow")
+		if err != nil {
+			return errors.Wrap(err, "failed to run process resources workflow")
+		}
 	}
 
 	return nil

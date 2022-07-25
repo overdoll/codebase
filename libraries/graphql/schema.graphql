@@ -54,13 +54,18 @@ type ResourceUrl {
   mimeType: String!
 }
 
+"""Identifies the progress of the resource for processing."""
+type ResourceProgress {
+  """An ID identifying this progress."""
+  id: ID!
+}
+
 """
 A resource represents an image or a video format that contains an ID to uniquely identify it,
 and urls to access the resources. We have many urls in order to provide a fallback for older browsers
 
 We also identify the type of resource (image or video) to make it easy to distinguish them
 """
-
 type Resource {
   """An ID uniquely identifying this resource."""
   id: ID!
@@ -91,6 +96,15 @@ type Resource {
 
   """A hex-code color of the resource that can be used in-place while the resource is loading."""
   preview: String!
+
+  """
+  This field identifies the progress for the resource.
+
+  If the resource is not yet processed, this will not be nil.
+
+  If we have some sort of state information available about the progress, this will not be nil.
+  """
+  progress: ResourceProgress
 
   """
   Whether or not this resource failed to process.

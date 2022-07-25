@@ -32,7 +32,7 @@ func TestUploadResourcesAndProcessFailed(t *testing.T) {
 	imageId := strings.Split(imageFileId, "+")[0]
 	videoId := strings.Split(videoFileId, "+")[0]
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceIds: []string{
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: []string{
 		imageId,
 		videoId,
 	}, Source: "STING"})
@@ -89,7 +89,7 @@ func TestUploadResourcesAndProcessPrivate_and_update_privacy(t *testing.T) {
 	imageId := strings.Split(imageFileId, "+")[0]
 	videoId := strings.Split(videoFileId, "+")[0]
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceIds: []string{
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: []string{
 		imageId,
 		videoId,
 	}, Source: "STING"})
@@ -199,7 +199,7 @@ func TestUploadResourcesAndApplyWidths(t *testing.T) {
 
 	imageId := strings.Split(imageFileId, "+")[0]
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, Width: 360, Height: 360, ResourceIds: []string{
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, Width: 360, Height: 360, ResourceId: []string{
 		imageId,
 	}, Source: "STING"})
 
@@ -265,7 +265,7 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 
 	fmt.Println(itemId)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceIds: []string{
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: []string{
 		imageId,
 		videoId,
 	}, Width: 0, Height: 0, Source: "STING"})
@@ -421,7 +421,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 
 	grpcClient := getGrpcClient(t)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceIds: []string{
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: []string{
 		strings.Split(imageFileId, "+")[0],
 		strings.Split(videoFileId, "+")[0],
 		strings.Split(videoFileId2, "+")[0],

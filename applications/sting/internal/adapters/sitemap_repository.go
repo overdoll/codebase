@@ -80,7 +80,7 @@ func (r PostsCassandraElasticsearchRepository) addPosts(ctx context.Context, sm 
 		var clubIds []string
 
 		for index, result := range response.Hits.Hits {
-			if int64(index) == response.Hits.TotalHits.Value-1 {
+			if index == len(response.Hits.Hits)-1 {
 				// reached end - take sort
 				searchAfter = result.Sort
 			}
@@ -184,7 +184,7 @@ func (r PostsCassandraElasticsearchRepository) addClubs(ctx context.Context, sm 
 		}
 
 		for index, result := range response.Hits.Hits {
-			if int64(index) == response.Hits.TotalHits.Value-1 {
+			if index == len(response.Hits.Hits)-1 {
 				// reached end - take sort
 				searchAfter = result.Sort
 			}
@@ -243,7 +243,7 @@ func (r PostsCassandraElasticsearchRepository) addCategories(ctx context.Context
 		}
 
 		for index, result := range response.Hits.Hits {
-			if int64(index) == response.Hits.TotalHits.Value-1 {
+			if index == len(response.Hits.Hits)-1 {
 				// reached end - take sort
 				searchAfter = result.Sort
 			}
@@ -303,7 +303,7 @@ func (r PostsCassandraElasticsearchRepository) addCharacters(ctx context.Context
 		var clubIds []string
 
 		for index, result := range response.Hits.Hits {
-			if int64(index) == response.Hits.TotalHits.Value-1 {
+			if index == len(response.Hits.Hits)-1 {
 				// reached end - take sort
 				searchAfter = result.Sort
 			}
@@ -409,7 +409,7 @@ func (r PostsCassandraElasticsearchRepository) addSeries(ctx context.Context, sm
 		}
 
 		for index, result := range response.Hits.Hits {
-			if int64(index) == response.Hits.TotalHits.Value-1 {
+			if index == len(response.Hits.Hits)-1 {
 				// reached end - take sort
 				searchAfter = result.Sort
 			}

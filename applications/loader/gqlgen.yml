@@ -1,0 +1,25 @@
+schema:
+  - ./schema/**/*.graphql
+  - ../../libraries/graphql/relay/schema.graphql
+
+exec:
+  filename: internal/ports/graphql/generated.go
+  package: gen
+
+model:
+  filename: internal/ports/graphql/types/types.go
+  package: types
+
+federation:
+  filename: internal/ports/graphql/federation.go
+  package: gen
+  version: 2
+
+autobind:
+  - overdoll/libraries/graphql/relay
+
+models:
+  ID:
+    model: overdoll/libraries/graphql/relay.ID
+  Node:
+    model: overdoll/libraries/graphql/relay.Node

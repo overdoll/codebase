@@ -2,22 +2,24 @@ package activities
 
 import (
 	"context"
+	"go.temporal.io/sdk/activity"
+	"go.uber.org/zap"
 	"os"
 	"overdoll/applications/loader/internal/domain/resource"
 	"overdoll/libraries/errors"
 )
 
 type ProcessResourcesInput struct {
-	ItemId      string
-	ResourceIds []string
-	Width       uint64
-	Height      uint64
+	ItemId     string
+	ResourceId string
+	Width      uint64
+	Height     uint64
 }
 
 func (h *Activities) ProcessResources(ctx context.Context, input ProcessResourcesInput) error {
 
 	// first, get all resources
-	resourcesFromIds, err := h.rr.GetResourcesByIds(ctx, []string{input.ItemId}, input.ResourceIds)
+	resourcesFromIds, err := h.rr.GetResourcesByIds(ctx, []string{input.ItemId}, []string{input.ResourceId})
 
 	if err != nil {
 		return err
@@ -33,6 +35,20 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 	config, err := resource.NewConfig(input.Width, input.Height)
 
 	if err != nil {
+		return err
+	}
+
+	// when progress is made on the resource socket, we record a heartbeat
+	if err := resource.ListenProgressSocket(input.ItemId, input.ResourceId, func(progress float64) {
+
+		// record heartbeat so we know this activity is still functional
+		activity.RecordHeartbeat(ctx, progress)
+
+		if err = h.event.SendProcessResourcesProgress(ctx, input.ItemId, input.ResourceId, progress); err != nil {
+			zap.S().Errorw("failed to send process resources progress", zap.Error(err))
+		}
+
+	}); err != nil {
 		return err
 	}
 

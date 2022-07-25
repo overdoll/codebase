@@ -299,7 +299,7 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 	// map_metadata removes all metadata
 	// sn removes subtitles
 	// map 0:v:0 selects only the first video track
-	encodingArgs := ffmpeg_go.KwArgs{"c:v": "libx264", "crf": "22", "preset": "slow", "map_metadata": "-1", "sn": "", "map": []string{"0:v:0"}}
+	encodingArgs := ffmpeg_go.KwArgs{"c:v": "libx264", "crf": "24", "preset": "veryslow", "map_metadata": "-1", "sn": "", "map": []string{"0:v:0"}}
 
 	newVideoFileName := fileName + ".mp4"
 
@@ -417,25 +417,32 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 
 		// width > height, landscape
 		if firstStream.Width > firstStream.Height {
-			if (firstStream.Height) > 720 {
-				encodingArgs["vf"] = "scale=-2:720"
+			if (firstStream.Height) > 1080 {
+				encodingArgs["vf"] = "scale=-2:1080"
 			}
 			// height > width, portrait
 		} else if firstStream.Width < firstStream.Height {
+			// for portrait, it seems like 720p always looks good no matter what
 			if (firstStream.Width) > 720 {
 				encodingArgs["vf"] = "scale=720:-2"
 			}
-		} else {
+		} else if firstStream.Width == firstStream.Height {
 			// otherwise, it's a square
-			if (firstStream.Width) > 720 {
-				encodingArgs["vf"] = "scale=-2:720"
+			if (firstStream.Width) > 1080 {
+				encodingArgs["vf"] = "scale=-2:1080"
 			}
 		}
+	}
+
+	parsedDuration, err := strconv.ParseFloat(videoStreamProbeResult.Streams[0].Duration, 64)
+	if err != nil {
+		return nil, err
 	}
 
 	if err := ffmpeg_go.Input(file.Name(), defaultArgs).
 		Output(newVideoFileName, encodingArgs).
 		WithErrorOutput(ffmpegLogger).
+		GlobalArgs("-progress", "unix://"+createFFMPEGTempSocket(r.itemId, r.id, parsedDuration)).
 		Run(); err != nil {
 		zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(ffmpegLogger.Output)))
 		return nil, err
