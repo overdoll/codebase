@@ -5,10 +5,6 @@ import { NextResponse } from 'next/server'
 export const middleware: Middleware = async (request, event) => {
   const ability = await getAbilityFromRequest(request)
 
-  if (request.nextUrl.pathname.startsWith('/verify-token')) {
-    if (ability.can('configure', 'Account')) return NextResponse.redirect(new URL('/', request.url))
-  }
-
   if (request.nextUrl.pathname.startsWith('/staff')) {
     if (ability.can('staff', 'Entity') || ability.can('staff', 'Account') || ability.can('staff', 'Club') || ability.can('staff', 'Post') || ability.can('staff', 'Billing')) return NextResponse.next()
 
@@ -83,7 +79,6 @@ export const config = {
     '/logout',
     '/moderation/:path*',
     '/settings/:path*',
-    '/staff/:path*',
-    '/verify-token'
+    '/staff/:path*'
   ]
 }

@@ -8,16 +8,24 @@ interface Props {
 interface Context {
   videoVolume: number
   videoMuted: boolean
+  videoPlaying: string
   changeVideoVolume: (e) => void
   changeVideoMuted: (e) => void
+  onPlayVideo: (resourceId: string) => void
+  onPauseVideo: (resourceId: string) => void
 }
 
 const defaultValue = {
   videoVolume: 0.1,
   videoMuted: true,
+  videoPlaying: '',
   changeVideoVolume: (e) => {
   },
   changeVideoMuted: (e) => {
+  },
+  onPlayVideo: (e) => {
+  },
+  onPauseVideo: (e) => {
   }
 }
 
@@ -25,9 +33,9 @@ export const GlobalVideoManagerContext = createContext<Context>(defaultValue)
 
 export function GlobalVideoManagerProvider ({ children }: Props): JSX.Element {
   const [globalVideoVolume, setGlobalVideoVolume] = useLocalStorage('globalVideoVolume', defaultValue.videoVolume)
-
   const [volume, setVolume] = useState(globalVideoVolume)
   const [muted, setMuted] = useState(defaultValue.videoMuted)
+  const [playing, setPlaying] = useState<string>('')
 
   const onChangeMuted = useCallback((isMuted) => {
     setMuted(isMuted)
@@ -38,63 +46,24 @@ export function GlobalVideoManagerProvider ({ children }: Props): JSX.Element {
     setGlobalVideoVolume(volume)
   }, [])
 
-  /*
+  const onPlayVideo = useCallback((resourceId) => {
+    setPlaying(resourceId)
+  }, [])
 
-  const removeKeyFromObject = (key, object): SingleVideoState => {
-    const newObject = {}
-    Object.keys(object).forEach((item) => {
-      if (item !== key) {
-        newObject[item] = object[item]
-      }
-    })
-    return newObject
-  }
-
-  const addKeyToObject = (key, value, object): SingleVideoState => {
-    const newObject = object
-    newObject[key] = value
-    return newObject
-  }
-
-  const resetKeyOrder = (key, value, object): SingleVideoState => {
-    const oldObject = removeKeyFromObject(key, object)
-    return addKeyToObject(key, value, oldObject)
-  }
-
-  // Disallow more than one video to be played at a time
-  // used to stop videos from playing if they are too close vertically
-  // Or if the user manually plays a video from a different post manually
-  // Also syncs volume and muted status when played
-
-  const onVideoPlay = (identifier, paused: boolean, target): void => {
-    if (!paused) {
-      setPlaying(x => resetKeyOrder(identifier, target, x))
-      if (target.volume !== volume) {
-        target.volume = volume
-      }
-      if (target.muted !== muted) {
-        target.muted = muted
-      }
-    }
-
-    if (paused && playing[identifier].paused) {
-      setPlaying(x => removeKeyFromObject(identifier, x))
-    }
-  }
-
-  useEffect(() => {
-    if (Object.keys(playing).length > 1) {
-      Object.keys(playing).slice(0, -1).forEach((item) => playing[item].pause())
+  const onPauseVideo = useCallback((resourceId) => {
+    if (resourceId === playing) {
+      setPlaying('')
     }
   }, [playing])
-
-   */
 
   const contextValue = {
     videoVolume: volume,
     videoMuted: muted,
+    videoPlaying: playing,
     changeVideoVolume: (volume) => onChangeVolume(volume),
-    changeVideoMuted: (volume) => onChangeMuted(volume)
+    changeVideoMuted: (volume) => onChangeMuted(volume),
+    onPlayVideo: (resourceId) => onPlayVideo(resourceId),
+    onPauseVideo: (resourceId) => onPauseVideo(resourceId)
   }
 
   return (
