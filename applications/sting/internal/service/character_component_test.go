@@ -28,6 +28,14 @@ type CharacterModified struct {
 	Banner    *graphql2.Resource
 }
 
+type SearchCharactersForSeries struct {
+	Characters struct {
+		Edges []struct {
+			Node CharacterModified
+		}
+	} `graphql:"characters(seriesSlug: $seriesSlug)"`
+}
+
 type SearchCharacters struct {
 	Characters struct {
 		Edges []struct {
@@ -96,7 +104,9 @@ func TestCreateSeriesCharacter_update_and_search(t *testing.T) {
 	require.NoError(t, err, "no error creating fake category")
 	currentCharacterSlug := fake.Slug
 
-	seriesId := "1pcKiQL7dgUW8CIN7uO1wqFaMql"
+	series := seedSeries(t)
+
+	seriesId := series.ID()
 
 	var createCharacter CreateCharacter
 
@@ -130,6 +140,16 @@ func TestCreateSeriesCharacter_update_and_search(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, searchCharacters.Characters.Edges, 1, "only found 1 result")
 	require.Equal(t, fake.Name, searchCharacters.Characters.Edges[0].Node.Name, "correct name")
+
+	var searchCharactersForSeries SearchCharactersForSeries
+
+	err = client.Query(context.Background(), &searchCharactersForSeries, map[string]interface{}{
+		"seriesSlug": graphql.String(series.Slug()),
+	})
+
+	require.NoError(t, err)
+	require.Len(t, searchCharactersForSeries.Characters.Edges, 1, "only found 1 result")
+	require.Equal(t, fake.Name, searchCharactersForSeries.Characters.Edges[0].Node.Name, "correct name")
 
 	fake = TestCharacter{}
 	err = faker.FakeData(&fake)

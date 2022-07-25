@@ -11,6 +11,6 @@ type Activities struct {
 	callback CallbackService
 }
 
-func NewActivitiesHandler(rr resource.Repository, callback CallbackService) *Activities {
-	return &Activities{rr: rr, callback: callback}
+func NewActivitiesHandler(rr resource.Repository, callback CallbackService, event event.Repository) *Activities {
+	return &Activities{rr: rr, callback: callback, event: event}
 }

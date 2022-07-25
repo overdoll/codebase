@@ -54,10 +54,9 @@ type ResourceUrl {
   mimeType: String!
 }
 
-"""Identifies the progress of the resource for processing."""
-type ResourceProgress {
+extend type ResourceProgress @key(fields: "id") {
   """An ID identifying this progress."""
-  id: ID!
+  id: ID! @external
 }
 
 """

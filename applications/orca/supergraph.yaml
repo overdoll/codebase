@@ -19,6 +19,10 @@ subgraphs:
     routing_url: http://ringer:8000/api/graphql
     schema:
       subgraph_url: http://ringer:8000/api/graphql
+  loader:
+    routing_url: http://loader:8000/api/graphql
+    schema:
+      subgraph_url: http://loader:8000/api/graphql
   relay:
     routing_url: http://some-fake-endpoint
     schema:

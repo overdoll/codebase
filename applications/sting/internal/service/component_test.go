@@ -167,6 +167,39 @@ func getPostFromAdapter(t *testing.T, postId string) *post.Post {
 	return pst
 }
 
+func seedSeries(t *testing.T) *post.Series {
+	fake := TestClub{}
+	err := faker.FakeData(&fake)
+	require.NoError(t, err)
+
+	prin := testing_tools.NewStaffPrincipal(uuid.New().String())
+	ext, err := principal.NewClubExtension(&sting.GetAccountClubDigestResponse{
+		SupportedClubIds:  nil,
+		ClubMembershipIds: nil,
+		OwnerClubIds:      nil,
+	})
+
+	require.NoError(t, err)
+
+	err = prin.ExtendWithClubExtension(ext)
+	require.NoError(t, err)
+
+	series, err := post.NewSeries(prin, fake.Slug, fake.Name)
+	require.NoError(t, err)
+
+	session := bootstrap.InitializeDatabaseSession()
+	es := bootstrap.InitializeElasticSearchSession()
+	serializer := resource.NewSerializer()
+
+	adapter := adapters.NewPostsCassandraRepository(session, es, serializer, bootstrap.InitializeAWSSession())
+	err = adapter.CreateSeries(context.Background(), series)
+	require.NoError(t, err)
+
+	refreshSeriesIndex(t)
+
+	return series
+}
+
 // helper which seeds a new post in the database
 func seedClub(t *testing.T, accountId string) *club.Club {
 	pst := newClub(t, accountId)

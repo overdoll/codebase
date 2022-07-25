@@ -439,14 +439,19 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 		return nil, err
 	}
 
+	socket, done := createFFMPEGTempSocket(r.itemId, r.id, parsedDuration)
+
 	if err := ffmpeg_go.Input(file.Name(), defaultArgs).
 		Output(newVideoFileName, encodingArgs).
 		WithErrorOutput(ffmpegLogger).
-		GlobalArgs("-progress", "unix://"+createFFMPEGTempSocket(r.itemId, r.id, parsedDuration)).
+		GlobalArgs("-progress", "unix://"+socket).
 		Run(); err != nil {
 		zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(ffmpegLogger.Output)))
 		return nil, err
 	}
+
+	// make sure to call this function or socket wont close correctly
+	done()
 
 	thumbnailFileName := fileName + ".jpg"
 
@@ -624,6 +629,15 @@ func (r *Resource) ProcessResource(file *os.File, config *Config) ([]*Move, erro
 	if r.processedId != "" {
 		fileName = r.processedId
 	}
+
+	c, err := getSocketClient(r.itemId, r.id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// indicate a heartbeat has started
+	c.Write([]byte("0"))
 
 	if kind.MIME.Value == "image/png" {
 

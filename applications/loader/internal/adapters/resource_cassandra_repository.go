@@ -255,6 +255,7 @@ func (r ResourceCassandraS3Repository) updateResources(ctx context.Context, res 
 				"video_thumbnail",
 				"video_thumbnail_mime_type",
 				"video_no_audio",
+				"type",
 				"width",
 				"height",
 				"preview",

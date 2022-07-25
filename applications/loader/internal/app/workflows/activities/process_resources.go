@@ -7,6 +7,7 @@ import (
 	"os"
 	"overdoll/applications/loader/internal/domain/resource"
 	"overdoll/libraries/errors"
+	"strings"
 )
 
 type ProcessResourcesInput struct {
@@ -39,18 +40,27 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 	}
 
 	// when progress is made on the resource socket, we record a heartbeat
-	if err := resource.ListenProgressSocket(input.ItemId, input.ResourceId, func(progress float64) {
+	cleanup, err := resource.ListenProgressSocket(input.ItemId, input.ResourceId, func(progress float64) {
 
 		// record heartbeat so we know this activity is still functional
 		activity.RecordHeartbeat(ctx, progress)
 
 		if err = h.event.SendProcessResourcesProgress(ctx, input.ItemId, input.ResourceId, progress); err != nil {
+
+			if strings.Contains(err.Error(), "workflow execution already completed") {
+				return
+			}
+
 			zap.S().Errorw("failed to send process resources progress", zap.Error(err))
 		}
 
-	}); err != nil {
+	})
+
+	if err != nil {
 		return err
 	}
+
+	defer cleanup()
 
 	for _, target := range resourcesNotProcessed {
 		if err := processResource(h, ctx, target, config); err != nil {

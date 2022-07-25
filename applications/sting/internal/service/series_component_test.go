@@ -19,12 +19,17 @@ import (
 )
 
 type SeriesModified struct {
-	Id        relay.ID
-	Reference string
-	Title     string
-	Slug      string
-	Thumbnail *graphql2.Resource
-	Banner    *graphql2.Resource
+	Id         relay.ID
+	Reference  string
+	Title      string
+	Slug       string
+	Thumbnail  *graphql2.Resource
+	Banner     *graphql2.Resource
+	Characters struct {
+		Edges []struct {
+			Node CharacterModified
+		}
+	} `graphql:"characters()"`
 }
 
 type SearchSeries struct {
@@ -205,6 +210,7 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 	series = getSeriesBySlug(t, client, currentSeriesSlug)
 	require.NotNil(t, series, "expected to have found series")
 	require.NotNil(t, series.Banner, "has a banner")
+	require.Equal(t, 1, len(series.Characters.Edges), "has the correct amount of characters")
 }
 
 func TestCreateCharacter_update_series_and_search_character(t *testing.T) {

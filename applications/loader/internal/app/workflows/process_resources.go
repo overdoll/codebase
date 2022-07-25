@@ -36,20 +36,6 @@ func ProcessResources(ctx workflow.Context, input ProcessResourcesInput) error {
 	})
 
 	logger := workflow.GetLogger(ctx)
-
-	so := &workflow.SessionOptions{
-		CreationTimeout:  time.Minute,
-		ExecutionTimeout: time.Minute,
-	}
-
-	sessionCtx, err := workflow.CreateSession(ctx, so)
-
-	if err != nil {
-		return err
-	}
-
-	defer workflow.CompleteSession(sessionCtx)
-
 	selector := workflow.NewSelector(ctx)
 
 	selector.AddReceive(workflow.GetSignalChannel(ctx, ProcessResourcesProgressAppendSignal), func(channel workflow.ReceiveChannel, more bool) {
@@ -71,10 +57,13 @@ func ProcessResources(ctx workflow.Context, input ProcessResourcesInput) error {
 			Width:      input.Width,
 			Height:     input.Height,
 		},
-	).Get(sessionCtx, nil); err != nil {
+	).Get(ctx, nil); err != nil {
 		logger.Error("failed to process resources", "Error", err)
 		return err
 	}
+
+	// wait for some sort of progress signal - we always send one
+	selector.Select(ctx)
 
 	// transitioned to a different state of progress
 	progress = -2

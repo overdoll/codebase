@@ -1112,26 +1112,13 @@ def go_repositories():
         sum = "h1:mV02weKRL81bEnm8A0HT1/CAelMQDBuQIfLw8n+d6xI=",
         version = "v0.0.0-20200824232613-28f6c0f3b639",
     )
-    go_repository(
-        name = "com_github_ikeikeikeike_go_sitemap_generator",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/ikeikeikeike/go-sitemap-generator",
-        sum = "h1:FbgqCB06MhrT3tzWsosbIERIiKTm91XjmO6DrJKNlLg=",
-        version = "v1.0.2",
-    )
+
     go_repository(
         name = "com_github_ikeikeikeike_go_sitemap_generator_v2",
         build_file_proto_mode = "disable",
         importpath = "github.com/ikeikeikeike/go-sitemap-generator/v2",
         sum = "h1:wIdDEle9HEy7vBPjC6oKz6ejs3Ut+jmsYvuOoAW2pSM=",
         version = "v2.0.2",
-    )
-    go_repository(
-        name = "com_github_imdario_mergo",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/imdario/mergo",
-        sum = "h1:Y+UAYTZ7gDEuOfhxKWy+dvb5dRQ6rJjFSdX2HZY1/gI=",
-        version = "v0.3.7",
     )
 
     go_repository(
