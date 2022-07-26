@@ -2,11 +2,13 @@ package activities
 
 import (
 	"context"
+	"fmt"
 	"go.temporal.io/sdk/activity"
 	"go.uber.org/zap"
 	"os"
 	"overdoll/applications/loader/internal/domain/resource"
 	"overdoll/libraries/errors"
+	"strconv"
 	"strings"
 )
 
@@ -39,11 +41,23 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 		return err
 	}
 
+	var heartbeat int64
+
 	// when progress is made on the resource socket, we record a heartbeat
-	cleanup, err := resource.ListenProgressSocket(input.ItemId, input.ResourceId, func(progress float64) {
+	cleanup, err := resource.ListenProgressSocket(input.ItemId, input.ResourceId, func(progress int64) {
 
 		// record heartbeat so we know this activity is still functional
-		activity.RecordHeartbeat(ctx, progress)
+		heartbeat++
+		println("heartbeat", heartbeat)
+		fmt.Println(ctx)
+		activity.RecordHeartbeat(ctx, heartbeat)
+
+		fmt.Printf("progress: %s\n", strconv.Itoa(int(progress)))
+
+		// ignore "0" progress
+		if progress == 0 {
+			return
+		}
 
 		if err = h.event.SendProcessResourcesProgress(ctx, input.ItemId, input.ResourceId, progress); err != nil {
 

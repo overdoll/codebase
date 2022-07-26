@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-func ListenProgressSocket(itemId, resourceId string, cb func(progress float64)) (func(), error) {
+func ListenProgressSocket(itemId, resourceId string, cb func(progress int64)) (func(), error) {
 
 	if err := os.RemoveAll(getSockAddr(itemId, resourceId)); err != nil {
 		return nil, err
@@ -26,33 +26,38 @@ func ListenProgressSocket(itemId, resourceId string, cb func(progress float64)) 
 		return nil, err
 	}
 
-	var ticker *time.Ticker
+	// use a 500ms ticker to rate limit
+	ticker := time.NewTicker(5000 * time.Millisecond)
 	done := make(chan bool)
 
 	go func() {
-		// use a 500ms ticker to rate limit ffmpeg
-		ticker = time.NewTicker(2000 * time.Millisecond)
-
+		re := regexp.MustCompile(`prog_per=(\d+)`)
 		fd, err := l.Accept()
 		if err != nil {
 			zap.S().Fatalw("accept error", zap.Error(err))
 		}
-		buf := make([]byte, 16)
 
+		buf := make([]byte, 16)
+		data := ""
 		for {
-			_, _ = fd.Read(buf)
+			_, err = fd.Read(buf)
+			if err == nil {
+				data += string(buf)
+			}
 
 			select {
 			case <-done:
-				return
+				//_ = fd.Close()
+				break
 			case _ = <-ticker.C:
-				fmt.Println("ticked")
-				// if no error, write output
-				s, err := strconv.ParseFloat(strings.Trim(string(buf), "\x00"), 64)
-
-				if err == nil {
-					cb(s)
+				a := re.FindAllStringSubmatch(data, -1)
+				if len(a) > 0 && len(a[len(a)-1]) > 0 {
+					c, err := strconv.Atoi(a[len(a)-1][len(a[len(a)-1])-1])
+					if err == nil {
+						cb(int64(c))
+					}
 				}
+
 			}
 
 		}
@@ -69,7 +74,7 @@ func getSocketClient(itemId, resourceId string) (net.Conn, error) {
 }
 
 func getSockAddr(itemId, resourceId string) string {
-	return fmt.Sprintf("resource:%s-%s_sock", itemId, resourceId)
+	return fmt.Sprintf("resource_%s-%s_sock", itemId, resourceId)
 }
 
 // show progress taken from: https://github.com/u2takey/ffmpeg-go/blob/master/examples/showProgress.go
@@ -81,6 +86,8 @@ func createFFMPEGTempSocket(itemId, resourceId string, duration float64) (string
 	if err != nil {
 		panic(err)
 	}
+
+	done := make(chan bool)
 
 	go func() {
 		c, _ := getSocketClient(itemId, resourceId)
@@ -96,7 +103,7 @@ func createFFMPEGTempSocket(itemId, resourceId string, duration float64) (string
 		for {
 			_, err = fd.Read(buf)
 			if err != nil {
-				return
+				continue
 			}
 			data += string(buf)
 			a := re.FindAllStringSubmatch(data, -1)
@@ -105,8 +112,8 @@ func createFFMPEGTempSocket(itemId, resourceId string, duration float64) (string
 			if len(a) > 0 && len(a[len(a)-1]) > 0 {
 				c, _ := strconv.Atoi(a[len(a)-1][len(a[len(a)-1])-1])
 				parsed := (float64(c) / duration / 1000000) * 100
-				rounded := math.Floor(parsed*100) / 100
-				cp = fmt.Sprintf("%f", rounded)
+				rounded := int(math.Floor(parsed*100) / 100)
+				cp = strconv.Itoa(rounded)
 			}
 
 			if strings.Contains(data, "progress=end") {
@@ -114,19 +121,31 @@ func createFFMPEGTempSocket(itemId, resourceId string, duration float64) (string
 			}
 
 			if cp == "" {
-				cp = "00.00"
+				cp = "0"
 			}
+
+			fmt.Sprintf("reported: %s\n", cp)
 
 			if cp != progress {
 				progress = cp
-				if c != nil {
-					c.Write([]byte(progress))
+				if c != nil && cp != "0" {
+					c.Write([]byte(fmt.Sprintf("prog_per=%s", cp)))
 				}
+			}
+
+			select {
+			case <-done:
+				//if <-done {
+				//
+				//}
+				//_ = l.Close()
+				//_ = fd.Close()
+				//_ = c.Close()
 			}
 		}
 	}()
 
 	return sockFileName, func() {
-		_ = os.RemoveAll(sockFileName)
+		done <- true
 	}
 }

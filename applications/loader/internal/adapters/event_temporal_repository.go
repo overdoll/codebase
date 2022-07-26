@@ -19,7 +19,7 @@ func NewEventTemporalRepository(client client.Client) EventTemporalRepository {
 	return EventTemporalRepository{client: client}
 }
 
-func (r EventTemporalRepository) SendProcessResourcesProgress(ctx context.Context, itemId, resourceId string, progress float64) error {
+func (r EventTemporalRepository) SendProcessResourcesProgress(ctx context.Context, itemId, resourceId string, progress int64) error {
 
 	if err := r.client.SignalWorkflow(ctx, "loader.ProcessResourcesForUpload_"+itemId+"_"+resourceId, "", workflows.ProcessResourcesProgressAppendSignal, progress); err != nil {
 		return errors.Wrap(err, "failed to signal resource progress")

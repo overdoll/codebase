@@ -24,10 +24,11 @@ const (
 
 func ProcessResources(ctx workflow.Context, input ProcessResourcesInput) error {
 
-	progress := float64(-1)
+	progress := int64(-1)
 
 	ctx = workflow.WithActivityOptions(ctx, workflow.ActivityOptions{
-		StartToCloseTimeout: time.Minute,
+		StartToCloseTimeout: time.Minute * 2,
+		HeartbeatTimeout:    time.Minute,
 		RetryPolicy: &temporal.RetryPolicy{
 			InitialInterval:    time.Second,
 			BackoffCoefficient: 2.0,
@@ -42,7 +43,7 @@ func ProcessResources(ctx workflow.Context, input ProcessResourcesInput) error {
 		channel.Receive(ctx, &progress)
 	})
 
-	if err := workflow.SetQueryHandler(ctx, ProcessResourcesProgressQuery, func() (float64, error) {
+	if err := workflow.SetQueryHandler(ctx, ProcessResourcesProgressQuery, func() (int64, error) {
 		return progress, nil
 	}); err != nil {
 		return err
@@ -61,9 +62,6 @@ func ProcessResources(ctx workflow.Context, input ProcessResourcesInput) error {
 		logger.Error("failed to process resources", "Error", err)
 		return err
 	}
-
-	// wait for some sort of progress signal - we always send one
-	selector.Select(ctx)
 
 	// transitioned to a different state of progress
 	progress = -2
