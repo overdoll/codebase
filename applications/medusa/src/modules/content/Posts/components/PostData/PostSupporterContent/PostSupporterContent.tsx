@@ -5,6 +5,7 @@ import { PostSupporterContentClubFragment$key } from '@//:artifacts/PostSupporte
 import { PostSupporterContentViewerFragment$key } from '@//:artifacts/PostSupporterContentViewerFragment.graphql'
 import PostSupporterContentUnlocked from './PostSupporterContentUnlocked/PostSupporterContentUnlocked'
 import PostSupporterContentLocked from './PostSupporterContentLocked/PostSupporterContentLocked'
+import ObserveContent from '../../PostPlayback/ObserveContent/ObserveContent'
 
 interface Props {
   query: PostSupporterContentFragment$key
@@ -47,9 +48,16 @@ export default function PostSupporterContent ({
       {data.isSupporterOnly
         ? (data.viewerCanViewSupporterOnlyContent
             ? (
-              <PostSupporterContentUnlocked>
-                {children}
-              </PostSupporterContentUnlocked>)
+              <ObserveContent>
+                {({
+                  isObservingDebounced
+                }) => (
+                  <PostSupporterContentUnlocked isObservingDebounced={isObservingDebounced}>
+                    {children}
+                  </PostSupporterContentUnlocked>
+                )}
+              </ObserveContent>
+              )
             : (
               <PostSupporterContentLocked clubQuery={clubData} viewerQuery={viewerData}>
                 {children}

@@ -4,9 +4,9 @@ import { graphql } from 'react-relay'
 import { useFragment, useMutation } from 'react-relay/hooks'
 import { ClubJoinWrapperMutation } from '@//:artifacts/ClubJoinWrapperMutation.graphql'
 import { t } from '@lingui/macro'
-import { useToast } from '@//:modules/content/ThemeComponents'
+import { useToast } from '../../ThemeComponents'
 import { MaybeRenderProp } from '@//:types/components'
-import runIfFunction from '@//:modules/support/runIfFunction'
+import runIfFunction from '../../../support/runIfFunction'
 
 interface ChildrenCallable {
   joinClub: () => void

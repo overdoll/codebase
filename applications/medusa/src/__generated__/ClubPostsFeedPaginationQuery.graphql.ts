@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<9207ca62fc799cd6839d92acf82ae1bb>>
- * @relayHash 6e2c7ba3c3bbc43f5dcf12e82bfd9371
+ * @generated SignedSource<<9dcfac2cc84c59d486bd2e33568bd023>>
+ * @relayHash 7b253a6d96cc2c36cf4fe866b85b24e0
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6e2c7ba3c3bbc43f5dcf12e82bfd9371
+// @relayRequestID 7b253a6d96cc2c36cf4fe866b85b24e0
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -316,42 +316,6 @@ return {
                                 "name": "canSupport",
                                 "storageKey": null
                               },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "concreteType": "LocalizedPricingPoint",
-                                "kind": "LinkedField",
-                                "name": "supporterSubscriptionPrice",
-                                "plural": false,
-                                "selections": [
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "concreteType": "Price",
-                                    "kind": "LinkedField",
-                                    "name": "localizedPrice",
-                                    "plural": false,
-                                    "selections": [
-                                      {
-                                        "alias": null,
-                                        "args": null,
-                                        "kind": "ScalarField",
-                                        "name": "amount",
-                                        "storageKey": null
-                                      },
-                                      {
-                                        "alias": null,
-                                        "args": null,
-                                        "kind": "ScalarField",
-                                        "name": "currency",
-                                        "storageKey": null
-                                      }
-                                    ],
-                                    "storageKey": null
-                                  }
-                                ],
-                                "storageKey": null
-                              },
                               (v4/*: any*/),
                               {
                                 "alias": null,
@@ -480,7 +444,7 @@ return {
     ]
   },
   "params": {
-    "id": "6e2c7ba3c3bbc43f5dcf12e82bfd9371",
+    "id": "7b253a6d96cc2c36cf4fe866b85b24e0",
     "metadata": {},
     "name": "ClubPostsFeedPaginationQuery",
     "operationKind": "query",

@@ -3,6 +3,7 @@ import { PostMediaFragment$key } from '@//:artifacts/PostMediaFragment.graphql'
 import ImageSnippet from '../../../../DataDisplay/ImageSnippet/ImageSnippet'
 import PostVideoMedia from './PostVideoMedia/PostVideoMedia'
 import { ControlledVideoProps } from '../ControlledVideo/ControlledVideo'
+import ObserveContent from '../ObserveContent/ObserveContent'
 
 interface Props extends Pick<ControlledVideoProps, 'controls'> {
   query: PostMediaFragment$key
@@ -28,7 +29,19 @@ export default function PostMedia ({
         return <ImageSnippet query={data} />
       case 'VIDEO':
         return (
-          <PostVideoMedia controls={controls} query={data} />
+          <ObserveContent>
+            {({
+              isObserving,
+              isObservingDebounced
+            }) => (
+              <PostVideoMedia
+                isObserving={isObserving}
+                isObservingDebounced={isObservingDebounced}
+                controls={controls}
+                query={data}
+              />
+            )}
+          </ObserveContent>
         )
       default:
         return <></>

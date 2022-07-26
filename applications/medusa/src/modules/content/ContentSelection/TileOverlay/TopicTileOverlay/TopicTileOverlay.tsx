@@ -40,6 +40,8 @@ export default function TopicTileOverlay ({
           }}
           color='gray.00'
           textAlign='center'
+          whiteSpace='normal'
+          wordBreak='break-word'
           noOfLines={4}
         >
           {data.title}

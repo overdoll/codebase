@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<51632c6338f81b867c5fd3c5b204ccb6>>
- * @relayHash fe34cde0a359949e838eff20334ec7bb
+ * @generated SignedSource<<11e036d30743690569e6607ebd2f0642>>
+ * @relayHash 28b25ca515e7458ce39bfe8773b53364
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID fe34cde0a359949e838eff20334ec7bb
+// @relayRequestID 28b25ca515e7458ce39bfe8773b53364
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -480,42 +480,6 @@ return {
                 "name": "canSupport",
                 "storageKey": null
               },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "LocalizedPricingPoint",
-                "kind": "LinkedField",
-                "name": "supporterSubscriptionPrice",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Price",
-                    "kind": "LinkedField",
-                    "name": "localizedPrice",
-                    "plural": false,
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "amount",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "currency",
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              },
               (v9/*: any*/),
               {
                 "alias": null,
@@ -712,7 +676,7 @@ return {
     ]
   },
   "params": {
-    "id": "fe34cde0a359949e838eff20334ec7bb",
+    "id": "28b25ca515e7458ce39bfe8773b53364",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

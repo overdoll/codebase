@@ -70,7 +70,6 @@ export default function PostGalleryPublicSimple ({
                 minH={100}
                 maxH={700}
                 align='center'
-                justify='center'
               >
                 <PostSupporterContent
                   query={item}
@@ -89,7 +88,10 @@ export default function PostGalleryPublicSimple ({
                     passHref
                   >
                     <Box w='100%' h='100%' as='a'>
-                      <PostMedia controls={{ canControl: false }} query={item.resource} />
+                      <PostMedia
+                        controls={{ canControl: false }}
+                        query={item.resource}
+                      />
                     </Box>
                   </Link>
                 </PostSupporterContent>

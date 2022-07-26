@@ -11,8 +11,8 @@ import {
 export default function RootDiscoverClubsRichObject (): JSX.Element {
   // TODO name first three clubs posting content in title and description
 
-  const TITLE = `Discover Clubs Creating ${TITLE_FEATURES} ${TITLE_SUFFIX}`
-  const DESCRIPTION = `${DESCRIPTION_PREFIX} ${DESCRIPTION_FEATURES} created by clubs on overdoll.com. ${DESCRIPTION_CONTENT_DISCOVER}.`
+  const TITLE = `Discover Clubs Creating ${TITLE_FEATURES} - ${TITLE_SUFFIX}`
+  const DESCRIPTION = `${DESCRIPTION_PREFIX} ${DESCRIPTION_FEATURES} created by clubs on ${TITLE_SUFFIX}. ${DESCRIPTION_CONTENT_DISCOVER}.`
 
   return (
     <>

@@ -1,13 +1,14 @@
-import { Box, HTMLChakraProps } from '@chakra-ui/react'
+import { Box, BoxProps } from '@chakra-ui/react'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import type { RenderVideoFragment$key } from '@//:artifacts/RenderVideoFragment.graphql'
 import { forwardRef } from 'react'
 
-interface Props extends HTMLChakraProps<any> {
+interface Props extends BoxProps {
   onClick?: () => void
   muted?: boolean
   query: RenderVideoFragment$key
+  autoPlay: boolean
 }
 
 const Fragment = graphql`
@@ -26,8 +27,8 @@ const Fragment = graphql`
 
 const RenderVideo = forwardRef<any, Props>(({
   query,
-  sendRef,
   muted = true,
+  autoPlay,
   ...rest
 }: Props, forwardRef): JSX.Element => {
   const data = useFragment(Fragment, query)
@@ -42,7 +43,6 @@ const RenderVideo = forwardRef<any, Props>(({
       bg='gray.800'
       loop
       playsInline
-      autoPlay
       poster={data?.videoThumbnail?.url}
       {...rest}
     >

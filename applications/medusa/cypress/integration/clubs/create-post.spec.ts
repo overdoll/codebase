@@ -1,5 +1,5 @@
 import { generateClubName, generateUsernameAndEmail } from '../../support/generate'
-import { gotoNextStep, saveCurrentStep } from '../../support/flow_builder'
+import { gotoNextStep, gotoPreviousStep, saveCurrentStep } from '../../support/flow_builder'
 import { clickOnButton, clickOnTab, clickOnTile, searchForTerm, typeIntoPlaceholder } from '../../support/user_actions'
 
 const postAudience = 'Standard Audience'
@@ -64,7 +64,7 @@ describe('Create & Manage Posts', () => {
      * Upload two files, wait for processing and go to next step
      */
     gotoClubCreatePost(clubName)
-    cy.findByText(/Upload Files/iu).should('be.visible').should('not.be.disabled').parent().parent().parent().get('input[type="file"]').attachFile(['test-post.png', 'test-post2.png'], { force: true })
+    cy.findByText(/Upload Files/iu).should('be.visible').should('not.be.disabled').parent().parent().parent().get('input[type="file"]').should('not.be.disabled').attachFile(['test-post.png', 'test-post2.png'], { force: true })
     isOnStep('content')
     waitForProcessing()
     cy.get('button[aria-label="Set Supporter Only"]').should('not.be.disabled').first().click({ force: true })
@@ -194,10 +194,10 @@ describe('Create & Manage Posts', () => {
     /**
      * Upload new files, remove upload, rearrange
      */
-    // test drag and drop with file that will fail processing
-    cy.findByText(/Upload Files/iu).should('be.visible').should('not.be.disabled').attachFile('test-video.mp4', {
-      force: true,
-      subjectType: 'drag-n-drop'
+    // test input with file that will fail processing
+    // TODO add test for drag and drop
+    cy.findByText(/Upload Files/iu).should('be.visible').should('not.be.disabled').parent().parent().parent().get('input[type="file"]').should('not.be.disabled').attachFile('test-video.mp4', {
+      force: true
     })
     cy.findByText(/This content failed to/).should('be.visible')
     clickOnButton('Remove Content')
@@ -206,24 +206,22 @@ describe('Create & Manage Posts', () => {
     cy.findByText('Add Content').should('be.visible').should('not.be.disabled').parent().parent().get('input[type="file"]').attachFile(['test-post.png', 'test-post2.png'], { force: true })
     waitForProcessing()
     // test rearrange
-    //
-    // TODO fix this element detaching issue
-    // cy.get('button[aria-label="Set Supporter Only"]').should('not.be.disabled').first().click({ force: true })
-    // cy.findByText(/Free content should be/).should('be.visible')
-    //
-    // cy.get('button[aria-label="Content Menu"]').first().should('be.visible').should('not.be.disabled').click({ force: true })
-    // cy.findByText(/Move Down/iu).should('be.visible').click({ force: true })
-    // cy.findByText(/Free content should be/).should('not.exist')
-    //
-    // cy.get('button[aria-label="Content Menu"]').last().should('be.visible').should('not.be.disabled').click({ force: true })
-    // cy.findByText(/Move Up/iu).should('be.visible').click({ force: true })
-    //
-    // cy.findByText(/Free content should be/).should('be.visible')
-    // gotoNextStep()
-    // gotoPreviousStep()
-    // // can remove uploads
-    // cy.get('button[aria-label="Content Menu"]').first().should('be.visible').should('not.be.disabled').click({ force: true })
-    // cy.findAllByText(/Remove Content/iu).first().should('be.visible').click({ force: true })
+    cy.get('button[aria-label="Set Supporter Only"]').should('not.be.disabled').first().click({ force: true })
+    cy.findByText(/Free content should be/).should('be.visible')
+
+    cy.get('button[aria-label="Content Menu"]').first().should('be.visible').should('not.be.disabled').click({ force: true })
+    cy.findByText(/Move Down/iu).click({ force: true })
+    gotoNextStep()
+    gotoPreviousStep()
+    cy.get('button[aria-label="Content Menu"]').last().should('be.visible').should('not.be.disabled').click({ force: true })
+    cy.findByText(/Move Up/iu).click({ force: true })
+
+    cy.findByText(/Free content should be/).should('be.visible')
+    gotoNextStep()
+    gotoPreviousStep()
+    // can remove uploads
+    cy.get('button[aria-label="Content Menu"]').first().should('be.visible').should('not.be.disabled').click({ force: true })
+    cy.findAllByText(/Remove Content/iu).first().click({ force: true })
     // can rewind categories from post in review
     isOnStep('content')
     cy.findByRole('button', { name: 'Next' }).should('not.be.disabled').click({ force: true })

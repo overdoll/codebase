@@ -1,8 +1,8 @@
-import { Box, HTMLChakraProps } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import type { ControlledVideoFragment$key } from '@//:artifacts/ControlledVideoFragment.graphql'
-import { forwardRef, useEffect, useRef, useState } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import useTimedDisclosure from './hooks/useTimedDisclosure/useTimedDisclosure'
 import RenderVideo from './components/RenderVideo/RenderVideo'
 import ControlVideo from './components/ControlVideo/ControlVideo'
@@ -14,7 +14,7 @@ type Controls = Partial<{
   canControl: boolean
 }>
 
-export interface ControlledVideoProps extends HTMLChakraProps<any> {
+export interface ControlledVideoProps {
   query: ControlledVideoFragment$key
   onPlay?: (paused: boolean, target?) => void
   onPause?: (paused: boolean, target?) => void
@@ -24,6 +24,7 @@ export interface ControlledVideoProps extends HTMLChakraProps<any> {
   volume?: number
   isMuted?: boolean
   controls: Controls
+  autoPlay: boolean
 }
 
 const Fragment = graphql`
@@ -33,7 +34,7 @@ const Fragment = graphql`
   }
 `
 
-const ControlledVideo = forwardRef<any, ControlledVideoProps>(({
+const ControlledVideo = forwardRef<HTMLVideoElement, ControlledVideoProps>(({
   query,
   onPlay: onDefaultPlay,
   onPause: onDefaultPause,
@@ -43,11 +44,13 @@ const ControlledVideo = forwardRef<any, ControlledVideoProps>(({
   volume: defaultVolume = 0.1,
   isMuted: isDefaultMuted = true,
   controls = {},
-  ...rest
+  autoPlay
 }: ControlledVideoProps, forwardRef): JSX.Element => {
   const data = useFragment(Fragment, query)
 
-  const ref = useRef<HTMLVideoElement | null>(null)
+  const ref = useRef<HTMLVideoElement>(null)
+
+  useImperativeHandle(forwardRef, () => ref.current as HTMLVideoElement)
 
   const [time, setTime] = useState(0)
   const [totalTime, setTotalTime] = useState(1)
@@ -163,11 +166,10 @@ const ControlledVideo = forwardRef<any, ControlledVideoProps>(({
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut}
       position='relative'
-      {...rest}
     >
       <RenderVideo
-        query={data}
         ref={ref}
+        query={data}
         onClick={onTap}
         onCanPlay={onCanPlay}
         onCanPlayThrough={onCanPlay}
@@ -183,9 +185,10 @@ const ControlledVideo = forwardRef<any, ControlledVideoProps>(({
         onPlay={onPlay}
         onPause={onPause}
         onWaiting={onWaiting}
+        autoPlay={autoPlay}
       />
       <ControlVideo
-        videoRef={ref}
+        ref={ref}
         onMouseHold={onMouseHold}
         isOpen={isOpen}
         isLoaded={isLoaded}

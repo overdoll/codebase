@@ -18,10 +18,11 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/staff/entity/topic/create/RootStaffCreateTopic/StaffCreateTopic/CreateTopicForm/CreateTopicForm.tsx:172
-msgid "Create Rule"
-msgstr ""
+#~ msgid "Create Rule"
+#~ msgstr ""
 
 #: src/domain/staff/entity/topic/create/RootStaffCreateTopic/RootStaffCreateTopic.tsx:35
+#: src/domain/staff/entity/topic/create/RootStaffCreateTopic/StaffCreateTopic/CreateTopicForm/CreateTopicForm.tsx:172
 msgid "Create Topic"
 msgstr ""
 

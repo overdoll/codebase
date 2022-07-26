@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8602f5123037170334ee6cb1b24243e5>>
- * @relayHash d03a7cf134b7dc7238a0bcca1c2c25ba
+ * @generated SignedSource<<5bca21766880dd4a458511d57288c477>>
+ * @relayHash 4ad9c0213c50aa62dde09c51ccb82df1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d03a7cf134b7dc7238a0bcca1c2c25ba
+// @relayRequestID 4ad9c0213c50aa62dde09c51ccb82df1
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -403,42 +403,6 @@ return {
                             "name": "canSupport",
                             "storageKey": null
                           },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "LocalizedPricingPoint",
-                            "kind": "LinkedField",
-                            "name": "supporterSubscriptionPrice",
-                            "plural": false,
-                            "selections": [
-                              {
-                                "alias": null,
-                                "args": null,
-                                "concreteType": "Price",
-                                "kind": "LinkedField",
-                                "name": "localizedPrice",
-                                "plural": false,
-                                "selections": [
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "amount",
-                                    "storageKey": null
-                                  },
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "currency",
-                                    "storageKey": null
-                                  }
-                                ],
-                                "storageKey": null
-                              }
-                            ],
-                            "storageKey": null
-                          },
                           (v10/*: any*/),
                           (v7/*: any*/),
                           {
@@ -630,7 +594,7 @@ return {
     ]
   },
   "params": {
-    "id": "d03a7cf134b7dc7238a0bcca1c2c25ba",
+    "id": "4ad9c0213c50aa62dde09c51ccb82df1",
     "metadata": {},
     "name": "PublicClubPostsQuery",
     "operationKind": "query",

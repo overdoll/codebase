@@ -7,6 +7,7 @@ import ClubSupporterSubscriptionPriceButton
 import { ClubMembers } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import ClubIconBanner from '../ClubIconBanner/ClubIconBanner'
+import { forwardRef } from '@chakra-ui/react'
 
 interface Props {
   clubQuery: ClubSupportBannerFragment$key
@@ -39,7 +40,7 @@ export default function ClubSupportBanner ({
   const clubData = useFragment(ClubFragment, clubQuery)
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
-  const DisplayButton = (props): JSX.Element => {
+  const DisplayButton = forwardRef<any, any>((props, forwardRef): JSX.Element => {
     if (!clubData.canSupport) {
       return <></>
     }
@@ -48,19 +49,21 @@ export default function ClubSupportBanner ({
       return <></>
     }
 
-    return <ClubSupporterSubscriptionPriceButton w='100%' query={clubData} {...props} />
-  }
+    return (
+      <ClubIconBanner
+        text={<Trans>Become a Supporter and get access to exclusive content!</Trans>}
+        colorScheme='orange'
+        icon={ClubMembers}
+        seed={clubData.id}
+      >
+        <ClubSupporterSubscriptionPriceButton ref={forwardRef} w='100%' query={clubData} {...props} />
+      </ClubIconBanner>
+    )
+  })
 
   return (
-    <ClubIconBanner
-      text={<Trans>Become a Supporter and get access to exclusive content!</Trans>}
-      colorScheme='orange'
-      icon={ClubMembers}
-      seed={clubData.id}
-    >
-      <ClubSupportConditionWrapper clubQuery={clubData} viewerQuery={viewerData}>
-        {props => DisplayButton(props)}
-      </ClubSupportConditionWrapper>
-    </ClubIconBanner>
+    <ClubSupportConditionWrapper clubQuery={clubData} viewerQuery={viewerData}>
+      {props => <DisplayButton {...props} />}
+    </ClubSupportConditionWrapper>
   )
 }

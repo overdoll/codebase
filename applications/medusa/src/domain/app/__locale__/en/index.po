@@ -171,7 +171,7 @@ msgstr ""
 #~ msgid "Exclusive Supporter Content"
 #~ msgstr ""
 
-#: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContentUnlocked/PostSupporterContentUnlocked.tsx:66
+#: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContentUnlocked/PostSupporterContentUnlocked.tsx:69
 msgid "Exclusive Supporter Content Unlocked"
 msgstr ""
 
@@ -715,6 +715,10 @@ msgstr ""
 msgid "Unlock Account"
 msgstr ""
 
+#: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContentLocked/PostSupporterContentLockedButton/PostSupporterContentLockedButton.tsx:55
+msgid "Unlock Supporter Content"
+msgstr ""
+
 #: src/modules/content/HookedComponents/Upload/components/CreatePostNewFilePicker/CreatePostNewFilePicker.tsx:33
 msgid "Upload Files"
 msgstr ""
@@ -762,6 +766,10 @@ msgstr ""
 
 #: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:45
 msgid "Yesterday"
+msgstr ""
+
+#: src/modules/content/Wrappers/ClubJoinWrapper/ClubJoinWrapper.tsx:81
+msgid "You are now a member of {0}!"
 msgstr ""
 
 #: src/common/components/AccountInformationBanner/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:102

@@ -5,7 +5,7 @@ import FullSimplePost from './FullSimplePost/FullSimplePost'
 import type { PostsInfiniteScrollFragment$key } from '@//:artifacts/PostsInfiniteScrollFragment.graphql'
 import type { PostsInfiniteScrollViewerFragment$key } from '@//:artifacts/PostsInfiniteScrollViewerFragment.graphql'
 import LoadMoreObserver from './LoadMoreObserver/LoadMoreObserver'
-import { Fragment } from 'react'
+import { Fragment, useTransition } from 'react'
 import { LoadMoreFn } from 'react-relay/relay-hooks/useLoadMoreFunction'
 import { EmptyPosts } from '../../../../Placeholder'
 
@@ -44,6 +44,11 @@ export default function PostsInfiniteScroll ({
 
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
+  // @ts-expect-error
+  const [isPending, startTransition] = useTransition({
+    timeoutMs: 150
+  })
+
   if (((data?.edges) != null) && data?.edges.length < 1) {
     return (
       <EmptyPosts />
@@ -57,14 +62,14 @@ export default function PostsInfiniteScroll ({
       </Flex>
     )
 
-    if (isLoadingNext) {
+    if (isLoadingNext || isPending) {
       return SpinnerComponent
     }
 
     if (hasNext) {
       return (
         <Box>
-          <LoadMoreObserver loadNext={loadNext} />
+          <LoadMoreObserver startTransition={startTransition} loadNext={loadNext} />
           {SpinnerComponent}
         </Box>
       )
@@ -78,7 +83,7 @@ export default function PostsInfiniteScroll ({
         (
           <Fragment key={index}>
             {(hasNext && data.edges.length - 2 === index) &&
-              <LoadMoreObserver loadNext={loadNext} />}
+              <LoadMoreObserver startTransition={startTransition} loadNext={loadNext} />}
             <Box key={index}>
               <FullSimplePost query={item.node} viewerQuery={viewerData} />
             </Box>

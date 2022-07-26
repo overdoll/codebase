@@ -4,7 +4,7 @@ import type {
   ClubJoinConditionWrapperViewerFragment$key
 } from '@//:artifacts/ClubJoinConditionWrapperViewerFragment.graphql'
 import ClubOwnerJoinWrapper from '../ClubOwnerJoinWrapper/ClubOwnerJoinWrapper'
-import ClubJoinWrapper from '../ClubJoinWrapper/ClubJoinWrapper'
+import ClubJoinWrapper from '../../../../../../../modules/content/Wrappers/ClubJoinWrapper/ClubJoinWrapper'
 import { MaybeRenderProp } from '@//:types/components'
 import runIfFunction from '@//:modules/support/runIfFunction'
 import Can from '@//:modules/authorization/Can'

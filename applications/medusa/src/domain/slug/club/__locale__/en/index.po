@@ -26,7 +26,7 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubBanners/ClubSupportBanner/ClubSupportBanner.tsx:52
+#: src/domain/slug/club/RootPublicClub/PublicClub/ClubBanners/ClubSupportBanner/ClubSupportBanner.tsx:54
 msgid "Become a Supporter and get access to exclusive content!"
 msgstr ""
 
@@ -308,8 +308,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubJoinWrapper/ClubJoinWrapper.tsx:81
-msgid "You are now a member of {0}!"
-msgstr ""
+#~ msgid "You are now a member of {0}!"
+#~ msgstr ""
 
 #: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubOwnerJoinWrapper/ClubOwnerJoinWrapper.tsx:27
 #: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubOwnerSupportWrapper/ClubOwnerSupportWrapper.tsx:27

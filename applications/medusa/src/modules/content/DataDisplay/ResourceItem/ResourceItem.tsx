@@ -65,6 +65,19 @@ export default function ResourceItem ({
     boxShadow: `inset 0 0 0 3px ${data.preview}70`
   }
 
+  const DisplayMedia = (): JSX.Element => {
+    switch (data.type) {
+      case 'IMAGE':
+        return <ImageSnippet containCover={containCover} cover={cover ?? true} query={data} />
+      case 'VIDEO':
+        return (
+          <VideoSnippet query={data} />
+        )
+      default:
+        return <></>
+    }
+  }
+
   return (
     <Flex
       w='100%'
@@ -74,10 +87,7 @@ export default function ResourceItem ({
       {...rest}
     >
       {showBorder && <Flex w='100%' h='100%' borderRadius='inherit' {...iconBorder} position='absolute' />}
-      {data.type === 'IMAGE' &&
-        <ImageSnippet containCover={containCover} cover={cover ?? true} query={data} />}
-      {data.type === 'VIDEO' &&
-        <VideoSnippet query={data} />}
+      <DisplayMedia />
     </Flex>
 
   )

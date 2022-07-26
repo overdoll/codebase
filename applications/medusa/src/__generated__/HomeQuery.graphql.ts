@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6c6b06f099f1a535a449c6182eee734e>>
- * @relayHash 8becc80c9f8cc6ad397c012963c12d4f
+ * @generated SignedSource<<6aacd8f9ea7e27284dafe6d8deefce3f>>
+ * @relayHash a578efd26361d02c39708c318fe2ea58
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8becc80c9f8cc6ad397c012963c12d4f
+// @relayRequestID a578efd26361d02c39708c318fe2ea58
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -286,42 +286,6 @@ return {
                         "name": "canSupport",
                         "storageKey": null
                       },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "LocalizedPricingPoint",
-                        "kind": "LinkedField",
-                        "name": "supporterSubscriptionPrice",
-                        "plural": false,
-                        "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "Price",
-                            "kind": "LinkedField",
-                            "name": "localizedPrice",
-                            "plural": false,
-                            "selections": [
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "amount",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "currency",
-                                "storageKey": null
-                              }
-                            ],
-                            "storageKey": null
-                          }
-                        ],
-                        "storageKey": null
-                      },
                       (v2/*: any*/),
                       {
                         "alias": null,
@@ -527,7 +491,7 @@ return {
     ]
   },
   "params": {
-    "id": "8becc80c9f8cc6ad397c012963c12d4f",
+    "id": "a578efd26361d02c39708c318fe2ea58",
     "metadata": {},
     "name": "HomeQuery",
     "operationKind": "query",
