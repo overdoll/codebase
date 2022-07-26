@@ -54,6 +54,22 @@ const ControlVideo = forwardRef<HTMLVideoElement, Props>(({
     pause()
   }
 
+  const onSeekStart = (): void => {
+    const video = ref.current
+    if (video == null) return
+    if (!video.paused) {
+      pause()
+    }
+  }
+
+  const onSeekEnd = (): void => {
+    const video = ref.current
+    if (video == null) return
+    if (video.paused) {
+      play()
+    }
+  }
+
   const onChangeMuted = (): void => {
     const video = ref.current
     if (video == null) return
@@ -119,6 +135,8 @@ const ControlVideo = forwardRef<HTMLVideoElement, Props>(({
               </HStack>
               {canSeek === true &&
                 <SeekVideoButton
+                  onChangeStart={onSeekStart}
+                  onChangeEnd={onSeekEnd}
                   setTime={setTime}
                   time={time}
                   totalTime={totalTime}

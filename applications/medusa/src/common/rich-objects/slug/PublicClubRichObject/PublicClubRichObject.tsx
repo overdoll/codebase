@@ -7,7 +7,8 @@ import {
   DESCRIPTION_CONTENT_TYPES,
   DESCRIPTION_FEATURES,
   DESCRIPTION_PREFIX,
-  TITLE_FEATURES
+  TITLE_FEATURES,
+  TITLE_SUFFIX
 } from '@//:modules/constants/rich-objects'
 
 interface Props {
@@ -33,8 +34,8 @@ export default function PublicClubRichObject ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const TITLE = `${data.name}'s ${TITLE_FEATURES} - overdoll.com/${data.slug}`
-  const DESCRIPTION = `${DESCRIPTION_PREFIX} ${data.name}'s ${DESCRIPTION_FEATURES} on overdoll.com. ${DESCRIPTION_CONTENT_TYPES} from ${data.name}.`
+  const TITLE = `${data.name}'s ${TITLE_FEATURES} - ${TITLE_SUFFIX}`
+  const DESCRIPTION = `${DESCRIPTION_PREFIX} ${data.name}'s ${DESCRIPTION_FEATURES} on ${TITLE_SUFFIX}. ${DESCRIPTION_CONTENT_TYPES} from ${data.name}.`
 
   const URL = `https://overdoll.com/${data.slug}`
 

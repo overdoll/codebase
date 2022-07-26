@@ -63,6 +63,19 @@ export default function ResourceIcon ({
     boxShadow: `inset 0 0 0 ${getBorderSize()}px ${data.preview}70`
   }
 
+  const DisplayMedia = (): JSX.Element => {
+    switch (data.type) {
+      case 'IMAGE':
+        return <ImageSnippet tinyError query={data} />
+      case 'VIDEO':
+        return (
+          <VideoSnippet query={data} />
+        )
+      default:
+        return <></>
+    }
+  }
+
   return (
     <Flex
       flexShrink={0}
@@ -76,10 +89,7 @@ export default function ResourceIcon ({
       {...rest}
     >
       {showBorder && <Flex w='100%' h='100%' borderRadius='inherit' {...iconBorder} position='absolute' />}
-      {data.type === 'IMAGE' &&
-        <ImageSnippet tinyError query={data} />}
-      {data.type === 'VIDEO' &&
-        <VideoSnippet query={data} />}
+      <DisplayMedia />
     </Flex>
   )
 }

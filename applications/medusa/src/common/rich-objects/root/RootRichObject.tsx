@@ -4,19 +4,12 @@ import {
   DESCRIPTION_CONTENT_DISCOVER,
   DESCRIPTION_FEATURES,
   DESCRIPTION_PREFIX,
-  TITLE_FEATURES
+  TITLE_FEATURES,
+  TITLE_SUFFIX
 } from '@//:modules/constants/rich-objects'
 
 export default function RootRichObject (): JSX.Element {
-  const DESCRIPTION = `${DESCRIPTION_PREFIX} ${DESCRIPTION_FEATURES} on overdoll.com. ${DESCRIPTION_CONTENT_DISCOVER}.`
-
-  // TODO add this meta tag but have it replaced by other meta tags on the page first - use this as a fallback
-  // TODO the problem is that even with the 'key' specified, it doesnt get replaced
-  // <meta
-  //         property='og:image'
-  //         key='og:image'
-  //         content='https://static.dollycdn.net/manifest/android-chrome-512x512.png'
-  //       />
+  const DESCRIPTION = `${DESCRIPTION_PREFIX} ${DESCRIPTION_FEATURES} on ${TITLE_SUFFIX}. ${DESCRIPTION_CONTENT_DISCOVER}.`
 
   return (
     <Head>

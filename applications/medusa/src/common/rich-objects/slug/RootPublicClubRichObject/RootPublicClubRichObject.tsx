@@ -10,8 +10,8 @@ import {
 
 export default function RootPublicClubRichObject (): JSX.Element {
   // TODO title could be better
-  const TITLE = `${TITLE_FEATURES} ${TITLE_SUFFIX}`
-  const DESCRIPTION = `${DESCRIPTION_PREFIX} ${DESCRIPTION_FEATURES} on overdoll.com. ${DESCRIPTION_CONTENT_TYPES}.`
+  const TITLE = `${TITLE_FEATURES} - ${TITLE_SUFFIX}`
+  const DESCRIPTION = `${DESCRIPTION_PREFIX} ${DESCRIPTION_FEATURES} on ${TITLE_SUFFIX}. ${DESCRIPTION_CONTENT_TYPES}.`
 
   return (
     <>

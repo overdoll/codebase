@@ -3,7 +3,12 @@ import type { PublicPostRichObjectFragment$key } from '@//:artifacts/PublicPostR
 import Head from 'next/head'
 import React from 'react'
 import PostContentRichObject from './PostContentRichObject/PostContentRichObject'
-import { DESCRIPTION_FEATURES, DESCRIPTION_PREFIX, TITLE_FEATURES } from '@//:modules/constants/rich-objects'
+import {
+  DESCRIPTION_FEATURES,
+  DESCRIPTION_PREFIX,
+  TITLE_FEATURES,
+  TITLE_SUFFIX
+} from '@//:modules/constants/rich-objects'
 
 interface Props {
   query: PublicPostRichObjectFragment$key
@@ -35,9 +40,9 @@ export default function PublicPostRichObject ({
     return ((data.characters as Array<{ name: string }>).map((item) => item.name)).join(', ')
   }
 
-  const TITLE = `${getCharacterNames()} From ${data.club.name}'s ${TITLE_FEATURES} - overdoll.com/${data.club.slug}`
+  const TITLE = `${getCharacterNames()} From ${data.club.name}'s ${TITLE_FEATURES} - ${TITLE_SUFFIX}`
 
-  const DESCRIPTION = `${DESCRIPTION_PREFIX} ${getCharacterNames()} ${DESCRIPTION_FEATURES} by ${data.club.name} on overdoll.com`
+  const DESCRIPTION = `${DESCRIPTION_PREFIX} ${getCharacterNames()} ${DESCRIPTION_FEATURES} by ${data.club.name} on ${TITLE_SUFFIX}`
 
   const URL = `https://overdoll.com/${data.club.slug}/post/${data.reference}`
 

@@ -6,7 +6,7 @@ import { Heading, Stack } from '@chakra-ui/react'
 export default function UploadEmptyCategories ({ hint }: HintProp): JSX.Element {
   const emptyMessage = (
     <Trans
-      id='message.placeholder.empty.categories.one'
+      id='message.placeholder.empty.categories.upload.one'
       message='No categories were found'
       values={{}}
       components={{}}
@@ -15,7 +15,7 @@ export default function UploadEmptyCategories ({ hint }: HintProp): JSX.Element 
 
   const fullMessage = (
     <Trans
-      id='message.placeholder.empty.categories.other'
+      id='message.placeholder.empty.categories.upload.other'
       values={{ hint: hint }}
       message={`No categories were found with the title ${hint as string}`}
       components={{}}
