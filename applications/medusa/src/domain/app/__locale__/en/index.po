@@ -768,6 +768,10 @@ msgstr ""
 msgid "Yesterday"
 msgstr ""
 
+#: src/modules/content/Wrappers/ClubJoinWrapper/ClubJoinWrapper.tsx:81
+msgid "You are now a member of {0}!"
+msgstr ""
+
 #: src/common/components/AccountInformationBanner/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:102
 msgid "You may unlock your account after agreeing to the community guidelines."
 msgstr ""
