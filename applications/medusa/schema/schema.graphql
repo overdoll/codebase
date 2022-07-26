@@ -5129,6 +5129,15 @@ type Resource {
   """
   processed: Boolean!
 
+  """
+  This field identifies the progress for the resource.
+  
+  If the resource is not yet processed, this will not be nil.
+  
+  If we have some sort of state information available about the progress, this will not be nil.
+  """
+  progress: ResourceProgress
+
   """The type of resource - either an image or a video."""
   type: ResourceType!
 
@@ -5146,6 +5155,27 @@ type Resource {
 
   """The width."""
   width: Int!
+}
+
+type ResourceProgress {
+  id: ID!
+
+  """The progress percent, in float. Will never be larger than 100."""
+  progress: Float!
+
+  """The state at which this resource is at."""
+  state: ResourceProgressState!
+}
+
+enum ResourceProgressState {
+  """Resource is finalizing processing."""
+  FINALIZING
+
+  """Resource has started processing."""
+  STARTED
+
+  """Resource is waiting to be processed."""
+  WAITING
 }
 
 """Identifies the type of resource"""

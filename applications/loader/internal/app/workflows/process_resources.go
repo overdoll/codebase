@@ -27,23 +27,29 @@ func ProcessResources(ctx workflow.Context, input ProcessResourcesInput) error {
 	progress := int64(-1)
 
 	ctx = workflow.WithActivityOptions(ctx, workflow.ActivityOptions{
-		StartToCloseTimeout: time.Minute * 2,
-		HeartbeatTimeout:    time.Minute,
+		StartToCloseTimeout: time.Hour * 24,
+		HeartbeatTimeout:    time.Minute * 2,
 		RetryPolicy: &temporal.RetryPolicy{
 			InitialInterval:    time.Second,
-			BackoffCoefficient: 2.0,
-			MaximumInterval:    time.Minute,
+			BackoffCoefficient: 10.0,
+			MaximumInterval:    time.Minute * 10,
 		},
 	})
 
 	logger := workflow.GetLogger(ctx)
+
+	signalChan := workflow.GetSignalChannel(ctx, ProcessResourcesProgressAppendSignal)
 	selector := workflow.NewSelector(ctx)
 
-	selector.AddReceive(workflow.GetSignalChannel(ctx, ProcessResourcesProgressAppendSignal), func(channel workflow.ReceiveChannel, more bool) {
-		channel.Receive(ctx, &progress)
-	})
+	selector.
+		AddReceive(signalChan, func(channel workflow.ReceiveChannel, more bool) {
+			channel.Receive(ctx, &progress)
+		})
 
 	if err := workflow.SetQueryHandler(ctx, ProcessResourcesProgressQuery, func() (int64, error) {
+		for signalChan.ReceiveAsync(&progress) {
+		}
+
 		return progress, nil
 	}); err != nil {
 		return err

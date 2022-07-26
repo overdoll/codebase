@@ -22,9 +22,9 @@ func NewProgress(progress float64) *Progress {
 		}
 	}
 
-	if progress == -2 {
+	if progress == -2 || progress == 100 {
 		return &Progress{
-			progress: 0,
+			progress: 100,
 			state:    Finalizing,
 		}
 	}

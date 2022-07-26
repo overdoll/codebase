@@ -299,7 +299,7 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 	// map_metadata removes all metadata
 	// sn removes subtitles
 	// map 0:v:0 selects only the first video track
-	encodingArgs := ffmpeg_go.KwArgs{"c:v": "libx264", "crf": "24", "preset": "veryslow", "map_metadata": "-1", "sn": "", "map": []string{"0:v:0"}}
+	encodingArgs := ffmpeg_go.KwArgs{"c:v": "libx264", "crf": "24", "preset": "veryslow", "map_metadata": "-1", "sn": "", "map": []string{"0:v:0"}, "threads:v": "1"}
 
 	newVideoFileName := fileName + ".mp4"
 
@@ -523,6 +523,10 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 }
 
 func (r *Resource) processImage(fileName string, file *os.File, config *Config) ([]*Move, error) {
+
+	c, _ := getSocketClient(r.itemId, r.id)
+	c.Write([]byte("0"))
+	defer c.Close()
 
 	src, err := png.Decode(file)
 

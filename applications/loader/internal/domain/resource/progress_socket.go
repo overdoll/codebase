@@ -3,7 +3,6 @@ package resource
 import (
 	"fmt"
 	"go.uber.org/zap"
-	"math"
 	"math/rand"
 	"net"
 	"os"
@@ -47,7 +46,9 @@ func ListenProgressSocket(itemId, resourceId string, cb func(progress int64)) (f
 
 			select {
 			case <-done:
-				//_ = fd.Close()
+				_ = l.Close()
+				_ = fd.Close()
+				data = ""
 				break
 			case _ = <-ticker.C:
 				a := re.FindAllStringSubmatch(data, -1)
@@ -55,17 +56,22 @@ func ListenProgressSocket(itemId, resourceId string, cb func(progress int64)) (f
 					c, err := strconv.Atoi(a[len(a)-1][len(a[len(a)-1])-1])
 					if err == nil {
 						cb(int64(c))
+						// clear data since we got it all this run
+						data = ""
 					}
 				}
-
+			default:
+				continue
 			}
-
 		}
 	}()
 
 	return func() {
 		ticker.Stop()
-		done <- true
+		select {
+		case done <- true:
+		default:
+		}
 	}, nil
 }
 
@@ -100,52 +106,59 @@ func createFFMPEGTempSocket(itemId, resourceId string, duration float64) (string
 		buf := make([]byte, 16)
 		data := ""
 		progress := ""
+
 		for {
-			_, err = fd.Read(buf)
-			if err != nil {
-				continue
-			}
-			data += string(buf)
-			a := re.FindAllStringSubmatch(data, -1)
-			cp := ""
+			select {
+			case <-done:
+				// clean up our sockets
+				_ = l.Close()
+				_ = fd.Close()
+				_ = c.Close()
+				_ = os.RemoveAll(sockFileName)
+				data = ""
+				progress = ""
+				break
+			default:
+				_, err = fd.Read(buf)
+				if err != nil {
+					return
+				}
+				data += string(buf)
+				a := re.FindAllStringSubmatch(data, -1)
+				cp := ""
 
-			if len(a) > 0 && len(a[len(a)-1]) > 0 {
-				c, _ := strconv.Atoi(a[len(a)-1][len(a[len(a)-1])-1])
-				parsed := (float64(c) / duration / 1000000) * 100
-				rounded := int(math.Floor(parsed*100) / 100)
-				cp = strconv.Itoa(rounded)
-			}
+				if len(a) > 0 && len(a[len(a)-1]) > 0 {
+					c, _ := strconv.Atoi(a[len(a)-1][len(a[len(a)-1])-1])
+					parsed := float64(c) / duration / 1000000
 
-			if strings.Contains(data, "progress=end") {
-				cp = "100"
-			}
+					truncated := fmt.Sprintf("%.2f", parsed)
+					parsed, _ = strconv.ParseFloat(truncated, 64)
+					cp = strconv.Itoa(int(parsed * 100))
+				}
 
-			if cp == "" {
-				cp = "0"
-			}
+				if strings.Contains(data, "progress=end") {
+					cp = "100"
+				}
 
-			fmt.Sprintf("reported: %s\n", cp)
+				if cp == "" {
+					cp = "0"
+				}
 
-			if cp != progress {
-				progress = cp
-				if c != nil && cp != "0" {
-					c.Write([]byte(fmt.Sprintf("prog_per=%s", cp)))
+				if cp != progress {
+					progress = cp
+					if c != nil && cp != "0" {
+						c.Write([]byte(fmt.Sprintf("prog_per=%s", cp)))
+					}
 				}
 			}
 
-			select {
-			case <-done:
-				//if <-done {
-				//
-				//}
-				//_ = l.Close()
-				//_ = fd.Close()
-				//_ = c.Close()
-			}
 		}
 	}()
 
 	return sockFileName, func() {
-		done <- true
+		select {
+		case done <- true:
+		default:
+		}
 	}
 }

@@ -27,8 +27,13 @@ const Query = graphql`
         isSupporterOnly
         resource {
           failed
+          type
           processed
           videoDuration
+          progress {
+            state
+            progress
+          }
           videoThumbnail {
             url
           }

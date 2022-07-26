@@ -56,7 +56,6 @@ func (r PostsCassandraElasticsearchRepository) addPosts(ctx context.Context, sm 
 		builder := r.client.Search()
 
 		builder.Size(pagingLimit)
-		builder.Sort("posted_at", false)
 		builder.Sort("id", false)
 
 		if len(searchAfter) > 0 {
@@ -73,7 +72,6 @@ func (r PostsCassandraElasticsearchRepository) addPosts(ctx context.Context, sm 
 		}
 
 		if len(response.Hits.Hits) == 0 {
-			searchAfter = nil
 			break
 		}
 
@@ -238,7 +236,6 @@ func (r PostsCassandraElasticsearchRepository) addCategories(ctx context.Context
 		}
 
 		if len(response.Hits.Hits) == 0 {
-			searchAfter = nil
 			break
 		}
 
@@ -296,7 +293,6 @@ func (r PostsCassandraElasticsearchRepository) addCharacters(ctx context.Context
 		}
 
 		if len(response.Hits.Hits) == 0 {
-			searchAfter = nil
 			break
 		}
 
@@ -404,7 +400,6 @@ func (r PostsCassandraElasticsearchRepository) addSeries(ctx context.Context, sm
 		}
 
 		if len(response.Hits.Hits) == 0 {
-			searchAfter = nil
 			break
 		}
 

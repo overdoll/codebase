@@ -2,13 +2,11 @@ package activities
 
 import (
 	"context"
-	"fmt"
 	"go.temporal.io/sdk/activity"
 	"go.uber.org/zap"
 	"os"
 	"overdoll/applications/loader/internal/domain/resource"
 	"overdoll/libraries/errors"
-	"strconv"
 	"strings"
 )
 
@@ -43,19 +41,35 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 
 	var heartbeat int64
 
+	alreadyReachedEnd := false
+
 	// when progress is made on the resource socket, we record a heartbeat
 	cleanup, err := resource.ListenProgressSocket(input.ItemId, input.ResourceId, func(progress int64) {
 
 		// record heartbeat so we know this activity is still functional
 		heartbeat++
-		println("heartbeat", heartbeat)
-		fmt.Println(ctx)
-		activity.RecordHeartbeat(ctx, heartbeat)
+		info := activity.GetInfo(ctx)
 
-		fmt.Printf("progress: %s\n", strconv.Itoa(int(progress)))
+		if err = h.event.SendProcessResourcesHeartbeat(ctx, info.TaskToken, progress); err != nil {
+
+			if strings.Contains(err.Error(), "workflow execution already completed") {
+				return
+			}
+
+			zap.S().Errorw("failed to send heartbeat", zap.Error(err))
+		}
 
 		// ignore "0" progress
 		if progress == 0 {
+			return
+		}
+
+		if progress == 100 && !alreadyReachedEnd {
+			alreadyReachedEnd = true
+		}
+
+		// only record "100" once
+		if progress == 100 && alreadyReachedEnd {
 			return
 		}
 
@@ -70,11 +84,11 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 
 	})
 
+	defer cleanup()
+
 	if err != nil {
 		return err
 	}
-
-	defer cleanup()
 
 	for _, target := range resourcesNotProcessed {
 		if err := processResource(h, ctx, target, config); err != nil {
