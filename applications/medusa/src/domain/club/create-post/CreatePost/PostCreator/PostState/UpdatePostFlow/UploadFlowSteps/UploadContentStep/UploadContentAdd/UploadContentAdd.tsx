@@ -1,6 +1,6 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { UploadContentAddFragment$key } from '@//:artifacts/UploadContentAddFragment.graphql'
-import { Stack } from '@chakra-ui/react'
+import { Stack, useUpdateEffect } from '@chakra-ui/react'
 import ContentFilesDisplay from './ContentFilesDisplay/ContentFilesDisplay'
 import { UploadContentAddMutation } from '@//:artifacts/UploadContentAddMutation.graphql'
 import { useEffect, useState } from 'react'
@@ -114,7 +114,7 @@ export default function UploadContentAdd ({
   }, [state.urls, state.files, state.errors])
 
   // When post content has been updated, we reset uppy and re-add all the files to keep uppy's internal limiter on file count upload limit
-  useEffect(() => {
+  useUpdateEffect(() => {
     if (Object.values(state.files).length < 1 && Object.keys(state.urls).length < 1) {
       setHasUpdateError(false)
       uppy.cancelAll()

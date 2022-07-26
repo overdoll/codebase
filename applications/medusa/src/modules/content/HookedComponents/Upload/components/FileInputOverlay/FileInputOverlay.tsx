@@ -5,6 +5,7 @@ import { Timeout } from '@//:types/components'
 import { UppyType } from '../../types'
 import { ClickableTile } from '../../../../ContentSelection'
 import DragDropOverlay from './DragDropOverlay/DragDropOverlay'
+import FileInput from '../../../../ThemeComponents/FileInput/FileInput'
 
 interface Props {
   uppy: UppyType
@@ -13,8 +14,7 @@ interface Props {
 
 export default function FileInputOverlay ({
   uppy,
-  children,
-  ...rest
+  children
 }: Props): JSX.Element {
   const {
     isOpen,
@@ -128,11 +128,9 @@ export default function FileInputOverlay ({
         h='100%'
         pointerEvents='none'
       >
-        <input
-          name={id}
+        <FileInput
+          id={id}
           ref={inputRef}
-          hidden
-          type='file'
           onChange={onChange}
           multiple={restrictions.maxNumberOfFiles !== 1}
           accept={restrictions.allowedFileTypes}

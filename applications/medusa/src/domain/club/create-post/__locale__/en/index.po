@@ -492,9 +492,17 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadSearchCategories/UploadEmptyCategories/UploadEmptyCategories.tsx:8
-msgid "message.placeholder.empty.categories.one"
+#~ msgid "message.placeholder.empty.categories.one"
+#~ msgstr ""
+
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadSearchCategories/UploadEmptyCategories/UploadEmptyCategories.tsx:17
+#~ msgid "message.placeholder.empty.categories.other"
+#~ msgstr ""
+
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadSearchCategories/UploadEmptyCategories/UploadEmptyCategories.tsx:8
+msgid "message.placeholder.empty.categories.upload.one"
 msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadSearchCategories/UploadEmptyCategories/UploadEmptyCategories.tsx:17
-msgid "message.placeholder.empty.categories.other"
+msgid "message.placeholder.empty.categories.upload.other"
 msgstr ""
