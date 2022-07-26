@@ -47,7 +47,6 @@ export default function ContentUpdateDisplay ({
             </Trans>
           </Button>
         </HStack>
-
       </Box>
     )
   }

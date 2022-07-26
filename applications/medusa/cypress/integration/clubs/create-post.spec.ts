@@ -194,10 +194,10 @@ describe('Create & Manage Posts', () => {
     /**
      * Upload new files, remove upload, rearrange
      */
-    // test drag and drop with file that will fail processing
-    cy.findByText(/Upload Files/iu).should('be.visible').should('not.be.disabled').attachFile('test-video.mp4', {
-      force: true,
-      subjectType: 'drag-n-drop'
+    // test input with file that will fail processing
+    // TODO add test for drag and drop
+    cy.findByText(/Upload Files/iu).should('be.visible').should('not.be.disabled').parent().parent().parent().get('input[type="file"]').should('not.be.disabled').attachFile('test-video.mp4', {
+      force: true
     })
     cy.findByText(/This content failed to/).should('be.visible')
     clickOnButton('Remove Content')
@@ -210,11 +210,11 @@ describe('Create & Manage Posts', () => {
     cy.findByText(/Free content should be/).should('be.visible')
 
     cy.get('button[aria-label="Content Menu"]').first().should('be.visible').should('not.be.disabled').click({ force: true })
-    cy.findByText(/Move Down/iu).should('be.visible').click({ force: true })
+    cy.findByText(/Move Down/iu).click({ force: true })
     gotoNextStep()
     gotoPreviousStep()
     cy.get('button[aria-label="Content Menu"]').last().should('be.visible').should('not.be.disabled').click({ force: true })
-    cy.findByText(/Move Up/iu).should('be.visible').click({ force: true })
+    cy.findByText(/Move Up/iu).click({ force: true })
 
     cy.findByText(/Free content should be/).should('be.visible')
     gotoNextStep()
