@@ -193,7 +193,6 @@ def execute_e2e_tests_commands(configs):
         "run",
         "--config-file=cypress.ci.json",
         "--record",
-        "--parallel",
         "--key={}".format(os.getenv("CYPRESS_API_KEY")),
         "--ci-build-id={}".format(os.getenv("BUILDKITE_BUILD_ID")),
     ])
