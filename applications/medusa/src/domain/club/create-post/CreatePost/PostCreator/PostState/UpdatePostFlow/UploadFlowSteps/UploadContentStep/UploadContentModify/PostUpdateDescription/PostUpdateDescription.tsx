@@ -2,7 +2,7 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type { PostUpdateDescriptionFragment$key } from '@//:artifacts/PostUpdateDescriptionFragment.graphql'
 import { useHistoryDisclosure } from '@//:modules/hooks'
 import PostDescriptionModal from '../UploadPostOptions/PostAddDescription/PostDescriptionModal/PostDescriptionModal'
-import { Flex, Text } from '@chakra-ui/react'
+import { Flex, Heading } from '@chakra-ui/react'
 import { ContentBookEdit } from '@//:assets/icons'
 import Icon from '../../../../../../../../../../../modules/content/PageLayout/Flair/Icon/Icon'
 import IconButton from '@//:modules/form/IconButton/IconButton'
@@ -37,6 +37,8 @@ export default function PostUpdateDescription ({
     return <></>
   }
 
+  const fontSize = data.description.length > 120 ? 'sm' : 'md'
+
   return (
     <>
       <Flex
@@ -48,10 +50,10 @@ export default function PostUpdateDescription ({
 
       >
         <Flex w='100%'>
-          <Flex w='88%' py={2} px={3}>
-            <Text color='gray.200' fontSize='sm'>
+          <Flex align='center' w='88%' py={2} px={3}>
+            <Heading color='gray.200' fontSize={fontSize}>
               {data.description}
-            </Text>
+            </Heading>
           </Flex>
           <Flex w='12%' justify='center' align='center' h='100%' bg='gray.700'>
             <IconButton
