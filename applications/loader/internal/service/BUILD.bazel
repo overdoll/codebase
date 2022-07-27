@@ -53,6 +53,7 @@ go_test(
         "@com_github_stretchr_testify//mock",
         "@com_github_stretchr_testify//require",
         "@io_bazel_rules_go//go/tools/bazel:go_default_library",
+        "@io_temporal_go_sdk//activity",
         "@io_temporal_go_sdk//converter",
         "@io_temporal_go_sdk//testsuite",
         "@org_golang_google_grpc//:go_default_library",

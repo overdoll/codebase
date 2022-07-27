@@ -51,6 +51,8 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 		heartbeat++
 		info := activity.GetInfo(ctx)
 
+		// TODO: this heartbeat isn't recorded for some reason? so we make a manual API call (possibly because its called from another goroutine?)
+		activity.RecordHeartbeat(ctx, heartbeat)
 		if err = h.event.SendProcessResourcesHeartbeat(ctx, info.TaskToken, progress); err != nil {
 
 			if strings.Contains(err.Error(), "workflow execution already completed") {
@@ -58,14 +60,6 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 			}
 
 			zap.S().Errorw("failed to send heartbeat", zap.Error(err))
-		}
-
-		if progress == 0 && !alreadyStarted {
-			alreadyStarted = true
-		}
-
-		if progress == 100 && !alreadyReachedEnd {
-			alreadyReachedEnd = true
 		}
 
 		// only record "100" once
@@ -76,6 +70,14 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 		// only record "0" once
 		if progress == 0 && alreadyStarted {
 			return
+		}
+
+		if progress == 0 && !alreadyStarted {
+			alreadyStarted = true
+		}
+
+		if progress == 100 && !alreadyReachedEnd {
+			alreadyReachedEnd = true
 		}
 
 		if err = h.event.SendProcessResourcesProgress(ctx, input.ItemId, input.ResourceId, progress); err != nil {

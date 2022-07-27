@@ -216,7 +216,7 @@ func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 	suite := new(testsuite.WorkflowTestSuite)
 	suite.SetLogger(testing_tools.NewDefaultTestWorkflowLogger())
 	env := suite.NewTestWorkflowEnvironment()
-	env.SetTestTimeout(time.Second * 60)
+	env.SetTestTimeout(time.Second * 300)
 
 	env.RegisterActivity(application.App.Activities)
 

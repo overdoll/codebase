@@ -38,6 +38,7 @@ func ListenProgressSocket(itemId, resourceId string, cb func(progress int64)) (f
 
 		buf := make([]byte, 16)
 		data := ""
+
 		for {
 			_, err = fd.Read(buf)
 			if err == nil {
@@ -87,7 +88,7 @@ func getSockAddr(itemId, resourceId string) string {
 func createFFMPEGTempSocket(itemId, resourceId string, duration float64) (string, func()) {
 
 	rand.Seed(time.Now().Unix())
-	sockFileName := path.Join(os.TempDir(), fmt.Sprintf("%d_sock", rand.Int()))
+	sockFileName := path.Join(os.TempDir(), fmt.Sprintf("%d_sock", rand.Int63()))
 	l, err := net.Listen("unix", sockFileName)
 	if err != nil {
 		panic(err)
