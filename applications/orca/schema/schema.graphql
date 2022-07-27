@@ -5192,6 +5192,15 @@ type Resource {
   """
   processed: Boolean!
 
+  """
+  This field identifies the progress for the resource.
+  
+  If the resource is not yet processed, this will not be nil.
+  
+  If we have some sort of state information available about the progress, this will not be nil.
+  """
+  progress: ResourceProgress
+
   """The type of resource - either an image or a video."""
   type: ResourceType!
 
@@ -5209,6 +5218,35 @@ type Resource {
 
   """The width."""
   width: Int!
+}
+
+type ResourceProgress
+  @join__owner(graph: LOADER)
+  @join__type(graph: LOADER, key: "id")
+  @join__type(graph: EVA, key: "id")
+  @join__type(graph: HADES, key: "id")
+  @join__type(graph: PARLEY, key: "id")
+  @join__type(graph: RINGER, key: "id")
+  @join__type(graph: STING, key: "id")
+{
+  id: ID! @join__field(graph: LOADER)
+
+  """The progress percent, in float. Will never be larger than 100."""
+  progress: Float! @join__field(graph: LOADER)
+
+  """The state at which this resource is at."""
+  state: ResourceProgressState! @join__field(graph: LOADER)
+}
+
+enum ResourceProgressState {
+  """Resource is finalizing processing."""
+  FINALIZING
+
+  """Resource has started processing."""
+  STARTED
+
+  """Resource is waiting to be processed."""
+  WAITING
 }
 
 """Identifies the type of resource"""
@@ -5376,6 +5414,32 @@ type Series implements Node
 {
   """A URL pointing to the object's banner."""
   banner: Resource @join__field(graph: STING)
+
+  """Get or search all characters for this series."""
+  characters(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the name of the character."""
+    name: String
+
+    """Search by character slugs."""
+    slugs: [String!]
+
+    """Sorting options for characters."""
+    sortBy: CharactersSort! = POPULAR
+  ): CharacterConnection! @join__field(graph: STING)
 
   """An ID pointing to this series."""
   id: ID! @join__field(graph: STING)
@@ -6393,6 +6457,7 @@ scalar join__FieldSet
 enum join__Graph {
   EVA @join__graph(name: "eva" url: "http://eva:8000/api/graphql")
   HADES @join__graph(name: "hades" url: "http://hades:8000/api/graphql")
+  LOADER @join__graph(name: "loader" url: "http://loader:8000/api/graphql")
   PARLEY @join__graph(name: "parley" url: "http://parley:8000/api/graphql")
   RELAY @join__graph(name: "relay" url: "http://some-fake-endpoint")
   RINGER @join__graph(name: "ringer" url: "http://ringer:8000/api/graphql")

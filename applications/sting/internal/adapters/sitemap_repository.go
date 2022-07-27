@@ -56,7 +56,6 @@ func (r PostsCassandraElasticsearchRepository) addPosts(ctx context.Context, sm 
 		builder := r.client.Search()
 
 		builder.Size(pagingLimit)
-		builder.Sort("posted_at", false)
 		builder.Sort("id", false)
 
 		if len(searchAfter) > 0 {
@@ -73,14 +72,13 @@ func (r PostsCassandraElasticsearchRepository) addPosts(ctx context.Context, sm 
 		}
 
 		if len(response.Hits.Hits) == 0 {
-			searchAfter = nil
 			break
 		}
 
 		var clubIds []string
 
 		for index, result := range response.Hits.Hits {
-			if int64(index) == response.Hits.TotalHits.Value-1 {
+			if index == len(response.Hits.Hits)-1 {
 				// reached end - take sort
 				searchAfter = result.Sort
 			}
@@ -184,7 +182,7 @@ func (r PostsCassandraElasticsearchRepository) addClubs(ctx context.Context, sm 
 		}
 
 		for index, result := range response.Hits.Hits {
-			if int64(index) == response.Hits.TotalHits.Value-1 {
+			if index == len(response.Hits.Hits)-1 {
 				// reached end - take sort
 				searchAfter = result.Sort
 			}
@@ -238,12 +236,11 @@ func (r PostsCassandraElasticsearchRepository) addCategories(ctx context.Context
 		}
 
 		if len(response.Hits.Hits) == 0 {
-			searchAfter = nil
 			break
 		}
 
 		for index, result := range response.Hits.Hits {
-			if int64(index) == response.Hits.TotalHits.Value-1 {
+			if index == len(response.Hits.Hits)-1 {
 				// reached end - take sort
 				searchAfter = result.Sort
 			}
@@ -296,14 +293,13 @@ func (r PostsCassandraElasticsearchRepository) addCharacters(ctx context.Context
 		}
 
 		if len(response.Hits.Hits) == 0 {
-			searchAfter = nil
 			break
 		}
 
 		var clubIds []string
 
 		for index, result := range response.Hits.Hits {
-			if int64(index) == response.Hits.TotalHits.Value-1 {
+			if index == len(response.Hits.Hits)-1 {
 				// reached end - take sort
 				searchAfter = result.Sort
 			}
@@ -404,12 +400,11 @@ func (r PostsCassandraElasticsearchRepository) addSeries(ctx context.Context, sm
 		}
 
 		if len(response.Hits.Hits) == 0 {
-			searchAfter = nil
 			break
 		}
 
 		for index, result := range response.Hits.Hits {
-			if int64(index) == response.Hits.TotalHits.Value-1 {
+			if index == len(response.Hits.Hits)-1 {
 				// reached end - take sort
 				searchAfter = result.Sort
 			}

@@ -223,6 +223,14 @@ container_pull(
 )
 
 container_pull(
+    name = "eva_base_image",
+    registry = DOCKER_REGISTRY,
+    repository = "base-images/eva",
+    tag = "v1.0.0",
+    digest = "sha256:bc40ed87fc5e154d8ae7d8d72fa0787fa035e3cf89686e8e08f1d0489f47b5d3",
+)
+
+container_pull(
     name = "rust_base_image",
     registry = "docker.io",
     repository = "library/rust",
@@ -233,6 +241,6 @@ container_pull(
     name = "go_ffmpeg_image",
     registry = DOCKER_REGISTRY,
     repository = "base-images/resource-processing",
-    tag = "v1.1.0",
-    digest = "sha256:74586f3d3f1b980725713984a8c77074ee026f2917aeaf60889bbb5f7a5d095f",
+    tag = "v1.2.0",
+    digest = "sha256:766208b943c294739827b2507f4be82c0140ed7429f284fb428b2bda36005a3e",
 )

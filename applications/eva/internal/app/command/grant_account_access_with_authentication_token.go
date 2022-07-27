@@ -72,7 +72,7 @@ func (h GrantAccountAccessWithAuthenticationTokenHandler) Handle(ctx context.Con
 		} else {
 			// validate TOTP code
 			if !totp.ValidateCode(*cmd.Code) {
-				return nil, err
+				return nil, account.ErrTOTPCodeInvalid
 			}
 		}
 	} else {

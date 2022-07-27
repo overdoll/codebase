@@ -846,6 +846,8 @@ type Series struct {
 	TotalLikes int `json:"totalLikes"`
 	// Total amount of posts.
 	TotalPosts int `json:"totalPosts"`
+	// Get or search all characters for this series.
+	Characters *CharacterConnection `json:"characters"`
 	// Posts belonging to this series
 	Posts *PostConnection `json:"posts"`
 }

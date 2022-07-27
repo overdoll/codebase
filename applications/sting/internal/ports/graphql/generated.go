@@ -523,12 +523,17 @@ type ComplexityRoot struct {
 		ID             func(childComplexity int) int
 		Preview        func(childComplexity int) int
 		Processed      func(childComplexity int) int
+		Progress       func(childComplexity int) int
 		Type           func(childComplexity int) int
 		Urls           func(childComplexity int) int
 		VideoDuration  func(childComplexity int) int
 		VideoNoAudio   func(childComplexity int) int
 		VideoThumbnail func(childComplexity int) int
 		Width          func(childComplexity int) int
+	}
+
+	ResourceProgress struct {
+		ID func(childComplexity int) int
 	}
 
 	ResourceUrl struct {
@@ -548,6 +553,7 @@ type ComplexityRoot struct {
 
 	Series struct {
 		Banner            func(childComplexity int) int
+		Characters        func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, sortBy types.CharactersSort) int
 		ID                func(childComplexity int) int
 		Posts             func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) int
 		Reference         func(childComplexity int) int
@@ -899,6 +905,7 @@ type QueryResolver interface {
 type SeriesResolver interface {
 	Title(ctx context.Context, obj *types.Series, locale *string) (string, error)
 
+	Characters(ctx context.Context, obj *types.Series, after *string, before *string, first *int, last *int, slugs []string, name *string, sortBy types.CharactersSort) (*types.CharacterConnection, error)
 	Posts(ctx context.Context, obj *types.Series, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error)
 }
 type TopicResolver interface {
@@ -3396,6 +3403,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Resource.Processed(childComplexity), true
 
+	case "Resource.progress":
+		if e.complexity.Resource.Progress == nil {
+			break
+		}
+
+		return e.complexity.Resource.Progress(childComplexity), true
+
 	case "Resource.type":
 		if e.complexity.Resource.Type == nil {
 			break
@@ -3437,6 +3451,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Resource.Width(childComplexity), true
+
+	case "ResourceProgress.id":
+		if e.complexity.ResourceProgress.ID == nil {
+			break
+		}
+
+		return e.complexity.ResourceProgress.ID(childComplexity), true
 
 	case "ResourceUrl.mimeType":
 		if e.complexity.ResourceUrl.MimeType == nil {
@@ -3486,6 +3507,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Series.Banner(childComplexity), true
+
+	case "Series.characters":
+		if e.complexity.Series.Characters == nil {
+			break
+		}
+
+		args, err := ec.field_Series_characters_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Series.Characters(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["sortBy"].(types.CharactersSort)), true
 
 	case "Series.id":
 		if e.complexity.Series.ID == nil {
@@ -4633,6 +4666,32 @@ enum CharactersSort {
 
   """Characters by most posts"""
   POPULAR
+}
+
+extend type Series {
+  """Get or search all characters for this series."""
+  characters(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Search by character slugs."""
+    slugs: [String!]
+
+    """Filter by the name of the character."""
+    name: String
+
+    """Sorting options for characters."""
+    sortBy: CharactersSort! = POPULAR
+  ): CharacterConnection! @goField(forceResolver: true)
 }
 
 extend type Club {
@@ -6974,13 +7033,17 @@ type ResourceUrl {
   mimeType: String!
 }
 
+extend type ResourceProgress @key(fields: "id") {
+  """An ID identifying this progress."""
+  id: ID! @external
+}
+
 """
 A resource represents an image or a video format that contains an ID to uniquely identify it,
 and urls to access the resources. We have many urls in order to provide a fallback for older browsers
 
 We also identify the type of resource (image or video) to make it easy to distinguish them
 """
-
 type Resource {
   """An ID uniquely identifying this resource."""
   id: ID!
@@ -7011,6 +7074,15 @@ type Resource {
 
   """A hex-code color of the resource that can be used in-place while the resource is loading."""
   preview: String!
+
+  """
+  This field identifies the progress for the resource.
+
+  If the resource is not yet processed, this will not be nil.
+
+  If we have some sort of state information available about the progress, this will not be nil.
+  """
+  progress: ResourceProgress
 
   """
   Whether or not this resource failed to process.
@@ -7052,7 +7124,7 @@ interface Node {
 `, BuiltIn: true},
 	{Name: "../../../federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
-union _Entity = Account | Audience | Category | Character | Club | ClubMember | Post | PostLike | Series | Topic
+union _Entity = Account | Audience | Category | Character | Club | ClubMember | Post | PostLike | ResourceProgress | Series | Topic
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
@@ -9863,6 +9935,75 @@ func (ec *executionContext) field_Query_topics_args(ctx context.Context, rawArgs
 	return args, nil
 }
 
+func (ec *executionContext) field_Series_characters_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg3
+	var arg4 []string
+	if tmp, ok := rawArgs["slugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slugs"))
+		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["slugs"] = arg4
+	var arg5 *string
+	if tmp, ok := rawArgs["name"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+		arg5, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["name"] = arg5
+	var arg6 types.CharactersSort
+	if tmp, ok := rawArgs["sortBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
+		arg6, err = ec.unmarshalNCharactersSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharactersSort(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["sortBy"] = arg6
+	return args, nil
+}
+
 func (ec *executionContext) field_Series_posts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -11218,6 +11359,8 @@ func (ec *executionContext) fieldContext_Audience_thumbnail(ctx context.Context,
 				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
+			case "progress":
+				return ec.fieldContext_Resource_progress(ctx, field)
 			case "failed":
 				return ec.fieldContext_Resource_failed(ctx, field)
 			}
@@ -11283,6 +11426,8 @@ func (ec *executionContext) fieldContext_Audience_banner(ctx context.Context, fi
 				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
+			case "progress":
+				return ec.fieldContext_Resource_progress(ctx, field)
 			case "failed":
 				return ec.fieldContext_Resource_failed(ctx, field)
 			}
@@ -12150,6 +12295,8 @@ func (ec *executionContext) fieldContext_Category_thumbnail(ctx context.Context,
 				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
+			case "progress":
+				return ec.fieldContext_Resource_progress(ctx, field)
 			case "failed":
 				return ec.fieldContext_Resource_failed(ctx, field)
 			}
@@ -12215,6 +12362,8 @@ func (ec *executionContext) fieldContext_Category_banner(ctx context.Context, fi
 				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
+			case "progress":
+				return ec.fieldContext_Resource_progress(ctx, field)
 			case "failed":
 				return ec.fieldContext_Resource_failed(ctx, field)
 			}
@@ -13155,6 +13304,8 @@ func (ec *executionContext) fieldContext_Character_thumbnail(ctx context.Context
 				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
+			case "progress":
+				return ec.fieldContext_Resource_progress(ctx, field)
 			case "failed":
 				return ec.fieldContext_Resource_failed(ctx, field)
 			}
@@ -13220,6 +13371,8 @@ func (ec *executionContext) fieldContext_Character_banner(ctx context.Context, f
 				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
+			case "progress":
+				return ec.fieldContext_Resource_progress(ctx, field)
 			case "failed":
 				return ec.fieldContext_Resource_failed(ctx, field)
 			}
@@ -13476,6 +13629,8 @@ func (ec *executionContext) fieldContext_Character_series(ctx context.Context, f
 				return ec.fieldContext_Series_totalLikes(ctx, field)
 			case "totalPosts":
 				return ec.fieldContext_Series_totalPosts(ctx, field)
+			case "characters":
+				return ec.fieldContext_Series_characters(ctx, field)
 			case "posts":
 				return ec.fieldContext_Series_posts(ctx, field)
 			}
@@ -14137,6 +14292,8 @@ func (ec *executionContext) fieldContext_Club_thumbnail(ctx context.Context, fie
 				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
+			case "progress":
+				return ec.fieldContext_Resource_progress(ctx, field)
 			case "failed":
 				return ec.fieldContext_Resource_failed(ctx, field)
 			}
@@ -14202,6 +14359,8 @@ func (ec *executionContext) fieldContext_Club_banner(ctx context.Context, field 
 				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
+			case "progress":
+				return ec.fieldContext_Resource_progress(ctx, field)
 			case "failed":
 				return ec.fieldContext_Resource_failed(ctx, field)
 			}
@@ -17136,6 +17295,8 @@ func (ec *executionContext) fieldContext_CreateSeriesPayload_series(ctx context.
 				return ec.fieldContext_Series_totalLikes(ctx, field)
 			case "totalPosts":
 				return ec.fieldContext_Series_totalPosts(ctx, field)
+			case "characters":
+				return ec.fieldContext_Series_characters(ctx, field)
 			case "posts":
 				return ec.fieldContext_Series_posts(ctx, field)
 			}
@@ -18785,6 +18946,8 @@ func (ec *executionContext) fieldContext_Entity_findSeriesByID(ctx context.Conte
 				return ec.fieldContext_Series_totalLikes(ctx, field)
 			case "totalPosts":
 				return ec.fieldContext_Series_totalPosts(ctx, field)
+			case "characters":
+				return ec.fieldContext_Series_characters(ctx, field)
 			case "posts":
 				return ec.fieldContext_Series_posts(ctx, field)
 			}
@@ -23650,6 +23813,8 @@ func (ec *executionContext) fieldContext_PostContent_resource(ctx context.Contex
 				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
+			case "progress":
+				return ec.fieldContext_Resource_progress(ctx, field)
 			case "failed":
 				return ec.fieldContext_Resource_failed(ctx, field)
 			}
@@ -23715,6 +23880,8 @@ func (ec *executionContext) fieldContext_PostContent_supporterOnlyResource(ctx c
 				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
+			case "progress":
+				return ec.fieldContext_Resource_progress(ctx, field)
 			case "failed":
 				return ec.fieldContext_Resource_failed(ctx, field)
 			}
@@ -25292,6 +25459,8 @@ func (ec *executionContext) fieldContext_Query_serial(ctx context.Context, field
 				return ec.fieldContext_Series_totalLikes(ctx, field)
 			case "totalPosts":
 				return ec.fieldContext_Series_totalPosts(ctx, field)
+			case "characters":
+				return ec.fieldContext_Series_characters(ctx, field)
 			case "posts":
 				return ec.fieldContext_Series_posts(ctx, field)
 			}
@@ -26365,6 +26534,51 @@ func (ec *executionContext) fieldContext_Resource_preview(ctx context.Context, f
 	return fc, nil
 }
 
+func (ec *executionContext) _Resource_progress(ctx context.Context, field graphql.CollectedField, obj *graphql1.Resource) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Resource_progress(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Progress, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*graphql1.ResourceProgress)
+	fc.Result = res
+	return ec.marshalOResourceProgress2ᚖoverdollᚋlibrariesᚋgraphqlᚐResourceProgress(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Resource_progress(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Resource",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_ResourceProgress_id(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ResourceProgress", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Resource_failed(ctx context.Context, field graphql.CollectedField, obj *graphql1.Resource) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Resource_failed(ctx, field)
 	if err != nil {
@@ -26404,6 +26618,50 @@ func (ec *executionContext) fieldContext_Resource_failed(ctx context.Context, fi
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ResourceProgress_id(ctx context.Context, field graphql.CollectedField, obj *graphql1.ResourceProgress) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ResourceProgress_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ResourceProgress_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ResourceProgress",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
 		},
 	}
 	return fc, nil
@@ -26877,6 +27135,8 @@ func (ec *executionContext) fieldContext_Series_thumbnail(ctx context.Context, f
 				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
+			case "progress":
+				return ec.fieldContext_Resource_progress(ctx, field)
 			case "failed":
 				return ec.fieldContext_Resource_failed(ctx, field)
 			}
@@ -26942,6 +27202,8 @@ func (ec *executionContext) fieldContext_Series_banner(ctx context.Context, fiel
 				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
+			case "progress":
+				return ec.fieldContext_Resource_progress(ctx, field)
 			case "failed":
 				return ec.fieldContext_Resource_failed(ctx, field)
 			}
@@ -27140,6 +27402,67 @@ func (ec *executionContext) fieldContext_Series_totalPosts(ctx context.Context, 
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
 		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Series_characters(ctx context.Context, field graphql.CollectedField, obj *types.Series) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Series_characters(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Series().Characters(rctx, obj, fc.Args["after"].(*string), fc.Args["before"].(*string), fc.Args["first"].(*int), fc.Args["last"].(*int), fc.Args["slugs"].([]string), fc.Args["name"].(*string), fc.Args["sortBy"].(types.CharactersSort))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.CharacterConnection)
+	fc.Result = res
+	return ec.marshalNCharacterConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacterConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Series_characters(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Series",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "edges":
+				return ec.fieldContext_CharacterConnection_edges(ctx, field)
+			case "pageInfo":
+				return ec.fieldContext_CharacterConnection_pageInfo(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CharacterConnection", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Series_characters_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
 	}
 	return fc, nil
 }
@@ -27410,6 +27733,8 @@ func (ec *executionContext) fieldContext_SeriesEdge_node(ctx context.Context, fi
 				return ec.fieldContext_Series_totalLikes(ctx, field)
 			case "totalPosts":
 				return ec.fieldContext_Series_totalPosts(ctx, field)
+			case "characters":
+				return ec.fieldContext_Series_characters(ctx, field)
 			case "posts":
 				return ec.fieldContext_Series_posts(ctx, field)
 			}
@@ -27870,6 +28195,8 @@ func (ec *executionContext) fieldContext_Topic_banner(ctx context.Context, field
 				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
+			case "progress":
+				return ec.fieldContext_Resource_progress(ctx, field)
 			case "failed":
 				return ec.fieldContext_Resource_failed(ctx, field)
 			}
@@ -30432,6 +30759,8 @@ func (ec *executionContext) fieldContext_UpdateSeriesThumbnailPayload_series(ctx
 				return ec.fieldContext_Series_totalLikes(ctx, field)
 			case "totalPosts":
 				return ec.fieldContext_Series_totalPosts(ctx, field)
+			case "characters":
+				return ec.fieldContext_Series_characters(ctx, field)
 			case "posts":
 				return ec.fieldContext_Series_posts(ctx, field)
 			}
@@ -30495,6 +30824,8 @@ func (ec *executionContext) fieldContext_UpdateSeriesTitlePayload_series(ctx con
 				return ec.fieldContext_Series_totalLikes(ctx, field)
 			case "totalPosts":
 				return ec.fieldContext_Series_totalPosts(ctx, field)
+			case "characters":
+				return ec.fieldContext_Series_characters(ctx, field)
 			case "posts":
 				return ec.fieldContext_Series_posts(ctx, field)
 			}
@@ -34533,6 +34864,13 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 			return graphql.Null
 		}
 		return ec._PostLike(ctx, sel, obj)
+	case graphql1.ResourceProgress:
+		return ec._ResourceProgress(ctx, sel, &obj)
+	case *graphql1.ResourceProgress:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ResourceProgress(ctx, sel, obj)
 	case types.Series:
 		return ec._Series(ctx, sel, &obj)
 	case *types.Series:
@@ -38559,9 +38897,41 @@ func (ec *executionContext) _Resource(ctx context.Context, sel ast.SelectionSet,
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "progress":
+
+			out.Values[i] = ec._Resource_progress(ctx, field, obj)
+
 		case "failed":
 
 			out.Values[i] = ec._Resource_failed(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var resourceProgressImplementors = []string{"ResourceProgress", "_Entity"}
+
+func (ec *executionContext) _ResourceProgress(ctx context.Context, sel ast.SelectionSet, obj *graphql1.ResourceProgress) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resourceProgressImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResourceProgress")
+		case "id":
+
+			out.Values[i] = ec._ResourceProgress_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -38762,6 +39132,26 @@ func (ec *executionContext) _Series(ctx context.Context, sel ast.SelectionSet, o
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "characters":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Series_characters(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "posts":
 			field := field
 
@@ -42937,6 +43327,13 @@ func (ec *executionContext) marshalOResource2ᚖoverdollᚋlibrariesᚋgraphql�
 		return graphql.Null
 	}
 	return ec._Resource(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOResourceProgress2ᚖoverdollᚋlibrariesᚋgraphqlᚐResourceProgress(ctx context.Context, sel ast.SelectionSet, v *graphql1.ResourceProgress) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._ResourceProgress(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOResourceUrl2ᚖoverdollᚋlibrariesᚋgraphqlᚐResourceURL(ctx context.Context, sel ast.SelectionSet, v *graphql1.ResourceURL) graphql.Marshaler {

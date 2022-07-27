@@ -2,22 +2,25 @@ package activities
 
 import (
 	"context"
+	"go.temporal.io/sdk/activity"
+	"go.uber.org/zap"
 	"os"
 	"overdoll/applications/loader/internal/domain/resource"
 	"overdoll/libraries/errors"
+	"strings"
 )
 
 type ProcessResourcesInput struct {
-	ItemId      string
-	ResourceIds []string
-	Width       uint64
-	Height      uint64
+	ItemId     string
+	ResourceId string
+	Width      uint64
+	Height     uint64
 }
 
 func (h *Activities) ProcessResources(ctx context.Context, input ProcessResourcesInput) error {
 
 	// first, get all resources
-	resourcesFromIds, err := h.rr.GetResourcesByIds(ctx, []string{input.ItemId}, input.ResourceIds)
+	resourcesFromIds, err := h.rr.GetResourcesByIds(ctx, []string{input.ItemId}, []string{input.ResourceId})
 
 	if err != nil {
 		return err
@@ -31,6 +34,64 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 	}
 
 	config, err := resource.NewConfig(input.Width, input.Height)
+
+	if err != nil {
+		return err
+	}
+
+	var heartbeat int64
+
+	alreadyReachedEnd := false
+	alreadyStarted := false
+
+	// when progress is made on the resource socket, we record a heartbeat
+	cleanup, err := resource.ListenProgressSocket(input.ItemId, input.ResourceId, func(progress int64) {
+
+		// record heartbeat so we know this activity is still functional
+		heartbeat++
+		info := activity.GetInfo(ctx)
+
+		// TODO: this heartbeat isn't recorded for some reason? so we make a manual API call (possibly because its called from another goroutine?)
+		activity.RecordHeartbeat(ctx, heartbeat)
+		if err = h.event.SendProcessResourcesHeartbeat(ctx, info.TaskToken, progress); err != nil {
+
+			if strings.Contains(err.Error(), "workflow execution already completed") {
+				return
+			}
+
+			zap.S().Errorw("failed to send heartbeat", zap.Error(err))
+		}
+
+		// only record "100" once
+		if progress == 100 && alreadyReachedEnd {
+			return
+		}
+
+		// only record "0" once
+		if progress == 0 && alreadyStarted {
+			return
+		}
+
+		if progress == 0 && !alreadyStarted {
+			alreadyStarted = true
+		}
+
+		if progress == 100 && !alreadyReachedEnd {
+			alreadyReachedEnd = true
+		}
+
+		if err = h.event.SendProcessResourcesProgress(ctx, input.ItemId, input.ResourceId, progress); err != nil {
+
+			if strings.Contains(err.Error(), "workflow execution already completed") {
+				return
+			}
+
+			zap.S().Errorw("failed to send process resources progress", zap.Error(err))
+		}
+
+	})
+
+	defer cleanup()
 
 	if err != nil {
 		return err

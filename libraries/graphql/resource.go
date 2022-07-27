@@ -9,6 +9,13 @@ import (
 	"strconv"
 )
 
+type ResourceProgress struct {
+	// An ID uniquely identifying this resource progress.
+	ID relay.ID `json:"id"`
+}
+
+func (ResourceProgress) IsEntity() {}
+
 // A resource represents an image or a video format that contains an ID to uniquely identify it,
 // and urls to access the resources. We have many urls in order to provide a fallback for older browsers
 //
@@ -42,6 +49,8 @@ type Resource struct {
 
 	// Whether or not the video has audio.
 	VideoNoAudio bool `json:"videoNoAudio"`
+
+	Progress *ResourceProgress `json:"progress"`
 }
 
 // A type representing a url to the resource and the mimetype
@@ -128,12 +137,19 @@ func MarshalResourceToGraphQL(ctx context.Context, res *resource.Resource) *Reso
 		}
 	}
 
+	var progress *ResourceProgress
+
+	if !res.IsProcessed() && !res.Failed() {
+		progress = &ResourceProgress{ID: relay.NewID(ResourceProgress{}, res.ItemId(), res.ID())}
+	}
+
 	return &Resource{
 		ID:             relay.NewID(Resource{}, res.ItemId(), res.ID()),
 		Processed:      res.IsProcessed(),
 		Type:           tp,
 		Urls:           urls,
 		Width:          res.Width(),
+		Progress:       progress,
 		Height:         res.Height(),
 		VideoDuration:  res.VideoDuration(),
 		VideoThumbnail: videoUrl,

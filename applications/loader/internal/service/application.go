@@ -62,8 +62,9 @@ func createApplication(ctx context.Context, callbackService activities.CallbackS
 			ReprocessResource:                  command.NewReprocessResourceHandler(resourceRepo, eventRepo),
 		},
 		Queries: app.Queries{
-			ResourcesByIds: query.NewResourcesByIdsHandler(resourceRepo),
+			ResourcesByIds:       query.NewResourcesByIdsHandler(resourceRepo),
+			ResourceProgressById: query.NewResourceProgressByIdHandler(eventRepo),
 		},
-		Activities: activities.NewActivitiesHandler(resourceRepo, callbackService),
+		Activities: activities.NewActivitiesHandler(resourceRepo, callbackService, eventRepo),
 	}
 }

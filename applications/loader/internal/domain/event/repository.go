@@ -9,4 +9,7 @@ type Repository interface {
 	ProcessResourcesWithFiltersFromCopy(ctx context.Context, itemId string, resourceIds []string, source string, config *resource.Config, filters *resource.ImageFilters) error
 	ProcessResources(ctx context.Context, itemId string, resourceIds []string, source string, config *resource.Config) error
 	DeleteResources(ctx context.Context, itemId string, resourceIds []string) error
+	SendProcessResourcesHeartbeat(ctx context.Context, token []byte, heartbeat int64) error
+	SendProcessResourcesProgress(ctx context.Context, itemId, resourceId string, progress int64) error
+	GetResourceProgress(ctx context.Context, itemId, resourceIds string) (*resource.Progress, error)
 }

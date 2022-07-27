@@ -1,6 +1,7 @@
 package workflows
 
 import (
+	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 	"overdoll/applications/loader/internal/app/workflows/activities"
 	"time"
@@ -8,7 +9,7 @@ import (
 
 type ProcessResourcesInput struct {
 	ItemId      string
-	ResourceIds []string
+	ResourceId  string
 	Source      string
 	IsNotFound  bool
 	AlreadySent bool
@@ -16,24 +17,60 @@ type ProcessResourcesInput struct {
 	Height      uint64
 }
 
+const (
+	ProcessResourcesProgressAppendSignal = "process-resources-progress-append"
+	ProcessResourcesProgressQuery        = "process-resources-progress"
+)
+
 func ProcessResources(ctx workflow.Context, input ProcessResourcesInput) error {
 
-	ctx = workflow.WithActivityOptions(ctx, options)
+	progress := int64(-1)
+
+	ctx = workflow.WithActivityOptions(ctx, workflow.ActivityOptions{
+		StartToCloseTimeout: time.Hour * 24,
+		HeartbeatTimeout:    time.Minute * 2,
+		RetryPolicy: &temporal.RetryPolicy{
+			InitialInterval:    time.Second,
+			BackoffCoefficient: 10.0,
+			MaximumInterval:    time.Minute * 10,
+		},
+	})
+
 	logger := workflow.GetLogger(ctx)
+
+	signalChan := workflow.GetSignalChannel(ctx, ProcessResourcesProgressAppendSignal)
+	selector := workflow.NewSelector(ctx)
+
+	selector.
+		AddReceive(signalChan, func(channel workflow.ReceiveChannel, more bool) {
+			channel.Receive(ctx, &progress)
+		})
+
+	if err := workflow.SetQueryHandler(ctx, ProcessResourcesProgressQuery, func() (int64, error) {
+		for signalChan.ReceiveAsync(&progress) {
+		}
+
+		return progress, nil
+	}); err != nil {
+		return err
+	}
 
 	var a *activities.Activities
 
 	if err := workflow.ExecuteActivity(ctx, a.ProcessResources,
 		activities.ProcessResourcesInput{
-			ItemId:      input.ItemId,
-			ResourceIds: input.ResourceIds,
-			Width:       input.Width,
-			Height:      input.Height,
+			ItemId:     input.ItemId,
+			ResourceId: input.ResourceId,
+			Width:      input.Width,
+			Height:     input.Height,
 		},
 	).Get(ctx, nil); err != nil {
 		logger.Error("failed to process resources", "Error", err)
 		return err
 	}
+
+	// transitioned to a different state of progress
+	progress = -2
 
 	totalTimes := 2
 
@@ -56,7 +93,7 @@ func ProcessResources(ctx workflow.Context, input ProcessResourcesInput) error {
 		if err := workflow.ExecuteActivity(ctx, a.SendCallback,
 			activities.SendCallbackInput{
 				ItemId:      input.ItemId,
-				ResourceIds: input.ResourceIds,
+				ResourceIds: []string{input.ResourceId},
 				Source:      input.Source,
 			},
 		).Get(ctx, &sendCallbackPayload); err != nil {

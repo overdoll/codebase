@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
@@ -255,6 +254,7 @@ func (r ResourceCassandraS3Repository) updateResources(ctx context.Context, res 
 				"video_thumbnail",
 				"video_thumbnail_mime_type",
 				"video_no_audio",
+				"type",
 				"width",
 				"height",
 				"preview",
@@ -435,19 +435,6 @@ func (r ResourceCassandraS3Repository) DeleteResources(ctx context.Context, reso
 				})
 
 				if err != nil {
-					return errors.Wrap(err, "unable to delete file")
-				}
-			}
-
-			// delete from uploads bucket
-			_, err := s3Client.DeleteObject(&s3.DeleteObjectInput{
-				Bucket: aws.String(os.Getenv("UPLOADS_BUCKET")),
-				Key:    aws.String("/" + target.ID()),
-			})
-
-			if err != nil {
-				// ignore no such key errors since uploaded files will expire in the bucket after 30 days
-				if aerr, ok := err.(awserr.Error); ok && aerr.Code() != s3.ErrCodeNoSuchKey {
 					return errors.Wrap(err, "unable to delete file")
 				}
 			}

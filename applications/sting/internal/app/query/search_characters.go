@@ -14,6 +14,7 @@ type SearchCharacters struct {
 	Slugs          []string
 	SortBy         string
 	Name           *string
+	SeriesId       *string
 	SeriesSlug     *string
 	ClubId         *string
 	ClubCharacters *bool
@@ -36,6 +37,7 @@ func (h SearchCharactersHandler) Handle(ctx context.Context, query SearchCharact
 		query.SeriesSlug,
 		query.ClubId,
 		query.ClubCharacters,
+		query.SeriesId,
 	)
 
 	if err != nil {
