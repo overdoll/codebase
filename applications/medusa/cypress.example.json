@@ -3,7 +3,8 @@
   "env": {
     "codeCoverage": {
       "url": "/api/coverage"
-    }
+    },
+    "FAIL_FAST_ENABLED": false
   },
   "experimentalSessionSupport": true,
   "chromeWebSecurity": false

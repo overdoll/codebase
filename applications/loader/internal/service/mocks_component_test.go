@@ -12,4 +12,12 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 	application = testApplication
 
 	application.StingCallbackClient.On("UpdateResources", mock.Anything, mock.Anything).Return(&proto.UpdateResourcesResponse{}, nil)
+
+	application.TemporalClient.On("RecordActivityHeartbeat", mock.Anything, mock.Anything, mock.Anything).
+		Run(
+			func(args mock.Arguments) {
+
+			},
+		).
+		Return(nil)
 }

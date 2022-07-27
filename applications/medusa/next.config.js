@@ -186,12 +186,20 @@ const moduleExports = withBundleAnalyzer({
     ]
   },
   rewrites: async () => {
-    return [
-      {
-        source: '/readyz',
-        destination: '/api/readyz'
-      }
-    ]
+    return {
+      beforeFiles: [
+        {
+          source: '/sitemaps/:path*',
+          destination: 'https://static.dollycdn.net/sitemaps/:path*'
+        }
+      ],
+      afterFiles: [
+        {
+          source: '/readyz',
+          destination: '/api/readyz'
+        }
+      ]
+    }
   },
   generateBuildId: () => nextBuildId({ dir: __dirname }),
   distDir: 'build',

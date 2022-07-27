@@ -746,7 +746,7 @@ var aRx = regexp.MustCompile(`(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([
 
 func validatePostDescription(name string) error {
 
-	err := validator.New().Var(name, "required,max=280")
+	err := validator.New().Var(name, "max=280")
 
 	if err != nil {
 		return domainerror.NewValidation(err.Error())

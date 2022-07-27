@@ -254,7 +254,11 @@ func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Cont
 	}
 
 	if filter.SeriesSlug() != nil {
-		query.Filter(elastic.NewTermQuery("series.slug", *filter.SeriesSlug()))
+		query.Filter(elastic.NewNestedQuery("series", elastic.NewMatchQuery("series.slug", *filter.SeriesSlug())))
+	}
+
+	if filter.SeriesId() != nil {
+		query.Filter(elastic.NewNestedQuery("series", elastic.NewTermsQuery("series.id", *filter.SeriesId())))
 	}
 
 	if filter.ClubId() != nil {

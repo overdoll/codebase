@@ -13,6 +13,7 @@ var application *service.ComponentTestApplication
 
 func mockServices(testApplication *service.ComponentTestApplication) {
 	application = testApplication
+
 }
 
 func mockAccountArtist(t *testing.T, accountId string) {

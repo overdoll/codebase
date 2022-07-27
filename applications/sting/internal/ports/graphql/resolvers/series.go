@@ -59,3 +59,29 @@ func (r SeriesResolver) Posts(ctx context.Context, obj *types.Series, after *str
 
 	return types.MarshalPostToGraphQLConnection(ctx, results, cursor), nil
 }
+
+func (r SeriesResolver) Characters(ctx context.Context, obj *types.Series, after *string, before *string, first *int, last *int, slugs []string, name *string, sortBy types.CharactersSort) (*types.CharacterConnection, error) {
+
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
+	}
+
+	seriesId := obj.ID.GetID()
+
+	results, err := r.App.Queries.SearchCharacters.Handle(ctx, query.SearchCharacters{
+		Principal: principal.FromContext(ctx),
+		Cursor:    cursor,
+		Slugs:     slugs,
+		SortBy:    sortBy.String(),
+		Name:      name,
+		SeriesId:  &seriesId,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalCharacterToGraphQLConnection(ctx, results, cursor), nil
+}

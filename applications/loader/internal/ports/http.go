@@ -7,6 +7,8 @@ import (
 	"go.uber.org/zap"
 	"net/http"
 	"overdoll/applications/loader/internal/app"
+	gen "overdoll/applications/loader/internal/ports/graphql"
+	"overdoll/libraries/graphql"
 	"overdoll/libraries/router"
 )
 
@@ -17,6 +19,13 @@ type GraphQLServer struct {
 func NewHttpServer(app *app.Application) http.Handler {
 
 	rtr := router.NewGinRouter(nil)
+
+	// graphql
+	rtr.POST("/api/graphql",
+		graphql.HandleGraphQL(gen.NewExecutableSchema(gen.Config{
+			Resolvers: gen.NewResolver(app),
+		})),
+	)
 
 	composer, err := app.Commands.TusComposer.Handle(context.Background())
 

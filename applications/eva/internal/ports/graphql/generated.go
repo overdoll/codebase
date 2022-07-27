@@ -307,12 +307,17 @@ type ComplexityRoot struct {
 		ID             func(childComplexity int) int
 		Preview        func(childComplexity int) int
 		Processed      func(childComplexity int) int
+		Progress       func(childComplexity int) int
 		Type           func(childComplexity int) int
 		Urls           func(childComplexity int) int
 		VideoDuration  func(childComplexity int) int
 		VideoNoAudio   func(childComplexity int) int
 		VideoThumbnail func(childComplexity int) int
 		Width          func(childComplexity int) int
+	}
+
+	ResourceProgress struct {
+		ID func(childComplexity int) int
 	}
 
 	ResourceUrl struct {
@@ -1588,6 +1593,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Resource.Processed(childComplexity), true
 
+	case "Resource.progress":
+		if e.complexity.Resource.Progress == nil {
+			break
+		}
+
+		return e.complexity.Resource.Progress(childComplexity), true
+
 	case "Resource.type":
 		if e.complexity.Resource.Type == nil {
 			break
@@ -1629,6 +1641,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Resource.Width(childComplexity), true
+
+	case "ResourceProgress.id":
+		if e.complexity.ResourceProgress.ID == nil {
+			break
+		}
+
+		return e.complexity.ResourceProgress.ID(childComplexity), true
 
 	case "ResourceUrl.mimeType":
 		if e.complexity.ResourceUrl.MimeType == nil {
@@ -2888,13 +2907,17 @@ type ResourceUrl {
   mimeType: String!
 }
 
+extend type ResourceProgress @key(fields: "id") {
+  """An ID identifying this progress."""
+  id: ID! @external
+}
+
 """
 A resource represents an image or a video format that contains an ID to uniquely identify it,
 and urls to access the resources. We have many urls in order to provide a fallback for older browsers
 
 We also identify the type of resource (image or video) to make it easy to distinguish them
 """
-
 type Resource {
   """An ID uniquely identifying this resource."""
   id: ID!
@@ -2925,6 +2948,15 @@ type Resource {
 
   """A hex-code color of the resource that can be used in-place while the resource is loading."""
   preview: String!
+
+  """
+  This field identifies the progress for the resource.
+
+  If the resource is not yet processed, this will not be nil.
+
+  If we have some sort of state information available about the progress, this will not be nil.
+  """
+  progress: ResourceProgress
 
   """
   Whether or not this resource failed to process.
@@ -2966,7 +2998,7 @@ interface Node {
 `, BuiltIn: true},
 	{Name: "../../../federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
-union _Entity = Account | AccountEmail | AccountSession
+union _Entity = Account | AccountEmail | AccountSession | ResourceProgress
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
@@ -3747,6 +3779,8 @@ func (ec *executionContext) fieldContext_Account_avatar(ctx context.Context, fie
 				return ec.fieldContext_Resource_videoNoAudio(ctx, field)
 			case "preview":
 				return ec.fieldContext_Resource_preview(ctx, field)
+			case "progress":
+				return ec.fieldContext_Resource_progress(ctx, field)
 			case "failed":
 				return ec.fieldContext_Resource_failed(ctx, field)
 			}
@@ -11346,6 +11380,51 @@ func (ec *executionContext) fieldContext_Resource_preview(ctx context.Context, f
 	return fc, nil
 }
 
+func (ec *executionContext) _Resource_progress(ctx context.Context, field graphql.CollectedField, obj *graphql1.Resource) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Resource_progress(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Progress, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*graphql1.ResourceProgress)
+	fc.Result = res
+	return ec.marshalOResourceProgress2ᚖoverdollᚋlibrariesᚋgraphqlᚐResourceProgress(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Resource_progress(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Resource",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_ResourceProgress_id(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ResourceProgress", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Resource_failed(ctx context.Context, field graphql.CollectedField, obj *graphql1.Resource) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Resource_failed(ctx, field)
 	if err != nil {
@@ -11385,6 +11464,50 @@ func (ec *executionContext) fieldContext_Resource_failed(ctx context.Context, fi
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ResourceProgress_id(ctx context.Context, field graphql.CollectedField, obj *graphql1.ResourceProgress) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ResourceProgress_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ResourceProgress_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ResourceProgress",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
 		},
 	}
 	return fc, nil
@@ -14851,6 +14974,13 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 			return graphql.Null
 		}
 		return ec._AccountSession(ctx, sel, obj)
+	case graphql1.ResourceProgress:
+		return ec._ResourceProgress(ctx, sel, &obj)
+	case *graphql1.ResourceProgress:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ResourceProgress(ctx, sel, obj)
 	default:
 		panic(fmt.Errorf("unexpected type %T", obj))
 	}
@@ -16899,9 +17029,41 @@ func (ec *executionContext) _Resource(ctx context.Context, sel ast.SelectionSet,
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "progress":
+
+			out.Values[i] = ec._Resource_progress(ctx, field, obj)
+
 		case "failed":
 
 			out.Values[i] = ec._Resource_failed(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var resourceProgressImplementors = []string{"ResourceProgress", "_Entity"}
+
+func (ec *executionContext) _ResourceProgress(ctx context.Context, sel ast.SelectionSet, obj *graphql1.ResourceProgress) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, resourceProgressImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ResourceProgress")
+		case "id":
+
+			out.Values[i] = ec._ResourceProgress_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -18952,6 +19114,13 @@ func (ec *executionContext) marshalOResource2ᚖoverdollᚋlibrariesᚋgraphql�
 		return graphql.Null
 	}
 	return ec._Resource(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOResourceProgress2ᚖoverdollᚋlibrariesᚋgraphqlᚐResourceProgress(ctx context.Context, sel ast.SelectionSet, v *graphql1.ResourceProgress) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._ResourceProgress(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOResourceUrl2ᚖoverdollᚋlibrariesᚋgraphqlᚐResourceURL(ctx context.Context, sel ast.SelectionSet, v *graphql1.ResourceURL) graphql.Marshaler {

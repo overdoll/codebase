@@ -28,6 +28,14 @@ type CharacterModified struct {
 	Banner    *graphql2.Resource
 }
 
+type SearchCharactersForSeries struct {
+	Characters struct {
+		Edges []struct {
+			Node CharacterModified
+		}
+	} `graphql:"characters(seriesSlug: $seriesSlug)"`
+}
+
 type SearchCharacters struct {
 	Characters struct {
 		Edges []struct {
@@ -69,12 +77,12 @@ func refreshCharacterIndex(t *testing.T) {
 	require.NoError(t, err)
 }
 
-func getSeriesCharacterBySlug(t *testing.T, client *graphql.Client, slug string) *CharacterModified {
+func getSeriesCharacterBySlug(t *testing.T, client *graphql.Client, slug, seriesSlug string) *CharacterModified {
 	var getCharacter CharacterSeries
 
 	err := client.Query(context.Background(), &getCharacter, map[string]interface{}{
 		"slug":       graphql.String(slug),
-		"seriesSlug": graphql.String("ForeignerOnMars"),
+		"seriesSlug": graphql.String(seriesSlug),
 	})
 
 	require.NoError(t, err)
@@ -96,7 +104,9 @@ func TestCreateSeriesCharacter_update_and_search(t *testing.T) {
 	require.NoError(t, err, "no error creating fake category")
 	currentCharacterSlug := fake.Slug
 
-	seriesId := "1pcKiQL7dgUW8CIN7uO1wqFaMql"
+	series := seedSeries(t)
+
+	seriesId := series.ID()
 
 	var createCharacter CreateCharacter
 
@@ -116,7 +126,7 @@ func TestCreateSeriesCharacter_update_and_search(t *testing.T) {
 
 	refreshCharacterIndex(t)
 
-	character := getSeriesCharacterBySlug(t, client, currentCharacterSlug)
+	character := getSeriesCharacterBySlug(t, client, currentCharacterSlug, series.Slug())
 
 	require.NotNil(t, character, "found character")
 	require.Equal(t, fake.Name, character.Name, "correct name")
@@ -130,6 +140,16 @@ func TestCreateSeriesCharacter_update_and_search(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, searchCharacters.Characters.Edges, 1, "only found 1 result")
 	require.Equal(t, fake.Name, searchCharacters.Characters.Edges[0].Node.Name, "correct name")
+
+	var searchCharactersForSeries SearchCharactersForSeries
+
+	err = client.Query(context.Background(), &searchCharactersForSeries, map[string]interface{}{
+		"seriesSlug": graphql.String(series.Slug()),
+	})
+
+	require.NoError(t, err)
+	require.Len(t, searchCharactersForSeries.Characters.Edges, 1, "only found 1 result")
+	require.Equal(t, fake.Name, searchCharactersForSeries.Characters.Edges[0].Node.Name, "correct name")
 
 	fake = TestCharacter{}
 	err = faker.FakeData(&fake)
@@ -180,7 +200,7 @@ func TestCreateSeriesCharacter_update_and_search(t *testing.T) {
 
 	require.NoError(t, err, "no error running resource callback")
 
-	character = getSeriesCharacterBySlug(t, client, currentCharacterSlug)
+	character = getSeriesCharacterBySlug(t, client, currentCharacterSlug, series.Slug())
 	require.NotNil(t, character, "expected to have found character")
 
 	require.Equal(t, fake.Name, character.Name, "title has been updated")
@@ -213,7 +233,7 @@ func TestCreateSeriesCharacter_update_and_search(t *testing.T) {
 
 	require.NoError(t, err, "no error updating character banner")
 
-	character = getSeriesCharacterBySlug(t, client, currentCharacterSlug)
+	character = getSeriesCharacterBySlug(t, client, currentCharacterSlug, series.Slug())
 	require.NotNil(t, character, "expected to have found character")
 	require.NotNil(t, character.Banner, "has a banner")
 }

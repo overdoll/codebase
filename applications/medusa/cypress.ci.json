@@ -7,5 +7,10 @@
   "retries": {
     "runMode": 2
   },
-  "video": false
+  "video": false,
+  "env": {
+    "FAIL_FAST_STRATEGY": "run",
+    "FAIL_FAST_ENABLED": true,
+    "FAIL_FAST_BAIL": 2
+  }
 }

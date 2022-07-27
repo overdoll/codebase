@@ -61,3 +61,5 @@ applications/sting/internal/ports/graphql/queries/resolvers.go
 **/__locale__/_build/
 **/__locale__/**/*.ts
 **/__locale__/**/*.js
+
+docker/eva/GeoLite2-City.mmdb

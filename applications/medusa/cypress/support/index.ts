@@ -1,10 +1,13 @@
 import '@testing-library/cypress/add-commands'
 import '@cypress/code-coverage/support'
 import 'cypress-file-upload'
+import 'cypress-fail-fast'
 import 'cypress-wait-until'
 import './join'
 import './email'
 import './cookies'
+
+require('cypress-terminal-report/src/installLogsCollector')()
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace

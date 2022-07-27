@@ -39,6 +39,8 @@ models:
     model: overdoll/libraries/graphql.Currency
   Resource:
     model: overdoll/libraries/graphql.Resource
+  ResourceProgress:
+    model: overdoll/libraries/graphql.ResourceProgress
   ResourceUrl:
     model: overdoll/libraries/graphql.ResourceURL
   ResourceType:

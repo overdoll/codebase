@@ -36,7 +36,7 @@ go_binary(
 
 go_image(
     name = "local-image",
-    base = "@go_base_image//image",
+    base = "@eva_base_image//image",
     data = ["//applications/eva:.env"] + DEPENDENCIES,
     embed = [":internal_lib"],
     importpath = "overdoll/applications/eva",
@@ -44,7 +44,7 @@ go_image(
 
 go_image(
     name = "image",
-    base = "@go_base_image//image",
+    base = "@eva_base_image//image",
     data = DEPENDENCIES,
     embed = [":internal_lib"],
     importpath = "overdoll/applications/eva",
