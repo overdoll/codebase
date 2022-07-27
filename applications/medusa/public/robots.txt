@@ -12,4 +12,4 @@ Disallow: /clubs/create-club
 Disallow: /clubs/feed
 Disallow: /join?
 
-Sitemap: https://static.dollycdn.net/sitemaps/sitemap.xml
+Sitemap: https://overdoll.com/sitemaps/sitemap.xml
