@@ -42,6 +42,7 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 	var heartbeat int64
 
 	alreadyReachedEnd := false
+	alreadyStarted := false
 
 	// when progress is made on the resource socket, we record a heartbeat
 	cleanup, err := resource.ListenProgressSocket(input.ItemId, input.ResourceId, func(progress int64) {
@@ -59,9 +60,8 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 			zap.S().Errorw("failed to send heartbeat", zap.Error(err))
 		}
 
-		// ignore "0" progress
-		if progress == 0 {
-			return
+		if progress == 0 && !alreadyStarted {
+			alreadyStarted = true
 		}
 
 		if progress == 100 && !alreadyReachedEnd {
@@ -70,6 +70,11 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 
 		// only record "100" once
 		if progress == 100 && alreadyReachedEnd {
+			return
+		}
+
+		// only record "0" once
+		if progress == 0 && alreadyStarted {
 			return
 		}
 
