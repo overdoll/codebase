@@ -7,6 +7,7 @@ import (
 	"github.com/bazelbuild/rules_go/go/tools/bazel"
 	"github.com/corona10/goimagehash"
 	"github.com/eventials/go-tus"
+	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"go.temporal.io/sdk/testsuite"
 	"golang.org/x/image/webp"
@@ -20,10 +21,12 @@ import (
 	"overdoll/applications/loader/internal/ports"
 	"overdoll/applications/loader/internal/service"
 	loader "overdoll/applications/loader/proto"
+	"overdoll/libraries/passport"
 	"overdoll/libraries/uuid"
 	"path"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
@@ -34,6 +37,7 @@ import (
 
 const LoaderHttpAddr = ":3333"
 const LoaderTusClientAddr = "http://:3333/api/upload/"
+const LoaderGraphqlClientAddr = "http://:3333/api/graphql/"
 
 const LoaderGrpcAddr = "localhost:3334"
 const LoaderGrpcClientAddr = "localhost:3334"
@@ -47,6 +51,13 @@ func getTusClient(t *testing.T) *tus.Client {
 	require.NoError(t, err)
 
 	return client
+}
+
+func getGraphqlClient(t *testing.T) *graphql.Client {
+
+	client, _ := passport.NewHTTPTestClientWithPassport(nil)
+
+	return graphql.NewClient(LoaderGraphqlClientAddr, client)
 }
 
 func uploadFileWithTus(t *testing.T, tusClient *tus.Client, filePath string) string {
@@ -205,6 +216,7 @@ func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 	suite := new(testsuite.WorkflowTestSuite)
 	suite.SetLogger(testing_tools.NewDefaultTestWorkflowLogger())
 	env := suite.NewTestWorkflowEnvironment()
+	env.SetTestTimeout(time.Second * 60)
 
 	env.RegisterActivity(application.App.Activities)
 

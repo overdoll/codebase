@@ -2,12 +2,16 @@ package service_test
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	graphql2 "github.com/99designs/gqlgen/graphql"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	"go.temporal.io/sdk/converter"
 	"overdoll/applications/loader/internal/app/workflows"
+	"overdoll/applications/loader/internal/ports/graphql/types"
 	loader "overdoll/applications/loader/proto"
+	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/resource"
 	"overdoll/libraries/resource/proto"
 	"overdoll/libraries/testing_tools"
@@ -16,6 +20,33 @@ import (
 	"testing"
 	"time"
 )
+
+type _Any map[string]interface{}
+
+type ResourceProgress struct {
+	Entities []struct {
+		ResourceProgress types.ResourceProgress `graphql:"... on ResourceProgress"`
+	} `graphql:"_entities(representations: $representations)"`
+}
+
+func queryResourceProgress(t *testing.T, itemId, resourceId string) types.ResourceProgress {
+	client := getGraphqlClient(t)
+
+	var progress ResourceProgress
+
+	err := client.Query(context.Background(), &progress, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "ResourceProgress",
+				"id":         base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.ResourceProgress{}, itemId, resourceId))),
+			},
+		},
+	})
+
+	require.NoError(t, err)
+
+	return progress.Entities[0].ResourceProgress
+}
 
 const previewRegex = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
 
@@ -32,10 +63,8 @@ func TestUploadResourcesAndProcessFailed(t *testing.T) {
 	imageId := strings.Split(imageFileId, "+")[0]
 	videoId := strings.Split(videoFileId, "+")[0]
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: []string{
-		imageId,
-		videoId,
-	}, Source: "STING"})
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: imageId, Source: "STING"})
+	workflowExecution2 := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: videoId, Source: "STING"})
 
 	grpcClient := getGrpcClient(t)
 
@@ -53,10 +82,8 @@ func TestUploadResourcesAndProcessFailed(t *testing.T) {
 
 	require.NoError(t, err, "no error creating new resources from uploads")
 
-	env := getWorkflowEnvironment()
-	env.SetTestTimeout(time.Second * 10)
-
-	workflowExecution.FindAndExecuteWorkflow(t, env)
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+	workflowExecution2.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	resourceResults, err := grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{
 		ItemId:      itemId,
@@ -89,10 +116,26 @@ func TestUploadResourcesAndProcessPrivate_and_update_privacy(t *testing.T) {
 	imageId := strings.Split(imageFileId, "+")[0]
 	videoId := strings.Split(videoFileId, "+")[0]
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: []string{
-		imageId,
-		videoId,
-	}, Source: "STING"})
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: imageId, Source: "STING"})
+	workflowExecution2 := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: videoId, Source: "STING"})
+
+	videoEnv := getWorkflowEnvironment()
+
+	application.TemporalClient.On("SignalWorkflow", mock.Anything, "loader.ProcessResourcesForUpload_"+itemId+"_"+videoId, "", workflows.ProcessResourcesProgressAppendSignal, mock.Anything).
+		Run(
+			func(args mock.Arguments) {
+				videoEnv.SignalWorkflow(workflows.ProcessResourcesProgressAppendSignal, 68)
+			},
+		).
+		Return(nil).
+		Once()
+
+	application.TemporalClient.On("QueryWorkflow", mock.Anything, "loader.ProcessResourcesForUpload_"+itemId+"_"+videoId, "", workflows.ProcessResourcesProgressQuery).
+		Return(func(ctx context.Context, workflowID string, runID string, queryType string, args ...interface{}) converter.EncodedValue {
+			val, _ := videoEnv.QueryWorkflow(workflows.ProcessResourcesProgressQuery)
+			return val
+		}, nil).
+		Once()
 
 	// start processing of files by calling grpc endpoint
 	res, err := grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{
@@ -106,12 +149,16 @@ func TestUploadResourcesAndProcessPrivate_and_update_privacy(t *testing.T) {
 		},
 	})
 
+	videoEnv.RegisterDelayedCallback(func() {
+		result := queryResourceProgress(t, itemId, videoId)
+		require.Equal(t, types.ResourceProgressStateStarted, result.State, "should have the correct state")
+		require.Equal(t, float64(68), result.Progress, "should have the correct progress")
+	}, time.Second*30)
+
 	require.NoError(t, err, "no error creating new resources from uploads")
 
-	env := getWorkflowEnvironment()
-	env.SetTestTimeout(time.Second * 20)
-
-	workflowExecution.FindAndExecuteWorkflow(t, env)
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+	workflowExecution2.FindAndExecuteWorkflow(t, videoEnv)
 
 	resourceResults, err := grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{
 		ItemId:      itemId,
@@ -185,6 +232,10 @@ func TestUploadResourcesAndProcessPrivate_and_update_privacy(t *testing.T) {
 	}
 
 	require.Equal(t, 4, assertions, "should have checked 4 urls in total")
+
+	result := queryResourceProgress(t, itemId, videoId)
+	require.Equal(t, types.ResourceProgressStateFinalizing, result.State, "should have the correct state")
+	require.Equal(t, float64(100), result.Progress, "should have the correct progress")
 }
 
 func TestUploadResourcesAndApplyWidths(t *testing.T) {
@@ -199,9 +250,7 @@ func TestUploadResourcesAndApplyWidths(t *testing.T) {
 
 	imageId := strings.Split(imageFileId, "+")[0]
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, Width: 360, Height: 360, ResourceId: []string{
-		imageId,
-	}, Source: "STING"})
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, Width: 360, Height: 360, ResourceId: imageId, Source: "STING"})
 
 	// start processing of files by calling grpc endpoint
 	res, err := grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{
@@ -217,10 +266,7 @@ func TestUploadResourcesAndApplyWidths(t *testing.T) {
 
 	require.NoError(t, err, "no error creating new resources from uploads")
 
-	env := getWorkflowEnvironment()
-	env.SetTestTimeout(time.Second * 10)
-
-	workflowExecution.FindAndExecuteWorkflow(t, env)
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	resourceResults, err := grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{
 		ItemId:      itemId,
@@ -265,10 +311,8 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 
 	fmt.Println(itemId)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: []string{
-		imageId,
-		videoId,
-	}, Width: 0, Height: 0, Source: "STING"})
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: imageId, Width: 0, Height: 0, Source: "STING"})
+	workflowExecution2 := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: videoId, Width: 0, Height: 0, Source: "STING"})
 
 	// start processing of files by calling grpc endpoint
 	res, err := grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{
@@ -284,10 +328,8 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 
 	require.NoError(t, err, "no error creating new resources from uploads")
 
-	env := getWorkflowEnvironment()
-	env.SetTestTimeout(time.Second * 20)
-
-	workflowExecution.FindAndExecuteWorkflow(t, env)
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+	workflowExecution2.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	resourceResults, err := grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{
 		ItemId:      itemId,
@@ -354,10 +396,7 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 			}},
 	)
 
-	env = getWorkflowEnvironment()
-	env.SetTestTimeout(time.Second * 20)
-
-	workflowExecution.FindAndExecuteWorkflow(t, env)
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	require.NoError(t, err, "no error copying resources")
 
@@ -421,11 +460,9 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 
 	grpcClient := getGrpcClient(t)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: []string{
-		strings.Split(imageFileId, "+")[0],
-		strings.Split(videoFileId, "+")[0],
-		strings.Split(videoFileId2, "+")[0],
-	}, Source: "STING"})
+	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: strings.Split(imageFileId, "+")[0], Source: "STING"})
+	workflowExecution2 := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: strings.Split(videoFileId, "+")[0], Source: "STING"})
+	workflowExecution3 := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: strings.Split(videoFileId2, "+")[0], Source: "STING"})
 
 	// start processing of files by calling grpc endpoint
 	res, err := grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{
@@ -496,10 +533,9 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 
 	require.Equal(t, 3, assertions, "expected to have checked 3 files")
 
-	env := getWorkflowEnvironment()
-	env.SetTestTimeout(time.Second * 40)
-
-	workflowExecution.FindAndExecuteWorkflow(t, env)
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+	workflowExecution2.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+	workflowExecution3.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	// then, run grpc call once again to make sure its processed
 	resources, err = grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{
@@ -637,11 +673,8 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	})
 	require.NoError(t, err)
 
-	env = getWorkflowEnvironment()
-	env.SetTestTimeout(time.Second * 20)
-
 	// run workflow to delete resources
-	deleteWorkflowExecution.FindAndExecuteWorkflow(t, env)
+	deleteWorkflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	// run grpc and see that we didn't find any resources
 	resources, err = grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{

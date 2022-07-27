@@ -4,6 +4,7 @@ go_library(
     name = "clients",
     srcs = [
         "carrier.go",
+        "default_grpc_dial_options.go",
         "eva.go",
         "hades.go",
         "loader.go",
