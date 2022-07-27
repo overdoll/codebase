@@ -14,8 +14,8 @@ func ParseDateWithTimeString(tm string) (time.Time, error) {
 	dateTime, err := time.ParseInLocation("20060102150405", tm, loc)
 
 	if err != nil {
-		var parseError time.ParseError
-		if errors.Is(err, &parseError) {
+		var parseError *time.ParseError
+		if errors.As(err, &parseError) {
 			dateTime = time.Now()
 		} else {
 			return time.Time{}, errors.Wrap(err, "error parsing date")
