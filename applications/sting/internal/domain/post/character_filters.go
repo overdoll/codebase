@@ -15,9 +15,10 @@ type CharacterFilters struct {
 	name           *string
 	clubId         *string
 	clubCharacters *bool
+	seriesId       *string
 }
 
-func NewCharacterFilters(name *string, sortBy string, slugs []string, seriesSlug, clubId *string, clubCharacters *bool) (*CharacterFilters, error) {
+func NewCharacterFilters(name *string, sortBy string, slugs []string, seriesSlug, clubId *string, clubCharacters *bool, seriesId *string) (*CharacterFilters, error) {
 
 	if len(slugs) > 0 && seriesSlug == nil {
 		return nil, ErrSeriesRequired
@@ -41,6 +42,7 @@ func NewCharacterFilters(name *string, sortBy string, slugs []string, seriesSlug
 		seriesSlug:     seriesSlug,
 		clubId:         clubId,
 		clubCharacters: clubCharacters,
+		seriesId:       seriesId,
 	}, nil
 }
 
@@ -62,6 +64,10 @@ func (e *CharacterFilters) SeriesSlug() *string {
 
 func (e *CharacterFilters) ClubId() *string {
 	return e.clubId
+}
+
+func (e *CharacterFilters) SeriesId() *string {
+	return e.seriesId
 }
 
 func (e *CharacterFilters) ClubCharacters() *bool {

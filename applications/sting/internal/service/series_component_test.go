@@ -18,6 +18,15 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+type CharacterSeriesModified struct {
+	Id        relay.ID
+	Name      string
+	Reference string
+	Slug      string
+	Thumbnail *graphql2.Resource
+	Banner    *graphql2.Resource
+}
+
 type SeriesModified struct {
 	Id         relay.ID
 	Reference  string
@@ -27,7 +36,7 @@ type SeriesModified struct {
 	Banner     *graphql2.Resource
 	Characters struct {
 		Edges []struct {
-			Node CharacterModified
+			Node CharacterSeriesModified
 		}
 	} `graphql:"characters()"`
 }
@@ -206,6 +215,9 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 	}}})
 
 	require.NoError(t, err, "no error updating series banner")
+
+	// seed a character connected to the series so we can look it up later
+	seedCharacter(t, createSeries.CreateSeries.Series.Reference)
 
 	series = getSeriesBySlug(t, client, currentSeriesSlug)
 	require.NotNil(t, series, "expected to have found series")

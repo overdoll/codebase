@@ -77,12 +77,12 @@ func refreshCharacterIndex(t *testing.T) {
 	require.NoError(t, err)
 }
 
-func getSeriesCharacterBySlug(t *testing.T, client *graphql.Client, slug string) *CharacterModified {
+func getSeriesCharacterBySlug(t *testing.T, client *graphql.Client, slug, seriesSlug string) *CharacterModified {
 	var getCharacter CharacterSeries
 
 	err := client.Query(context.Background(), &getCharacter, map[string]interface{}{
 		"slug":       graphql.String(slug),
-		"seriesSlug": graphql.String("ForeignerOnMars"),
+		"seriesSlug": graphql.String(seriesSlug),
 	})
 
 	require.NoError(t, err)
@@ -126,7 +126,7 @@ func TestCreateSeriesCharacter_update_and_search(t *testing.T) {
 
 	refreshCharacterIndex(t)
 
-	character := getSeriesCharacterBySlug(t, client, currentCharacterSlug)
+	character := getSeriesCharacterBySlug(t, client, currentCharacterSlug, series.Slug())
 
 	require.NotNil(t, character, "found character")
 	require.Equal(t, fake.Name, character.Name, "correct name")
@@ -200,7 +200,7 @@ func TestCreateSeriesCharacter_update_and_search(t *testing.T) {
 
 	require.NoError(t, err, "no error running resource callback")
 
-	character = getSeriesCharacterBySlug(t, client, currentCharacterSlug)
+	character = getSeriesCharacterBySlug(t, client, currentCharacterSlug, series.Slug())
 	require.NotNil(t, character, "expected to have found character")
 
 	require.Equal(t, fake.Name, character.Name, "title has been updated")
@@ -233,7 +233,7 @@ func TestCreateSeriesCharacter_update_and_search(t *testing.T) {
 
 	require.NoError(t, err, "no error updating character banner")
 
-	character = getSeriesCharacterBySlug(t, client, currentCharacterSlug)
+	character = getSeriesCharacterBySlug(t, client, currentCharacterSlug, series.Slug())
 	require.NotNil(t, character, "expected to have found character")
 	require.NotNil(t, character.Banner, "has a banner")
 }

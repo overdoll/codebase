@@ -553,6 +553,7 @@ type ComplexityRoot struct {
 
 	Series struct {
 		Banner            func(childComplexity int) int
+		Characters        func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, sortBy types.CharactersSort) int
 		ID                func(childComplexity int) int
 		Posts             func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) int
 		Reference         func(childComplexity int) int
@@ -904,6 +905,7 @@ type QueryResolver interface {
 type SeriesResolver interface {
 	Title(ctx context.Context, obj *types.Series, locale *string) (string, error)
 
+	Characters(ctx context.Context, obj *types.Series, after *string, before *string, first *int, last *int, slugs []string, name *string, sortBy types.CharactersSort) (*types.CharacterConnection, error)
 	Posts(ctx context.Context, obj *types.Series, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error)
 }
 type TopicResolver interface {
@@ -3506,6 +3508,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Series.Banner(childComplexity), true
 
+	case "Series.characters":
+		if e.complexity.Series.Characters == nil {
+			break
+		}
+
+		args, err := ec.field_Series_characters_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Series.Characters(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["sortBy"].(types.CharactersSort)), true
+
 	case "Series.id":
 		if e.complexity.Series.ID == nil {
 			break
@@ -4652,6 +4666,32 @@ enum CharactersSort {
 
   """Characters by most posts"""
   POPULAR
+}
+
+extend type Series {
+  """Get or search all characters for this series."""
+  characters(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Search by character slugs."""
+    slugs: [String!]
+
+    """Filter by the name of the character."""
+    name: String
+
+    """Sorting options for characters."""
+    sortBy: CharactersSort! = POPULAR
+  ): CharacterConnection! @goField(forceResolver: true)
 }
 
 extend type Club {
@@ -9895,6 +9935,75 @@ func (ec *executionContext) field_Query_topics_args(ctx context.Context, rawArgs
 	return args, nil
 }
 
+func (ec *executionContext) field_Series_characters_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg3
+	var arg4 []string
+	if tmp, ok := rawArgs["slugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slugs"))
+		arg4, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["slugs"] = arg4
+	var arg5 *string
+	if tmp, ok := rawArgs["name"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+		arg5, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["name"] = arg5
+	var arg6 types.CharactersSort
+	if tmp, ok := rawArgs["sortBy"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
+		arg6, err = ec.unmarshalNCharactersSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharactersSort(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["sortBy"] = arg6
+	return args, nil
+}
+
 func (ec *executionContext) field_Series_posts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -13520,6 +13629,8 @@ func (ec *executionContext) fieldContext_Character_series(ctx context.Context, f
 				return ec.fieldContext_Series_totalLikes(ctx, field)
 			case "totalPosts":
 				return ec.fieldContext_Series_totalPosts(ctx, field)
+			case "characters":
+				return ec.fieldContext_Series_characters(ctx, field)
 			case "posts":
 				return ec.fieldContext_Series_posts(ctx, field)
 			}
@@ -17184,6 +17295,8 @@ func (ec *executionContext) fieldContext_CreateSeriesPayload_series(ctx context.
 				return ec.fieldContext_Series_totalLikes(ctx, field)
 			case "totalPosts":
 				return ec.fieldContext_Series_totalPosts(ctx, field)
+			case "characters":
+				return ec.fieldContext_Series_characters(ctx, field)
 			case "posts":
 				return ec.fieldContext_Series_posts(ctx, field)
 			}
@@ -18833,6 +18946,8 @@ func (ec *executionContext) fieldContext_Entity_findSeriesByID(ctx context.Conte
 				return ec.fieldContext_Series_totalLikes(ctx, field)
 			case "totalPosts":
 				return ec.fieldContext_Series_totalPosts(ctx, field)
+			case "characters":
+				return ec.fieldContext_Series_characters(ctx, field)
 			case "posts":
 				return ec.fieldContext_Series_posts(ctx, field)
 			}
@@ -25344,6 +25459,8 @@ func (ec *executionContext) fieldContext_Query_serial(ctx context.Context, field
 				return ec.fieldContext_Series_totalLikes(ctx, field)
 			case "totalPosts":
 				return ec.fieldContext_Series_totalPosts(ctx, field)
+			case "characters":
+				return ec.fieldContext_Series_characters(ctx, field)
 			case "posts":
 				return ec.fieldContext_Series_posts(ctx, field)
 			}
@@ -27289,6 +27406,67 @@ func (ec *executionContext) fieldContext_Series_totalPosts(ctx context.Context, 
 	return fc, nil
 }
 
+func (ec *executionContext) _Series_characters(ctx context.Context, field graphql.CollectedField, obj *types.Series) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Series_characters(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Series().Characters(rctx, obj, fc.Args["after"].(*string), fc.Args["before"].(*string), fc.Args["first"].(*int), fc.Args["last"].(*int), fc.Args["slugs"].([]string), fc.Args["name"].(*string), fc.Args["sortBy"].(types.CharactersSort))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.CharacterConnection)
+	fc.Result = res
+	return ec.marshalNCharacterConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacterConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Series_characters(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Series",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "edges":
+				return ec.fieldContext_CharacterConnection_edges(ctx, field)
+			case "pageInfo":
+				return ec.fieldContext_CharacterConnection_pageInfo(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CharacterConnection", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Series_characters_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Series_posts(ctx context.Context, field graphql.CollectedField, obj *types.Series) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Series_posts(ctx, field)
 	if err != nil {
@@ -27555,6 +27733,8 @@ func (ec *executionContext) fieldContext_SeriesEdge_node(ctx context.Context, fi
 				return ec.fieldContext_Series_totalLikes(ctx, field)
 			case "totalPosts":
 				return ec.fieldContext_Series_totalPosts(ctx, field)
+			case "characters":
+				return ec.fieldContext_Series_characters(ctx, field)
 			case "posts":
 				return ec.fieldContext_Series_posts(ctx, field)
 			}
@@ -30579,6 +30759,8 @@ func (ec *executionContext) fieldContext_UpdateSeriesThumbnailPayload_series(ctx
 				return ec.fieldContext_Series_totalLikes(ctx, field)
 			case "totalPosts":
 				return ec.fieldContext_Series_totalPosts(ctx, field)
+			case "characters":
+				return ec.fieldContext_Series_characters(ctx, field)
 			case "posts":
 				return ec.fieldContext_Series_posts(ctx, field)
 			}
@@ -30642,6 +30824,8 @@ func (ec *executionContext) fieldContext_UpdateSeriesTitlePayload_series(ctx con
 				return ec.fieldContext_Series_totalLikes(ctx, field)
 			case "totalPosts":
 				return ec.fieldContext_Series_totalPosts(ctx, field)
+			case "characters":
+				return ec.fieldContext_Series_characters(ctx, field)
 			case "posts":
 				return ec.fieldContext_Series_posts(ctx, field)
 			}
@@ -38948,6 +39132,26 @@ func (ec *executionContext) _Series(ctx context.Context, sel ast.SelectionSet, o
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "characters":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Series_characters(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "posts":
 			field := field
 
