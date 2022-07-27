@@ -129,7 +129,14 @@ func createFFMPEGTempSocket(itemId, resourceId string, duration float64) (string
 				cp := ""
 
 				if len(a) > 0 && len(a[len(a)-1]) > 0 {
-					c, _ := strconv.Atoi(a[len(a)-1][len(a[len(a)-1])-1])
+					intValue := a[len(a)-1][len(a[len(a)-1])-1]
+
+					// if the intValue is not 8 digits, we got a bad reading, so we ignore it
+					if len(intValue) < 7 {
+						continue
+					}
+
+					c, _ := strconv.Atoi(intValue)
 					parsed := float64(c) / duration / 1000000
 
 					truncated := fmt.Sprintf("%.2f", parsed)

@@ -41,8 +41,7 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 
 	var heartbeat int64
 
-	alreadyReachedEnd := false
-	alreadyStarted := false
+	numbersAlreadySent := make(map[int64]bool)
 
 	// when progress is made on the resource socket, we record a heartbeat
 	cleanup, err := resource.ListenProgressSocket(input.ItemId, input.ResourceId, func(progress int64) {
@@ -62,33 +61,20 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 			zap.S().Errorw("failed to send heartbeat", zap.Error(err))
 		}
 
-		// only record "100" once
-		if progress == 100 && alreadyReachedEnd {
-			return
-		}
+		_, alreadySentNumber := numbersAlreadySent[progress]
 
-		// only record "0" once
-		if progress == 0 && alreadyStarted {
-			return
-		}
+		if !alreadySentNumber {
+			numbersAlreadySent[progress] = true
 
-		if progress == 0 && !alreadyStarted {
-			alreadyStarted = true
-		}
+			if err = h.event.SendProcessResourcesProgress(ctx, input.ItemId, input.ResourceId, progress); err != nil {
 
-		if progress == 100 && !alreadyReachedEnd {
-			alreadyReachedEnd = true
-		}
+				if strings.Contains(err.Error(), "workflow execution already completed") {
+					return
+				}
 
-		if err = h.event.SendProcessResourcesProgress(ctx, input.ItemId, input.ResourceId, progress); err != nil {
-
-			if strings.Contains(err.Error(), "workflow execution already completed") {
-				return
+				zap.S().Errorw("failed to send process resources progress", zap.Error(err))
 			}
-
-			zap.S().Errorw("failed to send process resources progress", zap.Error(err))
 		}
-
 	})
 
 	defer cleanup()
