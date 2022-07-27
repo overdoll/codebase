@@ -194,7 +194,9 @@ def execute_e2e_tests_commands(configs):
         "--config-file=cypress.ci.json",
         "--record",
         "--key={}".format(os.getenv("CYPRESS_API_KEY")),
-        "--ci-build-id={}".format(os.getenv("BUILDKITE_BUILD_ID")),
+        # TODO: when we have cypress parallel tests working, use this
+        # "--parallel",
+        # "--ci-build-id={}".format(os.getenv("BUILDKITE_BUILD_ID")),
     ])
 
     os.chdir(cwd)
