@@ -7,6 +7,8 @@ import './join'
 import './email'
 import './cookies'
 
+require('cypress-terminal-report/src/installLogsCollector')()
+
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {

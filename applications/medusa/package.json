@@ -158,7 +158,7 @@
     "cypress-fail-fast": "^5.0.0",
     "cypress-file-upload": "^5.0.3",
     "cypress-otp": "^1.0.3",
-    "cypress-terminal-report": "^3.4.1",
+    "cypress-terminal-report": "^4.1.1",
     "cypress-wait-until": "^1.7.1",
     "eslint": "^7.21.0",
     "eslint-config-standard": "^16.0.2",
