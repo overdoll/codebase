@@ -1,10 +1,10 @@
 import { Stack } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay'
 import type { PostPreviewFragment$key } from '@//:artifacts/PostPreviewFragment.graphql'
-import { PostHeaderClub } from '@//:modules/content/Posts'
 import PostGalleryStaffDetailed
   from '@//:modules/content/Posts/components/PostData/PostGalleryStaffDetailed/PostGalleryStaffDetailed'
-import PostDescription from '@//:modules/content/Posts/components/PostData/PostDescription/PostDescription'
+import PostPrivateHeader
+  from '@//:modules/content/Posts/components/PostInteraction/PostHeaders/PostPrivateHeader/PostPrivateHeader'
 
 interface Props {
   query: PostPreviewFragment$key
@@ -13,8 +13,7 @@ interface Props {
 const Fragment = graphql`
   fragment PostPreviewFragment on Post {
     ...PostGalleryStaffDetailedFragment
-    ...PostHeaderClubFragment
-    ...PostDescriptionFragment
+    ...PostPrivateHeaderFragment
   }
 `
 
@@ -23,10 +22,7 @@ export default function PostPreview ({ query }: Props): JSX.Element {
 
   return (
     <Stack spacing={2} direction='column'>
-      <Stack spacing={1}>
-        <PostHeaderClub query={data} />
-        <PostDescription query={data} />
-      </Stack>
+      <PostPrivateHeader postQuery={data} />
       <PostGalleryStaffDetailed postQuery={data} />
     </Stack>
   )

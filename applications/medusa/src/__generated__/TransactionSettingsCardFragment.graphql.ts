@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9fa8cf36c625b87f13518cefbbe3b421>>
+ * @generated SignedSource<<887b68522e3152503d3d5b5b2621a2aa>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,11 +17,8 @@ export type TransactionSettingsCardFragment$data = {
   readonly amount: number;
   readonly clubSupporterSubscription: {
     readonly club?: {
-      readonly id: string;
       readonly name: string;
-      readonly thumbnail: {
-        readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
-      } | null;
+      readonly " $fragmentSpreads": FragmentRefs<"ClubThumbnailFragment">;
     };
   } | null;
   readonly createdAt: any;
@@ -106,31 +103,13 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "id",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
                   "name": "name",
                   "storageKey": null
                 },
                 {
-                  "alias": null,
                   "args": null,
-                  "concreteType": "Resource",
-                  "kind": "LinkedField",
-                  "name": "thumbnail",
-                  "plural": false,
-                  "selections": [
-                    {
-                      "args": null,
-                      "kind": "FragmentSpread",
-                      "name": "ResourceIconFragment"
-                    }
-                  ],
-                  "storageKey": null
+                  "kind": "FragmentSpread",
+                  "name": "ClubThumbnailFragment"
                 }
               ],
               "storageKey": null
@@ -179,6 +158,6 @@ return {
 };
 })();
 
-(node as any).hash = "f38e7467652bc2eeb98a819a20ac0370";
+(node as any).hash = "8a76c696d66354a873a0fed21ad6e347";
 
 export default node;

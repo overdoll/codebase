@@ -2,7 +2,6 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type {
   AccountActiveClubSupporterSubscriptionDetailsFragment$key
 } from '@//:artifacts/AccountActiveClubSupporterSubscriptionDetailsFragment.graphql'
-import { ResourceIcon } from '@//:modules/content/PageLayout'
 import { Badge, Heading, HStack, Stack, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import format from 'date-fns/format'
@@ -11,6 +10,7 @@ import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { WarningTriangle } from '@//:assets/icons'
+import ClubThumbnail from '@//:modules/content/DataDisplay/Club/ClubThumbnail/ClubThumbnail'
 
 interface Props {
   query: AccountActiveClubSupporterSubscriptionDetailsFragment$key
@@ -21,15 +21,12 @@ const Fragment = graphql`
     supporterSince
     nextBillingDate
     club {
-      id
       name
       slug
-      thumbnail {
-        ...ResourceIconFragment
-      }
       suspension {
         expires
       }
+      ...ClubThumbnailFragment
     }
   }
 `
@@ -60,12 +57,10 @@ export default function AccountActiveClubSupporterSubscriptionDetails ({
     <Stack w='100%' spacing={2}>
       <HStack spacing={2} justify='space-between'>
         <HStack align='center' spacing={3}>
-          <ResourceIcon
-            showBorder
-            seed={data?.club.id}
+          <ClubThumbnail
             h={10}
             w={10}
-            query={data?.club.thumbnail}
+            query={data.club}
           />
           <Heading
             noOfLines={1}

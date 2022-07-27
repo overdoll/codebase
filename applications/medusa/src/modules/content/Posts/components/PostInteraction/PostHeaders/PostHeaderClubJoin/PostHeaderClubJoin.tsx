@@ -1,19 +1,19 @@
-import type { PostHeaderFragment$key } from '@//:artifacts/PostHeaderFragment.graphql'
-import type { PostHeaderViewerFragment$key } from '@//:artifacts/PostHeaderViewerFragment.graphql'
+import type { PostHeaderClubJoinFragment$key } from '@//:artifacts/PostHeaderClubJoinFragment.graphql'
+import type { PostHeaderClubJoinViewerFragment$key } from '@//:artifacts/PostHeaderClubJoinViewerFragment.graphql'
 import { graphql } from 'react-relay'
 import { useFragment } from 'react-relay/hooks'
 import { ButtonProps, HStack } from '@chakra-ui/react'
-import { PostHeaderClub } from '../../../index'
+import { PostHeaderClub } from '../../../../index'
 import PostJoinClub from '../PostJoinClub/PostJoinClub'
-import { LinkTile } from '../../../../ContentSelection'
+import { LinkTile } from '../../../../../ContentSelection'
 
 interface Props extends ButtonProps {
-  postQuery: PostHeaderFragment$key
-  viewerQuery: PostHeaderViewerFragment$key | null
+  postQuery: PostHeaderClubJoinFragment$key
+  viewerQuery: PostHeaderClubJoinViewerFragment$key | null
 }
 
 const PostFragment = graphql`
-  fragment PostHeaderFragment on Post {
+  fragment PostHeaderClubJoinFragment on Post {
     club {
       slug
       ...PostJoinClubFragment
@@ -24,12 +24,12 @@ const PostFragment = graphql`
 `
 
 const ViewerFragment = graphql`
-  fragment PostHeaderViewerFragment on Account {
+  fragment PostHeaderClubJoinViewerFragment on Account {
     ...PostJoinClubViewerFragment
   }
 `
 
-export default function PostHeader ({
+export default function PostHeaderClubJoin ({
   postQuery,
   viewerQuery
 }: Props): JSX.Element {

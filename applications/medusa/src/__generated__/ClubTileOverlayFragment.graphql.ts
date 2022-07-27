@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bbce5718afca8a860d1d122b202134a3>>
+ * @generated SignedSource<<f1f915e8b091351b72dd2c789ae4a091>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,9 +16,7 @@ export type ClubTileOverlayFragment$data = {
   } | null;
   readonly id: string;
   readonly name: string;
-  readonly thumbnail: {
-    readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
-  } | null;
+  readonly " $fragmentSpreads": FragmentRefs<"ClubThumbnailFragment">;
   readonly " $fragmentType": "ClubTileOverlayFragment";
 };
 export type ClubTileOverlayFragment$key = {
@@ -47,20 +45,9 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
-      "alias": null,
       "args": null,
-      "concreteType": "Resource",
-      "kind": "LinkedField",
-      "name": "thumbnail",
-      "plural": false,
-      "selections": [
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "ResourceIconFragment"
-        }
-      ],
-      "storageKey": null
+      "kind": "FragmentSpread",
+      "name": "ClubThumbnailFragment"
     },
     {
       "alias": null,
@@ -83,6 +70,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "aa70ba8804ff31a667161dc799f19179";
+(node as any).hash = "42f8ccc6c28d019fa6574ae171219c10";
 
 export default node;

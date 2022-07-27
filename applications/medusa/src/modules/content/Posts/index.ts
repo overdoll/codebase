@@ -1,7 +1,7 @@
 export {
   default as PostGalleryPublicSimple
 } from './components/PostData/PostGalleryPublicSimple/PostGalleryPublicSimple'
-export { default as PostHeaderClub } from './components/PostInteraction/PostHeaderClub/PostHeaderClub'
+export { default as PostHeaderClub } from './components/PostInteraction/PostHeaders/PostHeaderClub/PostHeaderClub'
 export { default as PostPreviewContent } from './components/PostData/PostPreviewContent/PostPreviewContent'
 export { default as PostStaticAudience } from './components/PostData/PostStaticAudience/PostStaticAudience'
 export { default as PostStaticCategories } from './components/PostData/PostStaticCategories/PostStaticCategories'

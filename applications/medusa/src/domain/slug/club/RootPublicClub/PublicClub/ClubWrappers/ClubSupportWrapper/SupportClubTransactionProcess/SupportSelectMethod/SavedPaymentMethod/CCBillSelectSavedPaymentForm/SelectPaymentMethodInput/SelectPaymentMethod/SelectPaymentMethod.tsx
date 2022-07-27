@@ -49,7 +49,7 @@ export default function SelectPaymentMethod ({
           key={index}
           {...register(item.node.id, {})}
         >
-          <SmallBackgroundBox bg='gray.900'>
+          <SmallBackgroundBox>
             <PaymentMethod query={item.node.paymentMethod} />
           </SmallBackgroundBox>
         </Choice>

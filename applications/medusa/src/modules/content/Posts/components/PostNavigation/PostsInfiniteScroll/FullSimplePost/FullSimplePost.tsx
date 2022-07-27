@@ -4,9 +4,8 @@ import { FullSimplePostFragment$key } from '@//:artifacts/FullSimplePostFragment
 import { FullSimplePostViewerFragment$key } from '@//:artifacts/FullSimplePostViewerFragment.graphql'
 import { Stack } from '@chakra-ui/react'
 import { PostGalleryPublicSimple } from '../../../../index'
-import PostHeader from '../../../PostInteraction/PostHeader/PostHeader'
 import PostFooterButtons from '../../../PostInteraction/PostFooterButtons/PostFooterButtons'
-import PostDescription from '../../../PostData/PostDescription/PostDescription'
+import PostPublicHeader from '../../../PostInteraction/PostHeaders/PostPublicHeader/PostPublicHeader'
 
 interface Props {
   query: FullSimplePostFragment$key
@@ -16,17 +15,16 @@ interface Props {
 const PostFragment = graphql`
   fragment FullSimplePostFragment on Post {
     ...PostGalleryPublicSimpleFragment
-    ...PostHeaderFragment
     ...PostFooterButtonsFragment
-    ...PostDescriptionFragment
+    ...PostPublicHeaderFragment
   }
 `
 
 const ViewerFragment = graphql`
   fragment FullSimplePostViewerFragment on Account {
-    ...PostHeaderViewerFragment
     ...PostGalleryPublicSimpleViewerFragment
     ...PostFooterButtonsViewerFragment
+    ...PostPublicHeaderViewerFragment
   }
 `
 
@@ -39,10 +37,7 @@ export default function FullSimplePost ({
 
   return (
     <Stack spacing={2}>
-      <Stack spacing={1}>
-        <PostHeader postQuery={data} viewerQuery={viewerData} />
-        <PostDescription noOfLines={2} query={data} />
-      </Stack>
+      <PostPublicHeader descriptionProps={{ noOfLines: 1 }} postQuery={data} viewerQuery={viewerData} />
       <PostGalleryPublicSimple postQuery={data} viewerQuery={viewerData} />
       <PostFooterButtons postQuery={data} viewerQuery={viewerData} />
     </Stack>

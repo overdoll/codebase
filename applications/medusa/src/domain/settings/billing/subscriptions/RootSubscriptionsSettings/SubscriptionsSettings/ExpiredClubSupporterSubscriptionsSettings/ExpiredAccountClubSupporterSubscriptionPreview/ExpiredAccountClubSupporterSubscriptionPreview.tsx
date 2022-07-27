@@ -2,7 +2,7 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type {
   ExpiredAccountClubSupporterSubscriptionPreviewFragment$key
 } from '@//:artifacts/ExpiredAccountClubSupporterSubscriptionPreviewFragment.graphql'
-import { LargeBackgroundBox, ResourceIcon } from '@//:modules/content/PageLayout'
+import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 import { Badge, Heading, HStack, Stack, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import format from 'date-fns/format'
@@ -11,6 +11,7 @@ import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 import { LinkTile } from '@//:modules/content/ContentSelection'
 import ManageExpiredSubscriptionButton from './ManageExpiredSubscriptionButton/ManageExpiredSubscriptionButton'
+import ClubThumbnail from '@//:modules/content/DataDisplay/Club/ClubThumbnail/ClubThumbnail'
 
 interface Props {
   query: ExpiredAccountClubSupporterSubscriptionPreviewFragment$key
@@ -21,12 +22,9 @@ const Fragment = graphql`
     supporterSince
     expiredAt
     club {
-      id
       name
       slug
-      thumbnail {
-        ...ResourceIconFragment
-      }
+      ...ClubThumbnailFragment
     }
     ...ManageExpiredSubscriptionButtonFragment
   }
@@ -58,12 +56,10 @@ export default function ExpiredAccountClubSupporterSubscriptionPreview ({ query 
         <HStack spacing={2} justify='space-between'>
           <LinkTile href={`/${data.club.slug}`}>
             <HStack spacing={3}>
-              <ResourceIcon
-                showBorder
-                seed={data?.club.id}
+              <ClubThumbnail
                 h={10}
                 w={10}
-                query={data?.club.thumbnail}
+                query={data.club}
               />
               <Heading
                 whiteSpace='nowrap'

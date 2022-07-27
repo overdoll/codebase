@@ -7,6 +7,7 @@ import { Barcode, SeriesIdentifier } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import { useRouter } from 'next/router'
 import ClubInformationBanner from '../../../../../../common/components/ClubInformationBanner/ClubInformationBanner'
+import ClubThumbnail from '@//:modules/content/DataDisplay/Club/ClubThumbnail/ClubThumbnail'
 
 interface Props {
   query: PreloadedQuery<ClubSettingsQuery>
@@ -15,14 +16,11 @@ interface Props {
 const Query = graphql`
   query ClubSettingsQuery($slug: String!) {
     club(slug: $slug) {
-      id
       slug
       name
-      thumbnail {
-        ...ResourceIconFragment
-      }
       viewerIsOwner
       ...ClubInformationBannerFragment
+      ...ClubThumbnailFragment
     }
   }
 `
@@ -77,13 +75,10 @@ export default function ClubSettings ({ query }: Props): JSX.Element {
         query: { slug: slug as string }
       }}
       >
-        <ResourceIcon
-          showBorder
-          seed={queryData.club.id}
+        <ClubThumbnail
           h={10}
           w={10}
-          borderRadius='md'
-          query={queryData.club.thumbnail}
+          query={queryData.club}
         />
         <PagePanelText
           title={

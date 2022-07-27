@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<90482c27e1d7c18dda223ed4509b70f1>>
- * @relayHash 8373446570a5b53f2b731f78f39d4a62
+ * @generated SignedSource<<d6c265994b0ca6bc5ff25254086e830d>>
+ * @relayHash 279a56ff9d5c13346a82897434f0cd5b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8373446570a5b53f2b731f78f39d4a62
+// @relayRequestID 279a56ff9d5c13346a82897434f0cd5b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -222,7 +222,26 @@ v17 = {
   "name": "canSupport",
   "storageKey": null
 },
-v18 = {
+v18 = [
+  (v7/*: any*/),
+  (v10/*: any*/),
+  (v11/*: any*/),
+  (v12/*: any*/),
+  (v13/*: any*/),
+  (v14/*: any*/),
+  (v8/*: any*/)
+],
+v19 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "Resource",
+  "kind": "LinkedField",
+  "name": "thumbnail",
+  "plural": false,
+  "selections": (v18/*: any*/),
+  "storageKey": null
+},
+v20 = {
   "alias": null,
   "args": null,
   "concreteType": "ClubMember",
@@ -239,25 +258,6 @@ v18 = {
     },
     (v7/*: any*/)
   ],
-  "storageKey": null
-},
-v19 = [
-  (v7/*: any*/),
-  (v10/*: any*/),
-  (v11/*: any*/),
-  (v12/*: any*/),
-  (v13/*: any*/),
-  (v14/*: any*/),
-  (v8/*: any*/)
-],
-v20 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "Resource",
-  "kind": "LinkedField",
-  "name": "thumbnail",
-  "plural": false,
-  "selections": (v19/*: any*/),
   "storageKey": null
 },
 v21 = {
@@ -446,7 +446,7 @@ return {
                           (v17/*: any*/),
                           (v7/*: any*/),
                           (v3/*: any*/),
-                          (v18/*: any*/),
+                          (v19/*: any*/),
                           (v20/*: any*/)
                         ],
                         "storageKey": null
@@ -536,7 +536,7 @@ return {
               },
               (v16/*: any*/),
               (v17/*: any*/),
-              (v18/*: any*/),
+              (v19/*: any*/),
               (v20/*: any*/)
             ],
             "storageKey": null
@@ -574,7 +574,7 @@ return {
                 "kind": "LinkedField",
                 "name": "banner",
                 "plural": false,
-                "selections": (v19/*: any*/),
+                "selections": (v18/*: any*/),
                 "storageKey": null
               }
             ],
@@ -627,6 +627,8 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
+          (v6/*: any*/),
+          (v7/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -641,8 +643,6 @@ return {
             "name": "clubMembershipsCount",
             "storageKey": null
           },
-          (v6/*: any*/),
-          (v7/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -681,7 +681,7 @@ return {
     ]
   },
   "params": {
-    "id": "8373446570a5b53f2b731f78f39d4a62",
+    "id": "279a56ff9d5c13346a82897434f0cd5b",
     "metadata": {},
     "name": "PublicPostQuery",
     "operationKind": "query",

@@ -1,6 +1,6 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import type { UpdatePostDescriptionFormFragment$key } from '@//:artifacts/UpdatePostDescriptionFormFragment.graphql'
-import { CircularProgress, HStack, Stack } from '@chakra-ui/react'
+import { CircularProgress, Flex, HStack, Stack } from '@chakra-ui/react'
 import {
   Form,
   FormInput,
@@ -20,6 +20,7 @@ import { CheckMark, DeleteBin } from '@//:assets/icons'
 import { Icon } from '@//:modules/content/PageLayout'
 import { useEffect, useState } from 'react'
 import IconButton from '@//:modules/form/IconButton/IconButton'
+import { DETECT_LINKS } from '@//:modules/constants/regex'
 
 interface Props {
   query: UpdatePostDescriptionFormFragment$key
@@ -64,14 +65,15 @@ export default function UpdatePostDescriptionForm ({
 
   const notify = useToast()
 
-  // TODO disallow links
   const schema = Joi.object({
     description: Joi
       .string()
+      .regex(DETECT_LINKS, { invert: true })
       .min(0)
       .max(MAXIMUM_CHARACTER_COUNT)
       .messages({
-        'string.max': i18n._(t`The description length cannot exceed ${MAXIMUM_CHARACTER_COUNT} characters`)
+        'string.max': i18n._(t`The description length cannot exceed ${MAXIMUM_CHARACTER_COUNT} characters`),
+        'string.pattern.invert.base': i18n._(t`The description cannot contain links `)
       })
   })
 
@@ -88,7 +90,9 @@ export default function UpdatePostDescriptionForm ({
 
   const descriptionProgressPercentage = (description.length / MAXIMUM_CHARACTER_COUNT) * 100
 
-  const { watch } = methods
+  const {
+    watch
+  } = methods
 
   const onSubmit = (formValues): void => {
     commit({
@@ -163,22 +167,25 @@ export default function UpdatePostDescriptionForm ({
           <InputFooter />
         </FormInput>
         <HStack justify='space-between'>
-          <IconButton
-            onClick={onRemove}
-            aria-label={i18n._(t`Clear Description`)}
-            icon={<Icon icon={DeleteBin} h={5} w={5} fill='gray.300' />}
-            size='lg'
-            variant='solid'
-            colorScheme='gray'
-            isLoading={IsInFlight}
-          />
+          {data.description.length !== 0
+            ? (
+              <IconButton
+                onClick={onRemove}
+                aria-label={i18n._(t`Clear Description`)}
+                icon={<Icon icon={DeleteBin} h={5} w={5} fill='gray.300' />}
+                size='lg'
+                variant='solid'
+                colorScheme='gray'
+                isLoading={IsInFlight}
+              />
+              )
+            : <Flex />}
           <HStack justify='flex-end' spacing={2}>
             {description.length !== 0 && (
               <CircularProgress
                 trackColor='gray.500'
                 thickness='12px'
                 color={descriptionProgressPercentage >= 100 ? 'orange.300' : (descriptionProgressPercentage > 60 ? 'purple.300' : 'teal.300')}
-                isIndeterminate={IsInFlight}
                 value={descriptionProgressPercentage}
               />
             )}

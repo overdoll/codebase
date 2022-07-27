@@ -1,17 +1,13 @@
 import { Flex, Heading } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay'
 import type { PostHeaderClubFragment$key } from '@//:artifacts/PostHeaderClubFragment.graphql'
-import { ResourceIcon } from '../../../../PageLayout'
-import type { ResourceIconFragment$key } from '@//:artifacts/ResourceIconFragment.graphql'
+import ClubThumbnail from '../../../../../DataDisplay/Club/ClubThumbnail/ClubThumbnail'
 
 const Fragment = graphql`
   fragment PostHeaderClubFragment on Post {
     club {
-      id
       name
-      thumbnail {
-        ...ResourceIconFragment
-      }
+      ...ClubThumbnailFragment
     }
   }
 `
@@ -25,13 +21,11 @@ export default function PostHeaderClub ({ query }: Props): JSX.Element {
 
   return (
     <Flex align='center'>
-      <ResourceIcon
-        showBorder
+      <ClubThumbnail
         h={8}
         w={8}
         mr={3}
-        seed={data?.club?.id}
-        query={data?.club?.thumbnail as ResourceIconFragment$key}
+        query={data.club}
       />
       <Heading color='gray.00' fontSize='xl'>
         {data?.club?.name}

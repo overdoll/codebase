@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8944b3daba2ae34d9390297fb1bc6283>>
+ * @generated SignedSource<<c0a17ba4b67cfbfa78e362ec11172d93>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,10 +12,7 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostDescriptionModalFragment$data = {
   readonly club: {
-    readonly id: string;
-    readonly thumbnail: {
-      readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
-    } | null;
+    readonly " $fragmentSpreads": FragmentRefs<"ClubThumbnailFragment">;
   };
   readonly " $fragmentSpreads": FragmentRefs<"UpdatePostDescriptionFormFragment">;
   readonly " $fragmentType": "PostDescriptionModalFragment";
@@ -40,27 +37,9 @@ const node: ReaderFragment = {
       "plural": false,
       "selections": [
         {
-          "alias": null,
           "args": null,
-          "kind": "ScalarField",
-          "name": "id",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "Resource",
-          "kind": "LinkedField",
-          "name": "thumbnail",
-          "plural": false,
-          "selections": [
-            {
-              "args": null,
-              "kind": "FragmentSpread",
-              "name": "ResourceIconFragment"
-            }
-          ],
-          "storageKey": null
+          "kind": "FragmentSpread",
+          "name": "ClubThumbnailFragment"
         }
       ],
       "storageKey": null
@@ -75,6 +54,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "1b421953788bbea600a0e7c063fe9f36";
+(node as any).hash = "4cd85381cbb65c15c08ef327885d26cb";
 
 export default node;

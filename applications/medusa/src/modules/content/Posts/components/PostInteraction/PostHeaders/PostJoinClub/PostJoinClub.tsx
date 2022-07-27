@@ -4,16 +4,16 @@ import { graphql } from 'react-relay'
 import { useFragment } from 'react-relay/hooks'
 import { t, Trans } from '@lingui/macro'
 import { HStack } from '@chakra-ui/react'
-import { Icon } from '@//:modules/content/PageLayout'
+import { Icon } from '../../../../../PageLayout'
 import { PlusCircle, PremiumStarHollow, SettingCog } from '@//:assets/icons'
-import IconButton from '../../../../../form/IconButton/IconButton'
+import IconButton from '../../../../../../form/IconButton/IconButton'
 import ClubJoinConditionWrapper
   from '@//:domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubJoinConditionWrapper/ClubJoinConditionWrapper'
 import { useLingui } from '@lingui/react'
-import Button from '../../../../../form/Button/Button'
-import LinkIconButton from '../../../../ThemeComponents/LinkIconButton/LinkIconButton'
+import Button from '../../../../../../form/Button/Button'
+import LinkIconButton from '../../../../../ThemeComponents/LinkIconButton/LinkIconButton'
 import ClubSupportPostConditionWrapper
-  from '../../PostWrappers/ClubSupportPostConditionWrapper/ClubSupportPostConditionWrapper'
+  from '../../../PostWrappers/ClubSupportPostConditionWrapper/ClubSupportPostConditionWrapper'
 
 interface Props {
   clubQuery: PostJoinClubFragment$key

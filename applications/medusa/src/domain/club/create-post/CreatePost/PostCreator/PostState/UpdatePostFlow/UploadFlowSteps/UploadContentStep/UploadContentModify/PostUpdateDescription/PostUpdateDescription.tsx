@@ -2,12 +2,15 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type { PostUpdateDescriptionFragment$key } from '@//:artifacts/PostUpdateDescriptionFragment.graphql'
 import { useHistoryDisclosure } from '@//:modules/hooks'
 import PostDescriptionModal from '../UploadPostOptions/PostAddDescription/PostDescriptionModal/PostDescriptionModal'
-import { Flex, Heading } from '@chakra-ui/react'
+import { Flex, HStack } from '@chakra-ui/react'
 import { ContentBookEdit } from '@//:assets/icons'
 import Icon from '../../../../../../../../../../../modules/content/PageLayout/Flair/Icon/Icon'
 import IconButton from '@//:modules/form/IconButton/IconButton'
 import { useLingui } from '@lingui/react'
 import { t } from '@lingui/macro'
+import ClubThumbnail from '@//:modules/content/DataDisplay/Club/ClubThumbnail/ClubThumbnail'
+import PostDescriptionHeading
+  from '@//:modules/content/Posts/components/PostInteraction/PostHeaders/PostDescriptionHeading/PostDescriptionHeading'
 
 interface Props {
   query: PostUpdateDescriptionFragment$key
@@ -16,7 +19,11 @@ interface Props {
 const Fragment = graphql`
   fragment PostUpdateDescriptionFragment on Post {
     description
+    club {
+      ...ClubThumbnailFragment
+    }
     ...PostDescriptionModalFragment
+    ...PostDescriptionHeadingFragment
   }
 `
 
@@ -37,8 +44,6 @@ export default function PostUpdateDescription ({
     return <></>
   }
 
-  const fontSize = data.description.length > 120 ? 'sm' : 'md'
-
   return (
     <>
       <Flex
@@ -47,22 +52,23 @@ export default function PostUpdateDescription ({
         overflow='hidden'
         borderRadius='md'
         bg='gray.800'
-
       >
         <Flex w='100%'>
           <Flex align='center' w='88%' py={2} px={3}>
-            <Heading color='gray.200' fontSize={fontSize}>
-              {data.description}
-            </Heading>
+            <HStack justify='center'>
+              <ClubThumbnail query={data.club} />
+              <PostDescriptionHeading postQuery={data} />
+            </HStack>
           </Flex>
           <Flex w='12%' justify='center' align='center' h='100%' bg='gray.700'>
             <IconButton
+              my={2}
               onClick={onOpen}
-              size='md'
-              borderRadius='md'
+              size='sm'
               variant='solid'
+              borderRadius='xl'
               colorScheme='gray'
-              icon={<Icon w={4} h={4} icon={ContentBookEdit} fill='gray.200' />}
+              icon={<Icon w={5} h={5} icon={ContentBookEdit} fill='gray.200' />}
               aria-label={i18n._(t`Set Supporter Only`)}
             />
           </Flex>

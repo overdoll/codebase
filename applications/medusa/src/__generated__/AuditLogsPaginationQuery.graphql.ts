@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<987d75bdd5362764ee1b8d57188ab2e1>>
- * @relayHash 1860541a9be8336bcc1a62e1d91b2165
+ * @generated SignedSource<<963ed0fab98825750ed790c530c78dd4>>
+ * @relayHash 8951d096f3899eac6f136facd2541212
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 1860541a9be8336bcc1a62e1d91b2165
+// @relayRequestID 8951d096f3899eac6f136facd2541212
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -300,6 +300,46 @@ return {
                                       (v17/*: any*/)
                                     ],
                                     "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "slug",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "concreteType": "ClubMember",
+                                    "kind": "LinkedField",
+                                    "name": "viewerMember",
+                                    "plural": false,
+                                    "selections": [
+                                      {
+                                        "alias": null,
+                                        "args": null,
+                                        "kind": "ScalarField",
+                                        "name": "isSupporter",
+                                        "storageKey": null
+                                      },
+                                      (v9/*: any*/)
+                                    ],
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "viewerIsOwner",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "canSupport",
+                                    "storageKey": null
                                   }
                                 ],
                                 "storageKey": null
@@ -452,7 +492,7 @@ return {
     ]
   },
   "params": {
-    "id": "1860541a9be8336bcc1a62e1d91b2165",
+    "id": "8951d096f3899eac6f136facd2541212",
     "metadata": {},
     "name": "AuditLogsPaginationQuery",
     "operationKind": "query",

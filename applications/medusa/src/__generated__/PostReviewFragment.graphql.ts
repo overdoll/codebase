@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a70fa9b9e9a44e193d0e0492fb90164e>>
+ * @generated SignedSource<<85c024fdc02ba60c9a658dd9197001a1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type PostReviewFragment$data = {
   readonly contributor: {
     readonly " $fragmentSpreads": FragmentRefs<"PostGalleryPublicDetailedViewerFragment">;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"PostClickableCategoriesFragment" | "PostClickableCharactersFragment" | "PostDescriptionFragment" | "PostGalleryPublicDetailedFragment" | "PostHeaderClubFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"PostClickableCategoriesFragment" | "PostClickableCharactersFragment" | "PostDescriptionFragment" | "PostGalleryPublicDetailedFragment" | "PostHeaderClubFragment" | "PostPrivateHeaderFragment">;
   readonly " $fragmentType": "PostReviewFragment";
 };
 export type PostReviewFragment$key = {
@@ -68,12 +68,17 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "PostDescriptionFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "PostPrivateHeaderFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 
-(node as any).hash = "aac7802ee20ff7bb4a400fd224e2eb94";
+(node as any).hash = "ff45b28eb5eadaec0c31408ed8b5328b";
 
 export default node;

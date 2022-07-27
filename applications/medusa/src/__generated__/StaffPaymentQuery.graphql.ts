@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<2c371a9768a2900508d4ae08c1d5b88d>>
- * @relayHash af4f91b6efd6e80ce8d5fddf2bf6452b
+ * @generated SignedSource<<6075f893e34ac13ec3cbfcde96272713>>
+ * @relayHash 90229a2d691b596a9366d5513fd35c5f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID af4f91b6efd6e80ce8d5fddf2bf6452b
+// @relayRequestID 90229a2d691b596a9366d5513fd35c5f
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -264,8 +264,8 @@ return {
             "name": "destinationClub",
             "plural": false,
             "selections": [
-              (v5/*: any*/),
               (v4/*: any*/),
+              (v5/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -348,7 +348,7 @@ return {
     ]
   },
   "params": {
-    "id": "af4f91b6efd6e80ce8d5fddf2bf6452b",
+    "id": "90229a2d691b596a9366d5513fd35c5f",
     "metadata": {},
     "name": "StaffPaymentQuery",
     "operationKind": "query",

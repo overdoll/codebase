@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3ef735a6abb3dd1e52c50f916dec08fd>>
- * @relayHash 069e57de58d5a0e009514a2bc8a20b5d
+ * @generated SignedSource<<1d6844a9a0b8e4a7d7dab14e6f56db21>>
+ * @relayHash aadae273e5b48324cb2b55a0caf14a74
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 069e57de58d5a0e009514a2bc8a20b5d
+// @relayRequestID aadae273e5b48324cb2b55a0caf14a74
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -334,7 +334,6 @@ return {
                                 "plural": false,
                                 "selections": [
                                   (v4/*: any*/),
-                                  (v12/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -351,6 +350,47 @@ return {
                                       (v11/*: any*/),
                                       (v5/*: any*/)
                                     ],
+                                    "storageKey": null
+                                  },
+                                  (v12/*: any*/),
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "slug",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "concreteType": "ClubMember",
+                                    "kind": "LinkedField",
+                                    "name": "viewerMember",
+                                    "plural": false,
+                                    "selections": [
+                                      {
+                                        "alias": null,
+                                        "args": null,
+                                        "kind": "ScalarField",
+                                        "name": "isSupporter",
+                                        "storageKey": null
+                                      },
+                                      (v4/*: any*/)
+                                    ],
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "viewerIsOwner",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "canSupport",
                                     "storageKey": null
                                   }
                                 ],
@@ -470,7 +510,7 @@ return {
     ]
   },
   "params": {
-    "id": "069e57de58d5a0e009514a2bc8a20b5d",
+    "id": "aadae273e5b48324cb2b55a0caf14a74",
     "metadata": {},
     "name": "PostsPaginationQuery",
     "operationKind": "query",

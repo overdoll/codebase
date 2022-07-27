@@ -3,8 +3,8 @@ import type { PostDescriptionModalFragment$key } from '@//:artifacts/PostDescrip
 import { HStack, Modal, ModalBody, ModalContent, ModalOverlay, Stack } from '@chakra-ui/react'
 import UpdatePostDescriptionForm from './UpdatePostDescriptionForm/UpdatePostDescriptionForm'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
-import { ResourceIcon } from '@//:modules/content/PageLayout'
 import { useRef } from 'react'
+import ClubThumbnail from '@//:modules/content/DataDisplay/Club/ClubThumbnail/ClubThumbnail'
 
 interface Props {
   query: PostDescriptionModalFragment$key
@@ -14,12 +14,8 @@ interface Props {
 
 const Fragment = graphql`
   fragment PostDescriptionModalFragment on Post {
-
     club {
-      id
-      thumbnail {
-        ...ResourceIconFragment
-      }
+      ...ClubThumbnailFragment
     }
     ...UpdatePostDescriptionFormFragment
   }
@@ -47,12 +43,10 @@ export default function PostDescriptionModal ({
         <ModalBody my={3}>
           <Stack spacing={4}>
             <HStack justify='space-between'>
-              <ResourceIcon
-                showBorder
-                seed={data.club.id}
+              <ClubThumbnail
                 h={14}
                 w={14}
-                query={data.club.thumbnail}
+                query={data.club}
               />
               <CloseButton bg='gray.800' size='lg' onClick={onClose} />
             </HStack>

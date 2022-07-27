@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8a5d736cca386027fa7ca1c52e57e482>>
- * @relayHash 91cbb2b250fd934883cae2fb97ab1658
+ * @generated SignedSource<<69601085f4bec952a125b4ee6ac76cc6>>
+ * @relayHash 3d07a5b97ff3ec4503f34ea49a7f404a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 91cbb2b250fd934883cae2fb97ab1658
+// @relayRequestID 3d07a5b97ff3ec4503f34ea49a7f404a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -311,10 +311,8 @@ return {
                                 "name": "club",
                                 "plural": false,
                                 "selections": [
-                                  (v5/*: any*/),
                                   (v10/*: any*/),
                                   (v11/*: any*/),
-                                  (v13/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -332,7 +330,9 @@ return {
                                       }
                                     ],
                                     "storageKey": null
-                                  }
+                                  },
+                                  (v5/*: any*/),
+                                  (v13/*: any*/)
                                 ],
                                 "storageKey": null
                               }
@@ -361,9 +361,9 @@ return {
                                 "name": "club",
                                 "plural": false,
                                 "selections": [
-                                  (v5/*: any*/),
                                   (v10/*: any*/),
                                   (v11/*: any*/),
+                                  (v5/*: any*/),
                                   (v13/*: any*/)
                                 ],
                                 "storageKey": null
@@ -449,7 +449,7 @@ return {
     ]
   },
   "params": {
-    "id": "91cbb2b250fd934883cae2fb97ab1658",
+    "id": "3d07a5b97ff3ec4503f34ea49a7f404a",
     "metadata": {},
     "name": "ClubSupporterSubscriptionsPaginationQuery",
     "operationKind": "query",

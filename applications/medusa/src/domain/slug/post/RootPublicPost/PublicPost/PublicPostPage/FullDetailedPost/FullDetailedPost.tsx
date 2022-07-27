@@ -9,9 +9,12 @@ import PostClickableCharacters
   from '@//:modules/content/Posts/components/PostInteraction/PostClickableCharacters/PostClickableCharacters'
 import PostClickableCategories
   from '@//:modules/content/Posts/components/PostInteraction/PostClickableCategories/PostClickableCategories'
-import PostHeader from '@//:modules/content/Posts/components/PostInteraction/PostHeader/PostHeader'
+import PostHeaderClubJoin
+  from '@//:modules/content/Posts/components/PostInteraction/PostHeaders/PostHeaderClubJoin/PostHeaderClubJoin'
 import PostFooterButtons from '@//:modules/content/Posts/components/PostInteraction/PostFooterButtons/PostFooterButtons'
 import PostDescription from '@//:modules/content/Posts/components/PostData/PostDescription/PostDescription'
+import PostPublicHeader
+  from '@//:modules/content/Posts/components/PostInteraction/PostHeaders/PostPublicHeader/PostPublicHeader'
 
 interface Props {
   query: FullDetailedPostFragment$key
@@ -23,17 +26,16 @@ const PostFragment = graphql`
     ...PostGalleryPublicDetailedFragment
     ...PostClickableCharactersFragment
     ...PostClickableCategoriesFragment
-    ...PostHeaderFragment
     ...PostFooterButtonsFragment
-    ...PostDescriptionFragment
+    ...PostPublicHeaderFragment
   }
 `
 
 const ViewerFragment = graphql`
   fragment FullDetailedPostViewerFragment on Account {
-    ...PostHeaderViewerFragment
     ...PostGalleryPublicDetailedViewerFragment
     ...PostFooterButtonsViewerFragment
+    ...PostPublicHeaderViewerFragment
   }
 `
 
@@ -47,10 +49,7 @@ export default function FullDetailedPost ({
   return (
     <Stack spacing={4}>
       <Stack spacing={2}>
-        <Stack spacing={1}>
-          <PostHeader postQuery={data} viewerQuery={viewerData} />
-          <PostDescription query={data} />
-        </Stack>
+        <PostPublicHeader postQuery={data} viewerQuery={viewerData} />
         <PostGalleryPublicDetailed postQuery={data} viewerQuery={viewerData} />
         <PostFooterButtons postQuery={data} viewerQuery={viewerData} />
       </Stack>

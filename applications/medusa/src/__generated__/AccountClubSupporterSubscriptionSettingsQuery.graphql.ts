@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1d442d8eb71e4ebaf189b4daaea6ce70>>
- * @relayHash a7c309a100a157e27bed364b53dc7b20
+ * @generated SignedSource<<57e14309c967c7ec54fda800cd47d3f9>>
+ * @relayHash 8180e2e5a7767b6d8ce138f6b4fb38a7
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a7c309a100a157e27bed364b53dc7b20
+// @relayRequestID 8180e2e5a7767b6d8ce138f6b4fb38a7
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -493,7 +493,6 @@ return {
                   (v17/*: any*/),
                   (v6/*: any*/),
                   (v18/*: any*/),
-                  (v19/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -511,7 +510,8 @@ return {
                       }
                     ],
                     "storageKey": null
-                  }
+                  },
+                  (v19/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -729,7 +729,7 @@ return {
     ]
   },
   "params": {
-    "id": "a7c309a100a157e27bed364b53dc7b20",
+    "id": "8180e2e5a7767b6d8ce138f6b4fb38a7",
     "metadata": {},
     "name": "AccountClubSupporterSubscriptionSettingsQuery",
     "operationKind": "query",

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<33b5e03f5f985344802e9824b10a2a7d>>
- * @relayHash 8521f1a1dd500a29815444aaae74bb40
+ * @generated SignedSource<<f89b6187484aca452a8aa2d58fa23522>>
+ * @relayHash 6be216fab6ac462205d76803b27f1cee
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8521f1a1dd500a29815444aaae74bb40
+// @relayRequestID 6be216fab6ac462205d76803b27f1cee
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -297,6 +297,24 @@ return {
                       {
                         "alias": null,
                         "args": null,
+                        "concreteType": "Resource",
+                        "kind": "LinkedField",
+                        "name": "thumbnail",
+                        "plural": false,
+                        "selections": [
+                          (v2/*: any*/),
+                          (v5/*: any*/),
+                          (v6/*: any*/),
+                          (v7/*: any*/),
+                          (v8/*: any*/),
+                          (v9/*: any*/),
+                          (v3/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
                         "concreteType": "ClubMember",
                         "kind": "LinkedField",
                         "name": "viewerMember",
@@ -310,24 +328,6 @@ return {
                             "storageKey": null
                           },
                           (v2/*: any*/)
-                        ],
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "Resource",
-                        "kind": "LinkedField",
-                        "name": "thumbnail",
-                        "plural": false,
-                        "selections": [
-                          (v2/*: any*/),
-                          (v5/*: any*/),
-                          (v6/*: any*/),
-                          (v7/*: any*/),
-                          (v8/*: any*/),
-                          (v9/*: any*/),
-                          (v3/*: any*/)
                         ],
                         "storageKey": null
                       }
@@ -419,6 +419,8 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
+          (v1/*: any*/),
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -433,8 +435,6 @@ return {
             "name": "clubMembershipsCount",
             "storageKey": null
           },
-          (v1/*: any*/),
-          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -498,7 +498,7 @@ return {
     ]
   },
   "params": {
-    "id": "8521f1a1dd500a29815444aaae74bb40",
+    "id": "6be216fab6ac462205d76803b27f1cee",
     "metadata": {},
     "name": "HomeQuery",
     "operationKind": "query",

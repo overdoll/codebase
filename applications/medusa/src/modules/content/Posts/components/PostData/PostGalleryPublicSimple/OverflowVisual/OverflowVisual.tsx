@@ -28,6 +28,7 @@ export default function OverflowVisual ({
           w='100%'
           position='absolute'
           bg='dimmers.100'
+          pointerEvents='none'
         >
           <Flex
             bg='dimmers.500'
