@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<11e036d30743690569e6607ebd2f0642>>
- * @relayHash 28b25ca515e7458ce39bfe8773b53364
+ * @generated SignedSource<<c4618259e169e3ccc9c25a64604acec4>>
+ * @relayHash af5b0f4e06fba9be07c66d2b395f4dde
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 28b25ca515e7458ce39bfe8773b53364
+// @relayRequestID af5b0f4e06fba9be07c66d2b395f4dde
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -200,25 +200,15 @@ v18 = [
 v19 = {
   "alias": null,
   "args": null,
-  "concreteType": "Resource",
-  "kind": "LinkedField",
-  "name": "banner",
-  "plural": false,
-  "selections": (v18/*: any*/),
-  "storageKey": null
-},
-v20 = {
-  "alias": null,
-  "args": null,
   "kind": "ScalarField",
   "name": "videoDuration",
   "storageKey": null
 },
-v21 = [
+v20 = [
   (v2/*: any*/),
   (v3/*: any*/)
 ],
-v22 = [
+v21 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -348,7 +338,16 @@ return {
                 ],
                 "storageKey": null
               },
-              (v19/*: any*/)
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Resource",
+                "kind": "LinkedField",
+                "name": "banner",
+                "plural": false,
+                "selections": (v18/*: any*/),
+                "storageKey": null
+              }
             ],
             "storageKey": null
           },
@@ -363,7 +362,19 @@ return {
               (v3/*: any*/),
               (v8/*: any*/),
               (v10/*: any*/),
-              (v19/*: any*/)
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Resource",
+                "kind": "LinkedField",
+                "name": "thumbnail",
+                "plural": false,
+                "selections": [
+                  (v15/*: any*/),
+                  (v3/*: any*/)
+                ],
+                "storageKey": null
+              }
             ],
             "storageKey": null
           },
@@ -418,7 +429,7 @@ return {
                     "storageKey": null
                   },
                   (v16/*: any*/),
-                  (v20/*: any*/)
+                  (v19/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -447,7 +458,7 @@ return {
                 "plural": false,
                 "selections": [
                   (v17/*: any*/),
-                  (v20/*: any*/),
+                  (v19/*: any*/),
                   (v3/*: any*/)
                 ],
                 "storageKey": null
@@ -501,7 +512,14 @@ return {
             "kind": "LinkedField",
             "name": "contributor",
             "plural": false,
-            "selections": (v21/*: any*/),
+            "selections": (v20/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "description",
             "storageKey": null
           }
         ],
@@ -573,7 +591,7 @@ return {
                     "kind": "LinkedField",
                     "name": "node",
                     "plural": false,
-                    "selections": (v21/*: any*/),
+                    "selections": (v20/*: any*/),
                     "storageKey": null
                   }
                 ],
@@ -584,7 +602,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v22/*: any*/),
+            "args": (v21/*: any*/),
             "concreteType": "PostConnection",
             "kind": "LinkedField",
             "name": "posts",
@@ -663,7 +681,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v22/*: any*/),
+            "args": (v21/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "ClubPosts_posts",
@@ -676,7 +694,7 @@ return {
     ]
   },
   "params": {
-    "id": "28b25ca515e7458ce39bfe8773b53364",
+    "id": "af5b0f4e06fba9be07c66d2b395f4dde",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

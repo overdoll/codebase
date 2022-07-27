@@ -5,6 +5,7 @@ import { HStack, Stack } from '@chakra-ui/react'
 import { PostClickableCategories, PostClickableCharacters, PostHeaderClub } from '@//:modules/content/Posts'
 import PostGalleryPublicDetailed
   from '@//:modules/content/Posts/components/PostData/PostGalleryPublicDetailed/PostGalleryPublicDetailed'
+import PostDescription from '@//:modules/content/Posts/components/PostData/PostDescription/PostDescription'
 
 interface Props {
   query: PostReviewFragment$key
@@ -12,13 +13,14 @@ interface Props {
 
 const Fragment = graphql`
   fragment PostReviewFragment on Post {
+    contributor {
+      ...PostGalleryPublicDetailedViewerFragment
+    }
     ...PostGalleryPublicDetailedFragment
     ...PostHeaderClubFragment
     ...PostClickableCharactersFragment
     ...PostClickableCategoriesFragment
-    contributor {
-      ...PostGalleryPublicDetailedViewerFragment
-    }
+    ...PostDescriptionFragment
   }
 `
 
@@ -29,9 +31,10 @@ export default function PostReview ({
 
   return (
     <Stack spacing={2}>
-      <HStack spacing={3} justify='space-between' align='center'>
+      <Stack spacing={1}>
         <PostHeaderClub query={data} />
-      </HStack>
+        <PostDescription query={data} />
+      </Stack>
       <PostGalleryPublicDetailed postQuery={data} viewerQuery={data.contributor} />
       <PostClickableCharacters query={data} />
       <PostClickableCategories query={data} />

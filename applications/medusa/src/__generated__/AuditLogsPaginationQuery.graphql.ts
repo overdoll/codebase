@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b1ecd2a1ad2878d25d49774592a4bcaf>>
- * @relayHash f4b2d3fc9409a901cd491931ecc75aaa
+ * @generated SignedSource<<987d75bdd5362764ee1b8d57188ab2e1>>
+ * @relayHash 1860541a9be8336bcc1a62e1d91b2165
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f4b2d3fc9409a901cd491931ecc75aaa
+// @relayRequestID 1860541a9be8336bcc1a62e1d91b2165
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -286,13 +286,6 @@ return {
                                   {
                                     "alias": null,
                                     "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "slug",
-                                    "storageKey": null
-                                  },
-                                  {
-                                    "alias": null,
-                                    "args": null,
                                     "concreteType": "Resource",
                                     "kind": "LinkedField",
                                     "name": "thumbnail",
@@ -368,6 +361,13 @@ return {
                                 "args": null,
                                 "kind": "ScalarField",
                                 "name": "reference",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "description",
                                 "storageKey": null
                               }
                             ],
@@ -452,7 +452,7 @@ return {
     ]
   },
   "params": {
-    "id": "f4b2d3fc9409a901cd491931ecc75aaa",
+    "id": "1860541a9be8336bcc1a62e1d91b2165",
     "metadata": {},
     "name": "AuditLogsPaginationQuery",
     "operationKind": "query",

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<04f9ba4483be33b160ba350c1a9ae9a2>>
- * @relayHash 86dc918afb2c16840ef4670789a1807c
+ * @generated SignedSource<<3ef735a6abb3dd1e52c50f916dec08fd>>
+ * @relayHash 069e57de58d5a0e009514a2bc8a20b5d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 86dc918afb2c16840ef4670789a1807c
+// @relayRequestID 069e57de58d5a0e009514a2bc8a20b5d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -338,13 +338,6 @@ return {
                                   {
                                     "alias": null,
                                     "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "slug",
-                                    "storageKey": null
-                                  },
-                                  {
-                                    "alias": null,
-                                    "args": null,
                                     "concreteType": "Resource",
                                     "kind": "LinkedField",
                                     "name": "thumbnail",
@@ -361,6 +354,13 @@ return {
                                     "storageKey": null
                                   }
                                 ],
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "description",
                                 "storageKey": null
                               },
                               {
@@ -470,7 +470,7 @@ return {
     ]
   },
   "params": {
-    "id": "86dc918afb2c16840ef4670789a1807c",
+    "id": "069e57de58d5a0e009514a2bc8a20b5d",
     "metadata": {},
     "name": "PostsPaginationQuery",
     "operationKind": "query",

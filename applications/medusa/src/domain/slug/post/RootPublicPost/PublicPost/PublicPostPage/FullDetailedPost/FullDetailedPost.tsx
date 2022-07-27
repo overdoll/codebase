@@ -11,6 +11,7 @@ import PostClickableCategories
   from '@//:modules/content/Posts/components/PostInteraction/PostClickableCategories/PostClickableCategories'
 import PostHeader from '@//:modules/content/Posts/components/PostInteraction/PostHeader/PostHeader'
 import PostFooterButtons from '@//:modules/content/Posts/components/PostInteraction/PostFooterButtons/PostFooterButtons'
+import PostDescription from '@//:modules/content/Posts/components/PostData/PostDescription/PostDescription'
 
 interface Props {
   query: FullDetailedPostFragment$key
@@ -24,6 +25,7 @@ const PostFragment = graphql`
     ...PostClickableCategoriesFragment
     ...PostHeaderFragment
     ...PostFooterButtonsFragment
+    ...PostDescriptionFragment
   }
 `
 
@@ -45,7 +47,10 @@ export default function FullDetailedPost ({
   return (
     <Stack spacing={4}>
       <Stack spacing={2}>
-        <PostHeader postQuery={data} viewerQuery={viewerData} />
+        <Stack spacing={1}>
+          <PostHeader postQuery={data} viewerQuery={viewerData} />
+          <PostDescription query={data} />
+        </Stack>
         <PostGalleryPublicDetailed postQuery={data} viewerQuery={viewerData} />
         <PostFooterButtons postQuery={data} viewerQuery={viewerData} />
       </Stack>

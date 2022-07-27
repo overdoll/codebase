@@ -5,6 +5,7 @@ import { useFragment } from 'react-relay/hooks'
 import { ButtonProps, HStack } from '@chakra-ui/react'
 import { PostHeaderClub } from '../../../index'
 import PostJoinClub from '../PostJoinClub/PostJoinClub'
+import { LinkTile } from '../../../../ContentSelection'
 
 interface Props extends ButtonProps {
   postQuery: PostHeaderFragment$key
@@ -14,9 +15,11 @@ interface Props extends ButtonProps {
 const PostFragment = graphql`
   fragment PostHeaderFragment on Post {
     club {
+      slug
       ...PostJoinClubFragment
     }
     ...PostHeaderClubFragment
+
   }
 `
 
@@ -36,7 +39,15 @@ export default function PostHeader ({
 
   return (
     <HStack spacing={3} justify='space-between' align='center'>
-      <PostHeaderClub query={postData} />
+      <LinkTile
+        borderRadius='base'
+        href={{
+          pathname: '/[slug]',
+          query: { slug: postData.club.slug }
+        }}
+      >
+        <PostHeaderClub query={postData} />
+      </LinkTile>
       <PostJoinClub clubQuery={postData.club} viewerQuery={viewerData} />
     </HStack>
   )

@@ -2,6 +2,8 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type { UploadContentModifyFragment$key } from '@//:artifacts/UploadContentModifyFragment.graphql'
 import { Stack } from '@chakra-ui/react'
 import ContentModifyPreview from './ContentModifyPreview/ContentModifyPreview'
+import UploadPostOptions from './UploadPostOptions/UploadPostOptions'
+import PostUpdateDescription from './PostUpdateDescription/PostUpdateDescription'
 
 interface Props {
   query: UploadContentModifyFragment$key
@@ -10,6 +12,8 @@ interface Props {
 const Fragment = graphql`
   fragment UploadContentModifyFragment on Post {
     ...ContentModifyPreviewFragment
+    ...UploadPostOptionsFragment
+    ...PostUpdateDescriptionFragment
   }
 `
 
@@ -18,11 +22,10 @@ export default function UploadContentModify ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  // TODO adding post description will go here as a separate component
-  // TODO as well as any other bulk post content management tools
-
   return (
-    <Stack spacing={1}>
+    <Stack spacing={2}>
+      <UploadPostOptions query={data} />
+      <PostUpdateDescription query={data} />
       <ContentModifyPreview query={data} />
     </Stack>
   )

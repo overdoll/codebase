@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c1ff12bff8b1b649f5d2f6bb0ea06d83>>
- * @relayHash 8779e23998e2674cffe10a9195a2ff66
+ * @generated SignedSource<<90482c27e1d7c18dda223ed4509b70f1>>
+ * @relayHash 8373446570a5b53f2b731f78f39d4a62
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8779e23998e2674cffe10a9195a2ff66
+// @relayRequestID 8373446570a5b53f2b731f78f39d4a62
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -295,17 +295,14 @@ v25 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "expires",
+  "name": "description",
   "storageKey": null
 },
 v26 = {
   "alias": null,
   "args": null,
-  "concreteType": "Resource",
-  "kind": "LinkedField",
-  "name": "banner",
-  "plural": false,
-  "selections": (v19/*: any*/),
+  "kind": "ScalarField",
+  "name": "expires",
   "storageKey": null
 };
 return {
@@ -456,7 +453,8 @@ return {
                       },
                       (v21/*: any*/),
                       (v23/*: any*/),
-                      (v24/*: any*/)
+                      (v24/*: any*/),
+                      (v25/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -520,7 +518,7 @@ return {
                 "name": "suspension",
                 "plural": false,
                 "selections": [
-                  (v25/*: any*/)
+                  (v26/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -569,7 +567,16 @@ return {
                 ],
                 "storageKey": null
               },
-              (v26/*: any*/)
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Resource",
+                "kind": "LinkedField",
+                "name": "banner",
+                "plural": false,
+                "selections": (v19/*: any*/),
+                "storageKey": null
+              }
             ],
             "storageKey": null
           },
@@ -590,12 +597,25 @@ return {
                 "storageKey": null
               },
               (v4/*: any*/),
-              (v26/*: any*/)
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Resource",
+                "kind": "LinkedField",
+                "name": "thumbnail",
+                "plural": false,
+                "selections": [
+                  (v13/*: any*/),
+                  (v7/*: any*/)
+                ],
+                "storageKey": null
+              }
             ],
             "storageKey": null
           },
           (v23/*: any*/),
-          (v24/*: any*/)
+          (v24/*: any*/),
+          (v25/*: any*/)
         ],
         "storageKey": null
       },
@@ -632,7 +652,7 @@ return {
             "plural": false,
             "selections": [
               (v6/*: any*/),
-              (v25/*: any*/)
+              (v26/*: any*/)
             ],
             "storageKey": null
           },
@@ -661,7 +681,7 @@ return {
     ]
   },
   "params": {
-    "id": "8779e23998e2674cffe10a9195a2ff66",
+    "id": "8373446570a5b53f2b731f78f39d4a62",
     "metadata": {},
     "name": "PublicPostQuery",
     "operationKind": "query",

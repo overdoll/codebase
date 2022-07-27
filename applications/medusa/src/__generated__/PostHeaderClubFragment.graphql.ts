@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6537f873bfea866bc9d13a3cb24d10a3>>
+ * @generated SignedSource<<a27e7fa995871d903cbf3bb7d6678d34>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ export type PostHeaderClubFragment$data = {
   readonly club: {
     readonly id: string;
     readonly name: string;
-    readonly slug: string;
     readonly thumbnail: {
       readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
     } | null;
@@ -57,13 +56,6 @@ const node: ReaderFragment = {
         {
           "alias": null,
           "args": null,
-          "kind": "ScalarField",
-          "name": "slug",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
           "concreteType": "Resource",
           "kind": "LinkedField",
           "name": "thumbnail",
@@ -85,6 +77,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "3a848ed79aec20b6df6c65656237de8e";
+(node as any).hash = "f837375197d57722bccbbb8d34ecba00";
 
 export default node;

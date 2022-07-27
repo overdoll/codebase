@@ -6,6 +6,7 @@ import { Stack } from '@chakra-ui/react'
 import { PostGalleryPublicSimple } from '../../../../index'
 import PostHeader from '../../../PostInteraction/PostHeader/PostHeader'
 import PostFooterButtons from '../../../PostInteraction/PostFooterButtons/PostFooterButtons'
+import PostDescription from '../../../PostData/PostDescription/PostDescription'
 
 interface Props {
   query: FullSimplePostFragment$key
@@ -17,6 +18,7 @@ const PostFragment = graphql`
     ...PostGalleryPublicSimpleFragment
     ...PostHeaderFragment
     ...PostFooterButtonsFragment
+    ...PostDescriptionFragment
   }
 `
 
@@ -37,7 +39,10 @@ export default function FullSimplePost ({
 
   return (
     <Stack spacing={2}>
-      <PostHeader postQuery={data} viewerQuery={viewerData} />
+      <Stack spacing={1}>
+        <PostHeader postQuery={data} viewerQuery={viewerData} />
+        <PostDescription noOfLines={2} query={data} />
+      </Stack>
       <PostGalleryPublicSimple postQuery={data} viewerQuery={viewerData} />
       <PostFooterButtons postQuery={data} viewerQuery={viewerData} />
     </Stack>
