@@ -69,8 +69,8 @@ export default function UpdatePostDescriptionForm ({
     description: Joi
       .string()
       .regex(DETECT_LINKS, { invert: true })
-      .min(0)
       .max(MAXIMUM_CHARACTER_COUNT)
+      .allow('')
       .messages({
         'string.max': i18n._(t`The description length cannot exceed ${MAXIMUM_CHARACTER_COUNT} characters`),
         'string.pattern.invert.base': i18n._(t`The description cannot contain links `)
