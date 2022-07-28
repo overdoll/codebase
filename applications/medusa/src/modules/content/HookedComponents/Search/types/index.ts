@@ -33,6 +33,7 @@ export interface RegisterFunctionReturn {
   id: RegisterSearchKey
   isPending: boolean
   onChangeRegister: OnChangeRegister
+  defaultValue?: string | null
 }
 
 export type RegisterFunction = (key: RegisterSearchKey, method: RegisterMethod) => RegisterFunctionReturn

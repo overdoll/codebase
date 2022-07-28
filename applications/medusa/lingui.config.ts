@@ -204,6 +204,10 @@ const ClubsCatalog = [
 
 const SearchCatalog = [
   {
+    path: 'src/domain/search/root/__locale__/{locale}/index',
+    include: ['src/domain/search/root/']
+  },
+  {
     path: 'src/domain/search/character/__locale__/{locale}/index',
     include: ['src/domain/search/character/']
   },

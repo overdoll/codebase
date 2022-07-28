@@ -7,10 +7,9 @@ import {
   TITLE_FEATURES,
   TITLE_SUFFIX
 } from '@//:modules/constants/rich-objects'
+import ImageRichObject from '../../../default/ImageRichObject/ImageRichObject'
 
 export default function RootDiscoverClubsRichObject (): JSX.Element {
-  // TODO name first three clubs posting content in title and description
-
   const TITLE = `Discover Clubs Creating ${TITLE_FEATURES} - ${TITLE_SUFFIX}`
   const DESCRIPTION = `${DESCRIPTION_PREFIX} ${DESCRIPTION_FEATURES} created by clubs on ${TITLE_SUFFIX}. ${DESCRIPTION_CONTENT_DISCOVER}.`
 
@@ -22,20 +21,18 @@ export default function RootDiscoverClubsRichObject (): JSX.Element {
         </title>
         <meta
           name='og:title'
-          key='og:title'
           content={TITLE}
         />
         <meta
           name='description'
-          key='description'
           content={DESCRIPTION}
         />
         <meta
           name='og:description'
-          key='og:description'
           content={DESCRIPTION}
         />
       </Head>
+      <ImageRichObject />
     </>
   )
 }

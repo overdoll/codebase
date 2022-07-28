@@ -25,24 +25,20 @@ import { Box, Stack, Text } from '@chakra-ui/react'
 import {
   CLUB_GUIDELINES,
   COMMUNITY_GUIDELINES,
+  OVERDOLL_ABOUT,
   PAYOUTS_INFORMATION,
   PRIVACY_POLICY,
   SUPPORTER_GUIDELINES,
-  TERMS_OF_SERVICE,
-  OVERDOLL_ABOUT
+  TERMS_OF_SERVICE
 } from '@//:modules/constants/links'
-import Head from 'next/head'
 import { PageProps } from '@//:types/app'
 import Can from '@//:modules/authorization/Can'
+import HelpRichObject from '../../../common/rich-objects/help/HelpRichObject/HelpRichObject'
 
 const Help: PageProps<{}> = () => {
   return (
     <>
-      <Head>
-        <title>
-          Help - overdoll
-        </title>
-      </Head>
+      <HelpRichObject />
       <PageWrapper>
         <Stack spacing={4}>
           <Box>

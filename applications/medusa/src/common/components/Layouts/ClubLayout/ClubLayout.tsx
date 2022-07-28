@@ -18,6 +18,7 @@ import SelectClubs from './SelectClubs/SelectClubs'
 import { useRouter } from 'next/router'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import Head from 'next/head'
+import DefaultRichObject from '../../../rich-objects/default/DefaultRichObject/DefaultRichObject'
 
 interface Props {
   children: ReactNode
@@ -48,11 +49,7 @@ export default function ClubLayout ({ children }: Props): JSX.Element {
 
   return (
     <>
-      <Head>
-        <title>
-          Manage Club - overdoll.com
-        </title>
-      </Head>
+
       <VerticalNavigation>
         <VerticalNavigation.Content
           title={

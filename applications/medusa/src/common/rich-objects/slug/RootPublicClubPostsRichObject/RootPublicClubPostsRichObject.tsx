@@ -8,9 +8,9 @@ import {
   TITLE_SEARCH_PREFIX,
   TITLE_SUFFIX
 } from '@//:modules/constants/rich-objects'
+import ImageRichObject from '../../default/ImageRichObject/ImageRichObject'
 
 export default function RootPublicClubPostsRichObject (): JSX.Element {
-  // TODO title could be better
   const TITLE = `${TITLE_SEARCH_PREFIX} ${TITLE_FEATURES} - ${TITLE_SUFFIX}`
   const DESCRIPTION = `${DESCRIPTION_PREFIX} ${DESCRIPTION_FEATURES} on ${TITLE_SUFFIX}. ${DESCRIPTION_CONTENT_TYPES}.`
 
@@ -21,21 +21,19 @@ export default function RootPublicClubPostsRichObject (): JSX.Element {
           {TITLE}
         </title>
         <meta
-          name='og:title'
-          key='og:title'
+          property='og:title'
           content={TITLE}
         />
         <meta
           name='description'
-          key='description'
           content={DESCRIPTION}
         />
         <meta
-          name='og:description'
-          key='og:description'
+          property='og:description'
           content={DESCRIPTION}
         />
       </Head>
+      <ImageRichObject />
     </>
   )
 }

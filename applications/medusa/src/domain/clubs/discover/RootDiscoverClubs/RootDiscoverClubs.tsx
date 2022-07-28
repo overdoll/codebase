@@ -7,7 +7,7 @@ import DiscoverClubs from './DiscoverClubs/DiscoverClubs'
 import type { DiscoverClubsQuery as DiscoverClubsQueryType } from '@//:artifacts/DiscoverClubsQuery.graphql'
 import DiscoverClubsQuery from '@//:artifacts/DiscoverClubsQuery.graphql'
 import RootDiscoverClubsRichObject
-  from '../../../../common/rich-objects/discover/RootDiscoverClubsRichObject/RootDiscoverClubsRichObject'
+  from '../../../../common/rich-objects/clubs/discover/RootDiscoverClubsRichObject/RootDiscoverClubsRichObject'
 
 interface Props {
   queryRefs: {

@@ -7,6 +7,8 @@ import { PageProps } from '@//:types/app'
 import { useRouter } from 'next/router'
 import type { LogoutMutation } from '@//:artifacts/LogoutMutation.graphql'
 import { invalidateToken } from '../../join/Join/support/support'
+import DefaultRichObject from '../../../common/rich-objects/default/DefaultRichObject/DefaultRichObject'
+import TitleRichObject from '../../../common/rich-objects/default/TitleRichObject/TitleRichObject'
 
 const LogoutButtonGQL = graphql`
   mutation LogoutMutation {
@@ -49,7 +51,13 @@ const Logout: PageProps<{}> = () => {
     })
   }, [])
 
-  return <CenteredSpinner />
+  return (
+    <>
+      <CenteredSpinner />
+      <DefaultRichObject />
+      <TitleRichObject />
+    </>
+  )
 }
 
 export default Logout

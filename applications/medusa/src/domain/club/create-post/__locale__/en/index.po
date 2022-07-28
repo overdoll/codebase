@@ -21,6 +21,10 @@ msgstr ""
 msgid "Add Categories From Post"
 msgstr ""
 
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostAddDescription.tsx:45
+msgid "Add Shout"
+msgstr ""
+
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadRewindCategories/UploadRewindCategories.tsx:103
 msgid "Add categories from previous posts"
 msgstr ""
@@ -68,6 +72,10 @@ msgstr ""
 #: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:153
 #~ msgid "Cannot upload while rearranging"
 #~ msgstr ""
+
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:174
+msgid "Clear Description"
+msgstr ""
 
 #: src/domain/club/create-post/CreatePost/ClubRestricted/ClubRestricted.tsx:29
 msgid "Club Restricted"
@@ -198,7 +206,7 @@ msgstr ""
 msgid "Opening Post"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:120
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:125
 msgid "Post Content Processed"
 msgstr ""
 
@@ -223,12 +231,12 @@ msgid "Processing Content"
 msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:109
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:102
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:107
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:95
 msgid "Processing Failed"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:111
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:116
 msgid "Processing Post Content"
 msgstr ""
 
@@ -323,6 +331,7 @@ msgid "Set Free"
 msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/SupporterPostContentButton/SupporterPostContentButton.tsx:95
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/PostUpdateDescription/PostUpdateDescription.tsx:72
 msgid "Set Supporter Only"
 msgstr ""
 
@@ -342,6 +351,10 @@ msgstr ""
 msgid "Supporter content should not be the first slide"
 msgstr ""
 
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:163
+msgid "Tell your fans what it's really all about"
+msgstr ""
+
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:28
 msgid "Thanks for posting! Your submission will be reviewed by our moderation team to ensure it does not violate any club guidelines. Once approved, it will be visible to the public."
 msgstr ""
@@ -354,6 +367,14 @@ msgstr ""
 #~ msgid "The audience is the group of people that you intended this post for. This will determine whether or not a user can see your post based on their set preferences. You can only select one audience."
 #~ msgstr ""
 
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:76
+msgid "The description cannot contain links"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:75
+msgid "The description length cannot exceed {MAXIMUM_CHARACTER_COUNT} characters"
+msgstr ""
+
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadRewindCategories/UploadRewindCategories.tsx:160
 msgid "The selected post has no categories"
 msgstr ""
@@ -365,6 +386,10 @@ msgstr ""
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:125
 #~ msgid "There was an error processing your files"
 #~ msgstr ""
+
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:133
+msgid "There was an error removing the description"
+msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateAudienceButton/UpdateAudienceButton.tsx:68
 msgid "There was an error saving the audience"
@@ -380,6 +405,10 @@ msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:85
 msgid "There was an error submitting your post"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:112
+msgid "There was an error updating the description"
 msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/ArrangeButton/ArrangeButton.tsx:91
@@ -405,6 +434,10 @@ msgstr ""
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/DraggableContent/DraggableContent.tsx:86
 #~ msgid "Up"
 #~ msgstr ""
+
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:193
+msgid "Update Description"
+msgstr ""
 
 #: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:102
 #~ msgid "Upload Files"

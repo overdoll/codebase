@@ -7,8 +7,6 @@ import PublicClub from './PublicClub/PublicClub'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
 import { useRouter } from 'next/router'
 import { PageProps } from '@//:types/app'
-import RootPublicClubRichObject
-  from '../../../../common/rich-objects/slug/RootPublicClubRichObject/RootPublicClubRichObject'
 
 interface Props {
   queryRefs: {
@@ -26,7 +24,6 @@ const RootPublicClub: PageProps<Props> = (props: Props) => {
 
   return (
     <>
-      <RootPublicClubRichObject />
       <PageWrapper>
         <QueryErrorBoundary loadQuery={() => loadQuery({ slug: slug as string })}>
           <Suspense fallback={<SkeletonPost />}>

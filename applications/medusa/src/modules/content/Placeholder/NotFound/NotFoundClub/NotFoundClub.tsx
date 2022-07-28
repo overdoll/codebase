@@ -1,18 +1,23 @@
 import { Center, Heading, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import NotFoundFooter from '../NotFoundFooter/NotFoundFooter'
+import RootPublicClubRichObject
+  from '../../../../../common/rich-objects/slug/RootPublicClubRichObject/RootPublicClubRichObject'
 
 export default function NotFoundClub (): JSX.Element {
   return (
-    <Center>
-      <Stack spacing={8}>
-        <Heading fontSize='2xl' color='gray.00'>
-          <Trans>
-            This club was not found
-          </Trans>
-        </Heading>
-        <NotFoundFooter />
-      </Stack>
-    </Center>
+    <>
+      <RootPublicClubRichObject />
+      <Center>
+        <Stack spacing={8}>
+          <Heading fontSize='2xl' color='gray.00'>
+            <Trans>
+              This club was not found
+            </Trans>
+          </Heading>
+          <NotFoundFooter />
+        </Stack>
+      </Center>
+    </>
   )
 }

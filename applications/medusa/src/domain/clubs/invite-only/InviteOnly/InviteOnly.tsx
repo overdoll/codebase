@@ -8,7 +8,7 @@ import HighlightInline from '@//:modules/content/ContentHints/HighlightInline/Hi
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import { OverdollLogo } from '@//:assets/logos'
 import Icon from '../../../../modules/content/PageLayout/Flair/Icon/Icon'
-import InviteOnlyRichObject from '../../../../common/rich-objects/invite-only/InviteOnlyRichObject/InviteOnlyRichObject'
+import InviteOnlyRichObject from '../../../../common/rich-objects/clubs/invite-only/InviteOnlyRichObject/InviteOnlyRichObject'
 import { OVERDOLL_ABOUT } from '@//:modules/constants/links'
 import { InfoCircle } from '@//:assets/icons'
 

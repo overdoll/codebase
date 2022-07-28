@@ -2,7 +2,7 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type { PublicPostRichObjectFragment$key } from '@//:artifacts/PublicPostRichObjectFragment.graphql'
 import Head from 'next/head'
 import React from 'react'
-import PostContentRichObject from './PostContentRichObject/PostContentRichObject'
+import PostContentRichObject from '../../default/PostContentRichObject/PostContentRichObject'
 import {
   DESCRIPTION_FEATURES,
   DESCRIPTION_PREFIX,
@@ -54,22 +54,18 @@ export default function PublicPostRichObject ({
         </title>
         <meta
           property='og:title'
-          key='og:title'
           content={TITLE}
         />
         <meta
-          property='description'
-          key='description'
+          name='description'
           content={DESCRIPTION}
         />
         <meta
           property='og:description'
-          key='og:description'
           content={DESCRIPTION}
         />
         <meta
           property='og:url'
-          key='og:url'
           content={URL}
         />
       </Head>

@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import React from 'react'
 import { DESCRIPTION_FEATURES, TITLE_FEATURES, TITLE_SUFFIX } from '@//:modules/constants/rich-objects'
+import ImageRichObject from '../../../default/ImageRichObject/ImageRichObject'
 
 export default function InviteOnlyRichObject (): JSX.Element {
   const TITLE = `Create, Post and Monetize Your ${TITLE_FEATURES} - ${TITLE_SUFFIX}`
@@ -14,20 +15,18 @@ export default function InviteOnlyRichObject (): JSX.Element {
         </title>
         <meta
           name='og:title'
-          key='og:title'
           content={TITLE}
         />
         <meta
           name='description'
-          key='description'
           content={DESCRIPTION}
         />
         <meta
           name='og:description'
-          key='og:description'
           content={DESCRIPTION}
         />
       </Head>
+      <ImageRichObject />
     </>
   )
 }

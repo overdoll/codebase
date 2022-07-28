@@ -5,9 +5,10 @@ import { useQueryParam } from 'use-query-params'
 import { useFlash } from '@//:modules/flash'
 import { ConfirmEmailMutation } from '@//:artifacts/ConfirmEmailMutation.graphql'
 import { t, Trans } from '@lingui/macro'
-import Head from 'next/head'
 import { PageProps } from '@//:types/app'
 import { useRouter } from 'next/router'
+import ConfirmEmailRichObject
+  from '../../../common/rich-objects/confirm-email/ConfirmEmailRichObject/ConfirmEmailRichObject'
 
 const ConfirmEmailMutationGQL = graphql`
   mutation ConfirmEmailMutation($input: ConfirmAccountEmailInput!) {
@@ -67,11 +68,7 @@ const ConfirmEmail: PageProps<{}> = (): JSX.Element => {
 
   return (
     <>
-      <Head>
-        <title>
-          Confirming your email - overdoll
-        </title>
-      </Head>
+      <ConfirmEmailRichObject />
       <Flex
         mt={40}
         h='100%'

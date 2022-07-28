@@ -4,10 +4,10 @@ import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryEr
 import type { ClubsFeedQuery as ClubsFeedQueryType } from '@//:artifacts/ClubsFeedQuery.graphql'
 import ClubsFeedQuery from '@//:artifacts/ClubsFeedQuery.graphql'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
-import Head from 'next/head'
 import { PageProps } from '@//:types/app'
 import ClubsFeed from './ClubsFeed/ClubsFeed'
 import { PageWrapper } from '@//:modules/content/PageLayout'
+import FeedRichObject from '../../../../common/rich-objects/clubs/feed/FeedRichObject/FeedRichObject'
 
 interface Props {
   queryRefs: {
@@ -23,11 +23,7 @@ const RootClubsFeed: PageProps<Props> = (props: Props) => {
 
   return (
     <>
-      <Head>
-        <title>
-          Clubs Feed - overdoll
-        </title>
-      </Head>
+      <FeedRichObject />
       <PageWrapper>
         <QueryErrorBoundary loadQuery={() => loadQuery({})}>
           <Suspense fallback={<SkeletonPost />}>

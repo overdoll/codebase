@@ -9,7 +9,7 @@ import {
   SEARCH_TITLE_SUFFIX,
   TITLE_FEATURES
 } from '@//:modules/constants/rich-objects'
-import ResourceRichObject from './ResourceRichObject/ResourceRichObject'
+import ResourceRichObject from '../../default/ResourceRichObject/ResourceRichObject'
 
 interface Props {
   query: SearchCategoryRichObjectFragment$key
@@ -43,22 +43,18 @@ export default function SearchCategoryRichObject ({
         </title>
         <meta
           property='og:title'
-          key='og:title'
           content={TITLE}
         />
         <meta
           name='description'
-          key='description'
           content={DESCRIPTION}
         />
         <meta
           property='og:description'
-          key='og:description'
           content={DESCRIPTION}
         />
         <meta
           property='og:url'
-          key='og:url'
           content={URL}
         />
       </Head>

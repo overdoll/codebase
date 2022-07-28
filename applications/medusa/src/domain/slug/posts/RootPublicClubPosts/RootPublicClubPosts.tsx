@@ -9,9 +9,8 @@ import { Stack } from '@chakra-ui/react'
 import { PageProps } from '@//:types/app'
 import { useRouter } from 'next/router'
 import { PageWrapper } from '@//:modules/content/PageLayout'
-import RootPublicClubPostsRichObject
-  from '../../../../common/rich-objects/slug/RootPublicClubPostsRichObject/RootPublicClubPostsRichObject'
-import useSearchSortArguments from '../../../../common/components/PageHeader/SearchButton/support/useSearchSortArguments'
+import useSearchSortArguments
+  from '../../../../common/components/PageHeader/SearchButton/support/useSearchSortArguments'
 
 interface Props {
   queryRefs: {
@@ -34,7 +33,6 @@ const RootPublicClubPosts: PageProps<Props> = (props: Props) => {
 
   return (
     <>
-      <RootPublicClubPostsRichObject />
       <PageWrapper>
         <Stack spacing={8}>
           <QueryErrorBoundary loadQuery={() => loadQuery({

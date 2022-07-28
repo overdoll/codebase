@@ -7,7 +7,7 @@ import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryEr
 import CreateClubQuery, { CreateClubQuery as CreateClubQueryType } from '@//:artifacts/CreateClubQuery.graphql'
 import { Suspense } from 'react'
 import { PageProps } from '@//:types/app'
-import Head from 'next/head'
+import CreateClubRichObject from '../../../../common/rich-objects/clubs/create-club/CreateClubRichObject'
 
 interface Props {
   queryRefs: {
@@ -23,11 +23,7 @@ const RootCreateClub: PageProps<Props> = (props: Props) => {
 
   return (
     <>
-      <Head>
-        <title>
-          Create your club - overdoll
-        </title>
-      </Head>
+      <CreateClubRichObject />
       <PageWrapper>
         <PageSectionWrap>
           <PageSectionTitle colorScheme='teal'>

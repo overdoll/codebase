@@ -196,7 +196,7 @@ msgstr ""
 msgid "I promise to be better and to follow the community guidelines more closely"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostJoinClub/PostJoinClub.tsx:89
+#: src/modules/content/Posts/components/PostInteraction/PostHeaders/PostJoinClub/PostJoinClub.tsx:89
 msgid "Join {0}"
 msgstr ""
 
@@ -248,7 +248,7 @@ msgid "Looks like you messed up. Something you did here violated our community g
 msgstr ""
 
 #: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:59
-#: src/modules/content/Posts/components/PostInteraction/PostJoinClub/PostJoinClub.tsx:74
+#: src/modules/content/Posts/components/PostInteraction/PostHeaders/PostJoinClub/PostJoinClub.tsx:74
 msgid "Manage Club"
 msgstr ""
 
@@ -493,7 +493,7 @@ msgstr ""
 msgid "Security"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostData/PostGalleryPublicSimple/OverflowVisual/OverflowVisual.tsx:41
+#: src/modules/content/Posts/components/PostData/PostGalleryPublicSimple/OverflowVisual/OverflowVisual.tsx:42
 msgid "See Full Size"
 msgstr ""
 
@@ -561,7 +561,7 @@ msgstr ""
 msgid "Subtract"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostJoinClub/PostJoinClub.tsx:121
+#: src/modules/content/Posts/components/PostInteraction/PostHeaders/PostJoinClub/PostJoinClub.tsx:121
 msgid "Support"
 msgstr ""
 

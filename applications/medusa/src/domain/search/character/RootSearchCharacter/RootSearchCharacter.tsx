@@ -11,7 +11,6 @@ import SearchCharacter from './SearchCharacter/SearchCharacter'
 import useSearchSortArguments
   from '../../../../common/components/PageHeader/SearchButton/support/useSearchSortArguments'
 import { PageWrapper } from '@//:modules/content/PageLayout'
-import RootSearchRichObject from '../../../../common/rich-objects/search/RootSearchRichObject/RootSearchRichObject'
 
 interface Props {
   queryRefs: {
@@ -36,7 +35,6 @@ const RootSearchCharacter: PageProps<Props> = (props: Props) => {
 
   return (
     <>
-      <RootSearchRichObject />
       <PageWrapper>
         <QueryErrorBoundary loadQuery={() => loadQuery({
           seriesSlug: seriesSlug as string,

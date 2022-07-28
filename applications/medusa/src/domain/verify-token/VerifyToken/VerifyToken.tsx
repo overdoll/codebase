@@ -11,6 +11,8 @@ import { useToast } from '@//:modules/content/ThemeComponents'
 import Complete from './Complete/Complete'
 import Invalid from './Invalid/Invalid'
 import { PageProps } from '@//:types/app'
+import VerifyTokenRichObject
+  from '../../../common/rich-objects/verify-token/VerifyTokenRichObject/VerifyTokenRichObject'
 
 interface Props {
   queryRefs: {
@@ -107,7 +109,12 @@ const VerifyToken: PageProps<Props> = (props: Props): JSX.Element => {
     }
 
     // otherwise we're in a "waiting" state - will auto-verify the token without requiring user action
-    return <CenteredSpinner />
+    return (
+      <>
+        <VerifyTokenRichObject />
+        <CenteredSpinner />
+      </>
+    )
   }
 
   // Token was verified and user was logged in

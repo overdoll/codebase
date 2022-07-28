@@ -11,7 +11,6 @@ import SearchCategory from './SearchCategory/SearchCategory'
 import useSearchSortArguments
   from '../../../../common/components/PageHeader/SearchButton/support/useSearchSortArguments'
 import { PageWrapper } from '@//:modules/content/PageLayout'
-import RootSearchRichObject from '../../../../common/rich-objects/search/RootSearchRichObject/RootSearchRichObject'
 
 interface Props {
   queryRefs: {
@@ -35,7 +34,6 @@ const RootSearchCategory: PageProps<Props> = (props: Props) => {
 
   return (
     <>
-      <RootSearchRichObject />
       <PageWrapper>
         <QueryErrorBoundary loadQuery={() => loadQuery({
           categorySlug: categorySlug as string,

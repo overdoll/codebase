@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<51465f5da3a3870bd2909fa5dcff87d1>>
- * @relayHash 89168edb364a440ac4ad6a1a317c54e1
+ * @generated SignedSource<<93df00536bf06a4a5ee28d6c6bdc64d0>>
+ * @relayHash 6483d08990b32f70fde63233c47c1955
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 89168edb364a440ac4ad6a1a317c54e1
+// @relayRequestID 6483d08990b32f70fde63233c47c1955
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -529,7 +529,23 @@ return {
             "name": "posts"
           },
           (v10/*: any*/),
-          (v18/*: any*/)
+          (v18/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Resource",
+            "kind": "LinkedField",
+            "name": "banner",
+            "plural": false,
+            "selections": [
+              (v13/*: any*/),
+              (v14/*: any*/),
+              (v15/*: any*/),
+              (v11/*: any*/),
+              (v10/*: any*/)
+            ],
+            "storageKey": null
+          }
         ],
         "storageKey": null
       },
@@ -601,7 +617,7 @@ return {
     ]
   },
   "params": {
-    "id": "89168edb364a440ac4ad6a1a317c54e1",
+    "id": "6483d08990b32f70fde63233c47c1955",
     "metadata": {},
     "name": "PublicClubPostsQuery",
     "operationKind": "query",

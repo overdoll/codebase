@@ -7,13 +7,16 @@ import PageWrapperDesktop from '../../../../common/components/PageWrapperDesktop
 import AdvertBoxWrapper from '../../../join/Join/components/PlatformBenefitsAdvert/AdvertBoxWrapper/AdvertBoxWrapper'
 import { ArrowButtonLeft, RemoveCross } from '@//:assets/icons'
 import BackgroundPatternWrapper from '../../../join/Join/components/BackgroundPatternWrapper/BackgroundPatternWrapper'
+import VerifyTokenRichObject
+  from '../../../../common/rich-objects/verify-token/VerifyTokenRichObject/VerifyTokenRichObject'
 
 export default function Invalid (): JSX.Element {
   return (
     <>
       <Head>
-        <title>Invalid login link - overdoll</title>
+        <title>Invalid Login Link - overdoll</title>
       </Head>
+      <VerifyTokenRichObject />
       <BackgroundPatternWrapper>
         <PageWrapperDesktop>
           <Center>

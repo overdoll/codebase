@@ -11,6 +11,8 @@ import { useRouter } from 'next/router'
 import BackgroundPatternWrapper from '../../../join/Join/components/BackgroundPatternWrapper/BackgroundPatternWrapper'
 import PageWrapperDesktop from '../../../../common/components/PageWrapperDesktop/PageWrapperDesktop'
 import AdvertBoxWrapper from '../../../join/Join/components/PlatformBenefitsAdvert/AdvertBoxWrapper/AdvertBoxWrapper'
+import VerifyTokenRichObject
+  from '../../../../common/rich-objects/verify-token/VerifyTokenRichObject/VerifyTokenRichObject'
 
 interface Props {
   query: CompleteFragment$key
@@ -48,8 +50,9 @@ export default function Complete ({ query }: Props): JSX.Element {
   return (
     <>
       <Head>
-        <title>Verification complete - overdoll</title>
+        <title>Verification Complete - overdoll</title>
       </Head>
+      <VerifyTokenRichObject />
       <BackgroundPatternWrapper>
         <PageWrapperDesktop>
           <Center>

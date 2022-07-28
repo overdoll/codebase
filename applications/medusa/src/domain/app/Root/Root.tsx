@@ -12,8 +12,8 @@ import PageContents from './PageContents/PageContents'
 import UniversalNavigator from './UniversalNavigator/UniversalNavigator'
 import { PageProps } from '@//:types/app'
 import NoScript from './NoScript/NoScript'
-import RootRichObject from '../../../common/rich-objects/root/RootRichObject'
 import SafeModal from './SafeModal/SafeModal'
+import RootRichObject from '../../../common/rich-objects/default/RootRichObject/RootRichObject'
 
 interface Props {
   children: ReactNode
