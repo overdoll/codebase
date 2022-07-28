@@ -67,7 +67,7 @@ export default function PostGalleryPublicSimple ({
           >
             <PostSlideBackground query={item}>
               <OverflowVisual
-                minH={100}
+                minH={300}
                 maxH={700}
                 align='center'
               >

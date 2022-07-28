@@ -9,12 +9,10 @@ import PostClickableCharacters
   from '@//:modules/content/Posts/components/PostInteraction/PostClickableCharacters/PostClickableCharacters'
 import PostClickableCategories
   from '@//:modules/content/Posts/components/PostInteraction/PostClickableCategories/PostClickableCategories'
-import PostHeaderClubJoin
-  from '@//:modules/content/Posts/components/PostInteraction/PostHeaders/PostHeaderClubJoin/PostHeaderClubJoin'
 import PostFooterButtons from '@//:modules/content/Posts/components/PostInteraction/PostFooterButtons/PostFooterButtons'
-import PostDescription from '@//:modules/content/Posts/components/PostData/PostDescription/PostDescription'
 import PostPublicHeader
   from '@//:modules/content/Posts/components/PostInteraction/PostHeaders/PostPublicHeader/PostPublicHeader'
+import { useMemo } from 'react'
 
 interface Props {
   query: FullDetailedPostFragment$key
@@ -23,6 +21,7 @@ interface Props {
 
 const PostFragment = graphql`
   fragment FullDetailedPostFragment on Post {
+    id
     ...PostGalleryPublicDetailedFragment
     ...PostClickableCharactersFragment
     ...PostClickableCategoriesFragment
@@ -46,11 +45,13 @@ export default function FullDetailedPost ({
   const data = useFragment<FullDetailedPostFragment$key>(PostFragment, query)
   const viewerData = useFragment<FullDetailedPostViewerFragment$key>(ViewerFragment, viewerQuery)
 
+  const PostMemo = useMemo(() => (<PostGalleryPublicDetailed postQuery={data} viewerQuery={viewerData} />), [data.id])
+
   return (
     <Stack spacing={4}>
       <Stack spacing={2}>
         <PostPublicHeader postQuery={data} viewerQuery={viewerData} />
-        <PostGalleryPublicDetailed postQuery={data} viewerQuery={viewerData} />
+        {PostMemo}
         <PostFooterButtons postQuery={data} viewerQuery={viewerData} />
       </Stack>
       <Stack spacing={2}>

@@ -17,7 +17,16 @@ export default function OverflowVisual ({
   const isOverflowing = ref?.current != null ? ref?.current?.clientHeight < ref?.current?.scrollHeight : false
 
   return (
-    <Flex position='relative' ref={ref} w='100%' direction='column' minH={minH} overflow='hidden' {...rest}>
+    <Flex
+      position='relative'
+      ref={ref}
+      w='100%'
+      direction='column'
+      minH={minH}
+      overflow='hidden'
+      justify={isOverflowing ? undefined : 'center'}
+      {...rest}
+    >
       {children}
       {isOverflowing && (
         <Flex
