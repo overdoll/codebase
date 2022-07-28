@@ -58,6 +58,10 @@ export default function PublicClubPostsRichObject ({
           property='og:url'
           content={URL}
         />
+        <link
+          rel='canonical'
+          href={URL}
+        />
       </Head>
       <ResourceRichObject query={clubData.banner} />
     </>

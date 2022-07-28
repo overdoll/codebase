@@ -11,7 +11,7 @@ import subYears from 'date-fns/subYears'
 import { useState } from 'react'
 import { useLingui } from '@lingui/react'
 
-type Props = SelectProps & RegisterFunctionReturn
+type Props = Omit<SelectProps, 'id' | 'defaultValue'> & RegisterFunctionReturn
 
 export interface SearchDateRangeProps {
   from: Date
@@ -32,6 +32,7 @@ export default function SearchDateRange ({
   id,
   onChangeRegister,
   isPending,
+  defaultValue: defaultRegisterValue,
   ...rest
 }: Props): JSX.Element {
   const { i18n } = useLingui()
@@ -59,7 +60,7 @@ export default function SearchDateRange ({
     }
   ]
 
-  const defaultValue = dates[0].value
+  const defaultValue = dates[0].value ?? defaultRegisterValue
 
   const [date, setDate] = useState<string>(defaultValue)
 

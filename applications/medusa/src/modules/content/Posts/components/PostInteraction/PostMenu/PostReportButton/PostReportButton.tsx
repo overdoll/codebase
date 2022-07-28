@@ -4,7 +4,7 @@ import { PostReportButtonFragment$key } from '@//:artifacts/PostReportButtonFrag
 import { PostReportButtonViewerFragment$key } from '@//:artifacts/PostReportButtonViewerFragment.graphql'
 import { PostReportButtonMutation } from '@//:artifacts/PostReportButtonMutation.graphql'
 import { useFragment, useMutation } from 'react-relay/hooks'
-import { MenuItem, MenuLinkItem } from '../../../../../ThemeComponents/Menu/Menu'
+import { MenuItem } from '../../../../../ThemeComponents/Menu/Menu'
 import { FlagReport } from '@//:assets/icons'
 import {
   Modal,
@@ -27,6 +27,7 @@ import { useChoice } from '../../../../../HookedComponents/Choice'
 import Button from '../../../../../../form/Button/Button'
 import { useToast } from '../../../../../ThemeComponents'
 import encodeJoinRedirect from '../../../../../../support/encodeJoinRedirect'
+import { useRouter } from 'next/router'
 
 interface Props {
   query: PostReportButtonFragment$key
@@ -77,6 +78,8 @@ export default function PostReportButton ({
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   const [commit, isInFlight] = useMutation<PostReportButtonMutation>(Mutation)
+
+  const router = useRouter()
 
   const {
     isOpen,
@@ -148,8 +151,8 @@ export default function PostReportButton ({
   const ReportMenuItem = (): JSX.Element => {
     if (viewerData == null) {
       return (
-        <MenuLinkItem
-          href={redirect}
+        <MenuItem
+          onClick={async () => await router.push(redirect)}
           text={<Trans>Report Post</Trans>}
           icon={FlagReport}
         />

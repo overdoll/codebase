@@ -6,6 +6,8 @@ import DefaultRichObject from '../../default/DefaultRichObject/DefaultRichObject
 export default function RootHomeRichObject (): JSX.Element {
   const TITLE = `overdoll - ${TITLE_FEATURES}`
 
+  const URL = 'https://overdoll.com/'
+
   return (
     <>
       <Head>
@@ -13,6 +15,10 @@ export default function RootHomeRichObject (): JSX.Element {
         <meta
           name='og:title'
           content={TITLE}
+        />
+        <link
+          rel='canonical'
+          href={URL}
         />
       </Head>
       <DefaultRichObject />

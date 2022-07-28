@@ -60,6 +60,10 @@ export default function SearchCharacterRichObject ({
           property='og:url'
           content={URL}
         />
+        <link
+          rel='canonical'
+          href={URL}
+        />
       </Head>
       <ResourceRichObject query={data.banner} />
     </>

@@ -7,6 +7,8 @@ export default function JoinRichObject (): JSX.Element {
   const TITLE = `Create an Account - ${TITLE_SUFFIX}`
   const DESCRIPTION = `Create an account and post or discover ${DESCRIPTION_FEATURES}. overdoll allows artists to post and monetize their content and for fans to discover new content.`
 
+  const URL = 'https://overdoll.com/join'
+
   return (
     <>
       <Head>
@@ -24,6 +26,10 @@ export default function JoinRichObject (): JSX.Element {
         <meta
           name='og:description'
           content={DESCRIPTION}
+        />
+        <link
+          rel='canonical'
+          href={URL}
         />
       </Head>
       <ImageRichObject />

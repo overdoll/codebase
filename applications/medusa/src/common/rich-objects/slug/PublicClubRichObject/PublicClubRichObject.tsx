@@ -57,6 +57,10 @@ export default function PublicClubRichObject ({
           property='og:url'
           content={URL}
         />
+        <link
+          rel='canonical'
+          href={URL}
+        />
       </Head>
       <ResourceRichObject query={data.banner} />
     </>

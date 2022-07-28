@@ -13,6 +13,8 @@ export default function RootDiscoverClubsRichObject (): JSX.Element {
   const TITLE = `Discover Clubs Creating ${TITLE_FEATURES} - ${TITLE_SUFFIX}`
   const DESCRIPTION = `${DESCRIPTION_PREFIX} ${DESCRIPTION_FEATURES} created by clubs on ${TITLE_SUFFIX}. ${DESCRIPTION_CONTENT_DISCOVER}.`
 
+  const URL = 'https://overdoll.com/clubs/discover'
+
   return (
     <>
       <Head>
@@ -30,6 +32,10 @@ export default function RootDiscoverClubsRichObject (): JSX.Element {
         <meta
           name='og:description'
           content={DESCRIPTION}
+        />
+        <link
+          rel='canonical'
+          href={URL}
         />
       </Head>
       <ImageRichObject />

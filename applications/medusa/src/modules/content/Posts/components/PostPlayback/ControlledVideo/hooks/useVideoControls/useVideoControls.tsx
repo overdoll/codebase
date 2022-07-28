@@ -17,7 +17,7 @@ export default function useVideoControls (videoRef: UseVideoControlsProps): UseV
   let videoLoaded: Promise<void> | null = null
 
   const onPlay = (): void => {
-    if (ref?.current == null) return
+    if (ref?.current == null || ref?.current?.readyState < 3) return
     videoLoaded = ref.current.play()
   }
 

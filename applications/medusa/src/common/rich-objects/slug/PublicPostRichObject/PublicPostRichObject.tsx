@@ -68,6 +68,10 @@ export default function PublicPostRichObject ({
           property='og:url'
           content={URL}
         />
+        <link
+          rel='canonical'
+          href={URL}
+        />
       </Head>
       <PostContentRichObject query={data} />
     </>
