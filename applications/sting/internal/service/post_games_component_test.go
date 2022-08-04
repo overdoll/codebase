@@ -33,7 +33,7 @@ func TestCreatePostGames(t *testing.T) {
 
 	var postGames PostGames
 
-	err := client.Mutate(context.Background(), &postGames, map[string]interface{}{
+	err := client.Query(context.Background(), &postGames, map[string]interface{}{
 		"slug": graphql.String(postsGameSlug),
 		"seed": graphql.String("asdasdasd"),
 	})

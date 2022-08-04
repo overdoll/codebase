@@ -26,7 +26,7 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 	application.StingClient.On("SuspendClub", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
 
 	application.StingClient.On("GetPost", mock.Anything, mock.Anything).Return(func(c context.Context, r *sting.PostRequest, g ...grpc.CallOption) *sting.Post {
-		return &sting.Post{ClubId: r.Id}
+		return &sting.Post{ClubId: r.Id, AccountId: r.Id}
 	}, nil)
 
 	application.StingClient.On("GetClubById", mock.Anything, mock.Anything).Return(&sting.GetClubByIdResponse{Club: &sting.Club{OwnerAccountId: "", CanSupport: true}}, nil)

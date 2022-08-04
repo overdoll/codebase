@@ -336,7 +336,7 @@ func TestPutPostIntoModeratorQueue_and_approve(t *testing.T) {
 
 	grpcClient := getGrpcClient(t)
 
-	postId := uuid.New().String()
+	postId := accountId
 
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.PutPostIntoModeratorQueue, mock.Anything)
 
