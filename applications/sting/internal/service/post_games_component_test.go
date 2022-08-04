@@ -14,7 +14,7 @@ type PostGames struct {
 		Edges []struct {
 			Node PostModified
 		}
-	} `graphql:"postGames(slug: $slug, seed: $seed)"`
+	} `graphql:"postsGame(slug: $slug, seed: $seed)"`
 }
 
 func TestCreatePostGames(t *testing.T) {
