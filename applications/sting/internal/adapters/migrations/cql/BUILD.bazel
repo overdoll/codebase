@@ -9,6 +9,7 @@ go_library(
         "1656433052_add_banners.cql",
         "1657032744_create_topics.cql",
         "1657653582_add_description_and_club_characters.cql",
+        "1659569908_create_post_games.cql",
     ],
     importpath = "overdoll/applications/sting/internal/adapters/migrations/cql",
     visibility = ["//applications/sting:__subpackages__"],

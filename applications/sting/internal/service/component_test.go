@@ -167,6 +167,22 @@ func getPostFromAdapter(t *testing.T, postId string) *post.Post {
 	return pst
 }
 
+func seedPostsGame(t *testing.T, postIds []string) string {
+	fake := TestClub{}
+	err := faker.FakeData(&fake)
+	require.NoError(t, err)
+
+	session := bootstrap.InitializeDatabaseSession()
+	es := bootstrap.InitializeElasticSearchSession()
+	serializer := resource.NewSerializer()
+
+	adapter := adapters.NewPostsCassandraRepository(session, es, serializer, bootstrap.InitializeAWSSession())
+	err = adapter.CreatePostsGame(context.Background(), fake.Slug, postIds)
+	require.NoError(t, err)
+
+	return fake.Slug
+}
+
 func seedCharacter(t *testing.T, seriesId string) *post.Character {
 	fake := TestClub{}
 	err := faker.FakeData(&fake)

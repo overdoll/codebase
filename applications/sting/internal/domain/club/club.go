@@ -655,8 +655,13 @@ func ViewClubSlugLimit(requester *principal.Principal, accountId string) (int, e
 }
 
 func ViewAccountClubsLimit(requester *principal.Principal, accountId string) (int, error) {
+
 	if err := requester.BelongsToAccount(accountId); err != nil {
 		return 0, err
+	}
+
+	if requester.IsStaff() {
+		return 9999, nil
 	}
 
 	return maxAccountClubsLimit, nil

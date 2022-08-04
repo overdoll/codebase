@@ -27,6 +27,7 @@ go_library(
         "post_series_elasticsearch_repository.go",
         "post_topic_cassandra_repository.go",
         "post_topic_elasticsearch_repository.go",
+        "posts_game_elasticsearch_repository.go",
         "repository.go",
         "search_elasticsearch_repository.go",
         "sitemap_repository.go",

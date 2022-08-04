@@ -26,6 +26,7 @@ go_library(
         "//applications/parley/internal/domain/club_infraction",
         "//applications/parley/internal/domain/event",
         "//applications/parley/internal/domain/moderator",
+        "//applications/parley/internal/domain/post",
         "//applications/parley/internal/domain/post_audit_log",
         "//applications/parley/internal/domain/report",
         "//applications/parley/internal/domain/rule",

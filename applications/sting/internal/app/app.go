@@ -169,4 +169,6 @@ type Queries struct {
 	HasNonTerminatedClubs query.HasNonTerminatedClubsHandler
 
 	ClubSupporterMembersCount query.ClubSupporterMembersCountHandler
+
+	PostsGame query.PostsGameHandler
 }
