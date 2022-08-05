@@ -35,7 +35,7 @@ func NewRejectPostHandler(pr post_audit_log.Repository, rr rule.Repository, cr c
 
 func (h RejectPostHandler) Handle(ctx context.Context, cmd RejectPost) error {
 
-	clubId, err := h.sting.GetPost(ctx, cmd.PostId)
+	pst, err := h.sting.GetPost(ctx, cmd.PostId)
 
 	if err != nil {
 		return err
@@ -53,7 +53,7 @@ func (h RejectPostHandler) Handle(ctx context.Context, cmd RejectPost) error {
 		return err
 	}
 
-	if err := h.event.RejectPost(ctx, cmd.Principal, postModerator, clubId, cmd.PostId, ruleItem, cmd.Notes); err != nil {
+	if err := h.event.RejectPost(ctx, cmd.Principal, postModerator, pst.ClubId(), cmd.PostId, ruleItem, cmd.Notes); err != nil {
 		return err
 	}
 

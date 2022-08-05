@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"overdoll/applications/parley/internal/domain/post"
 	"overdoll/libraries/errors"
 
 	sting "overdoll/applications/sting/proto"
@@ -52,15 +53,15 @@ func (s StingGrpc) SuspendClub(ctx context.Context, clubId string, endTime int64
 	return nil
 }
 
-func (s StingGrpc) GetPost(ctx context.Context, id string) (string, error) {
+func (s StingGrpc) GetPost(ctx context.Context, id string) (*post.Post, error) {
 
 	md, err := s.client.GetPost(ctx, &sting.PostRequest{Id: id})
 
 	if err != nil {
-		return "", errors.Wrap(err, "sting - GetPost")
+		return nil, errors.Wrap(err, "sting - GetPost")
 	}
 
-	return md.ClubId, nil
+	return post.UnmarshalPostFromDatabase(md.ClubId, md.AccountId), nil
 }
 
 func (s StingGrpc) PublishPost(ctx context.Context, id string) error {

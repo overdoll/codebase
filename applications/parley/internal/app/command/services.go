@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"overdoll/applications/parley/internal/domain/post"
 	"overdoll/libraries/principal"
 )
 
@@ -10,7 +11,7 @@ type EvaService interface {
 }
 
 type StingService interface {
-	GetPost(context.Context, string) (string, error)
+	GetPost(context.Context, string) (*post.Post, error)
 	PublishPost(context.Context, string) error
 	RejectPost(context.Context, string) error
 	DiscardPost(context.Context, string) error

@@ -34,6 +34,7 @@ go_test(
         "mocks_component_test.go",
         "post_component_test.go",
         "post_custom_feeds_test.go",
+        "post_games_component_test.go",
         "post_like_component_test.go",
         "series_component_test.go",
         "suspend_club_component_test.go",

@@ -581,6 +581,10 @@ func (m *Club) UpdateName(requester *principal.Principal, name string) error {
 
 func (m *Club) canUpdate(requester *principal.Principal) error {
 
+	if requester.IsStaff() {
+		return nil
+	}
+
 	if err := requester.BelongsToAccount(m.ownerAccountId); err != nil {
 		return err
 	}
@@ -655,8 +659,13 @@ func ViewClubSlugLimit(requester *principal.Principal, accountId string) (int, e
 }
 
 func ViewAccountClubsLimit(requester *principal.Principal, accountId string) (int, error) {
+
 	if err := requester.BelongsToAccount(accountId); err != nil {
 		return 0, err
+	}
+
+	if requester.IsStaff() {
+		return 9999, nil
 	}
 
 	return maxAccountClubsLimit, nil

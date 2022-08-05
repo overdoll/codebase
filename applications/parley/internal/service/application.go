@@ -84,7 +84,7 @@ func createApplication(ctx context.Context, eva command.EvaService, sting comman
 
 	return &app.Application{
 		Commands: app.Commands{
-			PutPostIntoModeratorQueueOrPublish: command.NewPutPostIntoModeratorQueueOrPublishHandler(moderatorRepo, eventRepo, sting),
+			PutPostIntoModeratorQueueOrPublish: command.NewPutPostIntoModeratorQueueOrPublishHandler(moderatorRepo, eventRepo, sting, eva),
 			AddModeratorToPostQueue:            command.NewAddModeratorToPostQueueHandler(moderatorRepo),
 			RemoveModeratorFromPostQueue:       command.NewRemoveModeratorFromPostQueue(moderatorRepo, eva),
 

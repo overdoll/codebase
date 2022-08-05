@@ -33,6 +33,28 @@ func (r *QueryResolver) Search(ctx context.Context, after *string, before *strin
 	return types.MarshalSearchToGraphQLConnection(ctx, results, cursor), nil
 }
 
+func (r *QueryResolver) PostsGame(ctx context.Context, after *string, before *string, first *int, last *int, slug string, seed string) (*types.PostConnection, error) {
+
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
+	}
+
+	results, err := r.App.Queries.PostsGame.Handle(ctx, query.PostsGame{
+		Principal: principal.FromContext(ctx),
+		Cursor:    cursor,
+		Seed:      seed,
+		Slug:      slug,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalPostToGraphQLConnection(ctx, results, cursor), nil
+}
+
 func (r *QueryResolver) PostsFeed(ctx context.Context, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)

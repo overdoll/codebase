@@ -109,6 +109,8 @@ type Repository interface {
 	SuggestedPostsByPost(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, post *Post) ([]*Post, error)
 	Search(ctx context.Context, passport *passport.Passport, requester *principal.Principal, cursor *paging.Cursor, query string) ([]interface{}, error)
 	SearchPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *Filters) ([]*Post, error)
+	PostsGame(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, slug, seed string) ([]*Post, error)
+
 	RefreshPostIndex(ctx context.Context) error
 
 	SearchCharacters(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *CharacterFilters) ([]*Character, error)

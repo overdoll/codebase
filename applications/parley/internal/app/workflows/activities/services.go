@@ -2,10 +2,11 @@ package activities
 
 import (
 	"context"
+	"overdoll/applications/parley/internal/domain/post"
 )
 
 type StingService interface {
-	GetPost(context.Context, string) (string, error)
+	GetPost(context.Context, string) (*post.Post, error)
 	PublishPost(context.Context, string) error
 	RejectPost(context.Context, string) error
 	DiscardPost(context.Context, string) error

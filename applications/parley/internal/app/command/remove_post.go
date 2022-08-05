@@ -33,7 +33,7 @@ func NewRemovePostHandler(pr post_audit_log.Repository, rr rule.Repository, cr c
 
 func (h RemovePostHandler) Handle(ctx context.Context, cmd RemovePost) error {
 
-	clubId, err := h.sting.GetPost(ctx, cmd.PostId)
+	pst, err := h.sting.GetPost(ctx, cmd.PostId)
 
 	if err != nil {
 		return err
@@ -45,7 +45,7 @@ func (h RemovePostHandler) Handle(ctx context.Context, cmd RemovePost) error {
 		return err
 	}
 
-	if err := h.event.RemovePost(ctx, cmd.Principal, clubId, cmd.PostId, ruleItem, cmd.Notes); err != nil {
+	if err := h.event.RemovePost(ctx, cmd.Principal, pst.ClubId(), cmd.PostId, ruleItem, cmd.Notes); err != nil {
 		return err
 	}
 

@@ -236,6 +236,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			CanDeleteAccountData:        query.NewCanDeleteAccountDataHandler(clubRepo),
 			HasNonTerminatedClubs:       query.NewHasNonTerminatedClubsHandler(clubRepo),
 			ClubSupporterMembersCount:   query.NewClubSupporterMembersCountHandler(clubRepo),
+			PostsGame:                   query.NewPostsGameHandler(postRepo),
 		},
 		Activities: activities.NewActivitiesHandler(postRepo, clubRepo, personalizationRepo, parley, loader, carrier),
 	}

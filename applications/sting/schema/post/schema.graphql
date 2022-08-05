@@ -452,6 +452,27 @@ extend type Mutation {
 }
 
 extend type Query {
+  """Get random posts."""
+  postsGame(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """The slug of the game to use."""
+    slug: String!
+
+    """The seed to use for the randomizer."""
+    seed: String!
+  ): PostConnection!
+
   """Perform a search across multiple types."""
   search(
     """Returns the elements in the list that come after the specified cursor."""
