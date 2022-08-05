@@ -25,16 +25,16 @@ msgstr ""
 msgid "Confirm Delete Account"
 msgstr ""
 
-#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountSettings.tsx:113
+#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountSettings.tsx:117
 #: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/RootDeleteAccountSettings.tsx:44
 msgid "Delete Account"
 msgstr ""
 
-#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountSettings.tsx:49
+#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountSettings.tsx:50
 msgid "If you are no longer using your account and would like to delete it, you may do so from this page. We will honor your request and schedule a deletion on your account."
 msgstr ""
 
-#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountSettings.tsx:88
+#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountSettings.tsx:89
 msgid "My Subscriptions"
 msgstr ""
 
@@ -55,10 +55,14 @@ msgid "There was an error deleting your account"
 msgstr ""
 
 #: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountSettings.tsx:102
-msgid "You cannot delete your account because you currently own a club. Please contact hello@overdoll.com to have your club terminated."
+#~ msgid "You cannot delete your account because you currently own a club. Please contact hello@overdoll.com to have your club terminated."
+#~ msgstr ""
+
+#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountSettings.tsx:104
+msgid "You cannot delete your account because you currently own a club. Please contact us to have your club terminated."
 msgstr ""
 
-#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountSettings.tsx:77
+#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountSettings.tsx:78
 msgid "You cannot delete your account until you cancel your subscriptions and wait for them to expire"
 msgstr ""
 
@@ -66,15 +70,15 @@ msgstr ""
 msgid "You have cancelled the deletion of your account"
 msgstr ""
 
-#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountSettings.tsx:133
+#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountSettings.tsx:137
 msgid "You have requested to delete your account. Unless you cancel the action, your account is scheduled to be deleted on {scheduledDeletion}."
 msgstr ""
 
-#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountSettings.tsx:61
+#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountSettings.tsx:62
 msgid "You may cancel the deletion of your account at any time before the scheduled deletion date."
 msgstr ""
 
-#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountSettings.tsx:55
+#: src/domain/settings/profile/delete-account/RootDeleteAccountSettings/DeleteAccountSettings/DeleteAccountSettings.tsx:56
 msgid "You will receive a confirmation email and then one more reminder email before your account is fully deleted. This is to ensure that you are the one that actually requested the deletion."
 msgstr ""
 

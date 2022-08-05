@@ -1,0 +1,24 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-08-05 14:17-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+
+#: src/domain/club/characters/RootClubCharacters/ClubCharacters/RestrictedClubCharacters/RestrictedClubCharacters.tsx:28
+msgid "Club Restricted"
+msgstr ""
+
+#: src/domain/club/characters/RootClubCharacters/ClubCharacters/DisabledClubCharacters/DisabledClubCharacters.tsx:18
+msgid "Creating custom characters is currently not enabled for your club. Please contact us if you would like it to be enabled."
+msgstr ""
+
+#: src/domain/club/characters/RootClubCharacters/ClubCharacters/DisabledClubCharacters/DisabledClubCharacters.tsx:12
+msgid "Custom Characters Disabled"
+msgstr ""
+
+#: src/domain/club/characters/RootClubCharacters/ClubCharacters/RestrictedClubCharacters/RestrictedClubCharacters.tsx:33
+msgid "You cannot create or manage characters at this time due to a restriction on your club"
+msgstr ""

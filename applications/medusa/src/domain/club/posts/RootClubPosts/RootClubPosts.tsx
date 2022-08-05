@@ -1,12 +1,12 @@
 import { Suspense } from 'react'
-import { PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
+import { PageWrapper } from '@//:modules/content/PageLayout'
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { useQueryLoader } from 'react-relay/hooks'
 import type { ClubPostsQuery as ClubPostsQueryType, PostState } from '@//:artifacts/ClubPostsQuery.graphql'
 import ClubPostsQuery from '@//:artifacts/ClubPostsQuery.graphql'
 import ClubPosts from './ClubPosts/ClubPosts'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
-import { Box, Stack } from '@chakra-ui/react'
+import { Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import SkeletonRectangleGrid from '@//:modules/content/Placeholder/Loading/SkeletonRectangleGrid/SkeletonRectangleGrid'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
@@ -60,50 +60,43 @@ const RootClubPosts: PageProps<Props> = (props: Props) => {
       </Head>
       <PageWrapper>
         <Stack spacing={2}>
-          <Box>
-            <PageSectionWrap>
-              <PageSectionTitle colorScheme='teal'>
-                Club Posts
-              </PageSectionTitle>
-            </PageSectionWrap>
-            <SearchSelect
-              variant='outline'
-              placeholder='All Posts'
-              defaultValue={state ?? undefined}
-              {...register('state', 'change')}
-            >
-              <option value='PUBLISHED'>
-                <Trans>
-                  Published
-                </Trans>
-              </option>
-              <option value='DRAFT'>
-                <Trans>
-                  Draft
-                </Trans>
-              </option>
-              <option value='ARCHIVED'>
-                <Trans>
-                  Archived
-                </Trans>
-              </option>
-              <option value='REVIEW'>
-                <Trans>
-                  In Review
-                </Trans>
-              </option>
-              <option value='REJECTED'>
-                <Trans>
-                  Rejected
-                </Trans>
-              </option>
-              <option value='REMOVED'>
-                <Trans>
-                  Removed
-                </Trans>
-              </option>
-            </SearchSelect>
-          </Box>
+          <SearchSelect
+            variant='solid'
+            placeholder='All Posts'
+            defaultValue={state ?? undefined as any}
+            {...register('state', 'change')}
+          >
+            <option value='PUBLISHED'>
+              <Trans>
+                Published
+              </Trans>
+            </option>
+            <option value='DRAFT'>
+              <Trans>
+                Draft
+              </Trans>
+            </option>
+            <option value='ARCHIVED'>
+              <Trans>
+                Archived
+              </Trans>
+            </option>
+            <option value='REVIEW'>
+              <Trans>
+                In Review
+              </Trans>
+            </option>
+            <option value='REJECTED'>
+              <Trans>
+                Rejected
+              </Trans>
+            </option>
+            <option value='REMOVED'>
+              <Trans>
+                Removed
+              </Trans>
+            </option>
+          </SearchSelect>
           <QueryErrorBoundary loadQuery={() => loadQuery({ ...searchArguments.variables })}>
             <Suspense fallback={<SkeletonRectangleGrid />}>
               <ClubPosts query={queryRef as PreloadedQuery<ClubPostsQueryType>} />

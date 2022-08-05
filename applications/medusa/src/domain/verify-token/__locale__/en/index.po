@@ -13,19 +13,19 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/verify-token/VerifyToken/Invalid/Invalid.tsx:53
+#: src/domain/verify-token/VerifyToken/Invalid/Invalid.tsx:56
 msgid "Back to the Join page"
 msgstr ""
 
-#: src/domain/verify-token/VerifyToken/Complete/Complete.tsx:111
+#: src/domain/verify-token/VerifyToken/Complete/Complete.tsx:114
 msgid "I closed the original tab"
 msgstr ""
 
-#: src/domain/verify-token/VerifyToken/Complete/Complete.tsx:118
+#: src/domain/verify-token/VerifyToken/Complete/Complete.tsx:121
 msgid "If you closed the original tab, just open it back up!"
 msgstr ""
 
-#: src/domain/verify-token/VerifyToken/Confirm/Confirm.tsx:147
+#: src/domain/verify-token/VerifyToken/Confirm/Confirm.tsx:150
 msgid "No, this is not me"
 msgstr ""
 
@@ -33,15 +33,15 @@ msgstr ""
 #~ msgid "Please confirm that you are attempting to login from the following device & location"
 #~ msgstr ""
 
-#: src/domain/verify-token/VerifyToken/Confirm/Confirm.tsx:91
+#: src/domain/verify-token/VerifyToken/Confirm/Confirm.tsx:94
 msgid "Please confirm that you are attempting to login from the following device and location"
 msgstr ""
 
-#: src/domain/verify-token/VerifyToken/Invalid/Invalid.tsx:40
+#: src/domain/verify-token/VerifyToken/Invalid/Invalid.tsx:43
 msgid "Please try logging in with another link"
 msgstr ""
 
-#: src/domain/verify-token/VerifyToken/Invalid/Invalid.tsx:35
+#: src/domain/verify-token/VerifyToken/Invalid/Invalid.tsx:38
 msgid "The login link you are attempting to use is either invalid or expired"
 msgstr ""
 
@@ -49,14 +49,14 @@ msgstr ""
 #~ msgid "The login link you are using is either invalid or expired"
 #~ msgstr ""
 
-#: src/domain/verify-token/VerifyToken/Confirm/Confirm.tsx:135
+#: src/domain/verify-token/VerifyToken/Confirm/Confirm.tsx:138
 msgid "Yes, this is me"
 msgstr ""
 
-#: src/domain/verify-token/VerifyToken/Complete/Complete.tsx:71
+#: src/domain/verify-token/VerifyToken/Complete/Complete.tsx:74
 msgid "You have been successfully logged in to the requested device"
 msgstr ""
 
-#: src/domain/verify-token/VerifyToken/Complete/Complete.tsx:76
+#: src/domain/verify-token/VerifyToken/Complete/Complete.tsx:79
 msgid "You may safely close this window"
 msgstr ""

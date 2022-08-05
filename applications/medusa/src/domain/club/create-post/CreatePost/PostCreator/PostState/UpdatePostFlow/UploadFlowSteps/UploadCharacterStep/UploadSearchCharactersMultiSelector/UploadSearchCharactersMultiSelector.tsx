@@ -12,6 +12,7 @@ import SuggestPrompt from '../../../../../../SuggestPrompt/SuggestPrompt'
 import { Trans } from '@lingui/macro'
 import { Stack } from '@chakra-ui/react'
 import MediumGridWrap from '@//:modules/content/ContentSelection/MediumGridWrap/MediumGridWrap'
+import ContactButton from '../../../../../../../../../../common/components/Contact/ContactButton'
 
 interface Props extends ComponentChoiceArguments<any>, ComponentSearchArguments<any> {
 }
@@ -73,11 +74,14 @@ export default function UploadSearchCharactersMultiSelector ({
       fallback={(
         <Stack spacing={2}>
           <EmptyCharacters hint={searchArguments.variables.name} />
-          <SuggestPrompt>
-            <Trans>
-              Have a character suggestion or want your character listed? Send us an email at hello@overdoll.com!
-            </Trans>
-          </SuggestPrompt>
+          <Stack spacing={1}>
+            <SuggestPrompt>
+              <Trans>
+                Have a character suggestion or want your character listed? Contact us!
+              </Trans>
+            </SuggestPrompt>
+            <ContactButton />
+          </Stack>
         </Stack>)}
       condition={data.characters.edges.length < 1}
     >

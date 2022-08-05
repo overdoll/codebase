@@ -33,6 +33,6 @@ msgstr ""
 msgid "Staff"
 msgstr ""
 
-#: src/domain/profile/RootProfile/Profile/Profile.tsx:47
+#: src/domain/profile/RootProfile/Profile/Profile.tsx:48
 msgid "This account was deleted"
 msgstr ""

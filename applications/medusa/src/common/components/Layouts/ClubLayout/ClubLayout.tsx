@@ -17,8 +17,6 @@ import QueryErrorBoundary from '../../../../modules/content/Placeholder/Fallback
 import SelectClubs from './SelectClubs/SelectClubs'
 import { useRouter } from 'next/router'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
-import Head from 'next/head'
-import DefaultRichObject from '../../../rich-objects/default/DefaultRichObject/DefaultRichObject'
 
 interface Props {
   children: ReactNode
@@ -114,18 +112,18 @@ export default function ClubLayout ({ children }: Props): JSX.Element {
               }
               icon={FileMultiple}
             />
-          </Can>
-          <Can I='configure' a='Club'>
             <VerticalNavigation.Button
               href={{
-                pathname: '/club/[slug]/members',
+                pathname: '/club/[slug]/characters',
                 query: { slug: slug }
               }}
               title={
-                <Trans>Members</Trans>
+                <Trans>Characters</Trans>
               }
               icon={UserHuman}
             />
+          </Can>
+          <Can I='configure' a='Club'>
             <VerticalNavigation.Button
               href={{
                 pathname: '/club/[slug]/settings',

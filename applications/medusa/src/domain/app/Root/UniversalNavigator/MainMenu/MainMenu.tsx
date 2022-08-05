@@ -1,4 +1,4 @@
-import { BirdHouse, ContentBrushPen } from '@//:assets/icons/navigation'
+import { BirdHouse, SearchSmall } from '@//:assets/icons/navigation'
 import HorizontalNavigation from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigation'
 import Can from '@//:modules/authorization/Can'
 import { t } from '@lingui/macro'
@@ -22,9 +22,9 @@ export default function MainMenu (): JSX.Element {
       <Can not I='create' a='Club'>
         <HorizontalNavigation.Button
           colorScheme='primary'
-          href='/clubs/invite-only'
-          icon={ContentBrushPen}
-          label={i18n._(t`Create a Post`)}
+          href='/search'
+          icon={SearchSmall}
+          label={i18n._(t`Search`)}
         />
       </Can>
       <Can I='create' a='Post'>

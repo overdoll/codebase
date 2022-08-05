@@ -61,7 +61,7 @@ export default function SafeModal (): JSX.Element {
             </Text>
             <Button size='lg' colorScheme='orange' onClick={closeModal}>
               <Trans>
-                I'm okay with seeing digital adult content
+                I'm okay with digital adult content
               </Trans>
             </Button>
           </Stack>

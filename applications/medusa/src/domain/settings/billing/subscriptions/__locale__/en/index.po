@@ -21,7 +21,7 @@ msgstr ""
 msgid "Continue Support"
 msgstr ""
 
-#: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/SubscriptionsSettings/SubscriptionsSettings.tsx:39
+#: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/SubscriptionsSettings/SubscriptionsSettings.tsx:40
 msgid "Current"
 msgstr ""
 
@@ -29,7 +29,7 @@ msgstr ""
 msgid "EXPIRED"
 msgstr ""
 
-#: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/SubscriptionsSettings/SubscriptionsSettings.tsx:44
+#: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/SubscriptionsSettings/SubscriptionsSettings.tsx:45
 msgid "Expired"
 msgstr ""
 
@@ -38,7 +38,11 @@ msgid "Expired on"
 msgstr ""
 
 #: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/SubscriptionsSettings/SubscriptionsSettings.tsx:59
-msgid "For questions or concerns about your billing, please contact hello@overdoll.com"
+#~ msgid "For questions or concerns about your billing, please contact hello@overdoll.com"
+#~ msgstr ""
+
+#: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/SubscriptionsSettings/SubscriptionsSettings.tsx:61
+msgid "For questions or concerns about your billing, please contact us"
 msgstr ""
 
 #: src/domain/settings/billing/subscriptions/RootSubscriptionsSettings/RootSubscriptionsSettings.tsx:38

@@ -10,6 +10,7 @@ import { ForwardedRef, useEffect, useState } from 'react'
 import { useQueryParam } from 'use-query-params'
 import useHistoryDisclosureContext
   from '@//:modules/content/HookedComponents/HistoryDisclosure/hooks/useHistoryDisclosureContext'
+import ContactButton from '../../../../../../../../../common/components/Contact/ContactButton'
 
 interface Props extends ComponentSearchArguments<any> {
   loadQuery: () => void
@@ -192,14 +193,17 @@ export default function CCBillDisplayTransaction ({
                 {queryData.ccbillTransactionDetails.declineText}
               </Text>
             </HStack>
-            <Text
-              fontSize='sm'
-              color='gray.200'
-            >
-              <Trans>
-                Please email hello@overdoll.com if you continue to experience billing issues
-              </Trans>
-            </Text>
+            <Stack spacing={2}>
+              <Text
+                fontSize='sm'
+                color='gray.200'
+              >
+                <Trans>
+                  Please contact us if you continue to experience billing issues
+                </Trans>
+              </Text>
+              <ContactButton />
+            </Stack>
           </Stack>
         </Box>
         <Button ref={closeButtonRef} onClick={onCancel} size='lg' colorScheme='orange'>
@@ -235,14 +239,17 @@ export default function CCBillDisplayTransaction ({
             </Trans>
           </Text>
         </Box>
-        <Text
-          fontSize='md'
-          color='gray.200'
-        >
-          <Trans>
-            Please email hello@overdoll.com if you continue to experience issues with receiving your club benefits
-          </Trans>
-        </Text>
+        <Stack spacing={2}>
+          <Text
+            fontSize='md'
+            color='gray.200'
+          >
+            <Trans>
+              Please contact us if you continue to experience issues with receiving your club benefits
+            </Trans>
+          </Text>
+          <ContactButton />
+        </Stack>
         <Button ref={closeButtonRef} onClick={onComplete} size='lg' colorScheme='orange'>
           <Trans>
             Close

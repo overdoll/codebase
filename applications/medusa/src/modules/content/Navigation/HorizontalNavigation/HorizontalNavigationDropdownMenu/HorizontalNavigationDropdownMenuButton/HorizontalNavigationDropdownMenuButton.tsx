@@ -6,8 +6,9 @@ import HorizontalNavigationDropdownMenuButtonBody
 import { LinkProps } from 'next/link'
 import { Box } from '@chakra-ui/react'
 import { IconType } from '@//:types/components'
+import { UrlObject } from 'url'
 
-interface Props extends LinkProps {
+interface Props {
   label?: ReactNode
   icon?: IconType
   to?: string
@@ -17,6 +18,7 @@ interface Props extends LinkProps {
   children?: ReactNode
   colorScheme?: string
   isActive?: boolean
+  href?: string | UrlObject
 }
 
 const HorizontalNavigationDropdownMenuButton = forwardRef<any, Props>(({

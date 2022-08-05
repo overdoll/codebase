@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c54878cb4153d4265223685a32613af5>>
- * @relayHash f7aa322eb86c6e1fda23fa18dfaa772a
+ * @generated SignedSource<<2fd812b370ac7393119907336a4853e7>>
+ * @relayHash 3f65de20ce8c6f73c1f64e5d0e8e517b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f7aa322eb86c6e1fda23fa18dfaa772a
+// @relayRequestID 3f65de20ce8c6f73c1f64e5d0e8e517b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -93,6 +93,53 @@ v5 = {
       "name": "type",
       "storageKey": null
     },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "processed",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "preview",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "failed",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ResourceProgress",
+      "kind": "LinkedField",
+      "name": "progress",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "progress",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "state",
+          "storageKey": null
+        },
+        (v2/*: any*/)
+      ],
+      "storageKey": null
+    },
     (v2/*: any*/),
     {
       "alias": null,
@@ -130,13 +177,6 @@ v5 = {
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "preview",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
       "concreteType": "ResourceUrl",
       "kind": "LinkedField",
       "name": "videoThumbnail",
@@ -144,20 +184,6 @@ v5 = {
       "selections": [
         (v4/*: any*/)
       ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "processed",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "failed",
       "storageKey": null
     }
   ],
@@ -424,7 +450,7 @@ return {
     ]
   },
   "params": {
-    "id": "f7aa322eb86c6e1fda23fa18dfaa772a",
+    "id": "3f65de20ce8c6f73c1f64e5d0e8e517b",
     "metadata": {},
     "name": "SearchRecommendationsQuery",
     "operationKind": "query",

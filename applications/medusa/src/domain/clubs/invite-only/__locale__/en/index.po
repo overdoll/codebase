@@ -13,40 +13,48 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:63
+#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:65
 msgid "Building a platform is challenging.<0> Building a great platform in the adult entertainment space is infinitely more challenging.</0> With a select group of artists, we believe that we can collect constructive feedback and build a great platform that adult content artists and their fans truly deserve."
 msgstr ""
 
-#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:58
+#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:60
 msgid "But why?"
 msgstr ""
 
-#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:102
+#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:104
 msgid "Cool! But what is overdoll?"
 msgstr ""
 
-#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:153
+#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:155
 msgid "Create Account"
 msgstr ""
 
-#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:159
-msgid "For any other questions, you may contact hello@overdoll.com"
+#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:162
+msgid "For any other questions, please contact us"
 msgstr ""
 
-#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:75
+#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:159
+#~ msgid "For any other questions, you may contact hello@overdoll.com"
+#~ msgstr ""
+
+#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:77
 msgid "How can I apply?"
 msgstr ""
 
-#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:133
+#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:135
 msgid "How the platform helps you"
 msgstr ""
 
-#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:48
+#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:50
 msgid "In order to create posts and collect subscription revenue,<0> you must submit an application and get approved to be an Aritst on the platform</0>. For everything else, access is unrestricted."
 msgstr ""
 
-#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:94
+#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:96
 msgid "Open Application Link"
+msgstr ""
+
+#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:148
+msgid "Regardless of whether you are a fan or an artist, feel free to create an account and start exploring the platform."
 msgstr ""
 
 #: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:133
@@ -54,10 +62,10 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:146
-msgid "Regardless of whether you are a fan or an artist, feel free to create an account and start exploring the platform. We're taking your initial feedback at hello@overdoll.com."
-msgstr ""
+#~ msgid "Regardless of whether you are a fan or an artist, feel free to create an account and start exploring the platform. We're taking your initial feedback at hello@overdoll.com."
+#~ msgstr ""
 
-#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:107
+#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:109
 msgid "Simply put,<0> overdoll.com is a platform where artists can post digitally-produced adult content and fans can support their favorite artists through a paid supporter subscription as well as discover other artists on our platform.</0>"
 msgstr ""
 
@@ -65,22 +73,22 @@ msgstr ""
 #~ msgid "We believe in building a platform specifically for adult digital artists and their fans because<0> the current offerings just don’t understand the industry.</0> Too far often opportunities are ignored here because of the simple fact that it involves adult content. We’re here to change that for good."
 #~ msgstr ""
 
-#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:117
+#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:119
 msgid "We believe in building a platform specifically for adult digital artists and their fans because<0> the current offerings just don’t understand the industry.</0> Too far often opportunities are ignored here because of the simple fact that it involves adult content. We’re here to change that for good. You can also check out the link below for our full vision for the platform."
 msgstr ""
 
-#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:141
+#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:143
 msgid "What can I do in the meantime?"
 msgstr ""
 
-#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:130
+#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:132
 msgid "What is overdoll?"
 msgstr ""
 
-#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:80
+#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:82
 msgid "You may apply using the button below. In fact, if you apply now chances are you’ll probably get accepted.<0> We encourage you to only submit an application if you are passionate about the industry and believe in helping us bring the platform to its true potential.</0>"
 msgstr ""
 
-#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:43
+#: src/domain/clubs/invite-only/InviteOnly/InviteOnly.tsx:45
 msgid "overdoll is invite-only"
 msgstr ""

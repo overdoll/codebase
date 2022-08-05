@@ -8,6 +8,7 @@ import ExpiredClubSupporterSubscriptionsSettings
   from './ExpiredClubSupporterSubscriptionsSettings/ExpiredClubSupporterSubscriptionsSettings'
 import AccountInformationBanner
   from '../../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
+import ContactButton from '../../../../../../common/components/Contact/ContactButton'
 
 interface Props {
   query: PreloadedQuery<SubscriptionsSettingsQuery>
@@ -55,11 +56,14 @@ export default function SubscriptionsSettings (props: Props): JSX.Element {
             </TabPanel>
           </TabPanels>
         </Tabs>
-        <Text fontSize='md' color='gray.200'>
-          <Trans>
-            For questions or concerns about your billing, please contact hello@overdoll.com
-          </Trans>
-        </Text>
+        <Stack spacing={2}>
+          <Text fontSize='md' color='gray.200'>
+            <Trans>
+              For questions or concerns about your billing, please contact us
+            </Trans>
+          </Text>
+          <ContactButton />
+        </Stack>
       </Stack>
     </>
   )

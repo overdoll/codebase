@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<2179768c0c37f229d933e164d0d919af>>
- * @relayHash 5926ea16a6cfdd1607c1c836b27b655e
+ * @generated SignedSource<<150d56884d62d86844c35dd9d2aaf2c3>>
+ * @relayHash 2a9da27eab0be1cdb945bfd8706c0e02
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 5926ea16a6cfdd1607c1c836b27b655e
+// @relayRequestID 2a9da27eab0be1cdb945bfd8706c0e02
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -331,8 +331,6 @@ return {
               (v7/*: any*/),
               (v8/*: any*/),
               (v9/*: any*/),
-              (v10/*: any*/),
-              (v11/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -340,13 +338,41 @@ return {
                 "name": "processed",
                 "storageKey": null
               },
+              (v10/*: any*/),
               {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
                 "name": "failed",
                 "storageKey": null
-              }
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ResourceProgress",
+                "kind": "LinkedField",
+                "name": "progress",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "progress",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "state",
+                    "storageKey": null
+                  },
+                  (v9/*: any*/)
+                ],
+                "storageKey": null
+              },
+              (v11/*: any*/)
             ],
             "storageKey": null
           },
@@ -644,7 +670,7 @@ return {
     ]
   },
   "params": {
-    "id": "5926ea16a6cfdd1607c1c836b27b655e",
+    "id": "2a9da27eab0be1cdb945bfd8706c0e02",
     "metadata": {},
     "name": "PublicClubQuery",
     "operationKind": "query",

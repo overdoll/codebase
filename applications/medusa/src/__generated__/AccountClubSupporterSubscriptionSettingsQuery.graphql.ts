@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<57e14309c967c7ec54fda800cd47d3f9>>
- * @relayHash 8180e2e5a7767b6d8ce138f6b4fb38a7
+ * @generated SignedSource<<6bc53fbc54a0bc327c958db731a5a25d>>
+ * @relayHash 81fbbafeb53c9e75fc5985d7847e8243
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8180e2e5a7767b6d8ce138f6b4fb38a7
+// @relayRequestID 81fbbafeb53c9e75fc5985d7847e8243
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -121,10 +121,17 @@ v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "preview",
   "storageKey": null
 },
 v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v11 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -132,7 +139,7 @@ v10 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v9/*: any*/),
+    (v10/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -143,25 +150,18 @@ v10 = {
   ],
   "storageKey": null
 },
-v11 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "width",
   "storageKey": null
 },
-v12 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "height",
-  "storageKey": null
-},
 v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "preview",
+  "name": "height",
   "storageKey": null
 },
 v14 = {
@@ -172,7 +172,7 @@ v14 = {
   "name": "videoThumbnail",
   "plural": false,
   "selections": [
-    (v9/*: any*/)
+    (v10/*: any*/)
   ],
   "storageKey": null
 },
@@ -269,19 +269,45 @@ v16 = {
                       "storageKey": null
                     },
                     (v8/*: any*/),
-                    (v6/*: any*/),
-                    (v10/*: any*/),
-                    (v11/*: any*/),
-                    (v12/*: any*/),
-                    (v13/*: any*/),
-                    (v14/*: any*/),
+                    (v9/*: any*/),
                     {
                       "alias": null,
                       "args": null,
                       "kind": "ScalarField",
                       "name": "failed",
                       "storageKey": null
-                    }
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "concreteType": "ResourceProgress",
+                      "kind": "LinkedField",
+                      "name": "progress",
+                      "plural": false,
+                      "selections": [
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "progress",
+                          "storageKey": null
+                        },
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "state",
+                          "storageKey": null
+                        },
+                        (v6/*: any*/)
+                      ],
+                      "storageKey": null
+                    },
+                    (v6/*: any*/),
+                    (v11/*: any*/),
+                    (v12/*: any*/),
+                    (v13/*: any*/),
+                    (v14/*: any*/)
                   ],
                   "storageKey": null
                 },
@@ -353,10 +379,10 @@ v19 = {
   "plural": false,
   "selections": [
     (v6/*: any*/),
-    (v10/*: any*/),
     (v11/*: any*/),
     (v12/*: any*/),
     (v13/*: any*/),
+    (v9/*: any*/),
     (v14/*: any*/),
     (v7/*: any*/)
   ],
@@ -729,7 +755,7 @@ return {
     ]
   },
   "params": {
-    "id": "8180e2e5a7767b6d8ce138f6b4fb38a7",
+    "id": "81fbbafeb53c9e75fc5985d7847e8243",
     "metadata": {},
     "name": "AccountClubSupporterSubscriptionSettingsQuery",
     "operationKind": "query",
