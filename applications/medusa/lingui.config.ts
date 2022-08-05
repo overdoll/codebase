@@ -38,10 +38,6 @@ const GeneralCatalogs = [
   {
     path: 'src/domain/profile/__locale__/{locale}/index',
     include: ['src/domain/profile/']
-  },
-  {
-    path: 'src/domain/feedback/__locale__/{locale}/index',
-    include: ['src/domain/feedback/']
   }
 ]
 
@@ -142,8 +138,12 @@ const ClubCatalog = [
     include: ['src/domain/club/posts/']
   },
   {
-    path: 'src/domain/club/characters/__locale__/{locale}/index',
-    include: ['src/domain/club/characters/']
+    path: 'src/domain/club/characters/root/__locale__/{locale}/index',
+    include: ['src/domain/club/characters/root/']
+  },
+  {
+    path: 'src/domain/club/characters/create/__locale__/{locale}/index',
+    include: ['src/domain/club/characters/create/']
   },
   {
     path: 'src/domain/club/revenue/root/__locale__/{locale}/index',

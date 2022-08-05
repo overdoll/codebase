@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<eca77dc2d3bd5c19326213c7c733b296>>
+ * @generated SignedSource<<22e17ca11f101e4a33f8e92aebb086e7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -37,6 +37,11 @@ return {
       "defaultValue": null,
       "kind": "LocalArgument",
       "name": "after"
+    },
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "clubCharacters"
     },
     {
       "defaultValue": 14,
@@ -77,6 +82,11 @@ return {
     {
       "alias": "characters",
       "args": [
+        {
+          "kind": "Variable",
+          "name": "clubCharacters",
+          "variableName": "clubCharacters"
+        },
         {
           "kind": "Variable",
           "name": "name",
@@ -177,6 +187,6 @@ return {
 };
 })();
 
-(node as any).hash = "c56ffacad38deec04187749604734a86";
+(node as any).hash = "9a32cb2c7cc03f294c0f35e9f6594660";
 
 export default node;

@@ -39,6 +39,7 @@ const Fragment = graphql`
     ...UploadReviewStepFragment
     ...UploadContentStepFragment
     ...UploadCategoryStepFragment
+    ...UploadCharacterStepFragment
   }
 `
 
@@ -58,7 +59,7 @@ export default function UpdatePostFlow ({
     content: <UploadContentStep query={data} />,
     audience: <UploadAudienceStep />,
     category: <UploadCategoryStep query={data} />,
-    character: <UploadCharacterStep />,
+    character: <UploadCharacterStep query={data} />,
     review: <UploadReviewStep query={data} />
   }
   const headers = {

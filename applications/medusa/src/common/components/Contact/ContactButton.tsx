@@ -1,20 +1,24 @@
-import { Box, Popover, PopoverContent, PopoverTrigger } from '@chakra-ui/react'
+import { Box, ButtonProps, Popover, PopoverContent, PopoverTrigger } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import Button from '@//:modules/form/Button/Button'
 import ContactInformation from './ContactInformation/ContactInformation'
 
-export default function ContactButton (): JSX.Element {
+interface Props extends ButtonProps {
+
+}
+
+export default function ContactButton (props: Props): JSX.Element {
   return (
     <Box>
       <Popover>
         <PopoverTrigger>
-          <Button size='md'>
+          <Button size='md' {...props}>
             <Trans>
               Contact Us
             </Trans>
           </Button>
         </PopoverTrigger>
-        <PopoverContent>
+        <PopoverContent p={4}>
           <ContactInformation />
         </PopoverContent>
       </Popover>

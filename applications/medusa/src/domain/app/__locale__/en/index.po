@@ -21,7 +21,7 @@ msgstr ""
 msgid "Account Settings"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Form/FormInput/Inputs/WeightInput/NumberInput/NumberInput.tsx:70
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/WeightInput/WeightNumberInput/WeightNumberInput.tsx:70
 msgid "Add"
 msgstr ""
 
@@ -160,7 +160,7 @@ msgstr ""
 #~ msgid "Drop your files to upload them"
 #~ msgstr ""
 
-#: src/modules/content/HookedComponents/Form/FormInput/Inputs/WeightInput/NumberInput/NumberInput.tsx:64
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/WeightInput/WeightNumberInput/WeightNumberInput.tsx:64
 msgid "Enter a weight 0-9999. Higher will show up first."
 msgstr ""
 
@@ -566,7 +566,7 @@ msgstr ""
 msgid "Submit Report"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Form/FormInput/Inputs/WeightInput/NumberInput/NumberInput.tsx:49
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/WeightInput/WeightNumberInput/WeightNumberInput.tsx:49
 msgid "Subtract"
 msgstr ""
 

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0df398874c2d3647e79bd4892d189d23>>
- * @relayHash 3bb4e8146d67ff04cded6c217d7ca2c6
+ * @generated SignedSource<<c3a108bde826a5fb08bd15421ad1aef1>>
+ * @relayHash d845d5a81883fc6de51c0be8d59fba34
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3bb4e8146d67ff04cded6c217d7ca2c6
+// @relayRequestID d845d5a81883fc6de51c0be8d59fba34
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -1057,6 +1057,20 @@ return {
             "kind": "ScalarField",
             "name": "canCreateSupporterOnlyPosts",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "charactersEnabled",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "charactersLimit",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -1064,7 +1078,7 @@ return {
     ]
   },
   "params": {
-    "id": "3bb4e8146d67ff04cded6c217d7ca2c6",
+    "id": "d845d5a81883fc6de51c0be8d59fba34",
     "metadata": {},
     "name": "StaffClubQuery",
     "operationKind": "query",

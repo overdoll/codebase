@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e7197c6b08a6ffd1e4682db66a4627b1>>
- * @relayHash 44b43b8b63ad76af13190a8eebab13fa
+ * @generated SignedSource<<1ffe02facc9cea886653b77c51fabdad>>
+ * @relayHash 15fbbe0b0812ddeaece0e1eb660916c1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,12 +9,13 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 44b43b8b63ad76af13190a8eebab13fa
+// @relayRequestID 15fbbe0b0812ddeaece0e1eb660916c1
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type UploadSearchCharactersMultiSelectorPaginationFragment$variables = {
   after?: string | null;
+  clubCharacters?: boolean | null;
   first?: number | null;
   name?: string | null;
 };
@@ -34,6 +35,11 @@ var v0 = [
     "name": "after"
   },
   {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "clubCharacters"
+  },
+  {
     "defaultValue": 14,
     "kind": "LocalArgument",
     "name": "first"
@@ -49,6 +55,11 @@ v1 = [
     "kind": "Variable",
     "name": "after",
     "variableName": "after"
+  },
+  {
+    "kind": "Variable",
+    "name": "clubCharacters",
+    "variableName": "clubCharacters"
   },
   {
     "kind": "Variable",
@@ -311,7 +322,8 @@ return {
         "alias": null,
         "args": (v1/*: any*/),
         "filters": [
-          "name"
+          "name",
+          "clubCharacters"
         ],
         "handle": "connection",
         "key": "UploadSearchCharactersMultiSelector_characters",
@@ -321,7 +333,7 @@ return {
     ]
   },
   "params": {
-    "id": "44b43b8b63ad76af13190a8eebab13fa",
+    "id": "15fbbe0b0812ddeaece0e1eb660916c1",
     "metadata": {},
     "name": "UploadSearchCharactersMultiSelectorPaginationFragment",
     "operationKind": "query",
@@ -330,6 +342,6 @@ return {
 };
 })();
 
-(node as any).hash = "c56ffacad38deec04187749604734a86";
+(node as any).hash = "9a32cb2c7cc03f294c0f35e9f6594660";
 
 export default node;

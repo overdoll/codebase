@@ -11,16 +11,35 @@ import { ChoiceRemovableTags, useChoice } from '@//:modules/content/HookedCompon
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import SkeletonUploadCharacterGrid
   from '@//:modules/content/Placeholder/Loading/SkeletonUploadCharacterGrid/SkeletonUploadCharacterGrid'
+import SearchBooleanButton
+  from '@//:modules/content/HookedComponents/Search/components/SearchBooleanButton/SearchBooleanButton'
+import { graphql, useFragment } from 'react-relay/hooks'
+import type { UploadCharacterStepFragment$key } from '@//:artifacts/UploadCharacterStepFragment.graphql'
+
+interface Props {
+  query: UploadCharacterStepFragment$key
+}
 
 interface SearchProps {
   name: string
+  clubCharacters?: boolean
 }
 
 interface ChoiceProps {
   name: string
 }
 
-export default function UploadCharacterStep (): JSX.Element {
+const Fragment = graphql`
+  fragment UploadCharacterStepFragment on Post {
+    club {
+      charactersCount
+    }
+  }
+`
+
+export default function UploadCharacterStep ({ query }: Props): JSX.Element {
+  const data = useFragment(Fragment, query)
+
   const { i18n } = useLingui()
 
   const {
@@ -61,6 +80,13 @@ export default function UploadCharacterStep (): JSX.Element {
           </Trans>
         </PageSectionDescription>
       </PageSectionWrap>
+      {data.club.charactersCount > 0 && (
+        <SearchBooleanButton nullifyOnClear {...registerSearch('clubCharacters', 'change')}>
+          <Trans>
+            Show Your Club Characters
+          </Trans>
+        </SearchBooleanButton>
+      )}
       <SearchInput
         nullifyOnClear
         {...registerSearch('name', 'change')}

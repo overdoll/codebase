@@ -8,7 +8,7 @@ import {
   SettingCog,
   SettingHammer,
   SubscriptionIdentifier,
-  UserHuman
+  CharacterIdentifier
 } from '@//:assets/icons'
 import Can from '@//:modules/authorization/Can'
 import { Trans } from '@lingui/macro'
@@ -120,7 +120,7 @@ export default function ClubLayout ({ children }: Props): JSX.Element {
               title={
                 <Trans>Characters</Trans>
               }
-              icon={UserHuman}
+              icon={CharacterIdentifier}
             />
           </Can>
           <Can I='configure' a='Club'>

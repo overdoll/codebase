@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<2f06df9b9841f3a88fabbd094fb952c7>>
- * @relayHash 8df6150939ed7c6e42c7a6f0b0a183ca
+ * @generated SignedSource<<676ae1c35e30b12c1d75e6e8511a087f>>
+ * @relayHash 29b09c6d891984d90332360efd6c3f47
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,11 +9,12 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8df6150939ed7c6e42c7a6f0b0a183ca
+// @relayRequestID 29b09c6d891984d90332360efd6c3f47
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type UploadSearchCharactersMultiSelectorQuery$variables = {
+  clubCharacters?: boolean | null;
   name?: string | null;
 };
 export type UploadSearchCharactersMultiSelectorQuery$data = {
@@ -25,34 +26,43 @@ export type UploadSearchCharactersMultiSelectorQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "name"
-  }
-],
+var v0 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "clubCharacters"
+},
 v1 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "name"
+},
+v2 = {
+  "kind": "Variable",
+  "name": "clubCharacters",
+  "variableName": "clubCharacters"
+},
+v3 = {
   "kind": "Variable",
   "name": "name",
   "variableName": "name"
 },
-v2 = [
+v4 = [
+  (v2/*: any*/),
   {
     "kind": "Literal",
     "name": "first",
     "value": 14
   },
-  (v1/*: any*/)
+  (v3/*: any*/)
 ],
-v3 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v4 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -61,14 +71,18 @@ v4 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v0/*: any*/),
+      (v1/*: any*/)
+    ],
     "kind": "Fragment",
     "metadata": null,
     "name": "UploadSearchCharactersMultiSelectorQuery",
     "selections": [
       {
         "args": [
-          (v1/*: any*/)
+          (v2/*: any*/),
+          (v3/*: any*/)
         ],
         "kind": "FragmentSpread",
         "name": "UploadSearchCharactersMultiSelectorFragment"
@@ -79,13 +93,16 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*: any*/),
+    "argumentDefinitions": [
+      (v1/*: any*/),
+      (v0/*: any*/)
+    ],
     "kind": "Operation",
     "name": "UploadSearchCharactersMultiSelectorQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v2/*: any*/),
+        "args": (v4/*: any*/),
         "concreteType": "CharacterConnection",
         "kind": "LinkedField",
         "name": "characters",
@@ -107,7 +124,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v3/*: any*/),
+                  (v5/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -130,7 +147,7 @@ return {
                         "name": "title",
                         "storageKey": null
                       },
-                      (v3/*: any*/)
+                      (v5/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -192,11 +209,11 @@ return {
                             "name": "state",
                             "storageKey": null
                           },
-                          (v3/*: any*/)
+                          (v5/*: any*/)
                         ],
                         "storageKey": null
                       },
-                      (v3/*: any*/),
+                      (v5/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -205,7 +222,7 @@ return {
                         "name": "urls",
                         "plural": true,
                         "selections": [
-                          (v4/*: any*/),
+                          (v6/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -238,7 +255,7 @@ return {
                         "name": "videoThumbnail",
                         "plural": false,
                         "selections": [
-                          (v4/*: any*/)
+                          (v6/*: any*/)
                         ],
                         "storageKey": null
                       }
@@ -295,9 +312,10 @@ return {
       },
       {
         "alias": null,
-        "args": (v2/*: any*/),
+        "args": (v4/*: any*/),
         "filters": [
-          "name"
+          "name",
+          "clubCharacters"
         ],
         "handle": "connection",
         "key": "UploadSearchCharactersMultiSelector_characters",
@@ -307,7 +325,7 @@ return {
     ]
   },
   "params": {
-    "id": "8df6150939ed7c6e42c7a6f0b0a183ca",
+    "id": "29b09c6d891984d90332360efd6c3f47",
     "metadata": {},
     "name": "UploadSearchCharactersMultiSelectorQuery",
     "operationKind": "query",
@@ -316,6 +334,6 @@ return {
 };
 })();
 
-(node as any).hash = "5deeba0856161292365ad950f891dcbb";
+(node as any).hash = "342da6a8611062a8b9e770473f74a485";
 
 export default node;
