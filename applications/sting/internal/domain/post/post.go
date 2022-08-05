@@ -588,14 +588,16 @@ func (p *Post) UpdateCharactersRequest(requester *principal.Principal, character
 
 		characterIds = append(characterIds, c.id)
 
-		if _, ok := visitedSeries[c.series.id]; !ok {
-			seriesIds = append(seriesIds, c.series.id)
-			visitedSeries[c.series.id] = true
+		if c.series != nil {
+			if _, ok := visitedSeries[c.series.id]; !ok {
+				seriesIds = append(seriesIds, c.series.id)
+				visitedSeries[c.series.id] = true
+			}
 		}
 	}
 
-	p.characterIds = characterIds
 	p.seriesIds = seriesIds
+	p.characterIds = characterIds
 
 	p.update()
 

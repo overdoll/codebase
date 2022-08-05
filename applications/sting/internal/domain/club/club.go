@@ -581,6 +581,10 @@ func (m *Club) UpdateName(requester *principal.Principal, name string) error {
 
 func (m *Club) canUpdate(requester *principal.Principal) error {
 
+	if requester.IsStaff() {
+		return nil
+	}
+
 	if err := requester.BelongsToAccount(m.ownerAccountId); err != nil {
 		return err
 	}
