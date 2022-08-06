@@ -69,7 +69,7 @@ export default function PostUpdateDescription ({
               borderRadius='xl'
               colorScheme='gray'
               icon={<Icon w={5} h={5} icon={ContentBookEdit} fill='gray.200' />}
-              aria-label={i18n._(t`Set Supporter Only`)}
+              aria-label={i18n._(t`Edit Description`)}
             />
           </Flex>
         </Flex>
