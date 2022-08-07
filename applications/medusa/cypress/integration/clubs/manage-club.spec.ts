@@ -84,7 +84,6 @@ describe('Manage Club', () => {
      * Visit club posts page
      */
     cy.visit(`/club/${newClubName}/posts`)
-    cy.findByText(/Club Posts/iu).should('exist')
     cy.findByText(/No posts were found/iu).should('exist')
 
     /**

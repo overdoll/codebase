@@ -204,7 +204,6 @@ describe('Create & Manage Posts', () => {
      */
     cy.reload()
     cy.visit(`/club/${clubName}/posts?state=REVIEW`)
-    cy.findByText(/Club Posts/iu).should('be.visible')
     cy.findAllByText(/REVIEW/iu).should('be.visible')
     gotoClubCreatePost(clubName)
 
