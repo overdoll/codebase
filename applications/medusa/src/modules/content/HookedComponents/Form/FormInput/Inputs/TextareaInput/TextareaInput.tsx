@@ -2,7 +2,7 @@ import { Textarea, TextareaProps } from '@chakra-ui/react'
 import { forwardRef, useContext } from 'react'
 import { FormInputContext } from '../../FormInput'
 import { useFormContext } from 'react-hook-form'
-import { mergeRefs } from 'use-callback-ref'
+import { mergeRefs } from '../../../../../../support/mergeRefs'
 
 const TextareaInput = forwardRef<HTMLTextAreaElement, TextareaProps>(({
   ...rest

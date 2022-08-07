@@ -39,7 +39,7 @@ msgstr ""
 #~ msgid "As a supporter, you have access to all exclusive content from this club."
 #~ msgstr ""
 
-#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionDetails/AccountCancelledClubSupporterSubscriptionDetails.tsx:70
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionDetails/AccountCancelledClubSupporterSubscriptionDetails.tsx:69
 msgid "CANCELLED"
 msgstr ""
 
@@ -53,7 +53,7 @@ msgstr ""
 msgid "Cancel Subscription"
 msgstr ""
 
-#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionDetails/AccountCancelledClubSupporterSubscriptionDetails.tsx:88
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionDetails/AccountCancelledClubSupporterSubscriptionDetails.tsx:87
 msgid "Cancelled on"
 msgstr ""
 
@@ -147,7 +147,7 @@ msgid "Subscription was cancelled. You will no longer be billed when it expires.
 msgstr ""
 
 #: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionDetails/AccountActiveClubSupporterSubscriptionDetails.tsx:83
-#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionDetails/AccountCancelledClubSupporterSubscriptionDetails.tsx:78
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionDetails/AccountCancelledClubSupporterSubscriptionDetails.tsx:77
 msgid "Supporter since"
 msgstr ""
 

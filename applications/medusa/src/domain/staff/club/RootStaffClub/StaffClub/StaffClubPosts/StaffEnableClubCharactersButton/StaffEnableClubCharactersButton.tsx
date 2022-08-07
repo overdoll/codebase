@@ -37,11 +37,7 @@ const Fragment = graphql`
 const Mutation = graphql`
   mutation StaffEnableClubCharactersButtonMutation($input: EnableClubCharactersInput!) {
     enableClubCharacters(input: $input) {
-      club {
-        id
-        charactersEnabled
-        charactersLimit
-      }
+      __typename
     }
   }
 `

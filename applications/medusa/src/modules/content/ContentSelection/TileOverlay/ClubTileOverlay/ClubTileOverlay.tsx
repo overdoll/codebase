@@ -3,7 +3,6 @@ import ResourceItem from '../../../DataDisplay/ResourceItem/ResourceItem'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { ClubTileOverlayFragment$key } from '@//:artifacts/ClubTileOverlayFragment.graphql'
 import { TileOverlay } from '../../index'
-import { ResourceIcon } from '../../../PageLayout'
 import ClubThumbnail from '../../../DataDisplay/Club/ClubThumbnail/ClubThumbnail'
 
 interface Props {

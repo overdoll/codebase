@@ -8,6 +8,7 @@ import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/S
 import { PageProps } from '@//:types/app'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import RootHomeRichObject from '../../../common/rich-objects/home/RootHomeRichObject/RootHomeRichObject'
+import HomeStructuredData from '../../../common/structured-data/home/HomeStructuredData/HomeStructuredData'
 
 interface Props {
   queryRefs: {
@@ -24,6 +25,7 @@ const RootHome: PageProps<Props> = (props: Props): JSX.Element => {
   return (
     <>
       <RootHomeRichObject />
+      <HomeStructuredData />
       <PageWrapper>
         <QueryErrorBoundary loadQuery={() => loadQuery({})}>
           <Suspense fallback={<SkeletonPost />}>

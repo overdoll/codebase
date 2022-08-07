@@ -15,6 +15,8 @@ import SearchButton from '../../../../../common/components/PageHeader/SearchButt
 import PostOrderButton from '../../../../../common/components/PageHeader/PostOrderButton/PostOrderButton'
 import PostSupporterStatusButton
   from '../../../../../common/components/PageHeader/PostSupporterStatusButton/PostSupporterStatusButton'
+import PublicClubPostsStructuredData
+  from '../../../../../common/structured-data/slug/PublicClubPostsStructuredData/PublicClubPostsStructuredData'
 
 interface Props {
   query: PreloadedQuery<PublicClubPostsQuery>
@@ -32,6 +34,7 @@ const Query = graphql`
       name
       ...PublicClubPostsFragment
       ...PublicClubPostsRichObjectFragment
+      ...PublicClubPostsStructuredDataFragment
     }
     viewer {
       ...PostsInfiniteScrollViewerFragment
@@ -87,6 +90,7 @@ export default function PublicClubPosts (props: Props): JSX.Element {
   return (
     <>
       <PublicClubPostsRichObject clubQuery={queryData.club} />
+      <PublicClubPostsStructuredData query={queryData.club} />
       <AccountInformationBanner query={queryData.viewer} />
       <Stack spacing={2}>
         <HStack spacing={2} justify='space-between'>

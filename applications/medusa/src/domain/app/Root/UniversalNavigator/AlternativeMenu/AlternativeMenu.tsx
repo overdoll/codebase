@@ -1,7 +1,6 @@
 import {
   CogDouble,
   ContentBrushPen,
-  InfoCircle,
   LoginKeys,
   PageControllerSettings,
   SafetyExitDoorLeft,
@@ -148,16 +147,6 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
           label={
             <Trans>
               Help
-            </Trans>
-          }
-        />
-        <HorizontalNavigationDropdownMenu.Button
-          href='/feedback'
-          colorScheme='green'
-          icon={InfoCircle}
-          label={
-            <Trans>
-              Contact / Feedback
             </Trans>
           }
         />

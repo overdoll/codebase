@@ -14,6 +14,8 @@ import AccountInformationBanner
   from '../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
 import PublicPostRichObject from '../../../../../common/rich-objects/slug/PublicPostRichObject/PublicPostRichObject'
 import SearchButton from '../../../../../common/components/PageHeader/SearchButton/SearchButton'
+import PublicPostStructuredData
+  from '../../../../../common/structured-data/slug/PublicPostStructuredData/PublicPostStructuredData'
 
 interface Props {
   query: PreloadedQuery<PublicPostQuery>
@@ -30,6 +32,7 @@ const Query = graphql`
       }
       ...PublicPostPageFragment
       ...PublicPostRichObjectFragment
+      ...PublicPostStructuredDataFragment
     }
     viewer {
       ...SuggestedPostsViewerFragment
@@ -76,6 +79,7 @@ export default function PublicPost (props: Props): JSX.Element {
   return (
     <>
       <PublicPostRichObject query={queryData.post} />
+      <PublicPostStructuredData query={queryData.post} />
       <AccountInformationBanner query={queryData.viewer} />
       <Stack spacing={8}>
         <HStack spacing={2} justify='space-between'>

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ab79709fe75f06d194dfb165deb2f0ca>>
- * @relayHash 783f87ee699c44d613ebcdc34d94128e
+ * @generated SignedSource<<bca6771799d075969ac36e395fb797da>>
+ * @relayHash 62931f73ec9f9751b53de67c28c23802
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 783f87ee699c44d613ebcdc34d94128e
+// @relayRequestID 62931f73ec9f9751b53de67c28c23802
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type VerifyAuthenticationTokenValidation = "TOKEN_INVALID" | "%future added value";
@@ -23,6 +23,11 @@ export type VerifyTokenMutation$variables = {
 export type VerifyTokenMutation$data = {
   readonly verifyAuthenticationToken: {
     readonly authenticationToken: {
+      readonly accountStatus: {
+        readonly multiFactor: {
+          readonly totp: boolean;
+        } | null;
+      } | null;
       readonly id: string;
       readonly verified: boolean;
     } | null;
@@ -85,6 +90,35 @@ v1 = [
             "kind": "ScalarField",
             "name": "verified",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AuthenticationTokenAccountStatus",
+            "kind": "LinkedField",
+            "name": "accountStatus",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "MultiFactor",
+                "kind": "LinkedField",
+                "name": "multiFactor",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "totp",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -111,7 +145,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "783f87ee699c44d613ebcdc34d94128e",
+    "id": "62931f73ec9f9751b53de67c28c23802",
     "metadata": {},
     "name": "VerifyTokenMutation",
     "operationKind": "mutation",
@@ -120,6 +154,6 @@ return {
 };
 })();
 
-(node as any).hash = "bfce37f014436b55ebd382bf991455ba";
+(node as any).hash = "dcbed2bded3eb88445dba71c428c0bf0";
 
 export default node;

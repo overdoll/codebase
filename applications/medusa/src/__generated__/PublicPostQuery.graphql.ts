@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d9119b791f0f866df4e876725fe1e057>>
- * @relayHash 9b6cd02dbdf63ffdd13fa9103969cfda
+ * @generated SignedSource<<46c128937048d700582c53f884dd3090>>
+ * @relayHash f83d872a0492635dbf317851d59317f3
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9b6cd02dbdf63ffdd13fa9103969cfda
+// @relayRequestID f83d872a0492635dbf317851d59317f3
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -23,7 +23,7 @@ export type PublicPostQuery$data = {
       readonly slug: string;
     };
     readonly reference: string;
-    readonly " $fragmentSpreads": FragmentRefs<"PublicPostPageFragment" | "PublicPostRichObjectFragment" | "SuggestedPostsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"PublicPostPageFragment" | "PublicPostRichObjectFragment" | "PublicPostStructuredDataFragment" | "SuggestedPostsFragment">;
   } | null;
   readonly viewer: {
     readonly " $fragmentSpreads": FragmentRefs<"AccountInformationBannerFragment" | "PublicPostPageViewerFragment" | "SuggestedPostsViewerFragment">;
@@ -348,6 +348,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "PublicPostRichObjectFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "PublicPostStructuredDataFragment"
           }
         ],
         "storageKey": null
@@ -681,7 +686,7 @@ return {
     ]
   },
   "params": {
-    "id": "9b6cd02dbdf63ffdd13fa9103969cfda",
+    "id": "f83d872a0492635dbf317851d59317f3",
     "metadata": {},
     "name": "PublicPostQuery",
     "operationKind": "query",
@@ -690,6 +695,6 @@ return {
 };
 })();
 
-(node as any).hash = "084ce8f2bf02b2ca72fea427f9f02f77";
+(node as any).hash = "1de72393778e9e7ad6287eea6eee7782";
 
 export default node;

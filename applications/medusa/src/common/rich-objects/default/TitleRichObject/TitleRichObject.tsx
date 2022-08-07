@@ -2,9 +2,9 @@ import Head from 'next/head'
 import React from 'react'
 import { TITLE_FEATURES } from '@//:modules/constants/rich-objects'
 
-export default function TitleRichObject (): JSX.Element {
-  const TITLE = `overdoll - ${TITLE_FEATURES}`
+export const TITLE = `overdoll - ${TITLE_FEATURES}`
 
+export default function TitleRichObject (): JSX.Element {
   return (
     <>
       <Head>

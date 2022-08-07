@@ -25,13 +25,21 @@ const Fragment = graphql`
   }
 `
 
+export const getClubDescription = (name: string): string => {
+  return `${DESCRIPTION_PREFIX} ${name}'s ${DESCRIPTION_FEATURES} on ${TITLE_SUFFIX}. ${DESCRIPTION_CONTENT_TYPES} from ${name}.`
+}
+
+export const getClubTitle = (name: string): string => {
+  return `${name}'s ${TITLE_FEATURES} - ${TITLE_SUFFIX}`
+}
+
 export default function PublicClubRichObject ({
   query
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const TITLE = `${data.name}'s ${TITLE_FEATURES} - ${TITLE_SUFFIX}`
-  const DESCRIPTION = `${DESCRIPTION_PREFIX} ${data.name}'s ${DESCRIPTION_FEATURES} on ${TITLE_SUFFIX}. ${DESCRIPTION_CONTENT_TYPES} from ${data.name}.`
+  const TITLE = getClubTitle(data.name)
+  const DESCRIPTION = getClubDescription(data.name)
 
   const URL = `https://overdoll.com/${data.slug}`
 

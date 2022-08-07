@@ -44,7 +44,7 @@ const ServerError: PageProps<{}> = (): JSX.Element => {
               </Trans>
             </Text>
           </Box>
-          <Stack spacing={2}>
+          <Stack align='center' spacing={2}>
             <Text
               fontSize='sm'
               textAlign='center'

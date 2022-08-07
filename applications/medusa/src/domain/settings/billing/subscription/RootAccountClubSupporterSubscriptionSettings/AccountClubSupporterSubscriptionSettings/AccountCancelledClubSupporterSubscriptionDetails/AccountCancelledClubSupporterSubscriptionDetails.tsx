@@ -2,7 +2,6 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type {
   AccountCancelledClubSupporterSubscriptionDetailsFragment$key
 } from '@//:artifacts/AccountCancelledClubSupporterSubscriptionDetailsFragment.graphql'
-import { ResourceIcon } from '@//:modules/content/PageLayout'
 import { Badge, Heading, HStack, Stack, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import format from 'date-fns/format'

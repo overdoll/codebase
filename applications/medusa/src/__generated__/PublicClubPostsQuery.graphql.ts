@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8437b915ffa43ecfd4bb371883d15671>>
- * @relayHash 80f28efeb8262fb05c0639142c88eac6
+ * @generated SignedSource<<a3d36e3a2f15b58b206fdd2ee8f3df8a>>
+ * @relayHash 65b623495a3898003d4179108a5427d8
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 80f28efeb8262fb05c0639142c88eac6
+// @relayRequestID 65b623495a3898003d4179108a5427d8
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -26,7 +26,7 @@ export type PublicClubPostsQuery$variables = {
 export type PublicClubPostsQuery$data = {
   readonly club: {
     readonly name: string;
-    readonly " $fragmentSpreads": FragmentRefs<"PublicClubPostsFragment" | "PublicClubPostsRichObjectFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"PublicClubPostsFragment" | "PublicClubPostsRichObjectFragment" | "PublicClubPostsStructuredDataFragment">;
   } | null;
   readonly viewer: {
     readonly " $fragmentSpreads": FragmentRefs<"AccountInformationBannerFragment" | "PostsInfiniteScrollViewerFragment">;
@@ -237,6 +237,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "PublicClubPostsRichObjectFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "PublicClubPostsStructuredDataFragment"
           }
         ],
         "storageKey": null
@@ -617,7 +622,7 @@ return {
     ]
   },
   "params": {
-    "id": "80f28efeb8262fb05c0639142c88eac6",
+    "id": "65b623495a3898003d4179108a5427d8",
     "metadata": {},
     "name": "PublicClubPostsQuery",
     "operationKind": "query",
@@ -626,6 +631,6 @@ return {
 };
 })();
 
-(node as any).hash = "d72ff0572193d33fd52a3827d4204c3a";
+(node as any).hash = "5ad6c01c8723fcac95c11ad80b3c2724";
 
 export default node;

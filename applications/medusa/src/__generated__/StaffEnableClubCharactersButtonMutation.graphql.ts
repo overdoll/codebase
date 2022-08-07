@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<84668153555ea6cf4ae32932af21176c>>
- * @relayHash d48e2f27afc9a31e3d2e9bd1bc4a687f
+ * @generated SignedSource<<badf93f11604f1a33b5d89885b11f028>>
+ * @relayHash 677958463b8367287e569a1e90279a90
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d48e2f27afc9a31e3d2e9bd1bc4a687f
+// @relayRequestID 677958463b8367287e569a1e90279a90
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type EnableClubCharactersInput = {
@@ -21,11 +21,7 @@ export type StaffEnableClubCharactersButtonMutation$variables = {
 };
 export type StaffEnableClubCharactersButtonMutation$data = {
   readonly enableClubCharacters: {
-    readonly club: {
-      readonly charactersEnabled: boolean;
-      readonly charactersLimit: number;
-      readonly id: string;
-    } | null;
+    readonly __typename: "EnableClubCharactersPayload";
   } | null;
 };
 export type StaffEnableClubCharactersButtonMutation = {
@@ -59,33 +55,8 @@ v1 = [
       {
         "alias": null,
         "args": null,
-        "concreteType": "Club",
-        "kind": "LinkedField",
-        "name": "club",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "charactersEnabled",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "charactersLimit",
-            "storageKey": null
-          }
-        ],
+        "kind": "ScalarField",
+        "name": "__typename",
         "storageKey": null
       }
     ],
@@ -110,7 +81,7 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "d48e2f27afc9a31e3d2e9bd1bc4a687f",
+    "id": "677958463b8367287e569a1e90279a90",
     "metadata": {},
     "name": "StaffEnableClubCharactersButtonMutation",
     "operationKind": "mutation",
@@ -119,6 +90,6 @@ return {
 };
 })();
 
-(node as any).hash = "35bc78a507b65b37e6b2af9c030a519a";
+(node as any).hash = "de051d5361c7f5ec7c280f245d59e33a";
 
 export default node;

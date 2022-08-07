@@ -8,9 +8,9 @@ import {
 } from '@//:modules/constants/rich-objects'
 import ImageRichObject from '../ImageRichObject/ImageRichObject'
 
-export default function DefaultRichObject (): JSX.Element {
-  const DESCRIPTION = `${DESCRIPTION_PREFIX} ${DESCRIPTION_FEATURES} on ${TITLE_SUFFIX}. ${DESCRIPTION_CONTENT_DISCOVER}.`
+export const DESCRIPTION = `${DESCRIPTION_PREFIX} ${DESCRIPTION_FEATURES} on ${TITLE_SUFFIX}. ${DESCRIPTION_CONTENT_DISCOVER}.`
 
+export default function DefaultRichObject (): JSX.Element {
   return (
     <>
       <Head>

@@ -3,7 +3,6 @@ import { forwardRef, ReactNode, useContext } from 'react'
 import { HorizontalNavigationDropdownMenuContext } from '../context'
 import HorizontalNavigationDropdownMenuButtonBody
   from './HorizontalNavigationDropdownMenuButtonBody/HorizontalNavigationDropdownMenuButtonBody'
-import { LinkProps } from 'next/link'
 import { Box } from '@chakra-ui/react'
 import { IconType } from '@//:types/components'
 import { UrlObject } from 'url'

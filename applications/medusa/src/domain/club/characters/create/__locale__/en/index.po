@@ -6,67 +6,85 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:158
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:167
 msgid "A unique link"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:144
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacter.tsx:66
+msgid "Back to Characters"
+msgstr ""
+
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:152
 msgid "Character name"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:169
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:180
 msgid "Create Character"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacter.tsx:58
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacter.tsx:72
 msgid "Create Club Character"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacter.tsx:63
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacter.tsx:77
 msgid "Create a club character to use in your posts"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:124
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:131
 msgid "Error creating character"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:78
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:85
 msgid "Please enter a character link"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:67
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:74
 msgid "Please enter a name for your character"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:118
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:125
 msgid "Successfully created character {0}"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:81
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:88
 msgid "The character link can only contain numbers and letters."
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:80
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:87
 msgid "The character link cannot exceed 25 characters"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:79
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:86
 msgid "The character link must be at least 2 characters"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:69
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:76
 msgid "The name cannot exceed 25 characters"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:68
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:75
 msgid "The name must be at least 2 characters"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:139
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:193
+msgid "You have created the maximum number of allowed characters ({0}). Please contact us if you would like this limit increased."
+msgstr ""
+
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:147
 msgid "Your Character Name"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:150
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:159
 msgid "Your Unique Character Link"
+msgstr ""
+
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:206
+msgid "{remainingCharacters, plural, one {You can create # more character} other {You can create # more characters}}"
 msgstr ""

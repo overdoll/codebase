@@ -107,7 +107,7 @@ msgstr ""
 msgid "EXPIRED"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubCharactersButton/StaffEnableClubCharactersButton.tsx:116
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubCharactersButton/StaffEnableClubCharactersButton.tsx:112
 msgid "Enable Club Characters"
 msgstr ""
 
@@ -173,7 +173,7 @@ msgstr ""
 msgid "Now"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubCharactersButton/StaffEnableClubCharactersButton.tsx:105
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubCharactersButton/StaffEnableClubCharactersButton.tsx:101
 msgid "Number of characters"
 msgstr ""
 
@@ -289,7 +289,7 @@ msgstr ""
 msgid "Successfully disabled supporter only posts for this club"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubCharactersButton/StaffEnableClubCharactersButton.tsx:87
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubCharactersButton/StaffEnableClubCharactersButton.tsx:83
 msgid "Successfully enabled characters for this club"
 msgstr ""
 
@@ -414,7 +414,7 @@ msgstr ""
 msgid "There was an error disabling supporter only posts for this club"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubCharactersButton/StaffEnableClubCharactersButton.tsx:93
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubCharactersButton/StaffEnableClubCharactersButton.tsx:89
 msgid "There was an error enabling characters for this club"
 msgstr ""
 

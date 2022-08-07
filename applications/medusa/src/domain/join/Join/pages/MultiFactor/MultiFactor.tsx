@@ -11,6 +11,7 @@ import {
   FlowBuilderFooter,
   FlowBuilderPreviousButton
 } from '@//:modules/content/PageLayout'
+import { WarningTriangle } from '@//:assets/icons'
 
 interface Props {
   queryRef: MultiFactorFragment$key
@@ -36,13 +37,24 @@ export default function MultiFactor ({ queryRef }: Props): JSX.Element {
 
   const components = {
     'multi-factor': (
-      <Stack spacing={6}>{data.accountStatus?.multiFactor?.totp === true &&
-        <TotpSubmission queryRef={data} />}
+      <Stack spacing={6}>
+        <TotpSubmission queryRef={data} />
       </Stack>),
     'recovery-codes': (
       <Stack spacing={6}>
         <RecoveryCode queryRef={data} />
       </Stack>)
+  }
+
+  const headers = {
+    'multi-factor': {
+      title: '1',
+      icon: WarningTriangle
+    },
+    'recovery-codes': {
+      title: '2',
+      icon: WarningTriangle
+    }
   }
 
   return (
@@ -52,7 +64,7 @@ export default function MultiFactor ({ queryRef }: Props): JSX.Element {
       </Head>
       <Flex align='center' justify='center' h='100%' position='relative'>
         <FlowBuilder
-          stepsHeaders={{}}
+          stepsHeaders={headers}
           colorScheme='green'
           stepsArray={steps}
           stepsComponents={components}

@@ -25,6 +25,11 @@ const Query = graphql`
     viewAuthenticationToken(token: $token, secret: $secret) {
       verified
       secure
+      accountStatus {
+        multiFactor {
+          totp
+        }
+      }
       ...ConfirmFragment
       ...CompleteFragment
     }
@@ -38,6 +43,11 @@ const Mutation = graphql`
       authenticationToken {
         id
         verified
+        accountStatus {
+          multiFactor {
+            totp
+          }
+        }
       }
     }
   }

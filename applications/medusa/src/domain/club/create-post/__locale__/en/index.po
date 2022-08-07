@@ -113,6 +113,10 @@ msgstr ""
 #~ msgid "Drop your files to upload them"
 #~ msgstr ""
 
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/PostUpdateDescription/PostUpdateDescription.tsx:72
+msgid "Edit Description"
+msgstr ""
+
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentAdd/ContentUpdateDisplay/ContentUpdateDisplay.tsx:39
 msgid "Error adding uploaded files to post"
 msgstr ""
@@ -166,7 +170,7 @@ msgstr ""
 #~ msgid "Have a category suggestion? Send us an email at hello@overdoll.com!"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadSearchCharactersMultiSelector/UploadSearchCharactersMultiSelector.tsx:79
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadSearchCharactersMultiSelector/UploadSearchCharactersMultiSelector.tsx:80
 msgid "Have a character suggestion or want your character listed? Contact us!"
 msgstr ""
 
@@ -200,6 +204,10 @@ msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreviewMenu/ArrangeUpPostContentButton/ArrangeUpPostContentButton.tsx:89
 msgid "Move Up"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadSearchCategories/UploadEmptyCategories/UploadEmptyCategories.tsx:11
+msgid "No categories were found with the title {0}"
 msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/CreatePostFooter/CreatePostFooter.tsx:37
@@ -286,7 +294,7 @@ msgstr ""
 msgid "Search for a category"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:67
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:93
 msgid "Search for a character by name"
 msgstr ""
 
@@ -298,7 +306,7 @@ msgstr ""
 msgid "Select a topic to see the available categories you can add, or search for a category by name."
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:59
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:78
 msgid "Select one or more characters that appear in all of the content"
 msgstr ""
 
@@ -335,8 +343,11 @@ msgid "Set Free"
 msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/SupporterPostContentButton/SupporterPostContentButton.tsx:95
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/PostUpdateDescription/PostUpdateDescription.tsx:72
 msgid "Set Supporter Only"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:85
+msgid "Show Your Club Characters"
 msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:99
@@ -479,7 +490,7 @@ msgstr ""
 msgid "When uploading any kind of supporter content, it's recommended that the first slide in your post is not supporter content and contains either a censored image or a reduced video to encourage your fans to become supporters."
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:54
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:73
 msgid "Who is in your post?"
 msgstr ""
 
@@ -537,9 +548,9 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadSearchCategories/UploadEmptyCategories/UploadEmptyCategories.tsx:8
-msgid "message.placeholder.empty.categories.upload.one"
-msgstr ""
+#~ msgid "message.placeholder.empty.categories.upload.one"
+#~ msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadSearchCategories/UploadEmptyCategories/UploadEmptyCategories.tsx:17
-msgid "message.placeholder.empty.categories.upload.other"
-msgstr ""
+#~ msgid "message.placeholder.empty.categories.upload.other"
+#~ msgstr ""

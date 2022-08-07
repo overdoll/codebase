@@ -99,7 +99,7 @@ msgstr ""
 #~ msgid "Club was terminated by {0}. Goodbye."
 #~ msgstr ""
 
-#: src/common/components/Contact/ContactButton.tsx:12
+#: src/common/components/Contact/ContactButton.tsx:16
 msgid "Contact Us"
 msgstr ""
 
