@@ -2,7 +2,7 @@
   "compilerOptions": {
     "incremental": true,
     "tsBuildInfoFile": "./cache/.tsbuildinfo",
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "moduleResolution": "node",
     "baseUrl": "./",
     "sourceMap": true,

@@ -19,11 +19,11 @@ sh setup/loader.sh
 sh cleanup/parley.sh
 sh setup/parley.sh
 
-sh cleanup/sting.sh
-sh setup/sting.sh
-
 sh cleanup/hades.sh
 sh setup/hades.sh
 
 sh cleanup/ringer.sh
 sh setup/ringer.sh
+
+sh cleanup/sting.sh
+sh setup/sting.sh
