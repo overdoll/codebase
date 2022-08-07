@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<14a9d61b22df487f81dc70fb15ce924c>>
+ * @generated SignedSource<<2c4db7a86d26a24d13167154dda1da90>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,7 +23,7 @@ export type UpdatePostFlowFragment$data = {
     readonly id: string;
     readonly name: string;
   }>;
-  readonly " $fragmentSpreads": FragmentRefs<"UploadCategoryStepFragment" | "UploadContentStepFragment" | "UploadFlowFooterFragment" | "UploadFlowHeaderFragment" | "UploadReviewStepFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"UploadCategoryStepFragment" | "UploadCharacterStepFragment" | "UploadContentStepFragment" | "UploadFlowFooterFragment" | "UploadFlowHeaderFragment" | "UploadReviewStepFragment">;
   readonly " $fragmentType": "UpdatePostFlowFragment";
 };
 export type UpdatePostFlowFragment$key = {
@@ -118,6 +118,11 @@ return {
       "args": null,
       "kind": "FragmentSpread",
       "name": "UploadCategoryStepFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "UploadCharacterStepFragment"
     }
   ],
   "type": "Post",
@@ -125,6 +130,6 @@ return {
 };
 })();
 
-(node as any).hash = "45aad80031564208c8fd4aab1548f6f2";
+(node as any).hash = "1ae3bd28bc5e4498955d11bd371330b1";
 
 export default node;

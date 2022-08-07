@@ -6,12 +6,12 @@ import { TableBodyColumn, TableBodyRow } from '@//:modules/content/ThemeComponen
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 import displayPrice from '@//:modules/support/displayPrice'
 import { useLingui } from '@lingui/react'
-import { ResourceIcon } from '@//:modules/content/PageLayout'
 import {
   getTransactionColorScheme
 } from '../../../../../../staff/billing/subscription/RootStaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffSubscriptionTransactions/StaffTransactionsList/StaffTransactionCard/StaffTransactionCard'
 import format from 'date-fns/format'
 import { dateFormatWithTimeSimple } from '@//:modules/constants/format'
+import ClubThumbnail from '@//:modules/content/DataDisplay/Club/ClubThumbnail/ClubThumbnail'
 
 interface Props {
   query: TransactionSettingsCardFragment$key
@@ -23,14 +23,11 @@ const Fragment = graphql`
     currency
     createdAt
     totalRefunded
-    clubSupporterSubscription {
+    clubSupporterSubscription  {
       ... on IAccountClubSupporterSubscription {
-        club {
-          id
+        club  {
           name
-          thumbnail {
-            ...ResourceIconFragment
-          }
+          ...ClubThumbnailFragment
         }
       }
     }
@@ -66,22 +63,22 @@ export default function TransactionSettingsCard ({
 
   return (
     <Stack spacing={2}>
-      <HStack spacing={2}>
-        <ResourceIcon
-          showBorder
-          seed={data?.clubSupporterSubscription?.club?.id}
-          h={9}
-          w={9}
-          query={data?.clubSupporterSubscription?.club?.thumbnail}
-        />
-        <Heading
-          noOfLines={1}
-          fontSize='lg'
-          color='gray.00'
-        >
-          {data?.clubSupporterSubscription?.club?.name}
-        </Heading>
-      </HStack>
+      {data?.clubSupporterSubscription?.club != null && (
+        <HStack spacing={2}>
+          <ClubThumbnail
+            h={10}
+            w={10}
+            query={data?.clubSupporterSubscription?.club}
+          />
+          <Heading
+            noOfLines={1}
+            fontSize='lg'
+            color='gray.00'
+          >
+            {data?.clubSupporterSubscription?.club?.name}
+          </Heading>
+        </HStack>
+      )}
       <TableBodyRow columns={7}>
         <TableBodyColumn column={3}>
           <Text w='100%' align='start' noOfLines={1} fontSize='md' color='gray.100'>

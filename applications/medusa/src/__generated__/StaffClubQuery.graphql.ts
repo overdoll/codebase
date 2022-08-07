@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3143947d8fb7397b2ebd26eb8ad31271>>
- * @relayHash 0cac6e88a09d7974473e1b03ea04f66c
+ * @generated SignedSource<<c3a108bde826a5fb08bd15421ad1aef1>>
+ * @relayHash d845d5a81883fc6de51c0be8d59fba34
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0cac6e88a09d7974473e1b03ea04f66c
+// @relayRequestID d845d5a81883fc6de51c0be8d59fba34
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -53,14 +53,14 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "name",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "id",
   "storageKey": null
 },
 v5 = {
@@ -71,7 +71,7 @@ v5 = {
   "storageKey": null
 },
 v6 = [
-  (v3/*: any*/),
+  (v4/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -141,7 +141,7 @@ v7 = {
 },
 v8 = [
   (v7/*: any*/),
-  (v3/*: any*/)
+  (v4/*: any*/)
 ],
 v9 = {
   "alias": null,
@@ -402,7 +402,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v3/*: any*/),
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -432,7 +432,7 @@ return {
                             "name": "title",
                             "storageKey": null
                           },
-                          (v3/*: any*/)
+                          (v4/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -472,7 +472,7 @@ return {
             "name": "owner",
             "plural": false,
             "selections": [
-              (v3/*: any*/),
+              (v4/*: any*/),
               (v7/*: any*/),
               {
                 "alias": null,
@@ -500,7 +500,7 @@ return {
                   {
                     "kind": "InlineFragment",
                     "selections": [
-                      (v3/*: any*/),
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -545,7 +545,7 @@ return {
                     "name": "country",
                     "plural": false,
                     "selections": [
-                      (v4/*: any*/),
+                      (v3/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -553,11 +553,11 @@ return {
                         "name": "emoji",
                         "storageKey": null
                       },
-                      (v3/*: any*/)
+                      (v4/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v3/*: any*/)
+                  (v4/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -625,7 +625,7 @@ return {
                         "name": "depositDate",
                         "storageKey": null
                       },
-                      (v3/*: any*/),
+                      (v4/*: any*/),
                       (v2/*: any*/)
                     ],
                     "storageKey": null
@@ -662,7 +662,7 @@ return {
                 "name": "percent",
                 "storageKey": null
               },
-              (v3/*: any*/)
+              (v4/*: any*/)
             ],
             "storageKey": null
           },
@@ -707,7 +707,7 @@ return {
                         "name": "settlementDate",
                         "storageKey": null
                       },
-                      (v3/*: any*/),
+                      (v4/*: any*/),
                       (v2/*: any*/)
                     ],
                     "storageKey": null
@@ -894,7 +894,7 @@ return {
                             "name": "suspendedUntil",
                             "storageKey": null
                           },
-                          (v3/*: any*/)
+                          (v4/*: any*/)
                         ],
                         "type": "ClubIssuedSuspensionLog",
                         "abstractKey": null
@@ -912,7 +912,7 @@ return {
                             "selections": (v8/*: any*/),
                             "storageKey": null
                           },
-                          (v3/*: any*/)
+                          (v4/*: any*/)
                         ],
                         "type": "ClubRemovedSuspensionLog",
                         "abstractKey": null
@@ -966,7 +966,7 @@ return {
                         "kind": "InlineFragment",
                         "selections": [
                           (v16/*: any*/),
-                          (v3/*: any*/)
+                          (v4/*: any*/)
                         ],
                         "type": "IAccountClubSupporterSubscription",
                         "abstractKey": "__isIAccountClubSupporterSubscription"
@@ -1026,7 +1026,7 @@ return {
                       {
                         "kind": "InlineFragment",
                         "selections": [
-                          (v3/*: any*/)
+                          (v4/*: any*/)
                         ],
                         "type": "Node",
                         "abstractKey": "__isNode"
@@ -1057,6 +1057,20 @@ return {
             "kind": "ScalarField",
             "name": "canCreateSupporterOnlyPosts",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "charactersEnabled",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "charactersLimit",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -1064,7 +1078,7 @@ return {
     ]
   },
   "params": {
-    "id": "0cac6e88a09d7974473e1b03ea04f66c",
+    "id": "d845d5a81883fc6de51c0be8d59fba34",
     "metadata": {},
     "name": "StaffClubQuery",
     "operationKind": "query",

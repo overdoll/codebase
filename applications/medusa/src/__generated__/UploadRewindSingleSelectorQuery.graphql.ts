@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0da672e2716742832b4d5f0e335f64fe>>
- * @relayHash 12410e384d6ef272fdb4a90f6d4688eb
+ * @generated SignedSource<<bafbe25df09ee1a8fe72504e07dac8d4>>
+ * @relayHash 792bce9c4be32a1d523ca9df46ac3e68
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 12410e384d6ef272fdb4a90f6d4688eb
+// @relayRequestID 792bce9c4be32a1d523ca9df46ac3e68
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -216,6 +216,46 @@ return {
                                 "storageKey": null
                               },
                               (v5/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "preview",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "failed",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "ResourceProgress",
+                                "kind": "LinkedField",
+                                "name": "progress",
+                                "plural": false,
+                                "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "progress",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "state",
+                                    "storageKey": null
+                                  },
+                                  (v3/*: any*/)
+                                ],
+                                "storageKey": null
+                              },
                               (v3/*: any*/),
                               {
                                 "alias": null,
@@ -253,13 +293,6 @@ return {
                               {
                                 "alias": null,
                                 "args": null,
-                                "kind": "ScalarField",
-                                "name": "preview",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
                                 "concreteType": "ResourceUrl",
                                 "kind": "LinkedField",
                                 "name": "videoThumbnail",
@@ -267,13 +300,6 @@ return {
                                 "selections": [
                                   (v6/*: any*/)
                                 ],
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "failed",
                                 "storageKey": null
                               }
                             ],
@@ -363,7 +389,7 @@ return {
     ]
   },
   "params": {
-    "id": "12410e384d6ef272fdb4a90f6d4688eb",
+    "id": "792bce9c4be32a1d523ca9df46ac3e68",
     "metadata": {},
     "name": "UploadRewindSingleSelectorQuery",
     "operationKind": "query",

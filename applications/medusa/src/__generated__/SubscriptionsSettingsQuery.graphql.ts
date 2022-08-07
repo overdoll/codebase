@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a209a6baa1c17e039f19f6f2ec3451dd>>
- * @relayHash d5e0dbd2707cd1debb419314a09d6451
+ * @generated SignedSource<<b4bb07a75797dcee0c923f8762f2b06e>>
+ * @relayHash 9e15a821c0f062e4457ac67c98d6ffd3
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d5e0dbd2707cd1debb419314a09d6451
+// @relayRequestID 9e15a821c0f062e4457ac67c98d6ffd3
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -90,10 +90,17 @@ v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "expires",
   "storageKey": null
 },
 v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v11 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
@@ -110,7 +117,7 @@ v10 = {
       "name": "urls",
       "plural": true,
       "selections": [
-        (v9/*: any*/),
+        (v10/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -150,7 +157,7 @@ v10 = {
       "name": "videoThumbnail",
       "plural": false,
       "selections": [
-        (v9/*: any*/)
+        (v10/*: any*/)
       ],
       "storageKey": null
     },
@@ -164,13 +171,6 @@ v10 = {
   ],
   "storageKey": null
 },
-v11 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "expires",
-  "storageKey": null
-},
 v12 = {
   "alias": null,
   "args": null,
@@ -179,10 +179,10 @@ v12 = {
   "name": "club",
   "plural": false,
   "selections": [
-    (v3/*: any*/),
     (v7/*: any*/),
     (v8/*: any*/),
-    (v10/*: any*/)
+    (v3/*: any*/),
+    (v11/*: any*/)
   ],
   "storageKey": null
 },
@@ -341,10 +341,8 @@ return {
                             "name": "club",
                             "plural": false,
                             "selections": [
-                              (v3/*: any*/),
                               (v7/*: any*/),
                               (v8/*: any*/),
-                              (v10/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -353,10 +351,12 @@ return {
                                 "name": "suspension",
                                 "plural": false,
                                 "selections": [
-                                  (v11/*: any*/)
+                                  (v9/*: any*/)
                                 ],
                                 "storageKey": null
-                              }
+                              },
+                              (v3/*: any*/),
+                              (v11/*: any*/)
                             ],
                             "storageKey": null
                           }
@@ -484,7 +484,7 @@ return {
             "plural": false,
             "selections": [
               (v2/*: any*/),
-              (v11/*: any*/)
+              (v9/*: any*/)
             ],
             "storageKey": null
           },
@@ -513,7 +513,7 @@ return {
     ]
   },
   "params": {
-    "id": "d5e0dbd2707cd1debb419314a09d6451",
+    "id": "9e15a821c0f062e4457ac67c98d6ffd3",
     "metadata": {},
     "name": "SubscriptionsSettingsQuery",
     "operationKind": "query",

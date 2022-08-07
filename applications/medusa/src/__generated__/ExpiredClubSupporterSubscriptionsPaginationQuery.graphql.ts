@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fab25d4088959b628db079875d5e2a8a>>
- * @relayHash 9b0be773046ed0fe0f3b0c1ea79b45ad
+ * @generated SignedSource<<66b4b8e095ba8a1c5b961924eba031be>>
+ * @relayHash ec58be3c2fb4b3d72695223a1410fceb
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9b0be773046ed0fe0f3b0c1ea79b45ad
+// @relayRequestID ec58be3c2fb4b3d72695223a1410fceb
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -178,7 +178,6 @@ return {
                             "name": "club",
                             "plural": false,
                             "selections": [
-                              (v4/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -193,6 +192,7 @@ return {
                                 "name": "slug",
                                 "storageKey": null
                               },
+                              (v4/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -329,7 +329,7 @@ return {
     ]
   },
   "params": {
-    "id": "9b0be773046ed0fe0f3b0c1ea79b45ad",
+    "id": "ec58be3c2fb4b3d72695223a1410fceb",
     "metadata": {},
     "name": "ExpiredClubSupporterSubscriptionsPaginationQuery",
     "operationKind": "query",

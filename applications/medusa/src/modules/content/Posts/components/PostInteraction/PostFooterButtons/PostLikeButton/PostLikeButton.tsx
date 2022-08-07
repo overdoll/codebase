@@ -9,6 +9,7 @@ import encodeJoinRedirect from '../../../../../../support/encodeJoinRedirect'
 import PostFooterButton from '../PostFooterButton/PostFooterButton'
 import PostLikeWrapper from '../../../PostWrappers/PostLikeWrapper/PostLikeWrapper'
 import { useLingui } from '@lingui/react'
+import { useRouter } from 'next/router'
 
 interface Props extends ButtonProps {
   postQuery: PostLikeButtonFragment$key
@@ -38,6 +39,8 @@ export default function PostLikeButton ({
   const postData = useFragment(PostFragment, postQuery)
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
+  const router = useRouter()
+
   const { i18n } = useLingui()
 
   const redirect = encodeJoinRedirect({
@@ -50,7 +53,7 @@ export default function PostLikeButton ({
 
   if (viewerData == null) {
     return (
-      <PostFooterButton isIcon href={redirect} icon={HeartOutline}>
+      <PostFooterButton isIcon onClick={async () => await router.push(redirect)} icon={HeartOutline}>
         {i18n._(t`Like`)}
       </PostFooterButton>
     )

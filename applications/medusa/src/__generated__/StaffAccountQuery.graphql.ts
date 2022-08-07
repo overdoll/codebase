@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1ce0235a9fc3a38349329da5eb21ff87>>
- * @relayHash 83d9bf07b2403c03ba4c9dcf85011613
+ * @generated SignedSource<<ee024393ff76e5dcd3f1a014550098e7>>
+ * @relayHash 867e045c951a45f1df7ebebcc6869a9b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 83d9bf07b2403c03ba4c9dcf85011613
+// @relayRequestID 867e045c951a45f1df7ebebcc6869a9b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -619,12 +619,6 @@ return {
                         "plural": false,
                         "selections": [
                           (v12/*: any*/),
-                          (v2/*: any*/),
-                          (v14/*: any*/),
-                          (v15/*: any*/),
-                          (v16/*: any*/),
-                          (v17/*: any*/),
-                          (v18/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -632,13 +626,45 @@ return {
                             "name": "processed",
                             "storageKey": null
                           },
+                          (v17/*: any*/),
                           {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
                             "name": "failed",
                             "storageKey": null
-                          }
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "ResourceProgress",
+                            "kind": "LinkedField",
+                            "name": "progress",
+                            "plural": false,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "progress",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "state",
+                                "storageKey": null
+                              },
+                              (v2/*: any*/)
+                            ],
+                            "storageKey": null
+                          },
+                          (v2/*: any*/),
+                          (v14/*: any*/),
+                          (v15/*: any*/),
+                          (v16/*: any*/),
+                          (v18/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -669,7 +695,7 @@ return {
     ]
   },
   "params": {
-    "id": "83d9bf07b2403c03ba4c9dcf85011613",
+    "id": "867e045c951a45f1df7ebebcc6869a9b",
     "metadata": {},
     "name": "StaffAccountQuery",
     "operationKind": "query",

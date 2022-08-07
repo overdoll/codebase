@@ -2,7 +2,7 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type { PublicPostRichObjectFragment$key } from '@//:artifacts/PublicPostRichObjectFragment.graphql'
 import Head from 'next/head'
 import React from 'react'
-import PostContentRichObject from './PostContentRichObject/PostContentRichObject'
+import PostContentRichObject from '../../default/PostContentRichObject/PostContentRichObject'
 import {
   DESCRIPTION_FEATURES,
   DESCRIPTION_PREFIX,
@@ -28,21 +28,27 @@ const Fragment = graphql`
   }
 `
 
+const getCharacterNames = (characters: string[]): string => {
+  if (characters.length === 1) {
+    return characters[0]
+  }
+  return characters.join(', ')
+}
+
+export const getPostTitle = (characters: string[], club: string): string => {
+  return `${getCharacterNames(characters)} From ${club}'s ${TITLE_FEATURES} - ${TITLE_SUFFIX}`
+}
+
 export default function PublicPostRichObject ({
   query
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const getCharacterNames = (): string => {
-    if (data.characters.length === 1) {
-      return data.characters[0].name
-    }
-    return ((data.characters as Array<{ name: string }>).map((item) => item.name)).join(', ')
-  }
+  const characters = data.characters.map((item) => item.name)
 
-  const TITLE = `${getCharacterNames()} From ${data.club.name}'s ${TITLE_FEATURES} - ${TITLE_SUFFIX}`
+  const TITLE = getPostTitle(characters, data.club.name)
 
-  const DESCRIPTION = `${DESCRIPTION_PREFIX} ${getCharacterNames()} ${DESCRIPTION_FEATURES} by ${data.club.name} on ${TITLE_SUFFIX}`
+  const DESCRIPTION = `${DESCRIPTION_PREFIX} ${getCharacterNames(characters)} ${DESCRIPTION_FEATURES} by ${data.club.name} on ${TITLE_SUFFIX}`
 
   const URL = `https://overdoll.com/${data.club.slug}/post/${data.reference}`
 
@@ -54,23 +60,23 @@ export default function PublicPostRichObject ({
         </title>
         <meta
           property='og:title'
-          key='og:title'
           content={TITLE}
         />
         <meta
-          property='description'
-          key='description'
+          name='description'
           content={DESCRIPTION}
         />
         <meta
           property='og:description'
-          key='og:description'
           content={DESCRIPTION}
         />
         <meta
           property='og:url'
-          key='og:url'
           content={URL}
+        />
+        <link
+          rel='canonical'
+          href={URL}
         />
       </Head>
       <PostContentRichObject query={data} />

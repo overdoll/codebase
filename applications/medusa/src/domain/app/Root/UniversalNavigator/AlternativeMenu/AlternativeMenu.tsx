@@ -5,7 +5,7 @@ import {
   PageControllerSettings,
   SafetyExitDoorLeft,
   SafetyFloat
-} from '@//:assets/icons/navigation'
+} from '@//:assets/icons'
 import HorizontalNavigationDropdownMenu
   from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
 import { RenderOnDesktop } from '@//:modules/content/PageLayout'
@@ -15,7 +15,7 @@ import QuickAccessButtonProfile from './QuickAccessButtonProfile/QuickAccessButt
 import DropdownMenuButtonProfile from './DropdownMenuButtonProfile/DropdownMenuButtonProfile'
 import Can from '@//:modules/authorization/Can'
 import { AlternativeMenuFragment$key } from '@//:artifacts/AlternativeMenuFragment.graphql'
-import { Suspense } from 'react'
+import React, { Suspense } from 'react'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import DropdownMenuButtonClub from './DropdownMenuButtonClub/DropdownMenuButtonClub'

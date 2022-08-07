@@ -1,9 +1,9 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { ThumbnailClubSettingsQuery } from '@//:artifacts/ThumbnailClubSettingsQuery.graphql'
 import { HStack, Stack } from '@chakra-ui/react'
-import { ResourceIcon } from '@//:modules/content/PageLayout'
 import ChangeClubThumbnailUpload from './ChangeClubThumbnailUpload/ChangeClubThumbnailUpload'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
+import ClubThumbnail from '@//:modules/content/DataDisplay/Club/ClubThumbnail/ClubThumbnail'
 
 interface Props {
   query: PreloadedQuery<ThumbnailClubSettingsQuery>
@@ -12,10 +12,7 @@ interface Props {
 const Query = graphql`
   query ThumbnailClubSettingsQuery($slug: String!) {
     club(slug: $slug) {
-      id
-      thumbnail {
-        ...ResourceIconFragment
-      }
+      ...ClubThumbnailFragment
       ...ChangeClubThumbnailUploadFragment
     }
   }
@@ -34,26 +31,20 @@ export default function ThumbnailClubSettings ({ query }: Props): JSX.Element {
   return (
     <Stack spacing={4}>
       <HStack spacing={8} align='flex-end' justify='center'>
-        <ResourceIcon
-          showBorder
-          seed={queryData.club.id}
+        <ClubThumbnail
           w={24}
           h={24}
-          query={queryData.club.thumbnail}
+          query={queryData.club}
         />
-        <ResourceIcon
-          showBorder
-          seed={queryData.club.id}
+        <ClubThumbnail
           w={16}
           h={16}
-          query={queryData.club.thumbnail}
+          query={queryData.club}
         />
-        <ResourceIcon
-          showBorder
-          seed={queryData.club.id}
+        <ClubThumbnail
           w={8}
           h={8}
-          query={queryData.club.thumbnail}
+          query={queryData.club}
         />
       </HStack>
       <ChangeClubThumbnailUpload query={queryData.club} />

@@ -33,7 +33,7 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffClubPosts.tsx:43
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffClubPosts.tsx:50
 msgid "Add Ability to Create Supporter Posts"
 msgstr ""
 
@@ -70,6 +70,10 @@ msgstr ""
 msgid "Cancel all subscriptions and wait for the benefits to expire"
 msgstr ""
 
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffClubPosts.tsx:62
+msgid "Club Characters"
+msgstr ""
+
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/InitiateClubPayoutForm/InitiateClubPayoutForm.tsx:113
 msgid "Confirm Initiate Payout"
 msgstr ""
@@ -87,6 +91,10 @@ msgstr ""
 msgid "Deposit Date"
 msgstr ""
 
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffDisableClubCharactersButton/StaffDisableClubCharactersButton.tsx:75
+msgid "Disable Club Characters"
+msgstr ""
+
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffDisableClubSupporterOnlyPostsButton/StaffDisableClubSupporterOnlyPostsButton.tsx:86
 msgid "Disable Supporter Only Posts"
 msgstr ""
@@ -97,6 +105,10 @@ msgstr ""
 
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptionPreview/StaffExpiredClubSupporterSubscriptionPreview/StaffExpiredClubSupporterSubscriptionPreview.tsx:40
 msgid "EXPIRED"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubCharactersButton/StaffEnableClubCharactersButton.tsx:112
+msgid "Enable Club Characters"
 msgstr ""
 
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubSupporterOnlyPostsButton/StaffEnableClubSupporterOnlyPostsButton.tsx:85
@@ -161,6 +173,10 @@ msgstr ""
 msgid "Now"
 msgstr ""
 
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubCharactersButton/StaffEnableClubCharactersButton.tsx:101
+msgid "Number of characters"
+msgstr ""
+
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:75
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubOwner/StaffClubOwner.tsx:45
 msgid "Owner"
@@ -205,7 +221,7 @@ msgstr ""
 msgid "Posts"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffClubPosts.tsx:32
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffClubPosts.tsx:39
 msgid "Prevent Creation of Supporter Posts"
 msgstr ""
 
@@ -265,8 +281,16 @@ msgstr ""
 msgid "Successfully cancelled all active club supporter subscriptions"
 msgstr ""
 
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffDisableClubCharactersButton/StaffDisableClubCharactersButton.tsx:54
+msgid "Successfully disabled characters for this club"
+msgstr ""
+
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffDisableClubSupporterOnlyPostsButton/StaffDisableClubSupporterOnlyPostsButton.tsx:54
 msgid "Successfully disabled supporter only posts for this club"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubCharactersButton/StaffEnableClubCharactersButton.tsx:83
+msgid "Successfully enabled characters for this club"
 msgstr ""
 
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubSupporterOnlyPostsButton/StaffEnableClubSupporterOnlyPostsButton.tsx:54
@@ -382,8 +406,16 @@ msgstr ""
 msgid "There was an error cancelling all active club supporter subscriptions"
 msgstr ""
 
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffDisableClubCharactersButton/StaffDisableClubCharactersButton.tsx:60
+msgid "There was an error disabling characters for this club"
+msgstr ""
+
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffDisableClubSupporterOnlyPostsButton/StaffDisableClubSupporterOnlyPostsButton.tsx:60
 msgid "There was an error disabling supporter only posts for this club"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubCharactersButton/StaffEnableClubCharactersButton.tsx:89
+msgid "There was an error enabling characters for this club"
 msgstr ""
 
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubSupporterOnlyPostsButton/StaffEnableClubSupporterOnlyPostsButton.tsx:60

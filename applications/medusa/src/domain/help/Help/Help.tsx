@@ -21,30 +21,37 @@ import {
 import { SocialTwitter } from '@//:assets/logos'
 import { Trans } from '@lingui/macro'
 import { SearchBar } from '@//:assets/icons/navigation'
-import { Box, Stack, Text } from '@chakra-ui/react'
+import { Box, Heading, Stack, Text } from '@chakra-ui/react'
 import {
   CLUB_GUIDELINES,
   COMMUNITY_GUIDELINES,
+  OVERDOLL_ABOUT,
   PAYOUTS_INFORMATION,
   PRIVACY_POLICY,
   SUPPORTER_GUIDELINES,
-  TERMS_OF_SERVICE,
-  OVERDOLL_ABOUT
+  TERMS_OF_SERVICE
 } from '@//:modules/constants/links'
-import Head from 'next/head'
 import { PageProps } from '@//:types/app'
 import Can from '@//:modules/authorization/Can'
+import HelpRichObject from '../../../common/rich-objects/help/HelpRichObject/HelpRichObject'
+import ContactInformation from '../../../common/components/Contact/ContactInformation/ContactInformation'
+import React from 'react'
 
 const Help: PageProps<{}> = () => {
   return (
     <>
-      <Head>
-        <title>
-          Help - overdoll
-        </title>
-      </Head>
+      <HelpRichObject />
       <PageWrapper>
         <Stack spacing={4}>
+          <Stack spacing={4}>
+            <Heading color='gray.00' fontSize='lg'>
+              <Trans>
+                If you would like to contact us or have any feedback, feel free to send us a note through one of the
+                following methods.
+              </Trans>
+            </Heading>
+            <ContactInformation />
+          </Stack>
           <Box>
             <PageSectionWrap>
               <PageSectionTitle>

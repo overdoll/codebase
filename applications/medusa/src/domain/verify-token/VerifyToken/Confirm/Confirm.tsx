@@ -12,6 +12,8 @@ import AdvertBoxWrapper from '../../../join/Join/components/PlatformBenefitsAdve
 import { Icon } from '@//:modules/content/PageLayout'
 import { WarningTriangle } from '@//:assets/icons'
 import BackgroundPatternWrapper from '../../../join/Join/components/BackgroundPatternWrapper/BackgroundPatternWrapper'
+import VerifyTokenRichObject
+  from '../../../../common/rich-objects/verify-token/VerifyTokenRichObject/VerifyTokenRichObject'
 
 interface Props {
   verify: () => void
@@ -69,8 +71,9 @@ export default function Confirm ({
   return (
     <>
       <Head>
-        <title>Verify login - overdoll</title>
+        <title>Verify Login - overdoll</title>
       </Head>
+      <VerifyTokenRichObject />
       <BackgroundPatternWrapper>
         <PageWrapperDesktop>
           <Center>

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1d442d8eb71e4ebaf189b4daaea6ce70>>
- * @relayHash a7c309a100a157e27bed364b53dc7b20
+ * @generated SignedSource<<6bc53fbc54a0bc327c958db731a5a25d>>
+ * @relayHash 81fbbafeb53c9e75fc5985d7847e8243
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a7c309a100a157e27bed364b53dc7b20
+// @relayRequestID 81fbbafeb53c9e75fc5985d7847e8243
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -121,10 +121,17 @@ v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "preview",
   "storageKey": null
 },
 v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v11 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -132,7 +139,7 @@ v10 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v9/*: any*/),
+    (v10/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -143,25 +150,18 @@ v10 = {
   ],
   "storageKey": null
 },
-v11 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "width",
   "storageKey": null
 },
-v12 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "height",
-  "storageKey": null
-},
 v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "preview",
+  "name": "height",
   "storageKey": null
 },
 v14 = {
@@ -172,7 +172,7 @@ v14 = {
   "name": "videoThumbnail",
   "plural": false,
   "selections": [
-    (v9/*: any*/)
+    (v10/*: any*/)
   ],
   "storageKey": null
 },
@@ -269,19 +269,45 @@ v16 = {
                       "storageKey": null
                     },
                     (v8/*: any*/),
-                    (v6/*: any*/),
-                    (v10/*: any*/),
-                    (v11/*: any*/),
-                    (v12/*: any*/),
-                    (v13/*: any*/),
-                    (v14/*: any*/),
+                    (v9/*: any*/),
                     {
                       "alias": null,
                       "args": null,
                       "kind": "ScalarField",
                       "name": "failed",
                       "storageKey": null
-                    }
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "concreteType": "ResourceProgress",
+                      "kind": "LinkedField",
+                      "name": "progress",
+                      "plural": false,
+                      "selections": [
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "progress",
+                          "storageKey": null
+                        },
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "state",
+                          "storageKey": null
+                        },
+                        (v6/*: any*/)
+                      ],
+                      "storageKey": null
+                    },
+                    (v6/*: any*/),
+                    (v11/*: any*/),
+                    (v12/*: any*/),
+                    (v13/*: any*/),
+                    (v14/*: any*/)
                   ],
                   "storageKey": null
                 },
@@ -353,10 +379,10 @@ v19 = {
   "plural": false,
   "selections": [
     (v6/*: any*/),
-    (v10/*: any*/),
     (v11/*: any*/),
     (v12/*: any*/),
     (v13/*: any*/),
+    (v9/*: any*/),
     (v14/*: any*/),
     (v7/*: any*/)
   ],
@@ -493,7 +519,6 @@ return {
                   (v17/*: any*/),
                   (v6/*: any*/),
                   (v18/*: any*/),
-                  (v19/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -511,7 +536,8 @@ return {
                       }
                     ],
                     "storageKey": null
-                  }
+                  },
+                  (v19/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -729,7 +755,7 @@ return {
     ]
   },
   "params": {
-    "id": "a7c309a100a157e27bed364b53dc7b20",
+    "id": "81fbbafeb53c9e75fc5985d7847e8243",
     "metadata": {},
     "name": "AccountClubSupporterSubscriptionSettingsQuery",
     "operationKind": "query",

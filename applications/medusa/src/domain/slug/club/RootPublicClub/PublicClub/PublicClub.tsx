@@ -12,6 +12,8 @@ import ClubHeaderBanner from './ClubBanners/ClubHeaderBanner/ClubHeaderBanner'
 import ClubJoinBanner from './ClubBanners/ClubJoinBanner/ClubJoinBanner'
 import ClubSupportBanner from './ClubBanners/ClubSupportBanner/ClubSupportBanner'
 import ClubPublicPosts from './ClubPublicPosts/ClubPublicPosts'
+import PublicClubStructuredData
+  from '../../../../../common/structured-data/slug/PublicClubStructuredData/PublicClubStructuredData'
 
 interface Props {
   query: PreloadedQuery<PublicClubQuery>
@@ -21,12 +23,13 @@ const Query = graphql`
   query PublicClubQuery($slug: String!) {
     club(slug: $slug) {
       ...ClubSuspendedStaffAlertFragment
-      ...PublicClubRichObjectFragment
       ...ClubHeaderBannerFragment
       ...ClubFooterButtonsFragment
       ...ClubJoinBannerFragment
       ...ClubSupportBannerFragment
       ...ClubPublicPostsFragment
+      ...PublicClubStructuredDataFragment
+      ...PublicClubRichObjectFragment
     }
     viewer {
       ...AccountInformationBannerFragment
@@ -50,6 +53,7 @@ export default function PublicClub (props: Props): JSX.Element {
   return (
     <>
       <PublicClubRichObject query={queryData.club} />
+      <PublicClubStructuredData query={queryData.club} />
       <AccountInformationBanner query={queryData.viewer} />
       <ClubSuspendedStaffAlert query={queryData.club} />
       <Stack spacing={8}>

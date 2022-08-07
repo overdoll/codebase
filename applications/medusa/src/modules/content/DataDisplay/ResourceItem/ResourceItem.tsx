@@ -1,4 +1,4 @@
-import { Flex, FlexProps } from '@chakra-ui/react'
+import { Flex, FlexProps, Progress } from '@chakra-ui/react'
 import { graphql } from 'react-relay/hooks'
 import ImageSnippet, { ImageSnippetCoverProps } from '../ImageSnippet/ImageSnippet'
 import VideoSnippet from '../VideoSnippet/VideoSnippet'
@@ -20,11 +20,15 @@ interface Props extends FlexProps, ImageSnippetCoverProps, ResourceItemBorderPro
 const Fragment = graphql`
   fragment ResourceItemFragment on Resource {
     type
-    ...ImageSnippetFragment
-    ...VideoSnippetFragment
     processed
     preview
     failed
+    progress {
+      progress
+      state
+    }
+    ...ImageSnippetFragment
+    ...VideoSnippetFragment
   }
 `
 
@@ -50,6 +54,53 @@ export default function ResourceItem ({
     return (
       <Flex w='100%' p={4} align='center' justify='center' h='100%' {...rest}>
         <Icon icon={WarningTriangle} fill='gray.500' w={6} h={6} />
+      </Flex>
+    )
+  }
+
+  if (data?.progress != null) {
+    const DisplayProgress = (): JSX.Element => {
+      if (data.progress == null) return <></>
+
+      switch (data.progress.state) {
+        case 'WAITING':
+          return (
+            <Progress
+              size='md'
+              colorScheme='teal'
+              w='100%'
+              isIndeterminate
+              value={100}
+            />
+          )
+        case 'STARTED':
+          return (
+            <Progress
+              size='md'
+              colorScheme='teal'
+              w='100%'
+              value={data.progress.progress}
+            />
+          )
+        case 'FINALIZING':
+          return (
+            <Progress
+              size='md'
+              colorScheme='teal'
+              w='100%'
+              hasStripe
+              isAnimated
+              value={100}
+            />
+          )
+        default:
+          return <></>
+      }
+    }
+
+    return (
+      <Flex w='100%' p={2} align='center' justify='center' h='100%' {...rest}>
+        <DisplayProgress />
       </Flex>
     )
   }

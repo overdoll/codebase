@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<9c867e355bdec110c96466a02af76fae>>
- * @relayHash 52db7692944eed56f5af8dcb247dd756
+ * @generated SignedSource<<da24343d918dfb465c1a7b4866aa78be>>
+ * @relayHash 26199f3789e8dcafbc1dd1910fa090f2
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 52db7692944eed56f5af8dcb247dd756
+// @relayRequestID 26199f3789e8dcafbc1dd1910fa090f2
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -19,6 +19,11 @@ export type VerifyTokenQuery$variables = {
 };
 export type VerifyTokenQuery$data = {
   readonly viewAuthenticationToken: {
+    readonly accountStatus: {
+      readonly multiFactor: {
+        readonly totp: boolean;
+      } | null;
+    } | null;
     readonly secure: boolean;
     readonly verified: boolean;
     readonly " $fragmentSpreads": FragmentRefs<"CompleteFragment" | "ConfirmFragment">;
@@ -65,6 +70,24 @@ v4 = {
   "kind": "ScalarField",
   "name": "secure",
   "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "MultiFactor",
+  "kind": "LinkedField",
+  "name": "multiFactor",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "totp",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -86,6 +109,18 @@ return {
         "selections": [
           (v3/*: any*/),
           (v4/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AuthenticationTokenAccountStatus",
+            "kind": "LinkedField",
+            "name": "accountStatus",
+            "plural": false,
+            "selections": [
+              (v5/*: any*/)
+            ],
+            "storageKey": null
+          },
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -122,6 +157,25 @@ return {
         "selections": [
           (v3/*: any*/),
           (v4/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "AuthenticationTokenAccountStatus",
+            "kind": "LinkedField",
+            "name": "accountStatus",
+            "plural": false,
+            "selections": [
+              (v5/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "registered",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -171,24 +225,6 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "AuthenticationTokenAccountStatus",
-            "kind": "LinkedField",
-            "name": "accountStatus",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "registered",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
             "kind": "ScalarField",
             "name": "id",
             "storageKey": null
@@ -199,7 +235,7 @@ return {
     ]
   },
   "params": {
-    "id": "52db7692944eed56f5af8dcb247dd756",
+    "id": "26199f3789e8dcafbc1dd1910fa090f2",
     "metadata": {},
     "name": "VerifyTokenQuery",
     "operationKind": "query",
@@ -208,7 +244,7 @@ return {
 };
 })();
 
-(node as any).hash = "081babeb3f8f7c4447faf3378bad1bc4";
+(node as any).hash = "2a6e7ae4d5a262e985bf71961bcf7d84";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

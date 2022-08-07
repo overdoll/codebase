@@ -8,17 +8,17 @@ import { EmptyBoundary, EmptyCharacters } from '@//:modules/content/Placeholder'
 import { ComponentChoiceArguments } from '@//:modules/content/HookedComponents/Choice/types'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
 import { Choice } from '@//:modules/content/HookedComponents/Choice'
-import SuggestPrompt from '../../../../../../SuggestPrompt/SuggestPrompt'
 import { Trans } from '@lingui/macro'
-import { Stack } from '@chakra-ui/react'
+import { Heading, HStack, Stack } from '@chakra-ui/react'
 import MediumGridWrap from '@//:modules/content/ContentSelection/MediumGridWrap/MediumGridWrap'
+import ContactButton from '../../../../../../../../../../common/components/Contact/ContactButton'
 
 interface Props extends ComponentChoiceArguments<any>, ComponentSearchArguments<any> {
 }
 
 const Query = graphql`
-  query UploadSearchCharactersMultiSelectorQuery($name: String) {
-    ...UploadSearchCharactersMultiSelectorFragment @arguments(name: $name)
+  query UploadSearchCharactersMultiSelectorQuery($name: String, $clubCharacters: Boolean) {
+    ...UploadSearchCharactersMultiSelectorFragment @arguments(name: $name, clubCharacters: $clubCharacters)
   }
 `
 
@@ -28,13 +28,15 @@ const Fragment = graphql`
     first: {type: Int, defaultValue: 14}
     after: {type: String},
     name: {type: String}
+    clubCharacters: {type: Boolean}
   )
   @refetchable(queryName: "UploadSearchCharactersMultiSelectorPaginationFragment" )
   {
     characters (
       first: $first,
       after: $after,
-      name: $name
+      name: $name,
+      clubCharacters: $clubCharacters
     ) @connection(key: "UploadSearchCharactersMultiSelector_characters")
     {
       edges {
@@ -73,11 +75,14 @@ export default function UploadSearchCharactersMultiSelector ({
       fallback={(
         <Stack spacing={2}>
           <EmptyCharacters hint={searchArguments.variables.name} />
-          <SuggestPrompt>
-            <Trans>
-              Have a character suggestion or want your character listed? Send us an email at hello@overdoll.com!
-            </Trans>
-          </SuggestPrompt>
+          <HStack p={4} bg='gray.800' borderRadius='md' spacing={2}>
+            <Heading color='gray.200' fontSize='sm'>
+              <Trans>
+                Have a character suggestion or want your character listed? Contact us!
+              </Trans>
+            </Heading>
+            <ContactButton variant='link' />
+          </HStack>
         </Stack>)}
       condition={data.characters.edges.length < 1}
     >

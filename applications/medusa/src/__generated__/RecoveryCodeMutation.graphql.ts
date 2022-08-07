@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6ccd513a6bad9c2715b68c67669acc96>>
- * @relayHash 978e4c5799933cc1365c25f5f6535b4d
+ * @generated SignedSource<<83526ca32c4aca197ad977f23b01b6f5>>
+ * @relayHash 37530c469d93a8d791015011ae5f624b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 978e4c5799933cc1365c25f5f6535b4d
+// @relayRequestID 37530c469d93a8d791015011ae5f624b
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -323,6 +323,32 @@ return {
                     "kind": "ScalarField",
                     "name": "failed",
                     "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "ResourceProgress",
+                    "kind": "LinkedField",
+                    "name": "progress",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "progress",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "state",
+                        "storageKey": null
+                      },
+                      (v4/*: any*/)
+                    ],
+                    "storageKey": null
                   }
                 ],
                 "storageKey": null
@@ -336,7 +362,7 @@ return {
     ]
   },
   "params": {
-    "id": "978e4c5799933cc1365c25f5f6535b4d",
+    "id": "37530c469d93a8d791015011ae5f624b",
     "metadata": {},
     "name": "RecoveryCodeMutation",
     "operationKind": "mutation",

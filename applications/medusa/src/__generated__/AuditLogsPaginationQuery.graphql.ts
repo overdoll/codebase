@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b1ecd2a1ad2878d25d49774592a4bcaf>>
- * @relayHash f4b2d3fc9409a901cd491931ecc75aaa
+ * @generated SignedSource<<963ed0fab98825750ed790c530c78dd4>>
+ * @relayHash 8951d096f3899eac6f136facd2541212
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f4b2d3fc9409a901cd491931ecc75aaa
+// @relayRequestID 8951d096f3899eac6f136facd2541212
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -286,13 +286,6 @@ return {
                                   {
                                     "alias": null,
                                     "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "slug",
-                                    "storageKey": null
-                                  },
-                                  {
-                                    "alias": null,
-                                    "args": null,
                                     "concreteType": "Resource",
                                     "kind": "LinkedField",
                                     "name": "thumbnail",
@@ -306,6 +299,46 @@ return {
                                       (v16/*: any*/),
                                       (v17/*: any*/)
                                     ],
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "slug",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "concreteType": "ClubMember",
+                                    "kind": "LinkedField",
+                                    "name": "viewerMember",
+                                    "plural": false,
+                                    "selections": [
+                                      {
+                                        "alias": null,
+                                        "args": null,
+                                        "kind": "ScalarField",
+                                        "name": "isSupporter",
+                                        "storageKey": null
+                                      },
+                                      (v9/*: any*/)
+                                    ],
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "viewerIsOwner",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "canSupport",
                                     "storageKey": null
                                   }
                                 ],
@@ -368,6 +401,13 @@ return {
                                 "args": null,
                                 "kind": "ScalarField",
                                 "name": "reference",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "description",
                                 "storageKey": null
                               }
                             ],
@@ -452,7 +492,7 @@ return {
     ]
   },
   "params": {
-    "id": "f4b2d3fc9409a901cd491931ecc75aaa",
+    "id": "8951d096f3899eac6f136facd2541212",
     "metadata": {},
     "name": "AuditLogsPaginationQuery",
     "operationKind": "query",

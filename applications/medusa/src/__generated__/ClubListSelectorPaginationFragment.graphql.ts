@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<9da71464644c7ade74059fae8300d2d1>>
- * @relayHash a40bd88912e3d305147418bd8f94f5f9
+ * @generated SignedSource<<5e5e77c2ddaab23c954e66c7a9aac8a0>>
+ * @relayHash 3f8cfcd1c343a97561431d78c4c855f7
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a40bd88912e3d305147418bd8f94f5f9
+// @relayRequestID 3f8cfcd1c343a97561431d78c4c855f7
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -276,12 +276,6 @@ return {
                             "plural": false,
                             "selections": [
                               (v14/*: any*/),
-                              (v7/*: any*/),
-                              (v9/*: any*/),
-                              (v10/*: any*/),
-                              (v11/*: any*/),
-                              (v12/*: any*/),
-                              (v13/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -289,13 +283,45 @@ return {
                                 "name": "processed",
                                 "storageKey": null
                               },
+                              (v12/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
                                 "kind": "ScalarField",
                                 "name": "failed",
                                 "storageKey": null
-                              }
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "ResourceProgress",
+                                "kind": "LinkedField",
+                                "name": "progress",
+                                "plural": false,
+                                "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "progress",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "state",
+                                    "storageKey": null
+                                  },
+                                  (v7/*: any*/)
+                                ],
+                                "storageKey": null
+                              },
+                              (v7/*: any*/),
+                              (v9/*: any*/),
+                              (v10/*: any*/),
+                              (v11/*: any*/),
+                              (v13/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -362,7 +388,7 @@ return {
     ]
   },
   "params": {
-    "id": "a40bd88912e3d305147418bd8f94f5f9",
+    "id": "3f8cfcd1c343a97561431d78c4c855f7",
     "metadata": {},
     "name": "ClubListSelectorPaginationFragment",
     "operationKind": "query",

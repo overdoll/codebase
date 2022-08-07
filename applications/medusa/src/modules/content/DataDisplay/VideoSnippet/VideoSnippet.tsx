@@ -36,8 +36,6 @@ export default function VideoSnippet ({
     <Box
       w='100%'
       h='100%'
-      display='block'
-      position='relative'
       bg={previewBackground}
     >
       <NextImage

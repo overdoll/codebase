@@ -3,8 +3,7 @@ import type { ClubPreviewFragment$key } from '@//:artifacts/ClubPreviewFragment.
 
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
-import { ResourceIconFragment$key } from '@//:artifacts/ResourceIconFragment.graphql'
-import { ResourceIcon } from '@//:modules/content/PageLayout'
+import ClubThumbnail from '@//:modules/content/DataDisplay/Club/ClubThumbnail/ClubThumbnail'
 
 interface Props {
   query: ClubPreviewFragment$key
@@ -12,12 +11,9 @@ interface Props {
 
 const Fragment = graphql`
   fragment ClubPreviewFragment on Club {
-    id
     name
     slug
-    thumbnail {
-      ...ResourceIconFragment
-    }
+    ...ClubThumbnailFragment
   }
 `
 
@@ -30,13 +26,11 @@ export default function ClubPreview ({
     <Flex
       align='center'
     >
-      <ResourceIcon
-        showBorder
-        seed={data.id}
+      <ClubThumbnail
         w={10}
         h={10}
         mr={3}
-        query={data?.thumbnail as ResourceIconFragment$key}
+        query={data}
       />
       <Box
         whiteSpace='nowrap'

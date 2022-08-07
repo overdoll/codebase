@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<56918c341efae9a31a931dc713b27df8>>
- * @relayHash 68cd75947b60bf26291a21342b88211e
+ * @generated SignedSource<<352fbd649f1c39d0473ae5fa117dbd6d>>
+ * @relayHash 8540b7dbf8b717687a7edca0c700b75b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 68cd75947b60bf26291a21342b88211e
+// @relayRequestID 8540b7dbf8b717687a7edca0c700b75b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -24,7 +24,7 @@ export type ProfileQuery$data = {
     readonly id: string;
     readonly isDeleted: boolean;
     readonly username: string;
-    readonly " $fragmentSpreads": FragmentRefs<"ProfileMenuFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ProfileMenuFragment" | "ProfileRichObjectFragment">;
   } | null;
 };
 export type ProfileQuery = {
@@ -113,6 +113,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "ProfileMenuFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ProfileRichObjectFragment"
           }
         ],
         "storageKey": null
@@ -215,7 +220,7 @@ return {
     ]
   },
   "params": {
-    "id": "68cd75947b60bf26291a21342b88211e",
+    "id": "8540b7dbf8b717687a7edca0c700b75b",
     "metadata": {},
     "name": "ProfileQuery",
     "operationKind": "query",
@@ -224,7 +229,7 @@ return {
 };
 })();
 
-(node as any).hash = "eac112c4e659ff27a1324ed25dd8d48b";
+(node as any).hash = "58c425e5bc56fbabc128406220a4d548";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

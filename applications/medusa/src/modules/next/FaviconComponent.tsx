@@ -16,6 +16,12 @@ const FaviconComponent = (): JSX.Element => {
       <meta name='msapplication-TileColor' content='#212121' />
       <meta name='theme-color' content='#212121' />
       <link rel='manifest' href={prefixStaticUrl('/manifest/site.webmanifest')} />
+      <link
+        rel='search'
+        type='application/opensearchdescription+xml'
+        href={prefixStaticUrl('/opensearch.xml')}
+        title='overdoll'
+      />
     </>
   )
 }

@@ -18,8 +18,7 @@ export default function TerminatedClubBanner (): JSX.Element {
             <AlertDescription>
               <Trans>
                 This club was terminated and will not be visible to the public anymore. Please contact
-                hello@overdoll.com if
-                this was done in error.
+                us if this was done in error.
               </Trans>
             </AlertDescription>
           </Flex>

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<80b510e2fbfb660ba791c3f752927d71>>
- * @relayHash 3e73372114139ae9d5cb17532bbf8e04
+ * @generated SignedSource<<1df317ad5759f1e30071aff8baf88c67>>
+ * @relayHash d6c6bd13baf224f6f689ffed67aa1632
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3e73372114139ae9d5cb17532bbf8e04
+// @relayRequestID d6c6bd13baf224f6f689ffed67aa1632
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -140,6 +140,53 @@ return {
                         "name": "type",
                         "storageKey": null
                       },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "processed",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "preview",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "failed",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "ResourceProgress",
+                        "kind": "LinkedField",
+                        "name": "progress",
+                        "plural": false,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "progress",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "state",
+                            "storageKey": null
+                          },
+                          (v2/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
                       (v2/*: any*/),
                       {
                         "alias": null,
@@ -177,13 +224,6 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "kind": "ScalarField",
-                        "name": "preview",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
                         "concreteType": "ResourceUrl",
                         "kind": "LinkedField",
                         "name": "videoThumbnail",
@@ -191,20 +231,6 @@ return {
                         "selections": [
                           (v3/*: any*/)
                         ],
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "processed",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "failed",
                         "storageKey": null
                       }
                     ],
@@ -270,7 +296,7 @@ return {
     ]
   },
   "params": {
-    "id": "3e73372114139ae9d5cb17532bbf8e04",
+    "id": "d6c6bd13baf224f6f689ffed67aa1632",
     "metadata": {},
     "name": "StaffSearchTopicsPaginationFragment",
     "operationKind": "query",

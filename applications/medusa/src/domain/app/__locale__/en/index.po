@@ -17,11 +17,11 @@ msgstr ""
 msgid "Account Locked"
 msgstr ""
 
-#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:16
+#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:19
 msgid "Account Settings"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Form/FormInput/Inputs/WeightInput/NumberInput/NumberInput.tsx:70
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/WeightInput/WeightNumberInput/WeightNumberInput.tsx:70
 msgid "Add"
 msgstr ""
 
@@ -37,7 +37,7 @@ msgstr ""
 msgid "Are you sure you'd like to delete this post? You cannot undo this action and it will be gone forever."
 msgstr ""
 
-#: src/common/components/Layouts/ModerationLayout/ModerationLayout.tsx:34
+#: src/common/components/Layouts/ModerationLayout/ModerationLayout.tsx:39
 msgid "Audit Logs"
 msgstr ""
 
@@ -53,7 +53,7 @@ msgstr ""
 msgid "Best"
 msgstr ""
 
-#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:67
+#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:70
 msgid "Billing"
 msgstr ""
 
@@ -65,11 +65,12 @@ msgstr ""
 msgid "Categories"
 msgstr ""
 
+#: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:121
 #: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:59
 msgid "Characters"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Search/components/SearchInput/SearchInput.tsx:41
+#: src/modules/content/HookedComponents/Search/components/SearchInput/SearchInput.tsx:42
 msgid "Clear Search"
 msgstr ""
 
@@ -86,7 +87,7 @@ msgstr ""
 msgid "Club Not Found"
 msgstr ""
 
-#: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:149
+#: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:144
 msgid "Club Page"
 msgstr ""
 
@@ -96,6 +97,14 @@ msgstr ""
 
 #: src/common/components/ClubInformationBanner/TerminatedClubBanner/TerminatedClubBanner.tsx:37
 #~ msgid "Club was terminated by {0}. Goodbye."
+#~ msgstr ""
+
+#: src/common/components/Contact/ContactButton.tsx:16
+msgid "Contact Us"
+msgstr ""
+
+#: src/common/components/Contact/ContactInformation/ContactInformation.tsx:22
+#~ msgid "Contact us through one of the following methods"
 #~ msgstr ""
 
 #: src/modules/hooks/useCopyToClipboardWrapper.ts:23
@@ -114,7 +123,7 @@ msgstr ""
 msgid "Copy Post Link"
 msgstr ""
 
-#: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:82
+#: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:77
 msgid "Create a Post"
 msgstr ""
 
@@ -127,7 +136,7 @@ msgstr ""
 msgid "Delete Post Confirmation"
 msgstr ""
 
-#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:35
+#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:40
 msgid "Deposit Requests"
 msgstr ""
 
@@ -151,7 +160,7 @@ msgstr ""
 #~ msgid "Drop your files to upload them"
 #~ msgstr ""
 
-#: src/modules/content/HookedComponents/Form/FormInput/Inputs/WeightInput/NumberInput/NumberInput.tsx:64
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/WeightInput/WeightNumberInput/WeightNumberInput.tsx:64
 msgid "Enter a weight 0-9999. Higher will show up first."
 msgstr ""
 
@@ -183,7 +192,7 @@ msgstr ""
 msgid "Go Back"
 msgstr ""
 
-#: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:94
+#: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:89
 #: src/modules/content/Placeholder/NotFound/NotFoundFooter/NotFoundFooter.tsx:22
 msgid "Home"
 msgstr ""
@@ -196,24 +205,24 @@ msgstr ""
 msgid "I promise to be better and to follow the community guidelines more closely"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostJoinClub/PostJoinClub.tsx:89
+#: src/modules/content/Posts/components/PostInteraction/PostHeaders/PostJoinClub/PostJoinClub.tsx:89
 msgid "Join {0}"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:53
+#: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:54
 msgid "Last Month"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:49
+#: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:50
 msgid "Last Week"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:57
+#: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:58
 msgid "Last Year"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostLikeButton/PostLikeButton.tsx:54
-#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostLikeButton/PostLikeButton.tsx:90
+#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostLikeButton/PostLikeButton.tsx:57
+#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostLikeButton/PostLikeButton.tsx:93
 msgid "Like"
 msgstr ""
 
@@ -247,12 +256,12 @@ msgstr ""
 msgid "Looks like you messed up. Something you did here violated our community guidelines. If you keep this up, the bans will become longer."
 msgstr ""
 
-#: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:59
-#: src/modules/content/Posts/components/PostInteraction/PostJoinClub/PostJoinClub.tsx:74
+#: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:54
+#: src/modules/content/Posts/components/PostInteraction/PostHeaders/PostJoinClub/PostJoinClub.tsx:74
 msgid "Manage Club"
 msgstr ""
 
-#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:26
+#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:31
 msgid "Manage Entity"
 msgstr ""
 
@@ -260,16 +269,16 @@ msgstr ""
 msgid "Member"
 msgstr ""
 
-#: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:128
-msgid "Members"
-msgstr ""
+#: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:125
+#~ msgid "Members"
+#~ msgstr ""
 
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton.tsx:33
 msgid "Moderate"
 msgstr ""
 
-#: src/common/components/Layouts/ModerationLayout/ModerationLayout.tsx:15
-#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:78
+#: src/common/components/Layouts/ModerationLayout/ModerationLayout.tsx:20
+#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:81
 msgid "Moderation"
 msgstr ""
 
@@ -331,11 +340,11 @@ msgstr ""
 msgid "Open Search"
 msgstr ""
 
-#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:56
+#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:59
 msgid "Payouts"
 msgstr ""
 
-#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:16
+#: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:21
 msgid "Platform Staff"
 msgstr ""
 
@@ -387,11 +396,11 @@ msgstr ""
 msgid "Please review the <0>Community Guidelines</0> to make sure this doesn't happen again."
 msgstr ""
 
-#: src/common/components/Layouts/ModerationLayout/ModerationLayout.tsx:45
+#: src/common/components/Layouts/ModerationLayout/ModerationLayout.tsx:50
 msgid "Post Reports"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:125
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:128
 msgid "Post report was submitted successfully"
 msgstr ""
 
@@ -407,19 +416,19 @@ msgstr ""
 msgid "Post was un-archived successfully"
 msgstr ""
 
-#: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:116
+#: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:111
 msgid "Posts"
 msgstr ""
 
-#: src/common/components/Layouts/ModerationLayout/ModerationLayout.tsx:24
+#: src/common/components/Layouts/ModerationLayout/ModerationLayout.tsx:29
 msgid "Posts Queue"
 msgstr ""
 
-#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:45
+#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:48
 msgid "Preferences"
 msgstr ""
 
-#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:25
+#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:28
 msgid "Profile"
 msgstr ""
 
@@ -431,7 +440,7 @@ msgstr ""
 msgid "Remove File"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostLikeButton/PostLikeButton.tsx:78
+#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostLikeButton/PostLikeButton.tsx:81
 msgid "Remove Like"
 msgstr ""
 
@@ -439,9 +448,9 @@ msgstr ""
 #~ msgid "Remove Upload"
 #~ msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:153
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:172
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:190
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:156
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:175
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:193
 msgid "Report Post"
 msgstr ""
 
@@ -449,7 +458,7 @@ msgstr ""
 #~ msgid "Report post"
 #~ msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:163
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:166
 msgid "Reported"
 msgstr ""
 
@@ -461,7 +470,7 @@ msgstr ""
 msgid "Retry File"
 msgstr ""
 
-#: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:104
+#: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:99
 msgid "Revenue"
 msgstr ""
 
@@ -489,11 +498,11 @@ msgstr ""
 #~ msgid "Search for characters, categories, or series"
 #~ msgstr ""
 
-#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:35
+#: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:38
 msgid "Security"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostData/PostGalleryPublicSimple/OverflowVisual/OverflowVisual.tsx:41
+#: src/modules/content/Posts/components/PostData/PostGalleryPublicSimple/OverflowVisual/OverflowVisual.tsx:51
 msgid "See Full Size"
 msgstr ""
 
@@ -529,7 +538,7 @@ msgstr ""
 msgid "Series"
 msgstr ""
 
-#: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:138
+#: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:133
 msgid "Settings"
 msgstr ""
 
@@ -553,15 +562,15 @@ msgstr ""
 msgid "Staff"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:216
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:219
 msgid "Submit Report"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Form/FormInput/Inputs/WeightInput/NumberInput/NumberInput.tsx:49
+#: src/modules/content/HookedComponents/Form/FormInput/Inputs/WeightInput/WeightNumberInput/WeightNumberInput.tsx:49
 msgid "Subtract"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostJoinClub/PostJoinClub.tsx:121
+#: src/modules/content/Posts/components/PostInteraction/PostHeaders/PostJoinClub/PostJoinClub.tsx:121
 msgid "Support"
 msgstr ""
 
@@ -629,7 +638,7 @@ msgstr ""
 msgid "There was an error deleting the post"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:142
+#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:145
 msgid "There was an error submitting the report"
 msgstr ""
 
@@ -649,20 +658,24 @@ msgstr ""
 msgid "This account was not found"
 msgstr ""
 
-#: src/modules/content/Placeholder/NotFound/NotFoundCategory/NotFoundCategory.tsx:10
+#: src/modules/content/Placeholder/NotFound/NotFoundCategory/NotFoundCategory.tsx:13
 msgid "This category was not found"
 msgstr ""
 
-#: src/modules/content/Placeholder/NotFound/NotFoundCharacter/NotFoundCharacter.tsx:10
+#: src/modules/content/Placeholder/NotFound/NotFoundCharacter/NotFoundCharacter.tsx:13
 msgid "This character was not found"
 msgstr ""
 
-#: src/modules/content/Placeholder/NotFound/NotFoundClub/NotFoundClub.tsx:10
+#: src/modules/content/Placeholder/NotFound/NotFoundClub/NotFoundClub.tsx:14
 msgid "This club was not found"
 msgstr ""
 
 #: src/common/components/ClubInformationBanner/TerminatedClubBanner/TerminatedClubBanner.tsx:19
-msgid "This club was terminated and will not be visible to the public anymore. Please contact hello@overdoll.com if this was done in error."
+#~ msgid "This club was terminated and will not be visible to the public anymore. Please contact hello@overdoll.com if this was done in error."
+#~ msgstr ""
+
+#: src/common/components/ClubInformationBanner/TerminatedClubBanner/TerminatedClubBanner.tsx:19
+msgid "This club was terminated and will not be visible to the public anymore. Please contact us if this was done in error."
 msgstr ""
 
 #: src/modules/validation/translateValidation.ts:9
@@ -678,7 +691,7 @@ msgstr ""
 msgid "This page was not found"
 msgstr ""
 
-#: src/modules/content/Placeholder/NotFound/NotFoundPublicPost/NotFoundPublicPost.tsx:11
+#: src/modules/content/Placeholder/NotFound/NotFoundPublicPost/NotFoundPublicPost.tsx:15
 msgid "This post was not found"
 msgstr ""
 
@@ -686,7 +699,7 @@ msgstr ""
 msgid "This recovery code is invalid"
 msgstr ""
 
-#: src/modules/content/Placeholder/NotFound/NotFoundSerial/NotFoundSerial.tsx:10
+#: src/modules/content/Placeholder/NotFound/NotFoundSerial/NotFoundSerial.tsx:13
 msgid "This series was not found"
 msgstr ""
 
@@ -694,7 +707,7 @@ msgstr ""
 msgid "This subscription was not found"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:41
+#: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:42
 msgid "Today"
 msgstr ""
 
@@ -764,7 +777,7 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:45
+#: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:46
 msgid "Yesterday"
 msgstr ""
 

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7899bf4d191c45bee7a1732e5457446d>>
- * @relayHash b458516e25cef1352e3791afbd9b5f7d
+ * @generated SignedSource<<1ffe02facc9cea886653b77c51fabdad>>
+ * @relayHash 15fbbe0b0812ddeaece0e1eb660916c1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,12 +9,13 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b458516e25cef1352e3791afbd9b5f7d
+// @relayRequestID 15fbbe0b0812ddeaece0e1eb660916c1
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type UploadSearchCharactersMultiSelectorPaginationFragment$variables = {
   after?: string | null;
+  clubCharacters?: boolean | null;
   first?: number | null;
   name?: string | null;
 };
@@ -34,6 +35,11 @@ var v0 = [
     "name": "after"
   },
   {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "clubCharacters"
+  },
+  {
     "defaultValue": 14,
     "kind": "LocalArgument",
     "name": "first"
@@ -49,6 +55,11 @@ v1 = [
     "kind": "Variable",
     "name": "after",
     "variableName": "after"
+  },
+  {
+    "kind": "Variable",
+    "name": "clubCharacters",
+    "variableName": "clubCharacters"
   },
   {
     "kind": "Variable",
@@ -163,6 +174,53 @@ return {
                         "name": "type",
                         "storageKey": null
                       },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "processed",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "preview",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "failed",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "ResourceProgress",
+                        "kind": "LinkedField",
+                        "name": "progress",
+                        "plural": false,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "progress",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "state",
+                            "storageKey": null
+                          },
+                          (v2/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
                       (v2/*: any*/),
                       {
                         "alias": null,
@@ -200,13 +258,6 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "kind": "ScalarField",
-                        "name": "preview",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
                         "concreteType": "ResourceUrl",
                         "kind": "LinkedField",
                         "name": "videoThumbnail",
@@ -214,20 +265,6 @@ return {
                         "selections": [
                           (v3/*: any*/)
                         ],
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "processed",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "failed",
                         "storageKey": null
                       }
                     ],
@@ -285,7 +322,8 @@ return {
         "alias": null,
         "args": (v1/*: any*/),
         "filters": [
-          "name"
+          "name",
+          "clubCharacters"
         ],
         "handle": "connection",
         "key": "UploadSearchCharactersMultiSelector_characters",
@@ -295,7 +333,7 @@ return {
     ]
   },
   "params": {
-    "id": "b458516e25cef1352e3791afbd9b5f7d",
+    "id": "15fbbe0b0812ddeaece0e1eb660916c1",
     "metadata": {},
     "name": "UploadSearchCharactersMultiSelectorPaginationFragment",
     "operationKind": "query",
@@ -304,6 +342,6 @@ return {
 };
 })();
 
-(node as any).hash = "c56ffacad38deec04187749604734a86";
+(node as any).hash = "9a32cb2c7cc03f294c0f35e9f6594660";
 
 export default node;

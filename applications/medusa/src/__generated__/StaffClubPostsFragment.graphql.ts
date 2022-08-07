@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<256057dcd1afd3d815f470d4f4c2e831>>
+ * @generated SignedSource<<139d733617d72d10d5137ac80779d351>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,8 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type StaffClubPostsFragment$data = {
   readonly canCreateSupporterOnlyPosts: boolean;
-  readonly " $fragmentSpreads": FragmentRefs<"StaffDisableClubSupporterOnlyPostsButtonFragment" | "StaffEnableClubSupporterOnlyPostsButtonFragment">;
+  readonly charactersEnabled: boolean;
+  readonly " $fragmentSpreads": FragmentRefs<"StaffDisableClubCharactersButtonFragment" | "StaffDisableClubSupporterOnlyPostsButtonFragment" | "StaffEnableClubCharactersButtonFragment" | "StaffEnableClubSupporterOnlyPostsButtonFragment">;
   readonly " $fragmentType": "StaffClubPostsFragment";
 };
 export type StaffClubPostsFragment$key = {
@@ -34,6 +35,13 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "charactersEnabled",
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "StaffDisableClubSupporterOnlyPostsButtonFragment"
@@ -42,12 +50,22 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "StaffEnableClubSupporterOnlyPostsButtonFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "StaffEnableClubCharactersButtonFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "StaffDisableClubCharactersButtonFragment"
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "55133fdef23d4ee94391dd72d91fdebb";
+(node as any).hash = "b9872ee3bd6156c9ea1f7ddf6707b9a8";
 
 export default node;

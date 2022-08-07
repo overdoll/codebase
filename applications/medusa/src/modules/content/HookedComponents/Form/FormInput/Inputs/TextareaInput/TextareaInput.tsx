@@ -1,22 +1,31 @@
 import { Textarea, TextareaProps } from '@chakra-ui/react'
-import { useContext } from 'react'
+import { forwardRef, useContext } from 'react'
 import { FormInputContext } from '../../FormInput'
 import { useFormContext } from 'react-hook-form'
+import { mergeRefs } from '../../../../../../support/mergeRefs'
 
-export default function TextareaInput ({
+const TextareaInput = forwardRef<HTMLTextAreaElement, TextareaProps>(({
   ...rest
-}: TextareaProps): JSX.Element {
+}: TextareaProps, forwardRef): JSX.Element => {
   const {
     id
   } = useContext(FormInputContext)
 
   const { register } = useFormContext()
 
+  const {
+    ref,
+    ...restOfRegister
+  } = register(id)
+
   return (
     <Textarea
+      ref={mergeRefs([ref, forwardRef])}
       resize='none'
-      {...register(id)}
       {...rest}
+      {...restOfRegister}
     />
   )
-}
+})
+
+export default TextareaInput

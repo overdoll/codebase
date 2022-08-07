@@ -11,6 +11,7 @@ import DeleteAccountForm from './DeleteAccountForm/DeleteAccountForm'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import CancelAccountDeletionButton from './CancelAccountDeletionButton/CancelAccountDeletionButton'
+import ContactButton from '../../../../../../common/components/Contact/ContactButton'
 
 interface Props {
   query: PreloadedQuery<DeleteAccountSettingsQuery>
@@ -93,19 +94,22 @@ export default function DeleteAccountSettings (props: Props): JSX.Element {
             </Alert>
           )}
           {queryData.viewer.hasNonTerminatedClubs && (
-            <Alert
-              status='warning'
-            >
-              <HStack spacing={0} align='center'>
-                <AlertIcon />
-                <AlertDescription>
-                  <Trans>
-                    You cannot delete your account because you currently own a club. Please contact hello@overdoll.com
-                    to have your club terminated.
-                  </Trans>
-                </AlertDescription>
-              </HStack>
-            </Alert>
+            <Stack>
+              <Alert
+                status='warning'
+              >
+                <HStack spacing={0} align='center'>
+                  <AlertIcon />
+                  <AlertDescription>
+                    <Trans>
+                      You cannot delete your account because you currently own a club. Please contact us
+                      to have your club terminated.
+                    </Trans>
+                  </AlertDescription>
+                </HStack>
+              </Alert>
+              <ContactButton />
+            </Stack>
           )}
         </Stack>
         <Collapse>

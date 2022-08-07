@@ -3,7 +3,7 @@ import ResourceItem from '../../../DataDisplay/ResourceItem/ResourceItem'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { ClubTileOverlayFragment$key } from '@//:artifacts/ClubTileOverlayFragment.graphql'
 import { TileOverlay } from '../../index'
-import { ResourceIcon } from '../../../PageLayout'
+import ClubThumbnail from '../../../DataDisplay/Club/ClubThumbnail/ClubThumbnail'
 
 interface Props {
   query: ClubTileOverlayFragment$key
@@ -13,9 +13,7 @@ const Fragment = graphql`
   fragment ClubTileOverlayFragment on Club {
     id
     name
-    thumbnail {
-      ...ResourceIconFragment
-    }
+    ...ClubThumbnailFragment
     banner {
       ...ResourceItemFragment
     }
@@ -34,9 +32,7 @@ export default function ClubTileOverlay ({
       }
     >
       <Stack p={2} w='100%' spacing={2} h='100%' align='center' justify='center'>
-        <ResourceIcon
-          showBorder
-          seed={data.id}
+        <ClubThumbnail
           h={{
             base: 8,
             md: 12
@@ -45,7 +41,7 @@ export default function ClubTileOverlay ({
             base: 8,
             md: 12
           }}
-          query={data.thumbnail}
+          query={data}
         />
         <Heading
           textAlign='center'

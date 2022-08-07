@@ -23,11 +23,7 @@ export default function ClubHeaderBanner ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   return (
-    <Box h={{
-      base: 200,
-      md: 300
-    }}
-    >
+    <Box h={200}>
       <TileOverlay
         backdrop={(
           <ResourceItem

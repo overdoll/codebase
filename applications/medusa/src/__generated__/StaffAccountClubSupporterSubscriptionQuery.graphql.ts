@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<db26a3ee382cf14f45303c3ecc6da1b4>>
- * @relayHash 1aa727dcd1591fbbf9b56a4aad13450e
+ * @generated SignedSource<<bfbebaa529759c6546f0450843a7d977>>
+ * @relayHash 1a62c251442b26f7281b6b5fc4125442
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 1aa727dcd1591fbbf9b56a4aad13450e
+// @relayRequestID 1a62c251442b26f7281b6b5fc4125442
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -512,8 +512,8 @@ return {
                 "name": "club",
                 "plural": false,
                 "selections": [
-                  (v3/*: any*/),
                   (v8/*: any*/),
+                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -654,7 +654,7 @@ return {
     ]
   },
   "params": {
-    "id": "1aa727dcd1591fbbf9b56a4aad13450e",
+    "id": "1a62c251442b26f7281b6b5fc4125442",
     "metadata": {},
     "name": "StaffAccountClubSupporterSubscriptionQuery",
     "operationKind": "query",

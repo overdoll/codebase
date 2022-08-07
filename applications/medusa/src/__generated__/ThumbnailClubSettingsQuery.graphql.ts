@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e0b893c77b0f75abf88226f7fd64d518>>
- * @relayHash 3bff3977b5f595c5aa2175fd3cd4887b
+ * @generated SignedSource<<2ea71ea57db4f7079fa833efcf018862>>
+ * @relayHash 8e26d9fd7dce414348ef02d219fa1496
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3bff3977b5f595c5aa2175fd3cd4887b
+// @relayRequestID 8e26d9fd7dce414348ef02d219fa1496
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,11 +18,7 @@ export type ThumbnailClubSettingsQuery$variables = {
 };
 export type ThumbnailClubSettingsQuery$data = {
   readonly club: {
-    readonly id: string;
-    readonly thumbnail: {
-      readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
-    } | null;
-    readonly " $fragmentSpreads": FragmentRefs<"ChangeClubThumbnailUploadFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ChangeClubThumbnailUploadFragment" | "ClubThumbnailFragment">;
   } | null;
 };
 export type ThumbnailClubSettingsQuery = {
@@ -74,22 +70,10 @@ return {
         "name": "club",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
           {
-            "alias": null,
             "args": null,
-            "concreteType": "Resource",
-            "kind": "LinkedField",
-            "name": "thumbnail",
-            "plural": false,
-            "selections": [
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "ResourceIconFragment"
-              }
-            ],
-            "storageKey": null
+            "kind": "FragmentSpread",
+            "name": "ClubThumbnailFragment"
           },
           {
             "args": null,
@@ -195,7 +179,7 @@ return {
     ]
   },
   "params": {
-    "id": "3bff3977b5f595c5aa2175fd3cd4887b",
+    "id": "8e26d9fd7dce414348ef02d219fa1496",
     "metadata": {},
     "name": "ThumbnailClubSettingsQuery",
     "operationKind": "query",
@@ -204,6 +188,6 @@ return {
 };
 })();
 
-(node as any).hash = "a7ef762a60a20596a48d7bda5f566cce";
+(node as any).hash = "dc747d970a9bf546f5a9db6b85cd87fd";
 
 export default node;

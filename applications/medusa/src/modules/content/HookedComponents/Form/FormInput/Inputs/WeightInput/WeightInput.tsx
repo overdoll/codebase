@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { FormInputContext } from '../../FormInput'
 import { Controller, useFormContext } from 'react-hook-form'
-import NumberInput from './NumberInput/NumberInput'
+import WeightNumberInput from './WeightNumberInput/WeightNumberInput'
 
 export default function WeightInput (): JSX.Element {
   const {
@@ -22,7 +22,7 @@ export default function WeightInput (): JSX.Element {
           value
         }
       }) => (
-        <NumberInput onChange={(val) => onChange(val)} value={value} />
+        <WeightNumberInput onChange={(val) => onChange(val)} value={value} />
       )}
     />
 

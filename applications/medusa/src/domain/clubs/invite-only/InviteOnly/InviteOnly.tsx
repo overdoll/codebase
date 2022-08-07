@@ -8,9 +8,11 @@ import HighlightInline from '@//:modules/content/ContentHints/HighlightInline/Hi
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import { OverdollLogo } from '@//:assets/logos'
 import Icon from '../../../../modules/content/PageLayout/Flair/Icon/Icon'
-import InviteOnlyRichObject from '../../../../common/rich-objects/invite-only/InviteOnlyRichObject/InviteOnlyRichObject'
+import InviteOnlyRichObject
+  from '../../../../common/rich-objects/clubs/invite-only/InviteOnlyRichObject/InviteOnlyRichObject'
 import { OVERDOLL_ABOUT } from '@//:modules/constants/links'
 import { InfoCircle } from '@//:assets/icons'
+import ContactButton from '../../../../common/components/Contact/ContactButton'
 
 const InviteOnly: PageProps<{}> = () => {
   const HEADER_PROPS = {
@@ -145,7 +147,7 @@ const InviteOnly: PageProps<{}> = () => {
               <Text {...TEXT_PROPS}>
                 <Trans>
                   Regardless of whether you are a fan or an artist, feel free to create an account and start exploring
-                  the platform. We're taking your initial feedback at hello@overdoll.com.
+                  the platform.
                 </Trans>
               </Text>
             </Stack>
@@ -155,11 +157,14 @@ const InviteOnly: PageProps<{}> = () => {
               </Trans>
             </LinkButton>
           </Stack>
-          <Text {...TEXT_PROPS}>
-            <Trans>
-              For any other questions, you may contact hello@overdoll.com
-            </Trans>
-          </Text>
+          <Stack spacing={2}>
+            <Text {...TEXT_PROPS}>
+              <Trans>
+                For any other questions, please contact us
+              </Trans>
+            </Text>
+            <ContactButton />
+          </Stack>
         </Stack>
       </PageWrapper>
     </>

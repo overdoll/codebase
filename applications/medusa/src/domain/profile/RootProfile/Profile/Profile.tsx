@@ -7,9 +7,9 @@ import { NotFoundAccount } from '@//:modules/content/Placeholder'
 import ProfileMenu from './ProfileMenu/ProfileMenu'
 import { TileOverlay } from '@//:modules/content/ContentSelection'
 import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
-import Head from 'next/head'
 import { Trans } from '@lingui/macro'
 import NotFoundFooter from '../../../../modules/content/Placeholder/NotFound/NotFoundFooter/NotFoundFooter'
+import ProfileRichObject from '../../../../common/rich-objects/profile/ProfileRichObject/ProfileRichObject'
 
 interface Props {
   query: PreloadedQuery<ProfileQuery>
@@ -25,6 +25,7 @@ const Query = graphql`
         ...ResourceIconFragment
       }
       ...ProfileMenuFragment
+      ...ProfileRichObjectFragment
     }
   }
 `
@@ -56,11 +57,7 @@ export default function Profile (props: Props): JSX.Element {
 
   return (
     <>
-      <Head>
-        <title>
-          {queryData.account.username}'s Profile - overdoll
-        </title>
-      </Head>
+      <ProfileRichObject accountQuery={queryData.account} />
       <Stack spacing={8}>
         <Box h={200}>
           <TileOverlay

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0ae961220fe9d88199678ecfc1d86b0f>>
- * @relayHash 8384979382d0a08d43da484c3e8c7850
+ * @generated SignedSource<<03c4fde3ffffccc76b5af1202910646b>>
+ * @relayHash c4e41c092ace1000ee798493e3763615
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8384979382d0a08d43da484c3e8c7850
+// @relayRequestID c4e41c092ace1000ee798493e3763615
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -180,6 +180,53 @@ return {
                                 "name": "type",
                                 "storageKey": null
                               },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "processed",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "preview",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "failed",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "ResourceProgress",
+                                "kind": "LinkedField",
+                                "name": "progress",
+                                "plural": false,
+                                "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "progress",
+                                    "storageKey": null
+                                  },
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "state",
+                                    "storageKey": null
+                                  },
+                                  (v4/*: any*/)
+                                ],
+                                "storageKey": null
+                              },
                               (v4/*: any*/),
                               {
                                 "alias": null,
@@ -217,13 +264,6 @@ return {
                               {
                                 "alias": null,
                                 "args": null,
-                                "kind": "ScalarField",
-                                "name": "preview",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
                                 "concreteType": "ResourceUrl",
                                 "kind": "LinkedField",
                                 "name": "videoThumbnail",
@@ -231,20 +271,6 @@ return {
                                 "selections": [
                                   (v6/*: any*/)
                                 ],
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "processed",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "failed",
                                 "storageKey": null
                               }
                             ],
@@ -319,7 +345,7 @@ return {
     ]
   },
   "params": {
-    "id": "8384979382d0a08d43da484c3e8c7850",
+    "id": "c4e41c092ace1000ee798493e3763615",
     "metadata": {},
     "name": "UploadSearchTopicCategoriesFragmentPaginationFragment",
     "operationKind": "query",

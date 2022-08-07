@@ -10,6 +10,7 @@ import {
   TITLE_SEARCH_PREFIX,
   TITLE_SUFFIX
 } from '@//:modules/constants/rich-objects'
+import ResourceRichObject from '../../default/ResourceRichObject/ResourceRichObject'
 
 interface Props {
   clubQuery: PublicClubPostsRichObjectFragment$key
@@ -19,6 +20,9 @@ const Fragment = graphql`
   fragment PublicClubPostsRichObjectFragment on Club {
     slug
     name
+    banner {
+      ...ResourceRichObjectFragment
+    }
   }
 `
 
@@ -27,13 +31,10 @@ export default function PublicClubPostsRichObject ({
 }: Props): JSX.Element {
   const clubData = useFragment(Fragment, clubQuery)
 
-  // TODO add search terms to the search title
-  // TODo a separate query that queries the url params with the tags and outputs them here as words with prioritization and removable on search
-  // TODO also a post image rich object preview
   const TITLE = `${TITLE_SEARCH_PREFIX} ${clubData.name}'s ${TITLE_FEATURES} - ${TITLE_SUFFIX}`
   const DESCRIPTION = `${DESCRIPTION_PREFIX} ${clubData.name}'s ${DESCRIPTION_FEATURES} on ${TITLE_SUFFIX}. ${DESCRIPTION_CONTENT_DISCOVER} from ${clubData.name}.`
 
-  const URL = `https://overdoll.com/${clubData.slug}/posts?sortBy=TOP`
+  const URL = `https://overdoll.com/${clubData.slug}/posts`
 
   return (
     <>
@@ -43,25 +44,26 @@ export default function PublicClubPostsRichObject ({
         </title>
         <meta
           property='og:title'
-          key='og:title'
           content={TITLE}
         />
         <meta
           name='description'
-          key='description'
           content={DESCRIPTION}
         />
         <meta
           property='og:description'
-          key='og:description'
           content={DESCRIPTION}
         />
         <meta
           property='og:url'
-          key='og:url'
           content={URL}
         />
+        <link
+          rel='canonical'
+          href={URL}
+        />
       </Head>
+      <ResourceRichObject query={clubData.banner} />
     </>
   )
 }

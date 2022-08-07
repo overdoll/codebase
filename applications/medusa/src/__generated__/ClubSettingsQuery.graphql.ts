@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<2cab2450dfed3722357b23109e78015f>>
- * @relayHash 250cb837dd8f7afb26fa96571cf4e283
+ * @generated SignedSource<<8aa0d4545977c9fbc58a86c7c0f363b0>>
+ * @relayHash d087043122581e232c40b6f96dae539e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 250cb837dd8f7afb26fa96571cf4e283
+// @relayRequestID d087043122581e232c40b6f96dae539e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,14 +18,10 @@ export type ClubSettingsQuery$variables = {
 };
 export type ClubSettingsQuery$data = {
   readonly club: {
-    readonly id: string;
     readonly name: string;
     readonly slug: string;
-    readonly thumbnail: {
-      readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
-    } | null;
     readonly viewerIsOwner: boolean;
-    readonly " $fragmentSpreads": FragmentRefs<"ClubInformationBannerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ClubInformationBannerFragment" | "ClubThumbnailFragment">;
   } | null;
 };
 export type ClubSettingsQuery = {
@@ -52,42 +48,42 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "slug",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "slug",
+  "name": "name",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "viewerIsOwner",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "viewerIsOwner",
+  "name": "__typename",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "id",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "__typename",
+  "name": "url",
   "storageKey": null
 };
 return {
@@ -109,26 +105,14 @@ return {
           (v3/*: any*/),
           (v4/*: any*/),
           {
-            "alias": null,
-            "args": null,
-            "concreteType": "Resource",
-            "kind": "LinkedField",
-            "name": "thumbnail",
-            "plural": false,
-            "selections": [
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "ResourceIconFragment"
-              }
-            ],
-            "storageKey": null
-          },
-          (v5/*: any*/),
-          {
             "args": null,
             "kind": "FragmentSpread",
             "name": "ClubInformationBannerFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ClubThumbnailFragment"
           }
         ],
         "storageKey": null
@@ -157,12 +141,44 @@ return {
           {
             "alias": null,
             "args": null,
+            "concreteType": "ClubSuspension",
+            "kind": "LinkedField",
+            "name": "suspension",
+            "plural": false,
+            "selections": [
+              (v5/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "expires",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ClubTermination",
+            "kind": "LinkedField",
+            "name": "termination",
+            "plural": false,
+            "selections": [
+              (v5/*: any*/)
+            ],
+            "storageKey": null
+          },
+          (v6/*: any*/),
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "Resource",
             "kind": "LinkedField",
             "name": "thumbnail",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
+              (v6/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -171,7 +187,7 @@ return {
                 "name": "urls",
                 "plural": true,
                 "selections": [
-                  (v6/*: any*/),
+                  (v7/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -211,7 +227,7 @@ return {
                 "name": "videoThumbnail",
                 "plural": false,
                 "selections": [
-                  (v6/*: any*/)
+                  (v7/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -224,38 +240,6 @@ return {
               }
             ],
             "storageKey": null
-          },
-          (v5/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "ClubSuspension",
-            "kind": "LinkedField",
-            "name": "suspension",
-            "plural": false,
-            "selections": [
-              (v7/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "expires",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "ClubTermination",
-            "kind": "LinkedField",
-            "name": "termination",
-            "plural": false,
-            "selections": [
-              (v7/*: any*/)
-            ],
-            "storageKey": null
           }
         ],
         "storageKey": null
@@ -263,7 +247,7 @@ return {
     ]
   },
   "params": {
-    "id": "250cb837dd8f7afb26fa96571cf4e283",
+    "id": "d087043122581e232c40b6f96dae539e",
     "metadata": {},
     "name": "ClubSettingsQuery",
     "operationKind": "query",
@@ -272,6 +256,6 @@ return {
 };
 })();
 
-(node as any).hash = "ac8a42c29577341c07385d7e704c656f";
+(node as any).hash = "f280ac28a5d803bc779bf5a7262a9534";
 
 export default node;

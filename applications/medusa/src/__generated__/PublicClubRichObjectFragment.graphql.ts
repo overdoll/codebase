@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a68033c5b4e5e13476880d1109598b66>>
+ * @generated SignedSource<<2b7db54aa91f74d627ed837ac168c1ab>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,13 +11,9 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PublicClubRichObjectFragment$data = {
-  readonly backgroundPost: {
-    readonly edges: ReadonlyArray<{
-      readonly node: {
-        readonly " $fragmentSpreads": FragmentRefs<"PostContentRichObjectFragment">;
-      };
-    }>;
-  };
+  readonly banner: {
+    readonly " $fragmentSpreads": FragmentRefs<"ResourceRichObjectFragment">;
+  } | null;
   readonly name: string;
   readonly slug: string;
   readonly " $fragmentType": "PublicClubRichObjectFragment";
@@ -48,54 +44,26 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
-      "alias": "backgroundPost",
-      "args": [
-        {
-          "kind": "Literal",
-          "name": "first",
-          "value": 1
-        }
-      ],
-      "concreteType": "PostConnection",
+      "alias": null,
+      "args": null,
+      "concreteType": "Resource",
       "kind": "LinkedField",
-      "name": "posts",
+      "name": "banner",
       "plural": false,
       "selections": [
         {
-          "alias": null,
           "args": null,
-          "concreteType": "PostEdge",
-          "kind": "LinkedField",
-          "name": "edges",
-          "plural": true,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "Post",
-              "kind": "LinkedField",
-              "name": "node",
-              "plural": false,
-              "selections": [
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "PostContentRichObjectFragment"
-                }
-              ],
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
+          "kind": "FragmentSpread",
+          "name": "ResourceRichObjectFragment"
         }
       ],
-      "storageKey": "posts(first:1)"
+      "storageKey": null
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "609dbbbf88217f4311e86352f12bbee4";
+(node as any).hash = "7011e3a93fb3789d0a26043f90c5cb14";
 
 export default node;

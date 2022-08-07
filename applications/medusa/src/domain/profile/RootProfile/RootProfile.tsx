@@ -6,7 +6,6 @@ import ProfileQuery from '@//:artifacts/ProfileQuery.graphql'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
 import Profile from './Profile/Profile'
-import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { PageProps } from '@//:types/app'
 
@@ -26,11 +25,6 @@ const RootProfile: PageProps<Props> = (props: Props) => {
 
   return (
     <>
-      <Head>
-        <title>
-          Profile - overdoll
-        </title>
-      </Head>
       <PageWrapper>
         <QueryErrorBoundary loadQuery={() => loadQuery({ username: username as string })}>
           <Suspense fallback={<SkeletonPost />}>

@@ -1,6 +1,13 @@
 import { generateClubName, generateUsernameAndEmail } from '../../support/generate'
 import { gotoNextStep, gotoPreviousStep, saveCurrentStep } from '../../support/flow_builder'
-import { clickOnButton, clickOnTab, clickOnTile, searchForTerm, typeIntoPlaceholder } from '../../support/user_actions'
+import {
+  clickOnAriaLabelButton,
+  clickOnButton,
+  clickOnTab,
+  clickOnTile,
+  searchForTerm,
+  typeIntoPlaceholder
+} from '../../support/user_actions'
 
 const postAudience = 'Standard Audience'
 const postCategories = ['Alter', 'Assure', 'Transmit']
@@ -74,6 +81,16 @@ describe('Create & Manage Posts', () => {
     cy.get('button[aria-label="Set Supporter Only"]').should('not.be.disabled').first().click({ force: true })
     cy.findByText(/Free content should be/).should('be.visible').click({ force: true })
     clickOnButton('Got it')
+
+    /**
+     * Add post description
+     */
+    clickOnButton('Add Shout')
+    typeIntoPlaceholder(/Tell your fans/iu, 'This is a test description')
+    clickOnAriaLabelButton('Update Description')
+    cy.get('button[aria-label="Edit Description"]').should('not.be.disabled').click({ force: true })
+    clickOnAriaLabelButton('Clear Description')
+    cy.findByText('This is a test description').should('not.exist')
     gotoNextStep()
 
     /**
@@ -187,7 +204,6 @@ describe('Create & Manage Posts', () => {
      */
     cy.reload()
     cy.visit(`/club/${clubName}/posts?state=REVIEW`)
-    cy.findByText(/Club Posts/iu).should('be.visible')
     cy.findAllByText(/REVIEW/iu).should('be.visible')
     gotoClubCreatePost(clubName)
 

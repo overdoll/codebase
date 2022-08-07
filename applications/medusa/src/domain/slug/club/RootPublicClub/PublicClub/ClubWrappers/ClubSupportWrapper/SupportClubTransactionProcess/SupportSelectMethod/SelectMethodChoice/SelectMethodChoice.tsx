@@ -73,7 +73,7 @@ export default function SelectMethodChoice ({
       <Stack spacing={4}>
         <Box>
           <Choice isDisabled={!viewerData.isSecure} {...register('existing_payment', {})}>
-            <LargeBackgroundBox bg='gray.900'>
+            <LargeBackgroundBox>
               <Center>
                 <HStack spacing={2}>
                   <Heading color='gray.00' fontSize='xl' textAlign='center'>
@@ -119,7 +119,7 @@ export default function SelectMethodChoice ({
         </Box>
         <Box>
           <Choice {...register('new_payment', {})}>
-            <LargeBackgroundBox bg='gray.900'>
+            <LargeBackgroundBox>
               <Center>
                 <Heading color='gray.00' fontSize='xl' textAlign='center'>
                   <Trans>

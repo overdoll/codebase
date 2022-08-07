@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<24a8bb56b992d9242076ea76aa24aaf0>>
- * @relayHash 04cd3dfcb663514f5688466a94d856fa
+ * @generated SignedSource<<44756ed22b35016f40dde5709f38771c>>
+ * @relayHash c75c3fa653e1a8837eee90290f80ae6d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 04cd3dfcb663514f5688466a94d856fa
+// @relayRequestID c75c3fa653e1a8837eee90290f80ae6d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -229,13 +229,6 @@ return {
                               {
                                 "alias": null,
                                 "args": null,
-                                "kind": "ScalarField",
-                                "name": "slug",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
                                 "concreteType": "Resource",
                                 "kind": "LinkedField",
                                 "name": "thumbnail",
@@ -249,6 +242,46 @@ return {
                                   (v8/*: any*/),
                                   (v9/*: any*/)
                                 ],
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "slug",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "ClubMember",
+                                "kind": "LinkedField",
+                                "name": "viewerMember",
+                                "plural": false,
+                                "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "isSupporter",
+                                    "storageKey": null
+                                  },
+                                  (v2/*: any*/)
+                                ],
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "viewerIsOwner",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "canSupport",
                                 "storageKey": null
                               }
                             ],
@@ -311,6 +344,13 @@ return {
                             "args": null,
                             "kind": "ScalarField",
                             "name": "reference",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "description",
                             "storageKey": null
                           }
                         ],
@@ -398,7 +438,7 @@ return {
     ]
   },
   "params": {
-    "id": "04cd3dfcb663514f5688466a94d856fa",
+    "id": "c75c3fa653e1a8837eee90290f80ae6d",
     "metadata": {},
     "name": "PostAuditLogsQuery",
     "operationKind": "query",

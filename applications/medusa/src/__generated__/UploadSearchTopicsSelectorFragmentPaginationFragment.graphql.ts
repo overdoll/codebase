@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<9d66e487f1d76f644461214194b1d52e>>
- * @relayHash c2720667793e4e2afdea9dd97f6c0b8c
+ * @generated SignedSource<<faaba1da197d2c205225d2be7d711859>>
+ * @relayHash 097caec308c0ea5a8b16478546375a62
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c2720667793e4e2afdea9dd97f6c0b8c
+// @relayRequestID 097caec308c0ea5a8b16478546375a62
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -86,6 +86,53 @@ v5 = {
       "name": "type",
       "storageKey": null
     },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "processed",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "preview",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "failed",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ResourceProgress",
+      "kind": "LinkedField",
+      "name": "progress",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "progress",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "state",
+          "storageKey": null
+        },
+        (v2/*: any*/)
+      ],
+      "storageKey": null
+    },
     (v2/*: any*/),
     {
       "alias": null,
@@ -123,13 +170,6 @@ v5 = {
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "preview",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
       "concreteType": "ResourceUrl",
       "kind": "LinkedField",
       "name": "videoThumbnail",
@@ -137,20 +177,6 @@ v5 = {
       "selections": [
         (v4/*: any*/)
       ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "processed",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "failed",
       "storageKey": null
     }
   ],
@@ -330,7 +356,7 @@ return {
     ]
   },
   "params": {
-    "id": "c2720667793e4e2afdea9dd97f6c0b8c",
+    "id": "097caec308c0ea5a8b16478546375a62",
     "metadata": {},
     "name": "UploadSearchTopicsSelectorFragmentPaginationFragment",
     "operationKind": "query",

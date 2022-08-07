@@ -21,6 +21,10 @@ msgstr ""
 msgid "Add Categories From Post"
 msgstr ""
 
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostAddDescription.tsx:45
+msgid "Add Shout"
+msgstr ""
+
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadRewindCategories/UploadRewindCategories.tsx:103
 msgid "Add categories from previous posts"
 msgstr ""
@@ -69,6 +73,10 @@ msgstr ""
 #~ msgid "Cannot upload while rearranging"
 #~ msgstr ""
 
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:174
+msgid "Clear Description"
+msgstr ""
+
 #: src/domain/club/create-post/CreatePost/ClubRestricted/ClubRestricted.tsx:29
 msgid "Club Restricted"
 msgstr ""
@@ -104,6 +112,10 @@ msgstr ""
 #: src/domain/club/create-post/CreatePost/components/DragOverFileInput/DragOverFileInput.tsx:106
 #~ msgid "Drop your files to upload them"
 #~ msgstr ""
+
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/PostUpdateDescription/PostUpdateDescription.tsx:72
+msgid "Edit Description"
+msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentAdd/ContentUpdateDisplay/ContentUpdateDisplay.tsx:39
 msgid "Error adding uploaded files to post"
@@ -158,9 +170,13 @@ msgstr ""
 #~ msgid "Have a category suggestion? Send us an email at hello@overdoll.com!"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadSearchCharactersMultiSelector/UploadSearchCharactersMultiSelector.tsx:77
-msgid "Have a character suggestion or want your character listed? Send us an email at hello@overdoll.com!"
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadSearchCharactersMultiSelector/UploadSearchCharactersMultiSelector.tsx:80
+msgid "Have a character suggestion or want your character listed? Contact us!"
 msgstr ""
+
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadSearchCharactersMultiSelector/UploadSearchCharactersMultiSelector.tsx:77
+#~ msgid "Have a character suggestion or want your character listed? Send us an email at hello@overdoll.com!"
+#~ msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:110
 msgid "Help"
@@ -190,6 +206,10 @@ msgstr ""
 msgid "Move Up"
 msgstr ""
 
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadSearchCategories/UploadEmptyCategories/UploadEmptyCategories.tsx:11
+msgid "No categories were found with the title {0}"
+msgstr ""
+
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/CreatePostFooter/CreatePostFooter.tsx:37
 msgid "Nothing extremely offensive, shocking, or illegal"
 msgstr ""
@@ -198,7 +218,7 @@ msgstr ""
 msgid "Opening Post"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:120
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:125
 msgid "Post Content Processed"
 msgstr ""
 
@@ -223,12 +243,12 @@ msgid "Processing Content"
 msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:109
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:102
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:107
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:95
 msgid "Processing Failed"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:111
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:116
 msgid "Processing Post Content"
 msgstr ""
 
@@ -274,7 +294,7 @@ msgstr ""
 msgid "Search for a category"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:67
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:93
 msgid "Search for a character by name"
 msgstr ""
 
@@ -286,7 +306,7 @@ msgstr ""
 msgid "Select a topic to see the available categories you can add, or search for a category by name."
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:59
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:78
 msgid "Select one or more characters that appear in all of the content"
 msgstr ""
 
@@ -326,6 +346,10 @@ msgstr ""
 msgid "Set Supporter Only"
 msgstr ""
 
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:85
+msgid "Show Your Club Characters"
+msgstr ""
+
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:99
 msgid "Submit"
 msgstr ""
@@ -342,6 +366,10 @@ msgstr ""
 msgid "Supporter content should not be the first slide"
 msgstr ""
 
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:163
+msgid "Tell your fans what it's really all about"
+msgstr ""
+
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:28
 msgid "Thanks for posting! Your submission will be reviewed by our moderation team to ensure it does not violate any club guidelines. Once approved, it will be visible to the public."
 msgstr ""
@@ -354,6 +382,14 @@ msgstr ""
 #~ msgid "The audience is the group of people that you intended this post for. This will determine whether or not a user can see your post based on their set preferences. You can only select one audience."
 #~ msgstr ""
 
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:76
+msgid "The description cannot contain links"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:75
+msgid "The description length cannot exceed {MAXIMUM_CHARACTER_COUNT} characters"
+msgstr ""
+
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadRewindCategories/UploadRewindCategories.tsx:160
 msgid "The selected post has no categories"
 msgstr ""
@@ -365,6 +401,10 @@ msgstr ""
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ProcessUploads/ProcessUploads.tsx:125
 #~ msgid "There was an error processing your files"
 #~ msgstr ""
+
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:133
+msgid "There was an error removing the description"
+msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateAudienceButton/UpdateAudienceButton.tsx:68
 msgid "There was an error saving the audience"
@@ -380,6 +420,10 @@ msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:85
 msgid "There was an error submitting your post"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:112
+msgid "There was an error updating the description"
 msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/ArrangeButton/ArrangeButton.tsx:91
@@ -405,6 +449,10 @@ msgstr ""
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/DraggableContent/DraggableContent.tsx:86
 #~ msgid "Up"
 #~ msgstr ""
+
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:193
+msgid "Update Description"
+msgstr ""
 
 #: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:102
 #~ msgid "Upload Files"
@@ -442,7 +490,7 @@ msgstr ""
 msgid "When uploading any kind of supporter content, it's recommended that the first slide in your post is not supporter content and contains either a censored image or a reduced video to encourage your fans to become supporters."
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:54
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:73
 msgid "Who is in your post?"
 msgstr ""
 
@@ -500,9 +548,9 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadSearchCategories/UploadEmptyCategories/UploadEmptyCategories.tsx:8
-msgid "message.placeholder.empty.categories.upload.one"
-msgstr ""
+#~ msgid "message.placeholder.empty.categories.upload.one"
+#~ msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadSearchCategories/UploadEmptyCategories/UploadEmptyCategories.tsx:17
-msgid "message.placeholder.empty.categories.upload.other"
-msgstr ""
+#~ msgid "message.placeholder.empty.categories.upload.other"
+#~ msgstr ""

@@ -40,6 +40,7 @@ const JoinTokenStatus = graphql`
       accountStatus {
         registered
         multiFactor {
+          totp
           __typename
         }
       }

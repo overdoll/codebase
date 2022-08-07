@@ -2,19 +2,16 @@ import { useFragment } from 'react-relay/hooks'
 import type { LargeClubHeaderFragment$key } from '@//:artifacts/LargeClubHeaderFragment.graphql'
 import { graphql } from 'react-relay'
 import { Flex, Heading } from '@chakra-ui/react'
-import { ResourceIcon } from '@//:modules/content/PageLayout'
+import ClubThumbnail from '@//:modules/content/DataDisplay/Club/ClubThumbnail/ClubThumbnail'
 
 interface Props {
-  query: LargeClubHeaderFragment$key | null
+  query: LargeClubHeaderFragment$key
 }
 
 const Fragment = graphql`
   fragment LargeClubHeaderFragment on Club {
-    id
     name
-    thumbnail {
-      ...ResourceIconFragment
-    }
+    ...ClubThumbnailFragment
   }
 `
 
@@ -23,13 +20,11 @@ export default function LargeClubHeader ({ query }: Props): JSX.Element {
 
   return (
     <Flex h={16} align='center'>
-      <ResourceIcon
-        showBorder
-        seed={data?.id}
+      <ClubThumbnail
         mr={4}
         h={14}
         w={14}
-        query={data?.thumbnail}
+        query={data}
       />
       <Heading
         noOfLines={1}

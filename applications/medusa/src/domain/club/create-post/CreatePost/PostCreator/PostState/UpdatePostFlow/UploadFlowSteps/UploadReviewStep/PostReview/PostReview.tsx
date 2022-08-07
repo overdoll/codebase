@@ -1,10 +1,11 @@
 import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { PostReviewFragment$key } from '@//:artifacts/PostReviewFragment.graphql'
-import { HStack, Stack } from '@chakra-ui/react'
-import { PostClickableCategories, PostClickableCharacters, PostHeaderClub } from '@//:modules/content/Posts'
+import { Stack } from '@chakra-ui/react'
+import { PostClickableCategories, PostClickableCharacters } from '@//:modules/content/Posts'
 import PostGalleryPublicDetailed
   from '@//:modules/content/Posts/components/PostData/PostGalleryPublicDetailed/PostGalleryPublicDetailed'
+import PostPrivateHeader from '@//:modules/content/Posts/components/PostInteraction/PostHeaders/PostPrivateHeader/PostPrivateHeader'
 
 interface Props {
   query: PostReviewFragment$key
@@ -12,13 +13,15 @@ interface Props {
 
 const Fragment = graphql`
   fragment PostReviewFragment on Post {
+    contributor {
+      ...PostGalleryPublicDetailedViewerFragment
+    }
     ...PostGalleryPublicDetailedFragment
     ...PostHeaderClubFragment
     ...PostClickableCharactersFragment
     ...PostClickableCategoriesFragment
-    contributor {
-      ...PostGalleryPublicDetailedViewerFragment
-    }
+    ...PostDescriptionFragment
+    ...PostPrivateHeaderFragment
   }
 `
 
@@ -29,9 +32,7 @@ export default function PostReview ({
 
   return (
     <Stack spacing={2}>
-      <HStack spacing={3} justify='space-between' align='center'>
-        <PostHeaderClub query={data} />
-      </HStack>
+      <PostPrivateHeader postQuery={data} />
       <PostGalleryPublicDetailed postQuery={data} viewerQuery={data.contributor} />
       <PostClickableCharacters query={data} />
       <PostClickableCategories query={data} />

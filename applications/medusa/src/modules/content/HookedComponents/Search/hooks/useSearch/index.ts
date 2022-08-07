@@ -92,7 +92,8 @@ function useSearch<TArguments extends SearchValues> (props: UseSearchProps<TArgu
     return {
       id: key,
       isPending,
-      onChangeRegister
+      onChangeRegister,
+      defaultValue: defaultValue[key]
     }
   }
 

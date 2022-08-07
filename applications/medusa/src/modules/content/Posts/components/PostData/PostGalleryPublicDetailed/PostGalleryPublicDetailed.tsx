@@ -76,7 +76,7 @@ export default function PostGalleryPublicDetailed ({
             <PostSlideBackground query={item}>
               <Flex
                 direction='column'
-                minH={100}
+                minH={200}
                 w='100%'
                 align='center'
                 justify='center'

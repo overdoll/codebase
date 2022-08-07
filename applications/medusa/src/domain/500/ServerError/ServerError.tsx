@@ -5,6 +5,7 @@ import { Trans } from '@lingui/macro'
 import { PageProps } from '@//:types/app'
 import Head from 'next/head'
 import { OverdollLogo } from '@//:assets/logos'
+import ContactButton from '../../../common/components/Contact/ContactButton'
 
 const ServerError: PageProps<{}> = (): JSX.Element => {
   return (
@@ -43,15 +44,18 @@ const ServerError: PageProps<{}> = (): JSX.Element => {
               </Trans>
             </Text>
           </Box>
-          <Text
-            fontSize='sm'
-            textAlign='center'
-            color='gray.200'
-          >
-            <Trans>
-              If you continue to experience issues for an extended period of time, please contact hello@overdoll.com
-            </Trans>
-          </Text>
+          <Stack align='center' spacing={2}>
+            <Text
+              fontSize='sm'
+              textAlign='center'
+              color='gray.200'
+            >
+              <Trans>
+                If you continue to experience issues for an extended period of time, please contact us
+              </Trans>
+            </Text>
+            <ContactButton />
+          </Stack>
         </Stack>
       </PageWrapper>
     </>
