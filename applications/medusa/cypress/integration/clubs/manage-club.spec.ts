@@ -1,7 +1,7 @@
 import { generateClubName, generateUsernameAndEmail } from '../../support/generate'
 import { clickOnButton, clickOnPanel, typeIntoPlaceholder } from '../../support/user_actions'
 
-Cypress.config('defaultCommandTimeout', 120000)
+Cypress.config('defaultCommandTimeout', 10000)
 
 describe('Manage Club', () => {
   it('club settings, club pages, public club join', () => {
