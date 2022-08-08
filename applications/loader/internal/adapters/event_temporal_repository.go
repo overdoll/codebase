@@ -5,6 +5,7 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"github.com/spf13/viper"
+	"go.temporal.io/api/serviceerror"
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/loader/internal/app/workflows"
 	"overdoll/applications/loader/internal/domain/resource"
@@ -40,6 +41,13 @@ func (r EventTemporalRepository) GetResourceProgress(ctx context.Context, itemId
 
 	response, err := r.client.QueryWorkflow(context.Background(), "loader.ProcessResourcesForUpload_"+itemId+"_"+resourceId, "", workflows.ProcessResourcesProgressQuery)
 	if err != nil {
+
+		var notFound *serviceerror.NotFound
+
+		if errors.As(err, &notFound) {
+			return resource.NewWaiting(), nil
+		}
+
 		return nil, err
 	}
 

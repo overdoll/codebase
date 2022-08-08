@@ -52,7 +52,7 @@ const waitForProcessing = (): void => {
   cy.findByText(/Processing Post Content/iu, { timeout: 30000 }).should('not.exist')
 }
 
-Cypress.config('defaultCommandTimeout', 30000)
+Cypress.config('defaultCommandTimeout', 10000)
 
 describe('Create & Manage Posts', () => {
   it('create post, manage posts, approve post', () => {
@@ -279,15 +279,15 @@ describe('Create & Manage Posts', () => {
     /**
      * Join as club owner and see the post is published and archive it and un-archive ot
      */
-    // cy.joinWithNewAccount(username)
-    // cy.visit(`/club/${clubName}/posts?state=PUBLISHED`)
-    // cy.reload()
+    cy.joinWithNewAccount(username)
+    cy.visit(`/club/${clubName}/posts?state=PUBLISHED`)
+    cy.reload()
     // cy.findAllByText(/PUBLISHED/iu).should('be.visible')
     // cy.get('button[aria-label="Open Menu"]').should('be.visible').click({ force: true })
-    // cy.findByText('Archive Post').should('be.visible').click({ force: true })
+    // cy.findByText('Archive Post', { timeout: 60000 }).should('be.visible').click({ force: true })
     // cy.findByText(/Post was archived/iu).should('be.visible')
     // cy.get('button[aria-label="Open Menu"]').should('be.visible').click({ force: true })
-    // cy.findByText('Un-Archive Post').should('be.visible').click({ force: true })
+    // cy.findByText('Un-Archive Post', { timeout: 60000 }).should('be.visible').click({ force: true })
     // cy.findByText(/Post was un-archived/iu).should('be.visible')
 
     /**
