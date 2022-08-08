@@ -52,7 +52,7 @@ const waitForProcessing = (): void => {
   cy.findByText(/Processing Post Content/iu, { timeout: 30000 }).should('not.exist')
 }
 
-Cypress.config('defaultCommandTimeout', 10000)
+Cypress.config('defaultCommandTimeout', 120000)
 
 describe('Create & Manage Posts', () => {
   it('create post, manage posts, approve post', () => {
