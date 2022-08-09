@@ -4,7 +4,7 @@ import { useFragment } from 'react-relay'
 import type { ResourceInfoFragment$key } from '@//:artifacts/ResourceInfoFragment.graphql'
 import ResourceItem, { ResourceItemBorderProp } from '../ResourceItem/ResourceItem'
 import { Icon } from '../../PageLayout'
-import { ControlPlayButton, PictureIdentifier } from '@//:assets/icons'
+import { ControlPlayButton, ControlVolumeMissing, PictureIdentifier } from '@//:assets/icons'
 import { ImageSnippetCoverProps } from '../ImageSnippet/ImageSnippet'
 
 interface Props extends ImageSnippetCoverProps, ResourceItemBorderProp {
@@ -20,11 +20,13 @@ const Fragment = graphql`
       type
       processed
       videoDuration
+      videoNoAudio
       ...ResourceItemFragment
     }
     supporterOnlyResource {
       type
       videoDuration
+      videoNoAudio
     }
   }
 `
@@ -42,6 +44,7 @@ export default function ResourceInfo ({
   }
 
   const resourceType = (data.isSupporterOnly && data.supporterOnlyResource != null) ? data.supporterOnlyResource.type : data.resource.type
+  const videoNoAudio = (data.isSupporterOnly && data.supporterOnlyResource != null) ? data.supporterOnlyResource.videoNoAudio : data.resource.videoNoAudio
 
   return (
     <Flex w='100%' h='100%' position='relative'>
@@ -50,7 +53,7 @@ export default function ResourceInfo ({
         <Flex align='center' justify='center' p={2} borderRadius='lg' bg='dimmers.400'>
           <Icon
             fill='gray.00'
-            icon={resourceType === 'VIDEO' ? ControlPlayButton : PictureIdentifier}
+            icon={resourceType === 'VIDEO' ? (videoNoAudio ? ControlVolumeMissing : ControlPlayButton) : PictureIdentifier}
             w={4}
             h={4}
             flexShrink={0}

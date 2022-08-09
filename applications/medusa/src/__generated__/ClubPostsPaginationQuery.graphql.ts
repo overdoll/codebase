@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<055478d78354f7bffe4c54e04682b4e7>>
- * @relayHash b80d9c3d2bd0f81f6d6a3fae2f5f3254
+ * @generated SignedSource<<a90070555bdcd832ea87a8f3fbff1da6>>
+ * @relayHash dc2ef43c6e2eee26f0a198a59276672a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b80d9c3d2bd0f81f6d6a3fae2f5f3254
+// @relayRequestID dc2ef43c6e2eee26f0a198a59276672a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -113,6 +113,13 @@ v12 = {
   "storageKey": null
 },
 v13 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "videoNoAudio",
+  "storageKey": null
+},
+v14 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -236,6 +243,7 @@ return {
                                     "storageKey": null
                                   },
                                   (v12/*: any*/),
+                                  (v13/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -279,7 +287,7 @@ return {
                                     "name": "urls",
                                     "plural": true,
                                     "selections": [
-                                      (v13/*: any*/),
+                                      (v14/*: any*/),
                                       {
                                         "alias": null,
                                         "args": null,
@@ -312,7 +320,7 @@ return {
                                     "name": "videoThumbnail",
                                     "plural": false,
                                     "selections": [
-                                      (v13/*: any*/)
+                                      (v14/*: any*/)
                                     ],
                                     "storageKey": null
                                   }
@@ -329,6 +337,7 @@ return {
                                 "selections": [
                                   (v11/*: any*/),
                                   (v12/*: any*/),
+                                  (v13/*: any*/),
                                   (v8/*: any*/)
                                 ],
                                 "storageKey": null
@@ -438,7 +447,7 @@ return {
     ]
   },
   "params": {
-    "id": "b80d9c3d2bd0f81f6d6a3fae2f5f3254",
+    "id": "dc2ef43c6e2eee26f0a198a59276672a",
     "metadata": {},
     "name": "ClubPostsPaginationQuery",
     "operationKind": "query",

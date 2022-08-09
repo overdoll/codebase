@@ -14,7 +14,7 @@ export default function ShortGridTile ({
       position='relative'
       {...rest}
     >
-      <Box pt='100%' />
+      <Box pt='100%' {...rest} />
       <Box top={0} w='100%' h='100%' position='absolute'>
         {children}
       </Box>

@@ -67,9 +67,10 @@ export default function ResourceItem ({
           return (
             <Progress
               size='md'
-              colorScheme='teal'
+              colorScheme='gray'
               w='100%'
-              isIndeterminate
+              hasStripe
+              isAnimated
               value={100}
             />
           )

@@ -12,6 +12,7 @@ export const FILE_ICONS = {
   'video/mp4': FileMp4
 }
 
+// TODO uppy doesn't expose the shouldTerminate variable to tus - custom plugin configuration is needed to pass in the parameter
 export const TUS_OPTIONS = {
   endpoint: '/api/upload/',
   retryDelays: [0, 1000, 3000, 5000],

@@ -59,7 +59,7 @@ const baseStyleTrack: SystemStyleFunction = (props) => {
 
 const baseStyleFilledTrack: SystemStyleFunction = (props) => {
   return {
-    transitionProperty: 'common',
+    transitionProperty: 'dimensions',
     transitionDuration: 'slow',
     ...filledStyle(props)
   }

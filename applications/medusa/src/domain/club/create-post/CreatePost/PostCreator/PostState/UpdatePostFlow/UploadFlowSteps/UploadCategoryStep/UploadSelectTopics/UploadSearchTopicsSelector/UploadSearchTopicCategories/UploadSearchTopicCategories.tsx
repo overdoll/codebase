@@ -74,10 +74,10 @@ export default function UploadSearchTopicCategories ({
         fallback={<></>}
         condition={data.categories.edges.length < 1}
       >
-        <ShortGridWrap>
+        <ShortGridWrap templateColumns='repeat(auto-fill, minmax(100px, 1fr))'>
           <ShortGridTile>
             <ClickableTile bg='gray.800' onClick={clearValues}>
-              <Stack spacing={2}>
+              <Stack p={2} spacing={2}>
                 <Icon icon={ArrowButtonLeft} w={3} h={3} color='gray.100' />
                 <Heading
                   fontSize={{
