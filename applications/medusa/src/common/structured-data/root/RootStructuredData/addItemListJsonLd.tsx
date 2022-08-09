@@ -1,6 +1,6 @@
-import { PreactDOMAttributes } from 'preact'
+import { DOMAttributes } from 'react'
 
-export default function addItemListJsonLd (): PreactDOMAttributes['dangerouslySetInnerHTML'] {
+export default function addItemListJsonLd (): DOMAttributes<string>['dangerouslySetInnerHTML'] {
   const schemaData = {
     '@context': 'https://schema.org/',
     '@type': 'ItemList',

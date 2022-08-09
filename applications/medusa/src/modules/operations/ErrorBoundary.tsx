@@ -10,7 +10,7 @@ interface PossibleActions {
 
 interface Props {
   children: ReactNode
-  fallback?: ReactNode | PossibleActions
+  fallback?: ReactNode | PossibleActions | any
 }
 
 interface State {
@@ -46,7 +46,6 @@ export default class ErrorBoundary extends Component<Props, State> {
         const Component = this.props.fallback
 
         return (
-          // @ts-expect-error
           <Component
             error={this.state.error}
             reset={this.reset}

@@ -119,7 +119,7 @@ const JoinRoot: PageProps<Props> = (props: Props): JSX.Element => {
         <QueryErrorBoundary
           loadQuery={() => loadQuery({ token: cookieToken })}
         >
-          <Suspense fallback={SkeletonStack}>
+          <Suspense fallback={<SkeletonStack />}>
             <Flex align='center' h='100%' position='relative'>
               <Flex top={0} position='absolute' w='100%' justify='flex-end'>
                 <RevokeTokenButton queryRef={data} />

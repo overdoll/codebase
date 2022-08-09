@@ -1,6 +1,6 @@
-import { PreactDOMAttributes } from 'preact'
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { addClubPostsJsonLdFragment$key } from '@//:artifacts/addClubPostsJsonLdFragment.graphql'
+import { DOMAttributes } from 'react'
 
 const Fragment = graphql`
   fragment addClubPostsJsonLdFragment on Club {
@@ -9,7 +9,7 @@ const Fragment = graphql`
   }
 `
 
-export default function addClubPostsJsonLd (query: addClubPostsJsonLdFragment$key): PreactDOMAttributes['dangerouslySetInnerHTML'] {
+export default function addClubPostsJsonLd (query: addClubPostsJsonLdFragment$key): DOMAttributes<string>['dangerouslySetInnerHTML'] {
   const data = useFragment(Fragment, query)
 
   const schemaData = {

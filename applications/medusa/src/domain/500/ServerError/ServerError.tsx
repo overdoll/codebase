@@ -2,12 +2,11 @@ import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
 import { Box, Heading, Stack, Text } from '@chakra-ui/react'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
-import { PageProps } from '@//:types/app'
 import Head from 'next/head'
 import { OverdollLogo } from '@//:assets/logos'
 import ContactButton from '../../../common/components/Contact/ContactButton'
 
-const ServerError: PageProps<{}> = (): JSX.Element => {
+const ServerError = (): JSX.Element => {
   return (
     <>
       <Head>

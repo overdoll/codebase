@@ -91,8 +91,8 @@
   },
   "license": "CC-BY-4.0",
   "resolutions": {
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0"
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6"
   },
   "devDependencies": {
     "@babel/core": "^7.14.3",
@@ -141,8 +141,8 @@
     "@types/history": "^4.7.9",
     "@types/jest": "^27.0.3",
     "@types/node": "15.6.1",
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
+    "@types/react": "18.0.17",
+    "@types/react-dom": "18.0.6",
     "@types/react-relay": "^11.0.3",
     "@types/relay-compiler": "^8.0.3",
     "@types/relay-runtime": "^12.0.1",
