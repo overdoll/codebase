@@ -2,8 +2,6 @@ import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { PublicClubPostsQuery } from '@//:artifacts/PublicClubPostsQuery.graphql'
 import { graphql, usePaginationFragment } from 'react-relay'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
-import PostsInfiniteScroll
-  from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/PostsInfiniteScroll'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
 import AccountInformationBanner
   from '../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
@@ -17,6 +15,10 @@ import PostSupporterStatusButton
   from '../../../../../common/components/PageHeader/PostSupporterStatusButton/PostSupporterStatusButton'
 import PublicClubPostsStructuredData
   from '../../../../../common/structured-data/slug/PublicClubPostsStructuredData/PublicClubPostsStructuredData'
+import FullSimplePost
+  from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/FullSimplePost/FullSimplePost'
+import PostInfiniteScroll
+  from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
 
 interface Props {
   query: PreloadedQuery<PublicClubPostsQuery>
@@ -37,8 +39,8 @@ const Query = graphql`
       ...PublicClubPostsStructuredDataFragment
     }
     viewer {
-      ...PostsInfiniteScrollViewerFragment
       ...AccountInformationBannerFragment
+      ...FullSimplePostViewerFragment
     }
   }
 `
@@ -60,9 +62,11 @@ const Fragment = graphql`
     )
     @connection (key: "ClubPublicPosts_posts") {
       edges {
-        __typename
+        node {
+          ...FullSimplePostFragment
+        }
       }
-      ...PostsInfiniteScrollFragment
+      ...PostInfiniteScrollFragment
     }
   }
 `
@@ -105,13 +109,20 @@ export default function PublicClubPosts (props: Props): JSX.Element {
         </HStack>
       </Stack>
       <GlobalVideoManagerProvider>
-        <PostsInfiniteScroll
-          hasNext={hasNext}
-          isLoadingNext={isLoadingNext}
-          loadNext={loadNext}
+        <PostInfiniteScroll
           query={data.posts}
-          viewerQuery={queryData.viewer}
-        />
+          hasNext={hasNext}
+          loadNext={loadNext}
+          isLoadingNext={isLoadingNext}
+        >
+          {({ index }) => (
+            <FullSimplePost
+              hideOverflow={false}
+              query={data.posts.edges[index].node}
+              viewerQuery={queryData.viewer}
+            />
+          )}
+        </PostInfiniteScroll>
       </GlobalVideoManagerProvider>
     </>
   )

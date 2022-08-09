@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f807568ef6bc20e731e0e9fc655418e9>>
+ * @generated SignedSource<<1f912bce0bab4dfb52716f5ae38cda5c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,9 +14,11 @@ export type SuggestedPostsFragment$data = {
   readonly id: string;
   readonly suggestedPosts: {
     readonly edges: ReadonlyArray<{
-      readonly __typename: "PostEdge";
+      readonly node: {
+        readonly " $fragmentSpreads": FragmentRefs<"FullSimplePostFragment">;
+      };
     }>;
-    readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"PostInfiniteScrollFragment">;
   };
   readonly " $fragmentType": "SuggestedPostsFragment";
 };
@@ -28,14 +30,7 @@ export type SuggestedPostsFragment$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "suggestedPosts"
-],
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
-};
+];
 return {
   "argumentDefinitions": [
     {
@@ -93,14 +88,6 @@ return {
           "name": "edges",
           "plural": true,
           "selections": [
-            (v1/*: any*/),
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "cursor",
-              "storageKey": null
-            },
             {
               "alias": null,
               "args": null,
@@ -109,8 +96,26 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v1/*: any*/)
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "FullSimplePostFragment"
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
+                  "storageKey": null
+                }
               ],
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "cursor",
               "storageKey": null
             }
           ],
@@ -119,7 +124,7 @@ return {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "PostsInfiniteScrollFragment"
+          "name": "PostInfiniteScrollFragment"
         },
         {
           "alias": null,
@@ -162,6 +167,6 @@ return {
 };
 })();
 
-(node as any).hash = "bec0a94a48aa18a3478bbd6122d05fe6";
+(node as any).hash = "300f08a402939a06af74a10380791752";
 
 export default node;

@@ -1,5 +1,5 @@
 import { graphql, useFragment } from 'react-relay'
-import { Box, Flex } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { PostGalleryStaffDetailedFragment$key } from '@//:artifacts/PostGalleryStaffDetailedFragment.graphql'
 import PostMedia from '../../PostPlayback/PostMedia/PostMedia'
@@ -8,6 +8,7 @@ import { useState } from 'react'
 import SwiperType from 'swiper'
 import PostSlideBackground from '../PostSlideBackground/PostSlideBackground'
 import { POST_SWIPER_PROPS, POST_SWIPER_SLIDE_PROPS } from '../../../constants'
+import PostShowOverflow from '../PostShowOverflow/PostShowOverflow'
 
 interface Props {
   postQuery: PostGalleryStaffDetailedFragment$key
@@ -45,13 +46,7 @@ export default function PostGalleryStaffDetailed ({
             {...POST_SWIPER_SLIDE_PROPS}
           >
             <PostSlideBackground query={item}>
-              <Flex
-                direction='column'
-                minH={100}
-                w='100%'
-                align='center'
-                justify='center'
-              >
+              <PostShowOverflow>
                 <PostMedia
                   controls={{
                     canSeek: true,
@@ -59,7 +54,7 @@ export default function PostGalleryStaffDetailed ({
                   }}
                   query={item.resource}
                 />
-              </Flex>
+              </PostShowOverflow>
             </PostSlideBackground>
           </SwiperSlide>)}
       </Swiper>

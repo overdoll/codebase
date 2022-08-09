@@ -1,6 +1,5 @@
 import { useDeferredValue, useEffect, useRef, useState } from 'react'
 import { Box } from '@chakra-ui/react'
-import CanUseDOM from '../../../../../operations/CanUseDOM'
 import { useDebounce } from 'usehooks-ts'
 import { MaybeRenderProp } from '@//:types/components'
 import runIfFunction from '../../../../../support/runIfFunction'
@@ -30,8 +29,8 @@ export default function ObserveContent ({
 
   const observerOptions = {
     root: null,
-    rootMargin: '0px',
-    threshold: 0.7
+    rootMargin: ' -17% 0px -40% 0px',
+    threshold: 0.75
   }
 
   const observerCallback = (entries): void => {
@@ -39,14 +38,11 @@ export default function ObserveContent ({
     setObserving(entry.isIntersecting)
   }
 
-  let observer: IntersectionObserver
-
-  if (CanUseDOM) {
-    observer = new IntersectionObserver(observerCallback, observerOptions)
-  }
-
   useEffect(() => {
     if (ref.current == null) return
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions)
+
     observer.observe(ref.current)
 
     return () => {

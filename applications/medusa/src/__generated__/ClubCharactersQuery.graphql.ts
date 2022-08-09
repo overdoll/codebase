@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<5ff92ced464e0bbf8fb0b1316f359358>>
- * @relayHash eb508d8cb4ce075a245d7d48d11bc92a
+ * @generated SignedSource<<a3e5a522a00cefe4c54eae9b85132e51>>
+ * @relayHash 4d077bdf44abd15029e532a28d4f3b54
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID eb508d8cb4ce075a245d7d48d11bc92a
+// @relayRequestID 4d077bdf44abd15029e532a28d4f3b54
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -293,6 +293,19 @@ return {
                       {
                         "alias": null,
                         "args": null,
+                        "concreteType": "Club",
+                        "kind": "LinkedField",
+                        "name": "club",
+                        "plural": false,
+                        "selections": [
+                          (v2/*: any*/),
+                          (v11/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
                         "concreteType": "Resource",
                         "kind": "LinkedField",
                         "name": "banner",
@@ -471,7 +484,7 @@ return {
     ]
   },
   "params": {
-    "id": "eb508d8cb4ce075a245d7d48d11bc92a",
+    "id": "4d077bdf44abd15029e532a28d4f3b54",
     "metadata": {},
     "name": "ClubCharactersQuery",
     "operationKind": "query",

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d2d2b0502cea6eb8fd5c73f05b68da57>>
+ * @generated SignedSource<<15312daff6dcb9e730079c8a3a8ba66b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type addPostJsonLdFragment$data = {
+export type addPostListJsonLdFragment$data = {
   readonly characters: ReadonlyArray<{
     readonly name: string;
   }>;
@@ -19,11 +19,11 @@ export type addPostJsonLdFragment$data = {
     readonly slug: string;
   };
   readonly reference: string;
-  readonly " $fragmentType": "addPostJsonLdFragment";
+  readonly " $fragmentType": "addPostListJsonLdFragment";
 };
-export type addPostJsonLdFragment$key = {
-  readonly " $data"?: addPostJsonLdFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"addPostJsonLdFragment">;
+export type addPostListJsonLdFragment$key = {
+  readonly " $data"?: addPostListJsonLdFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"addPostListJsonLdFragment">;
 };
 
 const node: ReaderFragment = (function(){
@@ -38,7 +38,7 @@ return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "addPostJsonLdFragment",
+  "name": "addPostListJsonLdFragment",
   "selections": [
     {
       "alias": null,
@@ -84,6 +84,6 @@ return {
 };
 })();
 
-(node as any).hash = "508dea0ca24c4262bc4a1adf49ffce52";
+(node as any).hash = "5a72df389dc24be061a29d39b8113c9a";
 
 export default node;

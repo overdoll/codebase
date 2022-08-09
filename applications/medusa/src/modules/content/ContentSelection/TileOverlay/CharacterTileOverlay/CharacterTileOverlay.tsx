@@ -15,10 +15,12 @@ const Fragment = graphql`
     series {
       title
     }
+    club {
+      name
+    }
     banner {
       ...ResourceItemFragment
     }
-
   }
 `
 
@@ -61,7 +63,7 @@ export default function CharacterTileOverlay ({
           whiteSpace='normal'
           wordBreak='break-word'
         >
-          {data.series?.title}
+          {data.series?.title ?? data.club?.name}
         </Text>
       </Stack>
     </TileOverlay>

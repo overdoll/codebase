@@ -1,8 +1,9 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { SearchResultsCharacterFragment$key } from '@//:artifacts/SearchResultsCharacterFragment.graphql'
-import { CharacterTileOverlay, LinkTile } from '@//:modules/content/ContentSelection'
+import { CharacterTileOverlay } from '@//:modules/content/ContentSelection'
 import useHistoryDisclosureContext
   from '@//:modules/content/HookedComponents/HistoryDisclosure/hooks/useHistoryDisclosureContext'
+import CharacterLinkTile from '../../../../../../../CharacterLinkTile/CharacterLinkTile'
 
 interface Props {
   query: SearchResultsCharacterFragment$key
@@ -10,11 +11,8 @@ interface Props {
 
 const Fragment = graphql`
   fragment SearchResultsCharacterFragment on Character {
-    slug
-    series {
-      slug
-    }
     ...CharacterTileOverlayFragment
+    ...CharacterLinkTileFragment
   }
 `
 
@@ -26,17 +24,8 @@ export default function SearchResultsCharacter ({
   const { onClose } = useHistoryDisclosureContext()
 
   return (
-    <LinkTile
-      onClick={onClose}
-      href={{
-        pathname: '/search/series/[seriesSlug]/[characterSlug]',
-        query: {
-          seriesSlug: data.series?.slug,
-          characterSlug: data.slug
-        }
-      }}
-    >
+    <CharacterLinkTile onClick={onClose} query={data}>
       <CharacterTileOverlay query={data} />
-    </LinkTile>
+    </CharacterLinkTile>
   )
 }

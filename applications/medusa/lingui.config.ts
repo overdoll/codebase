@@ -207,6 +207,10 @@ const ClubsCatalog = [
   {
     path: 'src/domain/slug/posts/__locale__/{locale}/index',
     include: ['src/domain/slug/posts/']
+  },
+  {
+    path: 'src/domain/slug/character/__locale__/{locale}/index',
+    include: ['src/domain/slug/character/']
   }
 ]
 

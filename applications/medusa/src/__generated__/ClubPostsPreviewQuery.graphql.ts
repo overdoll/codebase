@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0eb00d8913173388de491cce4d06236e>>
- * @relayHash 58b34a1109442847028c7d8c6c90f2e4
+ * @generated SignedSource<<0f7bcf06e968a9117396b23c17ad3224>>
+ * @relayHash 21b2a0fc679d62c9ad6fd8af5a8a9639
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 58b34a1109442847028c7d8c6c90f2e4
+// @relayRequestID 21b2a0fc679d62c9ad6fd8af5a8a9639
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -76,31 +76,24 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "__typename",
+  "name": "id",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "type",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "type",
-  "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "url",
   "storageKey": null
 },
-v7 = {
+v6 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -108,7 +101,7 @@ v7 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v6/*: any*/),
+    (v5/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -119,28 +112,28 @@ v7 = {
   ],
   "storageKey": null
 },
-v8 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "width",
   "storageKey": null
 },
-v9 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "height",
   "storageKey": null
 },
-v10 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "preview",
   "storageKey": null
 },
-v11 = {
+v10 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -148,13 +141,20 @@ v11 = {
   "name": "videoThumbnail",
   "plural": false,
   "selections": [
-    (v6/*: any*/)
+    (v5/*: any*/)
   ],
   "storageKey": null
 },
+v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
+},
 v12 = [
-  (v3/*: any*/),
-  (v4/*: any*/)
+  (v11/*: any*/),
+  (v3/*: any*/)
 ];
 return {
   "fragment": {
@@ -218,14 +218,6 @@ return {
                 "name": "edges",
                 "plural": true,
                 "selections": [
-                  (v3/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "cursor",
-                    "storageKey": null
-                  },
                   {
                     "alias": null,
                     "args": null,
@@ -235,7 +227,6 @@ return {
                     "plural": false,
                     "selections": [
                       (v3/*: any*/),
-                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -259,12 +250,12 @@ return {
                             "name": "resource",
                             "plural": false,
                             "selections": [
-                              (v5/*: any*/),
                               (v4/*: any*/),
+                              (v3/*: any*/),
+                              (v6/*: any*/),
                               (v7/*: any*/),
                               (v8/*: any*/),
                               (v9/*: any*/),
-                              (v10/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -272,7 +263,7 @@ return {
                                 "name": "videoNoAudio",
                                 "storageKey": null
                               },
-                              (v11/*: any*/)
+                              (v10/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -290,7 +281,7 @@ return {
                             "name": "isSupporterOnly",
                             "storageKey": null
                           },
-                          (v4/*: any*/)
+                          (v3/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -323,7 +314,7 @@ return {
                             "name": "canSupport",
                             "storageKey": null
                           },
-                          (v4/*: any*/),
+                          (v3/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -339,13 +330,13 @@ return {
                             "name": "thumbnail",
                             "plural": false,
                             "selections": [
-                              (v4/*: any*/),
+                              (v3/*: any*/),
+                              (v6/*: any*/),
                               (v7/*: any*/),
                               (v8/*: any*/),
                               (v9/*: any*/),
                               (v10/*: any*/),
-                              (v11/*: any*/),
-                              (v5/*: any*/)
+                              (v4/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -364,7 +355,7 @@ return {
                                 "name": "isSupporter",
                                 "storageKey": null
                               },
-                              (v4/*: any*/)
+                              (v3/*: any*/)
                             ],
                             "storageKey": null
                           }
@@ -404,8 +395,16 @@ return {
                         "kind": "ScalarField",
                         "name": "description",
                         "storageKey": null
-                      }
+                      },
+                      (v11/*: any*/)
                     ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "cursor",
                     "storageKey": null
                   }
                 ],
@@ -451,14 +450,14 @@ return {
             "kind": "LinkedHandle",
             "name": "posts"
           },
-          (v4/*: any*/)
+          (v3/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "58b34a1109442847028c7d8c6c90f2e4",
+    "id": "21b2a0fc679d62c9ad6fd8af5a8a9639",
     "metadata": {},
     "name": "ClubPostsPreviewQuery",
     "operationKind": "query",

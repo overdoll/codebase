@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d605244dcbdb156442d5c66594f4aed5>>
+ * @generated SignedSource<<986ed37529e76ca3c6db64d87dc823be>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,6 +20,10 @@ export type PostContentRichObjectFragment$data = {
         readonly mimeType: string;
         readonly url: string;
       }>;
+      readonly videoDuration: number;
+      readonly videoThumbnail: {
+        readonly url: string;
+      } | null;
       readonly width: number;
     };
   }>;
@@ -30,7 +34,15 @@ export type PostContentRichObjectFragment$key = {
   readonly " $fragmentSpreads": FragmentRefs<"PostContentRichObjectFragment">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
@@ -60,13 +72,7 @@ const node: ReaderFragment = {
               "name": "urls",
               "plural": true,
               "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "url",
-                  "storageKey": null
-                },
+                (v0/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -97,6 +103,25 @@ const node: ReaderFragment = {
               "kind": "ScalarField",
               "name": "type",
               "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "videoDuration",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "ResourceUrl",
+              "kind": "LinkedField",
+              "name": "videoThumbnail",
+              "plural": false,
+              "selections": [
+                (v0/*: any*/)
+              ],
+              "storageKey": null
             }
           ],
           "storageKey": null
@@ -108,7 +133,8 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "dbd3275be15b46e360ca03868bbb4859";
+(node as any).hash = "9877c6a753efed637fe2438e8fc8a47d";
 
 export default node;

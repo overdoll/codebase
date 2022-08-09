@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f9c0d56c37be27aac054acc4c08aaa81>>
+ * @generated SignedSource<<a82a16a13f921fec1be7d3110f813578>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SuggestedPostsViewerFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"PostsInfiniteScrollViewerFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"FullSimplePostViewerFragment">;
   readonly " $fragmentType": "SuggestedPostsViewerFragment";
 };
 export type SuggestedPostsViewerFragment$key = {
@@ -28,13 +28,13 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "PostsInfiniteScrollViewerFragment"
+      "name": "FullSimplePostViewerFragment"
     }
   ],
   "type": "Account",
   "abstractKey": null
 };
 
-(node as any).hash = "6bcd49c8f80445cfc80f978eb6149594";
+(node as any).hash = "e9e0582daff21c4f42ccb910582db787";
 
 export default node;

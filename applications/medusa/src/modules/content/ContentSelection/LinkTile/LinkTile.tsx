@@ -3,7 +3,7 @@ import ClickableTile from '../ClickableTile/ClickableTile'
 import { Link } from '../../../routing'
 import { UrlObject } from 'url'
 
-interface Props extends ButtonProps {
+export interface LinkTileProps extends ButtonProps {
   href: string | UrlObject
 }
 
@@ -11,7 +11,7 @@ export default function LinkTile ({
   href,
   children,
   ...rest
-}: Props): JSX.Element {
+}: LinkTileProps): JSX.Element {
   return (
     <Link passHref href={href}>
       <Box w='100%' as='a'>

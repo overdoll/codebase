@@ -1,11 +1,13 @@
 import { graphql, usePaginationFragment } from 'react-relay'
 import type { ClubPostsPreviewViewerFragment$key } from '@//:artifacts/ClubPostsPreviewViewerFragment.graphql'
-import PostsInfiniteScroll
-  from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/PostsInfiniteScroll'
 import { useFragment, useLazyLoadQuery } from 'react-relay/hooks'
 import { ClubPostsPreviewQuery } from '@//:artifacts/ClubPostsPreviewQuery.graphql'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
 import { EmptyBoundary, EmptyPosts } from '@//:modules/content/Placeholder'
+import FullSimplePost
+  from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/FullSimplePost/FullSimplePost'
+import PostInfiniteScroll
+  from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
 
 interface Props extends ComponentSearchArguments<any> {
   viewerQuery: ClubPostsPreviewViewerFragment$key | null
@@ -29,16 +31,18 @@ const Fragment = graphql`
     clubPosts: posts(first: $first, after: $after, sortBy: $sort, supporterOnlyStatus: $supporter)
     @connection (key: "ClubPostsPreview_clubPosts") {
       edges {
-        __typename
+        node {
+          ...FullSimplePostFragment
+        }
       }
-      ...PostsInfiniteScrollFragment
+      ...PostInfiniteScrollFragment
     }
   }
 `
 
 const ViewerFragment = graphql`
   fragment ClubPostsPreviewViewerFragment on Account {
-    ...PostsInfiniteScrollViewerFragment
+    ...FullSimplePostViewerFragment
   }
 `
 
@@ -69,13 +73,20 @@ export default function ClubPostsPreview ({
       fallback={<EmptyPosts />}
       condition={data?.clubPosts?.edges.length < 1}
     >
-      <PostsInfiniteScroll
+      <PostInfiniteScroll
         query={data.clubPosts}
-        viewerQuery={viewerData}
         hasNext={hasNext}
-        loadNext={() => loadNext(11)}
+        loadNext={loadNext}
         isLoadingNext={isLoadingNext}
-      />
+      >
+        {({ index }) => (
+          <FullSimplePost
+            hideOverflow={false}
+            query={data.clubPosts.edges[index].node}
+            viewerQuery={viewerData}
+          />
+        )}
+      </PostInfiniteScroll>
     </EmptyBoundary>
   )
 }

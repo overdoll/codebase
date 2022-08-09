@@ -19,7 +19,7 @@ interface Props {
 const RootHome: PageProps<Props> = (props: Props): JSX.Element => {
   const [queryRef, loadQuery] = useQueryLoader(
     HomeQuery,
-    props.queryRefs.homeQuery
+    props.queryRefs.homeQuery,
   )
 
   return (

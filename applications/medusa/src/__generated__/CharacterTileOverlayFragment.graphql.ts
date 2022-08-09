@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ee77532234d6b17516c3f491b07b0208>>
+ * @generated SignedSource<<4540ff5eeca3027a87e185049005eac1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,9 @@ export type CharacterTileOverlayFragment$data = {
   readonly banner: {
     readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
   } | null;
+  readonly club: {
+    readonly name: string;
+  } | null;
   readonly id: string;
   readonly name: string;
   readonly series: {
@@ -26,7 +29,15 @@ export type CharacterTileOverlayFragment$key = {
   readonly " $fragmentSpreads": FragmentRefs<"CharacterTileOverlayFragment">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
@@ -39,13 +50,7 @@ const node: ReaderFragment = {
       "name": "id",
       "storageKey": null
     },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "name",
-      "storageKey": null
-    },
+    (v0/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -61,6 +66,18 @@ const node: ReaderFragment = {
           "name": "title",
           "storageKey": null
         }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Club",
+      "kind": "LinkedField",
+      "name": "club",
+      "plural": false,
+      "selections": [
+        (v0/*: any*/)
       ],
       "storageKey": null
     },
@@ -84,7 +101,8 @@ const node: ReaderFragment = {
   "type": "Character",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "3873ff4860a69c1f99c8d97bed2ad8d3";
+(node as any).hash = "4da63faa712d990c7c49447ebecb624b";
 
 export default node;

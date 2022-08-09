@@ -1,10 +1,10 @@
 import { graphql, useFragment } from 'react-relay/hooks'
-import type { addPostJsonLdFragment$key } from '@//:artifacts/addPostJsonLdFragment.graphql'
+import type { addPostListJsonLdFragment$key } from '@//:artifacts/addPostListJsonLdFragment.graphql'
 import { getPostTitle } from '../../../rich-objects/slug/PublicPostRichObject/PublicPostRichObject'
 import { DOMAttributes } from 'react'
 
 const Fragment = graphql`
-  fragment addPostJsonLdFragment on Post {
+  fragment addPostListJsonLdFragment on Post {
     reference
     club {
       slug
@@ -16,7 +16,7 @@ const Fragment = graphql`
   }
 `
 
-export default function addPostJsonLd (query: addPostJsonLdFragment$key): DOMAttributes<string>['dangerouslySetInnerHTML'] {
+export default function addPostListJsonLd (query: addPostListJsonLdFragment$key): DOMAttributes<string>['dangerouslySetInnerHTML'] {
   const data = useFragment(Fragment, query)
 
   const characters = data.characters.map((item) => item.name)
@@ -45,7 +45,7 @@ export default function addPostJsonLd (query: addPostJsonLdFragment$key): DOMAtt
       position: 3,
       item: {
         '@type': 'Thing',
-        '@id': `/${data.club.slug}/post/${data.reference}`,
+        '@id': `https://www.overdoll.com/${data.club.slug}/post/${data.reference}`,
         name: getPostTitle(characters, data.club.name)
       }
     }]
