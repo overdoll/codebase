@@ -61,7 +61,7 @@ export default function SelectClubs ({ searchArguments }: Props): JSX.Element {
     )
   }
 
-  if (!queryData?.club.viewerIsOwner && ((queryData.viewer?.isStaff) === false)) {
+  if (!queryData?.club.viewerIsOwner && (!(queryData.viewer?.isStaff))) {
     return (
       <Flex {...flexProps}>
         <Heading color='gray.00' fontSize='lg'>
