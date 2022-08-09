@@ -28,7 +28,7 @@ func ListenProgressSocket(itemId, resourceId string, cb func(progress int64)) (f
 
 	// use a 500ms ticker to rate limit
 	ticker := time.NewTicker(5000 * time.Millisecond)
-	done := make(chan bool)
+	done := make(chan bool, 1)
 
 	go func() {
 		re := regexp.MustCompile(`prog_per=(\d+)`)
@@ -96,7 +96,7 @@ func createFFMPEGTempSocket(itemId, resourceId string, duration float64) (string
 		return "", err, nil
 	}
 
-	done := make(chan bool)
+	done := make(chan bool, 1)
 
 	go func() {
 		c, _ := getSocketClient(itemId, resourceId)
