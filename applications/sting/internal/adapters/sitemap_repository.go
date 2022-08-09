@@ -218,7 +218,7 @@ func (r PostsCassandraElasticsearchRepository) addCategories(ctx context.Context
 
 	// go through all categories
 	for {
-		builder := r.client.Search()
+		builder := r.client.Search().Query(elastic.NewRangeQuery("total_posts").Gt(0))
 
 		builder.Size(pagingLimit)
 		builder.Sort("id", false)
@@ -275,7 +275,7 @@ func (r PostsCassandraElasticsearchRepository) addCharacters(ctx context.Context
 
 	// go through all characters
 	for {
-		builder := r.client.Search()
+		builder := r.client.Search().Query(elastic.NewRangeQuery("total_posts").Gt(0))
 
 		builder.Size(pagingLimit)
 		builder.Sort("id", false)
@@ -382,7 +382,7 @@ func (r PostsCassandraElasticsearchRepository) addSeries(ctx context.Context, sm
 
 	// go through all series
 	for {
-		builder := r.client.Search()
+		builder := r.client.Search().Query(elastic.NewRangeQuery("total_posts").Gt(0))
 
 		builder.Size(pagingLimit)
 		builder.Sort("id", false)
