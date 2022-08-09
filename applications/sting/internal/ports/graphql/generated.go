@@ -785,8 +785,6 @@ type CharacterResolver interface {
 	Posts(ctx context.Context, obj *types.Character, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error)
 }
 type ClubResolver interface {
-	SlugAliasesLimit(ctx context.Context, obj *types.Club) (int, error)
-
 	SuspensionLogs(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int) (*types.ClubSuspensionLogConnection, error)
 
 	ViewerMember(ctx context.Context, obj *types.Club) (*types.ClubMember, error)
@@ -4915,7 +4913,7 @@ extend type Mutation {
   """
   Maximum amount of slug aliases that can be created for this club.
   """
-  slugAliasesLimit: Int! @goField(forceResolver: true)
+  slugAliasesLimit: Int!
 
   """An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug."""
   slugAliases: [ClubSlugAlias!]!
@@ -14253,7 +14251,7 @@ func (ec *executionContext) _Club_slugAliasesLimit(ctx context.Context, field gr
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Club().SlugAliasesLimit(rctx, obj)
+		return obj.SlugAliasesLimit, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -14274,8 +14272,8 @@ func (ec *executionContext) fieldContext_Club_slugAliasesLimit(ctx context.Conte
 	fc = &graphql.FieldContext{
 		Object:     "Club",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
 		},
@@ -36119,25 +36117,12 @@ func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj
 				atomic.AddUint32(&invalids, 1)
 			}
 		case "slugAliasesLimit":
-			field := field
 
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Club_slugAliasesLimit(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
+			out.Values[i] = ec._Club_slugAliasesLimit(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
 			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
 		case "slugAliases":
 
 			out.Values[i] = ec._Club_slugAliases(ctx, field, obj)

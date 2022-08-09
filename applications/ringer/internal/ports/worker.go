@@ -17,7 +17,7 @@ func NewWorker(app *app.Application) (worker.Worker, func()) {
 
 	client := clients.NewTemporalClient(context.Background())
 
-	w := bootstrap.NewWorker(client)
+	w := bootstrap.NewWorker(client, 0)
 
 	w.RegisterWorkflow(workflows.ClubPaymentDeduction)
 	w.RegisterWorkflow(workflows.ClubPaymentDeposit)

@@ -13,6 +13,7 @@ interface ChildrenCallable {
   isLikingPost: boolean
 }
 
+// @ts-expect-error
 interface Props extends ButtonProps {
   postQuery: PostLikeWrapperFragment$key
   children: MaybeRenderProp<ChildrenCallable>

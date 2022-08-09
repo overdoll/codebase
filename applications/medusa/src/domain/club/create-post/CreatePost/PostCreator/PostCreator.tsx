@@ -40,6 +40,9 @@ const Query = graphql`
       ...PostStateClubFragment
       ...ClubRestrictedFragment
     }
+    viewer {
+      isStaff
+    }
   }
 `
 
@@ -156,7 +159,7 @@ export default function PostCreator ({ query }: Props): JSX.Element {
     }
   }, [data?.post?.id])
 
-  if (data?.club?.viewerIsOwner === false) {
+  if (data?.club?.viewerIsOwner === false && ((data.viewer?.isStaff) === false)) {
     return <NotFoundClub />
   }
 

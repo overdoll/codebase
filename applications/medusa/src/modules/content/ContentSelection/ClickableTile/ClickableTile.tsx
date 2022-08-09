@@ -11,7 +11,7 @@ const ClickableTile = forwardRef<any, Props>(({
   children,
   isPending,
   ...rest
-}: Props, forwardRef): JSX.Element => {
+}: Props, forwardRef) => {
   return (
     <ClickableBox
       ref={forwardRef}

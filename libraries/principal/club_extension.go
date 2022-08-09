@@ -55,6 +55,10 @@ func (p *Principal) CheckClubOwner(clubId string) error {
 		return err
 	}
 
+	if p.IsStaff() {
+		return nil
+	}
+
 	found := false
 
 	for _, club := range p.clubExtension.ownerClubIds {

@@ -60,24 +60,26 @@ func (h *Activities) UpdateTotalLikesForPostTags(ctx context.Context, input Upda
 			return err
 		}
 
-		if _, ok := updatedSeries[newChar.Series().ID()]; !ok {
+		if newChar.Series() != nil {
+			if _, ok := updatedSeries[newChar.Series().ID()]; !ok {
 
-			_, err := h.pr.UpdateSeriesTotalLikesOperator(ctx, newChar.Series().ID(), func(series *post.Series) error {
+				_, err := h.pr.UpdateSeriesTotalLikesOperator(ctx, newChar.Series().ID(), func(series *post.Series) error {
 
-				totalLikes, err := h.pr.GetTotalLikesForSeriesOperator(ctx, series)
+					totalLikes, err := h.pr.GetTotalLikesForSeriesOperator(ctx, series)
+
+					if err != nil {
+						return err
+					}
+
+					return series.UpdateTotalLikes(totalLikes)
+				})
 
 				if err != nil {
 					return err
 				}
 
-				return series.UpdateTotalLikes(totalLikes)
-			})
-
-			if err != nil {
-				return err
+				updatedSeries[newChar.Series().ID()] = true
 			}
-
-			updatedSeries[newChar.Series().ID()] = true
 		}
 	}
 

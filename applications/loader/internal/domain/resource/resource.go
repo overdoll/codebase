@@ -299,12 +299,11 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 	// map_metadata removes all metadata
 	// sn removes subtitles
 	// map 0:v:0 selects only the first video track
-	encodingArgs := ffmpeg_go.KwArgs{"c:v": "libx264", "crf": "24", "preset": "slow", "map_metadata": "-1", "sn": "", "map": []string{"0:v:0"}, "threads:v": "1"}
+	encodingArgs := ffmpeg_go.KwArgs{"c:v": "libx264", "crf": "23", "preset": "slow", "map_metadata": "-1", "sn": "", "map": []string{"0:v:0"}, "threads:v": "1"}
 
 	newVideoFileName := fileName + ".mp4"
 
 	defaultArgs := map[string]interface{}{
-		"f": "mp4",
 		"v": "error",
 	}
 
@@ -422,9 +421,8 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 			}
 			// height > width, portrait
 		} else if firstStream.Width < firstStream.Height {
-			// for portrait, it seems like 720p always looks good no matter what
-			if (firstStream.Width) > 720 {
-				encodingArgs["vf"] = "scale=720:-2"
+			if (firstStream.Width) > 1080 {
+				encodingArgs["vf"] = "scale=1080:-2"
 			}
 		} else if firstStream.Width == firstStream.Height {
 			// otherwise, it's a square
@@ -439,7 +437,11 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 		return nil, err
 	}
 
-	socket, done := createFFMPEGTempSocket(r.itemId, r.id, parsedDuration)
+	socket, err, done := createFFMPEGTempSocket(r.itemId, r.id, parsedDuration)
+
+	if err != nil {
+		return nil, err
+	}
 
 	// make sure to call this function or socket wont close correctly
 	defer done()
@@ -620,7 +622,7 @@ func (r *Resource) ProcessResource(file *os.File, config *Config) ([]*Move, erro
 	// do a mime type check on the file to make sure its an accepted file and to get our extension
 	kind, _ := filetype.Match(headBuffer)
 	if kind == filetype.Unknown {
-		r.failed = false
+		r.failed = true
 		return nil, nil
 	}
 
@@ -644,7 +646,7 @@ func (r *Resource) ProcessResource(file *os.File, config *Config) ([]*Move, erro
 			return nil, err
 		}
 
-	} else if kind.MIME.Value == "video/mp4" {
+	} else if kind.MIME.Value == "video/mp4" || kind.MIME.Value == "video/x-m4v" {
 
 		moveTargets, err = r.processVideo(fileName, file, config)
 
@@ -653,6 +655,7 @@ func (r *Resource) ProcessResource(file *os.File, config *Config) ([]*Move, erro
 		}
 
 	} else {
+		zap.S().Errorw("unknown mime type", zap.String("mimeType", kind.MIME.Value))
 		r.failed = true
 		return nil, nil
 	}

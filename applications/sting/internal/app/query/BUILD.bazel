@@ -20,7 +20,6 @@ go_library(
         "club_characters_count.go",
         "club_member_by_id.go",
         "club_members_posts_feed.go",
-        "club_slug_aliases_limit.go",
         "club_supporter_members_count.go",
         "club_suspension_logs.go",
         "clubs_by_ids.go",

@@ -190,6 +190,10 @@ func (m *Club) CharactersLimit() int {
 	return m.charactersLimit
 }
 
+func (m *Club) SlugAliasLimit() int {
+	return maxClubSlugLimit
+}
+
 func (m *Club) NewClubMembers() []string {
 	return m.newClubMembers
 }
@@ -647,15 +651,6 @@ func ViewClubCharactersCount(requester *principal.Principal, clubId string) erro
 	}
 
 	return nil
-}
-
-func ViewClubSlugLimit(requester *principal.Principal, accountId string) (int, error) {
-
-	if err := requester.BelongsToAccount(accountId); err != nil {
-		return 0, err
-	}
-
-	return maxClubSlugLimit, nil
 }
 
 func ViewAccountClubsLimit(requester *principal.Principal, accountId string) (int, error) {

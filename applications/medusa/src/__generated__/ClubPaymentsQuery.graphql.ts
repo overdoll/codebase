@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<29ca04c35dd2a7a1648ae151b13de6ea>>
- * @relayHash 7dd288a6d97c5218b5ed54b4807bd467
+ * @generated SignedSource<<96ee8fb6b7c1edd0dabcb0b7d1f77e5e>>
+ * @relayHash 5909ce239adcb3889cfde70053dd2fd9
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7dd288a6d97c5218b5ed54b4807bd467
+// @relayRequestID 5909ce239adcb3889cfde70053dd2fd9
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -21,6 +21,9 @@ export type ClubPaymentsQuery$data = {
     readonly __typename: "Club";
     readonly viewerIsOwner: boolean;
     readonly " $fragmentSpreads": FragmentRefs<"ClubPaymentsFragment">;
+  } | null;
+  readonly viewer: {
+    readonly isStaff: boolean;
   } | null;
 };
 export type ClubPaymentsQuery = {
@@ -57,14 +60,21 @@ v3 = {
   "name": "viewerIsOwner",
   "storageKey": null
 },
-v4 = [
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "isStaff",
+  "storageKey": null
+},
+v5 = [
   {
     "kind": "Literal",
     "name": "first",
     "value": 7
   }
 ],
-v5 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -95,6 +105,18 @@ return {
           }
         ],
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "viewer",
+        "plural": false,
+        "selections": [
+          (v4/*: any*/)
+        ],
+        "storageKey": null
       }
     ],
     "type": "Query",
@@ -118,7 +140,7 @@ return {
           (v3/*: any*/),
           {
             "alias": null,
-            "args": (v4/*: any*/),
+            "args": (v5/*: any*/),
             "concreteType": "ClubPaymentConnection",
             "kind": "LinkedField",
             "name": "payments",
@@ -182,7 +204,7 @@ return {
                         "name": "isDeduction",
                         "storageKey": null
                       },
-                      (v5/*: any*/),
+                      (v6/*: any*/),
                       (v2/*: any*/)
                     ],
                     "storageKey": null
@@ -227,21 +249,34 @@ return {
           },
           {
             "alias": null,
-            "args": (v4/*: any*/),
+            "args": (v5/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "ClubPayments_payments",
             "kind": "LinkedHandle",
             "name": "payments"
           },
-          (v5/*: any*/)
+          (v6/*: any*/)
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "viewer",
+        "plural": false,
+        "selections": [
+          (v4/*: any*/),
+          (v6/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "7dd288a6d97c5218b5ed54b4807bd467",
+    "id": "5909ce239adcb3889cfde70053dd2fd9",
     "metadata": {},
     "name": "ClubPaymentsQuery",
     "operationKind": "query",
@@ -250,6 +285,6 @@ return {
 };
 })();
 
-(node as any).hash = "eec5a7e55d320c5ed6a323c43fd5d90d";
+(node as any).hash = "589d96d347d46450c654b2ca9f3d212e";
 
 export default node;

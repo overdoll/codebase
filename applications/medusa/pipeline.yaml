@@ -4,7 +4,7 @@ frontend_steps:
     commands:
       - ./run_yarn_install.sh
       - yarn locale:compile
-      #- yarn run check:tsc
+      - yarn run check:tsc
       - yarn run check:eslint
 
   unit_test:

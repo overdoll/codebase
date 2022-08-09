@@ -58,24 +58,26 @@ func (h *Activities) UpdateTotalPostsForPostTags(ctx context.Context, input Upda
 			return err
 		}
 
-		if _, ok := updatedSeries[newChar.Series().ID()]; !ok {
+		if newChar.Series() != nil {
+			if _, ok := updatedSeries[newChar.Series().ID()]; !ok {
 
-			newSeries, err := h.pr.UpdateSeriesTotalPostsOperator(ctx, newChar.Series().ID(), func(series *post.Series) error {
+				newSeries, err := h.pr.UpdateSeriesTotalPostsOperator(ctx, newChar.Series().ID(), func(series *post.Series) error {
 
-				totalPosts, err := h.pr.GetTotalPostsForSeriesOperator(ctx, series)
+					totalPosts, err := h.pr.GetTotalPostsForSeriesOperator(ctx, series)
+
+					if err != nil {
+						return err
+					}
+
+					return series.UpdateTotalPosts(totalPosts)
+				})
 
 				if err != nil {
 					return err
 				}
 
-				return series.UpdateTotalPosts(totalPosts)
-			})
-
-			if err != nil {
-				return err
+				updatedSeries[newSeries.ID()] = true
 			}
-
-			updatedSeries[newSeries.ID()] = true
 		}
 	}
 

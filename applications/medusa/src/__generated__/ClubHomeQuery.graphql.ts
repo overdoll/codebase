@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<72119b71cab22c6b05c4022a4383ddff>>
- * @relayHash 5f4b5bbc8bfc68802330cd3707e79156
+ * @generated SignedSource<<d07a00426b8adb4afba106d9249f49b2>>
+ * @relayHash 80c1e5f1edfbe378efb8a7ff55a93037
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 5f4b5bbc8bfc68802330cd3707e79156
+// @relayRequestID 80c1e5f1edfbe378efb8a7ff55a93037
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -22,6 +22,9 @@ export type ClubHomeQuery$data = {
     readonly name: string;
     readonly viewerIsOwner: boolean;
     readonly " $fragmentSpreads": FragmentRefs<"ClubBalanceHeaderFragment" | "ClubInformationBannerFragment" | "ClubSupporterHeaderFragment" | "LargeClubHeaderFragment">;
+  } | null;
+  readonly viewer: {
+    readonly isStaff: boolean;
   } | null;
 };
 export type ClubHomeQuery = {
@@ -69,17 +72,24 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "isStaff",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "id",
   "storageKey": null
 },
 v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -126,6 +136,18 @@ return {
           }
         ],
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "viewer",
+        "plural": false,
+        "selections": [
+          (v5/*: any*/)
+        ],
+        "storageKey": null
       }
     ],
     "type": "Query",
@@ -148,7 +170,7 @@ return {
           (v2/*: any*/),
           (v3/*: any*/),
           (v4/*: any*/),
-          (v5/*: any*/),
+          (v6/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -157,7 +179,7 @@ return {
             "name": "thumbnail",
             "plural": false,
             "selections": [
-              (v5/*: any*/),
+              (v6/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -166,7 +188,7 @@ return {
                 "name": "urls",
                 "plural": true,
                 "selections": [
-                  (v6/*: any*/),
+                  (v7/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -206,7 +228,7 @@ return {
                 "name": "videoThumbnail",
                 "plural": false,
                 "selections": [
-                  (v6/*: any*/)
+                  (v7/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -236,11 +258,11 @@ return {
                 "name": "payoutMethod",
                 "plural": false,
                 "selections": [
-                  (v7/*: any*/),
+                  (v8/*: any*/),
                   {
                     "kind": "InlineFragment",
                     "selections": [
-                      (v5/*: any*/)
+                      (v6/*: any*/)
                     ],
                     "type": "AccountPaxumPayoutMethod",
                     "abstractKey": null
@@ -248,7 +270,7 @@ return {
                 ],
                 "storageKey": null
               },
-              (v5/*: any*/)
+              (v6/*: any*/)
             ],
             "storageKey": null
           },
@@ -306,7 +328,7 @@ return {
             "name": "suspension",
             "plural": false,
             "selections": [
-              (v7/*: any*/),
+              (v8/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -325,17 +347,30 @@ return {
             "name": "termination",
             "plural": false,
             "selections": [
-              (v7/*: any*/)
+              (v8/*: any*/)
             ],
             "storageKey": null
           }
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "viewer",
+        "plural": false,
+        "selections": [
+          (v5/*: any*/),
+          (v6/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "5f4b5bbc8bfc68802330cd3707e79156",
+    "id": "80c1e5f1edfbe378efb8a7ff55a93037",
     "metadata": {},
     "name": "ClubHomeQuery",
     "operationKind": "query",
@@ -344,7 +379,7 @@ return {
 };
 })();
 
-(node as any).hash = "d480d64ed7ca9c639ce7b18dd164e91f";
+(node as any).hash = "4bb67a89aa3ae7206511347c3f866b63";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

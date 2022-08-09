@@ -62,13 +62,13 @@ function useSearch<TArguments extends SearchValues> (props: UseSearchProps<TArgu
   })
 
   // One of the replace functions but as a callback and with a transition
-  const changeArguments = useCallback((args) => {
+  const changeArguments = useCallback((args: any) => {
     startTransition(() => {
       setSearchArgs(prev => replaceOrCreateQueryArguments(prev, args, false))
     })
   }, [])
 
-  const setArguments = useCallback((args) => {
+  const setArguments = useCallback((args: any) => {
     startTransition(() => {
       setSearchArgs(prev => replaceQueryArguments(prev, args))
     })

@@ -1,7 +1,7 @@
-import { PreactDOMAttributes } from 'preact'
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { addPostJsonLdFragment$key } from '@//:artifacts/addPostJsonLdFragment.graphql'
 import { getPostTitle } from '../../../rich-objects/slug/PublicPostRichObject/PublicPostRichObject'
+import { DOMAttributes } from 'react'
 
 const Fragment = graphql`
   fragment addPostJsonLdFragment on Post {
@@ -16,7 +16,7 @@ const Fragment = graphql`
   }
 `
 
-export default function addPostJsonLd (query: addPostJsonLdFragment$key): PreactDOMAttributes['dangerouslySetInnerHTML'] {
+export default function addPostJsonLd (query: addPostJsonLdFragment$key): DOMAttributes<string>['dangerouslySetInnerHTML'] {
   const data = useFragment(Fragment, query)
 
   const characters = data.characters.map((item) => item.name)

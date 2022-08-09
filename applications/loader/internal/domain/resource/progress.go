@@ -13,6 +13,13 @@ func (p *Progress) State() ProgressState {
 	return p.state
 }
 
+func NewWaiting() *Progress {
+	return &Progress{
+		progress: 0,
+		state:    Waiting,
+	}
+}
+
 func NewProgress(progress float64) *Progress {
 
 	if progress == -1 {

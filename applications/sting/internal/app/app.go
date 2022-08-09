@@ -150,7 +150,6 @@ type Queries struct {
 	ClubBySlug                  query.ClubBySlugHandler
 	ClubById                    query.ClubByIdHandler
 	ClubsByIds                  query.ClubsByIdsHandler
-	ClubSlugAliasesLimit        query.ClubSlugAliasesLimitHandler
 	AccountClubMembershipsLimit query.AccountClubMembershipsLimitHandler
 	AccountClubMembershipsCount query.AccountClubMembershipsCountHandler
 

@@ -70,7 +70,7 @@ describe('Manage Club', () => {
     clickOnPanel('Club Thumbnail')
     cy.url().should('include', '/settings/thumbnail')
     cy.findByText('Drop').should('be.visible').parent().parent().get('input[type="file"]').attachFile('test-post.png')
-    cy.findByText(/updated your club thumbnail/iu).should('be.visible')
+    cy.findByText(/updated your club thumbnail/iu, { timeout: 300000 }).should('be.visible')
 
     /**
      * Visit club home page

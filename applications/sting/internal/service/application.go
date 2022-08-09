@@ -227,7 +227,6 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			ClubById:                    query.NewClubByIdHandler(clubRepo),
 			AccountClubsCount:           query.NewAccountClubsCountHandler(clubRepo),
 			AccountClubsLimit:           query.NewAccountClubsLimitHandler(clubRepo),
-			ClubSlugAliasesLimit:        query.NewClubSlugAliasesLimitHandler(clubRepo),
 			AccountClubMembershipsLimit: query.NewAccountClubMembershipsLimitHandler(clubRepo),
 			AccountClubMembershipsCount: query.NewAccountClubMembershipsCountHandler(clubRepo),
 			ClubMemberById:              query.NewClubMemberByIdHandler(clubRepo),
