@@ -1,9 +1,10 @@
 package resource
 
 import (
+	"crypto/rand"
 	"fmt"
 	"go.uber.org/zap"
-	"math/rand"
+	"math/big"
 	"net"
 	"os"
 	"path"
@@ -50,7 +51,7 @@ func ListenProgressSocket(itemId, resourceId string, cb func(progress int64)) (f
 				_ = l.Close()
 				_ = fd.Close()
 				data = ""
-				break
+				return
 			case _ = <-ticker.C:
 				a := re.FindAllStringSubmatch(data, -1)
 				if len(a) > 0 && len(a[len(a)-1]) > 0 {
@@ -68,11 +69,8 @@ func ListenProgressSocket(itemId, resourceId string, cb func(progress int64)) (f
 	}()
 
 	return func() {
+		done <- true
 		ticker.Stop()
-		select {
-		case done <- true:
-		default:
-		}
 	}, nil
 }
 
@@ -81,17 +79,21 @@ func getSocketClient(itemId, resourceId string) (net.Conn, error) {
 }
 
 func getSockAddr(itemId, resourceId string) string {
-	return fmt.Sprintf("resource_%s-%s_sock", itemId, resourceId)
+	return path.Join(os.TempDir(), fmt.Sprintf("resource_%s-%s_sock", itemId, resourceId))
 }
 
 // show progress taken from: https://github.com/u2takey/ffmpeg-go/blob/master/examples/showProgress.go
-func createFFMPEGTempSocket(itemId, resourceId string, duration float64) (string, func()) {
+func createFFMPEGTempSocket(itemId, resourceId string, duration float64) (string, error, func()) {
 
-	rand.Seed(time.Now().Unix())
-	sockFileName := path.Join(os.TempDir(), fmt.Sprintf("%d_sock", rand.Int63()))
+	nBig, err := rand.Int(rand.Reader, big.NewInt(9223372036854775))
+	if err != nil {
+		return "", err, nil
+	}
+
+	sockFileName := path.Join(os.TempDir(), fmt.Sprintf("%d_sock", nBig.Int64()))
 	l, err := net.Listen("unix", sockFileName)
 	if err != nil {
-		panic(err)
+		return "", err, nil
 	}
 
 	done := make(chan bool)
@@ -118,11 +120,11 @@ func createFFMPEGTempSocket(itemId, resourceId string, duration float64) (string
 				_ = os.RemoveAll(sockFileName)
 				data = ""
 				progress = ""
-				break
+				return
 			default:
 				_, err = fd.Read(buf)
 				if err != nil {
-					return
+					continue
 				}
 				data += string(buf)
 				a := re.FindAllStringSubmatch(data, -1)
@@ -163,10 +165,7 @@ func createFFMPEGTempSocket(itemId, resourceId string, duration float64) (string
 		}
 	}()
 
-	return sockFileName, func() {
-		select {
-		case done <- true:
-		default:
-		}
+	return sockFileName, nil, func() {
+		done <- true
 	}
 }

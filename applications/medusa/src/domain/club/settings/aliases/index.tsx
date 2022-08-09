@@ -8,7 +8,7 @@ RootAliasesClubSettings.getTranslationProps = async (ctx) => ({
 
 RootAliasesClubSettings.getRelayPreloadProps = (ctx) => {
   const { query: { slug } } = ctx
-
+  
   return {
     queries: {
       aliasesClubSettingsQuery: {

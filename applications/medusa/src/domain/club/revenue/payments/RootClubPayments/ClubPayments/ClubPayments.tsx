@@ -17,6 +17,9 @@ const Query = graphql`
       viewerIsOwner
       ...ClubPaymentsFragment
     }
+    viewer {
+      isStaff
+    }
   }
 `
 
@@ -57,7 +60,7 @@ export default function ClubPayments ({ query }: Props): JSX.Element {
     return <NotFoundClub />
   }
 
-  if (!queryData.club?.viewerIsOwner) {
+  if (!queryData.club?.viewerIsOwner && ((queryData.viewer?.isStaff) === false)) {
     return <NotFoundClub />
   }
 

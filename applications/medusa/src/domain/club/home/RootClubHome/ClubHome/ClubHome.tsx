@@ -28,6 +28,9 @@ const Query = graphql`
       ...ClubSupporterHeaderFragment
       ...ClubInformationBannerFragment
     }
+    viewer {
+      isStaff
+    }
   }
 `
 
@@ -43,7 +46,7 @@ export default function ClubHome ({ query }: Props): JSX.Element {
     return <NotFoundClub />
   }
 
-  if (!queryData.club?.viewerIsOwner) {
+  if (!queryData.club?.viewerIsOwner && ((queryData.viewer?.isStaff) === false)) {
     return <NotFoundClub />
   }
 

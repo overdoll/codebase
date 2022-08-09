@@ -26,8 +26,8 @@
     "isolatedModules": true,
     "noEmit": true,
     "types": [
-      "react-dom",
-      "react",
+      "react-dom/next",
+      "react/next",
       "webpack-env",
       "jest"
     ],

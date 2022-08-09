@@ -29,6 +29,9 @@ const Query = graphql`
       ...RestrictedClubCharactersFragment
       ...ManageClubCharactersFragment
     }
+    viewer {
+      isStaff
+    }
   }
 `
 
@@ -42,7 +45,7 @@ export default function ClubCharacters ({ query }: Props): JSX.Element {
     return <NotFoundClub />
   }
 
-  if (!queryData.club?.viewerIsOwner) {
+  if (!queryData.club?.viewerIsOwner && ((queryData.viewer?.isStaff) === false)) {
     return <NotFoundClub />
   }
 

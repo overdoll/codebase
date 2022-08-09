@@ -43,8 +43,14 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 
 	numbersAlreadySent := make(map[int64]bool)
 
+	finished := false
+
 	// when progress is made on the resource socket, we record a heartbeat
 	cleanup, err := resource.ListenProgressSocket(input.ItemId, input.ResourceId, func(progress int64) {
+
+		if finished {
+			return
+		}
 
 		// record heartbeat so we know this activity is still functional
 		heartbeat++
@@ -55,6 +61,10 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 		if err = h.event.SendProcessResourcesHeartbeat(ctx, info.TaskToken, progress); err != nil {
 
 			if strings.Contains(err.Error(), "workflow execution already completed") {
+				return
+			}
+
+			if strings.Contains(err.Error(), "invalid activityID or activity already timed out or invoking workflow is completed") {
 				return
 			}
 
@@ -78,6 +88,9 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 	})
 
 	defer cleanup()
+	defer func() {
+		finished = true
+	}()
 
 	if err != nil {
 		return err

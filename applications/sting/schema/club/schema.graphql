@@ -11,7 +11,7 @@ type Club implements Node @key(fields: "id") {
   """
   Maximum amount of slug aliases that can be created for this club.
   """
-  slugAliasesLimit: Int! @goField(forceResolver: true)
+  slugAliasesLimit: Int!
 
   """An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug."""
   slugAliases: [ClubSlugAlias!]!

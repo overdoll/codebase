@@ -37,20 +37,20 @@ export function GlobalVideoManagerProvider ({ children }: Props): JSX.Element {
   const [muted, setMuted] = useState(defaultValue.videoMuted)
   const [playing, setPlaying] = useState<string>('')
 
-  const onChangeMuted = useCallback((isMuted) => {
+  const onChangeMuted = useCallback((isMuted: any) => {
     setMuted(isMuted)
   }, [])
 
-  const onChangeVolume = useCallback((volume) => {
+  const onChangeVolume = useCallback((volume: any) => {
     setVolume(volume)
     setGlobalVideoVolume(volume)
   }, [])
 
-  const onPlayVideo = useCallback((resourceId) => {
+  const onPlayVideo = useCallback((resourceId: any) => {
     setPlaying(resourceId)
   }, [])
 
-  const onPauseVideo = useCallback((resourceId) => {
+  const onPauseVideo = useCallback((resourceId: any) => {
     if (resourceId === playing) {
       setPlaying('')
     }

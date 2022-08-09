@@ -22,6 +22,6 @@ export type Timeout = ReturnType<typeof setTimeout>
 
 export type ColorScheme = ThemeTypings['colorSchemes'] | (string & {})
 
-export type IconType = FunctionComponent<any>
+export type IconType = FunctionComponent<React.PropsWithChildren<any>>
 
 export type HrefType = string | UrlObject

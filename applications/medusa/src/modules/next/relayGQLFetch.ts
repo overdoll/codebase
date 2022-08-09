@@ -46,6 +46,32 @@ export const clientFetch = (securityToken) => {
   }
 }
 
+const delay = async (ms): Promise<void> => await new Promise<void>((resolve) => setTimeout(() => resolve(), ms))
+
+const retryFetch = async (
+  url,
+  fetchOptions = {},
+  retries = 3,
+  retryDelay = 1000
+): Promise<Response> => {
+  return await new Promise((resolve, reject) => {
+    const wrapper = (n): any => {
+      fetch(url, fetchOptions)
+        .then((res) => resolve(res))
+        .catch(async (err) => {
+          if (n > 0) {
+            await delay(retryDelay)
+            wrapper(--n)
+          } else {
+            reject(err)
+          }
+        })
+    }
+
+    wrapper(retries)
+  })
+}
+
 // used for fetching inside of Next.js middleware
 // note that we have to manually assign security cookies in case they are not present
 export const serverMiddlewareFetch = (req) => {
@@ -108,13 +134,15 @@ export const serverFetch = (req, res) => {
       headers[key] = value
     })
 
-    const response = await fetch(
+    const response = await retryFetch(
       process.env.SERVER_GRAPHQL_ENDPOINT as string,
       {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(data)
-      }
+      },
+      5,
+      1200
     )
 
     const responseData = await response.json()

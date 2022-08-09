@@ -8,12 +8,15 @@ import (
 	"go.uber.org/zap"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/sentry_support"
+	"time"
 )
 
-func NewWorker(client client.Client) worker.Worker {
+func NewWorker(client client.Client, maxActivitySessions int) worker.Worker {
 	return worker.New(client, viper.GetString("temporal.queue"),
 		worker.Options{
-			Interceptors: []interceptor.WorkerInterceptor{sentry_support.NewTemporalWorkerInterceptor()},
+			MaxConcurrentActivityExecutionSize: maxActivitySessions,
+			Interceptors:                       []interceptor.WorkerInterceptor{sentry_support.NewTemporalWorkerInterceptor()},
+			WorkerStopTimeout:                  time.Second * 10,
 		})
 }
 

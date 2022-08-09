@@ -169,18 +169,6 @@ func (r ClubResolver) Members(ctx context.Context, obj *types.Club, after *strin
 	return types.MarshalClubMembersToGraphQLConnection(ctx, results, cursor), nil
 }
 
-func (r ClubResolver) SlugAliasesLimit(ctx context.Context, obj *types.Club) (int, error) {
-
-	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return 0, err
-	}
-
-	return r.App.Queries.ClubSlugAliasesLimit.Handle(ctx, query.ClubSlugAliasesLimit{
-		AccountId: obj.Owner.ID.GetID(),
-		Principal: principal.FromContext(ctx),
-	})
-}
-
 func (r ClubResolver) SuspensionLogs(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int) (*types.ClubSuspensionLogConnection, error) {
 
 	// non-authed users will just return nil

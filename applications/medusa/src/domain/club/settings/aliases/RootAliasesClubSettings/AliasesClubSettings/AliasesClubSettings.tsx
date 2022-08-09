@@ -20,11 +20,15 @@ const Query = graphql`
       slug
       id
       slugAliasesLimit
+      viewerIsOwner
       slugAliases {
         slug
       }
       ...ManageClubSlugAliasesFragment
       ...AddClubSlugAliasFragment
+    }
+    viewer {
+      isStaff
     }
   }
 `
@@ -35,7 +39,11 @@ export default function AliasesClubSettings ({ query }: Props): JSX.Element {
     query
   )
 
-  if (queryData?.club == null) {
+  if (queryData.club == null) {
+    return <NotFoundClub />
+  }
+
+  if (!queryData.club.viewerIsOwner && ((queryData.viewer?.isStaff) === false)) {
     return <NotFoundClub />
   }
 

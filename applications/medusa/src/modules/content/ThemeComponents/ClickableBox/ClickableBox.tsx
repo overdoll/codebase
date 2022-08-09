@@ -10,7 +10,7 @@ interface Props extends ButtonProps {
 const ClickableBox = forwardRef<any, Props>(({
   children,
   ...rest
-}: Props, forwardRef): JSX.Element => {
+}: Props, forwardRef) => {
   return (
     <Button
       ref={forwardRef}

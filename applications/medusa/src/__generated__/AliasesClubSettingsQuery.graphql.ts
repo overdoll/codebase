@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f2ba645e5e0bd9ef2297112eb6bc6ee0>>
- * @relayHash 81ff3c7aef30c14da9f7aa1df29284da
+ * @generated SignedSource<<a0a443b3364e7d1e8b45954945bad8a8>>
+ * @relayHash 1673984e97d454418522b6a5165cd8f2
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 81ff3c7aef30c14da9f7aa1df29284da
+// @relayRequestID 1673984e97d454418522b6a5165cd8f2
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -24,7 +24,11 @@ export type AliasesClubSettingsQuery$data = {
       readonly slug: string;
     }>;
     readonly slugAliasesLimit: number;
+    readonly viewerIsOwner: boolean;
     readonly " $fragmentSpreads": FragmentRefs<"AddClubSlugAliasFragment" | "ManageClubSlugAliasesFragment">;
+  } | null;
+  readonly viewer: {
+    readonly isStaff: boolean;
   } | null;
 };
 export type AliasesClubSettingsQuery = {
@@ -71,6 +75,13 @@ v4 = {
 v5 = {
   "alias": null,
   "args": null,
+  "kind": "ScalarField",
+  "name": "viewerIsOwner",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
   "concreteType": "ClubSlugAlias",
   "kind": "LinkedField",
   "name": "slugAliases",
@@ -78,6 +89,13 @@ v5 = {
   "selections": [
     (v2/*: any*/)
   ],
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "isStaff",
   "storageKey": null
 };
 return {
@@ -99,6 +117,7 @@ return {
           (v3/*: any*/),
           (v4/*: any*/),
           (v5/*: any*/),
+          (v6/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -109,6 +128,18 @@ return {
             "kind": "FragmentSpread",
             "name": "AddClubSlugAliasFragment"
           }
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "viewer",
+        "plural": false,
+        "selections": [
+          (v7/*: any*/)
         ],
         "storageKey": null
       }
@@ -133,14 +164,28 @@ return {
           (v2/*: any*/),
           (v3/*: any*/),
           (v4/*: any*/),
-          (v5/*: any*/)
+          (v5/*: any*/),
+          (v6/*: any*/)
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "viewer",
+        "plural": false,
+        "selections": [
+          (v7/*: any*/),
+          (v3/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "81ff3c7aef30c14da9f7aa1df29284da",
+    "id": "1673984e97d454418522b6a5165cd8f2",
     "metadata": {},
     "name": "AliasesClubSettingsQuery",
     "operationKind": "query",
@@ -149,6 +194,6 @@ return {
 };
 })();
 
-(node as any).hash = "f161b1212134dfbce356fa7ec936ff0f";
+(node as any).hash = "15d781554b9d091a0da1065575d4bf90";
 
 export default node;
