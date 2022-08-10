@@ -1,5 +1,5 @@
 import { generateUsernameAndEmail } from '../../support/generate'
-import { clickOnButton, clickOnPanel, clickOnTab, clickOnToggle } from '../../support/user_actions'
+import { clickOnButton, clickOnPanel, clickOnToggle } from '../../support/user_actions'
 
 const testCardDetails = {
   firstName: 'Test',
@@ -186,22 +186,22 @@ describe('Supporter', () => {
 
     // go to club payments
     cy.visit(`/club/${savedPaymentMethodClub}/revenue`)
-    clickOnButton('View Payments')
-    cy.findByText(/Your club's Payments are the detailed breakdown/iu).should('be.visible')
-    cy.findAllByText('PENDING').first().should('be.visible').click({ force: true })
-    cy.findByText(/Fee Breakdown/iu).should('be.visible')
+    // clickOnButton('View Payments')
+    // cy.findByText(/Your club's Payments are the detailed breakdown/iu).should('be.visible')
+    // cy.findAllByText('PENDING').first().should('be.visible').click({ force: true })
+    // cy.findByText(/Fee Breakdown/iu).should('be.visible')
 
     // refund transaction
     cy.visit(`/staff/account/${username}`)
-    clickOnTab('Transactions')
-    cy.findByText('Transactions').should('be.visible')
-    cy.findAllByText('PAYMENT').first().should('be.visible').click({ force: true })
-    cy.findByText('CCBill Transaction ID').should('be.visible')
-    clickOnButton(/Manage Transaction/iu)
-    cy.findByText('Refund Transaction').should('be.visible').click({ force: true })
-    cy.findByText('Select refund amount').parent().should('not.be.disabled').select('$6.99 - Maximum Amount')
-    clickOnButton('Refund Transaction')
-    cy.findByText(/Successfully refunded/iu).should('be.visible')
+    // clickOnTab('Transactions')
+    // cy.findByText('Transactions').should('be.visible')
+    // cy.findAllByText('PAYMENT').first().should('be.visible').click({ force: true })
+    // cy.findByText('CCBill Transaction ID').should('be.visible')
+    // clickOnButton(/Manage Transaction/iu)
+    // cy.findByText('Refund Transaction').should('be.visible').click({ force: true })
+    // cy.findByText('Select refund amount').parent().should('not.be.disabled').select('$6.99 - Maximum Amount')
+    // clickOnButton('Refund Transaction')
+    // cy.findByText(/Successfully refunded/iu).should('be.visible')
 
     cy.visit(`/club/${savedPaymentMethodClub}/revenue`)
     // see transaction metrics
@@ -209,8 +209,8 @@ describe('Supporter', () => {
 
     // go to refunded transaction
     clickOnButton('View Payments')
-    cy.findAllByText('PENDING').first().should('be.visible').click({ force: true })
-    cy.findByText(/Deduction Breakdown/iu).should('be.visible')
+    // cy.findAllByText('PENDING').first().should('be.visible').click({ force: true })
+    // cy.findByText(/Deduction Breakdown/iu).should('be.visible')
     /*
         // issue payout
         cy.visit(`/staff/club/${newPaymentMethodClub}`)
