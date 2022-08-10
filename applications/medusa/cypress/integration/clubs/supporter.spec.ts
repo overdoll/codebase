@@ -108,12 +108,12 @@ describe('Supporter', () => {
     cy.get('button[aria-label="Close"]').click({ force: true })
 
     // cancel subscription
-    // clickOnButton(/Manage Subscription/iu)
-    // cy.findByText('Cancel Subscription').should('be.visible').click({ force: true })
-    // cy.findByText(/Cancellation Reason/iu).should('not.be.disabled').click({ force: true })
-    // clickOnButton('Cancel Subscription')
-    // cy.findByText(newPaymentMethodClubName).should('be.visible')
-    // cy.findByText(/Benefits expire in/iu).should('be.visible')
+    clickOnButton(/Manage Subscription/iu)
+    cy.findByText('Cancel Subscription').should('be.visible').click({ force: true })
+    cy.findByText(/Cancellation Reason/iu).should('not.be.disabled').click({ force: true })
+    clickOnButton('Cancel Subscription')
+    cy.findByText(newPaymentMethodClubName).should('be.visible')
+    cy.findByText(/Benefits expire in/iu).should('be.visible')
 
     /**
      * Become supporter using saved payment method
