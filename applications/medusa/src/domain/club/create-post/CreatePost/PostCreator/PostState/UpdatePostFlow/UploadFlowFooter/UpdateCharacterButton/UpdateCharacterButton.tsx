@@ -92,6 +92,7 @@ export default function UpdateCharacterButton ({
         }
       },
       onCompleted () {
+        if (contentFailed || !contentProcessed) return
         nextStep()
       },
       onError () {
@@ -101,6 +102,16 @@ export default function UpdateCharacterButton ({
         })
       }
     })
+  }
+
+  if (hasUpdate() && Object.keys(state.characters).length > 0) {
+    return (
+      <FlowBuilderSaveButton
+        isDisabled={buttonDisabled}
+        isLoading={isUpdatingCharacter}
+        onClick={onUpdateCharacter}
+      />
+    )
   }
 
   if (contentFailed) {
@@ -120,16 +131,6 @@ export default function UpdateCharacterButton ({
           Processing Content
         </Trans>
       </Button>
-    )
-  }
-
-  if (hasUpdate() && Object.keys(state.characters).length > 0) {
-    return (
-      <FlowBuilderSaveButton
-        isDisabled={buttonDisabled}
-        isLoading={isUpdatingCharacter}
-        onClick={onUpdateCharacter}
-      />
     )
   }
 

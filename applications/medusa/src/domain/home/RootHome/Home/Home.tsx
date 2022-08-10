@@ -2,13 +2,15 @@ import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { HomeQuery } from '@//:artifacts/HomeQuery.graphql'
 import { graphql, usePaginationFragment } from 'react-relay'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
-import PostsInfiniteScroll
-  from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/PostsInfiniteScroll'
 import { Heading, HStack, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import AccountInformationBanner from '../../../../common/components/AccountInformationBanner/AccountInformationBanner'
 import CurationProfileAlert from '../CurationProfileAlert/CurationProfileAlert'
 import SearchButton from '../../../../common/components/PageHeader/SearchButton/SearchButton'
+import PostInfiniteScroll
+  from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
+import FullSimplePost
+  from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/FullSimplePost/FullSimplePost'
 
 interface Props {
   query: PreloadedQuery<HomeQuery>
@@ -18,9 +20,9 @@ const Query = graphql`
   query HomeQuery @preloadable {
     ...HomeFragment
     viewer {
-      ...PostsInfiniteScrollViewerFragment
       ...CurationProfileAlertFragment
       ...AccountInformationBannerFragment
+      ...FullSimplePostViewerFragment
     }
   }
 `
@@ -35,9 +37,11 @@ const Fragment = graphql`
     postsFeed (first: $first, after: $after)
     @connection (key: "HomePosts_postsFeed") {
       edges {
-        __typename
+        node {
+          ...FullSimplePostFragment
+        }
       }
-      ...PostsInfiniteScrollFragment
+      ...PostInfiniteScrollFragment
     }
   }
 `
@@ -70,13 +74,19 @@ export default function Home (props: Props): JSX.Element {
           <SearchButton />
         </HStack>
         <GlobalVideoManagerProvider>
-          <PostsInfiniteScroll
-            hasNext={hasNext}
-            isLoadingNext={isLoadingNext}
-            loadNext={loadNext}
+          <PostInfiniteScroll
             query={data.postsFeed}
-            viewerQuery={queryData.viewer}
-          />
+            hasNext={hasNext}
+            loadNext={loadNext}
+            isLoadingNext={isLoadingNext}
+          >
+            {({ index }) => (
+              <FullSimplePost
+                query={data.postsFeed.edges[index].node}
+                viewerQuery={queryData.viewer}
+              />
+            )}
+          </PostInfiniteScroll>
         </GlobalVideoManagerProvider>
       </Stack>
     </>

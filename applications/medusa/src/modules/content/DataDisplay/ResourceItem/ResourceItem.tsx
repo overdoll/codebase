@@ -67,9 +67,10 @@ export default function ResourceItem ({
           return (
             <Progress
               size='md'
-              colorScheme='teal'
+              colorScheme='gray'
               w='100%'
-              isIndeterminate
+              hasStripe
+              isAnimated
               value={100}
             />
           )
@@ -122,7 +123,7 @@ export default function ResourceItem ({
         return <ImageSnippet containCover={containCover} cover={cover ?? true} query={data} />
       case 'VIDEO':
         return (
-          <VideoSnippet query={data} />
+          <VideoSnippet containCover={containCover} cover={cover ?? true} query={data} />
         )
       default:
         return <></>

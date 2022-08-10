@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<41af69ef63f159a04494952d8a6f9a4b>>
+ * @generated SignedSource<<2699a8e429a4ee175caffd43523df0ba>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,11 +18,13 @@ export type ResourceInfoFragment$data = {
     readonly processed: boolean;
     readonly type: ResourceType;
     readonly videoDuration: number;
+    readonly videoNoAudio: boolean;
     readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
   };
   readonly supporterOnlyResource: {
     readonly type: ResourceType;
     readonly videoDuration: number;
+    readonly videoNoAudio: boolean;
   } | null;
   readonly " $fragmentType": "ResourceInfoFragment";
 };
@@ -44,6 +46,13 @@ v1 = {
   "args": null,
   "kind": "ScalarField",
   "name": "videoDuration",
+  "storageKey": null
+},
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "videoNoAudio",
   "storageKey": null
 };
 return {
@@ -83,6 +92,7 @@ return {
           "storageKey": null
         },
         (v1/*: any*/),
+        (v2/*: any*/),
         {
           "args": null,
           "kind": "FragmentSpread",
@@ -100,7 +110,8 @@ return {
       "plural": false,
       "selections": [
         (v0/*: any*/),
-        (v1/*: any*/)
+        (v1/*: any*/),
+        (v2/*: any*/)
       ],
       "storageKey": null
     }
@@ -110,6 +121,6 @@ return {
 };
 })();
 
-(node as any).hash = "c411cec72768f94d461c2038cc763c07";
+(node as any).hash = "41159a126e187c7a5cb1b15990924e34";
 
 export default node;

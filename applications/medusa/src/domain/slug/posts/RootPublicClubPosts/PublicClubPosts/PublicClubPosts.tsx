@@ -2,21 +2,23 @@ import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { PublicClubPostsQuery } from '@//:artifacts/PublicClubPostsQuery.graphql'
 import { graphql, usePaginationFragment } from 'react-relay'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
-import PostsInfiniteScroll
-  from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/PostsInfiniteScroll'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
 import AccountInformationBanner
   from '../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
 import PublicClubPostsRichObject
   from '../../../../../common/rich-objects/slug/PublicClubPostsRichObject/PublicClubPostsRichObject'
-import { Trans } from '@lingui/macro'
-import { Heading, HStack, Stack } from '@chakra-ui/react'
+import { HStack, Stack } from '@chakra-ui/react'
 import SearchButton from '../../../../../common/components/PageHeader/SearchButton/SearchButton'
 import PostOrderButton from '../../../../../common/components/PageHeader/PostOrderButton/PostOrderButton'
 import PostSupporterStatusButton
   from '../../../../../common/components/PageHeader/PostSupporterStatusButton/PostSupporterStatusButton'
 import PublicClubPostsStructuredData
   from '../../../../../common/structured-data/slug/PublicClubPostsStructuredData/PublicClubPostsStructuredData'
+import PostInfiniteScroll
+  from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
+import FullClubPost from './FullClubPost/FullClubPost'
+import ClubCharacterRecommendations
+  from '../../../character/RootPublicClubCharacter/PublicClubCharacter/ClubCharacterRecommendations/ClubCharacterRecommendations'
 
 interface Props {
   query: PreloadedQuery<PublicClubPostsQuery>
@@ -31,14 +33,14 @@ const Query = graphql`
     $supporterOnlyStatus: [SupporterOnlyStatus!]
   ) {
     club(slug: $slug) {
-      name
       ...PublicClubPostsFragment
       ...PublicClubPostsRichObjectFragment
       ...PublicClubPostsStructuredDataFragment
+      ...ClubCharacterRecommendationsFragment
     }
     viewer {
-      ...PostsInfiniteScrollViewerFragment
       ...AccountInformationBannerFragment
+      ...FullClubPostViewerFragment
     }
   }
 `
@@ -60,9 +62,11 @@ const Fragment = graphql`
     )
     @connection (key: "ClubPublicPosts_posts") {
       edges {
-        __typename
+        node {
+          ...FullClubPostFragment
+        }
       }
-      ...PostsInfiniteScrollFragment
+      ...PostInfiniteScrollFragment
     }
   }
 `
@@ -93,25 +97,29 @@ export default function PublicClubPosts (props: Props): JSX.Element {
       <PublicClubPostsStructuredData query={queryData.club} />
       <AccountInformationBanner query={queryData.viewer} />
       <Stack spacing={2}>
-        <HStack spacing={2} justify='space-between'>
-          <Heading color='gray.00' fontSize='2xl'>
-            <Trans>{queryData.club.name}'s Posts</Trans>
-          </Heading>
+        <ClubCharacterRecommendations query={queryData.club} />
+        <HStack justify='space-between' mt={2} spacing={2}>
+          <HStack spacing={2}>
+            <PostOrderButton />
+            <PostSupporterStatusButton />
+          </HStack>
           <SearchButton />
-        </HStack>
-        <HStack mt={2} spacing={2}>
-          <PostOrderButton />
-          <PostSupporterStatusButton />
         </HStack>
       </Stack>
       <GlobalVideoManagerProvider>
-        <PostsInfiniteScroll
-          hasNext={hasNext}
-          isLoadingNext={isLoadingNext}
-          loadNext={loadNext}
+        <PostInfiniteScroll
           query={data.posts}
-          viewerQuery={queryData.viewer}
-        />
+          hasNext={hasNext}
+          loadNext={loadNext}
+          isLoadingNext={isLoadingNext}
+        >
+          {({ index }) => (
+            <FullClubPost
+              query={data.posts.edges[index].node}
+              viewerQuery={queryData.viewer}
+            />
+          )}
+        </PostInfiniteScroll>
       </GlobalVideoManagerProvider>
     </>
   )

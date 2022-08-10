@@ -20,6 +20,7 @@ import {
 } from '@//:modules/content/HookedComponents/Form'
 import translateValidation from '@//:modules/validation/translateValidation'
 import useSlugSubscribe from '../../../../../../../common/support/useSlugSubscribe'
+import { useRouter } from 'next/router'
 
 interface Props {
   query: CreateClubCharacterFormFragment$key
@@ -31,21 +32,43 @@ interface FormValues {
 }
 
 const Fragment = graphql`
-  fragment CreateClubCharacterFormFragment on Club {
+  fragment CreateClubCharacterFormFragment on Club
+  @argumentDefinitions(
+    first: {type: Int, defaultValue: 8}
+    after: {type: String}
+  ) {
     slug
     id
     charactersLimit
     charactersCount
+    characters(first: $first, after: $after)
+    @connection(key: "ClubCharacters_characters") {
+      __id
+      edges {
+        node {
+          ...CharacterTileOverlayFragment
+          ...CharacterLinkTileFragment
+        }
+      }
+    }
   }
 `
 
 const Mutation = graphql`
-  mutation CreateClubCharacterFormMutation ($input: CreateCharacterInput!) {
-    createCharacter(input: $input) {
+  mutation CreateClubCharacterFormMutation ($input: CreateCharacterInput!, $connections: [ID!]!) {
+    createCharacter(input: $input)  {
       validation
-      character {
+      character @appendNode(connections: $connections, edgeTypeName: "createCharacterPrimaryEdge") {
         id
         name
+        club {
+          name
+          slug
+          charactersCount
+        }
+        slug
+        ...CharacterTileOverlayFragment
+        ...CharacterLinkTileFragment
       }
     }
   }
@@ -58,7 +81,11 @@ export default function CreateClubCharacterForm ({
 
   const [commit, isInFlight] = useMutation<CreateClubCharacterFormMutation>(Mutation)
 
+  const router = useRouter()
+
   const { i18n } = useLingui()
+
+  const connectionId = data.characters.__id
 
   const isDisabled = data.charactersLimit === data.charactersCount
 
@@ -110,19 +137,26 @@ export default function CreateClubCharacterForm ({
         input: {
           clubId: data.id,
           ...formValues
-        }
+        },
+        connections: [connectionId]
       },
-      onCompleted (data) {
-        if (data?.createCharacter?.validation != null) {
+      onCompleted (queryData) {
+        if (queryData?.createCharacter?.validation != null) {
           setError('slug', {
             type: 'mutation',
-            message: i18n._(translateValidation(data.createCharacter.validation))
+            message: i18n._(translateValidation(queryData.createCharacter.validation))
           })
           return
         }
         notify({
           status: 'success',
           title: t`Successfully created character ${formValues.name}`
+        })
+        void router.push({
+          pathname: '/club/[slug]/characters',
+          query: {
+            slug: data.slug
+          }
         })
       },
       onError (data) {

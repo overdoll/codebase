@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1ffe02facc9cea886653b77c51fabdad>>
- * @relayHash 15fbbe0b0812ddeaece0e1eb660916c1
+ * @generated SignedSource<<346579abe3e21518edc7352ad0aeede2>>
+ * @relayHash 770f19e1492b2b49e0dea2ca501c115d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 15fbbe0b0812ddeaece0e1eb660916c1
+// @relayRequestID 770f19e1492b2b49e0dea2ca501c115d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -83,6 +83,13 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "url",
   "storageKey": null
 };
@@ -133,13 +140,7 @@ return {
                 "plural": false,
                 "selections": [
                   (v2/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "name",
-                    "storageKey": null
-                  },
+                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -155,6 +156,19 @@ return {
                         "name": "title",
                         "storageKey": null
                       },
+                      (v2/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Club",
+                    "kind": "LinkedField",
+                    "name": "club",
+                    "plural": false,
+                    "selections": [
+                      (v3/*: any*/),
                       (v2/*: any*/)
                     ],
                     "storageKey": null
@@ -230,7 +244,7 @@ return {
                         "name": "urls",
                         "plural": true,
                         "selections": [
-                          (v3/*: any*/),
+                          (v4/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -263,7 +277,7 @@ return {
                         "name": "videoThumbnail",
                         "plural": false,
                         "selections": [
-                          (v3/*: any*/)
+                          (v4/*: any*/)
                         ],
                         "storageKey": null
                       }
@@ -333,7 +347,7 @@ return {
     ]
   },
   "params": {
-    "id": "15fbbe0b0812ddeaece0e1eb660916c1",
+    "id": "770f19e1492b2b49e0dea2ca501c115d",
     "metadata": {},
     "name": "UploadSearchCharactersMultiSelectorPaginationFragment",
     "operationKind": "query",

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<757b8019a01d116b83af8933b022319a>>
- * @relayHash 57f333524bdf27c813fa8fd615882031
+ * @generated SignedSource<<216afbfa7212c0b36b4125d1711b9841>>
+ * @relayHash ef92d0da2504ab17a98dec840b7601ab
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 57f333524bdf27c813fa8fd615882031
+// @relayRequestID ef92d0da2504ab17a98dec840b7601ab
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -250,14 +250,6 @@ return {
                     "name": "edges",
                     "plural": true,
                     "selections": [
-                      (v8/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "cursor",
-                        "storageKey": null
-                      },
                       {
                         "alias": null,
                         "args": null,
@@ -266,7 +258,6 @@ return {
                         "name": "node",
                         "plural": false,
                         "selections": [
-                          (v8/*: any*/),
                           (v9/*: any*/),
                           {
                             "alias": null,
@@ -359,13 +350,6 @@ return {
                               {
                                 "alias": null,
                                 "args": null,
-                                "kind": "ScalarField",
-                                "name": "name",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
                                 "concreteType": "Resource",
                                 "kind": "LinkedField",
                                 "name": "thumbnail",
@@ -379,6 +363,13 @@ return {
                                   (v17/*: any*/),
                                   (v11/*: any*/)
                                 ],
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "name",
                                 "storageKey": null
                               },
                               {
@@ -436,8 +427,16 @@ return {
                             "kind": "ScalarField",
                             "name": "description",
                             "storageKey": null
-                          }
+                          },
+                          (v8/*: any*/)
                         ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "cursor",
                         "storageKey": null
                       }
                     ],
@@ -493,7 +492,7 @@ return {
     ]
   },
   "params": {
-    "id": "57f333524bdf27c813fa8fd615882031",
+    "id": "ef92d0da2504ab17a98dec840b7601ab",
     "metadata": {},
     "name": "ClubPostsPreviewPaginationQuery",
     "operationKind": "query",
@@ -502,6 +501,6 @@ return {
 };
 })();
 
-(node as any).hash = "81c57ecafae42285d55a14d3bcc6406f";
+(node as any).hash = "d82e8125979c0c8656ff38d842d305d8";
 
 export default node;

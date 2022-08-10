@@ -2,7 +2,8 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type { PublicPostStructuredDataFragment$key } from '@//:artifacts/PublicPostStructuredDataFragment.graphql'
 import Head from 'next/head'
 import React from 'react'
-import addPostJsonLd from './addPostJsonLd'
+import addPostListJsonLd from './addPostListJsonLd'
+import addPostContentJsonLd from './addPostContentJsonLd'
 
 interface Props {
   query: PublicPostStructuredDataFragment$key
@@ -10,7 +11,8 @@ interface Props {
 
 const Fragment = graphql`
   fragment PublicPostStructuredDataFragment on Post {
-    ...addPostJsonLdFragment
+    ...addPostListJsonLdFragment
+    ...addPostContentJsonLdFragment
   }
 `
 
@@ -23,8 +25,13 @@ export default function PublicPostStructuredData ({
     <Head>
       <script
         type='application/ld+json'
-        dangerouslySetInnerHTML={addPostJsonLd(data)}
+        dangerouslySetInnerHTML={addPostListJsonLd(data)}
         key='post-page-details'
+      />
+      <script
+        type='application/ld+json'
+        dangerouslySetInnerHTML={addPostContentJsonLd(data)}
+        key='post-content-details'
       />
     </Head>
   )

@@ -1,6 +1,9 @@
 import { generateClubName, generateUsernameAndEmail } from '../../support/generate'
+import { clickOnButton, clickOnTab, clickOnTile, typeIntoPlaceholder } from '../../support/user_actions'
 
 Cypress.config('defaultCommandTimeout', 10000)
+
+const character = 'TestCharacter'
 
 describe('Club Characters', () => {
   it('club characters', () => {
@@ -21,27 +24,26 @@ describe('Club Characters', () => {
     cy.visit(`/club/${clubName}/characters`)
     cy.findByText(/Custom Characters Disabled/iu).should('be.visible')
 
-    // TODO bug with enabling characters causes javascript error and therefore test will not finish successfully
-    // /**
-    //  * Enable characters as staff
-    //  */
-    // cy.joinWithExistingAccount('0eclipse')
-    // cy.visit(`/staff/club/${clubName}`)
-    // clickOnTab('Posts')
-    // clickOnButton('Enable Club Characters')
-    // cy.findByText(/Successfully enabled characters/iu).should('be.visible')
-    //
-    // /**
-    //  * Create character as club owner
-    //  */
-    // cy.visit(`/club/${clubName}/characters`)
-    // cy.findByText(/You haven't created/iu).should('be.visible')
-    // clickOnButton('Create Character')
-    // cy.findByText(/Create Club Character/iu).should('be.visible')
-    // typeIntoPlaceholder(/Character name/iu, 'TestCharacter')
-    // clickOnButton('Create Character')
-    // cy.findByText(/Successfully created character/iu).should('be.visible')
-    // cy.visit(`/club/${clubName}/characters`)
-    // cy.findByText('TestCharacter').should('be.visible')
+    /**
+     * Enable characters as staff
+     */
+    cy.joinWithExistingAccount('0eclipse')
+    cy.visit(`/staff/club/${clubName}`)
+    clickOnTab('Posts')
+    clickOnButton('Enable Club Characters')
+    cy.findByText(/Successfully enabled characters/iu).should('be.visible')
+
+    /**
+     * Create character as club owner
+     */
+    cy.visit(`/club/${clubName}/characters`)
+    cy.findByText(/You haven't created/iu).should('be.visible')
+    clickOnButton('Create Character')
+    cy.findByText(/Create Club Character/iu).should('be.visible')
+    typeIntoPlaceholder(/Character name/iu, character)
+    clickOnButton('Create Character')
+    cy.findByText(/Successfully created character/iu).should('be.visible')
+    clickOnTile(character)
+    cy.findByText('Club Character').should('be.visible')
   })
 })

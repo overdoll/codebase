@@ -13,78 +13,78 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:167
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:201
 msgid "A unique link"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacter.tsx:66
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacter.tsx:69
 msgid "Back to Characters"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:152
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:186
 msgid "Character name"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:180
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:214
 msgid "Create Character"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacter.tsx:72
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacter.tsx:75
 msgid "Create Club Character"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacter.tsx:77
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacter.tsx:80
 msgid "Create a club character to use in your posts"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:131
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:165
 msgid "Error creating character"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:85
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:112
 msgid "Please enter a character link"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:74
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:101
 msgid "Please enter a name for your character"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:125
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:153
 msgid "Successfully created character {0}"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:88
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:115
 msgid "The character link can only contain numbers and letters."
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:87
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:114
 msgid "The character link cannot exceed 25 characters"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:86
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:113
 msgid "The character link must be at least 2 characters"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:76
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:103
 msgid "The name cannot exceed 25 characters"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:75
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:102
 msgid "The name must be at least 2 characters"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:193
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:227
 msgid "You have created the maximum number of allowed characters ({0}). Please contact us if you would like this limit increased."
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:147
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:181
 msgid "Your Character Name"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:159
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:193
 msgid "Your Unique Character Link"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:206
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacterForm/CreateClubCharacterForm.tsx:240
 msgid "{remainingCharacters, plural, one {You can create # more character} other {You can create # more characters}}"
 msgstr ""

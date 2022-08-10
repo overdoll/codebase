@@ -74,7 +74,7 @@ export default function PostsInfiniteScroll ({
         </Box>
       )
     }
-    return <Box h={100} w='100%' />
+    return <Box h={400} w='100%' />
   }
 
   return (

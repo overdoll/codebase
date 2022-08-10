@@ -1,10 +1,12 @@
 import type { SuggestedPostsFragment$key } from '@//:artifacts/SuggestedPostsFragment.graphql'
 import type { SuggestedPostsViewerFragment$key } from '@//:artifacts/SuggestedPostsViewerFragment.graphql'
-
 import { graphql, usePaginationFragment } from 'react-relay'
-import PostsInfiniteScroll from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/PostsInfiniteScroll'
 import { useFragment } from 'react-relay/hooks'
 import { PublicPostQuery } from '@//:artifacts/PublicPostQuery.graphql'
+import FullSimplePost
+  from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/FullSimplePost/FullSimplePost'
+import PostInfiniteScroll
+  from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
 
 interface Props {
   query: SuggestedPostsFragment$key | null
@@ -21,16 +23,18 @@ const Fragment = graphql`
     suggestedPosts (first: $first, after: $after)
     @connection (key: "SuggestedPosts_suggestedPosts") {
       edges {
-        __typename
+        node {
+          ...FullSimplePostFragment
+        }
       }
-      ...PostsInfiniteScrollFragment
+      ...PostInfiniteScrollFragment
     }
   }
 `
 
 const ViewerFragment = graphql`
   fragment SuggestedPostsViewerFragment on Account {
-    ...PostsInfiniteScrollViewerFragment
+    ...FullSimplePostViewerFragment
   }
 `
 
@@ -51,12 +55,18 @@ export default function SuggestedPosts ({
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   return (
-    <PostsInfiniteScroll
+    <PostInfiniteScroll
       query={data.suggestedPosts}
-      viewerQuery={viewerData}
       hasNext={hasNext}
       loadNext={loadNext}
       isLoadingNext={isLoadingNext}
-    />
+    >
+      {({ index }) => (
+        <FullSimplePost
+          query={data.suggestedPosts.edges[index].node}
+          viewerQuery={viewerData}
+        />
+      )}
+    </PostInfiniteScroll>
   )
 }

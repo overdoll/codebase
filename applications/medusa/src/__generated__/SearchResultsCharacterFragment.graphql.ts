@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a5101c7fc6cd75c5c93cd2a6260c960c>>
+ * @generated SignedSource<<b8f2d298c46fbfdccca3ea4b555aebb0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,11 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SearchResultsCharacterFragment$data = {
-  readonly series: {
-    readonly slug: string;
-  } | null;
-  readonly slug: string;
-  readonly " $fragmentSpreads": FragmentRefs<"CharacterTileOverlayFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"CharacterLinkTileFragment" | "CharacterTileOverlayFragment">;
   readonly " $fragmentType": "SearchResultsCharacterFragment";
 };
 export type SearchResultsCharacterFragment$key = {
@@ -23,44 +19,27 @@ export type SearchResultsCharacterFragment$key = {
   readonly " $fragmentSpreads": FragmentRefs<"SearchResultsCharacterFragment">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "slug",
-  "storageKey": null
-};
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
   "name": "SearchResultsCharacterFragment",
   "selections": [
-    (v0/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "Series",
-      "kind": "LinkedField",
-      "name": "series",
-      "plural": false,
-      "selections": [
-        (v0/*: any*/)
-      ],
-      "storageKey": null
-    },
     {
       "args": null,
       "kind": "FragmentSpread",
       "name": "CharacterTileOverlayFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "CharacterLinkTileFragment"
     }
   ],
   "type": "Character",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "b82c89741f415d5f0e41f13906c5bfdd";
+(node as any).hash = "17cbe893b835626a65adaf53fdf83ca3";
 
 export default node;

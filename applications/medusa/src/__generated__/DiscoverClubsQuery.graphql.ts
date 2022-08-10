@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<2b2262bc1f152ecf0584e9269c396daf>>
- * @relayHash d085da0c2c83891d8660bbe8414832c5
+ * @generated SignedSource<<22b9d1833f9a6c4db4acdbca121e5c55>>
+ * @relayHash 1cc48249a67a7715a2c18e87aa393a60
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d085da0c2c83891d8660bbe8414832c5
+// @relayRequestID 1cc48249a67a7715a2c18e87aa393a60
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -70,7 +70,7 @@ v5 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 11
+    "value": 17
   }
 ],
 v6 = {
@@ -474,7 +474,7 @@ return {
             "storageKey": null
           }
         ],
-        "storageKey": "discoverClubs(first:11)"
+        "storageKey": "discoverClubs(first:17)"
       },
       {
         "alias": null,
@@ -488,7 +488,7 @@ return {
     ]
   },
   "params": {
-    "id": "d085da0c2c83891d8660bbe8414832c5",
+    "id": "1cc48249a67a7715a2c18e87aa393a60",
     "metadata": {},
     "name": "DiscoverClubsQuery",
     "operationKind": "query",

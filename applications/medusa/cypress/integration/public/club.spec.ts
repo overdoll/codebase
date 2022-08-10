@@ -46,7 +46,6 @@ describe('Club Page', () => {
     cy.findByText(/Copied to clipboard/iu).should('be.visible')
     clickOnButton('All Posts')
     cy.url().should('contain', `/${ClubSlug}/posts`)
-    cy.findByText(`${ClubName}'s Posts`).should('be.visible')
   })
 
   it('join, support as not logged in', () => {

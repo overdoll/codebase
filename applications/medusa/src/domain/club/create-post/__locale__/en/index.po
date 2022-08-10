@@ -89,7 +89,7 @@ msgstr ""
 msgid "Content Menu"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:115
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:116
 msgid "Creating Your Post"
 msgstr ""
 
@@ -218,7 +218,7 @@ msgstr ""
 msgid "Opening Post"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:125
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:128
 msgid "Post Content Processed"
 msgstr ""
 
@@ -238,17 +238,17 @@ msgstr ""
 #~ msgid "Processing"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:119
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:130
 msgid "Processing Content"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:109
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:107
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:120
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:110
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:95
 msgid "Processing Failed"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:116
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:119
 msgid "Processing Post Content"
 msgstr ""
 
@@ -350,7 +350,7 @@ msgstr ""
 msgid "Show Your Club Characters"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:99
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:106
 msgid "Submit"
 msgstr ""
 
@@ -414,11 +414,11 @@ msgstr ""
 msgid "There was an error saving the categories"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:100
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:101
 msgid "There was an error saving the characters"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:85
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:92
 msgid "There was an error submitting your post"
 msgstr ""
 

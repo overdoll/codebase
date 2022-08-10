@@ -13,7 +13,7 @@ interface Props {
 const Fragment = graphql`
   fragment DiscoverClubsListFragment on Query
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 11}
+    first: {type: Int, defaultValue: 17}
     after: {type: String}
   )
   @refetchable(queryName: "DiscoverClubsPaginationQuery" ) {

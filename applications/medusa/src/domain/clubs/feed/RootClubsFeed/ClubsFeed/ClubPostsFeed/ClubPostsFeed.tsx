@@ -2,9 +2,11 @@ import type { ClubPostsFeedFragment$key } from '@//:artifacts/ClubPostsFeedFragm
 import type { ClubPostsFeedViewerFragment$key } from '@//:artifacts/ClubPostsFeedViewerFragment.graphql'
 import { graphql, usePaginationFragment } from 'react-relay'
 import { ClubsFeedQuery } from '@//:artifacts/ClubsFeedQuery.graphql'
-import PostsInfiniteScroll
-  from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/PostsInfiniteScroll'
 import { useFragment } from 'react-relay/hooks'
+import PostInfiniteScroll
+  from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
+import FullSimplePost
+  from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/FullSimplePost/FullSimplePost'
 
 interface Props {
   query: ClubPostsFeedFragment$key | null
@@ -21,16 +23,18 @@ const Fragment = graphql`
     clubMembersPostsFeed (first: $first, after: $after)
     @connection (key: "ClubPostsFeed_clubMembersPostsFeed") {
       edges {
-        __typename
+        node {
+          ...FullSimplePostFragment
+        }
       }
-      ...PostsInfiniteScrollFragment
+      ...PostInfiniteScrollFragment
     }
   }
 `
 
 const ViewerFragment = graphql`
   fragment ClubPostsFeedViewerFragment on Account {
-    ...PostsInfiniteScrollViewerFragment
+    ...FullSimplePostViewerFragment
   }
 `
 
@@ -51,12 +55,19 @@ export default function ClubPostsFeed ({
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   return (
-    <PostsInfiniteScroll
+    <PostInfiniteScroll
       query={data.clubMembersPostsFeed}
-      viewerQuery={viewerData}
       hasNext={hasNext}
       loadNext={loadNext}
       isLoadingNext={isLoadingNext}
-    />
+    >
+      {({ index }) => (
+        <FullSimplePost
+          hideOverflow={false}
+          query={data.clubMembersPostsFeed.edges[index].node}
+          viewerQuery={viewerData}
+        />
+      )}
+    </PostInfiniteScroll>
   )
 }

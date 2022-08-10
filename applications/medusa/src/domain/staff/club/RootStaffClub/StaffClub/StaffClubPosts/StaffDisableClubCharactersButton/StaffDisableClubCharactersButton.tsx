@@ -40,12 +40,11 @@ export default function StaffDisableClubCharactersButton ({
 
   const notify = useToast()
 
-  const onSubmit = (formValues): void => {
+  const onSubmit = (): void => {
     commit({
       variables: {
         input: {
-          clubId: data.id,
-          ...formValues
+          clubId: data.id
         }
       },
       onCompleted () {

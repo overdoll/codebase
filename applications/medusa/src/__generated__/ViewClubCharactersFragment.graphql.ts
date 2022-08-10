@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bfa8e4aec9ca4bb7fde7739e02ac2727>>
+ * @generated SignedSource<<06c2db719841d53f920569d1fc2c86b0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,9 +12,10 @@ import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ViewClubCharactersFragment$data = {
   readonly characters: {
+    readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly " $fragmentSpreads": FragmentRefs<"CharacterTileOverlayFragment">;
+        readonly " $fragmentSpreads": FragmentRefs<"CharacterLinkTileFragment" | "CharacterTileOverlayFragment">;
       };
     }>;
   };
@@ -104,6 +105,11 @@ return {
                   "name": "CharacterTileOverlayFragment"
                 },
                 {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "CharacterLinkTileFragment"
+                },
+                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
@@ -147,6 +153,18 @@ return {
             }
           ],
           "storageKey": null
+        },
+        {
+          "kind": "ClientExtension",
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "__id",
+              "storageKey": null
+            }
+          ]
         }
       ],
       "storageKey": null
@@ -185,6 +203,6 @@ return {
 };
 })();
 
-(node as any).hash = "0689e15b8983dcd11f109f1ae110fefb";
+(node as any).hash = "203a19c66958c35ef3c037c636a2a25f";
 
 export default node;

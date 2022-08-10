@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1884e20f720910d82d291b79f14d7458>>
- * @relayHash 5ff1d6814ed6f0dc8e7d0cb9c03bdf19
+ * @generated SignedSource<<a0fc91e3eb062a1620ddaf92119db3ea>>
+ * @relayHash f73b135d402f62a93c7d5d6a6a756de0
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 5ff1d6814ed6f0dc8e7d0cb9c03bdf19
+// @relayRequestID f73b135d402f62a93c7d5d6a6a756de0
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -116,6 +116,13 @@ v10 = [
   }
 ],
 v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -255,13 +262,7 @@ return {
                     "plural": false,
                     "selections": [
                       (v9/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "name",
-                        "storageKey": null
-                      },
+                      (v11/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -277,7 +278,22 @@ return {
                             "name": "title",
                             "storageKey": null
                           },
-                          (v9/*: any*/)
+                          (v9/*: any*/),
+                          (v2/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Club",
+                        "kind": "LinkedField",
+                        "name": "club",
+                        "plural": false,
+                        "selections": [
+                          (v11/*: any*/),
+                          (v9/*: any*/),
+                          (v2/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -352,7 +368,7 @@ return {
                             "name": "urls",
                             "plural": true,
                             "selections": [
-                              (v11/*: any*/),
+                              (v12/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -385,13 +401,14 @@ return {
                             "name": "videoThumbnail",
                             "plural": false,
                             "selections": [
-                              (v11/*: any*/)
+                              (v12/*: any*/)
                             ],
                             "storageKey": null
                           }
                         ],
                         "storageKey": null
                       },
+                      (v2/*: any*/),
                       (v5/*: any*/)
                     ],
                     "storageKey": null
@@ -430,6 +447,18 @@ return {
                   }
                 ],
                 "storageKey": null
+              },
+              {
+                "kind": "ClientExtension",
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "__id",
+                    "storageKey": null
+                  }
+                ]
               }
             ],
             "storageKey": "characters(first:8)"
@@ -469,7 +498,7 @@ return {
     ]
   },
   "params": {
-    "id": "5ff1d6814ed6f0dc8e7d0cb9c03bdf19",
+    "id": "f73b135d402f62a93c7d5d6a6a756de0",
     "metadata": {},
     "name": "CreateClubCharacterQuery",
     "operationKind": "query",

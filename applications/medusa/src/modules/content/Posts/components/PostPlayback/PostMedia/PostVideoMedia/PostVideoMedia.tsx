@@ -6,7 +6,6 @@ import { GlobalVideoManagerContext } from '../../../../index'
 import { useSwiperSlide } from 'swiper/react'
 import { ObserveContentCallable } from '../../ObserveContent/ObserveContent'
 import useVideoControls from '../../ControlledVideo/hooks/useVideoControls/useVideoControls'
-import { useUpdateEffect } from 'usehooks-ts'
 
 interface Props extends Pick<ControlledVideoProps, 'controls'>, ObserveContentCallable {
   query: PostVideoMediaFragment$key
@@ -33,10 +32,7 @@ export default function PostVideoMedia ({
     videoMuted,
     videoVolume,
     changeVideoMuted,
-    changeVideoVolume,
-    videoPlaying,
-    onPauseVideo,
-    onPlayVideo
+    changeVideoVolume
   } = useContext(GlobalVideoManagerContext)
 
   const {
@@ -49,51 +45,32 @@ export default function PostVideoMedia ({
 
   const isActive = slide.isActive
 
-  const canPlay = videoPlaying === data.id
-
-  const onPlay = (): void => {
-    play()
-    onPlayVideo(data.id)
-  }
-
-  const onPauseFromVideo = (): void => {
-    onPauseVideo(data.id)
-  }
-
   useEffect(() => {
     if (ref?.current == null || ref.current.error != null) return
     if (isObservingDebounced && isActive && ref.current.paused) {
-      onPlay()
+      play()
     }
-  }, [isObservingDebounced, isActive, ref, data.id])
+  }, [isObservingDebounced, isActive, ref])
 
   useEffect(() => {
     if (ref?.current == null || ref.current.error != null) return
     if (isObserving && !isActive && !ref.current.paused) {
-      onPauseFromVideo()
+      pause()
     }
-  }, [isObserving, isActive, ref, data.id])
+  }, [isObserving, isActive, ref])
 
   useEffect(() => {
     if (ref?.current == null || ref.current.error != null) return
     if (!isObserving && !ref.current.paused) {
-      onPauseFromVideo()
-    }
-  }, [isObserving, ref, data.id])
-
-  useUpdateEffect(() => {
-    if (ref?.current == null || ref.current.error != null) return
-    if (!canPlay) {
       pause()
     }
-  }, [canPlay, ref])
+  }, [isObserving, ref])
 
   return (
     <ControlledVideo
       autoPlay={isObservingDebounced}
       ref={ref}
       controls={controls}
-      onPause={onPauseFromVideo}
       onVolumeChange={(volume) => changeVideoVolume(volume)}
       onMute={(muted) => changeVideoMuted(muted)}
       volume={videoVolume}

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<68eefe24084235bf7a42e5b7c44b6588>>
- * @relayHash ba919b27a31f41f9857f66fe801099a0
+ * @generated SignedSource<<3e9a691cbf68bd42a0810f2049577652>>
+ * @relayHash 8a00d5818cb8c419e803ab68fa11d795
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ba919b27a31f41f9857f66fe801099a0
+// @relayRequestID 8a00d5818cb8c419e803ab68fa11d795
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -211,14 +211,6 @@ return {
                     "name": "edges",
                     "plural": true,
                     "selections": [
-                      (v3/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "cursor",
-                        "storageKey": null
-                      },
                       {
                         "alias": null,
                         "args": null,
@@ -227,7 +219,6 @@ return {
                         "name": "node",
                         "plural": false,
                         "selections": [
-                          (v3/*: any*/),
                           (v4/*: any*/),
                           {
                             "alias": null,
@@ -397,8 +388,16 @@ return {
                             "kind": "ScalarField",
                             "name": "description",
                             "storageKey": null
-                          }
+                          },
+                          (v3/*: any*/)
                         ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "cursor",
                         "storageKey": null
                       }
                     ],
@@ -451,7 +450,7 @@ return {
     ]
   },
   "params": {
-    "id": "ba919b27a31f41f9857f66fe801099a0",
+    "id": "8a00d5818cb8c419e803ab68fa11d795",
     "metadata": {},
     "name": "ClubPostsFeedPaginationQuery",
     "operationKind": "query",
@@ -460,6 +459,6 @@ return {
 };
 })();
 
-(node as any).hash = "9c1c247799d47361c3b6aca9566bbf18";
+(node as any).hash = "d66e72112ee16c8bab72bb39d082f78e";
 
 export default node;

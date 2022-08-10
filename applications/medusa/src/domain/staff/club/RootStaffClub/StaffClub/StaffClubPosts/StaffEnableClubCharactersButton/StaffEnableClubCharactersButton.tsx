@@ -37,7 +37,11 @@ const Fragment = graphql`
 const Mutation = graphql`
   mutation StaffEnableClubCharactersButtonMutation($input: EnableClubCharactersInput!) {
     enableClubCharacters(input: $input) {
-      __typename
+      club {
+        id
+        charactersEnabled
+        charactersLimit
+      }
     }
   }
 `
@@ -105,7 +109,6 @@ export default function StaffEnableClubCharactersButton ({
         <FormSubmitButton
           size='md'
           isLoading={isInFlight}
-          onClick={onSubmit}
           w='100%'
           colorScheme='green'
         >

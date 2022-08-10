@@ -8,7 +8,8 @@ import { FileErrorType, UppyType } from '../../types'
 import { ArrowButtonRefresh, CheckCircle, DownloadArrow, UploadFile, WarningTriangle } from '@//:assets/icons'
 import IconButton from '../../../../../form/IconButton/IconButton'
 import { FILE_ICONS } from '../../constants/upload'
-import { useDeferredValue, useMemo } from 'react'
+import { useMemo } from 'react'
+import { useDebounce } from 'usehooks-ts'
 
 interface Props {
   file: UppyFile
@@ -31,7 +32,7 @@ export default function UploadFileDisplay ({
 
   const fileUploadStarted = file.progress?.uploadStarted != null && file?.progress?.percentage != null
 
-  const deferredPercentage = useDeferredValue(file?.progress?.percentage)
+  const debouncedPercentage = useDebounce(file?.progress?.percentage, 100)
 
   const onRemoveFile = (): void => {
     uppy.removeFile(file.id)
@@ -68,9 +69,7 @@ export default function UploadFileDisplay ({
       size: 'md',
       h: 5,
       borderRadius: 'md',
-      hasStripe: true,
-      transitionDelay: '0.1s',
-      transition: '0.3s ease'
+      hasStripe: true
     }
 
     const memoProgress = useMemo(() => {
@@ -89,11 +88,11 @@ export default function UploadFileDisplay ({
         <Progress
           colorScheme={determineColorScheme()}
           isAnimated={fileUploadStarted && !fileUploadComplete && !fileHasError}
-          value={deferredPercentage === 0 ? 5 : deferredPercentage}
+          value={debouncedPercentage === 0 ? 5 : debouncedPercentage}
           {...PROGRESS_PROPS}
         />
       )
-    }, [deferredPercentage, fileHasError, fileUploadComplete, fileUploadStarted])
+    }, [debouncedPercentage, fileHasError, fileUploadComplete, fileUploadStarted])
 
     if (fileHasError || fileUploadComplete || fileUploadStarted) {
       return (

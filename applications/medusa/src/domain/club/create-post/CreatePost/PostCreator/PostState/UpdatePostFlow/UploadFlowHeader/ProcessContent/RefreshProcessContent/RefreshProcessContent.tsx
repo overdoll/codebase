@@ -69,7 +69,10 @@ export default function RefreshProcessContent ({
     searchArguments.options
   )
 
-  const { skipToStep } = useContext(FlowContext)
+  const {
+    skipToStep,
+    currentStep
+  } = useContext(FlowContext)
 
   const contentIsProcessed = isProcessed(queryData?.post?.content)
   const contentFailed = isFailed(queryData?.post?.content)
@@ -126,6 +129,17 @@ export default function RefreshProcessContent ({
           Post Content Processed
         </Trans>
       </Heading>
+    )
+  }
+
+  if (currentStep === 'content') {
+    return (
+      <LargeBackgroundBox borderRadius='inherit' p={3}>
+        <HStack spacing={2}>
+          <ProcessingIcon />
+          <ProcessingText />
+        </HStack>
+      </LargeBackgroundBox>
     )
   }
 

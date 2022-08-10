@@ -3,7 +3,7 @@ import Uppy from '@uppy/core'
 import Tus from '@uppy/tus'
 import CanUseDOM from '../../../../../operations/CanUseDOM'
 import GoldenRetriever from '@uppy/golden-retriever'
-import { UPLOAD_MAX_FILE_SIZE, TUS_OPTIONS, UPLOAD_ALLOWED_FILE_TYPES } from '../../constants/upload'
+import { TUS_OPTIONS, UPLOAD_ALLOWED_FILE_TYPES, UPLOAD_MAX_FILE_SIZE } from '../../constants/upload'
 
 // TODO changing the name of the file to prevent duplicates issue breaks tus
 
@@ -21,10 +21,14 @@ const U: UppyType = Uppy({
 
 if (CanUseDOM) {
   // Allow resuming uploads if user refreshes or navigates away (browser-only)
-  U.use(GoldenRetriever, { serviceWorker: false })
+  U.use(GoldenRetriever, {
+    serviceWorker: false
+  })
 }
 
 // Resume-able uploads on the API
-U.use(Tus, TUS_OPTIONS)
+U.use(Tus, {
+  ...TUS_OPTIONS
+})
 
 export default U
