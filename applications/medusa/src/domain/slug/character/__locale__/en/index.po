@@ -1,0 +1,12 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-08-09 19:29-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+
+#: src/domain/slug/character/RootPublicClubCharacter/PublicClubCharacter/PublicClubCharacter.tsx:98
+msgid "Club Character"
+msgstr ""

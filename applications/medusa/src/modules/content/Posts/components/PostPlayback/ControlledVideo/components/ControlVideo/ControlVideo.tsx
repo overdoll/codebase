@@ -44,6 +44,8 @@ const ControlVideo = forwardRef<HTMLVideoElement, Props>(({
     ref
   } = useVideoControls(forwardRef as MutableRefObject<HTMLVideoElement>)
 
+  const determineCanSeek = canSeek && totalTime > 15
+
   const onChangeVideo = (): void => {
     const video = ref.current
     if (video == null) return
@@ -106,7 +108,7 @@ const ControlVideo = forwardRef<HTMLVideoElement, Props>(({
             <Stack
               align='center'
               bottom={0}
-              pb={2}
+              pb={3}
               pl={6}
               pr={6}
               position='absolute'
@@ -133,7 +135,7 @@ const ControlVideo = forwardRef<HTMLVideoElement, Props>(({
                     onClick={onFullscreen}
                   />}
               </HStack>
-              {canSeek === true &&
+              {determineCanSeek === true &&
                 <SeekVideoButton
                   onChangeStart={onSeekStart}
                   onChangeEnd={onSeekEnd}
@@ -146,13 +148,13 @@ const ControlVideo = forwardRef<HTMLVideoElement, Props>(({
           </Fade>
           <Fade unmountOnExit in={!isOpen}>
             <Flex
-              bottom='1px'
+              top='1px'
               position='absolute'
               w='100%'
               align='center'
               justify='center'
             >
-              <Slider isDisabled value={time} min={0} max={totalTime} step={0.1}>
+              <Slider transition='100ms' isDisabled value={time} min={0} max={totalTime} step={0.1}>
                 <SliderTrack borderRadius='none' h='2px' bg='whiteAlpha.100'>
                   <SliderFilledTrack bg='whiteAlpha.700' />
                 </SliderTrack>

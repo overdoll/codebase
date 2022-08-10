@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b58203b866cdfa3af37c608c74853de8>>
- * @relayHash 655b7bacc3a4aabe136fb131c563a55a
+ * @generated SignedSource<<f2851fafaa57d3ff0c4cf9d2270c4d22>>
+ * @relayHash b5f50a927e8c69d3ff5327d07d83cc5a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 655b7bacc3a4aabe136fb131c563a55a
+// @relayRequestID b5f50a927e8c69d3ff5327d07d83cc5a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -389,13 +389,6 @@ return {
                               {
                                 "alias": null,
                                 "args": null,
-                                "kind": "ScalarField",
-                                "name": "name",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
                                 "concreteType": "Resource",
                                 "kind": "LinkedField",
                                 "name": "thumbnail",
@@ -409,6 +402,13 @@ return {
                                   (v20/*: any*/),
                                   (v14/*: any*/)
                                 ],
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "name",
                                 "storageKey": null
                               },
                               {
@@ -534,7 +534,7 @@ return {
     ]
   },
   "params": {
-    "id": "655b7bacc3a4aabe136fb131c563a55a",
+    "id": "b5f50a927e8c69d3ff5327d07d83cc5a",
     "metadata": {},
     "name": "ClubPublicPostsPaginationQuery",
     "operationKind": "query",
@@ -543,6 +543,6 @@ return {
 };
 })();
 
-(node as any).hash = "e5d6b16081b1d9bdc862f432236dbba0";
+(node as any).hash = "ccbc824131d6a936238e11df475e1200";
 
 export default node;

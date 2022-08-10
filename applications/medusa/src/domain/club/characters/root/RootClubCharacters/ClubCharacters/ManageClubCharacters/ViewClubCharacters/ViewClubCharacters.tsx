@@ -13,6 +13,7 @@ import { Trans } from '@lingui/macro'
 import { ClubCharactersQuery } from '@//:artifacts/ClubCharactersQuery.graphql'
 import { Icon } from '@//:modules/content/PageLayout'
 import { AddPlus } from '@//:assets/icons'
+import CharacterLinkTile from '../../../../../../../../common/components/CharacterLinkTile/CharacterLinkTile'
 
 interface Props {
   query: ViewClubCharactersFragment$key
@@ -27,9 +28,11 @@ const Fragment = graphql`
   @refetchable(queryName: "ClubCharactersPaginationQuery" ) {
     characters (first: $first, after: $after)
     @connection(key: "ClubCharacters_characters") {
+      __id
       edges {
         node {
           ...CharacterTileOverlayFragment
+          ...CharacterLinkTileFragment
         }
       }
     }
@@ -49,6 +52,8 @@ export default function ViewClubCharacters ({ query }: Props): JSX.Element {
     Fragment,
     query
   )
+
+  console.log(data)
 
   const disabledCharacterCreation = data.charactersCount === data.charactersLimit
 
@@ -77,7 +82,9 @@ export default function ViewClubCharacters ({ query }: Props): JSX.Element {
       )}
       {data.characters.edges.map((item, index) => (
         <GridTile key={index}>
-          <CharacterTileOverlay query={item.node} />
+          <CharacterLinkTile query={item.node}>
+            <CharacterTileOverlay query={item.node} />
+          </CharacterLinkTile>
         </GridTile>
       )
       )}

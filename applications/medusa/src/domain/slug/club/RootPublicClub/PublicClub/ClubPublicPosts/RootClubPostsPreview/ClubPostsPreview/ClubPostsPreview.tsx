@@ -4,10 +4,9 @@ import { useFragment, useLazyLoadQuery } from 'react-relay/hooks'
 import { ClubPostsPreviewQuery } from '@//:artifacts/ClubPostsPreviewQuery.graphql'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
 import { EmptyBoundary, EmptyPosts } from '@//:modules/content/Placeholder'
-import FullSimplePost
-  from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/FullSimplePost/FullSimplePost'
 import PostInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
+import FullClubPost from '../../../../../../posts/RootPublicClubPosts/PublicClubPosts/FullClubPost/FullClubPost'
 
 interface Props extends ComponentSearchArguments<any> {
   viewerQuery: ClubPostsPreviewViewerFragment$key | null
@@ -32,7 +31,7 @@ const Fragment = graphql`
     @connection (key: "ClubPostsPreview_clubPosts") {
       edges {
         node {
-          ...FullSimplePostFragment
+          ...FullClubPostFragment
         }
       }
       ...PostInfiniteScrollFragment
@@ -42,7 +41,7 @@ const Fragment = graphql`
 
 const ViewerFragment = graphql`
   fragment ClubPostsPreviewViewerFragment on Account {
-    ...FullSimplePostViewerFragment
+    ...FullClubPostViewerFragment
   }
 `
 
@@ -80,9 +79,8 @@ export default function ClubPostsPreview ({
         isLoadingNext={isLoadingNext}
       >
         {({ index }) => (
-          <FullSimplePost
-            hideOverflow={false}
-            query={data.clubPosts.edges[index].node}
+          <FullClubPost
+            query={data.posts.edges[index].node}
             viewerQuery={viewerData}
           />
         )}

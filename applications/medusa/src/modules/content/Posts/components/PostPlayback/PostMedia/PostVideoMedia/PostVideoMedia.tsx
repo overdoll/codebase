@@ -32,10 +32,7 @@ export default function PostVideoMedia ({
     videoMuted,
     videoVolume,
     changeVideoMuted,
-    changeVideoVolume,
-    videoPlaying,
-    onPauseVideo,
-    onPlayVideo
+    changeVideoVolume
   } = useContext(GlobalVideoManagerContext)
 
   const {

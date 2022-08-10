@@ -13,6 +13,6 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/search/series/RootSearchSeries/SearchSeries/SearchSeries.tsx:88
+#: src/domain/search/series/RootSearchSeries/SearchSeries/SearchSeries.tsx:92
 msgid "Series"
 msgstr ""

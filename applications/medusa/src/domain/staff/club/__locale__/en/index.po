@@ -91,7 +91,7 @@ msgstr ""
 msgid "Deposit Date"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffDisableClubCharactersButton/StaffDisableClubCharactersButton.tsx:75
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffDisableClubCharactersButton/StaffDisableClubCharactersButton.tsx:74
 msgid "Disable Club Characters"
 msgstr ""
 
@@ -107,7 +107,7 @@ msgstr ""
 msgid "EXPIRED"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubCharactersButton/StaffEnableClubCharactersButton.tsx:112
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubCharactersButton/StaffEnableClubCharactersButton.tsx:115
 msgid "Enable Club Characters"
 msgstr ""
 
@@ -173,7 +173,7 @@ msgstr ""
 msgid "Now"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubCharactersButton/StaffEnableClubCharactersButton.tsx:101
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubCharactersButton/StaffEnableClubCharactersButton.tsx:105
 msgid "Number of characters"
 msgstr ""
 
@@ -281,7 +281,7 @@ msgstr ""
 msgid "Successfully cancelled all active club supporter subscriptions"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffDisableClubCharactersButton/StaffDisableClubCharactersButton.tsx:54
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffDisableClubCharactersButton/StaffDisableClubCharactersButton.tsx:53
 msgid "Successfully disabled characters for this club"
 msgstr ""
 
@@ -289,7 +289,7 @@ msgstr ""
 msgid "Successfully disabled supporter only posts for this club"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubCharactersButton/StaffEnableClubCharactersButton.tsx:83
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubCharactersButton/StaffEnableClubCharactersButton.tsx:87
 msgid "Successfully enabled characters for this club"
 msgstr ""
 
@@ -406,7 +406,7 @@ msgstr ""
 msgid "There was an error cancelling all active club supporter subscriptions"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffDisableClubCharactersButton/StaffDisableClubCharactersButton.tsx:60
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffDisableClubCharactersButton/StaffDisableClubCharactersButton.tsx:59
 msgid "There was an error disabling characters for this club"
 msgstr ""
 
@@ -414,7 +414,7 @@ msgstr ""
 msgid "There was an error disabling supporter only posts for this club"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubCharactersButton/StaffEnableClubCharactersButton.tsx:89
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPosts/StaffEnableClubCharactersButton/StaffEnableClubCharactersButton.tsx:93
 msgid "There was an error enabling characters for this club"
 msgstr ""
 

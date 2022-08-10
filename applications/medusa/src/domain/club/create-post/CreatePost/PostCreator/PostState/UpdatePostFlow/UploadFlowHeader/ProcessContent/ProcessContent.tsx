@@ -21,6 +21,7 @@ const Fragment = graphql`
     reference
     content {
       resource {
+        type
         processed
         failed
       }
@@ -46,9 +47,10 @@ export default function ProcessContent ({
 
   const contentProcessed = isProcessed(data.content)
   const contentFailed = isFailed(data.content)
+  const defaultRefreshTime = data.content.map((item) => item.resource.type).some(x => x === 'VIDEO') ? 5000 : 1000
 
   useEffect(() => {
-    let refreshTime = 1000
+    let refreshTime = defaultRefreshTime
     if (contentProcessed || contentFailed) {
       if (timeoutRef.current != null) {
         clearTimeout(timeoutRef.current)

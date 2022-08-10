@@ -17,7 +17,7 @@ msgstr ""
 msgid "A unique link"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacter.tsx:66
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacter.tsx:69
 msgid "Back to Characters"
 msgstr ""
 
@@ -29,11 +29,11 @@ msgstr ""
 msgid "Create Character"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacter.tsx:72
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacter.tsx:75
 msgid "Create Club Character"
 msgstr ""
 
-#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacter.tsx:77
+#: src/domain/club/characters/create/RootCreateClubCharacter/CreateClubCharacter/CreateClubCharacter.tsx:80
 msgid "Create a club character to use in your posts"
 msgstr ""
 

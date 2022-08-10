@@ -12,7 +12,7 @@ export default function MaxFileSizeDisplay ({
 }: Props): JSX.Element {
   const { restrictions } = uppy.opts
 
-  const maxFileSize = restrictions.maxFileSize / 1000000
+  const maxFileSize = restrictions.maxFileSize / 1048576
 
   return (
     <HStack align='flex-end' spacing={2}>

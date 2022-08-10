@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<54335aee96e33353d9d1648ac2ac1d1a>>
- * @relayHash a8a704e590e1e2b75760c3d7cb08c8a8
+ * @generated SignedSource<<cebbccb275a2682dc1d59dba4983b73a>>
+ * @relayHash 6f3cb22eb11f024b9aa3d07fa178cfc0
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a8a704e590e1e2b75760c3d7cb08c8a8
+// @relayRequestID 6f3cb22eb11f024b9aa3d07fa178cfc0
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -87,6 +87,13 @@ v5 = {
   "storageKey": null
 },
 v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "slug",
+  "storageKey": null
+},
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -180,7 +187,8 @@ return {
                                 "name": "title",
                                 "storageKey": null
                               },
-                              (v4/*: any*/)
+                              (v4/*: any*/),
+                              (v6/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -193,7 +201,8 @@ return {
                             "plural": false,
                             "selections": [
                               (v5/*: any*/),
-                              (v4/*: any*/)
+                              (v4/*: any*/),
+                              (v6/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -268,7 +277,7 @@ return {
                                 "name": "urls",
                                 "plural": true,
                                 "selections": [
-                                  (v6/*: any*/),
+                                  (v7/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -301,13 +310,14 @@ return {
                                 "name": "videoThumbnail",
                                 "plural": false,
                                 "selections": [
-                                  (v6/*: any*/)
+                                  (v7/*: any*/)
                                 ],
                                 "storageKey": null
                               }
                             ],
                             "storageKey": null
                           },
+                          (v6/*: any*/),
                           (v3/*: any*/)
                         ],
                         "storageKey": null
@@ -346,6 +356,18 @@ return {
                       }
                     ],
                     "storageKey": null
+                  },
+                  {
+                    "kind": "ClientExtension",
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "__id",
+                        "storageKey": null
+                      }
+                    ]
                   }
                 ],
                 "storageKey": null
@@ -373,13 +395,7 @@ return {
                 "name": "charactersLimit",
                 "storageKey": null
               },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "slug",
-                "storageKey": null
-              }
+              (v6/*: any*/)
             ],
             "type": "Club",
             "abstractKey": null
@@ -390,7 +406,7 @@ return {
     ]
   },
   "params": {
-    "id": "a8a704e590e1e2b75760c3d7cb08c8a8",
+    "id": "6f3cb22eb11f024b9aa3d07fa178cfc0",
     "metadata": {},
     "name": "ClubCharactersPaginationQuery",
     "operationKind": "query",
@@ -399,6 +415,6 @@ return {
 };
 })();
 
-(node as any).hash = "0689e15b8983dcd11f109f1ae110fefb";
+(node as any).hash = "203a19c66958c35ef3c037c636a2a25f";
 
 export default node;

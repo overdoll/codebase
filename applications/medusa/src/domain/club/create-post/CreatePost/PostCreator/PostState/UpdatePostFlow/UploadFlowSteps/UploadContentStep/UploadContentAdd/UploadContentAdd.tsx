@@ -33,16 +33,26 @@ const Mutation = graphql`
         content {
           id
           resource {
-            type
-            processed
             urls {
               url
               mimeType
             }
+            progress {
+              progress
+              state
+            }
+            videoThumbnail {
+              url
+            }
+            type
+            processed
             preview
             failed
             width
             height
+            videoNoAudio
+            videoDuration
+            ...ResourceItemFragment
           }
         }
       }

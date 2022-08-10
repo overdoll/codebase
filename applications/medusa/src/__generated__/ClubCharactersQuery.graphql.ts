@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a3e5a522a00cefe4c54eae9b85132e51>>
- * @relayHash 4d077bdf44abd15029e532a28d4f3b54
+ * @generated SignedSource<<905aa135f7bfc01b6b21ef5ce583e729>>
+ * @relayHash 1658e3e57e999e43379ff2b858d6525b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4d077bdf44abd15029e532a28d4f3b54
+// @relayRequestID 1658e3e57e999e43379ff2b858d6525b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -124,14 +124,21 @@ v11 = {
   "name": "id",
   "storageKey": null
 },
-v12 = [
+v12 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "slug",
+  "storageKey": null
+},
+v13 = [
   {
     "kind": "Literal",
     "name": "first",
     "value": 8
   }
 ],
-v13 = {
+v14 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -238,16 +245,10 @@ return {
           (v8/*: any*/),
           (v9/*: any*/),
           (v11/*: any*/),
+          (v12/*: any*/),
           {
             "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "slug",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": (v12/*: any*/),
+            "args": (v13/*: any*/),
             "concreteType": "CharacterConnection",
             "kind": "LinkedField",
             "name": "characters",
@@ -286,7 +287,8 @@ return {
                             "name": "title",
                             "storageKey": null
                           },
-                          (v11/*: any*/)
+                          (v11/*: any*/),
+                          (v12/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -299,7 +301,8 @@ return {
                         "plural": false,
                         "selections": [
                           (v2/*: any*/),
-                          (v11/*: any*/)
+                          (v11/*: any*/),
+                          (v12/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -374,7 +377,7 @@ return {
                             "name": "urls",
                             "plural": true,
                             "selections": [
-                              (v13/*: any*/),
+                              (v14/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -407,13 +410,14 @@ return {
                             "name": "videoThumbnail",
                             "plural": false,
                             "selections": [
-                              (v13/*: any*/)
+                              (v14/*: any*/)
                             ],
                             "storageKey": null
                           }
                         ],
                         "storageKey": null
                       },
+                      (v12/*: any*/),
                       (v5/*: any*/)
                     ],
                     "storageKey": null
@@ -452,13 +456,25 @@ return {
                   }
                 ],
                 "storageKey": null
+              },
+              {
+                "kind": "ClientExtension",
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "__id",
+                    "storageKey": null
+                  }
+                ]
               }
             ],
             "storageKey": "characters(first:8)"
           },
           {
             "alias": null,
-            "args": (v12/*: any*/),
+            "args": (v13/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "ClubCharacters_characters",
@@ -484,7 +500,7 @@ return {
     ]
   },
   "params": {
-    "id": "4d077bdf44abd15029e532a28d4f3b54",
+    "id": "1658e3e57e999e43379ff2b858d6525b",
     "metadata": {},
     "name": "ClubCharactersQuery",
     "operationKind": "query",

@@ -123,7 +123,7 @@ export default function ResourceItem ({
         return <ImageSnippet containCover={containCover} cover={cover ?? true} query={data} />
       case 'VIDEO':
         return (
-          <VideoSnippet query={data} />
+          <VideoSnippet containCover={containCover} cover={cover ?? true} query={data} />
         )
       default:
         return <></>

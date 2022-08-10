@@ -3,15 +3,11 @@ import { PublicClubCharacterQuery } from '@//:artifacts/PublicClubCharacterQuery
 import { NotFoundCharacter } from '@//:modules/content/Placeholder'
 import { HStack, Stack } from '@chakra-ui/react'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
-import PostsInfiniteScroll
-  from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/PostsInfiniteScroll'
 import { usePaginationFragment } from 'react-relay'
 import { Trans } from '@lingui/macro'
 import SearchSummary from '../../../../../common/components/PageHeader/SearchSummary/SearchSummary'
 import PostOrderButton from '../../../../../common/components/PageHeader/PostOrderButton/PostOrderButton'
 import SearchButton from '../../../../../common/components/PageHeader/SearchButton/SearchButton'
-import SearchCharacterRichObject
-  from '../../../../../common/rich-objects/search/SearchCharacterRichObject/SearchCharacterRichObject'
 import ClubCharacterRecommendations from './ClubCharacterRecommendations/ClubCharacterRecommendations'
 import PublicClubCharacterRichObject
   from '../../../../../common/rich-objects/slug/PublicClubCharacterRichObject/PublicClubCharacterRichObject'
@@ -34,9 +30,11 @@ const Query = graphql`
       name
       totalPosts
       totalLikes
+      club @required(action: THROW) {
+        ...ClubCharacterRecommendationsFragment
+      }
       ...PublicClubCharacterFragment
       ...PublicClubCharacterRichObjectFragment
-      ...ClubCharacterRecommendationsFragment
     }
     viewer {
       ...FullSimplePostViewerFragment
@@ -92,7 +90,7 @@ export default function PublicClubCharacter ({ query }: Props): JSX.Element {
       <PublicClubCharacterRichObject query={queryData.character} />
       <Stack spacing={8}>
         <Stack spacing={2}>
-          <ClubCharacterRecommendations query={queryData.character} />
+          <ClubCharacterRecommendations query={queryData.character.club} />
           <SearchSummary
             title={queryData.character.name}
             type={<Trans>Club Character</Trans>}

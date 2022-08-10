@@ -29,8 +29,8 @@ export default function ObserveContent ({
 
   const observerOptions = {
     root: null,
-    rootMargin: ' -17% 0px -40% 0px',
-    threshold: 0.75
+    rootMargin: ' -17% 0px -45% 0px',
+    threshold: 0.5
   }
 
   const observerCallback = (entries): void => {

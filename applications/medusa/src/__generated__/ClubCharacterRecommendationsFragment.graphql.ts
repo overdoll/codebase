@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f6d166c7ed9d6623605be26788dd017c>>
+ * @generated SignedSource<<54d8df260cc3df9a21c90814617b1b72>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,11 +11,9 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ClubCharacterRecommendationsFragment$data = {
-  readonly club: {
-    readonly name: string;
-    readonly slug: string;
-    readonly " $fragmentSpreads": FragmentRefs<"ClubThumbnailFragment">;
-  };
+  readonly name: string;
+  readonly slug: string;
+  readonly " $fragmentSpreads": FragmentRefs<"ClubThumbnailFragment">;
   readonly " $fragmentType": "ClubCharacterRecommendationsFragment";
 };
 export type ClubCharacterRecommendationsFragment$key = {
@@ -30,45 +28,29 @@ const node: ReaderFragment = {
   "name": "ClubCharacterRecommendationsFragment",
   "selections": [
     {
-      "kind": "RequiredField",
-      "field": {
-        "alias": null,
-        "args": null,
-        "concreteType": "Club",
-        "kind": "LinkedField",
-        "name": "club",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "name",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "slug",
-            "storageKey": null
-          },
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "ClubThumbnailFragment"
-          }
-        ],
-        "storageKey": null
-      },
-      "action": "THROW",
-      "path": "club"
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "name",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "slug",
+      "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "ClubThumbnailFragment"
     }
   ],
-  "type": "Character",
+  "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "5a72ccae55f127c7dc63f251ef7534c4";
+(node as any).hash = "f2b101d0c618058167dc761d2a2f1377";
 
 export default node;

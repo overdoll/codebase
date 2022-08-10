@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0cae0a3b955c0182dfc72b569bc88818>>
+ * @generated SignedSource<<bae9283ba57997e79797f92a626d3603>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type ClubPostsPreviewFragment$data = {
   readonly clubPosts: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly " $fragmentSpreads": FragmentRefs<"FullSimplePostFragment">;
+        readonly " $fragmentSpreads": FragmentRefs<"FullClubPostFragment">;
       };
     }>;
     readonly " $fragmentSpreads": FragmentRefs<"PostInfiniteScrollFragment">;
@@ -118,7 +118,7 @@ return {
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "FullSimplePostFragment"
+                  "name": "FullClubPostFragment"
                 },
                 {
                   "alias": null,
@@ -186,6 +186,6 @@ return {
 };
 })();
 
-(node as any).hash = "dcadf1e5adedbd021be68c9b91a0f938";
+(node as any).hash = "d82e8125979c0c8656ff38d842d305d8";
 
 export default node;

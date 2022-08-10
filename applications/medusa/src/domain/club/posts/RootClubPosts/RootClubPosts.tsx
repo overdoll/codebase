@@ -47,7 +47,7 @@ const RootClubPosts: PageProps<Props> = (props: Props) => {
     },
     onChange: (args) => {
       loadQuery({ ...args.variables })
-      state != null && setState(undefined)
+      args.variables?.state != null ? setState(args.variables.state) : (state != null && setState(undefined))
     }
   })
 

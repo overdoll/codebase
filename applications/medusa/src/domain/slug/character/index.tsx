@@ -19,7 +19,7 @@ RootPublicClubCharacter.getRelayPreloadProps = (ctx) => {
       publicClubCharacterQuery: {
         params: PublicClubCharacterQuery.params,
         variables: {
-          slug,
+          clubSlug: slug,
           characterSlug,
           ...decodeSearchArguments(query)
         },

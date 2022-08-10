@@ -11,12 +11,10 @@ interface Props {
 }
 
 const Fragment = graphql`
-  fragment ClubCharacterRecommendationsFragment on Character {
-    club @required(action: THROW) {
-      name
-      slug
-      ...ClubThumbnailFragment
-    }
+  fragment ClubCharacterRecommendationsFragment on Club {
+    name
+    slug
+    ...ClubThumbnailFragment
   }
 `
 
@@ -27,7 +25,7 @@ export default function ClubCharacterRecommendations ({ query }: Props): JSX.Ele
     <LinkTile href={{
       pathname: '/[slug]',
       query: {
-        slug: data.club?.slug
+        slug: data.slug
       }
     }}
     >
@@ -35,12 +33,12 @@ export default function ClubCharacterRecommendations ({ query }: Props): JSX.Ele
         <HStack spacing={2} justify='space-between'>
           <HStack spacing={2}>
             <ClubThumbnail
-              h={6}
-              w={6}
-              query={data.club}
+              h={8}
+              w={8}
+              query={data}
             />
-            <Heading color='gray.100' fontSize='md'>
-              {data.club?.name}
+            <Heading color='gray.100' fontSize='xl'>
+              {data.name}
             </Heading>
           </HStack>
           <Icon icon={ArrowButtonRight} w={4} h={4} fill='gray.200' />

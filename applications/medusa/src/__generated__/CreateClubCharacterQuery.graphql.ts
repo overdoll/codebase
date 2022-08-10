@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a5600a7d0ff713a13719034fde90468d>>
- * @relayHash 59c0caf846f0162c3aa8818ef06bc8a1
+ * @generated SignedSource<<a0fc91e3eb062a1620ddaf92119db3ea>>
+ * @relayHash f73b135d402f62a93c7d5d6a6a756de0
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 59c0caf846f0162c3aa8818ef06bc8a1
+// @relayRequestID f73b135d402f62a93c7d5d6a6a756de0
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -278,7 +278,8 @@ return {
                             "name": "title",
                             "storageKey": null
                           },
-                          (v9/*: any*/)
+                          (v9/*: any*/),
+                          (v2/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -291,7 +292,8 @@ return {
                         "plural": false,
                         "selections": [
                           (v11/*: any*/),
-                          (v9/*: any*/)
+                          (v9/*: any*/),
+                          (v2/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -406,6 +408,7 @@ return {
                         ],
                         "storageKey": null
                       },
+                      (v2/*: any*/),
                       (v5/*: any*/)
                     ],
                     "storageKey": null
@@ -444,6 +447,18 @@ return {
                   }
                 ],
                 "storageKey": null
+              },
+              {
+                "kind": "ClientExtension",
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "__id",
+                    "storageKey": null
+                  }
+                ]
               }
             ],
             "storageKey": "characters(first:8)"
@@ -483,7 +498,7 @@ return {
     ]
   },
   "params": {
-    "id": "59c0caf846f0162c3aa8818ef06bc8a1",
+    "id": "f73b135d402f62a93c7d5d6a6a756de0",
     "metadata": {},
     "name": "CreateClubCharacterQuery",
     "operationKind": "query",
