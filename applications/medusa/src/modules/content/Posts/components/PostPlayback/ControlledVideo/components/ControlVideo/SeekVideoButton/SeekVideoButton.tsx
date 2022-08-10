@@ -43,7 +43,7 @@ export default function SeekVideoButton ({
       step={0.1}
       {...rest}
     >
-      <SliderTrack h='2px' bg='whiteAlpha.100'>
+      <SliderTrack h='4px' bg='whiteAlpha.100'>
         <SliderFilledTrack bg='whiteAlpha.700' />
       </SliderTrack>
       <SliderThumb boxSize={3} />

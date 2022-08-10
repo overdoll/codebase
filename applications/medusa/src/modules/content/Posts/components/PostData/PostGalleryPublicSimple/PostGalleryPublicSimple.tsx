@@ -7,15 +7,17 @@ import { useState } from 'react'
 import PostSupporterContent from '../PostSupporterContent/PostSupporterContent'
 import { Link } from '../../../../../routing'
 import PostMedia from '../../PostPlayback/PostMedia/PostMedia'
-import OverflowVisual from './OverflowVisual/OverflowVisual'
 import PostSlideBackground from '../PostSlideBackground/PostSlideBackground'
 import { POST_SWIPER_PROPS } from '../../../constants'
 import { PostGalleryPublicSimpleFragment$key } from '@//:artifacts/PostGalleryPublicSimpleFragment.graphql'
 import { PostGalleryPublicSimpleViewerFragment$key } from '@//:artifacts/PostGalleryPublicSimpleViewerFragment.graphql'
+import PostHideOverflow from '../PostHideOverflow/PostHideOverflow'
+import PostShowOverflow from '../PostShowOverflow/PostShowOverflow'
 
 interface Props {
   postQuery: PostGalleryPublicSimpleFragment$key
   viewerQuery: PostGalleryPublicSimpleViewerFragment$key | null
+  hideOverflow?: boolean
 }
 
 const PostFragment = graphql`
@@ -44,12 +46,28 @@ const ViewerFragment = graphql`
 
 export default function PostGalleryPublicSimple ({
   postQuery,
-  viewerQuery
+  viewerQuery,
+  hideOverflow = true
 }: Props): JSX.Element {
   const postData = useFragment(PostFragment, postQuery)
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   const [swiper, setSwiper] = useState<null | SwiperType>(null)
+
+  const Wrapper = (children): JSX.Element => {
+    if (hideOverflow) {
+      return (
+        <PostHideOverflow>
+          {children}
+        </PostHideOverflow>
+      )
+    }
+    return (
+      <PostShowOverflow>
+        {children}
+      </PostShowOverflow>
+    )
+  }
 
   return (
     <Box>
@@ -66,11 +84,7 @@ export default function PostGalleryPublicSimple ({
             }}
           >
             <PostSlideBackground query={item}>
-              <OverflowVisual
-                minH={300}
-                maxH={700}
-                align='center'
-              >
+              {Wrapper(
                 <PostSupporterContent
                   query={item}
                   clubQuery={postData.club}
@@ -95,7 +109,7 @@ export default function PostGalleryPublicSimple ({
                     </Box>
                   </Link>
                 </PostSupporterContent>
-              </OverflowVisual>
+              )}
             </PostSlideBackground>
           </SwiperSlide>
         )}

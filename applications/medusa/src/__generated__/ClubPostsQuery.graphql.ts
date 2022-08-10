@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<816d9c00206b3791eb125ee26c73d46a>>
- * @relayHash 42bc702e8a454b0e03577378258c3576
+ * @generated SignedSource<<e4b0ff1b1b44164b0e20b5c25e6947cd>>
+ * @relayHash 1781a69ddbe7690a239e4591fc0a3a34
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 42bc702e8a454b0e03577378258c3576
+// @relayRequestID 1781a69ddbe7690a239e4591fc0a3a34
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -110,10 +110,17 @@ v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "videoNoAudio",
   "storageKey": null
 },
 v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -238,6 +245,7 @@ return {
                                 "storageKey": null
                               },
                               (v8/*: any*/),
+                              (v9/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -281,7 +289,7 @@ return {
                                 "name": "urls",
                                 "plural": true,
                                 "selections": [
-                                  (v9/*: any*/),
+                                  (v10/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -314,7 +322,7 @@ return {
                                 "name": "videoThumbnail",
                                 "plural": false,
                                 "selections": [
-                                  (v9/*: any*/)
+                                  (v10/*: any*/)
                                 ],
                                 "storageKey": null
                               }
@@ -331,6 +339,7 @@ return {
                             "selections": [
                               (v7/*: any*/),
                               (v8/*: any*/),
+                              (v9/*: any*/),
                               (v6/*: any*/)
                             ],
                             "storageKey": null
@@ -365,7 +374,7 @@ return {
                         ],
                         "storageKey": null
                       },
-                      (v10/*: any*/)
+                      (v11/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -439,7 +448,7 @@ return {
             "name": "suspension",
             "plural": false,
             "selections": [
-              (v10/*: any*/),
+              (v11/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -458,7 +467,7 @@ return {
             "name": "termination",
             "plural": false,
             "selections": [
-              (v10/*: any*/)
+              (v11/*: any*/)
             ],
             "storageKey": null
           }
@@ -481,7 +490,7 @@ return {
     ]
   },
   "params": {
-    "id": "42bc702e8a454b0e03577378258c3576",
+    "id": "1781a69ddbe7690a239e4591fc0a3a34",
     "metadata": {},
     "name": "ClubPostsQuery",
     "operationKind": "query",

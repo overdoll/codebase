@@ -82,8 +82,8 @@ msgstr ""
 msgid "Club Locked"
 msgstr ""
 
-#: src/common/components/Layouts/ClubLayout/SelectClubs/SelectClubs.tsx:53
-#: src/common/components/Layouts/ClubLayout/SelectClubs/SelectClubs.tsx:67
+#: src/common/components/Layouts/ClubLayout/SelectClubs/SelectClubs.tsx:54
+#: src/common/components/Layouts/ClubLayout/SelectClubs/SelectClubs.tsx:68
 msgid "Club Not Found"
 msgstr ""
 
@@ -436,7 +436,7 @@ msgstr ""
 msgid "Public Page"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Upload/components/UploadFileDisplay/UploadFileDisplay.tsx:132
+#: src/modules/content/HookedComponents/Upload/components/UploadFileDisplay/UploadFileDisplay.tsx:131
 msgid "Remove File"
 msgstr ""
 
@@ -466,7 +466,7 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Upload/components/UploadFileDisplay/UploadFileDisplay.tsx:125
+#: src/modules/content/HookedComponents/Upload/components/UploadFileDisplay/UploadFileDisplay.tsx:124
 msgid "Retry File"
 msgstr ""
 

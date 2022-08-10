@@ -17,7 +17,7 @@ msgstr ""
 #~ msgid "Account Locked"
 #~ msgstr ""
 
-#: src/domain/home/RootHome/Home/Home.tsx:68
+#: src/domain/home/RootHome/Home/Home.tsx:72
 msgid "Home"
 msgstr ""
 

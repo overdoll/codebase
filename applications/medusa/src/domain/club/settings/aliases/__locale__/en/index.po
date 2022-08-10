@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/AliasesClubSettings.tsx:70
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/AliasesClubSettings.tsx:78
 msgid "Add Club Link Alias"
 msgstr ""
 
@@ -29,7 +29,7 @@ msgstr ""
 msgid "Club Link"
 msgstr ""
 
-#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/AliasesClubSettings.tsx:61
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/AliasesClubSettings.tsx:69
 msgid "Default"
 msgstr ""
 
@@ -74,7 +74,7 @@ msgstr ""
 msgid "There was an error removing the link alias"
 msgstr ""
 
-#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/AliasesClubSettings.tsx:79
+#: src/domain/club/settings/aliases/RootAliasesClubSettings/AliasesClubSettings/AliasesClubSettings.tsx:87
 msgid "You have added the maximum amount of aliases. You'll have to remove at least one alias to be able to add another."
 msgstr ""
 

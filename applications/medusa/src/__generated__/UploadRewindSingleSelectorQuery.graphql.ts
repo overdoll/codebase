@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<bafbe25df09ee1a8fe72504e07dac8d4>>
- * @relayHash 792bce9c4be32a1d523ca9df46ac3e68
+ * @generated SignedSource<<0c738b39fa537eaa9425e5fdbab257d9>>
+ * @relayHash 4626f2668ca82c52acc2d05e42223adf
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 792bce9c4be32a1d523ca9df46ac3e68
+// @relayRequestID 4626f2668ca82c52acc2d05e42223adf
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -87,6 +87,13 @@ v5 = {
   "storageKey": null
 },
 v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "videoNoAudio",
+  "storageKey": null
+},
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -216,6 +223,7 @@ return {
                                 "storageKey": null
                               },
                               (v5/*: any*/),
+                              (v6/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -265,7 +273,7 @@ return {
                                 "name": "urls",
                                 "plural": true,
                                 "selections": [
-                                  (v6/*: any*/),
+                                  (v7/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -298,7 +306,7 @@ return {
                                 "name": "videoThumbnail",
                                 "plural": false,
                                 "selections": [
-                                  (v6/*: any*/)
+                                  (v7/*: any*/)
                                 ],
                                 "storageKey": null
                               }
@@ -315,6 +323,7 @@ return {
                             "selections": [
                               (v4/*: any*/),
                               (v5/*: any*/),
+                              (v6/*: any*/),
                               (v3/*: any*/)
                             ],
                             "storageKey": null
@@ -389,7 +398,7 @@ return {
     ]
   },
   "params": {
-    "id": "792bce9c4be32a1d523ca9df46ac3e68",
+    "id": "4626f2668ca82c52acc2d05e42223adf",
     "metadata": {},
     "name": "UploadRewindSingleSelectorQuery",
     "operationKind": "query",

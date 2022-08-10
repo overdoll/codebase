@@ -1,13 +1,14 @@
 import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { PostPrivateHeaderFragment$key } from '@//:artifacts/PostPrivateHeaderFragment.graphql'
-import { Heading, HStack, Stack } from '@chakra-ui/react'
+import { Heading, HeadingProps, HStack, Stack } from '@chakra-ui/react'
 import ClubThumbnail from '../../../../../DataDisplay/Club/ClubThumbnail/ClubThumbnail'
 import PostHeaderClub from '../PostHeaderClub/PostHeaderClub'
 import PostDescriptionHeading from '../PostDescriptionHeading/PostDescriptionHeading'
 
 interface Props {
   postQuery: PostPrivateHeaderFragment$key
+  descriptionProps?: HeadingProps
 }
 
 const PostFragment = graphql`
@@ -24,7 +25,8 @@ const PostFragment = graphql`
 `
 
 export default function PostPrivateHeader ({
-  postQuery
+  postQuery,
+  descriptionProps
 }: Props): JSX.Element {
   const postData = useFragment(PostFragment, postQuery)
 
@@ -45,7 +47,7 @@ export default function PostPrivateHeader ({
         <Heading color='gray.00' fontSize='xl'>
           {postData.club.name}
         </Heading>
-        <PostDescriptionHeading postQuery={postData} />
+        <PostDescriptionHeading postQuery={postData} {...descriptionProps} />
       </Stack>
     </HStack>
   )

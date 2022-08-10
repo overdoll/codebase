@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<43aa02e2b641be3bd7c1ce4d5780a23b>>
- * @relayHash 87970035c3e6b0a921c5852fcad5b469
+ * @generated SignedSource<<ba8fbd92c5461b7862e5be91d4c36ac5>>
+ * @relayHash f756c39c9f3983bf58edfd1bf8e1e488
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 87970035c3e6b0a921c5852fcad5b469
+// @relayRequestID f756c39c9f3983bf58edfd1bf8e1e488
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -54,14 +54,14 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "slug",
+  "name": "id",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "name",
   "storageKey": null
 },
 v4 = {
@@ -75,7 +75,7 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "slug",
   "storageKey": null
 },
 v6 = {
@@ -190,11 +190,11 @@ v13 = {
           "name": "state",
           "storageKey": null
         },
-        (v3/*: any*/)
+        (v2/*: any*/)
       ],
       "storageKey": null
     },
-    (v3/*: any*/),
+    (v2/*: any*/),
     (v9/*: any*/),
     (v10/*: any*/),
     (v11/*: any*/),
@@ -203,8 +203,8 @@ v13 = {
   "storageKey": null
 },
 v14 = [
+  (v5/*: any*/),
   (v2/*: any*/),
-  (v3/*: any*/),
   (v4/*: any*/),
   (v13/*: any*/)
 ];
@@ -302,6 +302,7 @@ return {
                     "kind": "InlineFragment",
                     "selections": [
                       (v2/*: any*/),
+                      (v3/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -310,15 +311,28 @@ return {
                         "name": "series",
                         "plural": false,
                         "selections": [
+                          (v4/*: any*/),
                           (v2/*: any*/),
-                          (v3/*: any*/),
-                          (v4/*: any*/)
+                          (v5/*: any*/)
                         ],
                         "storageKey": null
                       },
-                      (v3/*: any*/),
-                      (v5/*: any*/),
-                      (v13/*: any*/)
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Club",
+                        "kind": "LinkedField",
+                        "name": "club",
+                        "plural": false,
+                        "selections": [
+                          (v3/*: any*/),
+                          (v2/*: any*/),
+                          (v5/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      (v13/*: any*/),
+                      (v5/*: any*/)
                     ],
                     "type": "Character",
                     "abstractKey": null
@@ -332,9 +346,9 @@ return {
                   {
                     "kind": "InlineFragment",
                     "selections": [
+                      (v5/*: any*/),
                       (v2/*: any*/),
                       (v3/*: any*/),
-                      (v5/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -343,7 +357,7 @@ return {
                         "name": "thumbnail",
                         "plural": false,
                         "selections": [
-                          (v3/*: any*/),
+                          (v2/*: any*/),
                           (v9/*: any*/),
                           (v10/*: any*/),
                           (v11/*: any*/),
@@ -367,7 +381,7 @@ return {
                   {
                     "kind": "InlineFragment",
                     "selections": [
-                      (v3/*: any*/)
+                      (v2/*: any*/)
                     ],
                     "type": "Node",
                     "abstractKey": "__isNode"
@@ -384,7 +398,7 @@ return {
     ]
   },
   "params": {
-    "id": "87970035c3e6b0a921c5852fcad5b469",
+    "id": "f756c39c9f3983bf58edfd1bf8e1e488",
     "metadata": {},
     "name": "SearchResultsQuery",
     "operationKind": "query",

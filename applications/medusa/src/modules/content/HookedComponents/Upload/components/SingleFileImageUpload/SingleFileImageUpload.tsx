@@ -54,6 +54,7 @@ export default function SingleFileImageUpload ({
   const onUploadSuccess: OnUploadSuccessType = (file, response) => {
     const url = response.uploadURL as string
     const fileId = getIdFromUppyUrl(url)
+    setFile(file)
     setUrl(fileId)
   }
 

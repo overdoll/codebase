@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/club/characters/root/RootClubCharacters/ClubCharacters/ClubCharacters.tsx:71
+#: src/domain/club/characters/root/RootClubCharacters/ClubCharacters/ClubCharacters.tsx:74
 msgid "A custom club character is one that you own and would like to post your content under."
 msgstr ""
 
@@ -21,7 +21,7 @@ msgstr ""
 #~ msgid "Club Characters"
 #~ msgstr ""
 
-#: src/domain/club/characters/root/RootClubCharacters/ClubCharacters/ClubCharacters.tsx:66
+#: src/domain/club/characters/root/RootClubCharacters/ClubCharacters/ClubCharacters.tsx:69
 msgid "Club Characters ({0}/{1})"
 msgstr ""
 
@@ -30,7 +30,7 @@ msgid "Club Restricted"
 msgstr ""
 
 #: src/domain/club/characters/root/RootClubCharacters/ClubCharacters/ManageClubCharacters/ManageClubCharacters.tsx:43
-#: src/domain/club/characters/root/RootClubCharacters/ClubCharacters/ManageClubCharacters/ViewClubCharacters/ViewClubCharacters.tsx:70
+#: src/domain/club/characters/root/RootClubCharacters/ClubCharacters/ManageClubCharacters/ViewClubCharacters/ViewClubCharacters.tsx:75
 msgid "Create Character"
 msgstr ""
 

@@ -1,4 +1,3 @@
-import { PageWrapper } from '@//:modules/content/PageLayout'
 import { Suspense, useEffect } from 'react'
 import PostCreator from './PostCreator/PostCreator'
 import { useQueryParam } from 'use-query-params'
@@ -18,6 +17,7 @@ import { PageProps } from '@//:types/app'
 import { useRouter } from 'next/router'
 import { UppyFile } from '@uppy/core'
 import { FileErrorType } from '@//:modules/content/HookedComponents/Upload/types'
+import { PageWrapper } from '@//:modules/content/PageLayout'
 
 interface Props {
   queryRefs: {

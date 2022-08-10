@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<daa67f64a55f0c10b3da59a8a86c6ad4>>
- * @relayHash 61c81b36096c7bf7604b61f26db49a1d
+ * @generated SignedSource<<73d481073c74e65bb8a15f39355be887>>
+ * @relayHash 4001f1fcb7144a707043e4e09525f4b1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 61c81b36096c7bf7604b61f26db49a1d
+// @relayRequestID 4001f1fcb7144a707043e4e09525f4b1
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -303,6 +303,19 @@ return {
                   {
                     "alias": null,
                     "args": null,
+                    "concreteType": "Club",
+                    "kind": "LinkedField",
+                    "name": "club",
+                    "plural": false,
+                    "selections": [
+                      (v3/*: any*/),
+                      (v4/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
                     "concreteType": "Resource",
                     "kind": "LinkedField",
                     "name": "banner",
@@ -420,7 +433,7 @@ return {
     ]
   },
   "params": {
-    "id": "61c81b36096c7bf7604b61f26db49a1d",
+    "id": "4001f1fcb7144a707043e4e09525f4b1",
     "metadata": {},
     "name": "StaffViewSeriesQuery",
     "operationKind": "query",

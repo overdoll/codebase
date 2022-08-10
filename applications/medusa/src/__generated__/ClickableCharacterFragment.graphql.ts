@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<70a8e1a1bcf6e62f4ef26bc5dd4f838a>>
+ * @generated SignedSource<<f20f525d26f496197fc825eacd0fe6f6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,10 +16,7 @@ export type ClickableCharacterFragment$data = {
   } | null;
   readonly id: string;
   readonly name: string;
-  readonly series: {
-    readonly slug: string;
-  } | null;
-  readonly slug: string;
+  readonly " $fragmentSpreads": FragmentRefs<"CharacterLinkTileFragment">;
   readonly " $fragmentType": "ClickableCharacterFragment";
 };
 export type ClickableCharacterFragment$key = {
@@ -27,15 +24,7 @@ export type ClickableCharacterFragment$key = {
   readonly " $fragmentSpreads": FragmentRefs<"ClickableCharacterFragment">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "slug",
-  "storageKey": null
-};
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
@@ -55,19 +44,6 @@ return {
       "name": "name",
       "storageKey": null
     },
-    (v0/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "Series",
-      "kind": "LinkedField",
-      "name": "series",
-      "plural": false,
-      "selections": [
-        (v0/*: any*/)
-      ],
-      "storageKey": null
-    },
     {
       "alias": null,
       "args": null,
@@ -83,13 +59,17 @@ return {
         }
       ],
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "CharacterLinkTileFragment"
     }
   ],
   "type": "Character",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "9e02c2b2891c013534bdf98e4d31e048";
+(node as any).hash = "632aee8db49b94a5855d90e764dc6669";
 
 export default node;

@@ -79,6 +79,13 @@ export default function SubmitPostButton ({
           transform: 'SET'
         })
       },
+      updater: (store, payload) => {
+        if (payload?.submitPost?.post?.id == null) return
+        const node = store.get(payload.submitPost.post.id)
+        if (node != null) {
+          node.setValue('REVIEW', 'state')
+        }
+      },
       onError () {
         notify({
           status: 'error',

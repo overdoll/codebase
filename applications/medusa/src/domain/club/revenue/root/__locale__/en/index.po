@@ -21,7 +21,7 @@ msgstr ""
 msgid "Chargebacks (suspension at >{0}%)"
 msgstr ""
 
-#: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubRevenue.tsx:75
+#: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubRevenue.tsx:78
 msgid "Club Guidelines"
 msgstr ""
 
@@ -33,11 +33,11 @@ msgstr ""
 msgid "Deposit Date"
 msgstr ""
 
-#: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubRevenue.tsx:65
+#: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubRevenue.tsx:68
 msgid "Help"
 msgstr ""
 
-#: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubRevenue.tsx:89
+#: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubRevenue.tsx:92
 msgid "Information about payouts"
 msgstr ""
 
@@ -45,7 +45,7 @@ msgstr ""
 msgid "Payouts"
 msgstr ""
 
-#: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubRevenue.tsx:86
+#: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubRevenue.tsx:89
 msgid "Payouts Information"
 msgstr ""
 
@@ -61,7 +61,7 @@ msgstr ""
 msgid "Refunds (target is <{0}%)"
 msgstr ""
 
-#: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubRevenue.tsx:78
+#: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubRevenue.tsx:81
 msgid "Requirements for revenue collection"
 msgstr ""
 

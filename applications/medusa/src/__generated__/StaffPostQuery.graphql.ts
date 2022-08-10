@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ae32b10cd48904d7ff672f509546bd53>>
- * @relayHash 1e6fdf785ffd26611b57922e2146702a
+ * @generated SignedSource<<170326d68be818672431bcaa2aab43ef>>
+ * @relayHash b1ae156436be144c0c68f904099d035c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 1e6fdf785ffd26611b57922e2146702a
+// @relayRequestID b1ae156436be144c0c68f904099d035c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -319,7 +319,8 @@ return {
                 "plural": false,
                 "selections": (v14/*: any*/),
                 "storageKey": null
-              }
+              },
+              (v2/*: any*/)
             ],
             "storageKey": null
           },
@@ -347,6 +348,20 @@ return {
               {
                 "alias": null,
                 "args": null,
+                "kind": "ScalarField",
+                "name": "viewerIsOwner",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "canSupport",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
                 "concreteType": "ClubMember",
                 "kind": "LinkedField",
                 "name": "viewerMember",
@@ -361,20 +376,6 @@ return {
                   },
                   (v6/*: any*/)
                 ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "viewerIsOwner",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "canSupport",
                 "storageKey": null
               }
             ],
@@ -488,7 +489,7 @@ return {
     ]
   },
   "params": {
-    "id": "1e6fdf785ffd26611b57922e2146702a",
+    "id": "b1ae156436be144c0c68f904099d035c",
     "metadata": {},
     "name": "StaffPostQuery",
     "operationKind": "query",

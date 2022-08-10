@@ -39,6 +39,10 @@ export const getPostTitle = (characters: string[], club: string): string => {
   return `${getCharacterNames(characters)} From ${club}'s ${TITLE_FEATURES} - ${TITLE_SUFFIX}`
 }
 
+export const getPostDescription = (characters: string[], club: string): string => {
+  return `${DESCRIPTION_PREFIX} ${getCharacterNames(characters)} ${DESCRIPTION_FEATURES} by ${club} on ${TITLE_SUFFIX}`
+}
+
 export default function PublicPostRichObject ({
   query
 }: Props): JSX.Element {
@@ -48,7 +52,7 @@ export default function PublicPostRichObject ({
 
   const TITLE = getPostTitle(characters, data.club.name)
 
-  const DESCRIPTION = `${DESCRIPTION_PREFIX} ${getCharacterNames(characters)} ${DESCRIPTION_FEATURES} by ${data.club.name} on ${TITLE_SUFFIX}`
+  const DESCRIPTION = getPostDescription(characters, data.club.name)
 
   const URL = `https://overdoll.com/${data.club.slug}/post/${data.reference}`
 

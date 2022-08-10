@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f928b0fcc93e7bca3e37157c08b8a74f>>
- * @relayHash 984f4e3f6d99d7d4959fc720be4ce256
+ * @generated SignedSource<<3aff72368b316967295dac1c6e3343f9>>
+ * @relayHash b0d3e390d5c418a88647e12edd0a0332
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 984f4e3f6d99d7d4959fc720be4ce256
+// @relayRequestID b0d3e390d5c418a88647e12edd0a0332
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -111,6 +111,13 @@ v11 = {
   "storageKey": null
 },
 v12 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "videoNoAudio",
+  "storageKey": null
+},
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -253,6 +260,7 @@ return {
                                     "storageKey": null
                                   },
                                   (v11/*: any*/),
+                                  (v12/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -302,7 +310,7 @@ return {
                                     "name": "urls",
                                     "plural": true,
                                     "selections": [
-                                      (v12/*: any*/),
+                                      (v13/*: any*/),
                                       {
                                         "alias": null,
                                         "args": null,
@@ -335,7 +343,7 @@ return {
                                     "name": "videoThumbnail",
                                     "plural": false,
                                     "selections": [
-                                      (v12/*: any*/)
+                                      (v13/*: any*/)
                                     ],
                                     "storageKey": null
                                   }
@@ -352,6 +360,7 @@ return {
                                 "selections": [
                                   (v10/*: any*/),
                                   (v11/*: any*/),
+                                  (v12/*: any*/),
                                   (v8/*: any*/)
                                 ],
                                 "storageKey": null
@@ -423,7 +432,7 @@ return {
     ]
   },
   "params": {
-    "id": "984f4e3f6d99d7d4959fc720be4ce256",
+    "id": "b0d3e390d5c418a88647e12edd0a0332",
     "metadata": {},
     "name": "UploadRewindSingleSelectorPaginationFragment",
     "operationKind": "query",

@@ -37,7 +37,7 @@ msgstr ""
 msgid "In order to receive payouts, you must have an active payout method set up"
 msgstr ""
 
-#: src/domain/club/home/RootClubHome/ClubHome/ClubHome.tsx:71
+#: src/domain/club/home/RootClubHome/ClubHome/ClubHome.tsx:74
 msgid "Members"
 msgstr ""
 

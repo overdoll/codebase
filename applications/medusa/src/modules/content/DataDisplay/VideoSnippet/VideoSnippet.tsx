@@ -5,8 +5,9 @@ import NextImage from '../NextImage/NextImage'
 import { ImageProps } from 'next/image'
 import { Box } from '@chakra-ui/react'
 import { useHydrate } from '../../../hydrate'
+import { ImageSnippetCoverProps } from '../ImageSnippet/ImageSnippet'
 
-interface Props extends Omit<ImageProps, 'src' | 'width' | 'height' | 'layout' | 'alt'> {
+interface Props extends Omit<ImageProps, 'src' | 'width' | 'height' | 'layout' | 'alt'>, ImageSnippetCoverProps {
   innerRef?: () => void
   query: VideoSnippetFragment$key
 }
@@ -24,11 +25,15 @@ const Fragment = graphql`
 
 export default function VideoSnippet ({
   query,
+  cover,
+  containCover,
   ...rest
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   const isHydrated = useHydrate()
+
+  const determineCover = cover === true || (data?.width == null && data?.height == null)
 
   const previewBackground = data?.preview != null && data?.preview !== '' ? data?.preview : 'gray.800'
 
@@ -48,7 +53,7 @@ export default function VideoSnippet ({
           userSelect: 'none',
           width: '100%',
           height: '100%',
-          objectFit: 'cover'
+          objectFit: determineCover ? (containCover === true ? 'contain' : 'cover') : 'cover' as any
         }}
         src={data?.videoThumbnail?.url ?? 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='}
         {...rest}
