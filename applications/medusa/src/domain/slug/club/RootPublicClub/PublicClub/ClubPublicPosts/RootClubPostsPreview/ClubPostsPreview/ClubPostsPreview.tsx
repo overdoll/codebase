@@ -80,7 +80,7 @@ export default function ClubPostsPreview ({
       >
         {({ index }) => (
           <FullClubPost
-            query={data.posts.edges[index].node}
+            query={data.clubPosts.edges[index].node}
             viewerQuery={viewerData}
           />
         )}
