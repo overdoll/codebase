@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ad7578b36dd8cf6016a22ebbc18e88d4>>
- * @relayHash 287006ddb918661bc4b9ad4d1b628d8a
+ * @generated SignedSource<<e21ded348b4947e86f4a44ea463aa2db>>
+ * @relayHash e9cac63b4f0c8e7fe455eb3645f16ea8
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 287006ddb918661bc4b9ad4d1b628d8a
+// @relayRequestID e9cac63b4f0c8e7fe455eb3645f16ea8
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -233,6 +233,10 @@ v23 = {
   "storageKey": null
 },
 v24 = [
+  (v2/*: any*/),
+  (v3/*: any*/)
+],
+v25 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -534,6 +538,15 @@ return {
                 "storageKey": null
               },
               (v3/*: any*/),
+              (v7/*: any*/),
+              (v20/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "canSupport",
+                "storageKey": null
+              },
               (v11/*: any*/),
               {
                 "alias": null,
@@ -545,7 +558,6 @@ return {
                 "selections": (v19/*: any*/),
                 "storageKey": null
               },
-              (v20/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -565,14 +577,6 @@ return {
                 ],
                 "storageKey": null
               },
-              (v7/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "canSupport",
-                "storageKey": null
-              },
               {
                 "alias": null,
                 "args": null,
@@ -581,6 +585,16 @@ return {
                 "storageKey": null
               }
             ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Account",
+            "kind": "LinkedField",
+            "name": "contributor",
+            "plural": false,
+            "selections": (v24/*: any*/),
             "storageKey": null
           },
           {
@@ -659,10 +673,7 @@ return {
                     "kind": "LinkedField",
                     "name": "node",
                     "plural": false,
-                    "selections": [
-                      (v2/*: any*/),
-                      (v3/*: any*/)
-                    ],
+                    "selections": (v24/*: any*/),
                     "storageKey": null
                   }
                 ],
@@ -673,7 +684,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v24/*: any*/),
+            "args": (v25/*: any*/),
             "concreteType": "PostConnection",
             "kind": "LinkedField",
             "name": "posts",
@@ -752,7 +763,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v24/*: any*/),
+            "args": (v25/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "ClubPosts_posts",
@@ -778,7 +789,7 @@ return {
     ]
   },
   "params": {
-    "id": "287006ddb918661bc4b9ad4d1b628d8a",
+    "id": "e9cac63b4f0c8e7fe455eb3645f16ea8",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

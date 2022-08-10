@@ -11,10 +11,12 @@ export interface ObserveContentCallable {
 
 interface Props {
   children: MaybeRenderProp<ObserveContentCallable>
+  observerOptions?: IntersectionObserverInit
 }
 
 export default function ObserveContent ({
-  children
+  children,
+  observerOptions: definedObserverOptions
 }: Props): JSX.Element {
   const ref = useRef(null)
 
@@ -41,7 +43,7 @@ export default function ObserveContent ({
   useEffect(() => {
     if (ref.current == null) return
 
-    const observer = new IntersectionObserver(observerCallback, observerOptions)
+    const observer = new IntersectionObserver(observerCallback, definedObserverOptions ?? observerOptions)
 
     observer.observe(ref.current)
 

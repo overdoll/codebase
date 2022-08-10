@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7eb3fa28faaff3371c413a3491e077bb>>
- * @relayHash 0b5bfb957283985fb4e6eb9e7e416c4c
+ * @generated SignedSource<<9537bceb0bba7dda3e1ef67c168193eb>>
+ * @relayHash 99a64a7f2588a1deb2c800e26632c2ee
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0b5bfb957283985fb4e6eb9e7e416c4c
+// @relayRequestID 99a64a7f2588a1deb2c800e26632c2ee
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -44,7 +44,7 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "type",
+  "name": "__typename",
   "storageKey": null
 },
 v3 = {
@@ -110,18 +110,25 @@ v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "type",
   "storageKey": null
 },
 v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "title",
   "storageKey": null
 },
-v11 = [
-  (v10/*: any*/),
+v12 = [
+  (v11/*: any*/),
   (v1/*: any*/)
 ];
 return {
@@ -232,6 +239,90 @@ return {
                           {
                             "alias": null,
                             "args": null,
+                            "concreteType": "Account",
+                            "kind": "LinkedField",
+                            "name": "contributor",
+                            "plural": false,
+                            "selections": [
+                              (v2/*: any*/),
+                              (v1/*: any*/)
+                            ],
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Club",
+                            "kind": "LinkedField",
+                            "name": "club",
+                            "plural": false,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "viewerIsOwner",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "slug",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "canSupport",
+                                "storageKey": null
+                              },
+                              (v1/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "Resource",
+                                "kind": "LinkedField",
+                                "name": "thumbnail",
+                                "plural": false,
+                                "selections": [
+                                  (v1/*: any*/),
+                                  (v4/*: any*/),
+                                  (v5/*: any*/),
+                                  (v6/*: any*/),
+                                  (v7/*: any*/),
+                                  (v8/*: any*/),
+                                  (v9/*: any*/)
+                                ],
+                                "storageKey": null
+                              },
+                              (v10/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "ClubMember",
+                                "kind": "LinkedField",
+                                "name": "viewerMember",
+                                "plural": false,
+                                "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "isSupporter",
+                                    "storageKey": null
+                                  },
+                                  (v1/*: any*/)
+                                ],
+                                "storageKey": null
+                              }
+                            ],
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
                             "concreteType": "PostContent",
                             "kind": "LinkedField",
                             "name": "content",
@@ -245,7 +336,7 @@ return {
                                 "name": "resource",
                                 "plural": false,
                                 "selections": [
-                                  (v2/*: any*/),
+                                  (v9/*: any*/),
                                   (v1/*: any*/),
                                   (v4/*: any*/),
                                   (v5/*: any*/),
@@ -290,77 +381,6 @@ return {
                           {
                             "alias": null,
                             "args": null,
-                            "concreteType": "Club",
-                            "kind": "LinkedField",
-                            "name": "club",
-                            "plural": false,
-                            "selections": [
-                              (v1/*: any*/),
-                              {
-                                "alias": null,
-                                "args": null,
-                                "concreteType": "Resource",
-                                "kind": "LinkedField",
-                                "name": "thumbnail",
-                                "plural": false,
-                                "selections": [
-                                  (v1/*: any*/),
-                                  (v4/*: any*/),
-                                  (v5/*: any*/),
-                                  (v6/*: any*/),
-                                  (v7/*: any*/),
-                                  (v8/*: any*/),
-                                  (v2/*: any*/)
-                                ],
-                                "storageKey": null
-                              },
-                              (v9/*: any*/),
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "slug",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "concreteType": "ClubMember",
-                                "kind": "LinkedField",
-                                "name": "viewerMember",
-                                "plural": false,
-                                "selections": [
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "isSupporter",
-                                    "storageKey": null
-                                  },
-                                  (v1/*: any*/)
-                                ],
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "viewerIsOwner",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "canSupport",
-                                "storageKey": null
-                              }
-                            ],
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
                             "kind": "ScalarField",
                             "name": "description",
                             "storageKey": null
@@ -372,7 +392,7 @@ return {
                             "kind": "LinkedField",
                             "name": "audience",
                             "plural": false,
-                            "selections": (v11/*: any*/),
+                            "selections": (v12/*: any*/),
                             "storageKey": null
                           },
                           {
@@ -383,7 +403,7 @@ return {
                             "name": "characters",
                             "plural": true,
                             "selections": [
-                              (v9/*: any*/),
+                              (v10/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -391,7 +411,7 @@ return {
                                 "kind": "LinkedField",
                                 "name": "series",
                                 "plural": false,
-                                "selections": (v11/*: any*/),
+                                "selections": (v12/*: any*/),
                                 "storageKey": null
                               },
                               (v1/*: any*/)
@@ -405,19 +425,13 @@ return {
                             "kind": "LinkedField",
                             "name": "categories",
                             "plural": true,
-                            "selections": (v11/*: any*/),
+                            "selections": (v12/*: any*/),
                             "storageKey": null
                           }
                         ],
                         "storageKey": null
                       },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "__typename",
-                        "storageKey": null
-                      }
+                      (v2/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -497,7 +511,7 @@ return {
                 "plural": false,
                 "selections": [
                   (v1/*: any*/),
-                  (v10/*: any*/),
+                  (v11/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -517,7 +531,7 @@ return {
     ]
   },
   "params": {
-    "id": "0b5bfb957283985fb4e6eb9e7e416c4c",
+    "id": "99a64a7f2588a1deb2c800e26632c2ee",
     "metadata": {},
     "name": "PostModerationQueueQuery",
     "operationKind": "query",

@@ -9,6 +9,7 @@ import SwiperType from 'swiper'
 import PostSlideBackground from '../PostSlideBackground/PostSlideBackground'
 import { POST_SWIPER_PROPS, POST_SWIPER_SLIDE_PROPS } from '../../../constants'
 import PostShowOverflow from '../PostShowOverflow/PostShowOverflow'
+import PostSupporterContent from '../PostSupporterContent/PostSupporterContent'
 
 interface Props {
   postQuery: PostGalleryStaffDetailedFragment$key
@@ -16,6 +17,12 @@ interface Props {
 
 const PostFragment = graphql`
   fragment PostGalleryStaffDetailedFragment on Post {
+    contributor {
+      ...PostSupporterContentViewerFragment
+    }
+    club {
+      ...PostSupporterContentClubFragment
+    }
     content {
       resource {
         ...PostMediaFragment
@@ -47,13 +54,19 @@ export default function PostGalleryStaffDetailed ({
           >
             <PostSlideBackground query={item}>
               <PostShowOverflow>
-                <PostMedia
-                  controls={{
-                    canSeek: true,
-                    canFullscreen: true
-                  }}
-                  query={item.resource}
-                />
+                <PostSupporterContent
+                  viewerQuery={postData.contributor}
+                  clubQuery={postData.club}
+                  query={item}
+                >
+                  <PostMedia
+                    controls={{
+                      canSeek: true,
+                      canFullscreen: true
+                    }}
+                    query={item.resource}
+                  />
+                </PostSupporterContent>
               </PostShowOverflow>
             </PostSlideBackground>
           </SwiperSlide>)}
