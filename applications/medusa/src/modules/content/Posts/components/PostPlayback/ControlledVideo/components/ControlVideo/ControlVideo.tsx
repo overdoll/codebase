@@ -44,7 +44,7 @@ const ControlVideo = forwardRef<HTMLVideoElement, Props>(({
     ref
   } = useVideoControls(forwardRef as MutableRefObject<HTMLVideoElement>)
 
-  const determineCanSeek = canSeek && totalTime > 15
+  const determineCanSeek = canSeek === true && totalTime > 15
 
   const onChangeVideo = (): void => {
     const video = ref.current
@@ -135,7 +135,7 @@ const ControlVideo = forwardRef<HTMLVideoElement, Props>(({
                     onClick={onFullscreen}
                   />}
               </HStack>
-              {determineCanSeek === true &&
+              {determineCanSeek &&
                 <SeekVideoButton
                   onChangeStart={onSeekStart}
                   onChangeEnd={onSeekEnd}

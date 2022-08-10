@@ -3,8 +3,6 @@ import { graphql } from 'react-relay'
 import { PostReviewFragment$key } from '@//:artifacts/PostReviewFragment.graphql'
 import { Stack } from '@chakra-ui/react'
 import { PostClickableCategories, PostClickableCharacters } from '@//:modules/content/Posts'
-import PostGalleryPublicDetailed
-  from '@//:modules/content/Posts/components/PostData/PostGalleryPublicDetailed/PostGalleryPublicDetailed'
 import PostPrivateHeader
   from '@//:modules/content/Posts/components/PostInteraction/PostHeaders/PostPrivateHeader/PostPrivateHeader'
 import PostGalleryStaffDetailed
