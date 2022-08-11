@@ -278,7 +278,7 @@ func createPreviewFromFile(r io.Reader, isVideo bool) (string, error) {
 
 	if isVideo {
 		// don't mask since videos could include black / white fade-ins
-		cols, err = prominentcolor.KmeansWithAll(prominentcolor.DefaultK, img, prominentcolor.ArgumentDefault, prominentcolor.DefaultSize, []prominentcolor.ColorBackgroundMask{prominentcolor.MaskGreen})
+		cols, err = prominentcolor.KmeansWithAll(prominentcolor.DefaultK, img, prominentcolor.ArgumentDefault, prominentcolor.DefaultSize, []prominentcolor.ColorBackgroundMask{})
 	} else {
 		cols, err = prominentcolor.KmeansWithArgs(prominentcolor.ArgumentDefault, img)
 	}
