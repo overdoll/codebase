@@ -205,10 +205,10 @@ describe('Supporter', () => {
 
     cy.visit(`/club/${savedPaymentMethodClub}/revenue`)
     // see transaction metrics
-    cy.findByText('Transaction Metrics').should('be.visible')
+    // cy.findByText('Transaction Metrics').should('be.visible')
 
     // go to refunded transaction
-    clickOnButton('View Payments')
+    // clickOnButton('View Payments')
     // cy.findAllByText('PENDING').first().should('be.visible').click({ force: true })
     // cy.findByText(/Deduction Breakdown/iu).should('be.visible')
     /*
@@ -239,10 +239,10 @@ describe('Supporter', () => {
      */
 
     // refunded transaction
-    cy.visit('/settings/billing')
-    cy.findByText('Transaction History').should('be.visible').click({ force: true })
-    cy.url().should('include', '/settings/billing/transactions')
-    cy.findByText(newPaymentMethodClubName).should('be.visible')
-    cy.waitUntil(() => cy.findAllByText(/refunded to this payment/iu).should('be.visible'))
+    // cy.visit('/settings/billing')
+    // cy.findByText('Transaction History').should('be.visible').click({ force: true })
+    // cy.url().should('include', '/settings/billing/transactions')
+    // cy.findByText(newPaymentMethodClubName).should('be.visible')
+    // cy.waitUntil(() => cy.findAllByText(/refunded to this payment/iu).should('be.visible'))
   })
 })
