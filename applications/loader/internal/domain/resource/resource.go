@@ -543,17 +543,25 @@ func (r *Resource) processImage(mimeType string, fileName string, file *os.File,
 
 	if mimeType == "image/png" {
 		src, err = png.Decode(file)
-	} else {
-		src, err = jpeg.Decode(file)
-	}
-
-	if err != nil {
-		if err == image.ErrFormat {
-			zap.S().Errorw("failed to decode image", zap.Error(err))
+		// check for png format error
+		var formatError png.FormatError
+		if errors.As(err, &formatError) {
+			zap.S().Errorw("failed to decode png", zap.Error(err))
 			r.failed = true
 			return nil, nil
 		}
+	} else {
+		src, err = jpeg.Decode(file)
+		// check for jpeg format error
+		var formatError jpeg.FormatError
+		if errors.As(err, &formatError) {
+			zap.S().Errorw("failed to decode jpeg", zap.Error(err))
+			r.failed = true
+			return nil, nil
+		}
+	}
 
+	if err != nil {
 		return nil, errors.Wrap(err, "failed to decode image")
 	}
 
