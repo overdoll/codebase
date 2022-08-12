@@ -48,8 +48,8 @@ var (
 
 // accepted formats
 var (
-	imageAcceptedTypes = []string{"image/png"}
-	videoAcceptedTypes = []string{"video/mp4"}
+	imageAcceptedTypes = []string{"image/png", "image/jpeg", "image/jpg"}
+	videoAcceptedTypes = []string{"video/mp4", "video/x-m4v"}
 )
 
 var extensionsMap = map[string]string{
@@ -532,23 +532,29 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 	}, nil
 }
 
-func (r *Resource) processImage(fileName string, file *os.File, config *Config) ([]*Move, error) {
+func (r *Resource) processImage(mimeType string, fileName string, file *os.File, config *Config) ([]*Move, error) {
 
 	c, _ := getSocketClient(r.itemId, r.id)
 	c.Write([]byte("0"))
 	defer c.Close()
 
-	src, err := png.Decode(file)
+	var src image.Image
+	var err error
+
+	if mimeType == "image/png" {
+		src, err = png.Decode(file)
+	} else {
+		src, err = jpeg.Decode(file)
+	}
 
 	if err != nil {
-
 		if err == image.ErrFormat {
-			zap.S().Errorw("failed to decode png", zap.Error(err))
+			zap.S().Errorw("failed to decode image", zap.Error(err))
 			r.failed = true
 			return nil, nil
 		}
 
-		return nil, errors.Wrap(err, "failed to decode png")
+		return nil, errors.Wrap(err, "failed to decode image")
 	}
 
 	// resize to specified width
@@ -644,26 +650,41 @@ func (r *Resource) ProcessResource(file *os.File, config *Config) ([]*Move, erro
 		fileName = r.processedId
 	}
 
-	// indicate a heartbeat has started
+	foundImage := false
+	foundVideo := false
+	mimeType := kind.MIME.Value
 
-	if kind.MIME.Value == "image/png" {
+	for _, m := range imageAcceptedTypes {
+		if m == mimeType {
+			foundImage = true
+			break
+		}
+	}
 
-		moveTargets, err = r.processImage(fileName, file, config)
+	for _, m := range videoAcceptedTypes {
+		if m == mimeType {
+			foundVideo = true
+		}
+	}
+
+	if foundImage {
+		moveTargets, err = r.processImage(mimeType, fileName, file, config)
 
 		if err != nil {
 			return nil, err
 		}
+	}
 
-	} else if kind.MIME.Value == "video/mp4" || kind.MIME.Value == "video/x-m4v" {
-
+	if foundVideo {
 		moveTargets, err = r.processVideo(fileName, file, config)
 
 		if err != nil {
 			return nil, err
 		}
+	}
 
-	} else {
-		zap.S().Errorw("unknown mime type", zap.String("mimeType", kind.MIME.Value))
+	if !foundVideo && !foundImage {
+		zap.S().Errorw("unknown mime type", zap.String("mimeType", mimeType))
 		r.failed = true
 		return nil, nil
 	}
