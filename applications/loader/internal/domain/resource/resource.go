@@ -48,7 +48,7 @@ var (
 
 // accepted formats
 var (
-	imageAcceptedTypes = []string{"image/png", "image/jpeg", "image/jpg"}
+	imageAcceptedTypes = []string{"image/png", "image/jpeg"}
 	videoAcceptedTypes = []string{"video/mp4", "video/x-m4v"}
 )
 
@@ -252,7 +252,7 @@ func (r *Resource) ApplyFilters(file *os.File, config *Config, filters *ImageFil
 	}
 
 	r.preview = preview
-	r.mimeTypes = []string{"image/webp", "image/jpg"}
+	r.mimeTypes = []string{"image/webp", "image/jpeg"}
 
 	r.processedId = fileName
 	r.processed = true
@@ -505,7 +505,7 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 	r.height = probeResult.Streams[0].Height
 	r.videoDuration = int(math.Round(s * 1000))
 
-	r.videoThumbnailMimeType = "image/jpg"
+	r.videoThumbnailMimeType = "image/jpeg"
 	r.videoThumbnail = videoThumb
 	r.resourceType = resource.Video
 
@@ -606,7 +606,7 @@ func (r *Resource) processImage(mimeType string, fileName string, file *os.File,
 	}
 
 	r.preview = preview
-	r.mimeTypes = []string{"image/webp", "image/jpg"}
+	r.mimeTypes = []string{"image/webp", "image/jpeg"}
 
 	return []*Move{
 		{
