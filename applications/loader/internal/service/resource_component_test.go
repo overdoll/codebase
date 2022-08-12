@@ -629,7 +629,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	require.Len(t, newImageResource.FullUrls(), 2)
 
 	require.Equal(t, "image/webp", newImageResource.FullUrls()[0].MimeType(), "expected first image to be webp")
-	require.Equal(t, "image/jpg", newImageResource.FullUrls()[1].MimeType(), "expected second image to be jpg")
+	require.Equal(t, "image/jpeg", newImageResource.FullUrls()[1].MimeType(), "expected second image to be jpg")
 
 	require.Regexp(t, previewRegex, newImageResource.Preview(), "should be a hex code")
 
@@ -648,7 +648,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	require.Equal(t, 13347, newVideoResource.VideoDuration(), "should be the correct duration")
 
 	require.Equal(t, "video/mp4", newVideoResource.FullUrls()[0].MimeType(), "expected video to be mp4")
-	require.Equal(t, "image/jpg", newVideoResource.VideoThumbnailMimeType(), "expected video thumbnail to be jpg")
+	require.Equal(t, "image/jpeg", newVideoResource.VideoThumbnailMimeType(), "expected video thumbnail to be jpg")
 	require.True(t, newVideoResource.VideoNoAudio(), "expected video to have no audio track")
 
 	require.Regexp(t, previewRegex, newVideoResource.Preview(), "should be a hex code")
@@ -663,7 +663,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	// correct duration
 	require.Equal(t, 5700, newVideoResource2.VideoDuration(), "should be the correct duration")
 	require.Equal(t, "video/mp4", newVideoResource2.FullUrls()[0].MimeType(), "expected video to be mp4")
-	require.Equal(t, "image/jpg", newVideoResource2.VideoThumbnailMimeType(), "expected video thumbnail to be jpg")
+	require.Equal(t, "image/jpeg", newVideoResource2.VideoThumbnailMimeType(), "expected video thumbnail to be jpg")
 	require.False(t, newVideoResource2.VideoNoAudio(), "expected video to have an audio track")
 
 	require.Regexp(t, previewRegex, newVideoResource2.Preview(), "should be a hex code")

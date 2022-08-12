@@ -37,7 +37,7 @@ export default function PostContentRichObject ({
   const content = data?.content?.[0]
 
   // only show jpg and mp4 files as they are universally supported
-  const filteredUrls = content.resource.type === 'IMAGE' ? content.resource.urls.filter((item) => item.mimeType === 'image/jpg') : content.resource.urls.filter((item) => item.mimeType === 'video/mp4')
+  const filteredUrls = content.resource.type === 'IMAGE' ? content.resource.urls.filter((item) => item.mimeType === 'image/jpg' || item.mimeType === 'image/jpeg') : content.resource.urls.filter((item) => item.mimeType === 'video/mp4')
 
   return (
     <Head>
