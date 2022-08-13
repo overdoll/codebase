@@ -89,22 +89,23 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 
 	clubRepo := adapters.NewClubCassandraElasticsearchRepository(session, esClient, cache, resourceSerializer)
 
-	postRepo := adapters.NewPostsCassandraRepository(session, esClient, resourceSerializer, awsSession)
+	postRepo := adapters.NewPostsCassandraRepository(session, esClient, resourceSerializer, awsSession, cache)
 	personalizationRepo := adapters.NewCurationProfileCassandraRepository(session)
 
 	return &app.Application{
 		Commands: app.Commands{
-			UpdateResources:    command.NewUpdateResourcesHandler(postRepo, clubRepo, eventRepo),
-			CreatePost:         command.NewCreatePostHandler(postRepo, clubRepo),
-			PublishPost:        command.NewPublishPostHandler(postRepo, eventRepo),
-			DiscardPost:        command.NewDiscardPostHandler(postRepo, eventRepo),
-			RejectPost:         command.NewRejectPostHandler(postRepo),
-			SubmitPost:         command.NewSubmitPostHandler(postRepo, clubRepo, eventRepo),
-			RemovePost:         command.NewRemovePostHandler(postRepo, eventRepo),
-			DeletePost:         command.NewDeletePostHandler(postRepo, eventRepo),
-			ArchivePost:        command.NewArchivePostHandler(postRepo, eventRepo),
-			UnArchivePost:      command.NewUnArchivePostHandler(postRepo, eventRepo),
-			GenerateClubBanner: command.NewGenerateClubBannerHandler(postRepo, eventRepo),
+			TransferClubOwnership: command.NewTransferClubOwnershipHandler(clubRepo, eventRepo, eva),
+			UpdateResources:       command.NewUpdateResourcesHandler(postRepo, clubRepo, eventRepo),
+			CreatePost:            command.NewCreatePostHandler(postRepo, clubRepo),
+			PublishPost:           command.NewPublishPostHandler(postRepo, eventRepo),
+			DiscardPost:           command.NewDiscardPostHandler(postRepo, eventRepo),
+			RejectPost:            command.NewRejectPostHandler(postRepo),
+			SubmitPost:            command.NewSubmitPostHandler(postRepo, clubRepo, eventRepo),
+			RemovePost:            command.NewRemovePostHandler(postRepo, eventRepo),
+			DeletePost:            command.NewDeletePostHandler(postRepo, eventRepo),
+			ArchivePost:           command.NewArchivePostHandler(postRepo, eventRepo),
+			UnArchivePost:         command.NewUnArchivePostHandler(postRepo, eventRepo),
+			GenerateClubBanner:    command.NewGenerateClubBannerHandler(postRepo, eventRepo),
 
 			GenerateSitemap: command.NewGenerateSitemapHandler(eventRepo),
 

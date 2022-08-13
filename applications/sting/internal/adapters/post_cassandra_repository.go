@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/go-redis/redis/v8"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/libraries/errors"
@@ -105,10 +106,11 @@ type PostsCassandraElasticsearchRepository struct {
 	client             *elastic.Client
 	resourceSerializer *resource.Serializer
 	aws                *session.Session
+	cache              *redis.Client
 }
 
-func NewPostsCassandraRepository(session gocqlx.Session, client *elastic.Client, resourcesSerializer *resource.Serializer, aws *session.Session) PostsCassandraElasticsearchRepository {
-	return PostsCassandraElasticsearchRepository{session: session, client: client, resourceSerializer: resourcesSerializer, aws: aws}
+func NewPostsCassandraRepository(session gocqlx.Session, client *elastic.Client, resourcesSerializer *resource.Serializer, aws *session.Session, cache *redis.Client) PostsCassandraElasticsearchRepository {
+	return PostsCassandraElasticsearchRepository{session: session, client: client, resourceSerializer: resourcesSerializer, aws: aws, cache: cache}
 }
 
 func marshalPostToDatabase(pending *post.Post) (*posts, error) {
@@ -545,6 +547,12 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperator(ctx con
 	currentPost, err := r.GetPostByIdOperator(ctx, id)
 
 	if err != nil {
+
+		// not found errors - send back a resource not present, so we gracefully handle it
+		if apperror.IsNotFoundError(err) {
+			return nil, resource.ErrResourceNotPresent
+		}
+
 		return nil, err
 	}
 
@@ -558,14 +566,30 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperator(ctx con
 		return nil, err
 	}
 
+	var mapped []string
+
+	for key := range pst.ContentResources {
+		mapped = append(mapped, "content_resources["+key+"]")
+	}
+
+	var finalStruct map[string]interface{}
+
+	for key, val := range pst.ContentResources {
+		finalStruct["content_resources["+key+"]"] = val
+	}
+
+	finalStruct["updated_at"] = pst.UpdatedAt
+	finalStruct["id"] = pst.Id
+
+	// update strategically so we don't override each-other
 	if err := r.session.
 		Query(postTable.Update(
-			"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status", "content_resources", "updated_at",
+			append(mapped, "updated_at")...,
 		)).
 		WithContext(ctx).
 		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
-		BindStruct(pst).
+		BindMap(finalStruct).
 		ExecRelease(); err != nil {
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update post")
 	}

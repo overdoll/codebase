@@ -23,7 +23,7 @@ func TestUserRepository_GetUser_not_exists(t *testing.T) {
 
 	id := uuid.New().String()
 
-	usr, err := repo.GetAccountById(ctx, id)
+	usr, err := repo.GetRawAccountById(ctx, id)
 
 	assert.Nil(t, usr)
 	assert.True(t, apperror.IsNotFoundError(err))
@@ -187,6 +187,7 @@ func newFakeAccount(t *testing.T) *account.Account {
 
 func newAccountRepository(t *testing.T) adapters.AccountCassandraRepository {
 	session := bootstrap.InitializeDatabaseSession()
+	redis := bootstrap.InitializeRedisSession()
 
-	return adapters.NewAccountCassandraRedisRepository(session)
+	return adapters.NewAccountCassandraRedisRepository(session, redis)
 }

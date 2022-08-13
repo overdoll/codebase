@@ -273,6 +273,19 @@ func (m *Club) CanSupport() bool {
 	return !m.suspended && m.hasCreatedSupporterOnlyPost && !m.terminated
 }
 
+func (m *Club) CanTransferClubOwnership(requester, target *principal.Principal) error {
+
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
+
+	if !target.IsArtist() {
+		return domainerror.NewValidation("can only transfer club ownership to artists")
+	}
+
+	return nil
+}
+
 func (m *Club) CanViewSupporterCount(requester *principal.Principal) error {
 	return requester.BelongsToAccount(m.ownerAccountId)
 }

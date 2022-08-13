@@ -814,6 +814,81 @@ func (r ClubCassandraElasticsearchRepository) DeleteReservedSlugForClub(ctx cont
 	return nil
 }
 
+func (r ClubCassandraElasticsearchRepository) UpdateClubOwner(ctx context.Context, clubId, accountId string) error {
+
+	clb, err := r.getClubById(ctx, clubId)
+
+	if err != nil {
+		return err
+	}
+
+	// save old owner so we can remove them
+	oldOwnerAccountId := clb.OwnerAccountId
+
+	// update to new owner
+	clb.OwnerAccountId = accountId
+
+	// unmarshal, so we can index it
+	unmarshalled, err := r.unmarshalClubFromDatabase(ctx, clb)
+
+	if err != nil {
+		return err
+	}
+
+	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
+
+	// DELETE OLD ACCOUNT
+	stmt, names := accountClubsTable.Delete()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		accountClubs{
+			ClubId:    clubId,
+			AccountId: oldOwnerAccountId,
+		},
+	)
+
+	if err := r.removeInitialClubMemberToBatch(ctx, batch, clubId, oldOwnerAccountId); err != nil {
+		return err
+	}
+
+	// ADD NEW ACCOUNT
+	stmt, names = accountClubsTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		accountClubs{
+			ClubId:    clubId,
+			AccountId: accountId,
+		},
+	)
+
+	if err := r.addInitialClubMemberToBatch(ctx, batch, clubId, accountId, time.Now()); err != nil {
+		return err
+	}
+
+	// execute batch.
+	support.MarkBatchIdempotent(batch)
+	if err := r.session.ExecuteBatch(batch); err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to create club batch")
+	}
+
+	// index club with new owner
+	if err := r.indexClub(ctx, unmarshalled); err != nil {
+		return err
+	}
+
+	// clear digest cache for both old owner and new owner
+	if err := r.clearAccountDigestCache(ctx, oldOwnerAccountId); err != nil {
+		return err
+	}
+	if err := r.clearAccountDigestCache(ctx, accountId); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r ClubCassandraElasticsearchRepository) CreateClub(ctx context.Context, club *club.Club) error {
 
 	cla, err := marshalClubToDatabase(club)

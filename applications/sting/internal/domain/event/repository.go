@@ -42,4 +42,5 @@ type Repository interface {
 	GenerateClubBannerFromPost(ctx context.Context, post *post.Post) error
 
 	SendCompletedPixelatedResources(ctx context.Context, post *post.Post) error
+	TransferClubOwnership(ctx context.Context, requester *principal.Principal, club *club.Club, target *principal.Principal) error
 }

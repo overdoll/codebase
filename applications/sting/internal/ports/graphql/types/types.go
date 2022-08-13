@@ -944,6 +944,20 @@ type TopicEdge struct {
 	Node   *Topic `json:"node"`
 }
 
+// Transfer club ownership input.
+type TransferClubOwnershipInput struct {
+	// The club to transfer ownership for.
+	ClubID relay.ID `json:"clubId"`
+	// The new account that should be the owner of the club.
+	AccountID relay.ID `json:"accountId"`
+}
+
+// Transfer club ownership.
+type TransferClubOwnershipPayload struct {
+	// The new club after ownership has been transferred.
+	Club *Club `json:"club"`
+}
+
 // Un-Archive post.
 type UnArchivePostInput struct {
 	// The post to un-archive
@@ -2025,16 +2039,19 @@ const (
 	PostsSortNew PostsSort = "NEW"
 	// Posts by top likes
 	PostsSortTop PostsSort = "TOP"
+	// Posts by algorithm sort
+	PostsSortAlgorithm PostsSort = "ALGORITHM"
 )
 
 var AllPostsSort = []PostsSort{
 	PostsSortNew,
 	PostsSortTop,
+	PostsSortAlgorithm,
 }
 
 func (e PostsSort) IsValid() bool {
 	switch e {
-	case PostsSortNew, PostsSortTop:
+	case PostsSortNew, PostsSortTop, PostsSortAlgorithm:
 		return true
 	}
 	return false

@@ -130,6 +130,8 @@ func (s LoaderGrpc) CopyResourcesAndApplyPixelateFilter(ctx context.Context, ite
 
 func (s LoaderGrpc) DeleteResources(ctx context.Context, itemId string, resourceIds []string) error {
 
+	return nil
+
 	_, err := s.client.DeleteResources(ctx, &loader.DeleteResourcesRequest{ItemId: itemId, ResourceIds: resourceIds})
 
 	if err != nil {

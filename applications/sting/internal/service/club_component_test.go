@@ -86,6 +86,12 @@ type CreateClub struct {
 	} `graphql:"createClub(input: $input)"`
 }
 
+type TransferClubOwnership struct {
+	TransferClubOwnership *struct {
+		Club *ClubModified
+	} `graphql:"transferClubOwnership(input: $input)"`
+}
+
 func TestCreateClub_and_check_permission(t *testing.T) {
 	t.Parallel()
 
@@ -177,6 +183,67 @@ func TestCreateClub_and_check_permission(t *testing.T) {
 	require.Equal(t, 1, accountClubs.Entities[0].Account.ClubsLimit, "should have 3 limit")
 
 	require.True(t, accountClubs.Entities[0].Account.HasNonTerminatedClubs, "has non terminated clubs")
+
+	newAccountId := newFakeAccount(t)
+	mockAccountNormal(t, newAccountId)
+
+	staffAccountId := newFakeAccount(t)
+	mockAccountStaff(t, staffAccountId)
+
+	client = getGraphqlClientWithAuthenticatedAccount(t, staffAccountId)
+
+	workflowExecution = testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.TransferClubOwnership, mock.Anything)
+
+	var transferClubOwnership TransferClubOwnership
+
+	err = client.Mutate(context.Background(), &transferClubOwnership, map[string]interface{}{
+		"input": types.TransferClubOwnershipInput{
+			ClubID:    newClb.Club.ID,
+			AccountID: convertAccountIdToRelayId(newAccountId),
+		},
+	})
+
+	require.NoError(t, err, "no error transferring club ownership")
+
+	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+
+	client = getGraphqlClientWithAuthenticatedAccount(t, newAccountId)
+	newClb = getClub(t, client, fake.Slug)
+
+	require.True(t, newClb.Club.ViewerIsOwner, "viewer is owner now")
+
+	err = client.Query(context.Background(), &accountClubs, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Account",
+				"id":         convertAccountIdToRelayId(testingAccountId),
+			},
+		},
+	})
+
+	require.NoError(t, err)
+	require.Equal(t, 1, len(accountClubs.Entities[0].Account.Clubs.Edges), "should have 1 clubs")
+	require.Equal(t, 1, accountClubs.Entities[0].Account.ClubsCount, "should have 1 count")
+	require.Equal(t, 1, accountClubs.Entities[0].Account.ClubsLimit, "should have 1 limit")
+
+	client = getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
+	newClb = getClub(t, client, fake.Slug)
+
+	require.False(t, newClb.Club.ViewerIsOwner, "old viewer is no longer owner")
+
+	err = client.Query(context.Background(), &accountClubs, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Account",
+				"id":         convertAccountIdToRelayId(testingAccountId),
+			},
+		},
+	})
+
+	require.NoError(t, err)
+	require.Equal(t, 0, len(accountClubs.Entities[0].Account.Clubs.Edges), "should have 0 clubs")
+	require.Equal(t, 0, accountClubs.Entities[0].Account.ClubsCount, "should have 0 count")
+	require.Equal(t, 1, accountClubs.Entities[0].Account.ClubsLimit, "should have 1 limit")
 }
 
 type AddClubSlugAlias struct {

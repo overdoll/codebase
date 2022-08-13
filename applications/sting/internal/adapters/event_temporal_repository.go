@@ -36,6 +36,30 @@ func (r EventTemporalRepository) SendCompletedPixelatedResources(ctx context.Con
 	return nil
 }
 
+func (r EventTemporalRepository) TransferClubOwnership(ctx context.Context, requester *principal.Principal, club *club.Club, target *principal.Principal) error {
+
+	if err := club.CanTransferClubOwnership(requester, target); err != nil {
+		return err
+	}
+
+	options := client.StartWorkflowOptions{
+		TaskQueue:                                viper.GetString("temporal.queue"),
+		ID:                                       "sting.TransferClubOwnership_" + club.ID(),
+		WorkflowExecutionErrorWhenAlreadyStarted: true,
+	}
+
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.TransferClubOwnership, workflows.TransferClubOwnershipInput{
+		ClubId:    club.ID(),
+		AccountId: target.AccountId(),
+	})
+
+	if err != nil {
+		return errors.Wrap(err, "failed to transfer club ownership")
+	}
+
+	return nil
+}
+
 func (r EventTemporalRepository) GenerateSitemap(ctx context.Context, schedule string) error {
 
 	options := client.StartWorkflowOptions{

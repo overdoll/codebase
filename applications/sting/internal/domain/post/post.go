@@ -219,7 +219,7 @@ func (p *Post) MakeDiscarded() error {
 
 	p.state = Discarded
 
-	p.content = []*Content{}
+	//p.content = []*Content{}
 
 	return nil
 }
@@ -235,7 +235,7 @@ func (p *Post) MakeRemoved() error {
 
 	p.state = Removed
 
-	p.content = []*Content{}
+	//p.content = []*Content{}
 
 	return nil
 }
@@ -673,7 +673,7 @@ func (p *Post) CanUpdate(requester *principal.Principal) error {
 	}
 
 	if p.state != Draft {
-		return domainerror.NewValidation("can only update post in draft")
+		return domainerror.NewValidation("can only update posts that are in draft")
 	}
 
 	return nil

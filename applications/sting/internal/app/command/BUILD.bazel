@@ -43,6 +43,7 @@ go_library(
         "suspend_club.go",
         "suspend_club_operator.go",
         "terminate_club.go",
+        "transfer_club_ownership.go",
         "un_archive_post.go",
         "un_suspend_club.go",
         "un_terminate_club.go",

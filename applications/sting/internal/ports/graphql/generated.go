@@ -394,6 +394,7 @@ type ComplexityRoot struct {
 		SubmitPost                       func(childComplexity int, input types.SubmitPostInput) int
 		SuspendClub                      func(childComplexity int, input types.SuspendClubInput) int
 		TerminateClub                    func(childComplexity int, input types.TerminateClubInput) int
+		TransferClubOwnership            func(childComplexity int, input types.TransferClubOwnershipInput) int
 		UnArchivePost                    func(childComplexity int, input types.UnArchivePostInput) int
 		UnSuspendClub                    func(childComplexity int, input types.UnSuspendClubInput) int
 		UnTerminateClub                  func(childComplexity int, input types.UnTerminateClubInput) int
@@ -496,7 +497,6 @@ type ComplexityRoot struct {
 		Post               func(childComplexity int, reference string) int
 		Posts              func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) int
 		PostsFeed          func(childComplexity int, after *string, before *string, first *int, last *int) int
-		PostsGame          func(childComplexity int, after *string, before *string, first *int, last *int, slug string, seed string) int
 		Search             func(childComplexity int, after *string, before *string, first *int, last *int, query string) int
 		Serial             func(childComplexity int, slug string) int
 		Series             func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, title *string, sortBy types.SeriesSort) int
@@ -609,6 +609,10 @@ type ComplexityRoot struct {
 	TopicEdge struct {
 		Cursor func(childComplexity int) int
 		Node   func(childComplexity int) int
+	}
+
+	TransferClubOwnershipPayload struct {
+		Club func(childComplexity int) int
 	}
 
 	Translation struct {
@@ -843,6 +847,7 @@ type MutationResolver interface {
 	DisableClubCharacters(ctx context.Context, input types.DisableClubCharactersInput) (*types.DisableClubCharactersPayload, error)
 	EnableClubCharacters(ctx context.Context, input types.EnableClubCharactersInput) (*types.EnableClubCharactersPayload, error)
 	UpdateClubCharactersLimit(ctx context.Context, input types.UpdateClubCharactersLimitInput) (*types.UpdateClubCharactersLimitPayload, error)
+	TransferClubOwnership(ctx context.Context, input types.TransferClubOwnershipInput) (*types.TransferClubOwnershipPayload, error)
 	UpdateCurationProfileAudience(ctx context.Context, input types.UpdateCurationProfileAudienceInput) (*types.UpdateCurationProfileAudiencePayload, error)
 	UpdateCurationProfileCategory(ctx context.Context, input types.UpdateCurationProfileCategoryInput) (*types.UpdateCurationProfileCategoryPayload, error)
 	UpdateCurationProfileDateOfBirth(ctx context.Context, input types.UpdateCurationProfileDateOfBirthInput) (*types.UpdateCurationProfileDateOfBirthPayload, error)
@@ -892,7 +897,6 @@ type QueryResolver interface {
 	DiscoverClubs(ctx context.Context, after *string, before *string, first *int, last *int) (*types.ClubConnection, error)
 	Clubs(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended *bool, terminated *bool, sortBy types.ClubsSort) (*types.ClubConnection, error)
 	Club(ctx context.Context, slug string) (*types.Club, error)
-	PostsGame(ctx context.Context, after *string, before *string, first *int, last *int, slug string, seed string) (*types.PostConnection, error)
 	Search(ctx context.Context, after *string, before *string, first *int, last *int, query string) (*types.SearchConnection, error)
 	PostsFeed(ctx context.Context, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
 	Post(ctx context.Context, reference string) (*types.Post, error)
@@ -2497,6 +2501,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.TerminateClub(childComplexity, args["input"].(types.TerminateClubInput)), true
 
+	case "Mutation.transferClubOwnership":
+		if e.complexity.Mutation.TransferClubOwnership == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_transferClubOwnership_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.TransferClubOwnership(childComplexity, args["input"].(types.TransferClubOwnershipInput)), true
+
 	case "Mutation.unArchivePost":
 		if e.complexity.Mutation.UnArchivePost == nil {
 			break
@@ -3268,18 +3284,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.PostsFeed(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
 
-	case "Query.postsGame":
-		if e.complexity.Query.PostsGame == nil {
-			break
-		}
-
-		args, err := ec.field_Query_postsGame_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.PostsGame(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slug"].(string), args["seed"].(string)), true
-
 	case "Query.search":
 		if e.complexity.Query.Search == nil {
 			break
@@ -3767,6 +3771,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TopicEdge.Node(childComplexity), true
 
+	case "TransferClubOwnershipPayload.club":
+		if e.complexity.TransferClubOwnershipPayload.Club == nil {
+			break
+		}
+
+		return e.complexity.TransferClubOwnershipPayload.Club(childComplexity), true
+
 	case "Translation.language":
 		if e.complexity.Translation.Language == nil {
 			break
@@ -4046,6 +4057,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputSubmitPostInput,
 		ec.unmarshalInputSuspendClubInput,
 		ec.unmarshalInputTerminateClubInput,
+		ec.unmarshalInputTransferClubOwnershipInput,
 		ec.unmarshalInputUnArchivePostInput,
 		ec.unmarshalInputUnSuspendClubInput,
 		ec.unmarshalInputUnTerminateClubInput,
@@ -5372,6 +5384,15 @@ input DisableClubSupporterOnlyPostsInput {
   clubId: ID!
 }
 
+"""Transfer club ownership input."""
+input TransferClubOwnershipInput {
+  """The club to transfer ownership for."""
+  clubId: ID!
+
+  """The new account that should be the owner of the club."""
+  accountId: ID!
+}
+
 """Disable club supporter-only posts payload."""
 type DisableClubSupporterOnlyPostsPayload {
   """The new club after supporter-only posts are disabled."""
@@ -5423,6 +5444,12 @@ type SuspendClubPayload {
 """Terminate club payload."""
 type TerminateClubPayload {
   """The new club after it's terminated."""
+  club: Club
+}
+
+"""Transfer club ownership."""
+type TransferClubOwnershipPayload {
+  """The new club after ownership has been transferred."""
   club: Club
 }
 
@@ -5543,6 +5570,13 @@ extend type Mutation {
   Staff+ only.
   """
   updateClubCharactersLimit(input: UpdateClubCharactersLimitInput!): UpdateClubCharactersLimitPayload
+
+  """
+  Transfer club ownership from one account to another.
+
+  Staff+ only.
+  """
+  transferClubOwnership(input: TransferClubOwnershipInput!): TransferClubOwnershipPayload
 }
 
 extend type Query {
@@ -6175,6 +6209,9 @@ enum PostsSort {
 
   """Posts by top likes"""
   TOP
+
+  """Posts by algorithm sort"""
+  ALGORITHM
 }
 
 union Search = Category | Character | Series | Club
@@ -6314,27 +6351,6 @@ extend type Mutation {
 }
 
 extend type Query {
-  """Get random posts."""
-  postsGame(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """Returns the elements in the list that come before the specified cursor."""
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """The slug of the game to use."""
-    slug: String!
-
-    """The seed to use for the randomizer."""
-    seed: String!
-  ): PostConnection!
-
   """Perform a search across multiple types."""
   search(
     """Returns the elements in the list that come after the specified cursor."""
@@ -8621,6 +8637,21 @@ func (ec *executionContext) field_Mutation_terminateClub_args(ctx context.Contex
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_transferClubOwnership_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.TransferClubOwnershipInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNTransferClubOwnershipInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTransferClubOwnershipInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_unArchivePost_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -9668,66 +9699,6 @@ func (ec *executionContext) field_Query_postsFeed_args(ctx context.Context, rawA
 		}
 	}
 	args["last"] = arg3
-	return args, nil
-}
-
-func (ec *executionContext) field_Query_postsGame_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *string
-	if tmp, ok := rawArgs["after"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
-		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["after"] = arg0
-	var arg1 *string
-	if tmp, ok := rawArgs["before"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
-		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["before"] = arg1
-	var arg2 *int
-	if tmp, ok := rawArgs["first"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
-		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["first"] = arg2
-	var arg3 *int
-	if tmp, ok := rawArgs["last"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
-		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["last"] = arg3
-	var arg4 string
-	if tmp, ok := rawArgs["slug"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slug"))
-		arg4, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["slug"] = arg4
-	var arg5 string
-	if tmp, ok := rawArgs["seed"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seed"))
-		arg5, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["seed"] = arg5
 	return args, nil
 }
 
@@ -21122,6 +21093,62 @@ func (ec *executionContext) fieldContext_Mutation_updateClubCharactersLimit(ctx 
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_transferClubOwnership(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_transferClubOwnership(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().TransferClubOwnership(rctx, fc.Args["input"].(types.TransferClubOwnershipInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.TransferClubOwnershipPayload)
+	fc.Result = res
+	return ec.marshalOTransferClubOwnershipPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTransferClubOwnershipPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_transferClubOwnership(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "club":
+				return ec.fieldContext_TransferClubOwnershipPayload_club(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type TransferClubOwnershipPayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_transferClubOwnership_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Mutation_updateCurationProfileAudience(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_updateCurationProfileAudience(ctx, field)
 	if err != nil {
@@ -25166,67 +25193,6 @@ func (ec *executionContext) fieldContext_Query_club(ctx context.Context, field g
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_postsGame(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_postsGame(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().PostsGame(rctx, fc.Args["after"].(*string), fc.Args["before"].(*string), fc.Args["first"].(*int), fc.Args["last"].(*int), fc.Args["slug"].(string), fc.Args["seed"].(string))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*types.PostConnection)
-	fc.Result = res
-	return ec.marshalNPostConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostConnection(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Query_postsGame(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "edges":
-				return ec.fieldContext_PostConnection_edges(ctx, field)
-			case "pageInfo":
-				return ec.fieldContext_PostConnection_pageInfo(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type PostConnection", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_postsGame_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Query_search(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Query_search(ctx, field)
 	if err != nil {
@@ -28884,6 +28850,99 @@ func (ec *executionContext) fieldContext_TopicEdge_node(ctx context.Context, fie
 				return ec.fieldContext_Topic_categories(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Topic", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _TransferClubOwnershipPayload_club(ctx context.Context, field graphql.CollectedField, obj *types.TransferClubOwnershipPayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TransferClubOwnershipPayload_club(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Club, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Club)
+	fc.Result = res
+	return ec.marshalOClub2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TransferClubOwnershipPayload_club(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TransferClubOwnershipPayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Club_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Club_reference(ctx, field)
+			case "slug":
+				return ec.fieldContext_Club_slug(ctx, field)
+			case "slugAliasesLimit":
+				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "slugAliases":
+				return ec.fieldContext_Club_slugAliases(ctx, field)
+			case "thumbnail":
+				return ec.fieldContext_Club_thumbnail(ctx, field)
+			case "banner":
+				return ec.fieldContext_Club_banner(ctx, field)
+			case "name":
+				return ec.fieldContext_Club_name(ctx, field)
+			case "owner":
+				return ec.fieldContext_Club_owner(ctx, field)
+			case "termination":
+				return ec.fieldContext_Club_termination(ctx, field)
+			case "suspension":
+				return ec.fieldContext_Club_suspension(ctx, field)
+			case "suspensionLogs":
+				return ec.fieldContext_Club_suspensionLogs(ctx, field)
+			case "viewerIsOwner":
+				return ec.fieldContext_Club_viewerIsOwner(ctx, field)
+			case "canCreateSupporterOnlyPosts":
+				return ec.fieldContext_Club_canCreateSupporterOnlyPosts(ctx, field)
+			case "canSupport":
+				return ec.fieldContext_Club_canSupport(ctx, field)
+			case "nextSupporterPostTime":
+				return ec.fieldContext_Club_nextSupporterPostTime(ctx, field)
+			case "viewerMember":
+				return ec.fieldContext_Club_viewerMember(ctx, field)
+			case "membersIsSupporterCount":
+				return ec.fieldContext_Club_membersIsSupporterCount(ctx, field)
+			case "membersCount":
+				return ec.fieldContext_Club_membersCount(ctx, field)
+			case "members":
+				return ec.fieldContext_Club_members(ctx, field)
+			case "charactersEnabled":
+				return ec.fieldContext_Club_charactersEnabled(ctx, field)
+			case "charactersLimit":
+				return ec.fieldContext_Club_charactersLimit(ctx, field)
+			case "charactersCount":
+				return ec.fieldContext_Club_charactersCount(ctx, field)
+			case "characters":
+				return ec.fieldContext_Club_characters(ctx, field)
+			case "posts":
+				return ec.fieldContext_Club_posts(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Club", field.Name)
 		},
 	}
 	return fc, nil
@@ -33829,6 +33888,37 @@ func (ec *executionContext) unmarshalInputTerminateClubInput(ctx context.Context
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputTransferClubOwnershipInput(ctx context.Context, obj interface{}) (types.TransferClubOwnershipInput, error) {
+	var it types.TransferClubOwnershipInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "clubId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubId"))
+			it.ClubID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "accountId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountId"))
+			it.AccountID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputUnArchivePostInput(ctx context.Context, obj interface{}) (types.UnArchivePostInput, error) {
 	var it types.UnArchivePostInput
 	asMap := map[string]interface{}{}
@@ -37799,6 +37889,12 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_updateClubCharactersLimit(ctx, field)
 			})
 
+		case "transferClubOwnership":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_transferClubOwnership(ctx, field)
+			})
+
 		case "updateCurationProfileAudience":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -38632,29 +38728,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_club(ctx, field)
-				return res
-			}
-
-			rrm := func(ctx context.Context) graphql.Marshaler {
-				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
-			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return rrm(innerCtx)
-			})
-		case "postsGame":
-			field := field
-
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_postsGame(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -39678,6 +39751,31 @@ func (ec *executionContext) _TopicEdge(ctx context.Context, sel ast.SelectionSet
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var transferClubOwnershipPayloadImplementors = []string{"TransferClubOwnershipPayload"}
+
+func (ec *executionContext) _TransferClubOwnershipPayload(ctx context.Context, sel ast.SelectionSet, obj *types.TransferClubOwnershipPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, transferClubOwnershipPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("TransferClubOwnershipPayload")
+		case "club":
+
+			out.Values[i] = ec._TransferClubOwnershipPayload_club(ctx, field, obj)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -42464,6 +42562,11 @@ func (ec *executionContext) marshalNTopicEdge2ᚖoverdollᚋapplicationsᚋsting
 	return ec._TopicEdge(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNTransferClubOwnershipInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTransferClubOwnershipInput(ctx context.Context, v interface{}) (types.TransferClubOwnershipInput, error) {
+	res, err := ec.unmarshalInputTransferClubOwnershipInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNTranslation2ᚕᚖoverdollᚋlibrariesᚋgraphqlᚐTranslationᚄ(ctx context.Context, sel ast.SelectionSet, v []*graphql1.Translation) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -43687,6 +43790,13 @@ func (ec *executionContext) marshalOTopic2ᚖoverdollᚋapplicationsᚋstingᚋi
 		return graphql.Null
 	}
 	return ec._Topic(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOTransferClubOwnershipPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTransferClubOwnershipPayload(ctx context.Context, sel ast.SelectionSet, v *types.TransferClubOwnershipPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._TransferClubOwnershipPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOUnArchivePostPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUnArchivePostPayload(ctx context.Context, sel ast.SelectionSet, v *types.UnArchivePostPayload) graphql.Marshaler {
