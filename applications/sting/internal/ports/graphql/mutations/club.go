@@ -9,6 +9,31 @@ import (
 	"overdoll/libraries/principal"
 )
 
+func (r *MutationResolver) TransferClubOwnership(ctx context.Context, input types.TransferClubOwnershipInput) (*types.TransferClubOwnershipPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	pst, err := r.App.Commands.TransferClubOwnership.
+		Handle(
+			ctx,
+			command.TransferClubOwnership{
+				ClubId:    input.ClubID.GetID(),
+				AccountId: input.AccountID.GetID(),
+				Principal: principal.FromContext(ctx),
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.TransferClubOwnershipPayload{
+		Club: types.MarshalClubToGraphQL(ctx, pst),
+	}, nil
+}
+
 func (r *MutationResolver) EnableClubSupporterOnlyPosts(ctx context.Context, input types.EnableClubSupporterOnlyPostsInput) (*types.EnableClubSupporterOnlyPostsPayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {

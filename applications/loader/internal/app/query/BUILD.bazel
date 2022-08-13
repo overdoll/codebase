@@ -8,8 +8,5 @@ go_library(
     ],
     importpath = "overdoll/applications/loader/internal/app/query",
     visibility = ["//applications/loader:__subpackages__"],
-    deps = [
-        "//applications/loader/internal/domain/event",
-        "//applications/loader/internal/domain/resource",
-    ],
+    deps = ["//applications/loader/internal/domain/resource"],
 )

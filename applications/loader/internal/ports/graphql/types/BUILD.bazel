@@ -2,8 +2,14 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "types",
-    srcs = ["types.go"],
+    srcs = [
+        "marshal.go",
+        "types.go",
+    ],
     importpath = "overdoll/applications/loader/internal/ports/graphql/types",
     visibility = ["//applications/loader:__subpackages__"],
-    deps = ["//libraries/graphql/relay"],
+    deps = [
+        "//applications/loader/internal/domain/resource",
+        "//libraries/graphql/relay",
+    ],
 )

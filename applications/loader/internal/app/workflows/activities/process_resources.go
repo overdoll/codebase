@@ -33,6 +33,10 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 		resourcesNotProcessed = append(resourcesNotProcessed, res)
 	}
 
+	if err = h.rr.UpdateResourceProgress(ctx, input.ItemId, input.ResourceId, float64(0)); err != nil {
+		return err
+	}
+
 	config, err := resource.NewConfig(input.Width, input.Height)
 
 	if err != nil {
@@ -76,12 +80,7 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 		if !alreadySentNumber {
 			numbersAlreadySent[progress] = true
 
-			if err = h.event.SendProcessResourcesProgress(ctx, input.ItemId, input.ResourceId, progress); err != nil {
-
-				if strings.Contains(err.Error(), "workflow execution already completed") {
-					return
-				}
-
+			if err = h.rr.UpdateResourceProgress(ctx, input.ItemId, input.ResourceId, float64(progress)); err != nil {
 				zap.S().Errorw("failed to send process resources progress", zap.Error(err))
 			}
 		}
@@ -133,6 +132,10 @@ func processResource(h *Activities, ctx context.Context, target *resource.Resour
 
 	// upload the new resource
 	if err := h.rr.UploadProcessedResource(ctx, targetsToMove, target); err != nil {
+		return err
+	}
+
+	if err = h.rr.UpdateResourceProgress(ctx, target.ItemId(), target.ID(), float64(-2)); err != nil {
 		return err
 	}
 
