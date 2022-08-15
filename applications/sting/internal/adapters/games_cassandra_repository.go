@@ -7,6 +7,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/sting/internal/domain/games"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/support"
 )
 
@@ -115,6 +116,11 @@ func (r GamesCassandraRepository) GetGameSession(ctx context.Context, id string)
 		Consistency(gocql.LocalQuorum).
 		BindStruct(gameSessions{Id: id}).
 		GetRelease(&sess); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, apperror.NewNotFoundError("game session", id)
+		}
+
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get game session")
 	}
 

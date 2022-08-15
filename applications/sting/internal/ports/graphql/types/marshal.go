@@ -4,12 +4,14 @@ import (
 	"context"
 	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/applications/sting/internal/domain/curation"
+	"overdoll/applications/sting/internal/domain/games"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
+	"strconv"
 )
 
 func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
@@ -259,6 +261,39 @@ func MarshalTopicToGraphQL(ctx context.Context, result *post.Topic) *Topic {
 		TitleTranslations:       titleTranslations,
 		DescriptionTranslations: descriptionTranslations,
 		Weight:                  result.Weight(),
+	}
+}
+
+func MarshalRouletteGameStateToGraphQL(ctx context.Context, result *games.RouletteGameState) *RouletteGameState {
+
+	if result == nil {
+		return nil
+	}
+
+	return &RouletteGameState{
+		ID:        relay.NewID(RouletteGameState{}, result.GameSessionId(), strconv.Itoa(result.GameSessionSpinId())),
+		DiceOne:   result.DiceOne(),
+		DiceTwo:   result.DiceTwo(),
+		DiceThree: result.DiceThree(),
+		Post:      &Post{ID: relay.NewID(Post{}, result.SelectedPostId())},
+	}
+}
+
+func MarshalGameSessionToGraphQL(ctx context.Context, result *games.Session) *GameSession {
+
+	var gameType GameType
+
+	if result.GameType() == games.Roulette {
+		gameType = GameTypeRoulette
+	}
+
+	return &GameSession{
+		ID:             relay.NewID(GameSession{}, result.Id()),
+		Reference:      result.Id(),
+		IsClosed:       result.IsClosed(),
+		ViewerIsPlayer: result.IsPlayer(passport.FromContext(ctx)),
+		Seed:           result.Seed(),
+		GameType:       gameType,
 	}
 }
 

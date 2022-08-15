@@ -174,7 +174,5 @@ type Queries struct {
 
 	ClubSupporterMembersCount query.ClubSupporterMembersCountHandler
 
-	PostsGame query.PostsGameHandler
-
-	GameSession query.GameSessionHandler
+	GameSessionStatus query.GameSessionStatusHandler
 }

@@ -10,9 +10,9 @@ import (
 )
 
 type SpinRoulette struct {
-	GameSessionTokenId string
-	Passport           *passport.Passport
-	Requester          *principal.Principal
+	GameSessionId string
+	Passport      *passport.Passport
+	Requester     *principal.Principal
 }
 
 type SpinRouletteHandler struct {
@@ -27,7 +27,7 @@ func NewSpinRouletteHandler(gr games.Repository, pr post.Repository, ccr curatio
 
 func (h SpinRouletteHandler) Handle(ctx context.Context, cmd SpinRoulette) (*games.RouletteGameState, error) {
 
-	gameSession, err := h.gr.GetGameSession(ctx, cmd.GameSessionTokenId)
+	gameSession, err := h.gr.GetGameSession(ctx, cmd.GameSessionId)
 
 	if err != nil {
 		return nil, err

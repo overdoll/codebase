@@ -10,6 +10,7 @@ import (
 
 type CreateGameSession struct {
 	Game     string
+	Seed     *string
 	Passport *passport.Passport
 }
 
@@ -24,7 +25,7 @@ func NewCreateGameSessionHandler(gr games.Repository, pr post.Repository) Create
 
 func (h CreateGameSessionHandler) Handle(ctx context.Context, cmd CreateGameSession) (*games.Session, error) {
 
-	// we use nouns from our list of characters in the platform as the seed for games (so seeds can be shareable?)
+	// we use nouns from our list of characters in the platform as the seed for games (so seeds can be shareable)
 	// so, we seed them here if needed
 	if games.ShouldSeedNouns() {
 
@@ -45,7 +46,7 @@ func (h CreateGameSessionHandler) Handle(ctx context.Context, cmd CreateGameSess
 
 	if game == games.Roulette {
 
-		gameSessionState, err := games.NewRouletteSession(cmd.Passport)
+		gameSessionState, err := games.NewRouletteSession(cmd.Passport, cmd.Seed)
 
 		if err != nil {
 			return nil, err

@@ -18,7 +18,7 @@ type Session struct {
 	sessionState       State
 }
 
-func NewRouletteSession(passport *passport.Passport) (*Session, error) {
+func NewRouletteSession(passport *passport.Passport, askedSeed *string) (*Session, error) {
 
 	var accountId *string
 
@@ -27,16 +27,25 @@ func NewRouletteSession(passport *passport.Passport) (*Session, error) {
 		accountId = &acc
 	}
 
-	seed, err := generateSeed()
+	currentSeed := ""
 
-	if err != nil {
-		return nil, err
+	if askedSeed == nil {
+
+		seed, err := generateSeed()
+
+		if err != nil {
+			return nil, err
+		}
+
+		currentSeed = seed
+	} else {
+		currentSeed = *askedSeed
 	}
 
 	return &Session{
 		id:                 uuid.New().String(),
 		currentSpinId:      0,
-		seed:               seed,
+		seed:               currentSeed,
 		gameType:           Roulette,
 		initiatorAccountId: accountId,
 		linkedDeviceId:     passport.DeviceID(),

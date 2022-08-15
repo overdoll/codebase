@@ -15,6 +15,11 @@ type ClubSuspensionLog interface {
 	IsClubSuspensionLog()
 }
 
+// A union representing the status of various games.
+type GameSessionStatus interface {
+	IsGameSessionStatus()
+}
+
 type Search interface {
 	IsSearch()
 }
@@ -496,6 +501,20 @@ type CreateClubPayload struct {
 	Validation *CreateClubValidation `json:"validation"`
 }
 
+// Create a new game session.
+type CreateGameSessionInput struct {
+	// The game type to create the session for.
+	GameType GameType `json:"gameType"`
+	// Optionally pass a seed. If a seed is not passed in, one will be automatically generated.
+	Seed *string `json:"seed"`
+}
+
+// Payload for a new game session
+type CreateGameSessionPayload struct {
+	// The game session after creation.
+	GameSession *GameSession `json:"gameSession"`
+}
+
 // Create a new post. A club ID is required.
 type CreatePostInput struct {
 	// The club ID that this post will belong to
@@ -638,6 +657,21 @@ type EnableClubSupporterOnlyPostsInput struct {
 type EnableClubSupporterOnlyPostsPayload struct {
 	// The new club after supporter-only posts are enabled.
 	Club *Club `json:"club"`
+}
+
+type GameSession struct {
+	// An ID pointing to this game session.
+	ID relay.ID `json:"id"`
+	// An ID that can be used to uniquely-identify this game session.
+	Reference string `json:"reference"`
+	// Whether or not this game session is closed. A closed game session cannot be played anymore.
+	IsClosed bool `json:"isClosed"`
+	// Whether or not the current viewer is the player of the game. Only players can "play" the game.
+	ViewerIsPlayer bool `json:"viewerIsPlayer"`
+	// The type of game this session belongs to.
+	GameType GameType `json:"gameType"`
+	// The seed used for this session.
+	Seed string `json:"seed"`
 }
 
 // Join a club input.
@@ -815,6 +849,40 @@ type RemovePostContentPayload struct {
 	Post *Post `json:"post"`
 }
 
+// A roulette game state.
+type RouletteGameState struct {
+	// An ID used to uniquely identify this game state.
+	ID relay.ID `json:"id"`
+	// The first dice that was created.
+	DiceOne int `json:"diceOne"`
+	// The second dice that was created.
+	DiceTwo int `json:"diceTwo"`
+	// The third dice that was created.
+	DiceThree int `json:"diceThree"`
+	// The post that was selected.
+	Post *Post `json:"post"`
+}
+
+// The status of the roulette game.
+type RouletteStatus struct {
+	// The game session that this roulette belongs to.
+	GameSession *GameSession `json:"gameSession"`
+	// The last roulette spin that happened. If no spins happened yet, this is nil. Should be used to resume the current roulette session.
+	LastGameState *RouletteGameState `json:"lastGameState"`
+	// All the game states. Note that this is only available after the game session is closed.
+	AllGameStates []*RouletteGameState `json:"allGameStates"`
+	// How many rolls occurred. Note that this is 0 if the game session is not closed.
+	TotalRolls int `json:"totalRolls"`
+	// How many doubles occurred. Note that this is 0 if the game session is not closed.
+	TotalDoubles int `json:"totalDoubles"`
+	// The probability that the current state occurred at.
+	Probability float64 `json:"probability"`
+	// The total score.
+	Score int `json:"score"`
+}
+
+func (RouletteStatus) IsGameSessionStatus() {}
+
 type SearchConnection struct {
 	Edges    []*SearchEdge   `json:"edges"`
 	PageInfo *relay.PageInfo `json:"pageInfo"`
@@ -864,6 +932,18 @@ type SeriesConnection struct {
 type SeriesEdge struct {
 	Cursor string  `json:"cursor"`
 	Node   *Series `json:"node"`
+}
+
+// Spin roulette.
+type SpinRouletteInput struct {
+	// The game session ID to use for the spin.
+	GameSessionID relay.ID `json:"gameSessionId"`
+}
+
+// Payload for spinning roulette.
+type SpinRoulettePayload struct {
+	// The new roulette spin game state
+	RouletteGameState *RouletteGameState `json:"rouletteGameState"`
 }
 
 // Publish post.
@@ -1977,6 +2057,46 @@ func (e *CreateTopicValidation) UnmarshalGQL(v interface{}) error {
 }
 
 func (e CreateTopicValidation) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// The types of games available.
+type GameType string
+
+const (
+	GameTypeRoulette GameType = "ROULETTE"
+)
+
+var AllGameType = []GameType{
+	GameTypeRoulette,
+}
+
+func (e GameType) IsValid() bool {
+	switch e {
+	case GameTypeRoulette:
+		return true
+	}
+	return false
+}
+
+func (e GameType) String() string {
+	return string(e)
+}
+
+func (e *GameType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = GameType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid GameType", str)
+	}
+	return nil
+}
+
+func (e GameType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

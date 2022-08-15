@@ -5,19 +5,19 @@ import (
 	"overdoll/applications/sting/internal/domain/games"
 )
 
-type GameSession struct {
+type GameSessionStatus struct {
 	GameSessionId string
 }
 
-type GameSessionHandler struct {
+type GameSessionStatusHandler struct {
 	gr games.Repository
 }
 
-func NewGameSessionHandler(gr games.Repository) GameSessionHandler {
-	return GameSessionHandler{gr: gr}
+func NewGameSessionStatusHandler(gr games.Repository) GameSessionStatusHandler {
+	return GameSessionStatusHandler{gr: gr}
 }
 
-func (h GameSessionHandler) Handle(ctx context.Context, query GameSession) (*games.RouletteStatus, error) {
+func (h GameSessionStatusHandler) Handle(ctx context.Context, query GameSessionStatus) (*games.RouletteStatus, error) {
 
 	session, err := h.gr.GetGameSession(ctx, query.GameSessionId)
 

@@ -241,7 +241,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			HasNonTerminatedClubs:       query.NewHasNonTerminatedClubsHandler(clubRepo),
 			ClubSupporterMembersCount:   query.NewClubSupporterMembersCountHandler(clubRepo),
 			PostsGame:                   query.NewPostsGameHandler(postRepo),
-			GameSession:                 query.NewGameSessionHandler(gamesRepo),
+			GameSessionStatus:           query.NewGameSessionStatusHandler(gamesRepo),
 		},
 		Activities: activities.NewActivitiesHandler(postRepo, clubRepo, personalizationRepo, parley, loader, carrier),
 	}
