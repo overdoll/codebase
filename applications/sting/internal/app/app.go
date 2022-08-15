@@ -104,6 +104,9 @@ type Commands struct {
 	UnTerminateClub command.UnTerminateClubHandler
 
 	SuspendClubOperator command.SuspendClubOperatorHandler
+
+	CreateRouletteSession command.CreateRouletteSessionHandler
+	SpinRoulette          command.SpinRouletteHandler
 }
 
 type Queries struct {
@@ -172,4 +175,6 @@ type Queries struct {
 	ClubSupporterMembersCount query.ClubSupporterMembersCountHandler
 
 	PostsGame query.PostsGameHandler
+
+	RouletteStatus query.RouletteStatusHandler
 }

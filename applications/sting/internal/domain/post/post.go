@@ -510,6 +510,10 @@ func (p *Post) UpdateContentSupporterOnly(clb *club.Club, requester *principal.P
 		return err
 	}
 
+	if requester.IsStaff() && p.state == Published && supporterOnly {
+		return domainerror.NewValidation("cannot mark supporter content only as true when already published")
+	}
+
 	var actualContent []*Content
 
 	for _, content := range p.content {
@@ -670,6 +674,11 @@ func (p *Post) CanUpdate(requester *principal.Principal) error {
 
 	if requester.IsLocked() {
 		return principal.ErrLocked
+	}
+
+	// staff can update posts that are published
+	if requester.IsStaff() && p.state == Published {
+		return nil
 	}
 
 	if p.state != Draft {

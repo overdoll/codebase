@@ -9,6 +9,7 @@ import (
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/localization"
+	"overdoll/libraries/passport"
 	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"time"
@@ -167,6 +168,67 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 		PostedAt:                        pending.PostedAt(),
 		UpdatedAt:                       pending.UpdatedAt(),
 	}, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) GetPostWithRandomSeed(ctx context.Context, passport *passport.Passport, seed int64, audienceIds []string) (*post.Post, error) {
+
+	builder := r.client.Search().
+		Index(PostReaderIndex)
+
+	builder.Size(1)
+
+	terminatedClubIds, err := r.getTerminatedClubIds(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	query := elastic.NewBoolQuery()
+
+	var filterQueries []elastic.Query
+
+	filterQueries = append(filterQueries, elastic.NewTermQuery("state", post.Published.String()))
+
+	filterQueries = append(filterQueries, elastic.NewBoolQuery().
+		MustNot(elastic.NewTermsQueryFromStrings("club_id", terminatedClubIds...)),
+	)
+
+	if len(audienceIds) > 0 {
+		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("audience_id", audienceIds...))
+	}
+
+	if filterQueries != nil {
+		query.Filter(filterQueries...)
+	}
+
+	query.Must(elastic.NewFunctionScoreQuery().AddScoreFunc(elastic.NewRandomFunction().Seed(seed)))
+
+	builder.Query(query)
+
+	response, err := builder.Pretty(true).Do(ctx)
+
+	if err != nil {
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed to get random post")
+	}
+
+	if len(response.Hits.Hits) == 0 {
+		return nil, errors.New("could not find a random post")
+	}
+
+	var posts []*post.Post
+
+	for _, hit := range response.Hits.Hits {
+
+		createdPost, err := r.unmarshalPostDocument(ctx, hit.Source, hit.Sort)
+
+		if err != nil {
+			return nil, err
+		}
+
+		posts = append(posts, createdPost)
+	}
+
+	return posts[0], nil
 }
 
 func (r *PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Context, postPending posts) (*post.Post, error) {

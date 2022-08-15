@@ -381,7 +381,7 @@ func (r PostsCassandraElasticsearchRepository) GetPostsByIds(ctx context.Context
 	return posts, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, pst *post.Post) ([]*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, pst *post.Post, filters *post.Feed) ([]*post.Post, error) {
 
 	builder := r.client.Search().
 		Index(PostReaderIndex)

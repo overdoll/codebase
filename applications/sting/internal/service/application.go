@@ -91,6 +91,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 
 	postRepo := adapters.NewPostsCassandraRepository(session, esClient, resourceSerializer, awsSession, cache)
 	personalizationRepo := adapters.NewCurationProfileCassandraRepository(session)
+	gamesRepo := adapters.NewGamesCassandraRepository(session)
 
 	return &app.Application{
 		Commands: app.Commands{
@@ -180,6 +181,9 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 
 			TerminateClub:   command.NewTerminateClubHandler(clubRepo, eventRepo),
 			UnTerminateClub: command.NewUnTerminateClubHandler(clubRepo, eventRepo),
+
+			SpinRoulette:          command.NewSpinRouletteHandler(gamesRepo, postRepo, personalizationRepo),
+			CreateRouletteSession: command.NewCreateRouletteSessionHandler(gamesRepo, postRepo),
 		},
 		Queries: app.Queries{
 			DiscoverClubs: query.NewDiscoverClubsHandler(clubRepo),
@@ -212,7 +216,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			CurationProfileByAccountId: query.NewPersonalizationProfileByAccountIdHandler(personalizationRepo),
 
 			PostsFeed:             query.NewPostsFeedHandler(personalizationRepo, postRepo),
-			SuggestedPostsForPost: query.NewSuggestedPostsForPostHandler(postRepo),
+			SuggestedPostsForPost: query.NewSuggestedPostsForPostHandler(postRepo, personalizationRepo),
 			ClubMembersPostsFeed:  query.NewClubMembersPostsFeedHandler(postRepo),
 
 			TopicBySlug:  query.NewTopicBySlugHandler(postRepo),
@@ -237,6 +241,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			HasNonTerminatedClubs:       query.NewHasNonTerminatedClubsHandler(clubRepo),
 			ClubSupporterMembersCount:   query.NewClubSupporterMembersCountHandler(clubRepo),
 			PostsGame:                   query.NewPostsGameHandler(postRepo),
+			RouletteStatus:              query.NewRouletteStatusHandler(gamesRepo),
 		},
 		Activities: activities.NewActivitiesHandler(postRepo, clubRepo, personalizationRepo, parley, loader, carrier),
 	}

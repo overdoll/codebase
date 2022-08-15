@@ -1,4 +1,5 @@
 import socket
+
 import time
 
 from . import exception
@@ -16,8 +17,11 @@ def wait_for_port(host, port, timeout=5.0):
     start_time = time.perf_counter()
     while True:
         try:
-            with socket.create_connection((host, port), timeout=3):
-                break
+            with socket.create_connection((host, port), timeout=3) as sock:
+                sock.sendall("GET /readyz HTTP/1.1\r\n\r\n")
+                response_head, response_body = sock.recv(4096).decode().split('\n\n', 1)
+                if ''.join(response_body) == "ok":
+                    break
         except OSError as ex:
             time.sleep(0.5)
             if time.perf_counter() - start_time >= timeout:

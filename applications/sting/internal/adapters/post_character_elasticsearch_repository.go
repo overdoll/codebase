@@ -202,6 +202,37 @@ func (r PostsCassandraElasticsearchRepository) GetCharactersByIds(ctx context.Co
 	return characters, nil
 }
 
+func (r PostsCassandraElasticsearchRepository) GetTopCharacterNames(ctx context.Context) ([]string, error) {
+
+	builder := r.client.Search().
+		Index(CharacterReaderIndex)
+
+	builder.Size(1000)
+	builder.Sort("total_posts", false)
+	builder.Sort("id", false)
+
+	response, err := builder.Pretty(true).Do(ctx)
+
+	if err != nil {
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed to get top character names")
+	}
+
+	var characterNames []string
+
+	for _, hit := range response.Hits.Hits {
+
+		result, err := r.unmarshalCharacterDocument(ctx, hit.Source, hit.Sort)
+
+		if err != nil {
+			return nil, err
+		}
+
+		characterNames = append(characterNames, result.Name().TranslateDefault(""))
+	}
+
+	return characterNames, nil
+}
+
 func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.CharacterFilters) ([]*post.Character, error) {
 
 	builder := r.client.Search().
