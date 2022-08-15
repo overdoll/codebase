@@ -27,7 +27,7 @@ func NewSpinRouletteHandler(gr games.Repository, pr post.Repository, ccr curatio
 
 func (h SpinRouletteHandler) Handle(ctx context.Context, cmd SpinRoulette) (*games.RouletteGameState, error) {
 
-	gameSession, err := h.gr.GetGameSessionToken(ctx, cmd.GameSessionTokenId)
+	gameSession, err := h.gr.GetGameSession(ctx, cmd.GameSessionTokenId)
 
 	if err != nil {
 		return nil, err

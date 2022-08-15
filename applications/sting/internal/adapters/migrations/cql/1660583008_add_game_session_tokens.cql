@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS game_session_tokens
+CREATE TABLE IF NOT EXISTS game_sessions
 (
     id                   text,
     current_spin_id      int,
@@ -12,11 +12,11 @@ CREATE TABLE IF NOT EXISTS game_session_tokens
 
 CREATE TABLE IF NOT EXISTS roulette_game_state
 (
-    game_session_token_id text,
-    game_session_spin_id  int,
-    selected_post_id      text,
-    dice_one              int,
-    dice_two              int,
-    dice_three            int,
-    primary key ( game_session_token_id, game_session_spin_id )
+    game_session_id      text,
+    game_session_spin_id int,
+    selected_post_id     text,
+    dice_one             int,
+    dice_two             int,
+    dice_three           int,
+    primary key ( game_session_id, game_session_spin_id )
 );

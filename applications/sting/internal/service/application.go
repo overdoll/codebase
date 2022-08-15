@@ -182,8 +182,8 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			TerminateClub:   command.NewTerminateClubHandler(clubRepo, eventRepo),
 			UnTerminateClub: command.NewUnTerminateClubHandler(clubRepo, eventRepo),
 
-			SpinRoulette:          command.NewSpinRouletteHandler(gamesRepo, postRepo, personalizationRepo),
-			CreateRouletteSession: command.NewCreateRouletteSessionHandler(gamesRepo, postRepo),
+			SpinRoulette:      command.NewSpinRouletteHandler(gamesRepo, postRepo, personalizationRepo),
+			CreateGameSession: command.NewCreateGameSessionHandler(gamesRepo, postRepo),
 		},
 		Queries: app.Queries{
 			DiscoverClubs: query.NewDiscoverClubsHandler(clubRepo),
@@ -241,7 +241,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			HasNonTerminatedClubs:       query.NewHasNonTerminatedClubsHandler(clubRepo),
 			ClubSupporterMembersCount:   query.NewClubSupporterMembersCountHandler(clubRepo),
 			PostsGame:                   query.NewPostsGameHandler(postRepo),
-			RouletteStatus:              query.NewRouletteStatusHandler(gamesRepo),
+			GameSession:                 query.NewGameSessionHandler(gamesRepo),
 		},
 		Activities: activities.NewActivitiesHandler(postRepo, clubRepo, personalizationRepo, parley, loader, carrier),
 	}

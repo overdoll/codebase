@@ -3,7 +3,7 @@ package games
 import "overdoll/libraries/passport"
 
 type RouletteStatus struct {
-	session   *SessionToken
+	session   *Session
 	gameState []*RouletteGameState
 }
 
@@ -49,4 +49,11 @@ func (r *RouletteStatus) Score() float64 {
 	}
 
 	return 0
+}
+
+func RouletteStatusFromSession(session *Session, states []*RouletteGameState) *RouletteStatus {
+	return &RouletteStatus{
+		session:   session,
+		gameState: states,
+	}
 }

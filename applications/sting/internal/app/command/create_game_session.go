@@ -4,6 +4,7 @@ import (
 	"context"
 	"overdoll/applications/sting/internal/domain/games"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/passport"
 )
 
@@ -17,13 +18,13 @@ type CreateGameSessionHandler struct {
 	pr post.Repository
 }
 
-func NewCreateRouletteSessionHandler(gr games.Repository, pr post.Repository) CreateRouletteSessionHandler {
-	return CreateRouletteSessionHandler{gr: gr, pr: pr}
+func NewCreateGameSessionHandler(gr games.Repository, pr post.Repository) CreateGameSessionHandler {
+	return CreateGameSessionHandler{gr: gr, pr: pr}
 }
 
-func (h CreateRouletteSessionHandler) Handle(ctx context.Context, cmd CreateGameSession) (*games.SessionToken, error) {
+func (h CreateGameSessionHandler) Handle(ctx context.Context, cmd CreateGameSession) (*games.Session, error) {
 
-	// we use nouns from our list of characters in the platform
+	// we use nouns from our list of characters in the platform as the seed for games (so seeds can be shareable?)
 	// so, we seed them here if needed
 	if games.ShouldSeedNouns() {
 
@@ -36,15 +37,26 @@ func (h CreateRouletteSessionHandler) Handle(ctx context.Context, cmd CreateGame
 		games.SeedNouns(characterNames)
 	}
 
-	gameSessionState, err := games.NewRouletteSession(cmd.Passport)
+	game, err := games.TypeFromString(cmd.Game)
 
 	if err != nil {
 		return nil, err
 	}
 
-	if err := h.gr.CreateGameSessionToken(ctx, gameSessionState); err != nil {
-		return nil, err
+	if game == games.Roulette {
+
+		gameSessionState, err := games.NewRouletteSession(cmd.Passport)
+
+		if err != nil {
+			return nil, err
+		}
+
+		if err := h.gr.CreateGameSession(ctx, gameSessionState); err != nil {
+			return nil, err
+		}
+
+		return gameSessionState, nil
 	}
 
-	return gameSessionState, nil
+	return nil, domainerror.NewValidation("could not create game")
 }

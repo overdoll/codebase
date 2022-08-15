@@ -105,8 +105,8 @@ type Commands struct {
 
 	SuspendClubOperator command.SuspendClubOperatorHandler
 
-	CreateRouletteSession command.CreateRouletteSessionHandler
-	SpinRoulette          command.SpinRouletteHandler
+	CreateGameSession command.CreateGameSessionHandler
+	SpinRoulette      command.SpinRouletteHandler
 }
 
 type Queries struct {
@@ -176,5 +176,5 @@ type Queries struct {
 
 	PostsGame query.PostsGameHandler
 
-	RouletteStatus query.RouletteStatusHandler
+	GameSession query.GameSessionHandler
 }
