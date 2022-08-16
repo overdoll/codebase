@@ -50,6 +50,7 @@ func NewWorker(app *app.Application) (worker.Worker, func()) {
 	w.RegisterWorkflow(workflows.GenerateCategoryBanner)
 	w.RegisterWorkflow(workflows.GenerateClubBannerFromPost)
 	w.RegisterWorkflow(workflows.GenerateSitemap)
+	w.RegisterWorkflow(workflows.TransferClubOwnership)
 
 	// register activities with our struct
 	w.RegisterActivity(app.Activities)
