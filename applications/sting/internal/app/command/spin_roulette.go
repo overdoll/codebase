@@ -5,6 +5,7 @@ import (
 	"overdoll/applications/sting/internal/domain/curation"
 	"overdoll/applications/sting/internal/domain/games"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
 )
@@ -35,7 +36,8 @@ func (h SpinRouletteHandler) Handle(ctx context.Context, cmd SpinRoulette) (*gam
 
 	states, err := h.gr.GetRouletteGameStateForSession(ctx, gameSession)
 
-	if err != nil {
+	// catch not found errors
+	if err != nil && !apperror.IsNotFoundError(err) {
 		return nil, err
 	}
 
