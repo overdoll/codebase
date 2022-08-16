@@ -103,7 +103,7 @@ func TestCreateRouletteAndPlay(t *testing.T) {
 		},
 	})
 
-	pst := spinRoulette.SpinRoulette.RouletteGameState.Post.Reference
+	//pst := spinRoulette.SpinRoulette.RouletteGameState.Post.Reference
 
 	require.Equal(t, 6, spinRoulette.SpinRoulette.RouletteGameState.DiceOne, "correct dice 1")
 	require.Equal(t, 6, spinRoulette.SpinRoulette.RouletteGameState.DiceTwo, "correct dice 2")
@@ -120,7 +120,7 @@ func TestCreateRouletteAndPlay(t *testing.T) {
 	require.Equal(t, 3, spinRoulette.SpinRoulette.RouletteGameState.DiceOne, "correct dice 1")
 	require.Equal(t, 5, spinRoulette.SpinRoulette.RouletteGameState.DiceTwo, "correct dice 2")
 	require.Equal(t, 6, spinRoulette.SpinRoulette.RouletteGameState.DiceThree, "correct dice 3")
-	require.Equal(t, pst, spinRoulette.SpinRoulette.RouletteGameState.Post.Reference, "correct post")
+	//require.Equal(t, pst, spinRoulette.SpinRoulette.RouletteGameState.Post.Reference, "correct post")
 
 	// do a doubles session
 	seedDoubles := "71TestPersistentSeed5"
