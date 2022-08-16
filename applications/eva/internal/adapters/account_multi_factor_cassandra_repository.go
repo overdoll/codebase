@@ -280,6 +280,10 @@ func (r AccountCassandraRepository) CreateAccountMultiFactorTOTP(ctx context.Con
 		return errors.Wrap(support.NewGocqlError(err), "failed to create multi factor account")
 	}
 
+	if err := r.clearAccountCache(ctx, acc.ID()); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -315,6 +319,10 @@ func (r AccountCassandraRepository) DeleteAccountMultiFactorTOTP(ctx context.Con
 	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return errors.Wrap(support.NewGocqlError(err), "failed to delete multi factor account")
+	}
+
+	if err := r.clearAccountCache(ctx, acc.ID()); err != nil {
+		return err
 	}
 
 	return nil

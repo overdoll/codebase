@@ -700,7 +700,7 @@ func (r ResourceCassandraS3Repository) UploadProcessedResource(ctx context.Conte
 func (r ResourceCassandraS3Repository) UpdateResourceProgress(ctx context.Context, itemId, resourceId string, prog float64) error {
 
 	if err := r.session.
-		Query(qb.Update(resourcesProgressTable.Name()).Where(qb.Eq("item_id"), qb.Eq("resource_id")).ToCql()).
+		Query(resourcesProgressTable.Update("progress")).
 		WithContext(ctx).
 		Idempotent(true).
 		BindStruct(resourcesProgress{ItemId: itemId, ResourceId: resourceId, Progress: prog}).
