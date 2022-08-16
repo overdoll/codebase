@@ -2,7 +2,6 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/go-redis/redis/v8"
 	"github.com/olivere/elastic/v7"
@@ -711,16 +710,9 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperatorResource
 	finalStruct["updated_at"] = pst.UpdatedAt
 	finalStruct["id"] = pst.Id
 
-	fmt.Println(pst.Id)
-	fmt.Println(finalStruct)
-
-	ts, e := postTable.Update(append(mapped, "updated_at")...)
-	fmt.Println(ts)
-	fmt.Println(e)
-
 	// update strategically so we don't override each-other
 	if err := r.session.
-		Query(ts, e).
+		Query(postTable.Update(append(mapped, "updated_at")...)).
 		WithContext(ctx).
 		Idempotent(true).
 		Consistency(gocql.LocalQuorum).

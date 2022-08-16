@@ -879,6 +879,13 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubOwner(ctx context.Contex
 		},
 	)
 
+	stmt, names = clubTable.Update("owner_account_id")
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		clb,
+	)
+
 	if err := r.addInitialClubMemberToBatch(ctx, batch, clubId, accountId, time.Now()); err != nil {
 		return err
 	}
