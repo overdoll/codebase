@@ -55,7 +55,7 @@ func getTusClient(t *testing.T) *tus.Client {
 
 func getGraphqlClient(t *testing.T) *graphql.Client {
 
-	client, _ := passport.NewHTTPTestClientWithPassport(nil)
+	client, _ := passport.NewHTTPTestClientWithPassport(nil, nil)
 
 	return graphql.NewClient(LoaderGraphqlClientAddr, client)
 }

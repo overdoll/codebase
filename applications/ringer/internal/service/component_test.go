@@ -43,7 +43,7 @@ type _Any map[string]interface{}
 
 func getGraphqlClientWithAuthenticatedAccount(t *testing.T, accountId string) *graphql.Client {
 
-	client, _ := passport.NewHTTPTestClientWithPassport(&accountId)
+	client, _ := passport.NewHTTPTestClientWithPassport(&accountId, nil)
 
 	return graphql.NewClient(RingerGraphqlClientAddr, client)
 }
