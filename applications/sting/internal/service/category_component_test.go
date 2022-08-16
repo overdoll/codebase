@@ -11,6 +11,7 @@ import (
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/resource/proto"
 	"overdoll/libraries/uuid"
+	"strings"
 	"testing"
 
 	"github.com/shurcooL/graphql"
@@ -112,7 +113,7 @@ func TestCreateCategory_update_and_search(t *testing.T) {
 	fake := TestCategory{}
 	err := faker.FakeData(&fake)
 	require.NoError(t, err, "no error creating fake category")
-	currentCategorySlug := fake.Slug
+	currentCategorySlug := strings.ToLower(fake.Slug)
 
 	var createCategory CreateCategory
 

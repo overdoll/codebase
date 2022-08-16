@@ -12,6 +12,7 @@ import (
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/resource/proto"
 	"overdoll/libraries/uuid"
+	"strings"
 	"testing"
 
 	"github.com/shurcooL/graphql"
@@ -105,7 +106,7 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 	fake := TestSeries{}
 	err := faker.FakeData(&fake)
 	require.NoError(t, err, "no error creating fake series")
-	currentSeriesSlug := fake.Slug
+	currentSeriesSlug := strings.ToLower(fake.Slug)
 
 	var createSeries CreateSeries
 
@@ -238,7 +239,7 @@ func TestCreateCharacter_update_series_and_search_character(t *testing.T) {
 	fake := TestCharacter{}
 	err := faker.FakeData(&fake)
 	require.NoError(t, err, "no error creating fake category")
-	currentCharacterSlug := fake.Slug
+	currentCharacterSlug := strings.ToLower(fake.Slug)
 
 	var createCharacter CreateCharacter
 
