@@ -6101,10 +6101,10 @@ type RouletteStatus {
   """How many doubles occurred. Note that this is 0 if the game session is not closed."""
   totalDoubles: Int!
 
-  """The probability that the current state occurred at."""
+  """The probability that the current state occurred at. Note that this is 0 if the game session is not closed."""
   probability: Float!
 
-  """The total score."""
+  """The total score. Note that this is 0 if the game session is not closed."""
   score: Int!
 }
 
@@ -6138,6 +6138,8 @@ input CreateGameSessionInput {
 
   """
   Optionally pass a seed. If a seed is not passed in, one will be automatically generated.
+
+  Validation: only alphanumeric characters, no spaces, and max 25 characters.
   """
   seed: String
 }

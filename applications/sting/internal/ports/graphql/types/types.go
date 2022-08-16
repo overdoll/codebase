@@ -506,6 +506,8 @@ type CreateGameSessionInput struct {
 	// The game type to create the session for.
 	GameType GameType `json:"gameType"`
 	// Optionally pass a seed. If a seed is not passed in, one will be automatically generated.
+	//
+	// Validation: only alphanumeric characters, no spaces, and max 25 characters.
 	Seed *string `json:"seed"`
 }
 
@@ -875,9 +877,9 @@ type RouletteStatus struct {
 	TotalRolls int `json:"totalRolls"`
 	// How many doubles occurred. Note that this is 0 if the game session is not closed.
 	TotalDoubles int `json:"totalDoubles"`
-	// The probability that the current state occurred at.
+	// The probability that the current state occurred at. Note that this is 0 if the game session is not closed.
 	Probability float64 `json:"probability"`
-	// The total score.
+	// The total score. Note that this is 0 if the game session is not closed.
 	Score int `json:"score"`
 }
 

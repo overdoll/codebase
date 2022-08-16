@@ -2,6 +2,7 @@ package games
 
 import (
 	"fmt"
+	"github.com/go-playground/validator/v10"
 	"hash/fnv"
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/passport"
@@ -39,6 +40,13 @@ func NewRouletteSession(passport *passport.Passport, askedSeed *string) (*Sessio
 
 		currentSeed = seed
 	} else {
+
+		err := validator.New().Var(*askedSeed, "required,alphanum,max=25,excludesall= ")
+
+		if err != nil {
+			return nil, domainerror.NewValidation(err.Error())
+		}
+
 		currentSeed = *askedSeed
 	}
 

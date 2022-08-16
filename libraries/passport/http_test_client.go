@@ -52,9 +52,9 @@ func (a *memoryPassportStore) NewAccountSessionEvent(ctx context.Context, res *h
 
 // NewHTTPTestClientWithPassport Custom HTTP client that stores passport in memory so it can be used in testing
 // since tests don't use a proxy to set the passport
-func NewHTTPTestClientWithPassport(accountId *string) (*http.Client, *Pocket) {
+func NewHTTPTestClientWithPassport(accountId, deviceId *string) (*http.Client, *Pocket) {
 
-	p, err := issueTestingPassport(accountId)
+	p, err := issueTestingPassport(accountId, deviceId)
 
 	if err != nil {
 		panic(err)
