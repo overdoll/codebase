@@ -11,6 +11,7 @@ import (
 	"overdoll/libraries/principal"
 	"overdoll/libraries/resource"
 	resource_proto "overdoll/libraries/resource/proto"
+	"strings"
 	"time"
 
 	"overdoll/applications/sting/internal/adapters"
@@ -195,7 +196,7 @@ func seedCharacter(t *testing.T, seriesId string) *post.Character {
 	err = prin.ExtendWithClubExtension(ext)
 	require.NoError(t, err)
 
-	series, err := post.NewCharacter(prin, fake.Slug, fake.Name, post.UnmarshalSeriesFromDatabase(seriesId, "test__", nil, nil, nil, 0, 0, time.Now(), time.Now()), nil)
+	series, err := post.NewCharacter(prin, strings.ToLower(fake.Slug), fake.Name, post.UnmarshalSeriesFromDatabase(seriesId, "test-", nil, nil, nil, 0, 0, time.Now(), time.Now()), nil)
 	require.NoError(t, err)
 
 	session := bootstrap.InitializeDatabaseSession()
@@ -229,7 +230,7 @@ func seedSeries(t *testing.T) *post.Series {
 	err = prin.ExtendWithClubExtension(ext)
 	require.NoError(t, err)
 
-	series, err := post.NewSeries(prin, fake.Slug, fake.Name)
+	series, err := post.NewSeries(prin, strings.ToLower(fake.Slug), fake.Name)
 	require.NoError(t, err)
 
 	session := bootstrap.InitializeDatabaseSession()

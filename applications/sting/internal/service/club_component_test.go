@@ -216,7 +216,7 @@ func TestCreateClub_and_check_permission(t *testing.T) {
 		"representations": []_Any{
 			{
 				"__typename": "Account",
-				"id":         convertAccountIdToRelayId(testingAccountId),
+				"id":         convertAccountIdToRelayId(newAccountId),
 			},
 		},
 	})

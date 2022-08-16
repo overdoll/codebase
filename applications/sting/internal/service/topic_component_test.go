@@ -10,6 +10,7 @@ import (
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/resource/proto"
 	"overdoll/libraries/uuid"
+	"strings"
 	"testing"
 )
 
@@ -96,7 +97,7 @@ func TestCreatTopic_update_and_search(t *testing.T) {
 	fake := TestTopic{}
 	err := faker.FakeData(&fake)
 	require.NoError(t, err, "no error creating fake topic")
-	currentTopicSlug := fake.Slug
+	currentTopicSlug := strings.ToLower(fake.Slug)
 
 	var createTopic CreateTopic
 
