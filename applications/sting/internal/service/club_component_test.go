@@ -207,6 +207,8 @@ func TestCreateClub_and_check_permission(t *testing.T) {
 
 	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
+	refreshClubESIndex(t)
+
 	client = getGraphqlClientWithAuthenticatedAccount(t, newAccountId)
 	newClb = getClub(t, client, fake.Slug)
 
