@@ -2,25 +2,11 @@ package games
 
 type RouletteStatus struct {
 	session   *Session
-	gameState []*RouletteGameState
+	gameState *RouletteGameState
 }
 
-func (r *RouletteStatus) AllGameStates() []*RouletteGameState {
-
-	if r.isDone() {
-		return r.gameState
-	}
-
-	return nil
-}
-
-func (r *RouletteStatus) LastRouletteGameState() *RouletteGameState {
-
-	if len(r.gameState) == 0 {
-		return nil
-	}
-
-	return r.gameState[len(r.gameState)-1]
+func (r *RouletteStatus) RouletteGameState() *RouletteGameState {
+	return r.gameState
 }
 
 func (r *RouletteStatus) Session() *Session {
@@ -37,15 +23,7 @@ func (r *RouletteStatus) TotalDoubles() int {
 		return 0
 	}
 
-	total := 0
-
-	for _, state := range r.gameState {
-		if state.IsDouble() {
-			total += 1
-		}
-	}
-
-	return total
+	return 0
 }
 
 func (r *RouletteStatus) TotalRolls() int {
@@ -54,7 +32,7 @@ func (r *RouletteStatus) TotalRolls() int {
 		return 0
 	}
 
-	return len(r.gameState)
+	return r.gameState.gameSessionSpinId
 }
 
 func (r *RouletteStatus) Probability() float64 {
@@ -75,7 +53,7 @@ func (r *RouletteStatus) Score() int {
 	return 0
 }
 
-func RouletteStatusFromSession(session *Session, states []*RouletteGameState) *RouletteStatus {
+func RouletteStatusFromSession(session *Session, states *RouletteGameState) *RouletteStatus {
 	return &RouletteStatus{
 		session:   session,
 		gameState: states,

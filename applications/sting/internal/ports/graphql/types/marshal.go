@@ -11,7 +11,6 @@ import (
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
-	"strconv"
 )
 
 func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
@@ -271,7 +270,7 @@ func MarshalRouletteGameStateToGraphQL(ctx context.Context, result *games.Roulet
 	}
 
 	return &RouletteGameState{
-		ID:        relay.NewID(RouletteGameState{}, result.GameSessionId(), strconv.Itoa(result.GameSessionSpinId())),
+		ID:        relay.NewID(RouletteGameState{}, result.GameSessionId()),
 		DiceOne:   result.DiceOne(),
 		DiceTwo:   result.DiceTwo(),
 		DiceThree: result.DiceThree(),

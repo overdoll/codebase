@@ -4,6 +4,7 @@ go_library(
     name = "games",
     srcs = [
         "adjectives.go",
+        "dice.go",
         "generate_seed.go",
         "repository.go",
         "roulette_game_state.go",

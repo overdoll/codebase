@@ -18,5 +18,5 @@ CREATE TABLE IF NOT EXISTS roulette_game_state
     dice_one             int,
     dice_two             int,
     dice_three           int,
-    primary key ( game_session_id, game_session_spin_id )
+    primary key ( game_session_id )
 );

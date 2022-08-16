@@ -1,17 +1,9 @@
 package games
 
 import (
-	"math/rand"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/passport"
 )
-
-var dice = []int{1, 2, 3, 4, 5, 6}
-
-func rollDice(seed int64) int {
-	rand.Seed(seed)
-	return dice[rand.Intn(len(dice))]
-}
 
 type RouletteGameState struct {
 	gameSessionId     string
@@ -22,7 +14,7 @@ type RouletteGameState struct {
 	diceThree         int
 }
 
-func SpinRoulette(previousRouletteGameStates []*RouletteGameState, passport *passport.Passport, session *Session, getPost func(seed int64) (*post.Post, error)) (*RouletteGameState, error) {
+func SpinRoulette(previousRouletteGameState *RouletteGameState, passport *passport.Passport, session *Session, getPost func(seed int64) (*post.Post, error)) (*RouletteGameState, error) {
 
 	// get a spin - this will run a rng, update the session and make sure we aren't in a closed session
 	spin, err := session.Spin(passport)
@@ -34,12 +26,10 @@ func SpinRoulette(previousRouletteGameStates []*RouletteGameState, passport *pas
 	postId := ""
 
 	// check the last game state of the roulette to see if we got a double or whatever
-	if len(previousRouletteGameStates) > 0 {
-		lastState := previousRouletteGameStates[len(previousRouletteGameStates)-1]
-
+	if previousRouletteGameState != nil {
 		// if the last spin was a double, keep the post
-		if lastState.IsDouble() {
-			postId = lastState.selectedPostId
+		if previousRouletteGameState.IsDouble() {
+			postId = previousRouletteGameState.selectedPostId
 		}
 	}
 
@@ -54,9 +44,11 @@ func SpinRoulette(previousRouletteGameStates []*RouletteGameState, passport *pas
 		postId = pst.ID()
 	}
 
-	diceOne := rollDice(spin)
-	diceTwo := rollDice(spin)
-	diceThree := rollDice(spin)
+	roller := newDiceRoll(spin)
+
+	diceOne := roller.Roll()
+	diceTwo := roller.Roll()
+	diceThree := roller.Roll()
 
 	// triple = lost to the current post
 	if diceOne == diceTwo && diceTwo == diceThree && diceThree == diceOne {
@@ -77,7 +69,9 @@ func SpinRoulette(previousRouletteGameStates []*RouletteGameState, passport *pas
 }
 
 func (r *RouletteGameState) IsDouble() bool {
-	return r.diceOne == r.diceTwo || r.diceTwo == r.diceThree || r.diceThree == r.diceOne
+	return (r.diceOne == r.diceTwo && r.diceTwo != r.diceThree && r.diceThree == r.diceOne) ||
+		(r.diceTwo == r.diceThree && r.diceOne != r.diceTwo && r.diceThree != r.diceOne) ||
+		(r.diceThree == r.diceOne && r.diceOne != r.diceTwo && r.diceTwo != r.diceThree)
 }
 
 func (r *RouletteGameState) GameSessionId() string {

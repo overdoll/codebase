@@ -869,10 +869,8 @@ type RouletteGameState struct {
 type RouletteStatus struct {
 	// The game session that this roulette belongs to.
 	GameSession *GameSession `json:"gameSession"`
-	// The last roulette spin that happened. If no spins happened yet, this is nil. Should be used to resume the current roulette session.
-	LastGameState *RouletteGameState `json:"lastGameState"`
-	// All the game states. Note that this is only available after the game session is closed.
-	AllGameStates []*RouletteGameState `json:"allGameStates"`
+	// The current state of the roulette game. If no spins happened yet, this is nil. Should be used to resume the current roulette session.
+	GameState *RouletteGameState `json:"gameState"`
 	// How many rolls occurred. Note that this is 0 if the game session is not closed.
 	TotalRolls int `json:"totalRolls"`
 	// How many doubles occurred. Note that this is 0 if the game session is not closed.

@@ -33,7 +33,7 @@ func (h SpinRouletteHandler) Handle(ctx context.Context, cmd SpinRoulette) (*gam
 		return nil, err
 	}
 
-	states, err := h.gr.GetRouletteGameStatesForSession(ctx, gameSession)
+	states, err := h.gr.GetRouletteGameStateForSession(ctx, gameSession)
 
 	if err != nil {
 		return nil, err

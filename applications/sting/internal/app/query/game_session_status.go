@@ -25,16 +25,11 @@ func (h GameSessionStatusHandler) Handle(ctx context.Context, query GameSessionS
 		return nil, err
 	}
 
-	// session not closed
-	if !session.IsClosed() {
-		return games.RouletteStatusFromSession(session, nil), nil
-	}
-
-	states, err := h.gr.GetRouletteGameStatesForSession(ctx, session)
+	state, err := h.gr.GetRouletteGameStateForSession(ctx, session)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return games.RouletteStatusFromSession(session, states), nil
+	return games.RouletteStatusFromSession(session, state), nil
 }

@@ -28,11 +28,8 @@ type RouletteStatus {
   """The game session that this roulette belongs to."""
   gameSession: GameSession!
 
-  """The last roulette spin that happened. If no spins happened yet, this is nil. Should be used to resume the current roulette session."""
-  lastGameState: RouletteGameState
-
-  """All the game states. Note that this is only available after the game session is closed."""
-  allGameStates: [RouletteGameState!]!
+  """The current state of the roulette game. If no spins happened yet, this is nil. Should be used to resume the current roulette session."""
+  gameState: RouletteGameState
 
   """How many rolls occurred. Note that this is 0 if the game session is not closed."""
   totalRolls: Int!

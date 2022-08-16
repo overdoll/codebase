@@ -107,7 +107,7 @@ func createApplication(
 
 	tokenRepo := adapters.NewAuthenticationTokenRedisRepository(redis)
 	sessionRepo := adapters.NewSessionRepository(redis)
-	accountRepo := adapters.NewAccountCassandraRedisRepository(session)
+	accountRepo := adapters.NewAccountCassandraRedisRepository(session, redis)
 	confirmEmailRepo := adapters.NewConfirmEmailRedisRepository(redis)
 	locationRepo := adapters.NewLocationMaxmindRepository(db)
 	eventRepo := adapters.NewEventTemporalRepository(client)

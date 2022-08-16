@@ -568,13 +568,12 @@ type ComplexityRoot struct {
 	}
 
 	RouletteStatus struct {
-		AllGameStates func(childComplexity int) int
-		GameSession   func(childComplexity int) int
-		LastGameState func(childComplexity int) int
-		Probability   func(childComplexity int) int
-		Score         func(childComplexity int) int
-		TotalDoubles  func(childComplexity int) int
-		TotalRolls    func(childComplexity int) int
+		GameSession  func(childComplexity int) int
+		GameState    func(childComplexity int) int
+		Probability  func(childComplexity int) int
+		Score        func(childComplexity int) int
+		TotalDoubles func(childComplexity int) int
+		TotalRolls   func(childComplexity int) int
 	}
 
 	SearchConnection struct {
@@ -3654,13 +3653,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.RouletteGameState.Post(childComplexity), true
 
-	case "RouletteStatus.allGameStates":
-		if e.complexity.RouletteStatus.AllGameStates == nil {
-			break
-		}
-
-		return e.complexity.RouletteStatus.AllGameStates(childComplexity), true
-
 	case "RouletteStatus.gameSession":
 		if e.complexity.RouletteStatus.GameSession == nil {
 			break
@@ -3668,12 +3660,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.RouletteStatus.GameSession(childComplexity), true
 
-	case "RouletteStatus.lastGameState":
-		if e.complexity.RouletteStatus.LastGameState == nil {
+	case "RouletteStatus.gameState":
+		if e.complexity.RouletteStatus.GameState == nil {
 			break
 		}
 
-		return e.complexity.RouletteStatus.LastGameState(childComplexity), true
+		return e.complexity.RouletteStatus.GameState(childComplexity), true
 
 	case "RouletteStatus.probability":
 		if e.complexity.RouletteStatus.Probability == nil {
@@ -6089,11 +6081,8 @@ type RouletteStatus {
   """The game session that this roulette belongs to."""
   gameSession: GameSession!
 
-  """The last roulette spin that happened. If no spins happened yet, this is nil. Should be used to resume the current roulette session."""
-  lastGameState: RouletteGameState
-
-  """All the game states. Note that this is only available after the game session is closed."""
-  allGameStates: [RouletteGameState!]!
+  """The current state of the roulette game. If no spins happened yet, this is nil. Should be used to resume the current roulette session."""
+  gameState: RouletteGameState
 
   """How many rolls occurred. Note that this is 0 if the game session is not closed."""
   totalRolls: Int!
@@ -28067,8 +28056,8 @@ func (ec *executionContext) fieldContext_RouletteStatus_gameSession(ctx context.
 	return fc, nil
 }
 
-func (ec *executionContext) _RouletteStatus_lastGameState(ctx context.Context, field graphql.CollectedField, obj *types.RouletteStatus) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_RouletteStatus_lastGameState(ctx, field)
+func (ec *executionContext) _RouletteStatus_gameState(ctx context.Context, field graphql.CollectedField, obj *types.RouletteStatus) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RouletteStatus_gameState(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -28081,7 +28070,7 @@ func (ec *executionContext) _RouletteStatus_lastGameState(ctx context.Context, f
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.LastGameState, nil
+		return obj.GameState, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -28095,63 +28084,7 @@ func (ec *executionContext) _RouletteStatus_lastGameState(ctx context.Context, f
 	return ec.marshalORouletteGameState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐRouletteGameState(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_RouletteStatus_lastGameState(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "RouletteStatus",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_RouletteGameState_id(ctx, field)
-			case "diceOne":
-				return ec.fieldContext_RouletteGameState_diceOne(ctx, field)
-			case "diceTwo":
-				return ec.fieldContext_RouletteGameState_diceTwo(ctx, field)
-			case "diceThree":
-				return ec.fieldContext_RouletteGameState_diceThree(ctx, field)
-			case "post":
-				return ec.fieldContext_RouletteGameState_post(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type RouletteGameState", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _RouletteStatus_allGameStates(ctx context.Context, field graphql.CollectedField, obj *types.RouletteStatus) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_RouletteStatus_allGameStates(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.AllGameStates, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*types.RouletteGameState)
-	fc.Result = res
-	return ec.marshalNRouletteGameState2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐRouletteGameStateᚄ(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_RouletteStatus_allGameStates(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_RouletteStatus_gameState(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "RouletteStatus",
 		Field:      field,
@@ -41025,17 +40958,10 @@ func (ec *executionContext) _RouletteStatus(ctx context.Context, sel ast.Selecti
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "lastGameState":
+		case "gameState":
 
-			out.Values[i] = ec._RouletteStatus_lastGameState(ctx, field, obj)
+			out.Values[i] = ec._RouletteStatus_gameState(ctx, field, obj)
 
-		case "allGameStates":
-
-			out.Values[i] = ec._RouletteStatus_allGameStates(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "totalRolls":
 
 			out.Values[i] = ec._RouletteStatus_totalRolls(ctx, field, obj)
@@ -44142,60 +44068,6 @@ func (ec *executionContext) marshalNResourceUrl2ᚖoverdollᚋlibrariesᚋgraphq
 		return graphql.Null
 	}
 	return ec._ResourceUrl(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNRouletteGameState2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐRouletteGameStateᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.RouletteGameState) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNRouletteGameState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐRouletteGameState(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
-func (ec *executionContext) marshalNRouletteGameState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐRouletteGameState(ctx context.Context, sel ast.SelectionSet, v *types.RouletteGameState) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._RouletteGameState(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNSearch2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSearch(ctx context.Context, sel ast.SelectionSet, v types.Search) graphql.Marshaler {

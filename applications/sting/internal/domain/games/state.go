@@ -23,7 +23,7 @@ func StateFromString(s string) (State, error) {
 	case Open.slug:
 		return Open, nil
 	case Closed.slug:
-		return Open, nil
+		return Closed, nil
 	}
 
 	return UnknownState, domainerror.NewValidation("unknown session type: " + s)

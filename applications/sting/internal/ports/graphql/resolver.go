@@ -100,7 +100,7 @@ func (r *Resolver) Topic() TopicResolver {
 	}
 }
 
-func (r *Resolver) RouletteGameStateResolver() RouletteGameStateResolver {
+func (r *Resolver) RouletteGameState() RouletteGameStateResolver {
 	return &resolvers.RouletteGameStateResolver{
 		App: r.app,
 	}

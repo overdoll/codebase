@@ -131,14 +131,14 @@ func (r GamesCassandraRepository) UpdateRouletteGameState(ctx context.Context, s
 
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
-	stmt, names := gameSessionsTable.Update()
+	stmt, names := gameSessionsTable.Update("current_spin_id", "session_state")
 	support.BindStructToBatchStatement(
 		batch,
 		stmt, names,
 		marshalGameSession(session),
 	)
 
-	stmt, names = rouletteGameStateTable.Update()
+	stmt, names = rouletteGameStateTable.Insert()
 	support.BindStructToBatchStatement(
 		batch,
 		stmt, names,
@@ -153,25 +153,19 @@ func (r GamesCassandraRepository) UpdateRouletteGameState(ctx context.Context, s
 	return nil
 }
 
-func (r GamesCassandraRepository) GetRouletteGameStatesForSession(ctx context.Context, session *games.Session) ([]*games.RouletteGameState, error) {
+func (r GamesCassandraRepository) GetRouletteGameStateForSession(ctx context.Context, session *games.Session) (*games.RouletteGameState, error) {
 
-	var states []rouletteGameState
+	var state rouletteGameState
 
 	if err := r.session.
-		Query(rouletteGameStateTable.Select()).
+		Query(rouletteGameStateTable.Get()).
 		WithContext(ctx).
 		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(rouletteGameState{GameSessionId: session.Id()}).
-		SelectRelease(&states); err != nil {
+		GetRelease(&state); err != nil {
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get roulette game states for session")
 	}
 
-	var final []*games.RouletteGameState
-
-	for _, state := range states {
-		final = append(final, games.UnmarshalRouletteGameStateFromDatabase(state.GameSessionId, state.GameSessionSpinId, state.SelectedPostId, state.DiceOne, state.DiceTwo, state.DiceThree))
-	}
-
-	return final, nil
+	return games.UnmarshalRouletteGameStateFromDatabase(state.GameSessionId, state.GameSessionSpinId, state.SelectedPostId, state.DiceOne, state.DiceTwo, state.DiceThree), nil
 }
