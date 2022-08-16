@@ -34,6 +34,7 @@ type Repository interface {
 	UpdatePostDescription(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostContentAndState(ctx context.Context, id string, updateFn func(pending *Post) error) error
 	UpdatePostContentOperator(ctx context.Context, id string, updateFn func(pending *Post) error) (*Post, error)
+	UpdatePostContentOperatorResource(ctx context.Context, id string, resources []*resource.Resource) (*Post, error)
 	UpdatePostLikesOperator(ctx context.Context, id string, updateFn func(pending *Post) error) (*Post, error)
 
 	DeletePost(ctx context.Context, postId string) error
@@ -129,6 +130,9 @@ type Repository interface {
 	SearchSeries(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *ObjectFilters) ([]*Series, error)
 	GetTotalLikesForSeriesOperator(ctx context.Context, series *Series) (int, error)
 	GetTotalPostsForSeriesOperator(ctx context.Context, series *Series) (int, error)
+
+	GetTotalLikesForClubOperator(ctx context.Context, clubId string) (int, error)
+	GetTotalPostsForClubOperator(ctx context.Context, clubId string) (int, error)
 
 	SearchCategories(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *CategoryFilters) ([]*Category, error)
 	GetTotalLikesForCategoryOperator(ctx context.Context, category *Category) (int, error)

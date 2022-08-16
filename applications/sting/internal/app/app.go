@@ -37,6 +37,9 @@ type Commands struct {
 	UpdatePostCharacters  command.UpdatePostCharactersHandler
 	UpdatePostAudience    command.UpdatePostAudienceHandler
 
+	UpdateTotalPostsForPostTags command.UpdateTotalPostsForPostTagsHandler
+	UpdateTotalLikesForPostTags command.UpdateTotalLikesForPostTagsHandler
+
 	LikePost     command.LikePostHandler
 	UndoLikePost command.UndoLikePostHandler
 

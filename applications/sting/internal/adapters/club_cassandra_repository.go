@@ -33,6 +33,8 @@ var clubTable = table.New(table.Metadata{
 		"characters_enabled",
 		"characters_limit",
 		"members_count",
+		"total_likes",
+		"total_posts",
 		"members_count_last_update_id",
 		"owner_account_id",
 		"suspended",
@@ -58,6 +60,8 @@ type clubs struct {
 	BannerResource              string            `db:"banner_resource"`
 	CharactersEnabled           bool              `db:"characters_enabled"`
 	CharactersLimit             int               `db:"characters_limit"`
+	TotalLikes                  int               `db:"total_likes"`
+	TotalPosts                  int               `db:"total_posts"`
 	MembersCount                int               `db:"members_count"`
 	MembersCountLastUpdateId    gocql.UUID        `db:"members_count_last_update_id"`
 	OwnerAccountId              string            `db:"owner_account_id"`
@@ -176,6 +180,8 @@ func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
 		MembersCount:                cl.MembersCount(),
 		CharactersLimit:             cl.CharactersLimit(),
 		CharactersEnabled:           cl.CharactersEnabled(),
+		TotalLikes:                  cl.TotalLikes(),
+		TotalPosts:                  cl.TotalPosts(),
 		MembersCountLastUpdateId:    gocql.TimeUUID(),
 		OwnerAccountId:              cl.OwnerAccountId(),
 		Suspended:                   cl.Suspended(),
@@ -223,6 +229,8 @@ func (r ClubCassandraElasticsearchRepository) unmarshalClubFromDatabase(ctx cont
 		b.UpdatedAt,
 		b.CharactersEnabled,
 		b.CharactersLimit,
+		b.TotalLikes,
+		b.TotalPosts,
 	), nil
 }
 
@@ -617,6 +625,14 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubNextSupporterPostTime(ct
 
 func (r ClubCassandraElasticsearchRepository) UpdateClubTerminationStatus(ctx context.Context, clubId string, updateFn func(club *club.Club) error) (*club.Club, error) {
 	return r.updateClubRequest(ctx, clubId, updateFn, []string{"terminated", "terminated_by_account_id"})
+}
+
+func (r ClubCassandraElasticsearchRepository) UpdateClubTotalLikesCount(ctx context.Context, clubId string, updateFn func(club *club.Club) error) (*club.Club, error) {
+	return r.updateClubRequest(ctx, clubId, updateFn, []string{"total_likes"})
+}
+
+func (r ClubCassandraElasticsearchRepository) UpdateClubTotalPostsCount(ctx context.Context, clubId string, updateFn func(club *club.Club) error) (*club.Club, error) {
+	return r.updateClubRequest(ctx, clubId, updateFn, []string{"total_posts"})
 }
 
 func (r ClubCassandraElasticsearchRepository) UpdateClubSupporterOnlyPostsDisabled(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {

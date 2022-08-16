@@ -267,6 +267,10 @@ type Club struct {
 	Slug string `json:"slug"`
 	// Maximum amount of slug aliases that can be created for this club.
 	SlugAliasesLimit int `json:"slugAliasesLimit"`
+	// The total number of posts for this club.
+	TotalPosts int `json:"totalPosts"`
+	// The total number of likes for this club.
+	TotalLikes int `json:"totalLikes"`
 	// An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug.
 	SlugAliases []*ClubSlugAlias `json:"slugAliases"`
 	// A resource of the club's thumbnail.

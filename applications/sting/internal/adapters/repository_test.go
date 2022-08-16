@@ -27,6 +27,7 @@ func TestMain(m *testing.M) {
 	if !seedConfiguration() {
 		os.Exit(1)
 	}
+	bootstrap.NewBootstrap()
 
 	handler := http.NotFound
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

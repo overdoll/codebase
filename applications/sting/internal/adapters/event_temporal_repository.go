@@ -570,3 +570,35 @@ func (r EventTemporalRepository) UnTerminateClub(ctx context.Context, requester 
 
 	return nil
 }
+
+func (r EventTemporalRepository) UpdateTotalLikesForPostTags(ctx context.Context, post *post.Post) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "sting.UpdatePostTagsTotalLikesCount_" + post.ID(),
+	}
+
+	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.UpdateTotalLikesForPostTags, workflows.UpdateTotalLikesForPostTagsInput{
+		PostId: post.ID(),
+	}); err != nil {
+		return errors.Wrap(err, "failed to execute UpdateTotalPostsForPostTags workflow")
+	}
+
+	return nil
+}
+
+func (r EventTemporalRepository) UpdateTotalPostsForPostTags(ctx context.Context, post *post.Post) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "sting.UpdatePostTagsTotalPostsCount_" + post.ID(),
+	}
+
+	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.UpdateTotalPostsForPostTags, workflows.UpdateTotalPostsForPostTagsInput{
+		PostId: post.ID(),
+	}); err != nil {
+		return errors.Wrap(err, "failed to execute UpdateTotalPostsForPostTags workflow")
+	}
+
+	return nil
+}

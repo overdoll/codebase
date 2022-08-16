@@ -13,6 +13,16 @@ type Club implements Node @key(fields: "id") {
   """
   slugAliasesLimit: Int!
 
+  """
+  The total number of posts for this club.
+  """
+  totalPosts: Int!
+
+  """
+  The total number of likes for this club.
+  """
+  totalLikes: Int!
+
   """An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug."""
   slugAliases: [ClubSlugAlias!]!
 

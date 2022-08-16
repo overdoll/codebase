@@ -41,6 +41,9 @@ type Repository interface {
 	GenerateSeriesBanner(ctx context.Context, series *post.Series, duration time.Duration) error
 	GenerateClubBannerFromPost(ctx context.Context, post *post.Post) error
 
+	UpdateTotalLikesForPostTags(ctx context.Context, post *post.Post) error
+	UpdateTotalPostsForPostTags(ctx context.Context, post *post.Post) error
+
 	SendCompletedPixelatedResources(ctx context.Context, post *post.Post) error
 	TransferClubOwnership(ctx context.Context, requester *principal.Principal, club *club.Club, target *principal.Principal) error
 }

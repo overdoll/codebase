@@ -3,6 +3,7 @@ package query
 import (
 	"context"
 	"overdoll/applications/sting/internal/domain/games"
+	"overdoll/libraries/errors/apperror"
 )
 
 type GameSessionStatus struct {
@@ -28,6 +29,11 @@ func (h GameSessionStatusHandler) Handle(ctx context.Context, query GameSessionS
 	state, err := h.gr.GetRouletteGameStateForSession(ctx, session)
 
 	if err != nil {
+
+		if apperror.IsNotFoundError(err) {
+			return games.RouletteStatusFromSession(session, nil), nil
+		}
+
 		return nil, err
 	}
 

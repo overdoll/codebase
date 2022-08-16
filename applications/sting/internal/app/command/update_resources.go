@@ -47,9 +47,7 @@ func (h UpdateResourcesHandler) Handle(ctx context.Context, cmd UpdateResources)
 		switch token {
 		case "POST":
 			for itemId, resources := range value {
-				_, err := h.pr.UpdatePostContentOperator(ctx, itemId, func(pending *post.Post) error {
-					return pending.UpdateContentExisting(resources)
-				})
+				_, err := h.pr.UpdatePostContentOperatorResource(ctx, itemId, resources)
 
 				if err != nil {
 					return err
@@ -58,9 +56,7 @@ func (h UpdateResourcesHandler) Handle(ctx context.Context, cmd UpdateResources)
 			break
 		case "POST_PRIVATE_CONTENT":
 			for itemId, resources := range value {
-				pst, err := h.pr.UpdatePostContentOperator(ctx, itemId, func(pending *post.Post) error {
-					return pending.UpdateContentExisting(resources)
-				})
+				pst, err := h.pr.UpdatePostContentOperatorResource(ctx, itemId, resources)
 
 				if err != nil {
 					return err

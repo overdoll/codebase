@@ -29,6 +29,8 @@ type clubDocument struct {
 	SupporterOnlyPostsDisabled  bool              `json:"supporter_only_posts_disabled"`
 	CharactersEnabled           bool              `json:"characters_enabled"`
 	CharactersLimit             int               `json:"characters_limit"`
+	TotalLikes                  int               `json:"total_likes"`
+	TotalPosts                  int               `json:"total_posts"`
 	Name                        map[string]string `json:"name"`
 	CreatedAt                   time.Time         `json:"created_at"`
 	MembersCount                int               `json:"members_count"`
@@ -81,6 +83,8 @@ func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 		TerminatedByAccountId:       cat.TerminatedByAccountId(),
 		CharactersLimit:             cat.CharactersLimit(),
 		CharactersEnabled:           cat.CharactersEnabled(),
+		TotalLikes:                  cat.TotalLikes(),
+		TotalPosts:                  cat.TotalPosts(),
 	}, nil
 }
 
@@ -125,6 +129,8 @@ func unmarshalClubDocument(ctx context.Context, source json.RawMessage, sort []i
 		bd.UpdatedAt,
 		bd.CharactersEnabled,
 		bd.CharactersLimit,
+		bd.TotalLikes,
+		bd.TotalPosts,
 	)
 
 	if sort != nil {
@@ -203,7 +209,7 @@ func (r ClubCassandraElasticsearchRepository) DiscoverClubs(ctx context.Context,
 		return nil, paging.ErrCursorNotPresent
 	}
 
-	if err := cursor.BuildElasticsearch(builder, "members_count", "id", false); err != nil {
+	if err := cursor.BuildElasticsearch(builder, "total_posts", "id", false); err != nil {
 		return nil, err
 	}
 
@@ -219,6 +225,9 @@ func (r ClubCassandraElasticsearchRepository) DiscoverClubs(ctx context.Context,
 		// don't include clubs in the discovery if you are already a member of that club
 		MustNot(elastic.NewTermsQueryFromStrings("id", clubMembershipIds...)),
 	)
+
+	// only show clubs that have made at least 1 post
+	query.Filter(elastic.NewRangeQuery("total_posts").Gt(0))
 
 	query.Filter(elastic.NewTermQuery("terminated", false))
 

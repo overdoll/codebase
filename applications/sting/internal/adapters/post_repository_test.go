@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/zap"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/resource"
@@ -83,17 +84,19 @@ func TestPostRepository_update_parallel_content(t *testing.T) {
 			defer workersDone.Done()
 			<-startWorkers
 
-			_, err := repo.UpdatePostContentOperator(ctx, postId, func(pending *post.Post) error {
-				return pending.UpdateContentExisting([]*resource.Resource{resource.UnmarshalResourceFromProto(context.Background(), &proto.Resource{
-					Id:        resourceIds[workerNum],
-					ItemId:    postId,
-					Processed: true,
-				})})
-			})
+			resources := []*resource.Resource{resource.UnmarshalResourceFromProto(context.Background(), &proto.Resource{
+				Id:        resourceIds[workerNum],
+				ItemId:    postId,
+				Processed: true,
+			})}
+
+			_, err := repo.UpdatePostContentOperatorResource(ctx, postId, resources)
 
 			if err == nil {
 				// user is only created when an error is not returned
 				postsUpdated <- workerNum
+			} else {
+				zap.S().Errorw("failed to update post content", zap.Error(err))
 			}
 		}()
 	}

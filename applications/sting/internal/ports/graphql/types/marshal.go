@@ -880,6 +880,8 @@ func MarshalClubToGraphQL(ctx context.Context, result *club.Club) *Club {
 		CharactersLimit:             result.CharactersLimit(),
 		SlugAliasesLimit:            result.SlugAliasLimit(),
 		CharactersEnabled:           result.CharactersEnabled(),
+		TotalPosts:                  result.TotalPosts(),
+		TotalLikes:                  result.TotalLikes(),
 		Name:                        result.Name().TranslateDefault(""),
 		Slug:                        result.Slug(),
 		SlugAliases:                 slugAliases,

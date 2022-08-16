@@ -62,4 +62,7 @@ type Repository interface {
 
 	DeleteAccountData(ctx context.Context, accountId string) error
 	HasNonTerminatedClubs(ctx context.Context, requester *principal.Principal, accountId string) (bool, error)
+
+	UpdateClubTotalPostsCount(ctx context.Context, clubId string, updateFn func(club *Club) error) (*Club, error)
+	UpdateClubTotalLikesCount(ctx context.Context, clubId string, updateFn func(club *Club) error) (*Club, error)
 }

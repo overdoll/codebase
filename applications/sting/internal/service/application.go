@@ -127,6 +127,9 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			LikePost:     command.NewLikePostHandler(postRepo, eventRepo),
 			UndoLikePost: command.NewUndoLikePostHandler(postRepo, eventRepo),
 
+			UpdateTotalPostsForPostTags: command.NewUpdateTotalPostsForPostTagsHandler(postRepo, eventRepo),
+			UpdateTotalLikesForPostTags: command.NewUpdateTotalLikesForPostTagsHandler(postRepo, eventRepo),
+
 			UpdateCurationProfileAudience:    command.NewUpdateCurationProfileAudience(personalizationRepo),
 			UpdateCurationProfileCategory:    command.NewUpdateCurationProfileCategoryHandler(personalizationRepo),
 			UpdateCurationProfileDateOfBirth: command.NewUpdateCurationProfileDateOfBirthHandler(personalizationRepo),

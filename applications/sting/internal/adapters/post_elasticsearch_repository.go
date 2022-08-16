@@ -310,6 +310,43 @@ func (r PostsCassandraElasticsearchRepository) GetTotalPostsForSeriesOperator(ct
 	return int(count), nil
 }
 
+func (r PostsCassandraElasticsearchRepository) GetTotalPostsForClubOperator(ctx context.Context, clubId string) (int, error) {
+
+	count, err := r.client.Count().
+		Index(PostReaderIndex).
+		Query(elastic.NewBoolQuery().
+			Filter(
+				elastic.NewTermQuery("club_id", clubId),
+			)).
+		Do(ctx)
+
+	if err != nil {
+		return 0, errors.Wrap(support.ParseElasticError(err), "failed to get total posts for club")
+	}
+
+	return int(count), nil
+}
+
+func (r PostsCassandraElasticsearchRepository) GetTotalLikesForClubOperator(ctx context.Context, clubId string) (int, error) {
+
+	response, err := r.client.Search().
+		Index(PostReaderIndex).
+		Query(elastic.NewBoolQuery().
+			Filter(
+				elastic.NewTermQuery("club_id", clubId),
+			)).
+		Aggregation("total_likes", elastic.NewSumAggregation().Field("likes")).
+		Do(ctx)
+
+	if err != nil {
+		return 0, errors.Wrap(support.ParseElasticError(err), "failed to get total likes for club")
+	}
+
+	sm, _ := response.Aggregations.Sum("total_likes")
+
+	return int(math.Round(*sm.Value)), nil
+}
+
 func (r PostsCassandraElasticsearchRepository) GetTotalLikesForCategoryOperator(ctx context.Context, category *post.Category) (int, error) {
 
 	response, err := r.client.Search().

@@ -203,6 +203,8 @@ type ComplexityRoot struct {
 		SuspensionLogs              func(childComplexity int, after *string, before *string, first *int, last *int) int
 		Termination                 func(childComplexity int) int
 		Thumbnail                   func(childComplexity int) int
+		TotalLikes                  func(childComplexity int) int
+		TotalPosts                  func(childComplexity int) int
 		ViewerIsOwner               func(childComplexity int) int
 		ViewerMember                func(childComplexity int) int
 	}
@@ -1691,6 +1693,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Club.Thumbnail(childComplexity), true
+
+	case "Club.totalLikes":
+		if e.complexity.Club.TotalLikes == nil {
+			break
+		}
+
+		return e.complexity.Club.TotalLikes(childComplexity), true
+
+	case "Club.totalPosts":
+		if e.complexity.Club.TotalPosts == nil {
+			break
+		}
+
+		return e.complexity.Club.TotalPosts(childComplexity), true
 
 	case "Club.viewerIsOwner":
 		if e.complexity.Club.ViewerIsOwner == nil {
@@ -5133,6 +5149,16 @@ extend type Mutation {
   Maximum amount of slug aliases that can be created for this club.
   """
   slugAliasesLimit: Int!
+
+  """
+  The total number of posts for this club.
+  """
+  totalPosts: Int!
+
+  """
+  The total number of likes for this club.
+  """
+  totalLikes: Int!
 
   """An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug."""
   slugAliases: [ClubSlugAlias!]!
@@ -11364,6 +11390,10 @@ func (ec *executionContext) fieldContext_AddClubSlugAliasPayload_club(ctx contex
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -14121,6 +14151,10 @@ func (ec *executionContext) fieldContext_Character_club(ctx context.Context, fie
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -14613,6 +14647,94 @@ func (ec *executionContext) _Club_slugAliasesLimit(ctx context.Context, field gr
 }
 
 func (ec *executionContext) fieldContext_Club_slugAliasesLimit(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Club",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Club_totalPosts(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Club_totalPosts(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalPosts, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Club_totalPosts(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Club",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Club_totalLikes(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Club_totalLikes(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalLikes, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Club_totalLikes(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Club",
 		Field:      field,
@@ -15896,6 +16018,10 @@ func (ec *executionContext) fieldContext_ClubEdge_node(ctx context.Context, fiel
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -16277,6 +16403,10 @@ func (ec *executionContext) fieldContext_ClubMember_club(ctx context.Context, fi
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -17511,6 +17641,10 @@ func (ec *executionContext) fieldContext_CreateClubPayload_club(ctx context.Cont
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -18401,6 +18535,10 @@ func (ec *executionContext) fieldContext_DisableClubCharactersPayload_club(ctx c
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -18494,6 +18632,10 @@ func (ec *executionContext) fieldContext_DisableClubSupporterOnlyPostsPayload_cl
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -18587,6 +18729,10 @@ func (ec *executionContext) fieldContext_EnableClubCharactersPayload_club(ctx co
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -18680,6 +18826,10 @@ func (ec *executionContext) fieldContext_EnableClubSupporterOnlyPostsPayload_clu
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -19096,6 +19246,10 @@ func (ec *executionContext) fieldContext_Entity_findClubByID(ctx context.Context
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -23874,6 +24028,10 @@ func (ec *executionContext) fieldContext_Post_club(ctx context.Context, field gr
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -25307,6 +25465,10 @@ func (ec *executionContext) fieldContext_PromoteClubSlugAliasToDefaultPayload_cl
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -25937,6 +26099,10 @@ func (ec *executionContext) fieldContext_Query_club(ctx context.Context, field g
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -26935,6 +27101,10 @@ func (ec *executionContext) fieldContext_RemoveClubSlugAliasPayload_club(ctx con
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -29393,6 +29563,10 @@ func (ec *executionContext) fieldContext_SuspendClubPayload_club(ctx context.Con
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -29486,6 +29660,10 @@ func (ec *executionContext) fieldContext_TerminateClubPayload_club(ctx context.C
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -30307,6 +30485,10 @@ func (ec *executionContext) fieldContext_TransferClubOwnershipPayload_club(ctx c
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -30571,6 +30753,10 @@ func (ec *executionContext) fieldContext_UnSuspendClubPayload_club(ctx context.C
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -30664,6 +30850,10 @@ func (ec *executionContext) fieldContext_UnTerminateClubPayload_club(ctx context
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -31393,6 +31583,10 @@ func (ec *executionContext) fieldContext_UpdateClubCharactersLimitPayload_club(c
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -31486,6 +31680,10 @@ func (ec *executionContext) fieldContext_UpdateClubNamePayload_club(ctx context.
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -31579,6 +31777,10 @@ func (ec *executionContext) fieldContext_UpdateClubThumbnailPayload_club(ctx con
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -37687,6 +37889,20 @@ func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj
 		case "slugAliasesLimit":
 
 			out.Values[i] = ec._Club_slugAliasesLimit(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "totalPosts":
+
+			out.Values[i] = ec._Club_totalPosts(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "totalLikes":
+
+			out.Values[i] = ec._Club_totalLikes(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)

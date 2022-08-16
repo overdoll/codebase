@@ -755,9 +755,8 @@ func TestCreatePost_Discard(t *testing.T) {
 
 	post := getPost(t, client, postId)
 
-	// check to make sure post is in a dicarded state
+	// check to make sure post is in a discarded state
 	require.Equal(t, types.PostStateDiscarded, post.Post.State)
-	require.Len(t, post.Post.Content, 0)
 }
 
 type DeletePost struct {

@@ -2042,6 +2042,12 @@ type Club implements Node
   """A resource of the club's thumbnail."""
   thumbnail: Resource @join__field(graph: STING)
 
+  """The total number of likes for this club."""
+  totalLikes: Int! @join__field(graph: STING)
+
+  """The total number of posts for this club."""
+  totalPosts: Int! @join__field(graph: STING)
+
   """Month-by-month transaction metrics of this club."""
   transactionMetrics(
     """Returns the elements in the list that come after the specified cursor."""

@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"fmt"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/go-redis/redis/v8"
 	"github.com/olivere/elastic/v7"
@@ -609,12 +610,6 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperator(ctx con
 	currentPost, err := r.GetPostByIdOperator(ctx, id)
 
 	if err != nil {
-
-		// not found errors - send back a resource not present, so we gracefully handle it
-		if apperror.IsNotFoundError(err) {
-			return nil, resource.ErrResourceNotPresent
-		}
-
 		return nil, err
 	}
 
@@ -628,26 +623,104 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperator(ctx con
 		return nil, err
 	}
 
+	if err := r.session.
+		Query(postTable.Update(
+			"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status", "content_resources", "updated_at",
+		)).
+		WithContext(ctx).
+		Idempotent(true).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(pst).
+		ExecRelease(); err != nil {
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update post")
+	}
+
+	if err := r.indexPost(ctx, currentPost); err != nil {
+		return nil, err
+	}
+
+	return currentPost, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperatorResource(ctx context.Context, id string, resources []*resource.Resource) (*post.Post, error) {
+
+	currentPost, err := r.GetPostByIdOperator(ctx, id)
+
+	if err != nil {
+
+		// not found errors - send back a resource not present, so we gracefully handle it
+		if apperror.IsNotFoundError(err) {
+			return nil, resource.ErrResourceNotPresent
+		}
+
+		return nil, err
+	}
+
+	foundCount := 0
+
+	for _, content := range currentPost.Content() {
+		for _, res := range resources {
+
+			if content.ResourceHidden() != nil {
+				if res.ID() == content.ResourceHidden().ID() {
+					foundCount += 1
+					break
+				}
+			}
+
+			if res.ID() == content.Resource().ID() {
+				foundCount += 1
+				break
+			}
+		}
+	}
+
+	// make sure we updated all resources for this post otherwise we send a not found error
+	if foundCount != len(resources) {
+		return nil, resource.ErrResourceNotPresent
+	}
+
+	pst, err := marshalPostToDatabase(currentPost)
+
+	if err != nil {
+		return nil, err
+	}
+
+	marshalledResources := make(map[string]string)
+
+	for _, r := range resources {
+		marshalled, err := resource.MarshalResourceToDatabase(r)
+		if err != nil {
+			return nil, err
+		}
+		marshalledResources[r.ID()] = marshalled
+	}
+
 	var mapped []string
 
-	for key := range pst.ContentResources {
-		mapped = append(mapped, "content_resources["+key+"]")
+	for key := range marshalledResources {
+		mapped = append(mapped, "content_resources['"+key+"']")
 	}
 
 	finalStruct := make(map[string]interface{})
 
-	for key, val := range pst.ContentResources {
-		finalStruct["content_resources["+key+"]"] = val
+	for key, val := range marshalledResources {
+		finalStruct["content_resources['"+key+"']"] = val
 	}
 
 	finalStruct["updated_at"] = pst.UpdatedAt
 	finalStruct["id"] = pst.Id
 
+	fmt.Println(pst.Id)
+	fmt.Println(finalStruct)
+
+	ts, e := postTable.Update(append(mapped, "updated_at")...)
+	fmt.Println(ts)
+	fmt.Println(e)
+
 	// update strategically so we don't override each-other
 	if err := r.session.
-		Query(postTable.Update(
-			append(mapped, "updated_at")...,
-		)).
+		Query(ts, e).
 		WithContext(ctx).
 		Idempotent(true).
 		Consistency(gocql.LocalQuorum).

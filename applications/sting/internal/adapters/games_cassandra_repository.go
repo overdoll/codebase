@@ -167,6 +167,11 @@ func (r GamesCassandraRepository) GetRouletteGameStateForSession(ctx context.Con
 		Consistency(gocql.LocalQuorum).
 		BindStruct(rouletteGameState{GameSessionId: session.Id()}).
 		GetRelease(&state); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, apperror.NewNotFoundError("roulette game state", session.Id())
+		}
+
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get roulette game states for session")
 	}
 

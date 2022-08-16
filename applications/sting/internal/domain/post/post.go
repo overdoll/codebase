@@ -424,44 +424,6 @@ func (p *Post) AddContentRequest(requester *principal.Principal, resources []*re
 	return nil
 }
 
-func (p *Post) UpdateContentExisting(resources []*resource.Resource) error {
-
-	foundCount := 0
-
-	for _, content := range p.Content() {
-		for _, res := range resources {
-
-			if content.ResourceHidden() != nil {
-				if res.ID() == content.ResourceHidden().ID() {
-					foundCount += 1
-					if err := content.UpdateResourceHidden(res); err != nil {
-						return err
-					}
-
-					break
-				}
-			}
-
-			if res.ID() == content.Resource().ID() {
-				foundCount += 1
-				if err := content.UpdateResource(res); err != nil {
-					return err
-				}
-				break
-			}
-		}
-	}
-
-	// make sure we updated all resources for this post otherwise we send a not found error
-	if foundCount != len(resources) {
-		return resource.ErrResourceNotPresent
-	}
-
-	p.update()
-
-	return nil
-}
-
 func (p *Post) UpdateContentOrderRequest(requester *principal.Principal, contentIds []string) error {
 
 	if err := p.CanUpdate(requester); err != nil {

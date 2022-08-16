@@ -152,7 +152,7 @@ func (r PostsCassandraElasticsearchRepository) addClubs(ctx context.Context, sm 
 
 	// go through all the clubs
 	for {
-		builder := r.client.Search()
+		builder := r.client.Search().Query(elastic.NewRangeQuery("total_posts").Gt(0))
 
 		builder.Size(pagingLimit)
 		builder.Sort("id", false)

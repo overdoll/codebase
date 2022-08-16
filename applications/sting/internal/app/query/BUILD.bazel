@@ -57,6 +57,7 @@ go_library(
         "//applications/sting/internal/domain/games",
         "//applications/sting/internal/domain/post",
         "//applications/sting/proto:v1_go_proto",
+        "//libraries/errors/apperror",
         "//libraries/paging",
         "//libraries/passport",
         "//libraries/principal",

@@ -77,5 +77,29 @@ func InitializeCommands(app func() *app.Application) []*cobra.Command {
 
 	generateSitemap.PersistentFlags().String("schedule", "", "Generate sitemap on a cron schedule.")
 
-	return []*cobra.Command{generateBannerRootCmd, generateSitemap}
+	updateTotalLikesForPost := &cobra.Command{
+		Use:  "update-total-likes [post_id]",
+		Args: cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			if err := app().Commands.UpdateTotalLikesForPostTags.Handle(context.Background(), command.UpdateTotalLikesForPostTags{
+				PostId: args[0],
+			}); err != nil {
+				zap.S().Fatalw("failed to update total likes for post", zap.Error(err))
+			}
+		},
+	}
+
+	updateTotalPostsForPost := &cobra.Command{
+		Use:  "update-total-posts [post_id]",
+		Args: cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			if err := app().Commands.UpdateTotalPostsForPostTags.Handle(context.Background(), command.UpdateTotalPostsForPostTags{
+				PostId: args[0],
+			}); err != nil {
+				zap.S().Fatalw("failed to update total posts for post", zap.Error(err))
+			}
+		},
+	}
+
+	return []*cobra.Command{generateBannerRootCmd, generateSitemap, updateTotalLikesForPost, updateTotalPostsForPost}
 }
