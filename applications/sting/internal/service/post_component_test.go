@@ -550,7 +550,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
 		"supporterOnlyStatus": []types.SupporterOnlyStatus{},
 		"state":               types.PostStatePublished,
-		"categorySlugs":       []graphql.String{"Alter"},
+		"categorySlugs":       []graphql.String{"alter"},
 		"characterSlugs":      []graphql.String{},
 		"audienceSlugs":       []graphql.String{},
 		"seriesSlugs":         []graphql.String{},
@@ -562,10 +562,10 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
 		"supporterOnlyStatus": []types.SupporterOnlyStatus{},
 		"state":               types.PostStatePublished,
-		"characterSlugs":      []graphql.String{"AarushHills"},
+		"characterSlugs":      []graphql.String{"aarush-hills"},
 		"categorySlugs":       []graphql.String{},
 		"audienceSlugs":       []graphql.String{},
-		"seriesSlugs":         []graphql.String{"CatCanDance"},
+		"seriesSlugs":         []graphql.String{"cat-can-dance"},
 	})
 
 	require.NoError(t, err, "no error searching for character")
@@ -574,7 +574,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	err = client.Query(context.Background(), &posts, map[string]interface{}{
 		"supporterOnlyStatus": []types.SupporterOnlyStatus{},
 		"state":               types.PostStatePublished,
-		"audienceSlugs":       []graphql.String{"StandardAudience"},
+		"audienceSlugs":       []graphql.String{"standard-audience"},
 		"characterSlugs":      []graphql.String{},
 		"categorySlugs":       []graphql.String{},
 		"seriesSlugs":         []graphql.String{},
@@ -589,7 +589,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		"characterSlugs":      []graphql.String{},
 		"categorySlugs":       []graphql.String{},
 		"audienceSlugs":       []graphql.String{},
-		"seriesSlugs":         []graphql.String{"CatCanDance"},
+		"seriesSlugs":         []graphql.String{"cat-can-dance"},
 	})
 
 	require.NoError(t, err, "no error searching for series")
