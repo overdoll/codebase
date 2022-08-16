@@ -5,7 +5,7 @@ import time
 from . import exception
 
 
-def wait_for_port(host, port, timeout=5.0):
+def wait_for_port(host, port, timeout=5.0, check_ready=True):
     """Wait until a port starts accepting TCP connections.
     Args:
         port (int): Port number.
@@ -18,9 +18,12 @@ def wait_for_port(host, port, timeout=5.0):
     while True:
         try:
             with socket.create_connection((host, port), timeout=3) as sock:
-                sock.sendall("GET /readyz HTTP/1.1\r\n\r\n")
-                response_head, response_body = sock.recv(4096).decode().split('\n\n', 1)
-                if ''.join(response_body) == "ok":
+                if check_ready:
+                    sock.sendall("GET /readyz HTTP/1.1\r\n\r\n".encode())
+                    response_head, response_body = sock.recv(4096).decode().split('\n\n', 1)
+                    if ''.join(response_body) == "ok":
+                        break
+                else:
                     break
         except OSError as ex:
             time.sleep(0.5)

@@ -399,7 +399,7 @@ def execute_push_images(configs):
 
 def execute_build_commands(configs):
     terminal_print.print_collapsed_group(":bazel: Waiting for bazel remote cache to start up")
-    network.wait_for_port("bazel.remote", "8080", 180)
+    network.wait_for_port("bazel.remote", "8080", 180, check_ready=False)
 
     tmpdir = tempfile.mkdtemp()
 
