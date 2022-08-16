@@ -9,6 +9,7 @@ type RouletteGameState struct {
 	gameSessionId     string
 	gameSessionSpinId int
 	selectedPostId    string
+	doublesCount      int
 	diceOne           int
 	diceTwo           int
 	diceThree         int
@@ -25,11 +26,15 @@ func SpinRoulette(previousRouletteGameState *RouletteGameState, passport *passpo
 
 	postId := ""
 
+	doublesCount := 0
+
 	// check the last game state of the roulette to see if we got a double or whatever
 	if previousRouletteGameState != nil {
+		doublesCount = previousRouletteGameState.doublesCount
 		// if the last spin was a double, keep the post
 		if previousRouletteGameState.IsDouble() {
 			postId = previousRouletteGameState.selectedPostId
+			doublesCount += 1
 		}
 	}
 
@@ -61,6 +66,7 @@ func SpinRoulette(previousRouletteGameState *RouletteGameState, passport *passpo
 	return &RouletteGameState{
 		gameSessionId:     session.id,
 		gameSessionSpinId: session.currentSpinId,
+		doublesCount:      doublesCount,
 		selectedPostId:    postId,
 		diceOne:           diceOne,
 		diceTwo:           diceTwo,
@@ -86,6 +92,10 @@ func (r *RouletteGameState) SelectedPostId() string {
 	return r.selectedPostId
 }
 
+func (r *RouletteGameState) DoublesCount() int {
+	return r.doublesCount
+}
+
 func (r *RouletteGameState) DiceOne() int {
 	return r.diceOne
 }
@@ -98,7 +108,7 @@ func (r *RouletteGameState) DiceThree() int {
 	return r.diceThree
 }
 
-func UnmarshalRouletteGameStateFromDatabase(gameSessionId string, gameSessionSpinId int, selectedPostId string, diceOne, diceTwo, diceThree int) *RouletteGameState {
+func UnmarshalRouletteGameStateFromDatabase(gameSessionId string, gameSessionSpinId int, selectedPostId string, diceOne, diceTwo, diceThree, doublesCount int) *RouletteGameState {
 	return &RouletteGameState{
 		gameSessionId:     gameSessionId,
 		gameSessionSpinId: gameSessionSpinId,
@@ -106,5 +116,6 @@ func UnmarshalRouletteGameStateFromDatabase(gameSessionId string, gameSessionSpi
 		diceOne:           diceOne,
 		diceTwo:           diceTwo,
 		diceThree:         diceThree,
+		doublesCount:      doublesCount,
 	}
 }

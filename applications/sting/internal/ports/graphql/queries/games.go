@@ -32,7 +32,6 @@ func (r *QueryResolver) GameSessionStatus(ctx context.Context, reference string)
 		GameState:    types.MarshalRouletteGameStateToGraphQL(ctx, status.RouletteGameState()),
 		TotalRolls:   status.TotalRolls(),
 		TotalDoubles: status.TotalDoubles(),
-		Probability:  status.Probability(),
 		Score:        status.Score(),
 	}, nil
 }

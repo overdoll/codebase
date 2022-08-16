@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS roulette_game_state
 (
     game_session_id      text,
     game_session_spin_id int,
+    doubles_count        int,
     selected_post_id     text,
     dice_one             int,
     dice_two             int,

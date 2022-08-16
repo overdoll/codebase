@@ -41,18 +41,20 @@ var rouletteGameStateTable = table.New(table.Metadata{
 	Columns: []string{
 		"game_session_id",
 		"game_session_spin_id",
+		"doubles_count",
 		"selected_post_id",
 		"dice_one",
 		"dice_two",
 		"dice_three",
 	},
 	PartKey: []string{"game_session_id"},
-	SortKey: []string{"game_session_spin_id"},
+	SortKey: []string{},
 })
 
 type rouletteGameState struct {
 	GameSessionId     string `db:"game_session_id"`
 	GameSessionSpinId int    `db:"game_session_spin_id"`
+	DoublesCount      int    `db:"doubles_count"`
 	SelectedPostId    string `db:"selected_post_id"`
 	DiceOne           int    `db:"dice_one"`
 	DiceTwo           int    `db:"dice_two"`
@@ -72,6 +74,7 @@ func marshalRouletteGameState(session *games.RouletteGameState) rouletteGameStat
 		GameSessionId:     session.GameSessionId(),
 		GameSessionSpinId: session.GameSessionSpinId(),
 		SelectedPostId:    session.SelectedPostId(),
+		DoublesCount:      session.DoublesCount(),
 		DiceOne:           session.DiceOne(),
 		DiceTwo:           session.DiceTwo(),
 		DiceThree:         session.DiceThree(),
@@ -167,5 +170,5 @@ func (r GamesCassandraRepository) GetRouletteGameStateForSession(ctx context.Con
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get roulette game states for session")
 	}
 
-	return games.UnmarshalRouletteGameStateFromDatabase(state.GameSessionId, state.GameSessionSpinId, state.SelectedPostId, state.DiceOne, state.DiceTwo, state.DiceThree), nil
+	return games.UnmarshalRouletteGameStateFromDatabase(state.GameSessionId, state.GameSessionSpinId, state.SelectedPostId, state.DiceOne, state.DiceTwo, state.DiceThree, state.DoublesCount), nil
 }

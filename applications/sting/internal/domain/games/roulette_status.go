@@ -23,7 +23,7 @@ func (r *RouletteStatus) TotalDoubles() int {
 		return 0
 	}
 
-	return 0
+	return r.gameState.doublesCount
 }
 
 func (r *RouletteStatus) TotalRolls() int {
@@ -35,22 +35,13 @@ func (r *RouletteStatus) TotalRolls() int {
 	return r.gameState.gameSessionSpinId
 }
 
-func (r *RouletteStatus) Probability() float64 {
-
-	if !r.isDone() {
-		return 0
-	}
-
-	return 0
-}
-
 func (r *RouletteStatus) Score() int {
 
 	if !r.isDone() {
 		return 0
 	}
 
-	return 0
+	return r.TotalDoubles() * r.TotalRolls()
 }
 
 func RouletteStatusFromSession(session *Session, states *RouletteGameState) *RouletteStatus {

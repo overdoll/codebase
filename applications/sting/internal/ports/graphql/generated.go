@@ -570,7 +570,6 @@ type ComplexityRoot struct {
 	RouletteStatus struct {
 		GameSession  func(childComplexity int) int
 		GameState    func(childComplexity int) int
-		Probability  func(childComplexity int) int
 		Score        func(childComplexity int) int
 		TotalDoubles func(childComplexity int) int
 		TotalRolls   func(childComplexity int) int
@@ -3667,13 +3666,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.RouletteStatus.GameState(childComplexity), true
 
-	case "RouletteStatus.probability":
-		if e.complexity.RouletteStatus.Probability == nil {
-			break
-		}
-
-		return e.complexity.RouletteStatus.Probability(childComplexity), true
-
 	case "RouletteStatus.score":
 		if e.complexity.RouletteStatus.Score == nil {
 			break
@@ -6089,9 +6081,6 @@ type RouletteStatus {
 
   """How many doubles occurred. Note that this is 0 if the game session is not closed."""
   totalDoubles: Int!
-
-  """The probability that the current state occurred at. Note that this is 0 if the game session is not closed."""
-  probability: Float!
 
   """The total score. Note that this is 0 if the game session is not closed."""
   score: Int!
@@ -28197,50 +28186,6 @@ func (ec *executionContext) fieldContext_RouletteStatus_totalDoubles(ctx context
 	return fc, nil
 }
 
-func (ec *executionContext) _RouletteStatus_probability(ctx context.Context, field graphql.CollectedField, obj *types.RouletteStatus) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_RouletteStatus_probability(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Probability, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(float64)
-	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_RouletteStatus_probability(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "RouletteStatus",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Float does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _RouletteStatus_score(ctx context.Context, field graphql.CollectedField, obj *types.RouletteStatus) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_RouletteStatus_score(ctx, field)
 	if err != nil {
@@ -40976,13 +40921,6 @@ func (ec *executionContext) _RouletteStatus(ctx context.Context, sel ast.Selecti
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "probability":
-
-			out.Values[i] = ec._RouletteStatus_probability(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "score":
 
 			out.Values[i] = ec._RouletteStatus_score(ctx, field, obj)
@@ -43677,21 +43615,6 @@ func (ec *executionContext) unmarshalNEnableClubCharactersInput2overdollᚋappli
 func (ec *executionContext) unmarshalNEnableClubSupporterOnlyPostsInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐEnableClubSupporterOnlyPostsInput(ctx context.Context, v interface{}) (types.EnableClubSupporterOnlyPostsInput, error) {
 	res, err := ec.unmarshalInputEnableClubSupporterOnlyPostsInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNFloat2float64(ctx context.Context, v interface{}) (float64, error) {
-	res, err := graphql.UnmarshalFloatContext(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNFloat2float64(ctx context.Context, sel ast.SelectionSet, v float64) graphql.Marshaler {
-	res := graphql.MarshalFloatContext(v)
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return graphql.WrapContextMarshaler(ctx, res)
 }
 
 func (ec *executionContext) marshalNGameSession2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGameSession(ctx context.Context, sel ast.SelectionSet, v *types.GameSession) graphql.Marshaler {

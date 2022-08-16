@@ -875,8 +875,6 @@ type RouletteStatus struct {
 	TotalRolls int `json:"totalRolls"`
 	// How many doubles occurred. Note that this is 0 if the game session is not closed.
 	TotalDoubles int `json:"totalDoubles"`
-	// The probability that the current state occurred at. Note that this is 0 if the game session is not closed.
-	Probability float64 `json:"probability"`
 	// The total score. Note that this is 0 if the game session is not closed.
 	Score int `json:"score"`
 }

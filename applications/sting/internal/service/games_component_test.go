@@ -25,7 +25,6 @@ type RouletteStatusModified struct {
 	GameState    *RouletteGameStateModified
 	TotalRolls   int
 	TotalDoubles int
-	Probability  float64
 	Score        int
 }
 
@@ -149,8 +148,10 @@ func TestCreateRouletteAndPlay(t *testing.T) {
 
 	status = getGameSessionStatus(t, client, createGameSession.CreateGameSession.GameSession.Reference)
 
+	require.True(t, status.GameSession.IsClosed, "game session is closed")
 	require.Equal(t, 0, status.TotalDoubles, "correct total doubles")
 	require.Equal(t, 1, status.TotalRolls, "correct total doubles")
+	require.Equal(t, 0, status.Score, "0 score since no doubles occurred")
 	require.Equal(t, 4, status.GameState.DiceThree, "correct last game state 3")
 	require.Equal(t, 4, status.GameState.DiceTwo, "correct last game state 2")
 	require.Equal(t, 4, status.GameState.DiceOne, "correct last game state 1")
