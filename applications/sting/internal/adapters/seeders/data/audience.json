@@ -1,7 +1,7 @@
 [
   {
     "id": "1pcKiQL7dgUW8CIN7uO1wqFaMql",
-    "slug": "StandardAudience",
+    "slug": "standard-audience",
     "title": {
       "en": "Standard Audience"
     },
@@ -11,7 +11,7 @@
   },
   {
     "id": "1pcKiTRBqURVEdcw1cKhyiejFp7",
-    "slug": "NonStandardAudience",
+    "slug": "non-standard-audience",
     "title": {
       "en": "Non-Standard Audience"
     },
