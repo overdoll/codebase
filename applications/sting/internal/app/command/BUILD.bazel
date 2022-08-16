@@ -89,6 +89,7 @@ go_library(
         "//applications/sting/internal/domain/event",
         "//applications/sting/internal/domain/games",
         "//applications/sting/internal/domain/post",
+        "//libraries/errors/apperror",
         "//libraries/errors/domainerror",
         "//libraries/passport",
         "//libraries/principal",
