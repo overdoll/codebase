@@ -634,7 +634,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperator(ctx con
 		mapped = append(mapped, "content_resources["+key+"]")
 	}
 
-	var finalStruct map[string]interface{}
+	finalStruct := make(map[string]interface{})
 
 	for key, val := range pst.ContentResources {
 		finalStruct["content_resources["+key+"]"] = val
