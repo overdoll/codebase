@@ -82,26 +82,6 @@ func (r EventTemporalRepository) GenerateSitemap(ctx context.Context, schedule s
 	return nil
 }
 
-func (r EventTemporalRepository) GenerateCharacterBanner(ctx context.Context, character *post.Character, duration time.Duration) error {
-
-	options := client.StartWorkflowOptions{
-		TaskQueue:             viper.GetString("temporal.queue"),
-		ID:                    "sting.GenerateCharacterBanner_" + character.ID(),
-		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_TERMINATE_IF_RUNNING,
-	}
-
-	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.GenerateCharacterBanner, workflows.GenerateCharacterBannerInput{
-		CharacterId: character.ID(),
-		WaitPeriod:  duration,
-	})
-
-	if err != nil {
-		return errors.Wrap(err, "failed to run update character banner")
-	}
-
-	return nil
-}
-
 func (r EventTemporalRepository) GenerateClubBannerFromPost(ctx context.Context, post *post.Post) error {
 	options := client.StartWorkflowOptions{
 		TaskQueue:             viper.GetString("temporal.queue"),
@@ -120,7 +100,40 @@ func (r EventTemporalRepository) GenerateClubBannerFromPost(ctx context.Context,
 	return nil
 }
 
-func (r EventTemporalRepository) GenerateCategoryBanner(ctx context.Context, category *post.Category, duration time.Duration) error {
+func (r EventTemporalRepository) GenerateCharacterBanner(ctx context.Context, character *post.Character, pst *post.Post, duration time.Duration) error {
+
+	var postId string
+
+	if pst != nil {
+		postId = pst.ID()
+	}
+
+	options := client.StartWorkflowOptions{
+		TaskQueue:             viper.GetString("temporal.queue"),
+		ID:                    "sting.GenerateCharacterBanner_" + character.ID(),
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_TERMINATE_IF_RUNNING,
+	}
+
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.GenerateCharacterBanner, workflows.GenerateCharacterBannerInput{
+		CharacterId: character.ID(),
+		PostId:      postId,
+		WaitPeriod:  duration,
+	})
+
+	if err != nil {
+		return errors.Wrap(err, "failed to run update character banner")
+	}
+
+	return nil
+}
+
+func (r EventTemporalRepository) GenerateCategoryBanner(ctx context.Context, category *post.Category, pst *post.Post, duration time.Duration) error {
+
+	var postId string
+
+	if pst != nil {
+		postId = pst.ID()
+	}
 
 	options := client.StartWorkflowOptions{
 		TaskQueue:             viper.GetString("temporal.queue"),
@@ -130,6 +143,7 @@ func (r EventTemporalRepository) GenerateCategoryBanner(ctx context.Context, cat
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.GenerateCategoryBanner, workflows.GenerateCategoryBannerInput{
 		CategoryId: category.ID(),
+		PostId:     postId,
 		WaitPeriod: duration,
 	})
 
@@ -140,7 +154,13 @@ func (r EventTemporalRepository) GenerateCategoryBanner(ctx context.Context, cat
 	return nil
 }
 
-func (r EventTemporalRepository) GenerateSeriesBanner(ctx context.Context, series *post.Series, duration time.Duration) error {
+func (r EventTemporalRepository) GenerateSeriesBanner(ctx context.Context, series *post.Series, pst *post.Post, duration time.Duration) error {
+
+	var postId string
+
+	if pst != nil {
+		postId = pst.ID()
+	}
 
 	options := client.StartWorkflowOptions{
 		TaskQueue:             viper.GetString("temporal.queue"),
@@ -150,6 +170,7 @@ func (r EventTemporalRepository) GenerateSeriesBanner(ctx context.Context, serie
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.GenerateSeriesBanner, workflows.GenerateSeriesBannerInput{
 		SeriesId:   series.ID(),
+		PostId:     postId,
 		WaitPeriod: duration,
 	})
 
