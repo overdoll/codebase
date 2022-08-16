@@ -231,7 +231,7 @@ func TestSearchCharactersForTopic(t *testing.T) {
 	var getTopic TopicWithCategory
 
 	err := client.Query(context.Background(), &getTopic, map[string]interface{}{
-		"slug": graphql.String("DoubleTopiC"),
+		"slug": graphql.String("double-topiC"),
 	})
 
 	require.NoError(t, err)
