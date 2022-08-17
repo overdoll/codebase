@@ -20,7 +20,7 @@ def wait_for_port(host, port, timeout=5.0, check_ready=True):
         try:
             with socket.create_connection((host, port), timeout=3):
                 if check_ready:
-                    req = requests.get("http://" + host + ":" + port + "/readyz")
+                    req = requests.get("http://" + host + ":" + str(port) + "/readyz")
                     if req.text == "ok":
                         break
                 else:
