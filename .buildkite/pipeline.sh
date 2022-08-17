@@ -12,4 +12,8 @@ if ! python3 -c "import yaml" &>/dev/null; then
   apt install python3-yaml
 fi
 
+if ! python3 -c "import requests" &>/dev/null; then
+  apt install python3-requests
+fi
+
 python3 ./.buildkite/lib/main.py "$@"
