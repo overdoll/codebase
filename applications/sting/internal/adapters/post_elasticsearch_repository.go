@@ -2,9 +2,11 @@ package adapters
 
 import (
 	"context"
+	"crypto/rand"
 	"encoding/json"
 	"go.uber.org/zap"
 	"math"
+	"math/big"
 	"overdoll/libraries/cache"
 	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
@@ -905,13 +907,13 @@ func (r PostsCassandraElasticsearchRepository) GetFirstTopPostWithoutOccupiedRes
 
 	query.Filter(filterQueries...)
 
-	seed, err := r.getRandomizerSeed(ctx, "topPosts")
+	nBig, err := rand.Int(rand.Reader, big.NewInt(9223372036854775))
 
 	if err != nil {
 		return nil, err
 	}
 
-	query.Must(elastic.NewFunctionScoreQuery().AddScoreFunc(elastic.NewRandomFunction().Seed(seed)))
+	query.Must(elastic.NewFunctionScoreQuery().AddScoreFunc(elastic.NewRandomFunction().Seed(nBig.Int64())))
 
 	builder.Size(1)
 	builder.Query(query)
