@@ -875,8 +875,8 @@ func (r PostsCassandraElasticsearchRepository) GetFirstTopPostWithoutOccupiedRes
 		return nil, err
 	}
 
-	builder.Sort("likes", false)
-	builder.Sort("created_at", true)
+	builder.Sort("_score", false)
+	builder.Sort("id", true)
 
 	query := elastic.NewBoolQuery()
 
@@ -904,6 +904,14 @@ func (r PostsCassandraElasticsearchRepository) GetFirstTopPostWithoutOccupiedRes
 	}
 
 	query.Filter(filterQueries...)
+
+	seed, err := r.getRandomizerSeed(ctx, "topPosts")
+
+	if err != nil {
+		return nil, err
+	}
+
+	query.Must(elastic.NewFunctionScoreQuery().AddScoreFunc(elastic.NewRandomFunction().Seed(seed)))
 
 	builder.Size(1)
 	builder.Query(query)
