@@ -51,8 +51,9 @@ func GetClubSupporterLocalizedPricingDetails(location *location.Location) (*Pric
 
 	newCurrency, err := money.CurrencyFromString(curr.String())
 
+	// ignore unknown currency errors
 	if err != nil {
-		return nil, err
+		newCurrency = money.USD
 	}
 
 	return UnmarshalPricingFromDatabase(newCurrency, getRoundedPriceInInteger(clubSupporterPricingRatios[newCurrency]*clubSupporterBasePrice)), nil

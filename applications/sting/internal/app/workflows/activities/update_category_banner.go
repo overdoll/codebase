@@ -8,14 +8,26 @@ import (
 
 type UpdateCategoryBannerInput struct {
 	CategoryId string
+	PostId     string
 }
 
 func (h *Activities) UpdateCategoryBanner(ctx context.Context, input UpdateCategoryBannerInput) error {
 
-	pst, err := h.pr.GetFirstTopPostWithoutOccupiedResources(ctx, nil, &input.CategoryId, nil, nil)
+	var pst *post.Post
+	var err error
 
-	if err != nil {
-		return err
+	if input.PostId != "" {
+		pst, err = h.pr.GetPostByIdOperator(ctx, input.PostId)
+
+		if err != nil {
+			return err
+		}
+	} else {
+		pst, err = h.pr.GetFirstTopPostWithoutOccupiedResources(ctx, nil, &input.CategoryId, nil, nil)
+
+		if err != nil {
+			return err
+		}
 	}
 
 	if pst == nil {

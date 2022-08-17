@@ -219,7 +219,7 @@ func (p *Post) MakeDiscarded() error {
 
 	p.state = Discarded
 
-	p.content = []*Content{}
+	//p.content = []*Content{}
 
 	return nil
 }
@@ -235,7 +235,7 @@ func (p *Post) MakeRemoved() error {
 
 	p.state = Removed
 
-	p.content = []*Content{}
+	//p.content = []*Content{}
 
 	return nil
 }
@@ -424,44 +424,6 @@ func (p *Post) AddContentRequest(requester *principal.Principal, resources []*re
 	return nil
 }
 
-func (p *Post) UpdateContentExisting(resources []*resource.Resource) error {
-
-	foundCount := 0
-
-	for _, content := range p.Content() {
-		for _, res := range resources {
-
-			if content.ResourceHidden() != nil {
-				if res.ID() == content.ResourceHidden().ID() {
-					foundCount += 1
-					if err := content.UpdateResourceHidden(res); err != nil {
-						return err
-					}
-
-					break
-				}
-			}
-
-			if res.ID() == content.Resource().ID() {
-				foundCount += 1
-				if err := content.UpdateResource(res); err != nil {
-					return err
-				}
-				break
-			}
-		}
-	}
-
-	// make sure we updated all resources for this post otherwise we send a not found error
-	if foundCount != len(resources) {
-		return resource.ErrResourceNotPresent
-	}
-
-	p.update()
-
-	return nil
-}
-
 func (p *Post) UpdateContentOrderRequest(requester *principal.Principal, contentIds []string) error {
 
 	if err := p.CanUpdate(requester); err != nil {
@@ -508,6 +470,10 @@ func (p *Post) UpdateContentSupporterOnly(clb *club.Club, requester *principal.P
 
 	if err := p.CanUpdate(requester); err != nil {
 		return err
+	}
+
+	if requester.IsStaff() && p.state == Published && supporterOnly {
+		return domainerror.NewValidation("cannot mark supporter content only as true when already published")
 	}
 
 	var actualContent []*Content
@@ -672,8 +638,13 @@ func (p *Post) CanUpdate(requester *principal.Principal) error {
 		return principal.ErrLocked
 	}
 
+	// staff can update posts that are published
+	if requester.IsStaff() && p.state == Published {
+		return nil
+	}
+
 	if p.state != Draft {
-		return domainerror.NewValidation("can only update post in draft")
+		return domainerror.NewValidation("can only update posts that are in draft")
 	}
 
 	return nil

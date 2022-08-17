@@ -22,6 +22,6 @@ type Commands struct {
 }
 
 type Queries struct {
-	ResourcesByIds       query.ResourcesByIdsHandler
-	ResourceProgressById query.ResourceProgressByIdHandler
+	ResourcesByIds        query.ResourcesByIdsHandler
+	ResourceProgressByIds query.ResourceProgressByIdsHandler
 }

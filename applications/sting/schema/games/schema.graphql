@@ -1,0 +1,120 @@
+type GameSession {
+  """An ID pointing to this game session."""
+  id: ID!
+
+  """An ID that can be used to uniquely-identify this game session."""
+  reference: String!
+
+  """Whether or not this game session is closed. A closed game session cannot be played anymore."""
+  isClosed: Boolean!
+
+  """Whether or not the current viewer is the player of the game. Only players can "play" the game."""
+  viewerIsPlayer: Boolean!
+
+  """The type of game this session belongs to."""
+  gameType: GameType!
+
+  """The seed used for this session."""
+  seed: String!
+}
+
+"""The types of games available."""
+enum GameType {
+  ROULETTE
+}
+
+"""The status of the roulette game."""
+type RouletteStatus {
+  """The game session that this roulette belongs to."""
+  gameSession: GameSession!
+
+  """The current state of the roulette game. If no spins happened yet, this is nil. Should be used to resume the current roulette session."""
+  gameState: RouletteGameState
+
+  """How many rolls occurred. Note that this is 0 if the game session is not closed."""
+  totalRolls: Int!
+
+  """How many doubles occurred. Note that this is 0 if the game session is not closed."""
+  totalDoubles: Int!
+
+  """The total score. Note that this is 0 if the game session is not closed."""
+  score: Int!
+}
+
+"""A roulette game state."""
+type RouletteGameState {
+  """An ID used to uniquely identify this game state."""
+  id: ID!
+
+  """The first dice that was created."""
+  diceOne: Int!
+
+  """The second dice that was created."""
+  diceTwo: Int!
+
+  """The third dice that was created."""
+  diceThree: Int!
+
+  """The post that was selected."""
+  post: Post! @goField(forceResolver: true)
+}
+
+"""A union representing the status of various games."""
+union GameSessionStatus = RouletteStatus
+
+"""Create a new game session."""
+input CreateGameSessionInput {
+  """
+  The game type to create the session for.
+  """
+  gameType: GameType!
+
+  """
+  Optionally pass a seed. If a seed is not passed in, one will be automatically generated.
+
+  Validation: only alphanumeric characters, no spaces, and max 25 characters.
+  """
+  seed: String
+}
+
+"""Payload for a new game session"""
+type CreateGameSessionPayload {
+  """The game session after creation."""
+  gameSession: GameSession
+}
+
+"""Spin roulette."""
+input SpinRouletteInput {
+  """The game session ID to use for the spin."""
+  gameSessionId: ID!
+}
+
+"""Payload for spinning roulette."""
+type SpinRoulettePayload {
+  """The new roulette spin game state"""
+  rouletteGameState: RouletteGameState
+}
+
+extend type Mutation {
+  """
+  Create a new game session.
+  """
+  createGameSession(input: CreateGameSessionInput!): CreateGameSessionPayload
+
+  """
+  Spin the roulette. Cannot spin if the game session is closed.
+  """
+  spinRoulette(input: SpinRouletteInput!): SpinRoulettePayload
+}
+
+extend type Query {
+  """
+  Get the status of a current game session using the reference of a game session.
+
+  Returns nil if the game session does not exist.
+  """
+  gameSessionStatus(
+    """Search game session status by reference."""
+    reference: String!
+  ): GameSessionStatus
+}

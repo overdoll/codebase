@@ -310,6 +310,43 @@ func (r PostsCassandraElasticsearchRepository) GetTotalPostsForSeriesOperator(ct
 	return int(count), nil
 }
 
+func (r PostsCassandraElasticsearchRepository) GetTotalPostsForClubOperator(ctx context.Context, clubId string) (int, error) {
+
+	count, err := r.client.Count().
+		Index(PostReaderIndex).
+		Query(elastic.NewBoolQuery().
+			Filter(
+				elastic.NewTermQuery("club_id", clubId),
+			)).
+		Do(ctx)
+
+	if err != nil {
+		return 0, errors.Wrap(support.ParseElasticError(err), "failed to get total posts for club")
+	}
+
+	return int(count), nil
+}
+
+func (r PostsCassandraElasticsearchRepository) GetTotalLikesForClubOperator(ctx context.Context, clubId string) (int, error) {
+
+	response, err := r.client.Search().
+		Index(PostReaderIndex).
+		Query(elastic.NewBoolQuery().
+			Filter(
+				elastic.NewTermQuery("club_id", clubId),
+			)).
+		Aggregation("total_likes", elastic.NewSumAggregation().Field("likes")).
+		Do(ctx)
+
+	if err != nil {
+		return 0, errors.Wrap(support.ParseElasticError(err), "failed to get total likes for club")
+	}
+
+	sm, _ := response.Aggregations.Sum("total_likes")
+
+	return int(math.Round(*sm.Value)), nil
+}
+
 func (r PostsCassandraElasticsearchRepository) GetTotalLikesForCategoryOperator(ctx context.Context, category *post.Category) (int, error) {
 
 	response, err := r.client.Search().
@@ -381,7 +418,7 @@ func (r PostsCassandraElasticsearchRepository) GetPostsByIds(ctx context.Context
 	return posts, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, pst *post.Post) ([]*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, pst *post.Post, filters *post.Feed) ([]*post.Post, error) {
 
 	builder := r.client.Search().
 		Index(PostReaderIndex)
@@ -390,7 +427,7 @@ func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.
 		return nil, paging.ErrCursorNotPresent
 	}
 
-	if err := cursor.BuildElasticsearch(builder, "created_at", "id", true); err != nil {
+	if err := cursor.BuildElasticsearch(builder, "created_at", "id", false); err != nil {
 		return nil, err
 	}
 
@@ -427,6 +464,14 @@ func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.
 				elastic.NewTermQuery("club_id", pst.ClubId()).Boost(1),
 			),
 	)
+
+	seed, err := r.getRandomizerSeed(ctx, "suggestedPostsByPost")
+
+	if err != nil {
+		return nil, err
+	}
+
+	query.Must(elastic.NewFunctionScoreQuery().AddScoreFunc(elastic.NewRandomFunction().Seed(seed)))
 
 	builder.Query(query)
 
@@ -566,6 +611,14 @@ func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, re
 		query.Filter(filterQueries...)
 	}
 
+	seed, err := r.getRandomizerSeed(ctx, "postsFeed")
+
+	if err != nil {
+		return nil, err
+	}
+
+	query.Must(elastic.NewFunctionScoreQuery().AddScoreFunc(elastic.NewRandomFunction().Seed(seed)))
+
 	//scoreQuery := elastic.NewFunctionScoreQuery()
 
 	// decay from initial post time
@@ -640,6 +693,9 @@ func (r PostsCassandraElasticsearchRepository) SearchPosts(ctx context.Context, 
 	} else if filter.SortBy() == post.TopSort {
 		sortingColumn = "likes"
 		sortingAscending = false
+	} else if filter.SortBy() == post.AlgorithmSort {
+		sortingColumn = "created_at"
+		sortingAscending = false
 	}
 
 	suspendedClubIds, err := r.getTerminatedClubIds(ctx)
@@ -695,6 +751,17 @@ func (r PostsCassandraElasticsearchRepository) SearchPosts(ctx context.Context, 
 
 	if len(filter.AudienceIds()) > 0 {
 		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("audience_id", filter.AudienceIds()...))
+	}
+
+	if filter.SortBy() == post.AlgorithmSort {
+
+		seed, err := r.getRandomizerSeed(ctx, "postsSearch")
+
+		if err != nil {
+			return nil, err
+		}
+
+		query.Must(elastic.NewFunctionScoreQuery().AddScoreFunc(elastic.NewRandomFunction().Seed(seed)))
 	}
 
 	if filterQueries != nil {

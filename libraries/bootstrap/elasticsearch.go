@@ -4,6 +4,7 @@ import (
 	"os"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/sentry_support"
+	"overdoll/libraries/zap_support/zap_adapters"
 	"time"
 
 	"github.com/olivere/elastic/v7"
@@ -11,7 +12,8 @@ import (
 )
 
 func InitializeElasticSearchSession() *elastic.Client {
-	client, err := elastic.NewClient(
+
+	options := []elastic.ClientOptionFunc{
 		elastic.SetURL(os.Getenv("ELASTICSEARCH_URL")),
 		elastic.SetRetrier(
 			elastic.NewBackoffRetrier(
@@ -20,10 +22,13 @@ func InitializeElasticSearchSession() *elastic.Client {
 		),
 		elastic.SetRetryStatusCodes(429, 504),
 		elastic.SetHttpClient(sentry_support.NewElasticObserverHttpClient()),
-		// USEFUL FOR DEBUGGING QUERIES!
-		//elastic.SetErrorLog(zap_adapters.NewElasticZapAdapter(zap.S(), false)),
-		//elastic.SetInfoLog(zap_adapters.NewElasticZapAdapter(zap.S(), true)),
-	)
+	}
+
+	if os.Getenv("ENABLE_ELASTIC_TRACE_LOG") == "true" {
+		options = append(options, elastic.SetTraceLog(zap_adapters.NewElasticZapAdapter(zap.S(), true)))
+	}
+
+	client, err := elastic.NewClient(options...)
 
 	if err != nil {
 		sentry_support.MustCaptureException(errors.Wrap(err, "elastic session failed"))

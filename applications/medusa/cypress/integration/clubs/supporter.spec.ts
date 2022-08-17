@@ -1,5 +1,5 @@
 import { generateUsernameAndEmail } from '../../support/generate'
-import { clickOnButton, clickOnPanel, clickOnTab, clickOnToggle } from '../../support/user_actions'
+import { clickOnButton, clickOnPanel, clickOnToggle } from '../../support/user_actions'
 
 const testCardDetails = {
   firstName: 'Test',
@@ -141,13 +141,13 @@ describe('Supporter', () => {
     clickOnButton('Next')
     cy.findByText(/Select a saved payment method/iu).should('be.visible')
 
-    // use saved payment method to subscribe
-    cy.findByText(`${testCardDetails.cardExpirationMonth}/${testCardDetails.cardExpirationYear}`).should('not.be.disabled').click({ force: true })
-    clickOnToggle(/I have read and agree to the/iu, true)
-    clickOnButton('Subscribe')
-    cy.findByText(/Transaction Approved/iu, { timeout: 60000 }).should('be.visible')
-    clickOnButton('Close')
-    cy.findByRole('button', { name: /Manage Subscription/iu }).should('be.visible')
+    // // use saved payment method to subscribe
+    // cy.findByText(`${testCardDetails.cardExpirationMonth}/${testCardDetails.cardExpirationYear}`).should('not.be.disabled').click({ force: true })
+    // clickOnToggle(/I have read and agree to the/iu, true)
+    // clickOnButton('Subscribe')
+    // cy.findByText(/Transaction Approved/iu, { timeout: 60000 }).should('be.visible')
+    // clickOnButton('Close')
+    // cy.findByRole('button', { name: /Manage Subscription/iu }).should('be.visible')
 
     /**
      * Remove saved payment method
@@ -186,31 +186,31 @@ describe('Supporter', () => {
 
     // go to club payments
     cy.visit(`/club/${savedPaymentMethodClub}/revenue`)
-    clickOnButton('View Payments')
-    cy.findByText(/Your club's Payments are the detailed breakdown/iu).should('be.visible')
-    cy.findAllByText('PENDING').first().should('be.visible').click({ force: true })
-    cy.findByText(/Fee Breakdown/iu).should('be.visible')
+    // clickOnButton('View Payments')
+    // cy.findByText(/Your club's Payments are the detailed breakdown/iu).should('be.visible')
+    // cy.findAllByText('PENDING').first().should('be.visible').click({ force: true })
+    // cy.findByText(/Fee Breakdown/iu).should('be.visible')
 
     // refund transaction
     cy.visit(`/staff/account/${username}`)
-    clickOnTab('Transactions')
-    cy.findByText('Transactions').should('be.visible')
-    cy.findAllByText('PAYMENT').first().should('be.visible').click({ force: true })
-    cy.findByText('CCBill Transaction ID').should('be.visible')
-    clickOnButton(/Manage Transaction/iu)
-    cy.findByText('Refund Transaction').should('be.visible').click({ force: true })
-    cy.findByText('Select refund amount').parent().should('not.be.disabled').select('$6.99 - Maximum Amount')
-    clickOnButton('Refund Transaction')
-    cy.findByText(/Successfully refunded/iu).should('be.visible')
+    // clickOnTab('Transactions')
+    // cy.findByText('Transactions').should('be.visible')
+    // cy.findAllByText('PAYMENT').first().should('be.visible').click({ force: true })
+    // cy.findByText('CCBill Transaction ID').should('be.visible')
+    // clickOnButton(/Manage Transaction/iu)
+    // cy.findByText('Refund Transaction').should('be.visible').click({ force: true })
+    // cy.findByText('Select refund amount').parent().should('not.be.disabled').select('$6.99 - Maximum Amount')
+    // clickOnButton('Refund Transaction')
+    // cy.findByText(/Successfully refunded/iu).should('be.visible')
 
     cy.visit(`/club/${savedPaymentMethodClub}/revenue`)
     // see transaction metrics
-    cy.findByText('Transaction Metrics').should('be.visible')
+    // cy.findByText('Transaction Metrics').should('be.visible')
 
     // go to refunded transaction
-    clickOnButton('View Payments')
-    cy.findAllByText('PENDING').first().should('be.visible').click({ force: true })
-    cy.findByText(/Deduction Breakdown/iu).should('be.visible')
+    // clickOnButton('View Payments')
+    // cy.findAllByText('PENDING').first().should('be.visible').click({ force: true })
+    // cy.findByText(/Deduction Breakdown/iu).should('be.visible')
     /*
         // issue payout
         cy.visit(`/staff/club/${newPaymentMethodClub}`)
@@ -239,10 +239,10 @@ describe('Supporter', () => {
      */
 
     // refunded transaction
-    cy.visit('/settings/billing')
-    cy.findByText('Transaction History').should('be.visible').click({ force: true })
-    cy.url().should('include', '/settings/billing/transactions')
-    cy.findByText(newPaymentMethodClubName).should('be.visible')
-    cy.waitUntil(() => cy.findAllByText(/refunded to this payment/iu).should('be.visible'))
+    // cy.visit('/settings/billing')
+    // cy.findByText('Transaction History').should('be.visible').click({ force: true })
+    // cy.url().should('include', '/settings/billing/transactions')
+    // cy.findByText(newPaymentMethodClubName).should('be.visible')
+    // cy.waitUntil(() => cy.findAllByText(/refunded to this payment/iu).should('be.visible'))
   })
 })

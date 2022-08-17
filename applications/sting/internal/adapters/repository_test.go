@@ -27,6 +27,7 @@ func TestMain(m *testing.M) {
 	if !seedConfiguration() {
 		os.Exit(1)
 	}
+	bootstrap.NewBootstrap()
 
 	handler := http.NotFound
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -71,7 +72,7 @@ func createFakeSlug(t *testing.T) string {
 }
 
 func newPostRepository(t *testing.T) adapters.PostsCassandraElasticsearchRepository {
-	return adapters.NewPostsCassandraRepository(bootstrap.InitializeDatabaseSession(), bootstrap.InitializeElasticSearchSession(), resource.NewSerializer(), bootstrap.InitializeAWSSession())
+	return adapters.NewPostsCassandraRepository(bootstrap.InitializeDatabaseSession(), bootstrap.InitializeElasticSearchSession(), resource.NewSerializer(), bootstrap.InitializeAWSSession(), bootstrap.InitializeRedisSession())
 }
 
 func newPostRepositoryWithESFailure(t *testing.T) adapters.PostsCassandraElasticsearchRepository {
@@ -85,5 +86,5 @@ func newPostRepositoryWithESFailure(t *testing.T) adapters.PostsCassandraElastic
 		panic(err)
 	}
 
-	return adapters.NewPostsCassandraRepository(bootstrap.InitializeDatabaseSession(), client, resource.NewSerializer(), bootstrap.InitializeAWSSession())
+	return adapters.NewPostsCassandraRepository(bootstrap.InitializeDatabaseSession(), client, resource.NewSerializer(), bootstrap.InitializeAWSSession(), bootstrap.InitializeRedisSession())
 }

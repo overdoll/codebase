@@ -135,7 +135,7 @@ func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 
 func getHttpClientWithAuthenticatedAccount(t *testing.T, accountId string) *graphql.Client {
 
-	client, _ := passport.NewHTTPTestClientWithPassport(&accountId)
+	client, _ := passport.NewHTTPTestClientWithPassport(&accountId, nil)
 
 	return graphql.NewClient(ParleyHttpClientAddr, client)
 }

@@ -26,44 +26,56 @@ func InitializeCommands(app func() *app.Application) []*cobra.Command {
 		},
 	})
 
-	generateBannerRootCmd.AddCommand(&cobra.Command{
+	generateCharacterBannerCommand := &cobra.Command{
 		Use:  "character [character_id]",
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
+			postId, _ := cmd.Flags().GetString("post_id")
 			if err := app().Commands.GenerateCharacterBanner.Handle(context.Background(), command.GenerateCharacterBanner{
 				CharacterId: args[0],
+				PostId:      postId,
 				Duration:    0,
 			}); err != nil {
 				zap.S().Fatalw("failed to generate character banner", zap.Error(err))
 			}
 		},
-	})
+	}
+	generateCharacterBannerCommand.PersistentFlags().String("post_id", "", "Select a specific post.")
+	generateBannerRootCmd.AddCommand(generateCharacterBannerCommand)
 
-	generateBannerRootCmd.AddCommand(&cobra.Command{
+	generateSeriesBannerCommand := &cobra.Command{
 		Use:  "series [series_id]",
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
+			postId, _ := cmd.Flags().GetString("post_id")
 			if err := app().Commands.GenerateSeriesBanner.Handle(context.Background(), command.GenerateSeriesBanner{
 				SeriesId: args[0],
+				PostId:   postId,
 				Duration: 0,
 			}); err != nil {
 				zap.S().Fatalw("failed to generate series banner", zap.Error(err))
 			}
 		},
-	})
+	}
+	generateSeriesBannerCommand.PersistentFlags().String("post_id", "", "Select a specific post.")
+	generateBannerRootCmd.AddCommand(generateSeriesBannerCommand)
 
-	generateBannerRootCmd.AddCommand(&cobra.Command{
+	generateCategoryBannerCommand := &cobra.Command{
 		Use:  "category [category_id]",
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
+			postId, _ := cmd.Flags().GetString("post_id")
 			if err := app().Commands.GenerateCategoryBanner.Handle(context.Background(), command.GenerateCategoryBanner{
 				CategoryId: args[0],
+				PostId:     postId,
 				Duration:   0,
 			}); err != nil {
 				zap.S().Fatalw("failed to generate category banner", zap.Error(err))
 			}
 		},
-	})
+	}
+	generateCategoryBannerCommand.PersistentFlags().String("post_id", "", "Select a specific post.")
+	generateBannerRootCmd.AddCommand(generateCategoryBannerCommand)
 
 	generateSitemap := &cobra.Command{
 		Use: "generate-sitemap",
@@ -77,5 +89,29 @@ func InitializeCommands(app func() *app.Application) []*cobra.Command {
 
 	generateSitemap.PersistentFlags().String("schedule", "", "Generate sitemap on a cron schedule.")
 
-	return []*cobra.Command{generateBannerRootCmd, generateSitemap}
+	updateTotalLikesForPost := &cobra.Command{
+		Use:  "update-total-likes [post_id]",
+		Args: cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			if err := app().Commands.UpdateTotalLikesForPostTags.Handle(context.Background(), command.UpdateTotalLikesForPostTags{
+				PostId: args[0],
+			}); err != nil {
+				zap.S().Fatalw("failed to update total likes for post", zap.Error(err))
+			}
+		},
+	}
+
+	updateTotalPostsForPost := &cobra.Command{
+		Use:  "update-total-posts [post_id]",
+		Args: cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			if err := app().Commands.UpdateTotalPostsForPostTags.Handle(context.Background(), command.UpdateTotalPostsForPostTags{
+				PostId: args[0],
+			}); err != nil {
+				zap.S().Fatalw("failed to update total posts for post", zap.Error(err))
+			}
+		},
+	}
+
+	return []*cobra.Command{generateBannerRootCmd, generateSitemap, updateTotalLikesForPost, updateTotalPostsForPost}
 }

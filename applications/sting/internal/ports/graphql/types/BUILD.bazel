@@ -11,6 +11,7 @@ go_library(
     deps = [
         "//applications/sting/internal/domain/club",
         "//applications/sting/internal/domain/curation",
+        "//applications/sting/internal/domain/games",
         "//applications/sting/internal/domain/post",
         "//libraries/graphql",
         "//libraries/graphql/relay",

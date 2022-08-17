@@ -25,6 +25,7 @@ RUN mv crane /bin
 
 RUN apt install python3-yaml
 RUN python3 -m pip install redis
+RUN python3 -m pip install requests
 
 # install sentry
 RUN curl -sL https://sentry.io/get-cli/ | SENTRY_CLI_VERSION="2.1.0" bash

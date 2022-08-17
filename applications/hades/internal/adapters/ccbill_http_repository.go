@@ -391,7 +391,7 @@ func (r CCBillHttpRepository) ChargeByPreviousTransactionId(ctx context.Context,
 		}
 
 		if result < 1 {
-			return nil, errors.New(fmt.Sprintf("failed to charge by previous: ccbill error: %s", strconv.Itoa(int(result))))
+			return nil, errors.New(fmt.Sprintf("failed to charge by previous: ccbill error: %s, subscription id: %s", strconv.Itoa(int(result)), chargeByPrevious.CCBillSubscriptionId()))
 		}
 	}
 

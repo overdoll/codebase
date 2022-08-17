@@ -5,7 +5,6 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"github.com/spf13/viper"
-	"go.temporal.io/api/serviceerror"
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/loader/internal/app/workflows"
 	"overdoll/applications/loader/internal/domain/resource"
@@ -26,38 +25,6 @@ func (r EventTemporalRepository) SendProcessResourcesHeartbeat(ctx context.Conte
 	}
 
 	return nil
-}
-
-func (r EventTemporalRepository) SendProcessResourcesProgress(ctx context.Context, itemId, resourceId string, progress int64) error {
-
-	if err := r.client.SignalWorkflow(ctx, "loader.ProcessResourcesForUpload_"+itemId+"_"+resourceId, "", workflows.ProcessResourcesProgressAppendSignal, progress); err != nil {
-		return errors.Wrap(err, "failed to signal resource progress")
-	}
-
-	return nil
-}
-
-func (r EventTemporalRepository) GetResourceProgress(ctx context.Context, itemId, resourceId string) (*resource.Progress, error) {
-
-	response, err := r.client.QueryWorkflow(context.Background(), "loader.ProcessResourcesForUpload_"+itemId+"_"+resourceId, "", workflows.ProcessResourcesProgressQuery)
-	if err != nil {
-
-		var notFound *serviceerror.NotFound
-
-		if errors.As(err, &notFound) {
-			return resource.NewWaiting(), nil
-		}
-
-		return nil, err
-	}
-
-	var progress float64
-
-	if err := response.Get(&progress); err != nil {
-		return nil, err
-	}
-
-	return resource.NewProgress(progress), nil
 }
 
 func (r EventTemporalRepository) ProcessResourcesWithFiltersFromCopy(ctx context.Context, itemId string, resourceIds []string, source string, config *resource.Config, filters *resource.ImageFilters) error {

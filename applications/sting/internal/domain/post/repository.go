@@ -14,6 +14,10 @@ type Repository interface {
 	GetPostsByIds(ctx context.Context, requester *principal.Principal, postIds []string) ([]*Post, error)
 	CreatePost(ctx context.Context, post *Post) error
 
+	GetTopCharacterNames(ctx context.Context) ([]string, error)
+
+	GetPostWithRandomSeed(ctx context.Context, passport *passport.Passport, seed int64, audienceIds []string) (*Post, error)
+
 	GetFirstTopPostWithoutOccupiedResources(ctx context.Context, characterId, categoryId, seriesId, audienceId *string) (*Post, error)
 	AddPostOccupiedResource(ctx context.Context, post *Post, resource *resource.Resource) error
 
@@ -30,6 +34,7 @@ type Repository interface {
 	UpdatePostDescription(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostContentAndState(ctx context.Context, id string, updateFn func(pending *Post) error) error
 	UpdatePostContentOperator(ctx context.Context, id string, updateFn func(pending *Post) error) (*Post, error)
+	UpdatePostContentOperatorResource(ctx context.Context, id string, resources []*resource.Resource) (*Post, error)
 	UpdatePostLikesOperator(ctx context.Context, id string, updateFn func(pending *Post) error) (*Post, error)
 
 	DeletePost(ctx context.Context, postId string) error
@@ -106,10 +111,9 @@ type Repository interface {
 
 	PostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *Feed) ([]*Post, error)
 	ClubMembersPostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*Post, error)
-	SuggestedPostsByPost(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, post *Post) ([]*Post, error)
+	SuggestedPostsByPost(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, post *Post, filters *Feed) ([]*Post, error)
 	Search(ctx context.Context, passport *passport.Passport, requester *principal.Principal, cursor *paging.Cursor, query string) ([]interface{}, error)
 	SearchPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *Filters) ([]*Post, error)
-	PostsGame(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, slug, seed string) ([]*Post, error)
 
 	RefreshPostIndex(ctx context.Context) error
 
@@ -126,6 +130,9 @@ type Repository interface {
 	SearchSeries(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *ObjectFilters) ([]*Series, error)
 	GetTotalLikesForSeriesOperator(ctx context.Context, series *Series) (int, error)
 	GetTotalPostsForSeriesOperator(ctx context.Context, series *Series) (int, error)
+
+	GetTotalLikesForClubOperator(ctx context.Context, clubId string) (int, error)
+	GetTotalPostsForClubOperator(ctx context.Context, clubId string) (int, error)
 
 	SearchCategories(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *CategoryFilters) ([]*Category, error)
 	GetTotalLikesForCategoryOperator(ctx context.Context, category *Category) (int, error)

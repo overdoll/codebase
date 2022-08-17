@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io/fs"
 	"io/ioutil"
+	"overdoll/libraries/support"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -19,6 +20,10 @@ func createSeed(config SeederConfig) *cobra.Command {
 	return &cobra.Command{
 		Use: "seed [seeder files]",
 		Run: func(cmd *cobra.Command, args []string) {
+
+			if !support.IsDebug() {
+				zap.S().Fatal("can only run seeders when debugging is enabled")
+			}
 
 			ctx, cancelFn := context.WithTimeout(context.Background(), time.Second*5)
 			defer cancelFn()

@@ -50,15 +50,15 @@
       },
       "content_resources": {
         "type": "object",
-        "dynamic": true
+        "dynamic": false
       },
       "content_supporter_only": {
         "type": "object",
-        "dynamic": true
+        "dynamic": false
       },
       "content_supporter_only_resource_ids": {
         "type": "object",
-        "dynamic": true
+        "dynamic": false
       },
       "created_at": {
         "type": "date"

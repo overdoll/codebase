@@ -8,6 +8,7 @@ import (
 
 type GenerateCategoryBannerInput struct {
 	CategoryId string
+	PostId     string
 	WaitPeriod time.Duration
 }
 
@@ -26,6 +27,7 @@ func GenerateCategoryBanner(ctx workflow.Context, input GenerateCategoryBannerIn
 
 	if err := workflow.ExecuteActivity(ctx, a.UpdateCategoryBanner,
 		activities.UpdateCategoryBannerInput{
+			PostId:     input.PostId,
 			CategoryId: input.CategoryId,
 		},
 	).Get(ctx, nil); err != nil {

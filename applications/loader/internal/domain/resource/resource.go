@@ -48,8 +48,8 @@ var (
 
 // accepted formats
 var (
-	imageAcceptedTypes = []string{"image/png"}
-	videoAcceptedTypes = []string{"video/mp4"}
+	imageAcceptedTypes = []string{"image/png", "image/jpeg"}
+	videoAcceptedTypes = []string{"video/mp4", "video/x-m4v"}
 )
 
 var extensionsMap = map[string]string{
@@ -245,14 +245,14 @@ func (r *Resource) ApplyFilters(file *os.File, config *Config, filters *ImageFil
 	r.width = pixelatedSrc.Bounds().Dx()
 
 	_, _ = jpegFile.Seek(0, io.SeekStart)
-	preview, err := createPreviewFromFile(jpegFile)
+	preview, err := createPreviewFromFile(jpegFile, false)
 
 	if err != nil {
 		return nil, err
 	}
 
 	r.preview = preview
-	r.mimeTypes = []string{"image/webp", "image/jpg"}
+	r.mimeTypes = []string{"image/webp", "image/jpeg"}
 
 	r.processedId = fileName
 	r.processed = true
@@ -267,16 +267,24 @@ func (r *Resource) ApplyFilters(file *os.File, config *Config, filters *ImageFil
 	}, nil
 }
 
-func createPreviewFromFile(r io.Reader) (string, error) {
+func createPreviewFromFile(r io.Reader, isVideo bool) (string, error) {
 	img, err := jpeg.Decode(r)
 
 	if err != nil {
 		return "", err
 	}
 
-	cols, err := prominentcolor.KmeansWithArgs(prominentcolor.ArgumentDefault, img)
+	var cols []prominentcolor.ColorItem
+
+	if isVideo {
+		// don't mask since videos could include black / white fade-ins
+		cols, err = prominentcolor.KmeansWithAll(prominentcolor.DefaultK, img, prominentcolor.ArgumentDefault, prominentcolor.DefaultSize, []prominentcolor.ColorBackgroundMask{})
+	} else {
+		cols, err = prominentcolor.KmeansWithArgs(prominentcolor.ArgumentDefault, img)
+	}
+
 	if err != nil {
-		return "", err
+		return "", errors.Wrap(err, "failed to generate preview from file")
 	}
 
 	col := cols[0]
@@ -497,14 +505,14 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 	r.height = probeResult.Streams[0].Height
 	r.videoDuration = int(math.Round(s * 1000))
 
-	r.videoThumbnailMimeType = "image/jpg"
+	r.videoThumbnailMimeType = "image/jpeg"
 	r.videoThumbnail = videoThumb
 	r.resourceType = resource.Video
 
 	r.mimeTypes = []string{"video/mp4"}
 
 	_, _ = fileThumbnail.Seek(0, io.SeekStart)
-	preview, err := createPreviewFromFile(fileThumbnail)
+	preview, err := createPreviewFromFile(fileThumbnail, true)
 
 	if err != nil {
 		return nil, err
@@ -524,23 +532,33 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 	}, nil
 }
 
-func (r *Resource) processImage(fileName string, file *os.File, config *Config) ([]*Move, error) {
+func (r *Resource) processImage(mimeType string, fileName string, file *os.File, config *Config) ([]*Move, error) {
 
-	c, _ := getSocketClient(r.itemId, r.id)
-	c.Write([]byte("0"))
-	defer c.Close()
+	var src image.Image
+	var err error
 
-	src, err := png.Decode(file)
-
-	if err != nil {
-
-		if err == image.ErrFormat {
+	if mimeType == "image/png" {
+		src, err = png.Decode(file)
+		// check for png format error
+		var formatError png.FormatError
+		if errors.As(err, &formatError) {
 			zap.S().Errorw("failed to decode png", zap.Error(err))
 			r.failed = true
 			return nil, nil
 		}
+	} else {
+		src, err = jpeg.Decode(file)
+		// check for jpeg format error
+		var formatError jpeg.FormatError
+		if errors.As(err, &formatError) {
+			zap.S().Errorw("failed to decode jpeg", zap.Error(err))
+			r.failed = true
+			return nil, nil
+		}
+	}
 
-		return nil, errors.Wrap(err, "failed to decode png")
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to decode image")
 	}
 
 	// resize to specified width
@@ -585,14 +603,14 @@ func (r *Resource) processImage(fileName string, file *os.File, config *Config) 
 	r.width = src.Bounds().Dx()
 
 	_, _ = jpegFile.Seek(0, io.SeekStart)
-	preview, err := createPreviewFromFile(jpegFile)
+	preview, err := createPreviewFromFile(jpegFile, false)
 
 	if err != nil {
 		return nil, err
 	}
 
 	r.preview = preview
-	r.mimeTypes = []string{"image/webp", "image/jpg"}
+	r.mimeTypes = []string{"image/webp", "image/jpeg"}
 
 	return []*Move{
 		{
@@ -636,26 +654,41 @@ func (r *Resource) ProcessResource(file *os.File, config *Config) ([]*Move, erro
 		fileName = r.processedId
 	}
 
-	// indicate a heartbeat has started
+	foundImage := false
+	foundVideo := false
+	mimeType := kind.MIME.Value
 
-	if kind.MIME.Value == "image/png" {
+	for _, m := range imageAcceptedTypes {
+		if m == mimeType {
+			foundImage = true
+			break
+		}
+	}
 
-		moveTargets, err = r.processImage(fileName, file, config)
+	for _, m := range videoAcceptedTypes {
+		if m == mimeType {
+			foundVideo = true
+		}
+	}
+
+	if foundImage {
+		moveTargets, err = r.processImage(mimeType, fileName, file, config)
 
 		if err != nil {
 			return nil, err
 		}
+	}
 
-	} else if kind.MIME.Value == "video/mp4" || kind.MIME.Value == "video/x-m4v" {
-
+	if foundVideo {
 		moveTargets, err = r.processVideo(fileName, file, config)
 
 		if err != nil {
 			return nil, err
 		}
+	}
 
-	} else {
-		zap.S().Errorw("unknown mime type", zap.String("mimeType", kind.MIME.Value))
+	if !foundVideo && !foundImage {
+		zap.S().Errorw("unknown mime type", zap.String("mimeType", mimeType))
 		r.failed = true
 		return nil, nil
 	}

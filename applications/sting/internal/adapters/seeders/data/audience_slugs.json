@@ -1,10 +1,10 @@
 [
   {
     "audience_id": "1pcKiQL7dgUW8CIN7uO1wqFaMql",
-    "slug": "standardaudience"
+    "slug": "standard-audience"
   },
   {
     "audience_id": "1pcKiTRBqURVEdcw1cKhyiejFp7",
-    "slug": "nonstandardaudience"
+    "slug": "non-standard-audience"
   }
 ]

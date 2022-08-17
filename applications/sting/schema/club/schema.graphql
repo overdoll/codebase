@@ -13,6 +13,16 @@ type Club implements Node @key(fields: "id") {
   """
   slugAliasesLimit: Int!
 
+  """
+  The total number of posts for this club.
+  """
+  totalPosts: Int!
+
+  """
+  The total number of likes for this club.
+  """
+  totalLikes: Int!
+
   """An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug."""
   slugAliases: [ClubSlugAlias!]!
 
@@ -470,6 +480,15 @@ input DisableClubSupporterOnlyPostsInput {
   clubId: ID!
 }
 
+"""Transfer club ownership input."""
+input TransferClubOwnershipInput {
+  """The club to transfer ownership for."""
+  clubId: ID!
+
+  """The new account that should be the owner of the club."""
+  accountId: ID!
+}
+
 """Disable club supporter-only posts payload."""
 type DisableClubSupporterOnlyPostsPayload {
   """The new club after supporter-only posts are disabled."""
@@ -521,6 +540,12 @@ type SuspendClubPayload {
 """Terminate club payload."""
 type TerminateClubPayload {
   """The new club after it's terminated."""
+  club: Club
+}
+
+"""Transfer club ownership."""
+type TransferClubOwnershipPayload {
+  """The new club after ownership has been transferred."""
   club: Club
 }
 
@@ -641,6 +666,13 @@ extend type Mutation {
   Staff+ only.
   """
   updateClubCharactersLimit(input: UpdateClubCharactersLimitInput!): UpdateClubCharactersLimitPayload
+
+  """
+  Transfer club ownership from one account to another.
+
+  Staff+ only.
+  """
+  transferClubOwnership(input: TransferClubOwnershipInput!): TransferClubOwnershipPayload
 }
 
 extend type Query {

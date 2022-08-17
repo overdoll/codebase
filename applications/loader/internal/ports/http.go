@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"overdoll/applications/loader/internal/app"
 	gen "overdoll/applications/loader/internal/ports/graphql"
+	"overdoll/applications/loader/internal/ports/graphql/dataloader"
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/router"
 )
@@ -16,9 +17,19 @@ type GraphQLServer struct {
 	app *app.Application
 }
 
+func dataLoaderToContext(app *app.Application) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		ctx := context.WithValue(c.Request.Context(), graphql.DataLoaderKey, dataloader.NewDataLoader(app))
+		c.Request = c.Request.WithContext(ctx)
+		c.Next()
+	}
+}
+
 func NewHttpServer(app *app.Application) http.Handler {
 
 	rtr := router.NewGinRouter(nil)
+
+	rtr.Use(dataLoaderToContext(app))
 
 	// graphql
 	rtr.POST("/api/graphql",
@@ -40,7 +51,7 @@ func NewHttpServer(app *app.Application) http.Handler {
 		BasePath:                "/api/upload/",
 		StoreComposer:           composer,
 		RespectForwardedHeaders: true,
-		MaxSize:                 52428800,
+		MaxSize:                 52428800 * 2,
 		//Logger:                  logger,
 	})
 

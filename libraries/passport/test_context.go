@@ -6,7 +6,7 @@ import (
 
 func NewTestContext(ctx context.Context, accountId *string) (context.Context, error) {
 
-	pass, err := issueTestingPassport(accountId)
+	pass, err := issueTestingPassport(accountId, nil)
 
 	if err != nil {
 		return nil, err

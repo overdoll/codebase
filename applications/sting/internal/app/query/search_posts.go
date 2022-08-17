@@ -2,6 +2,7 @@ package query
 
 import (
 	"context"
+	"overdoll/applications/sting/internal/domain/curation"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -29,11 +30,12 @@ type SearchPosts struct {
 }
 
 type SearchPostsHandler struct {
-	pr post.Repository
+	pr  post.Repository
+	ppr curation.Repository
 }
 
-func NewSearchPostsHandler(pr post.Repository) SearchPostsHandler {
-	return SearchPostsHandler{pr: pr}
+func NewSearchPostsHandler(pr post.Repository, ppr curation.Repository) SearchPostsHandler {
+	return SearchPostsHandler{pr: pr, ppr: ppr}
 }
 
 func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*post.Post, error) {
@@ -83,6 +85,17 @@ func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*p
 
 	if len(query.CharacterIds) > 0 {
 		characterIds = query.CharacterIds
+	}
+
+	// use curation profile, but only when club filtering is not used
+	if query.Principal != nil && len(query.ClubIds) == 0 && query.ContributorId == nil {
+		personalProfile, err := h.ppr.GetProfileByAccountId(ctx, query.Principal, query.Principal.AccountId())
+
+		if err != nil {
+			return nil, err
+		}
+
+		audienceIds = append(audienceIds, personalProfile.AudienceIds()...)
 	}
 
 	filters, err := post.NewPostFilters(

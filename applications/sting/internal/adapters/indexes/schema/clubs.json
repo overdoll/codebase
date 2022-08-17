@@ -76,6 +76,12 @@
       "banner_resource": {
         "type": "keyword"
       },
+      "total_likes": {
+        "type": "integer"
+      },
+      "total_posts": {
+        "type": "integer"
+      },
       "supporter_only_posts_disabled": {
         "type": "boolean"
       },

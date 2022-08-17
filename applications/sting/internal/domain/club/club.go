@@ -51,6 +51,9 @@ type Club struct {
 	charactersEnabled bool
 	charactersLimit   int
 
+	totalLikes int
+	totalPosts int
+
 	membersCount   int
 	ownerAccountId string
 
@@ -130,7 +133,7 @@ func NewClub(requester *principal.Principal, slug, name string, currentClubCount
 	}, nil
 }
 
-func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail *resource.Resource, banner *resource.Resource, membersCount int, ownerAccountId string, suspended bool, suspendedUntil, nextSupporterPostTime *time.Time, hasCreatedSupporterOnlyPost bool, terminated bool, terminatedByAccountId *string, supporterOnlyPostsDisabled bool, createdAt, updatedAt time.Time, charactersEnabled bool, charactersLimit int) *Club {
+func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail *resource.Resource, banner *resource.Resource, membersCount int, ownerAccountId string, suspended bool, suspendedUntil, nextSupporterPostTime *time.Time, hasCreatedSupporterOnlyPost bool, terminated bool, terminatedByAccountId *string, supporterOnlyPostsDisabled bool, createdAt, updatedAt time.Time, charactersEnabled bool, charactersLimit, totalLikes, totalPosts int) *Club {
 	return &Club{
 		id:                          id,
 		slug:                        slug,
@@ -151,6 +154,8 @@ func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name 
 		supporterOnlyPostsDisabled:  supporterOnlyPostsDisabled,
 		charactersEnabled:           charactersEnabled,
 		charactersLimit:             charactersLimit,
+		totalLikes:                  totalLikes,
+		totalPosts:                  totalPosts,
 	}
 }
 
@@ -188,6 +193,26 @@ func (m *Club) CharactersEnabled() bool {
 
 func (m *Club) CharactersLimit() int {
 	return m.charactersLimit
+}
+
+func (m *Club) UpdateTotalPosts(totalPosts int) error {
+	m.totalPosts = totalPosts
+	m.update()
+	return nil
+}
+
+func (m *Club) UpdateTotalLikes(totalLikes int) error {
+	m.totalLikes = totalLikes
+	m.update()
+	return nil
+}
+
+func (m *Club) TotalLikes() int {
+	return m.totalLikes
+}
+
+func (m *Club) TotalPosts() int {
+	return m.totalPosts
 }
 
 func (m *Club) SlugAliasLimit() int {
@@ -271,6 +296,19 @@ func (m *Club) CanUnSuspend(requester *principal.Principal) error {
 
 func (m *Club) CanSupport() bool {
 	return !m.suspended && m.hasCreatedSupporterOnlyPost && !m.terminated
+}
+
+func (m *Club) CanTransferClubOwnership(requester, target *principal.Principal) error {
+
+	if !requester.IsStaff() {
+		return principal.ErrNotAuthorized
+	}
+
+	if !target.IsArtist() {
+		return domainerror.NewValidation("can only transfer club ownership to artists")
+	}
+
+	return nil
 }
 
 func (m *Club) CanViewSupporterCount(requester *principal.Principal) error {

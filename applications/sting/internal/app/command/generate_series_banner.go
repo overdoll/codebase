@@ -9,6 +9,7 @@ import (
 
 type GenerateSeriesBanner struct {
 	SeriesId string
+	PostId   string
 	Duration int64
 }
 
@@ -29,7 +30,17 @@ func (h GenerateSeriesBannerHandler) Handle(ctx context.Context, cmd GenerateSer
 		return err
 	}
 
-	if err := h.event.GenerateSeriesBanner(ctx, series, time.Duration(cmd.Duration)); err != nil {
+	var pst *post.Post
+
+	if cmd.PostId != "" {
+		pst, err = h.pr.GetPostByIdOperator(ctx, cmd.PostId)
+
+		if err != nil {
+			return err
+		}
+	}
+
+	if err := h.event.GenerateSeriesBanner(ctx, series, pst, time.Duration(cmd.Duration)); err != nil {
 		return err
 	}
 

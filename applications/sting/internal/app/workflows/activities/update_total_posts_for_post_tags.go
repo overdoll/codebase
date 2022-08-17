@@ -2,6 +2,7 @@ package activities
 
 import (
 	"context"
+	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/applications/sting/internal/domain/post"
 )
 
@@ -90,6 +91,21 @@ func (h *Activities) UpdateTotalPostsForPostTags(ctx context.Context, input Upda
 		}
 
 		return audience.UpdateTotalPosts(totalPosts)
+	})
+
+	if err != nil {
+		return err
+	}
+
+	_, err = h.cr.UpdateClubTotalPostsCount(ctx, pendingPost.ClubId(), func(clb *club.Club) error {
+
+		totalLikes, err := h.pr.GetTotalPostsForClubOperator(ctx, clb.ID())
+
+		if err != nil {
+			return err
+		}
+
+		return clb.UpdateTotalPosts(totalLikes)
 	})
 
 	if err != nil {
