@@ -21,6 +21,7 @@ import {
 import translateValidation from '@//:modules/validation/translateValidation'
 import useSlugSubscribe from '../../../../../../../common/support/useSlugSubscribe'
 import { useRouter } from 'next/router'
+import { URL_SLUG } from '@//:modules/constants/regex'
 
 interface Props {
   query: CreateClubCharacterFormFragment$key
@@ -107,12 +108,12 @@ export default function CreateClubCharacterForm ({
       .required()
       .min(2)
       .max(25)
-      .regex(/^[a-zA-Z0-9]*$/)
+      .regex(URL_SLUG)
       .messages({
         'string.empty': i18n._(t`Please enter a character link`),
         'string.min': i18n._(t`The character link must be at least 2 characters`),
         'string.max': i18n._(t`The character link cannot exceed 25 characters`),
-        'string.pattern.base': i18n._(t`The character link can only contain numbers and letters.`)
+        'string.pattern.base': i18n._(t`The character link can only contain numbers, letters, and dashes.`)
       })
   })
 

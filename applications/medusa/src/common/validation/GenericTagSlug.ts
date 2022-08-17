@@ -1,12 +1,13 @@
 import Joi from 'joi'
 import { useLingui } from '@lingui/react'
 import { t } from '@lingui/macro'
+import { URL_SLUG } from '@//:modules/constants/regex'
 
 export default function GenericTagSlug (): Joi.Schema {
   const { i18n } = useLingui()
   return Joi
     .string()
-    .regex(/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/)
+    .regex(URL_SLUG)
     .min(1)
     .max(30)
     .required()
