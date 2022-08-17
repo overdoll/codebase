@@ -1,5 +1,6 @@
 import socket
 
+import requests
 import time
 
 from . import exception
@@ -17,32 +18,11 @@ def wait_for_port(host, port, timeout=5.0, check_ready=True):
     start_time = time.perf_counter()
     while True:
         try:
-            with socket.create_connection((host, port), timeout=3) as sock:
+            with socket.create_connection((host, port), timeout=3):
                 if check_ready:
-                    sock.sendall("GET /readyz HTTP/1.1\r\n\r\n".encode())
-
-                    data = bytes()
-                    chunk = bytes()
-                    length = 0
-                    try:
-                        while not b'\r\n\r\n' in chunk:
-                            chunk = sock.recv(4096)
-                            if not chunk:
-                                break
-                            else:
-                                data += chunk
-                                length += len(chunk)
-                    except socket.timeout:
-                        pass
-
-                    try:
-                        index = data.index(b'\r\n\r\n')
-                    except:
-                        continue
-                    else:
-                        index += len(b'\r\n\r\n')
-                        if data[index:] == "ok":
-                            break
+                    req = requests.get("http://" + host + ":" + port + "/readyz")
+                    if req.text == "ok":
+                        break
                 else:
                     break
         except OSError as ex:
