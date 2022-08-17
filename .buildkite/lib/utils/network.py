@@ -20,9 +20,29 @@ def wait_for_port(host, port, timeout=5.0, check_ready=True):
             with socket.create_connection((host, port), timeout=3) as sock:
                 if check_ready:
                     sock.sendall("GET /readyz HTTP/1.1\r\n\r\n".encode())
-                    response_head, response_body = sock.recv(4096).decode().split('\n\n', 1)
-                    if ''.join(response_body) == "ok":
-                        break
+
+                    data = bytes()
+                    chunk = bytes()
+                    length = 0
+                    try:
+                        while not b'\r\n\r\n' in chunk:
+                            chunk = sock.recv(4096)
+                            if not chunk:
+                                break
+                            else:
+                                data += chunk
+                                length += len(chunk)
+                    except socket.timeout:
+                        pass
+
+                    try:
+                        index = data.index(b'\r\n\r\n')
+                    except:
+                        continue
+                    else:
+                        index += len(b'\r\n\r\n')
+                        if data[index:] == "ok":
+                            break
                 else:
                     break
         except OSError as ex:
