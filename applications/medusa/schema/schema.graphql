@@ -1991,6 +1991,12 @@ type Club implements Node {
   """A resource of the club's thumbnail."""
   thumbnail: Resource
 
+  """The total number of likes for this club."""
+  totalLikes: Int!
+
+  """The total number of posts for this club."""
+  totalPosts: Int!
+
   """Month-by-month transaction metrics of this club."""
   transactionMetrics(
     """Returns the elements in the list that come after the specified cursor."""
@@ -2675,6 +2681,25 @@ enum CreateClubValidation {
   SLUG_TAKEN
 }
 
+"""Create a new game session."""
+input CreateGameSessionInput {
+  """The game type to create the session for."""
+  gameType: GameType!
+
+  """
+  Optionally pass a seed. If a seed is not passed in, one will be automatically generated.
+  
+  Validation: only alphanumeric characters, no spaces, and max 25 characters.
+  """
+  seed: String
+}
+
+"""Payload for a new game session"""
+type CreateGameSessionPayload {
+  """The game session after creation."""
+  gameSession: GameSession
+}
+
 """Create a new post. A club ID is required."""
 input CreatePostInput {
   """The club ID that this post will belong to"""
@@ -3092,6 +3117,38 @@ input ExtendAccountClubSupporterSubscriptionInput {
 type ExtendAccountClubSupporterSubscriptionPayload {
   """The new subscription."""
   clubSupporterSubscription: AccountClubSupporterSubscription
+}
+
+type GameSession {
+  """The type of game this session belongs to."""
+  gameType: GameType!
+
+  """An ID pointing to this game session."""
+  id: ID!
+
+  """
+  Whether or not this game session is closed. A closed game session cannot be played anymore.
+  """
+  isClosed: Boolean!
+
+  """An ID that can be used to uniquely-identify this game session."""
+  reference: String!
+
+  """The seed used for this session."""
+  seed: String!
+
+  """
+  Whether or not the current viewer is the player of the game. Only players can "play" the game.
+  """
+  viewerIsPlayer: Boolean!
+}
+
+"""A union representing the status of various games."""
+union GameSessionStatus = RouletteStatus
+
+"""The types of games available."""
+enum GameType {
+  ROULETTE
 }
 
 """Payload of the created account recovery codes"""
@@ -3583,6 +3640,9 @@ type Mutation {
   """Create a new club"""
   createClub(input: CreateClubInput!): CreateClubPayload
 
+  """Create a new game session."""
+  createGameSession(input: CreateGameSessionInput!): CreateGameSessionPayload
+
   """Create a new post"""
   createPost(input: CreatePostInput!): CreatePostPayload
 
@@ -3859,6 +3919,9 @@ type Mutation {
   """
   setPaxumAccountPayoutMethod(input: SetPaxumAccountPayoutMethodInput!): SetPaxumAccountPayoutMethodPayload
 
+  """Spin the roulette. Cannot spin if the game session is closed."""
+  spinRoulette(input: SpinRouletteInput!): SpinRoulettePayload
+
   """Submit a post."""
   submitPost(input: SubmitPostInput!): SubmitPostPayload
 
@@ -3877,6 +3940,13 @@ type Mutation {
   Staff+ only.
   """
   terminateClub(input: TerminateClubInput!): TerminateClubPayload
+
+  """
+  Transfer club ownership from one account to another.
+  
+  Staff+ only.
+  """
+  transferClubOwnership(input: TransferClubOwnershipInput!): TransferClubOwnershipPayload
 
   """Un-archive a post, putting it back in public view."""
   unArchivePost(input: UnArchivePostInput!): UnArchivePostPayload
@@ -4363,6 +4433,9 @@ type PostReportEdge {
 
 """Properties by which posts connections can be sorted."""
 enum PostsSort {
+  """Posts by algorithm sort"""
+  ALGORITHM
+
   """Posts by newest first"""
   NEW
 
@@ -4678,6 +4751,16 @@ type Query {
     """Returns the last _n_ elements from the list."""
     last: Int
   ): ClubConnection!
+
+  """
+  Get the status of a current game session using the reference of a game session.
+  
+  Returns nil if the game session does not exist.
+  """
+  gameSessionStatus(
+    """Search game session status by reference."""
+    reference: String!
+  ): GameSessionStatus
 
   """
   List of all available languages
@@ -5273,6 +5356,51 @@ type RevokeAuthenticationTokenPayload {
   revokedAuthenticationTokenId: ID!
 }
 
+"""A roulette game state."""
+type RouletteGameState {
+  """The first dice that was created."""
+  diceOne: Int!
+
+  """The third dice that was created."""
+  diceThree: Int!
+
+  """The second dice that was created."""
+  diceTwo: Int!
+
+  """An ID used to uniquely identify this game state."""
+  id: ID!
+
+  """The post that was selected."""
+  post: Post!
+}
+
+"""The status of the roulette game."""
+type RouletteStatus {
+  """The game session that this roulette belongs to."""
+  gameSession: GameSession!
+
+  """
+  The current state of the roulette game. If no spins happened yet, this is nil.
+  Should be used to resume the current roulette session.
+  """
+  gameState: RouletteGameState
+
+  """
+  The total score. Note that this is 0 if the game session is not closed.
+  """
+  score: Int!
+
+  """
+  How many doubles occurred. Note that this is 0 if the game session is not closed.
+  """
+  totalDoubles: Int!
+
+  """
+  How many rolls occurred. Note that this is 0 if the game session is not closed.
+  """
+  totalRolls: Int!
+}
+
 """Rule."""
 type Rule implements Node {
   """If this rule is deprecated."""
@@ -5464,6 +5592,18 @@ type SetPaxumAccountPayoutMethodPayload {
   accountPayoutMethod: AccountPayoutMethod
 }
 
+"""Spin roulette."""
+input SpinRouletteInput {
+  """The game session ID to use for the spin."""
+  gameSessionId: ID!
+}
+
+"""Payload for spinning roulette."""
+type SpinRoulettePayload {
+  """The new roulette spin game state"""
+  rouletteGameState: RouletteGameState
+}
+
 """Publish post."""
 input SubmitPostInput {
   """The post to publish"""
@@ -5591,6 +5731,21 @@ type TopicConnection {
 type TopicEdge {
   cursor: String!
   node: Topic!
+}
+
+"""Transfer club ownership input."""
+input TransferClubOwnershipInput {
+  """The new account that should be the owner of the club."""
+  accountId: ID!
+
+  """The club to transfer ownership for."""
+  clubId: ID!
+}
+
+"""Transfer club ownership."""
+type TransferClubOwnershipPayload {
+  """The new club after ownership has been transferred."""
+  club: Club
 }
 
 type Translation {

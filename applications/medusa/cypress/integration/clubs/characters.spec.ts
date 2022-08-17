@@ -3,7 +3,7 @@ import { clickOnButton, clickOnTab, clickOnTile, typeIntoPlaceholder } from '../
 
 Cypress.config('defaultCommandTimeout', 10000)
 
-const character = 'TestCharacter'
+const character = 'testcharacter'
 
 describe('Club Characters', () => {
   it('club characters', () => {
