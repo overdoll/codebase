@@ -124,7 +124,8 @@ export default function CreateClubForm ({
 
   useSlugSubscribe({
     from: 'name',
-    ...methods
+    ...methods,
+    useTitleCase: true
   })
 
   return (

@@ -46,6 +46,9 @@
       ],
       "@//:domain/*": [
         "src/domain/*"
+      ],
+      "@//:common/*": [
+        "src/common/*"
       ]
     }
   },
