@@ -7,7 +7,7 @@ import (
 
 func validateSlug(slug string) error {
 
-	err := validator.New().Var(slug, "required,max=25,excludesall= ,excludesall=.,lowercase,hostname")
+	err := validator.New().Var(slug, "required,max=25,excludesall= ,excludesall=.,hostname")
 
 	if err != nil {
 		return domainerror.NewValidation(err.Error())
