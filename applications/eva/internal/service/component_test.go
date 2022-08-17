@@ -183,8 +183,9 @@ func seedNormalAccount(t *testing.T) *account.Account {
 	usr := newTestAccount(t)
 
 	session := bootstrap.InitializeDatabaseSession()
+	redis := bootstrap.InitializeRedisSession()
 
-	adapter := adapters.NewAccountCassandraRedisRepository(session)
+	adapter := adapters.NewAccountCassandraRedisRepository(session, redis)
 	err := adapter.CreateAccount(context.Background(), usr)
 	require.NoError(t, err)
 	return usr
@@ -197,8 +198,9 @@ func seedMfaAccount(t *testing.T) *account.Account {
 	require.NoError(t, err)
 
 	session := bootstrap.InitializeDatabaseSession()
+	redis := bootstrap.InitializeRedisSession()
 
-	adapter := adapters.NewAccountCassandraRedisRepository(session)
+	adapter := adapters.NewAccountCassandraRedisRepository(session, redis)
 	err = adapter.CreateAccount(context.Background(), usr)
 	require.NoError(t, err)
 	return usr
@@ -227,14 +229,14 @@ func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 
 func getHttpClientWithAuthenticatedAccount(t *testing.T, account string) (*graphql.Client, *passport.Pocket) {
 
-	client, transport := passport.NewHTTPTestClientWithPassport(&account)
+	client, transport := passport.NewHTTPTestClientWithPassport(&account, nil)
 
 	return graphql.NewClient(EvaHttpClientAddr, client), transport
 }
 
 func getHttpClient(t *testing.T) (*graphql.Client, *passport.Pocket) {
 
-	client, transport := passport.NewHTTPTestClientWithPassport(nil)
+	client, transport := passport.NewHTTPTestClientWithPassport(nil, nil)
 
 	return graphql.NewClient(EvaHttpClientAddr, client), transport
 }

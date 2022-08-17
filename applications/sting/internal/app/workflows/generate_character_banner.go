@@ -8,6 +8,7 @@ import (
 
 type GenerateCharacterBannerInput struct {
 	CharacterId string
+	PostId      string
 	WaitPeriod  time.Duration
 }
 
@@ -27,6 +28,7 @@ func GenerateCharacterBanner(ctx workflow.Context, input GenerateCharacterBanner
 	if err := workflow.ExecuteActivity(ctx, a.UpdateCharacterBanner,
 		activities.UpdateCharacterBannerInput{
 			CharacterId: input.CharacterId,
+			PostId:      input.PostId,
 		},
 	).Get(ctx, nil); err != nil {
 		logger.Error("failed to update character banner", "Error", err)

@@ -17,14 +17,7 @@ type ProcessResourcesInput struct {
 	Height      uint64
 }
 
-const (
-	ProcessResourcesProgressAppendSignal = "process-resources-progress-append"
-	ProcessResourcesProgressQuery        = "process-resources-progress"
-)
-
 func ProcessResources(ctx workflow.Context, input ProcessResourcesInput) error {
-
-	progress := int64(-1)
 
 	ctx = workflow.WithActivityOptions(ctx, workflow.ActivityOptions{
 		StartToCloseTimeout: time.Hour * 24,
@@ -37,23 +30,6 @@ func ProcessResources(ctx workflow.Context, input ProcessResourcesInput) error {
 	})
 
 	logger := workflow.GetLogger(ctx)
-
-	signalChan := workflow.GetSignalChannel(ctx, ProcessResourcesProgressAppendSignal)
-	selector := workflow.NewSelector(ctx)
-
-	selector.
-		AddReceive(signalChan, func(channel workflow.ReceiveChannel, more bool) {
-			channel.Receive(ctx, &progress)
-		})
-
-	if err := workflow.SetQueryHandler(ctx, ProcessResourcesProgressQuery, func() (int64, error) {
-		for signalChan.ReceiveAsync(&progress) {
-		}
-
-		return progress, nil
-	}); err != nil {
-		return err
-	}
 
 	var a *activities.Activities
 
@@ -68,9 +44,6 @@ func ProcessResources(ctx workflow.Context, input ProcessResourcesInput) error {
 		logger.Error("failed to process resources", "Error", err)
 		return err
 	}
-
-	// transitioned to a different state of progress
-	progress = -2
 
 	totalTimes := 2
 

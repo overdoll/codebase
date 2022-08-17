@@ -15,6 +15,11 @@ type ClubSuspensionLog interface {
 	IsClubSuspensionLog()
 }
 
+// A union representing the status of various games.
+type GameSessionStatus interface {
+	IsGameSessionStatus()
+}
+
 type Search interface {
 	IsSearch()
 }
@@ -262,6 +267,10 @@ type Club struct {
 	Slug string `json:"slug"`
 	// Maximum amount of slug aliases that can be created for this club.
 	SlugAliasesLimit int `json:"slugAliasesLimit"`
+	// The total number of posts for this club.
+	TotalPosts int `json:"totalPosts"`
+	// The total number of likes for this club.
+	TotalLikes int `json:"totalLikes"`
 	// An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug.
 	SlugAliases []*ClubSlugAlias `json:"slugAliases"`
 	// A resource of the club's thumbnail.
@@ -496,6 +505,22 @@ type CreateClubPayload struct {
 	Validation *CreateClubValidation `json:"validation"`
 }
 
+// Create a new game session.
+type CreateGameSessionInput struct {
+	// The game type to create the session for.
+	GameType GameType `json:"gameType"`
+	// Optionally pass a seed. If a seed is not passed in, one will be automatically generated.
+	//
+	// Validation: only alphanumeric characters, no spaces, and max 25 characters.
+	Seed *string `json:"seed"`
+}
+
+// Payload for a new game session
+type CreateGameSessionPayload struct {
+	// The game session after creation.
+	GameSession *GameSession `json:"gameSession"`
+}
+
 // Create a new post. A club ID is required.
 type CreatePostInput struct {
 	// The club ID that this post will belong to
@@ -638,6 +663,21 @@ type EnableClubSupporterOnlyPostsInput struct {
 type EnableClubSupporterOnlyPostsPayload struct {
 	// The new club after supporter-only posts are enabled.
 	Club *Club `json:"club"`
+}
+
+type GameSession struct {
+	// An ID pointing to this game session.
+	ID relay.ID `json:"id"`
+	// An ID that can be used to uniquely-identify this game session.
+	Reference string `json:"reference"`
+	// Whether or not this game session is closed. A closed game session cannot be played anymore.
+	IsClosed bool `json:"isClosed"`
+	// Whether or not the current viewer is the player of the game. Only players can "play" the game.
+	ViewerIsPlayer bool `json:"viewerIsPlayer"`
+	// The type of game this session belongs to.
+	GameType GameType `json:"gameType"`
+	// The seed used for this session.
+	Seed string `json:"seed"`
 }
 
 // Join a club input.
@@ -815,6 +855,36 @@ type RemovePostContentPayload struct {
 	Post *Post `json:"post"`
 }
 
+// A roulette game state.
+type RouletteGameState struct {
+	// An ID used to uniquely identify this game state.
+	ID relay.ID `json:"id"`
+	// The first dice that was created.
+	DiceOne int `json:"diceOne"`
+	// The second dice that was created.
+	DiceTwo int `json:"diceTwo"`
+	// The third dice that was created.
+	DiceThree int `json:"diceThree"`
+	// The post that was selected.
+	Post *Post `json:"post"`
+}
+
+// The status of the roulette game.
+type RouletteStatus struct {
+	// The game session that this roulette belongs to.
+	GameSession *GameSession `json:"gameSession"`
+	// The current state of the roulette game. If no spins happened yet, this is nil. Should be used to resume the current roulette session.
+	GameState *RouletteGameState `json:"gameState"`
+	// How many rolls occurred. Note that this is 0 if the game session is not closed.
+	TotalRolls int `json:"totalRolls"`
+	// How many doubles occurred. Note that this is 0 if the game session is not closed.
+	TotalDoubles int `json:"totalDoubles"`
+	// The total score. Note that this is 0 if the game session is not closed.
+	Score int `json:"score"`
+}
+
+func (RouletteStatus) IsGameSessionStatus() {}
+
 type SearchConnection struct {
 	Edges    []*SearchEdge   `json:"edges"`
 	PageInfo *relay.PageInfo `json:"pageInfo"`
@@ -864,6 +934,18 @@ type SeriesConnection struct {
 type SeriesEdge struct {
 	Cursor string  `json:"cursor"`
 	Node   *Series `json:"node"`
+}
+
+// Spin roulette.
+type SpinRouletteInput struct {
+	// The game session ID to use for the spin.
+	GameSessionID relay.ID `json:"gameSessionId"`
+}
+
+// Payload for spinning roulette.
+type SpinRoulettePayload struct {
+	// The new roulette spin game state
+	RouletteGameState *RouletteGameState `json:"rouletteGameState"`
 }
 
 // Publish post.
@@ -942,6 +1024,20 @@ type TopicConnection struct {
 type TopicEdge struct {
 	Cursor string `json:"cursor"`
 	Node   *Topic `json:"node"`
+}
+
+// Transfer club ownership input.
+type TransferClubOwnershipInput struct {
+	// The club to transfer ownership for.
+	ClubID relay.ID `json:"clubId"`
+	// The new account that should be the owner of the club.
+	AccountID relay.ID `json:"accountId"`
+}
+
+// Transfer club ownership.
+type TransferClubOwnershipPayload struct {
+	// The new club after ownership has been transferred.
+	Club *Club `json:"club"`
 }
 
 // Un-Archive post.
@@ -1966,6 +2062,46 @@ func (e CreateTopicValidation) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+// The types of games available.
+type GameType string
+
+const (
+	GameTypeRoulette GameType = "ROULETTE"
+)
+
+var AllGameType = []GameType{
+	GameTypeRoulette,
+}
+
+func (e GameType) IsValid() bool {
+	switch e {
+	case GameTypeRoulette:
+		return true
+	}
+	return false
+}
+
+func (e GameType) String() string {
+	return string(e)
+}
+
+func (e *GameType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = GameType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid GameType", str)
+	}
+	return nil
+}
+
+func (e GameType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 type PostState string
 
 const (
@@ -2025,16 +2161,19 @@ const (
 	PostsSortNew PostsSort = "NEW"
 	// Posts by top likes
 	PostsSortTop PostsSort = "TOP"
+	// Posts by algorithm sort
+	PostsSortAlgorithm PostsSort = "ALGORITHM"
 )
 
 var AllPostsSort = []PostsSort{
 	PostsSortNew,
 	PostsSortTop,
+	PostsSortAlgorithm,
 }
 
 func (e PostsSort) IsValid() bool {
 	switch e {
-	case PostsSortNew, PostsSortTop:
+	case PostsSortNew, PostsSortTop, PostsSortAlgorithm:
 		return true
 	}
 	return false

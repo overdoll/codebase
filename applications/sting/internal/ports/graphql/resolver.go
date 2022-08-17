@@ -99,3 +99,9 @@ func (r *Resolver) Topic() TopicResolver {
 		App: r.app,
 	}
 }
+
+func (r *Resolver) RouletteGameState() RouletteGameStateResolver {
+	return &resolvers.RouletteGameStateResolver{
+		App: r.app,
+	}
+}

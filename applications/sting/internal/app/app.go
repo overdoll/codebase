@@ -23,6 +23,8 @@ type Commands struct {
 	ArchivePost   command.ArchivePostHandler
 	UnArchivePost command.UnArchivePostHandler
 
+	TransferClubOwnership command.TransferClubOwnershipHandler
+
 	GenerateSitemap command.GenerateSitemapHandler
 
 	RemovePostContent                command.RemovePostContentHandler
@@ -34,6 +36,9 @@ type Commands struct {
 	UpdatePostCategories  command.UpdatePostCategoriesHandler
 	UpdatePostCharacters  command.UpdatePostCharactersHandler
 	UpdatePostAudience    command.UpdatePostAudienceHandler
+
+	UpdateTotalPostsForPostTags command.UpdateTotalPostsForPostTagsHandler
+	UpdateTotalLikesForPostTags command.UpdateTotalLikesForPostTagsHandler
 
 	LikePost     command.LikePostHandler
 	UndoLikePost command.UndoLikePostHandler
@@ -102,6 +107,9 @@ type Commands struct {
 	UnTerminateClub command.UnTerminateClubHandler
 
 	SuspendClubOperator command.SuspendClubOperatorHandler
+
+	CreateGameSession command.CreateGameSessionHandler
+	SpinRoulette      command.SpinRouletteHandler
 }
 
 type Queries struct {
@@ -169,5 +177,5 @@ type Queries struct {
 
 	ClubSupporterMembersCount query.ClubSupporterMembersCountHandler
 
-	PostsGame query.PostsGameHandler
+	GameSessionStatus query.GameSessionStatusHandler
 }

@@ -52,6 +52,7 @@ type ResolverRoot interface {
 	Mutation() MutationResolver
 	Post() PostResolver
 	Query() QueryResolver
+	RouletteGameState() RouletteGameStateResolver
 	Series() SeriesResolver
 	Topic() TopicResolver
 }
@@ -202,6 +203,8 @@ type ComplexityRoot struct {
 		SuspensionLogs              func(childComplexity int, after *string, before *string, first *int, last *int) int
 		Termination                 func(childComplexity int) int
 		Thumbnail                   func(childComplexity int) int
+		TotalLikes                  func(childComplexity int) int
+		TotalPosts                  func(childComplexity int) int
 		ViewerIsOwner               func(childComplexity int) int
 		ViewerMember                func(childComplexity int) int
 	}
@@ -289,6 +292,10 @@ type ComplexityRoot struct {
 		Validation func(childComplexity int) int
 	}
 
+	CreateGameSessionPayload struct {
+		GameSession func(childComplexity int) int
+	}
+
 	CreatePostPayload struct {
 		Post func(childComplexity int) int
 	}
@@ -350,6 +357,15 @@ type ComplexityRoot struct {
 		FindTopicByID      func(childComplexity int, id relay.ID) int
 	}
 
+	GameSession struct {
+		GameType       func(childComplexity int) int
+		ID             func(childComplexity int) int
+		IsClosed       func(childComplexity int) int
+		Reference      func(childComplexity int) int
+		Seed           func(childComplexity int) int
+		ViewerIsPlayer func(childComplexity int) int
+	}
+
 	JoinClubPayload struct {
 		ClubMember func(childComplexity int) int
 	}
@@ -376,6 +392,7 @@ type ComplexityRoot struct {
 		CreateCategory                   func(childComplexity int, input types.CreateCategoryInput) int
 		CreateCharacter                  func(childComplexity int, input types.CreateCharacterInput) int
 		CreateClub                       func(childComplexity int, input types.CreateClubInput) int
+		CreateGameSession                func(childComplexity int, input types.CreateGameSessionInput) int
 		CreatePost                       func(childComplexity int, input types.CreatePostInput) int
 		CreateSeries                     func(childComplexity int, input types.CreateSeriesInput) int
 		CreateTopic                      func(childComplexity int, input types.CreateTopicInput) int
@@ -391,9 +408,11 @@ type ComplexityRoot struct {
 		RemoveCategoryAlternativeTitle   func(childComplexity int, input types.RemoveCategoryAlternativeTitleInput) int
 		RemoveClubSlugAlias              func(childComplexity int, input types.RemoveClubSlugAliasInput) int
 		RemovePostContent                func(childComplexity int, input types.RemovePostContentInput) int
+		SpinRoulette                     func(childComplexity int, input types.SpinRouletteInput) int
 		SubmitPost                       func(childComplexity int, input types.SubmitPostInput) int
 		SuspendClub                      func(childComplexity int, input types.SuspendClubInput) int
 		TerminateClub                    func(childComplexity int, input types.TerminateClubInput) int
+		TransferClubOwnership            func(childComplexity int, input types.TransferClubOwnershipInput) int
 		UnArchivePost                    func(childComplexity int, input types.UnArchivePostInput) int
 		UnSuspendClub                    func(childComplexity int, input types.UnSuspendClubInput) int
 		UnTerminateClub                  func(childComplexity int, input types.UnTerminateClubInput) int
@@ -493,10 +512,10 @@ type ComplexityRoot struct {
 		Club               func(childComplexity int, slug string) int
 		Clubs              func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended *bool, terminated *bool, sortBy types.ClubsSort) int
 		DiscoverClubs      func(childComplexity int, after *string, before *string, first *int, last *int) int
+		GameSessionStatus  func(childComplexity int, reference string) int
 		Post               func(childComplexity int, reference string) int
 		Posts              func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) int
 		PostsFeed          func(childComplexity int, after *string, before *string, first *int, last *int) int
-		PostsGame          func(childComplexity int, after *string, before *string, first *int, last *int, slug string, seed string) int
 		Search             func(childComplexity int, after *string, before *string, first *int, last *int, query string) int
 		Serial             func(childComplexity int, slug string) int
 		Series             func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, title *string, sortBy types.SeriesSort) int
@@ -542,6 +561,22 @@ type ComplexityRoot struct {
 		URL      func(childComplexity int) int
 	}
 
+	RouletteGameState struct {
+		DiceOne   func(childComplexity int) int
+		DiceThree func(childComplexity int) int
+		DiceTwo   func(childComplexity int) int
+		ID        func(childComplexity int) int
+		Post      func(childComplexity int) int
+	}
+
+	RouletteStatus struct {
+		GameSession  func(childComplexity int) int
+		GameState    func(childComplexity int) int
+		Score        func(childComplexity int) int
+		TotalDoubles func(childComplexity int) int
+		TotalRolls   func(childComplexity int) int
+	}
+
 	SearchConnection struct {
 		Edges    func(childComplexity int) int
 		PageInfo func(childComplexity int) int
@@ -574,6 +609,10 @@ type ComplexityRoot struct {
 	SeriesEdge struct {
 		Cursor func(childComplexity int) int
 		Node   func(childComplexity int) int
+	}
+
+	SpinRoulettePayload struct {
+		RouletteGameState func(childComplexity int) int
 	}
 
 	SubmitPostPayload struct {
@@ -609,6 +648,10 @@ type ComplexityRoot struct {
 	TopicEdge struct {
 		Cursor func(childComplexity int) int
 		Node   func(childComplexity int) int
+	}
+
+	TransferClubOwnershipPayload struct {
+		Club func(childComplexity int) int
 	}
 
 	Translation struct {
@@ -843,9 +886,12 @@ type MutationResolver interface {
 	DisableClubCharacters(ctx context.Context, input types.DisableClubCharactersInput) (*types.DisableClubCharactersPayload, error)
 	EnableClubCharacters(ctx context.Context, input types.EnableClubCharactersInput) (*types.EnableClubCharactersPayload, error)
 	UpdateClubCharactersLimit(ctx context.Context, input types.UpdateClubCharactersLimitInput) (*types.UpdateClubCharactersLimitPayload, error)
+	TransferClubOwnership(ctx context.Context, input types.TransferClubOwnershipInput) (*types.TransferClubOwnershipPayload, error)
 	UpdateCurationProfileAudience(ctx context.Context, input types.UpdateCurationProfileAudienceInput) (*types.UpdateCurationProfileAudiencePayload, error)
 	UpdateCurationProfileCategory(ctx context.Context, input types.UpdateCurationProfileCategoryInput) (*types.UpdateCurationProfileCategoryPayload, error)
 	UpdateCurationProfileDateOfBirth(ctx context.Context, input types.UpdateCurationProfileDateOfBirthInput) (*types.UpdateCurationProfileDateOfBirthPayload, error)
+	CreateGameSession(ctx context.Context, input types.CreateGameSessionInput) (*types.CreateGameSessionPayload, error)
+	SpinRoulette(ctx context.Context, input types.SpinRouletteInput) (*types.SpinRoulettePayload, error)
 	LikePost(ctx context.Context, input types.LikePostInput) (*types.LikePostPayload, error)
 	UndoLikePost(ctx context.Context, input types.UndoLikePostInput) (*types.UndoLikePostPayload, error)
 	CreatePost(ctx context.Context, input types.CreatePostInput) (*types.CreatePostPayload, error)
@@ -892,7 +938,7 @@ type QueryResolver interface {
 	DiscoverClubs(ctx context.Context, after *string, before *string, first *int, last *int) (*types.ClubConnection, error)
 	Clubs(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended *bool, terminated *bool, sortBy types.ClubsSort) (*types.ClubConnection, error)
 	Club(ctx context.Context, slug string) (*types.Club, error)
-	PostsGame(ctx context.Context, after *string, before *string, first *int, last *int, slug string, seed string) (*types.PostConnection, error)
+	GameSessionStatus(ctx context.Context, reference string) (types.GameSessionStatus, error)
 	Search(ctx context.Context, after *string, before *string, first *int, last *int, query string) (*types.SearchConnection, error)
 	PostsFeed(ctx context.Context, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
 	Post(ctx context.Context, reference string) (*types.Post, error)
@@ -901,6 +947,9 @@ type QueryResolver interface {
 	Serial(ctx context.Context, slug string) (*types.Series, error)
 	Topics(ctx context.Context, after *string, before *string, first *int, last *int) (*types.TopicConnection, error)
 	Topic(ctx context.Context, slug string) (*types.Topic, error)
+}
+type RouletteGameStateResolver interface {
+	Post(ctx context.Context, obj *types.RouletteGameState) (*types.Post, error)
 }
 type SeriesResolver interface {
 	Title(ctx context.Context, obj *types.Series, locale *string) (string, error)
@@ -1645,6 +1694,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Club.Thumbnail(childComplexity), true
 
+	case "Club.totalLikes":
+		if e.complexity.Club.TotalLikes == nil {
+			break
+		}
+
+		return e.complexity.Club.TotalLikes(childComplexity), true
+
+	case "Club.totalPosts":
+		if e.complexity.Club.TotalPosts == nil {
+			break
+		}
+
+		return e.complexity.Club.TotalPosts(childComplexity), true
+
 	case "Club.viewerIsOwner":
 		if e.complexity.Club.ViewerIsOwner == nil {
 			break
@@ -1904,6 +1967,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CreateClubPayload.Validation(childComplexity), true
 
+	case "CreateGameSessionPayload.gameSession":
+		if e.complexity.CreateGameSessionPayload.GameSession == nil {
+			break
+		}
+
+		return e.complexity.CreateGameSessionPayload.GameSession(childComplexity), true
+
 	case "CreatePostPayload.post":
 		if e.complexity.CreatePostPayload.Post == nil {
 			break
@@ -2150,6 +2220,48 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Entity.FindTopicByID(childComplexity, args["id"].(relay.ID)), true
 
+	case "GameSession.gameType":
+		if e.complexity.GameSession.GameType == nil {
+			break
+		}
+
+		return e.complexity.GameSession.GameType(childComplexity), true
+
+	case "GameSession.id":
+		if e.complexity.GameSession.ID == nil {
+			break
+		}
+
+		return e.complexity.GameSession.ID(childComplexity), true
+
+	case "GameSession.isClosed":
+		if e.complexity.GameSession.IsClosed == nil {
+			break
+		}
+
+		return e.complexity.GameSession.IsClosed(childComplexity), true
+
+	case "GameSession.reference":
+		if e.complexity.GameSession.Reference == nil {
+			break
+		}
+
+		return e.complexity.GameSession.Reference(childComplexity), true
+
+	case "GameSession.seed":
+		if e.complexity.GameSession.Seed == nil {
+			break
+		}
+
+		return e.complexity.GameSession.Seed(childComplexity), true
+
+	case "GameSession.viewerIsPlayer":
+		if e.complexity.GameSession.ViewerIsPlayer == nil {
+			break
+		}
+
+		return e.complexity.GameSession.ViewerIsPlayer(childComplexity), true
+
 	case "JoinClubPayload.clubMember":
 		if e.complexity.JoinClubPayload.ClubMember == nil {
 			break
@@ -2280,6 +2392,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateClub(childComplexity, args["input"].(types.CreateClubInput)), true
+
+	case "Mutation.createGameSession":
+		if e.complexity.Mutation.CreateGameSession == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createGameSession_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateGameSession(childComplexity, args["input"].(types.CreateGameSessionInput)), true
 
 	case "Mutation.createPost":
 		if e.complexity.Mutation.CreatePost == nil {
@@ -2461,6 +2585,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.RemovePostContent(childComplexity, args["input"].(types.RemovePostContentInput)), true
 
+	case "Mutation.spinRoulette":
+		if e.complexity.Mutation.SpinRoulette == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_spinRoulette_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.SpinRoulette(childComplexity, args["input"].(types.SpinRouletteInput)), true
+
 	case "Mutation.submitPost":
 		if e.complexity.Mutation.SubmitPost == nil {
 			break
@@ -2496,6 +2632,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.TerminateClub(childComplexity, args["input"].(types.TerminateClubInput)), true
+
+	case "Mutation.transferClubOwnership":
+		if e.complexity.Mutation.TransferClubOwnership == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_transferClubOwnership_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.TransferClubOwnership(childComplexity, args["input"].(types.TransferClubOwnershipInput)), true
 
 	case "Mutation.unArchivePost":
 		if e.complexity.Mutation.UnArchivePost == nil {
@@ -3232,6 +3380,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.DiscoverClubs(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
 
+	case "Query.gameSessionStatus":
+		if e.complexity.Query.GameSessionStatus == nil {
+			break
+		}
+
+		args, err := ec.field_Query_gameSessionStatus_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GameSessionStatus(childComplexity, args["reference"].(string)), true
+
 	case "Query.post":
 		if e.complexity.Query.Post == nil {
 			break
@@ -3267,18 +3427,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.PostsFeed(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
-
-	case "Query.postsGame":
-		if e.complexity.Query.PostsGame == nil {
-			break
-		}
-
-		args, err := ec.field_Query_postsGame_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.PostsGame(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slug"].(string), args["seed"].(string)), true
 
 	case "Query.search":
 		if e.complexity.Query.Search == nil {
@@ -3485,6 +3633,76 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ResourceUrl.URL(childComplexity), true
 
+	case "RouletteGameState.diceOne":
+		if e.complexity.RouletteGameState.DiceOne == nil {
+			break
+		}
+
+		return e.complexity.RouletteGameState.DiceOne(childComplexity), true
+
+	case "RouletteGameState.diceThree":
+		if e.complexity.RouletteGameState.DiceThree == nil {
+			break
+		}
+
+		return e.complexity.RouletteGameState.DiceThree(childComplexity), true
+
+	case "RouletteGameState.diceTwo":
+		if e.complexity.RouletteGameState.DiceTwo == nil {
+			break
+		}
+
+		return e.complexity.RouletteGameState.DiceTwo(childComplexity), true
+
+	case "RouletteGameState.id":
+		if e.complexity.RouletteGameState.ID == nil {
+			break
+		}
+
+		return e.complexity.RouletteGameState.ID(childComplexity), true
+
+	case "RouletteGameState.post":
+		if e.complexity.RouletteGameState.Post == nil {
+			break
+		}
+
+		return e.complexity.RouletteGameState.Post(childComplexity), true
+
+	case "RouletteStatus.gameSession":
+		if e.complexity.RouletteStatus.GameSession == nil {
+			break
+		}
+
+		return e.complexity.RouletteStatus.GameSession(childComplexity), true
+
+	case "RouletteStatus.gameState":
+		if e.complexity.RouletteStatus.GameState == nil {
+			break
+		}
+
+		return e.complexity.RouletteStatus.GameState(childComplexity), true
+
+	case "RouletteStatus.score":
+		if e.complexity.RouletteStatus.Score == nil {
+			break
+		}
+
+		return e.complexity.RouletteStatus.Score(childComplexity), true
+
+	case "RouletteStatus.totalDoubles":
+		if e.complexity.RouletteStatus.TotalDoubles == nil {
+			break
+		}
+
+		return e.complexity.RouletteStatus.TotalDoubles(childComplexity), true
+
+	case "RouletteStatus.totalRolls":
+		if e.complexity.RouletteStatus.TotalRolls == nil {
+			break
+		}
+
+		return e.complexity.RouletteStatus.TotalRolls(childComplexity), true
+
 	case "SearchConnection.edges":
 		if e.complexity.SearchConnection.Edges == nil {
 			break
@@ -3633,6 +3851,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SeriesEdge.Node(childComplexity), true
 
+	case "SpinRoulettePayload.rouletteGameState":
+		if e.complexity.SpinRoulettePayload.RouletteGameState == nil {
+			break
+		}
+
+		return e.complexity.SpinRoulettePayload.RouletteGameState(childComplexity), true
+
 	case "SubmitPostPayload.post":
 		if e.complexity.SubmitPostPayload.Post == nil {
 			break
@@ -3766,6 +3991,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.TopicEdge.Node(childComplexity), true
+
+	case "TransferClubOwnershipPayload.club":
+		if e.complexity.TransferClubOwnershipPayload.Club == nil {
+			break
+		}
+
+		return e.complexity.TransferClubOwnershipPayload.Club(childComplexity), true
 
 	case "Translation.language":
 		if e.complexity.Translation.Language == nil {
@@ -4028,6 +4260,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputCreateCategoryInput,
 		ec.unmarshalInputCreateCharacterInput,
 		ec.unmarshalInputCreateClubInput,
+		ec.unmarshalInputCreateGameSessionInput,
 		ec.unmarshalInputCreatePostInput,
 		ec.unmarshalInputCreateSeriesInput,
 		ec.unmarshalInputCreateTopicInput,
@@ -4043,9 +4276,11 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputRemoveCategoryAlternativeTitleInput,
 		ec.unmarshalInputRemoveClubSlugAliasInput,
 		ec.unmarshalInputRemovePostContentInput,
+		ec.unmarshalInputSpinRouletteInput,
 		ec.unmarshalInputSubmitPostInput,
 		ec.unmarshalInputSuspendClubInput,
 		ec.unmarshalInputTerminateClubInput,
+		ec.unmarshalInputTransferClubOwnershipInput,
 		ec.unmarshalInputUnArchivePostInput,
 		ec.unmarshalInputUnSuspendClubInput,
 		ec.unmarshalInputUnTerminateClubInput,
@@ -4915,6 +5150,16 @@ extend type Mutation {
   """
   slugAliasesLimit: Int!
 
+  """
+  The total number of posts for this club.
+  """
+  totalPosts: Int!
+
+  """
+  The total number of likes for this club.
+  """
+  totalLikes: Int!
+
   """An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug."""
   slugAliases: [ClubSlugAlias!]!
 
@@ -5372,6 +5617,15 @@ input DisableClubSupporterOnlyPostsInput {
   clubId: ID!
 }
 
+"""Transfer club ownership input."""
+input TransferClubOwnershipInput {
+  """The club to transfer ownership for."""
+  clubId: ID!
+
+  """The new account that should be the owner of the club."""
+  accountId: ID!
+}
+
 """Disable club supporter-only posts payload."""
 type DisableClubSupporterOnlyPostsPayload {
   """The new club after supporter-only posts are disabled."""
@@ -5423,6 +5677,12 @@ type SuspendClubPayload {
 """Terminate club payload."""
 type TerminateClubPayload {
   """The new club after it's terminated."""
+  club: Club
+}
+
+"""Transfer club ownership."""
+type TransferClubOwnershipPayload {
+  """The new club after ownership has been transferred."""
   club: Club
 }
 
@@ -5543,6 +5803,13 @@ extend type Mutation {
   Staff+ only.
   """
   updateClubCharactersLimit(input: UpdateClubCharactersLimitInput!): UpdateClubCharactersLimitPayload
+
+  """
+  Transfer club ownership from one account to another.
+
+  Staff+ only.
+  """
+  transferClubOwnership(input: TransferClubOwnershipInput!): TransferClubOwnershipPayload
 }
 
 extend type Query {
@@ -5800,6 +6067,127 @@ extend type Mutation {
   Update the date of birth for the curation profile
   """
   updateCurationProfileDateOfBirth(input: UpdateCurationProfileDateOfBirthInput!): UpdateCurationProfileDateOfBirthPayload
+}
+`, BuiltIn: false},
+	{Name: "../../../schema/games/schema.graphql", Input: `type GameSession {
+  """An ID pointing to this game session."""
+  id: ID!
+
+  """An ID that can be used to uniquely-identify this game session."""
+  reference: String!
+
+  """Whether or not this game session is closed. A closed game session cannot be played anymore."""
+  isClosed: Boolean!
+
+  """Whether or not the current viewer is the player of the game. Only players can "play" the game."""
+  viewerIsPlayer: Boolean!
+
+  """The type of game this session belongs to."""
+  gameType: GameType!
+
+  """The seed used for this session."""
+  seed: String!
+}
+
+"""The types of games available."""
+enum GameType {
+  ROULETTE
+}
+
+"""The status of the roulette game."""
+type RouletteStatus {
+  """The game session that this roulette belongs to."""
+  gameSession: GameSession!
+
+  """The current state of the roulette game. If no spins happened yet, this is nil. Should be used to resume the current roulette session."""
+  gameState: RouletteGameState
+
+  """How many rolls occurred. Note that this is 0 if the game session is not closed."""
+  totalRolls: Int!
+
+  """How many doubles occurred. Note that this is 0 if the game session is not closed."""
+  totalDoubles: Int!
+
+  """The total score. Note that this is 0 if the game session is not closed."""
+  score: Int!
+}
+
+"""A roulette game state."""
+type RouletteGameState {
+  """An ID used to uniquely identify this game state."""
+  id: ID!
+
+  """The first dice that was created."""
+  diceOne: Int!
+
+  """The second dice that was created."""
+  diceTwo: Int!
+
+  """The third dice that was created."""
+  diceThree: Int!
+
+  """The post that was selected."""
+  post: Post! @goField(forceResolver: true)
+}
+
+"""A union representing the status of various games."""
+union GameSessionStatus = RouletteStatus
+
+"""Create a new game session."""
+input CreateGameSessionInput {
+  """
+  The game type to create the session for.
+  """
+  gameType: GameType!
+
+  """
+  Optionally pass a seed. If a seed is not passed in, one will be automatically generated.
+
+  Validation: only alphanumeric characters, no spaces, and max 25 characters.
+  """
+  seed: String
+}
+
+"""Payload for a new game session"""
+type CreateGameSessionPayload {
+  """The game session after creation."""
+  gameSession: GameSession
+}
+
+"""Spin roulette."""
+input SpinRouletteInput {
+  """The game session ID to use for the spin."""
+  gameSessionId: ID!
+}
+
+"""Payload for spinning roulette."""
+type SpinRoulettePayload {
+  """The new roulette spin game state"""
+  rouletteGameState: RouletteGameState
+}
+
+extend type Mutation {
+  """
+  Create a new game session.
+  """
+  createGameSession(input: CreateGameSessionInput!): CreateGameSessionPayload
+
+  """
+  Spin the roulette. Cannot spin if the game session is closed.
+  """
+  spinRoulette(input: SpinRouletteInput!): SpinRoulettePayload
+}
+
+extend type Query {
+  """
+  Get the status of a current game session using the reference of a game session.
+
+  Returns nil if the game session does not exist.
+  """
+  gameSessionStatus(
+    """Search game session status by reference."""
+    reference: String!
+  ): GameSessionStatus
 }
 `, BuiltIn: false},
 	{Name: "../../../schema/like/schema.graphql", Input: `type PostLike implements Node @key(fields: "id") {
@@ -6175,6 +6563,9 @@ enum PostsSort {
 
   """Posts by top likes"""
   TOP
+
+  """Posts by algorithm sort"""
+  ALGORITHM
 }
 
 union Search = Category | Character | Series | Club
@@ -6314,27 +6705,6 @@ extend type Mutation {
 }
 
 extend type Query {
-  """Get random posts."""
-  postsGame(
-    """Returns the elements in the list that come after the specified cursor."""
-    after: String
-
-    """Returns the elements in the list that come before the specified cursor."""
-    before: String
-
-    """Returns the first _n_ elements from the list."""
-    first: Int
-
-    """Returns the last _n_ elements from the list."""
-    last: Int
-
-    """The slug of the game to use."""
-    slug: String!
-
-    """The seed to use for the randomizer."""
-    seed: String!
-  ): PostConnection!
-
   """Perform a search across multiple types."""
   search(
     """Returns the elements in the list that come after the specified cursor."""
@@ -8351,6 +8721,21 @@ func (ec *executionContext) field_Mutation_createClub_args(ctx context.Context, 
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_createGameSession_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.CreateGameSessionInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCreateGameSessionInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateGameSessionInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_createPost_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -8576,6 +8961,21 @@ func (ec *executionContext) field_Mutation_removePostContent_args(ctx context.Co
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_spinRoulette_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.SpinRouletteInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNSpinRouletteInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSpinRouletteInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_submitPost_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -8613,6 +9013,21 @@ func (ec *executionContext) field_Mutation_terminateClub_args(ctx context.Contex
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNTerminateClubInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTerminateClubInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_transferClubOwnership_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.TransferClubOwnershipInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNTransferClubOwnershipInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTransferClubOwnershipInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -9614,6 +10029,21 @@ func (ec *executionContext) field_Query_discoverClubs_args(ctx context.Context, 
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_gameSessionStatus_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["reference"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reference"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["reference"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Query_post_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -9668,66 +10098,6 @@ func (ec *executionContext) field_Query_postsFeed_args(ctx context.Context, rawA
 		}
 	}
 	args["last"] = arg3
-	return args, nil
-}
-
-func (ec *executionContext) field_Query_postsGame_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *string
-	if tmp, ok := rawArgs["after"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
-		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["after"] = arg0
-	var arg1 *string
-	if tmp, ok := rawArgs["before"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
-		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["before"] = arg1
-	var arg2 *int
-	if tmp, ok := rawArgs["first"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
-		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["first"] = arg2
-	var arg3 *int
-	if tmp, ok := rawArgs["last"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
-		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["last"] = arg3
-	var arg4 string
-	if tmp, ok := rawArgs["slug"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slug"))
-		arg4, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["slug"] = arg4
-	var arg5 string
-	if tmp, ok := rawArgs["seed"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seed"))
-		arg5, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["seed"] = arg5
 	return args, nil
 }
 
@@ -11020,6 +11390,10 @@ func (ec *executionContext) fieldContext_AddClubSlugAliasPayload_club(ctx contex
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -13777,6 +14151,10 @@ func (ec *executionContext) fieldContext_Character_club(ctx context.Context, fie
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -14269,6 +14647,94 @@ func (ec *executionContext) _Club_slugAliasesLimit(ctx context.Context, field gr
 }
 
 func (ec *executionContext) fieldContext_Club_slugAliasesLimit(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Club",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Club_totalPosts(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Club_totalPosts(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalPosts, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Club_totalPosts(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Club",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Club_totalLikes(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Club_totalLikes(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalLikes, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Club_totalLikes(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Club",
 		Field:      field,
@@ -15552,6 +16018,10 @@ func (ec *executionContext) fieldContext_ClubEdge_node(ctx context.Context, fiel
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -15933,6 +16403,10 @@ func (ec *executionContext) fieldContext_ClubMember_club(ctx context.Context, fi
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -17167,6 +17641,10 @@ func (ec *executionContext) fieldContext_CreateClubPayload_club(ctx context.Cont
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -17252,6 +17730,61 @@ func (ec *executionContext) fieldContext_CreateClubPayload_validation(ctx contex
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type CreateClubValidation does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CreateGameSessionPayload_gameSession(ctx context.Context, field graphql.CollectedField, obj *types.CreateGameSessionPayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CreateGameSessionPayload_gameSession(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.GameSession, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.GameSession)
+	fc.Result = res
+	return ec.marshalOGameSession2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGameSession(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CreateGameSessionPayload_gameSession(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CreateGameSessionPayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_GameSession_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_GameSession_reference(ctx, field)
+			case "isClosed":
+				return ec.fieldContext_GameSession_isClosed(ctx, field)
+			case "viewerIsPlayer":
+				return ec.fieldContext_GameSession_viewerIsPlayer(ctx, field)
+			case "gameType":
+				return ec.fieldContext_GameSession_gameType(ctx, field)
+			case "seed":
+				return ec.fieldContext_GameSession_seed(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type GameSession", field.Name)
 		},
 	}
 	return fc, nil
@@ -18002,6 +18535,10 @@ func (ec *executionContext) fieldContext_DisableClubCharactersPayload_club(ctx c
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -18095,6 +18632,10 @@ func (ec *executionContext) fieldContext_DisableClubSupporterOnlyPostsPayload_cl
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -18188,6 +18729,10 @@ func (ec *executionContext) fieldContext_EnableClubCharactersPayload_club(ctx co
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -18281,6 +18826,10 @@ func (ec *executionContext) fieldContext_EnableClubSupporterOnlyPostsPayload_clu
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -18697,6 +19246,10 @@ func (ec *executionContext) fieldContext_Entity_findClubByID(ctx context.Context
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -19134,6 +19687,270 @@ func (ec *executionContext) fieldContext_Entity_findTopicByID(ctx context.Contex
 	if fc.Args, err = ec.field_Entity_findTopicByID_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GameSession_id(ctx context.Context, field graphql.CollectedField, obj *types.GameSession) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GameSession_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GameSession_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GameSession",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GameSession_reference(ctx context.Context, field graphql.CollectedField, obj *types.GameSession) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GameSession_reference(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Reference, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GameSession_reference(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GameSession",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GameSession_isClosed(ctx context.Context, field graphql.CollectedField, obj *types.GameSession) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GameSession_isClosed(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsClosed, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GameSession_isClosed(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GameSession",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GameSession_viewerIsPlayer(ctx context.Context, field graphql.CollectedField, obj *types.GameSession) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GameSession_viewerIsPlayer(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ViewerIsPlayer, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GameSession_viewerIsPlayer(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GameSession",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GameSession_gameType(ctx context.Context, field graphql.CollectedField, obj *types.GameSession) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GameSession_gameType(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.GameType, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(types.GameType)
+	fc.Result = res
+	return ec.marshalNGameType2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGameType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GameSession_gameType(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GameSession",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type GameType does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GameSession_seed(ctx context.Context, field graphql.CollectedField, obj *types.GameSession) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GameSession_seed(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Seed, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GameSession_seed(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GameSession",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
 	}
 	return fc, nil
 }
@@ -21122,6 +21939,62 @@ func (ec *executionContext) fieldContext_Mutation_updateClubCharactersLimit(ctx 
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_transferClubOwnership(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_transferClubOwnership(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().TransferClubOwnership(rctx, fc.Args["input"].(types.TransferClubOwnershipInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.TransferClubOwnershipPayload)
+	fc.Result = res
+	return ec.marshalOTransferClubOwnershipPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTransferClubOwnershipPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_transferClubOwnership(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "club":
+				return ec.fieldContext_TransferClubOwnershipPayload_club(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type TransferClubOwnershipPayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_transferClubOwnership_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Mutation_updateCurationProfileAudience(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_updateCurationProfileAudience(ctx, field)
 	if err != nil {
@@ -21284,6 +22157,118 @@ func (ec *executionContext) fieldContext_Mutation_updateCurationProfileDateOfBir
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_updateCurationProfileDateOfBirth_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createGameSession(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createGameSession(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateGameSession(rctx, fc.Args["input"].(types.CreateGameSessionInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.CreateGameSessionPayload)
+	fc.Result = res
+	return ec.marshalOCreateGameSessionPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateGameSessionPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createGameSession(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "gameSession":
+				return ec.fieldContext_CreateGameSessionPayload_gameSession(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CreateGameSessionPayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createGameSession_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_spinRoulette(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_spinRoulette(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().SpinRoulette(rctx, fc.Args["input"].(types.SpinRouletteInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.SpinRoulettePayload)
+	fc.Result = res
+	return ec.marshalOSpinRoulettePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSpinRoulettePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_spinRoulette(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "rouletteGameState":
+				return ec.fieldContext_SpinRoulettePayload_rouletteGameState(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SpinRoulettePayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_spinRoulette_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -23043,6 +24028,10 @@ func (ec *executionContext) fieldContext_Post_club(ctx context.Context, field gr
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -24476,6 +25465,10 @@ func (ec *executionContext) fieldContext_PromoteClubSlugAliasToDefaultPayload_cl
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -25106,6 +26099,10 @@ func (ec *executionContext) fieldContext_Query_club(ctx context.Context, field g
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -25166,8 +26163,8 @@ func (ec *executionContext) fieldContext_Query_club(ctx context.Context, field g
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_postsGame(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_postsGame(ctx, field)
+func (ec *executionContext) _Query_gameSessionStatus(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_gameSessionStatus(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -25180,37 +26177,28 @@ func (ec *executionContext) _Query_postsGame(ctx context.Context, field graphql.
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().PostsGame(rctx, fc.Args["after"].(*string), fc.Args["before"].(*string), fc.Args["first"].(*int), fc.Args["last"].(*int), fc.Args["slug"].(string), fc.Args["seed"].(string))
+		return ec.resolvers.Query().GameSessionStatus(rctx, fc.Args["reference"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(*types.PostConnection)
+	res := resTmp.(types.GameSessionStatus)
 	fc.Result = res
-	return ec.marshalNPostConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostConnection(ctx, field.Selections, res)
+	return ec.marshalOGameSessionStatus2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGameSessionStatus(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_postsGame(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_gameSessionStatus(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "edges":
-				return ec.fieldContext_PostConnection_edges(ctx, field)
-			case "pageInfo":
-				return ec.fieldContext_PostConnection_pageInfo(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type PostConnection", field.Name)
+			return nil, errors.New("field of type GameSessionStatus does not have child fields")
 		},
 	}
 	defer func() {
@@ -25220,7 +26208,7 @@ func (ec *executionContext) fieldContext_Query_postsGame(ctx context.Context, fi
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_postsGame_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_gameSessionStatus_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -26113,6 +27101,10 @@ func (ec *executionContext) fieldContext_RemoveClubSlugAliasPayload_club(ctx con
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -26904,6 +27896,505 @@ func (ec *executionContext) fieldContext_ResourceUrl_mimeType(ctx context.Contex
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RouletteGameState_id(ctx context.Context, field graphql.CollectedField, obj *types.RouletteGameState) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RouletteGameState_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RouletteGameState_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RouletteGameState",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RouletteGameState_diceOne(ctx context.Context, field graphql.CollectedField, obj *types.RouletteGameState) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RouletteGameState_diceOne(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DiceOne, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RouletteGameState_diceOne(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RouletteGameState",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RouletteGameState_diceTwo(ctx context.Context, field graphql.CollectedField, obj *types.RouletteGameState) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RouletteGameState_diceTwo(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DiceTwo, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RouletteGameState_diceTwo(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RouletteGameState",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RouletteGameState_diceThree(ctx context.Context, field graphql.CollectedField, obj *types.RouletteGameState) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RouletteGameState_diceThree(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.DiceThree, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RouletteGameState_diceThree(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RouletteGameState",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RouletteGameState_post(ctx context.Context, field graphql.CollectedField, obj *types.RouletteGameState) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RouletteGameState_post(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.RouletteGameState().Post(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.Post)
+	fc.Result = res
+	return ec.marshalNPost2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPost(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RouletteGameState_post(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RouletteGameState",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Post_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Post_reference(ctx, field)
+			case "state":
+				return ec.fieldContext_Post_state(ctx, field)
+			case "supporterOnlyStatus":
+				return ec.fieldContext_Post_supporterOnlyStatus(ctx, field)
+			case "contributor":
+				return ec.fieldContext_Post_contributor(ctx, field)
+			case "club":
+				return ec.fieldContext_Post_club(ctx, field)
+			case "content":
+				return ec.fieldContext_Post_content(ctx, field)
+			case "description":
+				return ec.fieldContext_Post_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Post_descriptionTranslations(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Post_createdAt(ctx, field)
+			case "postedAt":
+				return ec.fieldContext_Post_postedAt(ctx, field)
+			case "suggestedPosts":
+				return ec.fieldContext_Post_suggestedPosts(ctx, field)
+			case "audience":
+				return ec.fieldContext_Post_audience(ctx, field)
+			case "categories":
+				return ec.fieldContext_Post_categories(ctx, field)
+			case "characters":
+				return ec.fieldContext_Post_characters(ctx, field)
+			case "likes":
+				return ec.fieldContext_Post_likes(ctx, field)
+			case "viewerLiked":
+				return ec.fieldContext_Post_viewerLiked(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Post", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RouletteStatus_gameSession(ctx context.Context, field graphql.CollectedField, obj *types.RouletteStatus) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RouletteStatus_gameSession(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.GameSession, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.GameSession)
+	fc.Result = res
+	return ec.marshalNGameSession2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGameSession(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RouletteStatus_gameSession(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RouletteStatus",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_GameSession_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_GameSession_reference(ctx, field)
+			case "isClosed":
+				return ec.fieldContext_GameSession_isClosed(ctx, field)
+			case "viewerIsPlayer":
+				return ec.fieldContext_GameSession_viewerIsPlayer(ctx, field)
+			case "gameType":
+				return ec.fieldContext_GameSession_gameType(ctx, field)
+			case "seed":
+				return ec.fieldContext_GameSession_seed(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type GameSession", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RouletteStatus_gameState(ctx context.Context, field graphql.CollectedField, obj *types.RouletteStatus) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RouletteStatus_gameState(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.GameState, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.RouletteGameState)
+	fc.Result = res
+	return ec.marshalORouletteGameState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐRouletteGameState(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RouletteStatus_gameState(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RouletteStatus",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_RouletteGameState_id(ctx, field)
+			case "diceOne":
+				return ec.fieldContext_RouletteGameState_diceOne(ctx, field)
+			case "diceTwo":
+				return ec.fieldContext_RouletteGameState_diceTwo(ctx, field)
+			case "diceThree":
+				return ec.fieldContext_RouletteGameState_diceThree(ctx, field)
+			case "post":
+				return ec.fieldContext_RouletteGameState_post(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type RouletteGameState", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RouletteStatus_totalRolls(ctx context.Context, field graphql.CollectedField, obj *types.RouletteStatus) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RouletteStatus_totalRolls(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalRolls, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RouletteStatus_totalRolls(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RouletteStatus",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RouletteStatus_totalDoubles(ctx context.Context, field graphql.CollectedField, obj *types.RouletteStatus) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RouletteStatus_totalDoubles(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalDoubles, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RouletteStatus_totalDoubles(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RouletteStatus",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RouletteStatus_score(ctx context.Context, field graphql.CollectedField, obj *types.RouletteStatus) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RouletteStatus_score(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Score, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RouletteStatus_score(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RouletteStatus",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
 		},
 	}
 	return fc, nil
@@ -27898,6 +29389,59 @@ func (ec *executionContext) fieldContext_SeriesEdge_node(ctx context.Context, fi
 	return fc, nil
 }
 
+func (ec *executionContext) _SpinRoulettePayload_rouletteGameState(ctx context.Context, field graphql.CollectedField, obj *types.SpinRoulettePayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SpinRoulettePayload_rouletteGameState(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.RouletteGameState, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.RouletteGameState)
+	fc.Result = res
+	return ec.marshalORouletteGameState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐRouletteGameState(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SpinRoulettePayload_rouletteGameState(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SpinRoulettePayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_RouletteGameState_id(ctx, field)
+			case "diceOne":
+				return ec.fieldContext_RouletteGameState_diceOne(ctx, field)
+			case "diceTwo":
+				return ec.fieldContext_RouletteGameState_diceTwo(ctx, field)
+			case "diceThree":
+				return ec.fieldContext_RouletteGameState_diceThree(ctx, field)
+			case "post":
+				return ec.fieldContext_RouletteGameState_post(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type RouletteGameState", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SubmitPostPayload_post(ctx context.Context, field graphql.CollectedField, obj *types.SubmitPostPayload) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SubmitPostPayload_post(ctx, field)
 	if err != nil {
@@ -28019,6 +29563,10 @@ func (ec *executionContext) fieldContext_SuspendClubPayload_club(ctx context.Con
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -28112,6 +29660,10 @@ func (ec *executionContext) fieldContext_TerminateClubPayload_club(ctx context.C
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -28889,6 +30441,103 @@ func (ec *executionContext) fieldContext_TopicEdge_node(ctx context.Context, fie
 	return fc, nil
 }
 
+func (ec *executionContext) _TransferClubOwnershipPayload_club(ctx context.Context, field graphql.CollectedField, obj *types.TransferClubOwnershipPayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_TransferClubOwnershipPayload_club(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Club, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Club)
+	fc.Result = res
+	return ec.marshalOClub2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_TransferClubOwnershipPayload_club(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "TransferClubOwnershipPayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Club_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Club_reference(ctx, field)
+			case "slug":
+				return ec.fieldContext_Club_slug(ctx, field)
+			case "slugAliasesLimit":
+				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
+			case "slugAliases":
+				return ec.fieldContext_Club_slugAliases(ctx, field)
+			case "thumbnail":
+				return ec.fieldContext_Club_thumbnail(ctx, field)
+			case "banner":
+				return ec.fieldContext_Club_banner(ctx, field)
+			case "name":
+				return ec.fieldContext_Club_name(ctx, field)
+			case "owner":
+				return ec.fieldContext_Club_owner(ctx, field)
+			case "termination":
+				return ec.fieldContext_Club_termination(ctx, field)
+			case "suspension":
+				return ec.fieldContext_Club_suspension(ctx, field)
+			case "suspensionLogs":
+				return ec.fieldContext_Club_suspensionLogs(ctx, field)
+			case "viewerIsOwner":
+				return ec.fieldContext_Club_viewerIsOwner(ctx, field)
+			case "canCreateSupporterOnlyPosts":
+				return ec.fieldContext_Club_canCreateSupporterOnlyPosts(ctx, field)
+			case "canSupport":
+				return ec.fieldContext_Club_canSupport(ctx, field)
+			case "nextSupporterPostTime":
+				return ec.fieldContext_Club_nextSupporterPostTime(ctx, field)
+			case "viewerMember":
+				return ec.fieldContext_Club_viewerMember(ctx, field)
+			case "membersIsSupporterCount":
+				return ec.fieldContext_Club_membersIsSupporterCount(ctx, field)
+			case "membersCount":
+				return ec.fieldContext_Club_membersCount(ctx, field)
+			case "members":
+				return ec.fieldContext_Club_members(ctx, field)
+			case "charactersEnabled":
+				return ec.fieldContext_Club_charactersEnabled(ctx, field)
+			case "charactersLimit":
+				return ec.fieldContext_Club_charactersLimit(ctx, field)
+			case "charactersCount":
+				return ec.fieldContext_Club_charactersCount(ctx, field)
+			case "characters":
+				return ec.fieldContext_Club_characters(ctx, field)
+			case "posts":
+				return ec.fieldContext_Club_posts(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Club", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Translation_language(ctx context.Context, field graphql.CollectedField, obj *graphql1.Translation) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Translation_language(ctx, field)
 	if err != nil {
@@ -29104,6 +30753,10 @@ func (ec *executionContext) fieldContext_UnSuspendClubPayload_club(ctx context.C
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -29197,6 +30850,10 @@ func (ec *executionContext) fieldContext_UnTerminateClubPayload_club(ctx context
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -29926,6 +31583,10 @@ func (ec *executionContext) fieldContext_UpdateClubCharactersLimitPayload_club(c
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -30019,6 +31680,10 @@ func (ec *executionContext) fieldContext_UpdateClubNamePayload_club(ctx context.
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -30112,6 +31777,10 @@ func (ec *executionContext) fieldContext_UpdateClubThumbnailPayload_club(ctx con
 				return ec.fieldContext_Club_slug(ctx, field)
 			case "slugAliasesLimit":
 				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
 			case "thumbnail":
@@ -33335,6 +35004,37 @@ func (ec *executionContext) unmarshalInputCreateClubInput(ctx context.Context, o
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputCreateGameSessionInput(ctx context.Context, obj interface{}) (types.CreateGameSessionInput, error) {
+	var it types.CreateGameSessionInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "gameType":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("gameType"))
+			it.GameType, err = ec.unmarshalNGameType2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGameType(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "seed":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seed"))
+			it.Seed, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputCreatePostInput(ctx context.Context, obj interface{}) (types.CreatePostInput, error) {
 	var it types.CreatePostInput
 	asMap := map[string]interface{}{}
@@ -33752,6 +35452,29 @@ func (ec *executionContext) unmarshalInputRemovePostContentInput(ctx context.Con
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputSpinRouletteInput(ctx context.Context, obj interface{}) (types.SpinRouletteInput, error) {
+	var it types.SpinRouletteInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "gameSessionId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("gameSessionId"))
+			it.GameSessionID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputSubmitPostInput(ctx context.Context, obj interface{}) (types.SubmitPostInput, error) {
 	var it types.SubmitPostInput
 	asMap := map[string]interface{}{}
@@ -33820,6 +35543,37 @@ func (ec *executionContext) unmarshalInputTerminateClubInput(ctx context.Context
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubId"))
 			it.ClubID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputTransferClubOwnershipInput(ctx context.Context, obj interface{}) (types.TransferClubOwnershipInput, error) {
+	var it types.TransferClubOwnershipInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "clubId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubId"))
+			it.ClubID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "accountId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountId"))
+			it.AccountID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -34844,6 +36598,22 @@ func (ec *executionContext) _ClubSuspensionLog(ctx context.Context, sel ast.Sele
 			return graphql.Null
 		}
 		return ec._ClubRemovedSuspensionLog(ctx, sel, obj)
+	default:
+		panic(fmt.Errorf("unexpected type %T", obj))
+	}
+}
+
+func (ec *executionContext) _GameSessionStatus(ctx context.Context, sel ast.SelectionSet, obj types.GameSessionStatus) graphql.Marshaler {
+	switch obj := (obj).(type) {
+	case nil:
+		return graphql.Null
+	case types.RouletteStatus:
+		return ec._RouletteStatus(ctx, sel, &obj)
+	case *types.RouletteStatus:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._RouletteStatus(ctx, sel, obj)
 	default:
 		panic(fmt.Errorf("unexpected type %T", obj))
 	}
@@ -36123,6 +37893,20 @@ func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "totalPosts":
+
+			out.Values[i] = ec._Club_totalPosts(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "totalLikes":
+
+			out.Values[i] = ec._Club_totalLikes(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "slugAliases":
 
 			out.Values[i] = ec._Club_slugAliases(ctx, field, obj)
@@ -36918,6 +38702,31 @@ func (ec *executionContext) _CreateClubPayload(ctx context.Context, sel ast.Sele
 	return out
 }
 
+var createGameSessionPayloadImplementors = []string{"CreateGameSessionPayload"}
+
+func (ec *executionContext) _CreateGameSessionPayload(ctx context.Context, sel ast.SelectionSet, obj *types.CreateGameSessionPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, createGameSessionPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CreateGameSessionPayload")
+		case "gameSession":
+
+			out.Values[i] = ec._CreateGameSessionPayload_gameSession(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var createPostPayloadImplementors = []string{"CreatePostPayload"}
 
 func (ec *executionContext) _CreatePostPayload(ctx context.Context, sel ast.SelectionSet, obj *types.CreatePostPayload) graphql.Marshaler {
@@ -37481,6 +39290,69 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 	return out
 }
 
+var gameSessionImplementors = []string{"GameSession"}
+
+func (ec *executionContext) _GameSession(ctx context.Context, sel ast.SelectionSet, obj *types.GameSession) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, gameSessionImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("GameSession")
+		case "id":
+
+			out.Values[i] = ec._GameSession_id(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "reference":
+
+			out.Values[i] = ec._GameSession_reference(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "isClosed":
+
+			out.Values[i] = ec._GameSession_isClosed(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "viewerIsPlayer":
+
+			out.Values[i] = ec._GameSession_viewerIsPlayer(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "gameType":
+
+			out.Values[i] = ec._GameSession_gameType(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "seed":
+
+			out.Values[i] = ec._GameSession_seed(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var joinClubPayloadImplementors = []string{"JoinClubPayload"}
 
 func (ec *executionContext) _JoinClubPayload(ctx context.Context, sel ast.SelectionSet, obj *types.JoinClubPayload) graphql.Marshaler {
@@ -37799,6 +39671,12 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_updateClubCharactersLimit(ctx, field)
 			})
 
+		case "transferClubOwnership":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_transferClubOwnership(ctx, field)
+			})
+
 		case "updateCurationProfileAudience":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -37815,6 +39693,18 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateCurationProfileDateOfBirth(ctx, field)
+			})
+
+		case "createGameSession":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createGameSession(ctx, field)
+			})
+
+		case "spinRoulette":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_spinRoulette(ctx, field)
 			})
 
 		case "likePost":
@@ -38642,7 +40532,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "postsGame":
+		case "gameSessionStatus":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -38651,10 +40541,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_postsGame(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
+				res = ec._Query_gameSessionStatus(ctx, field)
 				return res
 			}
 
@@ -39146,6 +41033,128 @@ func (ec *executionContext) _ResourceUrl(ctx context.Context, sel ast.SelectionS
 	return out
 }
 
+var rouletteGameStateImplementors = []string{"RouletteGameState"}
+
+func (ec *executionContext) _RouletteGameState(ctx context.Context, sel ast.SelectionSet, obj *types.RouletteGameState) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, rouletteGameStateImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("RouletteGameState")
+		case "id":
+
+			out.Values[i] = ec._RouletteGameState_id(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "diceOne":
+
+			out.Values[i] = ec._RouletteGameState_diceOne(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "diceTwo":
+
+			out.Values[i] = ec._RouletteGameState_diceTwo(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "diceThree":
+
+			out.Values[i] = ec._RouletteGameState_diceThree(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "post":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._RouletteGameState_post(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var rouletteStatusImplementors = []string{"RouletteStatus", "GameSessionStatus"}
+
+func (ec *executionContext) _RouletteStatus(ctx context.Context, sel ast.SelectionSet, obj *types.RouletteStatus) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, rouletteStatusImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("RouletteStatus")
+		case "gameSession":
+
+			out.Values[i] = ec._RouletteStatus_gameSession(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "gameState":
+
+			out.Values[i] = ec._RouletteStatus_gameState(ctx, field, obj)
+
+		case "totalRolls":
+
+			out.Values[i] = ec._RouletteStatus_totalRolls(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "totalDoubles":
+
+			out.Values[i] = ec._RouletteStatus_totalDoubles(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "score":
+
+			out.Values[i] = ec._RouletteStatus_score(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var searchConnectionImplementors = []string{"SearchConnection"}
 
 func (ec *executionContext) _SearchConnection(ctx context.Context, sel ast.SelectionSet, obj *types.SearchConnection) graphql.Marshaler {
@@ -39406,6 +41415,31 @@ func (ec *executionContext) _SeriesEdge(ctx context.Context, sel ast.SelectionSe
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var spinRoulettePayloadImplementors = []string{"SpinRoulettePayload"}
+
+func (ec *executionContext) _SpinRoulettePayload(ctx context.Context, sel ast.SelectionSet, obj *types.SpinRoulettePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, spinRoulettePayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SpinRoulettePayload")
+		case "rouletteGameState":
+
+			out.Values[i] = ec._SpinRoulettePayload_rouletteGameState(ctx, field, obj)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -39678,6 +41712,31 @@ func (ec *executionContext) _TopicEdge(ctx context.Context, sel ast.SelectionSet
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var transferClubOwnershipPayloadImplementors = []string{"TransferClubOwnershipPayload"}
+
+func (ec *executionContext) _TransferClubOwnershipPayload(ctx context.Context, sel ast.SelectionSet, obj *types.TransferClubOwnershipPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, transferClubOwnershipPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("TransferClubOwnershipPayload")
+		case "club":
+
+			out.Values[i] = ec._TransferClubOwnershipPayload_club(ctx, field, obj)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -41705,6 +43764,11 @@ func (ec *executionContext) unmarshalNCreateClubInput2overdollᚋapplicationsᚋ
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNCreateGameSessionInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateGameSessionInput(ctx context.Context, v interface{}) (types.CreateGameSessionInput, error) {
+	res, err := ec.unmarshalInputCreateGameSessionInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNCreatePostInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreatePostInput(ctx context.Context, v interface{}) (types.CreatePostInput, error) {
 	res, err := ec.unmarshalInputCreatePostInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -41767,6 +43831,26 @@ func (ec *executionContext) unmarshalNEnableClubCharactersInput2overdollᚋappli
 func (ec *executionContext) unmarshalNEnableClubSupporterOnlyPostsInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐEnableClubSupporterOnlyPostsInput(ctx context.Context, v interface{}) (types.EnableClubSupporterOnlyPostsInput, error) {
 	res, err := ec.unmarshalInputEnableClubSupporterOnlyPostsInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNGameSession2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGameSession(ctx context.Context, sel ast.SelectionSet, v *types.GameSession) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._GameSession(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNGameType2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGameType(ctx context.Context, v interface{}) (types.GameType, error) {
+	var res types.GameType
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNGameType2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGameType(ctx context.Context, sel ast.SelectionSet, v types.GameType) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx context.Context, v interface{}) (relay.ID, error) {
@@ -42295,6 +44379,11 @@ func (ec *executionContext) marshalNSeriesSort2overdollᚋapplicationsᚋsting�
 	return v
 }
 
+func (ec *executionContext) unmarshalNSpinRouletteInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSpinRouletteInput(ctx context.Context, v interface{}) (types.SpinRouletteInput, error) {
+	res, err := ec.unmarshalInputSpinRouletteInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalString(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -42462,6 +44551,11 @@ func (ec *executionContext) marshalNTopicEdge2ᚖoverdollᚋapplicationsᚋsting
 		return graphql.Null
 	}
 	return ec._TopicEdge(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNTransferClubOwnershipInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTransferClubOwnershipInput(ctx context.Context, v interface{}) (types.TransferClubOwnershipInput, error) {
+	res, err := ec.unmarshalInputTransferClubOwnershipInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNTranslation2ᚕᚖoverdollᚋlibrariesᚋgraphqlᚐTranslationᚄ(ctx context.Context, sel ast.SelectionSet, v []*graphql1.Translation) graphql.Marshaler {
@@ -43280,6 +45374,13 @@ func (ec *executionContext) marshalOCreateClubValidation2ᚖoverdollᚋapplicati
 	return v
 }
 
+func (ec *executionContext) marshalOCreateGameSessionPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateGameSessionPayload(ctx context.Context, sel ast.SelectionSet, v *types.CreateGameSessionPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._CreateGameSessionPayload(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOCreatePostPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreatePostPayload(ctx context.Context, sel ast.SelectionSet, v *types.CreatePostPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -43373,6 +45474,20 @@ func (ec *executionContext) marshalOEnableClubSupporterOnlyPostsPayload2ᚖoverd
 		return graphql.Null
 	}
 	return ec._EnableClubSupporterOnlyPostsPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOGameSession2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGameSession(ctx context.Context, sel ast.SelectionSet, v *types.GameSession) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._GameSession(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOGameSessionStatus2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐGameSessionStatus(ctx context.Context, sel ast.SelectionSet, v types.GameSessionStatus) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._GameSessionStatus(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOID2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx context.Context, v interface{}) (*relay.ID, error) {
@@ -43507,11 +45622,25 @@ func (ec *executionContext) marshalOResourceUrl2ᚖoverdollᚋlibrariesᚋgraphq
 	return ec._ResourceUrl(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalORouletteGameState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐRouletteGameState(ctx context.Context, sel ast.SelectionSet, v *types.RouletteGameState) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._RouletteGameState(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOSeries2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeries(ctx context.Context, sel ast.SelectionSet, v *types.Series) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Series(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOSpinRoulettePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSpinRoulettePayload(ctx context.Context, sel ast.SelectionSet, v *types.SpinRoulettePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SpinRoulettePayload(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {
@@ -43687,6 +45816,13 @@ func (ec *executionContext) marshalOTopic2ᚖoverdollᚋapplicationsᚋstingᚋi
 		return graphql.Null
 	}
 	return ec._Topic(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOTransferClubOwnershipPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTransferClubOwnershipPayload(ctx context.Context, sel ast.SelectionSet, v *types.TransferClubOwnershipPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._TransferClubOwnershipPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOUnArchivePostPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUnArchivePostPayload(ctx context.Context, sel ast.SelectionSet, v *types.UnArchivePostPayload) graphql.Marshaler {

@@ -12,6 +12,7 @@ import (
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/resource/proto"
 	"overdoll/libraries/uuid"
+	"strings"
 	"testing"
 )
 
@@ -101,7 +102,7 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 	fake := TestAudience{}
 	err := faker.FakeData(&fake)
 	require.NoError(t, err, "no error creating fake audience")
-	currentAudienceSlug := fake.Slug
+	currentAudienceSlug := strings.ToLower(fake.Slug)
 
 	var createAudience CreateAudience
 

@@ -534,10 +534,6 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 
 func (r *Resource) processImage(mimeType string, fileName string, file *os.File, config *Config) ([]*Move, error) {
 
-	c, _ := getSocketClient(r.itemId, r.id)
-	c.Write([]byte("0"))
-	defer c.Close()
-
 	var src image.Image
 	var err error
 

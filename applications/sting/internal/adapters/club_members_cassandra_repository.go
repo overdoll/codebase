@@ -102,6 +102,49 @@ func (r ClubCassandraElasticsearchRepository) addDeleteInitialClubMemberToBatch(
 	return nil
 }
 
+func (r ClubCassandraElasticsearchRepository) removeInitialClubMemberToBatch(ctx context.Context, batch *gocql.Batch, clubId, accountId string) error {
+
+	clubMemb := clubMember{
+		ClubId:          clubId,
+		MemberAccountId: accountId,
+	}
+
+	stmt, names := clubMembersTable.Delete()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		clubMemb,
+	)
+
+	// insert into account's club list
+	stmt, names = clubMembersByAccountTable.Delete()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		clubMembersByAccount{
+			ClubId:          clubId,
+			MemberAccountId: accountId,
+		},
+	)
+
+	// insert into account's supported clubs
+	stmt, names = accountSupportedClubsTable.Delete()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		accountSupportedClubs{
+			ClubId:    clubId,
+			AccountId: accountId,
+		},
+	)
+
+	if err := r.deleteClubMemberIndexById(ctx, clubId, accountId); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r ClubCassandraElasticsearchRepository) addInitialClubMemberToBatch(ctx context.Context, batch *gocql.Batch, clubId, accountId string, timestamp time.Time) error {
 
 	clubMemb := clubMember{

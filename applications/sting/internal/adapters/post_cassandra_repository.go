@@ -3,11 +3,13 @@ package adapters
 import (
 	"context"
 	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/go-redis/redis/v8"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/localization"
+	"overdoll/libraries/passport"
 	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"time"
@@ -105,10 +107,11 @@ type PostsCassandraElasticsearchRepository struct {
 	client             *elastic.Client
 	resourceSerializer *resource.Serializer
 	aws                *session.Session
+	cache              *redis.Client
 }
 
-func NewPostsCassandraRepository(session gocqlx.Session, client *elastic.Client, resourcesSerializer *resource.Serializer, aws *session.Session) PostsCassandraElasticsearchRepository {
-	return PostsCassandraElasticsearchRepository{session: session, client: client, resourceSerializer: resourcesSerializer, aws: aws}
+func NewPostsCassandraRepository(session gocqlx.Session, client *elastic.Client, resourcesSerializer *resource.Serializer, aws *session.Session, cache *redis.Client) PostsCassandraElasticsearchRepository {
+	return PostsCassandraElasticsearchRepository{session: session, client: client, resourceSerializer: resourcesSerializer, aws: aws, cache: cache}
 }
 
 func marshalPostToDatabase(pending *post.Post) (*posts, error) {
@@ -165,6 +168,67 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 		PostedAt:                        pending.PostedAt(),
 		UpdatedAt:                       pending.UpdatedAt(),
 	}, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) GetPostWithRandomSeed(ctx context.Context, passport *passport.Passport, seed int64, audienceIds []string) (*post.Post, error) {
+
+	builder := r.client.Search().
+		Index(PostReaderIndex)
+
+	builder.Size(1)
+
+	terminatedClubIds, err := r.getTerminatedClubIds(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	query := elastic.NewBoolQuery()
+
+	var filterQueries []elastic.Query
+
+	filterQueries = append(filterQueries, elastic.NewTermQuery("state", post.Published.String()))
+
+	filterQueries = append(filterQueries, elastic.NewBoolQuery().
+		MustNot(elastic.NewTermsQueryFromStrings("club_id", terminatedClubIds...)),
+	)
+
+	if len(audienceIds) > 0 {
+		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("audience_id", audienceIds...))
+	}
+
+	if filterQueries != nil {
+		query.Filter(filterQueries...)
+	}
+
+	query.Must(elastic.NewFunctionScoreQuery().AddScoreFunc(elastic.NewRandomFunction().Seed(seed)))
+
+	builder.Query(query)
+
+	response, err := builder.Pretty(true).Do(ctx)
+
+	if err != nil {
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed to get random post")
+	}
+
+	if len(response.Hits.Hits) == 0 {
+		return nil, errors.New("could not find a random post")
+	}
+
+	var posts []*post.Post
+
+	for _, hit := range response.Hits.Hits {
+
+		createdPost, err := r.unmarshalPostDocument(ctx, hit.Source, hit.Sort)
+
+		if err != nil {
+			return nil, err
+		}
+
+		posts = append(posts, createdPost)
+	}
+
+	return posts[0], nil
 }
 
 func (r *PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Context, postPending posts) (*post.Post, error) {
@@ -566,6 +630,93 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperator(ctx con
 		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(pst).
+		ExecRelease(); err != nil {
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update post")
+	}
+
+	if err := r.indexPost(ctx, currentPost); err != nil {
+		return nil, err
+	}
+
+	return currentPost, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperatorResource(ctx context.Context, id string, resources []*resource.Resource) (*post.Post, error) {
+
+	currentPost, err := r.GetPostByIdOperator(ctx, id)
+
+	if err != nil {
+
+		// not found errors - send back a resource not present, so we gracefully handle it
+		if apperror.IsNotFoundError(err) {
+			return nil, resource.ErrResourceNotPresent
+		}
+
+		return nil, err
+	}
+
+	foundCount := 0
+
+	for _, content := range currentPost.Content() {
+		for _, res := range resources {
+
+			if content.ResourceHidden() != nil {
+				if res.ID() == content.ResourceHidden().ID() {
+					foundCount += 1
+					break
+				}
+			}
+
+			if res.ID() == content.Resource().ID() {
+				foundCount += 1
+				break
+			}
+		}
+	}
+
+	// make sure we updated all resources for this post otherwise we send a not found error
+	if foundCount != len(resources) {
+		return nil, resource.ErrResourceNotPresent
+	}
+
+	pst, err := marshalPostToDatabase(currentPost)
+
+	if err != nil {
+		return nil, err
+	}
+
+	marshalledResources := make(map[string]string)
+
+	for _, r := range resources {
+		marshalled, err := resource.MarshalResourceToDatabase(r)
+		if err != nil {
+			return nil, err
+		}
+		marshalledResources[r.ID()] = marshalled
+	}
+
+	var mapped []string
+
+	for key := range marshalledResources {
+		mapped = append(mapped, "content_resources['"+key+"']")
+	}
+
+	finalStruct := make(map[string]interface{})
+
+	for key, val := range marshalledResources {
+		finalStruct["content_resources['"+key+"']"] = val
+	}
+
+	finalStruct["updated_at"] = pst.UpdatedAt
+	finalStruct["id"] = pst.Id
+
+	// update strategically so we don't override each-other
+	if err := r.session.
+		Query(postTable.Update(append(mapped, "updated_at")...)).
+		WithContext(ctx).
+		Idempotent(true).
+		Consistency(gocql.LocalQuorum).
+		BindMap(finalStruct).
 		ExecRelease(); err != nil {
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update post")
 	}

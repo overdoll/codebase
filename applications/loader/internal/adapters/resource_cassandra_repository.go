@@ -72,6 +72,23 @@ type resources struct {
 	VideoNoAudio           bool   `db:"video_no_audio"`
 }
 
+var resourcesProgressTable = table.New(table.Metadata{
+	Name: "resource_progress",
+	Columns: []string{
+		"item_id",
+		"resource_id",
+		"progress",
+	},
+	PartKey: []string{"item_id"},
+	SortKey: []string{"resource_id"},
+})
+
+type resourcesProgress struct {
+	ItemId     string  `db:"item_id"`
+	ResourceId string  `db:"resource_id"`
+	Progress   float64 `db:"progress"`
+}
+
 type ResourceCassandraS3Repository struct {
 	session gocqlx.Session
 	aws     *session.Session
@@ -678,6 +695,50 @@ func (r ResourceCassandraS3Repository) UploadProcessedResource(ctx context.Conte
 	}
 
 	return nil
+}
+
+func (r ResourceCassandraS3Repository) UpdateResourceProgress(ctx context.Context, itemId, resourceId string, prog float64) error {
+
+	if err := r.session.
+		Query(resourcesProgressTable.Update("progress")).
+		WithContext(ctx).
+		Idempotent(true).
+		BindStruct(resourcesProgress{ItemId: itemId, ResourceId: resourceId, Progress: prog}).
+		ExecRelease(); err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to update resources progress")
+	}
+
+	return nil
+}
+
+func (r ResourceCassandraS3Repository) GetProgressForResources(ctx context.Context, itemIds, resourceIds []string) ([]*resource.Progress, error) {
+
+	var progresses []*resource.Progress
+
+	for _, itemId := range itemIds {
+
+		var progressItems []*resourcesProgress
+
+		if err := r.session.
+			Query(qb.Select(resourcesProgressTable.Name()).Where(qb.Eq("item_id")).ToCql()).
+			WithContext(ctx).
+			Idempotent(true).
+			Consistency(gocql.One).
+			BindStruct(resourcesProgress{ItemId: itemId}).
+			SelectRelease(&progressItems); err != nil {
+			return nil, errors.Wrap(support.NewGocqlError(err), "failed to get resource progress")
+		}
+
+		for _, progress := range progressItems {
+			for _, resourceId := range resourceIds {
+				if progress.ResourceId == resourceId {
+					progresses = append(progresses, resource.NewProgress(progress.ItemId, progress.ResourceId, progress.Progress))
+				}
+			}
+		}
+	}
+
+	return progresses, nil
 }
 
 func (r ResourceCassandraS3Repository) GetComposer(ctx context.Context) (*tusd.StoreComposer, error) {

@@ -3,7 +3,6 @@ package service_test
 import (
 	"context"
 	"encoding/base64"
-	"fmt"
 	graphql2 "github.com/99designs/gqlgen/graphql"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -50,11 +49,6 @@ func queryResourceProgress(t *testing.T, itemId, resourceId string) types.Resour
 
 const previewRegex = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
 
-func mockDefaultSignal(itemId, id string) {
-	application.TemporalClient.On("SignalWorkflow", mock.Anything, "loader.ProcessResourcesForUpload_"+itemId+"_"+id, "", workflows.ProcessResourcesProgressAppendSignal, mock.Anything).
-		Return(nil)
-}
-
 func TestUploadResourcesAndProcessFailed(t *testing.T) {
 	t.Parallel()
 
@@ -67,9 +61,6 @@ func TestUploadResourcesAndProcessFailed(t *testing.T) {
 
 	imageId := strings.Split(imageFileId, "+")[0]
 	videoId := strings.Split(videoFileId, "+")[0]
-
-	mockDefaultSignal(itemId, imageId)
-	mockDefaultSignal(itemId, videoId)
 
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: imageId, Source: "STING"})
 	workflowExecution2 := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: videoId, Source: "STING"})
@@ -124,26 +115,10 @@ func TestUploadResourcesAndProcessPrivate_and_update_privacy(t *testing.T) {
 	imageId := strings.Split(imageFileId, "+")[0]
 	videoId := strings.Split(videoFileId, "+")[0]
 
-	mockDefaultSignal(itemId, imageId)
-
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: imageId, Source: "STING"})
 	workflowExecution2 := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: videoId, Source: "STING"})
 
 	videoEnv := getWorkflowEnvironment()
-
-	application.TemporalClient.On("SignalWorkflow", mock.Anything, "loader.ProcessResourcesForUpload_"+itemId+"_"+videoId, "", workflows.ProcessResourcesProgressAppendSignal, mock.Anything).
-		Run(
-			func(args mock.Arguments) {
-				videoEnv.SignalWorkflow(workflows.ProcessResourcesProgressAppendSignal, args.Get(4))
-			},
-		).
-		Return(nil)
-
-	application.TemporalClient.On("QueryWorkflow", mock.Anything, "loader.ProcessResourcesForUpload_"+itemId+"_"+videoId, "", workflows.ProcessResourcesProgressQuery).
-		Return(func(ctx context.Context, workflowID string, runID string, queryType string, args ...interface{}) converter.EncodedValue {
-			val, _ := videoEnv.QueryWorkflow(workflows.ProcessResourcesProgressQuery)
-			return val
-		}, nil)
 
 	// start processing of files by calling grpc endpoint
 	res, err := grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{
@@ -284,8 +259,6 @@ func TestUploadResourcesAndApplyWidths(t *testing.T) {
 
 	imageId := strings.Split(imageFileId, "+")[0]
 
-	mockDefaultSignal(itemId, imageId)
-
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, Width: 360, Height: 360, ResourceId: imageId, Source: "STING"})
 
 	// start processing of files by calling grpc endpoint
@@ -344,11 +317,6 @@ func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
 
 	imageId := strings.Split(imageFileId, "+")[0]
 	videoId := strings.Split(videoFileId, "+")[0]
-
-	mockDefaultSignal(itemId, imageId)
-	mockDefaultSignal(itemId, videoId)
-
-	fmt.Println(itemId)
 
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: imageId, Width: 0, Height: 0, Source: "STING"})
 	workflowExecution2 := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: videoId, Width: 0, Height: 0, Source: "STING"})
@@ -500,10 +468,6 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	imageId := strings.Split(imageFileId, "+")[0]
 	videoId := strings.Split(videoFileId, "+")[0]
 	videoId2 := strings.Split(videoFileId2, "+")[0]
-
-	mockDefaultSignal(itemId, imageId)
-	mockDefaultSignal(itemId, videoId)
-	mockDefaultSignal(itemId, videoId2)
 
 	grpcClient := getGrpcClient(t)
 

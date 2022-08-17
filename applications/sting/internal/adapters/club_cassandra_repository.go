@@ -33,6 +33,8 @@ var clubTable = table.New(table.Metadata{
 		"characters_enabled",
 		"characters_limit",
 		"members_count",
+		"total_likes",
+		"total_posts",
 		"members_count_last_update_id",
 		"owner_account_id",
 		"suspended",
@@ -58,6 +60,8 @@ type clubs struct {
 	BannerResource              string            `db:"banner_resource"`
 	CharactersEnabled           bool              `db:"characters_enabled"`
 	CharactersLimit             int               `db:"characters_limit"`
+	TotalLikes                  int               `db:"total_likes"`
+	TotalPosts                  int               `db:"total_posts"`
 	MembersCount                int               `db:"members_count"`
 	MembersCountLastUpdateId    gocql.UUID        `db:"members_count_last_update_id"`
 	OwnerAccountId              string            `db:"owner_account_id"`
@@ -176,6 +180,8 @@ func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
 		MembersCount:                cl.MembersCount(),
 		CharactersLimit:             cl.CharactersLimit(),
 		CharactersEnabled:           cl.CharactersEnabled(),
+		TotalLikes:                  cl.TotalLikes(),
+		TotalPosts:                  cl.TotalPosts(),
 		MembersCountLastUpdateId:    gocql.TimeUUID(),
 		OwnerAccountId:              cl.OwnerAccountId(),
 		Suspended:                   cl.Suspended(),
@@ -223,6 +229,8 @@ func (r ClubCassandraElasticsearchRepository) unmarshalClubFromDatabase(ctx cont
 		b.UpdatedAt,
 		b.CharactersEnabled,
 		b.CharactersLimit,
+		b.TotalLikes,
+		b.TotalPosts,
 	), nil
 }
 
@@ -619,6 +627,14 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubTerminationStatus(ctx co
 	return r.updateClubRequest(ctx, clubId, updateFn, []string{"terminated", "terminated_by_account_id"})
 }
 
+func (r ClubCassandraElasticsearchRepository) UpdateClubTotalLikesCount(ctx context.Context, clubId string, updateFn func(club *club.Club) error) (*club.Club, error) {
+	return r.updateClubRequest(ctx, clubId, updateFn, []string{"total_likes"})
+}
+
+func (r ClubCassandraElasticsearchRepository) UpdateClubTotalPostsCount(ctx context.Context, clubId string, updateFn func(club *club.Club) error) (*club.Club, error) {
+	return r.updateClubRequest(ctx, clubId, updateFn, []string{"total_posts"})
+}
+
 func (r ClubCassandraElasticsearchRepository) UpdateClubSupporterOnlyPostsDisabled(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
 	return r.updateClubRequest(ctx, clubId, updateFn, []string{"supporter_only_posts_disabled", "next_supporter_post_time", "has_created_supporter_only_post"})
 }
@@ -808,6 +824,88 @@ func (r ClubCassandraElasticsearchRepository) DeleteReservedSlugForClub(ctx cont
 
 	// if fails, release unique slug
 	if err := r.deleteUniqueClubSlug(ctx, cla.Id, cla.Slug); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r ClubCassandraElasticsearchRepository) UpdateClubOwner(ctx context.Context, clubId, accountId string) error {
+
+	clb, err := r.getClubById(ctx, clubId)
+
+	if err != nil {
+		return err
+	}
+
+	// save old owner so we can remove them
+	oldOwnerAccountId := clb.OwnerAccountId
+
+	// update to new owner
+	clb.OwnerAccountId = accountId
+
+	// unmarshal, so we can index it
+	unmarshalled, err := r.unmarshalClubFromDatabase(ctx, clb)
+
+	if err != nil {
+		return err
+	}
+
+	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
+
+	// DELETE OLD ACCOUNT
+	stmt, names := accountClubsTable.Delete()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		accountClubs{
+			ClubId:    clubId,
+			AccountId: oldOwnerAccountId,
+		},
+	)
+
+	if err := r.removeInitialClubMemberToBatch(ctx, batch, clubId, oldOwnerAccountId); err != nil {
+		return err
+	}
+
+	// ADD NEW ACCOUNT
+	stmt, names = accountClubsTable.Insert()
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		accountClubs{
+			ClubId:    clubId,
+			AccountId: accountId,
+		},
+	)
+
+	stmt, names = clubTable.Update("owner_account_id")
+	support.BindStructToBatchStatement(
+		batch,
+		stmt, names,
+		clb,
+	)
+
+	if err := r.addInitialClubMemberToBatch(ctx, batch, clubId, accountId, time.Now()); err != nil {
+		return err
+	}
+
+	// execute batch.
+	support.MarkBatchIdempotent(batch)
+	if err := r.session.ExecuteBatch(batch); err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to create club batch")
+	}
+
+	// index club with new owner
+	if err := r.indexClub(ctx, unmarshalled); err != nil {
+		return err
+	}
+
+	// clear digest cache for both old owner and new owner
+	if err := r.clearAccountDigestCache(ctx, oldOwnerAccountId); err != nil {
+		return err
+	}
+	if err := r.clearAccountDigestCache(ctx, accountId); err != nil {
 		return err
 	}
 

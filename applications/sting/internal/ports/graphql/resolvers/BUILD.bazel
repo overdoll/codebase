@@ -12,6 +12,7 @@ go_library(
         "club.go",
         "club_member.go",
         "post.go",
+        "roulette_game_state_resolver.go",
         "series.go",
         "topic.go",
     ],

@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "account_cassandra_repository.go",
         "account_multi_factor_cassandra_repository.go",
+        "account_redis_cassandra_repository.go",
         "carrier_grpc.go",
         "confirm_email_redis_repository.go",
         "event_temporal_repository.go",

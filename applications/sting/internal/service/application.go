@@ -89,22 +89,24 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 
 	clubRepo := adapters.NewClubCassandraElasticsearchRepository(session, esClient, cache, resourceSerializer)
 
-	postRepo := adapters.NewPostsCassandraRepository(session, esClient, resourceSerializer, awsSession)
+	postRepo := adapters.NewPostsCassandraRepository(session, esClient, resourceSerializer, awsSession, cache)
 	personalizationRepo := adapters.NewCurationProfileCassandraRepository(session)
+	gamesRepo := adapters.NewGamesCassandraRepository(session)
 
 	return &app.Application{
 		Commands: app.Commands{
-			UpdateResources:    command.NewUpdateResourcesHandler(postRepo, clubRepo, eventRepo),
-			CreatePost:         command.NewCreatePostHandler(postRepo, clubRepo),
-			PublishPost:        command.NewPublishPostHandler(postRepo, eventRepo),
-			DiscardPost:        command.NewDiscardPostHandler(postRepo, eventRepo),
-			RejectPost:         command.NewRejectPostHandler(postRepo),
-			SubmitPost:         command.NewSubmitPostHandler(postRepo, clubRepo, eventRepo),
-			RemovePost:         command.NewRemovePostHandler(postRepo, eventRepo),
-			DeletePost:         command.NewDeletePostHandler(postRepo, eventRepo),
-			ArchivePost:        command.NewArchivePostHandler(postRepo, eventRepo),
-			UnArchivePost:      command.NewUnArchivePostHandler(postRepo, eventRepo),
-			GenerateClubBanner: command.NewGenerateClubBannerHandler(postRepo, eventRepo),
+			TransferClubOwnership: command.NewTransferClubOwnershipHandler(clubRepo, eventRepo, eva),
+			UpdateResources:       command.NewUpdateResourcesHandler(postRepo, clubRepo, eventRepo),
+			CreatePost:            command.NewCreatePostHandler(postRepo, clubRepo),
+			PublishPost:           command.NewPublishPostHandler(postRepo, eventRepo),
+			DiscardPost:           command.NewDiscardPostHandler(postRepo, eventRepo),
+			RejectPost:            command.NewRejectPostHandler(postRepo),
+			SubmitPost:            command.NewSubmitPostHandler(postRepo, clubRepo, eventRepo),
+			RemovePost:            command.NewRemovePostHandler(postRepo, eventRepo),
+			DeletePost:            command.NewDeletePostHandler(postRepo, eventRepo),
+			ArchivePost:           command.NewArchivePostHandler(postRepo, eventRepo),
+			UnArchivePost:         command.NewUnArchivePostHandler(postRepo, eventRepo),
+			GenerateClubBanner:    command.NewGenerateClubBannerHandler(postRepo, eventRepo),
 
 			GenerateSitemap: command.NewGenerateSitemapHandler(eventRepo),
 
@@ -124,6 +126,9 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 
 			LikePost:     command.NewLikePostHandler(postRepo, eventRepo),
 			UndoLikePost: command.NewUndoLikePostHandler(postRepo, eventRepo),
+
+			UpdateTotalPostsForPostTags: command.NewUpdateTotalPostsForPostTagsHandler(postRepo, eventRepo),
+			UpdateTotalLikesForPostTags: command.NewUpdateTotalLikesForPostTagsHandler(postRepo, eventRepo),
 
 			UpdateCurationProfileAudience:    command.NewUpdateCurationProfileAudience(personalizationRepo),
 			UpdateCurationProfileCategory:    command.NewUpdateCurationProfileCategoryHandler(personalizationRepo),
@@ -179,6 +184,9 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 
 			TerminateClub:   command.NewTerminateClubHandler(clubRepo, eventRepo),
 			UnTerminateClub: command.NewUnTerminateClubHandler(clubRepo, eventRepo),
+
+			SpinRoulette:      command.NewSpinRouletteHandler(gamesRepo, postRepo, personalizationRepo),
+			CreateGameSession: command.NewCreateGameSessionHandler(gamesRepo, postRepo),
 		},
 		Queries: app.Queries{
 			DiscoverClubs: query.NewDiscoverClubsHandler(clubRepo),
@@ -195,7 +203,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			CategoryBySlug:   query.NewCategoryBySlugHandler(postRepo),
 			CategoriesByIds:  query.NewCategoriesByIdsHandler(postRepo),
 
-			SearchPosts:      query.NewSearchPostsHandler(postRepo),
+			SearchPosts:      query.NewSearchPostsHandler(postRepo, personalizationRepo),
 			PostById:         query.NewPostByIdHandler(postRepo),
 			PostByIdOperator: query.NewPostByIdOperatorHandler(postRepo),
 			PostsByIds:       query.NewPostsByIdsHandler(postRepo),
@@ -211,7 +219,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			CurationProfileByAccountId: query.NewPersonalizationProfileByAccountIdHandler(personalizationRepo),
 
 			PostsFeed:             query.NewPostsFeedHandler(personalizationRepo, postRepo),
-			SuggestedPostsForPost: query.NewSuggestedPostsForPostHandler(postRepo),
+			SuggestedPostsForPost: query.NewSuggestedPostsForPostHandler(postRepo, personalizationRepo),
 			ClubMembersPostsFeed:  query.NewClubMembersPostsFeedHandler(postRepo),
 
 			TopicBySlug:  query.NewTopicBySlugHandler(postRepo),
@@ -235,7 +243,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			CanDeleteAccountData:        query.NewCanDeleteAccountDataHandler(clubRepo),
 			HasNonTerminatedClubs:       query.NewHasNonTerminatedClubsHandler(clubRepo),
 			ClubSupporterMembersCount:   query.NewClubSupporterMembersCountHandler(clubRepo),
-			PostsGame:                   query.NewPostsGameHandler(postRepo),
+			GameSessionStatus:           query.NewGameSessionStatusHandler(gamesRepo),
 		},
 		Activities: activities.NewActivitiesHandler(postRepo, clubRepo, personalizationRepo, parley, loader, carrier),
 	}

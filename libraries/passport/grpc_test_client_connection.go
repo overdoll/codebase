@@ -7,7 +7,7 @@ import (
 
 func NewGrpcTestClientConnection(ctx context.Context, address string, accountId *string) (*grpc.ClientConn, context.Context, error) {
 
-	pass, err := issueTestingPassport(accountId)
+	pass, err := issueTestingPassport(accountId, nil)
 
 	if err != nil {
 		return nil, nil, err

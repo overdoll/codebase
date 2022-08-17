@@ -6,6 +6,7 @@ go_library(
     embedsrcs = [
         "1614606770_create_resources.cql",
         "1656607697_add_failed.cql",
+        "1660430984_add_resource_progress.cql",
     ],
     importpath = "overdoll/applications/loader/internal/adapters/migrations/cql",
     visibility = ["//applications/loader:__subpackages__"],

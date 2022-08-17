@@ -4,6 +4,7 @@ import (
 	"context"
 	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/applications/sting/internal/domain/curation"
+	"overdoll/applications/sting/internal/domain/games"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
@@ -259,6 +260,39 @@ func MarshalTopicToGraphQL(ctx context.Context, result *post.Topic) *Topic {
 		TitleTranslations:       titleTranslations,
 		DescriptionTranslations: descriptionTranslations,
 		Weight:                  result.Weight(),
+	}
+}
+
+func MarshalRouletteGameStateToGraphQL(ctx context.Context, result *games.RouletteGameState) *RouletteGameState {
+
+	if result == nil {
+		return nil
+	}
+
+	return &RouletteGameState{
+		ID:        relay.NewID(RouletteGameState{}, result.GameSessionId()),
+		DiceOne:   result.DiceOne(),
+		DiceTwo:   result.DiceTwo(),
+		DiceThree: result.DiceThree(),
+		Post:      &Post{ID: relay.NewID(Post{}, result.SelectedPostId())},
+	}
+}
+
+func MarshalGameSessionToGraphQL(ctx context.Context, result *games.Session) *GameSession {
+
+	var gameType GameType
+
+	if result.GameType() == games.Roulette {
+		gameType = GameTypeRoulette
+	}
+
+	return &GameSession{
+		ID:             relay.NewID(GameSession{}, result.Id()),
+		Reference:      result.Id(),
+		IsClosed:       result.IsClosed(),
+		ViewerIsPlayer: result.IsPlayer(passport.FromContext(ctx)),
+		Seed:           result.Seed(),
+		GameType:       gameType,
 	}
 }
 
@@ -846,6 +880,8 @@ func MarshalClubToGraphQL(ctx context.Context, result *club.Club) *Club {
 		CharactersLimit:             result.CharactersLimit(),
 		SlugAliasesLimit:            result.SlugAliasLimit(),
 		CharactersEnabled:           result.CharactersEnabled(),
+		TotalPosts:                  result.TotalPosts(),
+		TotalLikes:                  result.TotalLikes(),
 		Name:                        result.Name().TranslateDefault(""),
 		Slug:                        result.Slug(),
 		SlugAliases:                 slugAliases,

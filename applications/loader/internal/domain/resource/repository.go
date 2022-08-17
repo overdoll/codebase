@@ -19,4 +19,7 @@ type Repository interface {
 	UpdateResourcePrivacy(ctx context.Context, resource []*Resource, private bool) error
 	GetResourcesByIds(ctx context.Context, itemIds, resourceIds []string) ([]*Resource, error)
 	GetResourceById(ctx context.Context, itemId string, resourceId string) (*Resource, error)
+
+	GetProgressForResources(ctx context.Context, itemIds, resourceIds []string) ([]*Progress, error)
+	UpdateResourceProgress(ctx context.Context, itemId, resourceId string, prog float64) error
 }

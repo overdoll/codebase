@@ -9,10 +9,11 @@ type Sorting struct {
 }
 
 var (
-	UnknownSort = Sorting{""}
-	NewSort     = Sorting{"NEW"}
-	TopSort     = Sorting{"TOP"}
-	PopularSort = Sorting{"POPULAR"}
+	UnknownSort   = Sorting{""}
+	NewSort       = Sorting{"NEW"}
+	TopSort       = Sorting{"TOP"}
+	PopularSort   = Sorting{"POPULAR"}
+	AlgorithmSort = Sorting{"ALGORITHM"}
 )
 
 func (r Sorting) String() string {
@@ -28,6 +29,8 @@ func SortingFromString(s string) (Sorting, error) {
 		return TopSort, nil
 	case PopularSort.slug:
 		return PopularSort, nil
+	case AlgorithmSort.slug:
+		return AlgorithmSort, nil
 	}
 
 	return UnknownSort, domainerror.NewValidation("unknown sorting type: " + s)

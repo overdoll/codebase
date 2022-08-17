@@ -34,6 +34,7 @@ go_library(
         "//libraries/bootstrap",
         "//libraries/errors",
         "//libraries/sentry_support",
+        "//libraries/support",
         "@com_github_scylladb_gocqlx_v2//:gocqlx",
         "@com_github_scylladb_gocqlx_v2//migrate",
         "@com_github_scylladb_gocqlx_v2//table",

@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"github.com/go-redis/redis/v8"
 	"go.uber.org/zap"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
@@ -108,10 +109,11 @@ type emailByAccount struct {
 
 type AccountCassandraRepository struct {
 	session gocqlx.Session
+	cache   *redis.Client
 }
 
-func NewAccountCassandraRedisRepository(session gocqlx.Session) AccountCassandraRepository {
-	return AccountCassandraRepository{session: session}
+func NewAccountCassandraRedisRepository(session gocqlx.Session, cache *redis.Client) AccountCassandraRepository {
+	return AccountCassandraRepository{session: session, cache: cache}
 }
 
 func marshalUserToDatabase(usr *account.Account) (*accounts, error) {
@@ -164,7 +166,8 @@ func (r AccountCassandraRepository) getAccountById(ctx context.Context, id strin
 }
 
 // GetAccountById - Get user using the ID
-func (r AccountCassandraRepository) GetAccountById(ctx context.Context, id string) (*account.Account, error) {
+
+func (r AccountCassandraRepository) GetRawAccountById(ctx context.Context, id string) (*account.Account, error) {
 
 	accountInstance, err := r.getAccountById(ctx, id)
 
@@ -254,7 +257,7 @@ func (r AccountCassandraRepository) GetAccountByEmail(ctx context.Context, email
 	}
 
 	// Get our user using the accounts AccountId, from the user email instance
-	usr, err := r.GetAccountById(ctx, accEmail.AccountId)
+	usr, err := r.GetRawAccountById(ctx, accEmail.AccountId)
 
 	if err != nil {
 		return nil, err
@@ -456,7 +459,7 @@ func (r AccountCassandraRepository) CreateAccount(ctx context.Context, instance 
 
 func (r AccountCassandraRepository) updateAccount(ctx context.Context, id string, updateFn func(usr *account.Account) error, columns []string) (*account.Account, error) {
 
-	currentUser, err := r.GetAccountById(ctx, id)
+	currentUser, err := r.GetRawAccountById(ctx, id)
 
 	if err != nil {
 		return nil, err
@@ -484,6 +487,10 @@ func (r AccountCassandraRepository) updateAccount(ctx context.Context, id string
 		Idempotent(true).
 		ExecRelease(); err != nil {
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update account")
+	}
+
+	if err := r.clearAccountCache(ctx, id); err != nil {
+		return nil, err
 	}
 
 	return currentUser, nil
@@ -581,6 +588,10 @@ func (r AccountCassandraRepository) DeleteAccountData(ctx context.Context, accou
 		return errors.Wrap(support.NewGocqlError(err), "failed to delete multi factor account data")
 	}
 
+	if err := r.clearAccountCache(ctx, accountId); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -588,7 +599,7 @@ func (r AccountCassandraRepository) DeleteAccountData(ctx context.Context, accou
 // or just change the casings
 func (r AccountCassandraRepository) UpdateAccountUsername(ctx context.Context, requester *principal.Principal, id string, updateFn func(usr *account.Account) error) (*account.Account, error) {
 
-	instance, err := r.GetAccountById(ctx, id)
+	instance, err := r.GetRawAccountById(ctx, id)
 
 	if err != nil {
 		return nil, err
@@ -654,6 +665,10 @@ func (r AccountCassandraRepository) UpdateAccountUsername(ctx context.Context, r
 			return nil, errors.Wrap(support.NewGocqlError(err), "failed to update account username")
 		}
 
+		if err := r.clearAccountCache(ctx, id); err != nil {
+			return nil, err
+		}
+
 		return instance, nil
 
 	}
@@ -685,7 +700,7 @@ func (r AccountCassandraRepository) GetAccountByUsername(ctx context.Context, us
 	}
 
 	// Get our user using the accounts AccountId, from the user email instance
-	usr, err := r.GetAccountById(ctx, accountUsername.AccountId)
+	usr, err := r.GetRawAccountById(ctx, accountUsername.AccountId)
 
 	if err != nil {
 		return nil, err
@@ -793,7 +808,7 @@ func (r AccountCassandraRepository) DeleteAccountEmail(ctx context.Context, requ
 // UpdateAccountMakeEmailPrimary - update the account and make the email primary
 func (r AccountCassandraRepository) UpdateAccountMakeEmailPrimary(ctx context.Context, requester *principal.Principal, accountId string, updateFn func(usr *account.Account, ems []*account.Email) error) (*account.Account, *account.Email, error) {
 
-	acc, err := r.GetAccountById(ctx, accountId)
+	acc, err := r.GetRawAccountById(ctx, accountId)
 
 	if err != nil {
 		return nil, nil, err
@@ -852,6 +867,10 @@ func (r AccountCassandraRepository) UpdateAccountMakeEmailPrimary(ctx context.Co
 	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return nil, nil, errors.Wrap(support.NewGocqlError(err), "failed to make email primary")
+	}
+
+	if err := r.clearAccountCache(ctx, accountId); err != nil {
+		return nil, nil, err
 	}
 
 	return acc, newEmail, nil
