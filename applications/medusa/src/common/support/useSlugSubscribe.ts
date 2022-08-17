@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import urlSlug, { TITLECASE_TRANSFORMER } from 'url-slug'
+import urlSlug, { LOWERCASE_TRANSFORMER } from 'url-slug'
 import { UseFormReturn } from 'react-hook-form'
 
 interface Props extends UseFormReturn<any> {
@@ -21,8 +21,8 @@ function useSlugSubscribe ({
     }) => {
       if (name === from) {
         setValue(to, urlSlug(value[from], {
-          separator: '',
-          transformer: TITLECASE_TRANSFORMER
+          separator: '-',
+          transformer: LOWERCASE_TRANSFORMER
         }))
         if (formState.errors[to] != null) {
           void trigger(to)
