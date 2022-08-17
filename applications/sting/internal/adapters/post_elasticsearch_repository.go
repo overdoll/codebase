@@ -427,7 +427,7 @@ func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.
 		return nil, paging.ErrCursorNotPresent
 	}
 
-	if err := cursor.BuildElasticsearch(builder, "created_at", "id", false); err != nil {
+	if err := cursor.BuildElasticsearch(builder, "_score", "id", false); err != nil {
 		return nil, err
 	}
 
@@ -589,7 +589,7 @@ func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, re
 		return nil, err
 	}
 
-	if err := cursor.BuildElasticsearch(builder, "posted_at", "id", false); err != nil {
+	if err := cursor.BuildElasticsearch(builder, "_score", "id", false); err != nil {
 		return nil, err
 	}
 
@@ -694,7 +694,7 @@ func (r PostsCassandraElasticsearchRepository) SearchPosts(ctx context.Context, 
 		sortingColumn = "likes"
 		sortingAscending = false
 	} else if filter.SortBy() == post.AlgorithmSort {
-		sortingColumn = "created_at"
+		sortingColumn = "_score"
 		sortingAscending = false
 	}
 
