@@ -6,7 +6,7 @@ export default function GenericTagSlug (): Joi.Schema {
   const { i18n } = useLingui()
   return Joi
     .string()
-    .regex(/^[a-zA-Z0-9]*$/)
+    .regex(/^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/)
     .min(1)
     .max(30)
     .required()
