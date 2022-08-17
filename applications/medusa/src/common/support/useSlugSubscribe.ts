@@ -1,10 +1,11 @@
 import { useEffect } from 'react'
-import urlSlug, { LOWERCASE_TRANSFORMER } from 'url-slug'
+import urlSlug, { LOWERCASE_TRANSFORMER, TITLECASE_TRANSFORMER } from 'url-slug'
 import { UseFormReturn } from 'react-hook-form'
 
 interface Props extends UseFormReturn<any> {
   from: string
   to?: string
+  useTitleCase?: boolean
 }
 
 function useSlugSubscribe ({
@@ -13,7 +14,8 @@ function useSlugSubscribe ({
   trigger,
   from,
   formState,
-  to = 'slug'
+  to = 'slug',
+  useTitleCase = false
 }: Props): void {
   useEffect(() => {
     const subscription = watch((value, {
@@ -21,8 +23,8 @@ function useSlugSubscribe ({
     }) => {
       if (name === from) {
         setValue(to, urlSlug(value[from], {
-          separator: '-',
-          transformer: LOWERCASE_TRANSFORMER
+          separator: useTitleCase ? '' : '-',
+          transformer: useTitleCase ? TITLECASE_TRANSFORMER : LOWERCASE_TRANSFORMER
         }))
         if (formState.errors[to] != null) {
           void trigger(to)
