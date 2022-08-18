@@ -53,8 +53,6 @@ export default function ViewClubCharacters ({ query }: Props): JSX.Element {
     query
   )
 
-  console.log(data)
-
   const disabledCharacterCreation = data.charactersCount === data.charactersLimit
 
   return (

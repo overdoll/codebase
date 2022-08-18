@@ -3,7 +3,6 @@ import type { UploadReviewStepFragment$key } from '@//:artifacts/UploadReviewSte
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import { Trans } from '@lingui/macro'
-import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import PostReview from './PostReview/PostReview'
 import { Stack } from '@chakra-ui/react'
 import SuggestPrompt from '../../../../../SuggestPrompt/SuggestPrompt'
@@ -51,9 +50,7 @@ export default function UploadReviewStep ({
           </Trans>
         </PageSectionDescription>
       </PageSectionWrap>
-      <GlobalVideoManagerProvider>
-        <PostReview query={data} />
-      </GlobalVideoManagerProvider>
+      <PostReview query={data} />
       <Stack spacing={2}>
         <SuggestPrompt>
           <Trans>

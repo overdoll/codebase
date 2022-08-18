@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d07a00426b8adb4afba106d9249f49b2>>
- * @relayHash 80c1e5f1edfbe378efb8a7ff55a93037
+ * @generated SignedSource<<c041d68d4e240460793e2f67d583effa>>
+ * @relayHash 300c72e63ead1890859576142086c986
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 80c1e5f1edfbe378efb8a7ff55a93037
+// @relayRequestID 300c72e63ead1890859576142086c986
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -323,6 +323,13 @@ return {
           {
             "alias": null,
             "args": null,
+            "kind": "ScalarField",
+            "name": "membersIsSupporterCount",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "ClubSuspension",
             "kind": "LinkedField",
             "name": "suspension",
@@ -370,7 +377,7 @@ return {
     ]
   },
   "params": {
-    "id": "80c1e5f1edfbe378efb8a7ff55a93037",
+    "id": "300c72e63ead1890859576142086c986",
     "metadata": {},
     "name": "ClubHomeQuery",
     "operationKind": "query",

@@ -20,6 +20,7 @@ import { ReactNode } from 'react'
 import RemovePostContentButton from './PostContentPreviewMenu/RemovePostContentButton/RemovePostContentButton'
 import Button from '@//:modules/form/Button/Button'
 import SupporterPostContentButton from './SupporterPostContentButton/SupporterPostContentButton'
+import ExpandableResourceInfo from './ExpandableResourceInfo/ExpandableResourceInfo'
 
 interface Props {
   query: PostContentPreviewFragment$key
@@ -33,10 +34,10 @@ const Fragment = graphql`
     resource {
       failed
     }
-    ...ResourceInfoFragment
     ...PostContentPreviewMenuFragment
     ...RemovePostContentButtonFragment
     ...SupporterPostContentButtonFragment
+    ...ExpandableResourceInfoFragment
   }
 `
 
@@ -149,8 +150,8 @@ export default function PostContentPreview ({
         </Flex>
       </Flex>
       <Flex p={2} align='center' justify='center' w='38%'>
-        <Flex overflow='hidden' w='100%' h='100%' borderRadius='md'>
-          <ResourceInfo containCover query={data} />
+        <Flex w='100%' h='100%'>
+          <ExpandableResourceInfo query={data} />
         </Flex>
       </Flex>
       <Flex align='center' justify='center' w='38%'>

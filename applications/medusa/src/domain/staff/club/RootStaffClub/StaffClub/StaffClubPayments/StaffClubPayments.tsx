@@ -9,7 +9,7 @@ import { Box, Stack } from '@chakra-ui/react'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import StaffClubPaymentsList from './StaffClubPaymentsList/StaffClubPaymentsList'
 import ClubTransactionMetrics
-  from '../../../../../club/revenue/root/RootClubRevenue/ClubRevenue/ClubTransactionMetrics/ClubTransactionMetrics'
+  from '../../../../../../common/components/ClubTransactionMetrics/ClubTransactionMetrics'
 
 interface Props {
   query: StaffClubPaymentsFragment$key

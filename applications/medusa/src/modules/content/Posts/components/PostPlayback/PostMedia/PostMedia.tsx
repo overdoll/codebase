@@ -4,6 +4,8 @@ import ImageSnippet from '../../../../DataDisplay/ImageSnippet/ImageSnippet'
 import PostVideoMedia from './PostVideoMedia/PostVideoMedia'
 import { ControlledVideoProps } from '../ControlledVideo/ControlledVideo'
 import ObserveContent from '../ObserveContent/ObserveContent'
+import { useContext } from 'react'
+import { GlobalVideoManagerContext } from '../../../support/GlobalVideoManager/GlobalVideoManager'
 
 interface Props extends Pick<ControlledVideoProps, 'controls'> {
   query: PostMediaFragment$key
@@ -26,7 +28,7 @@ export default function PostMedia ({
   const DisplayMedia = (): JSX.Element => {
     switch (data.type) {
       case 'IMAGE':
-        return <ImageSnippet query={data} />
+        return <ImageSnippet containCover cover query={data} />
       case 'VIDEO':
         return (
           <ObserveContent>

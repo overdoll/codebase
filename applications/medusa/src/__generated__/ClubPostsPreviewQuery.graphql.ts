@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7300eb964d90fb1ed7bcc018dfa8cbc8>>
+ * @generated SignedSource<<305c29a4c8b1899bc2da3dc1846616e4>>
  * @relayHash f9fb3b92455022b98788039ce9a3da36
  * @lightSyntaxTransform
  * @nogrep
@@ -13,7 +13,7 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostsSort = "NEW" | "TOP" | "%future added value";
+export type PostsSort = "ALGORITHM" | "NEW" | "TOP" | "%future added value";
 export type SupporterOnlyStatus = "FULL" | "NONE" | "PARTIAL" | "%future added value";
 export type ClubPostsPreviewQuery$variables = {
   slug: string;

@@ -18,6 +18,7 @@ import { useRouter } from 'next/router'
 import { UppyFile } from '@uppy/core'
 import { FileErrorType } from '@//:modules/content/HookedComponents/Upload/types'
 import { PageWrapper } from '@//:modules/content/PageLayout'
+import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 
 interface Props {
   queryRefs: {
@@ -105,17 +106,19 @@ const CreatePost: PageProps<Props> = (props: Props) => {
         </title>
       </Head>
       <PageWrapper>
-        <SequenceProvider {...methods}>
-          <QueryErrorBoundary loadQuery={() => loadQuery({
-            reference: postReference ?? '',
-            slug: slug as string
-          })}
-          >
-            <Suspense fallback={<SkeletonPost />}>
-              <PostCreator query={queryRef as PreloadedQuery<PostCreatorQueryType>} />
-            </Suspense>
-          </QueryErrorBoundary>
-        </SequenceProvider>
+        <GlobalVideoManagerProvider>
+          <SequenceProvider {...methods}>
+            <QueryErrorBoundary loadQuery={() => loadQuery({
+              reference: postReference ?? '',
+              slug: slug as string
+            })}
+            >
+              <Suspense fallback={<SkeletonPost />}>
+                <PostCreator query={queryRef as PreloadedQuery<PostCreatorQueryType>} />
+              </Suspense>
+            </QueryErrorBoundary>
+          </SequenceProvider>
+        </GlobalVideoManagerProvider>
       </PageWrapper>
     </>
   )

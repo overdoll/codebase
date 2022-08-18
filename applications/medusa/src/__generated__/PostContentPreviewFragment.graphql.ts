@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c43b8326ff262b34c3905264fb39c57e>>
+ * @generated SignedSource<<d7d35896bc7602350fd3c7420f5aa752>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type PostContentPreviewFragment$data = {
   readonly resource: {
     readonly failed: boolean;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"PostContentPreviewMenuFragment" | "RemovePostContentButtonFragment" | "ResourceInfoFragment" | "SupporterPostContentButtonFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"ExpandableResourceInfoFragment" | "PostContentPreviewMenuFragment" | "RemovePostContentButtonFragment" | "SupporterPostContentButtonFragment">;
   readonly " $fragmentType": "PostContentPreviewFragment";
 };
 export type PostContentPreviewFragment$key = {
@@ -65,11 +65,6 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "ResourceInfoFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
       "name": "PostContentPreviewMenuFragment"
     },
     {
@@ -81,12 +76,17 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "SupporterPostContentButtonFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "ExpandableResourceInfoFragment"
     }
   ],
   "type": "PostContent",
   "abstractKey": null
 };
 
-(node as any).hash = "6ba1000bd74a11434358e88e27742e1d";
+(node as any).hash = "162611b593812c2e4dd3e426757990ce";
 
 export default node;

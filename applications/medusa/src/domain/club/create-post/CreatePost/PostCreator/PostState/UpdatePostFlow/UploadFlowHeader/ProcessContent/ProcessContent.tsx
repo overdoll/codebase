@@ -69,12 +69,10 @@ export default function ProcessContent ({
   }, [contentProcessed, contentFailed])
 
   return (
-    <Collapse style={{ overflow: 'visible' }} unmountOnExit in={!contentProcessed || contentFailed}>
-      <QueryErrorBoundary loadQuery={loadQuery}>
-        <Suspense fallback={<></>}>
-          <RefreshProcessContent searchArguments={searchArguments} />
-        </Suspense>
-      </QueryErrorBoundary>
-    </Collapse>
+    <QueryErrorBoundary loadQuery={loadQuery}>
+      <Suspense fallback={<></>}>
+        <RefreshProcessContent searchArguments={searchArguments} />
+      </Suspense>
+    </QueryErrorBoundary>
   )
 }

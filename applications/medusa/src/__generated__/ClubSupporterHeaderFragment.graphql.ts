@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<afe6bcfb5bd520038ee0ccd51c51cda7>>
+ * @generated SignedSource<<b84741884a759f3856bb54995a8e0a17>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type ClubSupporterHeaderFragment$data = {
   readonly canCreateSupporterOnlyPosts: boolean;
   readonly canSupport: boolean;
-  readonly membersCount: number;
+  readonly membersIsSupporterCount: number;
   readonly nextSupporterPostTime: any | null;
   readonly suspension: {
     readonly __typename: "ClubSuspension";
@@ -56,7 +56,7 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "membersCount",
+      "name": "membersIsSupporterCount",
       "storageKey": null
     },
     {
@@ -82,6 +82,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "72c849468728185ab3e98116ffff8042";
+(node as any).hash = "d3c6516edac9e3f091b60ef593f93e8f";
 
 export default node;

@@ -23,7 +23,7 @@ const Fragment = graphql`
     canCreateSupporterOnlyPosts
     canSupport
     nextSupporterPostTime
-    membersCount
+    membersIsSupporterCount
     suspension {
       __typename
     }
@@ -33,9 +33,9 @@ const Fragment = graphql`
 export default function ClubSupporterHeader ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const supporterCount = data.membersCount
+  const supporterCount = data.membersIsSupporterCount
 
-  const supporters = (data.membersCount).toLocaleString()
+  const supporters = (data.membersIsSupporterCount).toLocaleString()
 
   const { query: { slug } } = useRouter()
 

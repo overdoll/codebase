@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<be7e9a2fff3065b334b45065942f9f66>>
+ * @generated SignedSource<<466901326b1599410c793e48a13095d3>>
  * @relayHash bca6429fa9405c0f9d75825f21827601
  * @lightSyntaxTransform
  * @nogrep
@@ -13,7 +13,7 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostsSort = "NEW" | "TOP" | "%future added value";
+export type PostsSort = "ALGORITHM" | "NEW" | "TOP" | "%future added value";
 export type SearchCharacterPostsPaginationQuery$variables = {
   after?: string | null;
   first?: number | null;

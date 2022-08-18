@@ -88,7 +88,6 @@ export default function CreatePostFlow ({ query }: Props): JSX.Element {
   useEffect(() => {
     const callBackFn = (file): void => {
       if (file.source !== 'already-uploaded') {
-        console.log('created post with uppy callback')
         const club = uppy.getState().meta.club
         if (club != null) {
           onCreatePost(club)
