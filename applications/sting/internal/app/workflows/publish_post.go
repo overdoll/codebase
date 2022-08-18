@@ -167,5 +167,5 @@ func PublishPost(ctx workflow.Context, input PublishPostInput) error {
 }
 
 func randomTimePeriod() time.Duration {
-	return time.Duration(rand.Intn(10-7)+7)*time.Hour*24 + time.Duration(rand.Intn(10-7)+7)*time.Hour
+	return time.Duration(rand.Intn(4-3)+3)*time.Hour*24 + time.Duration(rand.Intn(4-3)+3)*time.Hour
 }

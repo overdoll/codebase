@@ -423,6 +423,10 @@ func (r PostsCassandraElasticsearchRepository) GetPostsByIds(ctx context.Context
 
 func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, pst *post.Post, filters *post.Feed) ([]*post.Post, error) {
 
+	if !pst.IsPublished() {
+		return nil, nil
+	}
+
 	builder := r.client.Search().
 		Index(PostReaderIndex)
 

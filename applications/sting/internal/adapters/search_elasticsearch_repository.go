@@ -102,6 +102,7 @@ func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passp
 			NewMultiMatchQuery(qs, "name.en").
 			Type("best_fields"),
 	).
+		Must(elastic.NewRangeQuery("total_posts").Gt(0)).
 		Must(elastic.NewTermQuery("_index", ClubsReaderIndex))
 
 	clubsQuery.Filter(elastic.NewTermQuery("terminated", false))
