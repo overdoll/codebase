@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/json"
+	"fmt"
 	"go.uber.org/zap"
 	"math"
 	"math/big"
@@ -438,24 +439,24 @@ func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.
 	query.Should(
 		elastic.
 			NewBoolQuery().
-			Must(
-				elastic.NewTermsQueryFromStrings("character_ids", pst.CategoryIds()...).Boost(6),
+			Should(
+				elastic.NewTermsQueryFromStrings("category_ids", pst.CategoryIds()...).Boost(6),
 			),
 	)
 
 	query.Should(
 		elastic.
 			NewBoolQuery().
-			Must(
-				elastic.NewTermsQueryFromStrings("category_ids", pst.CategoryIds()...).Boost(5),
+			Should(
+				elastic.NewTermsQueryFromStrings("character_ids", pst.CharacterIds()...).Boost(5),
 			),
 	)
 
 	query.Should(
 		elastic.
 			NewBoolQuery().
-			Must(
-				elastic.NewTermQuery("audience_id", pst.AudienceId()).Boost(2),
+			Should(
+				elastic.NewTermQuery("audience_id", pst.AudienceId()).Boost(3),
 			),
 	)
 
@@ -499,6 +500,8 @@ func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.
 	var posts []*post.Post
 
 	for _, hit := range response.Hits.Hits {
+
+		fmt.Println(*hit.Score)
 
 		createdPost, err := r.unmarshalPostDocument(ctx, hit.Source, hit.Sort)
 
