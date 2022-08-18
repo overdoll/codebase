@@ -6,10 +6,13 @@ import { useEffect, useState } from 'react'
 import { useUpdateEffect } from 'usehooks-ts'
 import { NumberParam, useQueryParam } from 'use-query-params'
 import SwiperType from 'swiper'
+import ImageSnippet from '../../../../DataDisplay/ImageSnippet/ImageSnippet'
+import VideoSnippet from '../../../../DataDisplay/VideoSnippet/VideoSnippet'
+import ClickableTile from '../../../../ContentSelection/ClickableTile/ClickableTile'
 
 interface Props {
   query: PostSlideIndexFragment$key
-  swiper: SwiperType
+  swiper: SwiperType | null
 }
 
 const Fragment = graphql`
@@ -17,6 +20,11 @@ const Fragment = graphql`
     reference
     content {
       isSupporterOnly
+      resource {
+        type
+        ...ImageSnippetFragment
+        ...VideoSnippetFragment
+      }
     }
   }
 `
@@ -30,7 +38,7 @@ export default function PostSlideIndex ({
 
   const [slide] = useQueryParam<number | null | undefined>('slide', NumberParam)
 
-  const [activeIndex, setActiveIndex] = useState(slide ?? swiper?.activeIndex)
+  const [activeIndex, setActiveIndex] = useState(slide ?? swiper?.activeIndex ?? -1)
 
   const slidesCount = data.content.length
 
@@ -71,14 +79,38 @@ export default function PostSlideIndex ({
         const isActive = contentIndex === activeIndex
         const isSupporterOnly = item.isSupporterOnly
 
+        const DisplayMedia = (): JSX.Element => {
+          switch (item.resource.type) {
+            case 'IMAGE':
+              return <ImageSnippet tinyError query={item.resource} />
+            case 'VIDEO':
+              return (
+                <VideoSnippet query={item.resource} />
+              )
+            default:
+              return <></>
+          }
+        }
+
         return (
-          <Flex
-            key={contentIndex}
-            w={`${100 / slidesCount}%`}
-            h={1}
-            bg={!isSupporterOnly ? (isActive ? 'gray.200' : 'gray.50') : (isActive ? 'orange.300' : 'gray.50')}
+          <ClickableTile
+            isDisabled={swiper == null}
+            onClick={() => swiper?.slideTo(contentIndex, 50)}
             borderRadius='md'
-          />
+            w={`${100 / slidesCount}%`}
+            key={contentIndex}
+          >
+            <Flex
+              w='100%'
+              h={12}
+              borderWidth={isActive ? 2 : 0}
+              borderColor={!isSupporterOnly ? (isActive ? 'primary.400' : 'gray.50') : (isActive ? 'orange.300' : 'gray.50')}
+              borderRadius='inherit'
+              overflow='hidden'
+            >
+              <DisplayMedia />
+            </Flex>
+          </ClickableTile>
         )
       })}
     </HStack>

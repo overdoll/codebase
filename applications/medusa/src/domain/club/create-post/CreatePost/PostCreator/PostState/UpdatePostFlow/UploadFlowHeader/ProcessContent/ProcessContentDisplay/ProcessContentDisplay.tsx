@@ -118,7 +118,7 @@ export default function ProcessContentDisplay ({
     )
   }
 
-  if (currentStep === 'content') {
+  if (currentStep === 'content' || currentStep === 'review') {
     if (contentIsProcessed && !contentFailed) {
       return <></>
     }

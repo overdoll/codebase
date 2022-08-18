@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0b7fbd6b93c615553ed0ba5181a00153>>
- * @relayHash 973ee7c0fcb86be1816b24e34b03d08a
+ * @generated SignedSource<<44894833d2924ef40a7f622acce0cf53>>
+ * @relayHash 7055861ad7a258ad408585cdde509f8d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 973ee7c0fcb86be1816b24e34b03d08a
+// @relayRequestID 7055861ad7a258ad408585cdde509f8d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -477,7 +477,7 @@ return {
     ]
   },
   "params": {
-    "id": "973ee7c0fcb86be1816b24e34b03d08a",
+    "id": "7055861ad7a258ad408585cdde509f8d",
     "metadata": {},
     "name": "SearchCategoryPostsPaginationQuery",
     "operationKind": "query",

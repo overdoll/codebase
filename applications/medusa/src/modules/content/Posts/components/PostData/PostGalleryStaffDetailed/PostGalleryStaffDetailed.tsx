@@ -71,7 +71,7 @@ export default function PostGalleryStaffDetailed ({
             </PostSlideBackground>
           </SwiperSlide>)}
       </Swiper>
-      {swiper != null && <PostSlideIndex swiper={swiper} query={postData} />}
+      <PostSlideIndex swiper={swiper} query={postData} />
     </Box>
   )
 }

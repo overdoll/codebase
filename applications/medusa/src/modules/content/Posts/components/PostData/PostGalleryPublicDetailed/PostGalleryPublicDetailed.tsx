@@ -98,7 +98,7 @@ export default function PostGalleryPublicDetailed ({
             </PostSlideBackground>
           </SwiperSlide>)}
       </Swiper>
-      {swiper != null && <PostSlideIndex swiper={swiper} query={postData} />}
+      <PostSlideIndex swiper={swiper} query={postData} />
     </Box>
   )
 }
