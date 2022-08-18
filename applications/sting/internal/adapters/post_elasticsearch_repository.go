@@ -459,14 +459,6 @@ func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.
 			),
 	)
 
-	query.Should(
-		elastic.
-			NewBoolQuery().
-			Must(
-				elastic.NewTermQuery("club_id", pst.ClubId()).Boost(1),
-			),
-	)
-
 	seed, err := r.getRandomizerSeed(ctx, "suggestedPostsByPost")
 
 	if err != nil {
