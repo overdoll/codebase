@@ -473,7 +473,7 @@ func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.
 		return nil, err
 	}
 
-	query.Must(elastic.NewFunctionScoreQuery().AddScoreFunc(elastic.NewRandomFunction().Seed(seed)))
+	query.Must(elastic.NewFunctionScoreQuery().BoostMode("multiply").AddScoreFunc(elastic.NewRandomFunction().Seed(seed)))
 
 	builder.Query(query)
 
