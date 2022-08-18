@@ -266,7 +266,7 @@ func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Cont
 		if *filter.ClubCharacters() {
 			query.Filter(elastic.NewExistsQuery("club_id"))
 		} else {
-			query.Filter(elastic.NewExistsQuery("series"))
+			query.Filter(elastic.NewNestedQuery("series", elastic.NewBoolQuery().Must(elastic.NewExistsQuery("series"))))
 		}
 	}
 
