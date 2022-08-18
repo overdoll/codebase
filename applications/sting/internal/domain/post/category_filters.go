@@ -1,13 +1,14 @@
 package post
 
 type CategoryFilters struct {
-	sortBy  Sorting
-	slugs   []string
-	title   *string
-	topicId *string
+	sortBy       Sorting
+	slugs        []string
+	title        *string
+	topicId      *string
+	excludeEmpty bool
 }
 
-func NewCategoryFilters(title *string, sortBy string, slugs []string, topicId *string) (*CategoryFilters, error) {
+func NewCategoryFilters(title *string, sortBy string, slugs []string, topicId *string, excludeEmpty bool) (*CategoryFilters, error) {
 
 	sorting := UnknownSort
 	var err error
@@ -21,10 +22,11 @@ func NewCategoryFilters(title *string, sortBy string, slugs []string, topicId *s
 	}
 
 	return &CategoryFilters{
-		sortBy:  sorting,
-		title:   title,
-		slugs:   slugs,
-		topicId: topicId,
+		sortBy:       sorting,
+		title:        title,
+		slugs:        slugs,
+		topicId:      topicId,
+		excludeEmpty: excludeEmpty,
 	}, nil
 }
 
@@ -42,4 +44,8 @@ func (e *CategoryFilters) SortBy() Sorting {
 
 func (e *CategoryFilters) Slugs() []string {
 	return e.slugs
+}
+
+func (e *CategoryFilters) ExcludeEmpty() bool {
+	return e.excludeEmpty
 }

@@ -18,6 +18,7 @@ type SearchCharacters struct {
 	SeriesSlug     *string
 	ClubId         *string
 	ClubCharacters *bool
+	ExcludeEmpty   bool
 }
 
 type SearchCharactersHandler struct {
@@ -38,6 +39,7 @@ func (h SearchCharactersHandler) Handle(ctx context.Context, query SearchCharact
 		query.ClubId,
 		query.ClubCharacters,
 		query.SeriesId,
+		query.ExcludeEmpty,
 	)
 
 	if err != nil {

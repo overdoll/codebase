@@ -729,6 +729,9 @@ extend type Query {
     """
     terminated: Boolean
 
+    """Exclude empty clubs (clubs that have 0 posts)."""
+    excludeEmpty: Boolean! = false
+
     """Sorting options for clubs."""
     sortBy: ClubsSort! = POPULAR
   ): ClubConnection!

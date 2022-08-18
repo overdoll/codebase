@@ -33,7 +33,7 @@ func (r *QueryResolver) Search(ctx context.Context, after *string, before *strin
 	return types.MarshalSearchToGraphQLConnection(ctx, results, cursor), nil
 }
 
-func (r *QueryResolver) PostsFeed(ctx context.Context, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
+func (r *QueryResolver) PostsFeed(ctx context.Context, after *string, before *string, first *int, last *int, seed *string) (*types.PostConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -44,6 +44,7 @@ func (r *QueryResolver) PostsFeed(ctx context.Context, after *string, before *st
 	results, err := r.App.Queries.PostsFeed.Handle(ctx, query.PostsFeed{
 		Principal: principal.FromContext(ctx),
 		Cursor:    cursor,
+		Seed:      seed,
 	})
 
 	if err != nil {
@@ -53,7 +54,7 @@ func (r *QueryResolver) PostsFeed(ctx context.Context, after *string, before *st
 	return types.MarshalPostToGraphQLConnection(ctx, results, cursor), nil
 }
 
-func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error) {
+func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) (*types.PostConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -86,6 +87,7 @@ func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string
 		SortBy:              sortBy.String(),
 		Principal:           principal.FromContext(ctx),
 		ShowSuspendedClubs:  false,
+		Seed:                seed,
 	})
 
 	if err != nil {
@@ -111,5 +113,5 @@ func (r *QueryResolver) Post(ctx context.Context, reference string) (*types.Post
 		return nil, err
 	}
 
-	return types.MarshalPostToGraphQL(ctx, pendingPost), nil
+	return types.MarshalPostToGraphQL(ctx, pendingPost, nil), nil
 }

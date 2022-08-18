@@ -46,7 +46,7 @@ func (h SuggestedPostsForPostHandler) Handle(ctx context.Context, query Suggeste
 		categoryIds = personalProfile.CategoryIds()
 	}
 
-	filters, err := post.NewPostFeed(audienceIDs, categoryIds)
+	filters, err := post.NewPostFeed(audienceIDs, categoryIds, nil)
 
 	if err != nil {
 		return nil, err

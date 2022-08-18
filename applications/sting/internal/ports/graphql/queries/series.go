@@ -10,7 +10,7 @@ import (
 	"overdoll/libraries/principal"
 )
 
-func (r *QueryResolver) Series(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, title *string, sortBy types.SeriesSort) (*types.SeriesConnection, error) {
+func (r *QueryResolver) Series(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, title *string, excludeEmpty bool, sortBy types.SeriesSort) (*types.SeriesConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -19,11 +19,12 @@ func (r *QueryResolver) Series(ctx context.Context, after *string, before *strin
 	}
 
 	results, err := r.App.Queries.SearchSeries.Handle(ctx, query.SearchSeries{
-		Principal: principal.FromContext(ctx),
-		SortBy:    sortBy.String(),
-		Slugs:     slugs,
-		Cursor:    cursor,
-		Title:     title,
+		Principal:    principal.FromContext(ctx),
+		SortBy:       sortBy.String(),
+		Slugs:        slugs,
+		Cursor:       cursor,
+		Title:        title,
+		ExcludeEmpty: excludeEmpty,
 	})
 
 	if err != nil {

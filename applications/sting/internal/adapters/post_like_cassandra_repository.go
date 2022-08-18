@@ -3,11 +3,13 @@ package adapters
 import (
 	"context"
 	"github.com/gocql/gocql"
+	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/bucket"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/support"
 	"time"
@@ -25,8 +27,8 @@ var postLikeTable = table.New(table.Metadata{
 	SortKey: []string{},
 })
 
-var accountPostLikeTable = table.New(table.Metadata{
-	Name: "account_post_likes",
+var accountPostLikeSortedTable = table.New(table.Metadata{
+	Name: "account_post_likes_sorted",
 	Columns: []string{
 		"bucket",
 		"liked_account_id",
@@ -34,7 +36,7 @@ var accountPostLikeTable = table.New(table.Metadata{
 		"liked_at",
 	},
 	PartKey: []string{"bucket", "liked_account_id"},
-	SortKey: []string{"post_id"},
+	SortKey: []string{"post_id", "liked_at"},
 })
 
 type postLike struct {
@@ -77,7 +79,7 @@ func (r PostsCassandraElasticsearchRepository) CreatePostLike(ctx context.Contex
 		postLike,
 	)
 
-	stmt, names = accountPostLikeTable.Insert()
+	stmt, names = accountPostLikeSortedTable.Insert()
 	support.BindStructToBatchStatement(
 		batch,
 		stmt, names,
@@ -99,15 +101,21 @@ func (r PostsCassandraElasticsearchRepository) CreatePostLike(ctx context.Contex
 	return nil
 }
 
-func (r PostsCassandraElasticsearchRepository) DeletePostLike(ctx context.Context, like *post.Like) error {
+func (r PostsCassandraElasticsearchRepository) DeletePostLike(ctx context.Context, postId, accountId string) error {
+
+	lk, err := r.getPostLikeRawById(ctx, postId, accountId)
+
+	if err != nil {
+		return err
+	}
 
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
 	postLike := postLike{
-		Bucket:         bucket.MakeWeeklyBucketFromTimestamp(like.LikedAt()),
-		PostId:         like.PostId(),
-		LikedAccountId: like.AccountId(),
-		LikedAt:        like.LikedAt(),
+		Bucket:         lk.Bucket,
+		PostId:         lk.PostId,
+		LikedAccountId: lk.LikedAccountId,
+		LikedAt:        lk.LikedAt,
 	}
 
 	stmt, names := postLikeTable.Delete()
@@ -117,7 +125,7 @@ func (r PostsCassandraElasticsearchRepository) DeletePostLike(ctx context.Contex
 		postLike,
 	)
 
-	stmt, names = accountPostLikeTable.Delete()
+	stmt, names = accountPostLikeSortedTable.Delete()
 	support.BindStructToBatchStatement(
 		batch,
 		stmt, names,
@@ -131,8 +139,7 @@ func (r PostsCassandraElasticsearchRepository) DeletePostLike(ctx context.Contex
 	return nil
 }
 
-func (r PostsCassandraElasticsearchRepository) getPostLikeById(ctx context.Context, postId, accountId string) (*post.Like, error) {
-
+func (r PostsCassandraElasticsearchRepository) getPostLikeRawById(ctx context.Context, postId, accountId string) (*postLike, error) {
 	var pstLike postLike
 
 	if err := r.session.
@@ -147,6 +154,17 @@ func (r PostsCassandraElasticsearchRepository) getPostLikeById(ctx context.Conte
 		}
 
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get post like by id")
+	}
+
+	return &pstLike, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) getPostLikeById(ctx context.Context, postId, accountId string) (*post.Like, error) {
+
+	pstLike, err := r.getPostLikeRawById(ctx, postId, accountId)
+
+	if err != nil {
+		return nil, err
 	}
 
 	return post.UnmarshalLikeFromDatabase(pstLike.LikedAccountId, pstLike.PostId, pstLike.LikedAt), nil
@@ -200,6 +218,103 @@ func (r PostsCassandraElasticsearchRepository) getAccountPostLikesBuckets(ctx co
 	return buckets, nil
 }
 
+func (r PostsCassandraElasticsearchRepository) AccountPostLikes(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*post.LikedPost, error) {
+
+	if err := post.CanViewLikesForAccount(requester, accountId); err != nil {
+		return nil, err
+	}
+
+	terminatedClubIds, err := r.getTerminatedClubIds(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	buckets, err := r.getAccountPostLikesBuckets(ctx, accountId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var posts []*post.LikedPost
+
+	// iterate through all buckets starting from x bucket until we have enough values
+	for _, bucketId := range buckets {
+
+		var builder *qb.SelectBuilder
+
+		info := map[string]interface{}{}
+
+		builder = qb.Select(accountPostLikeSortedTable.Name()).
+			Where(qb.Eq("bucket"), qb.Eq("liked_account_id"))
+
+		info["bucket"] = bucketId
+		info["liked_account_id"] = accountId
+
+		var postL []postLike
+
+		if err := builder.
+			Query(r.session).
+			WithContext(ctx).
+			BindMap(info).
+			SelectRelease(&postL); err != nil {
+			return nil, errors.Wrap(support.NewGocqlError(err), "failed to get post likes")
+		}
+
+		esBuilder := r.client.MultiGet().Realtime(false)
+
+		for _, l := range postL {
+			esBuilder.Add(elastic.NewMultiGetItem().Id(l.PostId).Index(PostReaderIndex))
+		}
+
+		response, err := esBuilder.Do(ctx)
+
+		if err != nil {
+			return nil, errors.Wrap(support.ParseElasticError(err), "failed search posts")
+		}
+
+		for _, hit := range response.Docs {
+
+			result, err := r.unmarshalPostDocument(ctx, hit.Source, nil)
+
+			if err != nil {
+				return nil, err
+			}
+
+			isTerminated := false
+
+			for _, clbId := range terminatedClubIds {
+				if result.ClubId() == clbId {
+					isTerminated = true
+					break
+				}
+			}
+
+			if !isTerminated {
+
+				var pstLike postLike
+
+				for _, pstL := range postL {
+					if pstL.PostId == result.ID() {
+						pstLike = pstL
+						break
+					}
+				}
+
+				result.Node = paging.NewNode("")
+
+				posts = append(posts, post.UnmarshalLikedPostFromDatabase(post.UnmarshalLikeFromDatabase(pstLike.LikedAccountId, pstLike.PostId, pstLike.LikedAt), result))
+			}
+		}
+
+		if len(posts) >= cursor.GetLimit() {
+			break
+		}
+	}
+
+	return posts, nil
+}
+
 func (r PostsCassandraElasticsearchRepository) GetAccountPostLikes(ctx context.Context, accountId string) ([]string, error) {
 
 	var postLikedIds []string
@@ -217,7 +332,7 @@ func (r PostsCassandraElasticsearchRepository) GetAccountPostLikes(ctx context.C
 
 		info := map[string]interface{}{}
 
-		builder = qb.Select(accountPostLikeTable.Name()).
+		builder = qb.Select(accountPostLikeSortedTable.Name()).
 			Where(qb.Eq("bucket"), qb.Eq("liked_account_id"))
 
 		info["bucket"] = bucketId

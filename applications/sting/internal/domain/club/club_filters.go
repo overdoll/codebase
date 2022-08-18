@@ -7,9 +7,10 @@ type Filters struct {
 	ownerAccountId *string
 	suspended      *bool
 	terminated     *bool
+	excludeEmpty   bool
 }
 
-func NewFilters(search *string, suspended *bool, sortBy string, slugs []string, ownerAccountId *string, terminated *bool) (*Filters, error) {
+func NewFilters(search *string, suspended *bool, sortBy string, slugs []string, ownerAccountId *string, terminated *bool, excludeEmpty bool) (*Filters, error) {
 
 	sorting := UnknownSort
 	var err error
@@ -29,6 +30,7 @@ func NewFilters(search *string, suspended *bool, sortBy string, slugs []string, 
 		suspended:      suspended,
 		ownerAccountId: ownerAccountId,
 		terminated:     terminated,
+		excludeEmpty:   excludeEmpty,
 	}, nil
 }
 
@@ -54,4 +56,8 @@ func (e *Filters) Suspended() *bool {
 
 func (e *Filters) Terminated() *bool {
 	return e.terminated
+}
+
+func (e *Filters) ExcludeEmpty() bool {
+	return e.excludeEmpty
 }

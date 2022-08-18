@@ -142,7 +142,7 @@ func (r PostsCassandraElasticsearchRepository) GetSeriesByIds(ctx context.Contex
 	return series, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.ObjectFilters) ([]*post.Series, error) {
+func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.SeriesFilters) ([]*post.Series, error) {
 
 	builder := r.client.Search().
 		Index(SeriesReaderIndex)
@@ -183,6 +183,10 @@ func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context,
 		for _, id := range filter.Slugs() {
 			query.Filter(elastic.NewTermQuery("slug", id))
 		}
+	}
+
+	if filter.ExcludeEmpty() {
+		query.Must(elastic.NewRangeQuery("total_posts").Gt(0))
 	}
 
 	builder.Query(query)

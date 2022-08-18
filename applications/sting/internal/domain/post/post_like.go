@@ -61,3 +61,12 @@ func (m *Like) CanRemove(requester *principal.Principal) error {
 func (m *Like) CanView(requester *principal.Principal) error {
 	return requester.BelongsToAccount(m.AccountId())
 }
+
+func CanViewLikesForAccount(requester *principal.Principal, accountId string) error {
+
+	if requester.IsStaff() {
+		return nil
+	}
+
+	return requester.BelongsToAccount(accountId)
+}

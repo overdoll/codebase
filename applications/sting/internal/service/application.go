@@ -135,12 +135,14 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			UpdateCurationProfileDateOfBirth: command.NewUpdateCurationProfileDateOfBirthHandler(personalizationRepo),
 
 			CreateAudience:           command.NewCreateAudienceHandler(postRepo),
+			UpdateAudienceSlug:       command.NewUpdateAudienceSlugHandler(postRepo),
 			UpdateAudienceTitle:      command.NewUpdateAudienceTitleHandler(postRepo),
 			UpdateAudienceThumbnail:  command.NewUpdateAudienceThumbnailHandler(postRepo, loader),
 			UpdateAudienceIsStandard: command.NewUpdateAudienceIsStandardHandler(postRepo),
 			UpdateAudienceBanner:     command.NewUpdateAudienceBannerHandler(postRepo, loader),
 
 			CreateCategory:                 command.NewCreateCategoryHandler(postRepo),
+			UpdateCategorySlug:             command.NewUpdateCategorySlugHandler(postRepo),
 			UpdateCategoryTopic:            command.NewUpdateCategoryTopicHandler(postRepo),
 			AddCategoryAlternativeTitle:    command.NewAddCategoryAlternativeTitleHandler(postRepo),
 			RemoveCategoryAlternativeTitle: command.NewRemoveCategoryAlternativeTitleHandler(postRepo),
@@ -149,16 +151,19 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			GenerateCategoryBanner:         command.NewGenerateCategoryBannerHandler(postRepo, eventRepo),
 
 			CreateCharacter:          command.NewCreateCharacterHandler(postRepo, clubRepo),
+			UpdateCharacterSlug:      command.NewUpdateCharacterSlugHandler(postRepo),
 			UpdateCharacterName:      command.NewUpdateCharacterNameHandler(postRepo),
 			UpdateCharacterThumbnail: command.NewUpdateCharacterThumbnailHandler(postRepo, loader),
 			GenerateCharacterBanner:  command.NewGenerateCharacterBannerHandler(postRepo, eventRepo),
 
 			CreateSeries:          command.NewCreateSeriesHandler(postRepo),
+			UpdateSeriesSlug:      command.NewUpdateSeriesSlugHandler(postRepo),
 			UpdateSeriesTitle:     command.NewUpdateSeriesTitleHandler(postRepo),
 			UpdateSeriesThumbnail: command.NewUpdateSeriesThumbnailHandler(postRepo, loader),
 			GenerateSeriesBanner:  command.NewGenerateSeriesBannerHandler(postRepo, eventRepo),
 
 			CreateTopic:            command.NewCreateTopicHandler(postRepo),
+			UpdateTopicSlug:        command.NewUpdateTopicSlugHandler(postRepo),
 			UpdateTopicTitle:       command.NewUpdateTopicTitleHandler(postRepo),
 			UpdateTopicWeight:      command.NewUpdateTopicWeightHandler(postRepo),
 			UpdateTopicDescription: command.NewUpdateTopicDescriptionHandler(postRepo),
@@ -191,6 +196,8 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 		Queries: app.Queries{
 			DiscoverClubs: query.NewDiscoverClubsHandler(clubRepo),
 			Search:        query.NewSearchHandler(postRepo),
+
+			AccountLikedPosts: query.NewAccountLikedPosts(postRepo),
 
 			ClubCharactersCount: query.NewClubCharactersCountHandler(clubRepo),
 

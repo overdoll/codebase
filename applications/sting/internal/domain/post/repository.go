@@ -22,9 +22,11 @@ type Repository interface {
 	AddPostOccupiedResource(ctx context.Context, post *Post, resource *resource.Resource) error
 
 	CreatePostLike(ctx context.Context, like *Like) error
-	DeletePostLike(ctx context.Context, like *Like) error
+	DeletePostLike(ctx context.Context, postId string, accountId string) error
 	GetPostLikeById(ctx context.Context, requester *principal.Principal, postId, accountId string) (*Like, error)
 	GetPostLikeByIdOperator(ctx context.Context, postId, accountId string) (*Like, error)
+
+	AccountPostLikes(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*LikedPost, error)
 
 	UpdatePost(ctx context.Context, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostContent(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
@@ -127,7 +129,7 @@ type Repository interface {
 
 	SearchTopics(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*Topic, error)
 
-	SearchSeries(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *ObjectFilters) ([]*Series, error)
+	SearchSeries(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *SeriesFilters) ([]*Series, error)
 	GetTotalLikesForSeriesOperator(ctx context.Context, series *Series) (int, error)
 	GetTotalPostsForSeriesOperator(ctx context.Context, series *Series) (int, error)
 

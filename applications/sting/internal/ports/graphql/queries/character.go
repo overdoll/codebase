@@ -10,7 +10,7 @@ import (
 	"overdoll/libraries/principal"
 )
 
-func (r *QueryResolver) Characters(ctx context.Context, after *string, before *string, first *int, last *int, clubCharacters *bool, slugs []string, seriesSlug, clubSlug, name *string, sortBy types.CharactersSort) (*types.CharacterConnection, error) {
+func (r *QueryResolver) Characters(ctx context.Context, after *string, before *string, first *int, last *int, clubCharacters *bool, slugs []string, seriesSlug, clubSlug, name *string, excludeEmpty bool, sortBy types.CharactersSort) (*types.CharacterConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -27,6 +27,7 @@ func (r *QueryResolver) Characters(ctx context.Context, after *string, before *s
 		SeriesSlug:     seriesSlug,
 		ClubId:         clubSlug,
 		ClubCharacters: clubCharacters,
+		ExcludeEmpty:   excludeEmpty,
 	})
 
 	if err != nil {

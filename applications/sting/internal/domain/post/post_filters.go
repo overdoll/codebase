@@ -1,9 +1,13 @@
 package post
 
+import "overdoll/libraries/errors/domainerror"
+
 type Filters struct {
 	sortBy        Sorting
 	contributorId *string
 	clubIds       []string
+
+	seed *string
 
 	state State
 
@@ -17,7 +21,13 @@ type Filters struct {
 	categoryIds  []string
 }
 
-func NewPostFilters(sortBy string, state, contributorId *string, supporterOnlyStatus, clubIds, audienceIds, categoryIds, characterIds, seriesIds []string, showTerminatedClubs bool) (*Filters, error) {
+func NewPostFilters(sortBy string, state, contributorId *string, supporterOnlyStatus, clubIds, audienceIds, categoryIds, characterIds, seriesIds []string, showTerminatedClubs bool, seed *string) (*Filters, error) {
+
+	if seed != nil {
+		if len(*seed) > 100 {
+			return nil, domainerror.NewValidation("seed length too large")
+		}
+	}
 
 	newState := Unknown
 	var err error
@@ -67,6 +77,7 @@ func NewPostFilters(sortBy string, state, contributorId *string, supporterOnlySt
 		seriesIds:           seriesIds,
 		showTerminatedClubs: showTerminatedClubs,
 		supporterOnlyStatus: supporterOnlyStatusItem,
+		seed:                seed,
 	}, nil
 }
 
@@ -108,4 +119,8 @@ func (e *Filters) CategoryIds() []string {
 
 func (e *Filters) AudienceIds() []string {
 	return e.audienceIds
+}
+
+func (e *Filters) Seed() *string {
+	return e.seed
 }

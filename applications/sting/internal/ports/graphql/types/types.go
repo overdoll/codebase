@@ -47,7 +47,9 @@ type Account struct {
 	ClubMembersPostsFeed *PostConnection `json:"clubMembersPostsFeed"`
 	// Contributions specific to this account
 	Posts *PostConnection `json:"posts"`
-	ID    relay.ID        `json:"id"`
+	// All posts liked by this account, sorted by most recent.
+	LikedPosts *PostConnection `json:"likedPosts"`
+	ID         relay.ID        `json:"id"`
 }
 
 func (Account) IsEntity() {}

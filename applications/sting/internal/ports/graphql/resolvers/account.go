@@ -15,6 +15,31 @@ type AccountResolver struct {
 	App *app.Application
 }
 
+func (r AccountResolver) LikedPosts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
+	}
+
+	results, err := r.App.Queries.AccountLikedPosts.Handle(ctx, query.AccountLikedPosts{
+		Principal: principal.FromContext(ctx),
+		AccountId: obj.ID.GetID(),
+		Cursor:    cursor,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalLikedPostToGraphQLConnection(ctx, results, cursor), nil
+}
+
 func (r AccountResolver) ClubMembersPostsFeed(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
@@ -58,7 +83,7 @@ func (r AccountResolver) CurationProfile(ctx context.Context, obj *types.Account
 	return types.MarshalCurationProfileToGraphQL(ctx, profile), nil
 }
 
-func (r AccountResolver) Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error) {
+func (r AccountResolver) Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) (*types.PostConnection, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
@@ -97,6 +122,7 @@ func (r AccountResolver) Posts(ctx context.Context, obj *types.Account, after *s
 		SupporterOnlyStatus: supporterOnly,
 		Principal:           principal.FromContext(ctx),
 		ShowSuspendedClubs:  true,
+		Seed:                seed,
 	})
 
 	if err != nil {

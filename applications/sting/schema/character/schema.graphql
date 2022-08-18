@@ -155,6 +155,9 @@ extend type Query {
     """Filter by the name of the character."""
     name: String
 
+    """Exclude empty characters (characters that have 0 posts)."""
+    excludeEmpty: Boolean! = false
+
     """Sorting options for characters."""
     sortBy: CharactersSort! = POPULAR
   ): CharacterConnection!
