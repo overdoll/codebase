@@ -456,7 +456,7 @@ func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.
 		elastic.
 			NewBoolQuery().
 			Should(
-				elastic.NewTermQuery("audience_id", pst.AudienceId()).Boost(3),
+				elastic.NewTermQuery("audience_id", *pst.AudienceId()).Boost(3),
 			),
 	)
 
@@ -483,9 +483,13 @@ func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.
 		MustNot(elastic.NewTermsQueryFromStrings("id", pst.ID())),
 	)
 
-	filterQueries = append(filterQueries, elastic.NewTermQuery("audience_id", *pst.AudienceId()))
 	filterQueries = append(filterQueries, elastic.NewTermQuery("state", post.Published.String()))
 	filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("supporter_only_status", post.None.String(), post.Partial.String()))
+
+	// use curation profile when needed
+	if len(filters.AudienceIds()) > 0 {
+		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("audience_id", filters.AudienceIds()...))
+	}
 
 	query.Filter(filterQueries...)
 
