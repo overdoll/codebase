@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3aff72368b316967295dac1c6e3343f9>>
- * @relayHash b0d3e390d5c418a88647e12edd0a0332
+ * @generated SignedSource<<feccadb2e3361e33ebcdd5bc9d8f2486>>
+ * @relayHash 0486fdc1f9ef0d3189639ddad054771c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b0d3e390d5c418a88647e12edd0a0332
+// @relayRequestID 0486fdc1f9ef0d3189639ddad054771c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -235,6 +235,7 @@ return {
                             "name": "content",
                             "plural": true,
                             "selections": [
+                              (v8/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -242,7 +243,6 @@ return {
                                 "name": "isSupporterOnly",
                                 "storageKey": null
                               },
-                              (v8/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -283,6 +283,7 @@ return {
                                     "name": "progress",
                                     "plural": false,
                                     "selections": [
+                                      (v8/*: any*/),
                                       {
                                         "alias": null,
                                         "args": null,
@@ -296,8 +297,7 @@ return {
                                         "kind": "ScalarField",
                                         "name": "state",
                                         "storageKey": null
-                                      },
-                                      (v8/*: any*/)
+                                      }
                                     ],
                                     "storageKey": null
                                   },
@@ -432,7 +432,7 @@ return {
     ]
   },
   "params": {
-    "id": "b0d3e390d5c418a88647e12edd0a0332",
+    "id": "0486fdc1f9ef0d3189639ddad054771c",
     "metadata": {},
     "name": "UploadRewindSingleSelectorPaginationFragment",
     "operationKind": "query",

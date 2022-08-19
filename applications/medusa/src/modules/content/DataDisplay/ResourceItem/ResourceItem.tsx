@@ -24,6 +24,7 @@ const Fragment = graphql`
     preview
     failed
     progress {
+      id
       progress
       state
     }

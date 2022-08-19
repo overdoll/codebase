@@ -1,7 +1,7 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { SearchCharacterQuery } from '@//:artifacts/SearchCharacterQuery.graphql'
 import { NotFoundCharacter } from '@//:modules/content/Placeholder'
-import { HStack, Stack } from '@chakra-ui/react'
+import { Heading, HStack, Stack } from '@chakra-ui/react'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import { usePaginationFragment } from 'react-relay'
 import { Trans } from '@lingui/macro'
@@ -94,7 +94,10 @@ export default function SearchCharacter ({ query }: Props): JSX.Element {
             totalLikes={queryData.character.totalLikes}
           />
           <SearchCharacterRecommendations query={queryData.character} />
-          <HStack justify='flex-end' spacing={2}>
+          <HStack justify='space-between' spacing={2}>
+            <Heading color='gray.00' fontSize='2xl'>
+              {queryData.character.name}
+            </Heading>
             <SearchButton />
           </HStack>
         </Stack>

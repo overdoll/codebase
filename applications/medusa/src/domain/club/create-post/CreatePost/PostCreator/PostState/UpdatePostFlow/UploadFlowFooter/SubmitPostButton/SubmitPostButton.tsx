@@ -23,6 +23,8 @@ const Fragment = graphql`
     club {
       canCreateSupporterOnlyPosts
     }
+    ...PublishedPostFragment
+    ...ReviewPostFragment
   }
 `
 

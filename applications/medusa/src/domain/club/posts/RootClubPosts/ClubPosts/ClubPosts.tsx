@@ -41,6 +41,7 @@ const Fragment = graphql`
       __id
       edges {
         node {
+          id
           state
           ...PostPreviewContentFragment
           ...DraftPostFragment

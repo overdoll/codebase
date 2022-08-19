@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5dc5c2328fd9766c3d6963da0d540e7e>>
+ * @generated SignedSource<<35c972df317b57ccf468cc506595dc40>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,6 +17,7 @@ export type ResourceItemFragment$data = {
   readonly preview: string;
   readonly processed: boolean;
   readonly progress: {
+    readonly id: string;
     readonly progress: number;
     readonly state: ResourceProgressState;
   } | null;
@@ -75,6 +76,13 @@ const node: ReaderFragment = {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
+          "name": "id",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
           "name": "progress",
           "storageKey": null
         },
@@ -103,6 +111,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "5782a70263d64921c0be85f4a5f31200";
+(node as any).hash = "da34a76e7e6cf1b46e6fc818f7de368e";
 
 export default node;

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<22b9d1833f9a6c4db4acdbca121e5c55>>
- * @relayHash 1cc48249a67a7715a2c18e87aa393a60
+ * @generated SignedSource<<05441ce7d338d4ddaddb97f57f4893bc>>
+ * @relayHash d7fd10c01b80d0e6b95f8079e34fd7ed
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 1cc48249a67a7715a2c18e87aa393a60
+// @relayRequestID d7fd10c01b80d0e6b95f8079e34fd7ed
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -401,6 +401,7 @@ return {
                         "name": "progress",
                         "plural": false,
                         "selections": [
+                          (v3/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -414,8 +415,7 @@ return {
                             "kind": "ScalarField",
                             "name": "state",
                             "storageKey": null
-                          },
-                          (v3/*: any*/)
+                          }
                         ],
                         "storageKey": null
                       },
@@ -488,7 +488,7 @@ return {
     ]
   },
   "params": {
-    "id": "1cc48249a67a7715a2c18e87aa393a60",
+    "id": "d7fd10c01b80d0e6b95f8079e34fd7ed",
     "metadata": {},
     "name": "DiscoverClubsQuery",
     "operationKind": "query",

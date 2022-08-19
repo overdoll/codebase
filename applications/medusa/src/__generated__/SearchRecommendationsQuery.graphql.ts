@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1f728349c0d47c5aa2b3143e8aed9c42>>
- * @relayHash 803fbbf645e4fee5172affdcd258781f
+ * @generated SignedSource<<d3118332b83f8d450c8feac9a61535a5>>
+ * @relayHash 67422ba513a382c1e320a71de1ba8733
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 803fbbf645e4fee5172affdcd258781f
+// @relayRequestID 67422ba513a382c1e320a71de1ba8733
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -129,6 +129,7 @@ v6 = {
       "name": "progress",
       "plural": false,
       "selections": [
+        (v1/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -142,8 +143,7 @@ v6 = {
           "kind": "ScalarField",
           "name": "state",
           "storageKey": null
-        },
-        (v1/*: any*/)
+        }
       ],
       "storageKey": null
     },
@@ -465,7 +465,7 @@ return {
     ]
   },
   "params": {
-    "id": "803fbbf645e4fee5172affdcd258781f",
+    "id": "67422ba513a382c1e320a71de1ba8733",
     "metadata": {},
     "name": "SearchRecommendationsQuery",
     "operationKind": "query",

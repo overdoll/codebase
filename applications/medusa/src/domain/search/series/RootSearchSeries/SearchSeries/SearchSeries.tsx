@@ -1,12 +1,11 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { SearchSeriesQuery } from '@//:artifacts/SearchSeriesQuery.graphql'
 import { NotFoundSerial } from '@//:modules/content/Placeholder'
-import { HStack, Stack } from '@chakra-ui/react'
+import { Heading, HStack, Stack } from '@chakra-ui/react'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import { usePaginationFragment } from 'react-relay'
 import { Trans } from '@lingui/macro'
 import SearchSummary from '../../../../../common/components/PageHeader/SearchSummary/SearchSummary'
-import PostOrderButton from '../../../../../common/components/PageHeader/PostOrderButton/PostOrderButton'
 import SearchButton from '../../../../../common/components/PageHeader/SearchButton/SearchButton'
 import SearchSeriesRecommendations from './SearchSeriesRecommendations/SearchSeriesRecommendations'
 import SearchSeriesRichObject
@@ -15,7 +14,6 @@ import FullSimplePost
   from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/FullSimplePost/FullSimplePost'
 import PostInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
-import { useRouter } from 'next/router'
 
 interface Props {
   query: PreloadedQuery<SearchSeriesQuery>
@@ -95,7 +93,10 @@ export default function SearchSeries ({ query }: Props): JSX.Element {
             totalLikes={queryData.serial.totalLikes}
           />
           <SearchSeriesRecommendations query={queryData} />
-          <HStack justify='flex-end' spacing={2}>
+          <HStack justify='space-between' spacing={2}>
+            <Heading color='gray.00' fontSize='2xl'>
+              {queryData.serial.title}
+            </Heading>
             <SearchButton />
           </HStack>
         </Stack>

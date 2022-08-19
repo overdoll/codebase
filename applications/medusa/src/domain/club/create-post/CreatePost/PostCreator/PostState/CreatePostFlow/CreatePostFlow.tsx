@@ -18,17 +18,26 @@ interface Props {
 }
 
 const Fragment = graphql`
-  fragment CreatePostFlowFragment on Club @argumentDefinitions(
+  fragment CreatePostFlowFragment on Club
+  @argumentDefinitions(
     first: {type: Int, defaultValue: 5}
     after: {type: String}
   ) {
     id
-    posts (first: $first, after: $after)
+    posts (first: $first, after: $after, state: DRAFT)
     @connection(key: "ClubPosts_posts") {
       __id
       edges {
         node {
           id
+          state
+          ...PostPreviewContentFragment
+          ...DraftPostFragment
+          ...PublishedPostFragment
+          ...ReviewPostFragment
+          ...RejectedPostFragment
+          ...ArchivedPostFragment
+          ...RemovedPostFragment
         }
       }
     }

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e2fa02e3118f4ceade3f229add1d547e>>
- * @relayHash db6d1a0657e16d7bf7ae055ea431c434
+ * @generated SignedSource<<53e5fb3c55a28568d887e1b82acd1e3d>>
+ * @relayHash 447d7f1ee51248289aa9c989f1ec440c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID db6d1a0657e16d7bf7ae055ea431c434
+// @relayRequestID 447d7f1ee51248289aa9c989f1ec440c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -349,6 +349,7 @@ return {
                 "name": "progress",
                 "plural": false,
                 "selections": [
+                  (v4/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -362,8 +363,7 @@ return {
                     "kind": "ScalarField",
                     "name": "state",
                     "storageKey": null
-                  },
-                  (v4/*: any*/)
+                  }
                 ],
                 "storageKey": null
               },
@@ -675,7 +675,7 @@ return {
     ]
   },
   "params": {
-    "id": "db6d1a0657e16d7bf7ae055ea431c434",
+    "id": "447d7f1ee51248289aa9c989f1ec440c",
     "metadata": {},
     "name": "PublicClubQuery",
     "operationKind": "query",

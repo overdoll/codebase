@@ -13,12 +13,14 @@ const Query = graphql`
   query RefreshProcessContentQuery($reference: String!) {
     post (reference: $reference) {
       id
+      state
       reference
       content {
         id
         viewerCanViewSupporterOnlyContent
         isSupporterOnly
         resource {
+          id
           failed
           type
           processed
@@ -38,8 +40,16 @@ const Query = graphql`
           height
           preview
         }
+        ...PostContentPreviewMemoFragment
       }
       ...ProcessContentDisplayFragment
+      ...PostContentPreviewMemoPostFragment
+      ...DraftPostFragment
+      ...PublishedPostFragment
+      ...ReviewPostFragment
+      ...RejectedPostFragment
+      ...ArchivedPostFragment
+      ...RemovedPostFragment
     }
   }
 `

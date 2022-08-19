@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d7d35896bc7602350fd3c7420f5aa752>>
+ * @generated SignedSource<<8fc94eb40f5254e3c596e7a52fc4303d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type PostContentPreviewFragment$data = {
   readonly isSupporterOnly: boolean;
   readonly resource: {
     readonly failed: boolean;
+    readonly id: string;
   };
   readonly " $fragmentSpreads": FragmentRefs<"ExpandableResourceInfoFragment" | "PostContentPreviewMenuFragment" | "RemovePostContentButtonFragment" | "SupporterPostContentButtonFragment">;
   readonly " $fragmentType": "PostContentPreviewFragment";
@@ -24,19 +25,21 @@ export type PostContentPreviewFragment$key = {
   readonly " $fragmentSpreads": FragmentRefs<"PostContentPreviewFragment">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
   "name": "PostContentPreviewFragment",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
+    (v0/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -52,6 +55,7 @@ const node: ReaderFragment = {
       "name": "resource",
       "plural": false,
       "selections": [
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -86,7 +90,8 @@ const node: ReaderFragment = {
   "type": "PostContent",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "162611b593812c2e4dd3e426757990ce";
+(node as any).hash = "ae8774753882c652c171d33f569a6772";
 
 export default node;

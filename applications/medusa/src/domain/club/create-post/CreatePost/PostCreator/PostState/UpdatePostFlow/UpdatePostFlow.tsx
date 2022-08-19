@@ -40,6 +40,8 @@ const Fragment = graphql`
     ...UploadReviewStepFragment
     ...UploadContentStepFragment
     ...UploadCategoryStepFragment
+    ...ProcessContentDisplayFragment
+    ...PostContentPreviewMemoPostFragment
   }
 `
 

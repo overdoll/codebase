@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0c141c8133e459868a6f302f4c912003>>
- * @relayHash 81191b8fcea4c3a47505b8b8d3af56dc
+ * @generated SignedSource<<78268c7c332dd5bcf42dae63288b4288>>
+ * @relayHash dba41e2ac4fc4ed2802bf2630056c326
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 81191b8fcea4c3a47505b8b8d3af56dc
+// @relayRequestID dba41e2ac4fc4ed2802bf2630056c326
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -277,6 +277,7 @@ return {
                     "name": "progress",
                     "plural": false,
                     "selections": [
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -290,8 +291,7 @@ return {
                         "kind": "ScalarField",
                         "name": "state",
                         "storageKey": null
-                      },
-                      (v4/*: any*/)
+                      }
                     ],
                     "storageKey": null
                   },
@@ -374,7 +374,7 @@ return {
     ]
   },
   "params": {
-    "id": "81191b8fcea4c3a47505b8b8d3af56dc",
+    "id": "dba41e2ac4fc4ed2802bf2630056c326",
     "metadata": {},
     "name": "CreateClubCharacterFormMutation",
     "operationKind": "mutation",

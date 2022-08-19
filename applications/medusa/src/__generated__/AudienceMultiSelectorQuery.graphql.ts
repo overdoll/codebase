@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<183de81f7da0f0e24201cc309149c7a0>>
- * @relayHash 8242475853645e802173a42dfb13f2c6
+ * @generated SignedSource<<e71a850dc4cbca2fad94f5037c12f958>>
+ * @relayHash 89482ae2ffa1d4d2f8bda969f847e32d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8242475853645e802173a42dfb13f2c6
+// @relayRequestID 89482ae2ffa1d4d2f8bda969f847e32d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -179,6 +179,7 @@ return {
                         "name": "progress",
                         "plural": false,
                         "selections": [
+                          (v0/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -192,8 +193,7 @@ return {
                             "kind": "ScalarField",
                             "name": "state",
                             "storageKey": null
-                          },
-                          (v0/*: any*/)
+                          }
                         ],
                         "storageKey": null
                       },
@@ -258,7 +258,7 @@ return {
     ]
   },
   "params": {
-    "id": "8242475853645e802173a42dfb13f2c6",
+    "id": "89482ae2ffa1d4d2f8bda969f847e32d",
     "metadata": {},
     "name": "AudienceMultiSelectorQuery",
     "operationKind": "query",

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<5dff31cc01b7fb40f62aa91ed4df45c2>>
- * @relayHash d4bc486e1029176a962d36fa8e89f544
+ * @generated SignedSource<<0c474e513ed88e73416212706aebb357>>
+ * @relayHash 8307a07fd758b266c010dfe847337dda
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d4bc486e1029176a962d36fa8e89f544
+// @relayRequestID 8307a07fd758b266c010dfe847337dda
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -142,6 +142,7 @@ return {
                         "name": "progress",
                         "plural": false,
                         "selections": [
+                          (v1/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -155,8 +156,7 @@ return {
                             "kind": "ScalarField",
                             "name": "state",
                             "storageKey": null
-                          },
-                          (v1/*: any*/)
+                          }
                         ],
                         "storageKey": null
                       },
@@ -269,7 +269,7 @@ return {
     ]
   },
   "params": {
-    "id": "d4bc486e1029176a962d36fa8e89f544",
+    "id": "8307a07fd758b266c010dfe847337dda",
     "metadata": {},
     "name": "SelectTopicSearchQuery",
     "operationKind": "query",

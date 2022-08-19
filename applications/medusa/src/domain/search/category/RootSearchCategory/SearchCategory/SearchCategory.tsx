@@ -1,12 +1,11 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { SearchCategoryQuery } from '@//:artifacts/SearchCategoryQuery.graphql'
 import { NotFoundCategory } from '@//:modules/content/Placeholder'
-import { HStack, Stack } from '@chakra-ui/react'
+import { Heading, HStack, Stack } from '@chakra-ui/react'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import { usePaginationFragment } from 'react-relay'
 import { Trans } from '@lingui/macro'
 import SearchSummary from '../../../../../common/components/PageHeader/SearchSummary/SearchSummary'
-import PostOrderButton from '../../../../../common/components/PageHeader/PostOrderButton/PostOrderButton'
 import SearchButton from '../../../../../common/components/PageHeader/SearchButton/SearchButton'
 import SearchCategoryRecommendations from './SearchCategoryRecommendations/SearchCategoryRecommendations'
 import SearchCategoryRichObject
@@ -94,7 +93,10 @@ export default function SearchCategory ({ query }: Props): JSX.Element {
             totalLikes={queryData.category.totalLikes}
           />
           <SearchCategoryRecommendations query={queryData} />
-          <HStack justify='flex-end' spacing={2}>
+          <HStack justify='space-between' spacing={2}>
+            <Heading color='gray.00' fontSize='2xl'>
+              {queryData.category.title}
+            </Heading>
             <SearchButton />
           </HStack>
         </Stack>

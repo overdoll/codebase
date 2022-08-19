@@ -31,6 +31,7 @@ const Fragment = graphql`
     id
     isSupporterOnly
     resource {
+      id
       failed
     }
     ...PostContentPreviewMenuFragment

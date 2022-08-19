@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d8040354e5a6c65eb29b40f904e608ee>>
- * @relayHash 9728fde4d92ebf1b952d9e49f42ac892
+ * @generated SignedSource<<7fb69eab091d57d636860fcea97939e5>>
+ * @relayHash 4dcb47971f4c3a017b836ed5fd9f0fb9
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9728fde4d92ebf1b952d9e49f42ac892
+// @relayRequestID 4dcb47971f4c3a017b836ed5fd9f0fb9
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -216,6 +216,7 @@ return {
                                 "name": "progress",
                                 "plural": false,
                                 "selections": [
+                                  (v4/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -229,8 +230,7 @@ return {
                                     "kind": "ScalarField",
                                     "name": "state",
                                     "storageKey": null
-                                  },
-                                  (v4/*: any*/)
+                                  }
                                 ],
                                 "storageKey": null
                               },
@@ -352,7 +352,7 @@ return {
     ]
   },
   "params": {
-    "id": "9728fde4d92ebf1b952d9e49f42ac892",
+    "id": "4dcb47971f4c3a017b836ed5fd9f0fb9",
     "metadata": {},
     "name": "StaffViewTopicCategoriesFragmentPaginationFragment",
     "operationKind": "query",

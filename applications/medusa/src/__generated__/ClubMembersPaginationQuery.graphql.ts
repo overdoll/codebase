@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<aaccdf6cb4044428c8b3e94c4070a557>>
- * @relayHash 8bbbbe81ed0699230f90eda27c06d06d
+ * @generated SignedSource<<bf00bbeb0c02de2e15d87a78c4ce9538>>
+ * @relayHash f1ccfce7ebd38a33a8d90216cf80266a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8bbbbe81ed0699230f90eda27c06d06d
+// @relayRequestID f1ccfce7ebd38a33a8d90216cf80266a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -269,6 +269,7 @@ return {
                                     "name": "progress",
                                     "plural": false,
                                     "selections": [
+                                      (v4/*: any*/),
                                       {
                                         "alias": null,
                                         "args": null,
@@ -282,8 +283,7 @@ return {
                                         "kind": "ScalarField",
                                         "name": "state",
                                         "storageKey": null
-                                      },
-                                      (v4/*: any*/)
+                                      }
                                     ],
                                     "storageKey": null
                                   }
@@ -362,7 +362,7 @@ return {
     ]
   },
   "params": {
-    "id": "8bbbbe81ed0699230f90eda27c06d06d",
+    "id": "f1ccfce7ebd38a33a8d90216cf80266a",
     "metadata": {},
     "name": "ClubMembersPaginationQuery",
     "operationKind": "query",

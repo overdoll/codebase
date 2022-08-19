@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<92fb0eb0d050ec1525ec8ffd31d648b5>>
- * @relayHash e05101d05118ea7b0c55ff213605f9a8
+ * @generated SignedSource<<870576d3e0f92dce2ad536c9eb58f4c7>>
+ * @relayHash f8b8d73c8fc5c224d47a7feeade729dc
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e05101d05118ea7b0c55ff213605f9a8
+// @relayRequestID f8b8d73c8fc5c224d47a7feeade729dc
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -251,6 +251,7 @@ v17 = {
               "name": "content",
               "plural": true,
               "selections": [
+                (v6/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -258,7 +259,6 @@ v17 = {
                   "name": "isSupporterOnly",
                   "storageKey": null
                 },
-                (v6/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -293,6 +293,7 @@ v17 = {
                       "name": "progress",
                       "plural": false,
                       "selections": [
+                        (v6/*: any*/),
                         {
                           "alias": null,
                           "args": null,
@@ -306,8 +307,7 @@ v17 = {
                           "kind": "ScalarField",
                           "name": "state",
                           "storageKey": null
-                        },
-                        (v6/*: any*/)
+                        }
                       ],
                       "storageKey": null
                     },
@@ -764,7 +764,7 @@ return {
     ]
   },
   "params": {
-    "id": "e05101d05118ea7b0c55ff213605f9a8",
+    "id": "f8b8d73c8fc5c224d47a7feeade729dc",
     "metadata": {},
     "name": "AccountClubSupporterSubscriptionSettingsQuery",
     "operationKind": "query",

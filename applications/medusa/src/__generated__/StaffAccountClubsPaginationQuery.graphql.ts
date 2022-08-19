@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<243c197ccefa7ef451aad2452055eb5a>>
- * @relayHash 2221ca07c03c11c547dd3df679c51f59
+ * @generated SignedSource<<4865452bed5c9737ae41625bd6523d16>>
+ * @relayHash ae966d09d87b07e5577de93f053b5e8e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 2221ca07c03c11c547dd3df679c51f59
+// @relayRequestID ae966d09d87b07e5577de93f053b5e8e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -280,6 +280,7 @@ return {
                                 "name": "progress",
                                 "plural": false,
                                 "selections": [
+                                  (v4/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -293,8 +294,7 @@ return {
                                     "kind": "ScalarField",
                                     "name": "state",
                                     "storageKey": null
-                                  },
-                                  (v4/*: any*/)
+                                  }
                                 ],
                                 "storageKey": null
                               },
@@ -367,7 +367,7 @@ return {
     ]
   },
   "params": {
-    "id": "2221ca07c03c11c547dd3df679c51f59",
+    "id": "ae966d09d87b07e5577de93f053b5e8e",
     "metadata": {},
     "name": "StaffAccountClubsPaginationQuery",
     "operationKind": "query",

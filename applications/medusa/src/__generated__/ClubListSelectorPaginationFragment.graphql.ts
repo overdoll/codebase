@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<5b34e7b712ef45df8c333980251dab1d>>
- * @relayHash 34322b11040b7db8a2904f84c5664f3c
+ * @generated SignedSource<<44b99062f993c8889e38549399169337>>
+ * @relayHash 827d35d4fd450ed54601fcc03f86ece7
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 34322b11040b7db8a2904f84c5664f3c
+// @relayRequestID 827d35d4fd450ed54601fcc03f86ece7
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -299,6 +299,7 @@ return {
                                 "name": "progress",
                                 "plural": false,
                                 "selections": [
+                                  (v7/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -312,8 +313,7 @@ return {
                                     "kind": "ScalarField",
                                     "name": "state",
                                     "storageKey": null
-                                  },
-                                  (v7/*: any*/)
+                                  }
                                 ],
                                 "storageKey": null
                               },
@@ -388,7 +388,7 @@ return {
     ]
   },
   "params": {
-    "id": "34322b11040b7db8a2904f84c5664f3c",
+    "id": "827d35d4fd450ed54601fcc03f86ece7",
     "metadata": {},
     "name": "ClubListSelectorPaginationFragment",
     "operationKind": "query",

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<475f84d5c4e055da78a54eb4f0ca39a7>>
- * @relayHash e837f5ae3eda1688644428a9b5b85b33
+ * @generated SignedSource<<b78c259b96d34fafcdb079995db22e9e>>
+ * @relayHash 7ff49b6a961dd1203772f1631aaded4d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e837f5ae3eda1688644428a9b5b85b33
+// @relayRequestID 7ff49b6a961dd1203772f1631aaded4d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -342,6 +342,7 @@ return {
                             "name": "progress",
                             "plural": false,
                             "selections": [
+                              (v4/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -355,8 +356,7 @@ return {
                                 "kind": "ScalarField",
                                 "name": "state",
                                 "storageKey": null
-                              },
-                              (v4/*: any*/)
+                              }
                             ],
                             "storageKey": null
                           },
@@ -431,7 +431,7 @@ return {
     ]
   },
   "params": {
-    "id": "e837f5ae3eda1688644428a9b5b85b33",
+    "id": "7ff49b6a961dd1203772f1631aaded4d",
     "metadata": {},
     "name": "StaffViewTopicQuery",
     "operationKind": "query",

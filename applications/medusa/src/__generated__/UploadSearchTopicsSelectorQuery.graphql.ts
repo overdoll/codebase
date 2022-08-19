@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d0ab7a92ead1069273d6ea29f5b3bc09>>
- * @relayHash 6dcd498305210c69d154dccb83670f79
+ * @generated SignedSource<<61d1192c8106f14254008d815eaba0ff>>
+ * @relayHash ff21ae2d971161934b7358cca6533444
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6dcd498305210c69d154dccb83670f79
+// @relayRequestID ff21ae2d971161934b7358cca6533444
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -95,6 +95,7 @@ v4 = {
       "name": "progress",
       "plural": false,
       "selections": [
+        (v1/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -108,8 +109,7 @@ v4 = {
           "kind": "ScalarField",
           "name": "state",
           "storageKey": null
-        },
-        (v1/*: any*/)
+        }
       ],
       "storageKey": null
     },
@@ -329,7 +329,7 @@ return {
     ]
   },
   "params": {
-    "id": "6dcd498305210c69d154dccb83670f79",
+    "id": "ff21ae2d971161934b7358cca6533444",
     "metadata": {},
     "name": "UploadSearchTopicsSelectorQuery",
     "operationKind": "query",

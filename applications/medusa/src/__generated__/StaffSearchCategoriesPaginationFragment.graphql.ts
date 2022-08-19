@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c9b2188f4be489e75cb9b8c9ce8d4f33>>
- * @relayHash 63cd9bc67a92639245b79aec888aa0b7
+ * @generated SignedSource<<298950de9563865b5d8373198d5da173>>
+ * @relayHash 071f2fe4f43446e159130597ab983eb0
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 63cd9bc67a92639245b79aec888aa0b7
+// @relayRequestID 071f2fe4f43446e159130597ab983eb0
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -199,6 +199,7 @@ return {
                         "name": "progress",
                         "plural": false,
                         "selections": [
+                          (v5/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -212,8 +213,7 @@ return {
                             "kind": "ScalarField",
                             "name": "state",
                             "storageKey": null
-                          },
-                          (v5/*: any*/)
+                          }
                         ],
                         "storageKey": null
                       },
@@ -328,7 +328,7 @@ return {
     ]
   },
   "params": {
-    "id": "63cd9bc67a92639245b79aec888aa0b7",
+    "id": "071f2fe4f43446e159130597ab983eb0",
     "metadata": {},
     "name": "StaffSearchCategoriesPaginationFragment",
     "operationKind": "query",

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<83526ca32c4aca197ad977f23b01b6f5>>
- * @relayHash 37530c469d93a8d791015011ae5f624b
+ * @generated SignedSource<<4aec2b4e7d6333a0700f0e2f1b29c037>>
+ * @relayHash 68fc844ed8662aa6fcaa10b037237638
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 37530c469d93a8d791015011ae5f624b
+// @relayRequestID 68fc844ed8662aa6fcaa10b037237638
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -332,6 +332,7 @@ return {
                     "name": "progress",
                     "plural": false,
                     "selections": [
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -345,8 +346,7 @@ return {
                         "kind": "ScalarField",
                         "name": "state",
                         "storageKey": null
-                      },
-                      (v4/*: any*/)
+                      }
                     ],
                     "storageKey": null
                   }
@@ -362,7 +362,7 @@ return {
     ]
   },
   "params": {
-    "id": "37530c469d93a8d791015011ae5f624b",
+    "id": "68fc844ed8662aa6fcaa10b037237638",
     "metadata": {},
     "name": "RecoveryCodeMutation",
     "operationKind": "mutation",
