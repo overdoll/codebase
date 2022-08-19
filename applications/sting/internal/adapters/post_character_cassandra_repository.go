@@ -2,9 +2,7 @@ package adapters
 
 import (
 	"context"
-	"github.com/scylladb/gocqlx/v2"
 	"go.uber.org/zap"
-	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/localization"
@@ -242,46 +240,6 @@ func (r PostsCassandraElasticsearchRepository) GetCharacterBySlug(ctx context.Co
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateCharacterSlug(ctx context.Context, id, slug string, keepOld bool) error {
-
-	if id == "all_characters" && slug == "all_characters" {
-
-		scanner := database.NewScan(r.session,
-			database.ScanConfig{
-				NodesInCluster: 1,
-				CoresInNode:    2,
-				SmudgeFactor:   3,
-			},
-		)
-
-		err := scanner.RunIterator(ctx, characterTable, func(iter *gocqlx.Iterx) error {
-
-			var c character
-
-			for iter.StructScan(&c) {
-
-				newName := strings.ToLower(strings.Join(strings.Split(c.Name["en"], " "), "-"))
-
-				if newName != c.Slug {
-					if err := r.updateCharacterSlug(ctx, c.Id, newName, true); err != nil {
-						return err
-					}
-				}
-			}
-
-			return nil
-		})
-
-		if err != nil {
-			return err
-		}
-
-		return nil
-	}
-
-	return r.updateCharacterSlug(ctx, id, slug, keepOld)
-}
-
-func (r PostsCassandraElasticsearchRepository) updateCharacterSlug(ctx context.Context, id, slug string, keepOld bool) error {
 
 	char, err := r.getRawCharacterById(ctx, id)
 
