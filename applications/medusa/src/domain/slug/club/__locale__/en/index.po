@@ -39,8 +39,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/RootClubPostsPreview/RootClubPostsPreview.tsx:165
-msgid "Best"
-msgstr ""
+#~ msgid "Best"
+#~ msgstr ""
 
 #: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/BillingSummary/BillingSummary.tsx:79
 msgid "Billed every 30 days, starting from the day you subscribe. You can cancel at any time from your Billing page, which is located in your Account Settings."
@@ -93,6 +93,10 @@ msgstr ""
 
 #: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/RootClubPostsPreview/RootClubPostsPreview.tsx:174
 msgid "Fresh"
+msgstr ""
+
+#: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/RootClubPostsPreview/RootClubPostsPreview.tsx:165
+msgid "Hot"
 msgstr ""
 
 #: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:67

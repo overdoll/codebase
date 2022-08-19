@@ -89,7 +89,7 @@ msgstr ""
 msgid "Content Menu"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:115
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:139
 msgid "Creating Your Post"
 msgstr ""
 
@@ -182,7 +182,7 @@ msgstr ""
 #~ msgid "Have a character suggestion or want your character listed? Send us an email at hello@overdoll.com!"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:108
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:109
 msgid "Help"
 msgstr ""
 
@@ -227,12 +227,12 @@ msgid "Post Content Processed"
 msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:52
-msgid "Post Submitted"
-msgstr ""
+#~ msgid "Post Submitted"
+#~ msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:41
-msgid "Post again"
-msgstr ""
+#~ msgid "Post again"
+#~ msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/UploadArrangeStep.tsx:70
 #~ msgid "Posting {0} media"
@@ -252,7 +252,7 @@ msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:120
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:87
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:93
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:94
 msgid "Processing Failed"
 msgstr ""
 
@@ -366,11 +366,11 @@ msgstr ""
 msgid "Show only original characters"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:106
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:108
 msgid "Submit"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:23
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:29
 msgid "Submitted For Review"
 msgstr ""
 
@@ -386,9 +386,13 @@ msgstr ""
 msgid "Tell your fans what it's really all about"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:28
-msgid "Thanks for posting! Your submission will be reviewed by our moderation team to ensure it does not violate any club guidelines. Once approved, it will be visible to the public."
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:37
+msgid "Thanks for posting! Your post was submitted for review. Once approved, it will be visible to the public."
 msgstr ""
+
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:28
+#~ msgid "Thanks for posting! Your submission will be reviewed by our moderation team to ensure it does not violate any club guidelines. Once approved, it will be visible to the public."
+#~ msgstr ""
 
 #: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadAudienceStep/UploadAudienceStep.tsx:47
 #~ msgid "The audience is the group of people that you intended this post for. This will determine whether or not a user can see your post based on their set preferences."
@@ -410,7 +414,7 @@ msgstr ""
 msgid "The selected post has no categories"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:76
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:100
 msgid "There was an error creating a draft post"
 msgstr ""
 
@@ -434,7 +438,7 @@ msgstr ""
 msgid "There was an error saving the characters"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:92
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:94
 msgid "There was an error submitting your post"
 msgstr ""
 
@@ -446,7 +450,7 @@ msgstr ""
 #~ msgid "There was an error updating the post content"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:96
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:97
 msgid "This content failed to process. Please remove the content and try uploading it again."
 msgstr ""
 
@@ -494,7 +498,7 @@ msgstr ""
 #~ msgid "Upstanding netizens will read the <0>Club Guidelines</0> carefully. Creating and submitting a post also means you agree to these guidelines."
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:115
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:116
 msgid "We were not able to process your upload through our system. This could be because the format of the file is invalid or a completely separate issue. Please remove the content and try uploading files that are as close to the source file as possible."
 msgstr ""
 
@@ -548,8 +552,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:57
-msgid "Your post is now visible to the public"
-msgstr ""
+#~ msgid "Your post is now visible to the public"
+#~ msgstr ""
 
 #: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:27
 #~ msgid "Your post will be reviewed to ensure it falls within our community guidelines. Once approved, it will be visible to the public."

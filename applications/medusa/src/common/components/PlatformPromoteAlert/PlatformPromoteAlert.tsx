@@ -30,17 +30,17 @@ export default function PlatformPromoteAlert (): JSX.Element {
   return (
     <Flex w='100%' position='relative'>
       <Flex w='100%' h='100%' top={0} right={0} left={0} {...GLOW} position='absolute' />
-      <LargeBackgroundBox borderRadius='lg' bg='gray.900' zIndex={1} w='100%' borderColor='teal.300'>
+      <LargeBackgroundBox borderRadius='lg' bg='gray.900' zIndex={1} w='100%'>
         <Stack spacing={2}>
           <Stack>
             <HStack align='center'>
               <Icon
-                w={5}
-                h={5}
+                w={4}
+                h={4}
                 icon={InfoCircle}
-                fill='teal.300'
+                fill='gray.200'
               />
-              <Heading color='teal.300' fontSize='lg'>
+              <Heading color='gray.200' fontSize='lg'>
                 <Trans>
                   Want more content?
                 </Trans>

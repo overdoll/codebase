@@ -137,7 +137,12 @@ msgstr ""
 #~ msgid "Contact us through one of the following methods"
 #~ msgstr ""
 
-#: src/modules/hooks/useCopyToClipboardWrapper.ts:23
+#: src/common/components/PlatformPromoteAlert/PlatformShareDiscordButton/PlatformShareDiscordButton.tsx:21
+#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostShareDiscordButton/PostShareDiscordButton.tsx:49
+msgid "Copied Discord link! Send it in a channel or direct message!"
+msgstr ""
+
+#: src/modules/hooks/useCopyToClipboardWrapper.ts:27
 msgid "Copied to clipboard!"
 msgstr ""
 
@@ -145,9 +150,14 @@ msgstr ""
 msgid "Copy"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostMenu/PostCopyLinkButton/PostCopyLinkButton.tsx:44
-#~ msgid "Copy Link"
-#~ msgstr ""
+#: src/common/components/PlatformPromoteAlert/PlatformShareDiscordButton/PlatformShareDiscordButton.tsx:26
+#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostShareDiscordButton/PostShareDiscordButton.tsx:54
+msgid "Copy Discord Link"
+msgstr ""
+
+#: src/common/components/PlatformPromoteAlert/PlatformShareDirectButton/PlatformShareDirectButton.tsx:23
+msgid "Copy Link"
+msgstr ""
 
 #: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostCopyLinkButton/PostCopyLinkButton.tsx:46
 msgid "Copy Post Link"
@@ -257,6 +267,10 @@ msgstr ""
 
 #: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:58
 msgid "Last Year"
+msgstr ""
+
+#: src/common/components/PlatformPromoteAlert/PlatformPromoteAlert.tsx:50
+msgid "Let your favorite artists know about us! Use any one of the share buttons below."
 msgstr ""
 
 #: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostLikeButton/PostLikeButton.tsx:57
@@ -588,6 +602,16 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
+#: src/common/components/PlatformPromoteAlert/PlatformShareRedditButton/PlatformShareRedditButton.tsx:43
+#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostShareRedditButton/PostShareRedditButton.tsx:72
+msgid "Share on Reddit"
+msgstr ""
+
+#: src/common/components/PlatformPromoteAlert/PlatformShareTwitterButton/PlatformShareTwitterButton.tsx:47
+#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostShareTwitterButton/PostShareTwitterButton.tsx:87
+msgid "Share on Twitter"
+msgstr ""
+
 #: src/common/components/ClubTransactionMetrics/ClubTransactionMetrics.tsx:68
 msgid "Show Older Metrics"
 msgstr ""
@@ -838,6 +862,10 @@ msgstr ""
 
 #: src/common/components/ChangeCharacterName/ChangeCharacterName.tsx:43
 msgid "View Translations"
+msgstr ""
+
+#: src/common/components/PlatformPromoteAlert/PlatformPromoteAlert.tsx:44
+msgid "Want more content?"
 msgstr ""
 
 #: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchResults/SearchResults.tsx:50

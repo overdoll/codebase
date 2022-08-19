@@ -50,7 +50,7 @@ export default function PostInfiniteScroll ({
 
   if (((data?.edges) != null) && data?.edges.length < 1) {
     return (
-      <Stack spacing={8}>
+      <Stack spacing={24}>
         <EmptyPosts />
         <PlatformPromoteAlert />
       </Stack>
@@ -84,7 +84,7 @@ export default function PostInfiniteScroll ({
       )
     }
     return (
-      <Stack>
+      <Stack spacing={2}>
         {endOfTree}
         <Box
           h={{

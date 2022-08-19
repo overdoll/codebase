@@ -1,12 +1,13 @@
-import { Box, Center } from '@chakra-ui/react'
+import { Box, BoxProps, Center } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 
-interface Props {
+interface Props extends BoxProps {
   children: ReactNode
 }
 
 export default function PageWrapper ({
-  children
+  children,
+  ...rest
 }: Props): JSX.Element {
   return (
     <Center mt={{
@@ -23,6 +24,7 @@ export default function PageWrapper ({
           md: 6
         }}
         h='100%'
+        {...rest}
       >
         {children}
       </Box>

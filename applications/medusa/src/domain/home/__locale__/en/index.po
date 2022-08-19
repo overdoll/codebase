@@ -18,7 +18,11 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/home/RootHome/Home/Home.tsx:72
-msgid "Home"
+#~ msgid "Home"
+#~ msgstr ""
+
+#: src/domain/home/RootHome/Home/Home.tsx:73
+msgid "Hot Posts"
 msgstr ""
 
 #: src/domain/home/RootHome/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:102

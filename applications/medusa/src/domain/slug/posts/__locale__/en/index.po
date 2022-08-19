@@ -18,5 +18,5 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/slug/posts/RootPublicClubPosts/PublicClubPosts/PublicClubPosts.tsx:102
-#~ msgid "{0}'s Posts"
-#~ msgstr ""
+msgid "{0}'s Posts"
+msgstr ""
