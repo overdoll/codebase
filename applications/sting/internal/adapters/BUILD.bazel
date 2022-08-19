@@ -45,6 +45,7 @@ go_library(
         "//applications/sting/internal/domain/curation",
         "//applications/sting/internal/domain/games",
         "//applications/sting/internal/domain/post",
+        "//applications/sting/internal/domain/resource_options",
         "//libraries/bucket",
         "//libraries/cache",
         "//libraries/crypt",

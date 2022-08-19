@@ -3,6 +3,7 @@ package activities
 import (
 	"context"
 	"overdoll/applications/sting/internal/domain/club"
+	"overdoll/applications/sting/internal/domain/resource_options"
 	"overdoll/libraries/resource"
 )
 
@@ -31,7 +32,7 @@ func (h *Activities) UpdateClubBanner(ctx context.Context, input UpdateClubBanne
 		return nil
 	}
 
-	newContent, err := h.loader.CopyResourceIntoImage(ctx, input.PostId, chosenResource.ID(), false, "CLUB_BANNER", 480, 0, pst.ClubId())
+	newContent, err := h.loader.CopyResourceIntoImage(ctx, resource_options.NewResourceOptionsForClubBanner(chosenResource, pst.ClubId()))
 
 	if err != nil {
 		return err

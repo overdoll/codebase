@@ -6,6 +6,7 @@ import (
 	"google.golang.org/grpc/status"
 	loader "overdoll/applications/loader/proto"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/applications/sting/internal/domain/resource_options"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/resource"
@@ -53,21 +54,21 @@ func (s LoaderGrpc) CreateOrGetResourcesFromUploads(ctx context.Context, itemId 
 	return resources, nil
 }
 
-func (s LoaderGrpc) CopyResourceIntoImage(ctx context.Context, itemId string, resourceId string, private bool, token string, width uint64, height uint64, newItemId string) (*post.NewResource, error) {
+func (s LoaderGrpc) CopyResourceIntoImage(ctx context.Context, options *resource_options.ResourceOptions) (*post.NewResource, error) {
 
 	var toApply []*loader.ResourceIdentifier
 
 	toApply = append(toApply, &loader.ResourceIdentifier{
-		Id:     resourceId,
-		ItemId: itemId,
+		Id:     options.ResourceId(),
+		ItemId: options.Id(),
 	})
 
 	md, err := s.client.CopyResourcesAndApplyFilter(ctx, &loader.CopyResourcesAndApplyFilterRequest{
 		Resources: toApply,
-		Private:   private,
-		Config:    &loader.Config{Height: height, Width: width},
-		NewItemId: newItemId,
-		Token:     token,
+		Private:   options.Private(),
+		Config:    &loader.Config{Height: uint64(options.Height()), Width: uint64(options.Width())},
+		NewItemId: options.NewId(),
+		Token:     options.Token(),
 		Source:    proto.SOURCE_STING,
 	})
 
