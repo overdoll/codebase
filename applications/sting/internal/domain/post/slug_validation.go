@@ -3,7 +3,7 @@ package post
 import (
 	"github.com/go-playground/validator/v10"
 	"overdoll/libraries/errors/domainerror"
-	"regexp"
+	"strings"
 )
 
 func validateSlug(slug string) error {
@@ -14,14 +14,24 @@ func validateSlug(slug string) error {
 		return domainerror.NewValidation(err.Error())
 	}
 
-	match, err := regexp.MatchString("^(?!-)(?!.*--)[A-Za-z0-9-]+(?<!-)$", slug)
+	repeatCount := 1
+	lastChar := ""
 
-	if err != nil {
-		return err
+	for _, r := range slug {
+		c := string(r)
+		if c == lastChar {
+			repeatCount++
+			if repeatCount > 2 && c == "-" {
+				return domainerror.NewValidation("slug cannot contain consecutive hyphens")
+			}
+		} else {
+			repeatCount = 1
+		}
+		lastChar = c
 	}
 
-	if !match {
-		return domainerror.NewValidation("slug cannot end or start with hyphen. slug cannot contain consecutive hyphens")
+	if strings.HasSuffix(slug, "-") || strings.HasPrefix(slug, "-") {
+		return domainerror.NewValidation("slug cannot end or start with hyphen")
 	}
 
 	return nil
