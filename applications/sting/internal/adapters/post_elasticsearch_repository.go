@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"go.uber.org/zap"
+	"hash/fnv"
 	"math"
 	"math/big"
 	"overdoll/libraries/cache"
@@ -616,38 +617,35 @@ func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, re
 		query.Filter(filterQueries...)
 	}
 
-	seed, err := r.getRandomizerSeed(ctx, "postsFeed")
+	if filter.Seed() != nil {
 
-	if err != nil {
-		return nil, err
+		h := fnv.New32a()
+		if _, err := h.Write([]byte(*filter.Seed())); err != nil {
+			return nil, err
+		}
+
+		query.Must(elastic.NewFunctionScoreQuery().AddScoreFunc(elastic.NewRandomFunction().Seed(h.Sum32())))
+
+	} else {
+
+		seed, err := r.getRandomizerSeed(ctx, "postsFeed")
+
+		if err != nil {
+			return nil, err
+		}
+
+		query.Must(elastic.NewFunctionScoreQuery().AddScoreFunc(elastic.NewRandomFunction().Seed(seed)))
+
 	}
 
-	query.Must(elastic.NewFunctionScoreQuery().AddScoreFunc(elastic.NewRandomFunction().Seed(seed)))
-
-	//scoreQuery := elastic.NewFunctionScoreQuery()
-
-	// decay from initial post time
-	//scoreQuery.AddScoreFunc(
-	//	elastic.
-	//		NewGaussDecayFunction().
-	//		FieldName("posted_at").
-	//		Scale("1d").
-	//		Decay(0),
-	//)
-
 	// multiply by likes for this post
-	//scoreQuery.AddScoreFunc(
+	//query.Must(elastic.NewFunctionScoreQuery().AddScoreFunc(
 	//	elastic.
 	//		NewFieldValueFactorFunction().
 	//		Field("likes").
 	//		Factor(0).
 	//		Modifier("none"),
-	//)
-
-	//query.Must(scoreQuery)
-	//
-	//// multiply results
-	//scoreQuery.ScoreMode("multiply")
+	//))
 
 	builder.Query(query)
 
@@ -760,13 +758,26 @@ func (r PostsCassandraElasticsearchRepository) SearchPosts(ctx context.Context, 
 
 	if filter.SortBy() == post.AlgorithmSort {
 
-		seed, err := r.getRandomizerSeed(ctx, "postsSearch")
+		if filter.Seed() != nil {
 
-		if err != nil {
-			return nil, err
+			h := fnv.New32a()
+			if _, err := h.Write([]byte(*filter.Seed())); err != nil {
+				return nil, err
+			}
+
+			query.Must(elastic.NewFunctionScoreQuery().AddScoreFunc(elastic.NewRandomFunction().Seed(h.Sum32())))
+
+		} else {
+
+			seed, err := r.getRandomizerSeed(ctx, "postsSearch")
+
+			if err != nil {
+				return nil, err
+			}
+
+			query.Must(elastic.NewFunctionScoreQuery().AddScoreFunc(elastic.NewRandomFunction().Seed(seed)))
+
 		}
-
-		query.Must(elastic.NewFunctionScoreQuery().AddScoreFunc(elastic.NewRandomFunction().Seed(seed)))
 	}
 
 	if filterQueries != nil {

@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"go.uber.org/zap"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/localization"
@@ -203,6 +204,63 @@ func (r PostsCassandraElasticsearchRepository) CreateTopic(ctx context.Context, 
 	return nil
 }
 
+func (r PostsCassandraElasticsearchRepository) UpdateTopicSlug(ctx context.Context, id, slug string, keepOld bool) error {
+
+	topic, err := r.getRawTopicById(ctx, id)
+
+	if err != nil {
+		return err
+	}
+
+	// first, do a unique insert of slug to ensure we reserve a unique slug
+	applied, err := topicSlugTable.
+		InsertBuilder().
+		Unique().
+		Query(r.session).
+		WithContext(ctx).
+		SerialConsistency(gocql.Serial).
+		BindStruct(topicSlugs{Slug: strings.ToLower(slug), TopicId: id}).
+		ExecCASRelease()
+
+	if err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to create unique topic slug")
+	}
+
+	if !applied {
+		zap.S().Infow("slug already exists, will perform local update", zap.String("slug", slug))
+	}
+
+	if applied && !keepOld {
+		if err := r.deleteUniqueTopicSlug(ctx, id, topic.Slug); err != nil {
+			return err
+		}
+	}
+
+	topic.Slug = slug
+
+	if err := r.session.
+		Query(topicsTable.Update("slug")).
+		WithContext(ctx).
+		Idempotent(true).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(topic).
+		ExecRelease(); err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to update topic slug")
+	}
+
+	unmarshalled, err := r.unmarshalTopicFromDatabase(ctx, topic)
+
+	if err != nil {
+		return err
+	}
+
+	if err := r.indexTopic(ctx, unmarshalled); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r PostsCassandraElasticsearchRepository) updateTopic(ctx context.Context, id string, updateFn func(category *post.Topic) error, columns []string) (*post.Topic, error) {
 
 	topic, err := r.getTopicById(ctx, id)
@@ -260,7 +318,7 @@ func (r PostsCassandraElasticsearchRepository) UpdateTopicWeight(ctx context.Con
 	return r.updateTopic(ctx, id, updateFn, []string{"weight"})
 }
 
-func (r PostsCassandraElasticsearchRepository) getTopicById(ctx context.Context, topicId string) (*post.Topic, error) {
+func (r PostsCassandraElasticsearchRepository) getRawTopicById(ctx context.Context, topicId string) (*topics, error) {
 
 	var topic topics
 
@@ -279,5 +337,16 @@ func (r PostsCassandraElasticsearchRepository) getTopicById(ctx context.Context,
 		return nil, errors.Wrap(err, "failed to get topic by id")
 	}
 
-	return r.unmarshalTopicFromDatabase(ctx, &topic)
+	return &topic, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) getTopicById(ctx context.Context, topicId string) (*post.Topic, error) {
+
+	topic, err := r.getRawTopicById(ctx, topicId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return r.unmarshalTopicFromDatabase(ctx, topic)
 }

@@ -11,13 +11,7 @@ type DeletePostLikeInput struct {
 
 func (h *Activities) DeletePostLike(ctx context.Context, input DeletePostLikeInput) error {
 
-	like, err := h.pr.GetPostLikeByIdOperator(ctx, input.PostId, input.AccountId)
-
-	if err != nil {
-		return err
-	}
-
-	if err := h.pr.DeletePostLike(ctx, like); err != nil {
+	if err := h.pr.DeletePostLike(ctx, input.PostId, input.AccountId); err != nil {
 		return err
 	}
 

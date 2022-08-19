@@ -55,6 +55,19 @@ type PostWithViewer struct {
 	Post *PostWithViewerLike `graphql:"post(reference: $reference)"`
 }
 
+type AccountLikedPosts struct {
+	Entities []struct {
+		Account struct {
+			ID         string
+			LikedPosts *struct {
+				Edges []*struct {
+					Node PostModified
+				}
+			} `graphql:"likedPosts()"`
+		} `graphql:"... on Account"`
+	} `graphql:"_entities(representations: $representations)"`
+}
+
 func getPostWithViewerLike(t *testing.T, accountId, id string) PostWithViewer {
 
 	client := getGraphqlClientWithAuthenticatedAccount(t, accountId)
@@ -107,6 +120,21 @@ func TestLikePost_and_undo_and_delete(t *testing.T) {
 	require.NotNil(t, postAfterLiked.Post.ViewerLiked, "viewer like object should exist")
 
 	require.Equal(t, 1, postAfterLiked.Post.Likes, "post has 1 like")
+
+	var accountLiked AccountLikedPosts
+
+	err = client.Query(context.Background(), &accountLiked, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Account",
+				"id":         convertAccountIdToRelayId(testingAccountId),
+			},
+		},
+	})
+
+	require.NoError(t, err, "no error getting account liked posts")
+
+	require.Equal(t, 1, len(accountLiked.Entities[0].Account.LikedPosts.Edges), "has 1 liked post")
 
 	removeLikeWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.RemovePostLike, mock.Anything)
 

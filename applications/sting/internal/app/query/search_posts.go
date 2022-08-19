@@ -27,6 +27,7 @@ type SearchPosts struct {
 	SortBy string
 
 	ShowSuspendedClubs bool
+	Seed               *string
 }
 
 type SearchPostsHandler struct {
@@ -109,6 +110,7 @@ func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*p
 		characterIds,
 		seriesIds,
 		query.ShowSuspendedClubs,
+		query.Seed,
 	)
 
 	if err != nil {

@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"go.uber.org/zap"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/localization"
@@ -305,6 +306,63 @@ func (r PostsCassandraElasticsearchRepository) CreateSeries(ctx context.Context,
 			return errors.Wrap(support.NewGocqlError(err), "failed to delete series")
 		}
 
+		return err
+	}
+
+	return nil
+}
+
+func (r PostsCassandraElasticsearchRepository) UpdateSeriesSlug(ctx context.Context, id, slug string, keepOld bool) error {
+
+	serial, err := r.getSingleSeriesById(ctx, id)
+
+	if err != nil {
+		return err
+	}
+
+	// first, do a unique insert of slug to ensure we reserve a unique slug
+	applied, err := seriesSlugTable.
+		InsertBuilder().
+		Unique().
+		Query(r.session).
+		WithContext(ctx).
+		SerialConsistency(gocql.Serial).
+		BindStruct(seriesSlug{Slug: strings.ToLower(slug), SeriesId: id}).
+		ExecCASRelease()
+
+	if err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to create unique series slug")
+	}
+
+	if !applied {
+		zap.S().Infow("slug already exists, will perform local update", zap.String("slug", slug))
+	}
+
+	if applied && !keepOld {
+		if err := r.deleteUniqueSeriesSlug(ctx, id, serial.Slug); err != nil {
+			return err
+		}
+	}
+
+	serial.Slug = slug
+
+	if err := r.session.
+		Query(seriesTable.Update("slug")).
+		WithContext(ctx).
+		Idempotent(true).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(serial).
+		ExecRelease(); err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to update series slug")
+	}
+
+	unmarshalled, err := r.unmarshalSeriesFromDatabase(ctx, serial)
+
+	if err != nil {
+		return err
+	}
+
+	if err := r.indexSeries(ctx, unmarshalled); err != nil {
 		return err
 	}
 

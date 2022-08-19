@@ -48,12 +48,14 @@ type Commands struct {
 	UpdateCurationProfileDateOfBirth command.UpdateCurationProfileDateOfBirthHandler
 
 	CreateAudience           command.CreateAudienceHandler
+	UpdateAudienceSlug       command.UpdateAudienceSlugHandler
 	UpdateAudienceTitle      command.UpdateAudienceTitleHandler
 	UpdateAudienceThumbnail  command.UpdateAudienceThumbnailHandler
 	UpdateAudienceIsStandard command.UpdateAudienceIsStandardHandler
 	UpdateAudienceBanner     command.UpdateAudienceBannerHandler
 
 	CreateCategory                 command.CreateCategoryHandler
+	UpdateCategorySlug             command.UpdateCategorySlugHandler
 	UpdateCategoryTitle            command.UpdateCategoryTitleHandler
 	UpdateCategoryTopic            command.UpdateCategoryTopicHandler
 	UpdateCategoryThumbnail        command.UpdateCategoryThumbnailHandler
@@ -62,16 +64,19 @@ type Commands struct {
 	RemoveCategoryAlternativeTitle command.RemoveCategoryAlternativeTitleHandler
 
 	CreateCharacter          command.CreateCharacterHandler
+	UpdateCharacterSlug      command.UpdateCharacterSlugHandler
 	UpdateCharacterName      command.UpdateCharacterNameHandler
 	UpdateCharacterThumbnail command.UpdateCharacterThumbnailHandler
 	GenerateCharacterBanner  command.GenerateCharacterBannerHandler
 
 	CreateSeries          command.CreateSeriesHandler
+	UpdateSeriesSlug      command.UpdateSeriesSlugHandler
 	UpdateSeriesTitle     command.UpdateSeriesTitleHandler
 	UpdateSeriesThumbnail command.UpdateSeriesThumbnailHandler
 	GenerateSeriesBanner  command.GenerateSeriesBannerHandler
 
 	CreateTopic            command.CreateTopicHandler
+	UpdateTopicSlug        command.UpdateTopicSlugHandler
 	UpdateTopicTitle       command.UpdateTopicTitleHandler
 	UpdateTopicDescription command.UpdateTopicDescriptionHandler
 	UpdateTopicWeight      command.UpdateTopicWeightHandler
@@ -118,6 +123,8 @@ type Queries struct {
 	SearchPosts query.SearchPostsHandler
 	PostById    query.PostByIdHandler
 	PostsByIds  query.PostsByIdsHandler
+
+	AccountLikedPosts query.AccountLikedPostsHandler
 
 	ClubCharactersCount query.ClubCharactersCountHandler
 

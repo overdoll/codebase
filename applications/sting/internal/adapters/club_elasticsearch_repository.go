@@ -316,6 +316,10 @@ func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, r
 		}
 	}
 
+	if filter.ExcludeEmpty() {
+		query.Must(elastic.NewRangeQuery("total_posts").Gt(0))
+	}
+
 	builder.Query(query)
 
 	response, err := builder.Pretty(true).Do(ctx)

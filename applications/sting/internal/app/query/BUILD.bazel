@@ -8,6 +8,7 @@ go_library(
         "account_club_memberships_limit.go",
         "account_clubs_count.go",
         "account_clubs_limit.go",
+        "account_liked_posts.go",
         "audience_by_slug.go",
         "audiences_by_ids.go",
         "can_delete_account_data.go",

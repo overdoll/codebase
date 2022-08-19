@@ -80,6 +80,9 @@ type Query {
     """Filter by the title of the category."""
     title: String
 
+    """Exclude empty categories (categories that have 0 posts)."""
+    excludeEmpty: Boolean! = false
+
     """Sorting options for categories."""
     sortBy: CategoriesSort! = POPULAR
   ): CategoryConnection!

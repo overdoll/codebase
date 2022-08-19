@@ -296,6 +296,10 @@ func (r PostsCassandraElasticsearchRepository) SearchCharacters(ctx context.Cont
 		query.Filter(elastic.NewTermQuery("club_id", *filter.ClubId()))
 	}
 
+	if filter.ExcludeEmpty() {
+		query.Must(elastic.NewRangeQuery("total_posts").Gt(0))
+	}
+
 	builder.Query(query)
 
 	response, err := builder.Pretty(true).Do(ctx)

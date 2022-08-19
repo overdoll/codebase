@@ -28,7 +28,7 @@ func (r *MutationResolver) CreatePost(ctx context.Context, input types.CreatePos
 	}
 
 	return &types.CreatePostPayload{
-		Post: types.MarshalPostToGraphQL(ctx, pst),
+		Post: types.MarshalPostToGraphQL(ctx, pst, nil),
 	}, nil
 }
 
@@ -52,7 +52,7 @@ func (r *MutationResolver) SubmitPost(ctx context.Context, input types.SubmitPos
 	}
 
 	return &types.SubmitPostPayload{
-		Post: types.MarshalPostToGraphQL(ctx, pst),
+		Post: types.MarshalPostToGraphQL(ctx, pst, nil),
 	}, nil
 }
 
@@ -100,7 +100,7 @@ func (r *MutationResolver) ArchivePost(ctx context.Context, input types.ArchiveP
 	}
 
 	return &types.ArchivePostPayload{
-		Post: types.MarshalPostToGraphQL(ctx, pst),
+		Post: types.MarshalPostToGraphQL(ctx, pst, nil),
 	}, nil
 }
 
@@ -124,7 +124,7 @@ func (r *MutationResolver) UnArchivePost(ctx context.Context, input types.UnArch
 	}
 
 	return &types.UnArchivePostPayload{
-		Post: types.MarshalPostToGraphQL(ctx, pst),
+		Post: types.MarshalPostToGraphQL(ctx, pst, nil),
 	}, nil
 }
 
@@ -150,7 +150,7 @@ func (r *MutationResolver) UpdatePostDescription(ctx context.Context, input type
 	}
 
 	return &types.UpdatePostDescriptionPayload{
-		Post: types.MarshalPostToGraphQL(ctx, pst),
+		Post: types.MarshalPostToGraphQL(ctx, pst, nil),
 	}, nil
 }
 
@@ -175,7 +175,7 @@ func (r *MutationResolver) UpdatePostAudience(ctx context.Context, input types.U
 	}
 
 	return &types.UpdatePostAudiencePayload{
-		Post: types.MarshalPostToGraphQL(ctx, pst),
+		Post: types.MarshalPostToGraphQL(ctx, pst, nil),
 	}, nil
 }
 
@@ -200,7 +200,7 @@ func (r *MutationResolver) AddPostContent(ctx context.Context, input types.AddPo
 	}
 
 	return &types.AddPostContentPayload{
-		Post: types.MarshalPostToGraphQL(ctx, pst),
+		Post: types.MarshalPostToGraphQL(ctx, pst, nil),
 	}, nil
 }
 
@@ -231,7 +231,7 @@ func (r *MutationResolver) RemovePostContent(ctx context.Context, input types.Re
 	}
 
 	return &types.RemovePostContentPayload{
-		Post: types.MarshalPostToGraphQL(ctx, pst),
+		Post: types.MarshalPostToGraphQL(ctx, pst, nil),
 	}, nil
 }
 
@@ -262,7 +262,7 @@ func (r *MutationResolver) UpdatePostContentOrder(ctx context.Context, input typ
 	}
 
 	return &types.UpdatePostContentOrderPayload{
-		Post: types.MarshalPostToGraphQL(ctx, pst),
+		Post: types.MarshalPostToGraphQL(ctx, pst, nil),
 	}, nil
 }
 
@@ -294,7 +294,7 @@ func (r *MutationResolver) UpdatePostContentIsSupporterOnly(ctx context.Context,
 	}
 
 	return &types.UpdatePostContentIsSupporterOnlyPayload{
-		Post: types.MarshalPostToGraphQL(ctx, pst),
+		Post: types.MarshalPostToGraphQL(ctx, pst, nil),
 	}, nil
 }
 
@@ -325,7 +325,7 @@ func (r *MutationResolver) UpdatePostCharacters(ctx context.Context, input types
 	}
 
 	return &types.UpdatePostCharactersPayload{
-		Post: types.MarshalPostToGraphQL(ctx, pst),
+		Post: types.MarshalPostToGraphQL(ctx, pst, nil),
 	}, nil
 }
 
@@ -356,6 +356,6 @@ func (r *MutationResolver) UpdatePostCategories(ctx context.Context, input types
 	}
 
 	return &types.UpdatePostCategoriesPayload{
-		Post: types.MarshalPostToGraphQL(ctx, pst),
+		Post: types.MarshalPostToGraphQL(ctx, pst, nil),
 	}, nil
 }

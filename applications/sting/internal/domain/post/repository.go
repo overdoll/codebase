@@ -22,9 +22,11 @@ type Repository interface {
 	AddPostOccupiedResource(ctx context.Context, post *Post, resource *resource.Resource) error
 
 	CreatePostLike(ctx context.Context, like *Like) error
-	DeletePostLike(ctx context.Context, like *Like) error
+	DeletePostLike(ctx context.Context, postId string, accountId string) error
 	GetPostLikeById(ctx context.Context, requester *principal.Principal, postId, accountId string) (*Like, error)
 	GetPostLikeByIdOperator(ctx context.Context, postId, accountId string) (*Like, error)
+
+	AccountPostLikes(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*LikedPost, error)
 
 	UpdatePost(ctx context.Context, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostContent(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
@@ -49,6 +51,7 @@ type Repository interface {
 	UpdateCharacterThumbnailOperator(ctx context.Context, id string, updateFn func(character *Character) error) (*Character, error)
 	UpdateCharacterThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(character *Character) error) (*Character, error)
 	UpdateCharacterName(ctx context.Context, requester *principal.Principal, id string, updateFn func(character *Character) error) (*Character, error)
+	UpdateCharacterSlug(ctx context.Context, id, slug string, keepOld bool) error
 
 	UpdateCharacterTotalPostsOperator(ctx context.Context, id string, updateFn func(character *Character) error) (*Character, error)
 	UpdateCharacterTotalLikesOperator(ctx context.Context, id string, updateFn func(character *Character) error) (*Character, error)
@@ -65,6 +68,7 @@ type Repository interface {
 	UpdateAudienceBanner(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *Audience) error) (*Audience, error)
 	UpdateAudienceTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *Audience) error) (*Audience, error)
 	UpdateAudienceIsStandard(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *Audience) error) (*Audience, error)
+	UpdateAudienceSlug(ctx context.Context, id, slug string, keepOld bool) error
 
 	UpdateAudienceTotalPostsOperator(ctx context.Context, id string, updateFn func(audience *Audience) error) (*Audience, error)
 	UpdateAudienceTotalLikesOperator(ctx context.Context, id string, updateFn func(audience *Audience) error) (*Audience, error)
@@ -79,6 +83,7 @@ type Repository interface {
 	UpdateSeriesThumbnailOperator(ctx context.Context, id string, updateFn func(series *Series) error) (*Series, error)
 	UpdateSeriesThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(series *Series) error) (*Series, error)
 	UpdateSeriesTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(series *Series) error) (*Series, error)
+	UpdateSeriesSlug(ctx context.Context, id, slug string, keepOld bool) error
 
 	UpdateSeriesTotalPostsOperator(ctx context.Context, id string, updateFn func(series *Series) error) (*Series, error)
 	UpdateSeriesTotalLikesOperator(ctx context.Context, id string, updateFn func(series *Series) error) (*Series, error)
@@ -92,6 +97,7 @@ type Repository interface {
 	UpdateTopicTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(topic *Topic) error) (*Topic, error)
 	UpdateTopicDescription(ctx context.Context, requester *principal.Principal, id string, updateFn func(topic *Topic) error) (*Topic, error)
 	UpdateTopicWeight(ctx context.Context, requester *principal.Principal, id string, updateFn func(topic *Topic) error) (*Topic, error)
+	UpdateTopicSlug(ctx context.Context, id, slug string, keepOld bool) error
 
 	GetCategoryById(ctx context.Context, categoryId string) (*Category, error)
 	GetCategoriesByIds(ctx context.Context, categoryIds []string) ([]*Category, error)
@@ -105,6 +111,7 @@ type Repository interface {
 	UpdateCategoryTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *Category) error) (*Category, error)
 	UpdateCategoryTopic(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *Category) error) (*Category, error)
 	UpdateCategoryAlternativeTitles(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *Category) error) (*Category, error)
+	UpdateCategorySlug(ctx context.Context, id, slug string, keepOld bool) error
 
 	UpdateCategoryTotalPostsOperator(ctx context.Context, id string, updateFn func(category *Category) error) (*Category, error)
 	UpdateCategoryTotalLikesOperator(ctx context.Context, id string, updateFn func(category *Category) error) (*Category, error)
@@ -127,7 +134,7 @@ type Repository interface {
 
 	SearchTopics(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*Topic, error)
 
-	SearchSeries(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *ObjectFilters) ([]*Series, error)
+	SearchSeries(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *SeriesFilters) ([]*Series, error)
 	GetTotalLikesForSeriesOperator(ctx context.Context, series *Series) (int, error)
 	GetTotalPostsForSeriesOperator(ctx context.Context, series *Series) (int, error)
 

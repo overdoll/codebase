@@ -19,7 +19,7 @@ func (r SeriesResolver) Title(ctx context.Context, obj *types.Series, locale *st
 	return graphql.GetTranslationFromTranslationsAndLanguage(obj.TitleTranslations, locale)
 }
 
-func (r SeriesResolver) Posts(ctx context.Context, obj *types.Series, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, sortBy types.PostsSort) (*types.PostConnection, error) {
+func (r SeriesResolver) Posts(ctx context.Context, obj *types.Series, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) (*types.PostConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -51,6 +51,7 @@ func (r SeriesResolver) Posts(ctx context.Context, obj *types.Series, after *str
 		State:               stateModified,
 		SortBy:              sortBy.String(),
 		ShowSuspendedClubs:  false,
+		Seed:                seed,
 	})
 
 	if err != nil {

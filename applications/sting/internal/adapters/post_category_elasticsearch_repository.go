@@ -213,6 +213,10 @@ func (r PostsCassandraElasticsearchRepository) SearchCategories(ctx context.Cont
 		}
 	}
 
+	if filter.ExcludeEmpty() {
+		query.Must(elastic.NewRangeQuery("total_posts").Gt(0))
+	}
+
 	builder.Query(query)
 
 	response, err := builder.Do(ctx)

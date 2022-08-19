@@ -28,7 +28,7 @@ func postsByIds(app *app.Application) *dataloader.Loader[string, *types.Post] {
 
 					for _, result := range results {
 						mapping = append(mapping, graphql.Mapping[*types.Post]{
-							Data: types.MarshalPostToGraphQL(ctx, result),
+							Data: types.MarshalPostToGraphQL(ctx, result, nil),
 							Id:   result.ID(),
 						})
 					}

@@ -13,7 +13,7 @@ import (
 	"overdoll/libraries/principal"
 )
 
-func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
+func MarshalPostToGraphQL(ctx context.Context, result *post.Post, like *post.Like) *Post {
 
 	var categories []*Category
 
@@ -116,6 +116,12 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 		}
 	}
 
+	var viewerLiked *PostLike
+
+	if like != nil {
+		viewerLiked = MarshalPostLikeToGraphQL(ctx, like)
+	}
+
 	return &Post{
 		ID:                      relay.NewID(Post{}, result.ID()),
 		SupporterOnlyStatus:     supporterOnlyStatus,
@@ -124,6 +130,7 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post) *Post {
 		Contributor:             &Account{ID: relay.NewID(Account{}, result.ContributorId())},
 		Club:                    &Club{ID: relay.NewID(Club{}, result.ClubId())},
 		Audience:                audience,
+		ViewerLiked:             viewerLiked,
 		State:                   state,
 		Content:                 content,
 		Categories:              categories,
@@ -735,6 +742,64 @@ func MarshalAudienceToGraphQLConnection(ctx context.Context, results []*post.Aud
 	return conn
 }
 
+func MarshalLikedPostToGraphQLConnection(ctx context.Context, results []*post.LikedPost, cursor *paging.Cursor) *PostConnection {
+	var posts []*PostEdge
+
+	conn := &PostConnection{
+		PageInfo: &relay.PageInfo{
+			HasNextPage:     false,
+			HasPreviousPage: false,
+			StartCursor:     nil,
+			EndCursor:       nil,
+		},
+		Edges: posts,
+	}
+
+	limit := cursor.GetLimit()
+
+	if len(results) == 0 {
+		return conn
+	}
+
+	if len(results) == limit {
+		conn.PageInfo.HasNextPage = cursor.First() != nil
+		conn.PageInfo.HasPreviousPage = cursor.Last() != nil
+		results = results[:len(results)-1]
+	}
+
+	var nodeAt func(int) *post.LikedPost
+
+	if cursor != nil && cursor.Last() != nil {
+		n := len(results) - 1
+		nodeAt = func(i int) *post.LikedPost {
+			return results[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *post.LikedPost {
+			return results[i]
+		}
+	}
+
+	for i := range results {
+		node := nodeAt(i)
+		posts = append(posts, &PostEdge{
+			Node:   MarshalPostToGraphQL(ctx, node.Post(), node.Like()),
+			Cursor: node.Post().Cursor(),
+		})
+	}
+
+	conn.Edges = posts
+
+	if len(results) > 0 {
+		res := results[0].Post().Cursor()
+		conn.PageInfo.StartCursor = &res
+		res = results[len(results)-1].Post().Cursor()
+		conn.PageInfo.EndCursor = &res
+	}
+
+	return conn
+}
+
 func MarshalPostToGraphQLConnection(ctx context.Context, results []*post.Post, cursor *paging.Cursor) *PostConnection {
 	var posts []*PostEdge
 
@@ -776,7 +841,7 @@ func MarshalPostToGraphQLConnection(ctx context.Context, results []*post.Post, c
 	for i := range results {
 		node := nodeAt(i)
 		posts = append(posts, &PostEdge{
-			Node:   MarshalPostToGraphQL(ctx, node),
+			Node:   MarshalPostToGraphQL(ctx, node, nil),
 			Cursor: node.Cursor(),
 		})
 	}

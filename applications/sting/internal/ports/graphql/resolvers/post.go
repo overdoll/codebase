@@ -88,6 +88,11 @@ func (r PostResolver) SuggestedPosts(ctx context.Context, obj *types.Post, after
 
 func (r PostResolver) ViewerLiked(ctx context.Context, obj *types.Post) (*types.PostLike, error) {
 
+	// we may have already preloaded viewerLiked
+	if obj.ViewerLiked != nil {
+		return obj.ViewerLiked, nil
+	}
+
 	// non-authed users will just return nil
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, nil

@@ -8,12 +8,13 @@ import (
 )
 
 type SearchCategories struct {
-	Principal *principal.Principal
-	Cursor    *paging.Cursor
-	Title     *string
-	TopicId   *string
-	Slugs     []string
-	SortBy    string
+	Principal    *principal.Principal
+	Cursor       *paging.Cursor
+	Title        *string
+	TopicId      *string
+	Slugs        []string
+	SortBy       string
+	ExcludeEmpty bool
 }
 
 type SearchCategoriesHandler struct {
@@ -31,6 +32,7 @@ func (h SearchCategoriesHandler) Handle(ctx context.Context, query SearchCategor
 		query.SortBy,
 		query.Slugs,
 		query.TopicId,
+		query.ExcludeEmpty,
 	)
 
 	if err != nil {

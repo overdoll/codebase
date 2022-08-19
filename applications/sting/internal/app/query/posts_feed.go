@@ -12,6 +12,7 @@ import (
 type PostsFeed struct {
 	Principal *principal.Principal
 	Cursor    *paging.Cursor
+	Seed      *string
 }
 
 type PostsFeedHandler struct {
@@ -40,7 +41,7 @@ func (h PostsFeedHandler) Handle(ctx context.Context, query PostsFeed) ([]*post.
 		categoryIds = personalProfile.CategoryIds()
 	}
 
-	filters, err := post.NewPostFeed(audienceIDs, categoryIds)
+	filters, err := post.NewPostFeed(audienceIDs, categoryIds, query.Seed)
 
 	if err != nil {
 		return nil, err

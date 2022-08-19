@@ -74,6 +74,9 @@ extend type Query {
     """Filter by the title of the series."""
     title: String
 
+    """Exclude empty series (series that have 0 posts)."""
+    excludeEmpty: Boolean! = false
+
     """Sorting options for series."""
     sortBy: SeriesSort! = POPULAR
   ): SeriesConnection!

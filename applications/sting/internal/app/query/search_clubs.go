@@ -17,6 +17,7 @@ type SearchClubs struct {
 	Suspended      *bool
 	Slugs          []string
 	Terminated     *bool
+	ExcludeEmpty   bool
 }
 
 type SearchClubsHandler struct {
@@ -36,6 +37,7 @@ func (h SearchClubsHandler) Handle(ctx context.Context, query SearchClubs) ([]*c
 		query.Slugs,
 		query.OwnerAccountId,
 		query.Terminated,
+		query.ExcludeEmpty,
 	)
 
 	if err != nil {

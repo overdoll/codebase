@@ -82,6 +82,7 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 		nil,
 		nil,
 		false,
+		nil,
 	)
 
 	require.NoError(t, err, "no error creating empty filters")
