@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0773d006319d35f745649ae2be27c9ea>>
- * @relayHash ef57aeb36957a8640538ea1576fc6583
+ * @generated SignedSource<<4207517ef0d12f2d10da857083723996>>
+ * @relayHash bf5171c953cb461b88c9a0cf6476dd0d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ef57aeb36957a8640538ea1576fc6583
+// @relayRequestID bf5171c953cb461b88c9a0cf6476dd0d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -169,7 +169,14 @@ v17 = {
   ],
   "storageKey": null
 },
-v18 = [
+v18 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v19 = [
   (v8/*: any*/),
   (v9/*: any*/)
 ];
@@ -347,6 +354,7 @@ return {
                                 "storageKey": null
                               },
                               (v9/*: any*/),
+                              (v18/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -363,13 +371,6 @@ return {
                                   (v17/*: any*/),
                                   (v11/*: any*/)
                                 ],
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "name",
                                 "storageKey": null
                               },
                               {
@@ -408,7 +409,7 @@ return {
                             "kind": "LinkedField",
                             "name": "viewerReport",
                             "plural": false,
-                            "selections": (v18/*: any*/),
+                            "selections": (v19/*: any*/),
                             "storageKey": null
                           },
                           {
@@ -418,7 +419,39 @@ return {
                             "kind": "LinkedField",
                             "name": "viewerLiked",
                             "plural": false,
-                            "selections": (v18/*: any*/),
+                            "selections": (v19/*: any*/),
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Character",
+                            "kind": "LinkedField",
+                            "name": "characters",
+                            "plural": true,
+                            "selections": [
+                              (v18/*: any*/),
+                              (v9/*: any*/)
+                            ],
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Category",
+                            "kind": "LinkedField",
+                            "name": "categories",
+                            "plural": true,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "title",
+                                "storageKey": null
+                              },
+                              (v9/*: any*/)
+                            ],
                             "storageKey": null
                           },
                           {
@@ -492,7 +525,7 @@ return {
     ]
   },
   "params": {
-    "id": "ef57aeb36957a8640538ea1576fc6583",
+    "id": "bf5171c953cb461b88c9a0cf6476dd0d",
     "metadata": {},
     "name": "ClubPostsPreviewPaginationQuery",
     "operationKind": "query",

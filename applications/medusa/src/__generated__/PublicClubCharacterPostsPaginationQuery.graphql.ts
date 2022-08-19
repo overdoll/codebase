@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6a99756795fe9cbdd83327214ce89284>>
- * @relayHash 130e3de8f83dba47e17669e51c7b9872
+ * @generated SignedSource<<c8fc69c21ac94aae93a54cf3fed670f9>>
+ * @relayHash b72b57410b43e532ab188c1c2514e9c7
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 130e3de8f83dba47e17669e51c7b9872
+// @relayRequestID b72b57410b43e532ab188c1c2514e9c7
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -157,7 +157,14 @@ v16 = {
   ],
   "storageKey": null
 },
-v17 = [
+v17 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v18 = [
   (v7/*: any*/),
   (v8/*: any*/)
 ];
@@ -333,13 +340,7 @@ return {
                                 "storageKey": null
                               },
                               (v8/*: any*/),
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "name",
-                                "storageKey": null
-                              },
+                              (v17/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -394,7 +395,7 @@ return {
                             "kind": "LinkedField",
                             "name": "viewerReport",
                             "plural": false,
-                            "selections": (v17/*: any*/),
+                            "selections": (v18/*: any*/),
                             "storageKey": null
                           },
                           {
@@ -404,7 +405,39 @@ return {
                             "kind": "LinkedField",
                             "name": "viewerLiked",
                             "plural": false,
-                            "selections": (v17/*: any*/),
+                            "selections": (v18/*: any*/),
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Character",
+                            "kind": "LinkedField",
+                            "name": "characters",
+                            "plural": true,
+                            "selections": [
+                              (v17/*: any*/),
+                              (v8/*: any*/)
+                            ],
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Category",
+                            "kind": "LinkedField",
+                            "name": "categories",
+                            "plural": true,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "title",
+                                "storageKey": null
+                              },
+                              (v8/*: any*/)
+                            ],
                             "storageKey": null
                           },
                           {
@@ -477,7 +510,7 @@ return {
     ]
   },
   "params": {
-    "id": "130e3de8f83dba47e17669e51c7b9872",
+    "id": "b72b57410b43e532ab188c1c2514e9c7",
     "metadata": {},
     "name": "PublicClubCharacterPostsPaginationQuery",
     "operationKind": "query",

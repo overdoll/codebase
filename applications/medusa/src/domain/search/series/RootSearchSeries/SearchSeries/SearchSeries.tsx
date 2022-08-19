@@ -14,6 +14,7 @@ import FullSimplePost
   from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/FullSimplePost/FullSimplePost'
 import PostInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
+import PlatformPromoteAlert from '@//:common/components/PlatformPromoteAlert/PlatformPromoteAlert'
 
 interface Props {
   query: PreloadedQuery<SearchSeriesQuery>
@@ -106,6 +107,7 @@ export default function SearchSeries ({ query }: Props): JSX.Element {
             hasNext={hasNext}
             loadNext={loadNext}
             isLoadingNext={isLoadingNext}
+            endOfTree={<PlatformPromoteAlert />}
           >
             {({ index }) => (
               <FullSimplePost

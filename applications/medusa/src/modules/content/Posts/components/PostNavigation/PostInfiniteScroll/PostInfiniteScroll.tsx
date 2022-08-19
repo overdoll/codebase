@@ -3,11 +3,12 @@ import { graphql } from 'react-relay'
 import { Box, Flex, Spinner, Stack } from '@chakra-ui/react'
 import type { PostInfiniteScrollFragment$key } from '@//:artifacts/PostInfiniteScrollFragment.graphql'
 import LoadMoreObserver from '../PostsInfiniteScroll/LoadMoreObserver/LoadMoreObserver'
-import { Fragment, useTransition } from 'react'
+import { Fragment, ReactNode, useTransition } from 'react'
 import { LoadMoreFn } from 'react-relay/relay-hooks/useLoadMoreFunction'
 import { EmptyPosts } from '../../../../Placeholder'
 import runIfFunction from '../../../../../support/runIfFunction'
 import { MaybeRenderProp } from '@//:types/components'
+import PlatformPromoteAlert from '@//:common/components/PlatformPromoteAlert/PlatformPromoteAlert'
 
 interface ChildrenCallable {
   index: number
@@ -19,6 +20,7 @@ interface Props {
   loadNext: LoadMoreFn<any>
   isLoadingNext: boolean
   children: MaybeRenderProp<ChildrenCallable>
+  endOfTree?: ReactNode
 }
 
 const PostFragment = graphql`
@@ -36,7 +38,8 @@ export default function PostInfiniteScroll ({
   hasNext,
   loadNext,
   isLoadingNext,
-  children
+  children,
+  endOfTree
 }: Props): JSX.Element {
   const data = useFragment(PostFragment, query)
 
@@ -47,7 +50,10 @@ export default function PostInfiniteScroll ({
 
   if (((data?.edges) != null) && data?.edges.length < 1) {
     return (
-      <EmptyPosts />
+      <Stack spacing={8}>
+        <EmptyPosts />
+        <PlatformPromoteAlert />
+      </Stack>
     )
   }
 
@@ -78,13 +84,16 @@ export default function PostInfiniteScroll ({
       )
     }
     return (
-      <Box
-        h={{
-          base: 50,
-          md: 400
-        }}
-        w='100%'
-      />
+      <Stack>
+        {endOfTree}
+        <Box
+          h={{
+            base: 50,
+            md: 400
+          }}
+          w='100%'
+        />
+      </Stack>
     )
   }
 

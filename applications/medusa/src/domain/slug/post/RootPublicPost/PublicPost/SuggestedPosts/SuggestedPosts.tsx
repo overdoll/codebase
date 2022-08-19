@@ -7,6 +7,7 @@ import FullSimplePost
   from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/FullSimplePost/FullSimplePost'
 import PostInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
+import PlatformPromoteAlert from '@//:common/components/PlatformPromoteAlert/PlatformPromoteAlert'
 
 interface Props {
   query: SuggestedPostsFragment$key | null
@@ -60,6 +61,7 @@ export default function SuggestedPosts ({
       hasNext={hasNext}
       loadNext={loadNext}
       isLoadingNext={isLoadingNext}
+      endOfTree={<PlatformPromoteAlert />}
     >
       {({ index }) => (
         <FullSimplePost

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<4e1fd2c1aff2b76bfc9809e9aa681f0b>>
- * @relayHash 7f7efab813e0206827176b148409f83c
+ * @generated SignedSource<<9d0c79e053e401132b916848bd96711b>>
+ * @relayHash c533d9244dbe0790a4c2337d3c560968
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7f7efab813e0206827176b148409f83c
+// @relayRequestID c533d9244dbe0790a4c2337d3c560968
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -127,11 +127,18 @@ v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v11 = [
-  (v10/*: any*/),
+v12 = [
+  (v11/*: any*/),
   (v2/*: any*/)
 ];
 return {
@@ -269,13 +276,7 @@ return {
                         "storageKey": null
                       },
                       (v2/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "name",
-                        "storageKey": null
-                      },
+                      (v10/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -330,7 +331,7 @@ return {
                     "kind": "LinkedField",
                     "name": "viewerReport",
                     "plural": false,
-                    "selections": (v11/*: any*/),
+                    "selections": (v12/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -340,7 +341,39 @@ return {
                     "kind": "LinkedField",
                     "name": "viewerLiked",
                     "plural": false,
-                    "selections": (v11/*: any*/),
+                    "selections": (v12/*: any*/),
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Character",
+                    "kind": "LinkedField",
+                    "name": "characters",
+                    "plural": true,
+                    "selections": [
+                      (v10/*: any*/),
+                      (v2/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Category",
+                    "kind": "LinkedField",
+                    "name": "categories",
+                    "plural": true,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "title",
+                        "storageKey": null
+                      },
+                      (v2/*: any*/)
+                    ],
                     "storageKey": null
                   },
                   {
@@ -350,7 +383,7 @@ return {
                     "name": "description",
                     "storageKey": null
                   },
-                  (v10/*: any*/)
+                  (v11/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -404,7 +437,7 @@ return {
     ]
   },
   "params": {
-    "id": "7f7efab813e0206827176b148409f83c",
+    "id": "c533d9244dbe0790a4c2337d3c560968",
     "metadata": {},
     "name": "HomePostsPaginationQuery",
     "operationKind": "query",

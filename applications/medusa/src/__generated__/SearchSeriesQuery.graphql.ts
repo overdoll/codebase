@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<9f3539cb075e8351d76dcc1c8372151d>>
- * @relayHash e2a4228eef1a9927da35758f8b0fe21a
+ * @generated SignedSource<<d1240abd5fd481d6acaea30b0b240904>>
+ * @relayHash d36fa0a4e2ad2be794ddad2b93743606
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e2a4228eef1a9927da35758f8b0fe21a
+// @relayRequestID d36fa0a4e2ad2be794ddad2b93743606
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -446,6 +446,32 @@ return {
                       {
                         "alias": null,
                         "args": null,
+                        "concreteType": "Character",
+                        "kind": "LinkedField",
+                        "name": "characters",
+                        "plural": true,
+                        "selections": [
+                          (v16/*: any*/),
+                          (v7/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Category",
+                        "kind": "LinkedField",
+                        "name": "categories",
+                        "plural": true,
+                        "selections": [
+                          (v3/*: any*/),
+                          (v7/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
                         "kind": "ScalarField",
                         "name": "description",
                         "storageKey": null
@@ -631,7 +657,7 @@ return {
     ]
   },
   "params": {
-    "id": "e2a4228eef1a9927da35758f8b0fe21a",
+    "id": "d36fa0a4e2ad2be794ddad2b93743606",
     "metadata": {},
     "name": "SearchSeriesQuery",
     "operationKind": "query",

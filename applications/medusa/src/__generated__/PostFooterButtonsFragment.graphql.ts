@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cc7c26deb30c32313bf6b7c065eae6c0>>
+ * @generated SignedSource<<ceda98dcd3f494621e93ce68de0ac5c7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostFooterButtonsFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"PostCopyLinkButtonFragment" | "PostLikeButtonFragment" | "PostMenuButtonFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"PostCopyLinkButtonFragment" | "PostLikeButtonFragment" | "PostMenuButtonFragment" | "PostShareDiscordButtonFragment" | "PostShareRedditButtonFragment" | "PostShareTwitterButtonFragment">;
   readonly " $fragmentType": "PostFooterButtonsFragment";
 };
 export type PostFooterButtonsFragment$key = {
@@ -39,12 +39,27 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "PostCopyLinkButtonFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "PostShareRedditButtonFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "PostShareTwitterButtonFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "PostShareDiscordButtonFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 
-(node as any).hash = "41c80ede024af80b9c22fefd7a35cb0b";
+(node as any).hash = "a1bc2c4ecd46f81d049ea609cdbeb505";
 
 export default node;

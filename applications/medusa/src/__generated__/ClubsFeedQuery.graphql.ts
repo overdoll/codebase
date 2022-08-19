@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<9d1ed4eabb44d69470a36df78f238489>>
- * @relayHash b70facb4cc3b5c092e4376b65985f8ba
+ * @generated SignedSource<<adfd839ff303532b793b53ed4c563c63>>
+ * @relayHash 778ccd5b3566475fbc8d6f961d14edfb
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b70facb4cc3b5c092e4376b65985f8ba
+// @relayRequestID 778ccd5b3566475fbc8d6f961d14edfb
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -109,11 +109,18 @@ v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v10 = [
-  (v9/*: any*/),
+v11 = [
+  (v10/*: any*/),
   (v1/*: any*/)
 ];
 return {
@@ -280,13 +287,7 @@ return {
                             "storageKey": null
                           },
                           (v1/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "name",
-                            "storageKey": null
-                          },
+                          (v9/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -341,7 +342,7 @@ return {
                         "kind": "LinkedField",
                         "name": "viewerReport",
                         "plural": false,
-                        "selections": (v10/*: any*/),
+                        "selections": (v11/*: any*/),
                         "storageKey": null
                       },
                       {
@@ -351,7 +352,39 @@ return {
                         "kind": "LinkedField",
                         "name": "viewerLiked",
                         "plural": false,
-                        "selections": (v10/*: any*/),
+                        "selections": (v11/*: any*/),
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Character",
+                        "kind": "LinkedField",
+                        "name": "characters",
+                        "plural": true,
+                        "selections": [
+                          (v9/*: any*/),
+                          (v1/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Category",
+                        "kind": "LinkedField",
+                        "name": "categories",
+                        "plural": true,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "title",
+                            "storageKey": null
+                          },
+                          (v1/*: any*/)
+                        ],
                         "storageKey": null
                       },
                       {
@@ -361,7 +394,7 @@ return {
                         "name": "description",
                         "storageKey": null
                       },
-                      (v9/*: any*/)
+                      (v10/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -413,7 +446,7 @@ return {
             "name": "clubMembersPostsFeed"
           },
           (v1/*: any*/),
-          (v9/*: any*/),
+          (v10/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -436,7 +469,7 @@ return {
             "name": "lock",
             "plural": false,
             "selections": [
-              (v9/*: any*/),
+              (v10/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -455,7 +488,7 @@ return {
             "name": "deleting",
             "plural": false,
             "selections": [
-              (v9/*: any*/),
+              (v10/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -472,7 +505,7 @@ return {
     ]
   },
   "params": {
-    "id": "b70facb4cc3b5c092e4376b65985f8ba",
+    "id": "778ccd5b3566475fbc8d6f961d14edfb",
     "metadata": {},
     "name": "ClubsFeedQuery",
     "operationKind": "query",

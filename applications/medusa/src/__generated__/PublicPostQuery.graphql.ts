@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<903dab8bf92b289b0b06252b96f405f9>>
- * @relayHash 213ab66393557bbbb1e7ce76afcdb961
+ * @generated SignedSource<<f53f9011944616f056b506cc93965b85>>
+ * @relayHash 5aa69599699c942a56eebf151cc8b342
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 213ab66393557bbbb1e7ce76afcdb961
+// @relayRequestID 5aa69599699c942a56eebf151cc8b342
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -265,17 +265,24 @@ v27 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "description",
+  "name": "title",
   "storageKey": null
 },
 v28 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "description",
+  "storageKey": null
+},
+v29 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "expires",
   "storageKey": null
 },
-v29 = [
+v30 = [
   (v4/*: any*/),
   (v6/*: any*/)
 ];
@@ -456,7 +463,33 @@ return {
                       (v22/*: any*/),
                       (v25/*: any*/),
                       (v26/*: any*/),
-                      (v27/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Character",
+                        "kind": "LinkedField",
+                        "name": "characters",
+                        "plural": true,
+                        "selections": [
+                          (v3/*: any*/),
+                          (v6/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Category",
+                        "kind": "LinkedField",
+                        "name": "categories",
+                        "plural": true,
+                        "selections": [
+                          (v27/*: any*/),
+                          (v6/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      (v28/*: any*/),
                       (v23/*: any*/)
                     ],
                     "storageKey": null
@@ -528,7 +561,7 @@ return {
                 "name": "suspension",
                 "plural": false,
                 "selections": [
-                  (v28/*: any*/)
+                  (v29/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -620,7 +653,7 @@ return {
                 "kind": "LinkedField",
                 "name": "series",
                 "plural": false,
-                "selections": (v29/*: any*/),
+                "selections": (v30/*: any*/),
                 "storageKey": null
               },
               {
@@ -630,7 +663,7 @@ return {
                 "kind": "LinkedField",
                 "name": "club",
                 "plural": false,
-                "selections": (v29/*: any*/),
+                "selections": (v30/*: any*/),
                 "storageKey": null
               }
             ],
@@ -645,13 +678,7 @@ return {
             "plural": true,
             "selections": [
               (v6/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "title",
-                "storageKey": null
-              },
+              (v27/*: any*/),
               (v4/*: any*/),
               {
                 "alias": null,
@@ -671,7 +698,7 @@ return {
           },
           (v25/*: any*/),
           (v26/*: any*/),
-          (v27/*: any*/),
+          (v28/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -715,7 +742,7 @@ return {
             "plural": false,
             "selections": [
               (v23/*: any*/),
-              (v28/*: any*/)
+              (v29/*: any*/)
             ],
             "storageKey": null
           },
@@ -744,7 +771,7 @@ return {
     ]
   },
   "params": {
-    "id": "213ab66393557bbbb1e7ce76afcdb961",
+    "id": "5aa69599699c942a56eebf151cc8b342",
     "metadata": {},
     "name": "PublicPostQuery",
     "operationKind": "query",

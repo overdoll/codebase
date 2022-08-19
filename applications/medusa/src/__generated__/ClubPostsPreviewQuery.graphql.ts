@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a0488abbd98eeb3ea252aabf0ed04edd>>
- * @relayHash 06c11328219ca302fe589e275e839eeb
+ * @generated SignedSource<<f0f3d3701e41df4e8897f483974f0abe>>
+ * @relayHash aa544b2e181c211f5d9ab692120904bf
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 06c11328219ca302fe589e275e839eeb
+// @relayRequestID aa544b2e181c211f5d9ab692120904bf
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -149,11 +149,18 @@ v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v12 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v12 = [
-  (v11/*: any*/),
+v13 = [
+  (v12/*: any*/),
   (v3/*: any*/)
 ];
 return {
@@ -315,6 +322,7 @@ return {
                             "storageKey": null
                           },
                           (v3/*: any*/),
+                          (v11/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -331,13 +339,6 @@ return {
                               (v10/*: any*/),
                               (v4/*: any*/)
                             ],
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "name",
                             "storageKey": null
                           },
                           {
@@ -376,7 +377,7 @@ return {
                         "kind": "LinkedField",
                         "name": "viewerReport",
                         "plural": false,
-                        "selections": (v12/*: any*/),
+                        "selections": (v13/*: any*/),
                         "storageKey": null
                       },
                       {
@@ -386,7 +387,39 @@ return {
                         "kind": "LinkedField",
                         "name": "viewerLiked",
                         "plural": false,
-                        "selections": (v12/*: any*/),
+                        "selections": (v13/*: any*/),
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Character",
+                        "kind": "LinkedField",
+                        "name": "characters",
+                        "plural": true,
+                        "selections": [
+                          (v11/*: any*/),
+                          (v3/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Category",
+                        "kind": "LinkedField",
+                        "name": "categories",
+                        "plural": true,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "title",
+                            "storageKey": null
+                          },
+                          (v3/*: any*/)
+                        ],
                         "storageKey": null
                       },
                       {
@@ -396,7 +429,7 @@ return {
                         "name": "description",
                         "storageKey": null
                       },
-                      (v11/*: any*/)
+                      (v12/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -457,7 +490,7 @@ return {
     ]
   },
   "params": {
-    "id": "06c11328219ca302fe589e275e839eeb",
+    "id": "aa544b2e181c211f5d9ab692120904bf",
     "metadata": {},
     "name": "ClubPostsPreviewQuery",
     "operationKind": "query",

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a1db5c21e94b9506423deaf0e134bc82>>
- * @relayHash f7a194cfc4959a7689055ffbaed26d4f
+ * @generated SignedSource<<88c89502267876c049cd64ed18dfec75>>
+ * @relayHash ca51c943f78cc224f952e61c69caf412
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f7a194cfc4959a7689055ffbaed26d4f
+// @relayRequestID ca51c943f78cc224f952e61c69caf412
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -110,11 +110,18 @@ v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v10 = [
-  (v9/*: any*/),
+v11 = [
+  (v10/*: any*/),
   (v1/*: any*/)
 ];
 return {
@@ -278,13 +285,7 @@ return {
                         "storageKey": null
                       },
                       (v1/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "name",
-                        "storageKey": null
-                      },
+                      (v9/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -339,7 +340,7 @@ return {
                     "kind": "LinkedField",
                     "name": "viewerReport",
                     "plural": false,
-                    "selections": (v10/*: any*/),
+                    "selections": (v11/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -349,7 +350,39 @@ return {
                     "kind": "LinkedField",
                     "name": "viewerLiked",
                     "plural": false,
-                    "selections": (v10/*: any*/),
+                    "selections": (v11/*: any*/),
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Character",
+                    "kind": "LinkedField",
+                    "name": "characters",
+                    "plural": true,
+                    "selections": [
+                      (v9/*: any*/),
+                      (v1/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Category",
+                    "kind": "LinkedField",
+                    "name": "categories",
+                    "plural": true,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "title",
+                        "storageKey": null
+                      },
+                      (v1/*: any*/)
+                    ],
                     "storageKey": null
                   },
                   {
@@ -359,7 +392,7 @@ return {
                     "name": "description",
                     "storageKey": null
                   },
-                  (v9/*: any*/)
+                  (v10/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -418,7 +451,7 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v9/*: any*/),
+          (v10/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -446,7 +479,7 @@ return {
             "name": "lock",
             "plural": false,
             "selections": [
-              (v9/*: any*/),
+              (v10/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -465,7 +498,7 @@ return {
             "name": "deleting",
             "plural": false,
             "selections": [
-              (v9/*: any*/),
+              (v10/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -497,7 +530,7 @@ return {
     ]
   },
   "params": {
-    "id": "f7a194cfc4959a7689055ffbaed26d4f",
+    "id": "ca51c943f78cc224f952e61c69caf412",
     "metadata": {},
     "name": "HomeQuery",
     "operationKind": "query",

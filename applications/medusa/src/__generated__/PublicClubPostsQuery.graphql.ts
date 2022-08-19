@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0c8a04f557c848dfd21a42204a340b79>>
- * @relayHash 55a279ba03bf213b86eee58cc5e96d40
+ * @generated SignedSource<<97868a68ecad254fb395ad8784973a14>>
+ * @relayHash 607bde528f756b50166ff53c9a344f3b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 55a279ba03bf213b86eee58cc5e96d40
+// @relayRequestID 607bde528f756b50166ff53c9a344f3b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -423,8 +423,8 @@ return {
                             "storageKey": null
                           },
                           (v9/*: any*/),
-                          (v18/*: any*/),
                           (v7/*: any*/),
+                          (v18/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -472,6 +472,38 @@ return {
                         "name": "viewerLiked",
                         "plural": false,
                         "selections": (v20/*: any*/),
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Character",
+                        "kind": "LinkedField",
+                        "name": "characters",
+                        "plural": true,
+                        "selections": [
+                          (v7/*: any*/),
+                          (v9/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Category",
+                        "kind": "LinkedField",
+                        "name": "categories",
+                        "plural": true,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "title",
+                            "storageKey": null
+                          },
+                          (v9/*: any*/)
+                        ],
                         "storageKey": null
                       },
                       {
@@ -614,7 +646,7 @@ return {
     ]
   },
   "params": {
-    "id": "55a279ba03bf213b86eee58cc5e96d40",
+    "id": "607bde528f756b50166ff53c9a344f3b",
     "metadata": {},
     "name": "PublicClubPostsQuery",
     "operationKind": "query",

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<538437cb6b3f886a3d11d8bc9dfc1dbe>>
- * @relayHash 71734599d8af2f9330bd7ecd583ea8bd
+ * @generated SignedSource<<87a1339fcaf44c0269ec3b9469caceb6>>
+ * @relayHash 9216b46bcd579a4a333dd6d39a7d6ef1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 71734599d8af2f9330bd7ecd583ea8bd
+// @relayRequestID 9216b46bcd579a4a333dd6d39a7d6ef1
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -170,11 +170,18 @@ v16 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v17 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v17 = [
-  (v16/*: any*/),
+v18 = [
+  (v17/*: any*/),
   (v7/*: any*/)
 ];
 return {
@@ -363,13 +370,7 @@ return {
                             "storageKey": null
                           },
                           (v7/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "name",
-                            "storageKey": null
-                          },
+                          (v16/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -424,7 +425,7 @@ return {
                         "kind": "LinkedField",
                         "name": "viewerReport",
                         "plural": false,
-                        "selections": (v17/*: any*/),
+                        "selections": (v18/*: any*/),
                         "storageKey": null
                       },
                       {
@@ -434,7 +435,33 @@ return {
                         "kind": "LinkedField",
                         "name": "viewerLiked",
                         "plural": false,
-                        "selections": (v17/*: any*/),
+                        "selections": (v18/*: any*/),
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Character",
+                        "kind": "LinkedField",
+                        "name": "characters",
+                        "plural": true,
+                        "selections": [
+                          (v16/*: any*/),
+                          (v7/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Category",
+                        "kind": "LinkedField",
+                        "name": "categories",
+                        "plural": true,
+                        "selections": [
+                          (v3/*: any*/),
+                          (v7/*: any*/)
+                        ],
                         "storageKey": null
                       },
                       {
@@ -444,7 +471,7 @@ return {
                         "name": "description",
                         "storageKey": null
                       },
-                      (v16/*: any*/)
+                      (v17/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -526,7 +553,7 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v16/*: any*/),
+          (v17/*: any*/),
           (v7/*: any*/),
           {
             "alias": null,
@@ -603,7 +630,7 @@ return {
     ]
   },
   "params": {
-    "id": "71734599d8af2f9330bd7ecd583ea8bd",
+    "id": "9216b46bcd579a4a333dd6d39a7d6ef1",
     "metadata": {},
     "name": "SearchCategoryQuery",
     "operationKind": "query",

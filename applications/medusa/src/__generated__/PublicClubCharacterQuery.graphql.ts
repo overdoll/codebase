@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<685389209e5b43c4eb23d033b8f759cd>>
- * @relayHash 24dcce57b268a529b0461ec62c69b4ee
+ * @generated SignedSource<<6e29646a1d272030fdecf39ae1a4346c>>
+ * @relayHash d51d3ddb499586d5b7b9395fd9241a74
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 24dcce57b268a529b0461ec62c69b4ee
+// @relayRequestID d51d3ddb499586d5b7b9395fd9241a74
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -481,6 +481,38 @@ return {
                       {
                         "alias": null,
                         "args": null,
+                        "concreteType": "Character",
+                        "kind": "LinkedField",
+                        "name": "characters",
+                        "plural": true,
+                        "selections": [
+                          (v4/*: any*/),
+                          (v8/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Category",
+                        "kind": "LinkedField",
+                        "name": "categories",
+                        "plural": true,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "title",
+                            "storageKey": null
+                          },
+                          (v8/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
                         "kind": "ScalarField",
                         "name": "description",
                         "storageKey": null
@@ -589,7 +621,7 @@ return {
     ]
   },
   "params": {
-    "id": "24dcce57b268a529b0461ec62c69b4ee",
+    "id": "d51d3ddb499586d5b7b9395fd9241a74",
     "metadata": {},
     "name": "PublicClubCharacterQuery",
     "operationKind": "query",

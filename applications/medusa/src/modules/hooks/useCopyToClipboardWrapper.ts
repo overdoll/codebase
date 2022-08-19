@@ -5,9 +5,13 @@ import { useToast } from '../content/ThemeComponents'
 
 interface Props {
   text: string
+  response?: string
 }
 
-export default function useCopyToClipboardWrapper ({ text }: Props): [boolean, () => void] {
+export default function useCopyToClipboardWrapper ({
+  text,
+  response
+}: Props): [boolean, () => void] {
   const [copied] = useState(text)
 
   const {
@@ -20,7 +24,7 @@ export default function useCopyToClipboardWrapper ({ text }: Props): [boolean, (
   const onClickButton = (): void => {
     onCopy()
     notify({
-      title: t`Copied to clipboard!`,
+      title: response ?? t`Copied to clipboard!`,
       status: 'info',
       duration: 2000
     })

@@ -5,6 +5,9 @@ import { HStack } from '@chakra-ui/react'
 import PostMenuButton from './PostMenuButton/PostMenuButton'
 import PostLikeButton from './PostLikeButton/PostLikeButton'
 import PostCopyLinkButton from './PostCopyLinkButton/PostCopyLinkButton'
+import PostShareRedditButton from './PostShareRedditButton/PostShareRedditButton'
+import PostShareTwitterButton from './PostShareTwitterButton/PostShareTwitterButton'
+import PostShareDiscordButton from './PostShareDiscordButton/PostShareDiscordButton'
 
 interface Props {
   postQuery: PostFooterButtonsFragment$key
@@ -16,6 +19,9 @@ const PostFragment = graphql`
     ...PostMenuButtonFragment
     ...PostLikeButtonFragment
     ...PostCopyLinkButtonFragment
+    ...PostShareRedditButtonFragment
+    ...PostShareTwitterButtonFragment
+    ...PostShareDiscordButtonFragment
   }
 `
 const ViewerFragment = graphql`
@@ -36,6 +42,9 @@ export default function PostFooterButtons ({
     <HStack w='100%' justify='flex-end' spacing={1}>
       <PostMenuButton postQuery={postData} viewerQuery={viewerData} />
       <PostCopyLinkButton query={postData} />
+      <PostShareDiscordButton query={postData} />
+      <PostShareRedditButton query={postData} />
+      <PostShareTwitterButton query={postData} />
       <PostLikeButton postQuery={postData} viewerQuery={viewerData} />
     </HStack>
   )

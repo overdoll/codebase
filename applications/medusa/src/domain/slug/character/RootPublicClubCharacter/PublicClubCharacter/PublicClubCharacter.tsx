@@ -6,7 +6,6 @@ import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import { usePaginationFragment } from 'react-relay'
 import { Trans } from '@lingui/macro'
 import SearchSummary from '../../../../../common/components/PageHeader/SearchSummary/SearchSummary'
-import PostOrderButton from '../../../../../common/components/PageHeader/PostOrderButton/PostOrderButton'
 import SearchButton from '../../../../../common/components/PageHeader/SearchButton/SearchButton'
 import ClubCharacterRecommendations from './ClubCharacterRecommendations/ClubCharacterRecommendations'
 import PublicClubCharacterRichObject
@@ -15,6 +14,7 @@ import FullSimplePost
   from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/FullSimplePost/FullSimplePost'
 import PostInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
+import PlatformPromoteAlert from '@//:common/components/PlatformPromoteAlert/PlatformPromoteAlert'
 
 interface Props {
   query: PreloadedQuery<PublicClubCharacterQuery>
@@ -107,6 +107,7 @@ export default function PublicClubCharacter ({ query }: Props): JSX.Element {
             hasNext={hasNext}
             loadNext={loadNext}
             isLoadingNext={isLoadingNext}
+            endOfTree={<PlatformPromoteAlert />}
           >
             {({ index }) => (
               <FullSimplePost

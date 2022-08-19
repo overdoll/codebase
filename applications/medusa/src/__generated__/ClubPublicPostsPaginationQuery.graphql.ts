@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<70686d31da6edc4a6d4dd2b4f93968c2>>
- * @relayHash ca2d88d7bd2ad83a0e2321d248ebd7ec
+ * @generated SignedSource<<a4d7db493dc23125c627e5cf1789eba9>>
+ * @relayHash 1db4bd25d52d844ad61a47526ed98089
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ca2d88d7bd2ad83a0e2321d248ebd7ec
+// @relayRequestID 1db4bd25d52d844ad61a47526ed98089
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -202,7 +202,14 @@ v20 = {
   ],
   "storageKey": null
 },
-v21 = [
+v21 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v22 = [
   (v11/*: any*/),
   (v12/*: any*/)
 ];
@@ -386,6 +393,7 @@ return {
                                 "storageKey": null
                               },
                               (v12/*: any*/),
+                              (v21/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -402,13 +410,6 @@ return {
                                   (v20/*: any*/),
                                   (v14/*: any*/)
                                 ],
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "name",
                                 "storageKey": null
                               },
                               {
@@ -447,7 +448,7 @@ return {
                             "kind": "LinkedField",
                             "name": "viewerReport",
                             "plural": false,
-                            "selections": (v21/*: any*/),
+                            "selections": (v22/*: any*/),
                             "storageKey": null
                           },
                           {
@@ -457,7 +458,39 @@ return {
                             "kind": "LinkedField",
                             "name": "viewerLiked",
                             "plural": false,
-                            "selections": (v21/*: any*/),
+                            "selections": (v22/*: any*/),
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Character",
+                            "kind": "LinkedField",
+                            "name": "characters",
+                            "plural": true,
+                            "selections": [
+                              (v21/*: any*/),
+                              (v12/*: any*/)
+                            ],
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Category",
+                            "kind": "LinkedField",
+                            "name": "categories",
+                            "plural": true,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "title",
+                                "storageKey": null
+                              },
+                              (v12/*: any*/)
+                            ],
                             "storageKey": null
                           },
                           {
@@ -534,7 +567,7 @@ return {
     ]
   },
   "params": {
-    "id": "ca2d88d7bd2ad83a0e2321d248ebd7ec",
+    "id": "1db4bd25d52d844ad61a47526ed98089",
     "metadata": {},
     "name": "ClubPublicPostsPaginationQuery",
     "operationKind": "query",
