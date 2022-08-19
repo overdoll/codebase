@@ -123,7 +123,7 @@ func TestLikePost_and_undo_and_delete(t *testing.T) {
 
 	var accountLiked AccountLikedPosts
 
-	err = client.Mutate(context.Background(), &accountLiked, map[string]interface{}{
+	err = client.Query(context.Background(), &accountLiked, map[string]interface{}{
 		"representations": []_Any{
 			{
 				"__typename": "Account",
