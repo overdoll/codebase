@@ -226,6 +226,23 @@ type Account implements Node
   """Whether or not this account is a staff member"""
   isStaff: Boolean! @join__field(graph: EVA)
 
+  """All posts liked by this account, sorted by most recent."""
+  likedPosts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostConnection! @join__field(graph: STING)
+
   """The details of the account lock."""
   lock: AccountLock @join__field(graph: EVA)
 
@@ -317,6 +334,11 @@ type Account implements Node
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """
+    The seed to use for "algorithm" sort. Otherwise, uses a constant value that changes every 24 hours.
+    """
+    seed: String
 
     """Search by series slugs."""
     seriesSlugs: [String!]
@@ -1129,6 +1151,11 @@ type Audience implements Node
     """Returns the last _n_ elements from the list."""
     last: Int
 
+    """
+    The seed to use for "algorithm" sort. Otherwise, uses a constant value that changes every 24 hours.
+    """
+    seed: String
+
     """Search by series slugs."""
     seriesSlugs: [String!]
 
@@ -1598,6 +1625,11 @@ type Category implements Node
     """Returns the last _n_ elements from the list."""
     last: Int
 
+    """
+    The seed to use for "algorithm" sort. Otherwise, uses a constant value that changes every 24 hours.
+    """
+    seed: String
+
     """Search by series slugs."""
     seriesSlugs: [String!]
 
@@ -1707,6 +1739,11 @@ type Character implements Node
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """
+    The seed to use for "algorithm" sort. Otherwise, uses a constant value that changes every 24 hours.
+    """
+    seed: String
 
     """Sorting options for posts."""
     sortBy: PostsSort! = TOP
@@ -1961,6 +1998,11 @@ type Club implements Node
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """
+    The seed to use for "algorithm" sort. Otherwise, uses a constant value that changes every 24 hours.
+    """
+    seed: String
 
     """Search by series slugs."""
     seriesSlugs: [String!]
@@ -4626,6 +4668,9 @@ type Query {
     """
     before: String
 
+    """Exclude empty categories (categories that have 0 posts)."""
+    excludeEmpty: Boolean! = false
+
     """Returns the first _n_ elements from the list."""
     first: Int
 
@@ -4705,6 +4750,9 @@ type Query {
     """
     clubSlug: String
 
+    """Exclude empty characters (characters that have 0 posts)."""
+    excludeEmpty: Boolean! = false
+
     """Returns the first _n_ elements from the list."""
     first: Int
 
@@ -4743,6 +4791,9 @@ type Query {
     Returns the elements in the list that come before the specified cursor.
     """
     before: String
+
+    """Exclude empty clubs (clubs that have 0 posts)."""
+    excludeEmpty: Boolean! = false
 
     """Returns the first _n_ elements from the list."""
     first: Int
@@ -4940,6 +4991,11 @@ type Query {
     """Returns the last _n_ elements from the list."""
     last: Int
 
+    """
+    The seed to use for "algorithm" sort. Otherwise, uses a constant value that changes every 24 hours.
+    """
+    seed: String
+
     """Search by series slugs."""
     seriesSlugs: [String!]
 
@@ -4968,6 +5024,11 @@ type Query {
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """
+    The seed to use for posts feed randomizer. Otherwise, uses a constant value that changes every 24 hours.
+    """
+    seed: String
   ): PostConnection! @join__field(graph: STING)
 
   """Get a single rule by reference."""
@@ -5028,6 +5089,9 @@ type Query {
     Returns the elements in the list that come before the specified cursor.
     """
     before: String
+
+    """Exclude empty series (series that have 0 posts)."""
+    excludeEmpty: Boolean! = false
 
     """Returns the first _n_ elements from the list."""
     first: Int
@@ -5595,6 +5659,11 @@ type Series implements Node
 
     """Returns the last _n_ elements from the list."""
     last: Int
+
+    """
+    The seed to use for "algorithm" sort. Otherwise, uses a constant value that changes every 24 hours.
+    """
+    seed: String
 
     """Sorting options for posts."""
     sortBy: PostsSort! = TOP
