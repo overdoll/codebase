@@ -307,6 +307,18 @@ func (p *Post) UpdateDescription(requester *principal.Principal, description, lo
 
 func (p *Post) SubmitPostRequest(clb *club.Club, requester *principal.Principal) error {
 
+	if err := p.CanUpdate(requester); err != nil {
+		return err
+	}
+
+	if p.state != Draft {
+		return ErrNotDraft
+	}
+
+	if len(p.content) == 0 {
+		return domainerror.NewValidation("cannot submit post without content")
+	}
+
 	if clb.SupporterOnlyPostsDisabled() {
 		for _, cnt := range p.content {
 			if cnt.isSupporterOnly {
@@ -315,18 +327,14 @@ func (p *Post) SubmitPostRequest(clb *club.Club, requester *principal.Principal)
 		}
 	}
 
-	if err := p.CanUpdate(requester); err != nil {
-		return err
-	}
-
 	for _, cnt := range p.content {
 		if !cnt.resource.IsProcessed() {
 			return domainerror.NewValidation("all resources must be processed before submitting")
 		}
 	}
 
-	if p.state != Draft {
-		return ErrNotDraft
+	if p.audienceId == nil {
+		return domainerror.NewValidation("cannot submit post without audience")
 	}
 
 	p.update()
