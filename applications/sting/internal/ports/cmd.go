@@ -217,5 +217,21 @@ func InitializeCommands(app func() *app.Application) []*cobra.Command {
 	updateAudienceSlug.MarkPersistentFlagRequired("keep_old")
 	updateSlug.AddCommand(updateAudienceSlug)
 
-	return []*cobra.Command{generateBannerRootCmd, generateSitemap, updateTotalLikesForPost, updateTotalPostsForPost, updateSlug}
+	reIndex := &cobra.Command{
+		Use: "re-index",
+	}
+
+	reIndex.AddCommand(&cobra.Command{
+		Use:  "post [post_id]",
+		Args: cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			if err := app().Commands.IndexPost.Handle(context.Background(), command.IndexPost{
+				PostId: args[0],
+			}); err != nil {
+				zap.S().Fatalw("failed to index post", zap.Error(err))
+			}
+		},
+	})
+
+	return []*cobra.Command{generateBannerRootCmd, generateSitemap, updateTotalLikesForPost, updateTotalPostsForPost, updateSlug, reIndex}
 }

@@ -50,6 +50,21 @@ const PostIndexName = "posts"
 var PostReaderIndex = cache.ReadAlias(CachePrefix, PostIndexName)
 var postWriterIndex = cache.WriteAlias(CachePrefix, PostIndexName)
 
+func (r PostsCassandraElasticsearchRepository) IndexPost(ctx context.Context, postId string) error {
+
+	pst, err := r.GetPostByIdOperator(ctx, postId)
+
+	if err != nil {
+		return err
+	}
+
+	if err := r.indexPost(ctx, pst); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r *PostsCassandraElasticsearchRepository) unmarshalPostDocument(ctx context.Context, source json.RawMessage, sort []interface{}) (*post.Post, error) {
 
 	var pst postDocument

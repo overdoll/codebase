@@ -23,6 +23,8 @@ type Commands struct {
 	ArchivePost   command.ArchivePostHandler
 	UnArchivePost command.UnArchivePostHandler
 
+	IndexPost command.IndexPostHandler
+
 	TransferClubOwnership command.TransferClubOwnershipHandler
 
 	GenerateSitemap command.GenerateSitemapHandler

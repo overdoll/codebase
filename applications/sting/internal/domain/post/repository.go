@@ -13,6 +13,7 @@ type Repository interface {
 	GetPostById(ctx context.Context, requester *principal.Principal, id string) (*Post, error)
 	GetPostsByIds(ctx context.Context, requester *principal.Principal, postIds []string) ([]*Post, error)
 	CreatePost(ctx context.Context, post *Post) error
+	IndexPost(ctx context.Context, postId string) error
 
 	GetTopCharacterNames(ctx context.Context) ([]string, error)
 
