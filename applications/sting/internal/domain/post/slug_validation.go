@@ -14,7 +14,7 @@ func validateSlug(slug string) error {
 		return domainerror.NewValidation(err.Error())
 	}
 
-	match, err := regexp.MatchString("(?!-)(?!.*--)[A-Za-z0-9-]+(?<!-)", slug)
+	match, err := regexp.MatchString("^(?!-)(?!.*--)[A-Za-z0-9-]+(?<!-)$", slug)
 
 	if err != nil {
 		return err
