@@ -265,6 +265,20 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
   // do a prepass to collect all queries and wait for them to complete
   // TODO: when Next.js supports suspense with data fetching, we can get rid of this
   if (!CanUseDOM) {
+    if (app.Component?.getMiddleware != null) {
+      const result = app.Component.getMiddleware(app.ctx, requestProps.preloadedQueryResults)
+
+      if (result.redirect != null) {
+        app.ctx.res.writeHead(result.redirect.permanent === true ? 308 : 307, { Location: result.redirect.destination })
+        app.ctx.res.end()
+        return props
+      }
+
+      if (result.notFound === true) {
+        app.ctx.res.statusCode = 404
+      }
+    }
+
     await prepass(
       <RouterContext.Provider
         value={

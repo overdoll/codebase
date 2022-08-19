@@ -11,5 +11,6 @@ Disallow: /club
 Disallow: /clubs/create-club
 Disallow: /clubs/feed
 Disallow: /join?
+Disallow: /profile
 
 Sitemap: https://overdoll.com/sitemaps/sitemap.xml

@@ -77,6 +77,14 @@ export type GetRelayPreloadPropsReturn = Partial<{
   }
 }>
 
+export type GetMiddlewareReturn = Partial<{
+  redirect?: {
+    permanent: boolean
+    destination: string
+  }
+  notFound?: boolean
+}>
+
 export type GetTranslationPropsReturn = Promise<Partial<{
   translations: any
 }>>
@@ -87,6 +95,7 @@ interface PageContext extends NextPageContext {
 
 export declare type CustomComponentType<C extends BaseContext = PageContext, P = {}> = ComponentType<React.PropsWithChildren<P>> & {
   getRelayPreloadProps?: (context: C) => GetRelayPreloadPropsReturn
+  getMiddleware?: (context: C, data: any) => GetMiddlewareReturn
   getTranslationProps?: (context: C) => GetTranslationPropsReturn
   getLayout?: (page: JSX.Element) => JSX.Element
 }

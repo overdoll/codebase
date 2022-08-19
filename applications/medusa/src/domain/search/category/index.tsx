@@ -28,4 +28,26 @@ RootSearchCategory.getRelayPreloadProps = (ctx) => {
     }
   }
 }
+
+RootSearchCategory.getMiddleware = (ctx, data) => {
+  if (data.searchCategoryQuery.response.data.category == null) {
+    return {
+      notFound: true
+    }
+  }
+
+  const foundCategorySlug = data.searchCategoryQuery.response.data.category.slug
+
+  if (foundCategorySlug !== ctx.query.categorySlug) {
+    return {
+      redirect: {
+        permanent: true,
+        destination: `/search/category/${foundCategorySlug as string}`
+      }
+    }
+  }
+
+  return {}
+}
+
 export default RootSearchCategory

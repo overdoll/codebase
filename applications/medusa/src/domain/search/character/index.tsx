@@ -30,4 +30,27 @@ RootSearchCharacter.getRelayPreloadProps = (ctx) => {
     }
   }
 }
+
+RootSearchCharacter.getMiddleware = (ctx, data) => {
+  if (data.searchCharacterQuery.response.data.character == null) {
+    return {
+      notFound: true
+    }
+  }
+
+  const foundCharacterSlug = data.searchCharacterQuery.response.data.character.slug
+  const foundCharacterSeriesSlug = data.searchCharacterQuery.response.data?.character?.series?.slug
+
+  if (foundCharacterSlug !== ctx.query.characterSlug || ctx.query.seriesSlug !== foundCharacterSeriesSlug) {
+    return {
+      redirect: {
+        permanent: true,
+        destination: `/search/series/${foundCharacterSeriesSlug as string}/${foundCharacterSlug as string}`
+      }
+    }
+  }
+
+  return {}
+}
+
 export default RootSearchCharacter

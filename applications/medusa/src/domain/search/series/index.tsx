@@ -28,4 +28,26 @@ RootSearchSeries.getRelayPreloadProps = (ctx) => {
     }
   }
 }
+
+RootSearchSeries.getMiddleware = (ctx, data) => {
+  if (data.searchSeriesQuery.response.data.serial == null) {
+    return {
+      notFound: true
+    }
+  }
+
+  const foundSeriesSlug = data.searchSeriesQuery.response.data.serial.slug
+
+  if (foundSeriesSlug !== ctx.query.seriesSlug) {
+    return {
+      redirect: {
+        permanent: true,
+        destination: `/search/series/${foundSeriesSlug as string}`
+      }
+    }
+  }
+
+  return {}
+}
+
 export default RootSearchSeries
