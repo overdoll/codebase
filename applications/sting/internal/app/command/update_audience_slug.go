@@ -6,10 +6,9 @@ import (
 )
 
 type UpdateAudienceSlug struct {
-	AudienceId     string
-	Slug           string
-	KeepOld        bool
-	IgnoreConflict bool
+	AudienceId string
+	Slug       string
+	KeepOld    bool
 }
 
 type UpdateAudienceSlugHandler struct {
@@ -21,5 +20,5 @@ func NewUpdateAudienceSlugHandler(pr post.Repository) UpdateAudienceSlugHandler 
 }
 
 func (h UpdateAudienceSlugHandler) Handle(ctx context.Context, cmd UpdateAudienceSlug) error {
-	return nil
+	return h.pr.UpdateAudienceSlug(ctx, cmd.AudienceId, cmd.Slug, cmd.KeepOld)
 }

@@ -20,5 +20,5 @@ func NewUpdateCategorySlugHandler(pr post.Repository) UpdateCategorySlugHandler 
 }
 
 func (h UpdateCategorySlugHandler) Handle(ctx context.Context, cmd UpdateCategorySlug) error {
-	return nil
+	return h.pr.UpdateCategorySlug(ctx, cmd.CategoryId, cmd.Slug, cmd.KeepOld)
 }

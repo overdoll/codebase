@@ -3,6 +3,7 @@ package adapters
 import (
 	"context"
 	"encoding/json"
+	"go.uber.org/zap"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/localization"
@@ -288,6 +289,63 @@ func (r PostsCassandraElasticsearchRepository) CreateCategory(ctx context.Contex
 	return nil
 }
 
+func (r PostsCassandraElasticsearchRepository) UpdateCategorySlug(ctx context.Context, id, slug string, keepOld bool) error {
+
+	cat, err := r.getRawCategoryById(ctx, id)
+
+	if err != nil {
+		return err
+	}
+
+	// first, do a unique insert of slug to ensure we reserve a unique slug
+	applied, err := categorySlugTable.
+		InsertBuilder().
+		Unique().
+		Query(r.session).
+		WithContext(ctx).
+		SerialConsistency(gocql.Serial).
+		BindStruct(categorySlugs{Slug: strings.ToLower(slug), CategoryId: id}).
+		ExecCASRelease()
+
+	if err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to create unique category slug")
+	}
+
+	if !applied {
+		zap.S().Infow("slug already exists, will perform local update", zap.String("slug", slug))
+	}
+
+	if applied && !keepOld {
+		if err := r.deleteUniqueCategorySlug(ctx, id, cat.Slug); err != nil {
+			return err
+		}
+	}
+
+	cat.Slug = slug
+
+	if err := r.session.
+		Query(categoryTable.Update("slug")).
+		WithContext(ctx).
+		Idempotent(true).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(cat).
+		ExecRelease(); err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to update category slug")
+	}
+
+	unmarshalled, err := r.unmarshalCategoryFromDatabase(ctx, cat)
+
+	if err != nil {
+		return err
+	}
+
+	if err := r.indexCategory(ctx, unmarshalled); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r PostsCassandraElasticsearchRepository) updateCategory(ctx context.Context, id string, updateFn func(category *post.Category) error, columns []string) (*post.Category, error) {
 
 	category, err := r.getCategoryById(ctx, id)
@@ -357,7 +415,7 @@ func (r PostsCassandraElasticsearchRepository) UpdateCategoryTotalLikesOperator(
 	return r.updateCategory(ctx, id, updateFn, []string{"total_likes"})
 }
 
-func (r PostsCassandraElasticsearchRepository) getCategoryById(ctx context.Context, categoryId string) (*post.Category, error) {
+func (r PostsCassandraElasticsearchRepository) getRawCategoryById(ctx context.Context, categoryId string) (*category, error) {
 
 	var cat category
 
@@ -376,5 +434,16 @@ func (r PostsCassandraElasticsearchRepository) getCategoryById(ctx context.Conte
 		return nil, errors.Wrap(err, "failed to get category by id")
 	}
 
-	return r.unmarshalCategoryFromDatabase(ctx, &cat)
+	return &cat, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) getCategoryById(ctx context.Context, categoryId string) (*post.Category, error) {
+
+	cat, err := r.getRawCategoryById(ctx, categoryId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return r.unmarshalCategoryFromDatabase(ctx, cat)
 }

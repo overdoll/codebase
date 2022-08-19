@@ -20,5 +20,5 @@ func NewUpdateTopicSlugHandler(pr post.Repository) UpdateTopicSlugHandler {
 }
 
 func (h UpdateTopicSlugHandler) Handle(ctx context.Context, cmd UpdateTopicSlug) error {
-	return nil
+	return h.pr.UpdateTopicSlug(ctx, cmd.TopicId, cmd.Slug, cmd.KeepOld)
 }

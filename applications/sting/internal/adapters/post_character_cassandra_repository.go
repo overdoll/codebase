@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"go.uber.org/zap"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/localization"
@@ -238,6 +239,92 @@ func (r PostsCassandraElasticsearchRepository) GetCharacterBySlug(ctx context.Co
 	return r.GetCharacterById(ctx, b.CharacterId)
 }
 
+func (r PostsCassandraElasticsearchRepository) UpdateCharacterSlug(ctx context.Context, id, slug string, keepOld bool) error {
+
+	char, err := r.getRawCharacterById(ctx, id)
+
+	if err != nil {
+		return err
+	}
+
+	var targetId string
+
+	if char.SeriesId != nil {
+		targetId = *char.SeriesId
+	}
+
+	if char.ClubId != nil {
+		targetId = *char.ClubId
+	}
+
+	// first, do a unique insert of club to ensure we reserve a unique slug
+	applied, err := charactersSlugTable.
+		InsertBuilder().
+		Unique().
+		Query(r.session).
+		WithContext(ctx).
+		SerialConsistency(gocql.Serial).
+		BindStruct(characterSlug{Slug: strings.ToLower(char.Slug), CharacterId: char.Id, SeriesOrClubId: targetId, IsClubId: char.ClubId != nil}).
+		ExecCASRelease()
+
+	if err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to create unique character slug")
+	}
+
+	if !applied {
+		zap.S().Infow("slug already exists, will perform local update", zap.String("slug", slug))
+	}
+
+	if applied && !keepOld {
+
+		var seriesOrClubId string
+
+		if char.SeriesId != nil {
+			seriesOrClubId = *char.SeriesId
+		} else {
+			seriesOrClubId = *char.ClubId
+		}
+
+		if err := r.deleteUniqueCharacterSlug(ctx, seriesOrClubId, id, char.Slug); err != nil {
+			return err
+		}
+	}
+
+	char.Slug = slug
+
+	if err := r.session.
+		Query(characterTable.Update("slug")).
+		WithContext(ctx).
+		Idempotent(true).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(char).
+		ExecRelease(); err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to update character slug")
+	}
+
+	var media *series
+
+	if char.SeriesId != nil {
+		media, err = r.getSingleSeriesById(ctx, *char.SeriesId)
+
+		if err != nil {
+			return err
+		}
+	}
+
+	unmarshalled, err := r.unmarshalCharacterFromDatabase(ctx, char, media)
+
+	if err != nil {
+		return err
+	}
+
+	if err := r.indexCharacter(ctx, unmarshalled); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r PostsCassandraElasticsearchRepository) GetCharacterById(ctx context.Context, characterId string) (*post.Character, error) {
 	return r.getCharacterById(ctx, characterId)
 }
@@ -412,7 +499,7 @@ func (r PostsCassandraElasticsearchRepository) updateCharacter(ctx context.Conte
 	return char, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) getCharacterById(ctx context.Context, characterId string) (*post.Character, error) {
+func (r PostsCassandraElasticsearchRepository) getRawCharacterById(ctx context.Context, characterId string) (*character, error) {
 
 	var char character
 
@@ -431,8 +518,18 @@ func (r PostsCassandraElasticsearchRepository) getCharacterById(ctx context.Cont
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get characters by id")
 	}
 
+	return &char, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) getCharacterById(ctx context.Context, characterId string) (*post.Character, error) {
+
+	char, err := r.getRawCharacterById(ctx, characterId)
+
+	if err != nil {
+		return nil, err
+	}
+
 	var media *series
-	var err error
 
 	if char.SeriesId != nil {
 		media, err = r.getSingleSeriesById(ctx, *char.SeriesId)
@@ -442,7 +539,7 @@ func (r PostsCassandraElasticsearchRepository) getCharacterById(ctx context.Cont
 		}
 	}
 
-	unmarshalled, err := r.unmarshalCharacterFromDatabase(ctx, &char, media)
+	unmarshalled, err := r.unmarshalCharacterFromDatabase(ctx, char, media)
 
 	if err != nil {
 		return nil, err

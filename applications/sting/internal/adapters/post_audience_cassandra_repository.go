@@ -5,6 +5,7 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
+	"go.uber.org/zap"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
@@ -124,6 +125,63 @@ func (r PostsCassandraElasticsearchRepository) unmarshalAudienceFromDatabase(ctx
 	), nil
 }
 
+func (r PostsCassandraElasticsearchRepository) UpdateAudienceSlug(ctx context.Context, id, slug string, keepOld bool) error {
+
+	aud, err := r.getRawAudienceById(ctx, id)
+
+	if err != nil {
+		return err
+	}
+
+	// first, do a unique insert of slug to ensure we reserve a unique slug
+	applied, err := audienceSlugTable.
+		InsertBuilder().
+		Unique().
+		Query(r.session).
+		WithContext(ctx).
+		SerialConsistency(gocql.Serial).
+		BindStruct(audienceSlug{Slug: strings.ToLower(slug), AudienceId: id}).
+		ExecCASRelease()
+
+	if err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to create unique audience slug")
+	}
+
+	if !applied {
+		zap.S().Infow("slug already exists, will perform local update", zap.String("slug", slug))
+	}
+
+	if applied && !keepOld {
+		if err := r.deleteUniqueAudienceSlug(ctx, id, aud.Slug); err != nil {
+			return err
+		}
+	}
+
+	aud.Slug = slug
+
+	if err := r.session.
+		Query(audienceTable.Update("slug")).
+		WithContext(ctx).
+		Idempotent(true).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(aud).
+		ExecRelease(); err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to update audience slug")
+	}
+
+	unmarshalled, err := r.unmarshalAudienceFromDatabase(ctx, aud)
+
+	if err != nil {
+		return err
+	}
+
+	if err := r.indexAudience(ctx, unmarshalled); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r PostsCassandraElasticsearchRepository) GetAudienceIdsFromSlugs(ctx context.Context, audienceSlugs []string) ([]string, error) {
 
 	var audienceSlugResults []audienceSlug
@@ -176,7 +234,7 @@ func (r PostsCassandraElasticsearchRepository) GetAudienceBySlug(ctx context.Con
 	return r.GetAudienceById(ctx, b.AudienceId)
 }
 
-func (r PostsCassandraElasticsearchRepository) getAudienceById(ctx context.Context, audienceId string) (*post.Audience, error) {
+func (r PostsCassandraElasticsearchRepository) getRawAudienceById(ctx context.Context, audienceId string) (*audience, error) {
 
 	var b audience
 
@@ -195,7 +253,18 @@ func (r PostsCassandraElasticsearchRepository) getAudienceById(ctx context.Conte
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get audience by id")
 	}
 
-	unmarshalled, err := r.unmarshalAudienceFromDatabase(ctx, &b)
+	return &b, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) getAudienceById(ctx context.Context, audienceId string) (*post.Audience, error) {
+
+	aud, err := r.getRawAudienceById(ctx, audienceId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	unmarshalled, err := r.unmarshalAudienceFromDatabase(ctx, aud)
 
 	if err != nil {
 		return nil, err

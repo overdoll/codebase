@@ -20,5 +20,5 @@ func NewUpdateCharacterSlugHandler(pr post.Repository) UpdateCharacterSlugHandle
 }
 
 func (h UpdateCharacterSlugHandler) Handle(ctx context.Context, cmd UpdateCharacterSlug) error {
-	return nil
+	return h.pr.UpdateCharacterSlug(ctx, cmd.CharacterId, cmd.Slug, cmd.KeepOld)
 }

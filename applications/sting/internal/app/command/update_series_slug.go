@@ -6,10 +6,9 @@ import (
 )
 
 type UpdateSeriesSlug struct {
-	SeriesId       string
-	Slug           string
-	KeepOld        bool
-	IgnoreConflict bool
+	SeriesId string
+	Slug     string
+	KeepOld  bool
 }
 
 type UpdateSeriesSlugHandler struct {
@@ -21,5 +20,5 @@ func NewUpdateSeriesSlugHandler(pr post.Repository) UpdateSeriesSlugHandler {
 }
 
 func (h UpdateSeriesSlugHandler) Handle(ctx context.Context, cmd UpdateSeriesSlug) error {
-	return nil
+	return h.pr.UpdateSeriesSlug(ctx, cmd.SeriesId, cmd.Slug, cmd.KeepOld)
 }

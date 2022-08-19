@@ -11,6 +11,7 @@ go_library(
         "1657653582_add_description_and_club_characters.cql",
         "1660583008_add_game_session_tokens.cql",
         "1660667514_add_total_posts_to_clubs.cql",
+        "1660860893_add_post_likes_sorted.cql",
     ],
     importpath = "overdoll/applications/sting/internal/adapters/migrations/cql",
     visibility = ["//applications/sting:__subpackages__"],
