@@ -30,4 +30,27 @@ RootPublicClubCharacter.getRelayPreloadProps = (ctx) => {
     }
   }
 }
+
+RootPublicClubCharacter.getMiddleware = (ctx, data) => {
+  if (data.publicClubCharacterQuery.response.data.character == null) {
+    return {
+      notFound: true
+    }
+  }
+
+  const foundCharacterSlug = data.publicClubCharacterQuery.response.data.character.slug
+  const foundCharacterClubSlug = data.publicClubCharacterQuery.response.data?.character?.club?.slug
+
+  if (foundCharacterSlug !== ctx.query.characterSlug || ctx.query.slug !== foundCharacterClubSlug) {
+    return {
+      redirect: {
+        permanent: true,
+        destination: `/${foundCharacterClubSlug as string}/character/${foundCharacterSlug as string}`
+      }
+    }
+  }
+
+  return {}
+}
+
 export default RootPublicClubCharacter

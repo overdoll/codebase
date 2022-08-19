@@ -16,4 +16,25 @@ RootPublicClub.getRelayPreloadProps = (ctx) => ({
   }
 })
 
+RootPublicClub.getMiddleware = (ctx, data) => {
+  if (data.publicClubQuery.response.data.club == null) {
+    return {
+      notFound: true
+    }
+  }
+
+  const foundClubSlug = data.publicClubQuery.response.data.club.slug
+
+  if (foundClubSlug !== ctx.query.slug) {
+    return {
+      redirect: {
+        permanent: true,
+        destination: `/${foundClubSlug as string}`
+      }
+    }
+  }
+
+  return {}
+}
+
 export default RootPublicClub
