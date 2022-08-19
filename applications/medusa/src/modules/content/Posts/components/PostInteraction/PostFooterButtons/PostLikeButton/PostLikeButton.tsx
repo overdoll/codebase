@@ -1,7 +1,7 @@
 import { graphql, useFragment } from 'react-relay'
 import { PostLikeButtonFragment$key } from '@//:artifacts/PostLikeButtonFragment.graphql'
 import { PostLikeButtonViewerFragment$key } from '@//:artifacts/PostLikeButtonViewerFragment.graphql'
-import { HeartFull, HeartOutline } from '@//:assets/icons/interface'
+import { BookmarkFull, BookmarkOutline, HeartOutline } from '@//:assets/icons/interface'
 import { ButtonProps } from '@chakra-ui/react'
 import Can from '../../../../../../authorization/Can'
 import { t } from '@lingui/macro'
@@ -76,9 +76,9 @@ export default function PostLikeButton ({
                   isIcon
                   onClick={likePost}
                   isLoading={isLikingPost}
-                  icon={HeartFull}
+                  icon={BookmarkFull}
                 >
-                  {i18n._(t`Remove Like`)}
+                  {i18n._(t`Un-Save`)}
                 </PostFooterButton>
               )
             }
@@ -88,9 +88,9 @@ export default function PostLikeButton ({
                 isIcon
                 onClick={likePost}
                 isLoading={isLikingPost}
-                icon={HeartOutline}
+                icon={BookmarkOutline}
               >
-                {i18n._(t`Like`)}
+                {i18n._(t`Save`)}
               </PostFooterButton>
             )
           }}

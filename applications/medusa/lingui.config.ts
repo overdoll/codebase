@@ -201,6 +201,10 @@ const ClubsCatalog = [
     include: ['src/domain/clubs/invite-only/']
   },
   {
+    path: 'src/domain/clubs/liked-posts/__locale__/{locale}/index',
+    include: ['src/domain/clubs/liked-posts/']
+  },
+  {
     path: 'src/domain/slug/club/__locale__/{locale}/index',
     include: ['src/domain/slug/club/']
   },

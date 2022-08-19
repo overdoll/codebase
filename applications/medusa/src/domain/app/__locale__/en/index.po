@@ -253,6 +253,7 @@ msgstr ""
 msgid "I promise to be better and to follow the community guidelines more closely"
 msgstr ""
 
+#: src/common/components/ClubJoinTile/ClubJoinTileIconButton/ClubJoinTileIconButton.tsx:51
 #: src/modules/content/Posts/components/PostInteraction/PostHeaders/PostJoinClub/PostJoinClub.tsx:89
 msgid "Join {0}"
 msgstr ""

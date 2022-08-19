@@ -3,7 +3,7 @@ import { GridTile, GridWrap, LoadMoreGridTile } from '@//:modules/content/Conten
 import { DiscoverClubsListFragment$key } from '@//:artifacts/DiscoverClubsListFragment.graphql'
 import { EmptyBoundary, EmptyClubs } from '@//:modules/content/Placeholder'
 import type { DiscoverClubsQuery } from '@//:artifacts/DiscoverClubsQuery.graphql'
-import ClubJoinTile from './ClubJoinTile/ClubJoinTile'
+import ClubJoinTile from '../../../../../../common/components/ClubJoinTile/ClubJoinTile'
 import { Trans } from '@lingui/macro'
 
 interface Props {

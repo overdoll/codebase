@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<714bdf0f9d6ac0e6b0869431c0c07bf9>>
- * @relayHash 11075cb2750040cec06ad9924e7df4f9
+ * @generated SignedSource<<8bee5ad99eb3f7f46196a9bf0aa98bbe>>
+ * @relayHash ca2e90bca5c26ec02ac67aacd6fa2f44
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,20 +9,19 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 11075cb2750040cec06ad9924e7df4f9
+// @relayRequestID ca2e90bca5c26ec02ac67aacd6fa2f44
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type MainMenuButtonClubsQuery$variables = {};
 export type MainMenuButtonClubsQuery$data = {
   readonly viewer: {
-    readonly clubMembersPostsFeed: {
+    readonly likedPosts: {
       readonly edges: ReadonlyArray<{
         readonly node: {
           readonly __typename: "Post";
         };
       }>;
     };
-    readonly clubMembershipsCount: number;
   } | null;
 };
 export type MainMenuButtonClubsQuery = {
@@ -31,28 +30,21 @@ export type MainMenuButtonClubsQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "clubMembershipsCount",
-  "storageKey": null
-},
-v1 = [
+var v0 = [
   {
     "kind": "Literal",
     "name": "first",
     "value": 1
   }
 ],
-v2 = {
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v3 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -74,13 +66,12 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
           {
             "alias": null,
-            "args": (v1/*: any*/),
+            "args": (v0/*: any*/),
             "concreteType": "PostConnection",
             "kind": "LinkedField",
-            "name": "clubMembersPostsFeed",
+            "name": "likedPosts",
             "plural": false,
             "selections": [
               {
@@ -99,7 +90,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v2/*: any*/)
+                      (v1/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -107,7 +98,7 @@ return {
                 "storageKey": null
               }
             ],
-            "storageKey": "clubMembersPostsFeed(first:1)"
+            "storageKey": "likedPosts(first:1)"
           }
         ],
         "storageKey": null
@@ -130,13 +121,12 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
           {
             "alias": null,
-            "args": (v1/*: any*/),
+            "args": (v0/*: any*/),
             "concreteType": "PostConnection",
             "kind": "LinkedField",
-            "name": "clubMembersPostsFeed",
+            "name": "likedPosts",
             "plural": false,
             "selections": [
               {
@@ -155,8 +145,8 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v2/*: any*/),
-                      (v3/*: any*/)
+                      (v1/*: any*/),
+                      (v2/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -164,16 +154,16 @@ return {
                 "storageKey": null
               }
             ],
-            "storageKey": "clubMembersPostsFeed(first:1)"
+            "storageKey": "likedPosts(first:1)"
           },
-          (v3/*: any*/)
+          (v2/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "11075cb2750040cec06ad9924e7df4f9",
+    "id": "ca2e90bca5c26ec02ac67aacd6fa2f44",
     "metadata": {},
     "name": "MainMenuButtonClubsQuery",
     "operationKind": "query",
@@ -182,6 +172,6 @@ return {
 };
 })();
 
-(node as any).hash = "dc3c359554edf22cd4de716c36b7cc24";
+(node as any).hash = "befe5b5d795b15aa54a55fbaae6d70e5";
 
 export default node;
