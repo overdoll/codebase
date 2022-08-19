@@ -264,7 +264,7 @@ func (r PostsCassandraElasticsearchRepository) UpdateCharacterSlug(ctx context.C
 		Query(r.session).
 		WithContext(ctx).
 		SerialConsistency(gocql.Serial).
-		BindStruct(characterSlug{Slug: strings.ToLower(char.Slug), CharacterId: char.Id, SeriesOrClubId: targetId, IsClubId: char.ClubId != nil}).
+		BindStruct(characterSlug{Slug: strings.ToLower(slug), CharacterId: char.Id, SeriesOrClubId: targetId, IsClubId: char.ClubId != nil}).
 		ExecCASRelease()
 
 	if err != nil {

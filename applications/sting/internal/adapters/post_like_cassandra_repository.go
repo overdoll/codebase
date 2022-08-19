@@ -36,7 +36,7 @@ var accountPostLikeSortedTable = table.New(table.Metadata{
 		"liked_at",
 	},
 	PartKey: []string{"bucket", "liked_account_id"},
-	SortKey: []string{"post_id", "liked_at"},
+	SortKey: []string{"liked_at", "post_id"},
 })
 
 type postLike struct {
@@ -251,6 +251,17 @@ func (r PostsCassandraElasticsearchRepository) AccountPostLikes(ctx context.Cont
 		info["bucket"] = bucketId
 		info["liked_account_id"] = accountId
 
+		if cursor.After() != nil {
+			var afterValue time.Time
+
+			if err := cursor.After().Decode(&afterValue); err != nil {
+				return nil, err
+			}
+
+			builder.Where(qb.Lt("liked_at"))
+			info["liked_at"] = afterValue
+		}
+
 		var postL []postLike
 
 		if err := builder.
@@ -259,6 +270,10 @@ func (r PostsCassandraElasticsearchRepository) AccountPostLikes(ctx context.Cont
 			BindMap(info).
 			SelectRelease(&postL); err != nil {
 			return nil, errors.Wrap(support.NewGocqlError(err), "failed to get post likes")
+		}
+
+		if len(postL) == 0 {
+			continue
 		}
 
 		esBuilder := r.client.MultiGet().Realtime(false)
@@ -272,6 +287,8 @@ func (r PostsCassandraElasticsearchRepository) AccountPostLikes(ctx context.Cont
 		if err != nil {
 			return nil, errors.Wrap(support.ParseElasticError(err), "failed search posts")
 		}
+
+		var unsortedPosts []*post.LikedPost
 
 		for _, hit := range response.Docs {
 
@@ -301,9 +318,19 @@ func (r PostsCassandraElasticsearchRepository) AccountPostLikes(ctx context.Cont
 					}
 				}
 
-				result.Node = paging.NewNode("")
+				result.Node = paging.NewNode(pstLike.LikedAt)
 
-				posts = append(posts, post.UnmarshalLikedPostFromDatabase(post.UnmarshalLikeFromDatabase(pstLike.LikedAccountId, pstLike.PostId, pstLike.LikedAt), result))
+				unsortedPosts = append(unsortedPosts, post.UnmarshalLikedPostFromDatabase(post.UnmarshalLikeFromDatabase(pstLike.LikedAccountId, pstLike.PostId, pstLike.LikedAt), result))
+			}
+		}
+
+		for _, pst := range unsortedPosts {
+			for _, sortedLike := range postL {
+				// sort properly
+				if pst.Post().ID() == sortedLike.PostId {
+					posts = append(posts, pst)
+					break
+				}
 			}
 		}
 
