@@ -18,8 +18,8 @@ msgid "Balance"
 msgstr ""
 
 #: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubTransactionMetrics/ClubTransactionMetric/ClubTransactionMetric.tsx:91
-msgid "Chargebacks (suspension at >{0}%)"
-msgstr ""
+#~ msgid "Chargebacks (suspension at >{0}%)"
+#~ msgstr ""
 
 #: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubRevenue.tsx:78
 msgid "Club Guidelines"
@@ -58,28 +58,28 @@ msgid "Pending Balance"
 msgstr ""
 
 #: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubTransactionMetrics/ClubTransactionMetric/ClubTransactionMetric.tsx:77
-msgid "Refunds (target is <{0}%)"
-msgstr ""
+#~ msgid "Refunds (target is <{0}%)"
+#~ msgstr ""
 
 #: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubRevenue.tsx:81
 msgid "Requirements for revenue collection"
 msgstr ""
 
 #: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubTransactionMetrics/ClubTransactionMetrics.tsx:68
-msgid "Show Older Metrics"
-msgstr ""
+#~ msgid "Show Older Metrics"
+#~ msgstr ""
 
 #: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubPayoutsList/ClubPayoutsList.tsx:67
 msgid "Show Older Payouts"
 msgstr ""
 
 #: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubTransactionMetrics/ClubTransactionMetrics.tsx:51
-msgid "Transaction Metrics"
-msgstr ""
+#~ msgid "Transaction Metrics"
+#~ msgstr ""
 
 #: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubTransactionMetrics/ClubTransactionMetrics.tsx:56
-msgid "Transaction metrics help you maintain a good refund and chargeback ratio to keep your club in good standing."
-msgstr ""
+#~ msgid "Transaction metrics help you maintain a good refund and chargeback ratio to keep your club in good standing."
+#~ msgstr ""
 
 #: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubPayoutMethodAlert/ClubPayoutMethodAlert.tsx:41
 msgid "View Details"
@@ -102,9 +102,9 @@ msgid "{0}"
 msgstr ""
 
 #: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubTransactionMetrics/ClubTransactionMetric/GraphTransactionMetric/GraphTransactionMetric.tsx:38
-msgid "{currentAmount} of {totalAmount}"
-msgstr ""
+#~ msgid "{currentAmount} of {totalAmount}"
+#~ msgstr ""
 
 #: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubTransactionMetrics/ClubTransactionMetric/ClubTransactionMetric.tsx:70
-msgid "{totalTransactionsAmount} total processed"
-msgstr ""
+#~ msgid "{totalTransactionsAmount} total processed"
+#~ msgstr ""

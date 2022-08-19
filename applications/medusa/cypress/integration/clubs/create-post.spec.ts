@@ -195,8 +195,7 @@ describe('Create & Manage Posts', () => {
     isOnStep('review')
     // test post submission
     clickOnButton(/Submit/iu)
-    cy.findByText(/Submitted for review/iu).should('exist')
-    clickOnButton(/Post again/i)
+    cy.findByText(/Your post was submitted/iu).should('exist')
     cy.findByText(/Upload Files/iu).should('exist')
 
     /**

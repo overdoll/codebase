@@ -6,7 +6,6 @@ import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import { usePaginationFragment } from 'react-relay'
 import { Trans } from '@lingui/macro'
 import SearchSummary from '../../../../../common/components/PageHeader/SearchSummary/SearchSummary'
-import PostOrderButton from '../../../../../common/components/PageHeader/PostOrderButton/PostOrderButton'
 import SearchButton from '../../../../../common/components/PageHeader/SearchButton/SearchButton'
 import SearchCharacterRecommendations from './SearchCharacterRecommendations/SearchCharacterRecommendations'
 import SearchCharacterRichObject
@@ -95,8 +94,7 @@ export default function SearchCharacter ({ query }: Props): JSX.Element {
             totalLikes={queryData.character.totalLikes}
           />
           <SearchCharacterRecommendations query={queryData.character} />
-          <HStack justify='space-between' spacing={2}>
-            <PostOrderButton />
+          <HStack justify='flex-end' spacing={2}>
             <SearchButton />
           </HStack>
         </Stack>

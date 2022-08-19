@@ -79,13 +79,14 @@ export default function UploadContentAdd ({
   const onUpdateContent = (): void => {
     if (Object.keys(state.urls).length > 0) {
       setHasUpdateError(false)
-      const uploadedURLs = Object.values(state.urls)
+      const fileOrder = Object.keys(state.files)
+      const arrangedUrls = fileOrder.map((item) => state.urls[item])
 
       updateContent({
         variables: {
           input: {
             id: data.id,
-            content: uploadedURLs as string[]
+            content: arrangedUrls as string[]
           }
         },
         // check state for duplicate URL's. if they are the same, notify that duplicates were ignored

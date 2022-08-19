@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<80a69121c1b13c8f1594d39a8da0f046>>
- * @relayHash 8cacb129d03a0c987387d906cd5ba2fd
+ * @generated SignedSource<<795b2bf8e13b78f71b51523c1f69b7fc>>
+ * @relayHash e61a6e434076035b3c5b2b0fdf32986e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,19 +9,19 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8cacb129d03a0c987387d906cd5ba2fd
+// @relayRequestID e61a6e434076035b3c5b2b0fdf32986e
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
-export type UpdateAudienceThumbnailInput = {
+export type UpdateAudienceBannerInput = {
+  banner: string;
   id: string;
-  thumbnail: string;
 };
 export type ChangeAudienceThumbnailFormMutation$variables = {
-  input: UpdateAudienceThumbnailInput;
+  input: UpdateAudienceBannerInput;
 };
 export type ChangeAudienceThumbnailFormMutation$data = {
-  readonly updateAudienceThumbnail: {
+  readonly updateAudienceBanner: {
     readonly audience: {
       readonly banner: {
         readonly type: ResourceType;
@@ -103,9 +103,9 @@ return {
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "UpdateAudienceThumbnailPayload",
+        "concreteType": "UpdateAudienceBannerPayload",
         "kind": "LinkedField",
-        "name": "updateAudienceThumbnail",
+        "name": "updateAudienceBanner",
         "plural": false,
         "selections": [
           {
@@ -149,9 +149,9 @@ return {
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "UpdateAudienceThumbnailPayload",
+        "concreteType": "UpdateAudienceBannerPayload",
         "kind": "LinkedField",
-        "name": "updateAudienceThumbnail",
+        "name": "updateAudienceBanner",
         "plural": false,
         "selections": [
           {
@@ -186,7 +186,7 @@ return {
     ]
   },
   "params": {
-    "id": "8cacb129d03a0c987387d906cd5ba2fd",
+    "id": "e61a6e434076035b3c5b2b0fdf32986e",
     "metadata": {},
     "name": "ChangeAudienceThumbnailFormMutation",
     "operationKind": "mutation",
@@ -195,6 +195,6 @@ return {
 };
 })();
 
-(node as any).hash = "08f17c32fb299cf3ae0ac8991912ecf3";
+(node as any).hash = "6fa463452a18d8b50991b7c5da245876";
 
 export default node;

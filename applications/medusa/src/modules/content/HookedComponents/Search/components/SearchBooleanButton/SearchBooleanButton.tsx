@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { ButtonProps } from '@chakra-ui/react'
+import { IconButtonProps, Tooltip } from '@chakra-ui/react'
 import { RegisterFunctionReturn } from '../../types'
-import Button from '../../../../../form/Button/Button'
+import IconButton from '../../../../../form/IconButton/IconButton'
 
-interface Props extends Omit<ButtonProps, 'id' | 'defaultValue'>, RegisterFunctionReturn {
+interface Props extends Omit<IconButtonProps, 'id' | 'defaultValue'>, RegisterFunctionReturn {
   nullifyOnClear?: boolean
   activeValue?: boolean
 }
@@ -18,15 +18,7 @@ export default function SearchBooleanButton ({
   activeValue = true,
   ...rest
 }: Props): JSX.Element {
-  const [value, setValue] = useState<null | boolean | string>(defaultValue ?? (nullifyOnClear === true ? null : ''))
-
-  const activeProps = {
-    colorScheme: 'green'
-  }
-
-  const inactiveProps = {
-    colorScheme: 'gray'
-  }
+  const [value, setValue] = useState<null | boolean | string>(defaultValue ?? (nullifyOnClear === true ? null : false))
 
   const onClick = (): void => {
     if (nullifyOnClear === true) {
@@ -40,23 +32,26 @@ export default function SearchBooleanButton ({
       return
     }
 
-    if (value == null) {
+    if (value === false) {
       onChangeRegister(true)
       setValue(true)
       return
     }
-    onChangeRegister('')
-    setValue('')
+    onChangeRegister(false)
+    setValue(false)
   }
 
   return (
-    <Button
-      {...(value === activeValue ? activeProps : inactiveProps)}
-      onClick={onClick}
-      id={id}
-      isLoading={isPending}
-      size={size}
-      {...rest}
-    />
+    <Tooltip
+      label={rest['aria-label']}
+    >
+      <IconButton
+        onClick={onClick}
+        id={id}
+        isLoading={isPending}
+        size={size}
+        {...rest}
+      />
+    </Tooltip>
   )
 }

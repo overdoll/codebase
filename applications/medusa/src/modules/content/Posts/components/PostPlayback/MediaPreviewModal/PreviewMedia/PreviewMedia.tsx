@@ -1,12 +1,13 @@
 import { graphql, useFragment } from 'react-relay'
 import { PreviewMediaFragment$key } from '@//:artifacts/PreviewMediaFragment.graphql'
-import ImageSnippet from '@//:modules/content/DataDisplay/ImageSnippet/ImageSnippet'
-import ControlledVideo from '@//:modules/content/Posts/components/PostPlayback/ControlledVideo/ControlledVideo'
+import ImageSnippet from '../../../../../DataDisplay/ImageSnippet/ImageSnippet'
+import ControlledVideo from '../../ControlledVideo/ControlledVideo'
 import { useContext } from 'react'
-import { GlobalVideoManagerContext } from '@//:modules/content/Posts'
+import { GlobalVideoManagerContext } from '../../../../index'
 
 interface Props {
   query: PreviewMediaFragment$key
+  onClose: () => void
 }
 
 const Fragment = graphql`
@@ -18,7 +19,8 @@ const Fragment = graphql`
 `
 
 export default function PreviewMedia ({
-  query
+  query,
+  onClose
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
@@ -32,7 +34,7 @@ export default function PreviewMedia ({
   const DisplayMedia = (): JSX.Element => {
     switch (data.type) {
       case 'IMAGE':
-        return <ImageSnippet containCover cover query={data} />
+        return <ImageSnippet onClick={onClose} containCover cover query={data} />
       case 'VIDEO':
         return (
           <ControlledVideo

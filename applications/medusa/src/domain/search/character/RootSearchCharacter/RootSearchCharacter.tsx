@@ -39,7 +39,7 @@ const RootSearchCharacter: PageProps<Props> = (props: Props) => {
         <QueryErrorBoundary loadQuery={() => loadQuery({
           seriesSlug: seriesSlug as string,
           characterSlug: characterSlug as string,
-          sortBy: 'TOP'
+          sortBy: 'ALGORITHM'
         })}
         >
           <Suspense fallback={<SkeletonStack />}>

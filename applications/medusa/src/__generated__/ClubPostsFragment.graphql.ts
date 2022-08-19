@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f627b733eed8b4992086cfdf7c227abe>>
+ * @generated SignedSource<<5a5b9373de2ed68392e83306f5dc47ef>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -41,7 +41,7 @@ return {
       "name": "after"
     },
     {
-      "defaultValue": 11,
+      "defaultValue": 17,
       "kind": "LocalArgument",
       "name": "first"
     },
@@ -81,6 +81,11 @@ return {
     {
       "alias": "posts",
       "args": [
+        {
+          "kind": "Literal",
+          "name": "sortBy",
+          "value": "NEW"
+        },
         {
           "kind": "Variable",
           "name": "state",
@@ -223,6 +228,6 @@ return {
 };
 })();
 
-(node as any).hash = "878f08f5b6b57a35d9884d650db1a58c";
+(node as any).hash = "a8141a7915c2ae515c204c329488afb0";
 
 export default node;

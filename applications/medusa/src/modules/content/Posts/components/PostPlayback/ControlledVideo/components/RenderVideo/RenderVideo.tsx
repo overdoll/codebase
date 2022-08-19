@@ -8,7 +8,7 @@ interface Props extends BoxProps {
   onClick?: () => void
   muted?: boolean
   query: RenderVideoFragment$key
-  autoPlay: boolean
+  autoPlay: boolean | undefined
 }
 
 const Fragment = graphql`
@@ -43,6 +43,7 @@ const RenderVideo = forwardRef<any, Props>(({
       bg='gray.800'
       loop
       playsInline
+      autoPlay={autoPlay}
       poster={data?.videoThumbnail?.url}
       {...rest}
     >

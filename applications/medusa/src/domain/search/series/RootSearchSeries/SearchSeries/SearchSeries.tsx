@@ -15,6 +15,7 @@ import FullSimplePost
   from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/FullSimplePost/FullSimplePost'
 import PostInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
+import { useRouter } from 'next/router'
 
 interface Props {
   query: PreloadedQuery<SearchSeriesQuery>
@@ -94,8 +95,7 @@ export default function SearchSeries ({ query }: Props): JSX.Element {
             totalLikes={queryData.serial.totalLikes}
           />
           <SearchSeriesRecommendations query={queryData} />
-          <HStack justify='space-between' spacing={2}>
-            <PostOrderButton />
+          <HStack justify='flex-end' spacing={2}>
             <SearchButton />
           </HStack>
         </Stack>

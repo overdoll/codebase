@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e4b0ff1b1b44164b0e20b5c25e6947cd>>
- * @relayHash 1781a69ddbe7690a239e4591fc0a3a34
+ * @generated SignedSource<<e4fdaf22b2f20066a890081549b07e59>>
+ * @relayHash 61056233ed0717f4900f69f2cd7cbb7f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 1781a69ddbe7690a239e4591fc0a3a34
+// @relayRequestID 61056233ed0717f4900f69f2cd7cbb7f
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -70,7 +70,12 @@ v4 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 11
+    "value": 17
+  },
+  {
+    "kind": "Literal",
+    "name": "sortBy",
+    "value": "NEW"
   },
   {
     "kind": "Variable",
@@ -432,7 +437,8 @@ return {
             "alias": null,
             "args": (v4/*: any*/),
             "filters": [
-              "state"
+              "state",
+              "sortBy"
             ],
             "handle": "connection",
             "key": "ClubPosts_posts",
@@ -490,7 +496,7 @@ return {
     ]
   },
   "params": {
-    "id": "1781a69ddbe7690a239e4591fc0a3a34",
+    "id": "61056233ed0717f4900f69f2cd7cbb7f",
     "metadata": {},
     "name": "ClubPostsQuery",
     "operationKind": "query",

@@ -13,18 +13,16 @@ interface Props {
 }
 
 const Fragment = graphql`
-  fragment StaffSeriesSearchCharactersFragment on Query
+  fragment StaffSeriesSearchCharactersFragment on Series
   @argumentDefinitions(
     first: {type: Int, defaultValue: 9}
     after: {type: String},
-    slug: {type: String}
   )
   @refetchable(queryName: "StaffSeriesSearchCharactersPaginationFragment" )
   {
     characters (
       first: $first,
       after: $after,
-      seriesSlug: $slug
     ) @connection(key: "StaffSeriesSearchCharacters_characters")
     {
       edges {
@@ -58,7 +56,7 @@ export default function StaffSeriesSearchCharacters ({
       <PageSectionWrap>
         <PageSectionTitle>
           <Trans>
-            Characters from this series
+            Series Characters
           </Trans>
         </PageSectionTitle>
       </PageSectionWrap>
@@ -73,8 +71,8 @@ export default function StaffSeriesSearchCharacters ({
               <LinkTile href={{
                 pathname: '/staff/entity/character/[seriesSlug]/[slug]',
                 query: {
-                  slug: item.slug,
-                  seriesSlug: item.series.slug
+                  slug: item.node.slug,
+                  seriesSlug: item.node.series.slug
                 }
               }}
               >

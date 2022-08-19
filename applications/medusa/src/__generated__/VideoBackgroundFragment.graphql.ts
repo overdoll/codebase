@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c769a28fcda00ed691158d83b80daf60>>
+ * @generated SignedSource<<5b91b84a809fb4bea6b167b9e92c061b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,46 +10,46 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type UploadCharacterStepFragment$data = {
-  readonly club: {
-    readonly charactersCount: number;
-  };
-  readonly " $fragmentType": "UploadCharacterStepFragment";
+export type VideoBackgroundFragment$data = {
+  readonly videoThumbnail: {
+    readonly url: string;
+  } | null;
+  readonly " $fragmentType": "VideoBackgroundFragment";
 };
-export type UploadCharacterStepFragment$key = {
-  readonly " $data"?: UploadCharacterStepFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"UploadCharacterStepFragment">;
+export type VideoBackgroundFragment$key = {
+  readonly " $data"?: VideoBackgroundFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"VideoBackgroundFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "UploadCharacterStepFragment",
+  "name": "VideoBackgroundFragment",
   "selections": [
     {
       "alias": null,
       "args": null,
-      "concreteType": "Club",
+      "concreteType": "ResourceUrl",
       "kind": "LinkedField",
-      "name": "club",
+      "name": "videoThumbnail",
       "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "charactersCount",
+          "name": "url",
           "storageKey": null
         }
       ],
       "storageKey": null
     }
   ],
-  "type": "Post",
+  "type": "Resource",
   "abstractKey": null
 };
 
-(node as any).hash = "fb52c3fc6514013f9036ef7333ef06ec";
+(node as any).hash = "d45deccaf9bb2209e93fc1c7b9f683fe";
 
 export default node;

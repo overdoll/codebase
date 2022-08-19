@@ -14,7 +14,8 @@ const PostFragment = graphql`
 `
 
 export default function PostDescriptionHeading ({
-  postQuery
+  postQuery,
+  ...rest
 }: Props): JSX.Element {
   const postData = useFragment(PostFragment, postQuery)
 
@@ -26,6 +27,7 @@ export default function PostDescriptionHeading ({
       wordBreak='break-word'
       color='gray.200'
       fontSize={fontSize}
+      {...rest}
     >
       {postData.description}
     </Heading>

@@ -97,8 +97,7 @@ export default function PublicClubCharacter ({ query }: Props): JSX.Element {
             totalPosts={queryData.character.totalPosts}
             totalLikes={queryData.character.totalLikes}
           />
-          <HStack justify='space-between' spacing={2}>
-            <PostOrderButton />
+          <HStack justify='flex-end' spacing={2}>
             <SearchButton />
           </HStack>
         </Stack>

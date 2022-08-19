@@ -73,11 +73,10 @@ export default function UploadFlowFooter ({
   }
 
   return (
-    <Flex w='100%' bottom={0}>
-      <HStack w='100%' justify='space-between' spacing={2}>
-        {isAtStart ? <Box /> : <FlowBuilderPreviousButton />}
-        <NextButton />
-      </HStack>
-    </Flex>
+
+    <HStack w='100%' justify='space-between' spacing={2}>
+      {isAtStart ? <Box /> : <FlowBuilderPreviousButton />}
+      <NextButton />
+    </HStack>
   )
 }

@@ -69,7 +69,7 @@ export default function Home (props: Props): JSX.Element {
       <Stack spacing={8}>
         <HStack spacing={2} justify='space-between'>
           <Heading color='gray.00' fontSize='2xl'>
-            <Trans>Home</Trans>
+            <Trans>Hot Posts</Trans>
           </Heading>
           <SearchButton />
         </HStack>

@@ -62,7 +62,7 @@ export default function RootClubPostsPreview ({
   const isSupporter = clubData?.viewerMember?.isSupporter === true && !clubData.viewerIsOwner
 
   const staticParams = { slug: slug as string }
-  const sortByTopParams = { sort: 'TOP' }
+  const sortByTopParams = { sort: 'ALGORITHM' }
   const sortByNewParams = { sort: 'NEW' }
   const supporterParams = { supporter: ['FULL', 'PARTIAL'] }
 
@@ -103,14 +103,14 @@ export default function RootClubPostsPreview ({
     setParams(val => ({
       ...staticParams,
       ...supporterParams,
-      sort: val?.sort ?? 'TOP'
+      sort: val?.sort ?? 'ALGORITHM'
     }))
   }
 
   const setAllParams = (): void => {
     setParams(val => ({
       ...staticParams,
-      sort: val?.sort ?? 'TOP'
+      sort: val?.sort ?? 'ALGORITHM'
     }))
   }
 
@@ -159,11 +159,11 @@ export default function RootClubPostsPreview ({
           )}
           <Button
             {...BUTTON_PROPS}
-            colorScheme={params.sort === 'TOP' ? 'green' : 'gray'}
+            colorScheme={params.sort === 'ALGORITHM' ? 'green' : 'gray'}
             onClick={setTopParams}
           >
             <Trans>
-              Best
+              Hot
             </Trans>
           </Button>
           <Button

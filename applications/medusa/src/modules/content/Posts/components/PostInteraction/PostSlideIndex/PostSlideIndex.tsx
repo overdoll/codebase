@@ -9,6 +9,8 @@ import SwiperType from 'swiper'
 import ImageSnippet from '../../../../DataDisplay/ImageSnippet/ImageSnippet'
 import VideoSnippet from '../../../../DataDisplay/VideoSnippet/VideoSnippet'
 import ClickableTile from '../../../../ContentSelection/ClickableTile/ClickableTile'
+import { Icon } from '../../../../PageLayout'
+import { ControlPlayButton } from '@//:assets/icons'
 
 interface Props {
   query: PostSlideIndexFragment$key
@@ -70,7 +72,7 @@ export default function PostSlideIndex ({
     <HStack
       w='100%'
       pt={2}
-      spacing={2}
+      spacing={1}
       align='center'
       justify='center'
       {...rest}
@@ -107,7 +109,13 @@ export default function PostSlideIndex ({
               borderColor={!isSupporterOnly ? (isActive ? 'primary.400' : 'gray.50') : (isActive ? 'orange.300' : 'gray.50')}
               borderRadius='inherit'
               overflow='hidden'
+              position='relative'
             >
+              {item.resource.type === 'VIDEO' && (
+                <Flex position='absolute' w='100%' h='100%' align='center' justify='center'>
+                  <Icon icon={ControlPlayButton} w={3} h={3} fill='whiteAlpha.800' />
+                </Flex>
+              )}
               <DisplayMedia />
             </Flex>
           </ClickableTile>

@@ -37,7 +37,7 @@ const RootStaffViewTopic: PageProps<Props> = (props: Props) => {
       </Head>
       <PageWrapper>
         <Stack spacing={2}>
-          <BackButton href='/staff/entity/rule/search'>
+          <BackButton href='/staff/entity/topic/search'>
             <Trans>
               Back to search
             </Trans>

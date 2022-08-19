@@ -31,8 +31,8 @@ const Fragment = graphql`
 `
 
 const Mutation = graphql`
-  mutation ChangeAudienceThumbnailFormMutation($input: UpdateAudienceThumbnailInput!) {
-    updateAudienceThumbnail(input: $input) {
+  mutation ChangeAudienceThumbnailFormMutation($input: UpdateAudienceBannerInput!) {
+    updateAudienceBanner(input: $input) {
       audience {
         id
         banner {
@@ -57,7 +57,7 @@ export default function ChangeAudienceThumbnailForm ({
   const notify = useToast()
 
   const schema = Joi.object({
-    thumbnail: GenericFile()
+    banner: GenericFile()
   })
 
   const methods = useForm<AudienceValues>({
@@ -97,7 +97,7 @@ export default function ChangeAudienceThumbnailForm ({
     >
       <Stack spacing={4}>
         <FormInput
-          id='thumbnail'
+          id='banner'
           size='md'
         >
           <InputHeader>

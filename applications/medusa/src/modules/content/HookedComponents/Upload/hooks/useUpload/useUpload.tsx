@@ -1,7 +1,8 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { useToast } from '../../../../ThemeComponents'
-import { Uppy, UppyFile } from '@uppy/core'
-import { UppyType, UseUploadProps, UseUploadReturnType } from '../../types'
+import { UppyFile } from '@uppy/core'
+import { UseUploadProps, UseUploadReturnType } from '../../types'
+import { useUppy } from '@uppy/react'
 
 export default function useUpload (props: UseUploadProps): UseUploadReturnType {
   const {
@@ -16,12 +17,9 @@ export default function useUpload (props: UseUploadProps): UseUploadReturnType {
 
   const notify = useToast()
 
-  const initialUppy = useRef<Uppy | undefined>(undefined)
-  if (initialUppy.current === undefined) {
-    initialUppy.current = InitialUppy
-  }
-
-  const uppy = initialUppy.current as UppyType
+  const uppy = useUppy(() => {
+    return InitialUppy
+  })
 
   useEffect(() => {
     const callBackFn = (file, response): void => {

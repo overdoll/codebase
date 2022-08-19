@@ -2,7 +2,6 @@ import { graphql, useFragment } from 'react-relay'
 import { Box } from '@chakra-ui/react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { PostGalleryStaffDetailedFragment$key } from '@//:artifacts/PostGalleryStaffDetailedFragment.graphql'
-import PostMedia from '../../PostPlayback/PostMedia/PostMedia'
 import PostSlideIndex from '../../PostInteraction/PostSlideIndex/PostSlideIndex'
 import { useState } from 'react'
 import SwiperType from 'swiper'
@@ -10,6 +9,7 @@ import PostSlideBackground from '../PostSlideBackground/PostSlideBackground'
 import { POST_SWIPER_PROPS, POST_SWIPER_SLIDE_PROPS } from '../../../constants'
 import PostShowOverflow from '../PostShowOverflow/PostShowOverflow'
 import PostSupporterContent from '../PostSupporterContent/PostSupporterContent'
+import PostDetailedMedia from '../../PostPlayback/PostDetailedMedia/PostDetailedMedia'
 
 interface Props {
   postQuery: PostGalleryStaffDetailedFragment$key
@@ -25,7 +25,7 @@ const PostFragment = graphql`
     }
     content {
       resource {
-        ...PostMediaFragment
+        ...PostDetailedMediaFragment
       }
       ...PostSupporterContentFragment
       ...PostSlideBackgroundFragment
@@ -59,11 +59,7 @@ export default function PostGalleryStaffDetailed ({
                   clubQuery={postData.club}
                   query={item}
                 >
-                  <PostMedia
-                    controls={{
-                      canSeek: true,
-                      canFullscreen: true
-                    }}
+                  <PostDetailedMedia
                     query={item.resource}
                   />
                 </PostSupporterContent>

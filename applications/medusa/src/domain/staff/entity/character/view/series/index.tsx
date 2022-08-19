@@ -1,6 +1,6 @@
 import RootStaffViewCharacter from './RootStaffViewCharacter/RootStaffViewCharacter'
 import StaffViewCharacterQuery from '@//:artifacts/StaffViewCharacterQuery.graphql'
-import StaffLayout from '../../../../../common/components/Layouts/StaffLayout/StaffLayout'
+import StaffLayout from '@//:common/components/Layouts/StaffLayout/StaffLayout'
 
 RootStaffViewCharacter.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)

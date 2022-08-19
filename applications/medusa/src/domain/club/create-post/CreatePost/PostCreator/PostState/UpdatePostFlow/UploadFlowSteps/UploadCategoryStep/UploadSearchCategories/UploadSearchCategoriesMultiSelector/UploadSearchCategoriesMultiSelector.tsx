@@ -1,6 +1,5 @@
 import { usePaginationFragment } from 'react-relay'
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
-import { LoadMoreGridTile } from '@//:modules/content/ContentSelection'
 import type {
   UploadSearchCategoriesMultiSelectorQuery
 } from '@//:artifacts/UploadSearchCategoriesMultiSelectorQuery.graphql'
@@ -10,9 +9,11 @@ import { EmptyBoundary } from '@//:modules/content/Placeholder'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
 import { ComponentChoiceArguments } from '@//:modules/content/HookedComponents/Choice/types'
 import { Choice } from '@//:modules/content/HookedComponents/Choice'
-import ShortGridWrap from '@//:modules/content/ContentSelection/ShortGridWrap/ShortGridWrap'
 import ShortGridTile from '@//:modules/content/ContentSelection/ShortGridTile/ShortGridTile'
 import UploadEmptyCategories from '../UploadEmptyCategories/UploadEmptyCategories'
+import LoadMoreShortGridTile
+  from '@//:modules/content/ContentSelection/ShortGridTile/LoadMoreShortGridTile/LoadMoreShortGridTile'
+import ShortGridWrap from '@//:modules/content/ContentSelection/ShortGridWrap/ShortGridWrap'
 
 interface Props extends ComponentSearchArguments<any>, ComponentChoiceArguments<any> {
 }
@@ -75,7 +76,7 @@ export default function UploadSearchCategoriesMultiSelector ({
         <UploadEmptyCategories hint={searchArguments.variables.title} />)}
       condition={data.categories.edges.length < 1}
     >
-      <ShortGridWrap>
+      <ShortGridWrap templateColumns='repeat(auto-fill, minmax(100px, 1fr))'>
         {data.categories.edges.map((item, index) => (
           <ShortGridTile key={index}>
             <Choice
@@ -88,7 +89,7 @@ export default function UploadSearchCategoriesMultiSelector ({
           </ShortGridTile>
         )
         )}
-        <LoadMoreGridTile
+        <LoadMoreShortGridTile
           hasNext={hasNext}
           onLoadNext={() => loadNext(15)}
           isLoadingNext={isLoadingNext}

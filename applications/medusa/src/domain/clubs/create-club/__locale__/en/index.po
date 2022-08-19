@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/clubs/create-club/RootCreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:163
+#: src/domain/clubs/create-club/RootCreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:164
 msgid "A unique link"
 msgstr ""
 
@@ -21,7 +21,7 @@ msgstr ""
 msgid "Club {0} was created successfully"
 msgstr ""
 
-#: src/domain/clubs/create-club/RootCreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:181
+#: src/domain/clubs/create-club/RootCreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:182
 msgid "Create Club"
 msgstr ""
 
@@ -33,15 +33,15 @@ msgstr ""
 msgid "Error creating club {0}"
 msgstr ""
 
-#: src/domain/clubs/create-club/RootCreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:140
+#: src/domain/clubs/create-club/RootCreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:141
 msgid "The best name you can come up with"
 msgstr ""
 
-#: src/domain/clubs/create-club/RootCreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:145
+#: src/domain/clubs/create-club/RootCreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:146
 msgid "This is the name everyone will see"
 msgstr ""
 
-#: src/domain/clubs/create-club/RootCreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:168
+#: src/domain/clubs/create-club/RootCreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:169
 msgid "This is the unique link everyone will use to see your club"
 msgstr ""
 
@@ -49,14 +49,14 @@ msgstr ""
 msgid "You can only create a maximum of {0} clubs"
 msgstr ""
 
-#: src/domain/clubs/create-club/RootCreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:135
+#: src/domain/clubs/create-club/RootCreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:136
 msgid "Your Club Name"
 msgstr ""
 
-#: src/domain/clubs/create-club/RootCreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:153
+#: src/domain/clubs/create-club/RootCreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:154
 msgid "Your Unique Club Link"
 msgstr ""
 
-#: src/domain/clubs/create-club/RootCreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:159
+#: src/domain/clubs/create-club/RootCreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:160
 msgid "overdoll.com/"
 msgstr ""

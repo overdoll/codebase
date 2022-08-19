@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<5803927c5da4b4b8610c3c5de1040e2b>>
- * @relayHash e187eb6f05942bb234ed3913ca6ab83e
+ * @generated SignedSource<<a3d3e352331c46216996029ca441e610>>
+ * @relayHash edb7f01af1b7ccdd488330466dd64ac2
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e187eb6f05942bb234ed3913ca6ab83e
+// @relayRequestID edb7f01af1b7ccdd488330466dd64ac2
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -369,7 +369,7 @@ return {
     ]
   },
   "params": {
-    "id": "e187eb6f05942bb234ed3913ca6ab83e",
+    "id": "edb7f01af1b7ccdd488330466dd64ac2",
     "metadata": {},
     "name": "RefreshProcessContentQuery",
     "operationKind": "query",

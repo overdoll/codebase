@@ -2,26 +2,24 @@ import { graphql, useFragment } from 'react-relay'
 import { PostMediaFragment$key } from '@//:artifacts/PostMediaFragment.graphql'
 import ImageSnippet from '../../../../DataDisplay/ImageSnippet/ImageSnippet'
 import PostVideoMedia from './PostVideoMedia/PostVideoMedia'
-import { ControlledVideoProps } from '../ControlledVideo/ControlledVideo'
 import ObserveContent from '../ObserveContent/ObserveContent'
-import { useContext } from 'react'
-import { GlobalVideoManagerContext } from '../../../support/GlobalVideoManager/GlobalVideoManager'
 
-interface Props extends Pick<ControlledVideoProps, 'controls'> {
+interface Props {
   query: PostMediaFragment$key
 }
 
 const Fragment = graphql`
   fragment PostMediaFragment on Resource {
     type
+    width
+    height
     ...ImageSnippetFragment
     ...PostVideoMediaFragment
   }
 `
 
 export default function PostMedia ({
-  query,
-  controls
+  query
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
@@ -31,15 +29,15 @@ export default function PostMedia ({
         return <ImageSnippet containCover cover query={data} />
       case 'VIDEO':
         return (
-          <ObserveContent>
+          <ObserveContent height={data.height} width={data.width}>
             {({
               isObserving,
               isObservingDebounced
             }) => (
               <PostVideoMedia
+                controls={{ canControl: false }}
                 isObserving={isObserving}
                 isObservingDebounced={isObservingDebounced}
-                controls={controls}
                 query={data}
               />
             )}

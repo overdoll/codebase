@@ -13,7 +13,6 @@ interface Props extends Pick<ControlledVideoProps, 'controls'>, ObserveContentCa
 
 const Fragment = graphql`
   fragment PostVideoMediaFragment on Resource {
-    id
     ...ControlledVideoFragment
   }
 `
@@ -68,7 +67,7 @@ export default function PostVideoMedia ({
 
   return (
     <ControlledVideo
-      autoPlay={isObservingDebounced}
+      autoPlay={isObservingDebounced ? true : undefined}
       ref={ref}
       controls={controls}
       onVolumeChange={(volume) => changeVideoVolume(volume)}

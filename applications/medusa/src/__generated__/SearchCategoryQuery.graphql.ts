@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b66e02062ce746884e606596e976d49d>>
- * @relayHash 985e549347a0af5867a4f17705b9c360
+ * @generated SignedSource<<538437cb6b3f886a3d11d8bc9dfc1dbe>>
+ * @relayHash 71734599d8af2f9330bd7ecd583ea8bd
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 985e549347a0af5867a4f17705b9c360
+// @relayRequestID 71734599d8af2f9330bd7ecd583ea8bd
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -104,10 +104,24 @@ v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "width",
   "storageKey": null
 },
 v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "height",
+  "storageKey": null
+},
+v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v12 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -115,7 +129,7 @@ v10 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v9/*: any*/),
+    (v11/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -124,20 +138,6 @@ v10 = {
       "storageKey": null
     }
   ],
-  "storageKey": null
-},
-v11 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "width",
-  "storageKey": null
-},
-v12 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "height",
   "storageKey": null
 },
 v13 = {
@@ -155,7 +155,7 @@ v14 = {
   "name": "videoThumbnail",
   "plural": false,
   "selections": [
-    (v9/*: any*/)
+    (v11/*: any*/)
   ],
   "storageKey": null
 },
@@ -305,9 +305,9 @@ return {
                             "plural": false,
                             "selections": [
                               (v8/*: any*/),
-                              (v7/*: any*/),
+                              (v9/*: any*/),
                               (v10/*: any*/),
-                              (v11/*: any*/),
+                              (v7/*: any*/),
                               (v12/*: any*/),
                               (v13/*: any*/),
                               {
@@ -379,9 +379,9 @@ return {
                             "plural": false,
                             "selections": [
                               (v7/*: any*/),
-                              (v10/*: any*/),
-                              (v11/*: any*/),
                               (v12/*: any*/),
+                              (v9/*: any*/),
+                              (v10/*: any*/),
                               (v13/*: any*/),
                               (v14/*: any*/),
                               (v8/*: any*/)
@@ -507,9 +507,9 @@ return {
             "name": "banner",
             "plural": false,
             "selections": [
-              (v10/*: any*/),
-              (v11/*: any*/),
               (v12/*: any*/),
+              (v9/*: any*/),
+              (v10/*: any*/),
               (v8/*: any*/),
               (v7/*: any*/)
             ],
@@ -603,7 +603,7 @@ return {
     ]
   },
   "params": {
-    "id": "985e549347a0af5867a4f17705b9c360",
+    "id": "71734599d8af2f9330bd7ecd583ea8bd",
     "metadata": {},
     "name": "SearchCategoryQuery",
     "operationKind": "query",

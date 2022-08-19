@@ -11,6 +11,7 @@ import CreatePostNewFilePicker
   from '@//:modules/content/HookedComponents/Upload/components/CreatePostNewFilePicker/CreatePostNewFilePicker'
 import { useUppyContext } from '@//:modules/content/HookedComponents/Upload'
 import CreatePostOpening from '../CreatePostOpening/CreatePostOpening'
+import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 
 interface Props {
   query: CreatePostFlowFragment$key
@@ -50,6 +51,10 @@ export default function CreatePostFlow ({ query }: Props): JSX.Element {
 
   const [, setPostReference] = useQueryParam<string | null | undefined>('post')
 
+  const {
+    dispatch
+  } = useSequenceContext()
+
   const uppy = useUppyContext()
 
   const [createPost, isCreatingPost] = useMutation(Mutation)
@@ -61,6 +66,16 @@ export default function CreatePostFlow ({ query }: Props): JSX.Element {
   const connectionId = data.posts.__id
 
   const onCreatePost = (id): void => {
+    dispatch({
+      type: 'isSubmitted',
+      value: false,
+      transform: 'SET'
+    })
+    dispatch({
+      type: 'isInReview',
+      value: false,
+      transform: 'SET'
+    })
     createPost({
       variables: {
         clubId: id,

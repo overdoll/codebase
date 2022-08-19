@@ -1,11 +1,11 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { ProcessContentDisplayFragment$key } from '@//:artifacts/ProcessContentDisplayFragment.graphql'
 import { ArrowButtonDown, ArrowButtonUp, CheckMark, InfoCircle, WarningTriangle } from '@//:assets/icons'
-import { Collapse, Flex, Heading, HStack, Spinner, Stack, useDisclosure } from '@chakra-ui/react'
+import { Collapse, Flex, Heading, HStack, Progress, Spinner, Stack, useDisclosure } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { Icon, LargeBackgroundBox } from '@//:modules/content/PageLayout'
 import { ClickableTile, GridTile } from '@//:modules/content/ContentSelection'
-import { useContext } from 'react'
+import { ReactNode, useContext, useMemo } from 'react'
 import { FlowContext } from '@//:modules/content/PageLayout/FlowBuilder/FlowBuilder'
 import { isFailed, isProcessed } from '../RefreshProcessContent/RefreshProcessContent'
 import ExpandableResourceInfo
@@ -51,21 +51,21 @@ export default function ProcessContentDisplay ({
   const contentIsProcessed = isProcessed(data.content)
   const contentFailed = isFailed(data.content)
 
-  const ProcessingIcon = (): JSX.Element => {
-    const ICON_PROPS = {
-      w: 4,
-      h: 4
-    }
+  const ICON_PROPS = {
+    w: 4,
+    h: 4
+  }
 
+  const MemoSpinner = useMemo(() => <Spinner color='teal.300' {...ICON_PROPS} />, [])
+
+  const ProcessingIcon = (): JSX.Element => {
     if (contentFailed) {
       return (
         <Icon icon={WarningTriangle} fill='orange.300' {...ICON_PROPS} />
       )
     }
     if (!contentIsProcessed) {
-      return (
-        <Spinner color='teal.300' {...ICON_PROPS} />
-      )
+      return MemoSpinner
     }
     if (currentStep !== 'content') {
       return <Icon icon={InfoCircle} fill='gray.200' {...ICON_PROPS} />
@@ -118,32 +118,67 @@ export default function ProcessContentDisplay ({
     )
   }
 
+  const ProcessingProgress = (): JSX.Element => {
+    const progressArray = data.content.map((item) => item.resource.processed ? 100 : (item.resource.progress?.progress ?? 0))
+
+    const progressValue = progressArray.reduce((sum, accum) => sum + accum, 0)
+
+    const percentageValue = (progressValue / progressArray.length)
+
+    if (percentageValue === 100) {
+      return <></>
+    }
+
+    return (
+      <Progress
+        size='md'
+        h={1}
+        colorScheme={contentFailed ? 'orange' : 'teal'}
+        w='100%'
+        value={percentageValue}
+      />
+    )
+  }
+
+  const InnerDisplay = (): JSX.Element => {
+    return (
+      <HStack align='center' spacing={2}>
+        <ProcessingIcon />
+        <ProcessingText />
+      </HStack>
+    )
+  }
+
+  const BackgroundProgress = (children: ReactNode): JSX.Element => {
+    return (
+      <LargeBackgroundBox overflow='hidden' borderRadius='md' p={0}>
+        <Flex p={3}>
+          {children}
+        </Flex>
+        <ProcessingProgress />
+      </LargeBackgroundBox>
+    )
+  }
+
   if (currentStep === 'content' || currentStep === 'review') {
     if (contentIsProcessed && !contentFailed) {
       return <></>
     }
-    return (
-      <LargeBackgroundBox borderRadius='md' p={3}>
-        <HStack spacing={2}>
-          <ProcessingIcon />
-          <ProcessingText />
-        </HStack>
-      </LargeBackgroundBox>
-    )
+    return BackgroundProgress((
+      <HStack align='center' spacing={2}>
+        <ProcessingIcon />
+        <ProcessingText />
+      </HStack>))
   }
 
   return (
     <Stack spacing={2}>
       <ClickableTile onClick={onToggle}>
-        <LargeBackgroundBox borderRadius='md' p={3}>
-          <HStack justify='space-between'>
-            <HStack spacing={2}>
-              <ProcessingIcon />
-              <ProcessingText />
-            </HStack>
+        {BackgroundProgress((
+          <HStack w='100%' justify='space-between'>
+            <InnerDisplay />
             <Icon icon={isOpen ? ArrowButtonUp : ArrowButtonDown} fill='gray.500' w={4} h={4} />
-          </HStack>
-        </LargeBackgroundBox>
+          </HStack>))}
       </ClickableTile>
       <Collapse in={isOpen}>
         <LargeBackgroundBox borderRadius='md' p={2}>

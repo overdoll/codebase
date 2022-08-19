@@ -15,6 +15,7 @@ import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequenc
 import UploadContentStep from './UploadFlowSteps/UploadContentStep/UploadContentStep'
 import { useUppyContext } from '@//:modules/content/HookedComponents/Upload'
 import CreatePostOpening from '../CreatePostOpening/CreatePostOpening'
+import { Flex } from '@chakra-ui/react'
 
 interface Props {
   query: UpdatePostFlowFragment$key
@@ -39,7 +40,6 @@ const Fragment = graphql`
     ...UploadReviewStepFragment
     ...UploadContentStepFragment
     ...UploadCategoryStepFragment
-    ...UploadCharacterStepFragment
   }
 `
 
@@ -59,7 +59,7 @@ export default function UpdatePostFlow ({
     content: <UploadContentStep query={data} />,
     audience: <UploadAudienceStep />,
     category: <UploadCategoryStep query={data} />,
-    character: <UploadCharacterStep query={data} />,
+    character: <UploadCharacterStep />,
     review: <UploadReviewStep query={data} />
   }
   const headers = {
@@ -135,20 +135,22 @@ export default function UpdatePostFlow ({
     >
       <UploadFlowHeader query={data} />
       <FlowBuilderBody />
-      <FlowBuilderFooter>
-        {({
-          currentStep,
-          isAtStart,
-          nextStep
-        }) => (
-          <UploadFlowFooter
-            step={currentStep}
-            isAtStart={isAtStart}
-            nextStep={nextStep}
-            query={data}
-          />
-        )}
-      </FlowBuilderFooter>
+      <Flex w='100%'>
+        <FlowBuilderFooter>
+          {({
+            currentStep,
+            isAtStart,
+            nextStep
+          }) => (
+            <UploadFlowFooter
+              step={currentStep}
+              isAtStart={isAtStart}
+              nextStep={nextStep}
+              query={data}
+            />
+          )}
+        </FlowBuilderFooter>
+      </Flex>
     </FlowBuilder>
   )
 }

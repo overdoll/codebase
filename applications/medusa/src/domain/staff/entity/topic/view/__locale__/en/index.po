@@ -147,6 +147,10 @@ msgstr ""
 msgid "Topic Banner"
 msgstr ""
 
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/StaffViewTopicCategories/StaffViewTopicCategories.tsx:61
+msgid "Topic Categories"
+msgstr ""
+
 #: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicDescription/ChangeTopicDescription.tsx:31
 #: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicDescription/ChangeTopicDescriptionForm/ChangeTopicDescriptionForm.tsx:113
 msgid "Topic Description"

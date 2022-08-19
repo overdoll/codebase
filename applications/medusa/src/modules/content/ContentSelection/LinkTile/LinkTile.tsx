@@ -10,11 +10,12 @@ export interface LinkTileProps extends ButtonProps {
 export default function LinkTile ({
   href,
   children,
+  w,
   ...rest
 }: LinkTileProps): JSX.Element {
   return (
     <Link passHref href={href}>
-      <Box w='100%' as='a'>
+      <Box w={w ?? '100%'} as='a'>
         <ClickableTile {...rest}>
           {children}
         </ClickableTile>

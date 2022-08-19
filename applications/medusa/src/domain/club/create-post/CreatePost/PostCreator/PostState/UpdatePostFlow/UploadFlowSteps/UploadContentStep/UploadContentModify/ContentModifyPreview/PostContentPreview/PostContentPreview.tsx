@@ -13,7 +13,6 @@ import {
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { PostContentPreviewFragment$key } from '@//:artifacts/PostContentPreviewFragment.graphql'
 import type { PostContentPreviewPostFragment$key } from '@//:artifacts/PostContentPreviewPostFragment.graphql'
-import ResourceInfo from '@//:modules/content/DataDisplay/ResourceInfo/ResourceInfo'
 import PostContentPreviewMenu from './PostContentPreviewMenu/PostContentPreviewMenu'
 import { Trans } from '@lingui/macro'
 import { ReactNode } from 'react'
@@ -65,10 +64,8 @@ export default function PostContentPreview ({
   const getHeight = (): number => {
     if (postData.content.length <= 1) {
       return 150
-    } else if (postData.content.length < 6) {
-      return 125
     } else {
-      return 100
+      return 125
     }
   }
 

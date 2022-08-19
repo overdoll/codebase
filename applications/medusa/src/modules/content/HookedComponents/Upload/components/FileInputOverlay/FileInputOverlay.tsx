@@ -10,11 +10,17 @@ import FileInput from '../../../../ThemeComponents/FileInput/FileInput'
 interface Props {
   uppy: UppyType
   children: ReactNode
+  onlyDrop?: boolean
+  onlyPick?: boolean
+  isDisabled?: boolean
 }
 
 export default function FileInputOverlay ({
   uppy,
-  children
+  children,
+  onlyDrop = false,
+  onlyPick = false,
+  isDisabled = false
 }: Props): JSX.Element {
   const {
     isOpen,
@@ -74,6 +80,8 @@ export default function FileInputOverlay ({
     timeoutRef.current = null
 
     onClose()
+
+    if (isDisabled) return
     const files = Array.from(e.dataTransfer.files)
 
     if (files.length < 1) return
@@ -114,12 +122,60 @@ export default function FileInputOverlay ({
     }, 25)
   }
 
+  const DRAG_DROP_PROPS = {
+    onDrop: handleDrop,
+    onDragOver: onDragOver,
+    onDragLeave: onDragLeave
+  }
+
+  const PICK_PROPS = {
+    onClick: () => inputRef?.current?.click()
+  }
+
+  if (onlyDrop) {
+    return (
+      <Flex
+        w='100%'
+        h='100%'
+        {...DRAG_DROP_PROPS}
+      >
+        <Flex
+          position='relative'
+          borderRadius='md'
+          pointerEvents='none'
+          w='100%'
+          h='100%'
+        >
+          <Box h='100%' w='100%' pointerEvents='auto'>
+            {children}
+          </Box>
+          <DragDropOverlay isDisabled={isDisabled} isOpen={isOpen} />
+        </Flex>
+      </Flex>
+    )
+  }
+
+  if (onlyPick) {
+    return (
+      <ClickableTile
+        {...PICK_PROPS}
+      >
+        <FileInput
+          id={id}
+          ref={inputRef}
+          onChange={onChange}
+          multiple={restrictions.maxNumberOfFiles !== 1}
+          accept={restrictions.allowedFileTypes}
+        />
+        {children}
+      </ClickableTile>
+    )
+  }
+
   return (
     <ClickableTile
-      onClick={() => inputRef?.current?.click()}
-      onDrop={handleDrop}
-      onDragOver={onDragOver}
-      onDragLeave={onDragLeave}
+      {...PICK_PROPS}
+      {...DRAG_DROP_PROPS}
     >
       <Flex
         position='relative'

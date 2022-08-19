@@ -334,8 +334,12 @@ const StaffCatalog = [
     include: ['src/domain/staff/entity/character/search/']
   },
   {
-    path: 'src/domain/staff/entity/character/view/__locale__/{locale}/index',
-    include: ['src/domain/staff/entity/character/view/']
+    path: 'src/domain/staff/entity/character/view/club/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/character/view/club/']
+  },
+  {
+    path: 'src/domain/staff/entity/character/view/series/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/character/view/series/']
   },
   {
     path: 'src/domain/staff/entity/rule/create/__locale__/{locale}/index',

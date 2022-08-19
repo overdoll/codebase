@@ -53,7 +53,14 @@ export default function PostInfiniteScroll ({
 
   const SpinnerSection = (): JSX.Element => {
     const SpinnerComponent = (
-      <Flex w='100%' justify='center'>
+      <Flex
+        mb={{
+          base: 50,
+          md: 400
+        }}
+        w='100%'
+        justify='center'
+      >
         <Spinner color='gray.100' size='sm' />
       </Flex>
     )
@@ -70,7 +77,15 @@ export default function PostInfiniteScroll ({
         </Box>
       )
     }
-    return <Box h={400} w='100%' />
+    return (
+      <Box
+        h={{
+          base: 50,
+          md: 400
+        }}
+        w='100%'
+      />
+    )
   }
 
   return (

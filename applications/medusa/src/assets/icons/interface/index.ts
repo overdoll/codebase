@@ -27,6 +27,7 @@ export { default as ControlVolumeLow } from './mini-bold/actions/control-volume-
 export { default as ControlVolumeMuted } from './mini-bold/actions/control-volume-muted.svg'
 export { default as ControlVolumeMissing } from './mini-bold/actions/control-volume-missing.svg'
 export { default as ControlFullscreenEnable } from './mini-bold/actions/control-fullscreen-enable.svg'
+export { default as ControlFullscreenDisable } from './mini-bold/actions/control-fullscreen-disable.svg'
 export { default as PlaceholderResourceRabbit } from './normal-bold/placeholder-resource-rabbit.svg'
 export { default as PlaceholderResourceRobot } from './normal-bold/placeholder-resource-robot.svg'
 export { default as PlaceholderResourceSkull } from './normal-bold/placeholder-resource-skull.svg'

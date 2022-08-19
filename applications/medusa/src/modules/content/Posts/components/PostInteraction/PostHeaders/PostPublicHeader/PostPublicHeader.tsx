@@ -53,7 +53,8 @@ export default function PostPublicHeader ({
   return (
     <HStack align='flex-start' spacing={2}>
       <LinkTile
-        borderRadius='base'
+        w={12}
+        borderRadius='md'
         href={{
           pathname: '/[slug]',
           query: { slug: postData.club.slug }

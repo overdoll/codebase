@@ -10,7 +10,7 @@ import { TagLocale, TagName } from '@//:types/form'
 import { ChangeSeriesTitleFormMutation } from '@//:artifacts/ChangeSeriesTitleFormMutation.graphql'
 import { ChangeCharacterNameFormFragment$key } from '@//:artifacts/ChangeCharacterNameFormFragment.graphql'
 import Locale from '@//:modules/validation/Locale'
-import GenericTagName from '../../../../../../../../../common/validation/GenericTagName'
+import GenericTagName from '../../../validation/GenericTagName'
 import {
   Form,
   FormInput,

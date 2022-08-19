@@ -1,5 +1,5 @@
 import { Fade, Flex, HStack, Slider, SliderFilledTrack, SliderTrack, Stack } from '@chakra-ui/react'
-import { forwardRef, MutableRefObject } from 'react'
+import { forwardRef, MutableRefObject, RefObject } from 'react'
 import PlayPauseButton from './PlayPauseButton/PlayPauseButton'
 import VolumeButton from './VolumeButton/VolumeButton'
 import LoadingSpinner from './LoadingSpinner/LoadingSpinner'
@@ -21,6 +21,7 @@ interface Props {
   canSeek?: boolean | undefined
   canFullscreen?: boolean | undefined
   canControl?: boolean | undefined
+  wrapperRef: RefObject<HTMLDivElement>
 }
 
 const ControlVideo = forwardRef<HTMLVideoElement, Props>(({
@@ -36,7 +37,8 @@ const ControlVideo = forwardRef<HTMLVideoElement, Props>(({
   totalTime,
   canSeek,
   canFullscreen,
-  canControl
+  canControl,
+  wrapperRef
 }: Props, forwardRef): JSX.Element => {
   const {
     play,
@@ -44,7 +46,11 @@ const ControlVideo = forwardRef<HTMLVideoElement, Props>(({
     ref
   } = useVideoControls(forwardRef as MutableRefObject<HTMLVideoElement>)
 
-  const determineCanSeek = canSeek === true && totalTime > 15
+  const timeExceedsLimit = totalTime > 9
+
+  const determineCanSeek = canSeek === true && timeExceedsLimit
+
+  const fullscreenEnabled = canFullscreen
 
   const onChangeVideo = (): void => {
     const video = ref.current
@@ -94,8 +100,8 @@ const ControlVideo = forwardRef<HTMLVideoElement, Props>(({
     video.load()
   }
 
-  const onFullscreen = (): void => {
-    const video = ref.current
+  const onRequestFullscreenWrapper = (): void => {
+    const video = wrapperRef.current
     if (video == null) return
     void video.requestFullscreen()
   }
@@ -108,6 +114,8 @@ const ControlVideo = forwardRef<HTMLVideoElement, Props>(({
             <Stack
               align='center'
               bottom={0}
+              left={0}
+              right={0}
               pb={3}
               pl={6}
               pr={6}
@@ -129,10 +137,10 @@ const ControlVideo = forwardRef<HTMLVideoElement, Props>(({
                     onChangeMuted={onChangeMuted}
                     hasAudio={hasAudio}
                   />}
-                {canFullscreen === true &&
+                {fullscreenEnabled === true &&
                   <FullscreenButton
                     onMouseEnter={onMouseHold}
-                    onClick={onFullscreen}
+                    onRequestFullscreenWrapper={onRequestFullscreenWrapper}
                   />}
               </HStack>
               {determineCanSeek &&
@@ -146,17 +154,19 @@ const ControlVideo = forwardRef<HTMLVideoElement, Props>(({
                 />}
             </Stack>
           </Fade>
-          <Fade unmountOnExit in={!isOpen}>
+          <Fade unmountOnExit in={!timeExceedsLimit ? true : !isOpen}>
             <Flex
               top='1px'
+              left={0}
+              right={0}
               position='absolute'
               w='100%'
               align='center'
               justify='center'
             >
-              <Slider transition='100ms' isDisabled value={time} min={0} max={totalTime} step={0.1}>
-                <SliderTrack borderRadius='none' h='2px' bg='whiteAlpha.100'>
-                  <SliderFilledTrack bg='whiteAlpha.700' />
+              <Slider top={0} transition='100ms' isDisabled value={time} min={0} max={totalTime} step={0.1}>
+                <SliderTrack borderRadius='none' h='3px' bg='whiteAlpha.100'>
+                  <SliderFilledTrack bg='primary.300' />
                 </SliderTrack>
               </Slider>
             </Flex>
@@ -165,6 +175,7 @@ const ControlVideo = forwardRef<HTMLVideoElement, Props>(({
       <Flex
         pointerEvents={hasError ? undefined : 'none'}
         top={0}
+        left={0}
         position='absolute'
         w='100%'
         h='100%'

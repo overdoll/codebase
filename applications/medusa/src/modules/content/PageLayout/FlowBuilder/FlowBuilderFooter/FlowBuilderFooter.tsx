@@ -62,7 +62,7 @@ export default function FlowBuilderFooter ({
   }
 
   return (
-    <Flex>
+    <Flex w='100%'>
       {runIfFunction(children, {
         currentStep: currentStep,
         nextStep: nextStep,

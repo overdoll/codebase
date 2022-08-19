@@ -1,22 +1,23 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
-import { StaffViewCharacterQuery } from '@//:artifacts/StaffViewCharacterQuery.graphql'
+import { StaffViewClubCharacterQuery } from '@//:artifacts/StaffViewClubCharacterQuery.graphql'
 import { Box, Stack } from '@chakra-ui/react'
 import { NotFoundGeneric } from '@//:modules/content/Placeholder'
-import ChangeCharacterName from './ChangeCharacterName/ChangeCharacterName'
-import ChangeCharacterThumbnail from './ChangeCharacterThumbnail/ChangeCharacterThumbnail'
+
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
-import TagBadgeHeader from '../../../../../../../common/components/TagBadgeHeader/TagBadgeHeader'
+import TagBadgeHeader from '@//:common/components/TagBadgeHeader/TagBadgeHeader'
+import ChangeCharacterName from '../../../../../../../../common/components/ChangeCharacterName/ChangeCharacterName'
+import ChangeCharacterThumbnail from '../../../../../../../../common/components/ChangeCharacterThumbnail/ChangeCharacterThumbnail'
 
 interface Props {
-  query: PreloadedQuery<StaffViewCharacterQuery>
+  query: PreloadedQuery<StaffViewClubCharacterQuery>
 }
 
 const Query = graphql`
-  query StaffViewCharacterQuery($slug: String!, $seriesSlug: String) {
-    character(slug: $slug, seriesSlug: $seriesSlug) {
-      series {
-        title
+  query StaffViewClubCharacterQuery($slug: String!, $clubSlug: String) {
+    character(slug: $slug, clubSlug: $clubSlug) {
+      club {
+        name
       }
       ...ChangeCharacterNameFragment
       ...ChangeCharacterThumbnailFragment
@@ -24,8 +25,8 @@ const Query = graphql`
   }
 `
 
-export default function StaffViewCharacter ({ query }: Props): JSX.Element {
-  const queryData = usePreloadedQuery<StaffViewCharacterQuery>(
+export default function StaffViewClubCharacter ({ query }: Props): JSX.Element {
+  const queryData = usePreloadedQuery<StaffViewClubCharacterQuery>(
     Query,
     query
   )
@@ -46,12 +47,12 @@ export default function StaffViewCharacter ({ query }: Props): JSX.Element {
         <PageSectionWrap>
           <PageSectionTitle>
             <Trans>
-              Character Series
+              Character Club
             </Trans>
           </PageSectionTitle>
         </PageSectionWrap>
         <TagBadgeHeader>
-          {queryData?.character?.series?.title}
+          {queryData?.character?.club?.name}
         </TagBadgeHeader>
       </Box>
     </Stack>

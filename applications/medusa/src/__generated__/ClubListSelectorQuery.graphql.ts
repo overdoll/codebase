@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<34f0f80c211558d7361e9b722cc51352>>
- * @relayHash 49d3a1bbd2c533e697c6997805484d5e
+ * @generated SignedSource<<15481607044d8deb0886cf3729dc5bec>>
+ * @relayHash edce222a8cea7fcc9a49e8d19253058d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 49d3a1bbd2c533e697c6997805484d5e
+// @relayRequestID edce222a8cea7fcc9a49e8d19253058d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -29,7 +29,7 @@ var v0 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 3
+    "value": 11
   }
 ],
 v1 = {
@@ -307,7 +307,7 @@ return {
                 "storageKey": null
               }
             ],
-            "storageKey": "clubs(first:3)"
+            "storageKey": "clubs(first:11)"
           },
           {
             "alias": null,
@@ -327,7 +327,7 @@ return {
     ]
   },
   "params": {
-    "id": "49d3a1bbd2c533e697c6997805484d5e",
+    "id": "edce222a8cea7fcc9a49e8d19253058d",
     "metadata": {},
     "name": "ClubListSelectorQuery",
     "operationKind": "query",

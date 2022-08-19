@@ -30,7 +30,7 @@ msgid "Club Restricted"
 msgstr ""
 
 #: src/domain/club/characters/root/RootClubCharacters/ClubCharacters/ManageClubCharacters/ManageClubCharacters.tsx:43
-#: src/domain/club/characters/root/RootClubCharacters/ClubCharacters/ManageClubCharacters/ViewClubCharacters/ViewClubCharacters.tsx:75
+#: src/domain/club/characters/root/RootClubCharacters/ClubCharacters/ManageClubCharacters/ViewClubCharacters/ViewClubCharacters.tsx:73
 msgid "Create Character"
 msgstr ""
 

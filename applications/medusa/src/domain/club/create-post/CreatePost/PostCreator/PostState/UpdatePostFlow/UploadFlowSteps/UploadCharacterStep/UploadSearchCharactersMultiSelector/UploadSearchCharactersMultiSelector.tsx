@@ -12,8 +12,10 @@ import { Trans } from '@lingui/macro'
 import { Heading, HStack, Stack } from '@chakra-ui/react'
 import MediumGridWrap from '@//:modules/content/ContentSelection/MediumGridWrap/MediumGridWrap'
 import ContactButton from '../../../../../../../../../../common/components/Contact/ContactButton'
+import EmptyCustomCharacters from '@//:modules/content/Placeholder/Empty/EmptyCustomCharacters/EmptyCustomCharacters'
+import { UploadCharacterSearchProps } from '../UploadCharacterStep'
 
-interface Props extends ComponentChoiceArguments<any>, ComponentSearchArguments<any> {
+interface Props extends ComponentChoiceArguments<any>, ComponentSearchArguments<UploadCharacterSearchProps> {
 }
 
 const Query = graphql`
@@ -28,7 +30,7 @@ const Fragment = graphql`
     first: {type: Int, defaultValue: 14}
     after: {type: String},
     name: {type: String}
-    clubCharacters: {type: Boolean}
+    clubCharacters: {type: Boolean, defaultValue: false}
   )
   @refetchable(queryName: "UploadSearchCharactersMultiSelectorPaginationFragment" )
   {
@@ -50,10 +52,12 @@ const Fragment = graphql`
   }
 `
 
-export default function UploadSearchCharactersMultiSelector ({
-  searchArguments,
-  register
-}: Props): JSX.Element {
+export default function UploadSearchCharactersMultiSelector (props: Props): JSX.Element {
+  const {
+    searchArguments,
+    register
+  } = props
+
   const queryData = useLazyLoadQuery<UploadSearchCharactersMultiSelectorQuery>(
     Query,
     searchArguments.variables,
@@ -70,20 +74,31 @@ export default function UploadSearchCharactersMultiSelector ({
     queryData
   )
 
+  const EmptyFallback = (): JSX.Element => {
+    if (searchArguments.variables?.clubCharacters === true) {
+      return (
+        <EmptyCustomCharacters hint={searchArguments.variables.name} />
+      )
+    }
+
+    return (
+      <Stack spacing={2}>
+        <EmptyCharacters hint={searchArguments.variables.name} />
+        <HStack p={4} bg='gray.800' borderRadius='md' spacing={2}>
+          <Heading color='gray.200' fontSize='sm'>
+            <Trans>
+              Have a character suggestion or want your character listed? Contact us!
+            </Trans>
+          </Heading>
+          <ContactButton variant='link' />
+        </HStack>
+      </Stack>
+    )
+  }
+
   return (
     <EmptyBoundary
-      fallback={(
-        <Stack spacing={2}>
-          <EmptyCharacters hint={searchArguments.variables.name} />
-          <HStack p={4} bg='gray.800' borderRadius='md' spacing={2}>
-            <Heading color='gray.200' fontSize='sm'>
-              <Trans>
-                Have a character suggestion or want your character listed? Contact us!
-              </Trans>
-            </Heading>
-            <ContactButton variant='link' />
-          </HStack>
-        </Stack>)}
+      fallback={<EmptyFallback />}
       condition={data.characters.edges.length < 1}
     >
       <MediumGridWrap>

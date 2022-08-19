@@ -41,6 +41,10 @@ msgstr ""
 msgid "Audit Logs"
 msgstr ""
 
+#: src/common/components/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:126
+msgid "BCP 47 Locale Code"
+msgstr ""
+
 #: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderPreviousButton/FlowBuilderPreviousButton.tsx:20
 msgid "Back"
 msgstr ""
@@ -61,13 +65,39 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+#: src/modules/content/HookedComponents/Upload/components/FileInputOverlay/DragDropOverlay/DragDropOverlay.tsx:35
+msgid "Cannot drop while uploading"
+msgstr ""
+
 #: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:79
 msgid "Categories"
+msgstr ""
+
+#: src/common/components/ChangeCharacterName/ChangeCharacterName.tsx:57
+msgid "Change Character Name"
+msgstr ""
+
+#: src/common/components/ChangeCharacterThumbnail/ChangeCharacterThumbnail.tsx:47
+msgid "Change Thumbnail"
+msgstr ""
+
+#: src/common/components/ChangeCharacterName/ChangeCharacterName.tsx:32
+#: src/common/components/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:111
+msgid "Character Name"
+msgstr ""
+
+#: src/common/components/ChangeCharacterThumbnail/ChangeCharacterThumbnail.tsx:30
+#: src/common/components/ChangeCharacterThumbnail/ChangeCharacterThumbnailForm/ChangeCharacterThumbnailForm.tsx:104
+msgid "Character Thumbnail"
 msgstr ""
 
 #: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:121
 #: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:59
 msgid "Characters"
+msgstr ""
+
+#: src/common/components/ClubTransactionMetrics/ClubTransactionMetric/ClubTransactionMetric.tsx:91
+msgid "Chargebacks (suspension at >{0}%)"
 msgstr ""
 
 #: src/modules/content/HookedComponents/Search/components/SearchInput/SearchInput.tsx:42
@@ -160,6 +190,10 @@ msgstr ""
 #~ msgid "Drop your files to upload them"
 #~ msgstr ""
 
+#: src/common/components/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:116
+msgid "Enter a name"
+msgstr ""
+
 #: src/modules/content/HookedComponents/Form/FormInput/Inputs/WeightInput/WeightNumberInput/WeightNumberInput.tsx:64
 msgid "Enter a weight 0-9999. Higher will show up first."
 msgstr ""
@@ -170,6 +204,10 @@ msgstr ""
 
 #: src/modules/content/Posts/components/PostPlayback/ControlledVideo/components/ControlVideo/LoadingSpinner/LoadingSpinner.tsx:25
 msgid "Error Loading Video"
+msgstr ""
+
+#: src/common/components/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:93
+msgid "Error updating character name"
 msgstr ""
 
 #: src/modules/content/Placeholder/Fallback/ErrorFallback/ErrorFallback.tsx:35
@@ -241,6 +279,10 @@ msgstr ""
 #: src/modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/GeneralSearch/SearchChoices/GeneralSearchSeries/GeneralSearchSeries.tsx:79
 #~ msgid "Load More Series"
 #~ msgstr ""
+
+#: src/common/components/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:131
+msgid "Locale"
+msgstr ""
 
 #: src/modules/validation/Locale.ts:13
 msgid "Locale does not match BCP47 pattern"
@@ -436,7 +478,11 @@ msgstr ""
 msgid "Public Page"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Upload/components/UploadFileDisplay/UploadFileDisplay.tsx:131
+#: src/common/components/ClubTransactionMetrics/ClubTransactionMetric/ClubTransactionMetric.tsx:77
+msgid "Refunds (target is <{0}%)"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Upload/components/UploadFileDisplay/UploadFileDisplay.tsx:130
 msgid "Remove File"
 msgstr ""
 
@@ -466,7 +512,7 @@ msgstr ""
 msgid "Retry"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Upload/components/UploadFileDisplay/UploadFileDisplay.tsx:124
+#: src/modules/content/HookedComponents/Upload/components/UploadFileDisplay/UploadFileDisplay.tsx:123
 msgid "Retry File"
 msgstr ""
 
@@ -542,6 +588,10 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
+#: src/common/components/ClubTransactionMetrics/ClubTransactionMetrics.tsx:68
+msgid "Show Older Metrics"
+msgstr ""
+
 #: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderSkipButton/FlowBuilderSkipButton.tsx:13
 msgid "Skip"
 msgstr ""
@@ -562,12 +612,21 @@ msgstr ""
 msgid "Staff"
 msgstr ""
 
+#: src/common/components/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:142
+#: src/common/components/ChangeCharacterThumbnail/ChangeCharacterThumbnailForm/ChangeCharacterThumbnailForm.tsx:116
+msgid "Submit"
+msgstr ""
+
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostReportButton/PostReportButton.tsx:219
 msgid "Submit Report"
 msgstr ""
 
 #: src/modules/content/HookedComponents/Form/FormInput/Inputs/WeightInput/WeightNumberInput/WeightNumberInput.tsx:49
 msgid "Subtract"
+msgstr ""
+
+#: src/common/components/ChangeCharacterThumbnail/ChangeCharacterThumbnailForm/ChangeCharacterThumbnailForm.tsx:80
+msgid "Successfully updated character thumbnail"
 msgstr ""
 
 #: src/modules/content/Posts/components/PostInteraction/PostHeaders/PostJoinClub/PostJoinClub.tsx:121
@@ -654,6 +713,10 @@ msgstr ""
 msgid "There was an error unlocking your account"
 msgstr ""
 
+#: src/common/components/ChangeCharacterThumbnail/ChangeCharacterThumbnailForm/ChangeCharacterThumbnailForm.tsx:86
+msgid "There was an error updating the character thumbnail"
+msgstr ""
+
 #: src/modules/content/Placeholder/NotFound/NotFoundAccount/NotFoundAccount.tsx:10
 msgid "This account was not found"
 msgstr ""
@@ -711,6 +774,14 @@ msgstr ""
 msgid "Today"
 msgstr ""
 
+#: src/common/components/ClubTransactionMetrics/ClubTransactionMetrics.tsx:51
+msgid "Transaction Metrics"
+msgstr ""
+
+#: src/common/components/ClubTransactionMetrics/ClubTransactionMetrics.tsx:56
+msgid "Transaction metrics help you maintain a good refund and chargeback ratio to keep your club in good standing."
+msgstr ""
+
 #: src/modules/content/DataDisplay/NextImage/ImageError/ImageError.tsx:44
 #: src/modules/content/Posts/components/PostPlayback/ControlledVideo/components/ControlVideo/LoadingSpinner/LoadingSpinner.tsx:39
 msgid "Try refreshing the page to fix the error"
@@ -730,6 +801,10 @@ msgstr ""
 
 #: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContentLocked/PostSupporterContentLockedButton/PostSupporterContentLockedButton.tsx:55
 msgid "Unlock Supporter Content"
+msgstr ""
+
+#: src/common/components/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:87
+msgid "Updated character name to {0} for {1}"
 msgstr ""
 
 #: src/modules/content/HookedComponents/Upload/components/CreatePostNewFilePicker/CreatePostNewFilePicker.tsx:33
@@ -759,6 +834,10 @@ msgstr ""
 
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostViewButton/PostViewButton.tsx:37
 msgid "View Post"
+msgstr ""
+
+#: src/common/components/ChangeCharacterName/ChangeCharacterName.tsx:43
+msgid "View Translations"
 msgstr ""
 
 #: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchResults/SearchResults.tsx:50
@@ -867,6 +946,14 @@ msgstr ""
 msgid "message.placeholder.empty.clubs.other"
 msgstr ""
 
+#: src/modules/content/Placeholder/Empty/EmptyCustomCharacters/EmptyCustomCharacters.tsx:7
+msgid "message.placeholder.empty.custom_characters.one"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyCustomCharacters/EmptyCustomCharacters.tsx:16
+msgid "message.placeholder.empty.custom_characters.other"
+msgstr ""
+
 #: src/modules/content/Placeholder/Empty/EmptySeries/EmptySeries.tsx:7
 msgid "message.placeholder.empty.series.one"
 msgstr ""
@@ -890,4 +977,12 @@ msgstr ""
 #: src/common/components/AccountInformationBanner/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:117
 #: src/common/components/ClubInformationBanner/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:111
 msgid "{countdown}"
+msgstr ""
+
+#: src/common/components/ClubTransactionMetrics/ClubTransactionMetric/GraphTransactionMetric/GraphTransactionMetric.tsx:38
+msgid "{currentAmount} of {totalAmount}"
+msgstr ""
+
+#: src/common/components/ClubTransactionMetrics/ClubTransactionMetric/ClubTransactionMetric.tsx:70
+msgid "{totalTransactionsAmount} total processed"
 msgstr ""

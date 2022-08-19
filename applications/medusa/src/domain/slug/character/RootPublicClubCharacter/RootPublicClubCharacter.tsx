@@ -41,7 +41,7 @@ const RootPublicClubCharacter: PageProps<Props> = (props: Props) => {
         <QueryErrorBoundary loadQuery={() => loadQuery({
           clubSlug: slug as string,
           characterSlug: characterSlug as string,
-          sortBy: 'TOP'
+          sortBy: 'ALGORITHM'
         })}
         >
           <Suspense fallback={<SkeletonStack />}>

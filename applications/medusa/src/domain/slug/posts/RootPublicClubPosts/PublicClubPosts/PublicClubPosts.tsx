@@ -9,9 +9,6 @@ import PublicClubPostsRichObject
   from '../../../../../common/rich-objects/slug/PublicClubPostsRichObject/PublicClubPostsRichObject'
 import { HStack, Stack } from '@chakra-ui/react'
 import SearchButton from '../../../../../common/components/PageHeader/SearchButton/SearchButton'
-import PostOrderButton from '../../../../../common/components/PageHeader/PostOrderButton/PostOrderButton'
-import PostSupporterStatusButton
-  from '../../../../../common/components/PageHeader/PostSupporterStatusButton/PostSupporterStatusButton'
 import PublicClubPostsStructuredData
   from '../../../../../common/structured-data/slug/PublicClubPostsStructuredData/PublicClubPostsStructuredData'
 import PostInfiniteScroll
@@ -98,11 +95,7 @@ export default function PublicClubPosts (props: Props): JSX.Element {
       <AccountInformationBanner query={queryData.viewer} />
       <Stack spacing={2}>
         <ClubCharacterRecommendations query={queryData.club} />
-        <HStack justify='space-between' mt={2} spacing={2}>
-          <HStack spacing={2}>
-            <PostOrderButton />
-            <PostSupporterStatusButton />
-          </HStack>
+        <HStack justify='flex-end' mt={2} spacing={2}>
           <SearchButton />
         </HStack>
       </Stack>

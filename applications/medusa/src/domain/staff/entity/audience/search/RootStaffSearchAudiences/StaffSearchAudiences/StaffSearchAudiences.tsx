@@ -5,10 +5,12 @@ import {
   StaffSearchAudiencesQuery$variables
 } from '@//:artifacts/StaffSearchAudiencesQuery.graphql'
 import removeNode from '@//:modules/support/removeNode'
-import { AudienceTileOverlay, LinkTile, LoadMoreStackTile, StackTile } from '@//:modules/content/ContentSelection'
+import { AudienceTileOverlay, GridWrap, LinkTile } from '@//:modules/content/ContentSelection'
 import { EmptyAudiences, EmptyBoundary } from '@//:modules/content/Placeholder'
-import { ListSpacer } from '@//:modules/content/PageLayout'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
+import ShortGridTile from '@//:modules/content/ContentSelection/ShortGridTile/ShortGridTile'
+import LoadMoreShortGridTile
+  from '@//:modules/content/ContentSelection/ShortGridTile/LoadMoreShortGridTile/LoadMoreShortGridTile'
 
 interface Props extends ComponentSearchArguments<StaffSearchAudiencesQuery$variables> {
 }
@@ -22,7 +24,7 @@ const Query = graphql`
 const Fragment = graphql`
   fragment StaffSearchAudiencesFragment on Query
   @argumentDefinitions(
-    first: {type: Int}
+    first: {type: Int, defaultValue: 100}
     after: {type: String}
   )
   @refetchable(queryName: "StaffSearchAudiencesPaginationFragment" )
@@ -66,9 +68,9 @@ export default function StaffSearchAudiences ({ searchArguments }: Props): JSX.E
       fallback={<EmptyAudiences hint={searchArguments.variables.title} />}
       condition={audiences.length < 1}
     >
-      <ListSpacer>
+      <GridWrap>
         {audiences.map((item, index) => (
-          <StackTile key={index}>
+          <ShortGridTile key={index}>
             <LinkTile href={{
               pathname: '/staff/entity/audience/[slug]',
               query: { slug: item.slug }
@@ -76,15 +78,15 @@ export default function StaffSearchAudiences ({ searchArguments }: Props): JSX.E
             >
               <AudienceTileOverlay query={item} />
             </LinkTile>
-          </StackTile>
+          </ShortGridTile>
         )
         )}
-        <LoadMoreStackTile
+        <LoadMoreShortGridTile
           hasNext={hasNext}
           onLoadNext={() => loadNext(5)}
           isLoadingNext={isLoadingNext}
         />
-      </ListSpacer>
+      </GridWrap>
     </EmptyBoundary>
   )
 }

@@ -11,6 +11,7 @@ import ClubInformationBanner from '../../../../../../common/components/ClubInfor
 import ClubDraftPostsAlert from './ClubDraftPostsAlert/ClubDraftPostsAlert'
 import CreatePostFooter from './CreatePostFooter/CreatePostFooter'
 import PostNotDraft from './PostNotDraft/PostNotDraft'
+import CreatePostOpening from './CreatePostOpening/CreatePostOpening'
 
 interface Props {
   postQuery: PostStateFragment$key | null
@@ -41,14 +42,12 @@ export default function PostState ({
   const postData = useFragment(PostFragment, postQuery)
   const clubData = useFragment(ClubFragment, clubQuery)
 
-  const { state } = useSequenceContext()
+  const {
+    state
+  } = useSequenceContext()
 
   if (clubData == null) {
     return <NotFoundClub />
-  }
-
-  if (state.isSubmitted === true) {
-    return <PostSubmitted />
   }
 
   // If there is no post found from the URL parameter, show create post initiator
@@ -58,11 +57,16 @@ export default function PostState ({
         <ClubInformationBanner query={clubData} />
         <Stack spacing={4}>
           <ClubDraftPostsAlert query={clubData} />
+          <PostSubmitted />
           <CreatePostFlow query={clubData} />
           <CreatePostFooter />
         </Stack>
       </>
     )
+  }
+
+  if (state.isSubmitted === true) {
+    return <CreatePostOpening />
   }
 
   // If the post was already submitted

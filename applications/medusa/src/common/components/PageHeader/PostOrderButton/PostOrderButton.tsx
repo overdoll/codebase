@@ -19,7 +19,7 @@ export default function PostOrderButton (): JSX.Element {
   return (
     <HStack align='center' spacing={1}>
       <OrderButton
-        param='TOP'
+        param='ALGORITHM'
         defaultActive
         icon={RisingGraph}
       >

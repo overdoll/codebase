@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f501bf2dbba47c59652a3e3ce8c615c8>>
+ * @generated SignedSource<<fecca5b5eb2f69c1c6615f9a7c0dfaf3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,6 +22,7 @@ export type StaffSeriesSearchCharactersFragment$data = {
       };
     }>;
   };
+  readonly id: string;
   readonly " $fragmentType": "StaffSeriesSearchCharactersFragment";
 };
 export type StaffSeriesSearchCharactersFragment$key = {
@@ -51,11 +52,6 @@ return {
       "defaultValue": 9,
       "kind": "LocalArgument",
       "name": "first"
-    },
-    {
-      "defaultValue": null,
-      "kind": "LocalArgument",
-      "name": "slug"
     }
   ],
   "kind": "Fragment",
@@ -77,21 +73,18 @@ return {
         "backward": null,
         "path": (v0/*: any*/)
       },
-      "fragmentPathInResult": [],
-      "operation": require('./StaffSeriesSearchCharactersPaginationFragment.graphql')
+      "fragmentPathInResult": [
+        "node"
+      ],
+      "operation": require('./StaffSeriesSearchCharactersPaginationFragment.graphql'),
+      "identifierField": "id"
     }
   },
   "name": "StaffSeriesSearchCharactersFragment",
   "selections": [
     {
       "alias": "characters",
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "seriesSlug",
-          "variableName": "slug"
-        }
-      ],
+      "args": null,
       "concreteType": "CharacterConnection",
       "kind": "LinkedField",
       "name": "__StaffSeriesSearchCharacters_characters_connection",
@@ -178,13 +171,20 @@ return {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
     }
   ],
-  "type": "Query",
+  "type": "Series",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "484cebf880fbc6381e8052834cf0b2c1";
+(node as any).hash = "520cefe7aceadaaf1f2f3d4ecc1e85f3";
 
 export default node;

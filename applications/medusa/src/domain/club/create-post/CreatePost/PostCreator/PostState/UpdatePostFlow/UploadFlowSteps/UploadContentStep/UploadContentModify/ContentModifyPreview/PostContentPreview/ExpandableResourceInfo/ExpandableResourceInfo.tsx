@@ -1,9 +1,9 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { ExpandableResourceInfoFragment$key } from '@//:artifacts/ExpandableResourceInfoFragment.graphql'
 import ResourceInfo from '@//:modules/content/DataDisplay/ResourceInfo/ResourceInfo'
-import { Modal, ModalBody, ModalContent, ModalOverlay, useDisclosure } from '@chakra-ui/react'
+import { useDisclosure } from '@chakra-ui/react'
 import { ClickableTile } from '@//:modules/content/ContentSelection'
-import PreviewMedia from './PreviewMedia/PreviewMedia'
+import MediaPreviewModal from '@//:modules/content/Posts/components/PostPlayback/MediaPreviewModal/MediaPreviewModal'
 
 interface Props {
   query: ExpandableResourceInfoFragment$key
@@ -14,8 +14,7 @@ const Fragment = graphql`
     ...ResourceInfoFragment
     resource {
       processed
-      preview
-      ...PreviewMediaFragment
+      ...MediaPreviewModalFragment
     }
   }
 `
@@ -42,25 +41,7 @@ export default function ExpandableResourceInfo ({
       <ClickableTile onClick={onOpen}>
         <ResourceInfo containCover query={data} />
       </ClickableTile>
-      <Modal
-        allowPinchZoom
-        isOpen={isOpen}
-        onClose={onClose}
-        isCentered
-        size='6xl'
-        preserveScrollBarGap
-      >
-        <ModalOverlay
-          bg={`${data.resource.preview}90`}
-        />
-        <ModalContent m={0} width='auto' boxShadow='none' bg='transparent'>
-          <ModalBody p={0}>
-            <PreviewMedia
-              query={data.resource}
-            />
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+      <MediaPreviewModal query={data.resource} isOpen={isOpen} onClose={onClose} />
     </>
   )
 }

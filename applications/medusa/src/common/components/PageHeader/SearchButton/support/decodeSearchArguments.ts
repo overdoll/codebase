@@ -9,7 +9,7 @@ export default function decodeSearchArguments (query): SearchProps {
   const supporter = query?.supporter
 
   return {
-    sortBy: query?.sort ?? 'TOP',
+    sortBy: query?.sort ?? 'ALGORITHM',
     supporterOnlyStatus: supporter != null ? filterOutDefault(supporter) : []
   }
 }

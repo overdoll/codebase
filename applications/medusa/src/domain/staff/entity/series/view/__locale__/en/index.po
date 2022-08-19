@@ -34,8 +34,8 @@ msgid "Change Thumbnail"
 msgstr ""
 
 #: src/domain/staff/entity/series/view/RootStaffViewSeries/StaffViewSeries/StaffSeriesSearchCharacters/StaffSeriesSearchCharacters.tsx:60
-msgid "Characters from this series"
-msgstr ""
+#~ msgid "Characters from this series"
+#~ msgstr ""
 
 #: src/domain/staff/entity/series/view/RootStaffViewSeries/StaffViewSeries/ChangeSeriesTitle/ChangeSeriesTitleForm/ChangeSeriesTitleForm.tsx:118
 msgid "Enter a series title"
@@ -47,6 +47,10 @@ msgstr ""
 
 #: src/domain/staff/entity/series/view/RootStaffViewSeries/StaffViewSeries/ChangeSeriesTitle/ChangeSeriesTitleForm/ChangeSeriesTitleForm.tsx:133
 msgid "Locale"
+msgstr ""
+
+#: src/domain/staff/entity/series/view/RootStaffViewSeries/StaffViewSeries/StaffSeriesSearchCharacters/StaffSeriesSearchCharacters.tsx:58
+msgid "Series Characters"
 msgstr ""
 
 #: src/domain/staff/entity/series/view/RootStaffViewSeries/StaffViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnail.tsx:30

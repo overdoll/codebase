@@ -94,8 +94,7 @@ export default function SearchCategory ({ query }: Props): JSX.Element {
             totalLikes={queryData.category.totalLikes}
           />
           <SearchCategoryRecommendations query={queryData} />
-          <HStack justify='space-between' spacing={2}>
-            <PostOrderButton />
+          <HStack justify='flex-end' spacing={2}>
             <SearchButton />
           </HStack>
         </Stack>

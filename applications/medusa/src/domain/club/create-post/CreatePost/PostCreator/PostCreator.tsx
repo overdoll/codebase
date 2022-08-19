@@ -12,7 +12,7 @@ import {
   OnUploadErrorType,
   OnUploadProgressType,
   OnUploadRetryType,
-  OnUploadSuccessType
+  OnUploadSuccessType,
 } from '@//:modules/content/HookedComponents/Upload/types'
 import { useUpdateEffect } from '@chakra-ui/react'
 

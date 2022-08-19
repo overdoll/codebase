@@ -103,7 +103,6 @@ export default function PostGalleryPublicSimple ({
                   >
                     <Box w='100%' h='100%' as='a'>
                       <PostMedia
-                        controls={{ canControl: false }}
                         query={item.resource}
                       />
                     </Box>

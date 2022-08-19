@@ -37,7 +37,7 @@ const RootSearchCategory: PageProps<Props> = (props: Props) => {
       <PageWrapper>
         <QueryErrorBoundary loadQuery={() => loadQuery({
           categorySlug: categorySlug as string,
-          sortBy: 'TOP'
+          sortBy: 'ALGORITHM'
         })}
         >
           <Suspense fallback={<SkeletonStack />}>

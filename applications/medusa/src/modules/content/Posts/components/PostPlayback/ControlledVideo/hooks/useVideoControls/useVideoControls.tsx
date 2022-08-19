@@ -17,8 +17,15 @@ export default function useVideoControls (videoRef: UseVideoControlsProps): UseV
   let videoLoaded: Promise<void> | null = null
 
   const onPlay = (): void => {
-    if (ref?.current == null || ref?.current?.readyState < 3) return
-    videoLoaded = ref.current.play()
+    if (ref?.current == null) return
+    if (ref?.current?.readyState < 3) {
+      // TODO queue playing until video reaches a certain ready state
+    }
+    videoLoaded = ref.current.play().then(() => {
+      // TODO do something if video plays?
+    }).catch((error) => {
+      // TODO catch playing error
+    })
   }
 
   const onPause = (): void => {

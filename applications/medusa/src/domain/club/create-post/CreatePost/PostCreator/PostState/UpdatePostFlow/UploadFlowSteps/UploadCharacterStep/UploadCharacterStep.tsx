@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
-import { PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
+import { Icon, PageSectionDescription, PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import SearchInput from '@//:modules/content/HookedComponents/Search/components/SearchInput/SearchInput'
-import { Stack } from '@chakra-ui/react'
+import { HStack, Stack } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import SearchCharacters from './UploadSearchCharactersMultiSelector/UploadSearchCharactersMultiSelector'
@@ -13,14 +13,9 @@ import SkeletonUploadCharacterGrid
   from '@//:modules/content/Placeholder/Loading/SkeletonUploadCharacterGrid/SkeletonUploadCharacterGrid'
 import SearchBooleanButton
   from '@//:modules/content/HookedComponents/Search/components/SearchBooleanButton/SearchBooleanButton'
-import { graphql, useFragment } from 'react-relay/hooks'
-import type { UploadCharacterStepFragment$key } from '@//:artifacts/UploadCharacterStepFragment.graphql'
+import { CharacterIdentifier } from '@//:assets/icons'
 
-interface Props {
-  query: UploadCharacterStepFragment$key
-}
-
-interface SearchProps {
+export interface UploadCharacterSearchProps {
   name: string
   clubCharacters?: boolean
 }
@@ -29,17 +24,7 @@ interface ChoiceProps {
   name: string
 }
 
-const Fragment = graphql`
-  fragment UploadCharacterStepFragment on Post {
-    club {
-      charactersCount
-    }
-  }
-`
-
-export default function UploadCharacterStep ({ query }: Props): JSX.Element {
-  const data = useFragment(Fragment, query)
-
+export default function UploadCharacterStep (): JSX.Element {
   const { i18n } = useLingui()
 
   const {
@@ -51,7 +36,7 @@ export default function UploadCharacterStep ({ query }: Props): JSX.Element {
     searchArguments,
     loadQuery,
     register: registerSearch
-  } = useSearch<SearchProps>({})
+  } = useSearch<UploadCharacterSearchProps>({})
 
   const {
     values,
@@ -80,18 +65,24 @@ export default function UploadCharacterStep ({ query }: Props): JSX.Element {
           </Trans>
         </PageSectionDescription>
       </PageSectionWrap>
-      {data.club.charactersCount > 0 && (
-        <SearchBooleanButton nullifyOnClear {...registerSearch('clubCharacters', 'change')}>
-          <Trans>
-            Show Your Club Characters
-          </Trans>
-        </SearchBooleanButton>
-      )}
-      <SearchInput
-        nullifyOnClear
-        {...registerSearch('name', 'change')}
-        placeholder={i18n._(t`Search for a character by name`)}
-      />
+      <HStack spacing={2}>
+        <SearchInput
+          nullifyOnClear
+          {...registerSearch('name', 'change')}
+          placeholder={i18n._(t`Search for a character by name`)}
+        />
+        <SearchBooleanButton
+          icon={<Icon
+            icon={CharacterIdentifier}
+            h={5}
+            w={5}
+            fill={searchArguments.variables.clubCharacters === true ? 'green.900' : 'gray.300'}
+                />}
+          aria-label={searchArguments.variables.clubCharacters === true ? i18n._(t`Show all characters`) : i18n._(t`Show only original characters`)}
+          colorScheme={searchArguments.variables.clubCharacters === true ? 'green' : 'gray'}
+          {...registerSearch('clubCharacters', 'change')}
+        />
+      </HStack>
       <ChoiceRemovableTags
         values={values}
         removeValue={removeValue}

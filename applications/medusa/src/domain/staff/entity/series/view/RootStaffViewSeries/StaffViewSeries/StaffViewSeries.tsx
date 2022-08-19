@@ -15,8 +15,8 @@ const Query = graphql`
     serial(slug: $slug) {
       ...ChangeSeriesTitleFragment
       ...ChangeSeriesThumbnailFragment
+      ...StaffSeriesSearchCharactersFragment
     }
-    ...StaffSeriesSearchCharactersFragment @arguments(slug: $slug)
   }
 `
 
@@ -39,7 +39,7 @@ export default function StaffViewSeries ({ query }: Props): JSX.Element {
         <ChangeSeriesThumbnail query={queryData?.serial} />
       </Box>
       <Box>
-        <StaffSeriesSearchCharacters query={queryData} />
+        <StaffSeriesSearchCharacters query={queryData.serial} />
       </Box>
     </Stack>
   )

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<4e0392d55b9e3b085e3e7203f20bc5af>>
- * @relayHash 09e74c1069e374a1890472b854bb5121
+ * @generated SignedSource<<6a99756795fe9cbdd83327214ce89284>>
+ * @relayHash 130e3de8f83dba47e17669e51c7b9872
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 09e74c1069e374a1890472b854bb5121
+// @relayRequestID 130e3de8f83dba47e17669e51c7b9872
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -102,10 +102,24 @@ v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "width",
   "storageKey": null
 },
 v12 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "height",
+  "storageKey": null
+},
+v13 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v14 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -113,7 +127,7 @@ v12 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v11/*: any*/),
+    (v13/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -122,20 +136,6 @@ v12 = {
       "storageKey": null
     }
   ],
-  "storageKey": null
-},
-v13 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "width",
-  "storageKey": null
-},
-v14 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "height",
   "storageKey": null
 },
 v15 = {
@@ -153,7 +153,7 @@ v16 = {
   "name": "videoThumbnail",
   "plural": false,
   "selections": [
-    (v11/*: any*/)
+    (v13/*: any*/)
   ],
   "storageKey": null
 },
@@ -269,9 +269,9 @@ return {
                                 "plural": false,
                                 "selections": [
                                   (v10/*: any*/),
-                                  (v8/*: any*/),
+                                  (v11/*: any*/),
                                   (v12/*: any*/),
-                                  (v13/*: any*/),
+                                  (v8/*: any*/),
                                   (v14/*: any*/),
                                   (v15/*: any*/),
                                   {
@@ -349,9 +349,9 @@ return {
                                 "plural": false,
                                 "selections": [
                                   (v8/*: any*/),
-                                  (v12/*: any*/),
-                                  (v13/*: any*/),
                                   (v14/*: any*/),
+                                  (v11/*: any*/),
+                                  (v12/*: any*/),
                                   (v15/*: any*/),
                                   (v16/*: any*/),
                                   (v10/*: any*/)
@@ -477,7 +477,7 @@ return {
     ]
   },
   "params": {
-    "id": "09e74c1069e374a1890472b854bb5121",
+    "id": "130e3de8f83dba47e17669e51c7b9872",
     "metadata": {},
     "name": "PublicClubCharacterPostsPaginationQuery",
     "operationKind": "query",

@@ -1,12 +1,12 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import { ChangeCharacterNameFragment$key } from '@//:artifacts/ChangeCharacterNameFragment.graphql'
-import { Collapse, Stack } from '@chakra-ui/react'
+import { Stack } from '@chakra-ui/react'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import ChangeCharacterNameForm from './ChangeCharacterNameForm/ChangeCharacterNameForm'
-import TagHeader from '../../../../../../../../common/components/TagHeader/TagHeader'
-import TranslationSnippet from '../../../../../../../../common/components/TranslationSnippet/TranslationSnippet'
-import { CollapseBody, CollapseButton } from '@//:modules/content/ThemeComponents/Collapse/Collapse'
+import TagHeader from '../TagHeader/TagHeader'
+import TranslationSnippet from '../TranslationSnippet/TranslationSnippet'
+import { Collapse, CollapseBody, CollapseButton } from '@//:modules/content/ThemeComponents/Collapse/Collapse'
 
 interface Props {
   query: ChangeCharacterNameFragment$key

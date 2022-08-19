@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import type { ControlledVideoFragment$key } from '@//:artifacts/ControlledVideoFragment.graphql'
@@ -7,6 +7,7 @@ import useTimedDisclosure from './hooks/useTimedDisclosure/useTimedDisclosure'
 import RenderVideo from './components/RenderVideo/RenderVideo'
 import ControlVideo from './components/ControlVideo/ControlVideo'
 import { useUpdateEffect } from 'usehooks-ts'
+import VideoBackground from '../../../../DataDisplay/VideoBackground/VideoBackground'
 
 type Controls = Partial<{
   canSeek: boolean
@@ -24,12 +25,13 @@ export interface ControlledVideoProps {
   volume?: number
   isMuted?: boolean
   controls: Controls
-  autoPlay: boolean
+  autoPlay: boolean | undefined
 }
 
 const Fragment = graphql`
   fragment ControlledVideoFragment on Resource {
     videoNoAudio
+    ...VideoBackgroundFragment
     ...RenderVideoFragment
   }
 `
@@ -49,6 +51,11 @@ const ControlledVideo = forwardRef<HTMLVideoElement, ControlledVideoProps>(({
   const data = useFragment(Fragment, query)
 
   const ref = useRef<HTMLVideoElement>(null)
+
+  const wrapperRef = useRef<HTMLDivElement>(null)
+
+  // TODO rewrite video component with https://developer.chrome.com/blog/play-request-was-interrupted/#source-within-video-makes-play-promise-never-rejects
+  // TODO and canvas projecting thumbnail until video is loaded (scrolled into view), played manually, or gets the autoplay param
 
   useImperativeHandle(forwardRef, () => ref.current as HTMLVideoElement)
 
@@ -99,12 +106,10 @@ const ControlledVideo = forwardRef<HTMLVideoElement, ControlledVideoProps>(({
 
   const onSeeking = (e): void => {
     setPaused(e.target.paused)
-    setLoaded(false)
   }
 
   const onSeeked = (e): void => {
     setPaused(e.target.paused)
-    setLoaded(true)
   }
 
   const onLoadedData = (e): void => {
@@ -156,17 +161,26 @@ const ControlledVideo = forwardRef<HTMLVideoElement, ControlledVideoProps>(({
   useUpdateEffect(() => {
     if (ref.current == null) return
     ref.current.volume = defaultVolume
-    ref.current.muted = isDefaultMuted
+    if (ref.current.muted !== isDefaultMuted) {
+      ref.current.muted = isDefaultMuted
+    }
   }, [defaultVolume, isDefaultMuted, ref.current])
 
   return (
-    <Box
+    <Flex
+      ref={wrapperRef}
       minW={60}
       minH={130}
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut}
       position='relative'
+      w='100%'
+      h='100%'
+      align='center'
+      justify='center'
+      bg='gray.800'
     >
+      <VideoBackground zIndex={-1} query={data} />
       <RenderVideo
         ref={ref}
         query={data}
@@ -189,12 +203,13 @@ const ControlledVideo = forwardRef<HTMLVideoElement, ControlledVideoProps>(({
       />
       <ControlVideo
         ref={ref}
+        wrapperRef={wrapperRef}
         onMouseHold={onMouseHold}
         isOpen={isOpen}
         isLoaded={isLoaded}
         isPaused={isPaused}
         hasError={hasError}
-        isMuted={isDefaultMuted}
+        isMuted={isMuted}
         hasAudio={hasAudio}
         time={time}
         setTime={onSetTime}
@@ -203,7 +218,7 @@ const ControlledVideo = forwardRef<HTMLVideoElement, ControlledVideoProps>(({
         canFullscreen={controls?.canFullscreen}
         canControl={controls?.canControl}
       />
-    </Box>
+    </Flex>
   )
 })
 

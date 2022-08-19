@@ -80,7 +80,7 @@ export default function ResourceItem ({
               size='md'
               colorScheme='teal'
               w='100%'
-              value={data.progress.progress}
+              value={data.progress.progress === 0 ? 2 : data.progress.progress}
             />
           )
         case 'FINALIZING':

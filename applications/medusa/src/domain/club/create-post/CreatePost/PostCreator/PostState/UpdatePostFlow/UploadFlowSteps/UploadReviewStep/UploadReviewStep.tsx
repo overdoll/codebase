@@ -7,6 +7,7 @@ import PostReview from './PostReview/PostReview'
 import { Stack } from '@chakra-ui/react'
 import SuggestPrompt from '../../../../../SuggestPrompt/SuggestPrompt'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
+import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 
 interface Props {
   query: UploadReviewStepFragment$key
@@ -50,7 +51,9 @@ export default function UploadReviewStep ({
           </Trans>
         </PageSectionDescription>
       </PageSectionWrap>
-      <PostReview query={data} />
+      <GlobalVideoManagerProvider>
+        <PostReview query={data} />
+      </GlobalVideoManagerProvider>
       <Stack spacing={2}>
         <SuggestPrompt>
           <Trans>
