@@ -5,7 +5,7 @@ export const CLUB_ALLOWED_FILE_TYPES = ['image/png', 'image/jpeg']
 
 export const GENERIC_MAX_FILE_SIZE = 26214400
 
-export const UPLOAD_MAX_FILE_SIZE = 52428800
+export const UPLOAD_MAX_FILE_SIZE = 104857600
 
 export const FILE_ICONS = {
   'image/png': FilePng,
