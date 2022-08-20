@@ -3,6 +3,7 @@ package activities
 import (
 	"context"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/applications/sting/internal/domain/resource_options"
 	"overdoll/libraries/resource"
 )
 
@@ -49,7 +50,7 @@ func (h *Activities) UpdateSeriesBanner(ctx context.Context, input UpdateSeriesB
 
 	_, err = h.pr.UpdateSeriesBannerOperator(ctx, input.SeriesId, func(series *post.Series) error {
 
-		newResource, err := h.loader.CopyResourceIntoImage(ctx, pst.ID(), selectedContentResource.ID(), false, "SERIES_BANNER", 480, 0, series.ID())
+		newResource, err := h.loader.CopyResourceIntoImage(ctx, resource_options.NewResourceOptionsForSeriesBanner(selectedContentResource, series.ID()))
 
 		if err != nil {
 			return err
