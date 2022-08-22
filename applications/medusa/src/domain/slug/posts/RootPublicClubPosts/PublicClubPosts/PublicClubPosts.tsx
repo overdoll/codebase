@@ -28,7 +28,8 @@ const Query = graphql`
     $categorySlugs: [String!],
     $seriesSlugs: [String!],
     $characterSlugs: [String!],
-    $supporterOnlyStatus: [SupporterOnlyStatus!]
+    $supporterOnlyStatus: [SupporterOnlyStatus!],
+    $seed: String
   ) {
     club(slug: $slug) {
       name
@@ -57,7 +58,8 @@ const Fragment = graphql`
       categorySlugs: $categorySlugs,
       seriesSlugs: $seriesSlugs,
       characterSlugs: $characterSlugs,
-      supporterOnlyStatus: $supporterOnlyStatus
+      supporterOnlyStatus: $supporterOnlyStatus,
+      seed: $seed
     )
     @connection (key: "ClubPublicPosts_posts") {
       edges {

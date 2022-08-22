@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bae9283ba57997e79797f92a626d3603>>
+ * @generated SignedSource<<4aea4b912df6498180610bc02f87b46f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -45,6 +45,10 @@ return {
     },
     {
       "kind": "RootArgument",
+      "name": "seed"
+    },
+    {
+      "kind": "RootArgument",
       "name": "sort"
     },
     {
@@ -83,6 +87,11 @@ return {
     {
       "alias": "clubPosts",
       "args": [
+        {
+          "kind": "Variable",
+          "name": "seed",
+          "variableName": "seed"
+        },
         {
           "kind": "Variable",
           "name": "sortBy",
@@ -186,6 +195,6 @@ return {
 };
 })();
 
-(node as any).hash = "d82e8125979c0c8656ff38d842d305d8";
+(node as any).hash = "46004a669df7c3ee6bf776ddf0bf47d7";
 
 export default node;

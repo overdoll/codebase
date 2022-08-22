@@ -54,9 +54,9 @@ export default function PlatformPromoteAlert (): JSX.Element {
           </Stack>
           <HStack w='100%' spacing={2} justify='center'>
             <PlatformShareDirectButton />
-            <PlatformShareTwitterButton />
-            <PlatformShareRedditButton />
             <PlatformShareDiscordButton />
+            <PlatformShareRedditButton />
+            <PlatformShareTwitterButton />
           </HStack>
         </Stack>
       </LargeBackgroundBox>

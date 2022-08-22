@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<be55bc2e58ec1b663021a86188ab2471>>
+ * @generated SignedSource<<562ae763b2c9a5caa3dc2025a91a2550>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -45,6 +45,10 @@ return {
     },
     {
       "kind": "RootArgument",
+      "name": "seed"
+    },
+    {
+      "kind": "RootArgument",
       "name": "sortBy"
     }
   ],
@@ -79,6 +83,11 @@ return {
     {
       "alias": "posts",
       "args": [
+        {
+          "kind": "Variable",
+          "name": "seed",
+          "variableName": "seed"
+        },
         {
           "kind": "Variable",
           "name": "sortBy",
@@ -177,6 +186,6 @@ return {
 };
 })();
 
-(node as any).hash = "27edc317116853ddb26e431a8cc1a2bf";
+(node as any).hash = "870d0fd2ba2594f564768ceb73bc21fd";
 
 export default node;

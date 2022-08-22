@@ -23,7 +23,8 @@ interface Props {
 const Query = graphql`
   query SearchCategoryQuery(
     $sortBy: PostsSort!,
-    $categorySlug: String!
+    $categorySlug: String!,
+    $seed: String
   ) @preloadable {
     category(slug: $categorySlug) {
       title
@@ -50,6 +51,7 @@ const Fragment = graphql`
       first: $first,
       after: $after,
       sortBy: $sortBy,
+      seed: $seed
     )
     @connection (key: "SearchCategoryPosts_posts") {
       edges {

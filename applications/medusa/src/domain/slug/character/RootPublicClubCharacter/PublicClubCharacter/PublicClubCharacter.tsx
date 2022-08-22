@@ -25,6 +25,7 @@ const Query = graphql`
     $sortBy: PostsSort!,
     $clubSlug: String,
     $characterSlug: String!,
+    $seed: String
   ) @preloadable {
     character(clubSlug: $clubSlug, slug: $characterSlug) {
       name
@@ -53,6 +54,7 @@ const Fragment = graphql`
       first: $first,
       after: $after,
       sortBy: $sortBy,
+      seed: $seed
     )
     @connection (key: "PublicClubCharacterPosts_posts") {
       edges {

@@ -16,6 +16,7 @@ import { configMap } from '../../../../../../../common/components/PageHeader/Sea
 import { useUpdateEffect } from 'usehooks-ts'
 import { Icon } from '@//:modules/content/PageLayout'
 import { SearchSmall } from '@//:assets/icons'
+import { useCookies } from 'react-cookie'
 
 interface SearchProps {
   slug: string
@@ -59,6 +60,8 @@ export default function RootClubPostsPreview ({
 
   const { query: { slug } } = useRouter()
 
+  const [cookies] = useCookies<string>(['postSeed'])
+
   const isSupporter = clubData?.viewerMember?.isSupporter === true && !clubData.viewerIsOwner
 
   const staticParams = { slug: slug as string }
@@ -69,7 +72,8 @@ export default function RootClubPostsPreview ({
   const initialParams = {
     ...staticParams,
     ...sortByTopParams,
-    ...(isSupporter ? supporterParams : sortByTopParams)
+    ...(isSupporter ? supporterParams : sortByTopParams),
+    seed: cookies.postSeed ?? null
   }
 
   const [params, setParams] = useState<SearchProps>(initialParams)

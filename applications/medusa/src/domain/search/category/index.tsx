@@ -1,6 +1,7 @@
 import RootSearchCategory from './RootSearchCategory/RootSearchCategory'
 import SearchCategoryQuery from '@//:artifacts/SearchCategoryQuery.graphql'
 import decodeSearchArguments from '../../../common/components/PageHeader/SearchButton/support/decodeSearchArguments'
+import getPostSeed from '@//:modules/content/Posts/support/getPostSeed'
 
 RootSearchCategory.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)
@@ -19,7 +20,8 @@ RootSearchCategory.getRelayPreloadProps = (ctx) => {
         params: SearchCategoryQuery.params,
         variables: {
           categorySlug,
-          ...decodeSearchArguments(query)
+          ...decodeSearchArguments(query),
+          ...getPostSeed(ctx)
         },
         options: {
           fetchPolicy: 'store-or-network'

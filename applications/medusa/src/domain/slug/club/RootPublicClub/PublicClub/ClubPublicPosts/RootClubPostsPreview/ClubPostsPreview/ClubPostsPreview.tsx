@@ -13,7 +13,7 @@ interface Props extends ComponentSearchArguments<any> {
 }
 
 const Query = graphql`
-  query ClubPostsPreviewQuery($slug: String!, $sort: PostsSort!, $supporter: [SupporterOnlyStatus!]) {
+  query ClubPostsPreviewQuery($slug: String!, $sort: PostsSort!, $supporter: [SupporterOnlyStatus!], $seed: String) {
     club (slug: $slug) @required(action: THROW) {
       ...ClubPostsPreviewFragment
     }
@@ -27,7 +27,12 @@ const Fragment = graphql`
     after: {type: String}
   )
   @refetchable(queryName: "ClubPostsPreviewPaginationQuery" ) {
-    clubPosts: posts(first: $first, after: $after, sortBy: $sort, supporterOnlyStatus: $supporter)
+    clubPosts: posts(
+      first: $first,
+      after: $after,
+      sortBy: $sort,
+      supporterOnlyStatus: $supporter,
+      seed: $seed)
     @connection (key: "ClubPostsPreview_clubPosts") {
       edges {
         node {

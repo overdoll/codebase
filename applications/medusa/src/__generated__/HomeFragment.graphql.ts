@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1e8f057e184d9cc1188a2fe02c8fbd40>>
+ * @generated SignedSource<<c9e92ba20aec3c35b0a84072fc2f7305>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -41,6 +41,10 @@ return {
       "defaultValue": 9,
       "kind": "LocalArgument",
       "name": "first"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "seed"
     }
   ],
   "kind": "Fragment",
@@ -70,7 +74,13 @@ return {
   "selections": [
     {
       "alias": "postsFeed",
-      "args": null,
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "seed",
+          "variableName": "seed"
+        }
+      ],
       "concreteType": "PostConnection",
       "kind": "LinkedField",
       "name": "__HomePosts_postsFeed_connection",
@@ -156,6 +166,6 @@ return {
 };
 })();
 
-(node as any).hash = "050a42e99a1522e62d1fbaaf54722953";
+(node as any).hash = "793c3bee202158d7fe47ac5404248c88";
 
 export default node;

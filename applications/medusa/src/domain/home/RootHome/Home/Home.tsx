@@ -18,7 +18,7 @@ interface Props {
 }
 
 const Query = graphql`
-  query HomeQuery @preloadable {
+  query HomeQuery($seed: String) @preloadable {
     ...HomeFragment
     viewer {
       ...CurationProfileAlertFragment
@@ -35,7 +35,7 @@ const Fragment = graphql`
     after: {type: String}
   )
   @refetchable(queryName: "HomePostsPaginationQuery" ) {
-    postsFeed (first: $first, after: $after)
+    postsFeed (first: $first, after: $after, seed: $seed)
     @connection (key: "HomePosts_postsFeed") {
       edges {
         node {

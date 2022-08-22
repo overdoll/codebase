@@ -25,6 +25,7 @@ const Query = graphql`
     $sortBy: PostsSort!,
     $seriesSlug: String,
     $characterSlug: String!,
+    $seed: String
   ) @preloadable {
     character(seriesSlug: $seriesSlug, slug: $characterSlug) {
       name
@@ -51,6 +52,7 @@ const Fragment = graphql`
       first: $first,
       after: $after,
       sortBy: $sortBy,
+      seed: $seed
     )
     @connection (key: "SearchCharacterPosts_posts") {
       edges {

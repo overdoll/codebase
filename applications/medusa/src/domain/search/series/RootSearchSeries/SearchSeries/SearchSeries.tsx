@@ -23,7 +23,8 @@ interface Props {
 const Query = graphql`
   query SearchSeriesQuery(
     $sortBy: PostsSort!,
-    $seriesSlug: String!
+    $seriesSlug: String!,
+    $seed: String
   ) @preloadable {
     serial(slug: $seriesSlug) {
       title
@@ -50,6 +51,7 @@ const Fragment = graphql`
       first: $first,
       after: $after,
       sortBy: $sortBy,
+      seed: $seed
     )
     @connection (key: "SearchSeriesPosts_posts") {
       edges {

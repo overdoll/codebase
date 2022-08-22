@@ -85,7 +85,9 @@ export default function PostInfiniteScroll ({
     }
     return (
       <Stack spacing={2}>
-        {endOfTree}
+        <Flex mt={20}>
+          {endOfTree}
+        </Flex>
         <Box
           h={{
             base: 50,

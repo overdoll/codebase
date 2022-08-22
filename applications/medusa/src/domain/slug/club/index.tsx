@@ -17,7 +17,7 @@ RootPublicClub.getRelayPreloadProps = (ctx) => ({
 })
 
 RootPublicClub.getMiddleware = (ctx, data) => {
-  if (data.publicClubQuery.response.data.club == null) {
+  if (data.publicClubQuery.response.data?.club == null) {
     return {
       notFound: true
     }

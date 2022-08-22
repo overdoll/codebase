@@ -1,6 +1,7 @@
 import RootSearchCharacter from './RootSearchCharacter/RootSearchCharacter'
 import SearchCharacterQuery from '@//:artifacts/SearchCharacterQuery.graphql'
 import decodeSearchArguments from '../../../common/components/PageHeader/SearchButton/support/decodeSearchArguments'
+import getPostSeed from '@//:modules/content/Posts/support/getPostSeed'
 
 RootSearchCharacter.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)
@@ -21,7 +22,8 @@ RootSearchCharacter.getRelayPreloadProps = (ctx) => {
         variables: {
           seriesSlug,
           characterSlug,
-          ...decodeSearchArguments(query)
+          ...decodeSearchArguments(query),
+          ...getPostSeed(ctx)
         },
         options: {
           fetchPolicy: 'store-or-network'
