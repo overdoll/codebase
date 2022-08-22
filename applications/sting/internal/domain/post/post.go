@@ -337,6 +337,14 @@ func (p *Post) SubmitPostRequest(clb *club.Club, requester *principal.Principal)
 		return domainerror.NewValidation("cannot submit post without audience")
 	}
 
+	if len(p.categoryIds) < 3 {
+		return domainerror.NewValidation("cannot submit post without at least 3 categories")
+	}
+
+	if len(p.characterIds) < 1 {
+		return domainerror.NewValidation("cannot submit post without at least 1 character")
+	}
+
 	p.update()
 
 	return nil
@@ -425,6 +433,10 @@ func (p *Post) AddContentRequest(requester *principal.Principal, resources []*re
 				post:            p,
 			})
 		}
+	}
+
+	if len(newContent) > 20 {
+		return domainerror.NewValidation("only maximum 20 content pieces allowed")
 	}
 
 	p.content = append(p.content, newContent...)
