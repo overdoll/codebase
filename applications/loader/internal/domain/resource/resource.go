@@ -245,7 +245,7 @@ func (r *Resource) ApplyFilters(file *os.File, config *Config, filters *ImageFil
 	r.width = pixelatedSrc.Bounds().Dx()
 
 	_, _ = jpegFile.Seek(0, io.SeekStart)
-	preview, err := createPreviewFromFile(jpegFile, false)
+	preview, err := createPreviewFromFile(jpegFile)
 
 	if err != nil {
 		return nil, err
@@ -267,7 +267,7 @@ func (r *Resource) ApplyFilters(file *os.File, config *Config, filters *ImageFil
 	}, nil
 }
 
-func createPreviewFromFile(r io.Reader, isVideo bool) (string, error) {
+func createPreviewFromFile(r io.Reader) (string, error) {
 	img, err := jpeg.Decode(r)
 
 	if err != nil {
@@ -276,12 +276,7 @@ func createPreviewFromFile(r io.Reader, isVideo bool) (string, error) {
 
 	var cols []prominentcolor.ColorItem
 
-	if isVideo {
-		// don't mask since videos could include black / white fade-ins
-		cols, err = prominentcolor.KmeansWithAll(prominentcolor.DefaultK, img, prominentcolor.ArgumentDefault, prominentcolor.DefaultSize, []prominentcolor.ColorBackgroundMask{})
-	} else {
-		cols, err = prominentcolor.KmeansWithArgs(prominentcolor.ArgumentDefault, img)
-	}
+	cols, err = prominentcolor.KmeansWithAll(prominentcolor.DefaultK, img, prominentcolor.ArgumentDefault, prominentcolor.DefaultSize, []prominentcolor.ColorBackgroundMask{})
 
 	if err != nil {
 		return "", errors.Wrap(err, "failed to generate preview from file")
@@ -512,7 +507,7 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 	r.mimeTypes = []string{"video/mp4"}
 
 	_, _ = fileThumbnail.Seek(0, io.SeekStart)
-	preview, err := createPreviewFromFile(fileThumbnail, true)
+	preview, err := createPreviewFromFile(fileThumbnail)
 
 	if err != nil {
 		return nil, err
@@ -603,7 +598,7 @@ func (r *Resource) processImage(mimeType string, fileName string, file *os.File,
 	r.width = src.Bounds().Dx()
 
 	_, _ = jpegFile.Seek(0, io.SeekStart)
-	preview, err := createPreviewFromFile(jpegFile, false)
+	preview, err := createPreviewFromFile(jpegFile)
 
 	if err != nil {
 		return nil, err
