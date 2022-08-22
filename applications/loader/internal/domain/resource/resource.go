@@ -49,7 +49,7 @@ var (
 // accepted formats
 var (
 	imageAcceptedTypes = []string{"image/png", "image/jpeg"}
-	videoAcceptedTypes = []string{"video/mp4", "video/x-m4v"}
+	videoAcceptedTypes = []string{"video/mp4", "video/x-m4v", "video/quicktime"}
 )
 
 var extensionsMap = map[string]string{
