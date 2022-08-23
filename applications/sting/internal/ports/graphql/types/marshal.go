@@ -910,7 +910,7 @@ func MarshalClubToGraphQL(ctx context.Context, result *club.Club) *Club {
 
 	var banner *graphql.Resource
 
-	if result.BannerResource() != nil && result.BannerResource().IsProcessed() {
+	if result.BannerResource() != nil {
 		banner = graphql.MarshalResourceToGraphQL(ctx, result.BannerResource())
 	}
 
