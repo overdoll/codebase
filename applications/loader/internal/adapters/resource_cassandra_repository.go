@@ -751,7 +751,7 @@ func (r ResourceCassandraS3Repository) GetComposer(ctx context.Context) (*tusd.S
 		MinPartSize:        5 * 1024 * 1024,
 		PreferredPartSize:  10 * 1024 * 1024,
 		MaxMultipartParts:  10000,
-		MaxObjectSize:      1024 * 1024 * 1024,
+		MaxObjectSize:      1024 * 1024 * 1024 * 10,
 		MaxBufferedParts:   20,
 		TemporaryDirectory: "",
 	}

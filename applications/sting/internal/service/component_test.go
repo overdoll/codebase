@@ -355,9 +355,11 @@ func seedPublishedPostWithCategory(t *testing.T, categoryId string) {
 		"1pcKiQL7dgUW8CIN7uO1wqFaMql", "StandardAudience", map[string]string{"en": "Standard Audience"}, nil, nil, 1, 0, 0, time.Now(), time.Now(),
 	))
 
-	err = pst.UpdateCategoriesRequest(prin, []*post.Category{post.UnmarshalCategoryFromDatabase(
-		categoryId, "StandardCategory", map[string]string{"en": "Standard Audience"}, nil, nil, 1, 0, time.Now(), time.Now(), nil, nil,
-	)})
+	err = pst.UpdateCategoriesRequest(prin, []*post.Category{
+		post.UnmarshalCategoryFromDatabase(categoryId, "StandardCategory", map[string]string{"en": "Standard Audience"}, nil, nil, 0, 0, time.Now(), time.Now(), nil, nil),
+		post.UnmarshalCategoryFromDatabase("1q7MJFMVgDPo4mFjsfNag6rRwRy", "StandardCategory", map[string]string{"en": "Standard Audience"}, nil, nil, 0, 0, time.Now(), time.Now(), nil, nil),
+		post.UnmarshalCategoryFromDatabase("1q7MJFk9Wof1qyQQORKBrJxGFhJ", "StandardCategory", map[string]string{"en": "Standard Audience"}, nil, nil, 0, 0, time.Now(), time.Now(), nil, nil),
+	})
 
 	err = pst.AddContentRequest(prin, []*resource.Resource{
 		resource.UnmarshalResourceFromProto(context.Background(), &resource_proto.Resource{
@@ -406,6 +408,12 @@ func seedPublishedPostWithAudience(t *testing.T, audienceId string) {
 		audienceId, "StandardAudience", map[string]string{"en": "Standard Audience"}, nil, nil, 1, 0, 0, time.Now(), time.Now(),
 	))
 
+	err = pst.UpdateCategoriesRequest(prin, []*post.Category{
+		post.UnmarshalCategoryFromDatabase("1q7MJ9eXjRsgWJNIbOMJ9qzg2S3", "StandardCategory", map[string]string{"en": "Standard Audience"}, nil, nil, 0, 0, time.Now(), time.Now(), nil, nil),
+		post.UnmarshalCategoryFromDatabase("1q7MJFMVgDPo4mFjsfNag6rRwRy", "StandardCategory", map[string]string{"en": "Standard Audience"}, nil, nil, 0, 0, time.Now(), time.Now(), nil, nil),
+		post.UnmarshalCategoryFromDatabase("1q7MJFk9Wof1qyQQORKBrJxGFhJ", "StandardCategory", map[string]string{"en": "Standard Audience"}, nil, nil, 0, 0, time.Now(), time.Now(), nil, nil),
+	})
+
 	err = pst.AddContentRequest(prin, []*resource.Resource{
 		resource.UnmarshalResourceFromProto(context.Background(), &resource_proto.Resource{
 			Id:        uuid.New().String(),
@@ -448,6 +456,12 @@ func newPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
 	err = pst.UpdateAudienceRequest(prin, post.UnmarshalAudienceFromDatabase(
 		"1pcKiQL7dgUW8CIN7uO1wqFaMql", "StandardAudience", map[string]string{"en": "Standard Audience"}, nil, nil, 1, 0, 0, time.Now(), time.Now(),
 	))
+
+	err = pst.UpdateCategoriesRequest(prin, []*post.Category{
+		post.UnmarshalCategoryFromDatabase("1q7MJ9eXjRsgWJNIbOMJ9qzg2S3", "StandardCategory", map[string]string{"en": "Standard Audience"}, nil, nil, 0, 0, time.Now(), time.Now(), nil, nil),
+		post.UnmarshalCategoryFromDatabase("1q7MJFMVgDPo4mFjsfNag6rRwRy", "StandardCategory", map[string]string{"en": "Standard Audience"}, nil, nil, 0, 0, time.Now(), time.Now(), nil, nil),
+		post.UnmarshalCategoryFromDatabase("1q7MJFk9Wof1qyQQORKBrJxGFhJ", "StandardCategory", map[string]string{"en": "Standard Audience"}, nil, nil, 0, 0, time.Now(), time.Now(), nil, nil),
+	})
 
 	require.NoError(t, err)
 
