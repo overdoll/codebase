@@ -198,7 +198,7 @@ func MarshalAudienceToGraphQL(ctx context.Context, result *post.Audience) *Audie
 
 	var banner *graphql.Resource
 
-	if result.BannerResource() != nil && result.BannerResource().IsProcessed() {
+	if result.BannerResource() != nil {
 		banner = graphql.MarshalResourceToGraphQL(ctx, result.BannerResource())
 	}
 
@@ -231,7 +231,7 @@ func MarshalTopicToGraphQL(ctx context.Context, result *post.Topic) *Topic {
 
 	var banner *graphql.Resource
 
-	if result.BannerResource() != nil && result.BannerResource().IsProcessed() {
+	if result.BannerResource() != nil {
 		banner = graphql.MarshalResourceToGraphQL(ctx, result.BannerResource())
 	}
 
