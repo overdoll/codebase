@@ -7,7 +7,7 @@ import AccountInformationBanner
   from '../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
 import PublicClubPostsRichObject
   from '../../../../../common/rich-objects/slug/PublicClubPostsRichObject/PublicClubPostsRichObject'
-import { Heading, HStack, Stack } from '@chakra-ui/react'
+import { HStack, Stack } from '@chakra-ui/react'
 import SearchButton from '../../../../../common/components/PageHeader/SearchButton/SearchButton'
 import PublicClubPostsStructuredData
   from '../../../../../common/structured-data/slug/PublicClubPostsStructuredData/PublicClubPostsStructuredData'
@@ -16,7 +16,14 @@ import PostInfiniteScroll
 import FullClubPost from './FullClubPost/FullClubPost'
 import ClubCharacterRecommendations
   from '../../../character/RootPublicClubCharacter/PublicClubCharacter/ClubCharacterRecommendations/ClubCharacterRecommendations'
-import { Trans } from '@lingui/macro'
+import ClubFooterCopyLinkButton
+  from '../../../club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterCopyLinkButton/ClubFooterCopyLinkButton'
+import ClubFooterShareDiscordButton
+  from '../../../club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterShareDiscordButton/ClubFooterShareDiscordButton'
+import ClubFooterShareRedditButton
+  from '../../../club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterShareRedditButton/ClubFooterShareRedditButton'
+import ClubFooterShareTwitterButton
+  from '../../../club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterShareTwitterButton/ClubFooterShareTwitterButton'
 
 interface Props {
   query: PreloadedQuery<PublicClubPostsQuery>
@@ -32,11 +39,14 @@ const Query = graphql`
     $seed: String
   ) {
     club(slug: $slug) {
-      name
       ...PublicClubPostsFragment
       ...PublicClubPostsRichObjectFragment
       ...PublicClubPostsStructuredDataFragment
       ...ClubCharacterRecommendationsFragment
+      ...ClubFooterCopyLinkButtonFragment
+      ...ClubFooterShareDiscordButtonFragment
+      ...ClubFooterShareRedditButtonFragment
+      ...ClubFooterShareTwitterButtonFragment
     }
     viewer {
       ...AccountInformationBannerFragment
@@ -100,9 +110,12 @@ export default function PublicClubPosts (props: Props): JSX.Element {
       <Stack spacing={2}>
         <ClubCharacterRecommendations query={queryData.club} />
         <HStack justify='space-between' mt={2} spacing={2}>
-          <Heading color='gray.00' fontSize='2xl'>
-            <Trans>{queryData.club.name}'s Posts</Trans>
-          </Heading>
+          <HStack spacing={1}>
+            <ClubFooterCopyLinkButton query={queryData.club} />
+            <ClubFooterShareDiscordButton query={queryData.club} />
+            <ClubFooterShareRedditButton query={queryData.club} />
+            <ClubFooterShareTwitterButton query={queryData.club} />
+          </HStack>
           <SearchButton />
         </HStack>
       </Stack>

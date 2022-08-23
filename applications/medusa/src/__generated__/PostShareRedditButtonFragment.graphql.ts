@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6a43d26b371319383122b61dfdbe9efc>>
+ * @generated SignedSource<<4679f4fb344ac425d98736f05d87456d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,6 +12,9 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostShareRedditButtonFragment$data = {
   readonly characters: ReadonlyArray<{
+    readonly club: {
+      readonly __typename: "Club";
+    } | null;
     readonly name: string;
   }>;
   readonly club: {
@@ -74,7 +77,25 @@ return {
       "name": "characters",
       "plural": true,
       "selections": [
-        (v0/*: any*/)
+        (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "Club",
+          "kind": "LinkedField",
+          "name": "club",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "__typename",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        }
       ],
       "storageKey": null
     }
@@ -84,6 +105,6 @@ return {
 };
 })();
 
-(node as any).hash = "4fc4ec00bc795123d3ab45681767c3a6";
+(node as any).hash = "42838d03d57db0c41a13e0d72200b8ec";
 
 export default node;

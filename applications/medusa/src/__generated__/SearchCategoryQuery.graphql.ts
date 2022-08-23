@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d5f71f78ac550411eacea2f86caae796>>
- * @relayHash 70b0b755c1e80b6c77d1c70060be2dc2
+ * @generated SignedSource<<4576ba964dd6bb549e065fae31974a03>>
+ * @relayHash 5739696e215d347f816974c6acb3d4c6
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 70b0b755c1e80b6c77d1c70060be2dc2
+// @relayRequestID 5739696e215d347f816974c6acb3d4c6
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -24,7 +24,7 @@ export type SearchCategoryQuery$data = {
     readonly title: string;
     readonly totalLikes: number;
     readonly totalPosts: number;
-    readonly " $fragmentSpreads": FragmentRefs<"SearchCategoryFragment" | "SearchCategoryRichObjectFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"SearchCategoryCopyLinkButtonFragment" | "SearchCategoryFragment" | "SearchCategoryRichObjectFragment" | "SearchCategoryShareDiscordButtonFragment" | "SearchCategoryShareRedditButtonFragment" | "SearchCategoryShareTwitterButtonFragment">;
   } | null;
   readonly viewer: {
     readonly " $fragmentSpreads": FragmentRefs<"FullSimplePostViewerFragment">;
@@ -226,6 +226,26 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "SearchCategoryRichObjectFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "SearchCategoryShareDiscordButtonFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "SearchCategoryShareRedditButtonFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "SearchCategoryShareTwitterButtonFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "SearchCategoryCopyLinkButtonFragment"
           }
         ],
         "storageKey": null
@@ -460,6 +480,16 @@ return {
                         "plural": true,
                         "selections": [
                           (v17/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Club",
+                            "kind": "LinkedField",
+                            "name": "club",
+                            "plural": false,
+                            "selections": (v19/*: any*/),
+                            "storageKey": null
+                          },
                           (v8/*: any*/)
                         ],
                         "storageKey": null
@@ -644,7 +674,7 @@ return {
     ]
   },
   "params": {
-    "id": "70b0b755c1e80b6c77d1c70060be2dc2",
+    "id": "5739696e215d347f816974c6acb3d4c6",
     "metadata": {},
     "name": "SearchCategoryQuery",
     "operationKind": "query",
@@ -653,7 +683,7 @@ return {
 };
 })();
 
-(node as any).hash = "fc06ccea33388514374026f96da9c95c";
+(node as any).hash = "645f89a662aa9a88c156b182258c3778";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

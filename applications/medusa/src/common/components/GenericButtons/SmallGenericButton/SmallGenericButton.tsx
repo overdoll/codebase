@@ -5,7 +5,7 @@ import { Icon } from '@//:modules/content/PageLayout'
 import IconButton from '@//:modules/form/IconButton/IconButton'
 import LinkIconButton from '@//:modules/content/ThemeComponents/LinkIconButton/LinkIconButton'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
-import { ButtonProps, forwardRef } from '@chakra-ui/react'
+import { ButtonProps } from '@chakra-ui/react'
 
 interface Props extends ButtonProps {
   icon: IconType
@@ -14,56 +14,50 @@ interface Props extends ButtonProps {
   href?: HrefType
 }
 
-const PostFooterButton = forwardRef<Props, any>(({
+export default function SmallGenericButton ({
   icon,
   children,
   isIcon = false,
   href,
   colorScheme,
-  leftIcon,
   ...rest
-}: Props, forwardRef): JSX.Element => {
+}: Props): JSX.Element {
   const IconItem = (
     <Icon
       icon={icon}
       fill={(colorScheme !== 'gray' && colorScheme != null) ? 'gray.00' : 'gray.100'}
-      w={6}
-      h={6}
+      w={4}
+      h={4}
     />
   )
-
-  const DEFAULT_BUTTON_PROPS = {
-    size: 'md',
-    variant: 'solid',
-    borderRadius: 'xl',
-    colorScheme
-  }
 
   if (isIcon) {
     const ICON_BUTTON_PROPS = {
       icon: IconItem,
+      size: 'sm',
+      variant: 'solid',
       'aria-label': children as string,
-      ...DEFAULT_BUTTON_PROPS
+      colorScheme
     }
 
     if (href != null) {
-      return <LinkIconButton href={href} {...ICON_BUTTON_PROPS} ref={forwardRef} {...rest} />
+      return <LinkIconButton href={href} {...ICON_BUTTON_PROPS} {...rest} />
     }
 
-    return <IconButton {...ICON_BUTTON_PROPS} ref={forwardRef} {...rest} />
+    return <IconButton {...ICON_BUTTON_PROPS} {...rest} />
   }
 
   const BUTTON_PROPS = {
+    size: 'sm',
+    variant: 'solid',
     leftIcon: IconItem,
     children: children,
-    ...DEFAULT_BUTTON_PROPS
+    colorScheme
   }
 
   if (href != null) {
-    return <LinkButton href={href} {...BUTTON_PROPS} ref={forwardRef} {...rest} />
+    return <LinkButton href={href} {...BUTTON_PROPS} {...rest} />
   }
 
-  return <Button {...BUTTON_PROPS} ref={forwardRef} {...rest} />
-})
-
-export default PostFooterButton
+  return <Button {...BUTTON_PROPS} {...rest} />
+}

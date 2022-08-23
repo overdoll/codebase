@@ -5,7 +5,7 @@ import { BookmarkFull } from '@//:assets/icons/interface'
 import { ButtonProps } from '@chakra-ui/react'
 import Can from '../../../../../../authorization/Can'
 import { t } from '@lingui/macro'
-import PostFooterButton from '../PostFooterButton/PostFooterButton'
+import MediumGenericButton from '@//:common/components/GenericButtons/MediumGenericButton/MediumGenericButton'
 import PostLikeWrapper from '../../../PostWrappers/PostLikeWrapper/PostLikeWrapper'
 import { useLingui } from '@lingui/react'
 import PostLikeLoggedOutButton from '../PostLikeLoggedOutButton/PostLikeLoggedOutButton'
@@ -52,7 +52,7 @@ export default function PostLikeButton ({
           {allowed => {
             if (hasLiked) {
               return (
-                <PostFooterButton
+                <MediumGenericButton
                   colorScheme='primary'
                   isDisabled={allowed === false}
                   isIcon
@@ -61,11 +61,11 @@ export default function PostLikeButton ({
                   icon={BookmarkFull}
                 >
                   {i18n._(t`Un-Save`)}
-                </PostFooterButton>
+                </MediumGenericButton>
               )
             }
             return (
-              <PostFooterButton
+              <MediumGenericButton
                 isDisabled={allowed === false}
                 isIcon
                 onClick={likePost}
@@ -73,7 +73,7 @@ export default function PostLikeButton ({
                 icon={BookmarkFull}
               >
                 {i18n._(t`Save`)}
-              </PostFooterButton>
+              </MediumGenericButton>
             )
           }}
         </Can>

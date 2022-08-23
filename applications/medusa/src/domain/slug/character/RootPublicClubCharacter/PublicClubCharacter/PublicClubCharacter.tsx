@@ -15,6 +15,14 @@ import FullSimplePost
 import PostInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
 import PlatformPromoteAlert from '@//:common/components/PlatformPromoteAlert/PlatformPromoteAlert'
+import SearchCustomCharacterCopyLinkButton
+  from './SearchCustomCharacterCopyLinkButton/SearchCustomCharacterCopyLinkButton'
+import SearchCustomCharacterShareDiscordButton
+  from './SearchCustomCharacterShareDiscordButton/SearchCustomCharacterShareDiscordButton'
+import SearchCustomCharacterShareRedditButton
+  from './SearchCustomCharacterShareRedditButton/SearchCustomCharacterShareRedditButton'
+import SearchCustomCharacterShareTwitterButton
+  from './SearchCustomCharacterShareTwitterButton/SearchCustomCharacterShareTwitterButton'
 
 interface Props {
   query: PreloadedQuery<PublicClubCharacterQuery>
@@ -36,6 +44,10 @@ const Query = graphql`
       }
       ...PublicClubCharacterFragment
       ...PublicClubCharacterRichObjectFragment
+      ...SearchCustomCharacterCopyLinkButtonFragment
+      ...SearchCustomCharacterShareDiscordButtonFragment
+      ...SearchCustomCharacterShareRedditButtonFragment
+      ...SearchCustomCharacterShareTwitterButtonFragment
     }
     viewer {
       ...FullSimplePostViewerFragment
@@ -99,7 +111,13 @@ export default function PublicClubCharacter ({ query }: Props): JSX.Element {
             totalPosts={queryData.character.totalPosts}
             totalLikes={queryData.character.totalLikes}
           />
-          <HStack justify='flex-end' spacing={2}>
+          <HStack justify='space-between' spacing={2}>
+            <HStack spacing={1}>
+              <SearchCustomCharacterCopyLinkButton query={queryData.character} />
+              <SearchCustomCharacterShareDiscordButton query={queryData.character} />
+              <SearchCustomCharacterShareRedditButton query={queryData.character} />
+              <SearchCustomCharacterShareTwitterButton query={queryData.character} />
+            </HStack>
             <SearchButton />
           </HStack>
         </Stack>

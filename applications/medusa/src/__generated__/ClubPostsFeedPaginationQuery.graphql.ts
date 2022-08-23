@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<487efa22ff7366ed92c06be81afa958c>>
- * @relayHash 4fdb27a477c1e4b26a4c38d1b3afa32b
+ * @generated SignedSource<<8b3c8470bdbb3e7b4a889a7cb6e96779>>
+ * @relayHash ed66394cae9ecd4998c593feb0f7ba8f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4fdb27a477c1e4b26a4c38d1b3afa32b
+// @relayRequestID ed66394cae9ecd4998c593feb0f7ba8f
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -392,6 +392,16 @@ return {
                             "plural": true,
                             "selections": [
                               (v12/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "Club",
+                                "kind": "LinkedField",
+                                "name": "club",
+                                "plural": false,
+                                "selections": (v13/*: any*/),
+                                "storageKey": null
+                              },
                               (v4/*: any*/)
                             ],
                             "storageKey": null
@@ -483,7 +493,7 @@ return {
     ]
   },
   "params": {
-    "id": "4fdb27a477c1e4b26a4c38d1b3afa32b",
+    "id": "ed66394cae9ecd4998c593feb0f7ba8f",
     "metadata": {},
     "name": "ClubPostsFeedPaginationQuery",
     "operationKind": "query",

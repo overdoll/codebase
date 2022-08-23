@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<de47a9bf6d1c3370ef87dbeda883df90>>
- * @relayHash adf3711c566d6fe0ca8eac83df19a09b
+ * @generated SignedSource<<cb75edae99d40988b14e442d60e21068>>
+ * @relayHash 6ea8f084fa2c34e24805f2df70b72035
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID adf3711c566d6fe0ca8eac83df19a09b
+// @relayRequestID 6ea8f084fa2c34e24805f2df70b72035
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -281,11 +281,7 @@ v29 = {
   "kind": "ScalarField",
   "name": "expires",
   "storageKey": null
-},
-v30 = [
-  (v4/*: any*/),
-  (v6/*: any*/)
-];
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -472,6 +468,16 @@ return {
                         "plural": true,
                         "selections": [
                           (v3/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Club",
+                            "kind": "LinkedField",
+                            "name": "club",
+                            "plural": false,
+                            "selections": (v24/*: any*/),
+                            "storageKey": null
+                          },
                           (v6/*: any*/)
                         ],
                         "storageKey": null
@@ -653,7 +659,10 @@ return {
                 "kind": "LinkedField",
                 "name": "series",
                 "plural": false,
-                "selections": (v30/*: any*/),
+                "selections": [
+                  (v4/*: any*/),
+                  (v6/*: any*/)
+                ],
                 "storageKey": null
               },
               {
@@ -663,7 +672,11 @@ return {
                 "kind": "LinkedField",
                 "name": "club",
                 "plural": false,
-                "selections": (v30/*: any*/),
+                "selections": [
+                  (v4/*: any*/),
+                  (v6/*: any*/),
+                  (v23/*: any*/)
+                ],
                 "storageKey": null
               }
             ],
@@ -771,7 +784,7 @@ return {
     ]
   },
   "params": {
-    "id": "adf3711c566d6fe0ca8eac83df19a09b",
+    "id": "6ea8f084fa2c34e24805f2df70b72035",
     "metadata": {},
     "name": "PublicPostQuery",
     "operationKind": "query",

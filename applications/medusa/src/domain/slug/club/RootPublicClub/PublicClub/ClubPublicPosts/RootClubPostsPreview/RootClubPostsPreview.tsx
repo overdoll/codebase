@@ -22,6 +22,7 @@ interface SearchProps {
   slug: string
   sort: string
   supporter?: string[]
+  seed?: string | null
 }
 
 interface Props {
@@ -96,6 +97,7 @@ export default function RootClubPostsPreview ({
 
   const {
     slug: excludeSlug,
+    seed: excludeSeed,
     ...linkParams
   } = params
 

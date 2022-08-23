@@ -3,14 +3,10 @@ import type {
   ClubFooterShareTwitterButtonFragment$key
 } from '@//:artifacts/ClubFooterShareTwitterButtonFragment.graphql'
 import { t } from '@lingui/macro'
-import ClubFooterButton from '../ClubFooterButton/ClubFooterButton'
-import { useRouter } from 'next/router'
-import { resolveHref } from 'next/dist/shared/lib/router/router'
+import SmallGenericButton from '@//:common/components/GenericButtons/SmallGenericButton/SmallGenericButton'
 import { useLingui } from '@lingui/react'
-import { useRef } from 'react'
-import { encodeQueryParams, StringParam } from 'serialize-query-params'
-import { stringify } from 'query-string'
 import { SocialTwitter } from '@//:assets/logos'
+import useTwitterShare from '@//:modules/support/useTwitterShare'
 
 interface Props {
   query: ClubFooterShareTwitterButtonFragment$key
@@ -28,47 +24,25 @@ export default function ClubFooterShareTwitterButton ({ query }: Props): JSX.Ele
 
   const data = useFragment(Fragment, query)
 
-  const router = useRouter()
-
-  const windowReference = useRef<Window | null>(null)
-
-  const [, resolved] = resolveHref(router, {
-    pathname: '/[slug]',
-    query: {
-      slug: data.slug
-    }
-  }, true)
-
-  const platformLink = `https://overdoll.com${resolved}`
-
-  const configMap = {
-    url: StringParam,
-    hashtags: StringParam,
-    via: StringParam,
-    text: StringParam
-  }
-
-  const tweetData = {
-    url: platformLink,
-    hashtags: 'R34,Rule34,hentai,furry,NSFW,3D',
-    via: 'overdoll_com',
+  const onOpen = useTwitterShare({
+    url: {
+      pathname: '/[slug]',
+      query: {
+        slug: data.slug
+      }
+    },
+    hashtags: ['R34', 'Rule34', 'hentai', 'furry', 'NSFW', '3D'],
     text: `${data.name} is posting their free and high quality content on overdoll`
-  }
-
-  const encodedTweet = `https://twitter.com/intent/tweet?${stringify(encodeQueryParams(configMap, { ...tweetData }))}`
-
-  const onOpenWindow = (): void => {
-    windowReference.current = window.open(encodedTweet, '_blank', 'width=600,height=800')
-  }
+  })
 
   return (
-    <ClubFooterButton
+    <SmallGenericButton
       colorScheme='twitter'
       isIcon
-      onClick={onOpenWindow}
+      onClick={onOpen}
       icon={SocialTwitter}
     >
       {i18n._(t`Share on Twitter`)}
-    </ClubFooterButton>
+    </SmallGenericButton>
   )
 }

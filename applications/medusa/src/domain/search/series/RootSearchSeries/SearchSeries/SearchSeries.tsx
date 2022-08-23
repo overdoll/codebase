@@ -1,7 +1,7 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { SearchSeriesQuery } from '@//:artifacts/SearchSeriesQuery.graphql'
 import { NotFoundSerial } from '@//:modules/content/Placeholder'
-import { Heading, HStack, Stack } from '@chakra-ui/react'
+import { HStack, Stack } from '@chakra-ui/react'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import { usePaginationFragment } from 'react-relay'
 import { Trans } from '@lingui/macro'
@@ -15,6 +15,10 @@ import FullSimplePost
 import PostInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
 import PlatformPromoteAlert from '@//:common/components/PlatformPromoteAlert/PlatformPromoteAlert'
+import SearchSeriesCopyLinkButton from './SearchSeriesCopyLinkButton/SearchSeriesCopyLinkButton'
+import SearchSeriesShareDiscordButton from './SearchSeriesShareDiscordButton/SearchSeriesShareDiscordButton'
+import SearchSeriesShareRedditButton from './SearchSeriesShareRedditButton/SearchSeriesShareRedditButton'
+import SearchSeriesShareTwitterButton from './SearchSeriesShareTwitterButton/SearchSeriesShareTwitterButton'
 
 interface Props {
   query: PreloadedQuery<SearchSeriesQuery>
@@ -32,6 +36,10 @@ const Query = graphql`
       totalLikes
       ...SearchSeriesFragment
       ...SearchSeriesRichObjectFragment
+      ...SearchSeriesCopyLinkButtonFragment
+      ...SearchSeriesShareDiscordButtonFragment
+      ...SearchSeriesShareRedditButtonFragment
+      ...SearchSeriesShareTwitterButtonFragment
     }
     viewer {
       ...FullSimplePostViewerFragment
@@ -97,9 +105,12 @@ export default function SearchSeries ({ query }: Props): JSX.Element {
           />
           <SearchSeriesRecommendations query={queryData} />
           <HStack justify='space-between' spacing={2}>
-            <Heading color='gray.00' fontSize='2xl'>
-              {queryData.serial.title}
-            </Heading>
+            <HStack spacing={1}>
+              <SearchSeriesCopyLinkButton query={queryData.serial} />
+              <SearchSeriesShareDiscordButton query={queryData.serial} />
+              <SearchSeriesShareRedditButton query={queryData.serial} />
+              <SearchSeriesShareTwitterButton query={queryData.serial} />
+            </HStack>
             <SearchButton />
           </HStack>
         </Stack>

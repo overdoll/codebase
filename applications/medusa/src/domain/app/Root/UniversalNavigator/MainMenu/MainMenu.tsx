@@ -1,4 +1,4 @@
-import { BirdHouse, SearchSmall } from '@//:assets/icons/navigation'
+import { BirdHouse, SearchBar } from '@//:assets/icons/navigation'
 import HorizontalNavigation from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigation'
 import Can from '@//:modules/authorization/Can'
 import { t } from '@lingui/macro'
@@ -23,7 +23,7 @@ export default function MainMenu (): JSX.Element {
         <HorizontalNavigation.Button
           colorScheme='primary'
           href='/search'
-          icon={SearchSmall}
+          icon={SearchBar}
           label={i18n._(t`Search`)}
         />
       </Can>

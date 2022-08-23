@@ -6,7 +6,7 @@ import { SocialDiscord } from '@//:assets/logos'
 import { useCopyToClipboardWrapper } from '../../../../../../hooks'
 import { useRouter } from 'next/router'
 import { resolveHref } from 'next/dist/shared/lib/router/router'
-import PostFooterButton from '../PostFooterButton/PostFooterButton'
+import MediumGenericButton from '@//:common/components/GenericButtons/MediumGenericButton/MediumGenericButton'
 import { useLingui } from '@lingui/react'
 import { getCharacterNames } from '@//:common/rich-objects/slug/PublicPostRichObject/PublicPostRichObject'
 
@@ -45,13 +45,13 @@ export default function PostShareDiscordButton ({
   }, true)
 
   const [, onCopy] = useCopyToClipboardWrapper({
-    text: `${getCharacterNames((data.characters.map((item) => item.name).slice(0, 2)))} by ${data.club.name as string} - https://overdoll.com${resolved}`,
+    text: `${getCharacterNames((data.characters.map((item) => item.name).slice(0, 2)))} by ${data.club.name} - https://overdoll.com${resolved}`,
     response: i18n._(t`Copied Discord link! Send it in a channel or direct message!`)
   })
 
   return (
-    <PostFooterButton colorScheme='facebook' isIcon onClick={onCopy} icon={SocialDiscord}>
+    <MediumGenericButton colorScheme='facebook' isIcon onClick={onCopy} icon={SocialDiscord}>
       {i18n._(t`Copy Discord Link`)}
-    </PostFooterButton>
+    </MediumGenericButton>
   )
 }

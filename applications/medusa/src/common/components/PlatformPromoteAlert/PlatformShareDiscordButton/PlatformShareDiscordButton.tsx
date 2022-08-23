@@ -3,9 +3,8 @@ import { SocialDiscord } from '@//:assets/logos'
 import { useCopyToClipboardWrapper } from '@//:modules/hooks'
 import { useRouter } from 'next/router'
 import { resolveHref } from 'next/dist/shared/lib/router/router'
-import PostFooterButton
-  from '@//:modules/content/Posts/components/PostInteraction/PostFooterButtons/PostFooterButton/PostFooterButton'
 import { useLingui } from '@lingui/react'
+import MediumGenericButton from '../../GenericButtons/MediumGenericButton/MediumGenericButton'
 
 export default function PlatformShareDiscordButton (): JSX.Element {
   const { i18n } = useLingui()
@@ -22,8 +21,8 @@ export default function PlatformShareDiscordButton (): JSX.Element {
   })
 
   return (
-    <PostFooterButton colorScheme='facebook' isIcon onClick={onCopy} icon={SocialDiscord}>
+    <MediumGenericButton colorScheme='facebook' isIcon onClick={onCopy} icon={SocialDiscord}>
       {i18n._(t`Copy Discord Link`)}
-    </PostFooterButton>
+    </MediumGenericButton>
   )
 }

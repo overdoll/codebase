@@ -1,7 +1,7 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { SearchCategoryQuery } from '@//:artifacts/SearchCategoryQuery.graphql'
 import { NotFoundCategory } from '@//:modules/content/Placeholder'
-import { Heading, HStack, Stack } from '@chakra-ui/react'
+import { HStack, Stack } from '@chakra-ui/react'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import { usePaginationFragment } from 'react-relay'
 import { Trans } from '@lingui/macro'
@@ -15,6 +15,10 @@ import FullSimplePost
 import PostInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
 import PlatformPromoteAlert from '@//:common/components/PlatformPromoteAlert/PlatformPromoteAlert'
+import SearchCategoryCopyLinkButton from './SearchCategoryCopyLinkButton/SearchCategoryCopyLinkButton'
+import SearchCategoryShareDiscordButton from './SearchCategoryShareDiscordButton/SearchCategoryShareDiscordButton'
+import SearchCategoryShareRedditButton from './SearchCategoryShareRedditButton/SearchCategoryShareRedditButton'
+import SearchCategoryShareTwitterButton from './SearchCategoryShareTwitterButton/SearchCategoryShareTwitterButton'
 
 interface Props {
   query: PreloadedQuery<SearchCategoryQuery>
@@ -32,6 +36,10 @@ const Query = graphql`
       totalPosts
       ...SearchCategoryFragment
       ...SearchCategoryRichObjectFragment
+      ...SearchCategoryShareDiscordButtonFragment
+      ...SearchCategoryShareRedditButtonFragment
+      ...SearchCategoryShareTwitterButtonFragment
+      ...SearchCategoryCopyLinkButtonFragment
     }
     viewer {
       ...FullSimplePostViewerFragment
@@ -97,9 +105,12 @@ export default function SearchCategory ({ query }: Props): JSX.Element {
           />
           <SearchCategoryRecommendations query={queryData} />
           <HStack justify='space-between' spacing={2}>
-            <Heading color='gray.00' fontSize='2xl'>
-              {queryData.category.title}
-            </Heading>
+            <HStack spacing={1}>
+              <SearchCategoryCopyLinkButton query={queryData.category} />
+              <SearchCategoryShareDiscordButton query={queryData.category} />
+              <SearchCategoryShareRedditButton query={queryData.category} />
+              <SearchCategoryShareTwitterButton query={queryData.category} />
+            </HStack>
             <SearchButton />
           </HStack>
         </Stack>

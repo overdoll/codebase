@@ -2,7 +2,7 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type { ClubFooterCopyLinkButtonFragment$key } from '@//:artifacts/ClubFooterCopyLinkButtonFragment.graphql'
 import { t } from '@lingui/macro'
 import { CopyLink } from '@//:assets/icons'
-import ClubFooterButton from '../ClubFooterButton/ClubFooterButton'
+import SmallGenericButton from '@//:common/components/GenericButtons/SmallGenericButton/SmallGenericButton'
 import { useRouter } from 'next/router'
 import { resolveHref } from 'next/dist/shared/lib/router/router'
 import { useCopyToClipboardWrapper } from '@//:modules/hooks'
@@ -35,12 +35,12 @@ export default function ClubFooterCopyLinkButton ({ query }: Props): JSX.Element
   const [, onCopy] = useCopyToClipboardWrapper({ text: `https://overdoll.com${resolved}` })
 
   return (
-    <ClubFooterButton
+    <SmallGenericButton
       onClick={onCopy}
       isIcon
       icon={CopyLink}
     >
       {i18n._(t`Copy Club Link`)}
-    </ClubFooterButton>
+    </SmallGenericButton>
   )
 }

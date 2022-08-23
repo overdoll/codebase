@@ -46,6 +46,10 @@ const GeneralCatalogs = [
   {
     path: 'src/domain/browse/__locale__/{locale}/index',
     include: ['src/domain/browse/']
+  },
+  {
+    path: 'src/domain/browse/__locale__/{locale}/index',
+    include: ['src/domain/random/']
   }
 ]
 

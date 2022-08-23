@@ -3,7 +3,7 @@ import type {
   ClubFooterShareDiscordButtonFragment$key
 } from '@//:artifacts/ClubFooterShareDiscordButtonFragment.graphql'
 import { t } from '@lingui/macro'
-import ClubFooterButton from '../ClubFooterButton/ClubFooterButton'
+import SmallGenericButton from '@//:common/components/GenericButtons/SmallGenericButton/SmallGenericButton'
 import { useRouter } from 'next/router'
 import { resolveHref } from 'next/dist/shared/lib/router/router'
 import { useLingui } from '@lingui/react'
@@ -41,13 +41,13 @@ export default function ClubFooterShareDiscordButton ({ query }: Props): JSX.Ele
   })
 
   return (
-    <ClubFooterButton
+    <SmallGenericButton
       colorScheme='facebook'
       isIcon
       onClick={onCopy}
       icon={SocialDiscord}
     >
       {i18n._(t`Copy Discord Link`)}
-    </ClubFooterButton>
+    </SmallGenericButton>
   )
 }

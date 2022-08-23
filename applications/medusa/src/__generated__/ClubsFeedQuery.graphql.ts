@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<95dd1a5f80c5566080b6439a0567a333>>
- * @relayHash 183f933ff3e386b7230c236c949bdbd4
+ * @generated SignedSource<<7994af3a61c9b6bd057aadba81c275ea>>
+ * @relayHash 17efcb43a03787b6c907d10496643994
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 183f933ff3e386b7230c236c949bdbd4
+// @relayRequestID 17efcb43a03787b6c907d10496643994
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -413,6 +413,16 @@ return {
                         "plural": true,
                         "selections": [
                           (v11/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Club",
+                            "kind": "LinkedField",
+                            "name": "club",
+                            "plural": false,
+                            "selections": (v15/*: any*/),
+                            "storageKey": null
+                          },
                           (v1/*: any*/)
                         ],
                         "storageKey": null
@@ -636,7 +646,7 @@ return {
     ]
   },
   "params": {
-    "id": "183f933ff3e386b7230c236c949bdbd4",
+    "id": "17efcb43a03787b6c907d10496643994",
     "metadata": {},
     "name": "ClubsFeedQuery",
     "operationKind": "query",

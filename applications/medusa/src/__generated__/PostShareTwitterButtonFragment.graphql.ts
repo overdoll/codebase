@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<41cd3a30b42f8c8075e5b304e5ec65bf>>
+ * @generated SignedSource<<e6a137ac565e123ffbc6a2efa15c75b8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,9 @@ export type PostShareTwitterButtonFragment$data = {
     readonly title: string;
   }>;
   readonly characters: ReadonlyArray<{
+    readonly club: {
+      readonly __typename: "Club";
+    } | null;
     readonly name: string;
   }>;
   readonly club: {
@@ -77,7 +80,25 @@ return {
       "name": "characters",
       "plural": true,
       "selections": [
-        (v0/*: any*/)
+        (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "Club",
+          "kind": "LinkedField",
+          "name": "club",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "__typename",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        }
       ],
       "storageKey": null
     },
@@ -105,6 +126,6 @@ return {
 };
 })();
 
-(node as any).hash = "1cdbb1ea808c2bf1b620e5bfa94fa83d";
+(node as any).hash = "427e1440928c9f546f854772f3ef8c97";
 
 export default node;

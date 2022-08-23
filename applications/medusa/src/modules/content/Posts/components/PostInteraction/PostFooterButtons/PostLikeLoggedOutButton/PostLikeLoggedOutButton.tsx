@@ -13,7 +13,7 @@ import {
   useDisclosure
 } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
-import PostFooterButton from '../PostFooterButton/PostFooterButton'
+import MediumGenericButton from '@//:common/components/GenericButtons/MediumGenericButton/MediumGenericButton'
 import { useLingui } from '@lingui/react'
 import CloseButton from '../../../../../ThemeComponents/CloseButton/CloseButton'
 import encodeJoinRedirect from '../../../../../../support/encodeJoinRedirect'
@@ -59,9 +59,9 @@ export default function PostLikeLoggedOutButton ({
 
   return (
     <>
-      <PostFooterButton isIcon onClick={onOpen} icon={BookmarkFull}>
+      <MediumGenericButton isIcon onClick={onOpen} icon={BookmarkFull}>
         {i18n._(t`Save`)}
-      </PostFooterButton>
+      </MediumGenericButton>
       <Modal
         isCentered
         size={{

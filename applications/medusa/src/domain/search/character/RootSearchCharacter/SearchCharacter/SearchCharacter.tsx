@@ -1,7 +1,7 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { SearchCharacterQuery } from '@//:artifacts/SearchCharacterQuery.graphql'
 import { NotFoundCharacter } from '@//:modules/content/Placeholder'
-import { Heading, HStack, Stack } from '@chakra-ui/react'
+import { HStack, Stack } from '@chakra-ui/react'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import { usePaginationFragment } from 'react-relay'
 import { Trans } from '@lingui/macro'
@@ -15,6 +15,10 @@ import FullSimplePost
 import PostInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
 import PlatformPromoteAlert from '@//:common/components/PlatformPromoteAlert/PlatformPromoteAlert'
+import SearchCharacterCopyLinkButton from './SearchCharacterCopyLinkButton/SearchCharacterCopyLinkButton'
+import SearchCharacterShareDiscordButton from './SearchCharacterShareDiscordButton/SearchCharacterShareDiscordButton'
+import SearchCharacterShareRedditButton from './SearchCharacterShareRedditButton/SearchCharacterShareRedditButton'
+import SearchCharacterShareTwitterButton from './SearchCharacterShareTwitterButton/SearchCharacterShareTwitterButton'
 
 interface Props {
   query: PreloadedQuery<SearchCharacterQuery>
@@ -34,6 +38,10 @@ const Query = graphql`
       ...SearchCharacterRecommendationsFragment
       ...SearchCharacterFragment
       ...SearchCharacterRichObjectFragment
+      ...SearchCharacterCopyLinkButtonFragment
+      ...SearchCharacterShareDiscordButtonFragment
+      ...SearchCharacterShareRedditButtonFragment
+      ...SearchCharacterShareTwitterButtonFragment
     }
     viewer {
       ...FullSimplePostViewerFragment
@@ -98,9 +106,12 @@ export default function SearchCharacter ({ query }: Props): JSX.Element {
           />
           <SearchCharacterRecommendations query={queryData.character} />
           <HStack justify='space-between' spacing={2}>
-            <Heading color='gray.00' fontSize='2xl'>
-              {queryData.character.name}
-            </Heading>
+            <HStack spacing={1}>
+              <SearchCharacterCopyLinkButton query={queryData.character} />
+              <SearchCharacterShareDiscordButton query={queryData.character} />
+              <SearchCharacterShareRedditButton query={queryData.character} />
+              <SearchCharacterShareTwitterButton query={queryData.character} />
+            </HStack>
             <SearchButton />
           </HStack>
         </Stack>

@@ -6,7 +6,7 @@ import { CopyLink } from '@//:assets/icons'
 import { useCopyToClipboardWrapper } from '../../../../../../hooks'
 import { useRouter } from 'next/router'
 import { resolveHref } from 'next/dist/shared/lib/router/router'
-import PostFooterButton from '../PostFooterButton/PostFooterButton'
+import MediumGenericButton from '@//:common/components/GenericButtons/MediumGenericButton/MediumGenericButton'
 import { useLingui } from '@lingui/react'
 
 interface Props {
@@ -42,8 +42,8 @@ export default function PostCopyLinkButton ({
   const [, onCopy] = useCopyToClipboardWrapper({ text: `https://overdoll.com${resolved}` })
 
   return (
-    <PostFooterButton isIcon onClick={onCopy} icon={CopyLink}>
+    <MediumGenericButton isIcon onClick={onCopy} icon={CopyLink}>
       {i18n._(t`Copy Post Link`)}
-    </PostFooterButton>
+    </MediumGenericButton>
   )
 }

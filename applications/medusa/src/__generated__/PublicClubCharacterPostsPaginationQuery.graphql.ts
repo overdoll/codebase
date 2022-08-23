@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<62ad37a0ab3002c0a386f1934d1bdaa1>>
- * @relayHash f0f27f0da0db2cbcf0c88c13d1abd3c6
+ * @generated SignedSource<<c6c72bbe052560a8d1f7ba6aef86a719>>
+ * @relayHash da1fee84f3abd57bf7822f5523f09f3f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f0f27f0da0db2cbcf0c88c13d1abd3c6
+// @relayRequestID da1fee84f3abd57bf7822f5523f09f3f
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -430,6 +430,16 @@ return {
                             "plural": true,
                             "selections": [
                               (v18/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "Club",
+                                "kind": "LinkedField",
+                                "name": "club",
+                                "plural": false,
+                                "selections": (v19/*: any*/),
+                                "storageKey": null
+                              },
                               (v9/*: any*/)
                             ],
                             "storageKey": null
@@ -524,7 +534,7 @@ return {
     ]
   },
   "params": {
-    "id": "f0f27f0da0db2cbcf0c88c13d1abd3c6",
+    "id": "da1fee84f3abd57bf7822f5523f09f3f",
     "metadata": {},
     "name": "PublicClubCharacterPostsPaginationQuery",
     "operationKind": "query",

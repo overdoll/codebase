@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f0897d76b32e53eff010545a3d778f98>>
- * @relayHash 0a31cc87ce0a86f2c9160922a263d5b2
+ * @generated SignedSource<<7f6a272344a2ce5c0d2cca0c74580918>>
+ * @relayHash 0f12aff9951a78174b9b79cac76745b7
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0a31cc87ce0a86f2c9160922a263d5b2
+// @relayRequestID 0f12aff9951a78174b9b79cac76745b7
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -28,7 +28,7 @@ export type PublicClubCharacterQuery$data = {
     readonly name: string;
     readonly totalLikes: number;
     readonly totalPosts: number;
-    readonly " $fragmentSpreads": FragmentRefs<"PublicClubCharacterFragment" | "PublicClubCharacterRichObjectFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"PublicClubCharacterFragment" | "PublicClubCharacterRichObjectFragment" | "SearchCustomCharacterCopyLinkButtonFragment" | "SearchCustomCharacterShareDiscordButtonFragment" | "SearchCustomCharacterShareRedditButtonFragment" | "SearchCustomCharacterShareTwitterButtonFragment">;
   } | null;
   readonly viewer: {
     readonly " $fragmentSpreads": FragmentRefs<"FullSimplePostViewerFragment">;
@@ -272,6 +272,26 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "PublicClubCharacterRichObjectFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "SearchCustomCharacterCopyLinkButtonFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "SearchCustomCharacterShareDiscordButtonFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "SearchCustomCharacterShareRedditButtonFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "SearchCustomCharacterShareTwitterButtonFragment"
           }
         ],
         "storageKey": null
@@ -500,6 +520,16 @@ return {
                         "plural": true,
                         "selections": [
                           (v5/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Club",
+                            "kind": "LinkedField",
+                            "name": "club",
+                            "plural": false,
+                            "selections": (v20/*: any*/),
+                            "storageKey": null
+                          },
                           (v9/*: any*/)
                         ],
                         "storageKey": null
@@ -635,7 +665,7 @@ return {
     ]
   },
   "params": {
-    "id": "0a31cc87ce0a86f2c9160922a263d5b2",
+    "id": "0f12aff9951a78174b9b79cac76745b7",
     "metadata": {},
     "name": "PublicClubCharacterQuery",
     "operationKind": "query",
@@ -644,7 +674,7 @@ return {
 };
 })();
 
-(node as any).hash = "c37c2867478917f3ca03fe13fc9634a9";
+(node as any).hash = "04fd5eb0a755128a1113477fcd4c1fe0";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

@@ -4,7 +4,7 @@ import Can from '@//:modules/authorization/Can'
 import { HStack } from '@chakra-ui/react'
 import { t } from '@lingui/macro'
 import { LoginKeys, SettingCog } from '@//:assets/icons'
-import ClubFooterButton from './ClubFooterButton/ClubFooterButton'
+import SmallGenericButton from '@//:common/components/GenericButtons/SmallGenericButton/SmallGenericButton'
 import ClubFooterCopyLinkButton from './ClubFooterCopyLinkButton/ClubFooterCopyLinkButton'
 import ClubFooterLeaveButton from './ClubFooterLeaveButton/ClubFooterLeaveButton'
 import ClubFooterManageSubscriptionButton from './ClubFooterManageSubscriptionButton/ClubFooterManageSubscriptionButton'
@@ -38,7 +38,7 @@ export default function ClubFooterButtons ({ query }: Props): JSX.Element {
   return (
     <HStack w='100%' justify='flex-end' spacing={1}>
       <Can I='staff' a='Club'>
-        <ClubFooterButton
+        <SmallGenericButton
           href={{
             pathname: '/staff/club/[slug]',
             query: { slug: data.slug }
@@ -47,10 +47,10 @@ export default function ClubFooterButtons ({ query }: Props): JSX.Element {
           icon={LoginKeys}
         >
           {i18n._(t`Staff`)}
-        </ClubFooterButton>
+        </SmallGenericButton>
       </Can>
       {data.viewerIsOwner && (
-        <ClubFooterButton
+        <SmallGenericButton
           href={{
             pathname: '/club/[slug]/home',
             query: { slug: data.slug }
@@ -58,7 +58,7 @@ export default function ClubFooterButtons ({ query }: Props): JSX.Element {
           icon={SettingCog}
         >
           {i18n._(t`Manage Club`)}
-        </ClubFooterButton>
+        </SmallGenericButton>
       )}
       <ClubFooterLeaveButton query={data} />
       <ClubFooterCopyLinkButton query={data} />

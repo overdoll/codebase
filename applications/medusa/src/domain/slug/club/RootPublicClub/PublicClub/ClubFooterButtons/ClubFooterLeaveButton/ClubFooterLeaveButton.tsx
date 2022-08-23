@@ -2,7 +2,7 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type { ClubFooterLeaveButtonFragment$key } from '@//:artifacts/ClubFooterLeaveButtonFragment.graphql'
 import { t } from '@lingui/macro'
 import { SafetyExitDoorLeft } from '@//:assets/icons'
-import ClubFooterButton from '../ClubFooterButton/ClubFooterButton'
+import SmallGenericButton from '@//:common/components/GenericButtons/SmallGenericButton/SmallGenericButton'
 import ClubLeaveWrapper from '../../ClubWrappers/ClubLeaveWrapper/ClubLeaveWrapper'
 import Can from '@//:modules/authorization/Can'
 import { useLingui } from '@lingui/react'
@@ -44,13 +44,13 @@ export default function ClubFooterLeaveButton ({ query }: Props): JSX.Element {
           leaveClub,
           isLeavingClub
         }) => (
-          <ClubFooterButton
+          <SmallGenericButton
             onClick={leaveClub}
             isLoading={isLeavingClub}
             icon={SafetyExitDoorLeft}
           >
             {i18n._(t`Leave`)}
-          </ClubFooterButton>
+          </SmallGenericButton>
         )}
       </ClubLeaveWrapper>
     </Can>
