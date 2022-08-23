@@ -34,7 +34,15 @@ export default function PreviewMedia ({
   const DisplayMedia = (): JSX.Element => {
     switch (data.type) {
       case 'IMAGE':
-        return <ImageSnippet onClick={onClose} containCover cover query={data} />
+        return (
+          <ImageSnippet
+            onClick={onClose}
+            hideBackground
+            containCover
+            cover
+            query={data}
+          />
+        )
       case 'VIDEO':
         return (
           <ControlledVideo

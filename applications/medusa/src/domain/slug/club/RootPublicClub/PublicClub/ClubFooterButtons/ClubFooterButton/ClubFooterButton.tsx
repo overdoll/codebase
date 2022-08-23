@@ -19,16 +19,25 @@ export default function ClubFooterButton ({
   children,
   isIcon = false,
   href,
+  colorScheme,
   ...rest
 }: Props): JSX.Element {
-  const IconItem = <Icon icon={icon} fill='gray.100' w={4} h={4} />
+  const IconItem = (
+    <Icon
+      icon={icon}
+      fill={(colorScheme !== 'gray' && colorScheme != null) ? 'gray.00' : 'gray.100'}
+      w={4}
+      h={4}
+    />
+  )
 
   if (isIcon) {
     const ICON_BUTTON_PROPS = {
       icon: IconItem,
       size: 'sm',
       variant: 'solid',
-      'aria-label': children as string
+      'aria-label': children as string,
+      colorScheme
     }
 
     if (href != null) {
@@ -42,7 +51,8 @@ export default function ClubFooterButton ({
     size: 'sm',
     variant: 'solid',
     leftIcon: IconItem,
-    children: children
+    children: children,
+    colorScheme
   }
 
   if (href != null) {

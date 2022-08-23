@@ -25,7 +25,7 @@ export interface ControlledVideoProps {
   volume?: number
   isMuted?: boolean
   controls: Controls
-  autoPlay: boolean | undefined
+  autoPlay?: boolean | undefined
 }
 
 const Fragment = graphql`

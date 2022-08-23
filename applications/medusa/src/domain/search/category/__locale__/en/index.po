@@ -13,6 +13,6 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/search/category/RootSearchCategory/SearchCategory/SearchCategory.tsx:92
+#: src/domain/search/category/RootSearchCategory/SearchCategory/SearchCategory.tsx:94
 msgid "Category"
 msgstr ""

@@ -3,7 +3,7 @@ import React from 'react'
 import addItemListJsonLd from '../../root/RootStructuredData/addItemListJsonLd'
 import RootStructuredData from '../../root/RootStructuredData/RootStructuredData'
 
-export default function HomeStructuredData (): JSX.Element {
+export default function BrowseStructuredData (): JSX.Element {
   return (
     <>
       <RootStructuredData />

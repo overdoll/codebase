@@ -1,4 +1,4 @@
-import { Box, Flex, HStack } from '@chakra-ui/react'
+import { Box, HStack } from '@chakra-ui/react'
 import { graphql } from 'react-relay/hooks'
 import type { UploadFlowFooterFragment$key } from '@//:artifacts/UploadFlowFooterFragment.graphql'
 import { useFragment } from 'react-relay'
@@ -73,7 +73,6 @@ export default function UploadFlowFooter ({
   }
 
   return (
-
     <HStack w='100%' justify='space-between' spacing={2}>
       {isAtStart ? <Box /> : <FlowBuilderPreviousButton />}
       <NextButton />

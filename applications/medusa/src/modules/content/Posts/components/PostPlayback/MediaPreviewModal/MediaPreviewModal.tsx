@@ -1,6 +1,6 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { MediaPreviewModalFragment$key } from '@//:artifacts/MediaPreviewModalFragment.graphql'
-import { Modal, ModalBody, ModalContent, ModalOverlay, ModalProps } from '@chakra-ui/react'
+import { Flex, Modal, ModalBody, ModalContent, ModalOverlay, ModalProps } from '@chakra-ui/react'
 import PreviewMedia from './PreviewMedia/PreviewMedia'
 
 interface Props extends Omit<ModalProps, 'children'> {
@@ -25,7 +25,7 @@ export default function MediaPreviewModal ({
     <Modal
       allowPinchZoom
       isCentered
-      size='6xl'
+      size='full'
       preserveScrollBarGap
       autoFocus={false}
       onClose={onClose}
@@ -35,11 +35,22 @@ export default function MediaPreviewModal ({
         bg={`${data.preview}90`}
       />
       <ModalContent m={0} width='auto' boxShadow='none' bg='transparent'>
-        <ModalBody p={0}>
-          <PreviewMedia
-            onClose={onClose}
-            query={data}
-          />
+        <ModalBody w='100vw' p={0}>
+          <Flex
+            p={{
+              base: 0,
+              md: 1
+            }}
+            h='100vh'
+            w='100%'
+            align='center'
+            justify='center'
+          >
+            <PreviewMedia
+              onClose={onClose}
+              query={data}
+            />
+          </Flex>
         </ModalBody>
       </ModalContent>
     </Modal>

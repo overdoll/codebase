@@ -60,7 +60,7 @@ const Query = graphql`
   query CurationProfileSetupQuery {
     viewer {
       curationProfile {
-        ...CurationStepperFooterFragment
+        id
         completed
         dateOfBirth {
           dateOfBirth
@@ -77,6 +77,7 @@ const Query = graphql`
             title
           }
         }
+        ...CurationStepperFooterFragment
       }
     }
   }
@@ -95,14 +96,14 @@ export default function CurationProfileSetup (props: Props): JSX.Element | null 
   const defaultAudience = queryData.viewer?.curationProfile?.audience?.audiences.reduce((accum, value) => ({
     ...accum,
     [value.id]: {
-      name: value.title
+      title: value.title
     }
   }), {}) as SequenceProps['audience']
 
   const defaultCategories = queryData.viewer?.curationProfile?.category?.categories.reduce((accum, value) => ({
     ...accum,
     [value.id]: {
-      name: value.title
+      title: value.title
     }
   }), {}) as SequenceProps['category']
 

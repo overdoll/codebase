@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dedeb4adcbd39ec61f72d92e7977f6e6>>
+ * @generated SignedSource<<e4283d8b559509f26ed93ca2c12fe78e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,7 +23,12 @@ export type UpdatePostFlowFragment$data = {
     readonly id: string;
     readonly name: string;
   }>;
-  readonly " $fragmentSpreads": FragmentRefs<"PostContentPreviewMemoPostFragment" | "ProcessContentDisplayFragment" | "UploadCategoryStepFragment" | "UploadContentStepFragment" | "UploadFlowFooterFragment" | "UploadFlowHeaderFragment" | "UploadReviewStepFragment">;
+  readonly content: ReadonlyArray<{
+    readonly resource: {
+      readonly id: string;
+    };
+  }>;
+  readonly " $fragmentSpreads": FragmentRefs<"PostContentPreviewMemoPostFragment" | "ProcessContentDisplayFragment" | "UploadCategoryStepFragment" | "UploadContentStepFragment" | "UploadFlowHeaderFragment" | "UploadFlowStickyFooterFragment" | "UploadReviewStepFragment">;
   readonly " $fragmentType": "UpdatePostFlowFragment";
 };
 export type UpdatePostFlowFragment$key = {
@@ -95,14 +100,32 @@ return {
       "storageKey": null
     },
     {
+      "alias": null,
       "args": null,
-      "kind": "FragmentSpread",
-      "name": "UploadFlowHeaderFragment"
+      "concreteType": "PostContent",
+      "kind": "LinkedField",
+      "name": "content",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "Resource",
+          "kind": "LinkedField",
+          "name": "resource",
+          "plural": false,
+          "selections": [
+            (v0/*: any*/)
+          ],
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
     },
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "UploadFlowFooterFragment"
+      "name": "UploadFlowHeaderFragment"
     },
     {
       "args": null,
@@ -128,6 +151,11 @@ return {
       "args": null,
       "kind": "FragmentSpread",
       "name": "PostContentPreviewMemoPostFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "UploadFlowStickyFooterFragment"
     }
   ],
   "type": "Post",
@@ -135,6 +163,6 @@ return {
 };
 })();
 
-(node as any).hash = "339fd73373a4ca1224d77dce0510c083";
+(node as any).hash = "b846174bf93271c336dfc09a9bd1bc94";
 
 export default node;

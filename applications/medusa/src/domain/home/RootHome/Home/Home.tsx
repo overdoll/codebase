@@ -1,49 +1,22 @@
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { HomeQuery } from '@//:artifacts/HomeQuery.graphql'
-import { graphql, usePaginationFragment } from 'react-relay'
-import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
-import { Heading, HStack, Stack } from '@chakra-ui/react'
+import { graphql } from 'react-relay'
+import { Heading, Stack, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import AccountInformationBanner from '../../../../common/components/AccountInformationBanner/AccountInformationBanner'
 import CurationProfileAlert from '../CurationProfileAlert/CurationProfileAlert'
-import SearchButton from '../../../../common/components/PageHeader/SearchButton/SearchButton'
-import PostInfiniteScroll
-  from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
-import FullSimplePost
-  from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/FullSimplePost/FullSimplePost'
-import PlatformPromoteAlert from '@//:common/components/PlatformPromoteAlert/PlatformPromoteAlert'
+import HomeLinkTile from '../HomeLinkTile/HomeLinkTile'
+import { DiscoverGlobe, FurryFox, HentaiSkirt, RandomizeDice, ThreeDRender } from '@//:assets/icons'
 
 interface Props {
   query: PreloadedQuery<HomeQuery>
 }
 
 const Query = graphql`
-  query HomeQuery($seed: String) @preloadable {
-    ...HomeFragment
+  query HomeQuery @preloadable {
     viewer {
       ...CurationProfileAlertFragment
-      ...AccountInformationBannerFragment
-      ...FullSimplePostViewerFragment
-    }
-  }
-`
-
-const Fragment = graphql`
-  fragment HomeFragment on Query
-  @argumentDefinitions(
-    first: {type: Int, defaultValue: 9}
-    after: {type: String}
-  )
-  @refetchable(queryName: "HomePostsPaginationQuery" ) {
-    postsFeed (first: $first, after: $after, seed: $seed)
-    @connection (key: "HomePosts_postsFeed") {
-      edges {
-        node {
-          ...FullSimplePostFragment
-        }
-      }
-      ...PostInfiniteScrollFragment
-    }
+      ...AccountInformationBannerFragment}
   }
 `
 
@@ -53,43 +26,98 @@ export default function Home (props: Props): JSX.Element {
     props.query
   )
 
-  const {
-    data,
-    loadNext,
-    hasNext,
-    isLoadingNext
-  } = usePaginationFragment<HomeQuery, any>(
-    Fragment,
-    queryData
-  )
-
   return (
     <>
       <AccountInformationBanner query={queryData?.viewer} />
       <CurationProfileAlert query={queryData?.viewer} />
-      <Stack spacing={8}>
-        <HStack spacing={2} justify='space-between'>
+      <Stack spacing={24}>
+        <Stack spacing={4}>
+          <Heading color='gray.00' fontSize='2xl'>
+            <Trans>Show By Category</Trans>
+          </Heading>
+          <Stack spacing={8}>
+            <HomeLinkTile
+              icon={ThreeDRender}
+              href='/search/category/3d'
+              header={(
+                <Trans>
+                  3D Porn
+                </Trans>
+              )}
+              footer={(
+                <Trans>
+                  3D renders and animations pornography
+                </Trans>
+              )}
+            />
+            <HomeLinkTile
+              icon={HentaiSkirt}
+              href='/search/category/hentai'
+              header={(
+                <Trans>
+                  Hentai Porn
+                </Trans>
+              )}
+              footer={(
+                <Trans>
+                  Japanese-style pornography
+                </Trans>
+              )}
+            />
+            <HomeLinkTile
+              icon={FurryFox}
+              href='/search/category/furry'
+              header={(
+                <Trans>
+                  Furry Porn
+                </Trans>
+              )}
+              footer={(
+                <Trans>
+                  Anthro and furry character porn
+                </Trans>
+              )}
+            />
+          </Stack>
+        </Stack>
+        <Stack spacing={8}>
+          <HomeLinkTile
+            icon={DiscoverGlobe}
+            href='/search'
+            header={(
+              <Trans>
+                Search Porn
+              </Trans>
+            )}
+            footer={(
+              <Trans>
+                Search for any kind of porn
+              </Trans>
+            )}
+          />
+          <HomeLinkTile
+            icon={RandomizeDice}
+            href='/random'
+            header={(
+              <Trans>
+                Randomize Porn
+              </Trans>
+            )}
+            footer={(
+              <Trans>
+                Randomly browse porn
+              </Trans>
+            )}
+          />
+        </Stack>
+        <Stack>
           <Heading color='gray.00' fontSize='2xl'>
             <Trans>Hot Posts</Trans>
           </Heading>
-          <SearchButton />
-        </HStack>
-        <GlobalVideoManagerProvider>
-          <PostInfiniteScroll
-            query={data.postsFeed}
-            hasNext={hasNext}
-            loadNext={loadNext}
-            isLoadingNext={isLoadingNext}
-            endOfTree={<PlatformPromoteAlert />}
-          >
-            {({ index }) => (
-              <FullSimplePost
-                query={data.postsFeed.edges[index].node}
-                viewerQuery={queryData.viewer}
-              />
-            )}
-          </PostInfiniteScroll>
-        </GlobalVideoManagerProvider>
+          <Text>
+            list of posts here up until 9 and then "see all" and goes to /browse
+          </Text>
+        </Stack>
       </Stack>
     </>
   )

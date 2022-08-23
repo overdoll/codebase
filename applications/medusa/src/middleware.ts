@@ -51,12 +51,6 @@ export const middleware: Middleware = async (request, event) => {
     return NextResponse.redirect(new URL('/join', request.url))
   }
 
-  if (request.nextUrl.pathname.startsWith('/clubs/liked-posts')) {
-    if (ability.can('configure', 'Account')) return NextResponse.next()
-
-    return NextResponse.redirect(new URL('/join', request.url))
-  }
-
   if (request.nextUrl.pathname.startsWith('/clubs/invite-only')) {
     if (ability.can('create', 'Club')) return NextResponse.redirect(new URL('/', request.url))
   }

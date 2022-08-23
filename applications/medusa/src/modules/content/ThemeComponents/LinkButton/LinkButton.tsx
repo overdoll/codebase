@@ -12,10 +12,12 @@ const LinkButton = forwardRef<Props, any>(({
   children,
   ...rest
 }: Props, forwardRef): JSX.Element => {
+  const { w } = rest
+
   return (
     <Link passHref href={href}>
-      <Box as='a'>
-        <Button ref={forwardRef} {...rest}>
+      <Box as='a' w={w}>
+        <Button ref={forwardRef} w='inherit' {...rest}>
           {children}
         </Button>
       </Box>

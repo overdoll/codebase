@@ -17,13 +17,13 @@ msgstr ""
 #~ msgid "Account Locked"
 #~ msgstr ""
 
-#: src/domain/home/RootHome/Home/Home.tsx:72
-#~ msgid "Home"
-#~ msgstr ""
+#: src/domain/home/RootHome/Home/Home.tsx:35
+msgid "Home"
+msgstr ""
 
 #: src/domain/home/RootHome/Home/Home.tsx:73
-msgid "Hot Posts"
-msgstr ""
+#~ msgid "Hot Posts"
+#~ msgstr ""
 
 #: src/domain/home/RootHome/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:102
 #~ msgid "I promise to be better and to follow the community guidelines more closely"

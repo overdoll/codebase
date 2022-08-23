@@ -13,6 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/domain/clubs/liked-posts/RootLikedPosts/LikedPosts/LikedPostsFeed/LikedPostsFeed.tsx:80
+msgid "Browse Content"
+msgstr ""
+
 #: src/domain/clubs/feed/RootClubsFeed/ClubsFeed/ClubsFeed.tsx:38
 #~ msgid "Clubs Feed"
 #~ msgstr ""
@@ -21,8 +25,20 @@ msgstr ""
 #~ msgid "Discover Clubs"
 #~ msgstr ""
 
+#: src/domain/clubs/liked-posts/RootLikedPosts/LikedPosts/LikedPosts.tsx:65
+msgid "Join"
+msgstr ""
+
+#: src/domain/clubs/liked-posts/RootLikedPosts/LikedPosts/LikedPosts.tsx:59
+msgid "Join overdoll to save posts and let the artist know your like their content"
+msgstr ""
+
 #: src/domain/clubs/liked-posts/RootLikedPosts/LikedPosts/LikedPostsFeed/LikedPostsFeed.tsx:66
-msgid "When you like a post, we'll save it for you and it will show up here"
+#~ msgid "When you like a post, we'll save it for you and it will show up here"
+#~ msgstr ""
+
+#: src/domain/clubs/liked-posts/RootLikedPosts/LikedPosts/LikedPostsFeed/LikedPostsFeed.tsx:74
+msgid "You haven't saved any posts yet"
 msgstr ""
 
 #: src/domain/clubs/feed/RootClubsFeed/ClubsFeed/ClubsFeed.tsx:39
@@ -30,5 +46,14 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/clubs/liked-posts/RootLikedPosts/LikedPosts/LikedPosts.tsx:38
-msgid "Your Liked Posts"
+#~ msgid "Your Liked Posts"
+#~ msgstr ""
+
+#: src/domain/clubs/liked-posts/RootLikedPosts/LikedPosts/LikedPosts.tsx:42
+msgid "Your Saved Posts"
+msgstr ""
+
+#: src/domain/clubs/liked-posts/RootLikedPosts/LikedPosts/LikedPosts.tsx:54
+#: src/domain/clubs/liked-posts/RootLikedPosts/LikedPosts/LikedPostsFeed/LikedPostsFeed.tsx:69
+msgid "Your saved posts will show up here"
 msgstr ""

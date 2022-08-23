@@ -1,19 +1,11 @@
-import { Box, Fade, Heading, HStack, Progress, Stack } from '@chakra-ui/react'
+import { Heading, HStack, Stack } from '@chakra-ui/react'
 import AdvertBoxWrapper from '../AdvertBoxWrapper/AdvertBoxWrapper'
 import { Trans } from '@lingui/macro'
-import { ContentBrushPen, PremiumStar } from '@//:assets/icons'
+import { ContentBrushPen, DiscoverGlobe, PremiumStar } from '@//:assets/icons'
 import { Icon } from '@//:modules/content/PageLayout'
-import { ReactNode, useEffect, useState } from 'react'
-import { Timeout } from '@//:types/components'
-
-let timeout: null | Timeout = null
-
-let countdownTimeout: null | Timeout = null
+import { ReactNode } from 'react'
 
 export default function BenefitsTransition (): JSX.Element {
-  const [index, setIndex] = useState(0)
-  const [countdown, setCountdown] = useState(10)
-
   const ListItem = ({
     children,
     colorScheme
@@ -30,32 +22,24 @@ export default function BenefitsTransition (): JSX.Element {
 
   const ArtistPanel = (): JSX.Element => {
     return (
-
-      <Stack h='100%' justify='center' spacing={6}>
-        <Box>
-          <HStack align='center' spacing={3}>
-            <Icon icon={ContentBrushPen} fill='teal.300' w={6} h={6} />
-            <Heading fontSize='3xl' color='teal.300'>
-              <Trans>
-                For Artists
-              </Trans>
-            </Heading>
-          </HStack>
-          <Heading fontSize='md' color='gray.200'>
+      <Stack justify='center' spacing={4}>
+        <HStack align='center' spacing={3}>
+          <Icon icon={ContentBrushPen} fill='teal.300' w={6} h={6} />
+          <Heading fontSize='3xl' color='teal.300'>
             <Trans>
-              Creating adult digital content
+              For Artists
             </Trans>
           </Heading>
-        </Box>
+        </HStack>
         <Stack spacing={3}>
           <ListItem colorScheme='teal'>
             <Trans>
-              Collect paid supporter revenue
+              Post and categorize free and/or exclusive content
             </Trans>
           </ListItem>
           <ListItem colorScheme='teal'>
             <Trans>
-              Post free and/or exclusive content
+              Create a unique content experience for your fans
             </Trans>
           </ListItem>
           <ListItem colorScheme='teal'>
@@ -70,27 +54,19 @@ export default function BenefitsTransition (): JSX.Element {
 
   const FanPanel = (): JSX.Element => {
     return (
-
-      <Stack h='100%' justify='center' spacing={6}>
-        <Box>
-          <HStack align='center' spacing={3}>
-            <Icon icon={ContentBrushPen} fill='green.300' w={6} h={6} />
-            <Heading fontSize='3xl' color='green.300'>
-              <Trans>
-                For Fans
-              </Trans>
-            </Heading>
-          </HStack>
-          <Heading fontSize='md' color='gray.200'>
+      <Stack justify='center' spacing={4}>
+        <HStack align='center' spacing={3}>
+          <Icon icon={DiscoverGlobe} fill='green.300' w={6} h={6} />
+          <Heading fontSize='3xl' color='green.300'>
             <Trans>
-              Of adult digital content
+              For Fans
             </Trans>
           </Heading>
-        </Box>
+        </HStack>
         <Stack spacing={3}>
           <ListItem colorScheme='green'>
             <Trans>
-              Support your favorite artists
+              Save your favorite posts
             </Trans>
           </ListItem>
           <ListItem colorScheme='green'>
@@ -108,54 +84,12 @@ export default function BenefitsTransition (): JSX.Element {
     )
   }
 
-  useEffect(() => {
-    const refreshLoop = (): void => {
-      setIndex(x => x === 0 ? 1 : 0)
-      setCountdown(11)
-      timeout = setTimeout(refreshLoop, 10000)
-    }
-
-    timeout = setTimeout(refreshLoop, 10000)
-
-    return () => {
-      if (timeout != null) {
-        clearTimeout(timeout)
-      }
-    }
-  }, [])
-
-  useEffect(() => {
-    const refreshLoop = (): void => {
-      setCountdown(x => x - 1)
-      countdownTimeout = setTimeout(refreshLoop, 1000)
-    }
-
-    countdownTimeout = setTimeout(refreshLoop, 1000)
-
-    return () => {
-      if (countdownTimeout != null) {
-        clearTimeout(countdownTimeout)
-      }
-    }
-  }, [])
-
   return (
     <AdvertBoxWrapper>
-      <Fade unmountOnExit style={{ height: '100%' }} in={index === 1}>
+      <Stack spacing={12} h='100%' justify='center'>
         <FanPanel />
-      </Fade>
-      <Fade unmountOnExit style={{ height: '100%' }} in={index === 0}>
         <ArtistPanel />
-      </Fade>
-      <Progress
-        transitionDelay='0.5s'
-        transition='1s ease'
-        colorScheme='primary'
-        h={1}
-        size='sm'
-        value={(countdown / 11) * 100}
-        w='100%'
-      />
+      </Stack>
     </AdvertBoxWrapper>
   )
 }

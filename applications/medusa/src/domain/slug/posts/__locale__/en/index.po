@@ -17,6 +17,6 @@ msgstr ""
 #~ msgid "Club Posts Search"
 #~ msgstr ""
 
-#: src/domain/slug/posts/RootPublicClubPosts/PublicClubPosts/PublicClubPosts.tsx:102
+#: src/domain/slug/posts/RootPublicClubPosts/PublicClubPosts/PublicClubPosts.tsx:104
 msgid "{0}'s Posts"
 msgstr ""

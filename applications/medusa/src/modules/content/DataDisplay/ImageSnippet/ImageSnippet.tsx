@@ -18,6 +18,7 @@ export interface ImageSnippetCoverProps {
 interface Props extends Omit<ImageProps, 'src' | 'width' | 'height' | 'layout' | 'alt'>, ImageSnippetCoverProps {
   query: ImageSnippetFragment$key | null
   tinyError?: boolean
+  hideBackground?: boolean
 }
 
 const Fragment = graphql`
@@ -40,6 +41,7 @@ export default function ImageSnippet ({
   cover,
   tinyError,
   containCover,
+  hideBackground = false,
   ...rest
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
@@ -54,7 +56,7 @@ export default function ImageSnippet ({
 
   const determineCover = cover === true || (data?.width == null && data?.height == null)
 
-  const previewBackground = data?.preview != null && data?.preview !== '' ? data?.preview : 'gray.800'
+  const previewBackground = hideBackground ? 'transparent' : (data?.preview != null && data?.preview !== '' ? data?.preview : 'gray.800')
 
   const tiniestImage = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
 

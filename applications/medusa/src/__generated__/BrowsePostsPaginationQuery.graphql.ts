@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<bb142777b9a9f7208855d5242a65f640>>
- * @relayHash 72c8d1381841f034d0b356aee30c26ee
+ * @generated SignedSource<<80b476e7abd1494f2346162bb67c2364>>
+ * @relayHash 338ed3ac4b43a229b283caa87d6c8b71
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,21 +9,21 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 72c8d1381841f034d0b356aee30c26ee
+// @relayRequestID 338ed3ac4b43a229b283caa87d6c8b71
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type HomePostsPaginationQuery$variables = {
+export type BrowsePostsPaginationQuery$variables = {
   after?: string | null;
   first?: number | null;
   seed?: string | null;
 };
-export type HomePostsPaginationQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"HomeFragment">;
+export type BrowsePostsPaginationQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"BrowseFragment">;
 };
-export type HomePostsPaginationQuery = {
-  response: HomePostsPaginationQuery$data;
-  variables: HomePostsPaginationQuery$variables;
+export type BrowsePostsPaginationQuery = {
+  response: BrowsePostsPaginationQuery$data;
+  variables: BrowsePostsPaginationQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -159,7 +159,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "HomePostsPaginationQuery",
+    "name": "BrowsePostsPaginationQuery",
     "selections": [
       {
         "args": [
@@ -167,7 +167,7 @@ return {
           (v2/*: any*/)
         ],
         "kind": "FragmentSpread",
-        "name": "HomeFragment"
+        "name": "BrowseFragment"
       }
     ],
     "type": "Query",
@@ -177,7 +177,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "HomePostsPaginationQuery",
+    "name": "BrowsePostsPaginationQuery",
     "selections": [
       {
         "alias": null,
@@ -448,22 +448,22 @@ return {
           "seed"
         ],
         "handle": "connection",
-        "key": "HomePosts_postsFeed",
+        "key": "BrowsePosts_postsFeed",
         "kind": "LinkedHandle",
         "name": "postsFeed"
       }
     ]
   },
   "params": {
-    "id": "72c8d1381841f034d0b356aee30c26ee",
+    "id": "338ed3ac4b43a229b283caa87d6c8b71",
     "metadata": {},
-    "name": "HomePostsPaginationQuery",
+    "name": "BrowsePostsPaginationQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 
-(node as any).hash = "793c3bee202158d7fe47ac5404248c88";
+(node as any).hash = "185ca48f9459034754e97f93a999f612";
 
 export default node;

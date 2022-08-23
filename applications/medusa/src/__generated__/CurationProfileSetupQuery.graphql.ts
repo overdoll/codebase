@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<69f56ca8c8b7494b9b8543a78e0e64d5>>
- * @relayHash 7a05033bcbc27033c0ea37e8252be1d3
+ * @generated SignedSource<<9a30d8e7625dc59e409a0283d08df52b>>
+ * @relayHash 7499d691b047ccd34d839d5ac5d9ac59
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7a05033bcbc27033c0ea37e8252be1d3
+// @relayRequestID 7499d691b047ccd34d839d5ac5d9ac59
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -33,6 +33,7 @@ export type CurationProfileSetupQuery$data = {
       readonly dateOfBirth: {
         readonly dateOfBirth: any | null;
       };
+      readonly id: string;
       readonly " $fragmentSpreads": FragmentRefs<"CurationStepperFooterFragment">;
     };
   } | null;
@@ -47,10 +48,17 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "completed",
+  "name": "id",
   "storageKey": null
 },
 v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "completed",
+  "storageKey": null
+},
+v2 = {
   "alias": null,
   "args": null,
   "concreteType": "DateOfBirthCurationProfile",
@@ -68,15 +76,8 @@ v1 = {
   ],
   "storageKey": null
 },
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
 v3 = [
-  (v2/*: any*/),
+  (v0/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -150,15 +151,16 @@ return {
             "name": "curationProfile",
             "plural": false,
             "selections": [
+              (v0/*: any*/),
+              (v1/*: any*/),
+              (v2/*: any*/),
+              (v4/*: any*/),
+              (v5/*: any*/),
               {
                 "args": null,
                 "kind": "FragmentSpread",
                 "name": "CurationStepperFooterFragment"
-              },
-              (v0/*: any*/),
-              (v1/*: any*/),
-              (v4/*: any*/),
-              (v5/*: any*/)
+              }
             ],
             "storageKey": null
           }
@@ -191,22 +193,22 @@ return {
             "name": "curationProfile",
             "plural": false,
             "selections": [
-              (v1/*: any*/),
-              (v4/*: any*/),
-              (v5/*: any*/),
               (v0/*: any*/),
-              (v2/*: any*/)
+              (v1/*: any*/),
+              (v2/*: any*/),
+              (v4/*: any*/),
+              (v5/*: any*/)
             ],
             "storageKey": null
           },
-          (v2/*: any*/)
+          (v0/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "7a05033bcbc27033c0ea37e8252be1d3",
+    "id": "7499d691b047ccd34d839d5ac5d9ac59",
     "metadata": {},
     "name": "CurationProfileSetupQuery",
     "operationKind": "query",
@@ -215,6 +217,6 @@ return {
 };
 })();
 
-(node as any).hash = "ab6c7b80fb0075f7d293c77c545af368";
+(node as any).hash = "9eaac14fc99e64b79233a3541a27e4b2";
 
 export default node;

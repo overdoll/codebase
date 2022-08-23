@@ -7,9 +7,11 @@ import PostInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
 import FullSimplePost
   from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/FullSimplePost/FullSimplePost'
-import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
-import { Flex, Heading } from '@chakra-ui/react'
+import { Icon, LargeBackgroundBox } from '@//:modules/content/PageLayout'
+import { Box, Heading, Stack, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
+import { BookmarkLarge } from '@//:assets/icons'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 
 interface Props {
   query: LikedPostsFeedFragment$key | null
@@ -60,13 +62,26 @@ export default function LikedPostsFeed ({
   if (data.likedPosts.edges.length < 1) {
     return (
       <LargeBackgroundBox>
-        <Flex w='100%' align='center' justify='center'>
-          <Heading fontSize='md' color='gray.200'>
+        <Stack align='center' spacing={4}>
+          <Icon icon={BookmarkLarge} w={8} h={8} fill='primary.400' />
+          <Box>
+            <Heading textAlign='center' fontSize='lg' color='gray.00'>
+              <Trans>
+                Your saved posts will show up here
+              </Trans>
+            </Heading>
+            <Text textAlign='center' fontSize='md' color='gray.100'>
+              <Trans>
+                You haven't saved any posts yet
+              </Trans>
+            </Text>
+          </Box>
+          <LinkButton size='lg' colorScheme='primary' w='100%' href='/'>
             <Trans>
-              When you save a post, it will show up here
+              Browse Content
             </Trans>
-          </Heading>
-        </Flex>
+          </LinkButton>
+        </Stack>
       </LargeBackgroundBox>
     )
   }

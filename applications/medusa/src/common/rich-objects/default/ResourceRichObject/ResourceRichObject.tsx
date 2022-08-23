@@ -28,6 +28,7 @@ export default function ResourceRichObject ({
   return (
     <>
       <Head>
+        <meta name='twitter:card' content='summary_large_image' />
         {data?.urls.map((item, index) => {
           const type = data.type === 'IMAGE' ? 'image' : 'video'
           return (
@@ -40,7 +41,6 @@ export default function ResourceRichObject ({
             </Fragment>
           )
         })}
-
       </Head>
       <ImageRichObject />
     </>

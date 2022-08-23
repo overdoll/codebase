@@ -9,6 +9,9 @@ import ClubFooterCopyLinkButton from './ClubFooterCopyLinkButton/ClubFooterCopyL
 import ClubFooterLeaveButton from './ClubFooterLeaveButton/ClubFooterLeaveButton'
 import ClubFooterManageSubscriptionButton from './ClubFooterManageSubscriptionButton/ClubFooterManageSubscriptionButton'
 import { useLingui } from '@lingui/react'
+import ClubFooterShareTwitterButton from './ClubFooterShareTwitterButton/ClubFooterShareTwitterButton'
+import ClubFooterShareRedditButton from './ClubFooterShareRedditButton/ClubFooterShareRedditButton'
+import ClubFooterShareDiscordButton from './ClubFooterShareDiscordButton/ClubFooterShareDiscordButton'
 
 interface Props {
   query: ClubFooterButtonsFragment$key
@@ -21,6 +24,9 @@ const Fragment = graphql`
     ...ClubFooterCopyLinkButtonFragment
     ...ClubFooterLeaveButtonFragment
     ...ClubFooterManageSubscriptionButtonFragment
+    ...ClubFooterShareTwitterButtonFragment
+    ...ClubFooterShareRedditButtonFragment
+    ...ClubFooterShareDiscordButtonFragment
   }
 `
 
@@ -56,6 +62,9 @@ export default function ClubFooterButtons ({ query }: Props): JSX.Element {
       )}
       <ClubFooterLeaveButton query={data} />
       <ClubFooterCopyLinkButton query={data} />
+      <ClubFooterShareDiscordButton query={data} />
+      <ClubFooterShareRedditButton query={data} />
+      <ClubFooterShareTwitterButton query={data} />
       <ClubFooterManageSubscriptionButton query={data} />
     </HStack>
   )

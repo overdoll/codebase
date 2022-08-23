@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/RootClubPostsPreview/RootClubPostsPreview.tsx:184
+#: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/RootClubPostsPreview/RootClubPostsPreview.tsx:188
 msgid "All Posts"
 msgstr ""
 
@@ -55,8 +55,16 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
+#: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterShareDiscordButton/ClubFooterShareDiscordButton.tsx:40
+msgid "Copied Discord link! Send it in a channel or direct message!"
+msgstr ""
+
 #: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterCopyLinkButton/ClubFooterCopyLinkButton.tsx:43
 msgid "Copy Club Link"
+msgstr ""
+
+#: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterShareDiscordButton/ClubFooterShareDiscordButton.tsx:50
+msgid "Copy Discord Link"
 msgstr ""
 
 #: src/domain/slug/root/RootPublicClub/PublicClub/ClubMenu/ClubCopyLinkButton/ClubCopyLinkButton.tsx:40
@@ -87,15 +95,15 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/RootClubPostsPreview/RootClubPostsPreview.tsx:155
+#: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/RootClubPostsPreview/RootClubPostsPreview.tsx:159
 msgid "Exclusive"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/RootClubPostsPreview/RootClubPostsPreview.tsx:174
+#: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/RootClubPostsPreview/RootClubPostsPreview.tsx:178
 msgid "Fresh"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/RootClubPostsPreview/RootClubPostsPreview.tsx:165
+#: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/RootClubPostsPreview/RootClubPostsPreview.tsx:169
 msgid "Hot"
 msgstr ""
 
@@ -141,7 +149,7 @@ msgstr ""
 msgid "Manage"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterButtons.tsx:54
+#: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterButtons.tsx:60
 msgid "Manage Club"
 msgstr ""
 
@@ -215,6 +223,14 @@ msgstr ""
 msgid "Set Up"
 msgstr ""
 
+#: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterShareRedditButton/ClubFooterShareRedditButton.tsx:65
+msgid "Share on Reddit"
+msgstr ""
+
+#: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterShareTwitterButton/ClubFooterShareTwitterButton.tsx:71
+msgid "Share on Twitter"
+msgstr ""
+
 #: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillWindowListener/CCBillWindowListener.tsx:104
 msgid "Show Window"
 msgstr ""
@@ -227,7 +243,7 @@ msgstr ""
 msgid "Sorry, we were unable to process your payment. Please try another payment method."
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterButtons.tsx:43
+#: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterButtons.tsx:49
 msgid "Staff"
 msgstr ""
 

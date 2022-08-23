@@ -1,4 +1,4 @@
-import { Flex, HStack } from '@chakra-ui/react'
+import { Flex, Grid, GridItem } from '@chakra-ui/react'
 import { graphql } from 'react-relay'
 import { PostSlideIndexFragment$key } from '@//:artifacts/PostSlideIndexFragment.graphql'
 import { useFragment } from 'react-relay/hooks'
@@ -69,13 +69,12 @@ export default function PostSlideIndex ({
   }
 
   return (
-    <HStack
+    <Grid
+      mt={2}
+      alignItems='center'
       w='100%'
-      pt={2}
-      spacing={1}
-      align='center'
-      justify='center'
-      {...rest}
+      gap={1}
+      templateColumns={slidesCount > 10 ? 'repeat(10, 1fr)' : `repeat(${slidesCount}, 1fr)`}
     >
       {data.content.map((item, contentIndex) => {
         const isActive = contentIndex === activeIndex
@@ -93,34 +92,35 @@ export default function PostSlideIndex ({
               return <></>
           }
         }
-
         return (
-          <ClickableTile
-            isDisabled={swiper == null}
-            onClick={() => swiper?.slideTo(contentIndex, 50)}
-            borderRadius='md'
-            w={`${100 / slidesCount}%`}
-            key={contentIndex}
-          >
-            <Flex
+          <GridItem key={contentIndex} w='100%' h={12}>
+            <ClickableTile
+              isDisabled={swiper == null}
+              onClick={() => swiper?.slideTo(contentIndex, 50)}
+              borderRadius='md'
               w='100%'
-              h={12}
-              borderWidth={isActive ? 2 : 0}
-              borderColor={!isSupporterOnly ? (isActive ? 'primary.400' : 'gray.50') : (isActive ? 'orange.300' : 'gray.50')}
-              borderRadius='inherit'
-              overflow='hidden'
-              position='relative'
+              h='100%'
             >
-              {item.resource.type === 'VIDEO' && (
-                <Flex position='absolute' w='100%' h='100%' align='center' justify='center'>
-                  <Icon icon={ControlPlayButton} w={3} h={3} fill='whiteAlpha.800' />
-                </Flex>
-              )}
-              <DisplayMedia />
-            </Flex>
-          </ClickableTile>
+              <Flex
+                w='100%'
+                h='100%'
+                borderWidth={isActive ? 2 : 0}
+                borderColor={!isSupporterOnly ? (isActive ? 'primary.400' : 'gray.50') : (isActive ? 'orange.300' : 'gray.50')}
+                borderRadius='inherit'
+                overflow='hidden'
+                position='relative'
+              >
+                {item.resource.type === 'VIDEO' && (
+                  <Flex position='absolute' w='100%' h='100%' align='center' justify='center'>
+                    <Icon icon={ControlPlayButton} w={3} h={3} fill='whiteAlpha.800' />
+                  </Flex>
+                )}
+                <DisplayMedia />
+              </Flex>
+            </ClickableTile>
+          </GridItem>
         )
       })}
-    </HStack>
+    </Grid>
   )
 }

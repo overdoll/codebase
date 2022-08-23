@@ -60,6 +60,26 @@ const Mutation = graphql`
   }
 `
 
+export const addContentToUppy = (uppy, content): void => {
+  content.forEach((file, index) => {
+    const uppyFileId = uppy.addFile({
+      id: `${file.resource.id as string}_${index as string}`,
+      name: `${file.resource.id as string}_${index as string}`,
+      type: 'image/png',
+      data: new Blob(),
+      source: 'already-uploaded'
+    })
+
+    const fileFromUppy = uppy.getFile(uppyFileId)
+    uppy.emit('upload-started', fileFromUppy)
+    uppy.emit('upload-progress', fileFromUppy, {
+      bytesUploaded: 1,
+      bytesTotal: 1
+    })
+    uppy.emit('upload-success', fileFromUppy, 'success')
+  })
+}
+
 export default function UploadContentAdd ({
   query
 }: Props): JSX.Element {
@@ -129,23 +149,7 @@ export default function UploadContentAdd ({
     if (Object.values(state.files).length < 1 && Object.keys(state.urls).length < 1) {
       setHasUpdateError(false)
       uppy.cancelAll()
-      data.content.forEach((file, index) => {
-        const uppyFileId = uppy.addFile({
-          id: `${file.resource.id}_${index}`,
-          name: `${file.resource.id}_${index}`,
-          type: 'image/png',
-          data: new Blob(),
-          source: 'already-uploaded'
-        })
-
-        const fileFromUppy = uppy.getFile(uppyFileId)
-        uppy.emit('upload-started', fileFromUppy)
-        uppy.emit('upload-progress', fileFromUppy, {
-          bytesUploaded: 1,
-          bytesTotal: 1
-        })
-        uppy.emit('upload-success', fileFromUppy, 'success')
-      })
+      addContentToUppy(uppy, data.content)
     }
   }, [data.content])
 

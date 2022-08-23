@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b302f3427b1e8583c9906a9dd839459d>>
- * @relayHash fbce28928f3df9368995a79a1e535f73
+ * @generated SignedSource<<4ffeddbf359dff6604d0e9764a604e46>>
+ * @relayHash a8d4e8a2a6dee9f2eead9f6eece5f8d2
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID fbce28928f3df9368995a79a1e535f73
+// @relayRequestID a8d4e8a2a6dee9f2eead9f6eece5f8d2
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -232,65 +232,45 @@ v23 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "reference",
+  "name": "processed",
   "storageKey": null
 },
 v24 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "processed",
+  "name": "failed",
   "storageKey": null
 },
 v25 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "failed",
+  "name": "videoNoAudio",
   "storageKey": null
 },
 v26 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "videoDuration",
+  "name": "progress",
   "storageKey": null
 },
 v27 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "videoNoAudio",
+  "name": "videoDuration",
   "storageKey": null
 },
 v28 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "ResourceProgress",
-  "kind": "LinkedField",
-  "name": "progress",
-  "plural": false,
-  "selections": [
-    (v3/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "progress",
-      "storageKey": null
-    },
-    (v9/*: any*/)
-  ],
-  "storageKey": null
-},
-v29 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "isSupporterOnly",
   "storageKey": null
 },
-v30 = {
+v29 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
@@ -299,10 +279,17 @@ v30 = {
   "plural": false,
   "selections": [
     (v18/*: any*/),
-    (v26/*: any*/),
     (v27/*: any*/),
+    (v25/*: any*/),
     (v3/*: any*/)
   ],
+  "storageKey": null
+},
+v30 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "reference",
   "storageKey": null
 },
 v31 = [
@@ -489,7 +476,6 @@ return {
             ],
             "storageKey": null
           },
-          (v23/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -506,35 +492,49 @@ return {
                 "name": "resource",
                 "plural": false,
                 "selections": [
-                  (v18/*: any*/),
-                  (v24/*: any*/),
-                  (v25/*: any*/),
                   (v3/*: any*/),
-                  (v26/*: any*/),
-                  (v27/*: any*/),
-                  (v16/*: any*/),
-                  (v28/*: any*/),
+                  (v18/*: any*/),
+                  (v23/*: any*/),
+                  (v24/*: any*/),
                   (v13/*: any*/),
                   (v14/*: any*/),
                   (v15/*: any*/),
-                  (v17/*: any*/)
+                  (v16/*: any*/),
+                  (v25/*: any*/),
+                  (v17/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "ResourceProgress",
+                    "kind": "LinkedField",
+                    "name": "progress",
+                    "plural": false,
+                    "selections": [
+                      (v9/*: any*/),
+                      (v26/*: any*/),
+                      (v3/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  (v27/*: any*/)
                 ],
                 "storageKey": null
               },
               (v3/*: any*/),
-              (v29/*: any*/),
-              (v30/*: any*/),
-              (v2/*: any*/),
+              (v28/*: any*/),
               {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
                 "name": "viewerCanViewSupporterOnlyContent",
                 "storageKey": null
-              }
+              },
+              (v29/*: any*/),
+              (v2/*: any*/)
             ],
             "storageKey": null
           },
+          (v30/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -551,8 +551,8 @@ return {
                 "storageKey": null
               },
               (v3/*: any*/),
-              (v20/*: any*/),
               (v7/*: any*/),
+              (v20/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -719,7 +719,7 @@ return {
                         "plural": true,
                         "selections": [
                           (v3/*: any*/),
-                          (v29/*: any*/),
+                          (v28/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -729,12 +729,25 @@ return {
                             "plural": false,
                             "selections": [
                               (v18/*: any*/),
-                              (v24/*: any*/),
-                              (v26/*: any*/),
+                              (v23/*: any*/),
                               (v27/*: any*/),
-                              (v16/*: any*/),
                               (v25/*: any*/),
-                              (v28/*: any*/),
+                              (v16/*: any*/),
+                              (v24/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "ResourceProgress",
+                                "kind": "LinkedField",
+                                "name": "progress",
+                                "plural": false,
+                                "selections": [
+                                  (v3/*: any*/),
+                                  (v26/*: any*/),
+                                  (v9/*: any*/)
+                                ],
+                                "storageKey": null
+                              },
                               (v3/*: any*/),
                               (v13/*: any*/),
                               (v14/*: any*/),
@@ -743,11 +756,11 @@ return {
                             ],
                             "storageKey": null
                           },
-                          (v30/*: any*/)
+                          (v29/*: any*/)
                         ],
                         "storageKey": null
                       },
-                      (v23/*: any*/),
+                      (v30/*: any*/),
                       (v22/*: any*/),
                       (v2/*: any*/)
                     ],
@@ -833,7 +846,7 @@ return {
     ]
   },
   "params": {
-    "id": "fbce28928f3df9368995a79a1e535f73",
+    "id": "a8d4e8a2a6dee9f2eead9f6eece5f8d2",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

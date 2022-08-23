@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c9e92ba20aec3c35b0a84072fc2f7305>>
+ * @generated SignedSource<<f5127dbf1527871f9b549cd8912cd6a4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,25 +10,25 @@
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type HomeFragment$data = {
-  readonly postsFeed: {
+export type CurationTopicsSelectorFragment$data = {
+  readonly topics: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly " $fragmentSpreads": FragmentRefs<"FullSimplePostFragment">;
+        readonly id: string;
+        readonly " $fragmentSpreads": FragmentRefs<"CurationTopicCategoriesFragment" | "TopicTileOverlayFragment">;
       };
     }>;
-    readonly " $fragmentSpreads": FragmentRefs<"PostInfiniteScrollFragment">;
   };
-  readonly " $fragmentType": "HomeFragment";
+  readonly " $fragmentType": "CurationTopicsSelectorFragment";
 };
-export type HomeFragment$key = {
-  readonly " $data"?: HomeFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"HomeFragment">;
+export type CurationTopicsSelectorFragment$key = {
+  readonly " $data"?: CurationTopicsSelectorFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"CurationTopicsSelectorFragment">;
 };
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "postsFeed"
+  "topics"
 ];
 return {
   "argumentDefinitions": [
@@ -38,13 +38,9 @@ return {
       "name": "after"
     },
     {
-      "defaultValue": 9,
+      "defaultValue": 100,
       "kind": "LocalArgument",
       "name": "first"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "seed"
     }
   ],
   "kind": "Fragment",
@@ -67,29 +63,23 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./HomePostsPaginationQuery.graphql')
+      "operation": require('./CurationTopicsSelectorFragmentPaginationFragment.graphql')
     }
   },
-  "name": "HomeFragment",
+  "name": "CurationTopicsSelectorFragment",
   "selections": [
     {
-      "alias": "postsFeed",
-      "args": [
-        {
-          "kind": "Variable",
-          "name": "seed",
-          "variableName": "seed"
-        }
-      ],
-      "concreteType": "PostConnection",
+      "alias": "topics",
+      "args": null,
+      "concreteType": "TopicConnection",
       "kind": "LinkedField",
-      "name": "__HomePosts_postsFeed_connection",
+      "name": "__CurationTopicsSelectorFragment_topics_connection",
       "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
-          "concreteType": "PostEdge",
+          "concreteType": "TopicEdge",
           "kind": "LinkedField",
           "name": "edges",
           "plural": true,
@@ -97,15 +87,27 @@ return {
             {
               "alias": null,
               "args": null,
-              "concreteType": "Post",
+              "concreteType": "Topic",
               "kind": "LinkedField",
               "name": "node",
               "plural": false,
               "selections": [
                 {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "id",
+                  "storageKey": null
+                },
+                {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "FullSimplePostFragment"
+                  "name": "TopicTileOverlayFragment"
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "CurationTopicCategoriesFragment"
                 },
                 {
                   "alias": null,
@@ -126,11 +128,6 @@ return {
             }
           ],
           "storageKey": null
-        },
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "PostInfiniteScrollFragment"
         },
         {
           "alias": null,
@@ -166,6 +163,6 @@ return {
 };
 })();
 
-(node as any).hash = "793c3bee202158d7fe47ac5404248c88";
+(node as any).hash = "ef5cc801eb9b3479e1f2c82d7e8f40f3";
 
 export default node;
