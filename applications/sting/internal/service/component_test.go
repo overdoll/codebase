@@ -302,6 +302,12 @@ func seedPublishedPostWithCharacter(t *testing.T, characterId, seriesId string) 
 		nil,
 	)})
 
+	err = pst.UpdateCategoriesRequest(prin, []*post.Category{
+		post.UnmarshalCategoryFromDatabase("1q7MJ9eXjRsgWJNIbOMJ9qzg2S3", "StandardCategory", map[string]string{"en": "Standard Audience"}, nil, nil, 0, 0, time.Now(), time.Now(), nil, nil),
+		post.UnmarshalCategoryFromDatabase("1q7MJFMVgDPo4mFjsfNag6rRwRy", "StandardCategory", map[string]string{"en": "Standard Audience"}, nil, nil, 0, 0, time.Now(), time.Now(), nil, nil),
+		post.UnmarshalCategoryFromDatabase("1q7MJFk9Wof1qyQQORKBrJxGFhJ", "StandardCategory", map[string]string{"en": "Standard Audience"}, nil, nil, 0, 0, time.Now(), time.Now(), nil, nil),
+	})
+
 	err = pst.AddContentRequest(prin, []*resource.Resource{
 		resource.UnmarshalResourceFromProto(context.Background(), &resource_proto.Resource{
 			Id:        uuid.New().String(),
