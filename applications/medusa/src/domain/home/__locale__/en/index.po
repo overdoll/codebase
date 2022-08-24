@@ -13,11 +13,11 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/home/RootHome/Home/Home.tsx:43
+#: src/domain/home/RootHome/Home/Home.tsx:47
 msgid "3D Porn"
 msgstr ""
 
-#: src/domain/home/RootHome/Home/Home.tsx:48
+#: src/domain/home/RootHome/Home/Home.tsx:52
 msgid "3D renders and animations pornography"
 msgstr ""
 
@@ -25,15 +25,15 @@ msgstr ""
 #~ msgid "Account Locked"
 #~ msgstr ""
 
-#: src/domain/home/RootHome/Home/Home.tsx:76
+#: src/domain/home/RootHome/Home/Home.tsx:80
 msgid "Anthro and furry character pornography"
 msgstr ""
 
-#: src/domain/home/RootHome/Home/Home.tsx:71
+#: src/domain/home/RootHome/Home/Home.tsx:75
 msgid "Furry Porn"
 msgstr ""
 
-#: src/domain/home/RootHome/Home/Home.tsx:57
+#: src/domain/home/RootHome/Home/Home.tsx:61
 msgid "Hentai Porn"
 msgstr ""
 
@@ -42,14 +42,14 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/home/RootHome/Home/Home.tsx:115
-msgid "Hot Posts"
-msgstr ""
+#~ msgid "Hot Posts"
+#~ msgstr ""
 
 #: src/domain/home/RootHome/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:102
 #~ msgid "I promise to be better and to follow the community guidelines more closely"
 #~ msgstr ""
 
-#: src/domain/home/RootHome/Home/Home.tsx:62
+#: src/domain/home/RootHome/Home/Home.tsx:66
 msgid "Japanese-style pornography"
 msgstr ""
 
@@ -73,20 +73,24 @@ msgstr ""
 #~ msgid "Please review the <0>Community Guidelines</0> to make sure this doesn't happen again."
 #~ msgstr ""
 
-#: src/domain/home/RootHome/Home/Home.tsx:102
+#: src/domain/home/RootHome/Home/Home.tsx:106
 msgid "Randomize Porn"
 msgstr ""
 
-#: src/domain/home/RootHome/Home/Home.tsx:107
+#: src/domain/home/RootHome/Home/Home.tsx:111
 msgid "Randomly browse hentai, 3d, furry porn"
 msgstr ""
 
-#: src/domain/home/RootHome/Home/Home.tsx:88
+#: src/domain/home/RootHome/Home/Home.tsx:92
 msgid "Search Porn"
 msgstr ""
 
-#: src/domain/home/RootHome/Home/Home.tsx:93
+#: src/domain/home/RootHome/Home/Home.tsx:97
 msgid "Search for any kind of porn"
+msgstr ""
+
+#: src/domain/home/RootHome/Home/BrowsePostsPreview/BrowsePostsPreview.tsx:77
+msgid "See All Posts"
 msgstr ""
 
 #: src/domain/home/RootHome/NewAccountModal/NewAccountModal.tsx:75
@@ -105,13 +109,17 @@ msgstr ""
 msgid "Setup"
 msgstr ""
 
-#: src/domain/home/RootHome/Home/Home.tsx:36
+#: src/domain/home/RootHome/Home/Home.tsx:40
 msgid "Show By Category"
 msgstr ""
 
 #: src/domain/home/RootHome/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:84
 #~ msgid "There was an error unlocking your account"
 #~ msgstr ""
+
+#: src/domain/home/RootHome/Home/Home.tsx:119
+msgid "Trending Posts"
+msgstr ""
 
 #: src/domain/home/RootHome/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:114
 #~ msgid "Unlock Account"

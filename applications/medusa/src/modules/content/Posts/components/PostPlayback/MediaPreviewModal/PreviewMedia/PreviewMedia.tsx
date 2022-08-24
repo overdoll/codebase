@@ -40,6 +40,10 @@ export default function PreviewMedia ({
             hideBackground
             containCover
             cover
+            keepWidth
+            style={{
+              height: '100%'
+            }}
             query={data}
           />
         )

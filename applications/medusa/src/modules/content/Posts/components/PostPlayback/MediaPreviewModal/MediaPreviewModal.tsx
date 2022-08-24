@@ -32,7 +32,7 @@ export default function MediaPreviewModal ({
       {...rest}
     >
       <ModalOverlay
-        bg={`${data.preview}90`}
+        bg={data.preview != null && data.preview !== '' ? `${data.preview}90` : 'dimmers.400'}
       />
       <ModalContent m={0} width='auto' boxShadow='none' bg='transparent'>
         <ModalBody w='100vw' p={0}>

@@ -13,6 +13,26 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/search/category/RootSearchCategory/SearchCategory/SearchCategory.tsx:94
+#: src/domain/search/category/RootSearchCategory/SearchCategory/SearchCategory.tsx:102
 msgid "Category"
+msgstr ""
+
+#: src/domain/search/category/RootSearchCategory/SearchCategory/SearchCategoryShareDiscordButton/SearchCategoryShareDiscordButton.tsx:40
+msgid "Copied Discord link! Send it in a channel or direct message!"
+msgstr ""
+
+#: src/domain/search/category/RootSearchCategory/SearchCategory/SearchCategoryCopyLinkButton/SearchCategoryCopyLinkButton.tsx:46
+msgid "Copy Link"
+msgstr ""
+
+#: src/domain/search/category/RootSearchCategory/SearchCategory/SearchCategoryShareDiscordButton/SearchCategoryShareDiscordButton.tsx:50
+msgid "Share on Discord"
+msgstr ""
+
+#: src/domain/search/category/RootSearchCategory/SearchCategory/SearchCategoryShareRedditButton/SearchCategoryShareRedditButton.tsx:44
+msgid "Share on Reddit"
+msgstr ""
+
+#: src/domain/search/category/RootSearchCategory/SearchCategory/SearchCategoryShareTwitterButton/SearchCategoryShareTwitterButton.tsx:51
+msgid "Share on Twitter"
 msgstr ""

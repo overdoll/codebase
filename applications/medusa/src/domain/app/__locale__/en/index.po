@@ -137,7 +137,7 @@ msgstr ""
 #~ msgid "Contact us through one of the following methods"
 #~ msgstr ""
 
-#: src/common/components/PlatformPromoteAlert/PlatformShareDiscordButton/PlatformShareDiscordButton.tsx:21
+#: src/common/components/PlatformPromoteAlert/PlatformShareDiscordButton/PlatformShareDiscordButton.tsx:20
 #: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostShareDiscordButton/PostShareDiscordButton.tsx:49
 msgid "Copied Discord link! Send it in a channel or direct message!"
 msgstr ""
@@ -150,12 +150,12 @@ msgstr ""
 msgid "Copy"
 msgstr ""
 
-#: src/common/components/PlatformPromoteAlert/PlatformShareDiscordButton/PlatformShareDiscordButton.tsx:26
+#: src/common/components/PlatformPromoteAlert/PlatformShareDiscordButton/PlatformShareDiscordButton.tsx:25
 #: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostShareDiscordButton/PostShareDiscordButton.tsx:54
 msgid "Copy Discord Link"
 msgstr ""
 
-#: src/common/components/PlatformPromoteAlert/PlatformShareDirectButton/PlatformShareDirectButton.tsx:23
+#: src/common/components/PlatformPromoteAlert/PlatformShareDirectButton/PlatformShareDirectButton.tsx:22
 msgid "Copy Link"
 msgstr ""
 
@@ -405,7 +405,7 @@ msgstr ""
 msgid "Open Menu"
 msgstr ""
 
-#: src/common/components/PageHeader/SearchButton/SearchButton.tsx:28
+#: src/common/components/PageHeader/SearchButton/SearchButton.tsx:31
 msgid "Open Search"
 msgstr ""
 
@@ -625,13 +625,13 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: src/common/components/PlatformPromoteAlert/PlatformShareRedditButton/PlatformShareRedditButton.tsx:43
-#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostShareRedditButton/PostShareRedditButton.tsx:72
+#: src/common/components/PlatformPromoteAlert/PlatformShareRedditButton/PlatformShareRedditButton.tsx:19
+#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostShareRedditButton/PostShareRedditButton.tsx:53
 msgid "Share on Reddit"
 msgstr ""
 
-#: src/common/components/PlatformPromoteAlert/PlatformShareTwitterButton/PlatformShareTwitterButton.tsx:47
-#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostShareTwitterButton/PostShareTwitterButton.tsx:87
+#: src/common/components/PlatformPromoteAlert/PlatformShareTwitterButton/PlatformShareTwitterButton.tsx:20
+#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostShareTwitterButton/PostShareTwitterButton.tsx:65
 msgid "Share on Twitter"
 msgstr ""
 

@@ -15,6 +15,7 @@ import { ControlPlayButton } from '@//:assets/icons'
 interface Props {
   query: PostSlideIndexFragment$key
   swiper: SwiperType | null
+  fillHeight?: boolean
 }
 
 const Fragment = graphql`
@@ -34,7 +35,7 @@ const Fragment = graphql`
 export default function PostSlideIndex ({
   query,
   swiper,
-  ...rest
+  fillHeight = false
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
@@ -70,11 +71,13 @@ export default function PostSlideIndex ({
 
   return (
     <Grid
-      mt={2}
       alignItems='center'
+      mt={fillHeight ? 0 : 2}
       w='100%'
+      h={fillHeight ? '100%' : (slidesCount > 10 ? 24 : 12)}
       gap={1}
       templateColumns={slidesCount > 10 ? 'repeat(10, 1fr)' : `repeat(${slidesCount}, 1fr)`}
+      templateRows={slidesCount > 10 ? 'repeat(2, 1fr)' : 'repeat(1, 1fr)'}
     >
       {data.content.map((item, contentIndex) => {
         const isActive = contentIndex === activeIndex
@@ -83,7 +86,14 @@ export default function PostSlideIndex ({
         const DisplayMedia = (): JSX.Element => {
           switch (item.resource.type) {
             case 'IMAGE':
-              return <ImageSnippet tinyError query={item.resource} />
+              return (
+                <ImageSnippet
+                  keepWidth
+                  cover
+                  tinyError
+                  query={item.resource}
+                />
+              )
             case 'VIDEO':
               return (
                 <VideoSnippet query={item.resource} />
@@ -93,22 +103,27 @@ export default function PostSlideIndex ({
           }
         }
         return (
-          <GridItem key={contentIndex} w='100%' h={12}>
+          <GridItem overflow='hidden' h='100%' w='100%' key={contentIndex}>
             <ClickableTile
+              _active={{ boxShadow: 'none' }}
+              _focus={{ boxShadow: 'none' }}
               isDisabled={swiper == null}
               onClick={() => swiper?.slideTo(contentIndex, 50)}
               borderRadius='md'
-              w='100%'
               h='100%'
+              w='100%'
             >
               <Flex
-                w='100%'
-                h='100%'
                 borderWidth={isActive ? 2 : 0}
                 borderColor={!isSupporterOnly ? (isActive ? 'primary.400' : 'gray.50') : (isActive ? 'orange.300' : 'gray.50')}
                 borderRadius='inherit'
-                overflow='hidden'
                 position='relative'
+                w='100%'
+                h='100%'
+                overflow='hidden'
+                align='center'
+                justify='center'
+                flexGrow={0}
               >
                 {item.resource.type === 'VIDEO' && (
                   <Flex position='absolute' w='100%' h='100%' align='center' justify='center'>

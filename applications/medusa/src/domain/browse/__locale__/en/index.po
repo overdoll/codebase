@@ -14,5 +14,9 @@ msgstr ""
 "Plural-Forms: \n"
 
 #: src/domain/browse/RootBrowse/Browse/Browse.tsx:70
-msgid "Browse Posts"
+#~ msgid "Browse Posts"
+#~ msgstr ""
+
+#: src/domain/random/RootRandom/Random/Random.tsx:70
+msgid "Random Posts"
 msgstr ""

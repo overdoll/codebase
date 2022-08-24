@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/RootClubPostsPreview/RootClubPostsPreview.tsx:188
+#: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/RootClubPostsPreview/RootClubPostsPreview.tsx:190
 msgid "All Posts"
 msgstr ""
 
@@ -95,15 +95,15 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/RootClubPostsPreview/RootClubPostsPreview.tsx:159
+#: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/RootClubPostsPreview/RootClubPostsPreview.tsx:161
 msgid "Exclusive"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/RootClubPostsPreview/RootClubPostsPreview.tsx:178
+#: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/RootClubPostsPreview/RootClubPostsPreview.tsx:180
 msgid "Fresh"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/RootClubPostsPreview/RootClubPostsPreview.tsx:169
+#: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/RootClubPostsPreview/RootClubPostsPreview.tsx:171
 msgid "Hot"
 msgstr ""
 
@@ -223,11 +223,11 @@ msgstr ""
 msgid "Set Up"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterShareRedditButton/ClubFooterShareRedditButton.tsx:65
+#: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterShareRedditButton/ClubFooterShareRedditButton.tsx:42
 msgid "Share on Reddit"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterShareTwitterButton/ClubFooterShareTwitterButton.tsx:71
+#: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterShareTwitterButton/ClubFooterShareTwitterButton.tsx:45
 msgid "Share on Twitter"
 msgstr ""
 

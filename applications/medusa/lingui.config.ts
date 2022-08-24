@@ -50,6 +50,10 @@ const GeneralCatalogs = [
   {
     path: 'src/domain/browse/__locale__/{locale}/index',
     include: ['src/domain/random/']
+  },
+  {
+    path: 'src/domain/roulette/__locale__/{locale}/index',
+    include: ['src/domain/roulette/']
   }
 ]
 
