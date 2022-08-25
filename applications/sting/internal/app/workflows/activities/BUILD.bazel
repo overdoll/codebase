@@ -23,7 +23,6 @@ go_library(
         "discard_post.go",
         "generate_sitemap.go",
         "get_account_post_likes.go",
-        "get_post_details.go",
         "get_tags_without_banner_for_post.go",
         "mark_club_member_as_supporter.go",
         "publish_post.go",

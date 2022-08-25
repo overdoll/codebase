@@ -12,16 +12,28 @@ type SubmitPostInput struct {
 	PostDate time.Time
 }
 
-func (h *Activities) SubmitPost(ctx context.Context, input SubmitPostInput) error {
+type SubmitPostPayload struct {
+	ResourceIds []string
+}
 
-	_, err := h.pr.UpdatePost(ctx, input.PostId, func(pending *post.Post) error {
+func (h *Activities) SubmitPost(ctx context.Context, input SubmitPostInput) (*SubmitPostPayload, error) {
+
+	pst, err := h.pr.UpdatePost(ctx, input.PostId, func(pending *post.Post) error {
 		return pending.UpdatePostPostedDate(input.PostDate)
 	})
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	// Update pending post index
-	return nil
+	var resourceIds []string
+
+	for _, content := range pst.Content() {
+		// only grab the content that is not processed
+		if !content.Resource().IsProcessed() || content.Resource().Failed() {
+			resourceIds = append(resourceIds, content.Resource().ID())
+		}
+	}
+
+	return &SubmitPostPayload{ResourceIds: resourceIds}, nil
 }

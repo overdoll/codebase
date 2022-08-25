@@ -32,10 +32,9 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 	var a *activities.Activities
 
 	var pixelatedResourcesCompleted bool
-	var isSubmitted bool
 	var postDate *time.Time
 	var hasFailed bool
-	var resourcesFinishedProcessing []string
+	var resources []SubmitPostResourceFinished
 
 	postPixelatedSelector := workflow.NewSelector(ctx)
 
@@ -49,9 +48,6 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 	// wait for post to be submitted
 	postSubmissionSelector.AddReceive(workflow.GetSignalChannel(ctx, SubmitPostSignalChannel), func(channel workflow.ReceiveChannel, more bool) {
 		channel.Receive(ctx, &postDate)
-		// reset to false in case we failed before
-		hasFailed = false
-		isSubmitted = true
 	})
 
 	postResourceProcessingSelector := workflow.NewSelector(ctx)
@@ -62,23 +58,18 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 	postResourceProcessingSelector.AddReceive(postResourcesProcessingChannel, func(channel workflow.ReceiveChannel, more bool) {
 		var receivedPayload SubmitPostResourceFinished
 		for channel.ReceiveAsync(&receivedPayload) {
-			if receivedPayload.Failed {
-				hasFailed = true
-			} else {
-				resourcesFinishedProcessing = append(resourcesFinishedProcessing, receivedPayload.ResourceId)
-			}
+			resources = append(resources, receivedPayload)
 		}
 	})
 
 	// wait for post to be "submitted"
 	postSubmissionSelector.Select(ctx)
-	if !isSubmitted {
-		return errors.New("post not yet submitted")
-	}
 
 	if postDate == nil {
 		postDate = input.PostDate
 	}
+
+	var postDetails *activities.SubmitPostPayload
 
 	// update post status
 	if err := workflow.ExecuteActivity(ctx, a.SubmitPost,
@@ -86,24 +77,34 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 			PostId:   input.PostId,
 			PostDate: *postDate,
 		},
-	).Get(ctx, nil); err != nil {
+	).Get(ctx, &postDetails); err != nil {
 		logger.Error("failed to submit post", "Error", err)
 		return err
 	}
 
-	var postDetails *activities.GetPostDetailsPayload
-
-	if err := workflow.ExecuteActivity(ctx, a.GetPostDetails,
-		activities.GetPostDetailsInput{
-			PostId: input.PostId,
-		},
-	).Get(ctx, &postDetails); err != nil {
-		logger.Error("failed to get post", "Error", err)
-		return err
+	// wait for at least 1 resource to finish processing
+	// only block if we are waiting for at least 1 resource
+	if len(postDetails.ResourceIds) > 0 {
+		postResourceProcessingSelector.Select(ctx)
 	}
 
-	// wait for at least 1 resource to finish processing
-	postResourceProcessingSelector.Select(ctx)
+	// check our signal channels to see if we have a failed resource waiting
+	var receivedPayload SubmitPostResourceFinished
+	for postResourcesProcessingChannel.ReceiveAsync(&receivedPayload) {
+		resources = append(resources, receivedPayload)
+	}
+
+	for _, resourceId := range postDetails.ResourceIds {
+		for _, resource := range resources {
+			// check for a failed resource
+			if resourceId == resource.ResourceId {
+				if resource.Failed {
+					hasFailed = true
+					break
+				}
+			}
+		}
+	}
 
 	if hasFailed {
 		if err := workflow.ExecuteActivity(ctx, a.SendPostFailedProcessingNotification,
@@ -114,31 +115,39 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 			logger.Error("failed to send post failed processing notification", "Error", err)
 			return err
 		}
+
+		// continue workflow as new to restart the flow since we submitted a post with errors
+		return workflow.NewContinueAsNewError(ctx, SubmitPost, SubmitPostInput{
+			PostId:   input.PostId,
+			PostDate: postDate,
+		})
 	}
 
 	// check for a condition
 	// we receive all IDs that are processed, and then compare them against the post's actual IDs
 	// if we find all IDs then the post has finished processing
 	if err := workflow.Await(ctx, func() bool {
+
 		var finds int
 
 		var receivedPayload SubmitPostResourceFinished
 		for postResourcesProcessingChannel.ReceiveAsync(&receivedPayload) {
-			if !receivedPayload.Failed {
-				resourcesFinishedProcessing = append(resourcesFinishedProcessing, receivedPayload.ResourceId)
-			}
+			resources = append(resources, receivedPayload)
 		}
 
-		for _, targetId := range postDetails.ResourceIds {
-			for _, id := range resourcesFinishedProcessing {
-				if targetId == id {
-					finds++
-					break
+		for _, resourceId := range postDetails.ResourceIds {
+			for _, resource := range resources {
+				// check for a failed resource
+				if resourceId == resource.ResourceId {
+					if !resource.Failed {
+						finds++
+						break
+					}
 				}
 			}
 		}
 
-		return finds == len(postDetails.ResourceIds)
+		return finds >= len(postDetails.ResourceIds)
 	}); err != nil {
 		logger.Error("failed to await condition", "Error", err)
 		return err
