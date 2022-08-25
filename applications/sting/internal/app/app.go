@@ -117,6 +117,8 @@ type Commands struct {
 
 	CreateGameSession command.CreateGameSessionHandler
 	SpinRoulette      command.SpinRouletteHandler
+
+	ReprocessPostContent command.ReprocessPostContentHandler
 }
 
 type Queries struct {

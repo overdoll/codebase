@@ -91,6 +91,44 @@ func (s LoaderGrpc) CopyResourceIntoImage(ctx context.Context, options *resource
 	return res[0], nil
 }
 
+func (s LoaderGrpc) ReprocessResources(ctx context.Context, itemId string, resourceIds []string, width uint64, height uint64) error {
+
+	var toApply []*loader.ResourceIdentifier
+
+	for _, r := range resourceIds {
+		toApply = append(toApply, &loader.ResourceIdentifier{
+			Id:     r,
+			ItemId: itemId,
+		})
+	}
+
+	md, err := s.client.ReprocessResources(ctx, &loader.ReprocessResourcesRequest{
+		Resources: toApply,
+		Config: &loader.Config{
+			Width:  width,
+			Height: height,
+		},
+	})
+
+	if err != nil {
+		return errors.Wrap(err, "failed to reprocess resources")
+	}
+
+	var res []*resource.Resource
+	for _, r := range md.Resources {
+
+		unmarshalled, err := s.serializer.UnmarshalResourceFromProto(ctx, r)
+
+		if err != nil {
+			return err
+		}
+
+		res = append(res, unmarshalled)
+	}
+
+	return nil
+}
+
 func (s LoaderGrpc) CopyResourcesAndApplyPixelateFilter(ctx context.Context, itemId string, resourceIds []string, pixelate int, private bool, token string) ([]*post.NewResource, error) {
 
 	var toApply []*loader.ResourceIdentifier

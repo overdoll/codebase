@@ -2,6 +2,7 @@ package ports
 
 import (
 	"context"
+	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"overdoll/applications/loader/internal/app"
@@ -209,4 +210,21 @@ func (s Server) CopyResourcesAndApplyFilter(ctx context.Context, request *loader
 	}
 
 	return &loader.CopyResourcesAndApplyFilterResponse{Resources: filtered}, nil
+}
+
+func (s Server) ReprocessResources(ctx context.Context, request *loader.ReprocessResourcesRequest) (*loader.ReprocessResourcesResponse, error) {
+
+	for _, r := range request.Resources {
+		if err := s.app.Commands.ReprocessResource.Handle(context.Background(), command.ReprocessResource{
+			ItemId: r.ItemId,
+			Id:     r.Id,
+			Width:  request.Config.Width,
+			Height: request.Config.Height,
+			Source: "STING",
+		}); err != nil {
+			zap.S().Fatalw("failed to reprocess resource", zap.Error(err))
+		}
+	}
+
+	return &loader.ReprocessResourcesResponse{}, nil
 }
