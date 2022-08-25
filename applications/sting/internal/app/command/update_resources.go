@@ -47,10 +47,17 @@ func (h UpdateResourcesHandler) Handle(ctx context.Context, cmd UpdateResources)
 		switch token {
 		case "POST":
 			for itemId, resources := range value {
-				_, err := h.pr.UpdatePostContentOperatorResource(ctx, itemId, resources)
+
+				pst, err := h.pr.UpdatePostContentOperatorResource(ctx, itemId, resources)
 
 				if err != nil {
 					return err
+				}
+
+				for _, res := range resources {
+					if err := h.event.SendPostCompletedProcessing(ctx, pst, res.ID(), res.Failed()); err != nil {
+						return err
+					}
 				}
 			}
 			break

@@ -8,6 +8,7 @@ go_library(
         "confirm_email.go",
         "manage_subscription.go",
         "moderator.go",
+        "post.go",
         "transaction_details.go",
         "verify_token.go",
     ],

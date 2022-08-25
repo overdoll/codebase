@@ -36,6 +36,7 @@ go_test(
         "moderator_post_in_queue_test.go",
         "new_club_supporter_subscription_test.go",
         "new_login_token_email_test.go",
+        "post_failed_processing_test.go",
         "upcoming_club_supporter_subscription_renewals_test.go",
     ],
     data = [
@@ -74,6 +75,8 @@ go_test(
         "file_fixtures/club_supporter_subscription_payment_failure.txt",
         "file_fixtures/moderator_post_in_queue.html",
         "file_fixtures/moderator_post_in_queue.txt",
+        "file_fixtures/post_failed_processing_test.html",
+        "file_fixtures/post_failed_processing_test.txt",
     ],
     deps = [
         ":service",

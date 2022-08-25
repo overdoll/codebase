@@ -421,10 +421,10 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	env := getWorkflowEnvironment()
 
 	// signal workflow that resources were processed
-	application.TemporalClient.On("SignalWorkflow", mock.Anything, mock.Anything, "", workflows.SubmitPostSignalChannel, true).
+	application.TemporalClient.On("SignalWorkflow", mock.Anything, mock.Anything, "", workflows.SubmitPostPixelatedResourcesSignalChannel, true).
 		Run(
 			func(args mock.Arguments) {
-				env.SignalWorkflow(workflows.SubmitPostSignalChannel, true)
+				env.SignalWorkflow(workflows.SubmitPostPixelatedResourcesSignalChannel, true)
 			},
 		).
 		Return(nil).

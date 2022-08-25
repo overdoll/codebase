@@ -1,0 +1,20 @@
+<mjml>
+    <mj-include path="../../support/head.mjml"/>
+    <mj-body>
+        <mj-include path="../../support/email-header.mjml"/>
+        <mj-section>
+            <mj-column>
+                <mj-text>
+                    <h2>Post Failed Processing</h2>
+                    <p>Hello {{.Username}}!</p>
+                    <p>Your post has failed processing.</p>
+                    <p>Please click the button below to fix your post, by re-uploading the broken file.</p>
+                </mj-text>
+                <mj-button css-class="medium gray" href="{{.PostLink}}">
+                    Fix Post
+                </mj-button>
+            </mj-column>
+        </mj-section>
+        <mj-include path="../../support/email-footer.mjml"/>
+    </mj-body>
+</mjml>

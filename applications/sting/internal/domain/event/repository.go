@@ -45,5 +45,6 @@ type Repository interface {
 	UpdateTotalPostsForPostTags(ctx context.Context, post *post.Post) error
 
 	SendCompletedPixelatedResources(ctx context.Context, post *post.Post) error
+	SendPostCompletedProcessing(ctx context.Context, post *post.Post, resourceId string, failed bool) error
 	TransferClubOwnership(ctx context.Context, requester *principal.Principal, club *club.Club, target *principal.Principal) error
 }

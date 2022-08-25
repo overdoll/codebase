@@ -31,6 +31,19 @@ func (s CarrierGrpc) ClubSupporterRequiredPostReminder(ctx context.Context, club
 	return nil
 }
 
+func (s CarrierGrpc) PostFailedProcessing(ctx context.Context, postId string) error {
+
+	_, err := s.client.PostFailedProcessing(ctx, &carrier.PostFailedProcessingRequest{
+		Post: &carrier.Post{Id: postId},
+	})
+
+	if err != nil {
+		return errors.Wrap(err, "carrier - failed to send post failed processing email")
+	}
+
+	return nil
+}
+
 func (s CarrierGrpc) ClubSupporterNoPosts(ctx context.Context, clubId string) error {
 
 	_, err := s.client.ClubSupporterNoPosts(ctx, &carrier.ClubSupporterNoPostsRequest{
