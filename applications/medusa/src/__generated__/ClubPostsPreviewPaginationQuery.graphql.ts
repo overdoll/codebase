@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d718c63b531276e4e86893b2851f6644>>
- * @relayHash 9e7244ecc6a9247e32eaac07783346d9
+ * @generated SignedSource<<fe2c83caaa7a73beee79fb1a64c83c58>>
+ * @relayHash ef92d0da2504ab17a98dec840b7601ab
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9e7244ecc6a9247e32eaac07783346d9
+// @relayRequestID ef92d0da2504ab17a98dec840b7601ab
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -295,14 +295,7 @@ return {
                                     "name": "videoNoAudio",
                                     "storageKey": null
                                   },
-                                  (v17/*: any*/),
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "processed",
-                                    "storageKey": null
-                                  }
+                                  (v17/*: any*/)
                                 ],
                                 "storageKey": null
                               },
@@ -499,7 +492,7 @@ return {
     ]
   },
   "params": {
-    "id": "9e7244ecc6a9247e32eaac07783346d9",
+    "id": "ef92d0da2504ab17a98dec840b7601ab",
     "metadata": {},
     "name": "ClubPostsPreviewPaginationQuery",
     "operationKind": "query",

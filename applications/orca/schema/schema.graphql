@@ -4548,6 +4548,7 @@ enum PostState {
   REJECTED
   REMOVED
   REVIEW
+  SUBMITTED
 }
 
 """Properties by which posts connections can be sorted."""

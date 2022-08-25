@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<71a1e6b485af7d65e6531ad37196edc9>>
- * @relayHash 0fcd0e25d8c052f0905aeb3c7f4d6ede
+ * @generated SignedSource<<d52827b1d7d40a1b37b7b94e7fb4aa83>>
+ * @relayHash b4057991b231e20f7c747ae94527c798
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0fcd0e25d8c052f0905aeb3c7f4d6ede
+// @relayRequestID b4057991b231e20f7c747ae94527c798
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -381,14 +381,7 @@ return {
                                 "name": "videoNoAudio",
                                 "storageKey": null
                               },
-                              (v14/*: any*/),
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "processed",
-                                "storageKey": null
-                              }
+                              (v14/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -596,7 +589,7 @@ return {
     ]
   },
   "params": {
-    "id": "0fcd0e25d8c052f0905aeb3c7f4d6ede",
+    "id": "b4057991b231e20f7c747ae94527c798",
     "metadata": {},
     "name": "PublicClubCharacterQuery",
     "operationKind": "query",

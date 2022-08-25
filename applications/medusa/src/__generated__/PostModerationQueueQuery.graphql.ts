@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c175e0f3c41c5c964892dea68e4064bd>>
- * @relayHash 2b5c397a59a6a3f675e2a37ca2a9733d
+ * @generated SignedSource<<4a645c07f1eb633e65db01da6c5fc79d>>
+ * @relayHash b81877aa19f81d8b6f6ee2b5a051f6ab
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 2b5c397a59a6a3f675e2a37ca2a9733d
+// @relayRequestID b81877aa19f81d8b6f6ee2b5a051f6ab
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -336,6 +336,13 @@ return {
                                 "name": "resource",
                                 "plural": false,
                                 "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "processed",
+                                    "storageKey": null
+                                  },
                                   (v9/*: any*/),
                                   (v1/*: any*/),
                                   (v4/*: any*/),
@@ -349,14 +356,7 @@ return {
                                     "name": "videoNoAudio",
                                     "storageKey": null
                                   },
-                                  (v8/*: any*/),
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "processed",
-                                    "storageKey": null
-                                  }
+                                  (v8/*: any*/)
                                 ],
                                 "storageKey": null
                               },
@@ -538,7 +538,7 @@ return {
     ]
   },
   "params": {
-    "id": "2b5c397a59a6a3f675e2a37ca2a9733d",
+    "id": "b81877aa19f81d8b6f6ee2b5a051f6ab",
     "metadata": {},
     "name": "PostModerationQueueQuery",
     "operationKind": "query",

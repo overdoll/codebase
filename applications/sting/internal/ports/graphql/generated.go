@@ -6356,6 +6356,7 @@ enum PostState {
   REJECTED
   REMOVED
   ARCHIVED
+  SUBMITTED
 }
 
 enum SupporterOnlyStatus {

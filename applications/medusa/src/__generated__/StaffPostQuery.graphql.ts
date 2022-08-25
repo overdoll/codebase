@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<4db972537f5199a7454cb8d5adc54f70>>
- * @relayHash 419f3ee22fb1c0b674c0183dffd5376d
+ * @generated SignedSource<<36f6b6adb2a8afda9d8325345f09beb8>>
+ * @relayHash 951170062044982bd2339a57130c48a6
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,11 +9,11 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 419f3ee22fb1c0b674c0183dffd5376d
+// @relayRequestID 951170062044982bd2339a57130c48a6
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "%future added value";
+export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "SUBMITTED" | "%future added value";
 export type StaffPostQuery$variables = {
   reference: string;
 };
@@ -397,6 +397,13 @@ return {
                 "name": "resource",
                 "plural": false,
                 "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "processed",
+                    "storageKey": null
+                  },
                   (v13/*: any*/),
                   (v6/*: any*/),
                   (v8/*: any*/),
@@ -410,14 +417,7 @@ return {
                     "name": "videoNoAudio",
                     "storageKey": null
                   },
-                  (v12/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "processed",
-                    "storageKey": null
-                  }
+                  (v12/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -496,7 +496,7 @@ return {
     ]
   },
   "params": {
-    "id": "419f3ee22fb1c0b674c0183dffd5376d",
+    "id": "951170062044982bd2339a57130c48a6",
     "metadata": {},
     "name": "StaffPostQuery",
     "operationKind": "query",

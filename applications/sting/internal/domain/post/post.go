@@ -262,6 +262,10 @@ func (p *Post) IsPublished() bool {
 	return p.state == Published
 }
 
+func (p *Post) IsSubmitted() bool {
+	return p.state == Submitted
+}
+
 func (p *Post) IsRemoved() bool {
 	return p.state == Removed
 }
@@ -291,7 +295,7 @@ func (p *Post) MakeArchived() error {
 
 func (p *Post) UpdatePostPostedDate(date time.Time) error {
 	p.postedAt = &date
-	p.state = Submitting
+	p.state = Submitted
 	p.update()
 	return nil
 }

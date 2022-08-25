@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b47d0634ff1dbfdb1232e3d249c5ee07>>
+ * @generated SignedSource<<a16a0eafefaa8d31c3f8ec5d2394db05>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,6 @@ import { FragmentRefs } from "relay-runtime";
 export type PostSlideBackgroundFragment$data = {
   readonly resource: {
     readonly preview: string;
-    readonly processed: boolean;
     readonly type: ResourceType;
     readonly videoThumbnail: {
       readonly url: string;
@@ -60,13 +59,6 @@ const node: ReaderFragment = {
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "processed",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
             "concreteType": "ResourceUrl",
             "kind": "LinkedField",
             "name": "videoThumbnail",
@@ -93,6 +85,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "89553d8324dc2d244376b222357f0358";
+(node as any).hash = "399957d9093960740f66302b3485e6ad";
 
 export default node;

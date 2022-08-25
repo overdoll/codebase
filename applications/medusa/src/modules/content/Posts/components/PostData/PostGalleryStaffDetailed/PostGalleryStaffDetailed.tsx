@@ -1,5 +1,5 @@
 import { graphql, useFragment } from 'react-relay'
-import { Box } from '@chakra-ui/react'
+import { Box, Flex, Text } from '@chakra-ui/react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { PostGalleryStaffDetailedFragment$key } from '@//:artifacts/PostGalleryStaffDetailedFragment.graphql'
 import PostMedia from '../../PostPlayback/PostMedia/PostMedia'
@@ -10,6 +10,7 @@ import PostSlideBackground from '../PostSlideBackground/PostSlideBackground'
 import { POST_SWIPER_PROPS, POST_SWIPER_SLIDE_PROPS } from '../../../constants'
 import PostShowOverflow from '../PostShowOverflow/PostShowOverflow'
 import PostSupporterContent from '../PostSupporterContent/PostSupporterContent'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   postQuery: PostGalleryStaffDetailedFragment$key
@@ -25,6 +26,7 @@ const PostFragment = graphql`
     }
     content {
       resource {
+        processed
         ...PostMediaFragment
       }
       ...PostSupporterContentFragment
@@ -52,23 +54,45 @@ export default function PostGalleryStaffDetailed ({
             key={index}
             {...POST_SWIPER_SLIDE_PROPS}
           >
-            <PostSlideBackground query={item}>
-              <PostShowOverflow>
-                <PostSupporterContent
-                  viewerQuery={postData.contributor}
-                  clubQuery={postData.club}
-                  query={item}
+            {item.resource.processed === false
+              ? (
+                <Flex
+                  bg='gray.800'
+                  h='400px'
+                  w='100%'
+                  align='center'
+                  justify='center'
+                  overflow='hidden'
                 >
-                  <PostMedia
-                    controls={{
-                      canSeek: true,
-                      canFullscreen: true
-                    }}
-                    query={item.resource}
-                  />
-                </PostSupporterContent>
-              </PostShowOverflow>
-            </PostSlideBackground>
+                  <Text textAlign='center'>
+                    <Trans>
+                      Preview is only available once content is processed. You may submit your post at this stage, and
+                      we
+                      will
+                      notify you if there are any issues.
+                    </Trans>
+                  </Text>
+                </Flex>
+                )
+              : (
+                <PostSlideBackground query={item}>
+                  <PostShowOverflow>
+                    <PostSupporterContent
+                      viewerQuery={postData.contributor}
+                      clubQuery={postData.club}
+                      query={item}
+                    >
+                      <PostMedia
+                        controls={{
+                          canSeek: true,
+                          canFullscreen: true
+                        }}
+                        query={item.resource}
+                      />
+                    </PostSupporterContent>
+                  </PostShowOverflow>
+                </PostSlideBackground>
+                )}
           </SwiperSlide>)}
       </Swiper>
       {swiper != null && <PostSlideIndex swiper={swiper} query={postData} />}

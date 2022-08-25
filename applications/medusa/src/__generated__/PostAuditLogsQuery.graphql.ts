@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b5aa99792d3a07c958769d61e5fe18a2>>
- * @relayHash ac9d77ff93e42444879baee957bf67c1
+ * @generated SignedSource<<7a62108485936eb11b22f6376d2c7479>>
+ * @relayHash 0bf5ee5c9ef99c109cb5de64ef155294
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ac9d77ff93e42444879baee957bf67c1
+// @relayRequestID 0bf5ee5c9ef99c109cb5de64ef155294
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -324,6 +324,13 @@ return {
                                 "name": "resource",
                                 "plural": false,
                                 "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "processed",
+                                    "storageKey": null
+                                  },
                                   (v9/*: any*/),
                                   (v2/*: any*/),
                                   (v4/*: any*/),
@@ -337,14 +344,7 @@ return {
                                     "name": "videoNoAudio",
                                     "storageKey": null
                                   },
-                                  (v8/*: any*/),
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "processed",
-                                    "storageKey": null
-                                  }
+                                  (v8/*: any*/)
                                 ],
                                 "storageKey": null
                               },
@@ -459,7 +459,7 @@ return {
     ]
   },
   "params": {
-    "id": "ac9d77ff93e42444879baee957bf67c1",
+    "id": "0bf5ee5c9ef99c109cb5de64ef155294",
     "metadata": {},
     "name": "PostAuditLogsQuery",
     "operationKind": "query",

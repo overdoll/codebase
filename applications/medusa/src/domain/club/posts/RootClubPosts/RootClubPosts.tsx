@@ -96,6 +96,11 @@ const RootClubPosts: PageProps<Props> = (props: Props) => {
                 Removed
               </Trans>
             </option>
+            <option value='SUBMITTED'>
+              <Trans>
+                Submitted
+              </Trans>
+            </option>
           </SearchSelect>
           <QueryErrorBoundary loadQuery={() => loadQuery({ ...searchArguments.variables })}>
             <Suspense fallback={<SkeletonRectangleGrid />}>

@@ -9,15 +9,15 @@ type State struct {
 }
 
 var (
-	Unknown    = State{""}
-	Draft      = State{"DRAFT"}
-	Review     = State{"REVIEW"}
-	Published  = State{"PUBLISHED"}
-	Discarded  = State{"DISCARDED"}
-	Rejected   = State{"REJECTED"}
-	Removed    = State{"REMOVED"}
-	Archived   = State{"ARCHIVED"}
-	Submitting = State{"SUBMITTING"}
+	Unknown   = State{""}
+	Draft     = State{"DRAFT"}
+	Review    = State{"REVIEW"}
+	Published = State{"PUBLISHED"}
+	Discarded = State{"DISCARDED"}
+	Rejected  = State{"REJECTED"}
+	Removed   = State{"REMOVED"}
+	Archived  = State{"ARCHIVED"}
+	Submitted = State{"SUBMITTED"}
 )
 
 func (r State) String() string {
@@ -40,8 +40,10 @@ func StateFromString(s string) (State, error) {
 		return Removed, nil
 	case Archived.slug:
 		return Archived, nil
-	case Submitting.slug:
-		return Submitting, nil
+	case Submitted.slug:
+		return Submitted, nil
+	case "SUBMITTING":
+		return Submitted, nil
 	}
 
 	return Unknown, domainerror.NewValidation("unknown post state: " + s)

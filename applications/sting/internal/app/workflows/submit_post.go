@@ -57,8 +57,10 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 
 	postResourceProcessingSelector := workflow.NewSelector(ctx)
 
+	postResourcesProcessingChannel := workflow.GetSignalChannel(ctx, SubmitPostResourcesFinishedProcessingSignalChannel)
+
 	// wait for resources to finish processing
-	postResourceProcessingSelector.AddReceive(workflow.GetSignalChannel(ctx, SubmitPostResourcesFinishedProcessingSignalChannel), func(channel workflow.ReceiveChannel, more bool) {
+	postResourceProcessingSelector.AddReceive(postResourcesProcessingChannel, func(channel workflow.ReceiveChannel, more bool) {
 		var receivedPayload SubmitPostResourceFinished
 		for channel.ReceiveAsync(&receivedPayload) {
 			if receivedPayload.Failed {
@@ -121,11 +123,18 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 	if err := workflow.Await(ctx, func() bool {
 		var finds int
 
+		var receivedPayload SubmitPostResourceFinished
+		for postResourcesProcessingChannel.ReceiveAsync(&receivedPayload) {
+			if !receivedPayload.Failed {
+				resourcesFinishedProcessing = append(resourcesFinishedProcessing, receivedPayload.ResourceId)
+			}
+		}
+
 		fmt.Println(resourcesFinishedProcessing)
 		fmt.Println(postDetails.ResourceIds)
 
-		for _, id := range resourcesFinishedProcessing {
-			for _, targetId := range postDetails.ResourceIds {
+		for _, targetId := range postDetails.ResourceIds {
+			for _, id := range resourcesFinishedProcessing {
 				if targetId == id {
 					finds++
 					break

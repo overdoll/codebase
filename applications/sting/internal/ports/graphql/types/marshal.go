@@ -61,6 +61,10 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post, like *post.Lik
 		state = PostStateRemoved
 	}
 
+	if result.IsSubmitted() {
+		state = PostStateSubmitted
+	}
+
 	var content []*PostContent
 
 	for _, res := range result.Content() {
