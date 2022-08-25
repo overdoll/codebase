@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7300eb964d90fb1ed7bcc018dfa8cbc8>>
- * @relayHash f9fb3b92455022b98788039ce9a3da36
+ * @generated SignedSource<<15059a3eec13ac016969f2194a343728>>
+ * @relayHash fa81fc262d748e6dc60434f47740ed23
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,11 +9,11 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f9fb3b92455022b98788039ce9a3da36
+// @relayRequestID fa81fc262d748e6dc60434f47740ed23
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostsSort = "NEW" | "TOP" | "%future added value";
+export type PostsSort = "ALGORITHM" | "NEW" | "TOP" | "%future added value";
 export type SupporterOnlyStatus = "FULL" | "NONE" | "PARTIAL" | "%future added value";
 export type ClubPostsPreviewQuery$variables = {
   slug: string;
@@ -263,7 +263,14 @@ return {
                                 "name": "videoNoAudio",
                                 "storageKey": null
                               },
-                              (v10/*: any*/)
+                              (v10/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "processed",
+                                "storageKey": null
+                              }
                             ],
                             "storageKey": null
                           },
@@ -457,7 +464,7 @@ return {
     ]
   },
   "params": {
-    "id": "f9fb3b92455022b98788039ce9a3da36",
+    "id": "fa81fc262d748e6dc60434f47740ed23",
     "metadata": {},
     "name": "ClubPostsPreviewQuery",
     "operationKind": "query",

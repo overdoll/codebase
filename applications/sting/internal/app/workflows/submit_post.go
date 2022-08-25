@@ -2,6 +2,7 @@ package workflows
 
 import (
 	"errors"
+	"fmt"
 	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/sdk/temporal"
 	"time"
@@ -12,7 +13,7 @@ import (
 
 type SubmitPostInput struct {
 	PostId   string
-	PostDate time.Time
+	PostDate *time.Time
 }
 
 const SubmitPostPixelatedResourcesSignalChannel = "submit-post-pixelated-resources"
@@ -33,6 +34,7 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 
 	var pixelatedResourcesCompleted bool
 	var isSubmitted bool
+	var postDate *time.Time
 	var hasFailed bool
 	var resourcesFinishedProcessing []string
 
@@ -47,9 +49,10 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 
 	// wait for post to be submitted
 	postSubmissionSelector.AddReceive(workflow.GetSignalChannel(ctx, SubmitPostSignalChannel), func(channel workflow.ReceiveChannel, more bool) {
-		channel.Receive(ctx, &isSubmitted)
+		channel.Receive(ctx, &postDate)
 		// reset to false in case we failed before
 		hasFailed = false
+		isSubmitted = true
 	})
 
 	postResourceProcessingSelector := workflow.NewSelector(ctx)
@@ -57,12 +60,12 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 	// wait for resources to finish processing
 	postResourceProcessingSelector.AddReceive(workflow.GetSignalChannel(ctx, SubmitPostResourcesFinishedProcessingSignalChannel), func(channel workflow.ReceiveChannel, more bool) {
 		var receivedPayload SubmitPostResourceFinished
-		channel.Receive(ctx, &receivedPayload)
-
-		if receivedPayload.Failed {
-			hasFailed = true
-		} else {
-			resourcesFinishedProcessing = append(resourcesFinishedProcessing, receivedPayload.ResourceId)
+		for channel.ReceiveAsync(&receivedPayload) {
+			if receivedPayload.Failed {
+				hasFailed = true
+			} else {
+				resourcesFinishedProcessing = append(resourcesFinishedProcessing, receivedPayload.ResourceId)
+			}
 		}
 	})
 
@@ -70,6 +73,21 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 	postSubmissionSelector.Select(ctx)
 	if !isSubmitted {
 		return errors.New("post not yet submitted")
+	}
+
+	if postDate == nil {
+		postDate = input.PostDate
+	}
+
+	// update post status
+	if err := workflow.ExecuteActivity(ctx, a.SubmitPost,
+		activities.SubmitPostInput{
+			PostId:   input.PostId,
+			PostDate: *postDate,
+		},
+	).Get(ctx, nil); err != nil {
+		logger.Error("failed to submit post", "Error", err)
+		return err
 	}
 
 	var postDetails *activities.GetPostDetailsPayload
@@ -103,6 +121,9 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 	if err := workflow.Await(ctx, func() bool {
 		var finds int
 
+		fmt.Println(resourcesFinishedProcessing)
+		fmt.Println(postDetails.ResourceIds)
+
 		for _, id := range resourcesFinishedProcessing {
 			for _, targetId := range postDetails.ResourceIds {
 				if targetId == id {
@@ -126,16 +147,6 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 		},
 	).Get(ctx, &createdPayload); err != nil {
 		logger.Error("failed to create pixelated resources for supporter only content", "Error", err)
-		return err
-	}
-
-	if err := workflow.ExecuteActivity(ctx, a.SubmitPost,
-		activities.SubmitPostInput{
-			PostId:   input.PostId,
-			PostDate: input.PostDate,
-		},
-	).Get(ctx, nil); err != nil {
-		logger.Error("failed to submit post", "Error", err)
 		return err
 	}
 

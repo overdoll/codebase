@@ -35,5 +35,5 @@ func (s StingGrpc) GetPost(ctx context.Context, postId string) (*post.Post, erro
 		return nil, errors.Wrap(err, "error retrieving post")
 	}
 
-	return post.UnmarshalPostFromDatabase(md.ClubId), nil
+	return post.UnmarshalPostFromDatabase(md.ClubId, md.AccountId), nil
 }

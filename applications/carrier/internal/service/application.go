@@ -75,6 +75,7 @@ func createApplication(ctx context.Context, eva command.EvaService, sting comman
 			ClubOverChargebackThreshold:               command.NewClubOverChargebackThresholdHandler(mailingRepo, eva, sting),
 			ClubSupporterSubscriptionDuplicate:        command.NewClubSupporterSubscriptionDuplicateHandler(mailingRepo, eva, sting),
 			ModeratorPostInQueue:                      command.NewModeratorPostInQueueHandler(mailingRepo, eva),
+			PostFailedProcessing:                      command.NewPostFailedProcessingHandler(mailingRepo, eva, sting),
 		},
 		Queries: app.Queries{},
 	}

@@ -124,16 +124,6 @@ export default function UpdateCharacterButton ({
     )
   }
 
-  if (!contentProcessed) {
-    return (
-      <Button isDisabled size='lg'>
-        <Trans>
-          Processing Content
-        </Trans>
-      </Button>
-    )
-  }
-
   return (
     <FlowBuilderNextButton isDisabled={buttonDisabled}>
       {buttonDisabled ? `${(Object.keys(state.characters)).length} / 1` : undefined}

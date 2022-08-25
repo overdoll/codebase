@@ -1,7 +1,8 @@
 import { graphql, useFragment } from 'react-relay'
 import { ReactNode } from 'react'
 import { PostSlideBackgroundFragment$key } from '@//:artifacts/PostSlideBackgroundFragment.graphql'
-import { Flex } from '@chakra-ui/react'
+import { Flex, Text } from '@chakra-ui/react'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   query: PostSlideBackgroundFragment$key
@@ -10,9 +11,10 @@ interface Props {
 
 const Fragment = graphql`
   fragment PostSlideBackgroundFragment on PostContent {
-    resource {
+    resource @required(action: THROW) {
       preview
       type
+      processed
       videoThumbnail {
         url
       }
@@ -25,6 +27,26 @@ export default function PostSlideBackground ({
   children
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
+
+  if (!data.resource.processed) {
+    return (
+      <Flex
+        bg='gray.800'
+        h='400px'
+        w='100%'
+        align='center'
+        justify='center'
+        overflow='hidden'
+      >
+        <Text textAlign='center'>
+          <Trans>
+            Preview is only available once content is processed. You may submit your post at this stage, and we will
+            notify you if there are any issues.
+          </Trans>
+        </Text>
+      </Flex>
+    )
+  }
 
   return (
     <Flex

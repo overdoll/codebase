@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c3cc11ccdb2064eb0b47abadbc7fa965>>
- * @relayHash 8eebdea7e9ba63902db6912c92dbbd72
+ * @generated SignedSource<<0b3f25b659c81bcf1d11c67b23c4c3ba>>
+ * @relayHash ea1b76136639aaf87f64542fa4f9a026
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,11 +9,11 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8eebdea7e9ba63902db6912c92dbbd72
+// @relayRequestID ea1b76136639aaf87f64542fa4f9a026
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostsSort = "NEW" | "TOP" | "%future added value";
+export type PostsSort = "ALGORITHM" | "NEW" | "TOP" | "%future added value";
 export type SearchSeriesQuery$variables = {
   seriesSlug: string;
   sortBy: PostsSort;
@@ -337,7 +337,14 @@ return {
                                 "name": "videoNoAudio",
                                 "storageKey": null
                               },
-                              (v14/*: any*/)
+                              (v14/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "processed",
+                                "storageKey": null
+                              }
                             ],
                             "storageKey": null
                           },
@@ -631,7 +638,7 @@ return {
     ]
   },
   "params": {
-    "id": "8eebdea7e9ba63902db6912c92dbbd72",
+    "id": "ea1b76136639aaf87f64542fa4f9a026",
     "metadata": {},
     "name": "SearchSeriesQuery",
     "operationKind": "query",
