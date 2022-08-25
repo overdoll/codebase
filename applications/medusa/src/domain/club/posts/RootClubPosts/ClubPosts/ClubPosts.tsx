@@ -50,6 +50,7 @@ const Fragment = graphql`
           ...RejectedPostFragment
           ...ArchivedPostFragment
           ...RemovedPostFragment
+          ...SubmittedPostFragment
         }
       }
     }

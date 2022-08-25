@@ -26,7 +26,7 @@ func TestPostFailedProcessing(t *testing.T) {
 
 	timestampFrom := time.Now()
 
-	postId := uuid.New().String()
+	postId := "2DrcfzDIGh5WEtrmjOMuBCKWrjc"
 	clubId := uuid.New().String()
 
 	accountId := uuid.New().String()

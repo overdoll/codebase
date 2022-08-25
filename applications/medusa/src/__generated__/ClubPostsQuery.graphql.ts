@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e4b0ff1b1b44164b0e20b5c25e6947cd>>
- * @relayHash 1781a69ddbe7690a239e4591fc0a3a34
+ * @generated SignedSource<<e8b43b2a63a080796ab9db4723213b47>>
+ * @relayHash e465820421b2224886aba04848e5ec18
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,11 +9,11 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 1781a69ddbe7690a239e4591fc0a3a34
+// @relayRequestID e465820421b2224886aba04848e5ec18
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "%future added value";
+export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "SUBMITTED" | "%future added value";
 export type ClubPostsQuery$variables = {
   slug: string;
   state?: PostState | null;
@@ -490,7 +490,7 @@ return {
     ]
   },
   "params": {
-    "id": "1781a69ddbe7690a239e4591fc0a3a34",
+    "id": "e465820421b2224886aba04848e5ec18",
     "metadata": {},
     "name": "ClubPostsQuery",
     "operationKind": "query",

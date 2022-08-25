@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f627b733eed8b4992086cfdf7c227abe>>
+ * @generated SignedSource<<87767244cc1415184f49d43ac3066df6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
-export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "%future added value";
+export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "SUBMITTED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type ClubPostsFragment$data = {
   readonly id: string;
@@ -18,7 +18,7 @@ export type ClubPostsFragment$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly state: PostState;
-        readonly " $fragmentSpreads": FragmentRefs<"ArchivedPostFragment" | "DraftPostFragment" | "PostPreviewContentFragment" | "PublishedPostFragment" | "RejectedPostFragment" | "RemovedPostFragment" | "ReviewPostFragment">;
+        readonly " $fragmentSpreads": FragmentRefs<"ArchivedPostFragment" | "DraftPostFragment" | "PostPreviewContentFragment" | "PublishedPostFragment" | "RejectedPostFragment" | "RemovedPostFragment" | "ReviewPostFragment" | "SubmittedPostFragment">;
       };
     }>;
   };
@@ -151,6 +151,11 @@ return {
                   "name": "RemovedPostFragment"
                 },
                 {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "SubmittedPostFragment"
+                },
+                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
@@ -223,6 +228,6 @@ return {
 };
 })();
 
-(node as any).hash = "878f08f5b6b57a35d9884d650db1a58c";
+(node as any).hash = "bf9e275b1e41b60c5ad814be08430f9c";
 
 export default node;

@@ -4,17 +4,17 @@ overdoll
 
 Home ( https://overdoll.com/home ) Discover Clubs ( https://overdoll.com/clubs/discover )
 
----------------
-Account Deleted
----------------
+----------------------
+Post Failed Processing
+----------------------
 
 Hello test user!
 
-As requested, your account and all associated data has been deleted.
+Your post has failed processing.
 
-We're sorry to see you go. This is the last email we will send you.
+Please click the button below to fix your post, by re-uploading the broken file.
 
-Goodbye.
+Fix Post ( https://ci.overdoll.dev/club/test-club/create-post?post=2DrcfzDIGh5WEtrmjOMuBCKWrjc )
 
 Terms of Service ( https://www.corpodoll.com/tos/ )
 

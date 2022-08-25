@@ -24,7 +24,7 @@ export default function SubmittedPost ({
   return (
     <Stack spacing={1}>
       <HStack h={7} spacing={3} justify='flex-start'>
-        <Badge borderRadius='base' fontSize='sm' colorScheme='orange'>
+        <Badge borderRadius='base' fontSize='sm' colorScheme='blue'>
           <Trans>
             SUBMITTED
           </Trans>

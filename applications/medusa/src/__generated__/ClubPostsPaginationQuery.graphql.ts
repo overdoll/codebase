@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a90070555bdcd832ea87a8f3fbff1da6>>
- * @relayHash dc2ef43c6e2eee26f0a198a59276672a
+ * @generated SignedSource<<69a9de4066fc7abc5bc04de22f41c625>>
+ * @relayHash 667c956f8881ffc89bdcac776d9fe133
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,11 +9,11 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID dc2ef43c6e2eee26f0a198a59276672a
+// @relayRequestID 667c956f8881ffc89bdcac776d9fe133
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "%future added value";
+export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "SUBMITTED" | "%future added value";
 export type ClubPostsPaginationQuery$variables = {
   after?: string | null;
   first?: number | null;
@@ -447,7 +447,7 @@ return {
     ]
   },
   "params": {
-    "id": "dc2ef43c6e2eee26f0a198a59276672a",
+    "id": "667c956f8881ffc89bdcac776d9fe133",
     "metadata": {},
     "name": "ClubPostsPaginationQuery",
     "operationKind": "query",
@@ -456,6 +456,6 @@ return {
 };
 })();
 
-(node as any).hash = "878f08f5b6b57a35d9884d650db1a58c";
+(node as any).hash = "bf9e275b1e41b60c5ad814be08430f9c";
 
 export default node;

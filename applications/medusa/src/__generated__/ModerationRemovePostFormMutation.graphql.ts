@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<70caebffdd1ba008ea1e7264b8203608>>
+ * @generated SignedSource<<0d6d1e8bb0f53b946bfae1470e020efe>>
  * @relayHash 31c93fefea6e3c4c1cda343aab1920cf
  * @lightSyntaxTransform
  * @nogrep
@@ -12,7 +12,7 @@
 // @relayRequestID 31c93fefea6e3c4c1cda343aab1920cf
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "%future added value";
+export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "SUBMITTED" | "%future added value";
 export type RemovePostInput = {
   notes?: string | null;
   postId: string;
