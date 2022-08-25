@@ -268,6 +268,7 @@ func (r *Resource) ApplyFilters(file *os.File, config *Config, filters *ImageFil
 }
 
 func createPreviewFromFile(r io.Reader) (string, error) {
+
 	img, err := jpeg.Decode(r)
 
 	if err != nil {
@@ -276,10 +277,22 @@ func createPreviewFromFile(r io.Reader) (string, error) {
 
 	var cols []prominentcolor.ColorItem
 
-	cols, err = prominentcolor.KmeansWithAll(prominentcolor.DefaultK, img, prominentcolor.ArgumentDefault, prominentcolor.DefaultSize, []prominentcolor.ColorBackgroundMask{})
+	cols, err = prominentcolor.KmeansWithArgs(prominentcolor.ArgumentDefault, img)
 
 	if err != nil {
-		return "", errors.Wrap(err, "failed to generate preview from file")
+
+		if err.Error() == "Failed, no non-alpha pixels found (either fully transparent image, or the ColorBackgroundMask removed all pixels)" {
+			err = nil
+			cols, err = prominentcolor.KmeansWithAll(prominentcolor.DefaultK, img, prominentcolor.ArgumentDefault, prominentcolor.DefaultSize, []prominentcolor.ColorBackgroundMask{})
+
+			if err != nil {
+				return "", errors.Wrap(err, "failed to generate preview from file")
+			}
+		}
+
+		if err != nil {
+			return "", err
+		}
 	}
 
 	col := cols[0]
