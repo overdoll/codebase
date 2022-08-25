@@ -2,7 +2,6 @@ package workflows
 
 import (
 	"errors"
-	"fmt"
 	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/sdk/temporal"
 	"time"
@@ -129,9 +128,6 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 				resourcesFinishedProcessing = append(resourcesFinishedProcessing, receivedPayload.ResourceId)
 			}
 		}
-
-		fmt.Println(resourcesFinishedProcessing)
-		fmt.Println(postDetails.ResourceIds)
 
 		for _, targetId := range postDetails.ResourceIds {
 			for _, id := range resourcesFinishedProcessing {

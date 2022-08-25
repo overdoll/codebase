@@ -54,7 +54,7 @@ export default function PostGalleryStaffDetailed ({
             key={index}
             {...POST_SWIPER_SLIDE_PROPS}
           >
-            {item.resource.processed === false
+            {!item.resource.processed
               ? (
                 <Flex
                   bg='gray.800'

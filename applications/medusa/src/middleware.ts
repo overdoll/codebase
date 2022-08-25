@@ -23,6 +23,10 @@ export const middleware: Middleware = async (request, event) => {
     return NextResponse.redirect(new URL('/join', request.url))
   }
 
+  if (request.nextUrl.pathname.startsWith('/home')) {
+    return NextResponse.redirect(new URL('/', request.url))
+  }
+
   if (request.nextUrl.pathname.startsWith('/moderation')) {
     if (ability.can('moderate', 'Post')) return NextResponse.next()
 
@@ -79,6 +83,7 @@ export const config = {
     '/logout',
     '/moderation/:path*',
     '/settings/:path*',
-    '/staff/:path*'
+    '/staff/:path*',
+    '/home'
   ]
 }
