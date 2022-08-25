@@ -4,7 +4,6 @@ import type { RouletteSessionScreenViewerFragment$key } from '@//:artifacts/Roul
 import { graphql } from 'react-relay'
 import RouletteScreenInstructions from './RouletteScreenInstructions/RouletteScreenInstructions'
 import RouletteScreenGame from './RouletteScreenGame/RouletteScreenGame'
-import { GridItem } from '@chakra-ui/react'
 
 interface Props {
   query: RouletteSessionScreenFragment$key
@@ -45,11 +44,7 @@ export default function RouletteSessionScreen (props: Props): JSX.Element {
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   if (data.gameState == null) {
-    return (
-      <GridItem>
-        <RouletteScreenInstructions />
-      </GridItem>
-    )
+    return <RouletteScreenInstructions />
   }
 
   return <RouletteScreenGame query={data} viewerQuery={viewerData} />

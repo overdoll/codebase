@@ -3,7 +3,8 @@ import type { RouletteSessionFooterFragment$key } from '@//:artifacts/RouletteSe
 import { graphql } from 'react-relay'
 import SpinRoulette from './SpinRoulette/SpinRoulette'
 import { Flex, Grid, GridItem } from '@chakra-ui/react'
-import RouletteScreenDice from '../RouletteSessionScreen/RouletteScreenGame/RouletteScreenDice/RouletteScreenDice'
+import RouletteScreenDice from './RouletteScreenDice/RouletteScreenDice'
+import DiceTable from './DiceTable/DiceTable'
 
 interface Props {
   query: RouletteSessionFooterFragment$key
@@ -29,25 +30,29 @@ export default function RouletteSessionFooter (props: Props): JSX.Element {
   return (
     <Grid
       templateColumns={{
-        base: '1fr 130px',
-        md: '1fr 200px'
+        base: '1fr 110px',
+        md: '1fr 170px'
       }}
       templateRows='1fr'
       h='100%'
       w='100%'
     >
-      <GridItem bg='orange.400'>
-        {data.gameState != null && (
-          <Flex w='100%'>
-            <RouletteScreenDice query={data.gameState} />
-            {data.gameSession.isClosed && (
-              <>game finished</>
-            )}
-          </Flex>
-        )}
+      <GridItem>
+        <DiceTable>
+          {data.gameState != null && (
+            <Flex w='100%'>
+              <RouletteScreenDice query={data.gameState} />
+              {data.gameSession.isClosed && (
+                <>game finished</>
+              )}
+            </Flex>
+          )}
+        </DiceTable>
       </GridItem>
-      <GridItem bg='primary.400'>
-        <SpinRoulette query={data} />
+      <GridItem>
+        <Flex w='100%' h='100%' align='flex-start' justify='flex-end'>
+          <SpinRoulette query={data} />
+        </Flex>
       </GridItem>
     </Grid>
   )

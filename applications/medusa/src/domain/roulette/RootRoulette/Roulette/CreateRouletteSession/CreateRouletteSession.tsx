@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Trans } from '@lingui/macro'
 import type { CreateRouletteSessionMutation } from '@//:artifacts/CreateRouletteSessionMutation.graphql'
 import Button from '@//:modules/form/Button/Button'
-import RouletteScreenBackground from '../RouletteScreenBackground/RouletteScreenBackground'
+import { Grid, GridItem } from '@chakra-ui/react'
 
 const Mutation = graphql`
   mutation CreateRouletteSessionMutation($input: CreateGameSessionInput!) {
@@ -17,7 +17,7 @@ const Mutation = graphql`
 `
 
 export default function CreateRouletteSession (): JSX.Element {
-  const [, setGameSessionId] = useQueryParam<string | null | undefined>('gameSessionId')
+  const [gameSessionId, setGameSessionId] = useQueryParam<string | null | undefined>('gameSessionId')
 
   const [createGame, isCreatingGame] = useMutation<CreateRouletteSessionMutation>(Mutation)
 
@@ -42,30 +42,38 @@ export default function CreateRouletteSession (): JSX.Element {
   }
 
   useEffect(() => {
-    onCreateGame()
-  }, [])
+    if (gameSessionId == null) {
+      onCreateGame()
+    }
+  }, [gameSessionId])
 
-  if (isCreatingGame) {
-    return (
-      <RouletteScreenBackground>
-        creating game session
-      </RouletteScreenBackground>
-    )
-  }
+  const ShowCreateSession = (): JSX.Element => {
+    if (isCreatingGame) {
+      return (
+        <GridItem bg='green.400'>creating game session</GridItem>
+      )
+    }
 
-  if (hasError) {
+    if (hasError) {
+      return (
+        <GridItem bg='orange.400'>
+          <Button onClick={onCreateGame}>
+            <Trans>
+              Error. Retry Game Creation
+            </Trans>
+          </Button>
+        </GridItem>
+      )
+    }
+
     return (
-      <Button onClick={onCreateGame}>
-        <Trans>
-          Error. Retry Game Creation
-        </Trans>
-      </Button>
+      <GridItem bg='purple.400'>creating game session</GridItem>
     )
   }
 
   return (
-    <RouletteScreenBackground>
-      creating game session
-    </RouletteScreenBackground>
+    <Grid overflow='hidden' templateRows='1fr' templateColumns='100%' h='92vh' w='100%'>
+      <ShowCreateSession />
+    </Grid>
   )
 }

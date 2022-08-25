@@ -40,6 +40,5 @@ export default function RandomPattern ({ seed }: Props): JSX.Element {
       icon={randomIcon.icon}
       fill='gray.00'
     />
-
   )
 }

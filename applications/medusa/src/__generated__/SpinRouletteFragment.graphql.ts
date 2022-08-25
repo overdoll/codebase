@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6774bc91d1133f1e21f7757af334641a>>
+ * @generated SignedSource<<119559f84b1d485d44fc6fb885c24d31>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,6 @@ export type SpinRouletteFragment$data = {
     readonly diceThree: number;
     readonly diceTwo: number;
   } | null;
-  readonly " $fragmentSpreads": FragmentRefs<"SpinRouletteButtonFragment">;
   readonly " $fragmentType": "SpinRouletteFragment";
 };
 export type SpinRouletteFragment$key = {
@@ -106,17 +105,12 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "SpinRouletteButtonFragment"
     }
   ],
   "type": "RouletteStatus",
   "abstractKey": null
 };
 
-(node as any).hash = "9c61da4bbf752aa07c8d692c304c1dd6";
+(node as any).hash = "a6f37beef99577aa3b62ba614c552f9b";
 
 export default node;

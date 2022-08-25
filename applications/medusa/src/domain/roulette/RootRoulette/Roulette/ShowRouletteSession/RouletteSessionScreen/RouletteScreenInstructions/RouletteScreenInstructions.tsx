@@ -1,9 +1,7 @@
-import RouletteScreenBackground from '../../../RouletteScreenBackground/RouletteScreenBackground'
+import { GridItem } from '@chakra-ui/react'
 
 export default function RouletteScreenInstructions (): JSX.Element {
   return (
-    <RouletteScreenBackground>
-      game instructions
-    </RouletteScreenBackground>
+    <GridItem color='blackAlpha.700' bg='green.400'>game instructions</GridItem>
   )
 }

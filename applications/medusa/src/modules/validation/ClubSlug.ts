@@ -11,7 +11,7 @@ export default function ClubSlug (): Joi.Schema {
     'overdoll', 'admin',
     'moderation', 'club',
     'admins', 'clubs',
-    'post', 'posts', 'home',
+    'post', 'posts',
     'setting', 'settings',
     'manage', 'configure', 'mod',
     'token', 'confirm-email', 'verify-token',
@@ -22,7 +22,8 @@ export default function ClubSlug (): Joi.Schema {
     'character', 'characters', 'audience',
     'audiences', 'log-in', 'log-out',
     'review', 'help', 'submit',
-    'search', 'view', 'staff']
+    'search', 'view', 'staff', 'game',
+    'games', 'roulette', 'home', 'browse']
 
   return Joi
     .string()

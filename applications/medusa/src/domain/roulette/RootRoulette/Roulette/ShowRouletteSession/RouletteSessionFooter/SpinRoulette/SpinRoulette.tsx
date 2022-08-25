@@ -9,7 +9,6 @@ import { useToast } from '@//:modules/content/ThemeComponents'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import SpinRouletteButton from './SpinRouletteButton/SpinRouletteButton'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
-import { useUpdateEffect } from 'usehooks-ts'
 import React, { Suspense, useEffect } from 'react'
 import SpinRouletteUpdate from './SpinRouletteButton/SpinRouletteUpdate/SpinRouletteUpdate'
 
@@ -34,7 +33,6 @@ const Fragment = graphql`
       diceTwo
       diceThree
     }
-    ...SpinRouletteButtonFragment
   }
 `
 
@@ -151,8 +149,10 @@ export default function SpinRoulette (props: Props): JSX.Element {
     onSpin()
   }
 
+  const diceRolls = data.gameState != null ? [data.gameState.diceOne, data.gameState.diceThree, data.gameState.diceTwo] : [1, 2, 3]
+
   // If user completed tutorial, we want to spin right away instead of showing them the screen again
-  useUpdateEffect(() => {
+  useEffect(() => {
     if (data.gameState == null && state.tutorialCompleted === true) {
       onSpin()
     }
@@ -161,8 +161,6 @@ export default function SpinRoulette (props: Props): JSX.Element {
   // If user gets a triple, we load a query to see the results
   useEffect(() => {
     if (data.gameState == null || data.gameSession.isClosed) return
-    const diceRolls = [data.gameState.diceOne, data.gameState.diceThree, data.gameState.diceTwo]
-
     if (diceRolls.every(val => val === diceRolls[0])) {
       setArguments({
         reference: data.gameSession.reference
@@ -173,10 +171,16 @@ export default function SpinRoulette (props: Props): JSX.Element {
 
   return (
     <>
-      <Suspense fallback={<></>}>
-        <SpinRouletteUpdate searchArguments={searchArguments} />
-      </Suspense>
-      <SpinRouletteButton isDisabled={isCreatingGame || isSpinningRoulette} onClick={onClick} query={data} />
+      {(data.gameState != null && diceRolls.every(val => val === diceRolls[0])) && (
+        <Suspense fallback={<></>}>
+          <SpinRouletteUpdate searchArguments={searchArguments} />
+        </Suspense>
+      )}
+      <SpinRouletteButton
+        canFastForward
+        isDisabled={isCreatingGame || isSpinningRoulette}
+        onClick={onClick}
+      />
     </>
   )
 }
