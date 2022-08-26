@@ -18,6 +18,7 @@ go_library(
         "moderator_post_in_queue.go",
         "new_club_supporter_subscription.go",
         "new_login_token.go",
+        "post_failed_processing.go",
         "services.go",
         "upcoming_club_supporter_subscription_renewals.go",
     ],
@@ -29,5 +30,6 @@ go_library(
         "//applications/carrier/internal/domain/identifier",
         "//applications/carrier/internal/domain/links",
         "//applications/carrier/internal/domain/mailing",
+        "//applications/carrier/internal/domain/post",
     ],
 )

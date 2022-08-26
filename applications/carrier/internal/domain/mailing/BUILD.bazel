@@ -41,6 +41,8 @@ go_library(
         "views/templates/club_supporter_subscription_duplicate/subject.gotmpl",
         "views/templates/moderator_post_in_queue/subject.gotmpl",
         "views/templates/moderator_post_in_queue/email.gohtml",
+        "views/templates/post_failed_processing/email.gohtml",
+        "views/templates/post_failed_processing/subject.gotmpl",
     ],
     importpath = "overdoll/applications/carrier/internal/domain/mailing",
     visibility = ["//applications/carrier:__subpackages__"],

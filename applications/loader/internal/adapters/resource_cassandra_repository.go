@@ -654,6 +654,7 @@ func (r ResourceCassandraS3Repository) uploadResource(ctx context.Context, moveT
 		Body:          bytes.NewReader(buffer),
 		ContentLength: aws.Int64(size),
 		ContentType:   aws.String(http.DetectContentType(buffer)),
+		CacheControl:  aws.String("max-age=31536000"),
 	}
 
 	if !target.IsPrivate() {

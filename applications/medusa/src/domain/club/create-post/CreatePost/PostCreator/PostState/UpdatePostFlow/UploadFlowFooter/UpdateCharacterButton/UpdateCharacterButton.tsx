@@ -8,10 +8,7 @@ import { t, Trans } from '@lingui/macro'
 import { FlowBuilderNextButton, FlowBuilderSaveButton } from '@//:modules/content/PageLayout'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
-import {
-  isFailed,
-  isProcessed
-} from '../../UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent'
+import { isFailed } from '../../UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent'
 
 interface Props {
   query: UpdateCharacterButtonFragment$key
@@ -69,7 +66,6 @@ export default function UpdateCharacterButton ({
 
   const notify = useToast()
 
-  const contentProcessed = isProcessed(data.content)
   const contentFailed = isFailed(data.content)
 
   const buttonDisabled = (Object.keys(state.characters)).length < 1
@@ -92,7 +88,7 @@ export default function UpdateCharacterButton ({
         }
       },
       onCompleted () {
-        if (contentFailed || !contentProcessed) return
+        if (contentFailed) return
         nextStep()
       },
       onError () {
@@ -119,16 +115,6 @@ export default function UpdateCharacterButton ({
       <Button isDisabled size='lg'>
         <Trans>
           Processing Failed
-        </Trans>
-      </Button>
-    )
-  }
-
-  if (!contentProcessed) {
-    return (
-      <Button isDisabled size='lg'>
-        <Trans>
-          Processing Content
         </Trans>
       </Button>
     )

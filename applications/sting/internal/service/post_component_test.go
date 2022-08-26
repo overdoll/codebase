@@ -377,33 +377,95 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	})
 	require.Error(t, err)
 
-	// mark resources as processed in order to be able to submit
-	grpcClient := getGrpcCallbackClient(t)
-
-	var targets []*proto.Resource
-
-	for v, id := range resourceIds {
-		if v == 2 {
-			break
-		}
-		targets = append(targets, &proto.Resource{
-			Id:          id,
-			ItemId:      newPostReference,
-			Type:        proto.ResourceType_IMAGE,
-			Processed:   true,
-			ProcessedId: uuid.New().String(),
-			MimeTypes:   []string{"image/png"},
-			Private:     true,
-			Width:       100,
-			Height:      100,
-			Token:       "POST",
-		})
-	}
-
-	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: targets})
-	require.NoError(t, err, "no error updating resources")
+	postId := newPostReference
 
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.SubmitPost, mock.Anything)
+
+	env := getWorkflowEnvironment()
+
+	grpcClient := getGrpcCallbackClient(t)
+
+	application.TemporalClient.On("SignalWithStartWorkflow", mock.Anything, mock.Anything, workflows.SubmitPostResourcesFinishedProcessingSignalChannel, mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+		Run(
+			func(args mock.Arguments) {
+				env.SignalWorkflow(workflows.SubmitPostResourcesFinishedProcessingSignalChannel, args[3])
+			},
+		).
+		Return(nil, nil).
+		Twice()
+
+	// signal workflow that resources were processed
+	application.TemporalClient.On("SignalWorkflow", mock.Anything, mock.Anything, "", workflows.SubmitPostPixelatedResourcesSignalChannel, true).
+		Run(
+			func(args mock.Arguments) {
+				env.SignalWorkflow(workflows.SubmitPostPixelatedResourcesSignalChannel, args[4])
+			},
+		).
+		Return(nil).
+		Once()
+
+	env.OnRequestCancelExternalWorkflow(mock.Anything, mock.Anything, mock.Anything).
+		Run(
+			func(args mock.Arguments) {
+
+			},
+		).
+		Return(nil).
+		Once()
+
+	application.TemporalClient.On("SignalWithStartWorkflow", mock.Anything, mock.Anything, workflows.SubmitPostSignalChannel, mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+		Run(
+			func(args mock.Arguments) {
+				env.RegisterDelayedCallback(func() {
+
+					env.SignalWorkflow(workflows.SubmitPostSignalChannel, args[3])
+
+					for v, id := range resourceIds {
+						if v == 2 {
+							break
+						}
+
+						_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
+							Id:          id,
+							ItemId:      newPostReference,
+							Type:        proto.ResourceType_IMAGE,
+							Processed:   true,
+							ProcessedId: uuid.New().String(),
+							MimeTypes:   []string{"image/png"},
+							Private:     true,
+							Width:       100,
+							Height:      100,
+							Token:       "POST",
+						}}})
+						require.NoError(t, err, "no error updating resources")
+					}
+
+					env.RegisterDelayedCallback(func() {
+						pst := getPostFromAdapter(t, postId)
+						_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{
+							{
+								Id:          pst.Content()[1].ResourceHidden().ID(),
+								ItemId:      postId,
+								Processed:   true,
+								Type:        proto.ResourceType_IMAGE,
+								ProcessedId: uuid.New().String(),
+								Private:     false,
+								Width:       100,
+								Height:      100,
+								Token:       "POST_PRIVATE_CONTENT",
+							},
+						}})
+
+						require.NoError(t, err, "no error updating resource")
+					}, time.Second*2)
+
+				}, time.Second)
+
+				workflowExecution.FindAndExecuteWorkflow(t, env)
+			},
+		).
+		Return(nil, nil).
+		Once()
 
 	// finally, submit the post for review
 	var submitPost SubmitPost
@@ -415,50 +477,6 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	})
 
 	require.NoError(t, err)
-
-	postId := submitPost.SubmitPost.Post.Reference
-
-	env := getWorkflowEnvironment()
-
-	// signal workflow that resources were processed
-	application.TemporalClient.On("SignalWorkflow", mock.Anything, mock.Anything, "", workflows.SubmitPostSignalChannel, true).
-		Run(
-			func(args mock.Arguments) {
-				env.SignalWorkflow(workflows.SubmitPostSignalChannel, true)
-			},
-		).
-		Return(nil).
-		Once()
-
-	// update callback
-	env.RegisterDelayedCallback(func() {
-		pst := getPostFromAdapter(t, postId)
-		_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{
-			{
-				Id:          pst.Content()[1].ResourceHidden().ID(),
-				ItemId:      submitPost.SubmitPost.Post.Reference,
-				Processed:   true,
-				Type:        proto.ResourceType_IMAGE,
-				ProcessedId: uuid.New().String(),
-				Private:     false,
-				Width:       100,
-				Height:      100,
-				Token:       "POST_PRIVATE_CONTENT",
-			},
-		}})
-		require.NoError(t, err, "no error updating resource")
-	}, time.Millisecond)
-
-	env.OnRequestCancelExternalWorkflow(mock.Anything, mock.Anything, mock.Anything).
-		Run(
-			func(args mock.Arguments) {
-
-			},
-		).
-		Return(nil).
-		Once()
-
-	workflowExecution.FindAndExecuteWorkflow(t, env)
 
 	// refresh ES index or we wont see it
 	refreshPostESIndex(t)

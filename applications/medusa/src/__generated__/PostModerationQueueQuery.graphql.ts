@@ -1,6 +1,11 @@
 /**
+<<<<<<< HEAD
  * @generated SignedSource<<998f5579e2c6e8fb1def40bc447d5608>>
  * @relayHash db381867f4c427d3ed6abbe5318c6956
+=======
+ * @generated SignedSource<<4a645c07f1eb633e65db01da6c5fc79d>>
+ * @relayHash b81877aa19f81d8b6f6ee2b5a051f6ab
+>>>>>>> master
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +14,11 @@
 /* eslint-disable */
 // @ts-nocheck
 
+<<<<<<< HEAD
 // @relayRequestID db381867f4c427d3ed6abbe5318c6956
+=======
+// @relayRequestID b81877aa19f81d8b6f6ee2b5a051f6ab
+>>>>>>> master
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -336,6 +345,13 @@ return {
                                 "name": "resource",
                                 "plural": false,
                                 "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "processed",
+                                    "storageKey": null
+                                  },
                                   (v9/*: any*/),
                                   (v1/*: any*/),
                                   (v4/*: any*/),
@@ -531,7 +547,11 @@ return {
     ]
   },
   "params": {
+<<<<<<< HEAD
     "id": "db381867f4c427d3ed6abbe5318c6956",
+=======
+    "id": "b81877aa19f81d8b6f6ee2b5a051f6ab",
+>>>>>>> master
     "metadata": {},
     "name": "PostModerationQueueQuery",
     "operationKind": "query",

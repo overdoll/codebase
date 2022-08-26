@@ -14,7 +14,7 @@
     <mj-group width="50%" vertical-align="middle">
         <mj-column vertical-align="middle">
             <mj-navbar base-url="https://overdoll.com" ico-color="#ffffff">
-                <mj-navbar-link href="/home" color="#ffffff">Home</mj-navbar-link>
+                <mj-navbar-link href="/" color="#ffffff">Home</mj-navbar-link>
                 <mj-navbar-link href="/clubs/discover" color="#ffffff">Discover Clubs</mj-navbar-link>
             </mj-navbar>
         </mj-column>

@@ -64,6 +64,12 @@ func (m *MockWorkflow) getArgumentsForWorkflowCall() ([]interface{}, error) {
 				}
 			}
 		}
+
+		if c.Method == "SignalWithStartWorkflow" {
+			if funcName == GetFunctionName(c.Arguments[5]) {
+				return c.Arguments[6:], nil
+			}
+		}
 	}
 
 	return nil, fmt.Errorf("function call: %s not called during execution. double check your function name / test", funcName)

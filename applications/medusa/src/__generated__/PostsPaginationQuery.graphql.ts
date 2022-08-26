@@ -1,6 +1,11 @@
 /**
+<<<<<<< HEAD
  * @generated SignedSource<<72d6fc53516eff7ff522dc75fc441661>>
  * @relayHash 2cdea060fd985630213f5c5834c7d591
+=======
+ * @generated SignedSource<<e0e349efb95a0565f4e42bf1111742f3>>
+ * @relayHash 88d0fed9d69b40fd7226e10cbe93ad75
+>>>>>>> master
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +14,11 @@
 /* eslint-disable */
 // @ts-nocheck
 
+<<<<<<< HEAD
 // @relayRequestID 2cdea060fd985630213f5c5834c7d591
+=======
+// @relayRequestID 88d0fed9d69b40fd7226e10cbe93ad75
+>>>>>>> master
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -367,6 +376,13 @@ return {
                                     "name": "resource",
                                     "plural": false,
                                     "selections": [
+                                      {
+                                        "alias": null,
+                                        "args": null,
+                                        "kind": "ScalarField",
+                                        "name": "processed",
+                                        "storageKey": null
+                                      },
                                       (v11/*: any*/),
                                       (v4/*: any*/),
                                       (v6/*: any*/),
@@ -523,7 +539,11 @@ return {
     ]
   },
   "params": {
+<<<<<<< HEAD
     "id": "2cdea060fd985630213f5c5834c7d591",
+=======
+    "id": "88d0fed9d69b40fd7226e10cbe93ad75",
+>>>>>>> master
     "metadata": {},
     "name": "PostsPaginationQuery",
     "operationKind": "query",

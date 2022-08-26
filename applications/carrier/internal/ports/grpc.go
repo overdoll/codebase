@@ -20,6 +20,19 @@ func NewGrpcServer(application *app.Application) *Server {
 	}
 }
 
+func (s Server) PostFailedProcessing(ctx context.Context, request *carrier.PostFailedProcessingRequest) (*emptypb.Empty, error) {
+
+	if err := s.app.Commands.PostFailedProcessing.Handle(ctx,
+		command.PostFailedProcessing{
+			PostId: request.Post.Id,
+		},
+	); err != nil {
+		return nil, err
+	}
+
+	return &empty.Empty{}, nil
+}
+
 func (s Server) ModeratorPostInQueue(ctx context.Context, request *carrier.ModeratorPostInQueueRequest) (*emptypb.Empty, error) {
 	if err := s.app.Commands.ModeratorPostInQueue.Handle(ctx,
 		command.ModeratorPostInQueue{

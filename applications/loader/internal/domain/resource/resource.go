@@ -268,6 +268,7 @@ func (r *Resource) ApplyFilters(file *os.File, config *Config, filters *ImageFil
 }
 
 func createPreviewFromFile(r io.Reader) (string, error) {
+
 	img, err := jpeg.Decode(r)
 
 	if err != nil {
@@ -276,10 +277,22 @@ func createPreviewFromFile(r io.Reader) (string, error) {
 
 	var cols []prominentcolor.ColorItem
 
-	cols, err = prominentcolor.KmeansWithAll(prominentcolor.DefaultK, img, prominentcolor.ArgumentDefault, prominentcolor.DefaultSize, []prominentcolor.ColorBackgroundMask{})
+	cols, err = prominentcolor.KmeansWithArgs(prominentcolor.ArgumentDefault, img)
 
 	if err != nil {
-		return "", errors.Wrap(err, "failed to generate preview from file")
+
+		if err.Error() == "Failed, no non-alpha pixels found (either fully transparent image, or the ColorBackgroundMask removed all pixels)" {
+			err = nil
+			cols, err = prominentcolor.KmeansWithAll(prominentcolor.DefaultK, img, prominentcolor.ArgumentDefault, prominentcolor.DefaultSize, []prominentcolor.ColorBackgroundMask{})
+
+			if err != nil {
+				return "", errors.Wrap(err, "failed to generate preview from file")
+			}
+		}
+
+		if err != nil {
+			return "", err
+		}
 	}
 
 	col := cols[0]
@@ -302,7 +315,7 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 	// map_metadata removes all metadata
 	// sn removes subtitles
 	// map 0:v:0 selects only the first video track
-	encodingArgs := ffmpeg_go.KwArgs{"c:v": "libx264", "crf": "23", "preset": "slow", "map_metadata": "-1", "sn": "", "map": []string{"0:v:0"}, "threads:v": "1"}
+	encodingArgs := ffmpeg_go.KwArgs{"c:v": "libx264", "crf": "23", "preset": "slow", "map_metadata": "-1", "sn": "", "map": []string{"0:v:0"}, "threads:v": "1", "movflags": "+faststart"}
 
 	newVideoFileName := fileName + ".mp4"
 
@@ -643,11 +656,6 @@ func (r *Resource) ProcessResource(file *os.File, config *Config) ([]*Move, erro
 	_, _ = file.Seek(0, io.SeekStart)
 
 	fileName := uuid.New().String()
-
-	// in case we are re-processing, keep the same processed ID && override old files
-	if r.processedId != "" {
-		fileName = r.processedId
-	}
 
 	foundImage := false
 	foundVideo := false

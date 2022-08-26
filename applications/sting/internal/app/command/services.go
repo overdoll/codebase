@@ -17,4 +17,5 @@ type LoaderService interface {
 	CopyResourcesAndApplyPixelateFilter(ctx context.Context, itemId string, resourceIds []string, pixelate int, private bool, token string) ([]*post.NewResource, error)
 	CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string, private bool, token string, onlyImages bool, width uint64, height uint64) ([]*resource.Resource, error)
 	DeleteResources(ctx context.Context, itemId string, resourceIds []string) error
+	ReprocessResources(ctx context.Context, itemId string, resourceIds []string, width uint64, height uint64) error
 }

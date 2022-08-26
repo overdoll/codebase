@@ -1,6 +1,11 @@
 /**
+<<<<<<< HEAD
  * @generated SignedSource<<bfa699b25c7b7f8cc779eadf261a08c1>>
  * @relayHash e1194205570a462be10f83deb6d8ad53
+=======
+ * @generated SignedSource<<f691da488427a44d5a748111aa1a8c73>>
+ * @relayHash 4626f2668ca82c52acc2d05e42223adf
+>>>>>>> master
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +18,7 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "%future added value";
+export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "SUBMITTED" | "%future added value";
 export type UploadRewindSingleSelectorQuery$variables = {
   slug: string;
   state?: PostState | null;

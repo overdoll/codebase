@@ -28,6 +28,8 @@ service Carrier {
   rpc ClubSuspended(ClubSuspendedRequest) returns (google.protobuf.Empty) {}
 
   rpc ModeratorPostInQueue(ModeratorPostInQueueRequest) returns (google.protobuf.Empty) {}
+
+  rpc PostFailedProcessing(PostFailedProcessingRequest) returns (google.protobuf.Empty) {}
 }
 
 message ClubSuspendedRequest {
@@ -76,6 +78,10 @@ message Club {
   string id = 1;
 }
 
+message Post {
+  string id = 1;
+}
+
 message Subscription {
   string id = 1;
 }
@@ -113,6 +119,10 @@ message ClubSupporterSubscriptionDuplicateRequest {
   Account account = 1;
   Club club = 2;
   Payment payment = 3;
+}
+
+message PostFailedProcessingRequest {
+  Post post = 1;
 }
 
 message NewClubSupporterSubscriptionRequest {

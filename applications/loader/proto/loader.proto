@@ -85,10 +85,20 @@ message UpdateResourcePrivacyResponse {
   repeated overdoll.libraries.Resource resources = 1;
 }
 
+message ReprocessResourcesRequest {
+  repeated ResourceIdentifier resources = 1;
+  optional Config config = 2;
+}
+
+message ReprocessResourcesResponse {
+  repeated overdoll.libraries.Resource resources = 1;
+}
+
 service Loader {
   rpc CreateOrGetResourcesFromUploads(CreateOrGetResourcesFromUploadsRequest) returns (CreateOrGetResourcesFromUploadsResponse);
   rpc GetResources(GetResourcesRequest) returns (GetResourcesResponse);
   rpc DeleteResources(DeleteResourcesRequest) returns (DeleteResourcesResponse);
   rpc CopyResourcesAndApplyFilter(CopyResourcesAndApplyFilterRequest) returns (CopyResourcesAndApplyFilterResponse);
   rpc UpdateResourcePrivacy(UpdateResourcePrivacyRequest) returns (UpdateResourcePrivacyResponse);
+  rpc ReprocessResources(ReprocessResourcesRequest) returns (ReprocessResourcesResponse);
 }

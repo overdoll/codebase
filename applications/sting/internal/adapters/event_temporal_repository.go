@@ -24,8 +24,35 @@ func NewEventTemporalRepository(client client.Client) EventTemporalRepository {
 
 func (r EventTemporalRepository) SendCompletedPixelatedResources(ctx context.Context, post *post.Post) error {
 
-	if err := r.client.SignalWorkflow(ctx, "sting.SubmitPost_"+post.ID(), "", workflows.SubmitPostSignalChannel, true); err != nil {
+	if err := r.client.SignalWorkflow(ctx, "sting.SubmitPost_"+post.ID(), "", workflows.SubmitPostPixelatedResourcesSignalChannel, true); err != nil {
 
+		if strings.Contains(err.Error(), "workflow execution already completed") {
+			return nil
+		}
+
+		return errors.Wrap(err, "failed to signal submit post workflow")
+	}
+
+	return nil
+}
+
+func (r EventTemporalRepository) SendPostCompletedProcessing(ctx context.Context, post *post.Post, resourceId string, failed bool) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue:             viper.GetString("temporal.queue"),
+		ID:                    "sting.SubmitPost_" + post.ID(),
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
+	}
+
+	_, err := r.client.SignalWithStartWorkflow(ctx, "sting.SubmitPost_"+post.ID(), workflows.SubmitPostResourcesFinishedProcessingSignalChannel, &workflows.SubmitPostResourceFinished{
+		ResourceId: resourceId,
+		Failed:     failed,
+	}, options, workflows.SubmitPost, workflows.SubmitPostInput{
+		PostId:   post.ID(),
+		PostDate: nil,
+	})
+
+	if err != nil {
 		if strings.Contains(err.Error(), "workflow execution already completed") {
 			return nil
 		}
@@ -313,9 +340,9 @@ func (r EventTemporalRepository) SubmitPost(ctx context.Context, requester *prin
 		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
 	}
 
-	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.SubmitPost, workflows.SubmitPostInput{
+	_, err := r.client.SignalWithStartWorkflow(ctx, "sting.SubmitPost_"+pst.ID(), workflows.SubmitPostSignalChannel, submitTime, options, workflows.SubmitPost, workflows.SubmitPostInput{
 		PostId:   pst.ID(),
-		PostDate: submitTime,
+		PostDate: &submitTime,
 	})
 
 	if err != nil {

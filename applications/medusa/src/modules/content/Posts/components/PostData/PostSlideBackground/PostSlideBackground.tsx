@@ -11,7 +11,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment PostSlideBackgroundFragment on PostContent {
-    resource {
+    resource @required(action: THROW) {
       preview
       type
       ...VideoBackgroundFragment

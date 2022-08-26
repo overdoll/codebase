@@ -1,5 +1,9 @@
 /**
+<<<<<<< HEAD
  * @generated SignedSource<<1906b45ea36399229a7773394af80c80>>
+=======
+ * @generated SignedSource<<a16a0eafefaa8d31c3f8ec5d2394db05>>
+>>>>>>> master
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -31,6 +35,7 @@ const node: ReaderFragment = {
   "name": "PostSlideBackgroundFragment",
   "selections": [
     {
+<<<<<<< HEAD
       "alias": null,
       "args": null,
       "concreteType": "Resource",
@@ -59,12 +64,64 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
+=======
+      "kind": "RequiredField",
+      "field": {
+        "alias": null,
+        "args": null,
+        "concreteType": "Resource",
+        "kind": "LinkedField",
+        "name": "resource",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "preview",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "type",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ResourceUrl",
+            "kind": "LinkedField",
+            "name": "videoThumbnail",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "url",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      },
+      "action": "THROW",
+      "path": "resource"
+>>>>>>> master
     }
   ],
   "type": "PostContent",
   "abstractKey": null
 };
 
+<<<<<<< HEAD
 (node as any).hash = "c894b8eb72c2bc2f87d2fdba76835904";
+=======
+(node as any).hash = "399957d9093960740f66302b3485e6ad";
+>>>>>>> master
 
 export default node;

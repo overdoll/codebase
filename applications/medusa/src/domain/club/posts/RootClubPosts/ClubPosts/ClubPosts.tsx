@@ -11,6 +11,7 @@ import RejectedPost from './RejectedPost/RejectedPost'
 import ArchivedPost from './ArchivedPost/ArchivedPost'
 import RemovedPost from './RemovedPost/RemovedPost'
 import ClubInformationBanner from '../../../../../common/components/ClubInformationBanner/ClubInformationBanner'
+import SubmittedPost from './SubmittedPost/SubmittedPost'
 
 interface Props {
   query: PreloadedQuery<ClubPostsQuery>
@@ -50,6 +51,7 @@ const Fragment = graphql`
           ...RejectedPostFragment
           ...ArchivedPostFragment
           ...RemovedPostFragment
+          ...SubmittedPostFragment
         }
       }
     }
@@ -113,6 +115,10 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
               case 'REMOVED':
                 return (
                   <RemovedPost connectionId={data.posts.__id} key={index} query={item.node} />
+                )
+              case 'SUBMITTED':
+                return (
+                  <SubmittedPost key={index} query={item.node} />
                 )
               default:
                 return (

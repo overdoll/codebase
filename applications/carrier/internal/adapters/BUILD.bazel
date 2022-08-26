@@ -13,6 +13,7 @@ go_library(
         "//applications/carrier/internal/domain/club",
         "//applications/carrier/internal/domain/identifier",
         "//applications/carrier/internal/domain/mailing",
+        "//applications/carrier/internal/domain/post",
         "//applications/eva/proto:v1_go_proto",
         "//applications/sting/proto:v1_go_proto",
         "//libraries/errors",

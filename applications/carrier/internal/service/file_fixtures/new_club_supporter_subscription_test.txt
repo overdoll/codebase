@@ -2,7 +2,7 @@
 overdoll
 --------
 
-Home ( https://overdoll.com/home ) Discover Clubs ( https://overdoll.com/clubs/discover )
+Home ( https://overdoll.com/ ) Discover Clubs ( https://overdoll.com/clubs/discover )
 
 ----------------
 New Subscription

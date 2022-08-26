@@ -4493,6 +4493,7 @@ enum PostState {
   REJECTED
   REMOVED
   REVIEW
+  SUBMITTED
 }
 
 """Type describing a price."""

@@ -198,6 +198,16 @@ func (p *Post) update() {
 	p.updatedAt = time.Now()
 }
 
+func (p *Post) MakePostBackToDraft() error {
+
+	// reset post back to draft and reset posted_at date
+	p.postedAt = nil
+	p.state = Draft
+	p.update()
+
+	return nil
+}
+
 func (p *Post) MakePublish() error {
 
 	p.state = Published
@@ -252,6 +262,10 @@ func (p *Post) IsPublished() bool {
 	return p.state == Published
 }
 
+func (p *Post) IsSubmitted() bool {
+	return p.state == Submitted
+}
+
 func (p *Post) IsRemoved() bool {
 	return p.state == Removed
 }
@@ -281,7 +295,7 @@ func (p *Post) MakeArchived() error {
 
 func (p *Post) UpdatePostPostedDate(date time.Time) error {
 	p.postedAt = &date
-	p.state = Submitting
+	p.state = Submitted
 	p.update()
 	return nil
 }
@@ -324,12 +338,6 @@ func (p *Post) SubmitPostRequest(clb *club.Club, requester *principal.Principal)
 			if cnt.isSupporterOnly {
 				return domainerror.NewValidation("cannot submit post with supporter only content when it is disabled")
 			}
-		}
-	}
-
-	for _, cnt := range p.content {
-		if !cnt.resource.IsProcessed() {
-			return domainerror.NewValidation("all resources must be processed before submitting")
 		}
 	}
 

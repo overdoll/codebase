@@ -26,6 +26,7 @@ type Commands struct {
 	ClubOverChargebackThreshold               command.ClubOverChargebackThresholdHandler
 	ClubSupporterSubscriptionDuplicate        command.ClubSupporterSubscriptionDuplicateHandler
 	ModeratorPostInQueue                      command.ModeratorPostInQueueHandler
+	PostFailedProcessing                      command.PostFailedProcessingHandler
 }
 
 type Queries struct{}

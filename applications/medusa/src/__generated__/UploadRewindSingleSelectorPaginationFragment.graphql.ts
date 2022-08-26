@@ -1,6 +1,11 @@
 /**
+<<<<<<< HEAD
  * @generated SignedSource<<feccadb2e3361e33ebcdd5bc9d8f2486>>
  * @relayHash 0486fdc1f9ef0d3189639ddad054771c
+=======
+ * @generated SignedSource<<ecbe39030cfa6e0f20415026bea6a822>>
+ * @relayHash b0d3e390d5c418a88647e12edd0a0332
+>>>>>>> master
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +18,7 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "%future added value";
+export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "SUBMITTED" | "%future added value";
 export type UploadRewindSingleSelectorPaginationFragment$variables = {
   after?: string | null;
   first?: number | null;

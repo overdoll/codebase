@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/json"
-	"fmt"
 	"go.uber.org/zap"
 	"hash/fnv"
 	"math"
@@ -524,8 +523,6 @@ func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.
 	var posts []*post.Post
 
 	for _, hit := range response.Hits.Hits {
-
-		fmt.Println(*hit.Score)
 
 		createdPost, err := r.unmarshalPostDocument(ctx, hit.Source, hit.Sort)
 
