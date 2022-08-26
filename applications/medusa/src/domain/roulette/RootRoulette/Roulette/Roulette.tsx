@@ -3,7 +3,7 @@ import type { RouletteQuery } from '@//:artifacts/RouletteQuery.graphql'
 import { graphql } from 'react-relay'
 import ShowRouletteSession from './ShowRouletteSession/ShowRouletteSession'
 import CreateRouletteSession from './CreateRouletteSession/CreateRouletteSession'
-import { Grid, GridItem } from '@chakra-ui/react'
+import { GridItem } from '@chakra-ui/react'
 import { useQueryParam } from 'use-query-params'
 
 interface Props {
@@ -34,25 +34,17 @@ export default function Roulette (props: Props): JSX.Element {
 
   const [gameSessionId] = useQueryParam<string | null | undefined>('gameSessionId')
 
-  const RouletteSession = (): JSX.Element => {
-    if (gameSessionId != null && queryData?.gameSessionStatus == null) {
-      return <GridItem>loading session</GridItem>
-    }
-
-    if (queryData.gameSessionStatus != null) {
-      if (queryData.gameSessionStatus.__typename === 'RouletteStatus') {
-        return <ShowRouletteSession query={queryData.gameSessionStatus} viewerQuery={queryData.viewer} />
-      }
-
-      return <></>
-    }
-
-    return <CreateRouletteSession />
+  if (gameSessionId != null && queryData?.gameSessionStatus == null) {
+    return <GridItem>loading session</GridItem>
   }
 
-  return (
-    <Grid templateRows='30px 1fr 12vh' gap={1} templateColumns='100%' h='92vh' w='100%'>
-      <RouletteSession />
-    </Grid>
-  )
+  if (queryData.gameSessionStatus != null) {
+    if (queryData.gameSessionStatus.__typename === 'RouletteStatus') {
+      return <ShowRouletteSession query={queryData.gameSessionStatus} viewerQuery={queryData.viewer} />
+    }
+
+    return <></>
+  }
+
+  return <CreateRouletteSession />
 }

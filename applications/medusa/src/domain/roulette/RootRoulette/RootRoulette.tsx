@@ -7,10 +7,10 @@ import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/S
 import { PageProps } from '@//:types/app'
 import Roulette from './Roulette/Roulette'
 import PageWrapperGame from './Roulette/PageWrapperGame/PageWrapperGame'
-import { SequenceResolver } from '@//:modules/content/HookedComponents/Sequence/types'
-import { SequenceProvider, useSequence, ValueResolver } from '@//:modules/content/HookedComponents/Sequence'
 import { useQueryParam } from 'use-query-params'
-import { useUpdateEffect } from '@chakra-ui/react'
+import { useUpdateEffect, Grid } from '@chakra-ui/react'
+import { SequenceProvider, useSequence, ValueResolver } from '@//:modules/content/HookedComponents/Sequence'
+import { SequenceResolver } from '@//:modules/content/HookedComponents/Sequence/types'
 
 interface Props {
   queryRefs: {
@@ -19,33 +19,21 @@ interface Props {
 }
 
 interface SequenceProps {
-  gameSessionId: string | null
-  diceOne: number | null
-  diceTwo: number | null
-  diceThree: number | null
-  post: any | null
-  isClosed: boolean
   tutorialCompleted: boolean
+  isSpinning: boolean
+  isPending: boolean
 }
 
 const defaultValue: SequenceProps = {
-  gameSessionId: null,
-  diceOne: null,
-  diceTwo: null,
-  diceThree: null,
-  post: null,
-  isClosed: false,
-  tutorialCompleted: false
+  tutorialCompleted: false,
+  isSpinning: false,
+  isPending: false
 }
 
 const resolver: SequenceResolver<SequenceProps> = {
-  gameSessionId: ValueResolver(),
-  diceOne: ValueResolver(),
-  diceTwo: ValueResolver(),
-  diceThree: ValueResolver(),
-  post: ValueResolver(),
-  isClosed: ValueResolver(),
-  tutorialCompleted: ValueResolver()
+  tutorialCompleted: ValueResolver(),
+  isSpinning: ValueResolver(),
+  isPending: ValueResolver()
 }
 
 const RootRoulette: PageProps<Props> = (props: Props): JSX.Element => {
@@ -57,16 +45,16 @@ const RootRoulette: PageProps<Props> = (props: Props): JSX.Element => {
     RouletteQuery,
     rouletteQuery)
 
+  const methods = useSequence<SequenceProps>({
+    defaultValue: defaultValue,
+    resolver: resolver
+  })
+
   const loadRoulette = (): void => {
     loadQuery({
       reference: gameSessionId ?? ''
     })
   }
-
-  const methods = useSequence<SequenceProps>({
-    defaultValue: defaultValue,
-    resolver: resolver
-  })
 
   useUpdateEffect(() => {
     loadRoulette()
@@ -78,7 +66,9 @@ const RootRoulette: PageProps<Props> = (props: Props): JSX.Element => {
         <SequenceProvider {...methods}>
           <QueryErrorBoundary loadQuery={loadRoulette}>
             <Suspense fallback={<SkeletonPost />}>
-              <Roulette query={queryRef as PreloadedQuery<RouletteQueryType>} />
+              <Grid templateRows='30px 1fr 12vh' gap={1} templateColumns='100%' h='92vh' w='100%'>
+                <Roulette query={queryRef as PreloadedQuery<RouletteQueryType>} />
+              </Grid>
             </Suspense>
           </QueryErrorBoundary>
         </SequenceProvider>

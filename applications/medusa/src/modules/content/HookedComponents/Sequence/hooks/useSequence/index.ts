@@ -1,4 +1,4 @@
-import { Reducer, useReducer } from 'react'
+import { Reducer, useCallback, useReducer } from 'react'
 import { SequenceAction, SequenceRecords, SequenceResetAction, UseSequenceProps, UseSequenceReturn } from '../../types'
 
 export default function useSequence<TState extends SequenceRecords> (props: UseSequenceProps<TState>): UseSequenceReturn<TState> {
@@ -34,8 +34,10 @@ export default function useSequence<TState extends SequenceRecords> (props: UseS
     return resolvedReducers(sequenceState, sequenceAction)
   }
 
+  const memoFunction = useCallback((sequenceState, sequenceAction) => rootReducer(sequenceState, sequenceAction), [])
+
   const [state, dispatch] = useReducer<Reducer<TState, SequenceAction<TState> | SequenceResetAction<TState>>>(
-    rootReducer,
+    memoFunction,
     defaultValue,
     undefined
   )

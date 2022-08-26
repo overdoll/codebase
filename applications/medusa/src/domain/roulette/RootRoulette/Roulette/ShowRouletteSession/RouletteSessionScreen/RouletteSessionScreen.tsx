@@ -43,6 +43,8 @@ export default function RouletteSessionScreen (props: Props): JSX.Element {
 
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
+  // TODO eliminate unnecessary re-renders that sequence values cause, such as on the post
+
   if (data.gameState == null) {
     return <RouletteScreenInstructions />
   }

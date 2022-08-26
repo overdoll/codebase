@@ -22,6 +22,8 @@ export default function DiceTable (props: Props): JSX.Element {
       justify='center'
       position='relative'
       w='100%'
+      bg='gray.800'
+      borderRadius='xl'
     >
       <Flex
         top={0}
@@ -36,10 +38,9 @@ export default function DiceTable (props: Props): JSX.Element {
       </Flex>
       <Flex
         h='100%'
-        borderRadius='xl'
         align='center'
         justify='center'
-        bg='gray.800'
+        position='relative'
         w='100%'
       >
         {children}

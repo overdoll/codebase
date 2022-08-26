@@ -1,11 +1,12 @@
-import { Box, chakra, IconButtonProps } from '@chakra-ui/react'
+import { IconButtonProps } from '@chakra-ui/react'
 import { ControlFastForward, ControlPlayButton } from '@//:assets/icons'
 import { Icon } from '@//:modules/content/PageLayout'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import { isValidMotionProp, motion, useAnimation } from 'framer-motion'
+import { motion, useAnimation } from 'framer-motion'
 import IconButton from '@//:modules/form/IconButton/IconButton'
 import { useEffect } from 'react'
+import BackgroundGlow from '../../../../BackgroundGlow/BackgroundGlow'
 
 interface Props extends Omit<IconButtonProps, 'aria-label'> {
   canFastForward?: boolean
@@ -22,10 +23,6 @@ export default function SpinRouletteButton (props: Props): JSX.Element {
   // TODO replay icon when game is finished
 
   const { i18n } = useLingui()
-
-  const MotionBox = chakra(motion.div, {
-    shouldForwardProp: (prop) => isValidMotionProp(prop) || prop === 'children'
-  })
 
   // TODO remove layout shift that happens when window is resized
 
@@ -60,19 +57,7 @@ export default function SpinRouletteButton (props: Props): JSX.Element {
     h: {
       base: 24,
       md: 36
-    },
-    isDisabled
-  }
-
-  const DEFAULT_GLOW_PROPS = {
-    top: 0,
-    right: 0,
-    left: 0,
-    w: '100%',
-    h: '100%',
-    position: 'absolute',
-    borderRadius: '5%',
-    pointerEvents: 'none'
+    }
   }
 
   useEffect(() => {
@@ -97,72 +82,27 @@ export default function SpinRouletteButton (props: Props): JSX.Element {
         repeatDelay: 3,
         bounce: 0.5
       }}
+      style={{
+        position: 'relative',
+        top: 0,
+        left: 0
+      }}
     >
-      <Box position='relative'>
-        {allowAnimation && (
-          <>
-            <MotionBox
-              {...DEFAULT_GLOW_PROPS}
-              // @ts-expect-error
-              transition={{
-                duration: 2,
-                repeat: Infinity
-              }}
-              animate={{
-                scale: [0.9, 1.05, 1, 0.9],
-                opacity: 1
-              }}
-              bgGradient='radial(circle,green.500 0,green.200 30%,green.200 50%,green.400 80%, transparent 100%)'
-              filter='blur(10px)'
-            />
-            <MotionBox
-              {...DEFAULT_GLOW_PROPS}
-              initial={{
-                rotate: 25
-              }}
-              // @ts-expect-error
-              transition={{
-                duration: 2,
-                repeat: Infinity
-              }}
-              animate={{
-                scale: [1.07, 0.9, 1, 1.07],
-                opacity: 1
-              }}
-              bgGradient='radial(circle,green.500 0,green.200 30%,green.200 50%,green.400 80%, transparent 100%)'
-              filter='blur(10px)'
-            />
-            <MotionBox
-              {...DEFAULT_GLOW_PROPS}
-              initial={{
-                rotate: 75
-              }}
-              // @ts-expect-error
-              transition={{
-                duration: 4,
-                repeat: Infinity
-              }}
-              animate={{
-                scale: [1.09, 0.9, 1, 1.09],
-                opacity: 1
-              }}
-              bgGradient='radial(circle,green.500 0,green.200 30%,green.200 50%,green.400 80%, transparent 100%)'
-              filter='blur(12px)'
-            />
-          </>
-        )}
-        <IconButton
-          as={motion.button}
-          whileTap={{
-            scale: [1, 0.85],
-            transition: {
-              duration: 0.1
-            }
-          }}
-          {...DEFAULT_BUTTON_PROPS}
-          {...rest}
-        />
-      </Box>
+      {allowAnimation && (
+        <BackgroundGlow colorScheme='green' />
+      )}
+      <IconButton
+        as={motion.button}
+        whileTap={allowAnimation && {
+          scale: [1, 0.85],
+          transition: {
+            duration: 0.1
+          }
+        }}
+        {...DEFAULT_BUTTON_PROPS}
+        {...rest}
+        isDisabled={isDisabled}
+      />
     </motion.div>
   )
 }

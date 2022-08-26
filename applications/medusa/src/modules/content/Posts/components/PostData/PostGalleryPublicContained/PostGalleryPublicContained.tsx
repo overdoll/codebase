@@ -3,7 +3,7 @@ import { Flex, Grid, GridItem } from '@chakra-ui/react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { PostGalleryPublicContainedFragment$key } from '@//:artifacts/PostGalleryPublicContainedFragment.graphql'
 import {
-  PostGalleryPublicContainedViewerFragment$key
+  PostGalleryPublicContainedViewerFragment$key,
 } from '@//:artifacts/PostGalleryPublicContainedViewerFragment.graphql'
 import PostSupporterContent from '../PostSupporterContent/PostSupporterContent'
 import PostSlideIndex from '../../PostInteraction/PostSlideIndex/PostSlideIndex'

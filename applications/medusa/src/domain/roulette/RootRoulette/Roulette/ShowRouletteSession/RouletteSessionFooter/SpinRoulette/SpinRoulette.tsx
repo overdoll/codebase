@@ -83,7 +83,7 @@ export default function SpinRoulette (props: Props): JSX.Element {
     }
   })
 
-  const [spinRoulette, isSpinningRoulette] = useMutation<SpinRouletteMutation>(SpinMutation)
+  const [spinRoulette] = useMutation<SpinRouletteMutation>(SpinMutation)
   const [createGame, isCreatingGame] = useMutation<SpinRouletteCreateGameMutation>(RestartMutation)
 
   const [, setGameSessionId] = useQueryParam<string | null | undefined>('gameSessionId')
@@ -91,14 +91,28 @@ export default function SpinRoulette (props: Props): JSX.Element {
   const notify = useToast()
 
   const onSpin = (): void => {
+    dispatch({
+      type: 'isPending',
+      value: true,
+      transform: 'SET'
+    })
     spinRoulette({
       variables: {
         input: {
           gameSessionId: data.gameSession.id
         }
       },
-      onCompleted (rouletteData) {
-
+      onCompleted () {
+        dispatch({
+          type: 'isPending',
+          value: false,
+          transform: 'SET'
+        })
+        dispatch({
+          type: 'isSpinning',
+          value: true,
+          transform: 'SET'
+        })
       },
       updater: (store, payload) => {
         if (data.gameState == null) {
@@ -142,6 +156,15 @@ export default function SpinRoulette (props: Props): JSX.Element {
   }
 
   const onClick = (): void => {
+    // if spinning, you can skip it with the first button click
+    if (state.isSpinning === true) {
+      dispatch({
+        type: 'isSpinning',
+        value: false,
+        transform: 'SET'
+      })
+      return
+    }
     if (data.gameSession.isClosed) {
       onCreateGame()
       return
@@ -177,8 +200,8 @@ export default function SpinRoulette (props: Props): JSX.Element {
         </Suspense>
       )}
       <SpinRouletteButton
-        canFastForward
-        isDisabled={isCreatingGame || isSpinningRoulette}
+        canFastForward={state.isSpinning === true && state.isPending === false}
+        isDisabled={state.isPending === true || isCreatingGame}
         onClick={onClick}
       />
     </>
