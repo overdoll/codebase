@@ -91,7 +91,6 @@ func (r *RouletteGameState) GameSessionSpinId() int {
 func (r *RouletteGameState) SelectedPostId() string {
 	return r.selectedPostId
 }
-
 func (r *RouletteGameState) DoublesCount() int {
 	return r.doublesCount
 }
