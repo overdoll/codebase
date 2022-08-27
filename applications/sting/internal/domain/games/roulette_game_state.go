@@ -75,7 +75,7 @@ func SpinRoulette(previousRouletteGameState *RouletteGameState, passport *passpo
 }
 
 func (r *RouletteGameState) IsDouble() bool {
-	return (r.diceOne == r.diceTwo && r.diceTwo != r.diceThree && r.diceThree == r.diceOne) ||
+	return (r.diceOne == r.diceTwo && r.diceTwo != r.diceThree && r.diceThree != r.diceOne) ||
 		(r.diceTwo == r.diceThree && r.diceOne != r.diceTwo && r.diceThree != r.diceOne) ||
 		(r.diceThree == r.diceOne && r.diceOne != r.diceTwo && r.diceTwo != r.diceThree)
 }
