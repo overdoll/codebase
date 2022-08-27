@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8b3c8470bdbb3e7b4a889a7cb6e96779>>
- * @relayHash ed66394cae9ecd4998c593feb0f7ba8f
+ * @generated SignedSource<<eaf5a4a0676ae75488647add893efb47>>
+ * @relayHash a70aa7662b586cc5c17c0ea49363db4a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ed66394cae9ecd4998c593feb0f7ba8f
+// @relayRequestID a70aa7662b586cc5c17c0ea49363db4a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -36,7 +36,7 @@ var v0 = [
     "name": "after"
   },
   {
-    "defaultValue": 10,
+    "defaultValue": 5,
     "kind": "LocalArgument",
     "name": "first"
   },
@@ -493,7 +493,7 @@ return {
     ]
   },
   "params": {
-    "id": "ed66394cae9ecd4998c593feb0f7ba8f",
+    "id": "a70aa7662b586cc5c17c0ea49363db4a",
     "metadata": {},
     "name": "ClubPostsFeedPaginationQuery",
     "operationKind": "query",
@@ -502,6 +502,6 @@ return {
 };
 })();
 
-(node as any).hash = "d66e72112ee16c8bab72bb39d082f78e";
+(node as any).hash = "9bff140201e612e51cfb0b7e490e7616";
 
 export default node;

@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Flex } from '@chakra-ui/react'
+import { Flex, Heading } from '@chakra-ui/react'
 import { OverdollLogo } from '@//:assets/logos'
 import { Icon } from '@//:modules/content/PageLayout'
 
@@ -36,6 +36,16 @@ export default function DiceTable (props: Props): JSX.Element {
         overflow='hidden'
       >
         <Icon icon={OverdollLogo} fill='gray.600' w={250} h={250} />
+      </Flex>
+      <Flex
+        bottom={0}
+        right={1}
+        pointerEvents='none'
+        position='absolute'
+      >
+        <Heading fontSize='sm' color='gray.500'>
+          overdoll.com/roulette
+        </Heading>
       </Flex>
       <Flex
         h='100%'

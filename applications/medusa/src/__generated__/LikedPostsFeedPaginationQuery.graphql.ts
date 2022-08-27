@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6deff57f5dd2e4c5bd1bc837d0dbe72e>>
- * @relayHash dfa545f3e629ac9e83cf07e21cc69b86
+ * @generated SignedSource<<973bc4b3a62549d46fe7dccc29b45289>>
+ * @relayHash 20021edb4aede6168db9bff2b9516c68
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID dfa545f3e629ac9e83cf07e21cc69b86
+// @relayRequestID 20021edb4aede6168db9bff2b9516c68
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -36,7 +36,7 @@ var v0 = [
     "name": "after"
   },
   {
-    "defaultValue": 10,
+    "defaultValue": 5,
     "kind": "LocalArgument",
     "name": "first"
   },
@@ -493,7 +493,7 @@ return {
     ]
   },
   "params": {
-    "id": "dfa545f3e629ac9e83cf07e21cc69b86",
+    "id": "20021edb4aede6168db9bff2b9516c68",
     "metadata": {},
     "name": "LikedPostsFeedPaginationQuery",
     "operationKind": "query",
@@ -502,6 +502,6 @@ return {
 };
 })();
 
-(node as any).hash = "fd43d49261830b1ebc26977643a391b4";
+(node as any).hash = "5f630dfd2171504ad98157add0b6974d";
 
 export default node;

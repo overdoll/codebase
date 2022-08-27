@@ -16,7 +16,7 @@ interface Props {
 const Fragment = graphql`
   fragment ClubPostsFeedFragment on Account
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 10}
+    first: {type: Int, defaultValue: 5}
     after: {type: String}
   )
   @refetchable(queryName: "ClubPostsFeedPaginationQuery" ) {

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8416d3900b5b4698dcc71a9846e4296b>>
- * @relayHash 44d6db5682757e7dd056cc347a748a24
+ * @generated SignedSource<<87bed8fff63d54183c006a00ecda524b>>
+ * @relayHash b8a27c57acf9b299ddf2469779afac22
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 44d6db5682757e7dd056cc347a748a24
+// @relayRequestID b8a27c57acf9b299ddf2469779afac22
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -38,7 +38,7 @@ var v0 = {
   "name": "after"
 },
 v1 = {
-  "defaultValue": 9,
+  "defaultValue": 5,
   "kind": "LocalArgument",
   "name": "first"
 },
@@ -534,7 +534,7 @@ return {
     ]
   },
   "params": {
-    "id": "44d6db5682757e7dd056cc347a748a24",
+    "id": "b8a27c57acf9b299ddf2469779afac22",
     "metadata": {},
     "name": "SearchCharacterPostsPaginationQuery",
     "operationKind": "query",
@@ -543,6 +543,6 @@ return {
 };
 })();
 
-(node as any).hash = "870d0fd2ba2594f564768ceb73bc21fd";
+(node as any).hash = "f06ec50253b086b204bc274eefba1e47";
 
 export default node;

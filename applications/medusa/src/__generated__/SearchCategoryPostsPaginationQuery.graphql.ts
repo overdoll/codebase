@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3e5fdf87d904a0b35a3a10fb0255fafa>>
- * @relayHash 8556fdf63b069cc119cb7f92ca27521b
+ * @generated SignedSource<<2b1f45fa8ea8e2f216bad66fa3bfcc7f>>
+ * @relayHash bbf823852d0df42648c8a80dd8508f2a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8556fdf63b069cc119cb7f92ca27521b
+// @relayRequestID bbf823852d0df42648c8a80dd8508f2a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -38,7 +38,7 @@ var v0 = {
   "name": "after"
 },
 v1 = {
-  "defaultValue": 9,
+  "defaultValue": 5,
   "kind": "LocalArgument",
   "name": "first"
 },
@@ -534,7 +534,7 @@ return {
     ]
   },
   "params": {
-    "id": "8556fdf63b069cc119cb7f92ca27521b",
+    "id": "bbf823852d0df42648c8a80dd8508f2a",
     "metadata": {},
     "name": "SearchCategoryPostsPaginationQuery",
     "operationKind": "query",
@@ -543,6 +543,6 @@ return {
 };
 })();
 
-(node as any).hash = "b1d45992f7ced502532381b0fa79ea5e";
+(node as any).hash = "275dc5181ad07528b786dcd54627dad8";
 
 export default node;

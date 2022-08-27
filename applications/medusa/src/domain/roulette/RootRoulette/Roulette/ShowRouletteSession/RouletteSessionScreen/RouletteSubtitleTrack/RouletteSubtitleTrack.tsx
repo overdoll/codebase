@@ -3,7 +3,7 @@ import { RouletteSubtitleTrackFragment$key } from '@//:artifacts/RouletteSubtitl
 import { Flex, GridItem, Text } from '@chakra-ui/react'
 import { useLingui } from '@lingui/react'
 import { t } from '@lingui/macro'
-import { motion, useAnimation } from 'framer-motion'
+import { motion, useAnimationControls } from 'framer-motion'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import { useState } from 'react'
 import { useUpdateEffect } from 'usehooks-ts'
@@ -36,9 +36,10 @@ export default function RouletteSubtitleTrack (props: Props): JSX.Element {
     state
   } = useSequenceContext()
 
-  const trackControls = useAnimation()
+  const trackControls = useAnimationControls()
 
   const [subtitleTrack, setSubtitleTrack] = useState('...')
+  const [currentState, setCurrentState] = useState('pending')
 
   const PENDING_SUBTITLES = ['...']
 
@@ -137,6 +138,7 @@ export default function RouletteSubtitleTrack (props: Props): JSX.Element {
     void trackControls.start('play')
     const currentState = getCurrentState()
     setSubtitleTrack(getSubtitleTrack(currentState))
+    setCurrentState(currentState)
   }, [state.isSpinning, state.isPending])
 
   return (
@@ -155,8 +157,9 @@ export default function RouletteSubtitleTrack (props: Props): JSX.Element {
           <Text
             noOfLines={1}
             textAlign='center'
+            fontWeight={currentState === 'triples' ? 'semibold' : (currentState === 'doubles' ? 'semibold' : 'normal')}
             fontSize={subtitleTrack.length > 45 ? 'sm' : 'md'}
-            color='whiteAlpha.800'
+            color={currentState === 'triples' ? 'red.400' : (currentState === 'doubles' ? 'orange.300' : 'whiteAlpha.800')}
           >
             {subtitleTrack}
           </Text>

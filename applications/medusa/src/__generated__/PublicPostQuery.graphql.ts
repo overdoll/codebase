@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<cb75edae99d40988b14e442d60e21068>>
- * @relayHash 6ea8f084fa2c34e24805f2df70b72035
+ * @generated SignedSource<<743317989ec0f31b0e5766c15acfccc0>>
+ * @relayHash 9c1e62dbc03291f38ce97386c8611310
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6ea8f084fa2c34e24805f2df70b72035
+// @relayRequestID 9c1e62dbc03291f38ce97386c8611310
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -74,7 +74,7 @@ v5 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 10
+    "value": 5
   }
 ],
 v6 = {
@@ -536,7 +536,7 @@ return {
                 "storageKey": null
               }
             ],
-            "storageKey": "suggestedPosts(first:10)"
+            "storageKey": "suggestedPosts(first:5)"
           },
           {
             "alias": null,
@@ -784,7 +784,7 @@ return {
     ]
   },
   "params": {
-    "id": "6ea8f084fa2c34e24805f2df70b72035",
+    "id": "9c1e62dbc03291f38ce97386c8611310",
     "metadata": {},
     "name": "PublicPostQuery",
     "operationKind": "query",

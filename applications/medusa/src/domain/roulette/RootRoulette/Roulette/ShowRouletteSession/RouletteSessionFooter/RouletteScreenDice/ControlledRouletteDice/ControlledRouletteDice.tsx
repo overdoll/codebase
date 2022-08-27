@@ -1,8 +1,8 @@
 import RouletteDice from './RouletteDice/RouletteDice'
-import { motion } from 'framer-motion'
+import { AnimationControls, motion } from 'framer-motion'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import { useEffect } from 'react'
-import { AnimationControls } from 'framer-motion/types/animation/types'
+import { useUpdateEffect } from '@chakra-ui/react'
 
 interface Props {
   number: number | undefined
@@ -43,12 +43,12 @@ export default function ControlledRouletteDice (props: Props): JSX.Element {
     },
     {
       x: -3,
-      y: 17,
-      rotate: 9
+      y: 10,
+      rotate: 21
     },
     {
       x: 4,
-      y: -1,
+      y: -10,
       rotate: -33
     }
   ]
@@ -123,14 +123,18 @@ export default function ControlledRouletteDice (props: Props): JSX.Element {
     resetDice()
   }, [state.isSpinning])
 
+  useUpdateEffect(() => {
+    if (number == null) {
+      void controls.start('floor')
+    }
+  }, [number])
+
   return (
     <motion.div
       initial={number == null ? 'floor' : 'initial'}
       variants={diceVariants}
       animate={controls}
       style={{
-        marginLeft: 16,
-        marginRight: 16,
         zIndex: 5
       }}
     >

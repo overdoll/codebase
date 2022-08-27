@@ -1,8 +1,8 @@
 import { useFragment } from 'react-relay/hooks'
 import type { RouletteScreenDiceFragment$key } from '@//:artifacts/RouletteScreenDiceFragment.graphql'
 import { graphql } from 'react-relay'
-import { Flex } from '@chakra-ui/react'
-import { useAnimation } from 'framer-motion'
+import { HStack } from '@chakra-ui/react'
+import { useAnimationControls } from 'framer-motion'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import { useEffect, useState } from 'react'
 import ControlledRouletteDice from './ControlledRouletteDice/ControlledRouletteDice'
@@ -62,9 +62,9 @@ export default function RouletteScreenDice (props: Props): JSX.Element {
 
   const data = useFragment(Fragment, query)
 
-  const diceOneControls = useAnimation()
-  const diceTwoControls = useAnimation()
-  const diceThreeControls = useAnimation()
+  const diceOneControls = useAnimationControls()
+  const diceTwoControls = useAnimationControls()
+  const diceThreeControls = useAnimationControls()
   const [diceOneSpinning, setDiceOneSpinning] = useState(false)
   const [diceTwoSpinning, setDiceTwoSpinning] = useState(false)
   const [diceThreeSpinning, setDiceThreeSpinning] = useState(false)
@@ -207,7 +207,16 @@ export default function RouletteScreenDice (props: Props): JSX.Element {
   }, [state.isSpinning])
 
   return (
-    <Flex w='100%' h='100%' align='center' justify='center'>
+    <HStack
+      spacing={{
+        base: 8,
+        md: 16
+      }}
+      w='100%'
+      h='100%'
+      align='center'
+      justify='center'
+    >
       <ControlledRouletteDice
         showGlow={showDiceOneGlow}
         isSpinning={diceOneSpinning}
@@ -233,6 +242,6 @@ export default function RouletteScreenDice (props: Props): JSX.Element {
         variants={diceVariants}
         index={2}
       />
-    </Flex>
+    </HStack>
   )
 }

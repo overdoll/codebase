@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<54c793542cf495c37e47680b7e14cdc8>>
- * @relayHash d76c1490d6664849ffca2f57ee2918b9
+ * @generated SignedSource<<1b3bdc2f86a70af18f14e69153ce7d36>>
+ * @relayHash 972a609a79e3948f5d112aceec5e17ea
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d76c1490d6664849ffca2f57ee2918b9
+// @relayRequestID 972a609a79e3948f5d112aceec5e17ea
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -34,7 +34,7 @@ var v0 = [
     "name": "after"
   },
   {
-    "defaultValue": 9,
+    "defaultValue": 5,
     "kind": "LocalArgument",
     "name": "first"
   },
@@ -465,7 +465,7 @@ return {
     ]
   },
   "params": {
-    "id": "d76c1490d6664849ffca2f57ee2918b9",
+    "id": "972a609a79e3948f5d112aceec5e17ea",
     "metadata": {},
     "name": "BrowsePostsPaginationQuery",
     "operationKind": "query",
@@ -474,6 +474,6 @@ return {
 };
 })();
 
-(node as any).hash = "185ca48f9459034754e97f93a999f612";
+(node as any).hash = "6370cc1698d9955f78294b643aec4175";
 
 export default node;

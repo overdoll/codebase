@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<26c566ea38667a06facbe9d92abccd70>>
+ * @generated SignedSource<<13975cc1aea058191e4fbb6f41dc0283>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,7 @@ export type RouletteScreenShuffleFragment$data = {
     readonly diceTwo: number;
     readonly post: {
       readonly id: string;
-      readonly " $fragmentSpreads": FragmentRefs<"RouletteScreenBackgroundFragment" | "RouletteScreenPostFragment">;
+      readonly " $fragmentSpreads": FragmentRefs<"RouletteScreenBackgroundFragment" | "RouletteScreenPostDataFragment" | "RouletteScreenPostFragment">;
     };
     readonly " $fragmentSpreads": FragmentRefs<"RouletteScreenDiceFragment">;
   };
@@ -89,6 +89,11 @@ const node: ReaderFragment = {
                 "args": null,
                 "kind": "FragmentSpread",
                 "name": "RouletteScreenBackgroundFragment"
+              },
+              {
+                "args": null,
+                "kind": "FragmentSpread",
+                "name": "RouletteScreenPostDataFragment"
               }
             ],
             "storageKey": null
@@ -109,6 +114,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "43bdb7f1604666059812af28b4d9efb9";
+(node as any).hash = "8f2eaf00d159f23d2a9f2594a065d79f";
 
 export default node;

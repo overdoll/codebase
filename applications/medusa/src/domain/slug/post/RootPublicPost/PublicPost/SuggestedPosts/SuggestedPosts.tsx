@@ -17,7 +17,7 @@ interface Props {
 const Fragment = graphql`
   fragment SuggestedPostsFragment on Post
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 10}
+    first: {type: Int, defaultValue: 5}
     after: {type: String}
   )
   @refetchable(queryName: "SuggestedPostsPaginationQuery" ) {

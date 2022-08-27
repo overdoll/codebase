@@ -5,9 +5,10 @@ import { graphql } from 'react-relay'
 import RouletteScreenPost from '../RouletteScreenPost/RouletteScreenPost'
 import { Flex } from '@chakra-ui/react'
 import RouletteScreenBackground from '../RouletteScreenBackground/RouletteScreenBackground'
-import { motion, useAnimation } from 'framer-motion'
+import { motion, useAnimationControls } from 'framer-motion'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import { useEffect, useState } from 'react'
+import RouletteScreenPostData from '../../RouletteScreenPostData/RouletteScreenPostData'
 
 interface Props {
   query: RouletteScreenShuffleFragment$key
@@ -24,6 +25,7 @@ const Fragment = graphql`
         id
         ...RouletteScreenPostFragment
         ...RouletteScreenBackgroundFragment
+        ...RouletteScreenPostDataFragment
       }
       ...RouletteScreenDiceFragment
     }
@@ -50,7 +52,7 @@ export default function RouletteScreenShuffle (props: Props): JSX.Element {
     state
   } = useSequenceContext()
 
-  const shuffleControls = useAnimation()
+  const shuffleControls = useAnimationControls()
 
   const diceRolls = data.gameState != null ? [data.gameState.diceOne, data.gameState.diceThree, data.gameState.diceTwo] : [1, 2, 3]
 
@@ -110,6 +112,7 @@ export default function RouletteScreenShuffle (props: Props): JSX.Element {
           position: 'relative'
         }}
       >
+        <RouletteScreenPostData query={data.gameState.post} />
         <RouletteScreenPost query={data.gameState.post} viewerQuery={viewerData} />
       </motion.div>
     </Flex>

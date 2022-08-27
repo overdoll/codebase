@@ -39,7 +39,8 @@ export default function FullSimplePost ({
   const data = useFragment<FullSimplePostFragment$key>(PostFragment, query)
   const viewerData = useFragment<FullSimplePostViewerFragment$key>(ViewerFragment, viewerQuery)
 
-  const PostMemo = useMemo(() => (<PostGalleryPublicSimple hideOverflow={hideOverflow} postQuery={data} viewerQuery={viewerData} />), [data.id])
+  const PostMemo = useMemo(() => (
+    <PostGalleryPublicSimple hideOverflow={hideOverflow} postQuery={data} viewerQuery={viewerData} />), [data.id])
 
   return (
     <Stack spacing={2}>

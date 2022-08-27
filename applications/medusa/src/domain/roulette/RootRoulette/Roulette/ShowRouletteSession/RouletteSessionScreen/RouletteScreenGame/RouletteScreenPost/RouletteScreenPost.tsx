@@ -35,5 +35,7 @@ export default function RouletteScreenPost (props: Props): JSX.Element {
 
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
+  // TODO fix bug where post shifts to center after refresh for some reason (swiper?)
+
   return useMemo(() => (<PostGalleryPublicContained postQuery={data} viewerQuery={viewerData} />), [data.id])
 }

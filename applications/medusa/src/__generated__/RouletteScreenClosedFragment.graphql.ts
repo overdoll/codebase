@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<577fd08af0f54b0849af946f63e3e35e>>
+ * @generated SignedSource<<b3b39f79722e5eced85c35dc97e67714>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,20 @@ export type RouletteScreenClosedFragment$data = {
   readonly gameSession: {
     readonly isClosed: boolean;
   };
+  readonly gameState: {
+    readonly post: {
+      readonly characters: ReadonlyArray<{
+        readonly " $fragmentSpreads": FragmentRefs<"RoulettePostCharacterFragment">;
+      }>;
+      readonly club: {
+        readonly " $fragmentSpreads": FragmentRefs<"RoulettePostClubFragment">;
+      };
+    };
+  };
+  readonly score: number;
+  readonly totalDoubles: number;
+  readonly totalRolls: number;
+  readonly " $fragmentSpreads": FragmentRefs<"RouletteClosedShareDiscordButtonFragment" | "RouletteClosedShareRedditButtonFragment" | "RouletteClosedShareTwitterButtonFragment">;
   readonly " $fragmentType": "RouletteScreenClosedFragment";
 };
 export type RouletteScreenClosedFragment$key = {
@@ -44,12 +58,107 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
+    },
+    {
+      "kind": "RequiredField",
+      "field": {
+        "alias": null,
+        "args": null,
+        "concreteType": "RouletteGameState",
+        "kind": "LinkedField",
+        "name": "gameState",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Post",
+            "kind": "LinkedField",
+            "name": "post",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Character",
+                "kind": "LinkedField",
+                "name": "characters",
+                "plural": true,
+                "selections": [
+                  {
+                    "args": null,
+                    "kind": "FragmentSpread",
+                    "name": "RoulettePostCharacterFragment"
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Club",
+                "kind": "LinkedField",
+                "name": "club",
+                "plural": false,
+                "selections": [
+                  {
+                    "args": null,
+                    "kind": "FragmentSpread",
+                    "name": "RoulettePostClubFragment"
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      },
+      "action": "THROW",
+      "path": "gameState"
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "score",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "totalDoubles",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "totalRolls",
+      "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "RouletteClosedShareTwitterButtonFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "RouletteClosedShareRedditButtonFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "RouletteClosedShareDiscordButtonFragment"
     }
   ],
   "type": "RouletteStatus",
   "abstractKey": null
 };
 
-(node as any).hash = "3ed92e5cfd43a9ac28ae74fc8bf34805";
+(node as any).hash = "343a27ee75508991de647c7836dacebe";
 
 export default node;

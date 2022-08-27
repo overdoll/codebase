@@ -29,7 +29,7 @@ const Query = graphql`
 const Fragment = graphql`
   fragment BrowseFragment on Query
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 9}
+    first: {type: Int, defaultValue: 5}
     after: {type: String}
   )
   @refetchable(queryName: "BrowsePostsPaginationQuery" ) {

@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react'
 import { Trans } from '@lingui/macro'
 import type { CreateRouletteSessionMutation } from '@//:artifacts/CreateRouletteSessionMutation.graphql'
 import Button from '@//:modules/form/Button/Button'
-import { Grid, GridItem } from '@chakra-ui/react'
+import { GridItem } from '@chakra-ui/react'
+import RouletteScreenLoading from '../RouletteScreenLoading/RouletteScreenLoading'
 
 const Mutation = graphql`
   mutation CreateRouletteSessionMutation($input: CreateGameSessionInput!) {
@@ -47,33 +48,25 @@ export default function CreateRouletteSession (): JSX.Element {
     }
   }, [gameSessionId])
 
-  const ShowCreateSession = (): JSX.Element => {
-    if (isCreatingGame) {
-      return (
-        <GridItem bg='green.400'>creating game session</GridItem>
-      )
-    }
-
-    if (hasError) {
-      return (
-        <GridItem bg='orange.400'>
-          <Button onClick={onCreateGame}>
-            <Trans>
-              Error. Retry Game Creation
-            </Trans>
-          </Button>
-        </GridItem>
-      )
-    }
-
+  if (isCreatingGame) {
     return (
-      <GridItem bg='purple.400'>creating game session</GridItem>
+      <RouletteScreenLoading />
+    )
+  }
+
+  if (hasError) {
+    return (
+      <GridItem bg='orange.400'>
+        <Button onClick={onCreateGame}>
+          <Trans>
+            Error. Retry Game Creation
+          </Trans>
+        </Button>
+      </GridItem>
     )
   }
 
   return (
-    <Grid overflow='hidden' templateRows='1fr' templateColumns='100%' h='92vh' w='100%'>
-      <ShowCreateSession />
-    </Grid>
+    <RouletteScreenLoading />
   )
 }

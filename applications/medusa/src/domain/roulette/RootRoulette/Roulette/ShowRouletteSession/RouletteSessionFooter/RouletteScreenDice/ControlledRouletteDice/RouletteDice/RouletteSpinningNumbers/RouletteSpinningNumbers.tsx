@@ -101,7 +101,10 @@ export default function RouletteSpinningNumbers (props: Props): JSX.Element {
     >
       <Heading
         color='blackAlpha.400'
-        fontSize='3xl'
+        fontSize={{
+          base: '3xl',
+          md: '4xl'
+        }}
         textAlign='center'
         filter='blur(1px)'
         transform='scale(0.8,1)'

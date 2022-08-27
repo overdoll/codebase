@@ -13,6 +13,9 @@ interface Props {
 
 const Fragment = graphql`
   fragment RouletteScreenGameFragment on RouletteStatus {
+    gameState {
+      __typename
+    }
     ...RouletteScreenClosedFragment
     ...RouletteScreenShuffleFragment
   }
@@ -37,7 +40,7 @@ export default function RouletteScreenGame (props: Props): JSX.Element {
   return (
     <GridItem overflow='hidden'>
       <Flex w='100%' h='100%' position='relative'>
-        <RouletteScreenClosed query={data} />
+        {data.gameState != null && <RouletteScreenClosed query={data} />}
         <RouletteScreenShuffle query={data} viewerQuery={viewerData} />
       </Flex>
     </GridItem>

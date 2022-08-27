@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<4576ba964dd6bb549e065fae31974a03>>
- * @relayHash 5739696e215d347f816974c6acb3d4c6
+ * @generated SignedSource<<6f0e4aa9a1c5d324f08c384e5e5e2565>>
+ * @relayHash a457f2283eecb0d48cad1c792a1205e0
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 5739696e215d347f816974c6acb3d4c6
+// @relayRequestID a457f2283eecb0d48cad1c792a1205e0
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -84,7 +84,7 @@ v7 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 9
+    "value": 5
   },
   {
     "kind": "Variable",
@@ -674,7 +674,7 @@ return {
     ]
   },
   "params": {
-    "id": "5739696e215d347f816974c6acb3d4c6",
+    "id": "a457f2283eecb0d48cad1c792a1205e0",
     "metadata": {},
     "name": "SearchCategoryQuery",
     "operationKind": "query",

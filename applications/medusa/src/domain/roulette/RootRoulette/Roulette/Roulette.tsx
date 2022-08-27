@@ -3,8 +3,9 @@ import type { RouletteQuery } from '@//:artifacts/RouletteQuery.graphql'
 import { graphql } from 'react-relay'
 import ShowRouletteSession from './ShowRouletteSession/ShowRouletteSession'
 import CreateRouletteSession from './CreateRouletteSession/CreateRouletteSession'
-import { GridItem } from '@chakra-ui/react'
 import { useQueryParam } from 'use-query-params'
+import RouletteScreenLoading from './RouletteScreenLoading/RouletteScreenLoading'
+import { Grid, GridItem } from '@chakra-ui/react'
 
 interface Props {
   query: PreloadedQuery<RouletteQuery>
@@ -35,7 +36,12 @@ export default function Roulette (props: Props): JSX.Element {
   const [gameSessionId] = useQueryParam<string | null | undefined>('gameSessionId')
 
   if (gameSessionId != null && queryData?.gameSessionStatus == null) {
-    return <GridItem>loading session</GridItem>
+    return (
+      <>
+        <GridItem />
+        <RouletteScreenLoading />
+      </>
+    )
   }
 
   if (queryData.gameSessionStatus != null) {
@@ -46,5 +52,9 @@ export default function Roulette (props: Props): JSX.Element {
     return <></>
   }
 
-  return <CreateRouletteSession />
+  return (
+    <Grid overflow='hidden' templateRows='1fr' templateColumns='100%' h='92vh' w='100%'>
+      <CreateRouletteSession />
+    </Grid>
+  )
 }

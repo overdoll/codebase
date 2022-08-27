@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<57137cc790b5b7a48b128a9f2c2844fb>>
- * @relayHash abc62d328030592de4e84832df311bbb
+ * @generated SignedSource<<32fd769d8329e50b48d52bee887b65ca>>
+ * @relayHash a810e9b7e9931fb97ad22e0a9b00addb
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID abc62d328030592de4e84832df311bbb
+// @relayRequestID a810e9b7e9931fb97ad22e0a9b00addb
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -29,7 +29,7 @@ var v0 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 10
+    "value": 5
   }
 ],
 v1 = {
@@ -444,7 +444,7 @@ return {
                 "storageKey": null
               }
             ],
-            "storageKey": "likedPosts(first:10)"
+            "storageKey": "likedPosts(first:5)"
           },
           {
             "alias": null,
@@ -515,7 +515,7 @@ return {
     ]
   },
   "params": {
-    "id": "abc62d328030592de4e84832df311bbb",
+    "id": "a810e9b7e9931fb97ad22e0a9b00addb",
     "metadata": {},
     "name": "LikedPostsQuery",
     "operationKind": "query",

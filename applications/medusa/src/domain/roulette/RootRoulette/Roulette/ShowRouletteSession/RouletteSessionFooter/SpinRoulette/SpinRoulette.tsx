@@ -12,6 +12,7 @@ import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequenc
 import React, { Suspense, useEffect } from 'react'
 import SpinRouletteUpdate from './SpinRouletteButton/SpinRouletteUpdate/SpinRouletteUpdate'
 import { useUpdateEffect } from 'usehooks-ts'
+import { useKeyPress } from '@//:modules/support/useKeyPress'
 
 interface Props {
   query: SpinRouletteFragment$key
@@ -48,6 +49,7 @@ const SpinMutation = graphql`
         diceThree
         post {
           ...RouletteScreenPostFragment
+          ...RouletteScreenPostDataFragment
         }
       }
     }
@@ -89,6 +91,10 @@ export default function SpinRoulette (props: Props): JSX.Element {
   const [createGame, isCreatingGame] = useMutation<SpinRouletteCreateGameMutation>(RestartMutation)
 
   const [, setGameSessionId] = useQueryParam<string | null | undefined>('gameSessionId')
+
+  const isKeyPressed = useKeyPress(' ')
+
+  const disableSpin = state.isPending === true || isCreatingGame
 
   const notify = useToast()
 
@@ -198,6 +204,12 @@ export default function SpinRoulette (props: Props): JSX.Element {
     })
   }, [isSpinningRoulette])
 
+  useEffect(() => {
+    if (isKeyPressed && !disableSpin) {
+      onClick()
+    }
+  }, [isKeyPressed])
+
   return (
     <>
       {(data.gameState != null && diceRolls.every(val => val === diceRolls[0])) && (
@@ -208,7 +220,7 @@ export default function SpinRoulette (props: Props): JSX.Element {
       <SpinRouletteButton
         isReSpin={isReSpin}
         canFastForward={state.isSpinning === true && state.isPending === false}
-        isDisabled={state.isPending === true || isCreatingGame}
+        isDisabled={disableSpin}
         onClick={onClick}
       />
     </>

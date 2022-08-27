@@ -1,7 +1,7 @@
 import { useFragment } from 'react-relay/hooks'
 import type { RouletteScreenBackgroundFragment$key } from '@//:artifacts/RouletteScreenBackgroundFragment.graphql'
 import { graphql } from 'react-relay'
-import { Flex } from '@chakra-ui/react'
+import BlurredBackgroundThumbnail from '@//:common/components/BlurredBackgroundThumbnail/BlurredBackgroundThumbnail'
 
 interface Props {
   query: RouletteScreenBackgroundFragment$key
@@ -40,19 +40,9 @@ export default function RouletteScreenBackground (props: Props): JSX.Element {
   const backgroundColor = data.content[0].resource.preview ?? ''
 
   return (
-    <Flex
-      left='50%'
-      w='10%'
-      h='10%'
-      transform='scale(11)'
-      top='50%'
-      opacity={0.5}
-      bg='center center / cover no-repeat'
-      backgroundColor={backgroundColor}
+    <BlurredBackgroundThumbnail
       backgroundImage={thumbnailUrl}
-      filter='blur(2px)'
-      position='absolute'
-      cursor='pointer'
+      backgroundColor={backgroundColor}
     />
   )
 }

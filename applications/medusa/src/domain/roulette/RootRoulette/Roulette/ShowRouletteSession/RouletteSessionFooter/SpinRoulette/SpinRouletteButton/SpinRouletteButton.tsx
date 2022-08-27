@@ -3,7 +3,7 @@ import { ArrowRoundRight, ControlFastForward, ControlPlayButton } from '@//:asse
 import { Icon } from '@//:modules/content/PageLayout'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import { motion, useAnimation } from 'framer-motion'
+import { motion, useAnimationControls } from 'framer-motion'
 import IconButton from '@//:modules/form/IconButton/IconButton'
 import { useEffect } from 'react'
 import BackgroundGlow from '../../../../BackgroundGlow/BackgroundGlow'
@@ -15,7 +15,7 @@ interface Props extends Omit<IconButtonProps, 'aria-label'> {
 
 export default function SpinRouletteButton (props: Props): JSX.Element {
   const {
-    isDisabled,
+    isDisabled = false,
     canFastForward = false,
     isReSpin = false,
     ...rest
@@ -23,13 +23,13 @@ export default function SpinRouletteButton (props: Props): JSX.Element {
 
   const { i18n } = useLingui()
 
-  // TODO remove layout shift that happens when window is resized
+  // TODO remove layout shift that happens when button is resized from animation
 
-  const allowAnimation = isDisabled === false && !canFastForward
+  const allowAnimation = !isDisabled && !canFastForward
 
-  const canFastForwardCheck = canFastForward && isDisabled === false
+  const canFastForwardCheck = canFastForward && !isDisabled
 
-  const bounceControls = useAnimation()
+  const bounceControls = useAnimationControls()
 
   const BUTTON_ICON = (
     <Icon

@@ -1,4 +1,4 @@
-import { Flex, Heading, HeadingProps } from '@chakra-ui/react'
+import { Flex, FlexProps, Heading, HeadingProps } from '@chakra-ui/react'
 import BackgroundGlow from '../../../../../BackgroundGlow/BackgroundGlow'
 import RouletteSpinningNumbers from './RouletteSpinningNumbers/RouletteSpinningNumbers'
 
@@ -7,6 +7,8 @@ interface Props {
   isSpinning?: boolean
   numberCycleVariant: number
   showGlow?: boolean
+  diceProps?: FlexProps
+  headingProps?: HeadingProps
 }
 
 export default function RouletteDice (props: Props): JSX.Element {
@@ -14,12 +16,31 @@ export default function RouletteDice (props: Props): JSX.Element {
     number,
     isSpinning = false,
     numberCycleVariant,
-    showGlow = true
+    showGlow = true,
+    diceProps,
+    headingProps
   } = props
 
   const TEXT_PROPS: HeadingProps = {
-    fontSize: '3xl',
-    textAlign: 'center'
+    fontSize: {
+      base: '3xl',
+      md: '4xl'
+    },
+    textAlign: 'center',
+    ...headingProps
+  }
+
+  const DICE_PROPS: FlexProps = {
+    w: {
+      base: 12,
+      md: 16
+    },
+    borderRadius: 'lg',
+    h: {
+      base: 12,
+      md: 16
+    },
+    ...diceProps
   }
 
   const numberColorScheme = ['purple', 'teal', 'orange', 'primary', 'green', 'red']
@@ -35,14 +56,10 @@ export default function RouletteDice (props: Props): JSX.Element {
       <Flex
         align='center'
         justify='center'
-        borderRadius='lg'
-        borderWidth={0}
-        borderColor={(number != null && !isSpinning) ? (showGlow ? `${numberColorScheme[number - 1]}.200` : `${numberColorScheme[number - 1]}.900`) : 'transparent'}
-        w={12}
-        h={12}
-        bg={(number != null && !isSpinning) ? (showGlow ? `${numberColorScheme[number - 1]}.100` : `${numberColorScheme[number - 1]}.100`) : 'gray.00'}
+        bg={(number != null && !isSpinning) ? (showGlow ? `${numberColorScheme[number - 1]}.100` : 'gray.00') : 'gray.00'}
         position='relative'
         overflow='hidden'
+        {...DICE_PROPS}
       >
         {isSpinning && (
           <RouletteSpinningNumbers variant={numberCycleVariant} />
@@ -50,7 +67,7 @@ export default function RouletteDice (props: Props): JSX.Element {
         {!isSpinning && (
           <Heading
             {...TEXT_PROPS}
-            color={(number != null && !isSpinning) ? (showGlow ? `${numberColorScheme[number - 1]}.500` : `${numberColorScheme[number - 1]}.900`) : 'blackAlpha.400'}
+            color={(number != null && !isSpinning) ? (`${numberColorScheme[number - 1]}.300`) : 'blackAlpha.400'}
           >
             {number}
           </Heading>

@@ -15,11 +15,7 @@ export default function PageWrapperGame ({
   }
 
   return (
-    <Center mt={{
-      base: 1,
-      md: 6
-    }}
-    >
+    <Center mt={1}>
       <Box
         w={{
           base: 'full',
@@ -31,7 +27,6 @@ export default function PageWrapperGame ({
         }}
         pl={[1, 0]}
         pr={[1, 0]}
-
         h='100%'
       >
         {children}
