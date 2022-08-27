@@ -104,6 +104,7 @@ export default function RouletteSpinningNumbers (props: Props): JSX.Element {
         fontSize='3xl'
         textAlign='center'
         filter='blur(1px)'
+        transform='scale(0.8,1)'
       >
         {rollingVariants[variant].text}
       </Heading>

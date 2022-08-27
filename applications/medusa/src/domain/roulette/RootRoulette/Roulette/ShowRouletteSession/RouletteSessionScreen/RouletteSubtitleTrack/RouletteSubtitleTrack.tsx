@@ -5,7 +5,8 @@ import { useLingui } from '@lingui/react'
 import { t } from '@lingui/macro'
 import { motion, useAnimation } from 'framer-motion'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { useUpdateEffect } from 'usehooks-ts'
 
 interface Props {
   query: RouletteSubtitleTrackFragment$key
@@ -37,7 +38,7 @@ export default function RouletteSubtitleTrack (props: Props): JSX.Element {
 
   const trackControls = useAnimation()
 
-  const [subtitleTrack, setSubtitleTrack] = useState('')
+  const [subtitleTrack, setSubtitleTrack] = useState('...')
 
   const PENDING_SUBTITLES = ['...']
 
@@ -132,7 +133,7 @@ export default function RouletteSubtitleTrack (props: Props): JSX.Element {
     return SUBTITLE_STATES[state][Math.floor(Math.random() * SUBTITLE_STATES[state].length)]
   }
 
-  useEffect(() => {
+  useUpdateEffect(() => {
     void trackControls.start('play')
     const currentState = getCurrentState()
     setSubtitleTrack(getSubtitleTrack(currentState))
@@ -151,7 +152,12 @@ export default function RouletteSubtitleTrack (props: Props): JSX.Element {
           animate={trackControls}
           variants={variants}
         >
-          <Text textAlign='center' fontSize='md' color='whiteAlpha.800'>
+          <Text
+            noOfLines={1}
+            textAlign='center'
+            fontSize={subtitleTrack.length > 45 ? 'sm' : 'md'}
+            color='whiteAlpha.800'
+          >
             {subtitleTrack}
           </Text>
         </motion.div>

@@ -11,6 +11,7 @@ interface Props {
   index: number
   isSpinning: boolean
   isLastDice?: boolean
+  showGlow?: boolean
 }
 
 export default function ControlledRouletteDice (props: Props): JSX.Element {
@@ -20,7 +21,8 @@ export default function ControlledRouletteDice (props: Props): JSX.Element {
     variants,
     index,
     isSpinning,
-    isLastDice = false
+    isLastDice = false,
+    showGlow = true
   } = props
 
   const {
@@ -28,8 +30,8 @@ export default function ControlledRouletteDice (props: Props): JSX.Element {
   } = useSequenceContext()
 
   const rotateAnimation = [
-    [5, -5, 0],
-    [-5, 0, 5, 0],
+    [3, -7, 0],
+    [-7, 0, 3, 0],
     [5, 0]
   ]
 
@@ -62,7 +64,7 @@ export default function ControlledRouletteDice (props: Props): JSX.Element {
       }
     },
     exit: {
-      scale: [null, 1.1, 1.25],
+      scale: [null, 1.1, 1.2],
       x: [null, 0],
       y: [null, 0],
       rotate: rotateAnimation[index],
@@ -75,7 +77,8 @@ export default function ControlledRouletteDice (props: Props): JSX.Element {
         },
         rotate: {
           type: 'spring',
-          bounce: 0.1
+          bounce: 0.1,
+          duration: 0.1
         }
       }
     },
@@ -98,6 +101,9 @@ export default function ControlledRouletteDice (props: Props): JSX.Element {
   }
 
   const startPending = (): void => {
+    if (isLastDice) {
+      void controls.start('reset')
+    }
     void controls.start('pending')
   }
 
@@ -124,10 +130,12 @@ export default function ControlledRouletteDice (props: Props): JSX.Element {
       animate={controls}
       style={{
         marginLeft: 16,
-        marginRight: 16
+        marginRight: 16,
+        zIndex: 5
       }}
     >
       <RouletteDice
+        showGlow={showGlow}
         number={number}
         numberCycleVariant={index}
         isSpinning={isSpinning}

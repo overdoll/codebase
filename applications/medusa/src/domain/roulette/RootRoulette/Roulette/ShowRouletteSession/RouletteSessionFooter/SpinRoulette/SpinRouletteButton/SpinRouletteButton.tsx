@@ -85,7 +85,8 @@ export default function SpinRouletteButton (props: Props): JSX.Element {
       style={{
         position: 'relative',
         top: 0,
-        left: 0
+        left: 0,
+        zIndex: 5
       }}
     >
       <BackgroundGlow isVisible={allowAnimation} colorScheme='green' />

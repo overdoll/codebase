@@ -33,8 +33,9 @@ export default function DiceTable (props: Props): JSX.Element {
         justify='center'
         position='absolute'
         pointerEvents='none'
+        overflow='hidden'
       >
-        <Icon icon={OverdollLogo} fill='gray.600' w={24} h={24} />
+        <Icon icon={OverdollLogo} fill='gray.600' w={250} h={250} />
       </Flex>
       <Flex
         h='100%'

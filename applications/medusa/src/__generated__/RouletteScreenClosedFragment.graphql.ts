@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4e3bb7636d528ca21f97ab4361b9cad2>>
+ * @generated SignedSource<<577fd08af0f54b0849af946f63e3e35e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,11 +11,9 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type RouletteScreenClosedFragment$data = {
-  readonly gameState: {
-    readonly post: {
-      readonly __typename: "Post";
-    };
-  } | null;
+  readonly gameSession: {
+    readonly isClosed: boolean;
+  };
   readonly " $fragmentType": "RouletteScreenClosedFragment";
 };
 export type RouletteScreenClosedFragment$key = {
@@ -32,27 +30,16 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "RouletteGameState",
+      "concreteType": "GameSession",
       "kind": "LinkedField",
-      "name": "gameState",
+      "name": "gameSession",
       "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
-          "concreteType": "Post",
-          "kind": "LinkedField",
-          "name": "post",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "__typename",
-              "storageKey": null
-            }
-          ],
+          "kind": "ScalarField",
+          "name": "isClosed",
           "storageKey": null
         }
       ],
@@ -63,6 +50,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "f8ad40f0e34c33d45399acb6f860871f";
+(node as any).hash = "3ed92e5cfd43a9ac28ae74fc8bf34805";
 
 export default node;

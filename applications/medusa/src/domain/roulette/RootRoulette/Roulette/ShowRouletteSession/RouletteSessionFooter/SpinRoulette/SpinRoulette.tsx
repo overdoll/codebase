@@ -11,6 +11,7 @@ import SpinRouletteButton from './SpinRouletteButton/SpinRouletteButton'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import React, { Suspense, useEffect } from 'react'
 import SpinRouletteUpdate from './SpinRouletteButton/SpinRouletteUpdate/SpinRouletteUpdate'
+import { useUpdateEffect } from 'usehooks-ts'
 
 interface Props {
   query: SpinRouletteFragment$key
@@ -84,7 +85,7 @@ export default function SpinRoulette (props: Props): JSX.Element {
     }
   })
 
-  const [spinRoulette] = useMutation<SpinRouletteMutation>(SpinMutation)
+  const [spinRoulette, isSpinningRoulette] = useMutation<SpinRouletteMutation>(SpinMutation)
   const [createGame, isCreatingGame] = useMutation<SpinRouletteCreateGameMutation>(RestartMutation)
 
   const [, setGameSessionId] = useQueryParam<string | null | undefined>('gameSessionId')
@@ -92,11 +93,6 @@ export default function SpinRoulette (props: Props): JSX.Element {
   const notify = useToast()
 
   const onSpin = (): void => {
-    dispatch({
-      type: 'isPending',
-      value: true,
-      transform: 'SET'
-    })
     spinRoulette({
       variables: {
         input: {
@@ -104,11 +100,6 @@ export default function SpinRoulette (props: Props): JSX.Element {
         }
       },
       onCompleted () {
-        dispatch({
-          type: 'isPending',
-          value: false,
-          transform: 'SET'
-        })
         dispatch({
           type: 'isSpinning',
           value: true,
@@ -198,6 +189,14 @@ export default function SpinRoulette (props: Props): JSX.Element {
       loadQuery()
     }
   }, [data.gameState, data.gameSession])
+
+  useUpdateEffect(() => {
+    dispatch({
+      type: 'isPending',
+      value: isSpinningRoulette,
+      transform: 'SET'
+    })
+  }, [isSpinningRoulette])
 
   return (
     <>

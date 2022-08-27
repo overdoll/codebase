@@ -12,7 +12,7 @@ interface Props {
   query: RouletteScreenDiceFragment$key | null
 }
 
-type DurationTypes = 'veryslow' | 'slow' | 'moderate' | 'fast'
+type DurationTypes = 'veryslow' | 'mediumslow' | 'slow' | 'moderate' | 'fast'
 
 const Fragment = graphql`
   fragment RouletteScreenDiceFragment on RouletteGameState {
@@ -24,14 +24,18 @@ const Fragment = graphql`
 
 const DURATION_TYPES = [
   ['slow', 'slow', 'fast'],
-  ['slow', 'slow', 'slow'],
+  ['slow', 'fast', 'mediumslow'],
   ['fast', 'slow', 'slow'],
-  ['fast', 'moderate', 'moderate']
+  ['fast', 'fast', 'slow'],
+  ['fast', 'fast', 'mediumslow'],
+  ['fast', 'moderate', 'moderate'],
+  ['moderate', 'fast', 'fast']
 ]
 
 const generateDurationFromType = (type: DurationTypes): number => {
   const ranges = {
-    veryslow: [3.9, 4.7],
+    veryslow: [4.2, 4.7],
+    mediumslow: [2.3, 2.9],
     slow: [1.5, 1.9],
     moderate: [0.9, 1.3],
     fast: [0.55, 0.7]
@@ -65,6 +69,10 @@ export default function RouletteScreenDice (props: Props): JSX.Element {
   const [diceTwoSpinning, setDiceTwoSpinning] = useState(false)
   const [diceThreeSpinning, setDiceThreeSpinning] = useState(false)
   const [diceDuration, setDiceDuration] = useState(generateFullDiceDuration())
+
+  const showDiceOneGlow = !diceOneSpinning && ((!diceTwoSpinning && data?.diceOne === data?.diceTwo) || (!diceThreeSpinning && data?.diceOne === data?.diceThree))
+  const showDiceTwoGlow = !diceTwoSpinning && ((!diceOneSpinning && data?.diceOne === data?.diceTwo) || (!diceThreeSpinning && data?.diceTwo === data?.diceThree))
+  const showDiceThreeGlow = !diceThreeSpinning && ((!diceTwoSpinning && data?.diceThree === data?.diceTwo) || (!diceOneSpinning && data?.diceOne === data?.diceThree))
 
   const shakeTransition = {
     ease: [0, 0.71, 0.2, 1.01],
@@ -129,7 +137,11 @@ export default function RouletteScreenDice (props: Props): JSX.Element {
   }
 
   const spinThirdDice = (): void => {
-    const thirdDiceDuration = ((data?.diceOne === data?.diceTwo) && data?.diceOne != null) ? generateDurationFromType('veryslow') : diceDuration[2]
+    const thirdDiceDuration = ((data?.diceOne === data?.diceTwo) && data?.diceOne != null)
+      ? generateDurationFromType('veryslow')
+      : (((data?.diceOne === data?.diceThree || data?.diceTwo === data?.diceThree) && data?.diceThree != null)
+          ? generateDurationFromType('mediumslow')
+          : diceDuration[2])
     const transition = {
       scale: {
         duration: thirdDiceDuration,
@@ -197,6 +209,7 @@ export default function RouletteScreenDice (props: Props): JSX.Element {
   return (
     <Flex w='100%' h='100%' align='center' justify='center'>
       <ControlledRouletteDice
+        showGlow={showDiceOneGlow}
         isSpinning={diceOneSpinning}
         number={data?.diceOne}
         controls={diceOneControls}
@@ -204,6 +217,7 @@ export default function RouletteScreenDice (props: Props): JSX.Element {
         index={0}
       />
       <ControlledRouletteDice
+        showGlow={showDiceTwoGlow}
         isSpinning={diceTwoSpinning}
         number={data?.diceTwo}
         controls={diceTwoControls}
@@ -211,6 +225,7 @@ export default function RouletteScreenDice (props: Props): JSX.Element {
         index={1}
       />
       <ControlledRouletteDice
+        showGlow={showDiceThreeGlow}
         isLastDice
         isSpinning={diceThreeSpinning}
         number={data?.diceThree}
