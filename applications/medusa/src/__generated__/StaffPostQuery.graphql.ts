@@ -1,11 +1,6 @@
 /**
-<<<<<<< HEAD
- * @generated SignedSource<<a1b6a7ecbeb6032d47e9cf0f90531a13>>
- * @relayHash e6505b7c2795cf77615bf7b440bfe8f2
-=======
- * @generated SignedSource<<36f6b6adb2a8afda9d8325345f09beb8>>
- * @relayHash 951170062044982bd2339a57130c48a6
->>>>>>> master
+ * @generated SignedSource<<83963f81476a9a77698585df5eb4e24b>>
+ * @relayHash 0a2fdeb99c4091ed5dd364e10522543c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,11 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-<<<<<<< HEAD
-// @relayRequestID e6505b7c2795cf77615bf7b440bfe8f2
-=======
-// @relayRequestID 951170062044982bd2339a57130c48a6
->>>>>>> master
+// @relayRequestID 0a2fdeb99c4091ed5dd364e10522543c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -490,67 +481,6 @@ return {
           {
             "alias": null,
             "args": null,
-<<<<<<< HEAD
-=======
-            "concreteType": "PostContent",
-            "kind": "LinkedField",
-            "name": "content",
-            "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Resource",
-                "kind": "LinkedField",
-                "name": "resource",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "processed",
-                    "storageKey": null
-                  },
-                  (v13/*: any*/),
-                  (v6/*: any*/),
-                  (v8/*: any*/),
-                  (v9/*: any*/),
-                  (v10/*: any*/),
-                  (v11/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "videoNoAudio",
-                    "storageKey": null
-                  },
-                  (v12/*: any*/)
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "viewerCanViewSupporterOnlyContent",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "isSupporterOnly",
-                "storageKey": null
-              },
-              (v6/*: any*/)
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
->>>>>>> master
             "kind": "ScalarField",
             "name": "description",
             "storageKey": null
@@ -605,11 +535,7 @@ return {
     ]
   },
   "params": {
-<<<<<<< HEAD
-    "id": "e6505b7c2795cf77615bf7b440bfe8f2",
-=======
-    "id": "951170062044982bd2339a57130c48a6",
->>>>>>> master
+    "id": "0a2fdeb99c4091ed5dd364e10522543c",
     "metadata": {},
     "name": "StaffPostQuery",
     "operationKind": "query",

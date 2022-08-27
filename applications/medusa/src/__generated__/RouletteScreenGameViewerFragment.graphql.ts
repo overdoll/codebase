@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<eba230b8aa8c4527f16c8f50e00eaed8>>
+ * @generated SignedSource<<288e2b1e30f4502a77b6a2457fdee2b9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type RouletteScreenGameViewerFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"RouletteScreenPostViewerFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"RouletteScreenShuffleViewerFragment">;
   readonly " $fragmentType": "RouletteScreenGameViewerFragment";
 };
 export type RouletteScreenGameViewerFragment$key = {
@@ -28,13 +28,13 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "RouletteScreenPostViewerFragment"
+      "name": "RouletteScreenShuffleViewerFragment"
     }
   ],
   "type": "Account",
   "abstractKey": null
 };
 
-(node as any).hash = "145e6300b3cbcdaea4c45b235af63ce3";
+(node as any).hash = "16f44e8ed273f348f12866ec5ab67621";
 
 export default node;

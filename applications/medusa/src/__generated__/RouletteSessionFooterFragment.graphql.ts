@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<91c7c314852d546b446aaba81c61369f>>
+ * @generated SignedSource<<c2c38e2e3392a0716d191d3dba2eab85>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,9 +11,6 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type RouletteSessionFooterFragment$data = {
-  readonly gameSession: {
-    readonly isClosed: boolean;
-  };
   readonly gameState: {
     readonly " $fragmentSpreads": FragmentRefs<"RouletteScreenDiceFragment">;
   } | null;
@@ -48,24 +45,6 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
-      "alias": null,
-      "args": null,
-      "concreteType": "GameSession",
-      "kind": "LinkedField",
-      "name": "gameSession",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "isClosed",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
-    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "SpinRouletteFragment"
@@ -75,6 +54,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "6fefe0a97441b0396ba9af11304382dd";
+(node as any).hash = "dab9e9e4a6d70899850d8e2f73bc0e08";
 
 export default node;

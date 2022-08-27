@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1b4bc390b1491747c5a36197a2cf1e71>>
+ * @generated SignedSource<<e805f9c38d61a41ae5e27a4c1b45c7e6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,13 +14,7 @@ export type RouletteScreenGameFragment$data = {
   readonly gameSession: {
     readonly isClosed: boolean;
   };
-  readonly gameState: {
-    readonly id: string;
-    readonly post: {
-      readonly " $fragmentSpreads": FragmentRefs<"RouletteScreenPostFragment">;
-    };
-    readonly " $fragmentSpreads": FragmentRefs<"RouletteScreenDiceFragment">;
-  };
+  readonly " $fragmentSpreads": FragmentRefs<"RouletteScreenShuffleFragment">;
   readonly " $fragmentType": "RouletteScreenGameFragment";
 };
 export type RouletteScreenGameFragment$key = {
@@ -53,54 +47,15 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
-      "kind": "RequiredField",
-      "field": {
-        "alias": null,
-        "args": null,
-        "concreteType": "RouletteGameState",
-        "kind": "LinkedField",
-        "name": "gameState",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Post",
-            "kind": "LinkedField",
-            "name": "post",
-            "plural": false,
-            "selections": [
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "RouletteScreenPostFragment"
-              }
-            ],
-            "storageKey": null
-          },
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "RouletteScreenDiceFragment"
-          }
-        ],
-        "storageKey": null
-      },
-      "action": "THROW",
-      "path": "gameState"
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "RouletteScreenShuffleFragment"
     }
   ],
   "type": "RouletteStatus",
   "abstractKey": null
 };
 
-(node as any).hash = "8d8ca8d9cd8d8f26142ab69c01f9c2da";
+(node as any).hash = "b98de4b9da881116dd692295b5c92cb3";
 
 export default node;

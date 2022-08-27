@@ -4,6 +4,7 @@ import { ShowRouletteSessionViewerFragment$key } from '@//:artifacts/ShowRoulett
 import { GridItem } from '@chakra-ui/react'
 import RouletteSessionScreen from './RouletteSessionScreen/RouletteSessionScreen'
 import RouletteSessionFooter from './RouletteSessionFooter/RouletteSessionFooter'
+import RouletteSubtitleTrack from './RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack'
 
 interface Props {
   query: ShowRouletteSessionFragment$key
@@ -14,6 +15,7 @@ const Fragment = graphql`
   fragment ShowRouletteSessionFragment on RouletteStatus {
     ...RouletteSessionFooterFragment
     ...RouletteSessionScreenFragment
+    ...RouletteSubtitleTrackFragment
   }
 `
 
@@ -35,9 +37,7 @@ export default function ShowRouletteSession (props: Props): JSX.Element {
 
   return (
     <>
-      <GridItem color='blackAlpha.700' bg='teal.400'>
-        subtitle track
-      </GridItem>
+      <RouletteSubtitleTrack query={data} />
       <RouletteSessionScreen query={data} viewerQuery={viewerData} />
       <GridItem>
         <RouletteSessionFooter query={data} />

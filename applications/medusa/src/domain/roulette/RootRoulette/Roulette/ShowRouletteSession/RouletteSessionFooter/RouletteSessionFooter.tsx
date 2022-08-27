@@ -5,7 +5,6 @@ import SpinRoulette from './SpinRoulette/SpinRoulette'
 import { Flex, Grid, GridItem } from '@chakra-ui/react'
 import RouletteScreenDice from './RouletteScreenDice/RouletteScreenDice'
 import DiceTable from './DiceTable/DiceTable'
-import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 
 interface Props {
   query: RouletteSessionFooterFragment$key
@@ -16,9 +15,6 @@ const Fragment = graphql`
     gameState {
       ...RouletteScreenDiceFragment
     }
-    gameSession {
-      isClosed
-    }
     ...SpinRouletteFragment
   }
 `
@@ -27,12 +23,6 @@ export default function RouletteSessionFooter (props: Props): JSX.Element {
   const { query } = props
 
   const data = useFragment(Fragment, query)
-
-  const {
-    state
-  } = useSequenceContext()
-
-  const showGameFinished = state.isPending === false && state.isSpinning === false && data.gameSession.isClosed
 
   return (
     <Grid
@@ -47,9 +37,6 @@ export default function RouletteSessionFooter (props: Props): JSX.Element {
       <GridItem>
         <DiceTable>
           <RouletteScreenDice query={data.gameState} />
-          {(showGameFinished) && (
-            <>game finished</>
-          )}
         </DiceTable>
       </GridItem>
       <GridItem>

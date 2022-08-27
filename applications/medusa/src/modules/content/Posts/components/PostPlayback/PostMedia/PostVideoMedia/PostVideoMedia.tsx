@@ -9,6 +9,7 @@ import useVideoControls from '../../ControlledVideo/hooks/useVideoControls/useVi
 
 interface Props extends Pick<ControlledVideoProps, 'controls'>, ObserveContentCallable {
   query: PostVideoMediaFragment$key
+  hideBackground?: boolean
 }
 
 const Fragment = graphql`
@@ -21,7 +22,8 @@ export default function PostVideoMedia ({
   query,
   controls,
   isObserving,
-  isObservingDebounced
+  isObservingDebounced,
+  hideBackground = false
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
@@ -67,6 +69,7 @@ export default function PostVideoMedia ({
 
   return (
     <ControlledVideo
+      hideBackground={hideBackground}
       autoPlay={isObservingDebounced ? true : undefined}
       ref={ref}
       controls={controls}

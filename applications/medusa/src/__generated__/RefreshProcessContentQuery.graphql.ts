@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<351c1f881e1bf7b38e09ce8fadcff257>>
+ * @generated SignedSource<<c382998de7b4a0a5bf91378d22138a07>>
  * @relayHash 92633d275eb61ff9f833702218d9e165
  * @lightSyntaxTransform
  * @nogrep
@@ -13,7 +13,7 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "%future added value";
+export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "SUBMITTED" | "%future added value";
 export type ResourceProgressState = "FINALIZING" | "STARTED" | "WAITING" | "%future added value";
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 export type RefreshProcessContentQuery$variables = {

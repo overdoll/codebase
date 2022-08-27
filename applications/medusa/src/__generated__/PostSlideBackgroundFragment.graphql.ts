@@ -1,9 +1,5 @@
 /**
-<<<<<<< HEAD
- * @generated SignedSource<<1906b45ea36399229a7773394af80c80>>
-=======
- * @generated SignedSource<<a16a0eafefaa8d31c3f8ec5d2394db05>>
->>>>>>> master
+ * @generated SignedSource<<dc713137c3c46159fe53d485a17617b5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -35,36 +31,6 @@ const node: ReaderFragment = {
   "name": "PostSlideBackgroundFragment",
   "selections": [
     {
-<<<<<<< HEAD
-      "alias": null,
-      "args": null,
-      "concreteType": "Resource",
-      "kind": "LinkedField",
-      "name": "resource",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "preview",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "type",
-          "storageKey": null
-        },
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "VideoBackgroundFragment"
-        }
-      ],
-      "storageKey": null
-=======
       "kind": "RequiredField",
       "field": {
         "alias": null,
@@ -89,39 +55,21 @@ const node: ReaderFragment = {
             "storageKey": null
           },
           {
-            "alias": null,
             "args": null,
-            "concreteType": "ResourceUrl",
-            "kind": "LinkedField",
-            "name": "videoThumbnail",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "url",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
+            "kind": "FragmentSpread",
+            "name": "VideoBackgroundFragment"
           }
         ],
         "storageKey": null
       },
       "action": "THROW",
       "path": "resource"
->>>>>>> master
     }
   ],
   "type": "PostContent",
   "abstractKey": null
 };
 
-<<<<<<< HEAD
-(node as any).hash = "c894b8eb72c2bc2f87d2fdba76835904";
-=======
-(node as any).hash = "399957d9093960740f66302b3485e6ad";
->>>>>>> master
+(node as any).hash = "33a2b9c36d9d851cdc09b6ff93ed847b";
 
 export default node;

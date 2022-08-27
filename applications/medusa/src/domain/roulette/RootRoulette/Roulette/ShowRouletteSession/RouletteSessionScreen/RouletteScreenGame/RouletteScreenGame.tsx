@@ -3,7 +3,8 @@ import type { RouletteScreenGameFragment$key } from '@//:artifacts/RouletteScree
 import type { RouletteScreenGameViewerFragment$key } from '@//:artifacts/RouletteScreenGameViewerFragment.graphql'
 import { graphql } from 'react-relay'
 import { GridItem } from '@chakra-ui/react'
-import RouletteScreenPost from './RouletteScreenPost/RouletteScreenPost'
+import RouletteScreenShuffle from './RouletteScreenShuffle/RouletteScreenShuffle'
+import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 
 interface Props {
   query: RouletteScreenGameFragment$key
@@ -15,19 +16,13 @@ const Fragment = graphql`
     gameSession {
       isClosed
     }
-    gameState @required(action: THROW) {
-      id
-      post {
-        ...RouletteScreenPostFragment
-      }
-      ...RouletteScreenDiceFragment
-    }
+    ...RouletteScreenShuffleFragment
   }
 `
 
 const ViewerFragment = graphql`
   fragment RouletteScreenGameViewerFragment on Account {
-    ...RouletteScreenPostViewerFragment
+    ...RouletteScreenShuffleViewerFragment
   }
 `
 
@@ -41,9 +36,18 @@ export default function RouletteScreenGame (props: Props): JSX.Element {
 
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
+  const {
+    state
+  } = useSequenceContext()
+
+  // TODO game lost popup
+  // TODO viewerIsPlayer is false, encouraging you to spin to play your own game
+
+  const showGameFinished = state.isPending === false && state.isSpinning === false && data.gameSession.isClosed
+
   return (
-    <GridItem overflow='hidden' bg='blackAlpha.700'>
-      <RouletteScreenPost query={data.gameState.post} viewerQuery={viewerData} />
+    <GridItem overflow='hidden'>
+      <RouletteScreenShuffle query={data} viewerQuery={viewerData} />
     </GridItem>
   )
 }

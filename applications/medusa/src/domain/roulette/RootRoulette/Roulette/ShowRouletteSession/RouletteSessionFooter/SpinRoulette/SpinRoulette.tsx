@@ -26,6 +26,7 @@ const Fragment = graphql`
       id
       reference
       isClosed
+      viewerIsPlayer
     }
     gameState {
       __typename
@@ -156,6 +157,10 @@ export default function SpinRoulette (props: Props): JSX.Element {
   }
 
   const onClick = (): void => {
+    if (!data.gameSession.viewerIsPlayer) {
+      onCreateGame()
+      return
+    }
     // if spinning, you can skip it with the first button click
     if (state.isSpinning === true) {
       dispatch({
@@ -173,6 +178,8 @@ export default function SpinRoulette (props: Props): JSX.Element {
   }
 
   const diceRolls = data.gameState != null ? [data.gameState.diceOne, data.gameState.diceThree, data.gameState.diceTwo] : [1, 2, 3]
+
+  const isReSpin = !(new Set(diceRolls).size === diceRolls.length) && !(diceRolls.every(val => val === diceRolls[0]))
 
   // If user completed tutorial, we want to spin right away instead of showing them the screen again
   useEffect(() => {
@@ -200,6 +207,7 @@ export default function SpinRoulette (props: Props): JSX.Element {
         </Suspense>
       )}
       <SpinRouletteButton
+        isReSpin={isReSpin}
         canFastForward={state.isSpinning === true && state.isPending === false}
         isDisabled={state.isPending === true || isCreatingGame}
         onClick={onClick}

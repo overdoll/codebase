@@ -1,5 +1,5 @@
 import { IconButtonProps } from '@chakra-ui/react'
-import { ControlFastForward, ControlPlayButton } from '@//:assets/icons'
+import { ArrowRoundRight, ControlFastForward, ControlPlayButton } from '@//:assets/icons'
 import { Icon } from '@//:modules/content/PageLayout'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -10,23 +10,24 @@ import BackgroundGlow from '../../../../BackgroundGlow/BackgroundGlow'
 
 interface Props extends Omit<IconButtonProps, 'aria-label'> {
   canFastForward?: boolean
+  isReSpin?: boolean
 }
 
 export default function SpinRouletteButton (props: Props): JSX.Element {
   const {
     isDisabled,
     canFastForward = false,
+    isReSpin = false,
     ...rest
   } = props
-
-  // TODO button glows and rainbow outline when spinning is ready
-  // TODO replay icon when game is finished
 
   const { i18n } = useLingui()
 
   // TODO remove layout shift that happens when window is resized
 
   const allowAnimation = isDisabled === false && !canFastForward
+
+  const canFastForwardCheck = canFastForward && isDisabled === false
 
   const bounceControls = useAnimation()
 
@@ -41,13 +42,12 @@ export default function SpinRouletteButton (props: Props): JSX.Element {
         base: 10,
         md: 16
       }}
-      icon={(canFastForward && isDisabled === false) ? ControlFastForward : ControlPlayButton}
+      icon={(canFastForwardCheck) ? ControlFastForward : (isReSpin ? ArrowRoundRight : ControlPlayButton)}
     />
   )
 
   const DEFAULT_BUTTON_PROPS = {
     'aria-label': i18n._(t`Spin Roulette`),
-    colorScheme: 'green',
     icon: BUTTON_ICON,
     borderRadius: '25%',
     w: {
@@ -88,9 +88,7 @@ export default function SpinRouletteButton (props: Props): JSX.Element {
         left: 0
       }}
     >
-      {allowAnimation && (
-        <BackgroundGlow colorScheme='green' />
-      )}
+      <BackgroundGlow isVisible={allowAnimation} colorScheme='green' />
       <IconButton
         as={motion.button}
         whileTap={allowAnimation && {
@@ -101,6 +99,7 @@ export default function SpinRouletteButton (props: Props): JSX.Element {
         }}
         {...DEFAULT_BUTTON_PROPS}
         {...rest}
+        colorScheme={canFastForwardCheck ? 'gray' : 'green'}
         isDisabled={isDisabled}
       />
     </motion.div>

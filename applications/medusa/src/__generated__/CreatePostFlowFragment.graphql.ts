@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<043cbeee32bbc9ff27fe55f3d19557c3>>
+ * @generated SignedSource<<719d87785b92e8eb62e282e4882d9665>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
-export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "%future added value";
+export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "SUBMITTED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type CreatePostFlowFragment$data = {
   readonly id: string;

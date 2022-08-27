@@ -10,6 +10,7 @@ import { POST_SWIPER_PROPS, POST_SWIPER_SLIDE_PROPS } from '../../../constants'
 import PostShowOverflow from '../PostShowOverflow/PostShowOverflow'
 import PostSupporterContent from '../PostSupporterContent/PostSupporterContent'
 import { Trans } from '@lingui/macro'
+import PostDetailedMedia from '../../PostPlayback/PostDetailedMedia/PostDetailedMedia'
 
 interface Props {
   postQuery: PostGalleryStaffDetailedFragment$key
@@ -26,7 +27,7 @@ const PostFragment = graphql`
     content {
       resource {
         processed
-        ...PostMediaFragment
+        ...PostDetailedMediaFragment
       }
       ...PostSupporterContentFragment
       ...PostSlideBackgroundFragment
@@ -81,23 +82,13 @@ export default function PostGalleryStaffDetailed ({
                       clubQuery={postData.club}
                       query={item}
                     >
-                      <PostMedia
-                        controls={{
-                          canSeek: true,
-                          canFullscreen: true
-                        }}
+                      <PostDetailedMedia
                         query={item.resource}
                       />
                     </PostSupporterContent>
                   </PostShowOverflow>
                 </PostSlideBackground>
                 )}
-                  <PostDetailedMedia
-                    query={item.resource}
-                  />
-                </PostSupporterContent>
-              </PostShowOverflow>
-            </PostSlideBackground>
           </SwiperSlide>)}
       </Swiper>
       <PostSlideIndex swiper={swiper} query={postData} />

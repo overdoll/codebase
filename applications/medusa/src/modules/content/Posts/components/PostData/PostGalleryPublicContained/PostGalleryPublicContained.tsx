@@ -3,7 +3,7 @@ import { Flex, Grid, GridItem } from '@chakra-ui/react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { PostGalleryPublicContainedFragment$key } from '@//:artifacts/PostGalleryPublicContainedFragment.graphql'
 import {
-  PostGalleryPublicContainedViewerFragment$key,
+  PostGalleryPublicContainedViewerFragment$key
 } from '@//:artifacts/PostGalleryPublicContainedViewerFragment.graphql'
 import PostSupporterContent from '../PostSupporterContent/PostSupporterContent'
 import PostSlideIndex from '../../PostInteraction/PostSlideIndex/PostSlideIndex'
@@ -52,7 +52,7 @@ export default function PostGalleryPublicContained ({
 
   return (
     <Grid gap={1} overflow='hidden' templateRows={determineRows} templateColumns='100%' h='100%'>
-      <GridItem overflow='hidden' bg='green.400'>
+      <GridItem overflow='hidden'>
         <Swiper
           {...POST_SWIPER_PROPS}
           onSwiper={(swiper) => setSwiper(swiper)}
@@ -76,6 +76,7 @@ export default function PostGalleryPublicContained ({
                   query={item}
                 >
                   <PostDetailedMedia
+                    hideBackground
                     imageProps={{
                       hideBackground: true,
                       keepWidth: true,
@@ -90,7 +91,7 @@ export default function PostGalleryPublicContained ({
             </SwiperSlide>)}
         </Swiper>
       </GridItem>
-      <GridItem overflow='hidden' bg='purple.400'>
+      <GridItem overflow='hidden'>
         <PostSlideIndex fillHeight swiper={swiper} query={postData} />
       </GridItem>
     </Grid>

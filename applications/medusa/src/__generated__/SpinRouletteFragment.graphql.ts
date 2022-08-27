@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<119559f84b1d485d44fc6fb885c24d31>>
+ * @generated SignedSource<<b3285059e15d53723139d02ac5773aa2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type SpinRouletteFragment$data = {
     readonly id: string;
     readonly isClosed: boolean;
     readonly reference: string;
+    readonly viewerIsPlayer: boolean;
   };
   readonly gameState: {
     readonly __typename: "RouletteGameState";
@@ -62,6 +63,13 @@ const node: ReaderFragment = {
           "args": null,
           "kind": "ScalarField",
           "name": "isClosed",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "viewerIsPlayer",
           "storageKey": null
         }
       ],
@@ -111,6 +119,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "a6f37beef99577aa3b62ba614c552f9b";
+(node as any).hash = "70bbff877c4d937ea5d6116c042439d5";
 
 export default node;

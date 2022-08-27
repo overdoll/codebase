@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<662b7fd9f1af037b2cd082864c6ffb3b>>
+ * @generated SignedSource<<058df262cff7345db86e3428008243d4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ShowRouletteSessionFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"RouletteSessionFooterFragment" | "RouletteSessionScreenFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"RouletteSessionFooterFragment" | "RouletteSessionScreenFragment" | "RouletteSubtitleTrackFragment">;
   readonly " $fragmentType": "ShowRouletteSessionFragment";
 };
 export type ShowRouletteSessionFragment$key = {
@@ -34,12 +34,17 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "RouletteSessionScreenFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "RouletteSubtitleTrackFragment"
     }
   ],
   "type": "RouletteStatus",
   "abstractKey": null
 };
 
-(node as any).hash = "730a5f0fe9ab0f5bc5059f93ca5663f1";
+(node as any).hash = "ae505e8464d6a8bf06557868028e0f1a";
 
 export default node;

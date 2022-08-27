@@ -1,15 +1,18 @@
 import { useFragment } from 'react-relay/hooks'
 import type { RouletteScreenDiceFragment$key } from '@//:artifacts/RouletteScreenDiceFragment.graphql'
 import { graphql } from 'react-relay'
-import { Flex, useUpdateEffect } from '@chakra-ui/react'
-import RouletteDice from './RouletteDice/RouletteDice'
-import { motion, useAnimation } from 'framer-motion'
+import { Flex } from '@chakra-ui/react'
+import { useAnimation } from 'framer-motion'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import { useEffect, useState } from 'react'
+import ControlledRouletteDice from './ControlledRouletteDice/ControlledRouletteDice'
+import { randomFunction } from '../../../../support'
 
 interface Props {
   query: RouletteScreenDiceFragment$key | null
 }
+
+type DurationTypes = 'veryslow' | 'slow' | 'moderate' | 'fast'
 
 const Fragment = graphql`
   fragment RouletteScreenDiceFragment on RouletteGameState {
@@ -18,6 +21,30 @@ const Fragment = graphql`
     diceThree
   }
 `
+
+const DURATION_TYPES = [
+  ['slow', 'slow', 'fast'],
+  ['slow', 'slow', 'slow'],
+  ['fast', 'slow', 'slow'],
+  ['fast', 'moderate', 'moderate']
+]
+
+const generateDurationFromType = (type: DurationTypes): number => {
+  const ranges = {
+    veryslow: [3.9, 4.7],
+    slow: [1.5, 1.9],
+    moderate: [0.9, 1.3],
+    fast: [0.55, 0.7]
+  }
+
+  return randomFunction(ranges[type][0], ranges[type][1])
+}
+
+const generateFullDiceDuration = (): number[] => {
+  const numberOfDurationTypes = DURATION_TYPES.length
+  const randomDurationType = Math.floor(Math.random() * ((numberOfDurationTypes - 1) + 1))
+  return DURATION_TYPES[randomDurationType].map((item: DurationTypes) => generateDurationFromType(item))
+}
 
 export default function RouletteScreenDice (props: Props): JSX.Element {
   const {
@@ -31,90 +58,106 @@ export default function RouletteScreenDice (props: Props): JSX.Element {
 
   const data = useFragment(Fragment, query)
 
-  const containerControls = useAnimation()
+  const diceOneControls = useAnimation()
+  const diceTwoControls = useAnimation()
+  const diceThreeControls = useAnimation()
+  const [diceOneSpinning, setDiceOneSpinning] = useState(false)
+  const [diceTwoSpinning, setDiceTwoSpinning] = useState(false)
+  const [diceThreeSpinning, setDiceThreeSpinning] = useState(false)
+  const [diceDuration, setDiceDuration] = useState(generateFullDiceDuration())
 
-  const dices = [data?.diceOne, data?.diceTwo, data?.diceThree]
-
-  /*
-  const orderDice = (): Array<number | undefined> => {
-    if (data == null) {
-      return dices
-    }
-
-    if (dices.every((e, i, a) => a.indexOf(e) === i)) {
-
-      // figure out how to filter duplicates and
-
-      const duplicates = dices.filter((e, i, a) => a.indexOf(e) !== i)
-
-      const removeDuplicates = dices.filter((e, i, a) => a.indexOf(e) === i)
-
-      console.log(removeDuplicates)
-
-      return [...duplicates, ...removeDuplicates]
-    }
-
-    return dices
-  }
-
-   */
-
-  const [diceSpinning, setDiceSpinning] = useState([false, false, false])
-
-  const diceReveals = {
-    slow: {
-      scale: [1, 1.2, 1.5, 1.2],
-      transition: {
-        duration: 3,
-        times: [0, 0.8, 0.9, 1]
-      }
+  const shakeTransition = {
+    ease: [0, 0.71, 0.2, 1.01],
+    times: [0, 0.1, 0.9, 1],
+    x: {
+      duration: 0.2,
+      repeat: Infinity
+    },
+    y: {
+      duration: 0.3,
+      repeat: Infinity
     }
   }
 
   const diceVariants = {
-    pending: {
-      scale: [null, 0.8, 1],
-      transition: {
-        duration: 0.5
-      }
+    spinDice: {
+      scale: [null, 1.55],
+      x: [null, -5, 2.5, 0, 2.5, 0, -5, 0],
+      y: [null, -2.5, 5, 0, -2.5, 0, 2.5, 0]
     },
-    spinning: i => ({
-      rotate: [null, 0],
-      ...diceReveals.slow
-    }),
-    reset: {
-      scale: [null, 1],
-      rotate: [null, 0],
-      transition: {
-        duration: 0.1
-      }
+    spinDiceTwo: {
+      scale: [null, 1.55],
+      x: [null, -7, 2.5, 0, 5.5, 0, -7, 0],
+      y: [null, -2.5, 7, 0, -5.5, 0, 2.5, 0]
+    },
+    spinDiceThree: {
+      scale: [null, 1.25, 1.55],
+      x: [null, -7, 5.5, 0, 10.5, 0, -10, 0],
+      y: [null, -11.5, 10, 0, -7.5, 0, 2.5, 0]
     }
   }
 
-  const containerVariants = {
-    pending: {},
-    spinning: {
-      transition: {
-        staggerChildren: 3
-      }
-    },
-    reset: {
-      transition: {
-        duration: 0.1
-      }
+  const spinFirstDice = (): void => {
+    const transition = {
+      scale: {
+        duration: diceDuration[0],
+        onComplete: () => {
+          spinSecondDice()
+        },
+        delay: 0.5
+      },
+      ...shakeTransition
     }
+
+    void diceOneControls.start('spinDice', transition)
   }
 
-  const startPending = (): void => {
-    setDiceSpinning([true, true, true])
-    void containerControls.start('pending')
+  const spinSecondDice = (): void => {
+    const transition = {
+      scale: {
+        duration: diceDuration[1],
+        onComplete: () => {
+          spinThirdDice()
+        }
+      },
+      ...shakeTransition
+    }
+
+    setDiceOneSpinning(false)
+    void diceOneControls.start('exit')
+    void diceTwoControls.start('spinDiceTwo', transition)
   }
 
-  const startSpinning = (): void => {
-    void containerControls.start('spinning')
+  const spinThirdDice = (): void => {
+    const thirdDiceDuration = ((data?.diceOne === data?.diceTwo) && data?.diceOne != null) ? generateDurationFromType('veryslow') : diceDuration[2]
+    const transition = {
+      scale: {
+        duration: thirdDiceDuration,
+        onComplete: () => {
+          completeSpinning()
+        }
+      },
+      ...shakeTransition
+    }
+    setDiceTwoSpinning(false)
+    void diceTwoControls.start('exit')
+    void diceThreeControls.start('spinDiceThree', transition)
+  }
+
+  const setDiceSpinning = (): void => {
+    setDiceOneSpinning(true)
+    setDiceTwoSpinning(true)
+    setDiceThreeSpinning(true)
+  }
+
+  const startDiceAnimation = (): void => {
+    setDiceSpinning()
+    spinFirstDice()
   }
 
   const completeSpinning = (): void => {
+    setDiceThreeSpinning(false)
+    void diceThreeControls.start('exit')
     dispatch({
       type: 'isSpinning',
       value: false,
@@ -122,60 +165,59 @@ export default function RouletteScreenDice (props: Props): JSX.Element {
     })
   }
 
-  const completeAnimation = (i): void => {
-    setDiceSpinning(x => x.map((item, index) => index === i ? false : item))
+  const resetDiceAnimation = (): void => {
+    setDiceOneSpinning(false)
+    setDiceTwoSpinning(false)
+    setDiceThreeSpinning(false)
   }
 
-  useUpdateEffect(() => {
-    if (diceSpinning.every((x) => !x)) {
-      completeSpinning()
-    }
-  }, [diceSpinning])
-
+  // if spinning, start dice animation
+  // if stopped spinning, reset dice animation
   useEffect(() => {
     if (state.isPending === true) {
-      startPending()
+      setDiceSpinning()
     }
-  }, [state.isPending, setDiceSpinning])
+  }, [state.isPending])
 
   useEffect(() => {
     if (state.isSpinning === true) {
-      startSpinning()
+      startDiceAnimation()
       return
     }
-    setDiceSpinning([false, false, false])
-    void containerControls.start('reset')
-  }, [state.isSpinning, setDiceSpinning])
+    resetDiceAnimation()
+  }, [state.isSpinning])
+
+  // generate a random duration every new spin
+  useEffect(() => {
+    if (state.isSpinning === false) {
+      setDiceDuration(generateFullDiceDuration())
+    }
+  }, [state.isSpinning])
 
   return (
     <Flex w='100%' h='100%' align='center' justify='center'>
-      <motion.div
-        animate={containerControls}
-        variants={containerVariants}
-        style={{
-          display: 'flex'
-        }}
-      >
-        {dices.map((item, index) => (
-          <motion.div
-            key={index}
-            // @ts-expect-error
-            variants={diceVariants}
-            onAnimationComplete={() => completeAnimation(index)}
-            style={{
-              marginLeft: 16,
-              marginRight: 16
-            }}
-          >
-            <RouletteDice
-              numberCycleVariant={index}
-              isSpinning={diceSpinning[index]}
-              number={item}
-              key={index}
-            />
-          </motion.div>
-        ))}
-      </motion.div>
+      <ControlledRouletteDice
+        isSpinning={diceOneSpinning}
+        number={data?.diceOne}
+        controls={diceOneControls}
+        variants={diceVariants}
+        index={0}
+      />
+      <ControlledRouletteDice
+        isSpinning={diceTwoSpinning}
+        number={data?.diceTwo}
+        controls={diceTwoControls}
+        variants={diceVariants}
+        index={1}
+      />
+      <ControlledRouletteDice
+        isLastDice
+        isSpinning={diceThreeSpinning}
+        number={data?.diceThree}
+        controls={diceThreeControls}
+        variants={diceVariants}
+        index={2}
+      />
     </Flex>
   )
 }

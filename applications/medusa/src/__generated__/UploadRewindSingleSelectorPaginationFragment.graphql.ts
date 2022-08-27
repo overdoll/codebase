@@ -1,11 +1,6 @@
 /**
-<<<<<<< HEAD
- * @generated SignedSource<<feccadb2e3361e33ebcdd5bc9d8f2486>>
+ * @generated SignedSource<<9c6c9e3e38f532e188d8cc9bc2e340eb>>
  * @relayHash 0486fdc1f9ef0d3189639ddad054771c
-=======
- * @generated SignedSource<<ecbe39030cfa6e0f20415026bea6a822>>
- * @relayHash b0d3e390d5c418a88647e12edd0a0332
->>>>>>> master
  * @lightSyntaxTransform
  * @nogrep
  */

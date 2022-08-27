@@ -13,6 +13,7 @@ import MediaPreviewModal from '../MediaPreviewModal/MediaPreviewModal'
 interface Props {
   query: PostDetailedMediaFragment$key
   imageProps?: ImageSnippetCoverProps | ImageSnippetProps
+  hideBackground?: boolean
 }
 
 const Fragment = graphql`
@@ -26,7 +27,8 @@ const Fragment = graphql`
 
 export default function PostDetailedMedia ({
   query,
-  imageProps
+  imageProps,
+  hideBackground = false
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
@@ -60,6 +62,7 @@ export default function PostDetailedMedia ({
               isObservingDebounced
             }) => (
               <PostVideoMedia
+                hideBackground={hideBackground}
                 controls={{
                   canSeek: true,
                   canFullscreen: true

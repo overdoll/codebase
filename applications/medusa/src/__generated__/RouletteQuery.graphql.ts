@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<5626dccd3ac5afdd06c59f973bb7fc8c>>
- * @relayHash 5b911b829291a463eae18218c33f1ce6
+ * @generated SignedSource<<98c4ce78a313c24b5fcdc7f499fd5eca>>
+ * @relayHash c0e08473a8a9491fea71e0f8e8bcda80
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 5b911b829291a463eae18218c33f1ce6
+// @relayRequestID c0e08473a8a9491fea71e0f8e8bcda80
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -339,6 +339,8 @@ return {
                 "name": "gameSession",
                 "plural": false,
                 "selections": [
+                  (v3/*: any*/),
+                  (v5/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -346,8 +348,6 @@ return {
                     "name": "isClosed",
                     "storageKey": null
                   },
-                  (v3/*: any*/),
-                  (v5/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -381,7 +381,7 @@ return {
     ]
   },
   "params": {
-    "id": "5b911b829291a463eae18218c33f1ce6",
+    "id": "c0e08473a8a9491fea71e0f8e8bcda80",
     "metadata": {},
     "name": "RouletteQuery",
     "operationKind": "query",

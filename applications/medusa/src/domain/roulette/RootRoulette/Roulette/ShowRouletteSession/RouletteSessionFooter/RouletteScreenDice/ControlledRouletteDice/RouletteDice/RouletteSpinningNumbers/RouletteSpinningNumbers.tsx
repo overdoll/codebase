@@ -11,6 +11,8 @@ export default function RouletteSpinningNumbers (props: Props): JSX.Element {
     variant
   } = props
 
+  // TODO warp the numbers in a "squeeze" fashion so it looks like they're moving
+
   const numberSetOne = [1, 2, 3, 4, 5, 6]
 
   const numberSetTwo = [1, 2, 3, 4, 5, 6]

@@ -1,9 +1,9 @@
 import { Flex, Heading, HeadingProps } from '@chakra-ui/react'
-import BackgroundGlow from '../../../../BackgroundGlow/BackgroundGlow'
+import BackgroundGlow from '../../../../../BackgroundGlow/BackgroundGlow'
 import RouletteSpinningNumbers from './RouletteSpinningNumbers/RouletteSpinningNumbers'
 
 interface Props {
-  number?: number
+  number: number | undefined
   isSpinning?: boolean
   numberCycleVariant: number
 }
@@ -26,9 +26,10 @@ export default function RouletteDice (props: Props): JSX.Element {
     <Flex
       position='relative'
     >
-      {(!isSpinning && number != null) && (
-        <BackgroundGlow colorScheme={numberColorScheme[number - 1]} />
-      )}
+      <BackgroundGlow
+        isVisible={!isSpinning && number != null}
+        colorScheme={number != null ? numberColorScheme[number - 1] : 'gray'}
+      />
       <Flex
         align='center'
         justify='center'
