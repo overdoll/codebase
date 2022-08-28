@@ -137,6 +137,8 @@ export default function RouletteScreenDice (props: Props): JSX.Element {
   }
 
   const spinThirdDice = (): void => {
+    if (data == null) return
+
     const thirdDiceDuration = ((data?.diceOne === data?.diceTwo) && data?.diceOne != null)
       ? generateDurationFromType('veryslow')
       : (((data?.diceOne === data?.diceThree || data?.diceTwo === data?.diceThree) && data?.diceThree != null)

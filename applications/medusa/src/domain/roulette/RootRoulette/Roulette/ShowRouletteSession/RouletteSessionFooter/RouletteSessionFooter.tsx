@@ -7,7 +7,7 @@ import RouletteScreenDice from './RouletteScreenDice/RouletteScreenDice'
 import DiceTable from './DiceTable/DiceTable'
 
 interface Props {
-  query: RouletteSessionFooterFragment$key
+  query: RouletteSessionFooterFragment$key | null
 }
 
 const Fragment = graphql`
@@ -36,7 +36,7 @@ export default function RouletteSessionFooter (props: Props): JSX.Element {
     >
       <GridItem>
         <DiceTable>
-          <RouletteScreenDice query={data.gameState} />
+          <RouletteScreenDice query={data?.gameState ?? null} />
         </DiceTable>
       </GridItem>
       <GridItem>

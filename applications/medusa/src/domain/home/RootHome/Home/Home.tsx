@@ -8,6 +8,7 @@ import CurationProfileAlert from '../CurationProfileAlert/CurationProfileAlert'
 import HomeLinkTile from '../HomeLinkTile/HomeLinkTile'
 import { FurryFox, HentaiSkirt, RandomizeDice, SearchBar, ThreeDRender } from '@//:assets/icons'
 import BrowsePostsPreview from './BrowsePostsPreview/BrowsePostsPreview'
+import HomeGameTile from '../HomeGameTile/HomeGameTile'
 
 interface Props {
   query: PreloadedQuery<HomeQuery>
@@ -35,9 +36,25 @@ export default function Home (props: Props): JSX.Element {
       <AccountInformationBanner query={queryData?.viewer} />
       <CurationProfileAlert query={queryData?.viewer} />
       <Stack spacing={24}>
+        <HomeGameTile
+          href='/roulette'
+          bg='/banners/roulette-banner.jpg'
+          video='/banners/roulette-preview.mp4'
+          icon={RandomizeDice}
+          header={(
+            <Trans>
+              Rule34 Roulette
+            </Trans>
+          )}
+          footer={(
+            <Trans>
+              Spin your way through rule34, hentai, furry, 3D porn videos and images and see how long you can last
+            </Trans>
+          )}
+        />
         <Stack spacing={4}>
           <Heading color='gray.00' fontSize='2xl'>
-            <Trans>Show By Category</Trans>
+            <Trans>Browse Category</Trans>
           </Heading>
           <Stack spacing={8}>
             <HomeLinkTile

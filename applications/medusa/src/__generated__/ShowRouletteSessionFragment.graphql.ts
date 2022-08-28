@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<058df262cff7345db86e3428008243d4>>
+ * @generated SignedSource<<b32d81e1e77c6dabfeaf4c5725e4d0f2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -41,10 +41,10 @@ const node: ReaderFragment = {
       "name": "RouletteSubtitleTrackFragment"
     }
   ],
-  "type": "RouletteStatus",
-  "abstractKey": null
+  "type": "GameSessionStatus",
+  "abstractKey": "__isGameSessionStatus"
 };
 
-(node as any).hash = "ae505e8464d6a8bf06557868028e0f1a";
+(node as any).hash = "f9def8536c4be5e35a09f849a67f6dea";
 
 export default node;

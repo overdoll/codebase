@@ -41,7 +41,7 @@ export default function RouletteScreenBackground (props: Props): JSX.Element {
 
   return (
     <BlurredBackgroundThumbnail
-      backgroundImage={thumbnailUrl}
+      backgroundImage={thumbnailUrl ?? '/banners/roulette-banner.jpg'}
       backgroundColor={backgroundColor}
     />
   )

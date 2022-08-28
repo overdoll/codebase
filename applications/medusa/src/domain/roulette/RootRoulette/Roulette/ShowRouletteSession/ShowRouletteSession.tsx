@@ -7,12 +7,12 @@ import RouletteSessionFooter from './RouletteSessionFooter/RouletteSessionFooter
 import RouletteSubtitleTrack from './RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack'
 
 interface Props {
-  query: ShowRouletteSessionFragment$key
+  query: ShowRouletteSessionFragment$key | null
   viewerQuery: ShowRouletteSessionViewerFragment$key | null
 }
 
 const Fragment = graphql`
-  fragment ShowRouletteSessionFragment on RouletteStatus {
+  fragment ShowRouletteSessionFragment on GameSessionStatus {
     ...RouletteSessionFooterFragment
     ...RouletteSessionScreenFragment
     ...RouletteSubtitleTrackFragment

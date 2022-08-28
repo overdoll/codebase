@@ -48,7 +48,7 @@ export default function PostGalleryPublicContained ({
 
   const [swiper, setSwiper] = useState<null | SwiperType>(null)
 
-  const determineRows = postData.content.length > 10 ? '1fr 10vh' : (postData.content.length > 1 ? '1fr 5vh' : '1fr')
+  const determineRows = postData.content.length > 10 ? '1fr 10vh' : (postData.content.length > 1 ? '1fr 5vh' : '100%')
 
   return (
     <Grid gap={1} overflow='hidden' templateRows={determineRows} templateColumns='100%' h='100%'>
@@ -91,9 +91,11 @@ export default function PostGalleryPublicContained ({
             </SwiperSlide>)}
         </Swiper>
       </GridItem>
-      <GridItem overflow='hidden'>
-        <PostSlideIndex fillHeight swiper={swiper} query={postData} />
-      </GridItem>
+      {postData.content.length > 1 && (
+        <GridItem overflow='hidden'>
+          <PostSlideIndex fillHeight swiper={swiper} query={postData} />
+        </GridItem>
+      )}
     </Grid>
   )
 }

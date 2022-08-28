@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<5583d276a545a63cf26e22462cb2af8b>>
- * @relayHash 45e911f95835d0582fac4e1a2d6763d3
+ * @generated SignedSource<<f1e1727883e8c6fc22cd513cd4e50fb8>>
+ * @relayHash 751401278053588b7fc660a694798239
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 45e911f95835d0582fac4e1a2d6763d3
+// @relayRequestID 751401278053588b7fc660a694798239
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,12 +18,7 @@ export type RouletteQuery$variables = {
 };
 export type RouletteQuery$data = {
   readonly gameSessionStatus: {
-    readonly __typename: "RouletteStatus";
     readonly " $fragmentSpreads": FragmentRefs<"ShowRouletteSessionFragment">;
-  } | {
-    // This will never be '%other', but we need some
-    // value in case none of the concrete values match.
-    readonly __typename: "%other";
   } | null;
   readonly viewer: {
     readonly " $fragmentSpreads": FragmentRefs<"ShowRouletteSessionViewerFragment">;
@@ -176,18 +171,10 @@ return {
         "name": "gameSessionStatus",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
           {
-            "kind": "InlineFragment",
-            "selections": [
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "ShowRouletteSessionFragment"
-              }
-            ],
-            "type": "RouletteStatus",
-            "abstractKey": null
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ShowRouletteSessionFragment"
           }
         ],
         "storageKey": null
@@ -227,6 +214,10 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
+          {
+            "kind": "TypeDiscriminator",
+            "abstractKey": "__isGameSessionStatus"
+          },
           {
             "kind": "InlineFragment",
             "selections": [
@@ -449,7 +440,7 @@ return {
     ]
   },
   "params": {
-    "id": "45e911f95835d0582fac4e1a2d6763d3",
+    "id": "751401278053588b7fc660a694798239",
     "metadata": {},
     "name": "RouletteQuery",
     "operationKind": "query",
@@ -458,7 +449,7 @@ return {
 };
 })();
 
-(node as any).hash = "7e145f56a710c6d516eed1869d34e4b1";
+(node as any).hash = "9f684282a0f87ea87acdb299bbeb90ce";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

@@ -9,7 +9,7 @@ import { useState } from 'react'
 import { useUpdateEffect } from 'usehooks-ts'
 
 interface Props {
-  query: RouletteSubtitleTrackFragment$key
+  query: RouletteSubtitleTrackFragment$key | null
 }
 
 const Fragment = graphql`
@@ -93,7 +93,7 @@ export default function RouletteSubtitleTrack (props: Props): JSX.Element {
     i18n._(t`Triple. Don't disappoint me.`)
   ]
 
-  const diceRolls = data.gameState != null ? [data.gameState.diceOne, data.gameState.diceThree, data.gameState.diceTwo] : [1, 2, 3]
+  const diceRolls = data?.gameState != null ? [data.gameState.diceOne, data.gameState.diceThree, data.gameState.diceTwo] : [1, 2, 3]
 
   const SUBTITLE_STATES = {
     pending: PENDING_SUBTITLES,
@@ -104,6 +104,9 @@ export default function RouletteSubtitleTrack (props: Props): JSX.Element {
   }
 
   const getCurrentState = (): string => {
+    if (data == null) {
+      return 'pending'
+    }
     if (data.gameState == null) {
       return 'pending'
     }
@@ -147,7 +150,7 @@ export default function RouletteSubtitleTrack (props: Props): JSX.Element {
         bg='dimmers.100'
         w='100%'
         h='100%'
-        align='flex-end'
+        align='center'
         justify='center'
       >
         <motion.div

@@ -6,7 +6,7 @@ import RouletteScreenInstructions from './RouletteScreenInstructions/RouletteScr
 import RouletteScreenGame from './RouletteScreenGame/RouletteScreenGame'
 
 interface Props {
-  query: RouletteSessionScreenFragment$key
+  query: RouletteSessionScreenFragment$key | null
   viewerQuery: RouletteSessionScreenViewerFragment$key | null
 }
 
@@ -43,7 +43,7 @@ export default function RouletteSessionScreen (props: Props): JSX.Element {
 
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
-  if (data.gameState == null) {
+  if (data?.gameState == null) {
     return <RouletteScreenInstructions />
   }
 

@@ -15,7 +15,7 @@ import { useUpdateEffect } from 'usehooks-ts'
 import { useKeyPress } from '@//:modules/support/useKeyPress'
 
 interface Props {
-  query: SpinRouletteFragment$key
+  query: SpinRouletteFragment$key | null
 }
 
 interface SearchProps {
@@ -83,7 +83,7 @@ export default function SpinRoulette (props: Props): JSX.Element {
     loadQuery
   } = useSearch<SearchProps>({
     defaultValue: {
-      reference: data.gameSession.reference
+      reference: data?.gameSession?.reference ?? ''
     }
   })
 
@@ -99,6 +99,8 @@ export default function SpinRoulette (props: Props): JSX.Element {
   const notify = useToast()
 
   const onSpin = (): void => {
+    if (data == null) return
+
     spinRoulette({
       variables: {
         input: {
@@ -116,11 +118,6 @@ export default function SpinRoulette (props: Props): JSX.Element {
         if (data.gameState == null) {
           const payload = store.getRootField('spinRoulette').getLinkedRecord('rouletteGameState')
           store.getRoot().getLinkedRecord('gameSessionStatus', { reference: data.gameSession.reference })?.setLinkedRecord(payload, 'gameState')
-          dispatch({
-            type: 'tutorialCompleted',
-            value: true,
-            transform: 'SET'
-          })
         }
       },
       onError () {
@@ -132,7 +129,7 @@ export default function SpinRoulette (props: Props): JSX.Element {
     })
   }
 
-  const onCreateGame = (): void => {
+  const onCreateGame = (completeTutorial: boolean): void => {
     createGame({
       variables: {
         input: {
@@ -142,6 +139,13 @@ export default function SpinRoulette (props: Props): JSX.Element {
       onCompleted (storeData) {
         if (storeData.createGameSession?.gameSession?.reference != null) {
           setGameSessionId(storeData.createGameSession.gameSession.reference)
+        }
+        if (completeTutorial) {
+          dispatch({
+            type: 'tutorialCompleted',
+            value: true,
+            transform: 'SET'
+          })
         }
       },
       onError () {
@@ -154,8 +158,12 @@ export default function SpinRoulette (props: Props): JSX.Element {
   }
 
   const onClick = (): void => {
+    if (data == null) {
+      onCreateGame(true)
+      return
+    }
     if (!data.gameSession.viewerIsPlayer) {
-      onCreateGame()
+      onCreateGame(false)
       return
     }
     // if spinning, you can skip it with the first button click
@@ -168,33 +176,39 @@ export default function SpinRoulette (props: Props): JSX.Element {
       return
     }
     if (data.gameSession.isClosed) {
-      onCreateGame()
+      if (state.tutorialCompleted === false) {
+        setGameSessionId(undefined)
+        return
+      }
+      onCreateGame(false)
       return
     }
     onSpin()
   }
 
-  const diceRolls = data.gameState != null ? [data.gameState.diceOne, data.gameState.diceThree, data.gameState.diceTwo] : [1, 2, 3]
+  const diceRolls = data?.gameState != null ? [data.gameState.diceOne, data.gameState.diceThree, data.gameState.diceTwo] : [1, 2, 3]
 
   const isReSpin = !(new Set(diceRolls).size === diceRolls.length) && !(diceRolls.every(val => val === diceRolls[0]))
 
   // If user completed tutorial, we want to spin right away instead of showing them the screen again
   useEffect(() => {
-    if (data.gameState == null && state.tutorialCompleted === true) {
+    if (data == null) return
+    if (data?.gameState == null && state.tutorialCompleted === true) {
       onSpin()
     }
-  }, [state.tutorialCompleted, data.gameState])
+  }, [state.tutorialCompleted, data?.gameState])
 
   // If user gets a triple, we load a query to see the results
   useEffect(() => {
-    if (data.gameState == null || data.gameSession.isClosed) return
+    if (data == null) return
+    if (data?.gameState == null || data.gameSession.isClosed) return
     if (diceRolls.every(val => val === diceRolls[0])) {
       setArguments({
         reference: data.gameSession.reference
       })
       loadQuery()
     }
-  }, [data.gameState, data.gameSession])
+  }, [data?.gameState, data?.gameSession])
 
   useUpdateEffect(() => {
     dispatch({
@@ -212,7 +226,7 @@ export default function SpinRoulette (props: Props): JSX.Element {
 
   return (
     <>
-      {(data.gameState != null && diceRolls.every(val => val === diceRolls[0])) && (
+      {(data?.gameState != null && diceRolls.every(val => val === diceRolls[0])) && (
         <Suspense fallback={<></>}>
           <SpinRouletteUpdate searchArguments={searchArguments} />
         </Suspense>
