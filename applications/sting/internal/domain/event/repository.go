@@ -16,6 +16,7 @@ type Repository interface {
 	DiscardPost(ctx context.Context, postId string) error
 	SubmitPost(ctx context.Context, requester *principal.Principal, pst *post.Post, postTime time.Time) error
 	RemovePost(ctx context.Context, postId string) error
+	CancelPost(ctx context.Context, postId string) error
 	AddPostLike(ctx context.Context, like *post.Like) error
 	RemovePostLike(ctx context.Context, like *post.Like) error
 

@@ -57,6 +57,7 @@ go_library(
     deps = [
         "//applications/sting/internal/domain/club",
         "//applications/sting/internal/domain/curation",
+        "//applications/sting/internal/domain/event",
         "//applications/sting/internal/domain/post",
         "//applications/sting/internal/domain/resource_options",
         "//libraries/resource",

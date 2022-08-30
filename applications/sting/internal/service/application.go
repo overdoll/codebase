@@ -255,6 +255,6 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			ClubSupporterMembersCount:   query.NewClubSupporterMembersCountHandler(clubRepo),
 			GameSessionStatus:           query.NewGameSessionStatusHandler(gamesRepo),
 		},
-		Activities: activities.NewActivitiesHandler(postRepo, clubRepo, personalizationRepo, parley, loader, carrier),
+		Activities: activities.NewActivitiesHandler(postRepo, clubRepo, personalizationRepo, eventRepo, parley, loader, carrier),
 	}
 }

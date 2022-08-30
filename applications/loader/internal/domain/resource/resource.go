@@ -273,7 +273,7 @@ func createPreviewFromFile(r io.Reader) (string, error) {
 	img, err := jpeg.Decode(r)
 
 	if err != nil {
-		return "", err
+		return "", errors.Wrap(err, "failed to decode jpeg")
 	}
 
 	var cols []prominentcolor.ColorItem
@@ -283,6 +283,7 @@ func createPreviewFromFile(r io.Reader) (string, error) {
 	if err != nil {
 
 		if err.Error() == "Failed, no non-alpha pixels found (either fully transparent image, or the ColorBackgroundMask removed all pixels)" {
+
 			err = nil
 			cols, err = prominentcolor.KmeansWithAll(prominentcolor.DefaultK, img, prominentcolor.ArgumentDefault, prominentcolor.DefaultSize, []prominentcolor.ColorBackgroundMask{})
 
@@ -307,9 +308,12 @@ type ffmpegProbeStream struct {
 		Height   int    `json:"height"`
 		Duration string `json:"duration"`
 	} `json:"streams"`
+	Format struct {
+		Duration string `json:"duration"`
+	} `json:"format"`
 }
 
-func (r *Resource) processVideo(fileName string, file *os.File, config *Config) ([]*Move, error) {
+func (r *Resource) processVideo(fileName string, file *os.File, config *Config, mimeType string) ([]*Move, error) {
 
 	// arguments we wil use to encode our video
 	// h.264 codec, with crf=18 (good quality, indistinguishable from original)
@@ -415,6 +419,7 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 	str, err = ffmpeg_go.Probe(file.Name(), map[string]interface{}{
 		"select_streams": "v:0",
 		"show_entries":   "stream=width,height",
+		"show_format":    "",
 	})
 
 	if err != nil {
@@ -424,7 +429,7 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 	var videoStreamProbeResult *ffmpegProbeStream
 
 	if err := json.Unmarshal([]byte(str), &videoStreamProbeResult); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to unmarshal probe stream")
 	}
 
 	// logic for scaling down the video resolution if it's too large
@@ -449,9 +454,9 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 		}
 	}
 
-	parsedDuration, err := strconv.ParseFloat(videoStreamProbeResult.Streams[0].Duration, 64)
+	parsedDuration, err := strconv.ParseFloat(videoStreamProbeResult.Format.Duration, 64)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to parse duration")
 	}
 
 	socket, err, done := createFFMPEGTempSocket(r.itemId, r.id, parsedDuration)
@@ -502,12 +507,12 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 	var probeResult *ffmpegProbeStream
 
 	if err := json.Unmarshal([]byte(str), &probeResult); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to unmarshal probe stream #2")
 	}
 
-	s, err := strconv.ParseFloat(probeResult.Streams[0].Duration, 32)
+	s, err := strconv.ParseFloat(probeResult.Format.Duration, 64)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to parse probe duration")
 	}
 
 	r.width = probeResult.Streams[0].Width
@@ -524,7 +529,7 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config) 
 	preview, err := createPreviewFromFile(fileThumbnail)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to create preview from thumbnail")
 	}
 
 	_, _ = fileThumbnail.Seek(0, io.SeekStart)
@@ -684,7 +689,7 @@ func (r *Resource) ProcessResource(file *os.File, config *Config) ([]*Move, erro
 	}
 
 	if foundVideo {
-		moveTargets, err = r.processVideo(fileName, file, config)
+		moveTargets, err = r.processVideo(fileName, file, config, mimeType)
 
 		if err != nil {
 			return nil, err
