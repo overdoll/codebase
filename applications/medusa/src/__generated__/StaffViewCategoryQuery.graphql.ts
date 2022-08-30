@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<2f6088b7c2db5a524b745218eef7de95>>
- * @relayHash 3494b38d6e451d71230d041ef7af0370
+ * @generated SignedSource<<4dca2b781500fc9cc9cede6750372553>>
+ * @relayHash bf7eeea3ed4b057282721d57ab8ab5da
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3494b38d6e451d71230d041ef7af0370
+// @relayRequestID bf7eeea3ed4b057282721d57ab8ab5da
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -166,6 +166,13 @@ return {
             "name": "banner",
             "plural": false,
             "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "preview",
+                "storageKey": null
+              },
               (v3/*: any*/),
               {
                 "alias": null,
@@ -198,13 +205,6 @@ return {
                 "args": null,
                 "kind": "ScalarField",
                 "name": "height",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "preview",
                 "storageKey": null
               },
               {
@@ -248,7 +248,7 @@ return {
     ]
   },
   "params": {
-    "id": "3494b38d6e451d71230d041ef7af0370",
+    "id": "bf7eeea3ed4b057282721d57ab8ab5da",
     "metadata": {},
     "name": "StaffViewCategoryQuery",
     "operationKind": "query",

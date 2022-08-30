@@ -47,6 +47,9 @@ export default function CharacterLinkTile ({
   return (
     <LinkTile
       {...rest}
+      linkProps={{
+        prefetch: false
+      }}
       href={decideHref}
     >
       {children}

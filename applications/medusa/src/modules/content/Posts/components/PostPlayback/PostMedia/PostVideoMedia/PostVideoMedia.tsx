@@ -15,6 +15,7 @@ interface Props extends Pick<ControlledVideoProps, 'controls'>, ObserveContentCa
 const Fragment = graphql`
   fragment PostVideoMediaFragment on Resource {
     ...ControlledVideoFragment
+    ...useVideoControlsFragment
   }
 `
 
@@ -40,7 +41,7 @@ export default function PostVideoMedia ({
     pause,
     play,
     ref
-  } = useVideoControls(newRef)
+  } = useVideoControls(newRef, data)
 
   const slide = useSwiperSlide()
 
@@ -70,7 +71,6 @@ export default function PostVideoMedia ({
   return (
     <ControlledVideo
       hideBackground={hideBackground}
-      autoPlay={isObservingDebounced ? true : undefined}
       ref={ref}
       controls={controls}
       onVolumeChange={(volume) => changeVideoVolume(volume)}

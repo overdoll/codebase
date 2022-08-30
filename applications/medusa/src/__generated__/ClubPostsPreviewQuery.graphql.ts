@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<398c4e6218061d303fb5fb6f6c66cad8>>
- * @relayHash ff804d95aa6dbe2582390c8d4e41f14e
+ * @generated SignedSource<<237d0c474982da440b6b9b85214f10eb>>
+ * @relayHash a0be8741bda36672bb228e293de8fc52
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ff804d95aa6dbe2582390c8d4e41f14e
+// @relayRequestID a0be8741bda36672bb228e293de8fc52
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -350,11 +350,11 @@ return {
                             "name": "thumbnail",
                             "plural": false,
                             "selections": [
+                              (v12/*: any*/),
                               (v6/*: any*/),
                               (v11/*: any*/),
                               (v8/*: any*/),
                               (v9/*: any*/),
-                              (v12/*: any*/),
                               (v13/*: any*/),
                               (v7/*: any*/)
                             ],
@@ -520,7 +520,7 @@ return {
     ]
   },
   "params": {
-    "id": "ff804d95aa6dbe2582390c8d4e41f14e",
+    "id": "a0be8741bda36672bb228e293de8fc52",
     "metadata": {},
     "name": "ClubPostsPreviewQuery",
     "operationKind": "query",

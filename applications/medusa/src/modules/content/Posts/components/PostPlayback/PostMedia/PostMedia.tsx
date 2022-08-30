@@ -23,30 +23,23 @@ export default function PostMedia ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const DisplayMedia = (): JSX.Element => {
-    switch (data.type) {
-      case 'IMAGE':
-        return <ImageSnippet containCover cover query={data} />
-      case 'VIDEO':
-        return (
-          <ObserveContent height={data.height} width={data.width}>
-            {({
-              isObserving,
-              isObservingDebounced
-            }) => (
-              <PostVideoMedia
-                controls={{ canControl: false }}
-                isObserving={isObserving}
-                isObservingDebounced={isObservingDebounced}
-                query={data}
-              />
-            )}
-          </ObserveContent>
-        )
-      default:
-        return <></>
-    }
+  if (data.type === 'IMAGE') {
+    return <ImageSnippet containCover cover query={data} />
   }
 
-  return <DisplayMedia />
+  return (
+    <ObserveContent height={data.height} width={data.width}>
+      {({
+        isObserving,
+        isObservingDebounced
+      }) => (
+        <PostVideoMedia
+          controls={{ canControl: false }}
+          isObserving={isObserving}
+          isObservingDebounced={isObservingDebounced}
+          query={data}
+        />
+      )}
+    </ObserveContent>
+  )
 }

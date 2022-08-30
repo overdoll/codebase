@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b204aaa2a8f17f84ca7a3a7f50adbeeb>>
- * @relayHash 29120b611fc482e279ae89a97e3c1e62
+ * @generated SignedSource<<0c8caaad8e71ef6e7d2f242bb4af8370>>
+ * @relayHash aac66956a5a60b2da70ddd97c3ed4a0d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 29120b611fc482e279ae89a97e3c1e62
+// @relayRequestID aac66956a5a60b2da70ddd97c3ed4a0d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -169,6 +169,13 @@ return {
             "name": "thumbnail",
             "plural": false,
             "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "preview",
+                "storageKey": null
+              },
               (v4/*: any*/),
               {
                 "alias": null,
@@ -201,13 +208,6 @@ return {
                 "args": null,
                 "kind": "ScalarField",
                 "name": "height",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "preview",
                 "storageKey": null
               },
               {
@@ -257,7 +257,7 @@ return {
     ]
   },
   "params": {
-    "id": "29120b611fc482e279ae89a97e3c1e62",
+    "id": "aac66956a5a60b2da70ddd97c3ed4a0d",
     "metadata": {},
     "name": "SelectClubsQuery",
     "operationKind": "query",

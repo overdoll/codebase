@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3797239744df232c9ea6cae34e6dbb16>>
- * @relayHash 9ea54aa907da61415ac2a1272a11049a
+ * @generated SignedSource<<8427142258d96412fd782dafc4bfcbe1>>
+ * @relayHash 2048f0b5c72dce487dc22cbda78ba715
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9ea54aa907da61415ac2a1272a11049a
+// @relayRequestID 2048f0b5c72dce487dc22cbda78ba715
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -66,10 +66,17 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "preview",
   "storageKey": null
 },
 v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v7 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -77,7 +84,7 @@ v6 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v5/*: any*/),
+    (v6/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -88,25 +95,18 @@ v6 = {
   ],
   "storageKey": null
 },
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "width",
   "storageKey": null
 },
-v8 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "height",
-  "storageKey": null
-},
 v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "preview",
+  "name": "height",
   "storageKey": null
 },
 v10 = {
@@ -117,7 +117,7 @@ v10 = {
   "name": "videoThumbnail",
   "plural": false,
   "selections": [
-    (v5/*: any*/)
+    (v6/*: any*/)
   ],
   "storageKey": null
 },
@@ -240,8 +240,8 @@ return {
             "name": "banner",
             "plural": false,
             "selections": [
+              (v5/*: any*/),
               (v4/*: any*/),
-              (v6/*: any*/),
               (v7/*: any*/),
               (v8/*: any*/),
               (v9/*: any*/),
@@ -312,7 +312,6 @@ return {
                         "name": "banner",
                         "plural": false,
                         "selections": [
-                          (v11/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -320,7 +319,7 @@ return {
                             "name": "processed",
                             "storageKey": null
                           },
-                          (v9/*: any*/),
+                          (v5/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -354,10 +353,11 @@ return {
                             ],
                             "storageKey": null
                           },
+                          (v11/*: any*/),
                           (v4/*: any*/),
-                          (v6/*: any*/),
                           (v7/*: any*/),
                           (v8/*: any*/),
+                          (v9/*: any*/),
                           (v10/*: any*/)
                         ],
                         "storageKey": null
@@ -425,7 +425,7 @@ return {
     ]
   },
   "params": {
-    "id": "9ea54aa907da61415ac2a1272a11049a",
+    "id": "2048f0b5c72dce487dc22cbda78ba715",
     "metadata": {},
     "name": "StaffViewSeriesQuery",
     "operationKind": "query",

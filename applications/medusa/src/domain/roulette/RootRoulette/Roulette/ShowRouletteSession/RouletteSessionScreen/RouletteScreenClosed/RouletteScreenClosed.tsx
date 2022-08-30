@@ -87,7 +87,6 @@ export default function RouletteScreenClosed (props: Props): JSX.Element {
       scale: [null, 1],
       opacity: [null, 1],
       transition: {
-        delay: 1,
         duration: 0.7,
         staggerChildren: 0.5
       }

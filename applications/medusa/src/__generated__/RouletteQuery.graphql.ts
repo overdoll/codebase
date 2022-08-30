@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f1e1727883e8c6fc22cd513cd4e50fb8>>
- * @relayHash 751401278053588b7fc660a694798239
+ * @generated SignedSource<<f5d112240c92779f5f2925b83f647c50>>
+ * @relayHash 733568d5f11b1729810cedeb03a46a3f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 751401278053588b7fc660a694798239
+// @relayRequestID 733568d5f11b1729810cedeb03a46a3f
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -62,10 +62,17 @@ v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "preview",
   "storageKey": null
 },
 v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v6 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -73,7 +80,7 @@ v5 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v4/*: any*/),
+    (v5/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -84,25 +91,18 @@ v5 = {
   ],
   "storageKey": null
 },
-v6 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "width",
   "storageKey": null
 },
-v7 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "height",
-  "storageKey": null
-},
 v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "preview",
+  "name": "height",
   "storageKey": null
 },
 v9 = {
@@ -113,7 +113,7 @@ v9 = {
   "name": "videoThumbnail",
   "plural": false,
   "selections": [
-    (v4/*: any*/)
+    (v5/*: any*/)
   ],
   "storageKey": null
 },
@@ -132,8 +132,8 @@ v11 = {
   "name": "banner",
   "plural": false,
   "selections": [
+    (v4/*: any*/),
     (v3/*: any*/),
-    (v5/*: any*/),
     (v6/*: any*/),
     (v7/*: any*/),
     (v8/*: any*/),
@@ -329,10 +329,10 @@ return {
                             "selections": [
                               (v10/*: any*/),
                               (v3/*: any*/),
-                              (v5/*: any*/),
                               (v6/*: any*/),
                               (v7/*: any*/),
                               (v8/*: any*/),
+                              (v4/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -440,7 +440,7 @@ return {
     ]
   },
   "params": {
-    "id": "751401278053588b7fc660a694798239",
+    "id": "733568d5f11b1729810cedeb03a46a3f",
     "metadata": {},
     "name": "RouletteQuery",
     "operationKind": "query",

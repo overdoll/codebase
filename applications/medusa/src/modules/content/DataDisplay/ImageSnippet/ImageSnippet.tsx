@@ -78,7 +78,8 @@ export default function ImageSnippet ({
       height: containCover === true ? undefined : '100%',
       objectFit: determineCover ? (containCover === true ? 'contain' : 'cover') : 'cover' as any,
       ...style
-    }
+    },
+    draggable: false
   }
 
   const isHydrated = useHydrate()

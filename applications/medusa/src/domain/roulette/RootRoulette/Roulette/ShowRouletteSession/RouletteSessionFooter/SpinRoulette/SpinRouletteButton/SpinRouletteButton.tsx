@@ -1,7 +1,7 @@
-import { IconButtonProps } from '@chakra-ui/react'
+import { Heading, IconButtonProps, Kbd, Popover, PopoverContent, PopoverTrigger } from '@chakra-ui/react'
 import { ArrowRoundRight, ControlFastForward, ControlPlayButton } from '@//:assets/icons'
 import { Icon } from '@//:modules/content/PageLayout'
-import { t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { motion, useAnimationControls } from 'framer-motion'
 import IconButton from '@//:modules/form/IconButton/IconButton'
@@ -11,6 +11,7 @@ import BackgroundGlow from '../../../../BackgroundGlow/BackgroundGlow'
 interface Props extends Omit<IconButtonProps, 'aria-label'> {
   canFastForward?: boolean
   isReSpin?: boolean
+  showSpinConfirm?: boolean
 }
 
 export default function SpinRouletteButton (props: Props): JSX.Element {
@@ -18,6 +19,7 @@ export default function SpinRouletteButton (props: Props): JSX.Element {
     isDisabled = false,
     canFastForward = false,
     isReSpin = false,
+    showSpinConfirm = false,
     ...rest
   } = props
 
@@ -73,6 +75,7 @@ export default function SpinRouletteButton (props: Props): JSX.Element {
   return (
     <motion.div
       animate={bounceControls}
+      layoutScroll
       transition={{
         delay: 5,
         duration: 0.7,
@@ -83,26 +86,42 @@ export default function SpinRouletteButton (props: Props): JSX.Element {
         bounce: 0.5
       }}
       style={{
-        position: 'relative',
-        top: 0,
-        left: 0,
-        zIndex: 5
+        zIndex: 5,
+        position: 'relative'
       }}
     >
       <BackgroundGlow isVisible={allowAnimation} colorScheme='green' />
-      <IconButton
-        as={motion.button}
-        whileTap={allowAnimation && {
-          scale: [1, 0.85],
-          transition: {
-            duration: 0.1
-          }
-        }}
-        {...DEFAULT_BUTTON_PROPS}
-        {...rest}
-        colorScheme={canFastForwardCheck ? 'gray' : 'green'}
-        isDisabled={isDisabled}
-      />
+      <Popover
+        returnFocusOnClose={false}
+        closeOnBlur={false}
+        isOpen={showSpinConfirm}
+      >
+        <PopoverTrigger>
+          <IconButton
+            as={motion.button}
+            layout
+            whileTap={allowAnimation && {
+              scale: [1, 0.85],
+              transition: {
+                duration: 0.1
+              }
+            }}
+            {...DEFAULT_BUTTON_PROPS}
+            {...rest}
+            colorScheme={canFastForwardCheck ? 'gray' : 'green'}
+            isDisabled={isDisabled}
+          />
+        </PopoverTrigger>
+        <PopoverContent bg='dimmers.700' p={4}>
+          <Heading fontSize='lg' color='red.300'>
+            <Trans>
+              You lost the roulette! Tap on the button or hit <Kbd borderColor='red.300'>SPACE</Kbd> to
+              start a new
+              game.
+            </Trans>
+          </Heading>
+        </PopoverContent>
+      </Popover>
     </motion.div>
   )
 }

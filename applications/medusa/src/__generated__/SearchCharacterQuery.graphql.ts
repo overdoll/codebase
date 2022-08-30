@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e4e8df49a275bdaf3db27ecbd2301cdf>>
- * @relayHash 4c596b1dc9f8354e872cdf24e4e99ba9
+ * @generated SignedSource<<07e99593d685b80a301139c32ccc5a97>>
+ * @relayHash 3b632cdb345001858dd6bf2327dedd75
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4c596b1dc9f8354e872cdf24e4e99ba9
+// @relayRequestID 3b632cdb345001858dd6bf2327dedd75
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -438,11 +438,11 @@ return {
                             "name": "thumbnail",
                             "plural": false,
                             "selections": [
+                              (v17/*: any*/),
                               (v10/*: any*/),
                               (v16/*: any*/),
                               (v13/*: any*/),
                               (v14/*: any*/),
-                              (v17/*: any*/),
                               (v18/*: any*/),
                               (v12/*: any*/)
                             ],
@@ -645,7 +645,7 @@ return {
     ]
   },
   "params": {
-    "id": "4c596b1dc9f8354e872cdf24e4e99ba9",
+    "id": "3b632cdb345001858dd6bf2327dedd75",
     "metadata": {},
     "name": "SearchCharacterQuery",
     "operationKind": "query",

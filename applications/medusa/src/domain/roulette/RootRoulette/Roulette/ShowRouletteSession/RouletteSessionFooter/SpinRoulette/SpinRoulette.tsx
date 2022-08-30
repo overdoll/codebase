@@ -9,7 +9,7 @@ import { useToast } from '@//:modules/content/ThemeComponents'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import SpinRouletteButton from './SpinRouletteButton/SpinRouletteButton'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
-import React, { Suspense, useEffect } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import SpinRouletteUpdate from './SpinRouletteButton/SpinRouletteUpdate/SpinRouletteUpdate'
 import { useUpdateEffect } from 'usehooks-ts'
 import { useKeyPress } from '@//:modules/support/useKeyPress'
@@ -96,6 +96,9 @@ export default function SpinRoulette (props: Props): JSX.Element {
 
   const disableSpin = state.isPending === true || isCreatingGame
 
+  const spinTwice = data?.gameSession?.isClosed === true && data?.gameSession?.viewerIsPlayer
+  const [confirmSpin, setConfirmSpin] = useState(true)
+
   const notify = useToast()
 
   const onSpin = (): void => {
@@ -114,7 +117,7 @@ export default function SpinRoulette (props: Props): JSX.Element {
           transform: 'SET'
         })
       },
-      updater: (store, payload) => {
+      updater: (store) => {
         if (data.gameState == null) {
           const payload = store.getRootField('spinRoulette').getLinkedRecord('rouletteGameState')
           store.getRoot().getLinkedRecord('gameSessionStatus', { reference: data.gameSession.reference })?.setLinkedRecord(payload, 'gameState')
@@ -147,6 +150,7 @@ export default function SpinRoulette (props: Props): JSX.Element {
             transform: 'SET'
           })
         }
+        setConfirmSpin(true)
       },
       onError () {
         notify({
@@ -158,6 +162,10 @@ export default function SpinRoulette (props: Props): JSX.Element {
   }
 
   const onClick = (): void => {
+    if (spinTwice && confirmSpin && state.isSpinning === false) {
+      setConfirmSpin(false)
+      return
+    }
     if (data == null) {
       onCreateGame(true)
       return
@@ -233,6 +241,7 @@ export default function SpinRoulette (props: Props): JSX.Element {
       )}
       <SpinRouletteButton
         isReSpin={isReSpin}
+        showSpinConfirm={spinTwice && !confirmSpin}
         canFastForward={state.isSpinning === true && state.isPending === false}
         isDisabled={disableSpin}
         onClick={onClick}

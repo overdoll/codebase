@@ -37,7 +37,7 @@ export default function RouletteScreenBackground (props: Props): JSX.Element {
     ? (data.content[0].resource.videoThumbnail?.url ?? '')
     : (data.content[0].resource.urls.filter((item) => item.mimeType === 'image/jpeg')[0]?.url ?? '')
 
-  const backgroundColor = data.content[0].resource.preview ?? ''
+  const backgroundColor = data.content[0].resource.preview ?? 'orange.100'
 
   return (
     <BlurredBackgroundThumbnail

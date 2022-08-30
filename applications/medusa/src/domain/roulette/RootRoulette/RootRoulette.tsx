@@ -61,23 +61,25 @@ const RootRoulette: PageProps<Props> = (props: Props): JSX.Element => {
   }, [gameSessionId])
 
   return (
-    <PageWrapperGame>
-      <SequenceProvider {...methods}>
-        <QueryErrorBoundary loadQuery={loadRoulette}>
-          <Grid templateRows='24px 1fr 12vh' gap={1} templateColumns='100%' h='calc(100vh - 60px)' w='100%'>
-            <Suspense fallback={(
-              <>
-                <GridItem />
-                <RouletteScreenLoading />
-              </>
-            )}
-            >
-              <Roulette query={queryRef as PreloadedQuery<RouletteQueryType>} />
-            </Suspense>
-          </Grid>
-        </QueryErrorBoundary>
-      </SequenceProvider>
-    </PageWrapperGame>
+    <>
+      <PageWrapperGame>
+        <SequenceProvider {...methods}>
+          <QueryErrorBoundary loadQuery={loadRoulette}>
+            <Grid templateRows='1fr 24px 12vh' gap={1} templateColumns='100%' h='calc(100vh - 60px)' w='100%'>
+              <Suspense fallback={(
+                <>
+                  <RouletteScreenLoading />
+                  <GridItem />
+                </>
+              )}
+              >
+                <Roulette query={queryRef as PreloadedQuery<RouletteQueryType>} />
+              </Suspense>
+            </Grid>
+          </QueryErrorBoundary>
+        </SequenceProvider>
+      </PageWrapperGame>
+    </>
   )
 }
 

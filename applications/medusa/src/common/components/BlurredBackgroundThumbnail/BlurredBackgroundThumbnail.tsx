@@ -20,8 +20,8 @@ export default function BlurredBackgroundThumbnail (props: Props): JSX.Element {
       top='50%'
       opacity={0.5}
       bg='center center / cover no-repeat'
-      backgroundColor={backgroundColor ?? ''}
-      backgroundImage={backgroundImage ?? ''}
+      backgroundColor={backgroundColor}
+      backgroundImage={backgroundImage}
       filter='blur(2px)'
       position='absolute'
     />

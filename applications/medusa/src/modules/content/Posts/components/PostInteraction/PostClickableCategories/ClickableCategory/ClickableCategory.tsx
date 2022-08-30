@@ -38,6 +38,9 @@ export default function ClickableCategory ({ query }: Props): JSX.Element {
 
   return (
     <LinkTile
+      linkProps={{
+        prefetch: false
+      }}
       href={{
         pathname: '/search/category/[categorySlug]',
         query: {

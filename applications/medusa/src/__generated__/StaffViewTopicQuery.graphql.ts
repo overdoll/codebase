@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b78c259b96d34fafcdb079995db22e9e>>
- * @relayHash 7ff49b6a961dd1203772f1631aaded4d
+ * @generated SignedSource<<d2610ae060867160ba290108280a4a1c>>
+ * @relayHash 0baa2efab8e7fe3d905739f7c83bbfb0
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7ff49b6a961dd1203772f1631aaded4d
+// @relayRequestID 0baa2efab8e7fe3d905739f7c83bbfb0
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -93,10 +93,17 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "preview",
   "storageKey": null
 },
 v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v7 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -104,7 +111,7 @@ v6 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v5/*: any*/),
+    (v6/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -115,25 +122,18 @@ v6 = {
   ],
   "storageKey": null
 },
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "width",
   "storageKey": null
 },
-v8 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "height",
-  "storageKey": null
-},
 v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "preview",
+  "name": "height",
   "storageKey": null
 },
 v10 = {
@@ -144,7 +144,7 @@ v10 = {
   "name": "videoThumbnail",
   "plural": false,
   "selections": [
-    (v5/*: any*/)
+    (v6/*: any*/)
   ],
   "storageKey": null
 },
@@ -267,8 +267,8 @@ return {
             "name": "banner",
             "plural": false,
             "selections": [
+              (v5/*: any*/),
               (v4/*: any*/),
-              (v6/*: any*/),
               (v7/*: any*/),
               (v8/*: any*/),
               (v9/*: any*/),
@@ -318,7 +318,6 @@ return {
                         "name": "banner",
                         "plural": false,
                         "selections": [
-                          (v11/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -326,7 +325,7 @@ return {
                             "name": "processed",
                             "storageKey": null
                           },
-                          (v9/*: any*/),
+                          (v5/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -360,10 +359,11 @@ return {
                             ],
                             "storageKey": null
                           },
+                          (v11/*: any*/),
                           (v4/*: any*/),
-                          (v6/*: any*/),
                           (v7/*: any*/),
                           (v8/*: any*/),
+                          (v9/*: any*/),
                           (v10/*: any*/)
                         ],
                         "storageKey": null
@@ -431,7 +431,7 @@ return {
     ]
   },
   "params": {
-    "id": "7ff49b6a961dd1203772f1631aaded4d",
+    "id": "0baa2efab8e7fe3d905739f7c83bbfb0",
     "metadata": {},
     "name": "StaffViewTopicQuery",
     "operationKind": "query",

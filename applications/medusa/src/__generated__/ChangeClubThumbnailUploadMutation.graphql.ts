@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<881bcda538d3993a902ce71af3474e40>>
- * @relayHash f24fc67f6c14241edcf82accd752bada
+ * @generated SignedSource<<ecdfb2ec40aedcc0d2e3d2dc3af880a0>>
+ * @relayHash 820dc04428d85686b0821bca8f68fc0b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f24fc67f6c14241edcf82accd752bada
+// @relayRequestID 820dc04428d85686b0821bca8f68fc0b
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -291,7 +291,7 @@ return {
     ]
   },
   "params": {
-    "id": "f24fc67f6c14241edcf82accd752bada",
+    "id": "820dc04428d85686b0821bca8f68fc0b",
     "metadata": {},
     "name": "ChangeClubThumbnailUploadMutation",
     "operationKind": "mutation",

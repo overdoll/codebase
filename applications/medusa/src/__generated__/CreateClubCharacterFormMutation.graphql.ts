@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<78268c7c332dd5bcf42dae63288b4288>>
- * @relayHash dba41e2ac4fc4ed2802bf2630056c326
+ * @generated SignedSource<<f4ffd8321cf4f2efdf98a6e42b2cbb2d>>
+ * @relayHash 93f59cf88d7018cca147148987de7c96
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID dba41e2ac4fc4ed2802bf2630056c326
+// @relayRequestID 93f59cf88d7018cca147148987de7c96
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -245,13 +245,6 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "type",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
                     "name": "processed",
                     "storageKey": null
                   },
@@ -293,6 +286,13 @@ return {
                         "storageKey": null
                       }
                     ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "type",
                     "storageKey": null
                   },
                   (v4/*: any*/),
@@ -374,7 +374,7 @@ return {
     ]
   },
   "params": {
-    "id": "dba41e2ac4fc4ed2802bf2630056c326",
+    "id": "93f59cf88d7018cca147148987de7c96",
     "metadata": {},
     "name": "CreateClubCharacterFormMutation",
     "operationKind": "mutation",

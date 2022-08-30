@@ -29,13 +29,13 @@ export default function ClubSlug (): Joi.Schema {
     .string()
     .regex(/^[a-zA-Z0-9]*$/)
     .min(3)
-    .max(15)
+    .max(30)
     .invalid(...invalidSlugs)
     .required()
     .messages({
       'string.empty': i18n._(t`Please enter a club link`),
       'string.min': i18n._(t`The club link must be at least 3 characters`),
-      'string.max': i18n._(t`The club link cannot exceed 15 characters`),
+      'string.max': i18n._(t`The club link cannot exceed 30 characters`),
       'string.pattern.base': i18n._(t`The club link can only contain numbers and letters.`),
       'any.invalid': i18n._(t`Sorry, this keyword is reserved and you cannot use it.`)
     })

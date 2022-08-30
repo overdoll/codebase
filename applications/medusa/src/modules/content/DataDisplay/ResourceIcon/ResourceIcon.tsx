@@ -3,8 +3,7 @@ import type { ResourceIconFragment$key } from '@//:artifacts/ResourceIconFragmen
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import RandomIcon from '../RandomIcon/RandomIcon'
-import ImageSnippet from '../ImageSnippet/ImageSnippet'
-import VideoSnippet from '../VideoSnippet/VideoSnippet'
+import ResourceIconMedia from './ResourceIconMedia/ResourceIconMedia'
 
 interface Props extends FlexProps {
   query: ResourceIconFragment$key | null | undefined
@@ -14,10 +13,8 @@ interface Props extends FlexProps {
 
 const Fragment = graphql`
   fragment ResourceIconFragment on Resource {
-    ...ImageSnippetFragment
-    ...VideoSnippetFragment
-    type
     preview
+    ...ResourceIconMediaFragment
   }
 `
 
@@ -63,19 +60,6 @@ export default function ResourceIcon ({
     boxShadow: `inset 0 0 0 ${getBorderSize()}px ${data.preview}70`
   }
 
-  const DisplayMedia = (): JSX.Element => {
-    switch (data.type) {
-      case 'IMAGE':
-        return <ImageSnippet tinyError query={data} />
-      case 'VIDEO':
-        return (
-          <VideoSnippet query={data} />
-        )
-      default:
-        return <></>
-    }
-  }
-
   return (
     <Flex
       flexShrink={0}
@@ -89,7 +73,7 @@ export default function ResourceIcon ({
       {...rest}
     >
       {showBorder && <Flex w='100%' h='100%' borderRadius='inherit' {...iconBorder} position='absolute' />}
-      <DisplayMedia />
+      <ResourceIconMedia query={data} />
     </Flex>
   )
 }

@@ -1,12 +1,12 @@
 import { Flex, FlexProps, Progress } from '@chakra-ui/react'
 import { graphql } from 'react-relay/hooks'
-import ImageSnippet, { ImageSnippetCoverProps } from '../ImageSnippet/ImageSnippet'
-import VideoSnippet from '../VideoSnippet/VideoSnippet'
+import { ImageSnippetCoverProps } from '../ImageSnippet/ImageSnippet'
 import { useFragment } from 'react-relay'
 import type { ResourceItemFragment$key } from '@//:artifacts/ResourceItemFragment.graphql'
 import RandomPattern from '../RandomPattern/RandomPattern'
 import { Icon } from '../../PageLayout'
 import { TimeHourGlass, WarningTriangle } from '@//:assets/icons'
+import ResourceItemMedia from './ResourceItem/ResourceItemMedia'
 
 export interface ResourceItemBorderProp {
   showBorder?: boolean
@@ -19,7 +19,6 @@ interface Props extends FlexProps, ImageSnippetCoverProps, ResourceItemBorderPro
 
 const Fragment = graphql`
   fragment ResourceItemFragment on Resource {
-    type
     processed
     preview
     failed
@@ -28,8 +27,7 @@ const Fragment = graphql`
       progress
       state
     }
-    ...ImageSnippetFragment
-    ...VideoSnippetFragment
+    ...ResourceItemMediaFragment
   }
 `
 
@@ -118,19 +116,6 @@ export default function ResourceItem ({
     boxShadow: `inset 0 0 0 3px ${data.preview}70`
   }
 
-  const DisplayMedia = (): JSX.Element => {
-    switch (data.type) {
-      case 'IMAGE':
-        return <ImageSnippet containCover={containCover} cover={cover ?? true} query={data} />
-      case 'VIDEO':
-        return (
-          <VideoSnippet containCover={containCover} cover={cover ?? true} query={data} />
-        )
-      default:
-        return <></>
-    }
-  }
-
   return (
     <Flex
       w='100%'
@@ -140,7 +125,7 @@ export default function ResourceItem ({
       {...rest}
     >
       {showBorder && <Flex w='100%' h='100%' borderRadius='inherit' {...iconBorder} position='absolute' />}
-      <DisplayMedia />
+      <ResourceItemMedia query={data} containCover={containCover} cover={cover ?? true} />
     </Flex>
 
   )

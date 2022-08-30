@@ -23,7 +23,7 @@ export default function HomeLinkTile (props: Props): JSX.Element {
   } = props
 
   return (
-    <LinkTile href={href}>
+    <LinkTile linkProps={{ prefetch: false }} href={href}>
       <Flex bg='gray.900' borderRadius='lg' overflow='hidden' position='relative'>
         <Flex right={0} left={0} w='100%' h='100%' top={0} bg='dimmers.500' position='absolute'>
           <RandomPattern seed='123' />

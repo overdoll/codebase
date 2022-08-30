@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<58af970997e87f96cce9399b7fb010d4>>
- * @relayHash 8fcdab30c1a8212d85c0ce7d223063db
+ * @generated SignedSource<<3633e4a1d189978f3d3ad0f9f1d75094>>
+ * @relayHash 64ba197921236f04b7d34b3d43ac8838
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8fcdab30c1a8212d85c0ce7d223063db
+// @relayRequestID 64ba197921236f04b7d34b3d43ac8838
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -303,11 +303,11 @@ return {
                         "name": "thumbnail",
                         "plural": false,
                         "selections": [
+                          (v8/*: any*/),
                           (v2/*: any*/),
                           (v7/*: any*/),
                           (v4/*: any*/),
                           (v5/*: any*/),
-                          (v8/*: any*/),
                           (v9/*: any*/),
                           (v3/*: any*/)
                         ],
@@ -532,7 +532,7 @@ return {
     ]
   },
   "params": {
-    "id": "8fcdab30c1a8212d85c0ce7d223063db",
+    "id": "64ba197921236f04b7d34b3d43ac8838",
     "metadata": {},
     "name": "BrowseQuery",
     "operationKind": "query",

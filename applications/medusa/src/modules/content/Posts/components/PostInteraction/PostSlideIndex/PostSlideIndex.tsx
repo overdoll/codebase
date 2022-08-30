@@ -6,16 +6,16 @@ import { useEffect, useState } from 'react'
 import { useUpdateEffect } from 'usehooks-ts'
 import { NumberParam, useQueryParam } from 'use-query-params'
 import SwiperType from 'swiper'
-import ImageSnippet from '../../../../DataDisplay/ImageSnippet/ImageSnippet'
-import VideoSnippet from '../../../../DataDisplay/VideoSnippet/VideoSnippet'
 import ClickableTile from '../../../../ContentSelection/ClickableTile/ClickableTile'
 import { Icon } from '../../../../PageLayout'
 import { ControlPlayButton } from '@//:assets/icons'
+import PostSlideIndexMedia from './PostSlideIndexMedia/PostSlideIndexMedia'
 
 interface Props {
   query: PostSlideIndexFragment$key
   swiper: SwiperType | null
   fillHeight?: boolean
+  disableSlideIndexing?: boolean
 }
 
 const Fragment = graphql`
@@ -25,18 +25,20 @@ const Fragment = graphql`
       isSupporterOnly
       resource {
         type
-        ...ImageSnippetFragment
-        ...VideoSnippetFragment
       }
+      ...PostSlideIndexMediaFragment
     }
   }
 `
 
-export default function PostSlideIndex ({
-  query,
-  swiper,
-  fillHeight = false
-}: Props): JSX.Element {
+export default function PostSlideIndex (props: Props): JSX.Element {
+  const {
+    query,
+    swiper,
+    fillHeight = false,
+    disableSlideIndexing = false
+  } = props
+
   const data = useFragment(Fragment, query)
 
   const [slide] = useQueryParam<number | null | undefined>('slide', NumberParam)
@@ -46,7 +48,7 @@ export default function PostSlideIndex ({
   const slidesCount = data.content.length
 
   useEffect(() => {
-    if (swiper == null) return
+    if (swiper == null || disableSlideIndexing) return
     if (!swiper.destroyed) {
       swiper.on('slideChange', (swiper) => {
         setActiveIndex(swiper.activeIndex)
@@ -59,7 +61,7 @@ export default function PostSlideIndex ({
   }, [swiper])
 
   useUpdateEffect(() => {
-    if (swiper == null) return
+    if (swiper == null || disableSlideIndexing) return
     if (activeIndex !== 0) {
       swiper.slideTo(slide ?? 0, 50)
     }
@@ -83,25 +85,6 @@ export default function PostSlideIndex ({
         const isActive = contentIndex === activeIndex
         const isSupporterOnly = item.isSupporterOnly
 
-        const DisplayMedia = (): JSX.Element => {
-          switch (item.resource.type) {
-            case 'IMAGE':
-              return (
-                <ImageSnippet
-                  keepWidth
-                  cover
-                  tinyError
-                  query={item.resource}
-                />
-              )
-            case 'VIDEO':
-              return (
-                <VideoSnippet query={item.resource} />
-              )
-            default:
-              return <></>
-          }
-        }
         return (
           <GridItem overflow='hidden' h='100%' w='100%' key={contentIndex}>
             <ClickableTile
@@ -130,7 +113,7 @@ export default function PostSlideIndex ({
                     <Icon icon={ControlPlayButton} w={3} h={3} fill='whiteAlpha.800' />
                   </Flex>
                 )}
-                <DisplayMedia />
+                <PostSlideIndexMedia query={item} />
               </Flex>
             </ClickableTile>
           </GridItem>

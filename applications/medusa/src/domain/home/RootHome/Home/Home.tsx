@@ -38,8 +38,8 @@ export default function Home (props: Props): JSX.Element {
       <Stack spacing={24}>
         <HomeGameTile
           href='/roulette'
-          bg='/banners/roulette-banner.jpg'
-          video='/banners/roulette-preview.mp4'
+          bg='https://static.dollycdn.net/banners/roulette-banner.jpg'
+          video='https://static.dollycdn.net/banners/roulette-preview.mp4'
           icon={RandomizeDice}
           header={(
             <Trans>

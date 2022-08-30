@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<830c888285278a1faace8b180fdb9243>>
- * @relayHash e656f7457582a13482daa362af5f6a2f
+ * @generated SignedSource<<b2809ad3da8210332a32f2f07d1e0d24>>
+ * @relayHash 3b5628d840c73cdf7bb1477a3257c4d2
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e656f7457582a13482daa362af5f6a2f
+// @relayRequestID 3b5628d840c73cdf7bb1477a3257c4d2
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -91,10 +91,17 @@ v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "preview",
   "storageKey": null
 },
 v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v9 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -102,7 +109,7 @@ v8 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v7/*: any*/),
+    (v8/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -113,25 +120,18 @@ v8 = {
   ],
   "storageKey": null
 },
-v9 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "width",
   "storageKey": null
 },
-v10 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "height",
-  "storageKey": null
-},
 v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "preview",
+  "name": "height",
   "storageKey": null
 },
 v12 = {
@@ -142,7 +142,7 @@ v12 = {
   "name": "videoThumbnail",
   "plural": false,
   "selections": [
-    (v7/*: any*/)
+    (v8/*: any*/)
   ],
   "storageKey": null
 },
@@ -161,8 +161,8 @@ v14 = {
   "name": "banner",
   "plural": false,
   "selections": [
+    (v7/*: any*/),
     (v2/*: any*/),
-    (v8/*: any*/),
     (v9/*: any*/),
     (v10/*: any*/),
     (v11/*: any*/),
@@ -317,10 +317,10 @@ return {
                         "selections": [
                           (v13/*: any*/),
                           (v2/*: any*/),
-                          (v8/*: any*/),
                           (v9/*: any*/),
                           (v10/*: any*/),
                           (v11/*: any*/),
+                          (v7/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -383,7 +383,7 @@ return {
     ]
   },
   "params": {
-    "id": "e656f7457582a13482daa362af5f6a2f",
+    "id": "3b5628d840c73cdf7bb1477a3257c4d2",
     "metadata": {},
     "name": "SpinRouletteMutation",
     "operationKind": "mutation",

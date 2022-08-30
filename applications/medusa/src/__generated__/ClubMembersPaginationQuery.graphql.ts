@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<bf00bbeb0c02de2e15d87a78c4ce9538>>
- * @relayHash f1ccfce7ebd38a33a8d90216cf80266a
+ * @generated SignedSource<<4ec9f8359b1034b7139c1d4b166b6df2>>
+ * @relayHash 6ea2650459279c4aea6cebaad3e409c2
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f1ccfce7ebd38a33a8d90216cf80266a
+// @relayRequestID 6ea2650459279c4aea6cebaad3e409c2
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -187,6 +187,13 @@ return {
                                 "name": "avatar",
                                 "plural": false,
                                 "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "preview",
+                                    "storageKey": null
+                                  },
                                   (v4/*: any*/),
                                   {
                                     "alias": null,
@@ -219,13 +226,6 @@ return {
                                     "args": null,
                                     "kind": "ScalarField",
                                     "name": "height",
-                                    "storageKey": null
-                                  },
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "preview",
                                     "storageKey": null
                                   },
                                   {
@@ -362,7 +362,7 @@ return {
     ]
   },
   "params": {
-    "id": "f1ccfce7ebd38a33a8d90216cf80266a",
+    "id": "6ea2650459279c4aea6cebaad3e409c2",
     "metadata": {},
     "name": "ClubMembersPaginationQuery",
     "operationKind": "query",

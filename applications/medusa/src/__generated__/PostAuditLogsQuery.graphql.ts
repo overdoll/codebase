@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<25f11a8ab4e00a875472fabfcaa4670c>>
- * @relayHash b4aefe414aedd1bd7f0d87f95f8588fa
+ * @generated SignedSource<<ba5ba9b9d99679b5acb2bbef377bdff6>>
+ * @relayHash 08ec5a00bbe77abe1d045dc710145f99
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b4aefe414aedd1bd7f0d87f95f8588fa
+// @relayRequestID 08ec5a00bbe77abe1d045dc710145f99
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -68,10 +68,17 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "preview",
   "storageKey": null
 },
 v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v5 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -79,7 +86,7 @@ v4 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v3/*: any*/),
+    (v4/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -90,25 +97,18 @@ v4 = {
   ],
   "storageKey": null
 },
-v5 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "width",
   "storageKey": null
 },
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "height",
-  "storageKey": null
-},
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "preview",
+  "name": "height",
   "storageKey": null
 },
 v8 = {
@@ -119,7 +119,7 @@ v8 = {
   "name": "videoThumbnail",
   "plural": false,
   "selections": [
-    (v3/*: any*/)
+    (v4/*: any*/)
   ],
   "storageKey": null
 },
@@ -262,8 +262,8 @@ return {
                                 "name": "thumbnail",
                                 "plural": false,
                                 "selections": [
+                                  (v3/*: any*/),
                                   (v2/*: any*/),
-                                  (v4/*: any*/),
                                   (v5/*: any*/),
                                   (v6/*: any*/),
                                   (v7/*: any*/),
@@ -333,10 +333,10 @@ return {
                                   },
                                   (v9/*: any*/),
                                   (v2/*: any*/),
-                                  (v4/*: any*/),
                                   (v5/*: any*/),
                                   (v6/*: any*/),
                                   (v7/*: any*/),
+                                  (v3/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -459,7 +459,7 @@ return {
     ]
   },
   "params": {
-    "id": "b4aefe414aedd1bd7f0d87f95f8588fa",
+    "id": "08ec5a00bbe77abe1d045dc710145f99",
     "metadata": {},
     "name": "PostAuditLogsQuery",
     "operationKind": "query",

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0712c25a01bcd5772238c5a178037ece>>
- * @relayHash 646f1b1fa6bec91661c544c80a4827b3
+ * @generated SignedSource<<6b25970fcf64c48885a625260c9bbcd3>>
+ * @relayHash 96122c5d209a001f9027c615ce73ab8d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 646f1b1fa6bec91661c544c80a4827b3
+// @relayRequestID 96122c5d209a001f9027c615ce73ab8d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -135,11 +135,11 @@ v12 = {
   "name": "thumbnail",
   "plural": false,
   "selections": [
+    (v7/*: any*/),
     (v1/*: any*/),
     (v6/*: any*/),
     (v3/*: any*/),
     (v4/*: any*/),
-    (v7/*: any*/),
     (v8/*: any*/),
     (v2/*: any*/)
   ],
@@ -577,7 +577,6 @@ return {
                     "name": "banner",
                     "plural": false,
                     "selections": [
-                      (v2/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -613,6 +612,7 @@ return {
                         ],
                         "storageKey": null
                       },
+                      (v2/*: any*/),
                       (v1/*: any*/),
                       (v6/*: any*/),
                       (v3/*: any*/),
@@ -646,7 +646,7 @@ return {
     ]
   },
   "params": {
-    "id": "646f1b1fa6bec91661c544c80a4827b3",
+    "id": "96122c5d209a001f9027c615ce73ab8d",
     "metadata": {},
     "name": "ClubsFeedQuery",
     "operationKind": "query",

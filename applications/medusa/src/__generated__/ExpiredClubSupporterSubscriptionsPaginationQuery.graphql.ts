@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<66b4b8e095ba8a1c5b961924eba031be>>
- * @relayHash ec58be3c2fb4b3d72695223a1410fceb
+ * @generated SignedSource<<2a79feca8e753dc51a09fad7605ecad0>>
+ * @relayHash 68151d5e2a006b344049b0175526eef1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ec58be3c2fb4b3d72695223a1410fceb
+// @relayRequestID 68151d5e2a006b344049b0175526eef1
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -201,6 +201,13 @@ return {
                                 "name": "thumbnail",
                                 "plural": false,
                                 "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "kind": "ScalarField",
+                                    "name": "preview",
+                                    "storageKey": null
+                                  },
                                   (v4/*: any*/),
                                   {
                                     "alias": null,
@@ -233,13 +240,6 @@ return {
                                     "args": null,
                                     "kind": "ScalarField",
                                     "name": "height",
-                                    "storageKey": null
-                                  },
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "preview",
                                     "storageKey": null
                                   },
                                   {
@@ -329,7 +329,7 @@ return {
     ]
   },
   "params": {
-    "id": "ec58be3c2fb4b3d72695223a1410fceb",
+    "id": "68151d5e2a006b344049b0175526eef1",
     "metadata": {},
     "name": "ExpiredClubSupporterSubscriptionsPaginationQuery",
     "operationKind": "query",

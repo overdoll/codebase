@@ -70,7 +70,7 @@ export default function PostGalleryPublicSimple ({
   }
 
   return (
-    <Box>
+    <Box userSelect='none'>
       <Swiper
         {...POST_SWIPER_PROPS}
         onSwiper={(swiper) => setSwiper(swiper)}
@@ -113,7 +113,7 @@ export default function PostGalleryPublicSimple ({
           </SwiperSlide>
         )}
       </Swiper>
-      <PostSlideIndex swiper={swiper} query={postData} />
+      <PostSlideIndex disableSlideIndexing swiper={swiper} query={postData} />
     </Box>
   )
 }

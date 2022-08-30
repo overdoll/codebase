@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<4aec2b4e7d6333a0700f0e2f1b29c037>>
- * @relayHash 68fc844ed8662aa6fcaa10b037237638
+ * @generated SignedSource<<cccc0bc79243280c97e039d22ebe77e4>>
+ * @relayHash 6127377d51ae944d586f392dfe28bb59
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 68fc844ed8662aa6fcaa10b037237638
+// @relayRequestID 6127377d51ae944d586f392dfe28bb59
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -250,6 +250,13 @@ return {
                 "name": "avatar",
                 "plural": false,
                 "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "preview",
+                    "storageKey": null
+                  },
                   (v4/*: any*/),
                   {
                     "alias": null,
@@ -282,13 +289,6 @@ return {
                     "args": null,
                     "kind": "ScalarField",
                     "name": "height",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "preview",
                     "storageKey": null
                   },
                   {
@@ -362,7 +362,7 @@ return {
     ]
   },
   "params": {
-    "id": "68fc844ed8662aa6fcaa10b037237638",
+    "id": "6127377d51ae944d586f392dfe28bb59",
     "metadata": {},
     "name": "RecoveryCodeMutation",
     "operationKind": "mutation",

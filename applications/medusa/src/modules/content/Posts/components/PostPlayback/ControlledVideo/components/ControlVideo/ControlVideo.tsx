@@ -6,8 +6,12 @@ import LoadingSpinner from './LoadingSpinner/LoadingSpinner'
 import SeekVideoButton from './SeekVideoButton/SeekVideoButton'
 import FullscreenButton from './FullscreenButton/FullscreenButton'
 import useVideoControls from '../../hooks/useVideoControls/useVideoControls'
+import { useFragment } from 'react-relay'
+import { graphql } from 'react-relay/hooks'
+import type { ControlVideoFragment$key } from '@//:artifacts/ControlVideoFragment.graphql'
 
 interface Props {
+  query: ControlVideoFragment$key
   onMouseHold: () => void
   setTime: (time) => void
   isOpen: boolean
@@ -24,27 +28,38 @@ interface Props {
   wrapperRef: RefObject<HTMLDivElement>
 }
 
-const ControlVideo = forwardRef<HTMLVideoElement, Props>(({
-  onMouseHold,
-  isOpen,
-  isLoaded,
-  isPaused,
-  isMuted,
-  hasAudio,
-  hasError,
-  setTime,
-  time,
-  totalTime,
-  canSeek,
-  canFullscreen,
-  canControl,
-  wrapperRef
-}: Props, forwardRef): JSX.Element => {
+const Fragment = graphql`
+  fragment ControlVideoFragment on Resource {
+    ...useVideoControlsFragment
+  }
+`
+
+const ControlVideo = forwardRef<HTMLVideoElement, Props>((props: Props, forwardRef): JSX.Element => {
+  const {
+    onMouseHold,
+    isOpen,
+    isLoaded,
+    isPaused,
+    isMuted,
+    hasAudio,
+    hasError,
+    setTime,
+    time,
+    totalTime,
+    canSeek,
+    canFullscreen,
+    canControl,
+    wrapperRef,
+    query
+  } = props
+
+  const data = useFragment(Fragment, query)
+
   const {
     play,
     pause,
     ref
-  } = useVideoControls(forwardRef as MutableRefObject<HTMLVideoElement>)
+  } = useVideoControls(forwardRef as MutableRefObject<HTMLVideoElement>, data)
 
   const timeExceedsLimit = totalTime > 9
 

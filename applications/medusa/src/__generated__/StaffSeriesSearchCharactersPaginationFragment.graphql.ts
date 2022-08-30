@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<30e587c544eb22465adc37e437891409>>
- * @relayHash 72a423e4a903cd29a1c703a008a55df1
+ * @generated SignedSource<<2a9d8e057823ec17c5f7a632cba1a46d>>
+ * @relayHash 44683f81c0a80ffcb3fdd6e8a2243587
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 72a423e4a903cd29a1c703a008a55df1
+// @relayRequestID 44683f81c0a80ffcb3fdd6e8a2243587
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -218,13 +218,6 @@ return {
                                 "alias": null,
                                 "args": null,
                                 "kind": "ScalarField",
-                                "name": "type",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
                                 "name": "processed",
                                 "storageKey": null
                               },
@@ -266,6 +259,13 @@ return {
                                     "storageKey": null
                                   }
                                 ],
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "type",
                                 "storageKey": null
                               },
                               (v4/*: any*/),
@@ -378,7 +378,7 @@ return {
     ]
   },
   "params": {
-    "id": "72a423e4a903cd29a1c703a008a55df1",
+    "id": "44683f81c0a80ffcb3fdd6e8a2243587",
     "metadata": {},
     "name": "StaffSeriesSearchCharactersPaginationFragment",
     "operationKind": "query",

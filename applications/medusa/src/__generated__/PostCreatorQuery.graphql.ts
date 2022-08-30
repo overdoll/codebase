@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<85957f2f18b9a988f23a993c1087259f>>
- * @relayHash f824d772281ea1041c752722e4c630aa
+ * @generated SignedSource<<cd5e197205a394e2caa22dee07b7dee6>>
+ * @relayHash 10091496e31ea89ffb88e479c466bdeb
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f824d772281ea1041c752722e4c630aa
+// @relayRequestID 10091496e31ea89ffb88e479c466bdeb
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -136,10 +136,17 @@ v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "preview",
   "storageKey": null
 },
 v13 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v14 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -147,7 +154,7 @@ v13 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v12/*: any*/),
+    (v13/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -158,25 +165,18 @@ v13 = {
   ],
   "storageKey": null
 },
-v14 = {
+v15 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "width",
   "storageKey": null
 },
-v15 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "height",
-  "storageKey": null
-},
 v16 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "preview",
+  "name": "height",
   "storageKey": null
 },
 v17 = {
@@ -187,7 +187,7 @@ v17 = {
   "name": "videoThumbnail",
   "plural": false,
   "selections": [
-    (v12/*: any*/)
+    (v13/*: any*/)
   ],
   "storageKey": null
 },
@@ -199,8 +199,8 @@ v18 = {
   "storageKey": null
 },
 v19 = [
+  (v12/*: any*/),
   (v3/*: any*/),
-  (v13/*: any*/),
   (v14/*: any*/),
   (v15/*: any*/),
   (v16/*: any*/),
@@ -468,7 +468,7 @@ return {
                 "name": "thumbnail",
                 "plural": false,
                 "selections": [
-                  (v16/*: any*/),
+                  (v12/*: any*/),
                   (v3/*: any*/)
                 ],
                 "storageKey": null
@@ -496,10 +496,10 @@ return {
                   (v18/*: any*/),
                   (v23/*: any*/),
                   (v24/*: any*/),
-                  (v13/*: any*/),
                   (v14/*: any*/),
                   (v15/*: any*/),
                   (v16/*: any*/),
+                  (v12/*: any*/),
                   (v25/*: any*/),
                   (v17/*: any*/),
                   {
@@ -732,7 +732,7 @@ return {
                               (v23/*: any*/),
                               (v27/*: any*/),
                               (v25/*: any*/),
-                              (v16/*: any*/),
+                              (v12/*: any*/),
                               (v24/*: any*/),
                               {
                                 "alias": null,
@@ -749,9 +749,9 @@ return {
                                 "storageKey": null
                               },
                               (v3/*: any*/),
-                              (v13/*: any*/),
                               (v14/*: any*/),
                               (v15/*: any*/),
+                              (v16/*: any*/),
                               (v17/*: any*/)
                             ],
                             "storageKey": null
@@ -846,7 +846,7 @@ return {
     ]
   },
   "params": {
-    "id": "f824d772281ea1041c752722e4c630aa",
+    "id": "10091496e31ea89ffb88e479c466bdeb",
     "metadata": {},
     "name": "PostCreatorQuery",
     "operationKind": "query",

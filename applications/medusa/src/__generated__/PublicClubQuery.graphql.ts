@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e2e477b8129b6eef1278ae29627bf643>>
- * @relayHash fdd4ff6175e1fc8e088f79a2d06e0ba0
+ * @generated SignedSource<<9d47df74dd1b1ee3f368200e33401fa6>>
+ * @relayHash a7b55d3f2e867750a1f707b9d1f9ed8d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID fdd4ff6175e1fc8e088f79a2d06e0ba0
+// @relayRequestID a7b55d3f2e867750a1f707b9d1f9ed8d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -69,14 +69,14 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "type",
+  "name": "preview",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "preview",
+  "name": "type",
   "storageKey": null
 },
 v7 = {
@@ -325,7 +325,6 @@ return {
             "name": "banner",
             "plural": false,
             "selections": [
-              (v5/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -333,7 +332,7 @@ return {
                 "name": "processed",
                 "storageKey": null
               },
-              (v6/*: any*/),
+              (v5/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -367,6 +366,7 @@ return {
                 ],
                 "storageKey": null
               },
+              (v6/*: any*/),
               (v4/*: any*/),
               (v8/*: any*/),
               (v9/*: any*/),
@@ -390,13 +390,13 @@ return {
             "name": "thumbnail",
             "plural": false,
             "selections": [
+              (v5/*: any*/),
               (v4/*: any*/),
               (v8/*: any*/),
               (v9/*: any*/),
               (v10/*: any*/),
-              (v6/*: any*/),
               (v11/*: any*/),
-              (v5/*: any*/)
+              (v6/*: any*/)
             ],
             "storageKey": null
           },
@@ -646,7 +646,7 @@ return {
                                 "name": "expiration",
                                 "storageKey": null
                               },
-                              (v5/*: any*/)
+                              (v6/*: any*/)
                             ],
                             "storageKey": null
                           }
@@ -675,7 +675,7 @@ return {
     ]
   },
   "params": {
-    "id": "fdd4ff6175e1fc8e088f79a2d06e0ba0",
+    "id": "a7b55d3f2e867750a1f707b9d1f9ed8d",
     "metadata": {},
     "name": "PublicClubQuery",
     "operationKind": "query",

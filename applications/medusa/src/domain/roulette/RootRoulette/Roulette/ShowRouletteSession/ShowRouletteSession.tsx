@@ -37,8 +37,8 @@ export default function ShowRouletteSession (props: Props): JSX.Element {
 
   return (
     <>
-      <RouletteSubtitleTrack query={data} />
       <RouletteSessionScreen query={data} viewerQuery={viewerData} />
+      <RouletteSubtitleTrack query={data} />
       <GridItem>
         <RouletteSessionFooter query={data} />
       </GridItem>

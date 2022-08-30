@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<279bf5c6a4e01fade6de35c63853701b>>
- * @relayHash f51636a50fe7e214dfa6933a2915f891
+ * @generated SignedSource<<8cbcfad03c840c5711a42515e9ecc7ca>>
+ * @relayHash 6dfd714f922a2417882cc1aa31d8f656
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f51636a50fe7e214dfa6933a2915f891
+// @relayRequestID 6dfd714f922a2417882cc1aa31d8f656
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -147,10 +147,17 @@ v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "preview",
   "storageKey": null
 },
 v14 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v15 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -158,7 +165,7 @@ v14 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v13/*: any*/),
+    (v14/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -169,25 +176,18 @@ v14 = {
   ],
   "storageKey": null
 },
-v15 = {
+v16 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "width",
   "storageKey": null
 },
-v16 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "height",
-  "storageKey": null
-},
 v17 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "preview",
+  "name": "height",
   "storageKey": null
 },
 v18 = {
@@ -198,13 +198,13 @@ v18 = {
   "name": "videoThumbnail",
   "plural": false,
   "selections": [
-    (v13/*: any*/)
+    (v14/*: any*/)
   ],
   "storageKey": null
 },
 v19 = [
+  (v13/*: any*/),
   (v2/*: any*/),
-  (v14/*: any*/),
   (v15/*: any*/),
   (v16/*: any*/),
   (v17/*: any*/),
@@ -618,7 +618,6 @@ return {
                         "name": "banner",
                         "plural": false,
                         "selections": [
-                          (v12/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -626,7 +625,7 @@ return {
                             "name": "processed",
                             "storageKey": null
                           },
-                          (v17/*: any*/),
+                          (v13/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -660,10 +659,11 @@ return {
                             ],
                             "storageKey": null
                           },
+                          (v12/*: any*/),
                           (v2/*: any*/),
-                          (v14/*: any*/),
                           (v15/*: any*/),
                           (v16/*: any*/),
+                          (v17/*: any*/),
                           (v18/*: any*/)
                         ],
                         "storageKey": null
@@ -695,7 +695,7 @@ return {
     ]
   },
   "params": {
-    "id": "f51636a50fe7e214dfa6933a2915f891",
+    "id": "6dfd714f922a2417882cc1aa31d8f656",
     "metadata": {},
     "name": "StaffAccountQuery",
     "operationKind": "query",

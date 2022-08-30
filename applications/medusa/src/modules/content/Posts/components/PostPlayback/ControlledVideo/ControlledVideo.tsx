@@ -25,7 +25,6 @@ export interface ControlledVideoProps {
   volume?: number
   isMuted?: boolean
   controls: Controls
-  autoPlay?: boolean | undefined
   hideBackground?: boolean
 }
 
@@ -34,6 +33,7 @@ const Fragment = graphql`
     videoNoAudio
     ...VideoBackgroundFragment
     ...RenderVideoFragment
+    ...ControlVideoFragment
   }
 `
 
@@ -47,7 +47,6 @@ const ControlledVideo = forwardRef<HTMLVideoElement, ControlledVideoProps>(({
   volume: defaultVolume = 0.1,
   isMuted: isDefaultMuted = true,
   controls = {},
-  autoPlay,
   hideBackground = false
 }: ControlledVideoProps, forwardRef): JSX.Element => {
   const data = useFragment(Fragment, query)
@@ -202,10 +201,10 @@ const ControlledVideo = forwardRef<HTMLVideoElement, ControlledVideoProps>(({
         onPlay={onPlay}
         onPause={onPause}
         onWaiting={onWaiting}
-        autoPlay={autoPlay}
       />
       <ControlVideo
         ref={ref}
+        query={data}
         wrapperRef={wrapperRef}
         onMouseHold={onMouseHold}
         isOpen={isOpen}

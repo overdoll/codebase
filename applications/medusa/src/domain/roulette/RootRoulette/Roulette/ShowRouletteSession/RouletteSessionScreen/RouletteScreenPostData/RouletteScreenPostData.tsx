@@ -2,7 +2,6 @@ import { useFragment } from 'react-relay/hooks'
 import type { RouletteScreenPostDataFragment$key } from '@//:artifacts/RouletteScreenPostDataFragment.graphql'
 import { graphql } from 'react-relay'
 import { Flex, Heading, HStack } from '@chakra-ui/react'
-import { useLingui } from '@lingui/react'
 import { Trans } from '@lingui/macro'
 import { ResourceIcon } from '@//:modules/content/PageLayout'
 import { LinkTile } from '@//:modules/content/ContentSelection'
@@ -49,7 +48,9 @@ export default function RouletteScreenPostData (props: Props): JSX.Element {
       >
         <HStack spacing={2}>
           <HStack align='center' spacing={1}>
-            <ResourceIcon query={data.characters[0].banner} seed={data.characters[0].id} w={4} h={4} />
+            {data.characters[0].banner != null && (
+              <ResourceIcon query={data.characters[0].banner} seed={data.characters[0].id} w={4} h={4} />
+            )}
             <Heading noOfLines={1} fontSize='md' color='gray.00'>
               {data.characters[0].name}
             </Heading>
@@ -60,7 +61,9 @@ export default function RouletteScreenPostData (props: Props): JSX.Element {
             </Trans>
           </Heading>
           <HStack align='center' spacing={1}>
-            <ResourceIcon query={data.club.banner} seed={data.club.id} w={4} h={4} />
+            {data.club.banner != null && (
+              <ResourceIcon query={data.club.banner} seed={data.club.id} w={4} h={4} />
+            )}
             <Heading noOfLines={1} fontSize='md' color='gray.00'>
               {data.club.name}
             </Heading>

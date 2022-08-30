@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<20d941ddb20cb7378dfd700e4554b1bd>>
+ * @generated SignedSource<<87e8e8fcba1d6b9319c043f7bc14eb23>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,8 +16,8 @@ export type PostSlideIndexFragment$data = {
     readonly isSupporterOnly: boolean;
     readonly resource: {
       readonly type: ResourceType;
-      readonly " $fragmentSpreads": FragmentRefs<"ImageSnippetFragment" | "VideoSnippetFragment">;
     };
+    readonly " $fragmentSpreads": FragmentRefs<"PostSlideIndexMediaFragment">;
   }>;
   readonly reference: string;
   readonly " $fragmentType": "PostSlideIndexFragment";
@@ -69,19 +69,14 @@ const node: ReaderFragment = {
               "kind": "ScalarField",
               "name": "type",
               "storageKey": null
-            },
-            {
-              "args": null,
-              "kind": "FragmentSpread",
-              "name": "ImageSnippetFragment"
-            },
-            {
-              "args": null,
-              "kind": "FragmentSpread",
-              "name": "VideoSnippetFragment"
             }
           ],
           "storageKey": null
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "PostSlideIndexMediaFragment"
         }
       ],
       "storageKey": null
@@ -91,6 +86,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "880af6cb732fc903fdba229bfd50dcc5";
+(node as any).hash = "4b877edefb30c0785737c7b04f839cc8";
 
 export default node;

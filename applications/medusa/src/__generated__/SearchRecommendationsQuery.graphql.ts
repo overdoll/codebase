@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d3118332b83f8d450c8feac9a61535a5>>
- * @relayHash 67422ba513a382c1e320a71de1ba8733
+ * @generated SignedSource<<c342a6ba57b9f2ca69f49e452716f488>>
+ * @relayHash 9c428030e4e6f9d78737a8c8a894965b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 67422ba513a382c1e320a71de1ba8733
+// @relayRequestID 9c428030e4e6f9d78737a8c8a894965b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -97,13 +97,6 @@ v6 = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "type",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
       "name": "processed",
       "storageKey": null
     },
@@ -145,6 +138,13 @@ v6 = {
           "storageKey": null
         }
       ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "type",
       "storageKey": null
     },
     (v1/*: any*/),
@@ -465,7 +465,7 @@ return {
     ]
   },
   "params": {
-    "id": "67422ba513a382c1e320a71de1ba8733",
+    "id": "9c428030e4e6f9d78737a8c8a894965b",
     "metadata": {},
     "name": "SearchRecommendationsQuery",
     "operationKind": "query",

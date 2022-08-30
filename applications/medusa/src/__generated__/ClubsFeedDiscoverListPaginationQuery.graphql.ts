@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<88a83448f8c1279729d96f391e91b9c6>>
- * @relayHash 3189797f63a2b64c01e26ed6915f4052
+ * @generated SignedSource<<73d3d863ecba718deb7d8e837a562b1e>>
+ * @relayHash 8e1973884c9f16058ddc3a2931e45ba8
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3189797f63a2b64c01e26ed6915f4052
+// @relayRequestID 8e1973884c9f16058ddc3a2931e45ba8
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -68,10 +68,17 @@ v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "preview",
   "storageKey": null
 },
 v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v6 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -79,7 +86,7 @@ v5 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v4/*: any*/),
+    (v5/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -90,25 +97,18 @@ v5 = {
   ],
   "storageKey": null
 },
-v6 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "width",
   "storageKey": null
 },
-v7 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "height",
-  "storageKey": null
-},
 v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "preview",
+  "name": "height",
   "storageKey": null
 },
 v9 = {
@@ -119,7 +119,7 @@ v9 = {
   "name": "videoThumbnail",
   "plural": false,
   "selections": [
-    (v4/*: any*/)
+    (v5/*: any*/)
   ],
   "storageKey": null
 },
@@ -212,8 +212,8 @@ return {
                     "name": "thumbnail",
                     "plural": false,
                     "selections": [
+                      (v4/*: any*/),
                       (v3/*: any*/),
-                      (v5/*: any*/),
                       (v6/*: any*/),
                       (v7/*: any*/),
                       (v8/*: any*/),
@@ -230,7 +230,6 @@ return {
                     "name": "banner",
                     "plural": false,
                     "selections": [
-                      (v10/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -238,7 +237,7 @@ return {
                         "name": "processed",
                         "storageKey": null
                       },
-                      (v8/*: any*/),
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -272,10 +271,11 @@ return {
                         ],
                         "storageKey": null
                       },
+                      (v10/*: any*/),
                       (v3/*: any*/),
-                      (v5/*: any*/),
                       (v6/*: any*/),
                       (v7/*: any*/),
+                      (v8/*: any*/),
                       (v9/*: any*/)
                     ],
                     "storageKey": null
@@ -367,7 +367,7 @@ return {
     ]
   },
   "params": {
-    "id": "3189797f63a2b64c01e26ed6915f4052",
+    "id": "8e1973884c9f16058ddc3a2931e45ba8",
     "metadata": {},
     "name": "ClubsFeedDiscoverListPaginationQuery",
     "operationKind": "query",

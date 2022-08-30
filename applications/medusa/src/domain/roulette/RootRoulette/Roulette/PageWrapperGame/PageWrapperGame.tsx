@@ -8,15 +8,14 @@ interface Props {
 export default function PageWrapperGame ({
   children
 }: Props): JSX.Element {
-  // also try below
-  const width = {
-    base: 'full',
-    '2xl': '8xl'
-  }
-
   return (
     <Center mt={1}>
       <Box
+        position='fixed'
+        top={{
+          base: 1,
+          md: '56px'
+        }}
         w={{
           base: 'full',
           sm: 'sm',

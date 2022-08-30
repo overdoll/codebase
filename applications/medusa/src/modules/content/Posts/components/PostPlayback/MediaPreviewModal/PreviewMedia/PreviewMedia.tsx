@@ -31,41 +31,33 @@ export default function PreviewMedia ({
     changeVideoVolume
   } = useContext(GlobalVideoManagerContext)
 
-  const DisplayMedia = (): JSX.Element => {
-    switch (data.type) {
-      case 'IMAGE':
-        return (
-          <ImageSnippet
-            onClick={onClose}
-            hideBackground
-            containCover
-            cover
-            keepWidth
-            style={{
-              height: '100%'
-            }}
-            query={data}
-          />
-        )
-      case 'VIDEO':
-        return (
-          <ControlledVideo
-            autoPlay
-            controls={{
-              canSeek: true,
-              canFullscreen: true
-            }}
-            onVolumeChange={(volume) => changeVideoVolume(volume)}
-            onMute={(muted) => changeVideoMuted(muted)}
-            volume={videoVolume}
-            isMuted={videoMuted}
-            query={data}
-          />
-        )
-      default:
-        return <></>
-    }
+  if (data.type === 'IMAGE') {
+    return (
+      <ImageSnippet
+        onClick={onClose}
+        hideBackground
+        containCover
+        cover
+        keepWidth
+        style={{
+          height: '100%'
+        }}
+        query={data}
+      />
+    )
   }
 
-  return <DisplayMedia />
+  return (
+    <ControlledVideo
+      controls={{
+        canSeek: true,
+        canFullscreen: true
+      }}
+      onVolumeChange={(volume) => changeVideoVolume(volume)}
+      onMute={(muted) => changeVideoMuted(muted)}
+      volume={videoVolume}
+      isMuted={videoMuted}
+      query={data}
+    />
+  )
 }

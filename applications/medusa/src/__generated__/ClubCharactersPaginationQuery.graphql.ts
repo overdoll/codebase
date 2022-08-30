@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a6fbcde5eea91e1dfa01d65181c6bdb4>>
- * @relayHash 83b18d97f6e2dc74f98a0c45ad7ecff3
+ * @generated SignedSource<<86277639024407e6a3b6e445a6136cfa>>
+ * @relayHash a63144e7d499714cebd669321cd77ab4
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 83b18d97f6e2dc74f98a0c45ad7ecff3
+// @relayRequestID a63144e7d499714cebd669321cd77ab4
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -218,13 +218,6 @@ return {
                                 "alias": null,
                                 "args": null,
                                 "kind": "ScalarField",
-                                "name": "type",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
                                 "name": "processed",
                                 "storageKey": null
                               },
@@ -266,6 +259,13 @@ return {
                                     "storageKey": null
                                   }
                                 ],
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "type",
                                 "storageKey": null
                               },
                               (v4/*: any*/),
@@ -406,7 +406,7 @@ return {
     ]
   },
   "params": {
-    "id": "83b18d97f6e2dc74f98a0c45ad7ecff3",
+    "id": "a63144e7d499714cebd669321cd77ab4",
     "metadata": {},
     "name": "ClubCharactersPaginationQuery",
     "operationKind": "query",

@@ -46,7 +46,9 @@ export default function HomeGameTile (props: Props): JSX.Element {
   return (
     <Flex w='100%' h='100%' position='relative'>
       <Flex w='100%' h='100%' top={0} right={0} left={0} {...GLOW} position='absolute' />
-      <LinkTile href={href}>
+      <LinkTile
+        href={href}
+      >
         <Flex h={400} bg='gray.900' borderRadius='lg' position='relative'>
           <Flex bg='orange.100' overflow='hidden' right={0} left={0} w='100%' h='100%' top={0} position='absolute'>
             <NextImage
@@ -94,12 +96,8 @@ export default function HomeGameTile (props: Props): JSX.Element {
                   loop
                   playsInline
                   autoPlay
-                >
-                  <source
-                    src={video}
-                    type='video/mp4'
-                  />
-                </Box>
+                  src={video}
+                />
               </Flex>
             </GridItem>
           </Grid>

@@ -69,6 +69,7 @@ export default function BackgroundGlow (props: Props): JSX.Element {
       {isVisible && (
         <>
           <MotionBox
+            layout
             initial='visibleOne'
             key={0}
             {...DEFAULT_GLOW_PROPS}
@@ -84,6 +85,7 @@ export default function BackgroundGlow (props: Props): JSX.Element {
             exit='exit'
           />
           <MotionBox
+            layout
             key={1}
             {...DEFAULT_GLOW_PROPS}
             initial='visibleTwo'
@@ -99,6 +101,7 @@ export default function BackgroundGlow (props: Props): JSX.Element {
             exit='exit'
           />
           <MotionBox
+            layout
             key={2}
             {...DEFAULT_GLOW_PROPS}
             initial='visibleThree'

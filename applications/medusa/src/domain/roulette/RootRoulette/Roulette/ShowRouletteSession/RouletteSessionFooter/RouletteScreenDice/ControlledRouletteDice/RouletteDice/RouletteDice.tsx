@@ -59,6 +59,7 @@ export default function RouletteDice (props: Props): JSX.Element {
         bg={(number != null && !isSpinning) ? (showGlow ? `${numberColorScheme[number - 1]}.100` : 'gray.00') : 'gray.00'}
         position='relative'
         overflow='hidden'
+        userSelect='none'
         {...DICE_PROPS}
       >
         {isSpinning && (
