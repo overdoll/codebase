@@ -1,17 +1,17 @@
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import type { AudienceMultiSelectorQuery } from '@//:artifacts/AudienceMultiSelectorQuery.graphql'
-import { ListSpacer } from '@//:modules/content/PageLayout'
-import { AudienceTileOverlay, StackTile } from '@//:modules/content/ContentSelection'
+import { AudienceTileOverlay, GridWrap } from '@//:modules/content/ContentSelection'
 import { ComponentChoiceArguments } from '@//:modules/content/HookedComponents/Choice/types'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
 import { Choice } from '@//:modules/content/HookedComponents/Choice'
+import ShortGridTile from '@//:modules/content/ContentSelection/ShortGridTile/ShortGridTile'
 
 interface Props extends ComponentChoiceArguments<any>, ComponentSearchArguments<any> {
 }
 
 const Query = graphql`
   query AudienceMultiSelectorQuery {
-    audiences {
+    audiences (first: 100) {
       edges {
         node {
           id
@@ -34,17 +34,17 @@ export default function AudienceMultiSelector ({
   )
 
   return (
-    <ListSpacer>
+    <GridWrap>
       {data.audiences.edges.map((item, index) => (
-        <StackTile key={index}>
+        <ShortGridTile key={index}>
           <Choice
             {...register(item.node.id, { title: item.node.title })}
           >
             <AudienceTileOverlay query={item.node} />
           </Choice>
-        </StackTile>
+        </ShortGridTile>
       )
       )}
-    </ListSpacer>
+    </GridWrap>
   )
 }

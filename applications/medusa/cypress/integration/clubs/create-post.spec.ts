@@ -3,7 +3,6 @@ import { gotoNextStep, gotoPreviousStep, saveCurrentStep } from '../../support/f
 import {
   clickOnAriaLabelButton,
   clickOnButton,
-  clickOnTab,
   clickOnTile,
   searchForTerm,
   typeIntoPlaceholder
@@ -14,7 +13,6 @@ const postCategories = ['Alter', 'Assure', 'Transmit']
 const postCharacter = 'Haider Woodley'
 const postTopic = 'Single Topic'
 const postTopicDescription = 'A Single Topic'
-const rule = 'Rule #1 without infraction'
 
 const nextStepIsDisabled = (): void => {
   cy.findByRole('button', { name: /Next/iu }).should('be.disabled')
@@ -195,8 +193,7 @@ describe('Create & Manage Posts', () => {
     isOnStep('review')
     // test post submission
     clickOnButton(/Submit/iu)
-    cy.findByText(/Submitted for review/iu).should('exist')
-    clickOnButton(/Post again/i)
+    cy.findByText(/Your post was submitted/iu).should('exist')
     cy.findByText(/Upload Files/iu).should('exist')
 
     /**
@@ -312,12 +309,12 @@ describe('Create & Manage Posts', () => {
     cy.visit(`/${clubName}/posts?sort=NEW`)
     cy.get('button[aria-label="Open Menu"]').should('be.visible').click({ force: true })
     cy.findByText('Moderate').should('be.visible').click({ force: true })
-    clickOnTab('Actions')
-    clickOnButton('Remove Post')
-    clickOnButton('Select Rule')
-    clickOnTile(rule)
-    typeIntoPlaceholder(/Add a note describing/iu, 'A note about why the post was removed')
-    clickOnButton('Confirm Remove Post')
-    cy.findByText(/Successfully removed post/iu).should('be.visible')
+    // clickOnTab('Actions')
+    // clickOnButton('Remove Post')
+    // clickOnButton('Select Rule')
+    // clickOnTile(rule)
+    // typeIntoPlaceholder(/Add a note describing/iu, 'A note about why the post was removed')
+    // clickOnButton('Confirm Remove Post')
+    // cy.findByText(/Successfully removed post/iu).should('be.visible')
   })
 })

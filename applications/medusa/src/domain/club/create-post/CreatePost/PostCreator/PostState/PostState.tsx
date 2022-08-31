@@ -11,6 +11,10 @@ import ClubInformationBanner from '../../../../../../common/components/ClubInfor
 import ClubDraftPostsAlert from './ClubDraftPostsAlert/ClubDraftPostsAlert'
 import CreatePostFooter from './CreatePostFooter/CreatePostFooter'
 import PostNotDraft from './PostNotDraft/PostNotDraft'
+import CreatePostOpening from './CreatePostOpening/CreatePostOpening'
+import useAbility from '@//:modules/authorization/useAbility'
+import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   postQuery: PostStateFragment$key | null
@@ -41,14 +45,14 @@ export default function PostState ({
   const postData = useFragment(PostFragment, postQuery)
   const clubData = useFragment(ClubFragment, clubQuery)
 
-  const { state } = useSequenceContext()
+  const {
+    state
+  } = useSequenceContext()
+
+  const ability = useAbility()
 
   if (clubData == null) {
     return <NotFoundClub />
-  }
-
-  if (state.isSubmitted === true) {
-    return <PostSubmitted />
   }
 
   // If there is no post found from the URL parameter, show create post initiator
@@ -58,6 +62,7 @@ export default function PostState ({
         <ClubInformationBanner query={clubData} />
         <Stack spacing={4}>
           <ClubDraftPostsAlert query={clubData} />
+          <PostSubmitted />
           <CreatePostFlow query={clubData} />
           <CreatePostFooter />
         </Stack>
@@ -65,8 +70,12 @@ export default function PostState ({
     )
   }
 
+  if (state.isSubmitted === true) {
+    return <CreatePostOpening />
+  }
+
   // If the post was already submitted
-  if (postData?.state !== 'DRAFT') {
+  if (postData?.state !== 'DRAFT' && !ability.can('staff', 'Post')) {
     return (
       <PostNotDraft />
     )
@@ -74,8 +83,23 @@ export default function PostState ({
 
   // When there is a valid post we load the post creator flow
   return (
-    <UpdatePostFlow
-      query={postData}
-    />
+    <>
+      {(ability.can('staff', 'Post') && postData?.state !== 'DRAFT') && (
+        <Alert
+          status='info'
+          mb={2}
+        >
+          <AlertIcon />
+          <AlertDescription>
+            <Trans>
+              You are editing this post as a staff member
+            </Trans>
+          </AlertDescription>
+        </Alert>
+      )}
+      <UpdatePostFlow
+        query={postData}
+      />
+    </>
   )
 }

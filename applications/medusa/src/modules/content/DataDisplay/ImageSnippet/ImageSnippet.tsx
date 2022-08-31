@@ -4,18 +4,22 @@ import type { ImageSnippetFragment$key } from '@//:artifacts/ImageSnippetFragmen
 import NextImage from '../NextImage/NextImage'
 import { ImageProps } from 'next/image'
 import { useMemo, useRef, useState } from 'react'
-import { Box, Flex } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
 import ImageError from '../NextImage/ImageError/ImageError'
 import CanUseDOM from '../../../operations/CanUseDOM'
 import { useHasMimeTypeAcceptHeader } from '../../../configuration'
 import { useHydrate } from '../../../hydrate'
 
+export type ImageSnippetProps = Omit<ImageProps, 'src' | 'width' | 'height' | 'layout' | 'alt'>
+
 export interface ImageSnippetCoverProps {
   cover?: boolean
   containCover?: boolean
+  hideBackground?: boolean
+  keepWidth?: boolean
 }
 
-interface Props extends Omit<ImageProps, 'src' | 'width' | 'height' | 'layout' | 'alt'>, ImageSnippetCoverProps {
+interface Props extends ImageSnippetProps, ImageSnippetCoverProps {
   query: ImageSnippetFragment$key | null
   tinyError?: boolean
 }
@@ -40,6 +44,9 @@ export default function ImageSnippet ({
   cover,
   tinyError,
   containCover,
+  hideBackground = false,
+  keepWidth,
+  style,
   ...rest
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
@@ -54,7 +61,7 @@ export default function ImageSnippet ({
 
   const determineCover = cover === true || (data?.width == null && data?.height == null)
 
-  const previewBackground = data?.preview != null && data?.preview !== '' ? data?.preview : 'gray.800'
+  const previewBackground = hideBackground ? 'transparent' : (data?.preview != null && data?.preview !== '' ? data?.preview : 'gray.800')
 
   const tiniestImage = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
 
@@ -67,10 +74,12 @@ export default function ImageSnippet ({
     style: {
       backgroundColor: previewBackground,
       userSelect: 'none' as any,
-      width: '100%',
-      height: '100%',
-      objectFit: determineCover ? (containCover === true ? 'contain' : 'cover') : 'cover' as any
-    }
+      width: keepWidth === true ? '100%' : (determineCover ? (containCover === true ? undefined : '100%') : '100%') as any,
+      height: containCover === true ? undefined : '100%',
+      objectFit: determineCover ? (containCover === true ? 'contain' : 'cover') : 'cover' as any,
+      ...style
+    },
+    draggable: false
   }
 
   const isHydrated = useHydrate()
@@ -116,25 +125,36 @@ export default function ImageSnippet ({
 
   if (errorCount >= errorLimit) {
     return (
-      <Box w='100%' h='100%' position='relative'>
+      <Flex justify='center' w='100%' h='100%' position='relative'>
         <NextImage
           loading={isHydrated ? 'lazy' : 'eager'}
           {...IMAGE_PROPS}
           src={tiniestImage}
           {...rest}
         />
-        <Flex top={0} right={0} w='100%' h='100%' position='absolute' align='center' justify='center'>
+        <Flex
+          pointerEvents='none'
+          top={0}
+          right={0}
+          w='100%'
+          h='100%'
+          position='absolute'
+          align='center'
+          justify='center'
+        >
           <ImageError tiny={tinyError === true} />
         </Flex>
-      </Box>
+      </Flex>
     )
   }
 
   return (
-    <Box
+    <Flex
       bg={previewBackground}
       w='100%'
       h='100%'
+      justify='center'
+      align='center'
     >
       <NextImage
         priority={!isHydrated}
@@ -146,6 +166,6 @@ export default function ImageSnippet ({
         {...IMAGE_PROPS}
         {...rest}
       />
-    </Box>
+    </Flex>
   )
 }

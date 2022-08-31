@@ -16,7 +16,7 @@ export default function CreatePostContentFilePicker ({
   uppy
 }: Props): JSX.Element {
   return (
-    <FileInputOverlay uppy={uppy}>
+    <FileInputOverlay onlyPick uppy={uppy}>
       <LargeBackgroundBox p={3} w='100%'>
         <Stack w='100%' align='flex-start' justify='center' spacing={4}>
           <HStack spacing={3} align='center' justify='center'>

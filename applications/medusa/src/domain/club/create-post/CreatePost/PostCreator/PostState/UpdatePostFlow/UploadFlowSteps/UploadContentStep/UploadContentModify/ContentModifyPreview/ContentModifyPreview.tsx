@@ -1,7 +1,7 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { ContentModifyPreviewFragment$key } from '@//:artifacts/ContentModifyPreviewFragment.graphql'
 import { Stack } from '@chakra-ui/react'
-import PostContentPreview from './PostContentPreview/PostContentPreview'
+import PostContentPreviewMemo from './PostContentPreviewMemo/PostContentPreviewMemo'
 
 interface Props {
   query: ContentModifyPreviewFragment$key
@@ -10,9 +10,9 @@ interface Props {
 const Fragment = graphql`
   fragment ContentModifyPreviewFragment on Post {
     content {
-      ...PostContentPreviewFragment
+      ...PostContentPreviewMemoFragment
     }
-    ...PostContentPreviewPostFragment
+    ...PostContentPreviewMemoPostFragment
   }
 `
 
@@ -30,7 +30,7 @@ export default function ContentModifyPreview ({
   return (
     <Stack spacing={2}>
       {data.content.map((item, index) => (
-        <PostContentPreview key={index} query={item} postQuery={data} />
+        <PostContentPreviewMemo key={index} query={item} postQuery={data} />
       ))}
     </Stack>
   )

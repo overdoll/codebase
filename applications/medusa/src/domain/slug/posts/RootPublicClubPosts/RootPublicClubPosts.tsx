@@ -36,7 +36,7 @@ const RootPublicClubPosts: PageProps<Props> = (props: Props) => {
       <PageWrapper>
         <Stack spacing={8}>
           <QueryErrorBoundary loadQuery={() => loadQuery({
-            sortBy: 'TOP',
+            sortBy: 'ALGORITHM',
             slug: slug as string
           })}
           >

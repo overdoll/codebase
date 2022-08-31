@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b713a34514d6ed9ebff4dc23e4e04775>>
+ * @generated SignedSource<<6f83797fefb78cbe1e129f7a56720da0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -39,9 +39,13 @@ return {
       "name": "after"
     },
     {
-      "defaultValue": 9,
+      "defaultValue": 5,
       "kind": "LocalArgument",
       "name": "first"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "seed"
     },
     {
       "kind": "RootArgument",
@@ -79,6 +83,11 @@ return {
     {
       "alias": "posts",
       "args": [
+        {
+          "kind": "Variable",
+          "name": "seed",
+          "variableName": "seed"
+        },
         {
           "kind": "Variable",
           "name": "sortBy",
@@ -177,6 +186,6 @@ return {
 };
 })();
 
-(node as any).hash = "8e5fd1af0120449165a849c7f365f0cc";
+(node as any).hash = "275dc5181ad07528b786dcd54627dad8";
 
 export default node;

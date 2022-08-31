@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0c141c8133e459868a6f302f4c912003>>
- * @relayHash 81191b8fcea4c3a47505b8b8d3af56dc
+ * @generated SignedSource<<f4ffd8321cf4f2efdf98a6e42b2cbb2d>>
+ * @relayHash 93f59cf88d7018cca147148987de7c96
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 81191b8fcea4c3a47505b8b8d3af56dc
+// @relayRequestID 93f59cf88d7018cca147148987de7c96
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -245,13 +245,6 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "type",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
                     "name": "processed",
                     "storageKey": null
                   },
@@ -277,6 +270,7 @@ return {
                     "name": "progress",
                     "plural": false,
                     "selections": [
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -290,9 +284,15 @@ return {
                         "kind": "ScalarField",
                         "name": "state",
                         "storageKey": null
-                      },
-                      (v4/*: any*/)
+                      }
                     ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "type",
                     "storageKey": null
                   },
                   (v4/*: any*/),
@@ -374,7 +374,7 @@ return {
     ]
   },
   "params": {
-    "id": "81191b8fcea4c3a47505b8b8d3af56dc",
+    "id": "93f59cf88d7018cca147148987de7c96",
     "metadata": {},
     "name": "CreateClubCharacterFormMutation",
     "operationKind": "mutation",

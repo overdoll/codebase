@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bef5faa290069e6856ab65a2fa09353d>>
+ * @generated SignedSource<<a5ba9600ee1fab6c6a154c00adc9653e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,12 +9,10 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
-export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type ResourceIconFragment$data = {
   readonly preview: string;
-  readonly type: ResourceType;
-  readonly " $fragmentSpreads": FragmentRefs<"ImageSnippetFragment" | "VideoSnippetFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"ResourceIconMediaFragment">;
   readonly " $fragmentType": "ResourceIconFragment";
 };
 export type ResourceIconFragment$key = {
@@ -29,34 +27,22 @@ const node: ReaderFragment = {
   "name": "ResourceIconFragment",
   "selections": [
     {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "ImageSnippetFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "VideoSnippetFragment"
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "type",
-      "storageKey": null
-    },
-    {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
       "name": "preview",
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "ResourceIconMediaFragment"
     }
   ],
   "type": "Resource",
   "abstractKey": null
 };
 
-(node as any).hash = "8817d16fec069acc5ca2bdbfdb9ca82e";
+(node as any).hash = "d37dc1b32f025eb3871cebd85fc1537c";
 
 export default node;

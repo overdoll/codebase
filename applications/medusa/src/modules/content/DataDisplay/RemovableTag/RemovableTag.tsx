@@ -2,6 +2,7 @@ import { HTMLChakraProps, Tag, TagCloseButton, TagLabel } from '@chakra-ui/react
 import { useMemo } from 'react'
 import { Random } from '../../../utilities/random'
 import hash from '../../../utilities/hash'
+import { DEFAULT_SEED, TAG_COLOR_PALETTE } from '../../../constants/theme'
 
 interface Props extends HTMLChakraProps<any> {
   onRemove?: (id) => void
@@ -10,16 +11,6 @@ interface Props extends HTMLChakraProps<any> {
   generateColor?: boolean
 }
 
-const defaultSeed = 'DETERMINISTIC_SEED'
-
-const TAG_COLOR_PALETTE = [
-  'purple.300',
-  'teal.300',
-  'green.300',
-  'primary.300',
-  'orange.300'
-]
-
 export default function RemovableTag ({
   id,
   title,
@@ -27,9 +18,9 @@ export default function RemovableTag ({
   generateColor,
   ...rest
 }: Props): JSX.Element {
-  const memoized = useMemo(() => new Random(hash(id ?? defaultSeed)), [id])
+  const memoized = useMemo(() => new Random(hash(id ?? DEFAULT_SEED)), [id])
 
-  const chosenColor = useMemo(() => memoized.nextInt32([0, 5]), [id])
+  const chosenColor = useMemo(() => memoized.nextInt32([0, TAG_COLOR_PALETTE.length]), [id])
 
   const bgColor = generateColor === true ? TAG_COLOR_PALETTE[chosenColor] : undefined
   const removeButtonColor = generateColor === true ? 'transparent' : 'orange.300'

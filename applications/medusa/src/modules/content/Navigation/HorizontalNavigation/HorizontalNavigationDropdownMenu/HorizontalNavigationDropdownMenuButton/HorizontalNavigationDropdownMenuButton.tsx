@@ -67,6 +67,7 @@ const HorizontalNavigationDropdownMenuButton = forwardRef<any, Props>(({
     <NavLink
       passHref
       href={href}
+      prefetch={false}
       {...rest}
     >
       {({

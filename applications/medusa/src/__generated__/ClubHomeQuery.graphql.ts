@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d07a00426b8adb4afba106d9249f49b2>>
- * @relayHash 80c1e5f1edfbe378efb8a7ff55a93037
+ * @generated SignedSource<<3397cc6c4e2076984022ce855a465371>>
+ * @relayHash 680c4d813bd02aa3820aad7e0162acb3
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 80c1e5f1edfbe378efb8a7ff55a93037
+// @relayRequestID 680c4d813bd02aa3820aad7e0162acb3
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -179,6 +179,13 @@ return {
             "name": "thumbnail",
             "plural": false,
             "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "preview",
+                "storageKey": null
+              },
               (v6/*: any*/),
               {
                 "alias": null,
@@ -211,13 +218,6 @@ return {
                 "args": null,
                 "kind": "ScalarField",
                 "name": "height",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "preview",
                 "storageKey": null
               },
               {
@@ -323,6 +323,13 @@ return {
           {
             "alias": null,
             "args": null,
+            "kind": "ScalarField",
+            "name": "membersIsSupporterCount",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "ClubSuspension",
             "kind": "LinkedField",
             "name": "suspension",
@@ -370,7 +377,7 @@ return {
     ]
   },
   "params": {
-    "id": "80c1e5f1edfbe378efb8a7ff55a93037",
+    "id": "680c4d813bd02aa3820aad7e0162acb3",
     "metadata": {},
     "name": "ClubHomeQuery",
     "operationKind": "query",

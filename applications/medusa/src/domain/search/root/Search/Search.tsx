@@ -9,7 +9,7 @@ import SearchResults
 import {
   RecommendationsSkeleton,
   SlideSkeleton
-} from '../../../../common/components/PageHeader/SearchButton/components/SearchSkeleton/SearchSkeleton'
+} from '@//:common/components/PageHeader/SearchButton/components/SearchSkeleton/SearchSkeleton'
 import SearchRecommendations
   from '../../../../common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations'
 import { useQueryParam } from 'use-query-params'

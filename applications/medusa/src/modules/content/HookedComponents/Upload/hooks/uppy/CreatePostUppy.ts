@@ -10,7 +10,7 @@ import { TUS_OPTIONS, UPLOAD_ALLOWED_FILE_TYPES, UPLOAD_MAX_FILE_SIZE } from '..
 const U: UppyType = Uppy({
   id: 'posts',
   restrictions: {
-    maxNumberOfFiles: 10,
+    maxNumberOfFiles: 20,
     allowedFileTypes: UPLOAD_ALLOWED_FILE_TYPES,
     maxFileSize: UPLOAD_MAX_FILE_SIZE
   },

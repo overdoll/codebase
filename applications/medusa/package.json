@@ -28,7 +28,7 @@
     "date-fns": "^2.23.0",
     "dinero.js": "^2.0.0-alpha.8",
     "fathom-client": "^3.4.1",
-    "framer-motion": "^4",
+    "framer-motion": "^6.2.9",
     "joi": "^17.4.0",
     "js-file-download": "^0.4.12",
     "mjml": "^4.12.0",

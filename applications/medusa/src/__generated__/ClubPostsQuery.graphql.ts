@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e8b43b2a63a080796ab9db4723213b47>>
- * @relayHash e465820421b2224886aba04848e5ec18
+ * @generated SignedSource<<49afd0ef9e05ca7d56653a4b997249bf>>
+ * @relayHash f30391ec2f6a9a1cc29ff7e5c39e697c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e465820421b2224886aba04848e5ec18
+// @relayRequestID f30391ec2f6a9a1cc29ff7e5c39e697c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -70,7 +70,12 @@ v4 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 11
+    "value": 17
+  },
+  {
+    "kind": "Literal",
+    "name": "sortBy",
+    "value": "NEW"
   },
   {
     "kind": "Variable",
@@ -82,14 +87,14 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "state",
+  "name": "id",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "state",
   "storageKey": null
 },
 v7 = {
@@ -212,6 +217,7 @@ return {
                     "plural": false,
                     "selections": [
                       (v5/*: any*/),
+                      (v6/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -220,6 +226,7 @@ return {
                         "name": "content",
                         "plural": true,
                         "selections": [
+                          (v5/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -227,7 +234,6 @@ return {
                             "name": "isSupporterOnly",
                             "storageKey": null
                           },
-                          (v6/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -268,6 +274,7 @@ return {
                                 "name": "progress",
                                 "plural": false,
                                 "selections": [
+                                  (v5/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -275,12 +282,11 @@ return {
                                     "name": "progress",
                                     "storageKey": null
                                   },
-                                  (v5/*: any*/),
                                   (v6/*: any*/)
                                 ],
                                 "storageKey": null
                               },
-                              (v6/*: any*/),
+                              (v5/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -340,7 +346,7 @@ return {
                               (v7/*: any*/),
                               (v8/*: any*/),
                               (v9/*: any*/),
-                              (v6/*: any*/)
+                              (v5/*: any*/)
                             ],
                             "storageKey": null
                           }
@@ -354,7 +360,6 @@ return {
                         "name": "reference",
                         "storageKey": null
                       },
-                      (v6/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -370,7 +375,7 @@ return {
                             "name": "slug",
                             "storageKey": null
                           },
-                          (v6/*: any*/)
+                          (v5/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -432,14 +437,15 @@ return {
             "alias": null,
             "args": (v4/*: any*/),
             "filters": [
-              "state"
+              "state",
+              "sortBy"
             ],
             "handle": "connection",
             "key": "ClubPosts_posts",
             "kind": "LinkedHandle",
             "name": "posts"
           },
-          (v6/*: any*/),
+          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -483,14 +489,14 @@ return {
         "plural": false,
         "selections": [
           (v3/*: any*/),
-          (v6/*: any*/)
+          (v5/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "e465820421b2224886aba04848e5ec18",
+    "id": "f30391ec2f6a9a1cc29ff7e5c39e697c",
     "metadata": {},
     "name": "ClubPostsQuery",
     "operationKind": "query",

@@ -6,7 +6,6 @@ import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import { usePaginationFragment } from 'react-relay'
 import { Trans } from '@lingui/macro'
 import SearchSummary from '../../../../../common/components/PageHeader/SearchSummary/SearchSummary'
-import PostOrderButton from '../../../../../common/components/PageHeader/PostOrderButton/PostOrderButton'
 import SearchButton from '../../../../../common/components/PageHeader/SearchButton/SearchButton'
 import SearchCategoryRecommendations from './SearchCategoryRecommendations/SearchCategoryRecommendations'
 import SearchCategoryRichObject
@@ -15,6 +14,11 @@ import FullSimplePost
   from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/FullSimplePost/FullSimplePost'
 import PostInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
+import PlatformPromoteAlert from '@//:common/components/PlatformPromoteAlert/PlatformPromoteAlert'
+import SearchCategoryCopyLinkButton from './SearchCategoryCopyLinkButton/SearchCategoryCopyLinkButton'
+import SearchCategoryShareDiscordButton from './SearchCategoryShareDiscordButton/SearchCategoryShareDiscordButton'
+import SearchCategoryShareRedditButton from './SearchCategoryShareRedditButton/SearchCategoryShareRedditButton'
+import SearchCategoryShareTwitterButton from './SearchCategoryShareTwitterButton/SearchCategoryShareTwitterButton'
 
 interface Props {
   query: PreloadedQuery<SearchCategoryQuery>
@@ -23,7 +27,8 @@ interface Props {
 const Query = graphql`
   query SearchCategoryQuery(
     $sortBy: PostsSort!,
-    $categorySlug: String!
+    $categorySlug: String!,
+    $seed: String
   ) @preloadable {
     category(slug: $categorySlug) {
       title
@@ -31,6 +36,10 @@ const Query = graphql`
       totalPosts
       ...SearchCategoryFragment
       ...SearchCategoryRichObjectFragment
+      ...SearchCategoryShareDiscordButtonFragment
+      ...SearchCategoryShareRedditButtonFragment
+      ...SearchCategoryShareTwitterButtonFragment
+      ...SearchCategoryCopyLinkButtonFragment
     }
     viewer {
       ...FullSimplePostViewerFragment
@@ -42,7 +51,7 @@ const Query = graphql`
 const Fragment = graphql`
   fragment SearchCategoryFragment on Category
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 9}
+    first: {type: Int, defaultValue: 5}
     after: {type: String}
   )
   @refetchable(queryName: "SearchCategoryPostsPaginationQuery" ) {
@@ -50,6 +59,7 @@ const Fragment = graphql`
       first: $first,
       after: $after,
       sortBy: $sortBy,
+      seed: $seed
     )
     @connection (key: "SearchCategoryPosts_posts") {
       edges {
@@ -95,7 +105,12 @@ export default function SearchCategory ({ query }: Props): JSX.Element {
           />
           <SearchCategoryRecommendations query={queryData} />
           <HStack justify='space-between' spacing={2}>
-            <PostOrderButton />
+            <HStack spacing={1}>
+              <SearchCategoryCopyLinkButton query={queryData.category} />
+              <SearchCategoryShareDiscordButton query={queryData.category} />
+              <SearchCategoryShareRedditButton query={queryData.category} />
+              <SearchCategoryShareTwitterButton query={queryData.category} />
+            </HStack>
             <SearchButton />
           </HStack>
         </Stack>
@@ -105,6 +120,7 @@ export default function SearchCategory ({ query }: Props): JSX.Element {
             hasNext={hasNext}
             loadNext={loadNext}
             isLoadingNext={isLoadingNext}
+            endOfTree={<PlatformPromoteAlert />}
           >
             {({ index }) => (
               <FullSimplePost

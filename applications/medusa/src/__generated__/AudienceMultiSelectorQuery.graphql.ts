@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<183de81f7da0f0e24201cc309149c7a0>>
- * @relayHash 8242475853645e802173a42dfb13f2c6
+ * @generated SignedSource<<748399b3ca010b30211625b3684494fb>>
+ * @relayHash 10397fdbc9b72c6c5492b97c7fe8dac8
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8242475853645e802173a42dfb13f2c6
+// @relayRequestID 10397fdbc9b72c6c5492b97c7fe8dac8
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -31,21 +31,28 @@ export type AudienceMultiSelectorQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
+var v0 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 100
+  }
+],
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v1 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "title",
   "storageKey": null
 },
-v2 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -61,7 +68,7 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": null,
+        "args": (v0/*: any*/),
         "concreteType": "AudienceConnection",
         "kind": "LinkedField",
         "name": "audiences",
@@ -83,8 +90,8 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v0/*: any*/),
                   (v1/*: any*/),
+                  (v2/*: any*/),
                   {
                     "args": null,
                     "kind": "FragmentSpread",
@@ -97,7 +104,7 @@ return {
             "storageKey": null
           }
         ],
-        "storageKey": null
+        "storageKey": "audiences(first:100)"
       }
     ],
     "type": "Query",
@@ -111,7 +118,7 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": null,
+        "args": (v0/*: any*/),
         "concreteType": "AudienceConnection",
         "kind": "LinkedField",
         "name": "audiences",
@@ -133,8 +140,8 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v0/*: any*/),
                   (v1/*: any*/),
+                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -143,13 +150,6 @@ return {
                     "name": "banner",
                     "plural": false,
                     "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "type",
-                        "storageKey": null
-                      },
                       {
                         "alias": null,
                         "args": null,
@@ -179,6 +179,7 @@ return {
                         "name": "progress",
                         "plural": false,
                         "selections": [
+                          (v1/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -192,12 +193,18 @@ return {
                             "kind": "ScalarField",
                             "name": "state",
                             "storageKey": null
-                          },
-                          (v0/*: any*/)
+                          }
                         ],
                         "storageKey": null
                       },
-                      (v0/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "type",
+                        "storageKey": null
+                      },
+                      (v1/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -206,7 +213,7 @@ return {
                         "name": "urls",
                         "plural": true,
                         "selections": [
-                          (v2/*: any*/),
+                          (v3/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -239,7 +246,7 @@ return {
                         "name": "videoThumbnail",
                         "plural": false,
                         "selections": [
-                          (v2/*: any*/)
+                          (v3/*: any*/)
                         ],
                         "storageKey": null
                       }
@@ -253,12 +260,12 @@ return {
             "storageKey": null
           }
         ],
-        "storageKey": null
+        "storageKey": "audiences(first:100)"
       }
     ]
   },
   "params": {
-    "id": "8242475853645e802173a42dfb13f2c6",
+    "id": "10397fdbc9b72c6c5492b97c7fe8dac8",
     "metadata": {},
     "name": "AudienceMultiSelectorQuery",
     "operationKind": "query",
@@ -267,6 +274,6 @@ return {
 };
 })();
 
-(node as any).hash = "df5243268b0bf531c2745a3c5d4027d6";
+(node as any).hash = "a25cd0b3f01172910ab0a28c08bc1742";
 
 export default node;

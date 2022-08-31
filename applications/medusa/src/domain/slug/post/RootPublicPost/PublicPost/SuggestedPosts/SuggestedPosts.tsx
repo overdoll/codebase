@@ -7,6 +7,7 @@ import FullSimplePost
   from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/FullSimplePost/FullSimplePost'
 import PostInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
+import PlatformPromoteAlert from '@//:common/components/PlatformPromoteAlert/PlatformPromoteAlert'
 
 interface Props {
   query: SuggestedPostsFragment$key | null
@@ -16,7 +17,7 @@ interface Props {
 const Fragment = graphql`
   fragment SuggestedPostsFragment on Post
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 10}
+    first: {type: Int, defaultValue: 5}
     after: {type: String}
   )
   @refetchable(queryName: "SuggestedPostsPaginationQuery" ) {
@@ -60,6 +61,7 @@ export default function SuggestedPosts ({
       hasNext={hasNext}
       loadNext={loadNext}
       isLoadingNext={isLoadingNext}
+      endOfTree={<PlatformPromoteAlert />}
     >
       {({ index }) => (
         <FullSimplePost

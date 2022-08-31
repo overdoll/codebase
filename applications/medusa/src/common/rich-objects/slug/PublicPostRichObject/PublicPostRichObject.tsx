@@ -28,7 +28,7 @@ const Fragment = graphql`
   }
 `
 
-const getCharacterNames = (characters: string[]): string => {
+export const getCharacterNames = (characters: string[]): string => {
   if (characters.length === 1) {
     return characters[0]
   }

@@ -87,7 +87,6 @@ export default function UploadFileDisplay ({
       return (
         <Progress
           colorScheme={determineColorScheme()}
-          isAnimated={fileUploadStarted && !fileUploadComplete && !fileHasError}
           value={debouncedPercentage === 0 ? 5 : debouncedPercentage}
           {...PROGRESS_PROPS}
         />
@@ -144,6 +143,9 @@ export default function UploadFileDisplay ({
             <Icon icon={FILE_ICONS[file.type]} w={4} h={4} fill='gray.200' />
             <Heading noOfLines={1} fontSize='sm' color='gray.200'>
               {'name' in file.data ? file.data?.name : file.id}
+            </Heading>
+            <Heading ml={2} noOfLines={1} fontSize='xs' color='gray.200'>
+              {file.size / 1024 < 1000 ? `${(file.size / 1024).toFixed(0)} KB` : `${(file.size / 1048576).toFixed(1)} MB`}
             </Heading>
           </HStack>
         )}

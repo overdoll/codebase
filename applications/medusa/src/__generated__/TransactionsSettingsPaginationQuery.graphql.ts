@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<46281233946f8c801059ea99decafdbf>>
- * @relayHash 9f5e1b4bcf81bba6c45586f4c05b66cf
+ * @generated SignedSource<<89acad4e1345c1e40529da7384547b66>>
+ * @relayHash 6e48fe359ddd59b3cbc1f6f014399c62
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9f5e1b4bcf81bba6c45586f4c05b66cf
+// @relayRequestID 6e48fe359ddd59b3cbc1f6f014399c62
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -227,6 +227,13 @@ return {
                                         "name": "thumbnail",
                                         "plural": false,
                                         "selections": [
+                                          {
+                                            "alias": null,
+                                            "args": null,
+                                            "kind": "ScalarField",
+                                            "name": "preview",
+                                            "storageKey": null
+                                          },
                                           (v4/*: any*/),
                                           {
                                             "alias": null,
@@ -259,13 +266,6 @@ return {
                                             "args": null,
                                             "kind": "ScalarField",
                                             "name": "height",
-                                            "storageKey": null
-                                          },
-                                          {
-                                            "alias": null,
-                                            "args": null,
-                                            "kind": "ScalarField",
-                                            "name": "preview",
                                             "storageKey": null
                                           },
                                           {
@@ -407,7 +407,7 @@ return {
     ]
   },
   "params": {
-    "id": "9f5e1b4bcf81bba6c45586f4c05b66cf",
+    "id": "6e48fe359ddd59b3cbc1f6f014399c62",
     "metadata": {},
     "name": "TransactionsSettingsPaginationQuery",
     "operationKind": "query",

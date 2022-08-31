@@ -6,7 +6,7 @@ import PostArchiveButton from '../../PostMenu/PostArchiveButton/PostArchiveButto
 import PostModerateButton from '../../PostMenu/PostModerateButton/PostModerateButton'
 import PostReportButton from '../../PostMenu/PostReportButton/PostReportButton'
 import { NavigationMenuHorizontal } from '@//:assets/icons'
-import PostFooterButton from '../PostFooterButton/PostFooterButton'
+import MediumGenericButton from '@//:common/components/GenericButtons/MediumGenericButton/MediumGenericButton'
 import { Menu } from '../../../../../ThemeComponents/Menu/Menu'
 import Can from '../../../../../../authorization/Can'
 
@@ -59,7 +59,7 @@ export default function PostMenuButton ({
           isDisabled={allowed === false}
           icon={NavigationMenuHorizontal}
           size='md'
-          as={PostFooterButton}
+          as={MediumGenericButton}
         >
           <PostModerateButton query={postData} />
           {postData?.club?.viewerIsOwner

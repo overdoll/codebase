@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<5d31f40368d58f0f70785b9f7c4036d4>>
- * @relayHash 93ac88b00aef95d28ddb6d3cbf717396
+ * @generated SignedSource<<ac07696bd3d4bca8f999a40639bfb066>>
+ * @relayHash 604a6b9cd8635ce47d54c61a95eb7e5e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 93ac88b00aef95d28ddb6d3cbf717396
+// @relayRequestID 604a6b9cd8635ce47d54c61a95eb7e5e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -27,7 +27,7 @@ var v0 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 13
+    "value": 100
   }
 ],
 v1 = {
@@ -63,13 +63,6 @@ v4 = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "type",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
       "name": "processed",
       "storageKey": null
     },
@@ -95,6 +88,7 @@ v4 = {
       "name": "progress",
       "plural": false,
       "selections": [
+        (v1/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -108,9 +102,15 @@ v4 = {
           "kind": "ScalarField",
           "name": "state",
           "storageKey": null
-        },
-        (v1/*: any*/)
+        }
       ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "type",
       "storageKey": null
     },
     (v1/*: any*/),
@@ -162,28 +162,21 @@ v4 = {
   ],
   "storageKey": null
 },
-v5 = [
-  {
-    "kind": "Literal",
-    "name": "first",
-    "value": 19
-  }
-],
-v6 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v7 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "cursor",
   "storageKey": null
 },
-v8 = {
+v7 = {
   "alias": null,
   "args": null,
   "concreteType": "PageInfo",
@@ -259,7 +252,7 @@ return {
                   (v4/*: any*/),
                   {
                     "alias": null,
-                    "args": (v5/*: any*/),
+                    "args": (v0/*: any*/),
                     "concreteType": "CategoryConnection",
                     "kind": "LinkedField",
                     "name": "categories",
@@ -284,21 +277,21 @@ return {
                               (v1/*: any*/),
                               (v2/*: any*/),
                               (v4/*: any*/),
-                              (v6/*: any*/)
+                              (v5/*: any*/)
                             ],
                             "storageKey": null
                           },
-                          (v7/*: any*/)
+                          (v6/*: any*/)
                         ],
                         "storageKey": null
                       },
-                      (v8/*: any*/)
+                      (v7/*: any*/)
                     ],
-                    "storageKey": "categories(first:19)"
+                    "storageKey": "categories(first:100)"
                   },
                   {
                     "alias": null,
-                    "args": (v5/*: any*/),
+                    "args": (v0/*: any*/),
                     "filters": null,
                     "handle": "connection",
                     "key": "UploadSearchTopicCategoriesFragment_categories",
@@ -312,17 +305,17 @@ return {
                     "name": "description",
                     "storageKey": null
                   },
-                  (v6/*: any*/)
+                  (v5/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v7/*: any*/)
+              (v6/*: any*/)
             ],
             "storageKey": null
           },
-          (v8/*: any*/)
+          (v7/*: any*/)
         ],
-        "storageKey": "topics(first:13)"
+        "storageKey": "topics(first:100)"
       },
       {
         "alias": null,
@@ -336,7 +329,7 @@ return {
     ]
   },
   "params": {
-    "id": "93ac88b00aef95d28ddb6d3cbf717396",
+    "id": "604a6b9cd8635ce47d54c61a95eb7e5e",
     "metadata": {},
     "name": "UploadSearchTopicsSelectorQuery",
     "operationKind": "query",

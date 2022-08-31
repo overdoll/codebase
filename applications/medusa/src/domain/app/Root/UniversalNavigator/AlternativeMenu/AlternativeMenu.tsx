@@ -110,7 +110,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
         </Can>
         <Can not I='create' a='Club'>
           <HorizontalNavigationDropdownMenu.Button
-            href='/clubs/invite-only'
+            href='/artists'
             colorScheme='primary'
             icon={ContentBrushPen}
             label={

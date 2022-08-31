@@ -32,7 +32,7 @@ export default function PostClickableCategories ({ query }: Props): JSX.Element 
     hiddenData
   } = useLimiter<DeepWritable<PostClickableCategoriesFragment$data['categories']>>({
     data: data?.categories as DeepWritable<PostClickableCategoriesFragment$data['categories']> ?? [],
-    amount: 7
+    amount: 12
   })
 
   return (

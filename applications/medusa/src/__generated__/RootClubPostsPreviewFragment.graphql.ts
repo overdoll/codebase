@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cfec84d7679f56a7cc9bf86b510125b6>>
+ * @generated SignedSource<<bb76ffe1736640403921a028d31a8da6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,6 +23,7 @@ export type RootClubPostsPreviewFragment$data = {
   readonly viewerMember: {
     readonly isSupporter: boolean;
   } | null;
+  readonly " $fragmentSpreads": FragmentRefs<"ClubPostsPreviewFragment">;
   readonly " $fragmentType": "RootClubPostsPreviewFragment";
 };
 export type RootClubPostsPreviewFragment$key = {
@@ -121,12 +122,17 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": "posts(first:1,supporterOnlyStatus:[\"FULL\",\"PARTIAL\"])"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "ClubPostsPreviewFragment"
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "5504457479b07a5c82f90a7383791a85";
+(node as any).hash = "e1e5295203ada2b74ce48312ae382ed0";
 
 export default node;

@@ -3,6 +3,7 @@ const zIndices = {
   auto: 'auto',
   base: 0,
   absolute: 1,
+  game: 5,
   sidebar: 9,
   docked: 10,
   scrollbar: 900,

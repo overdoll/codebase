@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<69a9de4066fc7abc5bc04de22f41c625>>
- * @relayHash 667c956f8881ffc89bdcac776d9fe133
+ * @generated SignedSource<<db7451ddda100ae53f991b489ce38461>>
+ * @relayHash ba8257761eb19b4c366c275f73ad6c58
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 667c956f8881ffc89bdcac776d9fe133
+// @relayRequestID ba8257761eb19b4c366c275f73ad6c58
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -37,7 +37,7 @@ var v0 = {
   "name": "after"
 },
 v1 = {
-  "defaultValue": 11,
+  "defaultValue": 17,
   "kind": "LocalArgument",
   "name": "first"
 },
@@ -85,6 +85,11 @@ v8 = {
 v9 = [
   (v5/*: any*/),
   (v6/*: any*/),
+  {
+    "kind": "Literal",
+    "name": "sortBy",
+    "value": "NEW"
+  },
   {
     "kind": "Variable",
     "name": "state",
@@ -209,6 +214,7 @@ return {
                         "name": "node",
                         "plural": false,
                         "selections": [
+                          (v8/*: any*/),
                           (v10/*: any*/),
                           {
                             "alias": null,
@@ -218,6 +224,7 @@ return {
                             "name": "content",
                             "plural": true,
                             "selections": [
+                              (v8/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -225,7 +232,6 @@ return {
                                 "name": "isSupporterOnly",
                                 "storageKey": null
                               },
-                              (v8/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -266,6 +272,7 @@ return {
                                     "name": "progress",
                                     "plural": false,
                                     "selections": [
+                                      (v8/*: any*/),
                                       {
                                         "alias": null,
                                         "args": null,
@@ -273,8 +280,7 @@ return {
                                         "name": "progress",
                                         "storageKey": null
                                       },
-                                      (v10/*: any*/),
-                                      (v8/*: any*/)
+                                      (v10/*: any*/)
                                     ],
                                     "storageKey": null
                                   },
@@ -352,7 +358,6 @@ return {
                             "name": "reference",
                             "storageKey": null
                           },
-                          (v8/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -430,7 +435,8 @@ return {
                 "alias": null,
                 "args": (v9/*: any*/),
                 "filters": [
-                  "state"
+                  "state",
+                  "sortBy"
                 ],
                 "handle": "connection",
                 "key": "ClubPosts_posts",
@@ -447,7 +453,7 @@ return {
     ]
   },
   "params": {
-    "id": "667c956f8881ffc89bdcac776d9fe133",
+    "id": "ba8257761eb19b4c366c275f73ad6c58",
     "metadata": {},
     "name": "ClubPostsPaginationQuery",
     "operationKind": "query",
@@ -456,6 +462,6 @@ return {
 };
 })();
 
-(node as any).hash = "bf9e275b1e41b60c5ad814be08430f9c";
+(node as any).hash = "cb61df8b60e4a4941a2015b1f7bef3ef";
 
 export default node;

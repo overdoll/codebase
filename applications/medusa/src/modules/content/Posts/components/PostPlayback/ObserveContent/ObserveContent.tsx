@@ -12,11 +12,15 @@ export interface ObserveContentCallable {
 interface Props {
   children: MaybeRenderProp<ObserveContentCallable>
   observerOptions?: IntersectionObserverInit
+  height?: number
+  width?: number
 }
 
 export default function ObserveContent ({
   children,
-  observerOptions: definedObserverOptions
+  observerOptions: definedObserverOptions,
+  height,
+  width
 }: Props): JSX.Element {
   const ref = useRef(null)
 
@@ -29,10 +33,11 @@ export default function ObserveContent ({
 
   const debouncedObserving = useDebounce(observing, 300)
 
+  const setThreshold = (width == null || height == null) ? 0.45 : ((height / width) >= 1 ? 0.23 : 0.45)
+
   const observerOptions = {
-    root: null,
-    rootMargin: ' -17% 0px -45% 0px',
-    threshold: 0.5
+    rootMargin: '-19% 0% -45% 0%',
+    threshold: setThreshold
   }
 
   const observerCallback = (entries): void => {

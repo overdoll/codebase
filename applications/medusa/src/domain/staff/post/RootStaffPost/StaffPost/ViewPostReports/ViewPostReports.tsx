@@ -70,7 +70,7 @@ export default function ViewPostReports ({ searchArguments }: Props): JSX.Elemen
   return (
     <EmptyBoundary
       fallback={<SmallBackgroundBox><Trans>No reports found</Trans></SmallBackgroundBox>}
-      condition={data.reports.edges.length < 1}
+      condition={data.reports?.edges?.length < 1}
     >
       <Table>
         <TableHeader>

@@ -57,7 +57,7 @@ msgstr ""
 msgid "As a reminder of the guidelines"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadSelectTopics/UploadSearchTopicsSelector/UploadSearchTopicCategories/UploadSearchTopicCategories.tsx:90
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadSelectTopics/UploadSearchTopicsSelector/UploadSearchTopicCategories/UploadSearchTopicCategories.tsx:92
 msgid "Back To Topics"
 msgstr ""
 
@@ -89,7 +89,7 @@ msgstr ""
 msgid "Content Menu"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:116
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:139
 msgid "Creating Your Post"
 msgstr ""
 
@@ -162,6 +162,10 @@ msgstr ""
 msgid "Go back"
 msgstr ""
 
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:195
+msgid "Go to Content step"
+msgstr ""
+
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentSuggestions/UploadSupporterContentOptimization/UploadSupporterContentOptimization.tsx:70
 msgid "Got it"
 msgstr ""
@@ -170,7 +174,7 @@ msgstr ""
 #~ msgid "Have a category suggestion? Send us an email at hello@overdoll.com!"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadSearchCharactersMultiSelector/UploadSearchCharactersMultiSelector.tsx:80
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadSearchCharactersMultiSelector/UploadSearchCharactersMultiSelector.tsx:89
 msgid "Have a character suggestion or want your character listed? Contact us!"
 msgstr ""
 
@@ -178,7 +182,7 @@ msgstr ""
 #~ msgid "Have a character suggestion or want your character listed? Send us an email at hello@overdoll.com!"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:110
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:109
 msgid "Help"
 msgstr ""
 
@@ -218,37 +222,41 @@ msgstr ""
 msgid "Opening Post"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:128
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:114
 msgid "Post Content Processed"
 msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:52
-msgid "Post Submitted"
-msgstr ""
+#~ msgid "Post Submitted"
+#~ msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:41
-msgid "Post again"
-msgstr ""
+#~ msgid "Post again"
+#~ msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/UploadArrangeStep.tsx:70
 #~ msgid "Posting {0} media"
 #~ msgstr ""
+
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:105
+msgid "Preview Processed Content"
+msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:96
 #~ msgid "Processing"
 #~ msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:130
-msgid "Processing Content"
-msgstr ""
+#~ msgid "Processing Content"
+#~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:120
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:110
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:95
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:116
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:87
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:94
 msgid "Processing Failed"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent.tsx:119
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:96
 msgid "Processing Post Content"
 msgstr ""
 
@@ -294,7 +302,7 @@ msgstr ""
 msgid "Search for a category"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:93
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:72
 msgid "Search for a character by name"
 msgstr ""
 
@@ -306,7 +314,7 @@ msgstr ""
 msgid "Select a topic to see the available categories you can add, or search for a category by name."
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:78
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:63
 msgid "Select one or more characters that appear in all of the content"
 msgstr ""
 
@@ -347,14 +355,22 @@ msgid "Set Supporter Only"
 msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:85
-msgid "Show Your Club Characters"
+#~ msgid "Show Your Club Characters"
+#~ msgstr ""
+
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:81
+msgid "Show all characters"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:106
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:81
+msgid "Show only original characters"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:108
 msgid "Submit"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:23
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:29
 msgid "Submitted For Review"
 msgstr ""
 
@@ -370,9 +386,13 @@ msgstr ""
 msgid "Tell your fans what it's really all about"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:28
-msgid "Thanks for posting! Your submission will be reviewed by our moderation team to ensure it does not violate any club guidelines. Once approved, it will be visible to the public."
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:37
+msgid "Thanks for posting! Your post was submitted for review. Once approved, it will be visible to the public."
 msgstr ""
+
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:28
+#~ msgid "Thanks for posting! Your submission will be reviewed by our moderation team to ensure it does not violate any club guidelines. Once approved, it will be visible to the public."
+#~ msgstr ""
 
 #: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadAudienceStep/UploadAudienceStep.tsx:47
 #~ msgid "The audience is the group of people that you intended this post for. This will determine whether or not a user can see your post based on their set preferences."
@@ -394,7 +414,7 @@ msgstr ""
 msgid "The selected post has no categories"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:76
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:100
 msgid "There was an error creating a draft post"
 msgstr ""
 
@@ -414,11 +434,11 @@ msgstr ""
 msgid "There was an error saving the categories"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:101
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:97
 msgid "There was an error saving the characters"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:92
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:94
 msgid "There was an error submitting your post"
 msgstr ""
 
@@ -430,7 +450,7 @@ msgstr ""
 #~ msgid "There was an error updating the post content"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:98
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:97
 msgid "This content failed to process. Please remove the content and try uploading it again."
 msgstr ""
 
@@ -478,7 +498,7 @@ msgstr ""
 #~ msgid "Upstanding netizens will read the <0>Club Guidelines</0> carefully. Creating and submitting a post also means you agree to these guidelines."
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:117
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:116
 msgid "We were not able to process your upload through our system. This could be because the format of the file is invalid or a completely separate issue. Please remove the content and try uploading files that are as close to the source file as possible."
 msgstr ""
 
@@ -490,7 +510,7 @@ msgstr ""
 msgid "When uploading any kind of supporter content, it's recommended that the first slide in your post is not supporter content and contains either a censored image or a reduced video to encourage your fans to become supporters."
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:73
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:58
 msgid "Who is in your post?"
 msgstr ""
 
@@ -509,6 +529,10 @@ msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/UploadFlowHeader.tsx:105
 msgid "Yes, exit"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostState.tsx:94
+msgid "You are editing this post as a staff member"
 msgstr ""
 
 #: src/domain/club/create-post/CreatePost/ClubRestricted/ClubRestricted.tsx:34
@@ -532,8 +556,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:57
-msgid "Your post is now visible to the public"
-msgstr ""
+#~ msgid "Your post is now visible to the public"
+#~ msgstr ""
 
 #: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:27
 #~ msgid "Your post will be reviewed to ensure it falls within our community guidelines. Once approved, it will be visible to the public."

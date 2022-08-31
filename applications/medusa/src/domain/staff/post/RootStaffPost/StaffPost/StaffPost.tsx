@@ -1,6 +1,6 @@
 import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { StaffPostQuery } from '@//:artifacts/StaffPostQuery.graphql'
-import { Box, HStack, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Wrap } from '@chakra-ui/react'
+import { Box, HStack, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text, Wrap } from '@chakra-ui/react'
 import { NotFoundPublicPost } from '@//:modules/content/Placeholder'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
@@ -27,6 +27,10 @@ import ProfilePageButton from '../../../../profile/RootProfile/Profile/ProfileMe
 import ProfileStaffButton
   from '../../../../profile/RootProfile/Profile/ProfileMenu/ProfileStaffButton/ProfileStaffButton'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
+import {
+  isFailed,
+  isProcessed
+} from '../../../../club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent'
 
 interface Props {
   query: PreloadedQuery<StaffPostQuery>
@@ -44,6 +48,12 @@ const Query = graphql`
       __typename
       reference
       state
+      content {
+        resource {
+          processed
+          failed
+        }
+      }
       contributor {
         ...LargeAccountHeaderFragment
         ...ProfilePageButtonFragment
@@ -83,9 +93,23 @@ export default function StaffPost ({ query }: Props): JSX.Element {
     }
   })
 
+  const contentProcessed = isProcessed(queryData.post.content)
+  const contentFailed = isFailed(queryData.post.content)
+
   return (
     <Stack spacing={4}>
-      <PostPreview query={queryData.post} />
+      {!contentProcessed || contentFailed
+        ? (
+          <Text>
+            <Trans>
+              Post is processing
+            </Trans>
+          </Text>
+          )
+        : (
+          <PostPreview query={queryData.post} />
+          )}
+
       <Tabs colorScheme='gray' variant='soft-rounded'>
         <TabList>
           <Wrap>
@@ -123,6 +147,7 @@ export default function StaffPost ({ query }: Props): JSX.Element {
                   </TagHeader>
                 </Box>
                 <LinkButton
+                  isDisabled={!contentProcessed || contentFailed}
                   w='100%'
                   href={{
                     pathname: '/[slug]/post/[reference]',
@@ -180,7 +205,17 @@ export default function StaffPost ({ query }: Props): JSX.Element {
                       Tags
                     </Trans>
                   </PageSectionTitle>
-                  <PostTagsPreview query={queryData.post} />
+                  {!contentProcessed || contentFailed
+                    ? (
+                      <Text>
+                        <Trans>
+                          Post is processing
+                        </Trans>
+                      </Text>
+                      )
+                    : (
+                      <PostTagsPreview query={queryData.post} />
+                      )}
                 </PageSectionWrap>
               </Box>
             </Stack>

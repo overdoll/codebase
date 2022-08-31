@@ -14,20 +14,13 @@ import Grant from './pages/Grant/Grant'
 import MultiFactor from './pages/MultiFactor/MultiFactor'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { SkeletonStack } from '@//:modules/content/Placeholder'
-import { PageProps } from '@//:types/app'
-import BackgroundPatternWrapper from './components/BackgroundPatternWrapper/BackgroundPatternWrapper'
-import PageWrapperDesktop from '../../../common/components/PageWrapperDesktop/PageWrapperDesktop'
-import PlatformBenefitsAdvert from './components/PlatformBenefitsAdvert/PlatformBenefitsAdvert'
 import { useCookies } from 'react-cookie'
 import { Flex } from '@chakra-ui/react'
 import RevokeTokenButton from './components/RevokeTokenButton/RevokeTokenButton'
-import JoinRichObject from '../../../common/rich-objects/join/JoinRichObject/JoinRichObject'
 import { useUpdateEffect } from 'usehooks-ts'
 
 interface Props {
-  queryRefs: {
-    joinQuery: PreloadedQuery<JoinRootQuery>
-  }
+  query: PreloadedQuery<JoinRootQuery>
 }
 
 const JoinTokenStatus = graphql`
@@ -56,10 +49,12 @@ const JoinTokenStatus = graphql`
 
 // import translation and load the resource
 
-const JoinRoot: PageProps<Props> = (props: Props): JSX.Element => {
+export default function JoinRoot (props: Props): JSX.Element {
+  const { query } = props
+
   const [queryRef, loadQuery] = useQueryLoader<JoinRootQuery>(
     JoinTokenStatus,
-    props.queryRefs.joinQuery
+    query
   )
 
   const [cookies] = useCookies<string>(['token'])
@@ -102,62 +97,45 @@ const JoinRoot: PageProps<Props> = (props: Props): JSX.Element => {
     loadQuery({ token: cookieToken }, { fetchPolicy: 'network-only' })
   }, [cookieToken])
 
-  const JoinFragment = (): JSX.Element => {
-    // when authentication not initiated
-    if (!authenticationInitiated) {
-      return (
-        <Join
-          hadGrant={hadGrant}
-          clearGrant={clearGrant}
-          queryRef={data}
-        />
-      )
-    }
-
-    if (!authenticationTokenVerified) {
-      return (
-        <QueryErrorBoundary
-          loadQuery={() => loadQuery({ token: cookieToken })}
-        >
-          <Suspense fallback={<SkeletonStack />}>
-            <Flex align='center' h='100%' position='relative'>
-              <Flex top={0} position='absolute' w='100%' justify='flex-end'>
-                <RevokeTokenButton queryRef={data} />
-              </Flex>
-              <Lobby
-                queryRef={data}
-              />
-            </Flex>
-          </Suspense>
-        </QueryErrorBoundary>
-      )
-    }
-
-    if (data?.accountStatus?.registered === false) {
-      return <Register queryRef={data} />
-    }
-
-    // Check if the user has multi-factor enabled and show them the flow if they do
-    if (multiFactorEnabled) {
-      return <MultiFactor queryRef={data} />
-    }
-
-    // This one logs you in with the token - will error out if you try to log in if multiFactor isn't an empty array
-    return (<Grant queryRef={data} />)
+  // when authentication not initiated
+  if (!authenticationInitiated) {
+    return (
+      <Join
+        hadGrant={hadGrant}
+        clearGrant={clearGrant}
+        queryRef={data}
+      />
+    )
   }
 
-  return (
-    <>
-      <JoinRichObject />
-      <BackgroundPatternWrapper>
-        <PageWrapperDesktop>
-          <PlatformBenefitsAdvert>
-            <JoinFragment />
-          </PlatformBenefitsAdvert>
-        </PageWrapperDesktop>
-      </BackgroundPatternWrapper>
-    </>
-  )
-}
+  if (!authenticationTokenVerified) {
+    return (
+      <QueryErrorBoundary
+        loadQuery={() => loadQuery({ token: cookieToken })}
+      >
+        <Suspense fallback={<SkeletonStack />}>
+          <Flex align='center' h='100%' position='relative'>
+            <Flex top={0} position='absolute' w='100%' justify='flex-end'>
+              <RevokeTokenButton queryRef={data} />
+            </Flex>
+            <Lobby
+              queryRef={data}
+            />
+          </Flex>
+        </Suspense>
+      </QueryErrorBoundary>
+    )
+  }
 
-export default JoinRoot
+  if (data?.accountStatus?.registered === false) {
+    return <Register queryRef={data} />
+  }
+
+  // Check if the user has multi-factor enabled and show them the flow if they do
+  if (multiFactorEnabled) {
+    return <MultiFactor queryRef={data} />
+  }
+
+  // This one logs you in with the token - will error out if you try to log in if multiFactor isn't an empty array
+  return (<Grant queryRef={data} />)
+}

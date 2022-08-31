@@ -5,6 +5,7 @@ import { useHydrate } from '../../hydrate'
 
 interface Props extends IconButtonProps, ForwardRefProp {
   children?: ReactNode
+  ignoreTransition?: boolean
 }
 
 const IconButton = forwardRef<Props, any>(({
@@ -13,6 +14,7 @@ const IconButton = forwardRef<Props, any>(({
   isLoading,
   onClick,
   type,
+  ignoreTransition,
   ...rest
 }: Props, forwardRef) => {
   // @ts-expect-error
@@ -21,6 +23,10 @@ const IconButton = forwardRef<Props, any>(({
   })
 
   const handleClick = (e): void => {
+    if (ignoreTransition === true) {
+      onClick?.(e)
+      return
+    }
     startTransition(() => {
       onClick?.(e)
     })
@@ -28,7 +34,7 @@ const IconButton = forwardRef<Props, any>(({
 
   const isHydrated = useHydrate()
 
-  const fullDisable = (isDisabled ?? isLoading)
+  const fullDisable = (isDisabled === true || isLoading)
   // for type=submit (forms), we show a loading state, or else it will bug out
   const fullLoading = type === 'submit' ? (!isHydrated ?? isLoading ?? isPending) : (isLoading ?? isPending)
 

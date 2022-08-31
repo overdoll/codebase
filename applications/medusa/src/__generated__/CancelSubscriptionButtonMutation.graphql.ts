@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<afb98bde2480a171991b0decc6345b06>>
- * @relayHash 6dbd22316fe870c2627fdcd03f4586a3
+ * @generated SignedSource<<fee5053acbf302e0a2d57d84bf3b1233>>
+ * @relayHash 3a227144f83348a55b4188f171276b52
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6dbd22316fe870c2627fdcd03f4586a3
+// @relayRequestID 3a227144f83348a55b4188f171276b52
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -263,6 +263,13 @@ return {
                         "name": "thumbnail",
                         "plural": false,
                         "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "preview",
+                            "storageKey": null
+                          },
                           (v3/*: any*/),
                           {
                             "alias": null,
@@ -295,13 +302,6 @@ return {
                             "args": null,
                             "kind": "ScalarField",
                             "name": "height",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "preview",
                             "storageKey": null
                           },
                           {
@@ -349,7 +349,7 @@ return {
     ]
   },
   "params": {
-    "id": "6dbd22316fe870c2627fdcd03f4586a3",
+    "id": "3a227144f83348a55b4188f171276b52",
     "metadata": {},
     "name": "CancelSubscriptionButtonMutation",
     "operationKind": "mutation",

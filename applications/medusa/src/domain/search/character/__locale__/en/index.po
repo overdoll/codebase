@@ -13,6 +13,26 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/search/character/RootSearchCharacter/SearchCharacter/SearchCharacter.tsx:93
+#: src/domain/search/character/RootSearchCharacter/SearchCharacter/SearchCharacter.tsx:103
 msgid "Character"
+msgstr ""
+
+#: src/domain/search/character/RootSearchCharacter/SearchCharacter/SearchCharacterShareDiscordButton/SearchCharacterShareDiscordButton.tsx:45
+msgid "Copied Discord link! Send it in a channel or direct message!"
+msgstr ""
+
+#: src/domain/search/character/RootSearchCharacter/SearchCharacter/SearchCharacterCopyLinkButton/SearchCharacterCopyLinkButton.tsx:50
+msgid "Copy Link"
+msgstr ""
+
+#: src/domain/search/character/RootSearchCharacter/SearchCharacter/SearchCharacterShareDiscordButton/SearchCharacterShareDiscordButton.tsx:55
+msgid "Share on Discord"
+msgstr ""
+
+#: src/domain/search/character/RootSearchCharacter/SearchCharacter/SearchCharacterShareRedditButton/SearchCharacterShareRedditButton.tsx:49
+msgid "Share on Reddit"
+msgstr ""
+
+#: src/domain/search/character/RootSearchCharacter/SearchCharacter/SearchCharacterShareTwitterButton/SearchCharacterShareTwitterButton.tsx:61
+msgid "Share on Twitter"
 msgstr ""

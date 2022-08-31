@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1908ca0733617619022492cfe8858cf6>>
- * @relayHash 636a602f42a710efae565d0ecedbf18b
+ * @generated SignedSource<<0730c3d3e8fd8e8c77b778d06451ddd1>>
+ * @relayHash 27e0163a6ab4dac2b5ccb0ba22b349db
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 636a602f42a710efae565d0ecedbf18b
+// @relayRequestID 27e0163a6ab4dac2b5ccb0ba22b349db
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -213,6 +213,13 @@ return {
                         "name": "avatar",
                         "plural": false,
                         "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "preview",
+                            "storageKey": null
+                          },
                           (v7/*: any*/),
                           {
                             "alias": null,
@@ -245,13 +252,6 @@ return {
                             "args": null,
                             "kind": "ScalarField",
                             "name": "height",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "preview",
                             "storageKey": null
                           },
                           {
@@ -440,7 +440,7 @@ return {
     ]
   },
   "params": {
-    "id": "636a602f42a710efae565d0ecedbf18b",
+    "id": "27e0163a6ab4dac2b5ccb0ba22b349db",
     "metadata": {},
     "name": "StaffAccountTransactionQuery",
     "operationKind": "query",

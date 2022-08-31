@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6fe6065aad7572f49b7da27f794692c2>>
- * @relayHash f58ae6d9338308472d0375ad3ded15f4
+ * @generated SignedSource<<64d621520ea445f3244e13676e74c2b5>>
+ * @relayHash db24c4d10066543e9c50829822e11962
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f58ae6d9338308472d0375ad3ded15f4
+// @relayRequestID db24c4d10066543e9c50829822e11962
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -34,7 +34,7 @@ var v0 = [
     "name": "after"
   },
   {
-    "defaultValue": null,
+    "defaultValue": 100,
     "kind": "LocalArgument",
     "name": "first"
   },
@@ -153,13 +153,6 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "type",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
                         "name": "processed",
                         "storageKey": null
                       },
@@ -185,6 +178,7 @@ return {
                         "name": "progress",
                         "plural": false,
                         "selections": [
+                          (v4/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -198,9 +192,15 @@ return {
                             "kind": "ScalarField",
                             "name": "state",
                             "storageKey": null
-                          },
-                          (v4/*: any*/)
+                          }
                         ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "type",
                         "storageKey": null
                       },
                       (v4/*: any*/),
@@ -314,7 +314,7 @@ return {
     ]
   },
   "params": {
-    "id": "f58ae6d9338308472d0375ad3ded15f4",
+    "id": "db24c4d10066543e9c50829822e11962",
     "metadata": {},
     "name": "StaffSearchAudiencesPaginationFragment",
     "operationKind": "query",
@@ -323,6 +323,6 @@ return {
 };
 })();
 
-(node as any).hash = "ba1cc628de7f97d825baba9d25d0cb41";
+(node as any).hash = "20835b1e5d16fd7276d7f890849c0a1c";
 
 export default node;

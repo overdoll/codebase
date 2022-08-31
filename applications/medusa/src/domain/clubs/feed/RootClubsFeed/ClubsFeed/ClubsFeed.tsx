@@ -7,7 +7,7 @@ import { Trans } from '@lingui/macro'
 import AccountInformationBanner
   from '../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
 import SearchButton from '../../../../../common/components/PageHeader/SearchButton/SearchButton'
-import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
+import ClubsFeedDiscoverList from './ClubsFeedDiscoverList/ClubsFeedDiscoverList'
 
 interface Props {
   query: PreloadedQuery<ClubsFeedQuery>
@@ -20,6 +20,7 @@ const Query = graphql`
       ...ClubPostsFeedViewerFragment
       ...AccountInformationBannerFragment
     }
+    ...ClubsFeedDiscoverListFragment
   }
 `
 
@@ -38,16 +39,10 @@ export default function ClubsFeed (props: Props): JSX.Element {
             <Heading color='gray.00' fontSize='2xl'>
               <Trans>Your Clubs Feed</Trans>
             </Heading>
-            <HStack>
-              <LinkButton size='sm' href='/clubs/discover'>
-                <Trans>
-                  Discover Clubs
-                </Trans>
-              </LinkButton>
-              <SearchButton />
-            </HStack>
+            <SearchButton />
           </HStack>
         </Stack>
+        <ClubsFeedDiscoverList query={queryData} />
         <ClubPostsFeed
           query={queryData.viewer}
           viewerQuery={queryData.viewer}

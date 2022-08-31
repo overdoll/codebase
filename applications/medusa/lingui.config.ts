@@ -38,6 +38,22 @@ const GeneralCatalogs = [
   {
     path: 'src/domain/profile/__locale__/{locale}/index',
     include: ['src/domain/profile/']
+  },
+  {
+    path: 'src/domain/artists/__locale__/{locale}/index',
+    include: ['src/domain/artists/']
+  },
+  {
+    path: 'src/domain/browse/__locale__/{locale}/index',
+    include: ['src/domain/browse/']
+  },
+  {
+    path: 'src/domain/browse/__locale__/{locale}/index',
+    include: ['src/domain/random/']
+  },
+  {
+    path: 'src/domain/roulette/__locale__/{locale}/index',
+    include: ['src/domain/roulette/']
   }
 ]
 
@@ -197,6 +213,10 @@ const ClubsCatalog = [
     include: ['src/domain/clubs/invite-only/']
   },
   {
+    path: 'src/domain/clubs/liked-posts/__locale__/{locale}/index',
+    include: ['src/domain/clubs/liked-posts/']
+  },
+  {
     path: 'src/domain/slug/club/__locale__/{locale}/index',
     include: ['src/domain/slug/club/']
   },
@@ -334,8 +354,12 @@ const StaffCatalog = [
     include: ['src/domain/staff/entity/character/search/']
   },
   {
-    path: 'src/domain/staff/entity/character/view/__locale__/{locale}/index',
-    include: ['src/domain/staff/entity/character/view/']
+    path: 'src/domain/staff/entity/character/view/club/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/character/view/club/']
+  },
+  {
+    path: 'src/domain/staff/entity/character/view/series/__locale__/{locale}/index',
+    include: ['src/domain/staff/entity/character/view/series/']
   },
   {
     path: 'src/domain/staff/entity/rule/create/__locale__/{locale}/index',

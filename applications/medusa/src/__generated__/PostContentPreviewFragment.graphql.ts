@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c43b8326ff262b34c3905264fb39c57e>>
+ * @generated SignedSource<<8fc94eb40f5254e3c596e7a52fc4303d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,8 +15,9 @@ export type PostContentPreviewFragment$data = {
   readonly isSupporterOnly: boolean;
   readonly resource: {
     readonly failed: boolean;
+    readonly id: string;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"PostContentPreviewMenuFragment" | "RemovePostContentButtonFragment" | "ResourceInfoFragment" | "SupporterPostContentButtonFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"ExpandableResourceInfoFragment" | "PostContentPreviewMenuFragment" | "RemovePostContentButtonFragment" | "SupporterPostContentButtonFragment">;
   readonly " $fragmentType": "PostContentPreviewFragment";
 };
 export type PostContentPreviewFragment$key = {
@@ -24,19 +25,21 @@ export type PostContentPreviewFragment$key = {
   readonly " $fragmentSpreads": FragmentRefs<"PostContentPreviewFragment">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
   "name": "PostContentPreviewFragment",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
+    (v0/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -52,6 +55,7 @@ const node: ReaderFragment = {
       "name": "resource",
       "plural": false,
       "selections": [
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -61,11 +65,6 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "ResourceInfoFragment"
     },
     {
       "args": null,
@@ -81,12 +80,18 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "SupporterPostContentButtonFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "ExpandableResourceInfoFragment"
     }
   ],
   "type": "PostContent",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "6ba1000bd74a11434358e88e27742e1d";
+(node as any).hash = "ae8774753882c652c171d33f569a6772";
 
 export default node;

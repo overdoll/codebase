@@ -3,11 +3,11 @@ import type { UploadReviewStepFragment$key } from '@//:artifacts/UploadReviewSte
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import { Trans } from '@lingui/macro'
-import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import PostReview from './PostReview/PostReview'
 import { Stack } from '@chakra-ui/react'
 import SuggestPrompt from '../../../../../SuggestPrompt/SuggestPrompt'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
+import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 
 interface Props {
   query: UploadReviewStepFragment$key

@@ -13,13 +13,13 @@ import {
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { PostContentPreviewFragment$key } from '@//:artifacts/PostContentPreviewFragment.graphql'
 import type { PostContentPreviewPostFragment$key } from '@//:artifacts/PostContentPreviewPostFragment.graphql'
-import ResourceInfo from '@//:modules/content/DataDisplay/ResourceInfo/ResourceInfo'
 import PostContentPreviewMenu from './PostContentPreviewMenu/PostContentPreviewMenu'
 import { Trans } from '@lingui/macro'
 import { ReactNode } from 'react'
 import RemovePostContentButton from './PostContentPreviewMenu/RemovePostContentButton/RemovePostContentButton'
 import Button from '@//:modules/form/Button/Button'
 import SupporterPostContentButton from './SupporterPostContentButton/SupporterPostContentButton'
+import ExpandableResourceInfo from './ExpandableResourceInfo/ExpandableResourceInfo'
 
 interface Props {
   query: PostContentPreviewFragment$key
@@ -31,12 +31,13 @@ const Fragment = graphql`
     id
     isSupporterOnly
     resource {
+      id
       failed
     }
-    ...ResourceInfoFragment
     ...PostContentPreviewMenuFragment
     ...RemovePostContentButtonFragment
     ...SupporterPostContentButtonFragment
+    ...ExpandableResourceInfoFragment
   }
 `
 
@@ -64,10 +65,8 @@ export default function PostContentPreview ({
   const getHeight = (): number => {
     if (postData.content.length <= 1) {
       return 150
-    } else if (postData.content.length < 6) {
-      return 125
     } else {
-      return 100
+      return 125
     }
   }
 
@@ -149,8 +148,8 @@ export default function PostContentPreview ({
         </Flex>
       </Flex>
       <Flex p={2} align='center' justify='center' w='38%'>
-        <Flex overflow='hidden' w='100%' h='100%' borderRadius='md'>
-          <ResourceInfo containCover query={data} />
+        <Flex w='100%' h='100%'>
+          <ExpandableResourceInfo query={data} />
         </Flex>
       </Flex>
       <Flex align='center' justify='center' w='38%'>

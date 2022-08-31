@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<87767244cc1415184f49d43ac3066df6>>
+ * @generated SignedSource<<756fadfdf29d35e24e6abdadcd45850c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,6 +17,7 @@ export type ClubPostsFragment$data = {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly id: string;
         readonly state: PostState;
         readonly " $fragmentSpreads": FragmentRefs<"ArchivedPostFragment" | "DraftPostFragment" | "PostPreviewContentFragment" | "PublishedPostFragment" | "RejectedPostFragment" | "RemovedPostFragment" | "ReviewPostFragment" | "SubmittedPostFragment">;
       };
@@ -32,7 +33,14 @@ export type ClubPostsFragment$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "posts"
-];
+],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [
     {
@@ -41,7 +49,7 @@ return {
       "name": "after"
     },
     {
-      "defaultValue": 11,
+      "defaultValue": 17,
       "kind": "LocalArgument",
       "name": "first"
     },
@@ -82,6 +90,11 @@ return {
       "alias": "posts",
       "args": [
         {
+          "kind": "Literal",
+          "name": "sortBy",
+          "value": "NEW"
+        },
+        {
           "kind": "Variable",
           "name": "state",
           "variableName": "state"
@@ -108,6 +121,7 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
+                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -215,19 +229,13 @@ return {
       ],
       "storageKey": null
     },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    }
+    (v1/*: any*/)
   ],
   "type": "Club",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "bf9e275b1e41b60c5ad814be08430f9c";
+(node as any).hash = "cb61df8b60e4a4941a2015b1f7bef3ef";
 
 export default node;

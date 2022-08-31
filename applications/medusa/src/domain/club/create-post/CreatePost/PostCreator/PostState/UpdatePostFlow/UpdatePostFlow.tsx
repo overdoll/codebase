@@ -7,14 +7,15 @@ import UploadCategoryStep from './UploadFlowSteps/UploadCategoryStep/UploadCateg
 import UploadReviewStep from './UploadFlowSteps/UploadReviewStep/UploadReviewStep'
 import { CategoryIdentifier, CharacterIdentifier, ClubMembers, HeartFull } from '@//:assets/icons/interface'
 import { FileMultiple } from '@//:assets/icons/navigation'
-import { FlowBuilder, FlowBuilderBody, FlowBuilderFooter } from '@//:modules/content/PageLayout'
-import UploadFlowFooter from './UploadFlowFooter/UploadFlowFooter'
+import { FlowBuilder, FlowBuilderBody } from '@//:modules/content/PageLayout'
 import UploadCharacterStep from './UploadFlowSteps/UploadCharacterStep/UploadCharacterStep'
 import { useEffect, useState } from 'react'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import UploadContentStep from './UploadFlowSteps/UploadContentStep/UploadContentStep'
 import { useUppyContext } from '@//:modules/content/HookedComponents/Upload'
 import CreatePostOpening from '../CreatePostOpening/CreatePostOpening'
+import { addContentToUppy } from './UploadFlowSteps/UploadContentStep/UploadContentAdd/UploadContentAdd'
+import UploadFlowStickyFooter from './UploadFlowFooter/UploadFlowStickyFooter/UploadFlowStickyFooter'
 
 interface Props {
   query: UpdatePostFlowFragment$key
@@ -34,12 +35,18 @@ const Fragment = graphql`
       id
       title
     }
+    content {
+      resource {
+        id
+      }
+    }
     ...UploadFlowHeaderFragment
-    ...UploadFlowFooterFragment
     ...UploadReviewStepFragment
     ...UploadContentStepFragment
     ...UploadCategoryStepFragment
-    ...UploadCharacterStepFragment
+    ...ProcessContentDisplayFragment
+    ...PostContentPreviewMemoPostFragment
+    ...UploadFlowStickyFooterFragment
   }
 `
 
@@ -59,7 +66,7 @@ export default function UpdatePostFlow ({
     content: <UploadContentStep query={data} />,
     audience: <UploadAudienceStep />,
     category: <UploadCategoryStep query={data} />,
-    character: <UploadCharacterStep query={data} />,
+    character: <UploadCharacterStep />,
     review: <UploadReviewStep query={data} />
   }
   const headers = {
@@ -85,8 +92,8 @@ export default function UpdatePostFlow ({
     }
   }
 
-  // push all post data into state on post load
   useEffect(() => {
+    // push all post data into state on post load
     dispatch({
       type: 'audience',
       value: data?.audience?.id != null
@@ -112,6 +119,9 @@ export default function UpdatePostFlow ({
       }), {}),
       transform: 'SET'
     })
+    // push all content into uppy on post load
+    addContentToUppy(uppy, data.content)
+
     setLoaded(true)
   }, [])
 
@@ -135,20 +145,7 @@ export default function UpdatePostFlow ({
     >
       <UploadFlowHeader query={data} />
       <FlowBuilderBody />
-      <FlowBuilderFooter>
-        {({
-          currentStep,
-          isAtStart,
-          nextStep
-        }) => (
-          <UploadFlowFooter
-            step={currentStep}
-            isAtStart={isAtStart}
-            nextStep={nextStep}
-            query={data}
-          />
-        )}
-      </FlowBuilderFooter>
+      <UploadFlowStickyFooter query={data} />
     </FlowBuilder>
   )
 }

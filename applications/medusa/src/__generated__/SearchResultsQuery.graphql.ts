@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ba8fbd92c5461b7862e5be91d4c36ac5>>
- * @relayHash f756c39c9f3983bf58edfd1bf8e1e488
+ * @generated SignedSource<<119f82c818f397e1145002d9349ec0cf>>
+ * @relayHash ab3e932f7a20742f9bddda3254f4270e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f756c39c9f3983bf58edfd1bf8e1e488
+// @relayRequestID ab3e932f7a20742f9bddda3254f4270e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -82,14 +82,14 @@ v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "type",
+  "name": "preview",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "preview",
+  "name": "type",
   "storageKey": null
 },
 v8 = {
@@ -152,7 +152,6 @@ v13 = {
   "name": "banner",
   "plural": false,
   "selections": [
-    (v6/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -160,7 +159,7 @@ v13 = {
       "name": "processed",
       "storageKey": null
     },
-    (v7/*: any*/),
+    (v6/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -176,6 +175,7 @@ v13 = {
       "name": "progress",
       "plural": false,
       "selections": [
+        (v2/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -189,11 +189,11 @@ v13 = {
           "kind": "ScalarField",
           "name": "state",
           "storageKey": null
-        },
-        (v2/*: any*/)
+        }
       ],
       "storageKey": null
     },
+    (v7/*: any*/),
     (v2/*: any*/),
     (v9/*: any*/),
     (v10/*: any*/),
@@ -357,13 +357,13 @@ return {
                         "name": "thumbnail",
                         "plural": false,
                         "selections": [
+                          (v6/*: any*/),
                           (v2/*: any*/),
                           (v9/*: any*/),
                           (v10/*: any*/),
                           (v11/*: any*/),
-                          (v7/*: any*/),
                           (v12/*: any*/),
-                          (v6/*: any*/)
+                          (v7/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -398,7 +398,7 @@ return {
     ]
   },
   "params": {
-    "id": "f756c39c9f3983bf58edfd1bf8e1e488",
+    "id": "ab3e932f7a20742f9bddda3254f4270e",
     "metadata": {},
     "name": "SearchResultsQuery",
     "operationKind": "query",

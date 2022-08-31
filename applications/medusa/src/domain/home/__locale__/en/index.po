@@ -13,17 +13,53 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/domain/home/RootHome/Home/Home.tsx:66
+msgid "3D Porn"
+msgstr ""
+
+#: src/domain/home/RootHome/Home/Home.tsx:71
+msgid "3D renders and animations pornography"
+msgstr ""
+
 #: src/domain/home/RootHome/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:71
 #~ msgid "Account Locked"
 #~ msgstr ""
 
-#: src/domain/home/RootHome/Home/Home.tsx:72
-msgid "Home"
+#: src/domain/home/RootHome/Home/Home.tsx:101
+msgid "Anthro and furry character pornography"
 msgstr ""
+
+#: src/domain/home/RootHome/Home/Home.tsx:140
+msgid "Are you an artist looking to post your content?"
+msgstr ""
+
+#: src/domain/home/RootHome/Home/Home.tsx:58
+msgid "Browse Category"
+msgstr ""
+
+#: src/domain/home/RootHome/Home/Home.tsx:96
+msgid "Furry Porn"
+msgstr ""
+
+#: src/domain/home/RootHome/Home/Home.tsx:81
+msgid "Hentai Porn"
+msgstr ""
+
+#: src/domain/home/RootHome/Home/Home.tsx:35
+#~ msgid "Home"
+#~ msgstr ""
+
+#: src/domain/home/RootHome/Home/Home.tsx:115
+#~ msgid "Hot Posts"
+#~ msgstr ""
 
 #: src/domain/home/RootHome/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:102
 #~ msgid "I promise to be better and to follow the community guidelines more closely"
 #~ msgstr ""
+
+#: src/domain/home/RootHome/Home/Home.tsx:86
+msgid "Japanese-style pornography"
+msgstr ""
 
 #: src/domain/home/RootHome/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:72
 #~ msgid "Locked for {remaining}"
@@ -45,6 +81,30 @@ msgstr ""
 #~ msgid "Please review the <0>Community Guidelines</0> to make sure this doesn't happen again."
 #~ msgstr ""
 
+#: src/domain/home/RootHome/Home/Home.tsx:129
+msgid "Randomize Porn"
+msgstr ""
+
+#: src/domain/home/RootHome/Home/Home.tsx:134
+msgid "Randomly browse hentai, 3d, furry porn"
+msgstr ""
+
+#: src/domain/home/RootHome/Home/Home.tsx:46
+msgid "Rule34 Roulette"
+msgstr ""
+
+#: src/domain/home/RootHome/Home/Home.tsx:114
+msgid "Search Porn"
+msgstr ""
+
+#: src/domain/home/RootHome/Home/Home.tsx:119
+msgid "Search for any kind of porn"
+msgstr ""
+
+#: src/domain/home/RootHome/Home/BrowsePostsPreview/BrowsePostsPreview.tsx:77
+msgid "See All Posts"
+msgstr ""
+
 #: src/domain/home/RootHome/NewAccountModal/NewAccountModal.tsx:75
 #~ msgid "Set Up Your Profile"
 #~ msgstr ""
@@ -61,9 +121,21 @@ msgstr ""
 msgid "Setup"
 msgstr ""
 
+#: src/domain/home/RootHome/Home/Home.tsx:40
+#~ msgid "Show By Category"
+#~ msgstr ""
+
+#: src/domain/home/RootHome/Home/Home.tsx:51
+msgid "Spin your way through rule34, hentai, furry, 3D porn videos and images and see how long you can last"
+msgstr ""
+
 #: src/domain/home/RootHome/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:84
 #~ msgid "There was an error unlocking your account"
 #~ msgstr ""
+
+#: src/domain/home/RootHome/Home/Home.tsx:147
+msgid "Trending Posts"
+msgstr ""
 
 #: src/domain/home/RootHome/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:114
 #~ msgid "Unlock Account"

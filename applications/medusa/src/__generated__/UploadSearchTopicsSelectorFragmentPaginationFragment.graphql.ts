@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<faaba1da197d2c205225d2be7d711859>>
- * @relayHash 097caec308c0ea5a8b16478546375a62
+ * @generated SignedSource<<0ff61b35b8a91c0d4ce20fe34bcdb7c0>>
+ * @relayHash 3fb899163f99f2f5e533431d35609a62
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 097caec308c0ea5a8b16478546375a62
+// @relayRequestID 3fb899163f99f2f5e533431d35609a62
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -33,7 +33,7 @@ var v0 = [
     "name": "after"
   },
   {
-    "defaultValue": 13,
+    "defaultValue": 100,
     "kind": "LocalArgument",
     "name": "first"
   }
@@ -83,13 +83,6 @@ v5 = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "type",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
       "name": "processed",
       "storageKey": null
     },
@@ -115,6 +108,7 @@ v5 = {
       "name": "progress",
       "plural": false,
       "selections": [
+        (v2/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -128,9 +122,15 @@ v5 = {
           "kind": "ScalarField",
           "name": "state",
           "storageKey": null
-        },
-        (v2/*: any*/)
+        }
       ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "type",
       "storageKey": null
     },
     (v2/*: any*/),
@@ -186,7 +186,7 @@ v6 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 19
+    "value": 100
   }
 ],
 v7 = {
@@ -314,7 +314,7 @@ return {
                       },
                       (v9/*: any*/)
                     ],
-                    "storageKey": "categories(first:19)"
+                    "storageKey": "categories(first:100)"
                   },
                   {
                     "alias": null,
@@ -356,7 +356,7 @@ return {
     ]
   },
   "params": {
-    "id": "097caec308c0ea5a8b16478546375a62",
+    "id": "3fb899163f99f2f5e533431d35609a62",
     "metadata": {},
     "name": "UploadSearchTopicsSelectorFragmentPaginationFragment",
     "operationKind": "query",
@@ -365,6 +365,6 @@ return {
 };
 })();
 
-(node as any).hash = "5b58617bdb9f3eecf1c4e6197f57ec14";
+(node as any).hash = "a3c56e9865fd57c2d0c74db9cd388039";
 
 export default node;

@@ -3,7 +3,6 @@ import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import RefreshProcessContent, { isFailed, isProcessed } from './RefreshProcessContent/RefreshProcessContent'
 import { Suspense, useEffect, useRef } from 'react'
-import { Collapse } from '@chakra-ui/react'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import { Timeout } from '@//:types/components'
@@ -69,12 +68,10 @@ export default function ProcessContent ({
   }, [contentProcessed, contentFailed])
 
   return (
-    <Collapse style={{ overflow: 'visible' }} unmountOnExit in={!contentProcessed || contentFailed}>
-      <QueryErrorBoundary loadQuery={loadQuery}>
-        <Suspense fallback={<></>}>
-          <RefreshProcessContent searchArguments={searchArguments} />
-        </Suspense>
-      </QueryErrorBoundary>
-    </Collapse>
+    <QueryErrorBoundary loadQuery={loadQuery}>
+      <Suspense fallback={<></>}>
+        <RefreshProcessContent searchArguments={searchArguments} />
+      </Suspense>
+    </QueryErrorBoundary>
   )
 }

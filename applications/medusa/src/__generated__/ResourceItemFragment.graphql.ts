@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5dc5c2328fd9766c3d6963da0d540e7e>>
+ * @generated SignedSource<<a4dd636df6fc2cc00eed2ca8dc371f29>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,18 +10,17 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 export type ResourceProgressState = "FINALIZING" | "STARTED" | "WAITING" | "%future added value";
-export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type ResourceItemFragment$data = {
   readonly failed: boolean;
   readonly preview: string;
   readonly processed: boolean;
   readonly progress: {
+    readonly id: string;
     readonly progress: number;
     readonly state: ResourceProgressState;
   } | null;
-  readonly type: ResourceType;
-  readonly " $fragmentSpreads": FragmentRefs<"ImageSnippetFragment" | "VideoSnippetFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"ResourceItemMediaFragment">;
   readonly " $fragmentType": "ResourceItemFragment";
 };
 export type ResourceItemFragment$key = {
@@ -35,13 +34,6 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "ResourceItemFragment",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "type",
-      "storageKey": null
-    },
     {
       "alias": null,
       "args": null,
@@ -75,6 +67,13 @@ const node: ReaderFragment = {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
+          "name": "id",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
           "name": "progress",
           "storageKey": null
         },
@@ -91,18 +90,13 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "ImageSnippetFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "VideoSnippetFragment"
+      "name": "ResourceItemMediaFragment"
     }
   ],
   "type": "Resource",
   "abstractKey": null
 };
 
-(node as any).hash = "5782a70263d64921c0be85f4a5f31200";
+(node as any).hash = "7adf9dfb5d8955905029a4326358f9af";
 
 export default node;

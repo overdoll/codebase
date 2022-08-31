@@ -1,23 +1,27 @@
 import RootPublicClub from './RootPublicClub/RootPublicClub'
 import PublicClubQuery from '@//:artifacts/PublicClubQuery.graphql'
+import getPostSeed from '@//:modules/content/Posts/support/getPostSeed'
 
 RootPublicClub.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)
 })
 
-RootPublicClub.getRelayPreloadProps = (ctx) => ({
-  queries: {
-    publicClubQuery: {
-      params: PublicClubQuery.params,
-      variables: {
-        slug: ctx.query.slug
+RootPublicClub.getRelayPreloadProps = (ctx) => {
+  return ({
+    queries: {
+      publicClubQuery: {
+        params: PublicClubQuery.params,
+        variables: {
+          slug: ctx.query.slug,
+          ...getPostSeed(ctx)
+        }
       }
     }
-  }
-})
+  })
+}
 
 RootPublicClub.getMiddleware = (ctx, data) => {
-  if (data.publicClubQuery.response.data.club == null) {
+  if (data.publicClubQuery.response.data?.club == null) {
     return {
       notFound: true
     }

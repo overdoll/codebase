@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<058fb944ba3f4c77f8d2de90c5509687>>
+ * @generated SignedSource<<87e8e8fcba1d6b9319c043f7bc14eb23>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,10 +9,15 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
+export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type PostSlideIndexFragment$data = {
   readonly content: ReadonlyArray<{
     readonly isSupporterOnly: boolean;
+    readonly resource: {
+      readonly type: ResourceType;
+    };
+    readonly " $fragmentSpreads": FragmentRefs<"PostSlideIndexMediaFragment">;
   }>;
   readonly reference: string;
   readonly " $fragmentType": "PostSlideIndexFragment";
@@ -49,6 +54,29 @@ const node: ReaderFragment = {
           "kind": "ScalarField",
           "name": "isSupporterOnly",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "Resource",
+          "kind": "LinkedField",
+          "name": "resource",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "type",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "PostSlideIndexMediaFragment"
         }
       ],
       "storageKey": null
@@ -58,6 +86,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "b0eedacfc79453500fe1b19896f44154";
+(node as any).hash = "4b877edefb30c0785737c7b04f839cc8";
 
 export default node;

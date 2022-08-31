@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<03c4fde3ffffccc76b5af1202910646b>>
- * @relayHash c4e41c092ace1000ee798493e3763615
+ * @generated SignedSource<<362091fd5d8a125ebdc2c2c7d98b6f22>>
+ * @relayHash 699446c175d3c549dc94e03782074734
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c4e41c092ace1000ee798493e3763615
+// @relayRequestID 699446c175d3c549dc94e03782074734
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -36,7 +36,7 @@ var v0 = [
     "name": "after"
   },
   {
-    "defaultValue": 19,
+    "defaultValue": 100,
     "kind": "LocalArgument",
     "name": "first"
   },
@@ -177,13 +177,6 @@ return {
                                 "alias": null,
                                 "args": null,
                                 "kind": "ScalarField",
-                                "name": "type",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
                                 "name": "processed",
                                 "storageKey": null
                               },
@@ -209,6 +202,7 @@ return {
                                 "name": "progress",
                                 "plural": false,
                                 "selections": [
+                                  (v4/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -222,9 +216,15 @@ return {
                                     "kind": "ScalarField",
                                     "name": "state",
                                     "storageKey": null
-                                  },
-                                  (v4/*: any*/)
+                                  }
                                 ],
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "type",
                                 "storageKey": null
                               },
                               (v4/*: any*/),
@@ -345,7 +345,7 @@ return {
     ]
   },
   "params": {
-    "id": "c4e41c092ace1000ee798493e3763615",
+    "id": "699446c175d3c549dc94e03782074734",
     "metadata": {},
     "name": "UploadSearchTopicCategoriesFragmentPaginationFragment",
     "operationKind": "query",
@@ -354,6 +354,6 @@ return {
 };
 })();
 
-(node as any).hash = "ff2165acabbfe30b7578af5192b47cce";
+(node as any).hash = "9d5e70c16f92b597057175f54fc59c90";
 
 export default node;

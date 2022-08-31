@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b21bb6b7ba327d6c8e30ee87385b4d49>>
+ * @generated SignedSource<<719d87785b92e8eb62e282e4882d9665>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
+export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "SUBMITTED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type CreatePostFlowFragment$data = {
   readonly id: string;
@@ -17,6 +18,8 @@ export type CreatePostFlowFragment$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
+        readonly state: PostState;
+        readonly " $fragmentSpreads": FragmentRefs<"ArchivedPostFragment" | "DraftPostFragment" | "PostPreviewContentFragment" | "PublishedPostFragment" | "RejectedPostFragment" | "RemovedPostFragment" | "ReviewPostFragment">;
       };
     }>;
   };
@@ -66,7 +69,13 @@ return {
     (v0/*: any*/),
     {
       "alias": "posts",
-      "args": null,
+      "args": [
+        {
+          "kind": "Literal",
+          "name": "state",
+          "value": "DRAFT"
+        }
+      ],
       "concreteType": "PostConnection",
       "kind": "LinkedField",
       "name": "__ClubPosts_posts_connection",
@@ -89,6 +98,48 @@ return {
               "plural": false,
               "selections": [
                 (v0/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "state",
+                  "storageKey": null
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "PostPreviewContentFragment"
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "DraftPostFragment"
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "PublishedPostFragment"
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "ReviewPostFragment"
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "RejectedPostFragment"
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "ArchivedPostFragment"
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "RemovedPostFragment"
+                },
                 {
                   "alias": null,
                   "args": null,
@@ -147,7 +198,7 @@ return {
           ]
         }
       ],
-      "storageKey": null
+      "storageKey": "__ClubPosts_posts_connection(state:\"DRAFT\")"
     }
   ],
   "type": "Club",
@@ -155,6 +206,6 @@ return {
 };
 })();
 
-(node as any).hash = "ede45c8d87503004e12fbd8c28251bda";
+(node as any).hash = "dfc05a896410a711304f911fc4ae8ac7";
 
 export default node;

@@ -6,6 +6,7 @@ import { LinkTile } from '@//:modules/content/ContentSelection'
 import { useMemo } from 'react'
 import { Random } from '../../../../../../utilities/random'
 import hash from '../../../../../../utilities/hash'
+import { DEFAULT_SEED, TAG_COLOR_PALETTE } from '../../../../../../constants/theme'
 
 interface Props {
   query: ClickableCategoryFragment$key
@@ -22,31 +23,24 @@ const Fragment = graphql`
   }
 `
 
-const defaultSeed = 'DETERMINISTIC_SEED'
-
 export default function ClickableCategory ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const memoized = useMemo(() => new Random(hash(data.id ?? defaultSeed)), [data.id])
+  const memoized = useMemo(() => new Random(hash(data.id ?? DEFAULT_SEED)), [data.id])
 
-  const colors = [
-    'purple.300',
-    'orange.300',
-    'teal.300',
-    'green.300',
-    'primary.300'
-  ]
-
-  const chosenColor = useMemo(() => memoized.nextInt32([0, 6]), [data.id])
+  const chosenColor = useMemo(() => memoized.nextInt32([0, TAG_COLOR_PALETTE.length]), [data.id])
 
   const randomValues = useConst({
     colors: chosenColor
   })
 
-  const randomColor = colors[randomValues.colors]
+  const randomColor = TAG_COLOR_PALETTE[randomValues.colors]
 
   return (
     <LinkTile
+      linkProps={{
+        prefetch: false
+      }}
       href={{
         pathname: '/search/category/[categorySlug]',
         query: {

@@ -1,7 +1,7 @@
 import { generateClubName, generateUsernameAndEmail } from '../../support/generate'
 import { clickOnButton, clickOnTab, clickOnTile, typeIntoPlaceholder } from '../../support/user_actions'
 
-Cypress.config('defaultCommandTimeout', 10000)
+Cypress.config('defaultCommandTimeout', 30000)
 
 const character = 'testcharacter'
 

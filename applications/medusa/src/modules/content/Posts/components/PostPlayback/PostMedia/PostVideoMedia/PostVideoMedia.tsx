@@ -9,12 +9,13 @@ import useVideoControls from '../../ControlledVideo/hooks/useVideoControls/useVi
 
 interface Props extends Pick<ControlledVideoProps, 'controls'>, ObserveContentCallable {
   query: PostVideoMediaFragment$key
+  hideBackground?: boolean
 }
 
 const Fragment = graphql`
   fragment PostVideoMediaFragment on Resource {
-    id
     ...ControlledVideoFragment
+    ...useVideoControlsFragment
   }
 `
 
@@ -22,7 +23,8 @@ export default function PostVideoMedia ({
   query,
   controls,
   isObserving,
-  isObservingDebounced
+  isObservingDebounced,
+  hideBackground = false
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
@@ -39,7 +41,7 @@ export default function PostVideoMedia ({
     pause,
     play,
     ref
-  } = useVideoControls(newRef)
+  } = useVideoControls(newRef, data)
 
   const slide = useSwiperSlide()
 
@@ -68,7 +70,7 @@ export default function PostVideoMedia ({
 
   return (
     <ControlledVideo
-      autoPlay={isObservingDebounced}
+      hideBackground={hideBackground}
       ref={ref}
       controls={controls}
       onVolumeChange={(volume) => changeVideoVolume(volume)}

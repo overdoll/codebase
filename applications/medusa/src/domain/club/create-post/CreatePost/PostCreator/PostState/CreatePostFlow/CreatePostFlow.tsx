@@ -11,23 +11,33 @@ import CreatePostNewFilePicker
   from '@//:modules/content/HookedComponents/Upload/components/CreatePostNewFilePicker/CreatePostNewFilePicker'
 import { useUppyContext } from '@//:modules/content/HookedComponents/Upload'
 import CreatePostOpening from '../CreatePostOpening/CreatePostOpening'
+import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 
 interface Props {
   query: CreatePostFlowFragment$key
 }
 
 const Fragment = graphql`
-  fragment CreatePostFlowFragment on Club @argumentDefinitions(
+  fragment CreatePostFlowFragment on Club
+  @argumentDefinitions(
     first: {type: Int, defaultValue: 5}
     after: {type: String}
   ) {
     id
-    posts (first: $first, after: $after)
+    posts (first: $first, after: $after, state: DRAFT)
     @connection(key: "ClubPosts_posts") {
       __id
       edges {
         node {
           id
+          state
+          ...PostPreviewContentFragment
+          ...DraftPostFragment
+          ...PublishedPostFragment
+          ...ReviewPostFragment
+          ...RejectedPostFragment
+          ...ArchivedPostFragment
+          ...RemovedPostFragment
         }
       }
     }
@@ -50,6 +60,10 @@ export default function CreatePostFlow ({ query }: Props): JSX.Element {
 
   const [, setPostReference] = useQueryParam<string | null | undefined>('post')
 
+  const {
+    dispatch
+  } = useSequenceContext()
+
   const uppy = useUppyContext()
 
   const [createPost, isCreatingPost] = useMutation(Mutation)
@@ -61,6 +75,16 @@ export default function CreatePostFlow ({ query }: Props): JSX.Element {
   const connectionId = data.posts.__id
 
   const onCreatePost = (id): void => {
+    dispatch({
+      type: 'isSubmitted',
+      value: false,
+      transform: 'SET'
+    })
+    dispatch({
+      type: 'isInReview',
+      value: false,
+      transform: 'SET'
+    })
     createPost({
       variables: {
         clubId: id,
@@ -88,7 +112,6 @@ export default function CreatePostFlow ({ query }: Props): JSX.Element {
   useEffect(() => {
     const callBackFn = (file): void => {
       if (file.source !== 'already-uploaded') {
-        console.log('created post with uppy callback')
         const club = uppy.getState().meta.club
         if (club != null) {
           onCreatePost(club)

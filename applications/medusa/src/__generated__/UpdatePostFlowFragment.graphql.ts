@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2c4db7a86d26a24d13167154dda1da90>>
+ * @generated SignedSource<<e4283d8b559509f26ed93ca2c12fe78e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,7 +23,12 @@ export type UpdatePostFlowFragment$data = {
     readonly id: string;
     readonly name: string;
   }>;
-  readonly " $fragmentSpreads": FragmentRefs<"UploadCategoryStepFragment" | "UploadCharacterStepFragment" | "UploadContentStepFragment" | "UploadFlowFooterFragment" | "UploadFlowHeaderFragment" | "UploadReviewStepFragment">;
+  readonly content: ReadonlyArray<{
+    readonly resource: {
+      readonly id: string;
+    };
+  }>;
+  readonly " $fragmentSpreads": FragmentRefs<"PostContentPreviewMemoPostFragment" | "ProcessContentDisplayFragment" | "UploadCategoryStepFragment" | "UploadContentStepFragment" | "UploadFlowHeaderFragment" | "UploadFlowStickyFooterFragment" | "UploadReviewStepFragment">;
   readonly " $fragmentType": "UpdatePostFlowFragment";
 };
 export type UpdatePostFlowFragment$key = {
@@ -95,14 +100,32 @@ return {
       "storageKey": null
     },
     {
+      "alias": null,
       "args": null,
-      "kind": "FragmentSpread",
-      "name": "UploadFlowHeaderFragment"
+      "concreteType": "PostContent",
+      "kind": "LinkedField",
+      "name": "content",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "Resource",
+          "kind": "LinkedField",
+          "name": "resource",
+          "plural": false,
+          "selections": [
+            (v0/*: any*/)
+          ],
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
     },
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "UploadFlowFooterFragment"
+      "name": "UploadFlowHeaderFragment"
     },
     {
       "args": null,
@@ -122,7 +145,17 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "UploadCharacterStepFragment"
+      "name": "ProcessContentDisplayFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "PostContentPreviewMemoPostFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "UploadFlowStickyFooterFragment"
     }
   ],
   "type": "Post",
@@ -130,6 +163,6 @@ return {
 };
 })();
 
-(node as any).hash = "1ae3bd28bc5e4498955d11bd371330b1";
+(node as any).hash = "b846174bf93271c336dfc09a9bd1bc94";
 
 export default node;

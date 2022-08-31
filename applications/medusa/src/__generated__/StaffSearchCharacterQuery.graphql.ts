@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<15ad5fbf55fb3cafd9b886b3ec989b3a>>
- * @relayHash b3d9c5b00aea1f1fde714b843b77eead
+ * @generated SignedSource<<cdd0beea808a8bf95e6eafc9c1dbf1ba>>
+ * @relayHash 9a6fb0c27012ccba5908d5681ca92264
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b3d9c5b00aea1f1fde714b843b77eead
+// @relayRequestID 9a6fb0c27012ccba5908d5681ca92264
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -139,8 +139,6 @@ return {
                     ],
                     "storageKey": null
                   },
-                  (v3/*: any*/),
-                  (v4/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -149,11 +147,14 @@ return {
                     "name": "club",
                     "plural": false,
                     "selections": [
-                      (v4/*: any*/),
-                      (v3/*: any*/)
+                      (v2/*: any*/),
+                      (v3/*: any*/),
+                      (v4/*: any*/)
                     ],
                     "storageKey": null
                   },
+                  (v3/*: any*/),
+                  (v4/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -162,13 +163,6 @@ return {
                     "name": "banner",
                     "plural": false,
                     "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "type",
-                        "storageKey": null
-                      },
                       {
                         "alias": null,
                         "args": null,
@@ -198,6 +192,7 @@ return {
                         "name": "progress",
                         "plural": false,
                         "selections": [
+                          (v3/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -211,9 +206,15 @@ return {
                             "kind": "ScalarField",
                             "name": "state",
                             "storageKey": null
-                          },
-                          (v3/*: any*/)
+                          }
                         ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "type",
                         "storageKey": null
                       },
                       (v3/*: any*/),
@@ -327,7 +328,7 @@ return {
     ]
   },
   "params": {
-    "id": "b3d9c5b00aea1f1fde714b843b77eead",
+    "id": "9a6fb0c27012ccba5908d5681ca92264",
     "metadata": {},
     "name": "StaffSearchCharacterQuery",
     "operationKind": "query",

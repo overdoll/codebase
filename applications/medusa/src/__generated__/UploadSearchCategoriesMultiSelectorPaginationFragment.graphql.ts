@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<2cdebc7a21964faf94bc976efcbcbb6a>>
- * @relayHash 6e6e985bc86116c467559e06964ca496
+ * @generated SignedSource<<9759255d7b0e0f9b4e56083df372b646>>
+ * @relayHash 671c97853da3867267267e9f6ca8e373
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6e6e985bc86116c467559e06964ca496
+// @relayRequestID 671c97853da3867267267e9f6ca8e373
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -141,13 +141,6 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "type",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
                         "name": "processed",
                         "storageKey": null
                       },
@@ -173,6 +166,7 @@ return {
                         "name": "progress",
                         "plural": false,
                         "selections": [
+                          (v2/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -186,9 +180,15 @@ return {
                             "kind": "ScalarField",
                             "name": "state",
                             "storageKey": null
-                          },
-                          (v2/*: any*/)
+                          }
                         ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "type",
                         "storageKey": null
                       },
                       (v2/*: any*/),
@@ -302,7 +302,7 @@ return {
     ]
   },
   "params": {
-    "id": "6e6e985bc86116c467559e06964ca496",
+    "id": "671c97853da3867267267e9f6ca8e373",
     "metadata": {},
     "name": "UploadSearchCategoriesMultiSelectorPaginationFragment",
     "operationKind": "query",

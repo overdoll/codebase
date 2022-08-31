@@ -3,11 +3,12 @@ import { graphql } from 'react-relay'
 import { Box, Flex, Spinner, Stack } from '@chakra-ui/react'
 import type { PostInfiniteScrollFragment$key } from '@//:artifacts/PostInfiniteScrollFragment.graphql'
 import LoadMoreObserver from '../PostsInfiniteScroll/LoadMoreObserver/LoadMoreObserver'
-import { Fragment, useTransition } from 'react'
+import { Fragment, ReactNode, useTransition } from 'react'
 import { LoadMoreFn } from 'react-relay/relay-hooks/useLoadMoreFunction'
 import { EmptyPosts } from '../../../../Placeholder'
 import runIfFunction from '../../../../../support/runIfFunction'
 import { MaybeRenderProp } from '@//:types/components'
+import PlatformPromoteAlert from '@//:common/components/PlatformPromoteAlert/PlatformPromoteAlert'
 
 interface ChildrenCallable {
   index: number
@@ -19,6 +20,7 @@ interface Props {
   loadNext: LoadMoreFn<any>
   isLoadingNext: boolean
   children: MaybeRenderProp<ChildrenCallable>
+  endOfTree?: ReactNode
 }
 
 const PostFragment = graphql`
@@ -36,7 +38,8 @@ export default function PostInfiniteScroll ({
   hasNext,
   loadNext,
   isLoadingNext,
-  children
+  children,
+  endOfTree
 }: Props): JSX.Element {
   const data = useFragment(PostFragment, query)
 
@@ -47,13 +50,23 @@ export default function PostInfiniteScroll ({
 
   if (((data?.edges) != null) && data?.edges.length < 1) {
     return (
-      <EmptyPosts />
+      <Stack spacing={24}>
+        <EmptyPosts />
+        <PlatformPromoteAlert />
+      </Stack>
     )
   }
 
   const SpinnerSection = (): JSX.Element => {
     const SpinnerComponent = (
-      <Flex w='100%' justify='center'>
+      <Flex
+        mb={{
+          base: 50,
+          md: 400
+        }}
+        w='100%'
+        justify='center'
+      >
         <Spinner color='gray.100' size='sm' />
       </Flex>
     )
@@ -70,7 +83,20 @@ export default function PostInfiniteScroll ({
         </Box>
       )
     }
-    return <Box h={400} w='100%' />
+    return (
+      <Stack spacing={2}>
+        <Flex mt={20}>
+          {endOfTree}
+        </Flex>
+        <Box
+          h={{
+            base: 50,
+            md: 400
+          }}
+          w='100%'
+        />
+      </Stack>
+    )
   }
 
   return (

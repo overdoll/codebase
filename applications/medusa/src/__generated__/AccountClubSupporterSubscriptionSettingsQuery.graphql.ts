@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<92fb0eb0d050ec1525ec8ffd31d648b5>>
- * @relayHash e05101d05118ea7b0c55ff213605f9a8
+ * @generated SignedSource<<bd042f1700cfb5e40a8e4b64c38301e7>>
+ * @relayHash 6ce309c9f8824e1253f2d1fa0ef10880
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e05101d05118ea7b0c55ff213605f9a8
+// @relayRequestID 6ce309c9f8824e1253f2d1fa0ef10880
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -251,6 +251,7 @@ v17 = {
               "name": "content",
               "plural": true,
               "selections": [
+                (v6/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -258,7 +259,6 @@ v17 = {
                   "name": "isSupporterOnly",
                   "storageKey": null
                 },
-                (v6/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -293,6 +293,7 @@ v17 = {
                       "name": "progress",
                       "plural": false,
                       "selections": [
+                        (v6/*: any*/),
                         {
                           "alias": null,
                           "args": null,
@@ -306,8 +307,7 @@ v17 = {
                           "kind": "ScalarField",
                           "name": "state",
                           "storageKey": null
-                        },
-                        (v6/*: any*/)
+                        }
                       ],
                       "storageKey": null
                     },
@@ -387,11 +387,11 @@ v20 = {
   "name": "thumbnail",
   "plural": false,
   "selections": [
+    (v10/*: any*/),
     (v6/*: any*/),
     (v12/*: any*/),
     (v13/*: any*/),
     (v14/*: any*/),
-    (v10/*: any*/),
     (v15/*: any*/),
     (v7/*: any*/)
   ],
@@ -764,7 +764,7 @@ return {
     ]
   },
   "params": {
-    "id": "e05101d05118ea7b0c55ff213605f9a8",
+    "id": "6ce309c9f8824e1253f2d1fa0ef10880",
     "metadata": {},
     "name": "AccountClubSupporterSubscriptionSettingsQuery",
     "operationKind": "query",

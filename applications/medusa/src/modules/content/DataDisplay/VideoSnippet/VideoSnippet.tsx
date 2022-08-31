@@ -48,6 +48,7 @@ export default function VideoSnippet ({
         loading={isHydrated ? 'lazy' : 'eager'}
         width={data?.width}
         height={data?.height}
+        draggable={false}
         style={{
           backgroundColor: previewBackground,
           userSelect: 'none',

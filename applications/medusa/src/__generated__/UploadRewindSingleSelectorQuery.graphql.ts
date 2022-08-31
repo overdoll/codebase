@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f691da488427a44d5a748111aa1a8c73>>
- * @relayHash 4626f2668ca82c52acc2d05e42223adf
+ * @generated SignedSource<<0b749173415f780b97c260ed4ba1108d>>
+ * @relayHash 77533ae5cfa1f4015f904b83a7dccfde
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4626f2668ca82c52acc2d05e42223adf
+// @relayRequestID 77533ae5cfa1f4015f904b83a7dccfde
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -198,6 +198,7 @@ return {
                         "name": "content",
                         "plural": true,
                         "selections": [
+                          (v3/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -205,7 +206,6 @@ return {
                             "name": "isSupporterOnly",
                             "storageKey": null
                           },
-                          (v3/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -246,6 +246,7 @@ return {
                                 "name": "progress",
                                 "plural": false,
                                 "selections": [
+                                  (v3/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -259,8 +260,7 @@ return {
                                     "kind": "ScalarField",
                                     "name": "state",
                                     "storageKey": null
-                                  },
-                                  (v3/*: any*/)
+                                  }
                                 ],
                                 "storageKey": null
                               },
@@ -398,7 +398,7 @@ return {
     ]
   },
   "params": {
-    "id": "4626f2668ca82c52acc2d05e42223adf",
+    "id": "77533ae5cfa1f4015f904b83a7dccfde",
     "metadata": {},
     "name": "UploadRewindSingleSelectorQuery",
     "operationKind": "query",

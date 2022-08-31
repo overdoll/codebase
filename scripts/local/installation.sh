@@ -29,7 +29,7 @@ kubectl create -f https://download.elastic.co/downloads/eck/2.2.0/crds.yaml
 kubectl apply -f https://download.elastic.co/downloads/eck/2.2.0/operator.yaml
 
 # Apply scylla operator & wait
-kubectl apply -f scylla-operator.yaml
+kubectl apply -f https://raw.githubusercontent.com/scylladb/scylla-operator/master/examples/common/operator.yaml
 
 kubectl wait --for condition=established crd/scyllaclusters.scylla.scylladb.com
 kubectl wait --for condition=established crd/nodeconfigs.scylla.scylladb.com

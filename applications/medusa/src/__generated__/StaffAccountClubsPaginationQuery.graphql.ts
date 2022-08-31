@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<243c197ccefa7ef451aad2452055eb5a>>
- * @relayHash 2221ca07c03c11c547dd3df679c51f59
+ * @generated SignedSource<<7d1534e42d401ac3a53cb25d38291d40>>
+ * @relayHash 02c43fccf442accabc274ec5a28b1f78
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 2221ca07c03c11c547dd3df679c51f59
+// @relayRequestID 02c43fccf442accabc274ec5a28b1f78
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -83,10 +83,17 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "preview",
   "storageKey": null
 },
 v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v7 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -94,7 +101,7 @@ v6 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v5/*: any*/),
+    (v6/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -105,25 +112,18 @@ v6 = {
   ],
   "storageKey": null
 },
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "width",
   "storageKey": null
 },
-v8 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "height",
-  "storageKey": null
-},
 v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "preview",
+  "name": "height",
   "storageKey": null
 },
 v10 = {
@@ -134,7 +134,7 @@ v10 = {
   "name": "videoThumbnail",
   "plural": false,
   "selections": [
-    (v5/*: any*/)
+    (v6/*: any*/)
   ],
   "storageKey": null
 },
@@ -238,8 +238,8 @@ return {
                             "name": "thumbnail",
                             "plural": false,
                             "selections": [
+                              (v5/*: any*/),
                               (v4/*: any*/),
-                              (v6/*: any*/),
                               (v7/*: any*/),
                               (v8/*: any*/),
                               (v9/*: any*/),
@@ -256,7 +256,6 @@ return {
                             "name": "banner",
                             "plural": false,
                             "selections": [
-                              (v11/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -264,7 +263,7 @@ return {
                                 "name": "processed",
                                 "storageKey": null
                               },
-                              (v9/*: any*/),
+                              (v5/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -280,6 +279,7 @@ return {
                                 "name": "progress",
                                 "plural": false,
                                 "selections": [
+                                  (v4/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -293,15 +293,15 @@ return {
                                     "kind": "ScalarField",
                                     "name": "state",
                                     "storageKey": null
-                                  },
-                                  (v4/*: any*/)
+                                  }
                                 ],
                                 "storageKey": null
                               },
+                              (v11/*: any*/),
                               (v4/*: any*/),
-                              (v6/*: any*/),
                               (v7/*: any*/),
                               (v8/*: any*/),
+                              (v9/*: any*/),
                               (v10/*: any*/)
                             ],
                             "storageKey": null
@@ -367,7 +367,7 @@ return {
     ]
   },
   "params": {
-    "id": "2221ca07c03c11c547dd3df679c51f59",
+    "id": "02c43fccf442accabc274ec5a28b1f78",
     "metadata": {},
     "name": "StaffAccountClubsPaginationQuery",
     "operationKind": "query",

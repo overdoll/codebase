@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<714bdf0f9d6ac0e6b0869431c0c07bf9>>
- * @relayHash 11075cb2750040cec06ad9924e7df4f9
+ * @generated SignedSource<<ee88f43a0ce74ec6248b4f7a417ab53e>>
+ * @relayHash ae801335ff3b7778738febd1f1adb9b5
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 11075cb2750040cec06ad9924e7df4f9
+// @relayRequestID ae801335ff3b7778738febd1f1adb9b5
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type MainMenuButtonClubsQuery$variables = {};
@@ -22,7 +22,13 @@ export type MainMenuButtonClubsQuery$data = {
         };
       }>;
     };
-    readonly clubMembershipsCount: number;
+    readonly likedPosts: {
+      readonly edges: ReadonlyArray<{
+        readonly node: {
+          readonly __typename: "Post";
+        };
+      }>;
+    };
   } | null;
 };
 export type MainMenuButtonClubsQuery = {
@@ -31,34 +37,78 @@ export type MainMenuButtonClubsQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "clubMembershipsCount",
-  "storageKey": null
-},
-v1 = [
+var v0 = [
   {
     "kind": "Literal",
     "name": "first",
     "value": 1
   }
 ],
-v2 = {
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
+v2 = [
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "PostEdge",
+    "kind": "LinkedField",
+    "name": "edges",
+    "plural": true,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Post",
+        "kind": "LinkedField",
+        "name": "node",
+        "plural": false,
+        "selections": [
+          (v1/*: any*/)
+        ],
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  }
+],
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
-};
+},
+v4 = [
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "PostEdge",
+    "kind": "LinkedField",
+    "name": "edges",
+    "plural": true,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Post",
+        "kind": "LinkedField",
+        "name": "node",
+        "plural": false,
+        "selections": [
+          (v1/*: any*/),
+          (v3/*: any*/)
+        ],
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": [],
@@ -74,39 +124,24 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
           {
             "alias": null,
-            "args": (v1/*: any*/),
+            "args": (v0/*: any*/),
+            "concreteType": "PostConnection",
+            "kind": "LinkedField",
+            "name": "likedPosts",
+            "plural": false,
+            "selections": (v2/*: any*/),
+            "storageKey": "likedPosts(first:1)"
+          },
+          {
+            "alias": null,
+            "args": (v0/*: any*/),
             "concreteType": "PostConnection",
             "kind": "LinkedField",
             "name": "clubMembersPostsFeed",
             "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "PostEdge",
-                "kind": "LinkedField",
-                "name": "edges",
-                "plural": true,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Post",
-                    "kind": "LinkedField",
-                    "name": "node",
-                    "plural": false,
-                    "selections": [
-                      (v2/*: any*/)
-                    ],
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              }
-            ],
+            "selections": (v2/*: any*/),
             "storageKey": "clubMembersPostsFeed(first:1)"
           }
         ],
@@ -130,40 +165,24 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v0/*: any*/),
           {
             "alias": null,
-            "args": (v1/*: any*/),
+            "args": (v0/*: any*/),
+            "concreteType": "PostConnection",
+            "kind": "LinkedField",
+            "name": "likedPosts",
+            "plural": false,
+            "selections": (v4/*: any*/),
+            "storageKey": "likedPosts(first:1)"
+          },
+          {
+            "alias": null,
+            "args": (v0/*: any*/),
             "concreteType": "PostConnection",
             "kind": "LinkedField",
             "name": "clubMembersPostsFeed",
             "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "PostEdge",
-                "kind": "LinkedField",
-                "name": "edges",
-                "plural": true,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Post",
-                    "kind": "LinkedField",
-                    "name": "node",
-                    "plural": false,
-                    "selections": [
-                      (v2/*: any*/),
-                      (v3/*: any*/)
-                    ],
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              }
-            ],
+            "selections": (v4/*: any*/),
             "storageKey": "clubMembersPostsFeed(first:1)"
           },
           (v3/*: any*/)
@@ -173,7 +192,7 @@ return {
     ]
   },
   "params": {
-    "id": "11075cb2750040cec06ad9924e7df4f9",
+    "id": "ae801335ff3b7778738febd1f1adb9b5",
     "metadata": {},
     "name": "MainMenuButtonClubsQuery",
     "operationKind": "query",
@@ -182,6 +201,6 @@ return {
 };
 })();
 
-(node as any).hash = "dc3c359554edf22cd4de716c36b7cc24";
+(node as any).hash = "dfa75685f96fd482272a8fb7588c13bc";
 
 export default node;

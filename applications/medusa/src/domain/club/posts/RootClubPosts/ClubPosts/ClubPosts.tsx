@@ -33,15 +33,16 @@ const Query = graphql`
 const Fragment = graphql`
   fragment ClubPostsFragment on Club
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 11}
+    first: {type: Int, defaultValue: 17}
     after: {type: String}
   )
   @refetchable(queryName: "ClubPostsPaginationQuery" ) {
-    posts (first: $first, after: $after, state: $state)
+    posts (first: $first, after: $after, state: $state, sortBy: NEW)
     @connection (key: "ClubPosts_posts") {
       __id
       edges {
         node {
+          id
           state
           ...PostPreviewContentFragment
           ...DraftPostFragment
@@ -130,7 +131,7 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
           )}
           <LoadMoreGridTile
             hasNext={hasNext}
-            onLoadNext={() => loadNext(4)}
+            onLoadNext={() => loadNext(21)}
             isLoadingNext={isLoadingNext}
           />
         </GridWrap>

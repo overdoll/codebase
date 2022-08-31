@@ -6,7 +6,6 @@ import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import { usePaginationFragment } from 'react-relay'
 import { Trans } from '@lingui/macro'
 import SearchSummary from '../../../../../common/components/PageHeader/SearchSummary/SearchSummary'
-import PostOrderButton from '../../../../../common/components/PageHeader/PostOrderButton/PostOrderButton'
 import SearchButton from '../../../../../common/components/PageHeader/SearchButton/SearchButton'
 import SearchSeriesRecommendations from './SearchSeriesRecommendations/SearchSeriesRecommendations'
 import SearchSeriesRichObject
@@ -15,6 +14,11 @@ import FullSimplePost
   from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/FullSimplePost/FullSimplePost'
 import PostInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
+import PlatformPromoteAlert from '@//:common/components/PlatformPromoteAlert/PlatformPromoteAlert'
+import SearchSeriesCopyLinkButton from './SearchSeriesCopyLinkButton/SearchSeriesCopyLinkButton'
+import SearchSeriesShareDiscordButton from './SearchSeriesShareDiscordButton/SearchSeriesShareDiscordButton'
+import SearchSeriesShareRedditButton from './SearchSeriesShareRedditButton/SearchSeriesShareRedditButton'
+import SearchSeriesShareTwitterButton from './SearchSeriesShareTwitterButton/SearchSeriesShareTwitterButton'
 
 interface Props {
   query: PreloadedQuery<SearchSeriesQuery>
@@ -23,7 +27,8 @@ interface Props {
 const Query = graphql`
   query SearchSeriesQuery(
     $sortBy: PostsSort!,
-    $seriesSlug: String!
+    $seriesSlug: String!,
+    $seed: String
   ) @preloadable {
     serial(slug: $seriesSlug) {
       title
@@ -31,6 +36,10 @@ const Query = graphql`
       totalLikes
       ...SearchSeriesFragment
       ...SearchSeriesRichObjectFragment
+      ...SearchSeriesCopyLinkButtonFragment
+      ...SearchSeriesShareDiscordButtonFragment
+      ...SearchSeriesShareRedditButtonFragment
+      ...SearchSeriesShareTwitterButtonFragment
     }
     viewer {
       ...FullSimplePostViewerFragment
@@ -42,7 +51,7 @@ const Query = graphql`
 const Fragment = graphql`
   fragment SearchSeriesFragment on Series
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 9}
+    first: {type: Int, defaultValue: 5}
     after: {type: String}
   )
   @refetchable(queryName: "SearchSeriesPostsPaginationQuery" ) {
@@ -50,6 +59,7 @@ const Fragment = graphql`
       first: $first,
       after: $after,
       sortBy: $sortBy,
+      seed: $seed
     )
     @connection (key: "SearchSeriesPosts_posts") {
       edges {
@@ -95,7 +105,12 @@ export default function SearchSeries ({ query }: Props): JSX.Element {
           />
           <SearchSeriesRecommendations query={queryData} />
           <HStack justify='space-between' spacing={2}>
-            <PostOrderButton />
+            <HStack spacing={1}>
+              <SearchSeriesCopyLinkButton query={queryData.serial} />
+              <SearchSeriesShareDiscordButton query={queryData.serial} />
+              <SearchSeriesShareRedditButton query={queryData.serial} />
+              <SearchSeriesShareTwitterButton query={queryData.serial} />
+            </HStack>
             <SearchButton />
           </HStack>
         </Stack>
@@ -105,6 +120,7 @@ export default function SearchSeries ({ query }: Props): JSX.Element {
             hasNext={hasNext}
             loadNext={loadNext}
             isLoadingNext={isLoadingNext}
+            endOfTree={<PlatformPromoteAlert />}
           >
             {({ index }) => (
               <FullSimplePost

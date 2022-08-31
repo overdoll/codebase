@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<31ea9945b8734755358787a31f5cf462>>
+ * @generated SignedSource<<0484cedefe2f74be39de32e4d9980fd2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type ClubFooterButtonsFragment$data = {
   readonly slug: string;
   readonly viewerIsOwner: boolean;
-  readonly " $fragmentSpreads": FragmentRefs<"ClubFooterCopyLinkButtonFragment" | "ClubFooterLeaveButtonFragment" | "ClubFooterManageSubscriptionButtonFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"ClubFooterCopyLinkButtonFragment" | "ClubFooterLeaveButtonFragment" | "ClubFooterManageSubscriptionButtonFragment" | "ClubFooterShareDiscordButtonFragment" | "ClubFooterShareRedditButtonFragment" | "ClubFooterShareTwitterButtonFragment">;
   readonly " $fragmentType": "ClubFooterButtonsFragment";
 };
 export type ClubFooterButtonsFragment$key = {
@@ -55,12 +55,27 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "ClubFooterManageSubscriptionButtonFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "ClubFooterShareTwitterButtonFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "ClubFooterShareRedditButtonFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "ClubFooterShareDiscordButtonFragment"
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "52662c14f52de21bb6032ea7cee4bcee";
+(node as any).hash = "7f6def4b19c8df1c4d9bd7b28e7eb2d3";
 
 export default node;

@@ -2,25 +2,23 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import { RootClubPostsPreviewFragment$key } from '@//:artifacts/RootClubPostsPreviewFragment.graphql'
 import { RootClubPostsPreviewViewerFragment$key } from '@//:artifacts/RootClubPostsPreviewViewerFragment.graphql'
 import { HStack, Stack } from '@chakra-ui/react'
-import Button from '@//:modules/form/Button/Button'
 import { Trans } from '@lingui/macro'
 import { encodeQueryParams } from 'serialize-query-params'
 import { stringify } from 'query-string'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import ClubPostsPreview from './ClubPostsPreview/ClubPostsPreview'
-import { useSearch } from '@//:modules/content/HookedComponents/Search'
-import { QueryErrorBoundary, SkeletonPost } from '@//:modules/content/Placeholder'
-import { Suspense, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { configMap } from '../../../../../../../common/components/PageHeader/SearchButton/constants'
-import { useUpdateEffect } from 'usehooks-ts'
+import { configMap } from '@//:common/components/PageHeader/SearchButton/constants'
 import { Icon } from '@//:modules/content/PageLayout'
 import { SearchSmall } from '@//:assets/icons'
+import { useCookies } from 'react-cookie'
 
 interface SearchProps {
   slug: string
   sort: string
   supporter?: string[]
+  seed?: string | null
 }
 
 interface Props {
@@ -42,6 +40,7 @@ const ClubFragment = graphql`
         }
       }
     }
+    ...ClubPostsPreviewFragment
   }
 `
 
@@ -59,11 +58,16 @@ export default function RootClubPostsPreview ({
 
   const { query: { slug } } = useRouter()
 
+  const [cookies] = useCookies<string>(['postSeed'])
+
   const isSupporter = clubData?.viewerMember?.isSupporter === true && !clubData.viewerIsOwner
 
-  const staticParams = { slug: slug as string }
-  const sortByTopParams = { sort: 'TOP' }
-  const sortByNewParams = { sort: 'NEW' }
+  const staticParams = {
+    slug: slug as string,
+    seed: cookies.postSeed ?? null
+  }
+  const sortByTopParams = { sort: 'ALGORITHM' }
+  // const sortByNewParams = { sort: 'NEW' }
   const supporterParams = { supporter: ['FULL', 'PARTIAL'] }
 
   const initialParams = {
@@ -72,7 +76,7 @@ export default function RootClubPostsPreview ({
     ...(isSupporter ? supporterParams : sortByTopParams)
   }
 
-  const [params, setParams] = useState<SearchProps>(initialParams)
+  const [params] = useState<SearchProps>(initialParams)
 
   const BUTTON_PROPS = {
     size: {
@@ -81,58 +85,59 @@ export default function RootClubPostsPreview ({
     }
   }
 
-  const {
-    searchArguments,
-    setArguments,
-    loadQuery
-  } = useSearch<SearchProps>({
-    defaultValue: { ...params }
-  })
+  // const {
+  //   setArguments,
+  //   loadQuery
+  // } = useSearch<SearchProps>({
+  //   defaultValue: { ...params }
+  // })
+
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   const {
     slug: excludeSlug,
+    seed: excludeSeed,
     ...linkParams
   } = params
 
   const link = `/${clubData.slug}/posts?${stringify(encodeQueryParams(configMap, { ...linkParams }))}`
 
-  const hasSupporterPosts = clubData.supporterPosts.edges.length > 0
-
-  const setExclusiveParams = (): void => {
-    setParams(val => ({
-      ...staticParams,
-      ...supporterParams,
-      sort: val?.sort ?? 'TOP'
-    }))
-  }
-
-  const setAllParams = (): void => {
-    setParams(val => ({
-      ...staticParams,
-      sort: val?.sort ?? 'TOP'
-    }))
-  }
-
-  const setTopParams = (): void => {
-    setParams(val => ({
-      ...staticParams,
-      ...sortByTopParams,
-      ...(val?.supporter != null && { supporter: val.supporter })
-    }))
-  }
-
-  const setNewParams = (): void => {
-    setParams(val => ({
-      ...staticParams,
-      ...sortByNewParams,
-      ...(val?.supporter != null && { supporter: val.supporter })
-    }))
-  }
-
-  useUpdateEffect(() => {
-    setArguments({ ...params })
-  }, [params])
+  // const hasSupporterPosts = clubData.supporterPosts.edges.length > 0
+  //
+  // const setExclusiveParams = (): void => {
+  //   setParams(val => ({
+  //     ...staticParams,
+  //     ...supporterParams,
+  //     sort: val?.sort ?? 'ALGORITHM'
+  //   }))
+  // }
+  //
+  // const setAllParams = (): void => {
+  //   setParams(val => ({
+  //     ...staticParams,
+  //     sort: val?.sort ?? 'ALGORITHM'
+  //   }))
+  // }
+  //
+  // const setTopParams = (): void => {
+  //   setParams(val => ({
+  //     ...staticParams,
+  //     ...sortByTopParams,
+  //     ...(val?.supporter != null && { supporter: val.supporter })
+  //   }))
+  // }
+  //
+  // const setNewParams = (): void => {
+  //   setParams(val => ({
+  //     ...staticParams,
+  //     ...sortByNewParams,
+  //     ...(val?.supporter != null && { supporter: val.supporter })
+  //   }))
+  // }
+  //
+  // useUpdateEffect(() => {
+  //   setArguments({ ...params })
+  // }, [params])
 
   return (
     <Stack spacing={3}>
@@ -142,40 +147,9 @@ export default function RootClubPostsPreview ({
           md: 'visible'
         }}
         py={1}
-        justify='space-between'
+        justify='flex-end'
         spacing={1}
       >
-        <HStack spacing={2}>
-          {hasSupporterPosts && (
-            <Button
-              {...BUTTON_PROPS}
-              colorScheme={params.supporter != null ? 'orange' : 'gray'}
-              onClick={params.supporter != null ? setAllParams : setExclusiveParams}
-            >
-              <Trans>
-                Exclusive
-              </Trans>
-            </Button>
-          )}
-          <Button
-            {...BUTTON_PROPS}
-            colorScheme={params.sort === 'TOP' ? 'green' : 'gray'}
-            onClick={setTopParams}
-          >
-            <Trans>
-              Best
-            </Trans>
-          </Button>
-          <Button
-            {...BUTTON_PROPS}
-            colorScheme={params.sort === 'NEW' ? 'green' : 'gray'}
-            onClick={setNewParams}
-          >
-            <Trans>
-              Fresh
-            </Trans>
-          </Button>
-        </HStack>
         <LinkButton
           {...BUTTON_PROPS}
           href={link}
@@ -186,11 +160,7 @@ export default function RootClubPostsPreview ({
           </Trans>
         </LinkButton>
       </HStack>
-      <QueryErrorBoundary loadQuery={loadQuery}>
-        <Suspense fallback={<SkeletonPost />}>
-          <ClubPostsPreview searchArguments={searchArguments} viewerQuery={viewerData} />
-        </Suspense>
-      </QueryErrorBoundary>
+      <ClubPostsPreview clubQuery={clubData} viewerQuery={viewerData} />
     </Stack>
   )
 }

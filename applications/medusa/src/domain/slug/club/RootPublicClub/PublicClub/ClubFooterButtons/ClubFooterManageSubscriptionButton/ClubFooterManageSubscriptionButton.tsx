@@ -4,7 +4,7 @@ import type {
 } from '@//:artifacts/ClubFooterManageSubscriptionButtonFragment.graphql'
 import { t } from '@lingui/macro'
 import { SubscriptionIdentifier } from '@//:assets/icons'
-import ClubFooterButton from '../ClubFooterButton/ClubFooterButton'
+import SmallGenericButton from '@//:common/components/GenericButtons/SmallGenericButton/SmallGenericButton'
 import { useLingui } from '@lingui/react'
 
 interface Props {
@@ -50,13 +50,13 @@ export default function ClubFooterManageSubscriptionButton ({ query }: Props): J
   const mySubscriptionsLink = '/settings/billing/subscriptions'
 
   return (
-    <ClubFooterButton
+    <SmallGenericButton
       icon={SubscriptionIdentifier}
       href={data?.viewerMember?.clubSupporterSubscription != null
         ? manageSubscriptionLink
         : mySubscriptionsLink}
     >
       {i18n._(t`Manage Subscription`)}
-    </ClubFooterButton>
+    </SmallGenericButton>
   )
 }

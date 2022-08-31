@@ -17,7 +17,7 @@ type ToastAlertProps = RenderProps & UseToastOptions
 export default function useToast (options: UseToastInput = {}): (options: UseToastInput) => void {
   const position = useBreakpointValue<ToastPosition>({
     base: 'top',
-    md: 'bottom'
+    md: 'bottom-right'
   }, 'top')
 
   const toast = useCallback(useChakraToast({

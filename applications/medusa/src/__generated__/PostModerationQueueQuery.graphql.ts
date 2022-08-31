@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<4a645c07f1eb633e65db01da6c5fc79d>>
- * @relayHash b81877aa19f81d8b6f6ee2b5a051f6ab
+ * @generated SignedSource<<4ce2d00ca5382dd156ea78a45e6d1a04>>
+ * @relayHash 9bd7fed0fb7ebebd85cab8c1f613ae8d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b81877aa19f81d8b6f6ee2b5a051f6ab
+// @relayRequestID 9bd7fed0fb7ebebd85cab8c1f613ae8d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -51,10 +51,17 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "preview",
   "storageKey": null
 },
 v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v5 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -62,7 +69,7 @@ v4 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v3/*: any*/),
+    (v4/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -73,25 +80,18 @@ v4 = {
   ],
   "storageKey": null
 },
-v5 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "width",
   "storageKey": null
 },
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "height",
-  "storageKey": null
-},
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "preview",
+  "name": "height",
   "storageKey": null
 },
 v8 = {
@@ -102,7 +102,7 @@ v8 = {
   "name": "videoThumbnail",
   "plural": false,
   "selections": [
-    (v3/*: any*/)
+    (v4/*: any*/)
   ],
   "storageKey": null
 },
@@ -287,8 +287,8 @@ return {
                                 "name": "thumbnail",
                                 "plural": false,
                                 "selections": [
+                                  (v3/*: any*/),
                                   (v1/*: any*/),
-                                  (v4/*: any*/),
                                   (v5/*: any*/),
                                   (v6/*: any*/),
                                   (v7/*: any*/),
@@ -345,10 +345,10 @@ return {
                                   },
                                   (v9/*: any*/),
                                   (v1/*: any*/),
-                                  (v4/*: any*/),
                                   (v5/*: any*/),
                                   (v6/*: any*/),
                                   (v7/*: any*/),
+                                  (v3/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -538,7 +538,7 @@ return {
     ]
   },
   "params": {
-    "id": "b81877aa19f81d8b6f6ee2b5a051f6ab",
+    "id": "9bd7fed0fb7ebebd85cab8c1f613ae8d",
     "metadata": {},
     "name": "PostModerationQueueQuery",
     "operationKind": "query",

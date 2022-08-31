@@ -2,6 +2,7 @@ import { graphql, useFragment } from 'react-relay'
 import { ReactNode } from 'react'
 import { PostSlideBackgroundFragment$key } from '@//:artifacts/PostSlideBackgroundFragment.graphql'
 import { Flex } from '@chakra-ui/react'
+import VideoBackground from '../../../../DataDisplay/VideoBackground/VideoBackground'
 
 interface Props {
   query: PostSlideBackgroundFragment$key
@@ -13,9 +14,7 @@ const Fragment = graphql`
     resource @required(action: THROW) {
       preview
       type
-      videoThumbnail {
-        url
-      }
+      ...VideoBackgroundFragment
     }
   }
 `
@@ -37,19 +36,7 @@ export default function PostSlideBackground ({
       overflow='hidden'
     >
       {data.resource.type === 'VIDEO' && (
-        <Flex
-          left='50%'
-          w='10%'
-          h='10%'
-          transform='scale(11)'
-          top='50%'
-          bg='center center / cover no-repeat'
-          backgroundImage={data.resource?.videoThumbnail?.url ?? ''}
-          filter='blur(2px)'
-          opacity={0.5}
-          position='absolute'
-          cursor='pointer'
-        />
+        <VideoBackground query={data.resource} />
       )}
       {children}
     </Flex>

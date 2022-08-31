@@ -12,6 +12,7 @@ interface Props {
 const Fragment = graphql`
   fragment PostPreviewContentFragment on Post {
     content {
+      id
       isSupporterOnly
       ...ResourceInfoFragment
     }

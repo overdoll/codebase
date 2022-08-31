@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8e9546e68ad6407be28a759f115d66ae>>
- * @relayHash 6380d4d0a7d028d7e9c2abe21bf22134
+ * @generated SignedSource<<d2610ae060867160ba290108280a4a1c>>
+ * @relayHash 0baa2efab8e7fe3d905739f7c83bbfb0
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6380d4d0a7d028d7e9c2abe21bf22134
+// @relayRequestID 0baa2efab8e7fe3d905739f7c83bbfb0
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,7 +18,7 @@ export type StaffViewTopicQuery$variables = {
 };
 export type StaffViewTopicQuery$data = {
   readonly topic: {
-    readonly " $fragmentSpreads": FragmentRefs<"ChangeTopicBannerFragment" | "ChangeTopicDescriptionFragment" | "ChangeTopicTitleFragment" | "ChangeTopicWeightFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ChangeTopicBannerFragment" | "ChangeTopicDescriptionFragment" | "ChangeTopicTitleFragment" | "ChangeTopicWeightFragment" | "StaffViewTopicCategoriesFragment">;
   } | null;
 };
 export type StaffViewTopicQuery = {
@@ -41,7 +41,14 @@ v1 = [
     "variableName": "slug"
   }
 ],
-v2 = [
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "title",
+  "storageKey": null
+},
+v3 = [
   {
     "alias": null,
     "args": null,
@@ -75,20 +82,86 @@ v2 = [
     "storageKey": null
   }
 ],
-v3 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v4 = {
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "preview",
+  "storageKey": null
+},
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "url",
   "storageKey": null
-};
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ResourceUrl",
+  "kind": "LinkedField",
+  "name": "urls",
+  "plural": true,
+  "selections": [
+    (v6/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "mimeType",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "width",
+  "storageKey": null
+},
+v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "height",
+  "storageKey": null
+},
+v10 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ResourceUrl",
+  "kind": "LinkedField",
+  "name": "videoThumbnail",
+  "plural": false,
+  "selections": [
+    (v6/*: any*/)
+  ],
+  "storageKey": null
+},
+v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "type",
+  "storageKey": null
+},
+v12 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 100
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -123,6 +196,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "ChangeTopicBannerFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "StaffViewTopicCategoriesFragment"
           }
         ],
         "storageKey": null
@@ -145,13 +223,7 @@ return {
         "name": "topic",
         "plural": false,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "title",
-            "storageKey": null
-          },
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -159,10 +231,10 @@ return {
             "kind": "LinkedField",
             "name": "titleTranslations",
             "plural": true,
-            "selections": (v2/*: any*/),
+            "selections": (v3/*: any*/),
             "storageKey": null
           },
-          (v3/*: any*/),
+          (v4/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -177,7 +249,7 @@ return {
             "kind": "LinkedField",
             "name": "descriptionTranslations",
             "plural": true,
-            "selections": (v2/*: any*/),
+            "selections": (v3/*: any*/),
             "storageKey": null
           },
           {
@@ -195,21 +267,122 @@ return {
             "name": "banner",
             "plural": false,
             "selections": [
-              (v3/*: any*/),
+              (v5/*: any*/),
+              (v4/*: any*/),
+              (v7/*: any*/),
+              (v8/*: any*/),
+              (v9/*: any*/),
+              (v10/*: any*/),
+              (v11/*: any*/)
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": (v12/*: any*/),
+            "concreteType": "CategoryConnection",
+            "kind": "LinkedField",
+            "name": "categories",
+            "plural": false,
+            "selections": [
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "ResourceUrl",
+                "concreteType": "CategoryEdge",
                 "kind": "LinkedField",
-                "name": "urls",
+                "name": "edges",
                 "plural": true,
                 "selections": [
-                  (v4/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Category",
+                    "kind": "LinkedField",
+                    "name": "node",
+                    "plural": false,
+                    "selections": [
+                      (v2/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "slug",
+                        "storageKey": null
+                      },
+                      (v4/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Resource",
+                        "kind": "LinkedField",
+                        "name": "banner",
+                        "plural": false,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "processed",
+                            "storageKey": null
+                          },
+                          (v5/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "failed",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "ResourceProgress",
+                            "kind": "LinkedField",
+                            "name": "progress",
+                            "plural": false,
+                            "selections": [
+                              (v4/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "progress",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "state",
+                                "storageKey": null
+                              }
+                            ],
+                            "storageKey": null
+                          },
+                          (v11/*: any*/),
+                          (v4/*: any*/),
+                          (v7/*: any*/),
+                          (v8/*: any*/),
+                          (v9/*: any*/),
+                          (v10/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "__typename",
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  },
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "mimeType",
+                    "name": "cursor",
                     "storageKey": null
                   }
                 ],
@@ -218,45 +391,39 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "width",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "height",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "preview",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "ResourceUrl",
+                "concreteType": "PageInfo",
                 "kind": "LinkedField",
-                "name": "videoThumbnail",
+                "name": "pageInfo",
                 "plural": false,
                 "selections": [
-                  (v4/*: any*/)
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "endCursor",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "hasNextPage",
+                    "storageKey": null
+                  }
                 ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "type",
                 "storageKey": null
               }
             ],
-            "storageKey": null
+            "storageKey": "categories(first:100)"
+          },
+          {
+            "alias": null,
+            "args": (v12/*: any*/),
+            "filters": null,
+            "handle": "connection",
+            "key": "StaffViewTopicCategoriesFragment_categories",
+            "kind": "LinkedHandle",
+            "name": "categories"
           }
         ],
         "storageKey": null
@@ -264,7 +431,7 @@ return {
     ]
   },
   "params": {
-    "id": "6380d4d0a7d028d7e9c2abe21bf22134",
+    "id": "0baa2efab8e7fe3d905739f7c83bbfb0",
     "metadata": {},
     "name": "StaffViewTopicQuery",
     "operationKind": "query",
@@ -273,6 +440,6 @@ return {
 };
 })();
 
-(node as any).hash = "0e2dd465b3e5985ef34c3636d4017fd6";
+(node as any).hash = "7d7234fd4d9610c906566b153edc13b1";
 
 export default node;

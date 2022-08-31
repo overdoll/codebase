@@ -1,8 +1,9 @@
-import { Box, Heading, Stack, Text } from '@chakra-ui/react'
-import { PostPlaceholder } from '@//:modules/content/PageLayout'
-import Button from '@//:modules/form/Button/Button'
+import { Heading, HStack, Stack, Text } from '@chakra-ui/react'
+import { Icon, LargeBackgroundBox } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
+import { CheckCircle } from '@//:assets/icons'
+import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 
 export default function PostSubmitted (): JSX.Element {
   const {
@@ -14,51 +15,30 @@ export default function PostSubmitted (): JSX.Element {
     reset()
   }
 
-  if (state.isInReview === true) {
-    return (
-      <PostPlaceholder>
-        <Stack align='center' spacing={6}>
-          <Box>
-            <Heading mb={2} textAlign='center' color='gray.00' fontSize='2xl'>
+  if (state.isSubmitted === false) {
+    return <></>
+  }
+
+  return (
+    <LargeBackgroundBox>
+      <Stack spacing={0}>
+        <HStack justify='space-between'>
+          <HStack spacing={2}>
+            <Icon icon={CheckCircle} h={4} w={4} fill='gray.200' />
+            <Heading fontSize='lg' color='gray.200'>
               <Trans>
                 Submitted For Review
               </Trans>
             </Heading>
-            <Text textAlign='center' color='gray.100' fontSize='md'>
-              <Trans>
-                Thanks for posting! Your submission will be reviewed by our moderation team to ensure it does not
-                violate
-                any club guidelines. Once approved, it will be visible to the public.
-              </Trans>
-            </Text>
-          </Box>
-          <Button
-            variant='solid'
-            colorScheme='teal'
-            size='lg'
-            onClick={onRetry}
-          >
-            <Trans>Post again</Trans>
-          </Button>
-        </Stack>
-      </PostPlaceholder>
-    )
-  }
-
-  return (
-    <PostPlaceholder>
-      <Stack spacing={6}>
-        <Heading textAlign='center' color='gray.00' fontSize='2xl'>
+          </HStack>
+          <CloseButton onClick={onRetry} size='sm' />
+        </HStack>
+        <Text fontSize='sm' color='gray.300'>
           <Trans>
-            Post Submitted
-          </Trans>
-        </Heading>
-        <Text textAlign='center' color='gray.100' fontSize='md'>
-          <Trans>
-            Your post is now visible to the public
+            Thanks for posting! Your post was submitted for review. Once approved, it will be visible to the public.
           </Trans>
         </Text>
       </Stack>
-    </PostPlaceholder>
+    </LargeBackgroundBox>
   )
 }

@@ -30,8 +30,8 @@ msgid "Go to My Feed"
 msgstr ""
 
 #: src/domain/clubs/discover/RootDiscoverClubs/DiscoverClubs/DiscoverClubsList/ClubJoinTile/ClubJoinTileIconButton/ClubJoinTileIconButton.tsx:51
-msgid "Join {0}"
-msgstr ""
+#~ msgid "Join {0}"
+#~ msgstr ""
 
 #: src/domain/clubs/discover/RootDiscoverClubs/SearchSuggestedClubs/SuggestedClubs/SuggestedClubs.tsx:68
 #~ msgid "No clubs found"

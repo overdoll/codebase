@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a0fc91e3eb062a1620ddaf92119db3ea>>
- * @relayHash f73b135d402f62a93c7d5d6a6a756de0
+ * @generated SignedSource<<2342be46a912f8411db89440ce8a6d2d>>
+ * @relayHash b20082f3b9c8da4a488aecab20d50a52
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f73b135d402f62a93c7d5d6a6a756de0
+// @relayRequestID b20082f3b9c8da4a488aecab20d50a52
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -309,13 +309,6 @@ return {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
-                            "name": "type",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
                             "name": "processed",
                             "storageKey": null
                           },
@@ -341,6 +334,7 @@ return {
                             "name": "progress",
                             "plural": false,
                             "selections": [
+                              (v9/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -354,9 +348,15 @@ return {
                                 "kind": "ScalarField",
                                 "name": "state",
                                 "storageKey": null
-                              },
-                              (v9/*: any*/)
+                              }
                             ],
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "type",
                             "storageKey": null
                           },
                           (v9/*: any*/),
@@ -498,7 +498,7 @@ return {
     ]
   },
   "params": {
-    "id": "f73b135d402f62a93c7d5d6a6a756de0",
+    "id": "b20082f3b9c8da4a488aecab20d50a52",
     "metadata": {},
     "name": "CreateClubCharacterQuery",
     "operationKind": "query",

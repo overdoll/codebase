@@ -8,15 +8,14 @@ import { Icon } from '../../PageLayout'
 import { useMemo } from 'react'
 import { Random } from '../../../utilities/random'
 import hash from '../../../utilities/hash'
+import { DEFAULT_SEED, TAG_COLOR_PALETTE } from '../../../constants/theme'
 
 interface Props {
   seed: string | undefined
 }
 
-const defaultSeed = 'DETERMINISTIC_SEED'
-
 export default function RandomIcon ({ seed }: Props): JSX.Element {
-  const memoized = useMemo(() => new Random(hash(seed ?? defaultSeed)), [seed])
+  const memoized = useMemo(() => new Random(hash(seed ?? DEFAULT_SEED)), [seed])
 
   const icons = [
     PlaceholderResourceRabbit,
@@ -24,17 +23,8 @@ export default function RandomIcon ({ seed }: Props): JSX.Element {
     PlaceholderResourceRobot
   ]
 
-  const colors = [
-    'gray.00',
-    'purple.300',
-    'orange.300',
-    'teal.300',
-    'green.300',
-    'primary.300'
-  ]
-
   const chosenIcon = useMemo(() => memoized.nextInt32([0, 3]), [seed])
-  const chosenColor = useMemo(() => memoized.nextInt32([0, 6]), [seed])
+  const chosenColor = useMemo(() => memoized.nextInt32([0, TAG_COLOR_PALETTE.length]), [seed])
 
   const randomValues = useConst({
     icons: chosenIcon,
@@ -42,7 +32,7 @@ export default function RandomIcon ({ seed }: Props): JSX.Element {
   })
 
   const randomIcon = icons[randomValues.icons]
-  const randomColor = colors[randomValues.colors]
+  const randomColor = TAG_COLOR_PALETTE[randomValues.colors]
 
   return (
     <Icon icon={randomIcon} fill={randomColor} w='100%' h='100%' p={2} />

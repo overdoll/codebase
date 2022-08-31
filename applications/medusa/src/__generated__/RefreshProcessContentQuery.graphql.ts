@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<5fec3b11b19ca8b38651b171ba3ce766>>
- * @relayHash 0cdf5a2e14f6be9499d266361024e840
+ * @generated SignedSource<<fa85189de48dc85e8c0e90001e4de8cd>>
+ * @relayHash 2749f0d92250a12363d8bd76b1144239
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,9 +9,11 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0cdf5a2e14f6be9499d266361024e840
+// @relayRequestID 2749f0d92250a12363d8bd76b1144239
 
 import { ConcreteRequest, Query } from 'relay-runtime';
+import { FragmentRefs } from "relay-runtime";
+export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "SUBMITTED" | "%future added value";
 export type ResourceProgressState = "FINALIZING" | "STARTED" | "WAITING" | "%future added value";
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 export type RefreshProcessContentQuery$variables = {
@@ -25,6 +27,7 @@ export type RefreshProcessContentQuery$data = {
       readonly resource: {
         readonly failed: boolean;
         readonly height: number;
+        readonly id: string;
         readonly preview: string;
         readonly processed: boolean;
         readonly progress: {
@@ -43,9 +46,12 @@ export type RefreshProcessContentQuery$data = {
         readonly width: number;
       };
       readonly viewerCanViewSupporterOnlyContent: boolean;
+      readonly " $fragmentSpreads": FragmentRefs<"PostContentPreviewMemoFragment">;
     }>;
     readonly id: string;
     readonly reference: string;
+    readonly state: PostState;
+    readonly " $fragmentSpreads": FragmentRefs<"ArchivedPostFragment" | "DraftPostFragment" | "PostContentPreviewMemoPostFragment" | "ProcessContentDisplayFragment" | "PublishedPostFragment" | "RejectedPostFragment" | "RemovedPostFragment" | "ReviewPostFragment">;
   } | null;
 };
 export type RefreshProcessContentQuery = {
@@ -79,56 +85,56 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "reference",
+  "name": "state",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "viewerCanViewSupporterOnlyContent",
+  "name": "reference",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "isSupporterOnly",
+  "name": "viewerCanViewSupporterOnlyContent",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "failed",
+  "name": "isSupporterOnly",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "type",
+  "name": "failed",
   "storageKey": null
 },
 v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "processed",
+  "name": "type",
   "storageKey": null
 },
 v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "videoDuration",
+  "name": "processed",
   "storageKey": null
 },
 v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "state",
+  "name": "videoDuration",
   "storageKey": null
 },
 v11 = {
@@ -196,6 +202,13 @@ v17 = {
   "kind": "ScalarField",
   "name": "preview",
   "storageKey": null
+},
+v18 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "videoNoAudio",
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -214,6 +227,7 @@ return {
         "selections": [
           (v2/*: any*/),
           (v3/*: any*/),
+          (v4/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -223,8 +237,8 @@ return {
             "plural": true,
             "selections": [
               (v2/*: any*/),
-              (v4/*: any*/),
               (v5/*: any*/),
+              (v6/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -233,10 +247,11 @@ return {
                 "name": "resource",
                 "plural": false,
                 "selections": [
-                  (v6/*: any*/),
+                  (v2/*: any*/),
                   (v7/*: any*/),
                   (v8/*: any*/),
                   (v9/*: any*/),
+                  (v10/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -245,7 +260,7 @@ return {
                     "name": "progress",
                     "plural": false,
                     "selections": [
-                      (v10/*: any*/),
+                      (v3/*: any*/),
                       (v11/*: any*/)
                     ],
                     "storageKey": null
@@ -257,9 +272,54 @@ return {
                   (v17/*: any*/)
                 ],
                 "storageKey": null
+              },
+              {
+                "args": null,
+                "kind": "FragmentSpread",
+                "name": "PostContentPreviewMemoFragment"
               }
             ],
             "storageKey": null
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ProcessContentDisplayFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "PostContentPreviewMemoPostFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "DraftPostFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "PublishedPostFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ReviewPostFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "RejectedPostFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ArchivedPostFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "RemovedPostFragment"
           }
         ],
         "storageKey": null
@@ -284,6 +344,7 @@ return {
         "selections": [
           (v2/*: any*/),
           (v3/*: any*/),
+          (v4/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -293,8 +354,8 @@ return {
             "plural": true,
             "selections": [
               (v2/*: any*/),
-              (v4/*: any*/),
               (v5/*: any*/),
+              (v6/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -303,10 +364,11 @@ return {
                 "name": "resource",
                 "plural": false,
                 "selections": [
-                  (v6/*: any*/),
+                  (v2/*: any*/),
                   (v7/*: any*/),
                   (v8/*: any*/),
                   (v9/*: any*/),
+                  (v10/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -315,7 +377,7 @@ return {
                     "name": "progress",
                     "plural": false,
                     "selections": [
-                      (v10/*: any*/),
+                      (v3/*: any*/),
                       (v11/*: any*/),
                       (v2/*: any*/)
                     ],
@@ -326,8 +388,49 @@ return {
                   (v15/*: any*/),
                   (v16/*: any*/),
                   (v17/*: any*/),
+                  (v18/*: any*/)
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Resource",
+                "kind": "LinkedField",
+                "name": "supporterOnlyResource",
+                "plural": false,
+                "selections": [
+                  (v8/*: any*/),
+                  (v10/*: any*/),
+                  (v18/*: any*/),
                   (v2/*: any*/)
                 ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Club",
+            "kind": "LinkedField",
+            "name": "club",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "canCreateSupporterOnlyPosts",
+                "storageKey": null
+              },
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "slug",
                 "storageKey": null
               }
             ],
@@ -339,7 +442,7 @@ return {
     ]
   },
   "params": {
-    "id": "0cdf5a2e14f6be9499d266361024e840",
+    "id": "2749f0d92250a12363d8bd76b1144239",
     "metadata": {},
     "name": "RefreshProcessContentQuery",
     "operationKind": "query",
@@ -348,6 +451,6 @@ return {
 };
 })();
 
-(node as any).hash = "8d8c41ef33b0f59f2c71e57d6ee5d66e";
+(node as any).hash = "b918216e9a978d73c706611d0102889c";
 
 export default node;

@@ -6,7 +6,6 @@ import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import { usePaginationFragment } from 'react-relay'
 import { Trans } from '@lingui/macro'
 import SearchSummary from '../../../../../common/components/PageHeader/SearchSummary/SearchSummary'
-import PostOrderButton from '../../../../../common/components/PageHeader/PostOrderButton/PostOrderButton'
 import SearchButton from '../../../../../common/components/PageHeader/SearchButton/SearchButton'
 import ClubCharacterRecommendations from './ClubCharacterRecommendations/ClubCharacterRecommendations'
 import PublicClubCharacterRichObject
@@ -15,6 +14,15 @@ import FullSimplePost
   from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/FullSimplePost/FullSimplePost'
 import PostInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
+import PlatformPromoteAlert from '@//:common/components/PlatformPromoteAlert/PlatformPromoteAlert'
+import SearchCustomCharacterCopyLinkButton
+  from './SearchCustomCharacterCopyLinkButton/SearchCustomCharacterCopyLinkButton'
+import SearchCustomCharacterShareDiscordButton
+  from './SearchCustomCharacterShareDiscordButton/SearchCustomCharacterShareDiscordButton'
+import SearchCustomCharacterShareRedditButton
+  from './SearchCustomCharacterShareRedditButton/SearchCustomCharacterShareRedditButton'
+import SearchCustomCharacterShareTwitterButton
+  from './SearchCustomCharacterShareTwitterButton/SearchCustomCharacterShareTwitterButton'
 
 interface Props {
   query: PreloadedQuery<PublicClubCharacterQuery>
@@ -25,6 +33,7 @@ const Query = graphql`
     $sortBy: PostsSort!,
     $clubSlug: String,
     $characterSlug: String!,
+    $seed: String
   ) @preloadable {
     character(clubSlug: $clubSlug, slug: $characterSlug) {
       name
@@ -35,6 +44,10 @@ const Query = graphql`
       }
       ...PublicClubCharacterFragment
       ...PublicClubCharacterRichObjectFragment
+      ...SearchCustomCharacterCopyLinkButtonFragment
+      ...SearchCustomCharacterShareDiscordButtonFragment
+      ...SearchCustomCharacterShareRedditButtonFragment
+      ...SearchCustomCharacterShareTwitterButtonFragment
     }
     viewer {
       ...FullSimplePostViewerFragment
@@ -45,7 +58,7 @@ const Query = graphql`
 const Fragment = graphql`
   fragment PublicClubCharacterFragment on Character
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 9}
+    first: {type: Int, defaultValue: 5}
     after: {type: String}
   )
   @refetchable(queryName: "PublicClubCharacterPostsPaginationQuery" ) {
@@ -53,6 +66,7 @@ const Fragment = graphql`
       first: $first,
       after: $after,
       sortBy: $sortBy,
+      seed: $seed
     )
     @connection (key: "PublicClubCharacterPosts_posts") {
       edges {
@@ -98,7 +112,12 @@ export default function PublicClubCharacter ({ query }: Props): JSX.Element {
             totalLikes={queryData.character.totalLikes}
           />
           <HStack justify='space-between' spacing={2}>
-            <PostOrderButton />
+            <HStack spacing={1}>
+              <SearchCustomCharacterCopyLinkButton query={queryData.character} />
+              <SearchCustomCharacterShareDiscordButton query={queryData.character} />
+              <SearchCustomCharacterShareRedditButton query={queryData.character} />
+              <SearchCustomCharacterShareTwitterButton query={queryData.character} />
+            </HStack>
             <SearchButton />
           </HStack>
         </Stack>
@@ -108,6 +127,7 @@ export default function PublicClubCharacter ({ query }: Props): JSX.Element {
             hasNext={hasNext}
             loadNext={loadNext}
             isLoadingNext={isLoadingNext}
+            endOfTree={<PlatformPromoteAlert />}
           >
             {({ index }) => (
               <FullSimplePost

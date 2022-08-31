@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<73d481073c74e65bb8a15f39355be887>>
- * @relayHash 4001f1fcb7144a707043e4e09525f4b1
+ * @generated SignedSource<<8427142258d96412fd782dafc4bfcbe1>>
+ * @relayHash 2048f0b5c72dce487dc22cbda78ba715
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4001f1fcb7144a707043e4e09525f4b1
+// @relayRequestID 2048f0b5c72dce487dc22cbda78ba715
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,9 +18,8 @@ export type StaffViewSeriesQuery$variables = {
 };
 export type StaffViewSeriesQuery$data = {
   readonly serial: {
-    readonly " $fragmentSpreads": FragmentRefs<"ChangeSeriesThumbnailFragment" | "ChangeSeriesTitleFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ChangeSeriesThumbnailFragment" | "ChangeSeriesTitleFragment" | "StaffSeriesSearchCharactersFragment">;
   } | null;
-  readonly " $fragmentSpreads": FragmentRefs<"StaffSeriesSearchCharactersFragment">;
 };
 export type StaffViewSeriesQuery = {
   response: StaffViewSeriesQuery$data;
@@ -67,10 +66,17 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "preview",
   "storageKey": null
 },
 v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v7 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -78,7 +84,7 @@ v6 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v5/*: any*/),
+    (v6/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -89,25 +95,18 @@ v6 = {
   ],
   "storageKey": null
 },
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "width",
   "storageKey": null
 },
-v8 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "height",
-  "storageKey": null
-},
 v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "preview",
+  "name": "height",
   "storageKey": null
 },
 v10 = {
@@ -118,7 +117,7 @@ v10 = {
   "name": "videoThumbnail",
   "plural": false,
   "selections": [
-    (v5/*: any*/)
+    (v6/*: any*/)
   ],
   "storageKey": null
 },
@@ -134,11 +133,6 @@ v12 = [
     "kind": "Literal",
     "name": "first",
     "value": 9
-  },
-  {
-    "kind": "Variable",
-    "name": "seriesSlug",
-    "variableName": "slug"
   }
 ],
 v13 = {
@@ -172,14 +166,14 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "ChangeSeriesThumbnailFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "StaffSeriesSearchCharactersFragment"
           }
         ],
         "storageKey": null
-      },
-      {
-        "args": (v1/*: any*/),
-        "kind": "FragmentSpread",
-        "name": "StaffSeriesSearchCharactersFragment"
       }
     ],
     "type": "Query",
@@ -246,8 +240,8 @@ return {
             "name": "banner",
             "plural": false,
             "selections": [
+              (v5/*: any*/),
               (v4/*: any*/),
-              (v6/*: any*/),
               (v7/*: any*/),
               (v8/*: any*/),
               (v9/*: any*/),
@@ -255,119 +249,126 @@ return {
               (v11/*: any*/)
             ],
             "storageKey": null
-          }
-        ],
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": (v12/*: any*/),
-        "concreteType": "CharacterConnection",
-        "kind": "LinkedField",
-        "name": "characters",
-        "plural": false,
-        "selections": [
+          },
           {
             "alias": null,
-            "args": null,
-            "concreteType": "CharacterEdge",
+            "args": (v12/*: any*/),
+            "concreteType": "CharacterConnection",
             "kind": "LinkedField",
-            "name": "edges",
-            "plural": true,
+            "name": "characters",
+            "plural": false,
             "selections": [
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "Character",
+                "concreteType": "CharacterEdge",
                 "kind": "LinkedField",
-                "name": "node",
-                "plural": false,
+                "name": "edges",
+                "plural": true,
                 "selections": [
-                  (v13/*: any*/),
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "Series",
+                    "concreteType": "Character",
                     "kind": "LinkedField",
-                    "name": "series",
+                    "name": "node",
                     "plural": false,
                     "selections": [
                       (v13/*: any*/),
-                      (v4/*: any*/),
-                      (v2/*: any*/)
-                    ],
-                    "storageKey": null
-                  },
-                  (v4/*: any*/),
-                  (v3/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Club",
-                    "kind": "LinkedField",
-                    "name": "club",
-                    "plural": false,
-                    "selections": [
-                      (v3/*: any*/),
-                      (v4/*: any*/)
-                    ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Resource",
-                    "kind": "LinkedField",
-                    "name": "banner",
-                    "plural": false,
-                    "selections": [
-                      (v11/*: any*/),
                       {
                         "alias": null,
                         "args": null,
-                        "kind": "ScalarField",
-                        "name": "processed",
-                        "storageKey": null
-                      },
-                      (v9/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "failed",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "ResourceProgress",
+                        "concreteType": "Series",
                         "kind": "LinkedField",
-                        "name": "progress",
+                        "name": "series",
+                        "plural": false,
+                        "selections": [
+                          (v13/*: any*/),
+                          (v4/*: any*/),
+                          (v2/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      (v4/*: any*/),
+                      (v3/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Club",
+                        "kind": "LinkedField",
+                        "name": "club",
+                        "plural": false,
+                        "selections": [
+                          (v3/*: any*/),
+                          (v4/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Resource",
+                        "kind": "LinkedField",
+                        "name": "banner",
                         "plural": false,
                         "selections": [
                           {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
-                            "name": "progress",
+                            "name": "processed",
+                            "storageKey": null
+                          },
+                          (v5/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "failed",
                             "storageKey": null
                           },
                           {
                             "alias": null,
                             "args": null,
-                            "kind": "ScalarField",
-                            "name": "state",
+                            "concreteType": "ResourceProgress",
+                            "kind": "LinkedField",
+                            "name": "progress",
+                            "plural": false,
+                            "selections": [
+                              (v4/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "progress",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "state",
+                                "storageKey": null
+                              }
+                            ],
                             "storageKey": null
                           },
-                          (v4/*: any*/)
+                          (v11/*: any*/),
+                          (v4/*: any*/),
+                          (v7/*: any*/),
+                          (v8/*: any*/),
+                          (v9/*: any*/),
+                          (v10/*: any*/)
                         ],
                         "storageKey": null
                       },
-                      (v4/*: any*/),
-                      (v6/*: any*/),
-                      (v7/*: any*/),
-                      (v8/*: any*/),
-                      (v10/*: any*/)
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "__typename",
+                        "storageKey": null
+                      }
                     ],
                     "storageKey": null
                   },
@@ -375,7 +376,7 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "__typename",
+                    "name": "cursor",
                     "storageKey": null
                   }
                 ],
@@ -384,56 +385,47 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "cursor",
+                "concreteType": "PageInfo",
+                "kind": "LinkedField",
+                "name": "pageInfo",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "endCursor",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "hasNextPage",
+                    "storageKey": null
+                  }
+                ],
                 "storageKey": null
               }
             ],
-            "storageKey": null
+            "storageKey": "characters(first:9)"
           },
           {
             "alias": null,
-            "args": null,
-            "concreteType": "PageInfo",
-            "kind": "LinkedField",
-            "name": "pageInfo",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "endCursor",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "hasNextPage",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
+            "args": (v12/*: any*/),
+            "filters": null,
+            "handle": "connection",
+            "key": "StaffSeriesSearchCharacters_characters",
+            "kind": "LinkedHandle",
+            "name": "characters"
           }
         ],
         "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": (v12/*: any*/),
-        "filters": [
-          "seriesSlug"
-        ],
-        "handle": "connection",
-        "key": "StaffSeriesSearchCharacters_characters",
-        "kind": "LinkedHandle",
-        "name": "characters"
       }
     ]
   },
   "params": {
-    "id": "4001f1fcb7144a707043e4e09525f4b1",
+    "id": "2048f0b5c72dce487dc22cbda78ba715",
     "metadata": {},
     "name": "StaffViewSeriesQuery",
     "operationKind": "query",
@@ -442,6 +434,6 @@ return {
 };
 })();
 
-(node as any).hash = "379cb62aee5e4631b8526ab750950886";
+(node as any).hash = "719d162f8d419622b6c3e55d7570b26f";
 
 export default node;

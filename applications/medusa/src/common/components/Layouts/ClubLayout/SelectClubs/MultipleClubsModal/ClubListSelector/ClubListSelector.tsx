@@ -23,7 +23,7 @@ interface Props {
 const Fragment = graphql`
   fragment ClubListSelectorFragment on Account
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 3}
+    first: {type: Int, defaultValue: 11}
     after: {type: String},
     name: {type: String}
   )
@@ -32,7 +32,7 @@ const Fragment = graphql`
     clubs (
       first: $first,
       after: $after,
-      name: $name
+      name: $name,
     ) @connection(key: "ClubListSelector_clubs")
     {
       edges {

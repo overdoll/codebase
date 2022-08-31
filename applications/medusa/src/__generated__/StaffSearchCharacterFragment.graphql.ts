@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<34b0e098c23866f5c1d69da2fee37d5a>>
+ * @generated SignedSource<<7227543943da1dc79f00468cdd5fa0d2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,9 @@ export type StaffSearchCharacterFragment$data = {
   readonly characters: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly club: {
+          readonly slug: string;
+        } | null;
         readonly series: {
           readonly slug: string;
         } | null;
@@ -39,7 +42,10 @@ v1 = {
   "kind": "ScalarField",
   "name": "slug",
   "storageKey": null
-};
+},
+v2 = [
+  (v1/*: any*/)
+];
 return {
   "argumentDefinitions": [
     {
@@ -120,9 +126,17 @@ return {
                   "kind": "LinkedField",
                   "name": "series",
                   "plural": false,
-                  "selections": [
-                    (v1/*: any*/)
-                  ],
+                  "selections": (v2/*: any*/),
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "Club",
+                  "kind": "LinkedField",
+                  "name": "club",
+                  "plural": false,
+                  "selections": (v2/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -184,6 +198,6 @@ return {
 };
 })();
 
-(node as any).hash = "f115dbb116ea7571681c43b632ac94fd";
+(node as any).hash = "34a39fc179a1a74f535bb2f77a4b3b61";
 
 export default node;

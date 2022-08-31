@@ -3,14 +3,11 @@ import { Suspense } from 'react'
 import SkeletonStack from '@//:modules/content/Placeholder/Loading/SkeletonStack/SkeletonStack'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { PageSectionDescription, PageSectionWrap } from '@//:modules/content/PageLayout'
-import { t, Trans } from '@lingui/macro'
-import CategoryMultiSelector from './CategoryMultiSelector/CategoryMultiSelector'
-import SearchInput
-  from '@//:modules/content/HookedComponents/Search/components/SearchInput/SearchInput'
-import { useLingui } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import { ChoiceRemovableTags, useChoice } from '@//:modules/content/HookedComponents/Choice'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
+import CurationTopicsSelector from './CurationTopicsSelector/CurationTopicsSelector'
 
 interface SearchProps {
   title: string
@@ -26,12 +23,9 @@ export default function CategoriesCurationStep (): JSX.Element {
     dispatch
   } = useSequenceContext()
 
-  const { i18n } = useLingui()
-
   const {
     searchArguments,
-    loadQuery,
-    register: registerSearch
+    loadQuery
   } = useSearch<SearchProps>({})
 
   const {
@@ -52,7 +46,8 @@ export default function CategoriesCurationStep (): JSX.Element {
       <PageSectionWrap>
         <PageSectionDescription>
           <Trans>
-            Categories are a quick way to search for content. Select the categories you prefer to see the most. Leaving
+            Categories are a quick way to search for content. We group categories by topics. Select a topic to see all
+            available categories. Leaving
             other categories blank will still show posts with those categories to you.
           </Trans>
         </PageSectionDescription>
@@ -63,18 +58,10 @@ export default function CategoriesCurationStep (): JSX.Element {
           removeValue={removeValue}
           titleKey='title'
         />
-        <SearchInput
-          nullifyOnClear
-          {...registerSearch('title', 'change')}
-          placeholder={i18n._(t`Search for a category`)}
-        />
         <Box maxH='60vh' overflowY='auto'>
           <QueryErrorBoundary loadQuery={loadQuery}>
             <Suspense fallback={<SkeletonStack />}>
-              <CategoryMultiSelector
-                searchArguments={searchArguments}
-                register={register}
-              />
+              <CurationTopicsSelector searchArguments={searchArguments} register={register} />
             </Suspense>
           </QueryErrorBoundary>
         </Box>

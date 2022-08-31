@@ -36,6 +36,9 @@ const Fragment = graphql`
           series {
             slug
           }
+          club {
+            slug
+          }
           ...CharacterTileOverlayFragment
         }
       }
@@ -66,20 +69,31 @@ export default function StaffSearchCharacter ({ searchArguments }: Props): JSX.E
       condition={characters.length < 1}
     >
       <ShortGridWrap>
-        {characters.map((item, index) => (
-          <GridTile key={index}>
-            <LinkTile href={{
-              pathname: '/staff/entity/character/[seriesSlug]/[slug]',
-              query: {
-                slug: item.slug,
-                seriesSlug: item.series.slug
+        {characters.map((item, index) => {
+          const decideHref = item?.series == null
+            ? {
+                pathname: '/staff/entity/character/club/[clubSlug]/[slug]',
+                query: {
+                  slug: item.slug,
+                  clubSlug: item.club.slug
+                }
               }
-            }}
-            >
-              <CharacterTileOverlay query={item} />
-            </LinkTile>
-          </GridTile>
-        )
+            : {
+                pathname: '/staff/entity/character/[seriesSlug]/[slug]',
+                query: {
+                  slug: item.slug,
+                  seriesSlug: item.series.slug
+                }
+              }
+
+          return (
+            <GridTile key={index}>
+              <LinkTile href={decideHref}>
+                <CharacterTileOverlay query={item} />
+              </LinkTile>
+            </GridTile>
+          )
+        }
         )}
         <LoadMoreGridTile
           hasNext={hasNext}

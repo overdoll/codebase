@@ -37,7 +37,7 @@ const RootSearchSeries: PageProps<Props> = (props: Props) => {
       <PageWrapper>
         <QueryErrorBoundary loadQuery={() => loadQuery({
           seriesSlug: seriesSlug as string,
-          sortBy: 'TOP'
+          sortBy: 'ALGORITHM'
         })}
         >
           <Suspense fallback={<SkeletonStack />}>

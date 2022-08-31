@@ -8,27 +8,19 @@ interface Props extends BoxProps {
   onClick?: () => void
   muted?: boolean
   query: RenderVideoFragment$key
-  autoPlay: boolean
 }
 
 const Fragment = graphql`
   fragment RenderVideoFragment on Resource {
-    urls {
-      url
-      mimeType
-    }
     videoThumbnail {
       url
     }
-    width
-    height
   }
 `
 
 const RenderVideo = forwardRef<any, Props>(({
   query,
   muted = true,
-  autoPlay,
   ...rest
 }: Props, forwardRef): JSX.Element => {
   const data = useFragment(Fragment, query)
@@ -40,22 +32,13 @@ const RenderVideo = forwardRef<any, Props>(({
       as='video'
       ref={forwardRef}
       muted={muted}
-      bg='gray.800'
+      height='100%'
       loop
       playsInline
       poster={data?.videoThumbnail?.url}
+      draggable={false}
       {...rest}
-    >
-      {data.urls.map((item, index) => (
-        <source
-          width={data.width}
-          height={data.height}
-          key={index}
-          src={item.url}
-          type={item.mimeType}
-        />)
-      )}
-    </Box>
+    />
   )
 })
 

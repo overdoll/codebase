@@ -16,7 +16,7 @@ import ClubPayoutMethodAlert from './ClubPayoutMethodAlert/ClubPayoutMethodAlert
 import { CLUB_GUIDELINES, PAYOUTS_INFORMATION } from '@//:modules/constants/links'
 import { ClubPeopleGroup, PayoutMethod } from '@//:assets/icons'
 import ClubInformationBanner from '../../../../../../common/components/ClubInformationBanner/ClubInformationBanner'
-import ClubTransactionMetrics from './ClubTransactionMetrics/ClubTransactionMetrics'
+import ClubTransactionMetrics from '../../../../../../common/components/ClubTransactionMetrics/ClubTransactionMetrics'
 
 interface Props {
   query: PreloadedQuery<ClubRevenueQuery>

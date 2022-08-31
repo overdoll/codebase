@@ -6,6 +6,7 @@ import ChangeTopicTitle from './ChangeTopicTitle/ChangeTopicTitle'
 import ChangeTopicDescription from './ChangeTopicDescription/ChangeTopicDescription'
 import ChangeTopicWeight from './ChangeTopicWeight/ChangeTopicWeight'
 import ChangeTopicBanner from './ChangeTopicBanner/ChangeTopicBanner'
+import StaffViewTopicCategories from './StaffViewTopicCategories/StaffViewTopicCategories'
 
 interface Props {
   query: PreloadedQuery<StaffViewTopicQuery>
@@ -18,6 +19,7 @@ const Query = graphql`
       ...ChangeTopicDescriptionFragment
       ...ChangeTopicWeightFragment
       ...ChangeTopicBannerFragment
+      ...StaffViewTopicCategoriesFragment
     }
   }
 `
@@ -45,6 +47,9 @@ export default function StaffViewTopic ({ query }: Props): JSX.Element {
       </Box>
       <Box>
         <ChangeTopicBanner query={queryData.topic} />
+      </Box>
+      <Box>
+        <StaffViewTopicCategories query={queryData.topic} />
       </Box>
     </Stack>
   )

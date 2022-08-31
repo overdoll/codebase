@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<27223ab73527c79f3df81151a57d7016>>
- * @relayHash aa6e61df43e4461f9f1413f062b532f1
+ * @generated SignedSource<<23bac4b5c12980d0c8d1afdd7ed1d71c>>
+ * @relayHash 310c4e3e6eb20531cc8d5fbc4788a4de
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID aa6e61df43e4461f9f1413f062b532f1
+// @relayRequestID 310c4e3e6eb20531cc8d5fbc4788a4de
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -145,13 +145,6 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "type",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
                         "name": "processed",
                         "storageKey": null
                       },
@@ -177,6 +170,7 @@ return {
                         "name": "progress",
                         "plural": false,
                         "selections": [
+                          (v3/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -190,9 +184,15 @@ return {
                             "kind": "ScalarField",
                             "name": "state",
                             "storageKey": null
-                          },
-                          (v3/*: any*/)
+                          }
                         ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "type",
                         "storageKey": null
                       },
                       (v3/*: any*/),
@@ -306,7 +306,7 @@ return {
     ]
   },
   "params": {
-    "id": "aa6e61df43e4461f9f1413f062b532f1",
+    "id": "310c4e3e6eb20531cc8d5fbc4788a4de",
     "metadata": {},
     "name": "StaffSearchCategoriesQuery",
     "operationKind": "query",

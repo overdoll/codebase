@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d0a7c6992defc0426562e07272ba6000>>
+ * @generated SignedSource<<bb0731f21e1e7c69a9ff34cf75d7bcf2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -50,6 +50,10 @@ return {
       "defaultValue": 5,
       "kind": "LocalArgument",
       "name": "first"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "seed"
     },
     {
       "kind": "RootArgument",
@@ -104,6 +108,11 @@ return {
           "kind": "Variable",
           "name": "characterSlugs",
           "variableName": "characterSlugs"
+        },
+        {
+          "kind": "Variable",
+          "name": "seed",
+          "variableName": "seed"
         },
         {
           "kind": "Variable",
@@ -213,6 +222,6 @@ return {
 };
 })();
 
-(node as any).hash = "ccbc824131d6a936238e11df475e1200";
+(node as any).hash = "33f62396bdd129602a2e946f6d1e4c5e";
 
 export default node;

@@ -119,16 +119,16 @@ type Account implements Node {
 
   """
   Details belonging to this account.
-  
+
   If null, account details have not been filled out yet.
-  
+
   Account details are required to be filled out before setting a payout method.
   """
   details: AccountDetails
 
   """
   Emails for account (multiple emails per account)
-  
+
   Only queryable if the currently logged-in account belongs to the requested account
   """
   emails(
@@ -169,14 +169,14 @@ type Account implements Node {
 
   """
   Whether or not this account has at least 1 active or cancelled club supporter subscription.
-  
+
   This should be false in order to delete the account.
   """
   hasActiveOrCancelledAccountClubSupporterSubscriptions: Boolean!
 
   """
   Whether or not this club has non-terminated clubs.
-  
+
   Cannot delete account if this is true.
   """
   hasNonTerminatedClubs: Boolean!
@@ -189,7 +189,7 @@ type Account implements Node {
 
   """
   Whether or not this account is deleted.
-  
+
   When an account is deleted, the username, email and any other data is blank.
   """
   isDeleted: Boolean!
@@ -199,7 +199,7 @@ type Account implements Node {
 
   """
   Whether or not this account is secure.
-  
+
   At the moment, an account is secure once they have two factor authentication enabled. This may include future conditions.
   """
   isSecure: Boolean!
@@ -229,7 +229,7 @@ type Account implements Node {
 
   """
   Moderator settings and status for this account
-  
+
   Viewable by the currently authenticated account or staff+
   """
   moderatorSettings: ModeratorSettings!
@@ -247,7 +247,7 @@ type Account implements Node {
 
   """
   Post Audit Logs linked to this account
-  
+
   Viewable by either the currently logged-in account or staff+
   """
   postAuditLogs(
@@ -336,7 +336,7 @@ type Account implements Node {
 
   """
   MFA Recovery codes belonging to this account
-  
+
   Only queryable if the currently logged-in account belongs to the requested account
   """
   recoveryCodes: [AccountMultiFactorRecoveryCode!]!
@@ -368,7 +368,7 @@ type Account implements Node {
 
   """
   Sessions linked to this account
-  
+
   Only queryable if the currently logged-in account belongs to the requested account
   """
   sessions(
@@ -633,7 +633,7 @@ type AccountDetails {
 type AccountEmail implements Node {
   """
   The account that this email belongs to
-  
+
   May be null because unconfirmed emails are not yet actually attached to the account
   """
   account: Account
@@ -840,7 +840,7 @@ If a transaction is voided, it turns into a VOID transaction.
 type AccountTransaction implements Node {
   """
   The amount voided.
-  
+
   A positive integer representing the currency in the smallest currency unit.
   """
   amount: Int!
@@ -864,9 +864,9 @@ type AccountTransaction implements Node {
 
   """
   The events for this transaction.
-  
+
   If the transaction was refunded, an event will show up with the refund amount.
-  
+
   If the transaction was charged back, an event will show up with the chargeback amount.
   """
   events: [AccountTransactionEvent!]!
@@ -956,7 +956,7 @@ input AddCategoryAlternativeTitleInput {
 
   """
   The title to add.
-  
+
   Validation: Max 25 characters.
   """
   title: String!
@@ -975,7 +975,7 @@ input AddClubSlugAliasInput {
 
   """
   The chosen slug for the club.
-  
+
   Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
   """
   slug: String!
@@ -1145,7 +1145,7 @@ type Audience implements Node {
 
   """
   A title for this audience.
-  
+
   Optionally pass a locale to display it in a specific language. English by default.
   """
   title(locale: BCP47): String!
@@ -1474,7 +1474,7 @@ type Category implements Node {
 
   """
   A title for this category.
-  
+
   Optionally pass a locale to display it in a specific language. English by default.
   """
   title(locale: BCP47): String!
@@ -1643,9 +1643,9 @@ type CCBillTransactionDetails {
 
   """
   If this transaction was approved, poll this field to until this is not null anymore.
-  
+
   This signifies that the transaction has processed successfully (on our end),
-  
+
   and the supporter benefits are now available.
   """
   linkedAccountClubSupporterSubscription: AccountClubSupporterSubscription
@@ -1663,7 +1663,7 @@ type Character implements Node {
 
   """
   A name for this character.
-  
+
   Optionally pass a locale to display it in a specific language. English by default.
   """
   name(locale: BCP47): String!
@@ -1760,9 +1760,9 @@ type Club implements Node {
 
   """
   Whether creating supporter-only posts is enabled or disabled for this club.
-  
+
   When this is true, a club owner cannot mark individual content in a post as "supporter-only".
-  
+
   Additionally, if a club owner attempts to submit a post with supporter-only
   content already present, they will not be able to.
   """
@@ -1811,7 +1811,7 @@ type Club implements Node {
 
   """
   Infraction history for this club
-  
+
   Viewable by the currently authenticated account or staff+
   """
   infractionHistory(
@@ -1864,9 +1864,9 @@ type Club implements Node {
 
   """
   When the owner of the club needs to post the next supporter post.
-  
+
   Usually 30 days after the next post.
-  
+
   Nil if no supporter-only posts have been created.
   """
   nextSupporterPostTime: Time
@@ -2008,7 +2008,7 @@ type Club implements Node {
 
   """
   Club Suspension Logs.
-  
+
   Can see who a club was suspended by, the reason and who unsuspended a particular club.
   """
   suspensionLogs(
@@ -2120,7 +2120,7 @@ enum ClubInfractionHistorySource {
 type ClubIssuedSuspensionLog {
   """
   The account that created this suspension.
-  
+
   If nil, the suspension was created automatically
   """
   account: Account
@@ -2144,10 +2144,10 @@ type ClubMember implements Node {
 
   """
   The subscription linked to this club member.
-  
+
   Note that an account can have multiple subscriptions for the same club, due to
   the fact that we keep expired subscriptions.
-  
+
   So this will just grab the most recent active subscription for this club.
   """
   clubSupporterSubscription: AccountClubSupporterSubscription
@@ -2262,7 +2262,7 @@ enum ClubPaymentStatus {
 
   """
   A payment is ready to be picked up as part of a payout.
-  
+
   Note that a payment can be picked up by multiple payouts, it will only transition to the complete state once
   the minimum threshold for the payout has been reached. If the payout threshold
   isn't reached, the payment will be picked up
@@ -2537,7 +2537,7 @@ type Country {
 
   """
   Payout methods supported for this country.
-  
+
   If empty, this country does not support any sort of payout.
   """
   payoutMethods: [PayoutMethod!]!
@@ -2550,7 +2550,7 @@ input CreateAccountWithAuthenticationTokenInput {
 
   """
   The username to create the account with.
-  
+
   Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
   """
   username: String!
@@ -2579,7 +2579,7 @@ enum CreateAccountWithAuthenticationTokenValidation {
 input CreateAudienceInput {
   """
   The chosen slug for the audience.
-  
+
   Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
   """
   slug: String!
@@ -2589,7 +2589,7 @@ input CreateAudienceInput {
 
   """
   The chosen title for the audience.
-  
+
   Validation: Max 25 characters.
   """
   title: String!
@@ -2625,14 +2625,14 @@ type CreateCancellationReasonPayload {
 input CreateCategoryInput {
   """
   The chosen slug for the category.
-  
+
   Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
   """
   slug: String!
 
   """
   The chosen title for the category.
-  
+
   Validation: Max 25 characters.
   """
   title: String!
@@ -2662,7 +2662,7 @@ input CreateCharacterInput {
 
   """
   The chosen name for the character.
-  
+
   Validation: Max 25 characters.
   """
   name: String!
@@ -2672,7 +2672,7 @@ input CreateCharacterInput {
 
   """
   The chosen slug for the character.
-  
+
   Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
   """
   slug: String!
@@ -2696,14 +2696,14 @@ enum CreateCharacterValidation {
 input CreateClubInput {
   """
   The chosen name for the club.
-  
+
   Validation: Max 25 characters.
   """
   name: String!
 
   """
   The chosen slug for the club.
-  
+
   Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
   """
   slug: String!
@@ -2730,7 +2730,7 @@ input CreateGameSessionInput {
 
   """
   Optionally pass a seed. If a seed is not passed in, one will be automatically generated.
-  
+
   Validation: only alphanumeric characters, no spaces, and max 25 characters.
   """
   seed: String
@@ -2758,7 +2758,7 @@ type CreatePostPayload {
 input CreateRuleInput {
   """
   The description.
-  
+
   Validation: Max 25 characters. Markdown allowed.
   """
   description: String!
@@ -2768,7 +2768,7 @@ input CreateRuleInput {
 
   """
   The title.
-  
+
   Validation: Max 25 characters.
   """
   title: String!
@@ -2784,14 +2784,14 @@ type CreateRulePayload {
 input CreateSeriesInput {
   """
   The chosen slug for the series.
-  
+
   Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
   """
   slug: String!
 
   """
   The chosen title for the series.
-  
+
   Validation: Max 25 characters.
   """
   title: String!
@@ -2815,21 +2815,21 @@ enum CreateSeriesValidation {
 input CreateTopicInput {
   """
   The chosen description for the topic.
-  
+
   Validation: Markdown allowed.
   """
   description: String!
 
   """
   The chosen slug for the topic.
-  
+
   Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
   """
   slug: String!
 
   """
   The chosen title for the topic.
-  
+
   Validation: Max 25 characters.
   """
   title: String!
@@ -3059,7 +3059,7 @@ type DisableClubSupporterOnlyPostsPayload {
 input EnableClubCharactersInput {
   """
   The amount of characters the club will be able to create.
-  
+
   Validation: Limit to 200.
   """
   charactersLimit: Int!
@@ -3604,7 +3604,7 @@ type Mutation {
 
   """
   Add moderator to posts queue
-  
+
   Moderator+ only
   """
   addModeratorToPostQueue(input: AddModeratorToPostQueueInput!): AddModeratorToPostQueuePayload
@@ -3614,7 +3614,7 @@ type Mutation {
 
   """
   Approve a specific post.
-  
+
   Moderator+ only
   """
   approvePost(input: ApprovePostInput!): ApprovePostPayload
@@ -3642,14 +3642,14 @@ type Mutation {
 
   """
   Cancel all active subscriptions for a club.
-  
+
   Staff+ only.
   """
   cancelActiveSupporterSubscriptionsForClub(input: CancelActiveSupporterSubscriptionsForClubInput!): CancelActiveSupporterSubscriptionsForClubPayload
 
   """
   Cancel a specific club payout.
-  
+
   Staff+ only.
   """
   cancelClubPayout(input: CancelClubPayoutInput!): CancelClubPayoutPayload
@@ -3671,9 +3671,9 @@ type Mutation {
 
   """
   Create a new character.
-  
+
   Must either enter a seriesId for a series character or a clubId for a club character.
-  
+
   If entering a SeriesId, the authorization is Staff+ only.
   If entering a ClubId, you must be the owner of the club.
   """
@@ -3699,9 +3699,9 @@ type Mutation {
 
   """
   Delete an account.
-  
+
   The deletion will be scheduled and deleted after 30 days.
-  
+
   During this time, the account will be locked. (isLocked will not be true, however, "deleting" will be available).
   """
   deleteAccount(input: DeleteAccountInput!): DeleteAccountPayload
@@ -3713,7 +3713,7 @@ type Mutation {
 
   """
   Delete the current payout method linked to the logged-in account.
-  
+
   If no payout method is set, payouts won't happen.
   """
   deleteAccountPayoutMethod(input: DeleteAccountPayoutMethodInput!): DeleteAccountPayoutMethodPayload
@@ -3728,56 +3728,56 @@ type Mutation {
 
   """
   Disable account multi factor
-  
+
   Will delete all multi factor settings (if TOTP is set up, etc...)
-  
+
   Priv. users cannot disable multi factor
   """
   disableAccountMultiFactor: DisableAccountMultiFactorPayload
 
   """
   Disable club characters.
-  
+
   Will disable character creation for the club.
-  
+
   Staff+ only.
   """
   disableClubCharacters(input: DisableClubCharactersInput!): DisableClubCharactersPayload
 
   """
   Disable club supporter-only posts.
-  
+
   When this mutation is ran, the club will no longer be able to create
   supporter-only posts, and their supporter timer will reset, as well as
   removing the ability to collect subscriptions.
-  
+
   In order to be able to collect subscriptions again, the
   enableClubSupporterOnlyPosts mutation should be ran, and the club owner should
   create a post with supporter-only content.
-  
+
   Staff+ only.
   """
   disableClubSupporterOnlyPosts(input: DisableClubSupporterOnlyPostsInput!): DisableClubSupporterOnlyPostsPayload
 
   """
   Enable club characters.
-  
+
   Will enable club characters. Requires a limit to be set as well.
-  
+
   Staff+ only.
   """
   enableClubCharacters(input: EnableClubCharactersInput!): EnableClubCharactersPayload
 
   """
   Enable club supporter-only posts, if previously disabled.
-  
+
   Staff+ only.
   """
   enableClubSupporterOnlyPosts(input: EnableClubSupporterOnlyPostsInput!): EnableClubSupporterOnlyPostsPayload
 
   """
   Enroll into TOTP.
-  
+
   Must have called "generateAccountMultiFactorTOTP" first before enrolling, since this will
   generate a valid secret
   """
@@ -3785,7 +3785,7 @@ type Mutation {
 
   """
   Extend an account club supporter subscription for an X amount of days, so basically delay their billing date for x days.
-  
+
   Staff+ only.
   """
   extendAccountClubSupporterSubscription(input: ExtendAccountClubSupporterSubscriptionInput!): ExtendAccountClubSupporterSubscriptionPayload
@@ -3811,14 +3811,14 @@ type Mutation {
 
   """
   Generate a refund amount for a transaction.
-  
+
   Staff+ only.
   """
   generateRefundAmountForAccountTransaction(input: GenerateRefundAmountForAccountTransactionInput!): GenerateRefundAmountForAccountTransactionPayload
 
   """
   Grant account access with authentication token
-  
+
   Should be used if the token does not require a multi-factor authentication step, and the token has to be
   verified first
   """
@@ -3826,21 +3826,21 @@ type Mutation {
 
   """
   Grant account access using an authentication token and a multi factor option
-  
+
   Set "recoveryCode" when authenticating with a recovery code
   """
   grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload
 
   """
   Grant account access using an authentication token and a multi factor option
-  
+
   Set "code" when authenticating with a TOTP code
   """
   grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload
 
   """
   Grant authentication token
-  
+
   Authentication token can be used to login into a specific account, provided the token's value is first redeemed
   with the query
   """
@@ -3848,10 +3848,10 @@ type Mutation {
 
   """
   Initiate a club payout for the specific club.
-  
+
   Note that only 1 payout can be created at a time, so this call will fail if
   there is a payout either "in progress" or "queued".
-  
+
   Staff+ only.
   """
   initiateClubPayout(input: InitiateClubPayoutInput!): InitiateClubPayoutPayload
@@ -3864,7 +3864,7 @@ type Mutation {
 
   """
   Leave the club.
-  
+
   If you are the owner of the club, you cannot leave the club.
   """
   leaveClub(input: LeaveClubInput!): LeaveClubPayload
@@ -3882,14 +3882,14 @@ type Mutation {
 
   """
   Issue a refund on a transaction.
-  
+
   Staff+ only.
   """
   refundAccountTransaction(input: RefundAccountTransactionInput!): RefundAccountTransactionPayload
 
   """
   Reject a specific post
-  
+
   Moderator+ only
   """
   rejectPost(input: RejectPostInput!): RejectPostPayload
@@ -3899,7 +3899,7 @@ type Mutation {
 
   """
   In case of a false infraction, you can remove it from the club's history.
-  
+
   Staff+ only.
   """
   removeClubInfractionHistory(input: RemoveClubInfractionHistoryInput!): RemoveClubInfractionHistoryPayload
@@ -3909,14 +3909,14 @@ type Mutation {
 
   """
   Remove moderator from posts queue
-  
+
   Moderator+ only
   """
   removeModeratorFromPostQueue(input: RemoveModeratorFromPostQueueInput!): RemoveModeratorFromPostQueuePayload
 
   """
   Remove a specific post, after a post has already been moderated
-  
+
   Staff+ only
   """
   removePost(input: RemovePostInput!): RemovePostPayload
@@ -3929,7 +3929,7 @@ type Mutation {
 
   """
   Retry a specific club payout if it's failed.
-  
+
   Staff+ only.
   """
   retryClubPayout(input: RetryClubPayoutInput!): RetryClubPayoutPayload
@@ -3951,7 +3951,7 @@ type Mutation {
 
   """
   Revoke authentication token
-  
+
   Creating accounts and completing authentication flows will not be possible once it's revoked
   """
   revokeAuthenticationToken(input: RevokeAuthenticationTokenInput!): RevokeAuthenticationTokenPayload
@@ -3969,23 +3969,23 @@ type Mutation {
 
   """
   Suspend the club.
-  
+
   Staff+ only.
   """
   suspendClub(input: SuspendClubInput!): SuspendClubPayload
 
   """
   Terminate the club.
-  
+
   Terminating a club will remove it from public visibility. Subscriptions will not be cancelled.
-  
+
   Staff+ only.
   """
   terminateClub(input: TerminateClubInput!): TerminateClubPayload
 
   """
   Transfer club ownership from one account to another.
-  
+
   Staff+ only.
   """
   transferClubOwnership(input: TransferClubOwnershipInput!): TransferClubOwnershipPayload
@@ -3995,16 +3995,16 @@ type Mutation {
 
   """
   Un-Suspend the club. Suspension must be expired.
-  
+
   Staff+ may un-suspend even if suspension hasn't expired yet.
   """
   unSuspendClub(input: UnSuspendClubInput!): UnSuspendClubPayload
 
   """
   Un-Terminate the club.
-  
+
   Un-terminating will allow the club to be viewed publicly again, but all subscriptions will remain cancelled.
-  
+
   Staff+ only.
   """
   unTerminateClub(input: UnTerminateClubInput!): UnTerminateClubPayload
@@ -4014,7 +4014,7 @@ type Mutation {
 
   """
   Unlock Account - account may be locked for any reason. Use this endpoint to unlock the account.
-  
+
   Can be unlocked by staff+ regardless if time is past.
   """
   unlockAccount(input: UnlockAccountInput!): UnlockAccountPayload
@@ -4024,14 +4024,14 @@ type Mutation {
 
   """
   Update the account email status to primary
-  
+
   Cannot update if the email is not confirmed
   """
   updateAccountEmailStatusToPrimary(input: UpdateAccountEmailStatusToPrimaryInput!): UpdateAccountEmailStatusToPrimaryPayload
 
   """
   Update the account username
-  
+
   Will retain the old username
   """
   updateAccountUsername(input: UpdateAccountUsernameInput!): UpdateAccountUsernamePayload
@@ -4068,14 +4068,14 @@ type Mutation {
 
   """
   Update character thumbnail
-  
+
   Note that this is Staff+ only for now - even if the character is a club character.
   """
   updateCharacterThumbnail(input: UpdateCharacterThumbnailInput!): UpdateCharacterThumbnailPayload
 
   """
   Set the amount of characters that a club can create.
-  
+
   Staff+ only.
   """
   updateClubCharactersLimit(input: UpdateClubCharactersLimitInput!): UpdateClubCharactersLimitPayload
@@ -4085,20 +4085,20 @@ type Mutation {
 
   """
   Update a payout's deposit date.
-  
+
   Can be used to either make the payout happen earlier or schedule it for the future.
-  
+
   Setting the time to be before the current time will make the payout happen instantly.
-  
+
   Staff+ only.
   """
   updateClubPayoutDepositDate(input: UpdateClubPayoutDepositDateInput!): UpdateClubPayoutDepositDatePayload
 
   """
   Update the club's platform fee.
-  
+
   Cannot be less than 20 or more than 30 percent.
-  
+
   Staff+ only.
   """
   updateClubPlatformFee(input: UpdateClubPlatformFeeInput!): UpdateClubPlatformFeePayload
@@ -4126,9 +4126,9 @@ type Mutation {
 
   """
   Update a post content - whether or not it is supporter only.
-  
+
   If updating to true, the club must be able to post supporter-only content through "canCreateSupporterOnlyPosts"
-  
+
   Can update to false even if "canCreateSupporterOnlyPosts" is false.
   """
   updatePostContentIsSupporterOnly(input: UpdatePostContentIsSupporterOnlyInput!): UpdatePostContentIsSupporterOnlyPayload
@@ -4245,7 +4245,7 @@ type Post implements Node {
 
   """
   A description for this post.
-  
+
   Optionally pass a locale to display it in a specific language. English by default.
   """
   description(locale: BCP47): String!
@@ -4386,12 +4386,12 @@ type PostContent {
 
   """
   The resource for the supporter-only content.
-  
+
   If "viewerCanViewSupporterOnlyContent" is false, then this field will contain
   the original resource, with the URLs omitted. This allows you to use the
   details, such as the type (since the resource in the "resource" box will
   always be an image) or see the duration of the video.
-  
+
   This field will be nil if "viewerCanViewSupporterOnlyContent" is true
   """
   supporterOnlyResource: Resource
@@ -4500,7 +4500,7 @@ enum PostState {
 type Price {
   """
   The amount.
-  
+
   A positive integer representing the currency in the smallest currency unit.
   """
   amount: Int!
@@ -4629,7 +4629,7 @@ type Query {
 
   """
   Grab more details about a ccbill subscription, passing in the ID.
-  
+
   Staff+ only.
   """
   ccbillSubscriptionDetails(ccbillSubscriptionId: String!): CCBillSubscriptionDetails
@@ -4637,7 +4637,7 @@ type Query {
   """
   After a successful transaction (through CCBill FlexForms or becomeClubSupporterWithAccountSavedPaymentMethod),
   use the returned token in this query to grab the current state of the transaction.
-  
+
   It will tell you if the transaction was approved or denied, as well as having
   the ability to poll until a subscription is finalized.
   """
@@ -4671,16 +4671,16 @@ type Query {
 
     """
     Whether or not to show characters that were created by a club.
-    
+
     By default, shows all characters.
-    
+
     Otherwise, if true, shows all characters that were created by a club. If false, shows only series characters.
     """
     clubCharacters: Boolean
 
     """
     When searching for a character by slug, you need to include the club' slug since slugs are unique-per-series.
-    
+
     Only one slug is allowed for now since you don't want inaccurate results.
     """
     clubSlug: String
@@ -4699,7 +4699,7 @@ type Query {
 
     """
     When searching for a character by slug, you need to include the series' slug since slugs are unique-per-series.
-    
+
     Only one slug is allowed for now since you don't want inaccurate results.
     """
     seriesSlug: String
@@ -4747,18 +4747,18 @@ type Query {
 
     """
     Filter by all the clubs that are suspended.
-    
+
     By default, will show all clubs that are suspended and terminated.
-    
+
     False to show all clubs that are not suspended and True to show only clubs that are suspended.
     """
     suspended: Boolean
 
     """
     Filter by all the clubs that are terminated.
-    
+
     By default, will show all terminated clubs.
-    
+
     False to show all clubs that are not terminated and True to show only clubs that are terminated.
     """
     terminated: Boolean
@@ -4806,7 +4806,7 @@ type Query {
 
   """
   Get the status of a current game session using the reference of a game session.
-  
+
   Returns nil if the game session does not exist.
   """
   gameSessionStatus(
@@ -4816,7 +4816,7 @@ type Query {
 
   """
   List of all available languages
-  
+
   Should be used as a reference for back-end queries when requesting a specific
   language or adding a new language to a backend list
   """
@@ -5053,7 +5053,7 @@ type Query {
 
   """
   Search all topics.
-  
+
   Topics are sorted by the "weight" field. Higher weights are displayed at the top, in descending order.
   """
   topics(
@@ -5074,7 +5074,7 @@ type Query {
 
   """
   Get the status of the authentication token - whether or not it is redeemed, account status, etc..
-  
+
   Note: you can only view the authentication token if you're the originating
   device or you have entered a valid secret (not from same device)
   """
@@ -5091,7 +5091,7 @@ input RefundAccountTransactionInput {
 
   """
   The amount to refund.
-  
+
   A positive integer representing the currency in the smallest currency unit.
   """
   amount: Int!
@@ -5110,14 +5110,14 @@ type RefundAmount {
 
   """
   The maximum amount you can issue a refund for.
-  
+
   A positive integer representing the currency in the smallest currency unit.
   """
   maximumAmount: Int!
 
   """
   A prorated refund amount, based on the first date and last date of billing / billing duration.
-  
+
   A positive integer representing the currency in the smallest currency unit.
   """
   proratedAmount: Int!
@@ -5252,7 +5252,7 @@ We also identify the type of resource (image or video) to make it easy to distin
 type Resource {
   """
   Whether or not this resource failed to process.
-  
+
   A failure can happen if:
   - The supplied image is an unsupported format. This can happen if for example,
   someone submits a JPEG (unsupported) that was renamed to a PNG (supported)
@@ -5279,9 +5279,9 @@ type Resource {
 
   """
   This field identifies the progress for the resource.
-  
+
   If the resource is not yet processed, this will not be nil.
-  
+
   If we have some sort of state information available about the progress, this will not be nil.
   """
   progress: ResourceProgress
@@ -5473,7 +5473,7 @@ type Rule implements Node {
 
   """
   The description for this rule.
-  
+
   Optionally pass a locale to display it in a specific language. English by default.
   """
   description(locale: BCP47): String!
@@ -5494,7 +5494,7 @@ type Rule implements Node {
 
   """
   The title for this rule.
-  
+
   Optionally pass a locale to display it in a specific language. English by default.
   """
   title(locale: BCP47): String!
@@ -5613,7 +5613,7 @@ type Series implements Node {
 
   """
   A title for this series.
-  
+
   Optionally pass a locale to display it in a specific language. English by default.
   """
   title(locale: BCP47): String!
@@ -5760,7 +5760,7 @@ type Topic implements Node {
 
   """
   A description for this topic.
-  
+
   Optionally pass a locale to display it in a specific language. English by default.
   """
   description(locale: BCP47): String!
@@ -5781,7 +5781,7 @@ type Topic implements Node {
 
   """
   A title for this topic.
-  
+
   Optionally pass a locale to display it in a specific language. English by default.
   """
   title(locale: BCP47): String!
@@ -5994,7 +5994,7 @@ input UpdateAudienceTitleInput {
 
   """
   The title to update.
-  
+
   Validation: Max 25 characters.
   """
   title: String!
@@ -6064,7 +6064,7 @@ input UpdateCategoryTitleInput {
 
   """
   The title to update.
-  
+
   Validation: Max 25 characters.
   """
   title: String!
@@ -6098,14 +6098,14 @@ input UpdateCharacterNameInput {
 
   """
   The localization for this name.
-  
+
   Validation: Must be one of the languages from the languages query.
   """
   locale: BCP47!
 
   """
   The name to update.
-  
+
   Validation: Max 25 characters.
   """
   name: String!
@@ -6136,7 +6136,7 @@ type UpdateCharacterThumbnailPayload {
 input UpdateClubCharactersLimitInput {
   """
   The amount of characters the club will be able to create.
-  
+
   Validation: Limit to 200.
   """
   charactersLimit: Int!
@@ -6158,7 +6158,7 @@ input UpdateClubNameInput {
 
   """
   The chosen name for the club.
-  
+
   Validation: Max 25 characters.
   """
   name: String!
@@ -6348,7 +6348,7 @@ type UpdatePostContentOrderPayload {
 input UpdatePostDescriptionInput {
   """
   The description to update.
-  
+
   Validation: Max 280 characters. No links allowed.
   """
   description: String!
@@ -6358,7 +6358,7 @@ input UpdatePostDescriptionInput {
 
   """
   The localization for this description.
-  
+
   Locale must be one from the languages query, or else the locale won't be accepted.
   """
   locale: BCP47!
@@ -6389,7 +6389,7 @@ type UpdateRuleDeprecatedPayload {
 input UpdateRuleDescriptionInput {
   """
   The description to update.
-  
+
   Validation: Max 25 characters. Markdown allowed.
   """
   description: String!
@@ -6432,7 +6432,7 @@ input UpdateRuleTitleInput {
 
   """
   The title to update.
-  
+
   Validation: Max 25 characters.
   """
   title: String!
@@ -6466,14 +6466,14 @@ input UpdateSeriesTitleInput {
 
   """
   The localization for this title.
-  
+
   Locale must be one from the languages query, or else the locale won't be accepted.
   """
   locale: BCP47!
 
   """
   The title to update.
-  
+
   Validation: Max 25 characters.
   """
   title: String!
@@ -6504,7 +6504,7 @@ type UpdateTopicBannerPayload {
 input UpdateTopicDescriptionInput {
   """
   The description to update.
-  
+
   Validation: Markdown allowed.
   """
   description: String!
@@ -6532,7 +6532,7 @@ input UpdateTopicTitleInput {
 
   """
   The title to update.
-  
+
   Validation: Max 25 characters.
   """
   title: String!

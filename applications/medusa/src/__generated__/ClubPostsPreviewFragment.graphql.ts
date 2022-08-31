@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bae9283ba57997e79797f92a626d3603>>
+ * @generated SignedSource<<9082b9a1a8a81d57e6cd5e7f402c247e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -39,17 +39,13 @@ return {
       "name": "after"
     },
     {
-      "defaultValue": 10,
+      "defaultValue": 5,
       "kind": "LocalArgument",
       "name": "first"
     },
     {
       "kind": "RootArgument",
-      "name": "sort"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "supporter"
+      "name": "seed"
     }
   ],
   "kind": "Fragment",
@@ -85,13 +81,13 @@ return {
       "args": [
         {
           "kind": "Variable",
-          "name": "sortBy",
-          "variableName": "sort"
+          "name": "seed",
+          "variableName": "seed"
         },
         {
-          "kind": "Variable",
-          "name": "supporterOnlyStatus",
-          "variableName": "supporter"
+          "kind": "Literal",
+          "name": "sortBy",
+          "value": "ALGORITHM"
         }
       ],
       "concreteType": "PostConnection",
@@ -186,6 +182,6 @@ return {
 };
 })();
 
-(node as any).hash = "d82e8125979c0c8656ff38d842d305d8";
+(node as any).hash = "3f26a3c3fb3c0ac2cdd4d736aa6ef496";
 
 export default node;

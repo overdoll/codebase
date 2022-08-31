@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6c1ac0d625c14af1aca3d709fac10e75>>
- * @relayHash bb36f39649164608aa162e81c2e1ab3a
+ * @generated SignedSource<<85b19b3ba72807c733047b8d5968c5a5>>
+ * @relayHash b66a5d56189897c6cd091c82cff01c80
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID bb36f39649164608aa162e81c2e1ab3a
+// @relayRequestID b66a5d56189897c6cd091c82cff01c80
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -211,6 +211,13 @@ return {
                 "name": "avatar",
                 "plural": false,
                 "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "preview",
+                    "storageKey": null
+                  },
                   (v4/*: any*/),
                   {
                     "alias": null,
@@ -243,13 +250,6 @@ return {
                     "args": null,
                     "kind": "ScalarField",
                     "name": "height",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "preview",
                     "storageKey": null
                   },
                   {
@@ -293,6 +293,7 @@ return {
                     "name": "progress",
                     "plural": false,
                     "selections": [
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -306,8 +307,7 @@ return {
                         "kind": "ScalarField",
                         "name": "state",
                         "storageKey": null
-                      },
-                      (v4/*: any*/)
+                      }
                     ],
                     "storageKey": null
                   }
@@ -323,7 +323,7 @@ return {
     ]
   },
   "params": {
-    "id": "bb36f39649164608aa162e81c2e1ab3a",
+    "id": "b66a5d56189897c6cd091c82cff01c80",
     "metadata": {},
     "name": "RegisterMutation",
     "operationKind": "mutation",

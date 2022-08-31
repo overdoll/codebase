@@ -6,13 +6,13 @@ import {
   PostGalleryPublicDetailedViewerFragment$key
 } from '@//:artifacts/PostGalleryPublicDetailedViewerFragment.graphql'
 import PostSupporterContent from '../PostSupporterContent/PostSupporterContent'
-import PostMedia from '../../PostPlayback/PostMedia/PostMedia'
 import PostSlideIndex from '../../PostInteraction/PostSlideIndex/PostSlideIndex'
 import { NumberParam, useQueryParam } from 'use-query-params'
 import { useState } from 'react'
 import SwiperType from 'swiper'
 import PostSlideBackground from '../PostSlideBackground/PostSlideBackground'
 import { POST_SWIPER_PROPS } from '../../../constants'
+import PostDetailedMedia from '../../PostPlayback/PostDetailedMedia/PostDetailedMedia'
 
 interface Props {
   postQuery: PostGalleryPublicDetailedFragment$key
@@ -26,7 +26,7 @@ const PostFragment = graphql`
     }
     content {
       resource {
-        ...PostMediaFragment
+        ...PostDetailedMediaFragment
       }
       ...PostSupporterContentFragment
       ...PostSlideBackgroundFragment
@@ -86,11 +86,7 @@ export default function PostGalleryPublicDetailed ({
                   clubQuery={postData.club}
                   query={item}
                 >
-                  <PostMedia
-                    controls={{
-                      canSeek: true,
-                      canFullscreen: true
-                    }}
+                  <PostDetailedMedia
                     query={item.resource}
                   />
                 </PostSupporterContent>
@@ -98,7 +94,7 @@ export default function PostGalleryPublicDetailed ({
             </PostSlideBackground>
           </SwiperSlide>)}
       </Swiper>
-      {swiper != null && <PostSlideIndex swiper={swiper} query={postData} />}
+      <PostSlideIndex swiper={swiper} query={postData} />
     </Box>
   )
 }

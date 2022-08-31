@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a16a0eafefaa8d31c3f8ec5d2394db05>>
+ * @generated SignedSource<<dc713137c3c46159fe53d485a17617b5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,9 +15,7 @@ export type PostSlideBackgroundFragment$data = {
   readonly resource: {
     readonly preview: string;
     readonly type: ResourceType;
-    readonly videoThumbnail: {
-      readonly url: string;
-    } | null;
+    readonly " $fragmentSpreads": FragmentRefs<"VideoBackgroundFragment">;
   };
   readonly " $fragmentType": "PostSlideBackgroundFragment";
 };
@@ -57,22 +55,9 @@ const node: ReaderFragment = {
             "storageKey": null
           },
           {
-            "alias": null,
             "args": null,
-            "concreteType": "ResourceUrl",
-            "kind": "LinkedField",
-            "name": "videoThumbnail",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "url",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
+            "kind": "FragmentSpread",
+            "name": "VideoBackgroundFragment"
           }
         ],
         "storageKey": null
@@ -85,6 +70,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "399957d9093960740f66302b3485e6ad";
+(node as any).hash = "33a2b9c36d9d851cdc09b6ff93ed847b";
 
 export default node;

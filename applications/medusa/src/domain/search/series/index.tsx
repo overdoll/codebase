@@ -1,6 +1,7 @@
 import RootSearchSeries from './RootSearchSeries/RootSearchSeries'
 import SearchSeriesQuery from '@//:artifacts/SearchSeriesQuery.graphql'
 import decodeSearchArguments from '../../../common/components/PageHeader/SearchButton/support/decodeSearchArguments'
+import getPostSeed from '@//:modules/content/Posts/support/getPostSeed'
 
 RootSearchSeries.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)
@@ -19,7 +20,8 @@ RootSearchSeries.getRelayPreloadProps = (ctx) => {
         params: SearchSeriesQuery.params,
         variables: {
           seriesSlug,
-          ...decodeSearchArguments(query)
+          ...decodeSearchArguments(query),
+          ...getPostSeed(ctx)
         },
         options: {
           fetchPolicy: 'store-or-network'

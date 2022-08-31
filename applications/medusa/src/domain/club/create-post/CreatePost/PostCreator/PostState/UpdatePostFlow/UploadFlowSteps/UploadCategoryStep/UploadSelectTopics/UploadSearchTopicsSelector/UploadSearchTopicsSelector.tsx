@@ -1,6 +1,6 @@
 import { usePaginationFragment } from 'react-relay'
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
-import { GridWrap, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
+import { GridWrap } from '@//:modules/content/ContentSelection'
 import type { UploadSearchTopicsSelectorQuery } from '@//:artifacts/UploadSearchTopicsSelectorQuery.graphql'
 import type { UploadSearchTopicsSelectorFragment$data } from '@//:artifacts/UploadSearchTopicsSelectorFragment.graphql'
 import { EmptyBoundary } from '@//:modules/content/Placeholder'
@@ -10,6 +10,8 @@ import ShortGridTile from '@//:modules/content/ContentSelection/ShortGridTile/Sh
 import TopicTileOverlay from '@//:modules/content/ContentSelection/TileOverlay/TopicTileOverlay/TopicTileOverlay'
 import { Choice, useChoice } from '@//:modules/content/HookedComponents/Choice'
 import UploadSearchTopicCategories from './UploadSearchTopicCategories/UploadSearchTopicCategories'
+import LoadMoreShortGridTile
+  from '@//:modules/content/ContentSelection/ShortGridTile/LoadMoreShortGridTile/LoadMoreShortGridTile'
 
 interface Props extends ComponentSearchArguments<any>, ComponentChoiceArguments<any> {
 }
@@ -27,7 +29,7 @@ const Query = graphql`
 const Fragment = graphql`
   fragment UploadSearchTopicsSelectorFragment on Query
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 13}
+    first: {type: Int, defaultValue: 100}
     after: {type: String},
   )
   @refetchable(queryName: "UploadSearchTopicsSelectorFragmentPaginationFragment" )
@@ -104,7 +106,7 @@ export default function UploadSearchTopicsSelector ({
           </ShortGridTile>
         )
         )}
-        <LoadMoreGridTile
+        <LoadMoreShortGridTile
           hasNext={hasNext}
           onLoadNext={() => loadNext(7)}
           isLoadingNext={isLoadingNext}

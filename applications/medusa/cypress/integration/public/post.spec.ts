@@ -29,7 +29,7 @@ describe('Post', () => {
   }
 
   const clickOnPostLikeButton = (): void => {
-    cy.get('button[aria-label="Like"]').first().should('be.visible').should('not.be.disabled').click({ force: true })
+    cy.get('button[aria-label="Save"]').first().should('be.visible').should('not.be.disabled').click({ force: true })
   }
 
   const clickonReportPostMenuItem = (): void => {
@@ -52,8 +52,8 @@ describe('Post', () => {
      */
     loginAndGotoPost()
     clickOnPostLikeButton()
-    cy.get('button[aria-label="Remove Like"]').first().should('not.be.disabled').click({ force: true })
-    cy.get('button[aria-label="Like"]').first().should('not.be.disabled')
+    cy.get('button[aria-label="Un-Save"]').first().should('not.be.disabled').click({ force: true })
+    cy.get('button[aria-label="Save"]').first().should('not.be.disabled')
 
     /**
      * Report post
@@ -84,7 +84,7 @@ describe('Post', () => {
      */
     gotoPost()
     clickOnPostLikeButton()
-    cy.url().should('include', '/join')
+    cy.findByText(/Save this post to your bookmarks/iu).should('be.visible')
 
     /**
      * Join from post
@@ -128,7 +128,7 @@ describe('Post', () => {
      */
     gotoPost()
     cy.findAllByText(club).first().should('not.be.disabled').click()
-    cy.findByText(club).should('be.visible')
+    cy.findByText(/Join this club to see/iu).should('be.visible')
 
     /**
      * Category

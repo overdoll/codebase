@@ -73,8 +73,20 @@ msgstr ""
 #~ msgid "Review"
 #~ msgstr ""
 
+#: src/domain/club/posts/RootClubPosts/ClubPosts/SubmittedPost/SubmittedPost.tsx:28
+msgid "SUBMITTED"
+msgstr ""
+
+#: src/domain/club/posts/RootClubPosts/RootClubPosts.tsx:100
+msgid "Submitted"
+msgstr ""
+
 #: src/domain/club/posts/RootClubPosts/ClubPosts/RemovedPost/RemovedPost.tsx:56
 msgid "This post was removed for failing to comply with the <0>Club Guidelines</0>."
+msgstr ""
+
+#: src/domain/club/posts/RootClubPosts/ClubPosts/SubmittedPost/SubmittedPost.tsx:42
+msgid "Your post is currently submitted. It will stay in this state until all of the content has been processed, after which it will move into a review stage."
 msgstr ""
 
 #: src/domain/club/posts/RootClubPosts/ClubPosts/ReviewPost/ReviewPost.tsx:44
