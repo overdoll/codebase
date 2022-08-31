@@ -20,3 +20,7 @@ msgstr ""
 #: src/domain/random/RootRandom/Random/Random.tsx:70
 msgid "Random Posts"
 msgstr ""
+
+#: src/domain/random/RootRandom/RootRandom.tsx:50
+msgid "Randomize!"
+msgstr ""

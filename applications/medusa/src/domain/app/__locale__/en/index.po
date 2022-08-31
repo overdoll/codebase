@@ -425,7 +425,7 @@ msgstr ""
 msgid "Please enter a 6-digit authentication code"
 msgstr ""
 
-#: src/modules/validation/ClubSlug.ts:35
+#: src/modules/validation/ClubSlug.ts:36
 msgid "Please enter a club link"
 msgstr ""
 
@@ -495,6 +495,10 @@ msgstr ""
 
 #: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:48
 msgid "Preferences"
+msgstr ""
+
+#: src/modules/content/Posts/components/PostData/PostGalleryStaffDetailed/PostGalleryStaffDetailed.tsx:68
+msgid "Preview is only available once content is processed. You may submit your post at this stage, and we will notify you if there are any issues."
 msgstr ""
 
 #: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:28
@@ -643,7 +647,7 @@ msgstr ""
 msgid "Skip"
 msgstr ""
 
-#: src/modules/validation/ClubSlug.ts:39
+#: src/modules/validation/ClubSlug.ts:40
 msgid "Sorry, this keyword is reserved and you cannot use it."
 msgstr ""
 
@@ -696,15 +700,19 @@ msgstr ""
 msgid "Tap"
 msgstr ""
 
-#: src/modules/validation/ClubSlug.ts:38
+#: src/modules/validation/ClubSlug.ts:39
 msgid "The club link can only contain numbers and letters."
 msgstr ""
 
 #: src/modules/validation/ClubSlug.ts:37
-msgid "The club link cannot exceed 15 characters"
+#~ msgid "The club link cannot exceed 15 characters"
+#~ msgstr ""
+
+#: src/modules/validation/ClubSlug.ts:38
+msgid "The club link cannot exceed 30 characters"
 msgstr ""
 
-#: src/modules/validation/ClubSlug.ts:36
+#: src/modules/validation/ClubSlug.ts:37
 msgid "The club link must be at least 3 characters"
 msgstr ""
 

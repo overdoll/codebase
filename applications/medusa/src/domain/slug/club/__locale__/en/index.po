@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/RootClubPostsPreview/RootClubPostsPreview.tsx:190
+#: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/RootClubPostsPreview/RootClubPostsPreview.tsx:158
 msgid "All Posts"
 msgstr ""
 
@@ -96,16 +96,16 @@ msgid "Error"
 msgstr ""
 
 #: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/RootClubPostsPreview/RootClubPostsPreview.tsx:161
-msgid "Exclusive"
-msgstr ""
+#~ msgid "Exclusive"
+#~ msgstr ""
 
 #: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/RootClubPostsPreview/RootClubPostsPreview.tsx:180
-msgid "Fresh"
-msgstr ""
+#~ msgid "Fresh"
+#~ msgstr ""
 
 #: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/RootClubPostsPreview/RootClubPostsPreview.tsx:171
-msgid "Hot"
-msgstr ""
+#~ msgid "Hot"
+#~ msgstr ""
 
 #: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:67
 msgid "How will you pay?"

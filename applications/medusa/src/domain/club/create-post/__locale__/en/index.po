@@ -247,10 +247,10 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:130
-msgid "Processing Content"
-msgstr ""
+#~ msgid "Processing Content"
+#~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:120
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:116
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:87
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:94
 msgid "Processing Failed"
@@ -434,7 +434,7 @@ msgstr ""
 msgid "There was an error saving the categories"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:101
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:97
 msgid "There was an error saving the characters"
 msgstr ""
 
@@ -529,6 +529,10 @@ msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/UploadFlowHeader.tsx:105
 msgid "Yes, exit"
+msgstr ""
+
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostState.tsx:94
+msgid "You are editing this post as a staff member"
 msgstr ""
 
 #: src/domain/club/create-post/CreatePost/ClubRestricted/ClubRestricted.tsx:34

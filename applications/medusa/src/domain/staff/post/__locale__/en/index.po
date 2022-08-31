@@ -33,6 +33,14 @@ msgstr ""
 msgid "Contributor"
 msgstr ""
 
+#: src/domain/staff/post/RootStaffPost/StaffPost/ModerationPostActions/ModerationPostActions.tsx:51
+msgid "Edit"
+msgstr ""
+
+#: src/domain/staff/post/RootStaffPost/StaffPost/ModerationPostActions/ModerationPostActions.tsx:67
+msgid "Edit Post"
+msgstr ""
+
 #: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:117
 msgid "Information"
 msgstr ""
@@ -54,11 +62,11 @@ msgstr ""
 msgid "Post is processing"
 msgstr ""
 
-#: src/domain/staff/post/RootStaffPost/StaffPost/ModerationPostActions/ModerationPostActions.tsx:27
+#: src/domain/staff/post/RootStaffPost/StaffPost/ModerationPostActions/ModerationPostActions.tsx:32
 msgid "Remove"
 msgstr ""
 
-#: src/domain/staff/post/RootStaffPost/StaffPost/ModerationPostActions/ModerationPostActions.tsx:34
+#: src/domain/staff/post/RootStaffPost/StaffPost/ModerationPostActions/ModerationPostActions.tsx:39
 msgid "Remove Post"
 msgstr ""
 
