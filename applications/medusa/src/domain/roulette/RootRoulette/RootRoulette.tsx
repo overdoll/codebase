@@ -11,6 +11,7 @@ import { Grid, GridItem, useUpdateEffect } from '@chakra-ui/react'
 import { SequenceProvider, useSequence, ValueResolver } from '@//:modules/content/HookedComponents/Sequence'
 import { SequenceResolver } from '@//:modules/content/HookedComponents/Sequence/types'
 import RouletteScreenLoading from './Roulette/RouletteScreenLoading/RouletteScreenLoading'
+import RouletteRichObject from '@//:common/rich-objects/roulette/RouletteRichObject/RouletteRichObject'
 
 interface Props {
   queryRefs: {
@@ -62,6 +63,7 @@ const RootRoulette: PageProps<Props> = (props: Props): JSX.Element => {
 
   return (
     <>
+      <RouletteRichObject />
       <PageWrapperGame>
         <SequenceProvider {...methods}>
           <QueryErrorBoundary loadQuery={loadRoulette}>
