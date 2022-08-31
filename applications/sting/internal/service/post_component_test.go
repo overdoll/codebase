@@ -809,6 +809,7 @@ func TestCreatePost_Reject_and_delete(t *testing.T) {
 	require.Equal(t, types.PostStateRejected, post.Post.State)
 
 	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.DeletePost, mock.Anything)
+	application.TemporalClient.On("CancelWorkflow", mock.Anything, "sting.SubmitPost_"+postId, mock.Anything).Return(nil, nil).Once()
 
 	var deletePost DeletePost
 

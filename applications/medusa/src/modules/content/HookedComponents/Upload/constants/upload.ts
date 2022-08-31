@@ -1,6 +1,6 @@
-import { FileJpeg, FileMp4, FilePng } from '@//:assets/logos'
+import { FileJpeg, FileMp4, FilePng, FileWebm } from '@//:assets/logos'
 
-export const UPLOAD_ALLOWED_FILE_TYPES = ['image/png', 'image/jpeg', 'video/mp4']
+export const UPLOAD_ALLOWED_FILE_TYPES = ['image/png', 'image/jpeg', 'video/mp4', 'video/webm']
 export const CLUB_ALLOWED_FILE_TYPES = ['image/png', 'image/jpeg']
 
 export const GENERIC_MAX_FILE_SIZE = 26214400
@@ -10,7 +10,8 @@ export const UPLOAD_MAX_FILE_SIZE = 1073741824
 export const FILE_ICONS = {
   'image/png': FilePng,
   'image/jpeg': FileJpeg,
-  'video/mp4': FileMp4
+  'video/mp4': FileMp4,
+  'video/webm': FileWebm
 }
 
 // TODO uppy doesn't expose the shouldTerminate variable to tus - custom plugin configuration is needed to pass in the parameter

@@ -625,7 +625,7 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	require.Equal(t, 1920, newVideoResource2.Width(), "should be the correct width")
 
 	// correct duration
-	require.Equal(t, 5700, newVideoResource2.VideoDuration(), "should be the correct duration")
+	require.Equal(t, 5782, newVideoResource2.VideoDuration(), "should be the correct duration")
 	require.Equal(t, "video/mp4", newVideoResource2.FullUrls()[0].MimeType(), "expected video to be mp4")
 	require.Equal(t, "image/jpeg", newVideoResource2.VideoThumbnailMimeType(), "expected video thumbnail to be jpg")
 	require.False(t, newVideoResource2.VideoNoAudio(), "expected video to have an audio track")

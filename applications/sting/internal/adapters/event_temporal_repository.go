@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/spf13/viper"
 	"go.temporal.io/api/enums/v1"
+	"go.temporal.io/api/serviceerror"
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/domain/club"
@@ -241,6 +242,20 @@ func (r EventTemporalRepository) DiscardPost(ctx context.Context, postId string)
 
 	if err != nil {
 		return errors.Wrap(err, "failed to execute discard post workflow")
+	}
+
+	return nil
+}
+
+func (r EventTemporalRepository) CancelPost(ctx context.Context, postId string) error {
+
+	if err := r.client.CancelWorkflow(ctx, "sting.SubmitPost_"+postId, ""); err != nil {
+		var notFound *serviceerror.NotFound
+		if errors.As(err, &notFound) {
+			return nil
+		}
+
+		return errors.Wrap(err, "failed to execute cancel workflow")
 	}
 
 	return nil

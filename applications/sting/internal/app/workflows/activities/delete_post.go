@@ -16,6 +16,10 @@ func (h *Activities) DeletePost(ctx context.Context, input DeletePostInput) erro
 		return err
 	}
 
+	if err := h.event.CancelPost(ctx, input.PostId); err != nil {
+		return err
+	}
+
 	// Delete all resources
 	// TODO: for now don't delete resources
 	//if err := h.loader.DeleteResources(ctx, input.PostId, pst.AllContentResourceIds()); err != nil {
