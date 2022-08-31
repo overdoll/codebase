@@ -39,7 +39,7 @@ export default function RouletteScreenGame (props: Props): JSX.Element {
 
   return (
     <GridItem overflow='hidden'>
-      <Flex w='100%' h='100%' position='relative'>
+      <Flex data-test-id='roulette-post' w='100%' h='100%' position='relative'>
         {data.gameState != null && <RouletteScreenClosed query={data} />}
         <RouletteScreenShuffle query={data} viewerQuery={viewerData} />
       </Flex>

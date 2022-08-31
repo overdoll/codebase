@@ -1,9 +1,10 @@
 import { generateUsernameAndEmail } from '../../support/generate'
 import { gotoNextStep, gotoPreviousStep, saveCurrentStep, skipCurrentStep } from '../../support/flow_builder'
-import { clickOnTile, searchForTerm, typeIntoPlaceholder } from '../../support/user_actions'
+import { clickOnTile, typeIntoPlaceholder } from '../../support/user_actions'
 
 const preferenceAudience = 'Standard Audience'
 const preferenceCategory = 'Alter'
+const preferenceTopic = 'Single Topic'
 
 const isOnStep = (step: string): void => {
   switch (step) {
@@ -66,7 +67,7 @@ describe('Curation Profile', () => {
      * Fill out category section
      */
     isOnStep('category')
-    searchForTerm('Search for a category', preferenceCategory)
+    clickOnTile(preferenceTopic)
     clickOnTile(preferenceCategory)
     saveCurrentStep()
     cy.findByRole('button', { name: /Go home/iu }).should('exist')

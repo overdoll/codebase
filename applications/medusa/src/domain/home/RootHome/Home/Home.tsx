@@ -9,6 +9,7 @@ import HomeLinkTile from '../HomeLinkTile/HomeLinkTile'
 import { FurryFox, HentaiSkirt, RandomizeDice, SearchBar, ThreeDRender } from '@//:assets/icons'
 import BrowsePostsPreview from './BrowsePostsPreview/BrowsePostsPreview'
 import HomeGameTile from '../HomeGameTile/HomeGameTile'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 
 interface Props {
   query: PreloadedQuery<HomeQuery>
@@ -60,6 +61,7 @@ export default function Home (props: Props): JSX.Element {
             <HomeLinkTile
               icon={ThreeDRender}
               href='/search/category/3d'
+              bg='https://static.dollycdn.net/banners/3d-thumbnail.jpeg'
               header={(
                 <Trans>
                   3D Porn
@@ -74,6 +76,7 @@ export default function Home (props: Props): JSX.Element {
             <HomeLinkTile
               icon={HentaiSkirt}
               href='/search/category/hentai'
+              bg='https://static.dollycdn.net/banners/hentai-thumbnail.jpeg'
               header={(
                 <Trans>
                   Hentai Porn
@@ -87,6 +90,7 @@ export default function Home (props: Props): JSX.Element {
             />
             <HomeLinkTile
               icon={FurryFox}
+              bg='https://static.dollycdn.net/banners/furry-thumbnail.jpeg'
               href='/search/category/furry'
               header={(
                 <Trans>
@@ -103,6 +107,7 @@ export default function Home (props: Props): JSX.Element {
         </Stack>
         <Stack spacing={8}>
           <HomeLinkTile
+            bg='https://static.dollycdn.net/banners/roulette-banner.jpg'
             icon={SearchBar}
             href='/search'
             header={(
@@ -118,6 +123,7 @@ export default function Home (props: Props): JSX.Element {
           />
           <HomeLinkTile
             icon={RandomizeDice}
+            bg='https://static.dollycdn.net/banners/roulette-banner.jpg'
             href='/random'
             header={(
               <Trans>
@@ -130,6 +136,11 @@ export default function Home (props: Props): JSX.Element {
               </Trans>
             )}
           />
+          <LinkButton size='md' variant='link' href='/artists'>
+            <Trans>
+              Are you an artist looking to post your content?
+            </Trans>
+          </LinkButton>
         </Stack>
         <Stack spacing={4}>
           <Heading color='gray.00' fontSize='2xl'>

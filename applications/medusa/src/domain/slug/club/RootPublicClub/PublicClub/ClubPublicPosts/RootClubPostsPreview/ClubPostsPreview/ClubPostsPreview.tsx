@@ -1,24 +1,17 @@
 import { graphql, usePaginationFragment } from 'react-relay'
 import type { ClubPostsPreviewViewerFragment$key } from '@//:artifacts/ClubPostsPreviewViewerFragment.graphql'
-import { useFragment, useLazyLoadQuery } from 'react-relay/hooks'
-import { ClubPostsPreviewQuery } from '@//:artifacts/ClubPostsPreviewQuery.graphql'
-import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
+import { useFragment } from 'react-relay/hooks'
+import { ClubPostsPreviewFragment$key } from '@//:artifacts/ClubPostsPreviewFragment.graphql'
 import { EmptyBoundary, EmptyPosts } from '@//:modules/content/Placeholder'
 import PostInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
 import FullClubPost from '../../../../../../posts/RootPublicClubPosts/PublicClubPosts/FullClubPost/FullClubPost'
+import type { PublicClubQuery } from '@//:artifacts/PublicClubQuery.graphql'
 
-interface Props extends ComponentSearchArguments<any> {
+interface Props {
+  clubQuery: ClubPostsPreviewFragment$key
   viewerQuery: ClubPostsPreviewViewerFragment$key | null
 }
-
-const Query = graphql`
-  query ClubPostsPreviewQuery($slug: String!, $sort: PostsSort!, $supporter: [SupporterOnlyStatus!], $seed: String) {
-    club (slug: $slug) @required(action: THROW) {
-      ...ClubPostsPreviewFragment
-    }
-  }
-`
 
 const Fragment = graphql`
   fragment ClubPostsPreviewFragment on Club
@@ -30,8 +23,7 @@ const Fragment = graphql`
     clubPosts: posts(
       first: $first,
       after: $after,
-      sortBy: $sort,
-      supporterOnlyStatus: $supporter,
+      sortBy: ALGORITHM,
       seed: $seed)
     @connection (key: "ClubPostsPreview_clubPosts") {
       edges {
@@ -50,24 +42,20 @@ const ViewerFragment = graphql`
   }
 `
 
-export default function ClubPostsPreview ({
-  searchArguments,
-  viewerQuery
-}: Props): JSX.Element {
-  const queryData = useLazyLoadQuery<ClubPostsPreviewQuery>(
-    Query,
-    searchArguments.variables,
-    searchArguments.options
-  )
+export default function ClubPostsPreview (props: Props): JSX.Element {
+  const {
+    clubQuery,
+    viewerQuery
+  } = props
 
   const {
     data,
     hasNext,
     loadNext,
     isLoadingNext
-  } = usePaginationFragment<ClubPostsPreviewQuery, any>(
+  } = usePaginationFragment<PublicClubQuery, any>(
     Fragment,
-    queryData.club
+    clubQuery
   )
 
   const viewerData = useFragment(ViewerFragment, viewerQuery)

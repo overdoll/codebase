@@ -16,7 +16,7 @@ const openSearch = (): void => {
 
 describe('Search', () => {
   it('search button', () => {
-    cy.visit('/')
+    cy.visit('/browse')
     openSearch()
 
     // test closing
@@ -33,7 +33,7 @@ describe('Search', () => {
     cy.findByText('Series').should('be.visible')
 
     // test clicking on a category
-    cy.visit('/')
+    cy.visit('/browse')
     openSearch()
     typeIntoPlaceholder(/Search for a club/, category1)
     cy.findByText('Search Results').should('be.visible')
@@ -43,7 +43,7 @@ describe('Search', () => {
     cy.findByText('Category').should('be.visible')
 
     // test clicking on a series
-    cy.visit('/')
+    cy.visit('/browse')
     openSearch()
     typeIntoPlaceholder(/Search for a club/, series2)
     cy.findByText('Search Results').should('be.visible')
@@ -51,7 +51,7 @@ describe('Search', () => {
     cy.findByText('Series').should('be.visible')
 
     // test search bar
-    cy.visit('/')
+    cy.visit('/browse')
     openSearch()
     typeIntoPlaceholder(/Search for a club/, 'Second Test Club')
     cy.findByText('Search Results').should('be.visible')
@@ -59,7 +59,7 @@ describe('Search', () => {
     cy.url().should('contain', '/SecondTestClub')
 
     // test search bar no results
-    cy.visit('/')
+    cy.visit('/browse')
     openSearch()
     typeIntoPlaceholder(/Search for a club/, '123123123123123123123')
     cy.findByText(/We couldn't find a club/).should('be.visible')

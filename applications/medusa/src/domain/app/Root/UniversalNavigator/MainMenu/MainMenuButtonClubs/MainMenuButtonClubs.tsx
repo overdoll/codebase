@@ -44,7 +44,7 @@ export default function MainMenuButtonClubs (): JSX.Element {
   }
 
   if (data?.viewer.likedPosts == null || data?.viewer.likedPosts?.edges.length < 1) {
-    if (data?.viewer.clubMembersPostsFeed.edges.length > 0) {
+    if (data?.viewer?.clubMembersPostsFeed?.edges.length > 0) {
       return (
         <HorizontalNavigation.Button
           exact

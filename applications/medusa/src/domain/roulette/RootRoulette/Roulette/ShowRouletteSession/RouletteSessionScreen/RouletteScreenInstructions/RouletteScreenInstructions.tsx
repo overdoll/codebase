@@ -73,7 +73,10 @@ export default function RouletteScreenInstructions (): JSX.Element {
   return (
     <GridItem>
       <Flex h='100%' position='relative' overflow='hidden'>
-        <BlurredBackgroundThumbnail backgroundImage='/banners/roulette-banner.jpg' backgroundColor='gray.800' />
+        <BlurredBackgroundThumbnail
+          backgroundImage='https://static.dollycdn.net/banners/roulette-banner.jpg'
+          backgroundColor='gray.800'
+        />
         <Flex p={2} bg='dimmers.300' position='relative' w='100%' h='100%'>
           <motion.div
             initial='hidden'

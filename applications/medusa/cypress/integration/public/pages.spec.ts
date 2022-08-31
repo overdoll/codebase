@@ -3,9 +3,9 @@ describe('Pages', () => {
     cy.visit('/')
   })
 
-  it('go to the invite only page as not logged in', () => {
-    cy.visit('/clubs/invite-only')
-    cy.findAllByText(/overdoll is invite-only/iu)
+  it('go to the artists page as not logged in', () => {
+    cy.visit('/artists')
+    cy.findAllByText(/overdoll is the first true/iu)
   })
 
   // TODO add tests for joining club from discover page as logged in, not logged in

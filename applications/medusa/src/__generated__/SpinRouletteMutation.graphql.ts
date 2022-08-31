@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b2809ad3da8210332a32f2f07d1e0d24>>
- * @relayHash 3b5628d840c73cdf7bb1477a3257c4d2
+ * @generated SignedSource<<0ce99cfafd7c9234ac6cb18c7036a252>>
+ * @relayHash 968e771358d83ef7ec6222ad2412644d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3b5628d840c73cdf7bb1477a3257c4d2
+// @relayRequestID 968e771358d83ef7ec6222ad2412644d
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -383,7 +383,7 @@ return {
     ]
   },
   "params": {
-    "id": "3b5628d840c73cdf7bb1477a3257c4d2",
+    "id": "968e771358d83ef7ec6222ad2412644d",
     "metadata": {},
     "name": "SpinRouletteMutation",
     "operationKind": "mutation",

@@ -32,7 +32,7 @@ const RenderVideo = forwardRef<any, Props>(({
       as='video'
       ref={forwardRef}
       muted={muted}
-      bg='gray.800'
+      height='100%'
       loop
       playsInline
       poster={data?.videoThumbnail?.url}

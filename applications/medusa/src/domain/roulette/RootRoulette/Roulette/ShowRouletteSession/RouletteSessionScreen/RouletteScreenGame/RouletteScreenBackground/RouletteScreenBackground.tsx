@@ -34,14 +34,14 @@ export default function RouletteScreenBackground (props: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   const thumbnailUrl = data.content[0].resource.type === 'VIDEO'
-    ? (data.content[0].resource.videoThumbnail?.url ?? '')
-    : (data.content[0].resource.urls.filter((item) => item.mimeType === 'image/jpeg')[0]?.url ?? '')
+    ? (data.content[0].resource.videoThumbnail?.url)
+    : (data.content[0].resource.urls.filter((item) => item.mimeType === 'image/jpeg')[0]?.url)
 
   const backgroundColor = data.content[0].resource.preview ?? 'orange.100'
 
   return (
     <BlurredBackgroundThumbnail
-      backgroundImage={thumbnailUrl ?? '/banners/roulette-banner.jpg'}
+      backgroundImage={thumbnailUrl ?? 'https://static.dollycdn.net/banners/roulette-banner.jpg'}
       backgroundColor={backgroundColor}
     />
   )
