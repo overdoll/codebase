@@ -21,6 +21,6 @@ msgstr ""
 msgid "Random Posts"
 msgstr ""
 
-#: src/domain/random/RootRandom/RootRandom.tsx:50
+#: src/domain/random/RootRandom/RootRandom.tsx:59
 msgid "Randomize!"
 msgstr ""

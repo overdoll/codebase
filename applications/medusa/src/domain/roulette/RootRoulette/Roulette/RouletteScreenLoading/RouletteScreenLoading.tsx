@@ -20,7 +20,7 @@ export default function RouletteScreenLoading (): JSX.Element {
     <>
       <GridItem>
         <Flex h='100%' position='relative'>
-          <BlurredBackgroundThumbnail backgroundImage='/banners/roulette-banner.jpg' backgroundColor='gray.800' />
+          <BlurredBackgroundThumbnail backgroundImage='https://static.dollycdn.net/banners/roulette-banner.jpg' backgroundColor='gray.800' />
           <Flex bg='dimmers.300' position='relative' align='center' justify='center' w='100%' h='100%'>
             <motion.div
               animate='pending'

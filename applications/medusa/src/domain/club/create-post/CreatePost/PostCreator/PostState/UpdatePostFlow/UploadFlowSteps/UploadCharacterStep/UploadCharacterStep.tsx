@@ -16,7 +16,7 @@ import SearchBooleanButton
 import { CharacterIdentifier } from '@//:assets/icons'
 
 export interface UploadCharacterSearchProps {
-  name: string
+  name: string | null
   clubCharacters?: boolean
 }
 
@@ -36,7 +36,12 @@ export default function UploadCharacterStep (): JSX.Element {
     searchArguments,
     loadQuery,
     register: registerSearch
-  } = useSearch<UploadCharacterSearchProps>({})
+  } = useSearch<UploadCharacterSearchProps>({
+    defaultValue: {
+      clubCharacters: false,
+      name: null
+    }
+  })
 
   const {
     values,

@@ -6,14 +6,12 @@ RootRandom.getTranslationProps = async (ctx) => ({
 })
 
 RootRandom.getRelayPreloadProps = (ctx) => {
-  const time = `${Date.now()}`
-
   return ({
     queries: {
       randomQuery: {
         params: RandomQuery.params,
         variables: {
-          seed: time
+          seed: ctx.query.seed ?? null
         }
       }
     }

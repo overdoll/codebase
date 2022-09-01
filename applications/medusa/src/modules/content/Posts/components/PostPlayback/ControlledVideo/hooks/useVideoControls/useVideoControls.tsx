@@ -1,4 +1,4 @@
-import { MutableRefObject } from 'react'
+import { MutableRefObject, useState } from 'react'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import type { useVideoControlsFragment$key } from '@//:artifacts/useVideoControlsFragment.graphql'
@@ -16,6 +16,7 @@ interface UseVideoControlsReturn {
 
 const Fragment = graphql`
   fragment useVideoControlsFragment on Resource {
+    id
     urls {
       url
       mimeType
@@ -28,10 +29,20 @@ export default function useVideoControls (videoRef: UseVideoControlsProps, query
 
   const data = useFragment(Fragment, query)
 
+  const webmVideoSource = data.urls.filter((item) => item.mimeType === 'video/webm')?.[0]
+  const mp4VideoSource = data.urls.filter((item) => item.mimeType === 'video/mp4')?.[0]
+
+  const [currentSrc, setCurrentSrc] = useState('')
+
   let videoLoaded: Promise<void> | null = null
 
   const onPlay = (): void => {
     if (ref?.current == null) return
+
+    if ((currentSrc !== webmVideoSource?.url) && (currentSrc !== mp4VideoSource?.url) && currentSrc !== '') {
+      fetchVideoAndPlay()
+      return
+    }
 
     if (ref.current.src === '') {
       fetchVideoAndPlay()
@@ -67,21 +78,19 @@ export default function useVideoControls (videoRef: UseVideoControlsProps, query
       .then(async blob => {
         if (ref.current == null) return
         ref.current.src = URL.createObjectURL(blob)
+        ref.current.load()
+        setCurrentSrc(url)
         void ref.current.play()
       })
   }
 
   const fetchVideoAndPlay = (): void => {
     if (ref?.current == null) return
-    ref.current.load()
-
-    const webmVideoSource = data.urls.filter((item) => item.mimeType === 'video/webm')?.[0]
-    const mp4VideoSource = data.urls.filter((item) => item.mimeType === 'video/mp4')?.[0]
+    ref.current.src = ''
 
     if (webmVideoSource == null) {
       fetchVideoUrl(mp4VideoSource.url)
         .then(_ => {
-          // Video playback 2 started
         })
         .catch(e => {
           // Video playback 2 failed
@@ -91,13 +100,11 @@ export default function useVideoControls (videoRef: UseVideoControlsProps, query
 
     fetchVideoUrl(mp4VideoSource.url)
       .then(_ => {
-        // Video playback 1 started
       })
       .catch(e => {
         if (webmVideoSource == null) return
         fetchVideoUrl(webmVideoSource.url)
           .then(_ => {
-            // Video playback 2 started
           })
           .catch(e => {
             // Video playback 2 failed

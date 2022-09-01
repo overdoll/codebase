@@ -14,14 +14,20 @@ interface Props {
   observerOptions?: IntersectionObserverInit
   height?: number
   width?: number
+  debounceDelay?: number
+  threshold?: number
 }
 
-export default function ObserveContent ({
-  children,
-  observerOptions: definedObserverOptions,
-  height,
-  width
-}: Props): JSX.Element {
+export default function ObserveContent (props: Props): JSX.Element {
+  const {
+    children,
+    observerOptions: definedObserverOptions,
+    height,
+    width,
+    debounceDelay = 300,
+    threshold
+  } = props
+
   const ref = useRef(null)
 
   const [observing, setObserving] = useState(false)
@@ -31,9 +37,9 @@ export default function ObserveContent ({
     timeoutMs: 50
   })
 
-  const debouncedObserving = useDebounce(observing, 300)
+  const debouncedObserving = useDebounce(observing, debounceDelay)
 
-  const setThreshold = (width == null || height == null) ? 0.45 : ((height / width) >= 1 ? 0.23 : 0.45)
+  const setThreshold = threshold != null ? threshold : ((width == null || height == null) ? 0.45 : ((height / width) >= 1 ? 0.23 : 0.45))
 
   const observerOptions = {
     rootMargin: '-19% 0% -45% 0%',

@@ -1,7 +1,6 @@
 import { useFragment } from 'react-relay/hooks'
 import type { RouletteScreenPostFragment$key } from '@//:artifacts/RouletteScreenPostFragment.graphql'
 import { graphql } from 'react-relay'
-import { useMemo } from 'react'
 import { RouletteScreenPostViewerFragment$key } from '@//:artifacts/RouletteScreenPostViewerFragment.graphql'
 import PostGalleryPublicContained
   from '@//:modules/content/Posts/components/PostData/PostGalleryPublicContained/PostGalleryPublicContained'
@@ -14,7 +13,6 @@ interface Props {
 
 const Fragment = graphql`
   fragment RouletteScreenPostFragment on Post {
-    id
     ...PostGalleryPublicContainedFragment
   }
 `
@@ -35,7 +33,5 @@ export default function RouletteScreenPost (props: Props): JSX.Element {
 
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
-  // TODO fix bug where post shifts to center after refresh for some reason (swiper?)
-
-  return useMemo(() => (<PostGalleryPublicContained postQuery={data} viewerQuery={viewerData} />), [data.id])
+  return <PostGalleryPublicContained postQuery={data} viewerQuery={viewerData} />
 }

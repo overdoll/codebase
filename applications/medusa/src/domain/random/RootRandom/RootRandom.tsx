@@ -13,6 +13,8 @@ import Button from '@//:modules/form/Button/Button'
 import { Trans } from '@lingui/macro'
 import Icon from '../../../modules/content/PageLayout/Flair/Icon/Icon'
 import { RandomizeDice } from '@//:assets/icons'
+import { useQueryParam } from 'use-query-params'
+import { useUpdateEffect } from 'usehooks-ts'
 
 interface Props {
   queryRefs: {
@@ -25,13 +27,20 @@ const RootRandom: PageProps<Props> = (props: Props): JSX.Element => {
     RandomQuery,
     props.queryRefs.randomQuery)
 
+  const [postSeed, setPostSeed] = useQueryParam<string | null | undefined>('seed')
+
   const seed = `${Date.now()}`
 
   const onRandomize = (): void => {
-    loadQuery({
-      seed: seed
-    })
+    setPostSeed(seed)
   }
+
+  useUpdateEffect(() => {
+    if (seed == null) return
+    loadQuery({
+      seed: postSeed
+    })
+  }, [postSeed])
 
   return (
     <>
@@ -51,7 +60,10 @@ const RootRandom: PageProps<Props> = (props: Props): JSX.Element => {
             Randomize!
           </Trans>
         </Button>
-        <QueryErrorBoundary loadQuery={onRandomize}>
+        <QueryErrorBoundary loadQuery={() => loadQuery({
+          seed: postSeed
+        })}
+        >
           <Suspense fallback={<SkeletonPost />}>
             <Random query={queryRef as PreloadedQuery<RandomQueryType>} />
           </Suspense>

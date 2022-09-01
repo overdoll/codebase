@@ -10,7 +10,10 @@ import { motion } from 'framer-motion'
 export default function RouletteScreenInstructions (): JSX.Element {
   const INSTRUCTIONS_FONT: TextProps = {
     textAlign: 'center',
-    fontSize: 'sm',
+    fontSize: {
+      base: 'xs',
+      md: 'sm'
+    },
     color: 'gray.00'
   }
 

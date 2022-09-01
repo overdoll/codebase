@@ -2,7 +2,7 @@ import { useFragment } from 'react-relay/hooks'
 import type { RouletteScreenGameFragment$key } from '@//:artifacts/RouletteScreenGameFragment.graphql'
 import type { RouletteScreenGameViewerFragment$key } from '@//:artifacts/RouletteScreenGameViewerFragment.graphql'
 import { graphql } from 'react-relay'
-import { Flex, GridItem } from '@chakra-ui/react'
+import { Box, GridItem } from '@chakra-ui/react'
 import RouletteScreenShuffle from './RouletteScreenShuffle/RouletteScreenShuffle'
 import RouletteScreenClosed from '../RouletteScreenClosed/RouletteScreenClosed'
 
@@ -39,10 +39,10 @@ export default function RouletteScreenGame (props: Props): JSX.Element {
 
   return (
     <GridItem overflow='hidden'>
-      <Flex data-test-id='roulette-post' w='100%' h='100%' position='relative'>
+      <Box minWidth={0} data-test-id='roulette-post' w='100%' h='100%' position='relative'>
         {data.gameState != null && <RouletteScreenClosed query={data} />}
         <RouletteScreenShuffle query={data} viewerQuery={viewerData} />
-      </Flex>
+      </Box>
     </GridItem>
   )
 }

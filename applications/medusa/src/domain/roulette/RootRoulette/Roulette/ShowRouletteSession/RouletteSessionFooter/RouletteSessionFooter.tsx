@@ -25,27 +25,29 @@ export default function RouletteSessionFooter (props: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   return (
-    <Grid
-      templateColumns={{
-        base: '1fr 110px',
-        md: '1fr 170px'
-      }}
-      templateRows='minmax(0, 1fr)'
-      h='100%'
-      w='100%'
-    >
-      <GridItem>
-        <DiceTable>
-          <RouletteScreenDice query={data?.gameState ?? null} />
-        </DiceTable>
-      </GridItem>
-      <GridItem>
-        <Flex w='100%' h='100%' align='flex-start' justify='flex-end'>
-          <Box>
-            <SpinRoulette query={data} />
-          </Box>
-        </Flex>
-      </GridItem>
-    </Grid>
+    <GridItem>
+      <Grid
+        templateColumns={{
+          base: '1fr 110px',
+          md: '1fr 170px'
+        }}
+        templateRows='minmax(0, 1fr)'
+        h='100%'
+        w='100%'
+      >
+        <GridItem>
+          <DiceTable>
+            <RouletteScreenDice query={data?.gameState ?? null} />
+          </DiceTable>
+        </GridItem>
+        <GridItem>
+          <Flex w='100%' h='100%' align='flex-start' justify='flex-end'>
+            <Box>
+              <SpinRoulette query={data} />
+            </Box>
+          </Flex>
+        </GridItem>
+      </Grid>
+    </GridItem>
   )
 }
