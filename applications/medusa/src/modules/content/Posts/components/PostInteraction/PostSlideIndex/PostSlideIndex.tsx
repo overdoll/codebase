@@ -48,7 +48,7 @@ export default function PostSlideIndex (props: Props): JSX.Element {
   const slidesCount = data.content.length
 
   useEffect(() => {
-    if (swiper == null || disableSlideIndexing) return
+    if (swiper == null) return
     if (!swiper.destroyed) {
       swiper.on('slideChange', (swiper) => {
         setActiveIndex(swiper.activeIndex)

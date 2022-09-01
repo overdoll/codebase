@@ -3,7 +3,7 @@ import type { RouletteScreenShuffleFragment$key } from '@//:artifacts/RouletteSc
 import type { RouletteScreenShuffleViewerFragment$key } from '@//:artifacts/RouletteScreenShuffleViewerFragment.graphql'
 import { graphql } from 'react-relay'
 import RouletteScreenPost from '../RouletteScreenPost/RouletteScreenPost'
-import { Flex } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import RouletteScreenBackground from '../RouletteScreenBackground/RouletteScreenBackground'
 import { motion, useAnimationControls } from 'framer-motion'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
@@ -102,19 +102,21 @@ export default function RouletteScreenShuffle (props: Props): JSX.Element {
   }, [data.gameState.post.id, data.gameState])
 
   return (
-    <Flex w='100%' h='100%' position='relative'>
+    <Box w='100%' h='100%' position='relative'>
       <RouletteScreenBackground query={data.gameState.post} />
       <motion.div
         // @ts-expect-error
         variants={variants}
         animate={shuffleControls}
         style={{
-          position: 'relative'
+          position: 'relative',
+          height: '100%',
+          width: '100%'
         }}
       >
         <RouletteScreenPostData query={data.gameState.post} />
         <RouletteScreenPost query={data.gameState.post} viewerQuery={viewerData} />
       </motion.div>
-    </Flex>
+    </Box>
   )
 }

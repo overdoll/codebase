@@ -1,7 +1,6 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import { ShowRouletteSessionFragment$key } from '@//:artifacts/ShowRouletteSessionFragment.graphql'
 import { ShowRouletteSessionViewerFragment$key } from '@//:artifacts/ShowRouletteSessionViewerFragment.graphql'
-import { GridItem } from '@chakra-ui/react'
 import RouletteSessionScreen from './RouletteSessionScreen/RouletteSessionScreen'
 import RouletteSessionFooter from './RouletteSessionFooter/RouletteSessionFooter'
 import RouletteSubtitleTrack from './RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack'
@@ -39,9 +38,7 @@ export default function ShowRouletteSession (props: Props): JSX.Element {
     <>
       <RouletteSessionScreen query={data} viewerQuery={viewerData} />
       <RouletteSubtitleTrack query={data} />
-      <GridItem>
-        <RouletteSessionFooter query={data} />
-      </GridItem>
+      <RouletteSessionFooter query={data} />
     </>
   )
 }

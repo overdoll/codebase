@@ -51,7 +51,7 @@ export default function PostGalleryPublicContained ({
   const determineRows = postData.content.length > 10 ? '1fr 10vh' : (postData.content.length > 1 ? '1fr 5vh' : '100%')
 
   return (
-    <Grid gap={1} overflow='hidden' templateRows={determineRows} templateColumns='100%' h='100%'>
+    <Grid w='100%' gap={1} overflow='hidden' templateRows={determineRows} templateColumns='100%' h='100%'>
       <GridItem overflow='hidden'>
         <Swiper
           {...POST_SWIPER_PROPS}
@@ -77,6 +77,7 @@ export default function PostGalleryPublicContained ({
                 >
                   <PostDetailedMedia
                     hideBackground
+                    debounceDelay={50}
                     imageProps={{
                       hideBackground: true,
                       keepWidth: true,

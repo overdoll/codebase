@@ -34,11 +34,11 @@ const DURATION_TYPES = [
 
 const generateDurationFromType = (type: DurationTypes): number => {
   const ranges = {
-    veryslow: [4.2, 4.7],
-    mediumslow: [2.3, 2.9],
-    slow: [1.5, 1.9],
-    moderate: [0.9, 1.3],
-    fast: [0.55, 0.7]
+    veryslow: [2.5, 2.7],
+    mediumslow: [1.7, 2],
+    slow: [1.1, 1.4],
+    moderate: [0.6, 0.8],
+    fast: [0.2, 0.5]
   }
 
   return randomFunction(ranges[type][0], ranges[type][1])
@@ -90,8 +90,8 @@ export default function RouletteScreenDice (props: Props): JSX.Element {
   const diceVariants = {
     spinDice: {
       scale: [null, 1.55],
-      x: [null, -5, 2.5, 0, 2.5, 0, -5, 0],
-      y: [null, -2.5, 5, 0, -2.5, 0, 2.5, 0]
+      x: [null, -9, 2.5, 0, 2.5, 0, -10, 0],
+      y: [null, -2.5, 5, 0, -7.5, 0, 2.5, 0]
     },
     spinDiceTwo: {
       scale: [null, 1.55],

@@ -4,7 +4,7 @@ import { ClubsFeedDiscoverListFragment$key } from '@//:artifacts/ClubsFeedDiscov
 import type { ClubsFeedQuery } from '@//:artifacts/ClubsFeedQuery.graphql'
 import ClubJoinTile from '../../../../../../common/components/ClubJoinTile/ClubJoinTile'
 import { Trans } from '@lingui/macro'
-import { Heading, useBreakpointValue } from '@chakra-ui/react'
+import { Box, Heading, useBreakpointValue } from '@chakra-ui/react'
 import {
   SEARCH_SLIDE_HEIGHT,
   SEARCH_SLIDE_WIDTH,
@@ -56,34 +56,36 @@ export default function ClubsFeedDiscoverList ({
   }
 
   return (
-    <Swiper {...SEARCH_SWIPER_PROPS}>
-      {data.discoverClubs.edges.map((item, index) => (
-        <SwiperSlide
-          style={{
-            height: slideHeight,
-            width: slideWidth
-          }}
-          key={index}
-        >
-          <ClubJoinTile clubQuery={item.node} viewerQuery={data.viewer} />
-        </SwiperSlide>
-      ))}
-      {hasNext && (
-        <SwiperSlide
-          style={{
-            height: slideHeight,
-            width: slideWidth
-          }}
-        >
-          <LinkTile href='/clubs/discover'>
-            <Heading color='gray.00' fontSize='sm'>
-              <Trans>
-                See All
-              </Trans>
-            </Heading>
-          </LinkTile>
-        </SwiperSlide>
-      )}
-    </Swiper>
+    <Box overflowX='hidden'>
+      <Swiper {...SEARCH_SWIPER_PROPS}>
+        {data.discoverClubs.edges.map((item, index) => (
+          <SwiperSlide
+            style={{
+              height: slideHeight,
+              width: slideWidth
+            }}
+            key={index}
+          >
+            <ClubJoinTile clubQuery={item.node} viewerQuery={data.viewer} />
+          </SwiperSlide>
+        ))}
+        {hasNext && (
+          <SwiperSlide
+            style={{
+              height: slideHeight,
+              width: slideWidth
+            }}
+          >
+            <LinkTile href='/clubs/discover'>
+              <Heading color='gray.00' fontSize='sm'>
+                <Trans>
+                  See All
+                </Trans>
+              </Heading>
+            </LinkTile>
+          </SwiperSlide>
+        )}
+      </Swiper>
+    </Box>
   )
 }

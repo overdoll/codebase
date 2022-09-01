@@ -67,7 +67,16 @@ const RootRoulette: PageProps<Props> = (props: Props): JSX.Element => {
       <PageWrapperGame>
         <SequenceProvider {...methods}>
           <QueryErrorBoundary loadQuery={loadRoulette}>
-            <Grid templateRows='1fr 24px 12vh' gap={1} templateColumns='100%' h='calc(100vh - 60px)' w='100%'>
+            <Grid
+              templateRows={{
+                base: '1fr 24px 96px',
+                md: '1fr 24px 144px'
+              }}
+              gap={1}
+              templateColumns='100%'
+              h='calc(100vh - 64px)'
+              w='100%'
+            >
               <Suspense fallback={(
                 <>
                   <RouletteScreenLoading />

@@ -14,6 +14,7 @@ interface Props {
   query: PostDetailedMediaFragment$key
   imageProps?: ImageSnippetCoverProps | ImageSnippetProps
   hideBackground?: boolean
+  debounceDelay?: number
 }
 
 const Fragment = graphql`
@@ -25,11 +26,14 @@ const Fragment = graphql`
   }
 `
 
-export default function PostDetailedMedia ({
-  query,
-  imageProps,
-  hideBackground = false
-}: Props): JSX.Element {
+export default function PostDetailedMedia (props: Props): JSX.Element {
+  const {
+    query,
+    imageProps,
+    hideBackground = false,
+    debounceDelay = 300
+  } = props
+
   const data = useFragment(Fragment, query)
 
   const {
@@ -38,46 +42,42 @@ export default function PostDetailedMedia ({
     isOpen
   } = useDisclosure()
 
-  const DisplayMedia = (): JSX.Element => {
-    switch (data.type) {
-      case 'IMAGE':
-        return (
-          <>
-            <ClickableTile
-              _active={{ bg: 'transparent' }}
-              _hover={{ bg: 'transparent' }}
-              borderRadius='none'
-              onClick={onOpen}
-            >
-              <ImageSnippet containCover cover query={data} {...imageProps} />
-            </ClickableTile>
-            <MediaPreviewModal query={data} isOpen={isOpen} onClose={onClose} />
-          </>
-        )
-      case 'VIDEO':
-        return (
-          <ObserveContent>
-            {({
-              isObserving,
-              isObservingDebounced
-            }) => (
-              <PostVideoMedia
-                hideBackground={hideBackground}
-                controls={{
-                  canSeek: true,
-                  canFullscreen: true
-                }}
-                isObserving={isObserving}
-                isObservingDebounced={isObservingDebounced}
-                query={data}
-              />
-            )}
-          </ObserveContent>
-        )
-      default:
-        return <></>
-    }
+  if (data.type === 'IMAGE') {
+    return (
+      <>
+        <ClickableTile
+          _active={{ bg: 'transparent' }}
+          _hover={{ bg: 'transparent' }}
+          borderRadius='none'
+          onClick={onOpen}
+        >
+          <ImageSnippet containCover cover query={data} {...imageProps} />
+        </ClickableTile>
+        <MediaPreviewModal query={data} isOpen={isOpen} onClose={onClose} />
+      </>
+    )
   }
 
-  return <DisplayMedia />
+  return (
+    <ObserveContent
+      threshold={0}
+      debounceDelay={debounceDelay}
+    >
+      {({
+        isObserving,
+        isObservingDebounced
+      }) => (
+        <PostVideoMedia
+          hideBackground={hideBackground}
+          controls={{
+            canSeek: true,
+            canFullscreen: true
+          }}
+          isObserving={isObserving}
+          isObservingDebounced={isObservingDebounced}
+          query={data}
+        />
+      )}
+    </ObserveContent>
+  )
 }

@@ -207,6 +207,11 @@ const moduleExports = withBundleAnalyzer({
         source: '/home',
         destination: '/',
         permanent: true
+      },
+      {
+        source: '/clubs/invite-only',
+        destination: '/artists',
+        permanent: true
       }
     ]
   },
