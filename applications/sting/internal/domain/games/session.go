@@ -29,7 +29,6 @@ func NewRouletteSession(passport *passport.Passport, askedSeed *string) (*Sessio
 		acc := passport.AccountID()
 		accountId = &acc
 	}
-
 	currentSeed := ""
 
 	if askedSeed == nil {
