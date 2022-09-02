@@ -192,35 +192,34 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
     preloadedQueryResults: {}
   }
 
-  let queries: GetRelayPreloadPropsReturn = {}
+  const componentLoadTargets = [...componentsToLoad, app.Component]
 
-  for (let i = 0; i < componentsToLoad.length; i++) {
-    const component = componentsToLoad[i]
+  let queries: GetRelayPreloadPropsReturn = {}
+  let translationProps = {}
+
+  for (const component of componentLoadTargets) {
+    if (component == null) {
+      continue
+    }
 
     if (component?.getRelayPreloadProps != null) {
       queries = { ...queries, ...component.getRelayPreloadProps(app.ctx).queries }
     }
-  }
 
-  if (app.Component?.getRelayPreloadProps != null) {
-    queries = { ...queries, ...app.Component.getRelayPreloadProps(app.ctx).queries }
-  }
+    // load translation props
+    if (component.getTranslationProps != null) {
+      let data: { translations: any } | null = null
 
-  let translationProps = {}
+      try {
+        data = (await component.getTranslationProps(app.ctx))
+      } catch (e) {
+        data = null
+        console.error(e)
+      }
 
-  // load translation props
-  if (app.Component?.getTranslationProps != null) {
-    let data: { translations: any } | null = null
-
-    try {
-      data = (await app.Component.getTranslationProps(app.ctx))
-    } catch (e) {
-      data = null
-      console.error(e)
-    }
-
-    if (data != null) {
-      translationProps = { ...translationProps, ...data.translations.messages }
+      if (data != null) {
+        translationProps = { ...translationProps, ...data.translations.messages }
+      }
     }
   }
 
