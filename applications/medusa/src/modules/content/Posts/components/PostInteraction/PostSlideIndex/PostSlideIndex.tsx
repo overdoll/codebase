@@ -76,10 +76,10 @@ export default function PostSlideIndex (props: Props): JSX.Element {
       alignItems='center'
       mt={fillHeight ? 0 : 2}
       w='100%'
-      h={fillHeight ? '100%' : (slidesCount > 6 ? 24 : 12)}
+      h={fillHeight ? '100%' : (slidesCount > 10 ? 24 : 12)}
       gap={1}
       templateColumns={slidesCount > 10 ? 'repeat(10, 1fr)' : `repeat(${slidesCount}, 1fr)`}
-      templateRows={slidesCount > 6 ? 'repeat(2, 1fr)' : 'repeat(1, 1fr)'}
+      templateRows={slidesCount > 10 ? 'repeat(2, 1fr)' : 'repeat(1, 1fr)'}
     >
       {data.content.map((item, contentIndex) => {
         const isActive = contentIndex === activeIndex

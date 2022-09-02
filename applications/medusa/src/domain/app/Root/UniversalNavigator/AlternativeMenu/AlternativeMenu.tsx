@@ -8,8 +8,7 @@ import {
 } from '@//:assets/icons'
 import HorizontalNavigationDropdownMenu
   from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
-import { RenderOnDesktop } from '@//:modules/content/PageLayout'
-import HorizontalNavigation from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigation'
+import { Icon, RenderOnDesktop } from '@//:modules/content/PageLayout'
 import { graphql, useFragment } from 'react-relay/hooks'
 import QuickAccessButtonProfile from './QuickAccessButtonProfile/QuickAccessButtonProfile'
 import DropdownMenuButtonProfile from './DropdownMenuButtonProfile/DropdownMenuButtonProfile'
@@ -21,6 +20,7 @@ import { useLingui } from '@lingui/react'
 import DropdownMenuButtonClub from './DropdownMenuButtonClub/DropdownMenuButtonClub'
 import SkeletonDropdownMenuButton
   from '@//:modules/content/Placeholder/Loading/SkeletonDropdownMenuButton/SkeletonDropdownMenuButton'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 
 interface Props {
   queryRef: AlternativeMenuFragment$key | null
@@ -42,28 +42,21 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
     <>
       <RenderOnDesktop>
         <Can not I='configure' a='Account'>
-          <HorizontalNavigation.Button
+          <LinkButton
+            ml={1}
+            borderRadius='lg'
+            colorScheme='primary'
+            leftIcon={<Icon icon={LoginKeys} w={4} h={4} fill='primary.900' />}
             href='/join'
-            icon={LoginKeys}
-            label={
-              <Trans>
-                Join
-              </Trans>
-            }
-          />
+          >
+            <Trans>
+              Join
+            </Trans>
+          </LinkButton>
         </Can>
         <Can I='configure' a='Account'>
           <QuickAccessButtonProfile queryRef={data} />
         </Can>
-        <HorizontalNavigation.Button
-          href='/help'
-          icon={SafetyFloat}
-          label={
-            <Trans>
-              Help
-            </Trans>
-          }
-        />
       </RenderOnDesktop>
       <HorizontalNavigationDropdownMenu
         label={i18n._(t`Dropdown Menu`)}

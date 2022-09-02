@@ -180,9 +180,7 @@ const ControlledVideo = forwardRef<HTMLVideoElement, ControlledVideoProps>(({
       align='center'
       justify='center'
     >
-      {!hideBackground && (
-        <VideoBackground zIndex={-1} query={data} />
-      )}
+      <VideoBackground zIndex={-1} query={data} />
       <RenderVideo
         ref={ref}
         query={data}

@@ -25,6 +25,8 @@ const ClickableTile = forwardRef<any, Props>(({
       overflow='hidden'
       whiteSpace='normal'
       bg='transparent'
+      _active={{ bg: 'transparent' }}
+      _hover={{ bg: 'transparent' }}
       {...rest}
     >
       {children}

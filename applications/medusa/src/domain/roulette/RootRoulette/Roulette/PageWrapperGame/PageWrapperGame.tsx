@@ -9,12 +9,11 @@ export default function PageWrapperGame ({
   children
 }: Props): JSX.Element {
   return (
-    <Center mt={1}>
+    <Center h='100%'>
       <Box
-        position='fixed'
         top={{
-          base: 1,
-          md: '56px'
+          base: 0,
+          md: '54px'
         }}
         w={{
           base: 'full',

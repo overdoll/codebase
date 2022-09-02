@@ -6,6 +6,8 @@ import AlternativeMenu from './AlternativeMenu/AlternativeMenu'
 import { UniversalNavigatorFragment$key } from '@//:artifacts/UniversalNavigatorFragment.graphql'
 import { RenderOnDesktop, RenderOnMobile } from '@//:modules/content/PageLayout'
 import { useMemo } from 'react'
+import { useRouter } from 'next/router'
+import SimpleNav from './SimpleNav/SimpleNav'
 
 interface Props {
   queryRef: UniversalNavigatorFragment$key | null
@@ -20,6 +22,10 @@ const UniversalNavigatorGQL = graphql`
 
 export default function UniversalNavigator ({ queryRef }: Props): JSX.Element {
   const data = useFragment(UniversalNavigatorGQL, queryRef)
+
+  const simpleNav = ['/roulette']
+
+  const router = useRouter()
 
   const MainMenuMemo = useMemo(() => <MainMenu />, [data?.id])
 
@@ -43,12 +49,18 @@ export default function UniversalNavigator ({ queryRef }: Props): JSX.Element {
         </HorizontalNavigation>
       </RenderOnDesktop>
       <RenderOnMobile>
-        <HorizontalNavigation>
-          <HorizontalNavigation.Center>
-            {MainMenuMemo}
-            {AlternativeMenuMemo}
-          </HorizontalNavigation.Center>
-        </HorizontalNavigation>
+        {simpleNav.includes(router.pathname)
+          ? (
+            <SimpleNav />
+            )
+          : (
+            <HorizontalNavigation>
+              <HorizontalNavigation.Center>
+                {MainMenuMemo}
+                {AlternativeMenuMemo}
+              </HorizontalNavigation.Center>
+            </HorizontalNavigation>
+            )}
       </RenderOnMobile>
     </>
   )
