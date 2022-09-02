@@ -105,6 +105,7 @@ export default function useVideoControls (videoRef: UseVideoControlsProps, query
         if (webmVideoSource == null) return
         fetchVideoUrl(webmVideoSource.url)
           .then(_ => {
+
           })
           .catch(e => {
             // Video playback 2 failed
