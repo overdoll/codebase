@@ -14,7 +14,7 @@ export default function SimpleNav (): JSX.Element {
       position='fixed'
       pointerEvents='none'
     >
-      <LinkTile width={12} pointerEvents='auto' href='/'>
+      <LinkTile width={16} pointerEvents='auto' href='/'>
         <Stack
           boxShadow='drag'
           align='center'
@@ -25,8 +25,8 @@ export default function SimpleNav (): JSX.Element {
           py={2}
           spacing={1}
         >
-          <Icon icon={DiscoverGlobe} w={3} h={3} fill='whiteAlpha.800' />
-          <Heading textAlign='center' fontSize='2xs' color='whiteAlpha.800'>
+          <Icon icon={DiscoverGlobe} w={5} h={5} fill='whiteAlpha.800' />
+          <Heading textAlign='center' fontSize='xs' color='whiteAlpha.800'>
             <Trans>
               Browse Rule34
             </Trans>
