@@ -50,6 +50,14 @@ export default function RouletteScreenInstructions (): JSX.Element {
     maxW: 300
   }
 
+  const STACK_PROPS = {
+    align: 'center',
+    spacing: {
+      base: 1,
+      md: 3
+    }
+  }
+
   const containerVariants = {
     hidden: {},
     show: {
@@ -147,7 +155,7 @@ export default function RouletteScreenInstructions (): JSX.Element {
                       // @ts-expect-error
                       variants={itemVariants}
                     >
-                      <Stack align='center' spacing={3}>
+                      <Stack {...STACK_PROPS}>
                         <Flex borderRadius='25%' align='center' justify='center' bg='green.300' w={10} h={10}>
                           <Icon icon={ControlPlayButton} w={4} h={4} fill='gray.00' />
                         </Flex>
@@ -164,7 +172,7 @@ export default function RouletteScreenInstructions (): JSX.Element {
                       // @ts-expect-error
                       variants={itemVariants}
                     >
-                      <Stack align='center' spacing={3}>
+                      <Stack {...STACK_PROPS}>
                         <HStack spacing={3}>
                           <RouletteDice {...DICE_PROPS} showGlow={false} number={5} numberCycleVariant={1} />
                           <RouletteDice {...DICE_PROPS} showGlow={false} number={4} numberCycleVariant={2} />
@@ -183,7 +191,7 @@ export default function RouletteScreenInstructions (): JSX.Element {
                       // @ts-expect-error
                       variants={itemVariants}
                     >
-                      <Stack align='center' spacing={3}>
+                      <Stack {...STACK_PROPS}>
                         <HStack spacing={3}>
                           <RouletteDice {...DICE_PROPS} number={1} numberCycleVariant={1} />
                           <RouletteDice {...DICE_PROPS} showGlow={false} number={2} numberCycleVariant={2} />

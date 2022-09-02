@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import React from 'react'
 import { TITLE_FEATURES } from '@//:modules/constants/rich-objects'
-import ImageRichObject from '../../default/ImageRichObject/ImageRichObject'
 
 export default function RouletteRichObject (): JSX.Element {
   const TITLE = `Rule34 Roulette - Spin your way through ${TITLE_FEATURES}`
@@ -30,8 +29,14 @@ export default function RouletteRichObject (): JSX.Element {
           property='og:description'
           content={DESCRIPTION}
         />
+        <meta
+          property='og:image'
+          content='https://static.dollycdn.net/banners/roulette-opengraph-thumbnail.jpg'
+        />
+        <meta property='og:image:type' content='image/jpeg' />
+        <meta property='og:image:width' content='1827' />
+        <meta property='og:image:height' content='1145' />
       </Head>
-      <ImageRichObject />
     </>
   )
 }

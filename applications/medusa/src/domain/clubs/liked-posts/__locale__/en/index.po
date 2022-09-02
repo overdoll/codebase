@@ -30,8 +30,12 @@ msgid "Join"
 msgstr ""
 
 #: src/domain/clubs/liked-posts/RootLikedPosts/LikedPosts/LikedPosts.tsx:59
-msgid "Join overdoll to save posts and let the artist know your like their content"
+msgid "Join overdoll to save posts and let the artist know you like their content"
 msgstr ""
+
+#: src/domain/clubs/liked-posts/RootLikedPosts/LikedPosts/LikedPosts.tsx:59
+#~ msgid "Join overdoll to save posts and let the artist know your like their content"
+#~ msgstr ""
 
 #: src/domain/clubs/liked-posts/RootLikedPosts/LikedPosts/LikedPostsFeed/LikedPostsFeed.tsx:66
 #~ msgid "When you like a post, we'll save it for you and it will show up here"

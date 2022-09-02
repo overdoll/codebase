@@ -57,7 +57,7 @@ export default function LikedPosts (props: Props): JSX.Element {
                   </Heading>
                   <Text textAlign='center' fontSize='md' color='gray.100'>
                     <Trans>
-                      Join overdoll to save posts and let the artist know your like their content
+                      Join overdoll to save posts and let the artist know you like their content
                     </Trans>
                   </Text>
                 </Box>
