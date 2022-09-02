@@ -4,11 +4,11 @@ DEFAULT_IMAGE = "771779017151.dkr.ecr.us-east-1.amazonaws.com/ci@sha256:73890160
 
 
 def create_step(label, commands, platform, configs=None, artifacts=None, cache=None, additional_env_vars=None, shards=1,
-                soft_fail=None):
+                soft_fail=None, skip=None):
     if platform == "docker":
         step = create_docker_step(label, commands, additional_env_vars, cache)
     elif platform == "docker-compose":
-        step = create_docker_compose_step(label, commands, additional_env_vars, configs, cache)
+        step = create_docker_compose_step(label, commands, additional_env_vars, configs, cache, skip)
     else:
         step = {
             "label": label,
@@ -95,7 +95,7 @@ def create_docker_step(label, commands, additional_env_vars=None, cache=None):
     return step
 
 
-def create_docker_compose_step(label, commands, additional_env_vars=None, configs=None, cache=None):
+def create_docker_compose_step(label, commands, additional_env_vars=None, configs=None, cache=None, skip=None):
     vars = [
         "CCBILL_FLEXFORMS_URL",
         "CCBILL_SALT_KEY",
@@ -182,6 +182,9 @@ def create_docker_compose_step(label, commands, additional_env_vars=None, config
             }
         ],
     }
+
+    if skip:
+        step["if"] = skip
 
     if cache:
         step["plugins"] = step["plugins"] + cache

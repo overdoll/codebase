@@ -592,6 +592,7 @@ def print_project_pipeline():
             commands=[".buildkite/pipeline.sh e2e_test"],
             shards=1,
             platform="docker-compose",
+            skip="build.message !~ /skip e2e/",
             cache=[
                 {
                     "gencer/cache#v2.4.10": {
