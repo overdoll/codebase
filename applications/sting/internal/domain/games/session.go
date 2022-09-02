@@ -121,7 +121,7 @@ func (s *Session) IsClosed() bool {
 func (s *Session) IsPlayer(passport *passport.Passport) bool {
 
 	// first, if authenticated, can update game even if device ID does not match
-	if passport.Authenticated() == nil {
+	if passport.Authenticated() == nil && s.initiatorAccountId != nil {
 		if passport.AccountID() == *s.initiatorAccountId {
 			return true
 		}
