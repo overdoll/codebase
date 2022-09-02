@@ -7,6 +7,8 @@ import (
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/uuid"
+	"strconv"
+	"time"
 )
 
 type Session struct {
@@ -31,14 +33,7 @@ func NewRouletteSession(passport *passport.Passport, askedSeed *string) (*Sessio
 	currentSeed := ""
 
 	if askedSeed == nil {
-
-		seed, err := generateSeed()
-
-		if err != nil {
-			return nil, err
-		}
-
-		currentSeed = seed
+		currentSeed = strconv.Itoa(int(time.Now().Unix()))
 	} else {
 
 		err := validator.New().Var(*askedSeed, "required,alphanum,max=25,excludesall= ")
