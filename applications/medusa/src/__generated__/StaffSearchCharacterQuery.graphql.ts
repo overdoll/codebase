@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<cdd0beea808a8bf95e6eafc9c1dbf1ba>>
- * @relayHash 9a6fb0c27012ccba5908d5681ca92264
+ * @generated SignedSource<<4b12469b755b0e6ebb2a469b294538e4>>
+ * @relayHash 561d7c8f9b13194ee51d4f316c905487
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9a6fb0c27012ccba5908d5681ca92264
+// @relayRequestID 561d7c8f9b13194ee51d4f316c905487
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -48,14 +48,14 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "slug",
+  "name": "id",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "slug",
   "storageKey": null
 },
 v4 = {
@@ -119,6 +119,7 @@ return {
                 "plural": false,
                 "selections": [
                   (v2/*: any*/),
+                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -127,8 +128,8 @@ return {
                     "name": "series",
                     "plural": false,
                     "selections": [
-                      (v2/*: any*/),
                       (v3/*: any*/),
+                      (v2/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -147,13 +148,12 @@ return {
                     "name": "club",
                     "plural": false,
                     "selections": [
-                      (v2/*: any*/),
                       (v3/*: any*/),
+                      (v2/*: any*/),
                       (v4/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v3/*: any*/),
                   (v4/*: any*/),
                   {
                     "alias": null,
@@ -192,7 +192,7 @@ return {
                         "name": "progress",
                         "plural": false,
                         "selections": [
-                          (v3/*: any*/),
+                          (v2/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -217,7 +217,7 @@ return {
                         "name": "type",
                         "storageKey": null
                       },
-                      (v3/*: any*/),
+                      (v2/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -328,7 +328,7 @@ return {
     ]
   },
   "params": {
-    "id": "9a6fb0c27012ccba5908d5681ca92264",
+    "id": "561d7c8f9b13194ee51d4f316c905487",
     "metadata": {},
     "name": "StaffSearchCharacterQuery",
     "operationKind": "query",

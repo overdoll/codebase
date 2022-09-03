@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<89c33a4b2a8875f43582bc42d10ba452>>
- * @relayHash 639d7447f457c1e6ab875e6aa672dade
+ * @generated SignedSource<<200f61559f5c384c7ad14369cf206e62>>
+ * @relayHash 95af5206fd21015c34535cdb707e50a3
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 639d7447f457c1e6ab875e6aa672dade
+// @relayRequestID 95af5206fd21015c34535cdb707e50a3
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -180,6 +180,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -209,7 +210,6 @@ return {
                         "name": "depositDate",
                         "storageKey": null
                       },
-                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -274,7 +274,7 @@ return {
     ]
   },
   "params": {
-    "id": "639d7447f457c1e6ab875e6aa672dade",
+    "id": "95af5206fd21015c34535cdb707e50a3",
     "metadata": {},
     "name": "StaffDepositRequestQuery",
     "operationKind": "query",

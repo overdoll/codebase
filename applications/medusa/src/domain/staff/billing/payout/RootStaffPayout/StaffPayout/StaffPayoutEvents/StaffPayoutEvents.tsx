@@ -25,6 +25,7 @@ interface Props {
 const Fragment = graphql`
   fragment StaffPayoutEventsFragment on ClubPayout {
     events {
+      id
       error
       createdAt
     }
@@ -63,8 +64,8 @@ export default function StaffPayoutEvents ({ query }: Props): JSX.Element {
           </TableHeaderRow>
         </TableHeader>
         <TableBody>
-          {data.events.map((item, index) => (
-            <TableBodyRowBackground key={index}>
+          {data.events.map((item) => (
+            <TableBodyRowBackground key={item.id}>
               <TableBodyRow columns={3}>
                 <TableBodyColumnText column={2}>
                   {item.error}

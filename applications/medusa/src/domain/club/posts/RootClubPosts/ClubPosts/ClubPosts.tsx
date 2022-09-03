@@ -94,36 +94,36 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
             switch (item.node.state) {
               case 'DRAFT':
                 return (
-                  <DraftPost connectionId={data.posts.__id} key={index} query={item.node} />
+                  <DraftPost connectionId={data.posts.__id} key={item.node.id} query={item.node} />
                 )
               case 'PUBLISHED':
                 return (
-                  <PublishedPost key={index} query={item.node} />
+                  <PublishedPost key={item.node.id} query={item.node} />
                 )
               case 'REVIEW':
                 return (
-                  <ReviewPost key={index} query={item.node} />
+                  <ReviewPost key={item.node.id} query={item.node} />
                 )
               case 'REJECTED':
                 return (
-                  <RejectedPost connectionId={data.posts.__id} key={index} query={item.node} />
+                  <RejectedPost connectionId={data.posts.__id} key={item.node.id} query={item.node} />
                 )
               case 'ARCHIVED':
                 return (
-                  <ArchivedPost key={index} query={item.node} />
+                  <ArchivedPost key={item.node.id} query={item.node} />
                 )
               case 'REMOVED':
                 return (
-                  <RemovedPost connectionId={data.posts.__id} key={index} query={item.node} />
+                  <RemovedPost connectionId={data.posts.__id} key={item.node.id} query={item.node} />
                 )
               case 'SUBMITTED':
                 return (
-                  <SubmittedPost key={index} query={item.node} />
+                  <SubmittedPost key={item.node.id} query={item.node} />
                 )
               default:
                 return (
                   <GridTile>
-                    <PostPreviewContent key={index} query={data} />
+                    <PostPreviewContent key={item.node.id} query={data} />
                   </GridTile>
                 )
             }

@@ -11,7 +11,7 @@ import ClubCharacterRecommendations from './ClubCharacterRecommendations/ClubCha
 import PublicClubCharacterRichObject
   from '../../../../../common/rich-objects/slug/PublicClubCharacterRichObject/PublicClubCharacterRichObject'
 import FullSimplePost
-  from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/FullSimplePost/FullSimplePost'
+  from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/FullSimplePost/FullSimplePost'
 import PostInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
 import PlatformPromoteAlert from '@//:common/components/PlatformPromoteAlert/PlatformPromoteAlert'

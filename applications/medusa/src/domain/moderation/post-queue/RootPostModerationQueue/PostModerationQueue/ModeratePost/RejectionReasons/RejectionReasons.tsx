@@ -9,13 +9,13 @@ import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
 import {
-  TextareaInput,
   Form,
   FormInput,
   FormSubmitButton,
   InputFooter,
   InputHeader,
-  SelectInput
+  SelectInput,
+  TextareaInput
 } from '@//:modules/content/HookedComponents/Form'
 import ModerationNote from '@//:modules/validation/ModerationNote'
 
@@ -101,8 +101,8 @@ export default function RejectionReasons ({
             </Trans>
           </InputHeader>
           <SelectInput placeholder={i18n._(t`Select the rejection reason`)}>
-            {data.rules.edges.map((item, index) =>
-              <option key={index} value={item.node.id}>{item.node.title}</option>
+            {data.rules.edges.map((item) =>
+              <option key={item.node.id} value={item.node.id}>{item.node.title}</option>
             )}
           </SelectInput>
           <InputFooter />

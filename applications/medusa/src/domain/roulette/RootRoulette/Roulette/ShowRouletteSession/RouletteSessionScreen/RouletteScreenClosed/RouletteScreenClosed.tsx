@@ -28,6 +28,7 @@ const Fragment = graphql`
     gameState @required(action: THROW) {
       post {
         characters {
+          id
           ...RoulettePostCharacterFragment
         }
         club {
@@ -159,8 +160,8 @@ export default function RouletteScreenClosed (props: Props): JSX.Element {
             variants={itemVariants}
           >
             <Stack spacing={1}>
-              {data.gameState.post.characters.map((item, index) => (
-                <RoulettePostCharacter key={index} query={item} />
+              {data.gameState.post.characters.map((item) => (
+                <RoulettePostCharacter key={item.id} query={item} />
               ))}
             </Stack>
           </motion.div>

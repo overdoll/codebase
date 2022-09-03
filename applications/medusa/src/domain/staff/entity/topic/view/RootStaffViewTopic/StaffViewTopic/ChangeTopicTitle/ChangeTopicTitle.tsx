@@ -16,6 +16,7 @@ const Fragment = graphql`
   fragment ChangeTopicTitleFragment on Topic {
     title
     titleTranslations {
+      text
       ...TranslationSnippetFragment
     }
     ...ChangeTopicTitleFormFragment
@@ -46,8 +47,8 @@ export default function ChangeTopicTitle ({ query }: Props): JSX.Element {
           </CollapseButton>
           <CollapseBody>
             <Stack>
-              {data.titleTranslations.map((item, index) => (
-                <TranslationSnippet key={index} query={item} />)
+              {data.titleTranslations.map((item) => (
+                <TranslationSnippet key={item.text} query={item} />)
               )}
             </Stack>
           </CollapseBody>

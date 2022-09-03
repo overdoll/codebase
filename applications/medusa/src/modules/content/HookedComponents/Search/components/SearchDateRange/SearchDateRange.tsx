@@ -74,8 +74,8 @@ export default function SearchDateRange ({
 
   return (
     <Select value={date} id={id} onChange={onChange} {...rest}>
-      {dates.map((item, index) => (
-        <option key={index} value={item.value as unknown as string}>
+      {dates.map((item) => (
+        <option key={item.title} value={item.value as unknown as string}>
           {item.title}
         </option>)
       )}

@@ -21,6 +21,7 @@ interface Props {
 const Fragment = graphql`
   fragment StaffAccountTransactionEventsFragment on AccountTransaction {
     events {
+      id
       __typename
       ...StaffAccountTransactionEventFragment
     }
@@ -61,8 +62,8 @@ export default function StaffAccountTransactionEvents ({ query }: Props): JSX.El
           </TableHeaderRow>
         </TableHeader>
         <TableBody>
-          {data.events.map((item, index) => (
-            <StaffAccountTransactionEvent key={index} query={item} />
+          {data.events.map((item) => (
+            <StaffAccountTransactionEvent key={item.id} query={item} />
           ))}
         </TableBody>
       </Table>

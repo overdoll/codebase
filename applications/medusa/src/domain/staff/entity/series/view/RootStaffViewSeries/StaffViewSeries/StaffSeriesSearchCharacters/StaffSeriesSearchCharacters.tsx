@@ -27,6 +27,7 @@ const Fragment = graphql`
     {
       edges {
         node {
+          id
           slug
           series {
             slug
@@ -66,8 +67,8 @@ export default function StaffSeriesSearchCharacters ({
         condition={data.characters.edges.length < 1}
       >
         <ShortGridWrap>
-          {data.characters.edges.map((item, index) => (
-            <GridTile key={index}>
+          {data.characters.edges.map((item) => (
+            <GridTile key={item.node.id}>
               <LinkTile href={{
                 pathname: '/staff/entity/character/[seriesSlug]/[slug]',
                 query: {

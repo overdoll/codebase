@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<9d08baeeda6b8907b518b96b7a4c77b2>>
- * @relayHash 12394b7b0f0683341610a6774b87a3c5
+ * @generated SignedSource<<6ce324a1f2b9abaf4e68c44a8b2b31f6>>
+ * @relayHash bc38b960355272d3450082d6710f8321
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 12394b7b0f0683341610a6774b87a3c5
+// @relayRequestID bc38b960355272d3450082d6710f8321
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -104,6 +104,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
+                      (v1/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -171,7 +172,6 @@ return {
                         "name": "created",
                         "storageKey": null
                       },
-                      (v1/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -248,7 +248,7 @@ return {
     ]
   },
   "params": {
-    "id": "12394b7b0f0683341610a6774b87a3c5",
+    "id": "bc38b960355272d3450082d6710f8321",
     "metadata": {},
     "name": "SessionsSettingsQuery",
     "operationKind": "query",

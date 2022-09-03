@@ -18,7 +18,7 @@ msgid "Account"
 msgstr ""
 
 #: src/domain/staff/billing/payout/RootStaffPayout/StaffPayout/StaffPayoutOptions/StaffPayoutOptions.tsx:96
-#: src/domain/staff/billing/payout/RootStaffPayout/StaffPayout/StaffPayoutPaymentsList/StaffPayoutPaymentsList.tsx:67
+#: src/domain/staff/billing/payout/RootStaffPayout/StaffPayout/StaffPayoutPaymentsList/StaffPayoutPaymentsList.tsx:68
 msgid "Amount"
 msgstr ""
 
@@ -38,7 +38,7 @@ msgstr ""
 msgid "Deposit Date"
 msgstr ""
 
-#: src/domain/staff/billing/payout/RootStaffPayout/StaffPayout/StaffPayoutEvents/StaffPayoutEvents.tsx:54
+#: src/domain/staff/billing/payout/RootStaffPayout/StaffPayout/StaffPayoutEvents/StaffPayoutEvents.tsx:55
 msgid "Error"
 msgstr ""
 
@@ -54,7 +54,7 @@ msgstr ""
 msgid "New Date"
 msgstr ""
 
-#: src/domain/staff/billing/payout/RootStaffPayout/StaffPayout/StaffPayoutEvents/StaffPayoutEvents.tsx:44
+#: src/domain/staff/billing/payout/RootStaffPayout/StaffPayout/StaffPayoutEvents/StaffPayoutEvents.tsx:45
 msgid "No events"
 msgstr ""
 
@@ -74,12 +74,12 @@ msgstr ""
 msgid "Retry Payout"
 msgstr ""
 
-#: src/domain/staff/billing/payout/RootStaffPayout/StaffPayout/StaffPayoutPaymentsList/StaffPayoutPaymentsList.tsx:72
+#: src/domain/staff/billing/payout/RootStaffPayout/StaffPayout/StaffPayoutPaymentsList/StaffPayoutPaymentsList.tsx:73
 msgid "Settlement Date"
 msgstr ""
 
 #: src/domain/staff/billing/payout/RootStaffPayout/StaffPayout/StaffPayoutOptions/StaffPayoutOptions.tsx:61
-#: src/domain/staff/billing/payout/RootStaffPayout/StaffPayout/StaffPayoutPaymentsList/StaffPayoutPaymentsList.tsx:62
+#: src/domain/staff/billing/payout/RootStaffPayout/StaffPayout/StaffPayoutPaymentsList/StaffPayoutPaymentsList.tsx:63
 msgid "Status"
 msgstr ""
 
@@ -99,7 +99,7 @@ msgstr ""
 msgid "There was an error updating the deposit date"
 msgstr ""
 
-#: src/domain/staff/billing/payout/RootStaffPayout/StaffPayout/StaffPayoutEvents/StaffPayoutEvents.tsx:59
+#: src/domain/staff/billing/payout/RootStaffPayout/StaffPayout/StaffPayoutEvents/StaffPayoutEvents.tsx:60
 msgid "Timestamp"
 msgstr ""
 

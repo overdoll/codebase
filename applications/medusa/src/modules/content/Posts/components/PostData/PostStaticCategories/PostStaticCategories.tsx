@@ -9,6 +9,7 @@ interface Props {
 const Fragment = graphql`
   fragment PostStaticCategoriesFragment on Post {
     categories {
+      id
       title
     }
   }
@@ -19,8 +20,8 @@ export default function PostStaticCategories ({ query }: Props): JSX.Element {
 
   return (
     <Wrap>
-      {data.categories.map((item, index) =>
-        <WrapItem key={index}>
+      {data.categories.map((item) =>
+        <WrapItem key={item.id}>
           <Tag size='lg' variant='outline' colorScheme='gray' borderRadius='full'>
             <TagLabel>{item.title}</TagLabel>
           </Tag>

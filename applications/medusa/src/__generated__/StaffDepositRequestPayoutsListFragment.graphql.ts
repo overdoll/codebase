@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<78df1135c22305d26dff0eb651c76d75>>
+ * @generated SignedSource<<38bb699a501b9d409b502927f8a6dff2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type StaffDepositRequestPayoutsListFragment$data = {
   readonly payouts: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly id: string;
         readonly reference: string;
         readonly " $fragmentSpreads": FragmentRefs<"StaffClubPayoutCardFragment">;
       };
@@ -30,7 +31,14 @@ export type StaffDepositRequestPayoutsListFragment$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "payouts"
-];
+],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [
     {
@@ -96,6 +104,7 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
+                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -156,19 +165,13 @@ return {
       ],
       "storageKey": null
     },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    }
+    (v1/*: any*/)
   ],
   "type": "DepositRequest",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "80fdf43672cb657bf219998472c460df";
+(node as any).hash = "8b09c930a3db87e3524919710716a140";
 
 export default node;

@@ -15,6 +15,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment PublicPostPageFragment on Post {
+    id
     state
     club {
       ...ClubSuspendedStaffAlertFragment
@@ -62,7 +63,7 @@ export default function PublicPostPage ({
           </HStack>
         </Alert>
       )}
-      <FullDetailedPost query={data} viewerQuery={viewerData} />
+      <FullDetailedPost key={data.id} query={data} viewerQuery={viewerData} />
     </Box>
   )
 }

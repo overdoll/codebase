@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c342a6ba57b9f2ca69f49e452716f488>>
- * @relayHash 9c428030e4e6f9d78737a8c8a894965b
+ * @generated SignedSource<<b75952ff53b53a8fb68fceca70bb3882>>
+ * @relayHash 1510892078e03c895b291ee243b62212
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9c428030e4e6f9d78737a8c8a894965b
+// @relayRequestID 1510892078e03c895b291ee243b62212
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,6 +18,7 @@ export type SearchRecommendationsQuery$data = {
   readonly categories: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly id: string;
         readonly " $fragmentSpreads": FragmentRefs<"SearchResultsCategoryFragment">;
       };
     }>;
@@ -25,6 +26,7 @@ export type SearchRecommendationsQuery$data = {
   readonly characters: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly id: string;
         readonly " $fragmentSpreads": FragmentRefs<"SearchResultsCharacterFragment">;
       };
     }>;
@@ -32,6 +34,7 @@ export type SearchRecommendationsQuery$data = {
   readonly series: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly id: string;
         readonly " $fragmentSpreads": FragmentRefs<"SearchResultsSeriesFragment">;
       };
     }>;
@@ -197,8 +200,8 @@ v6 = {
   "storageKey": null
 },
 v7 = [
-  (v4/*: any*/),
   (v1/*: any*/),
+  (v4/*: any*/),
   (v3/*: any*/),
   (v6/*: any*/)
 ];
@@ -233,6 +236,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
+                  (v1/*: any*/),
                   {
                     "args": null,
                     "kind": "FragmentSpread",
@@ -271,6 +275,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
+                  (v1/*: any*/),
                   {
                     "args": null,
                     "kind": "FragmentSpread",
@@ -309,6 +314,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
+                  (v1/*: any*/),
                   {
                     "args": null,
                     "kind": "FragmentSpread",
@@ -465,7 +471,7 @@ return {
     ]
   },
   "params": {
-    "id": "9c428030e4e6f9d78737a8c8a894965b",
+    "id": "1510892078e03c895b291ee243b62212",
     "metadata": {},
     "name": "SearchRecommendationsQuery",
     "operationKind": "query",
@@ -474,6 +480,6 @@ return {
 };
 })();
 
-(node as any).hash = "827cf460c6403dcf180b06d6520779e7";
+(node as any).hash = "ddc3b0cf35e263413673a5b8f66936f5";
 
 export default node;

@@ -162,7 +162,7 @@ msgstr ""
 msgid "Go back"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:195
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:196
 msgid "Go to Content step"
 msgstr ""
 
@@ -222,7 +222,7 @@ msgstr ""
 msgid "Opening Post"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:114
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:115
 msgid "Post Content Processed"
 msgstr ""
 
@@ -238,7 +238,7 @@ msgstr ""
 #~ msgid "Posting {0} media"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:105
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:106
 msgid "Preview Processed Content"
 msgstr ""
 
@@ -251,12 +251,12 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:116
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:87
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:88
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:94
 msgid "Processing Failed"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:96
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:97
 msgid "Processing Post Content"
 msgstr ""
 
@@ -306,7 +306,7 @@ msgstr ""
 msgid "Search for a character by name"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadRewindCategories/UploadRewindSingleSelector/UploadRewindSingleSelector.tsx:90
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadRewindCategories/UploadRewindSingleSelector/UploadRewindSingleSelector.tsx:89
 msgid "Select a post to see the available categories"
 msgstr ""
 

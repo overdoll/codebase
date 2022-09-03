@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0730c3d3e8fd8e8c77b778d06451ddd1>>
- * @relayHash 27e0163a6ab4dac2b5ccb0ba22b349db
+ * @generated SignedSource<<6d96e5c89baf7344bbe5f5b5fd7c4559>>
+ * @relayHash ee41a8bed1aeab519179368f8272bc7c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 27e0163a6ab4dac2b5ccb0ba22b349db
+// @relayRequestID ee41a8bed1aeab519179368f8272bc7c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -419,6 +419,7 @@ return {
             "name": "events",
             "plural": true,
             "selections": [
+              (v7/*: any*/),
               (v6/*: any*/),
               (v3/*: any*/),
               (v4/*: any*/),
@@ -429,8 +430,7 @@ return {
                 "name": "reason",
                 "storageKey": null
               },
-              (v5/*: any*/),
-              (v7/*: any*/)
+              (v5/*: any*/)
             ],
             "storageKey": null
           }
@@ -440,7 +440,7 @@ return {
     ]
   },
   "params": {
-    "id": "27e0163a6ab4dac2b5ccb0ba22b349db",
+    "id": "ee41a8bed1aeab519179368f8272bc7c",
     "metadata": {},
     "name": "StaffAccountTransactionQuery",
     "operationKind": "query",

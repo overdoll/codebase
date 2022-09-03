@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<2304533e6585b97588a9e8ef579fd4ef>>
- * @relayHash a6ac77d99d972da33cb42e7b4f24d144
+ * @generated SignedSource<<d38e4f2954e9cfde9deecf86baa7153a>>
+ * @relayHash 704fdc15256d93a75db0cbbb720e230e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a6ac77d99d972da33cb42e7b4f24d144
+// @relayRequestID 704fdc15256d93a75db0cbbb720e230e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -72,14 +72,14 @@ const node: ConcreteRequest = {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "reference",
+                    "name": "id",
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "id",
+                    "name": "reference",
                     "storageKey": null
                   },
                   {
@@ -156,7 +156,7 @@ const node: ConcreteRequest = {
     ]
   },
   "params": {
-    "id": "a6ac77d99d972da33cb42e7b4f24d144",
+    "id": "704fdc15256d93a75db0cbbb720e230e",
     "metadata": {},
     "name": "StaffSearchRulesQuery",
     "operationKind": "query",

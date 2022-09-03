@@ -46,7 +46,7 @@ export default function SelectPaymentMethod ({
     <Stack spacing={1}>
       {data.savedPaymentMethods.edges.map((item, index) => (
         <Choice
-          key={index}
+          key={item.node.id}
           {...register(item.node.id, {})}
         >
           <SmallBackgroundBox>

@@ -12,7 +12,7 @@ import {
   SEARCH_SLIDE_HEIGHT,
   SEARCH_SLIDE_WIDTH,
   SEARCH_SWIPER_PROPS
-} from '../../../../../../../common/components/PageHeader/SearchButton/constants'
+} from '@//:common/components/PageHeader/SearchButton/constants'
 
 interface Props {
   query: PostsHorizontalPreviewFragment$key | null
@@ -24,11 +24,12 @@ const PostFragment = graphql`
   fragment PostsHorizontalPreviewFragment on PostConnection {
     edges {
       node {
+        id
         reference
-        ...PostPreviewContentFragment
         club {
           slug
         }
+        ...PostPreviewContentFragment
       }
     }
   }
@@ -56,13 +57,13 @@ export default function PostsHorizontalPreview ({
         {...SEARCH_SWIPER_PROPS}
         centeredSlides={data?.edges != null && data?.edges.length < 2}
       >
-        {data?.edges.map((item, index) =>
+        {data?.edges.map((item) =>
           <SwiperSlide
             style={{
               height: slideHeight,
               width: slideWidth
             }}
-            key={index}
+            key={item.node.id}
           >
             <LinkTile href={{
               pathname: '/[slug]/post/[reference]',

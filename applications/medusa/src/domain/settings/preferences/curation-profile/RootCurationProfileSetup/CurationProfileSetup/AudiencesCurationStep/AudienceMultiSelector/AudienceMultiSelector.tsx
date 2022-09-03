@@ -35,8 +35,8 @@ export default function AudienceMultiSelector ({
 
   return (
     <GridWrap>
-      {data.audiences.edges.map((item, index) => (
-        <ShortGridTile key={index}>
+      {data.audiences.edges.map((item) => (
+        <ShortGridTile key={item.node.id}>
           <Choice
             {...register(item.node.id, { title: item.node.title })}
           >

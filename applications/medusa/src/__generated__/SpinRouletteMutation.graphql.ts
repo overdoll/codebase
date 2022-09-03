@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6692ceb0b53f922da6b6f943aa5b49f7>>
- * @relayHash dcf2e21791f300498bc665e623bc1ed2
+ * @generated SignedSource<<5636bddfed1f65b16c1c825398338b2a>>
+ * @relayHash ac51c9b7079f0cc35ed1d8961867b6da
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID dcf2e21791f300498bc665e623bc1ed2
+// @relayRequestID ac51c9b7079f0cc35ed1d8961867b6da
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -263,6 +263,7 @@ return {
                 "name": "post",
                 "plural": false,
                 "selections": [
+                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -306,6 +307,7 @@ return {
                     "name": "content",
                     "plural": true,
                     "selections": [
+                      (v2/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -344,8 +346,7 @@ return {
                         "kind": "ScalarField",
                         "name": "isSupporterOnly",
                         "storageKey": null
-                      },
-                      (v2/*: any*/)
+                      }
                     ],
                     "storageKey": null
                   },
@@ -369,8 +370,7 @@ return {
                       (v14/*: any*/)
                     ],
                     "storageKey": null
-                  },
-                  (v2/*: any*/)
+                  }
                 ],
                 "storageKey": null
               }
@@ -383,7 +383,7 @@ return {
     ]
   },
   "params": {
-    "id": "dcf2e21791f300498bc665e623bc1ed2",
+    "id": "ac51c9b7079f0cc35ed1d8961867b6da",
     "metadata": {},
     "name": "SpinRouletteMutation",
     "operationKind": "mutation",

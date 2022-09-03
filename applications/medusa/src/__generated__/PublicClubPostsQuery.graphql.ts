@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1a7ca8af38d13d4f489daa8f9e824e20>>
- * @relayHash 3432a0570fff2944fb5fce6fcb218284
+ * @generated SignedSource<<94b7c2616b74de52c4765611343b9181>>
+ * @relayHash 4661176a4a57dbbe7c39b0ea6e535390
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3432a0570fff2944fb5fce6fcb218284
+// @relayRequestID 4661176a4a57dbbe7c39b0ea6e535390
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -386,6 +386,7 @@ return {
                         "name": "content",
                         "plural": true,
                         "selections": [
+                          (v9/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -424,8 +425,7 @@ return {
                             "kind": "ScalarField",
                             "name": "isSupporterOnly",
                             "storageKey": null
-                          },
-                          (v9/*: any*/)
+                          }
                         ],
                         "storageKey": null
                       },
@@ -681,14 +681,28 @@ return {
             "storageKey": null
           },
           (v9/*: any*/),
-          (v20/*: any*/)
+          (v20/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "clubMembershipsLimit",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "clubMembershipsCount",
+            "storageKey": null
+          }
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "3432a0570fff2944fb5fce6fcb218284",
+    "id": "4661176a4a57dbbe7c39b0ea6e535390",
     "metadata": {},
     "name": "PublicClubPostsQuery",
     "operationKind": "query",

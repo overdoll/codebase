@@ -18,6 +18,19 @@ const Query = graphql`
       edges {
         node {
           ...SearchResultsUnionFragment
+          __typename
+          ...on Character {
+            id
+          }
+          ...on Series {
+            id
+          }
+          ...on Club {
+            id
+          }
+          ...on Category {
+            id
+          }
         }
       }
     }
@@ -59,13 +72,13 @@ export default function SearchResults ({
 
     return (
       <Swiper {...SEARCH_SWIPER_PROPS}>
-        {queryData.search.edges.map((item, index) => (
+        {queryData.search.edges.map((item) => (
           <SwiperSlide
             style={{
               height: slideHeight,
               width: slideWidth
             }}
-            key={index}
+            key={item.node.id}
           >
             <SearchResultsUnion query={item.node} />
           </SwiperSlide>

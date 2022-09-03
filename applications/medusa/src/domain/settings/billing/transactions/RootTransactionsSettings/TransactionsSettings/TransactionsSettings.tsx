@@ -35,6 +35,7 @@ const Fragment = graphql`
       __id
       edges {
         node {
+          id
           ...TransactionSettingsCardFragment
         }
       }
@@ -65,8 +66,8 @@ export default function TransactionsSettings (props: Props): JSX.Element {
         condition={data.transactions.edges.length < 1}
       >
         <Stack spacing={2}>
-          {data.transactions.edges.map((item, index) => (
-            <StackTile key={index}>
+          {data.transactions.edges.map((item) => (
+            <StackTile key={item.node.id}>
               <LargeBackgroundBox w='100%'>
                 <TransactionSettingsCard query={item.node} />
               </LargeBackgroundBox>

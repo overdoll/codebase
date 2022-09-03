@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<67f3db162aa5e617c025fe4152f0d335>>
- * @relayHash 5f85a06b55ed86a0d3472ee666b7d108
+ * @generated SignedSource<<58e86e50bee704a0f4bbbcd47a127f0b>>
+ * @relayHash 4700ff40e515aadc09dd00e6e496b810
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 5f85a06b55ed86a0d3472ee666b7d108
+// @relayRequestID 4700ff40e515aadc09dd00e6e496b810
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -163,6 +163,7 @@ return {
                         "name": "node",
                         "plural": false,
                         "selections": [
+                          (v4/*: any*/),
                           (v5/*: any*/),
                           {
                             "alias": null,
@@ -171,7 +172,6 @@ return {
                             "name": "slug",
                             "storageKey": null
                           },
-                          (v4/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -352,7 +352,7 @@ return {
     ]
   },
   "params": {
-    "id": "5f85a06b55ed86a0d3472ee666b7d108",
+    "id": "4700ff40e515aadc09dd00e6e496b810",
     "metadata": {},
     "name": "StaffViewTopicCategoriesFragmentPaginationFragment",
     "operationKind": "query",
@@ -361,6 +361,6 @@ return {
 };
 })();
 
-(node as any).hash = "dc78dbb29ec08e25e7076c4264de7d99";
+(node as any).hash = "fb09920cb8dbea4df81cd6a7527aa93b";
 
 export default node;

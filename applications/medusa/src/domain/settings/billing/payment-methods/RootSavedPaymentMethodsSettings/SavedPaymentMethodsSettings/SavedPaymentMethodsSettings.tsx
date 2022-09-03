@@ -40,6 +40,7 @@ const Fragment = graphql`
       __id
       edges {
         node {
+          id
           paymentMethod {
             ...PaymentMethodFragment
           }
@@ -97,8 +98,8 @@ export default function SavedPaymentMethodsSettings (props: Props): JSX.Element 
               </HStack>
             </Alert>
           )}
-          {data.savedPaymentMethods.edges.map((item, index) => (
-            <StackTile key={index}>
+          {data.savedPaymentMethods.edges.map((item) => (
+            <StackTile key={item.node.id}>
               <LargeBackgroundBox w='100%'>
                 <HStack h='100%' align='center' spacing={3} justify='space-between'>
                   <PaymentMethod query={item.node.paymentMethod} />

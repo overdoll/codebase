@@ -17,6 +17,7 @@ interface Props {
 const Fragment = graphql`
   fragment PostClickableCategoriesFragment on Post {
     categories {
+      id
       ...ClickableCategoryFragment
     }
   }
@@ -37,8 +38,8 @@ export default function PostClickableCategories ({ query }: Props): JSX.Element 
 
   return (
     <Wrap overflow='show'>
-      {constructedData.map((item, index) =>
-        <WrapItem key={index}>
+      {constructedData.map((item) =>
+        <WrapItem key={item.id}>
           <ClickableCategory query={item} />
         </WrapItem>
       )}

@@ -9,8 +9,6 @@ import useVideoControls from '../../hooks/useVideoControls/useVideoControls'
 import { useFragment } from 'react-relay'
 import { graphql } from 'react-relay/hooks'
 import type { ControlVideoFragment$key } from '@//:artifacts/ControlVideoFragment.graphql'
-import { ControlPauseButton } from '@//:assets/icons'
-import { Icon } from '../../../../../../PageLayout'
 
 interface Props {
   query: ControlVideoFragment$key
@@ -32,6 +30,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment ControlVideoFragment on Resource {
+    id
     ...useVideoControlsFragment
   }
 `
@@ -187,21 +186,10 @@ const ControlVideo = forwardRef<HTMLVideoElement, Props>((props: Props, forwardR
                 </SliderTrack>
               </Slider>
             </Flex>
-            {isPaused && (
-              <Flex
-                top={4}
-                right={4}
-                position='absolute'
-                align='center'
-                justify='flex-end'
-              >
-                <Icon icon={ControlPauseButton} fill='whiteAlpha.600' w={6} h={6} />
-              </Flex>
-            )}
           </Fade>
         </>}
       <Flex
-        pointerEvents={hasError ? undefined : 'none'}
+        pointerEvents='none'
         top={0}
         left={0}
         position='absolute'
@@ -210,7 +198,14 @@ const ControlVideo = forwardRef<HTMLVideoElement, Props>((props: Props, forwardR
         align='center'
         justify='center'
       >
-        <LoadingSpinner canControl={canControl} onRetry={onRetry} isLoading={!isLoaded} hasError={hasError} />
+        <LoadingSpinner
+          onPlay={onChangeVideo}
+          isPaused={isPaused}
+          canControl={canControl}
+          onRetry={onRetry}
+          isLoading={!isLoaded}
+          hasError={hasError}
+        />
       </Flex>
     </>
   )

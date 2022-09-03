@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bda67da099bb1cb258b9b933878ed3dc>>
+ * @generated SignedSource<<0e0143f45b95c68afb53c5d07be25d59>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type ClubsFeedDiscoverListFragment$data = {
   readonly discoverClubs: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly id: string;
         readonly " $fragmentSpreads": FragmentRefs<"ClubJoinTileFragment">;
       };
     }>;
@@ -95,6 +96,13 @@ return {
               "plural": false,
               "selections": [
                 {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "id",
+                  "storageKey": null
+                },
+                {
                   "args": null,
                   "kind": "FragmentSpread",
                   "name": "ClubJoinTileFragment"
@@ -169,6 +177,6 @@ return {
 };
 })();
 
-(node as any).hash = "be3d9d15183d55738658fbe3887aef82";
+(node as any).hash = "3f3a119be7964891a8b14d87a8a2a783";
 
 export default node;

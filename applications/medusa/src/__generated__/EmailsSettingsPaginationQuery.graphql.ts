@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7b104a0f23b8996de485f3c6a9f820a6>>
- * @relayHash b8a050d5b709f771a1a0e52b957919fc
+ * @generated SignedSource<<81410079bec8a0f2a578d7c0bf469161>>
+ * @relayHash 7309b05b3832f7460b0d9bbcd2163547
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b8a050d5b709f771a1a0e52b957919fc
+// @relayRequestID 7309b05b3832f7460b0d9bbcd2163547
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -154,14 +154,14 @@ return {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
-                            "name": "email",
+                            "name": "status",
                             "storageKey": null
                           },
                           {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
-                            "name": "status",
+                            "name": "email",
                             "storageKey": null
                           },
                           (v3/*: any*/)
@@ -237,7 +237,7 @@ return {
     ]
   },
   "params": {
-    "id": "b8a050d5b709f771a1a0e52b957919fc",
+    "id": "7309b05b3832f7460b0d9bbcd2163547",
     "metadata": {},
     "name": "EmailsSettingsPaginationQuery",
     "operationKind": "query",
@@ -246,6 +246,6 @@ return {
 };
 })();
 
-(node as any).hash = "61647e9f7d6b3b803b4605825e973488";
+(node as any).hash = "8f7e8dfdea5af2143cdb64d71419ec47";
 
 export default node;

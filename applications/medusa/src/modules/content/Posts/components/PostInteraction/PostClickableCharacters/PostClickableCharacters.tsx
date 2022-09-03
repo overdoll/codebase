@@ -17,6 +17,7 @@ interface Props {
 const Fragment = graphql`
   fragment PostClickableCharactersFragment on Post {
     characters {
+      id
       ...ClickableCharacterFragment
     }
   }
@@ -38,7 +39,7 @@ export default function PostClickableCharacters ({ query }: Props): JSX.Element 
   return (
     <Wrap overflow='show'>
       {constructedData.map((item, index) =>
-        <WrapItem key={index}>
+        <WrapItem key={item.id}>
           <ClickableCharacter query={item} />
         </WrapItem>
       )}

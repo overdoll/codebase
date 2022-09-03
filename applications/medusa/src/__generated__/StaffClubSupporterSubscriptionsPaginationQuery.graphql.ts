@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f34235130cf87f30a8023f527b3f8de8>>
- * @relayHash 699a4da11599331338b95af003ee434a
+ * @generated SignedSource<<791bcd38bcd06b0ad24fa902e826ce73>>
+ * @relayHash d13fe7f5b2e593127f53bcea36aaeb8e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 699a4da11599331338b95af003ee434a
+// @relayRequestID d13fe7f5b2e593127f53bcea36aaeb8e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -179,14 +179,14 @@ return {
                           {
                             "kind": "InlineFragment",
                             "selections": [
+                              (v4/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
                                 "kind": "ScalarField",
                                 "name": "reference",
                                 "storageKey": null
-                              },
-                              (v4/*: any*/)
+                              }
                             ],
                             "type": "IAccountClubSupporterSubscription",
                             "abstractKey": "__isIAccountClubSupporterSubscription"
@@ -311,7 +311,7 @@ return {
     ]
   },
   "params": {
-    "id": "699a4da11599331338b95af003ee434a",
+    "id": "d13fe7f5b2e593127f53bcea36aaeb8e",
     "metadata": {},
     "name": "StaffClubSupporterSubscriptionsPaginationQuery",
     "operationKind": "query",
@@ -320,6 +320,6 @@ return {
 };
 })();
 
-(node as any).hash = "c3fa9f6504eab68bf036c3c4e024032f";
+(node as any).hash = "c2978c08b3879df35d0f61394ab36160";
 
 export default node;

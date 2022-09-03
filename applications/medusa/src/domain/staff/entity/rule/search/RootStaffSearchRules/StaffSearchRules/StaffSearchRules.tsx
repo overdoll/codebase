@@ -31,6 +31,7 @@ const Fragment = graphql`
     {
       edges {
         node {
+          id
           reference
           ...RuleTileOverlayFragment
         }
@@ -63,8 +64,8 @@ export default function StaffSearchRules ({ searchArguments }: Props): JSX.Eleme
       condition={rules.length < 1}
     >
       <ListSpacer>
-        {rules.map((item, index) => (
-          <StackTile key={index}>
+        {rules.map((item) => (
+          <StackTile key={item.node.id}>
             <LinkTile href={{
               pathname: '/staff/entity/rule/[reference]',
               query: { reference: item.reference }

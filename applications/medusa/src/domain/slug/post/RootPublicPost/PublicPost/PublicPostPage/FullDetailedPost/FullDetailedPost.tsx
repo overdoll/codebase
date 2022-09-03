@@ -12,7 +12,6 @@ import PostClickableCategories
 import PostFooterButtons from '@//:modules/content/Posts/components/PostInteraction/PostFooterButtons/PostFooterButtons'
 import PostPublicHeader
   from '@//:modules/content/Posts/components/PostInteraction/PostHeaders/PostPublicHeader/PostPublicHeader'
-import { useMemo } from 'react'
 
 interface Props {
   query: FullDetailedPostFragment$key
@@ -45,13 +44,11 @@ export default function FullDetailedPost ({
   const data = useFragment<FullDetailedPostFragment$key>(PostFragment, query)
   const viewerData = useFragment<FullDetailedPostViewerFragment$key>(ViewerFragment, viewerQuery)
 
-  const PostMemo = useMemo(() => (<PostGalleryPublicDetailed postQuery={data} viewerQuery={viewerData} />), [data.id])
-
   return (
     <Stack spacing={4}>
       <Stack spacing={2}>
         <PostPublicHeader postQuery={data} viewerQuery={viewerData} />
-        {PostMemo}
+        <PostGalleryPublicDetailed postQuery={data} viewerQuery={viewerData} />
         <PostFooterButtons postQuery={data} viewerQuery={viewerData} />
       </Stack>
       <Stack spacing={2}>

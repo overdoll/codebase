@@ -19,6 +19,7 @@ const Fragment = graphql`
     @connection (key: "StaffAccountClubs_clubs") {
       edges {
         node {
+          id
           slug
           ...ClubTileOverlayFragment
         }
@@ -49,8 +50,8 @@ export default function StaffAccountClubs ({
         condition={data.clubs.edges.length < 1}
       >
         <GridWrap>
-          {data.clubs.edges.map((item, index) =>
-            <GridTile key={index}>
+          {data.clubs.edges.map((item) =>
+            <GridTile key={item.node.id}>
               <LinkTile href={`/staff/club/${item.node.slug as string}`}>
                 <ClubTileOverlay query={item.node} />
               </LinkTile>

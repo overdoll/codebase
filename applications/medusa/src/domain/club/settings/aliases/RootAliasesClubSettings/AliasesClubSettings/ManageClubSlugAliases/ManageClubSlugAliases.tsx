@@ -127,8 +127,8 @@ export default function ManageClubSlugAliases ({ query }: Props): JSX.Element {
 
   return (
     <ListSpacer>
-      {data?.slugAliases.map((item, index) =>
-        <SmallBackgroundBox py={2} key={index}>
+      {data?.slugAliases.map((item) =>
+        <SmallBackgroundBox py={2} key={item.slug}>
           <Flex align='center' justify='space-between'>
             <Text fontSize='sm' fontFamily='mono'>
               overdoll.com/{item.slug}

@@ -22,6 +22,7 @@ const Fragment = graphql`
   fragment PostSlideIndexFragment on Post {
     reference
     content {
+      id
       isSupporterOnly
       resource {
         type
@@ -86,7 +87,7 @@ export default function PostSlideIndex (props: Props): JSX.Element {
         const isSupporterOnly = item.isSupporterOnly
 
         return (
-          <GridItem overflow='hidden' h='100%' w='100%' key={contentIndex}>
+          <GridItem overflow='hidden' h='100%' w='100%' key={item.id}>
             <ClickableTile
               _active={{ boxShadow: 'none' }}
               _focus={{ boxShadow: 'none' }}

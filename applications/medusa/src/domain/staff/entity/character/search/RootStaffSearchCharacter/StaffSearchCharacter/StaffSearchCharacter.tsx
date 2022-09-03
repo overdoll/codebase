@@ -32,6 +32,7 @@ const Fragment = graphql`
     {
       edges {
         node {
+          id
           slug
           series {
             slug
@@ -69,7 +70,7 @@ export default function StaffSearchCharacter ({ searchArguments }: Props): JSX.E
       condition={characters.length < 1}
     >
       <ShortGridWrap>
-        {characters.map((item, index) => {
+        {characters.map((item) => {
           const decideHref = item?.series == null
             ? {
                 pathname: '/staff/entity/character/club/[clubSlug]/[slug]',
@@ -87,7 +88,7 @@ export default function StaffSearchCharacter ({ searchArguments }: Props): JSX.E
               }
 
           return (
-            <GridTile key={index}>
+            <GridTile key={item.node.id}>
               <LinkTile href={decideHref}>
                 <CharacterTileOverlay query={item} />
               </LinkTile>

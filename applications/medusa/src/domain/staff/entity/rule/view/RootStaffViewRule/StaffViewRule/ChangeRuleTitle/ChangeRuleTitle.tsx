@@ -6,7 +6,7 @@ import { Trans } from '@lingui/macro'
 import ChangeRuleTitleForm from './ChangeRuleTitleForm/ChangeRuleTitleForm'
 import TagHeader from '../../../../../../../../common/components/TagHeader/TagHeader'
 import TranslationSnippet from '../../../../../../../../common/components/TranslationSnippet/TranslationSnippet'
-import { CollapseBody, CollapseButton, Collapse } from '@//:modules/content/ThemeComponents/Collapse/Collapse'
+import { Collapse, CollapseBody, CollapseButton } from '@//:modules/content/ThemeComponents/Collapse/Collapse'
 
 interface Props {
   query: ChangeRuleTitleFragment$key
@@ -16,6 +16,7 @@ const Fragment = graphql`
   fragment ChangeRuleTitleFragment on Rule {
     title
     titleTranslations {
+      text
       ...TranslationSnippetFragment
     }
     ...ChangeRuleTitleFormFragment
@@ -46,8 +47,8 @@ export default function ChangeRuleTitle ({ query }: Props): JSX.Element {
           </CollapseButton>
           <CollapseBody>
             <Stack>
-              {data.titleTranslations.map((item, index) => (
-                <TranslationSnippet key={index} query={item} />)
+              {data.titleTranslations.map((item) => (
+                <TranslationSnippet key={item.text} query={item} />)
               )}
             </Stack>
           </CollapseBody>

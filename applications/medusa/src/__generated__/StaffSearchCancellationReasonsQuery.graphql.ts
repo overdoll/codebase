@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8f64c1401f6899d84237ede2fc6e7eff>>
- * @relayHash 6adc7b3a8b294d02f1de77f7f13d6a89
+ * @generated SignedSource<<3b535051145bfb9e1a9560a929952e48>>
+ * @relayHash 2f33478853c2ed5c3b71726869eda06a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6adc7b3a8b294d02f1de77f7f13d6a89
+// @relayRequestID 2f33478853c2ed5c3b71726869eda06a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -72,14 +72,14 @@ const node: ConcreteRequest = {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "reference",
+                    "name": "id",
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "id",
+                    "name": "reference",
                     "storageKey": null
                   },
                   {
@@ -149,7 +149,7 @@ const node: ConcreteRequest = {
     ]
   },
   "params": {
-    "id": "6adc7b3a8b294d02f1de77f7f13d6a89",
+    "id": "2f33478853c2ed5c3b71726869eda06a",
     "metadata": {},
     "name": "StaffSearchCancellationReasonsQuery",
     "operationKind": "query",

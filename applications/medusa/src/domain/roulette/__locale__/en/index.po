@@ -57,7 +57,7 @@ msgstr ""
 msgid "Error. Retry Game Creation"
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenInstructions/RouletteScreenInstructions.tsx:174
+#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenInstructions/RouletteScreenInstructions.tsx:182
 msgid "Getting three unique numbers means you spin for a new post and three new dice"
 msgstr ""
 
@@ -93,7 +93,7 @@ msgstr ""
 msgid "Loading"
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteScreenClosed.tsx:153
+#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteScreenClosed.tsx:154
 msgid "Lost to"
 msgstr ""
 
@@ -121,11 +121,11 @@ msgstr ""
 msgid "Nothing yet. Again."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenInstructions/RouletteScreenInstructions.tsx:125
+#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenInstructions/RouletteScreenInstructions.tsx:133
 msgid "Rule34 Roulette"
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteScreenClosed.tsx:185
+#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteScreenClosed.tsx:186
 msgid "Score"
 msgstr ""
 
@@ -134,7 +134,7 @@ msgid "Share on Reddit"
 msgstr ""
 
 #: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteClosedShareTwitterButton/RouletteClosedShareTwitterButton.tsx:57
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteScreenClosed.tsx:234
+#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteScreenClosed.tsx:235
 msgid "Share on Twitter"
 msgstr ""
 
@@ -146,7 +146,7 @@ msgstr ""
 msgid "Spin Roulette"
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenInstructions/RouletteScreenInstructions.tsx:137
+#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenInstructions/RouletteScreenInstructions.tsx:145
 msgid "Spin your way through Rule34, Hentai, Furry, 3D Porn Videos and Images"
 msgstr ""
 
@@ -154,7 +154,7 @@ msgstr ""
 msgid "Spin. Spin. Spin. Spin."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenInstructions/RouletteScreenInstructions.tsx:155
+#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenInstructions/RouletteScreenInstructions.tsx:163
 msgid "Tap on the green button or hit <0>SPACE</0> to get a random post and spin three dice"
 msgstr ""
 
@@ -178,7 +178,7 @@ msgstr ""
 msgid "This is the last straw."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenInstructions/RouletteScreenInstructions.tsx:212
+#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenInstructions/RouletteScreenInstructions.tsx:220
 msgid "Three of the same numbers (triple) means you HAVE to lose to the post you rolled to - no excuses"
 msgstr ""
 
@@ -190,7 +190,7 @@ msgstr ""
 msgid "Triple. You know what to do."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenInstructions/RouletteScreenInstructions.tsx:193
+#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenInstructions/RouletteScreenInstructions.tsx:201
 msgid "Two of the same numbers (double) means you re-spin for three new dice but keep the same post"
 msgstr ""
 
@@ -238,7 +238,7 @@ msgstr ""
 msgid "You're too close to quit now. Keep going."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteScreenClosed.tsx:171
+#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteScreenClosed.tsx:172
 #: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenPostData/RouletteScreenPostData.tsx:59
 msgid "by"
 msgstr ""

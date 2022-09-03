@@ -22,8 +22,8 @@ export default function RouletteSpinningNumbers (props: Props): JSX.Element {
   const rollingVariants = [
     {
       text: (
-        <>{numberSetOne.map((item, index) => (
-          <Fragment key={index}>{item}<br />
+        <>{numberSetOne.map((item) => (
+          <Fragment key={item}>{item}<br />
             <br />
           </Fragment>))}
         </>),
@@ -45,8 +45,8 @@ export default function RouletteSpinningNumbers (props: Props): JSX.Element {
     },
     {
       text: (
-        <>{numberSetTwo.map((item, index) => (
-          <Fragment key={index}>
+        <>{numberSetTwo.map((item) => (
+          <Fragment key={item}>
             {item}
             <br />
             <br />
@@ -70,8 +70,8 @@ export default function RouletteSpinningNumbers (props: Props): JSX.Element {
     },
     {
       text: (
-        <>{numberSetThree.map((item, index) => (
-          <Fragment key={index}>
+        <>{numberSetThree.map((item) => (
+          <Fragment key={item}>
             {item}
             <br />
             <br />

@@ -69,8 +69,8 @@ export default function CategoryMultiSelector ({
       condition={data.categories.edges.length < 1}
     >
       <GridWrap>
-        {data.categories.edges.map((item, index) => (
-          <GridTile key={index}>
+        {data.categories.edges.map((item) => (
+          <GridTile key={item.node.id}>
             <Choice {...register(item.node.id, { title: item.node.title })}>
               <CategoryTileOverlay query={item.node} />
             </Choice>

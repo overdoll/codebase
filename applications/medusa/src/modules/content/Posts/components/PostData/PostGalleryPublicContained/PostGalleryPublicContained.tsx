@@ -23,6 +23,7 @@ const PostFragment = graphql`
       ...PostSupporterContentClubFragment
     }
     content {
+      id
       resource {
         ...PostDetailedMediaFragment
       }
@@ -60,9 +61,9 @@ export default function PostGalleryPublicContained ({
             height: '100%'
           }}
         >
-          {postData.content.map((item, index) =>
+          {postData.content.map((item) =>
             <SwiperSlide
-              key={index}
+              key={item.id}
             >
               <Flex
                 direction='column'
@@ -77,7 +78,7 @@ export default function PostGalleryPublicContained ({
                 >
                   <PostDetailedMedia
                     hideBackground
-                    debounceDelay={50}
+                    debounceDelay={150}
                     imageProps={{
                       hideBackground: true,
                       keepWidth: true,

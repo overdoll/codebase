@@ -17,11 +17,11 @@ msgstr ""
 msgid "Suggested Posts"
 msgstr ""
 
-#: src/domain/slug/post/RootPublicPost/PublicPost/PublicPostPage/PublicPostPage.tsx:58
+#: src/domain/slug/post/RootPublicPost/PublicPost/PublicPostPage/PublicPostPage.tsx:59
 msgid "This post is archived. Only you can see it."
 msgstr ""
 
-#: src/domain/slug/post/RootPublicPost/PublicPost/PublicPostPage/PublicPostPage.tsx:47
+#: src/domain/slug/post/RootPublicPost/PublicPost/PublicPostPage/PublicPostPage.tsx:48
 msgid "This post is not published. Only you can see it."
 msgstr ""
 

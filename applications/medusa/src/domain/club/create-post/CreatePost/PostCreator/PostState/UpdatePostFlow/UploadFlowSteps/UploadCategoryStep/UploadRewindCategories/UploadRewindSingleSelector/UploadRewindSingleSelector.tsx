@@ -4,8 +4,7 @@ import { usePaginationFragment } from 'react-relay'
 import { GridTile, GridWrap, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
 import { EmptyBoundary, EmptyPosts } from '@//:modules/content/Placeholder'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
-import PostPreviewContent
-  from '@//:modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
+import PostPreviewContent from '@//:modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
 import { Choice } from '@//:modules/content/HookedComponents/Choice'
 import { ComponentChoiceArguments } from '@//:modules/content/HookedComponents/Choice/types'
 import type {
@@ -98,15 +97,15 @@ export default function UploadRewindSingleSelector ({
         condition={data.posts.edges.length < 1}
       >
         <GridWrap>
-          {data.posts.edges.map((item, index) => (
-            <GridTile key={index}>
+          {data.posts.edges.map((item) => (
+            <GridTile key={item.node.id}>
               <Choice
                 isDisabled={postData.id === item.node.id}
                 {...register(item.node.id, {
                   categories: item.node.categories
                 })}
               >
-                <PostPreviewContent key={index} query={item.node} />
+                <PostPreviewContent query={item.node} />
               </Choice>
             </GridTile>
           )

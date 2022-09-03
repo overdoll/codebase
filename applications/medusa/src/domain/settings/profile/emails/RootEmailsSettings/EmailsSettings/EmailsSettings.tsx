@@ -37,8 +37,9 @@ const Fragment = graphql`
       __id
       edges {
         node {
-          ...EmailCardFragment
+          id
           status
+          ...EmailCardFragment
         }
       }
     }
@@ -100,11 +101,11 @@ export default function EmailsSettings (props: Props): JSX.Element {
   return (
     <Stack spacing={4}>
       <ListSpacer>
-        {data?.emails.edges.map((item, index) => {
+        {data?.emails.edges.map((item) => {
           return (
             <EmailCard
               emails={item.node}
-              key={index}
+              key={item.node.id}
               connectionID={emailsConnectionID}
             />
           )

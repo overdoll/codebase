@@ -11,7 +11,7 @@ import SearchCategoryRecommendations from './SearchCategoryRecommendations/Searc
 import SearchCategoryRichObject
   from '../../../../../common/rich-objects/search/SearchCategoryRichObject/SearchCategoryRichObject'
 import FullSimplePost
-  from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/FullSimplePost/FullSimplePost'
+  from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/FullSimplePost/FullSimplePost'
 import PostInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
 import PlatformPromoteAlert from '@//:common/components/PlatformPromoteAlert/PlatformPromoteAlert'

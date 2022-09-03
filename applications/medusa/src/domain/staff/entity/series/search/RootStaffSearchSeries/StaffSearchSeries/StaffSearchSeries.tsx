@@ -31,6 +31,7 @@ const Fragment = graphql`
     {
       edges {
         node {
+          id
           slug
           ...SeriesTileOverlayFragment
         }
@@ -62,8 +63,8 @@ export default function StaffSearchSeries ({ searchArguments }: Props): JSX.Elem
       condition={series.length < 1}
     >
       <GridWrap>
-        {series.map((item, index) => (
-          <GridTile key={index}>
+        {series.map((item) => (
+          <GridTile key={item.node.id}>
             <LinkTile href={{
               pathname: '/staff/entity/series/[slug]',
               query: { slug: item.slug }

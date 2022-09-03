@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<87e8e8fcba1d6b9319c043f7bc14eb23>>
+ * @generated SignedSource<<c60df4e68a626532680d7aee62e4ae8f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type PostSlideIndexFragment$data = {
   readonly content: ReadonlyArray<{
+    readonly id: string;
     readonly isSupporterOnly: boolean;
     readonly resource: {
       readonly type: ResourceType;
@@ -52,6 +53,13 @@ const node: ReaderFragment = {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
+          "name": "id",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
           "name": "isSupporterOnly",
           "storageKey": null
         },
@@ -86,6 +94,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "4b877edefb30c0785737c7b04f839cc8";
+(node as any).hash = "ca5227e36404a6bd5961e69da43ca235";
 
 export default node;

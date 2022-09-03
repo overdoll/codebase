@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d56598f0c5811ae26ec471f9f1b624df>>
+ * @generated SignedSource<<e13d7f5b65b88ac2a582f7c7000cc91a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type ClubPayoutsListFragment$data = {
   readonly payouts: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly id: string;
         readonly " $fragmentSpreads": FragmentRefs<"ClubPayoutCardFragment">;
       };
     }>;
@@ -29,7 +30,14 @@ export type ClubPayoutsListFragment$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "payouts"
-];
+],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [
     {
@@ -95,6 +103,7 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
+                (v1/*: any*/),
                 {
                   "args": null,
                   "kind": "FragmentSpread",
@@ -148,19 +157,13 @@ return {
       ],
       "storageKey": null
     },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    }
+    (v1/*: any*/)
   ],
   "type": "Club",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "65ef625767feb1294157a4ccd805a5ee";
+(node as any).hash = "c06ad77eb25a4bbf8d8991ab227ad9aa";
 
 export default node;

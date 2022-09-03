@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c9458ff8a6c4e021940f8730a198a314>>
+ * @generated SignedSource<<10fcc9a95114dec3a89d4c16298f7d18>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type ProfileContributingClubsFragment$data = {
   readonly contributingClubs: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly id: string;
         readonly slug: string;
         readonly " $fragmentSpreads": FragmentRefs<"ClubTileOverlayFragment">;
       };
@@ -60,6 +61,13 @@ const node: ReaderFragment = {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
+                  "name": "id",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
                   "name": "slug",
                   "storageKey": null
                 },
@@ -82,6 +90,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "ffbedf3230c92de1897e12badc083578";
+(node as any).hash = "68a19176eedebd673249f54974d7323e";
 
 export default node;

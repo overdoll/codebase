@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<2ca4df4fce6bf49c6d858fd00c64a0f6>>
- * @relayHash 71e61256bf767826f93c5f7c8ce86877
+ * @generated SignedSource<<a2ce31cfa5eebecee73d0eacf6e0a2dc>>
+ * @relayHash b16a1c647e05c509d85337f5bba11aff
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 71e61256bf767826f93c5f7c8ce86877
+// @relayRequestID b16a1c647e05c509d85337f5bba11aff
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -189,14 +189,15 @@ v17 = {
   "name": "name",
   "storageKey": null
 },
-v18 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "title",
-    "storageKey": null
-  },
+v18 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "title",
+  "storageKey": null
+},
+v19 = [
+  (v18/*: any*/),
   (v8/*: any*/)
 ];
 return {
@@ -492,7 +493,7 @@ return {
             "kind": "LinkedField",
             "name": "audience",
             "plural": false,
-            "selections": (v18/*: any*/),
+            "selections": (v19/*: any*/),
             "storageKey": null
           },
           {
@@ -503,6 +504,7 @@ return {
             "name": "characters",
             "plural": true,
             "selections": [
+              (v8/*: any*/),
               (v17/*: any*/),
               {
                 "alias": null,
@@ -511,10 +513,9 @@ return {
                 "kind": "LinkedField",
                 "name": "series",
                 "plural": false,
-                "selections": (v18/*: any*/),
+                "selections": (v19/*: any*/),
                 "storageKey": null
-              },
-              (v8/*: any*/)
+              }
             ],
             "storageKey": null
           },
@@ -525,7 +526,10 @@ return {
             "kind": "LinkedField",
             "name": "categories",
             "plural": true,
-            "selections": (v18/*: any*/),
+            "selections": [
+              (v8/*: any*/),
+              (v18/*: any*/)
+            ],
             "storageKey": null
           },
           (v8/*: any*/)
@@ -535,7 +539,7 @@ return {
     ]
   },
   "params": {
-    "id": "71e61256bf767826f93c5f7c8ce86877",
+    "id": "b16a1c647e05c509d85337f5bba11aff",
     "metadata": {},
     "name": "StaffPostQuery",
     "operationKind": "query",

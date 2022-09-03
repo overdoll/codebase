@@ -94,8 +94,8 @@ export default function UploadSearchTopicsSelector ({
       condition={data.topics.edges.length < 1}
     >
       <GridWrap>
-        {data.topics.edges.map((item, index) => (
-          <ShortGridTile key={index}>
+        {data.topics.edges.map((item) => (
+          <ShortGridTile key={item.node.id}>
             <Choice
               {...registerTopic(item.node.id, {
                 node: item.node

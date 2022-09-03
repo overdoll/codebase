@@ -102,8 +102,8 @@ export default function UploadSearchCharactersMultiSelector (props: Props): JSX.
       condition={data.characters.edges.length < 1}
     >
       <MediumGridWrap>
-        {data.characters.edges.map((item, index) => (
-          <GridTile key={index}>
+        {data.characters.edges.map((item) => (
+          <GridTile key={item.node.id}>
             <Choice {...register(item.node.id, { name: item.node.name })}>
               <CharacterTileOverlay query={item.node} />
             </Choice>

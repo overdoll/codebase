@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fa3e7700d3a48e7c223c51e22868b089>>
- * @relayHash b8fa3621a8d2060c5bdb4d23209fe951
+ * @generated SignedSource<<01a304c9d008caf6880a49ee9bc27d9e>>
+ * @relayHash ae30c65e71f050eeda77d484c9db041c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b8fa3621a8d2060c5bdb4d23209fe951
+// @relayRequestID ae30c65e71f050eeda77d484c9db041c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -269,6 +269,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
+                      (v9/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -292,7 +293,6 @@ return {
                         "name": "depositDate",
                         "storageKey": null
                       },
-                      (v9/*: any*/),
                       (v2/*: any*/)
                     ],
                     "storageKey": null
@@ -474,6 +474,18 @@ return {
                         "name": "totalTransactionsAmount",
                         "storageKey": null
                       },
+                      {
+                        "kind": "ClientExtension",
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "__id",
+                            "storageKey": null
+                          }
+                        ]
+                      },
                       (v2/*: any*/)
                     ],
                     "storageKey": null
@@ -514,7 +526,7 @@ return {
     ]
   },
   "params": {
-    "id": "b8fa3621a8d2060c5bdb4d23209fe951",
+    "id": "ae30c65e71f050eeda77d484c9db041c",
     "metadata": {},
     "name": "ClubRevenueQuery",
     "operationKind": "query",

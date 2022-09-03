@@ -23,6 +23,7 @@ const Fragment = graphql`
     @connection (key: "ClubTransactionMetrics_transactionMetrics") {
       edges {
         node {
+          __id
           ...ClubTransactionMetricFragment
         }
       }
@@ -59,8 +60,8 @@ export default function ClubTransactionMetrics ({ query }: Props): JSX.Element {
         </PageSectionDescription>
       </PageSectionWrap>
       <Stack spacing={2}>
-        {data.transactionMetrics.edges.map((item, index) => (
-          <ClubTransactionMetric key={index} query={item.node} />
+        {data.transactionMetrics.edges.map((item) => (
+          <ClubTransactionMetric key={item.node.__id} query={item.node} />
         ))}
         <LoadMoreStackTile
           hasNext={hasNext}

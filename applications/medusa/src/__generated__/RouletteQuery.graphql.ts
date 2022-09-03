@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<93f24f80a18ce32c7ab5c33b43229946>>
- * @relayHash 7fbb85e4197438f51f29132a999d3b34
+ * @generated SignedSource<<6cc8fd9e1be55f8b200b9c1747ffb207>>
+ * @relayHash 920e2062b7f88741df191076e91f5fdc
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7fbb85e4197438f51f29132a999d3b34
+// @relayRequestID 920e2062b7f88741df191076e91f5fdc
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -319,6 +319,7 @@ return {
                         "name": "content",
                         "plural": true,
                         "selections": [
+                          (v3/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -357,8 +358,7 @@ return {
                             "kind": "ScalarField",
                             "name": "isSupporterOnly",
                             "storageKey": null
-                          },
-                          (v3/*: any*/)
+                          }
                         ],
                         "storageKey": null
                       },
@@ -440,7 +440,7 @@ return {
     ]
   },
   "params": {
-    "id": "7fbb85e4197438f51f29132a999d3b34",
+    "id": "920e2062b7f88741df191076e91f5fdc",
     "metadata": {},
     "name": "RouletteQuery",
     "operationKind": "query",

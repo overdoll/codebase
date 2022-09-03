@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<533539ff57bd204a3b6a2c6bc5e6c911>>
+ * @generated SignedSource<<6339f8fac88ef757b42f1e0268b12851>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,7 @@ export type EmailsSettingsFragment$data = {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly id: string;
         readonly status: AccountEmailStatus;
         readonly " $fragmentSpreads": FragmentRefs<"EmailCardFragment">;
       };
@@ -32,7 +33,14 @@ export type EmailsSettingsFragment$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "emails"
-];
+],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [
     {
@@ -98,17 +106,18 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "EmailCardFragment"
-                },
+                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
                   "name": "status",
                   "storageKey": null
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "EmailCardFragment"
                 },
                 {
                   "alias": null,
@@ -170,19 +179,13 @@ return {
       ],
       "storageKey": null
     },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    }
+    (v1/*: any*/)
   ],
   "type": "Account",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "61647e9f7d6b3b803b4605825e973488";
+(node as any).hash = "8f7e8dfdea5af2143cdb64d71419ec47";
 
 export default node;

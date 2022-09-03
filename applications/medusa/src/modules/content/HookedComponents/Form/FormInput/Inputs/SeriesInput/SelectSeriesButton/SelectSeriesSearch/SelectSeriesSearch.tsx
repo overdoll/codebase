@@ -70,8 +70,8 @@ export default function SelectSeriesSearch ({
       condition={series.length < 1}
     >
       <GridWrap>
-        {series.map((item, index) => (
-          <GridTile key={index}>
+        {series.map((item) => (
+          <GridTile key={item.id}>
             <Choice
               {...register(item.id, { title: item.title })}
             >

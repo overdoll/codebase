@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3aa1d8962b692dd235830a0d3b1a5fc7>>
- * @relayHash c86be5d210cf95ad553544f7cb8fbf19
+ * @generated SignedSource<<9d3595594454c017e79a9e1359359e90>>
+ * @relayHash 8810d87545592752759e5469ca057492
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c86be5d210cf95ad553544f7cb8fbf19
+// @relayRequestID 8810d87545592752759e5469ca057492
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -362,6 +362,7 @@ return {
                         "name": "content",
                         "plural": true,
                         "selections": [
+                          (v10/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -400,8 +401,7 @@ return {
                             "kind": "ScalarField",
                             "name": "isSupporterOnly",
                             "storageKey": null
-                          },
-                          (v10/*: any*/)
+                          }
                         ],
                         "storageKey": null
                       },
@@ -645,7 +645,7 @@ return {
     ]
   },
   "params": {
-    "id": "c86be5d210cf95ad553544f7cb8fbf19",
+    "id": "8810d87545592752759e5469ca057492",
     "metadata": {},
     "name": "SearchCharacterQuery",
     "operationKind": "query",

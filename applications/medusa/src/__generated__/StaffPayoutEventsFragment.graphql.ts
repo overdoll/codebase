@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bddaeaf0bac5e69f7f2dc88f2f39c1e1>>
+ * @generated SignedSource<<8658436b985ec7d6c61cf52b787e70b5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type StaffPayoutEventsFragment$data = {
   readonly events: ReadonlyArray<{
     readonly createdAt: any;
     readonly error: string;
+    readonly id: string;
   }>;
   readonly " $fragmentType": "StaffPayoutEventsFragment";
 };
@@ -40,6 +41,13 @@ const node: ReaderFragment = {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
+          "name": "id",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
           "name": "error",
           "storageKey": null
         },
@@ -58,6 +66,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "428ae1907c6cdce100ec70b1f21188cf";
+(node as any).hash = "0f7855752f19cf931549044e3d40ea5d";
 
 export default node;

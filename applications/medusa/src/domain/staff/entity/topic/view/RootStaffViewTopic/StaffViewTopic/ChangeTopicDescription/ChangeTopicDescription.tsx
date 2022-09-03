@@ -15,6 +15,7 @@ const Fragment = graphql`
   fragment ChangeTopicDescriptionFragment on Topic {
     description
     descriptionTranslations {
+      text
       ...TranslationSnippetFragment
     }
     ...ChangeTopicDescriptionFormFragment
@@ -47,8 +48,8 @@ export default function ChangeTopicDescription ({ query }: Props): JSX.Element {
           </CollapseButton>
           <CollapseBody>
             <Stack>
-              {data.descriptionTranslations.map((item, index) => (
-                <TranslationSnippet key={index} query={item} />)
+              {data.descriptionTranslations.map((item) => (
+                <TranslationSnippet key={item.text} query={item} />)
               )}
             </Stack>
           </CollapseBody>

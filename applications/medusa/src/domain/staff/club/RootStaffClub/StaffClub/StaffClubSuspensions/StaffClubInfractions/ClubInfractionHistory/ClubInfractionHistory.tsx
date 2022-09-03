@@ -90,8 +90,8 @@ export default function ClubInfractionHistory ({ query }: Props): JSX.Element {
             </TableHeaderRow>
           </TableHeader>
           <TableBody>
-            {data.infractionHistory.edges.map((item, index) => (
-              <TableBodyRowBackground key={index}>
+            {data.infractionHistory.edges.map((item) => (
+              <TableBodyRowBackground key={item.node.id}>
                 <TableBodyRow columns={8}>
                   <TableBodyColumn column={2}>
                     {formatDistanceToNowStrict(new Date(item.node.issuedAt), {

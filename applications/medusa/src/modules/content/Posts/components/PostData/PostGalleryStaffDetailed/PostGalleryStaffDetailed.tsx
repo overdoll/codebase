@@ -25,6 +25,7 @@ const PostFragment = graphql`
       ...PostSupporterContentClubFragment
     }
     content {
+      id
       resource {
         processed
         ...PostDetailedMediaFragment
@@ -49,9 +50,9 @@ export default function PostGalleryStaffDetailed ({
         {...POST_SWIPER_PROPS}
         onSwiper={(swiper) => setSwiper(swiper)}
       >
-        {postData.content.map((item, index) =>
+        {postData.content.map((item) =>
           <SwiperSlide
-            key={index}
+            key={item.id}
             {...POST_SWIPER_SLIDE_PROPS}
           >
             {!item.resource.processed

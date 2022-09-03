@@ -38,6 +38,7 @@ const Fragment = graphql`
     @connection (key: "ClubMembers_members") {
       edges {
         node {
+          id
           ...ClubMemberTileFragment
         }
       }
@@ -89,8 +90,8 @@ export default function ClubMembers ({ query }: Props): JSX.Element {
       <Stack>
         <ClubInformationBanner query={queryData.club} />
         <GridWrap>
-          {data.members.edges.map((item, index) =>
-            <ClubMemberTile key={index} query={item.node} />
+          {data.members.edges.map((item) =>
+            <ClubMemberTile key={item.node.id} query={item.node} />
           )}
           <LoadMoreGridTile
             hasNext={hasNext}
