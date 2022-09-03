@@ -19,6 +19,7 @@ const Query = graphql`
     characters(first: 17) {
       edges {
         node {
+          id
           ...SearchResultsCharacterFragment
         }
       }
@@ -26,6 +27,7 @@ const Query = graphql`
     categories(first: 17) {
       edges {
         node {
+          id
           ...SearchResultsCategoryFragment
         }
       }
@@ -33,6 +35,7 @@ const Query = graphql`
     series(first: 17) {
       edges {
         node {
+          id
           ...SearchResultsSeriesFragment
         }
       }
@@ -61,13 +64,13 @@ export default function SearchRecommendations ({
           </Trans>
         </SearchHeader>
         <Swiper {...SEARCH_SWIPER_PROPS}>
-          {queryData.characters.edges.map((item, index) => (
+          {queryData.characters.edges.map((item) => (
             <SwiperSlide
               style={{
                 height: slideHeight,
                 width: slideWidth
               }}
-              key={index}
+              key={item.node.id}
             >
               <SearchResultsCharacter query={item.node} />
             </SwiperSlide>
@@ -87,7 +90,7 @@ export default function SearchRecommendations ({
                 height: slideHeight,
                 width: slideWidth
               }}
-              key={index}
+              key={item.node.id}
             >
               <SearchResultsCategory query={item.node} />
             </SwiperSlide>
@@ -107,7 +110,7 @@ export default function SearchRecommendations ({
                 height: slideHeight,
                 width: slideWidth
               }}
-              key={index}
+              key={item.node.id}
             >
               <SearchResultsSeries query={item.node} />
             </SwiperSlide>

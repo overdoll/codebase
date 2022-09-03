@@ -31,6 +31,12 @@ const Fragment = graphql`
     @connection(key: "StaffClubSuspensionLogs_suspensionLogs") {
       edges {
         node {
+          ...on ClubIssuedSuspensionLog {
+            id
+          }
+          ...on ClubRemovedSuspensionLog {
+            id
+          }
           ...StaffClubSuspensionLogFragment
         }
       }
@@ -85,9 +91,9 @@ export default function StaffClubSuspensionLogs ({ query }: Props): JSX.Element 
           </TableHeaderRow>
         </TableHeader>
         <TableBody>
-          {data.suspensionLogs.edges.map((item, index) => (
+          {data.suspensionLogs.edges.map((item) => (
             <TableBodyRowBackground
-              key={index}
+              key={item.node.id}
             >
               <StaffClubSuspensionLog query={item.node} />
             </TableBodyRowBackground>

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<602a1808d0f9ea240fb866620b44f16c>>
+ * @generated SignedSource<<ffdcd78379502da336a401cc3b5bc360>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,6 +12,7 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ProcessContentDisplayFragment$data = {
   readonly content: ReadonlyArray<{
+    readonly id: string;
     readonly resource: {
       readonly failed: boolean;
       readonly processed: boolean;
@@ -29,19 +30,21 @@ export type ProcessContentDisplayFragment$key = {
   readonly " $fragmentSpreads": FragmentRefs<"ProcessContentDisplayFragment">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
   "name": "ProcessContentDisplayFragment",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
+    (v0/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -50,6 +53,7 @@ const node: ReaderFragment = {
       "name": "content",
       "plural": true,
       "selections": [
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -105,7 +109,8 @@ const node: ReaderFragment = {
   "type": "Post",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "ca76435590703986e1f7df684c5d8669";
+(node as any).hash = "1b94f207b2fd3da2bcacf21a531ab700";
 
 export default node;

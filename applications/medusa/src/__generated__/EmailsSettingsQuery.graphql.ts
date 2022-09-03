@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<5f656b335da46516b4e767410b3f15f1>>
- * @relayHash a9edc5c2f0b3b82810f19f52a0f18237
+ * @generated SignedSource<<29f0c7be42ba4159fd583c31efc56da1>>
+ * @relayHash 3c2b7eca2a03b08b6affcd0f7496c8f1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a9edc5c2f0b3b82810f19f52a0f18237
+// @relayRequestID 3c2b7eca2a03b08b6affcd0f7496c8f1
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -118,14 +118,14 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "email",
+                        "name": "status",
                         "storageKey": null
                       },
                       {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "status",
+                        "name": "email",
                         "storageKey": null
                       },
                       {
@@ -205,7 +205,7 @@ return {
     ]
   },
   "params": {
-    "id": "a9edc5c2f0b3b82810f19f52a0f18237",
+    "id": "3c2b7eca2a03b08b6affcd0f7496c8f1",
     "metadata": {},
     "name": "EmailsSettingsQuery",
     "operationKind": "query",

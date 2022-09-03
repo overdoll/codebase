@@ -98,8 +98,8 @@ export default function PostReports ({ searchArguments }: Props): JSX.Element {
           </TableHeaderRow>
         </TableHeader>
         <TableBody>
-          {data.postReports.edges.map((item, index) => (
-            <TableBodyRowBackground key={index}>
+          {data.postReports.edges.map((item) => (
+            <TableBodyRowBackground key={item.node.id}>
               <TableBodyRow columns={6}>
                 <TableBodyColumn column={1}>
                   {item.node.account.username}

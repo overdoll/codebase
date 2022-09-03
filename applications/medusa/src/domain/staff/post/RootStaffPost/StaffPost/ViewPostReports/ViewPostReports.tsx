@@ -88,8 +88,8 @@ export default function ViewPostReports ({ searchArguments }: Props): JSX.Elemen
           </TableHeaderRow>
         </TableHeader>
         <TableBody>
-          {data.reports.edges.map((item, index) => (
-            <TableBodyRowBackground key={index}>
+          {data.reports.edges.map((item) => (
+            <TableBodyRowBackground key={item.node.id}>
               <TableBodyRow columns={6}>
                 <TableBodyColumn column={2}>
                   {item.node.account.username}

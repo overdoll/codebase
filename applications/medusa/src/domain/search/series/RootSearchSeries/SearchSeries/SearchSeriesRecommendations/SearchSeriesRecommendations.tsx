@@ -13,6 +13,7 @@ const Fragment = graphql`
     characters(seriesSlug: $seriesSlug, first: 3) {
       edges {
         node {
+          id
           ...ClickableCharacterFragment
         }
       }
@@ -26,7 +27,7 @@ export default function SearchSeriesRecommendations ({ query }: Props): JSX.Elem
   return (
     <Wrap overflow='show'>
       {data.characters.edges.map((item, index) =>
-        <WrapItem key={index}>
+        <WrapItem key={item.node.id}>
           <ClickableCharacter query={item.node} />
         </WrapItem>
       )}

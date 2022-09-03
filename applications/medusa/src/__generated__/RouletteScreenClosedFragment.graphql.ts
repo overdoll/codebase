@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b3b39f79722e5eced85c35dc97e67714>>
+ * @generated SignedSource<<5e7620932a9a32c39f6abdffd068a170>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,6 +17,7 @@ export type RouletteScreenClosedFragment$data = {
   readonly gameState: {
     readonly post: {
       readonly characters: ReadonlyArray<{
+        readonly id: string;
         readonly " $fragmentSpreads": FragmentRefs<"RoulettePostCharacterFragment">;
       }>;
       readonly club: {
@@ -85,6 +86,13 @@ const node: ReaderFragment = {
                 "name": "characters",
                 "plural": true,
                 "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "id",
+                    "storageKey": null
+                  },
                   {
                     "args": null,
                     "kind": "FragmentSpread",
@@ -159,6 +167,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "343a27ee75508991de647c7836dacebe";
+(node as any).hash = "d52d2e9c2a103ff2955b124954904d0c";
 
 export default node;

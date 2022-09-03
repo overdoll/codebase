@@ -101,7 +101,7 @@ msgstr ""
 msgid "Search for any kind of porn"
 msgstr ""
 
-#: src/domain/home/RootHome/Home/BrowsePostsPreview/BrowsePostsPreview.tsx:77
+#: src/domain/home/RootHome/Home/BrowsePostsPreview/BrowsePostsPreview.tsx:78
 msgid "See All Posts"
 msgstr ""
 

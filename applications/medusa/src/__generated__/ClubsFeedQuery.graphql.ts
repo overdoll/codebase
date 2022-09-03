@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<02e949cbdc2969eeaa7428d523f84ab4>>
- * @relayHash b9d35c157d2f4c90da8854503d92e566
+ * @generated SignedSource<<b2c312980a684abcff9865d974552f4e>>
+ * @relayHash ebe2be1d985398d6d846677b71d7c7b5
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b9d35c157d2f4c90da8854503d92e566
+// @relayRequestID ebe2be1d985398d6d846677b71d7c7b5
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -298,6 +298,7 @@ return {
                         "name": "content",
                         "plural": true,
                         "selections": [
+                          (v1/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -336,8 +337,7 @@ return {
                             "kind": "ScalarField",
                             "name": "isSupporterOnly",
                             "storageKey": null
-                          },
-                          (v1/*: any*/)
+                          }
                         ],
                         "storageKey": null
                       },
@@ -555,6 +555,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
+                  (v1/*: any*/),
                   (v9/*: any*/),
                   (v11/*: any*/),
                   {
@@ -567,7 +568,6 @@ return {
                     "selections": (v15/*: any*/),
                     "storageKey": null
                   },
-                  (v1/*: any*/),
                   (v12/*: any*/),
                   {
                     "alias": null,
@@ -646,7 +646,7 @@ return {
     ]
   },
   "params": {
-    "id": "b9d35c157d2f4c90da8854503d92e566",
+    "id": "ebe2be1d985398d6d846677b71d7c7b5",
     "metadata": {},
     "name": "ClubsFeedQuery",
     "operationKind": "query",

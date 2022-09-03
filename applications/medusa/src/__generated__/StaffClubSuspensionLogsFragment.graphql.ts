@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<951d055d2904003cd7d9ffee53f99bac>>
+ * @generated SignedSource<<0e87a47f976bf7d810879318f5112be1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type StaffClubSuspensionLogsFragment$data = {
   readonly suspensionLogs: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly id?: string;
         readonly " $fragmentSpreads": FragmentRefs<"StaffClubSuspensionLogFragment">;
       };
     }>;
@@ -29,6 +30,16 @@ export type StaffClubSuspensionLogsFragment$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "suspensionLogs"
+],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v2 = [
+  (v1/*: any*/)
 ];
 return {
   "argumentDefinitions": [
@@ -96,6 +107,18 @@ return {
               "plural": false,
               "selections": [
                 {
+                  "kind": "InlineFragment",
+                  "selections": (v2/*: any*/),
+                  "type": "ClubIssuedSuspensionLog",
+                  "abstractKey": null
+                },
+                {
+                  "kind": "InlineFragment",
+                  "selections": (v2/*: any*/),
+                  "type": "ClubRemovedSuspensionLog",
+                  "abstractKey": null
+                },
+                {
                   "args": null,
                   "kind": "FragmentSpread",
                   "name": "StaffClubSuspensionLogFragment"
@@ -148,19 +171,13 @@ return {
       ],
       "storageKey": null
     },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    }
+    (v1/*: any*/)
   ],
   "type": "Club",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "a5a83589d9474f8f818ad50781f50b20";
+(node as any).hash = "1a4dacf06dd6cf7e0887cf7311779bc4";
 
 export default node;

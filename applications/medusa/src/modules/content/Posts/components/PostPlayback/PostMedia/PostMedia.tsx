@@ -34,7 +34,10 @@ export default function PostMedia ({
         isObservingDebounced
       }) => (
         <PostVideoMedia
-          controls={{ canControl: false }}
+          controls={{
+            canSeek: false,
+            canFullscreen: false
+          }}
           isObserving={isObserving}
           isObservingDebounced={isObservingDebounced}
           query={data}

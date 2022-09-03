@@ -6,7 +6,7 @@ import { useFragment } from 'react-relay/hooks'
 import PostInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
 import FullSimplePost
-  from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/FullSimplePost/FullSimplePost'
+  from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/FullSimplePost/FullSimplePost'
 import { Icon, LargeBackgroundBox } from '@//:modules/content/PageLayout'
 import { Box, Heading, Stack, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'

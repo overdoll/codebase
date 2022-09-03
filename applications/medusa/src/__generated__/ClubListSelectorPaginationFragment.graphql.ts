@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ec1b043ee9578434f06cc640b5267c72>>
- * @relayHash 0434f831ef9184c169566532724a4731
+ * @generated SignedSource<<338b7c0161291b2c583c3330d1e0f194>>
+ * @relayHash bc283a0fe27dbd5e8168bc5bf3a19db4
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0434f831ef9184c169566532724a4731
+// @relayRequestID bc283a0fe27dbd5e8168bc5bf3a19db4
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -234,6 +234,7 @@ return {
                         "name": "node",
                         "plural": false,
                         "selections": [
+                          (v7/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -241,7 +242,6 @@ return {
                             "name": "slug",
                             "storageKey": null
                           },
-                          (v7/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -388,7 +388,7 @@ return {
     ]
   },
   "params": {
-    "id": "0434f831ef9184c169566532724a4731",
+    "id": "bc283a0fe27dbd5e8168bc5bf3a19db4",
     "metadata": {},
     "name": "ClubListSelectorPaginationFragment",
     "operationKind": "query",
@@ -397,6 +397,6 @@ return {
 };
 })();
 
-(node as any).hash = "4c8d5a326b569ad869fea46e3c8de518";
+(node as any).hash = "290041137b94658e76fd4aedf66cf03e";
 
 export default node;

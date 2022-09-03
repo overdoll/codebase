@@ -6,10 +6,12 @@ import { ButtonProps, HStack } from '@chakra-ui/react'
 import { PostHeaderClub } from '../../../../index'
 import PostJoinClub from '../PostJoinClub/PostJoinClub'
 import { LinkTile } from '../../../../../ContentSelection'
+import { UrlObject } from 'url'
 
 interface Props extends ButtonProps {
   postQuery: PostHeaderClubJoinFragment$key
   viewerQuery: PostHeaderClubJoinViewerFragment$key | null
+  href: string | UrlObject
 }
 
 const PostFragment = graphql`
@@ -31,7 +33,8 @@ const ViewerFragment = graphql`
 
 export default function PostHeaderClubJoin ({
   postQuery,
-  viewerQuery
+  viewerQuery,
+  href
 }: Props): JSX.Element {
   const postData = useFragment(PostFragment, postQuery)
 
@@ -41,10 +44,7 @@ export default function PostHeaderClubJoin ({
     <HStack spacing={3} justify='space-between' align='center'>
       <LinkTile
         borderRadius='base'
-        href={{
-          pathname: '/[slug]',
-          query: { slug: postData.club.slug }
-        }}
+        href={href}
       >
         <PostHeaderClub query={postData} />
       </LinkTile>

@@ -21,6 +21,7 @@ const Fragment = graphql`
     @connection (key: "DiscoverClubs_discoverClubs") {
       edges {
         node {
+          id
           ...ClubJoinTileFragment
         }
       }
@@ -53,8 +54,8 @@ export default function DiscoverClubsList ({
         condition={data.discoverClubs.edges.length < 1}
       >
         <GridWrap templateColumns='repeat(auto-fill, minmax(150px, 1fr))'>
-          {data.discoverClubs.edges.map((item, index) =>
-            <GridTile key={index}>
+          {data.discoverClubs.edges.map((item) =>
+            <GridTile key={item.node.id}>
               <ClubJoinTile clubQuery={item.node} viewerQuery={data.viewer} />
             </GridTile>)}
           <LoadMoreGridTile

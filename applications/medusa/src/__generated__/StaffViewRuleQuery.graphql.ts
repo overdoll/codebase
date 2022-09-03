@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6ab15f4b9aa6d6da2238d66c10791de9>>
- * @relayHash e7e315cd53afae5da2347629f69a2167
+ * @generated SignedSource<<d22c6c2dd542c19410f6c1dadc73b271>>
+ * @relayHash 9d0692c7da114b12cf256962af804d8a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e7e315cd53afae5da2347629f69a2167
+// @relayRequestID 9d0692c7da114b12cf256962af804d8a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -192,7 +192,7 @@ return {
     ]
   },
   "params": {
-    "id": "e7e315cd53afae5da2347629f69a2167",
+    "id": "9d0692c7da114b12cf256962af804d8a",
     "metadata": {},
     "name": "StaffViewRuleQuery",
     "operationKind": "query",

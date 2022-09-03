@@ -77,8 +77,8 @@ export default function UploadSearchCategoriesMultiSelector ({
       condition={data.categories.edges.length < 1}
     >
       <ShortGridWrap templateColumns='repeat(auto-fill, minmax(100px, 1fr))'>
-        {data.categories.edges.map((item, index) => (
-          <ShortGridTile key={index}>
+        {data.categories.edges.map((item) => (
+          <ShortGridTile key={item.node.id}>
             <Choice
               {...register(item.node.id, {
                 title: item.node.title

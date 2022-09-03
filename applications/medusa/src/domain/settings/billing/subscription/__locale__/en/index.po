@@ -119,7 +119,7 @@ msgstr ""
 msgid "See All"
 msgstr ""
 
-#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/ClubExclusivePosts/PostsHorizontalPreview/PostsHorizontalPreview.tsx:87
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/ClubExclusivePosts/PostsHorizontalPreview/PostsHorizontalPreview.tsx:88
 msgid "See all"
 msgstr ""
 

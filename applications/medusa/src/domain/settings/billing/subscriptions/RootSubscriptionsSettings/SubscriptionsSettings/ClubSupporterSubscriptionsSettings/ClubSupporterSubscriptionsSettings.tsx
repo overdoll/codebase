@@ -83,8 +83,8 @@ export default function ClubSupporterSubscriptionsSettings ({ query }: Props): J
       condition={data.clubSupporterSubscriptions.edges.length < 1}
     >
       <Stack spacing={2}>
-        {data.clubSupporterSubscriptions.edges.map((item, index) => (
-          <AccountSupporterSubscriptionPreview key={index} node={item.node} />
+        {data.clubSupporterSubscriptions.edges.map((item) => (
+          <AccountSupporterSubscriptionPreview key={item.node.id} node={item.node} />
         ))}
         <LoadMoreStackTile
           hasNext={hasNext}

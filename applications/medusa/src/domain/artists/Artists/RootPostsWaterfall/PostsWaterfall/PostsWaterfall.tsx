@@ -33,9 +33,9 @@ export default function PostsWaterfall (): JSX.Element {
         xl: 'repeat(7, 1fr)'
       }}
     >
-      {data.postsFeed.edges.map((item, index) => {
+      {data.postsFeed.edges.map((item) => {
         return (
-          <GridItem bg={item.node.content[0].resource.preview} key={index}>
+          <GridItem bg={item.node.content[0].resource.preview} key={item.node.id}>
             <ResourceInfo cover query={item.node.content[0]} />
           </GridItem>
         )

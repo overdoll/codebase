@@ -9,6 +9,7 @@ interface Props {
 const Fragment = graphql`
   fragment PostStaticCharactersFragment on Post {
     characters {
+      id
       name
       series {
         title
@@ -23,8 +24,8 @@ export default function PostStaticCharacters ({ query }: Props): JSX.Element {
   return (
 
     <Wrap>
-      {data.characters.map((item, index) =>
-        <WrapItem key={index}>
+      {data.characters.map((item) =>
+        <WrapItem key={item.id}>
           <Tag size='lg' variant='outline' colorScheme='gray' borderRadius='full'>
             <TagLabel>{item.name} ({item.series?.title})</TagLabel>
           </Tag>

@@ -103,8 +103,8 @@ export default function UpdateClubPlatformFeeForm ({
             </Trans>
           </InputHeader>
           <SelectInput placeholder={i18n._(t`Select percentage`)}>
-            {[...Array(11).keys()].map((item, index) => (
-              <option key={index} value={item + 20}>
+            {[...Array(11).keys()].map((item) => (
+              <option key={item} value={item + 20}>
                 {item + 20}%
               </option>))}
           </SelectInput>

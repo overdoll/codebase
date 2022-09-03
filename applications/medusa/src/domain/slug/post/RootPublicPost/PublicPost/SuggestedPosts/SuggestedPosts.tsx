@@ -4,7 +4,7 @@ import { graphql, usePaginationFragment } from 'react-relay'
 import { useFragment } from 'react-relay/hooks'
 import { PublicPostQuery } from '@//:artifacts/PublicPostQuery.graphql'
 import FullSimplePost
-  from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/FullSimplePost/FullSimplePost'
+  from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/FullSimplePost/FullSimplePost'
 import PostInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
 import PlatformPromoteAlert from '@//:common/components/PlatformPromoteAlert/PlatformPromoteAlert'

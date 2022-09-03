@@ -24,8 +24,8 @@ export default function ChoosePayoutMethod ({ query }: Props): JSX.Element {
 
   return (
     <Stack spacing={2}>
-      {data.payoutMethods.map((item, index) => (
-        <StackTile key={index}>
+      {data.payoutMethods.map((item) => (
+        <StackTile key={item}>
           <Choice
             {...register(item, {})}
           >

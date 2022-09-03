@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b06891a3fdfee8103f71fb153ee08bbe>>
+ * @generated SignedSource<<7825b065fd83e1b59ed976b6e3da4590>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type BrowsePostsPreviewFragment$data = {
   readonly postsFeed: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly id: string;
         readonly " $fragmentSpreads": FragmentRefs<"FullSimplePostFragment">;
       };
     }>;
@@ -103,6 +104,13 @@ return {
               "plural": false,
               "selections": [
                 {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "id",
+                  "storageKey": null
+                },
+                {
                   "args": null,
                   "kind": "FragmentSpread",
                   "name": "FullSimplePostFragment"
@@ -166,6 +174,6 @@ return {
 };
 })();
 
-(node as any).hash = "1e497312b3fb84d06478290264eae43b";
+(node as any).hash = "e2719effeb2438ad8d9742ec2b810025";
 
 export default node;

@@ -34,6 +34,7 @@ const Fragment = graphql`
     @connection (key: "ClubPayments_payments") {
       edges {
         node {
+          id
           ...ClubPaymentCardFragment
         }
       }
@@ -70,7 +71,7 @@ export default function ClubPayments ({ query }: Props): JSX.Element {
       condition={data.payments.edges.length < 1}
     >
       <Stack spacing={2}>
-        {data.payments.edges.map((item, index) => <ClubPaymentCard key={index} query={item.node} />)}
+        {data.payments.edges.map((item) => <ClubPaymentCard key={item.node.id} query={item.node} />)}
         <LoadMoreStackTile
           hasNext={hasNext}
           onLoadNext={() => loadNext(9)}

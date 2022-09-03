@@ -135,9 +135,9 @@ export default function RecoveryCodesSetup (props: Props): JSX.Element | null {
           </Flex>
         </Alert>
         <SimpleGrid columns={2} spacing={4}>
-          {recoveryCodes.map((item, index) => {
+          {recoveryCodes.map((item) => {
             return (
-              <Flex px={2} w='100%' h={8} position='relative' justify='center' align='center' key={index}>
+              <Flex px={2} w='100%' h={8} position='relative' justify='center' align='center' key={item.code}>
                 {isGeneratingCodes
                   ? <Skeleton w='100%' h='100%' />
                   : (

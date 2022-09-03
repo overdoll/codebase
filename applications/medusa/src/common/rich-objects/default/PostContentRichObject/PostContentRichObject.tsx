@@ -44,10 +44,10 @@ export default function PostContentRichObject ({
       {content.resource.type === 'IMAGE'
         ? <meta name='twitter:card' content='summary_large_image' />
         : <meta name='twitter:card' content='player' />}
-      {filteredUrls.map((item, index) => {
+      {filteredUrls.map((item) => {
         const type = content.resource.type === 'IMAGE' ? 'image' : 'video'
         return (
-          <Fragment key={index}>
+          <Fragment key={item.url}>
             <meta property='og:type' content={type} />
             <meta property={`og:${type}`} content={item.url} />
             <meta property={`og:${type}:secure_url`} content={item.url} />

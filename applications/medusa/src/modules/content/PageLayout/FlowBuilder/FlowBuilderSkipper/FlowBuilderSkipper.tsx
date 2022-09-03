@@ -19,11 +19,11 @@ export default function FlowBuilderSkipper ({ canSkipSteps = true }: Props): JSX
 
   return (
     <HStack justify='center' spacing={2}>
-      {stepsArray.map((item, index) =>
+      {stepsArray.map((item) =>
         <ClickableBox
           isDisabled={!canSkipSteps}
           onClick={() => skipToStep(item)}
-          key={index}
+          key={item}
           p={0}
           borderRadius='md'
           w={8}

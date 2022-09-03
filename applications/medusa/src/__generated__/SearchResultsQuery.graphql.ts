@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<119f82c818f397e1145002d9349ec0cf>>
- * @relayHash ab3e932f7a20742f9bddda3254f4270e
+ * @generated SignedSource<<dc107ab3694038c8d1abca6e801f65d5>>
+ * @relayHash 99db7a6bac8c120abdaa900b96643db7
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ab3e932f7a20742f9bddda3254f4270e
+// @relayRequestID 99db7a6bac8c120abdaa900b96643db7
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -20,6 +20,8 @@ export type SearchResultsQuery$data = {
   readonly search: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly __typename: string;
+        readonly id?: string;
         readonly " $fragmentSpreads": FragmentRefs<"SearchResultsUnionFragment">;
       };
     }>;
@@ -54,52 +56,62 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "__typename",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "id",
   "storageKey": null
 },
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "title",
-  "storageKey": null
-},
+v4 = [
+  (v3/*: any*/)
+],
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "slug",
+  "name": "name",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "preview",
+  "name": "title",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "type",
+  "name": "slug",
   "storageKey": null
 },
 v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "preview",
   "storageKey": null
 },
 v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "type",
+  "storageKey": null
+},
+v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v11 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -107,7 +119,7 @@ v9 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v8/*: any*/),
+    (v10/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -118,21 +130,21 @@ v9 = {
   ],
   "storageKey": null
 },
-v10 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "width",
   "storageKey": null
 },
-v11 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "height",
   "storageKey": null
 },
-v12 = {
+v14 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -140,11 +152,11 @@ v12 = {
   "name": "videoThumbnail",
   "plural": false,
   "selections": [
-    (v8/*: any*/)
+    (v10/*: any*/)
   ],
   "storageKey": null
 },
-v13 = {
+v15 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
@@ -159,7 +171,7 @@ v13 = {
       "name": "processed",
       "storageKey": null
     },
-    (v6/*: any*/),
+    (v8/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -175,7 +187,7 @@ v13 = {
       "name": "progress",
       "plural": false,
       "selections": [
-        (v2/*: any*/),
+        (v3/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -193,20 +205,20 @@ v13 = {
       ],
       "storageKey": null
     },
-    (v7/*: any*/),
-    (v2/*: any*/),
     (v9/*: any*/),
-    (v10/*: any*/),
+    (v3/*: any*/),
     (v11/*: any*/),
-    (v12/*: any*/)
+    (v12/*: any*/),
+    (v13/*: any*/),
+    (v14/*: any*/)
   ],
   "storageKey": null
 },
-v14 = [
-  (v5/*: any*/),
-  (v2/*: any*/),
-  (v4/*: any*/),
-  (v13/*: any*/)
+v16 = [
+  (v7/*: any*/),
+  (v3/*: any*/),
+  (v6/*: any*/),
+  (v15/*: any*/)
 ];
 return {
   "fragment": {
@@ -243,6 +255,31 @@ return {
                     "args": null,
                     "kind": "FragmentSpread",
                     "name": "SearchResultsUnionFragment"
+                  },
+                  (v2/*: any*/),
+                  {
+                    "kind": "InlineFragment",
+                    "selections": (v4/*: any*/),
+                    "type": "Character",
+                    "abstractKey": null
+                  },
+                  {
+                    "kind": "InlineFragment",
+                    "selections": (v4/*: any*/),
+                    "type": "Series",
+                    "abstractKey": null
+                  },
+                  {
+                    "kind": "InlineFragment",
+                    "selections": (v4/*: any*/),
+                    "type": "Club",
+                    "abstractKey": null
+                  },
+                  {
+                    "kind": "InlineFragment",
+                    "selections": (v4/*: any*/),
+                    "type": "Category",
+                    "abstractKey": null
                   }
                 ],
                 "storageKey": null
@@ -288,21 +325,15 @@ return {
                 "plural": false,
                 "selections": [
                   {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "__typename",
-                    "storageKey": null
-                  },
-                  {
                     "kind": "TypeDiscriminator",
                     "abstractKey": "__isSearch"
                   },
+                  (v2/*: any*/),
                   {
                     "kind": "InlineFragment",
                     "selections": [
-                      (v2/*: any*/),
                       (v3/*: any*/),
+                      (v5/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -311,9 +342,9 @@ return {
                         "name": "series",
                         "plural": false,
                         "selections": [
-                          (v4/*: any*/),
-                          (v2/*: any*/),
-                          (v5/*: any*/)
+                          (v6/*: any*/),
+                          (v3/*: any*/),
+                          (v7/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -325,30 +356,30 @@ return {
                         "name": "club",
                         "plural": false,
                         "selections": [
+                          (v5/*: any*/),
                           (v3/*: any*/),
-                          (v2/*: any*/),
-                          (v5/*: any*/)
+                          (v7/*: any*/)
                         ],
                         "storageKey": null
                       },
-                      (v13/*: any*/),
-                      (v5/*: any*/)
+                      (v15/*: any*/),
+                      (v7/*: any*/)
                     ],
                     "type": "Character",
                     "abstractKey": null
                   },
                   {
                     "kind": "InlineFragment",
-                    "selections": (v14/*: any*/),
+                    "selections": (v16/*: any*/),
                     "type": "Series",
                     "abstractKey": null
                   },
                   {
                     "kind": "InlineFragment",
                     "selections": [
-                      (v5/*: any*/),
-                      (v2/*: any*/),
+                      (v7/*: any*/),
                       (v3/*: any*/),
+                      (v5/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -357,32 +388,30 @@ return {
                         "name": "thumbnail",
                         "plural": false,
                         "selections": [
-                          (v6/*: any*/),
-                          (v2/*: any*/),
-                          (v9/*: any*/),
-                          (v10/*: any*/),
+                          (v8/*: any*/),
+                          (v3/*: any*/),
                           (v11/*: any*/),
                           (v12/*: any*/),
-                          (v7/*: any*/)
+                          (v13/*: any*/),
+                          (v14/*: any*/),
+                          (v9/*: any*/)
                         ],
                         "storageKey": null
                       },
-                      (v13/*: any*/)
+                      (v15/*: any*/)
                     ],
                     "type": "Club",
                     "abstractKey": null
                   },
                   {
                     "kind": "InlineFragment",
-                    "selections": (v14/*: any*/),
+                    "selections": (v16/*: any*/),
                     "type": "Category",
                     "abstractKey": null
                   },
                   {
                     "kind": "InlineFragment",
-                    "selections": [
-                      (v2/*: any*/)
-                    ],
+                    "selections": (v4/*: any*/),
                     "type": "Node",
                     "abstractKey": "__isNode"
                   }
@@ -398,7 +427,7 @@ return {
     ]
   },
   "params": {
-    "id": "ab3e932f7a20742f9bddda3254f4270e",
+    "id": "99db7a6bac8c120abdaa900b96643db7",
     "metadata": {},
     "name": "SearchResultsQuery",
     "operationKind": "query",
@@ -407,6 +436,6 @@ return {
 };
 })();
 
-(node as any).hash = "5fe09a34480c229a1dfc03ec83abff9c";
+(node as any).hash = "c3b2021c3522687c7db46f4527ee4090";
 
 export default node;

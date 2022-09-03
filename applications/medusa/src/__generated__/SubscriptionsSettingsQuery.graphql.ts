@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<96b9c89c55bc3fc3ac67ebf8fbaff42e>>
- * @relayHash c3b7ae09f048a81def2511f4b8cf8a3e
+ * @generated SignedSource<<24251f56f979edc4463a898d613520e2>>
+ * @relayHash 467f61153a87fcbf0f87157ddd8a484f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c3b7ae09f048a81def2511f4b8cf8a3e
+// @relayRequestID 467f61153a87fcbf0f87157ddd8a484f
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -444,6 +444,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
+                      (v3/*: any*/),
                       (v6/*: any*/),
                       {
                         "alias": null,
@@ -453,7 +454,6 @@ return {
                         "storageKey": null
                       },
                       (v12/*: any*/),
-                      (v3/*: any*/),
                       (v2/*: any*/)
                     ],
                     "storageKey": null
@@ -513,7 +513,7 @@ return {
     ]
   },
   "params": {
-    "id": "c3b7ae09f048a81def2511f4b8cf8a3e",
+    "id": "467f61153a87fcbf0f87157ddd8a484f",
     "metadata": {},
     "name": "SubscriptionsSettingsQuery",
     "operationKind": "query",

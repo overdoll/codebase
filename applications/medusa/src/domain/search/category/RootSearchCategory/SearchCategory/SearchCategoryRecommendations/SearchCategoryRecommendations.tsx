@@ -13,6 +13,7 @@ const Fragment = graphql`
     categories(first: 7) {
       edges {
         node {
+          id
           ...ClickableCategoryFragment
         }
       }
@@ -26,7 +27,7 @@ export default function SearchCategoryRecommendations ({ query }: Props): JSX.El
   return (
     <Wrap overflow='show'>
       {data.categories.edges.map((item, index) =>
-        <WrapItem key={index}>
+        <WrapItem key={item.node.id}>
           <ClickableCategory query={item.node} />
         </WrapItem>
       )}

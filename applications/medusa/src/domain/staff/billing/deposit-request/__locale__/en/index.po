@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestPayoutsList/StaffDepositRequestPayoutsList.tsx:69
+#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestPayoutsList/StaffDepositRequestPayoutsList.tsx:70
 msgid "Amount"
 msgstr ""
 
@@ -45,11 +45,11 @@ msgstr ""
 msgid "Payouts"
 msgstr ""
 
-#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestPayoutsList/StaffDepositRequestPayoutsList.tsx:74
+#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestPayoutsList/StaffDepositRequestPayoutsList.tsx:75
 msgid "Settlement Date"
 msgstr ""
 
-#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestPayoutsList/StaffDepositRequestPayoutsList.tsx:64
+#: src/domain/staff/billing/deposit-request/RootStaffDepositRequest/StaffDepositRequest/StaffDepositRequestPayoutsList/StaffDepositRequestPayoutsList.tsx:65
 msgid "Status"
 msgstr ""
 

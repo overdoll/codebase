@@ -41,7 +41,7 @@ msgstr ""
 msgid "Information about payouts"
 msgstr ""
 
-#: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubPayoutsList/ClubPayoutsList.tsx:48
+#: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubPayoutsList/ClubPayoutsList.tsx:49
 msgid "Payouts"
 msgstr ""
 
@@ -49,7 +49,7 @@ msgstr ""
 msgid "Payouts Information"
 msgstr ""
 
-#: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubPayoutsList/ClubPayoutsList.tsx:53
+#: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubPayoutsList/ClubPayoutsList.tsx:54
 msgid "Payouts are generated on the first of every month, and initiated on the 15th of the same month if the balance threshold of $100 or more is fulfilled."
 msgstr ""
 
@@ -69,7 +69,7 @@ msgstr ""
 #~ msgid "Show Older Metrics"
 #~ msgstr ""
 
-#: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubPayoutsList/ClubPayoutsList.tsx:67
+#: src/domain/club/revenue/root/RootClubRevenue/ClubRevenue/ClubPayoutsList/ClubPayoutsList.tsx:68
 msgid "Show Older Payouts"
 msgstr ""
 

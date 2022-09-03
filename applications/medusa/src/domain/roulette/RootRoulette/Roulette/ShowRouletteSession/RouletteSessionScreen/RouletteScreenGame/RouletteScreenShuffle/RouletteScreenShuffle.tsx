@@ -115,7 +115,7 @@ export default function RouletteScreenShuffle (props: Props): JSX.Element {
         }}
       >
         <RouletteScreenPostData query={data.gameState.post} />
-        <RouletteScreenPost query={data.gameState.post} viewerQuery={viewerData} />
+        <RouletteScreenPost key={data.gameState.post.id} query={data.gameState.post} viewerQuery={viewerData} />
       </motion.div>
     </Box>
   )

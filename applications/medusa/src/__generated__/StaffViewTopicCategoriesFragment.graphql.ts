@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7fbea5e7c354cfa7c7390ab6fd655157>>
+ * @generated SignedSource<<efa52df3321bd66703c24e644bdac209>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type StaffViewTopicCategoriesFragment$data = {
   readonly categories: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly id: string;
         readonly slug: string;
         readonly title: string;
         readonly " $fragmentSpreads": FragmentRefs<"CategoryTileOverlayFragment">;
@@ -35,6 +36,13 @@ var v0 = [
   "categories"
 ],
 v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -107,6 +115,7 @@ return {
               "plural": false,
               "selections": [
                 (v1/*: any*/),
+                (v2/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -167,7 +176,7 @@ return {
       ],
       "storageKey": null
     },
-    (v1/*: any*/),
+    (v2/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -175,19 +184,13 @@ return {
       "name": "description",
       "storageKey": null
     },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    }
+    (v1/*: any*/)
   ],
   "type": "Topic",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "dc78dbb29ec08e25e7076c4264de7d99";
+(node as any).hash = "fb09920cb8dbea4df81cd6a7527aa93b";
 
 export default node;

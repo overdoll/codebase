@@ -26,7 +26,7 @@ msgstr ""
 msgid "Cancellation Reason Deprecated"
 msgstr ""
 
-#: src/domain/staff/entity/cancellation-reason/view/RootStaffViewCancellationReason/StaffViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitle.tsx:32
+#: src/domain/staff/entity/cancellation-reason/view/RootStaffViewCancellationReason/StaffViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitle.tsx:33
 msgid "Cancellation Reason Title"
 msgstr ""
 
@@ -34,7 +34,7 @@ msgstr ""
 msgid "Cancellaton Reason Title"
 msgstr ""
 
-#: src/domain/staff/entity/cancellation-reason/view/RootStaffViewCancellationReason/StaffViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitle.tsx:57
+#: src/domain/staff/entity/cancellation-reason/view/RootStaffViewCancellationReason/StaffViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitle.tsx:58
 msgid "Change Cancellation Reason Title"
 msgstr ""
 
@@ -75,6 +75,6 @@ msgstr ""
 msgid "Updated cancellation reason title to {0} for {1}"
 msgstr ""
 
-#: src/domain/staff/entity/cancellation-reason/view/RootStaffViewCancellationReason/StaffViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitle.tsx:43
+#: src/domain/staff/entity/cancellation-reason/view/RootStaffViewCancellationReason/StaffViewCancellationReason/ChangeCancellationReasonTitle/ChangeCancellationReasonTitle.tsx:44
 msgid "View Translations"
 msgstr ""

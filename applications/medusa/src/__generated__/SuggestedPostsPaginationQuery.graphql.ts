@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b2fa4f35ed39526e8f29e0af66dcc473>>
- * @relayHash 8de85539cfb3491d560792ff1bb52a21
+ * @generated SignedSource<<b00fbc28909bd963f7bd71f19f6b4e95>>
+ * @relayHash d71ea4e7af9c2e5a71abe52abb95aa56
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8de85539cfb3491d560792ff1bb52a21
+// @relayRequestID d71ea4e7af9c2e5a71abe52abb95aa56
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -242,6 +242,7 @@ return {
                             "name": "content",
                             "plural": true,
                             "selections": [
+                              (v4/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -280,8 +281,7 @@ return {
                                 "kind": "ScalarField",
                                 "name": "isSupporterOnly",
                                 "storageKey": null
-                              },
-                              (v4/*: any*/)
+                              }
                             ],
                             "storageKey": null
                           },
@@ -493,7 +493,7 @@ return {
     ]
   },
   "params": {
-    "id": "8de85539cfb3491d560792ff1bb52a21",
+    "id": "d71ea4e7af9c2e5a71abe52abb95aa56",
     "metadata": {},
     "name": "SuggestedPostsPaginationQuery",
     "operationKind": "query",

@@ -11,9 +11,9 @@ export default function FlowBuilderHeader (): JSX.Element {
 
   return (
     <HStack spacing={2}>
-      {stepsArray.map((item, index) =>
+      {stepsArray.map((item) =>
         <Box
-          key={index}
+          key={item}
           h={2}
           w='100%'
           borderRadius='md'

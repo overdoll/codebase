@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8e75c3366fcc54f9c7edd42f62f2c6f0>>
- * @relayHash 2b43aeedf667796f1689b3f4213a6731
+ * @generated SignedSource<<a3bfa2c17595d559204c39af7fa1669d>>
+ * @relayHash 181b06cdaaf77a6255ab7014fca429f2
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 2b43aeedf667796f1689b3f4213a6731
+// @relayRequestID 181b06cdaaf77a6255ab7014fca429f2
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -413,6 +413,7 @@ return {
                         "name": "content",
                         "plural": true,
                         "selections": [
+                          (v6/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -433,8 +434,7 @@ return {
                             "storageKey": null
                           },
                           (v15/*: any*/),
-                          (v16/*: any*/),
-                          (v6/*: any*/)
+                          (v16/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -599,6 +599,7 @@ return {
             "name": "content",
             "plural": true,
             "selections": [
+              (v6/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -626,8 +627,7 @@ return {
                 "storageKey": null
               },
               (v15/*: any*/),
-              (v16/*: any*/),
-              (v6/*: any*/)
+              (v16/*: any*/)
             ],
             "storageKey": null
           },
@@ -784,7 +784,7 @@ return {
     ]
   },
   "params": {
-    "id": "2b43aeedf667796f1689b3f4213a6731",
+    "id": "181b06cdaaf77a6255ab7014fca429f2",
     "metadata": {},
     "name": "PublicPostQuery",
     "operationKind": "query",

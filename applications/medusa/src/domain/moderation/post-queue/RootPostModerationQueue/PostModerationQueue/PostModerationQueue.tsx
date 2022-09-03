@@ -191,12 +191,11 @@ export default function PostModerationQueue ({
         </Flex>
         {data?.postModeratorQueue.edges.map((item, index) => {
           if (index !== currentIndex) {
-            return <ReactFragment key={index} />
+            return <ReactFragment key={item.node.id} />
           }
           return (
-            <ReactFragment key={index}>
+            <ReactFragment key={item.node.id}>
               <Box
-                key={index}
                 position='relative'
               >
                 <PostPreview query={item.node.post} />

@@ -30,6 +30,7 @@ const Fragment = graphql`
     {
       edges {
         node {
+          id
           title
           slug
           ...CategoryTileOverlayFragment
@@ -68,8 +69,8 @@ export default function StaffViewTopicCategories ({
         condition={data.categories.edges.length < 1}
       >
         <ShortGridWrap templateColumns='repeat(auto-fill, minmax(100px, 1fr))'>
-          {data.categories.edges.map((item, index) => (
-            <ShortGridTile key={index}>
+          {data.categories.edges.map((item) => (
+            <ShortGridTile key={item.node.id}>
               <LinkTile href={{
                 pathname: '/staff/entity/category/[slug]',
                 query: { slug: item.node.slug }

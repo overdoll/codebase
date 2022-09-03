@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0041fa07cdd5ffa59c9d1685768a1cf7>>
+ * @generated SignedSource<<eb237af89b3a56b3e2fc33163f689822>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,7 @@ export type SessionsSettingsFragment$data = {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly id: string;
         readonly " $fragmentSpreads": FragmentRefs<"SessionCardFragment">;
       };
     }>;
@@ -30,7 +31,14 @@ export type SessionsSettingsFragment$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "sessions"
-];
+],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [
     {
@@ -98,6 +106,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
+                  (v1/*: any*/),
                   {
                     "args": null,
                     "kind": "FragmentSpread",
@@ -166,19 +175,13 @@ return {
       "action": "THROW",
       "path": "sessions"
     },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    }
+    (v1/*: any*/)
   ],
   "type": "Account",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "779c4281b6746834821ac87af01814ab";
+(node as any).hash = "47f27d97049bf307b8191282b861e025";
 
 export default node;

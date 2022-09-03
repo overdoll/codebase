@@ -21,6 +21,9 @@ const Fragment = graphql`
       url
       mimeType
     }
+    videoThumbnail {
+      url
+    }
   }
 `
 
@@ -35,6 +38,63 @@ export default function useVideoControls (videoRef: UseVideoControlsProps, query
   const [currentSrc, setCurrentSrc] = useState('')
 
   let videoLoaded: Promise<void> | null = null
+
+  const onPause = (): void => {
+    if (ref?.current == null) return
+    if (videoLoaded == null) {
+      ref.current.pause()
+    } else {
+      void videoLoaded.then(() => {
+        if (ref?.current == null) return
+        ref.current.pause()
+      })
+    }
+  }
+
+  const resetVideo = (): void => {
+    if (ref.current == null) return
+    ref.current.src = ''
+    ref.current.poster = data?.videoThumbnail?.url ?? ''
+    onPause()
+  }
+
+  const playVideo = (): void => {
+    if (ref.current == null) return
+    ref.current.load()
+    void ref.current.play().then(e => {
+
+    }).catch(e => {
+      console.log('fetch playback failed', e)
+    })
+  }
+
+  const tryVideoFetchFromURls = (): void => {
+    if (webmVideoSource == null) {
+      fetchVideoUrl(mp4VideoSource.url)
+        .then(_ => {
+          playVideo()
+        })
+        .catch(e => {
+          console.log('playback webm failed', e)
+        })
+      return
+    }
+
+    fetchVideoUrl(mp4VideoSource.url)
+      .then(_ => {
+        playVideo()
+      })
+      .catch(e => {
+        if (webmVideoSource == null) return
+        fetchVideoUrl(webmVideoSource.url)
+          .then(_ => {
+            playVideo()
+          })
+          .catch(e => {
+            console.log('playback mp4 failed', e)
+          })
+      })
+  }
 
   const onPlay = (): void => {
     if (ref?.current == null) return
@@ -54,20 +114,8 @@ export default function useVideoControls (videoRef: UseVideoControlsProps, query
     videoLoaded = ref.current.play().then(() => {
       // TODO do something if video plays?
     }).catch(e => {
-      // TODO catch playing error
+      console.log('play function failed', e)
     })
-  }
-
-  const onPause = (): void => {
-    if (ref?.current == null) return
-    if (videoLoaded == null) {
-      ref.current.pause()
-    } else {
-      void videoLoaded.then(() => {
-        if (ref?.current == null) return
-        ref.current.pause()
-      })
-    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
@@ -78,39 +126,14 @@ export default function useVideoControls (videoRef: UseVideoControlsProps, query
       .then(async blob => {
         if (ref.current == null) return
         ref.current.src = URL.createObjectURL(blob)
-        ref.current.load()
         setCurrentSrc(url)
-        void ref.current.play()
       })
   }
 
   const fetchVideoAndPlay = (): void => {
     if (ref?.current == null) return
-    ref.current.src = ''
-
-    if (webmVideoSource == null) {
-      fetchVideoUrl(mp4VideoSource.url)
-        .then(_ => {
-        })
-        .catch(e => {
-          // Video playback 2 failed
-        })
-      return
-    }
-
-    fetchVideoUrl(mp4VideoSource.url)
-      .then(_ => {
-      })
-      .catch(e => {
-        if (webmVideoSource == null) return
-        fetchVideoUrl(webmVideoSource.url)
-          .then(_ => {
-
-          })
-          .catch(e => {
-            // Video playback 2 failed
-          })
-      })
+    resetVideo()
+    tryVideoFetchFromURls()
   }
 
   return {

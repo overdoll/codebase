@@ -31,6 +31,7 @@ const Fragment = graphql`
       __id
       edges {
         node {
+          id
           ...CharacterTileOverlayFragment
           ...CharacterLinkTileFragment
         }
@@ -78,8 +79,8 @@ export default function ViewClubCharacters ({ query }: Props): JSX.Element {
           </LinkTile>
         </GridTile>
       )}
-      {data.characters.edges.map((item, index) => (
-        <GridTile key={index}>
+      {data.characters.edges.map((item) => (
+        <GridTile key={item.node.id}>
           <CharacterLinkTile query={item.node}>
             <CharacterTileOverlay query={item.node} />
           </CharacterLinkTile>

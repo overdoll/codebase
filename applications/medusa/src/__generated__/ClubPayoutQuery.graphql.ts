@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<85fad436a13ff4261196ebab460fb7b3>>
- * @relayHash de7200ce2cee39aab78c31ed083a21c8
+ * @generated SignedSource<<0e11b2c4c31afc2f14e2f48f50d549c5>>
+ * @relayHash 072a2cd6b06a2f2042249be651a7d243
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID de7200ce2cee39aab78c31ed083a21c8
+// @relayRequestID 072a2cd6b06a2f2042249be651a7d243
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -172,6 +172,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
+                      (v8/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -202,7 +203,6 @@ return {
                         "name": "isDeduction",
                         "storageKey": null
                       },
-                      (v8/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -267,7 +267,7 @@ return {
     ]
   },
   "params": {
-    "id": "de7200ce2cee39aab78c31ed083a21c8",
+    "id": "072a2cd6b06a2f2042249be651a7d243",
     "metadata": {},
     "name": "ClubPayoutQuery",
     "operationKind": "query",

@@ -27,6 +27,7 @@ const Fragment = graphql`
     @connection (key: "DiscoverClubs_discoverClubs") {
       edges {
         node {
+          id
           ...ClubJoinTileFragment
         }
       }
@@ -58,13 +59,13 @@ export default function ClubsFeedDiscoverList ({
   return (
     <Box overflowX='hidden'>
       <Swiper {...SEARCH_SWIPER_PROPS}>
-        {data.discoverClubs.edges.map((item, index) => (
+        {data.discoverClubs.edges.map((item) => (
           <SwiperSlide
             style={{
               height: slideHeight,
               width: slideWidth
             }}
-            key={index}
+            key={item.node.id}
           >
             <ClubJoinTile clubQuery={item.node} viewerQuery={data.viewer} />
           </SwiperSlide>

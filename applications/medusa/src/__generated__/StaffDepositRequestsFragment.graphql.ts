@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<812bf8c20096db910fbf99766a719ab6>>
+ * @generated SignedSource<<df28fa4a3f5e71feeb61c7c4c42e8592>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type StaffDepositRequestsFragment$data = {
   readonly depositRequests: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly id: string;
         readonly reference: string;
         readonly " $fragmentSpreads": FragmentRefs<"StaffDepositRequestCardFragment">;
       };
@@ -96,6 +97,13 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
+                  "name": "id",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
                   "name": "reference",
                   "storageKey": null
                 },
@@ -158,6 +166,6 @@ return {
 };
 })();
 
-(node as any).hash = "a7e05241b746b9ab4153d185a0460929";
+(node as any).hash = "122b0a6e19b17a04fb7aaecb5c8f26c1";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<51d4602cab7f0367a6618721b3178dff>>
+ * @generated SignedSource<<ddfc053ec90ee14360b0b387dd65bd8e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,7 @@ export type SavedPaymentMethodsSettingsFragment$data = {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly id: string;
         readonly paymentMethod: {
           readonly " $fragmentSpreads": FragmentRefs<"PaymentMethodFragment">;
         };
@@ -33,7 +34,14 @@ export type SavedPaymentMethodsSettingsFragment$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "savedPaymentMethods"
-];
+],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [
     {
@@ -99,6 +107,7 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
+                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -180,19 +189,13 @@ return {
       ],
       "storageKey": null
     },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    }
+    (v1/*: any*/)
   ],
   "type": "Account",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "28bb24c438d59e9d55b621d2579267c3";
+(node as any).hash = "62a7f10f5563f020b1556843f495b538";
 
 export default node;

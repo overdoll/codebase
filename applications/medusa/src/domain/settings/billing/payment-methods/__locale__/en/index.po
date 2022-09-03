@@ -42,7 +42,7 @@ msgstr ""
 msgid "Payment method successfully deleted"
 msgstr ""
 
-#: src/domain/settings/billing/payment-methods/RootSavedPaymentMethodsSettings/SavedPaymentMethodsSettings/SavedPaymentMethodsSettings.tsx:93
+#: src/domain/settings/billing/payment-methods/RootSavedPaymentMethodsSettings/SavedPaymentMethodsSettings/SavedPaymentMethodsSettings.tsx:94
 msgid "Set Up"
 msgstr ""
 
@@ -54,6 +54,6 @@ msgstr ""
 msgid "When you become a club supporter, you'll have the option to remember the payment method for next time. Note that you can only modify a payment method through the My Subscriptions page."
 msgstr ""
 
-#: src/domain/settings/billing/payment-methods/RootSavedPaymentMethodsSettings/SavedPaymentMethodsSettings/SavedPaymentMethodsSettings.tsx:82
+#: src/domain/settings/billing/payment-methods/RootSavedPaymentMethodsSettings/SavedPaymentMethodsSettings/SavedPaymentMethodsSettings.tsx:83
 msgid "You must enable two-factor authentication before you can use a saved payment method"
 msgstr ""

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2337f8cf04aaaa628de018b8adb1929a>>
+ * @generated SignedSource<<26c759e625965633c4ac634ecbc49e2c>>
  * @relayHash fc9ea6b35d1a94056af40df5a2f95df6
  * @lightSyntaxTransform
  * @nogrep
@@ -218,6 +218,18 @@ return {
                             "name": "totalTransactionsAmount",
                             "storageKey": null
                           },
+                          {
+                            "kind": "ClientExtension",
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "__id",
+                                "storageKey": null
+                              }
+                            ]
+                          },
                           (v3/*: any*/)
                         ],
                         "storageKey": null
@@ -288,6 +300,6 @@ return {
 };
 })();
 
-(node as any).hash = "0fa38b3f498d157f2379f36e90d8812b";
+(node as any).hash = "450c02a5e982f533de4c3247c4cd94a5";
 
 export default node;

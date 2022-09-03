@@ -25,15 +25,15 @@ msgstr ""
 msgid "Date Posted"
 msgstr ""
 
-#: src/domain/moderation/audit-logs/RootPostAuditLogs/PostAuditLogs/PostAuditLogs.tsx:89
+#: src/domain/moderation/audit-logs/RootPostAuditLogs/PostAuditLogs/PostAuditLogs.tsx:90
 msgid "Load More"
 msgstr ""
 
-#: src/domain/moderation/audit-logs/RootPostAuditLogs/PostAuditLogs/PostAuditLogs.tsx:74
+#: src/domain/moderation/audit-logs/RootPostAuditLogs/PostAuditLogs/PostAuditLogs.tsx:75
 msgid "No audit logs were found"
 msgstr ""
 
-#: src/domain/moderation/audit-logs/RootPostAuditLogs/PostAuditLogs/PostAuditLogs.tsx:96
+#: src/domain/moderation/audit-logs/RootPostAuditLogs/PostAuditLogs/PostAuditLogs.tsx:97
 msgid "Only the last 7 days of logs are available"
 msgstr ""
 

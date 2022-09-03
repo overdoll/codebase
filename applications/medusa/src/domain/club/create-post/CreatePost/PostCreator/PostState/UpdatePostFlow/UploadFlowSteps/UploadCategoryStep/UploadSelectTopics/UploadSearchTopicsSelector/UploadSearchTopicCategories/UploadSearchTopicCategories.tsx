@@ -96,8 +96,8 @@ export default function UploadSearchTopicCategories ({
               </Stack>
             </ClickableTile>
           </ShortGridTile>
-          {data.categories.edges.map((item, index) => (
-            <ShortGridTile key={index}>
+          {data.categories.edges.map((item) => (
+            <ShortGridTile key={item.node.id}>
               <Choice
                 {...registerCategory(item.node.id, {
                   title: item.node.title

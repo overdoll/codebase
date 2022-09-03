@@ -37,6 +37,7 @@ const Fragment = graphql`
     {
       edges {
         node {
+          id
           slug
           ...ClubTileOverlayFragment
         }
@@ -90,8 +91,8 @@ export default function ClubListSelector ({ onClose }: Props): JSX.Element {
       condition={data.clubs.edges.length < 1}
     >
       <GridWrap>
-        {data.clubs.edges.map((item, index) => (
-          <GridTile key={index}>
+        {data.clubs.edges.map((item) => (
+          <GridTile key={item.node.id}>
             <Choice {...register(item.node.slug, {})}>
               <ClubTileOverlay query={item.node} />
             </Choice>

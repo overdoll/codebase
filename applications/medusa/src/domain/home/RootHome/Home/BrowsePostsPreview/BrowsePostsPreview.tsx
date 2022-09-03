@@ -4,7 +4,7 @@ import type { BrowsePostsPreviewViewerFragment$key } from '@//:artifacts/BrowseP
 import { graphql, usePaginationFragment } from 'react-relay'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import FullSimplePost
-  from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/FullSimplePost/FullSimplePost'
+  from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/FullSimplePost/FullSimplePost'
 import type { HomeQuery } from '@//:artifacts/HomeQuery.graphql'
 import { Stack } from '@chakra-ui/react'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
@@ -28,6 +28,7 @@ const PostFragment = graphql`
     @connection (key: "BrowsePostsPreview_postsFeed") {
       edges {
         node {
+          id
           ...FullSimplePostFragment
         }
       }
@@ -60,9 +61,9 @@ export default function BrowsePostsPreview (props: Props): JSX.Element {
   return (
     <GlobalVideoManagerProvider>
       <Stack spacing={16}>
-        {data.postsFeed.edges.map((item, index) => (
+        {data.postsFeed.edges.map((item) => (
           <FullSimplePost
-            key={index}
+            key={item.node.id}
             query={item.node}
             viewerQuery={viewerData}
           />

@@ -1,6 +1,6 @@
-import { Flex, Heading, HTMLChakraProps, Spinner, Stack, Text } from '@chakra-ui/react'
+import { Box, Flex, Heading, HTMLChakraProps, Spinner, Stack, Text } from '@chakra-ui/react'
 import Icon from '../../../../../../../PageLayout/Flair/Icon/Icon'
-import { WarningTriangle } from '@//:assets/icons/interface'
+import { ControlPlayButton, WarningTriangle } from '@//:assets/icons/interface'
 import { Trans } from '@lingui/macro'
 import Button from '../../../../../../../../form/Button/Button'
 
@@ -9,17 +9,32 @@ interface Props extends HTMLChakraProps<any> {
   hasError: boolean
   onRetry: () => void
   canControl?: boolean | undefined
+  isPaused: boolean
+  onPlay: () => void
 }
 
-export default function LoadingSpinner ({
-  isLoading,
-  hasError,
-  onRetry,
-  canControl
-}: Props): JSX.Element {
+export default function LoadingSpinner (props: Props): JSX.Element {
+  const {
+    isLoading,
+    hasError,
+    onRetry,
+    canControl,
+    isPaused,
+    onPlay
+  } = props
+
   if (hasError && !isLoading) {
     return (
-      <Stack borderRadius='md' p={4} bg='dimmers.500' direction='column' justify='center' align='center' spacing={2}>
+      <Stack
+        pointerEvents='auto'
+        borderRadius='md'
+        p={4}
+        bg='dimmers.500'
+        direction='column'
+        justify='center'
+        align='center'
+        spacing={2}
+      >
         <Icon icon={WarningTriangle} w={6} h={6} fill='orange.300' />
         <Heading fontSize='md' color='orange.300'>
           <Trans>
@@ -45,10 +60,20 @@ export default function LoadingSpinner ({
     )
   }
 
-  if (!isLoading) return <></>
+  if (!isLoading && isPaused) {
+    return (
+      <Box pointerEvents='auto' onClick={onPlay} cursor='pointer' w={16} h={16}>
+        <Icon icon={ControlPlayButton} fill='whiteAlpha.800' />
+      </Box>
+    )
+  }
+
+  if (!isLoading) {
+    return <></>
+  }
 
   return (
-    <Flex borderRadius='full' p={2} bg='dimmers.500'>
+    <Flex pointerEvents='auto' borderRadius='full' p={2} bg='dimmers.500'>
       <Spinner
         boxShadow='lg'
         thickness='3px'

@@ -37,6 +37,7 @@ const Fragment = graphql`
     {
       edges {
         node {
+          id
           slug
           ...AudienceTileOverlayFragment
         }
@@ -69,8 +70,8 @@ export default function StaffSearchAudiences ({ searchArguments }: Props): JSX.E
       condition={audiences.length < 1}
     >
       <GridWrap>
-        {audiences.map((item, index) => (
-          <ShortGridTile key={index}>
+        {audiences.map((item) => (
+          <ShortGridTile key={item.node.id}>
             <LinkTile href={{
               pathname: '/staff/entity/audience/[slug]',
               query: { slug: item.slug }

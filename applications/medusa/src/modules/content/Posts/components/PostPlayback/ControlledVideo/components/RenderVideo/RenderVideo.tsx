@@ -12,6 +12,7 @@ interface Props extends BoxProps {
 
 const Fragment = graphql`
   fragment RenderVideoFragment on Resource {
+    id
     videoThumbnail {
       url
     }

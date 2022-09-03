@@ -30,6 +30,7 @@ export interface ControlledVideoProps {
 
 const Fragment = graphql`
   fragment ControlledVideoFragment on Resource {
+    id
     videoNoAudio
     ...VideoBackgroundFragment
     ...RenderVideoFragment
@@ -93,6 +94,7 @@ const ControlledVideo = forwardRef<HTMLVideoElement, ControlledVideoProps>(({
   }
 
   const onWaiting = (e): void => {
+    if (e.target.src === '') return
     setPaused(e.target.paused)
     setLoaded(false)
   }
@@ -205,7 +207,7 @@ const ControlledVideo = forwardRef<HTMLVideoElement, ControlledVideoProps>(({
         query={data}
         wrapperRef={wrapperRef}
         onMouseHold={onMouseHold}
-        isOpen={isOpen}
+        isOpen={isOpen || isPaused}
         isLoaded={isLoaded}
         isPaused={isPaused}
         hasError={hasError}

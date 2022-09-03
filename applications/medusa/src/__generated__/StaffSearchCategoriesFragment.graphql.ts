@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<be2dd77694785165b3bdd3502a80d7a8>>
+ * @generated SignedSource<<178844ba67892a5b7c33c15375ef8b78>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type StaffSearchCategoriesFragment$data = {
   readonly categories: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly id: string;
         readonly slug: string;
         readonly topic: {
           readonly title: string;
@@ -109,6 +110,13 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
+                  "name": "id",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
                   "name": "slug",
                   "storageKey": null
                 },
@@ -189,6 +197,6 @@ return {
 };
 })();
 
-(node as any).hash = "a0a3b052edcb3172e23b8898b3917b80";
+(node as any).hash = "3424caf161841c055b0560d09bfb916b";
 
 export default node;

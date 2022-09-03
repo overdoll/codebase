@@ -32,7 +32,7 @@ export default function ResourceRichObject ({
         {data?.urls.map((item, index) => {
           const type = data.type === 'IMAGE' ? 'image' : 'video'
           return (
-            <Fragment key={index}>
+            <Fragment key={item.url}>
               <meta property={`og:${type}`} content={item.url} />
               <meta property={`og:${type}:secure_url`} content={item.url} />
               <meta property={`og:${type}:type`} content={item.mimeType} />

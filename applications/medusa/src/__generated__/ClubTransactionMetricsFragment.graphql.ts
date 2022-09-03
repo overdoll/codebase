@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a05af782a5f0e5b44fbfde3bbc93a29b>>
+ * @generated SignedSource<<9ec4bd8f84f4eb9eba25502cb9d79346>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type ClubTransactionMetricsFragment$data = {
   readonly transactionMetrics: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly __id: string;
         readonly " $fragmentSpreads": FragmentRefs<"ClubTransactionMetricFragment">;
       };
     }>;
@@ -101,6 +102,18 @@ return {
                   "name": "ClubTransactionMetricFragment"
                 },
                 {
+                  "kind": "ClientExtension",
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "__id",
+                      "storageKey": null
+                    }
+                  ]
+                },
+                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
@@ -161,6 +174,6 @@ return {
 };
 })();
 
-(node as any).hash = "0fa38b3f498d157f2379f36e90d8812b";
+(node as any).hash = "450c02a5e982f533de4c3247c4cd94a5";
 
 export default node;

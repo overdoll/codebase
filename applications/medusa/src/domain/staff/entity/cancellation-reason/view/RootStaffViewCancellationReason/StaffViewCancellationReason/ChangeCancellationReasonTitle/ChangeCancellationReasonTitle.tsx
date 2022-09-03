@@ -16,6 +16,7 @@ const Fragment = graphql`
   fragment ChangeCancellationReasonTitleFragment on CancellationReason {
     title
     titleTranslations {
+      text
       ...TranslationSnippetFragment
     }
     ...ChangeCancellationReasonTitleFormFragment
@@ -47,7 +48,7 @@ export default function ChangeCancellationReasonTitle ({ query }: Props): JSX.El
           <CollapseBody>
             <Stack>
               {data.titleTranslations.map((item, index) => (
-                <TranslationSnippet key={index} query={item} />)
+                <TranslationSnippet key={item.text} query={item} />)
               )}
             </Stack>
           </CollapseBody>

@@ -13,6 +13,7 @@ interface Props {
   postQuery: PostPublicHeaderFragment$key
   viewerQuery: PostPublicHeaderViewerFragment$key | null
   descriptionProps?: HeadingProps
+  redirectToPost?: boolean
 }
 
 const PostFragment = graphql`
@@ -24,6 +25,7 @@ const PostFragment = graphql`
       ...PostJoinClubFragment
     }
     description
+    reference
     ...PostHeaderClubJoinFragment
     ...PostDescriptionHeadingFragment
   }
@@ -36,29 +38,44 @@ const ViewerFragment = graphql`
   }
 `
 
-export default function PostPublicHeader ({
-  postQuery,
-  viewerQuery,
-  descriptionProps
-}: Props): JSX.Element {
+export default function PostPublicHeader (props: Props): JSX.Element {
+  const {
+    postQuery,
+    viewerQuery,
+    descriptionProps,
+    redirectToPost = false
+  } = props
+
   const postData = useFragment(PostFragment, postQuery)
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
+  const href = redirectToPost
+    ? {
+        pathname: '/[slug]/post/[reference]',
+        query: {
+          slug: postData.club.slug,
+          reference: postData.reference
+        }
+      }
+    : {
+        pathname: '/[slug]',
+        query: { slug: postData.club.slug }
+      }
+
   if (postData.description.length === 0) {
     return (
-      <PostHeaderClubJoin postQuery={postData} viewerQuery={viewerData} />
+      <PostHeaderClubJoin href={href} postQuery={postData} viewerQuery={viewerData} />
     )
   }
+
+  // TODO re-add ability to get slide index
 
   return (
     <HStack align='flex-start' spacing={2}>
       <LinkTile
         w={12}
         borderRadius='md'
-        href={{
-          pathname: '/[slug]',
-          query: { slug: postData.club.slug }
-        }}
+        href={href}
       >
         <ClubThumbnail
           h={12}

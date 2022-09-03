@@ -17,7 +17,7 @@ msgstr ""
 msgid "A confirmation email was sent to {0}. Check your inbox/spam!"
 msgstr ""
 
-#: src/domain/settings/profile/emails/RootEmailsSettings/EmailsSettings/EmailsSettings.tsx:128
+#: src/domain/settings/profile/emails/RootEmailsSettings/EmailsSettings/EmailsSettings.tsx:129
 msgid "Add Email"
 msgstr ""
 
@@ -49,7 +49,7 @@ msgstr ""
 msgid "Enter a new email address"
 msgstr ""
 
-#: src/domain/settings/profile/emails/RootEmailsSettings/EmailsSettings/EmailsSettings.tsx:121
+#: src/domain/settings/profile/emails/RootEmailsSettings/EmailsSettings/EmailsSettings.tsx:122
 msgid "Load More"
 msgstr ""
 
@@ -85,7 +85,7 @@ msgstr ""
 msgid "Used to log into your account"
 msgstr ""
 
-#: src/domain/settings/profile/emails/RootEmailsSettings/EmailsSettings/EmailsSettings.tsx:138
+#: src/domain/settings/profile/emails/RootEmailsSettings/EmailsSettings/EmailsSettings.tsx:139
 msgid "You have added the maximum amount of confirmed emails. You'll have to remove at least one email to be able to add another."
 msgstr ""
 

@@ -21,22 +21,22 @@ msgstr ""
 msgid "Deposit requests are created on the first of every month and should always be fulfilled by the 15th of the same month for each relevant provider."
 msgstr ""
 
-#: src/domain/staff/billing/deposit-requests/RootStaffDepositRequests/StaffDepositRequests/StaffDepositRequests.tsx:93
+#: src/domain/staff/billing/deposit-requests/RootStaffDepositRequests/StaffDepositRequests/StaffDepositRequests.tsx:94
 msgid "Due Date"
 msgstr ""
 
-#: src/domain/staff/billing/deposit-requests/RootStaffDepositRequests/StaffDepositRequests/StaffDepositRequests.tsx:88
+#: src/domain/staff/billing/deposit-requests/RootStaffDepositRequests/StaffDepositRequests/StaffDepositRequests.tsx:89
 msgid "Method"
 msgstr ""
 
-#: src/domain/staff/billing/deposit-requests/RootStaffDepositRequests/StaffDepositRequests/StaffDepositRequests.tsx:102
+#: src/domain/staff/billing/deposit-requests/RootStaffDepositRequests/StaffDepositRequests/StaffDepositRequests.tsx:103
 msgid "No deposit requests"
 msgstr ""
 
-#: src/domain/staff/billing/deposit-requests/RootStaffDepositRequests/StaffDepositRequests/StaffDepositRequests.tsx:83
+#: src/domain/staff/billing/deposit-requests/RootStaffDepositRequests/StaffDepositRequests/StaffDepositRequests.tsx:84
 msgid "Total"
 msgstr ""
 
-#: src/domain/staff/billing/deposit-requests/RootStaffDepositRequests/StaffDepositRequests/StaffDepositRequests.tsx:73
+#: src/domain/staff/billing/deposit-requests/RootStaffDepositRequests/StaffDepositRequests/StaffDepositRequests.tsx:74
 msgid "You should wait at least 2 days before fulfilling a deposit request to ensure all payouts have been processed correctly."
 msgstr ""

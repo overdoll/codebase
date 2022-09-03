@@ -31,6 +31,7 @@ const Fragment = graphql`
     {
       edges {
         node {
+          id
           reference
           ...CancellationReasonOverlayFragment
         }
@@ -63,8 +64,8 @@ export default function StaffSearchCancellationReasons ({ searchArguments }: Pro
       condition={cancellationReasons.length < 1}
     >
       <Stack spacing={2}>
-        {cancellationReasons.map((item, index) => (
-          <StackTile minH={10} key={index}>
+        {cancellationReasons.map((item) => (
+          <StackTile minH={10} key={item.node.id}>
             <LinkTile href={{
               pathname: '/staff/entity/cancellation-reason/[reference]',
               query: { reference: item.reference }

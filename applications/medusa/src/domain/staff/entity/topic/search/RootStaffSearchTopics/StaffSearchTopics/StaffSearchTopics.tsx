@@ -31,6 +31,7 @@ const Fragment = graphql`
     {
       edges {
         node {
+          id
           slug
           ...TopicTileOverlayFragment
         }
@@ -62,8 +63,8 @@ export default function StaffSearchTopics ({ searchArguments }: Props): JSX.Elem
       condition={data.topics.edges.length < 1}
     >
       <GridWrap>
-        {data.topics.edges.map((item, index) => (
-          <ShortGridTile key={index}>
+        {data.topics.edges.map((item) => (
+          <ShortGridTile key={item.node.id}>
             <LinkTile href={{
               pathname: '/staff/entity/topic/[slug]',
               query: { slug: item.node.slug }
