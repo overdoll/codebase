@@ -7,6 +7,7 @@ import { useFragment } from 'react-relay/hooks'
 import { getCharacterNames } from '@//:common/rich-objects/slug/PublicPostRichObject/PublicPostRichObject'
 import MediumGenericButton from '@//:common/components/GenericButtons/MediumGenericButton/MediumGenericButton'
 import useTwitterShare from '../../../../../../support/useTwitterShare'
+import urlSlug, { TITLECASE_TRANSFORMER } from 'url-slug'
 
 interface Props {
   query: PostShareTwitterButtonFragment$key
@@ -43,7 +44,10 @@ export default function PostShareTwitterButton ({
   const getHashtags = (): string[] => {
     const initialHashtags = ['NSFW']
 
-    const getPostCategories = data.categories.map((item) => (item.title)).slice(0, 5)
+    const getPostCategories = data.categories.map((item) => urlSlug((item.title), {
+      separator: '',
+      transformer: TITLECASE_TRANSFORMER
+    })).slice(0, 5)
 
     return [...initialHashtags, ...getPostCategories]
   }
