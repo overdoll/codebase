@@ -39,8 +39,8 @@ export default function SelectRuleList ({
       condition={queryData.rules.edges.length < 1}
     >
       <Stack spacing={1}>
-        {queryData.rules.edges.map((item, index) => (
-          <StackTile key={index}>
+        {queryData.rules.edges.map((item) => (
+          <StackTile key={item.node.id}>
             <Choice
               {...register(item.node.id, { title: item.node.title })}
             >

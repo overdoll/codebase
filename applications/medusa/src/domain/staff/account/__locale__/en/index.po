@@ -75,7 +75,7 @@ msgstr ""
 msgid "Chargeback Transactions"
 msgstr ""
 
-#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffAccountClubSupporterSubscriptions.tsx:71
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffAccountClubSupporterSubscriptions.tsx:72
 msgid "Club"
 msgstr ""
 
@@ -103,7 +103,7 @@ msgstr ""
 msgid "Moderator"
 msgstr ""
 
-#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffAccountClubSupporterSubscriptions.tsx:81
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffAccountClubSupporterSubscriptions.tsx:82
 msgid "Next/End/Expired Date"
 msgstr ""
 
@@ -157,7 +157,7 @@ msgstr ""
 msgid "Staff"
 msgstr ""
 
-#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffAccountClubSupporterSubscriptions.tsx:66
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffAccountClubSupporterSubscriptions.tsx:67
 msgid "Status"
 msgstr ""
 
@@ -197,7 +197,7 @@ msgstr ""
 msgid "Successfully unlocked account"
 msgstr ""
 
-#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffAccountClubSupporterSubscriptions.tsx:76
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffClubSupporterSubscriptions/StaffAccountClubSupporterSubscriptions.tsx:77
 msgid "Supporting Since"
 msgstr ""
 

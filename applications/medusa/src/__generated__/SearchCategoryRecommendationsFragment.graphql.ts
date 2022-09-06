@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<59fca58edf522b227d4221fc3701e341>>
+ * @generated SignedSource<<3e8f6db389accd800c8a9ae0282cbb28>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type SearchCategoryRecommendationsFragment$data = {
   readonly categories: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly id: string;
         readonly " $fragmentSpreads": FragmentRefs<"ClickableCategoryFragment">;
       };
     }>;
@@ -62,6 +63,13 @@ const node: ReaderFragment = {
               "plural": false,
               "selections": [
                 {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "id",
+                  "storageKey": null
+                },
+                {
                   "args": null,
                   "kind": "FragmentSpread",
                   "name": "ClickableCategoryFragment"
@@ -80,6 +88,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "d0e497374ddb2c8b09962f9040d6b464";
+(node as any).hash = "aa65314e8e8433d05825371e5b9e91ee";
 
 export default node;

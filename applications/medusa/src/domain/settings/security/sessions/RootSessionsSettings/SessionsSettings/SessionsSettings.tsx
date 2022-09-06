@@ -32,6 +32,7 @@ const SessionsGQL = graphql`
       __id
       edges {
         node {
+          id
           ...SessionCardFragment
         }
       }
@@ -65,7 +66,7 @@ export default function MultiFactorSettings (props: Props): JSX.Element {
         <Stack mb={3}>
           {sessions.map((item, index) =>
             <SessionCard
-              key={index}
+              key={item.node.id}
               connectionID={sessionsConnectionID}
               query={item.node}
             />

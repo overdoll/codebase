@@ -25,11 +25,11 @@ export default function ContentFilesDisplay ({
 
   return (
     <Stack spacing={2}>
-      {Object.values(state.files).map((file: UppyFile, index) => {
+      {Object.values(state.files).map((file: UppyFile) => {
         return (
           <UploadFileDisplay
             error={state.errors[file.id]}
-            key={index}
+            key={file.id}
             file={file}
             uppy={uppy}
             isDisabled={isDisabled}

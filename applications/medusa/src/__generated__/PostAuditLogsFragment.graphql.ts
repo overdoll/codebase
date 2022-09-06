@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4a8e717671c523e0d05142c808dc9c9f>>
+ * @generated SignedSource<<37989171ad00c98ed925fcbf9392779c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type PostAuditLogsFragment$data = {
   readonly postAuditLogs: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly id: string;
         readonly " $fragmentSpreads": FragmentRefs<"AuditCardFragment">;
       };
     }>;
@@ -29,7 +30,14 @@ export type PostAuditLogsFragment$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "postAuditLogs"
-];
+],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [
     {
@@ -114,6 +122,7 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
+                (v1/*: any*/),
                 {
                   "args": null,
                   "kind": "FragmentSpread",
@@ -167,19 +176,13 @@ return {
       ],
       "storageKey": null
     },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    }
+    (v1/*: any*/)
   ],
   "type": "Account",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "35d731a3714412c25e492f66c8d47707";
+(node as any).hash = "ecef7e8f8f843c8dc46568fcb83436d7";
 
 export default node;

@@ -21,9 +21,9 @@ export default function ChoiceRemovableTags ({
   const Tags = (): JSX.Element => {
     return (
       <>
-        {Object.keys(values).map((item, index) => (
+        {Object.keys(values).map((item) => (
           <RemovableTag
-            key={index}
+            key={item}
             generateColor
             onRemove={onRemove}
             id={item}

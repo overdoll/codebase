@@ -45,9 +45,9 @@ export default function ChooseCurrency ({
         defaultValue={state.currency}
         onChange={onChangeCurrency}
       >
-        {data.supporterSubscriptionPrice.prices.map((item, index) => (
+        {data.supporterSubscriptionPrice.prices.map((item) => (
           <option
-            key={index}
+            key={item.currency}
             value={item.currency}
           >
             {item.currency}

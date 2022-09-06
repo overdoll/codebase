@@ -34,6 +34,7 @@ const Fragment = graphql`
     {
       edges {
         node {
+          id
           slug
           topic {
             title
@@ -68,8 +69,8 @@ export default function StaffSearchCategories ({ searchArguments }: Props): JSX.
       condition={categories.length < 1}
     >
       <GridWrap>
-        {categories.map((item, index) => (
-          <GridTile key={index}>
+        {categories.map((item) => (
+          <GridTile key={item.node.id}>
             <LinkTile href={{
               pathname: '/staff/entity/category/[slug]',
               query: { slug: item.slug }

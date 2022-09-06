@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<940be52bd6d322c38ef4b74a49b096b3>>
- * @relayHash 3ce503f2e5d2a518acca40014ea648ca
+ * @generated SignedSource<<20dd891c59946c58d02e335bb14e9a47>>
+ * @relayHash 98cadf8d60e96a5459f7d41d73304faf
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3ce503f2e5d2a518acca40014ea648ca
+// @relayRequestID 98cadf8d60e96a5459f7d41d73304faf
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -281,6 +281,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -304,7 +305,6 @@ return {
                         "name": "settlementDate",
                         "storageKey": null
                       },
-                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -370,6 +370,7 @@ return {
             "name": "events",
             "plural": true,
             "selections": [
+              (v4/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -383,8 +384,7 @@ return {
                 "kind": "ScalarField",
                 "name": "createdAt",
                 "storageKey": null
-              },
-              (v4/*: any*/)
+              }
             ],
             "storageKey": null
           },
@@ -430,7 +430,7 @@ return {
     ]
   },
   "params": {
-    "id": "3ce503f2e5d2a518acca40014ea648ca",
+    "id": "98cadf8d60e96a5459f7d41d73304faf",
     "metadata": {},
     "name": "StaffPayoutQuery",
     "operationKind": "query",

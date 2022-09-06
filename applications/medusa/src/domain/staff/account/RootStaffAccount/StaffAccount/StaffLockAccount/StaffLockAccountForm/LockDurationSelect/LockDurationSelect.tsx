@@ -57,8 +57,8 @@ export default function LockDurationSelect (): JSX.Element {
 
   return (
     <SelectInput placeholder={i18n._(t`Select duration`)}>
-      {durations.map((item, index) => (
-        <option key={index} value={item.value as unknown as string}>
+      {durations.map((item) => (
+        <option key={item.title} value={item.value as unknown as string}>
           {item.title}
         </option>)
       )}

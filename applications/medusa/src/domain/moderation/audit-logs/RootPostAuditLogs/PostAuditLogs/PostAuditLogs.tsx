@@ -30,6 +30,7 @@ const Fragment = graphql`
     @connection(key: "AuditLogsAccount_postAuditLogs") {
       edges {
         node {
+          id
           ...AuditCardFragment
         }
       }
@@ -63,7 +64,7 @@ export default function PostAuditLogs (props: Props): JSX.Element {
             <ListSpacer>
               {auditLogs.map((item, index) =>
                 <AuditCard
-                  key={index}
+                  key={item.node.id}
                   auditLog={auditLogs[index]?.node}
                 />
               )}

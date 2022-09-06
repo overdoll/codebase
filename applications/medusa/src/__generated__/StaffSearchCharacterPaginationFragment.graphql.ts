@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<27076bb1d645d6a6f642a32e945c95e0>>
- * @relayHash 7f393d507ae5df2e0713e9e8230d360c
+ * @generated SignedSource<<e16150997b6e4450aa8d1e88e4629829>>
+ * @relayHash 833dd09214c6769b9e5ef6e979da3f09
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7f393d507ae5df2e0713e9e8230d360c
+// @relayRequestID 833dd09214c6769b9e5ef6e979da3f09
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -67,14 +67,14 @@ v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "slug",
+  "name": "id",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "slug",
   "storageKey": null
 },
 v6 = {
@@ -141,6 +141,7 @@ return {
                 "plural": false,
                 "selections": [
                   (v4/*: any*/),
+                  (v5/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -149,8 +150,8 @@ return {
                     "name": "series",
                     "plural": false,
                     "selections": [
-                      (v4/*: any*/),
                       (v5/*: any*/),
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -169,13 +170,12 @@ return {
                     "name": "club",
                     "plural": false,
                     "selections": [
-                      (v4/*: any*/),
                       (v5/*: any*/),
+                      (v4/*: any*/),
                       (v6/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v5/*: any*/),
                   (v6/*: any*/),
                   {
                     "alias": null,
@@ -214,7 +214,7 @@ return {
                         "name": "progress",
                         "plural": false,
                         "selections": [
-                          (v5/*: any*/),
+                          (v4/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -239,7 +239,7 @@ return {
                         "name": "type",
                         "storageKey": null
                       },
-                      (v5/*: any*/),
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -350,7 +350,7 @@ return {
     ]
   },
   "params": {
-    "id": "7f393d507ae5df2e0713e9e8230d360c",
+    "id": "833dd09214c6769b9e5ef6e979da3f09",
     "metadata": {},
     "name": "StaffSearchCharacterPaginationFragment",
     "operationKind": "query",
@@ -359,6 +359,6 @@ return {
 };
 })();
 
-(node as any).hash = "34a39fc179a1a74f535bb2f77a4b3b61";
+(node as any).hash = "24617325769b6b4b74ab1c9ed39275dd";
 
 export default node;

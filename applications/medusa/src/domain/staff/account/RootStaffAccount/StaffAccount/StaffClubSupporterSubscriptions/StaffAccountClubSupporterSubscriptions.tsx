@@ -34,6 +34,7 @@ const Fragment = graphql`
       edges {
         node {
           ... on IAccountClubSupporterSubscription {
+            id
             reference
           }
           ...StaffAccountClubSupporterSubscriptionPreviewFragment
@@ -85,9 +86,9 @@ export default function StaffAccountClubSupporterSubscriptions ({ query }: Props
           </TableHeaderRow>
         </TableHeader>
         <TableBody>
-          {data.clubSupporterSubscriptions.edges.map((item, index) => (
+          {data.clubSupporterSubscriptions.edges.map((item) => (
             <TableBodyRowLink
-              key={index}
+              key={item.node.id}
               href={{
                 pathname: '/staff/billing/subscription/[reference]',
                 query: { reference: item.node.reference }

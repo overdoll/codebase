@@ -10,6 +10,7 @@ interface Props {
 const Fragment = graphql`
   fragment ContentModifyPreviewFragment on Post {
     content {
+      id
       ...PostContentPreviewMemoFragment
     }
     ...PostContentPreviewMemoPostFragment
@@ -29,8 +30,8 @@ export default function ContentModifyPreview ({
 
   return (
     <Stack spacing={2}>
-      {data.content.map((item, index) => (
-        <PostContentPreviewMemo key={index} query={item} postQuery={data} />
+      {data.content.map((item) => (
+        <PostContentPreviewMemo key={item.id} query={item} postQuery={data} />
       ))}
     </Stack>
   )

@@ -25,6 +25,7 @@ const PostFragment = graphql`
       ...PostSupporterContentClubFragment
     }
     content {
+      id
       resource {
         ...PostDetailedMediaFragment
       }
@@ -67,7 +68,7 @@ export default function PostGalleryPublicDetailed ({
       >
         {postData.content.map((item, index) =>
           <SwiperSlide
-            key={index}
+            key={item.id}
             style={{
               height: 'auto',
               alignSelf: 'stretch'

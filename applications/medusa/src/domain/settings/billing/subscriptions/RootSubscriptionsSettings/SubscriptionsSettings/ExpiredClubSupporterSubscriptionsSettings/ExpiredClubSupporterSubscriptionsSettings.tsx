@@ -25,6 +25,7 @@ const Fragment = graphql`
     @connection (key: "ExpiredClubSupporterSubscriptions_expiredClubSupporterSubscriptions") {
       edges {
         node {
+          id
           ...ExpiredAccountClubSupporterSubscriptionPreviewFragment
         }
       }
@@ -49,7 +50,7 @@ export default function ExpiredClubSupporterSubscriptionsSettings ({ query }: Pr
     >
       <Stack spacing={2}>
         {data.expiredClubSupporterSubscriptions.edges.map((item, index) => (
-          <StackTile key={index}>
+          <StackTile key={item.node.id}>
             <ExpiredAccountClubSupporterSubscriptionPreview query={item.node} />
           </StackTile>
         ))}

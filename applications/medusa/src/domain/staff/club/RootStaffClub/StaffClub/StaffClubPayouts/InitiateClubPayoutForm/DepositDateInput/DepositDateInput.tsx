@@ -35,8 +35,8 @@ export default function DepositDateInput (): JSX.Element {
 
   return (
     <SelectInput placeholder={i18n._(t`Select custom deposit date`)}>
-      {durations.map((item, index) => (
-        <option key={index} value={item.value as unknown as string}>
+      {durations.map((item) => (
+        <option key={item.title} value={item.value as unknown as string}>
           {item.title}
         </option>)
       )}

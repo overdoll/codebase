@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1e1abaa275a15a4c492e9b99c6a1a315>>
+ * @generated SignedSource<<41af7e44fd1f8d34d4658c7facf68f6f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type PublicPostPageFragment$data = {
   readonly club: {
     readonly " $fragmentSpreads": FragmentRefs<"ClubSuspendedStaffAlertFragment">;
   };
+  readonly id: string;
   readonly state: PostState;
   readonly " $fragmentSpreads": FragmentRefs<"FullDetailedPostFragment">;
   readonly " $fragmentType": "PublicPostPageFragment";
@@ -30,6 +31,13 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "PublicPostPageFragment",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -63,6 +71,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "ac1543ce9a3b67121516abb75b3cafc0";
+(node as any).hash = "e238d4e27e35601ab73d7695d1953394";
 
 export default node;

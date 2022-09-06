@@ -38,8 +38,8 @@ export default function SelectCancellationReasonList ({
       condition={queryData.cancellationReasons.edges.length < 1}
     >
       <Stack spacing={1}>
-        {queryData.cancellationReasons.edges.map((item, index) => (
-          <StackTile minH={10} key={index}>
+        {queryData.cancellationReasons.edges.map((item) => (
+          <StackTile minH={10} key={item.node.id}>
             <Choice
               {...register(item.node.id, {})}
             >

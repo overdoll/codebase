@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7227543943da1dc79f00468cdd5fa0d2>>
+ * @generated SignedSource<<1ef78701a0662407f313763f1e955b80>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,6 +17,7 @@ export type StaffSearchCharacterFragment$data = {
         readonly club: {
           readonly slug: string;
         } | null;
+        readonly id: string;
         readonly series: {
           readonly slug: string;
         } | null;
@@ -118,6 +119,13 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "id",
+                  "storageKey": null
+                },
                 (v1/*: any*/),
                 {
                   "alias": null,
@@ -198,6 +206,6 @@ return {
 };
 })();
 
-(node as any).hash = "34a39fc179a1a74f535bb2f77a4b3b61";
+(node as any).hash = "24617325769b6b4b74ab1c9ed39275dd";
 
 export default node;

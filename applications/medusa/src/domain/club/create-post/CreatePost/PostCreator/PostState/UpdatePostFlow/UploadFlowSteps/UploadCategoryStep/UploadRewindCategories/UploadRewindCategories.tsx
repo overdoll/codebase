@@ -144,8 +144,8 @@ export default function UploadRewindCategories ({
             <Stack spacing={2} w='100%'>
               {categories.length > 0 && (
                 <Wrap mb={2} spacing={1} overflow='show'>
-                  {categories.map((item, index) => (
-                    <WrapItem key={index}>
+                  {categories.map((item) => (
+                    <WrapItem key={item.id}>
                       <RemovableTag
                         generateColor
                         id={item.id}

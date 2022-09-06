@@ -20,8 +20,8 @@ export default function CountriesOptions ({ searchArguments }: CountriesOptionsP
 
   return (
     <>
-      {sortedData.map((item, index) =>
-        <option key={index} value={item.id}>{item.name}</option>
+      {sortedData.map((item) =>
+        <option key={item.id} value={item.id}>{item.name}</option>
       )}
     </>
   )

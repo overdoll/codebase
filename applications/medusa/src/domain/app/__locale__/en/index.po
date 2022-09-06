@@ -69,11 +69,11 @@ msgstr ""
 msgid "Cannot drop while uploading"
 msgstr ""
 
-#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:79
+#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:82
 msgid "Categories"
 msgstr ""
 
-#: src/common/components/ChangeCharacterName/ChangeCharacterName.tsx:57
+#: src/common/components/ChangeCharacterName/ChangeCharacterName.tsx:58
 msgid "Change Character Name"
 msgstr ""
 
@@ -81,7 +81,7 @@ msgstr ""
 msgid "Change Thumbnail"
 msgstr ""
 
-#: src/common/components/ChangeCharacterName/ChangeCharacterName.tsx:32
+#: src/common/components/ChangeCharacterName/ChangeCharacterName.tsx:33
 #: src/common/components/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:111
 msgid "Character Name"
 msgstr ""
@@ -92,7 +92,7 @@ msgid "Character Thumbnail"
 msgstr ""
 
 #: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:121
-#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:59
+#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:62
 msgid "Characters"
 msgstr ""
 
@@ -212,7 +212,7 @@ msgstr ""
 msgid "Error Loading Image"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostPlayback/ControlledVideo/components/ControlVideo/LoadingSpinner/LoadingSpinner.tsx:25
+#: src/modules/content/Posts/components/PostPlayback/ControlledVideo/components/ControlVideo/LoadingSpinner/LoadingSpinner.tsx:40
 msgid "Error Loading Video"
 msgstr ""
 
@@ -497,7 +497,7 @@ msgstr ""
 msgid "Preferences"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostData/PostGalleryStaffDetailed/PostGalleryStaffDetailed.tsx:68
+#: src/modules/content/Posts/components/PostData/PostGalleryStaffDetailed/PostGalleryStaffDetailed.tsx:69
 msgid "Preview is only available once content is processed. You may submit your post at this stage, and we will notify you if there are any issues."
 msgstr ""
 
@@ -539,7 +539,7 @@ msgstr ""
 msgid "Reported"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostPlayback/ControlledVideo/components/ControlVideo/LoadingSpinner/LoadingSpinner.tsx:32
+#: src/modules/content/Posts/components/PostPlayback/ControlledVideo/components/ControlVideo/LoadingSpinner/LoadingSpinner.tsx:47
 msgid "Retry"
 msgstr ""
 
@@ -569,7 +569,7 @@ msgstr ""
 #~ msgid "Search"
 #~ msgstr ""
 
-#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchResults/SearchResults.tsx:80
+#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchResults/SearchResults.tsx:93
 msgid "Search Results"
 msgstr ""
 
@@ -587,6 +587,10 @@ msgstr ""
 
 #: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:38
 msgid "Security"
+msgstr ""
+
+#: src/modules/content/Posts/components/PostData/PostGalleryPublicSimple/PostGalleryPublicSimple.tsx:125
+msgid "See Characters & Categories"
 msgstr ""
 
 #: src/modules/content/Posts/components/PostData/PostGalleryPublicSimple/OverflowVisual/OverflowVisual.tsx:51
@@ -621,7 +625,7 @@ msgstr ""
 msgid "Select a topic"
 msgstr ""
 
-#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:99
+#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:102
 msgid "Series"
 msgstr ""
 
@@ -639,7 +643,7 @@ msgstr ""
 msgid "Share on Twitter"
 msgstr ""
 
-#: src/common/components/ClubTransactionMetrics/ClubTransactionMetrics.tsx:68
+#: src/common/components/ClubTransactionMetrics/ClubTransactionMetrics.tsx:69
 msgid "Show Older Metrics"
 msgstr ""
 
@@ -829,16 +833,16 @@ msgstr ""
 msgid "Today"
 msgstr ""
 
-#: src/common/components/ClubTransactionMetrics/ClubTransactionMetrics.tsx:51
+#: src/common/components/ClubTransactionMetrics/ClubTransactionMetrics.tsx:52
 msgid "Transaction Metrics"
 msgstr ""
 
-#: src/common/components/ClubTransactionMetrics/ClubTransactionMetrics.tsx:56
+#: src/common/components/ClubTransactionMetrics/ClubTransactionMetrics.tsx:57
 msgid "Transaction metrics help you maintain a good refund and chargeback ratio to keep your club in good standing."
 msgstr ""
 
 #: src/modules/content/DataDisplay/NextImage/ImageError/ImageError.tsx:44
-#: src/modules/content/Posts/components/PostPlayback/ControlledVideo/components/ControlVideo/LoadingSpinner/LoadingSpinner.tsx:39
+#: src/modules/content/Posts/components/PostPlayback/ControlledVideo/components/ControlVideo/LoadingSpinner/LoadingSpinner.tsx:54
 msgid "Try refreshing the page to fix the error"
 msgstr ""
 
@@ -895,7 +899,7 @@ msgstr ""
 msgid "View Post"
 msgstr ""
 
-#: src/common/components/ChangeCharacterName/ChangeCharacterName.tsx:43
+#: src/common/components/ChangeCharacterName/ChangeCharacterName.tsx:44
 msgid "View Translations"
 msgstr ""
 
@@ -907,7 +911,7 @@ msgstr ""
 #~ msgid "We couldn't find a club, category, character, or series with the name {0}"
 #~ msgstr ""
 
-#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchResults/SearchResults.tsx:50
+#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchResults/SearchResults.tsx:63
 msgid "We couldn't find a club, category, character, or series with the name {1}"
 msgstr ""
 

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8f8bdc57951e358f84a3e00fc4f995f4>>
- * @relayHash d830c216cf279fbc41f025d7f6dc9aa0
+ * @generated SignedSource<<16500a3de957f9483403a23ed6219cb9>>
+ * @relayHash 9e2e5070351254f56c202a804cce496f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d830c216cf279fbc41f025d7f6dc9aa0
+// @relayRequestID 9e2e5070351254f56c202a804cce496f
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -67,14 +67,14 @@ v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "title",
+  "name": "id",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "title",
   "storageKey": null
 },
 v6 = {
@@ -133,6 +133,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
+                  (v4/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -148,13 +149,12 @@ return {
                     "name": "topic",
                     "plural": false,
                     "selections": [
-                      (v4/*: any*/),
-                      (v5/*: any*/)
+                      (v5/*: any*/),
+                      (v4/*: any*/)
                     ],
                     "storageKey": null
                   },
                   (v5/*: any*/),
-                  (v4/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -192,7 +192,7 @@ return {
                         "name": "progress",
                         "plural": false,
                         "selections": [
-                          (v5/*: any*/),
+                          (v4/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -217,7 +217,7 @@ return {
                         "name": "type",
                         "storageKey": null
                       },
-                      (v5/*: any*/),
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -328,7 +328,7 @@ return {
     ]
   },
   "params": {
-    "id": "d830c216cf279fbc41f025d7f6dc9aa0",
+    "id": "9e2e5070351254f56c202a804cce496f",
     "metadata": {},
     "name": "StaffSearchCategoriesPaginationFragment",
     "operationKind": "query",
@@ -337,6 +337,6 @@ return {
 };
 })();
 
-(node as any).hash = "a0a3b052edcb3172e23b8898b3917b80";
+(node as any).hash = "3424caf161841c055b0560d09bfb916b";
 
 export default node;

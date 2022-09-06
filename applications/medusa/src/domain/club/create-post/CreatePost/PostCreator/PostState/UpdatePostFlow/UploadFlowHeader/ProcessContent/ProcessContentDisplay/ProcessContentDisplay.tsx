@@ -21,6 +21,7 @@ const Fragment = graphql`
   fragment ProcessContentDisplayFragment on Post {
     id
     content {
+      id
       resource {
         failed
         processed
@@ -184,8 +185,8 @@ export default function ProcessContentDisplay ({
         <LargeBackgroundBox borderRadius='md' p={2}>
           <Stack spacing={2}>
             <ShortGridWrap>
-              {data.content.map((item, index) => (
-                <GridTile key={index}>
+              {data.content.map((item) => (
+                <GridTile key={item.id}>
                   <ExpandableResourceInfo query={item} />
                 </GridTile>
               ))}

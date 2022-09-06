@@ -45,6 +45,6 @@ msgstr ""
 msgid "Start by joining some clubs and we'll create a personalized feed for you!"
 msgstr ""
 
-#: src/domain/clubs/discover/RootDiscoverClubs/DiscoverClubs/DiscoverClubsList/DiscoverClubsList.tsx:61
+#: src/domain/clubs/discover/RootDiscoverClubs/DiscoverClubs/DiscoverClubsList/DiscoverClubsList.tsx:62
 msgid "View More Clubs"
 msgstr ""

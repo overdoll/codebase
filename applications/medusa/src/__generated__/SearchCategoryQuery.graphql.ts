@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<12ce42fbe86a32121ebe367b0b4d9fc6>>
- * @relayHash d6d18d6f2fd066518471d050794a661d
+ * @generated SignedSource<<3f28f575f551c7457742e76a65456473>>
+ * @relayHash d0a0656ddafe5869c46bf1472572abdd
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d6d18d6f2fd066518471d050794a661d
+// @relayRequestID d0a0656ddafe5869c46bf1472572abdd
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -336,6 +336,7 @@ return {
                         "name": "content",
                         "plural": true,
                         "selections": [
+                          (v8/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -374,8 +375,7 @@ return {
                             "kind": "ScalarField",
                             "name": "isSupporterOnly",
                             "storageKey": null
-                          },
-                          (v8/*: any*/)
+                          }
                         ],
                         "storageKey": null
                       },
@@ -674,7 +674,7 @@ return {
     ]
   },
   "params": {
-    "id": "d6d18d6f2fd066518471d050794a661d",
+    "id": "d0a0656ddafe5869c46bf1472572abdd",
     "metadata": {},
     "name": "SearchCategoryQuery",
     "operationKind": "query",

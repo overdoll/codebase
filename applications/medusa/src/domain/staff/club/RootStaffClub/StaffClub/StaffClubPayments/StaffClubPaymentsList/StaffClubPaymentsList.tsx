@@ -30,6 +30,7 @@ const Fragment = graphql`
     @connection(key: "StaffClubPayments_payments") {
       edges {
         node {
+          id
           reference
           ...StaffClubPaymentCardFragment
         }
@@ -75,9 +76,9 @@ export default function StaffClubPaymentsList ({ query }: Props): JSX.Element {
           </TableHeaderRow>
         </TableHeader>
         <TableBody>
-          {data.payments.edges.map((item, index) => (
+          {data.payments.edges.map((item) => (
             <TableBodyRowLink
-              key={index}
+              key={item.node.id}
               href={{
                 pathname: '/staff/billing/payment/[reference]',
                 query: { reference: item.node.reference }

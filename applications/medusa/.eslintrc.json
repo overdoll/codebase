@@ -81,6 +81,7 @@
     "relay/hook-required-argument": "error",
     "react/react-in-jsx-scope": "off",
     "@typescript-eslint/no-var-requires": "off",
+    "react/no-array-index-key": "error",
     "react/jsx-max-props-per-line": [
       1,
       {

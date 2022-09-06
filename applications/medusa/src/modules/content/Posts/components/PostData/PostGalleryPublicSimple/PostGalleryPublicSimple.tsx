@@ -1,11 +1,10 @@
 import { graphql, useFragment } from 'react-relay'
-import { Box } from '@chakra-ui/react'
+import { Box, Heading, Stack } from '@chakra-ui/react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import SwiperType from 'swiper'
 import PostSlideIndex from '../../PostInteraction/PostSlideIndex/PostSlideIndex'
 import { useState } from 'react'
 import PostSupporterContent from '../PostSupporterContent/PostSupporterContent'
-import { Link } from '../../../../../routing'
 import PostMedia from '../../PostPlayback/PostMedia/PostMedia'
 import PostSlideBackground from '../PostSlideBackground/PostSlideBackground'
 import { POST_SWIPER_PROPS } from '../../../constants'
@@ -13,6 +12,10 @@ import { PostGalleryPublicSimpleFragment$key } from '@//:artifacts/PostGalleryPu
 import { PostGalleryPublicSimpleViewerFragment$key } from '@//:artifacts/PostGalleryPublicSimpleViewerFragment.graphql'
 import PostHideOverflow from '../PostHideOverflow/PostHideOverflow'
 import PostShowOverflow from '../PostShowOverflow/PostShowOverflow'
+import { Trans } from '@lingui/macro'
+import { Icon } from '../../../../PageLayout'
+import { InfoCircle } from '@//:assets/icons'
+import { LinkTile } from '../../../../ContentSelection'
 
 interface Props {
   postQuery: PostGalleryPublicSimpleFragment$key
@@ -24,6 +27,7 @@ const PostFragment = graphql`
   fragment PostGalleryPublicSimpleFragment on Post {
     reference
     content {
+      id
       resource {
         ...PostMediaFragment
       }
@@ -77,7 +81,7 @@ export default function PostGalleryPublicSimple ({
       >
         {postData?.content.map((item, index) =>
           <SwiperSlide
-            key={index}
+            key={item.id}
             style={{
               height: 'auto',
               alignSelf: 'stretch'
@@ -90,23 +94,42 @@ export default function PostGalleryPublicSimple ({
                   clubQuery={postData.club}
                   viewerQuery={viewerData}
                 >
-                  <Link
-                    href={{
-                      pathname: '/[slug]/post/[reference]',
-                      query: {
-                        slug: postData.club.slug,
-                        reference: postData.reference,
-                        ...(index > 0 && { slide: index })
-                      }
-                    }}
-                    passHref
-                  >
-                    <Box w='100%' h='100%' as='a'>
-                      <PostMedia
-                        query={item.resource}
-                      />
+                  <Box position='relative'>
+                    <PostMedia
+                      query={item.resource}
+                    />
+                    <Box position='absolute' bottom={1} right={1}>
+                      <LinkTile
+                        width={16}
+                        href={{
+                          pathname: '/[slug]/post/[reference]',
+                          query: {
+                            slug: postData.club.slug,
+                            reference: postData.reference,
+                            ...(index !== 0 && { slide: index })
+                          }
+                        }}
+                      >
+                        <Stack
+                          boxShadow='drag'
+                          align='center'
+                          justify='center'
+                          borderRadius='inherit'
+                          bg='dimmers.700'
+                          px={1}
+                          py={2}
+                          spacing={1}
+                        >
+                          <Icon icon={InfoCircle} w={3} h={3} fill='whiteAlpha.800' />
+                          <Heading textAlign='center' fontSize='2xs' color='whiteAlpha.800'>
+                            <Trans>
+                              See Characters & Categories
+                            </Trans>
+                          </Heading>
+                        </Stack>
+                      </LinkTile>
                     </Box>
-                  </Link>
+                  </Box>
                 </PostSupporterContent>
               )}
             </PostSlideBackground>

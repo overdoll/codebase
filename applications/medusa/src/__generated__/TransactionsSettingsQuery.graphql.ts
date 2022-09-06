@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c3a36fe01b0f0099168d9c5aeb900ed1>>
- * @relayHash f0e485e2bc663fc5ccfe1daceeeb7dde
+ * @generated SignedSource<<5892ee6f0699583da9ba3424a59379ce>>
+ * @relayHash bc4378c631e4b186bc34ae7eb8ec1de8
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f0e485e2bc663fc5ccfe1daceeeb7dde
+// @relayRequestID bc4378c631e4b186bc34ae7eb8ec1de8
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -36,14 +36,14 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "__typename",
+  "name": "id",
   "storageKey": null
 },
 v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "__typename",
   "storageKey": null
 },
 v3 = {
@@ -135,6 +135,7 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
+                      (v1/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -171,7 +172,7 @@ return {
                         "name": "clubSupporterSubscription",
                         "plural": false,
                         "selections": [
-                          (v1/*: any*/),
+                          (v2/*: any*/),
                           {
                             "kind": "InlineFragment",
                             "selections": [
@@ -190,7 +191,7 @@ return {
                                     "name": "name",
                                     "storageKey": null
                                   },
-                                  (v2/*: any*/),
+                                  (v1/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -206,7 +207,7 @@ return {
                                         "name": "preview",
                                         "storageKey": null
                                       },
-                                      (v2/*: any*/),
+                                      (v1/*: any*/),
                                       {
                                         "alias": null,
                                         "args": null,
@@ -266,7 +267,7 @@ return {
                           {
                             "kind": "InlineFragment",
                             "selections": [
-                              (v2/*: any*/)
+                              (v1/*: any*/)
                             ],
                             "type": "Node",
                             "abstractKey": "__isNode"
@@ -305,8 +306,7 @@ return {
                         ],
                         "storageKey": null
                       },
-                      (v2/*: any*/),
-                      (v1/*: any*/)
+                      (v2/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -369,7 +369,7 @@ return {
             "kind": "LinkedHandle",
             "name": "transactions"
           },
-          (v2/*: any*/),
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -378,7 +378,7 @@ return {
             "name": "lock",
             "plural": false,
             "selections": [
-              (v1/*: any*/),
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -397,7 +397,7 @@ return {
             "name": "deleting",
             "plural": false,
             "selections": [
-              (v1/*: any*/),
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -414,7 +414,7 @@ return {
     ]
   },
   "params": {
-    "id": "f0e485e2bc663fc5ccfe1daceeeb7dde",
+    "id": "bc4378c631e4b186bc34ae7eb8ec1de8",
     "metadata": {},
     "name": "TransactionsSettingsQuery",
     "operationKind": "query",

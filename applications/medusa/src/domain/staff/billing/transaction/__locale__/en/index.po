@@ -34,7 +34,7 @@ msgstr ""
 #~ msgid "Club"
 #~ msgstr ""
 
-#: src/domain/staff/billing/transaction/RootStaffAccountTransaction/StaffAccountTransaction/StaffAccountTransactionEvents/StaffAccountTransactionEvents.tsx:57
+#: src/domain/staff/billing/transaction/RootStaffAccountTransaction/StaffAccountTransaction/StaffAccountTransactionEvents/StaffAccountTransactionEvents.tsx:58
 msgid "Date"
 msgstr ""
 
@@ -50,11 +50,11 @@ msgstr ""
 msgid "Manage Transaction"
 msgstr ""
 
-#: src/domain/staff/billing/transaction/RootStaffAccountTransaction/StaffAccountTransaction/StaffAccountTransactionEvents/StaffAccountTransactionEvents.tsx:47
+#: src/domain/staff/billing/transaction/RootStaffAccountTransaction/StaffAccountTransaction/StaffAccountTransactionEvents/StaffAccountTransactionEvents.tsx:48
 msgid "Price"
 msgstr ""
 
-#: src/domain/staff/billing/transaction/RootStaffAccountTransaction/StaffAccountTransaction/StaffAccountTransactionEvents/StaffAccountTransactionEvents.tsx:52
+#: src/domain/staff/billing/transaction/RootStaffAccountTransaction/StaffAccountTransaction/StaffAccountTransactionEvents/StaffAccountTransactionEvents.tsx:53
 msgid "Reason"
 msgstr ""
 
@@ -84,7 +84,7 @@ msgstr ""
 msgid "Successfully refunded {refundedAmount}"
 msgstr ""
 
-#: src/domain/staff/billing/transaction/RootStaffAccountTransaction/StaffAccountTransaction/StaffAccountTransactionEvents/StaffAccountTransactionEvents.tsx:37
+#: src/domain/staff/billing/transaction/RootStaffAccountTransaction/StaffAccountTransaction/StaffAccountTransactionEvents/StaffAccountTransactionEvents.tsx:38
 msgid "There are no events"
 msgstr ""
 

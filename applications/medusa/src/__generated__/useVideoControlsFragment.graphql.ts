@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6a6528ac1469f1176c0ee9585aef53a2>>
+ * @generated SignedSource<<b90403f3f07c147d9079bb236bc4c95c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,9 @@ export type useVideoControlsFragment$data = {
     readonly mimeType: string;
     readonly url: string;
   }>;
+  readonly videoThumbnail: {
+    readonly url: string;
+  } | null;
   readonly " $fragmentType": "useVideoControlsFragment";
 };
 export type useVideoControlsFragment$key = {
@@ -23,7 +26,15 @@ export type useVideoControlsFragment$key = {
   readonly " $fragmentSpreads": FragmentRefs<"useVideoControlsFragment">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
@@ -44,13 +55,7 @@ const node: ReaderFragment = {
       "name": "urls",
       "plural": true,
       "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "url",
-          "storageKey": null
-        },
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -60,12 +65,25 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ResourceUrl",
+      "kind": "LinkedField",
+      "name": "videoThumbnail",
+      "plural": false,
+      "selections": [
+        (v0/*: any*/)
+      ],
+      "storageKey": null
     }
   ],
   "type": "Resource",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "6c0000cc85fa28342fa55208760e8b15";
+(node as any).hash = "3071f0dd9e101467af7f8b69533b155b";
 
 export default node;

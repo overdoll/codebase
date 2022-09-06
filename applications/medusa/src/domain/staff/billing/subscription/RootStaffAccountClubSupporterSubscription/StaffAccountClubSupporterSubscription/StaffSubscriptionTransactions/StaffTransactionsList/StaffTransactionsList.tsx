@@ -25,6 +25,7 @@ const Fragment = graphql`
   fragment StaffTransactionsListFragment on AccountTransactionConnection {
     edges {
       node {
+        id
         reference
         ...StaffTransactionCardFragment
       }
@@ -71,9 +72,9 @@ export default function StaffTransactionsList ({
           </TableHeaderRow>
         </TableHeader>
         <TableBody>
-          {data.edges.map((item, index) => (
+          {data.edges.map((item) => (
             <TableBodyRowLink
-              key={index}
+              key={item.node.id}
               href={{
                 pathname: '/staff/billing/transaction/[reference]',
                 query: {

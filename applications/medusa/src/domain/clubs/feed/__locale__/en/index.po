@@ -21,7 +21,7 @@ msgstr ""
 #~ msgid "Discover Clubs"
 #~ msgstr ""
 
-#: src/domain/clubs/feed/RootClubsFeed/ClubsFeed/ClubsFeedDiscoverList/ClubsFeedDiscoverList.tsx:81
+#: src/domain/clubs/feed/RootClubsFeed/ClubsFeed/ClubsFeedDiscoverList/ClubsFeedDiscoverList.tsx:82
 msgid "See All"
 msgstr ""
 

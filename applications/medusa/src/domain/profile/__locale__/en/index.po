@@ -17,11 +17,11 @@ msgstr ""
 msgid "Copy Link"
 msgstr ""
 
-#: src/domain/profile/RootProfile/Profile/ProfileContributingClubs/ProfileContributingClubs.tsx:34
+#: src/domain/profile/RootProfile/Profile/ProfileContributingClubs/ProfileContributingClubs.tsx:35
 msgid "Not contributing to any clubs"
 msgstr ""
 
-#: src/domain/profile/RootProfile/Profile/ProfileSupportedClubs/ProfileSupportedClubs.tsx:34
+#: src/domain/profile/RootProfile/Profile/ProfileSupportedClubs/ProfileSupportedClubs.tsx:35
 msgid "Not supporting any clubs"
 msgstr ""
 

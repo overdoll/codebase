@@ -26,7 +26,7 @@ msgstr ""
 msgid "Category Thumbnail"
 msgstr ""
 
-#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitle.tsx:32
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitle.tsx:33
 #: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:111
 msgid "Category Title"
 msgstr ""
@@ -35,7 +35,7 @@ msgstr ""
 msgid "Category Topic"
 msgstr ""
 
-#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitle.tsx:57
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitle.tsx:58
 msgid "Change Category Title"
 msgstr ""
 
@@ -89,6 +89,6 @@ msgstr ""
 msgid "Updated category topic"
 msgstr ""
 
-#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitle.tsx:43
+#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitle.tsx:44
 msgid "View Translations"
 msgstr ""

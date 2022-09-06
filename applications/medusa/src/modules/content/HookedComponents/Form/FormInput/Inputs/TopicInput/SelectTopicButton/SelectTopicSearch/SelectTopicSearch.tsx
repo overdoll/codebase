@@ -66,8 +66,8 @@ export default function SelectTopicSearch ({
       condition={data.topics.edges.length < 1}
     >
       <GridWrap>
-        {data.topics.edges.map((item, index) => (
-          <GridTile key={index}>
+        {data.topics.edges.map((item) => (
+          <GridTile key={item.node.id}>
             <Choice
               {...register(item.node.id, { title: item.node.title })}
             >

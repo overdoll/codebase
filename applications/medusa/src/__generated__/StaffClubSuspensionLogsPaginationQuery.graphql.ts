@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<193f4bd181f2045da877b8ac33888675>>
- * @relayHash 860d23a00aac121c98615378aff739a1
+ * @generated SignedSource<<e19184f3eff31fe772444383bd3fe20f>>
+ * @relayHash 6cecb96a702e91a9e53ae5daf17be0ad
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 860d23a00aac121c98615378aff739a1
+// @relayRequestID 6cecb96a702e91a9e53ae5daf17be0ad
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -161,12 +161,9 @@ return {
                         "selections": [
                           (v3/*: any*/),
                           {
-                            "kind": "TypeDiscriminator",
-                            "abstractKey": "__isClubSuspensionLog"
-                          },
-                          {
                             "kind": "InlineFragment",
                             "selections": [
+                              (v4/*: any*/),
                               {
                                 "alias": "issuedAccount",
                                 "args": null,
@@ -190,8 +187,7 @@ return {
                                 "kind": "ScalarField",
                                 "name": "suspendedUntil",
                                 "storageKey": null
-                              },
-                              (v4/*: any*/)
+                              }
                             ],
                             "type": "ClubIssuedSuspensionLog",
                             "abstractKey": null
@@ -199,6 +195,7 @@ return {
                           {
                             "kind": "InlineFragment",
                             "selections": [
+                              (v4/*: any*/),
                               {
                                 "alias": "removedAccount",
                                 "args": null,
@@ -208,11 +205,14 @@ return {
                                 "plural": false,
                                 "selections": (v5/*: any*/),
                                 "storageKey": null
-                              },
-                              (v4/*: any*/)
+                              }
                             ],
                             "type": "ClubRemovedSuspensionLog",
                             "abstractKey": null
+                          },
+                          {
+                            "kind": "TypeDiscriminator",
+                            "abstractKey": "__isClubSuspensionLog"
                           }
                         ],
                         "storageKey": null
@@ -274,7 +274,7 @@ return {
     ]
   },
   "params": {
-    "id": "860d23a00aac121c98615378aff739a1",
+    "id": "6cecb96a702e91a9e53ae5daf17be0ad",
     "metadata": {},
     "name": "StaffClubSuspensionLogsPaginationQuery",
     "operationKind": "query",
@@ -283,6 +283,6 @@ return {
 };
 })();
 
-(node as any).hash = "a5a83589d9474f8f818ad50781f50b20";
+(node as any).hash = "1a4dacf06dd6cf7e0887cf7311779bc4";
 
 export default node;

@@ -5,9 +5,9 @@ import { FullClubPostViewerFragment$key } from '@//:artifacts/FullClubPostViewer
 import { Stack } from '@chakra-ui/react'
 import PostFooterButtons from '@//:modules/content/Posts/components/PostInteraction/PostFooterButtons/PostFooterButtons'
 import { useMemo } from 'react'
-import PostPrivateHeader
-  from '@//:modules/content/Posts/components/PostInteraction/PostHeaders/PostPrivateHeader/PostPrivateHeader'
 import { PostGalleryPublicSimple } from '@//:modules/content/Posts'
+import PostPublicHeader
+  from '@//:modules/content/Posts/components/PostInteraction/PostHeaders/PostPublicHeader/PostPublicHeader'
 
 interface Props {
   query: FullClubPostFragment$key
@@ -20,7 +20,7 @@ const PostFragment = graphql`
     id
     ...PostGalleryPublicSimpleFragment
     ...PostFooterButtonsFragment
-    ...PostPrivateHeaderFragment
+    ...PostPublicHeaderFragment
   }
 `
 
@@ -28,6 +28,7 @@ const ViewerFragment = graphql`
   fragment FullClubPostViewerFragment on Account {
     ...PostGalleryPublicSimpleViewerFragment
     ...PostFooterButtonsViewerFragment
+    ...PostPublicHeaderViewerFragment
   }
 `
 
@@ -44,7 +45,7 @@ export default function FullClubPost ({
 
   return (
     <Stack spacing={2}>
-      <PostPrivateHeader descriptionProps={{ noOfLines: 1 }} postQuery={data} />
+      <PostPublicHeader redirectToPost postQuery={data} viewerQuery={viewerData} />
       {PostMemo}
       <PostFooterButtons postQuery={data} viewerQuery={viewerData} />
     </Stack>

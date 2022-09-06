@@ -14,6 +14,7 @@ interface Props extends Pick<ControlledVideoProps, 'controls'>, ObserveContentCa
 
 const Fragment = graphql`
   fragment PostVideoMediaFragment on Resource {
+    id
     ...ControlledVideoFragment
     ...useVideoControlsFragment
   }
@@ -52,7 +53,7 @@ export default function PostVideoMedia ({
     if (isObservingDebounced && isActive && ref.current.paused) {
       play()
     }
-  }, [isObservingDebounced, isActive, ref])
+  }, [isObservingDebounced, isActive, ref, data.id])
 
   useEffect(() => {
     if (ref?.current == null || ref.current.error != null) return

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<15ebf6c4a45d8219ad4f1670683b0aca>>
+ * @generated SignedSource<<12d43323c55c71dfc1de70d66e80429e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type StaffSearchCancellationReasonsFragment$data = {
   readonly cancellationReasons: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly id: string;
         readonly reference: string;
         readonly " $fragmentSpreads": FragmentRefs<"CancellationReasonOverlayFragment">;
       };
@@ -96,6 +97,13 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
+                  "name": "id",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
                   "name": "reference",
                   "storageKey": null
                 },
@@ -158,6 +166,6 @@ return {
 };
 })();
 
-(node as any).hash = "fab28a9f18fde10f84aa0f9b4afe5613";
+(node as any).hash = "5940cef456bbf4a3e820c960f4ac012f";
 
 export default node;

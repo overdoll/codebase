@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<2d6495c7d3c7e1091003a84179a52a12>>
- * @relayHash fdf9a01c2ba06f1a2b40e187b9d4e177
+ * @generated SignedSource<<6aa0f30b5009d4aa45aa8374a3287495>>
+ * @relayHash 1d350bdbf73582f56706bdd167a9bc85
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID fdf9a01c2ba06f1a2b40e187b9d4e177
+// @relayRequestID 1d350bdbf73582f56706bdd167a9bc85
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -328,6 +328,7 @@ return {
                             "name": "content",
                             "plural": true,
                             "selections": [
+                              (v1/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -373,8 +374,7 @@ return {
                                 "kind": "ScalarField",
                                 "name": "isSupporterOnly",
                                 "storageKey": null
-                              },
-                              (v1/*: any*/)
+                              }
                             ],
                             "storageKey": null
                           },
@@ -410,6 +410,7 @@ return {
                             "name": "characters",
                             "plural": true,
                             "selections": [
+                              (v1/*: any*/),
                               (v10/*: any*/),
                               {
                                 "alias": null,
@@ -420,8 +421,7 @@ return {
                                 "plural": false,
                                 "selections": (v12/*: any*/),
                                 "storageKey": null
-                              },
-                              (v1/*: any*/)
+                              }
                             ],
                             "storageKey": null
                           },
@@ -432,7 +432,10 @@ return {
                             "kind": "LinkedField",
                             "name": "categories",
                             "plural": true,
-                            "selections": (v12/*: any*/),
+                            "selections": [
+                              (v1/*: any*/),
+                              (v11/*: any*/)
+                            ],
                             "storageKey": null
                           }
                         ],
@@ -538,7 +541,7 @@ return {
     ]
   },
   "params": {
-    "id": "fdf9a01c2ba06f1a2b40e187b9d4e177",
+    "id": "1d350bdbf73582f56706bdd167a9bc85",
     "metadata": {},
     "name": "PostModerationQueueQuery",
     "operationKind": "query",

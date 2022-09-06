@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<73d3d863ecba718deb7d8e837a562b1e>>
- * @relayHash 8e1973884c9f16058ddc3a2931e45ba8
+ * @generated SignedSource<<f7364d4728cda2c81903dd845480f9c9>>
+ * @relayHash 2c5e6f41389774c25586608311b75102
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8e1973884c9f16058ddc3a2931e45ba8
+// @relayRequestID 2c5e6f41389774c25586608311b75102
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -54,14 +54,14 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "__typename",
+  "name": "id",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "__typename",
   "storageKey": null
 },
 v4 = {
@@ -176,6 +176,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
+                  (v2/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -198,12 +199,11 @@ return {
                     "name": "viewerMember",
                     "plural": false,
                     "selections": [
-                      (v2/*: any*/),
-                      (v3/*: any*/)
+                      (v3/*: any*/),
+                      (v2/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -213,7 +213,7 @@ return {
                     "plural": false,
                     "selections": [
                       (v4/*: any*/),
-                      (v3/*: any*/),
+                      (v2/*: any*/),
                       (v6/*: any*/),
                       (v7/*: any*/),
                       (v8/*: any*/),
@@ -253,7 +253,7 @@ return {
                         "name": "progress",
                         "plural": false,
                         "selections": [
-                          (v3/*: any*/),
+                          (v2/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -272,7 +272,7 @@ return {
                         "storageKey": null
                       },
                       (v10/*: any*/),
-                      (v3/*: any*/),
+                      (v2/*: any*/),
                       (v6/*: any*/),
                       (v7/*: any*/),
                       (v8/*: any*/),
@@ -287,7 +287,7 @@ return {
                     "name": "viewerIsOwner",
                     "storageKey": null
                   },
-                  (v2/*: any*/)
+                  (v3/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -360,14 +360,14 @@ return {
             "name": "clubMembershipsCount",
             "storageKey": null
           },
-          (v3/*: any*/)
+          (v2/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "8e1973884c9f16058ddc3a2931e45ba8",
+    "id": "2c5e6f41389774c25586608311b75102",
     "metadata": {},
     "name": "ClubsFeedDiscoverListPaginationQuery",
     "operationKind": "query",
@@ -376,6 +376,6 @@ return {
 };
 })();
 
-(node as any).hash = "be3d9d15183d55738658fbe3887aef82";
+(node as any).hash = "3f3a119be7964891a8b14d87a8a2a783";
 
 export default node;

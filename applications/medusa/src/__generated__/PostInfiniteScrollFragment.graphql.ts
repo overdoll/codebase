@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2f5b235878dacba30a6c203944048d55>>
+ * @generated SignedSource<<cba7fb5f6963b4c2ef44a357889d0c7b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type PostInfiniteScrollFragment$data = {
   readonly edges: ReadonlyArray<{
     readonly node: {
       readonly __typename: "Post";
+      readonly id: string;
     };
   }>;
   readonly " $fragmentType": "PostInfiniteScrollFragment";
@@ -49,6 +50,13 @@ const node: ReaderFragment = {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
+              "name": "id",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
               "name": "__typename",
               "storageKey": null
             }
@@ -63,6 +71,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "43e653ac3b7e1ba3a97491b12d7a1f09";
+(node as any).hash = "6e7ab66c8940df705585c8dfaea1da82";
 
 export default node;

@@ -2,7 +2,7 @@ import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { Box, Flex, Spinner, Stack } from '@chakra-ui/react'
 import type { PostInfiniteScrollFragment$key } from '@//:artifacts/PostInfiniteScrollFragment.graphql'
-import LoadMoreObserver from '../PostsInfiniteScroll/LoadMoreObserver/LoadMoreObserver'
+import LoadMoreObserver from './LoadMoreObserver/LoadMoreObserver'
 import { Fragment, ReactNode, useTransition } from 'react'
 import { LoadMoreFn } from 'react-relay/relay-hooks/useLoadMoreFunction'
 import { EmptyPosts } from '../../../../Placeholder'
@@ -27,6 +27,7 @@ const PostFragment = graphql`
   fragment PostInfiniteScrollFragment on PostConnection {
     edges {
       node {
+        id
         __typename
       }
     }
@@ -103,10 +104,10 @@ export default function PostInfiniteScroll ({
     <Stack spacing={16}>
       {data?.edges.map((item, index) =>
         (
-          <Fragment key={index}>
+          <Fragment key={item.node.id}>
             {(hasNext && data.edges.length - 2 === index) &&
               <LoadMoreObserver startTransition={startTransition} loadNext={loadNext} />}
-            <Box key={index}>
+            <Box>
               {runIfFunction(children, {
                 index
               })}

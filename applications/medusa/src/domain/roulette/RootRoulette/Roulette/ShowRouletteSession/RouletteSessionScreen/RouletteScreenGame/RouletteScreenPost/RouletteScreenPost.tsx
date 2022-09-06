@@ -4,6 +4,7 @@ import { graphql } from 'react-relay'
 import { RouletteScreenPostViewerFragment$key } from '@//:artifacts/RouletteScreenPostViewerFragment.graphql'
 import PostGalleryPublicContained
   from '@//:modules/content/Posts/components/PostData/PostGalleryPublicContained/PostGalleryPublicContained'
+import { useMemo } from 'react'
 
 interface Props {
   query: RouletteScreenPostFragment$key
@@ -13,6 +14,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment RouletteScreenPostFragment on Post {
+    id
     ...PostGalleryPublicContainedFragment
   }
 `
@@ -33,5 +35,5 @@ export default function RouletteScreenPost (props: Props): JSX.Element {
 
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
-  return <PostGalleryPublicContained postQuery={data} viewerQuery={viewerData} />
+  return useMemo(() => <PostGalleryPublicContained postQuery={data} viewerQuery={viewerData} />, [data.id])
 }

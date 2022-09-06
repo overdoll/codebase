@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fecca5b5eb2f69c1c6615f9a7c0dfaf3>>
+ * @generated SignedSource<<31cf08240ee313d6322ef51963ec3bb9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type StaffSeriesSearchCharactersFragment$data = {
   readonly characters: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly id: string;
         readonly series: {
           readonly slug: string;
         } | null;
@@ -35,6 +36,13 @@ var v0 = [
   "characters"
 ],
 v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -107,6 +115,7 @@ return {
               "plural": false,
               "selections": [
                 (v1/*: any*/),
+                (v2/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -115,7 +124,7 @@ return {
                   "name": "series",
                   "plural": false,
                   "selections": [
-                    (v1/*: any*/)
+                    (v2/*: any*/)
                   ],
                   "storageKey": null
                 },
@@ -172,19 +181,13 @@ return {
       ],
       "storageKey": null
     },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    }
+    (v1/*: any*/)
   ],
   "type": "Series",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "520cefe7aceadaaf1f2f3d4ecc1e85f3";
+(node as any).hash = "ebb296248455ab00f1100da79349b39d";
 
 export default node;

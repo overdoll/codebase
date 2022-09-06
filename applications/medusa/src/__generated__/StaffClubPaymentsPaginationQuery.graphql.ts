@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<69293f8608fb2d03e6aea33fcc170377>>
- * @relayHash 9949b0ed1fd018aa9cbc27f9dad1dc0b
+ * @generated SignedSource<<8e1b5f976716b35e6c7781a53c75012f>>
+ * @relayHash 3d530050131065360da88ee0570161b7
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9949b0ed1fd018aa9cbc27f9dad1dc0b
+// @relayRequestID 3d530050131065360da88ee0570161b7
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -149,6 +149,7 @@ return {
                         "name": "node",
                         "plural": false,
                         "selections": [
+                          (v4/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -184,7 +185,6 @@ return {
                             "name": "settlementDate",
                             "storageKey": null
                           },
-                          (v4/*: any*/),
                           (v3/*: any*/)
                         ],
                         "storageKey": null
@@ -246,7 +246,7 @@ return {
     ]
   },
   "params": {
-    "id": "9949b0ed1fd018aa9cbc27f9dad1dc0b",
+    "id": "3d530050131065360da88ee0570161b7",
     "metadata": {},
     "name": "StaffClubPaymentsPaginationQuery",
     "operationKind": "query",
@@ -255,6 +255,6 @@ return {
 };
 })();
 
-(node as any).hash = "132b514ba7b5217e56aa40792db4d039";
+(node as any).hash = "fe625897172bba31c25bcccddb2d7ec2";
 
 export default node;

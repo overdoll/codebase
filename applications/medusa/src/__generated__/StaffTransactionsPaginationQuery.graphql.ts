@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ebfaba42dd355f4728c95ce4a57aa134>>
- * @relayHash a6e12db99b4cda18f1fcaa74f3df4dc9
+ * @generated SignedSource<<acbb3d9fdc35426502ff049d14b17399>>
+ * @relayHash 76c761ddddd6a379e6355473817f26ca
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a6e12db99b4cda18f1fcaa74f3df4dc9
+// @relayRequestID 76c761ddddd6a379e6355473817f26ca
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -149,6 +149,7 @@ return {
                         "name": "node",
                         "plural": false,
                         "selections": [
+                          (v4/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -230,7 +231,6 @@ return {
                             ],
                             "storageKey": null
                           },
-                          (v4/*: any*/),
                           (v3/*: any*/)
                         ],
                         "storageKey": null
@@ -321,7 +321,7 @@ return {
     ]
   },
   "params": {
-    "id": "a6e12db99b4cda18f1fcaa74f3df4dc9",
+    "id": "76c761ddddd6a379e6355473817f26ca",
     "metadata": {},
     "name": "StaffTransactionsPaginationQuery",
     "operationKind": "query",

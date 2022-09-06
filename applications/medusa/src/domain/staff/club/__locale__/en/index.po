@@ -25,7 +25,7 @@ msgstr ""
 msgid "ACTIVE"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptions.tsx:71
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptions.tsx:72
 msgid "Account"
 msgstr ""
 
@@ -37,8 +37,8 @@ msgstr ""
 msgid "Add Ability to Create Supporter Posts"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayments/StaffClubPaymentsList/StaffClubPaymentsList.tsx:66
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/StaffClubPayoutsList/StaffClubPayoutsList.tsx:66
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayments/StaffClubPaymentsList/StaffClubPaymentsList.tsx:67
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/StaffClubPayoutsList/StaffClubPayoutsList.tsx:67
 msgid "Amount"
 msgstr ""
 
@@ -87,7 +87,7 @@ msgid "Confirm Terminate Club"
 msgstr ""
 
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/InitiateClubPayoutForm/InitiateClubPayoutForm.tsx:100
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/StaffClubPayoutsList/StaffClubPayoutsList.tsx:71
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/StaffClubPayoutsList/StaffClubPayoutsList.tsx:72
 msgid "Deposit Date"
 msgstr ""
 
@@ -119,7 +119,7 @@ msgstr ""
 msgid "End of {month}"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubSuspensionLogs/StaffClubSuspensionLogs.tsx:81
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubSuspensionLogs/StaffClubSuspensionLogs.tsx:87
 msgid "Expires"
 msgstr ""
 
@@ -149,7 +149,7 @@ msgstr ""
 msgid "Issued"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptions.tsx:81
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptions.tsx:82
 msgid "Next/End/Expired Date"
 msgstr ""
 
@@ -165,7 +165,7 @@ msgstr ""
 msgid "No payout method set up for this account"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubSuspensionLogs/StaffClubSuspensionLogs.tsx:56
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubSuspensionLogs/StaffClubSuspensionLogs.tsx:62
 msgid "No suspension logs found"
 msgstr ""
 
@@ -225,7 +225,7 @@ msgstr ""
 msgid "Prevent Creation of Supporter Posts"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubSuspensionLogs/StaffClubSuspensionLogs.tsx:76
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubSuspensionLogs/StaffClubSuspensionLogs.tsx:82
 msgid "Reason"
 msgstr ""
 
@@ -254,11 +254,11 @@ msgstr ""
 msgid "Select percentage"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayments/StaffClubPaymentsList/StaffClubPaymentsList.tsx:71
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayments/StaffClubPaymentsList/StaffClubPaymentsList.tsx:72
 msgid "Settlement Date"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubSuspensionLogs/StaffClubSuspensionLogs.tsx:71
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubSuspensionLogs/StaffClubSuspensionLogs.tsx:77
 msgid "Staff"
 msgstr ""
 
@@ -267,9 +267,9 @@ msgid "Start of {month}"
 msgstr ""
 
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:65
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayments/StaffClubPaymentsList/StaffClubPaymentsList.tsx:61
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/StaffClubPayoutsList/StaffClubPayoutsList.tsx:61
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptions.tsx:66
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayments/StaffClubPaymentsList/StaffClubPaymentsList.tsx:62
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/StaffClubPayoutsList/StaffClubPayoutsList.tsx:62
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptions.tsx:67
 msgid "Status"
 msgstr ""
 
@@ -325,7 +325,7 @@ msgstr ""
 msgid "Successfully updated platform fee"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptions.tsx:76
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSupporterSubscriptions/StaffClubSupporterSubscriptions.tsx:77
 msgid "Supporting Since"
 msgstr ""
 
@@ -450,7 +450,7 @@ msgstr ""
 msgid "There was an error updating the platform fee"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubSuspensionLogs/StaffClubSuspensionLogs.tsx:66
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubSuspensionLogs/StaffClubSuspensionLogs.tsx:72
 msgid "Type"
 msgstr ""
 

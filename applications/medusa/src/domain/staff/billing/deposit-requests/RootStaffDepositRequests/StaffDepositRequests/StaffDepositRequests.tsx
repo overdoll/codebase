@@ -38,6 +38,7 @@ const Fragment = graphql`
     @connection(key: "DepositRequestsFragment_depositRequests") {
       edges {
         node {
+          id
           reference
           ...StaffDepositRequestCardFragment
         }
@@ -106,9 +107,9 @@ export default function StaffDepositRequests ({ query }: Props): JSX.Element {
           condition={data.depositRequests.edges.length < 1}
         >
           <TableBody>
-            {data.depositRequests.edges.map((item, index) => (
+            {data.depositRequests.edges.map((item) => (
               <TableBodyRowLink
-                key={index}
+                key={item.node.id}
                 href={{
                   pathname: '/staff/billing/deposit-requests/[reference]',
                   query: { reference: item.node.reference }

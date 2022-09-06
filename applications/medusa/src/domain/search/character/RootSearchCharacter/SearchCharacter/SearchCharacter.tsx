@@ -11,7 +11,7 @@ import SearchCharacterRecommendations from './SearchCharacterRecommendations/Sea
 import SearchCharacterRichObject
   from '../../../../../common/rich-objects/search/SearchCharacterRichObject/SearchCharacterRichObject'
 import FullSimplePost
-  from '@//:modules/content/Posts/components/PostNavigation/PostsInfiniteScroll/FullSimplePost/FullSimplePost'
+  from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/FullSimplePost/FullSimplePost'
 import PostInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
 import PlatformPromoteAlert from '@//:common/components/PlatformPromoteAlert/PlatformPromoteAlert'

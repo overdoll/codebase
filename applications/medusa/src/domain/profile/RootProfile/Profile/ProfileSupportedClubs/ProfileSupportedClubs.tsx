@@ -16,6 +16,7 @@ const Fragment = graphql`
     supportedClubs: clubs {
       edges {
         node {
+          id
           slug
           ...ClubTileOverlayFragment
         }
@@ -38,7 +39,7 @@ export default function ProfileSupportedClubs ({ query }: Props): JSX.Element {
     >
       <Stack spacing={2}>
         {data.supportedClubs.edges.map((item, index) =>
-          <StackTile key={index}>
+          <StackTile key={item.node.id}>
             <LinkTile href={`/${item.node.slug}`}>
               <ClubTileOverlay query={item.node} />
             </LinkTile>

@@ -16,6 +16,7 @@ const Fragment = graphql`
   fragment ChangeCharacterNameFragment on Character {
     name
     nameTranslations {
+      text
       ...TranslationSnippetFragment
     }
     ...ChangeCharacterNameFormFragment
@@ -46,8 +47,8 @@ export default function ChangeCharacterName ({ query }: Props): JSX.Element {
           </CollapseButton>
           <CollapseBody>
             <Stack>
-              {data.nameTranslations.map((item, index) => (
-                <TranslationSnippet key={index} query={item} />)
+              {data.nameTranslations.map((item) => (
+                <TranslationSnippet key={item.text} query={item} />)
               )}
             </Stack>
           </CollapseBody>
