@@ -22,22 +22,25 @@ type Application struct {
 	Repository session.Repository
 }
 
-func (a *Application) GetDeviceDataFromRequest(req *http.Request) (string, string, string, error) {
+func (a *Application) GetDeviceDataFromRequest(req *http.Request) (string, string, string, string, error) {
+
 	userAgent := strings.Join(req.Header["User-Agent"], ",")
 
 	ip := support.GetIPFromRequest(req)
 	deviceId := ""
 
+	referer := req.Referer()
+
 	c, err := req.Cookie(deviceCookieName)
 
 	if err == nil {
 		if err := a.Cookie.Decode(deviceCookieName, c.Value, &deviceId); err != nil && err != securecookie.ErrMacInvalid {
-			return "", "", "", errors.Wrap(err, "failed to decode cookie")
+			return "", "", "", "", errors.Wrap(err, "failed to decode cookie")
 		}
 	}
 
 	if err != nil && err != http.ErrNoCookie {
-		return "", "", "", errors.Wrap(err, "failed to get cookie")
+		return "", "", "", "", errors.Wrap(err, "failed to get cookie")
 	}
 
 	// no device ID - generate a new one (will be saved at the end of the request)
@@ -45,7 +48,7 @@ func (a *Application) GetDeviceDataFromRequest(req *http.Request) (string, strin
 		deviceId = uuid.New().String()
 	}
 
-	return deviceId, ip, userAgent, nil
+	return deviceId, ip, userAgent, referer, nil
 }
 
 func (a *Application) GetSessionDataFromRequest(req *http.Request) (string, string, error) {
@@ -89,7 +92,7 @@ func (a *Application) RevokedAccountSessionEvent(ctx context.Context, res *http.
 	return nil
 }
 
-func (a *Application) NewAccountSessionEvent(ctx context.Context, res *http.Response, accountId string) error {
+func (a *Application) NewAccountSessionEvent(ctx context.Context, res *http.Response, deviceId, accountId string) error {
 
 	sessionId, err := a.Repository.CreateSession(ctx, accountId)
 

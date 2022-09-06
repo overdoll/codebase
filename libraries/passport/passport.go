@@ -47,6 +47,10 @@ func (p *Passport) DeviceID() string {
 	return p.passport.DeviceInfo.Id
 }
 
+func (p *Passport) Referrer() string {
+	return p.passport.DeviceInfo.Referrer
+}
+
 func (p *Passport) IP() string {
 	return p.passport.DeviceInfo.Ip
 }
@@ -117,7 +121,7 @@ func MutatePassport(ctx context.Context, updateFn func(*Passport) error) error {
 	return nil
 }
 
-func issuePassport(sessionId, deviceId, ip, userAgent, accountId string) (*Passport, error) {
+func issuePassport(sessionId, deviceId, ip, userAgent, accountId, referer string) (*Passport, error) {
 
 	var account *libraries_passport_v1.AccountInfo
 
@@ -141,6 +145,7 @@ func issuePassport(sessionId, deviceId, ip, userAgent, accountId string) (*Passp
 			Id:        deviceId,
 			Ip:        ip,
 			UserAgent: userAgent,
+			Referrer:  referer,
 		},
 	}
 

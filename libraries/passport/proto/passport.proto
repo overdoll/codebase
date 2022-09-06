@@ -45,6 +45,9 @@ message DeviceInfo {
 
   // User Agent of the device (can be parsed to grab the actual device information)
   string userAgent = 3;
+
+  // The referer of the passport, if any
+  string referrer = 4;
 }
 
 message Action {

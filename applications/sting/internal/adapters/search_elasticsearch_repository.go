@@ -42,6 +42,13 @@ var searchHistoryWriterIndex = cache.WriteAlias(CachePrefix, SearchHistoryIndexN
 
 func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passport *passport.Passport, requester *principal.Principal, cursor *paging.Cursor, qs string) ([]interface{}, error) {
 
+	var results []interface{}
+
+	// ignore empty queries
+	if qs == "" {
+		return results, nil
+	}
+
 	builder := elastic.NewSearchSource().
 		IndexBoosts(
 			elastic.IndexBoost{
@@ -117,8 +124,6 @@ func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passp
 		return nil, errors.Wrap(support.ParseElasticError(err), fmt.Sprintf("failed to search query '%s'", qs))
 	}
 
-	var results []interface{}
-
 	var clubResults []SearchResultHistory
 	var seriesResults []SearchResultHistory
 	var characterResults []SearchResultHistory
@@ -188,6 +193,13 @@ func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passp
 			})
 
 			results = append(results, result)
+		}
+	}
+
+	// if staff is logged in, don't save search results
+	if requester != nil {
+		if requester.IsStaff() {
+			return results, nil
 		}
 	}
 
