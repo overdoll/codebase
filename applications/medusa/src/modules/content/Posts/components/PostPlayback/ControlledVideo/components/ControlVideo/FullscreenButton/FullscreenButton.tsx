@@ -12,17 +12,23 @@ export default function FullscreenButton ({
 }: Props): JSX.Element {
   // TODO if on safari, fullscreen should be activated on the video element instead of the root
 
-  const [isFullscreen, setIsFullscreen] = useState(document?.fullscreenElement == null)
+  const [isFullscreen, setIsFullscreen] = useState(document != null ? document?.fullscreenElement == null : false)
 
   useEffect(() => {
+    if (document == null) return
+    if (document?.fullscreenElement == null) return
     const onFullscreenChange = (): void => {
       setIsFullscreen(document?.fullscreenElement == null)
     }
 
-    document.addEventListener('fullscreenchange', onFullscreenChange)
+    document?.addEventListener('fullscreenchange', onFullscreenChange)
 
-    return () => document.removeEventListener('fullscreenchange', onFullscreenChange)
+    return () => document?.removeEventListener('fullscreenchange', onFullscreenChange)
   }, [])
+
+  if (document == null) {
+    return <></>
+  }
 
   if (document?.fullscreenEnabled == null || !document?.fullscreenEnabled) {
     return <></>

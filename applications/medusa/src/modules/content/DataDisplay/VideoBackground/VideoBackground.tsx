@@ -32,7 +32,6 @@ export default function VideoBackground ({
       backgroundImage={data.videoThumbnail?.url ?? ''}
       filter='blur(2px)'
       position='absolute'
-      cursor='pointer'
       {...rest}
     />
   )

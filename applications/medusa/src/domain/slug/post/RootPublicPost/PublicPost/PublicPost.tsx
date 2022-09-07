@@ -16,6 +16,7 @@ import PublicPostRichObject from '../../../../../common/rich-objects/slug/Public
 import SearchButton from '../../../../../common/components/PageHeader/SearchButton/SearchButton'
 import PublicPostStructuredData
   from '../../../../../common/structured-data/slug/PublicPostStructuredData/PublicPostStructuredData'
+import trackFathomEvent from '@//:modules/support/trackFathomEvent'
 
 interface Props {
   query: PreloadedQuery<PublicPostQuery>
@@ -52,13 +53,13 @@ export default function PublicPost (props: Props): JSX.Element {
 
   const { query: { slug } } = router
 
+  const [, setParamStep] = useQueryParam<string | null | undefined>('step')
+
   if (queryData?.post == null) {
     return (
       <NotFoundPublicPost />
     )
   }
-
-  const [, setParamStep] = useQueryParam<string | null | undefined>('step')
 
   useUpdateEffect(() => {
     setParamStep(undefined)
@@ -75,6 +76,24 @@ export default function PublicPost (props: Props): JSX.Element {
       })
     }
   }, [slug])
+
+  useEffect(() => {
+    const logTo = ['/random', '/browse', '/search/', '/posts', '/clubs/liked-posts', '/clubs/feed']
+
+    router.beforePopState(({ as }) => {
+      if (logTo.some((item) => as.includes(item))) {
+        trackFathomEvent('RDMKVLIO', 1)
+      }
+      if (as !== router.asPath && as.includes('/post/')) {
+        trackFathomEvent('46JKG1EM', 1)
+      }
+      return true
+    })
+
+    return () => {
+      router.beforePopState(() => true)
+    }
+  }, [router])
 
   return (
     <>

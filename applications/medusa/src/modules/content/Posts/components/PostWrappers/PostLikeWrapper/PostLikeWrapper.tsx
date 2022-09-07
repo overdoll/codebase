@@ -6,6 +6,7 @@ import { useMutation } from 'react-relay/hooks'
 import { ButtonProps } from '@chakra-ui/react'
 import { MaybeRenderProp } from '@//:types/components'
 import runIfFunction from '../../../../../support/runIfFunction'
+import trackFathomEvent from '../../../../../support/trackFathomEvent'
 
 interface ChildrenCallable {
   likePost: () => void
@@ -63,6 +64,10 @@ export default function PostLikeWrapper ({
         input: {
           id: postData.id
         }
+      },
+      onCompleted: () => {
+        // track post likes as fathom event
+        trackFathomEvent('QFXX3TG6', 1)
       },
       updater: (store) => {
         const node = store.get(postData.id)

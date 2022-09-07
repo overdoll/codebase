@@ -55,7 +55,7 @@ export default function PostLikeLoggedOutButton ({
       slug: postData.club.slug,
       reference: postData.reference
     }
-  })
+  }, 'post_like_button')
 
   return (
     <>

@@ -7,6 +7,7 @@ import { t } from '@lingui/macro'
 import { useToast } from '../../ThemeComponents'
 import { MaybeRenderProp } from '@//:types/components'
 import runIfFunction from '../../../support/runIfFunction'
+import trackFathomEvent from '../../../support/trackFathomEvent'
 
 interface ChildrenCallable {
   joinClub: () => void
@@ -80,6 +81,8 @@ export default function ClubJoinWrapper ({
           status: 'success',
           title: t`You are now a member of ${clubData.name}!`
         })
+        // track club join as fathom event
+        trackFathomEvent('OH0JNUWM', 1)
       },
       updater: (store) => {
         const node = store.get(clubData.id)

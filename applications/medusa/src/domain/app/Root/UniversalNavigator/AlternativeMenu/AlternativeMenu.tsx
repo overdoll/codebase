@@ -21,6 +21,8 @@ import DropdownMenuButtonClub from './DropdownMenuButtonClub/DropdownMenuButtonC
 import SkeletonDropdownMenuButton
   from '@//:modules/content/Placeholder/Loading/SkeletonDropdownMenuButton/SkeletonDropdownMenuButton'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
+import DropdownMenuButtonInstallApp from './DropdownMenuButtonInstallApp/DropdownMenuButtonInstallApp'
+import DropdownMenuSocialLinks from './DropdownMenuSocialLinks/DropdownMenuSocialLinks'
 
 interface Props {
   queryRef: AlternativeMenuFragment$key | null
@@ -101,6 +103,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
             }
           />
         </Can>
+        <DropdownMenuButtonInstallApp />
         <Can not I='create' a='Club'>
           <HorizontalNavigationDropdownMenu.Button
             href='/artists'
@@ -155,6 +158,7 @@ export default function AlternativeMenu ({ queryRef }: Props): JSX.Element {
             }
           />
         </Can>
+        <DropdownMenuSocialLinks />
       </HorizontalNavigationDropdownMenu>
     </>
   )

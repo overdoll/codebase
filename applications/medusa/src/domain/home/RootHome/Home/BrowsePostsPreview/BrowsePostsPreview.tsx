@@ -9,8 +9,6 @@ import type { HomeQuery } from '@//:artifacts/HomeQuery.graphql'
 import { Stack } from '@chakra-ui/react'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import { Trans } from '@lingui/macro'
-import { Icon } from '@//:modules/content/PageLayout'
-import { ControlPlayButton } from '@//:assets/icons'
 
 interface Props {
   postQuery: BrowsePostsPreviewFragment$key
@@ -69,14 +67,13 @@ export default function BrowsePostsPreview (props: Props): JSX.Element {
           />
         ))}
         <LinkButton
-          colorScheme='primary'
+          colorScheme='gray'
           w='100%'
           size='xl'
           href='/browse'
-          rightIcon={<Icon icon={ControlPlayButton} w={4} h={4} fill='primary.900' />}
         >
           <Trans>
-            See All Posts
+            See More Posts
           </Trans>
         </LinkButton>
       </Stack>

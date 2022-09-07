@@ -13,6 +13,7 @@ import React, { Suspense, useEffect, useState } from 'react'
 import SpinRouletteUpdate from './SpinRouletteButton/SpinRouletteUpdate/SpinRouletteUpdate'
 import { useUpdateEffect } from 'usehooks-ts'
 import { useKeyPress } from '@//:modules/support/useKeyPress'
+import trackFathomEvent from '@//:modules/support/trackFathomEvent'
 
 interface Props {
   query: SpinRouletteFragment$key | null
@@ -101,7 +102,7 @@ export default function SpinRoulette (props: Props): JSX.Element {
 
   const notify = useToast()
 
-  const onSpin = (): void => {
+  const onSpin = (skipTracking?: boolean, spunWithShortcut?: boolean): void => {
     if (data == null) return
 
     spinRoulette({
@@ -116,6 +117,15 @@ export default function SpinRoulette (props: Props): JSX.Element {
           value: true,
           transform: 'SET'
         })
+        if (skipTracking !== true) {
+          if (spunWithShortcut === true) {
+            // track new spin using keyboard shortcut
+            trackFathomEvent('KXKTPYXO', 1)
+            return
+          }
+          // track new spin using regular button click
+          trackFathomEvent('WMPMZGXS', 1)
+        }
       },
       updater: (store) => {
         if (data.gameState == null) {
@@ -151,6 +161,8 @@ export default function SpinRoulette (props: Props): JSX.Element {
           })
         }
         setConfirmSpin(true)
+        // track new game creation
+        trackFathomEvent('ACHBYYQY', 1)
       },
       onError () {
         notify({
@@ -161,7 +173,7 @@ export default function SpinRoulette (props: Props): JSX.Element {
     })
   }
 
-  const onClick = (): void => {
+  const onClick = (skipTracking?: boolean, spunWithShortcut?: boolean): void => {
     if (spinTwice && confirmSpin && state.isSpinning === false) {
       setConfirmSpin(false)
       return
@@ -181,6 +193,8 @@ export default function SpinRoulette (props: Props): JSX.Element {
         value: false,
         transform: 'SET'
       })
+      // track spin skipping
+      trackFathomEvent('HRIMDERJ', 1)
       return
     }
     if (data.gameSession.isClosed) {
@@ -191,7 +205,7 @@ export default function SpinRoulette (props: Props): JSX.Element {
       onCreateGame(false)
       return
     }
-    onSpin()
+    onSpin(skipTracking, spunWithShortcut)
   }
 
   const diceRolls = data?.gameState != null ? [data.gameState.diceOne, data.gameState.diceThree, data.gameState.diceTwo] : [1, 2, 3]
@@ -202,7 +216,7 @@ export default function SpinRoulette (props: Props): JSX.Element {
   useEffect(() => {
     if (data == null) return
     if (data?.gameState == null && state.tutorialCompleted === true) {
-      onSpin()
+      onSpin(true)
     }
   }, [state.tutorialCompleted, data?.gameState])
 
@@ -215,6 +229,8 @@ export default function SpinRoulette (props: Props): JSX.Element {
         reference: data.gameSession.reference
       })
       loadQuery()
+      // track game loss
+      trackFathomEvent('TSKUTJW8', 1)
     }
   }, [data?.gameState, data?.gameSession])
 
@@ -228,7 +244,7 @@ export default function SpinRoulette (props: Props): JSX.Element {
 
   useEffect(() => {
     if (isKeyPressed && !disableSpin) {
-      onClick()
+      onClick(false, true)
     }
   }, [isKeyPressed])
 
@@ -244,7 +260,7 @@ export default function SpinRoulette (props: Props): JSX.Element {
         showSpinConfirm={spinTwice && !confirmSpin}
         canFastForward={state.isSpinning === true && state.isPending === false}
         isDisabled={disableSpin}
-        onClick={onClick}
+        onClick={() => onClick(false, false)}
       />
     </>
   )

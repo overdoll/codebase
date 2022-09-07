@@ -3,7 +3,7 @@ import { graphql } from 'react-relay'
 import { Box, Flex, Spinner, Stack } from '@chakra-ui/react'
 import type { PostInfiniteScrollFragment$key } from '@//:artifacts/PostInfiniteScrollFragment.graphql'
 import LoadMoreObserver from './LoadMoreObserver/LoadMoreObserver'
-import { Fragment, ReactNode, useTransition } from 'react'
+import { Fragment, ReactNode } from 'react'
 import { LoadMoreFn } from 'react-relay/relay-hooks/useLoadMoreFunction'
 import { EmptyPosts } from '../../../../Placeholder'
 import runIfFunction from '../../../../../support/runIfFunction'
@@ -44,11 +44,6 @@ export default function PostInfiniteScroll ({
 }: Props): JSX.Element {
   const data = useFragment(PostFragment, query)
 
-  // @ts-expect-error
-  const [isPending, startTransition] = useTransition({
-    timeoutMs: 150
-  })
-
   if (((data?.edges) != null) && data?.edges.length < 1) {
     return (
       <Stack spacing={24}>
@@ -72,14 +67,14 @@ export default function PostInfiniteScroll ({
       </Flex>
     )
 
-    if (isLoadingNext || isPending) {
+    if (isLoadingNext) {
       return SpinnerComponent
     }
 
     if (hasNext) {
       return (
         <Box>
-          <LoadMoreObserver startTransition={startTransition} loadNext={loadNext} />
+          <LoadMoreObserver loadNext={loadNext} />
           {SpinnerComponent}
         </Box>
       )
@@ -106,7 +101,7 @@ export default function PostInfiniteScroll ({
         (
           <Fragment key={item.node.id}>
             {(hasNext && data.edges.length - 2 === index) &&
-              <LoadMoreObserver startTransition={startTransition} loadNext={loadNext} />}
+              <LoadMoreObserver loadNext={loadNext} />}
             <Box>
               {runIfFunction(children, {
                 index

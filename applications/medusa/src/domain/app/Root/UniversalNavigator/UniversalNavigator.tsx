@@ -8,6 +8,7 @@ import { RenderOnDesktop, RenderOnMobile } from '@//:modules/content/PageLayout'
 import { useMemo } from 'react'
 import { useRouter } from 'next/router'
 import SimpleNav from './SimpleNav/SimpleNav'
+import JoinPopup from './JoinPopup/JoinPopup'
 
 interface Props {
   queryRef: UniversalNavigatorFragment$key | null
@@ -62,6 +63,9 @@ export default function UniversalNavigator ({ queryRef }: Props): JSX.Element {
             </HorizontalNavigation>
             )}
       </RenderOnMobile>
+      {data == null && (
+        <JoinPopup />
+      )}
     </>
   )
 }

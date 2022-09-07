@@ -181,8 +181,8 @@ const ControlVideo = forwardRef<HTMLVideoElement, Props>((props: Props, forwardR
               justify='center'
             >
               <Slider top={0} transition='100ms' isDisabled value={time} min={0} max={totalTime} step={0.1}>
-                <SliderTrack borderRadius='none' h='3px' bg='whiteAlpha.100'>
-                  <SliderFilledTrack bg='primary.300' />
+                <SliderTrack borderRadius='none' h='3px' bg='dimmers.700'>
+                  <SliderFilledTrack borderEndRadius='md' bg='whiteAlpha.800' />
                 </SliderTrack>
               </Slider>
             </Flex>
