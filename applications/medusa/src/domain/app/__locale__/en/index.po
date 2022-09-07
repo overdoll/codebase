@@ -589,7 +589,7 @@ msgstr ""
 msgid "Security"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostData/PostGalleryPublicSimple/PostGalleryPublicSimple.tsx:125
+#: src/modules/content/Posts/components/PostData/PostGalleryPublicSimple/PostGalleryPublicSimple.tsx:109
 msgid "See Characters & Categories"
 msgstr ""
 
@@ -639,7 +639,7 @@ msgid "Share on Reddit"
 msgstr ""
 
 #: src/common/components/PlatformPromoteAlert/PlatformShareTwitterButton/PlatformShareTwitterButton.tsx:20
-#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostShareTwitterButton/PostShareTwitterButton.tsx:65
+#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostShareTwitterButton/PostShareTwitterButton.tsx:69
 msgid "Share on Twitter"
 msgstr ""
 
@@ -927,7 +927,7 @@ msgstr ""
 msgid "Yesterday"
 msgstr ""
 
-#: src/modules/content/Wrappers/ClubJoinWrapper/ClubJoinWrapper.tsx:81
+#: src/modules/content/Wrappers/ClubJoinWrapper/ClubJoinWrapper.tsx:82
 msgid "You are now a member of {0}!"
 msgstr ""
 

@@ -88,7 +88,7 @@ export default function StaffSearchCharacter ({ searchArguments }: Props): JSX.E
               }
 
           return (
-            <GridTile key={item.node.id}>
+            <GridTile key={item.id}>
               <LinkTile href={decideHref}>
                 <CharacterTileOverlay query={item} />
               </LinkTile>

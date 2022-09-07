@@ -6,7 +6,6 @@ import HorizontalNavigationRight from './HorizontalNavigationRight/HorizontalNav
 import HorizontalNavigationButton from './HorizontalNavigationButton/HorizontalNavigationButton'
 import { RenderOnDesktop, RenderOnMobile } from '../../PageLayout'
 import RouterLoadingBar from '../../../../domain/app/Root/RouterLoadingBar/RouterLoadingBar'
-import JoinPopup from '@//:domain/app/Root/UniversalNavigator/JoinPopup/JoinPopup'
 
 interface Props {
   children: ReactNode

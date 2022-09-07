@@ -77,6 +77,10 @@ msgstr ""
 #~ msgid "Open Lock Info"
 #~ msgstr ""
 
+#: src/domain/home/RootHome/HomeGameTile/HomeGameTile.tsx:110
+msgid "Play Now"
+msgstr ""
+
 #: src/domain/home/RootHome/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:82
 #~ msgid "Please review the <0>Community Guidelines</0> to make sure this doesn't happen again."
 #~ msgstr ""
@@ -102,7 +106,11 @@ msgid "Search for any kind of porn"
 msgstr ""
 
 #: src/domain/home/RootHome/Home/BrowsePostsPreview/BrowsePostsPreview.tsx:78
-msgid "See All Posts"
+#~ msgid "See All Posts"
+#~ msgstr ""
+
+#: src/domain/home/RootHome/Home/BrowsePostsPreview/BrowsePostsPreview.tsx:75
+msgid "See More Posts"
 msgstr ""
 
 #: src/domain/home/RootHome/NewAccountModal/NewAccountModal.tsx:75

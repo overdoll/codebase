@@ -64,7 +64,7 @@ export default function StaffSearchSeries ({ searchArguments }: Props): JSX.Elem
     >
       <GridWrap>
         {series.map((item) => (
-          <GridTile key={item.node.id}>
+          <GridTile key={item.id}>
             <LinkTile href={{
               pathname: '/staff/entity/series/[slug]',
               query: { slug: item.slug }

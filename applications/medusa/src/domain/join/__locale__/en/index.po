@@ -66,7 +66,7 @@ msgstr ""
 #~ msgid "Creating adult digital content"
 #~ msgstr ""
 
-#: src/domain/join/Join/pages/Register/Register.tsx:131
+#: src/domain/join/Join/pages/Register/Register.tsx:148
 msgid "Creating an account on overdoll means you agree to follow our <0>Community Guidelines</0> and understand both our <1>Terms of Service</1>  and  <2>Privacy Policy</2>, which also stipulate you must be at least 18 years of age to register."
 msgstr ""
 
@@ -206,7 +206,7 @@ msgstr ""
 msgid "There was an error with joining"
 msgstr ""
 
-#: src/domain/join/Join/pages/Register/Register.tsx:103
+#: src/domain/join/Join/pages/Register/Register.tsx:120
 msgid "There was an issue with registration"
 msgstr ""
 
@@ -230,7 +230,7 @@ msgstr ""
 msgid "Welcome back! Thanks for using two-factor to log in!"
 msgstr ""
 
-#: src/domain/join/Join/pages/Register/Register.tsx:96
+#: src/domain/join/Join/pages/Register/Register.tsx:100
 msgid "Welcome to overdoll!"
 msgstr ""
 

@@ -70,7 +70,7 @@ export default function StaffSearchCategories ({ searchArguments }: Props): JSX.
     >
       <GridWrap>
         {categories.map((item) => (
-          <GridTile key={item.node.id}>
+          <GridTile key={item.id}>
             <LinkTile href={{
               pathname: '/staff/entity/category/[slug]',
               query: { slug: item.slug }

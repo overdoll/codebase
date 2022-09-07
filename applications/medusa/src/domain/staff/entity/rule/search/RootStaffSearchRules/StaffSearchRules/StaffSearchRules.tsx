@@ -65,7 +65,7 @@ export default function StaffSearchRules ({ searchArguments }: Props): JSX.Eleme
     >
       <ListSpacer>
         {rules.map((item) => (
-          <StackTile key={item.node.id}>
+          <StackTile key={item.id}>
             <LinkTile href={{
               pathname: '/staff/entity/rule/[reference]',
               query: { reference: item.reference }
