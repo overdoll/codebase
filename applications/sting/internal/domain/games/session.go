@@ -19,6 +19,8 @@ type Session struct {
 	initiatorAccountId *string
 	linkedDeviceId     string
 	sessionState       State
+	openedAt           time.Time
+	closedAt           *time.Time
 }
 
 func NewRouletteSession(passport *passport.Passport, askedSeed *string) (*Session, error) {
@@ -52,6 +54,7 @@ func NewRouletteSession(passport *passport.Passport, askedSeed *string) (*Sessio
 		initiatorAccountId: accountId,
 		linkedDeviceId:     passport.DeviceID(),
 		sessionState:       Open,
+		openedAt:           time.Now(),
 	}, nil
 }
 
@@ -79,6 +82,14 @@ func (s *Session) LinkedDeviceId() string {
 	return s.linkedDeviceId
 }
 
+func (s *Session) OpenedAt() time.Time {
+	return s.openedAt
+}
+
+func (s *Session) ClosedAt() *time.Time {
+	return s.closedAt
+}
+
 func (s *Session) SessionState() State {
 	return s.sessionState
 }
@@ -94,6 +105,9 @@ func (s *Session) GetCurrentSpin() int64 {
 // Close - close the session
 func (s *Session) Close() error {
 	s.sessionState = Closed
+
+	tm := time.Now()
+	s.closedAt = &tm
 	return nil
 }
 
@@ -142,7 +156,7 @@ func (s *Session) CanUpdate(passport *passport.Passport) error {
 	return domainerror.NewValidation("cannot update game state")
 }
 
-func UnmarshalSessionFromDatabase(id string, currentSpinId int, seed string, gameType string, initiatorAccountId *string, linkedDeviceId string, sessionState string) *Session {
+func UnmarshalSessionFromDatabase(id string, currentSpinId int, seed string, gameType string, initiatorAccountId *string, linkedDeviceId string, sessionState string, openedAt time.Time, closedAt *time.Time) *Session {
 	tp, _ := TypeFromString(gameType)
 	st, _ := StateFromString(sessionState)
 	return &Session{
@@ -153,5 +167,7 @@ func UnmarshalSessionFromDatabase(id string, currentSpinId int, seed string, gam
 		initiatorAccountId: initiatorAccountId,
 		linkedDeviceId:     linkedDeviceId,
 		sessionState:       st,
+		openedAt:           openedAt,
+		closedAt:           closedAt,
 	}
 }

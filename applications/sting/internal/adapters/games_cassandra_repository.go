@@ -9,6 +9,7 @@ import (
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/support"
+	"time"
 )
 
 var gameSessionsTable = table.New(table.Metadata{
@@ -21,19 +22,23 @@ var gameSessionsTable = table.New(table.Metadata{
 		"initiator_account_id",
 		"linked_device_id",
 		"session_state",
+		"opened_at",
+		"closed_at",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
 })
 
 type gameSessions struct {
-	Id                 string  `db:"id"`
-	CurrentSpinId      int     `db:"current_spin_id"`
-	Seed               string  `db:"seed"`
-	GameType           string  `db:"game_type"`
-	InitiatorAccountId *string `db:"initiator_account_id"`
-	LinkedDeviceId     string  `db:"linked_device_id"`
-	SessionState       string  `db:"session_state"`
+	Id                 string     `db:"id"`
+	CurrentSpinId      int        `db:"current_spin_id"`
+	Seed               string     `db:"seed"`
+	GameType           string     `db:"game_type"`
+	InitiatorAccountId *string    `db:"initiator_account_id"`
+	LinkedDeviceId     string     `db:"linked_device_id"`
+	SessionState       string     `db:"session_state"`
+	OpenedAt           time.Time  `db:"opened_at"`
+	ClosedAt           *time.Time `db:"closed_at"`
 }
 
 var rouletteGameStateTable = table.New(table.Metadata{
@@ -90,6 +95,8 @@ func marshalGameSession(session *games.Session) gameSessions {
 		InitiatorAccountId: session.InitiatorAccountId(),
 		LinkedDeviceId:     session.LinkedDeviceId(),
 		SessionState:       session.SessionState().String(),
+		OpenedAt:           session.OpenedAt(),
+		ClosedAt:           session.ClosedAt(),
 	}
 }
 
@@ -127,14 +134,14 @@ func (r GamesCassandraRepository) GetGameSession(ctx context.Context, id string)
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get game session")
 	}
 
-	return games.UnmarshalSessionFromDatabase(sess.Id, sess.CurrentSpinId, sess.Seed, sess.GameType, sess.InitiatorAccountId, sess.LinkedDeviceId, sess.SessionState), nil
+	return games.UnmarshalSessionFromDatabase(sess.Id, sess.CurrentSpinId, sess.Seed, sess.GameType, sess.InitiatorAccountId, sess.LinkedDeviceId, sess.SessionState, sess.OpenedAt, sess.ClosedAt), nil
 }
 
 func (r GamesCassandraRepository) UpdateRouletteGameState(ctx context.Context, session *games.Session, state *games.RouletteGameState) error {
 
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
-	stmt, names := gameSessionsTable.Update("current_spin_id", "session_state")
+	stmt, names := gameSessionsTable.Update("current_spin_id", "session_state", "closed_at")
 	support.BindStructToBatchStatement(
 		batch,
 		stmt, names,
