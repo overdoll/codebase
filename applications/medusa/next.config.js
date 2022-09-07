@@ -217,6 +217,31 @@ const moduleExports = withBundleAnalyzer({
         source: '/rulet',
         destination: '/roulette',
         permanent: true
+      },
+      {
+        source: '/spin',
+        destination: '/roulette?utm_campaign=game_roulette&utm_source=spin_redirect',
+        permanent: true
+      },
+      {
+        source: '/rullette',
+        destination: '/roulette',
+        permanent: true
+      },
+      {
+        source: '/roll',
+        destination: '/roulette?utm_campaign=game_roulette&utm_source=roll_redirect',
+        permanent: true
+      },
+      {
+        source: '/roullete',
+        destination: '/roulette',
+        permanent: true
+      },
+      {
+        source: '/roullette',
+        destination: '/roulette',
+        permanent: true
       }
     ]
   },

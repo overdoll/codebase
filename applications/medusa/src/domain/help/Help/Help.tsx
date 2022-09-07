@@ -18,18 +18,20 @@ import {
   SeriesIdentifier,
   WarningTriangle
 } from '@//:assets/icons'
-import { SocialTwitter } from '@//:assets/logos'
+import { SocialDiscord, SocialTwitter } from '@//:assets/logos'
 import { Trans } from '@lingui/macro'
 import { SearchBar } from '@//:assets/icons/navigation'
 import { Box, Heading, Stack, Text } from '@chakra-ui/react'
 import {
   CLUB_GUIDELINES,
   COMMUNITY_GUIDELINES,
+  DISCORD_LINK,
   OVERDOLL_ABOUT,
   PAYOUTS_INFORMATION,
   PRIVACY_POLICY,
   SUPPORTER_GUIDELINES,
-  TERMS_OF_SERVICE
+  TERMS_OF_SERVICE,
+  TWITTER_FOLLOW_INTENT
 } from '@//:modules/constants/links'
 import { PageProps } from '@//:types/app'
 import Can from '@//:modules/authorization/Can'
@@ -59,64 +61,64 @@ const Help: PageProps<{}> = () => {
                   Platform
                 </Trans>
               </PageSectionTitle>
-              <ListSpacer>
-                <PagePanelWrap isExternal href={OVERDOLL_ABOUT}>
-                  <PagePanelIcon icon={InfoCircle} colorScheme='primary' />
-                  <PagePanelText
-                    title={
-                      <Trans>What is overdoll?</Trans>
-                    }
-                    description={(
-                      <Trans>What we're all about</Trans>
-                    )}
-                  />
-                </PagePanelWrap>
-                <PagePanelWrap isExternal href={COMMUNITY_GUIDELINES}>
-                  <PagePanelIcon icon={FlagReport} colorScheme='green' />
-                  <PagePanelText
-                    title={
-                      <Trans>Community Guidelines</Trans>
-                    }
-                    description={(
-                      <Trans>General platform rules for everyone</Trans>
-                    )}
-                  />
-                </PagePanelWrap>
-                <PagePanelWrap isExternal href={CLUB_GUIDELINES}>
-                  <PagePanelIcon icon={ClubPeopleGroup} colorScheme='teal' />
-                  <PagePanelText
-                    title={
-                      <Trans>Club Guidelines</Trans>
-                    }
-                    description={(
-                      <Trans>For clubs posting content</Trans>
-                    )}
-                  />
-                </PagePanelWrap>
-                <PagePanelWrap isExternal href={PAYOUTS_INFORMATION}>
-                  <PagePanelIcon icon={PayoutMethod} colorScheme='purple' />
-                  <PagePanelText
-                    title={
-                      <Trans>Payouts Information</Trans>
-                    }
-                    description={(
-                      <Trans>Information about payouts</Trans>
-                    )}
-                  />
-                </PagePanelWrap>
-                <PagePanelWrap isExternal href={SUPPORTER_GUIDELINES}>
-                  <PagePanelIcon icon={PremiumStar} colorScheme='orange' />
-                  <PagePanelText
-                    title={
-                      <Trans>Supporter Guidelines</Trans>
-                    }
-                    description={(
-                      <Trans>Billing help and subscriptions</Trans>
-                    )}
-                  />
-                </PagePanelWrap>
-              </ListSpacer>
             </PageSectionWrap>
+            <ListSpacer>
+              <PagePanelWrap isExternal href={OVERDOLL_ABOUT}>
+                <PagePanelIcon icon={InfoCircle} colorScheme='primary' />
+                <PagePanelText
+                  title={
+                    <Trans>What is overdoll?</Trans>
+                  }
+                  description={(
+                    <Trans>What we're all about</Trans>
+                  )}
+                />
+              </PagePanelWrap>
+              <PagePanelWrap isExternal href={COMMUNITY_GUIDELINES}>
+                <PagePanelIcon icon={FlagReport} colorScheme='green' />
+                <PagePanelText
+                  title={
+                    <Trans>Community Guidelines</Trans>
+                  }
+                  description={(
+                    <Trans>General platform rules for everyone</Trans>
+                  )}
+                />
+              </PagePanelWrap>
+              <PagePanelWrap isExternal href={CLUB_GUIDELINES}>
+                <PagePanelIcon icon={ClubPeopleGroup} colorScheme='teal' />
+                <PagePanelText
+                  title={
+                    <Trans>Club Guidelines</Trans>
+                  }
+                  description={(
+                    <Trans>For clubs posting content</Trans>
+                  )}
+                />
+              </PagePanelWrap>
+              <PagePanelWrap isExternal href={PAYOUTS_INFORMATION}>
+                <PagePanelIcon icon={PayoutMethod} colorScheme='purple' />
+                <PagePanelText
+                  title={
+                    <Trans>Payouts Information</Trans>
+                  }
+                  description={(
+                    <Trans>Information about payouts</Trans>
+                  )}
+                />
+              </PagePanelWrap>
+              <PagePanelWrap isExternal href={SUPPORTER_GUIDELINES}>
+                <PagePanelIcon icon={PremiumStar} colorScheme='orange' />
+                <PagePanelText
+                  title={
+                    <Trans>Supporter Guidelines</Trans>
+                  }
+                  description={(
+                    <Trans>Billing help and subscriptions</Trans>
+                  )}
+                />
+              </PagePanelWrap>
+            </ListSpacer>
           </Box>
           <Box>
             <PageSectionWrap>
@@ -193,7 +195,7 @@ const Help: PageProps<{}> = () => {
               </PageSectionTitle>
             </PageSectionWrap>
             <ListSpacer>
-              <PagePanelWrap isExternal href='https://twitter.com/overdoll_com'>
+              <PagePanelWrap isExternal href={TWITTER_FOLLOW_INTENT}>
                 <PagePanelIcon icon={SocialTwitter} colorScheme='teal' />
                 <PagePanelText
                   title={
@@ -201,6 +203,17 @@ const Help: PageProps<{}> = () => {
                   }
                   description={(
                     <Trans>Follow us on Twitter!</Trans>
+                  )}
+                />
+              </PagePanelWrap>
+              <PagePanelWrap isExternal href={DISCORD_LINK}>
+                <PagePanelIcon icon={SocialDiscord} colorScheme='facebook' />
+                <PagePanelText
+                  title={
+                    <Trans>Discord</Trans>
+                  }
+                  description={(
+                    <Trans>Join our discord!</Trans>
                   )}
                 />
               </PagePanelWrap>

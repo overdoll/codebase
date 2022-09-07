@@ -101,6 +101,7 @@ export default function PostGalleryPublicSimple ({
                     <Box position='absolute' bottom={1} right={1}>
                       <LinkTile
                         width={16}
+                        overflow={undefined}
                         href={{
                           pathname: '/[slug]/post/[reference]',
                           query: {
@@ -111,7 +112,6 @@ export default function PostGalleryPublicSimple ({
                         }}
                       >
                         <Stack
-                          boxShadow='drag'
                           align='center'
                           justify='center'
                           borderRadius='inherit'

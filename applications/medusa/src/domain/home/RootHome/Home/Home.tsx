@@ -70,7 +70,7 @@ export default function Home (props: Props): JSX.Element {
             <HomeLinkTile
               icon={ThreeDRender}
               href='/search/category/3d'
-              bg='https://static.dollycdn.net/banners/3d-thumbnail.jpeg'
+              bg='https://static.dollycdn.net/banners/3d-thumbnail-2.jpeg'
               header={(
                 <Trans>
                   3D Porn
@@ -99,7 +99,7 @@ export default function Home (props: Props): JSX.Element {
             />
             <HomeLinkTile
               icon={FurryFox}
-              bg='https://static.dollycdn.net/banners/furry-thumbnail.jpeg'
+              bg='https://static.dollycdn.net/banners/furry-thumbnail-2.jpg'
               href='/search/category/furry'
               header={(
                 <Trans>
@@ -116,7 +116,7 @@ export default function Home (props: Props): JSX.Element {
         </Stack>
         <Stack spacing={8}>
           <HomeLinkTile
-            bg='https://static.dollycdn.net/banners/roulette-banner.jpg'
+            bg='https://static.dollycdn.net/banners/search-thumbnail.jpg'
             icon={SearchBar}
             href='/search'
             header={(
@@ -132,7 +132,7 @@ export default function Home (props: Props): JSX.Element {
           />
           <HomeLinkTile
             icon={RandomizeDice}
-            bg='https://static.dollycdn.net/banners/roulette-banner.jpg'
+            bg='https://static.dollycdn.net/banners/browse-thumbnail-2.jpg'
             href={`/random?seed=${seed}`}
             header={(
               <Trans>

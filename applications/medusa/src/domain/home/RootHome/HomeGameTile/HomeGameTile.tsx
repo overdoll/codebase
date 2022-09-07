@@ -1,10 +1,12 @@
-import { Box, Flex, Grid, GridItem, Heading, keyframes, Stack } from '@chakra-ui/react'
+import { Box, Flex, Grid, GridItem, Heading, HStack, keyframes, Stack } from '@chakra-ui/react'
 import { Icon } from '@//:modules/content/PageLayout'
 import { LinkTile } from '@//:modules/content/ContentSelection'
 import { UrlObject } from 'url'
 import { IconType } from '@//:types/components'
 import { ReactNode } from 'react'
 import NextImage from '@//:modules/content/DataDisplay/NextImage/NextImage'
+import { ControlPlayButton } from '@//:assets/icons'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   href: string | UrlObject
@@ -50,7 +52,17 @@ export default function HomeGameTile (props: Props): JSX.Element {
         href={href}
       >
         <Flex h={400} bg='gray.900' borderRadius='lg' position='relative'>
-          <Flex bg='orange.100' overflow='hidden' right={0} left={0} w='100%' h='100%' top={0} position='absolute'>
+          <Flex
+            borderRadius='inherit'
+            bg='orange.100'
+            overflow='hidden'
+            right={0}
+            left={0}
+            w='100%'
+            h='100%'
+            top={0}
+            position='absolute'
+          >
             <NextImage
               style={{
                 objectFit: 'cover'
@@ -59,7 +71,18 @@ export default function HomeGameTile (props: Props): JSX.Element {
               src={bg}
             />
           </Flex>
-          <Flex right={0} left={0} w='100%' h='100%' top={0} bg='dimmers.500' position='absolute' />
+          <Flex
+            borderWidth={3}
+            borderRadius='inherit'
+            borderColor='gray.50'
+            right={0}
+            left={0}
+            w='100%'
+            h='100%'
+            top={0}
+            bg='dimmers.500'
+            position='absolute'
+          />
           <Grid
             gap={2}
             px={2}
@@ -69,16 +92,26 @@ export default function HomeGameTile (props: Props): JSX.Element {
             overflow='hidden'
           >
             <GridItem overflow='hidden'>
-              <Stack h='100%' align='center' justify='center' w='100%' spacing={2}>
-                <Stack align='center' spacing={2}>
-                  <Icon icon={icon} w={10} h={10} fill='gray.00' />
-                  <Heading textAlign='center' fontSize='4xl' color='gray.00'>
-                    {header}
+              <Stack h='100%' align='center' justify='center' spacing={6}>
+                <Stack align='center' justify='center' w='100%' spacing={2}>
+                  <Stack align='center' spacing={2}>
+                    <Icon icon={icon} w={10} h={10} fill='gray.00' />
+                    <Heading textAlign='center' fontSize='4xl' color='gray.00'>
+                      {header}
+                    </Heading>
+                  </Stack>
+                  <Heading textAlign='center' fontSize='sm' color='gray.100'>
+                    {footer}
                   </Heading>
                 </Stack>
-                <Heading textAlign='center' fontSize='md' color='gray.100'>
-                  {footer}
-                </Heading>
+                <HStack align='center' justify='center' spacing={3}>
+                  <Icon icon={ControlPlayButton} w={6} h={6} fill='whiteAlpha.800' />
+                  <Heading fontSize='2xl' color='whiteAlpha.800'>
+                    <Trans>
+                      Play Now
+                    </Trans>
+                  </Heading>
+                </HStack>
               </Stack>
             </GridItem>
             <GridItem overflow='hidden'>

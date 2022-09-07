@@ -28,6 +28,8 @@ export default function useTwitterShare (props: UseTwitterShareProps): UseTwitte
 
   const platformLink = `https://overdoll.com${resolved}`
 
+  const defaultHashtags = [...hashtags, 'overdoll']
+
   const configMap = {
     url: StringParam,
     hashtags: StringParam,
@@ -37,7 +39,7 @@ export default function useTwitterShare (props: UseTwitterShareProps): UseTwitte
 
   const tweetData = {
     url: platformLink,
-    hashtags: hashtags.join(','),
+    hashtags: defaultHashtags.join(','),
     via: 'overdoll_com',
     text: text
   }

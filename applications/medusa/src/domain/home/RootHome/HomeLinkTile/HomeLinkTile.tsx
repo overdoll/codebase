@@ -27,7 +27,7 @@ export default function HomeLinkTile (props: Props): JSX.Element {
   return (
     <LinkTile linkProps={{ prefetch: false }} href={href}>
       <Flex bg='gray.900' borderRadius='lg' overflow='hidden' position='relative'>
-        <Flex right={0} left={0} w='100%' h='100%' top={0} bg='orange.100' position='absolute'>
+        <Flex borderRadius='inherit' right={0} left={0} w='100%' h='100%' top={0} bg='orange.100' position='absolute'>
           <NextImage
             style={{
               objectFit: 'cover'
@@ -36,7 +36,18 @@ export default function HomeLinkTile (props: Props): JSX.Element {
             src={bg}
           />
         </Flex>
-        <Flex right={0} left={0} w='100%' h='100%' top={0} bg='dimmers.500' position='absolute' />
+        <Flex
+          borderWidth={3}
+          borderRadius='inherit'
+          borderColor='gray.50'
+          right={0}
+          left={0}
+          w='100%'
+          h='100%'
+          top={0}
+          bg='dimmers.500'
+          position='absolute'
+        />
         <Stack h='inherit' justify='center' w='100%' spacing={3} p={4} position='relative'>
           <HStack spacing={4}>
             <Icon icon={icon} w={8} h={8} fill='gray.00' />

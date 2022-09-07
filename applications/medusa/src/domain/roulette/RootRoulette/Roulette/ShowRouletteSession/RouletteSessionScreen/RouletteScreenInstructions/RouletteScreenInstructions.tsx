@@ -161,7 +161,8 @@ export default function RouletteScreenInstructions (): JSX.Element {
                         </Flex>
                         <Text {...INSTRUCTIONS_FONT}>
                           <Trans>
-                            Tap on the green button or hit <Kbd>SPACE</Kbd> to get a random post and spin three dice
+                            Tap on the green button or hit <Kbd>SPACE</Kbd> to get a
+                            random post and spin three dice
                           </Trans>
                         </Text>
                       </Stack>

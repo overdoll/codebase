@@ -33,7 +33,7 @@ export default function ClubGuestJoinWrapper ({
     query: {
       slug: data.slug
     }
-  })
+  }, 'club_join_button')
 
   const onJoinClub = (): void => {
     void router.push(redirect)
