@@ -87,7 +87,7 @@ func (r SessionRepository) getSessionById(ctx context.Context, passport *passpor
 	return res, nil
 }
 
-// getSessionById - get session by ID
+// GetSessionById - get session by ID
 func (r SessionRepository) GetSessionById(ctx context.Context, requester *principal.Principal, passport *passport.Passport, sessionId string) (*session.Session, error) {
 
 	res, err := r.getSessionById(ctx, passport, sessionId)

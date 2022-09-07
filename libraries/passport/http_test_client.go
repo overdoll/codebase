@@ -22,8 +22,8 @@ func (a *memoryPassportStore) UpdateDeviceLanguageEvent(ctx context.Context, res
 	return nil
 }
 
-func (a *memoryPassportStore) GetDeviceDataFromRequest(req *http.Request) (deviceId string, ip string, userAgent string, error error) {
-	return a.pocket.passport.DeviceID(), a.pocket.passport.IP(), a.pocket.passport.UserAgent(), nil
+func (a *memoryPassportStore) GetDeviceDataFromRequest(req *http.Request) (deviceId string, ip string, userAgent string, referrer string, error error) {
+	return a.pocket.passport.DeviceID(), a.pocket.passport.IP(), a.pocket.passport.UserAgent(), a.pocket.passport.Referrer(), nil
 }
 
 func (a *memoryPassportStore) ResponseEvent(ctx context.Context, res *http.Response) error {
@@ -45,7 +45,7 @@ func (a *memoryPassportStore) RevokedAccountSessionEvent(ctx context.Context, re
 	return nil
 }
 
-func (a *memoryPassportStore) NewAccountSessionEvent(ctx context.Context, res *http.Response, accountId string) error {
+func (a *memoryPassportStore) NewAccountSessionEvent(ctx context.Context, res *http.Response, deviceId, accountId string) error {
 	a.pocket.passport = FromContext(ctx)
 	return nil
 }

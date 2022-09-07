@@ -16,7 +16,7 @@ type repository interface {
 	GetSessionDataFromRequest(req *http.Request) (sessionId string, accountId string, error error)
 
 	// GetDeviceDataFromRequest - grabs device data from request
-	GetDeviceDataFromRequest(req *http.Request) (deviceId string, ip string, userAgent string, error error)
+	GetDeviceDataFromRequest(req *http.Request) (deviceId string, ip string, userAgent string, referer string, error error)
 
 	// For events, the current passport is stored in context, so it can be easily accessible
 
@@ -24,7 +24,7 @@ type repository interface {
 	RevokedAccountSessionEvent(ctx context.Context, res *http.Response, sessionId string) error
 
 	// NewAccountSessionEvent - runs when a new account session should be created
-	NewAccountSessionEvent(ctx context.Context, res *http.Response, accountId string) error
+	NewAccountSessionEvent(ctx context.Context, res *http.Response, deviceId, accountId string) error
 
 	// ResponseEvent - runs right before a response is about to be sent out
 	ResponseEvent(ctx context.Context, res *http.Response) error
@@ -62,7 +62,7 @@ func (h *passportTransport) roundTrip(req *http.Request) (*http.Response, error)
 		return nil, err
 	}
 
-	deviceId, ip, userAgent, err := h.repository.GetDeviceDataFromRequest(req)
+	deviceId, ip, userAgent, referer, err := h.repository.GetDeviceDataFromRequest(req)
 
 	requestPassport, err := issuePassport(
 		sessionId,
@@ -70,6 +70,7 @@ func (h *passportTransport) roundTrip(req *http.Request) (*http.Response, error)
 		ip,
 		userAgent,
 		accountId,
+		referer,
 	)
 
 	if err != nil {
@@ -107,7 +108,7 @@ func (h *passportTransport) roundTrip(req *http.Request) (*http.Response, error)
 	ctx := withContext(res.Request.Context(), responsePassport)
 
 	if responsePassport.performedAuthenticatedAccountAction() {
-		if err := h.repository.NewAccountSessionEvent(ctx, res, responsePassport.AccountID()); err != nil {
+		if err := h.repository.NewAccountSessionEvent(ctx, res, responsePassport.DeviceID(), responsePassport.AccountID()); err != nil {
 			return nil, err
 		}
 	}
