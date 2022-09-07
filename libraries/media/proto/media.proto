@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package overdoll.libraries;
+
+enum MediaLinkType {
+  POST = 0;
+}
+
+message VideoContainer {
+  string id = 1;
+  string mimeType = 2;
+  int64 bitrate = 3;
+}
+
+message VideoAspectRatio {
+  int64 left = 1;
+  int64 top = 2;
+}
+
+message VideoData {
+  repeated VideoContainer containers = 1;
+  VideoAspectRatio aspectRatio = 2;
+  int64 durationMilliseconds = 3;
+  bool hasAudio = 4;
+}
+
+message MediaPipeline {
+  bool processed = 1;
+  bool failed = 2;
+}
+
+message ColorPalette {
+  double percent = 1;
+  int32 red = 2;
+  int32 green = 3;
+  int32 blue = 4;
+}
+
+message FocusRectangle {
+  int32 x = 1;
+  int32 y = 2;
+  int32 width = 3;
+  int32 height = 4;
+}
+
+message ImageData {
+  string id = 1;
+  int64 width = 2;
+  int64 height = 3;
+  repeated ColorPalette palettes = 4;
+  repeated FocusRectangle focusRectangles = 5;
+}
+
+message MediaLink {
+  string id = 1;
+  MediaLinkType type = 2;
+}
+
+message Media {
+  string id = 1;
+  string prefix = 2;
+  string originalFileName = 3;
+  optional VideoData videoData = 4;
+  optional ImageData imageData = 5;
+  MediaPipeline pipeline = 6;
+}

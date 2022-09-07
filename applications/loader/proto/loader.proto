@@ -3,6 +3,7 @@ syntax = "proto3";
 package applications.grpc.loader.v1;
 
 import "libraries/resource/proto/resource.proto";
+import "libraries/media/proto/media.proto";
 
 message Filters {
   optional PixelateFilter pixelate = 1;
@@ -94,6 +95,17 @@ message ReprocessResourcesResponse {
   repeated overdoll.libraries.Resource resources = 1;
 }
 
+message CreateOrGetMediaFromUploadsRequest {
+  string linkedId = 1;
+  string linkedType = 2;
+  overdoll.libraries.SOURCE source = 3;
+  optional ValidationOptions validationOptions = 4;
+}
+
+message CreateOrGetMediaFromUploadsResponse {
+  overdoll.libraries.Media media = 1;
+}
+
 service Loader {
   rpc CreateOrGetResourcesFromUploads(CreateOrGetResourcesFromUploadsRequest) returns (CreateOrGetResourcesFromUploadsResponse);
   rpc GetResources(GetResourcesRequest) returns (GetResourcesResponse);
@@ -101,4 +113,6 @@ service Loader {
   rpc CopyResourcesAndApplyFilter(CopyResourcesAndApplyFilterRequest) returns (CopyResourcesAndApplyFilterResponse);
   rpc UpdateResourcePrivacy(UpdateResourcePrivacyRequest) returns (UpdateResourcePrivacyResponse);
   rpc ReprocessResources(ReprocessResourcesRequest) returns (ReprocessResourcesResponse);
+
+  rpc CreateOrGetMediaFromUploads(CreateOrGetMediaFromUploadsRequest) returns (CreateOrGetMediaFromUploadsResponse);
 }

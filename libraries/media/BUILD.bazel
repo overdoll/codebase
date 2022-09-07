@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "media",
+    srcs = ["media.go"],
+    importpath = "overdoll/libraries/media",
+    visibility = ["//visibility:public"],
+    deps = ["//libraries/errors/domainerror"],
+)

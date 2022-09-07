@@ -116,3 +116,78 @@ type Resource {
   """
   failed: Boolean!
 }
+
+type ImageMediaUrl {
+  url: URI!
+  mimeType: String!
+}
+
+type ImageMediaAccess {
+  width: Int!
+  height: Int!
+  url: ImageMediaUrl!
+}
+
+"""
+All variants available for an image.
+If
+"""
+type ImageMediaVariants {
+  """150x150 crop of an image. Suitable for small previews."""
+  thumbnail: ImageMediaAccess!
+  """680px width or height resize."""
+  small: ImageMediaAccess!
+  """1200px width or height resize."""
+  medium: ImageMediaAccess!
+  """2048px width or height resize."""
+  large: ImageMediaAccess!
+}
+
+type ImageMedia {
+  """An ID uniquely identifying this media."""
+  id: ID!
+
+  """All available variants for this media."""
+  variants: ImageMediaVariants!
+
+  """The original image media. Note that originals are resized if they are larger than 4096px."""
+  original: ImageMediaAccess!
+
+  """The width."""
+  width: Int!
+
+  """The height."""
+  height: Int!
+
+  """Duration, if video."""
+  videoDuration: Int!
+
+  """Video thumbnail, if video."""
+  videoThumbnail: ResourceUrl
+
+  """Whether or not the video has audio."""
+  videoNoAudio: Boolean!
+
+  """A hex-code color of the resource that can be used in-place while the resource is loading."""
+  preview: String!
+
+  """
+  This field identifies the progress for the resource.
+
+  If the resource is not yet processed, this will not be nil.
+
+  If we have some sort of state information available about the progress, this will not be nil.
+  """
+  progress: ResourceProgress
+
+  """
+  Whether or not this resource failed to process.
+
+  A failure can happen if:
+  - The supplied image is an unsupported format. This can happen if for example, someone submits a JPEG (unsupported) that was renamed to a PNG (supported)
+  - The supplied image is corrupted.
+  - The supplied video is invalid or corrupted.
+
+  """
+  failed: Boolean!
+}
