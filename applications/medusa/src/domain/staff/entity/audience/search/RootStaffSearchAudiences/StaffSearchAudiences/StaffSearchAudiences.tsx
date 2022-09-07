@@ -71,7 +71,7 @@ export default function StaffSearchAudiences ({ searchArguments }: Props): JSX.E
     >
       <GridWrap>
         {audiences.map((item) => (
-          <ShortGridTile key={item.node.id}>
+          <ShortGridTile key={item.id}>
             <LinkTile href={{
               pathname: '/staff/entity/audience/[slug]',
               query: { slug: item.slug }

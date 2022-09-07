@@ -10,12 +10,11 @@ import PostSlideBackground from '../PostSlideBackground/PostSlideBackground'
 import { POST_SWIPER_PROPS } from '../../../constants'
 import { PostGalleryPublicSimpleFragment$key } from '@//:artifacts/PostGalleryPublicSimpleFragment.graphql'
 import { PostGalleryPublicSimpleViewerFragment$key } from '@//:artifacts/PostGalleryPublicSimpleViewerFragment.graphql'
-import PostHideOverflow from '../PostHideOverflow/PostHideOverflow'
-import PostShowOverflow from '../PostShowOverflow/PostShowOverflow'
 import { Trans } from '@lingui/macro'
 import { Icon } from '../../../../PageLayout'
 import { InfoCircle } from '@//:assets/icons'
 import { LinkTile } from '../../../../ContentSelection'
+import OverflowWrapper from './OverflowWrapper/OverflowWrapper'
 
 interface Props {
   postQuery: PostGalleryPublicSimpleFragment$key
@@ -58,21 +57,6 @@ export default function PostGalleryPublicSimple ({
 
   const [swiper, setSwiper] = useState<null | SwiperType>(null)
 
-  const Wrapper = (children): JSX.Element => {
-    if (hideOverflow) {
-      return (
-        <PostHideOverflow>
-          {children}
-        </PostHideOverflow>
-      )
-    }
-    return (
-      <PostShowOverflow>
-        {children}
-      </PostShowOverflow>
-    )
-  }
-
   return (
     <Box userSelect='none'>
       <Swiper
@@ -88,7 +72,7 @@ export default function PostGalleryPublicSimple ({
             }}
           >
             <PostSlideBackground query={item}>
-              {Wrapper(
+              <OverflowWrapper hideOverflow={hideOverflow}>
                 <PostSupporterContent
                   query={item}
                   clubQuery={postData.club}
@@ -131,7 +115,7 @@ export default function PostGalleryPublicSimple ({
                     </Box>
                   </Box>
                 </PostSupporterContent>
-              )}
+              </OverflowWrapper>
             </PostSlideBackground>
           </SwiperSlide>
         )}
