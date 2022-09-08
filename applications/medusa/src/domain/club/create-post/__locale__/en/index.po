@@ -366,7 +366,7 @@ msgstr ""
 msgid "Show only original characters"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:108
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:112
 msgid "Submit"
 msgstr ""
 
@@ -438,7 +438,7 @@ msgstr ""
 msgid "There was an error saving the characters"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:94
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:98
 msgid "There was an error submitting your post"
 msgstr ""
 
@@ -558,6 +558,10 @@ msgstr ""
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:57
 #~ msgid "Your post is now visible to the public"
 #~ msgstr ""
+
+#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:85
+msgid "Your post was submitted!"
+msgstr ""
 
 #: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:27
 #~ msgid "Your post will be reviewed to ensure it falls within our community guidelines. Once approved, it will be visible to the public."

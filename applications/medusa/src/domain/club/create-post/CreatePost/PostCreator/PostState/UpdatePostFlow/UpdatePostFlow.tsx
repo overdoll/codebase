@@ -125,12 +125,6 @@ export default function UpdatePostFlow ({
     setLoaded(true)
   }, [])
 
-  useEffect(() => {
-    return () => {
-      uppy.reset()
-    }
-  }, [])
-
   // we check for this state otherwise upon refresh, the dom will dismount and cause test errors
   if (!loaded) {
     return <CreatePostOpening />

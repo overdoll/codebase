@@ -5,8 +5,6 @@ import CanUseDOM from '../../../../../operations/CanUseDOM'
 import GoldenRetriever from '@uppy/golden-retriever'
 import { TUS_OPTIONS, UPLOAD_ALLOWED_FILE_TYPES, UPLOAD_MAX_FILE_SIZE } from '../../constants/upload'
 
-// TODO changing the name of the file to prevent duplicates issue breaks tus
-
 const U: UppyType = Uppy({
   id: 'posts',
   restrictions: {

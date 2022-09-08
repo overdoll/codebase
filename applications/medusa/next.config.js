@@ -214,8 +214,8 @@ const moduleExports = withBundleAnalyzer({
         permanent: true
       },
       {
-        source: '/rulet',
-        destination: '/roulette',
+        source: '/roll',
+        destination: '/roulette?utm_campaign=game_roulette&utm_source=roll_redirect',
         permanent: true
       },
       {
@@ -223,26 +223,11 @@ const moduleExports = withBundleAnalyzer({
         destination: '/roulette?utm_campaign=game_roulette&utm_source=spin_redirect',
         permanent: true
       },
-      {
-        source: '/rullette',
+      ...['/rullette', '/rulet', '/roullete', '/roullette', '/roulete', '/rouette', '/rulet', '/rpulette', '/roult', '/roulettw', '/roette', '/rollet'].map((source) => ({
+        source,
         destination: '/roulette',
         permanent: true
-      },
-      {
-        source: '/roll',
-        destination: '/roulette?utm_campaign=game_roulette&utm_source=roll_redirect',
-        permanent: true
-      },
-      {
-        source: '/roullete',
-        destination: '/roulette',
-        permanent: true
-      },
-      {
-        source: '/roullette',
-        destination: '/roulette',
-        permanent: true
-      }
+      }))
     ]
   },
   generateBuildId: () => nextBuildId({ dir: __dirname }),

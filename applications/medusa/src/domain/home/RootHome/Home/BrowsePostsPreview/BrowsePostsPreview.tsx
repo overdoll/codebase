@@ -59,7 +59,7 @@ export default function BrowsePostsPreview (props: Props): JSX.Element {
   return (
     <GlobalVideoManagerProvider>
       <Stack spacing={16}>
-        {data.postsFeed.edges.map((item) => (
+        {data.postsFeed?.edges?.map((item) => (
           <FullSimplePost
             key={item.node.id}
             query={item.node}

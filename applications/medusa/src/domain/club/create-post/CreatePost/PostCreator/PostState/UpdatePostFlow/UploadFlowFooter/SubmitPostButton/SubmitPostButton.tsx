@@ -80,6 +80,10 @@ export default function SubmitPostButton ({
           value: true,
           transform: 'SET'
         })
+        notify({
+          status: 'success',
+          title: t`Your post was submitted!`
+        })
       },
       updater: (store, payload) => {
         if (payload?.submitPost?.post?.id == null) return
