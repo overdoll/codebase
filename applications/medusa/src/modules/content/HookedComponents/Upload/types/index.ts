@@ -9,6 +9,7 @@ export type OnUploadProgressType = (file: UppyFile, progress: UppyFile['progress
 export type OnFileRemovedType = (file: UppyFile, reason) => void
 export type OnUploadErrorType = (file: UppyFile, error, response) => void
 export type OnUploadRetryType = (fileId: UppyFile['id']) => void
+export type OnCancelAllType = () => void
 
 export interface UseUploadProps {
   uppy: UppyInitialType
@@ -18,6 +19,7 @@ export interface UseUploadProps {
   onFileRemoved?: OnFileRemovedType
   onUploadError?: OnUploadErrorType
   onUploadRetry?: OnUploadRetryType
+  onCancelAll?: OnCancelAllType
 }
 
 export type UseUploadReturnType = UppyType

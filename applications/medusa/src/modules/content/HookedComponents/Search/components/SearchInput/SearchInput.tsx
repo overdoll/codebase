@@ -21,7 +21,7 @@ export default function SearchInput ({
 }: Props): JSX.Element {
   const [searchInput, setSearch] = useState(defaultValue ?? '')
 
-  const debouncedSearchInput = useDebounce(searchInput, 300)
+  const debouncedSearchInput = useDebounce(searchInput, 550)
 
   const { i18n } = useLingui()
 
