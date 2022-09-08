@@ -285,7 +285,7 @@ func seedPublishedPostWithCharacter(t *testing.T, characterId, seriesId string) 
 	err = prin.ExtendWithClubExtension(ext)
 	require.NoError(t, err)
 
-	clb := club.UnmarshalClubFromDatabase(clubId, "", nil, nil, nil, nil, 0, accountId, false, nil, nil, false, false, nil, false, time.Now(), time.Now(), false, 0, 0, 0)
+	clb := club.UnmarshalClubFromDatabase(clubId, "", nil, nil, nil, nil, 0, accountId, false, nil, nil, false, false, nil, false, time.Now(), time.Now(), false, 0, 0, 0, nil)
 
 	pst, err := post.NewPost(prin, clb)
 	require.NoError(t, err)
@@ -346,7 +346,7 @@ func seedPublishedPostWithCategory(t *testing.T, categoryId string) {
 	err = prin.ExtendWithClubExtension(ext)
 	require.NoError(t, err)
 
-	clb := club.UnmarshalClubFromDatabase(clubId, "", nil, nil, nil, nil, 0, accountId, false, nil, nil, false, false, nil, false, time.Now(), time.Now(), false, 0, 0, 0)
+	clb := club.UnmarshalClubFromDatabase(clubId, "", nil, nil, nil, nil, 0, accountId, false, nil, nil, false, false, nil, false, time.Now(), time.Now(), false, 0, 0, 0, nil)
 
 	pst, err := post.NewPost(prin, clb)
 	require.NoError(t, err)
@@ -407,7 +407,7 @@ func seedPublishedPostWithAudience(t *testing.T, audienceId string) {
 	err = prin.ExtendWithClubExtension(ext)
 	require.NoError(t, err)
 
-	clb := club.UnmarshalClubFromDatabase(clubId, "", nil, nil, nil, nil, 0, accountId, false, nil, nil, false, false, nil, false, time.Now(), time.Now(), false, 0, 0, 0)
+	clb := club.UnmarshalClubFromDatabase(clubId, "", nil, nil, nil, nil, 0, accountId, false, nil, nil, false, false, nil, false, time.Now(), time.Now(), false, 0, 0, 0, nil)
 
 	pst, err := post.NewPost(prin, clb)
 	require.NoError(t, err)
@@ -464,7 +464,7 @@ func newPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
 	err = prin.ExtendWithClubExtension(ext)
 	require.NoError(t, err)
 
-	clb := club.UnmarshalClubFromDatabase(clubId, "", nil, nil, nil, nil, 0, accountId, false, nil, nil, false, false, nil, false, time.Now(), time.Now(), false, 0, 0, 0)
+	clb := club.UnmarshalClubFromDatabase(clubId, "", nil, nil, nil, nil, 0, accountId, false, nil, nil, false, false, nil, false, time.Now(), time.Now(), false, 0, 0, 0, nil)
 
 	pst, err := post.NewPost(prin, clb)
 	require.NoError(t, err)
