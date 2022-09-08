@@ -46,7 +46,7 @@ export default function ClubCharacters ({ query }: Props): JSX.Element {
     return <NotFoundClub />
   }
 
-  if (!queryData.club?.viewerIsOwner && ((queryData.viewer?.isStaff) === false) && (queryData.viewer?.isWorker) === false) {
+  if (!queryData.club?.viewerIsOwner && ((queryData.viewer?.isStaff) === false) && !(queryData.viewer?.isWorker)) {
     return <NotFoundClub />
   }
 
