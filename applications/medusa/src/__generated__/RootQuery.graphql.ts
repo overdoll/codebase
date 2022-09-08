@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<a91eaca49da72a8a48494263bd7d2b43>>
- * @relayHash 00b2578bce748d75e77349db4ea9fe9b
+ * @generated SignedSource<<b04b06b18e90f53ab12b5a2960def243>>
+ * @relayHash f9ec30b2e6d95c2ffea313e27c402dc6
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 00b2578bce748d75e77349db4ea9fe9b
+// @relayRequestID f9ec30b2e6d95c2ffea313e27c402dc6
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -155,6 +155,13 @@ return {
           {
             "alias": null,
             "args": null,
+            "kind": "ScalarField",
+            "name": "isWorker",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "Resource",
             "kind": "LinkedField",
             "name": "avatar",
@@ -229,7 +236,7 @@ return {
     ]
   },
   "params": {
-    "id": "00b2578bce748d75e77349db4ea9fe9b",
+    "id": "f9ec30b2e6d95c2ffea313e27c402dc6",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",

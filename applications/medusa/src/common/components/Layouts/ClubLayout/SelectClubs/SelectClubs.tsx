@@ -24,6 +24,7 @@ const Query = graphql`
       id
       clubsCount
       isStaff
+      isWorker
     }
   }
 `
@@ -61,7 +62,7 @@ export default function SelectClubs ({ searchArguments }: Props): JSX.Element {
     )
   }
 
-  if (!queryData?.club.viewerIsOwner && (!(queryData.viewer?.isStaff))) {
+  if (!queryData?.club.viewerIsOwner && (!(queryData.viewer?.isStaff) && !(queryData.viewer?.isWorker))) {
     return (
       <Flex {...flexProps}>
         <Heading color='gray.00' fontSize='lg'>

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0a4f68505fc430bce3153af71ca557a7>>
+ * @generated SignedSource<<796b6ca0a7ff1e8a84d41f67671d27d4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,6 +17,7 @@ export type AccountAuthorizerFragment$data = {
   readonly isArtist: boolean;
   readonly isModerator: boolean;
   readonly isStaff: boolean;
+  readonly isWorker: boolean;
   readonly lock: {
     readonly __typename: "AccountLock";
   } | null;
@@ -99,6 +100,13 @@ return {
       "kind": "ScalarField",
       "name": "isArtist",
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "isWorker",
+      "storageKey": null
     }
   ],
   "type": "Account",
@@ -106,6 +114,6 @@ return {
 };
 })();
 
-(node as any).hash = "6439c6e84a42b7c5993480319fe23afd";
+(node as any).hash = "c6137b28d1ce4c729a61e0ee6ce0f77e";
 
 export default node;

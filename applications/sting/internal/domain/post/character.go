@@ -53,8 +53,10 @@ func NewCharacter(requester *principal.Principal, slug, name string, series *Ser
 			return nil, domainerror.NewValidation("characters are not enabled for this club")
 		}
 
-		if err := requester.CheckClubOwner(club.ID()); err != nil {
-			return nil, err
+		if !requester.IsWorker() {
+			if err := requester.CheckClubOwner(club.ID()); err != nil {
+				return nil, err
+			}
 		}
 	}
 
@@ -236,8 +238,10 @@ func (c *Character) UpdateBanner(thumbnail *resource.Resource) error {
 func (c *Character) canUpdate(requester *principal.Principal) error {
 
 	if c.clubId != nil {
-		if err := requester.CheckClubOwner(*c.clubId); err != nil {
-			return err
+		if !requester.IsWorker() {
+			if err := requester.CheckClubOwner(*c.clubId); err != nil {
+				return err
+			}
 		}
 	}
 

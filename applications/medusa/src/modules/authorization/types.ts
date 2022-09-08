@@ -32,4 +32,5 @@ export interface Authenticated {
   isLocked: boolean
   isStaff: boolean
   isArtist: boolean
+  isWorker: boolean
 }

@@ -686,7 +686,7 @@ func IsAccountClubsLimitReached(requester *principal.Principal, accountId string
 
 func ViewClubCharactersCount(requester *principal.Principal, clubId string) error {
 
-	if requester.IsStaff() {
+	if requester.IsStaff() || requester.IsWorker() {
 		return nil
 	}
 
