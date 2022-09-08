@@ -8,6 +8,7 @@ import (
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/loader/internal/domain/progress"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/media"
 	"overdoll/libraries/support"
 )
 
@@ -36,13 +37,13 @@ func NewProgressCassandraS3Repository(session gocqlx.Session) ProgressCassandraS
 	return ProgressCassandraS3Repository{session: session}
 }
 
-func (r ProgressCassandraS3Repository) UpdateMediaProgress(ctx context.Context, linkedId, mediaId string, prog float64) error {
+func (r ProgressCassandraS3Repository) UpdateMediaProgress(ctx context.Context, media *media.Media, prog float64) error {
 
 	if err := r.session.
 		Query(progressTable.Update("progress")).
 		WithContext(ctx).
 		Idempotent(true).
-		BindStruct(progresses{ItemId: linkedId, ResourceId: mediaId, Progress: prog}).
+		BindStruct(progresses{ItemId: media.Source().Link.Id, ResourceId: media.Source().Id, Progress: prog}).
 		ExecRelease(); err != nil {
 		return errors.Wrap(support.NewGocqlError(err), "failed to update progress")
 	}

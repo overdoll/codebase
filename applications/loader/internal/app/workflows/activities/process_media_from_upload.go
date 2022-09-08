@@ -5,42 +5,19 @@ import (
 	"go.temporal.io/sdk/activity"
 	"go.uber.org/zap"
 	"os"
-	resource2 "overdoll/applications/loader/internal/domain/media_processing"
-	"overdoll/applications/loader/internal/domain/resource"
+	"overdoll/applications/loader/internal/domain/media_processing"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/media"
 	"overdoll/libraries/media/proto"
 	"strings"
 )
 
 type ProcessMediaFromUploadInput struct {
-	Media *proto.Media
+	Media  *proto.Media
+	Source string
 }
 
-func (h *Activities) ProcessMediaFromUpload(ctx context.Context, input ProcessResourcesInput) (*ProcessMediaPayload, error) {
-
-	// first, get all resources
-	resourcesFromIds, err := h.rr.GetResourcesByIds(ctx, []string{input.ItemId}, []string{input.ResourceId})
-
-	if err != nil {
-		return err
-	}
-
-	var resourcesNotProcessed []*resource2.Resource
-
-	// gather all resources that are processed = false
-	for _, res := range resourcesFromIds {
-		resourcesNotProcessed = append(resourcesNotProcessed, res)
-	}
-
-	if err = h.rr.UpdateResourceProgress(ctx, input.ItemId, input.ResourceId, float64(0)); err != nil {
-		return err
-	}
-
-	config, err := resource.NewConfig(input.Width, input.Height)
-
-	if err != nil {
-		return err
-	}
+func (h *Activities) ProcessMediaFromUpload(ctx context.Context, input ProcessMediaFromUploadInput) (*ProcessMediaPayload, error) {
 
 	var heartbeat int64
 
@@ -48,8 +25,10 @@ func (h *Activities) ProcessMediaFromUpload(ctx context.Context, input ProcessRe
 
 	finished := false
 
+	newMedia := media.FromProto(input.Media)
+
 	// when progress is made on the resource socket, we record a heartbeat
-	cleanup, err := resource.ListenProgressSocket(input.ItemId, input.ResourceId, func(progress int64) {
+	cleanup, err := media_processing.ListenProgressSocket(input.Media.Id, func(progress int64) {
 
 		if finished {
 			return
@@ -61,7 +40,7 @@ func (h *Activities) ProcessMediaFromUpload(ctx context.Context, input ProcessRe
 
 		// TODO: this heartbeat isn't recorded for some reason? so we make a manual API call (possibly because its called from another goroutine?)
 		activity.RecordHeartbeat(ctx, heartbeat)
-		if err = h.event.SendProcessResourcesHeartbeat(ctx, info.TaskToken, progress); err != nil {
+		if err := h.event.SendProcessResourcesHeartbeat(ctx, info.TaskToken, progress); err != nil {
 
 			if strings.Contains(err.Error(), "workflow execution already completed") {
 				return
@@ -79,8 +58,8 @@ func (h *Activities) ProcessMediaFromUpload(ctx context.Context, input ProcessRe
 		if !alreadySentNumber {
 			numbersAlreadySent[progress] = true
 
-			if err = h.rr.UpdateResourceProgress(ctx, input.ItemId, input.ResourceId, float64(progress)); err != nil {
-				zap.S().Errorw("failed to send process resources progress", zap.Error(err))
+			if err := h.pr.UpdateMediaProgress(ctx, newMedia, float64(progress)); err != nil {
+				zap.S().Errorw("failed to send process media progress", zap.Error(err))
 			}
 		}
 	})
@@ -91,32 +70,26 @@ func (h *Activities) ProcessMediaFromUpload(ctx context.Context, input ProcessRe
 	}()
 
 	if err != nil {
-		return err
-	}
-
-	for _, target := range resourcesNotProcessed {
-		if err := processResource(h, ctx, target, config); err != nil {
-			return err
-		}
-	}
-
-	if err := h.callback.SendCallback(ctx, input.Source, input.Media); err != nil {
-
-		if err == media_processing.ErrMediaCallbackNotFound {
-			return &SendCallbackPayload{NotFound: true}, nil
-		}
-
 		return nil, err
 	}
 
-	// update database entries for resources
-	return nil
+	if err := processMedia(h, ctx, newMedia); err != nil {
+		return nil, err
+	}
+
+	if err := h.callback.SendCallback(ctx, input.Source, input.Media); err != nil {
+		if err == media_processing.ErrMediaCallbackNotFound {
+			return &ProcessMediaPayload{AlreadySent: false, Media: input.Media}, nil
+		}
+	}
+
+	return &ProcessMediaPayload{AlreadySent: true, Media: input.Media}, nil
 }
 
-func processResource(h *Activities, ctx context.Context, target *resource2.Resource, config *resource.Config) error {
+func processMedia(h *Activities, ctx context.Context, target *media.Media) error {
 
 	// first, we need to download the resource
-	file, err := h.rr.DownloadResourceUpload(ctx, target)
+	file, err := h.ur.DownloadUpload(ctx, target)
 
 	if err != nil {
 		return err
@@ -127,23 +100,24 @@ func processResource(h *Activities, ctx context.Context, target *resource2.Resou
 	defer os.Remove(file.Name())
 
 	// process resource, get result of targets that need to be uploaded
-	targetsToMove, err := target.ProcessResource(file, config)
+	processResponse, err := media_processing.ProcessMedia(target, file)
 
 	if err != nil {
-		return errors.Wrap(err, "failed to process resource")
+		return errors.Wrap(err, "failed to process media")
 	}
 
-	// if the resource failed to process, update && return
-	if target.Failed() {
-		return h.rr.UpdateResourceFailed(ctx, target)
+	if processResponse.Failed() {
+		target.Source().State.Processed = false
+		target.Source().State.Failed = true
+		return nil
 	}
 
 	// upload the new resource
-	if err := h.rr.UploadProcessedResource(ctx, targetsToMove, target); err != nil {
+	if err := h.rr.UploadProcessedResource(ctx, processResponse, target); err != nil {
 		return err
 	}
 
-	if err = h.rr.UpdateResourceProgress(ctx, target.ItemId(), target.ID(), float64(-2)); err != nil {
+	if err = h.pr.UpdateMediaProgress(ctx, target, float64(-2)); err != nil {
 		return err
 	}
 

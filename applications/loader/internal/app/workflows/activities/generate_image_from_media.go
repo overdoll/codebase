@@ -5,14 +5,13 @@ import (
 	"os"
 	resource2 "overdoll/applications/loader/internal/domain/media_processing"
 	"overdoll/applications/loader/internal/domain/resource"
+	"overdoll/libraries/media/proto"
 )
 
 type GenerateFilteredImageFromMediaInput struct {
-	ItemId      string
-	ResourceIds []string
-	Width       uint64
-	Height      uint64
-	Pixelate    *int
+	Media    *proto.Media
+	Pixelate *int
+	Source   string
 }
 
 type copyPairs struct {

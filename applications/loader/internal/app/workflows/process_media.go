@@ -41,7 +41,8 @@ func ProcessMedia(ctx workflow.Context, input ProcessMediaInput) (*ProcessMediaP
 	if input.Pixelate == nil {
 		if err := workflow.ExecuteActivity(ctx, a.ProcessMediaFromUpload,
 			activities.ProcessMediaFromUploadInput{
-				Media: input.Media,
+				Media:  input.Media,
+				Source: input.Source,
 			},
 		).Get(ctx, &payload); err != nil {
 			logger.Error("failed to process media", "Error", err)
@@ -51,6 +52,7 @@ func ProcessMedia(ctx workflow.Context, input ProcessMediaInput) (*ProcessMediaP
 		if err := workflow.ExecuteActivity(ctx, a.GenerateFilteredImageFromMedia,
 			activities.GenerateFilteredImageFromMediaInput{
 				Media:    input.Media,
+				Source:   input.Source,
 				Pixelate: input.Pixelate,
 			},
 		).Get(ctx, &payload); err != nil {

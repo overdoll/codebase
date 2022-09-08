@@ -14,13 +14,13 @@ import (
 	"time"
 )
 
-func ListenProgressSocket(itemId, resourceId string, cb func(progress int64)) (func(), error) {
+func ListenProgressSocket(id string, cb func(progress int64)) (func(), error) {
 
-	if err := os.RemoveAll(getSockAddr(itemId, resourceId)); err != nil {
+	if err := os.RemoveAll(getSockAddr(id)); err != nil {
 		return nil, err
 	}
 
-	sockAddr := getSockAddr(itemId, resourceId)
+	sockAddr := getSockAddr(id)
 	l, err := net.Listen("unix", sockAddr)
 	if err != nil {
 		return nil, err
@@ -74,12 +74,12 @@ func ListenProgressSocket(itemId, resourceId string, cb func(progress int64)) (f
 	}, nil
 }
 
-func getSocketClient(itemId, resourceId string) (net.Conn, error) {
-	return net.Dial("unix", getSockAddr(itemId, resourceId))
+func getSocketClient(id string) (net.Conn, error) {
+	return net.Dial("unix", getSockAddr(id))
 }
 
-func getSockAddr(itemId, resourceId string) string {
-	return path.Join(os.TempDir(), fmt.Sprintf("resource_%s-%s_sock", itemId, resourceId))
+func getSockAddr(id string) string {
+	return path.Join(os.TempDir(), fmt.Sprintf("media_%s_sock", id))
 }
 
 // show progress taken from: https://github.com/u2takey/ffmpeg-go/blob/master/examples/showProgress.go

@@ -1,4 +1,4 @@
-package resource
+package upload
 
 type Upload struct {
 	itemId      string
