@@ -11,11 +11,10 @@ import (
 	"github.com/tus/tusd/pkg/s3store"
 	"io"
 	"os"
+	"overdoll/applications/loader/internal/domain/upload"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/media"
-	"overdoll/libraries/media/proto"
-	"overdoll/libraries/uuid"
 	"strings"
 )
 
@@ -27,7 +26,7 @@ func NewUploadS3Repository(aws *session.Session) UploadS3Repository {
 	return UploadS3Repository{aws: aws}
 }
 
-func (r UploadS3Repository) GetUploadAsMedia(ctx context.Context, link *proto.MediaLink, uploadId string) (*media.Media, error) {
+func (r UploadS3Repository) GetUpload(ctx context.Context, uploadId string) (*upload.Upload, error) {
 
 	s3Client := s3.New(r.aws)
 
@@ -76,24 +75,13 @@ func (r UploadS3Repository) GetUploadAsMedia(ctx context.Context, link *proto.Me
 		return nil, domainerror.NewValidation("file not yet fully uploaded")
 	}
 
-	source := &proto.Media{
-		Id:               uuid.New().String(),
-		UploadId:         fileId,
-		OriginalFileName: data.Filename,
-		Private:          true,
-		Link:             link,
-		State: &proto.MediaState{
-			Processed: false,
-			Failed:    false,
-		},
-		Version: proto.MediaVersion_ONE,
-	}
+	upl, err := upload.NewUpload(fileId, data.Filename)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return media.FromProto(source), nil
+	return upl, nil
 }
 
 func (r UploadS3Repository) DownloadUpload(ctx context.Context, med *media.Media) (*os.File, error) {

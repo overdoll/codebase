@@ -39,7 +39,8 @@ func ProcessMedia(ctx workflow.Context, input ProcessMediaInput) (*ProcessMediaP
 
 	var payload *activities.ProcessMediaPayload
 
-	if input.Pixelate == nil {
+	if input.NewMedia == nil {
+		// new media is nil, we are just processing an upload
 		if err := workflow.ExecuteActivity(ctx, a.ProcessMediaFromUpload,
 			activities.ProcessMediaFromUploadInput{
 				Media:  input.SourceMedia,
@@ -50,15 +51,17 @@ func ProcessMedia(ctx workflow.Context, input ProcessMediaInput) (*ProcessMediaP
 			return nil, err
 		}
 	} else {
-		if err := workflow.ExecuteActivity(ctx, a.GenerateFilteredImageFromMedia,
-			activities.GenerateFilteredImageFromMediaInput{
+
+		// new media is not nil, we are generating an image from a previous media
+		if err := workflow.ExecuteActivity(ctx, a.GenerateImageFromMedia,
+			activities.GenerateImageFromMediaInput{
 				Media:    input.SourceMedia,
 				Source:   input.Source,
 				Pixelate: input.Pixelate,
 				NewMedia: input.NewMedia,
 			},
 		).Get(ctx, &payload); err != nil {
-			logger.Error("failed to process media with filters", "Error", err)
+			logger.Error("failed to process media", "Error", err)
 			return nil, err
 		}
 

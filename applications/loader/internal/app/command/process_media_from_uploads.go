@@ -3,96 +3,66 @@ package command
 import (
 	"context"
 	"overdoll/applications/loader/internal/domain/event"
-	resource2 "overdoll/applications/loader/internal/domain/media_processing"
-	"overdoll/applications/loader/internal/domain/resource"
+	"overdoll/applications/loader/internal/domain/upload"
+	"overdoll/libraries/media"
+	"overdoll/libraries/media/proto"
+	"overdoll/libraries/uuid"
 	"strings"
 )
 
 type ProcessMediaFromUploads struct {
-	ItemId    string
+	Link      *proto.MediaLink
 	UploadIds []string
-	IsPrivate bool
-	Token     string
 	Source    string
 }
 
 type CreateOrGetResourcesFromUploadsHandler struct {
-	rr    resource.Repository
+	ur    upload.Repository
 	event event.Repository
 }
 
-func NewCreateOrGetResourcesFromUploadsHandler(rr resource.Repository, event event.Repository) CreateOrGetResourcesFromUploadsHandler {
-	return CreateOrGetResourcesFromUploadsHandler{rr: rr, event: event}
+func NewCreateOrGetResourcesFromUploadsHandler(ur upload.Repository, event event.Repository) CreateOrGetResourcesFromUploadsHandler {
+	return CreateOrGetResourcesFromUploadsHandler{ur: ur, event: event}
 }
 
-func (h CreateOrGetResourcesFromUploadsHandler) Handle(ctx context.Context, cmd CreateOrGetResourcesFromUploads) ([]*resource2.Resource, error) {
+func (h CreateOrGetResourcesFromUploadsHandler) Handle(ctx context.Context, cmd ProcessMediaFromUploads) ([]*media.Media, error) {
 
-	var newUploadIds []string
+	var results []*media.Media
 
 	for _, uploadId := range cmd.UploadIds {
-		// fix upload IDs
-		newUploadIds = append(newUploadIds, getUploadIdWithoutExtension(uploadId))
-	}
-
-	// first, get all resources
-	resourcesFromIds, err := h.rr.GetResourcesByIds(ctx, []string{cmd.ItemId}, newUploadIds)
-
-	if err != nil {
-		return nil, err
-	}
-
-	// now, get the resources that were not found, create the object and then create the record
-	var idsNotFound []string
-
-	for _, uploadId := range newUploadIds {
-
-		foundResource := false
-
-		for _, res := range resourcesFromIds {
-			if res.ID() == uploadId {
-				foundResource = true
-				break
-			}
+		newUploadId := getUploadIdWithoutExtension(uploadId)
+		final, err := h.ur.GetUpload(ctx, newUploadId)
+		if err != nil {
+			return nil, err
 		}
 
-		if !foundResource {
-			idsNotFound = append(idsNotFound, uploadId)
+		sourceMedia := &proto.Media{
+			Id:               uuid.New().String(),
+			UploadId:         final.FileId(),
+			OriginalFileName: final.FileName(),
+			Private:          true,
+			Link:             cmd.Link,
+			State: &proto.MediaState{
+				Processed: false,
+				Failed:    false,
+			},
+			Version: proto.MediaVersion_ONE,
 		}
-	}
-
-	var newResources []*resource2.Resource
-
-	// found at least 1 resource that was not created
-	if len(idsNotFound) > 0 {
-
-		upload, err := resource.NewUpload(cmd.ItemId, idsNotFound, cmd.Token, cmd.IsPrivate, cmd.AllowImages, cmd.AllowVideos)
 
 		if err != nil {
 			return nil, err
 		}
 
-		// get the resources from our remote source - grabbing information like file info
-		newResources, err = h.rr.GetAndCreateResources(ctx, upload)
+		newMedia := media.FromProto(sourceMedia)
 
-		if err != nil {
+		if err := h.event.ProcessMediaForUpload(ctx, newMedia, cmd.Source); err != nil {
 			return nil, err
 		}
+
+		results = append(results, newMedia)
 	}
 
-	// merge 2 arrays: new resources + current resources
-	resources := append(resourcesFromIds, newResources...)
-
-	var newResourceIds []string
-
-	for _, r := range resources {
-		newResourceIds = append(newResourceIds, r.ID())
-	}
-
-	if err := h.event.ProcessResources(ctx, cmd.ItemId, newResourceIds, cmd.Source, cmd.Config); err != nil {
-		return nil, err
-	}
-
-	return resources, nil
+	return results, nil
 }
 
 func getUploadIdWithoutExtension(uploadId string) string {

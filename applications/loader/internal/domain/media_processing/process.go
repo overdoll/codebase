@@ -24,7 +24,6 @@ import (
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/media"
 	"overdoll/libraries/media/proto"
-	"overdoll/libraries/uuid"
 	"overdoll/libraries/zap_support/zap_adapters"
 	"strconv"
 	"strings"
@@ -114,7 +113,7 @@ type ffmpegProbeStream struct {
 	} `json:"format"`
 }
 
-func processVideo(media *media.Media, fileName string, file *os.File) (*ProcessResponse, error) {
+func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 
 	videoNoAudio := true
 
@@ -125,7 +124,7 @@ func processVideo(media *media.Media, fileName string, file *os.File) (*ProcessR
 	// map 0:v:0 selects only the first video track
 	encodingArgs := ffmpeg_go.KwArgs{"c:v": "libx264", "crf": "23", "preset": "slow", "map_metadata": "-1", "sn": "", "map": []string{"0:v:0"}, "threads:v": "1", "movflags": "+faststart"}
 
-	newVideoFileName := fileName + ".mp4"
+	newVideoFileName := media.Id() + ".mp4"
 
 	defaultArgs := map[string]interface{}{
 		"v": "error",
@@ -279,7 +278,7 @@ func processVideo(media *media.Media, fileName string, file *os.File) (*ProcessR
 		return nil, err
 	}
 
-	thumbnailFileName := fileName + ".jpg"
+	thumbnailFileName := media.Id() + ".jpg"
 
 	fileThumbnail, err := os.Create(thumbnailFileName)
 	if err != nil {
@@ -324,7 +323,7 @@ func processVideo(media *media.Media, fileName string, file *os.File) (*ProcessR
 
 	// update the source image data - this is used for the thumbnail
 	media.Source().ImageData = &proto.ImageData{
-		Id:       fileName + ".jpg",
+		Id:       media.Id() + ".jpg",
 		MimeType: "image/jpeg",
 		Width:    int64(probeResult.Streams[0].Width),
 		Height:   int64(probeResult.Streams[0].Height),
@@ -333,7 +332,7 @@ func processVideo(media *media.Media, fileName string, file *os.File) (*ProcessR
 
 	media.Source().VideoData = &proto.VideoData{
 		Containers: []*proto.VideoContainer{{
-			Id:       fileName + ".mp4",
+			Id:       media.Id() + ".mp4",
 			MimeType: "video/mp4",
 			Bitrate:  0,
 		}},
@@ -355,7 +354,7 @@ func processVideo(media *media.Media, fileName string, file *os.File) (*ProcessR
 	}}, nil
 }
 
-func processImage(media *media.Media, mimeType string, fileName string, file *os.File) (*ProcessResponse, error) {
+func processImage(media *media.Media, mimeType string, file *os.File) (*ProcessResponse, error) {
 
 	var src image.Image
 	var err error
@@ -391,7 +390,7 @@ func processImage(media *media.Media, mimeType string, fileName string, file *os
 		src = resize.Resize(0, uint(maxImageWidthOrHeight), src, resize.Lanczos3)
 	}
 
-	jpegFileName := fileName + ".jpg"
+	jpegFileName := media.Id() + ".jpg"
 
 	jpegFile, err := os.Create(jpegFileName)
 	if err != nil {
@@ -445,8 +444,6 @@ func ProcessMedia(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	// seek file, so we can read it again (first time we only grab a few bytes)
 	_, _ = file.Seek(0, io.SeekStart)
 
-	fileName := uuid.New().String()
-
 	foundImage := false
 	foundVideo := false
 	mimeType := kind.MIME.Value
@@ -467,7 +464,7 @@ func ProcessMedia(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	var response *ProcessResponse
 
 	if foundImage {
-		response, err = processImage(media, mimeType, fileName, file)
+		response, err = processImage(media, mimeType, file)
 
 		if err != nil {
 			return nil, err
@@ -475,7 +472,7 @@ func ProcessMedia(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	}
 
 	if foundVideo {
-		response, err = processVideo(media, fileName, file)
+		response, err = processVideo(media, file)
 
 		if err != nil {
 			return nil, err
@@ -494,8 +491,6 @@ func ProcessMedia(media *media.Media, file *os.File) (*ProcessResponse, error) {
 }
 
 func ApplyFilters(media *media.Media, file *os.File, filters *ImageFilters) (*ProcessResponse, error) {
-
-	fileName := uuid.New().String()
 
 	defer file.Close()
 	defer os.Remove(file.Name())
@@ -522,7 +517,7 @@ func ApplyFilters(media *media.Media, file *os.File, filters *ImageFilters) (*Pr
 	pixelatedSrc := image.NewNRGBA(g.Bounds(src.Bounds()))
 	g.Draw(pixelatedSrc, src)
 
-	jpegFileName := fileName + ".jpg"
+	jpegFileName := media.Id() + ".jpg"
 
 	jpegFile, err := os.Create(jpegFileName)
 	if err != nil {

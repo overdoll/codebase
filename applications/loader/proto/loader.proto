@@ -15,10 +15,9 @@ message PixelateFilter {
 
 
 message ProcessMediaFromUploadsRequest {
-  string linkedId = 1;
-  overdoll.libraries.MediaLinkType linkedType = 2;
-  overdoll.libraries.SOURCE source = 3;
-  repeated string uploadIds = 4;
+  overdoll.libraries.MediaLink link = 1;
+  overdoll.libraries.SOURCE source = 2;
+  repeated string uploadIds = 3;
 }
 
 message ProcessMediaFromUploadsResponse {

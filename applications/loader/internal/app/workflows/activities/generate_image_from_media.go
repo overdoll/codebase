@@ -8,14 +8,14 @@ import (
 	"overdoll/libraries/media/proto"
 )
 
-type GenerateFilteredImageFromMediaInput struct {
+type GenerateImageFromMediaInput struct {
 	Media    *proto.Media
 	NewMedia *proto.Media
 	Pixelate *int
 	Source   string
 }
 
-func (h *Activities) GenerateFilteredImageFromMedia(ctx context.Context, input GenerateFilteredImageFromMediaInput) (*ProcessMediaPayload, error) {
+func (h *Activities) GenerateImageFromMedia(ctx context.Context, input GenerateImageFromMediaInput) (*ProcessMediaPayload, error) {
 
 	filters, err := media_processing.NewImageFilters(input.Pixelate)
 

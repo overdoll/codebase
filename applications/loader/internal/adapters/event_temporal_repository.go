@@ -7,7 +7,6 @@ import (
 	"overdoll/applications/loader/internal/app/workflows"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/media"
-	"overdoll/libraries/media/proto"
 )
 
 type EventTemporalRepository struct {
@@ -26,18 +25,18 @@ func (r EventTemporalRepository) SendProcessMediaHeartbeat(ctx context.Context, 
 	return nil
 }
 
-func (r EventTemporalRepository) GenerateImageFromMedia(ctx context.Context, media *media.Media, newMedia *proto.Media, source string, pixelate *int) error {
+func (r EventTemporalRepository) GenerateImageFromMedia(ctx context.Context, media *media.Media, newMedia *media.Media, source string, pixelate *int) error {
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "loader.GenerateImageFromMedia_" + media.Id(),
+		ID:        "loader.GenerateImageFromMedia_" + media.Id() + "_" + newMedia.Id(),
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ProcessMedia,
 		workflows.ProcessMediaInput{
 			SourceMedia: media.Source(),
 			Source:      source,
-			NewMedia:    newMedia,
+			NewMedia:    newMedia.Source(),
 			Pixelate:    pixelate,
 		},
 	)
