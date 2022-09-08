@@ -194,6 +194,8 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			SpinRoulette:      command.NewSpinRouletteHandler(gamesRepo, postRepo, personalizationRepo),
 			CreateGameSession: command.NewCreateGameSessionHandler(gamesRepo, postRepo),
 
+			IndexClub: command.NewIndexClubHandler(clubRepo),
+
 			ReprocessPostContent: command.NewReprocessPostContentHandler(postRepo, loader),
 		},
 		Queries: app.Queries{

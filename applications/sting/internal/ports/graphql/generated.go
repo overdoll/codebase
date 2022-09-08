@@ -189,6 +189,7 @@ type ComplexityRoot struct {
 		CharactersEnabled           func(childComplexity int) int
 		CharactersLimit             func(childComplexity int) int
 		ID                          func(childComplexity int) int
+		Links                       func(childComplexity int) int
 		Members                     func(childComplexity int, after *string, before *string, first *int, last *int, supporter bool, sortBy types.ClubMembersSort) int
 		MembersCount                func(childComplexity int) int
 		MembersIsSupporterCount     func(childComplexity int) int
@@ -225,6 +226,10 @@ type ComplexityRoot struct {
 		ID             func(childComplexity int) int
 		Reason         func(childComplexity int) int
 		SuspendedUntil func(childComplexity int) int
+	}
+
+	ClubLink struct {
+		URL func(childComplexity int) int
 	}
 
 	ClubMember struct {
@@ -1588,6 +1593,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Club.ID(childComplexity), true
 
+	case "Club.links":
+		if e.complexity.Club.Links == nil {
+			break
+		}
+
+		return e.complexity.Club.Links(childComplexity), true
+
 	case "Club.members":
 		if e.complexity.Club.Members == nil {
 			break
@@ -1791,6 +1803,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.ClubIssuedSuspensionLog.SuspendedUntil(childComplexity), true
+
+	case "ClubLink.url":
+		if e.complexity.ClubLink.URL == nil {
+			break
+		}
+
+		return e.complexity.ClubLink.URL(childComplexity), true
 
 	case "ClubMember.account":
 		if e.complexity.ClubMember.Account == nil {
@@ -5155,7 +5174,12 @@ extend type Mutation {
   updateCharacterThumbnail(input: UpdateCharacterThumbnailInput!): UpdateCharacterThumbnailPayload
 }
 `, BuiltIn: false},
-	{Name: "../../../schema/club/schema.graphql", Input: `type Club implements Node @key(fields: "id") {
+	{Name: "../../../schema/club/schema.graphql", Input: `type ClubLink {
+  """A link."""
+  url: URI!
+}
+
+type Club implements Node @key(fields: "id") {
   """An ID pointing to this club."""
   id: ID!
 
@@ -5182,6 +5206,9 @@ extend type Mutation {
 
   """An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug."""
   slugAliases: [ClubSlugAlias!]!
+
+  """A list of links for this club."""
+  links: [ClubLink!]!
 
   """A resource of the club's thumbnail."""
   thumbnail: Resource
@@ -11673,6 +11700,8 @@ func (ec *executionContext) fieldContext_AddClubSlugAliasPayload_club(ctx contex
 				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
+			case "links":
+				return ec.fieldContext_Club_links(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
 			case "banner":
@@ -14434,6 +14463,8 @@ func (ec *executionContext) fieldContext_Character_club(ctx context.Context, fie
 				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
+			case "links":
+				return ec.fieldContext_Club_links(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
 			case "banner":
@@ -15067,6 +15098,54 @@ func (ec *executionContext) fieldContext_Club_slugAliases(ctx context.Context, f
 				return ec.fieldContext_ClubSlugAlias_slug(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type ClubSlugAlias", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Club_links(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Club_links(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Links, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.ClubLink)
+	fc.Result = res
+	return ec.marshalNClubLink2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubLinkᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Club_links(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Club",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "url":
+				return ec.fieldContext_ClubLink_url(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ClubLink", field.Name)
 		},
 	}
 	return fc, nil
@@ -16303,6 +16382,8 @@ func (ec *executionContext) fieldContext_ClubEdge_node(ctx context.Context, fiel
 				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
+			case "links":
+				return ec.fieldContext_Club_links(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
 			case "banner":
@@ -16549,6 +16630,50 @@ func (ec *executionContext) fieldContext_ClubIssuedSuspensionLog_suspendedUntil(
 	return fc, nil
 }
 
+func (ec *executionContext) _ClubLink_url(ctx context.Context, field graphql.CollectedField, obj *types.ClubLink) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ClubLink_url(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.URL, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(graphql1.URI)
+	fc.Result = res
+	return ec.marshalNURI2overdollᚋlibrariesᚋgraphqlᚐURI(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ClubLink_url(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ClubLink",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type URI does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _ClubMember_id(ctx context.Context, field graphql.CollectedField, obj *types.ClubMember) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_ClubMember_id(ctx, field)
 	if err != nil {
@@ -16690,6 +16815,8 @@ func (ec *executionContext) fieldContext_ClubMember_club(ctx context.Context, fi
 				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
+			case "links":
+				return ec.fieldContext_Club_links(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
 			case "banner":
@@ -17934,6 +18061,8 @@ func (ec *executionContext) fieldContext_CreateClubPayload_club(ctx context.Cont
 				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
+			case "links":
+				return ec.fieldContext_Club_links(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
 			case "banner":
@@ -18828,6 +18957,8 @@ func (ec *executionContext) fieldContext_DisableClubCharactersPayload_club(ctx c
 				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
+			case "links":
+				return ec.fieldContext_Club_links(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
 			case "banner":
@@ -18925,6 +19056,8 @@ func (ec *executionContext) fieldContext_DisableClubSupporterOnlyPostsPayload_cl
 				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
+			case "links":
+				return ec.fieldContext_Club_links(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
 			case "banner":
@@ -19022,6 +19155,8 @@ func (ec *executionContext) fieldContext_EnableClubCharactersPayload_club(ctx co
 				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
+			case "links":
+				return ec.fieldContext_Club_links(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
 			case "banner":
@@ -19119,6 +19254,8 @@ func (ec *executionContext) fieldContext_EnableClubSupporterOnlyPostsPayload_clu
 				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
+			case "links":
+				return ec.fieldContext_Club_links(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
 			case "banner":
@@ -19541,6 +19678,8 @@ func (ec *executionContext) fieldContext_Entity_findClubByID(ctx context.Context
 				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
+			case "links":
+				return ec.fieldContext_Club_links(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
 			case "banner":
@@ -24325,6 +24464,8 @@ func (ec *executionContext) fieldContext_Post_club(ctx context.Context, field gr
 				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
+			case "links":
+				return ec.fieldContext_Club_links(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
 			case "banner":
@@ -25764,6 +25905,8 @@ func (ec *executionContext) fieldContext_PromoteClubSlugAliasToDefaultPayload_cl
 				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
+			case "links":
+				return ec.fieldContext_Club_links(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
 			case "banner":
@@ -26398,6 +26541,8 @@ func (ec *executionContext) fieldContext_Query_club(ctx context.Context, field g
 				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
+			case "links":
+				return ec.fieldContext_Club_links(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
 			case "banner":
@@ -27400,6 +27545,8 @@ func (ec *executionContext) fieldContext_RemoveClubSlugAliasPayload_club(ctx con
 				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
+			case "links":
+				return ec.fieldContext_Club_links(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
 			case "banner":
@@ -29862,6 +30009,8 @@ func (ec *executionContext) fieldContext_SuspendClubPayload_club(ctx context.Con
 				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
+			case "links":
+				return ec.fieldContext_Club_links(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
 			case "banner":
@@ -29959,6 +30108,8 @@ func (ec *executionContext) fieldContext_TerminateClubPayload_club(ctx context.C
 				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
+			case "links":
+				return ec.fieldContext_Club_links(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
 			case "banner":
@@ -30784,6 +30935,8 @@ func (ec *executionContext) fieldContext_TransferClubOwnershipPayload_club(ctx c
 				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
+			case "links":
+				return ec.fieldContext_Club_links(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
 			case "banner":
@@ -31052,6 +31205,8 @@ func (ec *executionContext) fieldContext_UnSuspendClubPayload_club(ctx context.C
 				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
+			case "links":
+				return ec.fieldContext_Club_links(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
 			case "banner":
@@ -31149,6 +31304,8 @@ func (ec *executionContext) fieldContext_UnTerminateClubPayload_club(ctx context
 				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
+			case "links":
+				return ec.fieldContext_Club_links(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
 			case "banner":
@@ -31882,6 +32039,8 @@ func (ec *executionContext) fieldContext_UpdateClubCharactersLimitPayload_club(c
 				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
+			case "links":
+				return ec.fieldContext_Club_links(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
 			case "banner":
@@ -31979,6 +32138,8 @@ func (ec *executionContext) fieldContext_UpdateClubNamePayload_club(ctx context.
 				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
+			case "links":
+				return ec.fieldContext_Club_links(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
 			case "banner":
@@ -32076,6 +32237,8 @@ func (ec *executionContext) fieldContext_UpdateClubThumbnailPayload_club(ctx con
 				return ec.fieldContext_Club_totalLikes(ctx, field)
 			case "slugAliases":
 				return ec.fieldContext_Club_slugAliases(ctx, field)
+			case "links":
+				return ec.fieldContext_Club_links(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Club_thumbnail(ctx, field)
 			case "banner":
@@ -38227,6 +38390,13 @@ func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "links":
+
+			out.Values[i] = ec._Club_links(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "thumbnail":
 
 			out.Values[i] = ec._Club_thumbnail(ctx, field, obj)
@@ -38552,6 +38722,34 @@ func (ec *executionContext) _ClubIssuedSuspensionLog(ctx context.Context, sel as
 		case "suspendedUntil":
 
 			out.Values[i] = ec._ClubIssuedSuspensionLog_suspendedUntil(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var clubLinkImplementors = []string{"ClubLink"}
+
+func (ec *executionContext) _ClubLink(ctx context.Context, sel ast.SelectionSet, obj *types.ClubLink) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, clubLinkImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ClubLink")
+		case "url":
+
+			out.Values[i] = ec._ClubLink_url(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -43811,6 +44009,60 @@ func (ec *executionContext) marshalNClubEdge2ᚖoverdollᚋapplicationsᚋsting�
 		return graphql.Null
 	}
 	return ec._ClubEdge(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNClubLink2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubLinkᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.ClubLink) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNClubLink2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubLink(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNClubLink2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubLink(ctx context.Context, sel ast.SelectionSet, v *types.ClubLink) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._ClubLink(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNClubMember2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubMember(ctx context.Context, sel ast.SelectionSet, v types.ClubMember) graphql.Marshaler {

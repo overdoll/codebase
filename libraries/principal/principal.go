@@ -102,6 +102,10 @@ func (p *Principal) IsArtist() bool {
 	return p.hasRoles([]string{"ARTIST"})
 }
 
+func (p *Principal) IsWorker() bool {
+	return p.hasRoles([]string{"WORKER"})
+}
+
 func (p *Principal) hasRoles(roles []string) bool {
 	for _, role := range p.roles {
 		for _, requiredRole := range roles {

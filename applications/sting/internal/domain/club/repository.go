@@ -8,6 +8,7 @@ import (
 )
 
 type Repository interface {
+	IndexClub(ctx context.Context, clubId string) error
 	GetClubsByIds(ctx context.Context, clubIds []string) ([]*Club, error)
 	GetClubById(ctx context.Context, clubId string) (*Club, error)
 	GetClubBySlug(ctx context.Context, requester *principal.Principal, slug string) (*Club, error)

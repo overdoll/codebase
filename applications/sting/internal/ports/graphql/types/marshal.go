@@ -942,6 +942,12 @@ func MarshalClubToGraphQL(ctx context.Context, result *club.Club) *Club {
 		accountId = passport.FromContext(ctx).AccountID()
 	}
 
+	var links []*ClubLink
+
+	for _, link := range result.Links() {
+		links = append(links, &ClubLink{URL: graphql.URI(link)})
+	}
+
 	return &Club{
 		ID:                          relay.NewID(Club{}, result.ID()),
 		Reference:                   result.ID(),
@@ -963,6 +969,7 @@ func MarshalClubToGraphQL(ctx context.Context, result *club.Club) *Club {
 		Suspension:                  suspension,
 		Termination:                 termination,
 		ViewerIsOwner:               accountId == result.OwnerAccountId(),
+		Links:                       links,
 	}
 }
 

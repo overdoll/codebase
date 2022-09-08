@@ -55,6 +55,9 @@
           }
         }
       },
+      "links": {
+        "type": "keyword"
+      },
       "members_count": {
         "type": "integer"
       },

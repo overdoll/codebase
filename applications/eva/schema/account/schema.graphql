@@ -20,6 +20,9 @@ type Account implements Node @key(fields: "id") {
   """Whether or not this account is part of the moderation team"""
   isModerator: Boolean!
 
+  """Whether or not this account is part of the worker team"""
+  isWorker: Boolean!
+
   """
   Whether or not this account is secure.
 

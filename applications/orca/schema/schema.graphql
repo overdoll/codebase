@@ -226,6 +226,9 @@ type Account implements Node
   """Whether or not this account is a staff member"""
   isStaff: Boolean! @join__field(graph: EVA)
 
+  """Whether or not this account is part of the worker team"""
+  isWorker: Boolean! @join__field(graph: EVA)
+
   """All posts liked by this account, sorted by most recent."""
   likedPosts(
     """Returns the elements in the list that come after the specified cursor."""
@@ -1882,6 +1885,9 @@ type Club implements Node
     last: Int
   ): ClubInfractionHistoryConnection! @join__field(graph: PARLEY)
 
+  """A list of links for this club."""
+  links: [ClubLink!]! @join__field(graph: STING)
+
   """Club members."""
   members(
     """Returns the elements in the list that come after the specified cursor."""
@@ -2187,6 +2193,11 @@ type ClubIssuedSuspensionLog {
 
   """How long the club was suspended until."""
   suspendedUntil: Time!
+}
+
+type ClubLink {
+  """A link."""
+  url: URI!
 }
 
 type ClubMember implements Node

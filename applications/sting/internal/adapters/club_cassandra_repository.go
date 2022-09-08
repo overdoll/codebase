@@ -34,6 +34,7 @@ var clubTable = table.New(table.Metadata{
 		"characters_limit",
 		"members_count",
 		"total_likes",
+		"links",
 		"total_posts",
 		"members_count_last_update_id",
 		"owner_account_id",
@@ -55,6 +56,7 @@ type clubs struct {
 	Id                          string            `db:"id"`
 	Slug                        string            `db:"slug"`
 	SlugAliases                 []string          `db:"slug_aliases"`
+	Links                       []string          `db:"links"`
 	Name                        map[string]string `db:"name"`
 	ThumbnailResource           string            `db:"thumbnail_resource"`
 	BannerResource              string            `db:"banner_resource"`
@@ -192,6 +194,7 @@ func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
 		TerminatedByAccountId:       cl.TerminatedByAccountId(),
 		CreatedAt:                   cl.CreatedAt(),
 		UpdatedAt:                   cl.UpdatedAt(),
+		Links:                       cl.Links(),
 	}, nil
 }
 
@@ -231,6 +234,7 @@ func (r ClubCassandraElasticsearchRepository) unmarshalClubFromDatabase(ctx cont
 		b.CharactersLimit,
 		b.TotalLikes,
 		b.TotalPosts,
+		b.Links,
 	), nil
 }
 

@@ -9,6 +9,7 @@ var (
 	Staff     = Role{"STAFF"}
 	Moderator = Role{"MODERATOR"}
 	Artist    = Role{"ARTIST"}
+	Worker    = Role{"WORKER"}
 )
 
 type Role struct {
@@ -27,6 +28,8 @@ func RoleFromString(s string) (Role, error) {
 		return Moderator, nil
 	case Artist.slug:
 		return Artist, nil
+	case Worker.slug:
+		return Worker, nil
 	}
 
 	return Unknown, domainerror.NewValidation("unknown role: " + s)

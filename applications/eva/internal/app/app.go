@@ -31,12 +31,14 @@ type Commands struct {
 	UnlockAccount command.UnlockAccountHandler
 	LockAccount   command.LockAccountHandler
 
+	RevokeAccountWorkerRole    command.RevokeAccountWorkerRoleHandler
 	RevokeAccountModeratorRole command.RevokeAccountModeratorRoleHandler
 	RevokeAccountStaffRole     command.RevokeAccountStaffRoleHandler
 	RevokeAccountArtistRole    command.RevokeAccountArtistRoleHandler
 	AssignAccountModeratorRole command.AssignAccountModeratorRoleHandler
 	AssignAccountStaffRole     command.AssignAccountStaffRoleHandler
 	AssignAccountArtistRole    command.AssignAccountArtistRoleHandler
+	AssignAccountWorkerRole    command.AssignAccountWorkerRoleHandler
 
 	CreateAccountWithAuthenticationToken      command.CreateAccountWithAuthenticationTokenHandler
 	GrantAccountAccessWithAuthenticationToken command.GrantAccountAccessWithAuthenticationTokenHandler

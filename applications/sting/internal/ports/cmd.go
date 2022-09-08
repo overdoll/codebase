@@ -233,6 +233,18 @@ func InitializeCommands(app func() *app.Application) []*cobra.Command {
 		},
 	})
 
+	reIndex.AddCommand(&cobra.Command{
+		Use:  "club [club_id]",
+		Args: cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			if err := app().Commands.IndexClub.Handle(context.Background(), command.IndexClub{
+				ClubId: args[0],
+			}); err != nil {
+				zap.S().Fatalw("failed to index club", zap.Error(err))
+			}
+		},
+	})
+
 	reprocessCmd := &cobra.Command{
 		Use: "reprocess",
 	}

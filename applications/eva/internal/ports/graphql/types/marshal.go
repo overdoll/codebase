@@ -46,6 +46,7 @@ func MarshalAccountToGraphQL(ctx context.Context, result *account.Account) *Acco
 		IsSecure:                result.IsSecure(),
 		IsStaff:                 result.IsStaff(),
 		IsArtist:                result.IsArtist(),
+		IsWorker:                result.IsWorker(),
 		IsModerator:             result.IsModerator(),
 		Lock:                    MarshalAccountLockToGraphQL(result),
 		UsernameEditAvailableAt: result.UsernameEditAvailableAt(),

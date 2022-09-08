@@ -35,7 +35,7 @@ func (h PutPostIntoModeratorQueueOrPublishHandler) Handle(ctx context.Context, c
 		return false, err
 	}
 
-	if acc.IsStaff() {
+	if acc.IsStaff() || acc.IsWorker() {
 		return false, nil
 	}
 

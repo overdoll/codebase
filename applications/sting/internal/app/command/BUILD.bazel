@@ -28,6 +28,7 @@ go_library(
         "generate_club_banner.go",
         "generate_series_banner.go",
         "generate_sitemap.go",
+        "index_club.go",
         "index_post.go",
         "join_club.go",
         "leave_club.go",
