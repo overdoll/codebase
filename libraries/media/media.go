@@ -18,6 +18,10 @@ func FromProto(source *proto.Media) *Media {
 	return &Media{source: source}
 }
 
+func (m *Media) Id() string {
+	return m.source.Id
+}
+
 func (m *Media) UploadId() string {
 	return m.source.UploadId
 }
@@ -27,6 +31,10 @@ func (m *Media) Source() *proto.Media {
 }
 
 func (m *Media) Prefix() string {
+	return ""
+}
+
+func (m *Media) ImageOriginalKey() string {
 	return ""
 }
 

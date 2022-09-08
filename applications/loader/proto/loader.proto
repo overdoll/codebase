@@ -14,26 +14,25 @@ message PixelateFilter {
 }
 
 
-message CreateOrGetMediaFromUploadsRequest {
+message ProcessMediaFromUploadsRequest {
   string linkedId = 1;
   overdoll.libraries.MediaLinkType linkedType = 2;
   overdoll.libraries.SOURCE source = 3;
   repeated string uploadIds = 4;
 }
 
-message CreateOrGetMediaFromUploadsResponse {
+message ProcessMediaFromUploadsResponse {
   repeated overdoll.libraries.Media media = 1;
 }
 
-message GenerateFilteredImageFromMediaRequest {
+message GenerateImageFromMediaRequest {
   repeated overdoll.libraries.Media media = 1;
-  string linkedId = 2;
-  overdoll.libraries.MediaLinkType linkedType = 3;
-  overdoll.libraries.SOURCE source = 4;
-  Filters filters = 5;
+  overdoll.libraries.MediaLink link = 2;
+  overdoll.libraries.SOURCE source = 3;
+  Filters filters = 4;
 }
 
-message GenerateFilteredImageFromMediaResponse {
+message GenerateImageFromMediaResponse {
   repeated overdoll.libraries.Media media = 1;
 }
 
@@ -48,6 +47,6 @@ message ConvertResourceToMediaResponse {
 
 service Loader {
   rpc ConvertResourceToMedia(ConvertResourceToMediaRequest) returns (ConvertResourceToMediaResponse);
-  rpc CreateOrGetMediaFromUploads(CreateOrGetMediaFromUploadsRequest) returns (CreateOrGetMediaFromUploadsResponse);
-  rpc GenerateFilteredImageFromMedia(GenerateFilteredImageFromMediaRequest) returns (GenerateFilteredImageFromMediaResponse);
+  rpc ProcessMediaFromUploads(ProcessMediaFromUploadsRequest) returns (ProcessMediaFromUploadsResponse);
+  rpc GenerateImageFromMedia(GenerateImageFromMediaRequest) returns (GenerateImageFromMediaResponse);
 }

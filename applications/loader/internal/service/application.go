@@ -48,7 +48,7 @@ func createApplication(ctx context.Context, callbackService activities.CallbackS
 
 	awsSession := bootstrap.InitializeAWSSession()
 
-	resourceRepo := adapters.NewResourceCassandraS3Repository(s, awsSession)
+	resourceRepo := adapters.NewMediaProcessingS3Repository(s, awsSession)
 
 	eventRepo := adapters.NewEventTemporalRepository(client)
 

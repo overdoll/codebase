@@ -6,6 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"net/http"
 	"os"
 	"overdoll/applications/loader/internal/domain/media_processing"
@@ -13,15 +14,15 @@ import (
 	"overdoll/libraries/media"
 )
 
-type MediaS3Repository struct {
+type MediaProcessingS3Repository struct {
 	aws *session.Session
 }
 
-func NewResourceCassandraS3Repository(aws *session.Session) MediaS3Repository {
-	return MediaS3Repository{aws: aws}
+func NewMediaProcessingS3Repository(aws *session.Session) MediaProcessingS3Repository {
+	return MediaProcessingS3Repository{aws: aws}
 }
 
-func (r MediaS3Repository) uploadResource(ctx context.Context, moveTarget *media_processing.Move, target *media.Media) error {
+func (r MediaProcessingS3Repository) uploadResource(ctx context.Context, moveTarget *media_processing.Move, target *media.Media) error {
 	s3Client := s3.New(r.aws)
 
 	remoteUrlTarget := target.Prefix() + "/" + moveTarget.FileName()
@@ -69,7 +70,7 @@ func (r MediaS3Repository) uploadResource(ctx context.Context, moveTarget *media
 	return nil
 }
 
-func (r MediaS3Repository) UploadMedia(ctx context.Context, move []*media_processing.Move, target *media.Media) error {
+func (r MediaProcessingS3Repository) UploadMedia(ctx context.Context, move []*media_processing.Move, target *media.Media) error {
 	// go through each new file from the filesystem (contained by resource) and upload to s3
 	for _, moveTarget := range move {
 		if err := r.uploadResource(ctx, moveTarget, target); err != nil {
@@ -78,4 +79,29 @@ func (r MediaS3Repository) UploadMedia(ctx context.Context, move []*media_proces
 	}
 
 	return nil
+}
+
+func (r MediaProcessingS3Repository) DownloadImageMedia(ctx context.Context, target *media.Media) (*os.File, error) {
+
+	downloader := s3manager.NewDownloader(r.aws)
+
+	file, err := os.Create(target.Id())
+
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to create file")
+	}
+
+	// Download our file from the private bucket
+	_, err = downloader.Download(file,
+		&s3.GetObjectInput{
+			Bucket: aws.String(os.Getenv("MEDIA_BUCKET")),
+			Key:    aws.String(target.ImageOriginalKey()),
+		},
+	)
+
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to download file")
+	}
+
+	return file, nil
 }

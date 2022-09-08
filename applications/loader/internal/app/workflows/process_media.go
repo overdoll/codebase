@@ -9,7 +9,8 @@ import (
 )
 
 type ProcessMediaInput struct {
-	Media       *proto.Media
+	SourceMedia *proto.Media
+	NewMedia    *proto.Media
 	Pixelate    *int
 	Source      string
 	IsNotFound  bool
@@ -41,7 +42,7 @@ func ProcessMedia(ctx workflow.Context, input ProcessMediaInput) (*ProcessMediaP
 	if input.Pixelate == nil {
 		if err := workflow.ExecuteActivity(ctx, a.ProcessMediaFromUpload,
 			activities.ProcessMediaFromUploadInput{
-				Media:  input.Media,
+				Media:  input.SourceMedia,
 				Source: input.Source,
 			},
 		).Get(ctx, &payload); err != nil {
@@ -51,9 +52,10 @@ func ProcessMedia(ctx workflow.Context, input ProcessMediaInput) (*ProcessMediaP
 	} else {
 		if err := workflow.ExecuteActivity(ctx, a.GenerateFilteredImageFromMedia,
 			activities.GenerateFilteredImageFromMediaInput{
-				Media:    input.Media,
+				Media:    input.SourceMedia,
 				Source:   input.Source,
 				Pixelate: input.Pixelate,
+				NewMedia: input.NewMedia,
 			},
 		).Get(ctx, &payload); err != nil {
 			logger.Error("failed to process media with filters", "Error", err)
@@ -66,7 +68,7 @@ func ProcessMedia(ctx workflow.Context, input ProcessMediaInput) (*ProcessMediaP
 		input.AlreadySent = true
 	}
 
-	input.Media = payload.Media
+	input.SourceMedia = payload.Media
 
 	totalTimes := 2
 
@@ -88,7 +90,7 @@ func ProcessMedia(ctx workflow.Context, input ProcessMediaInput) (*ProcessMediaP
 
 		if err := workflow.ExecuteActivity(ctx, a.SendCallback,
 			activities.SendCallbackInput{
-				Media:  input.Media,
+				Media:  input.SourceMedia,
 				Source: input.Source,
 			},
 		).Get(ctx, &sendCallbackPayload); err != nil {
@@ -105,5 +107,5 @@ func ProcessMedia(ctx workflow.Context, input ProcessMediaInput) (*ProcessMediaP
 		}
 	}
 
-	return &ProcessMediaPayload{Media: input.Media}, nil
+	return &ProcessMediaPayload{Media: input.SourceMedia}, nil
 }

@@ -8,15 +8,12 @@ import (
 	"strings"
 )
 
-type CreateOrGetResourcesFromUploads struct {
-	ItemId      string
-	UploadIds   []string
-	IsPrivate   bool
-	Token       string
-	Source      string
-	AllowImages bool
-	AllowVideos bool
-	Config      *resource.Config
+type ProcessMediaFromUploads struct {
+	ItemId    string
+	UploadIds []string
+	IsPrivate bool
+	Token     string
+	Source    string
 }
 
 type CreateOrGetResourcesFromUploadsHandler struct {

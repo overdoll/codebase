@@ -40,7 +40,7 @@ func (h *Activities) ProcessMediaFromUpload(ctx context.Context, input ProcessMe
 
 		// TODO: this heartbeat isn't recorded for some reason? so we make a manual API call (possibly because its called from another goroutine?)
 		activity.RecordHeartbeat(ctx, heartbeat)
-		if err := h.event.SendProcessResourcesHeartbeat(ctx, info.TaskToken, progress); err != nil {
+		if err := h.event.SendProcessMediaHeartbeat(ctx, info.TaskToken, progress); err != nil {
 
 			if strings.Contains(err.Error(), "workflow execution already completed") {
 				return
@@ -78,9 +78,7 @@ func (h *Activities) ProcessMediaFromUpload(ctx context.Context, input ProcessMe
 	}
 
 	if err := h.callback.SendCallback(ctx, input.Source, input.Media); err != nil {
-		if err == media_processing.ErrMediaCallbackNotFound {
-			return &ProcessMediaPayload{AlreadySent: false, Media: input.Media}, nil
-		}
+		return &ProcessMediaPayload{AlreadySent: false, Media: input.Media}, nil
 	}
 
 	return &ProcessMediaPayload{AlreadySent: true, Media: input.Media}, nil
@@ -113,10 +111,11 @@ func processMedia(h *Activities, ctx context.Context, target *media.Media) error
 	}
 
 	// upload the new resource
-	if err := h.rr.UploadProcessedResource(ctx, processResponse, target); err != nil {
+	if err := h.mr.UploadMedia(ctx, processResponse.Move(), target); err != nil {
 		return err
 	}
 
+	// update progress
 	if err = h.pr.UpdateMediaProgress(ctx, target, float64(-2)); err != nil {
 		return err
 	}

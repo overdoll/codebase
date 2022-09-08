@@ -2,13 +2,12 @@ package adapters
 
 import (
 	"context"
-	"crypto/md5"
-	"encoding/hex"
 	"github.com/spf13/viper"
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/loader/internal/app/workflows"
-	"overdoll/applications/loader/internal/domain/resource"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/media"
+	"overdoll/libraries/media/proto"
 )
 
 type EventTemporalRepository struct {
@@ -27,58 +26,45 @@ func (r EventTemporalRepository) SendProcessMediaHeartbeat(ctx context.Context, 
 	return nil
 }
 
-func (r EventTemporalRepository) ProcessResourcesWithFiltersFromCopy(ctx context.Context, itemId string, resourceIds []string, source string, config *resource.Config, filters *resource.ImageFilters) error {
-
-	processResourcesHash := md5.New()
-	processResourcesHash.Write([]byte(itemId))
-	for _, resource := range resourceIds {
-		processResourcesHash.Write([]byte(resource))
-	}
+func (r EventTemporalRepository) GenerateImageFromMedia(ctx context.Context, media *media.Media, newMedia *proto.Media, source string, pixelate *int) error {
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "loader.ProcessResourcesWithFiltersFromCopy_" + hex.EncodeToString(processResourcesHash.Sum(nil)[:]),
+		ID:        "loader.GenerateImageFromMedia_" + media.Id(),
 	}
 
-	c, err := r.client.ExecuteWorkflow(ctx, options, workflows.ProcessResourcesWithFiltersFromCopy,
-		workflows.ProcessResourcesWithFiltersFromCopyInput{
-			ItemId:      itemId,
-			ResourceIds: resourceIds,
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ProcessMedia,
+		workflows.ProcessMediaInput{
+			SourceMedia: media.Source(),
 			Source:      source,
-			Width:       config.Width(),
-			Height:      config.Height(),
-			Pixelate:    filters.Pixelate(),
+			NewMedia:    newMedia,
+			Pixelate:    pixelate,
 		},
 	)
 
 	if err != nil {
-		return errors.Wrap(err, "failed to run process resources with filters from copy workflow")
+		return errors.Wrap(err, "failed to run process resources workflow")
 	}
-
-	if c.GetWithOptions()
 
 	return nil
 }
 
-func (r EventTemporalRepository) ProcessResources(ctx context.Context, itemId string, resourceIds []string, source string) error {
+func (r EventTemporalRepository) ProcessMediaForUpload(ctx context.Context, media *media.Media, source string) error {
 
-	for _, resourceId := range resourceIds {
-		options := client.StartWorkflowOptions{
-			TaskQueue: viper.GetString("temporal.queue"),
-			ID:        "loader.ProcessResourcesForUpload_" + itemId + "_" + resourceId,
-		}
+	options := client.StartWorkflowOptions{
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "loader.ProcessMediaForUpload_" + media.Source().Link.Id + "_" + media.UploadId(),
+	}
 
-		_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ProcessResources,
-			workflows.ProcessResourcesInput{
-				ItemId:     itemId,
-				ResourceId: resourceId,
-				Source:     source,
-			},
-		)
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ProcessMedia,
+		workflows.ProcessMediaInput{
+			SourceMedia: media.Source(),
+			Source:      source,
+		},
+	)
 
-		if err != nil {
-			return errors.Wrap(err, "failed to run process resources workflow")
-		}
+	if err != nil {
+		return errors.Wrap(err, "failed to run process resources workflow")
 	}
 
 	return nil

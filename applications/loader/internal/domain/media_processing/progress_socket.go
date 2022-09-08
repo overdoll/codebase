@@ -83,7 +83,7 @@ func getSockAddr(id string) string {
 }
 
 // show progress taken from: https://github.com/u2takey/ffmpeg-go/blob/master/examples/showProgress.go
-func createFFMPEGTempSocket(itemId, resourceId string, duration float64) (string, error, func()) {
+func createFFMPEGTempSocket(id string, duration float64) (string, error, func()) {
 
 	nBig, err := rand.Int(rand.Reader, big.NewInt(9223372036854775))
 	if err != nil {
@@ -99,7 +99,7 @@ func createFFMPEGTempSocket(itemId, resourceId string, duration float64) (string
 	done := make(chan bool, 1)
 
 	go func() {
-		c, _ := getSocketClient(itemId, resourceId)
+		c, _ := getSocketClient(id)
 
 		re := regexp.MustCompile(`out_time_ms=(\d+)`)
 		fd, err := l.Accept()

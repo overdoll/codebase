@@ -8,3 +8,7 @@ type ProcessResponse struct {
 func (p *ProcessResponse) Failed() bool {
 	return p.failed
 }
+
+func (p *ProcessResponse) Move() []*Move {
+	return p.move
+}

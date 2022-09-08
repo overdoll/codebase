@@ -3,94 +3,63 @@ package activities
 import (
 	"context"
 	"os"
-	resource2 "overdoll/applications/loader/internal/domain/media_processing"
-	"overdoll/applications/loader/internal/domain/resource"
+	"overdoll/applications/loader/internal/domain/media_processing"
+	"overdoll/libraries/media"
 	"overdoll/libraries/media/proto"
 )
 
 type GenerateFilteredImageFromMediaInput struct {
 	Media    *proto.Media
+	NewMedia *proto.Media
 	Pixelate *int
 	Source   string
 }
 
-type copyPairs struct {
-	oldResource *resource2.Resource
-	newResource *resource2.Resource
-}
+func (h *Activities) GenerateFilteredImageFromMedia(ctx context.Context, input GenerateFilteredImageFromMediaInput) (*ProcessMediaPayload, error) {
 
-func (h *Activities) GenerateFilteredImageFromMedia(ctx context.Context, input GenerateFilteredImageFromMediaInput) error {
-
-	// first, get all resources
-	resourcesFromIds, err := h.rr.GetResourcesByIds(ctx, []string{input.ItemId}, input.ResourceIds)
+	filters, err := media_processing.NewImageFilters(input.Pixelate)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	var copyPairedResources []*copyPairs
-
-	for _, target := range resourcesFromIds {
-
-		res, err := h.rr.GetResourceById(ctx, target.CopiedItemId(), target.CopiedId())
-
-		if err != nil {
-			return err
-		}
-
-		copyPairedResources = append(copyPairedResources, &copyPairs{
-			oldResource: res,
-			newResource: target,
-		})
-	}
-
-	for _, target := range copyPairedResources {
-		if err := processResourceAndFilter(h, ctx, target, input); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-func processResourceAndFilter(h *Activities, ctx context.Context, target *copyPairs, input GenerateFilteredImageFromMediaInput) error {
-	var file *os.File
-	var err error
-
-	if target.oldResource.IsVideo() {
-		file, err = h.rr.DownloadVideoThumbnailForResource(ctx, target.oldResource)
-	} else {
-		file, err = h.rr.DownloadResource(ctx, target.oldResource)
-	}
+	newMedia, err := processMediaAndFilter(h, ctx, input.Media, input.NewMedia, filters)
 
 	if err != nil {
-		return err
+		return nil, err
+	}
+
+	if err := h.callback.SendCallback(ctx, input.Source, newMedia.Source()); err != nil {
+		return &ProcessMediaPayload{AlreadySent: false, Media: newMedia.Source()}, nil
+	}
+
+	return &ProcessMediaPayload{AlreadySent: true, Media: newMedia.Source()}, nil
+}
+
+func processMediaAndFilter(h *Activities, ctx context.Context, target *proto.Media, mediaToApply *proto.Media, filters *media_processing.ImageFilters) (*media.Media, error) {
+
+	file, err := h.mr.DownloadImageMedia(ctx, media.FromProto(target))
+
+	if err != nil {
+		return nil, err
 	}
 
 	defer file.Close()
 	defer os.Remove(file.Name())
 
-	config, err := resource.NewConfig(input.Width, input.Height)
+	newMedia := media.FromProto(mediaToApply)
+
+	move, err := media_processing.ApplyFilters(newMedia, file, filters)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	filters, err := resource.NewImageFilters(input.Pixelate)
-
-	if err != nil {
-		return err
+	// upload the new resource
+	if err := h.mr.UploadMedia(ctx, move.Move(), newMedia); err != nil {
+		return nil, err
 	}
 
-	move, err := target.newResource.ApplyFilters(file, config, filters)
-
-	if err != nil {
-		return err
-	}
-
-	if err := h.rr.UploadProcessedResource(ctx, move, target.newResource); err != nil {
-		return err
-	}
-
-	return nil
+	// send back the new media
+	return newMedia, nil
 }

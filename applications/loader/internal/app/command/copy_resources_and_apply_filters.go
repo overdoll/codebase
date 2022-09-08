@@ -31,6 +31,21 @@ func NewCopyResourcesAndApplyFiltersHandler(rr resource.Repository, event event.
 
 func (h CopyResourcesAndApplyFiltersHandler) Handle(ctx context.Context, cmd CopyResourcesAndApplyFilters) ([]*resource.FilteredResource, error) {
 
+	//newSourceMedia := &proto.Media{
+	//	Id: newMediaId,
+	//	// no upload linked to this media since it's a copy
+	//	UploadId: "",
+	//	// no filename linked since it's a copy
+	//	OriginalFileName: "",
+	//	Private:          true,
+	//	Link:             link,
+	//	State: &proto.MediaState{
+	//		Processed: false,
+	//		Failed:    false,
+	//	},
+	//	Version: proto.MediaVersion_ONE,
+	//}
+
 	var itemIds []string
 	var resourceIds []string
 
