@@ -32,7 +32,8 @@ export default function ClubFooterShareTwitterButton ({ query }: Props): JSX.Ele
       }
     },
     hashtags: ['R34', 'Rule34', 'hentai', 'furry', 'NSFW', '3D'],
-    text: `${data.name} is posting their free and high quality content on overdoll`
+    text: `${data.name} is posting their free and high quality content on overdoll`,
+    trackingEventId: '3HLCMZEV'
   })
 
   return (

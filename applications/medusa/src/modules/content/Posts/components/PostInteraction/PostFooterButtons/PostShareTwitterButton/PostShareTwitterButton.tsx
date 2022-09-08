@@ -61,7 +61,8 @@ export default function PostShareTwitterButton ({
       }
     },
     hashtags: getHashtags(),
-    text: `${getCharacterNames((data.characters.map((item) => item.name).slice(0, 2)))}${hasOriginal ? ' (OC) ' : ' '}by ${data.club.name}`
+    text: `${getCharacterNames((data.characters.map((item) => item.name).slice(0, 2)))}${hasOriginal ? ' (OC) ' : ' '}by ${data.club.name}`,
+    trackingEventId: '3HLCMZEV'
   })
 
   return (

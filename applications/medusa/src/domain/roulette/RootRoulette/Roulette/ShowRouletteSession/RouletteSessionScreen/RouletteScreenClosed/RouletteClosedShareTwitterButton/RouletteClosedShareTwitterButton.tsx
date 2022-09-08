@@ -44,7 +44,8 @@ export default function RouletteClosedShareTwitterButton ({ query }: Props): JSX
       }
     },
     hashtags: ['R34', 'Rule34', 'hentai', 'furry', 'NSFW', '3D'],
-    text: `I scored ${data.score} on the #Rule34Roulette and lost to ${data.gameState.post.characters[0].name} by ${data.gameState.post.club.name}`
+    text: `I scored ${data.score} on the #Rule34Roulette and lost to ${data.gameState.post.characters[0].name} by ${data.gameState.post.club.name}`,
+    trackingEventId: '3HLCMZEV'
   })
 
   return (

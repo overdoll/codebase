@@ -38,7 +38,8 @@ export default function SearchCategoryShareTwitterButton ({ query }: Props): JSX
       }
     },
     hashtags: ['R34', 'Rule34', 'NSFW', transformTitleIntoHashtag],
-    text: `${data.title} NSFW videos and images on overdoll`
+    text: `${data.title} NSFW videos and images on overdoll`,
+    trackingEventId: '3HLCMZEV'
   })
 
   return (

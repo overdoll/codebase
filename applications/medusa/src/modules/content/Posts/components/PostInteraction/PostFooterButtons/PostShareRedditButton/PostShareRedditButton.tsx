@@ -45,7 +45,8 @@ export default function PostShareRedditButton ({
         reference: data.reference
       }
     },
-    title: `${getCharacterNames(data.characters.map((item) => item.name))}${hasOriginal ? ' (OC) ' : ' '}by ${data.club.name} on overdoll.com`
+    title: `${getCharacterNames(data.characters.map((item) => item.name))}${hasOriginal ? ' (OC) ' : ' '}by ${data.club.name} on overdoll.com`,
+    trackingEventId: 'KYLM9WBY'
   })
 
   return (

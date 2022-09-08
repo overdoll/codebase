@@ -43,7 +43,8 @@ export default function RouletteClosedShareRedditButton ({ query }: Props): JSX.
         gameSessionId: data.gameSession.reference
       }
     },
-    title: `I scored ${data.score} on the Rule34 Roulette and lost to ${data.gameState.post.characters[0].name} by ${data.gameState.post.club.name}`
+    title: `I scored ${data.score} on the Rule34 Roulette and lost to ${data.gameState.post.characters[0].name} by ${data.gameState.post.club.name}`,
+    trackingEventId: 'KYLM9WBY'
   })
 
   return (

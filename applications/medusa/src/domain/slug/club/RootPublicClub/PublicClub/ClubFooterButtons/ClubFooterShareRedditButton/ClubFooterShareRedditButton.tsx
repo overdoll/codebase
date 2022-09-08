@@ -29,7 +29,8 @@ export default function ClubFooterShareRedditButton ({ query }: Props): JSX.Elem
         slug: data.slug
       }
     },
-    title: `${data.name} is posting their free and high quality content on overdoll`
+    title: `${data.name} is posting their free and high quality content on overdoll`,
+    trackingEventId: 'KYLM9WBY'
   })
 
   return (
