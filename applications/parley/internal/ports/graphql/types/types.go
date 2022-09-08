@@ -259,7 +259,7 @@ type RemoveClubInfractionHistoryInput struct {
 
 // Remove club infraction history.
 type RemoveClubInfractionHistoryPayload struct {
-	// The removed infraction history Id.
+	// The removed infraction history UploadId.
 	ClubInfractionHistoryID relay.ID `json:"clubInfractionHistoryId"`
 }
 

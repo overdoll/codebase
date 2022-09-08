@@ -40,7 +40,7 @@ func (r EventTemporalRepository) ProcessResourcesWithFiltersFromCopy(ctx context
 		ID:        "loader.ProcessResourcesWithFiltersFromCopy_" + hex.EncodeToString(processResourcesHash.Sum(nil)[:]),
 	}
 
-	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ProcessResourcesWithFiltersFromCopy,
+	c, err := r.client.ExecuteWorkflow(ctx, options, workflows.ProcessResourcesWithFiltersFromCopy,
 		workflows.ProcessResourcesWithFiltersFromCopyInput{
 			ItemId:      itemId,
 			ResourceIds: resourceIds,
@@ -55,10 +55,12 @@ func (r EventTemporalRepository) ProcessResourcesWithFiltersFromCopy(ctx context
 		return errors.Wrap(err, "failed to run process resources with filters from copy workflow")
 	}
 
+	if c.GetWithOptions()
+
 	return nil
 }
 
-func (r EventTemporalRepository) ProcessResources(ctx context.Context, itemId string, resourceIds []string, source string, config *resource.Config) error {
+func (r EventTemporalRepository) ProcessResources(ctx context.Context, itemId string, resourceIds []string, source string) error {
 
 	for _, resourceId := range resourceIds {
 		options := client.StartWorkflowOptions{

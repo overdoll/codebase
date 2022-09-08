@@ -71,7 +71,7 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 	//
 	//	for _, r := range req.Resources {
 	//		res = append(res, &proto.Resource{
-	//			Id:          r.Id,
+	//			UploadId:          r.UploadId,
 	//			ItemId:      r.ItemId,
 	//			Type:        proto.ResourceType_IMAGE,
 	//			Processed:   true,

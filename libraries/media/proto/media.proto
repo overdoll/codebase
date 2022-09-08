@@ -62,11 +62,12 @@ message MediaLink {
 
 message Media {
   string id = 1;
-  string originalFileName = 2;
-  bool private = 3;
-  MediaLink link = 4;
-  optional VideoData videoData = 5;
-  optional ImageData imageData = 6;
-  MediaState state = 7;
-  MediaVersion version = 8;
+  string uploadId = 2;
+  string originalFileName = 3;
+  bool private = 4;
+  MediaLink link = 5;
+  optional VideoData videoData = 6;
+  optional ImageData imageData = 7;
+  MediaState state = 8;
+  MediaVersion version = 9;
 }

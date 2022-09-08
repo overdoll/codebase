@@ -1678,7 +1678,7 @@ type IssueClubInfractionPayload {
 
 """Remove club infraction history."""
 type RemoveClubInfractionHistoryPayload {
-  """The removed infraction history Id."""
+  """The removed infraction history UploadId."""
   clubInfractionHistoryId: ID!
 }
 

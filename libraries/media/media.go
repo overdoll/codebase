@@ -18,8 +18,8 @@ func FromProto(source *proto.Media) *Media {
 	return &Media{source: source}
 }
 
-func (m *Media) Id() string {
-	return m.source.Id
+func (m *Media) UploadId() string {
+	return m.source.UploadId
 }
 
 func (m *Media) Source() *proto.Media {

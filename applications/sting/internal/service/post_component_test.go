@@ -515,7 +515,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	require.Len(t, post.Post.Content[0].Resource.Urls, 1, "should have 1 url")
 	for _, urls := range post.Post.Content[0].Resource.Urls {
-		require.Contains(t, urls.URL, "Key-Pair-Id", "should be private content")
+		require.Contains(t, urls.URL, "Key-Pair-UploadId", "should be private content")
 	}
 
 	require.True(t, post.Post.Content[1].ViewerCanViewSupporterOnlyContent, "can view supporter only because they are a supporter")
@@ -524,7 +524,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	require.Len(t, post.Post.Content[1].Resource.Urls, 1, "should have 1 url")
 	for _, urls := range post.Post.Content[1].Resource.Urls {
-		require.Contains(t, urls.URL, "Key-Pair-Id", "should be private content")
+		require.Contains(t, urls.URL, "Key-Pair-UploadId", "should be private content")
 	}
 
 	require.Equal(t, description, post.Post.Description, "should have the correct post description")

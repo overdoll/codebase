@@ -7,7 +7,7 @@ import (
 	"overdoll/applications/loader/internal/domain/resource"
 )
 
-type ProcessResourcesWithFiltersFromCopyInput struct {
+type GenerateFilteredImageFromMediaInput struct {
 	ItemId      string
 	ResourceIds []string
 	Width       uint64
@@ -20,7 +20,7 @@ type copyPairs struct {
 	newResource *resource2.Resource
 }
 
-func (h *Activities) ProcessResourcesWithFiltersFromCopy(ctx context.Context, input ProcessResourcesWithFiltersFromCopyInput) error {
+func (h *Activities) GenerateFilteredImageFromMedia(ctx context.Context, input GenerateFilteredImageFromMediaInput) error {
 
 	// first, get all resources
 	resourcesFromIds, err := h.rr.GetResourcesByIds(ctx, []string{input.ItemId}, input.ResourceIds)
@@ -54,7 +54,7 @@ func (h *Activities) ProcessResourcesWithFiltersFromCopy(ctx context.Context, in
 	return nil
 }
 
-func processResourceAndFilter(h *Activities, ctx context.Context, target *copyPairs, input ProcessResourcesWithFiltersFromCopyInput) error {
+func processResourceAndFilter(h *Activities, ctx context.Context, target *copyPairs, input GenerateFilteredImageFromMediaInput) error {
 	var file *os.File
 	var err error
 

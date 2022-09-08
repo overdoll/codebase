@@ -18,22 +18,23 @@ message CreateOrGetMediaFromUploadsRequest {
   string linkedId = 1;
   overdoll.libraries.MediaLinkType linkedType = 2;
   overdoll.libraries.SOURCE source = 3;
+  repeated string uploadIds = 4;
 }
 
 message CreateOrGetMediaFromUploadsResponse {
-  overdoll.libraries.Media media = 1;
+  repeated overdoll.libraries.Media media = 1;
 }
 
-message CreateFilteredImageFromMediaRequest {
-  string sourceMediaId = 1;
+message GenerateFilteredImageFromMediaRequest {
+  repeated overdoll.libraries.Media media = 1;
   string linkedId = 2;
   overdoll.libraries.MediaLinkType linkedType = 3;
   overdoll.libraries.SOURCE source = 4;
   Filters filters = 5;
 }
 
-message CreateFilteredImageFromMediaResponse {
-  overdoll.libraries.Media media = 1;
+message GenerateFilteredImageFromMediaResponse {
+  repeated overdoll.libraries.Media media = 1;
 }
 
 message ConvertResourceToMediaRequest {
@@ -48,5 +49,5 @@ message ConvertResourceToMediaResponse {
 service Loader {
   rpc ConvertResourceToMedia(ConvertResourceToMediaRequest) returns (ConvertResourceToMediaResponse);
   rpc CreateOrGetMediaFromUploads(CreateOrGetMediaFromUploadsRequest) returns (CreateOrGetMediaFromUploadsResponse);
-  rpc CreateFilteredImageFromMedia(CreateFilteredImageFromMediaRequest) returns (CreateFilteredImageFromMediaResponse);
+  rpc GenerateFilteredImageFromMedia(GenerateFilteredImageFromMediaRequest) returns (GenerateFilteredImageFromMediaResponse);
 }

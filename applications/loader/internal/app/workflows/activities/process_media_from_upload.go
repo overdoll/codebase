@@ -8,17 +8,15 @@ import (
 	resource2 "overdoll/applications/loader/internal/domain/media_processing"
 	"overdoll/applications/loader/internal/domain/resource"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/media/proto"
 	"strings"
 )
 
-type ProcessResourcesInput struct {
-	ItemId     string
-	ResourceId string
-	Width      uint64
-	Height     uint64
+type ProcessMediaFromUploadInput struct {
+	Media *proto.Media
 }
 
-func (h *Activities) ProcessResources(ctx context.Context, input ProcessResourcesInput) error {
+func (h *Activities) ProcessMediaFromUpload(ctx context.Context, input ProcessResourcesInput) (*ProcessMediaPayload, error) {
 
 	// first, get all resources
 	resourcesFromIds, err := h.rr.GetResourcesByIds(ctx, []string{input.ItemId}, []string{input.ResourceId})
@@ -100,6 +98,15 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 		if err := processResource(h, ctx, target, config); err != nil {
 			return err
 		}
+	}
+
+	if err := h.callback.SendCallback(ctx, input.Source, input.Media); err != nil {
+
+		if err == media_processing.ErrMediaCallbackNotFound {
+			return &SendCallbackPayload{NotFound: true}, nil
+		}
+
+		return nil, err
 	}
 
 	// update database entries for resources

@@ -3,12 +3,12 @@ package activities
 import (
 	"context"
 	"overdoll/applications/loader/internal/domain/media_processing"
+	"overdoll/libraries/media/proto"
 )
 
 type SendCallbackInput struct {
-	ItemId      string
-	ResourceIds []string
-	Source      string
+	Media  *proto.Media
+	Source string
 }
 
 type SendCallbackPayload struct {
@@ -17,16 +17,9 @@ type SendCallbackPayload struct {
 
 func (h *Activities) SendCallback(ctx context.Context, input SendCallbackInput) (*SendCallbackPayload, error) {
 
-	// first, get all resources
-	resources, err := h.rr.GetResourcesByIds(ctx, []string{input.ItemId}, input.ResourceIds)
+	if err := h.callback.SendCallback(ctx, input.Source, input.Media); err != nil {
 
-	if err != nil {
-		return nil, err
-	}
-
-	if err := h.callback.SendCallback(ctx, input.Source, resources); err != nil {
-
-		if err == resource.ErrResourceCallbackNotFound {
+		if err == media_processing.ErrMediaCallbackNotFound {
 			return &SendCallbackPayload{NotFound: true}, nil
 		}
 
