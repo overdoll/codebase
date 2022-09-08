@@ -1,3 +1,8 @@
+type ClubLink {
+  """A link."""
+  url: URI!
+}
+
 type Club implements Node @key(fields: "id") {
   """An ID pointing to this club."""
   id: ID!
@@ -25,6 +30,9 @@ type Club implements Node @key(fields: "id") {
 
   """An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug."""
   slugAliases: [ClubSlugAlias!]!
+
+  """A list of links for this club."""
+  links: [ClubLink!]!
 
   """A resource of the club's thumbnail."""
   thumbnail: Resource

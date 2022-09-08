@@ -12,7 +12,7 @@ import {
 import { t } from '@lingui/macro'
 import Joi from 'joi'
 import { useForm } from 'react-hook-form'
-import { joiResolver } from '@hookform/resolvers/joi/dist/joi'
+import { joiResolver } from '@hookform/resolvers/joi'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { UpdatePostDescriptionFormMutation } from '@//:artifacts/UpdatePostDescriptionFormMutation.graphql'
 import { useLingui } from '@lingui/react'

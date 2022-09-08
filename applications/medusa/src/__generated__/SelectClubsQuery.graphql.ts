@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0c8caaad8e71ef6e7d2f242bb4af8370>>
- * @relayHash aac66956a5a60b2da70ddd97c3ed4a0d
+ * @generated SignedSource<<a9a7836ff440e9b2d9d3b883ffdc4f28>>
+ * @relayHash d583d6e78bd2ac45d574c85e34ba4a8d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID aac66956a5a60b2da70ddd97c3ed4a0d
+// @relayRequestID d583d6e78bd2ac45d574c85e34ba4a8d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -26,6 +26,7 @@ export type SelectClubsQuery$data = {
     readonly clubsCount: number;
     readonly id: string;
     readonly isStaff: boolean;
+    readonly isWorker: boolean;
   } | null;
 };
 export type SelectClubsQuery = {
@@ -90,6 +91,13 @@ v5 = {
       "args": null,
       "kind": "ScalarField",
       "name": "isStaff",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "isWorker",
       "storageKey": null
     }
   ],
@@ -257,7 +265,7 @@ return {
     ]
   },
   "params": {
-    "id": "aac66956a5a60b2da70ddd97c3ed4a0d",
+    "id": "d583d6e78bd2ac45d574c85e34ba4a8d",
     "metadata": {},
     "name": "SelectClubsQuery",
     "operationKind": "query",
@@ -266,6 +274,6 @@ return {
 };
 })();
 
-(node as any).hash = "dd8e06ab995b8cfbeb731e689ffbbb1d";
+(node as any).hash = "200f62d6478dec078d170aa720a73d06";
 
 export default node;

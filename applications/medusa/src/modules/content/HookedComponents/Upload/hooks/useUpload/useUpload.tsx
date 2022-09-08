@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useToast } from '../../../../ThemeComponents'
 import { UppyFile } from '@uppy/core'
 import { UseUploadProps, UseUploadReturnType } from '../../types'
-import { useUppy } from '@uppy/react'
+import useUppy from '../useUppy/useUppy'
 
 export default function useUpload (props: UseUploadProps): UseUploadReturnType {
   const {
@@ -12,7 +12,8 @@ export default function useUpload (props: UseUploadProps): UseUploadReturnType {
     onUploadProgress,
     onFileRemoved,
     onUploadError,
-    onUploadRetry
+    onUploadRetry,
+    onCancelAll
   } = props
 
   const notify = useToast()
@@ -119,6 +120,17 @@ export default function useUpload (props: UseUploadProps): UseUploadReturnType {
     }
   }, [uppy])
 
+  useEffect(() => {
+    const callBackFn = (): void => {
+      onCancelAll?.()
+    }
+
+    uppy.on('cancel-all', callBackFn)
+    return () => {
+      uppy.off('cancel-all', callBackFn)
+    }
+  }, [uppy])
+
   // Event for errors
   useEffect(() => {
     const callBackFn = (): void => {
@@ -138,12 +150,6 @@ export default function useUpload (props: UseUploadProps): UseUploadReturnType {
 
     return () => {
       uppy.off('info-visible', callBackFn)
-    }
-  }, [uppy])
-
-  useEffect(() => {
-    return () => {
-      uppy.reset()
     }
   }, [uppy])
 

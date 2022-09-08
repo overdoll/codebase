@@ -36,7 +36,8 @@ export default function SearchCustomCharacterShareRedditButton ({ query }: Props
         slug: data.club.slug
       }
     },
-    title: `${data.name} (${data.club.name}) (OC) Rule34 NSFW videos and images on overdoll`
+    title: `${data.name} (${data.club.name}) (OC) Rule34 NSFW videos and images on overdoll`,
+    trackingEventId: 'KYLM9WBY'
   })
 
   return (

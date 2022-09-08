@@ -275,6 +275,8 @@ type Club struct {
 	TotalLikes int `json:"totalLikes"`
 	// An alias list of slugs. These are valid, as in, you can find the club using the slug. However, it should always be replaced by the default slug.
 	SlugAliases []*ClubSlugAlias `json:"slugAliases"`
+	// A list of links for this club.
+	Links []*ClubLink `json:"links"`
 	// A resource of the club's thumbnail.
 	Thumbnail *graphql1.Resource `json:"thumbnail"`
 	// A resource of the club's banner.
@@ -355,6 +357,11 @@ type ClubIssuedSuspensionLog struct {
 }
 
 func (ClubIssuedSuspensionLog) IsClubSuspensionLog() {}
+
+type ClubLink struct {
+	// A link.
+	URL graphql1.URI `json:"url"`
+}
 
 type ClubMember struct {
 	// An ID pointing to this club member.

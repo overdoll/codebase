@@ -4,7 +4,7 @@ import { ClubsFeedDiscoverListFragment$key } from '@//:artifacts/ClubsFeedDiscov
 import type { ClubsFeedQuery } from '@//:artifacts/ClubsFeedQuery.graphql'
 import ClubJoinTile from '../../../../../../common/components/ClubJoinTile/ClubJoinTile'
 import { Trans } from '@lingui/macro'
-import { Box, Heading, useBreakpointValue } from '@chakra-ui/react'
+import { Box, Flex, Heading, useBreakpointValue } from '@chakra-ui/react'
 import {
   SEARCH_SLIDE_HEIGHT,
   SEARCH_SLIDE_WIDTH,
@@ -78,11 +78,13 @@ export default function ClubsFeedDiscoverList ({
             }}
           >
             <LinkTile href='/clubs/discover'>
-              <Heading color='gray.00' fontSize='sm'>
-                <Trans>
-                  See All
-                </Trans>
-              </Heading>
+              <Flex w='100%' h='100%' align='center' justify='center' borderRadius='inherit' bg='gray.800'>
+                <Heading textAlign='center' color='gray.00' fontSize='sm'>
+                  <Trans>
+                    See All
+                  </Trans>
+                </Heading>
+              </Flex>
             </LinkTile>
           </SwiperSlide>
         )}

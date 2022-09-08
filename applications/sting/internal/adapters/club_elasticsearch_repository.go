@@ -23,6 +23,7 @@ import (
 type clubDocument struct {
 	Id                          string            `json:"id"`
 	Slug                        string            `json:"slug"`
+	Links                       []string          `json:"links"`
 	SlugAliases                 []string          `json:"slug_aliases"`
 	ThumbnailResource           string            `json:"thumbnail_resource"`
 	BannerResource              string            `json:"banner_resource"`
@@ -85,6 +86,7 @@ func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 		CharactersEnabled:           cat.CharactersEnabled(),
 		TotalLikes:                  cat.TotalLikes(),
 		TotalPosts:                  cat.TotalPosts(),
+		Links:                       cat.Links(),
 	}, nil
 }
 
@@ -131,6 +133,7 @@ func unmarshalClubDocument(ctx context.Context, source json.RawMessage, sort []i
 		bd.CharactersLimit,
 		bd.TotalLikes,
 		bd.TotalPosts,
+		bd.Links,
 	)
 
 	if sort != nil {
@@ -138,6 +141,21 @@ func unmarshalClubDocument(ctx context.Context, source json.RawMessage, sort []i
 	}
 
 	return newBrand, nil
+}
+
+func (r ClubCassandraElasticsearchRepository) IndexClub(ctx context.Context, postId string) error {
+
+	pst, err := r.GetClubById(ctx, postId)
+
+	if err != nil {
+		return err
+	}
+
+	if err := r.indexClub(ctx, pst); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (r ClubCassandraElasticsearchRepository) indexClub(ctx context.Context, club *club.Club) error {

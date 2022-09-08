@@ -64,6 +64,7 @@ type ComplexityRoot struct {
 		IsModerator               func(childComplexity int) int
 		IsSecure                  func(childComplexity int) int
 		IsStaff                   func(childComplexity int) int
+		IsWorker                  func(childComplexity int) int
 		Lock                      func(childComplexity int) int
 		MultiFactorEnabled        func(childComplexity int) int
 		MultiFactorTotpConfigured func(childComplexity int) int
@@ -534,6 +535,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Account.IsStaff(childComplexity), true
+
+	case "Account.isWorker":
+		if e.complexity.Account.IsWorker == nil {
+			break
+		}
+
+		return e.complexity.Account.IsWorker(childComplexity), true
 
 	case "Account.lock":
 		if e.complexity.Account.Lock == nil {
@@ -1888,6 +1896,9 @@ var sources = []*ast.Source{
 
   """Whether or not this account is part of the moderation team"""
   isModerator: Boolean!
+
+  """Whether or not this account is part of the worker team"""
+  isWorker: Boolean!
 
   """
   Whether or not this account is secure.
@@ -3966,6 +3977,50 @@ func (ec *executionContext) fieldContext_Account_isModerator(ctx context.Context
 	return fc, nil
 }
 
+func (ec *executionContext) _Account_isWorker(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Account_isWorker(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsWorker, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Account_isWorker(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Account",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Account_isSecure(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Account_isSecure(ctx, field)
 	if err != nil {
@@ -4804,6 +4859,8 @@ func (ec *executionContext) fieldContext_AccountEmail_account(ctx context.Contex
 				return ec.fieldContext_Account_isArtist(ctx, field)
 			case "isModerator":
 				return ec.fieldContext_Account_isModerator(ctx, field)
+			case "isWorker":
+				return ec.fieldContext_Account_isWorker(ctx, field)
 			case "isSecure":
 				return ec.fieldContext_Account_isSecure(ctx, field)
 			case "isDeleted":
@@ -5799,6 +5856,8 @@ func (ec *executionContext) fieldContext_AssignAccountArtistRolePayload_account(
 				return ec.fieldContext_Account_isArtist(ctx, field)
 			case "isModerator":
 				return ec.fieldContext_Account_isModerator(ctx, field)
+			case "isWorker":
+				return ec.fieldContext_Account_isWorker(ctx, field)
 			case "isSecure":
 				return ec.fieldContext_Account_isSecure(ctx, field)
 			case "isDeleted":
@@ -5882,6 +5941,8 @@ func (ec *executionContext) fieldContext_AssignAccountModeratorRolePayload_accou
 				return ec.fieldContext_Account_isArtist(ctx, field)
 			case "isModerator":
 				return ec.fieldContext_Account_isModerator(ctx, field)
+			case "isWorker":
+				return ec.fieldContext_Account_isWorker(ctx, field)
 			case "isSecure":
 				return ec.fieldContext_Account_isSecure(ctx, field)
 			case "isDeleted":
@@ -5965,6 +6026,8 @@ func (ec *executionContext) fieldContext_AssignAccountStaffRolePayload_account(c
 				return ec.fieldContext_Account_isArtist(ctx, field)
 			case "isModerator":
 				return ec.fieldContext_Account_isModerator(ctx, field)
+			case "isWorker":
+				return ec.fieldContext_Account_isWorker(ctx, field)
 			case "isSecure":
 				return ec.fieldContext_Account_isSecure(ctx, field)
 			case "isDeleted":
@@ -6506,6 +6569,8 @@ func (ec *executionContext) fieldContext_CancelAccountDeletionPayload_account(ct
 				return ec.fieldContext_Account_isArtist(ctx, field)
 			case "isModerator":
 				return ec.fieldContext_Account_isModerator(ctx, field)
+			case "isWorker":
+				return ec.fieldContext_Account_isWorker(ctx, field)
 			case "isSecure":
 				return ec.fieldContext_Account_isSecure(ctx, field)
 			case "isDeleted":
@@ -6722,6 +6787,8 @@ func (ec *executionContext) fieldContext_CreateAccountWithAuthenticationTokenPay
 				return ec.fieldContext_Account_isArtist(ctx, field)
 			case "isModerator":
 				return ec.fieldContext_Account_isModerator(ctx, field)
+			case "isWorker":
+				return ec.fieldContext_Account_isWorker(ctx, field)
 			case "isSecure":
 				return ec.fieldContext_Account_isSecure(ctx, field)
 			case "isDeleted":
@@ -6893,6 +6960,8 @@ func (ec *executionContext) fieldContext_DeleteAccountPayload_account(ctx contex
 				return ec.fieldContext_Account_isArtist(ctx, field)
 			case "isModerator":
 				return ec.fieldContext_Account_isModerator(ctx, field)
+			case "isWorker":
+				return ec.fieldContext_Account_isWorker(ctx, field)
 			case "isSecure":
 				return ec.fieldContext_Account_isSecure(ctx, field)
 			case "isDeleted":
@@ -6976,6 +7045,8 @@ func (ec *executionContext) fieldContext_DisableAccountMultiFactorPayload_accoun
 				return ec.fieldContext_Account_isArtist(ctx, field)
 			case "isModerator":
 				return ec.fieldContext_Account_isModerator(ctx, field)
+			case "isWorker":
+				return ec.fieldContext_Account_isWorker(ctx, field)
 			case "isSecure":
 				return ec.fieldContext_Account_isSecure(ctx, field)
 			case "isDeleted":
@@ -7100,6 +7171,8 @@ func (ec *executionContext) fieldContext_EnrollAccountMultiFactorTotpPayload_acc
 				return ec.fieldContext_Account_isArtist(ctx, field)
 			case "isModerator":
 				return ec.fieldContext_Account_isModerator(ctx, field)
+			case "isWorker":
+				return ec.fieldContext_Account_isWorker(ctx, field)
 			case "isSecure":
 				return ec.fieldContext_Account_isSecure(ctx, field)
 			case "isDeleted":
@@ -7186,6 +7259,8 @@ func (ec *executionContext) fieldContext_Entity_findAccountByID(ctx context.Cont
 				return ec.fieldContext_Account_isArtist(ctx, field)
 			case "isModerator":
 				return ec.fieldContext_Account_isModerator(ctx, field)
+			case "isWorker":
+				return ec.fieldContext_Account_isWorker(ctx, field)
 			case "isSecure":
 				return ec.fieldContext_Account_isSecure(ctx, field)
 			case "isDeleted":
@@ -7554,6 +7629,8 @@ func (ec *executionContext) fieldContext_GrantAccountAccessWithAuthenticationTok
 				return ec.fieldContext_Account_isArtist(ctx, field)
 			case "isModerator":
 				return ec.fieldContext_Account_isModerator(ctx, field)
+			case "isWorker":
+				return ec.fieldContext_Account_isWorker(ctx, field)
 			case "isSecure":
 				return ec.fieldContext_Account_isSecure(ctx, field)
 			case "isDeleted":
@@ -7722,6 +7799,8 @@ func (ec *executionContext) fieldContext_GrantAccountAccessWithAuthenticationTok
 				return ec.fieldContext_Account_isArtist(ctx, field)
 			case "isModerator":
 				return ec.fieldContext_Account_isModerator(ctx, field)
+			case "isWorker":
+				return ec.fieldContext_Account_isWorker(ctx, field)
 			case "isSecure":
 				return ec.fieldContext_Account_isSecure(ctx, field)
 			case "isDeleted":
@@ -7890,6 +7969,8 @@ func (ec *executionContext) fieldContext_GrantAccountAccessWithAuthenticationTok
 				return ec.fieldContext_Account_isArtist(ctx, field)
 			case "isModerator":
 				return ec.fieldContext_Account_isModerator(ctx, field)
+			case "isWorker":
+				return ec.fieldContext_Account_isWorker(ctx, field)
 			case "isSecure":
 				return ec.fieldContext_Account_isSecure(ctx, field)
 			case "isDeleted":
@@ -8469,6 +8550,8 @@ func (ec *executionContext) fieldContext_LockAccountPayload_account(ctx context.
 				return ec.fieldContext_Account_isArtist(ctx, field)
 			case "isModerator":
 				return ec.fieldContext_Account_isModerator(ctx, field)
+			case "isWorker":
+				return ec.fieldContext_Account_isWorker(ctx, field)
 			case "isSecure":
 				return ec.fieldContext_Account_isSecure(ctx, field)
 			case "isDeleted":
@@ -10522,6 +10605,8 @@ func (ec *executionContext) fieldContext_Query_viewer(ctx context.Context, field
 				return ec.fieldContext_Account_isArtist(ctx, field)
 			case "isModerator":
 				return ec.fieldContext_Account_isModerator(ctx, field)
+			case "isWorker":
+				return ec.fieldContext_Account_isWorker(ctx, field)
 			case "isSecure":
 				return ec.fieldContext_Account_isSecure(ctx, field)
 			case "isDeleted":
@@ -10605,6 +10690,8 @@ func (ec *executionContext) fieldContext_Query_account(ctx context.Context, fiel
 				return ec.fieldContext_Account_isArtist(ctx, field)
 			case "isModerator":
 				return ec.fieldContext_Account_isModerator(ctx, field)
+			case "isWorker":
+				return ec.fieldContext_Account_isWorker(ctx, field)
 			case "isSecure":
 				return ec.fieldContext_Account_isSecure(ctx, field)
 			case "isDeleted":
@@ -11695,6 +11782,8 @@ func (ec *executionContext) fieldContext_RevokeAccountArtistRolePayload_account(
 				return ec.fieldContext_Account_isArtist(ctx, field)
 			case "isModerator":
 				return ec.fieldContext_Account_isModerator(ctx, field)
+			case "isWorker":
+				return ec.fieldContext_Account_isWorker(ctx, field)
 			case "isSecure":
 				return ec.fieldContext_Account_isSecure(ctx, field)
 			case "isDeleted":
@@ -11778,6 +11867,8 @@ func (ec *executionContext) fieldContext_RevokeAccountModeratorRolePayload_accou
 				return ec.fieldContext_Account_isArtist(ctx, field)
 			case "isModerator":
 				return ec.fieldContext_Account_isModerator(ctx, field)
+			case "isWorker":
+				return ec.fieldContext_Account_isWorker(ctx, field)
 			case "isSecure":
 				return ec.fieldContext_Account_isSecure(ctx, field)
 			case "isDeleted":
@@ -11905,6 +11996,8 @@ func (ec *executionContext) fieldContext_RevokeAccountStaffRolePayload_account(c
 				return ec.fieldContext_Account_isArtist(ctx, field)
 			case "isModerator":
 				return ec.fieldContext_Account_isModerator(ctx, field)
+			case "isWorker":
+				return ec.fieldContext_Account_isWorker(ctx, field)
 			case "isSecure":
 				return ec.fieldContext_Account_isSecure(ctx, field)
 			case "isDeleted":
@@ -12126,6 +12219,8 @@ func (ec *executionContext) fieldContext_UnlockAccountPayload_account(ctx contex
 				return ec.fieldContext_Account_isArtist(ctx, field)
 			case "isModerator":
 				return ec.fieldContext_Account_isModerator(ctx, field)
+			case "isWorker":
+				return ec.fieldContext_Account_isWorker(ctx, field)
 			case "isSecure":
 				return ec.fieldContext_Account_isSecure(ctx, field)
 			case "isDeleted":
@@ -12352,6 +12447,8 @@ func (ec *executionContext) fieldContext_UpdateAccountUsernamePayload_account(ct
 				return ec.fieldContext_Account_isArtist(ctx, field)
 			case "isModerator":
 				return ec.fieldContext_Account_isModerator(ctx, field)
+			case "isWorker":
+				return ec.fieldContext_Account_isWorker(ctx, field)
 			case "isSecure":
 				return ec.fieldContext_Account_isSecure(ctx, field)
 			case "isDeleted":
@@ -15042,6 +15139,13 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 		case "isModerator":
 
 			out.Values[i] = ec._Account_isModerator(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "isWorker":
+
+			out.Values[i] = ec._Account_isWorker(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)

@@ -7,7 +7,7 @@ import {
 import { StaffEnableClubCharactersButtonMutation } from '@//:artifacts/StaffEnableClubCharactersButtonMutation.graphql'
 import Joi from 'joi'
 import { useForm } from 'react-hook-form'
-import { joiResolver } from '@hookform/resolvers/joi/dist/joi'
+import { joiResolver } from '@hookform/resolvers/joi'
 import {
   Form,
   FormInput,

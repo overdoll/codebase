@@ -17,6 +17,7 @@ go_library(
     deps = [
         "//applications/eva/internal/adapters/migrations",
         "//applications/eva/internal/adapters/seeders",
+        "//applications/eva/internal/app",
         "//applications/eva/internal/ports",
         "//applications/eva/internal/service",
         "//applications/eva/proto:v1_go_proto",

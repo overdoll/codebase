@@ -261,6 +261,10 @@ func (a *Account) IsArtist() bool {
 	return (a.hasRoles([]string{Artist.String()}) || a.IsStaff()) && !a.IsLocked()
 }
 
+func (a *Account) IsWorker() bool {
+	return (a.hasRoles([]string{Worker.String()}) || a.IsStaff()) && !a.IsLocked()
+}
+
 func (a *Account) hasRoles(roles []string) bool {
 	for _, role := range a.roles {
 		for _, requiredRole := range roles {
@@ -422,6 +426,21 @@ func (a *Account) AssignModeratorRole(requester *principal.Principal) error {
 	return nil
 }
 
+func (a *Account) AssignWorkerRole() error {
+
+	if a.deleting {
+		return ErrAccountIsDeleting
+	}
+
+	if a.IsWorker() {
+		return nil
+	}
+
+	a.roles = append(a.roles, Worker)
+
+	return nil
+}
+
 func (a *Account) AssignArtistRole(requester *principal.Principal) error {
 
 	if a.deleting {
@@ -507,6 +526,19 @@ func (a *Account) RevokeStaffRole(requester *principal.Principal) error {
 	}
 
 	if err := a.removeRole(Staff); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (a *Account) RevokeWorkerRole() error {
+
+	if !a.IsWorker() {
+		return ErrAccountNoRole
+	}
+
+	if err := a.removeRole(Worker); err != nil {
 		return err
 	}
 

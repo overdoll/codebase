@@ -26,6 +26,8 @@ type Account struct {
 	IsArtist bool `json:"isArtist"`
 	// Whether or not this account is part of the moderation team
 	IsModerator bool `json:"isModerator"`
+	// Whether or not this account is part of the worker team
+	IsWorker bool `json:"isWorker"`
 	// Whether or not this account is secure.
 	//
 	// At the moment, an account is secure once they have two factor authentication enabled. This may include future conditions.

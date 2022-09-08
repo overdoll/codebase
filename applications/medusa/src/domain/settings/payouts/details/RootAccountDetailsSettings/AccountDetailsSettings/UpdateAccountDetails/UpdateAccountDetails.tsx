@@ -15,7 +15,7 @@ import {
 import { t, Trans } from '@lingui/macro'
 import Joi from 'joi'
 import { useForm } from 'react-hook-form'
-import { joiResolver } from '@hookform/resolvers/joi/dist/joi'
+import { joiResolver } from '@hookform/resolvers/joi'
 import { useLingui } from '@lingui/react'
 import GenericTagId from '../../../../../../../common/validation/GenericTagId'
 import FirstName from '@//:modules/validation/FirstName'

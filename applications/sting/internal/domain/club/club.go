@@ -29,6 +29,7 @@ type Club struct {
 	id                string
 	slug              string
 	slugAliases       []string
+	links             []string
 	name              *localization.Translation
 	thumbnailResource *resource.Resource
 	bannerResource    *resource.Resource
@@ -133,7 +134,7 @@ func NewClub(requester *principal.Principal, slug, name string, currentClubCount
 	}, nil
 }
 
-func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail *resource.Resource, banner *resource.Resource, membersCount int, ownerAccountId string, suspended bool, suspendedUntil, nextSupporterPostTime *time.Time, hasCreatedSupporterOnlyPost bool, terminated bool, terminatedByAccountId *string, supporterOnlyPostsDisabled bool, createdAt, updatedAt time.Time, charactersEnabled bool, charactersLimit, totalLikes, totalPosts int) *Club {
+func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail *resource.Resource, banner *resource.Resource, membersCount int, ownerAccountId string, suspended bool, suspendedUntil, nextSupporterPostTime *time.Time, hasCreatedSupporterOnlyPost bool, terminated bool, terminatedByAccountId *string, supporterOnlyPostsDisabled bool, createdAt, updatedAt time.Time, charactersEnabled bool, charactersLimit, totalLikes, totalPosts int, links []string) *Club {
 	return &Club{
 		id:                          id,
 		slug:                        slug,
@@ -156,6 +157,7 @@ func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name 
 		charactersLimit:             charactersLimit,
 		totalLikes:                  totalLikes,
 		totalPosts:                  totalPosts,
+		links:                       links,
 	}
 }
 
@@ -169,6 +171,10 @@ func (m *Club) Slug() string {
 
 func (m *Club) SlugAliases() []string {
 	return m.slugAliases
+}
+
+func (m *Club) Links() []string {
+	return m.links
 }
 
 func (m *Club) Name() *localization.Translation {
@@ -680,7 +686,7 @@ func IsAccountClubsLimitReached(requester *principal.Principal, accountId string
 
 func ViewClubCharactersCount(requester *principal.Principal, clubId string) error {
 
-	if requester.IsStaff() {
+	if requester.IsStaff() || requester.IsWorker() {
 		return nil
 	}
 

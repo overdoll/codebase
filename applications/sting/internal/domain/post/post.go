@@ -57,8 +57,10 @@ func NewPost(requester *principal.Principal, club *club.Club) (*Post, error) {
 		return nil, principal.ErrLocked
 	}
 
-	if err := requester.CheckClubOwner(club.ID()); err != nil {
-		return nil, err
+	if !requester.IsWorker() {
+		if err := requester.CheckClubOwner(club.ID()); err != nil {
+			return nil, err
+		}
 	}
 
 	return &Post{
@@ -658,12 +660,14 @@ func (p *Post) CanUnArchive(requester *principal.Principal) error {
 
 func (p *Post) CanUpdate(requester *principal.Principal) error {
 
-	if err := requester.CheckClubOwner(p.clubId); err != nil {
-		return requester.BelongsToAccount(requester.AccountId())
-	}
-
 	if requester.IsLocked() {
 		return principal.ErrLocked
+	}
+
+	if !requester.IsWorker() {
+		if err := requester.CheckClubOwner(p.clubId); err != nil {
+			return requester.BelongsToAccount(requester.AccountId())
+		}
 	}
 
 	// staff can update posts that are published
@@ -686,7 +690,7 @@ func (p *Post) CanView(suspendedClubIds []string, requester *principal.Principal
 			return principal.ErrNotAuthorized
 		}
 
-		if requester.IsStaff() || requester.IsModerator() {
+		if requester.IsStaff() || requester.IsModerator() || requester.IsWorker() {
 			return nil
 		}
 
@@ -710,7 +714,7 @@ func (p *Post) CanView(suspendedClubIds []string, requester *principal.Principal
 	if found {
 
 		// check for staff or moderator
-		if requester.IsStaff() || requester.IsModerator() {
+		if requester.IsStaff() || requester.IsModerator() || requester.IsWorker() {
 			return nil
 		}
 

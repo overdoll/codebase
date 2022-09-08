@@ -7,6 +7,7 @@ import (
 	"os"
 	"overdoll/applications/eva/internal/adapters/migrations"
 	"overdoll/applications/eva/internal/adapters/seeders"
+	"overdoll/applications/eva/internal/app"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -40,6 +41,8 @@ func init() {
 		Use: "http",
 		Run: RunHttp,
 	})
+
+	rootCmd.AddCommand(AddCommands()...)
 }
 
 func main() {
@@ -47,6 +50,13 @@ func main() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+}
+
+func AddCommands() []*cobra.Command {
+	return ports.InitializeCommands(func() *app.Application {
+		application, _ := service.NewApplication(context.Background())
+		return application
+	})
 }
 
 func Run(cmd *cobra.Command, args []string) {

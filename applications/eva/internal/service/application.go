@@ -132,12 +132,14 @@ func createApplication(
 			DeleteAccountEmail:                        command.NewDeleteAccountEmailHandler(accountRepo),
 			RevokeAuthenticationToken:                 command.NewRevokeAuthenticationTokenHandler(tokenRepo),
 
+			RevokeAccountWorkerRole:    command.NewRevokeAccountWorkerRoleHandler(accountRepo),
 			RevokeAccountModeratorRole: command.NewRevokeAccountModeratorRoleHandler(accountRepo),
 			RevokeAccountStaffRole:     command.NewRevokeAccountStaffRoleHandler(accountRepo),
 			RevokeAccountArtistRole:    command.NewRevokeAccountArtistRoleHandler(accountRepo),
 			AssignAccountModeratorRole: command.NewAssignAccountModeratorRoleHandler(accountRepo),
 			AssignAccountStaffRole:     command.NewAssignAccountStaffRoleHandler(accountRepo),
 			AssignAccountArtistRole:    command.NewAssignAccountArtistRoleHandler(accountRepo),
+			AssignAccountWorkerRole:    command.NewAssignAccountWorkerRoleHandler(accountRepo),
 
 			CreateAccountSessionOperator: command.NewCreateAccountSessionOperatorHandler(sessionRepo, accountRepo, locationRepo),
 			TouchAccountSessionOperator:  command.NewTouchAccountSessionOperatorHandler(sessionRepo),

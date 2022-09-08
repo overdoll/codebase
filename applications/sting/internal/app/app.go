@@ -24,6 +24,7 @@ type Commands struct {
 	UnArchivePost command.UnArchivePostHandler
 
 	IndexPost command.IndexPostHandler
+	IndexClub command.IndexClubHandler
 
 	TransferClubOwnership command.TransferClubOwnershipHandler
 
