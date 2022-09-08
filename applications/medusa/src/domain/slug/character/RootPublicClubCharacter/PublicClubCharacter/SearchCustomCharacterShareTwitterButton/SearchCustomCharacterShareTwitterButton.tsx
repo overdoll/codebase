@@ -43,7 +43,8 @@ export default function SearchCustomCharacterShareTwitterButton ({ query }: Prop
       }
     },
     hashtags: ['R34', 'Rule34', 'NSFW', transformNameIntoHashtag],
-    text: `${data.name} (OC) NSFW videos and images on overdoll`
+    text: `${data.name} (OC) NSFW videos and images on overdoll`,
+    trackingEventId: '3HLCMZEV'
   })
 
   return (

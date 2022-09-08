@@ -31,7 +31,8 @@ export default function SearchCategoryShareRedditButton ({ query }: Props): JSX.
         slug: data.slug
       }
     },
-    title: `${data.title} Rule34 NSFW videos and images on overdoll`
+    title: `${data.title} Rule34 NSFW videos and images on overdoll`,
+    trackingEventId: 'KYLM9WBY'
   })
 
   return (

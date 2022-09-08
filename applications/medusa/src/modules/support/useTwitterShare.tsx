@@ -4,11 +4,13 @@ import { resolveHref } from 'next/dist/shared/lib/router/router'
 import { encodeQueryParams, StringParam } from 'serialize-query-params'
 import { stringify } from 'query-string'
 import { UrlObject } from 'url'
+import trackFathomEvent from './trackFathomEvent'
 
 interface UseTwitterShareProps {
   url: string | UrlObject
   hashtags: string[]
   text: string
+  trackingEventId?: string
 }
 
 type UseTwitterShareReturn = () => void
@@ -17,7 +19,8 @@ export default function useTwitterShare (props: UseTwitterShareProps): UseTwitte
   const {
     url,
     hashtags,
-    text
+    text,
+    trackingEventId
   } = props
 
   const router = useRouter()
@@ -48,5 +51,8 @@ export default function useTwitterShare (props: UseTwitterShareProps): UseTwitte
 
   return (): void => {
     windowReference.current = window.open(encodedTweet, '_blank', 'width=600,height=800')
+    if (trackingEventId != null) {
+      trackFathomEvent(trackingEventId, 1)
+    }
   }
 }

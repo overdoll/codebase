@@ -36,7 +36,8 @@ export default function SearchCharacterShareRedditButton ({ query }: Props): JSX
         seriesSlug: data.series.slug
       }
     },
-    title: `${data.name} (${data.series.title}) Rule34 NSFW videos and images on overdoll`
+    title: `${data.name} (${data.series.title}) Rule34 NSFW videos and images on overdoll`,
+    trackingEventId: 'KYLM9WBY'
   })
 
   return (

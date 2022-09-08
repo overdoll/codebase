@@ -11,7 +11,8 @@ export default function PlatformShareRedditButton (): JSX.Element {
     url: {
       pathname: '/artists'
     },
-    title: 'overdoll is a new platform built for Rule34, NSFW, Hentai, Furry artists'
+    title: 'overdoll is a new platform built for Rule34, NSFW, Hentai, Furry artists',
+    trackingEventId: 'KYLM9WBY'
   })
 
   return (
