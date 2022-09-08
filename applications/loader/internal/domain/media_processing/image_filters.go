@@ -1,4 +1,4 @@
-package resource
+package media_processing
 
 type ImageFilters struct {
 	pixelate *int

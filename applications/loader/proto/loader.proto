@@ -2,8 +2,8 @@ syntax = "proto3";
 
 package applications.grpc.loader.v1;
 
-import "libraries/resource/proto/resource.proto";
 import "libraries/media/proto/media.proto";
+import "libraries/media/proto/callback.proto";
 
 message Filters {
   optional PixelateFilter pixelate = 1;
@@ -13,106 +13,40 @@ message PixelateFilter {
   int64 size = 1;
 }
 
-message Config {
-  uint64 width = 1;
-  uint64 height = 2;
-}
-
-message ResourceIdentifier {
-  string id = 1;
-  string itemId = 2;
-}
-
-message DeleteResourcesRequest {
-  string itemId = 1;
-  repeated string resourceIds = 2;
-}
-
-message FilteredResources {
-  ResourceIdentifier oldResource = 1;
-  overdoll.libraries.Resource newResource = 2;
-}
-
-message CopyResourcesAndApplyFilterRequest {
-  repeated ResourceIdentifier resources = 1;
-  Filters filters = 2;
-  bool private = 3;
-  string token = 4;
-  optional Config config = 5;
-  overdoll.libraries.SOURCE source = 6;
-  string newItemId = 7;
-}
-
-message CopyResourcesAndApplyFilterResponse {
-  repeated FilteredResources resources = 1;
-}
-
-message CreateOrGetResourcesFromUploadsRequest {
-  string itemId = 1;
-  repeated string resourceIds = 2;
-  bool private = 3;
-  overdoll.libraries.SOURCE source = 4;
-  string token = 5;
-  optional ValidationOptions validationOptions = 6;
-  optional Config config = 7;
-}
-
-message CreateOrGetResourcesFromUploadsResponse {
-  repeated overdoll.libraries.Resource resources = 1;
-}
-
-message GetResourcesResponse {
-  repeated overdoll.libraries.Resource resources = 1;
-}
-
-message GetResourcesRequest {
-  string itemId = 1;
-  repeated string resourceIds = 2;
-}
-
-message DeleteResourcesResponse {}
-
-message ValidationOptions {
-  bool allowImages = 1;
-  bool allowVideos = 2;
-}
-
-message UpdateResourcePrivacyRequest {
-  repeated ResourceIdentifier resources = 1;
-  bool private = 2;
-}
-
-message UpdateResourcePrivacyResponse {
-  repeated overdoll.libraries.Resource resources = 1;
-}
-
-message ReprocessResourcesRequest {
-  repeated ResourceIdentifier resources = 1;
-  optional Config config = 2;
-}
-
-message ReprocessResourcesResponse {
-  repeated overdoll.libraries.Resource resources = 1;
-}
 
 message CreateOrGetMediaFromUploadsRequest {
   string linkedId = 1;
-  string linkedType = 2;
+  overdoll.libraries.MediaLinkType linkedType = 2;
   overdoll.libraries.SOURCE source = 3;
-  optional ValidationOptions validationOptions = 4;
 }
 
 message CreateOrGetMediaFromUploadsResponse {
   overdoll.libraries.Media media = 1;
 }
 
-service Loader {
-  rpc CreateOrGetResourcesFromUploads(CreateOrGetResourcesFromUploadsRequest) returns (CreateOrGetResourcesFromUploadsResponse);
-  rpc GetResources(GetResourcesRequest) returns (GetResourcesResponse);
-  rpc DeleteResources(DeleteResourcesRequest) returns (DeleteResourcesResponse);
-  rpc CopyResourcesAndApplyFilter(CopyResourcesAndApplyFilterRequest) returns (CopyResourcesAndApplyFilterResponse);
-  rpc UpdateResourcePrivacy(UpdateResourcePrivacyRequest) returns (UpdateResourcePrivacyResponse);
-  rpc ReprocessResources(ReprocessResourcesRequest) returns (ReprocessResourcesResponse);
+message CreateFilteredImageFromMediaRequest {
+  string sourceMediaId = 1;
+  string linkedId = 2;
+  overdoll.libraries.MediaLinkType linkedType = 3;
+  overdoll.libraries.SOURCE source = 4;
+  Filters filters = 5;
+}
 
+message CreateFilteredImageFromMediaResponse {
+  overdoll.libraries.Media media = 1;
+}
+
+message ConvertResourceToMediaRequest {
+  string resourceId = 1;
+  string itemId = 2;
+}
+
+message ConvertResourceToMediaResponse {
+  overdoll.libraries.Media media = 1;
+}
+
+service Loader {
+  rpc ConvertResourceToMedia(ConvertResourceToMediaRequest) returns (ConvertResourceToMediaResponse);
   rpc CreateOrGetMediaFromUploads(CreateOrGetMediaFromUploadsRequest) returns (CreateOrGetMediaFromUploadsResponse);
+  rpc CreateFilteredImageFromMedia(CreateFilteredImageFromMediaRequest) returns (CreateFilteredImageFromMediaResponse);
 }

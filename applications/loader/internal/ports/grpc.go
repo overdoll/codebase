@@ -8,6 +8,7 @@ import (
 	"overdoll/applications/loader/internal/app"
 	"overdoll/applications/loader/internal/app/command"
 	"overdoll/applications/loader/internal/app/query"
+	resource2 "overdoll/applications/loader/internal/domain/media_processing"
 	"overdoll/applications/loader/internal/domain/resource"
 	loader "overdoll/applications/loader/proto"
 	"overdoll/libraries/resource/proto"
@@ -52,7 +53,7 @@ func (s Server) CreateOrGetResourcesFromUploads(ctx context.Context, request *lo
 
 	if err != nil {
 
-		if err == resource.ErrFileTypeNotAllowed {
+		if err == resource2.ErrFileTypeNotAllowed {
 			return nil, status.Error(codes.InvalidArgument, err.Error())
 		}
 
@@ -62,7 +63,7 @@ func (s Server) CreateOrGetResourcesFromUploads(ctx context.Context, request *lo
 	var response []*proto.Resource
 
 	for _, res := range resources {
-		response = append(response, resource.ToProto(res))
+		response = append(response, resource2.ToProto(res))
 	}
 
 	return &loader.CreateOrGetResourcesFromUploadsResponse{Resources: response}, nil
@@ -94,7 +95,7 @@ func (s Server) GetResources(ctx context.Context, request *loader.GetResourcesRe
 	var response []*proto.Resource
 
 	for _, res := range allResources {
-		response = append(response, resource.ToProto(res))
+		response = append(response, resource2.ToProto(res))
 	}
 
 	return &loader.GetResourcesResponse{Resources: response}, nil
@@ -129,7 +130,7 @@ func (s Server) UpdateResourcePrivacy(ctx context.Context, request *loader.Updat
 	var finalResources []*proto.Resource
 
 	for _, r := range filteredResources {
-		finalResources = append(finalResources, resource.ToProto(r))
+		finalResources = append(finalResources, resource2.ToProto(r))
 	}
 
 	return &loader.UpdateResourcePrivacyResponse{Resources: finalResources}, nil
@@ -205,7 +206,7 @@ func (s Server) CopyResourcesAndApplyFilter(ctx context.Context, request *loader
 				Id:     r.OldResource().ID(),
 				ItemId: r.OldResource().ItemId(),
 			},
-			NewResource: resource.ToProto(r.NewResource()),
+			NewResource: resource2.ToProto(r.NewResource()),
 		})
 	}
 

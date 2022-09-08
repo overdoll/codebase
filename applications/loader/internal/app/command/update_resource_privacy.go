@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	resource2 "overdoll/applications/loader/internal/domain/media_processing"
 	"overdoll/applications/loader/internal/domain/resource"
 )
 
@@ -21,7 +22,7 @@ func NewUpdateResourcePrivacyHandler(rr resource.Repository) UpdateResourcePriva
 	return UpdateResourcePrivacyHandler{rr: rr}
 }
 
-func (h UpdateResourcePrivacyHandler) Handle(ctx context.Context, cmd UpdateResourcePrivacy) ([]*resource.Resource, error) {
+func (h UpdateResourcePrivacyHandler) Handle(ctx context.Context, cmd UpdateResourcePrivacy) ([]*resource2.Resource, error) {
 
 	var itemIds []string
 	var resourceIds []string

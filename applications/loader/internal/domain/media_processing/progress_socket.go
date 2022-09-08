@@ -1,4 +1,4 @@
-package resource
+package media_processing
 
 import (
 	"crypto/rand"

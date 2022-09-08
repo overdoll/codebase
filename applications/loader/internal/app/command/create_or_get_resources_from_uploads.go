@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"overdoll/applications/loader/internal/domain/event"
+	resource2 "overdoll/applications/loader/internal/domain/media_processing"
 	"overdoll/applications/loader/internal/domain/resource"
 	"strings"
 )
@@ -27,7 +28,7 @@ func NewCreateOrGetResourcesFromUploadsHandler(rr resource.Repository, event eve
 	return CreateOrGetResourcesFromUploadsHandler{rr: rr, event: event}
 }
 
-func (h CreateOrGetResourcesFromUploadsHandler) Handle(ctx context.Context, cmd CreateOrGetResourcesFromUploads) ([]*resource.Resource, error) {
+func (h CreateOrGetResourcesFromUploadsHandler) Handle(ctx context.Context, cmd CreateOrGetResourcesFromUploads) ([]*resource2.Resource, error) {
 
 	var newUploadIds []string
 
@@ -62,7 +63,7 @@ func (h CreateOrGetResourcesFromUploadsHandler) Handle(ctx context.Context, cmd 
 		}
 	}
 
-	var newResources []*resource.Resource
+	var newResources []*resource2.Resource
 
 	// found at least 1 resource that was not created
 	if len(idsNotFound) > 0 {

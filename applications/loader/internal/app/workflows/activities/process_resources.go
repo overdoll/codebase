@@ -5,6 +5,7 @@ import (
 	"go.temporal.io/sdk/activity"
 	"go.uber.org/zap"
 	"os"
+	resource2 "overdoll/applications/loader/internal/domain/media_processing"
 	"overdoll/applications/loader/internal/domain/resource"
 	"overdoll/libraries/errors"
 	"strings"
@@ -26,7 +27,7 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 		return err
 	}
 
-	var resourcesNotProcessed []*resource.Resource
+	var resourcesNotProcessed []*resource2.Resource
 
 	// gather all resources that are processed = false
 	for _, res := range resourcesFromIds {
@@ -105,7 +106,7 @@ func (h *Activities) ProcessResources(ctx context.Context, input ProcessResource
 	return nil
 }
 
-func processResource(h *Activities, ctx context.Context, target *resource.Resource, config *resource.Config) error {
+func processResource(h *Activities, ctx context.Context, target *resource2.Resource, config *resource.Config) error {
 
 	// first, we need to download the resource
 	file, err := h.rr.DownloadResourceUpload(ctx, target)

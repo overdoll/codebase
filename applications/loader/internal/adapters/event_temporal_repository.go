@@ -19,7 +19,7 @@ func NewEventTemporalRepository(client client.Client) EventTemporalRepository {
 	return EventTemporalRepository{client: client}
 }
 
-func (r EventTemporalRepository) SendProcessResourcesHeartbeat(ctx context.Context, token []byte, heartbeat int64) error {
+func (r EventTemporalRepository) SendProcessMediaHeartbeat(ctx context.Context, token []byte, heartbeat int64) error {
 	if err := r.client.RecordActivityHeartbeat(ctx, token, heartbeat); err != nil {
 		return errors.Wrap(err, "failed to record activity heartbeat")
 	}
@@ -71,41 +71,12 @@ func (r EventTemporalRepository) ProcessResources(ctx context.Context, itemId st
 				ItemId:     itemId,
 				ResourceId: resourceId,
 				Source:     source,
-				Width:      config.Width(),
-				Height:     config.Height(),
 			},
 		)
 
 		if err != nil {
 			return errors.Wrap(err, "failed to run process resources workflow")
 		}
-	}
-
-	return nil
-}
-
-func (r EventTemporalRepository) DeleteResources(ctx context.Context, itemId string, resourceIds []string) error {
-
-	deleteResourcesHash := md5.New()
-	deleteResourcesHash.Write([]byte(itemId))
-	for _, resource := range resourceIds {
-		deleteResourcesHash.Write([]byte(resource))
-	}
-
-	options := client.StartWorkflowOptions{
-		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "loader.DeleteProcessedResources_" + hex.EncodeToString(deleteResourcesHash.Sum(nil)[:]),
-	}
-
-	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.DeleteResources,
-		workflows.DeleteResourcesInput{
-			ItemId:      itemId,
-			ResourceIds: resourceIds,
-		},
-	)
-
-	if err != nil {
-		return errors.Wrap(err, "failed to run delete resources workflow")
 	}
 
 	return nil

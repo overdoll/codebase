@@ -1,4 +1,4 @@
-package resource
+package progress
 
 type Progress struct {
 	itemId     string

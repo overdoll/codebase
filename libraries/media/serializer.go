@@ -1,15 +1,13 @@
-package resource
+package media
 
 import (
 	"context"
 	"encoding/json"
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudfront/sign"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"go.uber.org/zap"
 	"os"
-	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/resource/proto"
 	"overdoll/libraries/support"
@@ -17,102 +15,25 @@ import (
 	"time"
 )
 
-type serializedResource struct {
-	ItemId                 string   `json:"item_id"`
-	ResourceId             string   `json:"resource_id"`
-	Type                   int      `json:"type"`
-	MimeTypes              []string `json:"mime_types"`
-	Processed              bool     `json:"processed"`
-	ProcessedId            string   `json:"processed_id"`
-	IsPrivate              bool     `json:"is_private"`
-	VideoDuration          int      `json:"video_duration"`
-	VideoThumbnail         string   `json:"video_thumbnail"`
-	VideoThumbnailMimeType string   `json:"video_thumbnail_mime_type"`
-	VideoNoAudio           bool     `json:"video_no_audio"`
-	Width                  int      `json:"width"`
-	Height                 int      `json:"height"`
-	Preview                string   `json:"preview"`
-	Failed                 bool     `json:"failed"`
+var serializer *Serializer
+
+func init() {
+	rsa, err := support.ParseRsaPrivateKeyFromPemEnvFile(os.Getenv("AWS_PRIVATE_MEDIA_KEY_PAIR_PRIVATE_KEY"))
+
+	if err != nil {
+		zap.S().Panicw("failed to parse RSA private key", zap.Error(err))
+	}
+
+	resourcesSigner := sign.NewURLSigner(os.Getenv("AWS_PRIVATE_MEDIA_KEY_PAIR_ID"), rsa)
+
+	serializer = &Serializer{signer: resourcesSigner}
 }
 
 type Serializer struct {
-	aws             *session.Session
-	resourcesSigner *sign.URLSigner
+	signer *sign.URLSigner
 }
 
-func NewSerializer() *Serializer {
-
-	awsSession := bootstrap.InitializeAWSSession()
-
-	resourcesRsa, err := support.ParseRsaPrivateKeyFromPemEnvFile(os.Getenv("AWS_PRIVATE_RESOURCES_KEY_PAIR_PRIVATE_KEY"))
-
-	if err != nil {
-		zap.S().Fatalw("failed to parse RSA private key", zap.Error(err))
-	}
-
-	resourcesSigner := sign.NewURLSigner(os.Getenv("AWS_PRIVATE_RESOURCES_KEY_PAIR_ID"), resourcesRsa)
-
-	return &Serializer{
-		aws:             awsSession,
-		resourcesSigner: resourcesSigner,
-	}
-}
-
-func unmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate bool, mimeTypes []string, processed bool, processedId string, videoDuration int, videoThumbnail, videoThumbnailMimeType string, width, height int, urls []*Url, videoThumbnailUrl *Url, preview string, failed bool, videoNoAudio bool) *Resource {
-	typ, _ := TypeFromInt(tp)
-	return &Resource{
-		id:                     resourceId,
-		itemId:                 itemId,
-		videoDuration:          videoDuration,
-		isPrivate:              isPrivate,
-		videoThumbnail:         videoThumbnail,
-		videoThumbnailMimeType: videoThumbnailMimeType,
-		width:                  width,
-		height:                 height,
-		processedId:            processedId,
-		mimeTypes:              mimeTypes,
-		resourceType:           typ,
-		processed:              processed,
-		urls:                   urls,
-		videoThumbnailUrl:      videoThumbnailUrl,
-		preview:                preview,
-		failed:                 failed,
-		videoNoAudio:           videoNoAudio,
-	}
-}
-
-func MarshalResourceToDatabase(resources *Resource) (string, error) {
-
-	if resources == nil {
-		return "", nil
-	}
-
-	data, err := json.Marshal(&serializedResource{
-		ItemId:                 resources.itemId,
-		ResourceId:             resources.id,
-		Type:                   resources.resourceType.Int(),
-		MimeTypes:              resources.MimeTypes(),
-		Processed:              resources.processed,
-		ProcessedId:            resources.processedId,
-		IsPrivate:              resources.isPrivate,
-		VideoDuration:          resources.videoDuration,
-		VideoThumbnail:         resources.videoThumbnail,
-		VideoThumbnailMimeType: resources.videoThumbnailMimeType,
-		Width:                  resources.width,
-		Height:                 resources.height,
-		Preview:                resources.preview,
-		Failed:                 resources.failed,
-		VideoNoAudio:           resources.videoNoAudio,
-	})
-
-	if err != nil {
-		return "", err
-	}
-
-	return string(data), nil
-}
-
-func (c Serializer) unmarshalResources(ctx context.Context, resourcesList []string) ([]*Resource, error) {
+func (c Serializer) unmarshalResources(ctx context.Context, resourcesList []string) ([]*Media, error) {
 
 	var res []serializedResource
 
@@ -161,61 +82,6 @@ func (c Serializer) unmarshalResources(ctx context.Context, resourcesList []stri
 	}
 
 	return resourcesResult, nil
-}
-
-func UnmarshalResourcesFromProto(ctx context.Context, resource []*proto.Resource) ([]*Resource, error) {
-
-	var resources []*Resource
-
-	for _, item := range resource {
-		resources = append(resources, UnmarshalResourceFromProto(ctx, item))
-	}
-
-	return resources, nil
-}
-
-func UnmarshalResourceFromProto(ctx context.Context, resource *proto.Resource) *Resource {
-
-	var tp Type
-
-	if resource.Type == proto.ResourceType_IMAGE {
-		tp = Image
-	}
-
-	if resource.Type == proto.ResourceType_VIDEO {
-		tp = Video
-	}
-
-	return &Resource{
-		itemId:                 resource.ItemId,
-		id:                     resource.Id,
-		processed:              resource.Processed,
-		processedId:            resource.ProcessedId,
-		urls:                   nil,
-		videoThumbnailUrl:      nil,
-		isPrivate:              resource.Private,
-		videoThumbnail:         resource.VideoThumbnail,
-		videoThumbnailMimeType: resource.VideoThumbnailMimeType,
-		width:                  int(resource.Width),
-		height:                 int(resource.Height),
-		videoDuration:          int(resource.VideoDuration),
-		mimeTypes:              resource.MimeTypes,
-		resourceType:           tp,
-		preview:                resource.Preview,
-		token:                  resource.Token,
-		failed:                 resource.Failed,
-		videoNoAudio:           resource.VideoNoAudio,
-	}
-}
-
-func (c *Serializer) UnmarshalResourceFromProto(ctx context.Context, resource *proto.Resource) (*Resource, error) {
-	result, err := c.UnmarshalResourcesFromProto(ctx, []*proto.Resource{resource})
-
-	if err != nil {
-		return nil, err
-	}
-
-	return result[0], nil
 }
 
 func (c *Serializer) UnmarshalResourcesFromProto(ctx context.Context, resource []*proto.Resource) ([]*Resource, error) {
@@ -405,7 +271,7 @@ func (c *Serializer) createSignedUrl(url string) (string, error) {
 
 	newTimestamp := time.Date(year, month, dayBucket, 0, 0, 0, 0, loc)
 
-	signedURL, err := c.resourcesSigner.Sign(url, newTimestamp)
+	signedURL, err := c.signer.Sign(url, newTimestamp)
 
 	if err != nil {
 		return "", errors.Wrap(err, "could not generate video thumbnail signed url")

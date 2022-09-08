@@ -5,8 +5,12 @@ package overdoll.libraries;
 import "libraries/media/proto/media.proto";
 import "google/protobuf/empty.proto";
 
+enum SOURCE {
+  STING = 0;
+}
+
 message UpdateMediaRequest {
-  repeated overdoll.libraries.Media media = 1;
+  overdoll.libraries.Media media = 1;
 }
 
 service MediaCallback {

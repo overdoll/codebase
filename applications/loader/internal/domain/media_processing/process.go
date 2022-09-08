@@ -1,4 +1,4 @@
-package resource
+package media_processing
 
 import (
 	"bufio"
@@ -21,29 +21,31 @@ import (
 	"log"
 	"math"
 	"os"
+	resource2 "overdoll/applications/loader/internal/domain/resource"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/media"
+	"overdoll/libraries/media/proto"
 	"overdoll/libraries/resource"
-	"overdoll/libraries/resource/proto"
 	"overdoll/libraries/uuid"
 	"overdoll/libraries/zap_support/zap_adapters"
 	"strconv"
 	"strings"
 )
 
-type ErrorResourceCallbackNotFound struct{}
+type ErrorMediaCallbackNotFound struct{}
 
-func newResourceCallbackNotFound() error {
-	return &ErrorResourceCallbackNotFound{}
+func newMediaCallbackNotFound() error {
+	return &ErrorMediaCallbackNotFound{}
 }
 
-func (c *ErrorResourceCallbackNotFound) Error() string {
-	return "resource callback not found"
+func (c *ErrorMediaCallbackNotFound) Error() string {
+	return "media callback not found"
 }
 
 var (
-	ErrFileTypeNotAllowed       = domainerror.NewValidation("filetype not allowed")
-	ErrResourceCallbackNotFound = newResourceCallbackNotFound()
+	ErrFileTypeNotAllowed    = domainerror.NewValidation("filetype not allowed")
+	ErrMediaCallbackNotFound = newMediaCallbackNotFound()
 )
 
 // accepted formats
@@ -60,6 +62,10 @@ var extensionsMap = map[string]string{
 	"image/jpg":  ".jpg",
 	"image/jpeg": ".jpg",
 }
+
+var (
+	maxImageWidthOrHeight = 4096
+)
 
 func init() {
 	// not ideal but we need to disable the log messages from ffmpeg-go
@@ -170,7 +176,7 @@ func NewResource(itemId, id, mimeType string, isPrivate bool, token string, allo
 	}, nil
 }
 
-func (r *Resource) ApplyFilters(file *os.File, config *Config, filters *ImageFilters) ([]*Move, error) {
+func (r *Resource) ApplyFilters(file *os.File, config *resource2.Config, filters *resource2.ImageFilters) ([]*resource2.Move, error) {
 
 	fileName := uuid.New().String()
 
@@ -258,7 +264,7 @@ func (r *Resource) ApplyFilters(file *os.File, config *Config, filters *ImageFil
 	r.processedId = fileName
 	r.processed = true
 
-	return []*Move{
+	return []*resource2.Move{
 		{
 			fileName: jpegFileName,
 		},
@@ -268,12 +274,12 @@ func (r *Resource) ApplyFilters(file *os.File, config *Config, filters *ImageFil
 	}, nil
 }
 
-func createPreviewFromFile(r io.Reader) (string, error) {
+func createPreviewFromFile(r io.Reader) ([]*proto.ColorPalette, error) {
 
 	img, err := jpeg.Decode(r)
 
 	if err != nil {
-		return "", errors.Wrap(err, "failed to decode jpeg")
+		return nil, errors.Wrap(err, "failed to decode jpeg")
 	}
 
 	var cols []prominentcolor.ColorItem
@@ -288,18 +294,27 @@ func createPreviewFromFile(r io.Reader) (string, error) {
 			cols, err = prominentcolor.KmeansWithAll(prominentcolor.DefaultK, img, prominentcolor.ArgumentDefault, prominentcolor.DefaultSize, []prominentcolor.ColorBackgroundMask{})
 
 			if err != nil {
-				return "", errors.Wrap(err, "failed to generate preview from file")
+				return nil, errors.Wrap(err, "failed to generate preview from file")
 			}
 		}
 
 		if err != nil {
-			return "", err
+			return nil, err
 		}
 	}
 
-	col := cols[0]
+	var palettes []*proto.ColorPalette
 
-	return fmt.Sprintf("#%02x%02x%02x", col.Color.R, col.Color.G, col.Color.B), nil
+	for _, col := range cols {
+		palettes = append(palettes, &proto.ColorPalette{
+			Percent: 0,
+			Red:     int32(col.Color.R),
+			Green:   int32(col.Color.G),
+			Blue:    int32(col.Color.B),
+		})
+	}
+
+	return palettes, nil
 }
 
 type ffmpegProbeStream struct {
@@ -313,7 +328,9 @@ type ffmpegProbeStream struct {
 	} `json:"format"`
 }
 
-func (r *Resource) processVideo(fileName string, file *os.File, config *Config, mimeType string) ([]*Move, error) {
+func processVideo(media *media.Media, fileName string, file *os.File) (*ProcessResponse, error) {
+
+	videoNoAudio := true
 
 	// arguments we wil use to encode our video
 	// h.264 codec, with crf=18 (good quality, indistinguishable from original)
@@ -341,8 +358,7 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config, 
 		WithErrorOutput(ffmpegLogger).
 		Run(); err != nil && len(ffmpegLogger.Output) > 0 {
 		zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(ffmpegLogger.Output)))
-		r.failed = true
-		return nil, nil
+		return &ProcessResponse{failed: true}, nil
 	}
 
 	// probe for audio streams
@@ -404,7 +420,7 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config, 
 		// silent audio stream, remove it
 		if hasSilentAudioStream {
 			encodingArgs["an"] = ""
-			r.videoNoAudio = true
+			videoNoAudio = true
 		} else {
 			// otherwise, only select the first audio stream for our encoding
 			encodingArgs["map"] = append(encodingArgs["map"].([]string), "0:a:0")
@@ -412,7 +428,7 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config, 
 	} else {
 		// no audio streams are on this audio track, add a flag to remove it just in case
 		encodingArgs["an"] = ""
-		r.videoNoAudio = true
+		videoNoAudio = true
 	}
 
 	// probe for video streams
@@ -465,7 +481,7 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config, 
 		return nil, err
 	}
 
-	// make sure to call this function or socket wont close correctly
+	// make sure to call this function or socket won't close correctly
 	defer done()
 
 	if err := ffmpeg_go.Input(file.Name(), defaultArgs).
@@ -496,8 +512,6 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config, 
 		return nil, err
 	}
 
-	videoThumb := fileName
-
 	str, err = ffmpeg_go.Probe(newVideoFileName, defaultArgs)
 
 	if err != nil {
@@ -515,38 +529,47 @@ func (r *Resource) processVideo(fileName string, file *os.File, config *Config, 
 		return nil, errors.Wrap(err, "failed to parse probe duration")
 	}
 
-	r.width = probeResult.Streams[0].Width
-	r.height = probeResult.Streams[0].Height
-	r.videoDuration = int(math.Round(s * 1000))
-
-	r.videoThumbnailMimeType = "image/jpeg"
-	r.videoThumbnail = videoThumb
-	r.resourceType = resource.Video
-
-	r.mimeTypes = []string{"video/mp4"}
-
 	_, _ = fileThumbnail.Seek(0, io.SeekStart)
-	preview, err := createPreviewFromFile(fileThumbnail)
+	palettes, err := createPreviewFromFile(fileThumbnail)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to create preview from thumbnail")
 	}
 
-	_, _ = fileThumbnail.Seek(0, io.SeekStart)
+	// update the source image data - this is used for the thumbnail
+	media.Source().ImageData = &proto.ImageData{
+		Id:       fileName + ".jpg",
+		MimeType: "image/jpeg",
+		Width:    int64(probeResult.Streams[0].Width),
+		Height:   int64(probeResult.Streams[0].Height),
+		Palettes: palettes,
+	}
 
-	r.preview = preview
+	media.Source().VideoData = &proto.VideoData{
+		Containers: []*proto.VideoContainer{{
+			Id:       fileName + ".mp4",
+			MimeType: "video/mp4",
+			Bitrate:  0,
+		}},
+		AspectRatio: &proto.VideoAspectRatio{
+			Width:  0,
+			Height: 0,
+		},
+		DurationMilliseconds: int64(math.Round(s * 1000)),
+		HasAudio:             !videoNoAudio,
+	}
 
-	return []*Move{
+	return &ProcessResponse{move: []*Move{
 		{
 			fileName: thumbnailFileName,
 		},
 		{
 			fileName: newVideoFileName,
 		},
-	}, nil
+	}}, nil
 }
 
-func (r *Resource) processImage(mimeType string, fileName string, file *os.File, config *Config) ([]*Move, error) {
+func processImage(media *media.Media, mimeType string, fileName string, file *os.File) (*ProcessResponse, error) {
 
 	var src image.Image
 	var err error
@@ -557,8 +580,7 @@ func (r *Resource) processImage(mimeType string, fileName string, file *os.File,
 		var formatError png.FormatError
 		if errors.As(err, &formatError) {
 			zap.S().Errorw("failed to decode png", zap.Error(err))
-			r.failed = true
-			return nil, nil
+			return &ProcessResponse{failed: true}, nil
 		}
 	} else {
 		src, err = jpeg.Decode(file)
@@ -566,8 +588,7 @@ func (r *Resource) processImage(mimeType string, fileName string, file *os.File,
 		var formatError jpeg.FormatError
 		if errors.As(err, &formatError) {
 			zap.S().Errorw("failed to decode jpeg", zap.Error(err))
-			r.failed = true
-			return nil, nil
+			return &ProcessResponse{failed: true}, nil
 		}
 	}
 
@@ -575,29 +596,13 @@ func (r *Resource) processImage(mimeType string, fileName string, file *os.File,
 		return nil, errors.Wrap(err, "failed to decode image")
 	}
 
-	// resize to specified width
-	if config.Width() > 0 && config.Height() == 0 {
-		if uint64(src.Bounds().Dx()) > config.Width() {
-			src = resize.Resize(uint(config.Width()), uint(config.Height()), src, resize.Lanczos3)
-		}
-	} else {
-		src = resize.Resize(uint(config.Width()), uint(config.Height()), src, resize.Lanczos3)
+	// resize if image width or height is greater than our max (4096)
+	if src.Bounds().Dx() > maxImageWidthOrHeight {
+		src = resize.Resize(uint(maxImageWidthOrHeight), 0, src, resize.Lanczos3)
 	}
 
-	webpFileName := fileName + ".webp"
-
-	webpFile, err := os.Create(webpFileName)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := webpbin.NewCWebP().
-		Quality(90).
-		InputImage(src).
-		Output(webpFile).
-		Run(); err != nil {
-		_ = webpFile.Close()
-		return nil, errors.Wrap(err, "failed to convert png to webp")
+	if src.Bounds().Dy() > maxImageWidthOrHeight {
+		src = resize.Resize(0, uint(maxImageWidthOrHeight), src, resize.Lanczos3)
 	}
 
 	jpegFileName := fileName + ".jpg"
@@ -611,39 +616,33 @@ func (r *Resource) processImage(mimeType string, fileName string, file *os.File,
 		return nil, errors.Wrap(err, "failed to encode jpeg")
 	}
 
-	r.resourceType = resource.Image
-
-	r.height = src.Bounds().Dy()
-	r.width = src.Bounds().Dx()
-
 	_, _ = jpegFile.Seek(0, io.SeekStart)
-	preview, err := createPreviewFromFile(jpegFile)
+	palettes, err := createPreviewFromFile(jpegFile)
 
 	if err != nil {
 		return nil, err
 	}
 
-	r.preview = preview
-	r.mimeTypes = []string{"image/webp", "image/jpeg"}
+	// update the source image data
+	media.Source().ImageData = &proto.ImageData{
+		Id:       jpegFileName,
+		MimeType: "image/jpeg",
+		Width:    int64(src.Bounds().Dx()),
+		Height:   int64(src.Bounds().Dy()),
+		Palettes: palettes,
+	}
 
-	return []*Move{
+	return &ProcessResponse{move: []*Move{
 		{
 			fileName: jpegFileName,
 		},
-		{
-			fileName: webpFileName,
-		},
-	}, nil
+	}}, nil
 }
 
-// ProcessResource process resource - should be at a new Url and any additional mimetypes that are available
-// must pass the file that needs to be processed (usually the current file, gotten from Url())
-func (r *Resource) ProcessResource(file *os.File, config *Config) ([]*Move, error) {
+func ProcessMedia(media *media.Media, file *os.File) (*ProcessResponse, error) {
 
 	defer os.Remove(file.Name())
 	defer file.Close()
-
-	var moveTargets []*Move
 
 	headBuffer := make([]byte, 261)
 	_, err := file.Read(headBuffer)
@@ -654,8 +653,7 @@ func (r *Resource) ProcessResource(file *os.File, config *Config) ([]*Move, erro
 	// do a mime type check on the file to make sure its an accepted file and to get our extension
 	kind, _ := filetype.Match(headBuffer)
 	if kind == filetype.Unknown {
-		r.failed = true
-		return nil, nil
+		return &ProcessResponse{failed: true}, nil
 	}
 
 	// seek file, so we can read it again (first time we only grab a few bytes)
@@ -680,8 +678,10 @@ func (r *Resource) ProcessResource(file *os.File, config *Config) ([]*Move, erro
 		}
 	}
 
+	var response *ProcessResponse
+
 	if foundImage {
-		moveTargets, err = r.processImage(mimeType, fileName, file, config)
+		response, err = processImage(media, mimeType, fileName, file)
 
 		if err != nil {
 			return nil, err
@@ -689,178 +689,20 @@ func (r *Resource) ProcessResource(file *os.File, config *Config) ([]*Move, erro
 	}
 
 	if foundVideo {
-		moveTargets, err = r.processVideo(fileName, file, config, mimeType)
+		response, err = processVideo(media, fileName, file)
 
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	if !foundVideo && !foundImage {
+	if !foundImage && !foundVideo {
 		zap.S().Errorw("unknown mime type", zap.String("mimeType", mimeType))
-		r.failed = true
-		return nil, nil
+		return &ProcessResponse{failed: true}, nil
 	}
 
-	r.processedId = fileName
-	r.processed = true
+	media.Source().State.Processed = true
+	media.Source().State.Failed = false
 
-	return moveTargets, nil
-}
-
-func (r *Resource) ID() string {
-	return r.id
-}
-
-func (r *Resource) ItemId() string {
-	return r.itemId
-}
-
-func (r *Resource) IsPrivate() bool {
-	return r.isPrivate
-}
-
-func (r *Resource) Failed() bool {
-	return r.failed
-}
-
-func (r *Resource) IsCopied() bool {
-	return r.copiedFromId != ""
-}
-
-func (r *Resource) VideoNoAudio() bool {
-	return r.videoNoAudio
-}
-
-func (r *Resource) CopiedItemId() string {
-	return strings.Split(r.copiedFromId, "-")[0]
-}
-
-func (r *Resource) CopiedFromId() string {
-	return r.copiedFromId
-}
-
-func (r *Resource) CopiedId() string {
-	return strings.Split(r.copiedFromId, "-")[1]
-}
-
-func (r *Resource) SetPrivate(private bool) {
-	r.isPrivate = private
-}
-
-func (r *Resource) MimeTypes() []string {
-	return r.mimeTypes
-}
-
-func (r *Resource) MakeImage() error {
-	r.resourceType = resource.Image
-	return nil
-}
-
-func (r *Resource) MakeVideo() error {
-	r.resourceType = resource.Video
-	return nil
-}
-
-func (r *Resource) IsProcessed() bool {
-	return r.processed
-}
-
-func (r *Resource) LastMimeType() string {
-	return r.mimeTypes[len(r.mimeTypes)-1]
-}
-
-func (r *Resource) ProcessedId() string {
-	return r.processedId
-}
-
-func (r *Resource) Width() int {
-	return r.width
-}
-
-func (r *Resource) Height() int {
-	return r.height
-}
-
-func (r *Resource) VideoDuration() int {
-	return r.videoDuration
-}
-
-func (r *Resource) Preview() string {
-	return r.preview
-}
-
-func (r *Resource) Token() string {
-	return r.token
-}
-
-func (r *Resource) IsImage() bool {
-	return r.resourceType == resource.Image
-}
-
-func (r *Resource) IsVideo() bool {
-	return r.resourceType == resource.Video
-}
-
-func (r *Resource) VideoThumbnailMimeType() string {
-	return r.videoThumbnailMimeType
-}
-
-func (r *Resource) VideoThumbnail() string {
-	return r.videoThumbnail
-}
-
-func UnmarshalResourceFromDatabase(itemId, resourceId string, tp int, isPrivate bool, mimeTypes []string, processed bool, processedId string, videoDuration int, videoThumbnail, videoThumbnailMimeType string, width, height int, preview, token string, failed bool, copiedFromId string, videoNoAudio bool) *Resource {
-
-	typ, _ := resource.TypeFromInt(tp)
-
-	return &Resource{
-		id:                     resourceId,
-		itemId:                 itemId,
-		videoDuration:          videoDuration,
-		isPrivate:              isPrivate,
-		videoThumbnail:         videoThumbnail,
-		videoThumbnailMimeType: videoThumbnailMimeType,
-		width:                  width,
-		height:                 height,
-		processedId:            processedId,
-		mimeTypes:              mimeTypes,
-		resourceType:           typ,
-		processed:              processed,
-		preview:                preview,
-		token:                  token,
-		failed:                 failed,
-		copiedFromId:           copiedFromId,
-		videoNoAudio:           videoNoAudio,
-	}
-}
-
-func ToProto(res *Resource) *proto.Resource {
-	var tp proto.ResourceType
-
-	if res.IsImage() {
-		tp = proto.ResourceType_IMAGE
-	}
-
-	if res.IsVideo() {
-		tp = proto.ResourceType_VIDEO
-	}
-	return &proto.Resource{
-		Id:                     res.ID(),
-		ItemId:                 res.ItemId(),
-		Processed:              res.IsProcessed(),
-		ProcessedId:            res.ProcessedId(),
-		Private:                res.IsPrivate(),
-		VideoThumbnail:         res.VideoThumbnail(),
-		VideoThumbnailMimeType: res.VideoThumbnailMimeType(),
-		Width:                  int64(res.Width()),
-		Height:                 int64(res.Height()),
-		VideoDuration:          int64(res.VideoDuration()),
-		MimeTypes:              res.MimeTypes(),
-		Type:                   tp,
-		Preview:                res.Preview(),
-		Token:                  res.Token(),
-		Failed:                 res.Failed(),
-		VideoNoAudio:           res.VideoNoAudio(),
-	}
+	return response, nil
 }

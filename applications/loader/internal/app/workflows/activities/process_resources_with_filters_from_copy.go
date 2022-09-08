@@ -3,6 +3,7 @@ package activities
 import (
 	"context"
 	"os"
+	resource2 "overdoll/applications/loader/internal/domain/media_processing"
 	"overdoll/applications/loader/internal/domain/resource"
 )
 
@@ -15,8 +16,8 @@ type ProcessResourcesWithFiltersFromCopyInput struct {
 }
 
 type copyPairs struct {
-	oldResource *resource.Resource
-	newResource *resource.Resource
+	oldResource *resource2.Resource
+	newResource *resource2.Resource
 }
 
 func (h *Activities) ProcessResourcesWithFiltersFromCopy(ctx context.Context, input ProcessResourcesWithFiltersFromCopyInput) error {

@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"overdoll/applications/loader/internal/domain/event"
+	resource2 "overdoll/applications/loader/internal/domain/media_processing"
 	"overdoll/applications/loader/internal/domain/resource"
 )
 
@@ -51,7 +52,7 @@ func (h CopyResourcesAndApplyFiltersHandler) Handle(ctx context.Context, cmd Cop
 	for _, target := range resources {
 
 		// create a new processed resource
-		cp, err := resource.NewImageCopyResource(cmd.NewItemId, "image/jpeg", cmd.IsPrivate, cmd.Token, target.ItemId(), target.ID())
+		cp, err := resource2.NewImageCopyResource(cmd.NewItemId, "image/jpeg", cmd.IsPrivate, cmd.Token, target.ItemId(), target.ID())
 
 		if err != nil {
 			return nil, err

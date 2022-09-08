@@ -3,7 +3,18 @@ syntax = "proto3";
 package overdoll.libraries;
 
 enum MediaLinkType {
-  POST = 0;
+  POST_CONTENT = 0;
+  CLUB_THUMBNAIL = 1;
+  CLUB_BANNER = 2;
+  SERIES_BANNER = 3;
+  CATEGORY_BANNER = 4;
+  CHARACTER_BANNER = 5;
+  AUDIENCE_BANNER = 6;
+  TOPIC_BANNER = 7;
+}
+
+enum MediaVersion {
+  ONE = 0;
 }
 
 message VideoContainer {
@@ -13,8 +24,8 @@ message VideoContainer {
 }
 
 message VideoAspectRatio {
-  int64 left = 1;
-  int64 top = 2;
+  int64 width = 1;
+  int64 height = 2;
 }
 
 message VideoData {
@@ -24,7 +35,7 @@ message VideoData {
   bool hasAudio = 4;
 }
 
-message MediaPipeline {
+message MediaState {
   bool processed = 1;
   bool failed = 2;
 }
@@ -36,19 +47,12 @@ message ColorPalette {
   int32 blue = 4;
 }
 
-message FocusRectangle {
-  int32 x = 1;
-  int32 y = 2;
-  int32 width = 3;
-  int32 height = 4;
-}
-
 message ImageData {
   string id = 1;
-  int64 width = 2;
-  int64 height = 3;
-  repeated ColorPalette palettes = 4;
-  repeated FocusRectangle focusRectangles = 5;
+  string mimeType = 2;
+  int64 width = 3;
+  int64 height = 4;
+  repeated ColorPalette palettes = 5;
 }
 
 message MediaLink {
@@ -58,9 +62,11 @@ message MediaLink {
 
 message Media {
   string id = 1;
-  string prefix = 2;
-  string originalFileName = 3;
-  optional VideoData videoData = 4;
-  optional ImageData imageData = 5;
-  MediaPipeline pipeline = 6;
+  string originalFileName = 2;
+  bool private = 3;
+  MediaLink link = 4;
+  optional VideoData videoData = 5;
+  optional ImageData imageData = 6;
+  MediaState state = 7;
+  MediaVersion version = 8;
 }

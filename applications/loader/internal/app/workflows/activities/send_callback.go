@@ -2,7 +2,7 @@ package activities
 
 import (
 	"context"
-	"overdoll/applications/loader/internal/domain/resource"
+	"overdoll/applications/loader/internal/domain/media_processing"
 )
 
 type SendCallbackInput struct {
