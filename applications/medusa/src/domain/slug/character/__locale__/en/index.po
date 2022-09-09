@@ -29,10 +29,10 @@ msgstr ""
 msgid "Share on Discord"
 msgstr ""
 
-#: src/domain/slug/character/RootPublicClubCharacter/PublicClubCharacter/SearchCustomCharacterShareRedditButton/SearchCustomCharacterShareRedditButton.tsx:49
+#: src/domain/slug/character/RootPublicClubCharacter/PublicClubCharacter/SearchCustomCharacterShareRedditButton/SearchCustomCharacterShareRedditButton.tsx:50
 msgid "Share on Reddit"
 msgstr ""
 
-#: src/domain/slug/character/RootPublicClubCharacter/PublicClubCharacter/SearchCustomCharacterShareTwitterButton/SearchCustomCharacterShareTwitterButton.tsx:56
+#: src/domain/slug/character/RootPublicClubCharacter/PublicClubCharacter/SearchCustomCharacterShareTwitterButton/SearchCustomCharacterShareTwitterButton.tsx:57
 msgid "Share on Twitter"
 msgstr ""

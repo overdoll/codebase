@@ -1,10 +1,9 @@
-import { Box, Center, Flex, Heading, Stack } from '@chakra-ui/react'
+import { Center, Flex, Heading, Spinner, Stack } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay/hooks'
-import Button from '@//:modules/form/Button/Button'
 import { CompleteFragment$key } from '@//:artifacts/CompleteFragment.graphql'
 import { Trans } from '@lingui/macro'
 import { Icon } from '@//:modules/content/PageLayout'
-import { ArrowButtonRefresh, CheckCircle } from '@//:assets/icons'
+import { CheckCircle } from '@//:assets/icons'
 import UAParser from 'ua-parser-js'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -13,6 +12,7 @@ import PageWrapperDesktop from '../../../../common/components/PageWrapperDesktop
 import AdvertBoxWrapper from '../../../join/Join/components/PlatformBenefitsAdvert/AdvertBoxWrapper/AdvertBoxWrapper'
 import VerifyTokenRichObject
   from '../../../../common/rich-objects/verify-token/VerifyTokenRichObject/VerifyTokenRichObject'
+import { useEffect } from 'react'
 
 interface Props {
   query: CompleteFragment$key
@@ -43,9 +43,11 @@ export default function Complete ({ query }: Props): JSX.Element {
   // - the app used the token and got an authentication token back, so the state is not in sync
   // - the app did not use the token yet and requires user action
 
-  const refresh = (): void => {
-    void router.push('/join')
-  }
+  useEffect(() => {
+    if (data.sameDevice) {
+      void router.push('/join')
+    }
+  }, [])
 
   return (
     <>
@@ -64,7 +66,7 @@ export default function Complete ({ query }: Props): JSX.Element {
                   h={16}
                   fill='green.300'
                 />
-                <Box>
+                <Stack spacing={1}>
                   <Heading
                     textAlign='center'
                     fontSize='xl'
@@ -75,12 +77,14 @@ export default function Complete ({ query }: Props): JSX.Element {
                       You have been successfully logged in to the requested device
                     </Trans>
                   </Heading>
-                  <Heading textAlign='center' color='gray.300' fontSize='sm'>
-                    <Trans>
-                      You may safely close this window
-                    </Trans>
-                  </Heading>
-                </Box>
+                  {!data.sameDevice && (
+                    <Heading textAlign='center' color='gray.300' fontSize='sm'>
+                      <Trans>
+                        You may safely close this window
+                      </Trans>
+                    </Heading>
+                  )}
+                </Stack>
                 <Flex
                   justify='center'
                   align='center'
@@ -104,17 +108,7 @@ export default function Complete ({ query }: Props): JSX.Element {
                 {data.sameDevice
                   ? (
                     <Flex justify='center'>
-                      <Button
-                        size='md'
-                        onClick={refresh}
-                        variant='solid'
-                        colorScheme='green'
-                        rightIcon={<Icon icon={ArrowButtonRefresh} fill='green.900' w={4} h={4} />}
-                      >
-                        <Trans>
-                          I closed the original tab
-                        </Trans>
-                      </Button>
+                      <Spinner w={8} h={8} color='green.300' />
                     </Flex>)
                   : (
                     <Heading textAlign='center' color='gray.100' fontSize='md'>

@@ -12,6 +12,7 @@ import PostClickableCategories
 import PostFooterButtons from '@//:modules/content/Posts/components/PostInteraction/PostFooterButtons/PostFooterButtons'
 import PostPublicHeader
   from '@//:modules/content/Posts/components/PostInteraction/PostHeaders/PostPublicHeader/PostPublicHeader'
+import PostClubLinks from '@//:modules/content/Posts/components/PostData/PostClubLinks/PostClubLinks'
 
 interface Props {
   query: FullDetailedPostFragment$key
@@ -21,6 +22,9 @@ interface Props {
 const PostFragment = graphql`
   fragment FullDetailedPostFragment on Post {
     id
+    club {
+      ...PostClubLinksFragment
+    }
     ...PostGalleryPublicDetailedFragment
     ...PostClickableCharactersFragment
     ...PostClickableCategoriesFragment
@@ -49,6 +53,7 @@ export default function FullDetailedPost ({
       <Stack spacing={2}>
         <PostPublicHeader postQuery={data} viewerQuery={viewerData} />
         <PostGalleryPublicDetailed postQuery={data} viewerQuery={viewerData} />
+        <PostClubLinks query={data.club} />
         <PostFooterButtons postQuery={data} viewerQuery={viewerData} />
       </Stack>
       <Stack spacing={2}>
