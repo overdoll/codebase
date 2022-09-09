@@ -223,11 +223,11 @@ msgstr ""
 msgid "Set Up"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterShareRedditButton/ClubFooterShareRedditButton.tsx:42
+#: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterShareRedditButton/ClubFooterShareRedditButton.tsx:43
 msgid "Share on Reddit"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterShareTwitterButton/ClubFooterShareTwitterButton.tsx:45
+#: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterShareTwitterButton/ClubFooterShareTwitterButton.tsx:46
 msgid "Share on Twitter"
 msgstr ""
 

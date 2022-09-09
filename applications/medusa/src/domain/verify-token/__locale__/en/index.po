@@ -18,10 +18,10 @@ msgid "Back to the Join page"
 msgstr ""
 
 #: src/domain/verify-token/VerifyToken/Complete/Complete.tsx:114
-msgid "I closed the original tab"
-msgstr ""
+#~ msgid "I closed the original tab"
+#~ msgstr ""
 
-#: src/domain/verify-token/VerifyToken/Complete/Complete.tsx:121
+#: src/domain/verify-token/VerifyToken/Complete/Complete.tsx:115
 msgid "If you closed the original tab, just open it back up!"
 msgstr ""
 
@@ -53,10 +53,10 @@ msgstr ""
 msgid "Yes, this is me"
 msgstr ""
 
-#: src/domain/verify-token/VerifyToken/Complete/Complete.tsx:74
+#: src/domain/verify-token/VerifyToken/Complete/Complete.tsx:76
 msgid "You have been successfully logged in to the requested device"
 msgstr ""
 
-#: src/domain/verify-token/VerifyToken/Complete/Complete.tsx:79
+#: src/domain/verify-token/VerifyToken/Complete/Complete.tsx:82
 msgid "You may safely close this window"
 msgstr ""

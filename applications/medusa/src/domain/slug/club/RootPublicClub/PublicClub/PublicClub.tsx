@@ -14,6 +14,7 @@ import ClubSupportBanner from './ClubBanners/ClubSupportBanner/ClubSupportBanner
 import ClubPublicPosts from './ClubPublicPosts/ClubPublicPosts'
 import PublicClubStructuredData
   from '../../../../../common/structured-data/slug/PublicClubStructuredData/PublicClubStructuredData'
+import PostClubLinks from '@//:modules/content/Posts/components/PostData/PostClubLinks/PostClubLinks'
 
 interface Props {
   query: PreloadedQuery<PublicClubQuery>
@@ -30,6 +31,7 @@ const Query = graphql`
       ...ClubPublicPostsFragment
       ...PublicClubStructuredDataFragment
       ...PublicClubRichObjectFragment
+      ...PostClubLinksFragment
     }
     viewer {
       ...AccountInformationBannerFragment
@@ -59,6 +61,7 @@ export default function PublicClub (props: Props): JSX.Element {
       <Stack spacing={8}>
         <Stack spacing={1}>
           <ClubHeaderBanner query={queryData.club} />
+          <PostClubLinks query={queryData.club} />
           <ClubFooterButtons query={queryData.club} />
         </Stack>
         <Stack spacing={4}>

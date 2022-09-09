@@ -160,7 +160,7 @@ export default function PostCreator ({ query }: Props): JSX.Element {
     }
   }, [data?.post?.id])
 
-  if (data?.club?.viewerIsOwner === false && ((data.viewer?.isStaff) === false) && (data.viewer?.isWorker) === false) {
+  if (data?.club?.viewerIsOwner === false && ((data.viewer?.isStaff) === false) && !(data.viewer?.isWorker)) {
     return <NotFoundClub />
   }
 
