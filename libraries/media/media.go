@@ -1,6 +1,7 @@
 package media
 
 import (
+	"context"
 	_ "image/png"
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/media/proto"
@@ -40,4 +41,21 @@ func (m *Media) ImageOriginalKey() string {
 
 func (m *Media) IsPrivate() bool {
 	return m.source.Private
+}
+
+func (m *Media) IsLegacy() bool {
+	return true
+}
+
+func (m *Media) LegacyResource() string {
+	return ""
+}
+
+func MarshalMediaToDatabase(media *Media) (*string, error) {
+
+	return nil, nil
+}
+
+func UnmarshalMediaWithLegacyFromDatabase(ctx context.Context, resource string, media *string) (*Media, error) {
+	return nil, nil
 }

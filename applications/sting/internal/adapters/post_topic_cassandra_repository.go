@@ -6,7 +6,7 @@ import (
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/localization"
-	"overdoll/libraries/resource"
+	"overdoll/libraries/media"
 	"overdoll/libraries/support"
 	"strings"
 	"time"
@@ -25,6 +25,7 @@ var topicsTable = table.New(table.Metadata{
 		"title",
 		"description",
 		"banner_resource",
+		"banner_media",
 		"weight",
 		"created_at",
 		"updated_at",
@@ -39,6 +40,7 @@ type topics struct {
 	Title          map[string]string `db:"title"`
 	Description    map[string]string `db:"description"`
 	BannerResource string            `db:"banner_resource"`
+	BannerMedia    *string           `db:"banner_media"`
 	Weight         int               `db:"weight"`
 	CreatedAt      time.Time         `db:"created_at"`
 	UpdatedAt      time.Time         `db:"updated_at"`
@@ -60,7 +62,8 @@ type topicSlugs struct {
 }
 
 func marshalTopicToDatabase(pending *post.Topic) (*topics, error) {
-	marshalledBanner, err := resource.MarshalResourceToDatabase(pending.BannerResource())
+
+	marshalledBanner, err := media.MarshalMediaToDatabase(pending.BannerMedia())
 
 	if err != nil {
 		return nil, err
@@ -71,7 +74,8 @@ func marshalTopicToDatabase(pending *post.Topic) (*topics, error) {
 		Slug:           pending.Slug(),
 		Title:          localization.MarshalTranslationToDatabase(pending.Title()),
 		Description:    localization.MarshalTranslationToDatabase(pending.Description()),
-		BannerResource: marshalledBanner,
+		BannerMedia:    marshalledBanner,
+		BannerResource: pending.BannerMedia().LegacyResource(),
 		Weight:         pending.Weight(),
 		CreatedAt:      pending.CreatedAt(),
 		UpdatedAt:      pending.UpdatedAt(),
@@ -80,7 +84,7 @@ func marshalTopicToDatabase(pending *post.Topic) (*topics, error) {
 
 func (r PostsCassandraElasticsearchRepository) unmarshalTopicFromDatabase(ctx context.Context, cat *topics) (*post.Topic, error) {
 
-	unmarshalledBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, cat.BannerResource)
+	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, cat.BannerResource, cat.BannerMedia)
 
 	if err != nil {
 		return nil, err

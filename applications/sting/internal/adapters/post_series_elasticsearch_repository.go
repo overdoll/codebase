@@ -7,7 +7,7 @@ import (
 	"overdoll/libraries/cache"
 	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
-	"overdoll/libraries/resource"
+	"overdoll/libraries/media"
 	"overdoll/libraries/support"
 	"time"
 
@@ -24,6 +24,8 @@ type seriesDocument struct {
 	Slug              string            `json:"slug"`
 	ThumbnailResource string            `json:"thumbnail_resource"`
 	BannerResource    string            `json:"banner_resource"`
+	ThumbnailMedia    *string           `json:"thumbnail_media"`
+	BannerMedia       *string           `json:"banner_media"`
 	Title             map[string]string `json:"title"`
 	CreatedAt         time.Time         `json:"created_at"`
 	UpdatedAt         time.Time         `json:"updated_at"`
@@ -42,13 +44,13 @@ func marshalSeriesToDocument(s *post.Series) (*seriesDocument, error) {
 		return nil, nil
 	}
 
-	marshalled, err := resource.MarshalResourceToDatabase(s.ThumbnailResource())
+	marshalledThumbnail, err := media.MarshalMediaToDatabase(s.ThumbnailMedia())
 
 	if err != nil {
 		return nil, err
 	}
 
-	marshalledBanner, err := resource.MarshalResourceToDatabase(s.BannerResource())
+	marshalledBanner, err := media.MarshalMediaToDatabase(s.BannerMedia())
 
 	if err != nil {
 		return nil, err
@@ -57,8 +59,10 @@ func marshalSeriesToDocument(s *post.Series) (*seriesDocument, error) {
 	return &seriesDocument{
 		Id:                s.ID(),
 		Slug:              s.Slug(),
-		ThumbnailResource: marshalled,
-		BannerResource:    marshalledBanner,
+		ThumbnailMedia:    marshalledThumbnail,
+		BannerMedia:       marshalledBanner,
+		BannerResource:    s.BannerMedia().LegacyResource(),
+		ThumbnailResource: s.ThumbnailMedia().LegacyResource(),
 		Title:             localization.MarshalTranslationToDatabase(s.Title()),
 		CreatedAt:         s.CreatedAt(),
 		TotalLikes:        s.TotalLikes(),
@@ -77,13 +81,13 @@ func (r PostsCassandraElasticsearchRepository) unmarshalSeriesDocument(ctx conte
 		return nil, errors.Wrap(err, "failed search series - unmarshal")
 	}
 
-	unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, md.ThumbnailResource)
+	unmarshalledThumbnail, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, md.ThumbnailResource, md.ThumbnailMedia)
 
 	if err != nil {
 		return nil, err
 	}
 
-	unmarshalledBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, md.BannerResource)
+	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, md.BannerResource, md.BannerMedia)
 
 	if err != nil {
 		return nil, err
@@ -93,7 +97,7 @@ func (r PostsCassandraElasticsearchRepository) unmarshalSeriesDocument(ctx conte
 		md.Id,
 		md.Slug,
 		md.Title,
-		unmarshalled,
+		unmarshalledThumbnail,
 		unmarshalledBanner,
 		md.TotalLikes,
 		md.TotalPosts,

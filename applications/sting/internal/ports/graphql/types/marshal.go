@@ -71,13 +71,13 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post, like *post.Lik
 
 		req := principal.FromContext(ctx)
 
-		resourceId := res.ResourceRequest(req)
+		resourceId := res.MediaRequest(req)
 
 		if resourceId != nil {
 			content = append(content, &PostContent{
 				ID:                                relay.NewID(PostContent{}, result.ID(), resourceId.ID()),
 				Resource:                          graphql.MarshalResourceToGraphQL(ctx, resourceId),
-				SupporterOnlyResource:             graphql.MarshalResourceToGraphQL(ctx, res.SupporterOnlyResourceRequest(req)),
+				SupporterOnlyResource:             graphql.MarshalResourceToGraphQL(ctx, res.SupporterOnlyMediaRequest(req)),
 				IsSupporterOnly:                   res.IsSupporterOnly(),
 				ViewerCanViewSupporterOnlyContent: res.CanViewSupporterOnly(principal.FromContext(ctx)),
 			})
@@ -908,14 +908,14 @@ func MarshalClubToGraphQL(ctx context.Context, result *club.Club) *Club {
 
 	var thumbnail *graphql.Resource
 
-	if result.ThumbnailResource() != nil {
-		thumbnail = graphql.MarshalResourceToGraphQL(ctx, result.ThumbnailResource())
+	if result.ThumbnailMedia() != nil {
+		thumbnail = graphql.MarshalResourceToGraphQL(ctx, result.ThumbnailMedia())
 	}
 
 	var banner *graphql.Resource
 
-	if result.BannerResource() != nil {
-		banner = graphql.MarshalResourceToGraphQL(ctx, result.BannerResource())
+	if result.BannerMedia() != nil {
+		banner = graphql.MarshalResourceToGraphQL(ctx, result.BannerMedia())
 	}
 
 	var slugAliases []*ClubSlugAlias

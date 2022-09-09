@@ -39,7 +39,7 @@ func (h *Activities) UpdateCategoryBanner(ctx context.Context, input UpdateCateg
 
 	for _, cnt := range pst.Content() {
 		if !cnt.IsSupporterOnly() {
-			selectedContentResource = cnt.Resource()
+			selectedContentResource = cnt.Media()
 			break
 		}
 	}

@@ -134,29 +134,29 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 	contentResources := make(map[string]string)
 
 	for _, cont := range pst.Content() {
-		contentResourceIds = append(contentResourceIds, cont.Resource().ID())
-		contentSupporterOnly[cont.Resource().ID()] = cont.IsSupporterOnly()
-		if cont.IsSupporterOnly() && cont.ResourceHidden() != nil {
-			contentSupporterOnlyResourceIds[cont.Resource().ID()] = cont.ResourceHidden().ID()
+		contentResourceIds = append(contentResourceIds, cont.Media().ID())
+		contentSupporterOnly[cont.Media().ID()] = cont.IsSupporterOnly()
+		if cont.IsSupporterOnly() && cont.MediaHidden() != nil {
+			contentSupporterOnlyResourceIds[cont.Media().ID()] = cont.MediaHidden().ID()
 		}
 
-		if cont.ResourceHidden() != nil {
-			marshalled, err := resource.MarshalResourceToDatabase(cont.ResourceHidden())
+		if cont.MediaHidden() != nil {
+			marshalled, err := resource.MarshalResourceToDatabase(cont.MediaHidden())
 
 			if err != nil {
 				return nil, err
 			}
 
-			contentResources[cont.ResourceHidden().ID()] = marshalled
+			contentResources[cont.MediaHidden().ID()] = marshalled
 		}
 
-		marshalled, err := resource.MarshalResourceToDatabase(cont.Resource())
+		marshalled, err := resource.MarshalResourceToDatabase(cont.Media())
 
 		if err != nil {
 			return nil, err
 		}
 
-		contentResources[cont.Resource().ID()] = marshalled
+		contentResources[cont.Media().ID()] = marshalled
 	}
 
 	return &postDocument{

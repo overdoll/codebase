@@ -444,7 +444,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 						pst := getPostFromAdapter(t, postId)
 						_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{
 							{
-								Id:          pst.Content()[1].ResourceHidden().ID(),
+								Id:          pst.Content()[1].MediaHidden().ID(),
 								ItemId:      postId,
 								Processed:   true,
 								Type:        proto.ResourceType_IMAGE,

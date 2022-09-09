@@ -10,8 +10,8 @@ import (
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/localization"
+	"overdoll/libraries/media"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"strings"
 	"time"
@@ -25,6 +25,8 @@ var audienceTable = table.New(table.Metadata{
 		"title",
 		"thumbnail_resource",
 		"banner_resource",
+		"thumbnail_media",
+		"banner_media",
 		"standard",
 		"total_likes",
 		"total_posts",
@@ -41,6 +43,8 @@ type audience struct {
 	Title             map[string]string `db:"title"`
 	ThumbnailResource string            `db:"thumbnail_resource"`
 	BannerResource    string            `db:"banner_resource"`
+	ThumbnailMedia    *string           `db:"thumbnail_media"`
+	BannerMedia       *string           `db:"banner_media"`
 	Standard          int               `db:"standard"`
 	TotalLikes        int               `db:"total_likes"`
 	TotalPosts        int               `db:"total_posts"`
@@ -71,13 +75,13 @@ func marshalAudienceToDatabase(pending *post.Audience) (*audience, error) {
 		standard = 1
 	}
 
-	marshalled, err := resource.MarshalResourceToDatabase(pending.ThumbnailResource())
+	marshalledThumbnail, err := media.MarshalMediaToDatabase(pending.ThumbnailMedia())
 
 	if err != nil {
 		return nil, err
 	}
 
-	marshalledBanner, err := resource.MarshalResourceToDatabase(pending.BannerResource())
+	marshalledBanner, err := media.MarshalMediaToDatabase(pending.BannerMedia())
 
 	if err != nil {
 		return nil, err
@@ -88,8 +92,10 @@ func marshalAudienceToDatabase(pending *post.Audience) (*audience, error) {
 		Slug:              pending.Slug(),
 		Standard:          standard,
 		Title:             localization.MarshalTranslationToDatabase(pending.Title()),
-		ThumbnailResource: marshalled,
-		BannerResource:    marshalledBanner,
+		ThumbnailResource: pending.ThumbnailMedia().LegacyResource(),
+		BannerResource:    pending.BannerMedia().LegacyResource(),
+		ThumbnailMedia:    marshalledThumbnail,
+		BannerMedia:       marshalledBanner,
 		TotalLikes:        pending.TotalLikes(),
 		TotalPosts:        pending.TotalPosts(),
 		CreatedAt:         pending.CreatedAt(),
@@ -99,13 +105,13 @@ func marshalAudienceToDatabase(pending *post.Audience) (*audience, error) {
 
 func (r PostsCassandraElasticsearchRepository) unmarshalAudienceFromDatabase(ctx context.Context, b *audience) (*post.Audience, error) {
 
-	unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, b.ThumbnailResource)
+	unmarshalled, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, b.ThumbnailResource, b.ThumbnailMedia)
 
 	if err != nil {
 		return nil, err
 	}
 
-	unmarshalledBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, b.BannerResource)
+	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, b.BannerResource, b.BannerMedia)
 
 	if err != nil {
 		return nil, err

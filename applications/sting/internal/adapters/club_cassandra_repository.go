@@ -13,9 +13,9 @@ import (
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/localization"
+	"overdoll/libraries/media"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"strings"
 	"time"
@@ -30,6 +30,8 @@ var clubTable = table.New(table.Metadata{
 		"name",
 		"thumbnail_resource",
 		"banner_resource",
+		"thumbnail_media",
+		"banner_media",
 		"characters_enabled",
 		"characters_limit",
 		"members_count",
@@ -59,7 +61,9 @@ type clubs struct {
 	Links                       []string          `db:"links"`
 	Name                        map[string]string `db:"name"`
 	ThumbnailResource           string            `db:"thumbnail_resource"`
+	ThumbnailMedia              *string           `db:"thumbnail_media"`
 	BannerResource              string            `db:"banner_resource"`
+	BannerMedia                 *string           `db:"banner_media"`
 	CharactersEnabled           bool              `db:"characters_enabled"`
 	CharactersLimit             int               `db:"characters_limit"`
 	TotalLikes                  int               `db:"total_likes"`
@@ -147,25 +151,24 @@ type clubCharacters struct {
 }
 
 type ClubCassandraElasticsearchRepository struct {
-	session            gocqlx.Session
-	client             *elastic.Client
-	cache              *redis.Client
-	resourceSerializer *resource.Serializer
+	session gocqlx.Session
+	client  *elastic.Client
+	cache   *redis.Client
 }
 
-func NewClubCassandraElasticsearchRepository(session gocqlx.Session, client *elastic.Client, cache *redis.Client, resourcesSerializer *resource.Serializer) ClubCassandraElasticsearchRepository {
-	return ClubCassandraElasticsearchRepository{session: session, client: client, cache: cache, resourceSerializer: resourcesSerializer}
+func NewClubCassandraElasticsearchRepository(session gocqlx.Session, client *elastic.Client, cache *redis.Client) ClubCassandraElasticsearchRepository {
+	return ClubCassandraElasticsearchRepository{session: session, client: client, cache: cache}
 }
 
 func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
 
-	marshalled, err := resource.MarshalResourceToDatabase(cl.ThumbnailResource())
+	marshalledThumbnail, err := media.MarshalMediaToDatabase(cl.ThumbnailMedia())
 
 	if err != nil {
 		return nil, err
 	}
 
-	marshalledBanner, err := resource.MarshalResourceToDatabase(cl.BannerResource())
+	marshalledBanner, err := media.MarshalMediaToDatabase(cl.BannerMedia())
 
 	if err != nil {
 		return nil, err
@@ -176,8 +179,10 @@ func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
 		Slug:                        cl.Slug(),
 		SlugAliases:                 cl.SlugAliases(),
 		Name:                        localization.MarshalTranslationToDatabase(cl.Name()),
-		ThumbnailResource:           marshalled,
-		BannerResource:              marshalledBanner,
+		ThumbnailResource:           cl.ThumbnailMedia().LegacyResource(),
+		BannerResource:              cl.BannerMedia().LegacyResource(),
+		ThumbnailMedia:              marshalledThumbnail,
+		BannerMedia:                 marshalledBanner,
 		SupporterOnlyPostsDisabled:  cl.SupporterOnlyPostsDisabled(),
 		MembersCount:                cl.MembersCount(),
 		CharactersLimit:             cl.CharactersLimit(),
@@ -200,13 +205,13 @@ func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
 
 func (r ClubCassandraElasticsearchRepository) unmarshalClubFromDatabase(ctx context.Context, b *clubs) (*club.Club, error) {
 
-	unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, b.ThumbnailResource)
+	unmarshalled, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, b.ThumbnailResource, b.ThumbnailMedia)
 
 	if err != nil {
 		return nil, err
 	}
 
-	unmarshalledBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, b.BannerResource)
+	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, b.BannerResource, b.BannerMedia)
 
 	if err != nil {
 		return nil, err
@@ -217,6 +222,8 @@ func (r ClubCassandraElasticsearchRepository) unmarshalClubFromDatabase(ctx cont
 		b.Slug,
 		b.SlugAliases,
 		b.Name,
+		b.ThumbnailResource,
+		b.BannerResource,
 		unmarshalled,
 		unmarshalledBanner,
 		b.MembersCount,

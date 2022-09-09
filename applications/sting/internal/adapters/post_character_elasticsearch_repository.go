@@ -7,7 +7,7 @@ import (
 	"overdoll/libraries/cache"
 	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
-	"overdoll/libraries/resource"
+	"overdoll/libraries/media"
 	"overdoll/libraries/support"
 	"time"
 
@@ -25,6 +25,8 @@ type characterDocument struct {
 	Slug              string            `json:"slug"`
 	ThumbnailResource string            `json:"thumbnail_resource"`
 	BannerResource    string            `json:"banner_resource"`
+	ThumbnailMedia    *string           `json:"thumbnail_media"`
+	BannerMedia       *string           `json:"banner_media"`
 	Name              map[string]string `json:"name"`
 	Series            *seriesDocument   `json:"series"`
 	ClubId            *string           `json:"club_id"`
@@ -41,13 +43,13 @@ var characterWriterIndex = cache.WriteAlias(CachePrefix, CharacterIndexName)
 
 func marshalCharacterToDocument(char *post.Character) (*characterDocument, error) {
 
-	marshalled, err := resource.MarshalResourceToDatabase(char.ThumbnailResource())
+	marshalledThumbnail, err := media.MarshalMediaToDatabase(char.ThumbnailMedia())
 
 	if err != nil {
 		return nil, err
 	}
 
-	marshalledBanner, err := resource.MarshalResourceToDatabase(char.BannerResource())
+	marshalledBanner, err := media.MarshalMediaToDatabase(char.BannerMedia())
 
 	if err != nil {
 		return nil, err
@@ -61,8 +63,10 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 
 	return &characterDocument{
 		Id:                char.ID(),
-		ThumbnailResource: marshalled,
-		BannerResource:    marshalledBanner,
+		ThumbnailMedia:    marshalledThumbnail,
+		BannerMedia:       marshalledBanner,
+		BannerResource:    char.BannerMedia().LegacyResource(),
+		ThumbnailResource: char.ThumbnailMedia().LegacyResource(),
 		Name:              localization.MarshalTranslationToDatabase(char.Name()),
 		ClubId:            char.ClubId(),
 		Slug:              char.Slug(),
@@ -84,13 +88,13 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx co
 		return nil, errors.Wrap(err, "failed to unmarshal character document")
 	}
 
-	unmarshalledCharacterResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, chr.ThumbnailResource)
+	unmarshalledCharacterThumbnail, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, chr.ThumbnailResource, chr.ThumbnailMedia)
 
 	if err != nil {
 		return nil, err
 	}
 
-	unmarshalledCharacterBannerResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, chr.BannerResource)
+	unmarshalledCharacterBanner, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, chr.BannerResource, chr.BannerMedia)
 
 	if err != nil {
 		return nil, err
@@ -100,13 +104,13 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx co
 
 	if chr.Series != nil {
 
-		unmarshalledSeriesResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, chr.Series.ThumbnailResource)
+		unmarshalledSeriesThumbnail, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, chr.Series.ThumbnailResource, chr.Series.ThumbnailMedia)
 
 		if err != nil {
 			return nil, err
 		}
 
-		unmarshalledSeriesBannerResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, chr.Series.BannerResource)
+		unmarshalledSeriesBanner, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, chr.Series.BannerResource, chr.Series.BannerMedia)
 
 		if err != nil {
 			return nil, err
@@ -116,8 +120,10 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx co
 			chr.Series.Id,
 			chr.Series.Slug,
 			chr.Series.Title,
-			unmarshalledSeriesResource,
-			unmarshalledSeriesBannerResource,
+			chr.Series.ThumbnailResource,
+			chr.Series.BannerResource,
+			unmarshalledSeriesThumbnail,
+			unmarshalledSeriesBanner,
 			chr.Series.TotalLikes,
 			chr.Series.TotalPosts,
 			chr.Series.CreatedAt,
@@ -129,8 +135,8 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx co
 		chr.Id,
 		chr.Slug,
 		chr.Name,
-		unmarshalledCharacterResource,
-		unmarshalledCharacterBannerResource,
+		unmarshalledCharacterThumbnail,
+		unmarshalledCharacterBanner,
 		chr.TotalLikes,
 		chr.TotalPosts,
 		chr.CreatedAt,

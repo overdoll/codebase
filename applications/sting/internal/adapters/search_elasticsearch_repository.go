@@ -148,7 +148,7 @@ func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passp
 		}
 
 		if strings.Contains(hit.Index, ClubsIndexName) {
-			result, err := unmarshalClubDocument(ctx, hit.Source, nil, r.resourceSerializer)
+			result, err := unmarshalClubDocument(ctx, hit.Source, nil)
 
 			if err != nil {
 				return nil, err
@@ -198,7 +198,7 @@ func (r PostsCassandraElasticsearchRepository) Search(ctx context.Context, passp
 
 	// if staff is logged in, don't save search results
 	if requester != nil {
-		if requester.IsStaff() {
+		if requester.IsStaff() || requester.IsWorker() || requester.IsModerator() {
 			return results, nil
 		}
 	}

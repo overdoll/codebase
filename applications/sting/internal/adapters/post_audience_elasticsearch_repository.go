@@ -7,7 +7,7 @@ import (
 	"overdoll/libraries/cache"
 	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
-	resource "overdoll/libraries/resource"
+	"overdoll/libraries/media"
 	"overdoll/libraries/support"
 	"time"
 
@@ -25,6 +25,8 @@ type audienceDocument struct {
 	Title             map[string]string `json:"title"`
 	ThumbnailResource string            `json:"thumbnail_resource"`
 	BannerResource    string            `json:"banner_resource"`
+	ThumbnailMedia    *string           `json:"thumbnail_media"`
+	BannerMedia       *string           `json:"banner_media"`
 	Standard          int               `json:"standard"`
 	TotalLikes        int               `json:"total_likes"`
 	TotalPosts        int               `json:"total_posts"`
@@ -45,13 +47,13 @@ func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 		stnd = 1
 	}
 
-	marshalledThumbnail, err := resource.MarshalResourceToDatabase(cat.ThumbnailResource())
+	marshalledThumbnail, err := media.MarshalMediaToDatabase(cat.ThumbnailMedia())
 
 	if err != nil {
 		return nil, err
 	}
 
-	marshalledBanner, err := resource.MarshalResourceToDatabase(cat.BannerResource())
+	marshalledBanner, err := media.MarshalMediaToDatabase(cat.BannerMedia())
 
 	if err != nil {
 		return nil, err
@@ -60,8 +62,10 @@ func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 	return &audienceDocument{
 		Id:                cat.ID(),
 		Slug:              cat.Slug(),
-		ThumbnailResource: marshalledThumbnail,
-		BannerResource:    marshalledBanner,
+		ThumbnailMedia:    marshalledThumbnail,
+		BannerMedia:       marshalledBanner,
+		ThumbnailResource: cat.ThumbnailMedia().LegacyResource(),
+		BannerResource:    cat.BannerMedia().LegacyResource(),
 		Title:             localization.MarshalTranslationToDatabase(cat.Title()),
 		CreatedAt:         cat.CreatedAt(),
 		Standard:          stnd,
@@ -114,13 +118,13 @@ func (r PostsCassandraElasticsearchRepository) unmarshalAudienceDocument(ctx con
 		return nil, errors.Wrap(err, "failed search audience - unmarshal")
 	}
 
-	unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, bd.ThumbnailResource)
+	unmarshalled, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, bd.ThumbnailResource, bd.ThumbnailMedia)
 
 	if err != nil {
 		return nil, err
 	}
 
-	unmarshalledBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, bd.BannerResource)
+	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, bd.BannerResource, bd.BannerMedia)
 
 	if err != nil {
 		return nil, err

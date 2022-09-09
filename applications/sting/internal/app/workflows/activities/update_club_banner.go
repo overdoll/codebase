@@ -23,7 +23,7 @@ func (h *Activities) UpdateClubBanner(ctx context.Context, input UpdateClubBanne
 
 	for _, cnt := range pst.Content() {
 		if !cnt.IsSupporterOnly() {
-			chosenResource = cnt.Resource()
+			chosenResource = cnt.Media()
 			break
 		}
 	}

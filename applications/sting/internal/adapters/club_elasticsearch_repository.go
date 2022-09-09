@@ -9,7 +9,7 @@ import (
 	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
-	"overdoll/libraries/resource"
+	"overdoll/libraries/media"
 	"overdoll/libraries/support"
 	"time"
 
@@ -25,8 +25,10 @@ type clubDocument struct {
 	Slug                        string            `json:"slug"`
 	Links                       []string          `json:"links"`
 	SlugAliases                 []string          `json:"slug_aliases"`
-	ThumbnailResource           string            `json:"thumbnail_resource"`
-	BannerResource              string            `json:"banner_resource"`
+	ThumbnailResource           string            `db:"thumbnail_resource"`
+	ThumbnailMedia              *string           `db:"thumbnail_media"`
+	BannerResource              string            `db:"banner_resource"`
+	BannerMedia                 *string           `db:"banner_media"`
 	SupporterOnlyPostsDisabled  bool              `json:"supporter_only_posts_disabled"`
 	CharactersEnabled           bool              `json:"characters_enabled"`
 	CharactersLimit             int               `json:"characters_limit"`
@@ -52,13 +54,13 @@ var clubsWriterIndex = cache.WriteAlias(CachePrefix, ClubsIndexName)
 
 func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 
-	marshalledThumbnail, err := resource.MarshalResourceToDatabase(cat.ThumbnailResource())
+	marshalledThumbnail, err := media.MarshalMediaToDatabase(cat.ThumbnailMedia())
 
 	if err != nil {
 		return nil, err
 	}
 
-	marshalledBanner, err := resource.MarshalResourceToDatabase(cat.BannerResource())
+	marshalledBanner, err := media.MarshalMediaToDatabase(cat.BannerMedia())
 
 	if err != nil {
 		return nil, err
@@ -68,8 +70,10 @@ func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 		Id:                          cat.ID(),
 		Slug:                        cat.Slug(),
 		SlugAliases:                 cat.SlugAliases(),
-		ThumbnailResource:           marshalledThumbnail,
-		BannerResource:              marshalledBanner,
+		ThumbnailResource:           cat.ThumbnailMedia().LegacyResource(),
+		BannerResource:              cat.BannerMedia().LegacyResource(),
+		ThumbnailMedia:              marshalledThumbnail,
+		BannerMedia:                 marshalledBanner,
 		SupporterOnlyPostsDisabled:  cat.SupporterOnlyPostsDisabled(),
 		Name:                        localization.MarshalTranslationToDatabase(cat.Name()),
 		CreatedAt:                   cat.CreatedAt(),
@@ -90,7 +94,7 @@ func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 	}, nil
 }
 
-func unmarshalClubDocument(ctx context.Context, source json.RawMessage, sort []interface{}, resourceSerializer *resource.Serializer) (*club.Club, error) {
+func unmarshalClubDocument(ctx context.Context, source json.RawMessage, sort []interface{}) (*club.Club, error) {
 	var bd clubDocument
 
 	err := json.Unmarshal(source, &bd)
@@ -99,13 +103,13 @@ func unmarshalClubDocument(ctx context.Context, source json.RawMessage, sort []i
 		return nil, errors.Wrap(err, "failed search clubs - unmarshal")
 	}
 
-	unmarshalledThumbnail, err := resourceSerializer.UnmarshalResourceFromDatabase(ctx, bd.ThumbnailResource)
+	unmarshalledThumbnail, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, bd.ThumbnailResource, bd.ThumbnailMedia)
 
 	if err != nil {
 		return nil, err
 	}
 
-	unmarshalledBanner, err := resourceSerializer.UnmarshalResourceFromDatabase(ctx, bd.BannerResource)
+	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, bd.BannerResource, bd.BannerMedia)
 
 	if err != nil {
 		return nil, err
@@ -206,7 +210,7 @@ func (r ClubCassandraElasticsearchRepository) GetClubsByIds(ctx context.Context,
 			return nil, apperror.NewNotFoundError("club", hit.Id)
 		}
 
-		result, err := unmarshalClubDocument(ctx, hit.Source, nil, r.resourceSerializer)
+		result, err := unmarshalClubDocument(ctx, hit.Source, nil)
 
 		if err != nil {
 			return nil, err
@@ -261,7 +265,7 @@ func (r ClubCassandraElasticsearchRepository) DiscoverClubs(ctx context.Context,
 
 	for _, hit := range response.Hits.Hits {
 
-		newBrand, err := unmarshalClubDocument(ctx, hit.Source, hit.Sort, r.resourceSerializer)
+		newBrand, err := unmarshalClubDocument(ctx, hit.Source, hit.Sort)
 
 		if err != nil {
 			return nil, err
@@ -350,7 +354,7 @@ func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, r
 
 	for _, hit := range response.Hits.Hits {
 
-		newBrand, err := unmarshalClubDocument(ctx, hit.Source, hit.Sort, r.resourceSerializer)
+		newBrand, err := unmarshalClubDocument(ctx, hit.Source, hit.Sort)
 
 		if err != nil {
 			return nil, err

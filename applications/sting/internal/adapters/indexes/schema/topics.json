@@ -65,6 +65,12 @@
       "banner_resource": {
         "type": "keyword"
       },
+      "thumbnail_media": {
+        "type": "keyword"
+      },
+      "banner_media": {
+        "type": "keyword"
+      },
       "weight": {
         "type": "integer"
       },

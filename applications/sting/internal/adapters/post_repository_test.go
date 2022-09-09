@@ -120,7 +120,7 @@ func TestPostRepository_update_parallel_content(t *testing.T) {
 
 	// ensure all resources are now "processed"
 	for _, res := range pst.Content() {
-		require.True(t, res.Resource().IsProcessed(), "resource should be processed")
+		require.True(t, res.Media().IsProcessed(), "resource should be processed")
 	}
 }
 

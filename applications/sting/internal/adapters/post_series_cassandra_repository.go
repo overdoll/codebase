@@ -6,7 +6,7 @@ import (
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/localization"
-	"overdoll/libraries/resource"
+	"overdoll/libraries/media"
 	"overdoll/libraries/support"
 	"strings"
 	"time"
@@ -26,6 +26,8 @@ var seriesTable = table.New(table.Metadata{
 		"title",
 		"thumbnail_resource",
 		"banner_resource",
+		"thumbnail_media",
+		"banner_media",
 		"total_likes",
 		"total_posts",
 		"created_at",
@@ -41,6 +43,8 @@ type series struct {
 	Title             map[string]string `db:"title"`
 	ThumbnailResource string            `db:"thumbnail_resource"`
 	BannerResource    string            `db:"banner_resource"`
+	ThumbnailMedia    *string           `db:"thumbnail_media"`
+	BannerMedia       *string           `db:"banner_media"`
 	TotalLikes        int               `db:"total_likes"`
 	TotalPosts        int               `db:"total_posts"`
 	CreatedAt         time.Time         `db:"created_at"`
@@ -64,13 +68,13 @@ type seriesSlug struct {
 
 func marshalSeriesToDatabase(pending *post.Series) (*series, error) {
 
-	marshalled, err := resource.MarshalResourceToDatabase(pending.ThumbnailResource())
+	marshalledThumbnail, err := media.MarshalMediaToDatabase(pending.ThumbnailMedia())
 
 	if err != nil {
 		return nil, err
 	}
 
-	marshalledBanner, err := resource.MarshalResourceToDatabase(pending.BannerResource())
+	marshalledBanner, err := media.MarshalMediaToDatabase(pending.BannerMedia())
 
 	if err != nil {
 		return nil, err
@@ -80,8 +84,10 @@ func marshalSeriesToDatabase(pending *post.Series) (*series, error) {
 		Id:                pending.ID(),
 		Slug:              pending.Slug(),
 		Title:             localization.MarshalTranslationToDatabase(pending.Title()),
-		ThumbnailResource: marshalled,
-		BannerResource:    marshalledBanner,
+		ThumbnailMedia:    marshalledThumbnail,
+		BannerMedia:       marshalledBanner,
+		BannerResource:    pending.BannerMedia().LegacyResource(),
+		ThumbnailResource: pending.ThumbnailMedia().LegacyResource(),
 		TotalLikes:        pending.TotalLikes(),
 		TotalPosts:        pending.TotalPosts(),
 		CreatedAt:         pending.CreatedAt(),
@@ -91,13 +97,13 @@ func marshalSeriesToDatabase(pending *post.Series) (*series, error) {
 
 func (r PostsCassandraElasticsearchRepository) unmarshalSeriesFromDatabase(ctx context.Context, med *series) (*post.Series, error) {
 
-	unmarshalledResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, med.ThumbnailResource)
+	unmarshalledThumbnail, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, med.ThumbnailResource, med.ThumbnailMedia)
 
 	if err != nil {
 		return nil, err
 	}
 
-	unmarshalledBannerResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, med.BannerResource)
+	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, med.BannerResource, med.BannerMedia)
 
 	if err != nil {
 		return nil, err
@@ -107,8 +113,8 @@ func (r PostsCassandraElasticsearchRepository) unmarshalSeriesFromDatabase(ctx c
 		med.Id,
 		med.Slug,
 		med.Title,
-		unmarshalledResource,
-		unmarshalledBannerResource,
+		unmarshalledThumbnail,
+		unmarshalledBanner,
 		med.TotalLikes,
 		med.TotalPosts,
 		med.CreatedAt,

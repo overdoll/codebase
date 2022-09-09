@@ -70,6 +70,12 @@
       "banner_resource": {
         "type": "keyword"
       },
+      "thumbnail_media": {
+        "type": "keyword"
+      },
+      "banner_media": {
+        "type": "keyword"
+      },
       "topic_id": {
         "type": "keyword"
       },

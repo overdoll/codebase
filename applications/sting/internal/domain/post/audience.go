@@ -3,8 +3,8 @@ package post
 import (
 	"github.com/go-playground/validator/v10"
 	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/media"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/resource"
 	"overdoll/libraries/uuid"
 	"time"
 
@@ -19,11 +19,12 @@ var (
 type Audience struct {
 	*paging.Node
 
-	id                string
-	slug              string
-	title             *localization.Translation
-	thumbnailResource *resource.Resource
-	bannerResource    *resource.Resource
+	id    string
+	slug  string
+	title *localization.Translation
+
+	thumbnailMedia *media.Media
+	bannerMedia    *media.Media
 
 	totalLikes int
 	totalPosts int
@@ -59,16 +60,14 @@ func NewAudience(requester *principal.Principal, slug, title string, standard bo
 	}
 
 	return &Audience{
-		id:                uuid.New().String(),
-		slug:              slug,
-		title:             lc,
-		thumbnailResource: nil,
-		bannerResource:    nil,
-		totalLikes:        0,
-		totalPosts:        0,
-		standard:          standard,
-		createdAt:         time.Now(),
-		updatedAt:         time.Now(),
+		id:         uuid.New().String(),
+		slug:       slug,
+		title:      lc,
+		totalLikes: 0,
+		totalPosts: 0,
+		standard:   standard,
+		createdAt:  time.Now(),
+		updatedAt:  time.Now(),
 	}, nil
 }
 
@@ -92,12 +91,12 @@ func (m *Audience) TotalPosts() int {
 	return m.totalPosts
 }
 
-func (m *Audience) ThumbnailResource() *resource.Resource {
-	return m.thumbnailResource
+func (m *Audience) ThumbnailMedia() *media.Media {
+	return m.thumbnailMedia
 }
 
-func (m *Audience) BannerResource() *resource.Resource {
-	return m.bannerResource
+func (m *Audience) BannerMedia() *media.Media {
+	return m.bannerMedia
 }
 
 // IsStandard a "standard" audience is an audience that the majority will consume
@@ -147,49 +146,49 @@ func (m *Audience) UpdateTitle(requester *principal.Principal, title, locale str
 	return nil
 }
 
-func (m *Audience) UpdateThumbnailExisting(thumbnail *resource.Resource) error {
+func (m *Audience) UpdateThumbnailExisting(thumbnail *media.Media) error {
 
-	if err := validateExistingResource(m.thumbnailResource, thumbnail); err != nil {
+	if err := validateExistingResource(m.thumbnailMedia, thumbnail); err != nil {
 		return err
 	}
 
-	m.thumbnailResource = thumbnail
+	m.thumbnailMedia = thumbnail
 	m.update()
 
 	return nil
 }
 
-func (m *Audience) UpdateBannerExisting(thumbnail *resource.Resource) error {
+func (m *Audience) UpdateBannerExisting(thumbnail *media.Media) error {
 
-	if err := validateExistingResource(m.bannerResource, thumbnail); err != nil {
+	if err := validateExistingResource(m.bannerMedia, thumbnail); err != nil {
 		return err
 	}
 
-	m.bannerResource = thumbnail
+	m.bannerMedia = thumbnail
 	m.update()
 
 	return nil
 }
 
-func (m *Audience) UpdateBanner(requester *principal.Principal, thumbnail *resource.Resource) error {
+func (m *Audience) UpdateBanner(requester *principal.Principal, thumbnail *media.Media) error {
 
 	if err := m.canUpdate(requester); err != nil {
 		return err
 	}
 
-	m.bannerResource = thumbnail
+	m.bannerMedia = thumbnail
 	m.update()
 
 	return nil
 }
 
-func (m *Audience) UpdateThumbnail(requester *principal.Principal, thumbnail *resource.Resource) error {
+func (m *Audience) UpdateThumbnail(requester *principal.Principal, thumbnail *media.Media) error {
 
 	if err := m.canUpdate(requester); err != nil {
 		return err
 	}
 
-	m.thumbnailResource = thumbnail
+	m.thumbnailMedia = thumbnail
 
 	return nil
 }
@@ -219,18 +218,18 @@ func (m *Audience) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalAudienceFromDatabase(id, slug string, title map[string]string, thumbnail *resource.Resource, banner *resource.Resource, standard int, totalLikes, totalPosts int, createdAt, updatedAt time.Time) *Audience {
+func UnmarshalAudienceFromDatabase(id, slug string, title map[string]string, thumbnail *media.Media, banner *media.Media, standard int, totalLikes, totalPosts int, createdAt, updatedAt time.Time) *Audience {
 	return &Audience{
-		id:                id,
-		slug:              slug,
-		totalLikes:        totalLikes,
-		totalPosts:        totalPosts,
-		title:             localization.UnmarshalTranslationFromDatabase(title),
-		thumbnailResource: thumbnail,
-		bannerResource:    banner,
-		standard:          standard == 1,
-		createdAt:         createdAt,
-		updatedAt:         updatedAt,
+		id:             id,
+		slug:           slug,
+		totalLikes:     totalLikes,
+		totalPosts:     totalPosts,
+		title:          localization.UnmarshalTranslationFromDatabase(title),
+		thumbnailMedia: thumbnail,
+		bannerMedia:    banner,
+		standard:       standard == 1,
+		createdAt:      createdAt,
+		updatedAt:      updatedAt,
 	}
 }
 

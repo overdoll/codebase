@@ -30,8 +30,8 @@ func (h *Activities) SubmitPost(ctx context.Context, input SubmitPostInput) (*Su
 
 	for _, content := range pst.Content() {
 		// only grab the content that is not processed
-		if !content.Resource().IsProcessed() || content.Resource().Failed() {
-			resourceIds = append(resourceIds, content.Resource().ID())
+		if !content.Media().IsProcessed() || content.Media().Failed() {
+			resourceIds = append(resourceIds, content.Media().ID())
 		}
 	}
 

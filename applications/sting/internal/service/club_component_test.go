@@ -473,7 +473,7 @@ func TestCreateClub_edit_banner(t *testing.T) {
 
 	_, err := grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
 		// we know which resource to access since it will always use the first one
-		Id:          cat.BannerResource().ID(),
+		Id:          cat.BannerMedia().ID(),
 		ItemId:      clb.ID(),
 		Processed:   true,
 		Type:        proto.ResourceType_IMAGE,

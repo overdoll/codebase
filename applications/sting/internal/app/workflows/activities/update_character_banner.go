@@ -39,7 +39,7 @@ func (h *Activities) UpdateCharacterBanner(ctx context.Context, input UpdateChar
 
 	for _, cnt := range pst.Content() {
 		if !cnt.IsSupporterOnly() {
-			selectedContentResource = cnt.Resource()
+			selectedContentResource = cnt.Media()
 			break
 		}
 	}

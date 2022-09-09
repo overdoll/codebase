@@ -29,8 +29,8 @@ func (h ReprocessPostContentHandler) Handle(ctx context.Context, cmd ReprocessPo
 	var collectedResourceIds []string
 
 	for _, resource := range pst.Content() {
-		if resource.Resource() != nil {
-			collectedResourceIds = append(collectedResourceIds, resource.Resource().ID())
+		if resource.Media() != nil {
+			collectedResourceIds = append(collectedResourceIds, resource.Media().ID())
 		}
 	}
 

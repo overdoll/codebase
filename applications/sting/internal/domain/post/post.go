@@ -7,6 +7,7 @@ import (
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/localization"
+	"overdoll/libraries/media"
 	"overdoll/libraries/resource"
 	"regexp"
 	"time"
@@ -109,8 +110,8 @@ func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int,
 					supporterOnlyStatus: so,
 					clubId:              clubId,
 				},
-				resource:        res,
-				resourceHidden:  hiddenRes,
+				media:           res,
+				mediaHidden:     hiddenRes,
 				isSupporterOnly: contentSupporterOnly[resourceId],
 			})
 		}
@@ -365,12 +366,12 @@ func (p *Post) AllContentResourceIds() []string {
 	var resourceIds []string
 
 	for _, cnt := range p.content {
-		if cnt.resource != nil {
-			resourceIds = append(resourceIds, cnt.resource.ID())
+		if cnt.media != nil {
+			resourceIds = append(resourceIds, cnt.media.ID())
 		}
 
-		if cnt.resourceHidden != nil {
-			resourceIds = append(resourceIds, cnt.resourceHidden.ID())
+		if cnt.mediaHidden != nil {
+			resourceIds = append(resourceIds, cnt.mediaHidden.ID())
 		}
 	}
 
@@ -396,7 +397,7 @@ func (p *Post) updatePostSupporterOnlyStatus() {
 
 	for _, c := range p.content {
 		if c.isSupporterOnly {
-			supporterOnlyContent = append(supporterOnlyContent, c.resource.ID())
+			supporterOnlyContent = append(supporterOnlyContent, c.media.ID())
 		}
 	}
 
@@ -429,7 +430,7 @@ func (p *Post) AddContentRequest(requester *principal.Principal, resources []*re
 
 		// only add content if the resource ID is not identical, otherwise we could get issues, i.e. adding the same content twice
 		for _, current := range p.content {
-			if current.resource.ID() == contentId.ID() {
+			if current.media.ID() == contentId.ID() {
 				found = true
 				break
 			}
@@ -437,8 +438,8 @@ func (p *Post) AddContentRequest(requester *principal.Principal, resources []*re
 
 		if !found {
 			newContent = append(newContent, &Content{
-				resource:        contentId,
-				resourceHidden:  nil,
+				media:           contentId,
+				mediaHidden:     nil,
 				isSupporterOnly: false,
 				post:            p,
 			})
@@ -471,7 +472,7 @@ func (p *Post) UpdateContentOrderRequest(requester *principal.Principal, content
 		foundContent := false
 
 		for _, currentContent := range p.content {
-			if currentContent.resource.ID() == newContent {
+			if currentContent.media.ID() == newContent {
 				foundContent = true
 				reorderedContent = append(reorderedContent, currentContent)
 				break
@@ -513,7 +514,7 @@ func (p *Post) UpdateContentSupporterOnly(clb *club.Club, requester *principal.P
 		foundContent := false
 
 		for _, updatedContent := range contentIds {
-			if updatedContent == content.resource.ID() {
+			if updatedContent == content.media.ID() {
 				foundContent = true
 				continue
 			}
@@ -545,7 +546,7 @@ func (p *Post) RemoveContentRequest(requester *principal.Principal, contentIds [
 		foundContent := false
 
 		for _, removedContent := range contentIds {
-			if removedContent == content.resource.ID() {
+			if removedContent == content.media.Id() {
 				foundContent = true
 				continue
 			}
@@ -734,13 +735,13 @@ func (p *Post) CanView(suspendedClubIds []string, requester *principal.Principal
 	return nil
 }
 
-func validateExistingResource(current *resource.Resource, new *resource.Resource) error {
+func validateExistingResource(current *media.Media, new *media.Media) error {
 	if current == nil {
-		return resource.ErrResourceNotPresent
+		return media.ErrMediaNotPresent
 	}
 
-	if current.ID() != new.ID() {
-		return resource.ErrResourceNotPresent
+	if current.Id() != new.Id() {
+		return media.ErrMediaNotPresent
 	}
 
 	return nil

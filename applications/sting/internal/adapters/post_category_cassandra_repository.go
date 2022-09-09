@@ -7,7 +7,7 @@ import (
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/localization"
-	"overdoll/libraries/resource"
+	"overdoll/libraries/media"
 	"overdoll/libraries/support"
 	"strings"
 	"time"
@@ -29,6 +29,8 @@ var categoryTable = table.New(table.Metadata{
 		"topic_id",
 		"thumbnail_resource",
 		"banner_resource",
+		"thumbnail_media",
+		"banner_media",
 		"total_likes",
 		"total_posts",
 		"created_at",
@@ -46,6 +48,8 @@ type category struct {
 	AlternativeTitles []string          `db:"alternative_titles"`
 	ThumbnailResource string            `db:"thumbnail_resource"`
 	BannerResource    string            `db:"banner_resource"`
+	ThumbnailMedia    *string           `db:"thumbnail_media"`
+	BannerMedia       *string           `db:"banner_media"`
 	TotalLikes        int               `db:"total_likes"`
 	TotalPosts        int               `db:"total_posts"`
 	CreatedAt         time.Time         `db:"created_at"`
@@ -69,13 +73,13 @@ type categorySlugs struct {
 
 func marshalCategoryToDatabase(pending *post.Category) (*category, error) {
 
-	marshalled, err := resource.MarshalResourceToDatabase(pending.ThumbnailResource())
+	marshalledThumbnail, err := media.MarshalMediaToDatabase(pending.ThumbnailMedia())
 
 	if err != nil {
 		return nil, err
 	}
 
-	marshalledBanner, err := resource.MarshalResourceToDatabase(pending.BannerResource())
+	marshalledBanner, err := media.MarshalMediaToDatabase(pending.BannerMedia())
 
 	if err != nil {
 		return nil, err
@@ -102,8 +106,10 @@ func marshalCategoryToDatabase(pending *post.Category) (*category, error) {
 		TopicId:           pending.TopicId(),
 		Title:             localization.MarshalTranslationToDatabase(pending.Title()),
 		AlternativeTitles: alternativeTitles,
-		ThumbnailResource: marshalled,
-		BannerResource:    marshalledBanner,
+		ThumbnailMedia:    marshalledThumbnail,
+		BannerMedia:       marshalledBanner,
+		ThumbnailResource: pending.ThumbnailMedia().LegacyResource(),
+		BannerResource:    pending.BannerMedia().LegacyResource(),
 		TotalLikes:        pending.TotalLikes(),
 		TotalPosts:        pending.TotalPosts(),
 		CreatedAt:         pending.CreatedAt(),
@@ -113,13 +119,13 @@ func marshalCategoryToDatabase(pending *post.Category) (*category, error) {
 
 func (r PostsCassandraElasticsearchRepository) unmarshalCategoryFromDatabase(ctx context.Context, cat *category) (*post.Category, error) {
 
-	unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, cat.ThumbnailResource)
+	unmarshalled, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, cat.ThumbnailResource, cat.ThumbnailMedia)
 
 	if err != nil {
 		return nil, err
 	}
 
-	unmarshalledBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, cat.BannerResource)
+	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, cat.BannerResource, cat.BannerMedia)
 
 	if err != nil {
 		return nil, err

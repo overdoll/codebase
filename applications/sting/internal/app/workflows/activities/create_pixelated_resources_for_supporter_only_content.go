@@ -28,7 +28,7 @@ func (h *Activities) CreatePixelatedResourcesForSupporterOnlyContent(ctx context
 				continue
 			}
 
-			resourceIds = append(resourceIds, c.Resource().ID())
+			resourceIds = append(resourceIds, c.Media().ID())
 		}
 
 		if len(resourceIds) > 0 {
@@ -44,8 +44,8 @@ func (h *Activities) CreatePixelatedResourcesForSupporterOnlyContent(ctx context
 			// create new pixelated content
 			for _, content := range pending.Content() {
 				for _, newContent := range newContents {
-					if newContent.OldResourceId() == content.Resource().ID() {
-						if err := content.UpdateResourceHidden(newContent.NewResource()); err != nil {
+					if newContent.OldResourceId() == content.Media().ID() {
+						if err := content.UpdateMediaHidden(newContent.NewResource()); err != nil {
 							return err
 						}
 					}
