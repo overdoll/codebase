@@ -102,6 +102,5 @@ go_library(
         "//libraries/errors/domainerror",
         "//libraries/passport",
         "//libraries/principal",
-        "//libraries/resource",
     ],
 )

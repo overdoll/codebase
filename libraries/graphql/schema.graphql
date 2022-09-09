@@ -141,6 +141,8 @@ type ImageMediaVariants {
   medium: ImageMediaAccess!
   """1920px width or height resize."""
   large: ImageMediaAccess!
+  """640px width or height resize."""
+  banner: ImageMediaAccess!
 }
 
 type ColorPalette {

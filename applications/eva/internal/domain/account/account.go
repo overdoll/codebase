@@ -3,7 +3,6 @@ package account
 import (
 	"errors"
 	"overdoll/libraries/errors/domainerror"
-	"overdoll/libraries/resource"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -19,7 +18,7 @@ type Account struct {
 	username       string
 	email          string
 	roles          []Role
-	avatarResource *resource.Resource
+	avatarResource string
 
 	locked      bool
 	lockedUntil *time.Time
@@ -47,7 +46,7 @@ var (
 	ErrAccountIsDeleting      = domainerror.NewValidation("cannot updated account in deleting status")
 )
 
-func UnmarshalAccountFromDatabase(id, username, email string, roles []string, avatar *resource.Resource, locked bool, lockedUntil *time.Time, isDeleting bool, scheduledDeletionAt *time.Time, scheduledDeletionWorkflowId *string, multiFactorEnabled bool, lastUsernameEdit time.Time, isDeleted bool, createdAt time.Time) *Account {
+func UnmarshalAccountFromDatabase(id, username, email string, roles []string, avatar string, locked bool, lockedUntil *time.Time, isDeleting bool, scheduledDeletionAt *time.Time, scheduledDeletionWorkflowId *string, multiFactorEnabled bool, lastUsernameEdit time.Time, isDeleted bool, createdAt time.Time) *Account {
 
 	var newRoles []Role
 
@@ -101,7 +100,7 @@ func (a *Account) Username() string {
 	return a.username
 }
 
-func (a *Account) AvatarResource() *resource.Resource {
+func (a *Account) AvatarResource() string {
 	return a.avatarResource
 }
 

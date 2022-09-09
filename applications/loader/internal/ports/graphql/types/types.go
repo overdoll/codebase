@@ -9,6 +9,16 @@ import (
 	"strconv"
 )
 
+type MediaProgress struct {
+	ID relay.ID `json:"id"`
+	// The state at which this media is at.
+	State MediaProgressState `json:"state"`
+	// The progress percent, in float. Will never be larger than 100.
+	Progress float64 `json:"progress"`
+}
+
+func (MediaProgress) IsEntity() {}
+
 type ResourceProgress struct {
 	ID relay.ID `json:"id"`
 	// The state at which this resource is at.
@@ -18,6 +28,52 @@ type ResourceProgress struct {
 }
 
 func (ResourceProgress) IsEntity() {}
+
+type MediaProgressState string
+
+const (
+	// Resource is waiting to be processed.
+	MediaProgressStateWaiting MediaProgressState = "WAITING"
+	// Resource has started processing.
+	MediaProgressStateStarted MediaProgressState = "STARTED"
+	// Resource is finalizing processing.
+	MediaProgressStateFinalizing MediaProgressState = "FINALIZING"
+)
+
+var AllMediaProgressState = []MediaProgressState{
+	MediaProgressStateWaiting,
+	MediaProgressStateStarted,
+	MediaProgressStateFinalizing,
+}
+
+func (e MediaProgressState) IsValid() bool {
+	switch e {
+	case MediaProgressStateWaiting, MediaProgressStateStarted, MediaProgressStateFinalizing:
+		return true
+	}
+	return false
+}
+
+func (e MediaProgressState) String() string {
+	return string(e)
+}
+
+func (e *MediaProgressState) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = MediaProgressState(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid MediaProgressState", str)
+	}
+	return nil
+}
+
+func (e MediaProgressState) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
 
 type ResourceProgressState string
 

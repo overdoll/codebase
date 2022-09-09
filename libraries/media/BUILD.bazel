@@ -2,8 +2,20 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "media",
-    srcs = ["media.go"],
+    srcs = [
+        "media.go",
+        "serializer.go",
+    ],
     importpath = "overdoll/libraries/media",
     visibility = ["//visibility:public"],
-    deps = ["//libraries/errors/domainerror"],
+    deps = [
+        "//libraries/errors",
+        "//libraries/errors/domainerror",
+        "//libraries/media/proto:libraries_go_proto",
+        "//libraries/support",
+        "@com_github_aws_aws_sdk_go//aws",
+        "@com_github_aws_aws_sdk_go//service/cloudfront/sign",
+        "@com_github_aws_aws_sdk_go//service/s3",
+        "@org_uber_go_zap//:zap",
+    ],
 )

@@ -26,7 +26,6 @@ go_library(
         "//applications/sting/proto:v1_go_proto",
         "//libraries/errors",
         "//libraries/passport",
-        "//libraries/resource/proto:libraries_go_proto",
         "//libraries/sentry_support",
         "//libraries/temporal_support",
         "//libraries/zap_support/zap_adapters",

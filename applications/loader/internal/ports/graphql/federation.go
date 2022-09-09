@@ -80,6 +80,26 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 		}()
 
 		switch typeName {
+		case "MediaProgress":
+			resolverName, err := entityResolverNameForMediaProgress(ctx, rep)
+			if err != nil {
+				return fmt.Errorf(`finding resolver for Entity "MediaProgress": %w`, err)
+			}
+			switch resolverName {
+
+			case "findMediaProgressByID":
+				id0, err := ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, rep["id"])
+				if err != nil {
+					return fmt.Errorf(`unmarshalling param 0 for findMediaProgressByID(): %w`, err)
+				}
+				entity, err := ec.resolvers.Entity().FindMediaProgressByID(ctx, id0)
+				if err != nil {
+					return fmt.Errorf(`resolving Entity "MediaProgress": %w`, err)
+				}
+
+				list[idx[i]] = entity
+				return nil
+			}
 		case "ResourceProgress":
 			resolverName, err := entityResolverNameForResourceProgress(ctx, rep)
 			if err != nil {
@@ -167,6 +187,23 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 		g.Wait()
 		return list
 	}
+}
+
+func entityResolverNameForMediaProgress(ctx context.Context, rep map[string]interface{}) (string, error) {
+	for {
+		var (
+			m   map[string]interface{}
+			val interface{}
+			ok  bool
+		)
+		_ = val
+		m = rep
+		if _, ok = m["id"]; !ok {
+			break
+		}
+		return "findMediaProgressByID", nil
+	}
+	return "", fmt.Errorf("%w for MediaProgress", ErrTypeNotFound)
 }
 
 func entityResolverNameForResourceProgress(ctx context.Context, rep map[string]interface{}) (string, error) {

@@ -54,16 +54,16 @@ func createApplication(ctx context.Context, callbackService activities.CallbackS
 
 	return &app.Application{
 		Commands: app.Commands{
-			TusComposer:                        command.NewTusComposerHandler(resourceRepo),
-			DeleteResources:                    command.NewDeleteResourcesHandler(eventRepo),
-			NewCreateOrGetResourcesFromUploads: command.NewCreateOrGetResourcesFromUploadsHandler(resourceRepo, eventRepo),
-			CopyResourcesAndApplyFilters:       command.NewCopyResourcesAndApplyFiltersHandler(resourceRepo, eventRepo),
-			UpdateResourcePrivacy:              command.NewUpdateResourcePrivacyHandler(resourceRepo),
-			ReprocessResource:                  command.NewReprocessResourceHandler(resourceRepo, eventRepo),
+			TusComposer:                  command.NewTusComposerHandler(resourceRepo),
+			DeleteResources:              command.NewDeleteResourcesHandler(eventRepo),
+			ProcessMediaFromUploads:      command.NewProcessMediaFromUploadsHandler(resourceRepo, eventRepo),
+			CopyResourcesAndApplyFilters: command.NewCopyResourcesAndApplyFiltersHandler(resourceRepo, eventRepo),
+			UpdateResourcePrivacy:        command.NewUpdateResourcePrivacyHandler(resourceRepo),
+			ReprocessResource:            command.NewReprocessResourceHandler(resourceRepo, eventRepo),
 		},
 		Queries: app.Queries{
-			ResourcesByIds:        query.NewResourcesByIdsHandler(resourceRepo),
-			ResourceProgressByIds: query.NewResourceProgressByIdHandler(resourceRepo),
+			ResourcesByIds:     query.NewResourcesByIdsHandler(resourceRepo),
+			MediaProgressByIds: query.NewMediaProgressByIdsHandler(resourceRepo),
 		},
 		Activities: activities.NewActivitiesHandler(resourceRepo, callbackService, eventRepo),
 	}

@@ -9,12 +9,12 @@ import (
 )
 
 type DataLoader struct {
-	resourceProgressByIds *dataloader.Loader[string, *types.ResourceProgress]
+	mediaProgressByIds *dataloader.Loader[string, *types.MediaProgress]
 }
 
 func NewDataLoader(app *app.Application) *DataLoader {
 	return &DataLoader{
-		resourceProgressByIds: resourceProgressByIds(app),
+		mediaProgressByIds: mediaProgressByIds(app),
 	}
 }
 

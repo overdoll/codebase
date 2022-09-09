@@ -22,8 +22,6 @@ go_library(
         "//libraries/clients",
         "//libraries/graphql",
         "//libraries/principal",
-        "//libraries/resource",
-        "//libraries/resource/proto:libraries_go_proto",
         "//libraries/router",
         "@com_github_gin_gonic_gin//:gin",
         "@com_github_spf13_cobra//:cobra",

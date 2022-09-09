@@ -76,8 +76,8 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post, like *post.Lik
 		if resourceId != nil {
 			content = append(content, &PostContent{
 				ID:                                relay.NewID(PostContent{}, result.ID(), resourceId.ID()),
-				Resource:                          graphql.MarshalResourceToGraphQL(ctx, resourceId),
-				SupporterOnlyResource:             graphql.MarshalResourceToGraphQL(ctx, res.SupporterOnlyMediaRequest(req)),
+				Resource:                          graphql.MarshaMediaToLegacyResourceGraphQL(ctx, resourceId),
+				SupporterOnlyResource:             graphql.MarshaMediaToLegacyResourceGraphQL(ctx, res.SupporterOnlyMediaRequest(req)),
 				IsSupporterOnly:                   res.IsSupporterOnly(),
 				ViewerCanViewSupporterOnlyContent: res.CanViewSupporterOnly(principal.FromContext(ctx)),
 			})
@@ -194,17 +194,8 @@ func MarshalPostLikeToGraphQL(ctx context.Context, result *post.Like) *PostLike 
 
 func MarshalAudienceToGraphQL(ctx context.Context, result *post.Audience) *Audience {
 
-	var res *graphql.Resource
-
-	if result.ThumbnailResource() != nil {
-		res = graphql.MarshalResourceToGraphQL(ctx, result.ThumbnailResource())
-	}
-
-	var banner *graphql.Resource
-
-	if result.BannerResource() != nil {
-		banner = graphql.MarshalResourceToGraphQL(ctx, result.BannerResource())
-	}
+	thumbnailResource := graphql.MarshaMediaToLegacyResourceGraphQL(ctx, result.ThumbnailMedia())
+	bannerResource := graphql.MarshaMediaToLegacyResourceGraphQL(ctx, result.BannerMedia())
 
 	var titleTranslations []*graphql.Translation
 
@@ -223,8 +214,8 @@ func MarshalAudienceToGraphQL(ctx context.Context, result *post.Audience) *Audie
 		Reference:         result.ID(),
 		TitleTranslations: titleTranslations,
 		Slug:              result.Slug(),
-		Thumbnail:         res,
-		Banner:            banner,
+		Thumbnail:         thumbnailResource,
+		Banner:            bannerResource,
 		Standard:          result.IsStandard(),
 		TotalLikes:        result.TotalLikes(),
 		TotalPosts:        result.TotalPosts(),
@@ -233,11 +224,7 @@ func MarshalAudienceToGraphQL(ctx context.Context, result *post.Audience) *Audie
 
 func MarshalTopicToGraphQL(ctx context.Context, result *post.Topic) *Topic {
 
-	var banner *graphql.Resource
-
-	if result.BannerResource() != nil {
-		banner = graphql.MarshalResourceToGraphQL(ctx, result.BannerResource())
-	}
+	bannerResource := graphql.MarshaMediaToLegacyResourceGraphQL(ctx, result.BannerMedia())
 
 	var titleTranslations []*graphql.Translation
 
@@ -267,7 +254,7 @@ func MarshalTopicToGraphQL(ctx context.Context, result *post.Topic) *Topic {
 		ID:                      relay.NewID(Topic{}, result.ID()),
 		Reference:               result.ID(),
 		Slug:                    result.Slug(),
-		Banner:                  banner,
+		Banner:                  bannerResource,
 		TitleTranslations:       titleTranslations,
 		DescriptionTranslations: descriptionTranslations,
 		Weight:                  result.Weight(),
@@ -309,17 +296,8 @@ func MarshalGameSessionToGraphQL(ctx context.Context, result *games.Session) *Ga
 
 func MarshalSeriesToGraphQL(ctx context.Context, result *post.Series) *Series {
 
-	var res *graphql.Resource
-
-	if result.ThumbnailResource() != nil {
-		res = graphql.MarshalResourceToGraphQL(ctx, result.ThumbnailResource())
-	}
-
-	var banner *graphql.Resource
-
-	if result.BannerResource() != nil && result.BannerResource().IsProcessed() {
-		banner = graphql.MarshalResourceToGraphQL(ctx, result.BannerResource())
-	}
+	thumbnailResource := graphql.MarshaMediaToLegacyResourceGraphQL(ctx, result.ThumbnailMedia())
+	bannerResource := graphql.MarshaMediaToLegacyResourceGraphQL(ctx, result.BannerMedia())
 
 	var titleTranslations []*graphql.Translation
 
@@ -338,8 +316,8 @@ func MarshalSeriesToGraphQL(ctx context.Context, result *post.Series) *Series {
 		Reference:         result.ID(),
 		Slug:              result.Slug(),
 		TitleTranslations: titleTranslations,
-		Thumbnail:         res,
-		Banner:            banner,
+		Thumbnail:         thumbnailResource,
+		Banner:            bannerResource,
 		TotalLikes:        result.TotalLikes(),
 		TotalPosts:        result.TotalPosts(),
 	}
@@ -347,17 +325,8 @@ func MarshalSeriesToGraphQL(ctx context.Context, result *post.Series) *Series {
 
 func MarshalCategoryToGraphQL(ctx context.Context, result *post.Category) *Category {
 
-	var res *graphql.Resource
-
-	if result.ThumbnailResource() != nil {
-		res = graphql.MarshalResourceToGraphQL(ctx, result.ThumbnailResource())
-	}
-
-	var banner *graphql.Resource
-
-	if result.BannerResource() != nil && result.BannerResource().IsProcessed() {
-		banner = graphql.MarshalResourceToGraphQL(ctx, result.BannerResource())
-	}
+	thumbnailResource := graphql.MarshaMediaToLegacyResourceGraphQL(ctx, result.ThumbnailMedia())
+	bannerResource := graphql.MarshaMediaToLegacyResourceGraphQL(ctx, result.BannerMedia())
 
 	var titleTranslations []*graphql.Translation
 
@@ -392,8 +361,8 @@ func MarshalCategoryToGraphQL(ctx context.Context, result *post.Category) *Categ
 	return &Category{
 		ID:                relay.NewID(Category{}, result.ID()),
 		Reference:         result.ID(),
-		Thumbnail:         res,
-		Banner:            banner,
+		Thumbnail:         thumbnailResource,
+		Banner:            bannerResource,
 		Slug:              result.Slug(),
 		Topic:             topic,
 		TitleTranslations: titleTranslations,
@@ -405,17 +374,8 @@ func MarshalCategoryToGraphQL(ctx context.Context, result *post.Category) *Categ
 
 func MarshalCharacterToGraphQL(ctx context.Context, result *post.Character) *Character {
 
-	var res *graphql.Resource
-
-	if result.ThumbnailResource() != nil {
-		res = graphql.MarshalResourceToGraphQL(ctx, result.ThumbnailResource())
-	}
-
-	var banner *graphql.Resource
-
-	if result.BannerResource() != nil && result.BannerResource().IsProcessed() {
-		banner = graphql.MarshalResourceToGraphQL(ctx, result.BannerResource())
-	}
+	thumbnailResource := graphql.MarshaMediaToLegacyResourceGraphQL(ctx, result.ThumbnailMedia())
+	bannerResource := graphql.MarshaMediaToLegacyResourceGraphQL(ctx, result.BannerMedia())
 
 	var nameTranslations []*graphql.Translation
 
@@ -445,8 +405,8 @@ func MarshalCharacterToGraphQL(ctx context.Context, result *post.Character) *Cha
 		Reference:        result.ID(),
 		Slug:             result.Slug(),
 		Club:             clb,
-		Thumbnail:        res,
-		Banner:           banner,
+		Thumbnail:        thumbnailResource,
+		Banner:           bannerResource,
 		NameTranslations: nameTranslations,
 		Series:           series,
 		TotalLikes:       result.TotalLikes(),
@@ -909,13 +869,13 @@ func MarshalClubToGraphQL(ctx context.Context, result *club.Club) *Club {
 	var thumbnail *graphql.Resource
 
 	if result.ThumbnailMedia() != nil {
-		thumbnail = graphql.MarshalResourceToGraphQL(ctx, result.ThumbnailMedia())
+		thumbnail = graphql.MarshaMediaToLegacyResourceGraphQL(ctx, result.ThumbnailMedia())
 	}
 
 	var banner *graphql.Resource
 
 	if result.BannerMedia() != nil {
-		banner = graphql.MarshalResourceToGraphQL(ctx, result.BannerMedia())
+		banner = graphql.MarshaMediaToLegacyResourceGraphQL(ctx, result.BannerMedia())
 	}
 
 	var slugAliases []*ClubSlugAlias

@@ -570,7 +570,7 @@ func (m *Club) UpdateBannerExisting(thumbnail *media.Media) error {
 		return media.ErrMediaNotPresent
 	}
 
-	if m.bannerMedia.Id() != thumbnail.Id() {
+	if m.bannerMedia.ID() != thumbnail.ID() {
 		return media.ErrMediaNotPresent
 	}
 
@@ -588,7 +588,7 @@ func (m *Club) UpdateThumbnailExisting(thumbnail *media.Media) error {
 
 	}
 
-	if m.thumbnailMedia.Id() != thumbnail.Id() {
+	if m.thumbnailMedia.ID() != thumbnail.ID() {
 		return media.ErrMediaNotPresent
 	}
 

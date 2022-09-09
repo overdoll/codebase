@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/resource"
+	"overdoll/libraries/media"
 	"strconv"
 )
 
@@ -101,60 +101,4 @@ func (e ResourceType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-func MarshalResourceToGraphQL(ctx context.Context, res *resource.Resource) *Resource {
-
-	if res == nil {
-		return nil
-	}
-
-	var urls []*ResourceURL
-	var videoUrl *ResourceURL
-
-	if res.FullUrls() != nil {
-		for _, url := range res.FullUrls() {
-			urls = append(urls, &ResourceURL{
-				URL:      URI(url.FullUrl()),
-				MimeType: url.MimeType(),
-			})
-		}
-	}
-
-	var tp ResourceType
-
-	if res.IsImage() {
-		tp = ResourceTypeImage
-	}
-
-	if res.IsVideo() {
-		tp = ResourceTypeVideo
-		url := res.VideoThumbnailFullUrl()
-
-		if url != nil {
-			videoUrl = &ResourceURL{
-				URL:      URI(url.FullUrl()),
-				MimeType: url.MimeType(),
-			}
-		}
-	}
-
-	var progress *ResourceProgress
-
-	if !res.IsProcessed() && !res.Failed() {
-		progress = &ResourceProgress{ID: relay.NewID(ResourceProgress{}, res.ItemId(), res.ID())}
-	}
-
-	return &Resource{
-		ID:             relay.NewID(Resource{}, res.ItemId(), res.ID()),
-		Processed:      res.IsProcessed(),
-		Type:           tp,
-		Urls:           urls,
-		Width:          res.Width(),
-		Progress:       progress,
-		Height:         res.Height(),
-		VideoDuration:  res.VideoDuration(),
-		VideoThumbnail: videoUrl,
-		Preview:        res.Preview(),
-		Failed:         res.Failed(),
-		VideoNoAudio:   res.VideoNoAudio(),
-	}
-}
+func MarshaMediaToLegacyResourceGraphQL(ctx context.Context, res *media.Media) *Resource {}

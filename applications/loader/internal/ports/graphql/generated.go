@@ -46,7 +46,14 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Entity struct {
+		FindMediaProgressByID    func(childComplexity int, id relay.ID) int
 		FindResourceProgressByID func(childComplexity int, id relay.ID) int
+	}
+
+	MediaProgress struct {
+		ID       func(childComplexity int) int
+		Progress func(childComplexity int) int
+		State    func(childComplexity int) int
 	}
 
 	PageInfo struct {
@@ -73,6 +80,7 @@ type ComplexityRoot struct {
 }
 
 type EntityResolver interface {
+	FindMediaProgressByID(ctx context.Context, id relay.ID) (*types.MediaProgress, error)
 	FindResourceProgressByID(ctx context.Context, id relay.ID) (*types.ResourceProgress, error)
 }
 
@@ -91,6 +99,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	_ = ec
 	switch typeName + "." + field {
 
+	case "Entity.findMediaProgressByID":
+		if e.complexity.Entity.FindMediaProgressByID == nil {
+			break
+		}
+
+		args, err := ec.field_Entity_findMediaProgressByID_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Entity.FindMediaProgressByID(childComplexity, args["id"].(relay.ID)), true
+
 	case "Entity.findResourceProgressByID":
 		if e.complexity.Entity.FindResourceProgressByID == nil {
 			break
@@ -102,6 +122,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Entity.FindResourceProgressByID(childComplexity, args["id"].(relay.ID)), true
+
+	case "MediaProgress.id":
+		if e.complexity.MediaProgress.ID == nil {
+			break
+		}
+
+		return e.complexity.MediaProgress.ID(childComplexity), true
+
+	case "MediaProgress.progress":
+		if e.complexity.MediaProgress.Progress == nil {
+			break
+		}
+
+		return e.complexity.MediaProgress.Progress(childComplexity), true
+
+	case "MediaProgress.state":
+		if e.complexity.MediaProgress.State == nil {
+			break
+		}
+
+		return e.complexity.MediaProgress.State(childComplexity), true
 
 	case "PageInfo.endCursor":
 		if e.complexity.PageInfo.EndCursor == nil {
@@ -239,11 +280,30 @@ var sources = []*ast.Source{
   FINALIZING
 }
 
+enum MediaProgressState {
+  """Resource is waiting to be processed."""
+  WAITING
+  """Resource has started processing."""
+  STARTED
+  """Resource is finalizing processing."""
+  FINALIZING
+}
+
 type ResourceProgress @key(fields: "id") {
   id: ID!
 
   """The state at which this resource is at."""
   state: ResourceProgressState!
+
+  """The progress percent, in float. Will never be larger than 100."""
+  progress: Float!
+}
+
+type MediaProgress @key(fields: "id") {
+  id: ID!
+
+  """The state at which this media is at."""
+  state: MediaProgressState!
 
   """The progress percent, in float. Will never be larger than 100."""
   progress: Float!
@@ -277,11 +337,12 @@ interface Node {
 `, BuiltIn: true},
 	{Name: "../../../federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
-union _Entity = ResourceProgress
+union _Entity = MediaProgress | ResourceProgress
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
-		findResourceProgressByID(id: ID!,): ResourceProgress!
+		findMediaProgressByID(id: ID!,): MediaProgress!
+	findResourceProgressByID(id: ID!,): ResourceProgress!
 
 }
 
@@ -300,6 +361,21 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) field_Entity_findMediaProgressByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 relay.ID
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
+	return args, nil
+}
 
 func (ec *executionContext) field_Entity_findResourceProgressByID_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -384,6 +460,69 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
+func (ec *executionContext) _Entity_findMediaProgressByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Entity_findMediaProgressByID(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Entity().FindMediaProgressByID(rctx, fc.Args["id"].(relay.ID))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.MediaProgress)
+	fc.Result = res
+	return ec.marshalNMediaProgress2ᚖoverdollᚋapplicationsᚋloaderᚋinternalᚋportsᚋgraphqlᚋtypesᚐMediaProgress(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Entity_findMediaProgressByID(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Entity",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_MediaProgress_id(ctx, field)
+			case "state":
+				return ec.fieldContext_MediaProgress_state(ctx, field)
+			case "progress":
+				return ec.fieldContext_MediaProgress_progress(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type MediaProgress", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Entity_findMediaProgressByID_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Entity_findResourceProgressByID(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Entity_findResourceProgressByID(ctx, field)
 	if err != nil {
@@ -443,6 +582,138 @@ func (ec *executionContext) fieldContext_Entity_findResourceProgressByID(ctx con
 	if fc.Args, err = ec.field_Entity_findResourceProgressByID_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MediaProgress_id(ctx context.Context, field graphql.CollectedField, obj *types.MediaProgress) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_MediaProgress_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_MediaProgress_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MediaProgress",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MediaProgress_state(ctx context.Context, field graphql.CollectedField, obj *types.MediaProgress) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_MediaProgress_state(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.State, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(types.MediaProgressState)
+	fc.Result = res
+	return ec.marshalNMediaProgressState2overdollᚋapplicationsᚋloaderᚋinternalᚋportsᚋgraphqlᚋtypesᚐMediaProgressState(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_MediaProgress_state(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MediaProgress",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type MediaProgressState does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MediaProgress_progress(ctx context.Context, field graphql.CollectedField, obj *types.MediaProgress) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_MediaProgress_progress(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Progress, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(float64)
+	fc.Result = res
+	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_MediaProgress_progress(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MediaProgress",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Float does not have child fields")
+		},
 	}
 	return fc, nil
 }
@@ -2812,6 +3083,13 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 	switch obj := (obj).(type) {
 	case nil:
 		return graphql.Null
+	case types.MediaProgress:
+		return ec._MediaProgress(ctx, sel, &obj)
+	case *types.MediaProgress:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._MediaProgress(ctx, sel, obj)
 	case types.ResourceProgress:
 		return ec._ResourceProgress(ctx, sel, &obj)
 	case *types.ResourceProgress:
@@ -2847,6 +3125,29 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Entity")
+		case "findMediaProgressByID":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Entity_findMediaProgressByID(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
 		case "findResourceProgressByID":
 			field := field
 
@@ -2870,6 +3171,48 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var mediaProgressImplementors = []string{"MediaProgress", "_Entity"}
+
+func (ec *executionContext) _MediaProgress(ctx context.Context, sel ast.SelectionSet, obj *types.MediaProgress) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, mediaProgressImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("MediaProgress")
+		case "id":
+
+			out.Values[i] = ec._MediaProgress_id(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "state":
+
+			out.Values[i] = ec._MediaProgress_state(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "progress":
+
+			out.Values[i] = ec._MediaProgress_progress(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3434,6 +3777,30 @@ func (ec *executionContext) unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelay�
 }
 
 func (ec *executionContext) marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx context.Context, sel ast.SelectionSet, v relay.ID) graphql.Marshaler {
+	return v
+}
+
+func (ec *executionContext) marshalNMediaProgress2overdollᚋapplicationsᚋloaderᚋinternalᚋportsᚋgraphqlᚋtypesᚐMediaProgress(ctx context.Context, sel ast.SelectionSet, v types.MediaProgress) graphql.Marshaler {
+	return ec._MediaProgress(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNMediaProgress2ᚖoverdollᚋapplicationsᚋloaderᚋinternalᚋportsᚋgraphqlᚋtypesᚐMediaProgress(ctx context.Context, sel ast.SelectionSet, v *types.MediaProgress) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._MediaProgress(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNMediaProgressState2overdollᚋapplicationsᚋloaderᚋinternalᚋportsᚋgraphqlᚋtypesᚐMediaProgressState(ctx context.Context, v interface{}) (types.MediaProgressState, error) {
+	var res types.MediaProgressState
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNMediaProgressState2overdollᚋapplicationsᚋloaderᚋinternalᚋportsᚋgraphqlᚋtypesᚐMediaProgressState(ctx context.Context, sel ast.SelectionSet, v types.MediaProgressState) graphql.Marshaler {
 	return v
 }
 

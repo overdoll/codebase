@@ -3,12 +3,10 @@ package post
 import (
 	"github.com/go-playground/validator/v10"
 	"overdoll/applications/sting/internal/domain/club"
-	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/media"
-	"overdoll/libraries/resource"
 	"regexp"
 	"time"
 
@@ -75,7 +73,7 @@ func NewPost(requester *principal.Principal, club *club.Club) (*Post, error) {
 	}, nil
 }
 
-func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int, contributorId string, contentResourceIds []string, contentResources []*resource.Resource, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt, updatedAt time.Time, postedAt *time.Time, description map[string]string) *Post {
+func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int, contributorId string, contentResourceIds []string, contentMedia []*media.Media, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt, updatedAt time.Time, postedAt *time.Time, description map[string]string) *Post {
 
 	ps, _ := StateFromString(state)
 	so, _ := SupporterOnlyStatusFromString(supporterOnlyStatus)
@@ -84,10 +82,10 @@ func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int,
 
 	for _, resourceId := range contentResourceIds {
 
-		var res *resource.Resource
-		var hiddenRes *resource.Resource
+		var res *media.Media
+		var hiddenRes *media.Media
 
-		for _, r := range contentResources {
+		for _, r := range contentMedia {
 
 			if r.ID() == resourceId {
 				res = r
@@ -412,7 +410,7 @@ func (p *Post) updatePostSupporterOnlyStatus() {
 	p.update()
 }
 
-func (p *Post) AddContentRequest(requester *principal.Principal, resources []*resource.Resource) error {
+func (p *Post) AddContentRequest(requester *principal.Principal, resources []*media.Media) error {
 
 	if err := p.CanUpdate(requester); err != nil {
 		return err
@@ -421,10 +419,6 @@ func (p *Post) AddContentRequest(requester *principal.Principal, resources []*re
 	var newContent []*Content
 
 	for _, contentId := range resources {
-
-		if !contentId.IsPrivate() {
-			return errors.New("only private content is allowed for posts")
-		}
 
 		found := false
 
@@ -546,7 +540,7 @@ func (p *Post) RemoveContentRequest(requester *principal.Principal, contentIds [
 		foundContent := false
 
 		for _, removedContent := range contentIds {
-			if removedContent == content.media.Id() {
+			if removedContent == content.media.ID() {
 				foundContent = true
 				continue
 			}
@@ -740,7 +734,7 @@ func validateExistingResource(current *media.Media, new *media.Media) error {
 		return media.ErrMediaNotPresent
 	}
 
-	if current.Id() != new.Id() {
+	if current.ID() != new.ID() {
 		return media.ErrMediaNotPresent
 	}
 

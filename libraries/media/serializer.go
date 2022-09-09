@@ -402,3 +402,15 @@ func (c *Serializer) unmarshalResourceFromDatabaseWithSignedUrls(i serializedRes
 		i.VideoNoAudio,
 	), nil
 }
+
+func MarshalMediaToDatabase(media *Media) (*string, error) {
+	return nil, nil
+}
+
+func UnmarshalMediaFromDatabase(ctx context.Context, media *string) (*Media, error) {
+	return nil, nil
+}
+
+func UnmarshalMediaWithLegacyFromDatabase(ctx context.Context, resource string, media *string) (*Media, error) {
+	return nil, nil
+}

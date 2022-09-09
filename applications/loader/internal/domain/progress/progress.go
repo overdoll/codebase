@@ -7,11 +7,11 @@ type Progress struct {
 	state      ProgressState
 }
 
-func (p *Progress) ItemId() string {
+func (p *Progress) LinkedId() string {
 	return p.itemId
 }
 
-func (p *Progress) ResourceId() string {
+func (p *Progress) MediaId() string {
 	return p.resourceId
 }
 

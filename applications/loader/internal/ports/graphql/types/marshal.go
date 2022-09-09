@@ -2,25 +2,44 @@ package types
 
 import (
 	"context"
-	"overdoll/applications/loader/internal/domain/resource"
+	"overdoll/applications/loader/internal/domain/progress"
 	"overdoll/libraries/graphql/relay"
 )
 
-func MarshalResourceProgressToGraphQL(ctx context.Context, progress *resource.Progress) *ResourceProgress {
+func MarshalMediaProgressToGraphQL(ctx context.Context, prog *progress.Progress) *MediaProgress {
+
+	var state MediaProgressState
+
+	if prog.State() == progress.Started {
+		state = MediaProgressStateStarted
+	}
+
+	if prog.State() == progress.Finalizing {
+		state = MediaProgressStateFinalizing
+	}
+
+	if prog.State() == progress.Waiting {
+		state = MediaProgressStateWaiting
+	}
+
+	return &MediaProgress{ID: relay.NewID(&MediaProgress{}, prog.LinkedId(), prog.MediaId()), State: state, Progress: prog.Progress()}
+}
+
+func MarshalMediaProgressToLegacyResourceProgressGraphQL(ctx context.Context, prog *MediaProgress) *ResourceProgress {
 
 	var state ResourceProgressState
 
-	if progress.State() == resource.Started {
+	if prog.State == MediaProgressStateStarted {
 		state = ResourceProgressStateStarted
 	}
 
-	if progress.State() == resource.Finalizing {
+	if prog.State == MediaProgressStateFinalizing {
 		state = ResourceProgressStateFinalizing
 	}
 
-	if progress.State() == resource.Waiting {
+	if prog.State == MediaProgressStateWaiting {
 		state = ResourceProgressStateWaiting
 	}
 
-	return &ResourceProgress{ID: relay.NewID(&ResourceProgress{}, progress.ItemId(), progress.ResourceId()), State: state, Progress: progress.Progress()}
+	return &ResourceProgress{ID: relay.NewID(&ResourceProgress{}, prog.ID.GetCompositePartID(1), prog.ID.GetCompositePartID(0)), State: state, Progress: prog.Progress}
 }

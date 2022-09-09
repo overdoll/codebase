@@ -16,16 +16,16 @@ type ProcessMediaFromUploads struct {
 	Source    string
 }
 
-type CreateOrGetResourcesFromUploadsHandler struct {
+type ProcessMediaFromUploadsHandler struct {
 	ur    upload.Repository
 	event event.Repository
 }
 
-func NewCreateOrGetResourcesFromUploadsHandler(ur upload.Repository, event event.Repository) CreateOrGetResourcesFromUploadsHandler {
-	return CreateOrGetResourcesFromUploadsHandler{ur: ur, event: event}
+func NewProcessMediaFromUploadsHandler(ur upload.Repository, event event.Repository) ProcessMediaFromUploadsHandler {
+	return ProcessMediaFromUploadsHandler{ur: ur, event: event}
 }
 
-func (h CreateOrGetResourcesFromUploadsHandler) Handle(ctx context.Context, cmd ProcessMediaFromUploads) ([]*media.Media, error) {
+func (h ProcessMediaFromUploadsHandler) Handle(ctx context.Context, cmd ProcessMediaFromUploads) ([]*media.Media, error) {
 
 	var results []*media.Media
 

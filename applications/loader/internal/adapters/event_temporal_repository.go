@@ -29,7 +29,7 @@ func (r EventTemporalRepository) GenerateImageFromMedia(ctx context.Context, med
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "loader.GenerateImageFromMedia_" + media.Id() + "_" + newMedia.Id(),
+		ID:        "loader.GenerateImageFromMedia_" + media.ID() + "_" + newMedia.ID(),
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ProcessMedia,

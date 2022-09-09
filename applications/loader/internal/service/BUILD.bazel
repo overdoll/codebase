@@ -41,8 +41,6 @@ go_test(
         "//libraries/config",
         "//libraries/graphql/relay",
         "//libraries/passport",
-        "//libraries/resource",
-        "//libraries/resource/proto:libraries_go_proto",
         "//libraries/testing_tools",
         "//libraries/uuid",
         "@com_github_99designs_gqlgen//graphql",

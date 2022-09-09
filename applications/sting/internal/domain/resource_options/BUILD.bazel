@@ -5,5 +5,4 @@ go_library(
     srcs = ["resource_options.go"],
     importpath = "overdoll/applications/sting/internal/domain/resource_options",
     visibility = ["//applications/sting:__subpackages__"],
-    deps = ["//libraries/resource"],
 )
