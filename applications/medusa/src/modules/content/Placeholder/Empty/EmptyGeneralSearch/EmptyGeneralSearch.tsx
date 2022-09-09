@@ -1,29 +1,21 @@
-import { Trans } from '@lingui/react'
 import EmptyBackground, { HintProp } from '../EmptyBackground/EmptyBackground'
 import { SearchBar } from '@//:assets/icons'
+import { Trans } from '@lingui/macro'
 
 export default function EmptyGeneralSearch ({ hint }: HintProp): JSX.Element {
-  const emptyMessage = (
-    <Trans
-      id='message.placeholder.empty.clubs.on'
-      message='No categories, characters, or series were found'
-      values={{}}
-      components={{}}
-    />
-  )
-
-  const fullMessage = (
-    <Trans
-      id='message.placeholder.empty.clubs.other'
-      values={{ hint: hint }}
-      message={`No categories, characters, or series were found from the text ${hint as string}`}
-      components={{}}
-    />
-  )
-
   return (
     <EmptyBackground icon={SearchBar}>
-      {hint == null ? emptyMessage : fullMessage}
+      {hint == null
+        ? (
+          <Trans>
+            No categories, characters, or series were found
+          </Trans>
+          )
+        : (
+          <Trans>
+            No categories, characters, or series were found from the text {hint}
+          </Trans>
+          )}
     </EmptyBackground>
   )
 }

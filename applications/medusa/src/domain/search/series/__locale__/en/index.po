@@ -29,10 +29,10 @@ msgstr ""
 msgid "Share on Discord"
 msgstr ""
 
-#: src/domain/search/series/RootSearchSeries/SearchSeries/SearchSeriesShareRedditButton/SearchSeriesShareRedditButton.tsx:44
+#: src/domain/search/series/RootSearchSeries/SearchSeries/SearchSeriesShareRedditButton/SearchSeriesShareRedditButton.tsx:45
 msgid "Share on Reddit"
 msgstr ""
 
-#: src/domain/search/series/RootSearchSeries/SearchSeries/SearchSeriesShareTwitterButton/SearchSeriesShareTwitterButton.tsx:51
+#: src/domain/search/series/RootSearchSeries/SearchSeries/SearchSeriesShareTwitterButton/SearchSeriesShareTwitterButton.tsx:52
 msgid "Share on Twitter"
 msgstr ""

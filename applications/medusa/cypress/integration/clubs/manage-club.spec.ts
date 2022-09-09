@@ -30,7 +30,7 @@ describe('Manage Club', () => {
      */
     cy.visit(`/${clubName}`)
     cy.findByText(/You haven't posted/iu).should('be.visible')
-    clickOnButton(/Create a Post/iu)
+    clickOnButton(/Create Post/iu)
     cy.url().should('include', `/club/${clubName}/create-post`)
 
     /**
@@ -55,9 +55,10 @@ describe('Manage Club', () => {
     typeIntoPlaceholder(/Enter a new club link/, newClubName)
     clickOnButton(/Submit/iu)
     // change to new club link and remove old
-    cy.get('button[aria-label="Open Menu"]').click()
+    cy.get('button[aria-label="Open Menu"]').click({ force: true })
     cy.findByText(/Set Default/iu).should('be.visible').click()
-    cy.get('button[aria-label="Open Menu"]').click()
+    cy.findByText(/Successfully promoted/iu).should('be.visible')
+    cy.get('button[aria-label="Open Menu"]').click({ force: true })
     cy.findByText(/Remove Alias/iu).should('be.visible').click()
     cy.findByText(/clubName/iu).should('not.exist')
     clickOnButton(/Add Club Link Alias/iu)

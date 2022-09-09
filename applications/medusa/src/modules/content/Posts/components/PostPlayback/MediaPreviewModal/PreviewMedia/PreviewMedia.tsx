@@ -49,6 +49,7 @@ export default function PreviewMedia ({
 
   return (
     <ControlledVideo
+      hideBackground
       controls={{
         canSeek: true,
         canFullscreen: true

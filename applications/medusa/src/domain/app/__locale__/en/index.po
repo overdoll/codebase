@@ -112,8 +112,8 @@ msgstr ""
 msgid "Club Locked"
 msgstr ""
 
-#: src/common/components/Layouts/ClubLayout/SelectClubs/SelectClubs.tsx:54
-#: src/common/components/Layouts/ClubLayout/SelectClubs/SelectClubs.tsx:68
+#: src/common/components/Layouts/ClubLayout/SelectClubs/SelectClubs.tsx:55
+#: src/common/components/Layouts/ClubLayout/SelectClubs/SelectClubs.tsx:69
 msgid "Club Not Found"
 msgstr ""
 
@@ -359,6 +359,54 @@ msgstr ""
 msgid "No"
 msgstr ""
 
+#: src/modules/content/Placeholder/Empty/EmptyAudiences/EmptyAudiences.tsx:10
+msgid "No audiences were found"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyAudiences/EmptyAudiences.tsx:15
+msgid "No audiences were found with the title {hint}"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyCategories/EmptyCategories.tsx:10
+msgid "No categories were found"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyCategories/EmptyCategories.tsx:15
+msgid "No categories were found with the title {hint}"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyGeneralSearch/EmptyGeneralSearch.tsx:10
+msgid "No categories, characters, or series were found"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyGeneralSearch/EmptyGeneralSearch.tsx:15
+msgid "No categories, characters, or series were found from the text {hint}"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyCharacters/EmptyCharacters.tsx:10
+msgid "No characters were found"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyCharacters/EmptyCharacters.tsx:15
+msgid "No characters were found with the name {hint}"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyClubs/EmptyClubs.tsx:10
+msgid "No clubs were found"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyClubs/EmptyClubs.tsx:15
+msgid "No clubs were found with the name {hint}"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyCustomCharacters/EmptyCustomCharacters.tsx:16
+msgid "No original characters were found with the name {hint}. Turn off the filter if you would like to search for all characters instead."
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyCustomCharacters/EmptyCustomCharacters.tsx:10
+msgid "No original characters were found. Turn off the filter if you would like to search for all characters instead."
+msgstr ""
+
 #: src/modules/content/Placeholder/Empty/EmptyPaymentMethods/EmptyPaymentMethods.tsx:8
 msgid "No payment methods found"
 msgstr ""
@@ -379,8 +427,24 @@ msgstr ""
 msgid "No rules were found"
 msgstr ""
 
+#: src/modules/content/Placeholder/Empty/EmptySeries/EmptySeries.tsx:10
+msgid "No series were found"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptySeries/EmptySeries.tsx:15
+msgid "No series were found with the title {hint}"
+msgstr ""
+
 #: src/modules/content/Placeholder/Empty/EmptySubscriptions/EmptySubscriptions.tsx:8
 msgid "No subscriptions were found"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyTopics/EmptyTopics.tsx:10
+msgid "No topics were found"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyTopics/EmptyTopics.tsx:15
+msgid "No topics were found with the title {hint}"
 msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyTransactions/EmptyTransactions.tsx:8
@@ -633,13 +697,13 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: src/common/components/PlatformPromoteAlert/PlatformShareRedditButton/PlatformShareRedditButton.tsx:19
-#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostShareRedditButton/PostShareRedditButton.tsx:53
+#: src/common/components/PlatformPromoteAlert/PlatformShareRedditButton/PlatformShareRedditButton.tsx:20
+#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostShareRedditButton/PostShareRedditButton.tsx:54
 msgid "Share on Reddit"
 msgstr ""
 
-#: src/common/components/PlatformPromoteAlert/PlatformShareTwitterButton/PlatformShareTwitterButton.tsx:20
-#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostShareTwitterButton/PostShareTwitterButton.tsx:69
+#: src/common/components/PlatformPromoteAlert/PlatformShareTwitterButton/PlatformShareTwitterButton.tsx:21
+#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostShareTwitterButton/PostShareTwitterButton.tsx:70
 msgid "Share on Twitter"
 msgstr ""
 
@@ -977,65 +1041,65 @@ msgid "message.fallback.error.retry"
 msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyAudiences/EmptyAudiences.tsx:7
-msgid "message.placeholder.empty.audiences.one"
-msgstr ""
+#~ msgid "message.placeholder.empty.audiences.one"
+#~ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyAudiences/EmptyAudiences.tsx:16
-msgid "message.placeholder.empty.audiences.other"
-msgstr ""
+#~ msgid "message.placeholder.empty.audiences.other"
+#~ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyCategories/EmptyCategories.tsx:7
-msgid "message.placeholder.empty.categories.one"
-msgstr ""
+#~ msgid "message.placeholder.empty.categories.one"
+#~ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyCategories/EmptyCategories.tsx:16
-msgid "message.placeholder.empty.categories.other"
-msgstr ""
+#~ msgid "message.placeholder.empty.categories.other"
+#~ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyCharacters/EmptyCharacters.tsx:7
-msgid "message.placeholder.empty.characters.one"
-msgstr ""
+#~ msgid "message.placeholder.empty.characters.one"
+#~ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyCharacters/EmptyCharacters.tsx:16
-msgid "message.placeholder.empty.characters.other"
-msgstr ""
+#~ msgid "message.placeholder.empty.characters.other"
+#~ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyGeneralSearch/EmptyGeneralSearch.tsx:7
-msgid "message.placeholder.empty.clubs.on"
-msgstr ""
+#~ msgid "message.placeholder.empty.clubs.on"
+#~ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyClubs/EmptyClubs.tsx:7
-msgid "message.placeholder.empty.clubs.one"
-msgstr ""
+#~ msgid "message.placeholder.empty.clubs.one"
+#~ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyClubs/EmptyClubs.tsx:16
 #: src/modules/content/Placeholder/Empty/EmptyGeneralSearch/EmptyGeneralSearch.tsx:16
-msgid "message.placeholder.empty.clubs.other"
-msgstr ""
+#~ msgid "message.placeholder.empty.clubs.other"
+#~ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyCustomCharacters/EmptyCustomCharacters.tsx:7
-msgid "message.placeholder.empty.custom_characters.one"
-msgstr ""
+#~ msgid "message.placeholder.empty.custom_characters.one"
+#~ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyCustomCharacters/EmptyCustomCharacters.tsx:16
-msgid "message.placeholder.empty.custom_characters.other"
-msgstr ""
+#~ msgid "message.placeholder.empty.custom_characters.other"
+#~ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptySeries/EmptySeries.tsx:7
-msgid "message.placeholder.empty.series.one"
-msgstr ""
+#~ msgid "message.placeholder.empty.series.one"
+#~ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptySeries/EmptySeries.tsx:16
-msgid "message.placeholder.empty.series.other"
-msgstr ""
+#~ msgid "message.placeholder.empty.series.other"
+#~ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyTopics/EmptyTopics.tsx:7
-msgid "message.placeholder.empty.topics.one"
-msgstr ""
+#~ msgid "message.placeholder.empty.topics.one"
+#~ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyTopics/EmptyTopics.tsx:16
-msgid "message.placeholder.empty.topics.other"
-msgstr ""
+#~ msgid "message.placeholder.empty.topics.other"
+#~ msgstr ""
 
 #: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:78
 #~ msgid "{0}"

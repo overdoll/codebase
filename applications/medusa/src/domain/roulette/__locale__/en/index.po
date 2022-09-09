@@ -129,11 +129,11 @@ msgstr ""
 msgid "Score"
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteClosedShareRedditButton/RouletteClosedShareRedditButton.tsx:56
+#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteClosedShareRedditButton/RouletteClosedShareRedditButton.tsx:57
 msgid "Share on Reddit"
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteClosedShareTwitterButton/RouletteClosedShareTwitterButton.tsx:57
+#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteClosedShareTwitterButton/RouletteClosedShareTwitterButton.tsx:58
 #: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteScreenClosed.tsx:235
 msgid "Share on Twitter"
 msgstr ""

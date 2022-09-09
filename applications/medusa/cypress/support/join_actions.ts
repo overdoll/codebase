@@ -33,9 +33,4 @@ export const join = (email: string): void => {
   })
 
   cy.url().should('include', '/verify-token')
-
-  cy.waitUntil(() => cy.findByRole('button', { name: /I closed the original tab/iu }).should('not.be.disabled'))
-
-  cy.findByRole('button', { name: /I closed the original tab/iu })
-    .click()
 }
