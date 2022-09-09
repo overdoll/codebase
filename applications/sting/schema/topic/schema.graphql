@@ -11,6 +11,9 @@ type Topic implements Node @key(fields: "id") {
   """A URL pointing to the object's banner."""
   banner: Resource
 
+  """A URL pointing to the object's banner."""
+  bannerMedia: Media
+
   """
   A title for this topic.
 

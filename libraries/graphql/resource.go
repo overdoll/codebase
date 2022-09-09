@@ -101,4 +101,6 @@ func (e ResourceType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-func MarshaMediaToLegacyResourceGraphQL(ctx context.Context, res *media.Media) *Resource {}
+func MarshaMediaToLegacyResourceGraphQL(ctx context.Context, res *media.Media) *Resource {
+	return nil
+}

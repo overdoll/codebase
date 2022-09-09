@@ -49,3 +49,15 @@ func (m *Media) IsLegacy() bool {
 func (m *Media) LegacyResource() string {
 	return ""
 }
+
+func (m *Media) IsVideo() bool {
+	return true
+}
+
+func (m *Media) VideoDuration() int {
+	return 0
+}
+
+func (m *Media) VideoNoAudio() bool {
+	return false
+}

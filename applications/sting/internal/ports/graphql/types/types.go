@@ -125,8 +125,12 @@ type Audience struct {
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
 	Thumbnail *graphql1.Resource `json:"thumbnail"`
+	// A URL pointing to the object's thumbnail.
+	ThumbnailMedia graphql1.Media `json:"thumbnailMedia"`
 	// A URL pointing to the object's banner.
 	Banner *graphql1.Resource `json:"banner"`
+	// A URL pointing to the object's banner.
+	BannerMedia graphql1.Media `json:"bannerMedia"`
 	// A title for this audience.
 	//
 	// Optionally pass a locale to display it in a specific language. English by default.
@@ -174,8 +178,12 @@ type Category struct {
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
 	Thumbnail *graphql1.Resource `json:"thumbnail"`
+	// A URL pointing to the object's thumbnail.
+	ThumbnailMedia graphql1.Media `json:"thumbnailMedia"`
 	// A URL pointing to the object's banner.
 	Banner *graphql1.Resource `json:"banner"`
+	// A URL pointing to the object's banner.
+	BannerMedia graphql1.Media `json:"bannerMedia"`
 	// A title for this category.
 	//
 	// Optionally pass a locale to display it in a specific language. English by default.
@@ -226,8 +234,12 @@ type Character struct {
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
 	Thumbnail *graphql1.Resource `json:"thumbnail"`
+	// A URL pointing to the object's thumbnail.
+	ThumbnailMedia graphql1.Media `json:"thumbnailMedia"`
 	// A URL pointing to the object's banner.
 	Banner *graphql1.Resource `json:"banner"`
+	// A URL pointing to the object's banner.
+	BannerMedia graphql1.Media `json:"bannerMedia"`
 	// A name for this character.
 	//
 	// Optionally pass a locale to display it in a specific language. English by default.
@@ -277,10 +289,14 @@ type Club struct {
 	SlugAliases []*ClubSlugAlias `json:"slugAliases"`
 	// A list of links for this club.
 	Links []*ClubLink `json:"links"`
-	// A resource of the club's thumbnail.
+	// A URL pointing to the object's thumbnail.
 	Thumbnail *graphql1.Resource `json:"thumbnail"`
-	// A resource of the club's banner.
+	// A URL pointing to the object's thumbnail.
+	ThumbnailMedia graphql1.Media `json:"thumbnailMedia"`
+	// A URL pointing to the object's banner.
 	Banner *graphql1.Resource `json:"banner"`
+	// A URL pointing to the object's banner.
+	BannerMedia graphql1.Media `json:"bannerMedia"`
 	// A name for this club.
 	Name string `json:"name"`
 	// The account that owns this club.
@@ -777,6 +793,12 @@ type PostContent struct {
 	ID relay.ID `json:"id"`
 	// The resource belonging to this content.
 	Resource *graphql1.Resource `json:"resource"`
+	// The media belonging to this content.
+	Media graphql1.Media `json:"media"`
+	// If "viewerCanViewSupporterOnlyContent" is false, will contain the duration of the video, if the media is a video.
+	SupporterOnlyVideoMediaDuration *int `json:"supporterOnlyVideoMediaDuration"`
+	// If "viewerCanViewSupporterOnlyContent" is false, will say if the video has audio, if the media is a video.
+	SupporterOnlyVideoMediaHasAudio *bool `json:"supporterOnlyVideoMediaHasAudio"`
 	// The resource for the supporter-only content.
 	//
 	// If "viewerCanViewSupporterOnlyContent" is false, then this field will contain the original resource, with the URLs omitted. This allows you to use the details, such as the type (since the resource in the "resource" box will always be an image) or see the duration of the video.
@@ -913,8 +935,12 @@ type Series struct {
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
 	Thumbnail *graphql1.Resource `json:"thumbnail"`
+	// A URL pointing to the object's thumbnail.
+	ThumbnailMedia graphql1.Media `json:"thumbnailMedia"`
 	// A URL pointing to the object's banner.
 	Banner *graphql1.Resource `json:"banner"`
+	// A URL pointing to the object's banner.
+	BannerMedia graphql1.Media `json:"bannerMedia"`
 	// A title for this series.
 	//
 	// Optionally pass a locale to display it in a specific language. English by default.
@@ -1004,6 +1030,8 @@ type Topic struct {
 	Slug string `json:"slug"`
 	// A URL pointing to the object's banner.
 	Banner *graphql1.Resource `json:"banner"`
+	// A URL pointing to the object's banner.
+	BannerMedia graphql1.Media `json:"bannerMedia"`
 	// A title for this topic.
 	//
 	// Optionally pass a locale to display it in a specific language. English by default.

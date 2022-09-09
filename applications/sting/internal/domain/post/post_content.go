@@ -30,7 +30,7 @@ func (m *Content) SupporterOnlyMediaRequest(requester *principal.Principal) *med
 		return nil
 	}
 
-	return m.media.AsEmpty()
+	return m.media
 }
 
 func (m *Content) Media() *media.Media {

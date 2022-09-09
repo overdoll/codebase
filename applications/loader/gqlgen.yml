@@ -1,5 +1,6 @@
 schema:
   - ./schema/**/*.graphql
+  - ../../libraries/graphql/schema.graphql
   - ../../libraries/graphql/relay/schema.graphql
 
 exec:
@@ -17,9 +18,54 @@ federation:
 
 autobind:
   - overdoll/libraries/graphql/relay
+  - overdoll/libraries/graphql
 
 models:
   ID:
     model: overdoll/libraries/graphql/relay.ID
   Node:
     model: overdoll/libraries/graphql/relay.Node
+  PageInfo:
+    model: overdoll/libraries/graphql/relay.PageInfo
+  URI:
+    model: overdoll/libraries/graphql.URI
+  Date:
+    model: overdoll/libraries/graphql.Date
+  Translation:
+    model: overdoll/libraries/graphql.Translation
+  Language:
+    model: overdoll/libraries/graphql.Language
+  Currency:
+    model: overdoll/libraries/graphql.Currency
+  Resource:
+    model: overdoll/libraries/graphql.Resource
+  ResourceProgress:
+    model: overdoll/libraries/graphql.ResourceProgress
+  ResourceUrl:
+    model: overdoll/libraries/graphql.ResourceURL
+  ResourceType:
+    model: overdoll/libraries/graphql.ResourceType
+  Media:
+    model: overdoll/libraries/graphql.Media
+  VideoMedia:
+    model: overdoll/libraries/graphql.VideoMedia
+  VideoContainer:
+    model: overdoll/libraries/graphql.VideoContainer
+  HLSVideoContainer:
+    model: overdoll/libraries/graphql.HLSVideoContainer
+  MP4VideoContainer:
+    model: overdoll/libraries/graphql.MP4VideoContainer
+  AspectRatio:
+    model: overdoll/libraries/graphql.AspectRatio
+  ImageMedia:
+    model: overdoll/libraries/graphql.ImageMedia
+  RawMedia:
+    model: overdoll/libraries/graphql.RawMedia
+  MediaProgress:
+    model: overdoll/libraries/graphql.MediaProgress
+  ColorPalette:
+    model: overdoll/libraries/graphql.ColorPalette
+  ImageMediaVariants:
+    model: overdoll/libraries/graphql.ImageMediaVariants
+  ImageMediaAccess:
+    model: overdoll/libraries/graphql.ImageMediaAccess

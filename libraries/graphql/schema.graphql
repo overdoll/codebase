@@ -133,6 +133,8 @@ type ImageMediaAccess {
 All variants available for an image.
 """
 type ImageMediaVariants {
+  """50x50 crop of an image. Suitable for mini icons."""
+  mini: ImageMediaAccess!
   """150x150 crop of an image. Suitable for small previews."""
   thumbnail: ImageMediaAccess!
   """768px width or height resize."""
@@ -143,6 +145,12 @@ type ImageMediaVariants {
   large: ImageMediaAccess!
   """640px width or height resize."""
   banner: ImageMediaAccess!
+  """480px width or height resize."""
+  video480: ImageMediaAccess!
+  """720px width or height resize."""
+  video720: ImageMediaAccess!
+  """1080px width or height resize."""
+  video1080: ImageMediaAccess!
 }
 
 type ColorPalette {
@@ -190,7 +198,7 @@ type ImageMedia {
   colorPalettes: [ColorPalette!]!
 }
 
-"""Data about the aspect ratio of the video. Note that this will always be values like 4:3, 16:9, etc..."""
+"""Data about the aspect ratio."""
 type AspectRatio {
   """The width."""
   width: Int!
