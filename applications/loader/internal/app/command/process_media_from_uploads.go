@@ -6,7 +6,6 @@ import (
 	"overdoll/applications/loader/internal/domain/upload"
 	"overdoll/libraries/media"
 	"overdoll/libraries/media/proto"
-	"overdoll/libraries/uuid"
 	"strings"
 )
 
@@ -37,8 +36,8 @@ func (h ProcessMediaFromUploadsHandler) Handle(ctx context.Context, cmd ProcessM
 		}
 
 		sourceMedia := &proto.Media{
-			Id:               uuid.New().String(),
-			UploadId:         final.FileId(),
+			Id:               final.FileId(),
+			IsUpload:         true,
 			OriginalFileName: final.FileName(),
 			Private:          true,
 			Link:             cmd.Link,

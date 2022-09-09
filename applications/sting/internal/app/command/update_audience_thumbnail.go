@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/media"
 	"overdoll/libraries/principal"
 )
 
@@ -26,7 +27,7 @@ func (h UpdateAudienceThumbnailHandler) Handle(ctx context.Context, cmd UpdateAu
 	aud, err := h.pr.UpdateAudienceThumbnail(ctx, cmd.Principal, cmd.AudienceId, func(audience *post.Audience) error {
 
 		// create resources from content
-		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.AudienceId, []string{cmd.Thumbnail}, false, "AUDIENCE", true, 100, 0)
+		resourceIds, err := h.loader.ProcessMediaFromUploads(ctx, []string{cmd.Thumbnail}, media.NewAudienceThumbnailMediaLink(cmd.AudienceId))
 
 		if err != nil {
 			return err

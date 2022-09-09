@@ -103,13 +103,13 @@ func unmarshalClubDocument(ctx context.Context, source json.RawMessage, sort []i
 		return nil, errors.Wrap(err, "failed search clubs - unmarshal")
 	}
 
-	unmarshalledThumbnail, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, bd.ThumbnailResource, bd.ThumbnailMedia)
+	unmarshalledThumbnail, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, bd.ThumbnailResource, bd.ThumbnailMedia)
 
 	if err != nil {
 		return nil, err
 	}
 
-	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, bd.BannerResource, bd.BannerMedia)
+	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, bd.BannerResource, bd.BannerMedia)
 
 	if err != nil {
 		return nil, err

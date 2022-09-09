@@ -12,7 +12,6 @@ import (
 	"overdoll/applications/sting/internal/app/workflows/activities"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
-	"overdoll/libraries/resource"
 	"overdoll/libraries/testing_tools/mocks"
 )
 
@@ -23,13 +22,11 @@ func NewApplication(ctx context.Context) (*app.Application, func()) {
 	carrierClient, cleanup3 := clients.NewCarrierClient(ctx, os.Getenv("CARRIER_SERVICE"))
 	loaderClient, cleanup4 := clients.NewLoaderClient(ctx, os.Getenv("LOADER_SERVICE"))
 
-	serializer := resource.NewSerializer()
-
 	return createApplication(ctx,
 			adapters.NewEvaGrpc(evaClient),
 			adapters.NewParleyGrpc(parleyClient),
 			adapters.NewCarrierGrpc(carrierClient),
-			adapters.NewLoaderGrpc(loaderClient, serializer),
+			adapters.NewLoaderGrpc(loaderClient),
 			clients.NewTemporalClient(ctx)),
 		func() {
 			cleanup()
@@ -57,15 +54,13 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 	carrierClient := &mocks.MockCarrierClient{}
 	temporalClient := &temporalmocks.Client{}
 
-	serializer := resource.NewSerializer()
-
 	return &ComponentTestApplication{
 		App: createApplication(
 			ctx,
 			adapters.NewEvaGrpc(evaClient),
 			adapters.NewParleyGrpc(parleyClient),
 			adapters.NewCarrierGrpc(carrierClient),
-			adapters.NewLoaderGrpc(loaderClient, serializer),
+			adapters.NewLoaderGrpc(loaderClient),
 			temporalClient,
 		),
 		TemporalClient: temporalClient,
@@ -85,18 +80,16 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 	eventRepo := adapters.NewEventTemporalRepository(client)
 
 	cache := bootstrap.InitializeRedisSession()
-	resourceSerializer := resource.NewSerializer()
+	clubRepo := adapters.NewClubCassandraElasticsearchRepository(session, esClient, cache)
 
-	clubRepo := adapters.NewClubCassandraElasticsearchRepository(session, esClient, cache, resourceSerializer)
-
-	postRepo := adapters.NewPostsCassandraRepository(session, esClient, resourceSerializer, awsSession, cache)
+	postRepo := adapters.NewPostsCassandraRepository(session, esClient, awsSession, cache)
 	personalizationRepo := adapters.NewCurationProfileCassandraRepository(session)
 	gamesRepo := adapters.NewGamesCassandraRepository(session)
 
 	return &app.Application{
 		Commands: app.Commands{
 			TransferClubOwnership: command.NewTransferClubOwnershipHandler(clubRepo, eventRepo, eva),
-			UpdateResources:       command.NewUpdateResourcesHandler(postRepo, clubRepo, eventRepo),
+			UpdateMedia:           command.NewUpdateMediaHandler(postRepo, clubRepo, eventRepo),
 			CreatePost:            command.NewCreatePostHandler(postRepo, clubRepo),
 			PublishPost:           command.NewPublishPostHandler(postRepo, eventRepo),
 			DiscardPost:           command.NewDiscardPostHandler(postRepo, eventRepo),
@@ -195,8 +188,6 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			CreateGameSession: command.NewCreateGameSessionHandler(gamesRepo, postRepo),
 
 			IndexClub: command.NewIndexClubHandler(clubRepo),
-
-			ReprocessPostContent: command.NewReprocessPostContentHandler(postRepo, loader),
 		},
 		Queries: app.Queries{
 			DiscoverClubs: query.NewDiscoverClubsHandler(clubRepo),

@@ -118,13 +118,13 @@ func (r PostsCassandraElasticsearchRepository) unmarshalAudienceDocument(ctx con
 		return nil, errors.Wrap(err, "failed search audience - unmarshal")
 	}
 
-	unmarshalled, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, bd.ThumbnailResource, bd.ThumbnailMedia)
+	unmarshalled, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, bd.ThumbnailResource, bd.ThumbnailMedia)
 
 	if err != nil {
 		return nil, err
 	}
 
-	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, bd.BannerResource, bd.BannerMedia)
+	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, bd.BannerResource, bd.BannerMedia)
 
 	if err != nil {
 		return nil, err

@@ -11,6 +11,16 @@ enum MediaLinkType {
   CHARACTER_BANNER = 5;
   AUDIENCE_BANNER = 6;
   TOPIC_BANNER = 7;
+  AUDIENCE_THUMBNAIL = 8;
+  SERIES_THUMBNAIL = 9;
+  CATEGORY_THUMBNAIL = 10;
+  CHARACTER_THUMBNAIL = 11;
+}
+
+enum MediaMimeType {
+  VideoMp4 = 0;
+  VideoMpegUrl = 1;
+  ImageJpeg = 2;
 }
 
 enum MediaVersion {
@@ -19,8 +29,10 @@ enum MediaVersion {
 
 message VideoContainer {
   string id = 1;
-  string mimeType = 2;
+  MediaMimeType mimeType = 2;
   int64 bitrate = 3;
+  int64 width = 4;
+  int64 height = 5;
 }
 
 message VideoAspectRatio {
@@ -49,7 +61,7 @@ message ColorPalette {
 
 message ImageData {
   string id = 1;
-  string mimeType = 2;
+  MediaMimeType mimeType = 2;
   int64 width = 3;
   int64 height = 4;
   repeated ColorPalette palettes = 5;
@@ -60,9 +72,14 @@ message MediaLink {
   MediaLinkType type = 2;
 }
 
+message MediaSource {
+  string sourceMediaId = 1;
+  MediaLink link = 2;
+}
+
 message Media {
   string id = 1;
-  string uploadId = 2;
+  bool isUpload = 2;
   string originalFileName = 3;
   bool private = 4;
   MediaLink link = 5;
@@ -70,4 +87,5 @@ message Media {
   optional ImageData imageData = 7;
   MediaState state = 8;
   MediaVersion version = 9;
+  optional MediaSource source = 10;
 }

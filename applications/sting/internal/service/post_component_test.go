@@ -385,20 +385,20 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	grpcClient := getGrpcCallbackClient(t)
 
-	application.TemporalClient.On("SignalWithStartWorkflow", mock.Anything, mock.Anything, workflows.SubmitPostResourcesFinishedProcessingSignalChannel, mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+	application.TemporalClient.On("SignalWithStartWorkflow", mock.Anything, mock.Anything, workflows.SubmitPostMediaFinishedProcessingSignalChannel, mock.Anything, mock.Anything, mock.Anything, mock.Anything).
 		Run(
 			func(args mock.Arguments) {
-				env.SignalWorkflow(workflows.SubmitPostResourcesFinishedProcessingSignalChannel, args[3])
+				env.SignalWorkflow(workflows.SubmitPostMediaFinishedProcessingSignalChannel, args[3])
 			},
 		).
 		Return(nil, nil).
 		Twice()
 
 	// signal workflow that resources were processed
-	application.TemporalClient.On("SignalWorkflow", mock.Anything, mock.Anything, "", workflows.SubmitPostPixelatedResourcesSignalChannel, true).
+	application.TemporalClient.On("SignalWorkflow", mock.Anything, mock.Anything, "", workflows.SubmitPostPixelatedMediaSignalChannel, true).
 		Run(
 			func(args mock.Arguments) {
-				env.SignalWorkflow(workflows.SubmitPostPixelatedResourcesSignalChannel, args[4])
+				env.SignalWorkflow(workflows.SubmitPostPixelatedMediaSignalChannel, args[4])
 			},
 		).
 		Return(nil).

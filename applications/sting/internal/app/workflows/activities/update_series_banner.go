@@ -3,8 +3,7 @@ package activities
 import (
 	"context"
 	"overdoll/applications/sting/internal/domain/post"
-	"overdoll/applications/sting/internal/domain/resource_options"
-	"overdoll/libraries/resource"
+	"overdoll/libraries/media"
 )
 
 type UpdateSeriesBannerInput struct {
@@ -24,7 +23,7 @@ func (h *Activities) UpdateSeriesBanner(ctx context.Context, input UpdateSeriesB
 			return err
 		}
 	} else {
-		pst, err = h.pr.GetFirstTopPostWithoutOccupiedResources(ctx, nil, nil, &input.SeriesId, nil)
+		pst, err = h.pr.GetFirstTopPostWithoutOccupiedMedias(ctx, nil, nil, &input.SeriesId, nil)
 
 		if err != nil {
 			return err
@@ -35,7 +34,7 @@ func (h *Activities) UpdateSeriesBanner(ctx context.Context, input UpdateSeriesB
 		return nil
 	}
 
-	var selectedContentResource *resource.Resource
+	var selectedContentResource *media.Media
 
 	for _, cnt := range pst.Content() {
 		if !cnt.IsSupporterOnly() {
@@ -50,18 +49,18 @@ func (h *Activities) UpdateSeriesBanner(ctx context.Context, input UpdateSeriesB
 
 	_, err = h.pr.UpdateSeriesBannerOperator(ctx, input.SeriesId, func(series *post.Series) error {
 
-		newResource, err := h.loader.CopyResourceIntoImage(ctx, resource_options.NewResourceOptionsForSeriesBanner(selectedContentResource, series.ID()))
+		newResource, err := h.loader.GenerateImageFromMedia(ctx, []*media.Media{selectedContentResource}, media.NewSeriesBannerMediaLink(input.SeriesId), nil)
 
 		if err != nil {
 			return err
 		}
 
-		return series.UpdateBanner(newResource.NewResource())
+		return series.UpdateBanner(newResource[0])
 	})
 
 	if err != nil {
 		return err
 	}
 
-	return h.pr.AddPostOccupiedResource(ctx, pst, selectedContentResource)
+	return h.pr.AddPostOccupiedMedia(ctx, pst, selectedContentResource)
 }

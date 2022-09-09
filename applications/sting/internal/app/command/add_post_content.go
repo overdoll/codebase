@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/media"
 	"overdoll/libraries/principal"
 )
 
@@ -27,7 +28,7 @@ func (h AddPostContentHandler) Handle(ctx context.Context, cmd AddPostContent) (
 	pendingPost, err := h.pr.UpdatePostContent(ctx, cmd.Principal, cmd.PostId, func(post *post.Post) error {
 
 		// create resources from content
-		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.PostId, cmd.Content, true, "POST", false, 1080, 0)
+		resourceIds, err := h.loader.ProcessMediaFromUploads(ctx, cmd.Content, media.NewPostContentMediaLink(cmd.PostId))
 
 		if err != nil {
 			return err

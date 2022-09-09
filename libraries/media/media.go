@@ -22,11 +22,7 @@ func (m *Media) ID() string {
 	return m.source.Id
 }
 
-func (m *Media) UploadId() string {
-	return m.source.UploadId
-}
-
-func (m *Media) Source() *proto.Media {
+func (m *Media) RawProto() *proto.Media {
 	return m.source
 }
 
@@ -46,8 +42,32 @@ func (m *Media) IsLegacy() bool {
 	return true
 }
 
+func (m *Media) IsProcessed() bool {
+	return true
+}
+
+func (m *Media) IsLinked() bool {
+	return true
+}
+
+func (m *Media) IsFailed() bool {
+	return true
+}
+
 func (m *Media) LegacyResource() string {
 	return ""
+}
+
+func (m *Media) SourceMediaId() string {
+	return ""
+}
+
+func (m *Media) LinkedId() string {
+	return ""
+}
+
+func (m *Media) SourceLinkType() proto.MediaLinkType {
+	return m.source.Source.Link.Type
 }
 
 func (m *Media) IsVideo() bool {

@@ -43,7 +43,7 @@ func (r ProgressCassandraS3Repository) UpdateMediaProgress(ctx context.Context, 
 		Query(progressTable.Update("progress")).
 		WithContext(ctx).
 		Idempotent(true).
-		BindStruct(progresses{ItemId: media.Source().Link.Id, ResourceId: media.Source().Id, Progress: prog}).
+		BindStruct(progresses{ItemId: media.RawProto().Link.Id, ResourceId: media.RawProto().Id, Progress: prog}).
 		ExecRelease(); err != nil {
 		return errors.Wrap(support.NewGocqlError(err), "failed to update progress")
 	}

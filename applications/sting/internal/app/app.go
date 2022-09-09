@@ -87,7 +87,7 @@ type Commands struct {
 
 	DeleteAccountData command.DeleteAccountDataHandler
 
-	UpdateResources command.UpdateResourcesHandler
+	UpdateMedia command.UpdateMediaHandler
 
 	DisableClubSupporterOnlyPosts command.DisableClubSupporterOnlyPostsHandler
 	EnableClubSupporterOnlyPosts  command.EnableClubSupporterOnlyPostsHandler
@@ -118,8 +118,6 @@ type Commands struct {
 
 	CreateGameSession command.CreateGameSessionHandler
 	SpinRoulette      command.SpinRouletteHandler
-
-	ReprocessPostContent command.ReprocessPostContentHandler
 }
 
 type Queries struct {

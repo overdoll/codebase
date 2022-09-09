@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/media"
 	"overdoll/libraries/principal"
 )
 
@@ -26,7 +27,7 @@ func (h UpdateCategoryThumbnailHandler) Handle(ctx context.Context, cmd UpdateCa
 	cat, err := h.pr.UpdateCategoryThumbnail(ctx, cmd.Principal, cmd.CategoryId, func(category *post.Category) error {
 
 		// create resources from content
-		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.CategoryId, []string{cmd.Thumbnail}, false, "CATEGORY", true, 100, 0)
+		resourceIds, err := h.loader.ProcessMediaFromUploads(ctx, []string{cmd.Thumbnail}, media.NewCategoryThumbnailMediaLink(cmd.CategoryId))
 
 		if err != nil {
 			return err

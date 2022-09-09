@@ -107,13 +107,13 @@ func marshalCharacterToDatabase(pending *post.Character) (*character, error) {
 
 func (r PostsCassandraElasticsearchRepository) unmarshalCharacterFromDatabase(ctx context.Context, char *character, serial *series) (*post.Character, error) {
 
-	unmarshalledCharacterThumbnail, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, char.ThumbnailResource, char.ThumbnailMedia)
+	unmarshalledCharacterThumbnail, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, char.ThumbnailResource, char.ThumbnailMedia)
 
 	if err != nil {
 		return nil, err
 	}
 
-	unmarshalledCharacterBanner, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, char.BannerResource, char.BannerMedia)
+	unmarshalledCharacterBanner, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, char.BannerResource, char.BannerMedia)
 
 	if err != nil {
 		return nil, err
@@ -123,13 +123,13 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterFromDatabase(ct
 
 	if serial != nil {
 
-		unmarshalledSeriesThumbnail, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, serial.ThumbnailResource, serial.ThumbnailMedia)
+		unmarshalledSeriesThumbnail, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, serial.ThumbnailResource, serial.ThumbnailMedia)
 
 		if err != nil {
 			return nil, err
 		}
 
-		unmarshalledSeriesBanner, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, serial.BannerResource, serial.BannerMedia)
+		unmarshalledSeriesBanner, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, serial.BannerResource, serial.BannerMedia)
 
 		if err != nil {
 			return nil, err

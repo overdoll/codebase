@@ -4,6 +4,7 @@ import (
 	"context"
 	club "overdoll/applications/sting/internal/domain/club"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/media"
 	"overdoll/libraries/principal"
 	"time"
 )
@@ -45,7 +46,7 @@ type Repository interface {
 	UpdateTotalLikesForPostTags(ctx context.Context, post *post.Post) error
 	UpdateTotalPostsForPostTags(ctx context.Context, post *post.Post) error
 
-	SendCompletedPixelatedResources(ctx context.Context, post *post.Post) error
-	SendPostCompletedProcessing(ctx context.Context, post *post.Post, resourceId string, failed bool) error
+	SendCompletedPixelatedResources(ctx context.Context, post *post.Post, media *media.Media) error
+	SendPostCompletedProcessing(ctx context.Context, post *post.Post, media *media.Media) error
 	TransferClubOwnership(ctx context.Context, requester *principal.Principal, club *club.Club, target *principal.Principal) error
 }

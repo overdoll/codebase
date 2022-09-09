@@ -67,7 +67,7 @@ func (r PostsCassandraElasticsearchRepository) unmarshalTopicDocument(ctx contex
 		return nil, errors.Wrap(err, "failed to unmarshal topic document")
 	}
 
-	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, topic.BannerResource, topic.BannerMedia)
+	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, topic.BannerResource, topic.BannerMedia)
 
 	if err != nil {
 		return nil, err

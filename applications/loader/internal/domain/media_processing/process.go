@@ -24,6 +24,7 @@ import (
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/media"
 	"overdoll/libraries/media/proto"
+	"overdoll/libraries/uuid"
 	"overdoll/libraries/zap_support/zap_adapters"
 	"strconv"
 	"strings"
@@ -114,6 +115,8 @@ type ffmpegProbeStream struct {
 }
 
 func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
+
+	fileName := uuid.New().String()
 
 	videoNoAudio := true
 
@@ -260,7 +263,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		return nil, errors.Wrap(err, "failed to parse duration")
 	}
 
-	socket, err, done := createFFMPEGTempSocket(media.Source().Id, parsedDuration)
+	socket, err, done := createFFMPEGTempSocket(media.RawProto().Id, parsedDuration)
 
 	if err != nil {
 		return nil, err
@@ -278,7 +281,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		return nil, err
 	}
 
-	thumbnailFileName := media.ID() + ".jpg"
+	thumbnailFileName := fileName + ".jpg"
 
 	fileThumbnail, err := os.Create(thumbnailFileName)
 	if err != nil {
@@ -322,18 +325,18 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	}
 
 	// update the source image data - this is used for the thumbnail
-	media.Source().ImageData = &proto.ImageData{
-		Id:       media.ID() + ".jpg",
-		MimeType: "image/jpeg",
+	media.RawProto().ImageData = &proto.ImageData{
+		Id:       fileName + ".jpg",
+		MimeType: proto.MediaMimeType_ImageJpeg,
 		Width:    int64(probeResult.Streams[0].Width),
 		Height:   int64(probeResult.Streams[0].Height),
 		Palettes: palettes,
 	}
 
-	media.Source().VideoData = &proto.VideoData{
+	media.RawProto().VideoData = &proto.VideoData{
 		Containers: []*proto.VideoContainer{{
-			Id:       media.ID() + ".mp4",
-			MimeType: "video/mp4",
+			Id:       fileName + ".mp4",
+			MimeType: proto.MediaMimeType_VideoMp4,
 			Bitrate:  0,
 		}},
 		AspectRatio: &proto.VideoAspectRatio{
@@ -355,6 +358,8 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 }
 
 func processImage(media *media.Media, mimeType string, file *os.File) (*ProcessResponse, error) {
+
+	fileName := uuid.New().String()
 
 	var src image.Image
 	var err error
@@ -390,7 +395,7 @@ func processImage(media *media.Media, mimeType string, file *os.File) (*ProcessR
 		src = resize.Resize(0, uint(maxImageWidthOrHeight), src, resize.Lanczos3)
 	}
 
-	jpegFileName := media.ID() + ".jpg"
+	jpegFileName := fileName + ".jpg"
 
 	jpegFile, err := os.Create(jpegFileName)
 	if err != nil {
@@ -409,9 +414,9 @@ func processImage(media *media.Media, mimeType string, file *os.File) (*ProcessR
 	}
 
 	// update the source image data
-	media.Source().ImageData = &proto.ImageData{
+	media.RawProto().ImageData = &proto.ImageData{
 		Id:       jpegFileName,
-		MimeType: "image/jpeg",
+		MimeType: proto.MediaMimeType_ImageJpeg,
 		Width:    int64(src.Bounds().Dx()),
 		Height:   int64(src.Bounds().Dy()),
 		Palettes: palettes,
@@ -484,8 +489,8 @@ func ProcessMedia(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		return &ProcessResponse{failed: true}, nil
 	}
 
-	media.Source().State.Processed = true
-	media.Source().State.Failed = false
+	media.RawProto().State.Processed = true
+	media.RawProto().State.Failed = false
 
 	return response, nil
 }
@@ -538,9 +543,9 @@ func ApplyFilters(media *media.Media, file *os.File, filters *ImageFilters) (*Pr
 	}
 
 	// update the source image data
-	media.Source().ImageData = &proto.ImageData{
+	media.RawProto().ImageData = &proto.ImageData{
 		Id:       jpegFileName,
-		MimeType: "image/jpeg",
+		MimeType: proto.MediaMimeType_ImageJpeg,
 		Width:    int64(src.Bounds().Dx()),
 		Height:   int64(src.Bounds().Dy()),
 		Palettes: palettes,

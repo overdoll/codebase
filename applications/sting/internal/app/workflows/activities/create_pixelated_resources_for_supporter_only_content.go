@@ -3,6 +3,7 @@ package activities
 import (
 	"context"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/media"
 )
 
 type CreatePixelatedResourcesForSupporterOnlyContentInput struct {
@@ -19,7 +20,7 @@ func (h *Activities) CreatePixelatedResourcesForSupporterOnlyContent(ctx context
 
 	_, err := h.pr.UpdatePostContentOperator(ctx, input.PostId, func(pending *post.Post) error {
 
-		var resourceIds []string
+		var medias []*media.Media
 
 		for _, c := range pending.Content() {
 
@@ -28,14 +29,16 @@ func (h *Activities) CreatePixelatedResourcesForSupporterOnlyContent(ctx context
 				continue
 			}
 
-			resourceIds = append(resourceIds, c.Media().ID())
+			medias = append(medias, c.Media())
 		}
 
-		if len(resourceIds) > 0 {
+		if len(medias) > 0 {
 
 			res.CreatedResources = true
 
-			newContents, err := h.loader.CopyResourcesAndApplyPixelateFilter(ctx, input.PostId, resourceIds, 20, false, "POST_PRIVATE_CONTENT")
+			pixelate := int64(20)
+
+			newContents, err := h.loader.GenerateImageFromMedia(ctx, medias, media.NewPostContentMediaLink(input.PostId), &pixelate)
 
 			if err != nil {
 				return err
@@ -44,8 +47,8 @@ func (h *Activities) CreatePixelatedResourcesForSupporterOnlyContent(ctx context
 			// create new pixelated content
 			for _, content := range pending.Content() {
 				for _, newContent := range newContents {
-					if newContent.OldResourceId() == content.Media().ID() {
-						if err := content.UpdateMediaHidden(newContent.NewResource()); err != nil {
+					if newContent.SourceMediaId() == content.Media().ID() {
+						if err := content.UpdateMediaHidden(newContent); err != nil {
 							return err
 						}
 					}

@@ -97,13 +97,13 @@ func marshalSeriesToDatabase(pending *post.Series) (*series, error) {
 
 func (r PostsCassandraElasticsearchRepository) unmarshalSeriesFromDatabase(ctx context.Context, med *series) (*post.Series, error) {
 
-	unmarshalledThumbnail, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, med.ThumbnailResource, med.ThumbnailMedia)
+	unmarshalledThumbnail, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, med.ThumbnailResource, med.ThumbnailMedia)
 
 	if err != nil {
 		return nil, err
 	}
 
-	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, med.BannerResource, med.BannerMedia)
+	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, med.BannerResource, med.BannerMedia)
 
 	if err != nil {
 		return nil, err

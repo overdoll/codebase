@@ -34,9 +34,9 @@ func (r EventTemporalRepository) GenerateImageFromMedia(ctx context.Context, med
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ProcessMedia,
 		workflows.ProcessMediaInput{
-			SourceMedia: media.Source(),
+			SourceMedia: media.RawProto(),
 			Source:      source,
-			NewMedia:    newMedia.Source(),
+			NewMedia:    newMedia.RawProto(),
 			Pixelate:    pixelate,
 		},
 	)
@@ -52,12 +52,12 @@ func (r EventTemporalRepository) ProcessMediaForUpload(ctx context.Context, medi
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "loader.ProcessMediaForUpload_" + media.Source().Link.Id + "_" + media.UploadId(),
+		ID:        "loader.ProcessMediaForUpload_" + media.RawProto().Link.Id + "_" + media.ID(),
 	}
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ProcessMedia,
 		workflows.ProcessMediaInput{
-			SourceMedia: media.Source(),
+			SourceMedia: media.RawProto(),
 			Source:      source,
 		},
 	)

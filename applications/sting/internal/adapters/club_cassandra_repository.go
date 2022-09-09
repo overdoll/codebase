@@ -205,13 +205,13 @@ func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
 
 func (r ClubCassandraElasticsearchRepository) unmarshalClubFromDatabase(ctx context.Context, b *clubs) (*club.Club, error) {
 
-	unmarshalled, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, b.ThumbnailResource, b.ThumbnailMedia)
+	unmarshalled, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, b.ThumbnailResource, b.ThumbnailMedia)
 
 	if err != nil {
 		return nil, err
 	}
 
-	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, b.BannerResource, b.BannerMedia)
+	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, b.BannerResource, b.BannerMedia)
 
 	if err != nil {
 		return nil, err

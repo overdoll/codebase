@@ -105,13 +105,13 @@ func marshalAudienceToDatabase(pending *post.Audience) (*audience, error) {
 
 func (r PostsCassandraElasticsearchRepository) unmarshalAudienceFromDatabase(ctx context.Context, b *audience) (*post.Audience, error) {
 
-	unmarshalled, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, b.ThumbnailResource, b.ThumbnailMedia)
+	unmarshalled, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, b.ThumbnailResource, b.ThumbnailMedia)
 
 	if err != nil {
 		return nil, err
 	}
 
-	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, b.BannerResource, b.BannerMedia)
+	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, b.BannerResource, b.BannerMedia)
 
 	if err != nil {
 		return nil, err

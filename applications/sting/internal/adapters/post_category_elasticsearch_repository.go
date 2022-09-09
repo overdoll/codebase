@@ -81,13 +81,13 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCategoryDocument(ctx con
 		return nil, errors.Wrap(err, "failed to unmarshal category document")
 	}
 
-	unmarshalled, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, pst.ThumbnailResource, pst.ThumbnailMedia)
+	unmarshalled, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, pst.ThumbnailResource, pst.ThumbnailMedia)
 
 	if err != nil {
 		return nil, err
 	}
 
-	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, pst.BannerResource, pst.BannerMedia)
+	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, pst.BannerResource, pst.BannerMedia)
 
 	if err != nil {
 		return nil, err

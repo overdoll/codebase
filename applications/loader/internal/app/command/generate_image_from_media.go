@@ -31,7 +31,7 @@ func (h GenerateImageFromMediaHandler) Handle(ctx context.Context, cmd GenerateI
 		newSourceMedia := &proto.Media{
 			Id: uuid.New().String(),
 			// no upload linked to this media since it's a copy
-			UploadId: "",
+			IsUpload: false,
 			// no filename linked since it's a copy
 			OriginalFileName: "",
 			Private:          true,
@@ -41,6 +41,10 @@ func (h GenerateImageFromMediaHandler) Handle(ctx context.Context, cmd GenerateI
 				Failed:    false,
 			},
 			Version: proto.MediaVersion_ONE,
+			Source: &proto.MediaSource{
+				SourceMediaId: mediaSource.Id,
+				Link:          mediaSource.Link,
+			},
 		}
 
 		newMedia := media.FromProto(newSourceMedia)

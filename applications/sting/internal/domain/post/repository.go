@@ -2,10 +2,10 @@ package post
 
 import (
 	"context"
+	"overdoll/libraries/media"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/resource"
 )
 
 type Repository interface {
@@ -19,8 +19,8 @@ type Repository interface {
 
 	GetPostWithRandomSeed(ctx context.Context, passport *passport.Passport, seed int64, audienceIds []string) (*Post, error)
 
-	GetFirstTopPostWithoutOccupiedResources(ctx context.Context, characterId, categoryId, seriesId, audienceId *string) (*Post, error)
-	AddPostOccupiedResource(ctx context.Context, post *Post, resource *resource.Resource) error
+	GetFirstTopPostWithoutOccupiedMedias(ctx context.Context, characterId, categoryId, seriesId, audienceId *string) (*Post, error)
+	AddPostOccupiedMedia(ctx context.Context, post *Post, resource *media.Media) error
 
 	CreatePostLike(ctx context.Context, like *Like) error
 	DeletePostLike(ctx context.Context, postId string, accountId string) error
@@ -37,7 +37,7 @@ type Repository interface {
 	UpdatePostDescription(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostContentAndState(ctx context.Context, id string, updateFn func(pending *Post) error) error
 	UpdatePostContentOperator(ctx context.Context, id string, updateFn func(pending *Post) error) (*Post, error)
-	UpdatePostContentOperatorResource(ctx context.Context, id string, resources []*resource.Resource) (*Post, error)
+	UpdatePostContentOperatorMedia(ctx context.Context, id string, medias []*media.Media) (*Post, error)
 	UpdatePostLikesOperator(ctx context.Context, id string, updateFn func(pending *Post) error) (*Post, error)
 
 	DeletePost(ctx context.Context, postId string) error

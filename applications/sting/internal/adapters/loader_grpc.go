@@ -5,34 +5,27 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	loader "overdoll/applications/loader/proto"
-	"overdoll/applications/sting/internal/domain/post"
-	"overdoll/applications/sting/internal/domain/resource_options"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/domainerror"
-	"overdoll/libraries/resource"
-	"overdoll/libraries/resource/proto"
+	"overdoll/libraries/media"
+	"overdoll/libraries/media/proto"
 )
 
 type LoaderGrpc struct {
-	client     loader.LoaderClient
-	serializer *resource.Serializer
+	client loader.LoaderClient
 }
 
-func NewLoaderGrpc(client loader.LoaderClient, serializer *resource.Serializer) LoaderGrpc {
-	return LoaderGrpc{client: client, serializer: serializer}
+func NewLoaderGrpc(client loader.LoaderClient) LoaderGrpc {
+	return LoaderGrpc{client: client}
 }
 
-func (s LoaderGrpc) CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string, private bool, token string, onlyImages bool, width uint64, height uint64) ([]*resource.Resource, error) {
+func (s LoaderGrpc) ProcessMediaFromUploads(ctx context.Context, uploadIds []string, link *media.Link) ([]*media.Media, error) {
 
-	req := &loader.CreateOrGetResourcesFromUploadsRequest{
-		ItemId: itemId, ResourceIds: resourceIds, Private: private, Token: token, Source: proto.SOURCE_STING, Config: &loader.Config{Height: height, Width: width},
-	}
-
-	if onlyImages {
-		req.ValidationOptions = &loader.ValidationOptions{AllowImages: true, AllowVideos: false}
-	}
-
-	md, err := s.client.CreateOrGetResourcesFromUploads(ctx, req)
+	md, err := s.client.ProcessMediaFromUploads(ctx, &loader.ProcessMediaFromUploadsRequest{
+		Link:      link.RawProto(),
+		Source:    proto.SOURCE_STING,
+		UploadIds: uploadIds,
+	})
 
 	if err != nil {
 
@@ -42,140 +35,48 @@ func (s LoaderGrpc) CreateOrGetResourcesFromUploads(ctx context.Context, itemId 
 			return nil, domainerror.NewValidation("file type not allowed")
 		}
 
-		return nil, errors.Wrap(err, "failed to create or get resources from uploads")
+		return nil, errors.Wrap(err, "failed to process media from uploads")
 	}
 
-	resources, err := s.serializer.UnmarshalResourcesFromProto(ctx, md.Resources)
+	var medias []*media.Media
 
-	if err != nil {
-		return nil, err
+	for _, m := range md.Media {
+		medias = append(medias, media.FromProto(m))
 	}
 
-	return resources, nil
+	return medias, nil
 }
 
-func (s LoaderGrpc) CopyResourceIntoImage(ctx context.Context, options *resource_options.ResourceOptions) (*post.NewResource, error) {
+func (s LoaderGrpc) GenerateImageFromMedia(ctx context.Context, sources []*media.Media, link *media.Link, pixelate *int64) ([]*media.Media, error) {
 
-	var toApply []*loader.ResourceIdentifier
+	var mediaSources []*proto.Media
 
-	toApply = append(toApply, &loader.ResourceIdentifier{
-		Id:     options.ResourceId(),
-		ItemId: options.Id(),
-	})
-
-	md, err := s.client.CopyResourcesAndApplyFilter(ctx, &loader.CopyResourcesAndApplyFilterRequest{
-		Resources: toApply,
-		Private:   options.Private(),
-		Config:    &loader.Config{Height: uint64(options.Height()), Width: uint64(options.Width())},
-		NewItemId: options.NewId(),
-		Token:     options.Token(),
-		Source:    proto.SOURCE_STING,
-	})
-
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to copy resources")
+	for _, source := range sources {
+		mediaSources = append(mediaSources, source.RawProto())
 	}
 
-	var res []*post.NewResource
-	for _, r := range md.Resources {
+	var filters *loader.Filters
 
-		unmarshalled, err := s.serializer.UnmarshalResourceFromProto(ctx, r.NewResource)
-
-		if err != nil {
-			return nil, err
-		}
-
-		res = append(res, post.UnmarshalNewResourceFromDatabase(r.OldResource.Id, unmarshalled))
+	if pixelate != nil {
+		filters = &loader.Filters{Pixelate: &loader.PixelateFilter{Size: *pixelate}}
 	}
 
-	return res[0], nil
-}
-
-func (s LoaderGrpc) ReprocessResources(ctx context.Context, itemId string, resourceIds []string, width uint64, height uint64) error {
-
-	var toApply []*loader.ResourceIdentifier
-
-	for _, r := range resourceIds {
-		toApply = append(toApply, &loader.ResourceIdentifier{
-			Id:     r,
-			ItemId: itemId,
-		})
-	}
-
-	md, err := s.client.ReprocessResources(ctx, &loader.ReprocessResourcesRequest{
-		Resources: toApply,
-		Config: &loader.Config{
-			Width:  width,
-			Height: height,
-		},
+	md, err := s.client.GenerateImageFromMedia(ctx, &loader.GenerateImageFromMediaRequest{
+		Media:   mediaSources,
+		Link:    link.RawProto(),
+		Source:  proto.SOURCE_STING,
+		Filters: filters,
 	})
 
 	if err != nil {
-		return errors.Wrap(err, "failed to reprocess resources")
+		return nil, errors.Wrap(err, "failed to generate image from media")
 	}
 
-	var res []*resource.Resource
-	for _, r := range md.Resources {
+	var medias []*media.Media
 
-		unmarshalled, err := s.serializer.UnmarshalResourceFromProto(ctx, r)
-
-		if err != nil {
-			return err
-		}
-
-		res = append(res, unmarshalled)
+	for _, m := range md.Media {
+		medias = append(medias, media.FromProto(m))
 	}
 
-	return nil
-}
-
-func (s LoaderGrpc) CopyResourcesAndApplyPixelateFilter(ctx context.Context, itemId string, resourceIds []string, pixelate int, private bool, token string) ([]*post.NewResource, error) {
-
-	var toApply []*loader.ResourceIdentifier
-
-	for _, r := range resourceIds {
-		toApply = append(toApply, &loader.ResourceIdentifier{
-			Id:     r,
-			ItemId: itemId,
-		})
-	}
-
-	md, err := s.client.CopyResourcesAndApplyFilter(ctx, &loader.CopyResourcesAndApplyFilterRequest{
-		Resources: toApply,
-		Filters:   &loader.Filters{Pixelate: &loader.PixelateFilter{Size: int64(pixelate)}},
-		Private:   private,
-		Token:     token,
-		NewItemId: itemId,
-	})
-
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to copy resources and apply pixelate filter")
-	}
-
-	var res []*post.NewResource
-	for _, r := range md.Resources {
-
-		unmarshalled, err := s.serializer.UnmarshalResourceFromProto(ctx, r.NewResource)
-
-		if err != nil {
-			return nil, err
-		}
-
-		res = append(res, post.UnmarshalNewResourceFromDatabase(r.OldResource.Id, unmarshalled))
-	}
-
-	return res, nil
-}
-
-func (s LoaderGrpc) DeleteResources(ctx context.Context, itemId string, resourceIds []string) error {
-
-	return nil
-
-	_, err := s.client.DeleteResources(ctx, &loader.DeleteResourcesRequest{ItemId: itemId, ResourceIds: resourceIds})
-
-	if err != nil {
-		return errors.Wrap(err, "failed to delete resources")
-	}
-
-	return nil
+	return medias, nil
 }

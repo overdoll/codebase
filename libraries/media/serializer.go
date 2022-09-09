@@ -15,6 +15,24 @@ import (
 	"time"
 )
 
+type serializedResource struct {
+	ItemId                 string   `json:"item_id"`
+	ResourceId             string   `json:"resource_id"`
+	Type                   int      `json:"type"`
+	MimeTypes              []string `json:"mime_types"`
+	Processed              bool     `json:"processed"`
+	ProcessedId            string   `json:"processed_id"`
+	IsPrivate              bool     `json:"is_private"`
+	VideoDuration          int      `json:"video_duration"`
+	VideoThumbnail         string   `json:"video_thumbnail"`
+	VideoThumbnailMimeType string   `json:"video_thumbnail_mime_type"`
+	VideoNoAudio           bool     `json:"video_no_audio"`
+	Width                  int      `json:"width"`
+	Height                 int      `json:"height"`
+	Preview                string   `json:"preview"`
+	Failed                 bool     `json:"failed"`
+}
+
 var serializer *Serializer
 
 func init() {
@@ -411,6 +429,6 @@ func UnmarshalMediaFromDatabase(ctx context.Context, media *string) (*Media, err
 	return nil, nil
 }
 
-func UnmarshalMediaWithLegacyFromDatabase(ctx context.Context, resource string, media *string) (*Media, error) {
+func UnmarshalMediaWithLegacyResourceFromDatabase(ctx context.Context, resource string, media *string) (*Media, error) {
 	return nil, nil
 }

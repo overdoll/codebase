@@ -135,6 +135,8 @@ All variants available for an image.
 type ImageMediaVariants {
   """50x50 crop of an image. Suitable for mini icons."""
   mini: ImageMediaAccess!
+  """100x100 crop of an image. Suitable for icons."""
+  icon: ImageMediaAccess!
   """150x150 crop of an image. Suitable for small previews."""
   thumbnail: ImageMediaAccess!
   """768px width or height resize."""
@@ -213,6 +215,12 @@ type MP4VideoContainer {
 
   """The bitrate of the video."""
   bitrate: Int!
+
+  """The width of the video."""
+  width: Int!
+
+  """The height of the video."""
+  height: Int!
 }
 
 """An application/x-mpegURL video container."""

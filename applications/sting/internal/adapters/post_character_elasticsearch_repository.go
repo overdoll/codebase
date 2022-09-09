@@ -88,13 +88,13 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx co
 		return nil, errors.Wrap(err, "failed to unmarshal character document")
 	}
 
-	unmarshalledCharacterThumbnail, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, chr.ThumbnailResource, chr.ThumbnailMedia)
+	unmarshalledCharacterThumbnail, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, chr.ThumbnailResource, chr.ThumbnailMedia)
 
 	if err != nil {
 		return nil, err
 	}
 
-	unmarshalledCharacterBanner, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, chr.BannerResource, chr.BannerMedia)
+	unmarshalledCharacterBanner, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, chr.BannerResource, chr.BannerMedia)
 
 	if err != nil {
 		return nil, err
@@ -104,13 +104,13 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx co
 
 	if chr.Series != nil {
 
-		unmarshalledSeriesThumbnail, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, chr.Series.ThumbnailResource, chr.Series.ThumbnailMedia)
+		unmarshalledSeriesThumbnail, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, chr.Series.ThumbnailResource, chr.Series.ThumbnailMedia)
 
 		if err != nil {
 			return nil, err
 		}
 
-		unmarshalledSeriesBanner, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, chr.Series.BannerResource, chr.Series.BannerMedia)
+		unmarshalledSeriesBanner, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, chr.Series.BannerResource, chr.Series.BannerMedia)
 
 		if err != nil {
 			return nil, err

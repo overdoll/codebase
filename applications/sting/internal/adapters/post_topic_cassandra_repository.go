@@ -84,7 +84,7 @@ func marshalTopicToDatabase(pending *post.Topic) (*topics, error) {
 
 func (r PostsCassandraElasticsearchRepository) unmarshalTopicFromDatabase(ctx context.Context, cat *topics) (*post.Topic, error) {
 
-	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, cat.BannerResource, cat.BannerMedia)
+	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, cat.BannerResource, cat.BannerMedia)
 
 	if err != nil {
 		return nil, err

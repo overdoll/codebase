@@ -81,13 +81,13 @@ func (r PostsCassandraElasticsearchRepository) unmarshalSeriesDocument(ctx conte
 		return nil, errors.Wrap(err, "failed search series - unmarshal")
 	}
 
-	unmarshalledThumbnail, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, md.ThumbnailResource, md.ThumbnailMedia)
+	unmarshalledThumbnail, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, md.ThumbnailResource, md.ThumbnailMedia)
 
 	if err != nil {
 		return nil, err
 	}
 
-	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, md.BannerResource, md.BannerMedia)
+	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, md.BannerResource, md.BannerMedia)
 
 	if err != nil {
 		return nil, err

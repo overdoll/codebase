@@ -22,7 +22,7 @@ func (s CallbackGrpc) SendCallback(ctx context.Context, source string, medias *m
 
 	if source == "STING" {
 
-		_, err := s.stingMediaCallback.UpdateMedia(ctx, &proto.UpdateMediaRequest{Media: medias.Source()})
+		_, err := s.stingMediaCallback.UpdateMedia(ctx, &proto.UpdateMediaRequest{Media: medias.RawProto()})
 
 		if err != nil {
 			if e, ok := status.FromError(err); ok {

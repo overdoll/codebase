@@ -119,13 +119,13 @@ func marshalCategoryToDatabase(pending *post.Category) (*category, error) {
 
 func (r PostsCassandraElasticsearchRepository) unmarshalCategoryFromDatabase(ctx context.Context, cat *category) (*post.Category, error) {
 
-	unmarshalled, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, cat.ThumbnailResource, cat.ThumbnailMedia)
+	unmarshalled, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, cat.ThumbnailResource, cat.ThumbnailMedia)
 
 	if err != nil {
 		return nil, err
 	}
 
-	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, cat.BannerResource, cat.BannerMedia)
+	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, cat.BannerResource, cat.BannerMedia)
 
 	if err != nil {
 		return nil, err

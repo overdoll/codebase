@@ -21,7 +21,7 @@ import (
 	"overdoll/libraries/principal"
 )
 
-var postsOccupiedResourceTable = table.New(table.Metadata{
+var postsOccupiedMediaTable = table.New(table.Metadata{
 	Name: "posts_occupied_resources",
 	Columns: []string{
 		"bucket",
@@ -32,7 +32,7 @@ var postsOccupiedResourceTable = table.New(table.Metadata{
 	SortKey: []string{"post_id", "resource_id"},
 })
 
-type postsOccupiedResource struct {
+type postsOccupiedMedia struct {
 	Bucket     int    `db:"bucket"`
 	PostId     string `db:"post_id"`
 	ResourceId string `db:"resource_id"`
@@ -248,7 +248,7 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Contex
 	var finalMedia []*media.Media
 
 	for _, r := range postPending.ContentResources {
-		m, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, r, nil)
+		m, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, r, nil)
 
 		if err != nil {
 			return nil, err
@@ -291,13 +291,13 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Contex
 
 func (r PostsCassandraElasticsearchRepository) getPostOccupiedResourcesPostIds(ctx context.Context) ([]string, error) {
 
-	var postResults []*postsOccupiedResource
+	var postResults []*postsOccupiedMedia
 
 	if err := r.session.
-		Query(qb.Select(postsOccupiedResourceTable.Name()).Where(qb.Eq("bucket")).ToCql()).
+		Query(qb.Select(postsOccupiedMediaTable.Name()).Where(qb.Eq("bucket")).ToCql()).
 		WithContext(ctx).
 		Idempotent(true).
-		BindStruct(postsOccupiedResource{
+		BindStruct(postsOccupiedMedia{
 			Bucket: 0,
 		}).
 		Consistency(gocql.LocalQuorum).
@@ -314,13 +314,13 @@ func (r PostsCassandraElasticsearchRepository) getPostOccupiedResourcesPostIds(c
 	return postIds, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) AddPostOccupiedResource(ctx context.Context, post *post.Post, resource *media.Media) error {
+func (r PostsCassandraElasticsearchRepository) AddPostOccupiedMedia(ctx context.Context, post *post.Post, resource *media.Media) error {
 
 	if err := r.session.
-		Query(postsOccupiedResourceTable.Insert()).
+		Query(postsOccupiedMediaTable.Insert()).
 		WithContext(ctx).
 		Idempotent(true).
-		BindStruct(postsOccupiedResource{
+		BindStruct(postsOccupiedMedia{
 			Bucket:     0,
 			PostId:     post.ID(),
 			ResourceId: resource.ID(),
@@ -646,7 +646,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperator(ctx con
 
 	if err := r.session.
 		Query(postTable.Update(
-			"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status", "content_resources", "updated_at",
+			"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status", "content_media", "updated_at",
 		)).
 		WithContext(ctx).
 		Idempotent(true).

@@ -48,6 +48,8 @@ type ImageMediaAccess struct {
 type ImageMediaVariants struct {
 	// 50x50 crop of an image. Suitable for mini icons.
 	Mini *ImageMediaAccess `json:"mini"`
+	// 100x100 crop of an image. Suitable for icons.
+	Icon *ImageMediaAccess `json:"icon"`
 	// 150x150 crop of an image. Suitable for small previews.
 	Thumbnail *ImageMediaAccess `json:"thumbnail"`
 	// 768px width or height resize.
@@ -72,6 +74,10 @@ type MP4VideoContainer struct {
 	URL URI `json:"url"`
 	// The bitrate of the video.
 	Bitrate int `json:"bitrate"`
+	// The width of the video.
+	Width int `json:"width"`
+	// The height of the video.
+	Height int `json:"height"`
 }
 
 func (MP4VideoContainer) IsVideoContainer() {}

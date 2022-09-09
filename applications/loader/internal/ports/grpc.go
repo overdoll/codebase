@@ -45,7 +45,7 @@ func (s Server) ProcessMediaFromUploads(ctx context.Context, request *loader.Pro
 	var response []*proto.Media
 
 	for _, res := range medias {
-		response = append(response, res.Source())
+		response = append(response, res.RawProto())
 	}
 
 	return &loader.ProcessMediaFromUploadsResponse{Media: response}, nil
@@ -76,7 +76,7 @@ func (s Server) GenerateImageFromMedia(ctx context.Context, request *loader.Gene
 	var response []*proto.Media
 
 	for _, res := range medias {
-		response = append(response, res.Source())
+		response = append(response, res.RawProto())
 	}
 
 	return &loader.GenerateImageFromMediaResponse{Media: response}, nil

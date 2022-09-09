@@ -87,7 +87,7 @@ func (h *Activities) ProcessMediaFromUpload(ctx context.Context, input ProcessMe
 func processMedia(h *Activities, ctx context.Context, target *media.Media) error {
 
 	// first, we need to download the resource
-	file, err := h.ur.DownloadUpload(ctx, target.UploadId())
+	file, err := h.ur.DownloadUpload(ctx, target.ID())
 
 	if err != nil {
 		return err
@@ -105,8 +105,8 @@ func processMedia(h *Activities, ctx context.Context, target *media.Media) error
 	}
 
 	if processResponse.Failed() {
-		target.Source().State.Processed = false
-		target.Source().State.Failed = true
+		target.RawProto().State.Processed = false
+		target.RawProto().State.Failed = true
 		return nil
 	}
 

@@ -84,7 +84,7 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPostDocument(ctx contex
 	var finalMedia []*media.Media
 
 	for _, r := range pst.ContentResources {
-		m, err := media.UnmarshalMediaWithLegacyFromDatabase(ctx, r, nil)
+		m, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, r, nil)
 
 		if err != nil {
 			return nil, err
@@ -908,7 +908,7 @@ func (r PostsCassandraElasticsearchRepository) deletePostIndexById(ctx context.C
 	return nil
 }
 
-func (r PostsCassandraElasticsearchRepository) GetFirstTopPostWithoutOccupiedResources(ctx context.Context, characterId, categoryId, seriesId, audienceId *string) (*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) GetFirstTopPostWithoutOccupiedMedias(ctx context.Context, characterId, categoryId, seriesId, audienceId *string) (*post.Post, error) {
 
 	builder := r.client.Search().
 		Index(PostReaderIndex)

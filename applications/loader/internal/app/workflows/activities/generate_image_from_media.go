@@ -29,11 +29,11 @@ func (h *Activities) GenerateImageFromMedia(ctx context.Context, input GenerateI
 		return nil, err
 	}
 
-	if err := h.callback.SendCallback(ctx, input.Source, newMedia.Source()); err != nil {
-		return &ProcessMediaPayload{AlreadySent: false, Media: newMedia.Source()}, nil
+	if err := h.callback.SendCallback(ctx, input.Source, newMedia.RawProto()); err != nil {
+		return &ProcessMediaPayload{AlreadySent: false, Media: newMedia.RawProto()}, nil
 	}
 
-	return &ProcessMediaPayload{AlreadySent: true, Media: newMedia.Source()}, nil
+	return &ProcessMediaPayload{AlreadySent: true, Media: newMedia.RawProto()}, nil
 }
 
 func processMediaAndFilter(h *Activities, ctx context.Context, target *proto.Media, mediaToApply *proto.Media, filters *media_processing.ImageFilters) (*media.Media, error) {

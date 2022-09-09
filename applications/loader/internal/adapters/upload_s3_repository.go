@@ -87,7 +87,7 @@ func (r UploadS3Repository) GetUpload(ctx context.Context, uploadId string) (*up
 func (r UploadS3Repository) DownloadUpload(ctx context.Context, med *media.Media) (*os.File, error) {
 	downloader := s3manager.NewDownloader(r.aws)
 
-	file, err := os.Create(med.UploadId())
+	file, err := os.Create(med.ID())
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to create file")
@@ -97,7 +97,7 @@ func (r UploadS3Repository) DownloadUpload(ctx context.Context, med *media.Media
 	_, err = downloader.Download(file,
 		&s3.GetObjectInput{
 			Bucket: aws.String(os.Getenv("UPLOADS_BUCKET")),
-			Key:    aws.String(med.UploadId()),
+			Key:    aws.String(med.ID()),
 		},
 	)
 

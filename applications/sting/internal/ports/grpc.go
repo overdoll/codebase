@@ -9,9 +9,9 @@ import (
 	"overdoll/applications/sting/internal/app/command"
 	"overdoll/applications/sting/internal/app/query"
 	sting "overdoll/applications/sting/proto"
+	"overdoll/libraries/media"
+	"overdoll/libraries/media/proto"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/resource"
-	"overdoll/libraries/resource/proto"
 	"time"
 )
 
@@ -107,24 +107,18 @@ func (s Server) DeleteAccountData(ctx context.Context, request *sting.DeleteAcco
 	return &emptypb.Empty{}, nil
 }
 
-func (s Server) UpdateResources(ctx context.Context, request *proto.UpdateResourcesRequest) (*proto.UpdateResourcesResponse, error) {
+func (s Server) UpdateMedia(ctx context.Context, request *proto.UpdateMediaRequest) (*emptypb.Empty, error) {
 
-	unmarshalled, err := resource.UnmarshalResourcesFromProto(ctx, request.Resources)
+	if err := s.app.Commands.UpdateMedia.Handle(ctx, command.UpdateMedia{Media: media.FromProto(request.Media)}); err != nil {
 
-	if err != nil {
-		return nil, err
-	}
-
-	if err := s.app.Commands.UpdateResources.Handle(ctx, command.UpdateResources{Resources: unmarshalled}); err != nil {
-
-		if err == resource.ErrResourceNotPresent {
+		if err == media.ErrMediaNotPresent {
 			return nil, status.Error(codes.NotFound, err.Error())
 		}
 
 		return nil, err
 	}
 
-	return &proto.UpdateResourcesResponse{}, nil
+	return &emptypb.Empty{}, nil
 }
 
 func (s Server) GetClubById(ctx context.Context, request *sting.GetClubByIdRequest) (*sting.GetClubByIdResponse, error) {
