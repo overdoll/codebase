@@ -122,8 +122,9 @@ export default function SearchCategory ({ query }: Props): JSX.Element {
             isLoadingNext={isLoadingNext}
             endOfTree={<PlatformPromoteAlert />}
           >
-            {({ index }) => (
+            {({ index, key }) => (
               <FullSimplePost
+                key={key}
                 query={data.posts.edges[index].node}
                 viewerQuery={queryData.viewer}
               />

@@ -9,12 +9,10 @@ import { PageWrapper } from '@//:modules/content/PageLayout'
 import BrowseStructuredData from '@//:common/structured-data/browse/BrowseStructuredData/BrowseStructuredData'
 import Random from './Random/Random'
 import RandomRichObject from '@//:common/rich-objects/random/RandomRichObject/RandomRichObject'
-import Button from '@//:modules/form/Button/Button'
-import { Trans } from '@lingui/macro'
-import Icon from '../../../modules/content/PageLayout/Flair/Icon/Icon'
-import { RandomizeDice } from '@//:assets/icons'
 import { useQueryParam } from 'use-query-params'
 import { useUpdateEffect } from 'usehooks-ts'
+import RandomizeButton from './RandomizeButton/RandomizeButton'
+import { Box } from '@chakra-ui/react'
 
 interface Props {
   queryRefs: {
@@ -27,19 +25,14 @@ const RootRandom: PageProps<Props> = (props: Props): JSX.Element => {
     RandomQuery,
     props.queryRefs.randomQuery)
 
-  const [postSeed, setPostSeed] = useQueryParam<string | null | undefined>('seed')
-
-  const seed = `${Date.now()}`
-
-  const onRandomize = (): void => {
-    setPostSeed(seed)
-  }
+  const [postSeed] = useQueryParam<string | null | undefined>('seed')
 
   useUpdateEffect(() => {
-    if (seed == null) return
+    if (postSeed == null) return
     loadQuery({
       seed: postSeed
     })
+    window.scrollTo(0, 0)
   }, [postSeed])
 
   return (
@@ -47,27 +40,17 @@ const RootRandom: PageProps<Props> = (props: Props): JSX.Element => {
       <RandomRichObject />
       <BrowseStructuredData />
       <PageWrapper>
-        <Button
-          leftIcon={<Icon w={5} h={5} icon={RandomizeDice} fill='orange.900' />}
-          onClick={onRandomize}
-          variant='solid'
-          mb={8}
-          size='lg'
-          colorScheme='orange'
-          w='100%'
-        >
-          <Trans>
-            Randomize!
-          </Trans>
-        </Button>
-        <QueryErrorBoundary loadQuery={() => loadQuery({
-          seed: postSeed
-        })}
-        >
-          <Suspense fallback={<SkeletonPost />}>
-            <Random query={queryRef as PreloadedQuery<RandomQueryType>} />
-          </Suspense>
-        </QueryErrorBoundary>
+        <RandomizeButton />
+        <Box mt={4}>
+          <QueryErrorBoundary loadQuery={() => loadQuery({
+            seed: postSeed
+          })}
+          >
+            <Suspense fallback={<SkeletonPost />}>
+              <Random query={queryRef as PreloadedQuery<RandomQueryType>} />
+            </Suspense>
+          </QueryErrorBoundary>
+        </Box>
       </PageWrapper>
     </>
   )

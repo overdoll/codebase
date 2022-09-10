@@ -93,8 +93,9 @@ export default function LikedPostsFeed ({
       loadNext={loadNext}
       isLoadingNext={isLoadingNext}
     >
-      {({ index }) => (
+      {({ index, key }) => (
         <FullSimplePost
+          key={key}
           hideOverflow={false}
           query={data.likedPosts.edges[index].node}
           viewerQuery={viewerData}

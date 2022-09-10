@@ -6,6 +6,7 @@ import compareTwoArrays from '@//:modules/support/compareTwoArrays'
 import { FlowBuilderSaveButton, FlowBuilderSkipButton } from '@//:modules/content/PageLayout'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
+import trackFathomEvent from '@//:modules/support/trackFathomEvent'
 
 interface Props {
   nextStep: () => void
@@ -65,6 +66,7 @@ export default function CurationCategoryNextButton ({
         skipped: false
       },
       onCompleted () {
+        trackFathomEvent('9HDVT6V6', 0)
       },
       onError () {
         notify({
@@ -82,6 +84,7 @@ export default function CurationCategoryNextButton ({
         skipped: true
       },
       onCompleted () {
+        trackFathomEvent('G57YC5OZ', 0)
         dispatch({
           type: 'category',
           value: {},

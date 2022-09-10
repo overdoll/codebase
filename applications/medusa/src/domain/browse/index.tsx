@@ -1,5 +1,6 @@
 import RootBrowse from './RootBrowse/RootBrowse'
 import BrowseQuery from '@//:artifacts/BrowseQuery.graphql'
+import getPostSeed from '@//:modules/content/Posts/support/getPostSeed'
 
 RootBrowse.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)
@@ -10,7 +11,9 @@ RootBrowse.getRelayPreloadProps = (ctx) => {
     queries: {
       browseQuery: {
         params: BrowseQuery.params,
-        variables: {}
+        variables: {
+          ...getPostSeed(ctx)
+        }
       }
     }
   })

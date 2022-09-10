@@ -126,8 +126,12 @@ export default function PublicClubPosts (props: Props): JSX.Element {
           loadNext={loadNext}
           isLoadingNext={isLoadingNext}
         >
-          {({ index }) => (
+          {({
+            index,
+            key
+          }) => (
             <FullClubPost
+              key={key}
               query={data.posts.edges[index].node}
               viewerQuery={queryData.viewer}
             />

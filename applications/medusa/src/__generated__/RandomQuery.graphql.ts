@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7fea836234de3638372567db06731f9c>>
- * @relayHash 06ff6d693331aaa55835ff25dea1ad79
+ * @generated SignedSource<<5737e4359d8a65933c6e81f703c8cfe5>>
+ * @relayHash e92f8162274b217efc2f3b3382afe8ac
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 06ff6d693331aaa55835ff25dea1ad79
+// @relayRequestID e92f8162274b217efc2f3b3382afe8ac
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -189,6 +189,38 @@ return {
         "name": "postsFeed",
         "plural": false,
         "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "PageInfo",
+            "kind": "LinkedField",
+            "name": "pageInfo",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "startCursor",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "endCursor",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "hasNextPage",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -424,31 +456,6 @@ return {
               }
             ],
             "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "PageInfo",
-            "kind": "LinkedField",
-            "name": "pageInfo",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "endCursor",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "hasNextPage",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
           }
         ],
         "storageKey": null
@@ -532,7 +539,7 @@ return {
     ]
   },
   "params": {
-    "id": "06ff6d693331aaa55835ff25dea1ad79",
+    "id": "e92f8162274b217efc2f3b3382afe8ac",
     "metadata": {},
     "name": "RandomQuery",
     "operationKind": "query",

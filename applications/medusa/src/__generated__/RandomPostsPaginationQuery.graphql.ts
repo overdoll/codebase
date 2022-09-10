@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<74d9febb92882866705dddf14c1edcec>>
- * @relayHash 8993036767ba56af849b808a26da7286
+ * @generated SignedSource<<1fabbe94e5e655d85e049f4f1ac66211>>
+ * @relayHash 0eaaa4773772f28e666488bf15861ed7
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8993036767ba56af849b808a26da7286
+// @relayRequestID 0eaaa4773772f28e666488bf15861ed7
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -187,6 +187,38 @@ return {
         "name": "postsFeed",
         "plural": false,
         "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "PageInfo",
+            "kind": "LinkedField",
+            "name": "pageInfo",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "startCursor",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "endCursor",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "hasNextPage",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -422,31 +454,6 @@ return {
               }
             ],
             "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "PageInfo",
-            "kind": "LinkedField",
-            "name": "pageInfo",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "endCursor",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "hasNextPage",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
           }
         ],
         "storageKey": null
@@ -465,7 +472,7 @@ return {
     ]
   },
   "params": {
-    "id": "8993036767ba56af849b808a26da7286",
+    "id": "0eaaa4773772f28e666488bf15861ed7",
     "metadata": {},
     "name": "RandomPostsPaginationQuery",
     "operationKind": "query",
@@ -474,6 +481,6 @@ return {
 };
 })();
 
-(node as any).hash = "3e6cb81ea14c0a15ac5a4dc6d19add34";
+(node as any).hash = "f7d56aa00013f038ccc0859fd85a1edf";
 
 export default node;
