@@ -54,6 +54,14 @@ func NewSeriesBannerMediaLink(audienceId string) *Link {
 	return &Link{}
 }
 
+func (l *Link) LinkedId() string {
+	return l.source.Id
+}
+
 func (l *Link) RawProto() *proto.MediaLink {
 	return l.source
+}
+
+func LinkFromProto(p *proto.MediaLink) *Link {
+	return &Link{source: p}
 }

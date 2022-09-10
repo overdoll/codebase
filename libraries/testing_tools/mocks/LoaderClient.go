@@ -17,8 +17,8 @@ type MockLoaderClient struct {
 	mock.Mock
 }
 
-// CopyResourcesAndApplyFilter provides a mock function with given fields: ctx, in, opts
-func (_m *MockLoaderClient) CopyResourcesAndApplyFilter(ctx context.Context, in *proto.CopyResourcesAndApplyFilterRequest, opts ...grpc.CallOption) (*proto.CopyResourcesAndApplyFilterResponse, error) {
+// ConvertResourceToMedia provides a mock function with given fields: ctx, in, opts
+func (_m *MockLoaderClient) ConvertResourceToMedia(ctx context.Context, in *proto.ConvertResourceToMediaRequest, opts ...grpc.CallOption) (*proto.ConvertResourceToMediaResponse, error) {
 	_va := make([]interface{}, len(opts))
 	for _i := range opts {
 		_va[_i] = opts[_i]
@@ -28,17 +28,17 @@ func (_m *MockLoaderClient) CopyResourcesAndApplyFilter(ctx context.Context, in 
 	_ca = append(_ca, _va...)
 	ret := _m.Called(_ca...)
 
-	var r0 *proto.CopyResourcesAndApplyFilterResponse
-	if rf, ok := ret.Get(0).(func(context.Context, *proto.CopyResourcesAndApplyFilterRequest, ...grpc.CallOption) *proto.CopyResourcesAndApplyFilterResponse); ok {
+	var r0 *proto.ConvertResourceToMediaResponse
+	if rf, ok := ret.Get(0).(func(context.Context, *proto.ConvertResourceToMediaRequest, ...grpc.CallOption) *proto.ConvertResourceToMediaResponse); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*proto.CopyResourcesAndApplyFilterResponse)
+			r0 = ret.Get(0).(*proto.ConvertResourceToMediaResponse)
 		}
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, *proto.CopyResourcesAndApplyFilterRequest, ...grpc.CallOption) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, *proto.ConvertResourceToMediaRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
 		r1 = ret.Error(1)
@@ -47,8 +47,8 @@ func (_m *MockLoaderClient) CopyResourcesAndApplyFilter(ctx context.Context, in 
 	return r0, r1
 }
 
-// CreateOrGetResourcesFromUploads provides a mock function with given fields: ctx, in, opts
-func (_m *MockLoaderClient) CreateOrGetResourcesFromUploads(ctx context.Context, in *proto.CreateOrGetResourcesFromUploadsRequest, opts ...grpc.CallOption) (*proto.CreateOrGetResourcesFromUploadsResponse, error) {
+// GenerateImageFromMedia provides a mock function with given fields: ctx, in, opts
+func (_m *MockLoaderClient) GenerateImageFromMedia(ctx context.Context, in *proto.GenerateImageFromMediaRequest, opts ...grpc.CallOption) (*proto.GenerateImageFromMediaResponse, error) {
 	_va := make([]interface{}, len(opts))
 	for _i := range opts {
 		_va[_i] = opts[_i]
@@ -58,17 +58,17 @@ func (_m *MockLoaderClient) CreateOrGetResourcesFromUploads(ctx context.Context,
 	_ca = append(_ca, _va...)
 	ret := _m.Called(_ca...)
 
-	var r0 *proto.CreateOrGetResourcesFromUploadsResponse
-	if rf, ok := ret.Get(0).(func(context.Context, *proto.CreateOrGetResourcesFromUploadsRequest, ...grpc.CallOption) *proto.CreateOrGetResourcesFromUploadsResponse); ok {
+	var r0 *proto.GenerateImageFromMediaResponse
+	if rf, ok := ret.Get(0).(func(context.Context, *proto.GenerateImageFromMediaRequest, ...grpc.CallOption) *proto.GenerateImageFromMediaResponse); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*proto.CreateOrGetResourcesFromUploadsResponse)
+			r0 = ret.Get(0).(*proto.GenerateImageFromMediaResponse)
 		}
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, *proto.CreateOrGetResourcesFromUploadsRequest, ...grpc.CallOption) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, *proto.GenerateImageFromMediaRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
 		r1 = ret.Error(1)
@@ -77,8 +77,8 @@ func (_m *MockLoaderClient) CreateOrGetResourcesFromUploads(ctx context.Context,
 	return r0, r1
 }
 
-// DeleteResources provides a mock function with given fields: ctx, in, opts
-func (_m *MockLoaderClient) DeleteResources(ctx context.Context, in *proto.DeleteResourcesRequest, opts ...grpc.CallOption) (*proto.DeleteResourcesResponse, error) {
+// ProcessMediaFromUploads provides a mock function with given fields: ctx, in, opts
+func (_m *MockLoaderClient) ProcessMediaFromUploads(ctx context.Context, in *proto.ProcessMediaFromUploadsRequest, opts ...grpc.CallOption) (*proto.ProcessMediaFromUploadsResponse, error) {
 	_va := make([]interface{}, len(opts))
 	for _i := range opts {
 		_va[_i] = opts[_i]
@@ -88,107 +88,17 @@ func (_m *MockLoaderClient) DeleteResources(ctx context.Context, in *proto.Delet
 	_ca = append(_ca, _va...)
 	ret := _m.Called(_ca...)
 
-	var r0 *proto.DeleteResourcesResponse
-	if rf, ok := ret.Get(0).(func(context.Context, *proto.DeleteResourcesRequest, ...grpc.CallOption) *proto.DeleteResourcesResponse); ok {
+	var r0 *proto.ProcessMediaFromUploadsResponse
+	if rf, ok := ret.Get(0).(func(context.Context, *proto.ProcessMediaFromUploadsRequest, ...grpc.CallOption) *proto.ProcessMediaFromUploadsResponse); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*proto.DeleteResourcesResponse)
+			r0 = ret.Get(0).(*proto.ProcessMediaFromUploadsResponse)
 		}
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, *proto.DeleteResourcesRequest, ...grpc.CallOption) error); ok {
-		r1 = rf(ctx, in, opts...)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// GetResources provides a mock function with given fields: ctx, in, opts
-func (_m *MockLoaderClient) GetResources(ctx context.Context, in *proto.GetResourcesRequest, opts ...grpc.CallOption) (*proto.GetResourcesResponse, error) {
-	_va := make([]interface{}, len(opts))
-	for _i := range opts {
-		_va[_i] = opts[_i]
-	}
-	var _ca []interface{}
-	_ca = append(_ca, ctx, in)
-	_ca = append(_ca, _va...)
-	ret := _m.Called(_ca...)
-
-	var r0 *proto.GetResourcesResponse
-	if rf, ok := ret.Get(0).(func(context.Context, *proto.GetResourcesRequest, ...grpc.CallOption) *proto.GetResourcesResponse); ok {
-		r0 = rf(ctx, in, opts...)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*proto.GetResourcesResponse)
-		}
-	}
-
-	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, *proto.GetResourcesRequest, ...grpc.CallOption) error); ok {
-		r1 = rf(ctx, in, opts...)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// ReprocessResources provides a mock function with given fields: ctx, in, opts
-func (_m *MockLoaderClient) ReprocessResources(ctx context.Context, in *proto.ReprocessResourcesRequest, opts ...grpc.CallOption) (*proto.ReprocessResourcesResponse, error) {
-	_va := make([]interface{}, len(opts))
-	for _i := range opts {
-		_va[_i] = opts[_i]
-	}
-	var _ca []interface{}
-	_ca = append(_ca, ctx, in)
-	_ca = append(_ca, _va...)
-	ret := _m.Called(_ca...)
-
-	var r0 *proto.ReprocessResourcesResponse
-	if rf, ok := ret.Get(0).(func(context.Context, *proto.ReprocessResourcesRequest, ...grpc.CallOption) *proto.ReprocessResourcesResponse); ok {
-		r0 = rf(ctx, in, opts...)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*proto.ReprocessResourcesResponse)
-		}
-	}
-
-	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, *proto.ReprocessResourcesRequest, ...grpc.CallOption) error); ok {
-		r1 = rf(ctx, in, opts...)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// UpdateResourcePrivacy provides a mock function with given fields: ctx, in, opts
-func (_m *MockLoaderClient) UpdateResourcePrivacy(ctx context.Context, in *proto.UpdateResourcePrivacyRequest, opts ...grpc.CallOption) (*proto.UpdateResourcePrivacyResponse, error) {
-	_va := make([]interface{}, len(opts))
-	for _i := range opts {
-		_va[_i] = opts[_i]
-	}
-	var _ca []interface{}
-	_ca = append(_ca, ctx, in)
-	_ca = append(_ca, _va...)
-	ret := _m.Called(_ca...)
-
-	var r0 *proto.UpdateResourcePrivacyResponse
-	if rf, ok := ret.Get(0).(func(context.Context, *proto.UpdateResourcePrivacyRequest, ...grpc.CallOption) *proto.UpdateResourcePrivacyResponse); ok {
-		r0 = rf(ctx, in, opts...)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*proto.UpdateResourcePrivacyResponse)
-		}
-	}
-
-	var r1 error
-	if rf, ok := ret.Get(1).(func(context.Context, *proto.UpdateResourcePrivacyRequest, ...grpc.CallOption) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, *proto.ProcessMediaFromUploadsRequest, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
 		r1 = ret.Error(1)

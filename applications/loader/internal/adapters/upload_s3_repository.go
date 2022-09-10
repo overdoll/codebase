@@ -14,7 +14,6 @@ import (
 	"overdoll/applications/loader/internal/domain/upload"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/domainerror"
-	"overdoll/libraries/media"
 	"strings"
 )
 
@@ -84,10 +83,10 @@ func (r UploadS3Repository) GetUpload(ctx context.Context, uploadId string) (*up
 	return upl, nil
 }
 
-func (r UploadS3Repository) DownloadUpload(ctx context.Context, med *media.Media) (*os.File, error) {
+func (r UploadS3Repository) DownloadUpload(ctx context.Context, uploadId string) (*os.File, error) {
 	downloader := s3manager.NewDownloader(r.aws)
 
-	file, err := os.Create(med.ID())
+	file, err := os.Create(uploadId)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to create file")
@@ -97,7 +96,7 @@ func (r UploadS3Repository) DownloadUpload(ctx context.Context, med *media.Media
 	_, err = downloader.Download(file,
 		&s3.GetObjectInput{
 			Bucket: aws.String(os.Getenv("UPLOADS_BUCKET")),
-			Key:    aws.String(med.ID()),
+			Key:    aws.String(uploadId),
 		},
 	)
 

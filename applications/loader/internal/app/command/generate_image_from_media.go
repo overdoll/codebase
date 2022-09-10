@@ -19,7 +19,7 @@ type GenerateImageFromMediaHandler struct {
 	event event.Repository
 }
 
-func NewCopyResourcesAndApplyFiltersHandler(event event.Repository) GenerateImageFromMediaHandler {
+func NewGenerateImageFromMediaHandler(event event.Repository) GenerateImageFromMediaHandler {
 	return GenerateImageFromMediaHandler{event: event}
 }
 

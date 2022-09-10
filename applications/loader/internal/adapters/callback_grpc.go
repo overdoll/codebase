@@ -6,7 +6,6 @@ import (
 	"google.golang.org/grpc/status"
 	"overdoll/applications/loader/internal/domain/media_processing"
 	"overdoll/libraries/errors"
-	"overdoll/libraries/media"
 	"overdoll/libraries/media/proto"
 )
 
@@ -18,11 +17,11 @@ func NewCallbackGrpc(stingMediaCallback proto.MediaCallbackClient) CallbackGrpc 
 	return CallbackGrpc{stingMediaCallback: stingMediaCallback}
 }
 
-func (s CallbackGrpc) SendCallback(ctx context.Context, source string, medias *media.Media) error {
+func (s CallbackGrpc) SendCallback(ctx context.Context, source string, media *proto.Media) error {
 
 	if source == "STING" {
 
-		_, err := s.stingMediaCallback.UpdateMedia(ctx, &proto.UpdateMediaRequest{Media: medias.RawProto()})
+		_, err := s.stingMediaCallback.UpdateMedia(ctx, &proto.UpdateMediaRequest{Media: media})
 
 		if err != nil {
 			if e, ok := status.FromError(err); ok {

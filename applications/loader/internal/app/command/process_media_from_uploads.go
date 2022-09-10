@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"overdoll/applications/loader/internal/domain/event"
+	"overdoll/applications/loader/internal/domain/media_storage"
 	"overdoll/applications/loader/internal/domain/upload"
 	"overdoll/libraries/media"
 	"overdoll/libraries/media/proto"
@@ -16,15 +17,22 @@ type ProcessMediaFromUploads struct {
 }
 
 type ProcessMediaFromUploadsHandler struct {
+	sr    media_storage.Repository
 	ur    upload.Repository
 	event event.Repository
 }
 
-func NewProcessMediaFromUploadsHandler(ur upload.Repository, event event.Repository) ProcessMediaFromUploadsHandler {
-	return ProcessMediaFromUploadsHandler{ur: ur, event: event}
+func NewProcessMediaFromUploadsHandler(ur upload.Repository, sr media_storage.Repository, event event.Repository) ProcessMediaFromUploadsHandler {
+	return ProcessMediaFromUploadsHandler{ur: ur, event: event, sr: sr}
 }
 
 func (h ProcessMediaFromUploadsHandler) Handle(ctx context.Context, cmd ProcessMediaFromUploads) ([]*media.Media, error) {
+
+	existingMedia, err := h.sr.GetMediaByLink(ctx, media.LinkFromProto(cmd.Link))
+
+	if err != nil {
+		return nil, err
+	}
 
 	var results []*media.Media
 
@@ -33,6 +41,20 @@ func (h ProcessMediaFromUploadsHandler) Handle(ctx context.Context, cmd ProcessM
 		final, err := h.ur.GetUpload(ctx, newUploadId)
 		if err != nil {
 			return nil, err
+		}
+
+		found := false
+
+		for _, existing := range existingMedia {
+			if existing.ID() == final.FileId() {
+				results = append(results, existing)
+				found = true
+				break
+			}
+		}
+
+		if found {
+			continue
 		}
 
 		sourceMedia := &proto.Media{

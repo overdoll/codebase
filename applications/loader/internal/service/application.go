@@ -27,13 +27,13 @@ func NewApplication(ctx context.Context) (*app.Application, func()) {
 type ComponentTestApplication struct {
 	App                 *app.Application
 	TemporalClient      *temporalmocks.Client
-	StingCallbackClient *mocks.MockResourceCallbackClient
+	StingCallbackClient *mocks.MockMediaCallbackClient
 }
 
 func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication {
 	bootstrap.NewBootstrap()
 	temporalClient := &temporalmocks.Client{}
-	callbackMock := &mocks.MockResourceCallbackClient{}
+	callbackMock := &mocks.MockMediaCallbackClient{}
 
 	return &ComponentTestApplication{
 		App:                 createApplication(ctx, adapters.NewCallbackGrpc(callbackMock), temporalClient),
@@ -48,23 +48,21 @@ func createApplication(ctx context.Context, callbackService activities.CallbackS
 
 	awsSession := bootstrap.InitializeAWSSession()
 
-	resourceRepo := adapters.NewMediaProcessingS3Repository(s, awsSession)
-
+	mediaProcessingRepo := adapters.NewMediaProcessingS3Repository(awsSession)
+	mediaStorageRepo := adapters.NewMediaStorageCassandraRepository(s)
+	progressRepo := adapters.NewProgressCassandraS3Repository(s)
+	uploadRepo := adapters.NewUploadS3Repository(awsSession)
 	eventRepo := adapters.NewEventTemporalRepository(client)
 
 	return &app.Application{
 		Commands: app.Commands{
-			TusComposer:                  command.NewTusComposerHandler(resourceRepo),
-			DeleteResources:              command.NewDeleteResourcesHandler(eventRepo),
-			ProcessMediaFromUploads:      command.NewProcessMediaFromUploadsHandler(resourceRepo, eventRepo),
-			CopyResourcesAndApplyFilters: command.NewCopyResourcesAndApplyFiltersHandler(resourceRepo, eventRepo),
-			UpdateResourcePrivacy:        command.NewUpdateResourcePrivacyHandler(resourceRepo),
-			ReprocessResource:            command.NewReprocessResourceHandler(resourceRepo, eventRepo),
+			TusComposer:             command.NewTusComposerHandler(uploadRepo),
+			ProcessMediaFromUploads: command.NewProcessMediaFromUploadsHandler(uploadRepo, mediaStorageRepo, eventRepo),
+			GenerateImageFromMedia:  command.NewGenerateImageFromMediaHandler(eventRepo),
 		},
 		Queries: app.Queries{
-			ResourcesByIds:     query.NewResourcesByIdsHandler(resourceRepo),
-			MediaProgressByIds: query.NewMediaProgressByIdsHandler(resourceRepo),
+			MediaProgressByIds: query.NewMediaProgressByIdsHandler(progressRepo),
 		},
-		Activities: activities.NewActivitiesHandler(resourceRepo, callbackService, eventRepo),
+		Activities: activities.NewActivitiesHandler(progressRepo, uploadRepo, mediaProcessingRepo, mediaStorageRepo, callbackService, eventRepo),
 	}
 }
