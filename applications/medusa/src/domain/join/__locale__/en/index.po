@@ -130,7 +130,7 @@ msgstr ""
 msgid "If you lost access to your two-factor device, you can use one of the recovery codes you downloaded when you set up two-factor authentication."
 msgstr ""
 
-#: src/domain/join/Join/pages/Grant/Grant.tsx:118
+#: src/domain/join/Join/pages/Grant/Grant.tsx:120
 msgid "Logging in"
 msgstr ""
 
@@ -146,7 +146,7 @@ msgstr ""
 msgid "Please enter a recovery code"
 msgstr ""
 
-#: src/domain/join/Join/pages/Grant/Grant.tsx:123
+#: src/domain/join/Join/pages/Grant/Grant.tsx:125
 msgid "Please wait while we log you in..."
 msgstr ""
 
@@ -186,11 +186,11 @@ msgstr ""
 #~ msgid "The login code has previously expired or is no longer valid. Try again?"
 #~ msgstr ""
 
-#: src/domain/join/Join/pages/Join/Join.tsx:112
+#: src/domain/join/Join/pages/Join/Join.tsx:116
 msgid "The login link has previously expired or is no longer valid. Please try logging in again."
 msgstr ""
 
-#: src/domain/join/Join/pages/Grant/Grant.tsx:92
+#: src/domain/join/Join/pages/Grant/Grant.tsx:94
 msgid "There was an error logging you in"
 msgstr ""
 
@@ -202,7 +202,7 @@ msgstr ""
 msgid "There was an error submitting the authentication code"
 msgstr ""
 
-#: src/domain/join/Join/pages/Join/Join.tsx:95
+#: src/domain/join/Join/pages/Join/Join.tsx:99
 msgid "There was an error with joining"
 msgstr ""
 
@@ -222,7 +222,7 @@ msgstr ""
 msgid "Waiting for you to click on the email link"
 msgstr ""
 
-#: src/domain/join/Join/pages/Grant/Grant.tsx:77
+#: src/domain/join/Join/pages/Grant/Grant.tsx:78
 msgid "Welcome back!"
 msgstr ""
 
