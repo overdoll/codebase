@@ -63,8 +63,9 @@ export default function SuggestedPosts ({
       isLoadingNext={isLoadingNext}
       endOfTree={<PlatformPromoteAlert />}
     >
-      {({ index }) => (
+      {({ index, key }) => (
         <FullSimplePost
+          key={key}
           query={data.suggestedPosts.edges[index].node}
           viewerQuery={viewerData}
         />

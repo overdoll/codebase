@@ -25,7 +25,7 @@ export default function ExternalLink ({
   return (
     <a
       target='_blank'
-      rel='nofollow noopener noreferrer'
+      rel='nofollow noreferrer'
       href={href}
     >
       {children}

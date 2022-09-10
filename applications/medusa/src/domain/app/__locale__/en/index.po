@@ -61,6 +61,10 @@ msgstr ""
 msgid "Billing"
 msgstr ""
 
+#: src/common/components/PlatformPromoteAlert/PlatformPromoteAlert.tsx:24
+msgid "Browse More Content"
+msgstr ""
+
 #: src/modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton.tsx:117
 msgid "Cancel"
 msgstr ""
@@ -253,11 +257,11 @@ msgstr ""
 msgid "I promise to be better and to follow the community guidelines more closely"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostLikeLoggedOutButton/PostLikeLoggedOutButton.tsx:102
+#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostLikeLoggedOutButton/PostLikeLoggedOutButton.tsx:108
 msgid "Join"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostLikeLoggedOutButton/PostLikeLoggedOutButton.tsx:90
+#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostLikeLoggedOutButton/PostLikeLoggedOutButton.tsx:96
 msgid "Join overdoll to save this post and let {0} know you like their post"
 msgstr ""
 
@@ -278,7 +282,7 @@ msgstr ""
 msgid "Last Year"
 msgstr ""
 
-#: src/common/components/PlatformPromoteAlert/PlatformPromoteAlert.tsx:50
+#: src/common/components/PlatformPromoteAlert/PlatformPromoteAlert.tsx:46
 msgid "Let your favorite artists know about us! Use any one of the share buttons below."
 msgstr ""
 
@@ -617,11 +621,11 @@ msgstr ""
 
 #: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderSaveButton/FlowBuilderSaveButton.tsx:13
 #: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostLikeButton/PostLikeButton.tsx:75
-#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostLikeLoggedOutButton/PostLikeLoggedOutButton.tsx:63
+#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostLikeLoggedOutButton/PostLikeLoggedOutButton.tsx:69
 msgid "Save"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostLikeLoggedOutButton/PostLikeLoggedOutButton.tsx:85
+#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostLikeLoggedOutButton/PostLikeLoggedOutButton.tsx:91
 msgid "Save this post to your bookmarks"
 msgstr ""
 
@@ -967,7 +971,7 @@ msgstr ""
 msgid "View Translations"
 msgstr ""
 
-#: src/common/components/PlatformPromoteAlert/PlatformPromoteAlert.tsx:44
+#: src/common/components/PlatformPromoteAlert/PlatformPromoteAlert.tsx:40
 msgid "Want more content?"
 msgstr ""
 

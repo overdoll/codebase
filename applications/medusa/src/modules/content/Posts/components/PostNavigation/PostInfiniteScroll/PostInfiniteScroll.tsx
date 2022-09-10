@@ -12,6 +12,7 @@ import PlatformPromoteAlert from '@//:common/components/PlatformPromoteAlert/Pla
 
 interface ChildrenCallable {
   index: number
+  key: string
 }
 
 interface Props {
@@ -104,7 +105,7 @@ export default function PostInfiniteScroll ({
               <LoadMoreObserver loadNext={loadNext} />}
             <Box>
               {runIfFunction(children, {
-                index
+                index, key: item.node.id
               })}
             </Box>
           </Fragment>

@@ -7,6 +7,7 @@ import PostInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
 import FullSimplePost
   from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/FullSimplePost/FullSimplePost'
+import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 
 interface Props {
   query: ClubPostsFeedFragment$key | null
@@ -55,19 +56,25 @@ export default function ClubPostsFeed ({
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   return (
-    <PostInfiniteScroll
-      query={data.clubMembersPostsFeed}
-      hasNext={hasNext}
-      loadNext={loadNext}
-      isLoadingNext={isLoadingNext}
-    >
-      {({ index }) => (
-        <FullSimplePost
-          hideOverflow={false}
-          query={data.clubMembersPostsFeed.edges[index].node}
-          viewerQuery={viewerData}
-        />
-      )}
-    </PostInfiniteScroll>
+    <GlobalVideoManagerProvider>
+      <PostInfiniteScroll
+        query={data.clubMembersPostsFeed}
+        hasNext={hasNext}
+        loadNext={loadNext}
+        isLoadingNext={isLoadingNext}
+      >
+        {({
+          index,
+          key
+        }) => (
+          <FullSimplePost
+            key={key}
+            hideOverflow={false}
+            query={data.clubMembersPostsFeed.edges[index].node}
+            viewerQuery={viewerData}
+          />
+        )}
+      </PostInfiniteScroll>
+    </GlobalVideoManagerProvider>
   )
 }

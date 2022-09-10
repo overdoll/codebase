@@ -10,9 +10,7 @@ import { FurryFox, HentaiSkirt, RandomizeDice, SearchBar, ThreeDRender } from '@
 import BrowsePostsPreview from './BrowsePostsPreview/BrowsePostsPreview'
 import HomeGameTile from '../HomeGameTile/HomeGameTile'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
-import { useId, useMemo } from 'react'
-import { Random } from '@//:modules/utilities/random'
-import hash from '@//:modules/utilities/hash'
+import getRandomSeed from '@//:modules/support/getRandomSeed'
 
 interface Props {
   query: PreloadedQuery<HomeQuery>
@@ -35,11 +33,7 @@ export default function Home (props: Props): JSX.Element {
     props.query
   )
 
-  const id = useId()
-
-  const memoized = useMemo(() => new Random(hash(id)), [id])
-
-  const seed = useMemo(() => memoized.nextInt31(), [id])
+  const seed = getRandomSeed()
 
   return (
     <>

@@ -9,6 +9,7 @@ import { JoinMutation } from '@//:artifacts/JoinMutation.graphql'
 import { t, Trans } from '@lingui/macro'
 import { Alert, AlertCloseButton, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
 import { useToast } from '@//:modules/content/ThemeComponents'
+import trackFathomEvent from '@//:modules/support/trackFathomEvent'
 
 interface Props {
   queryRef: JoinFragment$key | null
@@ -88,6 +89,9 @@ export default function Join ({
           secure: true,
           sameSite: 'lax'
         })
+      },
+      onCompleted () {
+        trackFathomEvent('OP1VETUI', 1)
       },
       onError (data) {
         notify({

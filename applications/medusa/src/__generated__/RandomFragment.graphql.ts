@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b723680b1af9d08fe6a303dc56b8788e>>
+ * @generated SignedSource<<62c58dffd5fb10b5e64ab7a4737fb32b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,6 +17,9 @@ export type RandomFragment$data = {
         readonly " $fragmentSpreads": FragmentRefs<"FullSimplePostFragment">;
       };
     }>;
+    readonly pageInfo: {
+      readonly startCursor: string | null;
+    };
     readonly " $fragmentSpreads": FragmentRefs<"PostInfiniteScrollFragment">;
   };
   readonly " $fragmentType": "RandomFragment";
@@ -89,6 +92,38 @@ return {
         {
           "alias": null,
           "args": null,
+          "concreteType": "PageInfo",
+          "kind": "LinkedField",
+          "name": "pageInfo",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "startCursor",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "endCursor",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "hasNextPage",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
           "concreteType": "PostEdge",
           "kind": "LinkedField",
           "name": "edges",
@@ -131,31 +166,6 @@ return {
           "args": null,
           "kind": "FragmentSpread",
           "name": "PostInfiniteScrollFragment"
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "PageInfo",
-          "kind": "LinkedField",
-          "name": "pageInfo",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "endCursor",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "hasNextPage",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
         }
       ],
       "storageKey": null
@@ -166,6 +176,6 @@ return {
 };
 })();
 
-(node as any).hash = "3e6cb81ea14c0a15ac5a4dc6d19add34";
+(node as any).hash = "f7d56aa00013f038ccc0859fd85a1edf";
 
 export default node;

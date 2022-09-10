@@ -21,6 +21,7 @@ import { graphql, useFragment } from 'react-relay'
 import { PostLikeLoggedOutButtonFragment$key } from '@//:artifacts/PostLikeLoggedOutButtonFragment.graphql'
 import LinkButton from '../../../../../ThemeComponents/LinkButton/LinkButton'
 import { Icon } from '../../../../../PageLayout'
+import trackFathomEvent from '../../../../../../support/trackFathomEvent'
 
 interface Props extends ButtonProps {
   postQuery: PostLikeLoggedOutButtonFragment$key
@@ -49,6 +50,11 @@ export default function PostLikeLoggedOutButton ({
 
   const { i18n } = useLingui()
 
+  const onOpenLike = (): void => {
+    onOpen()
+    trackFathomEvent('8EJWBRWW', 1)
+  }
+
   const redirect = encodeJoinRedirect({
     pathname: '/[slug]/post/[reference]',
     query: {
@@ -59,7 +65,7 @@ export default function PostLikeLoggedOutButton ({
 
   return (
     <>
-      <MediumGenericButton isIcon onClick={onOpen} icon={BookmarkFull}>
+      <MediumGenericButton isIcon onClick={onOpenLike} icon={BookmarkFull}>
         {i18n._(t`Save`)}
       </MediumGenericButton>
       <Modal

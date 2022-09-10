@@ -35,6 +35,9 @@ const Fragment = graphql`
   @refetchable(queryName: "RandomPostsPaginationQuery" ) {
     postsFeed (first: $first, after: $after, seed: $seed)
     @connection (key: "RandomPosts_postsFeed") {
+      pageInfo {
+        startCursor
+      }
       edges {
         node {
           ...FullSimplePostFragment
@@ -73,14 +76,19 @@ export default function Random (props: Props): JSX.Element {
         </HStack>
         <GlobalVideoManagerProvider>
           <PostInfiniteScroll
+            key={data.postsFeed.pageInfo.startCursor}
             query={data.postsFeed}
             hasNext={hasNext}
             loadNext={loadNext}
             isLoadingNext={isLoadingNext}
             endOfTree={<PlatformPromoteAlert />}
           >
-            {({ index }) => (
+            {({
+              index,
+              key
+            }) => (
               <FullSimplePost
+                key={key}
                 query={data.postsFeed.edges[index].node}
                 viewerQuery={queryData.viewer}
               />

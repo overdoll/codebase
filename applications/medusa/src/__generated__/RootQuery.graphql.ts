@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b04b06b18e90f53ab12b5a2960def243>>
- * @relayHash f9ec30b2e6d95c2ffea313e27c402dc6
+ * @generated SignedSource<<54fdfa3cee30da7da47496633b2619aa>>
+ * @relayHash edd402f31bfa9724b65c07bfb47387c2
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f9ec30b2e6d95c2ffea313e27c402dc6
+// @relayRequestID edd402f31bfa9724b65c07bfb47387c2
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -33,16 +33,17 @@ var v0 = {
   "name": "id",
   "storageKey": null
 },
-v1 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "__typename",
-    "storageKey": null
-  }
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
+},
+v2 = [
+  (v1/*: any*/)
 ],
-v2 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -118,7 +119,7 @@ return {
             "kind": "LinkedField",
             "name": "lock",
             "plural": false,
-            "selections": (v1/*: any*/),
+            "selections": (v2/*: any*/),
             "storageKey": null
           },
           {
@@ -128,7 +129,7 @@ return {
             "kind": "LinkedField",
             "name": "deleting",
             "plural": false,
-            "selections": (v1/*: any*/),
+            "selections": (v2/*: any*/),
             "storageKey": null
           },
           {
@@ -183,7 +184,7 @@ return {
                 "name": "urls",
                 "plural": true,
                 "selections": [
-                  (v2/*: any*/),
+                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -216,7 +217,7 @@ return {
                 "name": "videoThumbnail",
                 "plural": false,
                 "selections": [
-                  (v2/*: any*/)
+                  (v3/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -229,14 +230,15 @@ return {
               }
             ],
             "storageKey": null
-          }
+          },
+          (v1/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "f9ec30b2e6d95c2ffea313e27c402dc6",
+    "id": "edd402f31bfa9724b65c07bfb47387c2",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
