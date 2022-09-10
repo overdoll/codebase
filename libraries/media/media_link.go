@@ -3,65 +3,125 @@ package media
 import "overdoll/libraries/media/proto"
 
 type Link struct {
-	source *proto.MediaLink
+	proto *proto.MediaLink
 }
 
 func NewPostContentMediaLink(postId string) *Link {
-	return &Link{}
+	return &Link{
+		proto: &proto.MediaLink{
+			Id:   postId,
+			Type: proto.MediaLinkType_POST_CONTENT,
+		},
+	}
 }
 
 func NewClubBannerMediaLink(clubId string) *Link {
-	return &Link{}
+	return &Link{
+		proto: &proto.MediaLink{
+			Id:   clubId,
+			Type: proto.MediaLinkType_CLUB_BANNER,
+		},
+	}
 }
 
 func NewClubThumbnailMediaLink(clubId string) *Link {
-	return &Link{}
+	return &Link{
+		proto: &proto.MediaLink{
+			Id:   clubId,
+			Type: proto.MediaLinkType_CLUB_THUMBNAIL,
+		},
+	}
 }
 
-func NewSeriesThumbnailMediaLink(clubId string) *Link {
-	return &Link{}
+func NewSeriesThumbnailMediaLink(seriesId string) *Link {
+	return &Link{
+		proto: &proto.MediaLink{
+			Id:   seriesId,
+			Type: proto.MediaLinkType_SERIES_THUMBNAIL,
+		},
+	}
 }
 
-func NewTopicBannerMediaLink(audienceId string) *Link {
-	return &Link{}
+func NewTopicBannerMediaLink(topicId string) *Link {
+	return &Link{
+		proto: &proto.MediaLink{
+			Id:   topicId,
+			Type: proto.MediaLinkType_TOPIC_BANNER,
+		},
+	}
 }
 
 func NewAudienceBannerMediaLink(audienceId string) *Link {
-	return &Link{}
+	return &Link{
+		proto: &proto.MediaLink{
+			Id:   audienceId,
+			Type: proto.MediaLinkType_AUDIENCE_BANNER,
+		},
+	}
 }
 
 func NewAudienceThumbnailMediaLink(audienceId string) *Link {
-	return &Link{}
+	return &Link{
+		proto: &proto.MediaLink{
+			Id:   audienceId,
+			Type: proto.MediaLinkType_AUDIENCE_THUMBNAIL,
+		},
+	}
 }
 
-func NewCategoryThumbnailMediaLink(audienceId string) *Link {
-	return &Link{}
+func NewCategoryThumbnailMediaLink(categoryId string) *Link {
+	return &Link{
+		proto: &proto.MediaLink{
+			Id:   categoryId,
+			Type: proto.MediaLinkType_CATEGORY_THUMBNAIL,
+		},
+	}
 }
 
-func NewCategoryBannerMediaLink(audienceId string) *Link {
-	return &Link{}
+func NewCategoryBannerMediaLink(categoryId string) *Link {
+	return &Link{
+		proto: &proto.MediaLink{
+			Id:   categoryId,
+			Type: proto.MediaLinkType_CATEGORY_BANNER,
+		},
+	}
 }
 
-func NewCharacterThumbnailMediaLink(audienceId string) *Link {
-	return &Link{}
+func NewCharacterThumbnailMediaLink(characterId string) *Link {
+	return &Link{
+		proto: &proto.MediaLink{
+			Id:   characterId,
+			Type: proto.MediaLinkType_CHARACTER_THUMBNAIL,
+		},
+	}
 }
 
-func NewCharacterBannerMediaLink(audienceId string) *Link {
-	return &Link{}
+func NewCharacterBannerMediaLink(characterId string) *Link {
+	return &Link{
+		proto: &proto.MediaLink{
+			Id:   characterId,
+			Type: proto.MediaLinkType_CHARACTER_BANNER,
+		},
+	}
 }
 
-func NewSeriesBannerMediaLink(audienceId string) *Link {
-	return &Link{}
+func NewSeriesBannerMediaLink(seriesId string) *Link {
+	return &Link{
+		proto: &proto.MediaLink{
+			Id:   seriesId,
+			Type: proto.MediaLinkType_SERIES_BANNER,
+		},
+	}
 }
 
 func (l *Link) LinkedId() string {
-	return l.source.Id
+	return l.proto.Id
 }
 
 func (l *Link) RawProto() *proto.MediaLink {
-	return l.source
+	return l.proto
 }
 
 func LinkFromProto(p *proto.MediaLink) *Link {
-	return &Link{source: p}
+	return &Link{proto: p}
 }

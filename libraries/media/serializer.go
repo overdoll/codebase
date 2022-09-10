@@ -6,11 +6,13 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/cloudfront/sign"
 	"github.com/aws/aws-sdk-go/service/s3"
+	proto2 "github.com/golang/protobuf/proto"
 	"go.uber.org/zap"
 	"os"
 	"overdoll/libraries/errors"
-	"overdoll/libraries/resource/proto"
+	"overdoll/libraries/media/proto"
 	"overdoll/libraries/support"
+	"strconv"
 	"sync"
 	"time"
 )
@@ -100,50 +102,6 @@ func (c Serializer) unmarshalResources(ctx context.Context, resourcesList []stri
 	}
 
 	return resourcesResult, nil
-}
-
-func (c *Serializer) UnmarshalResourcesFromProto(ctx context.Context, resource []*proto.Resource) ([]*Resource, error) {
-
-	var resources []string
-
-	for _, item := range resource {
-
-		var tp int
-
-		if item.Type == proto.ResourceType_IMAGE {
-			tp = 1
-		}
-
-		if item.Type == proto.ResourceType_VIDEO {
-			tp = 2
-		}
-
-		data, err := json.Marshal(&serializedResource{
-			ItemId:                 item.ItemId,
-			ResourceId:             item.Id,
-			Type:                   tp,
-			MimeTypes:              item.MimeTypes,
-			Processed:              item.Processed,
-			ProcessedId:            item.ProcessedId,
-			IsPrivate:              item.Private,
-			VideoDuration:          int(item.VideoDuration),
-			VideoThumbnail:         item.VideoThumbnail,
-			VideoThumbnailMimeType: item.VideoThumbnailMimeType,
-			Width:                  int(item.Width),
-			Height:                 int(item.Height),
-			Preview:                item.Preview,
-			Failed:                 item.Failed,
-			VideoNoAudio:           item.VideoNoAudio,
-		})
-
-		if err != nil {
-			return nil, err
-		}
-
-		resources = append(resources, string(data))
-	}
-
-	return c.UnmarshalResourcesFromDatabase(ctx, resources)
 }
 
 func (c *Serializer) UnmarshalResourceFromDatabase(ctx context.Context, serializedResources string) (*Resource, error) {
@@ -421,14 +379,98 @@ func (c *Serializer) unmarshalResourceFromDatabaseWithSignedUrls(i serializedRes
 	), nil
 }
 
+func unmarshalLegacyResourceFromDatabase(ctx context.Context, resource string) (*Media, error) {
+
+	var re serializedResource
+
+	if err := json.Unmarshal([]byte(resource), &re); err != nil {
+		return nil, err
+	}
+
+	var videoData *proto.VideoData
+	var imageData *proto.ImageData
+
+	if re.Processed && re.VideoThumbnailMimeType != "" {
+		videoData = &proto.VideoData{
+			Containers: []*proto.VideoContainer{{
+				Id:       re.ProcessedId + ".mp4",
+				MimeType: proto.MediaMimeType_VideoMp4,
+				Bitrate:  0,
+				Height:   int64(re.Height),
+				Width:    int64(re.Width),
+			}},
+			AspectRatio: &proto.VideoAspectRatio{
+				Width:  0,
+				Height: 0,
+			},
+			DurationMilliseconds: int64(re.VideoDuration),
+			HasAudio:             !re.VideoNoAudio,
+		}
+	}
+
+	if re.Processed {
+		values, err := strconv.ParseUint(re.Preview, 16, 32)
+
+		if err != nil {
+			return nil, err
+		}
+
+		imageData = &proto.ImageData{
+			Id:       re.ProcessedId + ".jpg",
+			MimeType: proto.MediaMimeType_ImageJpeg,
+			Width:    int64(re.Width),
+			Height:   int64(re.Height),
+			Palettes: []*proto.ColorPalette{{
+				Percent: 100,
+				Red:     int32(uint8(values >> 16)),
+				Green:   int32(uint8((values >> 8) & 0xFF)),
+				Blue:    int32(uint8(values & 0xFF)),
+			}},
+		}
+	}
+
+	return FromProto(&proto.Media{
+		Id:        re.ResourceId,
+		Private:   re.IsPrivate,
+		VideoData: videoData,
+		ImageData: imageData,
+		State: &proto.MediaState{
+			Processed: re.Processed,
+			Failed:    re.Failed,
+		},
+		Version: 0,
+	}), nil
+}
+
 func MarshalMediaToDatabase(media *Media) (*string, error) {
-	return nil, nil
+
+	marshalled, err := proto2.Marshal(media.proto)
+
+	if err != nil {
+		return nil, err
+	}
+
+	str := string(marshalled)
+
+	return &str, nil
 }
 
 func UnmarshalMediaFromDatabase(ctx context.Context, media *string) (*Media, error) {
-	return nil, nil
+
+	var res *proto.Media
+
+	if err := proto2.Unmarshal([]byte(*media), res); err != nil {
+		return nil, err
+	}
+
+	return FromProto(res), nil
 }
 
 func UnmarshalMediaWithLegacyResourceFromDatabase(ctx context.Context, resource string, media *string) (*Media, error) {
-	return nil, nil
+
+	if media == nil {
+		return unmarshalLegacyResourceFromDatabase(ctx, resource)
+	}
+
+	return UnmarshalMediaFromDatabase(ctx, media)
 }

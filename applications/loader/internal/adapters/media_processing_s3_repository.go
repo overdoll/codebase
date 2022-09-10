@@ -95,7 +95,7 @@ func (r MediaProcessingS3Repository) DownloadImageMedia(ctx context.Context, tar
 	_, err = downloader.Download(file,
 		&s3.GetObjectInput{
 			Bucket: aws.String(os.Getenv("MEDIA_BUCKET")),
-			Key:    aws.String(target.ImageOriginalKey()),
+			Key:    aws.String(target.ImageOriginalDownloadKey()),
 		},
 	)
 
