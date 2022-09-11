@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<105385866bf7d925f315c2ce94344022>>
- * @relayHash ff74438af06fea96631f58e2acf95ec2
+ * @generated SignedSource<<d16203b8047158da59de26a50d8173ad>>
+ * @relayHash 2c120ac8df5cd8ef4591043d29b5e719
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,9 +9,10 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ff74438af06fea96631f58e2acf95ec2
+// @relayRequestID 2c120ac8df5cd8ef4591043d29b5e719
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
+import { FragmentRefs } from "relay-runtime";
 export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 export type UpdateCharacterThumbnailInput = {
   id: string;
@@ -29,6 +30,7 @@ export type ChangeCharacterThumbnailFormMutation$data = {
           readonly mimeType: string;
           readonly url: string;
         }>;
+        readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
       } | null;
       readonly id: string;
     } | null;
@@ -71,18 +73,19 @@ v3 = {
 v4 = {
   "alias": null,
   "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
   "concreteType": "ResourceUrl",
   "kind": "LinkedField",
   "name": "urls",
   "plural": true,
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "url",
-      "storageKey": null
-    },
+    (v4/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -126,7 +129,12 @@ return {
                 "plural": false,
                 "selections": [
                   (v3/*: any*/),
-                  (v4/*: any*/)
+                  (v5/*: any*/),
+                  {
+                    "args": null,
+                    "kind": "FragmentSpread",
+                    "name": "ResourceIconFragment"
+                  }
                 ],
                 "storageKey": null
               }
@@ -172,8 +180,41 @@ return {
                 "plural": false,
                 "selections": [
                   (v3/*: any*/),
-                  (v4/*: any*/),
-                  (v2/*: any*/)
+                  (v5/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "preview",
+                    "storageKey": null
+                  },
+                  (v2/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "width",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "height",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "ResourceUrl",
+                    "kind": "LinkedField",
+                    "name": "videoThumbnail",
+                    "plural": false,
+                    "selections": [
+                      (v4/*: any*/)
+                    ],
+                    "storageKey": null
+                  }
                 ],
                 "storageKey": null
               }
@@ -186,7 +227,7 @@ return {
     ]
   },
   "params": {
-    "id": "ff74438af06fea96631f58e2acf95ec2",
+    "id": "2c120ac8df5cd8ef4591043d29b5e719",
     "metadata": {},
     "name": "ChangeCharacterThumbnailFormMutation",
     "operationKind": "mutation",
@@ -195,6 +236,6 @@ return {
 };
 })();
 
-(node as any).hash = "011f52baf33cdb3d67d948832c9e3a81";
+(node as any).hash = "3e65b6ba0cda73551ff69fa5f6c9c577";
 
 export default node;
