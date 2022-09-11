@@ -113,7 +113,13 @@ export default function ImageSnippet ({
       justify='center'
       align='center'
     >
-      <picture>
+      <Flex
+        w='inherit'
+        h='inherit'
+        as='picture'
+        justify='center'
+        align='center'
+      >
         {data?.urls.map((item) => (
           <source key={item.url} src={item.url} type={item.mimeType} />
         ))}
@@ -126,7 +132,7 @@ export default function ImageSnippet ({
           {...IMAGE_PROPS}
           {...rest}
         />
-      </picture>
+      </Flex>
     </Flex>
   )
 }

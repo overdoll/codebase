@@ -41,6 +41,7 @@ const Mutation = graphql`
             url
             mimeType
           }
+          ...ResourceIconFragment
         }
       }
     }
