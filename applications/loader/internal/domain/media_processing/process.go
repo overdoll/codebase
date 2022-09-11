@@ -8,7 +8,6 @@ import (
 	"github.com/EdlinOrg/prominentcolor"
 	"github.com/disintegration/gift"
 	"github.com/h2non/filetype"
-	"github.com/nfnt/resize"
 	ffmpeg_go "github.com/u2takey/ffmpeg-go"
 	"go.uber.org/zap"
 	"image"
@@ -127,7 +126,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	// map 0:v:0 selects only the first video track
 	encodingArgs := ffmpeg_go.KwArgs{"c:v": "libx264", "crf": "23", "preset": "slow", "map_metadata": "-1", "sn": "", "map": []string{"0:v:0"}, "threads:v": "1", "movflags": "+faststart"}
 
-	newVideoFileName := media.ID() + ".mp4"
+	newVideoFileName := fileName + ".mp4"
 
 	defaultArgs := map[string]interface{}{
 		"v": "error",
@@ -281,7 +280,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		return nil, err
 	}
 
-	thumbnailFileName := fileName + ".jpg"
+	thumbnailFileName := uuid.New().String()
 
 	fileThumbnail, err := os.Create(thumbnailFileName)
 	if err != nil {
@@ -326,7 +325,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 
 	// update the source image data - this is used for the thumbnail
 	media.RawProto().ImageData = &proto.ImageData{
-		Id:       fileName + ".jpg",
+		Id:       fileName,
 		MimeType: proto.MediaMimeType_ImageJpeg,
 		Width:    int64(probeResult.Streams[0].Width),
 		Height:   int64(probeResult.Streams[0].Height),
@@ -386,28 +385,27 @@ func processImage(media *media.Media, mimeType string, file *os.File) (*ProcessR
 		return nil, errors.Wrap(err, "failed to decode image")
 	}
 
-	// resize if image width or height is greater than our max (4096)
-	if src.Bounds().Dx() > maxImageWidthOrHeight {
-		src = resize.Resize(uint(maxImageWidthOrHeight), 0, src, resize.Lanczos3)
-	}
-
-	if src.Bounds().Dy() > maxImageWidthOrHeight {
-		src = resize.Resize(0, uint(maxImageWidthOrHeight), src, resize.Lanczos3)
-	}
-
-	jpegFileName := fileName + ".jpg"
-
-	jpegFile, err := os.Create(jpegFileName)
+	imageFile, err := os.Create(fileName)
 	if err != nil {
 		return nil, err
 	}
 
-	if err := jpeg.Encode(jpegFile, src, &jpeg.Options{Quality: 90}); err != nil {
-		return nil, errors.Wrap(err, "failed to encode jpeg")
+	var finalMimeType proto.MediaMimeType
+
+	if mimeType == "image/png" {
+		finalMimeType = proto.MediaMimeType_ImagePng
+		if err := png.Encode(imageFile, src); err != nil {
+			return nil, errors.Wrap(err, "failed to encode png")
+		}
+	} else {
+		finalMimeType = proto.MediaMimeType_ImageJpeg
+		if err := jpeg.Encode(imageFile, src, &jpeg.Options{Quality: 100}); err != nil {
+			return nil, errors.Wrap(err, "failed to encode jpeg")
+		}
 	}
 
-	_, _ = jpegFile.Seek(0, io.SeekStart)
-	palettes, err := createPreviewFromFile(jpegFile)
+	_, _ = imageFile.Seek(0, io.SeekStart)
+	palettes, err := createPreviewFromFile(imageFile)
 
 	if err != nil {
 		return nil, err
@@ -415,8 +413,8 @@ func processImage(media *media.Media, mimeType string, file *os.File) (*ProcessR
 
 	// update the source image data
 	media.RawProto().ImageData = &proto.ImageData{
-		Id:       jpegFileName,
-		MimeType: proto.MediaMimeType_ImageJpeg,
+		Id:       fileName,
+		MimeType: finalMimeType,
 		Width:    int64(src.Bounds().Dx()),
 		Height:   int64(src.Bounds().Dy()),
 		Palettes: palettes,
@@ -424,7 +422,7 @@ func processImage(media *media.Media, mimeType string, file *os.File) (*ProcessR
 
 	return &ProcessResponse{move: []*Move{
 		{
-			fileName: jpegFileName,
+			fileName: fileName,
 		},
 	}}, nil
 }
@@ -495,15 +493,24 @@ func ProcessMedia(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	return response, nil
 }
 
-func ApplyFilters(media *media.Media, file *os.File, filters *ImageFilters) (*ProcessResponse, error) {
+func ApplyFilters(media *media.Media, file *os.File, filters *ImageFilters, mimeType proto.MediaMimeType) (*ProcessResponse, error) {
 
 	defer file.Close()
 	defer os.Remove(file.Name())
 
-	src, err := jpeg.Decode(file)
+	var src image.Image
+	var err error
 
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to decode a file for filters")
+	if mimeType == proto.MediaMimeType_ImagePng {
+		src, err = png.Decode(file)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to decode png")
+		}
+	} else {
+		src, err = jpeg.Decode(file)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to encode jpeg")
+		}
 	}
 
 	// create and apply filters
@@ -522,21 +529,21 @@ func ApplyFilters(media *media.Media, file *os.File, filters *ImageFilters) (*Pr
 	pixelatedSrc := image.NewNRGBA(g.Bounds(src.Bounds()))
 	g.Draw(pixelatedSrc, src)
 
-	jpegFileName := media.ID() + ".jpg"
+	finalFileName := uuid.New().String()
 
-	jpegFile, err := os.Create(jpegFileName)
+	targetFile, err := os.Create(finalFileName)
 	if err != nil {
 		return nil, err
 	}
 
 	// when filters are applied, this is usually to an existing JPEG, so it has already been compressed
 	// we want to avoid compressing it twice, so we set the quality to 100
-	if err := jpeg.Encode(jpegFile, pixelatedSrc, &jpeg.Options{Quality: 100}); err != nil {
+	if err := jpeg.Encode(targetFile, pixelatedSrc, &jpeg.Options{Quality: 100}); err != nil {
 		return nil, errors.Wrap(err, "failed to encode jpeg")
 	}
 
-	_, _ = jpegFile.Seek(0, io.SeekStart)
-	palettes, err := createPreviewFromFile(jpegFile)
+	_, _ = targetFile.Seek(0, io.SeekStart)
+	palettes, err := createPreviewFromFile(targetFile)
 
 	if err != nil {
 		return nil, err
@@ -544,7 +551,7 @@ func ApplyFilters(media *media.Media, file *os.File, filters *ImageFilters) (*Pr
 
 	// update the source image data
 	media.RawProto().ImageData = &proto.ImageData{
-		Id:       jpegFileName,
+		Id:       finalFileName,
 		MimeType: proto.MediaMimeType_ImageJpeg,
 		Width:    int64(src.Bounds().Dx()),
 		Height:   int64(src.Bounds().Dy()),
@@ -553,7 +560,7 @@ func ApplyFilters(media *media.Media, file *os.File, filters *ImageFilters) (*Pr
 
 	return &ProcessResponse{move: []*Move{
 		{
-			fileName: jpegFileName,
+			fileName: finalFileName,
 		},
 	}}, nil
 }

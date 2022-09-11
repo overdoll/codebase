@@ -49,7 +49,6 @@ func (r MediaProcessingS3Repository) uploadResource(ctx context.Context, moveTar
 		Body:          bytes.NewReader(buffer),
 		ContentLength: aws.Int64(size),
 		ContentType:   aws.String(http.DetectContentType(buffer)),
-		CacheControl:  aws.String("max-age=604800, must-revalidate"),
 	}
 
 	// new file that was created

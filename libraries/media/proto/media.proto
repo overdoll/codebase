@@ -21,6 +21,7 @@ enum MediaMimeType {
   VideoMp4 = 0;
   VideoMpegUrl = 1;
   ImageJpeg = 2;
+  ImagePng = 3;
 }
 
 enum MediaVersion {

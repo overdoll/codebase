@@ -520,7 +520,7 @@ func (a *Account) RevokeStaffRole(requester *principal.Principal) error {
 		return err
 	}
 
-	if !a.IsStaff() {
+	if !a.hasRoles([]string{Staff.String()}) {
 		return ErrAccountNoRole
 	}
 
@@ -533,7 +533,7 @@ func (a *Account) RevokeStaffRole(requester *principal.Principal) error {
 
 func (a *Account) RevokeWorkerRole() error {
 
-	if !a.IsWorker() {
+	if !a.hasRoles([]string{Worker.String()}) {
 		return ErrAccountNoRole
 	}
 
