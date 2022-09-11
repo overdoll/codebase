@@ -23,8 +23,8 @@ export default function ResourceIconMedia ({
   const data = useFragment(Fragment, query)
 
   if (data.type === 'IMAGE') {
-    return <ImageSnippet tinyError query={data} />
+    return <ImageSnippet cover tinyError query={data} />
   }
 
-  return <VideoSnippet query={data} />
+  return <VideoSnippet cover query={data} />
 }

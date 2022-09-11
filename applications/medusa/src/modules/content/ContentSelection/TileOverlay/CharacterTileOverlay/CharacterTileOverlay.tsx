@@ -32,6 +32,7 @@ export default function CharacterTileOverlay ({
   return (
     <TileOverlay backdrop={
       <ResourceItem
+        cover
         showBorder
         seed={data.id}
         query={data.banner}
