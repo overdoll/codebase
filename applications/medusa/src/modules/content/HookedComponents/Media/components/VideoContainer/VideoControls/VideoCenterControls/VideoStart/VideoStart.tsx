@@ -1,5 +1,5 @@
 import { Box } from '@chakra-ui/react'
-import { Icon } from '../../../../../../PageLayout'
+import { Icon } from '../../../../../../../PageLayout'
 import { ControlPlayButton } from '@//:assets/icons'
 import { useEffect, useState } from 'react'
 
@@ -7,7 +7,7 @@ interface Props {
   player: any
 }
 
-export default function VideoSpinner (props: Props): JSX.Element {
+export default function VideoStart (props: Props): JSX.Element {
   const {
     player: inheritedPlayer
   } = props
@@ -21,13 +21,14 @@ export default function VideoSpinner (props: Props): JSX.Element {
   // TODO loading is at the top left of the video so you can still see the content while the video loads
 
   const onStart = (): void => {
-    player.start()
+    player.play()
   }
 
   useEffect(() => {
     if (player == null) return
 
     const onAnyEvent = (player): void => {
+      console.log(player.hasStart)
       setPlayer(player)
     }
     player.on('play', onAnyEvent)
@@ -35,9 +36,11 @@ export default function VideoSpinner (props: Props): JSX.Element {
     return () => {
       player.off('play', onAnyEvent)
     }
-  }, [player])
+  }, [])
 
-  if (!(player.hasStart)) {
+  console.log(player)
+
+  if (player.hasStart === false) {
     return (
       <Box onClick={onStart} cursor='pointer' w={16} h={16}>
         <Icon icon={ControlPlayButton} fill='whiteAlpha.800' />
