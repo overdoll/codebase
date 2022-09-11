@@ -2,19 +2,21 @@ import NextImage from '../NextImage/NextImage'
 import { ReactNode, useState } from 'react'
 import ImageError from '../ImageError/ImageError'
 import { useHydrate } from '../../../../../hydrate'
-import { Box, useToken } from '@chakra-ui/react'
+import { Flex, useToken } from '@chakra-ui/react'
 
 interface Props {
   url: string
   color?: string
   variants?: ReactNode
+  cover?: boolean
 }
 
 export default function ImageMedia (props: Props): JSX.Element {
   const {
     url,
     color,
-    variants
+    variants,
+    cover = false
   } = props
 
   const [hasError, setError] = useState(false)
@@ -40,8 +42,12 @@ export default function ImageMedia (props: Props): JSX.Element {
   }
 
   return (
-    <Box
+    <Flex
       as='picture'
+      h='100%'
+      w='100%'
+      align='center'
+      justify='center'
     >
       {variants}
       <NextImage
@@ -53,10 +59,11 @@ export default function ImageMedia (props: Props): JSX.Element {
           backgroundColor: color ?? gray,
           userSelect: 'none',
           maxWidth: '100%',
-          height: 'auto'
+          height: cover ? '100%' : 'auto',
+          objectFit: cover ? 'cover' : 'contain'
         }}
         draggable={false}
       />
-    </Box>
+    </Flex>
   )
 }

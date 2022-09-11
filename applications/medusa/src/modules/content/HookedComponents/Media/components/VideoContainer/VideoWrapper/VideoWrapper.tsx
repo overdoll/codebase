@@ -2,6 +2,7 @@ import DynamicVideo, { CreateVideoProps } from './DynamicVideo/DynamicVideo'
 import { useHydrate } from '../../../../../../hydrate'
 import { Flex, FlexProps } from '@chakra-ui/react'
 import { ReactNode, useState } from 'react'
+import CoverImage from '../../NextImage/CoverImage/CoverImage'
 
 export interface VideoWrapperProps {
   poster: ReactNode
@@ -52,7 +53,9 @@ export default function VideoWrapper (props: Props): JSX.Element {
       paddingTop={`${(aspectRatio.height / aspectRatio.width) * 100}%`}
     >
       <Flex {...FLEX_PROPS}>
-        {poster}
+        <CoverImage>
+          {poster}
+        </CoverImage>
       </Flex>
       <Flex {...FLEX_PROPS}>
         {isHydrated && (

@@ -22,6 +22,7 @@ export default function VideoBackground (props: Props): JSX.Element {
         filter='blur(2px)'
         align='center'
         justify='center'
+        objectFit='cover'
       >
         {poster}
       </Flex>
