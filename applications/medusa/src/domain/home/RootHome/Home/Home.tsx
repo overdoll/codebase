@@ -1,7 +1,7 @@
 import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { HomeQuery } from '@//:artifacts/HomeQuery.graphql'
 import { graphql } from 'react-relay'
-import { Heading, Stack } from '@chakra-ui/react'
+import { Box, Heading, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import AccountInformationBanner from '../../../../common/components/AccountInformationBanner/AccountInformationBanner'
 import CurationProfileAlert from '../CurationProfileAlert/CurationProfileAlert'
@@ -11,6 +11,8 @@ import BrowsePostsPreview from './BrowsePostsPreview/BrowsePostsPreview'
 import HomeGameTile from '../HomeGameTile/HomeGameTile'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import getRandomSeed from '@//:modules/support/getRandomSeed'
+import VideoContainer from '@//:modules/content/HookedComponents/Media/components/VideoContainer/VideoContainer'
+import ImageMedia from '@//:modules/content/HookedComponents/Media/components/ImageMedia/ImageMedia'
 
 interface Props {
   query: PreloadedQuery<HomeQuery>
@@ -37,6 +39,16 @@ export default function Home (props: Props): JSX.Element {
 
   return (
     <>
+      <Box w='100%' h='100%'>
+        <VideoContainer
+          aspectRatio={{
+            width: 4,
+            height: 3
+          }}
+          poster={<ImageMedia url='https://static.dollycdn.net/banners/roulette-banner.jpg' />}
+          mp4Url='https://static.dollycdn.net/banners/roulette-preview.mp4'
+        />
+      </Box>
       <AccountInformationBanner query={queryData?.viewer} />
       <CurationProfileAlert query={queryData?.viewer} />
       <Stack spacing={24}>

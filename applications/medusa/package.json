@@ -62,7 +62,11 @@
     "url-slug": "^3.0.2",
     "use-query-params": "^1.2.3",
     "usehooks-ts": "^2.2.1",
-    "wait-port": "^0.2.9"
+    "wait-port": "^0.2.9",
+    "xgplayer": "^2.32.0",
+    "xgplayer-hls": "^2.5.2",
+    "xgplayer-hls-vod": "^2.5.2",
+    "xgplayer-mp4": "^2.0.2"
   },
   "browserslist": {
     "production": [

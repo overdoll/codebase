@@ -1,5 +1,5 @@
 import { Box, Flex, Heading, Stack, Text } from '@chakra-ui/react'
-import Icon from '../../../PageLayout/Flair/Icon/Icon'
+import Icon from '../../../../PageLayout/Flair/Icon/Icon'
 import { WarningTriangle } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 
