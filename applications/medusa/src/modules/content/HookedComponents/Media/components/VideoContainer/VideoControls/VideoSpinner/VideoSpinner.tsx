@@ -17,6 +17,9 @@ export default function VideoSpinner (props: Props): JSX.Element {
   const [hasStarted, setHasStarted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
+  // TODO this component only handles starting the video and then unmounts
+  // TODO loading is at the top left of the video so you can still see the content while the video loads
+
   const onStart = (): void => {
     player.start()
   }
