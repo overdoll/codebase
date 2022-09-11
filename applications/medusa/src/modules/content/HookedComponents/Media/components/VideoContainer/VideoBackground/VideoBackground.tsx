@@ -1,5 +1,6 @@
 import { Flex } from '@chakra-ui/react'
 import { ReactNode } from 'react'
+import CoverImage from '../../NextImage/CoverImage/CoverImage'
 
 interface Props {
   poster: ReactNode
@@ -24,7 +25,9 @@ export default function VideoBackground (props: Props): JSX.Element {
         justify='center'
         objectFit='cover'
       >
-        {poster}
+        <CoverImage>
+          {poster}
+        </CoverImage>
       </Flex>
     </Flex>
   )

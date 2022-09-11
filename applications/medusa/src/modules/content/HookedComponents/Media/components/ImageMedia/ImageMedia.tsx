@@ -44,10 +44,11 @@ export default function ImageMedia (props: Props): JSX.Element {
   return (
     <Flex
       as='picture'
-      h='100%'
-      w='100%'
+      h='inherit'
+      w='inherit'
       align='center'
       justify='center'
+      objectFit='inherit'
     >
       {variants}
       <NextImage
@@ -59,8 +60,9 @@ export default function ImageMedia (props: Props): JSX.Element {
           backgroundColor: color ?? gray,
           userSelect: 'none',
           maxWidth: '100%',
-          height: cover ? '100%' : 'auto',
-          objectFit: cover ? 'cover' : 'contain'
+          height: 'inherit',
+          width: 'inherit',
+          objectFit: 'inherit'
         }}
         draggable={false}
       />

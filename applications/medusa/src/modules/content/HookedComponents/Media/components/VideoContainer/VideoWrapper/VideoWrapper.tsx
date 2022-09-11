@@ -1,8 +1,8 @@
 import DynamicVideo, { CreateVideoProps } from './DynamicVideo/DynamicVideo'
 import { useHydrate } from '../../../../../../hydrate'
 import { Flex, FlexProps } from '@chakra-ui/react'
-import { ReactNode, useState } from 'react'
-import CoverImage from '../../NextImage/CoverImage/CoverImage'
+import { ReactNode, useEffect, useState } from 'react'
+import ContainImage from '../../NextImage/ContainImage/ContainImage'
 
 export interface VideoWrapperProps {
   poster: ReactNode
@@ -27,6 +27,7 @@ export default function VideoWrapper (props: Props): JSX.Element {
 
   const isHydrated = useHydrate()
   const [player, setPlayer] = useState(null)
+  const [hasPlayed, setHasPlayed] = useState(false)
 
   const setPlayers = (player): void => {
     setPlayer(player)
@@ -43,6 +44,18 @@ export default function VideoWrapper (props: Props): JSX.Element {
     left: 0
   }
 
+  useEffect(() => {
+    if (player == null) return
+    const onPlay = (): void => {
+      setHasPlayed(true)
+    }
+
+    player.once('play', onPlay)
+    return () => {
+      player.off('play', onPlay)
+    }
+  }, [player])
+
   // aspect ratio determine box sizing here
   return (
     <Flex
@@ -52,11 +65,13 @@ export default function VideoWrapper (props: Props): JSX.Element {
       width='100%'
       paddingTop={`${(aspectRatio.height / aspectRatio.width) * 100}%`}
     >
-      <Flex {...FLEX_PROPS}>
-        <CoverImage>
-          {poster}
-        </CoverImage>
-      </Flex>
+      {!hasPlayed && (
+        <Flex {...FLEX_PROPS}>
+          <ContainImage>
+            {poster}
+          </ContainImage>
+        </Flex>
+      )}
       <Flex {...FLEX_PROPS}>
         {isHydrated && (
           <DynamicVideo

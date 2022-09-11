@@ -25,7 +25,15 @@ export default function Mp4VideoPlayer (props: Props): JSX.Element {
     }
 
     const player = new Mp4Player(config)
-    onPlayerInit(player)
+
+    const onReady = (): void => {
+      onPlayerInit(player)
+    }
+
+    player.once('ready', onReady)
+    return () => {
+      player.off('ready', onReady)
+    }
   }, [mp4Url])
 
   return (

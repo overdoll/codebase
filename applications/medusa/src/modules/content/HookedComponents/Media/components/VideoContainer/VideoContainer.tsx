@@ -1,5 +1,5 @@
 import { Flex } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import VideoWrapper, { VideoWrapperProps } from './VideoWrapper/VideoWrapper'
 import VideoBackground from './VideoBackground/VideoBackground'
 import VideoControls from './VideoControls/VideoControls'
@@ -25,12 +25,6 @@ export default function VideoContainer (props: Props): JSX.Element {
     onPlayerInit?.(player)
   }
 
-  useEffect(() => {
-    if (player == null) return
-  }, [player])
-
-  // video background
-  // video controls
   return (
     <Flex
       w='100%'

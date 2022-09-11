@@ -5,14 +5,14 @@ interface Props {
   children: ReactNode
 }
 
-export default function CoverImage (props: Props): JSX.Element {
+export default function ContainImage (props: Props): JSX.Element {
   const { children } = props
 
   return (
     <Flex
-      w='100%'
-      h='100%'
-      objectFit='cover'
+      maxWidth='100%'
+      h='auto'
+      objectFit='contain'
     >
       {children}
     </Flex>

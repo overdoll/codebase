@@ -1,7 +1,8 @@
 import { Box } from '@chakra-ui/react'
 import { Icon } from '../../../../../../../PageLayout'
-import { ControlPlayButton } from '@//:assets/icons'
+import { ArrowButtonRefresh, ControlPlayButton } from '@//:assets/icons'
 import { useEffect, useState } from 'react'
+import { startOrPlayVideo } from '../../../../../support/controls'
 
 interface Props {
   player: any
@@ -15,40 +16,46 @@ export default function VideoStart (props: Props): JSX.Element {
   const [player, setPlayer] = useState(inheritedPlayer)
 
   const [hasStarted, setHasStarted] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-
-  // TODO this component only handles starting the video and then unmounts
-  // TODO loading is at the top left of the video so you can still see the content while the video loads
-
-  const onStart = (): void => {
-    player.play()
-  }
+  const [hasError, setError] = useState(false)
 
   useEffect(() => {
     if (player == null) return
 
-    const onAnyEvent = (player): void => {
-      console.log(player.hasStart)
-      setPlayer(player)
+    const onPlay = (): void => {
+      setHasStarted(true)
+      setError(false)
     }
-    player.on('play', onAnyEvent)
 
+    const onError = (): void => {
+      setError(true)
+    }
+
+    player.once('play', onPlay)
+    player.on('error', onError)
     return () => {
-      player.off('play', onAnyEvent)
+      player.off('play', onPlay)
+      player.off('error', onError)
     }
-  }, [])
+  }, [player, setPlayer])
 
-  console.log(player)
-
-  if (player.hasStart === false) {
-    return (
-      <Box onClick={onStart} cursor='pointer' w={16} h={16}>
-        <Icon icon={ControlPlayButton} fill='whiteAlpha.800' />
-      </Box>
-    )
+  if (hasStarted && !hasError) {
+    return <></>
   }
 
   return (
-    <></>
+    <Box
+      onClick={() => startOrPlayVideo(player)}
+      cursor='pointer'
+      w={16}
+      h={16}
+    >
+      {hasError
+        ? (
+          <Icon icon={ArrowButtonRefresh} fill='whiteAlpha.900' />
+          )
+        : (
+          <Icon icon={ControlPlayButton} fill='whiteAlpha.900' />
+          )}
+    </Box>
   )
 }

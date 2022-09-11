@@ -25,7 +25,14 @@ export default function HlsVideoPlayer (props: Props): JSX.Element {
 
     const player = new HlsPlayer(config)
 
-    onPlayerInit(player)
+    const onReady = (): void => {
+      onPlayerInit(player)
+    }
+
+    player.once('ready', onReady)
+    return () => {
+      player.off('ready', onReady)
+    }
   }, [hlsUrl])
 
   return (

@@ -2,7 +2,7 @@ export const VIDEO_OPTIONS = {
   controlsList: ['nodownload', 'noremoteplayback'],
   controls: false,
   airplay: false,
-  ignores: ['time', 'definition', 'error', 'fullscreen', 'i18n', 'loading', 'mobile', 'pc', 'poster', 'progress', 'replay', 'volume', 'play', 'start'],
+  ignores: ['cssFullscreen', 'danmu', 'enter', 'download', 'errorRetry', 'time', 'localPreview', 'logger', 'memoryPlay', 'pip', 'playNext', 'reload', 'rotate', 'screenShot', 'definition', 'error', 'fullscreen', 'i18n', 'loading', 'mobile', 'pc', 'play', 'playbackRate', 'poster', 'progress', 'replay', 'start', 'volume'],
   playsinline: true,
   fluid: true,
   videoStyle: {
@@ -10,6 +10,8 @@ export const VIDEO_OPTIONS = {
     height: '100%',
     objectFit: 'contain',
     display: 'block'
-  }
-  // autoPlay: true
+  },
+  loop: true,
+  muted: true,
+  volume: 0.1
 }

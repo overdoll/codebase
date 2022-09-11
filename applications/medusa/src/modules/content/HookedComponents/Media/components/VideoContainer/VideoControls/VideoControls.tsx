@@ -1,5 +1,7 @@
 import { Flex, Grid, GridItem } from '@chakra-ui/react'
 import VideoCenterControls from './VideoCenterControls/VideoCenterControls'
+import VideoHeaderControls from './VideoHeaderControls/VideoHeaderControls'
+import VideoFooterControls from './VideoFooterControls/VideoFooterControls'
 
 interface Props {
   player: any | null
@@ -38,13 +40,17 @@ export default function VideoControls (props: Props): JSX.Element {
         templateRows='30% 40% 30%'
         templateColumns='30% 40% 30%'
       >
-        <GridItem bg='purple.400' opacity={0.3} area='header' />
+        <GridItem area='header'>
+          <VideoHeaderControls player={player} />
+        </GridItem>
         <GridItem area='center'>
           <VideoCenterControls player={player} />
         </GridItem>
-        <GridItem bg='teal.400' opacity={0.3} area='footer' />
-        <GridItem bg='orange.400' opacity={0.3} area='left' />
-        <GridItem bg='green.400' opacity={0.3} area='right' />
+        <GridItem area='footer'>
+          <VideoFooterControls player={player} />
+        </GridItem>
+        <GridItem area='left' />
+        <GridItem area='right' />
       </Grid>
     </Flex>
   )
