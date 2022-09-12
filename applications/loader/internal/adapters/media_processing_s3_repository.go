@@ -25,7 +25,13 @@ func NewMediaProcessingS3Repository(aws *session.Session) MediaProcessingS3Repos
 func (r MediaProcessingS3Repository) uploadResource(ctx context.Context, moveTarget *media_processing.Move, target *media.Media) error {
 	s3Client := s3.New(r.aws)
 
-	remoteUrlTarget := target.Prefix() + "/" + moveTarget.FileName()
+	var remoteUrlTarget string
+
+	if moveTarget.IsImage() {
+		remoteUrlTarget = target.ImagePrefix() + "/" + moveTarget.FileName()
+	} else {
+		remoteUrlTarget = target.VideoPrefix() + "/" + moveTarget.FileName()
+	}
 
 	file, err := os.Open(moveTarget.FileName())
 

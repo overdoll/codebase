@@ -349,6 +349,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	return &ProcessResponse{move: []*Move{
 		{
 			fileName: thumbnailFileName,
+			isImage:  true,
 		},
 		{
 			fileName: newVideoFileName,
@@ -423,6 +424,7 @@ func processImage(media *media.Media, mimeType string, file *os.File) (*ProcessR
 	return &ProcessResponse{move: []*Move{
 		{
 			fileName: fileName,
+			isImage:  true,
 		},
 	}}, nil
 }
@@ -561,6 +563,7 @@ func ApplyFilters(media *media.Media, file *os.File, filters *ImageFilters, mime
 	return &ProcessResponse{move: []*Move{
 		{
 			fileName: finalFileName,
+			isImage:  true,
 		},
 	}}, nil
 }

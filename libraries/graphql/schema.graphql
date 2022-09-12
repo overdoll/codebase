@@ -139,12 +139,16 @@ type ImageMediaVariants {
   icon: ImageMediaAccess!
   """150x150 crop of an image. Suitable for small previews."""
   thumbnail: ImageMediaAccess!
+  """200x200 crop of an image. Suitable for large thumbnails."""
+  thumbnailHD: ImageMediaAccess!
   """768px width or height resize."""
   small: ImageMediaAccess!
   """1366px width or height resize."""
   medium: ImageMediaAccess!
   """1920px width or height resize."""
   large: ImageMediaAccess!
+  """4096px width or height resize."""
+  hd: ImageMediaAccess!
   """640px width or height resize."""
   banner: ImageMediaAccess!
   """480px width or height resize."""

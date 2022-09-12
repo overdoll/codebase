@@ -4,6 +4,7 @@ import (
 	"context"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/media"
+	"overdoll/libraries/media/proto"
 )
 
 // An application/x-mpegURL video container.
@@ -52,12 +53,16 @@ type ImageMediaVariants struct {
 	Icon *ImageMediaAccess `json:"icon"`
 	// 150x150 crop of an image. Suitable for small previews.
 	Thumbnail *ImageMediaAccess `json:"thumbnail"`
+	// 200x200 crop of an image. Suitable for large HD thumbnails.
+	ThumbnailHD *ImageMediaAccess `json:"thumbnailHd"`
 	// 768px width or height resize.
 	Small *ImageMediaAccess `json:"small"`
 	// 1366px width or height resize.
 	Medium *ImageMediaAccess `json:"medium"`
 	// 1920px width or height resize.
 	Large *ImageMediaAccess `json:"large"`
+	// 4096px width or height resize.
+	HighDefinition *ImageMediaAccess `json:"highDefinition"`
 	// 640px width or height resize.
 	Banner *ImageMediaAccess `json:"banner"`
 	// 480px width or height resize.
@@ -141,6 +146,92 @@ type Media interface {
 	IsMedia()
 }
 
+func marshalImageAccessToGraphQL(ctx context.Context, variant *media.ImageMediaAccess) *ImageMediaAccess {
+	return &ImageMediaAccess{
+		Width:  variant.Width(),
+		Height: variant.Height(),
+		URL:    URI(variant.Url()),
+	}
+}
+
+func marshalImageMediaToGraphQL(ctx context.Context, res *media.Media) *ImageMedia {
+
+	var palettes []*ColorPalette
+
+	for _, palette := range res.ColorPalettes() {
+		palettes = append(palettes, &ColorPalette{
+			Percent: palette.Percent(),
+			Red:     palette.Red(),
+			Green:   palette.Green(),
+			Blue:    palette.Blue(),
+		})
+	}
+
+	return &ImageMedia{
+		ID: relay.NewID(ImageMedia{}, res.UniqueId()),
+		Variants: &ImageMediaVariants{
+			Mini:           marshalImageAccessToGraphQL(ctx, res.MiniImageMediaAccess()),
+			Icon:           marshalImageAccessToGraphQL(ctx, res.IconImageMediaAccess()),
+			Thumbnail:      marshalImageAccessToGraphQL(ctx, res.ThumbnailImageMediaAccess()),
+			ThumbnailHD:    marshalImageAccessToGraphQL(ctx, res.ThumbnailHDImageMediaAccess()),
+			Small:          marshalImageAccessToGraphQL(ctx, res.SmallImageMediaAccess()),
+			Medium:         marshalImageAccessToGraphQL(ctx, res.MediumImageMediaAccess()),
+			Large:          marshalImageAccessToGraphQL(ctx, res.LargeImageMediaAccess()),
+			HighDefinition: marshalImageAccessToGraphQL(ctx, res.HdImageMediaAccess()),
+			Banner:         marshalImageAccessToGraphQL(ctx, res.BannerImageMediaAccess()),
+			Video480:       marshalImageAccessToGraphQL(ctx, res.Video480ImageMediaAccess()),
+			Video720:       marshalImageAccessToGraphQL(ctx, res.Video720ImageMediaAccess()),
+			Video1080:      marshalImageAccessToGraphQL(ctx, res.Video1080ImageMediaAccess()),
+		},
+		Original:      marshalImageAccessToGraphQL(ctx, res.OriginalImageMediaAccess()),
+		ColorPalettes: palettes,
+	}
+}
+
 func MarshaMediaToGraphQL(ctx context.Context, res *media.Media) Media {
-	return nil
+
+	if !res.IsProcessed() {
+		return &RawMedia{
+			ID:               relay.NewID(RawMedia{}, res.UniqueId()),
+			OriginalFileName: res.OriginalFileName(),
+			Failed:           res.IsFailed(),
+			Progress:         &MediaProgress{ID: relay.NewID(MediaProgress{}, res.LinkedId(), res.ID())},
+		}
+	}
+
+	if res.IsVideo() {
+
+		var containers []VideoContainer
+
+		for _, container := range res.VideoContainers() {
+			if container.MimeType() == proto.MediaMimeType_VideoMp4 {
+				containers = append(containers, &MP4VideoContainer{
+					URL:     URI(container.Url()),
+					Bitrate: container.Bitrate(),
+					Width:   container.Width(),
+					Height:  container.Height(),
+				})
+			}
+
+			if container.MimeType() == proto.MediaMimeType_VideoMpegUrl {
+				containers = append(containers, &HLSVideoContainer{
+					URL: URI(container.Url()),
+				})
+			}
+		}
+
+		return &VideoMedia{
+			ID:    relay.NewID(VideoMedia{}, res.UniqueId()),
+			Cover: marshalImageMediaToGraphQL(ctx, res),
+			AspectRatio: &AspectRatio{
+				Width:  res.VideoAspectRatioWidth(),
+				Height: res.VideoAspectRatioHeight(),
+			},
+			Containers: containers,
+			Duration:   res.VideoDuration(),
+			HasAudio:   res.HasAudio(),
+		}
+	}
+
+	return marshalImageMediaToGraphQL(ctx, res)
 }

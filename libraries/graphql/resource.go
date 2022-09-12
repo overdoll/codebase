@@ -102,5 +102,63 @@ func (e ResourceType) MarshalGQL(w io.Writer) {
 }
 
 func MarshaMediaToLegacyResourceGraphQL(ctx context.Context, res *media.Media) *Resource {
-	return nil
+
+	var tp ResourceType
+
+	if res.IsVideo() {
+		tp = ResourceTypeVideo
+	} else {
+		tp = ResourceTypeImage
+	}
+
+	var progress *ResourceProgress
+
+	if !res.IsProcessed() {
+		progress = &ResourceProgress{ID: relay.NewID(ResourceProgress{}, res.LinkedId(), res.ID())}
+	}
+
+	var urls []*ResourceURL
+
+	if res.IsProcessed() {
+		if res.IsVideo() {
+			for _, container := range res.VideoContainers() {
+				if container.Height() != 0 && container.Width() != 0 {
+					urls = append(urls, &ResourceURL{
+						URL:      URI(container.Url()),
+						MimeType: "video/mp4",
+					})
+					break
+				}
+			}
+		} else {
+			urls = append(urls, &ResourceURL{
+				URL:      URI(res.OriginalImageMediaAccess().Url()),
+				MimeType: "image/jpeg",
+			})
+		}
+	}
+
+	var videoThumbnail *ResourceURL
+
+	if res.IsProcessed() && res.IsVideo() {
+		videoThumbnail = &ResourceURL{
+			URL:      URI(res.OriginalImageMediaAccess().Url()),
+			MimeType: "image/jpeg",
+		}
+	}
+
+	return &Resource{
+		ID:             relay.NewID(Resource{}, res.LinkedId(), res.ID()),
+		Type:           tp,
+		Processed:      res.IsProcessed(),
+		Urls:           urls,
+		Width:          res.ImageWidth(),
+		Height:         res.ImageHeight(),
+		VideoDuration:  res.VideoDuration(),
+		VideoThumbnail: videoThumbnail,
+		Preview:        res.LegacyPreview(),
+		Failed:         res.IsFailed(),
+		VideoNoAudio:   res.VideoNoAudio(),
+		Progress:       progress,
+	}
 }

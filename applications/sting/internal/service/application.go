@@ -12,6 +12,7 @@ import (
 	"overdoll/applications/sting/internal/app/workflows/activities"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
+	"overdoll/libraries/media"
 	"overdoll/libraries/testing_tools/mocks"
 )
 
@@ -72,7 +73,7 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 }
 
 func createApplication(ctx context.Context, eva command.EvaService, parley activities.ParleyService, carrier activities.CarrierService, loader command.LoaderService, client client.Client) *app.Application {
-
+	media.InitSerializer()
 	session := bootstrap.InitializeDatabaseSession()
 	esClient := bootstrap.InitializeElasticSearchSession()
 	awsSession := bootstrap.InitializeAWSSession()
