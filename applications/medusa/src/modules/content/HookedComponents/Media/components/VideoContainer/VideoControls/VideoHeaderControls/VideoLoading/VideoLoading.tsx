@@ -1,9 +1,9 @@
-import { Flex, Heading } from '@chakra-ui/react'
+import { Flex, Heading, HStack } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { BeatLoader } from 'react-spinners'
 import { VideoControlTypeProps } from '../../../VideoContainer'
 import { Icon } from '../../../../../../../PageLayout'
-import { ControlPauseButton } from '@//:assets/icons'
+import { ControlPauseButton, ControlVolumeMissing } from '@//:assets/icons'
 
 interface Props extends Pick<VideoControlTypeProps, 'duration'> {
   player: any
@@ -76,11 +76,16 @@ export default function VideoLoading (props: Props): JSX.Element {
 
   if (!isLoading) {
     return (
-      <Flex {...FLEX_PROPS}>
-        <Heading color='whiteAlpha.900' fontSize='xs'>
-          {(duration - time).toFixed(1)}
-        </Heading>
-      </Flex>
+      <HStack align='center' spacing={1}>
+        <Flex {...FLEX_PROPS}>
+          <Heading color='whiteAlpha.900' fontSize='xs'>
+            {(duration - time).toFixed(1)}
+          </Heading>
+        </Flex>
+        <Flex align='center' justify='center' w={6} bg='dimmers.300' borderRadius='full' h={6}>
+          <Icon w={2} h={2} fill='whiteAlpha.900' icon={ControlVolumeMissing} />
+        </Flex>
+      </HStack>
     )
   }
 

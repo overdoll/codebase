@@ -39,7 +39,7 @@ export default function Home (props: Props): JSX.Element {
 
   return (
     <>
-      <Box w='100%' h='100%'>
+      <Box w='100%' h={500}>
         <VideoContainer
           duration={6}
           hasAudio={false}

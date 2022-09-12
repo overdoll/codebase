@@ -63,7 +63,7 @@ export default function VideoWrapper (props: Props): JSX.Element {
       justify='center'
       position='relative'
       width='100%'
-      paddingTop={`${(aspectRatio.height / aspectRatio.width) * 100}%`}
+      height='100%'
     >
       {!hasPlayed && (
         <Flex {...FLEX_PROPS}>

@@ -15,9 +15,8 @@ export default function MediaButton (props: Props): JSX.Element {
   return (
     <Box
       cursor='pointer'
-      w={6}
-      h={6}
-      boxShadow='lg'
+      w={5}
+      h={5}
       {...rest}
     >
       <Icon icon={icon} fill='whiteAlpha.900' />

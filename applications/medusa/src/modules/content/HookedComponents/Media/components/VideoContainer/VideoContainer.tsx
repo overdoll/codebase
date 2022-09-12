@@ -1,5 +1,5 @@
 import { Flex } from '@chakra-ui/react'
-import { useState } from 'react'
+import { MutableRefObject, useRef, useState } from 'react'
 import VideoWrapper, { VideoWrapperProps } from './VideoWrapper/VideoWrapper'
 import VideoBackground from './VideoBackground/VideoBackground'
 import VideoControls from './VideoControls/VideoControls'
@@ -8,6 +8,10 @@ import { CreateVideoProps } from './VideoWrapper/DynamicVideo/DynamicVideo'
 export interface VideoControlTypeProps {
   duration: number
   hasAudio: boolean
+}
+
+export interface ContainerRefProps {
+  containerRef: MutableRefObject<HTMLDivElement | null>
 }
 
 interface Props extends VideoWrapperProps, CreateVideoProps, VideoControlTypeProps {
@@ -25,6 +29,8 @@ export default function VideoContainer (props: Props): JSX.Element {
     hasAudio
   } = props
 
+  const containerRef = useRef<HTMLDivElement>(null)
+
   const [player, setPlayer] = useState(null)
 
   const setPlayers = (player): void => {
@@ -34,6 +40,7 @@ export default function VideoContainer (props: Props): JSX.Element {
 
   return (
     <Flex
+      ref={containerRef}
       w='100%'
       h='100%'
       align='center'
@@ -52,6 +59,7 @@ export default function VideoContainer (props: Props): JSX.Element {
         poster={poster}
       />
       <VideoControls
+        containerRef={containerRef}
         duration={duration}
         hasAudio={hasAudio}
         player={player}

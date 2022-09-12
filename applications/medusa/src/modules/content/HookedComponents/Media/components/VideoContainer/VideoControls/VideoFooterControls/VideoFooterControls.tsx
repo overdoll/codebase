@@ -1,17 +1,19 @@
 import { Flex, HStack } from '@chakra-ui/react'
 import VideoPlayPause from './VideoPlayPause/VideoPlayPause'
-import { VideoControlTypeProps } from '../../VideoContainer'
+import { ContainerRefProps, VideoControlTypeProps } from '../../VideoContainer'
 import { useEffect, useState } from 'react'
 import VideoFullscreen from './VideoFullscreen/VideoFullscreen'
+import VideoSimpleUnmute from './VideoSimpleUnmute/VideoSimpleUnmute'
 
-interface Props extends Pick<VideoControlTypeProps, 'hasAudio'> {
+interface Props extends Pick<VideoControlTypeProps, 'hasAudio'>, ContainerRefProps {
   player: any
 }
 
 export default function VideoFooterControls (props: Props): JSX.Element {
   const {
     player,
-    hasAudio
+    hasAudio,
+    containerRef
   } = props
 
   const [hasStarted, setHasStarted] = useState(false)
@@ -19,13 +21,13 @@ export default function VideoFooterControls (props: Props): JSX.Element {
   useEffect(() => {
     if (player == null) return
 
-    const onPlay = (player): void => {
+    const onPlay = (): void => {
       setHasStarted(true)
     }
 
-    player.on('play', onPlay)
+    player.on('canplay', onPlay)
     return () => {
-      player.off('play', onPlay)
+      player.off('canplay', onPlay)
     }
   }, [player])
 
@@ -34,10 +36,11 @@ export default function VideoFooterControls (props: Props): JSX.Element {
   }
 
   return (
-    <Flex justify='center' w='100%' h='100%' pb={4}>
-      <HStack align='flex-end' spacing={4}>
+    <Flex p={2} align='flex-end' justify='center' w='100%' h='100%'>
+      <HStack h={12} bg='dimmers.300' borderRadius='full' px={4} align='center' justify='center' spacing={4}>
         <VideoPlayPause player={player} />
-        <VideoFullscreen player={player} />
+        <VideoSimpleUnmute hasAudio={hasAudio} player={player} />
+        <VideoFullscreen containerRef={containerRef} player={player} />
       </HStack>
     </Flex>
   )

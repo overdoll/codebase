@@ -1,20 +1,17 @@
-import {
-  ControlFullscreenDisable,
-  ControlFullscreenEnable,
-  ControlPauseButton,
-  ControlPlayButton
-} from '@//:assets/icons'
+import { ControlFullscreenDisable, ControlFullscreenEnable } from '@//:assets/icons'
 import { useEffect, useState } from 'react'
-import { pauseVideo, playVideo } from '../../../../../support/controls'
+import { exitFullscreen, requestFullscreen } from '../../../../../support/controls'
 import MediaButton from '../../../../MediaButton/MediaButton'
+import { ContainerRefProps } from '../../../VideoContainer'
 
-interface Props {
+interface Props extends ContainerRefProps {
   player: any
 }
 
 export default function VideoFullscreen (props: Props): JSX.Element {
   const {
-    player: inheritedPlayer
+    player: inheritedPlayer,
+    containerRef
   } = props
 
   const [player, setPlayer] = useState(inheritedPlayer)
@@ -24,29 +21,34 @@ export default function VideoFullscreen (props: Props): JSX.Element {
   useEffect(() => {
     if (player == null) return
 
-    const onRequestFullscreen = (): void => {
-      setFullscreen(true)
-    }
-
-    const onExitFullscreen = (): void => {
+    const onFullscreenChange = (): void => {
+      const fullscreenEl = document.fullscreenElement ?? document.webkitFullscreenElement ?? document.mozFullScreenElement ?? document.msFullscreenElement
       setFullscreen(false)
     }
 
-    player.on('requestFullscreen', onRequestFullscreen)
-    player.on('exitFullscreen', onExitFullscreen)
+    ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(item => {
+      document.addEventListener(item, onFullscreenChange)
+    })
     return () => {
-      player.off('requestFullscreen', onRequestFullscreen)
-      player.on('exitFullscreen', onExitFullscreen)
+      ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(item => {
+        document.removeEventListener(item, onFullscreenChange)
+      })
     }
   }, [player, setPlayer])
 
   if (fullscreen) {
     return (
-      <MediaButton onClick={() => pauseVideo(player)} icon={ControlFullscreenDisable} />
+      <MediaButton
+        onClick={() => exitFullscreen(() => setFullscreen(false))}
+        icon={ControlFullscreenDisable}
+      />
     )
   }
 
   return (
-    <MediaButton onClick={() => playVideo(player)} icon={ControlFullscreenEnable} />
+    <MediaButton
+      onClick={() => requestFullscreen(player, containerRef.current, () => setFullscreen(true))}
+      icon={ControlFullscreenEnable}
+    />
   )
 }
