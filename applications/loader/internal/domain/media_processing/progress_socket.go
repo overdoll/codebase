@@ -14,54 +14,26 @@ import (
 	"time"
 )
 
+var progressSocketChannels = make(map[string]chan int64)
+
 func ListenProgressSocket(id string, cb func(progress int64)) (func(), error) {
 
-	if err := os.RemoveAll(getSockAddr(id)); err != nil {
-		return nil, err
-	}
-
-	sockAddr := getSockAddr(id)
-	l, err := net.Listen("unix", sockAddr)
-	if err != nil {
-		return nil, err
-	}
+	progressChannel := make(chan int64)
+	progressSocketChannels[id] = progressChannel
 
 	// use a 500ms ticker to rate limit
 	ticker := time.NewTicker(5000 * time.Millisecond)
-	done := make(chan bool, 1)
 
 	go func() {
-		re := regexp.MustCompile(`prog_per=(\d+)`)
-		fd, err := l.Accept()
-		if err != nil {
-			zap.S().Fatalw("accept error", zap.Error(err))
-		}
-
-		buf := make([]byte, 16)
-		data := ""
-
+		var lastProgress int64
 		for {
-			_, err = fd.Read(buf)
-			if err == nil {
-				data += string(buf)
-			}
-
 			select {
-			case <-done:
-				_ = l.Close()
-				_ = fd.Close()
-				data = ""
-				return
+			case progressValue := <-progressChannel:
+				lastProgress = progressValue
+				continue
 			case _ = <-ticker.C:
-				a := re.FindAllStringSubmatch(data, -1)
-				if len(a) > 0 && len(a[len(a)-1]) > 0 {
-					c, err := strconv.Atoi(a[len(a)-1][len(a[len(a)-1])-1])
-					if err == nil {
-						cb(int64(c))
-						// clear data since we got it all this run
-						data = ""
-					}
-				}
+				cb(lastProgress)
+				continue
 			default:
 				continue
 			}
@@ -69,17 +41,10 @@ func ListenProgressSocket(id string, cb func(progress int64)) (func(), error) {
 	}()
 
 	return func() {
-		done <- true
+		close(progressChannel)
+		delete(progressSocketChannels, id)
 		ticker.Stop()
 	}, nil
-}
-
-func getSocketClient(id string) (net.Conn, error) {
-	return net.Dial("unix", getSockAddr(id))
-}
-
-func getSockAddr(id string) string {
-	return path.Join(os.TempDir(), fmt.Sprintf("media_%s_sock", id))
 }
 
 // show progress taken from: https://github.com/u2takey/ffmpeg-go/blob/master/examples/showProgress.go
@@ -99,8 +64,6 @@ func createFFMPEGTempSocket(id string, duration float64) (string, error, func())
 	done := make(chan bool, 1)
 
 	go func() {
-		c, _ := getSocketClient(id)
-
 		re := regexp.MustCompile(`out_time_ms=(\d+)`)
 		fd, err := l.Accept()
 		if err != nil {
@@ -116,7 +79,6 @@ func createFFMPEGTempSocket(id string, duration float64) (string, error, func())
 				// clean up our sockets
 				_ = l.Close()
 				_ = fd.Close()
-				_ = c.Close()
 				_ = os.RemoveAll(sockFileName)
 				data = ""
 				progress = ""
@@ -156,8 +118,11 @@ func createFFMPEGTempSocket(id string, duration float64) (string, error, func())
 
 				if cp != progress {
 					progress = cp
-					if c != nil && cp != "0" {
-						c.Write([]byte(fmt.Sprintf("prog_per=%s", cp)))
+					if channel, ok := progressSocketChannels[id]; ok {
+						parsedInt, err := strconv.ParseInt(cp, 10, 64)
+						if err == nil {
+							channel <- parsedInt
+						}
 					}
 				}
 			}

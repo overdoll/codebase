@@ -104,12 +104,14 @@ func createPreviewFromFile(r io.Reader) ([]*proto.ColorPalette, error) {
 
 type ffmpegProbeStream struct {
 	Streams []struct {
-		Width    int    `json:"width"`
-		Height   int    `json:"height"`
-		Duration string `json:"duration"`
+		Width              int    `json:"width"`
+		Height             int    `json:"height"`
+		Duration           string `json:"duration"`
+		DisplayAspectRatio string `json:"display_aspect_ratio"`
 	} `json:"streams"`
 	Format struct {
 		Duration string `json:"duration"`
+		BitRate  string `json:"bit_rate"`
 	} `json:"format"`
 }
 
@@ -124,12 +126,30 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	// map_metadata removes all metadata
 	// sn removes subtitles
 	// map 0:v:0 selects only the first video track
-	encodingArgs := ffmpeg_go.KwArgs{"c:v": "libx264", "crf": "23", "preset": "slow", "map_metadata": "-1", "sn": "", "map": []string{"0:v:0"}, "threads:v": "1", "movflags": "+faststart"}
+	//encodingArgs := ffmpeg_go.KwArgs{
+	//	"c:v":                  "libx264",
+	//	"crf":                  "23",
+	//	"preset":               "slow",
+	//	"map_metadata":         "-1",
+	//	"sn":                   "",
+	//	"map":                  []string{"0:v:0"},
+	//	"threads:v":            "1",
+	//	"movflags":             "+faststart",
+	//	"hide_banner":          "",
+	//	"g":                    "48",
+	//	"keyint_min":           "48",
+	//	"sc_threshold":         "0",
+	//	"hls_time":             "3",
+	//	"hls_playlist_type":    "vod",
+	//	"hls_segment_type":     "fmp4",
+	//	"hls_segment_filename": fileName + "-%d.m4s",
+	//}
 
-	newVideoFileName := fileName + ".mp4"
+	newVideoFileName := fileName + "/master.m3u8"
 
 	defaultArgs := map[string]interface{}{
-		"v": "error",
+		"v":           "error",
+		"hide_banner": "",
 	}
 
 	ffmpegLogger := &zap_adapters.FfmpegGoLogErrorAdapter{
@@ -206,15 +226,10 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 
 		// silent audio stream, remove it
 		if hasSilentAudioStream {
-			encodingArgs["an"] = ""
 			videoNoAudio = true
-		} else {
-			// otherwise, only select the first audio stream for our encoding
-			encodingArgs["map"] = append(encodingArgs["map"].([]string), "0:a:0")
 		}
 	} else {
 		// no audio streams are on this audio track, add a flag to remove it just in case
-		encodingArgs["an"] = ""
 		videoNoAudio = true
 	}
 
@@ -270,9 +285,57 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 
 	// make sure to call this function or socket won't close correctly
 	defer done()
+	//
+	//ffmpeg -hide_banner -y -i beach.mkv \
+	//-vf scale=w=640:h=360:force_original_aspect_ratio=decrease -b:v 800k -maxrate 856k -bufsize 1200k -b:a 96k -hls_segment_filename beach/360p_%03d.ts beach/360p.m3u8 \
+	//-vf scale=w=1280:h=720:force_original_aspect_ratio=decrease -b:v 2800k -maxrate 2996k -bufsize 4200k -b:a 128k -hls_segment_filename beach/720p_%03d.ts beach/720p.m3u8 \
+	//-vf scale=w=1920:h=1080:force_original_aspect_ratio=decrease -b:v 5000k -maxrate 5350k -bufsize 7500k -b:a 192k -hls_segment_filename beach/1080p_%03d.ts beach/1080p.m3u8
+	//-master_pl_name master.m3u8
 
-	if err := ffmpeg_go.Input(file.Name(), defaultArgs).
-		Output(newVideoFileName, encodingArgs).
+	//1080p: 1920x1080.
+	//720p: 1280x720.
+	//480p: 854x480.
+	//360p: 640x360.
+
+	defaultAppArgs := map[string]interface{}{
+		"v":              "error",
+		"hide_banner":    "",
+		"master_pl_name": fileName + "/master.m3u8",
+	}
+
+	encodingArgs := ffmpeg_go.KwArgs{
+		"c:v":                  "libx264",
+		"crf":                  "23",
+		"preset":               "slow",
+		"map_metadata":         "-1",
+		"sn":                   "",
+		"map":                  []string{"0:v:0"},
+		"movflags":             "+faststart",
+		"sc_threshold":         "0",
+		"hls_time":             "3",
+		"force_key_frames:v":   "'expr:gte(t,n_forced*1)'",
+		"hls_playlist_type":    "vod",
+		"hls_segment_type":     "fmp4",
+		"hls_segment_filename": "480x270" + fileName + "-%d.m4s",
+	}
+
+	if videoNoAudio {
+		encodingArgs["an"] = ""
+	} else {
+		encodingArgs["map"] = append(encodingArgs["map"].([]string), "0:a:0")
+		encodingArgs["c:a"] = "aac"
+		encodingArgs["ar"] = "48000"
+	}
+
+	input := ffmpeg_go.Input(file.Name(), defaultArgs).Split()
+
+	var streams []*ffmpeg_go.Stream
+
+	out1 := input.Get("0").Filter("scale", ffmpeg_go.Args{"1920:-1"}).Output("./sample_data/1920.mp4", ffmpeg_go.KwArgs{"b:v": "5000k"})
+	out2 := input.Get("1").Filter("scale", ffmpeg_go.Args{"1280:-1"}).Output("./sample_data/1280.mp4", ffmpeg_go.KwArgs{"b:v": "2800k"})
+
+	if err := ffmpeg_go.Input(file.Name(), defaultAppArgs).
+		OverwriteOutput(ffmpeg_go.MergeOutputs(streams...)).
 		WithErrorOutput(ffmpegLogger).
 		GlobalArgs("-progress", "unix://"+socket).
 		Run(); err != nil {
@@ -289,7 +352,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 
 	defer fileThumbnail.Close()
 
-	if err := ffmpeg_go.Input(newVideoFileName, defaultArgs).
+	if err := ffmpeg_go.Input(file.Name(), defaultArgs).
 		Filter("select", ffmpeg_go.Args{fmt.Sprintf("gte(n,%d)", 5)}).
 		Output("pipe:", ffmpeg_go.KwArgs{"vframes": 1, "format": "image2"}).
 		WithErrorOutput(ffmpegLogger).
@@ -311,9 +374,26 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		return nil, errors.Wrap(err, "failed to unmarshal probe stream #2")
 	}
 
+	bitRate, err := strconv.ParseInt(probeResult.Format.BitRate, 10, 64)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to parse bit rate")
+	}
+
 	s, err := strconv.ParseFloat(probeResult.Format.Duration, 64)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to parse probe duration")
+	}
+
+	aspectRatioSplit := strings.Split(probeResult.Streams[0].DisplayAspectRatio, ":")
+
+	widthAspect, err := strconv.ParseInt(aspectRatioSplit[0], 10, 64)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to parse aspect ratio split width")
+	}
+
+	heightAspect, err := strconv.ParseInt(aspectRatioSplit[1], 10, 64)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to parse aspect ratio split height")
 	}
 
 	_, _ = fileThumbnail.Seek(0, io.SeekStart)
@@ -333,14 +413,20 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	}
 
 	media.RawProto().VideoData = &proto.VideoData{
-		Containers: []*proto.VideoContainer{{
-			Id:       fileName + ".mp4",
-			MimeType: proto.MediaMimeType_VideoMp4,
-			Bitrate:  0,
-		}},
+		Containers: []*proto.VideoContainer{
+			{
+				Id:       fileName + "/raw/720.mp4",
+				MimeType: proto.MediaMimeType_VideoMp4,
+				Bitrate:  bitRate,
+			},
+			{
+				Id:       fileName + "/playlist/master.m3u8",
+				MimeType: proto.MediaMimeType_VideoMpegUrl,
+			},
+		},
 		AspectRatio: &proto.VideoAspectRatio{
-			Width:  0,
-			Height: 0,
+			Width:  widthAspect,
+			Height: heightAspect,
 		},
 		DurationMilliseconds: int64(math.Round(s * 1000)),
 		HasAudio:             !videoNoAudio,
