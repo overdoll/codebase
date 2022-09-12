@@ -1,4 +1,4 @@
-import { IPlayerOptions } from 'xgplayer'
+import type Player from 'xgplayer'
 
 export interface VideoContainerProps {
   onPlayerInit: (player) => void
@@ -8,4 +8,9 @@ export interface PlayerOptions {
   volume: number
 }
 
-export type PlayerType = IPlayerOptions
+// @ts-expect-error
+export class PlayerType extends Player {
+  public video?: HTMLVideoElement
+}
+
+export type OnPlayerInitType = (player: PlayerType) => void

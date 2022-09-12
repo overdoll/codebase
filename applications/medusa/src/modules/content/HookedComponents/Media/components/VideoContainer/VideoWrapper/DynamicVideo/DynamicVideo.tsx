@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic'
-import { useState } from 'react'
+import { OnPlayerInitType } from '../../../../types'
 
 const DynamicMp4VideoPlayer = dynamic(
   async () => {
@@ -25,7 +25,7 @@ export interface CreateVideoProps {
 }
 
 interface Props extends CreateVideoProps {
-  onPlayerInit: (player) => void
+  onPlayerInit: OnPlayerInitType
 }
 
 export default function DynamicVideo (props: Props): JSX.Element {
@@ -35,19 +35,12 @@ export default function DynamicVideo (props: Props): JSX.Element {
     hlsUrl
   } = props
 
-  const [player, setPlayer] = useState(null)
-
-  const setPlayers = (player): void => {
-    setPlayer(player)
-    onPlayerInit(player)
-  }
-
   // determine HLS or MP4 video here
   if (mp4Url != null) {
     return (
       <DynamicMp4VideoPlayer
         mp4Url={mp4Url}
-        onPlayerInit={(player) => setPlayers(player)}
+        onPlayerInit={(player) => onPlayerInit(player)}
       />
     )
   }
@@ -56,7 +49,7 @@ export default function DynamicVideo (props: Props): JSX.Element {
     return (
       <DynamicHlsVideoPlayer
         hlsUrl={hlsUrl}
-        onPlayerInit={(player) => setPlayers(player)}
+        onPlayerInit={(player) => onPlayerInit(player)}
       />
     )
   }

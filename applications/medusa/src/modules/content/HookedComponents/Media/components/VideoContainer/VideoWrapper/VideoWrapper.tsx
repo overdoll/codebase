@@ -3,6 +3,7 @@ import { useHydrate } from '../../../../../../hydrate'
 import { Flex, FlexProps } from '@chakra-ui/react'
 import { ReactNode, useEffect, useState } from 'react'
 import ContainImage from '../../NextImage/ContainImage/ContainImage'
+import { OnPlayerInitType, PlayerType } from '../../../types'
 
 export interface VideoWrapperProps {
   poster: ReactNode
@@ -13,7 +14,7 @@ export interface VideoWrapperProps {
 }
 
 interface Props extends VideoWrapperProps, CreateVideoProps {
-  onPlayerInit: (player) => void
+  onPlayerInit: OnPlayerInitType
 }
 
 export default function VideoWrapper (props: Props): JSX.Element {
@@ -26,10 +27,10 @@ export default function VideoWrapper (props: Props): JSX.Element {
   } = props
 
   const isHydrated = useHydrate()
-  const [player, setPlayer] = useState(null)
+  const [player, setPlayer] = useState<PlayerType | null>(null)
   const [hasPlayed, setHasPlayed] = useState(false)
 
-  const setPlayers = (player): void => {
+  const setPlayers: OnPlayerInitType = (player) => {
     setPlayer(player)
     onPlayerInit(player)
   }

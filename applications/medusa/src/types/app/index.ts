@@ -93,12 +93,14 @@ interface PageContext extends NextPageContext {
   cookies: Cookies
 }
 
-export declare type CustomComponentType<C extends BaseContext = PageContext, P = {}> = ComponentType<React.PropsWithChildren<P>> & {
-  getRelayPreloadProps?: (context: C) => GetRelayPreloadPropsReturn
-  getMiddleware?: (context: C, data: any) => GetMiddlewareReturn
-  getTranslationProps?: (context: C) => GetTranslationPropsReturn
-  getLayout?: (page: JSX.Element) => JSX.Element
-}
+export declare type CustomComponentType<C extends BaseContext = PageContext, P = {}> =
+  ComponentType<React.PropsWithChildren<P>>
+  & {
+    getRelayPreloadProps?: (context: C) => GetRelayPreloadPropsReturn
+    getMiddleware?: (context: C, data: any) => GetMiddlewareReturn
+    getTranslationProps?: (context: C) => GetTranslationPropsReturn
+    getLayout?: (page: JSX.Element) => JSX.Element
+  }
 
 export type PageProps<P = {}, IP = P> =
   NextComponentType<PageContext, IP, P>
@@ -109,5 +111,33 @@ type NextMiddlewareResult = NextResponse | Response | null | undefined
 
 export type Middleware = (
   request: NextRequest,
-  event: NextFetchEvent
+  event: NextFetchEvent,
 ) => NextMiddlewareResult | Promise<NextMiddlewareResult>
+
+declare global {
+  interface Document {
+    mozCancelFullScreen?: () => Promise<void>
+    msExitFullscreen?: () => Promise<void>
+    webkitExitFullscreen?: () => Promise<void>
+    mozFullScreenElement?: Element
+    msFullscreenElement?: Element
+    webkitFullscreenElement?: Element
+  }
+
+  interface HTMLElement {
+    msRequestFullscreen?: () => Promise<void>
+    mozRequestFullScreen?: () => Promise<void>
+    webkitRequestFullscreen?: (method) => Promise<void>
+  }
+
+  interface Element {
+    ALLOW_KEYBOARD_INPUT: boolean
+  }
+
+  interface HTMLVideoElement {
+    webkitSupportsFullscreen: boolean
+    webkitEnterFullscreen: () => void
+    webkitPresentationMode: 'picture-in-picture' | 'inline' | 'fullscreen'
+  }
+
+}

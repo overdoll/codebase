@@ -1,8 +1,9 @@
 import { Flex } from '@chakra-ui/react'
 import VideoStart from './VideoStart/VideoStart'
+import { PlayerType } from '../../../../types'
 
 interface Props {
-  player: any
+  player: PlayerType
 }
 
 export default function VideoCenterControls (props: Props): JSX.Element {

@@ -4,6 +4,7 @@ import VideoWrapper, { VideoWrapperProps } from './VideoWrapper/VideoWrapper'
 import VideoBackground from './VideoBackground/VideoBackground'
 import VideoControls from './VideoControls/VideoControls'
 import { CreateVideoProps } from './VideoWrapper/DynamicVideo/DynamicVideo'
+import { OnPlayerInitType, PlayerType } from '../../types'
 
 export interface VideoControlTypeProps {
   duration: number
@@ -15,7 +16,7 @@ export interface ContainerRefProps {
 }
 
 interface Props extends VideoWrapperProps, CreateVideoProps, VideoControlTypeProps {
-  onPlayerInit?: (player) => void
+  onPlayerInit?: OnPlayerInitType
 }
 
 export default function VideoContainer (props: Props): JSX.Element {
@@ -31,9 +32,9 @@ export default function VideoContainer (props: Props): JSX.Element {
 
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const [player, setPlayer] = useState(null)
+  const [player, setPlayer] = useState<PlayerType | null>(null)
 
-  const setPlayers = (player): void => {
+  const setPlayers: OnPlayerInitType = (player) => {
     setPlayer(player)
     onPlayerInit?.(player)
   }

@@ -4,19 +4,25 @@ import { BeatLoader } from 'react-spinners'
 import { VideoControlTypeProps } from '../../../VideoContainer'
 import { Icon } from '../../../../../../../PageLayout'
 import { ControlPauseButton, ControlVolumeMissing } from '@//:assets/icons'
+import { CONTROLS_CONTAINER } from '../../../../../constants'
+import syncPlayerTimeUpdate from '../../../../../support/syncPlayerTimeUpdate'
+import { PlayerType } from '../../../../../types'
+import syncPlayerPlayPause from '../../../../../support/syncPlayerPlayPause'
+import formatSecondsIntoMinutes from '../../../../../support/formatSecondsIntoMinutes'
 
-interface Props extends Pick<VideoControlTypeProps, 'duration'> {
-  player: any
+interface Props extends VideoControlTypeProps {
+  player: PlayerType
 }
 
 export default function VideoLoading (props: Props): JSX.Element {
   const {
     player,
-    duration
+    duration,
+    hasAudio
   } = props
 
   const [isLoading, setLoading] = useState(false)
-  const [isPaused, setPaused] = useState(false)
+  const [playing, setPlaying] = useState(player?.video?.paused ?? true)
   const [time, setTime] = useState(player.currentTime)
 
   useEffect(() => {
@@ -27,46 +33,40 @@ export default function VideoLoading (props: Props): JSX.Element {
     }
 
     const onWaiting = (): void => {
-      setLoading(false)
-    }
-
-    const onTimeUpdate = (player): void => {
-      setTime(player.currentTime)
-    }
-
-    const onPlay = (): void => {
-      setPaused(false)
-    }
-
-    const onPause = (): void => {
-      setPaused(true)
+      setLoading(true)
     }
 
     player.on('canplay', onCanPlay)
-    player.on('play', onPlay)
-    player.on('pause', onPause)
     player.on('waiting', onWaiting)
-    player.on('timeupdate', onTimeUpdate)
     return () => {
       player.off('canplay', onCanPlay)
       player.off('waiting', onWaiting)
-      player.off('timeupdate', onTimeUpdate)
     }
   }, [player])
+
+  syncPlayerTimeUpdate(player, setTime)
+  syncPlayerPlayPause(player, setPlaying)
 
   const FLEX_PROPS = {
     align: 'center',
     justify: 'center',
     w: 12,
     h: 6,
-    bg: 'dimmers.300',
-    borderRadius: 'full'
+    ...CONTROLS_CONTAINER
   }
 
   // if video is paused, this will always show
   // if video is buffering, this will always show
 
-  if (isPaused && !isLoading) {
+  if (isLoading) {
+    return (
+      <Flex {...FLEX_PROPS}>
+        <BeatLoader color='white' size={6} />
+      </Flex>
+    )
+  }
+
+  if (!playing && !isLoading) {
     return (
       <Flex {...FLEX_PROPS}>
         <Icon w={2} h={2} fill='whiteAlpha.900' icon={ControlPauseButton} />
@@ -79,12 +79,14 @@ export default function VideoLoading (props: Props): JSX.Element {
       <HStack align='center' spacing={1}>
         <Flex {...FLEX_PROPS}>
           <Heading color='whiteAlpha.900' fontSize='xs'>
-            {(duration - time).toFixed(1)}
+            {formatSecondsIntoMinutes(duration - time)}
           </Heading>
         </Flex>
-        <Flex align='center' justify='center' w={6} bg='dimmers.300' borderRadius='full' h={6}>
-          <Icon w={2} h={2} fill='whiteAlpha.900' icon={ControlVolumeMissing} />
-        </Flex>
+        {!hasAudio && (
+          <Flex {...CONTROLS_CONTAINER} align='center' justify='center' w={6} h={6}>
+            <Icon w={2} h={2} fill='whiteAlpha.900' icon={ControlVolumeMissing} />
+          </Flex>
+        )}
       </HStack>
     )
   }
