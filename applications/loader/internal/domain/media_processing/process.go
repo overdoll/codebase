@@ -59,6 +59,30 @@ func init() {
 	log.SetOutput(ioutil.Discard)
 }
 
+func checkIfImageIsBlank(r io.Reader) (bool, error) {
+
+	img, err := jpeg.Decode(r)
+
+	if err != nil {
+		return false, errors.Wrap(err, "failed to decode jpeg")
+	}
+
+	_, err = prominentcolor.KmeansWithArgs(prominentcolor.ArgumentDefault, img)
+
+	if err != nil {
+
+		if err.Error() == "Failed, no non-alpha pixels found (either fully transparent image, or the ColorBackgroundMask removed all pixels)" {
+			return true, nil
+		}
+
+		if err != nil {
+			return false, err
+		}
+	}
+
+	return false, nil
+}
+
 func createPreviewFromFile(r io.Reader) ([]*proto.ColorPalette, error) {
 
 	img, err := jpeg.Decode(r)
@@ -108,6 +132,7 @@ type ffmpegProbeStream struct {
 		Height             int    `json:"height"`
 		Duration           string `json:"duration"`
 		DisplayAspectRatio string `json:"display_aspect_ratio"`
+		NBReadPackets      string `json:"nb_read_packets"`
 	} `json:"streams"`
 	Format struct {
 		Duration string `json:"duration"`
@@ -250,28 +275,6 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		return nil, errors.Wrap(err, "failed to unmarshal probe stream")
 	}
 
-	// logic for scaling down the video resolution if it's too large
-	if len(videoStreamProbeResult.Streams) > 0 {
-		firstStream := videoStreamProbeResult.Streams[0]
-
-		// width > height, landscape
-		if firstStream.Width > firstStream.Height {
-			if (firstStream.Height) > 1080 {
-				encodingArgs["vf"] = "scale=-2:1080"
-			}
-			// height > width, portrait
-		} else if firstStream.Width < firstStream.Height {
-			if (firstStream.Width) > 1080 {
-				encodingArgs["vf"] = "scale=1080:-2"
-			}
-		} else if firstStream.Width == firstStream.Height {
-			// otherwise, it's a square
-			if (firstStream.Width) > 1080 {
-				encodingArgs["vf"] = "scale=-2:1080"
-			}
-		}
-	}
-
 	parsedDuration, err := strconv.ParseFloat(videoStreamProbeResult.Format.Duration, 64)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to parse duration")
@@ -331,6 +334,28 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 
 	var streams []*ffmpeg_go.Stream
 
+	// logic for scaling down the video resolution if it's too large
+	if len(videoStreamProbeResult.Streams) > 0 {
+		firstStream := videoStreamProbeResult.Streams[0]
+
+		// width > height, landscape
+		if firstStream.Width > firstStream.Height {
+			if (firstStream.Height) > 1080 {
+				encodingArgs["vf"] = "scale=-2:1080"
+			}
+			// height > width, portrait
+		} else if firstStream.Width < firstStream.Height {
+			if (firstStream.Width) > 1080 {
+				encodingArgs["vf"] = "scale=1080:-2"
+			}
+		} else if firstStream.Width == firstStream.Height {
+			// otherwise, it's a square
+			if (firstStream.Width) > 1080 {
+				encodingArgs["vf"] = "scale=-2:1080"
+			}
+		}
+	}
+
 	out1 := input.Get("0").Filter("scale", ffmpeg_go.Args{"1920:-1"}).Output("./sample_data/1920.mp4", ffmpeg_go.KwArgs{"b:v": "5000k"})
 	out2 := input.Get("1").Filter("scale", ffmpeg_go.Args{"1280:-1"}).Output("./sample_data/1280.mp4", ffmpeg_go.KwArgs{"b:v": "2800k"})
 
@@ -360,6 +385,36 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		Run(); err != nil {
 		zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(ffmpegLogger.Output)))
 		return nil, err
+	}
+
+	isBlank, err := checkIfImageIsBlank(fileThumbnail)
+	if err != nil {
+		return nil, err
+	}
+
+	// first frame is blank, let's try a different image
+	if isBlank {
+		_ = os.Remove(fileThumbnail.Name())
+		fileThumbnail, err = os.Create(thumbnailFileName)
+		if err != nil {
+			return nil, err
+		}
+
+		parsedFrames, err := strconv.ParseInt(videoStreamProbeResult.Streams[0].NBReadPackets, 10, 64)
+
+		if err != nil {
+			return nil, err
+		}
+
+		if err := ffmpeg_go.Input(file.Name(), defaultArgs).
+			Filter("select", ffmpeg_go.Args{fmt.Sprintf("gte(n,%d)", parsedFrames/2)}).
+			Output("pipe:", ffmpeg_go.KwArgs{"vframes": 1, "format": "image2"}).
+			WithErrorOutput(ffmpegLogger).
+			WithOutput(fileThumbnail).
+			Run(); err != nil {
+			zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(ffmpegLogger.Output)))
+			return nil, err
+		}
 	}
 
 	str, err = ffmpeg_go.Probe(newVideoFileName, defaultArgs)
@@ -415,7 +470,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	media.RawProto().VideoData = &proto.VideoData{
 		Containers: []*proto.VideoContainer{
 			{
-				Id:       fileName + "/raw/720.mp4",
+				Id:       fileName + "/raw/lq.mp4",
 				MimeType: proto.MediaMimeType_VideoMp4,
 				Bitrate:  bitRate,
 			},
