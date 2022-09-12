@@ -53,7 +53,7 @@ func processMediaAndFilter(h *Activities, ctx context.Context, target *proto.Med
 
 	newMedia := media.FromProto(mediaToApply)
 
-	move, err := media_processing.ApplyFilters(newMedia, file, filters)
+	move, err := media_processing.ApplyFilters(newMedia, file, filters, target.ImageData.MimeType)
 
 	if err != nil {
 		return nil, err

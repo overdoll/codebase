@@ -13,7 +13,6 @@ message PixelateFilter {
   int64 size = 1;
 }
 
-
 message ProcessMediaFromUploadsRequest {
   overdoll.libraries.MediaLink link = 1;
   overdoll.libraries.SOURCE source = 2;

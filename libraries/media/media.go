@@ -69,6 +69,10 @@ func (m *Media) ImageHeight() int {
 	return int(m.proto.ImageData.Height)
 }
 
+func (m *Media) ImageMimeType() proto.MediaMimeType {
+	return m.proto.ImageData.MimeType
+}
+
 func (m *Media) IsProcessed() bool {
 	return m.proto.State.Processed
 }

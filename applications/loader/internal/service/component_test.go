@@ -21,6 +21,7 @@ import (
 	"overdoll/applications/loader/internal/ports"
 	"overdoll/applications/loader/internal/service"
 	loader "overdoll/applications/loader/proto"
+	"overdoll/libraries/media"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/uuid"
 	"path"
@@ -258,6 +259,8 @@ func startService() bool {
 	}
 
 	mockServices(app)
+
+	media.InitSerializer()
 
 	return true
 }

@@ -8,11 +8,11 @@ enum ResourceProgressState {
 }
 
 enum MediaProgressState {
-  """Resource is waiting to be processed."""
+  """Media is waiting to be processed."""
   WAITING
-  """Resource has started processing."""
+  """Media has started processing."""
   STARTED
-  """Resource is finalizing processing."""
+  """Media is finalizing processing."""
   FINALIZING
 }
 

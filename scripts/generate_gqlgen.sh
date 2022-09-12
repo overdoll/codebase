@@ -25,15 +25,6 @@ gqlgen
 
 cd ../../
 
-echo "running gqlgen loader"
-cp ./libraries/graphql/standard_gqlgen.yml ./applications/loader/gqlgen.yml
-
-cd ./applications/loader
-
-gqlgen
-
-cd ../../
-
 echo "running gqlgen parley"
 cp ./libraries/graphql/standard_gqlgen.yml ./applications/parley/gqlgen.yml
 
