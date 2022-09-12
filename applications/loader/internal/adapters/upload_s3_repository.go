@@ -57,7 +57,9 @@ func (r UploadS3Repository) GetUpload(ctx context.Context, uploadId string) (*up
 
 	type UploadMetaData struct {
 		Size     int
-		Filename string `json:"filename"`
+		MetaData struct {
+			Filename string `json:"filename"`
+		} `json:"MetaData"`
 	}
 
 	var data *UploadMetaData
@@ -74,7 +76,7 @@ func (r UploadS3Repository) GetUpload(ctx context.Context, uploadId string) (*up
 		return nil, domainerror.NewValidation("file not yet fully uploaded")
 	}
 
-	upl, err := upload.NewUpload(fileId, data.Filename)
+	upl, err := upload.NewUpload(fileId, data.MetaData.Filename)
 
 	if err != nil {
 		return nil, err

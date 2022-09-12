@@ -15,6 +15,31 @@ type MockWorkflow struct {
 	client *mocks.Client
 }
 
+func NewEagerMockWorkflowWithArgs(t *testing.T, client *mocks.Client, env *testsuite.TestWorkflowEnvironment, method interface{}, args ...interface{}) *MockWorkflow {
+	var ret []interface{}
+
+	ret = append(ret, mock.Anything)
+	ret = append(ret, mock.Anything)
+	ret = append(ret, mock.IsType(method))
+	ret = append(ret, args...)
+
+	m := &MockWorkflow{
+		args:   args,
+		method: method,
+		client: client,
+	}
+
+	m.onWorkflowExecution().Run(
+		func(args mock.Arguments) {
+			env.ExecuteWorkflow(method, args[3:]...)
+			require.True(t, env.IsWorkflowCompleted(), "workflow should be completed")
+			require.NoError(t, env.GetWorkflowError(), "no error executing the workflow")
+		},
+	).Return(&mocks.WorkflowRun{}, nil)
+
+	return m
+}
+
 func NewMockWorkflowWithArgs(client *mocks.Client, method interface{}, args ...interface{}) *MockWorkflow {
 	var ret []interface{}
 

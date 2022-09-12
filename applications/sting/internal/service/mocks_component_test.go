@@ -35,14 +35,6 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 		return &loader.CreateOrGetResourcesFromUploadsResponse{Resources: res}
 	}, nil)
 
-	application.CarrierClient.On("ClubSuspended", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
-	application.CarrierClient.On("ClubSupporterRequiredPostReminder", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
-	application.CarrierClient.On("ClubSupporterNoPosts", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
-
-	application.LoaderClient.On("DeleteResources", mock.Anything, mock.Anything).Return(&loader.DeleteResourcesResponse{}, nil)
-
-	application.ParleyClient.On("PutPostIntoModeratorQueueOrPublish", mock.Anything, mock.Anything).Return(&parley.PutPostIntoModeratorQueueOrPublishResponse{PutIntoReview: false}, nil)
-
 	application.LoaderClient.On("CopyResourcesAndApplyFilter", mock.Anything, mock.Anything).Return(func(c context.Context, req *loader.CopyResourcesAndApplyFilterRequest, g ...grpc.CallOption) *loader.CopyResourcesAndApplyFilterResponse {
 
 		var res []*loader.FilteredResources
@@ -64,28 +56,10 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 		return &loader.CopyResourcesAndApplyFilterResponse{Resources: res}
 	}, nil)
 
-	// not in use ATM
-	//application.LoaderClient.On("UpdateResourcePrivacy", mock.Anything, mock.Anything).Return(func(c context.Context, req *loader.UpdateResourcePrivacyRequest, g ...grpc.CallOption) *loader.UpdateResourcePrivacyResponse {
-	//
-	//	var res []*proto.Resource
-	//
-	//	for _, r := range req.Resources {
-	//		res = append(res, &proto.Resource{
-	//			UploadId:          r.UploadId,
-	//			ItemId:      r.ItemId,
-	//			Type:        proto.ResourceType_IMAGE,
-	//			Processed:   true,
-	//			ProcessedId: uuid.New().String(),
-	//			MimeTypes:   []string{"image/png"},
-	//			Private:     req.Private,
-	//			Width:       100,
-	//			Height:      100,
-	//			Token:       "POST",
-	//		})
-	//	}
-	//
-	//	return &loader.UpdateResourcePrivacyResponse{Resources: res}
-	//}, nil)
+	application.CarrierClient.On("ClubSuspended", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
+	application.CarrierClient.On("ClubSupporterRequiredPostReminder", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
+	application.CarrierClient.On("ClubSupporterNoPosts", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
+	application.ParleyClient.On("PutPostIntoModeratorQueueOrPublish", mock.Anything, mock.Anything).Return(&parley.PutPostIntoModeratorQueueOrPublishResponse{PutIntoReview: false}, nil)
 }
 
 func mockAccountStaff(t *testing.T, accountId string) {

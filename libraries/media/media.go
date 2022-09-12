@@ -8,6 +8,7 @@ import (
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/media/proto"
 	"strconv"
+	"strings"
 )
 
 var (
@@ -35,12 +36,16 @@ func (m *Media) RawProto() *proto.Media {
 	return m.proto
 }
 
+func (m *Media) getPrefixKey() string {
+	return strings.ToLower(m.proto.Link.Type.String()) + "/" + m.proto.Link.Id
+}
+
 func (m *Media) ImagePrefix() string {
-	return "private/images/" + m.proto.Link.Id
+	return "private/images/" + m.getPrefixKey()
 }
 
 func (m *Media) VideoPrefix() string {
-	return "private/videos/" + m.proto.Link.Id
+	return "private/videos/" + m.getPrefixKey()
 }
 
 // ImageOriginalDownloadKey - the path for the image to download it
@@ -50,7 +55,7 @@ func (m *Media) ImageOriginalDownloadKey() string {
 		return ""
 	}
 
-	return "private/images/" + m.proto.Link.Id + "/" + m.proto.ImageData.Id
+	return "private/images/" + m.getPrefixKey() + "/" + m.proto.ImageData.Id
 }
 
 func (m *Media) IsPrivate() bool {

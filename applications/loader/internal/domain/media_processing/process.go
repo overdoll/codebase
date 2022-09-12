@@ -85,9 +85,14 @@ func createPreviewFromFile(r io.Reader, isPng bool) ([]*proto.ColorPalette, imag
 
 	var palettes []*proto.ColorPalette
 
-	for _, col := range cols {
+	for i, col := range cols {
+
+		if i == 3 {
+			break
+		}
+
 		palettes = append(palettes, &proto.ColorPalette{
-			Percent: 0,
+			Percent: float64(col.Cnt / len(cols)),
 			Red:     int32(col.Color.R),
 			Green:   int32(col.Color.G),
 			Blue:    int32(col.Color.B),

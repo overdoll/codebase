@@ -5,6 +5,8 @@ import (
 	"encoding/base64"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	"go.temporal.io/sdk/activity"
+	"go.temporal.io/sdk/converter"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"overdoll/applications/loader/internal/app/workflows"
 	"overdoll/applications/loader/internal/ports/graphql/types"
@@ -34,8 +36,8 @@ func queryMediaProgress(t *testing.T, itemId, resourceId string) types.MediaProg
 	err := client.Query(context.Background(), &progress, map[string]interface{}{
 		"representations": []_Any{
 			{
-				"__typename": "ResourceProgress",
-				"id":         base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.ResourceProgress{}, itemId, resourceId))),
+				"__typename": "MediaProgress",
+				"id":         base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.MediaProgress{}, itemId, resourceId))),
 			},
 		},
 	})
@@ -56,7 +58,7 @@ func TestUploadMediaAndProcessFailed(t *testing.T) {
 	imageId := strings.Split(imageFileId, "+")[0]
 	videoId := strings.Split(videoFileId, "+")[0]
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessMedia, workflows.ProcessMediaInput{
+	testing_tools.NewEagerMockWorkflowWithArgs(t, application.TemporalClient, getWorkflowEnvironment(), workflows.ProcessMedia, workflows.ProcessMediaInput{
 		Source: "STING",
 		SourceMedia: &proto.Media{
 			Id:               imageId,
@@ -71,33 +73,36 @@ func TestUploadMediaAndProcessFailed(t *testing.T) {
 				Processed: false,
 				Failed:    false,
 			},
+			Version: proto.MediaVersion_ONE,
 		},
 	})
 
-	workflowExecution2 := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessMedia, workflows.ProcessMediaInput{
-		Source: "STING",
-		SourceMedia: &proto.Media{
-			Id:               videoId,
-			IsUpload:         true,
-			OriginalFileName: "test_file_2_broken.mp4",
-			Private:          true,
-			Link: &proto.MediaLink{
-				Id:   itemId,
-				Type: proto.MediaLinkType_POST_CONTENT,
+	testing_tools.NewEagerMockWorkflowWithArgs(t, application.TemporalClient, getWorkflowEnvironment(), workflows.ProcessMedia,
+		workflows.ProcessMediaInput{
+			Source: "STING",
+			SourceMedia: &proto.Media{
+				Id:               videoId,
+				IsUpload:         true,
+				OriginalFileName: "test_file_2_broken.mp4",
+				Private:          true,
+				Link: &proto.MediaLink{
+					Id:   itemId,
+					Type: proto.MediaLinkType_POST_CONTENT,
+				},
+				State: &proto.MediaState{
+					Processed: false,
+					Failed:    false,
+				},
+				Version: proto.MediaVersion_ONE,
 			},
-			State: &proto.MediaState{
-				Processed: false,
-				Failed:    false,
-			},
-		},
-	})
+		})
 
 	grpcClient := getGrpcClient(t)
 
 	var finalMedia []*proto.Media
 
 	application.StingCallbackClient.On("UpdateMedia", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
-		finalMedia = append(finalMedia, args[1].(*proto.Media))
+		finalMedia = append(finalMedia, args[1].(*proto.UpdateMediaRequest).Media)
 	}).Return(&emptypb.Empty{}, nil)
 
 	// start processing of files by calling grpc endpoint
@@ -111,9 +116,6 @@ func TestUploadMediaAndProcessFailed(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error creating new resources from uploads")
-
-	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
-	workflowExecution2.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	require.NoError(t, err, "no error getting resources")
 
@@ -141,7 +143,30 @@ func TestUploadMedia(t *testing.T) {
 
 	grpcClient := getGrpcClient(t)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessMedia, workflows.ProcessMediaInput{
+	videoEnv := getWorkflowEnvironment()
+
+	didCheckResourceFirst := false
+
+	videoEnv.SetOnActivityCompletedListener(func(activityInfo *activity.Info, details converter.EncodedValue, err error) {
+
+		if activityInfo.ActivityType.Name == "ProcessMedia" {
+			result := queryMediaProgress(t, itemId, videoId)
+
+			if result.Progress == 100 {
+				require.Equal(t, types.MediaProgressStateFinalizing, result.State, "should have the correct state")
+				require.Equal(t, float64(100), result.Progress, "should have the correct progress")
+			} else {
+				require.Equal(t, types.MediaProgressStateStarted, result.State, "should have the correct state")
+				// we don't know what the progress will be - sometimes it can reach 100 but sometimes its 99, or 80, so we make sure it's just greater than 0
+				require.GreaterOrEqual(t, result.Progress, float64(0), "should have the correct progress")
+				didCheckResourceFirst = true
+			}
+
+			didCheckResourceFirst = true
+		}
+	})
+
+	testing_tools.NewEagerMockWorkflowWithArgs(t, application.TemporalClient, getWorkflowEnvironment(), workflows.ProcessMedia, workflows.ProcessMediaInput{
 		Source: "STING",
 		SourceMedia: &proto.Media{
 			Id:               imageId,
@@ -156,10 +181,11 @@ func TestUploadMedia(t *testing.T) {
 				Processed: false,
 				Failed:    false,
 			},
+			Version: proto.MediaVersion_ONE,
 		},
 	})
 
-	workflowExecution2 := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessMedia, workflows.ProcessMediaInput{
+	testing_tools.NewEagerMockWorkflowWithArgs(t, application.TemporalClient, videoEnv, workflows.ProcessMedia, workflows.ProcessMediaInput{
 		Source: "STING",
 		SourceMedia: &proto.Media{
 			Id:               videoId,
@@ -174,10 +200,11 @@ func TestUploadMedia(t *testing.T) {
 				Processed: false,
 				Failed:    false,
 			},
+			Version: proto.MediaVersion_ONE,
 		},
 	})
 
-	workflowExecution3 := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessMedia, workflows.ProcessMediaInput{
+	testing_tools.NewEagerMockWorkflowWithArgs(t, application.TemporalClient, getWorkflowEnvironment(), workflows.ProcessMedia, workflows.ProcessMediaInput{
 		Source: "STING",
 		SourceMedia: &proto.Media{
 			Id:               videoId2,
@@ -192,6 +219,7 @@ func TestUploadMedia(t *testing.T) {
 				Processed: false,
 				Failed:    false,
 			},
+			Version: proto.MediaVersion_ONE,
 		},
 	})
 
@@ -240,9 +268,7 @@ func TestUploadMedia(t *testing.T) {
 	require.False(t, videoMedia.State.Processed, "should not be processed #2")
 	require.Equal(t, videoMedia.Link.Id, itemId, "correct item ID #2")
 
-	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
-	workflowExecution2.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
-	workflowExecution3.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+	require.True(t, didCheckResourceFirst, "should have checked the resource")
 
 	var unmarshalledMedia []*media.Media
 
@@ -371,7 +397,7 @@ func TestUploadMedia_GenerateImageFromMedia(t *testing.T) {
 	imageId := strings.Split(imageFileId, "+")[0]
 	videoId := strings.Split(videoFileId, "+")[0]
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessMedia, workflows.ProcessMediaInput{
+	testing_tools.NewEagerMockWorkflowWithArgs(t, application.TemporalClient, getWorkflowEnvironment(), workflows.ProcessMedia, workflows.ProcessMediaInput{
 		Source: "STING",
 		SourceMedia: &proto.Media{
 			Id:               imageId,
@@ -386,10 +412,11 @@ func TestUploadMedia_GenerateImageFromMedia(t *testing.T) {
 				Processed: false,
 				Failed:    false,
 			},
+			Version: proto.MediaVersion_ONE,
 		},
 	})
 
-	workflowExecution2 := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessMedia, workflows.ProcessMediaInput{
+	testing_tools.NewEagerMockWorkflowWithArgs(t, application.TemporalClient, getWorkflowEnvironment(), workflows.ProcessMedia, workflows.ProcessMediaInput{
 		Source: "STING",
 		SourceMedia: &proto.Media{
 			Id:               videoId,
@@ -404,6 +431,7 @@ func TestUploadMedia_GenerateImageFromMedia(t *testing.T) {
 				Processed: false,
 				Failed:    false,
 			},
+			Version: proto.MediaVersion_ONE,
 		},
 	})
 
@@ -424,12 +452,9 @@ func TestUploadMedia_GenerateImageFromMedia(t *testing.T) {
 
 	require.NoError(t, err, "no error creating new resources from uploads")
 
-	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
-	workflowExecution2.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
-
 	pixelate := 20
 
-	workflowExecution = testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessMedia, mock.Anything)
+	testing_tools.NewEagerMockWorkflowWithArgs(t, application.TemporalClient, getWorkflowEnvironment(), workflows.ProcessMedia, mock.Anything)
 
 	copyMediaResults, err := grpcClient.GenerateImageFromMedia(
 		context.Background(),
@@ -450,8 +475,6 @@ func TestUploadMedia_GenerateImageFromMedia(t *testing.T) {
 	)
 
 	finalMedia = []*proto.Media{}
-
-	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
 	require.NoError(t, err, "no error copying resources")
 

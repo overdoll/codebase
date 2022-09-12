@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"overdoll/applications/loader/internal/domain/media_processing"
@@ -22,35 +23,25 @@ func NewMediaProcessingS3Repository(aws *session.Session) MediaProcessingS3Repos
 	return MediaProcessingS3Repository{aws: aws}
 }
 
-func (r MediaProcessingS3Repository) uploadResource(ctx context.Context, moveTarget *media_processing.Move, target *media.Media) error {
+func (r MediaProcessingS3Repository) uploadResource(ctx context.Context, filePath, remoteUrlTarget string) error {
 	s3Client := s3.New(r.aws)
 
-	var remoteUrlTarget string
-
-	if moveTarget.IsImage() {
-		remoteUrlTarget = target.ImagePrefix() + "/" + moveTarget.FileName()
-	} else {
-		remoteUrlTarget = target.VideoPrefix() + "/" + moveTarget.FileName()
-	}
-
-	file, err := os.Open(moveTarget.FileName())
+	file, err := os.Open(filePath)
 
 	if err != nil {
 		return err
 	}
 
 	defer file.Close()
-	defer os.Remove(moveTarget.FileName())
+	defer os.Remove(filePath)
 
 	fileInfo, _ := file.Stat()
 	var size = fileInfo.Size()
 	buffer := make([]byte, size)
 	file.Read(buffer)
 
-	bucket := os.Getenv("MEDIA_BUCKET")
-
 	input := &s3.PutObjectInput{
-		Bucket:        aws.String(bucket),
+		Bucket:        aws.String(os.Getenv("MEDIA_BUCKET")),
 		Key:           aws.String(remoteUrlTarget),
 		Body:          bytes.NewReader(buffer),
 		ContentLength: aws.Int64(size),
@@ -64,23 +55,37 @@ func (r MediaProcessingS3Repository) uploadResource(ctx context.Context, moveTar
 		return errors.Wrap(err, "failed to put file")
 	}
 
-	// wait until file is available in private bucket
-	if err = s3Client.WaitUntilObjectExists(&s3.HeadObjectInput{
-		Bucket: aws.String(bucket),
-		Key:    aws.String(remoteUrlTarget),
-	}); err != nil {
-		return errors.Wrap(err, "failed to wait for file")
-	}
-
 	return nil
 }
 
 func (r MediaProcessingS3Repository) UploadMedia(ctx context.Context, move []*media_processing.Move, target *media.Media) error {
 	// go through each new file from the filesystem (contained by resource) and upload to s3
 	for _, moveTarget := range move {
-		if err := r.uploadResource(ctx, moveTarget, target); err != nil {
-			return err
+		if moveTarget.Directory() != "" {
+			files, err := ioutil.ReadDir(moveTarget.Directory())
+			if err != nil {
+				return err
+			}
+			for _, f := range files {
+				if err := r.uploadResource(ctx, moveTarget.Directory()+"/"+f.Name(), target.VideoPrefix()+"/"+f.Name()); err != nil {
+					return err
+				}
+			}
+
+		} else {
+			var remoteUrlTarget string
+
+			if moveTarget.IsImage() {
+				remoteUrlTarget = target.ImagePrefix() + "/" + moveTarget.FileName()
+			} else {
+				remoteUrlTarget = target.VideoPrefix() + "/" + moveTarget.FileName()
+			}
+
+			if err := r.uploadResource(ctx, moveTarget.FileName(), remoteUrlTarget); err != nil {
+				return err
+			}
 		}
+
 	}
 
 	return nil
