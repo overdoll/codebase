@@ -50,45 +50,28 @@ var (
 	videoAcceptedTypes = []string{"video/mp4", "video/x-m4v", "video/quicktime", "video/webm"}
 )
 
-var (
-	maxImageWidthOrHeight = 4096
-)
-
 func init() {
 	// not ideal but we need to disable the log messages from ffmpeg-go
 	log.SetOutput(ioutil.Discard)
 }
 
-func checkIfImageIsBlank(r io.Reader) (bool, error) {
+func createPreviewFromFile(r io.Reader, isPng bool) ([]*proto.ColorPalette, error) {
 
-	img, err := jpeg.Decode(r)
+	var img image.Image
+	var err error
 
-	if err != nil {
-		return false, errors.Wrap(err, "failed to decode jpeg")
-	}
-
-	_, err = prominentcolor.KmeansWithArgs(prominentcolor.ArgumentDefault, img)
-
-	if err != nil {
-
-		if err.Error() == "Failed, no non-alpha pixels found (either fully transparent image, or the ColorBackgroundMask removed all pixels)" {
-			return true, nil
-		}
+	if isPng {
+		img, err = png.Decode(r)
 
 		if err != nil {
-			return false, err
+			return nil, errors.Wrap(err, "failed to decode png")
 		}
-	}
+	} else {
+		img, err = jpeg.Decode(r)
 
-	return false, nil
-}
-
-func createPreviewFromFile(r io.Reader) ([]*proto.ColorPalette, error) {
-
-	img, err := jpeg.Decode(r)
-
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to decode jpeg")
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to decode jpeg")
+		}
 	}
 
 	var cols []prominentcolor.ColorItem
@@ -96,20 +79,7 @@ func createPreviewFromFile(r io.Reader) ([]*proto.ColorPalette, error) {
 	cols, err = prominentcolor.KmeansWithArgs(prominentcolor.ArgumentDefault, img)
 
 	if err != nil {
-
-		if err.Error() == "Failed, no non-alpha pixels found (either fully transparent image, or the ColorBackgroundMask removed all pixels)" {
-
-			err = nil
-			cols, err = prominentcolor.KmeansWithAll(prominentcolor.DefaultK, img, prominentcolor.ArgumentDefault, prominentcolor.DefaultSize, []prominentcolor.ColorBackgroundMask{})
-
-			if err != nil {
-				return nil, errors.Wrap(err, "failed to generate preview from file")
-			}
-		}
-
-		if err != nil {
-			return nil, err
-		}
+		return nil, err
 	}
 
 	var palettes []*proto.ColorPalette
@@ -145,30 +115,6 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	fileName := uuid.New().String()
 
 	videoNoAudio := true
-
-	// arguments we wil use to encode our video
-	// h.264 codec, with crf=18 (good quality, indistinguishable from original)
-	// map_metadata removes all metadata
-	// sn removes subtitles
-	// map 0:v:0 selects only the first video track
-	//encodingArgs := ffmpeg_go.KwArgs{
-	//	"c:v":                  "libx264",
-	//	"crf":                  "23",
-	//	"preset":               "slow",
-	//	"map_metadata":         "-1",
-	//	"sn":                   "",
-	//	"map":                  []string{"0:v:0"},
-	//	"threads:v":            "1",
-	//	"movflags":             "+faststart",
-	//	"hide_banner":          "",
-	//	"g":                    "48",
-	//	"keyint_min":           "48",
-	//	"sc_threshold":         "0",
-	//	"hls_time":             "3",
-	//	"hls_playlist_type":    "vod",
-	//	"hls_segment_type":     "fmp4",
-	//	"hls_segment_filename": fileName + "-%d.m4s",
-	//}
 
 	newVideoFileName := fileName + "/master.m3u8"
 
@@ -288,38 +234,25 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 
 	// make sure to call this function or socket won't close correctly
 	defer done()
-	//
-	//ffmpeg -hide_banner -y -i beach.mkv \
-	//-vf scale=w=640:h=360:force_original_aspect_ratio=decrease -b:v 800k -maxrate 856k -bufsize 1200k -b:a 96k -hls_segment_filename beach/360p_%03d.ts beach/360p.m3u8 \
-	//-vf scale=w=1280:h=720:force_original_aspect_ratio=decrease -b:v 2800k -maxrate 2996k -bufsize 4200k -b:a 128k -hls_segment_filename beach/720p_%03d.ts beach/720p.m3u8 \
-	//-vf scale=w=1920:h=1080:force_original_aspect_ratio=decrease -b:v 5000k -maxrate 5350k -bufsize 7500k -b:a 192k -hls_segment_filename beach/1080p_%03d.ts beach/1080p.m3u8
-	//-master_pl_name master.m3u8
 
-	//1080p: 1920x1080.
-	//720p: 1280x720.
-	//480p: 854x480.
-	//360p: 640x360.
-
+	masterPlaylistFileName := fileName + "/playlist/master.m3u8"
 	defaultAppArgs := map[string]interface{}{
 		"v":              "error",
 		"hide_banner":    "",
-		"master_pl_name": fileName + "/master.m3u8",
+		"master_pl_name": masterPlaylistFileName,
 	}
 
 	encodingArgs := ffmpeg_go.KwArgs{
-		"c:v":                  "libx264",
-		"crf":                  "23",
-		"preset":               "slow",
-		"map_metadata":         "-1",
-		"sn":                   "",
-		"map":                  []string{"0:v:0"},
-		"movflags":             "+faststart",
-		"sc_threshold":         "0",
-		"hls_time":             "3",
-		"force_key_frames:v":   "'expr:gte(t,n_forced*1)'",
-		"hls_playlist_type":    "vod",
-		"hls_segment_type":     "fmp4",
-		"hls_segment_filename": "480x270" + fileName + "-%d.m4s",
+		"c:v":                "libx264",
+		"preset":             "medium",
+		"map_metadata":       "-1",
+		"sn":                 "",
+		"map":                []string{"0:v:0"},
+		"sc_threshold":       "0",
+		"hls_time":           "3",
+		"force_key_frames:v": "'expr:gte(t,n_forced*1)'",
+		"hls_playlist_type":  "vod",
+		"hls_segment_type":   "fmp4",
 	}
 
 	if videoNoAudio {
@@ -334,30 +267,143 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 
 	var streams []*ffmpeg_go.Stream
 
-	// logic for scaling down the video resolution if it's too large
-	if len(videoStreamProbeResult.Streams) > 0 {
-		firstStream := videoStreamProbeResult.Streams[0]
+	firstStream := videoStreamProbeResult.Streams[0]
+	isLandscape := firstStream.Width > firstStream.Height
+	isPortrait := firstStream.Width < firstStream.Height
 
-		// width > height, landscape
-		if firstStream.Width > firstStream.Height {
-			if (firstStream.Height) > 1080 {
-				encodingArgs["vf"] = "scale=-2:1080"
-			}
-			// height > width, portrait
-		} else if firstStream.Width < firstStream.Height {
-			if (firstStream.Width) > 1080 {
-				encodingArgs["vf"] = "scale=1080:-2"
-			}
-		} else if firstStream.Width == firstStream.Height {
-			// otherwise, it's a square
-			if (firstStream.Width) > 1080 {
-				encodingArgs["vf"] = "scale=-2:1080"
-			}
+	hasDefaultResolution := false
+	hasFullHd := false
+
+	if isLandscape {
+		// 720+ video detected
+		if firstStream.Height >= 720 && firstStream.Width >= 1280 {
+			hasDefaultResolution = true
+		}
+
+		if firstStream.Height >= 1080 && firstStream.Width >= 1920 {
+			hasFullHd = true
+		}
+
+	} else if isPortrait {
+		if firstStream.Width >= 720 && firstStream.Height >= 1280 {
+			hasDefaultResolution = true
+		}
+
+		if firstStream.Width >= 1080 && firstStream.Height >= 1920 {
+			hasFullHd = true
 		}
 	}
 
-	out1 := input.Get("0").Filter("scale", ffmpeg_go.Args{"1920:-1"}).Output("./sample_data/1920.mp4", ffmpeg_go.KwArgs{"b:v": "5000k"})
-	out2 := input.Get("1").Filter("scale", ffmpeg_go.Args{"1280:-1"}).Output("./sample_data/1280.mp4", ffmpeg_go.KwArgs{"b:v": "2800k"})
+	if !hasDefaultResolution && !hasFullHd {
+
+		width := strconv.Itoa(firstStream.Width)
+		height := strconv.Itoa(firstStream.Width)
+		firstPrefix := width + "x" + height
+
+		// add a regular stream
+		input.Get("0").Filter("scale", ffmpeg_go.Args{"w=" + width + ":h=" + height + ":force_original_aspect_ratio=decrease"}).Output(fileName+"/playlist/"+firstPrefix+"/original.m3u8", mergeArgs(encodingArgs, ffmpeg_go.KwArgs{
+			"crf":                  "22",
+			"hls_segment_filename": fileName + "/segment/" + firstPrefix + "/original_%03d.ts",
+		}))
+	}
+
+	if hasDefaultResolution {
+
+		firstResolution := "w=640:h=360:force_original_aspect_ratio=decrease"
+		firstPrefix := "640x360"
+		secondResolution := "w=1280:h=720:force_original_aspect_ratio=decrease"
+		secondPrefix := "1280x720"
+		ThirdResolution := "w=852:h=480:force_original_aspect_ratio=decrease"
+		ThirdPrefix := "852x480"
+		if isPortrait {
+			firstPrefix = "360x640"
+			firstResolution = "w=360:h=640:force_original_aspect_ratio=decrease"
+			secondResolution = "w=720:h=1280:force_original_aspect_ratio=decrease"
+			secondPrefix = "720x1280"
+			ThirdResolution = "w=480:h=852:force_original_aspect_ratio=decrease"
+			ThirdPrefix = "480x852"
+		}
+
+		streams = append(streams,
+			// add 360p stream
+			input.Get("0").Filter("scale", ffmpeg_go.Args{firstResolution}).Output(fileName+"/playlist/"+firstPrefix+"/360p.m3u8", mergeArgs(encodingArgs, ffmpeg_go.KwArgs{
+				//"b:v":                  "800k",
+				//"bufsize":              "1200k",
+				//"maxrate":              "856k",
+				//"b:a":                  "96k",
+				"crf":                  "21",
+				"hls_segment_filename": fileName + "/segment/" + firstPrefix + "/360p_%03d.ts",
+			})),
+
+			// add a 480p stream
+			input.Get("2").Filter("scale", ffmpeg_go.Args{ThirdResolution}).Output(fileName+"/playlist/"+ThirdPrefix+"/480p.m3u8", mergeArgs(encodingArgs, ffmpeg_go.KwArgs{
+				//"b:v":                  "2800k",
+				//"bufsize":              "4200k",
+				//"maxrate":              "2996k",
+				//"b:a":                  "128k",
+				"crf":                  "21",
+				"hls_segment_filename": fileName + "/segment/" + ThirdPrefix + "/480p_%03d.ts",
+			})),
+
+			// add a 720p stream
+			input.Get("3").Filter("scale", ffmpeg_go.Args{secondResolution}).Output(fileName+"/playlist/"+secondPrefix+"/720p.m3u8", mergeArgs(encodingArgs, ffmpeg_go.KwArgs{
+				//"b:v":                  "2800k",
+				//"bufsize":              "4200k",
+				//"maxrate":              "2996k",
+				//"b:a":                  "128k",
+				"crf":                  "21",
+				"hls_segment_filename": fileName + "/segment/" + secondPrefix + "/720p_%03d.ts",
+			})),
+		)
+	}
+
+	if hasFullHd {
+		firstResolution := "w=1920:h=1080:force_original_aspect_ratio=decrease"
+		firstPrefix := "1920x1080"
+		if isPortrait {
+			firstResolution = "w=1080:h=1920:force_original_aspect_ratio=decrease"
+			firstPrefix = "1080x1920"
+		}
+
+		streams = append(streams,
+			// add 1080p stream
+			input.Get("4").Filter("scale", ffmpeg_go.Args{firstResolution}).Output(fileName+"/playlist/"+firstPrefix+"/1080p.m3u8", mergeArgs(encodingArgs, ffmpeg_go.KwArgs{
+				"b:v":                  "5000k",
+				"maxrate":              "5350k",
+				"bufsize":              "7500k",
+				"b:a":                  "192k",
+				"crf":                  "23",
+				"hls_segment_filename": fileName + "/segment/" + firstPrefix + "/1080p_%03d.ts",
+			})),
+		)
+	}
+
+	finalStream := input.Get("5")
+
+	// finally, we generate a video file that is 720p with crf of 23. this will be useful in case we can't support streaming
+	if isPortrait {
+		if firstStream.Width > 720 {
+			finalStream.Filter("scale", ffmpeg_go.Args{"-2:720"})
+		}
+	} else {
+		if firstStream.Height > 720 {
+			finalStream.Filter("scale", ffmpeg_go.Args{"720:-1"})
+		}
+	}
+
+	mp4FileName := fileName + "/raw/720p.mp4"
+
+	streams = append(streams,
+		finalStream.Output(mp4FileName, ffmpeg_go.KwArgs{
+			"crf":          "23",
+			"movflags":     "+faststart",
+			"c:v":          "libx264",
+			"preset":       "medium",
+			"map_metadata": "-1",
+			"sn":           "",
+			"map":          []string{"0:v:0"},
+		}),
+	)
 
 	if err := ffmpeg_go.Input(file.Name(), defaultAppArgs).
 		OverwriteOutput(ffmpeg_go.MergeOutputs(streams...)).
@@ -369,45 +415,20 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	}
 
 	thumbnailFileName := uuid.New().String()
+	var palettes []*proto.ColorPalette
 
-	fileThumbnail, err := os.Create(thumbnailFileName)
-	if err != nil {
-		return nil, err
-	}
+	lastFrame := 5
 
-	defer fileThumbnail.Close()
+	// keep looking for frames that are not all black
+	for true {
 
-	if err := ffmpeg_go.Input(file.Name(), defaultArgs).
-		Filter("select", ffmpeg_go.Args{fmt.Sprintf("gte(n,%d)", 5)}).
-		Output("pipe:", ffmpeg_go.KwArgs{"vframes": 1, "format": "image2"}).
-		WithErrorOutput(ffmpegLogger).
-		WithOutput(fileThumbnail).
-		Run(); err != nil {
-		zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(ffmpegLogger.Output)))
-		return nil, err
-	}
-
-	isBlank, err := checkIfImageIsBlank(fileThumbnail)
-	if err != nil {
-		return nil, err
-	}
-
-	// first frame is blank, let's try a different image
-	if isBlank {
-		_ = os.Remove(fileThumbnail.Name())
-		fileThumbnail, err = os.Create(thumbnailFileName)
-		if err != nil {
-			return nil, err
-		}
-
-		parsedFrames, err := strconv.ParseInt(videoStreamProbeResult.Streams[0].NBReadPackets, 10, 64)
-
+		fileThumbnail, err := os.Create(thumbnailFileName)
 		if err != nil {
 			return nil, err
 		}
 
 		if err := ffmpeg_go.Input(file.Name(), defaultArgs).
-			Filter("select", ffmpeg_go.Args{fmt.Sprintf("gte(n,%d)", parsedFrames/2)}).
+			Filter("select", ffmpeg_go.Args{fmt.Sprintf("gte(n,%d)", lastFrame)}).
 			Output("pipe:", ffmpeg_go.KwArgs{"vframes": 1, "format": "image2"}).
 			WithErrorOutput(ffmpegLogger).
 			WithOutput(fileThumbnail).
@@ -415,6 +436,23 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 			zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(ffmpegLogger.Output)))
 			return nil, err
 		}
+
+		palettes, err = createPreviewFromFile(fileThumbnail, false)
+
+		if err != nil {
+			// fully black image - we want to find a different one
+			if err.Error() == "Failed, no non-alpha pixels found (either fully transparent image, or the ColorBackgroundMask removed all pixels)" {
+				_ = os.Remove(fileThumbnail.Name())
+				lastFrame = lastFrame * 2
+				continue
+			}
+
+			return nil, err
+		}
+
+		_ = fileThumbnail.Close()
+
+		break
 	}
 
 	str, err = ffmpeg_go.Probe(newVideoFileName, defaultArgs)
@@ -451,13 +489,6 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		return nil, errors.Wrap(err, "failed to parse aspect ratio split height")
 	}
 
-	_, _ = fileThumbnail.Seek(0, io.SeekStart)
-	palettes, err := createPreviewFromFile(fileThumbnail)
-
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to create preview from thumbnail")
-	}
-
 	// update the source image data - this is used for the thumbnail
 	media.RawProto().ImageData = &proto.ImageData{
 		Id:       fileName,
@@ -470,13 +501,13 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	media.RawProto().VideoData = &proto.VideoData{
 		Containers: []*proto.VideoContainer{
 			{
-				Id:       fileName + "/raw/lq.mp4",
-				MimeType: proto.MediaMimeType_VideoMp4,
-				Bitrate:  bitRate,
+				Id:       masterPlaylistFileName,
+				MimeType: proto.MediaMimeType_VideoMpegUrl,
 			},
 			{
-				Id:       fileName + "/playlist/master.m3u8",
-				MimeType: proto.MediaMimeType_VideoMpegUrl,
+				Id:       mp4FileName,
+				MimeType: proto.MediaMimeType_VideoMp4,
+				Bitrate:  bitRate,
 			},
 		},
 		AspectRatio: &proto.VideoAspectRatio{
@@ -496,6 +527,14 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 			fileName: newVideoFileName,
 		},
 	}}, nil
+}
+
+func mergeArgs(target ffmpeg_go.KwArgs, destination ffmpeg_go.KwArgs) ffmpeg_go.KwArgs {
+	for k, v := range target {
+		destination[k] = v
+	}
+
+	return destination
 }
 
 func processImage(media *media.Media, mimeType string, file *os.File) (*ProcessResponse, error) {
@@ -547,7 +586,7 @@ func processImage(media *media.Media, mimeType string, file *os.File) (*ProcessR
 	}
 
 	_, _ = imageFile.Seek(0, io.SeekStart)
-	palettes, err := createPreviewFromFile(imageFile)
+	palettes, err := createPreviewFromFile(imageFile, mimeType == "image/png")
 
 	if err != nil {
 		return nil, err
@@ -686,7 +725,7 @@ func ApplyFilters(media *media.Media, file *os.File, filters *ImageFilters, mime
 	}
 
 	_, _ = targetFile.Seek(0, io.SeekStart)
-	palettes, err := createPreviewFromFile(targetFile)
+	palettes, err := createPreviewFromFile(targetFile, false)
 
 	if err != nil {
 		return nil, err
