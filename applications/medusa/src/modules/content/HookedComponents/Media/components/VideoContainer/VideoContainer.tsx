@@ -5,7 +5,12 @@ import VideoBackground from './VideoBackground/VideoBackground'
 import VideoControls from './VideoControls/VideoControls'
 import { CreateVideoProps } from './VideoWrapper/DynamicVideo/DynamicVideo'
 
-interface Props extends VideoWrapperProps, CreateVideoProps {
+export interface VideoControlTypeProps {
+  duration: number
+  hasAudio: boolean
+}
+
+interface Props extends VideoWrapperProps, CreateVideoProps, VideoControlTypeProps {
   onPlayerInit?: (player) => void
 }
 
@@ -15,7 +20,9 @@ export default function VideoContainer (props: Props): JSX.Element {
     onPlayerInit,
     hlsUrl,
     mp4Url,
-    aspectRatio
+    aspectRatio,
+    duration,
+    hasAudio
   } = props
 
   const [player, setPlayer] = useState(null)
@@ -45,6 +52,8 @@ export default function VideoContainer (props: Props): JSX.Element {
         poster={poster}
       />
       <VideoControls
+        duration={duration}
+        hasAudio={hasAudio}
         player={player}
       />
     </Flex>

@@ -1,8 +1,7 @@
-import { Box } from '@chakra-ui/react'
-import { Icon } from '../../../../../../../PageLayout'
 import { ArrowButtonRefresh, ControlPlayButton } from '@//:assets/icons'
 import { useEffect, useState } from 'react'
 import { startOrPlayVideo } from '../../../../../support/controls'
+import MediaButton from '../../../../MediaButton/MediaButton'
 
 interface Props {
   player: any
@@ -43,19 +42,11 @@ export default function VideoStart (props: Props): JSX.Element {
   }
 
   return (
-    <Box
-      onClick={() => startOrPlayVideo(player)}
-      cursor='pointer'
+    <MediaButton
       w={16}
       h={16}
-    >
-      {hasError
-        ? (
-          <Icon icon={ArrowButtonRefresh} fill='whiteAlpha.900' />
-          )
-        : (
-          <Icon icon={ControlPlayButton} fill='whiteAlpha.900' />
-          )}
-    </Box>
+      onClick={() => startOrPlayVideo(player)}
+      icon={hasError ? ArrowButtonRefresh : ControlPlayButton}
+    />
   )
 }

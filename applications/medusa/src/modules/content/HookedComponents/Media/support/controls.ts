@@ -21,3 +21,11 @@ export const pauseVideo = (player): void => {
     player.pause()
   }
 }
+
+export const requestFullscreen = (player): void => {
+
+}
+
+export const exitFullscreen = (player): void => {
+
+}
