@@ -8,6 +8,7 @@ import (
 	"github.com/EdlinOrg/prominentcolor"
 	"github.com/disintegration/gift"
 	"github.com/h2non/filetype"
+	"github.com/nfnt/resize"
 	ffmpeg_go "github.com/u2takey/ffmpeg-go"
 	"go.uber.org/zap"
 	"image"
@@ -55,7 +56,7 @@ func init() {
 	log.SetOutput(ioutil.Discard)
 }
 
-func createPreviewFromFile(r io.Reader, isPng bool) ([]*proto.ColorPalette, error) {
+func createPreviewFromFile(r io.Reader, isPng bool) ([]*proto.ColorPalette, image.Image, error) {
 
 	var img image.Image
 	var err error
@@ -64,13 +65,13 @@ func createPreviewFromFile(r io.Reader, isPng bool) ([]*proto.ColorPalette, erro
 		img, err = png.Decode(r)
 
 		if err != nil {
-			return nil, errors.Wrap(err, "failed to decode png")
+			return nil, nil, errors.Wrap(err, "failed to decode png")
 		}
 	} else {
 		img, err = jpeg.Decode(r)
 
 		if err != nil {
-			return nil, errors.Wrap(err, "failed to decode jpeg")
+			return nil, nil, errors.Wrap(err, "failed to decode jpeg")
 		}
 	}
 
@@ -79,7 +80,7 @@ func createPreviewFromFile(r io.Reader, isPng bool) ([]*proto.ColorPalette, erro
 	cols, err = prominentcolor.KmeansWithArgs(prominentcolor.ArgumentDefault, img)
 
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	var palettes []*proto.ColorPalette
@@ -93,7 +94,7 @@ func createPreviewFromFile(r io.Reader, isPng bool) ([]*proto.ColorPalette, erro
 		})
 	}
 
-	return palettes, nil
+	return palettes, img, nil
 }
 
 type ffmpegProbeStream struct {
@@ -416,10 +417,11 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 
 	thumbnailFileName := uuid.New().String()
 	var palettes []*proto.ColorPalette
+	var img image.Image
 
 	lastFrame := 5
 
-	// keep looking for frames that are not all black
+	// keep looking for frames that are not all black (we can successfully generate a preview
 	for true {
 
 		fileThumbnail, err := os.Create(thumbnailFileName)
@@ -437,7 +439,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 			return nil, err
 		}
 
-		palettes, err = createPreviewFromFile(fileThumbnail, false)
+		palettes, img, err = createPreviewFromFile(fileThumbnail, false)
 
 		if err != nil {
 			// fully black image - we want to find a different one
@@ -453,6 +455,44 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		_ = fileThumbnail.Close()
 
 		break
+	}
+
+	requiresResizing := false
+
+	if isPortrait {
+		if img.Bounds().Dx() > 1080 {
+			requiresResizing = true
+		}
+	} else {
+		if img.Bounds().Dy() > 1080 {
+			requiresResizing = true
+		}
+	}
+
+	// make sure to resize our thumbnail if needed (since we look at the source video for the thumbnail)
+	if requiresResizing {
+		_ = os.Remove(thumbnailFileName)
+
+		resizeWidth := 1920
+		resizeHeight := 1080
+
+		if isLandscape {
+			resizeWidth = 1080
+			resizeHeight = 1920
+		}
+
+		src := resize.Resize(uint(resizeWidth), uint(resizeHeight), img, resize.Lanczos3)
+
+		jpegFile, err := os.Create(thumbnailFileName)
+		if err != nil {
+			return nil, err
+		}
+
+		if err := jpeg.Encode(jpegFile, src, &jpeg.Options{Quality: 90}); err != nil {
+			return nil, errors.Wrap(err, "failed to encode jpeg")
+		}
+
+		_ = jpegFile.Close()
 	}
 
 	str, err = ffmpeg_go.Probe(newVideoFileName, defaultArgs)
@@ -524,7 +564,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 			isImage:  true,
 		},
 		{
-			fileName: newVideoFileName,
+			directory: fileName,
 		},
 	}}, nil
 }
@@ -586,7 +626,7 @@ func processImage(media *media.Media, mimeType string, file *os.File) (*ProcessR
 	}
 
 	_, _ = imageFile.Seek(0, io.SeekStart)
-	palettes, err := createPreviewFromFile(imageFile, mimeType == "image/png")
+	palettes, _, err := createPreviewFromFile(imageFile, mimeType == "image/png")
 
 	if err != nil {
 		return nil, err
@@ -725,7 +765,7 @@ func ApplyFilters(media *media.Media, file *os.File, filters *ImageFilters, mime
 	}
 
 	_, _ = targetFile.Seek(0, io.SeekStart)
-	palettes, err := createPreviewFromFile(targetFile, false)
+	palettes, _, err := createPreviewFromFile(targetFile, false)
 
 	if err != nil {
 		return nil, err

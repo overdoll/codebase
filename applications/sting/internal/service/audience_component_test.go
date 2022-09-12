@@ -10,20 +10,24 @@ import (
 	"overdoll/libraries/bootstrap"
 	graphql2 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/resource/proto"
+	"overdoll/libraries/media/proto"
 	"overdoll/libraries/uuid"
 	"strings"
 	"testing"
 )
 
 type AudienceModified struct {
-	Id        relay.ID
-	Reference string
-	Title     string
-	Slug      string
-	Standard  bool
-	Thumbnail *graphql2.Resource
-	Banner    *graphql2.Resource
+	Id             relay.ID
+	Reference      string
+	Title          string
+	Slug           string
+	Standard       bool
+	ThumbnailMedia *struct {
+		Item *graphql2.ImageMedia
+	} `graphql:"... on ImageMedia"`
+	BannerMedia *struct {
+		Item *graphql2.ImageMedia
+	} `graphql:"... on ImageMedia"`
 }
 
 type SearchAudience struct {
@@ -163,21 +167,22 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error updating audience thumbnail")
-	require.False(t, updateAudienceThumbnail.UpdateAudienceThumbnail.Audience.Thumbnail.Processed, "not yet processed")
+	require.Nil(t, updateAudienceThumbnail.UpdateAudienceThumbnail.Audience.ThumbnailMedia, "not yet processed")
 
 	grpcClient := getGrpcCallbackClient(t)
 
-	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
-		Id:          audienceThumbnailId,
-		ItemId:      updateAudienceThumbnail.UpdateAudienceThumbnail.Audience.Reference,
-		Processed:   true,
-		Type:        proto.ResourceType_IMAGE,
-		ProcessedId: uuid.New().String(),
-		Private:     false,
-		Width:       100,
-		Height:      100,
-		Token:       "AUDIENCE",
-	}}})
+	_, err = grpcClient.UpdateMedia(context.Background(), &proto.UpdateMediaRequest{Media: &proto.Media{
+		Id: audienceThumbnailId,
+		Link: &proto.MediaLink{
+			Id:   updateAudienceThumbnail.UpdateAudienceThumbnail.Audience.Reference,
+			Type: proto.MediaLinkType_AUDIENCE_THUMBNAIL,
+		},
+		ImageData: &proto.ImageData{Id: uuid.New().String()},
+		State: &proto.MediaState{
+			Processed: true,
+			Failed:    false,
+		},
+	}})
 
 	require.NoError(t, err, "no error updating resource")
 
@@ -196,9 +201,8 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 	require.NotNil(t, audience, "expected to have found audience")
 
 	require.Equal(t, fake.Title, audience.Title, "title has been updated")
-	require.NotNil(t, audience.Thumbnail, "has a thumbnail")
-	require.Nil(t, audience.Banner, "has no banner")
-	require.True(t, audience.Thumbnail.Processed, "should be processed")
+	require.NotNil(t, audience.ThumbnailMedia, "has a thumbnail")
+	require.Nil(t, audience.BannerMedia, "has no banner")
 	require.True(t, audience.Standard, "is standard now")
 
 	var updateAudienceBanner UpdateAudienceBanner
@@ -211,22 +215,23 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error updating audience thumbnail")
-	require.False(t, updateAudienceBanner.UpdateAudienceBanner.Audience.Banner.Processed, "not yet processed")
+	require.Nil(t, updateAudienceBanner.UpdateAudienceBanner.Audience.BannerMedia, "not yet processed")
 
-	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
-		Id:          audienceThumbnailId,
-		ItemId:      updateAudienceBanner.UpdateAudienceBanner.Audience.Reference,
-		Processed:   true,
-		Type:        proto.ResourceType_IMAGE,
-		ProcessedId: uuid.New().String(),
-		Private:     false,
-		Width:       100,
-		Height:      100,
-		Token:       "AUDIENCE_BANNER",
-	}}})
+	_, err = grpcClient.UpdateMedia(context.Background(), &proto.UpdateMediaRequest{Media: &proto.Media{
+		Id: audienceThumbnailId,
+		Link: &proto.MediaLink{
+			Id:   updateAudienceBanner.UpdateAudienceBanner.Audience.Reference,
+			Type: proto.MediaLinkType_AUDIENCE_BANNER,
+		},
+		ImageData: &proto.ImageData{Id: uuid.New().String()},
+		State: &proto.MediaState{
+			Processed: true,
+			Failed:    false,
+		},
+	}})
 
 	require.NoError(t, err, "no error updating resource")
 
 	audience = getAudienceBySlug(t, client, currentAudienceSlug)
-	require.True(t, audience.Banner.Processed, "banner should now be processed")
+	require.NotNil(t, audience.BannerMedia, "banner should now be processed")
 }
