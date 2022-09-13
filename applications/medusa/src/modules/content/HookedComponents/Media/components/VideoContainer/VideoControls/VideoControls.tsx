@@ -1,12 +1,13 @@
-import { ContainerRefProps, VideoControlTypeProps } from '../VideoContainer'
+import { ContainerRefProps, VideoControlTypeProps, VideoWatchProps } from '../VideoContainer'
 import { PlayerType } from '../../../types'
 import VideoControlsOverlay from './VideoControlsOverlay/VideoControlsOverlay'
+import { ControlTypes } from './VideoRequestControls/VideoRequestControls'
 
 export interface VideoControlsOpen {
   isOpen: boolean
 }
 
-interface Props extends VideoControlTypeProps, ContainerRefProps {
+interface Props extends VideoControlTypeProps, ContainerRefProps, ControlTypes {
   player: PlayerType | null
 }
 
@@ -15,7 +16,8 @@ export default function VideoControls (props: Props): JSX.Element {
     player,
     hasAudio,
     duration,
-    containerRef
+    containerRef,
+    controls
   } = props
 
   if (player == null) {
@@ -26,6 +28,7 @@ export default function VideoControls (props: Props): JSX.Element {
 
   return (
     <VideoControlsOverlay
+      controls={controls}
       player={player}
       duration={duration}
       hasAudio={hasAudio}

@@ -1,5 +1,6 @@
 import dynamic from 'next/dynamic'
 import { OnPlayerInitType } from '../../../../types'
+import { VideoWatchProps } from '../../VideoContainer'
 
 const DynamicMp4VideoPlayer = dynamic(
   async () => {
@@ -24,7 +25,7 @@ export interface CreateVideoProps {
   hlsUrl?: string
 }
 
-interface Props extends CreateVideoProps {
+interface Props extends CreateVideoProps, VideoWatchProps {
   onPlayerInit: OnPlayerInitType
 }
 
@@ -32,23 +33,33 @@ export default function DynamicVideo (props: Props): JSX.Element {
   const {
     onPlayerInit,
     mp4Url,
-    hlsUrl
+    hlsUrl,
+    volume,
+    muted,
+    autoPlay
   } = props
 
   // determine HLS or MP4 video here
-  if (mp4Url != null) {
+
+  if (hlsUrl != null) {
     return (
-      <DynamicMp4VideoPlayer
-        mp4Url={mp4Url}
+      <DynamicHlsVideoPlayer
+        autoPlay={autoPlay}
+        volume={volume}
+        muted={muted}
+        hlsUrl={hlsUrl}
         onPlayerInit={(player) => onPlayerInit(player)}
       />
     )
   }
 
-  if (hlsUrl != null) {
+  if (mp4Url != null) {
     return (
-      <DynamicHlsVideoPlayer
-        hlsUrl={hlsUrl}
+      <DynamicMp4VideoPlayer
+        autoPlay={autoPlay}
+        volume={volume}
+        muted={muted}
+        mp4Url={mp4Url}
         onPlayerInit={(player) => onPlayerInit(player)}
       />
     )

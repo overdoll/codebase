@@ -21,6 +21,8 @@ export default function ImageExpandCover (props: Props): JSX.Element {
     })
   }
 
+  // TODO hide if height > width as lazy loaded component
+
   return (
     <MediaButton
       onClick={onClick}

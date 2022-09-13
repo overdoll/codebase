@@ -3,15 +3,19 @@ import { useEffect, useRef } from 'react'
 import { VideoContainerProps } from '../../../../../types'
 import { VIDEO_OPTIONS } from '../../../../../constants'
 import VideoBox from '../VideoBox/VideoBox'
+import { VideoWatchProps } from '../../../VideoContainer'
 
-interface Props extends VideoContainerProps {
+interface Props extends VideoContainerProps, VideoWatchProps {
   hlsUrl: string
 }
 
 export default function HlsVideoPlayer (props: Props): JSX.Element {
   const {
     onPlayerInit,
-    hlsUrl
+    hlsUrl,
+    volume,
+    muted,
+    autoPlay
   } = props
 
   const ref = useRef(null)
@@ -20,14 +24,15 @@ export default function HlsVideoPlayer (props: Props): JSX.Element {
     const config = {
       el: ref.current,
       url: hlsUrl,
+      autoPlay,
       ...VIDEO_OPTIONS
     }
 
     const player = new HlsPlayer(config)
 
     const onReady = (): void => {
-      player.muted = true
-      player.volume = 0.1
+      player.muted = muted
+      player.volume = volume
       onPlayerInit(player)
     }
 

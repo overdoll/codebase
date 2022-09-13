@@ -17,7 +17,7 @@ const Advanced = dynamic(
 )
 
 export interface ControlTypes {
-  controls?: 'simple' | 'advanced'
+  controls: 'simple' | 'advanced' | 'none'
 }
 
 interface Props extends VideoControlTypeProps, ContainerRefProps, ControlTypes, VideoControlsOpen {

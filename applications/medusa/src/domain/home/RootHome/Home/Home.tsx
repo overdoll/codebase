@@ -47,8 +47,8 @@ export default function Home (props: Props): JSX.Element {
           duration={12}
           hasAudio
           aspectRatio={{
-            width: 4,
-            height: 3
+            width: 9,
+            height: 16
           }}
           poster={<ImageMedia url='https://static.dollycdn.net/banners/roulette-banner.jpg' />}
           mp4Url='https://static.dollycdn.net/banners/roulette-preview.mp4'

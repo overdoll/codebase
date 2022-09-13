@@ -1,9 +1,10 @@
 import DynamicVideo, { CreateVideoProps } from './DynamicVideo/DynamicVideo'
 import { useHydrate } from '../../../../../../hydrate'
-import { Flex, FlexProps } from '@chakra-ui/react'
+import { Box, Flex } from '@chakra-ui/react'
 import { ReactNode, useEffect, useState } from 'react'
 import ContainImage from '../../ImageContainer/ImageWrapper/ContainImage/ContainImage'
 import { OnPlayerInitType, PlayerType } from '../../../types'
+import { VideoWatchProps } from '../VideoContainer'
 
 export interface VideoWrapperProps {
   poster: ReactNode
@@ -13,7 +14,7 @@ export interface VideoWrapperProps {
   }
 }
 
-interface Props extends VideoWrapperProps, CreateVideoProps {
+interface Props extends VideoWrapperProps, CreateVideoProps, VideoWatchProps {
   onPlayerInit: OnPlayerInitType
 }
 
@@ -23,7 +24,10 @@ export default function VideoWrapper (props: Props): JSX.Element {
     onPlayerInit,
     hlsUrl,
     mp4Url,
-    aspectRatio
+    aspectRatio,
+    volume,
+    muted,
+    autoPlay
   } = props
 
   const isHydrated = useHydrate()
@@ -35,16 +39,7 @@ export default function VideoWrapper (props: Props): JSX.Element {
     onPlayerInit(player)
   }
 
-  const FLEX_PROPS: FlexProps = {
-    align: 'center',
-    justify: 'center',
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    right: 0,
-    left: 0
-  }
-
+  // when video has been played at least once, we hide the thumbnail
   useEffect(() => {
     if (player == null) return
     const onPlay = (): void => {
@@ -57,25 +52,60 @@ export default function VideoWrapper (props: Props): JSX.Element {
     }
   }, [player])
 
-  // aspect ratio determine box sizing here
+  // when volume has been changed by other video players, we update this value when video is played
+  useEffect(() => {
+    if (player == null) return
+    const onPlay = (): void => {
+      player.volume = volume
+    }
+    player.once('play', onPlay)
+    return () => {
+      player.off('play', onPlay)
+    }
+  }, [volume, player])
+
+  // same as above but for muted property
+  useEffect(() => {
+    if (player == null) return
+    const onPlay = (): void => {
+      player.muted = muted
+    }
+    player.once('play', onPlay)
+    return () => {
+      player.off('play', onPlay)
+    }
+  }, [muted, player])
+
   return (
     <Flex
       align='center'
       justify='center'
-      position='relative'
       width='100%'
       height='100%'
     >
+      <Box w='100%' display='block' paddingBottom={`${(aspectRatio.width / aspectRatio.height) * 100}%`} />
       {!hasPlayed && (
-        <Flex {...FLEX_PROPS}>
+        <Flex position='absolute' height='100%' width='100%'>
           <ContainImage>
             {poster}
           </ContainImage>
         </Flex>
       )}
-      <Flex {...FLEX_PROPS}>
+      <Flex
+        width='100%'
+        height='100%'
+        position='absolute'
+        w='100%'
+        h='100%'
+        top={0}
+        left={0}
+        bottom={0}
+      >
         {isHydrated && (
           <DynamicVideo
+            autoPlay={autoPlay}
+            volume={volume}
+            muted={muted}
             hlsUrl={hlsUrl}
             mp4Url={mp4Url}
             onPlayerInit={(player) => setPlayers(player)}

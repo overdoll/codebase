@@ -1,6 +1,6 @@
 import { HStack } from '@chakra-ui/react'
 import VideoPlayPause from '../../Controls/VideoPlayPause/VideoPlayPause'
-import { VideoControlTypeProps } from '../../../../VideoContainer'
+import { VideoControlTypeProps, VideoWatchProps } from '../../../../VideoContainer'
 import { PlayerType } from '../../../../../../types'
 import LazyVideoUnmute from '../../LazyControls/LazyVideoUnmute/LazyVideoUnmute'
 import LazyVideoSimpleSeek from '../../LazyControls/LazyVideoSimpleSeek/LazyVideoSimpleSeek'

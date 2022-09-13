@@ -1,14 +1,14 @@
 import { Flex, Grid, GridItem } from '@chakra-ui/react'
-import { ContainerRefProps, VideoControlTypeProps } from '../../VideoContainer'
+import { ContainerRefProps, VideoControlTypeProps, VideoWatchProps } from '../../VideoContainer'
 import { PlayerType } from '../../../../types'
 import useEnterControls from '../../../../support/useEnterControls'
 import { useEffect, useRef, useState } from 'react'
 import VideoHeaderControls from '../VideoHeaderControls/VideoHeaderControls'
-import VideoRequestControls from '../VideoRequestControls/VideoRequestControls'
+import VideoRequestControls, { ControlTypes } from '../VideoRequestControls/VideoRequestControls'
 import VideoCenterControls from '../VideoCenterControls/VideoCenterControls'
 import syncPlayerPlayPause from '../../../../support/syncPlayerPlayPause'
 
-interface Props extends VideoControlTypeProps, ContainerRefProps {
+interface Props extends VideoControlTypeProps, ContainerRefProps, ControlTypes {
   player: PlayerType
 }
 
@@ -17,7 +17,8 @@ export default function VideoControlsOverlay (props: Props): JSX.Element {
     player: inheritedPlayer,
     hasAudio,
     duration,
-    containerRef
+    containerRef,
+    controls
   } = props
 
   const ref = useRef(null)
@@ -87,7 +88,7 @@ export default function VideoControlsOverlay (props: Props): JSX.Element {
         </GridItem>
         <VideoRequestControls
           isOpen={isOpen}
-          controls='advanced'
+          controls={controls}
           duration={duration}
           containerRef={containerRef}
           hasAudio={hasAudio}

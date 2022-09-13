@@ -4,6 +4,7 @@ import { Dispatch, ReactNode, SetStateAction, useMemo, useState } from 'react'
 import ImageControls from './ImageControls/ImageControls'
 import { ColorType } from '../../../types'
 import ControlCoverContainImage from '../ImageWrapper/ControlCoverContainImage/ControlCoverContainImage'
+import ImageBackground from './ImageBackground/ImageBackground'
 
 export interface ImageMediaCopy {
   imageMedia: ReactNode
@@ -13,14 +14,19 @@ export interface SetCoveredProps {
   setCovered: Dispatch<SetStateAction<boolean>>
 }
 
-interface Props extends Omit<ImageMediaProps, 'color'>, ColorType, SetCoveredProps {
+export interface ImageBackgroundProps {
+  backgroundPoster: ReactNode
+}
+
+interface Props extends Omit<ImageMediaProps, 'color'>, ColorType, Partial<ImageBackgroundProps> {
 }
 
 export default function ImageControlContainer (props: Props): JSX.Element {
   const {
     url,
     rgb,
-    variants
+    variants,
+    backgroundPoster
   } = props
 
   const bgColor = rgb != null ? `rgb(${rgb.red},${rgb.green},${rgb.blue})` : undefined
@@ -38,8 +44,9 @@ export default function ImageControlContainer (props: Props): JSX.Element {
       position='relative'
       overflow='hidden'
       borderRadius='inherit'
-      bg={bgColor ?? 'gray.800'}
+      bg={bgColor ?? '#000'}
     >
+      <ImageBackground backgroundPoster={backgroundPoster ?? CloneImageMedia} />
       <ControlCoverContainImage isCovered={isCovered}>
         {CloneImageMedia}
       </ControlCoverContainImage>

@@ -1,22 +1,30 @@
 import { Flex } from '@chakra-ui/react'
-import { MutableRefObject, useRef, useState } from 'react'
+import { MutableRefObject, ReactNode, useRef, useState } from 'react'
 import VideoWrapper, { VideoWrapperProps } from './VideoWrapper/VideoWrapper'
 import VideoBackground from './VideoBackground/VideoBackground'
 import VideoControls from './VideoControls/VideoControls'
 import { CreateVideoProps } from './VideoWrapper/DynamicVideo/DynamicVideo'
 import { OnPlayerInitType, PlayerType } from '../../types'
+import { ControlTypes } from './VideoControls/VideoRequestControls/VideoRequestControls'
 
 export interface VideoControlTypeProps {
   duration: number
   hasAudio: boolean
 }
 
+export interface VideoWatchProps {
+  volume: number
+  muted: boolean
+  autoPlay: boolean
+}
+
 export interface ContainerRefProps {
   containerRef: MutableRefObject<HTMLDivElement | null>
 }
 
-interface Props extends VideoWrapperProps, CreateVideoProps, VideoControlTypeProps {
+interface Props extends VideoWrapperProps, CreateVideoProps, VideoControlTypeProps, Partial<VideoWatchProps>, Partial<ControlTypes> {
   onPlayerInit?: OnPlayerInitType
+  backgroundPoster?: ReactNode
 }
 
 export default function VideoContainer (props: Props): JSX.Element {
@@ -27,7 +35,12 @@ export default function VideoContainer (props: Props): JSX.Element {
     mp4Url,
     aspectRatio,
     duration,
-    hasAudio
+    hasAudio,
+    volume = 0.1,
+    muted = true,
+    controls = 'advanced',
+    autoPlay = false,
+    backgroundPoster
   } = props
 
   const containerRef = useRef<HTMLDivElement>(null)
@@ -50,9 +63,12 @@ export default function VideoContainer (props: Props): JSX.Element {
       overflow='hidden'
     >
       <VideoBackground
-        poster={poster}
+        poster={backgroundPoster ?? poster}
       />
       <VideoWrapper
+        autoPlay={autoPlay}
+        volume={volume}
+        muted={muted}
         aspectRatio={aspectRatio}
         hlsUrl={hlsUrl}
         mp4Url={mp4Url}
@@ -60,6 +76,7 @@ export default function VideoContainer (props: Props): JSX.Element {
         poster={poster}
       />
       <VideoControls
+        controls={controls}
         containerRef={containerRef}
         duration={duration}
         hasAudio={hasAudio}

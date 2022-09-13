@@ -19,6 +19,7 @@ export default function ControlCoverContainImage (props: Props): JSX.Element {
   return (
     <Flex
       borderRadius='inherit'
+      position='relative'
       {...(isCovered === true ? COVER_PROPS : CONTAIN_PROPS)}
     >
       {children}

@@ -14,15 +14,14 @@ export const VIDEO_OPTIONS = {
     display: 'block'
   },
   loop: true,
-  noLog: true
+  noLog: true,
+  hideStartBtn: true,
+  enableStallCheck: true
 }
 
 export const CONTROLS_CONTAINER = {
-  bg: 'dimmers.300',
-  borderRadius: 'full',
-  backdropFilter: 'auto',
-  backdropBlur: '1px',
-  boxShadow: 'lg'
+  bg: 'rgba(0, 0, 0, 0.5)',
+  borderRadius: 'full'
 }
 
 export const COVER_PROPS: FlexProps = {
