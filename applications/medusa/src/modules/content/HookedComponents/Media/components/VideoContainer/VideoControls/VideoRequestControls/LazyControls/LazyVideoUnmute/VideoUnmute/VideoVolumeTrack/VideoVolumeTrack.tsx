@@ -29,7 +29,16 @@ export default function VideoVolumeTrack (props: Props): JSX.Element {
   syncPlayerVolumeChange(player, setVolume, setMuted, setPlayer)
 
   return (
-    <Flex {...CONTROLS_CONTAINER} h={12} w={36} p={2} align='center' position='relative' justify='center'>
+    <Flex
+      data-ignore='click'
+      {...CONTROLS_CONTAINER}
+      h={12}
+      w={36}
+      p={2}
+      align='center'
+      position='relative'
+      justify='center'
+    >
       <Slider
         onChange={onChange}
         focusThumbOnChange={false}
@@ -38,12 +47,13 @@ export default function VideoVolumeTrack (props: Props): JSX.Element {
         max={1}
         step={0.01}
         h='100%'
+        data-ignore='click'
       >
-        <SliderTrack borderRadius='full' h='100%' bg='whiteAlpha.100'>
-          <SliderFilledTrack bg={muted ? 'red.300' : 'whiteAlpha.900'} />
+        <SliderTrack data-ignore='click' borderRadius='full' h='100%' bg='whiteAlpha.100'>
+          <SliderFilledTrack data-ignore='click' bg={muted ? 'red.300' : 'whiteAlpha.900'} />
         </SliderTrack>
       </Slider>
-      <Flex position='absolute'>
+      <Flex pointerEvents='none' data-ignore='click' position='absolute'>
         <Icon w={6} h={6} icon={muted ? ControlVolumeMuted : ControlSoundWave} fill='dimmers.300' />
       </Flex>
     </Flex>

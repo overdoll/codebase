@@ -1,5 +1,6 @@
 import { MutableRefObject, ReactNode, useMemo, useRef, useState } from 'react'
 import { Fade, Flex, useOutsideClick } from '@chakra-ui/react'
+import { useUpdateEffect } from 'usehooks-ts'
 
 type RequestType<T> = (control: T) => void
 export type CancelRequestType = () => void
@@ -8,6 +9,7 @@ interface UseControlRequestProps {
   controls: {
     [key: string]: ReactNode
   }
+  watchValue?: boolean
 }
 
 interface UseControlRequestReturn<T> {
@@ -20,7 +22,8 @@ interface UseControlRequestReturn<T> {
 
 export default function useControlRequest<ControlT extends string> (props: UseControlRequestProps): UseControlRequestReturn<ControlT> {
   const {
-    controls: specifiedControls
+    controls: specifiedControls,
+    watchValue
   } = props
 
   const [currentControl, setCurrentControl] = useState<ControlT | null>(null)
@@ -42,10 +45,17 @@ export default function useControlRequest<ControlT extends string> (props: UseCo
     }
   })
 
+  useUpdateEffect(() => {
+    if (watchValue === false) {
+      onCancel()
+    }
+  }, [watchValue])
+
   const controls = useMemo(() => (
-    <Flex ref={ref} align='inherit' justify='inherit' w='inherit' h='inherit' position='relative'>
+    <Flex data-ignore='click' ref={ref} align='inherit' justify='inherit' w='inherit' h='inherit' position='relative'>
       {Object.keys(specifiedControls).map((item) => (
         <Fade
+          data-ignore='click'
           style={{
             position: 'absolute',
             bottom: 0,

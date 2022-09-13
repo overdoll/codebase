@@ -1,7 +1,7 @@
 import { ControlFullscreenDisable, ControlFullscreenEnable } from '@//:assets/icons'
 import { useEffect, useState } from 'react'
 import { exitFullscreen, requestFullscreen } from '../../../../../../support/controls'
-import MediaButton from '../../../../../MediaButton/MediaButton'
+import MediaButton from '../../../../../MediaControls/MediaButton/MediaButton'
 import { ContainerRefProps } from '../../../../VideoContainer'
 import { PlayerType } from '../../../../../../types'
 

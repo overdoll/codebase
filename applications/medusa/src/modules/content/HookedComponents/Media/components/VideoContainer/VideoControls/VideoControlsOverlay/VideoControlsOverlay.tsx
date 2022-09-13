@@ -38,6 +38,7 @@ export default function VideoControlsOverlay (props: Props): JSX.Element {
       top={0}
       right={0}
       left={0}
+      cursor={isOpen ? 'auto' : 'none'}
       position='absolute'
       align='center'
       justify='center'

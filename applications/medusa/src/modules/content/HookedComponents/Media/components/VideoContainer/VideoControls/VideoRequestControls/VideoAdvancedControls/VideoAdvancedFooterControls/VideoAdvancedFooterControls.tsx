@@ -9,8 +9,9 @@ import { CONTROLS_CONTAINER } from '../../../../../../constants'
 import VideoSeek from '../../Controls/VideoSeek/VideoSeek'
 import VideoSeekTrack from '../../Controls/VideoSeek/VideoSeekTrack/VideoSeekTrack'
 import LazyVideoUnmute from '../../LazyControls/LazyVideoUnmute/LazyVideoUnmute'
+import { VideoControlsOpen } from '../../../VideoControls'
 
-interface Props extends VideoControlTypeProps, ContainerRefProps {
+interface Props extends VideoControlTypeProps, ContainerRefProps, VideoControlsOpen {
   player: PlayerType
 }
 
@@ -19,7 +20,8 @@ export default function VideoAdvancedFooterControls (props: Props): JSX.Element 
     player,
     hasAudio,
     containerRef,
-    duration
+    duration,
+    isOpen
   } = props
 
   const playerControls = {
@@ -34,15 +36,35 @@ export default function VideoAdvancedFooterControls (props: Props): JSX.Element 
     ref,
     currentControl
   } = useControlRequest<'seek' | 'volume'>({
-    controls: playerControls
+    controls: playerControls,
+    watchValue: isOpen
   })
 
   return (
-    <Stack ref={ref} align='flex-end' w='100%' h='100%' spacing={2}>
-      <Flex align='flex-end' justify='flex-end' h={24}>
+    <Stack
+      ref={ref}
+      align='flex-end'
+      w='100%'
+      h='100%'
+      spacing={2}
+    >
+      <Flex
+        align='flex-end'
+        justify='flex-end'
+        h={12}
+        pointerEvents={currentControl == null ? 'none' : 'auto'}
+      >
         {controls}
       </Flex>
-      <HStack {...CONTROLS_CONTAINER} h={12} px={4} align='center' justify='center' spacing={4}>
+      <HStack
+        {...CONTROLS_CONTAINER}
+        data-ignore='click'
+        h={12}
+        px={4}
+        align='center'
+        justify='center'
+        spacing={4}
+      >
         <VideoPlayPause player={player} />
         <LazyVideoUnmute player={player} hasAudio={hasAudio} unMuteCallback={() => request('volume')} />
         <VideoSeek

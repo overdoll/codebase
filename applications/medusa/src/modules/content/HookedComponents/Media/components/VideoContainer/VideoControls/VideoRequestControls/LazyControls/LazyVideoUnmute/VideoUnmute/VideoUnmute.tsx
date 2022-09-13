@@ -1,7 +1,7 @@
 import { ControlVolumeLow, ControlVolumeMuted } from '@//:assets/icons'
 import { useState } from 'react'
 import { muteVideo, unMuteVideo } from '../../../../../../../support/controls'
-import MediaButton from '../../../../../../MediaButton/MediaButton'
+import MediaButton from '../../../../../../MediaControls/MediaButton/MediaButton'
 import { PlayerType } from '../../../../../../../types'
 import syncPlayerVolumeChange from '../../../../../../../support/syncPlayerVolumeChange'
 

@@ -1,7 +1,7 @@
 import { ArrowButtonRefresh, ControlPlayButton } from '@//:assets/icons'
 import { useEffect, useState } from 'react'
 import { startOrPlayVideo } from '../../../../../support/controls'
-import MediaButton from '../../../../MediaButton/MediaButton'
+import MediaButton from '../../../../MediaControls/MediaButton/MediaButton'
 import { PlayerType } from '../../../../../types'
 import { Flex } from '@chakra-ui/react'
 import { CONTROLS_CONTAINER } from '../../../../../constants'
@@ -49,7 +49,10 @@ export default function VideoStart (props: Props): JSX.Element {
       <MediaButton
         w={10}
         h={10}
-        onClick={() => startOrPlayVideo(player)}
+        onClick={(e) => {
+          e.stopPropagation()
+          startOrPlayVideo(player)
+        }}
         icon={hasError ? ArrowButtonRefresh : ControlPlayButton}
       />
     </Flex>

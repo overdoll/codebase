@@ -1,5 +1,5 @@
 import { ControlFastForward } from '@//:assets/icons'
-import MediaButton from '../../../../../MediaButton/MediaButton'
+import MediaButton from '../../../../../MediaControls/MediaButton/MediaButton'
 import { VideoControlTypeProps } from '../../../../VideoContainer'
 
 interface Props extends Pick<VideoControlTypeProps, 'duration'> {

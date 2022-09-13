@@ -19,12 +19,24 @@ export default function VideoAdvancedControls (props: Props): JSX.Element {
 
   return (
     <>
-      <GridItem area='footer'>
-        <Flex p={2} align='flex-end' justify='flex-end' w='100%' h='100%'>
+      <GridItem
+        area='footer'
+      >
+        <Flex
+          p={2}
+          align='flex-end'
+          justify='flex-end'
+          w='100%'
+          h='100%'
+        >
           <Fade
             in={isOpen}
+            style={{
+              pointerEvents: isOpen ? 'auto' : 'none'
+            }}
           >
             <VideoAdvancedFooterControls
+              isOpen={isOpen}
               player={player}
               hasAudio={hasAudio}
               containerRef={containerRef}
@@ -33,8 +45,8 @@ export default function VideoAdvancedControls (props: Props): JSX.Element {
           </Fade>
         </Flex>
       </GridItem>
-      <GridItem area='left' />
-      <GridItem area='right' />
+      {/* <GridItem area='left' /> */}
+      {/* <GridItem area='right' /> */}
     </>
   )
 }

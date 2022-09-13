@@ -10,7 +10,7 @@ import {
   requestPlayAfterSeeking
 } from '../../../../../../../support/controls'
 import { ControlFastForwardTen, ControlGoBackwardTen } from '@//:assets/icons'
-import MediaButton from '../../../../../../MediaButton/MediaButton'
+import MediaButton from '../../../../../../MediaControls/MediaButton/MediaButton'
 import formatSecondsIntoMinutes from '../../../../../../../support/formatSecondsIntoMinutes'
 import syncPlayerTimeUpdate from '../../../../../../../support/syncPlayerTimeUpdate'
 
@@ -52,8 +52,8 @@ export default function VideoSeekTrack (props: Props): JSX.Element {
   syncPlayerTimeUpdate(player, setTime, setPlayer)
 
   return (
-    <HStack spacing={1}>
-      <Flex {...CONTROLS_CONTAINER} h={12} w={12} align='center' justify='center'>
+    <HStack data-ignore='click' spacing={1}>
+      <Flex data-ignore='click' {...CONTROLS_CONTAINER} h={12} w={12} align='center' justify='center'>
         <MediaButton
           w={6}
           h={6}
@@ -61,7 +61,16 @@ export default function VideoSeekTrack (props: Props): JSX.Element {
           icon={ControlGoBackwardTen}
         />
       </Flex>
-      <Flex position='relative' {...CONTROLS_CONTAINER} h={12} w={48} p={2} align='center' justify='center'>
+      <Flex
+        data-ignore='click'
+        position='relative'
+        {...CONTROLS_CONTAINER}
+        h={12}
+        w={48}
+        p={2}
+        align='center'
+        justify='center'
+      >
         <Slider
           onChange={onChange}
           onChangeEnd={onChangeEnd}
@@ -72,18 +81,19 @@ export default function VideoSeekTrack (props: Props): JSX.Element {
           max={duration}
           step={0.01}
           h='100%'
+          data-ignore='click'
         >
-          <SliderTrack borderRadius='full' h='100%' bg='whiteAlpha.100'>
-            <SliderFilledTrack bg='whiteAlpha.900' />
+          <SliderTrack data-ignore='click' borderRadius='full' h='100%' bg='whiteAlpha.100'>
+            <SliderFilledTrack data-ignore='click' bg='whiteAlpha.900' />
           </SliderTrack>
         </Slider>
-        <Flex pointerEvents='none' position='absolute'>
-          <Heading color='dimmers.300' fontSize='md'>
+        <Flex data-ignore='click' pointerEvents='none' position='absolute'>
+          <Heading data-ignore='click' color='dimmers.300' fontSize='md'>
             {formatSecondsIntoMinutes(time)} / {formatSecondsIntoMinutes(duration)}
           </Heading>
         </Flex>
       </Flex>
-      <Flex {...CONTROLS_CONTAINER} h={12} w={12} align='center' justify='center'>
+      <Flex data-ignore='click' {...CONTROLS_CONTAINER} h={12} w={12} align='center' justify='center'>
         <MediaButton
           w={6}
           h={6}

@@ -1,6 +1,6 @@
-import NextImage from '../NextImage/NextImage'
+import NextImage from './NextImage/NextImage'
 import { ReactNode, useState } from 'react'
-import ImageError from '../ImageError/ImageError'
+import ImageError from './ImageError/ImageError'
 import { useHydrate } from '../../../../../hydrate'
 import { Flex, useToken } from '@chakra-ui/react'
 
@@ -8,15 +8,13 @@ interface Props {
   url: string
   color?: string
   variants?: ReactNode
-  cover?: boolean
 }
 
 export default function ImageMedia (props: Props): JSX.Element {
   const {
     url,
     color,
-    variants,
-    cover = false
+    variants
   } = props
 
   const [hasError, setError] = useState(false)

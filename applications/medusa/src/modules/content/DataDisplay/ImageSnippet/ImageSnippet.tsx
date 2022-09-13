@@ -1,11 +1,11 @@
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import type { ImageSnippetFragment$key } from '@//:artifacts/ImageSnippetFragment.graphql'
-import NextImage from '../../HookedComponents/Media/components/NextImage/NextImage'
+import NextImage from '../../HookedComponents/Media/components/ImageMedia/NextImage/NextImage'
 import { ImageProps } from 'next/image'
 import { useRef, useState } from 'react'
 import { Flex } from '@chakra-ui/react'
-import ImageError from '../../HookedComponents/Media/components/ImageError/ImageError'
+import ImageError from '../../HookedComponents/Media/components/ImageMedia/ImageError/ImageError'
 import { useHydrate } from '../../../hydrate'
 
 export type ImageSnippetProps = Omit<ImageProps, 'src' | 'width' | 'height' | 'layout' | 'alt'>

@@ -1,7 +1,7 @@
 import { ControlPauseButton, ControlPlayButton } from '@//:assets/icons'
 import { useState } from 'react'
 import { pauseVideo, playVideo } from '../../../../../../support/controls'
-import MediaButton from '../../../../../MediaButton/MediaButton'
+import MediaButton from '../../../../../MediaControls/MediaButton/MediaButton'
 import { PlayerType } from '../../../../../../types'
 import syncPlayerPlayPause from '../../../../../../support/syncPlayerPlayPause'
 
