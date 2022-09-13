@@ -258,6 +258,7 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Contex
 	}
 
 	for _, r := range postPending.ContentMedia {
+
 		m, err := media.UnmarshalMediaFromDatabase(ctx, r)
 
 		if err != nil {

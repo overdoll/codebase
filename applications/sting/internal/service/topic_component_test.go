@@ -6,7 +6,6 @@ import (
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/sting/internal/ports/graphql/types"
-	graphql2 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/media/proto"
 	"overdoll/libraries/uuid"
@@ -21,8 +20,10 @@ type TopicModified struct {
 	Reference   string
 	Weight      int
 	BannerMedia *struct {
-		Item *graphql2.ImageMedia
-	} `graphql:"... on ImageMedia"`
+		ImageMedia struct {
+			Id relay.ID
+		} `graphql:"... on ImageMedia"`
+	}
 }
 
 type SearchTopics struct {
@@ -180,7 +181,7 @@ func TestCreatTopic_update_and_search(t *testing.T) {
 		},
 	})
 
-	require.Nil(t, updateTopicBanner.UpdateTopicBanner.Topic.BannerMedia, "not yet processed")
+	require.Empty(t, updateTopicBanner.UpdateTopicBanner.Topic.BannerMedia.ImageMedia.Id, "not yet processed")
 
 	require.NoError(t, err, "no error updating topic thumbnail")
 
@@ -206,7 +207,7 @@ func TestCreatTopic_update_and_search(t *testing.T) {
 	require.NotNil(t, topic, "found topic")
 	require.Equal(t, fake.Title, topic.Title, "title has been updated")
 	require.Equal(t, fake.Description, topic.Description, "description has been updated")
-	require.NotNil(t, topic.BannerMedia, "banner is now processed")
+	require.NotEmpty(t, topic.BannerMedia.ImageMedia.Id, "banner is now processed")
 	require.Equal(t, newWeight, topic.Weight, "topic weight is updated")
 }
 

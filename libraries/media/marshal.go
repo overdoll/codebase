@@ -3,6 +3,7 @@ package media
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	proto2 "github.com/golang/protobuf/proto"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/media/proto"
@@ -123,6 +124,8 @@ func UnmarshalMediaFromDatabase(ctx context.Context, media []byte) (*Media, erro
 	if err := proto2.Unmarshal(media, &res); err != nil {
 		return nil, errors.Wrap(err, "failed to unmarshal media from database")
 	}
+
+	fmt.Println(&res)
 
 	return FromProto(&res), nil
 }

@@ -24,11 +24,15 @@ type CategoryModified struct {
 	Reference         string
 	AlternativeTitles []*graphql2.Translation
 	ThumbnailMedia    *struct {
-		Item *graphql2.ImageMedia
-	} `graphql:"... on ImageMedia"`
+		ImageMedia struct {
+			Id relay.ID
+		} `graphql:"... on ImageMedia"`
+	}
 	BannerMedia *struct {
-		Item *graphql2.ImageMedia
-	} `graphql:"... on ImageMedia"`
+		ImageMedia struct {
+			Id relay.ID
+		} `graphql:"... on ImageMedia"`
+	}
 	Topic *TopicModified
 }
 
@@ -225,7 +229,7 @@ func TestCreateCategory_update_and_search(t *testing.T) {
 		},
 	})
 
-	require.Nil(t, updateCategoryThumbnail.UpdateCategoryThumbnail.Category.ThumbnailMedia, "not yet processed")
+	require.Empty(t, updateCategoryThumbnail.UpdateCategoryThumbnail.Category.ThumbnailMedia.ImageMedia.Id, "not yet processed")
 
 	require.NoError(t, err, "no error updating category thumbnail")
 
@@ -250,7 +254,7 @@ func TestCreateCategory_update_and_search(t *testing.T) {
 
 	require.NotNil(t, category, "found category")
 	require.Equal(t, fake.Title, category.Title, "title has been updated")
-	require.NotNil(t, category.ThumbnailMedia, "has a thumbnail")
+	require.NotEmpty(t, category.ThumbnailMedia.ImageMedia.Id, "has a thumbnail")
 	require.Nil(t, category.BannerMedia, "has no banner")
 
 	env := getWorkflowEnvironment()
@@ -279,7 +283,7 @@ func TestCreateCategory_update_and_search(t *testing.T) {
 
 	category = getCategoryBySlug(t, client, currentCategorySlug)
 	require.NotNil(t, category, "expected to have found category")
-	require.NotNil(t, category.BannerMedia, "has a banner")
+	require.NotEmpty(t, category.BannerMedia.ImageMedia.Id, "has a banner")
 	require.Nil(t, category.Topic, "no topic")
 
 	var updateCategoryTopic UpdateCategoryTopic

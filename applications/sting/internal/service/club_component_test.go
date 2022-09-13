@@ -10,7 +10,6 @@ import (
 	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	sting "overdoll/applications/sting/proto"
-	graphql2 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/media/proto"
 	"overdoll/libraries/testing_tools"
@@ -33,11 +32,15 @@ type ClubModified struct {
 		Slug string
 	}
 	ThumbnailMedia *struct {
-		Item *graphql2.ImageMedia
-	} `graphql:"... on ImageMedia"`
+		ImageMedia struct {
+			Id relay.ID
+		} `graphql:"... on ImageMedia"`
+	}
 	BannerMedia *struct {
-		Item *graphql2.ImageMedia
-	} `graphql:"... on ImageMedia"`
+		ImageMedia struct {
+			Id relay.ID
+		} `graphql:"... on ImageMedia"`
+	}
 	ViewerIsOwner               bool
 	CanSupport                  bool
 	CanCreateSupporterOnlyPosts bool
@@ -426,7 +429,7 @@ func TestCreateClub_edit_thumbnail(t *testing.T) {
 
 	// make sure thumbnail is set
 	updatedClb := getClub(t, client, clb.Slug())
-	require.NotNil(t, updatedClb.Club.ThumbnailMedia, "thumbnail is not nil")
+	require.Empty(t, updatedClb.Club.ThumbnailMedia.ImageMedia.Id, "thumbnail is not nil")
 
 	grpcClient := getGrpcCallbackClient(t)
 
@@ -446,7 +449,7 @@ func TestCreateClub_edit_thumbnail(t *testing.T) {
 	require.NoError(t, err, "no error updating resource")
 
 	updatedClb = getClub(t, client, clb.Slug())
-	require.NotNil(t, updatedClb.Club.ThumbnailMedia, "thumbnail is should be processed now")
+	require.NotEmpty(t, updatedClb.Club.ThumbnailMedia.ImageMedia.Id, "thumbnail is should be processed now")
 }
 
 // TestCreateClub_edit_banner - create a club and edit the banner
@@ -469,7 +472,7 @@ func TestCreateClub_edit_banner(t *testing.T) {
 	require.NoError(t, env.GetWorkflowError(), "no error generating banner")
 
 	updatedClb := getClub(t, client, clb.Slug())
-	require.Nil(t, updatedClb.Club.BannerMedia, "banner not yet processed initially")
+	require.Empty(t, updatedClb.Club.BannerMedia.ImageMedia.Id, "banner not yet processed initially")
 
 	grpcClient := getGrpcCallbackClient(t)
 
@@ -491,5 +494,5 @@ func TestCreateClub_edit_banner(t *testing.T) {
 	require.NoError(t, err, "no error updating resource")
 
 	updatedClb = getClub(t, client, clb.Slug())
-	require.NotNil(t, updatedClb.Club.BannerMedia, "banner should be processed now")
+	require.NotEmpty(t, updatedClb.Club.BannerMedia.ImageMedia.Id, "banner should be processed now")
 }

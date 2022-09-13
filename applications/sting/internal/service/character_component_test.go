@@ -10,7 +10,6 @@ import (
 	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/bootstrap"
-	graphql2 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/media/proto"
 	"overdoll/libraries/uuid"
@@ -26,11 +25,15 @@ type CharacterModified struct {
 	Series         *SeriesModified
 	Club           *ClubModified
 	ThumbnailMedia *struct {
-		Item *graphql2.ImageMedia
-	} `graphql:"... on ImageMedia"`
+		ImageMedia struct {
+			Id relay.ID
+		} `graphql:"... on ImageMedia"`
+	}
 	BannerMedia *struct {
-		Item *graphql2.ImageMedia
-	} `graphql:"... on ImageMedia"`
+		ImageMedia struct {
+			Id relay.ID
+		} `graphql:"... on ImageMedia"`
+	}
 }
 
 type SearchCharactersForSeries struct {
@@ -185,7 +188,7 @@ func TestCreateSeriesCharacter_update_and_search(t *testing.T) {
 
 	require.NoError(t, err, "no error updating character thumbnail")
 
-	require.Nil(t, updateCharacterThumbnail.UpdateCharacterThumbnail.Character.ThumbnailMedia, "not yet processed")
+	require.Empty(t, updateCharacterThumbnail.UpdateCharacterThumbnail.Character.ThumbnailMedia.ImageMedia.Id, "not yet processed")
 
 	require.NoError(t, err, "no error updating category thumbnail")
 
@@ -210,7 +213,7 @@ func TestCreateSeriesCharacter_update_and_search(t *testing.T) {
 	require.NotNil(t, character, "expected to have found character")
 
 	require.Equal(t, fake.Name, character.Name, "title has been updated")
-	require.NotNil(t, character.ThumbnailMedia, "has a thumbnail")
+	require.NotEmpty(t, character.ThumbnailMedia.ImageMedia.Id, "has a thumbnail")
 	require.Nil(t, character.BannerMedia, "has no banner ter")
 
 	env := getWorkflowEnvironment()
@@ -241,7 +244,7 @@ func TestCreateSeriesCharacter_update_and_search(t *testing.T) {
 
 	character = getSeriesCharacterBySlug(t, client, currentCharacterSlug, series.Slug())
 	require.NotNil(t, character, "expected to have found character")
-	require.NotNil(t, character.BannerMedia, "has a banner")
+	require.NotEmpty(t, character.BannerMedia.ImageMedia.Id, "has a banner")
 }
 
 func getClubCharacterBySlug(t *testing.T, client *graphql.Client, slug, clubSlug string) *CharacterModified {

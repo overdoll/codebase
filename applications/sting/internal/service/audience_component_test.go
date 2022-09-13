@@ -22,12 +22,12 @@ type AudienceModified struct {
 	Slug           string
 	Standard       bool
 	ThumbnailMedia *struct {
-		Item *struct {
+		ImageMedia struct {
 			Id relay.ID
 		} `graphql:"... on ImageMedia"`
 	}
 	BannerMedia *struct {
-		Item *struct {
+		ImageMedia struct {
 			Id relay.ID
 		} `graphql:"... on ImageMedia"`
 	}
@@ -170,7 +170,7 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error updating audience thumbnail")
-	require.Nil(t, updateAudienceThumbnail.UpdateAudienceThumbnail.Audience.ThumbnailMedia.Item, "not yet processed")
+	require.Empty(t, updateAudienceThumbnail.UpdateAudienceThumbnail.Audience.ThumbnailMedia.ImageMedia.Id, "not yet processed")
 
 	grpcClient := getGrpcCallbackClient(t)
 
@@ -204,8 +204,8 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 	require.NotNil(t, audience, "expected to have found audience")
 
 	require.Equal(t, fake.Title, audience.Title, "title has been updated")
-	require.NotNil(t, audience.ThumbnailMedia.Item, "has a thumbnail")
-	require.Nil(t, audience.BannerMedia.Item, "has no banner")
+	require.NotEmpty(t, audience.ThumbnailMedia.ImageMedia.Id, "has a thumbnail")
+	require.Nil(t, audience.BannerMedia, "has no banner")
 	require.True(t, audience.Standard, "is standard now")
 
 	var updateAudienceBanner UpdateAudienceBanner
@@ -218,7 +218,7 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error updating audience thumbnail")
-	require.Nil(t, updateAudienceBanner.UpdateAudienceBanner.Audience.BannerMedia.Item, "not yet processed")
+	require.Empty(t, updateAudienceBanner.UpdateAudienceBanner.Audience.BannerMedia.ImageMedia.Id, "not yet processed")
 
 	_, err = grpcClient.UpdateMedia(context.Background(), &proto.UpdateMediaRequest{Media: &proto.Media{
 		Id: audienceThumbnailId,
@@ -236,5 +236,5 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 	require.NoError(t, err, "no error updating resource")
 
 	audience = getAudienceBySlug(t, client, currentAudienceSlug)
-	require.NotNil(t, audience.BannerMedia.Item, "banner should now be processed")
+	require.NotEmpty(t, audience.BannerMedia.ImageMedia.Id, "banner should now be processed")
 }

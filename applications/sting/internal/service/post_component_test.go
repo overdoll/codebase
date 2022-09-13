@@ -17,6 +17,20 @@ import (
 	"time"
 )
 
+// Represents content for a post.
+type PostContentModified struct {
+	ID    relay.ID
+	Media struct {
+		ImageMedia struct {
+			Id relay.ID
+		} `graphql:"... on ImageMedia"`
+	}
+	SupporterOnlyVideoMediaDuration   *int
+	SupporterOnlyVideoMediaHasAudio   *bool
+	IsSupporterOnly                   bool
+	ViewerCanViewSupporterOnlyContent bool
+}
+
 type PostModified struct {
 	ID          relay.ID
 	Reference   string
@@ -28,7 +42,7 @@ type PostModified struct {
 	Characters          []CharacterModified
 	Audience            *AudienceModified
 	Categories          []CategoryModified
-	Content             []types.PostContent
+	Content             []PostContentModified
 	SupporterOnlyStatus types.SupporterOnlyStatus
 }
 
@@ -514,23 +528,13 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.True(t, post.Post.Content[0].ViewerCanViewSupporterOnlyContent, "can view first content because its free")
 	require.False(t, post.Post.Content[0].IsSupporterOnly, "can view content since its marked as non supporter")
 
-	require.Len(t, post.Post.Content[0].Resource.Urls, 1, "should have 1 url")
-	for _, urls := range post.Post.Content[0].Resource.Urls {
-		require.Contains(t, urls.URL, "Key-Pair-UploadId", "should be private content")
-	}
-
 	require.True(t, post.Post.Content[1].ViewerCanViewSupporterOnlyContent, "can view supporter only because they are a supporter")
 	require.True(t, post.Post.Content[1].IsSupporterOnly, "cant view first content because its supporter only")
-	require.Nil(t, post.Post.Content[1].SupporterOnlyResource, "supporter only resource is nil")
-
-	require.Len(t, post.Post.Content[1].Resource.Urls, 1, "should have 1 url")
-	for _, urls := range post.Post.Content[1].Resource.Urls {
-		require.Contains(t, urls.URL, "Key-Pair-UploadId", "should be private content")
-	}
+	require.Empty(t, post.Post.Content[1].SupporterOnlyVideoMediaDuration, "supporter only resource is nil")
 
 	require.Equal(t, description, post.Post.Description, "should have the correct post description")
 
-	originalId := post.Post.Content[1].Resource.ID
+	originalId := post.Post.Content[1].Media.ImageMedia.Id
 
 	// make a random client so we can test post permissions
 	client = getGraphqlClientWithAuthenticatedAccount(t, testAccount)
@@ -542,13 +546,13 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	require.False(t, post.Post.Content[1].ViewerCanViewSupporterOnlyContent, "cant view first content because its supporter only")
 	require.True(t, post.Post.Content[1].IsSupporterOnly, "cant view first content because its supporter only")
-	require.NotNil(t, post.Post.Content[1].SupporterOnlyResource, "can view supporter only resource")
+	require.NotEmpty(t, post.Post.Content[1].SupporterOnlyVideoMediaHasAudio, "can view supporter only resource")
 
-	sDec, _ := base64.StdEncoding.DecodeString(post.Post.Content[1].Resource.ID.GetID())
+	sDec, _ := base64.StdEncoding.DecodeString(post.Post.Content[1].Media.ImageMedia.Id.GetID())
 	resourceId := relay.ID(sDec).GetID()
 
 	require.NotEmpty(t, resourceId, "should not be empty")
-	require.NotEqual(t, originalId.GetID(), post.Post.Content[1].Resource.ID.GetID(), "should show a different id")
+	require.NotEqual(t, originalId.GetID(), post.Post.Content[1].Media.ImageMedia.Id.GetID(), "should show a different id")
 
 	client = getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 

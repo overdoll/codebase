@@ -8,7 +8,6 @@ import (
 	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/bootstrap"
-	graphql2 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/media/proto"
 	"overdoll/libraries/uuid"
@@ -25,11 +24,15 @@ type CharacterSeriesModified struct {
 	Reference      string
 	Slug           string
 	ThumbnailMedia *struct {
-		Item *graphql2.ImageMedia
-	} `graphql:"... on ImageMedia"`
+		ImageMedia struct {
+			Id relay.ID
+		} `graphql:"... on ImageMedia"`
+	}
 	BannerMedia *struct {
-		Item *graphql2.ImageMedia
-	} `graphql:"... on ImageMedia"`
+		ImageMedia struct {
+			Id relay.ID
+		} `graphql:"... on ImageMedia"`
+	}
 }
 
 type SeriesModified struct {
@@ -38,11 +41,15 @@ type SeriesModified struct {
 	Title          string
 	Slug           string
 	ThumbnailMedia *struct {
-		Item *graphql2.ImageMedia
-	} `graphql:"... on ImageMedia"`
+		ImageMedia struct {
+			Id relay.ID
+		} `graphql:"... on ImageMedia"`
+	}
 	BannerMedia *struct {
-		Item *graphql2.ImageMedia
-	} `graphql:"... on ImageMedia"`
+		ImageMedia struct {
+			Id relay.ID
+		} `graphql:"... on ImageMedia"`
+	}
 	Characters struct {
 		Edges []struct {
 			Node CharacterSeriesModified
@@ -176,7 +183,7 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 
 	require.NoError(t, err, "no error updating series thumbnail")
 
-	require.Nil(t, updateSeriesThumbnail.UpdateSeriesThumbnail.Series.ThumbnailMedia, "not yet processed")
+	require.Empty(t, updateSeriesThumbnail.UpdateSeriesThumbnail.Series.ThumbnailMedia.ImageMedia.Id, "not yet processed")
 
 	grpcClient := getGrpcCallbackClient(t)
 
@@ -199,7 +206,7 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 
 	require.NotNil(t, series, "expected to have found series")
 	require.Equal(t, fake.Title, series.Title, "title has been updated")
-	require.NotNil(t, series.ThumbnailMedia, "has a thumbnail")
+	require.NotEmpty(t, series.ThumbnailMedia.ImageMedia.Id, "has a thumbnail")
 	require.Nil(t, series.BannerMedia, "has no banner")
 
 	env := getWorkflowEnvironment()
@@ -231,7 +238,7 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 
 	series = getSeriesBySlug(t, client, currentSeriesSlug)
 	require.NotNil(t, series, "expected to have found series")
-	require.NotNil(t, series.BannerMedia, "has a banner")
+	require.NotEmpty(t, series.BannerMedia.ImageMedia.Id, "has a banner")
 	require.Equal(t, 1, len(series.Characters.Edges), "has the correct amount of characters")
 }
 
