@@ -237,6 +237,7 @@ func seedSeries(t *testing.T) *post.Series {
 // helper which seeds a new post in the database
 func seedClub(t *testing.T, accountId string) *club.Club {
 	pst := newClub(t, accountId)
+	pst.UpdateEnableSupporterOnlyPosts(testing_tools.NewStaffPrincipal(accountId))
 
 	session := bootstrap.InitializeDatabaseSession()
 	es := bootstrap.InitializeElasticSearchSession()
@@ -300,6 +301,7 @@ func seedPublishedPostWithCharacter(t *testing.T, characterId, seriesId string) 
 				Id:   uuid.New().String(),
 				Type: proto.MediaLinkType_POST_CONTENT,
 			},
+			ImageData: &proto.ImageData{Id: uuid.New().String()},
 			State: &proto.MediaState{
 				Processed: true,
 				Failed:    false,
@@ -366,6 +368,7 @@ func seedPublishedPostWithCategory(t *testing.T, categoryId string) {
 				Id:   uuid.New().String(),
 				Type: proto.MediaLinkType_POST_CONTENT,
 			},
+			ImageData: &proto.ImageData{Id: uuid.New().String()},
 			State: &proto.MediaState{
 				Processed: true,
 				Failed:    false,
@@ -432,6 +435,7 @@ func seedPublishedPostWithAudience(t *testing.T, audienceId string) {
 				Id:   uuid.New().String(),
 				Type: proto.MediaLinkType_POST_CONTENT,
 			},
+			ImageData: &proto.ImageData{Id: uuid.New().String()},
 			State: &proto.MediaState{
 				Processed: true,
 				Failed:    false,
@@ -496,6 +500,7 @@ func newPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
 				Id:   uuid.New().String(),
 				Type: proto.MediaLinkType_POST_CONTENT,
 			},
+			ImageData: &proto.ImageData{Id: uuid.New().String()},
 			State: &proto.MediaState{
 				Processed: true,
 				Failed:    false,

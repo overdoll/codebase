@@ -221,10 +221,15 @@ func (m *Media) VideoContainers() []*VideoContainer {
 func (m *Media) generateUrlForVideo(id string) string {
 	finalUrl := url.URL{}
 
-	finalUrl.Host = os.Getenv("MEDIA_URL")
-	finalUrl.Scheme = "https://"
-	finalUrl.Path = m.VideoPrefix() + "/" + id
+	if m.IsLegacy() {
+		finalUrl.Host = os.Getenv("PRIVATE_RESOURCES_URL")
+		finalUrl.Path = m.proto.Link.Id + "/" + m.proto.ImageData.Id
+	} else {
+		finalUrl.Host = os.Getenv("MEDIA_URL")
+		finalUrl.Path = m.VideoPrefix() + "/" + id
+	}
 
+	finalUrl.Scheme = "https://"
 	signed, _ := serializer.createSignedUrl(finalUrl.String())
 	return signed
 }

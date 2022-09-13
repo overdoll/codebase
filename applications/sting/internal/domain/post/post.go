@@ -445,6 +445,7 @@ func (p *Post) AddContentRequest(requester *principal.Principal, resources []*me
 	}
 
 	p.content = append(p.content, newContent...)
+
 	p.updatePostSupporterOnlyStatus()
 	return nil
 }
@@ -456,7 +457,7 @@ func (p *Post) UpdateContentOrderRequest(requester *principal.Principal, content
 	}
 
 	if len(contentIds) != len(p.content) {
-		return domainerror.NewValidation("missing resources")
+		return domainerror.NewValidation("missing media")
 	}
 
 	var reorderedContent []*Content

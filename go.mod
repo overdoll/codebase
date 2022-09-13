@@ -47,7 +47,6 @@ require (
 	github.com/u2takey/ffmpeg-go v0.4.0
 	github.com/vektah/gqlparser/v2 v2.4.4
 	github.com/yuin/goldmark v1.4.4
-	go.opencensus.io v0.23.0
 	go.temporal.io/api v1.8.0
 	go.temporal.io/sdk v1.15.0
 	go.uber.org/zap v1.21.0

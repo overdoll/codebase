@@ -135,7 +135,6 @@ func MarshaMediaToLegacyResourceGraphQL(ctx context.Context, res *media.Media) *
 				}
 			}
 		} else {
-			fmt.Println(res.RawProto())
 			urls = append(urls, &ResourceURL{
 				URL:      URI(res.OriginalImageMediaAccess().Url()),
 				MimeType: "image/jpeg",

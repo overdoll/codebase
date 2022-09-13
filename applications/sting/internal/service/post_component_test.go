@@ -409,7 +409,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		Twice()
 
 	// signal workflow that resources were processed
-	application.TemporalClient.On("SignalWorkflow", mock.Anything, mock.Anything, "", workflows.SubmitPostPixelatedMediaSignalChannel, true).
+	application.TemporalClient.On("SignalWorkflow", mock.Anything, mock.Anything, "", workflows.SubmitPostPixelatedMediaSignalChannel, mock.Anything).
 		Run(
 			func(args mock.Arguments) {
 				env.SignalWorkflow(workflows.SubmitPostPixelatedMediaSignalChannel, args[4])
@@ -469,6 +469,11 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 								Processed: true,
 								Failed:    false,
 							},
+							Source: &proto.MediaSource{
+								SourceMediaId: pst.Content()[1].Media().ID(), Link: &proto.MediaLink{
+									Id:   newPostReference,
+									Type: proto.MediaLinkType_POST_CONTENT,
+								}},
 						}})
 
 						require.NoError(t, err, "no error updating resource")

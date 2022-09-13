@@ -172,6 +172,7 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 		ContentMediaIds:              contentResourceIds,
 		ContentSupporterOnly:         contentSupporterOnly,
 		ContentResources:             contentResources,
+		ContentMedia:                 contentMedia,
 		ContentSupporterOnlyMediaIds: contentSupporterOnlyResourceIds,
 		CategoryIds:                  pending.CategoryIds(),
 		CharacterIds:                 pending.CharacterIds(),
@@ -248,6 +249,7 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Contex
 	var finalMedia []*media.Media
 
 	for _, r := range postPending.ContentResources {
+
 		m, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, r, nil)
 
 		if err != nil {

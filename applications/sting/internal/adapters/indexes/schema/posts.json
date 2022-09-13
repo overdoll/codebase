@@ -54,9 +54,7 @@
       },
       "content_media": {
         "type": "object",
-        "dynamic": false,
-        "index": false,
-        "store": true
+        "dynamic": false
       },
       "content_supporter_only": {
         "type": "object",

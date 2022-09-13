@@ -84,6 +84,7 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPostDocument(ctx contex
 	var finalMedia []*media.Media
 
 	for _, r := range pst.ContentResources {
+
 		m, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, r, nil)
 
 		if err != nil {
@@ -94,6 +95,7 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPostDocument(ctx contex
 	}
 
 	for _, r := range pst.ContentMedia {
+
 		m, err := media.UnmarshalMediaFromDatabase(ctx, r)
 
 		if err != nil {

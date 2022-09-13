@@ -3,7 +3,6 @@ package media
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	proto2 "github.com/golang/protobuf/proto"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/media/proto"
@@ -85,17 +84,24 @@ func unmarshalLegacyResourceFromDatabase(ctx context.Context, resource string) (
 		}
 	}
 
-	return FromProto(&proto.Media{
-		Id:        re.ResourceId,
-		Private:   re.IsPrivate,
-		VideoData: videoData,
-		ImageData: imageData,
-		State: &proto.MediaState{
-			Processed: re.Processed,
-			Failed:    re.Failed,
+	return &Media{
+		proto: &proto.Media{
+			Id:        re.ResourceId,
+			Private:   re.IsPrivate,
+			VideoData: videoData,
+			ImageData: imageData,
+			State: &proto.MediaState{
+				Processed: re.Processed,
+				Failed:    re.Failed,
+			},
+			Link: &proto.MediaLink{
+				Id:   re.ItemId,
+				Type: 0,
+			},
+			Version: 0,
 		},
-		Version: 0,
-	}), nil
+		legacy: resource,
+	}, nil
 }
 
 func MarshalMediaToDatabase(media *Media) ([]byte, error) {
@@ -124,8 +130,6 @@ func UnmarshalMediaFromDatabase(ctx context.Context, media []byte) (*Media, erro
 	if err := proto2.Unmarshal(media, &res); err != nil {
 		return nil, errors.Wrap(err, "failed to unmarshal media from database")
 	}
-
-	fmt.Println(&res)
 
 	return FromProto(&res), nil
 }

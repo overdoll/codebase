@@ -232,15 +232,18 @@ type ComplexityRoot struct {
 	}
 
 	ImageMediaVariants struct {
-		Banner    func(childComplexity int) int
-		Large     func(childComplexity int) int
-		Medium    func(childComplexity int) int
-		Mini      func(childComplexity int) int
-		Small     func(childComplexity int) int
-		Thumbnail func(childComplexity int) int
-		Video1080 func(childComplexity int) int
-		Video480  func(childComplexity int) int
-		Video720  func(childComplexity int) int
+		Banner      func(childComplexity int) int
+		Hd          func(childComplexity int) int
+		Icon        func(childComplexity int) int
+		Large       func(childComplexity int) int
+		Medium      func(childComplexity int) int
+		Mini        func(childComplexity int) int
+		Small       func(childComplexity int) int
+		Thumbnail   func(childComplexity int) int
+		ThumbnailHd func(childComplexity int) int
+		Video1080   func(childComplexity int) int
+		Video480    func(childComplexity int) int
+		Video720    func(childComplexity int) int
 	}
 
 	InitiateClubPayoutPayload struct {
@@ -254,7 +257,9 @@ type ComplexityRoot struct {
 
 	MP4VideoContainer struct {
 		Bitrate func(childComplexity int) int
+		Height  func(childComplexity int) int
 		URL     func(childComplexity int) int
+		Width   func(childComplexity int) int
 	}
 
 	MediaProgress struct {
@@ -1165,6 +1170,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ImageMediaVariants.Banner(childComplexity), true
 
+	case "ImageMediaVariants.hd":
+		if e.complexity.ImageMediaVariants.Hd == nil {
+			break
+		}
+
+		return e.complexity.ImageMediaVariants.Hd(childComplexity), true
+
+	case "ImageMediaVariants.icon":
+		if e.complexity.ImageMediaVariants.Icon == nil {
+			break
+		}
+
+		return e.complexity.ImageMediaVariants.Icon(childComplexity), true
+
 	case "ImageMediaVariants.large":
 		if e.complexity.ImageMediaVariants.Large == nil {
 			break
@@ -1199,6 +1218,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.ImageMediaVariants.Thumbnail(childComplexity), true
+
+	case "ImageMediaVariants.thumbnailHd":
+		if e.complexity.ImageMediaVariants.ThumbnailHd == nil {
+			break
+		}
+
+		return e.complexity.ImageMediaVariants.ThumbnailHd(childComplexity), true
 
 	case "ImageMediaVariants.video1080":
 		if e.complexity.ImageMediaVariants.Video1080 == nil {
@@ -1249,12 +1275,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.MP4VideoContainer.Bitrate(childComplexity), true
 
+	case "MP4VideoContainer.height":
+		if e.complexity.MP4VideoContainer.Height == nil {
+			break
+		}
+
+		return e.complexity.MP4VideoContainer.Height(childComplexity), true
+
 	case "MP4VideoContainer.url":
 		if e.complexity.MP4VideoContainer.URL == nil {
 			break
 		}
 
 		return e.complexity.MP4VideoContainer.URL(childComplexity), true
+
+	case "MP4VideoContainer.width":
+		if e.complexity.MP4VideoContainer.Width == nil {
+			break
+		}
+
+		return e.complexity.MP4VideoContainer.Width(childComplexity), true
 
 	case "MediaProgress.id":
 		if e.complexity.MediaProgress.ID == nil {
@@ -2637,14 +2677,20 @@ All variants available for an image.
 type ImageMediaVariants {
   """50x50 crop of an image. Suitable for mini icons."""
   mini: ImageMediaAccess!
+  """100x100 crop of an image. Suitable for icons."""
+  icon: ImageMediaAccess!
   """150x150 crop of an image. Suitable for small previews."""
   thumbnail: ImageMediaAccess!
+  """200x200 crop of an image. Suitable for large thumbnails."""
+  thumbnailHd: ImageMediaAccess!
   """768px width or height resize."""
   small: ImageMediaAccess!
   """1366px width or height resize."""
   medium: ImageMediaAccess!
   """1920px width or height resize."""
   large: ImageMediaAccess!
+  """4096px width or height resize."""
+  hd: ImageMediaAccess!
   """640px width or height resize."""
   banner: ImageMediaAccess!
   """480px width or height resize."""
@@ -2715,6 +2761,12 @@ type MP4VideoContainer {
 
   """The bitrate of the video."""
   bitrate: Int!
+
+  """The width of the video."""
+  width: Int!
+
+  """The height of the video."""
+  height: Int!
 }
 
 """An application/x-mpegURL video container."""
@@ -8081,14 +8133,20 @@ func (ec *executionContext) fieldContext_ImageMedia_variants(ctx context.Context
 			switch field.Name {
 			case "mini":
 				return ec.fieldContext_ImageMediaVariants_mini(ctx, field)
+			case "icon":
+				return ec.fieldContext_ImageMediaVariants_icon(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_ImageMediaVariants_thumbnail(ctx, field)
+			case "thumbnailHd":
+				return ec.fieldContext_ImageMediaVariants_thumbnailHd(ctx, field)
 			case "small":
 				return ec.fieldContext_ImageMediaVariants_small(ctx, field)
 			case "medium":
 				return ec.fieldContext_ImageMediaVariants_medium(ctx, field)
 			case "large":
 				return ec.fieldContext_ImageMediaVariants_large(ctx, field)
+			case "hd":
+				return ec.fieldContext_ImageMediaVariants_hd(ctx, field)
 			case "banner":
 				return ec.fieldContext_ImageMediaVariants_banner(ctx, field)
 			case "video480":
@@ -8394,6 +8452,58 @@ func (ec *executionContext) fieldContext_ImageMediaVariants_mini(ctx context.Con
 	return fc, nil
 }
 
+func (ec *executionContext) _ImageMediaVariants_icon(ctx context.Context, field graphql.CollectedField, obj *graphql1.ImageMediaVariants) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ImageMediaVariants_icon(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Icon, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*graphql1.ImageMediaAccess)
+	fc.Result = res
+	return ec.marshalNImageMediaAccess2ᚖoverdollᚋlibrariesᚋgraphqlᚐImageMediaAccess(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ImageMediaVariants_icon(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ImageMediaVariants",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "width":
+				return ec.fieldContext_ImageMediaAccess_width(ctx, field)
+			case "height":
+				return ec.fieldContext_ImageMediaAccess_height(ctx, field)
+			case "url":
+				return ec.fieldContext_ImageMediaAccess_url(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ImageMediaAccess", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _ImageMediaVariants_thumbnail(ctx context.Context, field graphql.CollectedField, obj *graphql1.ImageMediaVariants) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_ImageMediaVariants_thumbnail(ctx, field)
 	if err != nil {
@@ -8426,6 +8536,58 @@ func (ec *executionContext) _ImageMediaVariants_thumbnail(ctx context.Context, f
 }
 
 func (ec *executionContext) fieldContext_ImageMediaVariants_thumbnail(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ImageMediaVariants",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "width":
+				return ec.fieldContext_ImageMediaAccess_width(ctx, field)
+			case "height":
+				return ec.fieldContext_ImageMediaAccess_height(ctx, field)
+			case "url":
+				return ec.fieldContext_ImageMediaAccess_url(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ImageMediaAccess", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ImageMediaVariants_thumbnailHd(ctx context.Context, field graphql.CollectedField, obj *graphql1.ImageMediaVariants) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ImageMediaVariants_thumbnailHd(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ThumbnailHd, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*graphql1.ImageMediaAccess)
+	fc.Result = res
+	return ec.marshalNImageMediaAccess2ᚖoverdollᚋlibrariesᚋgraphqlᚐImageMediaAccess(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ImageMediaVariants_thumbnailHd(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "ImageMediaVariants",
 		Field:      field,
@@ -8582,6 +8744,58 @@ func (ec *executionContext) _ImageMediaVariants_large(ctx context.Context, field
 }
 
 func (ec *executionContext) fieldContext_ImageMediaVariants_large(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ImageMediaVariants",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "width":
+				return ec.fieldContext_ImageMediaAccess_width(ctx, field)
+			case "height":
+				return ec.fieldContext_ImageMediaAccess_height(ctx, field)
+			case "url":
+				return ec.fieldContext_ImageMediaAccess_url(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ImageMediaAccess", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ImageMediaVariants_hd(ctx context.Context, field graphql.CollectedField, obj *graphql1.ImageMediaVariants) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ImageMediaVariants_hd(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Hd, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*graphql1.ImageMediaAccess)
+	fc.Result = res
+	return ec.marshalNImageMediaAccess2ᚖoverdollᚋlibrariesᚋgraphqlᚐImageMediaAccess(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ImageMediaVariants_hd(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "ImageMediaVariants",
 		Field:      field,
@@ -9032,6 +9246,94 @@ func (ec *executionContext) _MP4VideoContainer_bitrate(ctx context.Context, fiel
 }
 
 func (ec *executionContext) fieldContext_MP4VideoContainer_bitrate(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MP4VideoContainer",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MP4VideoContainer_width(ctx context.Context, field graphql.CollectedField, obj *graphql1.MP4VideoContainer) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_MP4VideoContainer_width(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Width, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_MP4VideoContainer_width(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MP4VideoContainer",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MP4VideoContainer_height(ctx context.Context, field graphql.CollectedField, obj *graphql1.MP4VideoContainer) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_MP4VideoContainer_height(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Height, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_MP4VideoContainer_height(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "MP4VideoContainer",
 		Field:      field,
@@ -15587,9 +15889,23 @@ func (ec *executionContext) _ImageMediaVariants(ctx context.Context, sel ast.Sel
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "icon":
+
+			out.Values[i] = ec._ImageMediaVariants_icon(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "thumbnail":
 
 			out.Values[i] = ec._ImageMediaVariants_thumbnail(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "thumbnailHd":
+
+			out.Values[i] = ec._ImageMediaVariants_thumbnailHd(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -15611,6 +15927,13 @@ func (ec *executionContext) _ImageMediaVariants(ctx context.Context, sel ast.Sel
 		case "large":
 
 			out.Values[i] = ec._ImageMediaVariants_large(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "hd":
+
+			out.Values[i] = ec._ImageMediaVariants_hd(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -15737,6 +16060,20 @@ func (ec *executionContext) _MP4VideoContainer(ctx context.Context, sel ast.Sele
 		case "bitrate":
 
 			out.Values[i] = ec._MP4VideoContainer_bitrate(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "width":
+
+			out.Values[i] = ec._MP4VideoContainer_width(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "height":
+
+			out.Values[i] = ec._MP4VideoContainer_height(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
