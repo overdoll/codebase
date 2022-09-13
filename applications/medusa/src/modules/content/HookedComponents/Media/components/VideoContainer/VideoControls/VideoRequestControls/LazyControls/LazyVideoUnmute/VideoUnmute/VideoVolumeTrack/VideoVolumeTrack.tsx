@@ -50,7 +50,7 @@ export default function VideoVolumeTrack (props: Props): JSX.Element {
         data-ignore='click'
       >
         <SliderTrack data-ignore='click' borderRadius='full' h='100%' bg='whiteAlpha.100'>
-          <SliderFilledTrack data-ignore='click' bg={muted ? 'red.300' : 'whiteAlpha.900'} />
+          <SliderFilledTrack data-ignore='click' bg={muted ? 'red.200' : 'green.200'} />
         </SliderTrack>
       </Slider>
       <Flex pointerEvents='none' data-ignore='click' position='absolute'>

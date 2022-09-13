@@ -41,7 +41,7 @@ export default function Home (props: Props): JSX.Element {
     <>
       <Box w='100%' h={500}>
         <VideoContainer
-          duration={15}
+          duration={12}
           hasAudio
           aspectRatio={{
             width: 4,

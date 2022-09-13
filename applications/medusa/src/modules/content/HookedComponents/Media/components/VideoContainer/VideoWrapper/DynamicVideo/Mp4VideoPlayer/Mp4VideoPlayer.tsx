@@ -27,8 +27,8 @@ export default function Mp4VideoPlayer (props: Props): JSX.Element {
     const player = new Mp4Player(config)
 
     const onReady = (): void => {
-      player.video.muted = true
-      player.video.volume = 0.1
+      player.muted = true
+      player.volume = 0.1
       onPlayerInit(player)
     }
 

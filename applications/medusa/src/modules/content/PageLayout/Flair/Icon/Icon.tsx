@@ -1,7 +1,7 @@
 import { chakra, HTMLChakraProps } from '@chakra-ui/react'
 import { IconType } from '@//:types/components'
 
-interface Props extends HTMLChakraProps<any> {
+export interface IconProps extends HTMLChakraProps<any> {
   fill?: string
   alt?: string
   title?: string
@@ -19,12 +19,13 @@ export default function Icon ({
   sx,
   w,
   ...rest
-}: Props): JSX.Element {
+}: IconProps): JSX.Element {
   return (
     <chakra.svg
       as={icon}
       sx={{
         path: {
+          boxShadow: 'lg',
           stroke: color ?? undefined,
           fill: fill ?? undefined
         },

@@ -12,7 +12,7 @@ export const VIDEO_OPTIONS = {
     display: 'block'
   },
   loop: true,
-  volume: 0.1
+  noLog: true
 }
 
 export const CONTROLS_CONTAINER = {

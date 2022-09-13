@@ -4,19 +4,25 @@ import { Timeout } from '@//:types/components'
 
 interface UseEnterControlsReturn {
   isOpen: boolean
+  showCursor?: boolean
 }
 
 interface UseEnterControlsProps {
   ref: MutableRefObject<HTMLDivElement | null>
+  isDisabled?: boolean
 }
 
 export default function useEnterControls (props: UseEnterControlsProps): UseEnterControlsReturn {
-  const { ref } = props
+  const {
+    ref,
+    isDisabled
+  } = props
 
   const mouseTimeout = useRef<Timeout | null>(null)
   const tapTimeout = useRef<Timeout | null>(null)
 
   const [isOpen, setOpen] = useState(false)
+  const [showCursor, setShowCursor] = useState(false)
 
   const onClose = (): void => {
     if (mouseTimeout?.current != null) {
@@ -26,6 +32,7 @@ export default function useEnterControls (props: UseEnterControlsProps): UseEnte
       clearTimeout(tapTimeout?.current)
     }
     setOpen(false)
+    setShowCursor(false)
   }
 
   const refreshMouseTimeout = (): void => {
@@ -35,11 +42,11 @@ export default function useEnterControls (props: UseEnterControlsProps): UseEnte
     mouseTimeout.current = setTimeout(onClose, 3000)
   }
 
-  const refreshTapTimeout = (): void => {
+  const refreshTapTimeout = (custom?: number): void => {
     if (tapTimeout?.current != null) {
       clearTimeout(tapTimeout?.current)
     }
-    tapTimeout.current = setTimeout(onClose, 1500)
+    tapTimeout.current = setTimeout(onClose, custom ?? 1500)
   }
 
   const onOpenMouse = (): void => {
@@ -59,18 +66,21 @@ export default function useEnterControls (props: UseEnterControlsProps): UseEnte
     onClose()
   }
 
-  // TODO add handling what happens when cursor disappears and the user moves around the video to get it back
-  // TODO adding the open functionality bugs out with the controls fade
   const handleMouseOver = (e): void => {
+    setShowCursor(true)
     if (e.target.dataset.ignore === 'click' || e.target.parentNode.dataset.ignore === 'click') {
-      refreshTapTimeout()
+      refreshTapTimeout(3000)
       refreshMouseTimeout()
     }
   }
 
   const handleClick = (e): void => {
+    setShowCursor(true)
     if (e.target.dataset.ignore === 'click' || e.target.parentNode.dataset.ignore === 'click') {
-      refreshTapTimeout()
+      if (mouseTimeout?.current != null) {
+        clearTimeout(mouseTimeout?.current)
+      }
+      refreshTapTimeout(3000)
       return
     }
     onOpenTap()
@@ -97,6 +107,7 @@ export default function useEnterControls (props: UseEnterControlsProps): UseEnte
   }, [isOpen, setOpen])
 
   return {
-    isOpen
+    isOpen: isDisabled === true ? true : isOpen,
+    showCursor: isDisabled === true ? true : showCursor
   }
 }

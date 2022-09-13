@@ -26,8 +26,8 @@ export default function HlsVideoPlayer (props: Props): JSX.Element {
     const player = new HlsPlayer(config)
 
     const onReady = (): void => {
-      player.video.muted = true
-      player.video.volume = 0.1
+      player.muted = true
+      player.volume = 0.1
       onPlayerInit(player)
     }
 
