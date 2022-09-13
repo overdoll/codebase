@@ -12,7 +12,10 @@ import HomeGameTile from '../HomeGameTile/HomeGameTile'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import getRandomSeed from '@//:modules/support/getRandomSeed'
 import VideoContainer from '@//:modules/content/HookedComponents/Media/components/VideoContainer/VideoContainer'
-import ImageMedia from '@//:modules/content/HookedComponents/Media/components/ImageMedia/ImageMedia'
+import ImageMedia
+  from '@//:modules/content/HookedComponents/Media/components/ImageContainer/ImageWrapper/ImageMedia/ImageMedia'
+import ImageControlContainer
+  from '@//:modules/content/HookedComponents/Media/components/ImageContainer/ImageControlContainer/ImageControlContainer'
 
 interface Props {
   query: PreloadedQuery<HomeQuery>
@@ -49,6 +52,11 @@ export default function Home (props: Props): JSX.Element {
           }}
           poster={<ImageMedia url='https://static.dollycdn.net/banners/roulette-banner.jpg' />}
           mp4Url='https://static.dollycdn.net/banners/roulette-preview.mp4'
+        />
+      </Box>
+      <Box w='100%' h={500}>
+        <ImageControlContainer
+          url='https://static.dollycdn.net/banners/roulette-banner.jpg'
         />
       </Box>
       <AccountInformationBanner query={queryData?.viewer} />

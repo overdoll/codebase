@@ -5,7 +5,7 @@ import { LinkTile } from '@//:modules/content/ContentSelection'
 import { UrlObject } from 'url'
 import { IconType } from '@//:types/components'
 import { ReactNode } from 'react'
-import NextImage from '@//:modules/content/HookedComponents/Media/components/ImageMedia/NextImage/NextImage'
+import NextImage from '@//:modules/content/HookedComponents/Media/components/ImageContainer/ImageWrapper/ImageMedia/NextImage/NextImage'
 
 interface Props {
   href: string | UrlObject

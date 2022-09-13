@@ -14,3 +14,11 @@ export class PlayerType extends Player {
 }
 
 export type OnPlayerInitType = (player: PlayerType) => void
+
+export interface ColorType {
+  rgb?: {
+    red: number
+    green: number
+    blue: number
+  }
+}

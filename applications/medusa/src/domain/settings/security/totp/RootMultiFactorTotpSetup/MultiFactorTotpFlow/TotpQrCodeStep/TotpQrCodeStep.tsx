@@ -1,7 +1,7 @@
 import { Box, Flex, Heading, Stack, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import CopyCodeToClipboard from '@//:modules/content/ContentHints/CopyCodeToClipboard/CopyCodeToClipboard'
-import NextImage from '@//:modules/content/HookedComponents/Media/components/ImageMedia/NextImage/NextImage'
+import NextImage from '@//:modules/content/HookedComponents/Media/components/ImageContainer/ImageWrapper/ImageMedia/NextImage/NextImage'
 
 interface Props {
   secret: string | undefined

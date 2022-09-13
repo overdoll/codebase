@@ -67,3 +67,5 @@ export { default as ControlFastForwardTen } from './mini-bold/actions/control-fa
 export { default as ControlGoBackwardTen } from './mini-bold/actions/control-go-backward-ten.svg'
 export { default as ControlSoundWave } from './mini-bold/actions/control-sound-wave.svg'
 export { default as ControlTimeSeek } from './mini-bold/actions/control-time-seek.svg'
+export { default as ControlExpand } from './mini-bold/actions/control-expand.svg'
+export { default as ControlContract } from './mini-bold/actions/control-contract.svg'

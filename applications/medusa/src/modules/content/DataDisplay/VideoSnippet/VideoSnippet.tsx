@@ -1,7 +1,7 @@
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
 import type { VideoSnippetFragment$key } from '@//:artifacts/VideoSnippetFragment.graphql'
-import NextImage from '../../HookedComponents/Media/components/ImageMedia/NextImage/NextImage'
+import NextImage from '../../HookedComponents/Media/components/ImageContainer/ImageWrapper/ImageMedia/NextImage/NextImage'
 import { ImageProps } from 'next/image'
 import { Box } from '@chakra-ui/react'
 import { useHydrate } from '../../../hydrate'
