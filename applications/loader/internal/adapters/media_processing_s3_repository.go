@@ -58,34 +58,48 @@ func (r MediaProcessingS3Repository) uploadResource(ctx context.Context, filePat
 	return nil
 }
 
-func (r MediaProcessingS3Repository) UploadMedia(ctx context.Context, move []*media_processing.Move, target *media.Media) error {
-	// go through each new file from the filesystem (contained by resource) and upload to s3
-	for _, moveTarget := range move {
-		if moveTarget.Directory() != "" {
-			files, err := ioutil.ReadDir(moveTarget.Directory())
-			if err != nil {
-				return err
-			}
-			for _, f := range files {
-				if err := r.uploadResource(ctx, moveTarget.Directory()+"/"+f.Name(), target.VideoPrefix()+"/"+f.Name()); err != nil {
-					return err
-				}
-			}
+func (r MediaProcessingS3Repository) processMove(ctx context.Context, moveTarget *media_processing.Move, target *media.Media) error {
 
-		} else {
-			var remoteUrlTarget string
+	if moveTarget.Directory() != "" {
 
-			if moveTarget.IsImage() {
-				remoteUrlTarget = target.ImagePrefix() + "/" + moveTarget.FileName()
-			} else {
-				remoteUrlTarget = target.VideoPrefix() + "/" + moveTarget.FileName()
-			}
+		defer os.RemoveAll(moveTarget.Directory())
 
-			if err := r.uploadResource(ctx, moveTarget.FileName(), remoteUrlTarget); err != nil {
+		files, err := ioutil.ReadDir(moveTarget.Directory())
+		if err != nil {
+			return err
+		}
+		for _, f := range files {
+			if err := r.uploadResource(ctx, moveTarget.Directory()+"/"+f.Name(), target.VideoPrefix()+"/"+f.Name()); err != nil {
 				return err
 			}
 		}
 
+		return nil
+	}
+
+	defer os.Remove(moveTarget.FileName())
+
+	var remoteUrlTarget string
+
+	if moveTarget.IsImage() {
+		remoteUrlTarget = target.ImagePrefix() + "/" + moveTarget.FileName()
+	} else {
+		remoteUrlTarget = target.VideoPrefix() + "/" + moveTarget.FileName()
+	}
+
+	if err := r.uploadResource(ctx, moveTarget.FileName(), remoteUrlTarget); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r MediaProcessingS3Repository) UploadMedia(ctx context.Context, move []*media_processing.Move, target *media.Media) error {
+	// go through each new file from the filesystem (contained by resource) and upload to s3
+	for _, moveTarget := range move {
+		if err := r.processMove(ctx, moveTarget, target); err != nil {
+			return err
+		}
 	}
 
 	return nil

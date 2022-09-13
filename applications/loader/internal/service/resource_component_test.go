@@ -226,7 +226,7 @@ func TestUploadMedia(t *testing.T) {
 	var finalMedia []*proto.Media
 
 	application.StingCallbackClient.On("UpdateMedia", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
-		finalMedia = append(finalMedia, args[1].(*proto.Media))
+		finalMedia = append(finalMedia, args[1].(*proto.UpdateMediaRequest).Media)
 	}).Return(&emptypb.Empty{}, nil)
 
 	res, err := grpcClient.ProcessMediaFromUploads(context.Background(), &loader.ProcessMediaFromUploadsRequest{

@@ -1,9 +1,11 @@
 package testing_tools
 
 import (
+	"context"
 	"fmt"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	client2 "go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/mocks"
 	"go.temporal.io/sdk/testsuite"
 	"testing"
@@ -32,10 +34,24 @@ func NewEagerMockWorkflowWithArgs(t *testing.T, client *mocks.Client, env *tests
 	m.onWorkflowExecution().Run(
 		func(args mock.Arguments) {
 			env.ExecuteWorkflow(method, args[3:]...)
-			require.True(t, env.IsWorkflowCompleted(), "workflow should be completed")
-			require.NoError(t, env.GetWorkflowError(), "no error executing the workflow")
 		},
-	).Return(&mocks.WorkflowRun{}, nil)
+	).
+		Return(func(context.Context, client2.StartWorkflowOptions, interface{}, ...interface{}) client2.WorkflowRun {
+
+			if !env.IsWorkflowCompleted() {
+				return nil
+			}
+
+			return &mocks.WorkflowRun{}
+		},
+			func(context.Context, client2.StartWorkflowOptions, interface{}, ...interface{}) error {
+
+				if !env.IsWorkflowCompleted() {
+					return env.GetWorkflowError()
+				}
+
+				return nil
+			})
 
 	return m
 }

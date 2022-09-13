@@ -95,11 +95,7 @@ func MarshalMediaToDatabase(media *Media) (*string, error) {
 		return nil, nil
 	}
 
-	marshalled, err := proto2.Marshal(media.proto)
-
-	if err != nil {
-		return nil, err
-	}
+	marshalled := proto2.CompactTextString(media.proto)
 
 	str := string(marshalled)
 
@@ -110,7 +106,7 @@ func UnmarshalMediaFromDatabase(ctx context.Context, media *string) (*Media, err
 
 	var res *proto.Media
 
-	if err := proto2.Unmarshal([]byte(*media), res); err != nil {
+	if err := proto2.UnmarshalText(*media, res); err != nil {
 		return nil, err
 	}
 
