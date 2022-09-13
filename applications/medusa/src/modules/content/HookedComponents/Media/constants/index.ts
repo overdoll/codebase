@@ -19,5 +19,6 @@ export const CONTROLS_CONTAINER = {
   bg: 'dimmers.300',
   borderRadius: 'full',
   backdropFilter: 'auto',
-  backdropBlur: '1px'
+  backdropBlur: '1px',
+  boxShadow: 'lg'
 }

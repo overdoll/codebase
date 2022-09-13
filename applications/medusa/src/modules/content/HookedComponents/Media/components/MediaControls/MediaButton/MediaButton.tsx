@@ -5,7 +5,7 @@ import { IconProps } from '../../../../../PageLayout/Flair/Icon/Icon'
 
 interface Props extends BoxProps {
   icon: IconType
-  iconProps?: IconProps
+  iconProps?: Omit<IconProps, 'icon'>
 }
 
 export default function MediaButton (props: Props): JSX.Element {

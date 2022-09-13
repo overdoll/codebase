@@ -3,8 +3,6 @@ import { useEffect, useState } from 'react'
 import { startOrPlayVideo } from '../../../../../support/controls'
 import MediaButton from '../../../../MediaControls/MediaButton/MediaButton'
 import { PlayerType } from '../../../../../types'
-import { Flex } from '@chakra-ui/react'
-import { CONTROLS_CONTAINER } from '../../../../../constants'
 
 interface Props {
   player: PlayerType
@@ -45,16 +43,17 @@ export default function VideoStart (props: Props): JSX.Element {
   }
 
   return (
-    <Flex {...CONTROLS_CONTAINER} align='center' justify='center' py={4} px={8}>
-      <MediaButton
-        w={10}
-        h={10}
-        onClick={(e) => {
-          e.stopPropagation()
-          startOrPlayVideo(player)
-        }}
-        icon={hasError ? ArrowButtonRefresh : ControlPlayButton}
-      />
-    </Flex>
+    <MediaButton
+      w={20}
+      h={20}
+      onClick={(e) => {
+        e.stopPropagation()
+        startOrPlayVideo(player)
+      }}
+      iconProps={{
+        dropShadow: '2xl'
+      }}
+      icon={hasError ? ArrowButtonRefresh : ControlPlayButton}
+    />
   )
 }

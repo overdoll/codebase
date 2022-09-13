@@ -1,6 +1,6 @@
 import { Flex } from '@chakra-ui/react'
 import { ReactNode } from 'react'
-import CoverImage from '../../ImageMedia/CoverImage/CoverImage'
+import CoverImage from '../../ImageContainer/ImageWrapper/CoverImage/CoverImage'
 
 interface Props {
   poster: ReactNode

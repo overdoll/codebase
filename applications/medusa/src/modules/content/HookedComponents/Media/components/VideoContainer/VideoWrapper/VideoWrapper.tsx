@@ -2,7 +2,7 @@ import DynamicVideo, { CreateVideoProps } from './DynamicVideo/DynamicVideo'
 import { useHydrate } from '../../../../../../hydrate'
 import { Flex, FlexProps } from '@chakra-ui/react'
 import { ReactNode, useEffect, useState } from 'react'
-import ContainImage from '../../ImageMedia/ContainImage/ContainImage'
+import ContainImage from '../../ImageContainer/ImageWrapper/ContainImage/ContainImage'
 import { OnPlayerInitType, PlayerType } from '../../../types'
 
 export interface VideoWrapperProps {
