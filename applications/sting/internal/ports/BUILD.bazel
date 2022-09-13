@@ -21,6 +21,8 @@ go_library(
         "//libraries/bootstrap",
         "//libraries/clients",
         "//libraries/graphql",
+        "//libraries/media",
+        "//libraries/media/proto:libraries_go_proto",
         "//libraries/principal",
         "//libraries/router",
         "@com_github_gin_gonic_gin//:gin",

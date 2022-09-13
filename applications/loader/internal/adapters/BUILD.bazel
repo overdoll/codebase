@@ -6,6 +6,7 @@ go_library(
         "callback_grpc.go",
         "event_temporal_repository.go",
         "media_processing_s3_repository.go",
+        "media_storage_cassandra_repository.go",
         "progress_cassandra_repository.go",
         "upload_s3_repository.go",
     ],

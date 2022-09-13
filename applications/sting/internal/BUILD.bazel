@@ -22,6 +22,7 @@ go_library(
         "//libraries/cache",
         "//libraries/config",
         "//libraries/database",
+        "//libraries/media/proto:libraries_go_proto",
         "@com_github_spf13_cobra//:cobra",
         "@org_golang_google_grpc//:go_default_library",
     ],

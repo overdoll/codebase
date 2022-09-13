@@ -15,6 +15,7 @@ go_library(
     deps = [
         "//applications/loader/internal/domain/event",
         "//applications/loader/internal/domain/media_processing",
+        "//applications/loader/internal/domain/media_storage",
         "//applications/loader/internal/domain/progress",
         "//applications/loader/internal/domain/upload",
         "//libraries/errors",

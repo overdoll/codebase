@@ -17,6 +17,7 @@ go_library(
         "//libraries/errors/domainerror",
         "//libraries/media",
         "//libraries/media/proto:libraries_go_proto",
+        "//libraries/uuid",
         "//libraries/zap_support/zap_adapters",
         "@com_github_disintegration_gift//:gift",
         "@com_github_edlinorg_prominentcolor//:prominentcolor",

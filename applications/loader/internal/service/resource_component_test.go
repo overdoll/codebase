@@ -381,76 +381,6 @@ func TestUploadMedia(t *testing.T) {
 	}
 
 	require.Equal(t, 6, processedAssertions, "expected to have checked 6 files")
-}
-
-func TestUploadMedia_GenerateImageFromMedia(t *testing.T) {
-	// create an item ID to associate the resources with
-	itemId := uuid.New().String()
-
-	tusClient := getTusClient(t)
-	// upload some files
-	imageFileId := uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_1.png")
-	videoFileId := uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_2.mp4")
-
-	grpcClient := getGrpcClient(t)
-
-	imageId := strings.Split(imageFileId, "+")[0]
-	videoId := strings.Split(videoFileId, "+")[0]
-
-	testing_tools.NewEagerMockWorkflowWithArgs(t, application.TemporalClient, getWorkflowEnvironment(), workflows.ProcessMedia, workflows.ProcessMediaInput{
-		Source: "STING",
-		SourceMedia: &proto.Media{
-			Id:               imageId,
-			IsUpload:         true,
-			OriginalFileName: "test_file_1.png",
-			Private:          true,
-			Link: &proto.MediaLink{
-				Id:   itemId,
-				Type: proto.MediaLinkType_POST_CONTENT,
-			},
-			State: &proto.MediaState{
-				Processed: false,
-				Failed:    false,
-			},
-			Version: proto.MediaVersion_ONE,
-		},
-	})
-
-	testing_tools.NewEagerMockWorkflowWithArgs(t, application.TemporalClient, getWorkflowEnvironment(), workflows.ProcessMedia, workflows.ProcessMediaInput{
-		Source: "STING",
-		SourceMedia: &proto.Media{
-			Id:               videoId,
-			IsUpload:         true,
-			OriginalFileName: "test_file_2.mp4",
-			Private:          true,
-			Link: &proto.MediaLink{
-				Id:   itemId,
-				Type: proto.MediaLinkType_POST_CONTENT,
-			},
-			State: &proto.MediaState{
-				Processed: false,
-				Failed:    false,
-			},
-			Version: proto.MediaVersion_ONE,
-		},
-	})
-
-	var finalMedia []*proto.Media
-
-	application.StingCallbackClient.On("UpdateMedia", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
-		finalMedia = append(finalMedia, args[1].(*proto.Media))
-	}).Return(&emptypb.Empty{}, nil)
-
-	_, err := grpcClient.ProcessMediaFromUploads(context.Background(), &loader.ProcessMediaFromUploadsRequest{
-		Link: &proto.MediaLink{
-			Id:   itemId,
-			Type: proto.MediaLinkType_POST_CONTENT,
-		},
-		Source:    proto.SOURCE_STING,
-		UploadIds: []string{imageFileId, videoFileId},
-	})
-
-	require.NoError(t, err, "no error creating new resources from uploads")
 
 	pixelate := 20
 
@@ -491,7 +421,7 @@ func TestUploadMedia_GenerateImageFromMedia(t *testing.T) {
 		}
 	}
 
-	var unmarshalledMedia []*media.Media
+	unmarshalledMedia = []*media.Media{}
 
 	for _, m := range finalMedia {
 		unmarshalledMedia = append(unmarshalledMedia, media.FromProto(m))

@@ -11,6 +11,7 @@ go_library(
     visibility = ["//applications/loader:__subpackages__"],
     deps = [
         "//applications/loader/internal/domain/event",
+        "//applications/loader/internal/domain/media_storage",
         "//applications/loader/internal/domain/upload",
         "//libraries/media",
         "//libraries/media/proto:libraries_go_proto",

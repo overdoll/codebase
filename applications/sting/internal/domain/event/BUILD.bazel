@@ -8,6 +8,7 @@ go_library(
     deps = [
         "//applications/sting/internal/domain/club",
         "//applications/sting/internal/domain/post",
+        "//libraries/media",
         "//libraries/principal",
     ],
 )

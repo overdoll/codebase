@@ -13,7 +13,6 @@ go_library(
     deps = [
         "//applications/loader/internal/app",
         "//applications/loader/internal/app/command",
-        "//applications/loader/internal/app/query",
         "//applications/loader/internal/app/workflows",
         "//applications/loader/internal/domain/media_processing",
         "//applications/loader/internal/ports/graphql",
@@ -22,6 +21,7 @@ go_library(
         "//libraries/bootstrap",
         "//libraries/clients",
         "//libraries/graphql",
+        "//libraries/media/proto:libraries_go_proto",
         "//libraries/router",
         "@com_github_gin_gonic_gin//:gin",
         "@com_github_spf13_cobra//:cobra",

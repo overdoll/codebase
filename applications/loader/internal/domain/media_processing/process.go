@@ -28,6 +28,7 @@ import (
 	"overdoll/libraries/zap_support/zap_adapters"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type ErrorMediaCallbackNotFound struct{}
@@ -232,6 +233,96 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		return nil, errors.Wrap(err, "failed to parse duration")
 	}
 
+	firstStream := videoStreamProbeResult.Streams[0]
+	isLandscape := firstStream.Width > firstStream.Height
+	isPortrait := firstStream.Width < firstStream.Height
+
+	thumbnailFileName := uuid.New().String()
+	var palettes []*proto.ColorPalette
+	var img image.Image
+
+	lastFrame := 5
+	foundFrame := false
+
+	// keep looking for frames that are not all black (we can successfully generate a preview
+	for start := time.Now(); time.Since(start) < time.Second*10; {
+
+		fileThumbnail, err := os.Create(thumbnailFileName)
+		if err != nil {
+			return nil, err
+		}
+
+		if err := ffmpeg_go.Input(file.Name(), defaultArgs).
+			Filter("select", ffmpeg_go.Args{fmt.Sprintf("gte(n,%d)", lastFrame)}).
+			Output("pipe:", ffmpeg_go.KwArgs{"vframes": 1, "format": "image2"}).
+			WithErrorOutput(ffmpegLogger).
+			WithOutput(fileThumbnail).
+			Run(); err != nil {
+			zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(ffmpegLogger.Output)))
+			return nil, err
+		}
+
+		palettes, img, err = createPreviewFromFile(fileThumbnail, false)
+
+		if err != nil {
+			// fully black image - we want to find a different one
+			if err.Error() == "Failed, no non-alpha pixels found (either fully transparent image, or the ColorBackgroundMask removed all pixels)" {
+				_ = os.Remove(fileThumbnail.Name())
+				lastFrame = lastFrame * 2
+				continue
+			}
+
+			return nil, err
+		}
+
+		_ = fileThumbnail.Close()
+		foundFrame = true
+
+		break
+	}
+
+	if !foundFrame {
+		return nil, errors.New("failed to find a frame thumbnail in time")
+	}
+
+	requiresResizing := false
+
+	if isPortrait {
+		if img.Bounds().Dx() > 1080 {
+			requiresResizing = true
+		}
+	} else {
+		if img.Bounds().Dy() > 1080 {
+			requiresResizing = true
+		}
+	}
+
+	// make sure to resize our thumbnail if needed (since we look at the source video for the thumbnail)
+	if requiresResizing {
+		_ = os.Remove(thumbnailFileName)
+
+		resizeWidth := 1920
+		resizeHeight := 1080
+
+		if isLandscape {
+			resizeWidth = 1080
+			resizeHeight = 1920
+		}
+
+		src := resize.Resize(uint(resizeWidth), uint(resizeHeight), img, resize.Lanczos3)
+
+		jpegFile, err := os.Create(thumbnailFileName)
+		if err != nil {
+			return nil, err
+		}
+
+		if err := jpeg.Encode(jpegFile, src, &jpeg.Options{Quality: 90}); err != nil {
+			return nil, errors.Wrap(err, "failed to encode jpeg")
+		}
+
+		_ = jpegFile.Close()
+	}
+
 	socket, err, done := createFFMPEGTempSocket(media.RawProto().Id, parsedDuration)
 
 	if err != nil {
@@ -269,13 +360,9 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		encodingArgs["ar"] = "48000"
 	}
 
-	input := ffmpeg_go.Input(file.Name(), defaultArgs).Split()
+	input := ffmpeg_go.Input(file.Name(), defaultAppArgs).Split()
 
 	var streams []*ffmpeg_go.Stream
-
-	firstStream := videoStreamProbeResult.Streams[0]
-	isLandscape := firstStream.Width > firstStream.Height
-	isPortrait := firstStream.Width < firstStream.Height
 
 	hasDefaultResolution := false
 	hasFullHd := false
@@ -337,7 +424,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 				//"bufsize":              "1200k",
 				//"maxrate":              "856k",
 				//"b:a":                  "96k",
-				"crf":                  "21",
+				"crf":                  "20",
 				"hls_segment_filename": fileName + "/segment/" + firstPrefix + "/360p_%03d.ts",
 			})),
 
@@ -347,7 +434,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 				//"bufsize":              "4200k",
 				//"maxrate":              "2996k",
 				//"b:a":                  "128k",
-				"crf":                  "21",
+				"crf":                  "20",
 				"hls_segment_filename": fileName + "/segment/" + ThirdPrefix + "/480p_%03d.ts",
 			})),
 
@@ -357,7 +444,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 				//"bufsize":              "4200k",
 				//"maxrate":              "2996k",
 				//"b:a":                  "128k",
-				"crf":                  "21",
+				"crf":                  "23",
 				"hls_segment_filename": fileName + "/segment/" + secondPrefix + "/720p_%03d.ts",
 			})),
 		)
@@ -374,10 +461,10 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		streams = append(streams,
 			// add 1080p stream
 			input.Get("4").Filter("scale", ffmpeg_go.Args{firstResolution}).Output(fileName+"/playlist/"+firstPrefix+"/1080p.m3u8", mergeArgs(encodingArgs, ffmpeg_go.KwArgs{
-				"b:v":                  "5000k",
-				"maxrate":              "5350k",
-				"bufsize":              "7500k",
-				"b:a":                  "192k",
+				//"b:v":                  "5000k",
+				//"maxrate":              "5350k",
+				//"bufsize":              "7500k",
+				//"b:a":                  "192k",
 				"crf":                  "23",
 				"hls_segment_filename": fileName + "/segment/" + firstPrefix + "/1080p_%03d.ts",
 			})),
@@ -411,93 +498,13 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		}),
 	)
 
-	if err := ffmpeg_go.Input(file.Name(), defaultAppArgs).
-		OverwriteOutput(ffmpeg_go.MergeOutputs(streams...)).
+	if err := ffmpeg_go.MergeOutputs(streams...).
+		OverWriteOutput().
 		WithErrorOutput(ffmpegLogger).
 		GlobalArgs("-progress", "unix://"+socket).
 		Run(); err != nil {
 		zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(ffmpegLogger.Output)))
 		return nil, err
-	}
-
-	thumbnailFileName := uuid.New().String()
-	var palettes []*proto.ColorPalette
-	var img image.Image
-
-	lastFrame := 5
-
-	// keep looking for frames that are not all black (we can successfully generate a preview
-	for true {
-
-		fileThumbnail, err := os.Create(thumbnailFileName)
-		if err != nil {
-			return nil, err
-		}
-
-		if err := ffmpeg_go.Input(file.Name(), defaultArgs).
-			Filter("select", ffmpeg_go.Args{fmt.Sprintf("gte(n,%d)", lastFrame)}).
-			Output("pipe:", ffmpeg_go.KwArgs{"vframes": 1, "format": "image2"}).
-			WithErrorOutput(ffmpegLogger).
-			WithOutput(fileThumbnail).
-			Run(); err != nil {
-			zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(ffmpegLogger.Output)))
-			return nil, err
-		}
-
-		palettes, img, err = createPreviewFromFile(fileThumbnail, false)
-
-		if err != nil {
-			// fully black image - we want to find a different one
-			if err.Error() == "Failed, no non-alpha pixels found (either fully transparent image, or the ColorBackgroundMask removed all pixels)" {
-				_ = os.Remove(fileThumbnail.Name())
-				lastFrame = lastFrame * 2
-				continue
-			}
-
-			return nil, err
-		}
-
-		_ = fileThumbnail.Close()
-
-		break
-	}
-
-	requiresResizing := false
-
-	if isPortrait {
-		if img.Bounds().Dx() > 1080 {
-			requiresResizing = true
-		}
-	} else {
-		if img.Bounds().Dy() > 1080 {
-			requiresResizing = true
-		}
-	}
-
-	// make sure to resize our thumbnail if needed (since we look at the source video for the thumbnail)
-	if requiresResizing {
-		_ = os.Remove(thumbnailFileName)
-
-		resizeWidth := 1920
-		resizeHeight := 1080
-
-		if isLandscape {
-			resizeWidth = 1080
-			resizeHeight = 1920
-		}
-
-		src := resize.Resize(uint(resizeWidth), uint(resizeHeight), img, resize.Lanczos3)
-
-		jpegFile, err := os.Create(thumbnailFileName)
-		if err != nil {
-			return nil, err
-		}
-
-		if err := jpeg.Encode(jpegFile, src, &jpeg.Options{Quality: 90}); err != nil {
-			return nil, errors.Wrap(err, "failed to encode jpeg")
-		}
-
-		_ = jpegFile.Close()
 	}
 
 	str, err = ffmpeg_go.Probe(newVideoFileName, defaultArgs)
