@@ -7,12 +7,13 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
-	"io/ioutil"
+	"io/fs"
 	"net/http"
 	"os"
 	"overdoll/applications/loader/internal/domain/media_processing"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/media"
+	"path/filepath"
 )
 
 type MediaProcessingS3Repository struct {
@@ -64,14 +65,18 @@ func (r MediaProcessingS3Repository) processMove(ctx context.Context, moveTarget
 
 		defer os.RemoveAll(moveTarget.Directory())
 
-		files, err := ioutil.ReadDir(moveTarget.Directory())
-		if err != nil {
-			return err
-		}
-		for _, f := range files {
-			if err := r.uploadResource(ctx, moveTarget.Directory()+"/"+f.Name(), target.VideoPrefix()+"/"+f.Name()); err != nil {
+		if err := filepath.Walk(moveTarget.Directory(), func(path string, info fs.FileInfo, err error) error {
+			// ignore directories
+			if info.IsDir() {
+				return nil
+			}
+			if err := r.uploadResource(ctx, path, target.VideoPrefix()+"/"+path); err != nil {
 				return err
 			}
+
+			return nil
+		}); err != nil {
+			return err
 		}
 
 		return nil

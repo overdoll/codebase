@@ -148,8 +148,7 @@ func TestUploadMedia(t *testing.T) {
 	didCheckResourceFirst := false
 
 	videoEnv.SetOnActivityCompletedListener(func(activityInfo *activity.Info, details converter.EncodedValue, err error) {
-
-		if activityInfo.ActivityType.Name == "ProcessMedia" {
+		if activityInfo.ActivityType.Name == "ProcessMediaFromUpload" {
 			result := queryMediaProgress(t, itemId, videoId)
 
 			if result.Progress == 100 {
@@ -159,7 +158,6 @@ func TestUploadMedia(t *testing.T) {
 				require.Equal(t, types.MediaProgressStateStarted, result.State, "should have the correct state")
 				// we don't know what the progress will be - sometimes it can reach 100 but sometimes its 99, or 80, so we make sure it's just greater than 0
 				require.GreaterOrEqual(t, result.Progress, float64(0), "should have the correct progress")
-				didCheckResourceFirst = true
 			}
 
 			didCheckResourceFirst = true
