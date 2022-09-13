@@ -29,8 +29,10 @@ func (h *Activities) GenerateImageFromMedia(ctx context.Context, input GenerateI
 		return nil, err
 	}
 
-	if err := h.sr.StoreMedia(ctx, newMedia); err != nil {
-		return nil, err
+	if !newMedia.IsFailed() {
+		if err := h.sr.StoreMedia(ctx, newMedia); err != nil {
+			return nil, err
+		}
 	}
 
 	if err := h.callback.SendCallback(ctx, input.Source, newMedia.RawProto()); err != nil {

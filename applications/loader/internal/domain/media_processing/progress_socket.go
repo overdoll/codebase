@@ -23,17 +23,25 @@ func ListenProgressSocket(id string, cb func(progress int64)) (func(), error) {
 
 	// use a 500ms ticker to rate limit
 	ticker := time.NewTicker(5000 * time.Millisecond)
+	stop := make(chan bool, 1)
 
 	go func() {
 		var lastProgress int64
+		clearProgress := false
 		for {
 			select {
 			case progressValue := <-progressChannel:
 				lastProgress = progressValue
+				clearProgress = true
 				continue
 			case _ = <-ticker.C:
-				cb(lastProgress)
+				if clearProgress {
+					cb(lastProgress)
+					clearProgress = false
+				}
 				continue
+			case <-stop:
+				return
 			default:
 				continue
 			}
@@ -41,6 +49,7 @@ func ListenProgressSocket(id string, cb func(progress int64)) (func(), error) {
 	}()
 
 	return func() {
+		stop <- true
 		close(progressChannel)
 		delete(progressSocketChannels, id)
 		ticker.Stop()

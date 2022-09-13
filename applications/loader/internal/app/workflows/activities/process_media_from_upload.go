@@ -77,8 +77,10 @@ func (h *Activities) ProcessMediaFromUpload(ctx context.Context, input ProcessMe
 		return nil, err
 	}
 
-	if err := h.sr.StoreMedia(ctx, newMedia); err != nil {
-		return nil, err
+	if !newMedia.IsFailed() {
+		if err := h.sr.StoreMedia(ctx, newMedia); err != nil {
+			return nil, err
+		}
 	}
 
 	if err := h.callback.SendCallback(ctx, input.Source, input.Media); err != nil {

@@ -543,7 +543,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 
 	// update the source image data - this is used for the thumbnail
 	media.RawProto().ImageData = &proto.ImageData{
-		Id:       fileName,
+		Id:       thumbnailFileName,
 		MimeType: proto.MediaMimeType_ImageJpeg,
 		Width:    int64(probeResult.Streams[0].Width),
 		Height:   int64(probeResult.Streams[0].Height),
