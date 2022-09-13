@@ -4,19 +4,21 @@ import { useRef } from 'react'
 import { ImageMediaCopy, SetCoveredProps } from '../ImageControlContainer'
 import ImageFooterControls from './ImageFooterControls/ImageFooterControls'
 import { ColorType } from '../../../../types'
+import { ControlContainCoverImageProps } from '../../ImageWrapper/ControlCoverContainImage/ControlCoverContainImage'
 
 export interface ImageControlsOpen {
   isOpen: boolean
 }
 
-interface Props extends ImageMediaCopy, ColorType, SetCoveredProps {
+interface Props extends ImageMediaCopy, ColorType, SetCoveredProps, ControlContainCoverImageProps {
 }
 
 export default function ImageControls (props: Props): JSX.Element {
   const {
     imageMedia,
     rgb,
-    setCovered
+    setCovered,
+    isCovered
   } = props
 
   const ref = useRef(null)
@@ -56,7 +58,7 @@ export default function ImageControls (props: Props): JSX.Element {
         {/* <GridItem area='header' /> */}
         {/* <GridItem area='center' /> */}
         <GridItem area='footer'>
-          <ImageFooterControls setCovered={setCovered} rgb={rgb} imageMedia={imageMedia} isOpen={isOpen} />
+          <ImageFooterControls isCovered={isCovered} setCovered={setCovered} rgb={rgb} imageMedia={imageMedia} isOpen={isOpen} />
         </GridItem>
       </Grid>
     </Flex>

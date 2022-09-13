@@ -3,8 +3,9 @@ import { ImageMediaCopy, SetCoveredProps } from '../../ImageControlContainer'
 import { ImageControlsOpen } from '../ImageControls'
 import ImageAdvancedControls from './ImageAdvancedControls/ImageAdvancedControls'
 import { ColorType } from '../../../../../types'
+import { ControlContainCoverImageProps } from '../../../ImageWrapper/ControlCoverContainImage/ControlCoverContainImage'
 
-interface Props extends ImageMediaCopy, ImageControlsOpen, ColorType, SetCoveredProps {
+interface Props extends ImageMediaCopy, ImageControlsOpen, ColorType, SetCoveredProps, ControlContainCoverImageProps {
 }
 
 export default function ImageFooterControls (props: Props): JSX.Element {
@@ -12,7 +13,8 @@ export default function ImageFooterControls (props: Props): JSX.Element {
     imageMedia,
     isOpen,
     rgb,
-    setCovered
+    setCovered,
+    isCovered
   } = props
 
   return (
@@ -29,7 +31,7 @@ export default function ImageFooterControls (props: Props): JSX.Element {
           pointerEvents: isOpen ? 'auto' : 'none'
         }}
       >
-        <ImageAdvancedControls setCovered={setCovered} rgb={rgb} imageMedia={imageMedia} />
+        <ImageAdvancedControls isCovered={isCovered} setCovered={setCovered} rgb={rgb} imageMedia={imageMedia} />
       </Fade>
     </Flex>
   )

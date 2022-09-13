@@ -4,8 +4,11 @@ import { ImageMediaCopy, SetCoveredProps } from '../../../ImageControlContainer'
 import ImageExpandModal from '../Controls/ImageExpandModal/ImageExpandModal'
 import { ColorType } from '../../../../../../types'
 import ImageExpandCover from '../Controls/ImageExpandCover/ImageExpandCover'
+import {
+  ControlContainCoverImageProps
+} from '../../../../ImageWrapper/ControlCoverContainImage/ControlCoverContainImage'
 
-interface Props extends ImageMediaCopy, ColorType, SetCoveredProps {
+interface Props extends ImageMediaCopy, ColorType, SetCoveredProps, ControlContainCoverImageProps {
 
 }
 
@@ -13,7 +16,8 @@ export default function ImageAdvancedControls (props: Props): JSX.Element {
   const {
     imageMedia,
     rgb,
-    setCovered
+    setCovered,
+    isCovered
   } = props
 
   return (
@@ -26,7 +30,7 @@ export default function ImageAdvancedControls (props: Props): JSX.Element {
       justify='center'
       spacing={4}
     >
-      <ImageExpandCover setCovered={setCovered} />
+      <ImageExpandCover isCovered={isCovered} setCovered={setCovered} />
       <ImageExpandModal rgb={rgb} imageMedia={imageMedia} />
     </HStack>
   )
