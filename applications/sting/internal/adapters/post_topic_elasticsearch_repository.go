@@ -44,10 +44,16 @@ func marshalTopicToDocument(topic *post.Topic) (*topicDocument, error) {
 		return nil, err
 	}
 
+	var bannerResource string
+
+	if topic.BannerMedia() != nil {
+		bannerResource = topic.BannerMedia().LegacyResource()
+	}
+
 	return &topicDocument{
 		Id:             topic.ID(),
 		Slug:           topic.Slug(),
-		BannerResource: topic.BannerMedia().LegacyResource(),
+		BannerResource: bannerResource,
 		BannerMedia:    marshalledBanner,
 		Title:          localization.MarshalTranslationToDatabase(topic.Title()),
 		Description:    localization.MarshalTranslationToDatabase(topic.Description()),

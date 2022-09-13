@@ -9,7 +9,7 @@ import (
 	"overdoll/libraries/bootstrap"
 	graphql2 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/resource/proto"
+	"overdoll/libraries/media/proto"
 	"overdoll/libraries/uuid"
 	"strings"
 	"testing"
@@ -23,9 +23,13 @@ type CategoryModified struct {
 	Title             string
 	Reference         string
 	AlternativeTitles []*graphql2.Translation
-	Thumbnail         *graphql2.Resource
-	Banner            *graphql2.Resource
-	Topic             *TopicModified
+	ThumbnailMedia    *struct {
+		Item *graphql2.ImageMedia
+	} `graphql:"... on ImageMedia"`
+	BannerMedia *struct {
+		Item *graphql2.ImageMedia
+	} `graphql:"... on ImageMedia"`
+	Topic *TopicModified
 }
 
 type SearchCategories struct {
@@ -221,23 +225,24 @@ func TestCreateCategory_update_and_search(t *testing.T) {
 		},
 	})
 
-	require.False(t, updateCategoryThumbnail.UpdateCategoryThumbnail.Category.Thumbnail.Processed, "not yet processed")
+	require.Nil(t, updateCategoryThumbnail.UpdateCategoryThumbnail.Category.ThumbnailMedia, "not yet processed")
 
 	require.NoError(t, err, "no error updating category thumbnail")
 
 	grpcClient := getGrpcCallbackClient(t)
 
-	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
-		Id:          categoryThumbnailId,
-		ItemId:      category.Reference,
-		Processed:   true,
-		Type:        proto.ResourceType_IMAGE,
-		ProcessedId: uuid.New().String(),
-		Private:     false,
-		Width:       100,
-		Height:      100,
-		Token:       "CATEGORY",
-	}}})
+	_, err = grpcClient.UpdateMedia(context.Background(), &proto.UpdateMediaRequest{Media: &proto.Media{
+		Id: categoryThumbnailId,
+		Link: &proto.MediaLink{
+			Id:   category.Reference,
+			Type: proto.MediaLinkType_CATEGORY_THUMBNAIL,
+		},
+		ImageData: &proto.ImageData{Id: uuid.New().String()},
+		State: &proto.MediaState{
+			Processed: true,
+			Failed:    false,
+		},
+	}})
 
 	require.NoError(t, err, "no error updating resource")
 
@@ -245,9 +250,8 @@ func TestCreateCategory_update_and_search(t *testing.T) {
 
 	require.NotNil(t, category, "found category")
 	require.Equal(t, fake.Title, category.Title, "title has been updated")
-	require.NotNil(t, category.Thumbnail, "has a thumbnail")
-	require.Nil(t, category.Banner, "has no banner")
-	require.True(t, category.Thumbnail.Processed, "thumbnail is processed")
+	require.NotNil(t, category.ThumbnailMedia, "has a thumbnail")
+	require.Nil(t, category.BannerMedia, "has no banner")
 
 	env := getWorkflowEnvironment()
 
@@ -258,23 +262,24 @@ func TestCreateCategory_update_and_search(t *testing.T) {
 
 	cat := getCategoryFromAdapter(t, category.Reference)
 
-	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
-		Id:          cat.BannerResource().ID(),
-		ItemId:      category.Reference,
-		Processed:   true,
-		Type:        proto.ResourceType_IMAGE,
-		ProcessedId: uuid.New().String(),
-		Private:     false,
-		Width:       100,
-		Height:      100,
-		Token:       "CATEGORY_BANNER",
-	}}})
+	_, err = grpcClient.UpdateMedia(context.Background(), &proto.UpdateMediaRequest{Media: &proto.Media{
+		Id: cat.BannerMedia().ID(),
+		Link: &proto.MediaLink{
+			Id:   category.Reference,
+			Type: proto.MediaLinkType_CATEGORY_BANNER,
+		},
+		ImageData: &proto.ImageData{Id: uuid.New().String()},
+		State: &proto.MediaState{
+			Processed: true,
+			Failed:    false,
+		},
+	}})
 
 	require.NoError(t, err, "no error updating category banner")
 
 	category = getCategoryBySlug(t, client, currentCategorySlug)
 	require.NotNil(t, category, "expected to have found category")
-	require.NotNil(t, category.Banner, "has a banner")
+	require.NotNil(t, category.BannerMedia, "has a banner")
 	require.Nil(t, category.Topic, "no topic")
 
 	var updateCategoryTopic UpdateCategoryTopic

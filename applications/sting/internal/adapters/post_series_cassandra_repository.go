@@ -80,14 +80,26 @@ func marshalSeriesToDatabase(pending *post.Series) (*series, error) {
 		return nil, err
 	}
 
+	var bannerResource string
+
+	if pending.BannerMedia() != nil {
+		bannerResource = pending.BannerMedia().LegacyResource()
+	}
+
+	var thumbnailResource string
+
+	if pending.ThumbnailMedia() != nil {
+		thumbnailResource = pending.ThumbnailMedia().LegacyResource()
+	}
+
 	return &series{
 		Id:                pending.ID(),
 		Slug:              pending.Slug(),
 		Title:             localization.MarshalTranslationToDatabase(pending.Title()),
 		ThumbnailMedia:    marshalledThumbnail,
 		BannerMedia:       marshalledBanner,
-		BannerResource:    pending.BannerMedia().LegacyResource(),
-		ThumbnailResource: pending.ThumbnailMedia().LegacyResource(),
+		BannerResource:    bannerResource,
+		ThumbnailResource: thumbnailResource,
 		TotalLikes:        pending.TotalLikes(),
 		TotalPosts:        pending.TotalPosts(),
 		CreatedAt:         pending.CreatedAt(),

@@ -87,13 +87,25 @@ func marshalAudienceToDatabase(pending *post.Audience) (*audience, error) {
 		return nil, err
 	}
 
+	var bannerResource string
+
+	if pending.BannerMedia() != nil {
+		bannerResource = pending.BannerMedia().LegacyResource()
+	}
+
+	var thumbnailResource string
+
+	if pending.ThumbnailMedia() != nil {
+		thumbnailResource = pending.ThumbnailMedia().LegacyResource()
+	}
+
 	return &audience{
 		Id:                pending.ID(),
 		Slug:              pending.Slug(),
 		Standard:          standard,
 		Title:             localization.MarshalTranslationToDatabase(pending.Title()),
-		ThumbnailResource: pending.ThumbnailMedia().LegacyResource(),
-		BannerResource:    pending.BannerMedia().LegacyResource(),
+		ThumbnailResource: thumbnailResource,
+		BannerResource:    bannerResource,
 		ThumbnailMedia:    marshalledThumbnail,
 		BannerMedia:       marshalledBanner,
 		TotalLikes:        pending.TotalLikes(),

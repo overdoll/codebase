@@ -10,7 +10,7 @@ import (
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	sting "overdoll/applications/sting/proto"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/resource/proto"
+	"overdoll/libraries/media/proto"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
@@ -425,34 +425,35 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 							break
 						}
 
-						_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
-							Id:          id,
-							ItemId:      newPostReference,
-							Type:        proto.ResourceType_IMAGE,
-							Processed:   true,
-							ProcessedId: uuid.New().String(),
-							MimeTypes:   []string{"image/png"},
-							Private:     true,
-							Width:       100,
-							Height:      100,
-							Token:       "POST",
-						}}})
+						_, err = grpcClient.UpdateMedia(context.Background(), &proto.UpdateMediaRequest{Media: &proto.Media{
+							Id: id,
+							Link: &proto.MediaLink{
+								Id:   newPostReference,
+								Type: proto.MediaLinkType_POST_CONTENT,
+							},
+							ImageData: &proto.ImageData{Id: uuid.New().String()},
+							State: &proto.MediaState{
+								Processed: true,
+								Failed:    false,
+							},
+						}})
+
 						require.NoError(t, err, "no error updating resources")
 					}
 
 					env.RegisterDelayedCallback(func() {
 						pst := getPostFromAdapter(t, postId)
-						_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{
-							{
-								Id:          pst.Content()[1].MediaHidden().ID(),
-								ItemId:      postId,
-								Processed:   true,
-								Type:        proto.ResourceType_IMAGE,
-								ProcessedId: uuid.New().String(),
-								Private:     false,
-								Width:       100,
-								Height:      100,
-								Token:       "POST_PRIVATE_CONTENT",
+
+						_, err = grpcClient.UpdateMedia(context.Background(), &proto.UpdateMediaRequest{Media: &proto.Media{
+							Id: pst.Content()[1].MediaHidden().ID(),
+							Link: &proto.MediaLink{
+								Id:   postId,
+								Type: proto.MediaLinkType_POST_CONTENT,
+							},
+							ImageData: &proto.ImageData{Id: uuid.New().String()},
+							State: &proto.MediaState{
+								Processed: true,
+								Failed:    false,
 							},
 						}})
 
@@ -673,7 +674,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	clubViewer := getClub(t, client, clb.Slug())
 	require.True(t, clubViewer.Club.CanSupport, "should be able to support now that the club has created a new post")
 	require.NotNil(t, clubViewer.Club.NextSupporterPostTime, "should have a next supporter post time now")
-	require.NotNil(t, clubViewer.Club.Banner, "banner should now be present after creating a post")
+	require.NotNil(t, clubViewer.Club.BannerMedia, "banner should now be present after creating a post")
 	require.True(t, clubViewer.Club.CanCreateSupporterOnlyPosts, "should be able to create supporter only posts")
 
 	var disableSupporterOnlyPosts DisableClubSupporterOnlyPosts

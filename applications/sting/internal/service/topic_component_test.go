@@ -8,7 +8,7 @@ import (
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	graphql2 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/resource/proto"
+	"overdoll/libraries/media/proto"
 	"overdoll/libraries/uuid"
 	"strings"
 	"testing"
@@ -20,7 +20,9 @@ type TopicModified struct {
 	Description string
 	Reference   string
 	Weight      int
-	Banner      *graphql2.Resource
+	BannerMedia *struct {
+		Item *graphql2.ImageMedia
+	} `graphql:"... on ImageMedia"`
 }
 
 type SearchTopics struct {
@@ -178,23 +180,24 @@ func TestCreatTopic_update_and_search(t *testing.T) {
 		},
 	})
 
-	require.False(t, updateTopicBanner.UpdateTopicBanner.Topic.Banner.Processed, "not yet processed")
+	require.Nil(t, updateTopicBanner.UpdateTopicBanner.Topic.BannerMedia, "not yet processed")
 
 	require.NoError(t, err, "no error updating topic thumbnail")
 
 	grpcClient := getGrpcCallbackClient(t)
 
-	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
-		Id:          topicBannerId,
-		ItemId:      topic.Reference,
-		Processed:   true,
-		Type:        proto.ResourceType_IMAGE,
-		ProcessedId: uuid.New().String(),
-		Private:     false,
-		Width:       100,
-		Height:      100,
-		Token:       "TOPIC_BANNER",
-	}}})
+	_, err = grpcClient.UpdateMedia(context.Background(), &proto.UpdateMediaRequest{Media: &proto.Media{
+		Id: topicBannerId,
+		Link: &proto.MediaLink{
+			Id:   topic.Reference,
+			Type: proto.MediaLinkType_TOPIC_BANNER,
+		},
+		ImageData: &proto.ImageData{Id: uuid.New().String()},
+		State: &proto.MediaState{
+			Processed: true,
+			Failed:    false,
+		},
+	}})
 
 	require.NoError(t, err, "no error updating resource")
 
@@ -203,7 +206,7 @@ func TestCreatTopic_update_and_search(t *testing.T) {
 	require.NotNil(t, topic, "found topic")
 	require.Equal(t, fake.Title, topic.Title, "title has been updated")
 	require.Equal(t, fake.Description, topic.Description, "description has been updated")
-	require.True(t, topic.Banner.Processed, "banner is now processed")
+	require.NotNil(t, topic.BannerMedia, "banner is now processed")
 	require.Equal(t, newWeight, topic.Weight, "topic weight is updated")
 }
 

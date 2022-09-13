@@ -54,12 +54,24 @@ func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 		return nil, err
 	}
 
+	var bannerResource string
+
+	if cat.BannerMedia() != nil {
+		bannerResource = cat.BannerMedia().LegacyResource()
+	}
+
+	var thumbnailResource string
+
+	if cat.ThumbnailMedia() != nil {
+		thumbnailResource = cat.ThumbnailMedia().LegacyResource()
+	}
+
 	return &categoryDocument{
 		Id:                cat.ID(),
 		TopicId:           cat.TopicId(),
 		Slug:              cat.Slug(),
-		ThumbnailResource: cat.ThumbnailMedia().LegacyResource(),
-		BannerResource:    cat.BannerMedia().LegacyResource(),
+		ThumbnailResource: thumbnailResource,
+		BannerResource:    bannerResource,
 		ThumbnailMedia:    marshalledThumbnail,
 		BannerMedia:       marshalledBanner,
 		AlternativeTitles: localization.MarshalLocalizedDataTagsToDatabase(cat.AlternativeTitles()),

@@ -100,6 +100,18 @@ func marshalCategoryToDatabase(pending *post.Category) (*category, error) {
 		alternativeTitles = append(alternativeTitles, string(res))
 	}
 
+	var bannerResource string
+
+	if pending.BannerMedia() != nil {
+		bannerResource = pending.BannerMedia().LegacyResource()
+	}
+
+	var thumbnailResource string
+
+	if pending.ThumbnailMedia() != nil {
+		thumbnailResource = pending.ThumbnailMedia().LegacyResource()
+	}
+
 	return &category{
 		Id:                pending.ID(),
 		Slug:              pending.Slug(),
@@ -108,8 +120,8 @@ func marshalCategoryToDatabase(pending *post.Category) (*category, error) {
 		AlternativeTitles: alternativeTitles,
 		ThumbnailMedia:    marshalledThumbnail,
 		BannerMedia:       marshalledBanner,
-		ThumbnailResource: pending.ThumbnailMedia().LegacyResource(),
-		BannerResource:    pending.BannerMedia().LegacyResource(),
+		ThumbnailResource: thumbnailResource,
+		BannerResource:    bannerResource,
 		TotalLikes:        pending.TotalLikes(),
 		TotalPosts:        pending.TotalPosts(),
 		CreatedAt:         pending.CreatedAt(),

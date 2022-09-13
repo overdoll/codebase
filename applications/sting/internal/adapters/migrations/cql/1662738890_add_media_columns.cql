@@ -14,7 +14,7 @@ ALTER table audience
     add (thumbnail_media text, banner_media text);
 
 ALTER table topics
-    add (thumbnail_media text, banner_media text);
+    add (banner_media text);
 
 ALTER table posts
     add (content_media map<text, text>);

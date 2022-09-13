@@ -61,12 +61,24 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 		return nil, err
 	}
 
+	var bannerResource string
+
+	if char.BannerMedia() != nil {
+		bannerResource = char.BannerMedia().LegacyResource()
+	}
+
+	var thumbnailResource string
+
+	if char.ThumbnailMedia() != nil {
+		thumbnailResource = char.ThumbnailMedia().LegacyResource()
+	}
+
 	return &characterDocument{
 		Id:                char.ID(),
 		ThumbnailMedia:    marshalledThumbnail,
 		BannerMedia:       marshalledBanner,
-		BannerResource:    char.BannerMedia().LegacyResource(),
-		ThumbnailResource: char.ThumbnailMedia().LegacyResource(),
+		BannerResource:    bannerResource,
+		ThumbnailResource: thumbnailResource,
 		Name:              localization.MarshalTranslationToDatabase(char.Name()),
 		ClubId:            char.ClubId(),
 		Slug:              char.Slug(),
@@ -120,8 +132,6 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx co
 			chr.Series.Id,
 			chr.Series.Slug,
 			chr.Series.Title,
-			chr.Series.ThumbnailResource,
-			chr.Series.BannerResource,
 			unmarshalledSeriesThumbnail,
 			unmarshalledSeriesBanner,
 			chr.Series.TotalLikes,

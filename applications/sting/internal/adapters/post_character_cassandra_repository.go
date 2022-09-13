@@ -88,14 +88,26 @@ func marshalCharacterToDatabase(pending *post.Character) (*character, error) {
 		return nil, err
 	}
 
+	var bannerResource string
+
+	if pending.BannerMedia() != nil {
+		bannerResource = pending.BannerMedia().LegacyResource()
+	}
+
+	var thumbnailResource string
+
+	if pending.ThumbnailMedia() != nil {
+		thumbnailResource = pending.ThumbnailMedia().LegacyResource()
+	}
+
 	return &character{
 		Id:                pending.ID(),
 		Slug:              pending.Slug(),
 		Name:              localization.MarshalTranslationToDatabase(pending.Name()),
 		ThumbnailMedia:    marshalledThumbnail,
 		BannerMedia:       marshalledBanner,
-		BannerResource:    pending.BannerMedia().LegacyResource(),
-		ThumbnailResource: pending.ThumbnailMedia().LegacyResource(),
+		BannerResource:    bannerResource,
+		ThumbnailResource: thumbnailResource,
 		TotalLikes:        pending.TotalLikes(),
 		TotalPosts:        pending.TotalPosts(),
 		SeriesId:          pending.SeriesId(),
@@ -139,8 +151,6 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterFromDatabase(ct
 			serial.Id,
 			serial.Slug,
 			serial.Title,
-			serial.ThumbnailResource,
-			serial.BannerResource,
 			unmarshalledSeriesThumbnail,
 			unmarshalledSeriesBanner,
 			serial.TotalLikes,

@@ -174,13 +174,25 @@ func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
 		return nil, err
 	}
 
+	var bannerResource string
+
+	if cl.BannerMedia() != nil {
+		bannerResource = cl.BannerMedia().LegacyResource()
+	}
+
+	var thumbnailResource string
+
+	if cl.ThumbnailMedia() != nil {
+		thumbnailResource = cl.ThumbnailMedia().LegacyResource()
+	}
+
 	return &clubs{
 		Id:                          cl.ID(),
 		Slug:                        cl.Slug(),
 		SlugAliases:                 cl.SlugAliases(),
 		Name:                        localization.MarshalTranslationToDatabase(cl.Name()),
-		ThumbnailResource:           cl.ThumbnailMedia().LegacyResource(),
-		BannerResource:              cl.BannerMedia().LegacyResource(),
+		ThumbnailResource:           thumbnailResource,
+		BannerResource:              bannerResource,
 		ThumbnailMedia:              marshalledThumbnail,
 		BannerMedia:                 marshalledBanner,
 		SupporterOnlyPostsDisabled:  cl.SupporterOnlyPostsDisabled(),
@@ -208,13 +220,13 @@ func (r ClubCassandraElasticsearchRepository) unmarshalClubFromDatabase(ctx cont
 	unmarshalled, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, b.ThumbnailResource, b.ThumbnailMedia)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to unmarshal media from club")
 	}
 
 	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, b.BannerResource, b.BannerMedia)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to unmarshal media from club")
 	}
 
 	return club.UnmarshalClubFromDatabase(
@@ -222,8 +234,6 @@ func (r ClubCassandraElasticsearchRepository) unmarshalClubFromDatabase(ctx cont
 		b.Slug,
 		b.SlugAliases,
 		b.Name,
-		b.ThumbnailResource,
-		b.BannerResource,
 		unmarshalled,
 		unmarshalledBanner,
 		b.MembersCount,

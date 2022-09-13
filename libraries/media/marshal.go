@@ -4,8 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	proto2 "github.com/golang/protobuf/proto"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/media/proto"
 	"strconv"
+	"strings"
 )
 
 type serializedResource struct {
@@ -28,10 +30,14 @@ type serializedResource struct {
 
 func unmarshalLegacyResourceFromDatabase(ctx context.Context, resource string) (*Media, error) {
 
+	if resource == "" {
+		return nil, nil
+	}
+
 	var re serializedResource
 
 	if err := json.Unmarshal([]byte(resource), &re); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to unmarshal legacy resource")
 	}
 
 	var videoData *proto.VideoData
@@ -56,10 +62,21 @@ func unmarshalLegacyResourceFromDatabase(ctx context.Context, resource string) (
 	}
 
 	if re.Processed {
-		values, err := strconv.ParseUint(re.Preview, 16, 32)
+		var palette []*proto.ColorPalette
 
-		if err != nil {
-			return nil, err
+		if re.Preview != "" {
+			values, err := strconv.ParseUint(strings.Replace(re.Preview, "#", "", 1), 16, 32)
+
+			if err != nil {
+				return nil, err
+			}
+
+			palette = append(palette, &proto.ColorPalette{
+				Percent: 100,
+				Red:     int32(uint8(values >> 16)),
+				Green:   int32(uint8((values >> 8) & 0xFF)),
+				Blue:    int32(uint8(values & 0xFF)),
+			})
 		}
 
 		imageData = &proto.ImageData{
@@ -67,12 +84,7 @@ func unmarshalLegacyResourceFromDatabase(ctx context.Context, resource string) (
 			MimeType: proto.MediaMimeType_ImageJpeg,
 			Width:    int64(re.Width),
 			Height:   int64(re.Height),
-			Palettes: []*proto.ColorPalette{{
-				Percent: 100,
-				Red:     int32(uint8(values >> 16)),
-				Green:   int32(uint8((values >> 8) & 0xFF)),
-				Blue:    int32(uint8(values & 0xFF)),
-			}},
+			Palettes: palette,
 		}
 	}
 
@@ -90,6 +102,10 @@ func unmarshalLegacyResourceFromDatabase(ctx context.Context, resource string) (
 }
 
 func MarshalMediaToDatabase(media *Media) (*string, error) {
+
+	if media == nil {
+		return nil, nil
+	}
 
 	if media.legacy != "" {
 		return nil, nil
@@ -117,6 +133,10 @@ func UnmarshalMediaWithLegacyResourceFromDatabase(ctx context.Context, resource 
 
 	if media == nil {
 		return unmarshalLegacyResourceFromDatabase(ctx, resource)
+	}
+
+	if resource == "" {
+		return nil, nil
 	}
 
 	return UnmarshalMediaFromDatabase(ctx, media)

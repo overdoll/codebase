@@ -12,21 +12,25 @@ import (
 	"overdoll/libraries/bootstrap"
 	graphql2 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/resource/proto"
+	"overdoll/libraries/media/proto"
 	"overdoll/libraries/uuid"
 	"strings"
 	"testing"
 )
 
 type CharacterModified struct {
-	Id        relay.ID
-	Name      string
-	Reference string
-	Slug      string
-	Series    *SeriesModified
-	Club      *ClubModified
-	Thumbnail *graphql2.Resource
-	Banner    *graphql2.Resource
+	Id             relay.ID
+	Name           string
+	Reference      string
+	Slug           string
+	Series         *SeriesModified
+	Club           *ClubModified
+	ThumbnailMedia *struct {
+		Item *graphql2.ImageMedia
+	} `graphql:"... on ImageMedia"`
+	BannerMedia *struct {
+		Item *graphql2.ImageMedia
+	} `graphql:"... on ImageMedia"`
 }
 
 type SearchCharactersForSeries struct {
@@ -181,23 +185,24 @@ func TestCreateSeriesCharacter_update_and_search(t *testing.T) {
 
 	require.NoError(t, err, "no error updating character thumbnail")
 
-	require.False(t, updateCharacterThumbnail.UpdateCharacterThumbnail.Character.Thumbnail.Processed, "not yet processed")
+	require.Nil(t, updateCharacterThumbnail.UpdateCharacterThumbnail.Character.ThumbnailMedia, "not yet processed")
 
 	require.NoError(t, err, "no error updating category thumbnail")
 
 	grpcClient := getGrpcCallbackClient(t)
 
-	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
-		Id:          thumbnailResourceId,
-		ItemId:      updateCharacterThumbnail.UpdateCharacterThumbnail.Character.Reference,
-		Processed:   true,
-		Type:        proto.ResourceType_IMAGE,
-		ProcessedId: uuid.New().String(),
-		Private:     false,
-		Width:       100,
-		Height:      100,
-		Token:       "CHARACTER",
-	}}})
+	_, err = grpcClient.UpdateMedia(context.Background(), &proto.UpdateMediaRequest{Media: &proto.Media{
+		Id: thumbnailResourceId,
+		Link: &proto.MediaLink{
+			Id:   updateCharacterThumbnail.UpdateCharacterThumbnail.Character.Reference,
+			Type: proto.MediaLinkType_CHARACTER_THUMBNAIL,
+		},
+		ImageData: &proto.ImageData{Id: uuid.New().String()},
+		State: &proto.MediaState{
+			Processed: true,
+			Failed:    false,
+		},
+	}})
 
 	require.NoError(t, err, "no error running resource callback")
 
@@ -205,9 +210,8 @@ func TestCreateSeriesCharacter_update_and_search(t *testing.T) {
 	require.NotNil(t, character, "expected to have found character")
 
 	require.Equal(t, fake.Name, character.Name, "title has been updated")
-	require.NotNil(t, character.Thumbnail, "has a thumbnail")
-	require.Nil(t, character.Banner, "has no banner ter")
-	require.True(t, character.Thumbnail.Processed, "thumbnail is processed")
+	require.NotNil(t, character.ThumbnailMedia, "has a thumbnail")
+	require.Nil(t, character.BannerMedia, "has no banner ter")
 
 	env := getWorkflowEnvironment()
 
@@ -220,23 +224,24 @@ func TestCreateSeriesCharacter_update_and_search(t *testing.T) {
 
 	cat := getCharacterFromAdapter(t, character.Reference)
 
-	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
-		Id:          cat.BannerResource().ID(),
-		ItemId:      character.Reference,
-		Processed:   true,
-		Type:        proto.ResourceType_IMAGE,
-		ProcessedId: uuid.New().String(),
-		Private:     false,
-		Width:       100,
-		Height:      100,
-		Token:       "CHARACTER_BANNER",
-	}}})
+	_, err = grpcClient.UpdateMedia(context.Background(), &proto.UpdateMediaRequest{Media: &proto.Media{
+		Id: cat.BannerMedia().ID(),
+		Link: &proto.MediaLink{
+			Id:   character.Reference,
+			Type: proto.MediaLinkType_CHARACTER_BANNER,
+		},
+		ImageData: &proto.ImageData{Id: uuid.New().String()},
+		State: &proto.MediaState{
+			Processed: true,
+			Failed:    false,
+		},
+	}})
 
 	require.NoError(t, err, "no error updating character banner")
 
 	character = getSeriesCharacterBySlug(t, client, currentCharacterSlug, series.Slug())
 	require.NotNil(t, character, "expected to have found character")
-	require.NotNil(t, character.Banner, "has a banner")
+	require.NotNil(t, character.BannerMedia, "has a banner")
 }
 
 func getClubCharacterBySlug(t *testing.T, client *graphql.Client, slug, clubSlug string) *CharacterModified {

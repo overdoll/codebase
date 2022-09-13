@@ -3,8 +3,8 @@ package post
 import (
 	"github.com/stretchr/testify/require"
 	sting "overdoll/applications/sting/proto"
+	"overdoll/libraries/media"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/resource"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
@@ -13,8 +13,8 @@ import (
 func TestPostContent_non_published_supporter_only(t *testing.T) {
 	t.Parallel()
 
-	resourceId := &resource.Resource{}
-	resourceIdHidden := &resource.Resource{}
+	resourceId := &media.Media{}
+	resourceIdHidden := &media.Media{}
 
 	contentItem := &Content{
 		media:           resourceId,
@@ -32,8 +32,8 @@ func TestPostContent_non_published_supporter_only(t *testing.T) {
 func TestPostContent_published_non_supporter_only(t *testing.T) {
 	t.Parallel()
 
-	resourceId := &resource.Resource{}
-	resourceIdHidden := &resource.Resource{}
+	resourceId := &media.Media{}
+	resourceIdHidden := &media.Media{}
 
 	contentItem := &Content{
 		media:           resourceId,
@@ -51,8 +51,8 @@ func TestPostContent_published_non_supporter_only(t *testing.T) {
 func TestPostContent_published_supporter_only(t *testing.T) {
 	t.Parallel()
 
-	resourceId := &resource.Resource{}
-	resourceIdHidden := &resource.Resource{}
+	resourceId := &media.Media{}
+	resourceIdHidden := &media.Media{}
 	clubId := uuid.New().String()
 
 	contentItem := &Content{
@@ -80,8 +80,8 @@ func TestPostContent_published_supporter_only(t *testing.T) {
 func TestPostContent_published_supporter_only_as_staff(t *testing.T) {
 	t.Parallel()
 
-	resourceId := &resource.Resource{}
-	resourceIdHidden := &resource.Resource{}
+	resourceId := &media.Media{}
+	resourceIdHidden := &media.Media{}
 
 	contentItem := &Content{
 		media:           resourceId,
@@ -101,8 +101,8 @@ func TestPostContent_published_supporter_only_as_staff(t *testing.T) {
 func TestPostContent_published_supporter_only_as_nobody(t *testing.T) {
 	t.Parallel()
 
-	resourceId := &resource.Resource{}
-	resourceIdHidden := &resource.Resource{}
+	resourceId := &media.Media{}
+	resourceIdHidden := &media.Media{}
 
 	contentItem := &Content{
 		media:           resourceId,

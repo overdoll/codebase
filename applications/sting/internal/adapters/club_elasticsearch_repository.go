@@ -25,10 +25,10 @@ type clubDocument struct {
 	Slug                        string            `json:"slug"`
 	Links                       []string          `json:"links"`
 	SlugAliases                 []string          `json:"slug_aliases"`
-	ThumbnailResource           string            `db:"thumbnail_resource"`
-	ThumbnailMedia              *string           `db:"thumbnail_media"`
-	BannerResource              string            `db:"banner_resource"`
-	BannerMedia                 *string           `db:"banner_media"`
+	ThumbnailResource           string            `json:"thumbnail_resource"`
+	ThumbnailMedia              *string           `json:"thumbnail_media"`
+	BannerResource              string            `json:"banner_resource"`
+	BannerMedia                 *string           `json:"banner_media"`
 	SupporterOnlyPostsDisabled  bool              `json:"supporter_only_posts_disabled"`
 	CharactersEnabled           bool              `json:"characters_enabled"`
 	CharactersLimit             int               `json:"characters_limit"`
@@ -66,12 +66,24 @@ func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 		return nil, err
 	}
 
+	var bannerResource string
+
+	if cat.BannerMedia() != nil {
+		bannerResource = cat.BannerMedia().LegacyResource()
+	}
+
+	var thumbnailResource string
+
+	if cat.ThumbnailMedia() != nil {
+		thumbnailResource = cat.ThumbnailMedia().LegacyResource()
+	}
+
 	return &clubDocument{
 		Id:                          cat.ID(),
 		Slug:                        cat.Slug(),
 		SlugAliases:                 cat.SlugAliases(),
-		ThumbnailResource:           cat.ThumbnailMedia().LegacyResource(),
-		BannerResource:              cat.BannerMedia().LegacyResource(),
+		ThumbnailResource:           thumbnailResource,
+		BannerResource:              bannerResource,
 		ThumbnailMedia:              marshalledThumbnail,
 		BannerMedia:                 marshalledBanner,
 		SupporterOnlyPostsDisabled:  cat.SupporterOnlyPostsDisabled(),

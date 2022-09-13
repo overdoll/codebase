@@ -56,13 +56,25 @@ func marshalSeriesToDocument(s *post.Series) (*seriesDocument, error) {
 		return nil, err
 	}
 
+	var bannerResource string
+
+	if s.BannerMedia() != nil {
+		bannerResource = s.BannerMedia().LegacyResource()
+	}
+
+	var thumbnailResource string
+
+	if s.ThumbnailMedia() != nil {
+		thumbnailResource = s.ThumbnailMedia().LegacyResource()
+	}
+
 	return &seriesDocument{
 		Id:                s.ID(),
 		Slug:              s.Slug(),
 		ThumbnailMedia:    marshalledThumbnail,
 		BannerMedia:       marshalledBanner,
-		BannerResource:    s.BannerMedia().LegacyResource(),
-		ThumbnailResource: s.ThumbnailMedia().LegacyResource(),
+		BannerResource:    bannerResource,
+		ThumbnailResource: thumbnailResource,
 		Title:             localization.MarshalTranslationToDatabase(s.Title()),
 		CreatedAt:         s.CreatedAt(),
 		TotalLikes:        s.TotalLikes(),

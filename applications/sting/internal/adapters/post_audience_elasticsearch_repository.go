@@ -59,13 +59,25 @@ func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 		return nil, err
 	}
 
+	var bannerResource string
+
+	if cat.BannerMedia() != nil {
+		bannerResource = cat.BannerMedia().LegacyResource()
+	}
+
+	var thumbnailResource string
+
+	if cat.ThumbnailMedia() != nil {
+		thumbnailResource = cat.ThumbnailMedia().LegacyResource()
+	}
+
 	return &audienceDocument{
 		Id:                cat.ID(),
 		Slug:              cat.Slug(),
 		ThumbnailMedia:    marshalledThumbnail,
 		BannerMedia:       marshalledBanner,
-		ThumbnailResource: cat.ThumbnailMedia().LegacyResource(),
-		BannerResource:    cat.BannerMedia().LegacyResource(),
+		ThumbnailResource: thumbnailResource,
+		BannerResource:    bannerResource,
 		Title:             localization.MarshalTranslationToDatabase(cat.Title()),
 		CreatedAt:         cat.CreatedAt(),
 		Standard:          stnd,

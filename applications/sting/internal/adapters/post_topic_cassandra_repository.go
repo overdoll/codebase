@@ -69,13 +69,19 @@ func marshalTopicToDatabase(pending *post.Topic) (*topics, error) {
 		return nil, err
 	}
 
+	var bannerResource string
+
+	if pending.BannerMedia() != nil {
+		bannerResource = pending.BannerMedia().LegacyResource()
+	}
+
 	return &topics{
 		Id:             pending.ID(),
 		Slug:           pending.Slug(),
 		Title:          localization.MarshalTranslationToDatabase(pending.Title()),
 		Description:    localization.MarshalTranslationToDatabase(pending.Description()),
 		BannerMedia:    marshalledBanner,
-		BannerResource: pending.BannerMedia().LegacyResource(),
+		BannerResource: bannerResource,
 		Weight:         pending.Weight(),
 		CreatedAt:      pending.CreatedAt(),
 		UpdatedAt:      pending.UpdatedAt(),
