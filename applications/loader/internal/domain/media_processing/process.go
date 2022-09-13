@@ -17,7 +17,6 @@ import (
 	_ "image/png"
 	"io"
 	"io/ioutil"
-	"log"
 	"math"
 	"os"
 	"overdoll/libraries/errors"
@@ -54,7 +53,7 @@ var (
 
 func init() {
 	// not ideal but we need to disable the log messages from ffmpeg-go
-	log.SetOutput(ioutil.Discard)
+	//log.SetOutput(ioutil.Discard)
 }
 
 func createPreviewFromFile(r io.Reader, isPng bool) ([]*proto.ColorPalette, image.Image, error) {
@@ -121,7 +120,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 
 	fileName := uuid.New().String()
 
-	videoNoAudio := true
+	videoNoAudio := false
 
 	newVideoFileName := fileName + "/playlist/master.m3u8"
 
@@ -319,6 +318,8 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 			return nil, errors.Wrap(err, "failed to encode jpeg")
 		}
 
+		img = src
+
 		_ = jpegFile.Close()
 	}
 
@@ -331,14 +332,14 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		"threads:v":    "2",
 	}
 
-	//hlsArgs := ffmpeg_go.KwArgs{
-	//	"sc_threshold":       "0",
-	//	"hls_time":           "3",
-	//	"force_key_frames:v": "expr:gte(t,n_forced*1)",
-	//	"hls_playlist_type":  "vod",
-	//	"hls_segment_type":   "fmp4",
-	//	"master_pl_name":     newVideoFileName,
-	//}
+	hlsArgs := ffmpeg_go.KwArgs{
+		"sc_threshold":       "0",
+		"hls_time":           "3",
+		"force_key_frames:v": "expr:gte(t,n_forced*1)",
+		"hls_playlist_type":  "vod",
+		"hls_segment_type":   "fmp4",
+		"master_pl_name":     newVideoFileName,
+	}
 
 	if videoNoAudio {
 		encodingArgs["an"] = ""
@@ -388,100 +389,102 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		}
 	}
 
-	//if !hasDefaultResolution && !hasFullHd {
+	if !hasDefaultResolution && !hasFullHd {
 
-	//width := strconv.Itoa(firstStream.Width)
-	//height := strconv.Itoa(firstStream.Width)
-	//firstPrefix := width + "x" + height
+		width := strconv.Itoa(firstStream.Width)
+		height := strconv.Itoa(firstStream.Width)
+		firstPrefix := width + "x" + height
 
-	fmt.Println(hasDefaultResolution)
-	fmt.Println(hasFullHd)
+		firstSegmentDirectory := fileName + "/segment/" + firstPrefix
+		_ = os.MkdirAll(firstSegmentDirectory, os.ModePerm)
+		firstPlaylistDirectory := fileName + "/playlist/" + firstPrefix
+		_ = os.MkdirAll(firstPlaylistDirectory, os.ModePerm)
 
-	// add a regular stream
-	//streams = append(streams, input.Get("0").Filter("scale", ffmpeg_go.Args{"w=" + width + ":h=" + height}).Output(fileName+"/playlist/"+firstPrefix+"/original.m3u8", mergeArgs(encodingArgs, mergeArgs(hlsArgs, ffmpeg_go.KwArgs{
-	//	"crf":                  "22",
-	//	"hls_segment_filename": fileName + "/segment/" + firstPrefix + "/original_%03d.ts",
-	//}))))
-	//}
+		// add a regular stream
+		streams = append(streams, input.Get("0").Filter("scale", ffmpeg_go.Args{"w=" + width + ":h=" + height}).Output(firstPlaylistDirectory+"/original.m3u8", mergeArgs(encodingArgs, mergeArgs(hlsArgs, ffmpeg_go.KwArgs{
+			"crf":                  "22",
+			"hls_segment_filename": firstSegmentDirectory + "/original_%03d.ts",
+		}))))
+	}
 
-	//if hasDefaultResolution {
-	//
-	//	firstResolution := "w=640:h=-2"
-	//	firstPrefix := "640x360"
-	//	secondResolution := "w=1280:h=-2"
-	//	secondPrefix := "1280x720"
-	//	ThirdResolution := "w=852:h=-2"
-	//	ThirdPrefix := "852x480"
-	//	if isPortrait {
-	//		firstPrefix = "360x640"
-	//		firstResolution = "w=360:h=-2"
-	//		secondResolution = "w=720:h=-2"
-	//		secondPrefix = "720x1280"
-	//		ThirdResolution = "w=480:h=-2"
-	//		ThirdPrefix = "480x852"
-	//	}
-	//
-	//	firstSegmentDirectory := fileName + "/segment/" + firstPrefix
-	//	_ = os.MkdirAll(firstSegmentDirectory, os.ModePerm)
-	//	firstPlaylistDirectory := fileName + "/playlist/" + firstPrefix
-	//	_ = os.MkdirAll(firstPlaylistDirectory, os.ModePerm)
-	//
-	//	secondSegmentDirectory := fileName + "/segment/" + ThirdPrefix
-	//	_ = os.MkdirAll(secondSegmentDirectory, os.ModePerm)
-	//	secondPlaylistDirectory := fileName + "/playlist/" + ThirdPrefix
-	//	_ = os.MkdirAll(secondPlaylistDirectory, os.ModePerm)
-	//
-	//	thirdSegmentDirectory := fileName + "/segment/" + secondPrefix
-	//	_ = os.MkdirAll(thirdSegmentDirectory, os.ModePerm)
-	//	thirdPlaylistDirectory := fileName + "/playlist/" + secondPrefix + "/720p.m3u8"
-	//	_ = os.MkdirAll(thirdPlaylistDirectory, os.ModePerm)
-	//
-	//	streams = append(streams,
-	//		// add 360p stream
-	//		input.Get("0").Filter("scale", ffmpeg_go.Args{firstResolution}).Output(firstPlaylistDirectory+"/360p.m3u8", mergeArgs(encodingArgs, mergeArgs(hlsArgs, ffmpeg_go.KwArgs{
-	//			"maxrate":              "900k",
-	//			"crf":                  "23",
-	//			"hls_segment_filename": firstSegmentDirectory + "/360p_%03d.ts",
-	//		}))),
-	//
-	//		// add a 480p stream
-	//		input.Get("2").Filter("scale", ffmpeg_go.Args{ThirdResolution}).Output(secondPlaylistDirectory+"/480p.m3u8", mergeArgs(encodingArgs, mergeArgs(hlsArgs, ffmpeg_go.KwArgs{
-	//			"maxrate":              "1350k",
-	//			"crf":                  "23",
-	//			"hls_segment_filename": secondSegmentDirectory + "/480p_%03d.ts",
-	//		}))),
-	//
-	//		// add a 720p stream
-	//		input.Get("3").Filter("scale", ffmpeg_go.Args{secondResolution}).Output(thirdPlaylistDirectory+"/720p.m3u8", mergeArgs(encodingArgs, mergeArgs(hlsArgs, ffmpeg_go.KwArgs{
-	//			"maxrate":              "2700k",
-	//			"crf":                  "23",
-	//			"hls_segment_filename": thirdSegmentDirectory + "/720p_%03d.ts",
-	//		}))),
-	//	)
-	//}
-	//
-	//if hasFullHd {
-	//	firstResolution := "w=1920:h=-2"
-	//	firstPrefix := "1920x1080"
-	//	if isPortrait {
-	//		firstResolution = "w=1080:h=-2"
-	//		firstPrefix = "1080x1920"
-	//	}
-	//
-	//	firstSegmentDirectory := fileName + "/segment/" + firstPrefix
-	//	_ = os.MkdirAll(firstSegmentDirectory, os.ModePerm)
-	//	firstPlaylistDirectory := fileName + "/playlist/" + firstPrefix
-	//	_ = os.MkdirAll(firstPlaylistDirectory, os.ModePerm)
-	//
-	//	streams = append(streams,
-	//		// add 1080p stream
-	//		input.Get("4").Filter("scale", ffmpeg_go.Args{firstResolution}).Output(firstPlaylistDirectory+"/1080p.m3u8", mergeArgs(encodingArgs, mergeArgs(hlsArgs, ffmpeg_go.KwArgs{
-	//			"maxrate":              "4500k",
-	//			"crf":                  "25",
-	//			"hls_segment_filename": firstSegmentDirectory + "/1080p_%03d.ts",
-	//		}))),
-	//	)
-	//}
+	if hasDefaultResolution {
+
+		firstResolution := "w=640:h=-2"
+		firstPrefix := "640x360"
+		secondResolution := "w=1280:h=-2"
+		secondPrefix := "1280x720"
+		ThirdResolution := "w=852:h=-2"
+		ThirdPrefix := "852x480"
+		if isPortrait {
+			firstPrefix = "360x640"
+			firstResolution = "w=360:h=-2"
+			secondResolution = "w=720:h=-2"
+			secondPrefix = "720x1280"
+			ThirdResolution = "w=480:h=-2"
+			ThirdPrefix = "480x852"
+		}
+
+		firstSegmentDirectory := fileName + "/segment/" + firstPrefix
+		_ = os.MkdirAll(firstSegmentDirectory, os.ModePerm)
+		firstPlaylistDirectory := fileName + "/playlist/" + firstPrefix
+		_ = os.MkdirAll(firstPlaylistDirectory, os.ModePerm)
+
+		secondSegmentDirectory := fileName + "/segment/" + ThirdPrefix
+		_ = os.MkdirAll(secondSegmentDirectory, os.ModePerm)
+		secondPlaylistDirectory := fileName + "/playlist/" + ThirdPrefix
+		_ = os.MkdirAll(secondPlaylistDirectory, os.ModePerm)
+
+		thirdSegmentDirectory := fileName + "/segment/" + secondPrefix
+		_ = os.MkdirAll(thirdSegmentDirectory, os.ModePerm)
+		thirdPlaylistDirectory := fileName + "/playlist/" + secondPrefix
+		_ = os.MkdirAll(thirdPlaylistDirectory, os.ModePerm)
+
+		streams = append(streams,
+			// add 360p stream
+			input.Get("0").Filter("scale", ffmpeg_go.Args{firstResolution}).Output(firstPlaylistDirectory+"/360p.m3u8", mergeArgs(encodingArgs, mergeArgs(hlsArgs, ffmpeg_go.KwArgs{
+				"maxrate":              "900k",
+				"crf":                  "23",
+				"hls_segment_filename": firstSegmentDirectory + "/360p_%03d.ts",
+			}))),
+
+			// add a 480p stream
+			input.Get("2").Filter("scale", ffmpeg_go.Args{ThirdResolution}).Output(secondPlaylistDirectory+"/480p.m3u8", mergeArgs(encodingArgs, mergeArgs(hlsArgs, ffmpeg_go.KwArgs{
+				"maxrate":              "1350k",
+				"crf":                  "23",
+				"hls_segment_filename": secondSegmentDirectory + "/480p_%03d.ts",
+			}))),
+
+			// add a 720p stream
+			input.Get("3").Filter("scale", ffmpeg_go.Args{secondResolution}).Output(thirdPlaylistDirectory+"/720p.m3u8", mergeArgs(encodingArgs, mergeArgs(hlsArgs, ffmpeg_go.KwArgs{
+				"maxrate":              "2700k",
+				"crf":                  "23",
+				"hls_segment_filename": thirdSegmentDirectory + "/720p_%03d.ts",
+			}))),
+		)
+	}
+
+	if hasFullHd {
+		firstResolution := "w=1920:h=-2"
+		firstPrefix := "1920x1080"
+		if isPortrait {
+			firstResolution = "w=1080:h=-2"
+			firstPrefix = "1080x1920"
+		}
+
+		firstSegmentDirectory := fileName + "/segment/" + firstPrefix
+		_ = os.MkdirAll(firstSegmentDirectory, os.ModePerm)
+		firstPlaylistDirectory := fileName + "/playlist/" + firstPrefix
+		_ = os.MkdirAll(firstPlaylistDirectory, os.ModePerm)
+
+		streams = append(streams,
+			// add 1080p stream
+			input.Get("4").Filter("scale", ffmpeg_go.Args{firstResolution}).Output(firstPlaylistDirectory+"/1080p.m3u8", mergeArgs(encodingArgs, mergeArgs(hlsArgs, ffmpeg_go.KwArgs{
+				"maxrate":              "4500k",
+				"crf":                  "25",
+				"hls_segment_filename": firstSegmentDirectory + "/1080p_%03d.ts",
+			}))),
+		)
+	}
 
 	finalStream := input.Get("5")
 
@@ -566,8 +569,8 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	media.RawProto().ImageData = &proto.ImageData{
 		Id:       thumbnailFileName,
 		MimeType: proto.MediaMimeType_ImageJpeg,
-		Width:    int64(probeResult.Streams[0].Width),
-		Height:   int64(probeResult.Streams[0].Height),
+		Width:    int64(img.Bounds().Dx()),
+		Height:   int64(img.Bounds().Dy()),
 		Palettes: palettes,
 	}
 
@@ -581,6 +584,8 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 				Id:       mp4FileName,
 				MimeType: proto.MediaMimeType_VideoMp4,
 				Bitrate:  bitRate,
+				Width:    int64(probeResult.Streams[0].Width),
+				Height:   int64(probeResult.Streams[0].Height),
 			},
 		},
 		AspectRatio: &proto.VideoAspectRatio{

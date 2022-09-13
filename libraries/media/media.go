@@ -215,7 +215,7 @@ func (m *Media) VideoContainers() []*VideoContainer {
 		})
 	}
 
-	return nil
+	return containers
 }
 
 func (m *Media) generateUrlForVideo(id string) string {
@@ -225,11 +225,11 @@ func (m *Media) generateUrlForVideo(id string) string {
 		finalUrl.Host = os.Getenv("PRIVATE_RESOURCES_URL")
 		finalUrl.Path = m.proto.Link.Id + "/" + m.proto.ImageData.Id
 	} else {
-		finalUrl.Host = os.Getenv("MEDIA_URL")
+		finalUrl.Host = os.Getenv("MEDIA_HOST")
 		finalUrl.Path = m.VideoPrefix() + "/" + id
 	}
 
-	finalUrl.Scheme = "https://"
+	finalUrl.Scheme = "https"
 	signed, _ := serializer.createSignedUrl(finalUrl.String())
 	return signed
 }
@@ -291,9 +291,9 @@ func (m *Media) generateUrlForImage(width, height int64, optimize bool) *ImageMe
 	finalUrl := url.URL{}
 
 	finalUrl.RawQuery = q.Encode()
-	finalUrl.Host = os.Getenv("MEDIA_URL")
-	finalUrl.Scheme = "https://"
-	finalUrl.Path = m.ImagePrefix()
+	finalUrl.Host = os.Getenv("MEDIA_HOST")
+	finalUrl.Scheme = "https"
+	finalUrl.Path = m.ImagePrefix() + "/" + m.proto.ImageData.Id
 
 	signed, _ := serializer.createSignedUrl(finalUrl.String())
 

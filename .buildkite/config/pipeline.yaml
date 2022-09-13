@@ -24,7 +24,7 @@ steps:
         EMAIL_FROM_NAME: overdoll
         EMAIL_FROM_ADDRESS: please-dont-reply@overdoll.com
         EMAIL_DOMAIN_WHITELIST: inbox.testmail.app
-        MEDIA_URL: https://df585ia2rkn55.cloudfront.net
+        MEDIA_HOST: df585ia2rkn55.cloudfront.net
         RESOURCES_URL: https://sandbox-overdoll-resources.s3.amazonaws.com
         PRIVATE_RESOURCES_URL: https://dcd9vpqfvvgum.cloudfront.net
         OVERDOLL_CCBILL_ENCRYPTION_SECRET: AES256Key-32Characters1234567890
