@@ -47,6 +47,7 @@ go_test(
     embed = [":post"],
     deps = [
         "//applications/sting/proto:v1_go_proto",
+        "//libraries/media",
         "//libraries/principal",
         "//libraries/testing_tools",
         "//libraries/uuid",

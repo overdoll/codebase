@@ -48,8 +48,8 @@ type category struct {
 	AlternativeTitles []string          `db:"alternative_titles"`
 	ThumbnailResource string            `db:"thumbnail_resource"`
 	BannerResource    string            `db:"banner_resource"`
-	ThumbnailMedia    *string           `db:"thumbnail_media"`
-	BannerMedia       *string           `db:"banner_media"`
+	ThumbnailMedia    []byte            `db:"thumbnail_media"`
+	BannerMedia       []byte            `db:"banner_media"`
 	TotalLikes        int               `db:"total_likes"`
 	TotalPosts        int               `db:"total_posts"`
 	CreatedAt         time.Time         `db:"created_at"`
@@ -402,15 +402,15 @@ func (r PostsCassandraElasticsearchRepository) updateCategory(ctx context.Contex
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateCategoryThumbnailOperator(ctx context.Context, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
-	return r.updateCategory(ctx, id, updateFn, []string{"thumbnail_resource"})
+	return r.updateCategory(ctx, id, updateFn, []string{"thumbnail_media"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateCategoryBannerOperator(ctx context.Context, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
-	return r.updateCategory(ctx, id, updateFn, []string{"banner_resource"})
+	return r.updateCategory(ctx, id, updateFn, []string{"banner_media"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateCategoryThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
-	return r.updateCategory(ctx, id, updateFn, []string{"thumbnail_resource"})
+	return r.updateCategory(ctx, id, updateFn, []string{"thumbnail_media"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateCategoryTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *post.Category) error) (*post.Category, error) {

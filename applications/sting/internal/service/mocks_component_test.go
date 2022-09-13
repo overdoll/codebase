@@ -10,7 +10,6 @@ import (
 	parley "overdoll/applications/parley/proto"
 	"overdoll/applications/sting/internal/service"
 	"overdoll/libraries/media/proto"
-	"overdoll/libraries/uuid"
 	"testing"
 )
 
@@ -47,7 +46,7 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 
 		for _, r := range req.Media {
 			res = append(res, &proto.Media{
-				Id:      uuid.New().String(),
+				Id:      r.Id + "_FILTERED",
 				Private: true,
 				Link:    req.Link,
 				State:   &proto.MediaState{Processed: false, Failed: false},

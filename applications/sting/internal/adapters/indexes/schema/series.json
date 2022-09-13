@@ -56,10 +56,14 @@
         "type": "keyword"
       },
       "thumbnail_media": {
-        "type": "keyword"
+        "type": "text",
+        "index": false,
+        "store": true
       },
       "banner_media": {
-        "type": "keyword"
+        "type": "text",
+        "index": false,
+        "store": true
       },
       "total_likes": {
         "type": "integer"

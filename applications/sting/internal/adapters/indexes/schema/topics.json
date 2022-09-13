@@ -66,7 +66,9 @@
         "type": "keyword"
       },
       "banner_media": {
-        "type": "keyword"
+        "type": "text",
+        "index": false,
+        "store": true
       },
       "weight": {
         "type": "integer"

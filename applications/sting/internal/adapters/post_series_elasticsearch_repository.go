@@ -24,8 +24,8 @@ type seriesDocument struct {
 	Slug              string            `json:"slug"`
 	ThumbnailResource string            `json:"thumbnail_resource"`
 	BannerResource    string            `json:"banner_resource"`
-	ThumbnailMedia    *string           `json:"thumbnail_media"`
-	BannerMedia       *string           `json:"banner_media"`
+	ThumbnailMedia    []byte            `json:"thumbnail_media"`
+	BannerMedia       []byte            `json:"banner_media"`
 	Title             map[string]string `json:"title"`
 	CreatedAt         time.Time         `json:"created_at"`
 	UpdatedAt         time.Time         `json:"updated_at"`

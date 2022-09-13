@@ -71,10 +71,14 @@
         "type": "keyword"
       },
       "thumbnail_media": {
-        "type": "keyword"
+        "type": "text",
+        "index": false,
+        "store": true
       },
       "banner_media": {
-        "type": "keyword"
+        "type": "text",
+        "index": false,
+        "store": true
       },
       "topic_id": {
         "type": "keyword"

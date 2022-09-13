@@ -26,9 +26,9 @@ type clubDocument struct {
 	Links                       []string          `json:"links"`
 	SlugAliases                 []string          `json:"slug_aliases"`
 	ThumbnailResource           string            `json:"thumbnail_resource"`
-	ThumbnailMedia              *string           `json:"thumbnail_media"`
+	ThumbnailMedia              []byte            `json:"thumbnail_media"`
 	BannerResource              string            `json:"banner_resource"`
-	BannerMedia                 *string           `json:"banner_media"`
+	BannerMedia                 []byte            `json:"banner_media"`
 	SupporterOnlyPostsDisabled  bool              `json:"supporter_only_posts_disabled"`
 	CharactersEnabled           bool              `json:"characters_enabled"`
 	CharactersLimit             int               `json:"characters_limit"`

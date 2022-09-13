@@ -40,7 +40,7 @@ type topics struct {
 	Title          map[string]string `db:"title"`
 	Description    map[string]string `db:"description"`
 	BannerResource string            `db:"banner_resource"`
-	BannerMedia    *string           `db:"banner_media"`
+	BannerMedia    []byte            `db:"banner_media"`
 	Weight         int               `db:"weight"`
 	CreatedAt      time.Time         `db:"created_at"`
 	UpdatedAt      time.Time         `db:"updated_at"`
@@ -309,11 +309,11 @@ func (r PostsCassandraElasticsearchRepository) updateTopic(ctx context.Context, 
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateTopicBanner(ctx context.Context, requester *principal.Principal, id string, updateFn func(topic *post.Topic) error) (*post.Topic, error) {
-	return r.updateTopic(ctx, id, updateFn, []string{"banner_resource"})
+	return r.updateTopic(ctx, id, updateFn, []string{"banner_media"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateTopicBannerOperator(ctx context.Context, id string, updateFn func(topic *post.Topic) error) (*post.Topic, error) {
-	return r.updateTopic(ctx, id, updateFn, []string{"banner_resource"})
+	return r.updateTopic(ctx, id, updateFn, []string{"banner_media"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateTopicTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(topic *post.Topic) error) (*post.Topic, error) {

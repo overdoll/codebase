@@ -8,7 +8,6 @@ import (
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/bootstrap"
-	graphql2 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/media/proto"
 	"overdoll/libraries/uuid"
@@ -23,11 +22,15 @@ type AudienceModified struct {
 	Slug           string
 	Standard       bool
 	ThumbnailMedia *struct {
-		Item *graphql2.ImageMedia
-	} `graphql:"... on ImageMedia"`
+		Item *struct {
+			Id relay.ID
+		} `graphql:"... on ImageMedia"`
+	}
 	BannerMedia *struct {
-		Item *graphql2.ImageMedia
-	} `graphql:"... on ImageMedia"`
+		Item *struct {
+			Id relay.ID
+		} `graphql:"... on ImageMedia"`
+	}
 }
 
 type SearchAudience struct {
@@ -167,7 +170,7 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error updating audience thumbnail")
-	require.Nil(t, updateAudienceThumbnail.UpdateAudienceThumbnail.Audience.ThumbnailMedia, "not yet processed")
+	require.Nil(t, updateAudienceThumbnail.UpdateAudienceThumbnail.Audience.ThumbnailMedia.Item, "not yet processed")
 
 	grpcClient := getGrpcCallbackClient(t)
 
@@ -201,8 +204,8 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 	require.NotNil(t, audience, "expected to have found audience")
 
 	require.Equal(t, fake.Title, audience.Title, "title has been updated")
-	require.NotNil(t, audience.ThumbnailMedia, "has a thumbnail")
-	require.Nil(t, audience.BannerMedia, "has no banner")
+	require.NotNil(t, audience.ThumbnailMedia.Item, "has a thumbnail")
+	require.Nil(t, audience.BannerMedia.Item, "has no banner")
 	require.True(t, audience.Standard, "is standard now")
 
 	var updateAudienceBanner UpdateAudienceBanner
@@ -215,7 +218,7 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error updating audience thumbnail")
-	require.Nil(t, updateAudienceBanner.UpdateAudienceBanner.Audience.BannerMedia, "not yet processed")
+	require.Nil(t, updateAudienceBanner.UpdateAudienceBanner.Audience.BannerMedia.Item, "not yet processed")
 
 	_, err = grpcClient.UpdateMedia(context.Background(), &proto.UpdateMediaRequest{Media: &proto.Media{
 		Id: audienceThumbnailId,
@@ -233,5 +236,5 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 	require.NoError(t, err, "no error updating resource")
 
 	audience = getAudienceBySlug(t, client, currentAudienceSlug)
-	require.NotNil(t, audience.BannerMedia, "banner should now be processed")
+	require.NotNil(t, audience.BannerMedia.Item, "banner should now be processed")
 }

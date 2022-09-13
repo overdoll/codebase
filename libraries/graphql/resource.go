@@ -103,6 +103,10 @@ func (e ResourceType) MarshalGQL(w io.Writer) {
 
 func MarshaMediaToLegacyResourceGraphQL(ctx context.Context, res *media.Media) *Resource {
 
+	if res == nil {
+		return nil
+	}
+
 	var tp ResourceType
 
 	if res.IsVideo() {

@@ -25,8 +25,8 @@ type audienceDocument struct {
 	Title             map[string]string `json:"title"`
 	ThumbnailResource string            `json:"thumbnail_resource"`
 	BannerResource    string            `json:"banner_resource"`
-	ThumbnailMedia    *string           `json:"thumbnail_media"`
-	BannerMedia       *string           `json:"banner_media"`
+	ThumbnailMedia    []byte            `json:"thumbnail_media"`
+	BannerMedia       []byte            `json:"banner_media"`
 	Standard          int               `json:"standard"`
 	TotalLikes        int               `json:"total_likes"`
 	TotalPosts        int               `json:"total_posts"`

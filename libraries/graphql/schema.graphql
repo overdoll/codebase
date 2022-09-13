@@ -140,7 +140,7 @@ type ImageMediaVariants {
   """150x150 crop of an image. Suitable for small previews."""
   thumbnail: ImageMediaAccess!
   """200x200 crop of an image. Suitable for large thumbnails."""
-  thumbnailHD: ImageMediaAccess!
+  thumbnailHd: ImageMediaAccess!
   """768px width or height resize."""
   small: ImageMediaAccess!
   """1366px width or height resize."""

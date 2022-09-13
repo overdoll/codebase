@@ -45,8 +45,8 @@ type character struct {
 	Name              map[string]string `db:"name"`
 	ThumbnailResource string            `db:"thumbnail_resource"`
 	BannerResource    string            `db:"banner_resource"`
-	ThumbnailMedia    *string           `db:"thumbnail_media"`
-	BannerMedia       *string           `db:"banner_media"`
+	ThumbnailMedia    []byte            `db:"thumbnail_media"`
+	BannerMedia       []byte            `db:"banner_media"`
 	SeriesId          *string           `db:"series_id"`
 	ClubId            *string           `db:"club_id"`
 	TotalLikes        int               `db:"total_likes"`
@@ -457,15 +457,15 @@ func (r PostsCassandraElasticsearchRepository) CreateCharacter(ctx context.Conte
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateCharacterThumbnailOperator(ctx context.Context, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
-	return r.updateCharacter(ctx, id, updateFn, []string{"thumbnail_resource"})
+	return r.updateCharacter(ctx, id, updateFn, []string{"thumbnail_media"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateCharacterThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
-	return r.updateCharacter(ctx, id, updateFn, []string{"thumbnail_resource"})
+	return r.updateCharacter(ctx, id, updateFn, []string{"thumbnail_media"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateCharacterBannerOperator(ctx context.Context, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
-	return r.updateCharacter(ctx, id, updateFn, []string{"banner_resource"})
+	return r.updateCharacter(ctx, id, updateFn, []string{"banner_media"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateCharacterName(ctx context.Context, requester *principal.Principal, id string, updateFn func(character *post.Character) error) (*post.Character, error) {

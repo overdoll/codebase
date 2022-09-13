@@ -24,7 +24,7 @@ var storageTable = table.New(table.Metadata{
 type mediaStorage struct {
 	LinkedId string `db:"linked_id"`
 	Id       string `db:"id"`
-	Data     string `db:"data"`
+	Data     []byte `db:"data"`
 }
 
 type MediaStorageCassandraRepository struct {
@@ -51,7 +51,7 @@ func (r MediaStorageCassandraRepository) GetMediaByLink(ctx context.Context, lin
 	var results []*media.Media
 
 	for _, store := range storages {
-		unmarshalled, err := media.UnmarshalMediaFromDatabase(ctx, &store.Data)
+		unmarshalled, err := media.UnmarshalMediaFromDatabase(ctx, store.Data)
 
 		if err != nil {
 			return nil, err
@@ -75,7 +75,7 @@ func (r MediaStorageCassandraRepository) StoreMedia(ctx context.Context, m *medi
 		Query(storageTable.Insert()).
 		WithContext(ctx).
 		Idempotent(true).
-		BindStruct(mediaStorage{LinkedId: m.LinkedId(), Id: m.ID(), Data: *result}).
+		BindStruct(mediaStorage{LinkedId: m.LinkedId(), Id: m.ID(), Data: result}).
 		ExecRelease(); err != nil {
 		return errors.Wrap(support.NewGocqlError(err), "failed to store media")
 	}

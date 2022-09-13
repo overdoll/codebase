@@ -43,8 +43,8 @@ type audience struct {
 	Title             map[string]string `db:"title"`
 	ThumbnailResource string            `db:"thumbnail_resource"`
 	BannerResource    string            `db:"banner_resource"`
-	ThumbnailMedia    *string           `db:"thumbnail_media"`
-	BannerMedia       *string           `db:"banner_media"`
+	ThumbnailMedia    []byte            `db:"thumbnail_media"`
+	BannerMedia       []byte            `db:"banner_media"`
 	Standard          int               `db:"standard"`
 	TotalLikes        int               `db:"total_likes"`
 	TotalPosts        int               `db:"total_posts"`
@@ -375,19 +375,19 @@ func (r PostsCassandraElasticsearchRepository) CreateAudience(ctx context.Contex
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateAudienceThumbnailOperator(ctx context.Context, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
-	return r.updateAudience(ctx, id, updateFn, []string{"thumbnail_resource"})
+	return r.updateAudience(ctx, id, updateFn, []string{"thumbnail_media"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateAudienceBanner(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
-	return r.updateAudience(ctx, id, updateFn, []string{"banner_resource"})
+	return r.updateAudience(ctx, id, updateFn, []string{"banner_media"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateAudienceThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
-	return r.updateAudience(ctx, id, updateFn, []string{"thumbnail_resource"})
+	return r.updateAudience(ctx, id, updateFn, []string{"thumbnail_media"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateAudienceBannerOperator(ctx context.Context, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
-	return r.updateAudience(ctx, id, updateFn, []string{"banner_resource"})
+	return r.updateAudience(ctx, id, updateFn, []string{"banner_media"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateAudienceTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {

@@ -30,10 +30,6 @@ type serializedResource struct {
 
 func unmarshalLegacyResourceFromDatabase(ctx context.Context, resource string) (*Media, error) {
 
-	if resource == "" {
-		return nil, nil
-	}
-
 	var re serializedResource
 
 	if err := json.Unmarshal([]byte(resource), &re); err != nil {
@@ -68,7 +64,7 @@ func unmarshalLegacyResourceFromDatabase(ctx context.Context, resource string) (
 			values, err := strconv.ParseUint(strings.Replace(re.Preview, "#", "", 1), 16, 32)
 
 			if err != nil {
-				return nil, err
+				return nil, errors.Wrap(err, "failed to parse preview for legacy resource")
 			}
 
 			palette = append(palette, &proto.ColorPalette{
@@ -101,7 +97,7 @@ func unmarshalLegacyResourceFromDatabase(ctx context.Context, resource string) (
 	}), nil
 }
 
-func MarshalMediaToDatabase(media *Media) (*string, error) {
+func MarshalMediaToDatabase(media *Media) ([]byte, error) {
 
 	if media == nil {
 		return nil, nil
@@ -111,33 +107,35 @@ func MarshalMediaToDatabase(media *Media) (*string, error) {
 		return nil, nil
 	}
 
-	marshalled := proto2.CompactTextString(media.proto)
+	marshalled, err := proto2.Marshal(media.proto)
 
-	str := string(marshalled)
-
-	return &str, nil
-}
-
-func UnmarshalMediaFromDatabase(ctx context.Context, media *string) (*Media, error) {
-
-	var res *proto.Media
-
-	if err := proto2.UnmarshalText(*media, res); err != nil {
-		return nil, err
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to marshal media to database")
 	}
 
-	return FromProto(res), nil
+	return marshalled, nil
 }
 
-func UnmarshalMediaWithLegacyResourceFromDatabase(ctx context.Context, resource string, media *string) (*Media, error) {
+func UnmarshalMediaFromDatabase(ctx context.Context, media []byte) (*Media, error) {
 
-	if media == nil {
+	var res proto.Media
+
+	if err := proto2.Unmarshal(media, &res); err != nil {
+		return nil, errors.Wrap(err, "failed to unmarshal media from database")
+	}
+
+	return FromProto(&res), nil
+}
+
+func UnmarshalMediaWithLegacyResourceFromDatabase(ctx context.Context, resource string, media []byte) (*Media, error) {
+
+	if resource != "" {
 		return unmarshalLegacyResourceFromDatabase(ctx, resource)
 	}
 
-	if resource == "" {
-		return nil, nil
+	if media != nil {
+		return UnmarshalMediaFromDatabase(ctx, media)
 	}
 
-	return UnmarshalMediaFromDatabase(ctx, media)
+	return nil, nil
 }

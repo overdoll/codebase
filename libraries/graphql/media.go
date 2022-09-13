@@ -54,7 +54,7 @@ type ImageMediaVariants struct {
 	// 150x150 crop of an image. Suitable for small previews.
 	Thumbnail *ImageMediaAccess `json:"thumbnail"`
 	// 200x200 crop of an image. Suitable for large HD thumbnails.
-	ThumbnailHD *ImageMediaAccess `json:"thumbnailHd"`
+	ThumbnailHd *ImageMediaAccess `json:"thumbnailHd"`
 	// 768px width or height resize.
 	Small *ImageMediaAccess `json:"small"`
 	// 1366px width or height resize.
@@ -62,7 +62,7 @@ type ImageMediaVariants struct {
 	// 1920px width or height resize.
 	Large *ImageMediaAccess `json:"large"`
 	// 4096px width or height resize.
-	HighDefinition *ImageMediaAccess `json:"highDefinition"`
+	Hd *ImageMediaAccess `json:"hd"`
 	// 640px width or height resize.
 	Banner *ImageMediaAccess `json:"banner"`
 	// 480px width or height resize.
@@ -170,18 +170,18 @@ func marshalImageMediaToGraphQL(ctx context.Context, res *media.Media) *ImageMed
 	return &ImageMedia{
 		ID: relay.NewID(ImageMedia{}, res.UniqueId()),
 		Variants: &ImageMediaVariants{
-			Mini:           marshalImageAccessToGraphQL(ctx, res.MiniImageMediaAccess()),
-			Icon:           marshalImageAccessToGraphQL(ctx, res.IconImageMediaAccess()),
-			Thumbnail:      marshalImageAccessToGraphQL(ctx, res.ThumbnailImageMediaAccess()),
-			ThumbnailHD:    marshalImageAccessToGraphQL(ctx, res.ThumbnailHDImageMediaAccess()),
-			Small:          marshalImageAccessToGraphQL(ctx, res.SmallImageMediaAccess()),
-			Medium:         marshalImageAccessToGraphQL(ctx, res.MediumImageMediaAccess()),
-			Large:          marshalImageAccessToGraphQL(ctx, res.LargeImageMediaAccess()),
-			HighDefinition: marshalImageAccessToGraphQL(ctx, res.HdImageMediaAccess()),
-			Banner:         marshalImageAccessToGraphQL(ctx, res.BannerImageMediaAccess()),
-			Video480:       marshalImageAccessToGraphQL(ctx, res.Video480ImageMediaAccess()),
-			Video720:       marshalImageAccessToGraphQL(ctx, res.Video720ImageMediaAccess()),
-			Video1080:      marshalImageAccessToGraphQL(ctx, res.Video1080ImageMediaAccess()),
+			Mini:        marshalImageAccessToGraphQL(ctx, res.MiniImageMediaAccess()),
+			Icon:        marshalImageAccessToGraphQL(ctx, res.IconImageMediaAccess()),
+			Thumbnail:   marshalImageAccessToGraphQL(ctx, res.ThumbnailImageMediaAccess()),
+			ThumbnailHd: marshalImageAccessToGraphQL(ctx, res.ThumbnailHDImageMediaAccess()),
+			Small:       marshalImageAccessToGraphQL(ctx, res.SmallImageMediaAccess()),
+			Medium:      marshalImageAccessToGraphQL(ctx, res.MediumImageMediaAccess()),
+			Large:       marshalImageAccessToGraphQL(ctx, res.LargeImageMediaAccess()),
+			Hd:          marshalImageAccessToGraphQL(ctx, res.HdImageMediaAccess()),
+			Banner:      marshalImageAccessToGraphQL(ctx, res.BannerImageMediaAccess()),
+			Video480:    marshalImageAccessToGraphQL(ctx, res.Video480ImageMediaAccess()),
+			Video720:    marshalImageAccessToGraphQL(ctx, res.Video720ImageMediaAccess()),
+			Video1080:   marshalImageAccessToGraphQL(ctx, res.Video1080ImageMediaAccess()),
 		},
 		Original:      marshalImageAccessToGraphQL(ctx, res.OriginalImageMediaAccess()),
 		ColorPalettes: palettes,
@@ -189,6 +189,10 @@ func marshalImageMediaToGraphQL(ctx context.Context, res *media.Media) *ImageMed
 }
 
 func MarshaMediaToGraphQL(ctx context.Context, res *media.Media) Media {
+
+	if res == nil {
+		return nil
+	}
 
 	if !res.IsProcessed() {
 		return &RawMedia{

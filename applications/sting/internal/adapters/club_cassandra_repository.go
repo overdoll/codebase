@@ -61,9 +61,9 @@ type clubs struct {
 	Links                       []string          `db:"links"`
 	Name                        map[string]string `db:"name"`
 	ThumbnailResource           string            `db:"thumbnail_resource"`
-	ThumbnailMedia              *string           `db:"thumbnail_media"`
+	ThumbnailMedia              []byte            `db:"thumbnail_media"`
 	BannerResource              string            `db:"banner_resource"`
-	BannerMedia                 *string           `db:"banner_media"`
+	BannerMedia                 []byte            `db:"banner_media"`
 	CharactersEnabled           bool              `db:"characters_enabled"`
 	CharactersLimit             int               `db:"characters_limit"`
 	TotalLikes                  int               `db:"total_likes"`
@@ -629,11 +629,11 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubName(ctx context.Context
 }
 
 func (r ClubCassandraElasticsearchRepository) UpdateClubThumbnail(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
-	return r.updateClubRequest(ctx, clubId, updateFn, []string{"thumbnail_resource"})
+	return r.updateClubRequest(ctx, clubId, updateFn, []string{"thumbnail_media"})
 }
 
 func (r ClubCassandraElasticsearchRepository) UpdateClubBanner(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
-	return r.updateClubRequest(ctx, clubId, updateFn, []string{"banner_resource"})
+	return r.updateClubRequest(ctx, clubId, updateFn, []string{"banner_media"})
 }
 
 func (r ClubCassandraElasticsearchRepository) UpdateClubSuspensionStatus(ctx context.Context, clubId string, updateFn func(club *club.Club) error) (*club.Club, error) {

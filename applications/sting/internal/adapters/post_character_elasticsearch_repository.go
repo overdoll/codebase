@@ -25,8 +25,8 @@ type characterDocument struct {
 	Slug              string            `json:"slug"`
 	ThumbnailResource string            `json:"thumbnail_resource"`
 	BannerResource    string            `json:"banner_resource"`
-	ThumbnailMedia    *string           `json:"thumbnail_media"`
-	BannerMedia       *string           `json:"banner_media"`
+	ThumbnailMedia    []byte            `json:"thumbnail_media"`
+	BannerMedia       []byte            `json:"banner_media"`
 	Name              map[string]string `json:"name"`
 	Series            *seriesDocument   `json:"series"`
 	ClubId            *string           `json:"club_id"`

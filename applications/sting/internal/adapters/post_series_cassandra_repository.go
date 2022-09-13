@@ -43,8 +43,8 @@ type series struct {
 	Title             map[string]string `db:"title"`
 	ThumbnailResource string            `db:"thumbnail_resource"`
 	BannerResource    string            `db:"banner_resource"`
-	ThumbnailMedia    *string           `db:"thumbnail_media"`
-	BannerMedia       *string           `db:"banner_media"`
+	ThumbnailMedia    []byte            `db:"thumbnail_media"`
+	BannerMedia       []byte            `db:"banner_media"`
 	TotalLikes        int               `db:"total_likes"`
 	TotalPosts        int               `db:"total_posts"`
 	CreatedAt         time.Time         `db:"created_at"`
@@ -388,15 +388,15 @@ func (r PostsCassandraElasticsearchRepository) UpdateSeriesSlug(ctx context.Cont
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateSeriesThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
-	return r.updateSeries(ctx, id, updateFn, []string{"thumbnail_resource"})
+	return r.updateSeries(ctx, id, updateFn, []string{"thumbnail_media"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateSeriesThumbnailOperator(ctx context.Context, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
-	return r.updateSeries(ctx, id, updateFn, []string{"thumbnail_resource"})
+	return r.updateSeries(ctx, id, updateFn, []string{"thumbnail_media"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateSeriesBannerOperator(ctx context.Context, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
-	return r.updateSeries(ctx, id, updateFn, []string{"banner_resource"})
+	return r.updateSeries(ctx, id, updateFn, []string{"banner_media"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateSeriesTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(series *post.Series) error) (*post.Series, error) {

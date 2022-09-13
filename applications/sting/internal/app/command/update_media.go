@@ -27,7 +27,7 @@ func (h UpdateMediaHandler) Handle(ctx context.Context, cmd UpdateMedia) error {
 
 	sourceId := cmd.Media.LinkedId()
 
-	switch cmd.Media.SourceLinkType() {
+	switch cmd.Media.LinkType() {
 	case proto.MediaLinkType_AUDIENCE_BANNER:
 		_, err := h.pr.UpdateAudienceBannerOperator(ctx, sourceId, func(aud *post.Audience) error {
 			return aud.UpdateBannerExisting(cmd.Media)

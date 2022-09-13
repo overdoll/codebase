@@ -67,11 +67,21 @@ func (m *Media) IsLegacy() bool {
 }
 
 func (m *Media) ImageWidth() int {
-	return int(m.proto.ImageData.Width)
+
+	if m.proto.ImageData != nil {
+		return int(m.proto.ImageData.Width)
+	}
+
+	return 0
 }
 
 func (m *Media) ImageHeight() int {
-	return int(m.proto.ImageData.Height)
+
+	if m.proto.ImageData != nil {
+		return int(m.proto.ImageData.Height)
+	}
+
+	return 0
 }
 
 func (m *Media) ImageMimeType() proto.MediaMimeType {
@@ -106,6 +116,10 @@ func (m *Media) LinkedId() string {
 	return m.proto.Link.Id
 }
 
+func (m *Media) LinkType() proto.MediaLinkType {
+	return m.proto.Link.Type
+}
+
 func (m *Media) SourceLinkType() proto.MediaLinkType {
 	return m.proto.Source.Link.Type
 }
@@ -136,6 +150,10 @@ func (m *Media) LegacyPreview() string {
 
 	if !m.IsProcessed() {
 		return ""
+	}
+
+	if len(m.proto.ImageData.Palettes) == 0 {
+		return fmt.Sprintf("#%02x%02x%02x", 0, 0, 0)
 	}
 
 	first := m.proto.ImageData.Palettes[0]
