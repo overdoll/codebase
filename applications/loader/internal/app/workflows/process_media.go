@@ -30,7 +30,6 @@ func ProcessMedia(ctx workflow.Context, input ProcessMediaInput) (*ProcessMediaP
 			InitialInterval:    time.Second,
 			BackoffCoefficient: 10.0,
 			MaximumInterval:    time.Minute * 10,
-			MaximumAttempts:    1,
 		},
 	})
 

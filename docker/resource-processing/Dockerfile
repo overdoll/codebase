@@ -1,4 +1,4 @@
-FROM jrottenberg/ffmpeg@sha256:f6dd19ab7f63498d2fcde3b1ea1be4515d8ca8374f8f9829ca75d3f114cae780
+FROM jrottenberg/ffmpeg:4.4-ubuntu
 
 RUN  apt-get update \
   && apt-get install -y wget \

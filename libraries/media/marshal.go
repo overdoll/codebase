@@ -75,12 +75,23 @@ func unmarshalLegacyResourceFromDatabase(ctx context.Context, resource string) (
 			})
 		}
 
+		lastMimeType := re.MimeTypes[len(re.MimeTypes)-1]
+
 		imageData = &proto.ImageData{
-			Id:       re.ProcessedId + ".jpg",
-			MimeType: proto.MediaMimeType_ImageJpeg,
 			Width:    int64(re.Width),
 			Height:   int64(re.Height),
 			Palettes: palette,
+		}
+
+		if lastMimeType == "image/jpeg" {
+			imageData.Id = re.ProcessedId
+			imageData.MimeType = proto.MediaMimeType_ImageJpeg
+		} else if lastMimeType == "image/png" {
+			imageData.Id = re.ProcessedId
+			imageData.MimeType = proto.MediaMimeType_ImagePng
+		} else {
+			imageData.Id = re.ProcessedId
+			imageData.MimeType = proto.MediaMimeType_ImageJpeg
 		}
 	}
 

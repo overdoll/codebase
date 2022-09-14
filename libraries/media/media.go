@@ -153,7 +153,7 @@ func (m *Media) LegacyPreview() string {
 	}
 
 	if len(m.proto.ImageData.Palettes) == 0 {
-		return fmt.Sprintf("#%02x%02x%02x", 0, 0, 0)
+		return ""
 	}
 
 	first := m.proto.ImageData.Palettes[0]
@@ -236,29 +236,6 @@ func (m *Media) generateUrlForVideo(id string) string {
 
 func (m *Media) generateUrlForImage(width, height int64, optimize bool) *ImageMediaAccess {
 
-	if m.IsLegacy() {
-
-		var finalUrl string
-
-		key := "/" + m.proto.Link.Id + "/" + m.proto.ImageData.Id
-
-		if m.proto.Private {
-
-			signedURL, _ := serializer.createSignedUrl(os.Getenv("PRIVATE_RESOURCES_URL") + key)
-
-			finalUrl = signedURL
-
-		} else {
-			finalUrl = os.Getenv("RESOURCES_URL") + key
-		}
-
-		return &ImageMediaAccess{
-			url:    finalUrl,
-			width:  int(m.proto.ImageData.Width),
-			height: int(m.proto.ImageData.Height),
-		}
-	}
-
 	if width >= m.proto.ImageData.Width {
 		width = m.proto.ImageData.Width
 	}
@@ -302,6 +279,49 @@ func (m *Media) generateUrlForImage(width, height int64, optimize bool) *ImageMe
 		width:  int(width),
 		height: int(height),
 	}
+}
+
+func (m *Media) generateUrlForLegacyImage(webp bool) *ImageMediaAccess {
+
+	var finalUrl string
+
+	key := "/" + m.proto.Link.Id + "/" + m.proto.ImageData.Id
+
+	if m.proto.ImageData.MimeType == proto.MediaMimeType_ImageJpeg {
+
+		if webp {
+			key += ".webp"
+		} else {
+			key += ".jpg"
+		}
+	} else if m.proto.ImageData.MimeType == proto.MediaMimeType_ImagePng {
+		key += ".png"
+	}
+
+	if m.proto.Private {
+
+		signedURL, _ := serializer.createSignedUrl(os.Getenv("PRIVATE_RESOURCES_URL") + key)
+
+		finalUrl = signedURL
+
+	} else {
+		finalUrl = os.Getenv("RESOURCES_URL") + key
+	}
+
+	return &ImageMediaAccess{
+		url:    finalUrl,
+		width:  int(m.proto.ImageData.Width),
+		height: int(m.proto.ImageData.Height),
+	}
+
+}
+
+func (m *Media) LegacyWebpMediaAccess() *ImageMediaAccess {
+	return m.generateUrlForLegacyImage(true)
+}
+
+func (m *Media) LegacyImageMediaAccess() *ImageMediaAccess {
+	return m.generateUrlForLegacyImage(false)
 }
 
 func (m *Media) OriginalImageMediaAccess() *ImageMediaAccess {

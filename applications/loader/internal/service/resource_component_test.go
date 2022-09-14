@@ -337,12 +337,12 @@ func TestUploadMedia(t *testing.T) {
 	require.Len(t, newVideoMedia2.VideoContainers(), 2, "should have 2 video containers")
 
 	// correct dimensions
-	require.Equal(t, 1080, newVideoMedia2.VideoContainers()[1].Height(), "should be the correct height")
-	require.Equal(t, 1920, newVideoMedia2.VideoContainers()[1].Width(), "should be the correct width")
+	require.Equal(t, 720, newVideoMedia2.VideoContainers()[1].Height(), "should be the correct height")
+	require.Equal(t, 1280, newVideoMedia2.VideoContainers()[1].Width(), "should be the correct width")
 	require.Equal(t, proto.MediaMimeType_VideoMp4, newVideoMedia2.VideoContainers()[1].MimeType(), "should be the correct mime type")
 
 	// correct duration
-	require.Equal(t, 5780, newVideoMedia2.VideoDuration(), "should be the correct duration")
+	require.Equal(t, 5700, newVideoMedia2.VideoDuration(), "should be the correct duration")
 	require.Equal(t, proto.MediaMimeType_ImageJpeg, newVideoMedia2.ImageMimeType(), "expected video thumbnail to be jpg")
 	require.True(t, newVideoMedia2.HasAudio(), "expected video to have an audio track")
 
@@ -383,10 +383,9 @@ func TestUploadMedia(t *testing.T) {
 		}
 	}
 
-	require.Equal(t, 6, processedAssertions, "expected to have checked 6 files")
-
 	pixelate := 20
 
+	testing_tools.NewEagerMockWorkflowWithArgs(t, application.TemporalClient, getWorkflowEnvironment(), workflows.ProcessMedia, mock.Anything)
 	testing_tools.NewEagerMockWorkflowWithArgs(t, application.TemporalClient, getWorkflowEnvironment(), workflows.ProcessMedia, mock.Anything)
 
 	copyMediaResults, err := grpcClient.GenerateImageFromMedia(

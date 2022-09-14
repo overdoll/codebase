@@ -6,6 +6,7 @@ import (
 	"io"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/media"
+	"overdoll/libraries/media/proto"
 	"strconv"
 )
 
@@ -135,10 +136,42 @@ func MarshaMediaToLegacyResourceGraphQL(ctx context.Context, res *media.Media) *
 				}
 			}
 		} else {
-			urls = append(urls, &ResourceURL{
-				URL:      URI(res.OriginalImageMediaAccess().Url()),
-				MimeType: "image/jpeg",
-			})
+
+			if res.IsLegacy() {
+				urls = append(urls, &ResourceURL{
+					URL:      URI(res.LegacyWebpMediaAccess().Url()),
+					MimeType: "image/webp",
+				})
+
+				if res.ImageMimeType() == proto.MediaMimeType_ImageJpeg {
+					urls = append(urls, &ResourceURL{
+						URL:      URI(res.LegacyImageMediaAccess().Url()),
+						MimeType: "image/jpeg",
+					})
+				} else {
+					urls = append(urls, &ResourceURL{
+						URL:      URI(res.LegacyImageMediaAccess().Url()),
+						MimeType: "image/png",
+					})
+				}
+			} else {
+				urls = append(urls, &ResourceURL{
+					URL:      URI(res.OriginalImageMediaAccess().Url()),
+					MimeType: "image/webp",
+				})
+				if res.ImageMimeType() == proto.MediaMimeType_ImageJpeg {
+					urls = append(urls, &ResourceURL{
+						URL:      URI(res.OriginalImageMediaAccess().Url()),
+						MimeType: "image/jpeg",
+					})
+				} else {
+					urls = append(urls, &ResourceURL{
+						URL:      URI(res.OriginalImageMediaAccess().Url()),
+						MimeType: "image/png",
+					})
+				}
+
+			}
 		}
 	}
 
