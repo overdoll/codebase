@@ -1,4 +1,4 @@
-import { Stack, Text } from '@chakra-ui/react'
+import { Box, Flex, Heading, Stack, Text } from '@chakra-ui/react'
 import ResourceItem from '../../../DataDisplay/ResourceItem/ResourceItem'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { CharacterTileOverlayFragment$key } from '@//:artifacts/CharacterTileOverlayFragment.graphql'
@@ -38,6 +38,15 @@ export default function CharacterTileOverlay ({
       />
     }
     >
+      {data.club != null && (
+        <Flex position='absolute' p={2} right={0} bottom={0} justify='flex-end'>
+          <Box bg='teal.300' borderRadius='xl' px={2} py={1}>
+            <Heading color='gray.00' fontSize='sm'>
+              Original
+            </Heading>
+          </Box>
+        </Flex>
+      )}
       <Stack px={1} py={2} w='100%' h='100%' align='center' justify='center' spacing={0}>
         <Text
           fontSize={{
