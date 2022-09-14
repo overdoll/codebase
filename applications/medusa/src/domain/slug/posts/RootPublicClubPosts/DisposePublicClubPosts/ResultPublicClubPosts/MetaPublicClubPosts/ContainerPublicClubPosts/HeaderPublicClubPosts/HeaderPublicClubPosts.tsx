@@ -4,7 +4,7 @@ import { HStack, Stack } from '@chakra-ui/react'
 import SearchButton from '@//:common/components/PageHeader/SearchButton/SearchButton'
 import type { HeaderPublicClubPostsFragment$key } from '@//:artifacts/HeaderPublicClubPostsFragment.graphql'
 import ClubCharacterRecommendations
-  from '../../../../../../../character/RootPublicClubCharacter/PublicClubCharacter/ClubCharacterRecommendations/ClubCharacterRecommendations'
+  from '../../../../../../../character/RootPublicClubCharacter/DisposePublicClubCharacter/ResultPublicClubCharacter/MetaPublicClubCharacter/ContainerPublicClubCharacter/HeaderPublicClubCharacter/ClubCharacterRecommendations/ClubCharacterRecommendations'
 import ClubFooterCopyLinkButton
   from '../../../../../../../club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/ClubFooterButtons/ClubFooterCopyLinkButton/ClubFooterCopyLinkButton'
 import ClubFooterShareDiscordButton

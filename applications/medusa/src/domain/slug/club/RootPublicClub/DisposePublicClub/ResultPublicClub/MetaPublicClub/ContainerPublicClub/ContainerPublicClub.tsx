@@ -5,7 +5,6 @@ import { ContainerPublicClubViewerFragment$key } from '@//:artifacts/ContainerPu
 import { BannerContainer, ContentContainer, MobileContainer } from '@//:modules/content/PageLayout'
 import BannerPublicClub from './BannerPublicClub/BannerPublicClub'
 import HeaderPublicClub from './HeaderPublicClub/HeaderPublicClub'
-import { Stack } from '@chakra-ui/react'
 import PostsPublicClub from './PostsPublicClub/PostsPublicClub'
 
 interface Props {
@@ -46,11 +45,8 @@ export default function ContainerPublicClub (props: Props): JSX.Element {
       <MobileContainer>
         <HeaderPublicClub clubQuery={clubData} viewerQuery={viewerData} />
       </MobileContainer>
-      <ContentContainer>
-        <Stack spacing={8}>
-
-          <PostsPublicClub clubQuery={clubData} viewerQuery={viewerData} />
-        </Stack>
+      <ContentContainer pt={2}>
+        <PostsPublicClub clubQuery={clubData} viewerQuery={viewerData} />
       </ContentContainer>
     </>
   )

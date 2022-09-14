@@ -1,5 +1,5 @@
 import RootPublicClubCharacter from './RootPublicClubCharacter/RootPublicClubCharacter'
-import PublicClubCharacterQuery from '@//:artifacts/PublicClubCharacterQuery.graphql'
+import ResultPublicClubCharacterQuery from '@//:artifacts/ResultPublicClubCharacterQuery.graphql'
 import decodeSearchArguments from '../../../common/components/PageHeader/SearchButton/support/decodeSearchArguments'
 import getPostSeed from '@//:modules/content/Posts/support/getPostSeed'
 
@@ -18,7 +18,7 @@ RootPublicClubCharacter.getRelayPreloadProps = (ctx) => {
   return {
     queries: {
       publicClubCharacterQuery: {
-        params: PublicClubCharacterQuery.params,
+        params: ResultPublicClubCharacterQuery.params,
         variables: {
           clubSlug: slug,
           characterSlug,
