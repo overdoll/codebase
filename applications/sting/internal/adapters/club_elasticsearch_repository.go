@@ -26,6 +26,7 @@ type clubDocument struct {
 	Links                       []string          `json:"links"`
 	SlugAliases                 []string          `json:"slug_aliases"`
 	ThumbnailResource           string            `json:"thumbnail_resource"`
+	ThumbnailMedia              []byte            `json:"thumbnail_media"`
 	BannerResource              string            `json:"banner_resource"`
 	BannerMedia                 []byte            `json:"banner_media"`
 	SupporterOnlyPostsDisabled  bool              `json:"supporter_only_posts_disabled"`
@@ -53,6 +54,12 @@ var clubsWriterIndex = cache.WriteAlias(CachePrefix, ClubsIndexName)
 
 func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 
+	marshalledThumbnail, err := media.MarshalMediaToDatabase(cat.ThumbnailMedia())
+
+	if err != nil {
+		return nil, err
+	}
+
 	marshalledBanner, err := media.MarshalMediaToDatabase(cat.BannerMedia())
 
 	if err != nil {
@@ -78,6 +85,7 @@ func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 		ThumbnailResource:           thumbnailResource,
 		BannerResource:              bannerResource,
 		BannerMedia:                 marshalledBanner,
+		ThumbnailMedia:              marshalledThumbnail,
 		SupporterOnlyPostsDisabled:  cat.SupporterOnlyPostsDisabled(),
 		Name:                        localization.MarshalTranslationToDatabase(cat.Name()),
 		CreatedAt:                   cat.CreatedAt(),

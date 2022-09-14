@@ -19,15 +19,10 @@ import (
 )
 
 type CharacterSeriesModified struct {
-	Id             relay.ID
-	Name           string
-	Reference      string
-	Slug           string
-	ThumbnailMedia *struct {
-		ImageMedia struct {
-			Id relay.ID
-		} `graphql:"... on ImageMedia"`
-	}
+	Id          relay.ID
+	Name        string
+	Reference   string
+	Slug        string
 	BannerMedia *struct {
 		ImageMedia struct {
 			Id relay.ID
@@ -36,15 +31,10 @@ type CharacterSeriesModified struct {
 }
 
 type SeriesModified struct {
-	Id             relay.ID
-	Reference      string
-	Title          string
-	Slug           string
-	ThumbnailMedia *struct {
-		ImageMedia struct {
-			Id relay.ID
-		} `graphql:"... on ImageMedia"`
-	}
+	Id          relay.ID
+	Reference   string
+	Title       string
+	Slug        string
 	BannerMedia *struct {
 		ImageMedia struct {
 			Id relay.ID
@@ -79,12 +69,6 @@ type UpdateSeriesTitle struct {
 	UpdateSeriesTitle *struct {
 		Series *SeriesModified
 	} `graphql:"updateSeriesTitle(input: $input)"`
-}
-
-type UpdateSeriesThumbnail struct {
-	UpdateSeriesThumbnail *struct {
-		Series *SeriesModified
-	} `graphql:"updateSeriesThumbnail(input: $input)"`
 }
 
 type TestSeries struct {
@@ -170,43 +154,12 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 
 	require.NoError(t, err, "no error updating series title")
 
-	seriesThumbnailId := "04ba807328b59c911a8a37f80447e16a"
-
-	var updateSeriesThumbnail UpdateSeriesThumbnail
-
-	err = client.Mutate(context.Background(), &updateSeriesThumbnail, map[string]interface{}{
-		"input": types.UpdateSeriesThumbnailInput{
-			ID:        series.Id,
-			Thumbnail: seriesThumbnailId,
-		},
-	})
-
-	require.NoError(t, err, "no error updating series thumbnail")
-
-	require.Empty(t, updateSeriesThumbnail.UpdateSeriesThumbnail.Series.ThumbnailMedia.ImageMedia.Id, "not yet processed")
-
 	grpcClient := getGrpcCallbackClient(t)
-
-	_, err = grpcClient.UpdateMedia(context.Background(), &proto.UpdateMediaRequest{Media: &proto.Media{
-		Id: seriesThumbnailId,
-		Link: &proto.MediaLink{
-			Id:   updateSeriesThumbnail.UpdateSeriesThumbnail.Series.Reference,
-			Type: proto.MediaLinkType_SERIES_THUMBNAIL,
-		},
-		ImageData: &proto.ImageData{Id: uuid.New().String()},
-		State: &proto.MediaState{
-			Processed: true,
-			Failed:    false,
-		},
-	}})
-
-	require.NoError(t, err, "no error updating resource")
 
 	series = getSeriesBySlug(t, client, currentSeriesSlug)
 
 	require.NotNil(t, series, "expected to have found series")
 	require.Equal(t, fake.Title, series.Title, "title has been updated")
-	require.NotEmpty(t, series.ThumbnailMedia.ImageMedia.Id, "has a thumbnail")
 	require.Nil(t, series.BannerMedia, "has no banner")
 
 	env := getWorkflowEnvironment()
@@ -221,7 +174,7 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 	_, err = grpcClient.UpdateMedia(context.Background(), &proto.UpdateMediaRequest{Media: &proto.Media{
 		Id: ser.BannerMedia().ID(),
 		Link: &proto.MediaLink{
-			Id:   updateSeriesThumbnail.UpdateSeriesThumbnail.Series.Reference,
+			Id:   series.Reference,
 			Type: proto.MediaLinkType_SERIES_BANNER,
 		},
 		ImageData: &proto.ImageData{Id: uuid.New().String()},

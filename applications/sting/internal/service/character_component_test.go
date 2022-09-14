@@ -18,17 +18,12 @@ import (
 )
 
 type CharacterModified struct {
-	Id             relay.ID
-	Name           string
-	Reference      string
-	Slug           string
-	Series         *SeriesModified
-	Club           *ClubModified
-	ThumbnailMedia *struct {
-		ImageMedia struct {
-			Id relay.ID
-		} `graphql:"... on ImageMedia"`
-	}
+	Id          relay.ID
+	Name        string
+	Reference   string
+	Slug        string
+	Series      *SeriesModified
+	Club        *ClubModified
 	BannerMedia *struct {
 		ImageMedia struct {
 			Id relay.ID
@@ -66,12 +61,6 @@ type UpdateCharacterName struct {
 	UpdateCharacterName *struct {
 		Character *CharacterModified
 	} `graphql:"updateCharacterName(input: $input)"`
-}
-
-type UpdateCharacterThumbnail struct {
-	UpdateCharacterThumbnail *struct {
-		Character *CharacterModified
-	} `graphql:"updateCharacterThumbnail(input: $input)"`
 }
 
 type TestCharacter struct {
@@ -175,45 +164,10 @@ func TestCreateSeriesCharacter_update_and_search(t *testing.T) {
 
 	require.NoError(t, err, "no error updating character name")
 
-	thumbnailResourceId := "00be69a89e31d28cf8e79b7373d505c7"
-
-	var updateCharacterThumbnail UpdateCharacterThumbnail
-
-	err = client.Mutate(context.Background(), &updateCharacterThumbnail, map[string]interface{}{
-		"input": types.UpdateCharacterThumbnailInput{
-			ID:        character.Id,
-			Thumbnail: thumbnailResourceId,
-		},
-	})
-
-	require.NoError(t, err, "no error updating character thumbnail")
-
-	require.Empty(t, updateCharacterThumbnail.UpdateCharacterThumbnail.Character.ThumbnailMedia.ImageMedia.Id, "not yet processed")
-
-	require.NoError(t, err, "no error updating category thumbnail")
-
-	grpcClient := getGrpcCallbackClient(t)
-
-	_, err = grpcClient.UpdateMedia(context.Background(), &proto.UpdateMediaRequest{Media: &proto.Media{
-		Id: thumbnailResourceId,
-		Link: &proto.MediaLink{
-			Id:   updateCharacterThumbnail.UpdateCharacterThumbnail.Character.Reference,
-			Type: proto.MediaLinkType_CHARACTER_THUMBNAIL,
-		},
-		ImageData: &proto.ImageData{Id: uuid.New().String()},
-		State: &proto.MediaState{
-			Processed: true,
-			Failed:    false,
-		},
-	}})
-
-	require.NoError(t, err, "no error running resource callback")
-
 	character = getSeriesCharacterBySlug(t, client, currentCharacterSlug, series.Slug())
 	require.NotNil(t, character, "expected to have found character")
 
 	require.Equal(t, fake.Name, character.Name, "title has been updated")
-	require.NotEmpty(t, character.ThumbnailMedia.ImageMedia.Id, "has a thumbnail")
 	require.Nil(t, character.BannerMedia, "has no banner ter")
 
 	env := getWorkflowEnvironment()
@@ -227,6 +181,7 @@ func TestCreateSeriesCharacter_update_and_search(t *testing.T) {
 
 	cat := getCharacterFromAdapter(t, character.Reference)
 
+	grpcClient := getGrpcCallbackClient(t)
 	_, err = grpcClient.UpdateMedia(context.Background(), &proto.UpdateMediaRequest{Media: &proto.Media{
 		Id: cat.BannerMedia().ID(),
 		Link: &proto.MediaLink{
