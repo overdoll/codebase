@@ -1,5 +1,5 @@
 ALTER table clubs
-    add (thumbnail blob, banner_media blob);
+    add (thumbnail_media blob, banner_media blob);
 
 ALTER table series
     add (banner_media blob);
