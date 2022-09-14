@@ -183,35 +183,6 @@ func (c *Character) UpdateName(requester *principal.Principal, name, locale stri
 	return nil
 }
 
-func (c *Character) UpdateThumbnail(requester *principal.Principal, thumbnail *media.Media) error {
-
-	// thumbnail updating is staff-only for now
-	if !requester.IsStaff() {
-		return principal.ErrNotAuthorized
-	}
-
-	if err := c.canUpdate(requester); err != nil {
-		return err
-	}
-
-	c.thumbnailMedia = thumbnail
-
-	return nil
-}
-
-func (c *Character) UpdateThumbnailExisting(thumbnail *media.Media) error {
-
-	if err := validateExistingResource(c.thumbnailMedia, thumbnail); err != nil {
-		return err
-	}
-
-	c.thumbnailMedia = thumbnail
-
-	c.update()
-
-	return nil
-}
-
 func (c *Character) UpdateBannerExisting(thumbnail *media.Media) error {
 
 	if err := validateExistingResource(c.bannerMedia, thumbnail); err != nil {

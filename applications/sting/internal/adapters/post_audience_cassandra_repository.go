@@ -25,7 +25,6 @@ var audienceTable = table.New(table.Metadata{
 		"title",
 		"thumbnail_resource",
 		"banner_resource",
-		"thumbnail_media",
 		"banner_media",
 		"standard",
 		"total_likes",
@@ -43,7 +42,6 @@ type audience struct {
 	Title             map[string]string `db:"title"`
 	ThumbnailResource string            `db:"thumbnail_resource"`
 	BannerResource    string            `db:"banner_resource"`
-	ThumbnailMedia    []byte            `db:"thumbnail_media"`
 	BannerMedia       []byte            `db:"banner_media"`
 	Standard          int               `db:"standard"`
 	TotalLikes        int               `db:"total_likes"`
@@ -75,12 +73,6 @@ func marshalAudienceToDatabase(pending *post.Audience) (*audience, error) {
 		standard = 1
 	}
 
-	marshalledThumbnail, err := media.MarshalMediaToDatabase(pending.ThumbnailMedia())
-
-	if err != nil {
-		return nil, err
-	}
-
 	marshalledBanner, err := media.MarshalMediaToDatabase(pending.BannerMedia())
 
 	if err != nil {
@@ -106,7 +98,6 @@ func marshalAudienceToDatabase(pending *post.Audience) (*audience, error) {
 		Title:             localization.MarshalTranslationToDatabase(pending.Title()),
 		ThumbnailResource: thumbnailResource,
 		BannerResource:    bannerResource,
-		ThumbnailMedia:    marshalledThumbnail,
 		BannerMedia:       marshalledBanner,
 		TotalLikes:        pending.TotalLikes(),
 		TotalPosts:        pending.TotalPosts(),
@@ -117,7 +108,7 @@ func marshalAudienceToDatabase(pending *post.Audience) (*audience, error) {
 
 func (r PostsCassandraElasticsearchRepository) unmarshalAudienceFromDatabase(ctx context.Context, b *audience) (*post.Audience, error) {
 
-	unmarshalled, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, b.ThumbnailResource, b.ThumbnailMedia)
+	unmarshalled, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, b.ThumbnailResource, nil)
 
 	if err != nil {
 		return nil, err
@@ -374,16 +365,8 @@ func (r PostsCassandraElasticsearchRepository) CreateAudience(ctx context.Contex
 	return nil
 }
 
-func (r PostsCassandraElasticsearchRepository) UpdateAudienceThumbnailOperator(ctx context.Context, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
-	return r.updateAudience(ctx, id, updateFn, []string{"thumbnail_media"})
-}
-
 func (r PostsCassandraElasticsearchRepository) UpdateAudienceBanner(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
 	return r.updateAudience(ctx, id, updateFn, []string{"banner_media"})
-}
-
-func (r PostsCassandraElasticsearchRepository) UpdateAudienceThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {
-	return r.updateAudience(ctx, id, updateFn, []string{"thumbnail_media"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateAudienceBannerOperator(ctx context.Context, id string, updateFn func(audience *post.Audience) error) (*post.Audience, error) {

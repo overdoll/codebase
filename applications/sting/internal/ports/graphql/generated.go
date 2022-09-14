@@ -108,7 +108,6 @@ type ComplexityRoot struct {
 		Slug              func(childComplexity int) int
 		Standard          func(childComplexity int) int
 		Thumbnail         func(childComplexity int) int
-		ThumbnailMedia    func(childComplexity int) int
 		Title             func(childComplexity int, locale *string) int
 		TitleTranslations func(childComplexity int) int
 		TotalLikes        func(childComplexity int) int
@@ -140,7 +139,6 @@ type ComplexityRoot struct {
 		Reference         func(childComplexity int) int
 		Slug              func(childComplexity int) int
 		Thumbnail         func(childComplexity int) int
-		ThumbnailMedia    func(childComplexity int) int
 		Title             func(childComplexity int, locale *string) int
 		TitleTranslations func(childComplexity int) int
 		Topic             func(childComplexity int) int
@@ -176,7 +174,6 @@ type ComplexityRoot struct {
 		Series           func(childComplexity int) int
 		Slug             func(childComplexity int) int
 		Thumbnail        func(childComplexity int) int
-		ThumbnailMedia   func(childComplexity int) int
 		TotalLikes       func(childComplexity int) int
 		TotalPosts       func(childComplexity int) int
 	}
@@ -488,13 +485,10 @@ type ComplexityRoot struct {
 		UndoLikePost                     func(childComplexity int, input types.UndoLikePostInput) int
 		UpdateAudienceBanner             func(childComplexity int, input types.UpdateAudienceBannerInput) int
 		UpdateAudienceIsStandard         func(childComplexity int, input types.UpdateAudienceIsStandardInput) int
-		UpdateAudienceThumbnail          func(childComplexity int, input types.UpdateAudienceThumbnailInput) int
 		UpdateAudienceTitle              func(childComplexity int, input types.UpdateAudienceTitleInput) int
-		UpdateCategoryThumbnail          func(childComplexity int, input types.UpdateCategoryThumbnailInput) int
 		UpdateCategoryTitle              func(childComplexity int, input types.UpdateCategoryTitleInput) int
 		UpdateCategoryTopic              func(childComplexity int, input types.UpdateCategoryTopicInput) int
 		UpdateCharacterName              func(childComplexity int, input types.UpdateCharacterNameInput) int
-		UpdateCharacterThumbnail         func(childComplexity int, input types.UpdateCharacterThumbnailInput) int
 		UpdateClubCharactersLimit        func(childComplexity int, input types.UpdateClubCharactersLimitInput) int
 		UpdateClubName                   func(childComplexity int, input types.UpdateClubNameInput) int
 		UpdateClubThumbnail              func(childComplexity int, input types.UpdateClubThumbnailInput) int
@@ -507,7 +501,6 @@ type ComplexityRoot struct {
 		UpdatePostContentIsSupporterOnly func(childComplexity int, input types.UpdatePostContentIsSupporterOnlyInput) int
 		UpdatePostContentOrder           func(childComplexity int, input types.UpdatePostContentOrderInput) int
 		UpdatePostDescription            func(childComplexity int, input types.UpdatePostDescriptionInput) int
-		UpdateSeriesThumbnail            func(childComplexity int, input types.UpdateSeriesThumbnailInput) int
 		UpdateSeriesTitle                func(childComplexity int, input types.UpdateSeriesTitleInput) int
 		UpdateTopicBanner                func(childComplexity int, input types.UpdateTopicBannerInput) int
 		UpdateTopicDescription           func(childComplexity int, input types.UpdateTopicDescriptionInput) int
@@ -675,7 +668,6 @@ type ComplexityRoot struct {
 		Reference         func(childComplexity int) int
 		Slug              func(childComplexity int) int
 		Thumbnail         func(childComplexity int) int
-		ThumbnailMedia    func(childComplexity int) int
 		Title             func(childComplexity int, locale *string) int
 		TitleTranslations func(childComplexity int) int
 		TotalLikes        func(childComplexity int) int
@@ -765,16 +757,8 @@ type ComplexityRoot struct {
 		Audience func(childComplexity int) int
 	}
 
-	UpdateAudienceThumbnailPayload struct {
-		Audience func(childComplexity int) int
-	}
-
 	UpdateAudienceTitlePayload struct {
 		Audience func(childComplexity int) int
-	}
-
-	UpdateCategoryThumbnailPayload struct {
-		Category func(childComplexity int) int
 	}
 
 	UpdateCategoryTitlePayload struct {
@@ -786,10 +770,6 @@ type ComplexityRoot struct {
 	}
 
 	UpdateCharacterNamePayload struct {
-		Character func(childComplexity int) int
-	}
-
-	UpdateCharacterThumbnailPayload struct {
 		Character func(childComplexity int) int
 	}
 
@@ -843,10 +823,6 @@ type ComplexityRoot struct {
 
 	UpdatePostDescriptionPayload struct {
 		Post func(childComplexity int) int
-	}
-
-	UpdateSeriesThumbnailPayload struct {
-		Series func(childComplexity int) int
 	}
 
 	UpdateSeriesTitlePayload struct {
@@ -949,18 +925,15 @@ type EntityResolver interface {
 type MutationResolver interface {
 	CreateCategory(ctx context.Context, input types.CreateCategoryInput) (*types.CreateCategoryPayload, error)
 	UpdateCategoryTitle(ctx context.Context, input types.UpdateCategoryTitleInput) (*types.UpdateCategoryTitlePayload, error)
-	UpdateCategoryThumbnail(ctx context.Context, input types.UpdateCategoryThumbnailInput) (*types.UpdateCategoryThumbnailPayload, error)
 	UpdateCategoryTopic(ctx context.Context, input types.UpdateCategoryTopicInput) (*types.UpdateCategoryTopicPayload, error)
 	AddCategoryAlternativeTitle(ctx context.Context, input types.AddCategoryAlternativeTitleInput) (*types.AddCategoryAlternativeTitlePayload, error)
 	RemoveCategoryAlternativeTitle(ctx context.Context, input types.RemoveCategoryAlternativeTitleInput) (*types.RemoveCategoryAlternativeTitlePayload, error)
 	CreateAudience(ctx context.Context, input types.CreateAudienceInput) (*types.CreateAudiencePayload, error)
 	UpdateAudienceTitle(ctx context.Context, input types.UpdateAudienceTitleInput) (*types.UpdateAudienceTitlePayload, error)
-	UpdateAudienceThumbnail(ctx context.Context, input types.UpdateAudienceThumbnailInput) (*types.UpdateAudienceThumbnailPayload, error)
 	UpdateAudienceBanner(ctx context.Context, input types.UpdateAudienceBannerInput) (*types.UpdateAudienceBannerPayload, error)
 	UpdateAudienceIsStandard(ctx context.Context, input types.UpdateAudienceIsStandardInput) (*types.UpdateAudienceIsStandardPayload, error)
 	CreateCharacter(ctx context.Context, input types.CreateCharacterInput) (*types.CreateCharacterPayload, error)
 	UpdateCharacterName(ctx context.Context, input types.UpdateCharacterNameInput) (*types.UpdateCharacterNamePayload, error)
-	UpdateCharacterThumbnail(ctx context.Context, input types.UpdateCharacterThumbnailInput) (*types.UpdateCharacterThumbnailPayload, error)
 	JoinClub(ctx context.Context, input types.JoinClubInput) (*types.JoinClubPayload, error)
 	LeaveClub(ctx context.Context, input types.LeaveClubInput) (*types.LeaveClubPayload, error)
 	CreateClub(ctx context.Context, input types.CreateClubInput) (*types.CreateClubPayload, error)
@@ -1001,7 +974,6 @@ type MutationResolver interface {
 	UnArchivePost(ctx context.Context, input types.UnArchivePostInput) (*types.UnArchivePostPayload, error)
 	CreateSeries(ctx context.Context, input types.CreateSeriesInput) (*types.CreateSeriesPayload, error)
 	UpdateSeriesTitle(ctx context.Context, input types.UpdateSeriesTitleInput) (*types.UpdateSeriesTitlePayload, error)
-	UpdateSeriesThumbnail(ctx context.Context, input types.UpdateSeriesThumbnailInput) (*types.UpdateSeriesThumbnailPayload, error)
 	CreateTopic(ctx context.Context, input types.CreateTopicInput) (*types.CreateTopicPayload, error)
 	UpdateTopicTitle(ctx context.Context, input types.UpdateTopicTitleInput) (*types.UpdateTopicTitlePayload, error)
 	UpdateTopicDescription(ctx context.Context, input types.UpdateTopicDescriptionInput) (*types.UpdateTopicDescriptionPayload, error)
@@ -1291,13 +1263,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Audience.Thumbnail(childComplexity), true
 
-	case "Audience.thumbnailMedia":
-		if e.complexity.Audience.ThumbnailMedia == nil {
-			break
-		}
-
-		return e.complexity.Audience.ThumbnailMedia(childComplexity), true
-
 	case "Audience.title":
 		if e.complexity.Audience.Title == nil {
 			break
@@ -1440,13 +1405,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Category.Thumbnail(childComplexity), true
-
-	case "Category.thumbnailMedia":
-		if e.complexity.Category.ThumbnailMedia == nil {
-			break
-		}
-
-		return e.complexity.Category.ThumbnailMedia(childComplexity), true
 
 	case "Category.title":
 		if e.complexity.Category.Title == nil {
@@ -1623,13 +1581,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Character.Thumbnail(childComplexity), true
-
-	case "Character.thumbnailMedia":
-		if e.complexity.Character.ThumbnailMedia == nil {
-			break
-		}
-
-		return e.complexity.Character.ThumbnailMedia(childComplexity), true
 
 	case "Character.totalLikes":
 		if e.complexity.Character.TotalLikes == nil {
@@ -3108,18 +3059,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdateAudienceIsStandard(childComplexity, args["input"].(types.UpdateAudienceIsStandardInput)), true
 
-	case "Mutation.updateAudienceThumbnail":
-		if e.complexity.Mutation.UpdateAudienceThumbnail == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_updateAudienceThumbnail_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.UpdateAudienceThumbnail(childComplexity, args["input"].(types.UpdateAudienceThumbnailInput)), true
-
 	case "Mutation.updateAudienceTitle":
 		if e.complexity.Mutation.UpdateAudienceTitle == nil {
 			break
@@ -3131,18 +3070,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdateAudienceTitle(childComplexity, args["input"].(types.UpdateAudienceTitleInput)), true
-
-	case "Mutation.updateCategoryThumbnail":
-		if e.complexity.Mutation.UpdateCategoryThumbnail == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_updateCategoryThumbnail_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.UpdateCategoryThumbnail(childComplexity, args["input"].(types.UpdateCategoryThumbnailInput)), true
 
 	case "Mutation.updateCategoryTitle":
 		if e.complexity.Mutation.UpdateCategoryTitle == nil {
@@ -3179,18 +3106,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdateCharacterName(childComplexity, args["input"].(types.UpdateCharacterNameInput)), true
-
-	case "Mutation.updateCharacterThumbnail":
-		if e.complexity.Mutation.UpdateCharacterThumbnail == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_updateCharacterThumbnail_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.UpdateCharacterThumbnail(childComplexity, args["input"].(types.UpdateCharacterThumbnailInput)), true
 
 	case "Mutation.updateClubCharactersLimit":
 		if e.complexity.Mutation.UpdateClubCharactersLimit == nil {
@@ -3335,18 +3250,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdatePostDescription(childComplexity, args["input"].(types.UpdatePostDescriptionInput)), true
-
-	case "Mutation.updateSeriesThumbnail":
-		if e.complexity.Mutation.UpdateSeriesThumbnail == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_updateSeriesThumbnail_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.UpdateSeriesThumbnail(childComplexity, args["input"].(types.UpdateSeriesThumbnailInput)), true
 
 	case "Mutation.updateSeriesTitle":
 		if e.complexity.Mutation.UpdateSeriesTitle == nil {
@@ -4237,13 +4140,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Series.Thumbnail(childComplexity), true
 
-	case "Series.thumbnailMedia":
-		if e.complexity.Series.ThumbnailMedia == nil {
-			break
-		}
-
-		return e.complexity.Series.ThumbnailMedia(childComplexity), true
-
 	case "Series.title":
 		if e.complexity.Series.Title == nil {
 			break
@@ -4516,26 +4412,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.UpdateAudienceIsStandardPayload.Audience(childComplexity), true
 
-	case "UpdateAudienceThumbnailPayload.audience":
-		if e.complexity.UpdateAudienceThumbnailPayload.Audience == nil {
-			break
-		}
-
-		return e.complexity.UpdateAudienceThumbnailPayload.Audience(childComplexity), true
-
 	case "UpdateAudienceTitlePayload.audience":
 		if e.complexity.UpdateAudienceTitlePayload.Audience == nil {
 			break
 		}
 
 		return e.complexity.UpdateAudienceTitlePayload.Audience(childComplexity), true
-
-	case "UpdateCategoryThumbnailPayload.category":
-		if e.complexity.UpdateCategoryThumbnailPayload.Category == nil {
-			break
-		}
-
-		return e.complexity.UpdateCategoryThumbnailPayload.Category(childComplexity), true
 
 	case "UpdateCategoryTitlePayload.category":
 		if e.complexity.UpdateCategoryTitlePayload.Category == nil {
@@ -4557,13 +4439,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.UpdateCharacterNamePayload.Character(childComplexity), true
-
-	case "UpdateCharacterThumbnailPayload.character":
-		if e.complexity.UpdateCharacterThumbnailPayload.Character == nil {
-			break
-		}
-
-		return e.complexity.UpdateCharacterThumbnailPayload.Character(childComplexity), true
 
 	case "UpdateClubCharactersLimitPayload.club":
 		if e.complexity.UpdateClubCharactersLimitPayload.Club == nil {
@@ -4655,13 +4530,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.UpdatePostDescriptionPayload.Post(childComplexity), true
-
-	case "UpdateSeriesThumbnailPayload.series":
-		if e.complexity.UpdateSeriesThumbnailPayload.Series == nil {
-			break
-		}
-
-		return e.complexity.UpdateSeriesThumbnailPayload.Series(childComplexity), true
 
 	case "UpdateSeriesTitlePayload.series":
 		if e.complexity.UpdateSeriesTitlePayload.Series == nil {
@@ -4790,13 +4658,10 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputUndoLikePostInput,
 		ec.unmarshalInputUpdateAudienceBannerInput,
 		ec.unmarshalInputUpdateAudienceIsStandardInput,
-		ec.unmarshalInputUpdateAudienceThumbnailInput,
 		ec.unmarshalInputUpdateAudienceTitleInput,
-		ec.unmarshalInputUpdateCategoryThumbnailInput,
 		ec.unmarshalInputUpdateCategoryTitleInput,
 		ec.unmarshalInputUpdateCategoryTopicInput,
 		ec.unmarshalInputUpdateCharacterNameInput,
-		ec.unmarshalInputUpdateCharacterThumbnailInput,
 		ec.unmarshalInputUpdateClubCharactersLimitInput,
 		ec.unmarshalInputUpdateClubNameInput,
 		ec.unmarshalInputUpdateClubThumbnailInput,
@@ -4809,7 +4674,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputUpdatePostContentIsSupporterOnlyInput,
 		ec.unmarshalInputUpdatePostContentOrderInput,
 		ec.unmarshalInputUpdatePostDescriptionInput,
-		ec.unmarshalInputUpdateSeriesThumbnailInput,
 		ec.unmarshalInputUpdateSeriesTitleInput,
 		ec.unmarshalInputUpdateTopicBannerInput,
 		ec.unmarshalInputUpdateTopicDescriptionInput,
@@ -4887,9 +4751,6 @@ var sources = []*ast.Source{
 
   """A URL pointing to the object's thumbnail."""
   thumbnail: Resource
-
-  """A URL pointing to the object's thumbnail."""
-  thumbnailMedia: Media
 
   """A URL pointing to the object's banner."""
   banner: Resource
@@ -5027,15 +4888,6 @@ input UpdateAudienceTitleInput {
 }
 
 """Update audience."""
-input UpdateAudienceThumbnailInput {
-  """The audience to update"""
-  id: ID!
-
-  """The thumbnail"""
-  thumbnail: String!
-}
-
-"""Update audience."""
 input UpdateAudienceBannerInput {
   """The audience to update"""
   id: ID!
@@ -5055,12 +4907,6 @@ input UpdateAudienceIsStandardInput {
 
 """Payload for updating audience"""
 type UpdateAudienceTitlePayload {
-  """The audience after update"""
-  audience: Audience
-}
-
-"""Payload for updating audience"""
-type UpdateAudienceThumbnailPayload {
   """The audience after update"""
   audience: Audience
 }
@@ -5089,11 +4935,6 @@ extend type Mutation {
   updateAudienceTitle(input: UpdateAudienceTitleInput!): UpdateAudienceTitlePayload
 
   """
-  Update audience thumbnail
-  """
-  updateAudienceThumbnail(input: UpdateAudienceThumbnailInput!): UpdateAudienceThumbnailPayload
-
-  """
   Update audience banner
   """
   updateAudienceBanner(input: UpdateAudienceBannerInput!): UpdateAudienceBannerPayload
@@ -5116,9 +4957,6 @@ extend type Mutation {
 
   """A URL pointing to the object's thumbnail."""
   thumbnail: Resource
-
-  """A URL pointing to the object's thumbnail."""
-  thumbnailMedia: Media
 
   """A URL pointing to the object's banner."""
   banner: Resource
@@ -5301,15 +5139,6 @@ input UpdateCategoryTopicInput {
   topicId: ID!
 }
 
-"""Update category."""
-input UpdateCategoryThumbnailInput {
-  """The category to update"""
-  id: ID!
-
-  """The thumbnail"""
-  thumbnail: String!
-}
-
 """Payload for updating category"""
 type UpdateCategoryTopicPayload {
   """The category after update"""
@@ -5334,12 +5163,6 @@ type UpdateCategoryTitlePayload {
   category: Category
 }
 
-"""Payload for updating category"""
-type UpdateCategoryThumbnailPayload {
-  """The category after update"""
-  category: Category
-}
-
 type Mutation {
   """
   Create a new category
@@ -5350,11 +5173,6 @@ type Mutation {
   Update category title
   """
   updateCategoryTitle(input: UpdateCategoryTitleInput!): UpdateCategoryTitlePayload
-
-  """
-  Update category thumbnail
-  """
-  updateCategoryThumbnail(input: UpdateCategoryThumbnailInput!): UpdateCategoryThumbnailPayload
 
   """
   Update the category topic
@@ -5384,9 +5202,6 @@ type Mutation {
 
   """A URL pointing to the object's thumbnail."""
   thumbnail: Resource
-
-  """A URL pointing to the object's thumbnail."""
-  thumbnailMedia: Media
 
   """A URL pointing to the object's banner."""
   banner: Resource
@@ -5617,23 +5432,8 @@ input UpdateCharacterNameInput {
   locale: BCP47!
 }
 
-"""Update character."""
-input UpdateCharacterThumbnailInput {
-  """The character to update"""
-  id: ID!
-
-  """The thumbnail"""
-  thumbnail: String!
-}
-
 """Payload for updating character"""
 type UpdateCharacterNamePayload {
-  """The character after update"""
-  character: Character
-}
-
-"""Payload for updating character"""
-type UpdateCharacterThumbnailPayload {
   """The character after update"""
   character: Character
 }
@@ -5653,13 +5453,6 @@ extend type Mutation {
   Update character title
   """
   updateCharacterName(input: UpdateCharacterNameInput!): UpdateCharacterNamePayload
-
-  """
-  Update character thumbnail
-
-  Note that this is Staff+ only for now - even if the character is a club character.
-  """
-  updateCharacterThumbnail(input: UpdateCharacterThumbnailInput!): UpdateCharacterThumbnailPayload
 }
 `, BuiltIn: false},
 	{Name: "../../../schema/club/schema.graphql", Input: `type ClubLink {
@@ -7566,9 +7359,6 @@ extend type Audience {
   """A URL pointing to the object's thumbnail."""
   thumbnail: Resource
 
-  """A URL pointing to the object's thumbnail."""
-  thumbnailMedia: Media
-
   """A URL pointing to the object's banner."""
   banner: Resource
 
@@ -7700,24 +7490,9 @@ input UpdateSeriesTitleInput {
   locale: BCP47!
 }
 
-"""Update series."""
-input UpdateSeriesThumbnailInput {
-  """The series to update"""
-  id: ID!
-
-  """The thumbnail"""
-  thumbnail: String!
-}
-
 """Payload for updating series"""
 type UpdateSeriesTitlePayload {
   """The series after update"""
-  series: Series
-}
-
-"""Payload for updating series"""
-type UpdateSeriesThumbnailPayload {
-  """The category after update"""
   series: Series
 }
 
@@ -7731,11 +7506,6 @@ extend type Mutation {
   Update series title
   """
   updateSeriesTitle(input: UpdateSeriesTitleInput!): UpdateSeriesTitlePayload
-
-  """
-  Update series thumbnail
-  """
-  updateSeriesThumbnail(input: UpdateSeriesThumbnailInput!): UpdateSeriesThumbnailPayload
 }
 `, BuiltIn: false},
 	{Name: "../../../schema/topic/schema.graphql", Input: `type Topic implements Node @key(fields: "id") {
@@ -9963,21 +9733,6 @@ func (ec *executionContext) field_Mutation_updateAudienceIsStandard_args(ctx con
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_updateAudienceThumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 types.UpdateAudienceThumbnailInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUpdateAudienceThumbnailInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAudienceThumbnailInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
 func (ec *executionContext) field_Mutation_updateAudienceTitle_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -9985,21 +9740,6 @@ func (ec *executionContext) field_Mutation_updateAudienceTitle_args(ctx context.
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNUpdateAudienceTitleInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAudienceTitleInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_updateCategoryThumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 types.UpdateCategoryThumbnailInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUpdateCategoryThumbnailInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCategoryThumbnailInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -10045,21 +9785,6 @@ func (ec *executionContext) field_Mutation_updateCharacterName_args(ctx context.
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNUpdateCharacterNameInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCharacterNameInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_updateCharacterThumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 types.UpdateCharacterThumbnailInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUpdateCharacterThumbnailInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCharacterThumbnailInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -10240,21 +9965,6 @@ func (ec *executionContext) field_Mutation_updatePostDescription_args(ctx contex
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNUpdatePostDescriptionInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostDescriptionInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_updateSeriesThumbnail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 types.UpdateSeriesThumbnailInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNUpdateSeriesThumbnailInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateSeriesThumbnailInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -12284,8 +11994,6 @@ func (ec *executionContext) fieldContext_AddCategoryAlternativeTitlePayload_cate
 				return ec.fieldContext_Category_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Category_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Category_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Category_banner(ctx, field)
 			case "bannerMedia":
@@ -12891,47 +12599,6 @@ func (ec *executionContext) fieldContext_Audience_thumbnail(ctx context.Context,
 				return ec.fieldContext_Resource_failed(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Resource", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Audience_thumbnailMedia(ctx context.Context, field graphql.CollectedField, obj *types.Audience) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Audience_thumbnailMedia(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ThumbnailMedia, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(graphql1.Media)
-	fc.Result = res
-	return ec.marshalOMedia2overdollᚋlibrariesᚋgraphqlᚐMedia(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Audience_thumbnailMedia(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Audience",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Media does not have child fields")
 		},
 	}
 	return fc, nil
@@ -13582,8 +13249,6 @@ func (ec *executionContext) fieldContext_AudienceCurationProfile_audiences(ctx c
 				return ec.fieldContext_Audience_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Audience_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Audience_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Audience_banner(ctx, field)
 			case "bannerMedia":
@@ -13698,8 +13363,6 @@ func (ec *executionContext) fieldContext_AudienceEdge_node(ctx context.Context, 
 				return ec.fieldContext_Audience_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Audience_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Audience_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Audience_banner(ctx, field)
 			case "bannerMedia":
@@ -13917,47 +13580,6 @@ func (ec *executionContext) fieldContext_Category_thumbnail(ctx context.Context,
 				return ec.fieldContext_Resource_failed(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Resource", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Category_thumbnailMedia(ctx context.Context, field graphql.CollectedField, obj *types.Category) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Category_thumbnailMedia(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ThumbnailMedia, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(graphql1.Media)
-	fc.Result = res
-	return ec.marshalOMedia2overdollᚋlibrariesᚋgraphqlᚐMedia(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Category_thumbnailMedia(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Category",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Media does not have child fields")
 		},
 	}
 	return fc, nil
@@ -14679,8 +14301,6 @@ func (ec *executionContext) fieldContext_CategoryCurationProfile_categories(ctx 
 				return ec.fieldContext_Category_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Category_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Category_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Category_banner(ctx, field)
 			case "bannerMedia":
@@ -14797,8 +14417,6 @@ func (ec *executionContext) fieldContext_CategoryEdge_node(ctx context.Context, 
 				return ec.fieldContext_Category_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Category_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Category_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Category_banner(ctx, field)
 			case "bannerMedia":
@@ -15018,47 +14636,6 @@ func (ec *executionContext) fieldContext_Character_thumbnail(ctx context.Context
 				return ec.fieldContext_Resource_failed(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Resource", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Character_thumbnailMedia(ctx context.Context, field graphql.CollectedField, obj *types.Character) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Character_thumbnailMedia(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ThumbnailMedia, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(graphql1.Media)
-	fc.Result = res
-	return ec.marshalOMedia2overdollᚋlibrariesᚋgraphqlᚐMedia(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Character_thumbnailMedia(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Character",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Media does not have child fields")
 		},
 	}
 	return fc, nil
@@ -15409,8 +14986,6 @@ func (ec *executionContext) fieldContext_Character_series(ctx context.Context, f
 				return ec.fieldContext_Series_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Series_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Series_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Series_banner(ctx, field)
 			case "bannerMedia":
@@ -15793,8 +15368,6 @@ func (ec *executionContext) fieldContext_CharacterEdge_node(ctx context.Context,
 				return ec.fieldContext_Character_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Character_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Character_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Character_banner(ctx, field)
 			case "bannerMedia":
@@ -19028,8 +18601,6 @@ func (ec *executionContext) fieldContext_CreateAudiencePayload_audience(ctx cont
 				return ec.fieldContext_Audience_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Audience_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Audience_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Audience_banner(ctx, field)
 			case "bannerMedia":
@@ -19138,8 +18709,6 @@ func (ec *executionContext) fieldContext_CreateCategoryPayload_category(ctx cont
 				return ec.fieldContext_Category_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Category_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Category_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Category_banner(ctx, field)
 			case "bannerMedia":
@@ -19250,8 +18819,6 @@ func (ec *executionContext) fieldContext_CreateCharacterPayload_character(ctx co
 				return ec.fieldContext_Character_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Character_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Character_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Character_banner(ctx, field)
 			case "bannerMedia":
@@ -19638,8 +19205,6 @@ func (ec *executionContext) fieldContext_CreateSeriesPayload_series(ctx context.
 				return ec.fieldContext_Series_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Series_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Series_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Series_banner(ctx, field)
 			case "bannerMedia":
@@ -20764,8 +20329,6 @@ func (ec *executionContext) fieldContext_Entity_findAudienceByID(ctx context.Con
 				return ec.fieldContext_Audience_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Audience_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Audience_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Audience_banner(ctx, field)
 			case "bannerMedia":
@@ -20847,8 +20410,6 @@ func (ec *executionContext) fieldContext_Entity_findCategoryByID(ctx context.Con
 				return ec.fieldContext_Category_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Category_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Category_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Category_banner(ctx, field)
 			case "bannerMedia":
@@ -20932,8 +20493,6 @@ func (ec *executionContext) fieldContext_Entity_findCharacterByID(ctx context.Co
 				return ec.fieldContext_Character_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Character_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Character_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Character_banner(ctx, field)
 			case "bannerMedia":
@@ -21359,8 +20918,6 @@ func (ec *executionContext) fieldContext_Entity_findSeriesByID(ctx context.Conte
 				return ec.fieldContext_Series_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Series_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Series_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Series_banner(ctx, field)
 			case "bannerMedia":
@@ -23330,62 +22887,6 @@ func (ec *executionContext) fieldContext_Mutation_updateCategoryTitle(ctx contex
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_updateCategoryThumbnail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_updateCategoryThumbnail(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateCategoryThumbnail(rctx, fc.Args["input"].(types.UpdateCategoryThumbnailInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.UpdateCategoryThumbnailPayload)
-	fc.Result = res
-	return ec.marshalOUpdateCategoryThumbnailPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCategoryThumbnailPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_updateCategoryThumbnail(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "category":
-				return ec.fieldContext_UpdateCategoryThumbnailPayload_category(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type UpdateCategoryThumbnailPayload", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_updateCategoryThumbnail_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Mutation_updateCategoryTopic(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_updateCategoryTopic(ctx, field)
 	if err != nil {
@@ -23668,62 +23169,6 @@ func (ec *executionContext) fieldContext_Mutation_updateAudienceTitle(ctx contex
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_updateAudienceThumbnail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_updateAudienceThumbnail(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateAudienceThumbnail(rctx, fc.Args["input"].(types.UpdateAudienceThumbnailInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.UpdateAudienceThumbnailPayload)
-	fc.Result = res
-	return ec.marshalOUpdateAudienceThumbnailPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAudienceThumbnailPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_updateAudienceThumbnail(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "audience":
-				return ec.fieldContext_UpdateAudienceThumbnailPayload_audience(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type UpdateAudienceThumbnailPayload", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_updateAudienceThumbnail_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Mutation_updateAudienceBanner(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_updateAudienceBanner(ctx, field)
 	if err != nil {
@@ -23944,62 +23389,6 @@ func (ec *executionContext) fieldContext_Mutation_updateCharacterName(ctx contex
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_updateCharacterName_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Mutation_updateCharacterThumbnail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_updateCharacterThumbnail(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateCharacterThumbnail(rctx, fc.Args["input"].(types.UpdateCharacterThumbnailInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.UpdateCharacterThumbnailPayload)
-	fc.Result = res
-	return ec.marshalOUpdateCharacterThumbnailPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCharacterThumbnailPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_updateCharacterThumbnail(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "character":
-				return ec.fieldContext_UpdateCharacterThumbnailPayload_character(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type UpdateCharacterThumbnailPayload", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_updateCharacterThumbnail_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -26252,62 +25641,6 @@ func (ec *executionContext) fieldContext_Mutation_updateSeriesTitle(ctx context.
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_updateSeriesThumbnail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_updateSeriesThumbnail(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().UpdateSeriesThumbnail(rctx, fc.Args["input"].(types.UpdateSeriesThumbnailInput))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.UpdateSeriesThumbnailPayload)
-	fc.Result = res
-	return ec.marshalOUpdateSeriesThumbnailPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateSeriesThumbnailPayload(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_updateSeriesThumbnail(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "series":
-				return ec.fieldContext_UpdateSeriesThumbnailPayload_series(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type UpdateSeriesThumbnailPayload", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_updateSeriesThumbnail_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Mutation_createTopic(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_createTopic(ctx, field)
 	if err != nil {
@@ -27469,8 +26802,6 @@ func (ec *executionContext) fieldContext_Post_audience(ctx context.Context, fiel
 				return ec.fieldContext_Audience_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Audience_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Audience_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Audience_banner(ctx, field)
 			case "bannerMedia":
@@ -27541,8 +26872,6 @@ func (ec *executionContext) fieldContext_Post_categories(ctx context.Context, fi
 				return ec.fieldContext_Category_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Category_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Category_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Category_banner(ctx, field)
 			case "bannerMedia":
@@ -27615,8 +26944,6 @@ func (ec *executionContext) fieldContext_Post_characters(ctx context.Context, fi
 				return ec.fieldContext_Character_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Character_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Character_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Character_banner(ctx, field)
 			case "bannerMedia":
@@ -28806,8 +28133,6 @@ func (ec *executionContext) fieldContext_Query_category(ctx context.Context, fie
 				return ec.fieldContext_Category_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Category_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Category_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Category_banner(ctx, field)
 			case "bannerMedia":
@@ -28949,8 +28274,6 @@ func (ec *executionContext) fieldContext_Query_audience(ctx context.Context, fie
 				return ec.fieldContext_Audience_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Audience_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Audience_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Audience_banner(ctx, field)
 			case "bannerMedia":
@@ -29090,8 +28413,6 @@ func (ec *executionContext) fieldContext_Query_character(ctx context.Context, fi
 				return ec.fieldContext_Character_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Character_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Character_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Character_banner(ctx, field)
 			case "bannerMedia":
@@ -29792,8 +29113,6 @@ func (ec *executionContext) fieldContext_Query_serial(ctx context.Context, field
 				return ec.fieldContext_Series_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Series_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Series_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Series_banner(ctx, field)
 			case "bannerMedia":
@@ -30418,8 +29737,6 @@ func (ec *executionContext) fieldContext_RemoveCategoryAlternativeTitlePayload_c
 				return ec.fieldContext_Category_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Category_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Category_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Category_banner(ctx, field)
 			case "bannerMedia":
@@ -32185,47 +31502,6 @@ func (ec *executionContext) fieldContext_Series_thumbnail(ctx context.Context, f
 	return fc, nil
 }
 
-func (ec *executionContext) _Series_thumbnailMedia(ctx context.Context, field graphql.CollectedField, obj *types.Series) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Series_thumbnailMedia(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ThumbnailMedia, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(graphql1.Media)
-	fc.Result = res
-	return ec.marshalOMedia2overdollᚋlibrariesᚋgraphqlᚐMedia(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Series_thumbnailMedia(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Series",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Media does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Series_banner(ctx context.Context, field graphql.CollectedField, obj *types.Series) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Series_banner(ctx, field)
 	if err != nil {
@@ -32844,8 +32120,6 @@ func (ec *executionContext) fieldContext_SeriesEdge_node(ctx context.Context, fi
 				return ec.fieldContext_Series_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Series_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Series_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Series_banner(ctx, field)
 			case "bannerMedia":
@@ -34541,8 +33815,6 @@ func (ec *executionContext) fieldContext_UpdateAudienceBannerPayload_audience(ct
 				return ec.fieldContext_Audience_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Audience_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Audience_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Audience_banner(ctx, field)
 			case "bannerMedia":
@@ -34610,77 +33882,6 @@ func (ec *executionContext) fieldContext_UpdateAudienceIsStandardPayload_audienc
 				return ec.fieldContext_Audience_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Audience_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Audience_thumbnailMedia(ctx, field)
-			case "banner":
-				return ec.fieldContext_Audience_banner(ctx, field)
-			case "bannerMedia":
-				return ec.fieldContext_Audience_bannerMedia(ctx, field)
-			case "title":
-				return ec.fieldContext_Audience_title(ctx, field)
-			case "standard":
-				return ec.fieldContext_Audience_standard(ctx, field)
-			case "titleTranslations":
-				return ec.fieldContext_Audience_titleTranslations(ctx, field)
-			case "totalLikes":
-				return ec.fieldContext_Audience_totalLikes(ctx, field)
-			case "totalPosts":
-				return ec.fieldContext_Audience_totalPosts(ctx, field)
-			case "posts":
-				return ec.fieldContext_Audience_posts(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Audience", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _UpdateAudienceThumbnailPayload_audience(ctx context.Context, field graphql.CollectedField, obj *types.UpdateAudienceThumbnailPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_UpdateAudienceThumbnailPayload_audience(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Audience, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.Audience)
-	fc.Result = res
-	return ec.marshalOAudience2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐAudience(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_UpdateAudienceThumbnailPayload_audience(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "UpdateAudienceThumbnailPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Audience_id(ctx, field)
-			case "reference":
-				return ec.fieldContext_Audience_reference(ctx, field)
-			case "slug":
-				return ec.fieldContext_Audience_slug(ctx, field)
-			case "thumbnail":
-				return ec.fieldContext_Audience_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Audience_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Audience_banner(ctx, field)
 			case "bannerMedia":
@@ -34748,8 +33949,6 @@ func (ec *executionContext) fieldContext_UpdateAudienceTitlePayload_audience(ctx
 				return ec.fieldContext_Audience_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Audience_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Audience_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Audience_banner(ctx, field)
 			case "bannerMedia":
@@ -34768,77 +33967,6 @@ func (ec *executionContext) fieldContext_UpdateAudienceTitlePayload_audience(ctx
 				return ec.fieldContext_Audience_posts(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Audience", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _UpdateCategoryThumbnailPayload_category(ctx context.Context, field graphql.CollectedField, obj *types.UpdateCategoryThumbnailPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_UpdateCategoryThumbnailPayload_category(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Category, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.Category)
-	fc.Result = res
-	return ec.marshalOCategory2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCategory(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_UpdateCategoryThumbnailPayload_category(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "UpdateCategoryThumbnailPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Category_id(ctx, field)
-			case "reference":
-				return ec.fieldContext_Category_reference(ctx, field)
-			case "slug":
-				return ec.fieldContext_Category_slug(ctx, field)
-			case "thumbnail":
-				return ec.fieldContext_Category_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Category_thumbnailMedia(ctx, field)
-			case "banner":
-				return ec.fieldContext_Category_banner(ctx, field)
-			case "bannerMedia":
-				return ec.fieldContext_Category_bannerMedia(ctx, field)
-			case "title":
-				return ec.fieldContext_Category_title(ctx, field)
-			case "titleTranslations":
-				return ec.fieldContext_Category_titleTranslations(ctx, field)
-			case "alternativeTitles":
-				return ec.fieldContext_Category_alternativeTitles(ctx, field)
-			case "totalLikes":
-				return ec.fieldContext_Category_totalLikes(ctx, field)
-			case "totalPosts":
-				return ec.fieldContext_Category_totalPosts(ctx, field)
-			case "topic":
-				return ec.fieldContext_Category_topic(ctx, field)
-			case "posts":
-				return ec.fieldContext_Category_posts(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Category", field.Name)
 		},
 	}
 	return fc, nil
@@ -34888,8 +34016,6 @@ func (ec *executionContext) fieldContext_UpdateCategoryTitlePayload_category(ctx
 				return ec.fieldContext_Category_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Category_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Category_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Category_banner(ctx, field)
 			case "bannerMedia":
@@ -34959,8 +34085,6 @@ func (ec *executionContext) fieldContext_UpdateCategoryTopicPayload_category(ctx
 				return ec.fieldContext_Category_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Category_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Category_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Category_banner(ctx, field)
 			case "bannerMedia":
@@ -35030,79 +34154,6 @@ func (ec *executionContext) fieldContext_UpdateCharacterNamePayload_character(ct
 				return ec.fieldContext_Character_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Character_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Character_thumbnailMedia(ctx, field)
-			case "banner":
-				return ec.fieldContext_Character_banner(ctx, field)
-			case "bannerMedia":
-				return ec.fieldContext_Character_bannerMedia(ctx, field)
-			case "name":
-				return ec.fieldContext_Character_name(ctx, field)
-			case "nameTranslations":
-				return ec.fieldContext_Character_nameTranslations(ctx, field)
-			case "totalLikes":
-				return ec.fieldContext_Character_totalLikes(ctx, field)
-			case "totalPosts":
-				return ec.fieldContext_Character_totalPosts(ctx, field)
-			case "series":
-				return ec.fieldContext_Character_series(ctx, field)
-			case "club":
-				return ec.fieldContext_Character_club(ctx, field)
-			case "posts":
-				return ec.fieldContext_Character_posts(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Character", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _UpdateCharacterThumbnailPayload_character(ctx context.Context, field graphql.CollectedField, obj *types.UpdateCharacterThumbnailPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_UpdateCharacterThumbnailPayload_character(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Character, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.Character)
-	fc.Result = res
-	return ec.marshalOCharacter2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacter(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_UpdateCharacterThumbnailPayload_character(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "UpdateCharacterThumbnailPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Character_id(ctx, field)
-			case "reference":
-				return ec.fieldContext_Character_reference(ctx, field)
-			case "slug":
-				return ec.fieldContext_Character_slug(ctx, field)
-			case "thumbnail":
-				return ec.fieldContext_Character_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Character_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Character_banner(ctx, field)
 			case "bannerMedia":
@@ -36135,75 +35186,6 @@ func (ec *executionContext) fieldContext_UpdatePostDescriptionPayload_post(ctx c
 	return fc, nil
 }
 
-func (ec *executionContext) _UpdateSeriesThumbnailPayload_series(ctx context.Context, field graphql.CollectedField, obj *types.UpdateSeriesThumbnailPayload) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_UpdateSeriesThumbnailPayload_series(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Series, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*types.Series)
-	fc.Result = res
-	return ec.marshalOSeries2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSeries(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_UpdateSeriesThumbnailPayload_series(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "UpdateSeriesThumbnailPayload",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Series_id(ctx, field)
-			case "reference":
-				return ec.fieldContext_Series_reference(ctx, field)
-			case "slug":
-				return ec.fieldContext_Series_slug(ctx, field)
-			case "thumbnail":
-				return ec.fieldContext_Series_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Series_thumbnailMedia(ctx, field)
-			case "banner":
-				return ec.fieldContext_Series_banner(ctx, field)
-			case "bannerMedia":
-				return ec.fieldContext_Series_bannerMedia(ctx, field)
-			case "title":
-				return ec.fieldContext_Series_title(ctx, field)
-			case "titleTranslations":
-				return ec.fieldContext_Series_titleTranslations(ctx, field)
-			case "totalLikes":
-				return ec.fieldContext_Series_totalLikes(ctx, field)
-			case "totalPosts":
-				return ec.fieldContext_Series_totalPosts(ctx, field)
-			case "characters":
-				return ec.fieldContext_Series_characters(ctx, field)
-			case "posts":
-				return ec.fieldContext_Series_posts(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Series", field.Name)
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _UpdateSeriesTitlePayload_series(ctx context.Context, field graphql.CollectedField, obj *types.UpdateSeriesTitlePayload) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_UpdateSeriesTitlePayload_series(ctx, field)
 	if err != nil {
@@ -36248,8 +35230,6 @@ func (ec *executionContext) fieldContext_UpdateSeriesTitlePayload_series(ctx con
 				return ec.fieldContext_Series_slug(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Series_thumbnail(ctx, field)
-			case "thumbnailMedia":
-				return ec.fieldContext_Series_thumbnailMedia(ctx, field)
 			case "banner":
 				return ec.fieldContext_Series_banner(ctx, field)
 			case "bannerMedia":
@@ -39640,37 +38620,6 @@ func (ec *executionContext) unmarshalInputUpdateAudienceIsStandardInput(ctx cont
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputUpdateAudienceThumbnailInput(ctx context.Context, obj interface{}) (types.UpdateAudienceThumbnailInput, error) {
-	var it types.UpdateAudienceThumbnailInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "thumbnail":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("thumbnail"))
-			it.Thumbnail, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputUpdateAudienceTitleInput(ctx context.Context, obj interface{}) (types.UpdateAudienceTitleInput, error) {
 	var it types.UpdateAudienceTitleInput
 	asMap := map[string]interface{}{}
@@ -39701,37 +38650,6 @@ func (ec *executionContext) unmarshalInputUpdateAudienceTitleInput(ctx context.C
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
 			it.Locale, err = ec.unmarshalNBCP472string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputUpdateCategoryThumbnailInput(ctx context.Context, obj interface{}) (types.UpdateCategoryThumbnailInput, error) {
-	var it types.UpdateCategoryThumbnailInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "thumbnail":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("thumbnail"))
-			it.Thumbnail, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -39841,37 +38759,6 @@ func (ec *executionContext) unmarshalInputUpdateCharacterNameInput(ctx context.C
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
 			it.Locale, err = ec.unmarshalNBCP472string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputUpdateCharacterThumbnailInput(ctx context.Context, obj interface{}) (types.UpdateCharacterThumbnailInput, error) {
-	var it types.UpdateCharacterThumbnailInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "thumbnail":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("thumbnail"))
-			it.Thumbnail, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -40260,37 +39147,6 @@ func (ec *executionContext) unmarshalInputUpdatePostDescriptionInput(ctx context
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("locale"))
 			it.Locale, err = ec.unmarshalNBCP472string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputUpdateSeriesThumbnailInput(ctx context.Context, obj interface{}) (types.UpdateSeriesThumbnailInput, error) {
-	var it types.UpdateSeriesThumbnailInput
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	for k, v := range asMap {
-		switch k {
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "thumbnail":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("thumbnail"))
-			it.Thumbnail, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -41203,10 +40059,6 @@ func (ec *executionContext) _Audience(ctx context.Context, sel ast.SelectionSet,
 
 			out.Values[i] = ec._Audience_thumbnail(ctx, field, obj)
 
-		case "thumbnailMedia":
-
-			out.Values[i] = ec._Audience_thumbnailMedia(ctx, field, obj)
-
 		case "banner":
 
 			out.Values[i] = ec._Audience_banner(ctx, field, obj)
@@ -41453,10 +40305,6 @@ func (ec *executionContext) _Category(ctx context.Context, sel ast.SelectionSet,
 		case "thumbnail":
 
 			out.Values[i] = ec._Category_thumbnail(ctx, field, obj)
-
-		case "thumbnailMedia":
-
-			out.Values[i] = ec._Category_thumbnailMedia(ctx, field, obj)
 
 		case "banner":
 
@@ -41721,10 +40569,6 @@ func (ec *executionContext) _Character(ctx context.Context, sel ast.SelectionSet
 		case "thumbnail":
 
 			out.Values[i] = ec._Character_thumbnail(ctx, field, obj)
-
-		case "thumbnailMedia":
-
-			out.Values[i] = ec._Character_thumbnailMedia(ctx, field, obj)
 
 		case "banner":
 
@@ -43932,12 +42776,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_updateCategoryTitle(ctx, field)
 			})
 
-		case "updateCategoryThumbnail":
-
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_updateCategoryThumbnail(ctx, field)
-			})
-
 		case "updateCategoryTopic":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -43968,12 +42806,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_updateAudienceTitle(ctx, field)
 			})
 
-		case "updateAudienceThumbnail":
-
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_updateAudienceThumbnail(ctx, field)
-			})
-
 		case "updateAudienceBanner":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -43996,12 +42828,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateCharacterName(ctx, field)
-			})
-
-		case "updateCharacterThumbnail":
-
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_updateCharacterThumbnail(ctx, field)
 			})
 
 		case "joinClub":
@@ -44242,12 +43068,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateSeriesTitle(ctx, field)
-			})
-
-		case "updateSeriesThumbnail":
-
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_updateSeriesThumbnail(ctx, field)
 			})
 
 		case "createTopic":
@@ -45756,10 +44576,6 @@ func (ec *executionContext) _Series(ctx context.Context, sel ast.SelectionSet, o
 
 			out.Values[i] = ec._Series_thumbnail(ctx, field, obj)
 
-		case "thumbnailMedia":
-
-			out.Values[i] = ec._Series_thumbnailMedia(ctx, field, obj)
-
 		case "banner":
 
 			out.Values[i] = ec._Series_banner(ctx, field, obj)
@@ -46441,31 +45257,6 @@ func (ec *executionContext) _UpdateAudienceIsStandardPayload(ctx context.Context
 	return out
 }
 
-var updateAudienceThumbnailPayloadImplementors = []string{"UpdateAudienceThumbnailPayload"}
-
-func (ec *executionContext) _UpdateAudienceThumbnailPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateAudienceThumbnailPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, updateAudienceThumbnailPayloadImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("UpdateAudienceThumbnailPayload")
-		case "audience":
-
-			out.Values[i] = ec._UpdateAudienceThumbnailPayload_audience(ctx, field, obj)
-
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
 var updateAudienceTitlePayloadImplementors = []string{"UpdateAudienceTitlePayload"}
 
 func (ec *executionContext) _UpdateAudienceTitlePayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateAudienceTitlePayload) graphql.Marshaler {
@@ -46479,31 +45270,6 @@ func (ec *executionContext) _UpdateAudienceTitlePayload(ctx context.Context, sel
 		case "audience":
 
 			out.Values[i] = ec._UpdateAudienceTitlePayload_audience(ctx, field, obj)
-
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var updateCategoryThumbnailPayloadImplementors = []string{"UpdateCategoryThumbnailPayload"}
-
-func (ec *executionContext) _UpdateCategoryThumbnailPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateCategoryThumbnailPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, updateCategoryThumbnailPayloadImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("UpdateCategoryThumbnailPayload")
-		case "category":
-
-			out.Values[i] = ec._UpdateCategoryThumbnailPayload_category(ctx, field, obj)
 
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -46579,31 +45345,6 @@ func (ec *executionContext) _UpdateCharacterNamePayload(ctx context.Context, sel
 		case "character":
 
 			out.Values[i] = ec._UpdateCharacterNamePayload_character(ctx, field, obj)
-
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var updateCharacterThumbnailPayloadImplementors = []string{"UpdateCharacterThumbnailPayload"}
-
-func (ec *executionContext) _UpdateCharacterThumbnailPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateCharacterThumbnailPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, updateCharacterThumbnailPayloadImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("UpdateCharacterThumbnailPayload")
-		case "character":
-
-			out.Values[i] = ec._UpdateCharacterThumbnailPayload_character(ctx, field, obj)
 
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -46929,31 +45670,6 @@ func (ec *executionContext) _UpdatePostDescriptionPayload(ctx context.Context, s
 		case "post":
 
 			out.Values[i] = ec._UpdatePostDescriptionPayload_post(ctx, field, obj)
-
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var updateSeriesThumbnailPayloadImplementors = []string{"UpdateSeriesThumbnailPayload"}
-
-func (ec *executionContext) _UpdateSeriesThumbnailPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateSeriesThumbnailPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, updateSeriesThumbnailPayloadImplementors)
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("UpdateSeriesThumbnailPayload")
-		case "series":
-
-			out.Values[i] = ec._UpdateSeriesThumbnailPayload_series(ctx, field, obj)
 
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -49396,18 +48112,8 @@ func (ec *executionContext) unmarshalNUpdateAudienceIsStandardInput2overdollᚋa
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNUpdateAudienceThumbnailInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAudienceThumbnailInput(ctx context.Context, v interface{}) (types.UpdateAudienceThumbnailInput, error) {
-	res, err := ec.unmarshalInputUpdateAudienceThumbnailInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalNUpdateAudienceTitleInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAudienceTitleInput(ctx context.Context, v interface{}) (types.UpdateAudienceTitleInput, error) {
 	res, err := ec.unmarshalInputUpdateAudienceTitleInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNUpdateCategoryThumbnailInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCategoryThumbnailInput(ctx context.Context, v interface{}) (types.UpdateCategoryThumbnailInput, error) {
-	res, err := ec.unmarshalInputUpdateCategoryThumbnailInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -49423,11 +48129,6 @@ func (ec *executionContext) unmarshalNUpdateCategoryTopicInput2overdollᚋapplic
 
 func (ec *executionContext) unmarshalNUpdateCharacterNameInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCharacterNameInput(ctx context.Context, v interface{}) (types.UpdateCharacterNameInput, error) {
 	res, err := ec.unmarshalInputUpdateCharacterNameInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNUpdateCharacterThumbnailInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCharacterThumbnailInput(ctx context.Context, v interface{}) (types.UpdateCharacterThumbnailInput, error) {
-	res, err := ec.unmarshalInputUpdateCharacterThumbnailInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -49488,11 +48189,6 @@ func (ec *executionContext) unmarshalNUpdatePostContentOrderInput2overdollᚋapp
 
 func (ec *executionContext) unmarshalNUpdatePostDescriptionInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostDescriptionInput(ctx context.Context, v interface{}) (types.UpdatePostDescriptionInput, error) {
 	res, err := ec.unmarshalInputUpdatePostDescriptionInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNUpdateSeriesThumbnailInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateSeriesThumbnailInput(ctx context.Context, v interface{}) (types.UpdateSeriesThumbnailInput, error) {
-	res, err := ec.unmarshalInputUpdateSeriesThumbnailInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -50679,25 +49375,11 @@ func (ec *executionContext) marshalOUpdateAudienceIsStandardPayload2ᚖoverdoll�
 	return ec._UpdateAudienceIsStandardPayload(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOUpdateAudienceThumbnailPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAudienceThumbnailPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateAudienceThumbnailPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._UpdateAudienceThumbnailPayload(ctx, sel, v)
-}
-
 func (ec *executionContext) marshalOUpdateAudienceTitlePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateAudienceTitlePayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateAudienceTitlePayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._UpdateAudienceTitlePayload(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOUpdateCategoryThumbnailPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCategoryThumbnailPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateCategoryThumbnailPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._UpdateCategoryThumbnailPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOUpdateCategoryTitlePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCategoryTitlePayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateCategoryTitlePayload) graphql.Marshaler {
@@ -50719,13 +49401,6 @@ func (ec *executionContext) marshalOUpdateCharacterNamePayload2ᚖoverdollᚋapp
 		return graphql.Null
 	}
 	return ec._UpdateCharacterNamePayload(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOUpdateCharacterThumbnailPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateCharacterThumbnailPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateCharacterThumbnailPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._UpdateCharacterThumbnailPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOUpdateClubCharactersLimitPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubCharactersLimitPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateClubCharactersLimitPayload) graphql.Marshaler {
@@ -50810,13 +49485,6 @@ func (ec *executionContext) marshalOUpdatePostDescriptionPayload2ᚖoverdollᚋa
 		return graphql.Null
 	}
 	return ec._UpdatePostDescriptionPayload(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOUpdateSeriesThumbnailPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateSeriesThumbnailPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateSeriesThumbnailPayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._UpdateSeriesThumbnailPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOUpdateSeriesTitlePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateSeriesTitlePayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateSeriesTitlePayload) graphql.Marshaler {

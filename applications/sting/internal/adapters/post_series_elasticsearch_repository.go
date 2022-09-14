@@ -24,7 +24,6 @@ type seriesDocument struct {
 	Slug              string            `json:"slug"`
 	ThumbnailResource string            `json:"thumbnail_resource"`
 	BannerResource    string            `json:"banner_resource"`
-	ThumbnailMedia    []byte            `json:"thumbnail_media"`
 	BannerMedia       []byte            `json:"banner_media"`
 	Title             map[string]string `json:"title"`
 	CreatedAt         time.Time         `json:"created_at"`
@@ -42,12 +41,6 @@ func marshalSeriesToDocument(s *post.Series) (*seriesDocument, error) {
 
 	if s == nil {
 		return nil, nil
-	}
-
-	marshalledThumbnail, err := media.MarshalMediaToDatabase(s.ThumbnailMedia())
-
-	if err != nil {
-		return nil, err
 	}
 
 	marshalledBanner, err := media.MarshalMediaToDatabase(s.BannerMedia())
@@ -71,7 +64,6 @@ func marshalSeriesToDocument(s *post.Series) (*seriesDocument, error) {
 	return &seriesDocument{
 		Id:                s.ID(),
 		Slug:              s.Slug(),
-		ThumbnailMedia:    marshalledThumbnail,
 		BannerMedia:       marshalledBanner,
 		BannerResource:    bannerResource,
 		ThumbnailResource: thumbnailResource,
@@ -93,7 +85,7 @@ func (r PostsCassandraElasticsearchRepository) unmarshalSeriesDocument(ctx conte
 		return nil, errors.Wrap(err, "failed search series - unmarshal")
 	}
 
-	unmarshalledThumbnail, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, md.ThumbnailResource, md.ThumbnailMedia)
+	unmarshalledThumbnail, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, md.ThumbnailResource, nil)
 
 	if err != nil {
 		return nil, err

@@ -26,7 +26,6 @@ type clubDocument struct {
 	Links                       []string          `json:"links"`
 	SlugAliases                 []string          `json:"slug_aliases"`
 	ThumbnailResource           string            `json:"thumbnail_resource"`
-	ThumbnailMedia              []byte            `json:"thumbnail_media"`
 	BannerResource              string            `json:"banner_resource"`
 	BannerMedia                 []byte            `json:"banner_media"`
 	SupporterOnlyPostsDisabled  bool              `json:"supporter_only_posts_disabled"`
@@ -54,12 +53,6 @@ var clubsWriterIndex = cache.WriteAlias(CachePrefix, ClubsIndexName)
 
 func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 
-	marshalledThumbnail, err := media.MarshalMediaToDatabase(cat.ThumbnailMedia())
-
-	if err != nil {
-		return nil, err
-	}
-
 	marshalledBanner, err := media.MarshalMediaToDatabase(cat.BannerMedia())
 
 	if err != nil {
@@ -84,7 +77,6 @@ func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 		SlugAliases:                 cat.SlugAliases(),
 		ThumbnailResource:           thumbnailResource,
 		BannerResource:              bannerResource,
-		ThumbnailMedia:              marshalledThumbnail,
 		BannerMedia:                 marshalledBanner,
 		SupporterOnlyPostsDisabled:  cat.SupporterOnlyPostsDisabled(),
 		Name:                        localization.MarshalTranslationToDatabase(cat.Name()),
@@ -115,7 +107,7 @@ func unmarshalClubDocument(ctx context.Context, source json.RawMessage, sort []i
 		return nil, errors.Wrap(err, "failed search clubs - unmarshal")
 	}
 
-	unmarshalledThumbnail, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, bd.ThumbnailResource, bd.ThumbnailMedia)
+	unmarshalledThumbnail, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, bd.ThumbnailResource, nil)
 
 	if err != nil {
 		return nil, err

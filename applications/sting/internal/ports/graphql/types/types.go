@@ -125,8 +125,6 @@ type Audience struct {
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
 	Thumbnail *graphql1.Resource `json:"thumbnail"`
-	// A URL pointing to the object's thumbnail.
-	ThumbnailMedia graphql1.Media `json:"thumbnailMedia"`
 	// A URL pointing to the object's banner.
 	Banner *graphql1.Resource `json:"banner"`
 	// A URL pointing to the object's banner.
@@ -178,8 +176,6 @@ type Category struct {
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
 	Thumbnail *graphql1.Resource `json:"thumbnail"`
-	// A URL pointing to the object's thumbnail.
-	ThumbnailMedia graphql1.Media `json:"thumbnailMedia"`
 	// A URL pointing to the object's banner.
 	Banner *graphql1.Resource `json:"banner"`
 	// A URL pointing to the object's banner.
@@ -234,8 +230,6 @@ type Character struct {
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
 	Thumbnail *graphql1.Resource `json:"thumbnail"`
-	// A URL pointing to the object's thumbnail.
-	ThumbnailMedia graphql1.Media `json:"thumbnailMedia"`
 	// A URL pointing to the object's banner.
 	Banner *graphql1.Resource `json:"banner"`
 	// A URL pointing to the object's banner.
@@ -935,8 +929,6 @@ type Series struct {
 	Slug string `json:"slug"`
 	// A URL pointing to the object's thumbnail.
 	Thumbnail *graphql1.Resource `json:"thumbnail"`
-	// A URL pointing to the object's thumbnail.
-	ThumbnailMedia graphql1.Media `json:"thumbnailMedia"`
 	// A URL pointing to the object's banner.
 	Banner *graphql1.Resource `json:"banner"`
 	// A URL pointing to the object's banner.
@@ -1154,20 +1146,6 @@ type UpdateAudienceIsStandardPayload struct {
 }
 
 // Update audience.
-type UpdateAudienceThumbnailInput struct {
-	// The audience to update
-	ID relay.ID `json:"id"`
-	// The thumbnail
-	Thumbnail string `json:"thumbnail"`
-}
-
-// Payload for updating audience
-type UpdateAudienceThumbnailPayload struct {
-	// The audience after update
-	Audience *Audience `json:"audience"`
-}
-
-// Update audience.
 type UpdateAudienceTitleInput struct {
 	// The audience to update
 	ID relay.ID `json:"id"`
@@ -1183,20 +1161,6 @@ type UpdateAudienceTitleInput struct {
 type UpdateAudienceTitlePayload struct {
 	// The audience after update
 	Audience *Audience `json:"audience"`
-}
-
-// Update category.
-type UpdateCategoryThumbnailInput struct {
-	// The category to update
-	ID relay.ID `json:"id"`
-	// The thumbnail
-	Thumbnail string `json:"thumbnail"`
-}
-
-// Payload for updating category
-type UpdateCategoryThumbnailPayload struct {
-	// The category after update
-	Category *Category `json:"category"`
 }
 
 // Update category.
@@ -1247,20 +1211,6 @@ type UpdateCharacterNameInput struct {
 
 // Payload for updating character
 type UpdateCharacterNamePayload struct {
-	// The character after update
-	Character *Character `json:"character"`
-}
-
-// Update character.
-type UpdateCharacterThumbnailInput struct {
-	// The character to update
-	ID relay.ID `json:"id"`
-	// The thumbnail
-	Thumbnail string `json:"thumbnail"`
-}
-
-// Payload for updating character
-type UpdateCharacterThumbnailPayload struct {
 	// The character after update
 	Character *Character `json:"character"`
 }
@@ -1449,20 +1399,6 @@ type UpdatePostDescriptionInput struct {
 type UpdatePostDescriptionPayload struct {
 	// The post after the update
 	Post *Post `json:"post"`
-}
-
-// Update series.
-type UpdateSeriesThumbnailInput struct {
-	// The series to update
-	ID relay.ID `json:"id"`
-	// The thumbnail
-	Thumbnail string `json:"thumbnail"`
-}
-
-// Payload for updating series
-type UpdateSeriesThumbnailPayload struct {
-	// The category after update
-	Series *Series `json:"series"`
 }
 
 // Update series.

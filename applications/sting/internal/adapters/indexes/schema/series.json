@@ -55,11 +55,6 @@
       "banner_resource": {
         "type": "keyword"
       },
-      "thumbnail_media": {
-        "type": "text",
-        "index": false,
-        "store": true
-      },
       "banner_media": {
         "type": "text",
         "index": false,

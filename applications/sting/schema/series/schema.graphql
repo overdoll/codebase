@@ -11,9 +11,6 @@ type Series implements Node @key(fields: "id") {
   """A URL pointing to the object's thumbnail."""
   thumbnail: Resource
 
-  """A URL pointing to the object's thumbnail."""
-  thumbnailMedia: Media
-
   """A URL pointing to the object's banner."""
   banner: Resource
 
@@ -145,24 +142,9 @@ input UpdateSeriesTitleInput {
   locale: BCP47!
 }
 
-"""Update series."""
-input UpdateSeriesThumbnailInput {
-  """The series to update"""
-  id: ID!
-
-  """The thumbnail"""
-  thumbnail: String!
-}
-
 """Payload for updating series"""
 type UpdateSeriesTitlePayload {
   """The series after update"""
-  series: Series
-}
-
-"""Payload for updating series"""
-type UpdateSeriesThumbnailPayload {
-  """The category after update"""
   series: Series
 }
 
@@ -176,9 +158,4 @@ extend type Mutation {
   Update series title
   """
   updateSeriesTitle(input: UpdateSeriesTitleInput!): UpdateSeriesTitlePayload
-
-  """
-  Update series thumbnail
-  """
-  updateSeriesThumbnail(input: UpdateSeriesThumbnailInput!): UpdateSeriesThumbnailPayload
 }

@@ -25,7 +25,6 @@ type characterDocument struct {
 	Slug              string            `json:"slug"`
 	ThumbnailResource string            `json:"thumbnail_resource"`
 	BannerResource    string            `json:"banner_resource"`
-	ThumbnailMedia    []byte            `json:"thumbnail_media"`
 	BannerMedia       []byte            `json:"banner_media"`
 	Name              map[string]string `json:"name"`
 	Series            *seriesDocument   `json:"series"`
@@ -42,12 +41,6 @@ var CharacterReaderIndex = cache.ReadAlias(CachePrefix, CharacterIndexName)
 var characterWriterIndex = cache.WriteAlias(CachePrefix, CharacterIndexName)
 
 func marshalCharacterToDocument(char *post.Character) (*characterDocument, error) {
-
-	marshalledThumbnail, err := media.MarshalMediaToDatabase(char.ThumbnailMedia())
-
-	if err != nil {
-		return nil, err
-	}
 
 	marshalledBanner, err := media.MarshalMediaToDatabase(char.BannerMedia())
 
@@ -75,7 +68,6 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 
 	return &characterDocument{
 		Id:                char.ID(),
-		ThumbnailMedia:    marshalledThumbnail,
 		BannerMedia:       marshalledBanner,
 		BannerResource:    bannerResource,
 		ThumbnailResource: thumbnailResource,
@@ -100,7 +92,7 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx co
 		return nil, errors.Wrap(err, "failed to unmarshal character document")
 	}
 
-	unmarshalledCharacterThumbnail, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, chr.ThumbnailResource, chr.ThumbnailMedia)
+	unmarshalledCharacterThumbnail, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, chr.ThumbnailResource, nil)
 
 	if err != nil {
 		return nil, err
@@ -116,7 +108,7 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx co
 
 	if chr.Series != nil {
 
-		unmarshalledSeriesThumbnail, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, chr.Series.ThumbnailResource, chr.Series.ThumbnailMedia)
+		unmarshalledSeriesThumbnail, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, chr.Series.ThumbnailResource, nil)
 
 		if err != nil {
 			return nil, err

@@ -33,15 +33,6 @@ func NewClubThumbnailMediaLink(clubId string) *Link {
 	}
 }
 
-func NewSeriesThumbnailMediaLink(seriesId string) *Link {
-	return &Link{
-		proto: &proto.MediaLink{
-			Id:   seriesId,
-			Type: proto.MediaLinkType_SERIES_THUMBNAIL,
-		},
-	}
-}
-
 func NewTopicBannerMediaLink(topicId string) *Link {
 	return &Link{
 		proto: &proto.MediaLink{
@@ -60,38 +51,11 @@ func NewAudienceBannerMediaLink(audienceId string) *Link {
 	}
 }
 
-func NewAudienceThumbnailMediaLink(audienceId string) *Link {
-	return &Link{
-		proto: &proto.MediaLink{
-			Id:   audienceId,
-			Type: proto.MediaLinkType_AUDIENCE_THUMBNAIL,
-		},
-	}
-}
-
-func NewCategoryThumbnailMediaLink(categoryId string) *Link {
-	return &Link{
-		proto: &proto.MediaLink{
-			Id:   categoryId,
-			Type: proto.MediaLinkType_CATEGORY_THUMBNAIL,
-		},
-	}
-}
-
 func NewCategoryBannerMediaLink(categoryId string) *Link {
 	return &Link{
 		proto: &proto.MediaLink{
 			Id:   categoryId,
 			Type: proto.MediaLinkType_CATEGORY_BANNER,
-		},
-	}
-}
-
-func NewCharacterThumbnailMediaLink(characterId string) *Link {
-	return &Link{
-		proto: &proto.MediaLink{
-			Id:   characterId,
-			Type: proto.MediaLinkType_CHARACTER_THUMBNAIL,
 		},
 	}
 }

@@ -11,9 +11,6 @@ type Audience implements Node @key(fields: "id") {
   """A URL pointing to the object's thumbnail."""
   thumbnail: Resource
 
-  """A URL pointing to the object's thumbnail."""
-  thumbnailMedia: Media
-
   """A URL pointing to the object's banner."""
   banner: Resource
 
@@ -150,15 +147,6 @@ input UpdateAudienceTitleInput {
 }
 
 """Update audience."""
-input UpdateAudienceThumbnailInput {
-  """The audience to update"""
-  id: ID!
-
-  """The thumbnail"""
-  thumbnail: String!
-}
-
-"""Update audience."""
 input UpdateAudienceBannerInput {
   """The audience to update"""
   id: ID!
@@ -178,12 +166,6 @@ input UpdateAudienceIsStandardInput {
 
 """Payload for updating audience"""
 type UpdateAudienceTitlePayload {
-  """The audience after update"""
-  audience: Audience
-}
-
-"""Payload for updating audience"""
-type UpdateAudienceThumbnailPayload {
   """The audience after update"""
   audience: Audience
 }
@@ -210,11 +192,6 @@ extend type Mutation {
   Update audience title
   """
   updateAudienceTitle(input: UpdateAudienceTitleInput!): UpdateAudienceTitlePayload
-
-  """
-  Update audience thumbnail
-  """
-  updateAudienceThumbnail(input: UpdateAudienceThumbnailInput!): UpdateAudienceThumbnailPayload
 
   """
   Update audience banner

@@ -26,7 +26,6 @@ type categoryDocument struct {
 	AlternativeTitles []map[string]string `json:"alternative_titles"`
 	ThumbnailResource string              `json:"thumbnail_resource"`
 	BannerResource    string              `json:"banner_resource"`
-	ThumbnailMedia    []byte              `json:"thumbnail_media"`
 	BannerMedia       []byte              `json:"banner_media"`
 	Title             map[string]string   `json:"title"`
 	CreatedAt         time.Time           `json:"created_at"`
@@ -41,12 +40,6 @@ var CategoryReaderIndex = cache.ReadAlias(CachePrefix, CategoryIndexName)
 var categoryWriterIndex = cache.WriteAlias(CachePrefix, CategoryIndexName)
 
 func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
-
-	marshalledThumbnail, err := media.MarshalMediaToDatabase(cat.ThumbnailMedia())
-
-	if err != nil {
-		return nil, err
-	}
 
 	marshalledBanner, err := media.MarshalMediaToDatabase(cat.BannerMedia())
 
@@ -72,7 +65,6 @@ func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 		Slug:              cat.Slug(),
 		ThumbnailResource: thumbnailResource,
 		BannerResource:    bannerResource,
-		ThumbnailMedia:    marshalledThumbnail,
 		BannerMedia:       marshalledBanner,
 		AlternativeTitles: localization.MarshalLocalizedDataTagsToDatabase(cat.AlternativeTitles()),
 		Title:             localization.MarshalTranslationToDatabase(cat.Title()),
@@ -93,7 +85,7 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCategoryDocument(ctx con
 		return nil, errors.Wrap(err, "failed to unmarshal category document")
 	}
 
-	unmarshalled, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, pst.ThumbnailResource, pst.ThumbnailMedia)
+	unmarshalled, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, pst.ThumbnailResource, nil)
 
 	if err != nil {
 		return nil, err

@@ -29,7 +29,6 @@ var categoryTable = table.New(table.Metadata{
 		"topic_id",
 		"thumbnail_resource",
 		"banner_resource",
-		"thumbnail_media",
 		"banner_media",
 		"total_likes",
 		"total_posts",
@@ -48,7 +47,6 @@ type category struct {
 	AlternativeTitles []string          `db:"alternative_titles"`
 	ThumbnailResource string            `db:"thumbnail_resource"`
 	BannerResource    string            `db:"banner_resource"`
-	ThumbnailMedia    []byte            `db:"thumbnail_media"`
 	BannerMedia       []byte            `db:"banner_media"`
 	TotalLikes        int               `db:"total_likes"`
 	TotalPosts        int               `db:"total_posts"`
@@ -72,12 +70,6 @@ type categorySlugs struct {
 }
 
 func marshalCategoryToDatabase(pending *post.Category) (*category, error) {
-
-	marshalledThumbnail, err := media.MarshalMediaToDatabase(pending.ThumbnailMedia())
-
-	if err != nil {
-		return nil, err
-	}
 
 	marshalledBanner, err := media.MarshalMediaToDatabase(pending.BannerMedia())
 
@@ -118,7 +110,6 @@ func marshalCategoryToDatabase(pending *post.Category) (*category, error) {
 		TopicId:           pending.TopicId(),
 		Title:             localization.MarshalTranslationToDatabase(pending.Title()),
 		AlternativeTitles: alternativeTitles,
-		ThumbnailMedia:    marshalledThumbnail,
 		BannerMedia:       marshalledBanner,
 		ThumbnailResource: thumbnailResource,
 		BannerResource:    bannerResource,
@@ -131,7 +122,7 @@ func marshalCategoryToDatabase(pending *post.Category) (*category, error) {
 
 func (r PostsCassandraElasticsearchRepository) unmarshalCategoryFromDatabase(ctx context.Context, cat *category) (*post.Category, error) {
 
-	unmarshalled, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, cat.ThumbnailResource, cat.ThumbnailMedia)
+	unmarshalled, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, cat.ThumbnailResource, nil)
 
 	if err != nil {
 		return nil, err
@@ -401,16 +392,8 @@ func (r PostsCassandraElasticsearchRepository) updateCategory(ctx context.Contex
 	return category, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) UpdateCategoryThumbnailOperator(ctx context.Context, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
-	return r.updateCategory(ctx, id, updateFn, []string{"thumbnail_media"})
-}
-
 func (r PostsCassandraElasticsearchRepository) UpdateCategoryBannerOperator(ctx context.Context, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
 	return r.updateCategory(ctx, id, updateFn, []string{"banner_media"})
-}
-
-func (r PostsCassandraElasticsearchRepository) UpdateCategoryThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *post.Category) error) (*post.Category, error) {
-	return r.updateCategory(ctx, id, updateFn, []string{"thumbnail_media"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateCategoryTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *post.Category) error) (*post.Category, error) {

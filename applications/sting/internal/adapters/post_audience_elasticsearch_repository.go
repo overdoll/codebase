@@ -25,7 +25,6 @@ type audienceDocument struct {
 	Title             map[string]string `json:"title"`
 	ThumbnailResource string            `json:"thumbnail_resource"`
 	BannerResource    string            `json:"banner_resource"`
-	ThumbnailMedia    []byte            `json:"thumbnail_media"`
 	BannerMedia       []byte            `json:"banner_media"`
 	Standard          int               `json:"standard"`
 	TotalLikes        int               `json:"total_likes"`
@@ -45,12 +44,6 @@ func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 
 	if cat.IsStandard() {
 		stnd = 1
-	}
-
-	marshalledThumbnail, err := media.MarshalMediaToDatabase(cat.ThumbnailMedia())
-
-	if err != nil {
-		return nil, err
 	}
 
 	marshalledBanner, err := media.MarshalMediaToDatabase(cat.BannerMedia())
@@ -74,7 +67,6 @@ func marshalAudienceToDocument(cat *post.Audience) (*audienceDocument, error) {
 	return &audienceDocument{
 		Id:                cat.ID(),
 		Slug:              cat.Slug(),
-		ThumbnailMedia:    marshalledThumbnail,
 		BannerMedia:       marshalledBanner,
 		ThumbnailResource: thumbnailResource,
 		BannerResource:    bannerResource,
@@ -130,7 +122,7 @@ func (r PostsCassandraElasticsearchRepository) unmarshalAudienceDocument(ctx con
 		return nil, errors.Wrap(err, "failed search audience - unmarshal")
 	}
 
-	unmarshalled, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, bd.ThumbnailResource, bd.ThumbnailMedia)
+	unmarshalled, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, bd.ThumbnailResource, nil)
 
 	if err != nil {
 		return nil, err

@@ -53,7 +53,6 @@ type Commands struct {
 	CreateAudience           command.CreateAudienceHandler
 	UpdateAudienceSlug       command.UpdateAudienceSlugHandler
 	UpdateAudienceTitle      command.UpdateAudienceTitleHandler
-	UpdateAudienceThumbnail  command.UpdateAudienceThumbnailHandler
 	UpdateAudienceIsStandard command.UpdateAudienceIsStandardHandler
 	UpdateAudienceBanner     command.UpdateAudienceBannerHandler
 
@@ -61,22 +60,19 @@ type Commands struct {
 	UpdateCategorySlug             command.UpdateCategorySlugHandler
 	UpdateCategoryTitle            command.UpdateCategoryTitleHandler
 	UpdateCategoryTopic            command.UpdateCategoryTopicHandler
-	UpdateCategoryThumbnail        command.UpdateCategoryThumbnailHandler
 	GenerateCategoryBanner         command.GenerateCategoryBannerHandler
 	AddCategoryAlternativeTitle    command.AddCategoryAlternativeTitleHandler
 	RemoveCategoryAlternativeTitle command.RemoveCategoryAlternativeTitleHandler
 
-	CreateCharacter          command.CreateCharacterHandler
-	UpdateCharacterSlug      command.UpdateCharacterSlugHandler
-	UpdateCharacterName      command.UpdateCharacterNameHandler
-	UpdateCharacterThumbnail command.UpdateCharacterThumbnailHandler
-	GenerateCharacterBanner  command.GenerateCharacterBannerHandler
+	CreateCharacter         command.CreateCharacterHandler
+	UpdateCharacterSlug     command.UpdateCharacterSlugHandler
+	UpdateCharacterName     command.UpdateCharacterNameHandler
+	GenerateCharacterBanner command.GenerateCharacterBannerHandler
 
-	CreateSeries          command.CreateSeriesHandler
-	UpdateSeriesSlug      command.UpdateSeriesSlugHandler
-	UpdateSeriesTitle     command.UpdateSeriesTitleHandler
-	UpdateSeriesThumbnail command.UpdateSeriesThumbnailHandler
-	GenerateSeriesBanner  command.GenerateSeriesBannerHandler
+	CreateSeries         command.CreateSeriesHandler
+	UpdateSeriesSlug     command.UpdateSeriesSlugHandler
+	UpdateSeriesTitle    command.UpdateSeriesTitleHandler
+	GenerateSeriesBanner command.GenerateSeriesBannerHandler
 
 	CreateTopic            command.CreateTopicHandler
 	UpdateTopicSlug        command.UpdateTopicSlugHandler

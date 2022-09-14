@@ -26,7 +26,6 @@ var seriesTable = table.New(table.Metadata{
 		"title",
 		"thumbnail_resource",
 		"banner_resource",
-		"thumbnail_media",
 		"banner_media",
 		"total_likes",
 		"total_posts",
@@ -43,7 +42,6 @@ type series struct {
 	Title             map[string]string `db:"title"`
 	ThumbnailResource string            `db:"thumbnail_resource"`
 	BannerResource    string            `db:"banner_resource"`
-	ThumbnailMedia    []byte            `db:"thumbnail_media"`
 	BannerMedia       []byte            `db:"banner_media"`
 	TotalLikes        int               `db:"total_likes"`
 	TotalPosts        int               `db:"total_posts"`
@@ -68,12 +66,6 @@ type seriesSlug struct {
 
 func marshalSeriesToDatabase(pending *post.Series) (*series, error) {
 
-	marshalledThumbnail, err := media.MarshalMediaToDatabase(pending.ThumbnailMedia())
-
-	if err != nil {
-		return nil, err
-	}
-
 	marshalledBanner, err := media.MarshalMediaToDatabase(pending.BannerMedia())
 
 	if err != nil {
@@ -96,7 +88,6 @@ func marshalSeriesToDatabase(pending *post.Series) (*series, error) {
 		Id:                pending.ID(),
 		Slug:              pending.Slug(),
 		Title:             localization.MarshalTranslationToDatabase(pending.Title()),
-		ThumbnailMedia:    marshalledThumbnail,
 		BannerMedia:       marshalledBanner,
 		BannerResource:    bannerResource,
 		ThumbnailResource: thumbnailResource,
@@ -109,7 +100,7 @@ func marshalSeriesToDatabase(pending *post.Series) (*series, error) {
 
 func (r PostsCassandraElasticsearchRepository) unmarshalSeriesFromDatabase(ctx context.Context, med *series) (*post.Series, error) {
 
-	unmarshalledThumbnail, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, med.ThumbnailResource, med.ThumbnailMedia)
+	unmarshalledThumbnail, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, med.ThumbnailResource, nil)
 
 	if err != nil {
 		return nil, err
@@ -385,14 +376,6 @@ func (r PostsCassandraElasticsearchRepository) UpdateSeriesSlug(ctx context.Cont
 	}
 
 	return nil
-}
-
-func (r PostsCassandraElasticsearchRepository) UpdateSeriesThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
-	return r.updateSeries(ctx, id, updateFn, []string{"thumbnail_media"})
-}
-
-func (r PostsCassandraElasticsearchRepository) UpdateSeriesThumbnailOperator(ctx context.Context, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
-	return r.updateSeries(ctx, id, updateFn, []string{"thumbnail_media"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateSeriesBannerOperator(ctx context.Context, id string, updateFn func(series *post.Series) error) (*post.Series, error) {
