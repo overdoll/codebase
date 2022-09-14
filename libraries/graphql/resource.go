@@ -127,16 +127,14 @@ func MarshaMediaToLegacyResourceGraphQL(ctx context.Context, res *media.Media) *
 	if res.IsProcessed() {
 		if res.IsVideo() {
 			for _, container := range res.VideoContainers() {
-				if container.Height() != 0 && container.Width() != 0 {
+				if container.MimeType() == proto.MediaMimeType_VideoMp4 {
 					urls = append(urls, &ResourceURL{
 						URL:      URI(container.Url()),
 						MimeType: "video/mp4",
 					})
-					break
 				}
 			}
 		} else {
-
 			if res.IsLegacy() {
 				urls = append(urls, &ResourceURL{
 					URL:      URI(res.LegacyWebpMediaAccess().Url()),
@@ -178,9 +176,16 @@ func MarshaMediaToLegacyResourceGraphQL(ctx context.Context, res *media.Media) *
 	var videoThumbnail *ResourceURL
 
 	if res.IsProcessed() && res.IsVideo() {
-		videoThumbnail = &ResourceURL{
-			URL:      URI(res.OriginalImageMediaAccess().Url()),
-			MimeType: "image/jpeg",
+		if res.IsLegacy() {
+			videoThumbnail = &ResourceURL{
+				URL:      URI(res.LegacyImageMediaAccess().Url()),
+				MimeType: "image/jpeg",
+			}
+		} else {
+			videoThumbnail = &ResourceURL{
+				URL:      URI(res.OriginalImageMediaAccess().Url()),
+				MimeType: "image/jpeg",
+			}
 		}
 	}
 

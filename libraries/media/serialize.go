@@ -27,7 +27,7 @@ func InitSerializer() {
 	// create a cache with a max # of urls
 	// disable extending the cache
 	cache = ttlcache.New[string, string](
-		ttlcache.WithCapacity[string, string](1000),
+		ttlcache.WithCapacity[string, string](100000),
 		ttlcache.WithDisableTouchOnHit[string, string](),
 	)
 
