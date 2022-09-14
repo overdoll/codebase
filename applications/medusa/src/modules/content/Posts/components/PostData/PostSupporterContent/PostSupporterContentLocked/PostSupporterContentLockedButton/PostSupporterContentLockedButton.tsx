@@ -8,7 +8,7 @@ import { graphql } from 'react-relay'
 import { useFragment } from 'react-relay/hooks'
 import {
   SUPPORT_BUTTON_PROPS
-} from '@//:domain/slug/club/RootPublicClub/PublicClub/ClubGenericButtons/ClubSupporterSubscriptionPriceButton/ClubSupporterSubscriptionPriceButton'
+} from '@//:domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/ClubSupporterSubscriptionPriceButton/ClubSupporterSubscriptionPriceButton'
 import { ButtonProps } from '@chakra-ui/react'
 import ClubSupportPostConditionWrapper
   from '../../../../PostWrappers/ClubSupportPostConditionWrapper/ClubSupportPostConditionWrapper'

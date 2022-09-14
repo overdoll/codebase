@@ -8,6 +8,9 @@ import FullSimplePost
 import PostInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
 import PlatformPromoteAlert from '@//:common/components/PlatformPromoteAlert/PlatformPromoteAlert'
+import { Heading, Stack } from '@chakra-ui/react'
+import { Trans } from '@lingui/macro'
+import React from 'react'
 
 interface Props {
   postQuery: SuggestedPublicPostFragment$key
@@ -56,20 +59,28 @@ export default function SuggestedPublicPost ({
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   return (
-    <PostInfiniteScroll
-      query={data.suggestedPosts}
-      hasNext={hasNext}
-      loadNext={loadNext}
-      isLoadingNext={isLoadingNext}
-      endOfTree={<PlatformPromoteAlert />}
-    >
-      {({ index, key }) => (
-        <FullSimplePost
-          key={key}
-          query={data.suggestedPosts.edges[index].node}
-          viewerQuery={viewerData}
-        />
-      )}
-    </PostInfiniteScroll>
+    <Stack spacing={4}>
+      <Heading color='gray.00' fontSize='2xl'>
+        <Trans>Suggested Posts</Trans>
+      </Heading>
+      <PostInfiniteScroll
+        query={data.suggestedPosts}
+        hasNext={hasNext}
+        loadNext={loadNext}
+        isLoadingNext={isLoadingNext}
+        endOfTree={<PlatformPromoteAlert />}
+      >
+        {({
+          index,
+          key
+        }) => (
+          <FullSimplePost
+            key={key}
+            query={data.suggestedPosts.edges[index].node}
+            viewerQuery={viewerData}
+          />
+        )}
+      </PostInfiniteScroll>
+    </Stack>
   )
 }

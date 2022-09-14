@@ -9,9 +9,9 @@ import { MaybeRenderProp } from '@//:types/components'
 import runIfFunction from '../../../../../support/runIfFunction'
 import Can from '../../../../../authorization/Can'
 import ClubGuestSupportWrapper
-  from '@//:domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubGuestSupportWrapper/ClubGuestSupportWrapper'
+  from '@//:domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/ClubWrappers/ClubGuestSupportWrapper/ClubGuestSupportWrapper'
 import ClubRedirectSupportWrapper
-  from '@//:domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubRedirectSupportWrapper/ClubRedirectSupportWrapper'
+  from '@//:domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/ClubWrappers/ClubRedirectSupportWrapper/ClubRedirectSupportWrapper'
 
 interface ChildrenCallable {
   onClick: () => void

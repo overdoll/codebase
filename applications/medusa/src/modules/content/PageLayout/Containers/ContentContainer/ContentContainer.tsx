@@ -17,7 +17,6 @@ export default function ContentContainer ({
         md: 4,
         base: 2
       }}
-      pt={2}
       {...rest}
     >
       {children}

@@ -8,7 +8,7 @@ import { useRouter } from 'next/router'
 import { resolveHref } from 'next/dist/shared/lib/router/router'
 import MediumGenericButton from '@//:common/components/GenericButtons/MediumGenericButton/MediumGenericButton'
 import { useLingui } from '@lingui/react'
-import { getCharacterNames } from '@//:common/rich-objects/slug/PublicPostRichObject/PublicPostRichObject'
+import { getCharacterNames } from '../../../../../../support/metaHelpers'
 
 interface Props {
   query: PostShareDiscordButtonFragment$key

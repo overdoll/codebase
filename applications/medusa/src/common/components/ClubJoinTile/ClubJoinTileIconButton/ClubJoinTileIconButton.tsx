@@ -5,7 +5,7 @@ import { Icon } from '@//:modules/content/PageLayout'
 import { PlusCircle } from '@//:assets/icons'
 import { t } from '@lingui/macro'
 import ClubJoinConditionWrapper
-  from '@//:domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubJoinConditionWrapper/ClubJoinConditionWrapper'
+  from '@//:domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/ClubWrappers/ClubJoinConditionWrapper/ClubJoinConditionWrapper'
 import IconButton from '@//:modules/form/IconButton/IconButton'
 import { useLingui } from '@lingui/react'
 

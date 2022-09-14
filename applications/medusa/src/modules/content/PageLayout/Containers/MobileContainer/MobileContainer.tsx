@@ -11,13 +11,12 @@ export default function MobileContainer ({
 }: Props): JSX.Element {
   return (
     <Container
-      w={['lg', 'md', 'base']}
-      maxW='container.lg'
+      w={['full', 'base']}
+      maxW='container.md'
       px={{
         md: 4,
         base: 2
       }}
-      pt={2}
       {...rest}
     >
       {children}

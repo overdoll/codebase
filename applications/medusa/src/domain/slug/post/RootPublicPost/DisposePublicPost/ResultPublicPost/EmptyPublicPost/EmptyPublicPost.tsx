@@ -1,7 +1,7 @@
 import { Heading, Stack } from '@chakra-ui/react'
 import React from 'react'
 import { Trans } from '@lingui/macro'
-import RootPublicPostRichObject from '@//:common/rich-objects/slug/RootPublicPostRichObject/RootPublicPostRichObject'
+import RootPublicPostRichObject from './RootPublicPostRichObject/RootPublicPostRichObject'
 import { MobileContainer, PostPlaceholder } from '@//:modules/content/PageLayout'
 import NotFoundFooter from '@//:modules/content/Placeholder/NotFound/NotFoundFooter/NotFoundFooter'
 

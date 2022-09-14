@@ -4,7 +4,7 @@ import type { BannerPublicPostViewerFragment$key } from '@//:artifacts/BannerPub
 import React from 'react'
 import AccountInformationBanner from '@//:common/components/AccountInformationBanner/AccountInformationBanner'
 import ClubSuspendedStaffAlert
-  from '../../../../../../../club/RootPublicClub/PublicClub/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert'
+  from '../../../../../../../club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/BannerPublicClub/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
 import { Box, HStack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'

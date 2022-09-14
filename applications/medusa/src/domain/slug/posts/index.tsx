@@ -1,5 +1,5 @@
 import RootPublicClubPosts from './RootPublicClubPosts/RootPublicClubPosts'
-import PublicClubPostsQuery from '@//:artifacts/PublicClubPostsQuery.graphql'
+import ResultPublicClubPostsQuery from '@//:artifacts/ResultPublicClubPostsQuery.graphql'
 import decodeSearchArguments from '../../../common/components/PageHeader/SearchButton/support/decodeSearchArguments'
 import getPostSeed from '@//:modules/content/Posts/support/getPostSeed'
 
@@ -13,7 +13,7 @@ RootPublicClubPosts.getRelayPreloadProps = (ctx) => {
   return {
     queries: {
       publicClubPosts: {
-        params: PublicClubPostsQuery.params,
+        params: ResultPublicClubPostsQuery.params,
         variables: {
           slug: query.slug,
           ...decodeSearchArguments(query),

@@ -7,6 +7,7 @@ import DescriptionPublicPost from './DescriptionPublicPost/DescriptionPublicPost
 import { BannerContainer, CinematicContainer, ContentContainer } from '@//:modules/content/PageLayout'
 import CinematicPublicPost from './CinematicPublicPost/CinematicPublicPost'
 import SuggestedPublicPost from './SuggestedPublicPost/SuggestedPublicPost'
+import { Stack } from '@chakra-ui/react'
 
 interface Props {
   postQuery: ContainerPublicPostFragment$key
@@ -51,8 +52,10 @@ export default function ContainerPublicPost (props: Props): JSX.Element {
         <CinematicPublicPost postQuery={postData} viewerQuery={viewerData} />
       </CinematicContainer>
       <ContentContainer>
-        <DescriptionPublicPost postQuery={postData} viewerQuery={viewerData} />
-        <SuggestedPublicPost postQuery={postData} viewerQuery={viewerData} />
+        <Stack pt={2} spacing={8}>
+          <DescriptionPublicPost postQuery={postData} viewerQuery={viewerData} />
+          <SuggestedPublicPost postQuery={postData} viewerQuery={viewerData} />
+        </Stack>
       </ContentContainer>
     </>
   )

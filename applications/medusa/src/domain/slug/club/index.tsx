@@ -1,5 +1,5 @@
 import RootPublicClub from './RootPublicClub/RootPublicClub'
-import PublicClubQuery from '@//:artifacts/PublicClubQuery.graphql'
+import ResultPublicClubQuery from '@//:artifacts/ResultPublicClubQuery.graphql'
 import getPostSeed from '@//:modules/content/Posts/support/getPostSeed'
 
 RootPublicClub.getTranslationProps = async (ctx) => ({
@@ -10,7 +10,7 @@ RootPublicClub.getRelayPreloadProps = (ctx) => {
   return ({
     queries: {
       publicClubQuery: {
-        params: PublicClubQuery.params,
+        params: ResultPublicClubQuery.params,
         variables: {
           slug: ctx.query.slug,
           ...getPostSeed(ctx)

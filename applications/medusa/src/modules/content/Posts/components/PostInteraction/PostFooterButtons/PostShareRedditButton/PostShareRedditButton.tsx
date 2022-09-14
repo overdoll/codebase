@@ -4,7 +4,7 @@ import { SocialReddit } from '@//:assets/logos'
 import { PostShareRedditButtonFragment$key } from '@//:artifacts/PostShareRedditButtonFragment.graphql'
 import { graphql } from 'react-relay'
 import { useFragment } from 'react-relay/hooks'
-import { getCharacterNames } from '@//:common/rich-objects/slug/PublicPostRichObject/PublicPostRichObject'
+import { getCharacterNames } from '../../../../../../support/metaHelpers'
 import MediumGenericButton from '@//:common/components/GenericButtons/MediumGenericButton/MediumGenericButton'
 import useRedditShare from '../../../../../../support/useRedditShare'
 
