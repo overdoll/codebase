@@ -234,14 +234,46 @@ func (m *Media) generateUrlForVideo(id string) string {
 	return signed
 }
 
-func (m *Media) generateUrlForImage(width, height int64, optimize bool) *ImageMediaAccess {
+func (m *Media) generateUrlForImage(optimalSize int, crop bool) *ImageMediaAccess {
 
-	if width >= m.proto.ImageData.Width {
-		width = m.proto.ImageData.Width
+	isLandscape := m.proto.ImageData.Width >= m.proto.ImageData.Height
+
+	var optimalWidth, optimalHeight int
+
+	if crop {
+		optimalWidth = optimalSize
+		optimalHeight = optimalSize
+	} else {
+		if isLandscape {
+			optimalWidth = optimalSize
+		} else {
+			optimalHeight = optimalSize
+		}
 	}
 
-	if height >= m.proto.ImageData.Height {
-		height = m.proto.ImageData.Height
+	// if our optimal widths or heights are greater than the actual image's dimensions, then we don't optimize for that specific dimension
+	if optimalWidth >= int(m.proto.ImageData.Width) {
+		optimalWidth = 0
+	}
+
+	if optimalHeight >= int(m.proto.ImageData.Height) {
+		optimalHeight = 0
+	}
+
+	originalImageAspectRatio := float64(m.proto.ImageData.Width) / float64(m.proto.ImageData.Height)
+
+	var resizedWidth, resizedHeight int
+
+	// resizing - if we ask to resize, we need to send back dimensions
+	if optimalWidth == 0 && optimalHeight != 0 {
+		resizedWidth = int(float64(optimalHeight) * originalImageAspectRatio)
+		resizedHeight = optimalHeight
+	} else if optimalHeight == 0 && optimalWidth != 0 {
+		resizedHeight = int(float64(optimalWidth) / originalImageAspectRatio)
+		resizedWidth = optimalWidth
+	} else {
+		resizedWidth = int(m.proto.ImageData.Width)
+		resizedHeight = int(m.proto.ImageData.Height)
 	}
 
 	var format string
@@ -257,12 +289,12 @@ func (m *Media) generateUrlForImage(width, height int64, optimize bool) *ImageMe
 	q := url.Values{}
 	q.Add("format", format)
 
-	if width != m.proto.ImageData.Width && width != 0 && optimize {
-		q.Add("width", strconv.Itoa(int(m.proto.ImageData.Width)))
+	if optimalWidth != 0 {
+		q.Add("width", strconv.Itoa(optimalWidth))
 	}
 
-	if height != m.proto.ImageData.Height && height != 0 {
-		q.Add("height", strconv.Itoa(int(m.proto.ImageData.Height)))
+	if optimalHeight != 0 {
+		q.Add("height", strconv.Itoa(optimalHeight))
 	}
 
 	finalUrl := url.URL{}
@@ -276,8 +308,8 @@ func (m *Media) generateUrlForImage(width, height int64, optimize bool) *ImageMe
 
 	return &ImageMediaAccess{
 		url:    signed,
-		width:  int(width),
-		height: int(height),
+		width:  resizedWidth,
+		height: resizedHeight,
 	}
 }
 
@@ -324,54 +356,55 @@ func (m *Media) LegacyImageMediaAccess() *ImageMediaAccess {
 	return m.generateUrlForLegacyImage(false)
 }
 
+// OriginalImageMediaAccess original image is always max of 4096
 func (m *Media) OriginalImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(0, 0, false)
+	return m.generateUrlForImage(4096, false)
 }
 
 func (m *Media) HdImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(4096, 0, true)
+	return m.generateUrlForImage(4096, false)
 }
 
 func (m *Media) MiniImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(50, 50, false)
+	return m.generateUrlForImage(50, true)
 }
 
 func (m *Media) IconImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(100, 100, false)
+	return m.generateUrlForImage(100, true)
 }
 
 func (m *Media) ThumbnailImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(150, 150, false)
+	return m.generateUrlForImage(150, true)
 }
 
 func (m *Media) ThumbnailHDImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(200, 200, false)
+	return m.generateUrlForImage(200, true)
 }
 
 func (m *Media) SmallImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(768, 0, true)
+	return m.generateUrlForImage(768, false)
 }
 
 func (m *Media) MediumImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(1366, 0, true)
+	return m.generateUrlForImage(1366, false)
 }
 
 func (m *Media) LargeImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(1920, 0, true)
+	return m.generateUrlForImage(1920, false)
 }
 
 func (m *Media) BannerImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(640, 0, true)
+	return m.generateUrlForImage(640, false)
 }
 
 func (m *Media) Video480ImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(480, 0, true)
+	return m.generateUrlForImage(480, false)
 }
 
 func (m *Media) Video720ImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(720, 0, true)
+	return m.generateUrlForImage(720, false)
 }
 
 func (m *Media) Video1080ImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(1080, 0, true)
+	return m.generateUrlForImage(1080, false)
 }

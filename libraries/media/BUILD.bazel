@@ -20,6 +20,7 @@ go_library(
         "//libraries/support",
         "@com_github_aws_aws_sdk_go//service/cloudfront/sign",
         "@com_github_golang_protobuf//proto:go_default_library",
+        "@com_github_jellydator_ttlcache_v3//:ttlcache",
         "@org_uber_go_zap//:zap",
     ],
 )
