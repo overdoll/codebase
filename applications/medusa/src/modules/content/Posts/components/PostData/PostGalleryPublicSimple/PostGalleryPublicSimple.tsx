@@ -58,7 +58,7 @@ export default function PostGalleryPublicSimple ({
   const [swiper, setSwiper] = useState<null | SwiperType>(null)
 
   return (
-    <Box userSelect='none'>
+    <Box position='relative' userSelect='none'>
       <Swiper
         {...POST_SWIPER_PROPS}
         onSwiper={(swiper) => setSwiper(swiper)}

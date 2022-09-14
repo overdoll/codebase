@@ -60,7 +60,7 @@ export default function PostGalleryPublicDetailed ({
   }
 
   return (
-    <Box>
+    <Box position='relative'>
       <Swiper
         {...POST_SWIPER_PROPS}
         onSwiper={(swiper) => setSwiper(swiper)}

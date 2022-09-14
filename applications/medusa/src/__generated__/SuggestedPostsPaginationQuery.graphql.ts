@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b00fbc28909bd963f7bd71f19f6b4e95>>
- * @relayHash d71ea4e7af9c2e5a71abe52abb95aa56
+ * @generated SignedSource<<07e37555bbc9be85f891546ba8b63003>>
+ * @relayHash 6462508d9c8a2a96d3bdf6c3eba6f000
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d71ea4e7af9c2e5a71abe52abb95aa56
+// @relayRequestID 6462508d9c8a2a96d3bdf6c3eba6f000
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -20,7 +20,7 @@ export type SuggestedPostsPaginationQuery$variables = {
 };
 export type SuggestedPostsPaginationQuery$data = {
   readonly node: {
-    readonly " $fragmentSpreads": FragmentRefs<"SuggestedPostsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"SuggestedPublicPostFragment">;
   } | null;
 };
 export type SuggestedPostsPaginationQuery = {
@@ -174,7 +174,7 @@ return {
           {
             "args": (v2/*: any*/),
             "kind": "FragmentSpread",
-            "name": "SuggestedPostsFragment"
+            "name": "SuggestedPublicPostFragment"
           }
         ],
         "storageKey": null
@@ -493,7 +493,7 @@ return {
     ]
   },
   "params": {
-    "id": "d71ea4e7af9c2e5a71abe52abb95aa56",
+    "id": "6462508d9c8a2a96d3bdf6c3eba6f000",
     "metadata": {},
     "name": "SuggestedPostsPaginationQuery",
     "operationKind": "query",
@@ -502,6 +502,6 @@ return {
 };
 })();
 
-(node as any).hash = "71febe32331dca72c4c3ff1543a05e68";
+(node as any).hash = "239b89b03be3f51254f8c026bdab8447";
 
 export default node;
