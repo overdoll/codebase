@@ -17,6 +17,6 @@ export const FILE_ICONS = {
 export const TUS_OPTIONS = {
   endpoint: '/api/upload/',
   retryDelays: [0, 1000, 3000, 5000, 10000],
-  chunkSize: 1048576,
+  chunkSize: 52428800,
   shouldTerminate: false
 }
