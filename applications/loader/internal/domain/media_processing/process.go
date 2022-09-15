@@ -777,7 +777,7 @@ func processImage(media *media.Media, mimeType string, file *os.File) (*ProcessR
 			return nil, err
 		}
 
-		if err := jpeg.Encode(imageFile, src, &jpeg.Options{Quality: 95}); err != nil {
+		if err := jpeg.Encode(imageFile, src, &jpeg.Options{Quality: 85}); err != nil {
 			return nil, errors.Wrap(err, "failed to encode jpeg")
 		}
 	} else {

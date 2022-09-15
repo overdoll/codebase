@@ -55,24 +55,21 @@ func (c *Serializer) createSignedUrl(policy SerializerPolicy) (string, error) {
 
 	usesWildcard := policy.UseWildcardCacheKey != ""
 
-	cacheKey := ""
-
 	if usesWildcard {
-		cacheKey = policy.UseWildcardCacheKey
-	} else {
-		cacheKey = policy.URI
-	}
 
-	item := cache.Get(cacheKey)
+		item := cache.Get(policy.UseWildcardCacheKey)
 
-	if item != nil {
-
-		// if we use a wildcard, the wildcard only saved the query params, so we must reconstruct them
-		if usesWildcard {
+		if item != nil {
+			// if we use a wildcard, the wildcard only saved the query params, so we must reconstruct them
 			return policy.URI + "&" + item.Value(), nil
 		}
 
-		return item.Value(), nil
+	} else {
+		item := cache.Get(policy.URI)
+
+		if item != nil {
+			return item.Value(), nil
+		}
 	}
 
 	timestamp := time.Now()
@@ -135,8 +132,15 @@ func (c *Serializer) createSignedUrl(policy SerializerPolicy) (string, error) {
 		signedUrl, err = c.signer.Sign(policy.URI, newTimestamp)
 
 		if err != nil {
-			return "", errors.Wrap(err, "could not generate signed url")
+			return "", errors.Wrap(err, "could not generate signed url with canned policy")
 		}
+	}
+
+	paramsToSearch := []string{
+		"Policy",
+		"Signature",
+		"Expires",
+		"Key-Pair-Id",
 	}
 
 	if policy.UsePrefix {
@@ -147,13 +151,6 @@ func (c *Serializer) createSignedUrl(policy SerializerPolicy) (string, error) {
 			return "", errors.Wrap(err, "failed to parse url")
 		}
 
-		paramsToSearch := []string{
-			"Policy",
-			"Signature",
-			"Expires",
-			"Key-Pair-Id",
-		}
-
 		for _, param := range paramsToSearch {
 			if parsed.Query().Has(param) {
 				parsed.Query().Add("OD-"+param, parsed.Query().Get(param))
@@ -161,23 +158,43 @@ func (c *Serializer) createSignedUrl(policy SerializerPolicy) (string, error) {
 		}
 	}
 
+	cacheTTL := newTimestamp.Sub(time.Now()) - time.Hour*24
+
+	// uses a wildcard policy, we just cache the query params
 	if usesWildcard {
 
-	} else {
+		var paramsToCache []string
 
+		for _, param := range paramsToSearch {
+			paramsToCache = append(paramsToCache, param)
+			paramsToCache = append(paramsToCache, "OD-"+param)
+		}
+
+		parsed, err := url.Parse(signedUrl)
+
+		if err != nil {
+			return "", errors.Wrap(err, "failed to parse url")
+		}
+
+		finalCacheKey := ""
+
+		for i, param := range paramsToCache {
+			if parsed.Query().Has(param) {
+				if i == len(paramsToCache)-1 {
+					finalCacheKey += param
+				} else {
+					finalCacheKey += param + "&"
+				}
+			}
+		}
+
+		// put signed url into cache
+		cache.Set(policy.UseWildcardCacheKey, finalCacheKey, cacheTTL)
+		return signedUrl, nil
 	}
-
-	paramsToCache := []string{
-		"Policy",
-		"Signature",
-		"Expires",
-		"Key-Pair-Id",
-	}
-
-	parsed.RawQuery
 
 	// put signed url into cache
-	cache.Set(cacheKey, signedUrl, newTimestamp.Sub(time.Now())-time.Hour*24)
+	cache.Set(policy.URI, signedUrl, cacheTTL)
 
 	return signedUrl, nil
 }

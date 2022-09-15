@@ -221,8 +221,9 @@ func (m *Media) VideoContainers() []*VideoContainer {
 func (m *Media) generateUrlForVideo(id string) string {
 
 	if m.IsLegacy() {
-		signedLegacyUrl := os.Getenv("PRIVATE_RESOURCES_URL") + "/" + m.proto.Link.Id + "/" + id
-		signed, _ := serializer.createSignedUrl(signedLegacyUrl, signedLegacyUrl, false)
+		signed, _ := serializer.createSignedUrl(SerializerPolicy{
+			URI: os.Getenv("PRIVATE_RESOURCES_URL") + "/" + m.proto.Link.Id + "/" + id,
+		})
 		return signed
 	}
 
@@ -232,10 +233,13 @@ func (m *Media) generateUrlForVideo(id string) string {
 	finalUrl.Path = m.VideoPrefix() + "/" + id
 	finalUrl.Scheme = "https"
 
-	cacheKey := finalUrl.Host + "/" + finalUrl.Path + "/*"
-
 	// for video signed urls, we add a prefix so that it can be passed down without needing to sign playlists each time
-	signed, _ := serializer.createSignedUrl(cacheKey, finalUrl.String(), true)
+	signed, _ := serializer.createSignedUrl(SerializerPolicy{
+		URI:                 finalUrl.String(),
+		UseWildcardCacheKey: finalUrl.Host + "/" + finalUrl.Path + "/*",
+		UsePrefix:           true,
+	})
+
 	return signed
 }
 
@@ -309,9 +313,10 @@ func (m *Media) generateUrlForImage(optimalSize int, crop bool) *ImageMediaAcces
 	finalUrl.Scheme = "https"
 	finalUrl.Path = m.ImagePrefix() + "/" + m.proto.ImageData.Id
 
-	cacheKey := finalUrl.Host + "/" + finalUrl.Path + "*"
-
-	signed, _ := serializer.createSignedUrl(cacheKey, finalUrl.String(), false)
+	signed, _ := serializer.createSignedUrl(SerializerPolicy{
+		URI:                 finalUrl.String(),
+		UseWildcardCacheKey: finalUrl.Host + "/" + finalUrl.Path + "*",
+	})
 
 	return &ImageMediaAccess{
 		url:    signed,
@@ -339,9 +344,7 @@ func (m *Media) generateUrlForLegacyImage(webp bool) *ImageMediaAccess {
 
 	if m.proto.Private {
 
-		legacyUrl := os.Getenv("PRIVATE_RESOURCES_URL") + key
-
-		signedURL, _ := serializer.createSignedUrl(legacyUrl, legacyUrl, false)
+		signedURL, _ := serializer.createSignedUrl(SerializerPolicy{URI: os.Getenv("PRIVATE_RESOURCES_URL") + key})
 
 		finalUrl = signedURL
 
