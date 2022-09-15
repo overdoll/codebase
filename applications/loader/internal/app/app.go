@@ -15,6 +15,7 @@ type Application struct {
 type Commands struct {
 	TusComposer             command.TusComposerHandler
 	ProcessMediaFromUploads command.ProcessMediaFromUploadsHandler
+	CancelMediaProcessing   command.CancelMediaProcessingHandler
 	GenerateImageFromMedia  command.GenerateImageFromMediaHandler
 }
 

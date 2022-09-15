@@ -4,6 +4,7 @@ import (
 	"context"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"overdoll/applications/loader/internal/app"
 	"overdoll/applications/loader/internal/app/command"
 	resource2 "overdoll/applications/loader/internal/domain/media_processing"
@@ -21,8 +22,15 @@ func NewGrpcServer(application *app.Application) *Server {
 	}
 }
 
-func (s Server) ConvertResourceToMedia(ctx context.Context, request *loader.ConvertResourceToMediaRequest) (*loader.ConvertResourceToMediaResponse, error) {
-	panic("implement me")
+func (s Server) CancelMediaProcessing(ctx context.Context, request *loader.CancelMediaProcessingRequest) (*emptypb.Empty, error) {
+
+	if err := s.app.Commands.CancelMediaProcessing.Handle(ctx, command.CancelMediaProcessing{
+		Source: request.Media,
+	}); err != nil {
+		return nil, err
+	}
+
+	return &emptypb.Empty{}, nil
 }
 
 func (s Server) ProcessMediaFromUploads(ctx context.Context, request *loader.ProcessMediaFromUploadsRequest) (*loader.ProcessMediaFromUploadsResponse, error) {

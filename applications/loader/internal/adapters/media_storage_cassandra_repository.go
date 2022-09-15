@@ -2,10 +2,12 @@ package adapters
 
 import (
 	"context"
+	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/media"
 	"overdoll/libraries/support"
 )
@@ -33,6 +35,27 @@ type MediaStorageCassandraRepository struct {
 
 func NewMediaStorageCassandraRepository(session gocqlx.Session) MediaStorageCassandraRepository {
 	return MediaStorageCassandraRepository{session: session}
+}
+
+func (r MediaStorageCassandraRepository) GetSingleMediaByLinkAndId(ctx context.Context, link *media.Link, id string) (*media.Media, error) {
+
+	var storage mediaStorage
+
+	if err := r.session.
+		Query(storageTable.Get()).
+		WithContext(ctx).
+		Idempotent(true).
+		BindStruct(mediaStorage{LinkedId: link.LinkedId(), Id: id}).
+		GetRelease(&storage); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return nil, apperror.NewNotFoundError("media", id)
+		}
+
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get media by id")
+	}
+
+	return media.UnmarshalMediaFromDatabase(ctx, storage.Data)
 }
 
 func (r MediaStorageCassandraRepository) GetMediaByLink(ctx context.Context, link *media.Link) ([]*media.Media, error) {

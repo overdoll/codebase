@@ -27,6 +27,11 @@ func (h AddPostContentHandler) Handle(ctx context.Context, cmd AddPostContent) (
 
 	pendingPost, err := h.pr.UpdatePostContent(ctx, cmd.Principal, cmd.PostId, func(post *post.Post) error {
 
+		// should only be able to add content to DRAFT posts
+		if err := post.CanAddContent(cmd.Principal); err != nil {
+			return err
+		}
+
 		// create resources from content
 		resourceIds, err := h.loader.ProcessMediaFromUploads(ctx, cmd.Content, media.NewPostContentMediaLink(cmd.PostId))
 

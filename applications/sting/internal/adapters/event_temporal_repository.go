@@ -29,7 +29,7 @@ func (r EventTemporalRepository) SendCompletedPixelatedResources(ctx context.Con
 	if err := r.client.SignalWorkflow(ctx, "sting.SubmitPost_"+post.ID(), "", workflows.SubmitPostPixelatedMediaSignalChannel, &workflows.PixelatedPostMediaFinished{
 		MediaId: media.ID(),
 	}); err != nil {
-		if strings.Contains(err.Error(), "workflow execution already completed") {
+		if strings.Contains(err.Error(), "Workflow execution already finished successfully") {
 			return nil
 		}
 		return errors.Wrap(err, "failed to signal submit post workflow")
@@ -55,10 +55,9 @@ func (r EventTemporalRepository) SendPostCompletedProcessing(ctx context.Context
 	})
 
 	if err != nil {
-		if strings.Contains(err.Error(), "workflow execution already completed") {
+		if strings.Contains(err.Error(), "Workflow execution already finished successfully") {
 			return nil
 		}
-
 		return errors.Wrap(err, "failed to signal submit post workflow")
 	}
 
