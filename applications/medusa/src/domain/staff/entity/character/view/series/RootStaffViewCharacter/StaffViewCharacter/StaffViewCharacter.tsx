@@ -19,7 +19,6 @@ const Query = graphql`
         title
       }
       ...ChangeCharacterNameFragment
-      ...ChangeCharacterThumbnailFragment
     }
   }
 `
@@ -38,9 +37,6 @@ export default function StaffViewCharacter ({ query }: Props): JSX.Element {
     <Stack spacing={8}>
       <Box>
         <ChangeCharacterName query={queryData?.character} />
-      </Box>
-      <Box>
-        <ChangeCharacterThumbnail query={queryData?.character} />
       </Box>
       <Box>
         <PageSectionWrap>

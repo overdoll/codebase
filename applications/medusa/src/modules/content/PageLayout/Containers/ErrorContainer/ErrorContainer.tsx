@@ -11,9 +11,9 @@ export default function ErrorContainer ({
 }: Props): JSX.Element {
   return (
     <Container
-      w={['base']}
-      h='100%'
-      centerContent
+      w='100%'
+      pt={2}
+      maxW='container.sm'
       {...rest}
     >
       {children}

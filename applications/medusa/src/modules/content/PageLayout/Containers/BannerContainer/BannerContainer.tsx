@@ -14,8 +14,9 @@ export default function BannerContainer ({
       w='100%'
       maxW='container.sm'
       px={{
-        md: 4,
-        base: 2
+        lg: 4,
+        md: 2,
+        base: 1
       }}
       {...rest}
     >

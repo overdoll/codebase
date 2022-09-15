@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1034586e7a93cda5f50e46c4b0588cfe>>
- * @relayHash 436ecb9be8e3590068456143a8232bd0
+ * @generated SignedSource<<0119728b64a760af98bd20dfd00296ad>>
+ * @relayHash 91662db2c76d2190497635ad7f90235e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 436ecb9be8e3590068456143a8232bd0
+// @relayRequestID 91662db2c76d2190497635ad7f90235e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -22,7 +22,7 @@ export type StaffViewClubCharacterQuery$data = {
     readonly club: {
       readonly name: string;
     } | null;
-    readonly " $fragmentSpreads": FragmentRefs<"ChangeCharacterNameFragment" | "ChangeCharacterThumbnailFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ChangeCharacterNameFragment">;
   } | null;
 };
 export type StaffViewClubCharacterQuery = {
@@ -66,13 +66,6 @@ v4 = {
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
 };
 return {
   "fragment": {
@@ -108,11 +101,6 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "ChangeCharacterNameFragment"
-          },
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "ChangeCharacterThumbnailFragment"
           }
         ],
         "storageKey": null
@@ -189,85 +177,14 @@ return {
             ],
             "storageKey": null
           },
-          (v4/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Resource",
-            "kind": "LinkedField",
-            "name": "banner",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "preview",
-                "storageKey": null
-              },
-              (v4/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "ResourceUrl",
-                "kind": "LinkedField",
-                "name": "urls",
-                "plural": true,
-                "selections": [
-                  (v5/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "mimeType",
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "width",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "height",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "ResourceUrl",
-                "kind": "LinkedField",
-                "name": "videoThumbnail",
-                "plural": false,
-                "selections": [
-                  (v5/*: any*/)
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "type",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
+          (v4/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "436ecb9be8e3590068456143a8232bd0",
+    "id": "91662db2c76d2190497635ad7f90235e",
     "metadata": {},
     "name": "StaffViewClubCharacterQuery",
     "operationKind": "query",
@@ -276,6 +193,6 @@ return {
 };
 })();
 
-(node as any).hash = "71ae90506b3975187d01c62a89f57364";
+(node as any).hash = "4b8fcb37e934fae7ad31268140a933e0";
 
 export default node;

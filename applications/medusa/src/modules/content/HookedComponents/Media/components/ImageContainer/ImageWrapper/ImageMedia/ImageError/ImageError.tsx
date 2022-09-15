@@ -11,13 +11,12 @@ export default function ImageError ({ tiny }: Props): JSX.Element {
   if (tiny === true) {
     return (
       <Flex
-        p={2}
         justify='center'
         align='center'
-        w='100%'
-        h='100%'
+        w={4}
+        h={4}
       >
-        <Icon icon={WarningTriangle} w='100%' h='100%' fill='orange.300' />
+        <Icon icon={WarningTriangle} fill='gray.500' />
       </Flex>
     )
   }

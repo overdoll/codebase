@@ -11,7 +11,10 @@ export default function ImageCoverContainer (props: Props): JSX.Element {
   const {
     url,
     rgb,
-    variants
+    variants,
+    width,
+    height,
+    tiny
   } = props
 
   const bgColor = rgb != null ? `rgb(${rgb.red},${rgb.green},${rgb.blue})` : undefined
@@ -31,6 +34,9 @@ export default function ImageCoverContainer (props: Props): JSX.Element {
       <CoverImage>
         <ImageBorder color={borderColor ?? 'gray.50'} />
         <ImageMedia
+          tiny={tiny}
+          width={width}
+          height={height}
           url={url}
           color={bgColor}
           variants={variants}

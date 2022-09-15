@@ -12,11 +12,11 @@ export default function MobileContainer ({
   return (
     <Container
       w='100%'
-      maxW='container.md'
+      maxW='container.sm'
       px={{
         lg: 4,
         md: 2,
-        base: 0
+        base: 1
       }}
       {...rest}
     >

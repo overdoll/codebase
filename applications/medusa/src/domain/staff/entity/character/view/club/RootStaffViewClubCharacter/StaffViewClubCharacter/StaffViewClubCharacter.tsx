@@ -2,12 +2,10 @@ import { graphql, PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import { StaffViewClubCharacterQuery } from '@//:artifacts/StaffViewClubCharacterQuery.graphql'
 import { Box, Stack } from '@chakra-ui/react'
 import { NotFoundGeneric } from '@//:modules/content/Placeholder'
-
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import TagBadgeHeader from '@//:common/components/TagBadgeHeader/TagBadgeHeader'
 import ChangeCharacterName from '../../../../../../../../common/components/ChangeCharacterName/ChangeCharacterName'
-import ChangeCharacterThumbnail from '../../../../../../../../common/components/ChangeCharacterThumbnail/ChangeCharacterThumbnail'
 
 interface Props {
   query: PreloadedQuery<StaffViewClubCharacterQuery>
@@ -20,7 +18,6 @@ const Query = graphql`
         name
       }
       ...ChangeCharacterNameFragment
-      ...ChangeCharacterThumbnailFragment
     }
   }
 `
@@ -39,9 +36,6 @@ export default function StaffViewClubCharacter ({ query }: Props): JSX.Element {
     <Stack spacing={8}>
       <Box>
         <ChangeCharacterName query={queryData?.character} />
-      </Box>
-      <Box>
-        <ChangeCharacterThumbnail query={queryData?.character} />
       </Box>
       <Box>
         <PageSectionWrap>

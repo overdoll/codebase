@@ -1049,6 +1049,15 @@ type ArchivePostPayload {
   post: Post
 }
 
+"""Data about the aspect ratio."""
+type AspectRatio {
+  """The height."""
+  height: Int!
+
+  """The width."""
+  width: Int!
+}
+
 """Input to assign account to a arist role"""
 input AssignAccountArtistRole {
   """The account ID that the role needs to be assigned to"""
@@ -1088,6 +1097,9 @@ type AssignAccountStaffRolePayload {
 type Audience implements Node {
   """A URL pointing to the object's banner."""
   banner: Resource
+
+  """A URL pointing to the object's banner."""
+  bannerMedia: Media
 
   """An ID pointing to this audience."""
   id: ID!
@@ -1421,6 +1433,9 @@ type Category implements Node {
   """A URL pointing to the object's banner."""
   banner: Resource
 
+  """A URL pointing to the object's banner."""
+  bannerMedia: Media
+
   """An ID pointing to this category."""
   id: ID!
 
@@ -1658,6 +1673,9 @@ type Character implements Node {
   """A URL pointing to the object's banner."""
   banner: Resource
 
+  """A URL pointing to the object's banner."""
+  bannerMedia: Media
+
   """The club linked to this character, if it was created by a club."""
   club: Club
 
@@ -1758,8 +1776,11 @@ type Club implements Node {
   """The current balance of this club."""
   balance: Balance!
 
-  """A resource of the club's banner."""
+  """A URL pointing to the object's banner."""
   banner: Resource
+
+  """A URL pointing to the object's banner."""
+  bannerMedia: Media
 
   """
   Whether creating supporter-only posts is enabled or disabled for this club.
@@ -2036,8 +2057,11 @@ type Club implements Node {
   """Whether or not this club is terminated."""
   termination: ClubTermination
 
-  """A resource of the club's thumbnail."""
+  """A URL pointing to the object's thumbnail."""
   thumbnail: Resource
+
+  """A URL pointing to the object's thumbnail."""
+  thumbnailMedia: Media
 
   """The total number of likes for this club."""
   totalLikes: Int!
@@ -2506,6 +2530,13 @@ type ClubTransactionMetricConnection {
 type ClubTransactionMetricEdge {
   cursor: String!
   node: ClubTransactionMetric!
+}
+
+type ColorPalette {
+  blue: Int!
+  green: Int!
+  percent: Float!
+  red: Int!
 }
 
 """Input for confirming the account email"""
@@ -3384,6 +3415,12 @@ enum GrantAuthenticationTokenValidation {
   INVALID_EMAIL
 }
 
+"""An application/x-mpegURL video container."""
+type HLSVideoContainer {
+  """The URL used to access the container."""
+  url: URI!
+}
+
 interface IAccountClubSupporterSubscription {
   """The account linked to this subscription."""
   account: Account!
@@ -3447,6 +3484,73 @@ interface IAccountClubSupporterSubscription {
 interface IAccountPayoutMethod {
   """The ID linked to this payout method"""
   id: ID!
+}
+
+type ImageMedia {
+  """Color palettes for this image."""
+  colorPalettes: [ColorPalette!]!
+
+  """An ID uniquely identifying this media."""
+  id: ID!
+
+  """
+  The original image media. Note that originals are resized if they are larger than 4096px.
+  """
+  original: ImageMediaAccess!
+
+  """All available variants for this media."""
+  variants: ImageMediaVariants!
+}
+
+"""Type used to access a specific image."""
+type ImageMediaAccess {
+  """The height of the image."""
+  height: Int!
+
+  """The URL used to access the image."""
+  url: URI!
+
+  """The width of the image."""
+  width: Int!
+}
+
+"""All variants available for an image."""
+type ImageMediaVariants {
+  """640px width or height resize."""
+  banner: ImageMediaAccess!
+
+  """4096px width or height resize."""
+  hd: ImageMediaAccess!
+
+  """100x100 crop of an image. Suitable for icons."""
+  icon: ImageMediaAccess!
+
+  """1920px width or height resize."""
+  large: ImageMediaAccess!
+
+  """1366px width or height resize."""
+  medium: ImageMediaAccess!
+
+  """50x50 crop of an image. Suitable for mini icons."""
+  mini: ImageMediaAccess!
+
+  """768px width or height resize."""
+  small: ImageMediaAccess!
+
+  """150x150 crop of an image. Suitable for small previews."""
+  thumbnail: ImageMediaAccess!
+
+  """200x200 crop of an image. Suitable for large thumbnails."""
+  thumbnailHd: ImageMediaAccess!
+
+  """480px width or height resize."""
+  video480: ImageMediaAccess!
+
+  """720px width or height resize."""
+  video720: ImageMediaAccess!
+
+  """1080px width or height resize."""
+  video1080: ImageMediaAccess!
 }
 
 """Initiate a payout for a specific club."""
@@ -3573,6 +3677,29 @@ type LockAccountPayload {
   account: Account
 }
 
+union Media = ImageMedia | RawMedia | VideoMedia
+
+type MediaProgress {
+  id: ID!
+
+  """The progress percent, in float. Will never be larger than 100."""
+  progress: Float!
+
+  """The state at which this media is at."""
+  state: MediaProgressState!
+}
+
+enum MediaProgressState {
+  """Media is finalizing processing."""
+  FINALIZING
+
+  """Media has started processing."""
+  STARTED
+
+  """Media is waiting to be processed."""
+  WAITING
+}
+
 """General moderator settings."""
 type ModeratorSettings {
   """If this moderator is in queue."""
@@ -3582,6 +3709,21 @@ type ModeratorSettings {
   The last time this moderator was selected for a post. Null if moderator not in queue
   """
   lastSelected: Time
+}
+
+"""A video/mp4 video container."""
+type MP4VideoContainer {
+  """The bitrate of the video."""
+  bitrate: Int!
+
+  """The height of the video."""
+  height: Int!
+
+  """The URL used to access the container."""
+  url: URI!
+
+  """The width of the video."""
+  width: Int!
 }
 
 """Types of multi factor enabled for this account"""
@@ -4053,9 +4195,6 @@ type Mutation {
   """Update audience standard"""
   updateAudienceIsStandard(input: UpdateAudienceIsStandardInput!): UpdateAudienceIsStandardPayload
 
-  """Update audience thumbnail"""
-  updateAudienceThumbnail(input: UpdateAudienceThumbnailInput!): UpdateAudienceThumbnailPayload
-
   """Update audience title"""
   updateAudienceTitle(input: UpdateAudienceTitleInput!): UpdateAudienceTitlePayload
 
@@ -4065,9 +4204,6 @@ type Mutation {
   """Update a reason title."""
   updateCancellationReasonTitle(input: UpdateCancellationReasonTitleInput!): UpdateCancellationReasonTitlePayload
 
-  """Update category thumbnail"""
-  updateCategoryThumbnail(input: UpdateCategoryThumbnailInput!): UpdateCategoryThumbnailPayload
-
   """Update category title"""
   updateCategoryTitle(input: UpdateCategoryTitleInput!): UpdateCategoryTitlePayload
 
@@ -4076,13 +4212,6 @@ type Mutation {
 
   """Update character title"""
   updateCharacterName(input: UpdateCharacterNameInput!): UpdateCharacterNamePayload
-
-  """
-  Update character thumbnail
-  
-  Note that this is Staff+ only for now - even if the character is a club character.
-  """
-  updateCharacterThumbnail(input: UpdateCharacterThumbnailInput!): UpdateCharacterThumbnailPayload
 
   """
   Set the amount of characters that a club can create.
@@ -4163,9 +4292,6 @@ type Mutation {
 
   """Update a rule title."""
   updateRuleTitle(input: UpdateRuleTitleInput!): UpdateRuleTitlePayload
-
-  """Update series thumbnail"""
-  updateSeriesThumbnail(input: UpdateSeriesThumbnailInput!): UpdateSeriesThumbnailPayload
 
   """Update series title"""
   updateSeriesTitle(input: UpdateSeriesTitleInput!): UpdateSeriesTitlePayload
@@ -4392,6 +4518,9 @@ type PostContent {
   """Whether or not this content is supporter only."""
   isSupporterOnly: Boolean!
 
+  """The media belonging to this content."""
+  media: Media!
+
   """The resource belonging to this content."""
   resource: Resource!
 
@@ -4406,6 +4535,16 @@ type PostContent {
   This field will be nil if "viewerCanViewSupporterOnlyContent" is true
   """
   supporterOnlyResource: Resource
+
+  """
+  If "viewerCanViewSupporterOnlyContent" is false, will contain the duration of the video, if the media is a video.
+  """
+  supporterOnlyVideoMediaDuration: Int
+
+  """
+  If "viewerCanViewSupporterOnlyContent" is false, will say if the video has audio, if the media is a video.
+  """
+  supporterOnlyVideoMediaHasAudio: Boolean
 
   """Whether or not the viewer is able to see this content."""
   viewerCanViewSupporterOnlyContent: Boolean!
@@ -5095,6 +5234,25 @@ type Query {
   viewer: Account
 }
 
+"""
+RawMedia represents an unprocessed media object.
+
+While a media object is RawMedia, it is still in the process of processing.
+"""
+type RawMedia {
+  """Whether or not the media failed processing."""
+  failed: Boolean!
+
+  """An ID uniquely identifying this media."""
+  id: ID!
+
+  """The name of the original file, when it was uploaded."""
+  originalFileName: String!
+
+  """The current progress of the media processing."""
+  progress: MediaProgress
+}
+
 """Refund an account transaction."""
 input RefundAccountTransactionInput {
   """The id of the subscription."""
@@ -5542,6 +5700,9 @@ type Series implements Node {
   """A URL pointing to the object's banner."""
   banner: Resource
 
+  """A URL pointing to the object's banner."""
+  bannerMedia: Media
+
   """Get or search all characters for this series."""
   characters(
     """Returns the elements in the list that come after the specified cursor."""
@@ -5742,6 +5903,9 @@ scalar Time
 type Topic implements Node {
   """A URL pointing to the object's banner."""
   banner: Resource
+
+  """A URL pointing to the object's banner."""
+  bannerMedia: Media
 
   """All categories linked to this topic."""
   categories(
@@ -5981,21 +6145,6 @@ type UpdateAudienceIsStandardPayload {
 }
 
 """Update audience."""
-input UpdateAudienceThumbnailInput {
-  """The audience to update"""
-  id: ID!
-
-  """The thumbnail"""
-  thumbnail: String!
-}
-
-"""Payload for updating audience"""
-type UpdateAudienceThumbnailPayload {
-  """The audience after update"""
-  audience: Audience
-}
-
-"""Update audience."""
 input UpdateAudienceTitleInput {
   """The audience to update"""
   id: ID!
@@ -6048,21 +6197,6 @@ input UpdateCancellationReasonTitleInput {
 type UpdateCancellationReasonTitlePayload {
   """The updated reason."""
   cancellationReason: CancellationReason
-}
-
-"""Update category."""
-input UpdateCategoryThumbnailInput {
-  """The category to update"""
-  id: ID!
-
-  """The thumbnail"""
-  thumbnail: String!
-}
-
-"""Payload for updating category"""
-type UpdateCategoryThumbnailPayload {
-  """The category after update"""
-  category: Category
 }
 
 """Update category."""
@@ -6124,21 +6258,6 @@ input UpdateCharacterNameInput {
 
 """Payload for updating character"""
 type UpdateCharacterNamePayload {
-  """The character after update"""
-  character: Character
-}
-
-"""Update character."""
-input UpdateCharacterThumbnailInput {
-  """The character to update"""
-  id: ID!
-
-  """The thumbnail"""
-  thumbnail: String!
-}
-
-"""Payload for updating character"""
-type UpdateCharacterThumbnailPayload {
   """The character after update"""
   character: Character
 }
@@ -6456,21 +6575,6 @@ type UpdateRuleTitlePayload {
 }
 
 """Update series."""
-input UpdateSeriesThumbnailInput {
-  """The series to update"""
-  id: ID!
-
-  """The thumbnail"""
-  thumbnail: String!
-}
-
-"""Payload for updating series"""
-type UpdateSeriesThumbnailPayload {
-  """The category after update"""
-  series: Series
-}
-
-"""Update series."""
 input UpdateSeriesTitleInput {
   """The series to update"""
   id: ID!
@@ -6594,4 +6698,31 @@ type VerifyAuthenticationTokenPayload {
 """Validation for granting account access"""
 enum VerifyAuthenticationTokenValidation {
   TOKEN_INVALID
+}
+
+"""A container used to access the video."""
+union VideoContainer = HLSVideoContainer | MP4VideoContainer
+
+type VideoMedia {
+  """The aspect ratio of the media."""
+  aspectRatio: AspectRatio!
+
+  """
+  The container for videos.
+  
+  A video can have multiple containers, for example, an HLS video for general playback, and an .mp4 video as fallback.
+  """
+  containers: [VideoContainer!]!
+
+  """The cover for this image media."""
+  cover: ImageMedia!
+
+  """The video duration, in milliseconds."""
+  duration: Int!
+
+  """Whether or not the video has audio."""
+  hasAudio: Boolean!
+
+  """An ID uniquely identifying this media."""
+  id: ID!
 }
