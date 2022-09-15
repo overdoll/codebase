@@ -9,4 +9,5 @@ import (
 type Repository interface {
 	DeleteAccount(ctx context.Context, requester *principal.Principal, acc *account.Account) error
 	CancelAccountDeletion(ctx context.Context, requester *principal.Principal, acc *account.Account) error
+	NewAccountRegistration(ctx context.Context, acc *account.Account) error
 }

@@ -4,6 +4,7 @@ go_library(
     name = "workflows",
     srcs = [
         "delete_account.go",
+        "new_account_registration.go",
         "options.go",
     ],
     importpath = "overdoll/applications/eva/internal/app/workflows",

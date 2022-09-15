@@ -30,6 +30,8 @@ service Carrier {
   rpc ModeratorPostInQueue(ModeratorPostInQueueRequest) returns (google.protobuf.Empty) {}
 
   rpc PostFailedProcessing(PostFailedProcessingRequest) returns (google.protobuf.Empty) {}
+
+  rpc AccountNewRegistration(AccountNewRegistrationRequest) returns (google.protobuf.Empty) {}
 }
 
 message ClubSuspendedRequest {
@@ -43,6 +45,10 @@ message ClubOverChargebackThresholdRequest {
 }
 
 message ModeratorPostInQueueRequest {
+  Account account = 1;
+}
+
+message AccountNewRegistrationRequest {
   Account account = 1;
 }
 

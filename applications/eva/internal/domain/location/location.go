@@ -12,6 +12,7 @@ type Serializable struct {
 	Subdivision string `json:"subdivision"`
 	Latitude    string `json:"latitude"`
 	Longitude   string `json:"longitude"`
+	Timezone    string `json:"timezone"`
 }
 
 type Location struct {
@@ -21,9 +22,10 @@ type Location struct {
 	subdivision string
 	latitude    float64
 	longitude   float64
+	timezone    string
 }
 
-func UnmarshalLocationFromDatabase(city, country, postalCode, subdivision string, latitude, longitude float64) *Location {
+func UnmarshalLocationFromDatabase(city, country, postalCode, subdivision string, latitude, longitude float64, timezone string) *Location {
 	return &Location{
 		city:        city,
 		country:     country,
@@ -31,6 +33,7 @@ func UnmarshalLocationFromDatabase(city, country, postalCode, subdivision string
 		subdivision: subdivision,
 		latitude:    latitude,
 		longitude:   longitude,
+		timezone:    timezone,
 	}
 }
 
@@ -46,6 +49,7 @@ func UnmarshalLocationFromSerialized(serialized Serializable) *Location {
 		subdivision: serialized.Subdivision,
 		latitude:    lat,
 		longitude:   lng,
+		timezone:    serialized.Timezone,
 	}
 }
 
@@ -55,6 +59,7 @@ func Serialize(loc *Location) Serializable {
 		Country:     loc.country,
 		PostalCode:  loc.postalCode,
 		Subdivision: loc.subdivision,
+		Timezone:    loc.timezone,
 		Latitude:    fmt.Sprintf("%f", loc.latitude),
 		Longitude:   fmt.Sprintf("%f", loc.longitude),
 	}
@@ -78,6 +83,10 @@ func (c *Location) Longitude() float64 {
 
 func (c *Location) Subdivision() string {
 	return c.subdivision
+}
+
+func (c *Location) Timezone() string {
+	return c.timezone
 }
 
 func (c *Location) PostalCode() string {

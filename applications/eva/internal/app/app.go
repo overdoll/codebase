@@ -49,6 +49,8 @@ type Commands struct {
 
 	CancelAccountDeletion command.CancelAccountDeletionHandler
 	DeleteAccount         command.DeleteAccountHandler
+
+	NewAccountRegistration command.NewAccountRegistrationHandler
 }
 
 type Queries struct {

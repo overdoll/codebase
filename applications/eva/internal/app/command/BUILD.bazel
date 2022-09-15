@@ -22,6 +22,7 @@ go_library(
         "grant_account_access_with_authentication_token.go",
         "grant_authentication_token.go",
         "lock_account.go",
+        "new_account_registration.go",
         "revoke_account_artist_role.go",
         "revoke_account_moderator_role.go",
         "revoke_account_session.go",
@@ -47,5 +48,6 @@ go_library(
         "//libraries/errors/domainerror",
         "//libraries/passport",
         "//libraries/principal",
+        "//libraries/sentry_support",
     ],
 )

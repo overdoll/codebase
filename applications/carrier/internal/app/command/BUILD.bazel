@@ -6,6 +6,7 @@ go_library(
         "account_deleted.go",
         "account_deletion_begin.go",
         "account_deletion_reminder.go",
+        "account_new_registration.go",
         "club_over_chargeback_threshold.go",
         "club_supporter_no_posts.go",
         "club_supporter_required_post_reminder.go",

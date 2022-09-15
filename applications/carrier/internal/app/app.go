@@ -27,6 +27,7 @@ type Commands struct {
 	ClubSupporterSubscriptionDuplicate        command.ClubSupporterSubscriptionDuplicateHandler
 	ModeratorPostInQueue                      command.ModeratorPostInQueueHandler
 	PostFailedProcessing                      command.PostFailedProcessingHandler
+	AccountNewRegistration                    command.AccountNewRegistrationHandler
 }
 
 type Queries struct{}

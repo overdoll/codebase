@@ -51,5 +51,6 @@ func (r LocationMaxmindRepository) GetLocationFromIp(ctx context.Context, ip str
 		subdivision,
 		record.Location.Latitude,
 		record.Location.Longitude,
+		record.Location.TimeZone,
 	), nil
 }
