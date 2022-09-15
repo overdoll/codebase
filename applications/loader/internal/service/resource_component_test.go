@@ -148,6 +148,8 @@ func TestUploadMedia(t *testing.T) {
 
 	videoEnv := getWorkflowEnvironment()
 
+	fmt.Println(itemId)
+
 	didCheckResourceFirst := false
 
 	videoEnv.SetOnActivityCompletedListener(func(activityInfo *activity.Info, details converter.EncodedValue, err error) {
@@ -174,6 +176,7 @@ func TestUploadMedia(t *testing.T) {
 	var finalMedia []*proto.Media
 
 	application.StingCallbackClient.On("UpdateMedia", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+		fmt.Println("ran callback")
 		finalMedia = append(finalMedia, args[1].(*proto.UpdateMediaRequest).Media)
 	}).Return(&emptypb.Empty{}, nil)
 
