@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import React from 'react'
-import addItemListJsonLd from '../../root/RootStructuredData/addItemListJsonLd'
-import RootStructuredData from '../../root/RootStructuredData/RootStructuredData'
+import addItemListJsonLd from '../support/addItemListJsonLd'
+import RootStructuredData from '../RootStructuredData/RootStructuredData'
 
 export default function BrowseStructuredData (): JSX.Element {
   return (

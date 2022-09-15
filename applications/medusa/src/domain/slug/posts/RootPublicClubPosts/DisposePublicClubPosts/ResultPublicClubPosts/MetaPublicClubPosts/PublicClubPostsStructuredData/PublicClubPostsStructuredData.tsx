@@ -4,7 +4,7 @@ import type {
 } from '@//:artifacts/PublicClubPostsStructuredDataFragment.graphql'
 import Head from 'next/head'
 import React from 'react'
-import addItemListJsonLd from '@//:common/structured-data/root/RootStructuredData/addItemListJsonLd'
+import addItemListJsonLd from '@//:common/structured-data/support/addItemListJsonLd'
 import addClubPostsListJsonLd from './addClubPostsListJsonLd'
 
 interface Props {

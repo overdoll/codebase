@@ -8,7 +8,7 @@ import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/S
 import { PageProps } from '@//:types/app'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import RootHomeRichObject from '../../../common/rich-objects/home/RootHomeRichObject/RootHomeRichObject'
-import BrowseStructuredData from '@//:common/structured-data/browse/BrowseStructuredData/BrowseStructuredData'
+import BrowseStructuredData from '@//:common/structured-data/BrowseStructuredData/BrowseStructuredData'
 
 interface Props {
   queryRefs: {

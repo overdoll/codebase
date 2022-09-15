@@ -8,7 +8,7 @@ import type { DiscoverClubsQuery as DiscoverClubsQueryType } from '@//:artifacts
 import DiscoverClubsQuery from '@//:artifacts/DiscoverClubsQuery.graphql'
 import RootDiscoverClubsRichObject
   from '../../../../common/rich-objects/clubs/discover/RootDiscoverClubsRichObject/RootDiscoverClubsRichObject'
-import RootStructuredData from '../../../../common/structured-data/root/RootStructuredData/RootStructuredData'
+import RootStructuredData from '../../../../common/structured-data/RootStructuredData/RootStructuredData'
 
 interface Props {
   queryRefs: {

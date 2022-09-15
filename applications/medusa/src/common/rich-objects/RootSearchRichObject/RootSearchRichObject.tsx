@@ -13,8 +13,6 @@ export default function RootSearchRichObject (): JSX.Element {
   const TITLE = `${TITLE_SEARCH_PREFIX} ${TITLE_FEATURES} - ${SEARCH_TITLE_SUFFIX}`
   const DESCRIPTION = `${DESCRIPTION_PREFIX} ${DESCRIPTION_FEATURES} on ${SEARCH_TITLE_SUFFIX}. ${DESCRIPTION_CONTENT_DISCOVER}.`
 
-  const URL = 'https://overdoll.com/search'
-
   return (
     <>
       <Head>
@@ -32,10 +30,6 @@ export default function RootSearchRichObject (): JSX.Element {
         <meta
           property='og:description'
           content={DESCRIPTION}
-        />
-        <meta
-          property='og:url'
-          content={URL}
         />
       </Head>
     </>

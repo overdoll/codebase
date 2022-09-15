@@ -4,7 +4,7 @@ import Head from 'next/head'
 import React from 'react'
 import addClubPostsJsonLd from './addClubPostsJsonLd'
 import addClubDataJsonLd from './addClubDataJsonLd'
-import addItemListJsonLd from '@//:common/structured-data/root/RootStructuredData/addItemListJsonLd'
+import addItemListJsonLd from '@//:common/structured-data/support/addItemListJsonLd'
 
 interface Props {
   query: PublicClubStructuredDataFragment$key

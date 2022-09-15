@@ -1,5 +1,5 @@
-import { TITLE } from '../../../rich-objects/default/TitleRichObject/TitleRichObject'
-import { DESCRIPTION } from '../../../rich-objects/default/DefaultRichObject/DefaultRichObject'
+import { TITLE } from '../../rich-objects/default/TitleRichObject/TitleRichObject'
+import { DESCRIPTION } from '../../rich-objects/default/DefaultRichObject/DefaultRichObject'
 import { DOMAttributes } from 'react'
 
 export default function addWebsiteJsonLd (): DOMAttributes<string>['dangerouslySetInnerHTML'] {

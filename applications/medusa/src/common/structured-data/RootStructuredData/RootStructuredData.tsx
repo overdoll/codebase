@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import React from 'react'
-import addWebsiteJsonLd from './addWebsiteJsonLd'
+import addWebsiteJsonLd from '../support/addWebsiteJsonLd'
 
 export default function RootStructuredData (): JSX.Element {
   return (

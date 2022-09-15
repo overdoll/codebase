@@ -42,7 +42,7 @@ export default function CharacterTileOverlay ({
         <Flex position='absolute' p={2} right={0} bottom={0} justify='flex-end'>
           <Box bg='teal.300' borderRadius='xl' px={2} py={1}>
             <Heading color='gray.00' fontSize='sm'>
-              Original
+              OC
             </Heading>
           </Box>
         </Flex>

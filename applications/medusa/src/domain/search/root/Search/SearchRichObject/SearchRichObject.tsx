@@ -7,7 +7,7 @@ import {
   SEARCH_TITLE_SUFFIX,
   TITLE_SEARCH_PREFIX
 } from '@//:modules/constants/rich-objects'
-import ImageRichObject from '../../default/ImageRichObject/ImageRichObject'
+import ImageRichObject from '@//:common/rich-objects/default/ImageRichObject/ImageRichObject'
 
 export default function SearchRichObject (value: string): JSX.Element {
   const TITLE = `${TITLE_SEARCH_PREFIX} ${value} - ${SEARCH_TITLE_SUFFIX}`

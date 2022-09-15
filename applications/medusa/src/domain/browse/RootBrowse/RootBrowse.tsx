@@ -6,7 +6,7 @@ import BrowseQuery from '@//:artifacts/BrowseQuery.graphql'
 import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
 import { PageProps } from '@//:types/app'
 import { PageWrapper } from '@//:modules/content/PageLayout'
-import BrowseStructuredData from '@//:common/structured-data/browse/BrowseStructuredData/BrowseStructuredData'
+import BrowseStructuredData from '@//:common/structured-data/BrowseStructuredData/BrowseStructuredData'
 import Browse from './Browse/Browse'
 import BrowseRichObject from '@//:common/rich-objects/browse/BrowseRichObject/BrowseRichObject'
 
