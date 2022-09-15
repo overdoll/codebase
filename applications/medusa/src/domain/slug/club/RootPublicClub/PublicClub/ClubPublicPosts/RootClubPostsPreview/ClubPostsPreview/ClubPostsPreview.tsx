@@ -71,8 +71,9 @@ export default function ClubPostsPreview (props: Props): JSX.Element {
         loadNext={loadNext}
         isLoadingNext={isLoadingNext}
       >
-        {({ index }) => (
+        {({ index, key }) => (
           <FullClubPost
+            key={key}
             query={data.clubPosts.edges[index].node}
             viewerQuery={viewerData}
           />

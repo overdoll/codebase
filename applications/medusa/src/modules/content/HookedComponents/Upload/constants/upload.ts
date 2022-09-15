@@ -14,10 +14,9 @@ export const FILE_ICONS = {
   'video/webm': FileWebm
 }
 
-// TODO uppy doesn't expose the shouldTerminate variable to tus - custom plugin configuration is needed to pass in the parameter
 export const TUS_OPTIONS = {
   endpoint: '/api/upload/',
-  retryDelays: [0, 1000, 3000, 5000],
-  chunkSize: 104857600,
+  retryDelays: [0, 1000, 3000, 5000, 10000],
+  chunkSize: 52428800,
   shouldTerminate: false
 }

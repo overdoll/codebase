@@ -10,9 +10,11 @@ go_library(
         "delete_account_data.go",
         "delete_session_data.go",
         "get_account_data.go",
+        "get_account_local_timezone.go",
         "hades_delete_account_data.go",
         "parley_delete_account_data.go",
         "ringer_delete_account_data.go",
+        "send_account_new_registration_notification.go",
         "sting_delete_account_data.go",
         "update_account_cancel_deletion.go",
         "update_account_deleted.go",
@@ -23,6 +25,7 @@ go_library(
     deps = [
         "//applications/eva/internal/app/command",
         "//applications/eva/internal/domain/account",
+        "//applications/eva/internal/domain/location",
         "//applications/eva/internal/domain/session",
     ],
 )

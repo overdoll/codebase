@@ -4,7 +4,7 @@ import type { UploadFlowStickyFooterFragment$key } from '@//:artifacts/UploadFlo
 import { FlowBuilderFooter } from '@//:modules/content/PageLayout'
 import UploadFlowFooter from '../UploadFlowFooter'
 import { Flex } from '@chakra-ui/react'
-import { useEffect, useRef, useState } from 'react'
+import StickyWrapper from '@//:common/components/StickyWrapper/StickyWrapper'
 
 interface Props {
   query: UploadFlowStickyFooterFragment$key
@@ -21,9 +21,6 @@ export default function UploadFlowStickyFooter ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const [isSticky, setIsSticky] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
-
   const STICKY_PROPS = {
     bg: 'dimmers.300',
     pt: 2,
@@ -36,53 +33,42 @@ export default function UploadFlowStickyFooter ({
 
   const UNSTICKY_PROPS = {}
 
-  useEffect(() => {
-    if (ref.current == null) return
-
-    const cachedRef = ref.current
-    const observer = new IntersectionObserver(
-      ([e]) => setIsSticky(e.intersectionRatio < 1),
-      {
-        threshold: [1]
-      }
-    )
-
-    observer.observe(cachedRef)
-
-    return () => {
-      observer.unobserve(cachedRef)
-    }
-  }, [])
-
   return (
-    <Flex
-      ref={ref}
-      bottom={{
-        base: -1,
-        md: -2
-      }}
-      pb={{
-        base: 66,
-        md: 4
-      }}
-      position='sticky'
-      w='100%'
-      {...isSticky ? STICKY_PROPS : UNSTICKY_PROPS}
-    >
-      <FlowBuilderFooter>
-        {({
-          currentStep,
-          isAtStart,
-          nextStep
-        }) => (
-          <UploadFlowFooter
-            step={currentStep}
-            isAtStart={isAtStart}
-            nextStep={nextStep}
-            query={data}
-          />
-        )}
-      </FlowBuilderFooter>
-    </Flex>
+    <StickyWrapper>
+      {({
+        isSticky,
+        ref
+      }) => (
+        <Flex
+          ref={ref}
+          bottom={{
+            base: -1,
+            md: -2
+          }}
+          pb={{
+            base: 66,
+            md: 4
+          }}
+          position='sticky'
+          w='100%'
+          {...isSticky ? STICKY_PROPS : UNSTICKY_PROPS}
+        >
+          <FlowBuilderFooter>
+            {({
+              currentStep,
+              isAtStart,
+              nextStep
+            }) => (
+              <UploadFlowFooter
+                step={currentStep}
+                isAtStart={isAtStart}
+                nextStep={nextStep}
+                query={data}
+              />
+            )}
+          </FlowBuilderFooter>
+        </Flex>
+      )}
+    </StickyWrapper>
   )
 }

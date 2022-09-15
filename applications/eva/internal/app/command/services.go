@@ -6,6 +6,8 @@ import (
 )
 
 type CarrierService interface {
+	AccountNewRegistration(ctx context.Context, accountId string) error
+
 	ConfirmAccountEmail(ctx context.Context, accountId, email, id, secret string) error
 	NewLoginToken(ctx context.Context, email, token, secret string) error
 

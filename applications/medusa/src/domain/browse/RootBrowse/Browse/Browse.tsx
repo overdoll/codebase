@@ -79,8 +79,9 @@ export default function Browse (props: Props): JSX.Element {
             isLoadingNext={isLoadingNext}
             endOfTree={<PlatformPromoteAlert />}
           >
-            {({ index }) => (
+            {({ index, key }) => (
               <FullSimplePost
+                key={key}
                 query={data.postsFeed.edges[index].node}
                 viewerQuery={queryData.viewer}
               />

@@ -1,6 +1,5 @@
 import { Box, Heading, HStack } from '@chakra-ui/react'
-import { Icon, LargeBackgroundBox } from '@//:modules/content/PageLayout'
-import { FileMultiple } from '@//:assets/icons'
+import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 import { ReactNode } from 'react'
 
 interface Props {
@@ -16,19 +15,9 @@ export default function SearchSummary ({
   totalPosts,
   totalLikes
 }: Props): JSX.Element {
-  const responsiveSize = {
-    base: 4,
-    md: 6
-  }
-
   const responsiveFont = {
     base: 'lg',
     md: '2xl'
-  }
-
-  const responsiveSpacing = {
-    base: 1,
-    md: 2
   }
 
   return (
@@ -47,12 +36,6 @@ export default function SearchSummary ({
               {type}
             </Heading>
           </Box>
-          <HStack spacing={responsiveSpacing} align='center'>
-            <Icon icon={FileMultiple} w={responsiveSize} h={responsiveSize} fill='gray.200' />
-            <Heading fontSize={responsiveFont} color='gray.200'>
-              {totalPosts}
-            </Heading>
-          </HStack>
         </HStack>
       </HStack>
     </LargeBackgroundBox>

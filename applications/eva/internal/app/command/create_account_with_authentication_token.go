@@ -3,8 +3,10 @@ package command
 import (
 	"context"
 	"overdoll/applications/eva/internal/domain/account"
+	"overdoll/applications/eva/internal/domain/event"
 	"overdoll/applications/eva/internal/domain/token"
 	"overdoll/libraries/passport"
+	"overdoll/libraries/sentry_support"
 )
 
 type CreateAccountWithAuthenticationToken struct {
@@ -14,12 +16,13 @@ type CreateAccountWithAuthenticationToken struct {
 }
 
 type CreateAccountWithAuthenticationTokenHandler struct {
-	cr token.Repository
-	ur account.Repository
+	cr    token.Repository
+	ur    account.Repository
+	event event.Repository
 }
 
-func NewCreateAccountWithAuthenticationTokenHandler(cr token.Repository, ur account.Repository) CreateAccountWithAuthenticationTokenHandler {
-	return CreateAccountWithAuthenticationTokenHandler{cr: cr, ur: ur}
+func NewCreateAccountWithAuthenticationTokenHandler(cr token.Repository, ur account.Repository, event event.Repository) CreateAccountWithAuthenticationTokenHandler {
+	return CreateAccountWithAuthenticationTokenHandler{cr: cr, ur: ur, event: event}
 }
 
 func (h CreateAccountWithAuthenticationTokenHandler) Handle(ctx context.Context, cmd CreateAccountWithAuthenticationToken) (*account.Account, error) {
@@ -50,6 +53,12 @@ func (h CreateAccountWithAuthenticationTokenHandler) Handle(ctx context.Context,
 
 	if err := h.cr.DeleteAuthenticationToken(ctx, cmd.Passport, cmd.Token, nil); err != nil {
 		return nil, err
+	}
+
+	// we don't want to stop if an error occurs and prevent the account from registering, so we log the error and move on
+	if err := h.event.NewAccountRegistration(ctx, instance); err != nil {
+		sentry_support.CaptureException(ctx, err)
+		return nil, nil
 	}
 
 	return instance, nil

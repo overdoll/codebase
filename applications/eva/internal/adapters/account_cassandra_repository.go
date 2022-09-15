@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"github.com/getsentry/sentry-go"
 	"github.com/go-redis/redis/v8"
 	"go.uber.org/zap"
 	"overdoll/libraries/errors"
@@ -444,6 +445,14 @@ func (r AccountCassandraRepository) CreateAccount(ctx context.Context, instance 
 		}
 
 		return errors.Wrap(support.NewGocqlError(err), "failed to create account")
+	}
+
+	// set the scope of the account that was created
+	if hub := sentry.GetHubFromContext(ctx); hub != nil {
+		hub.Scope().SetUser(sentry.User{
+			ID:       instance.ID(),
+			Username: instance.Username(),
+		})
 	}
 
 	return nil

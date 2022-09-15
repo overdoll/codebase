@@ -12,7 +12,7 @@ import { useSwipeable } from 'react-swipeable'
 
 type UseToastInput = UseToastOptions
 
-type ToastAlertProps = RenderProps & UseToastOptions
+export type ToastAlertProps = RenderProps & UseToastOptions
 
 export default function useToast (options: UseToastInput = {}): (options: UseToastInput) => void {
   const position = useBreakpointValue<ToastPosition>({

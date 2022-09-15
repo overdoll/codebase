@@ -43,6 +43,8 @@ go_library(
         "views/templates/moderator_post_in_queue/email.gohtml",
         "views/templates/post_failed_processing/email.gohtml",
         "views/templates/post_failed_processing/subject.gotmpl",
+        "views/templates/account_new_registration/email.gohtml",
+        "views/templates/account_new_registration/subject.gotmpl",
     ],
     importpath = "overdoll/applications/carrier/internal/domain/mailing",
     visibility = ["//applications/carrier:__subpackages__"],

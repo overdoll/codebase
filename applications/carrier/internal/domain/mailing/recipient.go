@@ -1,12 +1,14 @@
 package mailing
 
 import (
+	"os"
 	"overdoll/applications/carrier/internal/domain/identifier"
 )
 
 type Recipient struct {
 	username string
 	email    string
+	source   string
 }
 
 func NewRecipient(username, email string) (*Recipient, error) {
@@ -18,6 +20,7 @@ func NewRecipient(username, email string) (*Recipient, error) {
 	return &Recipient{
 		username: username,
 		email:    email,
+		source:   os.Getenv("EMAIL_FROM_ADDRESS"),
 	}, nil
 }
 
@@ -25,6 +28,15 @@ func NewRecipientFromIdentifier(identifier *identifier.Identifier) (*Recipient, 
 	return &Recipient{
 		username: identifier.Username(),
 		email:    identifier.Email(),
+		source:   os.Getenv("EMAIL_FROM_ADDRESS"),
+	}, nil
+}
+
+func NewRecipientFromIdentifierWithCustomSource(identifier *identifier.Identifier, source string) (*Recipient, error) {
+	return &Recipient{
+		username: identifier.Username(),
+		email:    identifier.Email(),
+		source:   source,
 	}, nil
 }
 
@@ -34,6 +46,15 @@ func (r *Recipient) Username() string {
 
 func (r *Recipient) Email() string {
 	return r.email
+}
+
+func (r *Recipient) Source() string {
+
+	if r.source == "" {
+		return os.Getenv("EMAIL_FROM_ADDRESS")
+	}
+
+	return r.source
 }
 
 func (r *Recipient) SetEmail(email string) error {
