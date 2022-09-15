@@ -1,5 +1,5 @@
 import RootSearchCategory from './RootSearchCategory/RootSearchCategory'
-import SearchCategoryQuery from '@//:artifacts/SearchCategoryQuery.graphql'
+import ResultSearchCategoryQuery from '@//:artifacts/ResultSearchCategoryQuery.graphql'
 import decodeSearchArguments from '../../../common/components/PageHeader/SearchButton/support/decodeSearchArguments'
 import getPostSeed from '@//:modules/content/Posts/support/getPostSeed'
 
@@ -17,7 +17,7 @@ RootSearchCategory.getRelayPreloadProps = (ctx) => {
   return {
     queries: {
       searchCategoryQuery: {
-        params: SearchCategoryQuery.params,
+        params: ResultSearchCategoryQuery.params,
         variables: {
           categorySlug,
           ...decodeSearchArguments(query),

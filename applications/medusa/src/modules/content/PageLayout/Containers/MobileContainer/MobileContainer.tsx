@@ -14,8 +14,9 @@ export default function MobileContainer ({
       w={['full', 'base']}
       maxW='container.md'
       px={{
-        md: 4,
-        base: 2
+        lg: 4,
+        md: 2,
+        base: 0
       }}
       {...rest}
     >

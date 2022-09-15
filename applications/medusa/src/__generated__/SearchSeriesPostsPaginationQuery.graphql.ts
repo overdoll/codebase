@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b0415ce13f15a678f060e1498176146c>>
- * @relayHash c60f5968880f891aa97e15ac077a200e
+ * @generated SignedSource<<23fb707a6a3c58a6e9055bb52c6aa8b0>>
+ * @relayHash 4fbaf015f0bd2a78a3852f6a54152fd2
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c60f5968880f891aa97e15ac077a200e
+// @relayRequestID 4fbaf015f0bd2a78a3852f6a54152fd2
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -23,7 +23,7 @@ export type SearchSeriesPostsPaginationQuery$variables = {
 };
 export type SearchSeriesPostsPaginationQuery$data = {
   readonly node: {
-    readonly " $fragmentSpreads": FragmentRefs<"SearchSeriesFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ScrollSearchSeriesFragment">;
   } | null;
 };
 export type SearchSeriesPostsPaginationQuery = {
@@ -206,7 +206,7 @@ return {
               (v7/*: any*/)
             ],
             "kind": "FragmentSpread",
-            "name": "SearchSeriesFragment"
+            "name": "ScrollSearchSeriesFragment"
           }
         ],
         "storageKey": null
@@ -534,7 +534,7 @@ return {
     ]
   },
   "params": {
-    "id": "c60f5968880f891aa97e15ac077a200e",
+    "id": "4fbaf015f0bd2a78a3852f6a54152fd2",
     "metadata": {},
     "name": "SearchSeriesPostsPaginationQuery",
     "operationKind": "query",
@@ -543,6 +543,6 @@ return {
 };
 })();
 
-(node as any).hash = "5c8c60ee4fb9da8d647400ba5ca7a5e3";
+(node as any).hash = "559d665ed9a6886a24d4d79c94fef199";
 
 export default node;

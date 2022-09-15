@@ -1,5 +1,5 @@
 import RootSearchSeries from './RootSearchSeries/RootSearchSeries'
-import SearchSeriesQuery from '@//:artifacts/SearchSeriesQuery.graphql'
+import ResultSearchSeriesQuery from '@//:artifacts/ResultSearchSeriesQuery.graphql'
 import decodeSearchArguments from '../../../common/components/PageHeader/SearchButton/support/decodeSearchArguments'
 import getPostSeed from '@//:modules/content/Posts/support/getPostSeed'
 
@@ -17,7 +17,7 @@ RootSearchSeries.getRelayPreloadProps = (ctx) => {
   return {
     queries: {
       searchSeriesQuery: {
-        params: SearchSeriesQuery.params,
+        params: ResultSearchSeriesQuery.params,
         variables: {
           seriesSlug,
           ...decodeSearchArguments(query),

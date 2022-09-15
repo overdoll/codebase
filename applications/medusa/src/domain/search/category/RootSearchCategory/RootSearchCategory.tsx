@@ -1,51 +1,29 @@
-import { Suspense } from 'react'
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { useQueryLoader } from 'react-relay/hooks'
-import type { SearchCategoryQuery as SearchCategoryQueryType } from '@//:artifacts/SearchCategoryQuery.graphql'
-import SearchCategoryQuery from '@//:artifacts/SearchCategoryQuery.graphql'
-import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
-import { SkeletonStack } from '@//:modules/content/Placeholder'
-import { useRouter } from 'next/router'
+import type { ResultSearchCategoryQuery as ResultSearchCategoryQueryType } from '@//:artifacts/ResultSearchCategoryQuery.graphql'
+import ResultSearchCategoryQuery from '@//:artifacts/ResultSearchCategoryQuery.graphql'
 import { PageProps } from '@//:types/app'
-import SearchCategory from './SearchCategory/SearchCategory'
-import useSearchSortArguments
-  from '../../../../common/components/PageHeader/SearchButton/support/useSearchSortArguments'
-import { PageWrapper } from '@//:modules/content/PageLayout'
+import { PageContainer } from '@//:modules/content/PageLayout'
+import DisposeSearchCategory from './DisposeSearchCategory/DisposeSearchCategory'
 
 interface Props {
   queryRefs: {
-    searchCategoryQuery: PreloadedQuery<SearchCategoryQueryType>
+    searchCategoryQuery: PreloadedQuery<ResultSearchCategoryQueryType>
   }
 }
 
 const RootSearchCategory: PageProps<Props> = (props: Props) => {
-  const [queryRef, loadQuery] = useQueryLoader<SearchCategoryQueryType>(
-    SearchCategoryQuery,
-    props.queryRefs.searchCategoryQuery
+  const { queryRefs: { searchCategoryQuery } } = props
+
+  const params = useQueryLoader<ResultSearchCategoryQueryType>(
+    ResultSearchCategoryQuery,
+    searchCategoryQuery
   )
 
-  const {
-    query: {
-      categorySlug
-    }
-  } = useRouter()
-
-  useSearchSortArguments((params) => loadQuery(params))
-
   return (
-    <>
-      <PageWrapper>
-        <QueryErrorBoundary loadQuery={() => loadQuery({
-          categorySlug: categorySlug as string,
-          sortBy: 'ALGORITHM'
-        })}
-        >
-          <Suspense fallback={<SkeletonStack />}>
-            <SearchCategory query={queryRef as PreloadedQuery<SearchCategoryQueryType>} />
-          </Suspense>
-        </QueryErrorBoundary>
-      </PageWrapper>
-    </>
+    <PageContainer>
+      <DisposeSearchCategory params={params} />
+    </PageContainer>
   )
 }
 

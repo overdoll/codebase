@@ -14,8 +14,9 @@ export default function ContentContainer ({
       w={['full', 'base']}
       maxW='container.xl'
       px={{
-        md: 4,
-        base: 2
+        lg: 4,
+        md: 2,
+        base: 0
       }}
       {...rest}
     >
