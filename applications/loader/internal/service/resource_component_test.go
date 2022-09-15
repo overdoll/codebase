@@ -171,6 +171,12 @@ func TestUploadMedia(t *testing.T) {
 		}
 	})
 
+	var finalMedia []*proto.Media
+
+	application.StingCallbackClient.On("UpdateMedia", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+		finalMedia = append(finalMedia, args[1].(*proto.UpdateMediaRequest).Media)
+	}).Return(&emptypb.Empty{}, nil)
+
 	testing_tools.NewEagerMockWorkflowWithArgs(t, application.TemporalClient, getWorkflowEnvironment(), workflows.ProcessMedia, workflows.ProcessMediaInput{
 		Source: "STING",
 		SourceMedia: &proto.Media{
@@ -227,12 +233,6 @@ func TestUploadMedia(t *testing.T) {
 			Version: proto.MediaVersion_ONE,
 		},
 	})
-
-	var finalMedia []*proto.Media
-
-	application.StingCallbackClient.On("UpdateMedia", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
-		finalMedia = append(finalMedia, args[1].(*proto.UpdateMediaRequest).Media)
-	}).Return(&emptypb.Empty{}, nil)
 
 	res, err := grpcClient.ProcessMediaFromUploads(context.Background(), &loader.ProcessMediaFromUploadsRequest{
 		Link: &proto.MediaLink{
