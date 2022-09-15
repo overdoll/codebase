@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/base64"
-	"fmt"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"go.temporal.io/sdk/activity"
@@ -106,7 +105,7 @@ func TestUploadMediaAndProcessFailed(t *testing.T) {
 
 	application.StingCallbackClient.On("UpdateMedia", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 		finalMedia = append(finalMedia, args[1].(*proto.UpdateMediaRequest).Media)
-	}).Return(&emptypb.Empty{}, nil)
+	}).Return(&emptypb.Empty{}, nil).Times(2)
 
 	// start processing of files by calling grpc endpoint
 	_, err := grpcClient.ProcessMediaFromUploads(context.Background(), &loader.ProcessMediaFromUploadsRequest{
@@ -148,26 +147,18 @@ func TestUploadMedia(t *testing.T) {
 
 	videoEnv := getWorkflowEnvironment()
 
-	fmt.Println(itemId)
-
 	didCheckResourceFirst := false
 
 	videoEnv.SetOnActivityCompletedListener(func(activityInfo *activity.Info, details converter.EncodedValue, err error) {
 		if activityInfo.ActivityType.Name == "ProcessMediaFromUpload" {
 			result := queryMediaProgress(t, itemId, videoId)
 			if result.Progress == 100 {
-
 				if result.State == types.MediaProgressStateFinalizing {
 					didCheckResourceFirst = true
-				} else {
-					fmt.Println("incorrect state: " + result.State.String())
 				}
-
 			} else {
 				if result.State == types.MediaProgressStateStarted {
 					didCheckResourceFirst = true
-				} else {
-					fmt.Println("incorrect state: " + result.State.String())
 				}
 			}
 		}
@@ -176,9 +167,8 @@ func TestUploadMedia(t *testing.T) {
 	var finalMedia []*proto.Media
 
 	application.StingCallbackClient.On("UpdateMedia", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
-		fmt.Println("ran callback")
 		finalMedia = append(finalMedia, args[1].(*proto.UpdateMediaRequest).Media)
-	}).Return(&emptypb.Empty{}, nil)
+	}).Return(&emptypb.Empty{}, nil).Times(3)
 
 	testing_tools.NewEagerMockWorkflowWithArgs(t, application.TemporalClient, getWorkflowEnvironment(), workflows.ProcessMedia, workflows.ProcessMediaInput{
 		Source: "STING",

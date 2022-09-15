@@ -2,7 +2,6 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"overdoll/applications/loader/internal/domain/media_processing"
@@ -19,8 +18,6 @@ func NewCallbackGrpc(stingMediaCallback proto.MediaCallbackClient) CallbackGrpc 
 }
 
 func (s CallbackGrpc) SendCallback(ctx context.Context, source string, media *proto.Media) error {
-
-	fmt.Println("ran callback here")
 
 	if source == "STING" {
 
