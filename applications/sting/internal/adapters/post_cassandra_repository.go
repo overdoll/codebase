@@ -9,8 +9,8 @@ import (
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/localization"
+	"overdoll/libraries/media"
 	"overdoll/libraries/passport"
-	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"time"
 
@@ -21,7 +21,7 @@ import (
 	"overdoll/libraries/principal"
 )
 
-var postsOccupiedResourceTable = table.New(table.Metadata{
+var postsOccupiedMediaTable = table.New(table.Metadata{
 	Name: "posts_occupied_resources",
 	Columns: []string{
 		"bucket",
@@ -32,7 +32,7 @@ var postsOccupiedResourceTable = table.New(table.Metadata{
 	SortKey: []string{"post_id", "resource_id"},
 })
 
-type postsOccupiedResource struct {
+type postsOccupiedMedia struct {
 	Bucket     int    `db:"bucket"`
 	PostId     string `db:"post_id"`
 	ResourceId string `db:"resource_id"`
@@ -48,6 +48,7 @@ var postTable = table.New(table.Metadata{
 		"supporter_only_status",
 		"content_resource_ids",
 		"content_resources",
+		"content_media",
 		"content_supporter_only",
 		"content_supporter_only_resource_ids",
 		"contributor_account_id",
@@ -66,25 +67,26 @@ var postTable = table.New(table.Metadata{
 })
 
 type posts struct {
-	Id                              string            `db:"id"`
-	State                           string            `db:"state"`
-	Likes                           int               `db:"likes"`
-	Description                     map[string]string `db:"description"`
-	LikesLastUpdateId               gocql.UUID        `db:"likes_last_update_id"`
-	SupporterOnlyStatus             string            `db:"supporter_only_status"`
-	ContentResourceIds              []string          `db:"content_resource_ids"`
-	ContentSupporterOnly            map[string]bool   `db:"content_supporter_only"`
-	ContentResources                map[string]string `db:"content_resources"`
-	ContentSupporterOnlyResourceIds map[string]string `db:"content_supporter_only_resource_ids"`
-	ContributorId                   string            `db:"contributor_account_id"`
-	ClubId                          string            `db:"club_id"`
-	AudienceId                      *string           `db:"audience_id"`
-	CategoryIds                     []string          `db:"category_ids"`
-	CharacterIds                    []string          `db:"character_ids"`
-	SeriesIds                       []string          `db:"series_ids"`
-	CreatedAt                       time.Time         `db:"created_at"`
-	UpdatedAt                       time.Time         `db:"updated_at"`
-	PostedAt                        *time.Time        `db:"posted_at"`
+	Id                           string            `db:"id"`
+	State                        string            `db:"state"`
+	Likes                        int               `db:"likes"`
+	Description                  map[string]string `db:"description"`
+	LikesLastUpdateId            gocql.UUID        `db:"likes_last_update_id"`
+	SupporterOnlyStatus          string            `db:"supporter_only_status"`
+	ContentMediaIds              []string          `db:"content_resource_ids"`
+	ContentSupporterOnly         map[string]bool   `db:"content_supporter_only"`
+	ContentResources             map[string]string `db:"content_resources"`
+	ContentMedia                 map[string][]byte `db:"content_media"`
+	ContentSupporterOnlyMediaIds map[string]string `db:"content_supporter_only_resource_ids"`
+	ContributorId                string            `db:"contributor_account_id"`
+	ClubId                       string            `db:"club_id"`
+	AudienceId                   *string           `db:"audience_id"`
+	CategoryIds                  []string          `db:"category_ids"`
+	CharacterIds                 []string          `db:"character_ids"`
+	SeriesIds                    []string          `db:"series_ids"`
+	CreatedAt                    time.Time         `db:"created_at"`
+	UpdatedAt                    time.Time         `db:"updated_at"`
+	PostedAt                     *time.Time        `db:"posted_at"`
 }
 
 var terminatedClubsTable = table.New(table.Metadata{
@@ -103,15 +105,14 @@ type terminatedClubs struct {
 }
 
 type PostsCassandraElasticsearchRepository struct {
-	session            gocqlx.Session
-	client             *elastic.Client
-	resourceSerializer *resource.Serializer
-	aws                *session.Session
-	cache              *redis.Client
+	session gocqlx.Session
+	client  *elastic.Client
+	aws     *session.Session
+	cache   *redis.Client
 }
 
-func NewPostsCassandraRepository(session gocqlx.Session, client *elastic.Client, resourcesSerializer *resource.Serializer, aws *session.Session, cache *redis.Client) PostsCassandraElasticsearchRepository {
-	return PostsCassandraElasticsearchRepository{session: session, client: client, resourceSerializer: resourcesSerializer, aws: aws, cache: cache}
+func NewPostsCassandraRepository(session gocqlx.Session, client *elastic.Client, aws *session.Session, cache *redis.Client) PostsCassandraElasticsearchRepository {
+	return PostsCassandraElasticsearchRepository{session: session, client: client, aws: aws, cache: cache}
 }
 
 func marshalPostToDatabase(pending *post.Post) (*posts, error) {
@@ -120,53 +121,65 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 	contentSupporterOnly := make(map[string]bool)
 	contentSupporterOnlyResourceIds := make(map[string]string)
 	contentResources := make(map[string]string)
+	contentMedia := make(map[string][]byte)
 
 	for _, cont := range pending.Content() {
-		contentResourceIds = append(contentResourceIds, cont.Resource().ID())
-		contentSupporterOnly[cont.Resource().ID()] = cont.IsSupporterOnly()
-		if cont.IsSupporterOnly() && cont.ResourceHidden() != nil {
-			contentSupporterOnlyResourceIds[cont.Resource().ID()] = cont.ResourceHidden().ID()
+		contentResourceIds = append(contentResourceIds, cont.Media().ID())
+		contentSupporterOnly[cont.Media().ID()] = cont.IsSupporterOnly()
+		if cont.IsSupporterOnly() && cont.MediaHidden() != nil {
+			contentSupporterOnlyResourceIds[cont.Media().ID()] = cont.MediaHidden().ID()
 		}
 
-		if cont.ResourceHidden() != nil {
-			marshalled, err := resource.MarshalResourceToDatabase(cont.ResourceHidden())
+		if cont.MediaHidden() != nil {
+
+			if cont.MediaHidden().IsLegacy() {
+				contentResources[cont.MediaHidden().ID()] = cont.MediaHidden().LegacyResource()
+			} else {
+				marshalled, err := media.MarshalMediaToDatabase(cont.MediaHidden())
+
+				if err != nil {
+					return nil, err
+				}
+
+				contentMedia[cont.MediaHidden().ID()] = marshalled
+			}
+
+		}
+
+		if cont.Media().IsLegacy() {
+			contentResources[cont.Media().ID()] = cont.Media().LegacyResource()
+		} else {
+			marshalled, err := media.MarshalMediaToDatabase(cont.Media())
 
 			if err != nil {
 				return nil, err
 			}
 
-			contentResources[cont.ResourceHidden().ID()] = marshalled
+			contentMedia[cont.Media().ID()] = marshalled
 		}
-
-		marshalled, err := resource.MarshalResourceToDatabase(cont.Resource())
-
-		if err != nil {
-			return nil, err
-		}
-
-		contentResources[cont.Resource().ID()] = marshalled
 	}
 
 	return &posts{
-		Id:                              pending.ID(),
-		State:                           pending.State().String(),
-		SupporterOnlyStatus:             pending.SupporterOnlyStatus().String(),
-		Likes:                           pending.Likes(),
-		Description:                     localization.MarshalTranslationToDatabase(pending.Description()),
-		LikesLastUpdateId:               gocql.TimeUUID(),
-		ClubId:                          pending.ClubId(),
-		AudienceId:                      pending.AudienceId(),
-		ContributorId:                   pending.ContributorId(),
-		ContentResourceIds:              contentResourceIds,
-		ContentSupporterOnly:            contentSupporterOnly,
-		ContentResources:                contentResources,
-		ContentSupporterOnlyResourceIds: contentSupporterOnlyResourceIds,
-		CategoryIds:                     pending.CategoryIds(),
-		CharacterIds:                    pending.CharacterIds(),
-		SeriesIds:                       pending.SeriesIds(),
-		CreatedAt:                       pending.CreatedAt(),
-		PostedAt:                        pending.PostedAt(),
-		UpdatedAt:                       pending.UpdatedAt(),
+		Id:                           pending.ID(),
+		State:                        pending.State().String(),
+		SupporterOnlyStatus:          pending.SupporterOnlyStatus().String(),
+		Likes:                        pending.Likes(),
+		Description:                  localization.MarshalTranslationToDatabase(pending.Description()),
+		LikesLastUpdateId:            gocql.TimeUUID(),
+		ClubId:                       pending.ClubId(),
+		AudienceId:                   pending.AudienceId(),
+		ContributorId:                pending.ContributorId(),
+		ContentMediaIds:              contentResourceIds,
+		ContentSupporterOnly:         contentSupporterOnly,
+		ContentResources:             contentResources,
+		ContentMedia:                 contentMedia,
+		ContentSupporterOnlyMediaIds: contentSupporterOnlyResourceIds,
+		CategoryIds:                  pending.CategoryIds(),
+		CharacterIds:                 pending.CharacterIds(),
+		SeriesIds:                    pending.SeriesIds(),
+		CreatedAt:                    pending.CreatedAt(),
+		PostedAt:                     pending.PostedAt(),
+		UpdatedAt:                    pending.UpdatedAt(),
 	}, nil
 }
 
@@ -233,16 +246,28 @@ func (r PostsCassandraElasticsearchRepository) GetPostWithRandomSeed(ctx context
 
 func (r *PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Context, postPending posts) (*post.Post, error) {
 
-	var resourceValues []string
+	var finalMedia []*media.Media
 
 	for _, r := range postPending.ContentResources {
-		resourceValues = append(resourceValues, r)
+
+		m, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, r, nil)
+
+		if err != nil {
+			return nil, err
+		}
+
+		finalMedia = append(finalMedia, m)
 	}
 
-	resources, err := r.resourceSerializer.UnmarshalResourcesFromDatabase(ctx, resourceValues)
+	for _, r := range postPending.ContentMedia {
 
-	if err != nil {
-		return nil, err
+		m, err := media.UnmarshalMediaFromDatabase(ctx, r)
+
+		if err != nil {
+			return nil, err
+		}
+
+		finalMedia = append(finalMedia, m)
 	}
 
 	return post.UnmarshalPostFromDatabase(
@@ -251,10 +276,10 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Contex
 		postPending.SupporterOnlyStatus,
 		postPending.Likes,
 		postPending.ContributorId,
-		postPending.ContentResourceIds,
-		resources,
+		postPending.ContentMediaIds,
+		finalMedia,
 		postPending.ContentSupporterOnly,
-		postPending.ContentSupporterOnlyResourceIds,
+		postPending.ContentSupporterOnlyMediaIds,
 		postPending.ClubId,
 		postPending.AudienceId,
 		postPending.CharacterIds,
@@ -269,13 +294,13 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Contex
 
 func (r PostsCassandraElasticsearchRepository) getPostOccupiedResourcesPostIds(ctx context.Context) ([]string, error) {
 
-	var postResults []*postsOccupiedResource
+	var postResults []*postsOccupiedMedia
 
 	if err := r.session.
-		Query(qb.Select(postsOccupiedResourceTable.Name()).Where(qb.Eq("bucket")).ToCql()).
+		Query(qb.Select(postsOccupiedMediaTable.Name()).Where(qb.Eq("bucket")).ToCql()).
 		WithContext(ctx).
 		Idempotent(true).
-		BindStruct(postsOccupiedResource{
+		BindStruct(postsOccupiedMedia{
 			Bucket: 0,
 		}).
 		Consistency(gocql.LocalQuorum).
@@ -292,13 +317,13 @@ func (r PostsCassandraElasticsearchRepository) getPostOccupiedResourcesPostIds(c
 	return postIds, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) AddPostOccupiedResource(ctx context.Context, post *post.Post, resource *resource.Resource) error {
+func (r PostsCassandraElasticsearchRepository) AddPostOccupiedMedia(ctx context.Context, post *post.Post, resource *media.Media) error {
 
 	if err := r.session.
-		Query(postsOccupiedResourceTable.Insert()).
+		Query(postsOccupiedMediaTable.Insert()).
 		WithContext(ctx).
 		Idempotent(true).
-		BindStruct(postsOccupiedResource{
+		BindStruct(postsOccupiedMedia{
 			Bucket:     0,
 			PostId:     post.ID(),
 			ResourceId: resource.ID(),
@@ -580,12 +605,12 @@ func (r PostsCassandraElasticsearchRepository) updatePostRequest(ctx context.Con
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdatePostContentAndState(ctx context.Context, id string, updateFn func(pending *post.Post) error) error {
-	_, err := r.updatePost(ctx, id, updateFn, []string{"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status", "state", "content_resources"})
+	_, err := r.updatePost(ctx, id, updateFn, []string{"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status", "state", "content_media"})
 	return err
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdatePostContent(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
-	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status", "content_resources"})
+	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status", "content_media"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdatePostAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
@@ -624,7 +649,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperator(ctx con
 
 	if err := r.session.
 		Query(postTable.Update(
-			"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status", "content_resources", "updated_at",
+			"content_resource_ids", "content_supporter_only", "content_supporter_only_resource_ids", "supporter_only_status", "content_media", "updated_at",
 		)).
 		WithContext(ctx).
 		Idempotent(true).
@@ -641,7 +666,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperator(ctx con
 	return currentPost, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperatorResource(ctx context.Context, id string, resources []*resource.Resource) (*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperatorMedia(ctx context.Context, id string, resources []*media.Media) (*post.Post, error) {
 
 	currentPost, err := r.GetPostByIdOperator(ctx, id)
 
@@ -649,7 +674,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperatorResource
 
 		// not found errors - send back a resource not present, so we gracefully handle it
 		if apperror.IsNotFoundError(err) {
-			return nil, resource.ErrResourceNotPresent
+			return nil, media.ErrMediaNotPresent
 		}
 
 		return nil, err
@@ -660,14 +685,14 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperatorResource
 	for _, content := range currentPost.Content() {
 		for _, res := range resources {
 
-			if content.ResourceHidden() != nil {
-				if res.ID() == content.ResourceHidden().ID() {
+			if content.MediaHidden() != nil {
+				if res.ID() == content.MediaHidden().ID() {
 					foundCount += 1
 					break
 				}
 			}
 
-			if res.ID() == content.Resource().ID() {
+			if res.ID() == content.Media().ID() {
 				foundCount += 1
 				break
 			}
@@ -676,7 +701,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperatorResource
 
 	// make sure we updated all resources for this post otherwise we send a not found error
 	if foundCount != len(resources) {
-		return nil, resource.ErrResourceNotPresent
+		return nil, media.ErrMediaNotPresent
 	}
 
 	pst, err := marshalPostToDatabase(currentPost)
@@ -685,10 +710,10 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperatorResource
 		return nil, err
 	}
 
-	marshalledResources := make(map[string]string)
+	marshalledResources := make(map[string][]byte)
 
 	for _, r := range resources {
-		marshalled, err := resource.MarshalResourceToDatabase(r)
+		marshalled, err := media.MarshalMediaToDatabase(r)
 		if err != nil {
 			return nil, err
 		}
@@ -698,13 +723,13 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperatorResource
 	var mapped []string
 
 	for key := range marshalledResources {
-		mapped = append(mapped, "content_resources['"+key+"']")
+		mapped = append(mapped, "content_media['"+key+"']")
 	}
 
 	finalStruct := make(map[string]interface{})
 
 	for key, val := range marshalledResources {
-		finalStruct["content_resources['"+key+"']"] = val
+		finalStruct["content_media['"+key+"']"] = val
 	}
 
 	finalStruct["updated_at"] = pst.UpdatedAt

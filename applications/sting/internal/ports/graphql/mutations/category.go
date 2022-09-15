@@ -151,28 +151,3 @@ func (r *MutationResolver) UpdateCategoryTitle(ctx context.Context, input types.
 		Category: types.MarshalCategoryToGraphQL(ctx, category),
 	}, err
 }
-
-func (r *MutationResolver) UpdateCategoryThumbnail(ctx context.Context, input types.UpdateCategoryThumbnailInput) (*types.UpdateCategoryThumbnailPayload, error) {
-
-	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return nil, err
-	}
-
-	category, err := r.App.Commands.UpdateCategoryThumbnail.
-		Handle(
-			ctx,
-			command.UpdateCategoryThumbnail{
-				Principal:  principal.FromContext(ctx),
-				CategoryId: input.ID.GetID(),
-				Thumbnail:  input.Thumbnail,
-			},
-		)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.UpdateCategoryThumbnailPayload{
-		Category: types.MarshalCategoryToGraphQL(ctx, category),
-	}, err
-}

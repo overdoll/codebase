@@ -8,9 +8,9 @@ import (
 	"os"
 	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/domain/club"
+	"overdoll/libraries/media"
+	"overdoll/libraries/media/proto"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/resource"
-	resource_proto "overdoll/libraries/resource/proto"
 	"strings"
 	"time"
 
@@ -102,9 +102,7 @@ func getSeriesFromAdapter(t *testing.T, seriesId string) *post.Series {
 	aws := bootstrap.InitializeAWSSession()
 	cache := bootstrap.InitializeRedisSession()
 
-	serializer := resource.NewSerializer()
-
-	adapter := adapters.NewPostsCassandraRepository(session, es, serializer, aws, cache)
+	adapter := adapters.NewPostsCassandraRepository(session, es, aws, cache)
 
 	pst, err := adapter.GetSingleSeriesById(context.Background(), seriesId)
 	require.NoError(t, err)
@@ -118,9 +116,7 @@ func getClubFromAdapter(t *testing.T, clubId string) *club.Club {
 	es := bootstrap.InitializeElasticSearchSession()
 	redis := bootstrap.InitializeRedisSession()
 
-	serializer := resource.NewSerializer()
-
-	adapter := adapters.NewClubCassandraElasticsearchRepository(session, es, redis, serializer)
+	adapter := adapters.NewClubCassandraElasticsearchRepository(session, es, redis)
 
 	pst, err := adapter.GetClubById(context.Background(), clubId)
 	require.NoError(t, err)
@@ -135,9 +131,7 @@ func getCharacterFromAdapter(t *testing.T, characterId string) *post.Character {
 	aws := bootstrap.InitializeAWSSession()
 	cache := bootstrap.InitializeRedisSession()
 
-	serializer := resource.NewSerializer()
-
-	adapter := adapters.NewPostsCassandraRepository(session, es, serializer, aws, cache)
+	adapter := adapters.NewPostsCassandraRepository(session, es, aws, cache)
 
 	pst, err := adapter.GetCharacterById(context.Background(), characterId)
 	require.NoError(t, err)
@@ -152,9 +146,7 @@ func getCategoryFromAdapter(t *testing.T, categoryId string) *post.Category {
 	aws := bootstrap.InitializeAWSSession()
 	cache := bootstrap.InitializeRedisSession()
 
-	serializer := resource.NewSerializer()
-
-	adapter := adapters.NewPostsCassandraRepository(session, es, serializer, aws, cache)
+	adapter := adapters.NewPostsCassandraRepository(session, es, aws, cache)
 
 	pst, err := adapter.GetCategoryById(context.Background(), categoryId)
 	require.NoError(t, err)
@@ -168,10 +160,7 @@ func getPostFromAdapter(t *testing.T, postId string) *post.Post {
 	es := bootstrap.InitializeElasticSearchSession()
 	aws := bootstrap.InitializeAWSSession()
 	cache := bootstrap.InitializeRedisSession()
-
-	serializer := resource.NewSerializer()
-
-	adapter := adapters.NewPostsCassandraRepository(session, es, serializer, aws, cache)
+	adapter := adapters.NewPostsCassandraRepository(session, es, aws, cache)
 
 	pst, err := adapter.GetPostByIdOperator(context.Background(), postId)
 	require.NoError(t, err)
@@ -201,10 +190,9 @@ func seedCharacter(t *testing.T, seriesId string) *post.Character {
 
 	session := bootstrap.InitializeDatabaseSession()
 	es := bootstrap.InitializeElasticSearchSession()
-	serializer := resource.NewSerializer()
 	cache := bootstrap.InitializeRedisSession()
 
-	adapter := adapters.NewPostsCassandraRepository(session, es, serializer, bootstrap.InitializeAWSSession(), cache)
+	adapter := adapters.NewPostsCassandraRepository(session, es, bootstrap.InitializeAWSSession(), cache)
 	err = adapter.CreateCharacter(context.Background(), series)
 	require.NoError(t, err)
 
@@ -235,10 +223,9 @@ func seedSeries(t *testing.T) *post.Series {
 
 	session := bootstrap.InitializeDatabaseSession()
 	es := bootstrap.InitializeElasticSearchSession()
-	serializer := resource.NewSerializer()
 	cache := bootstrap.InitializeRedisSession()
 
-	adapter := adapters.NewPostsCassandraRepository(session, es, serializer, bootstrap.InitializeAWSSession(), cache)
+	adapter := adapters.NewPostsCassandraRepository(session, es, bootstrap.InitializeAWSSession(), cache)
 	err = adapter.CreateSeries(context.Background(), series)
 	require.NoError(t, err)
 
@@ -250,14 +237,13 @@ func seedSeries(t *testing.T) *post.Series {
 // helper which seeds a new post in the database
 func seedClub(t *testing.T, accountId string) *club.Club {
 	pst := newClub(t, accountId)
+	pst.UpdateEnableSupporterOnlyPosts(testing_tools.NewStaffPrincipal(accountId))
 
 	session := bootstrap.InitializeDatabaseSession()
 	es := bootstrap.InitializeElasticSearchSession()
 	redis := bootstrap.InitializeRedisSession()
 
-	serializer := resource.NewSerializer()
-
-	adapter := adapters.NewClubCassandraElasticsearchRepository(session, es, redis, serializer)
+	adapter := adapters.NewClubCassandraElasticsearchRepository(session, es, redis)
 	err := adapter.ReserveSlugForClub(context.Background(), pst)
 	require.NoError(t, err)
 	err = adapter.CreateClub(context.Background(), pst)
@@ -308,12 +294,18 @@ func seedPublishedPostWithCharacter(t *testing.T, characterId, seriesId string) 
 		post.UnmarshalCategoryFromDatabase("1q7MJFk9Wof1qyQQORKBrJxGFhJ", "StandardCategory", map[string]string{"en": "Standard Audience"}, nil, nil, 0, 0, time.Now(), time.Now(), nil, nil),
 	})
 
-	err = pst.AddContentRequest(prin, []*resource.Resource{
-		resource.UnmarshalResourceFromProto(context.Background(), &resource_proto.Resource{
-			Id:        uuid.New().String(),
-			ItemId:    uuid.New().String(),
-			Private:   true,
-			Processed: true,
+	err = pst.AddContentRequest(prin, []*media.Media{
+		media.FromProto(&proto.Media{
+			Id: uuid.New().String(),
+			Link: &proto.MediaLink{
+				Id:   uuid.New().String(),
+				Type: proto.MediaLinkType_POST_CONTENT,
+			},
+			ImageData: &proto.ImageData{Id: uuid.New().String()},
+			State: &proto.MediaState{
+				Processed: true,
+				Failed:    false,
+			},
 		}),
 	})
 
@@ -369,12 +361,18 @@ func seedPublishedPostWithCategory(t *testing.T, categoryId string) {
 		post.UnmarshalCategoryFromDatabase("1q7MJFk9Wof1qyQQORKBrJxGFhJ", "StandardCategory", map[string]string{"en": "Standard Audience"}, nil, nil, 0, 0, time.Now(), time.Now(), nil, nil),
 	})
 
-	err = pst.AddContentRequest(prin, []*resource.Resource{
-		resource.UnmarshalResourceFromProto(context.Background(), &resource_proto.Resource{
-			Id:        uuid.New().String(),
-			ItemId:    uuid.New().String(),
-			Private:   true,
-			Processed: true,
+	err = pst.AddContentRequest(prin, []*media.Media{
+		media.FromProto(&proto.Media{
+			Id: uuid.New().String(),
+			Link: &proto.MediaLink{
+				Id:   uuid.New().String(),
+				Type: proto.MediaLinkType_POST_CONTENT,
+			},
+			ImageData: &proto.ImageData{Id: uuid.New().String()},
+			State: &proto.MediaState{
+				Processed: true,
+				Failed:    false,
+			},
 		}),
 	})
 
@@ -430,12 +428,18 @@ func seedPublishedPostWithAudience(t *testing.T, audienceId string) {
 		post.UnmarshalCategoryFromDatabase("1q7MJFk9Wof1qyQQORKBrJxGFhJ", "StandardCategory", map[string]string{"en": "Standard Audience"}, nil, nil, 0, 0, time.Now(), time.Now(), nil, nil),
 	})
 
-	err = pst.AddContentRequest(prin, []*resource.Resource{
-		resource.UnmarshalResourceFromProto(context.Background(), &resource_proto.Resource{
-			Id:        uuid.New().String(),
-			ItemId:    uuid.New().String(),
-			Private:   true,
-			Processed: true,
+	err = pst.AddContentRequest(prin, []*media.Media{
+		media.FromProto(&proto.Media{
+			Id: uuid.New().String(),
+			Link: &proto.MediaLink{
+				Id:   uuid.New().String(),
+				Type: proto.MediaLinkType_POST_CONTENT,
+			},
+			ImageData: &proto.ImageData{Id: uuid.New().String()},
+			State: &proto.MediaState{
+				Processed: true,
+				Failed:    false,
+			},
 		}),
 	})
 
@@ -489,12 +493,18 @@ func newPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
 
 	require.NoError(t, err)
 
-	err = pst.AddContentRequest(prin, []*resource.Resource{
-		resource.UnmarshalResourceFromProto(context.Background(), &resource_proto.Resource{
-			Id:        uuid.New().String(),
-			ItemId:    uuid.New().String(),
-			Private:   true,
-			Processed: true,
+	err = pst.AddContentRequest(prin, []*media.Media{
+		media.FromProto(&proto.Media{
+			Id: uuid.New().String(),
+			Link: &proto.MediaLink{
+				Id:   uuid.New().String(),
+				Type: proto.MediaLinkType_POST_CONTENT,
+			},
+			ImageData: &proto.ImageData{Id: uuid.New().String()},
+			State: &proto.MediaState{
+				Processed: true,
+				Failed:    false,
+			},
 		}),
 	})
 
@@ -534,9 +544,7 @@ func seedPost(t *testing.T, pst *post.Post) *post.Post {
 	aws := bootstrap.InitializeAWSSession()
 	cache := bootstrap.InitializeRedisSession()
 
-	serializer := resource.NewSerializer()
-
-	adapter := adapters.NewPostsCassandraRepository(session, es, serializer, aws, cache)
+	adapter := adapters.NewPostsCassandraRepository(session, es, aws, cache)
 	err := adapter.CreatePost(context.Background(), pst)
 	require.NoError(t, err)
 
@@ -596,9 +604,9 @@ func getGrpcClient(t *testing.T) sting.StingClient {
 	return stingClient
 }
 
-func getGrpcCallbackClient(t *testing.T) resource_proto.ResourceCallbackClient {
+func getGrpcCallbackClient(t *testing.T) proto.MediaCallbackClient {
 
-	stingClient, _ := clients.NewResourceCallbackClient(context.Background(), StingGrpcClientAddr)
+	stingClient, _ := clients.NewMediaCallbackClient(context.Background(), StingGrpcClientAddr)
 
 	return stingClient
 }
@@ -645,7 +653,7 @@ func startService(m *testing.M) bool {
 	s := ports.NewGrpcServer(app.App)
 
 	go bootstrap.InitializeGRPCServer(StingGrpcAddr, func(server *grpc.Server) {
-		resource_proto.RegisterResourceCallbackServer(server, s)
+		proto.RegisterMediaCallbackServer(server, s)
 		sting.RegisterStingServer(server, s)
 	})
 

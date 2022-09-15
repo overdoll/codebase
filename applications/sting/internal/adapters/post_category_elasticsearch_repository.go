@@ -7,7 +7,7 @@ import (
 	"overdoll/libraries/cache"
 	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
-	"overdoll/libraries/resource"
+	"overdoll/libraries/media"
 	"overdoll/libraries/support"
 	"time"
 
@@ -26,6 +26,7 @@ type categoryDocument struct {
 	AlternativeTitles []map[string]string `json:"alternative_titles"`
 	ThumbnailResource string              `json:"thumbnail_resource"`
 	BannerResource    string              `json:"banner_resource"`
+	BannerMedia       []byte              `json:"banner_media"`
 	Title             map[string]string   `json:"title"`
 	CreatedAt         time.Time           `json:"created_at"`
 	UpdatedAt         time.Time           `json:"updated_at"`
@@ -40,24 +41,31 @@ var categoryWriterIndex = cache.WriteAlias(CachePrefix, CategoryIndexName)
 
 func marshalCategoryToDocument(cat *post.Category) (*categoryDocument, error) {
 
-	marshalled, err := resource.MarshalResourceToDatabase(cat.ThumbnailResource())
+	marshalledBanner, err := media.MarshalMediaToDatabase(cat.BannerMedia())
 
 	if err != nil {
 		return nil, err
 	}
 
-	marshalledBanner, err := resource.MarshalResourceToDatabase(cat.BannerResource())
+	var bannerResource string
 
-	if err != nil {
-		return nil, err
+	if cat.BannerMedia() != nil {
+		bannerResource = cat.BannerMedia().LegacyResource()
+	}
+
+	var thumbnailResource string
+
+	if cat.ThumbnailMedia() != nil {
+		thumbnailResource = cat.ThumbnailMedia().LegacyResource()
 	}
 
 	return &categoryDocument{
 		Id:                cat.ID(),
 		TopicId:           cat.TopicId(),
 		Slug:              cat.Slug(),
-		ThumbnailResource: marshalled,
-		BannerResource:    marshalledBanner,
+		ThumbnailResource: thumbnailResource,
+		BannerResource:    bannerResource,
+		BannerMedia:       marshalledBanner,
 		AlternativeTitles: localization.MarshalLocalizedDataTagsToDatabase(cat.AlternativeTitles()),
 		Title:             localization.MarshalTranslationToDatabase(cat.Title()),
 		CreatedAt:         cat.CreatedAt(),
@@ -77,13 +85,13 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCategoryDocument(ctx con
 		return nil, errors.Wrap(err, "failed to unmarshal category document")
 	}
 
-	unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, pst.ThumbnailResource)
+	unmarshalled, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, pst.ThumbnailResource, nil)
 
 	if err != nil {
 		return nil, err
 	}
 
-	unmarshalledBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, pst.BannerResource)
+	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, pst.BannerResource, pst.BannerMedia)
 
 	if err != nil {
 		return nil, err

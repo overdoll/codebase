@@ -3,8 +3,7 @@ package activities
 import (
 	"context"
 	"overdoll/applications/sting/internal/domain/club"
-	"overdoll/applications/sting/internal/domain/resource_options"
-	"overdoll/libraries/resource"
+	"overdoll/libraries/media"
 )
 
 type UpdateClubBannerInput struct {
@@ -19,11 +18,11 @@ func (h *Activities) UpdateClubBanner(ctx context.Context, input UpdateClubBanne
 		return err
 	}
 
-	var chosenResource *resource.Resource
+	var chosenResource *media.Media
 
 	for _, cnt := range pst.Content() {
 		if !cnt.IsSupporterOnly() {
-			chosenResource = cnt.Resource()
+			chosenResource = cnt.Media()
 			break
 		}
 	}
@@ -32,19 +31,20 @@ func (h *Activities) UpdateClubBanner(ctx context.Context, input UpdateClubBanne
 		return nil
 	}
 
-	newContent, err := h.loader.CopyResourceIntoImage(ctx, resource_options.NewResourceOptionsForClubBanner(chosenResource, pst.ClubId()))
-
-	if err != nil {
-		return err
-	}
-
 	_, err = h.cr.UpdateClubBanner(ctx, pst.ClubId(), func(cl *club.Club) error {
-		return cl.UpdateBanner(newContent.NewResource())
+
+		newResource, err := h.loader.GenerateImageFromMedia(ctx, []*media.Media{chosenResource}, media.NewClubBannerMediaLink(pst.ClubId()), nil)
+
+		if err != nil {
+			return err
+		}
+
+		return cl.UpdateBanner(newResource[0])
 	})
 
 	if err != nil {
 		return err
 	}
 
-	return h.pr.AddPostOccupiedResource(ctx, pst, chosenResource)
+	return h.pr.AddPostOccupiedMedia(ctx, pst, chosenResource)
 }

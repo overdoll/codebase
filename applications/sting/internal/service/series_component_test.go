@@ -8,9 +8,8 @@ import (
 	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/bootstrap"
-	graphql2 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/resource/proto"
+	"overdoll/libraries/media/proto"
 	"overdoll/libraries/uuid"
 	"strings"
 	"testing"
@@ -20,21 +19,27 @@ import (
 )
 
 type CharacterSeriesModified struct {
-	Id        relay.ID
-	Name      string
-	Reference string
-	Slug      string
-	Thumbnail *graphql2.Resource
-	Banner    *graphql2.Resource
+	Id          relay.ID
+	Name        string
+	Reference   string
+	Slug        string
+	BannerMedia *struct {
+		ImageMedia struct {
+			Id relay.ID
+		} `graphql:"... on ImageMedia"`
+	}
 }
 
 type SeriesModified struct {
-	Id         relay.ID
-	Reference  string
-	Title      string
-	Slug       string
-	Thumbnail  *graphql2.Resource
-	Banner     *graphql2.Resource
+	Id          relay.ID
+	Reference   string
+	Title       string
+	Slug        string
+	BannerMedia *struct {
+		ImageMedia struct {
+			Id relay.ID
+		} `graphql:"... on ImageMedia"`
+	}
 	Characters struct {
 		Edges []struct {
 			Node CharacterSeriesModified
@@ -64,12 +69,6 @@ type UpdateSeriesTitle struct {
 	UpdateSeriesTitle *struct {
 		Series *SeriesModified
 	} `graphql:"updateSeriesTitle(input: $input)"`
-}
-
-type UpdateSeriesThumbnail struct {
-	UpdateSeriesThumbnail *struct {
-		Series *SeriesModified
-	} `graphql:"updateSeriesThumbnail(input: $input)"`
 }
 
 type TestSeries struct {
@@ -155,44 +154,13 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 
 	require.NoError(t, err, "no error updating series title")
 
-	seriesThumbnailId := "04ba807328b59c911a8a37f80447e16a"
-
-	var updateSeriesThumbnail UpdateSeriesThumbnail
-
-	err = client.Mutate(context.Background(), &updateSeriesThumbnail, map[string]interface{}{
-		"input": types.UpdateSeriesThumbnailInput{
-			ID:        series.Id,
-			Thumbnail: seriesThumbnailId,
-		},
-	})
-
-	require.NoError(t, err, "no error updating series thumbnail")
-
-	require.False(t, updateSeriesThumbnail.UpdateSeriesThumbnail.Series.Thumbnail.Processed, "not yet processed")
-
 	grpcClient := getGrpcCallbackClient(t)
-
-	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
-		Id:          seriesThumbnailId,
-		ItemId:      updateSeriesThumbnail.UpdateSeriesThumbnail.Series.Reference,
-		Processed:   true,
-		Type:        proto.ResourceType_IMAGE,
-		ProcessedId: uuid.New().String(),
-		Private:     false,
-		Width:       100,
-		Height:      100,
-		Token:       "SERIES",
-	}}})
-
-	require.NoError(t, err, "no error updating resource")
 
 	series = getSeriesBySlug(t, client, currentSeriesSlug)
 
 	require.NotNil(t, series, "expected to have found series")
 	require.Equal(t, fake.Title, series.Title, "title has been updated")
-	require.NotNil(t, series.Thumbnail, "has a thumbnail")
-	require.Nil(t, series.Banner, "has no banner")
-	require.True(t, series.Thumbnail.Processed, "thumbnail is processed")
+	require.Nil(t, series.BannerMedia, "has no banner")
 
 	env := getWorkflowEnvironment()
 
@@ -203,17 +171,18 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 
 	ser := getSeriesFromAdapter(t, series.Reference)
 
-	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
-		Id:          ser.BannerResource().ID(),
-		ItemId:      updateSeriesThumbnail.UpdateSeriesThumbnail.Series.Reference,
-		Processed:   true,
-		Type:        proto.ResourceType_IMAGE,
-		ProcessedId: uuid.New().String(),
-		Private:     false,
-		Width:       100,
-		Height:      100,
-		Token:       "SERIES_BANNER",
-	}}})
+	_, err = grpcClient.UpdateMedia(context.Background(), &proto.UpdateMediaRequest{Media: &proto.Media{
+		Id: ser.BannerMedia().ID(),
+		Link: &proto.MediaLink{
+			Id:   series.Reference,
+			Type: proto.MediaLinkType_SERIES_BANNER,
+		},
+		ImageData: &proto.ImageData{Id: uuid.New().String()},
+		State: &proto.MediaState{
+			Processed: true,
+			Failed:    false,
+		},
+	}})
 
 	require.NoError(t, err, "no error updating series banner")
 
@@ -222,7 +191,7 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 
 	series = getSeriesBySlug(t, client, currentSeriesSlug)
 	require.NotNil(t, series, "expected to have found series")
-	require.NotNil(t, series.Banner, "has a banner")
+	require.NotEmpty(t, series.BannerMedia.ImageMedia.Id, "has a banner")
 	require.Equal(t, 1, len(series.Characters.Edges), "has the correct amount of characters")
 }
 

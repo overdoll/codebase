@@ -4,9 +4,9 @@ import (
 	"github.com/go-playground/validator/v10"
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/localization"
+	"overdoll/libraries/media"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/resource"
 	"overdoll/libraries/uuid"
 	"time"
 )
@@ -26,13 +26,14 @@ const (
 type Club struct {
 	*paging.Node
 
-	id                string
-	slug              string
-	slugAliases       []string
-	links             []string
-	name              *localization.Translation
-	thumbnailResource *resource.Resource
-	bannerResource    *resource.Resource
+	id          string
+	slug        string
+	slugAliases []string
+	links       []string
+	name        *localization.Translation
+
+	thumbnailMedia *media.Media
+	bannerMedia    *media.Media
 
 	suspended      bool
 	suspendedUntil *time.Time
@@ -71,8 +72,8 @@ func NewMustClub(id, slug string, name string, ownerAccountId string) *Club {
 		slug:                        slug,
 		name:                        lc,
 		slugAliases:                 []string{},
-		thumbnailResource:           nil,
-		bannerResource:              nil,
+		thumbnailMedia:              nil,
+		bannerMedia:                 nil,
 		membersCount:                1,
 		ownerAccountId:              ownerAccountId,
 		hasCreatedSupporterOnlyPost: false,
@@ -124,24 +125,25 @@ func NewClub(requester *principal.Principal, slug, name string, currentClubCount
 		slug:                        slug,
 		name:                        lc,
 		slugAliases:                 []string{},
-		thumbnailResource:           nil,
+		thumbnailMedia:              nil,
 		membersCount:                1,
 		ownerAccountId:              requester.AccountId(),
 		hasCreatedSupporterOnlyPost: false,
 		terminated:                  false,
+		supporterOnlyPostsDisabled:  true,
 		createdAt:                   time.Now(),
 		updatedAt:                   time.Now(),
 	}, nil
 }
 
-func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail *resource.Resource, banner *resource.Resource, membersCount int, ownerAccountId string, suspended bool, suspendedUntil, nextSupporterPostTime *time.Time, hasCreatedSupporterOnlyPost bool, terminated bool, terminatedByAccountId *string, supporterOnlyPostsDisabled bool, createdAt, updatedAt time.Time, charactersEnabled bool, charactersLimit, totalLikes, totalPosts int, links []string) *Club {
+func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail *media.Media, banner *media.Media, membersCount int, ownerAccountId string, suspended bool, suspendedUntil, nextSupporterPostTime *time.Time, hasCreatedSupporterOnlyPost bool, terminated bool, terminatedByAccountId *string, supporterOnlyPostsDisabled bool, createdAt, updatedAt time.Time, charactersEnabled bool, charactersLimit, totalLikes, totalPosts int, links []string) *Club {
 	return &Club{
 		id:                          id,
 		slug:                        slug,
 		slugAliases:                 alternativeSlugs,
 		name:                        localization.UnmarshalTranslationFromDatabase(name),
-		thumbnailResource:           thumbnail,
-		bannerResource:              banner,
+		thumbnailMedia:              thumbnail,
+		bannerMedia:                 banner,
 		ownerAccountId:              ownerAccountId,
 		membersCount:                membersCount,
 		suspended:                   suspended,
@@ -181,12 +183,12 @@ func (m *Club) Name() *localization.Translation {
 	return m.name
 }
 
-func (m *Club) ThumbnailResource() *resource.Resource {
-	return m.thumbnailResource
+func (m *Club) ThumbnailMedia() *media.Media {
+	return m.thumbnailMedia
 }
 
-func (m *Club) BannerResource() *resource.Resource {
-	return m.bannerResource
+func (m *Club) BannerMedia() *media.Media {
+	return m.bannerMedia
 }
 
 func (m *Club) MembersCount() int {
@@ -540,56 +542,57 @@ func (m *Club) RemoveSlugAlias(requester *principal.Principal, slug string) erro
 	return nil
 }
 
-func (m *Club) UpdateThumbnail(requester *principal.Principal, thumbnail *resource.Resource) error {
+func (m *Club) UpdateThumbnail(requester *principal.Principal, thumbnail *media.Media) error {
 
 	if err := m.canUpdate(requester); err != nil {
 		return err
 	}
 
-	m.thumbnailResource = thumbnail
+	m.thumbnailMedia = thumbnail
 
 	m.update()
 
 	return nil
 }
 
-func (m *Club) UpdateBanner(thumbnail *resource.Resource) error {
+func (m *Club) UpdateBanner(thumbnail *media.Media) error {
 
-	m.bannerResource = thumbnail
-
-	m.update()
-
-	return nil
-}
-
-func (m *Club) UpdateBannerExisting(thumbnail *resource.Resource) error {
-
-	if m.bannerResource == nil {
-		return resource.ErrResourceNotPresent
-	}
-
-	if m.bannerResource.ID() != thumbnail.ID() {
-		return resource.ErrResourceNotPresent
-	}
-
-	m.bannerResource = thumbnail
+	m.bannerMedia = thumbnail
 
 	m.update()
 
 	return nil
 }
 
-func (m *Club) UpdateThumbnailExisting(thumbnail *resource.Resource) error {
+func (m *Club) UpdateBannerExisting(thumbnail *media.Media) error {
 
-	if m.thumbnailResource == nil {
-		return resource.ErrResourceNotPresent
+	if m.bannerMedia == nil {
+		return media.ErrMediaNotPresent
 	}
 
-	if m.thumbnailResource.ID() != thumbnail.ID() {
-		return resource.ErrResourceNotPresent
+	if m.bannerMedia.ID() != thumbnail.ID() {
+		return media.ErrMediaNotPresent
 	}
 
-	m.thumbnailResource = thumbnail
+	m.bannerMedia = thumbnail
+
+	m.update()
+
+	return nil
+}
+
+func (m *Club) UpdateThumbnailExisting(thumbnail *media.Media) error {
+
+	if m.thumbnailMedia == nil {
+		return media.ErrMediaNotPresent
+
+	}
+
+	if m.thumbnailMedia.ID() != thumbnail.ID() {
+		return media.ErrMediaNotPresent
+	}
+
+	m.thumbnailMedia = thumbnail
 
 	m.update()
 

@@ -31,7 +31,7 @@ func (h *Activities) GetTagsWithoutBannerForPost(ctx context.Context, input GetT
 	}
 
 	for _, char := range characters {
-		if char.BannerResource() == nil {
+		if char.BannerMedia() == nil {
 			payload.CharacterIds = append(payload.CharacterIds, char.ID())
 		}
 	}
@@ -43,7 +43,7 @@ func (h *Activities) GetTagsWithoutBannerForPost(ctx context.Context, input GetT
 	}
 
 	for _, serial := range series {
-		if serial.BannerResource() == nil {
+		if serial.BannerMedia() == nil {
 			payload.SeriesIds = append(payload.SeriesIds, serial.ID())
 		}
 	}
@@ -55,7 +55,7 @@ func (h *Activities) GetTagsWithoutBannerForPost(ctx context.Context, input GetT
 	}
 
 	for _, cat := range categories {
-		if cat.BannerResource() == nil {
+		if cat.BannerMedia() == nil {
 			payload.CategoryIds = append(payload.CategoryIds, cat.ID())
 		}
 	}

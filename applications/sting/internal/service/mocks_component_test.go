@@ -9,7 +9,7 @@ import (
 	loader "overdoll/applications/loader/proto"
 	parley "overdoll/applications/parley/proto"
 	"overdoll/applications/sting/internal/service"
-	"overdoll/libraries/resource/proto"
+	"overdoll/libraries/media/proto"
 	"testing"
 )
 
@@ -18,74 +18,50 @@ var application *service.ComponentTestApplication
 func mockServices(testApplication *service.ComponentTestApplication) {
 	application = testApplication
 
-	application.LoaderClient.On("CreateOrGetResourcesFromUploads", mock.Anything, mock.Anything).Return(func(c context.Context, req *loader.CreateOrGetResourcesFromUploadsRequest, g ...grpc.CallOption) *loader.CreateOrGetResourcesFromUploadsResponse {
+	application.LoaderClient.On("ProcessMediaFromUploads", mock.Anything, mock.Anything).Return(func(c context.Context, req *loader.ProcessMediaFromUploadsRequest, g ...grpc.CallOption) *loader.ProcessMediaFromUploadsResponse {
 
-		var res []*proto.Resource
+		var res []*proto.Media
 
-		for _, r := range req.ResourceIds {
-			res = append(res, &proto.Resource{
-				Id:        r,
-				ItemId:    req.ItemId,
-				Processed: false,
-				Private:   req.Private,
-				Token:     req.Token,
+		for _, r := range req.UploadIds {
+			res = append(res, &proto.Media{
+				Id:               r,
+				IsUpload:         true,
+				OriginalFileName: "some-file.jpg",
+				Private:          true,
+				Link:             req.Link,
+				State: &proto.MediaState{
+					Processed: false,
+					Failed:    false,
+				},
+				Version: proto.MediaVersion_ONE,
 			})
 		}
 
-		return &loader.CreateOrGetResourcesFromUploadsResponse{Resources: res}
+		return &loader.ProcessMediaFromUploadsResponse{Media: res}
+	}, nil)
+
+	application.LoaderClient.On("GenerateImageFromMedia", mock.Anything, mock.Anything).Return(func(c context.Context, req *loader.GenerateImageFromMediaRequest, g ...grpc.CallOption) *loader.GenerateImageFromMediaResponse {
+
+		var res []*proto.Media
+
+		for _, r := range req.Media {
+			res = append(res, &proto.Media{
+				Id:      r.Id + "_FILTERED",
+				Private: true,
+				Link:    req.Link,
+				State:   &proto.MediaState{Processed: false, Failed: false},
+				Version: proto.MediaVersion_ONE,
+				Source:  &proto.MediaSource{SourceMediaId: r.Id, Link: r.Link},
+			})
+		}
+
+		return &loader.GenerateImageFromMediaResponse{Media: res}
 	}, nil)
 
 	application.CarrierClient.On("ClubSuspended", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
 	application.CarrierClient.On("ClubSupporterRequiredPostReminder", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
 	application.CarrierClient.On("ClubSupporterNoPosts", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
-
-	application.LoaderClient.On("DeleteResources", mock.Anything, mock.Anything).Return(&loader.DeleteResourcesResponse{}, nil)
-
 	application.ParleyClient.On("PutPostIntoModeratorQueueOrPublish", mock.Anything, mock.Anything).Return(&parley.PutPostIntoModeratorQueueOrPublishResponse{PutIntoReview: false}, nil)
-
-	application.LoaderClient.On("CopyResourcesAndApplyFilter", mock.Anything, mock.Anything).Return(func(c context.Context, req *loader.CopyResourcesAndApplyFilterRequest, g ...grpc.CallOption) *loader.CopyResourcesAndApplyFilterResponse {
-
-		var res []*loader.FilteredResources
-
-		for _, r := range req.Resources {
-			res = append(res, &loader.FilteredResources{
-				OldResource: &loader.ResourceIdentifier{
-					Id:     r.Id,
-					ItemId: r.ItemId,
-				},
-				NewResource: &proto.Resource{
-					ItemId:    r.ItemId,
-					Processed: false,
-					Id:        r.Id + "_FILTERED",
-				},
-			})
-		}
-
-		return &loader.CopyResourcesAndApplyFilterResponse{Resources: res}
-	}, nil)
-
-	// not in use ATM
-	//application.LoaderClient.On("UpdateResourcePrivacy", mock.Anything, mock.Anything).Return(func(c context.Context, req *loader.UpdateResourcePrivacyRequest, g ...grpc.CallOption) *loader.UpdateResourcePrivacyResponse {
-	//
-	//	var res []*proto.Resource
-	//
-	//	for _, r := range req.Resources {
-	//		res = append(res, &proto.Resource{
-	//			Id:          r.Id,
-	//			ItemId:      r.ItemId,
-	//			Type:        proto.ResourceType_IMAGE,
-	//			Processed:   true,
-	//			ProcessedId: uuid.New().String(),
-	//			MimeTypes:   []string{"image/png"},
-	//			Private:     req.Private,
-	//			Width:       100,
-	//			Height:      100,
-	//			Token:       "POST",
-	//		})
-	//	}
-	//
-	//	return &loader.UpdateResourcePrivacyResponse{Resources: res}
-	//}, nil)
 }
 
 func mockAccountStaff(t *testing.T, accountId string) {

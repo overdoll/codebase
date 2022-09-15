@@ -1,4 +1,4 @@
-FROM gcr.io/bazel-public/ubuntu1804-java11@sha256:54af0180aaa595b2a10edce51e3ec71923b2e21c3964ffc0938c6f599f0b35e3
+FROM gcr.io/bazel-public/ubuntu2004-java11@sha256:446ebb3ff63accd503177199be691114c3bbdfeeb97371caa648148e8b52b6f1
 
 USER root
 

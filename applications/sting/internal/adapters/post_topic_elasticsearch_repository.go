@@ -7,7 +7,7 @@ import (
 	"overdoll/libraries/cache"
 	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
-	"overdoll/libraries/resource"
+	"overdoll/libraries/media"
 	"overdoll/libraries/support"
 	"time"
 
@@ -23,6 +23,7 @@ type topicDocument struct {
 	Id             string            `json:"id"`
 	Slug           string            `json:"slug"`
 	BannerResource string            `json:"banner_resource"`
+	BannerMedia    []byte            `json:"banner_media"`
 	Title          map[string]string `json:"title"`
 	Description    map[string]string `json:"description"`
 	CreatedAt      time.Time         `json:"created_at"`
@@ -37,16 +38,23 @@ var topicWriterIndex = cache.WriteAlias(CachePrefix, TopicIndexName)
 
 func marshalTopicToDocument(topic *post.Topic) (*topicDocument, error) {
 
-	marshalledBanner, err := resource.MarshalResourceToDatabase(topic.BannerResource())
+	marshalledBanner, err := media.MarshalMediaToDatabase(topic.BannerMedia())
 
 	if err != nil {
 		return nil, err
 	}
 
+	var bannerResource string
+
+	if topic.BannerMedia() != nil {
+		bannerResource = topic.BannerMedia().LegacyResource()
+	}
+
 	return &topicDocument{
 		Id:             topic.ID(),
 		Slug:           topic.Slug(),
-		BannerResource: marshalledBanner,
+		BannerResource: bannerResource,
+		BannerMedia:    marshalledBanner,
 		Title:          localization.MarshalTranslationToDatabase(topic.Title()),
 		Description:    localization.MarshalTranslationToDatabase(topic.Description()),
 		CreatedAt:      topic.CreatedAt(),
@@ -65,7 +73,7 @@ func (r PostsCassandraElasticsearchRepository) unmarshalTopicDocument(ctx contex
 		return nil, errors.Wrap(err, "failed to unmarshal topic document")
 	}
 
-	unmarshalledBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, topic.BannerResource)
+	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, topic.BannerResource, topic.BannerMedia)
 
 	if err != nil {
 		return nil, err

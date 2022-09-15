@@ -6,7 +6,7 @@ import (
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/localization"
-	"overdoll/libraries/resource"
+	"overdoll/libraries/media"
 	"overdoll/libraries/support"
 	"strings"
 	"time"
@@ -26,6 +26,7 @@ var characterTable = table.New(table.Metadata{
 		"name",
 		"thumbnail_resource",
 		"banner_resource",
+		"banner_media",
 		"series_id",
 		"club_id",
 		"total_likes",
@@ -43,6 +44,7 @@ type character struct {
 	Name              map[string]string `db:"name"`
 	ThumbnailResource string            `db:"thumbnail_resource"`
 	BannerResource    string            `db:"banner_resource"`
+	BannerMedia       []byte            `db:"banner_media"`
 	SeriesId          *string           `db:"series_id"`
 	ClubId            *string           `db:"club_id"`
 	TotalLikes        int               `db:"total_likes"`
@@ -72,24 +74,31 @@ type characterSlug struct {
 
 func marshalCharacterToDatabase(pending *post.Character) (*character, error) {
 
-	marshalled, err := resource.MarshalResourceToDatabase(pending.ThumbnailResource())
+	marshalledBanner, err := media.MarshalMediaToDatabase(pending.BannerMedia())
 
 	if err != nil {
 		return nil, err
 	}
 
-	marshalledBanner, err := resource.MarshalResourceToDatabase(pending.BannerResource())
+	var bannerResource string
 
-	if err != nil {
-		return nil, err
+	if pending.BannerMedia() != nil {
+		bannerResource = pending.BannerMedia().LegacyResource()
+	}
+
+	var thumbnailResource string
+
+	if pending.ThumbnailMedia() != nil {
+		thumbnailResource = pending.ThumbnailMedia().LegacyResource()
 	}
 
 	return &character{
 		Id:                pending.ID(),
 		Slug:              pending.Slug(),
 		Name:              localization.MarshalTranslationToDatabase(pending.Name()),
-		ThumbnailResource: marshalled,
-		BannerResource:    marshalledBanner,
+		BannerMedia:       marshalledBanner,
+		BannerResource:    bannerResource,
+		ThumbnailResource: thumbnailResource,
 		TotalLikes:        pending.TotalLikes(),
 		TotalPosts:        pending.TotalPosts(),
 		SeriesId:          pending.SeriesId(),
@@ -101,13 +110,13 @@ func marshalCharacterToDatabase(pending *post.Character) (*character, error) {
 
 func (r PostsCassandraElasticsearchRepository) unmarshalCharacterFromDatabase(ctx context.Context, char *character, serial *series) (*post.Character, error) {
 
-	unmarshalledCharacter, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, char.ThumbnailResource)
+	unmarshalledCharacterThumbnail, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, char.ThumbnailResource, nil)
 
 	if err != nil {
 		return nil, err
 	}
 
-	unmarshalledCharacterBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, char.BannerResource)
+	unmarshalledCharacterBanner, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, char.BannerResource, char.BannerMedia)
 
 	if err != nil {
 		return nil, err
@@ -117,13 +126,13 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterFromDatabase(ct
 
 	if serial != nil {
 
-		unmarshalledSeries, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, serial.ThumbnailResource)
+		unmarshalledSeriesThumbnail, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, serial.ThumbnailResource, nil)
 
 		if err != nil {
 			return nil, err
 		}
 
-		unmarshalledSeriesBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, serial.BannerResource)
+		unmarshalledSeriesBanner, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, serial.BannerResource, serial.BannerMedia)
 
 		if err != nil {
 			return nil, err
@@ -133,7 +142,7 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterFromDatabase(ct
 			serial.Id,
 			serial.Slug,
 			serial.Title,
-			unmarshalledSeries,
+			unmarshalledSeriesThumbnail,
 			unmarshalledSeriesBanner,
 			serial.TotalLikes,
 			serial.TotalPosts,
@@ -146,7 +155,7 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterFromDatabase(ct
 		char.Id,
 		char.Slug,
 		char.Name,
-		unmarshalledCharacter,
+		unmarshalledCharacterThumbnail,
 		unmarshalledCharacterBanner,
 		char.TotalLikes,
 		char.TotalPosts,
@@ -438,16 +447,8 @@ func (r PostsCassandraElasticsearchRepository) CreateCharacter(ctx context.Conte
 	return nil
 }
 
-func (r PostsCassandraElasticsearchRepository) UpdateCharacterThumbnailOperator(ctx context.Context, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
-	return r.updateCharacter(ctx, id, updateFn, []string{"thumbnail_resource"})
-}
-
-func (r PostsCassandraElasticsearchRepository) UpdateCharacterThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
-	return r.updateCharacter(ctx, id, updateFn, []string{"thumbnail_resource"})
-}
-
 func (r PostsCassandraElasticsearchRepository) UpdateCharacterBannerOperator(ctx context.Context, id string, updateFn func(character *post.Character) error) (*post.Character, error) {
-	return r.updateCharacter(ctx, id, updateFn, []string{"banner_resource"})
+	return r.updateCharacter(ctx, id, updateFn, []string{"banner_media"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdateCharacterName(ctx context.Context, requester *principal.Principal, id string, updateFn func(character *post.Character) error) (*post.Character, error) {

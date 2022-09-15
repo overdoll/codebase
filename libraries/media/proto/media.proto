@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package overdoll.libraries;
+
+enum MediaLinkType {
+  POST_CONTENT = 0;
+  CLUB_THUMBNAIL = 1;
+  CLUB_BANNER = 2;
+  SERIES_BANNER = 3;
+  CATEGORY_BANNER = 4;
+  CHARACTER_BANNER = 5;
+  AUDIENCE_BANNER = 6;
+  TOPIC_BANNER = 7;
+}
+
+enum MediaMimeType {
+  VideoMp4 = 0;
+  VideoMpegUrl = 1;
+  ImageJpeg = 2;
+  ImagePng = 3;
+}
+
+enum MediaVersion {
+  ONE = 0;
+}
+
+message VideoContainer {
+  string id = 1;
+  MediaMimeType mimeType = 2;
+  int64 bitrate = 3;
+  int64 width = 4;
+  int64 height = 5;
+}
+
+message VideoAspectRatio {
+  int64 width = 1;
+  int64 height = 2;
+}
+
+message VideoData {
+  repeated VideoContainer containers = 1;
+  VideoAspectRatio aspectRatio = 2;
+  int64 durationMilliseconds = 3;
+  bool hasAudio = 4;
+}
+
+message MediaState {
+  bool processed = 1;
+  bool failed = 2;
+}
+
+message ColorPalette {
+  double percent = 1;
+  int32 red = 2;
+  int32 green = 3;
+  int32 blue = 4;
+}
+
+message ImageData {
+  string id = 1;
+  MediaMimeType mimeType = 2;
+  int64 width = 3;
+  int64 height = 4;
+  repeated ColorPalette palettes = 5;
+}
+
+message MediaLink {
+  string id = 1;
+  MediaLinkType type = 2;
+}
+
+message MediaSource {
+  string sourceMediaId = 1;
+  MediaLink link = 2;
+}
+
+message Media {
+  string id = 1;
+  bool isUpload = 2;
+  string originalFileName = 3;
+  bool private = 4;
+  MediaLink link = 5;
+  optional VideoData videoData = 6;
+  optional ImageData imageData = 7;
+  MediaState state = 8;
+  MediaVersion version = 9;
+  optional MediaSource source = 10;
+}

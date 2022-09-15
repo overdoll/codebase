@@ -1,6 +1,7 @@
 package testing_tools
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -30,9 +31,11 @@ func DownloadFile(filepath string, url string) error {
 func FileExists(fileUrl string) bool {
 	resp, err := http.Get(fileUrl)
 	if err != nil {
+		fmt.Println("could not find file with URL: " + fileUrl)
 		return false
 	}
 	if resp.StatusCode != http.StatusOK {
+		fmt.Println("could not find file with URL: " + fileUrl)
 		return false
 	}
 

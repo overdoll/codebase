@@ -245,23 +245,5 @@ func InitializeCommands(app func() *app.Application) []*cobra.Command {
 		},
 	})
 
-	reprocessCmd := &cobra.Command{
-		Use: "reprocess",
-	}
-
-	reprocessPostCmd := &cobra.Command{
-		Use: "post [post_id]",
-		Run: func(cmd *cobra.Command, args []string) {
-
-			if err := app().Commands.ReprocessPostContent.Handle(context.Background(), command.ReprocessPostContent{
-				PostId: args[0],
-			}); err != nil {
-				zap.S().Fatalw("failed to reprocess post content", zap.Error(err))
-			}
-		},
-	}
-
-	reprocessCmd.AddCommand(reprocessPostCmd)
-
-	return []*cobra.Command{generateBannerRootCmd, generateSitemap, updateTotalLikesForPost, updateTotalPostsForPost, updateSlug, reIndex, reprocessCmd}
+	return []*cobra.Command{generateBannerRootCmd, generateSitemap, updateTotalLikesForPost, updateTotalPostsForPost, updateSlug, reIndex}
 }

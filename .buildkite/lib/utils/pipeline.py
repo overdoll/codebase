@@ -1,6 +1,6 @@
 from . import format
 
-DEFAULT_IMAGE = "771779017151.dkr.ecr.us-east-1.amazonaws.com/ci@sha256:73890160c8b9c02f6697846567152861dda09cff4dc66908cd863245f446b2c8"
+DEFAULT_IMAGE = "771779017151.dkr.ecr.us-east-1.amazonaws.com/ci@sha256:9a2ba21d36b90d99e905c73dba9d91c1a9836d55a4d1975b6098e0ab92f188d5"
 
 
 def create_step(label, commands, platform, configs=None, artifacts=None, cache=None, additional_env_vars=None, shards=1,
@@ -103,8 +103,8 @@ def create_docker_compose_step(label, commands, additional_env_vars=None, config
         "CCBILL_SUB_ACCOUNT_NUMBER",
         "CCBILL_DATALINK_USERNAME",
         "CCBILL_DATALINK_PASSWORD",
-        "AWS_PRIVATE_RESOURCES_KEY_PAIR_ID",
-        "AWS_PRIVATE_RESOURCES_KEY_PAIR_PRIVATE_KEY",
+        "AWS_PRIVATE_MEDIA_KEY_PAIR_ID",
+        "AWS_PRIVATE_MEDIA_KEY_PAIR_PRIVATE_KEY",
         "BUILDKITE_JOB_ID",
         "BUILDKITE_BUILD_ID",
         "BUILDKITE_AGENT_ACCESS_TOKEN",

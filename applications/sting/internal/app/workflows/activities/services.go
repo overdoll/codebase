@@ -2,9 +2,7 @@ package activities
 
 import (
 	"context"
-	"overdoll/applications/sting/internal/domain/post"
-	"overdoll/applications/sting/internal/domain/resource_options"
-	"overdoll/libraries/resource"
+	"overdoll/libraries/media"
 	"time"
 )
 
@@ -13,10 +11,8 @@ type ParleyService interface {
 }
 
 type LoaderService interface {
-	CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string, private bool, token string, onlyImages bool, width uint64, height uint64) ([]*resource.Resource, error)
-	DeleteResources(context.Context, string, []string) error
-	CopyResourceIntoImage(ctx context.Context, options *resource_options.ResourceOptions) (*post.NewResource, error)
-	CopyResourcesAndApplyPixelateFilter(ctx context.Context, itemId string, resourceIds []string, pixelate int, private bool, token string) ([]*post.NewResource, error)
+	ProcessMediaFromUploads(ctx context.Context, uploadIds []string, link *media.Link) ([]*media.Media, error)
+	GenerateImageFromMedia(ctx context.Context, sources []*media.Media, link *media.Link, pixelate *int64) ([]*media.Media, error)
 }
 
 type CarrierService interface {

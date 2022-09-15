@@ -38,7 +38,6 @@ go_library(
         "//libraries/paging",
         "//libraries/passport",
         "//libraries/principal",
-        "//libraries/resource",
         "//libraries/support",
         "@com_github_go_redis_redis_v8//:redis",
         "@com_github_gocql_gocql//:gocql",

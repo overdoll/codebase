@@ -19,9 +19,9 @@ go_library(
     deps = [
         "//libraries/errors/domainerror",
         "//libraries/localization",
+        "//libraries/media",
         "//libraries/paging",
         "//libraries/principal",
-        "//libraries/resource",
         "//libraries/uuid",
         "@com_github_go_playground_validator_v10//:validator",
     ],

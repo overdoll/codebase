@@ -1,9 +1,0 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
-
-go_library(
-    name = "resource_options",
-    srcs = ["resource_options.go"],
-    importpath = "overdoll/applications/sting/internal/domain/resource_options",
-    visibility = ["//applications/sting:__subpackages__"],
-    deps = ["//libraries/resource"],
-)

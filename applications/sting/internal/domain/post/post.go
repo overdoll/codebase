@@ -3,11 +3,10 @@ package post
 import (
 	"github.com/go-playground/validator/v10"
 	"overdoll/applications/sting/internal/domain/club"
-	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/localization"
-	"overdoll/libraries/resource"
+	"overdoll/libraries/media"
 	"regexp"
 	"time"
 
@@ -74,7 +73,7 @@ func NewPost(requester *principal.Principal, club *club.Club) (*Post, error) {
 	}, nil
 }
 
-func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int, contributorId string, contentResourceIds []string, contentResources []*resource.Resource, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt, updatedAt time.Time, postedAt *time.Time, description map[string]string) *Post {
+func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int, contributorId string, contentResourceIds []string, contentMedia []*media.Media, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt, updatedAt time.Time, postedAt *time.Time, description map[string]string) *Post {
 
 	ps, _ := StateFromString(state)
 	so, _ := SupporterOnlyStatusFromString(supporterOnlyStatus)
@@ -83,10 +82,10 @@ func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int,
 
 	for _, resourceId := range contentResourceIds {
 
-		var res *resource.Resource
-		var hiddenRes *resource.Resource
+		var res *media.Media
+		var hiddenRes *media.Media
 
-		for _, r := range contentResources {
+		for _, r := range contentMedia {
 
 			if r.ID() == resourceId {
 				res = r
@@ -109,8 +108,8 @@ func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int,
 					supporterOnlyStatus: so,
 					clubId:              clubId,
 				},
-				resource:        res,
-				resourceHidden:  hiddenRes,
+				media:           res,
+				mediaHidden:     hiddenRes,
 				isSupporterOnly: contentSupporterOnly[resourceId],
 			})
 		}
@@ -365,12 +364,12 @@ func (p *Post) AllContentResourceIds() []string {
 	var resourceIds []string
 
 	for _, cnt := range p.content {
-		if cnt.resource != nil {
-			resourceIds = append(resourceIds, cnt.resource.ID())
+		if cnt.media != nil {
+			resourceIds = append(resourceIds, cnt.media.ID())
 		}
 
-		if cnt.resourceHidden != nil {
-			resourceIds = append(resourceIds, cnt.resourceHidden.ID())
+		if cnt.mediaHidden != nil {
+			resourceIds = append(resourceIds, cnt.mediaHidden.ID())
 		}
 	}
 
@@ -396,7 +395,7 @@ func (p *Post) updatePostSupporterOnlyStatus() {
 
 	for _, c := range p.content {
 		if c.isSupporterOnly {
-			supporterOnlyContent = append(supporterOnlyContent, c.resource.ID())
+			supporterOnlyContent = append(supporterOnlyContent, c.media.ID())
 		}
 	}
 
@@ -411,7 +410,7 @@ func (p *Post) updatePostSupporterOnlyStatus() {
 	p.update()
 }
 
-func (p *Post) AddContentRequest(requester *principal.Principal, resources []*resource.Resource) error {
+func (p *Post) AddContentRequest(requester *principal.Principal, resources []*media.Media) error {
 
 	if err := p.CanUpdate(requester); err != nil {
 		return err
@@ -421,15 +420,11 @@ func (p *Post) AddContentRequest(requester *principal.Principal, resources []*re
 
 	for _, contentId := range resources {
 
-		if !contentId.IsPrivate() {
-			return errors.New("only private content is allowed for posts")
-		}
-
 		found := false
 
 		// only add content if the resource ID is not identical, otherwise we could get issues, i.e. adding the same content twice
 		for _, current := range p.content {
-			if current.resource.ID() == contentId.ID() {
+			if current.media.ID() == contentId.ID() {
 				found = true
 				break
 			}
@@ -437,8 +432,8 @@ func (p *Post) AddContentRequest(requester *principal.Principal, resources []*re
 
 		if !found {
 			newContent = append(newContent, &Content{
-				resource:        contentId,
-				resourceHidden:  nil,
+				media:           contentId,
+				mediaHidden:     nil,
 				isSupporterOnly: false,
 				post:            p,
 			})
@@ -450,6 +445,7 @@ func (p *Post) AddContentRequest(requester *principal.Principal, resources []*re
 	}
 
 	p.content = append(p.content, newContent...)
+
 	p.updatePostSupporterOnlyStatus()
 	return nil
 }
@@ -461,7 +457,7 @@ func (p *Post) UpdateContentOrderRequest(requester *principal.Principal, content
 	}
 
 	if len(contentIds) != len(p.content) {
-		return domainerror.NewValidation("missing resources")
+		return domainerror.NewValidation("missing media")
 	}
 
 	var reorderedContent []*Content
@@ -471,7 +467,7 @@ func (p *Post) UpdateContentOrderRequest(requester *principal.Principal, content
 		foundContent := false
 
 		for _, currentContent := range p.content {
-			if currentContent.resource.ID() == newContent {
+			if currentContent.media.ID() == newContent {
 				foundContent = true
 				reorderedContent = append(reorderedContent, currentContent)
 				break
@@ -513,7 +509,7 @@ func (p *Post) UpdateContentSupporterOnly(clb *club.Club, requester *principal.P
 		foundContent := false
 
 		for _, updatedContent := range contentIds {
-			if updatedContent == content.resource.ID() {
+			if updatedContent == content.media.ID() {
 				foundContent = true
 				continue
 			}
@@ -545,7 +541,7 @@ func (p *Post) RemoveContentRequest(requester *principal.Principal, contentIds [
 		foundContent := false
 
 		for _, removedContent := range contentIds {
-			if removedContent == content.resource.ID() {
+			if removedContent == content.media.ID() {
 				foundContent = true
 				continue
 			}
@@ -734,13 +730,13 @@ func (p *Post) CanView(suspendedClubIds []string, requester *principal.Principal
 	return nil
 }
 
-func validateExistingResource(current *resource.Resource, new *resource.Resource) error {
+func validateExistingResource(current *media.Media, new *media.Media) error {
 	if current == nil {
-		return resource.ErrResourceNotPresent
+		return media.ErrMediaNotPresent
 	}
 
 	if current.ID() != new.ID() {
-		return resource.ErrResourceNotPresent
+		return media.ErrMediaNotPresent
 	}
 
 	return nil

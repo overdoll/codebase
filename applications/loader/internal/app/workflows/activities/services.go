@@ -2,9 +2,9 @@ package activities
 
 import (
 	"context"
-	"overdoll/applications/loader/internal/domain/resource"
+	"overdoll/libraries/media/proto"
 )
 
 type CallbackService interface {
-	SendCallback(ctx context.Context, source string, resources []*resource.Resource) error
+	SendCallback(ctx context.Context, source string, media *proto.Media) error
 }

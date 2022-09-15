@@ -11,7 +11,7 @@ go_library(
     deps = [
         "//applications/loader/internal/app",
         "//applications/loader/internal/app/query",
-        "//applications/loader/internal/domain/resource",
+        "//applications/loader/internal/domain/progress",
         "//applications/loader/internal/ports/graphql/types",
         "//libraries/graphql",
         "@com_github_graph_gophers_dataloader_v7//:dataloader",

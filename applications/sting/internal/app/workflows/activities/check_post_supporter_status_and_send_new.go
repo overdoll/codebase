@@ -29,7 +29,7 @@ func (h *Activities) CheckPostSupporterStatusAndSendNew(ctx context.Context, inp
 		return nil, err
 	}
 
-	clubHasBanner := clb.BannerResource() != nil
+	clubHasBanner := clb.BannerMedia() != nil
 
 	// send a notification if partial or full supporter-only status
 	if pst.SupporterOnlyStatus() == post.Partial || pst.SupporterOnlyStatus() == post.Full {

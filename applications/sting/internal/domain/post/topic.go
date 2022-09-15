@@ -5,8 +5,8 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/yuin/goldmark"
 	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/media"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/resource"
 	"overdoll/libraries/uuid"
 	"time"
 
@@ -21,12 +21,13 @@ var (
 type Topic struct {
 	*paging.Node
 
-	id             string
-	slug           string
-	title          *localization.Translation
-	description    *localization.Translation
-	bannerResource *resource.Resource
-	weight         int
+	id          string
+	slug        string
+	title       *localization.Translation
+	description *localization.Translation
+	bannerMedia *media.Media
+
+	weight int
 
 	createdAt time.Time
 	updatedAt time.Time
@@ -67,14 +68,13 @@ func NewTopic(requester *principal.Principal, slug, title, description string, w
 	}
 
 	return &Topic{
-		id:             uuid.New().String(),
-		slug:           slug,
-		title:          lc,
-		bannerResource: nil,
-		description:    desc,
-		weight:         weight,
-		createdAt:      time.Now(),
-		updatedAt:      time.Now(),
+		id:          uuid.New().String(),
+		slug:        slug,
+		title:       lc,
+		description: desc,
+		weight:      weight,
+		createdAt:   time.Now(),
+		updatedAt:   time.Now(),
 	}, nil
 }
 
@@ -94,8 +94,8 @@ func (c *Topic) Description() *localization.Translation {
 	return c.description
 }
 
-func (c *Topic) BannerResource() *resource.Resource {
-	return c.bannerResource
+func (c *Topic) BannerMedia() *media.Media {
+	return c.bannerMedia
 }
 
 func (c *Topic) Weight() int {
@@ -175,40 +175,40 @@ func (c *Topic) UpdateDescription(requester *principal.Principal, description, l
 	return nil
 }
 
-func (c *Topic) UpdateBannerExisting(thumbnail *resource.Resource) error {
+func (c *Topic) UpdateBannerExisting(thumbnail *media.Media) error {
 
-	if err := validateExistingResource(c.bannerResource, thumbnail); err != nil {
+	if err := validateExistingResource(c.bannerMedia, thumbnail); err != nil {
 		return err
 	}
 
-	c.bannerResource = thumbnail
+	c.bannerMedia = thumbnail
 	c.update()
 
 	return nil
 }
 
-func (c *Topic) UpdateBanner(requester *principal.Principal, thumbnail *resource.Resource) error {
+func (c *Topic) UpdateBanner(requester *principal.Principal, thumbnail *media.Media) error {
 
 	if err := c.canUpdate(requester); err != nil {
 		return err
 	}
 
-	c.bannerResource = thumbnail
+	c.bannerMedia = thumbnail
 	c.update()
 
 	return nil
 }
 
-func UnmarshalTopicFromDatabase(id, slug string, title map[string]string, description map[string]string, banner *resource.Resource, weight int, createdAt, updatedAt time.Time) *Topic {
+func UnmarshalTopicFromDatabase(id, slug string, title map[string]string, description map[string]string, banner *media.Media, weight int, createdAt, updatedAt time.Time) *Topic {
 	return &Topic{
-		id:             id,
-		slug:           slug,
-		title:          localization.UnmarshalTranslationFromDatabase(title),
-		description:    localization.UnmarshalTranslationFromDatabase(description),
-		bannerResource: banner,
-		weight:         weight,
-		createdAt:      createdAt,
-		updatedAt:      updatedAt,
+		id:          id,
+		slug:        slug,
+		title:       localization.UnmarshalTranslationFromDatabase(title),
+		description: localization.UnmarshalTranslationFromDatabase(description),
+		bannerMedia: banner,
+		weight:      weight,
+		createdAt:   createdAt,
+		updatedAt:   updatedAt,
 	}
 }
 

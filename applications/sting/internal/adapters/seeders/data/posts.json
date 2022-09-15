@@ -15,7 +15,7 @@
       "ef20e0221f1532267a9c7062152ff879"
     ],
     "content_resources": {
-      "ef20e0221f1532267a9c7062152ff879": "{\"item_id\":\"25WqmS7kgwotdDaxQDEa6I4CjuO\",\"resource_id\":\"ef20e0221f1532267a9c7062152ff879\",\"is_private\":true,\"mime_types\":[\"image/webp\",\"image/png\"],\"processed\":true,\"processed_id\":\"25oJ5h0w5jF6ZJLWfJlcBkJQZwM\",\"video_duration\":0,\"width\":656,\"height\":532,\"type\":1}"
+      "ef20e0221f1532267a9c7062152ff879": "{\"item_id\":\"25WqmS7kgwotdDaxQDEa6I4CjuO\",\"resource_id\":\"ef20e0221f1532267a9c7062152ff879\",\"preview\":\"#ffffff\",\"is_private\":true,\"mime_types\":[\"image/webp\",\"image/png\"],\"processed\":true,\"processed_id\":\"25oJ5h0w5jF6ZJLWfJlcBkJQZwM\",\"video_duration\":0,\"width\":656,\"height\":532,\"type\":1}"
     },
     "contributor_account_id": "1q7MJ5IyRTV0X4J27F3m5wGD5mj",
     "created_at": "2022-02-23 21:55:48.437",
@@ -42,7 +42,7 @@
       "ef20e0221f1532267a9c7062152ff878"
     ],
     "content_resources": {
-      "ef20e0221f1532267a9c7062152ff878": "{\"item_id\":\"28ft7hZCxE7wwGfGet51uThe38F\",\"resource_id\":\"ef20e0221f1532267a9c7062152ff878\",\"is_private\":true,\"mime_types\":[\"image/webp\",\"image/png\"],\"processed\":true,\"processed_id\":\"28ft7paz64u9CNcC9q7R7nwOZb2\",\"video_duration\":0,\"width\":656,\"height\":532,\"type\":1}"
+      "ef20e0221f1532267a9c7062152ff878": "{\"item_id\":\"28ft7hZCxE7wwGfGet51uThe38F\",\"resource_id\":\"ef20e0221f1532267a9c7062152ff878\",\"preview\":\"#ffffff\",\"is_private\":true,\"mime_types\":[\"image/webp\",\"image/png\"],\"processed\":true,\"processed_id\":\"28ft7paz64u9CNcC9q7R7nwOZb2\",\"video_duration\":0,\"width\":656,\"height\":532,\"type\":1}"
     },
     "contributor_account_id": "1q7MJ5IyRTV0X4J27F3m5wGD5mj",
     "created_at": "2022-02-23 21:55:48.437",

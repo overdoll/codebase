@@ -2,13 +2,11 @@ package adapters
 
 import (
 	"context"
-	"crypto/md5"
-	"encoding/hex"
 	"github.com/spf13/viper"
 	"go.temporal.io/sdk/client"
 	"overdoll/applications/loader/internal/app/workflows"
-	"overdoll/applications/loader/internal/domain/resource"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/media"
 )
 
 type EventTemporalRepository struct {
@@ -19,7 +17,7 @@ func NewEventTemporalRepository(client client.Client) EventTemporalRepository {
 	return EventTemporalRepository{client: client}
 }
 
-func (r EventTemporalRepository) SendProcessResourcesHeartbeat(ctx context.Context, token []byte, heartbeat int64) error {
+func (r EventTemporalRepository) SendProcessMediaHeartbeat(ctx context.Context, token []byte, heartbeat int64) error {
 	if err := r.client.RecordActivityHeartbeat(ctx, token, heartbeat); err != nil {
 		return errors.Wrap(err, "failed to record activity heartbeat")
 	}
@@ -27,85 +25,45 @@ func (r EventTemporalRepository) SendProcessResourcesHeartbeat(ctx context.Conte
 	return nil
 }
 
-func (r EventTemporalRepository) ProcessResourcesWithFiltersFromCopy(ctx context.Context, itemId string, resourceIds []string, source string, config *resource.Config, filters *resource.ImageFilters) error {
-
-	processResourcesHash := md5.New()
-	processResourcesHash.Write([]byte(itemId))
-	for _, resource := range resourceIds {
-		processResourcesHash.Write([]byte(resource))
-	}
+func (r EventTemporalRepository) GenerateImageFromMedia(ctx context.Context, media *media.Media, newMedia *media.Media, source string, pixelate *int) error {
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "loader.ProcessResourcesWithFiltersFromCopy_" + hex.EncodeToString(processResourcesHash.Sum(nil)[:]),
+		ID:        "loader.GenerateImageFromMedia_" + media.ID() + "_" + newMedia.ID(),
 	}
 
-	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ProcessResourcesWithFiltersFromCopy,
-		workflows.ProcessResourcesWithFiltersFromCopyInput{
-			ItemId:      itemId,
-			ResourceIds: resourceIds,
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ProcessMedia,
+		workflows.ProcessMediaInput{
+			SourceMedia: media.RawProto(),
 			Source:      source,
-			Width:       config.Width(),
-			Height:      config.Height(),
-			Pixelate:    filters.Pixelate(),
+			NewMedia:    newMedia.RawProto(),
+			Pixelate:    pixelate,
 		},
 	)
 
 	if err != nil {
-		return errors.Wrap(err, "failed to run process resources with filters from copy workflow")
+		return errors.Wrap(err, "failed to run process resources workflow")
 	}
 
 	return nil
 }
 
-func (r EventTemporalRepository) ProcessResources(ctx context.Context, itemId string, resourceIds []string, source string, config *resource.Config) error {
-
-	for _, resourceId := range resourceIds {
-		options := client.StartWorkflowOptions{
-			TaskQueue: viper.GetString("temporal.queue"),
-			ID:        "loader.ProcessResourcesForUpload_" + itemId + "_" + resourceId,
-		}
-
-		_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ProcessResources,
-			workflows.ProcessResourcesInput{
-				ItemId:     itemId,
-				ResourceId: resourceId,
-				Source:     source,
-				Width:      config.Width(),
-				Height:     config.Height(),
-			},
-		)
-
-		if err != nil {
-			return errors.Wrap(err, "failed to run process resources workflow")
-		}
-	}
-
-	return nil
-}
-
-func (r EventTemporalRepository) DeleteResources(ctx context.Context, itemId string, resourceIds []string) error {
-
-	deleteResourcesHash := md5.New()
-	deleteResourcesHash.Write([]byte(itemId))
-	for _, resource := range resourceIds {
-		deleteResourcesHash.Write([]byte(resource))
-	}
+func (r EventTemporalRepository) ProcessMediaForUpload(ctx context.Context, media *media.Media, source string) error {
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
-		ID:        "loader.DeleteProcessedResources_" + hex.EncodeToString(deleteResourcesHash.Sum(nil)[:]),
+		ID:        "loader.ProcessMediaForUpload_" + media.RawProto().Link.Id + "_" + media.ID(),
 	}
 
-	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.DeleteResources,
-		workflows.DeleteResourcesInput{
-			ItemId:      itemId,
-			ResourceIds: resourceIds,
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ProcessMedia,
+		workflows.ProcessMediaInput{
+			SourceMedia: media.RawProto(),
+			Source:      source,
 		},
 	)
 
 	if err != nil {
-		return errors.Wrap(err, "failed to run delete resources workflow")
+		return errors.Wrap(err, "failed to run process resources workflow")
 	}
 
 	return nil

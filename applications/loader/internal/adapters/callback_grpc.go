@@ -4,36 +4,30 @@ import (
 	"context"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"overdoll/applications/loader/internal/domain/resource"
+	"overdoll/applications/loader/internal/domain/media_processing"
 	"overdoll/libraries/errors"
-	"overdoll/libraries/resource/proto"
+	"overdoll/libraries/media/proto"
 )
 
 type CallbackGrpc struct {
-	stingResourceCallback proto.ResourceCallbackClient
+	stingMediaCallback proto.MediaCallbackClient
 }
 
-func NewCallbackGrpc(stingResourceCallback proto.ResourceCallbackClient) CallbackGrpc {
-	return CallbackGrpc{stingResourceCallback: stingResourceCallback}
+func NewCallbackGrpc(stingMediaCallback proto.MediaCallbackClient) CallbackGrpc {
+	return CallbackGrpc{stingMediaCallback: stingMediaCallback}
 }
 
-func (s CallbackGrpc) SendCallback(ctx context.Context, source string, resources []*resource.Resource) error {
-
-	var results []*proto.Resource
-
-	for _, res := range resources {
-		results = append(results, resource.ToProto(res))
-	}
+func (s CallbackGrpc) SendCallback(ctx context.Context, source string, media *proto.Media) error {
 
 	if source == "STING" {
 
-		_, err := s.stingResourceCallback.UpdateResources(ctx, &proto.UpdateResourcesRequest{Resources: results})
+		_, err := s.stingMediaCallback.UpdateMedia(ctx, &proto.UpdateMediaRequest{Media: media})
 
 		if err != nil {
 			if e, ok := status.FromError(err); ok {
 				switch e.Code() {
 				case codes.NotFound:
-					return resource.ErrResourceCallbackNotFound
+					return media_processing.ErrMediaCallbackNotFound
 				default:
 					return err
 				}

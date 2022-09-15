@@ -13,5 +13,16 @@ type EntityResolver struct {
 }
 
 func (e EntityResolver) FindResourceProgressByID(ctx context.Context, id relay.ID) (*types.ResourceProgress, error) {
-	return dataloader.For(ctx).GetResourceProgressById(ctx, id.GetCompositePartID(1), id.GetCompositePartID(0))
+
+	res, err := dataloader.For(ctx).GetMediaProgressById(ctx, id.GetCompositePartID(1), id.GetCompositePartID(0))
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalMediaProgressToLegacyResourceProgressGraphQL(ctx, res), nil
+}
+
+func (e EntityResolver) FindMediaProgressByID(ctx context.Context, id relay.ID) (*types.MediaProgress, error) {
+	return dataloader.For(ctx).GetMediaProgressById(ctx, id.GetCompositePartID(1), id.GetCompositePartID(0))
 }

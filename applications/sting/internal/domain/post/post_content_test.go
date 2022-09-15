@@ -3,8 +3,8 @@ package post
 import (
 	"github.com/stretchr/testify/require"
 	sting "overdoll/applications/sting/proto"
+	"overdoll/libraries/media"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/resource"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
@@ -13,12 +13,12 @@ import (
 func TestPostContent_non_published_supporter_only(t *testing.T) {
 	t.Parallel()
 
-	resourceId := &resource.Resource{}
-	resourceIdHidden := &resource.Resource{}
+	resourceId := &media.Media{}
+	resourceIdHidden := &media.Media{}
 
 	contentItem := &Content{
-		resource:        resourceId,
-		resourceHidden:  resourceIdHidden,
+		media:           resourceId,
+		mediaHidden:     resourceIdHidden,
 		isSupporterOnly: true,
 		post: &Post{
 			state: Draft,
@@ -26,18 +26,18 @@ func TestPostContent_non_published_supporter_only(t *testing.T) {
 	}
 
 	require.True(t, contentItem.CanViewSupporterOnly(nil), "can view supporter only content on draft")
-	require.Equal(t, resourceId, contentItem.ResourceRequest(nil))
+	require.Equal(t, resourceId, contentItem.MediaRequest(nil))
 }
 
 func TestPostContent_published_non_supporter_only(t *testing.T) {
 	t.Parallel()
 
-	resourceId := &resource.Resource{}
-	resourceIdHidden := &resource.Resource{}
+	resourceId := &media.Media{}
+	resourceIdHidden := &media.Media{}
 
 	contentItem := &Content{
-		resource:        resourceId,
-		resourceHidden:  resourceIdHidden,
+		media:           resourceId,
+		mediaHidden:     resourceIdHidden,
 		isSupporterOnly: false,
 		post: &Post{
 			state: Published,
@@ -45,19 +45,19 @@ func TestPostContent_published_non_supporter_only(t *testing.T) {
 	}
 
 	require.True(t, contentItem.CanViewSupporterOnly(nil), "can view supporter only content on draft")
-	require.Equal(t, resourceId, contentItem.ResourceRequest(nil))
+	require.Equal(t, resourceId, contentItem.MediaRequest(nil))
 }
 
 func TestPostContent_published_supporter_only(t *testing.T) {
 	t.Parallel()
 
-	resourceId := &resource.Resource{}
-	resourceIdHidden := &resource.Resource{}
+	resourceId := &media.Media{}
+	resourceIdHidden := &media.Media{}
 	clubId := uuid.New().String()
 
 	contentItem := &Content{
-		resource:        resourceId,
-		resourceHidden:  resourceIdHidden,
+		media:           resourceId,
+		mediaHidden:     resourceIdHidden,
 		isSupporterOnly: true,
 		post: &Post{
 			state:  Published,
@@ -74,18 +74,18 @@ func TestPostContent_published_supporter_only(t *testing.T) {
 	requester.ExtendWithClubExtension(p)
 
 	require.True(t, contentItem.CanViewSupporterOnly(requester), "can view supporter only content on draft")
-	require.Equal(t, resourceId, contentItem.ResourceRequest(requester))
+	require.Equal(t, resourceId, contentItem.MediaRequest(requester))
 }
 
 func TestPostContent_published_supporter_only_as_staff(t *testing.T) {
 	t.Parallel()
 
-	resourceId := &resource.Resource{}
-	resourceIdHidden := &resource.Resource{}
+	resourceId := &media.Media{}
+	resourceIdHidden := &media.Media{}
 
 	contentItem := &Content{
-		resource:        resourceId,
-		resourceHidden:  resourceIdHidden,
+		media:           resourceId,
+		mediaHidden:     resourceIdHidden,
 		isSupporterOnly: true,
 		post: &Post{
 			state: Published,
@@ -95,18 +95,18 @@ func TestPostContent_published_supporter_only_as_staff(t *testing.T) {
 	requester := testing_tools.NewStaffPrincipal("")
 
 	require.True(t, contentItem.CanViewSupporterOnly(requester), "can view supporter only content on draft")
-	require.Equal(t, resourceId, contentItem.ResourceRequest(requester))
+	require.Equal(t, resourceId, contentItem.MediaRequest(requester))
 }
 
 func TestPostContent_published_supporter_only_as_nobody(t *testing.T) {
 	t.Parallel()
 
-	resourceId := &resource.Resource{}
-	resourceIdHidden := &resource.Resource{}
+	resourceId := &media.Media{}
+	resourceIdHidden := &media.Media{}
 
 	contentItem := &Content{
-		resource:        resourceId,
-		resourceHidden:  resourceIdHidden,
+		media:           resourceId,
+		mediaHidden:     resourceIdHidden,
 		isSupporterOnly: true,
 		post: &Post{
 			state: Published,
@@ -114,5 +114,5 @@ func TestPostContent_published_supporter_only_as_nobody(t *testing.T) {
 	}
 
 	require.False(t, contentItem.CanViewSupporterOnly(nil), "cannot view supporter only content on draft")
-	require.Equal(t, resourceIdHidden, contentItem.ResourceRequest(nil), "show hidden resource id")
+	require.Equal(t, resourceIdHidden, contentItem.MediaRequest(nil), "show hidden resource id")
 }

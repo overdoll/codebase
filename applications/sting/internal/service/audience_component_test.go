@@ -8,22 +8,24 @@ import (
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	"overdoll/libraries/bootstrap"
-	graphql2 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/resource/proto"
+	"overdoll/libraries/media/proto"
 	"overdoll/libraries/uuid"
 	"strings"
 	"testing"
 )
 
 type AudienceModified struct {
-	Id        relay.ID
-	Reference string
-	Title     string
-	Slug      string
-	Standard  bool
-	Thumbnail *graphql2.Resource
-	Banner    *graphql2.Resource
+	Id          relay.ID
+	Reference   string
+	Title       string
+	Slug        string
+	Standard    bool
+	BannerMedia *struct {
+		ImageMedia struct {
+			Id relay.ID
+		} `graphql:"... on ImageMedia"`
+	}
 }
 
 type SearchAudience struct {
@@ -48,12 +50,6 @@ type UpdateAudienceTitle struct {
 	UpdateAudienceTitle *struct {
 		Audience *AudienceModified
 	} `graphql:"updateAudienceTitle(input: $input)"`
-}
-
-type UpdateAudienceThumbnail struct {
-	UpdateAudienceThumbnail *struct {
-		Audience *AudienceModified
-	} `graphql:"updateAudienceThumbnail(input: $input)"`
 }
 
 type UpdateAudienceBanner struct {
@@ -153,34 +149,6 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 
 	audienceThumbnailId := "00be69a89e31d28cf8e79b7373d505c7"
 
-	var updateAudienceThumbnail UpdateAudienceThumbnail
-
-	err = client.Mutate(context.Background(), &updateAudienceThumbnail, map[string]interface{}{
-		"input": types.UpdateAudienceThumbnailInput{
-			ID:        audience.Id,
-			Thumbnail: audienceThumbnailId,
-		},
-	})
-
-	require.NoError(t, err, "no error updating audience thumbnail")
-	require.False(t, updateAudienceThumbnail.UpdateAudienceThumbnail.Audience.Thumbnail.Processed, "not yet processed")
-
-	grpcClient := getGrpcCallbackClient(t)
-
-	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
-		Id:          audienceThumbnailId,
-		ItemId:      updateAudienceThumbnail.UpdateAudienceThumbnail.Audience.Reference,
-		Processed:   true,
-		Type:        proto.ResourceType_IMAGE,
-		ProcessedId: uuid.New().String(),
-		Private:     false,
-		Width:       100,
-		Height:      100,
-		Token:       "AUDIENCE",
-	}}})
-
-	require.NoError(t, err, "no error updating resource")
-
 	var updateAudienceIsStandard UpdateAudienceIsStandard
 
 	err = client.Mutate(context.Background(), &updateAudienceIsStandard, map[string]interface{}{
@@ -196,9 +164,7 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 	require.NotNil(t, audience, "expected to have found audience")
 
 	require.Equal(t, fake.Title, audience.Title, "title has been updated")
-	require.NotNil(t, audience.Thumbnail, "has a thumbnail")
-	require.Nil(t, audience.Banner, "has no banner")
-	require.True(t, audience.Thumbnail.Processed, "should be processed")
+	require.Nil(t, audience.BannerMedia, "has no banner")
 	require.True(t, audience.Standard, "is standard now")
 
 	var updateAudienceBanner UpdateAudienceBanner
@@ -211,22 +177,25 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error updating audience thumbnail")
-	require.False(t, updateAudienceBanner.UpdateAudienceBanner.Audience.Banner.Processed, "not yet processed")
+	require.Empty(t, updateAudienceBanner.UpdateAudienceBanner.Audience.BannerMedia.ImageMedia.Id, "not yet processed")
 
-	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
-		Id:          audienceThumbnailId,
-		ItemId:      updateAudienceBanner.UpdateAudienceBanner.Audience.Reference,
-		Processed:   true,
-		Type:        proto.ResourceType_IMAGE,
-		ProcessedId: uuid.New().String(),
-		Private:     false,
-		Width:       100,
-		Height:      100,
-		Token:       "AUDIENCE_BANNER",
-	}}})
+	grpcClient := getGrpcCallbackClient(t)
+
+	_, err = grpcClient.UpdateMedia(context.Background(), &proto.UpdateMediaRequest{Media: &proto.Media{
+		Id: audienceThumbnailId,
+		Link: &proto.MediaLink{
+			Id:   updateAudienceBanner.UpdateAudienceBanner.Audience.Reference,
+			Type: proto.MediaLinkType_AUDIENCE_BANNER,
+		},
+		ImageData: &proto.ImageData{Id: uuid.New().String()},
+		State: &proto.MediaState{
+			Processed: true,
+			Failed:    false,
+		},
+	}})
 
 	require.NoError(t, err, "no error updating resource")
 
 	audience = getAudienceBySlug(t, client, currentAudienceSlug)
-	require.True(t, audience.Banner.Processed, "banner should now be processed")
+	require.NotEmpty(t, audience.BannerMedia.ImageMedia.Id, "banner should now be processed")
 }

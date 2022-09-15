@@ -12,7 +12,7 @@ import (
 	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/localization"
-	"overdoll/libraries/resource"
+	"overdoll/libraries/media"
 	"overdoll/libraries/support"
 	"time"
 
@@ -24,24 +24,25 @@ import (
 )
 
 type postDocument struct {
-	Id                              string            `json:"id"`
-	State                           string            `json:"state"`
-	Description                     map[string]string `json:"description"`
-	SupporterOnlyStatus             string            `json:"supporter_only_status"`
-	ContentResourceIds              []string          `json:"content_resource_ids"`
-	ContentResources                map[string]string `json:"content_resources"`
-	ContentSupporterOnly            map[string]bool   `json:"content_supporter_only"`
-	ContentSupporterOnlyResourceIds map[string]string `json:"content_supporter_only_resource_ids"`
-	Likes                           int               `json:"likes"`
-	ContributorId                   string            `json:"contributor_id"`
-	ClubId                          string            `json:"club_id"`
-	AudienceId                      string            `json:"audience_id"`
-	CategoryIds                     []string          `json:"category_ids"`
-	CharacterIds                    []string          `json:"character_ids"`
-	SeriesIds                       []string          `json:"series_ids"`
-	CreatedAt                       time.Time         `json:"created_at"`
-	UpdatedAt                       time.Time         `json:"updated_at"`
-	PostedAt                        *time.Time        `json:"posted_at"`
+	Id                           string            `json:"id"`
+	State                        string            `json:"state"`
+	Description                  map[string]string `json:"description"`
+	SupporterOnlyStatus          string            `json:"supporter_only_status"`
+	ContentMediaIds              []string          `json:"content_resource_ids"`
+	ContentResources             map[string]string `json:"content_resources"`
+	ContentMedia                 map[string][]byte `json:"content_media"`
+	ContentSupporterOnly         map[string]bool   `json:"content_supporter_only"`
+	ContentSupporterOnlyMediaIds map[string]string `json:"content_supporter_only_resource_ids"`
+	Likes                        int               `json:"likes"`
+	ContributorId                string            `json:"contributor_id"`
+	ClubId                       string            `json:"club_id"`
+	AudienceId                   string            `json:"audience_id"`
+	CategoryIds                  []string          `json:"category_ids"`
+	CharacterIds                 []string          `json:"character_ids"`
+	SeriesIds                    []string          `json:"series_ids"`
+	CreatedAt                    time.Time         `json:"created_at"`
+	UpdatedAt                    time.Time         `json:"updated_at"`
+	PostedAt                     *time.Time        `json:"posted_at"`
 }
 
 const PostIndexName = "posts"
@@ -80,16 +81,28 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPostDocument(ctx contex
 		audience = &pst.AudienceId
 	}
 
-	var valueString []string
+	var finalMedia []*media.Media
 
 	for _, r := range pst.ContentResources {
-		valueString = append(valueString, r)
+
+		m, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, r, nil)
+
+		if err != nil {
+			return nil, err
+		}
+
+		finalMedia = append(finalMedia, m)
 	}
 
-	resources, err := r.resourceSerializer.UnmarshalResourcesFromDatabase(ctx, valueString)
+	for _, r := range pst.ContentMedia {
 
-	if err != nil {
-		return nil, err
+		m, err := media.UnmarshalMediaFromDatabase(ctx, r)
+
+		if err != nil {
+			return nil, err
+		}
+
+		finalMedia = append(finalMedia, m)
 	}
 
 	createdPost := post.UnmarshalPostFromDatabase(
@@ -98,10 +111,10 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPostDocument(ctx contex
 		pst.SupporterOnlyStatus,
 		pst.Likes,
 		pst.ContributorId,
-		pst.ContentResourceIds,
-		resources,
+		pst.ContentMediaIds,
+		finalMedia,
 		pst.ContentSupporterOnly,
-		pst.ContentSupporterOnlyResourceIds,
+		pst.ContentSupporterOnlyMediaIds,
 		pst.ClubId,
 		audience,
 		pst.CharacterIds,
@@ -132,52 +145,64 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 	contentSupporterOnly := make(map[string]bool)
 	contentSupporterOnlyResourceIds := make(map[string]string)
 	contentResources := make(map[string]string)
+	contentMedia := make(map[string][]byte)
 
 	for _, cont := range pst.Content() {
-		contentResourceIds = append(contentResourceIds, cont.Resource().ID())
-		contentSupporterOnly[cont.Resource().ID()] = cont.IsSupporterOnly()
-		if cont.IsSupporterOnly() && cont.ResourceHidden() != nil {
-			contentSupporterOnlyResourceIds[cont.Resource().ID()] = cont.ResourceHidden().ID()
+		contentResourceIds = append(contentResourceIds, cont.Media().ID())
+		contentSupporterOnly[cont.Media().ID()] = cont.IsSupporterOnly()
+		if cont.IsSupporterOnly() && cont.MediaHidden() != nil {
+			contentSupporterOnlyResourceIds[cont.Media().ID()] = cont.MediaHidden().ID()
 		}
 
-		if cont.ResourceHidden() != nil {
-			marshalled, err := resource.MarshalResourceToDatabase(cont.ResourceHidden())
+		if cont.MediaHidden() != nil {
+
+			if cont.MediaHidden().IsLegacy() {
+				contentResources[cont.MediaHidden().ID()] = cont.MediaHidden().LegacyResource()
+			} else {
+				marshalled, err := media.MarshalMediaToDatabase(cont.MediaHidden())
+
+				if err != nil {
+					return nil, err
+				}
+
+				contentMedia[cont.MediaHidden().ID()] = marshalled
+			}
+
+		}
+
+		if cont.Media().IsLegacy() {
+			contentResources[cont.Media().ID()] = cont.Media().LegacyResource()
+		} else {
+			marshalled, err := media.MarshalMediaToDatabase(cont.Media())
 
 			if err != nil {
 				return nil, err
 			}
 
-			contentResources[cont.ResourceHidden().ID()] = marshalled
+			contentMedia[cont.Media().ID()] = marshalled
 		}
-
-		marshalled, err := resource.MarshalResourceToDatabase(cont.Resource())
-
-		if err != nil {
-			return nil, err
-		}
-
-		contentResources[cont.Resource().ID()] = marshalled
 	}
 
 	return &postDocument{
-		Id:                              pst.ID(),
-		Likes:                           pst.Likes(),
-		SupporterOnlyStatus:             pst.SupporterOnlyStatus().String(),
-		State:                           pst.State().String(),
-		AudienceId:                      audience,
-		ClubId:                          pst.ClubId(),
-		ContributorId:                   pst.ContributorId(),
-		ContentResources:                contentResources,
-		ContentResourceIds:              contentResourceIds,
-		ContentSupporterOnly:            contentSupporterOnly,
-		ContentSupporterOnlyResourceIds: contentSupporterOnlyResourceIds,
-		CategoryIds:                     pst.CategoryIds(),
-		CharacterIds:                    pst.CharacterIds(),
-		SeriesIds:                       pst.SeriesIds(),
-		CreatedAt:                       pst.CreatedAt(),
-		UpdatedAt:                       pst.UpdatedAt(),
-		PostedAt:                        pst.PostedAt(),
-		Description:                     localization.MarshalTranslationToDatabase(pst.Description()),
+		Id:                           pst.ID(),
+		Likes:                        pst.Likes(),
+		SupporterOnlyStatus:          pst.SupporterOnlyStatus().String(),
+		State:                        pst.State().String(),
+		AudienceId:                   audience,
+		ClubId:                       pst.ClubId(),
+		ContributorId:                pst.ContributorId(),
+		ContentResources:             contentResources,
+		ContentMedia:                 contentMedia,
+		ContentMediaIds:              contentResourceIds,
+		ContentSupporterOnly:         contentSupporterOnly,
+		ContentSupporterOnlyMediaIds: contentSupporterOnlyResourceIds,
+		CategoryIds:                  pst.CategoryIds(),
+		CharacterIds:                 pst.CharacterIds(),
+		SeriesIds:                    pst.SeriesIds(),
+		CreatedAt:                    pst.CreatedAt(),
+		UpdatedAt:                    pst.UpdatedAt(),
+		PostedAt:                     pst.PostedAt(),
+		Description:                  localization.MarshalTranslationToDatabase(pst.Description()),
 	}, nil
 }
 
@@ -885,7 +910,7 @@ func (r PostsCassandraElasticsearchRepository) deletePostIndexById(ctx context.C
 	return nil
 }
 
-func (r PostsCassandraElasticsearchRepository) GetFirstTopPostWithoutOccupiedResources(ctx context.Context, characterId, categoryId, seriesId, audienceId *string) (*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) GetFirstTopPostWithoutOccupiedMedias(ctx context.Context, characterId, categoryId, seriesId, audienceId *string) (*post.Post, error) {
 
 	builder := r.client.Search().
 		Index(PostReaderIndex)

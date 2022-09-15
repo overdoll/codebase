@@ -4,8 +4,8 @@ import (
 	"github.com/go-playground/validator/v10"
 	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/media"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/resource"
 	"overdoll/libraries/uuid"
 	"time"
 
@@ -20,13 +20,13 @@ var (
 type Character struct {
 	*paging.Node
 
-	id                string
-	slug              string
-	name              *localization.Translation
-	thumbnailResource *resource.Resource
-	bannerResource    *resource.Resource
-	series            *Series
-	clubId            *string
+	id             string
+	slug           string
+	name           *localization.Translation
+	thumbnailMedia *media.Media
+	bannerMedia    *media.Media
+	series         *Series
+	clubId         *string
 
 	totalLikes int
 	totalPosts int
@@ -82,17 +82,15 @@ func NewCharacter(requester *principal.Principal, slug, name string, series *Ser
 	}
 
 	return &Character{
-		id:                uuid.New().String(),
-		slug:              slug,
-		name:              lc,
-		series:            series,
-		thumbnailResource: nil,
-		clubId:            clubId,
-		bannerResource:    nil,
-		totalLikes:        0,
-		totalPosts:        0,
-		createdAt:         time.Now(),
-		updatedAt:         time.Now(),
+		id:         uuid.New().String(),
+		slug:       slug,
+		name:       lc,
+		series:     series,
+		clubId:     clubId,
+		totalLikes: 0,
+		totalPosts: 0,
+		createdAt:  time.Now(),
+		updatedAt:  time.Now(),
 	}, nil
 }
 
@@ -138,12 +136,12 @@ func (c *Character) update() {
 	c.updatedAt = time.Now()
 }
 
-func (c *Character) ThumbnailResource() *resource.Resource {
-	return c.thumbnailResource
+func (c *Character) ThumbnailMedia() *media.Media {
+	return c.thumbnailMedia
 }
 
-func (c *Character) BannerResource() *resource.Resource {
-	return c.bannerResource
+func (c *Character) BannerMedia() *media.Media {
+	return c.bannerMedia
 }
 
 func (c *Character) TotalLikes() int {
@@ -185,51 +183,22 @@ func (c *Character) UpdateName(requester *principal.Principal, name, locale stri
 	return nil
 }
 
-func (c *Character) UpdateThumbnail(requester *principal.Principal, thumbnail *resource.Resource) error {
+func (c *Character) UpdateBannerExisting(thumbnail *media.Media) error {
 
-	// thumbnail updating is staff-only for now
-	if !requester.IsStaff() {
-		return principal.ErrNotAuthorized
-	}
-
-	if err := c.canUpdate(requester); err != nil {
+	if err := validateExistingResource(c.bannerMedia, thumbnail); err != nil {
 		return err
 	}
 
-	c.thumbnailResource = thumbnail
-
-	return nil
-}
-
-func (c *Character) UpdateThumbnailExisting(thumbnail *resource.Resource) error {
-
-	if err := validateExistingResource(c.thumbnailResource, thumbnail); err != nil {
-		return err
-	}
-
-	c.thumbnailResource = thumbnail
+	c.bannerMedia = thumbnail
 
 	c.update()
 
 	return nil
 }
 
-func (c *Character) UpdateBannerExisting(thumbnail *resource.Resource) error {
+func (c *Character) UpdateBanner(thumbnail *media.Media) error {
 
-	if err := validateExistingResource(c.bannerResource, thumbnail); err != nil {
-		return err
-	}
-
-	c.bannerResource = thumbnail
-
-	c.update()
-
-	return nil
-}
-
-func (c *Character) UpdateBanner(thumbnail *resource.Resource) error {
-
-	c.bannerResource = thumbnail
+	c.bannerMedia = thumbnail
 	c.update()
 
 	return nil
@@ -259,19 +228,19 @@ func (c *Character) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalCharacterFromDatabase(id, slug string, name map[string]string, thumbnail, banner *resource.Resource, totalLikes, totalPosts int, createdAt, updatedAt time.Time, media *Series, clubId *string) *Character {
+func UnmarshalCharacterFromDatabase(id, slug string, name map[string]string, thumbnail, banner *media.Media, totalLikes, totalPosts int, createdAt, updatedAt time.Time, media *Series, clubId *string) *Character {
 	return &Character{
-		id:                id,
-		slug:              slug,
-		name:              localization.UnmarshalTranslationFromDatabase(name),
-		thumbnailResource: thumbnail,
-		bannerResource:    banner,
-		series:            media,
-		clubId:            clubId,
-		totalLikes:        totalLikes,
-		totalPosts:        totalPosts,
-		createdAt:         createdAt,
-		updatedAt:         updatedAt,
+		id:             id,
+		slug:           slug,
+		name:           localization.UnmarshalTranslationFromDatabase(name),
+		thumbnailMedia: thumbnail,
+		bannerMedia:    banner,
+		series:         media,
+		clubId:         clubId,
+		totalLikes:     totalLikes,
+		totalPosts:     totalPosts,
+		createdAt:      createdAt,
+		updatedAt:      updatedAt,
 	}
 }
 

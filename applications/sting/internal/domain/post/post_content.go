@@ -1,53 +1,53 @@
 package post
 
 import (
+	"overdoll/libraries/media"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/resource"
 )
 
 type Content struct {
 	post *Post
 
-	resource *resource.Resource
+	media *media.Media
 
-	resourceHidden *resource.Resource
+	mediaHidden *media.Media
 
 	isSupporterOnly bool
 }
 
-func (m *Content) ResourceRequest(requester *principal.Principal) *resource.Resource {
+func (m *Content) MediaRequest(requester *principal.Principal) *media.Media {
 
 	if !m.canView(requester) {
-		return m.resourceHidden
+		return m.mediaHidden
 	}
 
-	return m.resource
+	return m.media
 }
 
-func (m *Content) SupporterOnlyResourceRequest(requester *principal.Principal) *resource.Resource {
+func (m *Content) SupporterOnlyMediaRequest(requester *principal.Principal) *media.Media {
 
 	if m.canView(requester) {
 		return nil
 	}
 
-	return m.resource.AsEmpty()
+	return m.media
 }
 
-func (m *Content) Resource() *resource.Resource {
-	return m.resource
+func (m *Content) Media() *media.Media {
+	return m.media
 }
 
-func (m *Content) ResourceHidden() *resource.Resource {
-	return m.resourceHidden
+func (m *Content) MediaHidden() *media.Media {
+	return m.mediaHidden
 }
 
-func (m *Content) UpdateResource(id *resource.Resource) error {
-	m.resource = id
+func (m *Content) UpdateMedia(id *media.Media) error {
+	m.media = id
 	return nil
 }
 
-func (m *Content) UpdateResourceHidden(id *resource.Resource) error {
-	m.resourceHidden = id
+func (m *Content) UpdateMediaHidden(id *media.Media) error {
+	m.mediaHidden = id
 	return nil
 }
 

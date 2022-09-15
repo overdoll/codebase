@@ -10,6 +10,5 @@ go_library(
         "//applications/sting/internal/adapters/indexes/schema",
         "//libraries/bootstrap",
         "//libraries/cache",
-        "//libraries/resource",
     ],
 )

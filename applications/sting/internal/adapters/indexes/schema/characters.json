@@ -55,6 +55,11 @@
       "banner_resource": {
         "type": "keyword"
       },
+      "banner_media": {
+        "type": "keyword",
+        "index": false,
+        "store": true
+      },
       "created_at": {
         "type": "date"
       },
@@ -81,6 +86,11 @@
           },
           "banner_resource": {
             "type": "keyword"
+          },
+          "banner_media": {
+            "type": "text",
+            "index": false,
+            "store": true
           },
           "total_likes": {
             "type": "integer"

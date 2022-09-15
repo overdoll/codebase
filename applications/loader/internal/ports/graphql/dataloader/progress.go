@@ -5,19 +5,19 @@ import (
 	"github.com/graph-gophers/dataloader/v7"
 	"overdoll/applications/loader/internal/app"
 	"overdoll/applications/loader/internal/app/query"
-	"overdoll/applications/loader/internal/domain/resource"
+	"overdoll/applications/loader/internal/domain/progress"
 	"overdoll/applications/loader/internal/ports/graphql/types"
 	"overdoll/libraries/graphql"
 	"strings"
 	"time"
 )
 
-func resourceProgressByIds(app *app.Application) *dataloader.Loader[string, *types.ResourceProgress] {
-	return dataloader.NewBatchedLoader[string, *types.ResourceProgress](
-		func(ctx context.Context, keys []string) []*dataloader.Result[*types.ResourceProgress] {
-			return graphql.DataloaderHelper[*types.ResourceProgress](
-				"resource_progress",
-				func(keys []string) ([]graphql.Mapping[*types.ResourceProgress], error) {
+func mediaProgressByIds(app *app.Application) *dataloader.Loader[string, *types.MediaProgress] {
+	return dataloader.NewBatchedLoader[string, *types.MediaProgress](
+		func(ctx context.Context, keys []string) []*dataloader.Result[*types.MediaProgress] {
+			return graphql.DataloaderHelper[*types.MediaProgress](
+				"media_progress",
+				func(keys []string) ([]graphql.Mapping[*types.MediaProgress], error) {
 
 					var itemIds []string
 					var resourceIds []string
@@ -28,16 +28,16 @@ func resourceProgressByIds(app *app.Application) *dataloader.Loader[string, *typ
 						resourceIds = append(resourceIds, split[1])
 					}
 
-					results, err := app.Queries.ResourceProgressByIds.Handle(ctx, query.ResourceProgressByIds{
-						ItemIds:     itemIds,
-						ResourceIds: resourceIds,
+					results, err := app.Queries.MediaProgressByIds.Handle(ctx, query.MediaProgressByIds{
+						LinkedIds: itemIds,
+						MediaIds:  resourceIds,
 					})
 
 					if err != nil {
 						return nil, err
 					}
 
-					var mapping []graphql.Mapping[*types.ResourceProgress]
+					var mapping []graphql.Mapping[*types.MediaProgress]
 
 					for _, k := range keys {
 						found := false
@@ -45,9 +45,9 @@ func resourceProgressByIds(app *app.Application) *dataloader.Loader[string, *typ
 						itemId := split[0]
 						resourceId := split[1]
 						for _, result := range results {
-							if result.ItemId() == itemId && result.ResourceId() == resourceId {
-								mapping = append(mapping, graphql.Mapping[*types.ResourceProgress]{
-									Data: types.MarshalResourceProgressToGraphQL(ctx, result),
+							if result.LinkedId() == itemId && result.MediaId() == resourceId {
+								mapping = append(mapping, graphql.Mapping[*types.MediaProgress]{
+									Data: types.MarshalMediaProgressToGraphQL(ctx, result),
 									Id:   k,
 								})
 								found = true
@@ -56,8 +56,8 @@ func resourceProgressByIds(app *app.Application) *dataloader.Loader[string, *typ
 						}
 
 						if !found {
-							mapping = append(mapping, graphql.Mapping[*types.ResourceProgress]{
-								Data: types.MarshalResourceProgressToGraphQL(ctx, resource.NewWaiting(itemId, resourceId)),
+							mapping = append(mapping, graphql.Mapping[*types.MediaProgress]{
+								Data: types.MarshalMediaProgressToGraphQL(ctx, progress.NewWaiting(itemId, resourceId)),
 								Id:   k,
 							})
 						}
@@ -65,12 +65,12 @@ func resourceProgressByIds(app *app.Application) *dataloader.Loader[string, *typ
 
 					return mapping, nil
 				}, ctx, keys)
-		}, dataloader.WithWait[string, *types.ResourceProgress](time.Millisecond*5))
+		}, dataloader.WithWait[string, *types.MediaProgress](time.Millisecond*5))
 }
 
-func (i *DataLoader) GetResourceProgressById(ctx context.Context, itemId, resourceId string) (*types.ResourceProgress, error) {
+func (i *DataLoader) GetMediaProgressById(ctx context.Context, itemId, resourceId string) (*types.MediaProgress, error) {
 
-	thunk := i.resourceProgressByIds.Load(ctx, itemId+"-"+resourceId)
+	thunk := i.mediaProgressByIds.Load(ctx, itemId+"-"+resourceId)
 	result, err := thunk()
 
 	if err != nil {
