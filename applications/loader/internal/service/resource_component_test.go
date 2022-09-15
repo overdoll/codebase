@@ -168,7 +168,7 @@ func TestUploadMedia(t *testing.T) {
 
 	application.StingCallbackClient.On("UpdateMedia", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 		finalMedia = append(finalMedia, args[1].(*proto.UpdateMediaRequest).Media)
-	}).Return(&emptypb.Empty{}, nil).Times(3)
+	}).Return(&emptypb.Empty{}, nil).Times(5)
 
 	testing_tools.NewEagerMockWorkflowWithArgs(t, application.TemporalClient, getWorkflowEnvironment(), workflows.ProcessMedia, workflows.ProcessMediaInput{
 		Source: "STING",

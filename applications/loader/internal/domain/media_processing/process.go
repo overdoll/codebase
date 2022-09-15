@@ -17,7 +17,6 @@ import (
 	_ "image/png"
 	"io"
 	"io/ioutil"
-	"log"
 	"math"
 	"os"
 	"overdoll/libraries/errors"
@@ -54,7 +53,7 @@ var (
 
 func init() {
 	// not ideal but we need to disable the log messages from ffmpeg-go
-	log.SetOutput(ioutil.Discard)
+	//log.SetOutput(ioutil.Discard)
 }
 
 func createPreviewFromFile(r io.Reader, isPng bool) ([]*proto.ColorPalette, image.Image, error) {
@@ -126,6 +125,7 @@ type ffmpegProbeStream struct {
 func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 
 	fileName := uuid.New().String()
+	targetFileName := file.Name()
 
 	videoNoAudio := false
 
@@ -141,7 +141,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	}
 
 	// first, check integrity of mp4 file before proceeding to process the video
-	if err := ffmpeg_go.Input(file.Name(), defaultArgs).
+	if err := ffmpeg_go.Input(targetFileName, defaultArgs).
 		Output("pipe:", ffmpeg_go.KwArgs{
 			"format": "rawvideo",
 		}).
@@ -171,7 +171,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	if len(audioStreamProbeResult.Streams) > 0 {
 		bytes := bytes2.NewBuffer(nil)
 		// found audio streams - get first audio stream and check if it's silent
-		if err := ffmpeg_go.Input(file.Name(), ffmpeg_go.KwArgs{"loglevel": "error"}).
+		if err := ffmpeg_go.Input(targetFileName, ffmpeg_go.KwArgs{"loglevel": "error"}).
 			Output("-", ffmpeg_go.KwArgs{"map": "0:a:0", "af": "astats=metadata=1:reset=0,ametadata=print:file=-:key=lavfi.astats.Overall.RMS_level", "f": "null"}).
 			WithErrorOutput(ffmpegLogger).
 			WithOutput(bytes).
@@ -216,15 +216,41 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		videoNoAudio = true
 	}
 
+	// if the video doesn't have audio, we need to re-encode it with a blank audio stream or HLS doesn't like it
+	if videoNoAudio {
+		newFileNameWithAudio := uuid.New().String()
+		if err := ffmpeg_go.
+			Input(targetFileName, map[string]interface{}{
+				"v":           "error",
+				"hide_banner": "",
+				"i":           "anullsrc",
+				"f":           "lavfi",
+			}).
+			Output(newFileNameWithAudio, ffmpeg_go.KwArgs{
+				"c:v":      "copy",
+				"c:a":      "aac",
+				"map":      []string{"1:v", "0:a"},
+				"shortest": "",
+				"format":   "mp4",
+			}).
+			WithErrorOutput(ffmpegLogger).
+			Run(); err != nil {
+			return nil, errors.Wrap(err, "failed to generate blank stream for video audio: "+string(ffmpegLogger.Output))
+		}
+		targetFileName = newFileNameWithAudio
+		// remove the file since we won't need it
+		defer os.Remove(newFileNameWithAudio)
+	}
+
 	// probe for video streams
-	str, err = ffmpeg_go.Probe(file.Name(), map[string]interface{}{
+	str, err = ffmpeg_go.Probe(targetFileName, map[string]interface{}{
 		"select_streams": "v:0",
 		"show_entries":   "stream=width,height",
 		"show_format":    "",
 	})
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to probe for video stream")
 	}
 
 	var videoStreamProbeResult *ffmpegProbeStream
@@ -257,7 +283,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 			return nil, err
 		}
 
-		if err := ffmpeg_go.Input(file.Name(), defaultArgs).
+		if err := ffmpeg_go.Input(targetFileName, defaultArgs).
 			Filter("select", ffmpeg_go.Args{fmt.Sprintf("gte(n,%d)", lastFrame)}).
 			Output("pipe:", ffmpeg_go.KwArgs{"vframes": 1, "format": "image2"}).
 			WithErrorOutput(ffmpegLogger).
@@ -520,16 +546,8 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		"map":          []string{"0:v:0"},
 	}
 
-	streamMap := "v:0"
-	finalMap := []string{"0:v:0"}
-
-	if !videoNoAudio {
-		streamMap = "v:0,a:0"
-		finalMap = append(finalMap, "0:a:0")
-	}
-
 	hlsStreamArgs := ffmpeg_go.KwArgs{
-		"map":                  finalMap,
+		"map":                  []string{"0:v:0", "0:a:0"},
 		"c:v:0":                "libx264",
 		"preset":               "slow",
 		"crf":                  "23",
@@ -542,7 +560,8 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		"hls_segment_type":     "fmp4",
 		"master_pl_name":       "master.m3u8",
 		"hls_segment_filename": fileName + "/stream_%v_%02d.m4s",
-		"var_stream_map":       streamMap,
+		"var_stream_map":       "v:0,a:0",
+		"c:a:0":                "aac",
 	}
 
 	// finally, we generate a video file that is 720p with crf of 23. this will be useful in case we can't support streaming
@@ -580,13 +599,8 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		mp4FileArgs["b:a"] = "96k"
 		mp4FileArgs["ac"] = "2"
 		mp4FileArgs["map"] = append(mp4FileArgs["map"].([]string), "0:a:0")
-
-		hlsStreamArgs["c:a:0"] = "aac"
-		hlsStreamArgs["b:a:0"] = "96k"
-		hlsStreamArgs["ac"] = "2"
 	} else {
 		mp4FileArgs["an"] = ""
-		hlsStreamArgs["an"] = ""
 	}
 
 	socket, err, done := createFFMPEGTempSocket(media.RawProto().Id, parsedDuration)
@@ -617,7 +631,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		"progress":    "unix://" + socket,
 	}
 
-	if err := ffmpeg_go.Input(file.Name(), defaultAllArgs).
+	if err := ffmpeg_go.Input(targetFileName, defaultAllArgs).
 		Output(mp4FileName, mp4FileArgs).
 		WithErrorOutput(ffmpegLogger).
 		WithCpuCoreLimit(2).
@@ -627,7 +641,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		return nil, err
 	}
 
-	if err := ffmpeg_go.Input(file.Name(), defaultAllArgs).
+	if err := ffmpeg_go.Input(targetFileName, defaultAllArgs).
 		Output(fileName+"/segment_%v.m3u8", hlsStreamArgs).
 		WithErrorOutput(ffmpegLogger).
 		WithCpuCoreLimit(2).
