@@ -11,7 +11,7 @@ export default function ContentContainer ({
 }: Props): JSX.Element {
   return (
     <Container
-      w={['full', 'base']}
+      w='100%'
       maxW='container.xl'
       px={{
         lg: 4,

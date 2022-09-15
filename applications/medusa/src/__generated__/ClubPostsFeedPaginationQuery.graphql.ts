@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<962f65c61b62a0c6ca4339e5556bb67a>>
- * @relayHash 4e6bc15db4e0502fb85b0cd5af775a77
+ * @generated SignedSource<<08f487c965226564bd6e8a647488b69b>>
+ * @relayHash 5ef268ecd8af4a84ba47992ebdf8cc63
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4e6bc15db4e0502fb85b0cd5af775a77
+// @relayRequestID 5ef268ecd8af4a84ba47992ebdf8cc63
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -20,7 +20,7 @@ export type ClubPostsFeedPaginationQuery$variables = {
 };
 export type ClubPostsFeedPaginationQuery$data = {
   readonly node: {
-    readonly " $fragmentSpreads": FragmentRefs<"ClubPostsFeedFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ScrollClubsFeedFragment">;
   } | null;
 };
 export type ClubPostsFeedPaginationQuery = {
@@ -174,7 +174,7 @@ return {
           {
             "args": (v2/*: any*/),
             "kind": "FragmentSpread",
-            "name": "ClubPostsFeedFragment"
+            "name": "ScrollClubsFeedFragment"
           }
         ],
         "storageKey": null
@@ -482,6 +482,20 @@ return {
                 "key": "ClubPostsFeed_clubMembersPostsFeed",
                 "kind": "LinkedHandle",
                 "name": "clubMembersPostsFeed"
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "clubMembershipsLimit",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "clubMembershipsCount",
+                "storageKey": null
               }
             ],
             "type": "Account",
@@ -493,7 +507,7 @@ return {
     ]
   },
   "params": {
-    "id": "4e6bc15db4e0502fb85b0cd5af775a77",
+    "id": "5ef268ecd8af4a84ba47992ebdf8cc63",
     "metadata": {},
     "name": "ClubPostsFeedPaginationQuery",
     "operationKind": "query",
@@ -502,6 +516,6 @@ return {
 };
 })();
 
-(node as any).hash = "9bff140201e612e51cfb0b7e490e7616";
+(node as any).hash = "598d718753341e717f314182dd922b0a";
 
 export default node;

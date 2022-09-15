@@ -1,5 +1,5 @@
 import RootLikedPosts from './RootLikedPosts/RootLikedPosts'
-import LikedPostsQuery from '@//:artifacts/LikedPostsQuery.graphql'
+import ResultLikedPostsQuery from '@//:artifacts/ResultLikedPostsQuery.graphql'
 import ClubsLayout from '@//:common/components/Layouts/ClubsLayout/ClubsLayout'
 
 RootLikedPosts.getTranslationProps = async (ctx) => ({
@@ -9,7 +9,7 @@ RootLikedPosts.getTranslationProps = async (ctx) => ({
 RootLikedPosts.getRelayPreloadProps = () => ({
   queries: {
     likedPostsQuery: {
-      params: LikedPostsQuery.params,
+      params: ResultLikedPostsQuery.params,
       variables: {}
     }
   }

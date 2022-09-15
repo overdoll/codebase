@@ -80,14 +80,14 @@ const CreatePost: PageProps<Props> = (props: Props) => {
     resolver: resolver
   })
 
-  const [postReference] = useQueryParam<string | null | undefined>('post')
-
   const [queryRef, loadQuery] = useQueryLoader(
     PostCreatorQuery as PreloadableConcreteRequest<PostCreatorQueryType>,
     props.queryRefs.postCreatorQuery
   )
 
   const { query: { slug } } = useRouter()
+
+  const [postReference] = useQueryParam<string | null | undefined>('post')
 
   useEffect(() => {
     if (slug == null) return

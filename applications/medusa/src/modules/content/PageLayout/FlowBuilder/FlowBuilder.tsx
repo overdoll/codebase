@@ -17,6 +17,7 @@ interface ComponentProps extends BuilderProps {
   children: ReactNode
   useParams?: boolean | undefined
   onFinish?: () => void
+  ignoreStack?: boolean
 }
 
 interface ContextProps extends BuilderProps {
@@ -61,7 +62,8 @@ export default function FlowBuilder ({
   stepsHeaders,
   colorScheme = 'primary',
   onFinish,
-  useParams
+  useParams,
+  ignoreStack
 }: ComponentProps): JSX.Element {
   const initialStep = defaultStep != null ? defaultStep : stepsArray[0]
 
@@ -128,9 +130,17 @@ export default function FlowBuilder ({
 
   return (
     <FlowContext.Provider value={contextValue}>
-      <Stack spacing={4}>
-        {children}
-      </Stack>
+      {ignoreStack === true
+        ? (
+          <>
+            {children}
+          </>)
+        : (
+          <>
+            <Stack spacing={4}>
+              {children}
+            </Stack>
+          </>)}
     </FlowContext.Provider>
   )
 }

@@ -31,7 +31,12 @@ export default function useEnterControls (props: UseEnterControlsProps): UseEnte
     if (tapTimeout?.current != null) {
       clearTimeout(tapTimeout?.current)
     }
-    setOpen(false)
+    setOpen(x => {
+      if (!x) {
+        return x
+      }
+      return false
+    })
     setShowCursor(false)
   }
 

@@ -2,7 +2,7 @@ import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import HorizontalNavigationDropdownMenu
   from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
 import { Trans } from '@lingui/macro'
-import { ClubPeopleGroup } from '@//:assets/icons/navigation'
+import { BirdHouse } from '@//:assets/icons'
 import { AddPlus } from '@//:assets/icons/interface'
 import { DropdownMenuButtonClubQuery } from '@//:artifacts/DropdownMenuButtonClubQuery.graphql'
 
@@ -48,7 +48,7 @@ export default function DropdownMenuButtonClub (): JSX.Element {
         query: { slug: selectedClub.slug }
       }}
       colorScheme='teal'
-      icon={ClubPeopleGroup}
+      icon={BirdHouse}
       label={selectedClub.name}
     />
   )

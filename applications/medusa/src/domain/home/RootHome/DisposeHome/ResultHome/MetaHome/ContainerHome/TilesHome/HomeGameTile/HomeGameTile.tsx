@@ -4,7 +4,8 @@ import { LinkTile } from '@//:modules/content/ContentSelection'
 import { UrlObject } from 'url'
 import { IconType } from '@//:types/components'
 import { ReactNode } from 'react'
-import NextImage from '@//:modules/content/HookedComponents/Media/components/ImageContainer/ImageWrapper/ImageMedia/NextImage/NextImage'
+import NextImage
+  from '@//:modules/content/HookedComponents/Media/components/ImageContainer/ImageWrapper/ImageMedia/NextImage/NextImage'
 import { ControlPlayButton } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 
@@ -40,7 +41,6 @@ export default function HomeGameTile (props: Props): JSX.Element {
     bgGradient: 'linear(to-r,teal.300,teal.400,primary.400,primary.300,teal.400,teal.300)',
     backgroundSize: '200% 200%',
     animation: `${animateGlow} 5s linear infinite`,
-    transform: 'scale(1.01) translateZ(0)',
     filter: 'blur(20px)',
     opacity: 0.5
   }

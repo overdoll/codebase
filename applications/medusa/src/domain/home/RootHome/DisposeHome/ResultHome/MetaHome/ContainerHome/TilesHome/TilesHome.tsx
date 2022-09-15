@@ -3,7 +3,6 @@ import { FurryFox, HentaiSkirt, RandomizeDice, SearchBar, ThreeDRender } from '@
 import { Trans } from '@lingui/macro'
 import { Box, Heading, Stack } from '@chakra-ui/react'
 import HomeLinkTile from './HomeLinkTile/HomeLinkTile'
-import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import getRandomSeed from '@//:modules/support/getRandomSeed'
 import VideoContainer from '@//:modules/content/HookedComponents/Media/components/VideoContainer/VideoContainer'
 import ImageMedia
@@ -133,11 +132,6 @@ export default function TilesHome (): JSX.Element {
               </Trans>
             )}
           />
-          <LinkButton size='md' variant='link' href='/artists'>
-            <Trans>
-              Are you an artist looking to post your content?
-            </Trans>
-          </LinkButton>
         </Stack>
         <Heading color='gray.00' fontSize='2xl'>
           <Trans>Trending Posts</Trans>

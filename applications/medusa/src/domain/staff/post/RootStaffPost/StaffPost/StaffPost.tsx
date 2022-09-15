@@ -30,7 +30,7 @@ import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButto
 import {
   isFailed,
   isProcessed
-} from '../../../../club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent'
+} from '../../../../club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowHeader/ProcessContent/RefreshProcessContent/RefreshProcessContent'
 
 interface Props {
   query: PreloadedQuery<StaffPostQuery>

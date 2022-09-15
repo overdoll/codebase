@@ -11,7 +11,7 @@ export default function BannerContainer ({
 }: Props): JSX.Element {
   return (
     <Container
-      w={['lg', 'md', 'base']}
+      w='100%'
       maxW='container.sm'
       px={{
         md: 4,

@@ -11,7 +11,7 @@ export default function MobileContainer ({
 }: Props): JSX.Element {
   return (
     <Container
-      w={['full', 'base']}
+      w='100%'
       maxW='container.md'
       px={{
         lg: 4,
