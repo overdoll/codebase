@@ -5,7 +5,6 @@ import ImageCoverContainer from '../../../components/ImageContainer/ImageCoverCo
 
 const Fragment = graphql`
   fragment ThumbnailImageMediaFragment on ImageMedia {
-    id
     colorPalettes {
       red
       green
@@ -49,14 +48,15 @@ export default function ThumbnailImageMedia (props: Props): JSX.Element {
     <ImageCoverContainer
       variants={(
         <source
-          src={data.variants.thumbnail.url}
-          width={data.variants.thumbnail.width}
-          height={data.variants.thumbnail.height}
+          media='(min-width: 48em)'
+          srcSet={data.variants.thumbnailHd.url}
+          width={data.variants.thumbnailHd.width}
+          height={data.variants.thumbnailHd.height}
         />
       )}
-      url={data.variants.thumbnailHd.url}
-      width={data.variants.thumbnailHd.width}
-      height={data.variants.thumbnailHd.height}
+      url={data.variants.thumbnail.url}
+      width={data.variants.thumbnail.width}
+      height={data.variants.thumbnail.height}
       rgb={rgb}
     />
   )

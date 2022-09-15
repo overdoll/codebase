@@ -16,7 +16,7 @@ export default function ContentContainer ({
       px={{
         lg: 4,
         md: 2,
-        base: 0
+        base: 1
       }}
       {...rest}
     >

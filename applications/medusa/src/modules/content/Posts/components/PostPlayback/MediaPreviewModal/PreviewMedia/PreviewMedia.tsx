@@ -1,17 +1,17 @@
 import { graphql, useFragment } from 'react-relay'
-import { PreviewMediaFragment$key } from '@//:artifacts/PreviewMediaFragment.graphql'
+import { PreviewMediaOldFragment$key } from '@//:artifacts/PreviewMediaOldFragment.graphql'
 import ImageSnippet from '../../../../../DataDisplay/ImageSnippet/ImageSnippet'
 import ControlledVideo from '../../ControlledVideo/ControlledVideo'
 import { useContext } from 'react'
 import { GlobalVideoManagerContext } from '../../../../index'
 
 interface Props {
-  query: PreviewMediaFragment$key
+  query: PreviewMediaOldFragment$key
   onClose: () => void
 }
 
 const Fragment = graphql`
-  fragment PreviewMediaFragment on Resource {
+  fragment PreviewMediaOldFragment on Resource {
     type
     ...ImageSnippetFragment
     ...ControlledVideoFragment

@@ -22,12 +22,12 @@ export interface ContainerRefProps {
   containerRef: MutableRefObject<HTMLDivElement | null>
 }
 
-interface Props extends VideoWrapperProps, CreateVideoProps, VideoControlTypeProps, Partial<VideoWatchProps>, Partial<ControlTypes> {
+export interface VideoContainerProps extends VideoWrapperProps, CreateVideoProps, VideoControlTypeProps, Partial<VideoWatchProps>, Partial<ControlTypes> {
   onPlayerInit?: OnPlayerInitType
   backgroundPoster?: ReactNode
 }
 
-export default function VideoContainer (props: Props): JSX.Element {
+export default function VideoContainer (props: VideoContainerProps): JSX.Element {
   const {
     poster,
     onPlayerInit,
@@ -61,6 +61,7 @@ export default function VideoContainer (props: Props): JSX.Element {
       justify='center'
       position='relative'
       overflow='hidden'
+      borderRadius='inherit'
     >
       <VideoBackground
         poster={backgroundPoster ?? poster}

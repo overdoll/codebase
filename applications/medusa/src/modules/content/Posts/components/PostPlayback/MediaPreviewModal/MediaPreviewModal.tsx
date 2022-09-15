@@ -10,7 +10,7 @@ interface Props extends Omit<ModalProps, 'children'> {
 const Fragment = graphql`
   fragment MediaPreviewModalFragment on Resource {
     preview
-    ...PreviewMediaFragment
+    ...PreviewMediaOldFragment
   }
 `
 

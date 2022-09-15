@@ -112,6 +112,7 @@ export default function ResourceItem ({
       </Flex>
     )
   }
+
   const iconBorder = {
     boxShadow: `inset 0 0 0 3px ${data.preview}70`
   }

@@ -13,7 +13,7 @@ export default function ImageContainContainer (props: Props): JSX.Element {
     variants
   } = props
 
-  const bgColor = rgb != null ? `rgb(${rgb.red},${rgb.green},${rgb.blue})` : undefined
+  const bgColor = typeof rgb === 'string' ? rgb : (rgb != null ? `rgb(${rgb.red},${rgb.green},${rgb.blue})` : undefined)
 
   return (
     <Flex

@@ -29,7 +29,7 @@ export default function ImageControlContainer (props: Props): JSX.Element {
     backgroundPoster
   } = props
 
-  const bgColor = rgb != null ? `rgb(${rgb.red},${rgb.green},${rgb.blue})` : undefined
+  const bgColor = typeof rgb === 'string' ? rgb : (rgb != null ? `rgb(${rgb.red},${rgb.green},${rgb.blue})` : undefined)
 
   const CloneImageMedia = useMemo(() => <ImageMedia url={url} variants={variants} />, [url])
 

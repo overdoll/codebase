@@ -17,8 +17,8 @@ export default function ImageCoverContainer (props: Props): JSX.Element {
     tiny
   } = props
 
-  const bgColor = rgb != null ? `rgb(${rgb.red},${rgb.green},${rgb.blue})` : undefined
-  const borderColor = rgb != null ? `rgba(${rgb.red},${rgb?.green},${rgb?.blue},0.15)` : undefined
+  const bgColor = typeof rgb === 'string' ? rgb : (rgb != null ? `rgb(${rgb.red},${rgb.green},${rgb.blue})` : undefined)
+  const borderColor = typeof rgb === 'string' ? rgb : (rgb != null ? `rgba(${rgb.red},${rgb?.green},${rgb?.blue},0.15)` : undefined)
 
   return (
     <Flex
@@ -29,7 +29,7 @@ export default function ImageCoverContainer (props: Props): JSX.Element {
       position='relative'
       overflow='hidden'
       borderRadius='inherit'
-      bg={bgColor ?? 'gray.800'}
+      bg={bgColor ?? 'transparent'}
     >
       <CoverImage>
         <ImageBorder color={borderColor ?? 'gray.50'} />

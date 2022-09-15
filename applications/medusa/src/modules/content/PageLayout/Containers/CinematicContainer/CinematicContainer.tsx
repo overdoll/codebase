@@ -16,7 +16,6 @@ export default function CinematicContainer ({
       maxW='100%'
       maxH='calc(100vh - 169px)'
       minH='480px'
-      bg='#000'
       px={0}
       {...rest}
     >

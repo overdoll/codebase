@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0a286c64bc2067aca88b678ebf0467eb>>
+ * @generated SignedSource<<6fc73e1425ca2120b218a98f325d3acf>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,6 @@ export type ThumbnailImageMediaFragment$data = {
     readonly green: number;
     readonly red: number;
   }>;
-  readonly id: string;
   readonly variants: {
     readonly thumbnail: {
       readonly height: number;
@@ -66,13 +65,6 @@ return {
   "metadata": null,
   "name": "ThumbnailImageMediaFragment",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
     {
       "alias": null,
       "args": null,
@@ -142,6 +134,6 @@ return {
 };
 })();
 
-(node as any).hash = "554e96020d102974fa52b2973156479c";
+(node as any).hash = "32af61acc085deb12c80be83c87343bd";
 
 export default node;

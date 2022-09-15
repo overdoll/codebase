@@ -20,5 +20,5 @@ export interface ColorType {
     red: number
     green: number
     blue: number
-  }
+  } | string
 }
