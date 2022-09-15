@@ -31,7 +31,7 @@ export const COVER_PROPS: FlexProps = {
 }
 
 export const CONTAIN_PROPS: FlexProps = {
-  maxWidth: '100%',
-  h: 'auto',
+  w: '100%',
+  h: '100%',
   objectFit: 'contain'
 }

@@ -2,11 +2,10 @@ import React, { Suspense, useEffect } from 'react'
 import type { ResultPublicClubQuery as ResultPublicClubQueryType } from '@//:artifacts/ResultPublicClubQuery.graphql'
 import { useRouter } from 'next/router'
 import { useQueryLoaderHookType } from 'react-relay/relay-hooks/useQueryLoader'
-import QueryErrorBoundary
-  from '../../../../../modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import LoadPublicClub from './LoadPublicClub/LoadPublicClub'
 import SuspensePublicClub from './SuspensePublicClub/SuspensePublicClub'
 import ResultPublicClub from './ResultPublicClub/ResultPublicClub'
+import PageErrorBoundary from '@//:modules/content/Placeholder/Fallback/PageErrorBoundary/PageErrorBoundary'
 
 interface Props {
   params: useQueryLoaderHookType<ResultPublicClubQueryType>
@@ -34,10 +33,10 @@ export default function DisposePublicClub (props: Props): JSX.Element {
   }
 
   return (
-    <QueryErrorBoundary loadQuery={onLoadQuery}>
+    <PageErrorBoundary loadQuery={onLoadQuery}>
       <Suspense fallback={<SuspensePublicClub />}>
         <ResultPublicClub query={queryRef} />
       </Suspense>
-    </QueryErrorBoundary>
+    </PageErrorBoundary>
   )
 }

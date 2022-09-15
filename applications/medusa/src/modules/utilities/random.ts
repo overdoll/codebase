@@ -120,3 +120,7 @@ export class Random {
     return (a * 67108864.0 + b) * (1.0 / 9007199254740992.0)
   }
 }
+
+export const randomFunction = (min: number, max: number): number => {
+  return Math.random() * (max - min) + min
+}

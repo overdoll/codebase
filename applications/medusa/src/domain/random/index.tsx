@@ -1,5 +1,5 @@
 import RootRandom from './RootRandom/RootRandom'
-import RandomQuery from '@//:artifacts/RandomQuery.graphql'
+import ResultRandomQuery from '@//:artifacts/ResultRandomQuery.graphql'
 
 RootRandom.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)
@@ -11,7 +11,7 @@ RootRandom.getRelayPreloadProps = (ctx) => {
   return ({
     queries: {
       randomQuery: {
-        params: RandomQuery.params,
+        params: ResultRandomQuery.params,
         variables: {
           seed: ctx.query.seed ?? seed
         }

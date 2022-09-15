@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1fabbe94e5e655d85e049f4f1ac66211>>
- * @relayHash 0eaaa4773772f28e666488bf15861ed7
+ * @generated SignedSource<<b6415b487550250e71e10c8962e353df>>
+ * @relayHash a0018825cac3505e336bb43908c7ea0a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0eaaa4773772f28e666488bf15861ed7
+// @relayRequestID a0018825cac3505e336bb43908c7ea0a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -19,7 +19,7 @@ export type RandomPostsPaginationQuery$variables = {
   seed?: string | null;
 };
 export type RandomPostsPaginationQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"RandomFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"ScrollRandomFragment">;
 };
 export type RandomPostsPaginationQuery = {
   response: RandomPostsPaginationQuery$data;
@@ -167,7 +167,7 @@ return {
           (v2/*: any*/)
         ],
         "kind": "FragmentSpread",
-        "name": "RandomFragment"
+        "name": "ScrollRandomFragment"
       }
     ],
     "type": "Query",
@@ -472,7 +472,7 @@ return {
     ]
   },
   "params": {
-    "id": "0eaaa4773772f28e666488bf15861ed7",
+    "id": "a0018825cac3505e336bb43908c7ea0a",
     "metadata": {},
     "name": "RandomPostsPaginationQuery",
     "operationKind": "query",
@@ -481,6 +481,6 @@ return {
 };
 })();
 
-(node as any).hash = "f7d56aa00013f038ccc0859fd85a1edf";
+(node as any).hash = "d3704abcd417f9ddaff1c1b2cbd315c5";
 
 export default node;

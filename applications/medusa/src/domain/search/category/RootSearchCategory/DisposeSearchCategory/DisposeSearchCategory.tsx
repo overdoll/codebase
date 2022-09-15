@@ -4,12 +4,11 @@ import type {
 } from '@//:artifacts/ResultSearchCategoryQuery.graphql'
 import { useRouter } from 'next/router'
 import { useQueryLoaderHookType } from 'react-relay/relay-hooks/useQueryLoader'
-import QueryErrorBoundary
-  from '../../../../../modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import useSearchSortArguments from '@//:common/components/PageHeader/SearchButton/support/useSearchSortArguments'
 import LoadSearchCategory from './LoadSearchCategory/LoadSearchCategory'
 import SuspenseSearchCategory from './SuspenseSearchCategory/SuspenseSearchCategory'
 import ResultSearchCategory from './ResultSearchCategory/ResultSearchCategory'
+import PageErrorBoundary from '@//:modules/content/Placeholder/Fallback/PageErrorBoundary/PageErrorBoundary'
 
 interface Props {
   params: useQueryLoaderHookType<ResultSearchCategoryQueryType>
@@ -44,10 +43,10 @@ export default function DisposeSearchCategory (props: Props): JSX.Element {
   }
 
   return (
-    <QueryErrorBoundary loadQuery={onLoadQuery}>
+    <PageErrorBoundary loadQuery={onLoadQuery}>
       <Suspense fallback={<SuspenseSearchCategory />}>
         <ResultSearchCategory query={queryRef} />
       </Suspense>
-    </QueryErrorBoundary>
+    </PageErrorBoundary>
   )
 }

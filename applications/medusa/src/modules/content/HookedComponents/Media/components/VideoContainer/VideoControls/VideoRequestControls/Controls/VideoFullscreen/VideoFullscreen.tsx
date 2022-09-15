@@ -31,6 +31,7 @@ export default function VideoFullscreen (props: Props): JSX.Element {
         setFullscreen(false)
       }
     }
+
     const onEnableFullscreen = (): void => {
       setFullscreen(true)
     }
@@ -63,6 +64,24 @@ export default function VideoFullscreen (props: Props): JSX.Element {
       player.video.removeEventListener('webkitpresentationmodechanged', onWebkitPresentationMode)
     }
   }, [player, setPlayer])
+
+  useEffect(() => {
+    const handleDoubleClick = (e): void => {
+      if (e.target.dataset.ignore === 'click' || e.target.parentNode.dataset.ignore === 'click') {
+        return
+      }
+      if (fullscreen) {
+        exitFullscreen(player)
+      } else {
+        requestFullscreen(player, containerRef.current)
+      }
+    }
+
+    containerRef.current?.addEventListener('dblclick', handleDoubleClick)
+    return () => {
+      containerRef.current?.removeEventListener('dblclick', handleDoubleClick)
+    }
+  }, [fullscreen])
 
   if (fullscreen) {
     return (

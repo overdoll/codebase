@@ -1,5 +1,5 @@
 import Home from './RootHome/RootHome'
-import HomeQuery from '@//:artifacts/HomeQuery.graphql'
+import ResultHomeQuery from '@//:artifacts/ResultHomeQuery.graphql'
 import getPostSeed from '@//:modules/content/Posts/support/getPostSeed'
 
 Home.getTranslationProps = async (ctx) => ({
@@ -10,7 +10,7 @@ Home.getRelayPreloadProps = (ctx) => {
   return ({
     queries: {
       homeQuery: {
-        params: HomeQuery.params,
+        params: ResultHomeQuery.params,
         variables: {
           ...getPostSeed(ctx)
         }

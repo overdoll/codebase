@@ -4,12 +4,11 @@ import type {
 } from '@//:artifacts/ResultPublicClubCharacterQuery.graphql'
 import { useRouter } from 'next/router'
 import { useQueryLoaderHookType } from 'react-relay/relay-hooks/useQueryLoader'
-import QueryErrorBoundary
-  from '../../../../../modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import useSearchSortArguments from '@//:common/components/PageHeader/SearchButton/support/useSearchSortArguments'
 import LoadPublicClubCharacter from './LoadPublicClubCharacter/LoadPublicClubCharacter'
 import ResultPublicClubCharacter from './ResultPublicClubCharacter/ResultPublicClubCharacter'
 import SuspensePublicClubCharacter from './SuspensePublicClubCharacter/SuspensePublicClubCharacter'
+import PageErrorBoundary from '@//:modules/content/Placeholder/Fallback/PageErrorBoundary/PageErrorBoundary'
 
 interface Props {
   params: useQueryLoaderHookType<ResultPublicClubCharacterQueryType>
@@ -46,10 +45,10 @@ export default function DisposePublicClubCharacter (props: Props): JSX.Element {
   }
 
   return (
-    <QueryErrorBoundary loadQuery={onLoadQuery}>
+    <PageErrorBoundary loadQuery={onLoadQuery}>
       <Suspense fallback={<SuspensePublicClubCharacter />}>
         <ResultPublicClubCharacter query={queryRef} />
       </Suspense>
-    </QueryErrorBoundary>
+    </PageErrorBoundary>
   )
 }

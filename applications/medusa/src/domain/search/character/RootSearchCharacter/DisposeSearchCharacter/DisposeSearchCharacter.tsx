@@ -4,12 +4,11 @@ import type {
 } from '@//:artifacts/ResultSearchCharacterQuery.graphql'
 import { useRouter } from 'next/router'
 import { useQueryLoaderHookType } from 'react-relay/relay-hooks/useQueryLoader'
-import QueryErrorBoundary
-  from '../../../../../modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import useSearchSortArguments from '@//:common/components/PageHeader/SearchButton/support/useSearchSortArguments'
 import LoadSearchCharacter from './LoadSearchCharacter/LoadSearchCharacter'
 import SuspenseSearchCharacter from './SuspenseSearchCharacter/SuspenseSearchCharacter'
 import ResultSearchCharacter from './ResultSearchCharacter/ResultSearchCharacter'
+import PageErrorBoundary from '@//:modules/content/Placeholder/Fallback/PageErrorBoundary/PageErrorBoundary'
 
 interface Props {
   params: useQueryLoaderHookType<ResultSearchCharacterQueryType>
@@ -46,10 +45,10 @@ export default function DisposeSearchCharacter (props: Props): JSX.Element {
   }
 
   return (
-    <QueryErrorBoundary loadQuery={onLoadQuery}>
+    <PageErrorBoundary loadQuery={onLoadQuery}>
       <Suspense fallback={<SuspenseSearchCharacter />}>
         <ResultSearchCharacter query={queryRef} />
       </Suspense>
-    </QueryErrorBoundary>
+    </PageErrorBoundary>
   )
 }

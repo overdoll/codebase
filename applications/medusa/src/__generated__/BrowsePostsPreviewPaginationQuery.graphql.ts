@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b4e2e4cc88766552f5d896165fb2ca1c>>
- * @relayHash 18e9e57e49bb322624cf99095957ea43
+ * @generated SignedSource<<0763f4857df552296da08068d983c992>>
+ * @relayHash 408e80e913333e8bb93a5d4b132d2c83
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 18e9e57e49bb322624cf99095957ea43
+// @relayRequestID 408e80e913333e8bb93a5d4b132d2c83
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -19,7 +19,7 @@ export type BrowsePostsPreviewPaginationQuery$variables = {
   seed?: string | null;
 };
 export type BrowsePostsPreviewPaginationQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"BrowsePostsPreviewFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"PostsHomeFragment">;
 };
 export type BrowsePostsPreviewPaginationQuery = {
   response: BrowsePostsPreviewPaginationQuery$data;
@@ -167,7 +167,7 @@ return {
           (v2/*: any*/)
         ],
         "kind": "FragmentSpread",
-        "name": "BrowsePostsPreviewFragment"
+        "name": "PostsHomeFragment"
       }
     ],
     "type": "Query",
@@ -465,7 +465,7 @@ return {
     ]
   },
   "params": {
-    "id": "18e9e57e49bb322624cf99095957ea43",
+    "id": "408e80e913333e8bb93a5d4b132d2c83",
     "metadata": {},
     "name": "BrowsePostsPreviewPaginationQuery",
     "operationKind": "query",
@@ -474,6 +474,6 @@ return {
 };
 })();
 
-(node as any).hash = "e2719effeb2438ad8d9742ec2b810025";
+(node as any).hash = "3481cb29638ef5d290f31befdb6f413f";
 
 export default node;

@@ -4,12 +4,11 @@ import type {
 } from '@//:artifacts/ResultPublicClubPostsQuery.graphql'
 import { useRouter } from 'next/router'
 import { useQueryLoaderHookType } from 'react-relay/relay-hooks/useQueryLoader'
-import QueryErrorBoundary
-  from '../../../../../modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import useSearchSortArguments from '@//:common/components/PageHeader/SearchButton/support/useSearchSortArguments'
 import LoadPublicClubPosts from './LoadPublicClubPosts/LoadPublicClubPosts'
 import SuspensePublicClubPosts from './SuspensePublicClubPosts/SuspensePublicClubPosts'
 import ResultPublicClubPosts from './ResultPublicClubPosts/ResultPublicClubPosts'
+import PageErrorBoundary from '@//:modules/content/Placeholder/Fallback/PageErrorBoundary/PageErrorBoundary'
 
 interface Props {
   params: useQueryLoaderHookType<ResultPublicClubPostsQueryType>
@@ -45,10 +44,10 @@ export default function DisposePublicClubPosts (props: Props): JSX.Element {
   }
 
   return (
-    <QueryErrorBoundary loadQuery={onLoadQuery}>
+    <PageErrorBoundary loadQuery={onLoadQuery}>
       <Suspense fallback={<SuspensePublicClubPosts />}>
         <ResultPublicClubPosts query={queryRef} />
       </Suspense>
-    </QueryErrorBoundary>
+    </PageErrorBoundary>
   )
 }

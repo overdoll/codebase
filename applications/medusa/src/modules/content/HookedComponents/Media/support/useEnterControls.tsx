@@ -55,8 +55,12 @@ export default function useEnterControls (props: UseEnterControlsProps): UseEnte
   }
 
   const onOpenTap = (): void => {
-    setOpen(x => !x)
-    refreshTapTimeout()
+    setOpen((x: boolean) => {
+      if (!x) {
+        refreshTapTimeout()
+      }
+      return !x
+    })
   }
 
   const handleMouseEnter = (): void => {
@@ -92,14 +96,12 @@ export default function useEnterControls (props: UseEnterControlsProps): UseEnte
   })
 
   useEffect(() => {
-    ref.current?.addEventListener('touchend', handleClick)
-    ref.current?.addEventListener('mouseup', handleClick)
+    ref.current?.addEventListener('click', handleClick)
     ref.current?.addEventListener('mouseenter', handleMouseEnter)
     ref.current?.addEventListener('mouseover', handleMouseOver)
     ref.current?.addEventListener('mouseleave', handleMouseLeave)
     return () => {
-      ref.current?.removeEventListener('touchend', handleClick)
-      ref.current?.removeEventListener('mouseup', handleClick)
+      ref.current?.removeEventListener('click', handleClick)
       ref.current?.removeEventListener('mouseenter', handleMouseEnter)
       ref.current?.removeEventListener('mouseover', handleMouseOver)
       ref.current?.removeEventListener('mouseleave', handleMouseLeave)
