@@ -34,10 +34,11 @@ func NewEagerMockWorkflowWithArgs(t *testing.T, client *mocks.Client, env *tests
 	m.onWorkflowExecution().Run(
 		func(args mock.Arguments) {
 			env.ExecuteWorkflow(method, args[3:]...)
+			fmt.Println("workflow executed")
 		},
 	).
 		Return(func(context.Context, client2.StartWorkflowOptions, interface{}, ...interface{}) client2.WorkflowRun {
-
+			fmt.Println(env.IsWorkflowCompleted())
 			if !env.IsWorkflowCompleted() {
 				return nil
 			}
@@ -45,7 +46,7 @@ func NewEagerMockWorkflowWithArgs(t *testing.T, client *mocks.Client, env *tests
 			return &mocks.WorkflowRun{}
 		},
 			func(context.Context, client2.StartWorkflowOptions, interface{}, ...interface{}) error {
-
+				fmt.Println(env.GetWorkflowError())
 				if !env.IsWorkflowCompleted() {
 					return env.GetWorkflowError()
 				}
