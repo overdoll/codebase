@@ -84,6 +84,12 @@ func createPreviewFromFile(r io.Reader, isPng bool) ([]*proto.ColorPalette, imag
 		return nil, nil, err
 	}
 
+	totalPixels := 0
+
+	for _, c := range cols {
+		totalPixels += c.Cnt
+	}
+
 	var palettes []*proto.ColorPalette
 
 	for i, col := range cols {
@@ -93,7 +99,7 @@ func createPreviewFromFile(r io.Reader, isPng bool) ([]*proto.ColorPalette, imag
 		}
 
 		palettes = append(palettes, &proto.ColorPalette{
-			Percent: float64(col.Cnt / len(cols)),
+			Percent: math.Round(100*(float64(col.Cnt)/float64(totalPixels)*float64(100))) / 100,
 			Red:     int32(col.Color.R),
 			Green:   int32(col.Color.G),
 			Blue:    int32(col.Color.B),
@@ -518,7 +524,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	finalMap := []string{"0:v:0"}
 
 	if !videoNoAudio {
-		streamMap += ",a:0"
+		streamMap = "v:0,a:0"
 		finalMap = append(finalMap, "0:a:0")
 	}
 
@@ -548,7 +554,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	} else {
 		if firstStream.Height > 720 || firstStream.Width > 1280 {
 			//finalStream.Filter("scale", ffmpeg_go.Args{"1280:-2"})
-			mp4FileArgs["vf"] = "scale=1280:-2"
+			mp4FileArgs["vf"] = "scale=-2:720"
 		}
 	}
 
@@ -674,8 +680,8 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 			return nil, errors.Wrap(err, "failed to parse aspect ratio split height")
 		}
 	} else {
-		widthAspect = 16
-		heightAspect = 9
+		widthAspect = 0
+		heightAspect = 0
 	}
 
 	// update the source image data - this is used for the thumbnail
@@ -720,14 +726,6 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	}}, nil
 }
 
-func mergeArgs(target ffmpeg_go.KwArgs, destination ffmpeg_go.KwArgs) ffmpeg_go.KwArgs {
-	for k, v := range target {
-		destination[k] = v
-	}
-
-	return destination
-}
-
 func processImage(media *media.Media, mimeType string, file *os.File) (*ProcessResponse, error) {
 
 	fileName := uuid.New().String()
@@ -757,27 +755,31 @@ func processImage(media *media.Media, mimeType string, file *os.File) (*ProcessR
 		return nil, errors.Wrap(err, "failed to decode image")
 	}
 
-	imageFile, err := os.Create(fileName)
-	if err != nil {
-		return nil, err
-	}
-
-	var finalMimeType proto.MediaMimeType
+	var imageFile *os.File
 
 	if mimeType == "image/png" {
-		finalMimeType = proto.MediaMimeType_ImagePng
-		if err := png.Encode(imageFile, src); err != nil {
-			return nil, errors.Wrap(err, "failed to encode png")
+		imageFile, err = os.Create(fileName)
+		if err != nil {
+			return nil, err
+		}
+
+		if err := jpeg.Encode(imageFile, src, &jpeg.Options{Quality: 95}); err != nil {
+			return nil, errors.Wrap(err, "failed to encode jpeg")
 		}
 	} else {
-		finalMimeType = proto.MediaMimeType_ImageJpeg
-		if err := jpeg.Encode(imageFile, src, &jpeg.Options{Quality: 100}); err != nil {
-			return nil, errors.Wrap(err, "failed to encode jpeg")
+		// if the source is a JPEG source, we just copy the file over and we don't make any changes
+		imageFile, err = os.Create(fileName)
+		if err != nil {
+			return nil, err
+		}
+		_, err := io.Copy(imageFile, file)
+		if err != nil {
+			return nil, err
 		}
 	}
 
 	_, _ = imageFile.Seek(0, io.SeekStart)
-	palettes, _, err := createPreviewFromFile(imageFile, mimeType == "image/png")
+	palettes, _, err := createPreviewFromFile(imageFile, false)
 
 	if err != nil {
 		return nil, err
@@ -786,7 +788,7 @@ func processImage(media *media.Media, mimeType string, file *os.File) (*ProcessR
 	// update the source image data
 	media.RawProto().ImageData = &proto.ImageData{
 		Id:       fileName,
-		MimeType: finalMimeType,
+		MimeType: proto.MediaMimeType_ImageJpeg,
 		Width:    int64(src.Bounds().Dx()),
 		Height:   int64(src.Bounds().Dy()),
 		Palettes: palettes,

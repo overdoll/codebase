@@ -1,6 +1,7 @@
 package service_test
 
 import (
+	"bytes"
 	"context"
 	"encoding/base64"
 	"fmt"
@@ -9,6 +10,7 @@ import (
 	"go.temporal.io/sdk/activity"
 	"go.temporal.io/sdk/converter"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"os/exec"
 	"overdoll/applications/loader/internal/app/workflows"
 	"overdoll/applications/loader/internal/ports/graphql/types"
 	loader "overdoll/applications/loader/proto"
@@ -309,7 +311,7 @@ func TestUploadMedia(t *testing.T) {
 	// second element is processed
 	require.True(t, newVideoMedia2.IsProcessed(), "should be processed #3")
 
-	require.Equal(t, proto.MediaMimeType_ImagePng, newImageMedia.ImageMimeType(), "expected to be a png image")
+	require.Equal(t, proto.MediaMimeType_ImageJpeg, newImageMedia.ImageMimeType(), "expected to be a png image")
 
 	require.Len(t, newImageMedia.ColorPalettes(), 3, "should have 2 color palettes")
 
@@ -342,7 +344,7 @@ func TestUploadMedia(t *testing.T) {
 	require.Equal(t, proto.MediaMimeType_VideoMp4, newVideoMedia2.VideoContainers()[1].MimeType(), "should be the correct mime type")
 
 	// correct duration
-	require.Equal(t, 5700, newVideoMedia2.VideoDuration(), "should be the correct duration")
+	require.GreaterOrEqual(t, newVideoMedia2.VideoDuration(), 5700, "should be the correct duration")
 	require.Equal(t, proto.MediaMimeType_ImageJpeg, newVideoMedia2.ImageMimeType(), "expected video thumbnail to be jpg")
 	require.True(t, newVideoMedia2.HasAudio(), "expected video to have an audio track")
 
@@ -359,10 +361,18 @@ func TestUploadMedia(t *testing.T) {
 
 		require.True(t, testing_tools.FileExists(imageMediaUrl), "processed file exists in bucket")
 		processedAssertions += 1
-
 		if entity.IsVideo() {
 			for _, container := range entity.VideoContainers() {
 				require.True(t, testing_tools.FileExists(container.Url()), "video thumbnail file exists in bucket")
+
+				cmd := exec.CommandContext(context.Background(), "ffprobe", container.Url())
+				buf := bytes.NewBuffer(nil)
+				cmd.Stdout = buf
+				cmd.Stderr = buf
+				err := cmd.Run()
+				t.Log(string(buf.Bytes()))
+				require.NoError(t, err, "no error probing video file")
+
 				processedAssertions += 1
 			}
 		}
