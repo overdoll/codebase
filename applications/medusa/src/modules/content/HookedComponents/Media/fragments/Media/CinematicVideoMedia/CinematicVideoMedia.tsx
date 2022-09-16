@@ -61,7 +61,7 @@ export default function CinematicVideoMedia (props: Props): JSX.Element {
           width: data.aspectRatio.width,
           height: data.aspectRatio.height
         }}
-        duration={data.duration}
+        duration={data.duration / 1000}
         hasAudio={data.hasAudio}
         controls='advanced'
         {...rest}
@@ -81,7 +81,7 @@ export default function CinematicVideoMedia (props: Props): JSX.Element {
           width: data.aspectRatio.width,
           height: data.aspectRatio.height
         }}
-        duration={data.duration}
+        duration={data.duration / 1000}
         hasAudio={data.hasAudio}
         controls='advanced'
         {...rest}

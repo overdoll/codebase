@@ -61,7 +61,7 @@ export default function PreviewVideoMedia (props: Props): JSX.Element {
           width: data.aspectRatio.width,
           height: data.aspectRatio.height
         }}
-        duration={data.duration}
+        duration={data.duration / 1000}
         hasAudio={data.hasAudio}
         controls='simple'
         {...rest}
@@ -79,7 +79,7 @@ export default function PreviewVideoMedia (props: Props): JSX.Element {
           width: data.aspectRatio.width,
           height: data.aspectRatio.height
         }}
-        duration={data.duration}
+        duration={data.duration / 1000}
         hasAudio={data.hasAudio}
         controls='simple'
         {...rest}
