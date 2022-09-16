@@ -4,7 +4,7 @@ import { OnSwiperInitType } from '../../../types'
 import { useState } from 'react'
 import SwiperType from 'swiper'
 import ContentGrid from '../../../components/ContentGrid/ContentGrid'
-import { Box, GridItem } from '@chakra-ui/react'
+import { Box, Center, GridItem } from '@chakra-ui/react'
 import CinematicGallery from '../../Gallery/CinematicGallery/CinematicGallery'
 import CinematicCarousel from '../../Carousel/CinematicCarousel/CinematicCarousel'
 
@@ -44,7 +44,9 @@ export default function CinematicContent (props: Props): JSX.Element {
         </Box>
       </GridItem>
       <GridItem overflow='hidden' area='carousel'>
-        <CinematicCarousel swiper={swiper} postQuery={postData} />
+        <Center h='100%' w='100%'>
+          <CinematicCarousel swiper={swiper} postQuery={postData} />
+        </Center>
       </GridItem>
     </ContentGrid>
   )

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1aa245e1f8e93f05c3e67bcb6200998f>>
- * @relayHash bb2017c3885845e1829c48ebdb951068
+ * @generated SignedSource<<f53dceb78cfb115c0df0b87a9c1ef9b9>>
+ * @relayHash 0435acc647b1b6618bae62d169a16031
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID bb2017c3885845e1829c48ebdb951068
+// @relayRequestID 0435acc647b1b6618bae62d169a16031
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -266,7 +266,7 @@ v23 = {
   "args": null,
   "concreteType": "ImageMediaAccess",
   "kind": "LinkedField",
-  "name": "medium",
+  "name": "thumbnail",
   "plural": false,
   "selections": (v21/*: any*/),
   "storageKey": null
@@ -276,22 +276,12 @@ v24 = {
   "args": null,
   "concreteType": "ImageMediaAccess",
   "kind": "LinkedField",
-  "name": "thumbnail",
-  "plural": false,
-  "selections": (v21/*: any*/),
-  "storageKey": null
-},
-v25 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "ImageMediaAccess",
-  "kind": "LinkedField",
   "name": "thumbnailHd",
   "plural": false,
   "selections": (v21/*: any*/),
   "storageKey": null
 },
-v26 = {
+v25 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -521,7 +511,16 @@ return {
                         "plural": false,
                         "selections": [
                           (v22/*: any*/),
-                          (v23/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "ImageMediaAccess",
+                            "kind": "LinkedField",
+                            "name": "medium",
+                            "plural": false,
+                            "selections": (v21/*: any*/),
+                            "storageKey": null
+                          },
                           {
                             "alias": null,
                             "args": null,
@@ -542,8 +541,8 @@ return {
                             "selections": (v21/*: any*/),
                             "storageKey": null
                           },
-                          (v24/*: any*/),
-                          (v25/*: any*/)
+                          (v23/*: any*/),
+                          (v24/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -563,6 +562,7 @@ return {
                         "name": "cover",
                         "plural": false,
                         "selections": [
+                          (v20/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -571,15 +571,13 @@ return {
                             "name": "variants",
                             "plural": false,
                             "selections": [
-                              (v24/*: any*/),
                               (v23/*: any*/),
                               (v22/*: any*/),
-                              (v25/*: any*/)
+                              (v24/*: any*/)
                             ],
                             "storageKey": null
                           },
-                          (v2/*: any*/),
-                          (v20/*: any*/)
+                          (v2/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -674,7 +672,7 @@ return {
                   (v16/*: any*/),
                   (v17/*: any*/),
                   (v18/*: any*/),
-                  (v26/*: any*/)
+                  (v25/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -688,7 +686,7 @@ return {
                 "selections": [
                   (v8/*: any*/),
                   (v10/*: any*/),
-                  (v26/*: any*/),
+                  (v25/*: any*/),
                   (v2/*: any*/)
                 ],
                 "storageKey": null
@@ -728,7 +726,7 @@ return {
     ]
   },
   "params": {
-    "id": "bb2017c3885845e1829c48ebdb951068",
+    "id": "0435acc647b1b6618bae62d169a16031",
     "metadata": {},
     "name": "RefreshProcessContentQuery",
     "operationKind": "query",

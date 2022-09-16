@@ -1,4 +1,4 @@
-import { ContainerRefProps, VideoControlTypeProps, VideoWatchProps } from '../VideoContainer'
+import { ContainerRefProps, VideoControlTypeProps } from '../VideoContainer'
 import { PlayerType } from '../../../types'
 import VideoControlsOverlay from './VideoControlsOverlay/VideoControlsOverlay'
 import { ControlTypes } from './VideoRequestControls/VideoRequestControls'

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<2820db6cb20d0b92ebd1363450907e05>>
- * @relayHash 49a7096cb09cabd76638abf421b8e936
+ * @generated SignedSource<<a69e2df2a30f249bb6ba6804e1a68f4e>>
+ * @relayHash d58defbf99e4dd18d48a1e627f269d41
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 49a7096cb09cabd76638abf421b8e936
+// @relayRequestID d58defbf99e4dd18d48a1e627f269d41
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -297,6 +297,7 @@ v28 = {
       "name": "cover",
       "plural": false,
       "selections": [
+        (v22/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -306,14 +307,12 @@ v28 = {
           "plural": false,
           "selections": [
             (v26/*: any*/),
-            (v25/*: any*/),
             (v24/*: any*/),
             (v27/*: any*/)
           ],
           "storageKey": null
         },
-        (v4/*: any*/),
-        (v22/*: any*/)
+        (v4/*: any*/)
       ],
       "storageKey": null
     },
@@ -999,7 +998,7 @@ return {
     ]
   },
   "params": {
-    "id": "49a7096cb09cabd76638abf421b8e936",
+    "id": "d58defbf99e4dd18d48a1e627f269d41",
     "metadata": {},
     "name": "ResultPublicPostQuery",
     "operationKind": "query",

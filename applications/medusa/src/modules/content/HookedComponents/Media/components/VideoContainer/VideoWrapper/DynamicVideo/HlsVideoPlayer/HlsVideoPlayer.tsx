@@ -38,7 +38,6 @@ export default function HlsVideoPlayer (props: Props): JSX.Element {
         player.currentTime = currentTime
       }
       onPlayerInit(player)
-      player.play()
     }
 
     player.once('ready', onReady)

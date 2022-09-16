@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<740f551e5ba8caa6a07b0ecf054bc72f>>
+ * @generated SignedSource<<14e3ac42cf0ca8de33c49a05010d09ec>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,11 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type BackgroundPosterImageMediaFragment$data = {
+  readonly colorPalettes: ReadonlyArray<{
+    readonly blue: number;
+    readonly green: number;
+    readonly red: number;
+  }>;
   readonly variants: {
     readonly thumbnail: {
       readonly height: number;
@@ -31,6 +36,38 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "BackgroundPosterImageMediaFragment",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ColorPalette",
+      "kind": "LinkedField",
+      "name": "colorPalettes",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "red",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "green",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "blue",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -79,6 +116,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "cdd96f4268bc5a84d0e47946aa096a96";
+(node as any).hash = "039f5f073330cf278125a622694cc649";
 
 export default node;

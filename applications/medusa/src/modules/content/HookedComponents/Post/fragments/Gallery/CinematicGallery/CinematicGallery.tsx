@@ -47,10 +47,10 @@ export default function CinematicGallery (props: Props): JSX.Element {
       key={postData.id}
       onSwiper={onInit}
       initialSlide={slide != null ? slide : 0}
+      {...GALLERY_PROPS}
       style={{
         height: '100%'
       }}
-      {...GALLERY_PROPS}
     >
       {postData.content.map((content, index) =>
         <SwiperSlide

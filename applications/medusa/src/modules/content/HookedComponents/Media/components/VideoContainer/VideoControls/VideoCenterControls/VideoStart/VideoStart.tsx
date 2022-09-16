@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { startOrPlayVideo } from '../../../../../support/controls'
 import MediaButton from '../../../../MediaControls/MediaButton/MediaButton'
 import { PlayerType } from '../../../../../types'
+import syncPlayerLoading from '../../../../../support/syncPlayerLoading'
 
 interface Props {
   player: PlayerType
@@ -17,6 +18,7 @@ export default function VideoStart (props: Props): JSX.Element {
 
   const [hasStarted, setHasStarted] = useState(false)
   const [hasError, setError] = useState(false)
+  const [isLoading, setLoading] = useState(false)
 
   useEffect(() => {
     if (player == null) return
@@ -37,6 +39,12 @@ export default function VideoStart (props: Props): JSX.Element {
       player.off('error', onError)
     }
   }, [player, setPlayer])
+
+  syncPlayerLoading(player, setLoading)
+
+  if (isLoading) {
+    return <></>
+  }
 
   if (hasStarted && !hasError) {
     return <></>

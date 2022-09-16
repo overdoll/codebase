@@ -53,9 +53,7 @@ export default function CinematicVideoMedia (props: Props): JSX.Element {
     return (
       <ObserveVideoContainer
         hlsUrl={hlsUrl}
-        poster={(
-          <PosterImageMedia imageMediaQuery={data.cover} />
-        )}
+        poster={<PosterImageMedia imageMediaQuery={data.cover} />}
         backgroundPoster={<BackgroundPosterImageMedia imageMediaQuery={data.cover} />}
         aspectRatio={{
           width: data.aspectRatio.width,
@@ -73,9 +71,7 @@ export default function CinematicVideoMedia (props: Props): JSX.Element {
     return (
       <ObserveVideoContainer
         mp4Url={mp4Url}
-        poster={(
-          <PosterImageMedia imageMediaQuery={data.cover} />
-        )}
+        poster={<PosterImageMedia imageMediaQuery={data.cover} />}
         backgroundPoster={<BackgroundPosterImageMedia imageMediaQuery={data.cover} />}
         aspectRatio={{
           width: data.aspectRatio.width,

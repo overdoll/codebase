@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d875321828382988d2bfc0bb325921d9>>
- * @relayHash ea630d74ba7265ebcf271cccabce6a37
+ * @generated SignedSource<<fb80907f0c7ab20fb4e9b109f329a409>>
+ * @relayHash 372ae269180c575dfe06edc1e99ae5e9
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ea630d74ba7265ebcf271cccabce6a37
+// @relayRequestID 372ae269180c575dfe06edc1e99ae5e9
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -199,7 +199,7 @@ v17 = {
   "args": null,
   "concreteType": "ImageMediaAccess",
   "kind": "LinkedField",
-  "name": "medium",
+  "name": "thumbnail",
   "plural": false,
   "selections": (v15/*: any*/),
   "storageKey": null
@@ -209,22 +209,12 @@ v18 = {
   "args": null,
   "concreteType": "ImageMediaAccess",
   "kind": "LinkedField",
-  "name": "thumbnail",
-  "plural": false,
-  "selections": (v15/*: any*/),
-  "storageKey": null
-},
-v19 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "ImageMediaAccess",
-  "kind": "LinkedField",
   "name": "thumbnailHd",
   "plural": false,
   "selections": (v15/*: any*/),
   "storageKey": null
 },
-v20 = {
+v19 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -392,7 +382,16 @@ return {
                                     "plural": false,
                                     "selections": [
                                       (v16/*: any*/),
-                                      (v17/*: any*/),
+                                      {
+                                        "alias": null,
+                                        "args": null,
+                                        "concreteType": "ImageMediaAccess",
+                                        "kind": "LinkedField",
+                                        "name": "medium",
+                                        "plural": false,
+                                        "selections": (v15/*: any*/),
+                                        "storageKey": null
+                                      },
                                       {
                                         "alias": null,
                                         "args": null,
@@ -413,8 +412,8 @@ return {
                                         "selections": (v15/*: any*/),
                                         "storageKey": null
                                       },
-                                      (v18/*: any*/),
-                                      (v19/*: any*/)
+                                      (v17/*: any*/),
+                                      (v18/*: any*/)
                                     ],
                                     "storageKey": null
                                   },
@@ -434,6 +433,7 @@ return {
                                     "name": "cover",
                                     "plural": false,
                                     "selections": [
+                                      (v14/*: any*/),
                                       {
                                         "alias": null,
                                         "args": null,
@@ -442,15 +442,13 @@ return {
                                         "name": "variants",
                                         "plural": false,
                                         "selections": [
-                                          (v18/*: any*/),
                                           (v17/*: any*/),
                                           (v16/*: any*/),
-                                          (v19/*: any*/)
+                                          (v18/*: any*/)
                                         ],
                                         "storageKey": null
                                       },
-                                      (v3/*: any*/),
-                                      (v14/*: any*/)
+                                      (v3/*: any*/)
                                     ],
                                     "storageKey": null
                                   },
@@ -554,7 +552,7 @@ return {
                         ],
                         "storageKey": null
                       },
-                      (v20/*: any*/)
+                      (v19/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -570,7 +568,7 @@ return {
                 "plural": false,
                 "selections": [
                   (v3/*: any*/),
-                  (v20/*: any*/),
+                  (v19/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -619,7 +617,7 @@ return {
     ]
   },
   "params": {
-    "id": "ea630d74ba7265ebcf271cccabce6a37",
+    "id": "372ae269180c575dfe06edc1e99ae5e9",
     "metadata": {},
     "name": "ResultRouletteQuery",
     "operationKind": "query",

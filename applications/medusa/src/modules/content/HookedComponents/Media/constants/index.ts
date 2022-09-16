@@ -15,8 +15,7 @@ export const VIDEO_OPTIONS = {
   },
   loop: true,
   noLog: true,
-  hideStartBtn: true,
-  enableStallCheck: true
+  hideStartBtn: true
 }
 
 export const CONTROLS_CONTAINER = {

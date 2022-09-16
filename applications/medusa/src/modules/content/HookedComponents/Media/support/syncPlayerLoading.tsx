@@ -15,9 +15,11 @@ export default function syncPlayerLoading (player: PlayerType | null, setLoading
 
     player.on('canplay', onCanPlay)
     player.on('waiting', onWaiting)
+    player.on('loadstart', onWaiting)
     return () => {
       player.off('canplay', onCanPlay)
       player.off('waiting', onWaiting)
+      player.off('loadstart', onWaiting)
     }
   }, [player, setLoading])
 }

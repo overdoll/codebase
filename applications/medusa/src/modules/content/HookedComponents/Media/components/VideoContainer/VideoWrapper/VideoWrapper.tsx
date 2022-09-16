@@ -59,22 +59,26 @@ export default function VideoWrapper (props: Props): JSX.Element {
       justify='center'
       width='100%'
       height='100%'
+      position='relative'
     >
-      <Box w='100%' display='block' paddingBottom={`${(aspectRatio.width / aspectRatio.height) * 100}%`} />
+      <Box w='100%' display='block' paddingBottom={`${(aspectRatio.height / aspectRatio.width) * 100}%`} />
       {!hasPlayed && (
-        <Flex position='absolute' height='100%' width='100%'>
+        <Flex
+          position='absolute'
+          height='100%'
+          width='100%'
+        >
           <ContainImage>
             {poster}
           </ContainImage>
         </Flex>
       )}
       <Flex
-        width='100%'
-        height='100%'
         position='absolute'
         w='100%'
         h='100%'
         top={0}
+        right={0}
         left={0}
         bottom={0}
       >

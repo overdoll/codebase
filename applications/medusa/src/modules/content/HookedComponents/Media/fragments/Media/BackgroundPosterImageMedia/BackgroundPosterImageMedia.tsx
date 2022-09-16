@@ -5,6 +5,11 @@ import ImageMedia from '../../../components/ImageContainer/ImageWrapper/ImageMed
 
 const Fragment = graphql`
   fragment BackgroundPosterImageMediaFragment on ImageMedia {
+    colorPalettes {
+      red
+      green
+      blue
+    }
     variants {
       thumbnail {
         url
@@ -26,8 +31,13 @@ export default function BackgroundPosterImageMedia (props: Props): JSX.Element {
 
   const data = useFragment(Fragment, imageMediaQuery)
 
+  const colorPalette = data.colorPalettes[0]
+
+  const bgColor = `rgb(${colorPalette.red},${colorPalette.green},${colorPalette.blue})`
+
   return (
     <ImageMedia
+      color={bgColor}
       width={data.variants.thumbnail.width}
       height={data.variants.thumbnail.height}
       url={data.variants.thumbnail.url}

@@ -12,7 +12,7 @@ export default function VideoBackground (props: Props): JSX.Element {
   } = props
 
   return (
-    <Flex bg='#000' position='absolute' overflow='hidden' w='100%' h='100%' align='center' justify='center'>
+    <Flex position='absolute' overflow='hidden' w='100%' h='100%' align='center' justify='center'>
       <Flex
         left='50%'
         w='10%'

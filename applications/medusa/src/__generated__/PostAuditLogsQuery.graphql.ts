@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<268b876e53bd358f625995b4b779e8bc>>
- * @relayHash a7aae7089bbc24d3032178abe8451107
+ * @generated SignedSource<<ff460d4875ec9b91a55f7d52a94db13a>>
+ * @relayHash 3349516fdd59817f1bb1a8a791849cc5
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a7aae7089bbc24d3032178abe8451107
+// @relayRequestID 3349516fdd59817f1bb1a8a791849cc5
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -147,22 +147,12 @@ v11 = {
   "args": null,
   "concreteType": "ImageMediaAccess",
   "kind": "LinkedField",
-  "name": "medium",
-  "plural": false,
-  "selections": (v9/*: any*/),
-  "storageKey": null
-},
-v12 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "ImageMediaAccess",
-  "kind": "LinkedField",
   "name": "thumbnail",
   "plural": false,
   "selections": (v9/*: any*/),
   "storageKey": null
 },
-v13 = {
+v12 = {
   "alias": null,
   "args": null,
   "concreteType": "ImageMediaAccess",
@@ -454,7 +444,16 @@ return {
                                         "plural": false,
                                         "selections": [
                                           (v10/*: any*/),
-                                          (v11/*: any*/),
+                                          {
+                                            "alias": null,
+                                            "args": null,
+                                            "concreteType": "ImageMediaAccess",
+                                            "kind": "LinkedField",
+                                            "name": "medium",
+                                            "plural": false,
+                                            "selections": (v9/*: any*/),
+                                            "storageKey": null
+                                          },
                                           {
                                             "alias": null,
                                             "args": null,
@@ -475,8 +474,8 @@ return {
                                             "selections": (v9/*: any*/),
                                             "storageKey": null
                                           },
-                                          (v12/*: any*/),
-                                          (v13/*: any*/)
+                                          (v11/*: any*/),
+                                          (v12/*: any*/)
                                         ],
                                         "storageKey": null
                                       },
@@ -496,6 +495,7 @@ return {
                                         "name": "cover",
                                         "plural": false,
                                         "selections": [
+                                          (v8/*: any*/),
                                           {
                                             "alias": null,
                                             "args": null,
@@ -504,15 +504,13 @@ return {
                                             "name": "variants",
                                             "plural": false,
                                             "selections": [
-                                              (v12/*: any*/),
                                               (v11/*: any*/),
                                               (v10/*: any*/),
-                                              (v13/*: any*/)
+                                              (v12/*: any*/)
                                             ],
                                             "storageKey": null
                                           },
-                                          (v2/*: any*/),
-                                          (v8/*: any*/)
+                                          (v2/*: any*/)
                                         ],
                                         "storageKey": null
                                       },
@@ -663,7 +661,7 @@ return {
     ]
   },
   "params": {
-    "id": "a7aae7089bbc24d3032178abe8451107",
+    "id": "3349516fdd59817f1bb1a8a791849cc5",
     "metadata": {},
     "name": "PostAuditLogsQuery",
     "operationKind": "query",

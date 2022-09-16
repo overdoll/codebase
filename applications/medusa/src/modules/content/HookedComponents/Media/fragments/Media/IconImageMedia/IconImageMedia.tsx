@@ -5,7 +5,6 @@ import ImageCoverContainer from '../../../components/ImageContainer/ImageCoverCo
 
 const Fragment = graphql`
   fragment IconImageMediaFragment on ImageMedia {
-    id
     colorPalettes {
       red
       green

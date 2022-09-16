@@ -25,11 +25,9 @@ export default function ContentGrid (props: Props): JSX.Element {
       "carousel"
       `}
       templateRows={{
-        base: template,
-        lg: '100%'
+        base: template
       }}
       templateColumns={{
-        base: '100%',
         lg: template
       }}
     >

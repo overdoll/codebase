@@ -29,8 +29,6 @@ export default function ImageControlContainer (props: Props): JSX.Element {
     backgroundPoster
   } = props
 
-  const bgColor = typeof rgb === 'string' ? rgb : (rgb != null ? `rgb(${rgb.red},${rgb.green},${rgb.blue})` : undefined)
-
   const CloneImageMedia = useMemo(() => <ImageMedia url={url} variants={variants} />, [url])
 
   const [isCovered, setCovered] = useState(false)
@@ -44,7 +42,6 @@ export default function ImageControlContainer (props: Props): JSX.Element {
       position='relative'
       overflow='hidden'
       borderRadius='inherit'
-      bg={bgColor ?? '#000'}
     >
       <ImageBackground backgroundPoster={backgroundPoster ?? CloneImageMedia} />
       <ControlCoverContainImage isCovered={isCovered}>

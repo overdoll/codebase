@@ -13,6 +13,7 @@ const ContainImage = forwardRef<any, Props>((props: Props, forwardRef): JSX.Elem
     <Flex
       ref={forwardRef}
       {...CONTAIN_PROPS}
+      justify='center'
       borderRadius='inherit'
     >
       {children}

@@ -49,8 +49,6 @@ export default function PreviewVideoMedia (props: Props): JSX.Element {
   const hlsUrl = urls.filter((item) => item.hlsUrl != null)?.[0].hlsUrl
   const mp4Url = urls.filter((item) => item.mp4Url != null)?.[0].mp4Url
 
-  // TODO video containers need to be wrapped in managers that control autoplay
-
   if (hlsUrl != null) {
     return (
       <ObserveVideoContainer
@@ -73,7 +71,7 @@ export default function PreviewVideoMedia (props: Props): JSX.Element {
     return (
       <ObserveVideoContainer
         mp4Url={mp4Url}
-        poster={<BackgroundPosterImageMedia imageMediaQuery={data.cover} />}
+        poster={<PosterImageMedia imageMediaQuery={data.cover} />}
         backgroundPoster={<BackgroundPosterImageMedia imageMediaQuery={data.cover} />}
         aspectRatio={{
           width: data.aspectRatio.width,

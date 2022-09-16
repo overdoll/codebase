@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d53010b50b85884865bfa73ecd1cab20>>
+ * @generated SignedSource<<35db31e06af72de5e90e2074f2133945>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,6 @@ export type IconImageMediaFragment$data = {
     readonly green: number;
     readonly red: number;
   }>;
-  readonly id: string;
   readonly variants: {
     readonly icon: {
       readonly height: number;
@@ -66,13 +65,6 @@ return {
   "metadata": null,
   "name": "IconImageMediaFragment",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
     {
       "alias": null,
       "args": null,
@@ -142,6 +134,6 @@ return {
 };
 })();
 
-(node as any).hash = "a3d202edd9c42e29ce61b8f42892a04c";
+(node as any).hash = "e1e15118f8eb979857209abc7bb8ba5d";
 
 export default node;
