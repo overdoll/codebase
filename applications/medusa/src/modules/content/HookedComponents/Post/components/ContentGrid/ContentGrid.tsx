@@ -12,24 +12,18 @@ export default function ContentGrid (props: Props): JSX.Element {
     contentLength
   } = props
 
-  const template = contentLength > 1 ? '1fr 40px' : '1fr 0px'
+  const template = contentLength > 1 ? '1fr 60px' : '1fr 0px'
 
   return (
     <Grid
-      overflow='hidden'
       w='100%'
       h='100%'
-      gap={2}
+      gap={1}
       templateAreas={`
       "gallery"
       "carousel"
       `}
-      templateRows={{
-        base: template
-      }}
-      templateColumns={{
-        lg: template
-      }}
+      templateRows={template}
     >
       {children}
     </Grid>

@@ -43,7 +43,10 @@ export default function PreviewContent (props: Props): JSX.Element {
           <PreviewGallery postQuery={postData} onSwiper={onInit} />
         </Box>
       </GridItem>
-      <GridItem overflow='hidden' area='carousel'>
+      <GridItem
+        overflow='hidden'
+        area='carousel'
+      >
         <CinematicCarousel swiper={swiper} postQuery={postData} />
       </GridItem>
     </ContentGrid>

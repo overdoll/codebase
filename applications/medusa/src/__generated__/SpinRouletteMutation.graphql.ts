@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<11ee04f9a0231454c58234d55a51baf1>>
- * @relayHash fb9a1a216ca24ea607f3bf765a960216
+ * @generated SignedSource<<7ff67948f054eafa15cafaa5975f1834>>
+ * @relayHash adea3e88b008707ff5bbb06e0541f123
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID fb9a1a216ca24ea607f3bf765a960216
+// @relayRequestID adea3e88b008707ff5bbb06e0541f123
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -165,27 +165,17 @@ v13 = {
   "selections": (v11/*: any*/),
   "storageKey": null
 },
-v14 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "ImageMediaAccess",
-  "kind": "LinkedField",
-  "name": "thumbnailHd",
-  "plural": false,
-  "selections": (v11/*: any*/),
-  "storageKey": null
-},
-v15 = [
+v14 = [
   (v8/*: any*/)
 ],
-v16 = {
+v15 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v17 = {
+v16 = {
   "alias": null,
   "args": null,
   "concreteType": "Resource",
@@ -229,7 +219,7 @@ v17 = {
       "kind": "LinkedField",
       "name": "videoThumbnail",
       "plural": false,
-      "selections": (v15/*: any*/),
+      "selections": (v14/*: any*/),
       "storageKey": null
     },
     {
@@ -401,8 +391,7 @@ return {
                                     "selections": (v11/*: any*/),
                                     "storageKey": null
                                   },
-                                  (v13/*: any*/),
-                                  (v14/*: any*/)
+                                  (v13/*: any*/)
                                 ],
                                 "storageKey": null
                               },
@@ -432,8 +421,7 @@ return {
                                     "plural": false,
                                     "selections": [
                                       (v13/*: any*/),
-                                      (v12/*: any*/),
-                                      (v14/*: any*/)
+                                      (v12/*: any*/)
                                     ],
                                     "storageKey": null
                                   },
@@ -479,13 +467,13 @@ return {
                                   (v6/*: any*/),
                                   {
                                     "kind": "InlineFragment",
-                                    "selections": (v15/*: any*/),
+                                    "selections": (v14/*: any*/),
                                     "type": "HLSVideoContainer",
                                     "abstractKey": null
                                   },
                                   {
                                     "kind": "InlineFragment",
-                                    "selections": (v15/*: any*/),
+                                    "selections": (v14/*: any*/),
                                     "type": "MP4VideoContainer",
                                     "abstractKey": null
                                   }
@@ -541,8 +529,8 @@ return {
                         "storageKey": null
                       },
                       (v2/*: any*/),
-                      (v16/*: any*/),
-                      (v17/*: any*/)
+                      (v15/*: any*/),
+                      (v16/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -562,8 +550,8 @@ return {
                     "plural": true,
                     "selections": [
                       (v2/*: any*/),
-                      (v16/*: any*/),
-                      (v17/*: any*/)
+                      (v15/*: any*/),
+                      (v16/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -579,7 +567,7 @@ return {
     ]
   },
   "params": {
-    "id": "fb9a1a216ca24ea607f3bf765a960216",
+    "id": "adea3e88b008707ff5bbb06e0541f123",
     "metadata": {},
     "name": "SpinRouletteMutation",
     "operationKind": "mutation",

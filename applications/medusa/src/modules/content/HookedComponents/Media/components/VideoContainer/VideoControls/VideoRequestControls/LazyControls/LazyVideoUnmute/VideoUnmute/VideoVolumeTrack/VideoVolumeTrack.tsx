@@ -54,7 +54,7 @@ export default function VideoVolumeTrack (props: Props): JSX.Element {
         </SliderTrack>
       </Slider>
       <Flex pointerEvents='none' data-ignore='click' position='absolute'>
-        <Icon w={6} h={6} icon={muted ? ControlVolumeMuted : ControlSoundWave} fill='dimmers.300' />
+        <Icon w={6} h={6} icon={muted ? ControlVolumeMuted : ControlSoundWave} fill='whiteAlpha.700' />
       </Flex>
     </Flex>
   )

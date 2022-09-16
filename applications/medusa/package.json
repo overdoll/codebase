@@ -67,6 +67,7 @@
     "xgplayer": "^2.32.0",
     "xgplayer-hls": "^2.5.2",
     "xgplayer-hls-vod": "^2.5.2",
+    "xgplayer-hls.js": "^2.6.3",
     "xgplayer-mp4": "^2.0.2"
   },
   "browserslist": {

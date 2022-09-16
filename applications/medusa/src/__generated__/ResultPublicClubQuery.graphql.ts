@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<99b62e20637bfbb837ab2df01a4a2a23>>
- * @relayHash 49d5367086067e7b89b437274aa4fd92
+ * @generated SignedSource<<dc4018a4e2ae9928cae6da0db6ffa5a9>>
+ * @relayHash d23fa9c3065d7c3d19a6d6fa97bc70a4
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 49d5367086067e7b89b437274aa4fd92
+// @relayRequestID d23fa9c3065d7c3d19a6d6fa97bc70a4
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -290,21 +290,11 @@ v28 = {
 v29 = {
   "alias": null,
   "args": null,
-  "concreteType": "ImageMediaAccess",
-  "kind": "LinkedField",
-  "name": "thumbnailHd",
-  "plural": false,
-  "selections": (v26/*: any*/),
-  "storageKey": null
-},
-v30 = {
-  "alias": null,
-  "args": null,
   "kind": "ScalarField",
   "name": "canSupport",
   "storageKey": null
 },
-v31 = [
+v30 = [
   {
     "alias": null,
     "args": null,
@@ -623,8 +613,7 @@ return {
                                         "selections": (v26/*: any*/),
                                         "storageKey": null
                                       },
-                                      (v28/*: any*/),
-                                      (v29/*: any*/)
+                                      (v28/*: any*/)
                                     ],
                                     "storageKey": null
                                   },
@@ -654,8 +643,7 @@ return {
                                         "plural": false,
                                         "selections": [
                                           (v28/*: any*/),
-                                          (v27/*: any*/),
-                                          (v29/*: any*/)
+                                          (v27/*: any*/)
                                         ],
                                         "storageKey": null
                                       },
@@ -788,7 +776,7 @@ return {
                             ],
                             "storageKey": null
                           },
-                          (v30/*: any*/)
+                          (v29/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -928,7 +916,7 @@ return {
             "selections": (v13/*: any*/),
             "storageKey": null
           },
-          (v30/*: any*/),
+          (v29/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -944,7 +932,7 @@ return {
                 "kind": "LinkedField",
                 "name": "localizedPrice",
                 "plural": false,
-                "selections": (v31/*: any*/),
+                "selections": (v30/*: any*/),
                 "storageKey": null
               },
               {
@@ -954,7 +942,7 @@ return {
                 "kind": "LinkedField",
                 "name": "prices",
                 "plural": true,
-                "selections": (v31/*: any*/),
+                "selections": (v30/*: any*/),
                 "storageKey": null
               }
             ],
@@ -1104,7 +1092,7 @@ return {
     ]
   },
   "params": {
-    "id": "49d5367086067e7b89b437274aa4fd92",
+    "id": "d23fa9c3065d7c3d19a6d6fa97bc70a4",
     "metadata": {},
     "name": "ResultPublicClubQuery",
     "operationKind": "query",

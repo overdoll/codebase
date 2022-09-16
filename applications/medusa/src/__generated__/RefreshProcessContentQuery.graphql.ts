@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f53dceb78cfb115c0df0b87a9c1ef9b9>>
- * @relayHash 0435acc647b1b6618bae62d169a16031
+ * @generated SignedSource<<ea3c3820c6b6d1613245b61366da48d9>>
+ * @relayHash 9e86b3e6e3b42f26c7a3ab7834cb73d5
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0435acc647b1b6618bae62d169a16031
+// @relayRequestID 9e86b3e6e3b42f26c7a3ab7834cb73d5
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -274,16 +274,6 @@ v23 = {
 v24 = {
   "alias": null,
   "args": null,
-  "concreteType": "ImageMediaAccess",
-  "kind": "LinkedField",
-  "name": "thumbnailHd",
-  "plural": false,
-  "selections": (v21/*: any*/),
-  "storageKey": null
-},
-v25 = {
-  "alias": null,
-  "args": null,
   "kind": "ScalarField",
   "name": "videoNoAudio",
   "storageKey": null
@@ -541,8 +531,7 @@ return {
                             "selections": (v21/*: any*/),
                             "storageKey": null
                           },
-                          (v23/*: any*/),
-                          (v24/*: any*/)
+                          (v23/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -572,8 +561,7 @@ return {
                             "plural": false,
                             "selections": [
                               (v23/*: any*/),
-                              (v22/*: any*/),
-                              (v24/*: any*/)
+                              (v22/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -672,7 +660,7 @@ return {
                   (v16/*: any*/),
                   (v17/*: any*/),
                   (v18/*: any*/),
-                  (v25/*: any*/)
+                  (v24/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -686,7 +674,7 @@ return {
                 "selections": [
                   (v8/*: any*/),
                   (v10/*: any*/),
-                  (v25/*: any*/),
+                  (v24/*: any*/),
                   (v2/*: any*/)
                 ],
                 "storageKey": null
@@ -726,7 +714,7 @@ return {
     ]
   },
   "params": {
-    "id": "0435acc647b1b6618bae62d169a16031",
+    "id": "9e86b3e6e3b42f26c7a3ab7834cb73d5",
     "metadata": {},
     "name": "RefreshProcessContentQuery",
     "operationKind": "query",

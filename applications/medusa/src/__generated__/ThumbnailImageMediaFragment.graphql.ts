@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6fc73e1425ca2120b218a98f325d3acf>>
+ * @generated SignedSource<<0f28425455c149e8587df3e0db17e36a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,11 +22,6 @@ export type ThumbnailImageMediaFragment$data = {
       readonly url: string;
       readonly width: number;
     };
-    readonly thumbnailHd: {
-      readonly height: number;
-      readonly url: string;
-      readonly width: number;
-    };
   };
   readonly " $fragmentType": "ThumbnailImageMediaFragment";
 };
@@ -35,31 +30,7 @@ export type ThumbnailImageMediaFragment$key = {
   readonly " $fragmentSpreads": FragmentRefs<"ThumbnailImageMediaFragment">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "url",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "width",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "height",
-    "storageKey": null
-  }
-];
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
@@ -112,17 +83,29 @@ return {
           "kind": "LinkedField",
           "name": "thumbnail",
           "plural": false,
-          "selections": (v0/*: any*/),
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "ImageMediaAccess",
-          "kind": "LinkedField",
-          "name": "thumbnailHd",
-          "plural": false,
-          "selections": (v0/*: any*/),
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "url",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "width",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "height",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         }
       ],
@@ -132,8 +115,7 @@ return {
   "type": "ImageMedia",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "32af61acc085deb12c80be83c87343bd";
+(node as any).hash = "4ae25c1c991e09a670d23b49d14ef9a2";
 
 export default node;

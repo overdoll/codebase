@@ -11837,6 +11837,11 @@ deep-object-diff@^1.1.0:
   resolved "https://registry.npmjs.org/deep-object-diff/-/deep-object-diff-1.1.0.tgz"
   integrity sha512-b+QLs5vHgS+IoSNcUE4n9HP2NwcHj7aqnJWsjPtuG75Rh5TOaGt0OjAYInh77d5T16V5cRDC+Pw/6ZZZiETBGw==
 
+deepmerge@2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-2.0.1.tgz#25c1c24f110fb914f80001b925264dd77f3f4312"
+  integrity sha512-VIPwiMJqJ13ZQfaCsIFnp5Me9tnjURiaIFxfz7EH0Ci0dTSQpZtSLrqOicXqEd/z2r+z+Klk9GzmnRsgpgbOsQ==
+
 deepmerge@^2.0.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/deepmerge/-/deepmerge-2.2.1.tgz#5d3ff22a01c00f645405a2fbc17d0778a1801170"
@@ -14828,6 +14833,11 @@ history@^5.1.0:
   integrity sha512-zPuQgPacm2vH2xdORvGGz1wQMuHSIB56yNAy5FnLuwOwgSYyPKptJtcMm6Ev+hRGeS+GzhbmRacHzvlESbFwDg==
   dependencies:
     "@babel/runtime" "^7.7.6"
+
+hls.js@^1.1.1:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/hls.js/-/hls.js-1.2.3.tgz#9b9e5d5b05c4912dacec173962694b710eea33ac"
+  integrity sha512-CC/vHi82ldiiydIhliNI3whlcepRXxI2jdpd/KKb6lyEv+74e7lXs4cGk5PHfTLxZMKOj6+m5LX9VAbvV/r7AQ==
 
 hmac-drbg@^1.0.0:
   version "1.0.1"
@@ -25225,6 +25235,16 @@ xgplayer-hls-vod@2.5.2, xgplayer-hls-vod@^2.5.2:
     xgplayer-helper-models "2.5.2"
     xgplayer-helper-transmuxers "2.5.2"
     xgplayer-helper-utils "2.5.2"
+
+xgplayer-hls.js@^2.6.3:
+  version "2.6.3"
+  resolved "https://registry.yarnpkg.com/xgplayer-hls.js/-/xgplayer-hls.js-2.6.3.tgz#97351813de0191902560bc61e10f974b3eeb3205"
+  integrity sha512-kpvrM+nAR8y9ZJULz65ZzfERKMsgiOCfu6EEox/8gXshRw3wzr50DUmvDtjbAo5UQ/2rcddQEfQd6gUwyzoLSw==
+  dependencies:
+    deepmerge "2.0.1"
+    event-emitter "^0.3.5"
+    eventemitter3 "^4.0.7"
+    hls.js "^1.1.1"
 
 xgplayer-hls@^2.5.2:
   version "2.5.2"

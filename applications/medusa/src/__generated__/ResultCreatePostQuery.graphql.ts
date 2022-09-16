@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<61b76d430072caa5097f94265aa7e745>>
- * @relayHash 0e9550ebe7d3c036ca945101f9f710e5
+ * @generated SignedSource<<e1f018f3e4707b45977f82a55062aaa9>>
+ * @relayHash 673356ec77878bc2c38c646fdedbcdfe
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0e9550ebe7d3c036ca945101f9f710e5
+// @relayRequestID 673356ec77878bc2c38c646fdedbcdfe
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -337,16 +337,6 @@ v34 = {
 v35 = {
   "alias": null,
   "args": null,
-  "concreteType": "ImageMediaAccess",
-  "kind": "LinkedField",
-  "name": "thumbnailHd",
-  "plural": false,
-  "selections": (v32/*: any*/),
-  "storageKey": null
-},
-v36 = {
-  "alias": null,
-  "args": null,
   "concreteType": "Resource",
   "kind": "LinkedField",
   "name": "supporterOnlyResource",
@@ -359,25 +349,25 @@ v36 = {
   ],
   "storageKey": null
 },
-v37 = {
+v36 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "reference",
   "storageKey": null
 },
-v38 = {
+v37 = {
   "kind": "Literal",
   "name": "state",
   "value": "DRAFT"
 },
-v39 = [
+v38 = [
   {
     "kind": "Literal",
     "name": "first",
     "value": 5
   },
-  (v38/*: any*/)
+  (v37/*: any*/)
 ];
 return {
   "fragment": {
@@ -677,8 +667,7 @@ return {
                             "selections": (v32/*: any*/),
                             "storageKey": null
                           },
-                          (v34/*: any*/),
-                          (v35/*: any*/)
+                          (v34/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -708,8 +697,7 @@ return {
                             "plural": false,
                             "selections": [
                               (v34/*: any*/),
-                              (v33/*: any*/),
-                              (v35/*: any*/)
+                              (v33/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -776,11 +764,11 @@ return {
                 ],
                 "storageKey": null
               },
-              (v36/*: any*/)
+              (v35/*: any*/)
             ],
             "storageKey": null
           },
-          (v37/*: any*/),
+          (v36/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -889,7 +877,7 @@ return {
                 "name": "first",
                 "value": 1
               },
-              (v38/*: any*/)
+              (v37/*: any*/)
             ],
             "concreteType": "PostConnection",
             "kind": "LinkedField",
@@ -925,7 +913,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v39/*: any*/),
+            "args": (v38/*: any*/),
             "concreteType": "PostConnection",
             "kind": "LinkedField",
             "name": "posts",
@@ -995,11 +983,11 @@ return {
                             ],
                             "storageKey": null
                           },
-                          (v36/*: any*/)
+                          (v35/*: any*/)
                         ],
                         "storageKey": null
                       },
-                      (v37/*: any*/),
+                      (v36/*: any*/),
                       (v24/*: any*/),
                       (v3/*: any*/)
                     ],
@@ -1057,7 +1045,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v39/*: any*/),
+            "args": (v38/*: any*/),
             "filters": [
               "state"
             ],
@@ -1086,7 +1074,7 @@ return {
     ]
   },
   "params": {
-    "id": "0e9550ebe7d3c036ca945101f9f710e5",
+    "id": "673356ec77878bc2c38c646fdedbcdfe",
     "metadata": {},
     "name": "ResultCreatePostQuery",
     "operationKind": "query",

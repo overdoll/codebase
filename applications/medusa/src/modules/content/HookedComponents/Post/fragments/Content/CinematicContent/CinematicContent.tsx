@@ -7,6 +7,7 @@ import ContentGrid from '../../../components/ContentGrid/ContentGrid'
 import { Box, Center, GridItem } from '@chakra-ui/react'
 import CinematicGallery from '../../Gallery/CinematicGallery/CinematicGallery'
 import CinematicCarousel from '../../Carousel/CinematicCarousel/CinematicCarousel'
+import syncSwiperSlideChange from '../../../support/syncSwiperSlideChange'
 
 interface Props {
   postQuery: CinematicContentFragment$key
@@ -35,6 +36,8 @@ export default function CinematicContent (props: Props): JSX.Element {
   const onInit: OnSwiperInitType = (swiper) => {
     setSwiper(swiper)
   }
+
+  syncSwiperSlideChange(swiper, setSwiper)
 
   return (
     <ContentGrid contentLength={postData.content.length} key={postData.id}>

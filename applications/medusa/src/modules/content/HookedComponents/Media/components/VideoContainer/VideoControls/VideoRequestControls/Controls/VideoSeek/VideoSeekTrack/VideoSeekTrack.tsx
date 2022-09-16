@@ -84,11 +84,11 @@ export default function VideoSeekTrack (props: Props): JSX.Element {
           data-ignore='click'
         >
           <SliderTrack data-ignore='click' borderRadius='full' h='100%' bg='whiteAlpha.100'>
-            <SliderFilledTrack data-ignore='click' bg='purple.200' />
+            <SliderFilledTrack data-ignore='click' bg='teal.200' />
           </SliderTrack>
         </Slider>
         <Flex data-ignore='click' pointerEvents='none' position='absolute'>
-          <Heading data-ignore='click' color='dimmers.300' fontSize='md'>
+          <Heading data-ignore='click' color='whiteAlpha.700' fontSize='md'>
             {formatSecondsIntoMinutes(time)} / {formatSecondsIntoMinutes(duration)}
           </Heading>
         </Flex>

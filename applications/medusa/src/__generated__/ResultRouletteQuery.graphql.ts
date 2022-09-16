@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fb80907f0c7ab20fb4e9b109f329a409>>
- * @relayHash 372ae269180c575dfe06edc1e99ae5e9
+ * @generated SignedSource<<386d3977e66440fa3d639efc7f26f296>>
+ * @relayHash bce86f9218aa675e57c1da389587ed62
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 372ae269180c575dfe06edc1e99ae5e9
+// @relayRequestID bce86f9218aa675e57c1da389587ed62
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -207,16 +207,6 @@ v17 = {
 v18 = {
   "alias": null,
   "args": null,
-  "concreteType": "ImageMediaAccess",
-  "kind": "LinkedField",
-  "name": "thumbnailHd",
-  "plural": false,
-  "selections": (v15/*: any*/),
-  "storageKey": null
-},
-v19 = {
-  "alias": null,
-  "args": null,
   "kind": "ScalarField",
   "name": "reference",
   "storageKey": null
@@ -412,8 +402,7 @@ return {
                                         "selections": (v15/*: any*/),
                                         "storageKey": null
                                       },
-                                      (v17/*: any*/),
-                                      (v18/*: any*/)
+                                      (v17/*: any*/)
                                     ],
                                     "storageKey": null
                                   },
@@ -443,8 +432,7 @@ return {
                                         "plural": false,
                                         "selections": [
                                           (v17/*: any*/),
-                                          (v16/*: any*/),
-                                          (v18/*: any*/)
+                                          (v16/*: any*/)
                                         ],
                                         "storageKey": null
                                       },
@@ -552,7 +540,7 @@ return {
                         ],
                         "storageKey": null
                       },
-                      (v19/*: any*/)
+                      (v18/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -568,7 +556,7 @@ return {
                 "plural": false,
                 "selections": [
                   (v3/*: any*/),
-                  (v19/*: any*/),
+                  (v18/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -617,7 +605,7 @@ return {
     ]
   },
   "params": {
-    "id": "372ae269180c575dfe06edc1e99ae5e9",
+    "id": "bce86f9218aa675e57c1da389587ed62",
     "metadata": {},
     "name": "ResultRouletteQuery",
     "operationKind": "query",

@@ -1,4 +1,4 @@
-import HlsPlayer from 'xgplayer-hls-vod'
+import HlsPlayer from 'xgplayer-hls.js'
 import { useEffect, useRef } from 'react'
 import { VideoContainerProps } from '../../../../../types'
 import { VIDEO_OPTIONS } from '../../../../../constants'

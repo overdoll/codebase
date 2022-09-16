@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ff460d4875ec9b91a55f7d52a94db13a>>
- * @relayHash 3349516fdd59817f1bb1a8a791849cc5
+ * @generated SignedSource<<0dc3ec6853dfcdf64936e5df2eb93fb2>>
+ * @relayHash a15712a52948324a92e33f6bb1e74dd5
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3349516fdd59817f1bb1a8a791849cc5
+// @relayRequestID a15712a52948324a92e33f6bb1e74dd5
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -148,16 +148,6 @@ v11 = {
   "concreteType": "ImageMediaAccess",
   "kind": "LinkedField",
   "name": "thumbnail",
-  "plural": false,
-  "selections": (v9/*: any*/),
-  "storageKey": null
-},
-v12 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "ImageMediaAccess",
-  "kind": "LinkedField",
-  "name": "thumbnailHd",
   "plural": false,
   "selections": (v9/*: any*/),
   "storageKey": null
@@ -474,8 +464,7 @@ return {
                                             "selections": (v9/*: any*/),
                                             "storageKey": null
                                           },
-                                          (v11/*: any*/),
-                                          (v12/*: any*/)
+                                          (v11/*: any*/)
                                         ],
                                         "storageKey": null
                                       },
@@ -505,8 +494,7 @@ return {
                                             "plural": false,
                                             "selections": [
                                               (v11/*: any*/),
-                                              (v10/*: any*/),
-                                              (v12/*: any*/)
+                                              (v10/*: any*/)
                                             ],
                                             "storageKey": null
                                           },
@@ -661,7 +649,7 @@ return {
     ]
   },
   "params": {
-    "id": "3349516fdd59817f1bb1a8a791849cc5",
+    "id": "a15712a52948324a92e33f6bb1e74dd5",
     "metadata": {},
     "name": "PostAuditLogsQuery",
     "operationKind": "query",

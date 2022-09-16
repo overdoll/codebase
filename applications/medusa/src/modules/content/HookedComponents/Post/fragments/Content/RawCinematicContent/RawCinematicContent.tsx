@@ -7,6 +7,7 @@ import ContentGrid from '../../../components/ContentGrid/ContentGrid'
 import { Box, GridItem } from '@chakra-ui/react'
 import RawCinematicGallery from '../../Gallery/RawCinematicGallery/RawCinematicGallery'
 import RawCinematicCarousel from '../../Carousel/RawCinematicCarousel/RawCinematicCarousel'
+import syncSwiperSlideChange from '../../../support/syncSwiperSlideChange'
 
 interface Props {
   postQuery: RawCinematicContentFragment$key
@@ -35,6 +36,8 @@ export default function RawCinematicContent (props: Props): JSX.Element {
   const onInit: OnSwiperInitType = (swiper) => {
     setSwiper(swiper)
   }
+
+  syncSwiperSlideChange(swiper, setSwiper)
 
   return (
     <ContentGrid contentLength={postData.content.length} key={postData.id}>

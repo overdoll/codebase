@@ -6,7 +6,6 @@ import useObserveVideo from '../../support/useObserveVideo'
 import { Flex } from '@chakra-ui/react'
 import { pauseVideo, playVideo, startOrPlayVideo } from '../../support/controls'
 import syncPlayerPlayPause from '../../support/syncPlayerPlayPause'
-import syncPlayerLoading from '../../support/syncPlayerLoading'
 
 export interface ObserveVideoContainerProps {
   isActive: boolean
@@ -25,8 +24,6 @@ export default function ObserveVideoContainer (props: Props): JSX.Element {
   } = props
 
   const [player, setPlayer] = useState<PlayerType | null>(null)
-  const [isLoading, setLoading] = useState(false)
-  const [playing, setPlaying] = useState(player?.video?.paused !== true)
 
   const setPlayers: OnPlayerInitType = (player) => {
     setPlayer(player)
@@ -41,40 +38,38 @@ export default function ObserveVideoContainer (props: Props): JSX.Element {
 
   // play video if it hasn't been loaded yet, and you're focused into it
   useEffect(() => {
-    if (player != null && player?.video == null && autoPlay === false && isObservingDebounced && isActive) {
+    if (player != null && !player.hasStart && autoPlay !== true && isObservingDebounced && isActive) {
       startOrPlayVideo(player)
     }
-  }, [isObservingDebounced, isActive, player, autoPlay, isLoading])
+  }, [isObservingDebounced, isActive, player, autoPlay])
 
   // play video when you scroll into it, slide is active, and it is paused
   useEffect(() => {
-    if (player == null) return
-    if (isObservingDebounced && isActive && !playing && !isLoading) {
+    if (player == null || !player.hasStart) return
+    if (isObservingDebounced && isActive && player.video.paused) {
       playVideo(player)
     }
-  }, [isObservingDebounced, isActive, player, playing, isLoading])
+  }, [isObservingDebounced, isActive, player])
 
   // pause video when you're scrolled into it, slide is not active, and it is paused
-  // TODO stop loading if scrolled away from loading video, or stop autoplay
   useEffect(() => {
-    if (player == null) return
-    if (isObserving && !isActive && !playing) {
+    if (player == null || !player.hasStart) return
+    if (isObserving && !isActive && !player.video.paused) {
       pauseVideo(player)
     }
-  }, [isObserving, isActive, playing, player])
+  }, [isObserving, isActive, player])
 
   // pause video when you scroll away
-  // TODO stop loading if scrolled away from loading video, or stop autoplay
   useEffect(() => {
-    if (player == null) return
-    if (!isObserving && !playing) {
+    if (player == null || !player.hasStart) return
+    if (!isObserving && !player.video.paused) {
       pauseVideo(player)
     }
-  }, [isObserving, playing, player])
+  }, [isObserving, player])
 
   // keep track of video states
-  syncPlayerLoading(player, setLoading)
-  syncPlayerPlayPause(player, setPlaying, setPlayer)
+  syncPlayerPlayPause(player, () => {
+  }, setPlayer)
 
   return (
     <Flex

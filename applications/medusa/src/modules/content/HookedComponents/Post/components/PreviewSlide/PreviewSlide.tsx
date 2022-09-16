@@ -11,10 +11,9 @@ export default function PreviewSlide (props: Props): JSX.Element {
   return (
     <Flex
       direction='column'
-      maxH={{
-        base: 700,
-        md: 800
-      }}
+      maxH='80vh'
+      borderRadius='lg'
+      overflow='hidden'
       w='100%'
       h='100%'
       align='center'

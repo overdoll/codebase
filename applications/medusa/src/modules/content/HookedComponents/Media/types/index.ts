@@ -10,7 +10,7 @@ export interface PlayerOptions {
 
 // @ts-expect-error
 export class PlayerType extends Player {
-  public video?: HTMLVideoElement
+  public video: HTMLVideoElement
 }
 
 export type OnPlayerInitType = (player: PlayerType) => void

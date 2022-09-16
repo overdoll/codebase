@@ -12,9 +12,15 @@ export default function CinematicContainer ({
   return (
     <Container
       w='100%'
-      h='56.25vw'
+      h={{
+        lg: '56.25vw',
+        base: '80vh'
+      }}
       maxW='100%'
-      maxH='calc(100vh - 169px)'
+      maxH={{
+        lg: 'calc(100vh - 169px)',
+        base: '100%'
+      }}
       minH='480px'
       px={0}
       position='relative'

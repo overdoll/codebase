@@ -18,7 +18,7 @@ const Fragment = graphql`
   }
 `
 
-interface Props extends ObserveVideoContainerProps, Partial<Pick<VideoContainerProps, 'currentTime'>> {
+interface Props extends ObserveVideoContainerProps, Partial<Pick<VideoContainerProps, 'currentTime' | 'autoPlay'>> {
   mediaQuery: CinematicMediaFragment$key
 }
 

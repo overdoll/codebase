@@ -16,11 +16,6 @@ const Fragment = graphql`
         width
         height
       }
-      thumbnailHd {
-        url
-        width
-        height
-      }
     }
   }
 `
@@ -46,14 +41,6 @@ export default function ThumbnailImageMedia (props: Props): JSX.Element {
 
   return (
     <ImageCoverContainer
-      variants={(
-        <source
-          media='(min-width: 48em)'
-          srcSet={data.variants.thumbnailHd.url}
-          width={data.variants.thumbnailHd.width}
-          height={data.variants.thumbnailHd.height}
-        />
-      )}
       url={data.variants.thumbnail.url}
       width={data.variants.thumbnail.width}
       height={data.variants.thumbnail.height}

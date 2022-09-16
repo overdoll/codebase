@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { GALLERY_PROPS, SLIDE_PROPS } from '../../../constants'
 import { OnSwiperInitType } from '../../../types'
 import { RawCinematicMedia } from '../../../../Media'
-import PreviewSlide from '../../../components/PreviewSlide/PreviewSlide'
+import RawCinematicSlide from '../../../components/RawCinematicSlide/RawCinematicSlide'
 
 interface Props {
   postQuery: RawCinematicGalleryFragment$key
@@ -47,12 +47,12 @@ export default function RawCinematicGallery (props: Props): JSX.Element {
           {...SLIDE_PROPS}
         >
           {({ isActive }) => (
-            <PreviewSlide>
+            <RawCinematicSlide>
               <RawCinematicMedia
                 mediaQuery={content.media}
                 isActive={isActive}
               />
-            </PreviewSlide>
+            </RawCinematicSlide>
           )}
         </SwiperSlide>)}
     </Swiper>
