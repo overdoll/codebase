@@ -1,4 +1,4 @@
-import { SwiperProps, SwiperSlideProps } from 'swiper/react/swiper-react'
+import { SwiperProps, SwiperSlideProps } from 'swiper/react'
 
 export const POST_SWIPER_PROPS: SwiperProps = {
   grabCursor: true,

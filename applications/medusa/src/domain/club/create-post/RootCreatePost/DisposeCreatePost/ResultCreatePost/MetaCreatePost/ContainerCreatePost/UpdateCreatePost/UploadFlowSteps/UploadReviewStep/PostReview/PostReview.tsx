@@ -7,6 +7,7 @@ import PostPrivateHeader
   from '@//:modules/content/Posts/components/PostInteraction/PostHeaders/PostPrivateHeader/PostPrivateHeader'
 import PostGalleryStaffDetailed
   from '@//:modules/content/Posts/components/PostData/PostGalleryStaffDetailed/PostGalleryStaffDetailed'
+import { RawCinematicContent } from '@//:modules/content/HookedComponents/Post'
 
 interface Props {
   query: PostReviewFragment$key
@@ -14,11 +15,9 @@ interface Props {
 
 const Fragment = graphql`
   fragment PostReviewFragment on Post {
-    ...PostGalleryStaffDetailedFragment
-    ...PostHeaderClubFragment
+    ...RawCinematicContentFragment
     ...PostClickableCharactersFragment
     ...PostClickableCategoriesFragment
-    ...PostDescriptionFragment
     ...PostPrivateHeaderFragment
   }
 `
@@ -31,7 +30,7 @@ export default function PostReview ({
   return (
     <Stack spacing={2}>
       <PostPrivateHeader postQuery={data} />
-      <PostGalleryStaffDetailed postQuery={data} />
+      <RawCinematicContent postQuery={data} />
       <PostClickableCharacters query={data} />
       <PostClickableCategories query={data} />
     </Stack>

@@ -1,6 +1,5 @@
 import { useFragment } from 'react-relay/hooks'
 import type { RouletteScreenGameFragment$key } from '@//:artifacts/RouletteScreenGameFragment.graphql'
-import type { RouletteScreenGameViewerFragment$key } from '@//:artifacts/RouletteScreenGameViewerFragment.graphql'
 import { graphql } from 'react-relay'
 import { Box, GridItem } from '@chakra-ui/react'
 import RouletteScreenShuffle from './RouletteScreenShuffle/RouletteScreenShuffle'
@@ -8,7 +7,6 @@ import RouletteScreenClosed from '../RouletteScreenClosed/RouletteScreenClosed'
 
 interface Props {
   query: RouletteScreenGameFragment$key
-  viewerQuery: RouletteScreenGameViewerFragment$key | null
 }
 
 const Fragment = graphql`
@@ -21,27 +19,18 @@ const Fragment = graphql`
   }
 `
 
-const ViewerFragment = graphql`
-  fragment RouletteScreenGameViewerFragment on Account {
-    ...RouletteScreenShuffleViewerFragment
-  }
-`
-
 export default function RouletteScreenGame (props: Props): JSX.Element {
   const {
-    query,
-    viewerQuery
+    query
   } = props
 
   const data = useFragment(Fragment, query)
-
-  const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   return (
     <GridItem overflow='hidden'>
       <Box minWidth={0} data-test-id='roulette-post' w='100%' h='100%' position='relative'>
         {data.gameState != null && <RouletteScreenClosed query={data} />}
-        <RouletteScreenShuffle query={data} viewerQuery={viewerData} />
+        <RouletteScreenShuffle query={data} />
       </Box>
     </GridItem>
   )

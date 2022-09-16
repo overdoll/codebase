@@ -12,9 +12,6 @@ const Query = graphql`
     gameSessionStatus(reference: $reference) {
       ...MetaRouletteFragment
     }
-    viewer {
-      ...MetaRouletteViewerFragment
-    }
   }
 `
 
@@ -27,6 +24,6 @@ export default function ResultRoulette (props: Props): JSX.Element {
   )
 
   return (
-    <MetaRoulette gameSessionStatusQuery={queryData?.gameSessionStatus} viewerQuery={queryData.viewer} />
+    <MetaRoulette gameSessionStatusQuery={queryData?.gameSessionStatus} />
   )
 }

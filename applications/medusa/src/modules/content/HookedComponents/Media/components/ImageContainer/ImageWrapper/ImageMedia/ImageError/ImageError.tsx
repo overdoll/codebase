@@ -13,6 +13,7 @@ export default function ImageError ({ tiny }: Props): JSX.Element {
       <Flex
         justify='center'
         align='center'
+        position='absolute'
         w={4}
         h={4}
       >
@@ -30,6 +31,7 @@ export default function ImageError ({ tiny }: Props): JSX.Element {
       direction='column'
       justify='center'
       align='center'
+      position='absolute'
       spacing={2}
     >
       <Icon icon={WarningTriangle} w={6} h={6} fill='orange.300' />

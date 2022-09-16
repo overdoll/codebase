@@ -90,7 +90,6 @@ export default function ScrollLikedPosts (props: Props): JSX.Element {
       }) => (
         <FullSimplePost
           key={key}
-          hideOverflow={false}
           query={data.likedPosts.edges[index].node}
           viewerQuery={data}
         />

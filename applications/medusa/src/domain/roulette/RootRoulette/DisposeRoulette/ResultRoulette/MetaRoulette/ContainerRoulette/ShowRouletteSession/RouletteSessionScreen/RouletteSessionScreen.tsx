@@ -1,13 +1,11 @@
 import { useFragment } from 'react-relay/hooks'
 import type { RouletteSessionScreenFragment$key } from '@//:artifacts/RouletteSessionScreenFragment.graphql'
-import type { RouletteSessionScreenViewerFragment$key } from '@//:artifacts/RouletteSessionScreenViewerFragment.graphql'
 import { graphql } from 'react-relay'
 import RouletteScreenInstructions from './RouletteScreenInstructions/RouletteScreenInstructions'
 import RouletteScreenGame from './RouletteScreenGame/RouletteScreenGame'
 
 interface Props {
   query: RouletteSessionScreenFragment$key | null
-  viewerQuery: RouletteSessionScreenViewerFragment$key | null
 }
 
 const Fragment = graphql`
@@ -27,25 +25,16 @@ const Fragment = graphql`
   }
 `
 
-const ViewerFragment = graphql`
-  fragment RouletteSessionScreenViewerFragment on Account {
-    ...RouletteScreenGameViewerFragment
-  }
-`
-
 export default function RouletteSessionScreen (props: Props): JSX.Element {
   const {
-    query,
-    viewerQuery
+    query
   } = props
 
   const data = useFragment(Fragment, query)
-
-  const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   if (data?.gameState == null) {
     return <RouletteScreenInstructions />
   }
 
-  return <RouletteScreenGame query={data} viewerQuery={viewerData} />
+  return <RouletteScreenGame query={data} />
 }

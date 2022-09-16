@@ -16,6 +16,7 @@ export interface VideoWatchProps {
   volume: number
   muted: boolean
   autoPlay: boolean
+  currentTime: number
 }
 
 export interface ContainerRefProps {
@@ -40,6 +41,7 @@ export default function VideoContainer (props: VideoContainerProps): JSX.Element
     muted = true,
     controls = 'advanced',
     autoPlay = false,
+    currentTime = 0,
     backgroundPoster
   } = props
 
@@ -75,6 +77,7 @@ export default function VideoContainer (props: VideoContainerProps): JSX.Element
         mp4Url={mp4Url}
         onPlayerInit={(player) => setPlayers(player)}
         poster={poster}
+        currentTime={currentTime}
       />
       <VideoControls
         controls={controls}

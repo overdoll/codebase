@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { OnPlayerInitType, PlayerType } from '../types'
 
-export default function syncPlayerPlayPause (player: PlayerType, setPlaying?: (playing) => void, setPlayer?: OnPlayerInitType): void {
+export default function syncPlayerPlayPause (player: PlayerType | null, setPlaying?: (playing) => void, setPlayer?: OnPlayerInitType): void {
   useEffect(() => {
     if (player == null) return
 
@@ -18,8 +18,8 @@ export default function syncPlayerPlayPause (player: PlayerType, setPlaying?: (p
     player.on('play', onPlay)
     player.on('pause', onPause)
     return () => {
-      player.on('play', onPlay)
-      player.on('pause', onPause)
+      player.off('play', onPlay)
+      player.off('pause', onPause)
     }
   }, [player, setPlaying])
 }

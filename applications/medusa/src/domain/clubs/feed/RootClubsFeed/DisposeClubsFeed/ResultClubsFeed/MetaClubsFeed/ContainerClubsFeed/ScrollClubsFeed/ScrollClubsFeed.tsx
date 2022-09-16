@@ -58,7 +58,6 @@ export default function ScrollClubsFeed (props: Props): JSX.Element {
       }) => (
         <FullSimplePost
           key={key}
-          hideOverflow={false}
           query={data.clubMembersPostsFeed.edges[index].node}
           viewerQuery={data}
         />

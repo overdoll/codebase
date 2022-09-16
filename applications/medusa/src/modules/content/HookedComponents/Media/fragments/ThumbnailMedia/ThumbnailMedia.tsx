@@ -28,13 +28,13 @@ export default function ThumbnailMedia (props: Props): JSX.Element {
 
   const data = useFragment(Fragment, mediaQuery)
 
-  if (data.__typename === 'ImageMedia') {
+  if (data?.__typename === 'ImageMedia') {
     return (
       <ThumbnailImageMedia imageMediaQuery={data} />
     )
   }
 
-  if (data.__typename === 'VideoMedia') {
+  if (data?.__typename === 'VideoMedia') {
     return (
       <ThumbnailImageMedia imageMediaQuery={data.cover} />
     )

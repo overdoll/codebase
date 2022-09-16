@@ -15,7 +15,8 @@ export default function HlsVideoPlayer (props: Props): JSX.Element {
     hlsUrl,
     volume,
     muted,
-    autoPlay
+    autoPlay,
+    currentTime
   } = props
 
   const ref = useRef(null)
@@ -33,6 +34,9 @@ export default function HlsVideoPlayer (props: Props): JSX.Element {
     const onReady = (): void => {
       player.muted = muted
       player.volume = volume
+      if (currentTime !== 0) {
+        player.currentTime = currentTime
+      }
       onPlayerInit(player)
     }
 

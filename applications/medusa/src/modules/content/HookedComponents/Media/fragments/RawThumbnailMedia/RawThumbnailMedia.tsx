@@ -25,7 +25,7 @@ export default function RawThumbnailMedia (props: Props): JSX.Element {
 
   const data = useFragment(Fragment, mediaQuery)
 
-  if (data.__typename === 'RawMedia') {
+  if (data?.__typename === 'RawMedia') {
     return <ProcessingRawMedia rawMediaQuery={data} />
   }
 

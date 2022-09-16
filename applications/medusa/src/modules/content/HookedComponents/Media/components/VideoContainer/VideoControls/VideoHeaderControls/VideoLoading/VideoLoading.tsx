@@ -1,5 +1,5 @@
 import { Flex, Heading, HStack } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { BeatLoader } from 'react-spinners'
 import { VideoControlTypeProps } from '../../../VideoContainer'
 import { Icon } from '../../../../../../../PageLayout'
@@ -9,6 +9,7 @@ import syncPlayerTimeUpdate from '../../../../../support/syncPlayerTimeUpdate'
 import { PlayerType } from '../../../../../types'
 import syncPlayerPlayPause from '../../../../../support/syncPlayerPlayPause'
 import formatSecondsIntoMinutes from '../../../../../support/formatSecondsIntoMinutes'
+import syncPlayerLoading from '../../../../../support/syncPlayerLoading'
 
 interface Props extends VideoControlTypeProps {
   player: PlayerType
@@ -22,28 +23,10 @@ export default function VideoLoading (props: Props): JSX.Element {
   } = props
 
   const [isLoading, setLoading] = useState(false)
-  const [playing, setPlaying] = useState(player?.video?.paused ?? true)
+  const [playing, setPlaying] = useState(player?.video?.paused !== true)
   const [time, setTime] = useState(player.currentTime)
 
-  useEffect(() => {
-    if (player == null) return
-
-    const onCanPlay = (): void => {
-      setLoading(false)
-    }
-
-    const onWaiting = (): void => {
-      setLoading(true)
-    }
-
-    player.on('canplay', onCanPlay)
-    player.on('waiting', onWaiting)
-    return () => {
-      player.off('canplay', onCanPlay)
-      player.off('waiting', onWaiting)
-    }
-  }, [player])
-
+  syncPlayerLoading(player, setLoading)
   syncPlayerTimeUpdate(player, setTime)
   syncPlayerPlayPause(player, setPlaying)
 

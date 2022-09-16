@@ -36,7 +36,8 @@ export default function DynamicVideo (props: Props): JSX.Element {
     hlsUrl,
     volume,
     muted,
-    autoPlay
+    autoPlay,
+    currentTime
   } = props
 
   // determine HLS or MP4 video here
@@ -44,6 +45,7 @@ export default function DynamicVideo (props: Props): JSX.Element {
   if (hlsUrl != null) {
     return (
       <DynamicHlsVideoPlayer
+        currentTime={currentTime}
         autoPlay={autoPlay}
         volume={volume}
         muted={muted}
@@ -56,6 +58,7 @@ export default function DynamicVideo (props: Props): JSX.Element {
   if (mp4Url != null) {
     return (
       <DynamicMp4VideoPlayer
+        currentTime={currentTime}
         autoPlay={autoPlay}
         volume={volume}
         muted={muted}

@@ -25,7 +25,6 @@ export default function UploadFlowStickyFooter ({
     p: 2,
     backdropFilter: 'auto',
     backdropBlur: '2px',
-    zIndex: 'sidebar',
     borderTopRadius: 'lg'
   }
 
@@ -37,7 +36,7 @@ export default function UploadFlowStickyFooter ({
       }}
       position='fixed'
       w='100%'
-
+      zIndex='sidebar'
     >
       <MobileContainer>
         <Flex {...STICKY_PROPS}>

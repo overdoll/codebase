@@ -33,7 +33,31 @@ export default function ImageMedia (props: ImageMediaProps): JSX.Element {
 
   if (hasError) {
     return (
-      <ImageError tiny={tiny} />
+      <Flex
+        as='picture'
+        h='inherit'
+        w='inherit'
+        align='center'
+        justify='center'
+        objectFit='inherit'
+      >
+        <ImageError tiny={tiny} />
+        <NextImage
+          loading='lazy'
+          src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+          width={width ?? undefined}
+          height={height ?? undefined}
+          style={{
+            backgroundColor: color ?? 'transparent',
+            userSelect: 'none',
+            width: width == null ? 'inherit' : 'auto',
+            height: height == null ? 'inherit' : 'auto',
+            maxWidth: '100%',
+            objectFit: 'inherit'
+          }}
+          draggable={false}
+        />
+      </Flex>
     )
   }
 

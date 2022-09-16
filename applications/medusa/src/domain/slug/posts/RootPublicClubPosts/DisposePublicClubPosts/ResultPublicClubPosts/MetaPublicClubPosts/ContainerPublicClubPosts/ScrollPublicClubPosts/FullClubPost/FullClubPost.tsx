@@ -8,6 +8,8 @@ import { useMemo } from 'react'
 import { PostGalleryPublicSimple } from '@//:modules/content/Posts'
 import PostPublicHeader
   from '@//:modules/content/Posts/components/PostInteraction/PostHeaders/PostPublicHeader/PostPublicHeader'
+import PreviewGallery from '@//:modules/content/HookedComponents/Post/fragments/Gallery/PreviewGallery/PreviewGallery'
+import { PreviewContent } from '@//:modules/content/HookedComponents/Post'
 
 interface Props {
   query: FullClubPostFragment$key
@@ -18,7 +20,7 @@ interface Props {
 const PostFragment = graphql`
   fragment FullClubPostFragment on Post {
     id
-    ...PostGalleryPublicSimpleFragment
+    ...PreviewContentFragment
     ...PostFooterButtonsFragment
     ...PostPublicHeaderFragment
   }
@@ -40,13 +42,10 @@ export default function FullClubPost ({
   const data = useFragment<FullClubPostFragment$key>(PostFragment, query)
   const viewerData = useFragment<FullClubPostViewerFragment$key>(ViewerFragment, viewerQuery)
 
-  const PostMemo = useMemo(() => (
-    <PostGalleryPublicSimple hideOverflow={hideOverflow} postQuery={data} viewerQuery={viewerData} />), [data.id])
-
   return (
     <Stack spacing={2}>
       <PostPublicHeader redirectToPost postQuery={data} viewerQuery={viewerData} />
-      {PostMemo}
+      <PreviewContent postQuery={data} />
       <PostFooterButtons postQuery={data} viewerQuery={viewerData} />
     </Stack>
   )

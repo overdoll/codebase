@@ -19,6 +19,10 @@ const Query = graphql`
         id
         viewerCanViewSupporterOnlyContent
         isSupporterOnly
+        media {
+          ...RawCinematicMediaFragment
+          ...ThumbnailImageMediaFragment
+        }
         resource {
           id
           failed

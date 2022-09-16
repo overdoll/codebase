@@ -3,7 +3,10 @@ import type { PreviewVideoMediaFragment$key } from '@//:artifacts/PreviewVideoMe
 import { useFragment } from 'react-relay/hooks'
 import BackgroundPosterImageMedia from '../BackgroundPosterImageMedia/BackgroundPosterImageMedia'
 import PosterImageMedia from '../PosterImageMedia/PosterImageMedia'
-import ControlledVideoContainer from '../../../components/ControlledVideoContainer/ControlledVideoContainer'
+import ObserveVideoContainer, {
+  ObserveVideoContainerProps
+} from '../../../components/ObserveVideoContainer/ObserveVideoContainer'
+import { VideoContainerProps } from '../../../components/VideoContainer/VideoContainer'
 
 const Fragment = graphql`
   fragment PreviewVideoMediaFragment on VideoMedia {
@@ -29,13 +32,14 @@ const Fragment = graphql`
   }
 `
 
-interface Props {
+interface Props extends ObserveVideoContainerProps, Partial<Pick<VideoContainerProps, 'currentTime'>> {
   videoMediaQuery: PreviewVideoMediaFragment$key
 }
 
 export default function PreviewVideoMedia (props: Props): JSX.Element {
   const {
-    videoMediaQuery
+    videoMediaQuery,
+    ...rest
   } = props
 
   const data = useFragment(Fragment, videoMediaQuery)
@@ -49,7 +53,7 @@ export default function PreviewVideoMedia (props: Props): JSX.Element {
 
   if (hlsUrl != null) {
     return (
-      <ControlledVideoContainer
+      <ObserveVideoContainer
         hlsUrl={hlsUrl}
         poster={<PosterImageMedia imageMediaQuery={data.cover} />}
         backgroundPoster={<BackgroundPosterImageMedia imageMediaQuery={data.cover} />}
@@ -60,13 +64,14 @@ export default function PreviewVideoMedia (props: Props): JSX.Element {
         duration={data.duration}
         hasAudio={data.hasAudio}
         controls='simple'
+        {...rest}
       />
     )
   }
 
   if (mp4Url != null) {
     return (
-      <ControlledVideoContainer
+      <ObserveVideoContainer
         mp4Url={mp4Url}
         poster={<BackgroundPosterImageMedia imageMediaQuery={data.cover} />}
         backgroundPoster={<BackgroundPosterImageMedia imageMediaQuery={data.cover} />}
@@ -77,6 +82,7 @@ export default function PreviewVideoMedia (props: Props): JSX.Element {
         duration={data.duration}
         hasAudio={data.hasAudio}
         controls='simple'
+        {...rest}
       />
     )
   }

@@ -2,9 +2,9 @@
  * Static assets
  */
 // For static background images used on the site
-export { default as StaticImageCover } from './static/StaticImageCover/StaticImageCover'
+export { default as StaticImageCover } from './components/StaticImageCover/StaticImageCover'
 // For static background videos used on the site
-export { default as StaticVideoCover } from './static/StaticVideoCover/StaticVideoCover'
+export { default as StaticVideoCover } from './components/StaticVideoCover/StaticVideoCover'
 
 /**
  * Non-moving assets, displaying only low quality video and image previews
@@ -39,4 +39,4 @@ export { default as CinematicMedia } from './fragments/CinematicMedia/CinematicM
 // Used to show club owners the progress of the post in the upload flow
 // But on the actual post itself
 // Also used for staff to see progress when in post staff view
-export { default as RawPreviewMedia } from './fragments/RawPreviewMedia/RawPreviewMedia'
+export { default as RawCinematicMedia } from './fragments/RawCinematicMedia/RawCinematicMedia'

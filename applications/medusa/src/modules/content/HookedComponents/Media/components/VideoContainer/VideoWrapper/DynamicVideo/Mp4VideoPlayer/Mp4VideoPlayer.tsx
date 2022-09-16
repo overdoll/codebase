@@ -15,7 +15,8 @@ export default function Mp4VideoPlayer (props: Props): JSX.Element {
     mp4Url,
     volume,
     muted,
-    autoPlay
+    autoPlay,
+    currentTime
   } = props
 
   const ref = useRef(null)
@@ -34,6 +35,10 @@ export default function Mp4VideoPlayer (props: Props): JSX.Element {
     const onReady = (): void => {
       player.muted = muted
       player.volume = volume
+      if (currentTime !== 0) {
+        player.currentTime = currentTime
+      }
+
       onPlayerInit(player)
     }
 

@@ -1,13 +1,11 @@
 import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { ContainerRouletteFragment$key } from '@//:artifacts/ContainerRouletteFragment.graphql'
-import { ContainerRouletteViewerFragment$key } from '@//:artifacts/ContainerRouletteViewerFragment.graphql'
 import ShowRouletteSession from './ShowRouletteSession/ShowRouletteSession'
 import { Grid } from '@chakra-ui/react'
 
 interface Props {
   gameSessionStatusQuery: ContainerRouletteFragment$key | null
-  viewerQuery: ContainerRouletteViewerFragment$key | null
 }
 
 const GameFragment = graphql`
@@ -16,20 +14,12 @@ const GameFragment = graphql`
   }
 `
 
-const ViewerFragment = graphql`
-  fragment ContainerRouletteViewerFragment on Account {
-    ...ShowRouletteSessionViewerFragment
-  }
-`
-
 export default function ContainerRoulette (props: Props): JSX.Element {
   const {
-    gameSessionStatusQuery,
-    viewerQuery
+    gameSessionStatusQuery
   } = props
 
   const gameData = useFragment(GameFragment, gameSessionStatusQuery)
-  const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   return (
     <Grid
@@ -42,7 +32,7 @@ export default function ContainerRoulette (props: Props): JSX.Element {
       h='100%'
       w='100%'
     >
-      <ShowRouletteSession query={gameData} viewerQuery={viewerData} />
+      <ShowRouletteSession query={gameData} />
     </Grid>
   )
 }

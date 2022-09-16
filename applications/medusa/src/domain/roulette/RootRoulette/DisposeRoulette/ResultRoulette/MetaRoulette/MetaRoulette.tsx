@@ -1,7 +1,6 @@
 import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { MetaRouletteFragment$key } from '@//:artifacts/MetaRouletteFragment.graphql'
-import { MetaRouletteViewerFragment$key } from '@//:artifacts/MetaRouletteViewerFragment.graphql'
 import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import RouletteRichObject from './RouletteRichObject/RouletteRichObject'
 import { SequenceProvider, useSequence, ValueResolver } from '@//:modules/content/HookedComponents/Sequence'
@@ -10,7 +9,6 @@ import ContainerRoulette from './ContainerRoulette/ContainerRoulette'
 
 interface Props {
   gameSessionStatusQuery: MetaRouletteFragment$key | null
-  viewerQuery: MetaRouletteViewerFragment$key | null
 }
 
 interface SequenceProps {
@@ -37,16 +35,9 @@ const GameFragment = graphql`
   }
 `
 
-const ViewerFragment = graphql`
-  fragment MetaRouletteViewerFragment on Account {
-    ...ContainerRouletteViewerFragment
-  }
-`
-
 export default function MetaRoulette (props: Props): JSX.Element {
   const {
-    gameSessionStatusQuery,
-    viewerQuery
+    gameSessionStatusQuery
   } = props
 
   const methods = useSequence<SequenceProps>({
@@ -55,14 +46,13 @@ export default function MetaRoulette (props: Props): JSX.Element {
   })
 
   const gameData = useFragment(GameFragment, gameSessionStatusQuery)
-  const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   return (
     <>
       <RouletteRichObject />
       <SequenceProvider {...methods}>
         <GlobalVideoManagerProvider>
-          <ContainerRoulette gameSessionStatusQuery={gameData} viewerQuery={viewerData} />
+          <ContainerRoulette gameSessionStatusQuery={gameData} />
         </GlobalVideoManagerProvider>
       </SequenceProvider>
     </>

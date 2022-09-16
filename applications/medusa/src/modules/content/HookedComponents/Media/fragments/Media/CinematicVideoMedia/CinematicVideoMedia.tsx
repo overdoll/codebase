@@ -3,7 +3,10 @@ import type { CinematicVideoMediaFragment$key } from '@//:artifacts/CinematicVid
 import { useFragment } from 'react-relay/hooks'
 import BackgroundPosterImageMedia from '../BackgroundPosterImageMedia/BackgroundPosterImageMedia'
 import PosterImageMedia from '../PosterImageMedia/PosterImageMedia'
-import ControlledVideoContainer from '../../../components/ControlledVideoContainer/ControlledVideoContainer'
+import ObserveVideoContainer, {
+  ObserveVideoContainerProps
+} from '../../../components/ObserveVideoContainer/ObserveVideoContainer'
+import { VideoContainerProps } from '../../../components/VideoContainer/VideoContainer'
 
 const Fragment = graphql`
   fragment CinematicVideoMediaFragment on VideoMedia {
@@ -29,13 +32,14 @@ const Fragment = graphql`
   }
 `
 
-interface Props {
+interface Props extends ObserveVideoContainerProps, Partial<Pick<VideoContainerProps, 'currentTime'>> {
   videoMediaQuery: CinematicVideoMediaFragment$key
 }
 
 export default function CinematicVideoMedia (props: Props): JSX.Element {
   const {
-    videoMediaQuery
+    videoMediaQuery,
+    ...rest
   } = props
 
   const data = useFragment(Fragment, videoMediaQuery)
@@ -45,11 +49,9 @@ export default function CinematicVideoMedia (props: Props): JSX.Element {
   const hlsUrl = urls.filter((item) => item.hlsUrl != null)?.[0].hlsUrl
   const mp4Url = urls.filter((item) => item.mp4Url != null)?.[0].mp4Url
 
-  // TODO video containers need to be wrapped in managers that control autoplay
-
   if (hlsUrl != null) {
     return (
-      <ControlledVideoContainer
+      <ObserveVideoContainer
         hlsUrl={hlsUrl}
         poster={(
           <PosterImageMedia imageMediaQuery={data.cover} />
@@ -62,13 +64,14 @@ export default function CinematicVideoMedia (props: Props): JSX.Element {
         duration={data.duration}
         hasAudio={data.hasAudio}
         controls='advanced'
+        {...rest}
       />
     )
   }
 
   if (mp4Url != null) {
     return (
-      <ControlledVideoContainer
+      <ObserveVideoContainer
         mp4Url={mp4Url}
         poster={(
           <PosterImageMedia imageMediaQuery={data.cover} />
@@ -81,6 +84,7 @@ export default function CinematicVideoMedia (props: Props): JSX.Element {
         duration={data.duration}
         hasAudio={data.hasAudio}
         controls='advanced'
+        {...rest}
       />
     )
   }

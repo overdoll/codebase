@@ -27,7 +27,8 @@ export default function VideoWrapper (props: Props): JSX.Element {
     aspectRatio,
     volume,
     muted,
-    autoPlay
+    autoPlay,
+    currentTime
   } = props
 
   const isHydrated = useHydrate()
@@ -51,30 +52,6 @@ export default function VideoWrapper (props: Props): JSX.Element {
       player.off('play', onPlay)
     }
   }, [player])
-
-  // when volume has been changed by other video players, we update this value when video is played
-  useEffect(() => {
-    if (player == null) return
-    const onPlay = (): void => {
-      player.volume = volume
-    }
-    player.once('play', onPlay)
-    return () => {
-      player.off('play', onPlay)
-    }
-  }, [volume, player])
-
-  // same as above but for muted property
-  useEffect(() => {
-    if (player == null) return
-    const onPlay = (): void => {
-      player.muted = muted
-    }
-    player.once('play', onPlay)
-    return () => {
-      player.off('play', onPlay)
-    }
-  }, [muted, player])
 
   return (
     <Flex
@@ -103,6 +80,7 @@ export default function VideoWrapper (props: Props): JSX.Element {
       >
         {isHydrated && (
           <DynamicVideo
+            currentTime={currentTime}
             autoPlay={autoPlay}
             volume={volume}
             muted={muted}

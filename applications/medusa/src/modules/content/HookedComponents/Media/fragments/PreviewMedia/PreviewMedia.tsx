@@ -3,6 +3,7 @@ import type { PreviewMediaFragment$key } from '@//:artifacts/PreviewMediaFragmen
 import { useFragment } from 'react-relay/hooks'
 import PreviewVideoMedia from '../Media/PreviewVideoMedia/PreviewVideoMedia'
 import PreviewImageMedia from '../Media/PreviewImageMedia/PreviewImageMedia'
+import { ObserveVideoContainerProps } from '../../components/ObserveVideoContainer/ObserveVideoContainer'
 
 const Fragment = graphql`
   fragment PreviewMediaFragment on Media {
@@ -16,13 +17,14 @@ const Fragment = graphql`
   }
 `
 
-interface Props {
+interface Props extends ObserveVideoContainerProps {
   mediaQuery: PreviewMediaFragment$key
 }
 
 export default function PreviewMedia (props: Props): JSX.Element {
   const {
-    mediaQuery
+    mediaQuery,
+    ...rest
   } = props
 
   const data = useFragment(Fragment, mediaQuery)
@@ -35,7 +37,7 @@ export default function PreviewMedia (props: Props): JSX.Element {
 
   if (data.__typename === 'VideoMedia') {
     return (
-      <PreviewVideoMedia videoMediaQuery={data} />
+      <PreviewVideoMedia videoMediaQuery={data} {...rest} />
     )
   }
 
