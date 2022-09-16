@@ -33,6 +33,27 @@ func (s Server) CancelMediaProcessing(ctx context.Context, request *loader.Cance
 	return &emptypb.Empty{}, nil
 }
 
+func (s Server) ConvertResourcesToMedia(ctx context.Context, request *loader.ConvertResourceToMediaRequest) (*loader.ConvertResourceToMediaResponse, error) {
+
+	medias, err := s.app.Commands.ConvertResourcesToMedia.Handle(ctx, command.ConvertResourcesToMedia{
+		ItemId:      request.ItemId,
+		ResourceIds: request.ResourceIds,
+		Source:      "STING",
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	var response []*proto.Media
+
+	for _, res := range medias {
+		response = append(response, res.RawProto())
+	}
+
+	return &loader.ConvertResourceToMediaResponse{Media: response}, nil
+}
+
 func (s Server) ProcessMediaFromUploads(ctx context.Context, request *loader.ProcessMediaFromUploadsRequest) (*loader.ProcessMediaFromUploadsResponse, error) {
 
 	medias, err := s.app.Commands.ProcessMediaFromUploads.Handle(ctx, command.ProcessMediaFromUploads{

@@ -3604,15 +3604,6 @@ type ImageMediaVariants {
 
   """200x200 crop of an image. Suitable for large thumbnails."""
   thumbnailHd: ImageMediaAccess!
-
-  """480px width or height resize."""
-  video480: ImageMediaAccess!
-
-  """720px width or height resize."""
-  video720: ImageMediaAccess!
-
-  """1080px width or height resize."""
-  video1080: ImageMediaAccess!
 }
 
 """Initiate a payout for a specific club."""

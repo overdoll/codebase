@@ -60,6 +60,7 @@ func createApplication(ctx context.Context, callbackService activities.CallbackS
 			ProcessMediaFromUploads: command.NewProcessMediaFromUploadsHandler(uploadRepo, mediaStorageRepo, eventRepo),
 			GenerateImageFromMedia:  command.NewGenerateImageFromMediaHandler(eventRepo),
 			CancelMediaProcessing:   command.NewCancelMediaProcessingHandler(mediaStorageRepo, eventRepo),
+			ConvertResourcesToMedia: command.NewConvertResourcesToMediaHandler(uploadRepo, mediaStorageRepo, eventRepo),
 		},
 		Queries: app.Queries{
 			MediaProgressByIds: query.NewMediaProgressByIdsHandler(progressRepo),

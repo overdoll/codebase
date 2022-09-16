@@ -151,12 +151,6 @@ type ImageMediaVariants {
   hd: ImageMediaAccess!
   """640px width or height resize."""
   banner: ImageMediaAccess!
-  """480px width or height resize."""
-  video480: ImageMediaAccess!
-  """720px width or height resize."""
-  video720: ImageMediaAccess!
-  """1080px width or height resize."""
-  video1080: ImageMediaAccess!
 }
 
 type ColorPalette {

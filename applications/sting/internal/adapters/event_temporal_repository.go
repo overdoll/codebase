@@ -43,7 +43,7 @@ func (r EventTemporalRepository) SendPostCompletedProcessing(ctx context.Context
 	options := client.StartWorkflowOptions{
 		TaskQueue:             viper.GetString("temporal.queue"),
 		ID:                    "sting.SubmitPost_" + post.ID(),
-		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_REJECT_DUPLICATE,
 	}
 
 	_, err := r.client.SignalWithStartWorkflow(ctx, "sting.SubmitPost_"+post.ID(), workflows.SubmitPostMediaFinishedProcessingSignalChannel, &workflows.SubmitPostMediaFinished{
@@ -352,7 +352,7 @@ func (r EventTemporalRepository) SubmitPost(ctx context.Context, requester *prin
 	options := client.StartWorkflowOptions{
 		TaskQueue:             viper.GetString("temporal.queue"),
 		ID:                    "sting.SubmitPost_" + pst.ID(),
-		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
+		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_REJECT_DUPLICATE,
 	}
 
 	_, err := r.client.SignalWithStartWorkflow(ctx, "sting.SubmitPost_"+pst.ID(), workflows.SubmitPostSignalChannel, submitTime, options, workflows.SubmitPost, workflows.SubmitPostInput{

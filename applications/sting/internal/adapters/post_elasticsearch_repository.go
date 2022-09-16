@@ -24,25 +24,25 @@ import (
 )
 
 type postDocument struct {
-	Id                           string            `json:"id"`
-	State                        string            `json:"state"`
-	Description                  map[string]string `json:"description"`
-	SupporterOnlyStatus          string            `json:"supporter_only_status"`
-	ContentMediaIds              []string          `json:"content_resource_ids"`
-	ContentResources             map[string]string `json:"content_resources"`
-	ContentMedia                 map[string][]byte `json:"content_media"`
-	ContentSupporterOnly         map[string]bool   `json:"content_supporter_only"`
-	ContentSupporterOnlyMediaIds map[string]string `json:"content_supporter_only_resource_ids"`
-	Likes                        int               `json:"likes"`
-	ContributorId                string            `json:"contributor_id"`
-	ClubId                       string            `json:"club_id"`
-	AudienceId                   string            `json:"audience_id"`
-	CategoryIds                  []string          `json:"category_ids"`
-	CharacterIds                 []string          `json:"character_ids"`
-	SeriesIds                    []string          `json:"series_ids"`
-	CreatedAt                    time.Time         `json:"created_at"`
-	UpdatedAt                    time.Time         `json:"updated_at"`
-	PostedAt                     *time.Time        `json:"posted_at"`
+	Id                           string             `json:"id"`
+	State                        string             `json:"state"`
+	Description                  map[string]string  `json:"description"`
+	SupporterOnlyStatus          string             `json:"supporter_only_status"`
+	ContentMediaIds              []string           `json:"content_resource_ids"`
+	ContentResources             map[string]string  `json:"content_resources"`
+	ContentMedia                 map[string]*string `json:"content_media"`
+	ContentSupporterOnly         map[string]bool    `json:"content_supporter_only"`
+	ContentSupporterOnlyMediaIds map[string]string  `json:"content_supporter_only_resource_ids"`
+	Likes                        int                `json:"likes"`
+	ContributorId                string             `json:"contributor_id"`
+	ClubId                       string             `json:"club_id"`
+	AudienceId                   string             `json:"audience_id"`
+	CategoryIds                  []string           `json:"category_ids"`
+	CharacterIds                 []string           `json:"character_ids"`
+	SeriesIds                    []string           `json:"series_ids"`
+	CreatedAt                    time.Time          `json:"created_at"`
+	UpdatedAt                    time.Time          `json:"updated_at"`
+	PostedAt                     *time.Time         `json:"posted_at"`
 }
 
 const PostIndexName = "posts"
@@ -82,17 +82,7 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPostDocument(ctx contex
 	}
 
 	var finalMedia []*media.Media
-
-	for _, r := range pst.ContentResources {
-
-		m, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, r, nil)
-
-		if err != nil {
-			return nil, err
-		}
-
-		finalMedia = append(finalMedia, m)
-	}
+	alreadyVisitedIds := make(map[string]bool)
 
 	for _, r := range pst.ContentMedia {
 
@@ -103,6 +93,19 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPostDocument(ctx contex
 		}
 
 		finalMedia = append(finalMedia, m)
+		alreadyVisitedIds[m.ID()] = true
+	}
+
+	for _, r := range pst.ContentResources {
+		m, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, r, nil)
+
+		if err != nil {
+			return nil, err
+		}
+
+		if _, ok := alreadyVisitedIds[m.ID()]; !ok {
+			finalMedia = append(finalMedia, m)
+		}
 	}
 
 	createdPost := post.UnmarshalPostFromDatabase(
@@ -145,7 +148,7 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 	contentSupporterOnly := make(map[string]bool)
 	contentSupporterOnlyResourceIds := make(map[string]string)
 	contentResources := make(map[string]string)
-	contentMedia := make(map[string][]byte)
+	contentMedia := make(map[string]*string)
 
 	for _, cont := range pst.Content() {
 		contentResourceIds = append(contentResourceIds, cont.Media().ID())

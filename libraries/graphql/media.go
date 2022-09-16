@@ -65,12 +65,6 @@ type ImageMediaVariants struct {
 	Hd *ImageMediaAccess `json:"hd"`
 	// 640px width or height resize.
 	Banner *ImageMediaAccess `json:"banner"`
-	// 480px width or height resize.
-	Video480 *ImageMediaAccess `json:"video480"`
-	// 720px width or height resize.
-	Video720 *ImageMediaAccess `json:"video720"`
-	// 1080px width or height resize.
-	Video1080 *ImageMediaAccess `json:"video1080"`
 }
 
 // A video/mp4 video container.
@@ -179,9 +173,6 @@ func marshalImageMediaToGraphQL(ctx context.Context, res *media.Media) *ImageMed
 			Large:       marshalImageAccessToGraphQL(ctx, res.LargeImageMediaAccess()),
 			Hd:          marshalImageAccessToGraphQL(ctx, res.HdImageMediaAccess()),
 			Banner:      marshalImageAccessToGraphQL(ctx, res.BannerImageMediaAccess()),
-			Video480:    marshalImageAccessToGraphQL(ctx, res.Video480ImageMediaAccess()),
-			Video720:    marshalImageAccessToGraphQL(ctx, res.Video720ImageMediaAccess()),
-			Video1080:   marshalImageAccessToGraphQL(ctx, res.Video1080ImageMediaAccess()),
 		},
 		Original:      marshalImageAccessToGraphQL(ctx, res.OriginalImageMediaAccess()),
 		ColorPalettes: palettes,

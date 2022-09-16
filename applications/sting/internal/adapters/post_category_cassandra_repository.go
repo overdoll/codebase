@@ -47,7 +47,7 @@ type category struct {
 	AlternativeTitles []string          `db:"alternative_titles"`
 	ThumbnailResource string            `db:"thumbnail_resource"`
 	BannerResource    string            `db:"banner_resource"`
-	BannerMedia       []byte            `db:"banner_media"`
+	BannerMedia       *string           `db:"banner_media"`
 	TotalLikes        int               `db:"total_likes"`
 	TotalPosts        int               `db:"total_posts"`
 	CreatedAt         time.Time         `db:"created_at"`

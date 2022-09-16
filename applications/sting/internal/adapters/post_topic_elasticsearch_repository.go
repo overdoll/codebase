@@ -23,7 +23,7 @@ type topicDocument struct {
 	Id             string            `json:"id"`
 	Slug           string            `json:"slug"`
 	BannerResource string            `json:"banner_resource"`
-	BannerMedia    []byte            `json:"banner_media"`
+	BannerMedia    *string           `json:"banner_media"`
 	Title          map[string]string `json:"title"`
 	Description    map[string]string `json:"description"`
 	CreatedAt      time.Time         `json:"created_at"`

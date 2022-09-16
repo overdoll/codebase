@@ -44,7 +44,7 @@ type character struct {
 	Name              map[string]string `db:"name"`
 	ThumbnailResource string            `db:"thumbnail_resource"`
 	BannerResource    string            `db:"banner_resource"`
-	BannerMedia       []byte            `db:"banner_media"`
+	BannerMedia       *string           `db:"banner_media"`
 	SeriesId          *string           `db:"series_id"`
 	ClubId            *string           `db:"club_id"`
 	TotalLikes        int               `db:"total_likes"`

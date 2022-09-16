@@ -207,7 +207,7 @@ func (m *Media) VideoContainers() []*VideoContainer {
 
 	for _, container := range m.proto.VideoData.Containers {
 		containers = append(containers, &VideoContainer{
-			url:      m.generateUrlForVideo(container.Id),
+			url:      m.generateUrlForVideo(container.Id, container.MimeType == proto.MediaMimeType_VideoMpegUrl),
 			bitrate:  int(container.Bitrate),
 			width:    int(container.Width),
 			height:   int(container.Height),
@@ -218,11 +218,12 @@ func (m *Media) VideoContainers() []*VideoContainer {
 	return containers
 }
 
-func (m *Media) generateUrlForVideo(id string) string {
+func (m *Media) generateUrlForVideo(id string, usePrefix bool) string {
 
 	if m.IsLegacy() {
-		signedLegacyUrl := os.Getenv("PRIVATE_RESOURCES_URL") + "/" + m.proto.Link.Id + "/" + id
-		signed, _ := serializer.createSignedUrl(signedLegacyUrl, signedLegacyUrl, false)
+		signed, _ := serializer.createSignedUrl(SerializerPolicy{
+			URI: os.Getenv("PRIVATE_RESOURCES_URL") + "/" + m.proto.Link.Id + "/" + id,
+		})
 		return signed
 	}
 
@@ -232,14 +233,21 @@ func (m *Media) generateUrlForVideo(id string) string {
 	finalUrl.Path = m.VideoPrefix() + "/" + id
 	finalUrl.Scheme = "https"
 
-	cacheKey := finalUrl.Host + "/" + finalUrl.Path + "/*"
-
 	// for video signed urls, we add a prefix so that it can be passed down without needing to sign playlists each time
-	signed, _ := serializer.createSignedUrl(cacheKey, finalUrl.String(), true)
+	signed, _ := serializer.createSignedUrl(SerializerPolicy{
+		URI:                 finalUrl.String(),
+		UseWildcardCacheKey: "https://" + finalUrl.Host + "/" + m.VideoPrefix() + "/*",
+		UsePrefix:           usePrefix,
+	})
+
 	return signed
 }
 
 func (m *Media) generateUrlForImage(optimalSize int, crop bool) *ImageMediaAccess {
+
+	if m.IsLegacy() {
+		return m.LegacyImageMediaAccess()
+	}
 
 	isLandscape := m.proto.ImageData.Width >= m.proto.ImageData.Height
 
@@ -292,7 +300,10 @@ func (m *Media) generateUrlForImage(optimalSize int, crop bool) *ImageMediaAcces
 	}
 
 	q := url.Values{}
-	q.Add("format", format)
+
+	if optimalWidth != 0 || optimalHeight != 0 {
+		q.Add("format", format)
+	}
 
 	if optimalWidth != 0 {
 		q.Add("width", strconv.Itoa(optimalWidth))
@@ -309,9 +320,10 @@ func (m *Media) generateUrlForImage(optimalSize int, crop bool) *ImageMediaAcces
 	finalUrl.Scheme = "https"
 	finalUrl.Path = m.ImagePrefix() + "/" + m.proto.ImageData.Id
 
-	cacheKey := finalUrl.Host + "/" + finalUrl.Path + "*"
-
-	signed, _ := serializer.createSignedUrl(cacheKey, finalUrl.String(), false)
+	signed, _ := serializer.createSignedUrl(SerializerPolicy{
+		URI:                 finalUrl.String(),
+		UseWildcardCacheKey: "https://" + finalUrl.Host + "/" + finalUrl.Path + "*",
+	})
 
 	return &ImageMediaAccess{
 		url:    signed,
@@ -339,9 +351,7 @@ func (m *Media) generateUrlForLegacyImage(webp bool) *ImageMediaAccess {
 
 	if m.proto.Private {
 
-		legacyUrl := os.Getenv("PRIVATE_RESOURCES_URL") + key
-
-		signedURL, _ := serializer.createSignedUrl(legacyUrl, legacyUrl, false)
+		signedURL, _ := serializer.createSignedUrl(SerializerPolicy{URI: os.Getenv("PRIVATE_RESOURCES_URL") + key})
 
 		finalUrl = signedURL
 
@@ -404,16 +414,4 @@ func (m *Media) LargeImageMediaAccess() *ImageMediaAccess {
 
 func (m *Media) BannerImageMediaAccess() *ImageMediaAccess {
 	return m.generateUrlForImage(640, false)
-}
-
-func (m *Media) Video480ImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(480, false)
-}
-
-func (m *Media) Video720ImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(720, false)
-}
-
-func (m *Media) Video1080ImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(1080, false)
 }

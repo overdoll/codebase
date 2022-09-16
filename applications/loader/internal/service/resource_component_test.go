@@ -56,9 +56,11 @@ func TestUploadMediaAndProcessFailed(t *testing.T) {
 	tusClient := getTusClient(t)
 	imageFileId := uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_1_broken.png")
 	videoFileId := uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_2_broken.mp4")
+	imageFileId2 := uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_1_360x360.jpg")
 
 	imageId := strings.Split(imageFileId, "+")[0]
 	videoId := strings.Split(videoFileId, "+")[0]
+	imageId2 := strings.Split(imageFileId2, "+")[0]
 
 	testing_tools.NewEagerMockWorkflowWithArgs(t, application.TemporalClient, getWorkflowEnvironment(), workflows.ProcessMedia, workflows.ProcessMediaInput{
 		Source: "STING",
@@ -99,13 +101,33 @@ func TestUploadMediaAndProcessFailed(t *testing.T) {
 			},
 		})
 
+	testing_tools.NewEagerMockWorkflowWithArgs(t, application.TemporalClient, getWorkflowEnvironment(), workflows.ProcessMedia,
+		workflows.ProcessMediaInput{
+			Source: "STING",
+			SourceMedia: &proto.Media{
+				Id:               imageId2,
+				IsUpload:         true,
+				OriginalFileName: "test_file_1_360x360.jpg",
+				Private:          true,
+				Link: &proto.MediaLink{
+					Id:   itemId,
+					Type: proto.MediaLinkType_POST_CONTENT,
+				},
+				State: &proto.MediaState{
+					Processed: false,
+					Failed:    false,
+				},
+				Version: proto.MediaVersion_ONE,
+			},
+		})
+
 	grpcClient := getGrpcClient(t)
 
 	var finalMedia []*proto.Media
 
 	application.StingCallbackClient.On("UpdateMedia", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
 		finalMedia = append(finalMedia, args[1].(*proto.UpdateMediaRequest).Media)
-	}).Return(&emptypb.Empty{}, nil).Times(2)
+	}).Return(&emptypb.Empty{}, nil).Times(3)
 
 	// start processing of files by calling grpc endpoint
 	_, err := grpcClient.ProcessMediaFromUploads(context.Background(), &loader.ProcessMediaFromUploadsRequest{
@@ -114,19 +136,22 @@ func TestUploadMediaAndProcessFailed(t *testing.T) {
 			Type: proto.MediaLinkType_POST_CONTENT,
 		},
 		Source:    proto.SOURCE_STING,
-		UploadIds: []string{imageFileId, videoFileId},
+		UploadIds: []string{imageFileId, videoFileId, imageId2},
 	})
 
 	require.NoError(t, err, "no error creating new resources from uploads")
 
 	require.NoError(t, err, "no error getting resources")
 
-	require.Len(t, finalMedia, 2, "should have only 2 media")
+	require.Len(t, finalMedia, 3, "should have 3 media")
 	require.True(t, finalMedia[0].State.Failed, "should have failed processing image")
 	require.False(t, finalMedia[0].State.Processed, "should not be processed")
 
 	require.True(t, finalMedia[1].State.Failed, "should have failed processing video")
 	require.False(t, finalMedia[1].State.Processed, "should not be processed")
+
+	require.False(t, finalMedia[2].State.Failed, "should have failed processing video")
+	require.True(t, finalMedia[2].State.Processed, "should be processed")
 }
 
 func TestUploadMedia(t *testing.T) {

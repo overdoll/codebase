@@ -40,7 +40,7 @@ type topics struct {
 	Title          map[string]string `db:"title"`
 	Description    map[string]string `db:"description"`
 	BannerResource string            `db:"banner_resource"`
-	BannerMedia    []byte            `db:"banner_media"`
+	BannerMedia    *string           `db:"banner_media"`
 	Weight         int               `db:"weight"`
 	CreatedAt      time.Time         `db:"created_at"`
 	UpdatedAt      time.Time         `db:"updated_at"`
