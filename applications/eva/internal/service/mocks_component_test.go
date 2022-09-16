@@ -37,6 +37,8 @@ func mockServices(testApplication *service.ComponentTestApplication) {
 		}).
 		Return(&emptypb.Empty{}, nil)
 
+	application.CarrierClient.On("AccountNewRegistration", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
+
 	application.CarrierClient.On("AccountDeletionBegin", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
 	application.CarrierClient.On("AccountDeletionReminder", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
 	application.CarrierClient.On("AccountDeleted", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)

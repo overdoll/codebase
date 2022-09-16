@@ -163,6 +163,39 @@ func (r SessionRepository) DeleteAccountSessionData(ctx context.Context, account
 	return nil
 }
 
+func (r SessionRepository) GetLastActiveSessionByAccountIdOperator(ctx context.Context, accountId string) (*session.Session, error) {
+
+	keys, err := r.scanKeys(ctx, accountId, 0)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var lastActiveSession *session.Session
+
+	for _, sessionID := range keys {
+
+		// remove prefix
+		sess, err := r.getSessionById(ctx, nil, strings.TrimLeft(sessionID, sessionPrefix))
+
+		if err != nil {
+			return nil, err
+		}
+
+		if lastActiveSession == nil {
+			lastActiveSession = sess
+		} else {
+			// if the new session is after the one we saved, we use it
+			// since we want to use the most recent session for that account
+			if sess.LastSeen().After(lastActiveSession.LastSeen()) {
+				lastActiveSession = sess
+			}
+		}
+	}
+
+	return lastActiveSession, nil
+}
+
 // GetSessionsByAccountId - Get sessions
 func (r SessionRepository) GetSessionsByAccountId(ctx context.Context, requester *principal.Principal, passport *passport.Passport, cursor *paging.Cursor, accountId string) ([]*session.Session, error) {
 

@@ -76,6 +76,7 @@ func createApplication(ctx context.Context, eva command.EvaService, sting comman
 			ClubSupporterSubscriptionDuplicate:        command.NewClubSupporterSubscriptionDuplicateHandler(mailingRepo, eva, sting),
 			ModeratorPostInQueue:                      command.NewModeratorPostInQueueHandler(mailingRepo, eva),
 			PostFailedProcessing:                      command.NewPostFailedProcessingHandler(mailingRepo, eva, sting),
+			AccountNewRegistration:                    command.NewAccountNewRegistrationHandler(mailingRepo, eva),
 		},
 		Queries: app.Queries{},
 	}

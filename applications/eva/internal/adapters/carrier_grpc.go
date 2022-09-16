@@ -17,6 +17,19 @@ func NewCarrierGrpc(client carrier.CarrierClient) CarrierGrpc {
 	return CarrierGrpc{client: client}
 }
 
+func (s CarrierGrpc) AccountNewRegistration(ctx context.Context, accountId string) error {
+
+	_, err := s.client.AccountNewRegistration(ctx, &carrier.AccountNewRegistrationRequest{
+		Account: &carrier.Account{Id: accountId},
+	})
+
+	if err != nil {
+		return errors.Wrap(err, "error sending account new registration email")
+	}
+
+	return nil
+}
+
 func (s CarrierGrpc) ConfirmAccountEmail(ctx context.Context, accountId, email, id, secret string) error {
 
 	_, err := s.client.ConfirmAccountEmail(ctx, &carrier.ConfirmAccountEmailRequest{

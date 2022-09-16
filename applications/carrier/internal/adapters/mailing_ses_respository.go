@@ -42,7 +42,7 @@ func (r MailingSESRepository) SendEmail(ctx context.Context, recipient *mailing.
 				Data: aws.String(email.Subject()),
 			},
 		},
-		Source: aws.String(os.Getenv("EMAIL_FROM_ADDRESS")),
+		Source: aws.String(recipient.Source()),
 	}
 
 	_, err := r.client.SendEmail(sesEmailInput)

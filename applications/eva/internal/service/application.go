@@ -116,7 +116,7 @@ func createApplication(
 		Commands: app.Commands{
 			VerifyAuthenticationToken:                 command.NewVerifyAuthenticationTokenHandler(tokenRepo, accountRepo),
 			GrantAccountAccessWithAuthenticationToken: command.NewGrantAccountAccessWithAuthenticationTokenHandler(tokenRepo, accountRepo),
-			CreateAccountWithAuthenticationToken:      command.NewCreateAccountWithAuthenticationTokenHandler(tokenRepo, accountRepo),
+			CreateAccountWithAuthenticationToken:      command.NewCreateAccountWithAuthenticationTokenHandler(tokenRepo, accountRepo, eventRepo),
 			GrantAuthenticationToken:                  command.NewGrantAuthenticationTokenHandler(tokenRepo, locationRepo, carrier),
 			LockAccount:                               command.NewLockAccountHandler(accountRepo),
 			UnlockAccount:                             command.NewUnlockUserHandler(accountRepo),
@@ -131,6 +131,7 @@ func createApplication(
 			DisableAccountMultiFactor:                 command.NewDisableAccountMultiFactorHandler(accountRepo),
 			DeleteAccountEmail:                        command.NewDeleteAccountEmailHandler(accountRepo),
 			RevokeAuthenticationToken:                 command.NewRevokeAuthenticationTokenHandler(tokenRepo),
+			NewAccountRegistration:                    command.NewNewAccountRegistrationHandler(accountRepo, eventRepo),
 
 			RevokeAccountWorkerRole:    command.NewRevokeAccountWorkerRoleHandler(accountRepo),
 			RevokeAccountModeratorRole: command.NewRevokeAccountModeratorRoleHandler(accountRepo),
@@ -169,6 +170,7 @@ func createApplication(
 		Activities: activities.NewActivitiesHandler(
 			accountRepo,
 			sessionRepo,
+			locationRepo,
 			hades,
 			sting,
 			parley,

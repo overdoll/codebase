@@ -21,6 +21,7 @@ func NewWorker(app *app.Application) (worker.Worker, func()) {
 	w := bootstrap.NewWorker(client, 0)
 
 	w.RegisterWorkflow(workflows.DeleteAccount)
+	w.RegisterWorkflow(workflows.NewAccountRegistration)
 
 	// register activities with our struct
 	w.RegisterActivity(app.Activities)

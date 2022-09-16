@@ -38,5 +38,16 @@ func InitializeCommands(app func() *app.Application) []*cobra.Command {
 		},
 	})
 
-	return []*cobra.Command{accountRoleRootCmd}
+	sendNewRegistrationNotification := &cobra.Command{
+		Use: "new-acc-reg [account_id]",
+		Run: func(cmd *cobra.Command, args []string) {
+			if err := app().Commands.NewAccountRegistration.Handle(context.Background(), command.NewAccountRegistration{
+				AccountId: args[0],
+			}); err != nil {
+				zap.S().Fatalw("failed to send new account registration", zap.Error(err))
+			}
+		},
+	}
+
+	return []*cobra.Command{accountRoleRootCmd, sendNewRegistrationNotification}
 }
