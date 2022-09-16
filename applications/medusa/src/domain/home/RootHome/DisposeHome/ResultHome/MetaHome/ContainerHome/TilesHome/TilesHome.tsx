@@ -1,37 +1,15 @@
 import HomeGameTile from './HomeGameTile/HomeGameTile'
 import { FurryFox, HentaiSkirt, RandomizeDice, SearchBar, ThreeDRender } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
-import { Box, Heading, Stack } from '@chakra-ui/react'
+import { Heading, Stack } from '@chakra-ui/react'
 import HomeLinkTile from './HomeLinkTile/HomeLinkTile'
 import getRandomSeed from '@//:modules/support/getRandomSeed'
-import VideoContainer from '@//:modules/content/HookedComponents/Media/components/VideoContainer/VideoContainer'
-import ImageMedia
-  from '@//:modules/content/HookedComponents/Media/components/ImageContainer/ImageWrapper/ImageMedia/ImageMedia'
-import ImageControlContainer
-  from '@//:modules/content/HookedComponents/Media/components/ImageContainer/ImageControlContainer/ImageControlContainer'
 
 export default function TilesHome (): JSX.Element {
   const seed = getRandomSeed()
 
   return (
     <>
-      <Box w='100%' h={500}>
-        <VideoContainer
-          duration={12}
-          hasAudio
-          aspectRatio={{
-            width: 9,
-            height: 16
-          }}
-          poster={<ImageMedia url='https://static.dollycdn.net/banners/roulette-banner.jpg' />}
-          mp4Url='https://static.dollycdn.net/banners/roulette-preview.mp4'
-        />
-      </Box>
-      <Box w='100%' h={500}>
-        <ImageControlContainer
-          url='https://static.dollycdn.net/banners/roulette-banner.jpg'
-        />
-      </Box>
       <Stack spacing={24}>
         <HomeGameTile
           href='/roulette'

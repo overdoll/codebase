@@ -21,7 +21,7 @@ const Query = graphql`
         isSupporterOnly
         media {
           ...RawCinematicMediaFragment
-          ...ThumbnailImageMediaFragment
+          ...RawThumbnailMediaFragment
         }
         resource {
           id

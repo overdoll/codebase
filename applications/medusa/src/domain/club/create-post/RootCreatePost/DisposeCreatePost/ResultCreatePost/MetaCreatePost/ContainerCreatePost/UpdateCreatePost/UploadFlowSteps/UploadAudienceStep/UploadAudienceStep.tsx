@@ -6,7 +6,7 @@ import {
   PageSectionTitle,
   PageSectionWrap
 } from '@//:modules/content/PageLayout'
-import RequiredPrompt from '../../../../../../../../CreatePost/RequiredPrompt/RequiredPrompt'
+import RequiredPrompt from './RequiredPrompt/RequiredPrompt'
 import { Trans } from '@lingui/macro'
 import UploadAudiencesSingleSelector from './UploadAudiencesSingleSelector/UploadAudiencesSingleSelector'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'

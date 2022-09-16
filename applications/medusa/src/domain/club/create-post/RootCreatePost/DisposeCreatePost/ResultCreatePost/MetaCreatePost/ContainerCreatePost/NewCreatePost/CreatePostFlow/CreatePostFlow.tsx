@@ -10,7 +10,6 @@ import { useToast } from '@//:modules/content/ThemeComponents'
 import CreatePostNewFilePicker
   from '@//:modules/content/HookedComponents/Upload/components/CreatePostNewFilePicker/CreatePostNewFilePicker'
 import { useUppyContext } from '@//:modules/content/HookedComponents/Upload'
-import CreatePostOpening from '../../../../../../../CreatePost/PostCreator/PostState/CreatePostOpening/CreatePostOpening'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 
 interface Props {
@@ -127,7 +126,14 @@ export default function CreatePostFlow ({ query }: Props): JSX.Element {
 
   if (created) {
     return (
-      <CreatePostOpening />
+      <>
+        <PostPlaceholder>
+          <Stack align='center' spacing={6}>
+            <Spinner thickness='6px' w={12} h={12} color='teal.300' />
+            <Heading fontSize='4xl' color='gray.00'><Trans>Opening Post</Trans></Heading>
+          </Stack>
+        </PostPlaceholder>
+      </>
     )
   }
 

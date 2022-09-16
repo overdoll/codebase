@@ -64,7 +64,7 @@ export default function ContainerCreatePost ({
   // If the post was already submitted
   if (postData?.state !== 'DRAFT' && !ability.can('staff', 'Post')) {
     return (
-      <MobileContainer>
+      <MobileContainer pt={2}>
         <SubmittedCreatePost />
       </MobileContainer>
     )

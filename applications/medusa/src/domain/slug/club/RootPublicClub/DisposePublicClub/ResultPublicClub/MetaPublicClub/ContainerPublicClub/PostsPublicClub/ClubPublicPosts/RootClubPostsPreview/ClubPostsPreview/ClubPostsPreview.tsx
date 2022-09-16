@@ -5,8 +5,9 @@ import { ClubPostsPreviewFragment$key } from '@//:artifacts/ClubPostsPreviewFrag
 import { EmptyBoundary, EmptyPosts } from '@//:modules/content/Placeholder'
 import PostInfiniteScroll
   from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
-import FullClubPost from '../../../../../../../../../../posts/RootPublicClubPosts/DisposePublicClubPosts/ResultPublicClubPosts/MetaPublicClubPosts/ContainerPublicClubPosts/ScrollPublicClubPosts/FullClubPost/FullClubPost'
-import type { PublicClubQuery } from '@//:artifacts/PublicClubQuery.graphql'
+import FullClubPost
+  from '../../../../../../../../../../posts/RootPublicClubPosts/DisposePublicClubPosts/ResultPublicClubPosts/MetaPublicClubPosts/ContainerPublicClubPosts/ScrollPublicClubPosts/FullClubPost/FullClubPost'
+import type { ResultPublicClubQuery } from '@//:artifacts/ResultPublicClubQuery.graphql'
 
 interface Props {
   clubQuery: ClubPostsPreviewFragment$key
@@ -53,7 +54,7 @@ export default function ClubPostsPreview (props: Props): JSX.Element {
     hasNext,
     loadNext,
     isLoadingNext
-  } = usePaginationFragment<PublicClubQuery, any>(
+  } = usePaginationFragment<ResultPublicClubQuery, any>(
     Fragment,
     clubQuery
   )
@@ -71,7 +72,10 @@ export default function ClubPostsPreview (props: Props): JSX.Element {
         loadNext={loadNext}
         isLoadingNext={isLoadingNext}
       >
-        {({ index, key }) => (
+        {({
+          index,
+          key
+        }) => (
           <FullClubPost
             key={key}
             query={data.clubPosts.edges[index].node}

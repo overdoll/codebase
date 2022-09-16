@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<4f6072a80954549ce1f7daa6e86bab92>>
- * @relayHash cda4b3a0c65210c0c4e2167cd5528ea3
+ * @generated SignedSource<<1aa245e1f8e93f05c3e67bcb6200998f>>
+ * @relayHash bb2017c3885845e1829c48ebdb951068
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID cda4b3a0c65210c0c4e2167cd5528ea3
+// @relayRequestID bb2017c3885845e1829c48ebdb951068
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -25,7 +25,7 @@ export type RefreshProcessContentQuery$data = {
       readonly id: string;
       readonly isSupporterOnly: boolean;
       readonly media: {
-        readonly " $fragmentSpreads": FragmentRefs<"RawCinematicMediaFragment" | "ThumbnailImageMediaFragment">;
+        readonly " $fragmentSpreads": FragmentRefs<"RawCinematicMediaFragment" | "RawThumbnailMediaFragment">;
       };
       readonly resource: {
         readonly failed: boolean;
@@ -214,29 +214,51 @@ v19 = {
   "name": "__typename",
   "storageKey": null
 },
-v20 = [
+v20 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ColorPalette",
+  "kind": "LinkedField",
+  "name": "colorPalettes",
+  "plural": true,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "red",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "green",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "blue",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v21 = [
   (v12/*: any*/),
   (v16/*: any*/),
   (v17/*: any*/)
 ],
-v21 = {
+v22 = {
   "alias": null,
   "args": null,
   "concreteType": "ImageMediaAccess",
   "kind": "LinkedField",
   "name": "small",
   "plural": false,
-  "selections": (v20/*: any*/),
-  "storageKey": null
-},
-v22 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "ImageMediaAccess",
-  "kind": "LinkedField",
-  "name": "medium",
-  "plural": false,
-  "selections": (v20/*: any*/),
+  "selections": (v21/*: any*/),
   "storageKey": null
 },
 v23 = {
@@ -244,12 +266,32 @@ v23 = {
   "args": null,
   "concreteType": "ImageMediaAccess",
   "kind": "LinkedField",
-  "name": "thumbnail",
+  "name": "medium",
   "plural": false,
-  "selections": (v20/*: any*/),
+  "selections": (v21/*: any*/),
   "storageKey": null
 },
 v24 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ImageMediaAccess",
+  "kind": "LinkedField",
+  "name": "thumbnail",
+  "plural": false,
+  "selections": (v21/*: any*/),
+  "storageKey": null
+},
+v25 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ImageMediaAccess",
+  "kind": "LinkedField",
+  "name": "thumbnailHd",
+  "plural": false,
+  "selections": (v21/*: any*/),
+  "storageKey": null
+},
+v26 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -301,7 +343,7 @@ return {
                   {
                     "args": null,
                     "kind": "FragmentSpread",
-                    "name": "ThumbnailImageMediaFragment"
+                    "name": "RawThumbnailMediaFragment"
                   }
                 ],
                 "storageKey": null
@@ -469,38 +511,7 @@ return {
                   {
                     "kind": "InlineFragment",
                     "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "ColorPalette",
-                        "kind": "LinkedField",
-                        "name": "colorPalettes",
-                        "plural": true,
-                        "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "red",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "green",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "blue",
-                            "storageKey": null
-                          }
-                        ],
-                        "storageKey": null
-                      },
+                      (v20/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -509,8 +520,8 @@ return {
                         "name": "variants",
                         "plural": false,
                         "selections": [
-                          (v21/*: any*/),
                           (v22/*: any*/),
+                          (v23/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -518,7 +529,7 @@ return {
                             "kind": "LinkedField",
                             "name": "large",
                             "plural": false,
-                            "selections": (v20/*: any*/),
+                            "selections": (v21/*: any*/),
                             "storageKey": null
                           },
                           {
@@ -528,20 +539,11 @@ return {
                             "kind": "LinkedField",
                             "name": "hd",
                             "plural": false,
-                            "selections": (v20/*: any*/),
+                            "selections": (v21/*: any*/),
                             "storageKey": null
                           },
-                          (v23/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "ImageMediaAccess",
-                            "kind": "LinkedField",
-                            "name": "thumbnailHd",
-                            "plural": false,
-                            "selections": (v20/*: any*/),
-                            "storageKey": null
-                          }
+                          (v24/*: any*/),
+                          (v25/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -569,13 +571,15 @@ return {
                             "name": "variants",
                             "plural": false,
                             "selections": [
+                              (v24/*: any*/),
                               (v23/*: any*/),
                               (v22/*: any*/),
-                              (v21/*: any*/)
+                              (v25/*: any*/)
                             ],
                             "storageKey": null
                           },
-                          (v2/*: any*/)
+                          (v2/*: any*/),
+                          (v20/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -670,7 +674,7 @@ return {
                   (v16/*: any*/),
                   (v17/*: any*/),
                   (v18/*: any*/),
-                  (v24/*: any*/)
+                  (v26/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -684,7 +688,7 @@ return {
                 "selections": [
                   (v8/*: any*/),
                   (v10/*: any*/),
-                  (v24/*: any*/),
+                  (v26/*: any*/),
                   (v2/*: any*/)
                 ],
                 "storageKey": null
@@ -724,7 +728,7 @@ return {
     ]
   },
   "params": {
-    "id": "cda4b3a0c65210c0c4e2167cd5528ea3",
+    "id": "bb2017c3885845e1829c48ebdb951068",
     "metadata": {},
     "name": "RefreshProcessContentQuery",
     "operationKind": "query",
@@ -733,6 +737,6 @@ return {
 };
 })();
 
-(node as any).hash = "a2e2624ef2d97fc7ce8f30ad25ad59cf";
+(node as any).hash = "10882cf457c4b56df983ae1b28cd5473";
 
 export default node;

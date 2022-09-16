@@ -25,7 +25,7 @@ const PostFragment = graphql`
 
 export default function RawCinematicContent (props: Props): JSX.Element {
   const {
-    postQuery
+    postQuery,
   } = props
 
   const postData = useFragment(PostFragment, postQuery)

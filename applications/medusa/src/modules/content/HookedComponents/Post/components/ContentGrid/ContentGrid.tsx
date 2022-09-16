@@ -16,6 +16,7 @@ export default function ContentGrid (props: Props): JSX.Element {
 
   return (
     <Grid
+      overflow='hidden'
       w='100%'
       h='100%'
       gap={2}

@@ -11,7 +11,7 @@ import { useFragment } from 'react-relay'
 import { Trans } from '@lingui/macro'
 import PostReview from './PostReview/PostReview'
 import { Stack } from '@chakra-ui/react'
-import SuggestPrompt from '../../../../../../../../CreatePost/SuggestPrompt/SuggestPrompt'
+import SuggestPrompt from './SuggestPrompt/SuggestPrompt'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
 
 interface Props {
