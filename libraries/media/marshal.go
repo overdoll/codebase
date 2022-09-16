@@ -134,7 +134,7 @@ func MarshalMediaToDatabase(media *Media) ([]byte, error) {
 	return marshalled, nil
 }
 
-func UnmarshalMediaFromDatabase(ctx context.Context, media []byte) (*Media, error) {
+func UnmarshalMediaFromDatabase(ctx context.Context, media *string) (*Media, error) {
 
 	var res proto.Media
 
@@ -145,7 +145,7 @@ func UnmarshalMediaFromDatabase(ctx context.Context, media []byte) (*Media, erro
 	return FromProto(&res), nil
 }
 
-func UnmarshalMediaWithLegacyResourceFromDatabase(ctx context.Context, resource string, media []byte) (*Media, error) {
+func UnmarshalMediaWithLegacyResourceFromDatabase(ctx context.Context, resource string, media *string) (*Media, error) {
 
 	if resource != "" {
 		return unmarshalLegacyResourceFromDatabase(ctx, resource)
