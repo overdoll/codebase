@@ -4,6 +4,7 @@ go_library(
     name = "command",
     srcs = [
         "cancel_media_processing.go",
+        "convert_resources_to_media.go",
         "generate_image_from_media.go",
         "process_media_from_uploads.go",
         "tusd_composer.go",

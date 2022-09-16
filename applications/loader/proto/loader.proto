@@ -39,7 +39,17 @@ message CancelMediaProcessingRequest {
   repeated overdoll.libraries.Media media = 1;
 }
 
+message ConvertResourceToMediaResponse {
+  repeated overdoll.libraries.Media media = 1;
+}
+
+message ConvertResourceToMediaRequest {
+  string itemId = 1;
+  repeated string resourceIds = 2;
+}
+
 service Loader {
+  rpc ConvertResourcesToMedia(ConvertResourceToMediaRequest) returns (ConvertResourceToMediaResponse);
   rpc CancelMediaProcessing(CancelMediaProcessingRequest) returns (google.protobuf.Empty);
   rpc ProcessMediaFromUploads(ProcessMediaFromUploadsRequest) returns (ProcessMediaFromUploadsResponse);
   rpc GenerateImageFromMedia(GenerateImageFromMediaRequest) returns (GenerateImageFromMediaResponse);

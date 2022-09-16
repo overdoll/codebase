@@ -247,17 +247,7 @@ func (r PostsCassandraElasticsearchRepository) GetPostWithRandomSeed(ctx context
 func (r *PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Context, postPending posts) (*post.Post, error) {
 
 	var finalMedia []*media.Media
-
-	for _, r := range postPending.ContentResources {
-
-		m, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, r, nil)
-
-		if err != nil {
-			return nil, err
-		}
-
-		finalMedia = append(finalMedia, m)
-	}
+	alreadyVisitedIds := make(map[string]bool)
 
 	for _, r := range postPending.ContentMedia {
 
@@ -268,6 +258,19 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Contex
 		}
 
 		finalMedia = append(finalMedia, m)
+		alreadyVisitedIds[m.ID()] = true
+	}
+
+	for _, r := range postPending.ContentResources {
+		m, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, r, nil)
+
+		if err != nil {
+			return nil, err
+		}
+
+		if _, ok := alreadyVisitedIds[m.ID()]; !ok {
+			finalMedia = append(finalMedia, m)
+		}
 	}
 
 	return post.UnmarshalPostFromDatabase(

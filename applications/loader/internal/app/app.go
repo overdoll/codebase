@@ -17,6 +17,7 @@ type Commands struct {
 	ProcessMediaFromUploads command.ProcessMediaFromUploadsHandler
 	CancelMediaProcessing   command.CancelMediaProcessingHandler
 	GenerateImageFromMedia  command.GenerateImageFromMediaHandler
+	ConvertResourcesToMedia command.ConvertResourcesToMediaHandler
 }
 
 type Queries struct {

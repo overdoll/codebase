@@ -82,17 +82,7 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPostDocument(ctx contex
 	}
 
 	var finalMedia []*media.Media
-
-	for _, r := range pst.ContentResources {
-
-		m, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, r, nil)
-
-		if err != nil {
-			return nil, err
-		}
-
-		finalMedia = append(finalMedia, m)
-	}
+	alreadyVisitedIds := make(map[string]bool)
 
 	for _, r := range pst.ContentMedia {
 
@@ -103,6 +93,19 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPostDocument(ctx contex
 		}
 
 		finalMedia = append(finalMedia, m)
+		alreadyVisitedIds[m.ID()] = true
+	}
+
+	for _, r := range pst.ContentResources {
+		m, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, r, nil)
+
+		if err != nil {
+			return nil, err
+		}
+
+		if _, ok := alreadyVisitedIds[m.ID()]; !ok {
+			finalMedia = append(finalMedia, m)
+		}
 	}
 
 	createdPost := post.UnmarshalPostFromDatabase(

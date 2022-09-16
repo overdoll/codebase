@@ -769,6 +769,14 @@ func processImage(media *media.Media, mimeType string, file *os.File) (*ProcessR
 		return nil, errors.Wrap(err, "failed to decode image")
 	}
 
+	isPortrait := src.Bounds().Dy() > src.Bounds().Dx()
+	// if larger than 4096, we resize to save on storage space && resizing operations at origin
+	if isPortrait && src.Bounds().Dy() > 4096 {
+		src = resize.Resize(0, 4096, src, resize.Lanczos3)
+	} else if !isPortrait && src.Bounds().Dx() > 4096 {
+		src = resize.Resize(4096, 0, src, resize.Lanczos3)
+	}
+
 	var imageFile *os.File
 
 	if mimeType == "image/png" {
