@@ -4,21 +4,21 @@ version = "0.1.0"
 edition = "2021"
 
 [[bin]]
-name = "orca_library"
+name = "router"
 path = "src/main.rs"
 
 [dependencies]
-apollo-router = { git = "https://github.com/apollographql/router", rev = "e1bdbaa208b56b2386fc43fa54d66dc2999bf33c" }
-apollo-router-core = { git = "https://github.com/apollographql/router", rev = "e1bdbaa208b56b2386fc43fa54d66dc2999bf33c" }
-tower = { version = "0.4.12", features = ["full"] }
-tokio = { version = "1.17.0", features = ["full"] }
-tokio-util = { version = "0.7.0", features = ["net", "codec"] }
+anyhow = "1.0.58"
+# Note if you update these dependencies then also update xtask/Cargo.toml
+apollo-router = "1.0.0-rc.1"
+async-trait = "0.1.52"
+futures = "0.3.21"
+schemars = "0.8.10"
 serde = "1.0.136"
 serde_json = "1.0.79"
-serde_json_bytes = "0.2.0"
-anyhow = "1.0.55"
+tokio = { version = "1.17.0", features = ["full"] }
+tower = { version = "0.4.12", features = ["full"] }
+tracing = "=0.1.34"
 dotenv = "0.15.0"
-http = "0.2.6"
-schemars = "0.8.8"
 redis = { version = "0.21.5", features = ["tokio-comp"] }
-async-trait = "0.1.53"
+http = "0.2"

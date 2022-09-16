@@ -8,19 +8,32 @@ workspace(
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
-    name = "rules_rust",
-    sha256 = "39655ab175e3c6b979f362f55f58085528f1647957b0e9b3a07f81d8a9c3ea0a",
+    name = "com_google_protobuf",
+    sha256 = "6aff9834fd7c540875e1836967c8d14c6897e3785a2efac629f69860fb7834ff",
+    strip_prefix = "protobuf-3.15.0",
     urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/rules_rust/releases/download/0.2.0/rules_rust-v0.2.0.tar.gz",
-        "https://github.com/bazelbuild/rules_rust/releases/download/0.2.0/rules_rust-v0.2.0.tar.gz",
+        "https://mirror.bazel.build/github.com/protocolbuffers/protobuf/archive/v3.15.0.tar.gz",
+        "https://github.com/protocolbuffers/protobuf/archive/v3.15.0.tar.gz",
+    ],
+)
+
+load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
+
+protobuf_deps()
+
+http_archive(
+    name = "rules_rust",
+    sha256 = "0cc7e6b39e492710b819e00d48f2210ae626b717a3ab96e048c43ab57e61d204",
+    urls = [
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_rust/releases/download/0.10.0/rules_rust-v0.10.0.tar.gz",
+        "https://github.com/bazelbuild/rules_rust/releases/download/0.10.0/rules_rust-v0.10.0.tar.gz",
     ],
 )
 
 load("@rules_rust//rust:repositories.bzl", "rules_rust_dependencies", "rust_register_toolchains")
 
 rules_rust_dependencies()
-
-rust_register_toolchains(version = "1.59.0", edition="2021", rustfmt_version = "1.59.0")
+rust_register_toolchains(version = "1.62.1", edition="2021")
 
 load("@rules_rust//crate_universe:repositories.bzl", "crate_universe_dependencies")
 
@@ -35,70 +48,77 @@ rusty_v8_repositories()
 
 crates_repository(
     name = "crates",
-    lockfile = "//:Cargo.Bazel.lock",
-    manifests = ["//:Cargo.toml", "//applications/orca:Cargo.toml"],
+    lockfile = "//:cargo_bazel_lock.json",
+    cargo_lockfile = "//:Cargo.lock",
+    manifests = ["//:Cargo.toml", "//applications/orca:Cargo.toml", "//applications/orca:xtask/Cargo.toml"],
     annotations = {
-            "v8": [crate.annotation(
-               data = [
-                   "@rusty_v8//file"
-               ],
-               compile_data = [
-                   "@rusty_v8//file"
-               ],
-               build_script_data = [
-                   "@rusty_v8//file"
-               ],
-               rustc_flags = [
-                   "-Lall=external/rusty_v8/file"
-               ],
-            )],
-            "router-bridge": [crate.annotation(
-               gen_build_script = False,
-               data = [
-                   "@overdoll//third_party/router_bridge:files"
-               ],
-               rustc_env = {
-                   "STATIC_DIR": "${pwd}/third_party/router_bridge",
-               },
-               patch_args = ["-p1"],
-               patches = ["@overdoll//.patches:router_bridge.patch"],
-            )],
+              "v8": [crate.annotation(
+                   data = [
+                       "@rusty_v8//file"
+                   ],
+                   compile_data = [
+                       "@rusty_v8//file"
+                   ],
+                   data_glob = [],
+                   compile_data_glob = [],
+                   build_script_data = [
+                       "@rusty_v8//file"
+                   ],
+                   rustc_flags = [
+                       "-Lall=external/rusty_v8/file"
+                   ],
+                )],
             "opentelemetry-otlp": [crate.annotation(
                build_script_data = [
                     "@com_google_protobuf//:protoc",
-                    "@rules_rust//rust/toolchain:current_exec_rustfmt_files",
+                    "@rules_rust//rust/toolchain:current_rustfmt_files",
                ],
                build_script_env = {
                     "PROTOC": "$(execpath @com_google_protobuf//:protoc)",
-                    "RUSTFMT": "$(execpath @rules_rust//rust/toolchain:current_exec_rustfmt_files)",
+                    "RUSTFMT": "$(execpath @rules_rust//rust/toolchain:current_rustfmt_files)",
                     "BUILD_WORKSPACE_DIRECTORY": "."
                },
             )],
-            "apollo-spaceport": [crate.annotation(
-               version = "0.1.0-preview.1",
+            "apollo-router": [crate.annotation(
+               version = "1.0.0-rc.1",
                build_script_data = [
                     "@com_google_protobuf//:protoc",
-                    "@crates__prost-build-0.9.0//:third-party",
-                    "@rules_rust//rust/toolchain:current_exec_rustfmt_files",
+                    "@rules_rust//rust/toolchain:current_rustfmt_files",
+                    "@com_google_protobuf//:well_known_protos",
                ],
                build_script_env = {
+                    "PROTOC_INCLUDE": "$${pwd}/external/com_google_protobuf/src",
                     "PROTOC": "$(execpath @com_google_protobuf//:protoc)",
-                    "PROTOC_INCLUDE": "${pwd}/external/crates__prost-build-0.9.0/third-party/protobuf/include",
-                    "RUSTFMT": "$(execpath @rules_rust//rust/toolchain:current_exec_rustfmt_files)",
+                    "RUSTFMT": "$(execpath @rules_rust//rust/toolchain:current_rustfmt_files)",
                     "BUILD_WORKSPACE_DIRECTORY": "."
-               },
+               }
             )],
-            "prost-build": [crate.annotation(
-               additive_build_file_content = "filegroup(name=\"third-party\", srcs = glob([\"third-party/**\"]))",
+            "tonic-build": [crate.annotation(
                build_script_data = [
                     "@com_google_protobuf//:protoc",
-                    ":third-party",
+                    "@com_google_protobuf//:well_known_protos",
+               ],
+               data = [
+                    "@com_google_protobuf//:protoc",
                ],
                build_script_env = {
                     "PROTOC": "$(execpath @com_google_protobuf//:protoc)"
                },
             )],
-        },
+            "prost-build": [crate.annotation(
+               build_script_data = [
+                    "@com_google_protobuf//:protoc",
+                    "@com_google_protobuf//:well_known_protos",
+               ],
+               data = [
+                    "@com_google_protobuf//:protoc",
+                    "@com_google_protobuf//:well_known_protos",
+               ],
+               build_script_env = {
+                    "PROTOC": "$(execpath @com_google_protobuf//:protoc)"
+               },
+            )],
+    }
 )
 
 load("@crates//:defs.bzl", "crate_repositories")
@@ -151,20 +171,6 @@ container_repositories()
 load("@io_bazel_rules_docker//repositories:deps.bzl", container_deps = "deps")
 
 container_deps()
-
-http_archive(
-    name = "com_google_protobuf",
-    sha256 = "6aff9834fd7c540875e1836967c8d14c6897e3785a2efac629f69860fb7834ff",
-    strip_prefix = "protobuf-3.15.0",
-    urls = [
-        "https://mirror.bazel.build/github.com/protocolbuffers/protobuf/archive/v3.15.0.tar.gz",
-        "https://github.com/protocolbuffers/protobuf/archive/v3.15.0.tar.gz",
-    ],
-)
-
-load("@com_google_protobuf//:protobuf_deps.bzl", "protobuf_deps")
-
-protobuf_deps()
 
 http_archive(
     name = "build_bazel_rules_nodejs",
@@ -234,7 +240,7 @@ container_pull(
     name = "rust_base_image",
     registry = "docker.io",
     repository = "library/rust",
-    tag = "1.59.0",
+    tag = "1.62.1",
 )
 
 container_pull(

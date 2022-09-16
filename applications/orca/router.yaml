@@ -1,14 +1,23 @@
-server:
-  cors:
-    allow_any_origin: false
-    origins:
-      - https://overdoll.com
-    allow_credentials: true
-    allow_headers: [ Content-Type, Authorization ]
-    methods: [ POST, OPTIONS ]
-    expose_headers: [ ]
+cors:
+  allow_headers:
+    - Content-Type
+    - Authorization
+    - X-overdoll-Security
 
-  listen: 0.0.0.0:8000
+  origins:
+    - https://overdoll.test
+    - https://overdoll.com
+    - https://studio.apollographql.com
+
+  allow_credentials: true
+
+  methods:
+    - GET
+    - POST
+    - OPTIONS
+
+csrf:
+  unsafe_disabled: true
 
 plugins:
   overdoll.passport:
