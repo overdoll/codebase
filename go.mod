@@ -27,6 +27,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/h2non/filetype v1.1.1
 	github.com/ikeikeikeike/go-sitemap-generator/v2 v2.0.2
+	github.com/jellydator/ttlcache/v3 v3.0.0
 	github.com/joho/godotenv v1.3.0
 	github.com/jung-kurt/gofpdf v1.16.2
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
@@ -86,7 +87,6 @@ require (
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
-	github.com/jellydator/ttlcache/v3 v3.0.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect

@@ -241,9 +241,6 @@ type ComplexityRoot struct {
 		Small       func(childComplexity int) int
 		Thumbnail   func(childComplexity int) int
 		ThumbnailHd func(childComplexity int) int
-		Video1080   func(childComplexity int) int
-		Video480    func(childComplexity int) int
-		Video720    func(childComplexity int) int
 	}
 
 	InitiateClubPayoutPayload struct {
@@ -1225,27 +1222,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.ImageMediaVariants.ThumbnailHd(childComplexity), true
-
-	case "ImageMediaVariants.video1080":
-		if e.complexity.ImageMediaVariants.Video1080 == nil {
-			break
-		}
-
-		return e.complexity.ImageMediaVariants.Video1080(childComplexity), true
-
-	case "ImageMediaVariants.video480":
-		if e.complexity.ImageMediaVariants.Video480 == nil {
-			break
-		}
-
-		return e.complexity.ImageMediaVariants.Video480(childComplexity), true
-
-	case "ImageMediaVariants.video720":
-		if e.complexity.ImageMediaVariants.Video720 == nil {
-			break
-		}
-
-		return e.complexity.ImageMediaVariants.Video720(childComplexity), true
 
 	case "InitiateClubPayoutPayload.club":
 		if e.complexity.InitiateClubPayoutPayload.Club == nil {
@@ -2693,12 +2669,6 @@ type ImageMediaVariants {
   hd: ImageMediaAccess!
   """640px width or height resize."""
   banner: ImageMediaAccess!
-  """480px width or height resize."""
-  video480: ImageMediaAccess!
-  """720px width or height resize."""
-  video720: ImageMediaAccess!
-  """1080px width or height resize."""
-  video1080: ImageMediaAccess!
 }
 
 type ColorPalette {
@@ -8149,12 +8119,6 @@ func (ec *executionContext) fieldContext_ImageMedia_variants(ctx context.Context
 				return ec.fieldContext_ImageMediaVariants_hd(ctx, field)
 			case "banner":
 				return ec.fieldContext_ImageMediaVariants_banner(ctx, field)
-			case "video480":
-				return ec.fieldContext_ImageMediaVariants_video480(ctx, field)
-			case "video720":
-				return ec.fieldContext_ImageMediaVariants_video720(ctx, field)
-			case "video1080":
-				return ec.fieldContext_ImageMediaVariants_video1080(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type ImageMediaVariants", field.Name)
 		},
@@ -8848,162 +8812,6 @@ func (ec *executionContext) _ImageMediaVariants_banner(ctx context.Context, fiel
 }
 
 func (ec *executionContext) fieldContext_ImageMediaVariants_banner(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "ImageMediaVariants",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "width":
-				return ec.fieldContext_ImageMediaAccess_width(ctx, field)
-			case "height":
-				return ec.fieldContext_ImageMediaAccess_height(ctx, field)
-			case "url":
-				return ec.fieldContext_ImageMediaAccess_url(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type ImageMediaAccess", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _ImageMediaVariants_video480(ctx context.Context, field graphql.CollectedField, obj *graphql1.ImageMediaVariants) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_ImageMediaVariants_video480(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Video480, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*graphql1.ImageMediaAccess)
-	fc.Result = res
-	return ec.marshalNImageMediaAccess2ᚖoverdollᚋlibrariesᚋgraphqlᚐImageMediaAccess(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_ImageMediaVariants_video480(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "ImageMediaVariants",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "width":
-				return ec.fieldContext_ImageMediaAccess_width(ctx, field)
-			case "height":
-				return ec.fieldContext_ImageMediaAccess_height(ctx, field)
-			case "url":
-				return ec.fieldContext_ImageMediaAccess_url(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type ImageMediaAccess", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _ImageMediaVariants_video720(ctx context.Context, field graphql.CollectedField, obj *graphql1.ImageMediaVariants) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_ImageMediaVariants_video720(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Video720, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*graphql1.ImageMediaAccess)
-	fc.Result = res
-	return ec.marshalNImageMediaAccess2ᚖoverdollᚋlibrariesᚋgraphqlᚐImageMediaAccess(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_ImageMediaVariants_video720(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "ImageMediaVariants",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "width":
-				return ec.fieldContext_ImageMediaAccess_width(ctx, field)
-			case "height":
-				return ec.fieldContext_ImageMediaAccess_height(ctx, field)
-			case "url":
-				return ec.fieldContext_ImageMediaAccess_url(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type ImageMediaAccess", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _ImageMediaVariants_video1080(ctx context.Context, field graphql.CollectedField, obj *graphql1.ImageMediaVariants) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_ImageMediaVariants_video1080(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Video1080, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*graphql1.ImageMediaAccess)
-	fc.Result = res
-	return ec.marshalNImageMediaAccess2ᚖoverdollᚋlibrariesᚋgraphqlᚐImageMediaAccess(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_ImageMediaVariants_video1080(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "ImageMediaVariants",
 		Field:      field,
@@ -15941,27 +15749,6 @@ func (ec *executionContext) _ImageMediaVariants(ctx context.Context, sel ast.Sel
 		case "banner":
 
 			out.Values[i] = ec._ImageMediaVariants_banner(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "video480":
-
-			out.Values[i] = ec._ImageMediaVariants_video480(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "video720":
-
-			out.Values[i] = ec._ImageMediaVariants_video720(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "video1080":
-
-			out.Values[i] = ec._ImageMediaVariants_video1080(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++

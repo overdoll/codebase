@@ -207,7 +207,7 @@ func (m *Media) VideoContainers() []*VideoContainer {
 
 	for _, container := range m.proto.VideoData.Containers {
 		containers = append(containers, &VideoContainer{
-			url:      m.generateUrlForVideo(container.Id),
+			url:      m.generateUrlForVideo(container.Id, container.MimeType == proto.MediaMimeType_VideoMpegUrl),
 			bitrate:  int(container.Bitrate),
 			width:    int(container.Width),
 			height:   int(container.Height),
@@ -218,7 +218,7 @@ func (m *Media) VideoContainers() []*VideoContainer {
 	return containers
 }
 
-func (m *Media) generateUrlForVideo(id string) string {
+func (m *Media) generateUrlForVideo(id string, usePrefix bool) string {
 
 	if m.IsLegacy() {
 		signed, _ := serializer.createSignedUrl(SerializerPolicy{
@@ -236,14 +236,18 @@ func (m *Media) generateUrlForVideo(id string) string {
 	// for video signed urls, we add a prefix so that it can be passed down without needing to sign playlists each time
 	signed, _ := serializer.createSignedUrl(SerializerPolicy{
 		URI:                 finalUrl.String(),
-		UseWildcardCacheKey: finalUrl.Host + "/" + finalUrl.Path + "/*",
-		UsePrefix:           true,
+		UseWildcardCacheKey: "https://" + finalUrl.Host + "/" + m.VideoPrefix() + "/*",
+		UsePrefix:           usePrefix,
 	})
 
 	return signed
 }
 
 func (m *Media) generateUrlForImage(optimalSize int, crop bool) *ImageMediaAccess {
+
+	if m.IsLegacy() {
+		return m.LegacyImageMediaAccess()
+	}
 
 	isLandscape := m.proto.ImageData.Width >= m.proto.ImageData.Height
 
@@ -318,7 +322,7 @@ func (m *Media) generateUrlForImage(optimalSize int, crop bool) *ImageMediaAcces
 
 	signed, _ := serializer.createSignedUrl(SerializerPolicy{
 		URI:                 finalUrl.String(),
-		UseWildcardCacheKey: finalUrl.Host + "/" + finalUrl.Path + "*",
+		UseWildcardCacheKey: "https://" + finalUrl.Host + "/" + finalUrl.Path + "*",
 	})
 
 	return &ImageMediaAccess{
@@ -410,16 +414,4 @@ func (m *Media) LargeImageMediaAccess() *ImageMediaAccess {
 
 func (m *Media) BannerImageMediaAccess() *ImageMediaAccess {
 	return m.generateUrlForImage(640, false)
-}
-
-func (m *Media) Video480ImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(480, false)
-}
-
-func (m *Media) Video720ImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(720, false)
-}
-
-func (m *Media) Video1080ImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(1080, false)
 }

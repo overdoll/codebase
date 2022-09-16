@@ -51,6 +51,13 @@ type SerializerPolicy struct {
 	UseWildcardCacheKey string
 }
 
+var paramsToSearch = []string{
+	"Policy",
+	"Signature",
+	"Expires",
+	"Key-Pair-Id",
+}
+
 func (c *Serializer) createSignedUrl(policy SerializerPolicy) (string, error) {
 
 	usesWildcard := policy.UseWildcardCacheKey != ""
@@ -60,6 +67,24 @@ func (c *Serializer) createSignedUrl(policy SerializerPolicy) (string, error) {
 		item := cache.Get(policy.UseWildcardCacheKey)
 
 		if item != nil {
+
+			if policy.UsePrefix {
+
+				parsedQuery, err := url.ParseQuery(item.Value())
+
+				if err != nil {
+					return "", errors.Wrap(err, "failed to parse query")
+				}
+
+				for _, param := range paramsToSearch {
+					if parsedQuery.Has(param) {
+						parsedQuery.Add("OD-"+param, parsedQuery.Get(param))
+					}
+				}
+
+				return policy.URI + "?" + parsedQuery.Encode(), nil
+			}
+
 			// if we use a wildcard, the wildcard only saved the query params, so we must reconstruct them
 			return policy.URI + "&" + item.Value(), nil
 		}
@@ -136,13 +161,6 @@ func (c *Serializer) createSignedUrl(policy SerializerPolicy) (string, error) {
 		}
 	}
 
-	paramsToSearch := []string{
-		"Policy",
-		"Signature",
-		"Expires",
-		"Key-Pair-Id",
-	}
-
 	if policy.UsePrefix {
 
 		parsed, err := url.Parse(signedUrl)
@@ -156,19 +174,14 @@ func (c *Serializer) createSignedUrl(policy SerializerPolicy) (string, error) {
 				parsed.Query().Add("OD-"+param, parsed.Query().Get(param))
 			}
 		}
+
+		signedUrl = parsed.String()
 	}
 
 	cacheTTL := newTimestamp.Sub(time.Now()) - time.Hour*24
 
 	// uses a wildcard policy, we just cache the query params
 	if usesWildcard {
-
-		var paramsToCache []string
-
-		for _, param := range paramsToSearch {
-			paramsToCache = append(paramsToCache, param)
-			paramsToCache = append(paramsToCache, "OD-"+param)
-		}
 
 		parsed, err := url.Parse(signedUrl)
 
@@ -178,12 +191,13 @@ func (c *Serializer) createSignedUrl(policy SerializerPolicy) (string, error) {
 
 		finalCacheKey := ""
 
-		for i, param := range paramsToCache {
+		for i, param := range paramsToSearch {
 			if parsed.Query().Has(param) {
-				if i == len(paramsToCache)-1 {
-					finalCacheKey += param
+				paramValue := param + "=" + parsed.Query().Get(param)
+				if i == len(paramsToSearch)-1 {
+					finalCacheKey += paramValue
 				} else {
-					finalCacheKey += param + "&"
+					finalCacheKey += paramValue + "&"
 				}
 			}
 		}
