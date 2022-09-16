@@ -1,5 +1,5 @@
 import { Flex, Grid, GridItem } from '@chakra-ui/react'
-import { ContainerRefProps, VideoControlTypeProps, VideoWatchProps } from '../../VideoContainer'
+import { ContainerRefProps, VideoControlTypeProps } from '../../VideoContainer'
 import { PlayerType } from '../../../../types'
 import useEnterControls from '../../../../support/useEnterControls'
 import { useEffect, useRef, useState } from 'react'
@@ -65,6 +65,7 @@ export default function VideoControlsOverlay (props: Props): JSX.Element {
       <Grid
         w='100%'
         h='100%'
+        maxW='container.md'
         templateAreas={`
       "header header header"
       "left center right"

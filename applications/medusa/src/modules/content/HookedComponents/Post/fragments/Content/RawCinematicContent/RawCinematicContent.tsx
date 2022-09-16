@@ -25,7 +25,7 @@ const PostFragment = graphql`
 
 export default function RawCinematicContent (props: Props): JSX.Element {
   const {
-    postQuery,
+    postQuery
   } = props
 
   const postData = useFragment(PostFragment, postQuery)
@@ -39,7 +39,7 @@ export default function RawCinematicContent (props: Props): JSX.Element {
   return (
     <ContentGrid contentLength={postData.content.length} key={postData.id}>
       <GridItem overflow='hidden' area='gallery'>
-        <Box position='relative'>
+        <Box h='100%' position='relative'>
           <RawCinematicGallery postQuery={postData} onSwiper={onInit} />
         </Box>
       </GridItem>

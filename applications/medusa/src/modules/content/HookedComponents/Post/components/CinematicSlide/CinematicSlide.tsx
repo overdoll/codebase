@@ -11,9 +11,9 @@ export default function CinematicSlide (props: Props): JSX.Element {
   return (
     <Flex
       direction='column'
-      maxH='calc(100vh - 169px)'
-      h='100%'
       w='100%'
+      minH='300px'
+      h='100%'
       align='center'
       justify='center'
     >

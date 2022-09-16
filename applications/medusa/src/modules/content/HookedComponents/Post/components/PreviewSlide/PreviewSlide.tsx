@@ -16,6 +16,7 @@ export default function PreviewSlide (props: Props): JSX.Element {
         md: 800
       }}
       w='100%'
+      h='100%'
       align='center'
       justify='center'
     >

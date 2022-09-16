@@ -46,6 +46,7 @@ export default function ImageControls (props: Props): JSX.Element {
     >
       <Grid
         w='100%'
+        maxW='container.md'
         h='100%'
         templateAreas={`
       "header header header"
@@ -58,7 +59,13 @@ export default function ImageControls (props: Props): JSX.Element {
         {/* <GridItem area='header' /> */}
         {/* <GridItem area='center' /> */}
         <GridItem area='footer'>
-          <ImageFooterControls isCovered={isCovered} setCovered={setCovered} rgb={rgb} imageMedia={imageMedia} isOpen={isOpen} />
+          <ImageFooterControls
+            isCovered={isCovered}
+            setCovered={setCovered}
+            rgb={rgb}
+            imageMedia={imageMedia}
+            isOpen={isOpen}
+          />
         </GridItem>
       </Grid>
     </Flex>

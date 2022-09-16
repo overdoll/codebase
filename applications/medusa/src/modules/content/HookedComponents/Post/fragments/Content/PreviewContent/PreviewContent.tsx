@@ -39,7 +39,7 @@ export default function PreviewContent (props: Props): JSX.Element {
   return (
     <ContentGrid contentLength={postData.content.length} key={postData.id}>
       <GridItem overflow='hidden' area='gallery'>
-        <Box w='100%' h='100%' position='relative'>
+        <Box h='100%' position='relative'>
           <PreviewGallery postQuery={postData} onSwiper={onInit} />
         </Box>
       </GridItem>

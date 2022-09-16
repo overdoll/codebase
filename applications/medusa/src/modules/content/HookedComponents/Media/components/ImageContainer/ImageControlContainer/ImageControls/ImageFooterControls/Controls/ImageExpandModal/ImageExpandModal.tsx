@@ -39,7 +39,7 @@ export default function ImageExpandModal (props: Props): JSX.Element {
   const [showPopup, setShowPopup] = useState(false)
   const [delay, setDelay] = useState<number | null>(null)
 
-  const bgColor = rgb != null ? `rgba(${rgb.red},${rgb.green},${rgb.blue}, 0.15)` : undefined
+  const bgColor = typeof rgb === 'string' ? rgb : (rgb != null ? `rgba(${rgb.red},${rgb?.green},${rgb?.blue},0.7)` : undefined)
 
   useTimeout(() => setShowPopup(false), delay)
 

@@ -50,8 +50,8 @@ export default function ImageMedia (props: ImageMediaProps): JSX.Element {
           style={{
             backgroundColor: color ?? 'transparent',
             userSelect: 'none',
-            width: width == null ? 'inherit' : 'auto',
-            height: height == null ? 'inherit' : 'auto',
+            width: width == null ? 'inherit' : undefined,
+            height: height == null ? 'inherit' : undefined,
             maxWidth: '100%',
             objectFit: 'inherit'
           }}
@@ -81,8 +81,8 @@ export default function ImageMedia (props: ImageMediaProps): JSX.Element {
         style={{
           backgroundColor: color ?? 'transparent',
           userSelect: 'none',
-          width: width == null ? 'inherit' : 'auto',
-          height: height == null ? 'inherit' : 'auto',
+          width: width == null ? 'inherit' : undefined,
+          height: height == null ? 'inherit' : undefined,
           maxWidth: '100%',
           objectFit: 'inherit'
         }}
