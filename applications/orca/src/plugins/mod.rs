@@ -1,3 +1,3 @@
 mod passport;
+mod persisted_queries;
 mod relay;
-mod relay_persisted_queries;

@@ -21,4 +21,5 @@ csrf:
 
 plugins:
   overdoll.passport:
-  overdoll.relay_persisted_queries:
+  overdoll.persisted_queries:
+  overdoll.relay:

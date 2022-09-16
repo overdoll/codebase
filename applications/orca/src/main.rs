@@ -5,7 +5,6 @@ use std::env;
 use anyhow::Result;
 
 mod plugins;
-mod relay_subgraph;
 
 fn main() -> Result<()> {
     let my_path = env::current_dir()?;

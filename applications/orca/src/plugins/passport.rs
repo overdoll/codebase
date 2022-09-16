@@ -4,7 +4,8 @@ use apollo_router::services::subgraph::Request;
 use apollo_router::services::{subgraph, supergraph};
 use apollo_router::{graphql, register_plugin};
 use futures::{Stream, TryStreamExt};
-use tower::{BoxError, ServiceExt};
+use tower::util::BoxService;
+use tower::{BoxError, ServiceBuilder, ServiceExt};
 
 #[derive(Default)]
 struct Passport {}
@@ -18,6 +19,7 @@ impl Plugin for Passport {
 
     fn supergraph_service(&self, service: supergraph::BoxService) -> supergraph::BoxService {
         service
+            // .map_first_graphql_response()
             .map_request(|req: supergraph::Request| {
                 let passport_key = req.supergraph_request.body().extensions.get("passport");
                 if !passport_key.is_none() {
@@ -30,19 +32,22 @@ impl Plugin for Passport {
 
                 req
             })
-            .map_response(|mut response: supergraph::Response| {
-                // Send back updated passport
-                if let Some(code) = response
+            .map_response(|supergraph_response| {
+                // insert passport into the response
+                if let Some(code) = supergraph_response
                     .context
                     .get::<&String, String>(&"passport_response".to_string())
                     .expect("couldn't access context")
                 {
-                    // if let mut body = response.response.body_mut().poll_next() {
-                    //     body.extensions
-                    //         .insert("passport", String::from(code).as_str().parse().unwrap());
-                    // }
+                    supergraph_response.map_stream(|mut graphql_response| {
+                        graphql_response
+                            .extensions
+                            .insert("passport", String::from(code).as_str().parse().unwrap());
+                        graphql_response
+                    });
                 }
-                response
+
+                supergraph_response
             })
             .boxed()
     }
