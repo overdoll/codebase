@@ -296,7 +296,10 @@ func (m *Media) generateUrlForImage(optimalSize int, crop bool) *ImageMediaAcces
 	}
 
 	q := url.Values{}
-	q.Add("format", format)
+
+	if optimalWidth != 0 || optimalHeight != 0 {
+		q.Add("format", format)
+	}
 
 	if optimalWidth != 0 {
 		q.Add("width", strconv.Itoa(optimalWidth))
