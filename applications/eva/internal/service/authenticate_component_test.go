@@ -2,6 +2,9 @@ package service_test
 
 import (
 	"context"
+	"github.com/stretchr/testify/mock"
+	"overdoll/applications/eva/internal/app/workflows"
+	"overdoll/libraries/testing_tools"
 	"testing"
 	"time"
 
@@ -331,6 +334,8 @@ type CreateAccountWithAuthenticationToken struct {
 // this is in one test because it requires a persistent state (in this case, it's cookies)
 func TestAccountRegistration_complete(t *testing.T) {
 	t.Parallel()
+
+	_ = testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.NewAccountRegistration, mock.Anything)
 
 	client, _ := getHttpClient(t)
 
