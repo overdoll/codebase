@@ -782,7 +782,7 @@ func processImage(media *media.Media, mimeType string, file *os.File) (*ProcessR
 		}
 	} else {
 		_, _ = file.Seek(0, io.SeekStart)
-		// if the source is a JPEG source, we just copy the file over and we don't make any changes
+		// if the source is a JPEG source, we just copy the file over, and we don't make any changes
 		imageFile, err = os.Create(fileName)
 		if err != nil {
 			return nil, err

@@ -59,6 +59,7 @@ func createApplication(ctx context.Context, callbackService activities.CallbackS
 			TusComposer:             command.NewTusComposerHandler(uploadRepo),
 			ProcessMediaFromUploads: command.NewProcessMediaFromUploadsHandler(uploadRepo, mediaStorageRepo, eventRepo),
 			GenerateImageFromMedia:  command.NewGenerateImageFromMediaHandler(eventRepo),
+			CancelMediaProcessing:   command.NewCancelMediaProcessingHandler(mediaStorageRepo, eventRepo),
 		},
 		Queries: app.Queries{
 			MediaProgressByIds: query.NewMediaProgressByIdsHandler(progressRepo),

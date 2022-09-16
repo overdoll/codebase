@@ -528,11 +528,17 @@ func (p *Post) UpdateContentSupporterOnly(clb *club.Club, requester *principal.P
 	return nil
 }
 
-func (p *Post) RemoveContentRequest(requester *principal.Principal, contentIds []string) error {
+func (p *Post) RemoveContentRequest(requester *principal.Principal, contentIds []string) ([]*media.Media, error) {
 
 	if err := p.CanUpdate(requester); err != nil {
-		return err
+		return nil, err
 	}
+
+	if p.state != Draft {
+		return nil, domainerror.NewValidation("cannot remove content from a published post")
+	}
+
+	var removedMedia []*media.Media
 
 	var actualContent []*Content
 
@@ -543,6 +549,12 @@ func (p *Post) RemoveContentRequest(requester *principal.Principal, contentIds [
 		for _, removedContent := range contentIds {
 			if removedContent == content.media.ID() {
 				foundContent = true
+				removedMedia = append(removedMedia, content.media)
+
+				if content.isSupporterOnly {
+					removedMedia = append(removedMedia, content.mediaHidden)
+				}
+
 				continue
 			}
 		}
@@ -557,7 +569,7 @@ func (p *Post) RemoveContentRequest(requester *principal.Principal, contentIds [
 
 	p.update()
 
-	return nil
+	return removedMedia, nil
 }
 
 func (p *Post) UpdateCharactersRequest(requester *principal.Principal, characters []*Character) error {
@@ -654,25 +666,34 @@ func (p *Post) CanUnArchive(requester *principal.Principal) error {
 	return p.MakePublish()
 }
 
+func (p *Post) CanAddContent(requester *principal.Principal) error {
+
+	if p.state != Draft {
+		return domainerror.NewValidation("can only add content to draft posts")
+	}
+
+	return p.CanUpdate(requester)
+}
+
 func (p *Post) CanUpdate(requester *principal.Principal) error {
+
+	if p.state != Draft {
+		return domainerror.NewValidation("can only update posts that are in draft")
+	}
 
 	if requester.IsLocked() {
 		return principal.ErrLocked
+	}
+
+	// staff && workers can update posts that are published
+	if (requester.IsStaff() || requester.IsWorker()) && p.state == Published {
+		return nil
 	}
 
 	if !requester.IsWorker() {
 		if err := requester.CheckClubOwner(p.clubId); err != nil {
 			return requester.BelongsToAccount(requester.AccountId())
 		}
-	}
-
-	// staff can update posts that are published
-	if requester.IsStaff() && p.state == Published {
-		return nil
-	}
-
-	if p.state != Draft {
-		return domainerror.NewValidation("can only update posts that are in draft")
 	}
 
 	return nil

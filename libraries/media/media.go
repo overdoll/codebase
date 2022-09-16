@@ -221,7 +221,8 @@ func (m *Media) VideoContainers() []*VideoContainer {
 func (m *Media) generateUrlForVideo(id string) string {
 
 	if m.IsLegacy() {
-		signed, _ := serializer.createSignedUrl(os.Getenv("PRIVATE_RESOURCES_URL") + "/" + m.proto.Link.Id + "/" + id)
+		signedLegacyUrl := os.Getenv("PRIVATE_RESOURCES_URL") + "/" + m.proto.Link.Id + "/" + id
+		signed, _ := serializer.createSignedUrl(signedLegacyUrl, signedLegacyUrl, false)
 		return signed
 	}
 
@@ -230,7 +231,11 @@ func (m *Media) generateUrlForVideo(id string) string {
 	finalUrl.Host = os.Getenv("MEDIA_HOST")
 	finalUrl.Path = m.VideoPrefix() + "/" + id
 	finalUrl.Scheme = "https"
-	signed, _ := serializer.createSignedUrl(finalUrl.String())
+
+	cacheKey := finalUrl.Host + "/" + finalUrl.Path + "/*"
+
+	// for video signed urls, we add a prefix so that it can be passed down without needing to sign playlists each time
+	signed, _ := serializer.createSignedUrl(cacheKey, finalUrl.String(), true)
 	return signed
 }
 
@@ -304,7 +309,9 @@ func (m *Media) generateUrlForImage(optimalSize int, crop bool) *ImageMediaAcces
 	finalUrl.Scheme = "https"
 	finalUrl.Path = m.ImagePrefix() + "/" + m.proto.ImageData.Id
 
-	signed, _ := serializer.createSignedUrl(finalUrl.String())
+	cacheKey := finalUrl.Host + "/" + finalUrl.Path + "*"
+
+	signed, _ := serializer.createSignedUrl(cacheKey, finalUrl.String(), false)
 
 	return &ImageMediaAccess{
 		url:    signed,
@@ -332,7 +339,9 @@ func (m *Media) generateUrlForLegacyImage(webp bool) *ImageMediaAccess {
 
 	if m.proto.Private {
 
-		signedURL, _ := serializer.createSignedUrl(os.Getenv("PRIVATE_RESOURCES_URL") + key)
+		legacyUrl := os.Getenv("PRIVATE_RESOURCES_URL") + key
+
+		signedURL, _ := serializer.createSignedUrl(legacyUrl, legacyUrl, false)
 
 		finalUrl = signedURL
 

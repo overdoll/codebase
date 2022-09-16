@@ -19,6 +19,31 @@ func NewLoaderGrpc(client loader.LoaderClient) LoaderGrpc {
 	return LoaderGrpc{client: client}
 }
 
+func (s LoaderGrpc) CancelMediaProcessing(ctx context.Context, media []*media.Media) error {
+
+	var protos []*proto.Media
+
+	for _, m := range media {
+		if !m.IsProcessed() {
+			protos = append(protos, m.RawProto())
+		}
+	}
+
+	if len(protos) == 0 {
+		return nil
+	}
+
+	_, err := s.client.CancelMediaProcessing(ctx, &loader.CancelMediaProcessingRequest{
+		Media: protos,
+	})
+
+	if err != nil {
+		return errors.Wrap(err, "failed to cancel media processing")
+	}
+
+	return nil
+}
+
 func (s LoaderGrpc) ProcessMediaFromUploads(ctx context.Context, uploadIds []string, link *media.Link) ([]*media.Media, error) {
 
 	md, err := s.client.ProcessMediaFromUploads(ctx, &loader.ProcessMediaFromUploadsRequest{

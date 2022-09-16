@@ -18,6 +18,7 @@ go_library(
         "//applications/loader/internal/domain/progress",
         "//applications/loader/internal/domain/upload",
         "//libraries/errors",
+        "//libraries/errors/apperror",
         "//libraries/errors/domainerror",
         "//libraries/media",
         "//libraries/media/proto:libraries_go_proto",

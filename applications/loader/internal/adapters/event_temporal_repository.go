@@ -68,3 +68,18 @@ func (r EventTemporalRepository) ProcessMediaForUpload(ctx context.Context, medi
 
 	return nil
 }
+
+func (r EventTemporalRepository) CancelMediaProcessing(ctx context.Context, media *media.Media) error {
+
+	workflowID := "loader.ProcessMediaForUpload_" + media.RawProto().Link.Id + "_" + media.ID()
+
+	if media.IsLinked() {
+		workflowID = "loader.GenerateImageFromMedia_" + media.SourceMediaId() + "_" + media.ID()
+	}
+
+	if err := r.client.CancelWorkflow(ctx, workflowID, ""); err != nil {
+		return errors.Wrap(err, "failed to cancel media processing")
+	}
+
+	return nil
+}

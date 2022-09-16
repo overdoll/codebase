@@ -24,8 +24,20 @@ func NewRemovePostContentHandler(pr post.Repository, loader LoaderService) Remov
 
 func (h RemovePostContentHandler) Handle(ctx context.Context, cmd RemovePostContent) (*post.Post, error) {
 
-	pendingPost, err := h.pr.UpdatePostContent(ctx, cmd.Principal, cmd.PostId, func(post *post.Post) error {
-		return post.RemoveContentRequest(cmd.Principal, cmd.ContentIds)
+	pendingPost, err := h.pr.UpdatePostContent(ctx, cmd.Principal, cmd.PostId, func(target *post.Post) error {
+
+		removed, err := target.RemoveContentRequest(cmd.Principal, cmd.ContentIds)
+
+		if err != nil {
+			return err
+		}
+
+		// cancel processing for this media, if needed
+		if err := h.loader.CancelMediaProcessing(ctx, removed); err != nil {
+			return err
+		}
+
+		return nil
 	})
 
 	if err != nil {
