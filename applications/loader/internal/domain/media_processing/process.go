@@ -771,6 +771,7 @@ func processImage(media *media.Media, mimeType string, file *os.File) (*ProcessR
 	}
 
 	isPortrait := src.Bounds().Dy() > src.Bounds().Dx()
+
 	// if larger than 4096, we resize to save on storage space && resizing operations at origin
 	if isPortrait && src.Bounds().Dy() > 4096 {
 		src = resize.Resize(0, 4096, src, resize.Lanczos3)
@@ -780,26 +781,13 @@ func processImage(media *media.Media, mimeType string, file *os.File) (*ProcessR
 
 	var imageFile *os.File
 
-	if mimeType == "image/png" {
-		imageFile, err = os.Create(fileName)
-		if err != nil {
-			return nil, err
-		}
+	imageFile, err = os.Create(fileName)
+	if err != nil {
+		return nil, err
+	}
 
-		if err := jpeg.Encode(imageFile, src, &jpeg.Options{Quality: 85}); err != nil {
-			return nil, errors.Wrap(err, "failed to encode jpeg")
-		}
-	} else {
-		_, _ = file.Seek(0, io.SeekStart)
-		// if the source is a JPEG source, we just copy the file over, and we don't make any changes
-		imageFile, err = os.Create(fileName)
-		if err != nil {
-			return nil, err
-		}
-		_, err := io.Copy(imageFile, file)
-		if err != nil {
-			return nil, err
-		}
+	if err := jpeg.Encode(imageFile, src, &jpeg.Options{Quality: 80}); err != nil {
+		return nil, errors.Wrap(err, "failed to encode jpeg")
 	}
 
 	_, _ = imageFile.Seek(0, io.SeekStart)
@@ -938,7 +926,7 @@ func ApplyFilters(media *media.Media, file *os.File, filters *ImageFilters, mime
 
 	// when filters are applied, this is usually to an existing JPEG, so it has already been compressed
 	// we want to avoid compressing it twice, so we set the quality to 100
-	if err := jpeg.Encode(targetFile, pixelatedSrc, &jpeg.Options{Quality: 100}); err != nil {
+	if err := jpeg.Encode(targetFile, pixelatedSrc, &jpeg.Options{Quality: 80}); err != nil {
 		return nil, errors.Wrap(err, "failed to encode jpeg")
 	}
 

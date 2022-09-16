@@ -8,6 +8,7 @@ import (
 	"os"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/support"
+	"strings"
 	"time"
 )
 
@@ -86,7 +87,11 @@ func (c *Serializer) createSignedUrl(policy SerializerPolicy) (string, error) {
 			}
 
 			// if we use a wildcard, the wildcard only saved the query params, so we must reconstruct them
-			return policy.URI + "&" + item.Value(), nil
+			if strings.Contains(policy.URI, "?") {
+				return policy.URI + "&" + item.Value(), nil
+			}
+
+			return policy.URI + "?" + item.Value(), nil
 		}
 
 	} else {
