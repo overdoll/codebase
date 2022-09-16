@@ -2,6 +2,7 @@ package media
 
 import (
 	"context"
+	"encoding/hex"
 	"encoding/json"
 	proto2 "github.com/golang/protobuf/proto"
 	"overdoll/libraries/errors"
@@ -45,8 +46,8 @@ func unmarshalLegacyResourceFromDatabase(ctx context.Context, resource string) (
 				Id:       re.ProcessedId + ".mp4",
 				MimeType: proto.MediaMimeType_VideoMp4,
 				Bitrate:  0,
-				Height:   int64(re.Height),
-				Width:    int64(re.Width),
+				Height:   uint32(re.Height),
+				Width:    uint32(re.Width),
 			}},
 			AspectRatio: &proto.VideoAspectRatio{
 				Width:  0,
@@ -69,17 +70,17 @@ func unmarshalLegacyResourceFromDatabase(ctx context.Context, resource string) (
 
 			palette = append(palette, &proto.ColorPalette{
 				Percent: 100,
-				Red:     int32(uint8(values >> 16)),
-				Green:   int32(uint8((values >> 8) & 0xFF)),
-				Blue:    int32(uint8(values & 0xFF)),
+				Red:     uint32(uint8(values >> 16)),
+				Green:   uint32(uint8((values >> 8) & 0xFF)),
+				Blue:    uint32(uint8(values & 0xFF)),
 			})
 		}
 
 		lastMimeType := re.MimeTypes[len(re.MimeTypes)-1]
 
 		imageData = &proto.ImageData{
-			Width:    int64(re.Width),
-			Height:   int64(re.Height),
+			Width:    uint32(re.Width),
+			Height:   uint32(re.Height),
 			Palettes: palette,
 		}
 
@@ -115,7 +116,7 @@ func unmarshalLegacyResourceFromDatabase(ctx context.Context, resource string) (
 	}, nil
 }
 
-func MarshalMediaToDatabase(media *Media) ([]byte, error) {
+func MarshalMediaToDatabase(media *Media) (*string, error) {
 
 	if media == nil {
 		return nil, nil
@@ -131,14 +132,21 @@ func MarshalMediaToDatabase(media *Media) ([]byte, error) {
 		return nil, errors.Wrap(err, "failed to marshal media to database")
 	}
 
-	return marshalled, nil
+	// encode to hex string for storage
+	res := hex.EncodeToString(marshalled)
+	return &res, nil
 }
 
 func UnmarshalMediaFromDatabase(ctx context.Context, media *string) (*Media, error) {
 
+	newData, err := hex.DecodeString(*media)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to decode hex string")
+	}
+
 	var res proto.Media
 
-	if err := proto2.Unmarshal(media, &res); err != nil {
+	if err := proto2.Unmarshal(newData, &res); err != nil {
 		return nil, errors.Wrap(err, "failed to unmarshal media from database")
 	}
 

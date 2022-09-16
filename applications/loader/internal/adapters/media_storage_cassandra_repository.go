@@ -25,9 +25,9 @@ var storageTable = table.New(table.Metadata{
 })
 
 type mediaStorage struct {
-	LinkedId string `db:"linked_id"`
-	Id       string `db:"id"`
-	Data     []byte `db:"data"`
+	LinkedId string  `db:"linked_id"`
+	Id       string  `db:"id"`
+	Data     *string `db:"data"`
 }
 
 var resourcesTable = table.New(table.Metadata{

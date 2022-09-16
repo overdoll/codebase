@@ -61,9 +61,9 @@ type clubs struct {
 	Links                       []string          `db:"links"`
 	Name                        map[string]string `db:"name"`
 	ThumbnailResource           string            `db:"thumbnail_resource"`
-	ThumbnailMedia              []byte            `db:"thumbnail_media"`
+	ThumbnailMedia              *string           `db:"thumbnail_media"`
 	BannerResource              string            `db:"banner_resource"`
-	BannerMedia                 []byte            `db:"banner_media"`
+	BannerMedia                 *string           `db:"banner_media"`
 	CharactersEnabled           bool              `db:"characters_enabled"`
 	CharactersLimit             int               `db:"characters_limit"`
 	TotalLikes                  int               `db:"total_likes"`

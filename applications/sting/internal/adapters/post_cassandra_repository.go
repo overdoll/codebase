@@ -67,26 +67,26 @@ var postTable = table.New(table.Metadata{
 })
 
 type posts struct {
-	Id                           string            `db:"id"`
-	State                        string            `db:"state"`
-	Likes                        int               `db:"likes"`
-	Description                  map[string]string `db:"description"`
-	LikesLastUpdateId            gocql.UUID        `db:"likes_last_update_id"`
-	SupporterOnlyStatus          string            `db:"supporter_only_status"`
-	ContentMediaIds              []string          `db:"content_resource_ids"`
-	ContentSupporterOnly         map[string]bool   `db:"content_supporter_only"`
-	ContentResources             map[string]string `db:"content_resources"`
-	ContentMedia                 map[string][]byte `db:"content_media"`
-	ContentSupporterOnlyMediaIds map[string]string `db:"content_supporter_only_resource_ids"`
-	ContributorId                string            `db:"contributor_account_id"`
-	ClubId                       string            `db:"club_id"`
-	AudienceId                   *string           `db:"audience_id"`
-	CategoryIds                  []string          `db:"category_ids"`
-	CharacterIds                 []string          `db:"character_ids"`
-	SeriesIds                    []string          `db:"series_ids"`
-	CreatedAt                    time.Time         `db:"created_at"`
-	UpdatedAt                    time.Time         `db:"updated_at"`
-	PostedAt                     *time.Time        `db:"posted_at"`
+	Id                           string             `db:"id"`
+	State                        string             `db:"state"`
+	Likes                        int                `db:"likes"`
+	Description                  map[string]string  `db:"description"`
+	LikesLastUpdateId            gocql.UUID         `db:"likes_last_update_id"`
+	SupporterOnlyStatus          string             `db:"supporter_only_status"`
+	ContentMediaIds              []string           `db:"content_resource_ids"`
+	ContentSupporterOnly         map[string]bool    `db:"content_supporter_only"`
+	ContentResources             map[string]string  `db:"content_resources"`
+	ContentMedia                 map[string]*string `db:"content_media"`
+	ContentSupporterOnlyMediaIds map[string]string  `db:"content_supporter_only_resource_ids"`
+	ContributorId                string             `db:"contributor_account_id"`
+	ClubId                       string             `db:"club_id"`
+	AudienceId                   *string            `db:"audience_id"`
+	CategoryIds                  []string           `db:"category_ids"`
+	CharacterIds                 []string           `db:"character_ids"`
+	SeriesIds                    []string           `db:"series_ids"`
+	CreatedAt                    time.Time          `db:"created_at"`
+	UpdatedAt                    time.Time          `db:"updated_at"`
+	PostedAt                     *time.Time         `db:"posted_at"`
 }
 
 var terminatedClubsTable = table.New(table.Metadata{
@@ -121,7 +121,7 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 	contentSupporterOnly := make(map[string]bool)
 	contentSupporterOnlyResourceIds := make(map[string]string)
 	contentResources := make(map[string]string)
-	contentMedia := make(map[string][]byte)
+	contentMedia := make(map[string]*string)
 
 	for _, cont := range pending.Content() {
 		contentResourceIds = append(contentResourceIds, cont.Media().ID())
@@ -713,7 +713,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperatorMedia(ct
 		return nil, err
 	}
 
-	marshalledResources := make(map[string][]byte)
+	marshalledResources := make(map[string]*string)
 
 	for _, r := range resources {
 		marshalled, err := media.MarshalMediaToDatabase(r)
