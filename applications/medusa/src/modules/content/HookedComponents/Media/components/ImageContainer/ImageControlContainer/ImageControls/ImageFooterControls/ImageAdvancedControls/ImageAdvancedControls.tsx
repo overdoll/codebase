@@ -23,7 +23,7 @@ export default function ImageAdvancedControls (props: Props): JSX.Element {
   return (
     <HStack
       {...CONTROLS_CONTAINER}
-      data-ignore='click'
+      data-ignore='controls'
       h={12}
       px={4}
       align='center'

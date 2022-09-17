@@ -1,7 +1,6 @@
 import NextImage from './NextImage/NextImage'
 import { ReactNode, useState } from 'react'
 import ImageError from './ImageError/ImageError'
-import { useHydrate } from '../../../../../../../hydrate'
 import { Flex } from '@chakra-ui/react'
 import { ImageProps } from 'next/future/image'
 
@@ -12,6 +11,7 @@ export interface ImageMediaProps {
   tiny?: boolean
   width?: number
   height?: number
+  loadFirst?: boolean
 }
 
 export default function ImageMedia (props: ImageMediaProps): JSX.Element {
@@ -21,12 +21,11 @@ export default function ImageMedia (props: ImageMediaProps): JSX.Element {
     variants,
     tiny,
     width,
-    height
+    height,
+    loadFirst = false
   } = props
 
   const [hasError, setError] = useState(false)
-
-  const isHydrated = useHydrate()
 
   const IMAGE_STYLE: Omit<ImageProps, 'src'> = {
     style: {
@@ -69,8 +68,8 @@ export default function ImageMedia (props: ImageMediaProps): JSX.Element {
     return (
       <NextImage
         src={url ?? 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='}
-        loading={isHydrated ? 'lazy' : 'eager'}
-        priority={!isHydrated}
+        loading={loadFirst ? 'eager' : 'lazy'}
+        priority={loadFirst}
         onError={onError}
         width={width ?? undefined}
         height={height ?? undefined}
@@ -91,8 +90,8 @@ export default function ImageMedia (props: ImageMediaProps): JSX.Element {
       {variants}
       <NextImage
         src={url ?? 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='}
-        loading={isHydrated ? 'lazy' : 'eager'}
-        priority={!isHydrated}
+        loading={loadFirst ? 'eager' : 'lazy'}
+        priority={loadFirst}
         onError={onError}
         width={width ?? undefined}
         height={height ?? undefined}

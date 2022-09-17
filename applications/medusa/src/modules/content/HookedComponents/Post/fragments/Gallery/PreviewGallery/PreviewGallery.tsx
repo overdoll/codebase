@@ -57,7 +57,9 @@ export default function PreviewGallery (props: Props): JSX.Element {
               >
                 <PreviewMedia
                   mediaQuery={content.media}
-                  isActive={isActive}
+                  observerProps={{
+                    isActive
+                  }}
                 />
               </SupporterSlide>
             </PreviewSlide>

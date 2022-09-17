@@ -17,7 +17,7 @@ export default function MediaButton (props: Props): JSX.Element {
 
   return (
     <Box
-      data-ignore='click'
+      data-ignore='controls'
       cursor='pointer'
       w={5}
       h={5}

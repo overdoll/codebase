@@ -30,7 +30,7 @@ export default function VideoVolumeTrack (props: Props): JSX.Element {
 
   return (
     <Flex
-      data-ignore='click'
+      data-ignore='controls'
       {...CONTROLS_CONTAINER}
       h={12}
       w={36}
@@ -47,14 +47,14 @@ export default function VideoVolumeTrack (props: Props): JSX.Element {
         max={1}
         step={0.01}
         h='100%'
-        data-ignore='click'
+        data-ignore='controls'
       >
-        <SliderTrack data-ignore='click' borderRadius='full' h='100%' bg='whiteAlpha.100'>
-          <SliderFilledTrack data-ignore='click' bg={muted ? 'red.200' : 'green.200'} />
+        <SliderTrack data-ignore='controls' borderRadius='full' h='100%' bg='whiteAlpha.100'>
+          <SliderFilledTrack data-ignore='controls' bg={muted ? 'red.300' : 'green.300'} />
         </SliderTrack>
       </Slider>
-      <Flex pointerEvents='none' data-ignore='click' position='absolute'>
-        <Icon w={6} h={6} icon={muted ? ControlVolumeMuted : ControlSoundWave} fill='whiteAlpha.700' />
+      <Flex pointerEvents='none' data-ignore='controls' position='absolute'>
+        <Icon w={6} h={6} icon={muted ? ControlVolumeMuted : ControlSoundWave} fill='whiteAlpha.800' />
       </Flex>
     </Flex>
   )

@@ -50,7 +50,9 @@ export default function RawCinematicGallery (props: Props): JSX.Element {
             <RawCinematicSlide>
               <RawCinematicMedia
                 mediaQuery={content.media}
-                isActive={isActive}
+                observerProps={{
+                  isActive
+                }}
               />
             </RawCinematicSlide>
           )}

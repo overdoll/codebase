@@ -65,9 +65,11 @@ export default function VideoContainer (props: VideoContainerProps): JSX.Element
       overflow='hidden'
       borderRadius='inherit'
     >
-      <VideoBackground
-        poster={backgroundPoster ?? poster}
-      />
+      {backgroundPoster != null && (
+        <VideoBackground
+          poster={backgroundPoster}
+        />
+      )}
       <VideoWrapper
         autoPlay={autoPlay}
         volume={volume}

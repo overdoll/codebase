@@ -65,8 +65,15 @@ export default function CinematicGallery (props: Props): JSX.Element {
               >
                 <CinematicMedia
                   mediaQuery={content.media}
-                  isActive={isActive}
-                  currentTime={(slide != null && index === slide && time != null) ? time : 0}
+                  videoProps={{
+                    currentTime: (slide != null && index === slide && time != null) ? time : 0
+                  }}
+                  observerProps={{
+                    isActive
+                  }}
+                  imageProps={{
+                    loadFirst: (slide != null && index === slide) || (slide == null && index === 0)
+                  }}
                 />
               </SupporterSlide>
             </CinematicSlide>

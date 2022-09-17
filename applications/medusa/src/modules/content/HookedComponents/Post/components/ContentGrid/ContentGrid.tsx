@@ -12,7 +12,7 @@ export default function ContentGrid (props: Props): JSX.Element {
     contentLength
   } = props
 
-  const template = contentLength > 1 ? '1fr 60px' : '1fr 0px'
+  const template = contentLength > 1 ? '1fr 60px' : '1fr'
 
   return (
     <Grid

@@ -8,8 +8,7 @@ export default function SimpleNav (): JSX.Element {
   return (
     <Box
       zIndex='docked'
-      right={0}
-      left={1}
+      right={1}
       top={1}
       position='fixed'
       pointerEvents='none'

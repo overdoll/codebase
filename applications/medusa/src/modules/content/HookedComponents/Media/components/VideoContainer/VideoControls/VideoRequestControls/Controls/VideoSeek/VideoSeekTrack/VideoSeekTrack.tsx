@@ -52,8 +52,8 @@ export default function VideoSeekTrack (props: Props): JSX.Element {
   syncPlayerTimeUpdate(player, setTime, setPlayer)
 
   return (
-    <HStack data-ignore='click' spacing={1}>
-      <Flex data-ignore='click' {...CONTROLS_CONTAINER} h={12} w={12} align='center' justify='center'>
+    <HStack data-ignore='controls' spacing={1}>
+      <Flex data-ignore='controls' {...CONTROLS_CONTAINER} h={12} w={12} align='center' justify='center'>
         <MediaButton
           w={6}
           h={6}
@@ -62,7 +62,7 @@ export default function VideoSeekTrack (props: Props): JSX.Element {
         />
       </Flex>
       <Flex
-        data-ignore='click'
+        data-ignore='controls'
         position='relative'
         {...CONTROLS_CONTAINER}
         h={12}
@@ -81,19 +81,19 @@ export default function VideoSeekTrack (props: Props): JSX.Element {
           max={duration}
           step={0.01}
           h='100%'
-          data-ignore='click'
+          data-ignore='controls'
         >
-          <SliderTrack data-ignore='click' borderRadius='full' h='100%' bg='whiteAlpha.100'>
-            <SliderFilledTrack data-ignore='click' bg='teal.200' />
+          <SliderTrack data-ignore='controls' borderRadius='full' h='100%' bg='whiteAlpha.100'>
+            <SliderFilledTrack data-ignore='controls' bg='teal.300' />
           </SliderTrack>
         </Slider>
-        <Flex data-ignore='click' pointerEvents='none' position='absolute'>
-          <Heading data-ignore='click' color='whiteAlpha.700' fontSize='md'>
+        <Flex ddata-ignore='controls' pointerEvents='none' position='absolute'>
+          <Heading data-ignore='controls' color='whiteAlpha.800' fontSize='md'>
             {formatSecondsIntoMinutes(time)} / {formatSecondsIntoMinutes(duration)}
           </Heading>
         </Flex>
       </Flex>
-      <Flex data-ignore='click' {...CONTROLS_CONTAINER} h={12} w={12} align='center' justify='center'>
+      <Flex data-ignore='controls' {...CONTROLS_CONTAINER} h={12} w={12} align='center' justify='center'>
         <MediaButton
           w={6}
           h={6}

@@ -1,10 +1,8 @@
 import { graphql } from 'react-relay'
 import type { CinematicMediaFragment$key } from '@//:artifacts/CinematicMediaFragment.graphql'
 import { useFragment } from 'react-relay/hooks'
-import CinematicImageMedia from '../Media/CinematicImageMedia/CinematicImageMedia'
-import CinematicVideoMedia from '../Media/CinematicVideoMedia/CinematicVideoMedia'
-import { ObserveVideoContainerProps } from '../../components/ObserveVideoContainer/ObserveVideoContainer'
-import { VideoContainerProps } from '../../components/VideoContainer/VideoContainer'
+import CinematicImageMedia, { CinematicImageMediaProps } from '../Media/CinematicImageMedia/CinematicImageMedia'
+import CinematicVideoMedia, { CinematicVideoMediaProps } from '../Media/CinematicVideoMedia/CinematicVideoMedia'
 
 const Fragment = graphql`
   fragment CinematicMediaFragment on Media {
@@ -18,27 +16,37 @@ const Fragment = graphql`
   }
 `
 
-interface Props extends ObserveVideoContainerProps, Partial<Pick<VideoContainerProps, 'currentTime' | 'autoPlay'>> {
+interface Props extends CinematicVideoMediaProps, CinematicImageMediaProps {
   mediaQuery: CinematicMediaFragment$key
 }
 
 export default function CinematicMedia (props: Props): JSX.Element {
   const {
     mediaQuery,
-    ...rest
+    imageProps,
+    videoProps,
+    observerProps
   } = props
 
   const data = useFragment(Fragment, mediaQuery)
 
   if (data?.__typename === 'ImageMedia') {
     return (
-      <CinematicImageMedia imageMediaQuery={data} />
+      <CinematicImageMedia
+        imageMediaQuery={data}
+        imageProps={imageProps}
+      />
     )
   }
 
   if (data?.__typename === 'VideoMedia') {
     return (
-      <CinematicVideoMedia videoMediaQuery={data} {...rest} />
+      <CinematicVideoMedia
+        videoMediaQuery={data}
+        imageProps={imageProps}
+        videoProps={videoProps}
+        observerProps={observerProps}
+      />
     )
   }
 

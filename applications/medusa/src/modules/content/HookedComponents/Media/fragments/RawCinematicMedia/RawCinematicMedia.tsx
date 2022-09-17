@@ -3,7 +3,7 @@ import type { RawCinematicMediaFragment$key } from '@//:artifacts/RawCinematicMe
 import { useFragment } from 'react-relay/hooks'
 import ProcessingRawMedia from '../Media/ProcessingRawMedia/ProcessingRawMedia'
 import CinematicMedia from '../CinematicMedia/CinematicMedia'
-import { ObserveVideoContainerProps } from '../../components/ObserveVideoContainer/ObserveVideoContainer'
+import { CinematicVideoMediaProps } from '../Media/CinematicVideoMedia/CinematicVideoMedia'
 
 const Fragment = graphql`
   fragment RawCinematicMediaFragment on Media {
@@ -15,7 +15,7 @@ const Fragment = graphql`
   }
 `
 
-interface Props extends ObserveVideoContainerProps {
+interface Props extends CinematicVideoMediaProps {
   mediaQuery: RawCinematicMediaFragment$key
 }
 

@@ -1,7 +1,7 @@
 import { graphql } from 'react-relay'
 import type { BackgroundPosterImageMediaFragment$key } from '@//:artifacts/BackgroundPosterImageMediaFragment.graphql'
 import { useFragment } from 'react-relay/hooks'
-import ImageMedia from '../../../components/ImageContainer/ImageWrapper/ImageMedia/ImageMedia'
+import ImageMedia, { ImageMediaProps } from '../../../components/ImageContainer/ImageWrapper/ImageMedia/ImageMedia'
 
 const Fragment = graphql`
   fragment BackgroundPosterImageMediaFragment on ImageMedia {
@@ -20,13 +20,18 @@ const Fragment = graphql`
   }
 `
 
-interface Props {
+export interface BackgroundPosterImageMediaProps {
+  imageProps?: Pick<ImageMediaProps, 'loadFirst'>
+}
+
+interface Props extends BackgroundPosterImageMediaProps {
   imageMediaQuery: BackgroundPosterImageMediaFragment$key
 }
 
 export default function BackgroundPosterImageMedia (props: Props): JSX.Element {
   const {
-    imageMediaQuery
+    imageMediaQuery,
+    imageProps
   } = props
 
   const data = useFragment(Fragment, imageMediaQuery)
@@ -41,6 +46,7 @@ export default function BackgroundPosterImageMedia (props: Props): JSX.Element {
       width={data.variants.thumbnail.width}
       height={data.variants.thumbnail.height}
       url={data.variants.thumbnail.url}
+      {...imageProps}
     />
   )
 }

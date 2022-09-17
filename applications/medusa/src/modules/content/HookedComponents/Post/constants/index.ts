@@ -6,7 +6,8 @@ export const GALLERY_PROPS: SwiperProps = {
   touchRatio: 3,
   resistanceRatio: 0.5,
   speed: 100,
-  longSwipesMs: 700
+  longSwipesMs: 700,
+  noSwipingSelector: '[data-ignore="controls"]'
 }
 
 export const SLIDE_PROPS: SwiperSlideProps = {

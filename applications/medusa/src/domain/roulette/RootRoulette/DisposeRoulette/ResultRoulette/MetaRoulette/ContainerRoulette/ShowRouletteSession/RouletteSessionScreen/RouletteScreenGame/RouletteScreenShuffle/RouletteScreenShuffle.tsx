@@ -23,6 +23,7 @@ const Fragment = graphql`
         id
         ...RouletteScreenPostFragment
         ...RouletteScreenPostDataFragment
+        ...RouletteScreenBackgroundFragment
       }
       ...RouletteScreenDiceFragment
     }
@@ -91,6 +92,7 @@ export default function RouletteScreenShuffle (props: Props): JSX.Element {
 
   return (
     <Box w='100%' h='100%' position='relative'>
+      <RouletteScreenBackground query={data.gameState.post} />
       <motion.div
         // @ts-expect-error
         variants={variants}

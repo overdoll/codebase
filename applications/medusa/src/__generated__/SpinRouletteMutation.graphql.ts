@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7ff67948f054eafa15cafaa5975f1834>>
- * @relayHash adea3e88b008707ff5bbb06e0541f123
+ * @generated SignedSource<<efb59a2f147641c074da05c0cdf1b00a>>
+ * @relayHash 22231dbdaaae9477904021b89482ef6f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID adea3e88b008707ff5bbb06e0541f123
+// @relayRequestID 22231dbdaaae9477904021b89482ef6f
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -411,7 +411,6 @@ return {
                                 "name": "cover",
                                 "plural": false,
                                 "selections": [
-                                  (v7/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -420,12 +419,13 @@ return {
                                     "name": "variants",
                                     "plural": false,
                                     "selections": [
-                                      (v13/*: any*/),
-                                      (v12/*: any*/)
+                                      (v12/*: any*/),
+                                      (v13/*: any*/)
                                     ],
                                     "storageKey": null
                                   },
-                                  (v2/*: any*/)
+                                  (v2/*: any*/),
+                                  (v7/*: any*/)
                                 ],
                                 "storageKey": null
                               },
@@ -495,42 +495,7 @@ return {
                           }
                         ],
                         "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "viewerCanViewSupporterOnlyContent",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "isSupporterOnly",
-                        "storageKey": null
                       }
-                    ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Club",
-                    "kind": "LinkedField",
-                    "name": "club",
-                    "plural": false,
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "slug",
-                        "storageKey": null
-                      },
-                      (v2/*: any*/),
-                      (v15/*: any*/),
-                      (v16/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -554,6 +519,27 @@ return {
                       (v16/*: any*/)
                     ],
                     "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Club",
+                    "kind": "LinkedField",
+                    "name": "club",
+                    "plural": false,
+                    "selections": [
+                      (v2/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "slug",
+                        "storageKey": null
+                      },
+                      (v15/*: any*/),
+                      (v16/*: any*/)
+                    ],
+                    "storageKey": null
                   }
                 ],
                 "storageKey": null
@@ -567,7 +553,7 @@ return {
     ]
   },
   "params": {
-    "id": "adea3e88b008707ff5bbb06e0541f123",
+    "id": "22231dbdaaae9477904021b89482ef6f",
     "metadata": {},
     "name": "SpinRouletteMutation",
     "operationKind": "mutation",

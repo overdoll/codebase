@@ -3,6 +3,8 @@ import type { CinematicImageMediaFragment$key } from '@//:artifacts/CinematicIma
 import { useFragment } from 'react-relay/hooks'
 import ImageControlContainer from '../../../components/ImageContainer/ImageControlContainer/ImageControlContainer'
 import BackgroundPosterImageMedia from '../BackgroundPosterImageMedia/BackgroundPosterImageMedia'
+import { ImageMediaProps } from '../../../components/ImageContainer/ImageWrapper/ImageMedia/ImageMedia'
+import HdImageMedia from '../HdImageMedia/HdImageMedia'
 
 const Fragment = graphql`
   fragment CinematicImageMediaFragment on ImageMedia {
@@ -34,16 +36,22 @@ const Fragment = graphql`
       }
     }
     ...BackgroundPosterImageMediaFragment
+    ...HdImageMediaFragment
   }
 `
 
-interface Props {
+export interface CinematicImageMediaProps {
+  imageProps?: Pick<ImageMediaProps, 'loadFirst'>
+}
+
+interface Props extends CinematicImageMediaProps {
   imageMediaQuery: CinematicImageMediaFragment$key
 }
 
 export default function CinematicImageMedia (props: Props): JSX.Element {
   const {
-    imageMediaQuery
+    imageMediaQuery,
+    imageProps
   } = props
 
   const data = useFragment(Fragment, imageMediaQuery)
@@ -59,6 +67,7 @@ export default function CinematicImageMedia (props: Props): JSX.Element {
   return (
     <ImageControlContainer
       backgroundPoster={<BackgroundPosterImageMedia imageMediaQuery={data} />}
+      hdPoster={<HdImageMedia imageMediaQuery={data} />}
       variants={(
         <>
           <source
@@ -85,6 +94,7 @@ export default function CinematicImageMedia (props: Props): JSX.Element {
       width={data.variants.small.width}
       height={data.variants.small.height}
       rgb={rgb}
+      {...imageProps}
     />
   )
 }

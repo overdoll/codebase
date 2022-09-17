@@ -1,7 +1,7 @@
 import { graphql } from 'react-relay'
 import type { ThumbnailMediaFragment$key } from '@//:artifacts/ThumbnailMediaFragment.graphql'
 import { useFragment } from 'react-relay/hooks'
-import ThumbnailImageMedia from '../Media/ThumbnailImageMedia/ThumbnailImageMedia'
+import ThumbnailImageMedia, { ThumbnailImageMediaProps } from '../Media/ThumbnailImageMedia/ThumbnailImageMedia'
 
 const Fragment = graphql`
   fragment ThumbnailMediaFragment on Media {
@@ -17,26 +17,27 @@ const Fragment = graphql`
   }
 `
 
-interface Props {
+interface Props extends ThumbnailImageMediaProps {
   mediaQuery: ThumbnailMediaFragment$key
 }
 
 export default function ThumbnailMedia (props: Props): JSX.Element {
   const {
-    mediaQuery
+    mediaQuery,
+    imageProps
   } = props
 
   const data = useFragment(Fragment, mediaQuery)
 
   if (data?.__typename === 'ImageMedia') {
     return (
-      <ThumbnailImageMedia imageMediaQuery={data} />
+      <ThumbnailImageMedia imageMediaQuery={data} imageProps={imageProps} />
     )
   }
 
   if (data?.__typename === 'VideoMedia') {
     return (
-      <ThumbnailImageMedia imageMediaQuery={data.cover} />
+      <ThumbnailImageMedia imageMediaQuery={data.cover} imageProps={imageProps} />
     )
   }
 

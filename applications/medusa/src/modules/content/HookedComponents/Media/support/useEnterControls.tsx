@@ -1,5 +1,4 @@
 import { MutableRefObject, useEffect, useRef, useState } from 'react'
-import { useOutsideClick } from '@chakra-ui/react'
 import { Timeout } from '@//:types/components'
 
 interface UseEnterControlsReturn {
@@ -18,103 +17,89 @@ export default function useEnterControls (props: UseEnterControlsProps): UseEnte
     isDisabled
   } = props
 
-  const mouseTimeout = useRef<Timeout | null>(null)
-  const tapTimeout = useRef<Timeout | null>(null)
+  const timeout = useRef<Timeout | null>(null)
 
   const [isOpen, setOpen] = useState(false)
-  const [showCursor, setShowCursor] = useState(false)
+  const [showCursor, setShowCursor] = useState(true)
 
-  const onClose = (): void => {
-    if (mouseTimeout?.current != null) {
-      clearTimeout(mouseTimeout?.current)
+  const clearControlTimeout = (): void => {
+    if (timeout?.current != null) {
+      clearTimeout(timeout?.current)
     }
-    if (tapTimeout?.current != null) {
-      clearTimeout(tapTimeout?.current)
-    }
-    setOpen(x => {
-      if (!x) {
-        return x
-      }
-      return false
-    })
+  }
+
+  const onCloseControls = (): void => {
+    clearControlTimeout()
+    setOpen(false)
     setShowCursor(false)
   }
 
-  const refreshMouseTimeout = (): void => {
-    if (mouseTimeout?.current != null) {
-      clearTimeout(mouseTimeout?.current)
-    }
-    mouseTimeout.current = setTimeout(onClose, 3000)
+  const refreshControlTimeout = (): void => {
+    clearControlTimeout()
+    timeout.current = setTimeout(onCloseControls, 2500)
   }
 
-  const refreshTapTimeout = (custom?: number): void => {
-    if (tapTimeout?.current != null) {
-      clearTimeout(tapTimeout?.current)
-    }
-    tapTimeout.current = setTimeout(onClose, custom ?? 1500)
-  }
-
-  const onOpenMouse = (): void => {
+  const onMouseEnter = (): void => {
+    setShowCursor(true)
     setOpen(true)
-    refreshMouseTimeout()
+    refreshControlTimeout()
   }
 
-  const onOpenTap = (): void => {
-    setOpen((x: boolean) => {
-      if (!x) {
-        refreshTapTimeout()
-      }
-      return !x
-    })
-  }
-
-  const handleMouseEnter = (): void => {
-    onOpenMouse()
-  }
-  const handleMouseLeave = (): void => {
-    onClose()
-  }
-
-  const handleMouseOver = (e): void => {
+  const onMouseOver = (): void => {
     setShowCursor(true)
-    if (e.target.dataset.ignore === 'click' || e.target.parentNode.dataset.ignore === 'click') {
-      refreshTapTimeout(3000)
-      refreshMouseTimeout()
+    setOpen(true)
+    refreshControlTimeout()
+  }
+
+  const onMouseLeave = (): void => {
+    setShowCursor(false)
+    clearControlTimeout()
+    setOpen(false)
+  }
+
+  const onClick = (e): void => {
+    if (!isOpen) {
+      onMouseEnter()
+    } else if (isOpen && (e.target.dataset.ignore !== 'controls' || e.target.parentNode.dataset.ignore !== 'controls')) {
+      onMouseLeave()
+    }
+    if (e.target.dataset.ignore === 'controls' || e.target.parentNode.dataset.ignore === 'controls') {
+      refreshControlTimeout()
     }
   }
 
-  const handleClick = (e): void => {
-    setShowCursor(true)
-    if (e.target.dataset.ignore === 'click' || e.target.parentNode.dataset.ignore === 'click') {
-      if (mouseTimeout?.current != null) {
-        clearTimeout(mouseTimeout?.current)
+  const onTouchMove = (e): void => {
+    if (isOpen) {
+      if (e.target.dataset.ignore === 'controls' || e.target.parentNode.dataset.ignore === 'controls') {
+        refreshControlTimeout()
       }
-      refreshTapTimeout(3000)
-      return
     }
-    onOpenTap()
   }
-
-  useOutsideClick({
-    ref: ref,
-    handler: () => onClose()
-  })
 
   useEffect(() => {
-    ref.current?.addEventListener('click', handleClick)
-    ref.current?.addEventListener('mouseenter', handleMouseEnter)
-    ref.current?.addEventListener('mouseover', handleMouseOver)
-    ref.current?.addEventListener('mouseleave', handleMouseLeave)
     return () => {
-      ref.current?.removeEventListener('click', handleClick)
-      ref.current?.removeEventListener('mouseenter', handleMouseEnter)
-      ref.current?.removeEventListener('mouseover', handleMouseOver)
-      ref.current?.removeEventListener('mouseleave', handleMouseLeave)
+      clearControlTimeout()
     }
-  }, [isOpen, setOpen])
+  }, [])
+
+  useEffect(() => {
+    if (isDisabled === true) return
+    ref.current?.addEventListener('click', onClick)
+    ref.current?.addEventListener('touchmove', onTouchMove)
+    ref.current?.addEventListener('mouseenter', onMouseEnter)
+    ref.current?.addEventListener('mouseover', onMouseOver)
+    ref.current?.addEventListener('mouseleave', onMouseLeave)
+    return () => {
+      ref.current?.removeEventListener('click', onClick)
+      ref.current?.removeEventListener('touchmove', onTouchMove)
+      ref.current?.removeEventListener('mouseenter', onMouseEnter)
+      ref.current?.removeEventListener('mouseover', onMouseOver)
+      ref.current?.removeEventListener('mouseleave', onMouseLeave)
+    }
+  }, [isOpen, setOpen, isDisabled])
 
   return {
-    isOpen: isDisabled === true ? true : isOpen,
-    showCursor: isDisabled === true ? true : showCursor
+    isOpen: isOpen,
+    showCursor: showCursor
   }
 }

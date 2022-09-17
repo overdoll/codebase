@@ -41,7 +41,7 @@ export default function useControlRequest<ControlT extends string> (props: UseCo
   useOutsideClick({
     ref: ref,
     handler: () => {
-      onCancel()
+      // onCancel()
     }
   })
 
@@ -52,10 +52,10 @@ export default function useControlRequest<ControlT extends string> (props: UseCo
   }, [watchValue])
 
   const controls = useMemo(() => (
-    <Flex data-ignore='click' ref={ref} align='inherit' justify='inherit' w='inherit' h='inherit' position='relative'>
+    <Flex ddata-ignore='controls' ref={ref} align='inherit' justify='inherit' w='inherit' h='inherit' position='relative'>
       {Object.keys(specifiedControls).map((item) => (
         <Fade
-          data-ignore='click'
+          data-ignore='controls'
           style={{
             position: 'absolute',
             bottom: 0,

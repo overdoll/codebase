@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7a8f278f907aea8c8190aafd4f05afd3>>
+ * @generated SignedSource<<d312c6f80e10994ae5a42659266825f3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -38,7 +38,7 @@ export type CinematicImageMediaFragment$data = {
       readonly width: number;
     };
   };
-  readonly " $fragmentSpreads": FragmentRefs<"BackgroundPosterImageMediaFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"BackgroundPosterImageMediaFragment" | "HdImageMediaFragment">;
   readonly " $fragmentType": "CinematicImageMediaFragment";
 };
 export type CinematicImageMediaFragment$key = {
@@ -163,6 +163,11 @@ return {
       "args": null,
       "kind": "FragmentSpread",
       "name": "BackgroundPosterImageMediaFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "HdImageMediaFragment"
     }
   ],
   "type": "ImageMedia",
@@ -170,6 +175,6 @@ return {
 };
 })();
 
-(node as any).hash = "d5df34cc5f869a07ec849cdf086e5755";
+(node as any).hash = "cc280904f8d7ec818261818ffef7e3dc";
 
 export default node;

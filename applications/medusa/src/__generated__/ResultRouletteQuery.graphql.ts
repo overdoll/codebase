@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<351b25f4ca10b75f75de7d20ec3797a9>>
- * @relayHash 372242396e1b90dc8c745024c3c26354
+ * @generated SignedSource<<d2d984642bf50bdd268e8b89af94c13e>>
+ * @relayHash fdb05c784ec3a9fa0abb559eb7dc0d44
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 372242396e1b90dc8c745024c3c26354
+// @relayRequestID fdb05c784ec3a9fa0abb559eb7dc0d44
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -418,7 +418,6 @@ return {
                                     "name": "cover",
                                     "plural": false,
                                     "selections": [
-                                      (v10/*: any*/),
                                       {
                                         "alias": null,
                                         "args": null,
@@ -427,12 +426,13 @@ return {
                                         "name": "variants",
                                         "plural": false,
                                         "selections": [
-                                          (v13/*: any*/),
-                                          (v12/*: any*/)
+                                          (v12/*: any*/),
+                                          (v13/*: any*/)
                                         ],
                                         "storageKey": null
                                       },
-                                      (v3/*: any*/)
+                                      (v3/*: any*/),
+                                      (v10/*: any*/)
                                     ],
                                     "storageKey": null
                                   },
@@ -501,20 +501,6 @@ return {
                                 "abstractKey": null
                               }
                             ],
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "viewerCanViewSupporterOnlyContent",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "isSupporterOnly",
                             "storageKey": null
                           }
                         ],
@@ -585,7 +571,7 @@ return {
     ]
   },
   "params": {
-    "id": "372242396e1b90dc8c745024c3c26354",
+    "id": "fdb05c784ec3a9fa0abb559eb7dc0d44",
     "metadata": {},
     "name": "ResultRouletteQuery",
     "operationKind": "query",

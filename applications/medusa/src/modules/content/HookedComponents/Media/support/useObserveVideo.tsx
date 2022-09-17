@@ -7,7 +7,7 @@ interface UseObserveVideoPropsReturn {
   isObserving: boolean
 }
 
-interface UseObserveVideoProps {
+export interface UseObserveVideoProps {
   height?: number
   width?: number
   debounceDelay?: number

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1cc55546cdf5a510e3a62b5b10a6735a>>
- * @relayHash f327712ff2da5413293acc247efec248
+ * @generated SignedSource<<fc033a1b8fdd56b39eb02005134c9f9e>>
+ * @relayHash da5124479a0831f773e4c913e2ae929c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f327712ff2da5413293acc247efec248
+// @relayRequestID da5124479a0831f773e4c913e2ae929c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -432,8 +432,8 @@ return {
                                     "name": "aspectRatio",
                                     "plural": false,
                                     "selections": [
-                                      (v9/*: any*/),
-                                      (v8/*: any*/)
+                                      (v8/*: any*/),
+                                      (v9/*: any*/)
                                     ],
                                     "storageKey": null
                                   },
@@ -753,7 +753,7 @@ return {
     ]
   },
   "params": {
-    "id": "f327712ff2da5413293acc247efec248",
+    "id": "da5124479a0831f773e4c913e2ae929c",
     "metadata": {},
     "name": "ResultSearchCategoryQuery",
     "operationKind": "query",

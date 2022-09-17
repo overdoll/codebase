@@ -26,7 +26,7 @@ export default function VideoSimpleFooterControls (props: Props): JSX.Element {
       align='center'
       justify='center'
       spacing={4}
-      data-ignore='click'
+      data-ignore='controls'
     >
       <VideoPlayPause player={player} />
       <LazyVideoUnmute player={player} hasAudio={hasAudio} />

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2ebc092d77832539770d247a2208fc72>>
+ * @generated SignedSource<<939b1a21c1ae3078c5a312c8dad2d71f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,20 +9,21 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
-export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type RouletteScreenBackgroundFragment$data = {
   readonly content: ReadonlyArray<{
-    readonly resource: {
-      readonly preview: string;
-      readonly type: ResourceType;
-      readonly urls: ReadonlyArray<{
-        readonly mimeType: string;
-        readonly url: string;
-      }>;
-      readonly videoThumbnail: {
-        readonly url: string;
-      } | null;
+    readonly media: {
+      readonly __typename: "ImageMedia";
+      readonly " $fragmentSpreads": FragmentRefs<"BackgroundPosterImageMediaFragment">;
+    } | {
+      readonly __typename: "VideoMedia";
+      readonly cover: {
+        readonly " $fragmentSpreads": FragmentRefs<"BackgroundPosterImageMediaFragment">;
+      };
+    } | {
+      // This will never be '%other', but we need some
+      // value in case none of the concrete values match.
+      readonly __typename: "%other";
     };
   }>;
   readonly " $fragmentType": "RouletteScreenBackgroundFragment";
@@ -33,13 +34,13 @@ export type RouletteScreenBackgroundFragment$key = {
 };
 
 const node: ReaderFragment = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
-};
+var v0 = [
+  {
+    "args": null,
+    "kind": "FragmentSpread",
+    "name": "BackgroundPosterImageMediaFragment"
+  }
+];
 return {
   "argumentDefinitions": [],
   "kind": "Fragment",
@@ -57,55 +58,40 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "Resource",
+          "concreteType": null,
           "kind": "LinkedField",
-          "name": "resource",
+          "name": "media",
           "plural": false,
           "selections": [
             {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "type",
+              "name": "__typename",
               "storageKey": null
             },
             {
-              "alias": null,
-              "args": null,
-              "concreteType": "ResourceUrl",
-              "kind": "LinkedField",
-              "name": "urls",
-              "plural": true,
+              "kind": "InlineFragment",
               "selections": [
-                (v0/*: any*/),
                 {
                   "alias": null,
                   "args": null,
-                  "kind": "ScalarField",
-                  "name": "mimeType",
+                  "concreteType": "ImageMedia",
+                  "kind": "LinkedField",
+                  "name": "cover",
+                  "plural": false,
+                  "selections": (v0/*: any*/),
                   "storageKey": null
                 }
               ],
-              "storageKey": null
+              "type": "VideoMedia",
+              "abstractKey": null
             },
             {
-              "alias": null,
-              "args": null,
-              "concreteType": "ResourceUrl",
-              "kind": "LinkedField",
-              "name": "videoThumbnail",
-              "plural": false,
-              "selections": [
-                (v0/*: any*/)
-              ],
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "preview",
-              "storageKey": null
+              "kind": "InlineFragment",
+              "selections": (v0/*: any*/),
+              "type": "ImageMedia",
+              "abstractKey": null
             }
           ],
           "storageKey": null
@@ -119,6 +105,6 @@ return {
 };
 })();
 
-(node as any).hash = "586880f69f0699ab2cb42c4be0557fc5";
+(node as any).hash = "1dbf67cbd262c6bd9b4cabf3d2f913c2";
 
 export default node;

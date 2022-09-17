@@ -2,7 +2,7 @@ import { Flex } from '@chakra-ui/react'
 import CoverImage from '../../ImageWrapper/CoverImage/CoverImage'
 import { ImageBackgroundProps } from '../ImageControlContainer'
 
-interface Props extends ImageBackgroundProps {
+interface Props extends Pick<ImageBackgroundProps, 'backgroundPoster'> {
 }
 
 export default function ImageBackground (props: Props): JSX.Element {

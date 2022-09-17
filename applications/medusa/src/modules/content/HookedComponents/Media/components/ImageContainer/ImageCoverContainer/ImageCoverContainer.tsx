@@ -14,7 +14,8 @@ export default function ImageCoverContainer (props: Props): JSX.Element {
     variants,
     width,
     height,
-    tiny
+    tiny,
+    ...rest
   } = props
 
   const bgColor = typeof rgb === 'string' ? rgb : (rgb != null ? `rgb(${rgb.red},${rgb.green},${rgb.blue})` : undefined)
@@ -40,6 +41,7 @@ export default function ImageCoverContainer (props: Props): JSX.Element {
           url={url}
           color={bgColor}
           variants={variants}
+          {...rest}
         />
       </CoverImage>
     </Flex>

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ca27c8ef1072353d3fab3d83e2e7cd28>>
+ * @generated SignedSource<<2c2fa91113e8487f6d720c108e256ee7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,22 +15,10 @@ export type PreviewVideoMediaFragment$data = {
     readonly height: number;
     readonly width: number;
   };
-  readonly containers: ReadonlyArray<{
-    readonly __typename: "HLSVideoContainer";
-    readonly url: string;
-  } | {
-    readonly __typename: "MP4VideoContainer";
-    readonly url: string;
-  } | {
-    // This will never be '%other', but we need some
-    // value in case none of the concrete values match.
-    readonly __typename: "%other";
-  }>;
   readonly cover: {
     readonly " $fragmentSpreads": FragmentRefs<"BackgroundPosterImageMediaFragment" | "PosterImageMediaFragment">;
   };
-  readonly duration: number;
-  readonly hasAudio: boolean;
+  readonly " $fragmentSpreads": FragmentRefs<"ContainersVideoMediaFragment">;
   readonly " $fragmentType": "PreviewVideoMediaFragment";
 };
 export type PreviewVideoMediaFragment$key = {
@@ -38,17 +26,7 @@ export type PreviewVideoMediaFragment$key = {
   readonly " $fragmentSpreads": FragmentRefs<"PreviewVideoMediaFragment">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "url",
-    "storageKey": null
-  }
-];
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
@@ -87,69 +65,29 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "height",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
           "name": "width",
           "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "duration",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "hasAudio",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": null,
-      "kind": "LinkedField",
-      "name": "containers",
-      "plural": true,
-      "selections": [
+        },
         {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "__typename",
+          "name": "height",
           "storageKey": null
-        },
-        {
-          "kind": "InlineFragment",
-          "selections": (v0/*: any*/),
-          "type": "HLSVideoContainer",
-          "abstractKey": null
-        },
-        {
-          "kind": "InlineFragment",
-          "selections": (v0/*: any*/),
-          "type": "MP4VideoContainer",
-          "abstractKey": null
         }
       ],
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "ContainersVideoMediaFragment"
     }
   ],
   "type": "VideoMedia",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "5b2e3da7ad700291c3bc003524bfba45";
+(node as any).hash = "1cf84f0a831faa75ad19c9357c2b0ac9";
 
 export default node;

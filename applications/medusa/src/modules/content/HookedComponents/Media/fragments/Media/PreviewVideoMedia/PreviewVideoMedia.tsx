@@ -1,12 +1,9 @@
 import { graphql } from 'react-relay'
 import type { PreviewVideoMediaFragment$key } from '@//:artifacts/PreviewVideoMediaFragment.graphql'
 import { useFragment } from 'react-relay/hooks'
-import BackgroundPosterImageMedia from '../BackgroundPosterImageMedia/BackgroundPosterImageMedia'
+import ContainersVideoMedia, { ContainersVideoMediaProps } from '../ContainersVideoMedia/ContainersVideoMedia'
 import PosterImageMedia from '../PosterImageMedia/PosterImageMedia'
-import ObserveVideoContainer, {
-  ObserveVideoContainerProps
-} from '../../../components/ObserveVideoContainer/ObserveVideoContainer'
-import { VideoContainerProps } from '../../../components/VideoContainer/VideoContainer'
+import BackgroundPosterImageMedia from '../BackgroundPosterImageMedia/BackgroundPosterImageMedia'
 
 const Fragment = graphql`
   fragment PreviewVideoMediaFragment on VideoMedia {
@@ -15,77 +12,45 @@ const Fragment = graphql`
       ...PosterImageMediaFragment
     }
     aspectRatio {
-      height
       width
+      height
     }
-    duration
-    hasAudio
-    containers {
-      __typename
-      ...on HLSVideoContainer {
-        url
-      }
-      ...on MP4VideoContainer {
-        url
-      }
-    }
+    ...ContainersVideoMediaFragment
   }
 `
 
-interface Props extends ObserveVideoContainerProps, Partial<Pick<VideoContainerProps, 'currentTime'>> {
+export interface PreviewVideoMediaProps {
+  videoProps?: Omit<ContainersVideoMediaProps['videoProps'], 'controls' | 'poster' | 'backgroundPoster'>
+  observerProps: Omit<ContainersVideoMediaProps['observerProps'], 'width' | 'height'>
+}
+
+interface Props extends PreviewVideoMediaProps {
   videoMediaQuery: PreviewVideoMediaFragment$key
 }
 
 export default function PreviewVideoMedia (props: Props): JSX.Element {
   const {
     videoMediaQuery,
-    ...rest
+    videoProps,
+    observerProps
   } = props
 
   const data = useFragment(Fragment, videoMediaQuery)
 
-  const urls = data.containers.map(item => item.__typename === 'HLSVideoContainer' ? ({ hlsUrl: item.url }) : (item.__typename === 'MP4VideoContainer' ? ({ mp4Url: item.url }) : ({})))
-
-  const hlsUrl = urls.filter((item) => item.hlsUrl != null)?.[0].hlsUrl
-  const mp4Url = urls.filter((item) => item.mp4Url != null)?.[0].mp4Url
-
-  if (hlsUrl != null) {
-    return (
-      <ObserveVideoContainer
-        hlsUrl={hlsUrl}
-        poster={<PosterImageMedia imageMediaQuery={data.cover} />}
-        backgroundPoster={<BackgroundPosterImageMedia imageMediaQuery={data.cover} />}
-        aspectRatio={{
-          width: data.aspectRatio.width,
-          height: data.aspectRatio.height
-        }}
-        duration={data.duration / 1000}
-        hasAudio={data.hasAudio}
-        controls='simple'
-        {...rest}
-      />
-    )
-  }
-
-  if (mp4Url != null) {
-    return (
-      <ObserveVideoContainer
-        mp4Url={mp4Url}
-        poster={<PosterImageMedia imageMediaQuery={data.cover} />}
-        backgroundPoster={<BackgroundPosterImageMedia imageMediaQuery={data.cover} />}
-        aspectRatio={{
-          width: data.aspectRatio.width,
-          height: data.aspectRatio.height
-        }}
-        duration={data.duration / 1000}
-        hasAudio={data.hasAudio}
-        controls='simple'
-        {...rest}
-      />
-    )
-  }
-
   return (
-    <></>
+    <ContainersVideoMedia
+      videoMediaQuery={data}
+      videoProps={{
+        controls: 'simple',
+        poster: <PosterImageMedia imageMediaQuery={data.cover} />,
+        backgroundPoster: <BackgroundPosterImageMedia imageMediaQuery={data.cover} />,
+        ...videoProps
+      }}
+      observerProps={{
+        width: data.aspectRatio.width,
+        height: data.aspectRatio.height,
+        ...observerProps
+      }}
+    />
   )
 }

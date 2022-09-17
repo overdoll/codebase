@@ -37,7 +37,7 @@ export default function RouletteScreenPostData (props: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   return (
-    <Flex position='absolute' zIndex={2} top={0} opacity={0.2} right={0}>
+    <Flex position='absolute' left={0} top={0} zIndex={2} opacity={0.2}>
       <LinkTile href={{
         pathname: '/[slug]/post/[reference]',
         query: {

@@ -1,7 +1,11 @@
 import { useFragment } from 'react-relay/hooks'
 import type { RouletteScreenBackgroundFragment$key } from '@//:artifacts/RouletteScreenBackgroundFragment.graphql'
 import { graphql } from 'react-relay'
-import BlurredBackgroundThumbnail from '@//:common/components/BlurredBackgroundThumbnail/BlurredBackgroundThumbnail'
+import VideoBackground
+  from '@//:modules/content/HookedComponents/Media/components/VideoContainer/VideoBackground/VideoBackground'
+import BackgroundPosterImageMedia
+  from '@//:modules/content/HookedComponents/Media/fragments/Media/BackgroundPosterImageMedia/BackgroundPosterImageMedia'
+import { StaticImageCover } from '@//:modules/content/HookedComponents/Media'
 
 interface Props {
   query: RouletteScreenBackgroundFragment$key
@@ -11,16 +15,16 @@ interface Props {
 const Fragment = graphql`
   fragment RouletteScreenBackgroundFragment on Post {
     content {
-      resource {
-        type
-        urls {
-          url
-          mimeType
+      media {
+        __typename
+        ...on VideoMedia {
+          cover {
+            ...BackgroundPosterImageMediaFragment
+          }
         }
-        videoThumbnail {
-          url
+        ...on ImageMedia {
+          ...BackgroundPosterImageMediaFragment
         }
-        preview
       }
     }
   }
@@ -33,16 +37,19 @@ export default function RouletteScreenBackground (props: Props): JSX.Element {
 
   const data = useFragment(Fragment, query)
 
-  const thumbnailUrl = data.content[0].resource.type === 'VIDEO'
-    ? (data.content[0].resource.videoThumbnail?.url)
-    : (data.content[0].resource.urls.filter((item) => item.mimeType === 'image/jpeg')[0]?.url)
+  if (data.content[0].media.__typename === 'VideoMedia') {
+    return (
+      <VideoBackground poster={<BackgroundPosterImageMedia imageMediaQuery={data.content[0].media.cover} />} />
+    )
+  }
 
-  const backgroundColor = data.content[0].resource.preview ?? 'orange.100'
+  if (data.content[0].media.__typename === 'ImageMedia') {
+    return (
+      <VideoBackground poster={<BackgroundPosterImageMedia imageMediaQuery={data.content[0].media} />} />
+    )
+  }
 
   return (
-    <BlurredBackgroundThumbnail
-      backgroundImage={thumbnailUrl ?? 'https://static.dollycdn.net/banners/roulette-banner.jpg'}
-      backgroundColor={backgroundColor}
-    />
+    <VideoBackground poster={<StaticImageCover url='https://static.dollycdn.net/banners/roulette-banner.jpg' />} />
   )
 }

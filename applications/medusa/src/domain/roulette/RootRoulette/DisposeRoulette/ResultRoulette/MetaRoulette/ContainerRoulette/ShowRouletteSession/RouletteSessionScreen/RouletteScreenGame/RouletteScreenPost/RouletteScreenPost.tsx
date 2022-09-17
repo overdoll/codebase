@@ -1,7 +1,8 @@
 import { useFragment } from 'react-relay/hooks'
 import type { RouletteScreenPostFragment$key } from '@//:artifacts/RouletteScreenPostFragment.graphql'
 import { graphql } from 'react-relay'
-import { CinematicContent } from '@//:modules/content/HookedComponents/Post'
+import RouletteContent
+  from '@//:modules/content/HookedComponents/Post/fragments/Content/RouletteContent/RouletteContent'
 
 interface Props {
   query: RouletteScreenPostFragment$key
@@ -9,7 +10,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment RouletteScreenPostFragment on Post {
-    ...CinematicContentFragment
+    ...RouletteContentFragment
   }
 `
 
@@ -21,6 +22,6 @@ export default function RouletteScreenPost (props: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   return (
-    <CinematicContent postQuery={data} />
+    <RouletteContent postQuery={data} />
   )
 }

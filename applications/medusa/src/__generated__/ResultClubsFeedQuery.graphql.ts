@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0d3850fae29f54556e961ca9c43b5b57>>
- * @relayHash cdf7d6994877271cd146843795b9d17a
+ * @generated SignedSource<<ce6385337d4e061e2b6fa1927748847a>>
+ * @relayHash cad8acb885912c5de8aa8ee144e5f721
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID cdf7d6994877271cd146843795b9d17a
+// @relayRequestID cad8acb885912c5de8aa8ee144e5f721
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -462,8 +462,8 @@ return {
                                     "name": "aspectRatio",
                                     "plural": false,
                                     "selections": [
-                                      (v6/*: any*/),
-                                      (v5/*: any*/)
+                                      (v5/*: any*/),
+                                      (v6/*: any*/)
                                     ],
                                     "storageKey": null
                                   },
@@ -811,7 +811,7 @@ return {
     ]
   },
   "params": {
-    "id": "cdf7d6994877271cd146843795b9d17a",
+    "id": "cad8acb885912c5de8aa8ee144e5f721",
     "metadata": {},
     "name": "ResultClubsFeedQuery",
     "operationKind": "query",

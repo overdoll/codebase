@@ -1,27 +1,35 @@
-import { VideoContainerProps } from '../VideoContainer/VideoContainer'
 import { OnPlayerInitType, PlayerType } from '../../types'
 import { useEffect, useState } from 'react'
-import StorageVideoContainer from './StorageVideoContainer/StorageVideoContainer'
-import useObserveVideo from '../../support/useObserveVideo'
+import StorageVideoContainer, { StorageVideoProps } from './StorageVideoContainer/StorageVideoContainer'
+import useObserveVideo, { UseObserveVideoProps } from '../../support/useObserveVideo'
 import { Flex } from '@chakra-ui/react'
 import { pauseVideo, playVideo, startOrPlayVideo } from '../../support/controls'
 import syncPlayerPlayPause from '../../support/syncPlayerPlayPause'
 
-export interface ObserveVideoContainerProps {
+interface ObserveVideoProps extends UseObserveVideoProps {
   isActive: boolean
 }
 
-interface Props extends Omit<VideoContainerProps, 'volume' | 'muted'>, ObserveVideoContainerProps {
-  onPlayerInit?: OnPlayerInitType
+export interface ObserveVideoContainerProps {
+  videoProps: StorageVideoProps
+  observerProps: ObserveVideoProps
 }
 
-export default function ObserveVideoContainer (props: Props): JSX.Element {
+export default function ObserveVideoContainer (props: ObserveVideoContainerProps): JSX.Element {
+  const {
+    videoProps,
+    observerProps
+  } = props
+
   const {
     onPlayerInit,
+    ...restVideo
+  } = videoProps
+
+  const {
     isActive,
-    autoPlay,
-    ...rest
-  } = props
+    ...restObserver
+  } = observerProps
 
   const [player, setPlayer] = useState<PlayerType | null>(null)
 
@@ -34,14 +42,14 @@ export default function ObserveVideoContainer (props: Props): JSX.Element {
     ref,
     isObserving,
     isObservingDebounced
-  } = useObserveVideo({})
+  } = useObserveVideo({ ...restObserver })
 
   // play video if it hasn't been loaded yet, and you're focused into it
   useEffect(() => {
-    if (player != null && !player.hasStart && autoPlay !== true && isObservingDebounced && isActive) {
+    if (player != null && !player.hasStart && isObservingDebounced && isActive) {
       startOrPlayVideo(player)
     }
-  }, [isObservingDebounced, isActive, player, autoPlay])
+  }, [isObservingDebounced, isActive, player])
 
   // play video when you scroll into it, slide is active, and it is paused
   useEffect(() => {
@@ -81,9 +89,10 @@ export default function ObserveVideoContainer (props: Props): JSX.Element {
       borderRadius='inherit'
     >
       <StorageVideoContainer
-        autoPlay={isActive && autoPlay === true}
-        onPlayerInit={setPlayers}
-        {...rest}
+        videoProps={{
+          onPlayerInit: setPlayers,
+          ...restVideo
+        }}
       />
     </Flex>
   )

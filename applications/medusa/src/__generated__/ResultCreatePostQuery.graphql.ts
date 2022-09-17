@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e1f018f3e4707b45977f82a55062aaa9>>
- * @relayHash 673356ec77878bc2c38c646fdedbcdfe
+ * @generated SignedSource<<6fea9fc61e8425148084634b9600bf00>>
+ * @relayHash 6f939efaba163386aba212e6a6423d67
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 673356ec77878bc2c38c646fdedbcdfe
+// @relayRequestID 6f939efaba163386aba212e6a6423d67
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -1074,7 +1074,7 @@ return {
     ]
   },
   "params": {
-    "id": "673356ec77878bc2c38c646fdedbcdfe",
+    "id": "6f939efaba163386aba212e6a6423d67",
     "metadata": {},
     "name": "ResultCreatePostQuery",
     "operationKind": "query",

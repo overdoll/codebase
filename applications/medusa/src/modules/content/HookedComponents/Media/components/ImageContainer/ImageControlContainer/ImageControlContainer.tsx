@@ -16,6 +16,7 @@ export interface SetCoveredProps {
 
 export interface ImageBackgroundProps {
   backgroundPoster: ReactNode
+  hdPoster: ReactNode
 }
 
 interface Props extends Omit<ImageMediaProps, 'color'>, ColorType, Partial<ImageBackgroundProps> {
@@ -26,10 +27,12 @@ export default function ImageControlContainer (props: Props): JSX.Element {
     url,
     rgb,
     variants,
-    backgroundPoster
+    backgroundPoster,
+    hdPoster,
+    loadFirst
   } = props
 
-  const CloneImageMedia = useMemo(() => <ImageMedia url={url} variants={variants} />, [url])
+  const CloneImageMedia = useMemo(() => <ImageMedia loadFirst={loadFirst} url={url} variants={variants} />, [url])
 
   const [isCovered, setCovered] = useState(false)
 
@@ -43,11 +46,13 @@ export default function ImageControlContainer (props: Props): JSX.Element {
       overflow='hidden'
       borderRadius='inherit'
     >
-      <ImageBackground backgroundPoster={backgroundPoster ?? CloneImageMedia} />
+      {backgroundPoster != null && (
+        <ImageBackground backgroundPoster={backgroundPoster} />
+      )}
       <ControlCoverContainImage isCovered={isCovered}>
         {CloneImageMedia}
       </ControlCoverContainImage>
-      <ImageControls setCovered={setCovered} rgb={rgb} imageMedia={CloneImageMedia} />
+      <ImageControls setCovered={setCovered} rgb={rgb} imageMedia={hdPoster} />
     </Flex>
   )
 }

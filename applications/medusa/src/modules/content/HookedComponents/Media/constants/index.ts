@@ -15,7 +15,11 @@ export const VIDEO_OPTIONS = {
   },
   loop: true,
   noLog: true,
-  hideStartBtn: true
+  hideStartBtn: true,
+  keyShortcut: 'off',
+  closeFocusVideoFocus: true,
+  closePlayVideoFocus: true,
+  closeControlsBlur: true
 }
 
 export const CONTROLS_CONTAINER = {

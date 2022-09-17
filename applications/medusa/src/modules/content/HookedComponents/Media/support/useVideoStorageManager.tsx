@@ -1,4 +1,3 @@
-import { useCallback, useState } from 'react'
 import { useLocalStorage, useSessionStorage } from 'usehooks-ts'
 
 interface UseVideoStorageManagerReturn {
@@ -9,25 +8,20 @@ interface UseVideoStorageManagerReturn {
 }
 
 export default function useVideoStorageManager (): UseVideoStorageManagerReturn {
-  const [globalVideoVolume, setGlobalVideoVolume] = useLocalStorage('globalVideoVolume', 0.1)
+  const [globalVideoVolume, setGlobalVideoVolume] = useLocalStorage<number>('globalVideoVolume', 0.1)
   const [globalVideoMuted, setGlobalVideoMuted] = useSessionStorage('globalVideoMuted', true)
 
-  const [volume, setVolume] = useState(globalVideoVolume)
-  const [muted, setMuted] = useState(globalVideoMuted)
-
-  const onChangeMuted = useCallback((muted: boolean) => {
-    setMuted(muted)
+  const onChangeMuted = (muted: boolean): void => {
     setGlobalVideoMuted(muted)
-  }, [])
+  }
 
-  const onChangeVolume = useCallback((volume: number) => {
-    setVolume(volume)
+  const onChangeVolume = (volume: number): void => {
     setGlobalVideoVolume(volume)
-  }, [])
+  }
 
   return {
-    volume,
-    muted,
+    volume: globalVideoVolume,
+    muted: globalVideoMuted,
     updateVolume: (volume) => onChangeVolume(volume),
     updateMuted: (muted) => onChangeMuted(muted)
   }

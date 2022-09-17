@@ -58,7 +58,7 @@ export default function VideoAdvancedFooterControls (props: Props): JSX.Element 
       </Flex>
       <HStack
         {...CONTROLS_CONTAINER}
-        data-ignore='click'
+        data-ignore='controls'
         h={12}
         px={4}
         align='center'

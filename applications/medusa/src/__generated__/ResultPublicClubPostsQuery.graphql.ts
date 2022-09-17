@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<225d4be9580bb9ed3483f5a2a15fc274>>
- * @relayHash 265850659d51a8d5abef39f0ec8afc12
+ * @generated SignedSource<<7a6a71e3f4071a6f2b25ad04fb9bea6e>>
+ * @relayHash 726d5dc53e850b7a484a4da7c57c07f6
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 265850659d51a8d5abef39f0ec8afc12
+// @relayRequestID 726d5dc53e850b7a484a4da7c57c07f6
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -499,8 +499,8 @@ return {
                                     "name": "aspectRatio",
                                     "plural": false,
                                     "selections": [
-                                      (v13/*: any*/),
-                                      (v12/*: any*/)
+                                      (v12/*: any*/),
+                                      (v13/*: any*/)
                                     ],
                                     "storageKey": null
                                   },
@@ -835,7 +835,7 @@ return {
     ]
   },
   "params": {
-    "id": "265850659d51a8d5abef39f0ec8afc12",
+    "id": "726d5dc53e850b7a484a4da7c57c07f6",
     "metadata": {},
     "name": "ResultPublicClubPostsQuery",
     "operationKind": "query",

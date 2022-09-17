@@ -38,7 +38,12 @@ export default function CinematicCarousel (props: Props): JSX.Element {
           swiper={swiper}
           index={index}
         >
-          <ThumbnailCarouseItem mediaQuery={item.media} />
+          <ThumbnailCarouseItem
+            imageProps={{
+              loadFirst: true
+            }}
+            mediaQuery={item.media}
+          />
         </CarouselGridItem>
       ))}
     </CarouselGrid>

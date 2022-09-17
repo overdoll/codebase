@@ -46,11 +46,13 @@ export default function CinematicContent (props: Props): JSX.Element {
           <CinematicGallery postQuery={postData} onSwiper={onInit} />
         </Box>
       </GridItem>
-      <GridItem overflow='hidden' area='carousel'>
-        <Center h='100%' w='100%'>
-          <CinematicCarousel swiper={swiper} postQuery={postData} />
-        </Center>
-      </GridItem>
+      {postData.content.length > 1 && (
+        <GridItem overflow='hidden' area='carousel'>
+          <Center h='100%' w='100%'>
+            <CinematicCarousel swiper={swiper} postQuery={postData} />
+          </Center>
+        </GridItem>
+      )}
     </ContentGrid>
   )
 }

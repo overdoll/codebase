@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dab781fa856b5a245469da00cd62c6a4>>
+ * @generated SignedSource<<63713714d746e7a920d462d0e5189f7a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,7 @@ export type PreviewContentFragment$data = {
     readonly __typename: "PostContent";
   }>;
   readonly id: string;
-  readonly " $fragmentSpreads": FragmentRefs<"CinematicCarouselFragment" | "PreviewGalleryFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"PreviewCarouselFragment" | "PreviewGalleryFragment">;
   readonly " $fragmentType": "PreviewContentFragment";
 };
 export type PreviewContentFragment$key = {
@@ -62,13 +62,13 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "CinematicCarouselFragment"
+      "name": "PreviewCarouselFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 
-(node as any).hash = "86d929870281d0d846d030e1ee610eb0";
+(node as any).hash = "75a090739102a8b37ffbb49a9a591390";
 
 export default node;

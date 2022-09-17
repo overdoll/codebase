@@ -5,8 +5,8 @@ import { useState } from 'react'
 import SwiperType from 'swiper'
 import ContentGrid from '../../../components/ContentGrid/ContentGrid'
 import { Box, GridItem } from '@chakra-ui/react'
-import CinematicCarousel from '../../Carousel/CinematicCarousel/CinematicCarousel'
 import PreviewGallery from '../../Gallery/PreviewGallery/PreviewGallery'
+import PreviewCarousel from '../../Carousel/PreviewCarousel/PreviewCarousel'
 
 interface Props {
   postQuery: PreviewContentFragment$key
@@ -19,7 +19,7 @@ const PostFragment = graphql`
       __typename
     }
     ...PreviewGalleryFragment
-    ...CinematicCarouselFragment
+    ...PreviewCarouselFragment
   }
 `
 
@@ -47,7 +47,7 @@ export default function PreviewContent (props: Props): JSX.Element {
         overflow='hidden'
         area='carousel'
       >
-        <CinematicCarousel swiper={swiper} postQuery={postData} />
+        <PreviewCarousel swiper={swiper} postQuery={postData} />
       </GridItem>
     </ContentGrid>
   )

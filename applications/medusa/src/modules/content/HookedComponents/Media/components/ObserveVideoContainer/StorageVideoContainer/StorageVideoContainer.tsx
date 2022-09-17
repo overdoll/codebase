@@ -4,15 +4,23 @@ import useVideoStorageManager from '../../../support/useVideoStorageManager'
 import VideoContainer, { VideoContainerProps } from '../../VideoContainer/VideoContainer'
 import syncPlayerVolumeChange from '../../../support/syncPlayerVolumeChange'
 
-interface Props extends Omit<VideoContainerProps, 'volume' | 'muted'> {
+export interface StorageVideoProps extends Omit<VideoContainerProps, 'volume' | 'muted'> {
   onPlayerInit?: OnPlayerInitType
+}
+
+interface Props {
+  videoProps: StorageVideoProps
 }
 
 export default function StorageVideoContainer (props: Props): JSX.Element {
   const {
-    onPlayerInit,
-    ...rest
+    videoProps
   } = props
+
+  const {
+    onPlayerInit,
+    ...restVideo
+  } = videoProps
 
   const [player, setPlayer] = useState<PlayerType | null>(null)
 
@@ -32,9 +40,9 @@ export default function StorageVideoContainer (props: Props): JSX.Element {
   useEffect(() => {
     if (player == null) return
     const onPlay = (): void => {
-      player.volume = volume
+      player.video.volume = volume
     }
-    player.once('play', onPlay)
+    player.on('play', onPlay)
     return () => {
       player.off('play', onPlay)
     }
@@ -44,9 +52,9 @@ export default function StorageVideoContainer (props: Props): JSX.Element {
   useEffect(() => {
     if (player == null) return
     const onPlay = (): void => {
-      player.muted = muted
+      player.video.muted = muted
     }
-    player.once('play', onPlay)
+    player.on('play', onPlay)
     return () => {
       player.off('play', onPlay)
     }
@@ -59,7 +67,7 @@ export default function StorageVideoContainer (props: Props): JSX.Element {
       onPlayerInit={setPlayers}
       volume={volume}
       muted={muted}
-      {...rest}
+      {...restVideo}
     />
   )
 }
