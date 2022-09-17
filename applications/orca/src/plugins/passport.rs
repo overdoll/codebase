@@ -1,19 +1,17 @@
-use apollo_router::graphql::Response;
-use apollo_router::plugin::Plugin;
+use apollo_router::plugin::{Plugin, PluginInit};
+use apollo_router::register_plugin;
 use apollo_router::services::subgraph::Request;
 use apollo_router::services::{subgraph, supergraph};
-use apollo_router::{graphql, register_plugin};
-use futures::{Stream, TryStreamExt};
-use tower::util::BoxService;
-use tower::{BoxError, ServiceBuilder, ServiceExt};
+use tower::{BoxError, ServiceExt};
 
 #[derive(Default)]
 struct Passport {}
 
+#[async_trait::async_trait]
 impl Plugin for Passport {
     type Config = ();
 
-    fn new(_configuration: Self::Config) -> Result<Self, BoxError> {
+    async fn new(_configuration: PluginInit<Self::Config>) -> Result<Self, BoxError> {
         Ok(Self::default())
     }
 

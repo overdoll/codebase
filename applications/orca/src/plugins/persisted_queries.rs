@@ -4,7 +4,6 @@ use std::ops::ControlFlow;
 use apollo_router::layers::ServiceBuilderExt;
 use apollo_router::plugin::{Plugin, PluginInit};
 use apollo_router::services::supergraph;
-use apollo_router::services::supergraph::Request;
 use apollo_router::{graphql, register_plugin};
 use http::StatusCode;
 use redis::aio::MultiplexedConnection;
@@ -106,9 +105,10 @@ impl Plugin for PersistedQueries {
             }
         };
 
-        let test = ServiceBuilder::new()
+        return ServiceBuilder::new()
             .checkpoint_async(handler)
-            .map_request(move |mut req: Request| {
+            .buffered()
+            .map_request(move |mut req: supergraph::Request| {
                 if let Some(code) = req
                     .context
                     .get::<&String, String>(&"relay_persisted_query".to_string())
@@ -119,11 +119,8 @@ impl Plugin for PersistedQueries {
                 }
                 req
             })
-            .buffer(20_000)
             .service(service)
             .boxed();
-
-        return test;
     }
 }
 

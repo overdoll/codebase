@@ -1,5 +1,5 @@
 {
-  "checksum": "64a14fae656b39391b2067260dd20da6856d27307a450d763756813d98385704",
+  "checksum": "c7fefd3bbe2acde3b2e09ac52595e1eba0c649e914a8e5377d7018c427009946",
   "crates": {
     "access-json 0.1.0": {
       "name": "access-json",
@@ -15145,6 +15145,10 @@
               "target": "futures"
             },
             {
+              "id": "http 0.2.8",
+              "target": "http"
+            },
+            {
               "id": "redis 0.21.6",
               "target": "redis"
             },
@@ -15167,10 +15171,6 @@
             {
               "id": "tower 0.4.13",
               "target": "tower"
-            },
-            {
-              "id": "tracing 0.1.34",
-              "target": "tracing"
             }
           ],
           "selects": {}
