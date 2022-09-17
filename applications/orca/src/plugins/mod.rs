@@ -1,2 +1,2 @@
-// mod passport;
+mod passport;
 mod persisted_queries;

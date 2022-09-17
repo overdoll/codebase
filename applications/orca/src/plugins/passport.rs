@@ -38,9 +38,10 @@ impl Plugin for Passport {
                     .expect("couldn't access context")
                 {
                     supergraph_response.map_stream(|mut graphql_response| {
+                        let newcode = code.clone();
                         graphql_response
                             .extensions
-                            .insert("passport", String::from(code).as_str().parse().unwrap());
+                            .insert("passport", String::from(newcode).as_str().parse().unwrap());
                         graphql_response
                     });
                 }
