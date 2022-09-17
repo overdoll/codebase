@@ -18,7 +18,6 @@ export default function GameContainer ({
           base: '100%',
           md: 'calc(100% - 54px)'
         }}
-        py={1}
         position='fixed'
         bottom={0}
         minH='300px'
