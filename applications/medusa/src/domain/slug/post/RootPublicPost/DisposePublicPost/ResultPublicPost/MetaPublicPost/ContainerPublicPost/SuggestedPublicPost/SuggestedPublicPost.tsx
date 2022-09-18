@@ -1,20 +1,13 @@
 import type { SuggestedPublicPostFragment$key } from '@//:artifacts/SuggestedPublicPostFragment.graphql'
-import type { SuggestedPublicPostViewerFragment$key } from '@//:artifacts/SuggestedPublicPostViewerFragment.graphql'
 import { graphql, usePaginationFragment } from 'react-relay'
-import { useFragment } from 'react-relay/hooks'
 import { ResultPublicPostQuery } from '@//:artifacts/ResultPublicPostQuery.graphql'
-import FullSimplePost
-  from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/FullSimplePost/FullSimplePost'
-import PostInfiniteScroll
-  from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
-import PlatformPromoteAlert from '@//:common/components/PlatformPromoteAlert/PlatformPromoteAlert'
 import { Heading, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import React from 'react'
+import { PreviewPost, VerticalPaginationScroller } from '@//:modules/content/HookedComponents/Post'
 
 interface Props {
   postQuery: SuggestedPublicPostFragment$key
-  viewerQuery: SuggestedPublicPostViewerFragment$key | null
 }
 
 const Fragment = graphql`
@@ -28,24 +21,17 @@ const Fragment = graphql`
     @connection (key: "SuggestedPosts_suggestedPosts") {
       edges {
         node {
-          ...FullSimplePostFragment
+          ...PreviewPostFragment
         }
       }
-      ...PostInfiniteScrollFragment
+      ...VerticalPaginationScrollerFragment
     }
   }
 `
 
-const ViewerFragment = graphql`
-  fragment SuggestedPublicPostViewerFragment on Account {
-    ...FullSimplePostViewerFragment
-  }
-`
+export default function SuggestedPublicPost (props: Props): JSX.Element {
+  const { postQuery } = props
 
-export default function SuggestedPublicPost ({
-  postQuery,
-  viewerQuery
-}: Props): JSX.Element {
   const {
     data,
     loadNext,
@@ -56,31 +42,25 @@ export default function SuggestedPublicPost ({
     postQuery
   )
 
-  const viewerData = useFragment(ViewerFragment, viewerQuery)
-
   return (
     <Stack spacing={4}>
       <Heading color='gray.00' fontSize='2xl'>
         <Trans>Suggested Posts</Trans>
       </Heading>
-      <PostInfiniteScroll
-        query={data.suggestedPosts}
+      <VerticalPaginationScroller
+        postConnectionQuery={data.suggestedPosts}
         hasNext={hasNext}
         loadNext={loadNext}
         isLoadingNext={isLoadingNext}
-        endOfTree={<PlatformPromoteAlert />}
       >
         {({
-          index,
-          key
+          index
         }) => (
-          <FullSimplePost
-            key={key}
-            query={data.suggestedPosts.edges[index].node}
-            viewerQuery={viewerData}
+          <PreviewPost
+            postQuery={data.suggestedPosts.edges[index].node}
           />
         )}
-      </PostInfiniteScroll>
+      </VerticalPaginationScroller>
     </Stack>
   )
 }

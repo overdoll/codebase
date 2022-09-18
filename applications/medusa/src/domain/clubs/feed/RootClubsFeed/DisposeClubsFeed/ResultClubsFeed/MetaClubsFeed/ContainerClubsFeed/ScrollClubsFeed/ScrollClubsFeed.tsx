@@ -1,13 +1,10 @@
 import { graphql, usePaginationFragment } from 'react-relay'
 import { ScrollClubsFeedFragment$key } from '@//:artifacts/ScrollClubsFeedFragment.graphql'
-import FullSimplePost
-  from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/FullSimplePost/FullSimplePost'
-import PostInfiniteScroll
-  from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
 import { ResultClubsFeedQuery } from '@//:artifacts/ResultClubsFeedQuery.graphql'
+import { PreviewPost, VerticalPaginationScroller } from '@//:modules/content/HookedComponents/Post'
 
 interface Props {
-  viewerQuery: ScrollClubsFeedFragment$key | null
+  viewerQuery: ScrollClubsFeedFragment$key
 }
 
 const ViewerFragment = graphql`
@@ -21,12 +18,11 @@ const ViewerFragment = graphql`
     @connection (key: "ClubPostsFeed_clubMembersPostsFeed") {
       edges {
         node {
-          ...FullSimplePostFragment
+          ...PreviewPostFragment
         }
       }
-      ...PostInfiniteScrollFragment
+      ...VerticalPaginationScrollerFragment
     }
-    ...FullSimplePostViewerFragment
   }
 `
 
@@ -46,22 +42,19 @@ export default function ScrollClubsFeed (props: Props): JSX.Element {
   )
 
   return (
-    <PostInfiniteScroll
-      query={data.clubMembersPostsFeed}
+    <VerticalPaginationScroller
+      postConnectionQuery={data.clubMembersPostsFeed}
       hasNext={hasNext}
       loadNext={loadNext}
       isLoadingNext={isLoadingNext}
     >
       {({
-        index,
-        key
+        index
       }) => (
-        <FullSimplePost
-          key={key}
-          query={data.clubMembersPostsFeed.edges[index].node}
-          viewerQuery={data}
+        <PreviewPost
+          postQuery={data.clubMembersPostsFeed.edges[index].node}
         />
       )}
-    </PostInfiniteScroll>
+    </VerticalPaginationScroller>
   )
 }

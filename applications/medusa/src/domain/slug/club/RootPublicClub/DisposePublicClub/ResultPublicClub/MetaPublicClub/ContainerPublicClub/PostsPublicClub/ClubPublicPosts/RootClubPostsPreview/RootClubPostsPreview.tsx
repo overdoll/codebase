@@ -23,7 +23,6 @@ interface SearchProps {
 
 interface Props {
   clubQuery: RootClubPostsPreviewFragment$key
-  viewerQuery: RootClubPostsPreviewViewerFragment$key | null
 }
 
 const ClubFragment = graphql`
@@ -44,15 +43,8 @@ const ClubFragment = graphql`
   }
 `
 
-const ViewerFragment = graphql`
-  fragment RootClubPostsPreviewViewerFragment on Account {
-    ...ClubPostsPreviewViewerFragment
-  }
-`
-
 export default function RootClubPostsPreview ({
-  clubQuery,
-  viewerQuery
+  clubQuery
 }: Props): JSX.Element {
   const clubData = useFragment(ClubFragment, clubQuery)
 
@@ -160,7 +152,7 @@ export default function RootClubPostsPreview ({
           </Trans>
         </LinkButton>
       </HStack>
-      <ClubPostsPreview clubQuery={clubData} viewerQuery={viewerData} />
+      <ClubPostsPreview clubQuery={clubData} />
     </Stack>
   )
 }

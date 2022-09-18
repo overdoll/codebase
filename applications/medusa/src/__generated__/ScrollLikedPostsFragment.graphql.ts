@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f3d39c831b281e4b1a4b7a7f7fa30768>>
+ * @generated SignedSource<<c6b6a613537e4238307fbab775504120>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,12 +15,11 @@ export type ScrollLikedPostsFragment$data = {
   readonly likedPosts: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly " $fragmentSpreads": FragmentRefs<"FullSimplePostFragment">;
+        readonly " $fragmentSpreads": FragmentRefs<"PreviewPostFragment">;
       };
     }>;
-    readonly " $fragmentSpreads": FragmentRefs<"PostInfiniteScrollFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"VerticalPaginationScrollerFragment">;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"FullSimplePostViewerFragment">;
   readonly " $fragmentType": "ScrollLikedPostsFragment";
 };
 export type ScrollLikedPostsFragment$key = {
@@ -100,7 +99,7 @@ return {
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "FullSimplePostFragment"
+                  "name": "PreviewPostFragment"
                 },
                 {
                   "alias": null,
@@ -125,7 +124,7 @@ return {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "PostInfiniteScrollFragment"
+          "name": "VerticalPaginationScrollerFragment"
         },
         {
           "alias": null,
@@ -156,11 +155,6 @@ return {
       "storageKey": null
     },
     {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "FullSimplePostViewerFragment"
-    },
-    {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
@@ -173,6 +167,6 @@ return {
 };
 })();
 
-(node as any).hash = "bb1dda1b60e0782e6d2c43bc97330566";
+(node as any).hash = "b769511dbc3d401691ec4fdb661808a9";
 
 export default node;

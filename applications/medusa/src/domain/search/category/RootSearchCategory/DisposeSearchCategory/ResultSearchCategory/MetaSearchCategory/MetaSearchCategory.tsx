@@ -8,7 +8,6 @@ import ContainerSearchCategory from './ContainerSearchCategory/ContainerSearchCa
 
 interface Props {
   categoryQuery: MetaSearchCategoryFragment$key
-  viewerQuery: MetaSearchCategoryViewerFragment$key | null
 }
 
 const CharacterFragment = graphql`
@@ -18,26 +17,18 @@ const CharacterFragment = graphql`
   }
 `
 
-const ViewerFragment = graphql`
-  fragment MetaSearchCategoryViewerFragment on Account {
-    ...ContainerSearchCategoryViewerFragment
-  }
-`
-
 export default function MetaSearchCategory (props: Props): JSX.Element {
   const {
-    categoryQuery,
-    viewerQuery
+    categoryQuery
   } = props
 
   const categoryData = useFragment(CharacterFragment, categoryQuery)
-  const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   return (
     <>
       <SearchCategoryRichObject query={categoryData} />
       <GlobalVideoManagerProvider>
-        <ContainerSearchCategory categoryQuery={categoryData} viewerQuery={viewerData} />
+        <ContainerSearchCategory categoryQuery={categoryData} />
       </GlobalVideoManagerProvider>
     </>
   )

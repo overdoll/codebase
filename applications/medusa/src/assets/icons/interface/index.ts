@@ -71,3 +71,4 @@ export { default as ControlExpand } from './mini-bold/actions/control-expand.svg
 export { default as ControlContract } from './mini-bold/actions/control-contract.svg'
 export { default as MagicBall } from './normal-bold/magic-ball.svg'
 export { default as SeeRight } from './normal-bold/see-right.svg'
+export { default as SadError } from './normal-bold/sad-error.svg'

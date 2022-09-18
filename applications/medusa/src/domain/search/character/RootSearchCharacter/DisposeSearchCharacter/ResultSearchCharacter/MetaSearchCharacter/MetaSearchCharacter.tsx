@@ -8,7 +8,6 @@ import ContainerSearchCharacter from './ContainerSearchCharacter/ContainerSearch
 
 interface Props {
   characterQuery: MetaSearchCharacterFragment$key
-  viewerQuery: MetaSearchCharacterViewerFragment$key | null
 }
 
 const CharacterFragment = graphql`
@@ -18,26 +17,18 @@ const CharacterFragment = graphql`
   }
 `
 
-const ViewerFragment = graphql`
-  fragment MetaSearchCharacterViewerFragment on Account {
-    ...ContainerSearchCharacterViewerFragment
-  }
-`
-
 export default function MetaSearchCharacter (props: Props): JSX.Element {
   const {
-    characterQuery,
-    viewerQuery
+    characterQuery
   } = props
 
   const characterData = useFragment(CharacterFragment, characterQuery)
-  const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   return (
     <>
       <SearchCharacterRichObject query={characterData} />
       <GlobalVideoManagerProvider>
-        <ContainerSearchCharacter characterQuery={characterData} viewerQuery={viewerData} />
+        <ContainerSearchCharacter characterQuery={characterData} />
       </GlobalVideoManagerProvider>
     </>
   )

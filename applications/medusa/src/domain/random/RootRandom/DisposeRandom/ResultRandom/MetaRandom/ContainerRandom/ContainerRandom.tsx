@@ -22,7 +22,6 @@ const RootFragment = graphql`
 
 const ViewerFragment = graphql`
   fragment ContainerRandomViewerFragment on Account {
-    ...ScrollRandomViewerFragment
     ...BannerRandomViewerFragment
   }
 `
@@ -45,7 +44,7 @@ export default function ContainerRandom (props: Props): JSX.Element {
         <Stack spacing={4}>
           <HeaderRandom />
           <RandomizeButton />
-          <ScrollRandom rootQuery={rootData} viewerQuery={viewerData} />
+          <ScrollRandom rootQuery={rootData} />
         </Stack>
       </ContentContainer>
     </>

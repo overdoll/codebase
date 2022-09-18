@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<669addd06f9cfa26d4882ff98abb73a1>>
+ * @generated SignedSource<<d39c0f41c1337586459ecb7c5fd9447b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,13 +14,10 @@ export type ScrollRandomFragment$data = {
   readonly postsFeed: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly " $fragmentSpreads": FragmentRefs<"FullSimplePostFragment">;
+        readonly " $fragmentSpreads": FragmentRefs<"PreviewPostFragment">;
       };
     }>;
-    readonly pageInfo: {
-      readonly startCursor: string | null;
-    };
-    readonly " $fragmentSpreads": FragmentRefs<"PostInfiniteScrollFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"VerticalPaginationScrollerFragment">;
   };
   readonly " $fragmentType": "ScrollRandomFragment";
 };
@@ -92,38 +89,6 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "PageInfo",
-          "kind": "LinkedField",
-          "name": "pageInfo",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "startCursor",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "endCursor",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "hasNextPage",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
           "concreteType": "PostEdge",
           "kind": "LinkedField",
           "name": "edges",
@@ -140,7 +105,7 @@ return {
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "FullSimplePostFragment"
+                  "name": "PreviewPostFragment"
                 },
                 {
                   "alias": null,
@@ -165,7 +130,32 @@ return {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "PostInfiniteScrollFragment"
+          "name": "VerticalPaginationScrollerFragment"
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "PageInfo",
+          "kind": "LinkedField",
+          "name": "pageInfo",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "endCursor",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "hasNextPage",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -176,6 +166,6 @@ return {
 };
 })();
 
-(node as any).hash = "d3704abcd417f9ddaff1c1b2cbd315c5";
+(node as any).hash = "96e07ab6a57cfd06d7675594f35473eb";
 
 export default node;

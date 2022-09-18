@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7b219f6612cffc0bb8b61db6c42bf187>>
+ * @generated SignedSource<<5cb4b40126717721d1903b03b1f50cef>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,13 +14,12 @@ export type ScrollClubsFeedFragment$data = {
   readonly clubMembersPostsFeed: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly " $fragmentSpreads": FragmentRefs<"FullSimplePostFragment">;
+        readonly " $fragmentSpreads": FragmentRefs<"PreviewPostFragment">;
       };
     }>;
-    readonly " $fragmentSpreads": FragmentRefs<"PostInfiniteScrollFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"VerticalPaginationScrollerFragment">;
   };
   readonly id: string;
-  readonly " $fragmentSpreads": FragmentRefs<"FullSimplePostViewerFragment">;
   readonly " $fragmentType": "ScrollClubsFeedFragment";
 };
 export type ScrollClubsFeedFragment$key = {
@@ -100,7 +99,7 @@ return {
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "FullSimplePostFragment"
+                  "name": "PreviewPostFragment"
                 },
                 {
                   "alias": null,
@@ -125,7 +124,7 @@ return {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "PostInfiniteScrollFragment"
+          "name": "VerticalPaginationScrollerFragment"
         },
         {
           "alias": null,
@@ -156,11 +155,6 @@ return {
       "storageKey": null
     },
     {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "FullSimplePostViewerFragment"
-    },
-    {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
@@ -173,6 +167,6 @@ return {
 };
 })();
 
-(node as any).hash = "598d718753341e717f314182dd922b0a";
+(node as any).hash = "1d8c53675dd527401fd557d14b7fdfda";
 
 export default node;

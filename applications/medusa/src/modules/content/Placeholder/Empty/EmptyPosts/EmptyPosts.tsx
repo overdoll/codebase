@@ -2,11 +2,11 @@ import { Trans } from '@lingui/macro'
 import EmptyBackground from '../EmptyBackground/EmptyBackground'
 import { FileMultiple } from '@//:assets/icons'
 
-export default function EmptyPayouts (): JSX.Element {
+export default function EmptyPosts (): JSX.Element {
   return (
     <EmptyBackground icon={FileMultiple}>
       <Trans>
-        No posts were found
+        We couldn't find any posts
       </Trans>
     </EmptyBackground>
   )

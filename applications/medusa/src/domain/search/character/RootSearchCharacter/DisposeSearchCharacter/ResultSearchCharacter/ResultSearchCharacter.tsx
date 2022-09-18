@@ -18,9 +18,6 @@ const Query = graphql`
     character(seriesSlug: $seriesSlug, slug: $characterSlug) {
       ...MetaSearchCharacterFragment
     }
-    viewer {
-      ...MetaSearchCharacterViewerFragment
-    }
   }
 `
 
@@ -37,6 +34,6 @@ export default function ResultSearchCharacter (props: Props): JSX.Element {
   }
 
   return (
-    <MetaSearchCharacter characterQuery={queryData.character} viewerQuery={queryData.viewer} />
+    <MetaSearchCharacter characterQuery={queryData.character} />
   )
 }

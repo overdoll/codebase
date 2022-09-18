@@ -6,13 +6,10 @@ import { Box, Heading, Stack, Text } from '@chakra-ui/react'
 import { BookmarkLarge } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
-import PostInfiniteScroll
-  from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
-import FullSimplePost
-  from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/FullSimplePost/FullSimplePost'
+import { PreviewPost, VerticalPaginationScroller } from '@//:modules/content/HookedComponents/Post'
 
 interface Props {
-  viewerQuery: ScrollLikedPostsFragment$key | null
+  viewerQuery: ScrollLikedPostsFragment$key
 }
 
 const ViewerFragment = graphql`
@@ -26,12 +23,11 @@ const ViewerFragment = graphql`
     @connection (key: "LikedPostsFeed_likedPosts") {
       edges {
         node {
-          ...FullSimplePostFragment
+          ...PreviewPostFragment
         }
       }
-      ...PostInfiniteScrollFragment
+      ...VerticalPaginationScrollerFragment
     }
-    ...FullSimplePostViewerFragment
   }
 `
 
@@ -78,22 +74,19 @@ export default function ScrollLikedPosts (props: Props): JSX.Element {
   }
 
   return (
-    <PostInfiniteScroll
-      query={data.likedPosts}
+    <VerticalPaginationScroller
+      postConnectionQuery={data.likedPosts}
       hasNext={hasNext}
       loadNext={loadNext}
       isLoadingNext={isLoadingNext}
     >
       {({
-        index,
-        key
+        index
       }) => (
-        <FullSimplePost
-          key={key}
-          query={data.likedPosts.edges[index].node}
-          viewerQuery={data}
+        <PreviewPost
+          postQuery={data.likedPosts.edges[index].node}
         />
       )}
-    </PostInfiniteScroll>
+    </VerticalPaginationScroller>
   )
 }

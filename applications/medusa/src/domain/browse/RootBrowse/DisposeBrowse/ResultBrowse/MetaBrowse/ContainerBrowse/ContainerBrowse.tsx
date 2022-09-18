@@ -21,7 +21,6 @@ const RootFragment = graphql`
 const ViewerFragment = graphql`
   fragment ContainerBrowseViewerFragment on Account {
     ...BannerBrowseViewerFragment
-    ...ScrollBrowseViewerFragment
   }
 `
 
@@ -43,7 +42,7 @@ export default function ContainerBrowse (props: Props): JSX.Element {
         <HeaderBrowse />
       </MobileContainer>
       <ContentContainer pt={8}>
-        <ScrollBrowse rootQuery={rootData} viewerQuery={viewerData} />
+        <ScrollBrowse rootQuery={rootData} />
       </ContentContainer>
     </>
   )

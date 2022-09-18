@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5d79e78fba902ebdd6b3174bff4ebaee>>
+ * @generated SignedSource<<95a253c2224012dc154f6bffb7c6754f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,10 +15,10 @@ export type ScrollPublicClubCharacterFragment$data = {
   readonly posts: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly " $fragmentSpreads": FragmentRefs<"FullSimplePostFragment">;
+        readonly " $fragmentSpreads": FragmentRefs<"PreviewPostFragment">;
       };
     }>;
-    readonly " $fragmentSpreads": FragmentRefs<"PostInfiniteScrollFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"VerticalPaginationScrollerFragment">;
   };
   readonly " $fragmentType": "ScrollPublicClubCharacterFragment";
 };
@@ -118,7 +118,7 @@ return {
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "FullSimplePostFragment"
+                  "name": "PreviewPostFragment"
                 },
                 {
                   "alias": null,
@@ -143,7 +143,7 @@ return {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "PostInfiniteScrollFragment"
+          "name": "VerticalPaginationScrollerFragment"
         },
         {
           "alias": null,
@@ -186,6 +186,6 @@ return {
 };
 })();
 
-(node as any).hash = "fc0958527a9ef7709c2d6648841dc06f";
+(node as any).hash = "e238e90af5bef1946e3b69c244ff5af3";
 
 export default node;

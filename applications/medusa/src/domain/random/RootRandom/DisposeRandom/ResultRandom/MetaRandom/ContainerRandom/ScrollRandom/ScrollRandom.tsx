@@ -1,17 +1,10 @@
-import { useFragment } from 'react-relay/hooks'
 import { graphql, usePaginationFragment } from 'react-relay'
 import { ScrollRandomFragment$key } from '@//:artifacts/ScrollRandomFragment.graphql'
 import { ResultRandomQuery } from '@//:artifacts/ResultRandomQuery.graphql'
-import { ScrollRandomViewerFragment$key } from '@//:artifacts/ScrollRandomViewerFragment.graphql'
-import PlatformPromoteAlert from '@//:common/components/PlatformPromoteAlert/PlatformPromoteAlert'
-import FullSimplePost
-  from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/FullSimplePost/FullSimplePost'
-import PostInfiniteScroll
-  from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
+import { PreviewPost, VerticalPaginationScroller } from '@//:modules/content/HookedComponents/Post'
 
 interface Props {
   rootQuery: ScrollRandomFragment$key
-  viewerQuery: ScrollRandomViewerFragment$key | null
 }
 
 const RootFragment = graphql`
@@ -23,29 +16,19 @@ const RootFragment = graphql`
   @refetchable(queryName: "RandomPostsPaginationQuery" ) {
     postsFeed (first: $first, after: $after, seed: $seed)
     @connection (key: "RandomPosts_postsFeed") {
-      pageInfo {
-        startCursor
-      }
       edges {
         node {
-          ...FullSimplePostFragment
+          ...PreviewPostFragment
         }
       }
-      ...PostInfiniteScrollFragment
+      ...VerticalPaginationScrollerFragment
     }
-  }
-`
-
-const ViewerFragment = graphql`
-  fragment ScrollRandomViewerFragment on Account {
-    ...FullSimplePostViewerFragment
   }
 `
 
 export default function ScrollRandom (props: Props): JSX.Element {
   const {
-    rootQuery,
-    viewerQuery
+    rootQuery
   } = props
 
   const {
@@ -58,27 +41,20 @@ export default function ScrollRandom (props: Props): JSX.Element {
     rootQuery
   )
 
-  const viewerData = useFragment(ViewerFragment, viewerQuery)
-
   return (
-    <PostInfiniteScroll
-      key={data.postsFeed.pageInfo.startCursor}
-      query={data.postsFeed}
+    <VerticalPaginationScroller
+      postConnectionQuery={data.postsFeed}
       hasNext={hasNext}
       loadNext={loadNext}
       isLoadingNext={isLoadingNext}
-      endOfTree={<PlatformPromoteAlert />}
     >
       {({
-        index,
-        key
+        index
       }) => (
-        <FullSimplePost
-          key={key}
-          query={data.postsFeed.edges[index].node}
-          viewerQuery={viewerData}
+        <PreviewPost
+          postQuery={data.postsFeed.edges[index].node}
         />
       )}
-    </PostInfiniteScroll>
+    </VerticalPaginationScroller>
   )
 }

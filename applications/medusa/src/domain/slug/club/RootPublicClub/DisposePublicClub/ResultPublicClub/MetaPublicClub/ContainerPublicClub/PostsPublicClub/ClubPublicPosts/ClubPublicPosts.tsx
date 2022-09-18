@@ -1,12 +1,10 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import { ClubPublicPostsFragment$key } from '@//:artifacts/ClubPublicPostsFragment.graphql'
-import { ClubPublicPostsViewerFragment$key } from '@//:artifacts/ClubPublicPostsViewerFragment.graphql'
 import ClubEmptyPosts from './ClubEmptyPosts/ClubEmptyPosts'
 import RootClubPostsPreview from './RootClubPostsPreview/RootClubPostsPreview'
 
 interface Props {
   clubQuery: ClubPublicPostsFragment$key
-  viewerQuery: ClubPublicPostsViewerFragment$key | null
 }
 
 const ClubFragment = graphql`
@@ -23,18 +21,10 @@ const ClubFragment = graphql`
   }
 `
 
-const ViewerFragment = graphql`
-  fragment ClubPublicPostsViewerFragment on Account {
-    ...RootClubPostsPreviewViewerFragment
-  }
-`
-
 export default function ClubPublicPosts ({
-  clubQuery,
-  viewerQuery
+  clubQuery
 }: Props): JSX.Element {
   const clubData = useFragment(ClubFragment, clubQuery)
-  const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   if (clubData.posts.edges.length < 1) {
     return (
@@ -43,6 +33,6 @@ export default function ClubPublicPosts ({
   }
 
   return (
-    <RootClubPostsPreview clubQuery={clubData} viewerQuery={viewerData} />
+    <RootClubPostsPreview clubQuery={clubData} />
   )
 }

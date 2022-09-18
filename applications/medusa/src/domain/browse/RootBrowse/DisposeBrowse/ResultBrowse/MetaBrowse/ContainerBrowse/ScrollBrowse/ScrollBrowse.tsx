@@ -1,17 +1,10 @@
-import { useFragment } from 'react-relay/hooks'
 import { graphql, usePaginationFragment } from 'react-relay'
 import { ScrollBrowseFragment$key } from '@//:artifacts/ScrollBrowseFragment.graphql'
 import { ResultBrowseQuery } from '@//:artifacts/ResultBrowseQuery.graphql'
-import { ScrollBrowseViewerFragment$key } from '@//:artifacts/ScrollBrowseViewerFragment.graphql'
-import PlatformPromoteAlert from '@//:common/components/PlatformPromoteAlert/PlatformPromoteAlert'
-import FullSimplePost
-  from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/FullSimplePost/FullSimplePost'
-import PostInfiniteScroll
-  from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
+import { PreviewPost, VerticalPaginationScroller } from '@//:modules/content/HookedComponents/Post'
 
 interface Props {
   rootQuery: ScrollBrowseFragment$key
-  viewerQuery: ScrollBrowseViewerFragment$key | null
 }
 
 const RootFragment = graphql`
@@ -25,24 +18,17 @@ const RootFragment = graphql`
     @connection (key: "BrowsePosts_postsFeed") {
       edges {
         node {
-          ...FullSimplePostFragment
+          ...PreviewPostFragment
         }
       }
-      ...PostInfiniteScrollFragment
+      ...VerticalPaginationScrollerFragment
     }
-  }
-`
-
-const ViewerFragment = graphql`
-  fragment ScrollBrowseViewerFragment on Account {
-    ...FullSimplePostViewerFragment
   }
 `
 
 export default function ScrollBrowse (props: Props): JSX.Element {
   const {
-    rootQuery,
-    viewerQuery
+    rootQuery
   } = props
 
   const {
@@ -55,26 +41,20 @@ export default function ScrollBrowse (props: Props): JSX.Element {
     rootQuery
   )
 
-  const viewerData = useFragment(ViewerFragment, viewerQuery)
-
   return (
-    <PostInfiniteScroll
-      query={data.postsFeed}
+    <VerticalPaginationScroller
+      postConnectionQuery={data.postsFeed}
       hasNext={hasNext}
       loadNext={loadNext}
       isLoadingNext={isLoadingNext}
-      endOfTree={<PlatformPromoteAlert />}
     >
       {({
-        index,
-        key
+        index
       }) => (
-        <FullSimplePost
-          key={key}
-          query={data.postsFeed.edges[index].node}
-          viewerQuery={viewerData}
+        <PreviewPost
+          postQuery={data.postsFeed.edges[index].node}
         />
       )}
-    </PostInfiniteScroll>
+    </VerticalPaginationScroller>
   )
 }

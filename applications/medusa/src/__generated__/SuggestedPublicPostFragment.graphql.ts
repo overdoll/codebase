@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d2c206aa1a497c7ba81e94714cb85be0>>
+ * @generated SignedSource<<ad7dbf81c81be592005c82a1d2d691ed>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,10 +15,10 @@ export type SuggestedPublicPostFragment$data = {
   readonly suggestedPosts: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly " $fragmentSpreads": FragmentRefs<"FullSimplePostFragment">;
+        readonly " $fragmentSpreads": FragmentRefs<"PreviewPostFragment">;
       };
     }>;
-    readonly " $fragmentSpreads": FragmentRefs<"PostInfiniteScrollFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"VerticalPaginationScrollerFragment">;
   };
   readonly " $fragmentType": "SuggestedPublicPostFragment";
 };
@@ -99,7 +99,7 @@ return {
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "FullSimplePostFragment"
+                  "name": "PreviewPostFragment"
                 },
                 {
                   "alias": null,
@@ -124,7 +124,7 @@ return {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "PostInfiniteScrollFragment"
+          "name": "VerticalPaginationScrollerFragment"
         },
         {
           "alias": null,
@@ -167,6 +167,6 @@ return {
 };
 })();
 
-(node as any).hash = "239b89b03be3f51254f8c026bdab8447";
+(node as any).hash = "682831b794781423e8fced83f05c589c";
 
 export default node;

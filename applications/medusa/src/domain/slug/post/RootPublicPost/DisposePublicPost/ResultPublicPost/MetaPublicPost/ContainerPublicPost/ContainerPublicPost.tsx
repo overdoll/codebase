@@ -27,7 +27,6 @@ const ViewerFragment = graphql`
   fragment ContainerPublicPostViewerFragment on Account {
     ...BannerPublicPostViewerFragment
     ...DescriptionPublicPostViewerFragment
-    ...SuggestedPublicPostViewerFragment
   }
 `
 
@@ -53,7 +52,7 @@ export default function ContainerPublicPost (props: Props): JSX.Element {
       <ContentContainer>
         <Stack pt={2} spacing={8}>
           <DescriptionPublicPost postQuery={postData} viewerQuery={viewerData} />
-          <SuggestedPublicPost postQuery={postData} viewerQuery={viewerData} />
+          <SuggestedPublicPost postQuery={postData} />
         </Stack>
       </ContentContainer>
     </>

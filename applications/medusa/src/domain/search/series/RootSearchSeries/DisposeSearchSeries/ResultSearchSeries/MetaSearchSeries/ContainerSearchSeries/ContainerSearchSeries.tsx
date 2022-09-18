@@ -8,7 +8,6 @@ import ScrollSearchSeries from './ScrollSearchSeries/ScrollSearchSeries'
 
 interface Props {
   seriesQuery: ContainerSearchSeriesFragment$key
-  viewerQuery: ContainerSearchSeriesViewerFragment$key | null
 }
 
 const SeriesFragment = graphql`
@@ -18,20 +17,12 @@ const SeriesFragment = graphql`
   }
 `
 
-const ViewerFragment = graphql`
-  fragment ContainerSearchSeriesViewerFragment on Account {
-    ...ScrollSearchSeriesViewerFragment
-  }
-`
-
 export default function ContainerSearchSeries (props: Props): JSX.Element {
   const {
-    seriesQuery,
-    viewerQuery
+    seriesQuery
   } = props
 
   const seriesData = useFragment(SeriesFragment, seriesQuery)
-  const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   return (
     <>
@@ -39,7 +30,7 @@ export default function ContainerSearchSeries (props: Props): JSX.Element {
         <HeaderSearchSeries seriesQuery={seriesData} />
       </MobileContainer>
       <ContentContainer pt={8}>
-        <ScrollSearchSeries seriesQuery={seriesData} viewerQuery={viewerData} />
+        <ScrollSearchSeries seriesQuery={seriesData} />
       </ContentContainer>
     </>
   )

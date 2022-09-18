@@ -17,9 +17,6 @@ const Query = graphql`
     category(slug: $categorySlug) {
       ...MetaSearchCategoryFragment
     }
-    viewer {
-      ...MetaSearchCategoryViewerFragment
-    }
   }
 `
 
@@ -36,6 +33,6 @@ export default function ResultSearchCategory (props: Props): JSX.Element {
   }
 
   return (
-    <MetaSearchCategory categoryQuery={queryData.category} viewerQuery={queryData.viewer} />
+    <MetaSearchCategory categoryQuery={queryData.category} />
   )
 }

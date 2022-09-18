@@ -1,17 +1,10 @@
-import { useFragment } from 'react-relay/hooks'
 import { graphql, usePaginationFragment } from 'react-relay'
 import { ScrollSearchCategoryFragment$key } from '@//:artifacts/ScrollSearchCategoryFragment.graphql'
-import { ScrollSearchCategoryViewerFragment$key } from '@//:artifacts/ScrollSearchCategoryViewerFragment.graphql'
 import { ResultSearchCategoryQuery } from '@//:artifacts/ResultSearchCategoryQuery.graphql'
-import PlatformPromoteAlert from '@//:common/components/PlatformPromoteAlert/PlatformPromoteAlert'
-import FullSimplePost
-  from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/FullSimplePost/FullSimplePost'
-import PostInfiniteScroll
-  from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/PostInfiniteScroll'
+import { PreviewPost, VerticalPaginationScroller } from '@//:modules/content/HookedComponents/Post'
 
 interface Props {
   categoryQuery: ScrollSearchCategoryFragment$key
-  viewerQuery: ScrollSearchCategoryViewerFragment$key | null
 }
 
 const Fragment = graphql`
@@ -30,24 +23,17 @@ const Fragment = graphql`
     @connection (key: "SearchCategoryPosts_posts") {
       edges {
         node {
-          ...FullSimplePostFragment
+          ...PreviewPostFragment
         }
       }
-      ...PostInfiniteScrollFragment
+      ...VerticalPaginationScrollerFragment
     }
-  }
-`
-
-const ViewerFragment = graphql`
-  fragment ScrollSearchCategoryViewerFragment on Account {
-    ...FullSimplePostViewerFragment
   }
 `
 
 export default function ScrollSearchCategory (props: Props): JSX.Element {
   const {
-    categoryQuery,
-    viewerQuery
+    categoryQuery
   } = props
 
   const {
@@ -59,26 +45,21 @@ export default function ScrollSearchCategory (props: Props): JSX.Element {
     Fragment,
     categoryQuery
   )
-  const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   return (
-    <PostInfiniteScroll
-      query={data.posts}
+    <VerticalPaginationScroller
+      postConnectionQuery={data.posts}
       hasNext={hasNext}
       loadNext={loadNext}
       isLoadingNext={isLoadingNext}
-      endOfTree={<PlatformPromoteAlert />}
     >
       {({
-        index,
-        key
+        index
       }) => (
-        <FullSimplePost
-          key={key}
-          query={data.posts.edges[index].node}
-          viewerQuery={viewerData}
+        <PreviewPost
+          postQuery={data.posts.edges[index].node}
         />
       )}
-    </PostInfiniteScroll>
+    </VerticalPaginationScroller>
   )
 }

@@ -10,7 +10,6 @@ import ScrollSearchCharacter from './ScrollSearchCharacter/ScrollSearchCharacter
 
 interface Props {
   characterQuery: ContainerSearchCharacterFragment$key
-  viewerQuery: ContainerSearchCharacterViewerFragment$key | null
 }
 
 const CharacterFragment = graphql`
@@ -20,20 +19,12 @@ const CharacterFragment = graphql`
   }
 `
 
-const ViewerFragment = graphql`
-  fragment ContainerSearchCharacterViewerFragment on Account {
-    ...ScrollSearchCharacterViewerFragment
-  }
-`
-
 export default function ContainerSearchCharacter (props: Props): JSX.Element {
   const {
-    characterQuery,
-    viewerQuery
+    characterQuery
   } = props
 
   const characterData = useFragment(CharacterFragment, characterQuery)
-  const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   return (
     <>
@@ -41,7 +32,7 @@ export default function ContainerSearchCharacter (props: Props): JSX.Element {
         <HeaderSearchCharacter characterQuery={characterData} />
       </MobileContainer>
       <ContentContainer pt={8}>
-        <ScrollSearchCharacter characterQuery={characterData} viewerQuery={viewerData} />
+        <ScrollSearchCharacter characterQuery={characterData} />
       </ContentContainer>
     </>
   )
