@@ -43,7 +43,7 @@ export default function PostAddDescription ({
         leftIcon={<Icon w={4} h={4} icon={AddDescription} fill='gray.100' />}
       >
         <Trans>
-          Add Shout
+          Add Caption
         </Trans>
       </Button>
       <PostDescriptionModal query={data} isOpen={isOpen} onClose={onClose} />

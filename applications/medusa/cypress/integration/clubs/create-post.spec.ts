@@ -83,7 +83,7 @@ describe('Create & Manage Posts', () => {
     /**
      * Add post description
      */
-    clickOnButton('Add Shout')
+    clickOnButton('Add Caption')
     typeIntoPlaceholder(/Tell your fans/iu, 'This is a test description')
     clickOnAriaLabelButton('Update Description')
     cy.get('button[aria-label="Edit Description"]').should('not.be.disabled').click({ force: true })

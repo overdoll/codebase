@@ -28,7 +28,7 @@ export default function PreviewFooter (props: Props): JSX.Element {
     <HStack spacing={1} justify='space-between' {...rest}>
       <Box pointerEvents='none' w='100%' p={1} overflow='hidden' position='relative' borderRadius='lg' h={10}>
         <HStack spacing={2} h='100%' align='center' justify='flex-start'>
-          <Icon fill='whiteAlpha.300' icon={MagicBall} w={6} h={6} />
+          <Icon fill='whiteAlpha.300' icon={MagicBall} w={5} h={5} />
           <Box>
             <Heading fontSize='sm' color='whiteAlpha.300'>
               <Trans>
