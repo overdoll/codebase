@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { GALLERY_PROPS, SLIDE_PROPS } from '../../../constants'
 import { OnSwiperInitType } from '../../../types'
 import { PreviewMedia } from '../../../../Media'
-import SupporterSlide from '../../SupporterSlide/SupporterSlide'
+import SupporterSlide from '../SupporterSlide/SupporterSlide'
 import PreviewSlide from '../../../components/PreviewSlide/PreviewSlide'
 
 interface Props {

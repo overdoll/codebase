@@ -16,9 +16,9 @@ import {
   Stack,
   Tooltip,
   Wrap,
-  WrapItem
+  WrapItem,
+  useDisclosure
 } from '@chakra-ui/react'
-import { useHistoryDisclosure } from '@//:modules/hooks'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import UploadRewindSingleSelector from './UploadRewindSingleSelector/UploadRewindSingleSelector'
@@ -66,7 +66,7 @@ export default function UploadRewindCategories ({
     isOpen,
     onOpen,
     onClose
-  } = useHistoryDisclosure()
+  } = useDisclosure()
 
   const { query: { slug } } = useRouter()
 

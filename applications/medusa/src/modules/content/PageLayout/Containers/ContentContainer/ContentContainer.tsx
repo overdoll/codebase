@@ -12,7 +12,7 @@ export default function ContentContainer ({
   return (
     <Container
       w='100%'
-      maxW='container.md'
+      maxW='container.lg'
       px={{
         lg: 4,
         md: 2,

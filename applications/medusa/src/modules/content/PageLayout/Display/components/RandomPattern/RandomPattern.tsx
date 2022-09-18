@@ -1,8 +1,8 @@
 import { OverlappingBubbles, OverlappingCircles, OverlappingPlus } from '@//:assets/icons/patterns'
-import IconPattern from '../../PageLayout/Flair/IconPattern/IconPattern'
+import IconPattern from './IconPattern/IconPattern'
 import { useMemo } from 'react'
-import { Random } from '../../../utilities/random'
-import hash from '../../../utilities/hash'
+import { Random } from '../../../../../utilities/random'
+import hash from '../../../../../utilities/hash'
 
 interface Props {
   seed: string | undefined

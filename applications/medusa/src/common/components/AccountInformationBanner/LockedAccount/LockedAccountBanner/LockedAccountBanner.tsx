@@ -1,7 +1,6 @@
-import { Flex, HStack } from '@chakra-ui/react'
+import { Flex, HStack, useDisclosure } from '@chakra-ui/react'
 import Button from '@//:modules/form/Button/Button'
 import { graphql, useFragment } from 'react-relay/hooks'
-import { useHistoryDisclosure } from '@//:modules/hooks'
 import LockedAccountModal from '../LockedAccountModal/LockedAccountModal'
 import { Trans } from '@lingui/macro'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
@@ -24,7 +23,7 @@ export default function LockedAccountBanner ({ query }: Props): JSX.Element {
     isOpen,
     onToggle,
     onClose
-  } = useHistoryDisclosure()
+  } = useDisclosure()
 
   return (
     <Alert

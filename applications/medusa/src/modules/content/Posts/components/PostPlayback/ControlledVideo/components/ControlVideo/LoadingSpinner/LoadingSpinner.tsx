@@ -1,5 +1,5 @@
 import { Box, Flex, Heading, HTMLChakraProps, Spinner, Stack, Text } from '@chakra-ui/react'
-import Icon from '../../../../../../../PageLayout/Flair/Icon/Icon'
+import Icon from '../../../../../../../PageLayout/BuildingBlocks/Icon/Icon'
 import { ControlPlayButton, WarningTriangle } from '@//:assets/icons/interface'
 import { Trans } from '@lingui/macro'
 import Button from '../../../../../../../../form/Button/Button'

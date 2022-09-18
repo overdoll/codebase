@@ -1,7 +1,7 @@
 import { Box, Heading, Stack, StackProps } from '@chakra-ui/react'
 import { Icon } from '@//:modules/content/PageLayout'
 import { TileOverlay } from '@//:modules/content/ContentSelection'
-import RandomPattern from '@//:modules/content/DataDisplay/RandomPattern/RandomPattern'
+import RandomPattern from '@//:modules/content/PageLayout/Display/components/RandomPattern/RandomPattern'
 import { ReactNode } from 'react'
 import { IconType } from '@//:types/components'
 

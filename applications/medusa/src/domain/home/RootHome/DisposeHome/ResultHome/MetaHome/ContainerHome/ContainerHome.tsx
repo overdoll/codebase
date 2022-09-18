@@ -22,7 +22,6 @@ const RootFragment = graphql`
 const ViewerFragment = graphql`
   fragment ContainerHomeViewerFragment on Account {
     ...BannerHomeViewerFragment
-    ...PostsHomeViewerFragment
   }
 `
 
@@ -43,7 +42,7 @@ export default function ContainerHome (props: Props): JSX.Element {
       <ContentContainer>
         <Stack spacing={4}>
           <TilesHome />
-          <PostsHome rootQuery={rootData} viewerQuery={viewerData} />
+          <PostsHome rootQuery={rootData} />
         </Stack>
       </ContentContainer>
     </>

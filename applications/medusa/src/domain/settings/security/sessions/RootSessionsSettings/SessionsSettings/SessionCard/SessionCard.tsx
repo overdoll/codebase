@@ -1,6 +1,6 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import { AccordionButton, AccordionItem, AccordionPanel, Box, Flex, Heading, Text } from '@chakra-ui/react'
-import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/BuildingBlocks/Icon/Icon'
 import type { SessionCardFragment$key } from '@//:artifacts/SessionCardFragment.graphql'
 import UAParser from 'ua-parser-js'
 import { format } from 'date-fns'

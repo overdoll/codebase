@@ -18,7 +18,7 @@ export default function ContentGrid (props: Props): JSX.Element {
     <Grid
       w='100%'
       h='100%'
-      gap={1}
+      gap={contentLength > 1 ? 1 : 0}
       templateAreas={`
       "gallery"
       "carousel"

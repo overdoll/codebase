@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { OverlappingPlus } from '@//:assets/icons'
-import IconPattern from '@//:modules/content/PageLayout/Flair/IconPattern/IconPattern'
+import IconPattern from '@//:modules/content/PageLayout/Display/components/RandomPattern/IconPattern/IconPattern'
 import { Box } from '@chakra-ui/react'
 
 interface Props {

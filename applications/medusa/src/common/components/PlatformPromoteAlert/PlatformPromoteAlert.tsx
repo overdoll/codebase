@@ -1,7 +1,7 @@
 import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 import { Flex, Heading, HStack, Stack, Text } from '@chakra-ui/react'
 import { InfoCircle } from '@//:assets/icons'
-import Icon from '../../../modules/content/PageLayout/Flair/Icon/Icon'
+import Icon from '../../../modules/content/PageLayout/BuildingBlocks/Icon/Icon'
 import { Trans } from '@lingui/macro'
 import PlatformShareTwitterButton from './PlatformShareTwitterButton/PlatformShareTwitterButton'
 import PlatformShareDirectButton from './PlatformShareDirectButton/PlatformShareDirectButton'

@@ -1,5 +1,5 @@
 import { Button, Flex } from '@chakra-ui/react'
-import Icon from '../../../PageLayout/Flair/Icon/Icon'
+import Icon from '../../../PageLayout/BuildingBlocks/Icon/Icon'
 import { ArrowButtonRefresh } from '@//:assets/icons/navigation'
 import { Trans } from '@lingui/react'
 import { Alert, AlertDescription, AlertIcon } from '../../../ThemeComponents'

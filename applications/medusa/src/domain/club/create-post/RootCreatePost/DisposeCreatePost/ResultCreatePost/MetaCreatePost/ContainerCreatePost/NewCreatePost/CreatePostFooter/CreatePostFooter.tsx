@@ -1,6 +1,6 @@
 import { Box, Heading, HStack, Link, Stack, Text } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
-import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/BuildingBlocks/Icon/Icon'
 import { CheckCircle, DeleteCircle } from '@//:assets/icons'
 import { CLUB_GUIDELINES } from '@//:modules/constants/links'
 

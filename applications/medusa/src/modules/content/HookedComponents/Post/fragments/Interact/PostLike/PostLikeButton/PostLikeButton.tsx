@@ -1,18 +1,16 @@
 import { graphql, useFragment } from 'react-relay'
 import { PostLikeButtonFragment$key } from '@//:artifacts/PostLikeButtonFragment.graphql'
-import { PostLikeButtonViewerFragment$key } from '@//:artifacts/PostLikeButtonViewerFragment.graphql'
 import { BookmarkFull } from '@//:assets/icons/interface'
-import { ButtonProps } from '@chakra-ui/react'
-import Can from '../../../../../../authorization/Can'
+import Can from '../../../../../../../authorization/Can'
 import { t } from '@lingui/macro'
 import MediumGenericButton from '@//:common/components/GenericButtons/MediumGenericButton/MediumGenericButton'
-import PostLikeWrapper from '../../../PostWrappers/PostLikeWrapper/PostLikeWrapper'
+import PostLikeWrapper from '../../../../../../Posts/components/PostWrappers/PostLikeWrapper/PostLikeWrapper'
 import { useLingui } from '@lingui/react'
-import PostLikeLoggedOutButton from '../PostLikeLoggedOutButton/PostLikeLoggedOutButton'
+import PostLikeLoggedOutButton from './PostLikeLoggedOutButton/PostLikeLoggedOutButton'
+import useAbility from '../../../../../../../authorization/useAbility'
 
-interface Props extends ButtonProps {
+interface Props {
   postQuery: PostLikeButtonFragment$key
-  viewerQuery: PostLikeButtonViewerFragment$key | null
 }
 
 const PostFragment = graphql`
@@ -22,22 +20,16 @@ const PostFragment = graphql`
   }
 `
 
-const ViewerFragment = graphql`
-  fragment PostLikeButtonViewerFragment on Account {
-    __typename
-  }
-`
-
 export default function PostLikeButton ({
-  postQuery,
-  viewerQuery
+  postQuery
 }: Props): JSX.Element {
   const postData = useFragment(PostFragment, postQuery)
-  const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   const { i18n } = useLingui()
 
-  if (viewerData == null) {
+  const ability = useAbility()
+
+  if (!ability.can('configure', 'Account')) {
     return (<PostLikeLoggedOutButton postQuery={postData} />)
   }
 

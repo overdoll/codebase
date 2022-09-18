@@ -1,6 +1,6 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { Stack } from '@chakra-ui/react'
-import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/BuildingBlocks/Icon/Icon'
 import JoinForm from './JoinForm/JoinForm'
 import { OverdollLogo } from '@//:assets/logos'
 import type { JoinFragment$key } from '@//:artifacts/JoinFragment.graphql'

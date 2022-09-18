@@ -1,8 +1,7 @@
-import { Modal, ModalBody, ModalContent, ModalOverlay } from '@chakra-ui/react'
+import { Modal, ModalBody, ModalContent, ModalOverlay, useDisclosure } from '@chakra-ui/react'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { SearchSmall } from '@//:assets/icons/navigation'
-import { useHistoryDisclosure } from '@//:modules/hooks'
 import SearchBody from './components/SearchBody/SearchBody'
 import HistoryDisclosureProvider
   from '@//:modules/content/HookedComponents/HistoryDisclosure/components/HistoryDisclosureProvider/HistoryDisclosureProvider'
@@ -10,7 +9,7 @@ import { useRef } from 'react'
 import SmallGenericButton from '../../GenericButtons/SmallGenericButton/SmallGenericButton'
 
 export default function SearchButton (): JSX.Element {
-  const methods = useHistoryDisclosure({ hash: 'search' })
+  const methods = useDisclosure()
   const {
     isOpen,
     onOpen,

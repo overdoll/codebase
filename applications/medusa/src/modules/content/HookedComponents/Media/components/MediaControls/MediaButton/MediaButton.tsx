@@ -1,7 +1,7 @@
 import { Box, BoxProps } from '@chakra-ui/react'
 import { Icon } from '../../../../../PageLayout'
 import { IconType } from '@//:types/components'
-import { IconProps } from '../../../../../PageLayout/Flair/Icon/Icon'
+import { IconProps } from '../../../../../PageLayout/BuildingBlocks/Icon/Icon'
 
 interface Props extends BoxProps {
   icon: IconType

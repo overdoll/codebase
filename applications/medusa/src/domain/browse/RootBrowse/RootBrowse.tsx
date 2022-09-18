@@ -1,13 +1,13 @@
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
-import type { BrowseQuery as BrowseQueryType } from '@//:artifacts/BrowseQuery.graphql'
-import BrowseQuery from '@//:artifacts/BrowseQuery.graphql'
+import type { ResultBrowseQuery as ResultBrowseQueryType } from '@//:artifacts/ResultBrowseQuery.graphql'
+import ResultBrowseQuery from '@//:artifacts/ResultBrowseQuery.graphql'
 import { PageProps } from '@//:types/app'
 import { PageContainer } from '@//:modules/content/PageLayout'
 import DisposeBrowse from './DisposeBrowse/DisposeBrowse'
 
 interface Props {
   queryRefs: {
-    browseQuery: PreloadedQuery<BrowseQueryType>
+    browseQuery: PreloadedQuery<ResultBrowseQueryType>
   }
 }
 
@@ -15,7 +15,7 @@ const RootBrowse: PageProps<Props> = (props: Props): JSX.Element => {
   const { queryRefs: { browseQuery } } = props
 
   const params = useQueryLoader(
-    BrowseQuery,
+    ResultBrowseQuery,
     browseQuery
   )
 

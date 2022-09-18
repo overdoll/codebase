@@ -4,7 +4,7 @@ import { OnSwiperInitType } from '../../../types'
 import { useState } from 'react'
 import SwiperType from 'swiper'
 import ContentGrid from '../../../components/ContentGrid/ContentGrid'
-import { Box, Center, GridItem } from '@chakra-ui/react'
+import { Box, GridItem } from '@chakra-ui/react'
 import CinematicCarousel from '../../Carousel/CinematicCarousel/CinematicCarousel'
 import syncSwiperSlideChange from '../../../support/syncSwiperSlideChange'
 import RouletteGallery from '../../Gallery/RouletteGallery/RouletteGallery'
@@ -48,9 +48,7 @@ export default function RouletteContent (props: Props): JSX.Element {
       </GridItem>
       {postData.content.length > 1 && (
         <GridItem overflow='hidden' area='carousel'>
-          <Center h='100%' w='100%'>
-            <CinematicCarousel swiper={swiper} postQuery={postData} />
-          </Center>
+          <CinematicCarousel swiper={swiper} postQuery={postData} />
         </GridItem>
       )}
     </ContentGrid>

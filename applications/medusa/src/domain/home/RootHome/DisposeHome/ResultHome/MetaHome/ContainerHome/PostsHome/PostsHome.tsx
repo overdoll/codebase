@@ -1,17 +1,13 @@
-import { useFragment } from 'react-relay/hooks'
 import type { PostsHomeFragment$key } from '@//:artifacts/PostsHomeFragment.graphql'
-import type { PostsHomeViewerFragment$key } from '@//:artifacts/PostsHomeViewerFragment.graphql'
 import { graphql, usePaginationFragment } from 'react-relay'
-import FullSimplePost
-  from '@//:modules/content/Posts/components/PostNavigation/PostInfiniteScroll/FullSimplePost/FullSimplePost'
 import type { ResultHomeQuery } from '@//:artifacts/ResultHomeQuery.graphql'
 import { Stack } from '@chakra-ui/react'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import { Trans } from '@lingui/macro'
+import PreviewPost from '@//:modules/content/HookedComponents/Post/fragments/Post/PreviewPost/PreviewPost'
 
 interface Props {
   rootQuery: PostsHomeFragment$key
-  viewerQuery: PostsHomeViewerFragment$key | null
 }
 
 const RootFragment = graphql`
@@ -26,24 +22,16 @@ const RootFragment = graphql`
       edges {
         node {
           id
-          ...FullSimplePostFragment
+          ...PreviewPostFragment
         }
       }
-      ...PostInfiniteScrollFragment
     }
-  }
-`
-
-const ViewerFragment = graphql`
-  fragment PostsHomeViewerFragment on Account {
-    ...FullSimplePostViewerFragment
   }
 `
 
 export default function PostsHome (props: Props): JSX.Element {
   const {
-    rootQuery,
-    viewerQuery
+    rootQuery
   } = props
 
   const {
@@ -53,16 +41,10 @@ export default function PostsHome (props: Props): JSX.Element {
     rootQuery
   )
 
-  const viewerData = useFragment(ViewerFragment, viewerQuery)
-
   return (
     <Stack spacing={16}>
       {data.postsFeed?.edges?.map((item) => (
-        <FullSimplePost
-          key={item.node.id}
-          query={item.node}
-          viewerQuery={viewerData}
-        />
+        <PreviewPost key={item.node.id} postQuery={item.node} />
       ))}
       <LinkButton
         colorScheme='gray'

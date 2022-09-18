@@ -23,7 +23,7 @@ export { default as SmallMenuItem } from '../Interactables/SmallMenuItem/SmallMe
 export { default as PostPlaceholder } from '../Placeholder/PostPlaceholder/PostPlaceholder'
 
 export { default as ResourceIcon } from '../DataDisplay/ResourceIcon/ResourceIcon'
-export { default as Icon } from './Flair/Icon/Icon'
+export { default as Icon } from './BuildingBlocks/Icon/Icon'
 
 export * from './FlowBuilder/index'
 

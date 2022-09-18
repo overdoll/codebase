@@ -1,7 +1,7 @@
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { Suspense } from 'react'
-import { HStack, Stack } from '@chakra-ui/react'
+import { HStack, Stack, useDisclosure } from '@chakra-ui/react'
 import { SearchInput, useSearch } from '@//:modules/content/HookedComponents/Search'
 import { QueryErrorBoundary } from '@//:modules/content/Placeholder'
 import SearchResults
@@ -14,7 +14,6 @@ import SearchRecommendations
   from '../../../../common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations'
 import { useQueryParam } from 'use-query-params'
 import { PageProps } from '@//:types/app'
-import { useHistoryDisclosure } from '@//:modules/hooks'
 import HistoryDisclosureProvider
   from '@//:modules/content/HookedComponents/HistoryDisclosure/components/HistoryDisclosureProvider/HistoryDisclosureProvider'
 import SearchRichObject from './SearchRichObject/SearchRichObject'
@@ -29,7 +28,7 @@ const Search: PageProps<{}> = (): JSX.Element => {
 
   const [search] = useQueryParam<string | null | undefined>('q')
 
-  const methods = useHistoryDisclosure({ hash: 'search' })
+  const methods = useDisclosure()
 
   const searchMethods = useSearch<SearchProps>({
     defaultValue: {

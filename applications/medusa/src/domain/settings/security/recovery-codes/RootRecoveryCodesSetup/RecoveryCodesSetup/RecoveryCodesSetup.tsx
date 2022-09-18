@@ -3,7 +3,7 @@ import { Box, Code, Flex, HStack, SimpleGrid, Skeleton, Stack } from '@chakra-ui
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
 import fileDownload from 'js-file-download'
 import Button from '@//:modules/form/Button/Button'
-import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/BuildingBlocks/Icon/Icon'
 import { CopyText, DownloadArrow } from '@//:assets/icons/interface'
 import type { RecoveryCodesSetupQuery } from '@//:artifacts/RecoveryCodesSetupQuery.graphql'
 import type { RecoveryCodesSetupMutation } from '@//:artifacts/RecoveryCodesSetupMutation.graphql'

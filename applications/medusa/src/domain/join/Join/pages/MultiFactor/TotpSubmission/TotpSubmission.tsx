@@ -1,6 +1,6 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { Box, Heading, Stack } from '@chakra-ui/react'
-import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/BuildingBlocks/Icon/Icon'
 import type { TotpSubmissionFragment$key } from '@//:artifacts/TotpSubmissionFragment.graphql'
 import { TotpSubmissionMutation } from '@//:artifacts/TotpSubmissionMutation.graphql'
 import { t, Trans } from '@lingui/macro'

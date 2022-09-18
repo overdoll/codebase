@@ -2,7 +2,6 @@ import { PremiumStar } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import { ClickableTile } from '@//:modules/content/ContentSelection'
 import InspectableAlert from '@//:common/components/InspectableAlert/InspectableAlert'
-import { useHistoryDisclosure } from '@//:modules/hooks'
 import {
   Heading,
   Modal,
@@ -12,7 +11,8 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
-  Text
+  Text,
+  useDisclosure
 } from '@chakra-ui/react'
 import Button from '@//:modules/form/Button/Button'
 
@@ -21,7 +21,7 @@ export default function UploadSupporterContentOptimization (): JSX.Element {
     isOpen,
     onClose,
     onOpen
-  } = useHistoryDisclosure()
+  } = useDisclosure()
 
   return (
     <>

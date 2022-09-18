@@ -1,10 +1,9 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { PostUpdateDescriptionFragment$key } from '@//:artifacts/PostUpdateDescriptionFragment.graphql'
-import { useHistoryDisclosure } from '@//:modules/hooks'
 import PostDescriptionModal from '../UploadPostOptions/PostAddDescription/PostDescriptionModal/PostDescriptionModal'
-import { Flex, HStack } from '@chakra-ui/react'
+import { Flex, HStack, useDisclosure } from '@chakra-ui/react'
 import { ContentBookEdit } from '@//:assets/icons'
-import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/BuildingBlocks/Icon/Icon'
 import IconButton from '@//:modules/form/IconButton/IconButton'
 import { useLingui } from '@lingui/react'
 import { t } from '@lingui/macro'
@@ -36,7 +35,7 @@ export default function PostUpdateDescription ({
     isOpen,
     onClose,
     onOpen
-  } = useHistoryDisclosure()
+  } = useDisclosure()
 
   const { i18n } = useLingui()
 

@@ -2,7 +2,7 @@ import { Box, HStack } from '@chakra-ui/react'
 import { useContext } from 'react'
 import { FlowContext } from '../FlowBuilder'
 import { ClickableBox } from '../../index'
-import Icon from '../../Flair/Icon/Icon'
+import Icon from '../../BuildingBlocks/Icon/Icon'
 
 interface Props {
   canSkipSteps?: boolean

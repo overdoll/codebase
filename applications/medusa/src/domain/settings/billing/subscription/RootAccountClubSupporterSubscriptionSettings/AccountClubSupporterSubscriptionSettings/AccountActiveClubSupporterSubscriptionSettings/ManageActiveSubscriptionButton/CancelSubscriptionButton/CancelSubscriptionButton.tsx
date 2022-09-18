@@ -3,7 +3,6 @@ import type { CancelSubscriptionButtonFragment$key } from '@//:artifacts/CancelS
 import Button from '@//:modules/form/Button/Button'
 import { t, Trans } from '@lingui/macro'
 import { CancelSubscriptionButtonMutation } from '@//:artifacts/CancelSubscriptionButtonMutation.graphql'
-import { useHistoryDisclosure } from '@//:modules/hooks'
 import useSearch from '@//:modules/content/HookedComponents/Search/hooks/useSearch'
 import { useChoice } from '@//:modules/content/HookedComponents/Choice'
 import { Alert, AlertDescription, AlertIcon, useToast } from '@//:modules/content/ThemeComponents'
@@ -16,7 +15,8 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
-  Text
+  Text,
+  useDisclosure
 } from '@chakra-ui/react'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
@@ -90,7 +90,7 @@ export default function CancelSubscriptionButton ({
     isOpen,
     onOpen,
     onClose
-  } = useHistoryDisclosure()
+  } = useDisclosure()
 
   const {
     loadQuery,

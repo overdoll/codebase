@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { Fade, Flex, Heading, HStack } from '@chakra-ui/react'
-import { Icon } from '../../../../../PageLayout'
+import { Icon } from '../../../../../../PageLayout'
 import { ActionUnlock } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 

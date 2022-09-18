@@ -1,6 +1,6 @@
 import { useQueryParam } from 'use-query-params'
 import trackFathomEvent from '@//:modules/support/trackFathomEvent'
-import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/BuildingBlocks/Icon/Icon'
 import { RandomizeDice } from '@//:assets/icons'
 import { t, Trans } from '@lingui/macro'
 import Button from '@//:modules/form/Button/Button'

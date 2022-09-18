@@ -1,8 +1,8 @@
 import { IconSizes } from '../../Media/IconImageMedia/IconImageMedia'
-import { Flex } from '@chakra-ui/react'
+import { Flex, FlexProps } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 
-interface Props {
+interface Props extends FlexProps {
   size: IconSizes
   children: ReactNode
 }
@@ -10,7 +10,8 @@ interface Props {
 export default function IconSizer (props: Props): JSX.Element {
   const {
     size = 'sm',
-    children
+    children,
+    ...rest
   } = props
 
   const sizes = {
@@ -23,12 +24,12 @@ export default function IconSizer (props: Props): JSX.Element {
       h: 8
     },
     lg: {
-      w: 16,
-      h: 16
+      w: 12,
+      h: 12
     },
     xl: {
-      w: 24,
-      h: 24
+      w: 18,
+      h: 18
     }
   }
 
@@ -41,6 +42,8 @@ export default function IconSizer (props: Props): JSX.Element {
       overflow='hidden'
       w={sizes[size].w}
       h={sizes[size].h}
+      bg='gray.700'
+      {...rest}
     >
       {children}
     </Flex>

@@ -6,7 +6,7 @@ import { SupporterLockedFragment$key } from '@//:artifacts/SupporterLockedFragme
 import {
   SUPPORT_BUTTON_PROPS
 } from '@//:domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/ClubSupporterSubscriptionPriceButton/ClubSupporterSubscriptionPriceButton'
-import LinkButton from '../../../../../ThemeComponents/LinkButton/LinkButton'
+import LinkButton from '../../../../../../ThemeComponents/LinkButton/LinkButton'
 
 interface Props {
   children: ReactNode

@@ -5,7 +5,6 @@ import type {
 import Button from '@//:modules/form/Button/Button'
 import { t, Trans } from '@lingui/macro'
 import { DeleteSavedPaymentMethodButtonMutation } from '@//:artifacts/DeleteSavedPaymentMethodButtonMutation.graphql'
-import { useHistoryDisclosure } from '@//:modules/hooks'
 import { Alert, AlertDescription, AlertIcon, useToast } from '@//:modules/content/ThemeComponents'
 import {
   Modal,
@@ -16,7 +15,8 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
-  Text
+  Text,
+  useDisclosure
 } from '@chakra-ui/react'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { MenuItem } from '@//:modules/content/ThemeComponents/Menu/Menu'
@@ -58,7 +58,7 @@ export default function DeleteSavedPaymentMethodButton ({
     isOpen,
     onOpen,
     onClose
-  } = useHistoryDisclosure()
+  } = useDisclosure()
 
   const notify = useToast()
 

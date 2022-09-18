@@ -3,7 +3,6 @@ import type { PostFooterButtonsFragment$key } from '@//:artifacts/PostFooterButt
 import type { PostFooterButtonsViewerFragment$key } from '@//:artifacts/PostFooterButtonsViewerFragment.graphql'
 import { HStack } from '@chakra-ui/react'
 import PostMenuButton from './PostMenuButton/PostMenuButton'
-import PostLikeButton from './PostLikeButton/PostLikeButton'
 import PostCopyLinkButton from './PostCopyLinkButton/PostCopyLinkButton'
 import PostShareRedditButton from './PostShareRedditButton/PostShareRedditButton'
 import PostShareTwitterButton from './PostShareTwitterButton/PostShareTwitterButton'
@@ -27,7 +26,6 @@ const PostFragment = graphql`
 const ViewerFragment = graphql`
   fragment PostFooterButtonsViewerFragment on Account {
     ...PostMenuButtonViewerFragment
-    ...PostLikeButtonViewerFragment
   }
 `
 
@@ -45,7 +43,6 @@ export default function PostFooterButtons ({
       <PostShareDiscordButton query={postData} />
       <PostShareRedditButton query={postData} />
       <PostShareTwitterButton query={postData} />
-      <PostLikeButton postQuery={postData} viewerQuery={viewerData} />
     </HStack>
   )
 }

@@ -14,7 +14,7 @@ import { dateFormat } from '@//:modules/constants/format'
 import { LinkTile } from '@//:modules/content/ContentSelection'
 import { useRouter } from 'next/router'
 import { AddPlus, ArrowButtonRight, SubtractMinus } from '@//:assets/icons'
-import Icon from '../../../../../../../modules/content/PageLayout/Flair/Icon/Icon'
+import Icon from '../../../../../../../modules/content/PageLayout/BuildingBlocks/Icon/Icon'
 
 interface Props {
   query: ClubPaymentCardFragment$key

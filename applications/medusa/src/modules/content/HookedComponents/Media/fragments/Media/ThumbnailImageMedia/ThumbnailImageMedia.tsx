@@ -25,7 +25,7 @@ export interface ThumbnailImageMediaProps {
   imageProps?: Pick<ImageMediaProps, 'loadFirst'>
 }
 
-interface Props extends ThumbnailImageMediaProps{
+interface Props extends ThumbnailImageMediaProps {
   imageMediaQuery: ThumbnailImageMediaFragment$key
 }
 

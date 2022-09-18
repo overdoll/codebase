@@ -1,7 +1,7 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
 import { Flex, Link, Stack, Text } from '@chakra-ui/react'
 import type { RegisterMutation } from '@//:artifacts/RegisterMutation.graphql'
-import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/BuildingBlocks/Icon/Icon'
 import RegisterForm from './RegisterForm/RegisterForm'
 import type { RegisterFragment$key } from '@//:artifacts/RegisterFragment.graphql'
 import { t, Trans } from '@lingui/macro'

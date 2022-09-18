@@ -5,7 +5,7 @@ import { GALLERY_PROPS, SLIDE_PROPS } from '../../../constants'
 import { OnSwiperInitType } from '../../../types'
 import { CinematicMedia } from '../../../../Media'
 import CinematicSlide from '../../../components/CinematicSlide/CinematicSlide'
-import SupporterSlide from '../../SupporterSlide/SupporterSlide'
+import SupporterSlide from '../SupporterSlide/SupporterSlide'
 import { NumberParam, useQueryParam } from 'use-query-params'
 
 interface Props {

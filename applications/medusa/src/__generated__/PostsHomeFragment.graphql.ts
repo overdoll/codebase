@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<936c67b9583361fd6924742c125bee86>>
+ * @generated SignedSource<<8cc397aa2e9f2ec7bd1e081cb9d47a4b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,10 +15,9 @@ export type PostsHomeFragment$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
-        readonly " $fragmentSpreads": FragmentRefs<"FullSimplePostFragment">;
+        readonly " $fragmentSpreads": FragmentRefs<"PreviewPostFragment">;
       };
     }>;
-    readonly " $fragmentSpreads": FragmentRefs<"PostInfiniteScrollFragment">;
   };
   readonly " $fragmentType": "PostsHomeFragment";
 };
@@ -113,7 +112,7 @@ return {
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "FullSimplePostFragment"
+                  "name": "PreviewPostFragment"
                 },
                 {
                   "alias": null,
@@ -134,11 +133,6 @@ return {
             }
           ],
           "storageKey": null
-        },
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "PostInfiniteScrollFragment"
         },
         {
           "alias": null,
@@ -174,6 +168,6 @@ return {
 };
 })();
 
-(node as any).hash = "3481cb29638ef5d290f31befdb6f413f";
+(node as any).hash = "58d256c34036a2090093559c82b99127";
 
 export default node;

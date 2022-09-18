@@ -13,7 +13,7 @@ export {
   default as PostClickableCharacters
 } from './components/PostInteraction/PostClickableCharacters/PostClickableCharacters'
 export { default as PostFooter } from './components/PostInteraction/PostAltFooter/PostFooter'
-export { default as PostLikeButton } from './components/PostInteraction/PostFooterButtons/PostLikeButton/PostLikeButton'
+export { default as PostLikeButton } from '../HookedComponents/Post/fragments/Interact/PostLike/PostLikeButton/PostLikeButton'
 export { default as PostMenu } from './components/PostInteraction/PostMenu/PostMenu'
 
 export * from './support/GlobalVideoManager/GlobalVideoManager'

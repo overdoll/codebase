@@ -15,13 +15,13 @@ import {
 import { t, Trans } from '@lingui/macro'
 import MediumGenericButton from '@//:common/components/GenericButtons/MediumGenericButton/MediumGenericButton'
 import { useLingui } from '@lingui/react'
-import CloseButton from '../../../../../ThemeComponents/CloseButton/CloseButton'
-import encodeJoinRedirect from '../../../../../../support/encodeJoinRedirect'
+import CloseButton from '../../../../../../../ThemeComponents/CloseButton/CloseButton'
+import encodeJoinRedirect from '../../../../../../../../support/encodeJoinRedirect'
 import { graphql, useFragment } from 'react-relay'
 import { PostLikeLoggedOutButtonFragment$key } from '@//:artifacts/PostLikeLoggedOutButtonFragment.graphql'
-import LinkButton from '../../../../../ThemeComponents/LinkButton/LinkButton'
-import { Icon } from '../../../../../PageLayout'
-import trackFathomEvent from '../../../../../../support/trackFathomEvent'
+import LinkButton from '../../../../../../../ThemeComponents/LinkButton/LinkButton'
+import { Icon } from '../../../../../../../PageLayout'
+import trackFathomEvent from '../../../../../../../../support/trackFathomEvent'
 
 interface Props extends ButtonProps {
   postQuery: PostLikeLoggedOutButtonFragment$key

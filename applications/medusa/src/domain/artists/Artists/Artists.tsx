@@ -4,7 +4,7 @@ import { Trans } from '@lingui/macro'
 import { Heading, HStack, Stack } from '@chakra-ui/react'
 import { OverdollLogo } from '@//:assets/logos'
 import { FileUpload, PremiumStar, SearchSmall } from '@//:assets/icons'
-import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/BuildingBlocks/Icon/Icon'
 import ContactButton from '@//:common/components/Contact/ContactButton'
 import PlatformShareDirectButton
   from '@//:common/components/PlatformPromoteAlert/PlatformShareDirectButton/PlatformShareDirectButton'

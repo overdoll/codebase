@@ -2,7 +2,7 @@ import { graphql, useFragment } from 'react-relay'
 import type { PostPreviewContentFragment$key } from '@//:artifacts/PostPreviewContentFragment.graphql'
 import { Flex, HStack, Text } from '@chakra-ui/react'
 import { FileMultiple, PremiumStar } from '@//:assets/icons'
-import Icon from '../../../../PageLayout/Flair/Icon/Icon'
+import Icon from '../../../../PageLayout/BuildingBlocks/Icon/Icon'
 import ResourceInfo from '../../../../DataDisplay/ResourceInfo/ResourceInfo'
 
 interface Props {

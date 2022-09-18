@@ -2,7 +2,7 @@ import { Flex, FlexProps } from '@chakra-ui/react'
 import type { ResourceIconFragment$key } from '@//:artifacts/ResourceIconFragment.graphql'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
-import RandomIcon from '../RandomIcon/RandomIcon'
+import RandomIcon from '../../PageLayout/Display/components/RandomIcon/RandomIcon'
 import ResourceIconMedia from './ResourceIconMedia/ResourceIconMedia'
 
 interface Props extends FlexProps {

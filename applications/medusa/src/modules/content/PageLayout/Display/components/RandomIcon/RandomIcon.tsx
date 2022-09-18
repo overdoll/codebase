@@ -4,11 +4,11 @@ import {
   PlaceholderResourceSkull
 } from '@//:assets/icons/interface'
 import { useConst } from '@chakra-ui/react'
-import { Icon } from '../../PageLayout'
+import { Icon } from '../../../index'
 import { useMemo } from 'react'
-import { Random } from '../../../utilities/random'
-import hash from '../../../utilities/hash'
-import { DEFAULT_SEED, TAG_COLOR_PALETTE } from '../../../constants/theme'
+import { Random } from '../../../../../utilities/random'
+import hash from '../../../../../utilities/hash'
+import { DEFAULT_SEED, TAG_COLOR_PALETTE } from '../../../../../constants/theme'
 
 interface Props {
   seed: string | undefined
