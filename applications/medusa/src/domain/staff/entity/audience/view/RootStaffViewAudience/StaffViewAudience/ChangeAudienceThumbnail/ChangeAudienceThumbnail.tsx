@@ -5,7 +5,7 @@ import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayou
 import { Trans } from '@lingui/macro'
 import { Collapse, CollapseBody, CollapseButton } from '@//:modules/content/ThemeComponents/Collapse/Collapse'
 import ChangeAudienceThumbnailForm from './ChangeAudienceThumbnailForm/ChangeAudienceThumbnailForm'
-import AudienceIcon from '@//:modules/content/PageLayout/Display/fragments/AudienceIcon/AudienceIcon'
+import AudienceIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/AudienceIcon/AudienceIcon'
 
 interface Props {
   query: ChangeAudienceThumbnailFragment$key
@@ -32,7 +32,7 @@ export default function ChangeAudienceThumbnail ({ query }: Props): JSX.Element 
       </PageSectionWrap>
       <Stack spacing={2}>
         <Flex w='100%' align='center' justify='center'>
-          <AudienceIcon size='xl' clubQuery={data} />
+          <AudienceIcon size='xl' audienceQuery={data} />
         </Flex>
         <Collapse>
           <CollapseButton>

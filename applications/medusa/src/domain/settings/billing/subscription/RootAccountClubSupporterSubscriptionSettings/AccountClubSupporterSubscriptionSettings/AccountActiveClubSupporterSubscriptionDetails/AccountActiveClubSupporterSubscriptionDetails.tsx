@@ -11,6 +11,7 @@ import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 import Icon from '@//:modules/content/PageLayout/BuildingBlocks/Icon/Icon'
 import { WarningTriangle } from '@//:assets/icons'
 import ClubThumbnail from '@//:modules/content/DataDisplay/Club/ClubThumbnail/ClubThumbnail'
+import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
 
 interface Props {
   query: AccountActiveClubSupporterSubscriptionDetailsFragment$key
@@ -26,7 +27,7 @@ const Fragment = graphql`
       suspension {
         expires
       }
-      ...ClubThumbnailFragment
+      ...ClubIconFragment
     }
   }
 `
@@ -57,11 +58,7 @@ export default function AccountActiveClubSupporterSubscriptionDetails ({
     <Stack w='100%' spacing={2}>
       <HStack spacing={2} justify='space-between'>
         <HStack align='center' spacing={3}>
-          <ClubThumbnail
-            h={10}
-            w={10}
-            query={data.club}
-          />
+          <ClubIcon size='md' clubQuery={data?.club} />
           <Heading
             noOfLines={1}
             fontSize='2xl'

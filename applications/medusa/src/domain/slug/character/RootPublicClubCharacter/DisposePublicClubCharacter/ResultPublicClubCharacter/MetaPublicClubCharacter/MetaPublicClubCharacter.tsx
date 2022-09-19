@@ -3,7 +3,6 @@ import { graphql } from 'react-relay'
 import { MetaPublicClubCharacterFragment$key } from '@//:artifacts/MetaPublicClubCharacterFragment.graphql'
 import PublicClubCharacterRichObject from './PublicClubCharacterRichObject/PublicClubCharacterRichObject'
 import ContainerPublicClubCharacter from './ContainerPublicClubCharacter/ContainerPublicClubCharacter'
-import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 
 interface Props {
   characterQuery: MetaPublicClubCharacterFragment$key
@@ -26,9 +25,7 @@ export default function MetaPublicClubCharacter (props: Props): JSX.Element {
   return (
     <>
       <PublicClubCharacterRichObject query={characterData} />
-      <GlobalVideoManagerProvider>
-        <ContainerPublicClubCharacter characterQuery={characterData} />
-      </GlobalVideoManagerProvider>
+      <ContainerPublicClubCharacter characterQuery={characterData} />
     </>
   )
 }

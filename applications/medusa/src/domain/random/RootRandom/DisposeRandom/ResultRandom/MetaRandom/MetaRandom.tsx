@@ -2,7 +2,6 @@ import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { MetaRandomFragment$key } from '@//:artifacts/MetaRandomFragment.graphql'
 import { MetaRandomViewerFragment$key } from '@//:artifacts/MetaRandomViewerFragment.graphql'
-import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import RandomRichObject from './RandomRichObject/RandomRichObject'
 import ContainerRandom from './ContainerRandom/ContainerRandom'
 import RootStructuredData from '@//:common/structured-data/RootStructuredData/RootStructuredData'
@@ -37,9 +36,7 @@ export default function MetaRandom (props: Props): JSX.Element {
     <>
       <RandomRichObject />
       <RootStructuredData />
-      <GlobalVideoManagerProvider>
-        <ContainerRandom rootQuery={rootData} viewerQuery={viewerData} />
-      </GlobalVideoManagerProvider>
+      <ContainerRandom rootQuery={rootData} viewerQuery={viewerData} />
     </>
   )
 }

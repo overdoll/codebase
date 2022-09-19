@@ -4,11 +4,12 @@ import { DescriptionPublicPostFragment$key } from '@//:artifacts/DescriptionPubl
 import { DescriptionPublicPostViewerFragment$key } from '@//:artifacts/DescriptionPublicPostViewerFragment.graphql'
 import { Stack } from '@chakra-ui/react'
 import PostClickableCharacters
-  from '@//:modules/content/Posts/components/PostInteraction/PostClickableCharacters/PostClickableCharacters'
+  from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostClickableCharacters/PostClickableCharacters'
 import PostClickableCategories
-  from '@//:modules/content/Posts/components/PostInteraction/PostClickableCategories/PostClickableCategories'
-import PostFooterButtons from '@//:modules/content/Posts/components/PostInteraction/PostFooterButtons/PostFooterButtons'
-import PostClubLinks from '@//:modules/content/Posts/components/PostData/PostClubLinks/PostClubLinks'
+  from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostClickableCategories/PostClickableCategories'
+import PostFooterButtons
+  from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostFooterButtons/PostFooterButtons'
+import ClubExternalLinks from '@//:modules/content/HookedComponents/Club/fragments/ClubExternalLinks/ClubExternalLinks'
 
 interface Props {
   postQuery: DescriptionPublicPostFragment$key
@@ -17,9 +18,8 @@ interface Props {
 
 const PostFragment = graphql`
   fragment DescriptionPublicPostFragment on Post {
-    id
     club {
-      ...PostClubLinksFragment
+      ...ClubExternalLinksFragment
     }
     ...PostClickableCharactersFragment
     ...PostClickableCategoriesFragment
@@ -45,7 +45,7 @@ export default function DescriptionPublicPost ({
   return (
     <Stack spacing={4}>
       <Stack spacing={2}>
-        <PostClubLinks query={postData.club} />
+        <ClubExternalLinks clubQuery={postData.club} />
         <PostFooterButtons postQuery={postData} viewerQuery={viewerData} />
       </Stack>
       <Stack spacing={2}>

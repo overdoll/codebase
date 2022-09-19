@@ -1,7 +1,7 @@
 import { graphql, useFragment } from 'react-relay'
 import { Badge, HStack, Popover, PopoverBody, PopoverContent, PopoverTrigger, Stack } from '@chakra-ui/react'
 import { ClickableTile, GridTile } from '@//:modules/content/ContentSelection'
-import PostPreviewContent from '@//:modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
+import PostPreviewContent from '@//:modules/content/HookedComponents/Post/fragments/PostContent/PostPreviewContent/PostPreviewContent'
 import { Trans } from '@lingui/macro'
 import { SubmittedPostFragment$key } from '@//:artifacts/SubmittedPostFragment.graphql'
 

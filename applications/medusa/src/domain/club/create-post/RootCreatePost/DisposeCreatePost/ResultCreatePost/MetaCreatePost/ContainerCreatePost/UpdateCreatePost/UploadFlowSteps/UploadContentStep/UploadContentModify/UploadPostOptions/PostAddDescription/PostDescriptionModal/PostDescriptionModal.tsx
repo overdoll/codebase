@@ -4,7 +4,7 @@ import { HStack, Modal, ModalBody, ModalContent, ModalOverlay, Stack } from '@ch
 import UpdatePostDescriptionForm from './UpdatePostDescriptionForm/UpdatePostDescriptionForm'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { useRef } from 'react'
-import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/ClubIcon/ClubIcon'
+import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
 
 interface Props {
   query: PostDescriptionModalFragment$key

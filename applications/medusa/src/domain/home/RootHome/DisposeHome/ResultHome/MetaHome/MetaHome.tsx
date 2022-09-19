@@ -1,7 +1,6 @@
 import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { MetaHomeViewerFragment$key } from '@//:artifacts/MetaHomeViewerFragment.graphql'
-import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import RootStructuredData from '@//:common/structured-data/RootStructuredData/RootStructuredData'
 import RootHomeRichObject from './RootHomeRichObject/RootHomeRichObject'
 import ContainerHome from './ContainerHome/ContainerHome'
@@ -27,9 +26,7 @@ export default function MetaHome (props: Props): JSX.Element {
     <>
       <RootHomeRichObject />
       <RootStructuredData />
-      <GlobalVideoManagerProvider>
-        <ContainerHome viewerQuery={viewerData} />
-      </GlobalVideoManagerProvider>
+      <ContainerHome viewerQuery={viewerData} />
     </>
   )
 }

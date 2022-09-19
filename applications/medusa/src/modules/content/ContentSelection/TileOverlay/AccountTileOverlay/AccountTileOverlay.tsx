@@ -1,10 +1,11 @@
 import { Badge, Stack, Text } from '@chakra-ui/react'
-import ResourceItem from '../../../DataDisplay/ResourceItem/ResourceItem'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { AccountTileOverlayFragment$key } from '@//:artifacts/AccountTileOverlayFragment.graphql'
 import { TileOverlay } from '../../index'
 import { Trans } from '@lingui/macro'
-import AccountIcon from '../../../PageLayout/Display/fragments/AccountIcon/AccountIcon'
+import AccountIcon from '../../../PageLayout/Display/fragments/Icon/AccountIcon/AccountIcon'
+import CoverImage from '../../../HookedComponents/Media/components/ImageContainer/ImageWrapper/CoverImage/CoverImage'
+import RandomPattern from '../../../PageLayout/Display/components/RandomPattern/RandomPattern'
 
 interface Props {
   query: AccountTileOverlayFragment$key
@@ -26,9 +27,10 @@ export default function AccountTileOverlay ({
   const data = useFragment(Fragment, query)
 
   return (
-    <TileOverlay backdrop={
-      <ResourceItem seed={data.id} query={null} />
-    }
+    <TileOverlay backdrop={(
+      <CoverImage>
+        <RandomPattern seed={data.id} />
+      </CoverImage>)}
     >
       <Stack p={2} h='100%' w='100%' spacing={2} align='center' justify='center'>
         <AccountIcon size='md' accountQuery={data} />

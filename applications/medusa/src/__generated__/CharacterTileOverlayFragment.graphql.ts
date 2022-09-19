@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4540ff5eeca3027a87e185049005eac1>>
+ * @generated SignedSource<<c381b50074e9eb41caea759c7e530b62>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,17 +11,14 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type CharacterTileOverlayFragment$data = {
-  readonly banner: {
-    readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
-  } | null;
   readonly club: {
     readonly name: string;
   } | null;
-  readonly id: string;
   readonly name: string;
   readonly series: {
     readonly title: string;
   } | null;
+  readonly " $fragmentSpreads": FragmentRefs<"CharacterBannerFragment">;
   readonly " $fragmentType": "CharacterTileOverlayFragment";
 };
 export type CharacterTileOverlayFragment$key = {
@@ -43,13 +40,6 @@ return {
   "metadata": null,
   "name": "CharacterTileOverlayFragment",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
     (v0/*: any*/),
     {
       "alias": null,
@@ -82,20 +72,9 @@ return {
       "storageKey": null
     },
     {
-      "alias": null,
       "args": null,
-      "concreteType": "Resource",
-      "kind": "LinkedField",
-      "name": "banner",
-      "plural": false,
-      "selections": [
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "ResourceItemFragment"
-        }
-      ],
-      "storageKey": null
+      "kind": "FragmentSpread",
+      "name": "CharacterBannerFragment"
     }
   ],
   "type": "Character",
@@ -103,6 +82,6 @@ return {
 };
 })();
 
-(node as any).hash = "4da63faa712d990c7c49447ebecb624b";
+(node as any).hash = "c1ad4ff73a4f71eddd7650e8a56e0cef";
 
 export default node;

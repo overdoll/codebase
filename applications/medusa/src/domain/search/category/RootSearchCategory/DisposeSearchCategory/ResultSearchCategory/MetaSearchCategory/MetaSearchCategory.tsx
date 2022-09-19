@@ -1,7 +1,6 @@
 import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { MetaSearchCategoryFragment$key } from '@//:artifacts/MetaSearchCategoryFragment.graphql'
-import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import SearchCategoryRichObject from './SearchCategoryRichObject/SearchCategoryRichObject'
 import ContainerSearchCategory from './ContainerSearchCategory/ContainerSearchCategory'
 
@@ -26,9 +25,7 @@ export default function MetaSearchCategory (props: Props): JSX.Element {
   return (
     <>
       <SearchCategoryRichObject query={categoryData} />
-      <GlobalVideoManagerProvider>
-        <ContainerSearchCategory categoryQuery={categoryData} />
-      </GlobalVideoManagerProvider>
+      <ContainerSearchCategory categoryQuery={categoryData} />
     </>
   )
 }

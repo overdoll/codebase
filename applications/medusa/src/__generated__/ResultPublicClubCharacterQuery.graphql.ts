@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b794e48d25332c2f25a9317f112788d4>>
- * @relayHash 92aa1a6a6dc134807789d23286575fbd
+ * @generated SignedSource<<ffd88288b30b3970bede7efa1cefc0ba>>
+ * @relayHash 16848a88b87c746f86d13867f140f434
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 92aa1a6a6dc134807789d23286575fbd
+// @relayRequestID 16848a88b87c746f86d13867f140f434
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -88,81 +88,14 @@ v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
-},
-v9 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "ResourceUrl",
-  "kind": "LinkedField",
-  "name": "urls",
-  "plural": true,
-  "selections": [
-    (v8/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "mimeType",
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-},
-v10 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "width",
-  "storageKey": null
-},
-v11 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "height",
-  "storageKey": null
-},
-v12 = [
-  (v8/*: any*/)
-],
-v13 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "type",
-  "storageKey": null
-},
-v14 = [
-  {
-    "kind": "Literal",
-    "name": "first",
-    "value": 5
-  },
-  {
-    "kind": "Variable",
-    "name": "seed",
-    "variableName": "seed"
-  },
-  {
-    "kind": "Variable",
-    "name": "sortBy",
-    "variableName": "sortBy"
-  }
-],
-v15 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v16 = {
+v9 = {
   "kind": "TypeDiscriminator",
   "abstractKey": "__isMedia"
 },
-v17 = {
+v10 = {
   "alias": null,
   "args": null,
   "concreteType": "ColorPalette",
@@ -194,13 +127,34 @@ v17 = {
   ],
   "storageKey": null
 },
-v18 = [
-  (v8/*: any*/),
-  (v10/*: any*/),
-  (v11/*: any*/)
+v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+},
+v12 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "width",
+  "storageKey": null
+},
+v13 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "height",
+  "storageKey": null
+},
+v14 = [
+  (v11/*: any*/),
+  (v12/*: any*/),
+  (v13/*: any*/)
 ],
-v19 = [
-  (v17/*: any*/),
+v15 = [
+  (v10/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -216,7 +170,7 @@ v19 = [
         "kind": "LinkedField",
         "name": "icon",
         "plural": false,
-        "selections": (v18/*: any*/),
+        "selections": (v14/*: any*/),
         "storageKey": null
       },
       {
@@ -226,7 +180,7 @@ v19 = [
         "kind": "LinkedField",
         "name": "mini",
         "plural": false,
-        "selections": (v18/*: any*/),
+        "selections": (v14/*: any*/),
         "storageKey": null
       }
     ],
@@ -234,7 +188,7 @@ v19 = [
   },
   (v7/*: any*/)
 ],
-v20 = {
+v16 = {
   "kind": "InlineFragment",
   "selections": [
     (v7/*: any*/)
@@ -242,26 +196,84 @@ v20 = {
   "type": "RawMedia",
   "abstractKey": null
 },
-v21 = {
+v17 = {
+  "alias": null,
+  "args": null,
+  "concreteType": null,
+  "kind": "LinkedField",
+  "name": "thumbnailMedia",
+  "plural": false,
+  "selections": [
+    (v8/*: any*/),
+    (v9/*: any*/),
+    {
+      "kind": "InlineFragment",
+      "selections": (v15/*: any*/),
+      "type": "ImageMedia",
+      "abstractKey": null
+    },
+    {
+      "kind": "InlineFragment",
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "ImageMedia",
+          "kind": "LinkedField",
+          "name": "cover",
+          "plural": false,
+          "selections": (v15/*: any*/),
+          "storageKey": null
+        },
+        (v7/*: any*/)
+      ],
+      "type": "VideoMedia",
+      "abstractKey": null
+    },
+    (v16/*: any*/)
+  ],
+  "storageKey": null
+},
+v18 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 5
+  },
+  {
+    "kind": "Variable",
+    "name": "seed",
+    "variableName": "seed"
+  },
+  {
+    "kind": "Variable",
+    "name": "sortBy",
+    "variableName": "sortBy"
+  }
+],
+v19 = {
   "alias": null,
   "args": null,
   "concreteType": "ImageMediaAccess",
   "kind": "LinkedField",
   "name": "small",
   "plural": false,
-  "selections": (v18/*: any*/),
+  "selections": (v14/*: any*/),
   "storageKey": null
 },
-v22 = {
+v20 = {
   "alias": null,
   "args": null,
   "concreteType": "ImageMediaAccess",
   "kind": "LinkedField",
   "name": "thumbnail",
   "plural": false,
-  "selections": (v18/*: any*/),
+  "selections": (v14/*: any*/),
   "storageKey": null
-};
+},
+v21 = [
+  (v11/*: any*/)
+];
 return {
   "fragment": {
     "argumentDefinitions": [
@@ -326,39 +338,7 @@ return {
               (v5/*: any*/),
               (v6/*: any*/),
               (v7/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Resource",
-                "kind": "LinkedField",
-                "name": "thumbnail",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "preview",
-                    "storageKey": null
-                  },
-                  (v7/*: any*/),
-                  (v9/*: any*/),
-                  (v10/*: any*/),
-                  (v11/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "ResourceUrl",
-                    "kind": "LinkedField",
-                    "name": "videoThumbnail",
-                    "plural": false,
-                    "selections": (v12/*: any*/),
-                    "storageKey": null
-                  },
-                  (v13/*: any*/)
-                ],
-                "storageKey": null
-              }
+              (v17/*: any*/)
             ],
             "storageKey": null
           },
@@ -370,10 +350,34 @@ return {
             "name": "banner",
             "plural": false,
             "selections": [
-              (v9/*: any*/),
-              (v10/*: any*/),
-              (v11/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ResourceUrl",
+                "kind": "LinkedField",
+                "name": "urls",
+                "plural": true,
+                "selections": [
+                  (v11/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "mimeType",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              (v12/*: any*/),
               (v13/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "type",
+                "storageKey": null
+              },
               (v7/*: any*/)
             ],
             "storageKey": null
@@ -394,7 +398,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v14/*: any*/),
+            "args": (v18/*: any*/),
             "concreteType": "PostConnection",
             "kind": "LinkedField",
             "name": "posts",
@@ -434,44 +438,7 @@ return {
                           (v5/*: any*/),
                           (v7/*: any*/),
                           (v6/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": null,
-                            "kind": "LinkedField",
-                            "name": "thumbnailMedia",
-                            "plural": false,
-                            "selections": [
-                              (v15/*: any*/),
-                              (v16/*: any*/),
-                              {
-                                "kind": "InlineFragment",
-                                "selections": (v19/*: any*/),
-                                "type": "ImageMedia",
-                                "abstractKey": null
-                              },
-                              {
-                                "kind": "InlineFragment",
-                                "selections": [
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "concreteType": "ImageMedia",
-                                    "kind": "LinkedField",
-                                    "name": "cover",
-                                    "plural": false,
-                                    "selections": (v19/*: any*/),
-                                    "storageKey": null
-                                  },
-                                  (v7/*: any*/)
-                                ],
-                                "type": "VideoMedia",
-                                "abstractKey": null
-                              },
-                              (v20/*: any*/)
-                            ],
-                            "storageKey": null
-                          }
+                          (v17/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -491,7 +458,7 @@ return {
                         "name": "content",
                         "plural": true,
                         "selections": [
-                          (v15/*: any*/),
+                          (v8/*: any*/),
                           (v7/*: any*/),
                           {
                             "alias": null,
@@ -501,12 +468,12 @@ return {
                             "name": "media",
                             "plural": false,
                             "selections": [
-                              (v15/*: any*/),
-                              (v16/*: any*/),
+                              (v8/*: any*/),
+                              (v9/*: any*/),
                               {
                                 "kind": "InlineFragment",
                                 "selections": [
-                                  (v17/*: any*/),
+                                  (v10/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -515,7 +482,7 @@ return {
                                     "name": "variants",
                                     "plural": false,
                                     "selections": [
-                                      (v21/*: any*/),
+                                      (v19/*: any*/),
                                       {
                                         "alias": null,
                                         "args": null,
@@ -523,10 +490,10 @@ return {
                                         "kind": "LinkedField",
                                         "name": "medium",
                                         "plural": false,
-                                        "selections": (v18/*: any*/),
+                                        "selections": (v14/*: any*/),
                                         "storageKey": null
                                       },
-                                      (v22/*: any*/)
+                                      (v20/*: any*/)
                                     ],
                                     "storageKey": null
                                   },
@@ -546,7 +513,7 @@ return {
                                     "name": "cover",
                                     "plural": false,
                                     "selections": [
-                                      (v17/*: any*/),
+                                      (v10/*: any*/),
                                       {
                                         "alias": null,
                                         "args": null,
@@ -555,8 +522,8 @@ return {
                                         "name": "variants",
                                         "plural": false,
                                         "selections": [
-                                          (v22/*: any*/),
-                                          (v21/*: any*/)
+                                          (v20/*: any*/),
+                                          (v19/*: any*/)
                                         ],
                                         "storageKey": null
                                       },
@@ -572,8 +539,8 @@ return {
                                     "name": "aspectRatio",
                                     "plural": false,
                                     "selections": [
-                                      (v10/*: any*/),
-                                      (v11/*: any*/)
+                                      (v12/*: any*/),
+                                      (v13/*: any*/)
                                     ],
                                     "storageKey": null
                                   },
@@ -599,16 +566,16 @@ return {
                                     "name": "containers",
                                     "plural": true,
                                     "selections": [
-                                      (v15/*: any*/),
+                                      (v8/*: any*/),
                                       {
                                         "kind": "InlineFragment",
-                                        "selections": (v12/*: any*/),
+                                        "selections": (v21/*: any*/),
                                         "type": "HLSVideoContainer",
                                         "abstractKey": null
                                       },
                                       {
                                         "kind": "InlineFragment",
-                                        "selections": (v12/*: any*/),
+                                        "selections": (v21/*: any*/),
                                         "type": "MP4VideoContainer",
                                         "abstractKey": null
                                       }
@@ -620,7 +587,7 @@ return {
                                 "type": "VideoMedia",
                                 "abstractKey": null
                               },
-                              (v20/*: any*/)
+                              (v16/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -649,12 +616,12 @@ return {
                         "name": "viewerLiked",
                         "plural": false,
                         "selections": [
-                          (v15/*: any*/),
+                          (v8/*: any*/),
                           (v7/*: any*/)
                         ],
                         "storageKey": null
                       },
-                      (v15/*: any*/)
+                      (v8/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -698,7 +665,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v14/*: any*/),
+            "args": (v18/*: any*/),
             "filters": [
               "sortBy",
               "seed"
@@ -715,7 +682,7 @@ return {
     ]
   },
   "params": {
-    "id": "92aa1a6a6dc134807789d23286575fbd",
+    "id": "16848a88b87c746f86d13867f140f434",
     "metadata": {},
     "name": "ResultPublicClubCharacterQuery",
     "operationKind": "query",

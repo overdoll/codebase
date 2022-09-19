@@ -2,7 +2,6 @@ import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { MetaBrowseFragment$key } from '@//:artifacts/MetaBrowseFragment.graphql'
 import { MetaBrowseViewerFragment$key } from '@//:artifacts/MetaBrowseViewerFragment.graphql'
-import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import BrowseRichObject from './BrowseRichObject/BrowseRichObject'
 import BrowseStructuredData from './BrowseStructuredData/BrowseStructuredData'
 import ContainerBrowse from './ContainerBrowse/ContainerBrowse'
@@ -37,9 +36,7 @@ export default function MetaBrowse (props: Props): JSX.Element {
     <>
       <BrowseRichObject />
       <BrowseStructuredData />
-      <GlobalVideoManagerProvider>
-        <ContainerBrowse rootQuery={rootData} viewerQuery={viewerData} />
-      </GlobalVideoManagerProvider>
+      <ContainerBrowse rootQuery={rootData} viewerQuery={viewerData} />
     </>
   )
 }

@@ -31,7 +31,6 @@ const GrantAction = graphql`
           __typename
         }
         avatar {
-          ...ResourceIconFragment
           ...ResourceItemFragment
         }
       }

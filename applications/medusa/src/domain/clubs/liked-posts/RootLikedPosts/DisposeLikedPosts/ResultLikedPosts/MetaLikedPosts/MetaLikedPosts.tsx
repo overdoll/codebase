@@ -1,7 +1,6 @@
 import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { MetaLikedPostsViewerFragment$key } from '@//:artifacts/MetaLikedPostsViewerFragment.graphql'
-import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import LikedPostsRichObject from './LikedPostsRichObject/LikedPostsRichObject'
 import ContainerLikedPosts from './ContainerLikedPosts/ContainerLikedPosts'
 
@@ -25,9 +24,7 @@ export default function MetaLikedPosts (props: Props): JSX.Element {
   return (
     <>
       <LikedPostsRichObject />
-      <GlobalVideoManagerProvider>
-        <ContainerLikedPosts viewerQuery={viewerData} />
-      </GlobalVideoManagerProvider>
+      <ContainerLikedPosts viewerQuery={viewerData} />
     </>
   )
 }

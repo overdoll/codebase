@@ -12,6 +12,7 @@ import {
 import format from 'date-fns/format'
 import { dateFormatWithTimeSimple } from '@//:modules/constants/format'
 import ClubThumbnail from '@//:modules/content/DataDisplay/Club/ClubThumbnail/ClubThumbnail'
+import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
 
 interface Props {
   query: TransactionSettingsCardFragment$key
@@ -27,7 +28,7 @@ const Fragment = graphql`
       ... on IAccountClubSupporterSubscription {
         club  {
           name
-          ...ClubThumbnailFragment
+          ...ClubIconFragment
         }
       }
     }
@@ -65,11 +66,7 @@ export default function TransactionSettingsCard ({
     <Stack spacing={2}>
       {data?.clubSupporterSubscription?.club != null && (
         <HStack spacing={2}>
-          <ClubThumbnail
-            h={10}
-            w={10}
-            query={data?.clubSupporterSubscription?.club}
-          />
+          <ClubIcon size='md' clubQuery={data?.clubSupporterSubscription?.club} />
           <Heading
             noOfLines={1}
             fontSize='lg'

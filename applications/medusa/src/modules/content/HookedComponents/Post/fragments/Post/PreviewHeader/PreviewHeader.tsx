@@ -2,7 +2,7 @@ import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { PreviewHeaderFragment$key } from '@//:artifacts/PreviewHeaderFragment.graphql'
 import { Heading, HStack, Stack, StackProps } from '@chakra-ui/react'
-import ClubIcon from '../../../../../PageLayout/Display/fragments/ClubIcon/ClubIcon'
+import ClubIcon from '../../../../../PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
 import { SeeRight } from '@//:assets/icons'
 import { Icon } from '../../../../../PageLayout'
 

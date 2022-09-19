@@ -3,7 +3,7 @@ import { Flex } from '@chakra-ui/react'
 import HorizontalNavigation from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigation'
 import { QuickAccessButtonProfileFragment$key } from '@//:artifacts/QuickAccessButtonProfileFragment.graphql'
 import { Trans } from '@lingui/macro'
-import AccountIcon from '@//:modules/content/PageLayout/Display/fragments/AccountIcon/AccountIcon'
+import AccountIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/AccountIcon/AccountIcon'
 
 interface Props {
   queryRef: QuickAccessButtonProfileFragment$key | null

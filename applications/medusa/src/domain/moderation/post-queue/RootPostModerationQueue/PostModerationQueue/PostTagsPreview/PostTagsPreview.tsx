@@ -1,9 +1,9 @@
 import { Flex, Heading, Stack } from '@chakra-ui/react'
-import PostStaticAudience from '@//:modules/content/Posts/components/PostData/PostStaticAudience/PostStaticAudience'
+import PostStaticAudience from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostStaticAudience/PostStaticAudience'
 import PostStaticCharacters
-  from '@//:modules/content/Posts/components/PostData/PostStaticCharacters/PostStaticCharacters'
+  from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostStaticCharacters/PostStaticCharacters'
 import PostStaticCategories
-  from '@//:modules/content/Posts/components/PostData/PostStaticCategories/PostStaticCategories'
+  from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostStaticCategories/PostStaticCategories'
 import { graphql, useFragment } from 'react-relay'
 import type { PostTagsPreviewFragment$key } from '@//:artifacts/PostTagsPreviewFragment.graphql'
 import { Trans } from '@lingui/macro'

@@ -4,7 +4,7 @@ import { Heading, HStack } from '@chakra-ui/react'
 import { Icon, SmallBackgroundBox } from '@//:modules/content/PageLayout'
 import { LinkTile } from '@//:modules/content/ContentSelection'
 import { ArrowButtonRight } from '@//:assets/icons'
-import ClubThumbnail from '@//:modules/content/DataDisplay/Club/ClubThumbnail/ClubThumbnail'
+import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
 
 interface Props {
   query: ClubCharacterRecommendationsFragment$key
@@ -14,7 +14,7 @@ const Fragment = graphql`
   fragment ClubCharacterRecommendationsFragment on Club {
     name
     slug
-    ...ClubThumbnailFragment
+    ...ClubIconFragment
   }
 `
 
@@ -32,11 +32,7 @@ export default function ClubCharacterRecommendations ({ query }: Props): JSX.Ele
       <SmallBackgroundBox>
         <HStack spacing={2} justify='space-between'>
           <HStack spacing={2}>
-            <ClubThumbnail
-              h={8}
-              w={8}
-              query={data}
-            />
+            <ClubIcon size='md' clubQuery={data} />
             <Heading color='gray.100' fontSize='xl'>
               {data.name}
             </Heading>

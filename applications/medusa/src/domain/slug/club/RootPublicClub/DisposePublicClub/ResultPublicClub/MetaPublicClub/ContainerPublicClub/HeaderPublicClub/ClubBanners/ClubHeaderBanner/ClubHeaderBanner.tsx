@@ -2,8 +2,9 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type { ClubHeaderBannerFragment$key } from '@//:artifacts/ClubHeaderBannerFragment.graphql'
 import { Box, Flex } from '@chakra-ui/react'
 import { TileOverlay } from '@//:modules/content/ContentSelection'
-import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
-import LargeClubHeader from '../../../../../../../../../../club/home/RootClubHome/ClubHome/LargeClubHeader/LargeClubHeader'
+import LargeClubHeader
+  from '../../../../../../../../../../club/home/RootClubHome/ClubHome/LargeClubHeader/LargeClubHeader'
+import ClubBanner from '@//:modules/content/PageLayout/Display/fragments/Banner/ClubBanner/ClubBanner'
 
 interface Props {
   query: ClubHeaderBannerFragment$key
@@ -11,10 +12,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment ClubHeaderBannerFragment on Club {
-    id
-    banner {
-      ...ResourceItemFragment
-    }
+    ...ClubBannerFragment
     ...LargeClubHeaderFragment
   }
 `
@@ -25,12 +23,7 @@ export default function ClubHeaderBanner ({ query }: Props): JSX.Element {
   return (
     <Box h={200}>
       <TileOverlay
-        backdrop={(
-          <ResourceItem
-            showBorder
-            seed={data.id}
-            query={data.banner ?? null}
-          />)}
+        backdrop={<ClubBanner clubQuery={data} />}
       >
         <Flex w='100%' h='100%' align='center' justify='center'>
           <LargeClubHeader query={data} />

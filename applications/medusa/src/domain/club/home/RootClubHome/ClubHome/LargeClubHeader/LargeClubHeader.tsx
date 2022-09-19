@@ -2,7 +2,7 @@ import { useFragment } from 'react-relay/hooks'
 import type { LargeClubHeaderFragment$key } from '@//:artifacts/LargeClubHeaderFragment.graphql'
 import { graphql } from 'react-relay'
 import { Heading, HStack } from '@chakra-ui/react'
-import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/ClubIcon/ClubIcon'
+import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
 
 interface Props {
   query: LargeClubHeaderFragment$key

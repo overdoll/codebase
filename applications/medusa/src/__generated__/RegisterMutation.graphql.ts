@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<85b19b3ba72807c733047b8d5968c5a5>>
- * @relayHash b66a5d56189897c6cd091c82cff01c80
+ * @generated SignedSource<<7c98b1f80f9db72898747d61dc4dfea2>>
+ * @relayHash 480253000c3322428ac20819bc8503b9
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b66a5d56189897c6cd091c82cff01c80
+// @relayRequestID 480253000c3322428ac20819bc8503b9
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -25,7 +25,7 @@ export type RegisterMutation$data = {
   readonly createAccountWithAuthenticationToken: {
     readonly account: {
       readonly avatar: {
-        readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment" | "ResourceItemFragment">;
+        readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
       } | null;
       readonly id: string;
       readonly isArtist: boolean;
@@ -154,11 +154,6 @@ return {
                   {
                     "args": null,
                     "kind": "FragmentSpread",
-                    "name": "ResourceIconFragment"
-                  },
-                  {
-                    "args": null,
-                    "kind": "FragmentSpread",
                     "name": "ResourceItemFragment"
                   }
                 ],
@@ -215,7 +210,54 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
+                    "name": "processed",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
                     "name": "preview",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "failed",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "ResourceProgress",
+                    "kind": "LinkedField",
+                    "name": "progress",
+                    "plural": false,
+                    "selections": [
+                      (v4/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "progress",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "state",
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "type",
                     "storageKey": null
                   },
                   (v4/*: any*/),
@@ -263,53 +305,6 @@ return {
                       (v9/*: any*/)
                     ],
                     "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "type",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "processed",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "failed",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "ResourceProgress",
-                    "kind": "LinkedField",
-                    "name": "progress",
-                    "plural": false,
-                    "selections": [
-                      (v4/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "progress",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "state",
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": null
                   }
                 ],
                 "storageKey": null
@@ -323,7 +318,7 @@ return {
     ]
   },
   "params": {
-    "id": "b66a5d56189897c6cd091c82cff01c80",
+    "id": "480253000c3322428ac20819bc8503b9",
     "metadata": {},
     "name": "RegisterMutation",
     "operationKind": "mutation",
@@ -332,6 +327,6 @@ return {
 };
 })();
 
-(node as any).hash = "870ac2565e3d231710c2dde85028950b";
+(node as any).hash = "f18ddf12b24573ad888e91464f74472c";
 
 export default node;

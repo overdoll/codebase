@@ -48,7 +48,6 @@ const RecoveryCodeMutationGQL = graphql`
           __typename
         }
         avatar {
-          ...ResourceIconFragment
           ...ResourceItemFragment
         }
       }

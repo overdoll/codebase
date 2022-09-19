@@ -2,7 +2,6 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type { MetaCreatePostFragment$key } from '@//:artifacts/MetaCreatePostFragment.graphql'
 import type { MetaCreatePostClubFragment$key } from '@//:artifacts/MetaCreatePostClubFragment.graphql'
 import CreatePostRichObject from './CreatePostRichObject/CreatePostRichObject'
-import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import { useUpdateEffect } from '@chakra-ui/react'
 import {
   FileErrorType,
@@ -212,13 +211,11 @@ export default function MetaCreatePost ({
   return (
     <>
       <CreatePostRichObject />
-      <GlobalVideoManagerProvider>
-        <SequenceProvider {...methods}>
-          <UppyProvider uppy={uppy}>
-            <ContainerCreatePost postQuery={postData} clubQuery={clubData} />
-          </UppyProvider>
-        </SequenceProvider>
-      </GlobalVideoManagerProvider>
+      <SequenceProvider {...methods}>
+        <UppyProvider uppy={uppy}>
+          <ContainerCreatePost postQuery={postData} clubQuery={clubData} />
+        </UppyProvider>
+      </SequenceProvider>
     </>
   )
 }

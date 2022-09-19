@@ -2,7 +2,6 @@ import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { MetaClubsFeedFragment$key } from '@//:artifacts/MetaClubsFeedFragment.graphql'
 import { MetaClubsFeedViewerFragment$key } from '@//:artifacts/MetaClubsFeedViewerFragment.graphql'
-import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import FeedRichObject from './FeedRichObject/FeedRichObject'
 import ContainerClubsFeed from './ContainerClubsFeed/ContainerClubsFeed'
 
@@ -35,9 +34,7 @@ export default function MetaClubsFeed (props: Props): JSX.Element {
   return (
     <>
       <FeedRichObject />
-      <GlobalVideoManagerProvider>
-        <ContainerClubsFeed rootQuery={rootData} viewerQuery={viewerData} />
-      </GlobalVideoManagerProvider>
+      <ContainerClubsFeed rootQuery={rootData} viewerQuery={viewerData} />
     </>
   )
 }

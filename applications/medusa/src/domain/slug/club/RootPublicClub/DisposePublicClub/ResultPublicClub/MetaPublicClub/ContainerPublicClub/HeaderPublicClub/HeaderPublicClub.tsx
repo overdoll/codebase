@@ -4,7 +4,7 @@ import { HeaderPublicClubFragment$key } from '@//:artifacts/HeaderPublicClubFrag
 import { HeaderPublicClubViewerFragment$key } from '@//:artifacts/HeaderPublicClubViewerFragment.graphql'
 import { Stack } from '@chakra-ui/react'
 import ClubHeaderBanner from './ClubBanners/ClubHeaderBanner/ClubHeaderBanner'
-import PostClubLinks from '@//:modules/content/Posts/components/PostData/PostClubLinks/PostClubLinks'
+import ClubExternalLinks from '@//:modules/content/HookedComponents/Club/fragments/ClubExternalLinks/ClubExternalLinks'
 import ClubFooterButtons from './ClubFooterButtons/ClubFooterButtons'
 import ClubJoinBanner from './ClubBanners/ClubJoinBanner/ClubJoinBanner'
 import ClubSupportBanner from './ClubBanners/ClubSupportBanner/ClubSupportBanner'
@@ -17,7 +17,7 @@ interface Props {
 const ClubFragment = graphql`
   fragment HeaderPublicClubFragment on Club {
     ...ClubHeaderBannerFragment
-    ...PostClubLinksFragment
+    ...ClubExternalLinksFragment
     ...ClubFooterButtonsFragment
     ...ClubJoinBannerFragment
     ...ClubSupportBannerFragment
@@ -44,7 +44,7 @@ export default function HeaderPublicClub (props: Props): JSX.Element {
     <Stack spacing={8}>
       <Stack spacing={1}>
         <ClubHeaderBanner query={clubData} />
-        <PostClubLinks query={clubData} />
+        <ClubExternalLinks clubQuery={clubData} />
         <ClubFooterButtons query={clubData} />
       </Stack>
       <Stack spacing={4}>

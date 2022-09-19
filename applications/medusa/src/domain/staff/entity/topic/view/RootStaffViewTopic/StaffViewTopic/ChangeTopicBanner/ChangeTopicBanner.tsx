@@ -5,7 +5,7 @@ import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayou
 import { Trans } from '@lingui/macro'
 import { Collapse, CollapseBody, CollapseButton } from '@//:modules/content/ThemeComponents/Collapse/Collapse'
 import ChangeTopicBannerForm from './ChangeTopicBannerForm/ChangeTopicBannerForm'
-import TopicIcon from '@//:modules/content/PageLayout/Display/fragments/TopicIcon/TopicIcon'
+import TopicIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/TopicIcon/TopicIcon'
 
 interface Props {
   query: ChangeTopicBannerFragment$key
@@ -32,7 +32,7 @@ export default function ChangeTopicBanner ({ query }: Props): JSX.Element {
       </PageSectionWrap>
       <Stack spacing={2}>
         <Flex w='100%' align='center' justify='center'>
-          <TopicIcon clubQuery={data} />
+          <TopicIcon topicQuery={data} />
         </Flex>
         <Collapse>
           <CollapseButton>

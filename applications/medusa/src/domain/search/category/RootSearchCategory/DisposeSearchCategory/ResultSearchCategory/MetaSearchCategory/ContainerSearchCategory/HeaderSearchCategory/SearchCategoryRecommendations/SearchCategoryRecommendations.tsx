@@ -2,7 +2,7 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import { SearchCategoryRecommendationsFragment$key } from '@//:artifacts/SearchCategoryRecommendationsFragment.graphql'
 import { Wrap, WrapItem } from '@chakra-ui/react'
 import ClickableCategory
-  from '@//:modules/content/Posts/components/PostInteraction/PostClickableCategories/ClickableCategory/ClickableCategory'
+  from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostClickableCategories/ClickableCategory/ClickableCategory'
 
 interface Props {
   query: SearchCategoryRecommendationsFragment$key

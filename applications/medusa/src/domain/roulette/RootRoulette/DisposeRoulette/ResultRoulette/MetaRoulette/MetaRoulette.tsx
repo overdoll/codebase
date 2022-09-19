@@ -1,7 +1,6 @@
 import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { MetaRouletteFragment$key } from '@//:artifacts/MetaRouletteFragment.graphql'
-import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import RouletteRichObject from './RouletteRichObject/RouletteRichObject'
 import { SequenceProvider, useSequence, ValueResolver } from '@//:modules/content/HookedComponents/Sequence'
 import { SequenceResolver } from '@//:modules/content/HookedComponents/Sequence/types'
@@ -51,9 +50,7 @@ export default function MetaRoulette (props: Props): JSX.Element {
     <>
       <RouletteRichObject />
       <SequenceProvider {...methods}>
-        <GlobalVideoManagerProvider>
-          <ContainerRoulette gameSessionStatusQuery={gameData} />
-        </GlobalVideoManagerProvider>
+        <ContainerRoulette gameSessionStatusQuery={gameData} />
       </SequenceProvider>
     </>
   )

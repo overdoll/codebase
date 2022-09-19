@@ -5,11 +5,13 @@ import { Box, Center, Flex, Heading, Stack } from '@chakra-ui/react'
 import { NotFoundAccount } from '@//:modules/content/Placeholder'
 import ProfileMenu from './ProfileMenu/ProfileMenu'
 import { TileOverlay } from '@//:modules/content/ContentSelection'
-import ResourceItem from '@//:modules/content/DataDisplay/ResourceItem/ResourceItem'
 import { Trans } from '@lingui/macro'
 import NotFoundFooter from '../../../../modules/content/Placeholder/NotFound/NotFoundFooter/NotFoundFooter'
 import ProfileRichObject from '../../../../common/rich-objects/profile/ProfileRichObject/ProfileRichObject'
-import AccountIcon from '@//:modules/content/PageLayout/Display/fragments/AccountIcon/AccountIcon'
+import AccountIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/AccountIcon/AccountIcon'
+import CoverImage
+  from '@//:modules/content/HookedComponents/Media/components/ImageContainer/ImageWrapper/CoverImage/CoverImage'
+import RandomPattern from '@//:modules/content/PageLayout/Display/components/RandomPattern/RandomPattern'
 
 interface Props {
   query: PreloadedQuery<ProfileQuery>
@@ -60,11 +62,10 @@ export default function Profile (props: Props): JSX.Element {
         <Box h={200}>
           <TileOverlay
             backdrop={(
-              <ResourceItem
-                showBorder
-                seed={queryData.account.id}
-                query={null}
-              />)}
+              <CoverImage>
+                <RandomPattern seed={queryData?.account?.id} />
+              </CoverImage>
+            )}
           >
             <Flex p={2} h='100%' w='100%' align='center' justify='center' position='relative'>
               <Stack align='center' p={4} spacing={2}>

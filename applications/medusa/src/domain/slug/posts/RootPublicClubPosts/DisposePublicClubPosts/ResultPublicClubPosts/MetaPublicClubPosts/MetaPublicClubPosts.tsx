@@ -1,6 +1,5 @@
 import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
-import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import PublicClubPostsRichObject from './PublicClubPostsRichObject/PublicClubPostsRichObject'
 import PublicClubPostsStructuredData from './PublicClubPostsStructuredData/PublicClubPostsStructuredData'
 import type { MetaPublicClubPostsFragment$key } from '@//:artifacts/MetaPublicClubPostsFragment.graphql'
@@ -39,9 +38,7 @@ export default function MetaPublicClubPosts (props: Props): JSX.Element {
     <>
       <PublicClubPostsRichObject clubQuery={clubData} />
       <PublicClubPostsStructuredData query={clubData} />
-      <GlobalVideoManagerProvider>
-        <ContainerPublicClubPosts clubQuery={clubData} viewerQuery={viewerData} />
-      </GlobalVideoManagerProvider>
+      <ContainerPublicClubPosts clubQuery={clubData} viewerQuery={viewerData} />
     </>
   )
 }

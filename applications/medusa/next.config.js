@@ -214,6 +214,18 @@ const moduleExports = withBundleAnalyzer({
         permanent: true
       },
       {
+        source: '/join',
+        has: [
+          {
+            type: 'query',
+            key: 'redirect',
+            value: '/LewyNsfw'
+          }
+        ],
+        destination: '/join',
+        permanent: true
+      },
+      {
         source: '/roll',
         destination: '/roulette?utm_campaign=game_roulette&utm_source=roll_redirect',
         permanent: true

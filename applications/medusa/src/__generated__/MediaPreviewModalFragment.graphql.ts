@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e2e8c3e3b626819b39655282e3dc7bfb>>
+ * @generated SignedSource<<80a7f40feec7f02d84eb11dc33d535ed>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,8 +11,9 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type MediaPreviewModalFragment$data = {
-  readonly preview: string;
-  readonly " $fragmentSpreads": FragmentRefs<"PreviewMediaOldFragment">;
+  readonly media: {
+    readonly " $fragmentSpreads": FragmentRefs<"RawCinematicMediaFragment">;
+  };
   readonly " $fragmentType": "MediaPreviewModalFragment";
 };
 export type MediaPreviewModalFragment$key = {
@@ -29,20 +30,24 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "preview",
+      "concreteType": null,
+      "kind": "LinkedField",
+      "name": "media",
+      "plural": false,
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "RawCinematicMediaFragment"
+        }
+      ],
       "storageKey": null
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "PreviewMediaOldFragment"
     }
   ],
-  "type": "Resource",
+  "type": "PostContent",
   "abstractKey": null
 };
 
-(node as any).hash = "1a9554a8186b4b87861407306a573a2a";
+(node as any).hash = "5a53deabc8c8441886cccb84d2ff1413";
 
 export default node;

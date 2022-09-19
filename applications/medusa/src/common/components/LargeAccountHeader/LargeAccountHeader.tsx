@@ -2,7 +2,7 @@ import { useFragment } from 'react-relay/hooks'
 import type { LargeAccountHeaderFragment$key } from '@//:artifacts/LargeAccountHeaderFragment.graphql'
 import { graphql } from 'react-relay'
 import { Heading, HStack } from '@chakra-ui/react'
-import AccountIcon from '@//:modules/content/PageLayout/Display/fragments/AccountIcon/AccountIcon'
+import AccountIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/AccountIcon/AccountIcon'
 
 interface Props {
   query: LargeAccountHeaderFragment$key

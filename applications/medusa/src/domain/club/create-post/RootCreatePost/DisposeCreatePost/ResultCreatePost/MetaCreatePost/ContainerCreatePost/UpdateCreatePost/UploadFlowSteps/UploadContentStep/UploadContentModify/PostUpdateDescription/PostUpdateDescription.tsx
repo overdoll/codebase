@@ -10,7 +10,7 @@ import { t } from '@lingui/macro'
 import ClubThumbnail from '@//:modules/content/DataDisplay/Club/ClubThumbnail/ClubThumbnail'
 import PostDescriptionHeading
   from '@//:modules/PostDescriptionHeading/PostDescriptionHeading'
-import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/ClubIcon/ClubIcon'
+import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
 
 interface Props {
   query: PostUpdateDescriptionFragment$key

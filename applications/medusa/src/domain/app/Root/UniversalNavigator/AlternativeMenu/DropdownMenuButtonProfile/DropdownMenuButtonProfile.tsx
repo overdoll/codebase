@@ -5,7 +5,7 @@ import HorizontalNavigationDropdownMenu
 import { DropdownMenuButtonProfileFragment$key } from '@//:artifacts/DropdownMenuButtonProfileFragment.graphql'
 import { Trans } from '@lingui/macro'
 import { RenderOnDesktop, RenderOnMobile } from '@//:modules/content/PageLayout'
-import AccountIcon from '@//:modules/content/PageLayout/Display/fragments/AccountIcon/AccountIcon'
+import AccountIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/AccountIcon/AccountIcon'
 
 interface Props {
   queryRef: DropdownMenuButtonProfileFragment$key | null

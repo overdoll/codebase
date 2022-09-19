@@ -4,7 +4,7 @@ import { usePaginationFragment } from 'react-relay'
 import { GridTile, GridWrap, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
 import { EmptyBoundary, EmptyPosts } from '@//:modules/content/Placeholder'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
-import PostPreviewContent from '@//:modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
+import PostPreviewContent from '@//:modules/content/HookedComponents/Post/fragments/PostContent/PostPreviewContent/PostPreviewContent'
 import { Choice } from '@//:modules/content/HookedComponents/Choice'
 import { ComponentChoiceArguments } from '@//:modules/content/HookedComponents/Choice/types'
 import type {

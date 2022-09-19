@@ -63,9 +63,6 @@ const Mutation = graphql`
           club {
             name
             slug
-            thumbnail {
-              ...ResourceIconFragment
-            }
           }
           ...ManageCancelledSubscriptionButtonFragment
         }

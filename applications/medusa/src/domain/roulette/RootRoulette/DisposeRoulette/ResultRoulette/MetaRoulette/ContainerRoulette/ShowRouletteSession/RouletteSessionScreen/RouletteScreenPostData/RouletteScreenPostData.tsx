@@ -4,8 +4,8 @@ import { graphql } from 'react-relay'
 import { Flex, Heading, HStack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { LinkTile } from '@//:modules/content/ContentSelection'
-import CharacterIcon from '@//:modules/content/PageLayout/Display/fragments/CharacterIcon/CharacterIcon'
-import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/ClubIcon/ClubIcon'
+import CharacterIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/CharacterIcon/CharacterIcon'
+import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
 
 interface Props {
   query: RouletteScreenPostDataFragment$key
@@ -44,7 +44,7 @@ export default function RouletteScreenPostData (props: Props): JSX.Element {
       >
         <HStack spacing={2}>
           <HStack align='center' spacing={1}>
-            <CharacterIcon size='sm' clubQuery={data.characters[0]} />
+            <CharacterIcon size='sm' characterQuery={data.characters[0]} />
             <Heading noOfLines={1} fontSize='md' color='gray.00'>
               {data.characters[0].name}
             </Heading>

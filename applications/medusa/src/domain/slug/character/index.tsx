@@ -1,7 +1,7 @@
 import RootPublicClubCharacter from './RootPublicClubCharacter/RootPublicClubCharacter'
 import ResultPublicClubCharacterQuery from '@//:artifacts/ResultPublicClubCharacterQuery.graphql'
 import decodeSearchArguments from '../../../common/components/PageHeader/SearchButton/support/decodeSearchArguments'
-import getPostSeed from '@//:modules/content/Posts/support/getPostSeed'
+import getPostSeed from '@//:modules/content/HookedComponents/Post/support/getPostSeed'
 
 RootPublicClubCharacter.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)

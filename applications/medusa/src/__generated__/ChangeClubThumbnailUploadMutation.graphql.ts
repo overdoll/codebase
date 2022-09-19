@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ecdfb2ec40aedcc0d2e3d2dc3af880a0>>
- * @relayHash 820dc04428d85686b0821bca8f68fc0b
+ * @generated SignedSource<<e1b915684086e59e7fdc3a9cf828b538>>
+ * @relayHash 60e8a2dca6d5c5256fa46ee8046d47f2
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 820dc04428d85686b0821bca8f68fc0b
+// @relayRequestID 60e8a2dca6d5c5256fa46ee8046d47f2
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -35,7 +35,7 @@ export type ChangeClubThumbnailUploadMutation$data = {
           readonly url: string;
         }>;
         readonly width: number;
-        readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment" | "ResourceItemFragment">;
+        readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
       } | null;
     } | null;
   } | null;
@@ -169,11 +169,6 @@ return {
                   {
                     "args": null,
                     "kind": "FragmentSpread",
-                    "name": "ResourceIconFragment"
-                  },
-                  {
-                    "args": null,
-                    "kind": "FragmentSpread",
                     "name": "ResourceItemFragment"
                   }
                 ],
@@ -226,19 +221,6 @@ return {
                   (v7/*: any*/),
                   (v8/*: any*/),
                   (v9/*: any*/),
-                  (v2/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "ResourceUrl",
-                    "kind": "LinkedField",
-                    "name": "videoThumbnail",
-                    "plural": false,
-                    "selections": [
-                      (v5/*: any*/)
-                    ],
-                    "storageKey": null
-                  },
                   {
                     "alias": null,
                     "args": null,
@@ -278,6 +260,19 @@ return {
                       }
                     ],
                     "storageKey": null
+                  },
+                  (v2/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "ResourceUrl",
+                    "kind": "LinkedField",
+                    "name": "videoThumbnail",
+                    "plural": false,
+                    "selections": [
+                      (v5/*: any*/)
+                    ],
+                    "storageKey": null
                   }
                 ],
                 "storageKey": null
@@ -291,7 +286,7 @@ return {
     ]
   },
   "params": {
-    "id": "820dc04428d85686b0821bca8f68fc0b",
+    "id": "60e8a2dca6d5c5256fa46ee8046d47f2",
     "metadata": {},
     "name": "ChangeClubThumbnailUploadMutation",
     "operationKind": "mutation",
@@ -300,6 +295,6 @@ return {
 };
 })();
 
-(node as any).hash = "38449f3351b1e84876fcef6d99578d23";
+(node as any).hash = "dc695a9b8ef054bf33163313c438989a";
 
 export default node;

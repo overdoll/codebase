@@ -1,7 +1,7 @@
 import RootSearchSeries from './RootSearchSeries/RootSearchSeries'
 import ResultSearchSeriesQuery from '@//:artifacts/ResultSearchSeriesQuery.graphql'
 import decodeSearchArguments from '../../../common/components/PageHeader/SearchButton/support/decodeSearchArguments'
-import getPostSeed from '@//:modules/content/Posts/support/getPostSeed'
+import getPostSeed from '@//:modules/content/HookedComponents/Post/support/getPostSeed'
 
 RootSearchSeries.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)

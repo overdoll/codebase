@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<cccc0bc79243280c97e039d22ebe77e4>>
- * @relayHash 6127377d51ae944d586f392dfe28bb59
+ * @generated SignedSource<<a94f4bf61388b594d6af673d87c87aa9>>
+ * @relayHash ff7f3fdd422e278712f4b13ebc6d3b79
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6127377d51ae944d586f392dfe28bb59
+// @relayRequestID ff7f3fdd422e278712f4b13ebc6d3b79
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -25,7 +25,7 @@ export type RecoveryCodeMutation$data = {
   readonly grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode: {
     readonly account: {
       readonly avatar: {
-        readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment" | "ResourceItemFragment">;
+        readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
       } | null;
       readonly deleting: {
         readonly __typename: "AccountDeleting";
@@ -191,11 +191,6 @@ return {
                   {
                     "args": null,
                     "kind": "FragmentSpread",
-                    "name": "ResourceIconFragment"
-                  },
-                  {
-                    "args": null,
-                    "kind": "FragmentSpread",
                     "name": "ResourceItemFragment"
                   }
                 ],
@@ -254,7 +249,54 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
+                    "name": "processed",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
                     "name": "preview",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "failed",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "ResourceProgress",
+                    "kind": "LinkedField",
+                    "name": "progress",
+                    "plural": false,
+                    "selections": [
+                      (v4/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "progress",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "state",
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "type",
                     "storageKey": null
                   },
                   (v4/*: any*/),
@@ -302,53 +344,6 @@ return {
                       (v12/*: any*/)
                     ],
                     "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "type",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "processed",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "failed",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "ResourceProgress",
-                    "kind": "LinkedField",
-                    "name": "progress",
-                    "plural": false,
-                    "selections": [
-                      (v4/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "progress",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "state",
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": null
                   }
                 ],
                 "storageKey": null
@@ -362,7 +357,7 @@ return {
     ]
   },
   "params": {
-    "id": "6127377d51ae944d586f392dfe28bb59",
+    "id": "ff7f3fdd422e278712f4b13ebc6d3b79",
     "metadata": {},
     "name": "RecoveryCodeMutation",
     "operationKind": "mutation",
@@ -371,6 +366,6 @@ return {
 };
 })();
 
-(node as any).hash = "ecd9f44afc18a95d6e007466ffde490b";
+(node as any).hash = "43f13ecd22a9eba6990b1b31d669e5df";
 
 export default node;

@@ -1,7 +1,6 @@
 import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { MetaSearchSeriesFragment$key } from '@//:artifacts/MetaSearchSeriesFragment.graphql'
-import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import SearchSeriesRichObject from './SearchSeriesRichObject/SearchSeriesRichObject'
 import ContainerSearchSeries from './ContainerSearchSeries/ContainerSearchSeries'
 
@@ -26,9 +25,7 @@ export default function MetaSearchSeries (props: Props): JSX.Element {
   return (
     <>
       <SearchSeriesRichObject query={seriesData} />
-      <GlobalVideoManagerProvider>
-        <ContainerSearchSeries seriesQuery={seriesData} />
-      </GlobalVideoManagerProvider>
+      <ContainerSearchSeries seriesQuery={seriesData} />
     </>
   )
 }

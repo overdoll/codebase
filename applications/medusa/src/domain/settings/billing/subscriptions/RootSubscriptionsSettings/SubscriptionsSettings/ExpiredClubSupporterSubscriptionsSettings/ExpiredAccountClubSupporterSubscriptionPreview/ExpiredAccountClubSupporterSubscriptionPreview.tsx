@@ -11,7 +11,7 @@ import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 import { LinkTile } from '@//:modules/content/ContentSelection'
 import ManageExpiredSubscriptionButton from './ManageExpiredSubscriptionButton/ManageExpiredSubscriptionButton'
-import ClubThumbnail from '@//:modules/content/DataDisplay/Club/ClubThumbnail/ClubThumbnail'
+import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
 
 interface Props {
   query: ExpiredAccountClubSupporterSubscriptionPreviewFragment$key
@@ -24,7 +24,7 @@ const Fragment = graphql`
     club {
       name
       slug
-      ...ClubThumbnailFragment
+      ...ClubIconFragment
     }
     ...ManageExpiredSubscriptionButtonFragment
   }
@@ -56,11 +56,7 @@ export default function ExpiredAccountClubSupporterSubscriptionPreview ({ query 
         <HStack spacing={2} justify='space-between'>
           <LinkTile href={`/${data.club.slug}`}>
             <HStack spacing={3}>
-              <ClubThumbnail
-                h={10}
-                w={10}
-                query={data.club}
-              />
+              <ClubIcon size='md' clubQuery={data.club} />
               <Heading
                 whiteSpace='nowrap'
                 textOverflow='ellipsis'

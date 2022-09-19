@@ -31,7 +31,6 @@ const Mutation = graphql`
           preview
           width
           height
-          ...ResourceIconFragment
           ...ResourceItemFragment
         }
       }

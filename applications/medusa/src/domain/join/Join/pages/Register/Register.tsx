@@ -33,7 +33,6 @@ const RegisterMutationGQL = graphql`
         isStaff
         isArtist
         avatar {
-          ...ResourceIconFragment
           ...ResourceItemFragment
         }
       }

@@ -56,7 +56,6 @@ const Mutation = graphql`
           __typename
         }
         avatar {
-          ...ResourceIconFragment
           ...ResourceItemFragment
         }
       }

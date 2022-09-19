@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<54d8df260cc3df9a21c90814617b1b72>>
+ * @generated SignedSource<<62d31e176ae40b9a1a0254281d1e064f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type ClubCharacterRecommendationsFragment$data = {
   readonly name: string;
   readonly slug: string;
-  readonly " $fragmentSpreads": FragmentRefs<"ClubThumbnailFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"ClubIconFragment">;
   readonly " $fragmentType": "ClubCharacterRecommendationsFragment";
 };
 export type ClubCharacterRecommendationsFragment$key = {
@@ -44,13 +44,13 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "ClubThumbnailFragment"
+      "name": "ClubIconFragment"
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "f2b101d0c618058167dc761d2a2f1377";
+(node as any).hash = "8891290c2d950a2bc8b7a94f76bafcda";
 
 export default node;

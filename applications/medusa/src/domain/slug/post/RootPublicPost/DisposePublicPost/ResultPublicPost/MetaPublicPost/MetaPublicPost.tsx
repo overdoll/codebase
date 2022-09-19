@@ -9,7 +9,6 @@ import { useRouter } from 'next/router'
 import ContainerPublicPost from './ContainerPublicPost/ContainerPublicPost'
 import { useQueryParam } from 'use-query-params'
 import { useUpdateEffect } from '@chakra-ui/react'
-import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 
 interface Props {
   postQuery: MetaPublicPostFragment$key
@@ -86,10 +85,10 @@ export default function MetaPublicPost (props: Props): JSX.Element {
   }, [postData.reference])
 
   return (
-    <GlobalVideoManagerProvider>
+    <>
       <PublicPostRichObject query={postData} />
       <PublicPostStructuredData query={postData} />
       <ContainerPublicPost postQuery={postData} viewerQuery={viewerData} />
-    </GlobalVideoManagerProvider>
+    </>
   )
 }
