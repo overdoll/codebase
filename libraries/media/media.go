@@ -212,6 +212,7 @@ func (m *Media) VideoContainers() []*VideoContainer {
 			width:    int(container.Width),
 			height:   int(container.Height),
 			mimeType: container.MimeType,
+			device:   container.TargetDevice,
 		})
 	}
 

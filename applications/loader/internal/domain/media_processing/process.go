@@ -18,6 +18,7 @@ import (
 	"io"
 	"io/fs"
 	"io/ioutil"
+	"log"
 	"math"
 	"os"
 	"overdoll/libraries/errors"
@@ -60,7 +61,7 @@ const (
 
 func init() {
 	// not ideal but we need to disable the log messages from ffmpeg-go
-	//log.SetOutput(ioutil.Discard)
+	log.SetOutput(ioutil.Discard)
 }
 
 func createPreviewFromFile(r io.Reader, isPng bool) ([]*proto.ColorPalette, image.Image, error) {
@@ -474,16 +475,12 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 
 	var streams []*ffmpeg_go.Stream
 
-	width := strconv.Itoa(firstStream.Width)
-	height := strconv.Itoa(firstStream.Width)
-	firstPrefix := width + "x" + height
-
-	firstSegmentDirectory := fileName + "/" + firstPrefix
+	firstSegmentDirectory := fileName + "/playlist"
 	_ = os.MkdirAll(firstSegmentDirectory, os.ModePerm)
-	firstPlaylistDirectory := fileName + "/" + firstPrefix
+	firstPlaylistDirectory := fileName + "/segment"
 	_ = os.MkdirAll(firstPlaylistDirectory, os.ModePerm)
 
-	mp4RawDirectory := fileName + "/raw"
+	mp4RawDirectory := fileName
 	_ = os.MkdirAll(mp4RawDirectory, os.ModePerm)
 	mp4FileName := mp4RawDirectory + "/low_res.mp4"
 
@@ -566,7 +563,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 
 		streams = append(streams, overlay.
 			///	Overlay(baseStream, "", overlayScale).
-			Output(fileName+"/playlist/segment_"+index+"_%v.m3u8", ffmpeg_go.KwArgs{
+			Output(fileName+"/pl_"+index+"_%v.m3u8", ffmpeg_go.KwArgs{
 				"c:v":                  "libx264",
 				"c:a":                  "aac",
 				"b:a":                  scale.ar,
@@ -580,7 +577,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 				"preset":               defaultPreset,
 				"sc_threshold":         "0",
 				"map_metadata":         "-1",
-				"hls_segment_filename": fileName + "/stream_" + index + "_%v_%02d.m4s",
+				"hls_segment_filename": fileName + "/sg_" + index + "_%v_%02d.m4s",
 				"hls_time":             "3",
 				"hls_playlist_type":    "vod",
 				"hls_segment_type":     "fmp4",
@@ -663,12 +660,16 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 
 	var playlists []*playlist
 
-	if err := filepath.Walk(fileName+"/playlist", func(path string, info fs.FileInfo, err error) error {
+	if err := filepath.Walk(fileName, func(path string, info fs.FileInfo, err error) error {
 		if info.IsDir() {
 			return nil
 		}
 
-		str, err = ffmpeg_go.Probe(mp4FileName, ffprobeSettings)
+		if !strings.HasSuffix(info.Name(), ".m3u8") {
+			return nil
+		}
+
+		str, err = ffmpeg_go.Probe(path, ffprobeSettings)
 
 		if err != nil {
 			return errors.Wrap(err, "failed to probe playlist file")
@@ -715,7 +716,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 			return nil, errors.Wrap(err, "failed to create file")
 		}
 
-		dataWriter := bufio.NewWriter(file)
+		dataWriter := bufio.NewWriter(masterPlaylistFile)
 
 		_, _ = dataWriter.WriteString("#EXTM3U" + "\n")
 		_, _ = dataWriter.WriteString("#EXT-X-VERSION:7" + "\n")
