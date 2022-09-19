@@ -16,6 +16,7 @@ import (
 	"image/png"
 	_ "image/png"
 	"io"
+	"io/fs"
 	"io/ioutil"
 	"math"
 	"os"
@@ -25,6 +26,7 @@ import (
 	"overdoll/libraries/media/proto"
 	"overdoll/libraries/uuid"
 	"overdoll/libraries/zap_support/zap_adapters"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -134,8 +136,6 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	targetFileName := file.Name()
 
 	videoNoAudio := false
-
-	newVideoFileName := fileName + "/master.m3u8"
 
 	defaultArgs := map[string]interface{}{
 		"v":           "error",
@@ -566,7 +566,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 
 		streams = append(streams, overlay.
 			///	Overlay(baseStream, "", overlayScale).
-			Output(fileName+"/segment_"+index+"_%v.m3u8", ffmpeg_go.KwArgs{
+			Output(fileName+"/playlist/segment_"+index+"_%v.m3u8", ffmpeg_go.KwArgs{
 				"c:v":                  "libx264",
 				"c:a":                  "aac",
 				"b:a":                  scale.ar,
@@ -636,6 +636,13 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		}
 	}
 
+	ffprobeSettings := map[string]interface{}{
+		"v":            "error",
+		"show_entries": "stream=width,height,display_aspect_ratio,bit_rate",
+		"show_format":  "",
+		"hide_banner":  "",
+	}
+
 	if err := ffmpeg_go.MergeOutputs(streams...).
 		OverWriteOutput().
 		WithErrorOutput(ffmpegLogger).
@@ -646,12 +653,91 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		return nil, err
 	}
 
-	str, err = ffmpeg_go.Probe(mp4FileName, map[string]interface{}{
-		"v":            "error",
-		"show_entries": "stream=width,height,display_aspect_ratio,bit_rate",
-		"show_format":  "",
-		"hide_banner":  "",
-	})
+	type playlist struct {
+		bitrate        string
+		averageBitrate string
+		resolution     string
+		uri            string
+		codecs         string
+	}
+
+	var playlists []*playlist
+
+	if err := filepath.Walk(fileName+"/playlist", func(path string, info fs.FileInfo, err error) error {
+		if info.IsDir() {
+			return nil
+		}
+
+		str, err = ffmpeg_go.Probe(mp4FileName, ffprobeSettings)
+
+		if err != nil {
+			return errors.Wrap(err, "failed to probe playlist file")
+		}
+
+		var probeResult *ffmpegProbeStream
+
+		if err := json.Unmarshal([]byte(str), &probeResult); err != nil {
+			return errors.Wrap(err, "failed to unmarshal playlist probe")
+		}
+
+		playlists = append(playlists, &playlist{
+			bitrate:        probeResult.Format.BitRate,
+			averageBitrate: probeResult.Format.BitRate,
+			resolution:     strconv.Itoa(probeResult.Streams[0].Width) + "x" + strconv.Itoa(probeResult.Streams[0].Height),
+			uri:            path,
+			codecs:         "mp4a.40.2,avc1.640020",
+		})
+		return nil
+	}); err != nil {
+		return nil, errors.Wrap(err, "failed to walk playlists")
+	}
+
+	targetDeviceDesktop := proto.MediaDeviceType_Desktop
+	targetDeviceMobile := proto.MediaDeviceType_Mobile
+
+	videoContainers := []*proto.VideoContainer{
+		{
+			Id:           fileName + "/master.m3u8",
+			MimeType:     proto.MediaMimeType_VideoMpegUrl,
+			TargetDevice: &targetDeviceDesktop,
+		},
+		{
+			Id:           fileName + "/master_mobile.m3u8",
+			MimeType:     proto.MediaMimeType_VideoMpegUrl,
+			TargetDevice: &targetDeviceMobile,
+		},
+	}
+
+	for _, container := range videoContainers {
+
+		masterPlaylistFile, err := os.Create(container.Id)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to create file")
+		}
+
+		dataWriter := bufio.NewWriter(file)
+
+		_, _ = dataWriter.WriteString("#EXTM3U" + "\n")
+		_, _ = dataWriter.WriteString("#EXT-X-VERSION:7" + "\n")
+		_, _ = dataWriter.WriteString("#EXT-X-INDEPENDENT-SEGMENTS" + "\n")
+
+		// if mobile, put the largest resolution to the bottom (only if we have 4 playlists, like a 1080p stream at the top)
+		if len(playlists) == 4 && *container.TargetDevice == proto.MediaDeviceType_Mobile {
+			var popped *playlist
+			popped, playlists = playlists[0], playlists[1:]
+			playlists = append(playlists, popped)
+		}
+
+		for _, playlist := range playlists {
+			_, _ = dataWriter.WriteString("#EXT-X-STREAM-INF:AVERAGE-BANDWIDTH=" + playlist.averageBitrate + ",BANDWIDTH=" + playlist.bitrate + ",RESOLUTION=" + playlist.resolution + ",CODECS=" + playlist.codecs + "\n")
+			_, _ = dataWriter.WriteString(strings.Replace(playlist.uri, fileName+"/", "", 1) + "\n")
+		}
+
+		_ = dataWriter.Flush()
+		_ = masterPlaylistFile.Close()
+	}
+
+	str, err = ffmpeg_go.Probe(mp4FileName, ffprobeSettings)
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to probe new video file")
@@ -689,9 +775,41 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 			return nil, errors.Wrap(err, "failed to parse aspect ratio split height")
 		}
 	} else {
-		widthAspect = 0
-		heightAspect = 0
-		//return nil, errors.New("could not calculate aspect ratio")
+		// calculate aspect ratio manually, since it's not available
+		width := probeResult.Streams[0].Width
+		height := probeResult.Streams[0].Height
+
+		if height == width {
+			widthAspect = 1
+			heightAspect = 1
+		}
+
+		var dividend, divisor int
+
+		if width > height {
+			dividend = height
+			divisor = width
+		}
+
+		if height > width {
+			dividend = width
+			divisor = height
+		}
+
+		gcd := -1
+
+		for gcd == -1 {
+			remainder := dividend % divisor
+			if remainder == 0 {
+				gcd = divisor
+			} else {
+				dividend = divisor
+				divisor = remainder
+			}
+		}
+
+		widthAspect = int64(width / gcd)
+		heightAspect = int64(height / gcd)
 	}
 
 	// update the source image data - this is used for the thumbnail
@@ -704,25 +822,13 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	}
 
 	media.RawProto().VideoData = &proto.VideoData{
-		Containers: []*proto.VideoContainer{
-			{
-				Id:           newVideoFileName,
-				MimeType:     proto.MediaMimeType_VideoMpegUrl,
-				TargetDevice: proto.MediaDeviceType_Desktop,
-			},
-			{
-				Id:           newVideoFileName,
-				MimeType:     proto.MediaMimeType_VideoMpegUrl,
-				TargetDevice: proto.MediaDeviceType_Mobile,
-			},
-			{
-				Id:       mp4FileName,
-				MimeType: proto.MediaMimeType_VideoMp4,
-				Bitrate:  uint64(bitRate),
-				Width:    uint32(probeResult.Streams[0].Width),
-				Height:   uint32(probeResult.Streams[0].Height),
-			},
-		},
+		Containers: append(videoContainers, &proto.VideoContainer{
+			Id:       mp4FileName,
+			MimeType: proto.MediaMimeType_VideoMp4,
+			Bitrate:  uint64(bitRate),
+			Width:    uint32(probeResult.Streams[0].Width),
+			Height:   uint32(probeResult.Streams[0].Height),
+		}),
 		AspectRatio: &proto.VideoAspectRatio{
 			Width:  uint32(widthAspect),
 			Height: uint32(heightAspect),
