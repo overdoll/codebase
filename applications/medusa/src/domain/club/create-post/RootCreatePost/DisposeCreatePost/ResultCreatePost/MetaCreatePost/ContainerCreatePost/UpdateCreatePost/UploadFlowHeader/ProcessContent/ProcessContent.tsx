@@ -1,11 +1,13 @@
 import type { ProcessContentFragment$key } from '@//:artifacts/ProcessContentFragment.graphql'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
-import RefreshProcessContent, { isFailed, isProcessed } from './RefreshProcessContent/RefreshProcessContent'
+import RefreshProcessContent from './RefreshProcessContent/RefreshProcessContent'
 import { Suspense, useEffect, useRef } from 'react'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import { Timeout } from '@//:types/components'
+import isProcessed from '@//:modules/content/HookedComponents/Post/support/isProcessed'
+import isFailed from '@//:modules/content/HookedComponents/Post/support/isFailed'
 
 interface Props {
   query: ProcessContentFragment$key
@@ -18,13 +20,8 @@ interface SearchProps {
 const Fragment = graphql`
   fragment ProcessContentFragment on Post {
     reference
-    content {
-      resource {
-        type
-        processed
-        failed
-      }
-    }
+    ...isProcessedFragment
+    ...isFailedFragment
   }
 `
 
@@ -44,9 +41,9 @@ export default function ProcessContent ({
     }
   })
 
-  const contentProcessed = isProcessed(data.content)
-  const contentFailed = isFailed(data.content)
-  const defaultRefreshTime = data.content.map((item) => item.resource.type).some(x => x === 'VIDEO') ? 5000 : 1000
+  const contentProcessed = isProcessed(data)
+  const contentFailed = isFailed(data)
+  const defaultRefreshTime = 2500
 
   useEffect(() => {
     let refreshTime = defaultRefreshTime

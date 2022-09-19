@@ -19,54 +19,14 @@ const Query = graphql`
         id
         viewerCanViewSupporterOnlyContent
         isSupporterOnly
-        media {
-          ...RawCinematicMediaFragment
-          ...RawThumbnailMediaFragment
-        }
-        resource {
-          id
-          failed
-          type
-          processed
-          videoDuration
-          progress {
-            state
-            progress
-          }
-          videoThumbnail {
-            url
-          }
-          urls {
-            mimeType
-            url
-          }
-          width
-          height
-          preview
-        }
-        ...PostContentPreviewMemoFragment
+        ...InfoRawPostContentBannerFragment
       }
+      ...RawCinematicContentFragment
+      ...ContentModifyPreviewFragment
       ...ProcessContentDisplayFragment
-      ...PostContentPreviewMemoPostFragment
-      ...DraftPostFragment
-      ...PublishedPostFragment
-      ...ReviewPostFragment
-      ...RejectedPostFragment
-      ...ArchivedPostFragment
-      ...RemovedPostFragment
     }
   }
 `
-
-export const isProcessed = (content): boolean => {
-  const processed = content.map((item) => item.resource.processed) as boolean[]
-  return processed.every(x => x)
-}
-
-export const isFailed = (content): boolean => {
-  const failed = content.map((item) => item.resource.failed) as boolean[]
-  return failed.some(x => x)
-}
 
 export default function RefreshProcessContent ({
   searchArguments

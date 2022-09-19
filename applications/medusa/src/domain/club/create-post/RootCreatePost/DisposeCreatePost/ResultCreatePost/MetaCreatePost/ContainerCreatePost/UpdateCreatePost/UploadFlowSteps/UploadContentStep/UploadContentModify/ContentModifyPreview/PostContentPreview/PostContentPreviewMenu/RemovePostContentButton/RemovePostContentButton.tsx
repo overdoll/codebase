@@ -19,10 +19,6 @@ interface Props {
 const Fragment = graphql`
   fragment RemovePostContentButtonFragment on PostContent {
     id
-    resource {
-      id
-    }
-    ...ResourceInfoFragment
   }
 `
 
@@ -42,16 +38,7 @@ const Mutation = graphql`
         id
         reference
         content {
-          resource {
-            id
-            type
-            processed
-            failed
-            urls {
-              url
-              mimeType
-            }
-          }
+          ...InfoRawPostContentBannerFragment
         }
       }
     }

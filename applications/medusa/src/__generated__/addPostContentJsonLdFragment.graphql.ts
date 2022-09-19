@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ebc80a270f83ee10622d10b45d14542a>>
+ * @generated SignedSource<<a8d2a3e2da8f7666a46678638c69d893>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,6 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
-export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type addPostContentJsonLdFragment$data = {
   readonly categories: ReadonlyArray<{
@@ -22,20 +21,6 @@ export type addPostContentJsonLdFragment$data = {
     readonly name: string;
     readonly slug: string;
   };
-  readonly content: ReadonlyArray<{
-    readonly resource: {
-      readonly height: number;
-      readonly type: ResourceType;
-      readonly urls: ReadonlyArray<{
-        readonly url: string;
-      }>;
-      readonly videoThumbnail: {
-        readonly url: string;
-      } | null;
-      readonly width: number;
-    };
-  }>;
-  readonly postedAt: any | null;
   readonly reference: string;
   readonly " $fragmentType": "addPostContentJsonLdFragment";
 };
@@ -51,16 +36,7 @@ var v0 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
-},
-v1 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "url",
-    "storageKey": null
-  }
-];
+};
 return {
   "argumentDefinitions": [],
   "kind": "Fragment",
@@ -72,13 +48,6 @@ return {
       "args": null,
       "kind": "ScalarField",
       "name": "reference",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "postedAt",
       "storageKey": null
     },
     {
@@ -129,69 +98,6 @@ return {
         }
       ],
       "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "PostContent",
-      "kind": "LinkedField",
-      "name": "content",
-      "plural": true,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "Resource",
-          "kind": "LinkedField",
-          "name": "resource",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "ResourceUrl",
-              "kind": "LinkedField",
-              "name": "urls",
-              "plural": true,
-              "selections": (v1/*: any*/),
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "height",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "width",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "type",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "ResourceUrl",
-              "kind": "LinkedField",
-              "name": "videoThumbnail",
-              "plural": false,
-              "selections": (v1/*: any*/),
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
     }
   ],
   "type": "Post",
@@ -199,6 +105,6 @@ return {
 };
 })();
 
-(node as any).hash = "5f9c752c8afc72cf793a86d325ec0a3a";
+(node as any).hash = "bf3c8651a5f52b5e44c891b41a96d535";
 
 export default node;

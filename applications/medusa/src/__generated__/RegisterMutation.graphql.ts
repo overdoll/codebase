@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7c98b1f80f9db72898747d61dc4dfea2>>
- * @relayHash 480253000c3322428ac20819bc8503b9
+ * @generated SignedSource<<6d11d473818d8122b9a443b4b19f2ee0>>
+ * @relayHash 853cae8e8d0914b3f7819b2afde98807
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 480253000c3322428ac20819bc8503b9
+// @relayRequestID 853cae8e8d0914b3f7819b2afde98807
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -24,14 +24,12 @@ export type RegisterMutation$variables = {
 export type RegisterMutation$data = {
   readonly createAccountWithAuthenticationToken: {
     readonly account: {
-      readonly avatar: {
-        readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
-      } | null;
       readonly id: string;
       readonly isArtist: boolean;
       readonly isModerator: boolean;
       readonly isStaff: boolean;
       readonly username: string;
+      readonly " $fragmentSpreads": FragmentRefs<"AccountIconFragment">;
     } | null;
     readonly revokedAuthenticationTokenId: string;
     readonly validation: CreateAccountWithAuthenticationTokenValidation | null;
@@ -105,13 +103,6 @@ v8 = {
   "kind": "ScalarField",
   "name": "isArtist",
   "storageKey": null
-},
-v9 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
 };
 return {
   "fragment": {
@@ -144,20 +135,9 @@ return {
               (v7/*: any*/),
               (v8/*: any*/),
               {
-                "alias": null,
                 "args": null,
-                "concreteType": "Resource",
-                "kind": "LinkedField",
-                "name": "avatar",
-                "plural": false,
-                "selections": [
-                  {
-                    "args": null,
-                    "kind": "FragmentSpread",
-                    "name": "ResourceItemFragment"
-                  }
-                ],
-                "storageKey": null
+                "kind": "FragmentSpread",
+                "name": "AccountIconFragment"
               }
             ],
             "storageKey": null
@@ -210,102 +190,10 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "processed",
+                    "name": "__typename",
                     "storageKey": null
                   },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "preview",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "failed",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "ResourceProgress",
-                    "kind": "LinkedField",
-                    "name": "progress",
-                    "plural": false,
-                    "selections": [
-                      (v4/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "progress",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "state",
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "type",
-                    "storageKey": null
-                  },
-                  (v4/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "ResourceUrl",
-                    "kind": "LinkedField",
-                    "name": "urls",
-                    "plural": true,
-                    "selections": [
-                      (v9/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "mimeType",
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "width",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "height",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "ResourceUrl",
-                    "kind": "LinkedField",
-                    "name": "videoThumbnail",
-                    "plural": false,
-                    "selections": [
-                      (v9/*: any*/)
-                    ],
-                    "storageKey": null
-                  }
+                  (v4/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -318,7 +206,7 @@ return {
     ]
   },
   "params": {
-    "id": "480253000c3322428ac20819bc8503b9",
+    "id": "853cae8e8d0914b3f7819b2afde98807",
     "metadata": {},
     "name": "RegisterMutation",
     "operationKind": "mutation",
@@ -327,6 +215,6 @@ return {
 };
 })();
 
-(node as any).hash = "f18ddf12b24573ad888e91464f74472c";
+(node as any).hash = "a00bb7d3d3b4ecaa5a93fd13d8fe64c3";
 
 export default node;

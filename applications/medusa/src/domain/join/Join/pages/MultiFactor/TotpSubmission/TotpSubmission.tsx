@@ -55,9 +55,7 @@ const Mutation = graphql`
         lock {
           __typename
         }
-        avatar {
-          ...ResourceItemFragment
-        }
+        ...AccountIconFragment
       }
     }
   }

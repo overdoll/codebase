@@ -2,7 +2,7 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type { PublicPostRichObjectFragment$key } from '@//:artifacts/PublicPostRichObjectFragment.graphql'
 import Head from 'next/head'
 import React from 'react'
-import PostContentRichObject from '@//:common/rich-objects/default/PostContentRichObject/PostContentRichObject'
+import PostContentRichObject from '@//:common/rich-objects/default/PostRichObject/PostContentRichObject'
 import { getPostDescription, getPostTitle } from '@//:modules/support/metaHelpers'
 
 interface Props {

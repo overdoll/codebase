@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<312ec24963d11ad3d965f063dd1c2c4b>>
+ * @generated SignedSource<<e7990f1c0ecbf25e196dcaded02e8297>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,11 +24,9 @@ export type UpdateCreatePostFragment$data = {
     readonly name: string;
   }>;
   readonly content: ReadonlyArray<{
-    readonly resource: {
-      readonly id: string;
-    };
+    readonly id: string;
   }>;
-  readonly " $fragmentSpreads": FragmentRefs<"PostContentPreviewMemoPostFragment" | "ProcessContentDisplayFragment" | "UploadCategoryStepFragment" | "UploadContentStepFragment" | "UploadFlowHeaderFragment" | "UploadFlowStickyFooterFragment" | "UploadReviewStepFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"UploadCategoryStepFragment" | "UploadContentStepFragment" | "UploadFlowHeaderFragment" | "UploadFlowStickyFooterFragment" | "UploadReviewStepFragment">;
   readonly " $fragmentType": "UpdateCreatePostFragment";
 };
 export type UpdateCreatePostFragment$key = {
@@ -107,18 +105,7 @@ return {
       "name": "content",
       "plural": true,
       "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "Resource",
-          "kind": "LinkedField",
-          "name": "resource",
-          "plural": false,
-          "selections": [
-            (v0/*: any*/)
-          ],
-          "storageKey": null
-        }
+        (v0/*: any*/)
       ],
       "storageKey": null
     },
@@ -145,16 +132,6 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "ProcessContentDisplayFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "PostContentPreviewMemoPostFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
       "name": "UploadFlowStickyFooterFragment"
     }
   ],
@@ -163,6 +140,6 @@ return {
 };
 })();
 
-(node as any).hash = "f856eab953494b117286e4674e4357ce";
+(node as any).hash = "5383f1505c6ef7053a6b232a863762a2";
 
 export default node;

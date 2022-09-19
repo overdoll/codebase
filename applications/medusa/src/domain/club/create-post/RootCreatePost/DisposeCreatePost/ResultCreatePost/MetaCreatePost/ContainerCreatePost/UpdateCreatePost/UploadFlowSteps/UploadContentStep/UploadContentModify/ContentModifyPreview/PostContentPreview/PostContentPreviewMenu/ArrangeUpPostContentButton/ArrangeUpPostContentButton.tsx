@@ -18,7 +18,6 @@ interface Props {
 const Fragment = graphql`
   fragment ArrangeUpPostContentButtonFragment on PostContent {
     id
-    ...ResourceInfoFragment
   }
 `
 

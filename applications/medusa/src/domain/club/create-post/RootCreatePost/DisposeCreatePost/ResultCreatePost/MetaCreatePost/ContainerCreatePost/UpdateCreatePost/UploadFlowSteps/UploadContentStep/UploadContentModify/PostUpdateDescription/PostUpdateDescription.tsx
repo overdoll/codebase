@@ -7,9 +7,7 @@ import Icon from '@//:modules/content/PageLayout/BuildingBlocks/Icon/Icon'
 import IconButton from '@//:modules/form/IconButton/IconButton'
 import { useLingui } from '@lingui/react'
 import { t } from '@lingui/macro'
-import ClubThumbnail from '@//:modules/content/DataDisplay/Club/ClubThumbnail/ClubThumbnail'
-import PostDescriptionHeading
-  from '@//:modules/PostDescriptionHeading/PostDescriptionHeading'
+import PostDescriptionHeading from './PostDescriptionHeading/PostDescriptionHeading'
 import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
 
 interface Props {

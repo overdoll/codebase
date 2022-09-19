@@ -7,11 +7,12 @@ import { Icon, LargeBackgroundBox } from '@//:modules/content/PageLayout'
 import { ClickableTile, GridTile } from '@//:modules/content/ContentSelection'
 import { ReactNode, useContext, useMemo } from 'react'
 import { FlowContext } from '@//:modules/content/PageLayout/FlowBuilder/FlowBuilder'
-import { isFailed, isProcessed } from '../RefreshProcessContent/RefreshProcessContent'
 import ExpandableResourceInfo
   from '../../../UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/ExpandableResourceInfo/ExpandableResourceInfo'
 import ShortGridWrap from '@//:modules/content/ContentSelection/ShortGridWrap/ShortGridWrap'
 import Button from '@//:modules/form/Button/Button'
+import isProcessed from '@//:modules/content/HookedComponents/Post/support/isProcessed'
+import isFailed from '@//:modules/content/HookedComponents/Post/support/isFailed'
 
 interface Props {
   query: ProcessContentDisplayFragment$key
@@ -22,15 +23,18 @@ const Fragment = graphql`
     id
     content {
       id
-      resource {
-        failed
-        processed
-        progress {
-          progress
+      media {
+        __typename
+        ...on RawMedia {
+          progress {
+            progress
+          }
         }
       }
       ...ExpandableResourceInfoFragment
     }
+    ...isFailedFragment
+    ...isProcessedFragment
   }
 `
 
@@ -49,8 +53,8 @@ export default function ProcessContentDisplay ({
     isOpen
   } = useDisclosure()
 
-  const contentIsProcessed = isProcessed(data.content)
-  const contentFailed = isFailed(data.content)
+  const contentIsProcessed = isProcessed(data)
+  const contentFailed = isFailed(data)
 
   const ICON_PROPS = {
     w: 4,
@@ -120,7 +124,7 @@ export default function ProcessContentDisplay ({
   }
 
   const ProcessingProgress = (): JSX.Element => {
-    const progressArray = data.content.map((item) => item.resource.processed ? 100 : (item.resource.progress?.progress ?? 0))
+    const progressArray = data.content.map((item) => item.media.__typename !== 'RawMedia' ? 100 : (item.media?.progress?.progress ?? 0))
 
     const progressValue = progressArray.reduce((sum, accum) => sum + accum, 0)
 

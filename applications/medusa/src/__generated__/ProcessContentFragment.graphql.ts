@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<96d5f2d6f8e87699b70c07df94b3b1c2>>
+ * @generated SignedSource<<26cec01ab7f18b4a7a0da1941e60b059>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,17 +9,10 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
-export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type ProcessContentFragment$data = {
-  readonly content: ReadonlyArray<{
-    readonly resource: {
-      readonly failed: boolean;
-      readonly processed: boolean;
-      readonly type: ResourceType;
-    };
-  }>;
   readonly reference: string;
+  readonly " $fragmentSpreads": FragmentRefs<"isFailedFragment" | "isProcessedFragment">;
   readonly " $fragmentType": "ProcessContentFragment";
 };
 export type ProcessContentFragment$key = {
@@ -41,53 +34,20 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
-      "alias": null,
       "args": null,
-      "concreteType": "PostContent",
-      "kind": "LinkedField",
-      "name": "content",
-      "plural": true,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "Resource",
-          "kind": "LinkedField",
-          "name": "resource",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "type",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "processed",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "failed",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
+      "kind": "FragmentSpread",
+      "name": "isProcessedFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "isFailedFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 
-(node as any).hash = "1a609761fa0846cb95b45c6b25771958";
+(node as any).hash = "8392037791b20e3aaedf76104009603a";
 
 export default node;

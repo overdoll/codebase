@@ -52,7 +52,7 @@ export default function ImageControlContainer (props: Props): JSX.Element {
       <ControlCoverContainImage isCovered={isCovered}>
         {CloneImageMedia}
       </ControlCoverContainImage>
-      <ImageControls setCovered={setCovered} rgb={rgb} imageMedia={hdPoster} />
+      <ImageControls isCovered={isCovered} setCovered={setCovered} rgb={rgb} imageMedia={hdPoster} />
     </Flex>
   )
 }

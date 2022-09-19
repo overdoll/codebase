@@ -47,9 +47,7 @@ const RecoveryCodeMutationGQL = graphql`
         lock {
           __typename
         }
-        avatar {
-          ...ResourceItemFragment
-        }
+        ...AccountIconFragment
       }
     }
   }

@@ -17,9 +17,6 @@ const Fragment = graphql`
     id
     content {
       id
-      resource {
-        id
-      }
     }
   }
 `
@@ -32,28 +29,7 @@ const Mutation = graphql`
         reference
         content {
           id
-          resource {
-            urls {
-              url
-              mimeType
-            }
-            progress {
-              progress
-              state
-            }
-            videoThumbnail {
-              url
-            }
-            type
-            processed
-            preview
-            failed
-            width
-            height
-            videoNoAudio
-            videoDuration
-            ...ResourceItemFragment
-          }
+          ...InfoRawPostContentBannerFragment
         }
       }
     }
@@ -63,8 +39,8 @@ const Mutation = graphql`
 export const addContentToUppy = (uppy, content): void => {
   content.forEach((file, index) => {
     const uppyFileId = uppy.addFile({
-      id: `${file.resource.id as string}_${index as string}`,
-      name: `${file.resource.id as string}_${index as string}`,
+      id: `${file.id as string}_${index as string}`,
+      name: `${file.id as string}_${index as string}`,
       type: 'image/png',
       data: new Blob(),
       source: 'already-uploaded'

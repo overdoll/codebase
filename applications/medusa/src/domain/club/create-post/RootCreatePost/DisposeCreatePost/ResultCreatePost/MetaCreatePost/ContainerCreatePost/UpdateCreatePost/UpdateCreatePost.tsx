@@ -36,16 +36,12 @@ const Fragment = graphql`
       title
     }
     content {
-      resource {
-        id
-      }
+      id
     }
     ...UploadFlowHeaderFragment
     ...UploadReviewStepFragment
     ...UploadContentStepFragment
     ...UploadCategoryStepFragment
-    ...ProcessContentDisplayFragment
-    ...PostContentPreviewMemoPostFragment
     ...UploadFlowStickyFooterFragment
   }
 `

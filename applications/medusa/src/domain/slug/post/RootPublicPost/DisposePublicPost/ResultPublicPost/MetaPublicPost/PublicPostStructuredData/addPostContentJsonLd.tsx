@@ -6,7 +6,6 @@ import { getPostDescription, getPostTitle } from '@//:modules/support/metaHelper
 const Fragment = graphql`
   fragment addPostContentJsonLdFragment on Post {
     reference
-    postedAt
     club {
       slug
       name
@@ -16,19 +15,6 @@ const Fragment = graphql`
     }
     categories {
       title
-    }
-    content {
-      resource {
-        urls {
-          url
-        }
-        height
-        width
-        type
-        videoThumbnail {
-          url
-        }
-      }
     }
   }
 `
@@ -48,46 +34,47 @@ export default function addPostContentJsonLd (query: addPostContentJsonLdFragmen
 
   const postDescription = getPostDescription(characters, data.club.name)
 
-  const videoObjects = data.content.filter((item) => item.resource.type === 'VIDEO')
+  // i dont know why i had this here its not even useful
+  // const videoObjects = data.content.filter((item) => item.resource.type === 'VIDEO')
+  //
+  // const imageObjects = data.content.filter((item) => item.resource.type === 'IMAGE')
 
-  const imageObjects = data.content.filter((item) => item.resource.type === 'IMAGE')
-
-  const dataObjects = {
-    ...(videoObjects.length > 0 && {
-      video: videoObjects.map((videoItem) => ({
-        '@type': 'VideoObject',
-        '@id': postLink,
-        contentUrl: videoItem.resource.urls[0].url,
-        url: videoItem.resource.urls[0].url,
-        author: data.club.name,
-        creator: data.club.name,
-        description: postDescription,
-        height: videoItem.resource.height,
-        keywords: keywords,
-        name: postTitle,
-        ...(videoItem.resource.videoThumbnail?.url != null && { thumbnailUrl: videoItem.resource.videoThumbnail.url }),
-        uploadDate: data.postedAt,
-        width: videoItem.resource.width
-      }))
-    }),
-    ...(imageObjects.length > 0 && (
-      {
-        image: imageObjects.map((imageObject) => ({
-          '@type': 'ImageObject',
-          '@id': postLink,
-          contentUrl: imageObject.resource.urls[0].url,
-          url: imageObject.resource.urls[0].url,
-          author: data.club.name,
-          creator: data.club.name,
-          description: postDescription,
-          height: imageObject.resource.height,
-          keywords: keywords,
-          name: postTitle,
-          width: imageObject.resource.width
-        }))
-      }
-    ))
-  }
+  // const dataObjects = {
+  //   ...(videoObjects.length > 0 && {
+  //     video: videoObjects.map((videoItem) => ({
+  //       '@type': 'VideoObject',
+  //       '@id': postLink,
+  //       contentUrl: videoItem.resource.urls[0].url,
+  //       url: videoItem.resource.urls[0].url,
+  //       author: data.club.name,
+  //       creator: data.club.name,
+  //       description: postDescription,
+  //       height: videoItem.resource.height,
+  //       keywords: keywords,
+  //       name: postTitle,
+  //       ...(videoItem.resource.videoThumbnail?.url != null && { thumbnailUrl: videoItem.resource.videoThumbnail.url }),
+  //       uploadDate: data.postedAt,
+  //       width: videoItem.resource.width
+  //     }))
+  //   }),
+  //   ...(imageObjects.length > 0 && (
+  //     {
+  //       image: imageObjects.map((imageObject) => ({
+  //         '@type': 'ImageObject',
+  //         '@id': postLink,
+  //         contentUrl: imageObject.resource.urls[0].url,
+  //         url: imageObject.resource.urls[0].url,
+  //         author: data.club.name,
+  //         creator: data.club.name,
+  //         description: postDescription,
+  //         height: imageObject.resource.height,
+  //         keywords: keywords,
+  //         name: postTitle,
+  //         width: imageObject.resource.width
+  //       }))
+  //     }
+  //   ))
+  // }
 
   const schemaData = {
     '@context': 'http://schema.org',
@@ -101,8 +88,7 @@ export default function addPostContentJsonLd (query: addPostContentJsonLdFragmen
       type: 'Person',
       name: data.club.name,
       url: clubLink
-    },
-    ...dataObjects
+    }
   }
 
   return {

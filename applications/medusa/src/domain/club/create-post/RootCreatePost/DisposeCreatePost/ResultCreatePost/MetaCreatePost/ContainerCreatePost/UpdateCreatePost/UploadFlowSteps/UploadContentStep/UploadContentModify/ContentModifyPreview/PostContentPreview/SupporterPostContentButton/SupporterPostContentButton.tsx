@@ -18,11 +18,8 @@ interface Props {
 
 const Fragment = graphql`
   fragment SupporterPostContentButtonFragment on PostContent {
+    id
     isSupporterOnly
-    resource {
-      id
-    }
-    ...ResourceInfoFragment
   }
 `
 
@@ -42,11 +39,9 @@ const Mutation = graphql`
         id
         reference
         content {
+          id
           viewerCanViewSupporterOnlyContent
           isSupporterOnly
-          resource {
-            id
-          }
         }
       }
     }
@@ -72,7 +67,7 @@ export default function SupporterPostContentButton ({
       variables: {
         input: {
           id: postData.id,
-          contentIds: [data.resource.id],
+          contentIds: [data.id],
           isSupporterOnly: !data.isSupporterOnly
         }
       },

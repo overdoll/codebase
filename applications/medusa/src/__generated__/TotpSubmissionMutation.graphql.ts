@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<32ad36e7f69430992ba63506f29b7fd5>>
- * @relayHash 38f40c0b16dc793eea82bf475f691703
+ * @generated SignedSource<<051e1fbc6646f0115b1d8e6780b24d3b>>
+ * @relayHash e9c4c43657034ac8c5dd3b229ba5f470
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 38f40c0b16dc793eea82bf475f691703
+// @relayRequestID e9c4c43657034ac8c5dd3b229ba5f470
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -24,9 +24,6 @@ export type TotpSubmissionMutation$variables = {
 export type TotpSubmissionMutation$data = {
   readonly grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp: {
     readonly account: {
-      readonly avatar: {
-        readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
-      } | null;
       readonly deleting: {
         readonly __typename: "AccountDeleting";
       } | null;
@@ -38,6 +35,7 @@ export type TotpSubmissionMutation$data = {
         readonly __typename: "AccountLock";
       } | null;
       readonly username: string;
+      readonly " $fragmentSpreads": FragmentRefs<"AccountIconFragment">;
     } | null;
     readonly revokedAuthenticationTokenId: string;
     readonly validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation | null;
@@ -112,40 +110,34 @@ v8 = {
   "name": "isArtist",
   "storageKey": null
 },
-v9 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "__typename",
-    "storageKey": null
-  }
+v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
+},
+v10 = [
+  (v9/*: any*/)
 ],
-v10 = {
+v11 = {
   "alias": null,
   "args": null,
   "concreteType": "AccountDeleting",
   "kind": "LinkedField",
   "name": "deleting",
   "plural": false,
-  "selections": (v9/*: any*/),
+  "selections": (v10/*: any*/),
   "storageKey": null
 },
-v11 = {
+v12 = {
   "alias": null,
   "args": null,
   "concreteType": "AccountLock",
   "kind": "LinkedField",
   "name": "lock",
   "plural": false,
-  "selections": (v9/*: any*/),
-  "storageKey": null
-},
-v12 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
+  "selections": (v10/*: any*/),
   "storageKey": null
 };
 return {
@@ -178,23 +170,12 @@ return {
               (v6/*: any*/),
               (v7/*: any*/),
               (v8/*: any*/),
-              (v10/*: any*/),
               (v11/*: any*/),
+              (v12/*: any*/),
               {
-                "alias": null,
                 "args": null,
-                "concreteType": "Resource",
-                "kind": "LinkedField",
-                "name": "avatar",
-                "plural": false,
-                "selections": [
-                  {
-                    "args": null,
-                    "kind": "FragmentSpread",
-                    "name": "ResourceItemFragment"
-                  }
-                ],
-                "storageKey": null
+                "kind": "FragmentSpread",
+                "name": "AccountIconFragment"
               }
             ],
             "storageKey": null
@@ -235,8 +216,8 @@ return {
               (v6/*: any*/),
               (v7/*: any*/),
               (v8/*: any*/),
-              (v10/*: any*/),
               (v11/*: any*/),
+              (v12/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -245,106 +226,8 @@ return {
                 "name": "avatar",
                 "plural": false,
                 "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "processed",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "preview",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "failed",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "ResourceProgress",
-                    "kind": "LinkedField",
-                    "name": "progress",
-                    "plural": false,
-                    "selections": [
-                      (v4/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "progress",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "state",
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "type",
-                    "storageKey": null
-                  },
-                  (v4/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "ResourceUrl",
-                    "kind": "LinkedField",
-                    "name": "urls",
-                    "plural": true,
-                    "selections": [
-                      (v12/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "mimeType",
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "width",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "height",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "ResourceUrl",
-                    "kind": "LinkedField",
-                    "name": "videoThumbnail",
-                    "plural": false,
-                    "selections": [
-                      (v12/*: any*/)
-                    ],
-                    "storageKey": null
-                  }
+                  (v9/*: any*/),
+                  (v4/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -357,7 +240,7 @@ return {
     ]
   },
   "params": {
-    "id": "38f40c0b16dc793eea82bf475f691703",
+    "id": "e9c4c43657034ac8c5dd3b229ba5f470",
     "metadata": {},
     "name": "TotpSubmissionMutation",
     "operationKind": "mutation",
@@ -366,6 +249,6 @@ return {
 };
 })();
 
-(node as any).hash = "da6e6b13ce83205169327bc92bbb8c7e";
+(node as any).hash = "cc04d236bed47b5d9f275120825b5377";
 
 export default node;

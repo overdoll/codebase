@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5032a0d60a43b75388c435b8ab55cdd4>>
+ * @generated SignedSource<<596f14655d500ea97198ac8d234bc838>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,11 +11,8 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SupporterPostContentButtonFragment$data = {
+  readonly id: string;
   readonly isSupporterOnly: boolean;
-  readonly resource: {
-    readonly id: string;
-  };
-  readonly " $fragmentSpreads": FragmentRefs<"ResourceInfoFragment">;
   readonly " $fragmentType": "SupporterPostContentButtonFragment";
 };
 export type SupporterPostContentButtonFragment$key = {
@@ -33,37 +30,21 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "isSupporterOnly",
+      "name": "id",
       "storageKey": null
     },
     {
       "alias": null,
       "args": null,
-      "concreteType": "Resource",
-      "kind": "LinkedField",
-      "name": "resource",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "id",
-          "storageKey": null
-        }
-      ],
+      "kind": "ScalarField",
+      "name": "isSupporterOnly",
       "storageKey": null
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "ResourceInfoFragment"
     }
   ],
   "type": "PostContent",
   "abstractKey": null
 };
 
-(node as any).hash = "1fc2a1c404698fc7dae44b5d36ec1c54";
+(node as any).hash = "3ce21c845baff448519bf43fce889ec8";
 
 export default node;

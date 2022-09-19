@@ -22,17 +22,7 @@ const Mutation = graphql`
       club {
         id
         name
-        thumbnail {
-          type
-          urls {
-            url
-            mimeType
-          }
-          preview
-          width
-          height
-          ...ResourceItemFragment
-        }
+        ...ClubIconFragment
       }
     }
   }

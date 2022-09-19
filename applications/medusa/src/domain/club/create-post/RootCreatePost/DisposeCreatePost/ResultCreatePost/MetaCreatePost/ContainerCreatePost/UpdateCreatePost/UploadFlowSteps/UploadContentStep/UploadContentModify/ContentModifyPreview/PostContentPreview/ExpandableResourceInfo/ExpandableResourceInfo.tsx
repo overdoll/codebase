@@ -2,7 +2,7 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type { ExpandableResourceInfoFragment$key } from '@//:artifacts/ExpandableResourceInfoFragment.graphql'
 import { useDisclosure } from '@chakra-ui/react'
 import { ClickableTile } from '@//:modules/content/ContentSelection'
-import MediaPreviewModal from '@//:modules/MediaPreviewModal/MediaPreviewModal'
+import MediaPreviewModal from './MediaPreviewModal/MediaPreviewModal'
 import InfoRawPostContentBanner
   from '@//:modules/content/HookedComponents/Post/fragments/PostContent/InfoRawPostContentBanner/InfoRawPostContentBanner'
 

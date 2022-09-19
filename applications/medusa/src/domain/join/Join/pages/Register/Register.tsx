@@ -32,9 +32,7 @@ const RegisterMutationGQL = graphql`
         isModerator
         isStaff
         isArtist
-        avatar {
-          ...ResourceItemFragment
-        }
+        ...AccountIconFragment
       }
     }
   }

@@ -15,7 +15,6 @@ import type { PostContentPreviewFragment$key } from '@//:artifacts/PostContentPr
 import type { PostContentPreviewPostFragment$key } from '@//:artifacts/PostContentPreviewPostFragment.graphql'
 import PostContentPreviewMenu from './PostContentPreviewMenu/PostContentPreviewMenu'
 import { Trans } from '@lingui/macro'
-import { ReactNode } from 'react'
 import RemovePostContentButton from './PostContentPreviewMenu/RemovePostContentButton/RemovePostContentButton'
 import Button from '@//:modules/form/Button/Button'
 import SupporterPostContentButton from './SupporterPostContentButton/SupporterPostContentButton'
@@ -30,9 +29,11 @@ const Fragment = graphql`
   fragment PostContentPreviewFragment on PostContent {
     id
     isSupporterOnly
-    resource {
-      id
-      failed
+    media {
+      __typename
+      ...on RawMedia {
+        failed
+      }
     }
     ...PostContentPreviewMenuFragment
     ...RemovePostContentButtonFragment
@@ -70,7 +71,7 @@ export default function PostContentPreview ({
     }
   }
 
-  const PostContentPanel = ({ children }: { children: ReactNode }): JSX.Element => {
+  if (data.media.__typename === 'RawMedia' && data.media.failed) {
     return (
       <Flex
         h={getHeight()}
@@ -78,16 +79,8 @@ export default function PostContentPreview ({
         borderRadius='md'
         overflow='hidden'
         borderWidth={2}
-        borderColor={data.resource.failed ? 'orange.300' : (data.isSupporterOnly ? 'green.300' : 'gray.800')}
+        borderColor='orange.300'
       >
-        {children}
-      </Flex>
-    )
-  }
-
-  if (data.resource.failed) {
-    return (
-      <PostContentPanel>
         <Stack px={4} py={2} w='100%' h='100%' align='flex-end' justify='center' spacing={0}>
           <Box>
             <Heading fontSize='sm' color='orange.300'>
@@ -127,12 +120,19 @@ export default function PostContentPreview ({
             <RemovePostContentButton query={data} postQuery={postData} isButton />
           </HStack>
         </Stack>
-      </PostContentPanel>
+      </Flex>
     )
   }
 
   return (
-    <PostContentPanel>
+    <Flex
+      h={getHeight()}
+      bg='gray.800'
+      borderRadius='md'
+      overflow='hidden'
+      borderWidth={2}
+      borderColor={data.isSupporterOnly ? 'green.300' : 'gray.800'}
+    >
       <Flex align='center' w='12%' justify='center'>
         <Flex
           borderRadius='lg'
@@ -158,6 +158,6 @@ export default function PostContentPreview ({
       <Flex align='center' bg='gray.700' w='12%' justify='center'>
         <PostContentPreviewMenu query={data} postQuery={postData} />
       </Flex>
-    </PostContentPanel>
+    </Flex>
   )
 }
