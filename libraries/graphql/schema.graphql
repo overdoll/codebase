@@ -141,11 +141,11 @@ type ImageMediaVariants {
   thumbnail: ImageMediaAccess!
   """200x200 crop of an image. Suitable for large thumbnails."""
   thumbnailHd: ImageMediaAccess!
-  """768px width or height resize."""
+  """680px width or height resize."""
   small: ImageMediaAccess!
-  """1366px width or height resize."""
+  """1200px width or height resize."""
   medium: ImageMediaAccess!
-  """1920px width or height resize."""
+  """2048px width or height resize."""
   large: ImageMediaAccess!
   """4096px width or height resize."""
   hd: ImageMediaAccess!
@@ -190,9 +190,6 @@ type ImageMedia {
 
   """All available variants for this media."""
   variants: ImageMediaVariants!
-
-  """The original image media. Note that originals are resized if they are larger than 4096px."""
-  original: ImageMediaAccess!
 
   """Color palettes for this image."""
   colorPalettes: [ColorPalette!]!

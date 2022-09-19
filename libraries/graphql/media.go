@@ -20,8 +20,6 @@ type ImageMedia struct {
 	ID relay.ID `json:"id"`
 	// All available variants for this media.
 	Variants *ImageMediaVariants `json:"variants"`
-	// The original image media. Note that originals are resized if they are larger than 4096px.
-	Original *ImageMediaAccess `json:"original"`
 	// Color palettes for this image.
 	ColorPalettes []*ColorPalette `json:"colorPalettes"`
 }
@@ -55,11 +53,11 @@ type ImageMediaVariants struct {
 	Thumbnail *ImageMediaAccess `json:"thumbnail"`
 	// 200x200 crop of an image. Suitable for large HD thumbnails.
 	ThumbnailHd *ImageMediaAccess `json:"thumbnailHd"`
-	// 768px width or height resize.
+	// 680px width or height resize.
 	Small *ImageMediaAccess `json:"small"`
-	// 1366px width or height resize.
+	// 1200px width or height resize.
 	Medium *ImageMediaAccess `json:"medium"`
-	// 1920px width or height resize.
+	// 2048px width or height resize.
 	Large *ImageMediaAccess `json:"large"`
 	// 4096px width or height resize.
 	Hd *ImageMediaAccess `json:"hd"`
@@ -174,7 +172,6 @@ func marshalImageMediaToGraphQL(ctx context.Context, res *media.Media) *ImageMed
 			Hd:          marshalImageAccessToGraphQL(ctx, res.HdImageMediaAccess()),
 			Banner:      marshalImageAccessToGraphQL(ctx, res.BannerImageMediaAccess()),
 		},
-		Original:      marshalImageAccessToGraphQL(ctx, res.OriginalImageMediaAccess()),
 		ColorPalettes: palettes,
 	}
 }

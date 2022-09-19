@@ -401,15 +401,15 @@ func (m *Media) ThumbnailHDImageMediaAccess() *ImageMediaAccess {
 }
 
 func (m *Media) SmallImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(768, false)
+	return m.generateUrlForImage(680, false)
 }
 
 func (m *Media) MediumImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(1366, false)
+	return m.generateUrlForImage(1200, false)
 }
 
 func (m *Media) LargeImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(1920, false)
+	return m.generateUrlForImage(2048, false)
 }
 
 func (m *Media) BannerImageMediaAccess() *ImageMediaAccess {

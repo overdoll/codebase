@@ -454,6 +454,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		"movflags":     "+faststart",
 		"crf":          "23",
 		"map_metadata": "-1",
+		"tune":         "animation",
 		"map":          []string{"0:v:0"},
 	}
 
@@ -510,7 +511,9 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 			}
 		}
 
-		overlay := input.Filter("boxblur", ffmpeg_go.Args{"40", targetScale, "setsar=1"})
+		fpsTarget := "fps=" + strconv.Itoa(scale.maxFps)
+
+		overlay := input.Filter("boxblur", ffmpeg_go.Args{"40", targetScale, "setsar=1", fpsTarget})
 		scaleWithAspectRatio := targetScale + ":force_original_aspect_ratio=decrease"
 
 		overlayScale := ffmpeg_go.KwArgs{"y": "(H-h)/2"}
@@ -521,7 +524,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 
 		streams = append(streams,
 			input.Get(index).
-				Filter("scale", ffmpeg_go.Args{scaleWithAspectRatio}).
+				Filter("scale", ffmpeg_go.Args{scaleWithAspectRatio, fpsTarget}).
 				Overlay(overlay, "", overlayScale).
 				Output(fileName+"/segment_"+index+"_%v.m3u8", ffmpeg_go.KwArgs{
 					"c:v":              "libx264",
@@ -566,12 +569,13 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		WithCpuCoreLimit(2).
 		WithCpuCoreRequest(2).
 		GlobalArgs(
-			"hls_time", "3",
-			"hls_playlist_type", "vod",
-			"hls_segment_type", "fmp4",
-			"master_pl_name", "master.m3u8",
-			"hls_segment_filename", fileName+"/stream_%v_%02d.m4s",
-			"var_stream_map", streamMap,
+			"-hls_time", "3",
+			"-hls_playlist_type", "vod",
+			"-hls_segment_type", "fmp4",
+			"-master_pl_name", "master.m3u8",
+			"-hls_segment_filename", fileName+"/stream_%v_%02d.m4s",
+			"-var_stream_map", streamMap,
+			"-hls_flags", "avg_bw",
 		).
 		Run(); err != nil {
 		zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(ffmpegLogger.Output)))
@@ -621,8 +625,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 			return nil, errors.Wrap(err, "failed to parse aspect ratio split height")
 		}
 	} else {
-		widthAspect = 0
-		heightAspect = 0
+		return nil, errors.New("could not calculate aspect ratio")
 	}
 
 	// update the source image data - this is used for the thumbnail
