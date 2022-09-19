@@ -20,6 +20,11 @@ enum MediaMimeType {
   ImagePng = 3;
 }
 
+enum MediaDeviceType {
+  Mobile = 0;
+  Desktop = 1;
+}
+
 enum MediaVersion {
   ONE = 0;
 }
@@ -27,9 +32,10 @@ enum MediaVersion {
 message VideoContainer {
   string id = 1;
   MediaMimeType mimeType = 2;
-  uint64 bitrate = 3;
-  uint32 width = 4;
-  uint32 height = 5;
+  optional MediaDeviceType targetDevice = 3;
+  uint64 bitrate = 4;
+  uint32 width = 5;
+  uint32 height = 6;
 }
 
 message VideoAspectRatio {

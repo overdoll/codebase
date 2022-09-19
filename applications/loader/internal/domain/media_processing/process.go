@@ -706,8 +706,14 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	media.RawProto().VideoData = &proto.VideoData{
 		Containers: []*proto.VideoContainer{
 			{
-				Id:       newVideoFileName,
-				MimeType: proto.MediaMimeType_VideoMpegUrl,
+				Id:           newVideoFileName,
+				MimeType:     proto.MediaMimeType_VideoMpegUrl,
+				TargetDevice: proto.MediaDeviceType_Desktop,
+			},
+			{
+				Id:           newVideoFileName,
+				MimeType:     proto.MediaMimeType_VideoMpegUrl,
+				TargetDevice: proto.MediaDeviceType_Mobile,
 			},
 			{
 				Id:       mp4FileName,

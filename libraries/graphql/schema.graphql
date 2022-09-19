@@ -218,10 +218,18 @@ type MP4VideoContainer {
   height: Int!
 }
 
+enum MediaDeviceType {
+  MOBILE
+  DESKTOP
+}
+
 """An application/x-mpegURL video container."""
 type HLSVideoContainer {
   """The URL used to access the container."""
   url: URI!
+
+  """The target device for this HLS container. If null, can be used on any device."""
+  targetDevice: MediaDeviceType
 }
 
 """A container used to access the video."""
