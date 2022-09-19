@@ -6,8 +6,11 @@ import BannerPublicPost from './BannerPublicPost/BannerPublicPost'
 import DescriptionPublicPost from './DescriptionPublicPost/DescriptionPublicPost'
 import { BannerContainer, CinematicContainer, ContentContainer } from '@//:modules/content/PageLayout'
 import CinematicPublicPost from './CinematicPublicPost/CinematicPublicPost'
-import SuggestedPublicPost from './SuggestedPublicPost/SuggestedPublicPost'
 import { Stack } from '@chakra-ui/react'
+import PageHeader from '@//:modules/content/PageLayout/Display/components/PageHeader/PageHeader'
+import { Trans } from '@lingui/macro'
+import { MagicWand } from '@//:assets/icons'
+import PrepareSuggestedPosts from './PrepareSuggestedPosts/PrepareSuggestedPosts'
 
 interface Props {
   postQuery: ContainerPublicPostFragment$key
@@ -19,7 +22,7 @@ const PostFragment = graphql`
     ...BannerPublicPostFragment
     ...CinematicPublicPostFragment
     ...DescriptionPublicPostFragment
-    ...SuggestedPublicPostFragment
+    ...PrepareSuggestedPostsFragment
   }
 `
 
@@ -49,10 +52,13 @@ export default function ContainerPublicPost (props: Props): JSX.Element {
       <CinematicContainer>
         <CinematicPublicPost postQuery={postData} />
       </CinematicContainer>
-      <ContentContainer>
-        <Stack pt={2} spacing={8}>
+      <ContentContainer pt={2}>
+        <Stack spacing={16}>
           <DescriptionPublicPost postQuery={postData} viewerQuery={viewerData} />
-          <SuggestedPublicPost postQuery={postData} />
+          <Stack spacing={4}>
+            <PageHeader icon={MagicWand} title={<Trans>Content similar to this post</Trans>} />
+            <PrepareSuggestedPosts postQuery={postData} />
+          </Stack>
         </Stack>
       </ContentContainer>
     </>

@@ -17,6 +17,12 @@ export { default as PreviewContent } from './fragments/Content/PreviewContent/Pr
 export {
   default as VerticalPaginationScroller
 } from './components/VerticalPaginationScroller/VerticalPaginationScroller'
+export {
+  default as SuspenseLazyPosts
+} from './components/SuspenseLazyPosts/SuspenseLazyPosts'
+export {
+  default as LazyPostsErrorBoundary
+} from './components/LazyPostsErrorBoundary/LazyPostsErrorBoundary'
 
 // Post preview with limited controls and buttons
 export { default as PreviewPost } from './fragments/Post/PreviewPost/PreviewPost'

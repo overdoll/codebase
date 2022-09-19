@@ -8,11 +8,12 @@ interface Props {
   loadQuery: () => (any)
 }
 
-// a component composed of ErrorBoundary and ErrorFallback to have simple fallbacks
-export default function PageErrorBoundary ({
-  children,
-  loadQuery
-}: Props): JSX.Element {
+export default function PageErrorBoundary (props: Props): JSX.Element {
+  const {
+    children,
+    loadQuery
+  } = props
+
   return (
     <ErrorBoundary
       fallback={({

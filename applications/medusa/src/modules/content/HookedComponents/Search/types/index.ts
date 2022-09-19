@@ -11,7 +11,7 @@ export declare type SearchAnyValues = Record<string, any>
 
 export interface UseSearchQueryOptions {
   options: {
-    fetchKey: number
+    fetchKey?: number | string
     fetchPolicy?: FetchPolicy | undefined
   }
 }

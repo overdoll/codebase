@@ -5,7 +5,9 @@ import { ContainerPublicClubViewerFragment$key } from '@//:artifacts/ContainerPu
 import { BannerContainer, ContentContainer, MobileContainer } from '@//:modules/content/PageLayout'
 import BannerPublicClub from './BannerPublicClub/BannerPublicClub'
 import HeaderPublicClub from './HeaderPublicClub/HeaderPublicClub'
-import PostsPublicClub from './PostsPublicClub/PostsPublicClub'
+import ButtonsPublicClub from './ButtonsPublicClub/ButtonsPublicClub'
+import { Stack } from '@chakra-ui/react'
+import PrepareClubPosts from './PrepareClubPosts/PrepareClubPosts'
 
 interface Props {
   clubQuery: ContainerPublicClubFragment$key
@@ -15,8 +17,9 @@ interface Props {
 const ClubFragment = graphql`
   fragment ContainerPublicClubFragment on Club {
     ...BannerPublicClubFragment
-    ...PostsPublicClubFragment
     ...HeaderPublicClubFragment
+    ...ButtonsPublicClubFragment
+    ...PrepareClubPostsFragment
   }
 `
 
@@ -45,7 +48,10 @@ export default function ContainerPublicClub (props: Props): JSX.Element {
         <HeaderPublicClub clubQuery={clubData} viewerQuery={viewerData} />
       </MobileContainer>
       <ContentContainer pt={2}>
-        <PostsPublicClub clubQuery={clubData} />
+        <Stack spacing={4}>
+          <ButtonsPublicClub clubQuery={clubData} />
+          <PrepareClubPosts clubQuery={clubData} />
+        </Stack>
       </ContentContainer>
     </>
   )

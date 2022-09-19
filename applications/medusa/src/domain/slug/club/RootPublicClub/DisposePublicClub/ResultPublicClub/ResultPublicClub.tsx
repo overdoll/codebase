@@ -10,7 +10,7 @@ interface Props {
 }
 
 const Query = graphql`
-  query ResultPublicClubQuery($slug: String!, $seed: String) {
+  query ResultPublicClubQuery($slug: String!) {
     club(slug: $slug) {
       ...MetaPublicClubFragment
     }
