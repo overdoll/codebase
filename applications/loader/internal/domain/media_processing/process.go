@@ -17,7 +17,6 @@ import (
 	_ "image/png"
 	"io"
 	"io/ioutil"
-	"log"
 	"math"
 	"os"
 	"overdoll/libraries/errors"
@@ -59,7 +58,7 @@ const (
 
 func init() {
 	// not ideal but we need to disable the log messages from ffmpeg-go
-	log.SetOutput(ioutil.Discard)
+	//log.SetOutput(ioutil.Discard)
 }
 
 func createPreviewFromFile(r io.Reader, isPng bool) ([]*proto.ColorPalette, image.Image, error) {
@@ -116,12 +115,12 @@ func createPreviewFromFile(r io.Reader, isPng bool) ([]*proto.ColorPalette, imag
 
 type ffmpegProbeStream struct {
 	Streams []struct {
-		Width              int     `json:"width"`
-		Height             int     `json:"height"`
-		Duration           string  `json:"duration"`
-		DisplayAspectRatio string  `json:"display_aspect_ratio"`
-		NBReadPackets      string  `json:"nb_read_packets"`
-		FrameRate          float64 `json:"r_frame_rate"`
+		Width              int    `json:"width"`
+		Height             int    `json:"height"`
+		Duration           string `json:"duration"`
+		DisplayAspectRatio string `json:"display_aspect_ratio"`
+		NBReadPackets      string `json:"nb_read_packets"`
+		FrameRate          string `json:"r_frame_rate"`
 	} `json:"streams"`
 	Format struct {
 		Duration string `json:"duration"`
@@ -433,6 +432,31 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		}
 	}
 
+	if len(resolutionTargets) < 4 {
+
+		var high, low int
+
+		if isLandscape {
+			high = firstStream.Width
+			low = firstStream.Height
+		} else {
+			high = firstStream.Height
+			low = firstStream.Width
+		}
+
+		// include original resolution if the original resolution isn't 72
+		if high != resolutionTargets[0].high && low != resolutionTargets[0].low {
+			scales = append(scales, resolutionTarget{
+				high:    high,
+				low:     low,
+				rate:    "3100k",
+				ar:      "96k",
+				maxFps:  60,
+				profile: "high",
+			})
+		}
+	}
+
 	socket, err, done := createFFMPEGTempSocket(media.RawProto().Id, parsedDuration)
 
 	if err != nil {
@@ -448,18 +472,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		"progress":    "unix://" + socket,
 	}
 
-	mp4FileArgs := ffmpeg_go.KwArgs{
-		"c:v":          "libx264",
-		"preset":       defaultPreset,
-		"movflags":     "+faststart",
-		"crf":          "23",
-		"map_metadata": "-1",
-		"tune":         "animation",
-		"map":          []string{"0:v:0"},
-	}
-
 	var streams []*ffmpeg_go.Stream
-	var streamMap string
 
 	width := strconv.Itoa(firstStream.Width)
 	height := strconv.Itoa(firstStream.Width)
@@ -476,17 +489,10 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 
 	generatedSoloFile := false
 
-	input := ffmpeg_go.Input(targetFileName, defaultAllArgs)
+	input := ffmpeg_go.Input(targetFileName, defaultAllArgs).Split()
 
 	for i, scale := range scales {
 		index := strconv.Itoa(i)
-
-		streamTarget := "v:" + index + ",a:" + index
-		if i == len(scales)-1 {
-			streamMap += streamTarget
-		} else {
-			streamMap += streamTarget + ","
-		}
 
 		var targetScale string
 
@@ -511,72 +517,130 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 			}
 		}
 
-		fpsTarget := "fps=" + strconv.Itoa(scale.maxFps)
+		fpsTarget := ""
 
-		overlay := input.Filter("boxblur", ffmpeg_go.Args{"40", targetScale, "setsar=1", fpsTarget})
-		scaleWithAspectRatio := targetScale + ":force_original_aspect_ratio=decrease"
-
-		overlayScale := ffmpeg_go.KwArgs{"y": "(H-h)/2"}
-
-		if isPortrait {
-			overlayScale = ffmpeg_go.KwArgs{"x": "(W-w)/2"}
+		parsedFps := strings.Split(firstStream.FrameRate, "/")
+		fpsDecimalFirst, err := strconv.ParseFloat(parsedFps[0], 64)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to parse first decimal")
+		}
+		fpsDecimalSecond, err := strconv.ParseFloat(parsedFps[0], 64)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to parse second decimal")
 		}
 
-		streams = append(streams,
-			input.Get(index).
-				Filter("scale", ffmpeg_go.Args{scaleWithAspectRatio, fpsTarget}).
-				Overlay(overlay, "", overlayScale).
-				Output(fileName+"/segment_"+index+"_%v.m3u8", ffmpeg_go.KwArgs{
-					"c:v":              "libx264",
-					"c:a":              "aac",
-					"ar":               scale.ar,
-					"maxrate":          scale.rate,
-					"bufsize":          scale.rate,
-					"tune":             "animation",
-					"crf":              "23",
-					"profile:v":        scale.profile,
-					"force_key_frames": "'expr:gte(t,n_forced*3)'",
-					"preset":           defaultPreset,
-					"sc_threshold":     "0",
-					"map_metadata":     "-1",
-				}),
-		)
+		targetFrameRate := fpsDecimalFirst / fpsDecimalSecond
+
+		// check if we need to limit our framerate
+		if targetFrameRate > float64(scale.maxFps) {
+			fpsTarget = strconv.Itoa(scale.maxFps)
+		}
+
+		scaleWithAspectRatio := targetScale
+
+		if requiresResize {
+			scaleWithAspectRatio += ":force_original_aspect_ratio=decrease"
+		}
+
+		overlay := input.Get(index).
+			Filter("scale", ffmpeg_go.Args{scaleWithAspectRatio})
+		//Filter("boxblur", ffmpeg_go.Args{"40"}).
+		//Filter("setsar", ffmpeg_go.Args{"1"})
+
+		if fpsTarget != "" {
+			overlay = overlay.Filter("fps", ffmpeg_go.Args{fpsTarget})
+		}
+
+		//overlayScale := ffmpeg_go.KwArgs{"y": "(H-h)/2"}
+		//
+		//if isPortrait {
+		//	overlayScale = ffmpeg_go.KwArgs{"x": "(W-w)/2"}
+		//}
+		//
+		//baseStream := input.Get("0-"+index).
+		//	Filter("scale", ffmpeg_go.Args{scaleWithAspectRatio})
+		//
+		//if fpsTarget != "" {
+		//	baseStream = baseStream.Filter("fps", ffmpeg_go.Args{fpsTarget})
+		//}
+
+		streams = append(streams, overlay.
+			///	Overlay(baseStream, "", overlayScale).
+			Output(fileName+"/segment_"+index+"_%v.m3u8", ffmpeg_go.KwArgs{
+				"c:v":                  "libx264",
+				"c:a":                  "aac",
+				"b:a":                  scale.ar,
+				"ar":                   "48000",
+				"maxrate":              scale.rate,
+				"bufsize":              scale.rate,
+				"tune":                 "animation",
+				"crf":                  "23",
+				"profile:v":            scale.profile,
+				"force_key_frames":     "expr:gte(t,n_forced*3)",
+				"preset":               defaultPreset,
+				"sc_threshold":         "0",
+				"map_metadata":         "-1",
+				"hls_segment_filename": fileName + "/stream_" + index + "_%v_%02d.m4s",
+				"hls_time":             "3",
+				"hls_playlist_type":    "vod",
+				"hls_segment_type":     "fmp4",
+			}))
 
 		if scale.low <= 720 && !generatedSoloFile {
+
+			mp4FileArgs := ffmpeg_go.KwArgs{
+				"c:v":          "libx264",
+				"preset":       defaultPreset,
+				"movflags":     "+faststart",
+				"crf":          "23",
+				"map_metadata": "-1",
+				"tune":         "animation",
+			}
 
 			generatedSoloFile = true
 
 			if !videoNoAudio {
 				mp4FileArgs["c:a"] = "aac"
+				mp4FileArgs["ar"] = "48000"
 				mp4FileArgs["b:a"] = scale.ar
 				mp4FileArgs["ac"] = "2"
-				mp4FileArgs["map"] = append(mp4FileArgs["map"].([]string), "0:a:0")
+				mp4FileArgs["map"] = []string{"0:a:0"}
 			} else {
 				mp4FileArgs["an"] = ""
 			}
 
+			mp4Index := strconv.Itoa(len(scales))
+
+			overlay := input.Get(mp4Index).
+				Filter("scale", ffmpeg_go.Args{scaleWithAspectRatio})
+			//Filter("boxblur", ffmpeg_go.Args{"40"}).
+			//Filter("setsar", ffmpeg_go.Args{"1"})
+
+			if fpsTarget != "" {
+				overlay = overlay.Filter("fps", ffmpeg_go.Args{fpsTarget})
+			}
+			//
+			//baseStream := input.Get("0-"+mp4Index).
+			//	Filter("fps", ffmpeg_go.Args{fpsTarget}).
+			//	Filter("scale", ffmpeg_go.Args{scaleWithAspectRatio})
+			//
+			//if fpsTarget != "" {
+			//	baseStream = baseStream.Filter("fps", ffmpeg_go.Args{fpsTarget})
+			//}
+
 			streams = append(streams,
-				input.Get(strconv.Itoa(len(scales))).
-					Overlay(overlay, "", overlayScale).
-					Filter("scale", ffmpeg_go.Args{scaleWithAspectRatio}).
+				overlay.
+					//Overlay(baseStream, "", overlayScale).
 					Output(mp4FileName, mp4FileArgs),
 			)
 		}
 	}
 
 	if err := ffmpeg_go.MergeOutputs(streams...).
+		OverWriteOutput().
 		WithErrorOutput(ffmpegLogger).
 		WithCpuCoreLimit(2).
 		WithCpuCoreRequest(2).
-		GlobalArgs(
-			"-hls_time", "3",
-			"-hls_playlist_type", "vod",
-			"-hls_segment_type", "fmp4",
-			"-master_pl_name", "master.m3u8",
-			"-hls_segment_filename", fileName+"/stream_%v_%02d.m4s",
-			"-var_stream_map", streamMap,
-			"-hls_flags", "avg_bw",
-		).
 		Run(); err != nil {
 		zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(ffmpegLogger.Output)))
 		return nil, err
@@ -625,7 +689,9 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 			return nil, errors.Wrap(err, "failed to parse aspect ratio split height")
 		}
 	} else {
-		return nil, errors.New("could not calculate aspect ratio")
+		widthAspect = 0
+		heightAspect = 0
+		//return nil, errors.New("could not calculate aspect ratio")
 	}
 
 	// update the source image data - this is used for the thumbnail
