@@ -1,7 +1,6 @@
 import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { ContainerSearchSeriesFragment$key } from '@//:artifacts/ContainerSearchSeriesFragment.graphql'
-import { ContainerSearchSeriesViewerFragment$key } from '@//:artifacts/ContainerSearchSeriesViewerFragment.graphql'
 import { ContentContainer, MobileContainer } from '@//:modules/content/PageLayout'
 import HeaderSearchSeries from './HeaderSearchSeries/HeaderSearchSeries'
 import ScrollSearchSeries from './ScrollSearchSeries/ScrollSearchSeries'

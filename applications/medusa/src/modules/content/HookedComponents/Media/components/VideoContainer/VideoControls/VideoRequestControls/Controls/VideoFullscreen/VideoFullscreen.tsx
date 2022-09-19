@@ -67,7 +67,7 @@ export default function VideoFullscreen (props: Props): JSX.Element {
 
   useEffect(() => {
     const handleDoubleClick = (e): void => {
-      if (e.target.dataset.ignore === 'click' || e.target.parentNode.dataset.ignore === 'click') {
+      if (e.target.dataset.ignore === 'controls' || e.target.parentNode.dataset.ignore === 'controls') {
         return
       }
       if (fullscreen) {

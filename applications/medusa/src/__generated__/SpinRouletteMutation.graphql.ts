@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<efb59a2f147641c074da05c0cdf1b00a>>
- * @relayHash 22231dbdaaae9477904021b89482ef6f
+ * @generated SignedSource<<ce6a08cd7c8a5eaa3e994ece5e737587>>
+ * @relayHash cba81af4379ad2a5b260e82890496bb1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 22231dbdaaae9477904021b89482ef6f
+// @relayRequestID cba81af4379ad2a5b260e82890496bb1
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -88,6 +88,10 @@ v6 = {
   "storageKey": null
 },
 v7 = {
+  "kind": "TypeDiscriminator",
+  "abstractKey": "__isMedia"
+},
+v8 = {
   "alias": null,
   "args": null,
   "concreteType": "ColorPalette",
@@ -119,119 +123,134 @@ v7 = {
   ],
   "storageKey": null
 },
-v8 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "url",
   "storageKey": null
 },
-v9 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "width",
   "storageKey": null
 },
-v10 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "height",
   "storageKey": null
 },
-v11 = [
-  (v8/*: any*/),
+v12 = [
   (v9/*: any*/),
-  (v10/*: any*/)
+  (v10/*: any*/),
+  (v11/*: any*/)
 ],
-v12 = {
+v13 = {
   "alias": null,
   "args": null,
   "concreteType": "ImageMediaAccess",
   "kind": "LinkedField",
   "name": "small",
   "plural": false,
-  "selections": (v11/*: any*/),
+  "selections": (v12/*: any*/),
   "storageKey": null
 },
-v13 = {
+v14 = {
   "alias": null,
   "args": null,
   "concreteType": "ImageMediaAccess",
   "kind": "LinkedField",
   "name": "thumbnail",
   "plural": false,
-  "selections": (v11/*: any*/),
+  "selections": (v12/*: any*/),
   "storageKey": null
 },
-v14 = [
-  (v8/*: any*/)
+v15 = [
+  (v9/*: any*/)
 ],
-v15 = {
+v16 = {
+  "kind": "InlineFragment",
+  "selections": [
+    (v2/*: any*/)
+  ],
+  "type": "RawMedia",
+  "abstractKey": null
+},
+v17 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v16 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "Resource",
-  "kind": "LinkedField",
-  "name": "banner",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "preview",
-      "storageKey": null
-    },
-    (v2/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "ResourceUrl",
-      "kind": "LinkedField",
-      "name": "urls",
-      "plural": true,
-      "selections": [
-        (v8/*: any*/),
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "mimeType",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
-    (v9/*: any*/),
-    (v10/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "ResourceUrl",
-      "kind": "LinkedField",
-      "name": "videoThumbnail",
-      "plural": false,
-      "selections": (v14/*: any*/),
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "type",
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-};
+v18 = [
+  (v8/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "ImageMediaVariants",
+    "kind": "LinkedField",
+    "name": "variants",
+    "plural": false,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "ImageMediaAccess",
+        "kind": "LinkedField",
+        "name": "icon",
+        "plural": false,
+        "selections": (v12/*: any*/),
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "ImageMediaAccess",
+        "kind": "LinkedField",
+        "name": "mini",
+        "plural": false,
+        "selections": (v12/*: any*/),
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  },
+  (v2/*: any*/)
+],
+v19 = [
+  (v6/*: any*/),
+  (v7/*: any*/),
+  {
+    "kind": "InlineFragment",
+    "selections": (v18/*: any*/),
+    "type": "ImageMedia",
+    "abstractKey": null
+  },
+  {
+    "kind": "InlineFragment",
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "ImageMedia",
+        "kind": "LinkedField",
+        "name": "cover",
+        "plural": false,
+        "selections": (v18/*: any*/),
+        "storageKey": null
+      },
+      (v2/*: any*/)
+    ],
+    "type": "VideoMedia",
+    "abstractKey": null
+  },
+  (v16/*: any*/)
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -344,14 +363,11 @@ return {
                         "plural": false,
                         "selections": [
                           (v6/*: any*/),
-                          {
-                            "kind": "TypeDiscriminator",
-                            "abstractKey": "__isMedia"
-                          },
+                          (v7/*: any*/),
                           {
                             "kind": "InlineFragment",
                             "selections": [
-                              (v7/*: any*/),
+                              (v8/*: any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -360,7 +376,7 @@ return {
                                 "name": "variants",
                                 "plural": false,
                                 "selections": [
-                                  (v12/*: any*/),
+                                  (v13/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -368,7 +384,7 @@ return {
                                     "kind": "LinkedField",
                                     "name": "medium",
                                     "plural": false,
-                                    "selections": (v11/*: any*/),
+                                    "selections": (v12/*: any*/),
                                     "storageKey": null
                                   },
                                   {
@@ -378,7 +394,7 @@ return {
                                     "kind": "LinkedField",
                                     "name": "large",
                                     "plural": false,
-                                    "selections": (v11/*: any*/),
+                                    "selections": (v12/*: any*/),
                                     "storageKey": null
                                   },
                                   {
@@ -388,10 +404,10 @@ return {
                                     "kind": "LinkedField",
                                     "name": "hd",
                                     "plural": false,
-                                    "selections": (v11/*: any*/),
+                                    "selections": (v12/*: any*/),
                                     "storageKey": null
                                   },
-                                  (v13/*: any*/)
+                                  (v14/*: any*/)
                                 ],
                                 "storageKey": null
                               },
@@ -419,13 +435,13 @@ return {
                                     "name": "variants",
                                     "plural": false,
                                     "selections": [
-                                      (v12/*: any*/),
-                                      (v13/*: any*/)
+                                      (v13/*: any*/),
+                                      (v14/*: any*/)
                                     ],
                                     "storageKey": null
                                   },
                                   (v2/*: any*/),
-                                  (v7/*: any*/)
+                                  (v8/*: any*/)
                                 ],
                                 "storageKey": null
                               },
@@ -437,8 +453,8 @@ return {
                                 "name": "aspectRatio",
                                 "plural": false,
                                 "selections": [
-                                  (v10/*: any*/),
-                                  (v9/*: any*/)
+                                  (v11/*: any*/),
+                                  (v10/*: any*/)
                                 ],
                                 "storageKey": null
                               },
@@ -467,13 +483,13 @@ return {
                                   (v6/*: any*/),
                                   {
                                     "kind": "InlineFragment",
-                                    "selections": (v14/*: any*/),
+                                    "selections": (v15/*: any*/),
                                     "type": "HLSVideoContainer",
                                     "abstractKey": null
                                   },
                                   {
                                     "kind": "InlineFragment",
-                                    "selections": (v14/*: any*/),
+                                    "selections": (v15/*: any*/),
                                     "type": "MP4VideoContainer",
                                     "abstractKey": null
                                   }
@@ -485,14 +501,7 @@ return {
                             "type": "VideoMedia",
                             "abstractKey": null
                           },
-                          {
-                            "kind": "InlineFragment",
-                            "selections": [
-                              (v2/*: any*/)
-                            ],
-                            "type": "RawMedia",
-                            "abstractKey": null
-                          }
+                          (v16/*: any*/)
                         ],
                         "storageKey": null
                       }
@@ -515,8 +524,17 @@ return {
                     "plural": true,
                     "selections": [
                       (v2/*: any*/),
-                      (v15/*: any*/),
-                      (v16/*: any*/)
+                      (v17/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": null,
+                        "kind": "LinkedField",
+                        "name": "bannerMedia",
+                        "plural": false,
+                        "selections": (v19/*: any*/),
+                        "storageKey": null
+                      }
                     ],
                     "storageKey": null
                   },
@@ -528,7 +546,6 @@ return {
                     "name": "club",
                     "plural": false,
                     "selections": [
-                      (v2/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -536,8 +553,18 @@ return {
                         "name": "slug",
                         "storageKey": null
                       },
-                      (v15/*: any*/),
-                      (v16/*: any*/)
+                      (v17/*: any*/),
+                      (v2/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": null,
+                        "kind": "LinkedField",
+                        "name": "thumbnailMedia",
+                        "plural": false,
+                        "selections": (v19/*: any*/),
+                        "storageKey": null
+                      }
                     ],
                     "storageKey": null
                   }
@@ -553,7 +580,7 @@ return {
     ]
   },
   "params": {
-    "id": "22231dbdaaae9477904021b89482ef6f",
+    "id": "cba81af4379ad2a5b260e82890496bb1",
     "metadata": {},
     "name": "SpinRouletteMutation",
     "operationKind": "mutation",

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6d96e5c89baf7344bbe5f5b5fd7c4559>>
- * @relayHash ee41a8bed1aeab519179368f8272bc7c
+ * @generated SignedSource<<687b4adf5b006f2f0b4b37677380f917>>
+ * @relayHash 717ddca6f3599baf49274817512358d8
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ee41a8bed1aeab519179368f8272bc7c
+// @relayRequestID 717ddca6f3599baf49274817512358d8
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -106,13 +106,6 @@ v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
-},
-v10 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "supporterSince",
   "storageKey": null
 };
@@ -197,7 +190,6 @@ return {
                     "name": "account",
                     "plural": false,
                     "selections": [
-                      (v7/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -205,6 +197,7 @@ return {
                         "name": "username",
                         "storageKey": null
                       },
+                      (v7/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -213,60 +206,8 @@ return {
                         "name": "avatar",
                         "plural": false,
                         "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "preview",
-                            "storageKey": null
-                          },
-                          (v7/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "ResourceUrl",
-                            "kind": "LinkedField",
-                            "name": "urls",
-                            "plural": true,
-                            "selections": [
-                              (v9/*: any*/),
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "mimeType",
-                                "storageKey": null
-                              }
-                            ],
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "width",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "height",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "ResourceUrl",
-                            "kind": "LinkedField",
-                            "name": "videoThumbnail",
-                            "plural": false,
-                            "selections": [
-                              (v9/*: any*/)
-                            ],
-                            "storageKey": null
-                          },
-                          (v2/*: any*/)
+                          (v6/*: any*/),
+                          (v7/*: any*/)
                         ],
                         "storageKey": null
                       }
@@ -300,7 +241,7 @@ return {
               {
                 "kind": "InlineFragment",
                 "selections": [
-                  (v10/*: any*/),
+                  (v9/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -316,7 +257,7 @@ return {
               {
                 "kind": "InlineFragment",
                 "selections": [
-                  (v10/*: any*/),
+                  (v9/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -332,7 +273,7 @@ return {
               {
                 "kind": "InlineFragment",
                 "selections": [
-                  (v10/*: any*/),
+                  (v9/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -440,7 +381,7 @@ return {
     ]
   },
   "params": {
-    "id": "ee41a8bed1aeab519179368f8272bc7c",
+    "id": "717ddca6f3599baf49274817512358d8",
     "metadata": {},
     "name": "StaffAccountTransactionQuery",
     "operationKind": "query",

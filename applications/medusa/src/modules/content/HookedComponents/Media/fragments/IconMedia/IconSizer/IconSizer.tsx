@@ -28,8 +28,8 @@ export default function IconSizer (props: Props): JSX.Element {
       h: 12
     },
     xl: {
-      w: 18,
-      h: 18
+      w: 16,
+      h: 16
     }
   }
 

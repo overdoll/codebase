@@ -1,8 +1,8 @@
 import { useFragment } from 'react-relay/hooks'
 import type { LargeAccountHeaderFragment$key } from '@//:artifacts/LargeAccountHeaderFragment.graphql'
 import { graphql } from 'react-relay'
-import { Flex, Heading } from '@chakra-ui/react'
-import { ResourceIcon } from '@//:modules/content/PageLayout'
+import { Heading, HStack } from '@chakra-ui/react'
+import AccountIcon from '@//:modules/content/PageLayout/Display/fragments/AccountIcon/AccountIcon'
 
 interface Props {
   query: LargeAccountHeaderFragment$key
@@ -10,11 +10,8 @@ interface Props {
 
 const Fragment = graphql`
   fragment LargeAccountHeaderFragment on Account {
-    id
     username
-    avatar {
-      ...ResourceIconFragment
-    }
+    ...AccountIconFragment
   }
 `
 
@@ -22,15 +19,8 @@ export default function LargeAccountHeader ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   return (
-    <Flex h={16} align='center'>
-      <ResourceIcon
-        showBorder
-        seed={data.id}
-        mr={4}
-        h={14}
-        w={14}
-        query={data?.avatar}
-      />
+    <HStack spacing={4} h={16} align='center'>
+      <AccountIcon size='lg' accountQuery={data} />
       <Heading
         noOfLines={1}
         fontSize='3xl'
@@ -38,6 +28,6 @@ export default function LargeAccountHeader ({ query }: Props): JSX.Element {
       >
         {data?.username}
       </Heading>
-    </Flex>
+    </HStack>
   )
 }

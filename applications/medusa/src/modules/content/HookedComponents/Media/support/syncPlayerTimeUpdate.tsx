@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { OnPlayerInitType, PlayerType } from '../types'
 
-export default function syncPlayerTimeUpdate (player: PlayerType, setTime?: (time) => void, setPlayer?: OnPlayerInitType): void {
+export default function syncPlayerTimeUpdate (player: PlayerType | null, setTime?: (time) => void, setPlayer?: OnPlayerInitType): void {
   useEffect(() => {
     if (player == null) return
 

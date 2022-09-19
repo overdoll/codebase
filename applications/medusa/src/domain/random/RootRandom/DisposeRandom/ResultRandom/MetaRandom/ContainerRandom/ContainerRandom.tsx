@@ -7,7 +7,6 @@ import BannerRandom from './BannerRandom/BannerRandom'
 import HeaderRandom from './HeaderRandom/HeaderRandom'
 import ScrollRandom from './ScrollRandom/ScrollRandom'
 import { Stack } from '@chakra-ui/react'
-import RandomizeButton from './HeaderRandom/RandomizeButton/RandomizeButton'
 
 interface Props {
   rootQuery: ContainerRandomFragment$key
@@ -41,9 +40,8 @@ export default function ContainerRandom (props: Props): JSX.Element {
         <BannerRandom viewerQuery={viewerData} />
       </BannerContainer>
       <ContentContainer>
-        <Stack spacing={4}>
+        <Stack spacing={8}>
           <HeaderRandom />
-          <RandomizeButton />
           <ScrollRandom rootQuery={rootData} />
         </Stack>
       </ContentContainer>

@@ -1,5 +1,5 @@
 import { MutableRefObject, ReactNode, useMemo, useRef, useState } from 'react'
-import { Fade, Flex, useOutsideClick } from '@chakra-ui/react'
+import { Fade, Flex } from '@chakra-ui/react'
 import { useUpdateEffect } from 'usehooks-ts'
 
 type RequestType<T> = (control: T) => void
@@ -38,13 +38,6 @@ export default function useControlRequest<ControlT extends string> (props: UseCo
     setCurrentControl(null)
   }
 
-  useOutsideClick({
-    ref: ref,
-    handler: () => {
-      // onCancel()
-    }
-  })
-
   useUpdateEffect(() => {
     if (watchValue === false) {
       onCancel()
@@ -52,7 +45,15 @@ export default function useControlRequest<ControlT extends string> (props: UseCo
   }, [watchValue])
 
   const controls = useMemo(() => (
-    <Flex ddata-ignore='controls' ref={ref} align='inherit' justify='inherit' w='inherit' h='inherit' position='relative'>
+    <Flex
+      ddata-ignore='controls'
+      ref={ref}
+      align='inherit'
+      justify='inherit'
+      w='inherit'
+      h='inherit'
+      position='relative'
+    >
       {Object.keys(specifiedControls).map((item) => (
         <Fade
           data-ignore='controls'

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c4a5650e139e2aa944dacc4c7775c72a>>
- * @relayHash 4220b0d87fe8ebb56dd87d3048d206f4
+ * @generated SignedSource<<b8133542b42b188e0498678b362b3369>>
+ * @relayHash 4b3d2badcf743bc43ef54c0057e3d8bd
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4220b0d87fe8ebb56dd87d3048d206f4
+// @relayRequestID 4b3d2badcf743bc43ef54c0057e3d8bd
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -143,21 +143,28 @@ v12 = {
   "name": "type",
   "storageKey": null
 },
-v13 = {
+v13 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 11
+  }
+],
+v14 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "preview",
   "storageKey": null
 },
-v14 = {
+v15 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "url",
   "storageKey": null
 },
-v15 = {
+v16 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -165,7 +172,7 @@ v15 = {
   "name": "urls",
   "plural": true,
   "selections": [
-    (v14/*: any*/),
+    (v15/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -176,21 +183,21 @@ v15 = {
   ],
   "storageKey": null
 },
-v16 = {
+v17 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "width",
   "storageKey": null
 },
-v17 = {
+v18 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "height",
   "storageKey": null
 },
-v18 = {
+v19 = {
   "alias": null,
   "args": null,
   "concreteType": "ResourceUrl",
@@ -198,26 +205,10 @@ v18 = {
   "name": "videoThumbnail",
   "plural": false,
   "selections": [
-    (v14/*: any*/)
+    (v15/*: any*/)
   ],
   "storageKey": null
-},
-v19 = [
-  (v13/*: any*/),
-  (v2/*: any*/),
-  (v15/*: any*/),
-  (v16/*: any*/),
-  (v17/*: any*/),
-  (v18/*: any*/),
-  (v12/*: any*/)
-],
-v20 = [
-  {
-    "kind": "Literal",
-    "name": "first",
-    "value": 11
-  }
-];
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -564,12 +555,15 @@ return {
             "kind": "LinkedField",
             "name": "avatar",
             "plural": false,
-            "selections": (v19/*: any*/),
+            "selections": [
+              (v4/*: any*/),
+              (v2/*: any*/)
+            ],
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v20/*: any*/),
+            "args": (v13/*: any*/),
             "concreteType": "ClubConnection",
             "kind": "LinkedField",
             "name": "clubs",
@@ -607,7 +601,15 @@ return {
                         "kind": "LinkedField",
                         "name": "thumbnail",
                         "plural": false,
-                        "selections": (v19/*: any*/),
+                        "selections": [
+                          (v14/*: any*/),
+                          (v2/*: any*/),
+                          (v16/*: any*/),
+                          (v17/*: any*/),
+                          (v18/*: any*/),
+                          (v19/*: any*/),
+                          (v12/*: any*/)
+                        ],
                         "storageKey": null
                       },
                       {
@@ -625,7 +627,7 @@ return {
                             "name": "processed",
                             "storageKey": null
                           },
-                          (v13/*: any*/),
+                          (v14/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -661,10 +663,10 @@ return {
                           },
                           (v12/*: any*/),
                           (v2/*: any*/),
-                          (v15/*: any*/),
                           (v16/*: any*/),
                           (v17/*: any*/),
-                          (v18/*: any*/)
+                          (v18/*: any*/),
+                          (v19/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -682,7 +684,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v20/*: any*/),
+            "args": (v13/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "StaffAccountClubs_clubs",
@@ -695,7 +697,7 @@ return {
     ]
   },
   "params": {
-    "id": "4220b0d87fe8ebb56dd87d3048d206f4",
+    "id": "4b3d2badcf743bc43ef54c0057e3d8bd",
     "metadata": {},
     "name": "StaffAccountQuery",
     "operationKind": "query",

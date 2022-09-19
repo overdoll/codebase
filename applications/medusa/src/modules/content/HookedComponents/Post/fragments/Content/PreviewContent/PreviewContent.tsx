@@ -7,9 +7,12 @@ import ContentGrid from '../../../components/ContentGrid/ContentGrid'
 import { Box, GridItem } from '@chakra-ui/react'
 import PreviewGallery from '../../Gallery/PreviewGallery/PreviewGallery'
 import PreviewCarousel from '../../Carousel/PreviewCarousel/PreviewCarousel'
+import { OnPlayerInitType } from '../../../../Media/types'
 
 interface Props {
   postQuery: PreviewContentFragment$key
+  onSwiper?: OnSwiperInitType
+  onPlayerInit?: OnPlayerInitType
 }
 
 const PostFragment = graphql`
@@ -25,14 +28,17 @@ const PostFragment = graphql`
 
 export default function PreviewContent (props: Props): JSX.Element {
   const {
-    postQuery
+    postQuery,
+    onSwiper,
+    onPlayerInit
   } = props
 
   const postData = useFragment(PostFragment, postQuery)
 
   const [swiper, setSwiper] = useState<SwiperType | null>(null)
 
-  const onInit: OnSwiperInitType = (swiper) => {
+  const onSwiperInit: OnSwiperInitType = (swiper) => {
+    onSwiper?.(swiper)
     setSwiper(swiper)
   }
 
@@ -40,7 +46,7 @@ export default function PreviewContent (props: Props): JSX.Element {
     <ContentGrid contentLength={postData.content.length} key={postData.id}>
       <GridItem overflow='hidden' area='gallery'>
         <Box h='100%' position='relative'>
-          <PreviewGallery postQuery={postData} onSwiper={onInit} />
+          <PreviewGallery postQuery={postData} onSwiper={onSwiperInit} onPlayerInit={onPlayerInit} />
         </Box>
       </GridItem>
       <GridItem

@@ -1,4 +1,4 @@
-import { Flex, Heading } from '@chakra-ui/react'
+import { Heading, HStack } from '@chakra-ui/react'
 import Button from '../../../../../../../form/Button/Button'
 import { Trans } from '@lingui/macro'
 import { ArrowButtonRefresh } from '@//:assets/icons'
@@ -12,13 +12,14 @@ export default function ErrorButton (props: Props): JSX.Element {
   const { onClick } = props
 
   return (
-    <Flex
+    <HStack
+      spacing={2}
       w='100%'
       h={24}
       align='center'
       justify='center'
     >
-      <Heading mb={2} textAlign='center' color='gray.200' fontSize='sm'>
+      <Heading textAlign='center' color='gray.200' fontSize='sm'>
         <Trans>
           Something went wrong
         </Trans>
@@ -36,6 +37,6 @@ export default function ErrorButton (props: Props): JSX.Element {
           Retry
         </Trans>
       </Button>
-    </Flex>
+    </HStack>
   )
 }

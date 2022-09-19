@@ -8,8 +8,6 @@ import PostClickableCharacters
 import PostClickableCategories
   from '@//:modules/content/Posts/components/PostInteraction/PostClickableCategories/PostClickableCategories'
 import PostFooterButtons from '@//:modules/content/Posts/components/PostInteraction/PostFooterButtons/PostFooterButtons'
-import PostPublicHeader
-  from '@//:modules/content/Posts/components/PostInteraction/PostHeaders/PostPublicHeader/PostPublicHeader'
 import PostClubLinks from '@//:modules/content/Posts/components/PostData/PostClubLinks/PostClubLinks'
 
 interface Props {
@@ -26,14 +24,12 @@ const PostFragment = graphql`
     ...PostClickableCharactersFragment
     ...PostClickableCategoriesFragment
     ...PostFooterButtonsFragment
-    ...PostPublicHeaderFragment
   }
 `
 
 const ViewerFragment = graphql`
   fragment DescriptionPublicPostViewerFragment on Account {
     ...PostFooterButtonsViewerFragment
-    ...PostPublicHeaderViewerFragment
   }
 `
 
@@ -44,10 +40,11 @@ export default function DescriptionPublicPost ({
   const postData = useFragment(PostFragment, postQuery)
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
+  // TODO add post header
+
   return (
     <Stack spacing={4}>
       <Stack spacing={2}>
-        <PostPublicHeader postQuery={postData} viewerQuery={viewerData} />
         <PostClubLinks query={postData.club} />
         <PostFooterButtons postQuery={postData} viewerQuery={viewerData} />
       </Stack>

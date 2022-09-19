@@ -35,6 +35,6 @@ export default function RandomIcon ({ seed }: Props): JSX.Element {
   const randomColor = TAG_COLOR_PALETTE[randomValues.colors]
 
   return (
-    <Icon icon={randomIcon} fill={randomColor} w='100%' h='100%' p={2} />
+    <Icon flexShrink={0} icon={randomIcon} fill={randomColor} w='100%' h='100%' p={2} />
   )
 }

@@ -16,7 +16,7 @@ export default function HlsVideoPlayer (props: Props): JSX.Element {
     volume,
     muted,
     autoPlay,
-    currentTime
+    currentTime,
   } = props
 
   const ref = useRef(null)
@@ -26,7 +26,7 @@ export default function HlsVideoPlayer (props: Props): JSX.Element {
       el: ref.current,
       url: hlsUrl,
       autoPlay,
-      ...VIDEO_OPTIONS
+      ...VIDEO_OPTIONS,
     }
 
     const player = new HlsPlayer(config)

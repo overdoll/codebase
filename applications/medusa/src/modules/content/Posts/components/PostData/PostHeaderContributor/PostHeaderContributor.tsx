@@ -1,17 +1,15 @@
-import { Flex, Heading } from '@chakra-ui/react'
+import { Heading, HStack } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay'
 import type { PostHeaderContributorFragment$key } from '@//:artifacts/PostHeaderContributorFragment.graphql'
-import { ClickableBox, ResourceIcon } from '../../../../PageLayout'
+import { ClickableBox } from '../../../../PageLayout'
 import { Link } from '../../../../../routing'
+import AccountIcon from '../../../../PageLayout/Display/fragments/AccountIcon/AccountIcon'
 
 const Fragment = graphql`
   fragment PostHeaderContributorFragment on Post {
     contributor {
-      id
       username
-      avatar {
-        ...ResourceIconFragment
-      }
+      ...AccountIconFragment
     }
   }
 `
@@ -31,17 +29,12 @@ export default function PostHeaderContributor ({ query }: Props): JSX.Element {
       }}
     >
       <ClickableBox bg='transparent' p={0}>
-        <Flex align='center'>
-          <ResourceIcon
-            showBorder
-            seed={data.contributor.id}
-            mr={3}
-            query={data.contributor.avatar}
-          />
+        <HStack spacing={3} align='center'>
+          <AccountIcon size='md' accountQuery={data?.contributor} />
           <Heading color='gray.00' fontSize='xl'>
             {data?.contributor?.username}
           </Heading>
-        </Flex>
+        </HStack>
       </ClickableBox>
     </Link>
   )

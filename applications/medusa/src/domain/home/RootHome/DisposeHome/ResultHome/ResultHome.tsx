@@ -8,8 +8,7 @@ interface Props {
 }
 
 const Query = graphql`
-  query ResultHomeQuery($seed: String) @preloadable {
-    ...MetaHomeFragment
+  query ResultHomeQuery @preloadable {
     viewer {
       ...MetaHomeViewerFragment
     }
@@ -25,6 +24,6 @@ export default function ResultHome (props: Props): JSX.Element {
   )
 
   return (
-    <MetaHome rootQuery={queryData} viewerQuery={queryData.viewer} />
+    <MetaHome viewerQuery={queryData.viewer} />
   )
 }

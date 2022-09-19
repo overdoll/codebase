@@ -2,7 +2,7 @@ import { graphql } from 'react-relay'
 import { RoulettePostCharacterFragment$key } from '@//:artifacts/RoulettePostCharacterFragment.graphql'
 import { useFragment } from 'react-relay/hooks'
 import { Heading, HStack } from '@chakra-ui/react'
-import { ResourceIcon } from '@//:modules/content/PageLayout'
+import CharacterIcon from '@//:modules/content/PageLayout/Display/fragments/CharacterIcon/CharacterIcon'
 
 interface Props {
   query: RoulettePostCharacterFragment$key
@@ -10,11 +10,8 @@ interface Props {
 
 const Fragment = graphql`
   fragment RoulettePostCharacterFragment on Character {
-    id
-    banner {
-      ...ResourceIconFragment
-    }
     name
+    ...CharacterIconFragment
   }
 `
 
@@ -25,7 +22,7 @@ export default function RoulettePostCharacter (props: Props): JSX.Element {
 
   return (
     <HStack align='center' spacing={2}>
-      <ResourceIcon query={data.banner} seed={data.id} w={6} h={6} />
+      <CharacterIcon clubQuery={data} />
       <Heading fontSize='xl' color='gray.00'>
         {data.name}
       </Heading>

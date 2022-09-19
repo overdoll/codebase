@@ -4,7 +4,7 @@ import { HStack, Modal, ModalBody, ModalContent, ModalOverlay, Stack } from '@ch
 import UpdatePostDescriptionForm from './UpdatePostDescriptionForm/UpdatePostDescriptionForm'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { useRef } from 'react'
-import ClubThumbnail from '@//:modules/content/DataDisplay/Club/ClubThumbnail/ClubThumbnail'
+import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/ClubIcon/ClubIcon'
 
 interface Props {
   query: PostDescriptionModalFragment$key
@@ -15,7 +15,7 @@ interface Props {
 const Fragment = graphql`
   fragment PostDescriptionModalFragment on Post {
     club {
-      ...ClubThumbnailFragment
+      ...ClubIconFragment
     }
     ...UpdatePostDescriptionFormFragment
   }
@@ -43,10 +43,9 @@ export default function PostDescriptionModal ({
         <ModalBody my={3}>
           <Stack spacing={4}>
             <HStack justify='space-between'>
-              <ClubThumbnail
-                h={14}
-                w={14}
-                query={data.club}
+              <ClubIcon
+                size='xl'
+                clubQuery={data.club}
               />
               <CloseButton bg='gray.800' size='lg' onClick={onClose} />
             </HStack>

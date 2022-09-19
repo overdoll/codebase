@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<20dd891c59946c58d02e335bb14e9a47>>
- * @relayHash 98cadf8d60e96a5459f7d41d73304faf
+ * @generated SignedSource<<20805d5958ba7ef7e3c24d5d5ee3827d>>
+ * @relayHash 39385a3a4d169786cb75cc97a7502dd5
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 98cadf8d60e96a5459f7d41d73304faf
+// @relayRequestID 39385a3a4d169786cb75cc97a7502dd5
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -66,35 +66,22 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "url",
+  "name": "__typename",
   "storageKey": null
 },
 v6 = [
   {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "preview",
-    "storageKey": null
-  },
-  (v4/*: any*/),
+    "kind": "Literal",
+    "name": "first",
+    "value": 5
+  }
+],
+v7 = [
   {
     "alias": null,
     "args": null,
-    "concreteType": "ResourceUrl",
-    "kind": "LinkedField",
-    "name": "urls",
-    "plural": true,
-    "selections": [
-      (v5/*: any*/),
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "mimeType",
-        "storageKey": null
-      }
-    ],
+    "kind": "ScalarField",
+    "name": "url",
     "storageKey": null
   },
   {
@@ -110,33 +97,73 @@ v6 = [
     "kind": "ScalarField",
     "name": "height",
     "storageKey": null
-  },
+  }
+],
+v8 = [
   {
     "alias": null,
     "args": null,
-    "concreteType": "ResourceUrl",
+    "concreteType": "ColorPalette",
     "kind": "LinkedField",
-    "name": "videoThumbnail",
-    "plural": false,
+    "name": "colorPalettes",
+    "plural": true,
     "selections": [
-      (v5/*: any*/)
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "red",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "green",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "blue",
+        "storageKey": null
+      }
     ],
     "storageKey": null
   },
   {
     "alias": null,
     "args": null,
-    "kind": "ScalarField",
-    "name": "type",
+    "concreteType": "ImageMediaVariants",
+    "kind": "LinkedField",
+    "name": "variants",
+    "plural": false,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "ImageMediaAccess",
+        "kind": "LinkedField",
+        "name": "icon",
+        "plural": false,
+        "selections": (v7/*: any*/),
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "ImageMediaAccess",
+        "kind": "LinkedField",
+        "name": "mini",
+        "plural": false,
+        "selections": (v7/*: any*/),
+        "storageKey": null
+      }
+    ],
     "storageKey": null
-  }
-],
-v7 = [
-  {
-    "kind": "Literal",
-    "name": "first",
-    "value": 5
-  }
+  },
+  (v4/*: any*/)
 ];
 return {
   "fragment": {
@@ -236,7 +263,6 @@ return {
             "name": "payoutAccount",
             "plural": false,
             "selections": [
-              (v4/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -244,6 +270,7 @@ return {
                 "name": "username",
                 "storageKey": null
               },
+              (v4/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -251,7 +278,10 @@ return {
                 "kind": "LinkedField",
                 "name": "avatar",
                 "plural": false,
-                "selections": (v6/*: any*/),
+                "selections": [
+                  (v5/*: any*/),
+                  (v4/*: any*/)
+                ],
                 "storageKey": null
               }
             ],
@@ -259,7 +289,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v7/*: any*/),
+            "args": (v6/*: any*/),
             "concreteType": "ClubPaymentConnection",
             "kind": "LinkedField",
             "name": "payments",
@@ -305,13 +335,7 @@ return {
                         "name": "settlementDate",
                         "storageKey": null
                       },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "__typename",
-                        "storageKey": null
-                      }
+                      (v5/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -355,7 +379,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v7/*: any*/),
+            "args": (v6/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "StaffPayoutPayments_payments",
@@ -407,11 +431,49 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "Resource",
+                "concreteType": null,
                 "kind": "LinkedField",
-                "name": "thumbnail",
+                "name": "thumbnailMedia",
                 "plural": false,
-                "selections": (v6/*: any*/),
+                "selections": [
+                  (v5/*: any*/),
+                  {
+                    "kind": "TypeDiscriminator",
+                    "abstractKey": "__isMedia"
+                  },
+                  {
+                    "kind": "InlineFragment",
+                    "selections": (v8/*: any*/),
+                    "type": "ImageMedia",
+                    "abstractKey": null
+                  },
+                  {
+                    "kind": "InlineFragment",
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "ImageMedia",
+                        "kind": "LinkedField",
+                        "name": "cover",
+                        "plural": false,
+                        "selections": (v8/*: any*/),
+                        "storageKey": null
+                      },
+                      (v4/*: any*/)
+                    ],
+                    "type": "VideoMedia",
+                    "abstractKey": null
+                  },
+                  {
+                    "kind": "InlineFragment",
+                    "selections": [
+                      (v4/*: any*/)
+                    ],
+                    "type": "RawMedia",
+                    "abstractKey": null
+                  }
+                ],
                 "storageKey": null
               },
               {
@@ -430,7 +492,7 @@ return {
     ]
   },
   "params": {
-    "id": "98cadf8d60e96a5459f7d41d73304faf",
+    "id": "39385a3a4d169786cb75cc97a7502dd5",
     "metadata": {},
     "name": "StaffPayoutQuery",
     "operationKind": "query",

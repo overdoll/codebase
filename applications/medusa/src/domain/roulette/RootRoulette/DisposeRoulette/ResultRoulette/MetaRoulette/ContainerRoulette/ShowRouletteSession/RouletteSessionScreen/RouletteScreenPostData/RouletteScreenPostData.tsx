@@ -3,8 +3,9 @@ import type { RouletteScreenPostDataFragment$key } from '@//:artifacts/RouletteS
 import { graphql } from 'react-relay'
 import { Flex, Heading, HStack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
-import { ResourceIcon } from '@//:modules/content/PageLayout'
 import { LinkTile } from '@//:modules/content/ContentSelection'
+import CharacterIcon from '@//:modules/content/PageLayout/Display/fragments/CharacterIcon/CharacterIcon'
+import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/ClubIcon/ClubIcon'
 
 interface Props {
   query: RouletteScreenPostDataFragment$key
@@ -16,17 +17,12 @@ const Fragment = graphql`
     characters {
       id
       name
-      banner {
-        ...ResourceIconFragment
-      }
+      ...CharacterIconFragment
     }
     club {
-      id
       slug
       name
-      banner {
-        ...ResourceIconFragment
-      }
+      ...ClubIconFragment
     }
   }
 `
@@ -48,9 +44,7 @@ export default function RouletteScreenPostData (props: Props): JSX.Element {
       >
         <HStack spacing={2}>
           <HStack align='center' spacing={1}>
-            {data.characters[0].banner != null && (
-              <ResourceIcon query={data.characters[0].banner} seed={data.characters[0].id} w={4} h={4} />
-            )}
+            <CharacterIcon size='sm' clubQuery={data.characters[0]} />
             <Heading noOfLines={1} fontSize='md' color='gray.00'>
               {data.characters[0].name}
             </Heading>
@@ -61,9 +55,7 @@ export default function RouletteScreenPostData (props: Props): JSX.Element {
             </Trans>
           </Heading>
           <HStack align='center' spacing={1}>
-            {data.club.banner != null && (
-              <ResourceIcon query={data.club.banner} seed={data.club.id} w={4} h={4} />
-            )}
+            <ClubIcon size='sm' clubQuery={data.club} />
             <Heading noOfLines={1} fontSize='md' color='gray.00'>
               {data.club.name}
             </Heading>

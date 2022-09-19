@@ -6,10 +6,12 @@ import { OnSwiperInitType } from '../../../types'
 import { PreviewMedia } from '../../../../Media'
 import SupporterSlide from '../SupporterSlide/SupporterSlide'
 import PreviewSlide from '../../../components/PreviewSlide/PreviewSlide'
+import { OnPlayerInitType } from '../../../../Media/types'
 
 interface Props {
   postQuery: PreviewGalleryFragment$key
   onSwiper?: OnSwiperInitType
+  onPlayerInit?: OnPlayerInitType
 }
 
 const PostFragment = graphql`
@@ -29,19 +31,16 @@ const PostFragment = graphql`
 export default function PreviewGallery (props: Props): JSX.Element {
   const {
     postQuery,
-    onSwiper
+    onSwiper,
+    onPlayerInit
   } = props
 
   const postData = useFragment(PostFragment, postQuery)
 
-  const onInit: OnSwiperInitType = (swiper) => {
-    onSwiper?.(swiper)
-  }
-
   return (
     <Swiper
       key={postData.id}
-      onSwiper={onInit}
+      onSwiper={onSwiper}
       {...GALLERY_PROPS}
     >
       {postData.content.map((content) =>
@@ -59,6 +58,9 @@ export default function PreviewGallery (props: Props): JSX.Element {
                   mediaQuery={content.media}
                   observerProps={{
                     isActive
+                  }}
+                  videoProps={{
+                    onPlayerInit
                   }}
                 />
               </SupporterSlide>

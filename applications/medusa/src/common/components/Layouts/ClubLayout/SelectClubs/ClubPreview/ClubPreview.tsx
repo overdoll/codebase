@@ -1,9 +1,8 @@
-import { Box, Flex, Heading, Text } from '@chakra-ui/react'
+import { Box, Heading, Stack, Text } from '@chakra-ui/react'
 import type { ClubPreviewFragment$key } from '@//:artifacts/ClubPreviewFragment.graphql'
-
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
-import ClubThumbnail from '@//:modules/content/DataDisplay/Club/ClubThumbnail/ClubThumbnail'
+import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/ClubIcon/ClubIcon'
 
 interface Props {
   query: ClubPreviewFragment$key
@@ -13,7 +12,7 @@ const Fragment = graphql`
   fragment ClubPreviewFragment on Club {
     name
     slug
-    ...ClubThumbnailFragment
+    ...ClubIconFragment
   }
 `
 
@@ -23,15 +22,11 @@ export default function ClubPreview ({
   const data = useFragment(Fragment, query)
 
   return (
-    <Flex
+    <Stack
+      spacing={2}
       align='center'
     >
-      <ClubThumbnail
-        w={10}
-        h={10}
-        mr={3}
-        query={data}
-      />
+      <ClubIcon size='md' clubQuery={data} />
       <Box
         whiteSpace='nowrap'
         textOverflow='ellipsis'
@@ -51,6 +46,6 @@ export default function ClubPreview ({
           /{data.slug}
         </Text>
       </Box>
-    </Flex>
+    </Stack>
   )
 }

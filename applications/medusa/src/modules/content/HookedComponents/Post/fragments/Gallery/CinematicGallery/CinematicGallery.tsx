@@ -66,7 +66,7 @@ export default function CinematicGallery (props: Props): JSX.Element {
                 <CinematicMedia
                   mediaQuery={content.media}
                   videoProps={{
-                    currentTime: (slide != null && index === slide && time != null) ? time : 0
+                    currentTime: (slide != null && index === slide && time != null) ? time : (slide == null && index === 0 && time != null) ? time : 0
                   }}
                   observerProps={{
                     isActive

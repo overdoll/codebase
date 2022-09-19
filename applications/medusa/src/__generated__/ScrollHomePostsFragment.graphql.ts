@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8cc397aa2e9f2ec7bd1e081cb9d47a4b>>
+ * @generated SignedSource<<f085f4a60055a73989f45cb979eb4364>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PostsHomeFragment$data = {
+export type ScrollHomePostsFragment$data = {
   readonly postsFeed: {
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -19,11 +19,11 @@ export type PostsHomeFragment$data = {
       };
     }>;
   };
-  readonly " $fragmentType": "PostsHomeFragment";
+  readonly " $fragmentType": "ScrollHomePostsFragment";
 };
-export type PostsHomeFragment$key = {
-  readonly " $data"?: PostsHomeFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"PostsHomeFragment">;
+export type ScrollHomePostsFragment$key = {
+  readonly " $data"?: ScrollHomePostsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ScrollHomePostsFragment">;
 };
 
 const node: ReaderFragment = (function(){
@@ -43,7 +43,8 @@ return {
       "name": "first"
     },
     {
-      "kind": "RootArgument",
+      "defaultValue": null,
+      "kind": "LocalArgument",
       "name": "seed"
     }
   ],
@@ -70,7 +71,7 @@ return {
       "operation": require('./BrowsePostsPreviewPaginationQuery.graphql')
     }
   },
-  "name": "PostsHomeFragment",
+  "name": "ScrollHomePostsFragment",
   "selections": [
     {
       "alias": "postsFeed",
@@ -168,6 +169,6 @@ return {
 };
 })();
 
-(node as any).hash = "58d256c34036a2090093559c82b99127";
+(node as any).hash = "9aeb87a9732a59e8333b9d7d7949794a";
 
 export default node;

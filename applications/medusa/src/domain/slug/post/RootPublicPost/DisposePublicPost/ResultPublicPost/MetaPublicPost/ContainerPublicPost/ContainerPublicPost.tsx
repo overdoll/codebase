@@ -56,7 +56,7 @@ export default function ContainerPublicPost (props: Props): JSX.Element {
         <Stack spacing={16}>
           <DescriptionPublicPost postQuery={postData} viewerQuery={viewerData} />
           <Stack spacing={4}>
-            <PageHeader icon={MagicWand} title={<Trans>Content similar to this post</Trans>} />
+            <PageHeader icon={MagicWand} title={<Trans>Similar content</Trans>} />
             <PrepareSuggestedPosts postQuery={postData} />
           </Stack>
         </Stack>

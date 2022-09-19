@@ -1,20 +1,21 @@
-import type { PostsHomeFragment$key } from '@//:artifacts/PostsHomeFragment.graphql'
+import type { ScrollHomePostsFragment$key } from '@//:artifacts/ScrollHomePostsFragment.graphql'
 import { graphql, usePaginationFragment } from 'react-relay'
-import type { ResultHomeQuery } from '@//:artifacts/ResultHomeQuery.graphql'
+import type { LazyHomePostsQuery } from '@//:artifacts/LazyHomePostsQuery.graphql'
 import { Stack } from '@chakra-ui/react'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import { Trans } from '@lingui/macro'
 import PreviewPost from '@//:modules/content/HookedComponents/Post/fragments/Post/PreviewPost/PreviewPost'
 
 interface Props {
-  rootQuery: PostsHomeFragment$key
+  rootQuery: ScrollHomePostsFragment$key
 }
 
 const RootFragment = graphql`
-  fragment PostsHomeFragment on Query
+  fragment ScrollHomePostsFragment on Query
   @argumentDefinitions(
     first: {type: Int, defaultValue: 5}
     after: {type: String}
+    seed: {type: String}
   )
   @refetchable(queryName: "BrowsePostsPreviewPaginationQuery" ) {
     postsFeed (first: $first, after: $after, seed: $seed)
@@ -29,14 +30,14 @@ const RootFragment = graphql`
   }
 `
 
-export default function PostsHome (props: Props): JSX.Element {
+export default function ScrollHomePosts (props: Props): JSX.Element {
   const {
     rootQuery
   } = props
 
   const {
     data
-  } = usePaginationFragment<ResultHomeQuery, any>(
+  } = usePaginationFragment<LazyHomePostsQuery, any>(
     RootFragment,
     rootQuery
   )

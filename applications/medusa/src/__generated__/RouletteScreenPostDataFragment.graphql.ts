@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<028085dd63a0e4c0673f150292c44469>>
+ * @generated SignedSource<<5de27855c607efab0733a554fc8aa698>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,19 +12,14 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type RouletteScreenPostDataFragment$data = {
   readonly characters: ReadonlyArray<{
-    readonly banner: {
-      readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
-    } | null;
     readonly id: string;
     readonly name: string;
+    readonly " $fragmentSpreads": FragmentRefs<"CharacterIconFragment">;
   }>;
   readonly club: {
-    readonly banner: {
-      readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
-    } | null;
-    readonly id: string;
     readonly name: string;
     readonly slug: string;
+    readonly " $fragmentSpreads": FragmentRefs<"ClubIconFragment">;
   };
   readonly reference: string;
   readonly " $fragmentType": "RouletteScreenPostDataFragment";
@@ -39,30 +34,7 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "name",
-  "storageKey": null
-},
-v2 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "Resource",
-  "kind": "LinkedField",
-  "name": "banner",
-  "plural": false,
-  "selections": [
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "ResourceIconFragment"
-    }
-  ],
   "storageKey": null
 };
 return {
@@ -86,9 +58,19 @@ return {
       "name": "characters",
       "plural": true,
       "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "id",
+          "storageKey": null
+        },
         (v0/*: any*/),
-        (v1/*: any*/),
-        (v2/*: any*/)
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "CharacterIconFragment"
+        }
       ],
       "storageKey": null
     },
@@ -100,7 +82,6 @@ return {
       "name": "club",
       "plural": false,
       "selections": [
-        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -108,8 +89,12 @@ return {
           "name": "slug",
           "storageKey": null
         },
-        (v1/*: any*/),
-        (v2/*: any*/)
+        (v0/*: any*/),
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "ClubIconFragment"
+        }
       ],
       "storageKey": null
     }
@@ -119,6 +104,6 @@ return {
 };
 })();
 
-(node as any).hash = "5683a1c019838f6cfd41f65d434bfc01";
+(node as any).hash = "6d0f6b83b1995c522559d1f92e0ee13e";
 
 export default node;

@@ -44,7 +44,8 @@ const MyApp = ({
   environment,
   relayStore,
   translationProps,
-  appHeaders
+  appHeaders,
+  cookies
 }: CustomPageAppProps): JSX.Element => {
   if (CanUseDOM) {
     securityTokenCache = securityToken
@@ -131,7 +132,7 @@ const MyApp = ({
               <ConfigurationProvider headers={appHeaders}>
                 <ChakraProvider theme={theme}>
                   <FlashProvider>
-                    <CookiesProvider>
+                    <CookiesProvider cookies={cookies != null ? new Cookies(cookies) : undefined}>
                       <ReactRelayContainer
                         environment={environment}
                         requestProps={requestProps}
@@ -251,6 +252,11 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
     )
   )
 
+  // pass down specific cookies into the cookie provider
+  const chosenCookies = {
+    postSeed: app.ctx.cookies.get('postSeed')
+  }
+
   const props: CustomAppProps = {
     ...initialProps,
     requestProps,
@@ -258,7 +264,8 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
     environment,
     relayStore,
     translationProps,
-    appHeaders
+    appHeaders,
+    cookies: chosenCookies
   }
 
   // do a prepass to collect all queries and wait for them to complete

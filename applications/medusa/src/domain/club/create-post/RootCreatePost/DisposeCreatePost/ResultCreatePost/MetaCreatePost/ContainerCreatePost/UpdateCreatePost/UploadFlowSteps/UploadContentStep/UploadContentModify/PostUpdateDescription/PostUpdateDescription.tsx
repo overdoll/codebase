@@ -9,7 +9,8 @@ import { useLingui } from '@lingui/react'
 import { t } from '@lingui/macro'
 import ClubThumbnail from '@//:modules/content/DataDisplay/Club/ClubThumbnail/ClubThumbnail'
 import PostDescriptionHeading
-  from '@//:modules/content/Posts/components/PostInteraction/PostHeaders/PostDescriptionHeading/PostDescriptionHeading'
+  from '@//:modules/PostDescriptionHeading/PostDescriptionHeading'
+import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/ClubIcon/ClubIcon'
 
 interface Props {
   query: PostUpdateDescriptionFragment$key
@@ -19,7 +20,7 @@ const Fragment = graphql`
   fragment PostUpdateDescriptionFragment on Post {
     description
     club {
-      ...ClubThumbnailFragment
+      ...ClubIconFragment
     }
     ...PostDescriptionModalFragment
     ...PostDescriptionHeadingFragment
@@ -55,7 +56,7 @@ export default function PostUpdateDescription ({
         <Flex w='100%'>
           <Flex align='center' w='88%' py={2} px={3}>
             <HStack justify='center'>
-              <ClubThumbnail query={data.club} />
+              <ClubIcon size='lg' clubQuery={data.club} />
               <PostDescriptionHeading postQuery={data} />
             </HStack>
           </Flex>

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d6caff4b9abaed96ab583527c73e7923>>
- * @relayHash 33dab2b6157304d9c6607ba3e9d9cb51
+ * @generated SignedSource<<31b948703bb2e8c3f5dfd02903d9de84>>
+ * @relayHash df72acd4797d0195b062a6206723aeda
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 33dab2b6157304d9c6607ba3e9d9cb51
+// @relayRequestID df72acd4797d0195b062a6206723aeda
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -397,29 +397,101 @@ v20 = {
   ],
   "storageKey": null
 },
-v21 = {
+v21 = [
+  (v11/*: any*/),
+  (v13/*: any*/),
+  (v14/*: any*/)
+],
+v22 = [
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "ColorPalette",
+    "kind": "LinkedField",
+    "name": "colorPalettes",
+    "plural": true,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "red",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "green",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "blue",
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "ImageMediaVariants",
+    "kind": "LinkedField",
+    "name": "variants",
+    "plural": false,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "ImageMediaAccess",
+        "kind": "LinkedField",
+        "name": "icon",
+        "plural": false,
+        "selections": (v21/*: any*/),
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "ImageMediaAccess",
+        "kind": "LinkedField",
+        "name": "mini",
+        "plural": false,
+        "selections": (v21/*: any*/),
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  },
+  (v6/*: any*/)
+],
+v23 = [
+  (v6/*: any*/)
+],
+v24 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "ccbillSubscriptionId",
   "storageKey": null
 },
-v22 = {
+v25 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "supporterSince",
   "storageKey": null
 },
-v23 = {
+v26 = {
   "kind": "InlineFragment",
-  "selections": [
-    (v6/*: any*/)
-  ],
+  "selections": (v23/*: any*/),
   "type": "Node",
   "abstractKey": "__isNode"
 },
-v24 = [
+v27 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -546,7 +618,53 @@ return {
                     ],
                     "storageKey": null
                   },
-                  (v20/*: any*/)
+                  (v20/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": null,
+                    "kind": "LinkedField",
+                    "name": "thumbnailMedia",
+                    "plural": false,
+                    "selections": [
+                      (v2/*: any*/),
+                      {
+                        "kind": "TypeDiscriminator",
+                        "abstractKey": "__isMedia"
+                      },
+                      {
+                        "kind": "InlineFragment",
+                        "selections": (v22/*: any*/),
+                        "type": "ImageMedia",
+                        "abstractKey": null
+                      },
+                      {
+                        "kind": "InlineFragment",
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "ImageMedia",
+                            "kind": "LinkedField",
+                            "name": "cover",
+                            "plural": false,
+                            "selections": (v22/*: any*/),
+                            "storageKey": null
+                          },
+                          (v6/*: any*/)
+                        ],
+                        "type": "VideoMedia",
+                        "abstractKey": null
+                      },
+                      {
+                        "kind": "InlineFragment",
+                        "selections": (v23/*: any*/),
+                        "type": "RawMedia",
+                        "abstractKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  }
                 ],
                 "storageKey": null
               },
@@ -558,7 +676,7 @@ return {
                 "name": "ccbillSubscription",
                 "plural": false,
                 "selections": [
-                  (v21/*: any*/),
+                  (v24/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -583,7 +701,7 @@ return {
                 ],
                 "storageKey": null
               },
-              (v22/*: any*/),
+              (v25/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -661,11 +779,11 @@ return {
                 "name": "ccbillSubscription",
                 "plural": false,
                 "selections": [
-                  (v21/*: any*/)
+                  (v24/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v22/*: any*/),
+              (v25/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -684,7 +802,7 @@ return {
             "type": "AccountCancelledClubSupporterSubscription",
             "abstractKey": null
           },
-          (v23/*: any*/)
+          (v26/*: any*/)
         ],
         "storageKey": null
       },
@@ -698,7 +816,7 @@ return {
         "selections": [
           {
             "alias": null,
-            "args": (v24/*: any*/),
+            "args": (v27/*: any*/),
             "concreteType": "AccountClubSupporterSubscriptionConnection",
             "kind": "LinkedField",
             "name": "clubSupporterSubscriptions",
@@ -723,7 +841,7 @@ return {
                     "plural": false,
                     "selections": [
                       (v2/*: any*/),
-                      (v23/*: any*/)
+                      (v26/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -748,7 +866,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v24/*: any*/),
+            "args": (v27/*: any*/),
             "filters": [
               "status"
             ],
@@ -764,7 +882,7 @@ return {
     ]
   },
   "params": {
-    "id": "33dab2b6157304d9c6607ba3e9d9cb51",
+    "id": "df72acd4797d0195b062a6206723aeda",
     "metadata": {},
     "name": "AccountClubSupporterSubscriptionSettingsQuery",
     "operationKind": "query",

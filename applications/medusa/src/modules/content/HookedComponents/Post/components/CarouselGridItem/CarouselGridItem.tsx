@@ -1,7 +1,7 @@
 import { Flex, GridItem } from '@chakra-ui/react'
 import SwiperType from 'swiper'
 import { ClickableTile } from '../../../../ContentSelection'
-import { ReactNode, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import syncSwiperSlideChange from '../../support/syncSwiperSlideChange'
 
 interface Props {
@@ -22,6 +22,13 @@ export default function CarouselGridItem (props: Props): JSX.Element {
   const isActive = index === activeIndex
 
   syncSwiperSlideChange(swiper, (swiper) => setActiveIndex(swiper.activeIndex))
+
+  useEffect(() => {
+    if (swiper == null) return
+    if (swiper.activeIndex !== 0) {
+      setActiveIndex(swiper.activeIndex)
+    }
+  }, [swiper])
 
   return (
     <GridItem overflow='hidden' h='100%' w='100%'>
