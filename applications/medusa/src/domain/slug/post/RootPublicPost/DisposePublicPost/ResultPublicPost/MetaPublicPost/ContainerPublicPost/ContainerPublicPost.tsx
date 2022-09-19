@@ -38,7 +38,7 @@ const ViewerFragment = graphql`
 export default function ContainerPublicPost (props: Props): JSX.Element {
   const {
     postQuery,
-    viewerQuery
+    viewerQuery,
   } = props
 
   const postData = useFragment(PostFragment, postQuery)

@@ -1,8 +1,9 @@
 import { graphql, useFragment } from 'react-relay'
 import { Badge, HStack, Popover, PopoverBody, PopoverContent, PopoverTrigger, Stack } from '@chakra-ui/react'
 import { ClickableTile, GridTile } from '@//:modules/content/ContentSelection'
-import PostPreviewContent from '@//:modules/content/HookedComponents/Post/fragments/PostContent/PostPreviewContent/PostPreviewContent'
-import { PostMenu } from '@//:modules/content/Posts'
+import PostPreviewContent
+  from '@//:modules/content/HookedComponents/Post/fragments/PostContent/PostPreviewContent/PostPreviewContent'
+import PostMenu from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostMenu'
 import { Trans } from '@lingui/macro'
 import type { RejectedPostFragment$key } from '@//:artifacts/RejectedPostFragment.graphql'
 import PostModerateButton

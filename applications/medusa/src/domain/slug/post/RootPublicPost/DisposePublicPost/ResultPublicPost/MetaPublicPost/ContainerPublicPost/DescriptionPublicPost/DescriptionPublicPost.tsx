@@ -7,9 +7,8 @@ import PostClickableCharacters
   from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostClickableCharacters/PostClickableCharacters'
 import PostClickableCategories
   from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostClickableCategories/PostClickableCategories'
-import PostFooterButtons
-  from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostFooterButtons/PostFooterButtons'
-import ClubExternalLinks from '@//:modules/content/HookedComponents/Club/fragments/ClubExternalLinks/ClubExternalLinks'
+import RepostPublicPost from './RepostPublicPost/RepostPublicPost'
+import ClubPublicPost from './ClubPublicPost/ClubPublicPost'
 
 interface Props {
   postQuery: DescriptionPublicPostFragment$key
@@ -18,40 +17,34 @@ interface Props {
 
 const PostFragment = graphql`
   fragment DescriptionPublicPostFragment on Post {
-    club {
-      ...ClubExternalLinksFragment
-    }
     ...PostClickableCharactersFragment
     ...PostClickableCategoriesFragment
-    ...PostFooterButtonsFragment
+    ...RepostPublicPostFragment
+    ...ClubPublicPostFragment
   }
 `
 
 const ViewerFragment = graphql`
   fragment DescriptionPublicPostViewerFragment on Account {
-    ...PostFooterButtonsViewerFragment
+    ...ClubPublicPostViewerFragment
   }
 `
 
-export default function DescriptionPublicPost ({
-  postQuery,
-  viewerQuery
-}: Props): JSX.Element {
+export default function DescriptionPublicPost (props: Props): JSX.Element {
+  const {
+    postQuery,
+    viewerQuery
+  } = props
+
   const postData = useFragment(PostFragment, postQuery)
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
-  // TODO add post header
-
   return (
-    <Stack spacing={4}>
-      <Stack spacing={2}>
-        <ClubExternalLinks clubQuery={postData.club} />
-        <PostFooterButtons postQuery={postData} viewerQuery={viewerData} />
-      </Stack>
-      <Stack spacing={2}>
-        <PostClickableCharacters query={postData} />
-        <PostClickableCategories query={postData} />
-      </Stack>
+    <Stack spacing={6}>
+      <RepostPublicPost postQuery={postData} />
+      <ClubPublicPost postQuery={postData} viewerQuery={viewerData} />
+      <PostClickableCharacters query={postData} />
+      <PostClickableCategories query={postData} />
     </Stack>
   )
 }

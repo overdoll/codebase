@@ -27,7 +27,7 @@ export default function ClubTileOverlay ({
       backdrop={<ClubBanner clubQuery={data} />}
     >
       <Stack p={2} w='100%' spacing={2} h='100%' align='center' justify='center'>
-        <ClubIcon clubQuery={data} />
+        <ClubIcon size='md' clubQuery={data} />
         <Heading
           textAlign='center'
           color='gray.00'

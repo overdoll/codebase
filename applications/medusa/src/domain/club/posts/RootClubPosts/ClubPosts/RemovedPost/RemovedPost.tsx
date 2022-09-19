@@ -3,7 +3,7 @@ import type { RemovedPostFragment$key } from '@//:artifacts/RemovedPostFragment.
 import { Badge, HStack, Popover, PopoverBody, PopoverContent, PopoverTrigger, Stack } from '@chakra-ui/react'
 import { ClickableTile, GridTile } from '@//:modules/content/ContentSelection'
 import PostPreviewContent from '@//:modules/content/HookedComponents/Post/fragments/PostContent/PostPreviewContent/PostPreviewContent'
-import { PostMenu } from '@//:modules/content/Posts'
+import PostMenu from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostMenu'
 import { Trans } from '@lingui/macro'
 import PostModerateButton
   from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostModerateButton/PostModerateButton'

@@ -1,4 +1,4 @@
-import { Box, Heading, Stack, Text } from '@chakra-ui/react'
+import { Box, Heading, HStack, Text } from '@chakra-ui/react'
 import type { ClubPreviewFragment$key } from '@//:artifacts/ClubPreviewFragment.graphql'
 import { graphql } from 'react-relay/hooks'
 import { useFragment } from 'react-relay'
@@ -22,7 +22,7 @@ export default function ClubPreview ({
   const data = useFragment(Fragment, query)
 
   return (
-    <Stack
+    <HStack
       spacing={2}
       align='center'
     >
@@ -46,6 +46,6 @@ export default function ClubPreview ({
           /{data.slug}
         </Text>
       </Box>
-    </Stack>
+    </HStack>
   )
 }

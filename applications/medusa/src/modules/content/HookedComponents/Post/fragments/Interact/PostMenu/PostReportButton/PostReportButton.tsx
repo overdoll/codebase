@@ -1,7 +1,6 @@
 import { t, Trans } from '@lingui/macro'
 import { graphql } from 'react-relay'
 import { PostReportButtonFragment$key } from '@//:artifacts/PostReportButtonFragment.graphql'
-import { PostReportButtonViewerFragment$key } from '@//:artifacts/PostReportButtonViewerFragment.graphql'
 import { PostReportButtonMutation } from '@//:artifacts/PostReportButtonMutation.graphql'
 import { useFragment, useMutation } from 'react-relay/hooks'
 import { MenuItem } from '../../../../../../ThemeComponents/Menu/Menu'
@@ -28,10 +27,10 @@ import Button from '../../../../../../../form/Button/Button'
 import { useToast } from '../../../../../../ThemeComponents'
 import encodeJoinRedirect from '../../../../../../../support/encodeJoinRedirect'
 import { useRouter } from 'next/router'
+import useAbility from '../../../../../../../authorization/useAbility'
 
 interface Props {
   query: PostReportButtonFragment$key
-  viewerQuery: PostReportButtonViewerFragment$key | null
 }
 
 interface ChoiceProps {
@@ -51,12 +50,6 @@ const Fragment = graphql`
   }
 `
 
-const ViewerFragment = graphql`
-  fragment PostReportButtonViewerFragment on Account {
-    id
-  }
-`
-
 const Mutation = graphql`
   mutation PostReportButtonMutation($input: ReportPostInput!) {
     reportPost(input: $input) {
@@ -71,11 +64,9 @@ const Mutation = graphql`
 `
 
 export default function PostReportButton ({
-  query,
-  viewerQuery
+  query
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
-  const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   const [commit, isInFlight] = useMutation<PostReportButtonMutation>(Mutation)
 
@@ -103,6 +94,8 @@ export default function PostReportButton ({
   const isDisabled = Object.keys(values).length < 1
 
   const notify = useToast()
+
+  const ability = useAbility()
 
   const redirect = encodeJoinRedirect({
     pathname: '/[slug]/post/[reference]',
@@ -149,7 +142,7 @@ export default function PostReportButton ({
   }
 
   const ReportMenuItem = (): JSX.Element => {
-    if (viewerData == null) {
+    if (!ability.can('configure', 'Account')) {
       return (
         <MenuItem
           onClick={async () => await router.push(redirect)}

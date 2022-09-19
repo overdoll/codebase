@@ -16,7 +16,7 @@ interface Props {
 
 export default function ClubOwnerJoinWrapper ({ children }: Props): JSX.Element {
   return (
-    <Box w='100%'>
+    <Box>
       <Popover>
         <PopoverTrigger>
           {children}
