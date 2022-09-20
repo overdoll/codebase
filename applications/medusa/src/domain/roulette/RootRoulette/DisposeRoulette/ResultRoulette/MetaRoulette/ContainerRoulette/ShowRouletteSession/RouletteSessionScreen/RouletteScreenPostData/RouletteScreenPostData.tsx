@@ -20,6 +20,7 @@ const Fragment = graphql`
       ...CharacterIconFragment
     }
     club {
+      id
       slug
       name
       ...ClubIconFragment

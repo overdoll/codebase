@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<5238d0c01799d9831a60dac84a048b40>>
- * @relayHash 67a6a1e5cc57b0bfd427ab14854de547
+ * @generated SignedSource<<f7338d870dc8ef0dfdde71b0cd16eb7d>>
+ * @relayHash 6929b56441c9c410085b1f049c8c7c00
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 67a6a1e5cc57b0bfd427ab14854de547
+// @relayRequestID 6929b56441c9c410085b1f049c8c7c00
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -137,53 +137,7 @@ return {
                 "name": "__typename",
                 "storageKey": null
               },
-              (v2/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "ResourceUrl",
-                "kind": "LinkedField",
-                "name": "urls",
-                "plural": true,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "url",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "mimeType",
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "width",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "height",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "type",
-                "storageKey": null
-              }
+              (v2/*: any*/)
             ],
             "storageKey": null
           }
@@ -193,7 +147,7 @@ return {
     ]
   },
   "params": {
-    "id": "67a6a1e5cc57b0bfd427ab14854de547",
+    "id": "6929b56441c9c410085b1f049c8c7c00",
     "metadata": {},
     "name": "ProfileQuery",
     "operationKind": "query",

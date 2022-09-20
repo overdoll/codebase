@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<69422c640fe4a7030be12f73b917ce9b>>
- * @relayHash d65e426e3d4551a97013939a49922312
+ * @generated SignedSource<<6a75165ec033df2612ab8400cfb7be0b>>
+ * @relayHash 18063a45edfabf7f4fa138396d0dbf2f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d65e426e3d4551a97013939a49922312
+// @relayRequestID 18063a45edfabf7f4fa138396d0dbf2f
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,6 +18,7 @@ export type ClubSettingsQuery$variables = {
 };
 export type ClubSettingsQuery$data = {
   readonly club: {
+    readonly id: string;
     readonly name: string;
     readonly slug: string;
     readonly viewerIsOwner: boolean;
@@ -51,42 +52,42 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "slug",
+  "name": "id",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "slug",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "viewerIsOwner",
+  "name": "name",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "isStaff",
+  "name": "viewerIsOwner",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "__typename",
+  "name": "isStaff",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "__typename",
   "storageKey": null
 },
 v8 = [
@@ -176,7 +177,7 @@ v9 = [
     ],
     "storageKey": null
   },
-  (v7/*: any*/)
+  (v2/*: any*/)
 ];
 return {
   "fragment": {
@@ -196,6 +197,7 @@ return {
           (v2/*: any*/),
           (v3/*: any*/),
           (v4/*: any*/),
+          (v5/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -217,7 +219,7 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v5/*: any*/)
+          (v6/*: any*/)
         ],
         "storageKey": null
       }
@@ -242,6 +244,7 @@ return {
           (v2/*: any*/),
           (v3/*: any*/),
           (v4/*: any*/),
+          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -250,7 +253,7 @@ return {
             "name": "suspension",
             "plural": false,
             "selections": [
-              (v6/*: any*/),
+              (v7/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -269,11 +272,10 @@ return {
             "name": "termination",
             "plural": false,
             "selections": [
-              (v6/*: any*/)
+              (v7/*: any*/)
             ],
             "storageKey": null
           },
-          (v7/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -282,7 +284,7 @@ return {
             "name": "thumbnailMedia",
             "plural": false,
             "selections": [
-              (v6/*: any*/),
+              (v7/*: any*/),
               {
                 "kind": "TypeDiscriminator",
                 "abstractKey": "__isMedia"
@@ -306,7 +308,7 @@ return {
                     "selections": (v9/*: any*/),
                     "storageKey": null
                   },
-                  (v7/*: any*/)
+                  (v2/*: any*/)
                 ],
                 "type": "VideoMedia",
                 "abstractKey": null
@@ -314,7 +316,7 @@ return {
               {
                 "kind": "InlineFragment",
                 "selections": [
-                  (v7/*: any*/)
+                  (v2/*: any*/)
                 ],
                 "type": "RawMedia",
                 "abstractKey": null
@@ -333,15 +335,15 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v5/*: any*/),
-          (v7/*: any*/)
+          (v6/*: any*/),
+          (v2/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "d65e426e3d4551a97013939a49922312",
+    "id": "18063a45edfabf7f4fa138396d0dbf2f",
     "metadata": {},
     "name": "ClubSettingsQuery",
     "operationKind": "query",
@@ -350,6 +352,6 @@ return {
 };
 })();
 
-(node as any).hash = "72f69d387392936b590985e8a6b6bfdc";
+(node as any).hash = "7a8139cff76adf6f28c19e1231fa7253";
 
 export default node;

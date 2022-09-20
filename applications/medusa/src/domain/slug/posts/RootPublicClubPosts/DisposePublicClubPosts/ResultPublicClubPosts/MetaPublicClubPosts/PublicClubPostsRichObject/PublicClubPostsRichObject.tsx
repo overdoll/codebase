@@ -10,7 +10,7 @@ import {
   TITLE_SEARCH_PREFIX,
   TITLE_SUFFIX
 } from '@//:modules/constants/rich-objects'
-import ResourceRichObject from '@//:common/rich-objects/default/ResourceRichObject/ResourceRichObject'
+import MediaRichObject from '@//:common/rich-objects/default/MediaRichObject/MediaRichObject'
 
 interface Props {
   clubQuery: PublicClubPostsRichObjectFragment$key
@@ -20,8 +20,8 @@ const Fragment = graphql`
   fragment PublicClubPostsRichObjectFragment on Club {
     slug
     name
-    banner {
-      ...ResourceRichObjectFragment
+    bannerMedia {
+      ...MediaRichObjectFragment
     }
   }
 `
@@ -63,7 +63,7 @@ export default function PublicClubPostsRichObject ({
           href={URL}
         />
       </Head>
-      <ResourceRichObject query={clubData.banner} />
+      <MediaRichObject query={clubData.bannerMedia} />
     </>
   )
 }

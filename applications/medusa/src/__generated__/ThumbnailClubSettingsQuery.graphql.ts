@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e5d5ad0f7ccedab84ade4c8ab5192dc8>>
- * @relayHash e8b285b129bef7fa5dfe6e9399db08c6
+ * @generated SignedSource<<2287a390028e2f74646907eea42ff8a7>>
+ * @relayHash e5d5f039424503e16d80571d5821c85c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e8b285b129bef7fa5dfe6e9399db08c6
+// @relayRequestID e5d5f039424503e16d80571d5821c85c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,6 +18,7 @@ export type ThumbnailClubSettingsQuery$variables = {
 };
 export type ThumbnailClubSettingsQuery$data = {
   readonly club: {
+    readonly id: string;
     readonly " $fragmentSpreads": FragmentRefs<"ChangeClubThumbnailUploadFragment" | "ClubIconFragment">;
   } | null;
 };
@@ -152,6 +153,7 @@ return {
         "name": "club",
         "plural": false,
         "selections": [
+          (v2/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -244,7 +246,7 @@ return {
     ]
   },
   "params": {
-    "id": "e8b285b129bef7fa5dfe6e9399db08c6",
+    "id": "e5d5f039424503e16d80571d5821c85c",
     "metadata": {},
     "name": "ThumbnailClubSettingsQuery",
     "operationKind": "query",
@@ -253,6 +255,6 @@ return {
 };
 })();
 
-(node as any).hash = "eefb93b41afbcecdae2ec160269073e3";
+(node as any).hash = "b884e9f4d85cf0e9c78f7843f55f9bdb";
 
 export default node;

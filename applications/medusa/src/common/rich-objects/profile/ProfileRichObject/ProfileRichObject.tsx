@@ -2,7 +2,7 @@ import Head from 'next/head'
 import React from 'react'
 import { ProfileRichObjectFragment$key } from '@//:artifacts/ProfileRichObjectFragment.graphql'
 import { graphql, useFragment } from 'react-relay/hooks'
-import ResourceRichObject from '../../default/ResourceRichObject/ResourceRichObject'
+import ImageRichObject from '../../default/ImageRichObject/ImageRichObject'
 
 interface Props {
   accountQuery: ProfileRichObjectFragment$key
@@ -11,9 +11,6 @@ interface Props {
 const Fragment = graphql`
   fragment ProfileRichObjectFragment on Account {
     username
-    avatar {
-      ...ResourceRichObjectFragment
-    }
   }
 `
 
@@ -50,7 +47,7 @@ export default function ProfileRichObject ({ accountQuery }: Props): JSX.Element
           content={DESCRIPTION}
         />
       </Head>
-      <ResourceRichObject query={data.avatar} />
+      <ImageRichObject />
     </>
   )
 }

@@ -17,9 +17,6 @@ const Fragment = graphql`
     id
     title
     slug
-    thumbnail {
-      preview
-    }
   }
 `
 
@@ -51,7 +48,7 @@ export default function ClickableCategory ({ query }: Props): JSX.Element {
     >
       <SmallBackgroundBox
         borderLeftWidth={6}
-        borderColor={data?.thumbnail?.preview ?? randomColor}
+        borderColor={randomColor}
         borderRadius='inherit'
         align='center'
         px={2}

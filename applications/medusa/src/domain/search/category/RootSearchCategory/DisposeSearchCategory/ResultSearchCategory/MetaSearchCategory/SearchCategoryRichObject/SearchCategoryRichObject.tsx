@@ -9,7 +9,7 @@ import {
   SEARCH_TITLE_SUFFIX,
   TITLE_FEATURES
 } from '@//:modules/constants/rich-objects'
-import ResourceRichObject from '@//:common/rich-objects/default/ResourceRichObject/ResourceRichObject'
+import MediaRichObject from '@//:common/rich-objects/default/MediaRichObject/MediaRichObject'
 
 interface Props {
   query: SearchCategoryRichObjectFragment$key
@@ -19,8 +19,8 @@ const Fragment = graphql`
   fragment SearchCategoryRichObjectFragment on Category {
     slug
     title
-    banner {
-      ...ResourceRichObjectFragment
+    bannerMedia {
+      ...MediaRichObjectFragment
     }
   }
 `
@@ -62,7 +62,7 @@ export default function SearchCategoryRichObject ({
           href={URL}
         />
       </Head>
-      <ResourceRichObject query={data.banner} />
+      <MediaRichObject query={data.bannerMedia} />
     </>
   )
 }

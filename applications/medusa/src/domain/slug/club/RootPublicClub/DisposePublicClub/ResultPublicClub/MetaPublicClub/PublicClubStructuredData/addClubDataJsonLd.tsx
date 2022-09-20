@@ -7,11 +7,6 @@ const Fragment = graphql`
   fragment addClubDataJsonLdFragment on Club {
     name
     slug
-    thumbnail {
-      urls {
-        url
-      }
-    }
   }
 `
 
@@ -30,13 +25,6 @@ export default function addClubDataJsonLd (query: addClubDataJsonLdFragment$key)
         '@type': 'Place',
         name: ''
       },
-      ...(data?.thumbnail?.urls != null && {
-        image: {
-          '@type': 'ImageObject',
-          contentUrl: data.thumbnail.urls[0].url,
-          thumbnailUrl: data.thumbnail.urls[0].url
-        }
-      }),
       url: `https://www.overdoll.com/${data.slug}`
     }
   }

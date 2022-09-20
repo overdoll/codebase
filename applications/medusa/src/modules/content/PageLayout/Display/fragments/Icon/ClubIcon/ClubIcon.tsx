@@ -10,6 +10,7 @@ const Fragment = graphql`
   fragment ClubIconFragment on Club {
     id
     thumbnailMedia {
+      __typename
       ...IconMediaFragment
     }
   }
@@ -28,7 +29,7 @@ export default function ClubIcon (props: Props): JSX.Element {
 
   const data = useFragment(Fragment, clubQuery)
 
-  if (data.thumbnailMedia == null) {
+  if (data.thumbnailMedia == null || data.thumbnailMedia.__typename === 'RawMedia') {
     return (
       <IconSizer size={size}>
         <RandomIcon seed={data.id} />
@@ -37,6 +38,6 @@ export default function ClubIcon (props: Props): JSX.Element {
   }
 
   return (
-    <IconMedia mediaQuery={data.thumbnailMedia} />
+    <IconMedia size={size} mediaQuery={data.thumbnailMedia} />
   )
 }

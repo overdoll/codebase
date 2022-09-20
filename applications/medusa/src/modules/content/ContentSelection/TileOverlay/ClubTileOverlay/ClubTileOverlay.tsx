@@ -11,6 +11,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment ClubTileOverlayFragment on Club {
+    id
     name
     ...ClubIconFragment
     ...ClubBannerFragment

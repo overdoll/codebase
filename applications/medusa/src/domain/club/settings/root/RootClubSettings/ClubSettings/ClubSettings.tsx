@@ -16,6 +16,7 @@ interface Props {
 const Query = graphql`
   query ClubSettingsQuery($slug: String!) {
     club(slug: $slug) {
+      id
       slug
       name
       viewerIsOwner

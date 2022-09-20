@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0d924077bd0aa2898b398fa597b79d66>>
- * @relayHash e91c7965af72dfab3d4a6b7ba9271f73
+ * @generated SignedSource<<d81630ad45f21e035127ccd68693e9b0>>
+ * @relayHash 6b2443c261d9bd3486a3924774a50a53
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e91c7965af72dfab3d4a6b7ba9271f73
+// @relayRequestID 6b2443c261d9bd3486a3924774a50a53
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -24,7 +24,6 @@ export type ChangeClubThumbnailUploadMutation$data = {
   readonly updateClubThumbnail: {
     readonly club: {
       readonly id: string;
-      readonly name: string;
       readonly " $fragmentSpreads": FragmentRefs<"ClubIconFragment">;
     } | null;
   } | null;
@@ -56,14 +55,7 @@ v2 = {
   "name": "id",
   "storageKey": null
 },
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
-v4 = [
+v3 = [
   {
     "alias": null,
     "args": null,
@@ -86,7 +78,7 @@ v4 = [
     "storageKey": null
   }
 ],
-v5 = [
+v4 = [
   {
     "alias": null,
     "args": null,
@@ -134,7 +126,7 @@ v5 = [
         "kind": "LinkedField",
         "name": "icon",
         "plural": false,
-        "selections": (v4/*: any*/),
+        "selections": (v3/*: any*/),
         "storageKey": null
       },
       {
@@ -144,7 +136,7 @@ v5 = [
         "kind": "LinkedField",
         "name": "mini",
         "plural": false,
-        "selections": (v4/*: any*/),
+        "selections": (v3/*: any*/),
         "storageKey": null
       }
     ],
@@ -176,7 +168,6 @@ return {
             "plural": false,
             "selections": [
               (v2/*: any*/),
-              (v3/*: any*/),
               {
                 "args": null,
                 "kind": "FragmentSpread",
@@ -215,7 +206,6 @@ return {
             "plural": false,
             "selections": [
               (v2/*: any*/),
-              (v3/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -237,7 +227,7 @@ return {
                   },
                   {
                     "kind": "InlineFragment",
-                    "selections": (v5/*: any*/),
+                    "selections": (v4/*: any*/),
                     "type": "ImageMedia",
                     "abstractKey": null
                   },
@@ -251,7 +241,7 @@ return {
                         "kind": "LinkedField",
                         "name": "cover",
                         "plural": false,
-                        "selections": (v5/*: any*/),
+                        "selections": (v4/*: any*/),
                         "storageKey": null
                       },
                       (v2/*: any*/)
@@ -279,7 +269,7 @@ return {
     ]
   },
   "params": {
-    "id": "e91c7965af72dfab3d4a6b7ba9271f73",
+    "id": "6b2443c261d9bd3486a3924774a50a53",
     "metadata": {},
     "name": "ChangeClubThumbnailUploadMutation",
     "operationKind": "mutation",
@@ -288,6 +278,6 @@ return {
 };
 })();
 
-(node as any).hash = "0100dbb2d7bc68a11f7345e6d8de8def";
+(node as any).hash = "12c3508bd4307f710304fe95a72e2db2";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5de27855c607efab0733a554fc8aa698>>
+ * @generated SignedSource<<149ee5b219b68177adf47e41256a4549>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,6 +17,7 @@ export type RouletteScreenPostDataFragment$data = {
     readonly " $fragmentSpreads": FragmentRefs<"CharacterIconFragment">;
   }>;
   readonly club: {
+    readonly id: string;
     readonly name: string;
     readonly slug: string;
     readonly " $fragmentSpreads": FragmentRefs<"ClubIconFragment">;
@@ -31,6 +32,13 @@ export type RouletteScreenPostDataFragment$key = {
 
 const node: ReaderFragment = (function(){
 var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -58,14 +66,8 @@ return {
       "name": "characters",
       "plural": true,
       "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "id",
-          "storageKey": null
-        },
         (v0/*: any*/),
+        (v1/*: any*/),
         {
           "args": null,
           "kind": "FragmentSpread",
@@ -82,6 +84,7 @@ return {
       "name": "club",
       "plural": false,
       "selections": [
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -89,7 +92,7 @@ return {
           "name": "slug",
           "storageKey": null
         },
-        (v0/*: any*/),
+        (v1/*: any*/),
         {
           "args": null,
           "kind": "FragmentSpread",
@@ -104,6 +107,6 @@ return {
 };
 })();
 
-(node as any).hash = "6d0f6b83b1995c522559d1f92e0ee13e";
+(node as any).hash = "78b20aef8551530916e29c888ba72235";
 
 export default node;

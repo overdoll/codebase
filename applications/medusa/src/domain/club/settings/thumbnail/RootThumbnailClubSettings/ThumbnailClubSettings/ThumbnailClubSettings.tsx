@@ -12,6 +12,7 @@ interface Props {
 const Query = graphql`
   query ThumbnailClubSettingsQuery($slug: String!) {
     club(slug: $slug) {
+      id
       ...ClubIconFragment
       ...ChangeClubThumbnailUploadFragment
     }

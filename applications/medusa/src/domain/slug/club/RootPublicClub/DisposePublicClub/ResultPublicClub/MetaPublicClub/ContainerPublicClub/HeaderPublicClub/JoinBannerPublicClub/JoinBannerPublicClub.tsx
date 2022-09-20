@@ -17,6 +17,7 @@ interface Props {
 
 const ClubFragment = graphql`
   fragment JoinBannerPublicClubFragment on Club {
+    id
     ...ClubHeaderBannerFragment
     ...ClubJoinBannerFragment
     ...ClubFooterShareTwitterButtonFragment

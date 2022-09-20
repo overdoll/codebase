@@ -15,6 +15,7 @@ interface Props {
 const PostFragment = graphql`
   fragment ClubPublicPostFragment on Post {
     club {
+      id
       name
       slug
       ...ClubIconFragment

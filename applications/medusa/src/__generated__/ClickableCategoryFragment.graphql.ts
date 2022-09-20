@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<142f8df21c5b14e9a2fd4baef369f2b9>>
+ * @generated SignedSource<<7a476eef4e6770014e6ef05827f0cd86>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,9 +13,6 @@ import { FragmentRefs } from "relay-runtime";
 export type ClickableCategoryFragment$data = {
   readonly id: string;
   readonly slug: string;
-  readonly thumbnail: {
-    readonly preview: string;
-  } | null;
   readonly title: string;
   readonly " $fragmentType": "ClickableCategoryFragment";
 };
@@ -50,30 +47,12 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "slug",
       "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "Resource",
-      "kind": "LinkedField",
-      "name": "thumbnail",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "preview",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
     }
   ],
   "type": "Category",
   "abstractKey": null
 };
 
-(node as any).hash = "648702e357abb35e3b82c002a6ae2627";
+(node as any).hash = "3238ffaafabaf21cd9e99cfd659686aa";
 
 export default node;

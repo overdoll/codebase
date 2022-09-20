@@ -18,6 +18,7 @@ const Fragment = graphql`
   fragment PostUpdateDescriptionFragment on Post {
     description
     club {
+      id
       ...ClubIconFragment
     }
     ...PostDescriptionModalFragment

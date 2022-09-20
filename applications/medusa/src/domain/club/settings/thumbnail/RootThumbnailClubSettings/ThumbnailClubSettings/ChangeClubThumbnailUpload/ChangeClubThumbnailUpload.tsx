@@ -21,7 +21,6 @@ const Mutation = graphql`
     updateClubThumbnail(input: $input) {
       club {
         id
-        name
         ...ClubIconFragment
       }
     }

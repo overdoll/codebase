@@ -13,6 +13,7 @@ interface Props extends StackProps {
 const PostFragment = graphql`
   fragment PreviewHeaderFragment on Post {
     club {
+      id
       name
       ...ClubIconFragment
     }

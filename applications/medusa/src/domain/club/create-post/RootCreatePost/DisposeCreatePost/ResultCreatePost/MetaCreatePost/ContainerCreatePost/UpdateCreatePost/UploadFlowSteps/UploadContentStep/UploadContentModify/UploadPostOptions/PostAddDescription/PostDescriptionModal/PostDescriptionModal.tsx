@@ -15,6 +15,7 @@ interface Props {
 const Fragment = graphql`
   fragment PostDescriptionModalFragment on Post {
     club {
+      id
       ...ClubIconFragment
     }
     ...UpdatePostDescriptionFormFragment

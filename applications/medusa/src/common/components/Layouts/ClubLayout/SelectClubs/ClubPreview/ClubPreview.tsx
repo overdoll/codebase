@@ -10,6 +10,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment ClubPreviewFragment on Club {
+    id
     name
     slug
     ...ClubIconFragment

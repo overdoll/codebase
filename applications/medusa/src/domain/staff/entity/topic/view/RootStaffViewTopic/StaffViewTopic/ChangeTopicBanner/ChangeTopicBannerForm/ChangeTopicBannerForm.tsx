@@ -35,13 +35,7 @@ const Mutation = graphql`
     updateTopicBanner(input: $input) {
       topic {
         id
-        banner {
-          type
-          urls {
-            url
-            mimeType
-          }
-        }
+        ...TopicBannerFragment
       }
     }
   }
