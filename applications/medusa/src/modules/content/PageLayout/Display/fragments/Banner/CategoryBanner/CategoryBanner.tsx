@@ -1,7 +1,7 @@
 import { graphql } from 'react-relay'
 import type { CategoryBannerFragment$key } from '@//:artifacts/CategoryBannerFragment.graphql'
 import { useFragment } from 'react-relay/hooks'
-import { ThumbnailMedia } from '../../../../../HookedComponents/Media'
+import { BannerMedia, ThumbnailMedia } from '../../../../../HookedComponents/Media'
 import CoverImage
   from '../../../../../HookedComponents/Media/components/ImageContainer/ImageWrapper/CoverImage/CoverImage'
 import RandomPattern from '../../../components/RandomPattern/RandomPattern'
@@ -10,7 +10,7 @@ const Fragment = graphql`
   fragment CategoryBannerFragment on Category {
     id
     bannerMedia {
-      ...ThumbnailMediaFragment
+      ...BannerMediaFragment
     }
   }
 `
@@ -35,6 +35,6 @@ export default function CategoryBanner (props: Props): JSX.Element {
   }
 
   return (
-    <ThumbnailMedia mediaQuery={data.bannerMedia} />
+    <BannerMedia mediaQuery={data.bannerMedia} />
   )
 }

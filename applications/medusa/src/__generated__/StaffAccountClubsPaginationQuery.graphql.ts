@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d42db763a3e334b1ac98e990ea59ac07>>
- * @relayHash 8c5ad9ac11284acba66d637c09d5e8e1
+ * @generated SignedSource<<b02d1e04d377c549e173e7ecbe0a0536>>
+ * @relayHash c3ffd55222dfec8eac92ec01a8e9f0db
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8c5ad9ac11284acba66d637c09d5e8e1
+// @relayRequestID c3ffd55222dfec8eac92ec01a8e9f0db
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -196,7 +196,7 @@ v10 = [
         "args": null,
         "concreteType": "ImageMediaAccess",
         "kind": "LinkedField",
-        "name": "thumbnail",
+        "name": "banner",
         "plural": false,
         "selections": (v7/*: any*/),
         "storageKey": null
@@ -428,7 +428,7 @@ return {
     ]
   },
   "params": {
-    "id": "8c5ad9ac11284acba66d637c09d5e8e1",
+    "id": "c3ffd55222dfec8eac92ec01a8e9f0db",
     "metadata": {},
     "name": "StaffAccountClubsPaginationQuery",
     "operationKind": "query",

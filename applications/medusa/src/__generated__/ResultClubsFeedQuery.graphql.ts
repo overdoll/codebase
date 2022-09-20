@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<13ba2af5b52cbef067c6032d9e21b9d9>>
- * @relayHash 25a2990fd360d32785b9577f34f6344b
+ * @generated SignedSource<<9611ec40cc336cba57801722bf10e176>>
+ * @relayHash 2e204320dbf9b95a6ee9819fbb2cfb84
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 25a2990fd360d32785b9577f34f6344b
+// @relayRequestID 2e204320dbf9b95a6ee9819fbb2cfb84
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -280,7 +280,16 @@ v21 = [
     "name": "variants",
     "plural": false,
     "selections": [
-      (v15/*: any*/)
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "ImageMediaAccess",
+        "kind": "LinkedField",
+        "name": "banner",
+        "plural": false,
+        "selections": (v10/*: any*/),
+        "storageKey": null
+      }
     ],
     "storageKey": null
   },
@@ -738,7 +747,7 @@ return {
     ]
   },
   "params": {
-    "id": "25a2990fd360d32785b9577f34f6344b",
+    "id": "2e204320dbf9b95a6ee9819fbb2cfb84",
     "metadata": {},
     "name": "ResultClubsFeedQuery",
     "operationKind": "query",

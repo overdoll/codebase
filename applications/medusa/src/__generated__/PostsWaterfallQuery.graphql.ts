@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7b7b7aa4ad832d83d756a0ad56efa0f6>>
- * @relayHash 798f3ad6e76bc5f082c86a1201b7b74a
+ * @generated SignedSource<<791173127a018f3d1f1d1d03453b3574>>
+ * @relayHash 79b512cb8e4ee0ba82e13e6fac818fbd
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 798f3ad6e76bc5f082c86a1201b7b74a
+// @relayRequestID 79b512cb8e4ee0ba82e13e6fac818fbd
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -92,7 +92,7 @@ v2 = [
         "args": null,
         "concreteType": "ImageMediaAccess",
         "kind": "LinkedField",
-        "name": "thumbnail",
+        "name": "banner",
         "plural": false,
         "selections": [
           {
@@ -334,7 +334,7 @@ return {
     ]
   },
   "params": {
-    "id": "798f3ad6e76bc5f082c86a1201b7b74a",
+    "id": "79b512cb8e4ee0ba82e13e6fac818fbd",
     "metadata": {},
     "name": "PostsWaterfallQuery",
     "operationKind": "query",

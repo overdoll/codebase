@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<02698ec0abdb1e99d664b1452ccb95e5>>
- * @relayHash 70136c89332121d9f46c4e966c279de3
+ * @generated SignedSource<<b2f54ca569660fd2104392b28ad11973>>
+ * @relayHash 4adfc22459f7bb3d63b722611c46538a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 70136c89332121d9f46c4e966c279de3
+// @relayRequestID 4adfc22459f7bb3d63b722611c46538a
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -111,7 +111,7 @@ v5 = {
       "args": null,
       "concreteType": "ImageMediaAccess",
       "kind": "LinkedField",
-      "name": "thumbnail",
+      "name": "banner",
       "plural": false,
       "selections": [
         {
@@ -354,7 +354,7 @@ return {
     ]
   },
   "params": {
-    "id": "70136c89332121d9f46c4e966c279de3",
+    "id": "4adfc22459f7bb3d63b722611c46538a",
     "metadata": {},
     "name": "UploadContentAddMutation",
     "operationKind": "mutation",

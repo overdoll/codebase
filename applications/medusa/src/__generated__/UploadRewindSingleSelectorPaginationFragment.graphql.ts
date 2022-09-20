@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<95355b5ddad044aad3e9cd6eec1dfe8c>>
- * @relayHash 313da4b98d7db5136805a3fb8693bfa4
+ * @generated SignedSource<<1551a3db4c3124323043e51768926cd7>>
+ * @relayHash 777bb5f2c002123b210a015a777e3a1e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 313da4b98d7db5136805a3fb8693bfa4
+// @relayRequestID 777bb5f2c002123b210a015a777e3a1e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -141,7 +141,7 @@ v11 = {
       "args": null,
       "concreteType": "ImageMediaAccess",
       "kind": "LinkedField",
-      "name": "thumbnail",
+      "name": "banner",
       "plural": false,
       "selections": [
         {
@@ -467,7 +467,7 @@ return {
     ]
   },
   "params": {
-    "id": "313da4b98d7db5136805a3fb8693bfa4",
+    "id": "777bb5f2c002123b210a015a777e3a1e",
     "metadata": {},
     "name": "UploadRewindSingleSelectorPaginationFragment",
     "operationKind": "query",

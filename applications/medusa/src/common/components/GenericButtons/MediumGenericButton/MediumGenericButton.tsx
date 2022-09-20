@@ -53,7 +53,7 @@ const MediumGenericButton = forwardRef<Props, any>(({
   }
 
   const BUTTON_PROPS = {
-    leftIcon: IconItem,
+    rightIcon: IconItem,
     children: children,
     ...DEFAULT_BUTTON_PROPS
   }

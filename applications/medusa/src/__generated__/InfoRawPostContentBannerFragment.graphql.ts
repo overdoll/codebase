@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ef9ba9dbcff165bda66062c25fd8d0ec>>
+ * @generated SignedSource<<bd5b8ab6540ae0fb43f1788a3abdfe42>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type InfoRawPostContentBannerFragment$data = {
   readonly media: {
     readonly __typename: "VideoMedia";
     readonly cover: {
-      readonly " $fragmentSpreads": FragmentRefs<"ThumbnailImageMediaFragment">;
+      readonly " $fragmentSpreads": FragmentRefs<"BannerImageMediaFragment">;
     };
     readonly duration: number;
     readonly hasAudio: boolean;
@@ -66,7 +66,7 @@ const node: ReaderFragment = {
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "ThumbnailImageMediaFragment"
+                  "name": "BannerImageMediaFragment"
                 }
               ],
               "storageKey": null
@@ -102,6 +102,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "35a78c4dafbe887d4562233a5ba21ce1";
+(node as any).hash = "bdad7751f5331811be1f60b54d43743e";
 
 export default node;

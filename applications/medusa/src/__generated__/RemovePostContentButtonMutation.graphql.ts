@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d3da36b6c0766b493768216749a41c8f>>
- * @relayHash 4a46f9922f3a87f6839b7330950b1c45
+ * @generated SignedSource<<4726ab56432966af43e76e56589932ba>>
+ * @relayHash 868ac693d1396a238c126eccca6e14ff
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4a46f9922f3a87f6839b7330950b1c45
+// @relayRequestID 868ac693d1396a238c126eccca6e14ff
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -110,7 +110,7 @@ v5 = {
       "args": null,
       "concreteType": "ImageMediaAccess",
       "kind": "LinkedField",
-      "name": "thumbnail",
+      "name": "banner",
       "plural": false,
       "selections": [
         {
@@ -352,7 +352,7 @@ return {
     ]
   },
   "params": {
-    "id": "4a46f9922f3a87f6839b7330950b1c45",
+    "id": "868ac693d1396a238c126eccca6e14ff",
     "metadata": {},
     "name": "RemovePostContentButtonMutation",
     "operationKind": "mutation",

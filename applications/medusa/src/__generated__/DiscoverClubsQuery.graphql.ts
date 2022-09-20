@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<645d9e327fa1fb9a81c9da3b4fc61bb1>>
- * @relayHash 6a93bc1721cb92de19a3534722c8103c
+ * @generated SignedSource<<1f16ada1f7cf533e841a1e060260f73b>>
+ * @relayHash 0f64b6d46d07e9d7d37375bb985f83bd
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6a93bc1721cb92de19a3534722c8103c
+// @relayRequestID 0f64b6d46d07e9d7d37375bb985f83bd
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -190,7 +190,7 @@ v11 = [
         "args": null,
         "concreteType": "ImageMediaAccess",
         "kind": "LinkedField",
-        "name": "thumbnail",
+        "name": "banner",
         "plural": false,
         "selections": (v8/*: any*/),
         "storageKey": null
@@ -549,7 +549,7 @@ return {
     ]
   },
   "params": {
-    "id": "6a93bc1721cb92de19a3534722c8103c",
+    "id": "0f64b6d46d07e9d7d37375bb985f83bd",
     "metadata": {},
     "name": "DiscoverClubsQuery",
     "operationKind": "query",

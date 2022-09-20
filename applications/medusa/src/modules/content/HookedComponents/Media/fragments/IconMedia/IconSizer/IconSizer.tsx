@@ -16,8 +16,8 @@ export default function IconSizer (props: Props): JSX.Element {
 
   const sizes = {
     sm: {
-      w: 4,
-      h: 4
+      w: 6,
+      h: 6
     },
     md: {
       w: 8,

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ef1ae7ac65a874fe5a068c4b08438dc9>>
- * @relayHash c6c3434beeb1a949018fbfd117c9baf3
+ * @generated SignedSource<<d31d48cadcc209bea796996d7dc54ae9>>
+ * @relayHash ab3b4b3a3d53ad643e92bfa218f03f51
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c6c3434beeb1a949018fbfd117c9baf3
+// @relayRequestID ab3b4b3a3d53ad643e92bfa218f03f51
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -144,7 +144,7 @@ v8 = [
         "args": null,
         "concreteType": "ImageMediaAccess",
         "kind": "LinkedField",
-        "name": "thumbnail",
+        "name": "banner",
         "plural": false,
         "selections": [
           {
@@ -388,7 +388,7 @@ return {
     ]
   },
   "params": {
-    "id": "c6c3434beeb1a949018fbfd117c9baf3",
+    "id": "ab3b4b3a3d53ad643e92bfa218f03f51",
     "metadata": {},
     "name": "CreateClubCharacterFormMutation",
     "operationKind": "mutation",

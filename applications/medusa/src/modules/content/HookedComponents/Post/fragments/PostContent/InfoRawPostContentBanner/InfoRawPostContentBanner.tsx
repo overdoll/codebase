@@ -2,10 +2,10 @@ import { graphql } from 'react-relay'
 import type { InfoRawPostContentBannerFragment$key } from '@//:artifacts/InfoRawPostContentBannerFragment.graphql'
 import { useFragment } from 'react-relay/hooks'
 import RawPostContentBanner from '../RawPostContentBanner/RawPostContentBanner'
-import ThumbnailImageMedia from '../../../../Media/fragments/Media/ThumbnailImageMedia/ThumbnailImageMedia'
 import { Flex, Text } from '@chakra-ui/react'
 import { Icon } from '../../../../../PageLayout'
 import { ControlPlayButton, ControlVolumeMissing } from '@//:assets/icons'
+import BannerImageMedia from '../../../../Media/fragments/Media/BannerImageMedia/BannerImageMedia'
 
 const Fragment = graphql`
   fragment InfoRawPostContentBannerFragment on PostContent {
@@ -13,7 +13,7 @@ const Fragment = graphql`
       __typename
       ...on VideoMedia {
         cover {
-          ...ThumbnailImageMediaFragment
+          ...BannerImageMediaFragment
         }
         hasAudio
         duration
@@ -37,7 +37,7 @@ export default function InfoRawPostContentBanner (props: Props): JSX.Element {
   if (data.media.__typename === 'VideoMedia') {
     return (
       <Flex position='absolute'>
-        <ThumbnailImageMedia imageMediaQuery={data.media.cover} />
+        <BannerImageMedia imageMediaQuery={data.media.cover} />
         <Flex align='center' justify='center' position='absolute' top={0} bottom={0} right={0} left={0}>
           <Flex align='center' justify='center' p={2} borderRadius='lg' bg='dimmers.400'>
             <Icon

@@ -18,10 +18,12 @@ const ClickableBox = forwardRef<any, Props>(({
       h='100%'
       size='sm'
       p={0}
+      py={0}
       fontFamily='body'
       fontWeight='normal'
       textAlign='left'
       variant='panel'
+      bg='transparent'
       {...rest}
     >
       {children}

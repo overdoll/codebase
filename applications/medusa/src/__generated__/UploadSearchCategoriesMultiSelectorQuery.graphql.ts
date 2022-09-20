@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e2f8883cf7b75676827e8a3d0436e426>>
- * @relayHash 96f3951ee1cf0abb9775e52eca39ceed
+ * @generated SignedSource<<fcbee1dda4e5349f823568d659e727e6>>
+ * @relayHash 2cf4ba01b0e89503a69067c5669e28f5
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 96f3951ee1cf0abb9775e52eca39ceed
+// @relayRequestID 2cf4ba01b0e89503a69067c5669e28f5
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -105,7 +105,7 @@ v5 = [
         "args": null,
         "concreteType": "ImageMediaAccess",
         "kind": "LinkedField",
-        "name": "thumbnail",
+        "name": "banner",
         "plural": false,
         "selections": [
           {
@@ -297,7 +297,7 @@ return {
     ]
   },
   "params": {
-    "id": "96f3951ee1cf0abb9775e52eca39ceed",
+    "id": "2cf4ba01b0e89503a69067c5669e28f5",
     "metadata": {},
     "name": "UploadSearchCategoriesMultiSelectorQuery",
     "operationKind": "query",

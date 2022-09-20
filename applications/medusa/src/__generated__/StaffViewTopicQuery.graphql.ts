@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f9179ee587f89ca79e7f73d97b40c71f>>
- * @relayHash 2c9fa19c7e26714b158aaa19167cb94a
+ * @generated SignedSource<<0789f6048e8421ce4e78c5b6817b8f5a>>
+ * @relayHash e2e4cfc1e407419260af7c4997ec8af7
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 2c9fa19c7e26714b158aaa19167cb94a
+// @relayRequestID e2e4cfc1e407419260af7c4997ec8af7
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -220,7 +220,7 @@ v12 = [
         "args": null,
         "concreteType": "ImageMediaAccess",
         "kind": "LinkedField",
-        "name": "thumbnail",
+        "name": "banner",
         "plural": false,
         "selections": (v8/*: any*/),
         "storageKey": null
@@ -493,7 +493,7 @@ return {
     ]
   },
   "params": {
-    "id": "2c9fa19c7e26714b158aaa19167cb94a",
+    "id": "e2e4cfc1e407419260af7c4997ec8af7",
     "metadata": {},
     "name": "StaffViewTopicQuery",
     "operationKind": "query",

@@ -3,12 +3,10 @@ import { graphql } from 'react-relay'
 import { DescriptionPublicPostFragment$key } from '@//:artifacts/DescriptionPublicPostFragment.graphql'
 import { DescriptionPublicPostViewerFragment$key } from '@//:artifacts/DescriptionPublicPostViewerFragment.graphql'
 import { Stack } from '@chakra-ui/react'
-import PostClickableCharacters
-  from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostClickableCharacters/PostClickableCharacters'
-import PostClickableCategories
-  from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostClickableCategories/PostClickableCategories'
 import RepostPublicPost from './RepostPublicPost/RepostPublicPost'
 import ClubPublicPost from './ClubPublicPost/ClubPublicPost'
+import SavePublicPost from './SavePublicPost/SavePublicPost'
+import TagsPublicPost from './TagsPublicPost/TagsPublicPost'
 
 interface Props {
   postQuery: DescriptionPublicPostFragment$key
@@ -17,10 +15,10 @@ interface Props {
 
 const PostFragment = graphql`
   fragment DescriptionPublicPostFragment on Post {
-    ...PostClickableCharactersFragment
-    ...PostClickableCategoriesFragment
     ...RepostPublicPostFragment
     ...ClubPublicPostFragment
+    ...SavePublicPostFragment
+    ...TagsPublicPostFragment
   }
 `
 
@@ -41,10 +39,12 @@ export default function DescriptionPublicPost (props: Props): JSX.Element {
 
   return (
     <Stack spacing={6}>
-      <RepostPublicPost postQuery={postData} />
+      <Stack spacing={3}>
+        <RepostPublicPost postQuery={postData} />
+        <SavePublicPost postQuery={postData} />
+      </Stack>
       <ClubPublicPost postQuery={postData} viewerQuery={viewerData} />
-      <PostClickableCharacters query={postData} />
-      <PostClickableCategories query={postData} />
+      <TagsPublicPost postQuery={postData} />
     </Stack>
   )
 }

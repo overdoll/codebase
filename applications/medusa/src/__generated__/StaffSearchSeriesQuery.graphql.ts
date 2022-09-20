@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c016dc4405fac6ec2e259f3200e07785>>
- * @relayHash 64ac52ebbe8b65440d8cdfd5cc0ec12d
+ * @generated SignedSource<<2b42a13eb9fa43cab49da8d3fea8515e>>
+ * @relayHash 3dd4b2969894fd307883dc84eafc1e58
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 64ac52ebbe8b65440d8cdfd5cc0ec12d
+// @relayRequestID 3dd4b2969894fd307883dc84eafc1e58
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -104,7 +104,7 @@ v4 = [
         "args": null,
         "concreteType": "ImageMediaAccess",
         "kind": "LinkedField",
-        "name": "thumbnail",
+        "name": "banner",
         "plural": false,
         "selections": [
           {
@@ -301,7 +301,7 @@ return {
     ]
   },
   "params": {
-    "id": "64ac52ebbe8b65440d8cdfd5cc0ec12d",
+    "id": "3dd4b2969894fd307883dc84eafc1e58",
     "metadata": {},
     "name": "StaffSearchSeriesQuery",
     "operationKind": "query",

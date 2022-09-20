@@ -21,11 +21,13 @@ const Fragment = graphql`
   }
 `
 
-export default function CharacterLinkTile ({
-  query,
-  children,
-  ...rest
-}: Props): JSX.Element {
+export default function CharacterLinkTile (props: Props): JSX.Element {
+  const {
+    query,
+    children,
+    ...rest
+  } = props
+
   const data = useFragment(Fragment, query)
 
   const decideHref = data?.series == null
@@ -51,6 +53,7 @@ export default function CharacterLinkTile ({
         prefetch: false
       }}
       href={decideHref}
+      overflow='visible'
     >
       {children}
     </LinkTile>

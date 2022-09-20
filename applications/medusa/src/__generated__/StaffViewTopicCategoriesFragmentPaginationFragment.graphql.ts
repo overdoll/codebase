@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fb1cddf3ecbfa712c476635aea3dbfc1>>
- * @relayHash cce14f78bdf85e631d6ee337dd97910d
+ * @generated SignedSource<<657212f06e425568be41ca368b55162a>>
+ * @relayHash 3b459070d158ac4c6821ff5d30b23d8b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID cce14f78bdf85e631d6ee337dd97910d
+// @relayRequestID 3b459070d158ac4c6821ff5d30b23d8b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -132,7 +132,7 @@ v6 = [
         "args": null,
         "concreteType": "ImageMediaAccess",
         "kind": "LinkedField",
-        "name": "thumbnail",
+        "name": "banner",
         "plural": false,
         "selections": [
           {
@@ -360,7 +360,7 @@ return {
     ]
   },
   "params": {
-    "id": "cce14f78bdf85e631d6ee337dd97910d",
+    "id": "3b459070d158ac4c6821ff5d30b23d8b",
     "metadata": {},
     "name": "StaffViewTopicCategoriesFragmentPaginationFragment",
     "operationKind": "query",

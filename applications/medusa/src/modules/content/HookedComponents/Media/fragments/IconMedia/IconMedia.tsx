@@ -3,6 +3,7 @@ import type { IconMediaFragment$key } from '@//:artifacts/IconMediaFragment.grap
 import { useFragment } from 'react-relay/hooks'
 import IconImageMedia, { IconSizes } from '../Media/IconImageMedia/IconImageMedia'
 import IconSizer from './IconSizer/IconSizer'
+import { FlexProps } from '@chakra-ui/react'
 
 const Fragment = graphql`
   fragment IconMediaFragment on Media {
@@ -20,20 +21,22 @@ const Fragment = graphql`
 
 interface Props {
   mediaQuery: IconMediaFragment$key
+  sizerProps?: FlexProps
   size?: IconSizes
 }
 
 export default function IconMedia (props: Props): JSX.Element {
   const {
     mediaQuery,
-    size = 'sm'
+    size = 'sm',
+    sizerProps
   } = props
 
   const data = useFragment(Fragment, mediaQuery)
 
   if (data.__typename === 'ImageMedia') {
     return (
-      <IconSizer size={size}>
+      <IconSizer size={size} {...sizerProps}>
         <IconImageMedia imageMediaQuery={data} size={size} />
       </IconSizer>
     )
@@ -41,7 +44,7 @@ export default function IconMedia (props: Props): JSX.Element {
 
   if (data.__typename === 'VideoMedia') {
     return (
-      <IconSizer size={size}>
+      <IconSizer size={size} {...sizerProps}>
         <IconImageMedia imageMediaQuery={data.cover} size={size} />
       </IconSizer>
     )

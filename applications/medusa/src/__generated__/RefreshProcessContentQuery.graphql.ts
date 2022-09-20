@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<4e5c5c83265789c73e0d99ae4df57b3d>>
- * @relayHash f92ed1be31520777a680a7f2611e7919
+ * @generated SignedSource<<c3c2e30ef201ca2a7d322f71a75ac85e>>
+ * @relayHash fcc8e218e8bd0d321d82d2acbb11c25b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f92ed1be31520777a680a7f2611e7919
+// @relayRequestID fcc8e218e8bd0d321d82d2acbb11c25b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -156,7 +156,7 @@ v13 = {
   "args": null,
   "concreteType": "ImageMediaAccess",
   "kind": "LinkedField",
-  "name": "thumbnail",
+  "name": "banner",
   "plural": false,
   "selections": (v12/*: any*/),
   "storageKey": null
@@ -166,12 +166,22 @@ v14 = {
   "args": null,
   "concreteType": "ImageMediaAccess",
   "kind": "LinkedField",
+  "name": "thumbnail",
+  "plural": false,
+  "selections": (v12/*: any*/),
+  "storageKey": null
+},
+v15 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ImageMediaAccess",
+  "kind": "LinkedField",
   "name": "small",
   "plural": false,
   "selections": (v12/*: any*/),
   "storageKey": null
 },
-v15 = [
+v16 = [
   (v9/*: any*/)
 ];
 return {
@@ -291,7 +301,8 @@ return {
                             "plural": false,
                             "selections": [
                               (v13/*: any*/),
-                              (v14/*: any*/)
+                              (v14/*: any*/),
+                              (v15/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -338,13 +349,13 @@ return {
                           (v7/*: any*/),
                           {
                             "kind": "InlineFragment",
-                            "selections": (v15/*: any*/),
+                            "selections": (v16/*: any*/),
                             "type": "HLSVideoContainer",
                             "abstractKey": null
                           },
                           {
                             "kind": "InlineFragment",
-                            "selections": (v15/*: any*/),
+                            "selections": (v16/*: any*/),
                             "type": "MP4VideoContainer",
                             "abstractKey": null
                           }
@@ -369,7 +380,7 @@ return {
                         "plural": false,
                         "selections": [
                           (v13/*: any*/),
-                          (v14/*: any*/),
+                          (v15/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -399,7 +410,8 @@ return {
                             "plural": false,
                             "selections": (v12/*: any*/),
                             "storageKey": null
-                          }
+                          },
+                          (v14/*: any*/)
                         ],
                         "storageKey": null
                       }
@@ -485,7 +497,7 @@ return {
     ]
   },
   "params": {
-    "id": "f92ed1be31520777a680a7f2611e7919",
+    "id": "fcc8e218e8bd0d321d82d2acbb11c25b",
     "metadata": {},
     "name": "RefreshProcessContentQuery",
     "operationKind": "query",

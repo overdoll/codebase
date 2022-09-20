@@ -1,14 +1,14 @@
 import { graphql } from 'react-relay'
 import type { RawPostContentBannerFragment$key } from '@//:artifacts/RawPostContentBannerFragment.graphql'
 import { useFragment } from 'react-relay/hooks'
-import { ThumbnailMedia } from '../../../../Media'
+import { BannerMedia } from '../../../../Media'
 import ProcessingRawMedia from '../../../../Media/fragments/Media/ProcessingRawMedia/ProcessingRawMedia'
 
 const Fragment = graphql`
   fragment RawPostContentBannerFragment on PostContent {
     media {
       __typename
-      ...ThumbnailMediaFragment
+      ...BannerMediaFragment
       ...ProcessingRawMediaFragment
     }
   }
@@ -30,6 +30,6 @@ export default function RawPostContentBanner (props: Props): JSX.Element {
   }
 
   return (
-    <ThumbnailMedia mediaQuery={data.media} />
+    <BannerMedia mediaQuery={data.media} />
   )
 }

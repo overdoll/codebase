@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5d57b794a4ac15b4b402e5720f04a5b3>>
+ * @generated SignedSource<<9e4f486bbe118d5fb4fefb97aa221e61>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,6 +12,7 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type CharacterIconFragment$data = {
   readonly bannerMedia: {
+    readonly __typename: string;
     readonly " $fragmentSpreads": FragmentRefs<"IconMediaFragment">;
   } | null;
   readonly id: string;
@@ -44,6 +45,13 @@ const node: ReaderFragment = {
       "plural": false,
       "selections": [
         {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "__typename",
+          "storageKey": null
+        },
+        {
           "args": null,
           "kind": "FragmentSpread",
           "name": "IconMediaFragment"
@@ -56,6 +64,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "227b6804acc6173e3565f40524be5f7d";
+(node as any).hash = "a90195e8e7be068c0c3baf4bbf5bbd27";
 
 export default node;

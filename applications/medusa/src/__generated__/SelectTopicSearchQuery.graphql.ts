@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e80141af7afb01b440a53029c678ec66>>
- * @relayHash 1dc88c1741fd1ca1123f153e07e48e49
+ * @generated SignedSource<<762db8e4314523f8d1bd3763ea279089>>
+ * @relayHash 46af296eb775c9acaaf34d5f8ae093a7
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 1dc88c1741fd1ca1123f153e07e48e49
+// @relayRequestID 46af296eb775c9acaaf34d5f8ae093a7
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -90,7 +90,7 @@ v3 = [
         "args": null,
         "concreteType": "ImageMediaAccess",
         "kind": "LinkedField",
-        "name": "thumbnail",
+        "name": "banner",
         "plural": false,
         "selections": [
           {
@@ -278,7 +278,7 @@ return {
     ]
   },
   "params": {
-    "id": "1dc88c1741fd1ca1123f153e07e48e49",
+    "id": "46af296eb775c9acaaf34d5f8ae093a7",
     "metadata": {},
     "name": "SelectTopicSearchQuery",
     "operationKind": "query",

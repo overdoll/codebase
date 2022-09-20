@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<099c5ea753a861072c606a309c116525>>
- * @relayHash c9cba770e66bb9e7aa65a6ea6f85fbc5
+ * @generated SignedSource<<b4af579545ff747579d1047b60d46ad2>>
+ * @relayHash 112a2ba9261a225a32ae6032b209f3d3
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c9cba770e66bb9e7aa65a6ea6f85fbc5
+// @relayRequestID 112a2ba9261a225a32ae6032b209f3d3
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -148,7 +148,7 @@ v12 = {
       "args": null,
       "concreteType": "ImageMediaAccess",
       "kind": "LinkedField",
-      "name": "thumbnail",
+      "name": "banner",
       "plural": false,
       "selections": [
         {
@@ -488,7 +488,7 @@ return {
     ]
   },
   "params": {
-    "id": "c9cba770e66bb9e7aa65a6ea6f85fbc5",
+    "id": "112a2ba9261a225a32ae6032b209f3d3",
     "metadata": {},
     "name": "ClubPostsPaginationQuery",
     "operationKind": "query",
