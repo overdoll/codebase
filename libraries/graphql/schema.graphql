@@ -139,8 +139,6 @@ type ImageMediaVariants {
   icon: ImageMediaAccess!
   """150x150 crop of an image. Suitable for small previews."""
   thumbnail: ImageMediaAccess!
-  """200x200 crop of an image. Suitable for large thumbnails."""
-  thumbnailHd: ImageMediaAccess!
   """680px width or height resize."""
   small: ImageMediaAccess!
   """1200px width or height resize."""
@@ -149,8 +147,10 @@ type ImageMediaVariants {
   large: ImageMediaAccess!
   """4096px width or height resize."""
   hd: ImageMediaAccess!
-  """640px width or height resize."""
+  """720px width or height resize."""
   banner: ImageMediaAccess!
+  """360px width or height resize."""
+  smallBanner: ImageMediaAccess!
 }
 
 type ColorPalette {
@@ -221,6 +221,7 @@ type MP4VideoContainer {
 enum MediaDeviceType {
   MOBILE
   DESKTOP
+  UNIVERSAL
 }
 
 """An application/x-mpegURL video container."""
@@ -228,8 +229,8 @@ type HLSVideoContainer {
   """The URL used to access the container."""
   url: URI!
 
-  """The target device for this HLS container. If null, can be used on any device."""
-  targetDevice: MediaDeviceType
+  """The target device for this HLS container."""
+  targetDevice: MediaDeviceType!
 }
 
 """A container used to access the video."""

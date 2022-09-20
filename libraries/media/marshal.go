@@ -79,8 +79,13 @@ func unmarshalLegacyResourceFromDatabase(ctx context.Context, resource string) (
 		lastMimeType := re.MimeTypes[len(re.MimeTypes)-1]
 
 		imageData = &proto.ImageData{
-			Width:    uint32(re.Width),
-			Height:   uint32(re.Height),
+			Sizes: []*proto.ImageDataSize{
+				{
+					Id:     "",
+					Width:  uint32(re.Width),
+					Height: uint32(re.Height),
+				},
+			},
 			Palettes: palette,
 		}
 

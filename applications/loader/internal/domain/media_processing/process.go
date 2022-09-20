@@ -18,6 +18,7 @@ import (
 	"io"
 	"io/fs"
 	"io/ioutil"
+	"log"
 	"math"
 	"os"
 	"overdoll/libraries/errors"
@@ -60,7 +61,7 @@ const (
 
 func init() {
 	// not ideal but we need to disable the log messages from ffmpeg-go
-	//log.SetOutput(ioutil.Discard)
+	log.SetOutput(ioutil.Discard)
 }
 
 func createPreviewFromFile(r io.Reader, isPng bool) ([]*proto.ColorPalette, image.Image, error) {
@@ -123,6 +124,10 @@ type ffmpegProbeStream struct {
 		DisplayAspectRatio string `json:"display_aspect_ratio"`
 		NBReadPackets      string `json:"nb_read_packets"`
 		FrameRate          string `json:"r_frame_rate"`
+		BitRate            string `json:"bit_rate"`
+		CodecTagString     string `json:"codec_tag_string"`
+		Profile            string `json:"profile"`
+		Level              int    `json:"level"`
 	} `json:"streams"`
 	Format struct {
 		Duration string `json:"duration"`
@@ -223,30 +228,30 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	}
 
 	// if the video doesn't have audio, we need to re-encode it with a blank audio stream or HLS doesn't like it
-	if videoNoAudio {
-		newFileNameWithAudio := uuid.New().String()
-		if err := ffmpeg_go.
-			Input(targetFileName, map[string]interface{}{
-				"v":           "error",
-				"hide_banner": "",
-				"i":           "anullsrc",
-				"f":           "lavfi",
-			}).
-			Output(newFileNameWithAudio, ffmpeg_go.KwArgs{
-				"c:v":      "copy",
-				"c:a":      "aac",
-				"map":      []string{"1:v", "0:a"},
-				"shortest": "",
-				"format":   "mp4",
-			}).
-			WithErrorOutput(ffmpegLogger).
-			Run(); err != nil {
-			return nil, errors.Wrap(err, "failed to generate blank stream for video audio: "+string(ffmpegLogger.Output))
-		}
-		targetFileName = newFileNameWithAudio
-		// remove the file since we won't need it
-		defer os.Remove(newFileNameWithAudio)
-	}
+	//if videoNoAudio {
+	//	newFileNameWithAudio := uuid.New().String()
+	//	if err := ffmpeg_go.
+	//		Input(targetFileName, map[string]interface{}{
+	//			"v":           "error",
+	//			"hide_banner": "",
+	//			"i":           "anullsrc",
+	//			"f":           "lavfi",
+	//		}).
+	//		Output(newFileNameWithAudio, ffmpeg_go.KwArgs{
+	//			"c:v":      "copy",
+	//			"c:a":      "aac",
+	//			"map":      []string{"1:v", "0:a"},
+	//			"shortest": "",
+	//			"format":   "mp4",
+	//		}).
+	//		WithErrorOutput(ffmpegLogger).
+	//		Run(); err != nil {
+	//		return nil, errors.Wrap(err, "failed to generate blank stream for video audio: "+string(ffmpegLogger.Output))
+	//	}
+	//	targetFileName = newFileNameWithAudio
+	//	// remove the file since we won't need it
+	//	defer os.Remove(newFileNameWithAudio)
+	//}
 
 	// probe for video streams
 	str, err = ffmpeg_go.Probe(targetFileName, map[string]interface{}{
@@ -272,19 +277,18 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 
 	firstStream := videoStreamProbeResult.Streams[0]
 	isLandscape := firstStream.Width > firstStream.Height
-	isPortrait := firstStream.Width < firstStream.Height
 
-	thumbnailFileName := uuid.New().String()
-	var palettes []*proto.ColorPalette
 	var img image.Image
 
 	lastFrame := 5
 	foundFrame := false
 
+	fileThumbnailName := uuid.New().String()
+
 	// keep looking for frames that are not all black (we can successfully generate a preview
 	for start := time.Now(); time.Since(start) < time.Second*10; {
 
-		fileThumbnail, err := os.Create(thumbnailFileName)
+		fileThumbnail, err := os.Create(fileThumbnailName)
 		if err != nil {
 			return nil, err
 		}
@@ -299,7 +303,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		}
 
 		_, _ = fileThumbnail.Seek(0, io.SeekStart)
-		palettes, img, err = createPreviewFromFile(fileThumbnail, false)
+		_, img, err = createPreviewFromFile(fileThumbnail, false)
 
 		if err != nil {
 			// fully black image - we want to find a different one
@@ -318,48 +322,10 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		break
 	}
 
+	defer os.Remove(fileThumbnailName)
+
 	if !foundFrame {
 		return nil, errors.New("failed to find a frame thumbnail in time")
-	}
-
-	requiresResizing := false
-
-	if isPortrait {
-		if img.Bounds().Dx() > 1080 {
-			requiresResizing = true
-		}
-	} else {
-		if img.Bounds().Dy() > 1080 {
-			requiresResizing = true
-		}
-	}
-
-	// make sure to resize our thumbnail if needed (since we look at the source video for the thumbnail)
-	if requiresResizing {
-		_ = os.Remove(thumbnailFileName)
-
-		resizeWidth := 1920
-		resizeHeight := 1080
-
-		if isLandscape {
-			resizeWidth = 1080
-			resizeHeight = 1920
-		}
-
-		src := resize.Resize(uint(resizeWidth), uint(resizeHeight), img, resize.Lanczos3)
-
-		jpegFile, err := os.Create(thumbnailFileName)
-		if err != nil {
-			return nil, err
-		}
-
-		if err := jpeg.Encode(jpegFile, src, &jpeg.Options{Quality: jpegQuality}); err != nil {
-			return nil, errors.Wrap(err, "failed to encode jpeg")
-		}
-
-		img = src
-
-		_ = jpegFile.Close()
 	}
 
 	type resolutionTarget struct {
@@ -369,6 +335,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		ar      string
 		maxFps  int
 		profile string
+		level   string
 	}
 
 	resolutionTargets := []resolutionTarget{
@@ -379,6 +346,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 			rate:    "3100k",
 			maxFps:  60,
 			profile: "high",
+			level:   "4.2",
 		},
 		{
 			high:    1280,
@@ -387,14 +355,16 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 			rate:    "1800k",
 			maxFps:  60,
 			profile: "high",
+			level:   "3.2",
 		},
 		{
 			high:    854,
 			low:     480,
 			ar:      "48k",
 			rate:    "900k",
-			maxFps:  60,
-			profile: "high",
+			maxFps:  30,
+			profile: "main",
+			level:   "3.1",
 		},
 		{
 			high:    640,
@@ -402,7 +372,8 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 			ar:      "48k",
 			rate:    "500k",
 			maxFps:  30,
-			profile: "baseline",
+			profile: "main",
+			level:   "3.0",
 		},
 	}
 
@@ -533,60 +504,74 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 			fpsTarget = strconv.Itoa(scale.maxFps)
 		}
 
-		scaleWithAspectRatio := targetScale
+		// helper function to create a playlist variant
+		createVariant := func(index, fileName string, args ffmpeg_go.KwArgs) {
+			scaleWithAspectRatio := targetScale
 
-		if requiresResize {
-			scaleWithAspectRatio += ":force_original_aspect_ratio=decrease"
-		}
-
-		overlay := input.Get(index).
-			Filter("scale", ffmpeg_go.Args{targetScale})
-
-		if requiresResize {
-			overlay = overlay.Filter("crop", ffmpeg_go.Args{"h=ceil(ih/2)*2"}).
-				Filter("gblur", ffmpeg_go.Args{"sigma=20"})
-		}
-
-		if fpsTarget != "" {
-			overlay = overlay.Filter("fps", ffmpeg_go.Args{fpsTarget})
-		}
-
-		overlayScale := ffmpeg_go.KwArgs{"x": "(main_w-overlay_w)/2", "y": "(main_h-overlay_h)/2"}
-
-		if requiresResize {
-			baseStream := input.Get("0"+index).
-				Filter("scale", ffmpeg_go.Args{scaleWithAspectRatio})
-
-			if fpsTarget != "" {
-				baseStream = baseStream.Filter("fps", ffmpeg_go.Args{fpsTarget})
+			if requiresResize {
+				scaleWithAspectRatio += ":force_original_aspect_ratio=decrease"
 			}
 
-			overlay = overlay.Overlay(baseStream, "", overlayScale)
+			overlay := input.Get(index).
+				Filter("scale", ffmpeg_go.Args{targetScale})
+
+			if requiresResize {
+				overlay = overlay.Filter("crop", ffmpeg_go.Args{"h=ceil(ih/2)*2"}).
+					Filter("gblur", ffmpeg_go.Args{"sigma=20"})
+			}
+
+			if fpsTarget != "" {
+				overlay = overlay.Filter("fps", ffmpeg_go.Args{fpsTarget})
+			}
+
+			overlayScale := ffmpeg_go.KwArgs{"x": "(main_w-overlay_w)/2", "y": "(main_h-overlay_h)/2"}
+
+			if requiresResize {
+				baseStream := input.Get("0"+index).
+					Filter("scale", ffmpeg_go.Args{scaleWithAspectRatio})
+
+				if fpsTarget != "" {
+					baseStream = baseStream.Filter("fps", ffmpeg_go.Args{fpsTarget})
+				}
+
+				overlay = overlay.Overlay(baseStream, "", overlayScale)
+			}
+
+			streams = append(streams, overlay.
+				Output(fileName, args))
 		}
 
-		streams = append(streams, overlay.
-			Output(fileName+"/pl_"+index+"_%v.m3u8", ffmpeg_go.KwArgs{
-				"c:v":                    "libx264",
-				"c:a":                    "aac",
-				"b:a":                    scale.ar,
-				"ar":                     "48000",
-				"maxrate":                scale.rate,
-				"bufsize":                scale.rate,
-				"tune":                   "animation",
-				"crf":                    "23",
-				"profile:v":              scale.profile,
-				"force_key_frames":       "expr:gte(t,n_forced*3)",
-				"preset":                 defaultPreset,
-				"sc_threshold":           "0",
-				"map_metadata":           "-1",
-				"hls_segment_filename":   fileName + "/sg_" + index + "_%v_%02d.m4s",
-				"hls_fmp4_init_filename": "init_" + index + ".mp4",
-				"hls_time":               "3",
-				"hls_playlist_type":      "vod",
-				"hls_segment_type":       "fmp4",
-				"map":                    "0:a:0",
-				"hls_list_size":          "0",
-			}))
+		hlsArgs := ffmpeg_go.KwArgs{
+			"c:v":                    "libx264",
+			"maxrate":                scale.rate,
+			"bufsize":                scale.rate,
+			"tune":                   "animation",
+			"crf":                    "23",
+			"profile:v":              scale.profile,
+			"force_key_frames":       "expr:gte(t,n_forced*3)",
+			"preset":                 defaultPreset,
+			"sc_threshold":           "0",
+			"map_metadata":           "-1",
+			"hls_segment_filename":   fileName + "/sg_" + index + "_%v_%02d.m4s",
+			"hls_fmp4_init_filename": "init_" + index + ".mp4",
+			"hls_time":               "3",
+			"hls_playlist_type":      "vod",
+			"hls_segment_type":       "fmp4",
+			"hls_list_size":          "0",
+			"level":                  scale.level,
+		}
+
+		if videoNoAudio {
+			hlsArgs["an"] = ""
+		} else {
+			hlsArgs["c:a"] = "aac"
+			hlsArgs["b:a"] = scale.ar
+			hlsArgs["ar"] = "48000"
+			hlsArgs["ac"] = "2"
+			hlsArgs["map"] = []string{"0:a:0"}
+		}
+
+		createVariant(index, fileName+"/pl_"+index+"_%v.m3u8", hlsArgs)
 
 		if scale.low <= 720 && !generatedSoloFile {
 
@@ -597,6 +582,8 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 				"crf":          "23",
 				"map_metadata": "-1",
 				"tune":         "animation",
+				"profile":      "high",
+				"level":        "3.2",
 			}
 
 			generatedSoloFile = true
@@ -613,37 +600,13 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 
 			mp4Index := strconv.Itoa(len(scales))
 
-			overlay := input.Get(mp4Index).
-				Filter("scale", ffmpeg_go.Args{targetScale})
-
-			if requiresResize {
-				overlay = overlay.Filter("crop", ffmpeg_go.Args{"h=ceil(ih/2)*2"}).
-					Filter("gblur", ffmpeg_go.Args{"sigma=20"})
-			}
-
-			if fpsTarget != "" {
-				overlay = overlay.Filter("fps", ffmpeg_go.Args{fpsTarget})
-			}
-
-			if requiresResize {
-				baseStream := input.Get("0"+strconv.Itoa(len(scales))).
-					Filter("scale", ffmpeg_go.Args{scaleWithAspectRatio})
-
-				if fpsTarget != "" {
-					baseStream = baseStream.Filter("fps", ffmpeg_go.Args{fpsTarget})
-				}
-
-				overlay = overlay.
-					Overlay(baseStream, "", overlayScale)
-			}
-
-			streams = append(streams, overlay.Output(mp4FileName, mp4FileArgs))
+			createVariant(mp4Index, mp4FileName, mp4FileArgs)
 		}
 	}
 
 	ffprobeSettings := map[string]interface{}{
 		"v":            "error",
-		"show_entries": "stream=width,height,display_aspect_ratio,bit_rate",
+		"show_entries": "stream=width,height,display_aspect_ratio,bit_rate,codec_tag_string,profile,level",
 		"show_format":  "",
 		"hide_banner":  "",
 	}
@@ -689,12 +652,49 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 			return errors.Wrap(err, "failed to unmarshal playlist probe")
 		}
 
+		var codecs string
+		var bitrate int64
+
+		for i, stream := range probeResult.Streams {
+
+			parsedInt, err := strconv.ParseInt(stream.BitRate, 10, 64)
+			if err != nil {
+				return err
+			}
+
+			bitrate += parsedInt
+
+			if stream.CodecTagString == "mp4a" {
+				codecs += "mp4a.40.2"
+			} else if stream.CodecTagString == "avc1" {
+				codecs += "avc1"
+				if stream.Profile == "High" && stream.Level == 42 {
+					codecs += ".64002a"
+				} else if stream.Profile == "High" && stream.Level == 32 {
+					codecs += ".640020"
+				} else if stream.Profile == "Main" && stream.Level == 30 {
+					codecs += ".4d001e"
+				} else if stream.Profile == "Main" && stream.Level == 31 {
+					codecs += ".4d001f"
+				} else {
+					return errors.New("unknown level with codec: " + stream.CodecTagString + " - " + strconv.Itoa(stream.Level))
+				}
+
+			} else {
+				return errors.New("unknown codec: " + stream.CodecTagString)
+			}
+
+			if i != len(probeResult.Streams)-1 {
+				codecs += ","
+			}
+		}
+
 		playlists = append(playlists, &playlist{
-			bitrate:        probeResult.Format.BitRate,
-			averageBitrate: probeResult.Format.BitRate,
+			bitrate:        strconv.Itoa(int(bitrate)),
+			averageBitrate: strconv.Itoa(int(bitrate)),
 			resolution:     strconv.Itoa(probeResult.Streams[0].Width) + "x" + strconv.Itoa(probeResult.Streams[0].Height),
 			uri:            path,
-			codecs:         "mp4a.40.2,avc1.640020",
+			codecs:         codecs,
 		})
 		return nil
 	}); err != nil {
@@ -834,13 +834,10 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		heightAspect = int64(height / gcd)
 	}
 
-	// update the source image data - this is used for the thumbnail
-	media.RawProto().ImageData = &proto.ImageData{
-		Id:       thumbnailFileName,
-		MimeType: proto.MediaMimeType_ImageJpeg,
-		Width:    uint32(img.Bounds().Dx()),
-		Height:   uint32(img.Bounds().Dy()),
-		Palettes: palettes,
+	processedResponses, err := processImageWithSizes(media, img)
+
+	if err != nil {
+		return nil, err
 	}
 
 	media.RawProto().VideoData = &proto.VideoData{
@@ -859,20 +856,166 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		HasAudio:             !videoNoAudio,
 	}
 
-	return &ProcessResponse{move: []*Move{
-		{
-			fileName: thumbnailFileName,
-			isImage:  true,
-		},
+	return &ProcessResponse{
+		move: append(processedResponses, &Move{
+			directory: fileName,
+		}),
+	}, nil
+}
+
+type processImageSizes struct {
+	name       string
+	constraint int
+	crop       bool
+	mandatory  bool
+}
+
+var postContentSizes = []*processImageSizes{
+	{
+		name:       "hd",
+		constraint: 4096,
+		mandatory:  true,
+	},
+	{
+		name:       "large",
+		constraint: 2048,
+	},
+	{
+		name:       "medium",
+		constraint: 1200,
+	},
+	{
+		name:       "small",
+		constraint: 680,
+	},
+	{
+		name:       "thumbnail",
+		constraint: 150,
+		crop:       true,
+	},
+}
+
+var thumbnailSizes = []*processImageSizes{
+	{
+		name:       "icon",
+		constraint: 100,
+		crop:       true,
+	},
+	{
+		name:       "mini",
+		constraint: 50,
+		crop:       true,
+	},
+}
+
+var banner = []*processImageSizes{
+	{
+		name:       "banner",
+		constraint: 720,
+	},
+	{
+		name:       "small-banner",
+		constraint: 360,
+	},
+}
+
+func processImageWithSizes(media *media.Media, sourceSrc image.Image) ([]*Move, error) {
+
+	var contentSizes []*processImageSizes
+
+	var imageSizes []*proto.ImageDataSize
+	var imageFile *os.File
+
+	fileName := uuid.New().String()
+
+	isPortrait := sourceSrc.Bounds().Dy() > sourceSrc.Bounds().Dx()
+
+	switch media.LinkType() {
+	case proto.MediaLinkType_POST_CONTENT:
+		contentSizes = postContentSizes
+		break
+	case proto.MediaLinkType_CLUB_THUMBNAIL:
+		contentSizes = thumbnailSizes
+		break
+	case proto.MediaLinkType_CLUB_BANNER:
+	case proto.MediaLinkType_SERIES_BANNER:
+	case proto.MediaLinkType_CATEGORY_BANNER:
+	case proto.MediaLinkType_CHARACTER_BANNER:
+	case proto.MediaLinkType_AUDIENCE_BANNER:
+	case proto.MediaLinkType_TOPIC_BANNER:
+		contentSizes = banner
+		break
+	}
+
+	for i, size := range contentSizes {
+
+		shouldResizeHeight := isPortrait && sourceSrc.Bounds().Dy() > size.constraint
+		shouldResizeWidth := !isPortrait && sourceSrc.Bounds().Dx() > size.constraint
+
+		if !shouldResizeWidth && !shouldResizeHeight && !size.mandatory {
+			continue
+		}
+
+		var src image.Image
+
+		if size.crop {
+			src = resize.Resize(uint(size.constraint), uint(size.constraint), sourceSrc, resize.Lanczos3)
+		} else {
+			// if larger than constraint, we resize
+			if shouldResizeHeight {
+				src = resize.Resize(0, uint(size.constraint), sourceSrc, resize.Lanczos3)
+			} else if shouldResizeWidth {
+				src = resize.Resize(uint(size.constraint), 0, sourceSrc, resize.Lanczos3)
+			} else {
+				src = sourceSrc
+			}
+		}
+
+		imageSizes = append(imageSizes, &proto.ImageDataSize{
+			Id:     size.name,
+			Width:  uint32(sourceSrc.Bounds().Dx()),
+			Height: uint32(sourceSrc.Bounds().Dy()),
+		})
+
+		resizedImageFile, err := os.Create(fileName + "/" + size.name + ".jpg")
+		if err != nil {
+			return nil, err
+		}
+
+		if err := jpeg.Encode(resizedImageFile, src, &jpeg.Options{Quality: jpegQuality}); err != nil {
+			return nil, errors.Wrap(err, "failed to encode jpeg")
+		}
+
+		if i == 0 {
+			imageFile = resizedImageFile
+		}
+	}
+
+	// do preview generation on the first file
+	_, _ = imageFile.Seek(0, io.SeekStart)
+	palettes, _, err := createPreviewFromFile(imageFile, false)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// update the source image data
+	media.RawProto().ImageData = &proto.ImageData{
+		Id:       fileName,
+		MimeType: proto.MediaMimeType_ImageJpeg,
+		Sizes:    imageSizes,
+		Palettes: palettes,
+	}
+
+	return []*Move{
 		{
 			directory: fileName,
+			isImage:   true,
 		},
-	}}, nil
+	}, nil
 }
 
 func processImage(media *media.Media, mimeType string, file *os.File) (*ProcessResponse, error) {
-
-	fileName := uuid.New().String()
 
 	var src image.Image
 	var err error
@@ -899,48 +1042,13 @@ func processImage(media *media.Media, mimeType string, file *os.File) (*ProcessR
 		return nil, errors.Wrap(err, "failed to decode image")
 	}
 
-	isPortrait := src.Bounds().Dy() > src.Bounds().Dx()
-
-	// if larger than 4096, we resize to save on storage space && resizing operations at origin
-	if isPortrait && src.Bounds().Dy() > 4096 {
-		src = resize.Resize(0, 4096, src, resize.Lanczos3)
-	} else if !isPortrait && src.Bounds().Dx() > 4096 {
-		src = resize.Resize(4096, 0, src, resize.Lanczos3)
-	}
-
-	var imageFile *os.File
-
-	imageFile, err = os.Create(fileName)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := jpeg.Encode(imageFile, src, &jpeg.Options{Quality: jpegQuality}); err != nil {
-		return nil, errors.Wrap(err, "failed to encode jpeg")
-	}
-
-	_, _ = imageFile.Seek(0, io.SeekStart)
-	palettes, _, err := createPreviewFromFile(imageFile, false)
+	move, err := processImageWithSizes(media, src)
 
 	if err != nil {
 		return nil, err
 	}
 
-	// update the source image data
-	media.RawProto().ImageData = &proto.ImageData{
-		Id:       fileName,
-		MimeType: proto.MediaMimeType_ImageJpeg,
-		Width:    uint32(src.Bounds().Dx()),
-		Height:   uint32(src.Bounds().Dy()),
-		Palettes: palettes,
-	}
-
-	return &ProcessResponse{move: []*Move{
-		{
-			fileName: fileName,
-			isImage:  true,
-		},
-	}}, nil
+	return &ProcessResponse{move: move}, nil
 }
 
 func ProcessMedia(media *media.Media, file *os.File) (*ProcessResponse, error) {
@@ -1046,39 +1154,11 @@ func ApplyFilters(media *media.Media, file *os.File, filters *ImageFilters, mime
 	pixelatedSrc := image.NewNRGBA(g.Bounds(src.Bounds()))
 	g.Draw(pixelatedSrc, src)
 
-	finalFileName := uuid.New().String()
-
-	targetFile, err := os.Create(finalFileName)
-	if err != nil {
-		return nil, err
-	}
-
-	// when filters are applied, this is usually to an existing JPEG, so it has already been compressed
-	// we want to avoid compressing it twice, so we set the quality to 100
-	if err := jpeg.Encode(targetFile, pixelatedSrc, &jpeg.Options{Quality: jpegQuality}); err != nil {
-		return nil, errors.Wrap(err, "failed to encode jpeg")
-	}
-
-	_, _ = targetFile.Seek(0, io.SeekStart)
-	palettes, _, err := createPreviewFromFile(targetFile, false)
+	move, err := processImageWithSizes(media, src)
 
 	if err != nil {
 		return nil, err
 	}
 
-	// update the source image data
-	media.RawProto().ImageData = &proto.ImageData{
-		Id:       finalFileName,
-		MimeType: proto.MediaMimeType_ImageJpeg,
-		Width:    uint32(src.Bounds().Dx()),
-		Height:   uint32(src.Bounds().Dy()),
-		Palettes: palettes,
-	}
-
-	return &ProcessResponse{move: []*Move{
-		{
-			fileName: finalFileName,
-			isImage:  true,
-		},
-	}}, nil
+	return &ProcessResponse{move: move}, nil
 }

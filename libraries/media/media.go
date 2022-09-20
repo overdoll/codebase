@@ -7,7 +7,6 @@ import (
 	"os"
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/media/proto"
-	"strconv"
 	"strings"
 )
 
@@ -66,19 +65,19 @@ func (m *Media) IsLegacy() bool {
 	return m.legacy != ""
 }
 
-func (m *Media) ImageWidth() int {
+func (m *Media) LegacyImageWidth() int {
 
 	if m.proto.ImageData != nil {
-		return int(m.proto.ImageData.Width)
+		return int(m.proto.ImageData.Sizes[0].Width)
 	}
 
 	return 0
 }
 
-func (m *Media) ImageHeight() int {
+func (m *Media) LegacyImageHeight() int {
 
 	if m.proto.ImageData != nil {
-		return int(m.proto.ImageData.Height)
+		return int(m.proto.ImageData.Sizes[0].Height)
 	}
 
 	return 0
@@ -244,92 +243,65 @@ func (m *Media) generateUrlForVideo(id string, usePrefix bool) string {
 	return signed
 }
 
-func (m *Media) generateUrlForImage(optimalSize int, crop bool) *ImageMediaAccess {
+func (m *Media) generateUrlForImage(optimalSize int) *ImageMediaAccess {
 
 	if m.IsLegacy() {
 		return m.LegacyImageMediaAccess()
 	}
 
-	isLandscape := m.proto.ImageData.Width >= m.proto.ImageData.Height
+	var lastSize *proto.ImageDataSize
 
-	var optimalWidth, optimalHeight int
+	for _, size := range m.proto.ImageData.Sizes {
 
-	if crop {
-		optimalWidth = optimalSize
-		optimalHeight = optimalSize
-	} else {
-		if isLandscape {
-			optimalWidth = optimalSize
+		isPortrait := size.Height > size.Width
+
+		var targetSize int
+
+		if isPortrait {
+			targetSize = int(size.Height)
 		} else {
-			optimalHeight = optimalSize
+			targetSize = int(size.Width)
 		}
-	}
 
-	// if our optimal widths or heights are greater than the actual image's dimensions, then we don't optimize for that specific dimension
-	if optimalWidth >= int(m.proto.ImageData.Width) {
-		optimalWidth = 0
-	}
+		if optimalSize == targetSize {
+			lastSize = size
+			break
+		} else if optimalSize < targetSize {
+			if lastSize == nil {
+				lastSize = size
+			} else {
+				var sourceTargetSize int
 
-	if optimalHeight >= int(m.proto.ImageData.Height) {
-		optimalHeight = 0
-	}
+				if isPortrait {
+					sourceTargetSize = int(lastSize.Height)
+				} else {
+					sourceTargetSize = int(lastSize.Width)
+				}
 
-	originalImageAspectRatio := float64(m.proto.ImageData.Width) / float64(m.proto.ImageData.Height)
+				if sourceTargetSize > targetSize {
+					lastSize = size
+				}
+			}
+		}
 
-	var resizedWidth, resizedHeight int
-
-	// resizing - if we ask to resize, we need to send back dimensions
-	if optimalWidth == 0 && optimalHeight != 0 {
-		resizedWidth = int(float64(optimalHeight) * originalImageAspectRatio)
-		resizedHeight = optimalHeight
-	} else if optimalHeight == 0 && optimalWidth != 0 {
-		resizedHeight = int(float64(optimalWidth) / originalImageAspectRatio)
-		resizedWidth = optimalWidth
-	} else {
-		resizedWidth = int(m.proto.ImageData.Width)
-		resizedHeight = int(m.proto.ImageData.Height)
-	}
-
-	var format string
-
-	if m.proto.ImageData.MimeType == proto.MediaMimeType_ImageJpeg {
-		format = "jpeg"
-	}
-
-	if m.proto.ImageData.MimeType == proto.MediaMimeType_ImagePng {
-		format = "jpeg"
-	}
-
-	q := url.Values{}
-
-	if optimalWidth != 0 || optimalHeight != 0 {
-		q.Add("format", format)
-	}
-
-	if optimalWidth != 0 {
-		q.Add("width", strconv.Itoa(optimalWidth))
-	}
-
-	if optimalHeight != 0 {
-		q.Add("height", strconv.Itoa(optimalHeight))
 	}
 
 	finalUrl := url.URL{}
 
-	finalUrl.RawQuery = q.Encode()
+	finalUrl.RawQuery = url.Values{}.Encode()
 	finalUrl.Host = os.Getenv("MEDIA_HOST")
 	finalUrl.Scheme = "https"
-	finalUrl.Path = m.ImagePrefix() + "/" + m.proto.ImageData.Id
+	finalUrl.Path = m.ImagePrefix() + "/" + m.proto.ImageData.Id + "/" + lastSize.Id
 
 	signed, _ := serializer.createSignedUrl(SerializerPolicy{
 		URI:                 finalUrl.String(),
-		UseWildcardCacheKey: "https://" + finalUrl.Host + "/" + finalUrl.Path + "*",
+		UseWildcardCacheKey: "https://" + finalUrl.Host + "/" + finalUrl.Path + "/*",
 	})
 
 	return &ImageMediaAccess{
 		url:    signed,
-		width:  resizedWidth,
-		height: resizedHeight,
+		width:  int(lastSize.Width),
+		height: int(lastSize.Height),
 	}
 }
 
@@ -339,15 +311,18 @@ func (m *Media) generateUrlForLegacyImage(webp bool) *ImageMediaAccess {
 
 	key := "/" + m.proto.Link.Id + "/" + m.proto.ImageData.Id
 
-	if m.proto.ImageData.MimeType == proto.MediaMimeType_ImageJpeg {
-
-		if webp {
-			key += ".webp"
-		} else {
-			key += ".jpg"
+	if m.IsLegacy() {
+		if m.proto.ImageData.MimeType == proto.MediaMimeType_ImageJpeg {
+			if webp {
+				key += ".webp"
+			} else {
+				key += ".jpg"
+			}
+		} else if m.proto.ImageData.MimeType == proto.MediaMimeType_ImagePng {
+			key += ".png"
 		}
-	} else if m.proto.ImageData.MimeType == proto.MediaMimeType_ImagePng {
-		key += ".png"
+	} else {
+		key += "/" + m.proto.ImageData.Sizes[0].Id
 	}
 
 	if m.proto.Private {
@@ -362,10 +337,9 @@ func (m *Media) generateUrlForLegacyImage(webp bool) *ImageMediaAccess {
 
 	return &ImageMediaAccess{
 		url:    finalUrl,
-		width:  int(m.proto.ImageData.Width),
-		height: int(m.proto.ImageData.Height),
+		width:  int(m.proto.ImageData.Sizes[0].Width),
+		height: int(m.proto.ImageData.Sizes[0].Height),
 	}
-
 }
 
 func (m *Media) LegacyWebpMediaAccess() *ImageMediaAccess {
@@ -378,41 +352,41 @@ func (m *Media) LegacyImageMediaAccess() *ImageMediaAccess {
 
 // OriginalImageMediaAccess original image is always max of 4096
 func (m *Media) OriginalImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(4096, false)
+	return m.generateUrlForImage(4096)
 }
 
 func (m *Media) HdImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(4096, false)
+	return m.generateUrlForImage(4096)
 }
 
 func (m *Media) MiniImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(50, true)
+	return m.generateUrlForImage(50)
 }
 
 func (m *Media) IconImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(100, true)
+	return m.generateUrlForImage(100)
 }
 
 func (m *Media) ThumbnailImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(150, true)
-}
-
-func (m *Media) ThumbnailHDImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(200, true)
+	return m.generateUrlForImage(150)
 }
 
 func (m *Media) SmallImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(680, false)
+	return m.generateUrlForImage(680)
 }
 
 func (m *Media) MediumImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(1200, false)
+	return m.generateUrlForImage(1200)
 }
 
 func (m *Media) LargeImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(2048, false)
+	return m.generateUrlForImage(2048)
 }
 
 func (m *Media) BannerImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(640, false)
+	return m.generateUrlForImage(720)
+}
+
+func (m *Media) SmallBannerImageMediaAccess() *ImageMediaAccess {
+	return m.generateUrlForImage(360)
 }
