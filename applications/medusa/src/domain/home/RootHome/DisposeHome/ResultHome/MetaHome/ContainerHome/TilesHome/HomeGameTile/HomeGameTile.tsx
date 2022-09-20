@@ -4,10 +4,9 @@ import { LinkTile } from '@//:modules/content/ContentSelection'
 import { UrlObject } from 'url'
 import { IconType } from '@//:types/components'
 import { ReactNode } from 'react'
-import NextImage
-  from '@//:modules/content/HookedComponents/Media/components/ImageContainer/ImageWrapper/ImageMedia/NextImage/NextImage'
 import { ControlPlayButton } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
+import { StaticImageCover } from '@//:modules/content/HookedComponents/Media'
 
 interface Props {
   href: string | UrlObject
@@ -54,7 +53,7 @@ export default function HomeGameTile (props: Props): JSX.Element {
         <Flex h={400} bg='gray.900' borderRadius='lg' position='relative'>
           <Flex
             borderRadius='inherit'
-            bg='orange.100'
+            bg='dimmers.100'
             overflow='hidden'
             right={0}
             left={0}
@@ -63,18 +62,12 @@ export default function HomeGameTile (props: Props): JSX.Element {
             top={0}
             position='absolute'
           >
-            <NextImage
-              style={{
-                objectFit: 'cover'
-              }}
-              width={600}
-              src={bg}
-            />
+            <StaticImageCover url={bg} />
           </Flex>
           <Flex
             borderWidth={3}
             borderRadius='inherit'
-            borderColor='gray.50'
+            borderColor='dimmers.200'
             right={0}
             left={0}
             w='100%'
@@ -88,7 +81,8 @@ export default function HomeGameTile (props: Props): JSX.Element {
             px={2}
             position='relative'
             templateColumns='55% 45%'
-            templateRows='100%'
+            templateRows='1fr'
+            w='100%'
             overflow='hidden'
           >
             <GridItem overflow='hidden'>
@@ -117,6 +111,8 @@ export default function HomeGameTile (props: Props): JSX.Element {
             <GridItem overflow='hidden'>
               <Flex align='center' justify='center' h='100%' w='100%'>
                 <Box
+                  borderWidth={3}
+                  borderColor='dimmers.200'
                   bg='dimmers.300'
                   borderRadius='md'
                   h={320}

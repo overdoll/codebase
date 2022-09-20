@@ -5,7 +5,7 @@ import { LinkTile } from '@//:modules/content/ContentSelection'
 import { UrlObject } from 'url'
 import { IconType } from '@//:types/components'
 import { ReactNode } from 'react'
-import NextImage from '@//:modules/content/HookedComponents/Media/components/ImageContainer/ImageWrapper/ImageMedia/NextImage/NextImage'
+import { StaticImageCover } from '@//:modules/content/HookedComponents/Media'
 
 interface Props {
   href: string | UrlObject
@@ -28,18 +28,12 @@ export default function HomeLinkTile (props: Props): JSX.Element {
     <LinkTile linkProps={{ prefetch: false }} href={href}>
       <Flex bg='gray.900' borderRadius='lg' overflow='hidden' position='relative'>
         <Flex borderRadius='inherit' right={0} left={0} w='100%' h='100%' top={0} bg='orange.100' position='absolute'>
-          <NextImage
-            style={{
-              objectFit: 'cover'
-            }}
-            width={600}
-            src={bg}
-          />
+          <StaticImageCover url={bg} />
         </Flex>
         <Flex
           borderWidth={3}
           borderRadius='inherit'
-          borderColor='gray.50'
+          borderColor='dimmers.200'
           right={0}
           left={0}
           w='100%'

@@ -21,9 +21,12 @@ const RootPublicPost: PageProps<Props> = (props: Props) => {
   )
 
   return (
-    <PageContainer>
-      <DisposePublicPost params={params} />
-    </PageContainer>
+    <>
+      <PageContainer>
+        <DisposePublicPost params={params} />
+      </PageContainer>
+    </>
+
   )
 }
 

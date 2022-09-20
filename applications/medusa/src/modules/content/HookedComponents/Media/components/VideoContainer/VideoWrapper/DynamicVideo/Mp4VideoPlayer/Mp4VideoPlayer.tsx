@@ -26,7 +26,7 @@ export default function Mp4VideoPlayer (props: Props): JSX.Element {
       el: ref.current,
       url: mp4Url,
       maxBufferLength: 10,
-      autoPlay,
+      autoplay: autoPlay,
       ...VIDEO_OPTIONS
     }
 

@@ -6,6 +6,7 @@ import BannerHome from './BannerHome/BannerHome'
 import TilesHome from './TilesHome/TilesHome'
 import { Stack } from '@chakra-ui/react'
 import PrepareHomePosts from './PrepareHomePosts/PrepareHomePosts'
+import SecretBox from './SecretBox/SecretBox'
 
 interface Props {
   viewerQuery: ContainerHomeViewerFragment$key | null
@@ -34,6 +35,7 @@ export default function ContainerHome (props: Props): JSX.Element {
           <TilesHome />
           <PrepareHomePosts />
         </Stack>
+        <SecretBox />
       </ContentContainer>
     </>
   )

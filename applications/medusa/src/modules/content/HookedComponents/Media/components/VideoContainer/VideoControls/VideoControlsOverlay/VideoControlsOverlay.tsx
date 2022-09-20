@@ -24,7 +24,7 @@ export default function VideoControlsOverlay (props: Props): JSX.Element {
   const ref = useRef(null)
   const [player, setPlayer] = useState<PlayerType>(inheritedPlayer)
   const [hasPlayed, setHasPlayed] = useState(false)
-  const [playing, setPlaying] = useState(((player?.video?.paused) === false) ?? false)
+  const [playing, setPlaying] = useState((!(player?.video?.paused) ?? false))
 
   useEffect(() => {
     if (player == null) return
@@ -75,12 +75,14 @@ export default function VideoControlsOverlay (props: Props): JSX.Element {
         templateColumns='25% 50% 25%'
       >
         <GridItem area='header'>
-          <VideoHeaderControls
-            isOpen={playing ? isOpen : true}
-            hasAudio={hasAudio}
-            duration={duration}
-            player={player}
-          />
+          {controls !== 'none' && (
+            <VideoHeaderControls
+              isOpen={playing ? isOpen : true}
+              hasAudio={hasAudio}
+              duration={duration}
+              player={player}
+            />
+          )}
         </GridItem>
         <GridItem area='center'>
           <VideoCenterControls
