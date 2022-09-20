@@ -18,7 +18,6 @@ import (
 	"io"
 	"io/fs"
 	"io/ioutil"
-	"log"
 	"math"
 	"os"
 	"overdoll/libraries/errors"
@@ -61,7 +60,7 @@ const (
 
 func init() {
 	// not ideal but we need to disable the log messages from ffmpeg-go
-	log.SetOutput(ioutil.Discard)
+	//log.SetOutput(ioutil.Discard)
 }
 
 func createPreviewFromFile(r io.Reader, isPng bool) ([]*proto.ColorPalette, image.Image, error) {
@@ -489,6 +488,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	input := ffmpeg_go.Input(targetFileName, defaultAllArgs).Split()
 
 	for i, scale := range scales {
+
 		index := strconv.Itoa(i)
 
 		var targetScale string
@@ -540,47 +540,52 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		}
 
 		overlay := input.Get(index).
-			Filter("scale", ffmpeg_go.Args{scaleWithAspectRatio})
-		//Filter("boxblur", ffmpeg_go.Args{"40"}).
-		//Filter("setsar", ffmpeg_go.Args{"1"})
+			Filter("scale", ffmpeg_go.Args{targetScale})
+
+		if requiresResize {
+			overlay = overlay.Filter("crop", ffmpeg_go.Args{"h=ceil(ih/2)*2"}).
+				Filter("gblur", ffmpeg_go.Args{"sigma=20"})
+		}
 
 		if fpsTarget != "" {
 			overlay = overlay.Filter("fps", ffmpeg_go.Args{fpsTarget})
 		}
 
-		//overlayScale := ffmpeg_go.KwArgs{"y": "(H-h)/2"}
-		//
-		//if isPortrait {
-		//	overlayScale = ffmpeg_go.KwArgs{"x": "(W-w)/2"}
-		//}
-		//
-		//baseStream := input.Get("0-"+index).
-		//	Filter("scale", ffmpeg_go.Args{scaleWithAspectRatio})
-		//
-		//if fpsTarget != "" {
-		//	baseStream = baseStream.Filter("fps", ffmpeg_go.Args{fpsTarget})
-		//}
+		overlayScale := ffmpeg_go.KwArgs{"x": "(main_w-overlay_w)/2", "y": "(main_h-overlay_h)/2"}
+
+		if requiresResize {
+			baseStream := input.Get("0"+index).
+				Filter("scale", ffmpeg_go.Args{scaleWithAspectRatio})
+
+			if fpsTarget != "" {
+				baseStream = baseStream.Filter("fps", ffmpeg_go.Args{fpsTarget})
+			}
+
+			overlay = overlay.Overlay(baseStream, "", overlayScale)
+		}
 
 		streams = append(streams, overlay.
-			///	Overlay(baseStream, "", overlayScale).
 			Output(fileName+"/pl_"+index+"_%v.m3u8", ffmpeg_go.KwArgs{
-				"c:v":                  "libx264",
-				"c:a":                  "aac",
-				"b:a":                  scale.ar,
-				"ar":                   "48000",
-				"maxrate":              scale.rate,
-				"bufsize":              scale.rate,
-				"tune":                 "animation",
-				"crf":                  "23",
-				"profile:v":            scale.profile,
-				"force_key_frames":     "expr:gte(t,n_forced*3)",
-				"preset":               defaultPreset,
-				"sc_threshold":         "0",
-				"map_metadata":         "-1",
-				"hls_segment_filename": fileName + "/sg_" + index + "_%v_%02d.m4s",
-				"hls_time":             "3",
-				"hls_playlist_type":    "vod",
-				"hls_segment_type":     "fmp4",
+				"c:v":                    "libx264",
+				"c:a":                    "aac",
+				"b:a":                    scale.ar,
+				"ar":                     "48000",
+				"maxrate":                scale.rate,
+				"bufsize":                scale.rate,
+				"tune":                   "animation",
+				"crf":                    "23",
+				"profile:v":              scale.profile,
+				"force_key_frames":       "expr:gte(t,n_forced*3)",
+				"preset":                 defaultPreset,
+				"sc_threshold":           "0",
+				"map_metadata":           "-1",
+				"hls_segment_filename":   fileName + "/sg_" + index + "_%v_%02d.m4s",
+				"hls_fmp4_init_filename": "init_" + index + ".mp4",
+				"hls_time":               "3",
+				"hls_playlist_type":      "vod",
+				"hls_segment_type":       "fmp4",
+				"map":                    "0:a:0",
+				"hls_list_size":          "0",
 			}))
 
 		if scale.low <= 720 && !generatedSoloFile {
@@ -609,27 +614,30 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 			mp4Index := strconv.Itoa(len(scales))
 
 			overlay := input.Get(mp4Index).
-				Filter("scale", ffmpeg_go.Args{scaleWithAspectRatio})
-			//Filter("boxblur", ffmpeg_go.Args{"40"}).
-			//Filter("setsar", ffmpeg_go.Args{"1"})
+				Filter("scale", ffmpeg_go.Args{targetScale})
+
+			if requiresResize {
+				overlay = overlay.Filter("crop", ffmpeg_go.Args{"h=ceil(ih/2)*2"}).
+					Filter("gblur", ffmpeg_go.Args{"sigma=20"})
+			}
 
 			if fpsTarget != "" {
 				overlay = overlay.Filter("fps", ffmpeg_go.Args{fpsTarget})
 			}
-			//
-			//baseStream := input.Get("0-"+mp4Index).
-			//	Filter("fps", ffmpeg_go.Args{fpsTarget}).
-			//	Filter("scale", ffmpeg_go.Args{scaleWithAspectRatio})
-			//
-			//if fpsTarget != "" {
-			//	baseStream = baseStream.Filter("fps", ffmpeg_go.Args{fpsTarget})
-			//}
 
-			streams = append(streams,
-				overlay.
-					//Overlay(baseStream, "", overlayScale).
-					Output(mp4FileName, mp4FileArgs),
-			)
+			if requiresResize {
+				baseStream := input.Get("0"+strconv.Itoa(len(scales))).
+					Filter("scale", ffmpeg_go.Args{scaleWithAspectRatio})
+
+				if fpsTarget != "" {
+					baseStream = baseStream.Filter("fps", ffmpeg_go.Args{fpsTarget})
+				}
+
+				overlay = overlay.
+					Overlay(baseStream, "", overlayScale)
+			}
+
+			streams = append(streams, overlay.Output(mp4FileName, mp4FileArgs))
 		}
 	}
 
@@ -669,7 +677,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 			return nil
 		}
 
-		str, err = ffmpeg_go.Probe(path, ffprobeSettings)
+		str, err := ffmpeg_go.Probe(path, ffprobeSettings)
 
 		if err != nil {
 			return errors.Wrap(err, "failed to probe playlist file")
@@ -695,18 +703,31 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 
 	targetDeviceDesktop := proto.MediaDeviceType_Desktop
 	targetDeviceMobile := proto.MediaDeviceType_Mobile
+	targetDeviceUniversal := proto.MediaDeviceType_Universal
 
-	videoContainers := []*proto.VideoContainer{
-		{
-			Id:           fileName + "/master.m3u8",
-			MimeType:     proto.MediaMimeType_VideoMpegUrl,
-			TargetDevice: &targetDeviceDesktop,
-		},
-		{
-			Id:           fileName + "/master_mobile.m3u8",
-			MimeType:     proto.MediaMimeType_VideoMpegUrl,
-			TargetDevice: &targetDeviceMobile,
-		},
+	var videoContainers []*proto.VideoContainer
+
+	if len(playlists) == 4 {
+		videoContainers = []*proto.VideoContainer{
+			{
+				Id:           fileName + "/master.m3u8",
+				MimeType:     proto.MediaMimeType_VideoMpegUrl,
+				TargetDevice: &targetDeviceDesktop,
+			},
+			{
+				Id:           fileName + "/master_mobile.m3u8",
+				MimeType:     proto.MediaMimeType_VideoMpegUrl,
+				TargetDevice: &targetDeviceMobile,
+			},
+		}
+	} else {
+		videoContainers = []*proto.VideoContainer{
+			{
+				Id:           fileName + "/master.m3u8",
+				MimeType:     proto.MediaMimeType_VideoMpegUrl,
+				TargetDevice: &targetDeviceUniversal,
+			},
+		}
 	}
 
 	for _, container := range videoContainers {
