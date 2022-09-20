@@ -39,7 +39,7 @@ export default function PreviewHeader (props: Props): JSX.Element {
         <Icon fill='whiteAlpha.200' icon={SeeRight} w={5} h={5} />
       </HStack>
       {postData.description.length > 0 && (
-        <Heading fontSize='sm' color='gray.200'>
+        <Heading noOfLines={1} fontSize='sm' color='gray.200'>
           {postData.description}
         </Heading>
       )}

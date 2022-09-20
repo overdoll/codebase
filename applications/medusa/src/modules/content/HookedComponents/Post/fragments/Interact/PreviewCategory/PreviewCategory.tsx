@@ -25,9 +25,13 @@ export default function PreviewCategory (props: Props): JSX.Element {
     <TileOverlay
       backdrop={<CategoryThumbnail categoryQuery={data} />}
     >
-      <Stack px={2} align='center' justify='center' minH={50}>
+      <Stack px={2} align='center' justify='center' minH={50} h='100%'>
         <Heading
-          fontSize='xs'
+          fontSize={{
+            base: '2xs',
+            md: 'xs'
+          }}
+          wordBreak='break-all'
           color='whiteAlpha.800'
           textAlign='center'
         >

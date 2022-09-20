@@ -3,11 +3,8 @@ import { graphql } from 'react-relay'
 import { HeaderPublicClubFragment$key } from '@//:artifacts/HeaderPublicClubFragment.graphql'
 import { HeaderPublicClubViewerFragment$key } from '@//:artifacts/HeaderPublicClubViewerFragment.graphql'
 import { Stack } from '@chakra-ui/react'
-import ClubHeaderBanner from './ClubBanners/ClubHeaderBanner/ClubHeaderBanner'
-import ClubExternalLinks from '@//:modules/content/HookedComponents/Club/fragments/ClubExternalLinks/ClubExternalLinks'
-import ClubFooterButtons from './ClubFooterButtons/ClubFooterButtons'
-import ClubJoinBanner from './ClubBanners/ClubJoinBanner/ClubJoinBanner'
-import ClubSupportBanner from './ClubBanners/ClubSupportBanner/ClubSupportBanner'
+import SupportLinksPublicClub from './SupportLinksPublicClub/SupportLinksPublicClub'
+import JoinBannerPublicClub from './JoinBannerPublicClub/JoinBannerPublicClub'
 
 interface Props {
   clubQuery: HeaderPublicClubFragment$key
@@ -16,18 +13,15 @@ interface Props {
 
 const ClubFragment = graphql`
   fragment HeaderPublicClubFragment on Club {
-    ...ClubHeaderBannerFragment
-    ...ClubExternalLinksFragment
-    ...ClubFooterButtonsFragment
-    ...ClubJoinBannerFragment
-    ...ClubSupportBannerFragment
+    ...SupportLinksPublicClubFragment
+    ...JoinBannerPublicClubFragment
   }
 `
 
 const ViewerFragment = graphql`
   fragment HeaderPublicClubViewerFragment on Account {
-    ...ClubJoinBannerViewerFragment
-    ...ClubSupportBannerViewerFragment
+    ...SupportLinksPublicClubViewerFragment
+    ...JoinBannerPublicClubViewerFragment
   }
 `
 
@@ -41,16 +35,9 @@ export default function HeaderPublicClub (props: Props): JSX.Element {
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   return (
-    <Stack spacing={8}>
-      <Stack spacing={1}>
-        <ClubHeaderBanner query={clubData} />
-        <ClubExternalLinks clubQuery={clubData} />
-        <ClubFooterButtons query={clubData} />
-      </Stack>
-      <Stack spacing={4}>
-        <ClubJoinBanner clubQuery={clubData} viewerQuery={viewerData} />
-        <ClubSupportBanner clubQuery={clubData} viewerQuery={viewerData} />
-      </Stack>
+    <Stack spacing={2}>
+      <JoinBannerPublicClub clubQuery={clubData} viewerQuery={viewerData} />
+      <SupportLinksPublicClub clubQuery={clubData} viewerQuery={viewerData} />
     </Stack>
   )
 }

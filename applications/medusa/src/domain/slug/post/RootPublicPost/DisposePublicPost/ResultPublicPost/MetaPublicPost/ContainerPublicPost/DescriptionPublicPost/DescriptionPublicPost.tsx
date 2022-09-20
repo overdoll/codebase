@@ -7,6 +7,7 @@ import RepostPublicPost from './RepostPublicPost/RepostPublicPost'
 import ClubPublicPost from './ClubPublicPost/ClubPublicPost'
 import SavePublicPost from './SavePublicPost/SavePublicPost'
 import TagsPublicPost from './TagsPublicPost/TagsPublicPost'
+import MenuPublicPost from './MenuPublicPost/MenuPublicPost'
 
 interface Props {
   postQuery: DescriptionPublicPostFragment$key
@@ -19,6 +20,7 @@ const PostFragment = graphql`
     ...ClubPublicPostFragment
     ...SavePublicPostFragment
     ...TagsPublicPostFragment
+    ...MenuPublicPostFragment
   }
 `
 
@@ -45,6 +47,7 @@ export default function DescriptionPublicPost (props: Props): JSX.Element {
       </Stack>
       <ClubPublicPost postQuery={postData} viewerQuery={viewerData} />
       <TagsPublicPost postQuery={postData} />
+      <MenuPublicPost postQuery={postData} />
     </Stack>
   )
 }

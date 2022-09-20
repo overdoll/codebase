@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<4fca3fc3756cb2ddbee9c4075cc1c7b6>>
- * @relayHash 8c0fe1292fca6ecb36e3a177987fc5e9
+ * @generated SignedSource<<cd082585492c71b760e9525af903ba9a>>
+ * @relayHash 2de276b86887faeb6f0b90457910f132
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8c0fe1292fca6ecb36e3a177987fc5e9
+// @relayRequestID 2de276b86887faeb6f0b90457910f132
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -252,10 +252,17 @@ v18 = {
   ],
   "storageKey": null
 },
-v19 = [
+v19 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "title",
+  "storageKey": null
+},
+v20 = [
   (v9/*: any*/)
 ],
-v20 = {
+v21 = {
   "alias": null,
   "args": null,
   "concreteType": "ImageMediaAccess",
@@ -457,10 +464,13 @@ return {
                 "plural": false,
                 "selections": [
                   (v2/*: any*/),
-                  (v3/*: any*/)
+                  (v3/*: any*/),
+                  (v19/*: any*/),
+                  (v18/*: any*/)
                 ],
                 "storageKey": null
-              }
+              },
+              (v6/*: any*/)
             ],
             "storageKey": null
           },
@@ -496,13 +506,13 @@ return {
                           (v6/*: any*/),
                           {
                             "kind": "InlineFragment",
-                            "selections": (v19/*: any*/),
+                            "selections": (v20/*: any*/),
                             "type": "MP4VideoContainer",
                             "abstractKey": null
                           },
                           {
                             "kind": "InlineFragment",
-                            "selections": (v19/*: any*/),
+                            "selections": (v20/*: any*/),
                             "type": "HLSVideoContainer",
                             "abstractKey": null
                           }
@@ -532,7 +542,7 @@ return {
                             "name": "variants",
                             "plural": false,
                             "selections": [
-                              (v20/*: any*/),
+                              (v21/*: any*/),
                               (v16/*: any*/)
                             ],
                             "storageKey": null
@@ -578,7 +588,7 @@ return {
                         "name": "variants",
                         "plural": false,
                         "selections": [
-                          (v20/*: any*/),
+                          (v21/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -650,16 +660,11 @@ return {
             "name": "categories",
             "plural": true,
             "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "title",
-                "storageKey": null
-              },
+              (v19/*: any*/),
               (v3/*: any*/),
               (v18/*: any*/),
-              (v2/*: any*/)
+              (v2/*: any*/),
+              (v6/*: any*/)
             ],
             "storageKey": null
           },
@@ -762,7 +767,7 @@ return {
     ]
   },
   "params": {
-    "id": "8c0fe1292fca6ecb36e3a177987fc5e9",
+    "id": "2de276b86887faeb6f0b90457910f132",
     "metadata": {},
     "name": "ResultPublicPostQuery",
     "operationKind": "query",

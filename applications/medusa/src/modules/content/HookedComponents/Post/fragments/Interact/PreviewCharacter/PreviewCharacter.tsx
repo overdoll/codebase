@@ -27,7 +27,11 @@ export default function PreviewCharacter (props: Props): JSX.Element {
     >
       <Stack px={2} align='center' justify='center' minH={100}>
         <Heading
-          fontSize='md'
+          fontSize={{
+            base: '2xs',
+            md: 'xs'
+          }}
+          wordBreak='break-all'
           color='whiteAlpha.800'
           textAlign='center'
         >

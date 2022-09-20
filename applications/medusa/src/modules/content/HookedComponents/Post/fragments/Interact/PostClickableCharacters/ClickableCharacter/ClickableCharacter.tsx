@@ -2,7 +2,7 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import { ClickableCharacterFragment$key } from '@//:artifacts/ClickableCharacterFragment.graphql'
 import { Heading, HStack } from '@chakra-ui/react'
 import { SmallBackgroundBox } from '../../../../../../PageLayout'
-import CharacterLinkTile from '@//:common/components/CharacterLinkTile/CharacterLinkTile'
+import CharacterLinkTile from '../../../../../../PageLayout/Display/fragments/Link/CharacterLinkTile/CharacterLinkTile'
 
 interface Props {
   query: ClickableCharacterFragment$key

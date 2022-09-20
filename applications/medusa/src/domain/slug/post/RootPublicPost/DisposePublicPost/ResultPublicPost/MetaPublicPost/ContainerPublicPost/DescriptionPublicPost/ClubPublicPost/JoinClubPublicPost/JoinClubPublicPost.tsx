@@ -2,7 +2,7 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type { JoinClubPublicPostFragment$key } from '@//:artifacts/JoinClubPublicPostFragment.graphql'
 import type { JoinClubPublicPostViewerFragment$key } from '@//:artifacts/JoinClubPublicPostViewerFragment.graphql'
 import ClubJoinConditionWrapper
-  from '../../../../../../../../../club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/ClubWrappers/ClubJoinConditionWrapper/ClubJoinConditionWrapper'
+  from '../../../../../../../../../club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubJoinConditionWrapper/ClubJoinConditionWrapper'
 import Button from '@//:modules/form/Button/Button'
 import { Trans } from '@lingui/macro'
 import { PlusCircle } from '@//:assets/icons'

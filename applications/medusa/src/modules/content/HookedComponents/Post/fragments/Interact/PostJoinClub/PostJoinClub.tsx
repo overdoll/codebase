@@ -8,7 +8,7 @@ import { Icon } from '../../../../../PageLayout'
 import { PlusCircle, PremiumStarHollow, SettingCog } from '@//:assets/icons'
 import IconButton from '../../../../../../form/IconButton/IconButton'
 import ClubJoinConditionWrapper
-  from '@//:domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/ClubWrappers/ClubJoinConditionWrapper/ClubJoinConditionWrapper'
+  from '@//:domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubJoinConditionWrapper/ClubJoinConditionWrapper'
 import { useLingui } from '@lingui/react'
 import Button from '../../../../../../form/Button/Button'
 import LinkIconButton from '../../../../../ThemeComponents/LinkIconButton/LinkIconButton'

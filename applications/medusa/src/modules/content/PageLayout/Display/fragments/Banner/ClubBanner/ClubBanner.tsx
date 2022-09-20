@@ -10,6 +10,7 @@ const Fragment = graphql`
   fragment ClubBannerFragment on Club {
     id
     bannerMedia {
+      __typename
       ...BannerMediaFragment
     }
   }
@@ -26,7 +27,7 @@ export default function ClubBanner (props: Props): JSX.Element {
 
   const data = useFragment(Fragment, clubQuery)
 
-  if (data.bannerMedia == null) {
+  if (data.bannerMedia == null || data.bannerMedia.__typename === 'RawMedia') {
     return (
       <CoverImage>
         <RandomPattern seed={data.id} />

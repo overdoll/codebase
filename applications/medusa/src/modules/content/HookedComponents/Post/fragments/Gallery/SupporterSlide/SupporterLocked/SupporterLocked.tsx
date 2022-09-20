@@ -5,7 +5,7 @@ import { graphql, useFragment } from 'react-relay'
 import { SupporterLockedFragment$key } from '@//:artifacts/SupporterLockedFragment.graphql'
 import {
   SUPPORT_BUTTON_PROPS
-} from '@//:domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/ClubSupporterSubscriptionPriceButton/ClubSupporterSubscriptionPriceButton'
+} from '@//:domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubSupporterSubscriptionPriceButton/ClubSupporterSubscriptionPriceButton'
 import LinkButton from '../../../../../../ThemeComponents/LinkButton/LinkButton'
 
 interface Props {

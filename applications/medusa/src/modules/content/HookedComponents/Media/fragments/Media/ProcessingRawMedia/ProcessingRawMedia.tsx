@@ -29,8 +29,8 @@ export default function ProcessingRawMedia (props: Props): JSX.Element {
 
   if (data.failed) {
     return (
-      <Center p={2}>
-        <Stack>
+      <Center w='100%' p={2}>
+        <Stack maxW={100}>
           <Icon icon={WarningTriangle} fill='gray.500' w={6} h={6} />
           <Heading textAlign='center' noOfLines={2} fontSize='sm' color='gray.200'>
             {data.originalFileName}
@@ -43,8 +43,8 @@ export default function ProcessingRawMedia (props: Props): JSX.Element {
   if (data.progress != null) {
     if (data.progress.state === 'WAITING') {
       return (
-        <Center p={2}>
-          <Stack>
+        <Center w='100%' p={2}>
+          <Stack maxW={100}>
             <Progress
               size='md'
               colorScheme='gray'
@@ -61,8 +61,8 @@ export default function ProcessingRawMedia (props: Props): JSX.Element {
       )
     } else if (data.progress.state === 'STARTED') {
       return (
-        <Center p={2}>
-          <Stack>
+        <Center w='100%' p={2}>
+          <Stack maxW={100}>
             <Progress
               size='md'
               colorScheme='teal'
@@ -77,8 +77,8 @@ export default function ProcessingRawMedia (props: Props): JSX.Element {
       )
     } else if (data.progress.state === 'FINALIZING') {
       return (
-        <Center p={2}>
-          <Stack>
+        <Center w='100%' p={2}>
+          <Stack maxW={100}>
             <Progress
               size='md'
               colorScheme='green'
@@ -99,8 +99,8 @@ export default function ProcessingRawMedia (props: Props): JSX.Element {
   }
 
   return (
-    <Center p={2}>
-      <Stack>
+    <Center w='100%' p={2}>
+      <Stack maxW={100}>
         <Icon icon={TimeHourGlass} fill='gray.500' w={6} h={6} />
         <Heading mt={2} textAlign='center' noOfLines={2} fontSize='sm' color='gray.200'>
           {data.originalFileName}

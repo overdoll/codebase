@@ -45,14 +45,14 @@ export default function PostLikeButton ({
             if (hasLiked) {
               return (
                 <MediumGenericButton
+                  isIcon
                   colorScheme='primary'
                   isDisabled={allowed === false}
                   onClick={likePost}
                   isLoading={isLikingPost}
-                  isIcon
                   icon={BookmarkFull}
                 >
-                  {i18n._(t`Un-Save`)}
+                  {i18n._(t`Saved`)}
                 </MediumGenericButton>
               )
             }
@@ -60,7 +60,6 @@ export default function PostLikeButton ({
               <MediumGenericButton
                 isDisabled={allowed === false}
                 onClick={likePost}
-                isIcon
                 isLoading={isLikingPost}
                 icon={BookmarkFull}
               >

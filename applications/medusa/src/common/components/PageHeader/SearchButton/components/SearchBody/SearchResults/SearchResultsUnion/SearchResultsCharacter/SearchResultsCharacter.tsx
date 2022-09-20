@@ -3,7 +3,7 @@ import type { SearchResultsCharacterFragment$key } from '@//:artifacts/SearchRes
 import { CharacterTileOverlay } from '@//:modules/content/ContentSelection'
 import useHistoryDisclosureContext
   from '@//:modules/content/HookedComponents/HistoryDisclosure/hooks/useHistoryDisclosureContext'
-import CharacterLinkTile from '../../../../../../../CharacterLinkTile/CharacterLinkTile'
+import CharacterLinkTile from '../../../../../../../../../modules/content/PageLayout/Display/fragments/Link/CharacterLinkTile/CharacterLinkTile'
 
 interface Props {
   query: SearchResultsCharacterFragment$key

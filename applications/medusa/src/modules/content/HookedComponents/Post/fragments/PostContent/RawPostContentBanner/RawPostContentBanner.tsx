@@ -3,6 +3,7 @@ import type { RawPostContentBannerFragment$key } from '@//:artifacts/RawPostCont
 import { useFragment } from 'react-relay/hooks'
 import { BannerMedia } from '../../../../Media'
 import ProcessingRawMedia from '../../../../Media/fragments/Media/ProcessingRawMedia/ProcessingRawMedia'
+import ContainImage from '../../../../Media/components/ImageContainer/ImageWrapper/ContainImage/ContainImage'
 
 const Fragment = graphql`
   fragment RawPostContentBannerFragment on PostContent {
@@ -26,7 +27,11 @@ export default function RawPostContentBanner (props: Props): JSX.Element {
   const data = useFragment(Fragment, postContentQuery)
 
   if (data.media.__typename === 'RawMedia') {
-    return <ProcessingRawMedia rawMediaQuery={data.media} />
+    return (
+      <ContainImage>
+        <ProcessingRawMedia rawMediaQuery={data.media} />
+      </ContainImage>
+    )
   }
 
   return (

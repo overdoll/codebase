@@ -2,7 +2,7 @@ import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { ContainerPublicClubFragment$key } from '@//:artifacts/ContainerPublicClubFragment.graphql'
 import { ContainerPublicClubViewerFragment$key } from '@//:artifacts/ContainerPublicClubViewerFragment.graphql'
-import { BannerContainer, ContentContainer, MobileContainer } from '@//:modules/content/PageLayout'
+import { BannerContainer, ContentContainer } from '@//:modules/content/PageLayout'
 import BannerPublicClub from './BannerPublicClub/BannerPublicClub'
 import HeaderPublicClub from './HeaderPublicClub/HeaderPublicClub'
 import ButtonsPublicClub from './ButtonsPublicClub/ButtonsPublicClub'
@@ -44,11 +44,9 @@ export default function ContainerPublicClub (props: Props): JSX.Element {
       <BannerContainer pt={2}>
         <BannerPublicClub clubQuery={clubData} viewerQuery={viewerData} />
       </BannerContainer>
-      <MobileContainer>
-        <HeaderPublicClub clubQuery={clubData} viewerQuery={viewerData} />
-      </MobileContainer>
-      <ContentContainer pt={2}>
+      <ContentContainer>
         <Stack spacing={4}>
+          <HeaderPublicClub clubQuery={clubData} viewerQuery={viewerData} />
           <ButtonsPublicClub clubQuery={clubData} />
           <PrepareClubPosts clubQuery={clubData} />
         </Stack>

@@ -13,7 +13,7 @@ import { Trans } from '@lingui/macro'
 import { ClubCharactersQuery } from '@//:artifacts/ClubCharactersQuery.graphql'
 import { Icon } from '@//:modules/content/PageLayout'
 import { AddPlus } from '@//:assets/icons'
-import CharacterLinkTile from '../../../../../../../../common/components/CharacterLinkTile/CharacterLinkTile'
+import CharacterLinkTile from '../../../../../../../../modules/content/PageLayout/Display/fragments/Link/CharacterLinkTile/CharacterLinkTile'
 
 interface Props {
   query: ViewClubCharactersFragment$key
