@@ -268,10 +268,14 @@ func (m *Media) generateUrlForImage(optimalSize int) *ImageMediaAccess {
 			targetSize = int(size.Width)
 		}
 
+		fmt.Println("look for size")
+		fmt.Println(targetSize)
+		fmt.Println(optimalSize)
+
 		if optimalSize == targetSize {
 			lastSize = size
 			break
-		} else if optimalSize < targetSize {
+		} else if optimalSize > targetSize {
 			if lastSize == nil {
 				lastSize = size
 			} else {
@@ -287,6 +291,8 @@ func (m *Media) generateUrlForImage(optimalSize int) *ImageMediaAccess {
 					lastSize = size
 				}
 			}
+		} else {
+			lastSize = size
 		}
 
 	}

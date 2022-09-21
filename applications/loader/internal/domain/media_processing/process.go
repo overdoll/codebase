@@ -9,6 +9,7 @@ import (
 	"github.com/disintegration/gift"
 	"github.com/h2non/filetype"
 	"github.com/nfnt/resize"
+	"github.com/oliamb/cutter"
 	ffmpeg_go "github.com/u2takey/ffmpeg-go"
 	"go.uber.org/zap"
 	"image"
@@ -664,16 +665,17 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 				codecs += "mp4a.40.2"
 			} else if stream.CodecTagString == "avc1" {
 				codecs += "avc1"
-				if stream.Profile == "High" && stream.Level == 42 {
+
+				if stream.Level == 42 {
 					codecs += ".64002a"
-				} else if stream.Profile == "High" && stream.Level == 32 {
+				} else if stream.Level == 32 {
 					codecs += ".640020"
-				} else if stream.Profile == "Main" && stream.Level == 30 {
+				} else if stream.Level == 30 {
 					codecs += ".4d001e"
-				} else if stream.Profile == "Main" && stream.Level == 31 {
+				} else if stream.Level == 31 {
 					codecs += ".4d001f"
 				} else {
-					return errors.New("unknown level with codec: " + stream.CodecTagString + " - " + strconv.Itoa(stream.Level))
+					return errors.New("unknown level with codec: " + stream.CodecTagString + " - " + stream.Profile + ": " + strconv.Itoa(stream.Level))
 				}
 
 			} else {
@@ -863,6 +865,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 type processImageSizes struct {
 	name       string
 	constraint int
+	resize     bool
 	crop       bool
 	mandatory  bool
 }
@@ -888,7 +891,7 @@ var postContentSizes = []*processImageSizes{
 	{
 		name:       "thumbnail",
 		constraint: 150,
-		crop:       true,
+		resize:     true,
 	},
 }
 
@@ -896,12 +899,12 @@ var thumbnailSizes = []*processImageSizes{
 	{
 		name:       "icon",
 		constraint: 100,
-		crop:       true,
+		resize:     true,
 	},
 	{
 		name:       "mini",
 		constraint: 50,
-		crop:       true,
+		resize:     true,
 	},
 }
 
@@ -957,8 +960,19 @@ func processImageWithSizes(media *media.Media, sourceSrc image.Image) ([]*Move, 
 
 		var src image.Image
 
-		if size.crop {
-			src = resize.Resize(uint(size.constraint), uint(size.constraint), sourceSrc, resize.Lanczos3)
+		if size.resize {
+			src = resize.Thumbnail(uint(size.constraint), uint(size.constraint), sourceSrc, resize.Lanczos3)
+		} else if size.crop {
+			var err error
+			src, err = cutter.Crop(sourceSrc, cutter.Config{
+				Width:   size.constraint,
+				Height:  size.constraint,
+				Options: cutter.Copy,
+				Mode:    cutter.Centered,
+			})
+			if err != nil {
+				return nil, errors.Wrap(err, "failed to crop")
+			}
 		} else {
 			// if larger than constraint, we resize
 			if shouldResizeHeight {
@@ -974,8 +988,8 @@ func processImageWithSizes(media *media.Media, sourceSrc image.Image) ([]*Move, 
 
 		imageSizes = append(imageSizes, &proto.ImageDataSize{
 			Id:     imageName,
-			Width:  uint32(sourceSrc.Bounds().Dx()),
-			Height: uint32(sourceSrc.Bounds().Dy()),
+			Width:  uint32(src.Bounds().Dx()),
+			Height: uint32(src.Bounds().Dy()),
 		})
 
 		resizedImageFile, err := os.Create(fileName + "/" + imageName)

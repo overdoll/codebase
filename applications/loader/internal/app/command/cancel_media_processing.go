@@ -31,20 +31,16 @@ func (h CancelMediaProcessingHandler) Handle(ctx context.Context, cmd CancelMedi
 		if err != nil {
 
 			if apperror.IsNotFoundError(err) {
+
+				if err := h.event.CancelMediaProcessing(ctx, existingMedia); err != nil {
+					return err
+				}
+
 				return nil
 			}
 
 			return err
 		}
-
-		if existingMedia.IsProcessed() {
-			return nil
-		}
-
-		if err := h.event.CancelMediaProcessing(ctx, existingMedia); err != nil {
-			return err
-		}
-
 	}
 
 	return nil

@@ -25,7 +25,7 @@ func ProcessMedia(ctx workflow.Context, input ProcessMediaInput) (*ProcessMediaP
 
 	ctx = workflow.WithActivityOptions(ctx, workflow.ActivityOptions{
 		StartToCloseTimeout: time.Hour * 24,
-		HeartbeatTimeout:    time.Minute * 10,
+		HeartbeatTimeout:    time.Minute * 2,
 		RetryPolicy: &temporal.RetryPolicy{
 			InitialInterval:    time.Second,
 			BackoffCoefficient: 10.0,
