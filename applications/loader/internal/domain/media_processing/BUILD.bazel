@@ -23,6 +23,7 @@ go_library(
         "@com_github_edlinorg_prominentcolor//:prominentcolor",
         "@com_github_h2non_filetype//:filetype",
         "@com_github_nfnt_resize//:resize",
+        "@com_github_oliamb_cutter//:cutter",
         "@com_github_u2takey_ffmpeg_go//:ffmpeg-go",
         "@org_uber_go_zap//:zap",
     ],
