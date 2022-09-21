@@ -45,10 +45,11 @@ message VideoAspectRatio {
 }
 
 message VideoData {
-  repeated VideoContainer containers = 1;
-  VideoAspectRatio aspectRatio = 2;
-  sint64 durationMilliseconds = 3;
-  bool hasAudio = 4;
+  string id = 1;
+  repeated VideoContainer containers = 2;
+  VideoAspectRatio aspectRatio = 3;
+  sint64 durationMilliseconds = 4;
+  bool hasAudio = 5;
 }
 
 message MediaState {

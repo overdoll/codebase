@@ -445,14 +445,10 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 
 	var streams []*ffmpeg_go.Stream
 
-	firstSegmentDirectory := fileName + "/playlist"
-	_ = os.MkdirAll(firstSegmentDirectory, os.ModePerm)
-	firstPlaylistDirectory := fileName + "/segment"
-	_ = os.MkdirAll(firstPlaylistDirectory, os.ModePerm)
-
 	mp4RawDirectory := fileName
+	mp4ActualFileName := "original.mp4"
 	_ = os.MkdirAll(mp4RawDirectory, os.ModePerm)
-	mp4FileName := mp4RawDirectory + "/low_res.mp4"
+	mp4FileName := mp4RawDirectory + "/" + mp4ActualFileName
 
 	generatedSoloFile := false
 
@@ -694,7 +690,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 			averageBitrate: strconv.Itoa(int(bitrate)),
 			resolution:     strconv.Itoa(probeResult.Streams[0].Width) + "x" + strconv.Itoa(probeResult.Streams[0].Height),
 			uri:            path,
-			codecs:         codecs,
+			codecs:         "\"" + codecs + "\"",
 		})
 		return nil
 	}); err != nil {
@@ -710,12 +706,12 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	if len(playlists) == 4 {
 		videoContainers = []*proto.VideoContainer{
 			{
-				Id:           fileName + "/master.m3u8",
+				Id:           "master.m3u8",
 				MimeType:     proto.MediaMimeType_VideoMpegUrl,
 				TargetDevice: &targetDeviceDesktop,
 			},
 			{
-				Id:           fileName + "/master_mobile.m3u8",
+				Id:           "master-device_mobile.m3u8",
 				MimeType:     proto.MediaMimeType_VideoMpegUrl,
 				TargetDevice: &targetDeviceMobile,
 			},
@@ -723,7 +719,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	} else {
 		videoContainers = []*proto.VideoContainer{
 			{
-				Id:           fileName + "/master.m3u8",
+				Id:           "master.m3u8",
 				MimeType:     proto.MediaMimeType_VideoMpegUrl,
 				TargetDevice: &targetDeviceUniversal,
 			},
@@ -732,7 +728,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 
 	for _, container := range videoContainers {
 
-		masterPlaylistFile, err := os.Create(container.Id)
+		masterPlaylistFile, err := os.Create(fileName + "/" + container.Id)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to create file")
 		}
@@ -841,8 +837,9 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	}
 
 	media.RawProto().VideoData = &proto.VideoData{
+		Id: fileName,
 		Containers: append(videoContainers, &proto.VideoContainer{
-			Id:       mp4FileName,
+			Id:       mp4ActualFileName,
 			MimeType: proto.MediaMimeType_VideoMp4,
 			Bitrate:  uint64(bitRate),
 			Width:    uint32(probeResult.Streams[0].Width),

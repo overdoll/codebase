@@ -42,6 +42,7 @@ func unmarshalLegacyResourceFromDatabase(ctx context.Context, resource string) (
 
 	if re.Processed && re.VideoThumbnailMimeType != "" {
 		videoData = &proto.VideoData{
+			Id: re.ProcessedId,
 			Containers: []*proto.VideoContainer{{
 				Id:       re.ProcessedId + ".mp4",
 				MimeType: proto.MediaMimeType_VideoMp4,

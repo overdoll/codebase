@@ -230,13 +230,13 @@ func (m *Media) generateUrlForVideo(id string, usePrefix bool) string {
 	finalUrl := url.URL{}
 
 	finalUrl.Host = os.Getenv("MEDIA_HOST")
-	finalUrl.Path = m.VideoPrefix() + "/" + id
+	finalUrl.Path = m.VideoPrefix() + "/" + m.proto.VideoData.Id + "/" + id
 	finalUrl.Scheme = "https"
 
 	// for video signed urls, we add a prefix so that it can be passed down without needing to sign playlists each time
 	signed, _ := serializer.createSignedUrl(SerializerPolicy{
 		URI:                 finalUrl.String(),
-		UseWildcardCacheKey: "https://" + finalUrl.Host + "/" + m.VideoPrefix() + "/*",
+		UseWildcardCacheKey: "https://" + finalUrl.Host + "/" + m.VideoPrefix() + "/" + m.proto.VideoData.Id + "/*",
 		UsePrefix:           usePrefix,
 	})
 
@@ -300,7 +300,7 @@ func (m *Media) generateUrlForImage(optimalSize int) *ImageMediaAccess {
 
 	signed, _ := serializer.createSignedUrl(SerializerPolicy{
 		URI:                 finalUrl.String(),
-		UseWildcardCacheKey: "https://" + finalUrl.Host + "/" + m.ImagePrefix() + "/*",
+		UseWildcardCacheKey: "https://" + finalUrl.Host + "/" + m.ImagePrefix() + "/" + m.proto.ImageData.Id + "/*",
 	})
 
 	return &ImageMediaAccess{
