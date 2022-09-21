@@ -2,6 +2,7 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type { MediaPreviewModalFragment$key } from '@//:artifacts/MediaPreviewModalFragment.graphql'
 import { Flex, Modal, ModalBody, ModalContent, ModalOverlay, ModalProps } from '@chakra-ui/react'
 import { RawCinematicMedia } from '@//:modules/content/HookedComponents/Media'
+import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 
 interface Props extends Omit<ModalProps, 'children'> {
   query: MediaPreviewModalFragment$key
@@ -46,6 +47,7 @@ export default function MediaPreviewModal ({
             w='100%'
             align='center'
             justify='center'
+            position='relative'
           >
             <RawCinematicMedia
               mediaQuery={data.media}
@@ -53,6 +55,9 @@ export default function MediaPreviewModal ({
                 isActive: true
               }}
             />
+            <Flex w='100%' maxW='container.sm' position='absolute' top={2} right={2}>
+              <CloseButton colorScheme='teal' size='lg' variant='solid' onClick={onClose} />
+            </Flex>
           </Flex>
         </ModalBody>
       </ModalContent>

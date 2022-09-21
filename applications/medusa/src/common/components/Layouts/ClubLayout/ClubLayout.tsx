@@ -3,12 +3,12 @@ import { Suspense } from 'react'
 import VerticalNavigation from '@//:modules/content/Navigation/VerticalNavigation/VerticalNavigation'
 import {
   BirdHouse,
+  CharacterIdentifier,
   ContentBrushPen,
   FileMultiple,
   SettingCog,
   SettingHammer,
-  SubscriptionIdentifier,
-  CharacterIdentifier
+  SubscriptionIdentifier
 } from '@//:assets/icons'
 import Can from '@//:modules/authorization/Can'
 import { Trans } from '@lingui/macro'
@@ -85,6 +85,7 @@ export default function ClubLayout ({ children }: Props): JSX.Element {
                 pathname: '/club/[slug]/home',
                 query: { slug: slug }
               }}
+              prefetch={false}
               title={
                 <Trans>Home</Trans>
               }
@@ -95,6 +96,7 @@ export default function ClubLayout ({ children }: Props): JSX.Element {
                 pathname: '/club/[slug]/revenue',
                 query: { slug: slug }
               }}
+              prefetch={false}
               title={
                 <Trans>Revenue</Trans>
               }
@@ -117,6 +119,7 @@ export default function ClubLayout ({ children }: Props): JSX.Element {
                 pathname: '/club/[slug]/characters',
                 query: { slug: slug }
               }}
+              prefetch={false}
               title={
                 <Trans>Characters</Trans>
               }
@@ -129,6 +132,7 @@ export default function ClubLayout ({ children }: Props): JSX.Element {
                 pathname: '/club/[slug]/settings',
                 query: { slug: slug }
               }}
+              prefetch={false}
               title={
                 <Trans>Settings</Trans>
               }

@@ -13,6 +13,7 @@ import type { UploadCategoryStepFragment$key } from '@//:artifacts/UploadCategor
 import UploadSearchCategories from './UploadSearchCategories/UploadSearchCategories'
 import UploadRewindCategories from './UploadRewindCategories/UploadRewindCategories'
 import UploadSelectTopics from './UploadSelectTopics/UploadSelectTopics'
+import Head from 'next/head'
 
 interface Props {
   query: UploadCategoryStepFragment$key
@@ -52,6 +53,11 @@ export default function UploadCategoryStep ({ query }: Props): JSX.Element {
 
   return (
     <MobileContainer>
+      <Head>
+        <title>
+          Select Categories - overdoll
+        </title>
+      </Head>
       <Stack spacing={2}>
         <PageSectionWrap>
           <PageSectionTitle colorScheme='teal'>

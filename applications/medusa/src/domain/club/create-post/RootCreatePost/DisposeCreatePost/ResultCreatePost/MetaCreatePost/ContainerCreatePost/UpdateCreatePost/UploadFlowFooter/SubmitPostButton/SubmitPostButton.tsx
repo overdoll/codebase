@@ -9,6 +9,7 @@ import { useToast } from '@//:modules/content/ThemeComponents'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import { hasSupporterContent } from '../../UploadFlowSteps/UploadReviewStep/UploadReviewStep'
 import { useUppyContext } from '@//:modules/content/HookedComponents/Upload'
+import isFailed from '@//:modules/content/HookedComponents/Post/support/isFailed'
 
 interface Props {
   query: SubmitPostButtonFragment$key
@@ -25,6 +26,7 @@ const Fragment = graphql`
     }
     ...PublishedPostFragment
     ...ReviewPostFragment
+    ...isFailedFragment
   }
 `
 
@@ -54,6 +56,8 @@ export default function SubmitPostButton ({
   const [submitPost, isSubmittingPost] = useMutation<SubmitPostButtonMutation>(Mutation)
 
   const [, setPostReference] = useQueryParam<string | null | undefined>('post')
+
+  const contentFailed = isFailed(data)
 
   const supportingDisabledAndPostHasSupporterContent = hasSupporterContent(data.content) && !data.club.canCreateSupporterOnlyPosts
 
@@ -105,7 +109,7 @@ export default function SubmitPostButton ({
     <Button
       colorScheme='teal'
       size='lg'
-      isDisabled={supportingDisabledAndPostHasSupporterContent}
+      isDisabled={supportingDisabledAndPostHasSupporterContent || contentFailed}
       isLoading={isSubmittingPost}
       onClick={onSubmitPost}
     >

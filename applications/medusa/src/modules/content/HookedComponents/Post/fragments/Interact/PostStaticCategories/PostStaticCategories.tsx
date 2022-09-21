@@ -22,7 +22,7 @@ export default function PostStaticCategories ({ query }: Props): JSX.Element {
     <Wrap>
       {data.categories.map((item) =>
         <WrapItem key={item.id}>
-          <Tag size='lg' variant='outline' colorScheme='gray' borderRadius='full'>
+          <Tag size='lg' variant='solid' colorScheme='gray' borderRadius='full'>
             <TagLabel>{item.title}</TagLabel>
           </Tag>
         </WrapItem>

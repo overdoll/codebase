@@ -13,6 +13,7 @@ import PostReview from './PostReview/PostReview'
 import { Stack } from '@chakra-ui/react'
 import SuggestPrompt from './SuggestPrompt/SuggestPrompt'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
+import Head from 'next/head'
 
 interface Props {
   query: UploadReviewStepFragment$key
@@ -45,6 +46,11 @@ export default function UploadReviewStep ({
   return (
     <>
       <MobileContainer>
+        <Head>
+          <title>
+            Review Post - overdoll
+          </title>
+        </Head>
         <PageSectionWrap>
           <PageSectionTitle colorScheme='teal'>
             <Trans>
@@ -61,7 +67,7 @@ export default function UploadReviewStep ({
       <ContentContainer pt={4}>
         <PostReview query={data} />
       </ContentContainer>
-      <MobileContainer pt={4}>
+      <MobileContainer mb={40} pt={4}>
         <Stack spacing={2}>
           <SuggestPrompt>
             <Trans>

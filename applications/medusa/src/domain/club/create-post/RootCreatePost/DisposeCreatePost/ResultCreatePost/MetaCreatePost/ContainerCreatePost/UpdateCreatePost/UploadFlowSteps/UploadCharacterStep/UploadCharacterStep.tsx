@@ -20,6 +20,7 @@ import SkeletonUploadCharacterGrid
 import SearchBooleanButton
   from '@//:modules/content/HookedComponents/Search/components/SearchBooleanButton/SearchBooleanButton'
 import { CharacterIdentifier } from '@//:assets/icons'
+import Head from 'next/head'
 
 export interface UploadCharacterSearchProps {
   name: string | null
@@ -64,6 +65,11 @@ export default function UploadCharacterStep (): JSX.Element {
 
   return (
     <MobileContainer>
+      <Head>
+        <title>
+          Select Characters - overdoll
+        </title>
+      </Head>
       <Stack spacing={2}>
         <PageSectionWrap>
           <PageSectionTitle colorScheme='teal'>

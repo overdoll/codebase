@@ -39,18 +39,18 @@ const Fragment = graphql`
 `
 
 export default function ProcessContentDisplay ({
-  query
+  query,
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   const {
     skipToStep,
-    currentStep
+    currentStep,
   } = useContext(FlowContext)
 
   const {
     onToggle,
-    isOpen
+    isOpen,
   } = useDisclosure()
 
   const contentIsProcessed = isProcessed(data)
@@ -58,7 +58,7 @@ export default function ProcessContentDisplay ({
 
   const ICON_PROPS = {
     w: 4,
-    h: 4
+    h: 4,
   }
 
   const MemoSpinner = useMemo(() => <Spinner color='teal.300' {...ICON_PROPS} />, [])
@@ -83,7 +83,7 @@ export default function ProcessContentDisplay ({
     const TEXT_PROPS = {
       fontSize: 'md',
       color: 'gray.00',
-      lineHeight: 1
+      lineHeight: 1,
     }
 
     if (contentFailed) {

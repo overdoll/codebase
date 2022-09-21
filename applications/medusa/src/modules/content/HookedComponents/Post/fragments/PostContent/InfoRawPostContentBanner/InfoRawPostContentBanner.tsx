@@ -36,7 +36,7 @@ export default function InfoRawPostContentBanner (props: Props): JSX.Element {
 
   if (data.media.__typename === 'VideoMedia') {
     return (
-      <Flex position='absolute'>
+      <Flex top={0} bottom={0} right={0} left={0} position='absolute'>
         <BannerImageMedia imageMediaQuery={data.media.cover} />
         <Flex align='center' justify='center' position='absolute' top={0} bottom={0} right={0} left={0}>
           <Flex align='center' justify='center' p={2} borderRadius='lg' bg='dimmers.400'>
