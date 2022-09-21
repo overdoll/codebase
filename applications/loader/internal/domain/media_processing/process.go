@@ -1021,7 +1021,7 @@ func processImageWithSizes(media *media.Media, sourceSrc image.Image) ([]*Move, 
 		shouldResizeHeight := isPortrait && sourceSrc.Bounds().Dy() > size.constraint
 		shouldResizeWidth := !isPortrait && sourceSrc.Bounds().Dx() > size.constraint
 
-		if (!shouldResizeWidth || !shouldResizeHeight) && !size.mandatory {
+		if !shouldResizeWidth && !shouldResizeHeight && !size.mandatory {
 			continue
 		}
 
@@ -1236,7 +1236,7 @@ func ApplyFilters(media *media.Media, file *os.File, filters *ImageFilters, mime
 	pixelatedSrc := image.NewNRGBA(g.Bounds(src.Bounds()))
 	g.Draw(pixelatedSrc, src)
 
-	move, err := processImageWithSizes(media, src)
+	move, err := processImageWithSizes(media, pixelatedSrc)
 
 	if err != nil {
 		return nil, err

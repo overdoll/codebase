@@ -13,8 +13,7 @@ type SubmitPostInput struct {
 }
 
 type SubmitPostPayload struct {
-	MediaIds          []string
-	PixelatedMediaIds []string
+	MediaIds []string
 }
 
 func (h *Activities) SubmitPost(ctx context.Context, input SubmitPostInput) (*SubmitPostPayload, error) {
@@ -28,18 +27,13 @@ func (h *Activities) SubmitPost(ctx context.Context, input SubmitPostInput) (*Su
 	}
 
 	var mediaIds []string
-	var pixelatedMediaIds []string
 
 	for _, content := range pst.Content() {
 		// only grab the content that is not processed
 		if !content.Media().IsProcessed() || content.Media().IsFailed() {
 			mediaIds = append(mediaIds, content.Media().ID())
 		}
-
-		if content.MediaHidden() != nil {
-			pixelatedMediaIds = append(pixelatedMediaIds, content.MediaHidden().ID())
-		}
 	}
 
-	return &SubmitPostPayload{MediaIds: mediaIds, PixelatedMediaIds: pixelatedMediaIds}, nil
+	return &SubmitPostPayload{MediaIds: mediaIds}, nil
 }
