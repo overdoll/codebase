@@ -713,14 +713,14 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperatorMedia(ct
 		return nil, err
 	}
 
-	marshalledResources := make(map[string]*string)
+	marshalledResources := make(map[string]string)
 
 	for _, r := range resources {
 		marshalled, err := media.MarshalMediaToDatabase(r)
 		if err != nil {
 			return nil, err
 		}
-		marshalledResources[r.ID()] = marshalled
+		marshalledResources[r.ID()] = *marshalled
 	}
 
 	var mapped []string
@@ -749,8 +749,25 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperatorMedia(ct
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update post")
 	}
 
-	if err := r.indexPost(ctx, currentPost); err != nil {
-		return nil, err
+	updateDoc := make(map[string]interface{})
+	contentMedia := make(map[string]string)
+
+	for key, val := range marshalledResources {
+		contentMedia[key] = val
+	}
+
+	updateDoc["content_media"] = contentMedia
+	updateDoc["updated_at"] = pst.UpdatedAt
+
+	_, err = r.client.
+		Update().
+		Index(postWriterIndex).
+		Id(pst.Id).
+		Doc(updateDoc).
+		Do(ctx)
+
+	if err != nil {
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed to partially update post media")
 	}
 
 	return currentPost, nil

@@ -56,7 +56,7 @@ var (
 )
 
 const (
-	jpegQuality   = 80
+	jpegQuality   = 85
 	defaultPreset = "veryslow"
 )
 
@@ -555,6 +555,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	}
 
 	type playlist struct {
+		bitrateInt     int
 		bitrate        string
 		averageBitrate string
 		resolution     string
@@ -626,6 +627,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		}
 
 		playlist := &playlist{
+			bitrateInt:     int(bitrate),
 			bitrate:        strconv.Itoa(int(bitrate)),
 			averageBitrate: strconv.Itoa(int(bitrate)),
 			resolution:     strconv.Itoa(probeResult.Streams[0].Width) + "x" + strconv.Itoa(probeResult.Streams[0].Height),
@@ -636,7 +638,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		if highResolutionPlaylist == nil {
 			highResolutionPlaylist = playlist
 		} else {
-			if playlist.bitrate > highResolutionPlaylist.bitrate {
+			if playlist.bitrateInt > highResolutionPlaylist.bitrateInt {
 				highResolutionPlaylist = playlist
 			}
 		}
@@ -653,7 +655,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	lastFrame := 5
 	foundFrame := false
 
-	fileThumbnailName := uuid.New().String()
+	fileThumbnailName := uuid.New().String() + ".png"
 
 	// keep looking for frames that are not all black (we can successfully generate a preview
 	for start := time.Now(); time.Since(start) < time.Second*10; {
