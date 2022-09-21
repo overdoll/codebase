@@ -42,6 +42,7 @@ func unmarshalLegacyResourceFromDatabase(ctx context.Context, resource string) (
 
 	if re.Processed && re.VideoThumbnailMimeType != "" {
 		videoData = &proto.VideoData{
+			Id: re.ProcessedId,
 			Containers: []*proto.VideoContainer{{
 				Id:       re.ProcessedId + ".mp4",
 				MimeType: proto.MediaMimeType_VideoMp4,
@@ -79,8 +80,13 @@ func unmarshalLegacyResourceFromDatabase(ctx context.Context, resource string) (
 		lastMimeType := re.MimeTypes[len(re.MimeTypes)-1]
 
 		imageData = &proto.ImageData{
-			Width:    uint32(re.Width),
-			Height:   uint32(re.Height),
+			Sizes: []*proto.ImageDataSize{
+				{
+					Id:     "",
+					Width:  uint32(re.Width),
+					Height: uint32(re.Height),
+				},
+			},
 			Palettes: palette,
 		}
 

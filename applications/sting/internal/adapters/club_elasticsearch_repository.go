@@ -115,7 +115,7 @@ func unmarshalClubDocument(ctx context.Context, source json.RawMessage, sort []i
 		return nil, errors.Wrap(err, "failed search clubs - unmarshal")
 	}
 
-	unmarshalledThumbnail, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, bd.ThumbnailResource, nil)
+	unmarshalledThumbnail, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, bd.ThumbnailResource, bd.ThumbnailMedia)
 
 	if err != nil {
 		return nil, err

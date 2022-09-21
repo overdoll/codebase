@@ -3,8 +3,8 @@ build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64
 run --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64
 test --incompatible_strict_action_env
 build --incompatible_strict_action_env
+build --nobuild_runfile_links
+run --nobuild_runfile_links
+test --nobuild_runfile_links
 run --incompatible_strict_action_env
-run --incompatible_restrict_string_escapes=false
-build --incompatible_restrict_string_escapes=false
-sync --incompatible_restrict_string_escapes=false
 coverage --instrument_test_targets

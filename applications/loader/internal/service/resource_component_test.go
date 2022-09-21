@@ -334,12 +334,13 @@ func TestUploadMedia(t *testing.T) {
 	require.Len(t, newImageMedia.ColorPalettes(), 3, "should have 2 color palettes")
 
 	// correct dimensions
-	require.Equal(t, 532, newImageMedia.ImageHeight(), "should be the correct height")
-	require.Equal(t, 656, newImageMedia.ImageWidth(), "should be the correct width")
+	require.Equal(t, 532, newImageMedia.LegacyImageHeight(), "should be the correct height")
+	require.Equal(t, 656, newImageMedia.LegacyImageWidth(), "should be the correct width")
 
 	require.Len(t, newVideoMedia.VideoContainers(), 2, "should have 2 video containers")
 
 	require.Equal(t, proto.MediaMimeType_VideoMpegUrl, newVideoMedia.VideoContainers()[0].MimeType(), "should be the correct mime type")
+	require.Equal(t, proto.MediaDeviceType_Universal, *newVideoMedia.VideoContainers()[0].Device(), "should be the correct mime type")
 
 	// correct dimensions
 	require.Equal(t, 360, newVideoMedia.VideoContainers()[1].Height(), "should be the correct height")
@@ -354,12 +355,17 @@ func TestUploadMedia(t *testing.T) {
 
 	require.Len(t, newVideoMedia.ColorPalettes(), 3, "should have 3 color palettes")
 
-	require.Len(t, newVideoMedia2.VideoContainers(), 2, "should have 2 video containers")
+	require.Len(t, newVideoMedia2.VideoContainers(), 3, "should have 2 video containers")
+
+	require.Equal(t, proto.MediaMimeType_VideoMpegUrl, newVideoMedia2.VideoContainers()[0].MimeType(), "should be the correct mime type")
+	require.Equal(t, proto.MediaDeviceType_Desktop, *newVideoMedia2.VideoContainers()[0].Device(), "should be the correct mime type")
+	require.Equal(t, proto.MediaDeviceType_Mobile, *newVideoMedia2.VideoContainers()[1].Device(), "should be the correct mime type")
+	require.Equal(t, proto.MediaMimeType_VideoMpegUrl, newVideoMedia2.VideoContainers()[1].MimeType(), "should be the correct mime type")
 
 	// correct dimensions
-	require.Equal(t, 720, newVideoMedia2.VideoContainers()[1].Height(), "should be the correct height")
-	require.Equal(t, 1280, newVideoMedia2.VideoContainers()[1].Width(), "should be the correct width")
-	require.Equal(t, proto.MediaMimeType_VideoMp4, newVideoMedia2.VideoContainers()[1].MimeType(), "should be the correct mime type")
+	require.Equal(t, 720, newVideoMedia2.VideoContainers()[2].Height(), "should be the correct height")
+	require.Equal(t, 1280, newVideoMedia2.VideoContainers()[2].Width(), "should be the correct width")
+	require.Equal(t, proto.MediaMimeType_VideoMp4, newVideoMedia2.VideoContainers()[2].MimeType(), "should be the correct mime type")
 
 	// correct duration
 	require.GreaterOrEqual(t, newVideoMedia2.VideoDuration(), 5700, "should be the correct duration")

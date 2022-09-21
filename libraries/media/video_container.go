@@ -8,6 +8,7 @@ type VideoContainer struct {
 	width    int
 	height   int
 	mimeType proto.MediaMimeType
+	device   *proto.MediaDeviceType
 }
 
 func (i *VideoContainer) Url() string {
@@ -16,6 +17,10 @@ func (i *VideoContainer) Url() string {
 
 func (i *VideoContainer) MimeType() proto.MediaMimeType {
 	return i.mimeType
+}
+
+func (i *VideoContainer) Device() *proto.MediaDeviceType {
+	return i.device
 }
 
 func (i *VideoContainer) Width() int {

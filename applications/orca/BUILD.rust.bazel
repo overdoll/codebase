@@ -11,17 +11,15 @@ _PROC_MACRO_DEPS = [
 _DEPS = [
     "@crates//:anyhow",
     "@crates//:apollo-router",
-    "@crates//:apollo-router-core",
-    "@crates//:tower",
-    "@crates//:tokio",
-    "@crates//:tokio-util",
+    "@crates//:futures",
+    "@crates//:schemars",
     "@crates//:serde",
     "@crates//:serde_json",
-    "@crates//:serde_json_bytes",
-    "@crates//:http",
-    "@crates//:schemars",
+    "@crates//:tokio",
+    "@crates//:tower",
     "@crates//:dotenv",
     "@crates//:redis",
+    "@crates//:http",
 ]
 
 _DATA = [
@@ -31,8 +29,9 @@ _DATA = [
 
 _SRCS = [
     "src/main.rs",
-    "src/passport.rs",
-    "src/relay_persisted_queries.rs",
+    #"src/plugins/passport.rs",
+    "src/plugins/persisted_queries.rs",
+    "src/plugins/mod.rs",
 ]
 
 rust_binary(
@@ -49,7 +48,6 @@ rust_image(
     base = "@rust_base_image//image",
     data = _DATA + [
         ".env",
-        "dev.router.yaml",
     ],
     proc_macro_deps = _PROC_MACRO_DEPS,
     deps = _DEPS,

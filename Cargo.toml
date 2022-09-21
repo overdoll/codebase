@@ -2,4 +2,5 @@
 
 members = [
     "applications/orca",
+    "applications/orca/xtask"
 ]

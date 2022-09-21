@@ -20,6 +20,12 @@ enum MediaMimeType {
   ImagePng = 3;
 }
 
+enum MediaDeviceType {
+  Universal = 0;
+  Mobile = 1;
+  Desktop = 2;
+}
+
 enum MediaVersion {
   ONE = 0;
 }
@@ -27,9 +33,10 @@ enum MediaVersion {
 message VideoContainer {
   string id = 1;
   MediaMimeType mimeType = 2;
-  uint64 bitrate = 3;
-  uint32 width = 4;
-  uint32 height = 5;
+  optional MediaDeviceType targetDevice = 3;
+  uint64 bitrate = 4;
+  uint32 width = 5;
+  uint32 height = 6;
 }
 
 message VideoAspectRatio {
@@ -38,10 +45,11 @@ message VideoAspectRatio {
 }
 
 message VideoData {
-  repeated VideoContainer containers = 1;
-  VideoAspectRatio aspectRatio = 2;
-  sint64 durationMilliseconds = 3;
-  bool hasAudio = 4;
+  string id = 1;
+  repeated VideoContainer containers = 2;
+  VideoAspectRatio aspectRatio = 3;
+  sint64 durationMilliseconds = 4;
+  bool hasAudio = 5;
 }
 
 message MediaState {
@@ -56,12 +64,17 @@ message ColorPalette {
   uint32 blue = 4;
 }
 
+message ImageDataSize {
+  string id = 1;
+  uint32 width = 2;
+  uint32 height = 3;
+}
+
 message ImageData {
   string id = 1;
   MediaMimeType mimeType = 2;
-  uint32 width = 3;
-  uint32 height = 4;
-  repeated ColorPalette palettes = 5;
+  repeated ImageDataSize sizes = 3;
+  repeated ColorPalette palettes = 4;
 }
 
 message MediaLink {

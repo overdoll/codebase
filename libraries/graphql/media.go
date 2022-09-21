@@ -2,15 +2,65 @@ package graphql
 
 import (
 	"context"
+	"fmt"
+	"io"
 	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/media"
 	"overdoll/libraries/media/proto"
+	"strconv"
 )
+
+// Identifies the type of media
+type MediaDeviceType string
+
+const (
+	MediaDeviceTypeMobile    MediaDeviceType = "MOBILE"
+	MediaDeviceTypeDesktop   MediaDeviceType = "DESKTOP"
+	MediaDeviceTypeUniversal MediaDeviceType = "UNIVERSAL"
+)
+
+var AllMediaDeviceType = []MediaDeviceType{
+	MediaDeviceTypeMobile,
+	MediaDeviceTypeDesktop,
+	MediaDeviceTypeUniversal,
+}
+
+func (e MediaDeviceType) IsValid() bool {
+	switch e {
+	case MediaDeviceTypeMobile, MediaDeviceTypeDesktop, MediaDeviceTypeUniversal:
+		return true
+	}
+	return false
+}
+
+func (e MediaDeviceType) String() string {
+	return string(e)
+}
+
+func (e *MediaDeviceType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = MediaDeviceType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid MediaDeviceType", str)
+	}
+	return nil
+}
+
+func (e MediaDeviceType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
 
 // An application/x-mpegURL video container.
 type HLSVideoContainer struct {
 	// The URL used to access the container.
 	URL URI `json:"url"`
+
+	// The MediaDeviceType used to access the container.
+	TargetDevice MediaDeviceType `json:"targetDevice"`
 }
 
 func (HLSVideoContainer) IsVideoContainer() {}
@@ -20,8 +70,6 @@ type ImageMedia struct {
 	ID relay.ID `json:"id"`
 	// All available variants for this media.
 	Variants *ImageMediaVariants `json:"variants"`
-	// The original image media. Note that originals are resized if they are larger than 4096px.
-	Original *ImageMediaAccess `json:"original"`
 	// Color palettes for this image.
 	ColorPalettes []*ColorPalette `json:"colorPalettes"`
 }
@@ -53,18 +101,18 @@ type ImageMediaVariants struct {
 	Icon *ImageMediaAccess `json:"icon"`
 	// 150x150 crop of an image. Suitable for small previews.
 	Thumbnail *ImageMediaAccess `json:"thumbnail"`
-	// 200x200 crop of an image. Suitable for large HD thumbnails.
-	ThumbnailHd *ImageMediaAccess `json:"thumbnailHd"`
-	// 768px width or height resize.
+	// 680px width or height resize.
 	Small *ImageMediaAccess `json:"small"`
-	// 1366px width or height resize.
+	// 1200px width or height resize.
 	Medium *ImageMediaAccess `json:"medium"`
-	// 1920px width or height resize.
+	// 2048px width or height resize.
 	Large *ImageMediaAccess `json:"large"`
 	// 4096px width or height resize.
 	Hd *ImageMediaAccess `json:"hd"`
-	// 640px width or height resize.
+	// 720px width or height resize.
 	Banner *ImageMediaAccess `json:"banner"`
+	// 360px width or height resize.
+	SmallBanner *ImageMediaAccess `json:"smallBanner"`
 }
 
 // A video/mp4 video container.
@@ -167,14 +215,13 @@ func marshalImageMediaToGraphQL(ctx context.Context, res *media.Media) *ImageMed
 			Mini:        marshalImageAccessToGraphQL(ctx, res.MiniImageMediaAccess()),
 			Icon:        marshalImageAccessToGraphQL(ctx, res.IconImageMediaAccess()),
 			Thumbnail:   marshalImageAccessToGraphQL(ctx, res.ThumbnailImageMediaAccess()),
-			ThumbnailHd: marshalImageAccessToGraphQL(ctx, res.ThumbnailHDImageMediaAccess()),
 			Small:       marshalImageAccessToGraphQL(ctx, res.SmallImageMediaAccess()),
 			Medium:      marshalImageAccessToGraphQL(ctx, res.MediumImageMediaAccess()),
 			Large:       marshalImageAccessToGraphQL(ctx, res.LargeImageMediaAccess()),
 			Hd:          marshalImageAccessToGraphQL(ctx, res.HdImageMediaAccess()),
 			Banner:      marshalImageAccessToGraphQL(ctx, res.BannerImageMediaAccess()),
+			SmallBanner: marshalImageAccessToGraphQL(ctx, res.SmallBannerImageMediaAccess()),
 		},
-		Original:      marshalImageAccessToGraphQL(ctx, res.OriginalImageMediaAccess()),
 		ColorPalettes: palettes,
 	}
 }
@@ -209,8 +256,24 @@ func MarshaMediaToGraphQL(ctx context.Context, res *media.Media) Media {
 			}
 
 			if container.MimeType() == proto.MediaMimeType_VideoMpegUrl {
+
+				var mediaDeviceType MediaDeviceType
+
+				if *container.Device() == proto.MediaDeviceType_Mobile {
+					mediaDeviceType = MediaDeviceTypeMobile
+				}
+
+				if *container.Device() == proto.MediaDeviceType_Desktop {
+					mediaDeviceType = MediaDeviceTypeDesktop
+				}
+
+				if *container.Device() == proto.MediaDeviceType_Universal {
+					mediaDeviceType = MediaDeviceTypeUniversal
+				}
+
 				containers = append(containers, &HLSVideoContainer{
-					URL: URI(container.Url()),
+					URL:          URI(container.Url()),
+					TargetDevice: mediaDeviceType,
 				})
 			}
 		}
