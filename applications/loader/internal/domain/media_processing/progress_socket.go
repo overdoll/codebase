@@ -14,11 +14,16 @@ import (
 	"time"
 )
 
-var progressSocketChannels = make(map[string]chan int64)
+var progressSocketChannels = make(map[string]chan ProgressSocketMessage)
 
-func ListenProgressSocket(id string, cb func(progress int64)) (func(), error) {
+type ProgressSocketMessage struct {
+	Progress      int64
+	OnlyHeartbeat bool
+}
 
-	progressChannel := make(chan int64)
+func ListenProgressSocket(id string, cb func(progress ProgressSocketMessage)) (func(), error) {
+
+	progressChannel := make(chan ProgressSocketMessage)
 	progressSocketChannels[id] = progressChannel
 
 	// use a 500ms ticker to rate limit
@@ -26,7 +31,7 @@ func ListenProgressSocket(id string, cb func(progress int64)) (func(), error) {
 	stop := make(chan bool, 1)
 
 	go func() {
-		var lastProgress int64
+		var lastProgress ProgressSocketMessage
 		clearProgress := false
 		for {
 			select {
@@ -57,7 +62,7 @@ func ListenProgressSocket(id string, cb func(progress int64)) (func(), error) {
 }
 
 // show progress taken from: https://github.com/u2takey/ffmpeg-go/blob/master/examples/showProgress.go
-func createFFMPEGTempSocket(id string, duration float64) (string, error, func()) {
+func createFFMPEGTempSocket(id string, duration float64, onlyHeartbeat bool) (string, error, func()) {
 
 	nBig, err := rand.Int(rand.Reader, big.NewInt(9223372036854775))
 	if err != nil {
@@ -130,7 +135,7 @@ func createFFMPEGTempSocket(id string, duration float64) (string, error, func())
 					if channel, ok := progressSocketChannels[id]; ok {
 						parsedInt, err := strconv.ParseInt(cp, 10, 64)
 						if err == nil {
-							channel <- parsedInt
+							channel <- ProgressSocketMessage{Progress: parsedInt, OnlyHeartbeat: onlyHeartbeat}
 						}
 					}
 				}

@@ -251,8 +251,6 @@ func (m *Media) generateUrlForImage(optimalSize int) *ImageMediaAccess {
 
 	var lastSize *proto.ImageDataSize
 
-	fmt.Println(m.proto.ImageData.Sizes)
-
 	for _, size := range m.proto.ImageData.Sizes {
 
 		if optimalSize == 0 {
@@ -289,12 +287,11 @@ func (m *Media) generateUrlForImage(optimalSize int) *ImageMediaAccess {
 					lastSize = size
 				}
 			}
-		} else {
-			if lastSize == nil {
-				lastSize = size
-			}
 		}
+	}
 
+	if lastSize == nil {
+		lastSize = m.proto.ImageData.Sizes[0]
 	}
 
 	finalUrl := url.URL{}

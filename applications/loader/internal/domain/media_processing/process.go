@@ -152,8 +152,21 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		Output: *new([]byte),
 	}
 
+	validationSocket, err, cleanupValidationSocket := createFFMPEGTempSocket(media.RawProto().Id, 0, true)
+
+	if err != nil {
+		return nil, err
+	}
+
+	//// make sure to call this function or socket won't close correctly
+	defer cleanupValidationSocket()
+
 	// first, check integrity of mp4 file before proceeding to process the video
-	if err := ffmpeg_go.Input(targetFileName, defaultArgs).
+	if err := ffmpeg_go.Input(targetFileName, map[string]interface{}{
+		"v":           "error",
+		"hide_banner": "",
+		"progress":    "unix://" + validationSocket,
+	}).
 		Output("pipe:", ffmpeg_go.KwArgs{
 			"format": "rawvideo",
 		}).
@@ -228,32 +241,6 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		videoNoAudio = true
 	}
 
-	// if the video doesn't have audio, we need to re-encode it with a blank audio stream or HLS doesn't like it
-	//if videoNoAudio {
-	//	newFileNameWithAudio := uuid.New().String()
-	//	if err := ffmpeg_go.
-	//		Input(targetFileName, map[string]interface{}{
-	//			"v":           "error",
-	//			"hide_banner": "",
-	//			"i":           "anullsrc",
-	//			"f":           "lavfi",
-	//		}).
-	//		Output(newFileNameWithAudio, ffmpeg_go.KwArgs{
-	//			"c:v":      "copy",
-	//			"c:a":      "aac",
-	//			"map":      []string{"1:v", "0:a"},
-	//			"shortest": "",
-	//			"format":   "mp4",
-	//		}).
-	//		WithErrorOutput(ffmpegLogger).
-	//		Run(); err != nil {
-	//		return nil, errors.Wrap(err, "failed to generate blank stream for video audio: "+string(ffmpegLogger.Output))
-	//	}
-	//	targetFileName = newFileNameWithAudio
-	//	// remove the file since we won't need it
-	//	defer os.Remove(newFileNameWithAudio)
-	//}
-
 	// probe for video streams
 	str, err = ffmpeg_go.Probe(targetFileName, map[string]interface{}{
 		"select_streams": "v:0",
@@ -278,56 +265,6 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 
 	firstStream := videoStreamProbeResult.Streams[0]
 	isLandscape := firstStream.Width > firstStream.Height
-
-	var img image.Image
-
-	lastFrame := 5
-	foundFrame := false
-
-	fileThumbnailName := uuid.New().String()
-
-	// keep looking for frames that are not all black (we can successfully generate a preview
-	for start := time.Now(); time.Since(start) < time.Second*10; {
-
-		fileThumbnail, err := os.Create(fileThumbnailName)
-		if err != nil {
-			return nil, err
-		}
-
-		if err := ffmpeg_go.Input(targetFileName, defaultArgs).
-			Filter("select", ffmpeg_go.Args{fmt.Sprintf("gte(n,%d)", lastFrame)}).
-			Output("pipe:", ffmpeg_go.KwArgs{"vframes": 1, "format": "image2"}).
-			WithErrorOutput(ffmpegLogger).
-			WithOutput(fileThumbnail).
-			Run(); err != nil {
-			return nil, errors.Wrap(err, "failed to generate thumbnail: "+string(ffmpegLogger.Output))
-		}
-
-		_, _ = fileThumbnail.Seek(0, io.SeekStart)
-		_, img, err = createPreviewFromFile(fileThumbnail, false)
-
-		if err != nil {
-			// fully black image - we want to find a different one
-			if err.Error() == "Failed, no non-alpha pixels found (either fully transparent image, or the ColorBackgroundMask removed all pixels)" {
-				_ = os.Remove(fileThumbnail.Name())
-				lastFrame += 30
-				continue
-			}
-
-			return nil, err
-		}
-
-		_ = fileThumbnail.Close()
-		foundFrame = true
-
-		break
-	}
-
-	defer os.Remove(fileThumbnailName)
-
-	if !foundFrame {
-		return nil, errors.New("failed to find a frame thumbnail in time")
-	}
 
 	type resolutionTarget struct {
 		high    int
@@ -429,19 +366,18 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		}
 	}
 
-	socket, err, done := createFFMPEGTempSocket(media.RawProto().Id, parsedDuration)
+	processSocket, err, processCleanup := createFFMPEGTempSocket(media.RawProto().Id, parsedDuration, false)
 
 	if err != nil {
 		return nil, err
 	}
 
-	//// make sure to call this function or socket won't close correctly
-	defer done()
+	defer processCleanup()
 
 	defaultAllArgs := map[string]interface{}{
 		"v":           "error",
 		"hide_banner": "",
-		"progress":    "unix://" + socket,
+		"progress":    "unix://" + processSocket,
 	}
 
 	var streams []*ffmpeg_go.Stream
@@ -627,8 +563,10 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	}
 
 	var playlists []*playlist
+	var highResolutionPlaylist *playlist
 
 	if err := filepath.Walk(fileName, func(path string, info fs.FileInfo, err error) error {
+
 		if info.IsDir() {
 			return nil
 		}
@@ -687,16 +625,77 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 			}
 		}
 
-		playlists = append(playlists, &playlist{
+		playlist := &playlist{
 			bitrate:        strconv.Itoa(int(bitrate)),
 			averageBitrate: strconv.Itoa(int(bitrate)),
 			resolution:     strconv.Itoa(probeResult.Streams[0].Width) + "x" + strconv.Itoa(probeResult.Streams[0].Height),
 			uri:            path,
 			codecs:         "\"" + codecs + "\"",
-		})
+		}
+
+		if highResolutionPlaylist == nil {
+			highResolutionPlaylist = playlist
+		} else {
+			if playlist.bitrate > highResolutionPlaylist.bitrate {
+				highResolutionPlaylist = playlist
+			}
+		}
+
+		playlists = append(playlists, playlist)
 		return nil
 	}); err != nil {
 		return nil, errors.Wrap(err, "failed to walk playlists")
+	}
+
+	// generate a thumbnail
+	var img image.Image
+
+	lastFrame := 5
+	foundFrame := false
+
+	fileThumbnailName := uuid.New().String()
+
+	// keep looking for frames that are not all black (we can successfully generate a preview
+	for start := time.Now(); time.Since(start) < time.Second*10; {
+
+		fileThumbnail, err := os.Create(fileThumbnailName)
+		if err != nil {
+			return nil, err
+		}
+
+		if err := ffmpeg_go.Input(highResolutionPlaylist.uri, defaultArgs).
+			Filter("select", ffmpeg_go.Args{fmt.Sprintf("gte(n,%d)", lastFrame)}).
+			Output("pipe:", ffmpeg_go.KwArgs{"vframes": 1, "format": "image2"}).
+			WithErrorOutput(ffmpegLogger).
+			WithOutput(fileThumbnail).
+			Run(); err != nil {
+			return nil, errors.Wrap(err, "failed to generate thumbnail: "+string(ffmpegLogger.Output))
+		}
+
+		_, _ = fileThumbnail.Seek(0, io.SeekStart)
+		_, img, err = createPreviewFromFile(fileThumbnail, false)
+
+		if err != nil {
+			// fully black image - we want to find a different one
+			if err.Error() == "Failed, no non-alpha pixels found (either fully transparent image, or the ColorBackgroundMask removed all pixels)" {
+				_ = os.Remove(fileThumbnail.Name())
+				lastFrame += 30
+				continue
+			}
+
+			return nil, err
+		}
+
+		_ = fileThumbnail.Close()
+		foundFrame = true
+
+		break
+	}
+
+	defer os.Remove(fileThumbnailName)
+
+	if !foundFrame {
+		return nil, errors.New("failed to find a frame thumbnail in time")
 	}
 
 	targetDeviceDesktop := proto.MediaDeviceType_Desktop

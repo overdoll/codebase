@@ -3479,6 +3479,9 @@ enum GrantAuthenticationTokenValidation {
 
 """An application/x-mpegURL video container."""
 type HLSVideoContainer {
+  """The target device for this HLS container."""
+  targetDevice: MediaDeviceType!
+
   """The URL used to access the container."""
   url: URI!
 }
@@ -3555,11 +3558,6 @@ type ImageMedia {
   """An ID uniquely identifying this media."""
   id: ID!
 
-  """
-  The original image media. Note that originals are resized if they are larger than 4096px.
-  """
-  original: ImageMediaAccess!
-
   """All available variants for this media."""
   variants: ImageMediaVariants!
 }
@@ -3578,7 +3576,7 @@ type ImageMediaAccess {
 
 """All variants available for an image."""
 type ImageMediaVariants {
-  """640px width or height resize."""
+  """720px width or height resize."""
   banner: ImageMediaAccess!
 
   """4096px width or height resize."""
@@ -3587,23 +3585,23 @@ type ImageMediaVariants {
   """100x100 crop of an image. Suitable for icons."""
   icon: ImageMediaAccess!
 
-  """1920px width or height resize."""
+  """2048px width or height resize."""
   large: ImageMediaAccess!
 
-  """1366px width or height resize."""
+  """1200px width or height resize."""
   medium: ImageMediaAccess!
 
   """50x50 crop of an image. Suitable for mini icons."""
   mini: ImageMediaAccess!
 
-  """768px width or height resize."""
+  """680px width or height resize."""
   small: ImageMediaAccess!
+
+  """360px width or height resize."""
+  smallBanner: ImageMediaAccess!
 
   """150x150 crop of an image. Suitable for small previews."""
   thumbnail: ImageMediaAccess!
-
-  """200x200 crop of an image. Suitable for large thumbnails."""
-  thumbnailHd: ImageMediaAccess!
 }
 
 """Initiate a payout for a specific club."""
@@ -3746,6 +3744,12 @@ type MP4VideoContainer {
 }
 
 union Media = ImageMedia | RawMedia | VideoMedia
+
+enum MediaDeviceType {
+  DESKTOP
+  MOBILE
+  UNIVERSAL
+}
 
 type MediaProgress
   @join__owner(graph: LOADER)

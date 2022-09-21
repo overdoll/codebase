@@ -28,7 +28,7 @@ func (h *Activities) ProcessMediaFromUpload(ctx context.Context, input ProcessMe
 	newMedia := media.FromProto(input.Media)
 
 	// when progress is made on the resource socket, we record a heartbeat
-	cleanup, err := media_processing.ListenProgressSocket(input.Media.Id, func(progress int64) {
+	cleanup, err := media_processing.ListenProgressSocket(input.Media.Id, func(progress media_processing.ProgressSocketMessage) {
 
 		if finished {
 			return
@@ -40,7 +40,7 @@ func (h *Activities) ProcessMediaFromUpload(ctx context.Context, input ProcessMe
 
 		// TODO: this heartbeat isn't recorded for some reason? so we make a manual API call (possibly because its called from another goroutine?)
 		activity.RecordHeartbeat(ctx, heartbeat)
-		if err := h.event.SendProcessMediaHeartbeat(ctx, info.TaskToken, progress); err != nil {
+		if err := h.event.SendProcessMediaHeartbeat(ctx, info.TaskToken, progress.Progress); err != nil {
 
 			if strings.Contains(err.Error(), "workflow execution already completed") {
 				return
@@ -53,12 +53,16 @@ func (h *Activities) ProcessMediaFromUpload(ctx context.Context, input ProcessMe
 			zap.S().Errorw("failed to send heartbeat", zap.Error(err))
 		}
 
-		_, alreadySentNumber := numbersAlreadySent[progress]
+		if progress.OnlyHeartbeat {
+			return
+		}
+
+		_, alreadySentNumber := numbersAlreadySent[progress.Progress]
 
 		if !alreadySentNumber {
-			numbersAlreadySent[progress] = true
+			numbersAlreadySent[progress.Progress] = true
 
-			if err := h.pr.UpdateMediaProgress(ctx, newMedia, float64(progress)); err != nil {
+			if err := h.pr.UpdateMediaProgress(ctx, newMedia, float64(progress.Progress)); err != nil {
 				zap.S().Errorw("failed to send process media progress", zap.Error(err))
 			}
 		}
