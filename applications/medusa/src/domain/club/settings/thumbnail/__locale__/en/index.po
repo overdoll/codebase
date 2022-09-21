@@ -33,10 +33,10 @@ msgstr ""
 #~ msgid "Submit Thumbnail"
 #~ msgstr ""
 
-#: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/ThumbnailClubSettings/ChangeClubThumbnailUpload/ChangeClubThumbnailUpload.tsx:63
+#: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/ThumbnailClubSettings/ChangeClubThumbnailUpload/ChangeClubThumbnailUpload.tsx:51
 msgid "Successfully updated your club thumbnail"
 msgstr ""
 
-#: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/ThumbnailClubSettings/ChangeClubThumbnailUpload/ChangeClubThumbnailUpload.tsx:69
+#: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/ThumbnailClubSettings/ChangeClubThumbnailUpload/ChangeClubThumbnailUpload.tsx:57
 msgid "There was an error updating your club thumbnail"
 msgstr ""

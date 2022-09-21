@@ -13,18 +13,65 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/slug/post/RootPublicPost/PublicPost/PublicPost.tsx:116
-msgid "Suggested Posts"
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/RepostPublicPost/SocialRepostPublicPost/PostShareDiscordButton/PostShareDiscordButton.tsx:50
+msgid "Copied Discord link! Send it in a channel or direct message!"
 msgstr ""
 
-#: src/domain/slug/post/RootPublicPost/PublicPost/PublicPostPage/PublicPostPage.tsx:59
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/RepostPublicPost/CopyLinkPublicPost/CopyLinkPublicPost.tsx:65
+msgid "Copy Link"
+msgstr ""
+
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/ClubPublicPost/JoinClubPublicPost/JoinClubPublicPost.tsx:56
+msgid "Join"
+msgstr ""
+
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/SavePublicPost/SavePublicPost.tsx:71
+msgid "Let the artist know you love their content"
+msgstr ""
+
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/RepostPublicPost/CopyLinkPublicPost/CopyLinkPublicPost.tsx:48
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/RepostPublicPost/SocialRepostPublicPost/PostShareDiscordButton/PostShareDiscordButton.tsx:55
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/RepostPublicPost/SocialRepostPublicPost/PostShareRedditButton/PostShareRedditButton.tsx:54
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/RepostPublicPost/SocialRepostPublicPost/PostShareTwitterButton/PostShareTwitterButton.tsx:71
+msgid "Repost"
+msgstr ""
+
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/TagsPublicPost/TagsPublicPost.tsx:57
+msgid "Reveal"
+msgstr ""
+
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/SavePublicPost/SavePublicPost.tsx:60
+msgid "Save this post"
+msgstr ""
+
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/ContainerPublicPost.tsx:59
+msgid "Similar content"
+msgstr ""
+
+#: src/domain/slug/post/RootPublicPost/PublicPost/PublicPost.tsx:116
+#~ msgid "Suggested Posts"
+#~ msgstr ""
+
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/BannerPublicPost/BannerPublicPost.tsx:62
 msgid "This post is archived. Only you can see it."
 msgstr ""
 
-#: src/domain/slug/post/RootPublicPost/PublicPost/PublicPostPage/PublicPostPage.tsx:48
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/BannerPublicPost/BannerPublicPost.tsx:51
 msgid "This post is not published. Only you can see it."
 msgstr ""
 
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/EmptyPublicPost/EmptyPublicPost.tsx:16
+msgid "This post was not found"
+msgstr ""
+
 #: src/domain/slug/post/RootPublicPost/PublicPost/PublicPost.tsx:106
-msgid "View Post"
+#~ msgid "View Post"
+#~ msgstr ""
+
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/TagsPublicPost/TagsPublicPost.tsx:73
+msgid "{0, plural, one { # category} other { # categories}}"
+msgstr ""
+
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/TagsPublicPost/TagsPublicPost.tsx:63
+msgid "{0, plural, one {# character} other {# characters}}"
 msgstr ""

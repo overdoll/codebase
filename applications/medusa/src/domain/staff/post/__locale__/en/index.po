@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:127
+#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:103
 msgid "Actions"
 msgstr ""
 
@@ -21,7 +21,7 @@ msgstr ""
 msgid "Add a note describing the reason in detail..."
 msgstr ""
 
-#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:168
+#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:143
 msgid "Club"
 msgstr ""
 
@@ -29,7 +29,7 @@ msgstr ""
 msgid "Confirm Remove Post"
 msgstr ""
 
-#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:186
+#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:161
 msgid "Contributor"
 msgstr ""
 
@@ -41,7 +41,7 @@ msgstr ""
 msgid "Edit Post"
 msgstr ""
 
-#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:117
+#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:93
 msgid "Information"
 msgstr ""
 
@@ -59,8 +59,8 @@ msgstr ""
 
 #: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:104
 #: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:211
-msgid "Post is processing"
-msgstr ""
+#~ msgid "Post is processing"
+#~ msgstr ""
 
 #: src/domain/staff/post/RootStaffPost/StaffPost/ModerationPostActions/ModerationPostActions.tsx:32
 msgid "Remove"
@@ -70,7 +70,7 @@ msgstr ""
 msgid "Remove Post"
 msgstr ""
 
-#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:122
+#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:98
 msgid "Reports"
 msgstr ""
 
@@ -79,7 +79,7 @@ msgstr ""
 msgid "Rule"
 msgstr ""
 
-#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:140
+#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:116
 msgid "State"
 msgstr ""
 
@@ -87,7 +87,7 @@ msgstr ""
 msgid "Successfully removed post"
 msgstr ""
 
-#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:204
+#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:179
 msgid "Tags"
 msgstr ""
 
@@ -99,6 +99,6 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:160
+#: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:135
 msgid "View Post"
 msgstr ""

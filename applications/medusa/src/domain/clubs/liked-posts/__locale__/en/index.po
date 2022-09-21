@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/clubs/liked-posts/RootLikedPosts/LikedPosts/LikedPostsFeed/LikedPostsFeed.tsx:80
+#: src/domain/clubs/liked-posts/RootLikedPosts/DisposeLikedPosts/ResultLikedPosts/MetaLikedPosts/ContainerLikedPosts/ScrollLikedPosts/ScrollLikedPosts.tsx:67
 msgid "Browse Content"
 msgstr ""
 
@@ -25,11 +25,11 @@ msgstr ""
 #~ msgid "Discover Clubs"
 #~ msgstr ""
 
-#: src/domain/clubs/liked-posts/RootLikedPosts/LikedPosts/LikedPosts.tsx:65
+#: src/domain/clubs/liked-posts/RootLikedPosts/DisposeLikedPosts/ResultLikedPosts/ResultLikedPosts.tsx:49
 msgid "Join"
 msgstr ""
 
-#: src/domain/clubs/liked-posts/RootLikedPosts/LikedPosts/LikedPosts.tsx:59
+#: src/domain/clubs/liked-posts/RootLikedPosts/DisposeLikedPosts/ResultLikedPosts/ResultLikedPosts.tsx:43
 msgid "Join overdoll to save posts and let the artist know you like their content"
 msgstr ""
 
@@ -41,7 +41,7 @@ msgstr ""
 #~ msgid "When you like a post, we'll save it for you and it will show up here"
 #~ msgstr ""
 
-#: src/domain/clubs/liked-posts/RootLikedPosts/LikedPosts/LikedPostsFeed/LikedPostsFeed.tsx:74
+#: src/domain/clubs/liked-posts/RootLikedPosts/DisposeLikedPosts/ResultLikedPosts/MetaLikedPosts/ContainerLikedPosts/ScrollLikedPosts/ScrollLikedPosts.tsx:61
 msgid "You haven't saved any posts yet"
 msgstr ""
 
@@ -53,11 +53,11 @@ msgstr ""
 #~ msgid "Your Liked Posts"
 #~ msgstr ""
 
-#: src/domain/clubs/liked-posts/RootLikedPosts/LikedPosts/LikedPosts.tsx:42
+#: src/domain/clubs/liked-posts/RootLikedPosts/DisposeLikedPosts/ResultLikedPosts/MetaLikedPosts/ContainerLikedPosts/HeaderLikedPosts/HeaderLikedPosts.tsx:10
 msgid "Your Saved Posts"
 msgstr ""
 
-#: src/domain/clubs/liked-posts/RootLikedPosts/LikedPosts/LikedPosts.tsx:54
-#: src/domain/clubs/liked-posts/RootLikedPosts/LikedPosts/LikedPostsFeed/LikedPostsFeed.tsx:69
+#: src/domain/clubs/liked-posts/RootLikedPosts/DisposeLikedPosts/ResultLikedPosts/MetaLikedPosts/ContainerLikedPosts/ScrollLikedPosts/ScrollLikedPosts.tsx:56
+#: src/domain/clubs/liked-posts/RootLikedPosts/DisposeLikedPosts/ResultLikedPosts/ResultLikedPosts.tsx:38
 msgid "Your saved posts will show up here"
 msgstr ""

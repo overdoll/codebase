@@ -13,11 +13,11 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/home/RootHome/Home/Home.tsx:69
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:41
 msgid "3D Porn"
 msgstr ""
 
-#: src/domain/home/RootHome/Home/Home.tsx:74
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:46
 msgid "3D renders and animations pornography"
 msgstr ""
 
@@ -25,23 +25,23 @@ msgstr ""
 #~ msgid "Account Locked"
 #~ msgstr ""
 
-#: src/domain/home/RootHome/Home/Home.tsx:104
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:76
 msgid "Anthro and furry character pornography"
 msgstr ""
 
 #: src/domain/home/RootHome/Home/Home.tsx:143
-msgid "Are you an artist looking to post your content?"
-msgstr ""
+#~ msgid "Are you an artist looking to post your content?"
+#~ msgstr ""
 
-#: src/domain/home/RootHome/Home/Home.tsx:61
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:33
 msgid "Browse Category"
 msgstr ""
 
-#: src/domain/home/RootHome/Home/Home.tsx:99
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:71
 msgid "Furry Porn"
 msgstr ""
 
-#: src/domain/home/RootHome/Home/Home.tsx:84
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:56
 msgid "Hentai Porn"
 msgstr ""
 
@@ -57,7 +57,7 @@ msgstr ""
 #~ msgid "I promise to be better and to follow the community guidelines more closely"
 #~ msgstr ""
 
-#: src/domain/home/RootHome/Home/Home.tsx:89
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:61
 msgid "Japanese-style pornography"
 msgstr ""
 
@@ -77,7 +77,7 @@ msgstr ""
 #~ msgid "Open Lock Info"
 #~ msgstr ""
 
-#: src/domain/home/RootHome/HomeGameTile/HomeGameTile.tsx:110
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/HomeGameTile/HomeGameTile.tsx:104
 msgid "Play Now"
 msgstr ""
 
@@ -85,23 +85,23 @@ msgstr ""
 #~ msgid "Please review the <0>Community Guidelines</0> to make sure this doesn't happen again."
 #~ msgstr ""
 
-#: src/domain/home/RootHome/Home/Home.tsx:132
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:104
 msgid "Randomize Porn"
 msgstr ""
 
-#: src/domain/home/RootHome/Home/Home.tsx:137
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:109
 msgid "Randomly browse hentai, 3d, furry porn"
 msgstr ""
 
-#: src/domain/home/RootHome/Home/Home.tsx:49
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:21
 msgid "Rule34 Roulette"
 msgstr ""
 
-#: src/domain/home/RootHome/Home/Home.tsx:117
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:89
 msgid "Search Porn"
 msgstr ""
 
-#: src/domain/home/RootHome/Home/Home.tsx:122
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:94
 msgid "Search for any kind of porn"
 msgstr ""
 
@@ -109,7 +109,7 @@ msgstr ""
 #~ msgid "See All Posts"
 #~ msgstr ""
 
-#: src/domain/home/RootHome/Home/BrowsePostsPreview/BrowsePostsPreview.tsx:75
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/PrepareHomePosts/LazyHomePosts/ScrollHomePosts/ScrollHomePosts.tsx:56
 msgid "See More Posts"
 msgstr ""
 
@@ -121,11 +121,11 @@ msgstr ""
 #~ msgid "Set up profile"
 #~ msgstr ""
 
-#: src/domain/home/RootHome/CurationProfileAlert/CurationProfileAlert.tsx:62
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/BannerHome/CurationProfileAlert/CurationProfileAlert.tsx:62
 msgid "Set up your curation profile so we can show you personalized content"
 msgstr ""
 
-#: src/domain/home/RootHome/CurationProfileAlert/CurationProfileAlert.tsx:75
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/BannerHome/CurationProfileAlert/CurationProfileAlert.tsx:75
 msgid "Setup"
 msgstr ""
 
@@ -133,7 +133,7 @@ msgstr ""
 #~ msgid "Show By Category"
 #~ msgstr ""
 
-#: src/domain/home/RootHome/Home/Home.tsx:54
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:26
 msgid "Spin your way through rule34, hentai, furry, 3D porn videos and images and see how long you can last"
 msgstr ""
 
@@ -142,7 +142,11 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/home/RootHome/Home/Home.tsx:150
-msgid "Trending Posts"
+#~ msgid "Trending Posts"
+#~ msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:115
+msgid "Trending content"
 msgstr ""
 
 #: src/domain/home/RootHome/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:114
