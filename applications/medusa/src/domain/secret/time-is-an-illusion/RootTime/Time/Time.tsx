@@ -1,6 +1,8 @@
 import { Flex, Heading } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import { DISCORD_LINK } from '@//:modules/constants/links'
+import { ExternalLink } from '@//:modules/routing'
 
 export default function Time (): JSX.Element {
   const getTime = (): number => {
@@ -21,14 +23,27 @@ export default function Time (): JSX.Element {
 
   const timedSize = (currentTimeDifference / timeRequired) * finalSize
 
-  const variants = {
-    start: {
+  const containerVariants = {
+    hidden: {
       opacity: 0
     },
     show: {
       opacity: [null, 1],
       transition: {
-        duration: 3
+        duration: 0.7,
+        staggerChildren: 5
+      }
+    }
+  }
+
+  const itemVariants = {
+    start: {
+      opacity: 0
+    },
+    show: {
+      opacity: [0, 1],
+      transition: {
+        duration: 5
       }
     }
   }
@@ -51,14 +66,27 @@ export default function Time (): JSX.Element {
         h='1px'
       />
       <motion.div
-        initial='start'
-        animate='show'
+        initial='hidden'
         // @ts-expect-error
-        variants={variants}
+        variants={containerVariants}
+        animate='show'
       >
-        <Heading textAlign='center' mt={12} fontSize='sm' color='#fff'>
-          I... I don't know how this got here... it must be a mistake...
-        </Heading>
+        <motion.div
+          variants={itemVariants}
+        >
+          <Heading textAlign='center' mt={12} fontSize='sm' color='#fff'>
+            I... I don't know how this got here... it must be a mistake...
+          </Heading>
+        </motion.div>
+        <motion.div
+          variants={itemVariants}
+        >
+          <ExternalLink href={DISCORD_LINK}>
+            <Heading textAlign='center' mt={12} fontSize='xs' color='#fff'>
+              discuss
+            </Heading>
+          </ExternalLink>
+        </motion.div>
       </motion.div>
     </Flex>
   )

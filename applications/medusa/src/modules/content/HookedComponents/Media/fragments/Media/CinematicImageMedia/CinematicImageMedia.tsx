@@ -29,11 +29,6 @@ const Fragment = graphql`
         width
         height
       }
-      hd {
-        url
-        width
-        height
-      }
     }
     ...BackgroundPosterImageMediaFragment
     ...HdImageMediaFragment
@@ -70,12 +65,6 @@ export default function CinematicImageMedia (props: Props): JSX.Element {
       hdPoster={<HdImageMedia imageMediaQuery={data} />}
       variants={(
         <>
-          <source
-            media='(min-width: 80em)'
-            srcSet={data.variants.hd.url}
-            width={data.variants.hd.width}
-            height={data.variants.hd.height}
-          />
           <source
             media='(min-width: 48em)'
             srcSet={data.variants.large.url}

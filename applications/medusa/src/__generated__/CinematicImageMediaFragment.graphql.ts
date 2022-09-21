@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d312c6f80e10994ae5a42659266825f3>>
+ * @generated SignedSource<<327b4bd625002fb56fbec7e27d76bcac>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,11 +17,6 @@ export type CinematicImageMediaFragment$data = {
     readonly red: number;
   }>;
   readonly variants: {
-    readonly hd: {
-      readonly height: number;
-      readonly url: string;
-      readonly width: number;
-    };
     readonly large: {
       readonly height: number;
       readonly url: string;
@@ -145,16 +140,6 @@ return {
           "plural": false,
           "selections": (v0/*: any*/),
           "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "ImageMediaAccess",
-          "kind": "LinkedField",
-          "name": "hd",
-          "plural": false,
-          "selections": (v0/*: any*/),
-          "storageKey": null
         }
       ],
       "storageKey": null
@@ -175,6 +160,6 @@ return {
 };
 })();
 
-(node as any).hash = "cc280904f8d7ec818261818ffef7e3dc";
+(node as any).hash = "4c3bb40056b8438fdbf347dc902d5583";
 
 export default node;
