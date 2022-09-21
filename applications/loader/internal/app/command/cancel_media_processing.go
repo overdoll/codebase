@@ -26,13 +26,13 @@ func (h CancelMediaProcessingHandler) Handle(ctx context.Context, cmd CancelMedi
 
 	for _, source := range cmd.Source {
 
-		existingMedia, err := h.sr.GetSingleMediaByLinkAndId(ctx, media.LinkFromProto(source.Link), source.Id)
+		_, err := h.sr.GetSingleMediaByLinkAndId(ctx, media.LinkFromProto(source.Link), source.Id)
 
 		if err != nil {
 
 			if apperror.IsNotFoundError(err) {
 
-				if err := h.event.CancelMediaProcessing(ctx, existingMedia); err != nil {
+				if err := h.event.CancelMediaProcessing(ctx, media.FromProto(source)); err != nil {
 					return err
 				}
 

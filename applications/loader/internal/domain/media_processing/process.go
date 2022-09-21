@@ -56,7 +56,7 @@ var (
 )
 
 const (
-	jpegQuality   = 80
+	jpegQuality   = 85
 	defaultPreset = "veryslow"
 )
 
@@ -142,11 +142,6 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	targetFileName := file.Name()
 
 	videoNoAudio := false
-
-	defaultArgs := map[string]interface{}{
-		"v":           "error",
-		"hide_banner": "",
-	}
 
 	ffmpegLogger := &zap_adapters.FfmpegGoLogErrorAdapter{
 		Output: *new([]byte),
@@ -425,7 +420,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to parse first decimal")
 		}
-		fpsDecimalSecond, err := strconv.ParseFloat(parsedFps[0], 64)
+		fpsDecimalSecond, err := strconv.ParseFloat(parsedFps[1], 64)
 		if err != nil {
 			return nil, errors.Wrap(err, "failed to parse second decimal")
 		}
@@ -555,6 +550,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	}
 
 	type playlist struct {
+		bitrateInt     int
 		bitrate        string
 		averageBitrate string
 		resolution     string
@@ -626,6 +622,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		}
 
 		playlist := &playlist{
+			bitrateInt:     int(bitrate),
 			bitrate:        strconv.Itoa(int(bitrate)),
 			averageBitrate: strconv.Itoa(int(bitrate)),
 			resolution:     strconv.Itoa(probeResult.Streams[0].Width) + "x" + strconv.Itoa(probeResult.Streams[0].Height),
@@ -636,7 +633,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		if highResolutionPlaylist == nil {
 			highResolutionPlaylist = playlist
 		} else {
-			if playlist.bitrate > highResolutionPlaylist.bitrate {
+			if playlist.bitrateInt > highResolutionPlaylist.bitrateInt {
 				highResolutionPlaylist = playlist
 			}
 		}
@@ -650,10 +647,11 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	// generate a thumbnail
 	var img image.Image
 
-	lastFrame := 5
 	foundFrame := false
 
 	fileThumbnailName := uuid.New().String()
+
+	durationAddition := float64(0)
 
 	// keep looking for frames that are not all black (we can successfully generate a preview
 	for start := time.Now(); time.Since(start) < time.Second*10; {
@@ -663,8 +661,42 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 			return nil, err
 		}
 
-		if err := ffmpeg_go.Input(highResolutionPlaylist.uri, defaultArgs).
-			Filter("select", ffmpeg_go.Args{fmt.Sprintf("gte(n,%d)", lastFrame)}).
+		str, err := ffmpeg_go.Probe(highResolutionPlaylist.uri, ffprobeSettings)
+
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to probe playlist file")
+		}
+
+		var probeResult *ffmpegProbeStream
+
+		if err := json.Unmarshal([]byte(str), &probeResult); err != nil {
+			return nil, errors.Wrap(err, "failed to unmarshal playlist probe")
+		}
+
+		duration, err := strconv.ParseFloat(probeResult.Format.Duration, 64)
+
+		if err != nil {
+			return nil, err
+		}
+
+		parsedFps := strings.Split(probeResult.Streams[0].FrameRate, "/")
+		fpsDecimalFirst, err := strconv.ParseFloat(parsedFps[0], 64)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to parse first decimal")
+		}
+		fpsDecimalSecond, err := strconv.ParseFloat(parsedFps[1], 64)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to parse second decimal")
+		}
+
+		targetFrameRate := fpsDecimalFirst / fpsDecimalSecond
+		frameCut := ((duration + durationAddition) / float64(2)) * targetFrameRate
+
+		if err := ffmpeg_go.Input(highResolutionPlaylist.uri, map[string]interface{}{
+			"v":           "error",
+			"hide_banner": "",
+		}).
+			Filter("select", ffmpeg_go.Args{fmt.Sprintf("gte(n,%f)", frameCut)}).
 			Output("pipe:", ffmpeg_go.KwArgs{"vframes": 1, "format": "image2"}).
 			WithErrorOutput(ffmpegLogger).
 			WithOutput(fileThumbnail).
@@ -679,7 +711,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 			// fully black image - we want to find a different one
 			if err.Error() == "Failed, no non-alpha pixels found (either fully transparent image, or the ColorBackgroundMask removed all pixels)" {
 				_ = os.Remove(fileThumbnail.Name())
-				lastFrame += 30
+				durationAddition += 0.5
 				continue
 			}
 
