@@ -953,11 +953,13 @@ var thumbnailSizes = []*processImageSizes{
 		name:       "icon",
 		constraint: 100,
 		resize:     true,
+		mandatory:  true,
 	},
 	{
 		name:       "mini",
 		constraint: 50,
 		resize:     true,
+		mandatory:  true,
 	},
 }
 
@@ -965,10 +967,12 @@ var banner = []*processImageSizes{
 	{
 		name:       "banner",
 		constraint: 720,
+		mandatory:  true,
 	},
 	{
 		name:       "small-banner",
 		constraint: 360,
+		mandatory:  true,
 	},
 }
 
@@ -993,21 +997,31 @@ func processImageWithSizes(media *media.Media, sourceSrc image.Image) ([]*Move, 
 		contentSizes = thumbnailSizes
 		break
 	case proto.MediaLinkType_CLUB_BANNER:
+		contentSizes = banner
+		break
 	case proto.MediaLinkType_SERIES_BANNER:
+		contentSizes = banner
+		break
 	case proto.MediaLinkType_CATEGORY_BANNER:
+		contentSizes = banner
+		break
 	case proto.MediaLinkType_CHARACTER_BANNER:
+		contentSizes = banner
+		break
 	case proto.MediaLinkType_AUDIENCE_BANNER:
+		contentSizes = banner
+		break
 	case proto.MediaLinkType_TOPIC_BANNER:
 		contentSizes = banner
 		break
 	}
 
-	for i, size := range contentSizes {
+	for _, size := range contentSizes {
 
 		shouldResizeHeight := isPortrait && sourceSrc.Bounds().Dy() > size.constraint
 		shouldResizeWidth := !isPortrait && sourceSrc.Bounds().Dx() > size.constraint
 
-		if !shouldResizeWidth && !shouldResizeHeight && !size.mandatory {
+		if (!shouldResizeWidth || !shouldResizeHeight) && !size.mandatory {
 			continue
 		}
 
@@ -1054,7 +1068,7 @@ func processImageWithSizes(media *media.Media, sourceSrc image.Image) ([]*Move, 
 			return nil, errors.Wrap(err, "failed to encode jpeg")
 		}
 
-		if i == 0 {
+		if imageFile == nil {
 			imageFile = resizedImageFile
 		}
 	}
@@ -1227,6 +1241,9 @@ func ApplyFilters(media *media.Media, file *os.File, filters *ImageFilters, mime
 	if err != nil {
 		return nil, err
 	}
+
+	media.RawProto().State.Processed = true
+	media.RawProto().State.Failed = false
 
 	return &ProcessResponse{move: move}, nil
 }
