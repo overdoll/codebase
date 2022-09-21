@@ -313,14 +313,23 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	var scales []resolutionTarget
 
 	requiresResize := false
+	hasOversized := false
 
 	if isLandscape {
 		if firstStream.Width > 1920 {
 			requiresResize = true
 		}
+
+		if firstStream.Height > 1080 {
+			hasOversized = true
+		}
 	} else {
 		if firstStream.Height > 1920 {
 			requiresResize = true
+		}
+
+		if firstStream.Width > 1080 {
+			hasOversized = true
 		}
 	}
 
@@ -336,28 +345,41 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		}
 	}
 
-	if len(resolutionTargets) < 4 {
+	if !requiresResize && !hasOversized {
+		if len(scales) < 4 {
 
-		var high, low int
+			var high, low int
 
-		if isLandscape {
-			high = firstStream.Width
-			low = firstStream.Height
-		} else {
-			high = firstStream.Height
-			low = firstStream.Width
-		}
+			if isLandscape {
+				high = firstStream.Width
+				low = firstStream.Height
+			} else {
+				high = firstStream.Height
+				low = firstStream.Width
+			}
 
-		// include original resolution if the original resolution isn't 72
-		if high != resolutionTargets[0].high && low != resolutionTargets[0].low {
-			scales = append(scales, resolutionTarget{
-				high:    high,
-				low:     low,
-				rate:    "3100k",
-				ar:      "96k",
-				maxFps:  60,
-				profile: "high",
-			})
+			var highTarget, lowTarget int
+
+			if isLandscape {
+				highTarget = scales[0].high
+				lowTarget = scales[0].low
+			} else {
+				highTarget = scales[0].low
+				lowTarget = scales[0].high
+			}
+
+			// include original resolution if the original resolution isn't the top one
+			if high != highTarget && low != lowTarget {
+				scales = append([]resolutionTarget{{
+					high:    high,
+					low:     low,
+					ar:      "96k",
+					rate:    "3100k",
+					maxFps:  60,
+					profile: "high",
+					level:   "4.2",
+				}}, scales...)
+			}
 		}
 	}
 
@@ -690,7 +712,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		}
 
 		targetFrameRate := fpsDecimalFirst / fpsDecimalSecond
-		frameCut := ((duration + durationAddition) / float64(2)) * targetFrameRate
+		frameCut := ((duration + durationAddition - (duration / 10)) / float64(2)) * targetFrameRate
 
 		if err := ffmpeg_go.Input(highResolutionPlaylist.uri, map[string]interface{}{
 			"v":           "error",
