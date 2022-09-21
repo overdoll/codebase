@@ -1,5 +1,5 @@
 import HomeGameTile from './HomeGameTile/HomeGameTile'
-import { FurryFox, HentaiSkirt, HotContent, RandomizeDice, SearchBar, ThreeDRender } from '@//:assets/icons'
+import { FreshLeaf, FurryFox, HentaiSkirt, HotContent, RandomizeDice, SearchBar, ThreeDRender } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import { Heading, Stack } from '@chakra-ui/react'
 import HomeLinkTile from './HomeLinkTile/HomeLinkTile'
@@ -111,6 +111,38 @@ export default function TilesHome (): JSX.Element {
             </Trans>
           )}
         />
+        <Stack spacing={4}>
+          <HomeLinkTile
+            icon={FreshLeaf}
+            bg='https://static.dollycdn.net/banners/new-thumbnail-2.jpg'
+            href='/new'
+            header={(
+              <Trans>
+                New Content
+              </Trans>
+            )}
+            footer={(
+              <Trans>
+                See fresh content
+              </Trans>
+            )}
+          />
+          <HomeLinkTile
+            icon={HotContent}
+            bg='https://static.dollycdn.net/banners/top-thumbnail.jpg'
+            href='/top'
+            header={(
+              <Trans>
+                Top Content
+              </Trans>
+            )}
+            footer={(
+              <Trans>
+                See the best content
+              </Trans>
+            )}
+          />
+        </Stack>
       </Stack>
       <PageHeader icon={HotContent} title={<Trans>Trending content</Trans>} />
     </Stack>

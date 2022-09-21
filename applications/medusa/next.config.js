@@ -213,18 +213,19 @@ const moduleExports = withBundleAnalyzer({
         destination: '/artists',
         permanent: true
       },
-      {
-        source: '/join',
-        has: [
-          {
-            type: 'query',
-            key: 'redirect',
-            value: '/LewyNsfw'
-          }
-        ],
-        destination: '/join',
-        permanent: true
-      },
+      // this causes an error where it says it redirected you too many times so we should just leave it
+      // {
+      //   source: '/join',
+      //   has: [
+      //     {
+      //       type: 'query',
+      //       key: 'redirect',
+      //       value: '/LewyNsfw'
+      //     }
+      //   ],
+      //   destination: '/join',
+      //   permanent: true
+      // },
       {
         source: '/roll',
         destination: '/roulette?utm_campaign=game_roulette&utm_source=roll_redirect',

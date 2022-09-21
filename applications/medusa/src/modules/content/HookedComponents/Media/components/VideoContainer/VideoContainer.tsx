@@ -32,7 +32,7 @@ export default function VideoContainer (props: VideoContainerProps): JSX.Element
   const {
     poster,
     onPlayerInit,
-    hlsUrl,
+    hlsUrls,
     mp4Url,
     aspectRatio,
     duration,
@@ -75,7 +75,7 @@ export default function VideoContainer (props: VideoContainerProps): JSX.Element
         volume={volume}
         muted={muted}
         aspectRatio={aspectRatio}
-        hlsUrl={hlsUrl}
+        hlsUrls={hlsUrls}
         mp4Url={mp4Url}
         onPlayerInit={(player) => setPlayers(player)}
         poster={poster}

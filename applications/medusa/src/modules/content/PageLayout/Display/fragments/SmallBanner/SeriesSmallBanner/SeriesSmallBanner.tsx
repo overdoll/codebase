@@ -1,26 +1,26 @@
 import { graphql } from 'react-relay'
-import type { SeriesThumbnailFragment$key } from '@//:artifacts/SeriesThumbnailFragment.graphql'
+import { SeriesSmallBannerFragment$key } from '@//:artifacts/SeriesSmallBannerFragment.graphql'
 import { useFragment } from 'react-relay/hooks'
-import { ThumbnailMedia } from '../../../../../HookedComponents/Media'
 import CoverImage
   from '../../../../../HookedComponents/Media/components/ImageContainer/ImageWrapper/CoverImage/CoverImage'
 import RandomPattern from '../../../components/RandomPattern/RandomPattern'
+import SmallBannerMedia from '../../../../../HookedComponents/Media/fragments/SmallBannerMedia/SmallBannerMedia'
 
 const Fragment = graphql`
-  fragment SeriesThumbnailFragment on Series {
+  fragment SeriesSmallBannerFragment on Series {
     id
     bannerMedia {
       __typename
-      ...ThumbnailMediaFragment
+      ...SmallBannerMediaFragment
     }
   }
 `
 
 interface Props {
-  seriesQuery: SeriesThumbnailFragment$key
+  seriesQuery: SeriesSmallBannerFragment$key
 }
 
-export default function SeriesThumbnail (props: Props): JSX.Element {
+export default function SeriesSmallBanner (props: Props): JSX.Element {
   const {
     seriesQuery
   } = props
@@ -36,6 +36,6 @@ export default function SeriesThumbnail (props: Props): JSX.Element {
   }
 
   return (
-    <ThumbnailMedia mediaQuery={data.bannerMedia} />
+    <SmallBannerMedia mediaQuery={data.bannerMedia} />
   )
 }

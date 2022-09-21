@@ -27,8 +27,8 @@ export default function HlsVideoPlayer (props: Props): JSX.Element {
       url: hlsUrl,
       autoPlay,
       hlsOpts: {
-        maxBufferLength: 5,
-        maxBufferSize: 10 * 1000 * 1000
+        maxBufferLength: 1,
+        maxMaxBufferLength: 6
       },
       ...VIDEO_OPTIONS
     }

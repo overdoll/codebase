@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c9200784cea2b532dcc2a1bd6f0e8c93>>
+ * @generated SignedSource<<8214b9d7bbcfa88c157368adbac6c3f4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,24 +10,24 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type CategoryThumbnailFragment$data = {
+export type CategorySmallBannerFragment$data = {
   readonly bannerMedia: {
     readonly __typename: string;
-    readonly " $fragmentSpreads": FragmentRefs<"ThumbnailMediaFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"SmallBannerMediaFragment">;
   } | null;
   readonly id: string;
-  readonly " $fragmentType": "CategoryThumbnailFragment";
+  readonly " $fragmentType": "CategorySmallBannerFragment";
 };
-export type CategoryThumbnailFragment$key = {
-  readonly " $data"?: CategoryThumbnailFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"CategoryThumbnailFragment">;
+export type CategorySmallBannerFragment$key = {
+  readonly " $data"?: CategorySmallBannerFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"CategorySmallBannerFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "CategoryThumbnailFragment",
+  "name": "CategorySmallBannerFragment",
   "selections": [
     {
       "alias": null,
@@ -54,7 +54,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "ThumbnailMediaFragment"
+          "name": "SmallBannerMediaFragment"
         }
       ],
       "storageKey": null
@@ -64,6 +64,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "cd1118f51ac01ded148fb8427d696058";
+(node as any).hash = "a47d0f2b1e214cba534e79aa89f35d7f";
 
 export default node;

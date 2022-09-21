@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b529d9a795a01c39cdf32a60191833fc>>
- * @relayHash 97d8a6741c6ca9d5ea1e9a4c8fcfbc38
+ * @generated SignedSource<<6576b8b6e5aa75004974cf4f39e277be>>
+ * @relayHash c43305abd0e9acacaf0d65865fe63655
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 97d8a6741c6ca9d5ea1e9a4c8fcfbc38
+// @relayRequestID c43305abd0e9acacaf0d65865fe63655
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -657,7 +657,16 @@ return {
                                       (v10/*: any*/),
                                       {
                                         "kind": "InlineFragment",
-                                        "selections": (v13/*: any*/),
+                                        "selections": [
+                                          {
+                                            "alias": null,
+                                            "args": null,
+                                            "kind": "ScalarField",
+                                            "name": "targetDevice",
+                                            "storageKey": null
+                                          },
+                                          (v12/*: any*/)
+                                        ],
                                         "type": "HLSVideoContainer",
                                         "abstractKey": null
                                       },
@@ -818,7 +827,7 @@ return {
     ]
   },
   "params": {
-    "id": "97d8a6741c6ca9d5ea1e9a4c8fcfbc38",
+    "id": "c43305abd0e9acacaf0d65865fe63655",
     "metadata": {},
     "name": "ResultPublicClubPostsQuery",
     "operationKind": "query",

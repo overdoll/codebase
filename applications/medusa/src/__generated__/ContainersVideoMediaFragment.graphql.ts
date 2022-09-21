@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b60789a8ba5e1d97af05e170f7c514dc>>
+ * @generated SignedSource<<4902a217853d47512bf915050deb6b09>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
+export type MediaDeviceType = "DESKTOP" | "MOBILE" | "UNIVERSAL" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type ContainersVideoMediaFragment$data = {
   readonly aspectRatio: {
@@ -17,6 +18,7 @@ export type ContainersVideoMediaFragment$data = {
   };
   readonly containers: ReadonlyArray<{
     readonly __typename: "HLSVideoContainer";
+    readonly targetDevice: MediaDeviceType;
     readonly url: string;
   } | {
     readonly __typename: "MP4VideoContainer";
@@ -36,15 +38,13 @@ export type ContainersVideoMediaFragment$key = {
 };
 
 const node: ReaderFragment = (function(){
-var v0 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "url",
-    "storageKey": null
-  }
-];
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "url",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [],
   "kind": "Fragment",
@@ -107,13 +107,24 @@ return {
         },
         {
           "kind": "InlineFragment",
-          "selections": (v0/*: any*/),
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "targetDevice",
+              "storageKey": null
+            },
+            (v0/*: any*/)
+          ],
           "type": "HLSVideoContainer",
           "abstractKey": null
         },
         {
           "kind": "InlineFragment",
-          "selections": (v0/*: any*/),
+          "selections": [
+            (v0/*: any*/)
+          ],
           "type": "MP4VideoContainer",
           "abstractKey": null
         }
@@ -126,6 +137,6 @@ return {
 };
 })();
 
-(node as any).hash = "d5f37c2e7193e0cfc1460cdfac05a13b";
+(node as any).hash = "eafb8247c2aadcb090e825d964687075";
 
 export default node;

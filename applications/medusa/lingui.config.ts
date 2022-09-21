@@ -54,6 +54,14 @@ const GeneralCatalogs = [
   {
     path: 'src/domain/roulette/__locale__/{locale}/index',
     include: ['src/domain/roulette/']
+  },
+  {
+    path: 'src/domain/new/__locale__/{locale}/index',
+    include: ['src/domain/new/']
+  },
+  {
+    path: 'src/domain/top/__locale__/{locale}/index',
+    include: ['src/domain/top/']
   }
 ]
 

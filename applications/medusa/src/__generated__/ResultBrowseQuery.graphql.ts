@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<94ff1346a830475c8a720c4d7e50c0ed>>
- * @relayHash a0abcab825a3d3ce7b6ae827251c5919
+ * @generated SignedSource<<76ca91f18d4872543180960259956459>>
+ * @relayHash 40312a10efb495c2cbd5302df4e334cb
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a0abcab825a3d3ce7b6ae827251c5919
+// @relayRequestID 40312a10efb495c2cbd5302df4e334cb
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -17,9 +17,6 @@ export type ResultBrowseQuery$variables = {
   seed?: string | null;
 };
 export type ResultBrowseQuery$data = {
-  readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"MetaBrowseViewerFragment">;
-  } | null;
   readonly " $fragmentSpreads": FragmentRefs<"MetaBrowseFragment">;
 };
 export type ResultBrowseQuery = {
@@ -185,10 +182,7 @@ v13 = {
   "plural": false,
   "selections": (v9/*: any*/),
   "storageKey": null
-},
-v14 = [
-  (v6/*: any*/)
-];
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -200,22 +194,6 @@ return {
         "args": null,
         "kind": "FragmentSpread",
         "name": "MetaBrowseFragment"
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "Account",
-        "kind": "LinkedField",
-        "name": "viewer",
-        "plural": false,
-        "selections": [
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "MetaBrowseViewerFragment"
-          }
-        ],
-        "storageKey": null
       }
     ],
     "type": "Query",
@@ -449,13 +427,24 @@ return {
                                   (v3/*: any*/),
                                   {
                                     "kind": "InlineFragment",
-                                    "selections": (v14/*: any*/),
+                                    "selections": [
+                                      {
+                                        "alias": null,
+                                        "args": null,
+                                        "kind": "ScalarField",
+                                        "name": "targetDevice",
+                                        "storageKey": null
+                                      },
+                                      (v6/*: any*/)
+                                    ],
                                     "type": "HLSVideoContainer",
                                     "abstractKey": null
                                   },
                                   {
                                     "kind": "InlineFragment",
-                                    "selections": (v14/*: any*/),
+                                    "selections": [
+                                      (v6/*: any*/)
+                                    ],
                                     "type": "MP4VideoContainer",
                                     "abstractKey": null
                                   }
@@ -553,61 +542,11 @@ return {
         "key": "BrowsePosts_postsFeed",
         "kind": "LinkedHandle",
         "name": "postsFeed"
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "Account",
-        "kind": "LinkedField",
-        "name": "viewer",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "AccountLock",
-            "kind": "LinkedField",
-            "name": "lock",
-            "plural": false,
-            "selections": [
-              (v3/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "expires",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "AccountDeleting",
-            "kind": "LinkedField",
-            "name": "deleting",
-            "plural": false,
-            "selections": [
-              (v3/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "scheduledDeletion",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          },
-          (v2/*: any*/)
-        ],
-        "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "a0abcab825a3d3ce7b6ae827251c5919",
+    "id": "40312a10efb495c2cbd5302df4e334cb",
     "metadata": {},
     "name": "ResultBrowseQuery",
     "operationKind": "query",
@@ -616,7 +555,7 @@ return {
 };
 })();
 
-(node as any).hash = "83ca462cfa3065ecd2c7a3bb05b5c7de";
+(node as any).hash = "3a27aac69e928583c574c75dbbcb534f";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

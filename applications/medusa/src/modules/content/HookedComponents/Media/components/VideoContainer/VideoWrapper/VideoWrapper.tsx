@@ -22,7 +22,7 @@ export default function VideoWrapper (props: Props): JSX.Element {
   const {
     poster,
     onPlayerInit,
-    hlsUrl,
+    hlsUrls,
     mp4Url,
     aspectRatio,
     volume,
@@ -88,7 +88,7 @@ export default function VideoWrapper (props: Props): JSX.Element {
             autoPlay={autoPlay}
             volume={volume}
             muted={muted}
-            hlsUrl={hlsUrl}
+            hlsUrls={hlsUrls}
             mp4Url={mp4Url}
             onPlayerInit={(player) => setPlayers(player)}
           />)}

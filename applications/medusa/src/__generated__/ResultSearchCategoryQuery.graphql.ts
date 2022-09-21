@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<68d37a19a289172dee8fb9b541819bf0>>
- * @relayHash dff6ca1970a728076aca7db840d9e138
+ * @generated SignedSource<<727277c01a1e7c00ed5c56790c8a5952>>
+ * @relayHash 18103a19adf0f52e1f718e3b702c859d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID dff6ca1970a728076aca7db840d9e138
+// @relayRequestID 18103a19adf0f52e1f718e3b702c859d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -601,7 +601,16 @@ return {
                                       (v5/*: any*/),
                                       {
                                         "kind": "InlineFragment",
-                                        "selections": (v8/*: any*/),
+                                        "selections": [
+                                          {
+                                            "alias": null,
+                                            "args": null,
+                                            "kind": "ScalarField",
+                                            "name": "targetDevice",
+                                            "storageKey": null
+                                          },
+                                          (v7/*: any*/)
+                                        ],
                                         "type": "HLSVideoContainer",
                                         "abstractKey": null
                                       },
@@ -709,7 +718,7 @@ return {
     ]
   },
   "params": {
-    "id": "dff6ca1970a728076aca7db840d9e138",
+    "id": "18103a19adf0f52e1f718e3b702c859d",
     "metadata": {},
     "name": "ResultSearchCategoryQuery",
     "operationKind": "query",

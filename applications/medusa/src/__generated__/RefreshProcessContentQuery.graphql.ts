@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<71beaeab91f0dae939dbcf2e0a90dbc2>>
- * @relayHash b9643ea023b2b839aa63fe79e6e7d8f0
+ * @generated SignedSource<<db1f3815eecee5983bd4cde2926bf2b5>>
+ * @relayHash c49314cfe98a1c7d64b67ae3de0fa1b8
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b9643ea023b2b839aa63fe79e6e7d8f0
+// @relayRequestID c49314cfe98a1c7d64b67ae3de0fa1b8
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -180,10 +180,7 @@ v15 = {
   "plural": false,
   "selections": (v12/*: any*/),
   "storageKey": null
-},
-v16 = [
-  (v9/*: any*/)
-];
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -349,13 +346,24 @@ return {
                           (v7/*: any*/),
                           {
                             "kind": "InlineFragment",
-                            "selections": (v16/*: any*/),
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "targetDevice",
+                                "storageKey": null
+                              },
+                              (v9/*: any*/)
+                            ],
                             "type": "HLSVideoContainer",
                             "abstractKey": null
                           },
                           {
                             "kind": "InlineFragment",
-                            "selections": (v16/*: any*/),
+                            "selections": [
+                              (v9/*: any*/)
+                            ],
                             "type": "MP4VideoContainer",
                             "abstractKey": null
                           }
@@ -497,7 +505,7 @@ return {
     ]
   },
   "params": {
-    "id": "b9643ea023b2b839aa63fe79e6e7d8f0",
+    "id": "c49314cfe98a1c7d64b67ae3de0fa1b8",
     "metadata": {},
     "name": "RefreshProcessContentQuery",
     "operationKind": "query",

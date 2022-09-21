@@ -1,31 +1,31 @@
 import { graphql } from 'react-relay'
-import type { CategoryThumbnailFragment$key } from '@//:artifacts/CategoryThumbnailFragment.graphql'
+import { CharacterSmallBannerFragment$key } from '@//:artifacts/CharacterSmallBannerFragment.graphql'
 import { useFragment } from 'react-relay/hooks'
-import { ThumbnailMedia } from '../../../../../HookedComponents/Media'
 import CoverImage
   from '../../../../../HookedComponents/Media/components/ImageContainer/ImageWrapper/CoverImage/CoverImage'
 import RandomPattern from '../../../components/RandomPattern/RandomPattern'
+import SmallBannerMedia from '../../../../../HookedComponents/Media/fragments/SmallBannerMedia/SmallBannerMedia'
 
 const Fragment = graphql`
-  fragment CategoryThumbnailFragment on Category {
+  fragment CharacterSmallBannerFragment on Character {
     id
     bannerMedia {
       __typename
-      ...ThumbnailMediaFragment
+      ...SmallBannerMediaFragment
     }
   }
 `
 
 interface Props {
-  categoryQuery: CategoryThumbnailFragment$key
+  characterQuery: CharacterSmallBannerFragment$key
 }
 
-export default function CategoryThumbnail (props: Props): JSX.Element {
+export default function CharacterSmallBanner (props: Props): JSX.Element {
   const {
-    categoryQuery
+    characterQuery
   } = props
 
-  const data = useFragment(Fragment, categoryQuery)
+  const data = useFragment(Fragment, characterQuery)
 
   if (data.bannerMedia == null || data.bannerMedia.__typename === 'RawMedia') {
     return (
@@ -36,6 +36,6 @@ export default function CategoryThumbnail (props: Props): JSX.Element {
   }
 
   return (
-    <ThumbnailMedia mediaQuery={data.bannerMedia} />
+    <SmallBannerMedia mediaQuery={data.bannerMedia} />
   )
 }

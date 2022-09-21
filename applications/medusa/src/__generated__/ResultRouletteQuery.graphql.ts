@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<88d632ad2cffe678a46f0db3d3e39d3e>>
- * @relayHash 8a848e3f16b7fd13406c60004885fea1
+ * @generated SignedSource<<0126d1da3bbb799b7bdc09287c2f842d>>
+ * @relayHash 28a0c210992a860afa4ff2ed7606fadd
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8a848e3f16b7fd13406c60004885fea1
+// @relayRequestID 28a0c210992a860afa4ff2ed7606fadd
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -216,10 +216,7 @@ v15 = {
   "selections": (v10/*: any*/),
   "storageKey": null
 },
-v16 = [
-  (v7/*: any*/)
-],
-v17 = {
+v16 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -508,13 +505,24 @@ return {
                                       (v2/*: any*/),
                                       {
                                         "kind": "InlineFragment",
-                                        "selections": (v16/*: any*/),
+                                        "selections": [
+                                          {
+                                            "alias": null,
+                                            "args": null,
+                                            "kind": "ScalarField",
+                                            "name": "targetDevice",
+                                            "storageKey": null
+                                          },
+                                          (v7/*: any*/)
+                                        ],
                                         "type": "HLSVideoContainer",
                                         "abstractKey": null
                                       },
                                       {
                                         "kind": "InlineFragment",
-                                        "selections": (v16/*: any*/),
+                                        "selections": [
+                                          (v7/*: any*/)
+                                        ],
                                         "type": "MP4VideoContainer",
                                         "abstractKey": null
                                       }
@@ -533,7 +541,7 @@ return {
                         ],
                         "storageKey": null
                       },
-                      (v17/*: any*/)
+                      (v16/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -549,7 +557,7 @@ return {
                 "plural": false,
                 "selections": [
                   (v3/*: any*/),
-                  (v17/*: any*/),
+                  (v16/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -598,7 +606,7 @@ return {
     ]
   },
   "params": {
-    "id": "8a848e3f16b7fd13406c60004885fea1",
+    "id": "28a0c210992a860afa4ff2ed7606fadd",
     "metadata": {},
     "name": "ResultRouletteQuery",
     "operationKind": "query",
