@@ -25,7 +25,6 @@ go_test(
         "component_test.go",
         "mocks_component_test.go",
         "resource_component_test.go",
-        "scratch_test.go",
     ],
     data = [
         "//applications/loader:config.toml",
@@ -34,7 +33,6 @@ go_test(
     deps = [
         ":service",
         "//applications/loader/internal/app/workflows",
-        "//applications/loader/internal/domain/media_processing",
         "//applications/loader/internal/ports",
         "//applications/loader/internal/ports/graphql/types",
         "//applications/loader/proto:v1_go_proto",
