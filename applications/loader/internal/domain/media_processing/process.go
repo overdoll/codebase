@@ -711,7 +711,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 				TargetDevice: &targetDeviceDesktop,
 			},
 			{
-				Id:           "master-device_mobile.m3u8",
+				Id:           "master-d_mobile.m3u8",
 				MimeType:     proto.MediaMimeType_VideoMpegUrl,
 				TargetDevice: &targetDeviceMobile,
 			},
