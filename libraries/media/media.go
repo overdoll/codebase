@@ -253,6 +253,11 @@ func (m *Media) generateUrlForImage(optimalSize int) *ImageMediaAccess {
 
 	for _, size := range m.proto.ImageData.Sizes {
 
+		if optimalSize == 0 {
+			lastSize = size
+			break
+		}
+
 		isPortrait := size.Height > size.Width
 
 		var targetSize int
@@ -295,7 +300,7 @@ func (m *Media) generateUrlForImage(optimalSize int) *ImageMediaAccess {
 
 	signed, _ := serializer.createSignedUrl(SerializerPolicy{
 		URI:                 finalUrl.String(),
-		UseWildcardCacheKey: "https://" + finalUrl.Host + "/" + finalUrl.Path + "/*",
+		UseWildcardCacheKey: "https://" + finalUrl.Host + "/" + m.ImagePrefix() + "/*",
 	})
 
 	return &ImageMediaAccess{
@@ -352,7 +357,7 @@ func (m *Media) LegacyImageMediaAccess() *ImageMediaAccess {
 
 // OriginalImageMediaAccess original image is always max of 4096
 func (m *Media) OriginalImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(4096)
+	return m.generateUrlForImage(0)
 }
 
 func (m *Media) HdImageMediaAccess() *ImageMediaAccess {

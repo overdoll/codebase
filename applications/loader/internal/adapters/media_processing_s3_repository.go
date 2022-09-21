@@ -61,6 +61,14 @@ func (r MediaProcessingS3Repository) uploadResource(ctx context.Context, filePat
 
 func (r MediaProcessingS3Repository) processMove(ctx context.Context, moveTarget *media_processing.Move, target *media.Media) error {
 
+	var remoteUrlTarget string
+
+	if moveTarget.IsImage() {
+		remoteUrlTarget = target.ImagePrefix() + "/" + moveTarget.FileName()
+	} else {
+		remoteUrlTarget = target.VideoPrefix() + "/" + moveTarget.FileName()
+	}
+
 	if moveTarget.Directory() != "" {
 
 		defer os.RemoveAll(moveTarget.Directory())
@@ -70,7 +78,8 @@ func (r MediaProcessingS3Repository) processMove(ctx context.Context, moveTarget
 			if info.IsDir() {
 				return nil
 			}
-			if err := r.uploadResource(ctx, path, target.VideoPrefix()+"/"+path); err != nil {
+
+			if err := r.uploadResource(ctx, path, remoteUrlTarget+"/"+path); err != nil {
 				return err
 			}
 
@@ -83,14 +92,6 @@ func (r MediaProcessingS3Repository) processMove(ctx context.Context, moveTarget
 	}
 
 	defer os.Remove(moveTarget.FileName())
-
-	var remoteUrlTarget string
-
-	if moveTarget.IsImage() {
-		remoteUrlTarget = target.ImagePrefix() + "/" + moveTarget.FileName()
-	} else {
-		remoteUrlTarget = target.VideoPrefix() + "/" + moveTarget.FileName()
-	}
 
 	if err := r.uploadResource(ctx, moveTarget.FileName(), remoteUrlTarget); err != nil {
 		return err

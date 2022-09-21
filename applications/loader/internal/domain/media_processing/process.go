@@ -928,6 +928,8 @@ func processImageWithSizes(media *media.Media, sourceSrc image.Image) ([]*Move, 
 
 	fileName := uuid.New().String()
 
+	_ = os.MkdirAll(fileName, os.ModePerm)
+
 	isPortrait := sourceSrc.Bounds().Dy() > sourceSrc.Bounds().Dx()
 
 	switch media.LinkType() {
@@ -971,15 +973,17 @@ func processImageWithSizes(media *media.Media, sourceSrc image.Image) ([]*Move, 
 			}
 		}
 
+		imageName := size.name + ".jpg"
+
 		imageSizes = append(imageSizes, &proto.ImageDataSize{
-			Id:     size.name,
+			Id:     imageName,
 			Width:  uint32(sourceSrc.Bounds().Dx()),
 			Height: uint32(sourceSrc.Bounds().Dy()),
 		})
 
-		resizedImageFile, err := os.Create(fileName + "/" + size.name + ".jpg")
+		resizedImageFile, err := os.Create(fileName + "/" + imageName)
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to create image")
 		}
 
 		if err := jpeg.Encode(resizedImageFile, src, &jpeg.Options{Quality: jpegQuality}); err != nil {
