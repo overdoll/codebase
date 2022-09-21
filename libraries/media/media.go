@@ -54,7 +54,19 @@ func (m *Media) ImageOriginalDownloadKey() string {
 		return ""
 	}
 
-	return "private/images/" + m.getPrefixKey() + "/" + m.proto.ImageData.Id
+	var largestSize *proto.ImageDataSize
+
+	for _, size := range m.proto.ImageData.Sizes {
+		if largestSize == nil {
+			largestSize = size
+		} else {
+			if size.Width > largestSize.Width && size.Height > largestSize.Height {
+				largestSize = size
+			}
+		}
+	}
+
+	return "private/images/" + m.getPrefixKey() + "/" + m.proto.ImageData.Id + "/" + largestSize.Id
 }
 
 func (m *Media) IsPrivate() bool {

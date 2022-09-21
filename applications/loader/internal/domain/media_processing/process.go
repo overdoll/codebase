@@ -313,14 +313,23 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 	var scales []resolutionTarget
 
 	requiresResize := false
+	hasOversized := false
 
 	if isLandscape {
 		if firstStream.Width > 1920 {
 			requiresResize = true
 		}
+
+		if firstStream.Height > 1080 {
+			hasOversized = true
+		}
 	} else {
 		if firstStream.Height > 1920 {
 			requiresResize = true
+		}
+
+		if firstStream.Width > 1080 {
+			hasOversized = true
 		}
 	}
 
@@ -336,28 +345,41 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		}
 	}
 
-	if len(resolutionTargets) < 4 {
+	if !requiresResize && !hasOversized {
+		if len(scales) < 4 {
 
-		var high, low int
+			var high, low int
 
-		if isLandscape {
-			high = firstStream.Width
-			low = firstStream.Height
-		} else {
-			high = firstStream.Height
-			low = firstStream.Width
-		}
+			if isLandscape {
+				high = firstStream.Width
+				low = firstStream.Height
+			} else {
+				high = firstStream.Height
+				low = firstStream.Width
+			}
 
-		// include original resolution if the original resolution isn't 72
-		if high != resolutionTargets[0].high && low != resolutionTargets[0].low {
-			scales = append(scales, resolutionTarget{
-				high:    high,
-				low:     low,
-				rate:    "3100k",
-				ar:      "96k",
-				maxFps:  60,
-				profile: "high",
-			})
+			var highTarget, lowTarget int
+
+			if isLandscape {
+				highTarget = scales[0].high
+				lowTarget = scales[0].low
+			} else {
+				highTarget = scales[0].low
+				lowTarget = scales[0].high
+			}
+
+			// include original resolution if the original resolution isn't the top one
+			if high != highTarget && low != lowTarget {
+				scales = append([]resolutionTarget{{
+					high:    high,
+					low:     low,
+					ar:      "96k",
+					rate:    "3100k",
+					maxFps:  60,
+					profile: "high",
+					level:   "4.2",
+				}}, scales...)
+			}
 		}
 	}
 
@@ -690,7 +712,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		}
 
 		targetFrameRate := fpsDecimalFirst / fpsDecimalSecond
-		frameCut := ((duration + durationAddition) / float64(2)) * targetFrameRate
+		frameCut := ((duration + durationAddition - (duration / 10)) / float64(2)) * targetFrameRate
 
 		if err := ffmpeg_go.Input(highResolutionPlaylist.uri, map[string]interface{}{
 			"v":           "error",
@@ -931,11 +953,13 @@ var thumbnailSizes = []*processImageSizes{
 		name:       "icon",
 		constraint: 100,
 		resize:     true,
+		mandatory:  true,
 	},
 	{
 		name:       "mini",
 		constraint: 50,
 		resize:     true,
+		mandatory:  true,
 	},
 }
 
@@ -943,10 +967,12 @@ var banner = []*processImageSizes{
 	{
 		name:       "banner",
 		constraint: 720,
+		mandatory:  true,
 	},
 	{
 		name:       "small-banner",
 		constraint: 360,
+		mandatory:  true,
 	},
 }
 
@@ -971,21 +997,31 @@ func processImageWithSizes(media *media.Media, sourceSrc image.Image) ([]*Move, 
 		contentSizes = thumbnailSizes
 		break
 	case proto.MediaLinkType_CLUB_BANNER:
+		contentSizes = banner
+		break
 	case proto.MediaLinkType_SERIES_BANNER:
+		contentSizes = banner
+		break
 	case proto.MediaLinkType_CATEGORY_BANNER:
+		contentSizes = banner
+		break
 	case proto.MediaLinkType_CHARACTER_BANNER:
+		contentSizes = banner
+		break
 	case proto.MediaLinkType_AUDIENCE_BANNER:
+		contentSizes = banner
+		break
 	case proto.MediaLinkType_TOPIC_BANNER:
 		contentSizes = banner
 		break
 	}
 
-	for i, size := range contentSizes {
+	for _, size := range contentSizes {
 
 		shouldResizeHeight := isPortrait && sourceSrc.Bounds().Dy() > size.constraint
 		shouldResizeWidth := !isPortrait && sourceSrc.Bounds().Dx() > size.constraint
 
-		if !shouldResizeWidth && !shouldResizeHeight && !size.mandatory {
+		if (!shouldResizeWidth || !shouldResizeHeight) && !size.mandatory {
 			continue
 		}
 
@@ -1032,7 +1068,7 @@ func processImageWithSizes(media *media.Media, sourceSrc image.Image) ([]*Move, 
 			return nil, errors.Wrap(err, "failed to encode jpeg")
 		}
 
-		if i == 0 {
+		if imageFile == nil {
 			imageFile = resizedImageFile
 		}
 	}
@@ -1205,6 +1241,9 @@ func ApplyFilters(media *media.Media, file *os.File, filters *ImageFilters, mime
 	if err != nil {
 		return nil, err
 	}
+
+	media.RawProto().State.Processed = true
+	media.RawProto().State.Failed = false
 
 	return &ProcessResponse{move: move}, nil
 }

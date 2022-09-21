@@ -13,6 +13,7 @@ import (
 	"overdoll/applications/loader/internal/domain/media_processing"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/media"
+	"overdoll/libraries/uuid"
 	"path/filepath"
 )
 
@@ -115,7 +116,7 @@ func (r MediaProcessingS3Repository) DownloadImageMedia(ctx context.Context, tar
 
 	downloader := s3manager.NewDownloader(r.aws)
 
-	file, err := os.Create(target.ID())
+	file, err := os.Create(uuid.New().String())
 
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to create file")
