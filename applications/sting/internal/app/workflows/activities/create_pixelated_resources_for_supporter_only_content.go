@@ -11,12 +11,15 @@ type CreatePixelatedResourcesForSupporterOnlyContentInput struct {
 }
 
 type CreatePixelatedResourcesForSupporterOnlyContentPayload struct {
-	CreatedResources bool
+	CreatedResources  bool
+	PixelatedMediaIds []string
 }
 
 func (h *Activities) CreatePixelatedResourcesForSupporterOnlyContent(ctx context.Context, input CreatePixelatedResourcesForSupporterOnlyContentInput) (*CreatePixelatedResourcesForSupporterOnlyContentPayload, error) {
 
 	res := &CreatePixelatedResourcesForSupporterOnlyContentPayload{CreatedResources: false}
+
+	var pixelatedMediaIds []string
 
 	_, err := h.pr.UpdatePostContentOperator(ctx, input.PostId, func(pending *post.Post) error {
 
@@ -48,6 +51,7 @@ func (h *Activities) CreatePixelatedResourcesForSupporterOnlyContent(ctx context
 			for _, content := range pending.Content() {
 				for _, newContent := range newContents {
 					if newContent.SourceMediaId() == content.Media().ID() {
+						pixelatedMediaIds = append(pixelatedMediaIds, newContent.ID())
 						if err := content.UpdateMediaHidden(newContent); err != nil {
 							return err
 						}
@@ -55,6 +59,8 @@ func (h *Activities) CreatePixelatedResourcesForSupporterOnlyContent(ctx context
 				}
 
 			}
+
+			res.PixelatedMediaIds = pixelatedMediaIds
 		}
 
 		return nil
