@@ -6,6 +6,9 @@ import UploadFileDisplay
 import { UppyFile } from '@uppy/core'
 import CreatePostContentFilePicker
   from '@//:modules/content/HookedComponents/Upload/components/CreatePostContentFilePicker/CreatePostContentFilePicker'
+import Head from 'next/head'
+import usePreventWindowUnload from '@//:modules/hooks/usePreventWindowUnload'
+import { useEffect, useState } from 'react'
 
 interface Props {
   isDisabled: boolean
@@ -19,12 +22,25 @@ export default function ContentFilesDisplay ({
     state
   } = useSequenceContext()
 
+  const [isUploading, setUploading] = useState(false)
+
+  usePreventWindowUnload(isUploading)
+
+  useEffect(() => {
+    setUploading(Object.values(state.files).length > 0)
+  }, [state.files])
+
   if (Object.values(state.files).length < 1) {
     return <CreatePostContentFilePicker uppy={uppy} />
   }
 
   return (
     <Stack spacing={2}>
+      <Head>
+        <title>
+          Uploading Content... - overdoll
+        </title>
+      </Head>
       {Object.values(state.files).map((file: UppyFile) => {
         return (
           <UploadFileDisplay

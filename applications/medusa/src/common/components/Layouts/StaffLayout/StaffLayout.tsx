@@ -25,6 +25,7 @@ export default function StaffLayout ({ children }: Props): JSX.Element {
         >
           <Can I='staff' a='Entity'>
             <VerticalNavigation.Button
+              prefetch={false}
               href='/staff/entity'
               icon={CategoryIdentifier}
               title={
@@ -34,6 +35,7 @@ export default function StaffLayout ({ children }: Props): JSX.Element {
           </Can>
           <Can I='staff' a='Billing'>
             <VerticalNavigation.Button
+              prefetch={false}
               href='/staff/billing/deposit-requests'
               icon={PayoutMethod}
               title={

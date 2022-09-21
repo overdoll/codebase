@@ -15,6 +15,7 @@ import { useChoice } from '@//:modules/content/HookedComponents/Choice'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import SkeletonUploadAudienceGrid
   from '@//:modules/content/Placeholder/Loading/SkeletonUploadAudienceGrid/SkeletonUploadAudienceGrid'
+import Head from 'next/head'
 
 interface ChoiceProps {
   title: string
@@ -43,6 +44,11 @@ export default function UploadAudienceStep (): JSX.Element {
 
   return (
     <MobileContainer>
+      <Head>
+        <title>
+          Select Audience - overdoll
+        </title>
+      </Head>
       <Stack spacing={2}>
         <PageSectionWrap>
           <PageSectionTitle colorScheme='teal'>

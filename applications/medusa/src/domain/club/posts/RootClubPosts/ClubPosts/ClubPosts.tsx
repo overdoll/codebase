@@ -5,7 +5,8 @@ import { GridTile, GridWrap, LoadMoreGridTile } from '@//:modules/content/Conten
 import { EmptyBoundary, EmptyPosts, NotFoundClub } from '@//:modules/content/Placeholder'
 import DraftPost from './DraftPost/DraftPost'
 import PublishedPost from './PublishedPost/PublishedPost'
-import PostPreviewContent from '@//:modules/content/HookedComponents/Post/fragments/PostContent/PostPreviewContent/PostPreviewContent'
+import PostPreviewContent
+  from '@//:modules/content/HookedComponents/Post/fragments/PostContent/PostPreviewContent/PostPreviewContent'
 import ReviewPost from './ReviewPost/ReviewPost'
 import RejectedPost from './RejectedPost/RejectedPost'
 import ArchivedPost from './ArchivedPost/ArchivedPost'
@@ -91,7 +92,7 @@ export default function ClubPosts ({ query }: Props): JSX.Element {
         condition={data?.posts?.edges.length < 1}
       >
         <GridWrap>
-          {data?.posts?.edges.map((item, index) => {
+          {data?.posts?.edges.map((item) => {
             switch (item.node.state) {
               case 'DRAFT':
                 return (

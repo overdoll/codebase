@@ -20,7 +20,7 @@ export default function PostStaticAudience ({ query }: Props): JSX.Element {
   return (
     <Wrap direction='column'>
       <WrapItem>
-        <Tag size='lg' variant='outline' colorScheme='gray' borderRadius='full'>
+        <Tag size='lg' variant='solid' colorScheme='gray' borderRadius='full'>
           <TagLabel>{data?.audience?.title}</TagLabel>
         </Tag>
       </WrapItem>

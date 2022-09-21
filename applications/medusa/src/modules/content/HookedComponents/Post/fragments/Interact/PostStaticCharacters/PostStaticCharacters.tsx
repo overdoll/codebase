@@ -26,8 +26,8 @@ export default function PostStaticCharacters ({ query }: Props): JSX.Element {
     <Wrap>
       {data.characters.map((item) =>
         <WrapItem key={item.id}>
-          <Tag size='lg' variant='outline' colorScheme='gray' borderRadius='full'>
-            <TagLabel>{item.name} ({item.series?.title})</TagLabel>
+          <Tag size='lg' variant='solid' colorScheme='gray' borderRadius='full'>
+            <TagLabel>{item.name} {item.series != null ? `(${item?.series?.title})` : ''}</TagLabel>
           </Tag>
         </WrapItem>
       )}

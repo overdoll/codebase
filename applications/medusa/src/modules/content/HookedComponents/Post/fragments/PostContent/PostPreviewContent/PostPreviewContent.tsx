@@ -1,10 +1,10 @@
 import { graphql, useFragment } from 'react-relay'
 import type { PostPreviewContentFragment$key } from '@//:artifacts/PostPreviewContentFragment.graphql'
-import { Flex, HStack, Text } from '@chakra-ui/react'
-import { FileMultiple, PremiumStar } from '@//:assets/icons'
+import { Flex, Heading, HStack, Stack, Text } from '@chakra-ui/react'
+import { FileMultiple, PremiumStar, SadError } from '@//:assets/icons'
 import Icon from '../../../../../PageLayout/BuildingBlocks/Icon/Icon'
-import InfoRawPostContentBanner
-  from '../InfoRawPostContentBanner/InfoRawPostContentBanner'
+import InfoRawPostContentBanner from '../InfoRawPostContentBanner/InfoRawPostContentBanner'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   query: PostPreviewContentFragment$key
@@ -24,7 +24,7 @@ export default function PostPreviewContent ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const firstContent = data.content[0]
+  const firstContent = data.content?.[0]
 
   const hasMoreThanOne = data.content.length > 1
 
@@ -42,7 +42,18 @@ export default function PostPreviewContent ({
       justify='center'
       align='center'
     >
-      <InfoRawPostContentBanner postContentQuery={firstContent} />
+      {firstContent != null
+        ? (
+          <InfoRawPostContentBanner postContentQuery={firstContent} />
+          )
+        : (
+          <Stack p={2} spacing={1}>
+            <Icon icon={SadError} w={6} h={6} fill='gray.200' />
+            <Heading textAlign='center' fontSize='sm' color='gray.200'>
+              <Trans>This post has no content</Trans>
+            </Heading>
+          </Stack>
+          )}
       {hasMoreThanOne &&
         <HStack
           align='center'

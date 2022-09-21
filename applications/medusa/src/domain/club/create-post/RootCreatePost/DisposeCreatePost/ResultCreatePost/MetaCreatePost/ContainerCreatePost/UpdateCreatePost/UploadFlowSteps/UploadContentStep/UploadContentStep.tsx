@@ -8,6 +8,7 @@ import { useUppyContext } from '@//:modules/content/HookedComponents/Upload'
 import FileInputOverlay from '@//:modules/content/HookedComponents/Upload/components/FileInputOverlay/FileInputOverlay'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import { MobileContainer } from '@//:modules/content/PageLayout'
+import Head from 'next/head'
 
 interface Props {
   query: UploadContentStepFragment$key
@@ -35,6 +36,11 @@ export default function UploadContentStep ({
   return (
     <MobileContainer>
       <Stack spacing={2}>
+        <Head>
+          <title>
+            Modify Content - overdoll
+          </title>
+        </Head>
         <UploadContentSuggestions query={data} />
         <FileInputOverlay isDisabled={Object.values(state.files).length > 0} onlyDrop uppy={uppy}>
           <Stack spacing={2}>
