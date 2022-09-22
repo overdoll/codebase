@@ -399,7 +399,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	grpcClient := getGrpcCallbackClient(t)
 
-	application.TemporalClient.On("SignalWithStartWorkflow", mock.Anything, mock.Anything, workflows.SubmitPostMediaFinishedProcessingSignalChannel, mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+	application.TemporalClient.On("SignalWorkflow", mock.Anything, mock.Anything, workflows.SubmitPostMediaFinishedProcessingSignalChannel, mock.Anything, mock.Anything, mock.Anything, mock.Anything).
 		Run(
 			func(args mock.Arguments) {
 				env.SignalWorkflow(workflows.SubmitPostMediaFinishedProcessingSignalChannel, args[3])
@@ -427,66 +427,6 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		Return(nil).
 		Once()
 
-	application.TemporalClient.On("SignalWithStartWorkflow", mock.Anything, mock.Anything, workflows.SubmitPostSignalChannel, mock.Anything, mock.Anything, mock.Anything, mock.Anything).
-		Run(
-			func(args mock.Arguments) {
-				env.RegisterDelayedCallback(func() {
-
-					env.SignalWorkflow(workflows.SubmitPostSignalChannel, args[3])
-
-					for v, id := range resourceIds {
-						if v == 2 {
-							break
-						}
-
-						_, err = grpcClient.UpdateMedia(context.Background(), &proto.UpdateMediaRequest{Media: &proto.Media{
-							Id: id,
-							Link: &proto.MediaLink{
-								Id:   newPostReference,
-								Type: proto.MediaLinkType_POST_CONTENT,
-							},
-							ImageData: &proto.ImageData{Id: uuid.New().String()},
-							State: &proto.MediaState{
-								Processed: true,
-								Failed:    false,
-							},
-						}})
-
-						require.NoError(t, err, "no error updating resources")
-					}
-
-					env.RegisterDelayedCallback(func() {
-						pst := getPostFromAdapter(t, postId)
-
-						_, err = grpcClient.UpdateMedia(context.Background(), &proto.UpdateMediaRequest{Media: &proto.Media{
-							Id: pst.Content()[1].MediaHidden().ID(),
-							Link: &proto.MediaLink{
-								Id:   postId,
-								Type: proto.MediaLinkType_POST_CONTENT,
-							},
-							ImageData: &proto.ImageData{Id: uuid.New().String()},
-							State: &proto.MediaState{
-								Processed: true,
-								Failed:    false,
-							},
-							Source: &proto.MediaSource{
-								SourceMediaId: pst.Content()[1].Media().ID(), Link: &proto.MediaLink{
-									Id:   newPostReference,
-									Type: proto.MediaLinkType_POST_CONTENT,
-								}},
-						}})
-
-						require.NoError(t, err, "no error updating resource")
-					}, time.Second*2)
-
-				}, time.Second)
-
-				workflowExecution.FindAndExecuteWorkflow(t, env)
-			},
-		).
-		Return(nil, nil).
-		Once()
-
 	// finally, submit the post for review
 	var submitPost SubmitPost
 
@@ -495,6 +435,57 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 			ID: newPostId,
 		},
 	})
+
+	env.RegisterDelayedCallback(func() {
+
+		for v, id := range resourceIds {
+			if v == 2 {
+				break
+			}
+
+			_, err = grpcClient.UpdateMedia(context.Background(), &proto.UpdateMediaRequest{Media: &proto.Media{
+				Id: id,
+				Link: &proto.MediaLink{
+					Id:   newPostReference,
+					Type: proto.MediaLinkType_POST_CONTENT,
+				},
+				ImageData: &proto.ImageData{Id: uuid.New().String()},
+				State: &proto.MediaState{
+					Processed: true,
+					Failed:    false,
+				},
+			}})
+
+			require.NoError(t, err, "no error updating resources")
+		}
+
+		env.RegisterDelayedCallback(func() {
+			pst := getPostFromAdapter(t, postId)
+
+			_, err = grpcClient.UpdateMedia(context.Background(), &proto.UpdateMediaRequest{Media: &proto.Media{
+				Id: pst.Content()[1].MediaHidden().ID(),
+				Link: &proto.MediaLink{
+					Id:   postId,
+					Type: proto.MediaLinkType_POST_CONTENT,
+				},
+				ImageData: &proto.ImageData{Id: uuid.New().String()},
+				State: &proto.MediaState{
+					Processed: true,
+					Failed:    false,
+				},
+				Source: &proto.MediaSource{
+					SourceMediaId: pst.Content()[1].Media().ID(), Link: &proto.MediaLink{
+						Id:   newPostReference,
+						Type: proto.MediaLinkType_POST_CONTENT,
+					}},
+			}})
+
+			require.NoError(t, err, "no error updating resource")
+		}, time.Second*2)
+
+	}, time.Second)
+
+	workflowExecution.FindAndExecuteWorkflow(t, env)
 
 	require.NoError(t, err)
 

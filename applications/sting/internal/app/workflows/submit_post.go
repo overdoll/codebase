@@ -11,12 +11,11 @@ import (
 
 type SubmitPostInput struct {
 	PostId   string
-	PostDate *time.Time
+	PostDate time.Time
 }
 
 const SubmitPostPixelatedMediaSignalChannel = "submit-post-pixelated-media"
 const SubmitPostMediaFinishedProcessingSignalChannel = "submit-post-media-finish-processing"
-const SubmitPostSignalChannel = "submit-post"
 
 type SubmitPostMediaFinished struct {
 	MediaId string
@@ -34,7 +33,6 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 
 	var a *activities.Activities
 
-	var postDate *time.Time
 	var hasFailed bool
 	var media []SubmitPostMediaFinished
 	var pixelatedMedia []PixelatedPostMediaFinished
@@ -51,13 +49,6 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 		}
 	})
 
-	postSubmissionSelector := workflow.NewSelector(ctx)
-
-	// wait for post to be submitted
-	postSubmissionSelector.AddReceive(workflow.GetSignalChannel(ctx, SubmitPostSignalChannel), func(channel workflow.ReceiveChannel, more bool) {
-		channel.Receive(ctx, &postDate)
-	})
-
 	postResourceProcessingSelector := workflow.NewSelector(ctx)
 
 	postResourcesProcessingChannel := workflow.GetSignalChannel(ctx, SubmitPostMediaFinishedProcessingSignalChannel)
@@ -70,20 +61,13 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 		}
 	})
 
-	// wait for post to be "submitted"
-	postSubmissionSelector.Select(ctx)
-
-	if postDate == nil {
-		postDate = input.PostDate
-	}
-
 	var postDetails *activities.SubmitPostPayload
 
 	// update post status
 	if err := workflow.ExecuteActivity(ctx, a.SubmitPost,
 		activities.SubmitPostInput{
 			PostId:   input.PostId,
-			PostDate: *postDate,
+			PostDate: input.PostDate,
 		},
 	).Get(ctx, &postDetails); err != nil {
 		logger.Error("failed to submit post", "Error", err)
@@ -124,10 +108,18 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 			return err
 		}
 
-		// continue workflow as new to restart the flow since we submitted a post with errors
-		return workflow.NewContinueAsNewError(ctx, SubmitPost, SubmitPostInput{
-			PostId:   input.PostId,
-			PostDate: postDate,
+		if err := workflow.ExecuteActivity(ctx, a.CancelSubmitPost,
+			activities.CancelSubmitPostInput{
+				PostId: input.PostId,
+			},
+		).Get(ctx, nil); err != nil {
+			logger.Error("failed to cancel submit post", "Error", err)
+			return err
+		}
+
+		// workflow is marked as cancelled
+		return workflow.Await(ctx, func() bool {
+			return false
 		})
 	}
 
