@@ -209,6 +209,60 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 	}, nil
 }
 
+func (r PostsCassandraElasticsearchRepository) ScanPosts(ctx context.Context, clubId, postId string, callback func(post *post.Post) error) error {
+
+	builder := r.client.Search().
+		Index(PostReaderIndex)
+
+	query := elastic.NewBoolQuery()
+
+	query.Should(
+		elastic.
+			NewBoolQuery().
+			Should(
+				elastic.NewTermsQueryFromStrings("club_id", clubId),
+			),
+	)
+
+	query.Should(
+		elastic.
+			NewBoolQuery().
+			Should(
+				elastic.NewTermsQueryFromStrings("id", postId),
+			),
+	)
+
+	var filterQueries []elastic.Query
+
+	filterQueries = append(filterQueries, elastic.NewTermQuery("state", post.Published.String()))
+
+	query.Filter(filterQueries...)
+
+	builder.Query(query)
+	builder.Size(10000)
+
+	response, err := builder.Pretty(true).Do(ctx)
+
+	if err != nil {
+		return errors.Wrap(support.ParseElasticError(err), "failed to search posts")
+	}
+
+	for _, hit := range response.Hits.Hits {
+
+		createdPost, err := r.unmarshalPostDocument(ctx, hit.Source, hit.Sort)
+
+		if err != nil {
+			return err
+		}
+
+		if err := callback(createdPost); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (r PostsCassandraElasticsearchRepository) RefreshPostIndex(ctx context.Context) error {
 
 	_, err := r.client.

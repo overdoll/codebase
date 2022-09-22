@@ -105,3 +105,28 @@ func (s LoaderGrpc) GenerateImageFromMedia(ctx context.Context, sources []*media
 
 	return medias, nil
 }
+
+func (s LoaderGrpc) ConvertResourcesToMedia(ctx context.Context, sourceId string, legacyMedia []*media.Media) ([]*media.Media, error) {
+
+	var resourceIds []string
+
+	for _, med := range legacyMedia {
+		if med.IsLegacy() {
+			resourceIds = append(resourceIds, med.ID())
+		}
+	}
+
+	md, err := s.client.ConvertResourcesToMedia(ctx, &loader.ConvertResourceToMediaRequest{ResourceIds: resourceIds, ItemId: sourceId})
+
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to convert resources to media")
+	}
+
+	var medias []*media.Media
+
+	for _, m := range md.Media {
+		medias = append(medias, media.FromProto(m))
+	}
+
+	return medias, nil
+}

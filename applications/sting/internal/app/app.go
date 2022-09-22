@@ -114,6 +114,11 @@ type Commands struct {
 
 	CreateGameSession command.CreateGameSessionHandler
 	SpinRoulette      command.SpinRouletteHandler
+
+	MigrateCategoryResources   command.MigrateCategoriesResourcesHandler
+	MigrateCharactersResources command.MigrateCharactersResourcesHandler
+	MigrateSeriesResources     command.MigrateSeriesResourcesHandler
+	MigratePostsResources      command.MigratePostsResourcesHandler
 }
 
 type Queries struct {
