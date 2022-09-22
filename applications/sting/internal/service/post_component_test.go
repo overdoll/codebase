@@ -449,7 +449,12 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 					Id:   newPostReference,
 					Type: proto.MediaLinkType_POST_CONTENT,
 				},
-				ImageData: &proto.ImageData{Id: uuid.New().String()},
+				ImageData: &proto.ImageData{Id: uuid.New().String(), Sizes: []*proto.ImageDataSize{
+					{
+						Width:  0,
+						Height: 0,
+					},
+				}},
 				State: &proto.MediaState{
 					Processed: true,
 					Failed:    false,
@@ -468,7 +473,12 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 					Id:   postId,
 					Type: proto.MediaLinkType_POST_CONTENT,
 				},
-				ImageData: &proto.ImageData{Id: uuid.New().String()},
+				ImageData: &proto.ImageData{Id: uuid.New().String(), Sizes: []*proto.ImageDataSize{
+					{
+						Width:  0,
+						Height: 0,
+					},
+				}},
 				State: &proto.MediaState{
 					Processed: true,
 					Failed:    false,

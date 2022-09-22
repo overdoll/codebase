@@ -230,7 +230,12 @@ func TestCreateCategory_update_and_search(t *testing.T) {
 			Id:   category.Reference,
 			Type: proto.MediaLinkType_CATEGORY_BANNER,
 		},
-		ImageData: &proto.ImageData{Id: uuid.New().String()},
+		ImageData: &proto.ImageData{Id: uuid.New().String(), Sizes: []*proto.ImageDataSize{
+			{
+				Width:  0,
+				Height: 0,
+			},
+		}},
 		State: &proto.MediaState{
 			Processed: true,
 			Failed:    false,

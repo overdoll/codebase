@@ -193,7 +193,12 @@ func TestCreatTopic_update_and_search(t *testing.T) {
 			Id:   topic.Reference,
 			Type: proto.MediaLinkType_TOPIC_BANNER,
 		},
-		ImageData: &proto.ImageData{Id: uuid.New().String()},
+		ImageData: &proto.ImageData{Id: uuid.New().String(), Sizes: []*proto.ImageDataSize{
+			{
+				Width:  0,
+				Height: 0,
+			},
+		}},
 		State: &proto.MediaState{
 			Processed: true,
 			Failed:    false,

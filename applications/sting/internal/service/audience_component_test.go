@@ -187,7 +187,12 @@ func TestCreateAudience_search_and_update(t *testing.T) {
 			Id:   updateAudienceBanner.UpdateAudienceBanner.Audience.Reference,
 			Type: proto.MediaLinkType_AUDIENCE_BANNER,
 		},
-		ImageData: &proto.ImageData{Id: uuid.New().String()},
+		ImageData: &proto.ImageData{Id: uuid.New().String(), Sizes: []*proto.ImageDataSize{
+			{
+				Width:  0,
+				Height: 0,
+			},
+		}},
 		State: &proto.MediaState{
 			Processed: true,
 			Failed:    false,

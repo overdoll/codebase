@@ -301,7 +301,12 @@ func seedPublishedPostWithCharacter(t *testing.T, characterId, seriesId string) 
 				Id:   uuid.New().String(),
 				Type: proto.MediaLinkType_POST_CONTENT,
 			},
-			ImageData: &proto.ImageData{Id: uuid.New().String()},
+			ImageData: &proto.ImageData{Id: uuid.New().String(), Sizes: []*proto.ImageDataSize{
+				{
+					Width:  0,
+					Height: 0,
+				},
+			}},
 			State: &proto.MediaState{
 				Processed: true,
 				Failed:    false,
@@ -368,7 +373,12 @@ func seedPublishedPostWithCategory(t *testing.T, categoryId string) {
 				Id:   uuid.New().String(),
 				Type: proto.MediaLinkType_POST_CONTENT,
 			},
-			ImageData: &proto.ImageData{Id: uuid.New().String()},
+			ImageData: &proto.ImageData{Id: uuid.New().String(), Sizes: []*proto.ImageDataSize{
+				{
+					Width:  0,
+					Height: 0,
+				},
+			}},
 			State: &proto.MediaState{
 				Processed: true,
 				Failed:    false,
@@ -435,7 +445,12 @@ func seedPublishedPostWithAudience(t *testing.T, audienceId string) {
 				Id:   uuid.New().String(),
 				Type: proto.MediaLinkType_POST_CONTENT,
 			},
-			ImageData: &proto.ImageData{Id: uuid.New().String()},
+			ImageData: &proto.ImageData{Id: uuid.New().String(), Sizes: []*proto.ImageDataSize{
+				{
+					Width:  0,
+					Height: 0,
+				},
+			}},
 			State: &proto.MediaState{
 				Processed: true,
 				Failed:    false,
@@ -500,7 +515,12 @@ func newPublishingPost(t *testing.T, accountId, clubId string) *post.Post {
 				Id:   uuid.New().String(),
 				Type: proto.MediaLinkType_POST_CONTENT,
 			},
-			ImageData: &proto.ImageData{Id: uuid.New().String()},
+			ImageData: &proto.ImageData{Id: uuid.New().String(), Sizes: []*proto.ImageDataSize{
+				{
+					Width:  0,
+					Height: 0,
+				},
+			}},
 			State: &proto.MediaState{
 				Processed: true,
 				Failed:    false,
