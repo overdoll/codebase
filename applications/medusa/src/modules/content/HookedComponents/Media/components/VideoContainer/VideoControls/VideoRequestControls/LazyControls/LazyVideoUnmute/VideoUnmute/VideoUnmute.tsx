@@ -4,6 +4,7 @@ import { muteVideo, unMuteVideo } from '../../../../../../../support/controls'
 import MediaButton from '../../../../../../MediaControls/MediaButton/MediaButton'
 import { PlayerType } from '../../../../../../../types'
 import syncPlayerVolumeChange from '../../../../../../../support/syncPlayerVolumeChange'
+import trackFathomEvent from '../../../../../../../../../../support/trackFathomEvent'
 
 interface Props {
   player: PlayerType
@@ -20,16 +21,20 @@ export default function VideoUnmute (props: Props): JSX.Element {
 
   const [muted, setMuted] = useState(player?.video?.muted ?? true)
 
+  const onUnMuteVideo = (): void => {
+    unMuteVideo(player)
+    unMuteCallback?.()
+    // track video unmute
+    trackFathomEvent('101EOY3R', 1)
+  }
+
   syncPlayerVolumeChange(player, () => {
   }, setMuted, setPlayer)
 
   if (muted) {
     return (
       <MediaButton
-        onClick={() => {
-          unMuteVideo(player)
-          unMuteCallback?.()
-        }}
+        onClick={onUnMuteVideo}
         icon={ControlVolumeMuted}
       />
     )

@@ -5,6 +5,7 @@ import { Flex, Slider, SliderFilledTrack, SliderTrack } from '@chakra-ui/react'
 import { Icon } from '../../../../../../../../../../PageLayout'
 import { ControlSoundWave, ControlVolumeMuted } from '@//:assets/icons'
 import syncPlayerVolumeChange from '../../../../../../../../support/syncPlayerVolumeChange'
+import trackFathomEvent from '../../../../../../../../../../../support/trackFathomEvent'
 
 interface Props {
   player: PlayerType
@@ -26,6 +27,10 @@ export default function VideoVolumeTrack (props: Props): JSX.Element {
     setMuted(player.video.muted)
   }
 
+  const onChangeEnd = (): void => {
+    trackFathomEvent('OIMQ1FTK', 1)
+  }
+
   syncPlayerVolumeChange(player, setVolume, setMuted, setPlayer)
 
   return (
@@ -41,6 +46,7 @@ export default function VideoVolumeTrack (props: Props): JSX.Element {
     >
       <Slider
         onChange={onChange}
+        onChangeEnd={() => onChangeEnd()}
         focusThumbOnChange={false}
         value={volume}
         min={0}

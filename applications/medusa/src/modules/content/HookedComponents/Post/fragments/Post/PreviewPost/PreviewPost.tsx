@@ -11,6 +11,7 @@ import SwiperType from 'swiper'
 import { PlayerType } from '../../../../Media/types'
 import syncSwiperSlideChange from '../../../support/syncSwiperSlideChange'
 import syncPlayerTimeUpdate from '../../../../Media/support/syncPlayerTimeUpdate'
+import trackFathomEvent from '../../../../../../support/trackFathomEvent'
 
 interface Props {
   postQuery: PreviewPostFragment$key
@@ -38,12 +39,18 @@ export default function PreviewPost (props: Props): JSX.Element {
   const [activeIndex, setActiveIndex] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
 
+  const onClick = (): void => {
+    // track post clicks
+    trackFathomEvent('QVSNTJRX', 1)
+  }
+
   syncSwiperSlideChange(swiper, (swiper) => setActiveIndex(swiper.activeIndex))
   syncPlayerTimeUpdate(player, (time) => setCurrentTime(time))
 
   return (
     <Box position='relative'>
       <Link
+        onClick={onClick}
         passHref
         href={{
           pathname: '/[slug]/post/[reference]',

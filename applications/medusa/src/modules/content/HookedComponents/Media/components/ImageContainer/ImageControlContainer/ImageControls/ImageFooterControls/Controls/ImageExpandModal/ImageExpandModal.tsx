@@ -19,6 +19,7 @@ import { CONTROLS_CONTAINER } from '../../../../../../../constants'
 import { Trans } from '@lingui/macro'
 import { useState } from 'react'
 import { useUpdateEffect } from 'usehooks-ts'
+import trackFathomEvent from '../../../../../../../../../../support/trackFathomEvent'
 
 interface Props extends ImageMediaCopy, ColorType {
 
@@ -35,6 +36,11 @@ export default function ImageExpandModal (props: Props): JSX.Element {
     onOpen,
     onClose
   } = useDisclosure()
+
+  const onOpenModal = (): void => {
+    trackFathomEvent('X7BYX8OX', 1)
+    onOpen()
+  }
 
   const [showPopup, setShowPopup] = useState(false)
   const [delay, setDelay] = useState<number | null>(null)
@@ -55,7 +61,7 @@ export default function ImageExpandModal (props: Props): JSX.Element {
   return (
     <>
       <MediaButton
-        onClick={onOpen}
+        onClick={onOpenModal}
         icon={ControlFullscreenEnable}
       />
       <Modal

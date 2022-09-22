@@ -4,6 +4,7 @@ import { SetCoveredProps } from '../../../../ImageControlContainer'
 import {
   ControlContainCoverImageProps
 } from '../../../../../ImageWrapper/ControlCoverContainImage/ControlCoverContainImage'
+import trackFathomEvent from '../../../../../../../../../../support/trackFathomEvent'
 
 interface Props extends SetCoveredProps, ControlContainCoverImageProps {
 
@@ -16,6 +17,9 @@ export default function ImageExpandCover (props: Props): JSX.Element {
   } = props
 
   const onClick = (): void => {
+    if (isCovered === false) {
+      trackFathomEvent('UYWU5N7B', 1)
+    }
     setCovered(x => !x)
   }
 

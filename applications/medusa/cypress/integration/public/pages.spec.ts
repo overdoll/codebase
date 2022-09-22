@@ -3,6 +3,22 @@ describe('Pages', () => {
     cy.visit('/')
   })
 
+  it('go to browse page', () => {
+    cy.visit('/browse')
+  })
+
+  it('go to random page', () => {
+    cy.visit('/random')
+  })
+
+  it('go to new page', () => {
+    cy.visit('/new')
+  })
+
+  it('go to top page', () => {
+    cy.visit('/top')
+  })
+
   it('go to the artists page as not logged in', () => {
     cy.visit('/artists')
     cy.findAllByText(/overdoll is the first true/iu)

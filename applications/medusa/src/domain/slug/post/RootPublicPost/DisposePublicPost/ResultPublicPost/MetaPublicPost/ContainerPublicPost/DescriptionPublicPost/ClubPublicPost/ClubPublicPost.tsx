@@ -6,6 +6,7 @@ import { Box, Flex, Heading, HStack, Text } from '@chakra-ui/react'
 import { Link } from '@//:modules/routing'
 import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
 import JoinClubPublicPost from './JoinClubPublicPost/JoinClubPublicPost'
+import trackFathomEvent from '@//:modules/support/trackFathomEvent'
 
 interface Props {
   postQuery: ClubPublicPostFragment$key
@@ -40,9 +41,15 @@ export default function ClubPublicPost (props: Props): JSX.Element {
   const postData = useFragment(PostFragment, postQuery)
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
+  const onClick = (): void => {
+    // track club link clicks
+    trackFathomEvent('U1AWMVCU', 1)
+  }
+
   return (
     <Flex position='relative'>
       <Link
+        onClick={onClick}
         passHref
         href={{
           pathname: '/[slug]',

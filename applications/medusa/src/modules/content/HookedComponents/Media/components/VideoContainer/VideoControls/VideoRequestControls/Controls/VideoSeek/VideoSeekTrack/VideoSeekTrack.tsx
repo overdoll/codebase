@@ -13,6 +13,7 @@ import { ControlFastForwardTen, ControlGoBackwardTen } from '@//:assets/icons'
 import MediaButton from '../../../../../../MediaControls/MediaButton/MediaButton'
 import formatSecondsIntoMinutes from '../../../../../../../support/formatSecondsIntoMinutes'
 import syncPlayerTimeUpdate from '../../../../../../../support/syncPlayerTimeUpdate'
+import trackFathomEvent from '../../../../../../../../../../support/trackFathomEvent'
 
 interface Props extends Pick<VideoControlTypeProps, 'duration'> {
   player: PlayerType
@@ -47,6 +48,8 @@ export default function VideoSeekTrack (props: Props): JSX.Element {
     setTime(value)
     player.currentTime = value
     requestPlayAfterSeeking(player)
+    // track seeking
+    trackFathomEvent('EFY0WCPJ', 1)
   }
 
   syncPlayerTimeUpdate(player, setTime, setPlayer)

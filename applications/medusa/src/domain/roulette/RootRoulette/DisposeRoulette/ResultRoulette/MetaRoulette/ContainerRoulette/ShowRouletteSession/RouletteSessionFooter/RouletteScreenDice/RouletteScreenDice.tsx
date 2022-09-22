@@ -34,11 +34,11 @@ const DURATION_TYPES = [
 
 const generateDurationFromType = (type: DurationTypes): number => {
   const ranges = {
-    veryslow: [2.5, 2.7],
-    mediumslow: [1.7, 2],
-    slow: [1.1, 1.4],
-    moderate: [0.6, 0.8],
-    fast: [0.2, 0.5]
+    veryslow: [2.1, 2.3],
+    mediumslow: [1.4, 1.9],
+    slow: [0.9, 1.2],
+    moderate: [0.4, 0.7],
+    fast: [0.15, 0.3]
   }
 
   return randomFunction(ranges[type][0], ranges[type][1])
