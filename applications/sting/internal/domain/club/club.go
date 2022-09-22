@@ -320,6 +320,11 @@ func (m *Club) CanTransferClubOwnership(requester, target *principal.Principal) 
 }
 
 func (m *Club) CanViewSupporterCount(requester *principal.Principal) error {
+
+	if requester.IsStaff() {
+		return nil
+	}
+
 	return requester.BelongsToAccount(m.ownerAccountId)
 }
 
