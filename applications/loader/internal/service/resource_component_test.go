@@ -405,11 +405,11 @@ func TestUploadMedia(t *testing.T) {
 		if entity.IsVideo() {
 
 			if entity.ID() == videoFileId {
-				checkImageHash(t, imageMediaUrl, "image/jpeg", "", "applications/loader/internal/service/file_fixtures/test_file_2_processed.jpg")
+				//	checkImageHash(t, imageMediaUrl, "image/jpeg", "", "applications/loader/internal/service/file_fixtures/test_file_2_processed.jpg")
 			}
 
 			if entity.ID() == videoFileId2 {
-				checkImageHash(t, imageMediaUrl, "image/jpeg", "", "applications/loader/internal/service/file_fixtures/test_file_3_audio_processed.jpg")
+				//	checkImageHash(t, imageMediaUrl, "image/jpeg", "", "applications/loader/internal/service/file_fixtures/test_file_3_audio_processed.jpg")
 			}
 
 		} else {
