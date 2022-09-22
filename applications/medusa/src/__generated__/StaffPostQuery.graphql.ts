@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<107b360c5e1753bc351973288b123a87>>
- * @relayHash 596d80552280de9ab10cda8ffa0ba0f5
+ * @generated SignedSource<<707b5cf55a856ab0eff53c03371a4338>>
+ * @relayHash f6b76e933d34c6048cc967a583ac047a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 596d80552280de9ab10cda8ffa0ba0f5
+// @relayRequestID f6b76e933d34c6048cc967a583ac047a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -211,18 +211,15 @@ v16 = {
   "selections": (v13/*: any*/),
   "storageKey": null
 },
-v17 = [
-  (v10/*: any*/)
-],
-v18 = {
+v17 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "title",
   "storageKey": null
 },
-v19 = [
-  (v18/*: any*/),
+v18 = [
+  (v17/*: any*/),
   (v6/*: any*/)
 ];
 return {
@@ -613,13 +610,24 @@ return {
                           (v2/*: any*/),
                           {
                             "kind": "InlineFragment",
-                            "selections": (v17/*: any*/),
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "targetDevice",
+                                "storageKey": null
+                              },
+                              (v10/*: any*/)
+                            ],
                             "type": "HLSVideoContainer",
                             "abstractKey": null
                           },
                           {
                             "kind": "InlineFragment",
-                            "selections": (v17/*: any*/),
+                            "selections": [
+                              (v10/*: any*/)
+                            ],
                             "type": "MP4VideoContainer",
                             "abstractKey": null
                           }
@@ -644,7 +652,7 @@ return {
             "kind": "LinkedField",
             "name": "audience",
             "plural": false,
-            "selections": (v19/*: any*/),
+            "selections": (v18/*: any*/),
             "storageKey": null
           },
           {
@@ -664,7 +672,7 @@ return {
                 "kind": "LinkedField",
                 "name": "series",
                 "plural": false,
-                "selections": (v19/*: any*/),
+                "selections": (v18/*: any*/),
                 "storageKey": null
               }
             ],
@@ -679,7 +687,7 @@ return {
             "plural": true,
             "selections": [
               (v6/*: any*/),
-              (v18/*: any*/)
+              (v17/*: any*/)
             ],
             "storageKey": null
           }
@@ -689,7 +697,7 @@ return {
     ]
   },
   "params": {
-    "id": "596d80552280de9ab10cda8ffa0ba0f5",
+    "id": "f6b76e933d34c6048cc967a583ac047a",
     "metadata": {},
     "name": "StaffPostQuery",
     "operationKind": "query",

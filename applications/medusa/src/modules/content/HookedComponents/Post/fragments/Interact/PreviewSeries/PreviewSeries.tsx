@@ -2,7 +2,8 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import { PreviewSeriesFragment$key } from '@//:artifacts/PreviewSeriesFragment.graphql'
 import { Heading, Stack } from '@chakra-ui/react'
 import { TileOverlay } from '../../../../../ContentSelection'
-import SeriesThumbnail from '../../../../../PageLayout/Display/fragments/Thumbnail/SeriesThumbnail/SeriesThumbnail'
+import SeriesSmallBanner
+  from '../../../../../PageLayout/Display/fragments/SmallBanner/SeriesSmallBanner/SeriesSmallBanner'
 
 interface Props {
   seriesQuery: PreviewSeriesFragment$key
@@ -11,7 +12,7 @@ interface Props {
 const Fragment = graphql`
   fragment PreviewSeriesFragment on Series {
     title
-    ...SeriesThumbnailFragment
+    ...SeriesSmallBannerFragment
   }
 `
 
@@ -22,7 +23,7 @@ export default function PreviewSeries (props: Props): JSX.Element {
 
   return (
     <TileOverlay
-      backdrop={<SeriesThumbnail seriesQuery={data} />}
+      backdrop={<SeriesSmallBanner seriesQuery={data} />}
     >
       <Stack overflow='hidden' px={2} align='center' justify='center' h='100%'>
         <Heading

@@ -10,9 +10,6 @@ interface Props {
 const Query = graphql`
   query ResultBrowseQuery($seed: String) @preloadable {
     ...MetaBrowseFragment
-    viewer {
-      ...MetaBrowseViewerFragment
-    }
   }
 `
 
@@ -25,6 +22,6 @@ export default function ResultBrowse (props: Props): JSX.Element {
   )
 
   return (
-    <MetaBrowse rootQuery={queryData} viewerQuery={queryData.viewer} />
+    <MetaBrowse rootQuery={queryData} />
   )
 }

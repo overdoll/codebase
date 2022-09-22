@@ -17,6 +17,7 @@ const Fragment = graphql`
     containers {
       __typename
       ...on HLSVideoContainer {
+        targetDevice
         url
       }
       ...on MP4VideoContainer {
@@ -44,48 +45,39 @@ export default function ContainersVideoMedia (props: Props): JSX.Element {
 
   const data = useFragment(Fragment, videoMediaQuery)
 
-  const urls = data.containers.map(item => item.__typename === 'HLSVideoContainer' ? ({ hlsUrl: item.url }) : (item.__typename === 'MP4VideoContainer' ? ({ mp4Url: item.url }) : ({})))
+  const getHlsUrls = data.containers.reduce((accum, item) => {
+    if (item.__typename !== 'HLSVideoContainer') {
+      return accum
+    }
+    return ({
+      ...accum,
+      ...(item.targetDevice === 'DESKTOP' && { desktop: item.url }),
+      ...(item.targetDevice === 'UNIVERSAL' && { universal: item.url }),
+      ...(item.targetDevice === 'MOBILE' && { mobile: item.url })
+    })
+  }, {})
 
-  const hlsUrl = urls.filter((item) => item.hlsUrl != null)?.[0].hlsUrl
-  const mp4Url = urls.filter((item) => item.mp4Url != null)?.[0].mp4Url
-
-  if (hlsUrl != null) {
-    return (
-      <ObserveVideoContainer
-        videoProps={{
-          hlsUrl: hlsUrl,
-          aspectRatio: {
-            width: data.aspectRatio.width,
-            height: data.aspectRatio.height
-          },
-          duration: data.duration / 1000,
-          hasAudio: data.hasAudio,
-          ...videoProps
-        }}
-        {...rest}
-      />
-    )
-  }
-
-  if (mp4Url != null) {
-    return (
-      <ObserveVideoContainer
-        videoProps={{
-          mp4Url: mp4Url,
-          aspectRatio: {
-            width: data.aspectRatio.width,
-            height: data.aspectRatio.height
-          },
-          duration: data.duration / 1000,
-          hasAudio: data.hasAudio,
-          ...videoProps
-        }}
-        {...rest}
-      />
-    )
-  }
+  const getMp4Url = data.containers.reduce((accum, item) => {
+    if (item.__typename !== 'MP4VideoContainer') {
+      return accum
+    }
+    return item.url
+  }, null)
 
   return (
-    <></>
+    <ObserveVideoContainer
+      videoProps={{
+        mp4Url: getMp4Url ?? undefined,
+        hlsUrls: getHlsUrls,
+        aspectRatio: {
+          width: data.aspectRatio.width,
+          height: data.aspectRatio.height
+        },
+        duration: data.duration / 1000,
+        hasAudio: data.hasAudio,
+        ...videoProps
+      }}
+      {...rest}
+    />
   )
 }

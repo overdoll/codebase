@@ -1,14 +1,12 @@
 import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { MetaBrowseFragment$key } from '@//:artifacts/MetaBrowseFragment.graphql'
-import { MetaBrowseViewerFragment$key } from '@//:artifacts/MetaBrowseViewerFragment.graphql'
 import BrowseRichObject from './BrowseRichObject/BrowseRichObject'
 import BrowseStructuredData from './BrowseStructuredData/BrowseStructuredData'
 import ContainerBrowse from './ContainerBrowse/ContainerBrowse'
 
 interface Props {
   rootQuery: MetaBrowseFragment$key
-  viewerQuery: MetaBrowseViewerFragment$key | null
 }
 
 const RootFragment = graphql`
@@ -17,26 +15,18 @@ const RootFragment = graphql`
   }
 `
 
-const ViewerFragment = graphql`
-  fragment MetaBrowseViewerFragment on Account {
-    ...ContainerBrowseViewerFragment
-  }
-`
-
 export default function MetaBrowse (props: Props): JSX.Element {
   const {
-    rootQuery,
-    viewerQuery
+    rootQuery
   } = props
 
   const rootData = useFragment(RootFragment, rootQuery)
-  const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   return (
     <>
       <BrowseRichObject />
       <BrowseStructuredData />
-      <ContainerBrowse rootQuery={rootData} viewerQuery={viewerData} />
+      <ContainerBrowse rootQuery={rootData} />
     </>
   )
 }

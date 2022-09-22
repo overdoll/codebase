@@ -2,8 +2,8 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import { PreviewCategoryFragment$key } from '@//:artifacts/PreviewCategoryFragment.graphql'
 import { Heading, Stack } from '@chakra-ui/react'
 import { TileOverlay } from '../../../../../ContentSelection'
-import CategoryThumbnail
-  from '../../../../../PageLayout/Display/fragments/Thumbnail/CategoryThumbnail/CategoryThumbnail'
+import CategorySmallBanner
+  from '../../../../../PageLayout/Display/fragments/SmallBanner/CategorySmallBanner/CategorySmallBanner'
 
 interface Props {
   categoryQuery: PreviewCategoryFragment$key
@@ -12,7 +12,7 @@ interface Props {
 const Fragment = graphql`
   fragment PreviewCategoryFragment on Category {
     title
-    ...CategoryThumbnailFragment
+    ...CategorySmallBannerFragment
   }
 `
 
@@ -23,7 +23,7 @@ export default function PreviewCategory (props: Props): JSX.Element {
 
   return (
     <TileOverlay
-      backdrop={<CategoryThumbnail categoryQuery={data} />}
+      backdrop={<CategorySmallBanner categoryQuery={data} />}
     >
       <Stack px={2} align='center' justify='center' minH={50} h='100%'>
         <Heading

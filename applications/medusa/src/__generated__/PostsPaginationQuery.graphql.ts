@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<cfb8eff0c9970884091002eda936ea47>>
- * @relayHash d3b4dd04db3cadaec74b8e033b0f444e
+ * @generated SignedSource<<9c999e4cc4c625a4496847d697317b4c>>
+ * @relayHash f23a206819e99cef4b3d7941ccf96fb1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d3b4dd04db3cadaec74b8e033b0f444e
+// @relayRequestID f23a206819e99cef4b3d7941ccf96fb1
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -157,21 +157,18 @@ v11 = {
   "selections": (v9/*: any*/),
   "storageKey": null
 },
-v12 = [
-  (v6/*: any*/)
-],
-v13 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "title",
   "storageKey": null
 },
-v14 = [
-  (v13/*: any*/),
+v13 = [
+  (v12/*: any*/),
   (v4/*: any*/)
 ],
-v15 = {
+v14 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -473,13 +470,24 @@ return {
                                               (v3/*: any*/),
                                               {
                                                 "kind": "InlineFragment",
-                                                "selections": (v12/*: any*/),
+                                                "selections": [
+                                                  {
+                                                    "alias": null,
+                                                    "args": null,
+                                                    "kind": "ScalarField",
+                                                    "name": "targetDevice",
+                                                    "storageKey": null
+                                                  },
+                                                  (v6/*: any*/)
+                                                ],
                                                 "type": "HLSVideoContainer",
                                                 "abstractKey": null
                                               },
                                               {
                                                 "kind": "InlineFragment",
-                                                "selections": (v12/*: any*/),
+                                                "selections": [
+                                                  (v6/*: any*/)
+                                                ],
                                                 "type": "MP4VideoContainer",
                                                 "abstractKey": null
                                               }
@@ -504,7 +512,7 @@ return {
                                 "kind": "LinkedField",
                                 "name": "audience",
                                 "plural": false,
-                                "selections": (v14/*: any*/),
+                                "selections": (v13/*: any*/),
                                 "storageKey": null
                               },
                               {
@@ -516,7 +524,7 @@ return {
                                 "plural": true,
                                 "selections": [
                                   (v4/*: any*/),
-                                  (v15/*: any*/),
+                                  (v14/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -524,7 +532,7 @@ return {
                                     "kind": "LinkedField",
                                     "name": "series",
                                     "plural": false,
-                                    "selections": (v14/*: any*/),
+                                    "selections": (v13/*: any*/),
                                     "storageKey": null
                                   }
                                 ],
@@ -539,7 +547,7 @@ return {
                                 "plural": true,
                                 "selections": [
                                   (v4/*: any*/),
-                                  (v13/*: any*/)
+                                  (v12/*: any*/)
                                 ],
                                 "storageKey": null
                               },
@@ -551,7 +559,7 @@ return {
                                 "name": "club",
                                 "plural": false,
                                 "selections": [
-                                  (v15/*: any*/),
+                                  (v14/*: any*/),
                                   (v4/*: any*/)
                                 ],
                                 "storageKey": null
@@ -620,7 +628,7 @@ return {
     ]
   },
   "params": {
-    "id": "d3b4dd04db3cadaec74b8e033b0f444e",
+    "id": "f23a206819e99cef4b3d7941ccf96fb1",
     "metadata": {},
     "name": "PostsPaginationQuery",
     "operationKind": "query",

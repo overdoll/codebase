@@ -13,24 +13,24 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/RootClubPostsPreview/RootClubPostsPreview.tsx:158
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/ButtonsPublicClub/ButtonsPublicClub.tsx:52
 msgid "All Posts"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:279
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:279
 msgid "Attempt {timeoutCount} of {TIMEOUT_LIMIT}..."
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:133
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:210
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:133
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:210
 msgid "Back"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubBanners/ClubSupportBanner/ClubSupportBanner.tsx:54
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/SupportLinksPublicClub/ClubSupportBanner/ClubSupportBanner.tsx:54
 msgid "Become a Supporter and get access to exclusive content!"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubGenericButtons/ClubSupporterSubscriptionPriceButton/ClubSupporterSubscriptionPriceButton.tsx:68
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubSupporterSubscriptionPriceButton/ClubSupporterSubscriptionPriceButton.tsx:68
 msgid "Become a Supporter {price}"
 msgstr ""
 
@@ -42,36 +42,36 @@ msgstr ""
 #~ msgid "Best"
 #~ msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/BillingSummary/BillingSummary.tsx:79
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/BillingSummary/BillingSummary.tsx:79
 msgid "Billed every 30 days, starting from the day you subscribe. You can cancel at any time from your Billing page, which is located in your Account Settings."
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillWindowListener/CCBillWindowListener.tsx:99
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillWindowListener/CCBillWindowListener.tsx:99
 msgid "Cancel"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:254
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:312
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:254
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:312
 msgid "Close"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterShareDiscordButton/ClubFooterShareDiscordButton.tsx:40
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/JoinBannerPublicClub/ClubFooterShareDiscordButton/ClubFooterShareDiscordButton.tsx:40
 msgid "Copied Discord link! Send it in a channel or direct message!"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterCopyLinkButton/ClubFooterCopyLinkButton.tsx:43
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/SupportLinksPublicClub/ClubFooterButtons/ClubFooterCopyLinkButton/ClubFooterCopyLinkButton.tsx:43
 msgid "Copy Club Link"
 msgstr ""
 
 #: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterShareDiscordButton/ClubFooterShareDiscordButton.tsx:50
-msgid "Copy Discord Link"
-msgstr ""
-
-#: src/domain/slug/root/RootPublicClub/PublicClub/ClubMenu/ClubCopyLinkButton/ClubCopyLinkButton.tsx:40
-#~ msgid "Copy Link"
+#~ msgid "Copy Discord Link"
 #~ msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/ClubEmptyPosts/ClubEmptyPosts.tsx:49
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/JoinBannerPublicClub/ClubFooterShareLinkButton/ClubFooterShareLinkButton.tsx:54
+msgid "Copy Link"
+msgstr ""
+
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/PrepareClubPosts/LazyClubPosts/ClubEmptyPosts/ClubEmptyPosts.tsx:49
 msgid "Create Post"
 msgstr ""
 
@@ -79,19 +79,19 @@ msgstr ""
 #~ msgid "Create an account and become a supporter to get access to this club's exclusive content!"
 #~ msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:185
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:185
 msgid "Description"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:125
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:125
 msgid "Enter a new payment method"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillWindowListener/CCBillWindowListener.tsx:86
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillWindowListener/CCBillWindowListener.tsx:86
 msgid "Enter your payment details in the new window"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:169
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:169
 msgid "Error"
 msgstr ""
 
@@ -107,11 +107,11 @@ msgstr ""
 #~ msgid "Hot"
 #~ msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:67
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:67
 msgid "How will you pay?"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupporterGuidelinesAgreement/SupporterGuidelinesAgreement.tsx:12
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupporterGuidelinesAgreement/SupporterGuidelinesAgreement.tsx:12
 msgid "I have read and agree to the <0>Supporter Guidelines</0>"
 msgstr ""
 
@@ -119,41 +119,36 @@ msgstr ""
 #~ msgid "I have read and agree to the <0>Supporter Guidelines</0>, which clearly outline the refund and cancellation policy."
 #~ msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/BillingSummary/BillingSummary.tsx:85
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/BillingSummary/BillingSummary.tsx:85
 msgid "If requested, refunds may be considered on a case-by-case basis."
 msgstr ""
 
-#: src/domain/slug/root/RootPublicClub/PublicClub/JoinClubButton/BecomeMemberButton/BecomeMemberButton.tsx:110
-#: src/domain/slug/root/RootPublicClub/PublicClub/JoinClubButton/BecomeMemberButton/BecomeMemberButton.tsx:124
-#: src/domain/slug/root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromPage/JoinClubFromPage.tsx:76
-#: src/domain/slug/root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromPage/JoinClubFromPage.tsx:104
-#: src/domain/slug/root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromPost/JoinClubFromPost.tsx:63
-#: src/domain/slug/root/RootPublicClub/PublicClub/JoinClubButton/JoinClubFromTile/JoinClubFromTile.tsx:62
-#~ msgid "Join"
-#~ msgstr ""
-
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubBanners/ClubJoinBanner/ClubJoinBanner.tsx:47
-msgid "Join this club to see new content in your feed!"
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/JoinBannerPublicClub/ClubJoinBanner/ClubJoinBanner.tsx:74
+msgid "Join"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubBanners/ClubJoinBanner/ClubJoinBanner.tsx:64
+#: src/domain/slug/club/RootPublicClub/PublicClub/ClubBanners/ClubJoinBanner/ClubJoinBanner.tsx:47
+#~ msgid "Join this club to see new content in your feed!"
+#~ msgstr ""
+
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/JoinBannerPublicClub/ClubJoinBanner/ClubJoinBanner.tsx:53
 msgid "Join {0}"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterLeaveButton/ClubFooterLeaveButton.tsx:52
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/SupportLinksPublicClub/ClubFooterButtons/ClubFooterLeaveButton/ClubFooterLeaveButton.tsx:52
 msgid "Leave"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert.tsx:62
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert.tsx:85
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/BannerPublicClub/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert.tsx:62
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/BannerPublicClub/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert.tsx:85
 msgid "Manage"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterButtons.tsx:60
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/SupportLinksPublicClub/ClubFooterButtons/ClubFooterButtons.tsx:52
 msgid "Manage Club"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterManageSubscriptionButton/ClubFooterManageSubscriptionButton.tsx:59
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/SupportLinksPublicClub/ClubFooterButtons/ClubFooterManageSubscriptionButton/ClubFooterManageSubscriptionButton.tsx:59
 msgid "Manage Subscription"
 msgstr ""
 
@@ -161,7 +156,7 @@ msgstr ""
 #~ msgid "Members"
 #~ msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:146
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:146
 msgid "Next"
 msgstr ""
 
@@ -169,15 +164,15 @@ msgstr ""
 #~ msgid "No posts found"
 #~ msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:231
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:231
 msgid "Pending Club Benefits"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:201
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:201
 msgid "Please contact us if you continue to experience billing issues"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:247
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:247
 msgid "Please contact us if you continue to experience issues with receiving your club benefits"
 msgstr ""
 
@@ -189,8 +184,8 @@ msgstr ""
 #~ msgid "Please email hello@overdoll.com if you continue to experience issues with receiving your club benefits"
 #~ msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:95
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:96
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:95
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:96
 msgid "Please select a payment method"
 msgstr ""
 
@@ -202,7 +197,7 @@ msgstr ""
 #~ msgid "Public Page"
 #~ msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillSubscribeForm/CCBillSubscribeForm.tsx:142
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillSubscribeForm/CCBillSubscribeForm.tsx:142
 msgid "Remember this payment method"
 msgstr ""
 
@@ -215,43 +210,53 @@ msgstr ""
 #~ msgid "See all"
 #~ msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:143
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/JoinBannerPublicClub/ClubJoinBanner/ClubJoinBanner.tsx:58
+msgid "See their newly posted content in your feed"
+msgstr ""
+
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:143
 msgid "Select a saved payment method"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:107
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:107
 msgid "Set Up"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterShareRedditButton/ClubFooterShareRedditButton.tsx:43
-msgid "Share on Reddit"
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/JoinBannerPublicClub/ClubFooterShareDiscordButton/ClubFooterShareDiscordButton.tsx:49
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/JoinBannerPublicClub/ClubFooterShareRedditButton/ClubFooterShareRedditButton.tsx:42
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/JoinBannerPublicClub/ClubFooterShareTwitterButton/ClubFooterShareTwitterButton.tsx:45
+msgid "Share"
 msgstr ""
+
+#: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterShareRedditButton/ClubFooterShareRedditButton.tsx:43
+#~ msgid "Share on Reddit"
+#~ msgstr ""
 
 #: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterShareTwitterButton/ClubFooterShareTwitterButton.tsx:46
-msgid "Share on Twitter"
-msgstr ""
+#~ msgid "Share on Twitter"
+#~ msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillWindowListener/CCBillWindowListener.tsx:104
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillWindowListener/CCBillWindowListener.tsx:104
 msgid "Show Window"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:127
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:127
 msgid "Sorry, we couldn't find the transaction. Please try again later."
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:159
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:159
 msgid "Sorry, we were unable to process your payment. Please try another payment method."
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubFooterButtons/ClubFooterButtons.tsx:49
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/SupportLinksPublicClub/ClubFooterButtons/ClubFooterButtons.tsx:41
 msgid "Staff"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:166
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:166
 msgid "Subscribe"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillSubscribeForm/CCBillSubscribeForm.tsx:154
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillSubscribeForm/CCBillSubscribeForm.tsx:154
 msgid "Subscribe with CCBill"
 msgstr ""
 
@@ -274,60 +279,60 @@ msgstr ""
 #~ msgid "Thanks for supporting this club! You can now access all of its exclusive content."
 #~ msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert.tsx:48
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/BannerPublicClub/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert.tsx:48
 msgid "The owner can unlock the club."
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert.tsx:50
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/BannerPublicClub/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert.tsx:50
 msgid "The suspension expires in {remaining}."
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillSubscribeForm/CCBillSubscribeForm.tsx:113
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:129
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillSubscribeForm/CCBillSubscribeForm.tsx:113
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:129
 msgid "There was an error subscribing. Please try again later."
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/ClubEmptyPosts/ClubEmptyPosts.tsx:61
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/PrepareClubPosts/LazyClubPosts/ClubEmptyPosts/ClubEmptyPosts.tsx:61
 msgid "This club hasn't posted any content yet"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert.tsx:42
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/BannerPublicClub/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert.tsx:42
 msgid "This club is currently suspended. Only staff can see this page."
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert.tsx:74
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/BannerPublicClub/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert.tsx:74
 msgid "This club is currently terminated. Only staff can see this page."
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillWindowListener/CCBillWindowListener.tsx:91
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillWindowListener/CCBillWindowListener.tsx:91
 msgid "This page will update after you have successfully submitted your payment details"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:301
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:301
 msgid "Transaction Approved!"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:154
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:154
 msgid "Transaction Declined"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:118
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:118
 msgid "Transaction not found"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:80
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:80
 msgid "Use a saved payment method"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:268
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:268
 msgid "Verifying Transaction"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:236
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:236
 msgid "We received your payment, but weren't able to issue your club benefits in a reasonable amount of time. Try refreshing the page or coming back in a few minutes and you should see your club benefits!"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:273
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:273
 msgid "We've received your payment! Now we're issuing your club benefits. This page will update shortly."
 msgstr ""
 
@@ -339,12 +344,12 @@ msgstr ""
 #~ msgid "You are now a member of {0}!"
 #~ msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubOwnerJoinWrapper/ClubOwnerJoinWrapper.tsx:27
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubOwnerSupportWrapper/ClubOwnerSupportWrapper.tsx:27
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubOwnerJoinWrapper/ClubOwnerJoinWrapper.tsx:27
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubOwnerSupportWrapper/ClubOwnerSupportWrapper.tsx:27
 msgid "You are the owner"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:306
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:306
 msgid "You can start using your club benefits right away!"
 msgstr ""
 
@@ -352,24 +357,24 @@ msgstr ""
 #~ msgid "You cannot leave a club that you are a supporter of"
 #~ msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubPublicPosts/ClubEmptyPosts/ClubEmptyPosts.tsx:30
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/PrepareClubPosts/LazyClubPosts/ClubEmptyPosts/ClubEmptyPosts.tsx:30
 msgid "You haven't posted any content yet. Start posting by clicking the button below!"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillSubscribeForm/CCBillSubscribeForm.tsx:68
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:89
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/NewPaymentMethod/CCBillSubscribeForm/CCBillSubscribeForm.tsx:68
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:89
 msgid "You must agree to the guidelines"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:96
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:96
 msgid "You must enable two-factor authentication before you can use a saved payment method"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:133
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:133
 msgid "You will be asked to enter your payment information and subscribe through our billing provider"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:115
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:115
 msgid "You will be asked to subscribe using an existing payment method"
 msgstr ""
 
@@ -377,7 +382,7 @@ msgstr ""
 #~ msgid "You're in too many clubs. You need to leave at least one before you can join this one."
 #~ msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/PublicClub/ClubWrappers/ClubSupportWrapper/BillingSummary/BillingSummary.tsx:65
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/BillingSummary/BillingSummary.tsx:65
 msgid "Your contribution directly supports this creator and unlocks access to their exclusive content"
 msgstr ""
 

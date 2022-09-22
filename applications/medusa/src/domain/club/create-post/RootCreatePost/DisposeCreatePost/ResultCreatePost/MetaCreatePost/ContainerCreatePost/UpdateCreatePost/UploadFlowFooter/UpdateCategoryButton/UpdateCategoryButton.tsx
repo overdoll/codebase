@@ -31,7 +31,6 @@ const Mutation = graphql`
           id
           title
           slug
-          ...CategoryThumbnailFragment
         }
       }
     }

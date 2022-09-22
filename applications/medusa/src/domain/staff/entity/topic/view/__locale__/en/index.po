@@ -22,7 +22,7 @@ msgstr ""
 msgid "Back to search"
 msgstr ""
 
-#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicBanner/ChangeTopicBanner.tsx:47
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicBanner/ChangeTopicBanner.tsx:39
 msgid "Change Banner"
 msgstr ""
 
@@ -112,7 +112,7 @@ msgstr ""
 #~ msgid "Rule Title"
 #~ msgstr ""
 
-#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicBanner/ChangeTopicBannerForm/ChangeTopicBannerForm.tsx:116
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicBanner/ChangeTopicBannerForm/ChangeTopicBannerForm.tsx:110
 #: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicDescription/ChangeTopicDescriptionForm/ChangeTopicDescriptionForm.tsx:144
 #: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicTitle/ChangeTopicTitleForm/ChangeTopicTitleForm.tsx:143
 #: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicWeight/ChangeTopicWeightForm/ChangeTopicWeightForm.tsx:103
@@ -127,7 +127,7 @@ msgstr ""
 #~ msgid "Successfully updated rule infraction"
 #~ msgstr ""
 
-#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicBanner/ChangeTopicBannerForm/ChangeTopicBannerForm.tsx:80
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicBanner/ChangeTopicBannerForm/ChangeTopicBannerForm.tsx:74
 msgid "Successfully updated topic thumbnail"
 msgstr ""
 
@@ -139,11 +139,11 @@ msgstr ""
 #~ msgid "There was an error updating rule infraction"
 #~ msgstr ""
 
-#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicBanner/ChangeTopicBannerForm/ChangeTopicBannerForm.tsx:86
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicBanner/ChangeTopicBannerForm/ChangeTopicBannerForm.tsx:80
 msgid "There was an error updating the topic thumbnail"
 msgstr ""
 
-#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicBanner/ChangeTopicBanner.tsx:30
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicBanner/ChangeTopicBanner.tsx:28
 msgid "Topic Banner"
 msgstr ""
 
@@ -156,7 +156,7 @@ msgstr ""
 msgid "Topic Description"
 msgstr ""
 
-#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicBanner/ChangeTopicBannerForm/ChangeTopicBannerForm.tsx:104
+#: src/domain/staff/entity/topic/view/RootStaffViewTopic/StaffViewTopic/ChangeTopicBanner/ChangeTopicBannerForm/ChangeTopicBannerForm.tsx:98
 msgid "Topic Thumbnail"
 msgstr ""
 

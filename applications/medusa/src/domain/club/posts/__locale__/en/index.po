@@ -21,7 +21,7 @@ msgstr ""
 msgid "Archived"
 msgstr ""
 
-#: src/domain/club/posts/RootClubPosts/ClubPosts/DraftPost/DraftPost.tsx:42
+#: src/domain/club/posts/RootClubPosts/ClubPosts/DraftPost/DraftPost.tsx:43
 msgid "DRAFT"
 msgstr ""
 
@@ -29,7 +29,7 @@ msgstr ""
 msgid "Draft"
 msgstr ""
 
-#: src/domain/club/posts/RootClubPosts/ClubPosts/DraftPost/DraftPost.tsx:56
+#: src/domain/club/posts/RootClubPosts/ClubPosts/DraftPost/DraftPost.tsx:57
 msgid "Edit Draft"
 msgstr ""
 
@@ -49,7 +49,7 @@ msgstr ""
 msgid "Published"
 msgstr ""
 
-#: src/domain/club/posts/RootClubPosts/ClubPosts/RejectedPost/RejectedPost.tsx:38
+#: src/domain/club/posts/RootClubPosts/ClubPosts/RejectedPost/RejectedPost.tsx:39
 msgid "REJECTED"
 msgstr ""
 
@@ -93,6 +93,6 @@ msgstr ""
 msgid "Your post is under review. It will be checked against the <0>Club Guidelines</0> to ensure that it is allowed on the platform. You can expect your post to be reviewed anywhere between a few minutes to a day from submission."
 msgstr ""
 
-#: src/domain/club/posts/RootClubPosts/ClubPosts/RejectedPost/RejectedPost.tsx:56
+#: src/domain/club/posts/RootClubPosts/ClubPosts/RejectedPost/RejectedPost.tsx:57
 msgid "Your post was reviewed and it was determined that the contents did not comply with the <0>Club Guidelines</0>. Please review the guidelines before posting again so that any future posts are not rejected."
 msgstr ""

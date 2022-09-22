@@ -4,7 +4,7 @@ import { TITLE_FEATURES } from '@//:modules/constants/rich-objects'
 import DefaultRichObject from '@//:common/rich-objects/default/DefaultRichObject/DefaultRichObject'
 
 export default function RandomRichObject (): JSX.Element {
-  const TITLE = `overdoll - ${TITLE_FEATURES}`
+  const TITLE = `Random ${TITLE_FEATURES} on overdoll`
 
   const URL = 'https://overdoll.com/random'
 

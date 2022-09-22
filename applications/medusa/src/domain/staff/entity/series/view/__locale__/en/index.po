@@ -30,8 +30,8 @@ msgid "Change Series Title"
 msgstr ""
 
 #: src/domain/staff/entity/series/view/RootStaffViewSeries/StaffViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnail.tsx:47
-msgid "Change Thumbnail"
-msgstr ""
+#~ msgid "Change Thumbnail"
+#~ msgstr ""
 
 #: src/domain/staff/entity/series/view/RootStaffViewSeries/StaffViewSeries/StaffSeriesSearchCharacters/StaffSeriesSearchCharacters.tsx:60
 #~ msgid "Characters from this series"
@@ -55,25 +55,24 @@ msgstr ""
 
 #: src/domain/staff/entity/series/view/RootStaffViewSeries/StaffViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnail.tsx:30
 #: src/domain/staff/entity/series/view/RootStaffViewSeries/StaffViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnailForm/ChangeSeriesThumbnailForm.tsx:104
-msgid "Series Thumbnail"
-msgstr ""
+#~ msgid "Series Thumbnail"
+#~ msgstr ""
 
 #: src/domain/staff/entity/series/view/RootStaffViewSeries/StaffViewSeries/ChangeSeriesTitle/ChangeSeriesTitle.tsx:33
 msgid "Series Title"
 msgstr ""
 
-#: src/domain/staff/entity/series/view/RootStaffViewSeries/StaffViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnailForm/ChangeSeriesThumbnailForm.tsx:116
 #: src/domain/staff/entity/series/view/RootStaffViewSeries/StaffViewSeries/ChangeSeriesTitle/ChangeSeriesTitleForm/ChangeSeriesTitleForm.tsx:144
 msgid "Submit"
 msgstr ""
 
 #: src/domain/staff/entity/series/view/RootStaffViewSeries/StaffViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnailForm/ChangeSeriesThumbnailForm.tsx:80
-msgid "Successfully updated series thumbnail"
-msgstr ""
+#~ msgid "Successfully updated series thumbnail"
+#~ msgstr ""
 
 #: src/domain/staff/entity/series/view/RootStaffViewSeries/StaffViewSeries/ChangeSeriesThumbnail/ChangeSeriesThumbnailForm/ChangeSeriesThumbnailForm.tsx:86
-msgid "There was an error updating the series thumbnail"
-msgstr ""
+#~ msgid "There was an error updating the series thumbnail"
+#~ msgstr ""
 
 #: src/domain/staff/entity/series/view/RootStaffViewSeries/StaffViewSeries/ChangeSeriesTitle/ChangeSeriesTitleForm/ChangeSeriesTitleForm.tsx:89
 msgid "Updated series title to {0} for {1}"

@@ -23,8 +23,8 @@ msgstr ""
 
 #: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnail.tsx:30
 #: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnailForm/ChangeCategoryThumbnailForm.tsx:98
-msgid "Category Thumbnail"
-msgstr ""
+#~ msgid "Category Thumbnail"
+#~ msgstr ""
 
 #: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitle.tsx:33
 #: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:111
@@ -44,8 +44,8 @@ msgid "Change Category Topic"
 msgstr ""
 
 #: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnail.tsx:41
-msgid "Change Thumbnail"
-msgstr ""
+#~ msgid "Change Thumbnail"
+#~ msgstr ""
 
 #: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:116
 msgid "Enter a category title"
@@ -67,19 +67,18 @@ msgstr ""
 msgid "No topic"
 msgstr ""
 
-#: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnailForm/ChangeCategoryThumbnailForm.tsx:110
 #: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:142
 #: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTopic/ChangeCategoryTopicForm/ChangeCategoryTopicForm.tsx:100
 msgid "Submit"
 msgstr ""
 
 #: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnailForm/ChangeCategoryThumbnailForm.tsx:74
-msgid "Successfully updated category thumbnail"
-msgstr ""
+#~ msgid "Successfully updated category thumbnail"
+#~ msgstr ""
 
 #: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryThumbnail/ChangeCategoryThumbnailForm/ChangeCategoryThumbnailForm.tsx:80
-msgid "There was an error updating the category thumbnail"
-msgstr ""
+#~ msgid "There was an error updating the category thumbnail"
+#~ msgstr ""
 
 #: src/domain/staff/entity/category/view/RootStaffViewCategory/StaffViewCategory/ChangeCategoryTitle/ChangeCategoryTitleForm/ChangeCategoryTitleForm.tsx:87
 msgid "Updated category title to {0} for {1}"
