@@ -1,6 +1,6 @@
 import { GridItem } from '@chakra-ui/react'
 import GridLayoutHome from '../../components/GridsHome/GridLayoutHome/GridLayoutHome'
-import { FreshLeaf, HotContent } from '@//:assets/icons'
+import { ArchiveFolder, FreshLeaf, HotContent } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import React from 'react'
 import StaticTile from '../../components/Tiles/StaticTile/StaticTile'
@@ -10,34 +10,34 @@ export default function GridArchives (): JSX.Element {
     <GridLayoutHome columns={3} rows={3}>
       <GridItem gridColumn='auto / span 3'>
         <StaticTile
-          icon={HotContent}
-          bg='https://static.dollycdn.net/banners/top-thumbnail.jpg'
+          icon={ArchiveFolder}
+          bg='https://static.dollycdn.net/banners/generalbutch-thumbnail.jpg'
           href='/generalbutch'
           header={(
             <Trans>
-              GeneralButch archive
+              GeneralButch Archive
             </Trans>
           )}
           footer={(
             <Trans>
-              gb archive
+              GeneralButch's content archive
             </Trans>
           )}
         />
       </GridItem>
       <GridItem gridColumn='auto / span 3'>
         <StaticTile
-          icon={HotContent}
-          bg='https://static.dollycdn.net/banners/top-thumbnail.jpg'
+          icon={ArchiveFolder}
+          bg='https://static.dollycdn.net/banners/arhoangel-thumbnail.jpg'
           href='/arhoangel'
           header={(
             <Trans>
-              ArhoAngel archive
+              ArhoAngel Archive
             </Trans>
           )}
           footer={(
             <Trans>
-              gb archive
+              ArhoAngel's content archive
             </Trans>
           )}
         />

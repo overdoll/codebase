@@ -1,107 +1,126 @@
 import { GridItem } from '@chakra-ui/react'
 import GridLayoutHome from '../../components/GridsHome/GridLayoutHome/GridLayoutHome'
-import { FreshLeaf } from '@//:assets/icons'
+import { BirdHouse, ContentBookEdit, ContentBrushPen, LoginKeys } from '@//:assets/icons'
+import { SocialDiscord, SocialTwitter } from '@//:assets/logos'
 import { Trans } from '@lingui/macro'
 import React from 'react'
 import StaticTile from '../../components/Tiles/StaticTile/StaticTile'
+import useAbility from '@//:modules/authorization/useAbility'
+import { DISCORD_LINK, FEEDBACK_LINK, TWITTER_FOLLOW_INTENT } from '@//:modules/constants/links'
 
 export default function GridContribute (): JSX.Element {
+  const ability = useAbility()
+
   return (
     <GridLayoutHome columns={3} rows={2}>
       <GridItem colSpan={2}>
-        <GridItem gridColumn='auto / span 2'>
-          <StaticTile
-            icon={FreshLeaf}
-            bg='https://static.dollycdn.net/banners/new-thumbnail-2.jpg'
-            href='/join'
-            header={(
-              <Trans>
-                Create account
-              </Trans>
+        {ability.can('configure', 'Account')
+          ? (
+            <StaticTile
+              color='primary.300'
+              icon={BirdHouse}
+              href='/settings/preferences'
+              header={(
+                <Trans>
+                  Update Preferences
+                </Trans>
+              )}
+              footer={(
+                <Trans>
+                  Update your curation profile
+                </Trans>
+              )}
+            />
+            )
+          : (
+            <StaticTile
+              color='primary.300'
+              icon={LoginKeys}
+              href='/join'
+              header={(
+                <Trans>
+                  Join overdoll
+                </Trans>
+              )}
+              footer={(
+                <Trans>
+                  Join overdoll to curate your content and save posts
+                </Trans>
+              )}
+            />
             )}
-            footer={(
-              <Trans>
-                See fresh content
-              </Trans>
-            )}
-          />
-        </GridItem>
+
       </GridItem>
       <GridItem colSpan={1}>
-        <GridItem gridColumn='auto / span 2'>
-          <StaticTile
-            icon={FreshLeaf}
-            bg='https://static.dollycdn.net/banners/new-thumbnail-2.jpg'
-            href='/artists'
-            header={(
-              <Trans>
-                Post your content
-              </Trans>
-            )}
-            footer={(
-              <Trans>
-                See fresh content
-              </Trans>
-            )}
-          />
-        </GridItem>
+        <StaticTile
+          color='green.300'
+          icon={ContentBrushPen}
+          href='/artists'
+          header={(
+            <Trans>
+              Post Content
+            </Trans>
+          )}
+          footer={(
+            <Trans>
+              Post your adult content
+            </Trans>
+          )}
+        />
       </GridItem>
       <GridItem colSpan={1}>
-        <GridItem gridColumn='auto / span 2'>
-          <StaticTile
-            icon={FreshLeaf}
-            bg='https://static.dollycdn.net/banners/new-thumbnail-2.jpg'
-            href='/new'
-            header={(
-              <Trans>
-                Join discord
-              </Trans>
-            )}
-            footer={(
-              <Trans>
-                See fresh content
-              </Trans>
-            )}
-          />
-        </GridItem>
+        <StaticTile
+          color='facebook.300'
+          isExternal
+          icon={SocialDiscord}
+          href={DISCORD_LINK}
+          header={(
+            <Trans>
+              Join Discord
+            </Trans>
+          )}
+          footer={(
+            <Trans>
+              Join our community Discord
+            </Trans>
+          )}
+        />
       </GridItem>
       <GridItem colSpan={1}>
-        <GridItem gridColumn='auto / span 2'>
-          <StaticTile
-            icon={FreshLeaf}
-            bg='https://static.dollycdn.net/banners/new-thumbnail-2.jpg'
-            href='/new'
-            header={(
-              <Trans>
-                Follow twitter
-              </Trans>
-            )}
-            footer={(
-              <Trans>
-                See fresh content
-              </Trans>
-            )}
-          />
-        </GridItem>
+        <StaticTile
+          color='twitter.300'
+          isExternal
+          icon={SocialTwitter}
+          href={TWITTER_FOLLOW_INTENT}
+          header={(
+            <Trans>
+              Follow Twitter
+            </Trans>
+          )}
+          footer={(
+            <Trans>
+              Follow us on Twitter
+            </Trans>
+          )}
+        />
       </GridItem>
       <GridItem colSpan={1}>
-        <GridItem gridColumn='auto / span 2'>
-          <StaticTile
-            icon={FreshLeaf}
-            bg='https://static.dollycdn.net/banners/new-thumbnail-2.jpg'
-            href='/new'
-            header={(
-              <Trans>
-                Give feedback
-              </Trans>
-            )}
-            footer={(
-              <Trans>
-                See fresh content
-              </Trans>
-            )}
-          />
-        </GridItem>
+        <StaticTile
+          color='purple.300'
+          isExternal
+          icon={ContentBookEdit}
+          href={FEEDBACK_LINK}
+          header={(
+            <Trans>
+              Give Feedback
+            </Trans>
+          )}
+          footer={(
+            <Trans>
+              Tell us what you really think
+            </Trans>
+          )}
+        />
       </GridItem>
     </GridLayoutHome>
   )

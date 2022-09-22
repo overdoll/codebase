@@ -25,7 +25,7 @@ export default function PreviewCharacter (props: Props): JSX.Element {
     <TileOverlay
       backdrop={<CharacterSmallBanner characterQuery={data} />}
     >
-      <Stack px={2} align='center' justify='center' minH={100}>
+      <Stack h='100%' px={2} align='center' justify='center' minH={100}>
         <Heading
           fontSize={{
             base: '2xs',

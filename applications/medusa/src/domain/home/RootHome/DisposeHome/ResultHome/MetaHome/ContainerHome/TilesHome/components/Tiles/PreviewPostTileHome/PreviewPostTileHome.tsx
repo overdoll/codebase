@@ -27,12 +27,12 @@ export default function PreviewPostTileHome (props: Props): JSX.Element {
 
   return (
     <PostLinkTile query={data}>
-      <Flex position='relative'>
+      <Flex borderRadius='lg' w='100%' h='100%' position='relative'>
         <PreviewPostContentSmallBanner postContentQuery={data.content[0]} />
-        <Flex bottom={0} right={0} position='absolute'>
+        <Flex bottom={1} right={1} position='absolute'>
           {data.content.length > 1 && (
-            <Box bg='dimmers.300' p={1}>
-              <Heading fontSize='xs' color='whiteAlpha.800'>
+            <Box borderRadius='lg' bg='dimmers.500' p={1}>
+              <Heading fontSize='xs' color='whiteAlpha.900'>
                 {data.content.length}
               </Heading>
             </Box>

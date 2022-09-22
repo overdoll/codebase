@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7f295b789775891dd2689f895490255b>>
+ * @generated SignedSource<<e869e9cffe1e1bf0ea3bac8747654729>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -44,10 +44,7 @@ var v0 = {
   "kind": "Literal",
   "name": "first",
   "value": 3
-},
-v1 = [
-  (v0/*: any*/)
-];
+};
 return {
   "argumentDefinitions": [],
   "kind": "Fragment",
@@ -106,7 +103,9 @@ return {
     },
     {
       "alias": null,
-      "args": (v1/*: any*/),
+      "args": [
+        (v0/*: any*/)
+      ],
       "concreteType": "CharacterConnection",
       "kind": "LinkedField",
       "name": "characters",
@@ -144,7 +143,13 @@ return {
     },
     {
       "alias": null,
-      "args": (v1/*: any*/),
+      "args": [
+        {
+          "kind": "Literal",
+          "name": "first",
+          "value": 2
+        }
+      ],
       "concreteType": "SeriesConnection",
       "kind": "LinkedField",
       "name": "series",
@@ -178,7 +183,7 @@ return {
           "storageKey": null
         }
       ],
-      "storageKey": "series(first:3)"
+      "storageKey": "series(first:2)"
     }
   ],
   "type": "Query",
@@ -186,6 +191,6 @@ return {
 };
 })();
 
-(node as any).hash = "1e879b18c0ffcaedcc63f33e4a05831d";
+(node as any).hash = "619b2e6761f0ff819e1670e7f610351e";
 
 export default node;

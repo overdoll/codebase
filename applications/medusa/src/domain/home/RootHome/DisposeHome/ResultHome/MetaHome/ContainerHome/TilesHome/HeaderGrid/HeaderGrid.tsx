@@ -2,7 +2,7 @@ import { GridItem } from '@chakra-ui/react'
 import React from 'react'
 import GridLayoutHome from '../components/GridsHome/GridLayoutHome/GridLayoutHome'
 import RouletteTile from '../components/Tiles/RouletteTile/RouletteTile'
-import { RandomizeDice, SearchBar } from '@//:assets/icons'
+import { DiscoverGlobe, RandomizeDice, SearchBar } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import getRandomSeed from '@//:modules/support/getRandomSeed'
 import StaticTile from '../components/Tiles/StaticTile/StaticTile'
@@ -51,8 +51,8 @@ export default function HeaderGrid (): JSX.Element {
       </GridItem>
       <GridItem>
         <StaticTile
-          bg='https://static.dollycdn.net/banners/search-thumbnail.jpg'
-          icon={SearchBar}
+          bg='https://static.dollycdn.net/banners/discover-thumbnail.jpg'
+          icon={DiscoverGlobe}
           href='/clubs/discover'
           header={(
             <Trans>
@@ -61,7 +61,7 @@ export default function HeaderGrid (): JSX.Element {
           )}
           footer={(
             <Trans>
-              Discover
+              Discover clubs posting content
             </Trans>
           )}
         />

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<dfb060b43b627e64fec1807f43e16ccf>>
- * @relayHash 74c257c712e452ad19f296b9d01b7a2a
+ * @generated SignedSource<<47994214251ad8a51b9b9919f5a6f9be>>
+ * @relayHash d2d11d40ce9a2a3f5520815727ff14de
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 74c257c712e452ad19f296b9d01b7a2a
+// @relayRequestID d2d11d40ce9a2a3f5520815727ff14de
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -280,9 +280,6 @@ v13 = [
   (v1/*: any*/),
   (v12/*: any*/),
   (v7/*: any*/)
-],
-v14 = [
-  (v11/*: any*/)
 ];
 return {
   "fragment": {
@@ -394,7 +391,9 @@ return {
       },
       {
         "alias": null,
-        "args": (v14/*: any*/),
+        "args": [
+          (v11/*: any*/)
+        ],
         "concreteType": "CharacterConnection",
         "kind": "LinkedField",
         "name": "characters",
@@ -448,7 +447,13 @@ return {
       },
       {
         "alias": null,
-        "args": (v14/*: any*/),
+        "args": [
+          {
+            "kind": "Literal",
+            "name": "first",
+            "value": 2
+          }
+        ],
         "concreteType": "SeriesConnection",
         "kind": "LinkedField",
         "name": "series",
@@ -476,12 +481,12 @@ return {
             "storageKey": null
           }
         ],
-        "storageKey": "series(first:3)"
+        "storageKey": "series(first:2)"
       }
     ]
   },
   "params": {
-    "id": "74c257c712e452ad19f296b9d01b7a2a",
+    "id": "d2d11d40ce9a2a3f5520815727ff14de",
     "metadata": {},
     "name": "LazyNewTopPostsHomeQuery",
     "operationKind": "query",

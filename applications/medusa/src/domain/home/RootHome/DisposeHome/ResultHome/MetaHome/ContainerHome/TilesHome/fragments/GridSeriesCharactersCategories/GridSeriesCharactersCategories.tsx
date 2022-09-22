@@ -33,7 +33,7 @@ const RootFragment = graphql`
         }
       }
     }
-    series(first: 3) {
+    series(first: 2) {
       edges {
         node {
           ...PreviewSeriesTileHomeFragment
@@ -61,13 +61,7 @@ export default function GridSeriesCharactersCategories (props: Props): JSX.Eleme
       <GridItem>
         <PreviewCharacterTileHome characterQuery={data.characters.edges[0].node} />
       </GridItem>
-      <GridItem>
-        <PreviewSeriesTileHome seriesQuery={data.series.edges[0].node} />
-      </GridItem>
-      <GridItem>
-        <PreviewCategoryTileHome categoryQuery={data.categories.edges[1].node} />
-      </GridItem>
-      <GridItem>
+      <GridItem colSpan={2}>
         <StaticTile
           icon={ThreeDRender}
           href='/search/category/3d'
@@ -83,6 +77,9 @@ export default function GridSeriesCharactersCategories (props: Props): JSX.Eleme
             </Trans>
           )}
         />
+      </GridItem>
+      <GridItem>
+        <PreviewCategoryTileHome categoryQuery={data.categories.edges[1].node} />
       </GridItem>
       <GridItem>
         <PreviewSeriesTileHome seriesQuery={data.series.edges[1].node} />
@@ -131,7 +128,7 @@ export default function GridSeriesCharactersCategories (props: Props): JSX.Eleme
         <PreviewCharacterTileHome characterQuery={data.characters.edges[2].node} />
       </GridItem>
       <GridItem>
-        <PreviewSeriesTileHome seriesQuery={data.series.edges[2].node} />
+        <PreviewSeriesTileHome seriesQuery={data.series.edges[1].node} />
       </GridItem>
     </GridLayoutHome>
   )

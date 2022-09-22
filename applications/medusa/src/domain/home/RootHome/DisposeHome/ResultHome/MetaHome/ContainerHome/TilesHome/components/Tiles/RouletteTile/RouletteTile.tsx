@@ -12,15 +12,14 @@ export default function RouletteTile (): JSX.Element {
       <LinkTile
         href='/roulette'
       >
-        <Flex h={400} bg='gray.900' borderRadius='lg' position='relative'>
+        <Flex h='100%' w='100%' borderRadius='lg' position='relative'>
           <Flex
             borderRadius='inherit'
             bg='dimmers.100'
             overflow='hidden'
             right={0}
             left={0}
-            w='100%'
-            h='100%'
+            bottom={0}
             top={0}
             position='absolute'
           >
@@ -48,19 +47,20 @@ export default function RouletteTile (): JSX.Element {
             overflow='hidden'
           >
             <GridItem overflow='hidden'>
-              <Stack h='100%' align='center' justify='center' spacing={6}>
-                <Stack align='center' justify='center' w='100%' spacing={2}>
+              <Stack h='100%' align='center' justify='center' spacing={2}>
+                <Stack maxW={200} align='center' justify='center' w='100%' spacing={2}>
                   <Stack align='center' spacing={2}>
-                    <Icon icon={RandomizeDice} w={10} h={10} fill='gray.00' />
-                    <Heading textAlign='center' fontSize='4xl' color='gray.00'>
+                    <Icon icon={RandomizeDice} w={8} h={8} fill='gray.00' />
+                    <Heading textAlign='center' fontSize='2xl' color='gray.00'>
                       <Trans>
                         Rule34 Roulette
                       </Trans>
                     </Heading>
                   </Stack>
-                  <Heading textAlign='center' fontSize='sm' color='gray.100'>
+                  <Heading textAlign='center' fontSize='xs' color='whiteAlpha.700'>
                     <Trans>
-                      Spin your way through rule34, hentai, furry, 3D porn videos and images and see how long you can last
+                      Spin your way through rule34, hentai, furry, 3D porn videos and images and see how long you can
+                      last
                     </Trans>
                   </Heading>
                 </Stack>
@@ -77,11 +77,8 @@ export default function RouletteTile (): JSX.Element {
             <GridItem overflow='hidden'>
               <Flex align='center' justify='center' h='100%' w='100%'>
                 <Box
-                  borderWidth={3}
-                  borderColor='dimmers.200'
                   bg='dimmers.300'
-                  borderRadius='md'
-                  h={320}
+                  h='100%'
                   w={36}
                   objectFit='cover'
                   disablePictureInPicture

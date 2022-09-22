@@ -40,7 +40,7 @@ export default function PreviewPostContentSmallBanner (props: Props): JSX.Elemen
 
   if (data.media.__typename === 'VideoMedia') {
     return (
-      <Flex top={0} bottom={0} right={0} left={0} position='absolute'>
+      <Flex borderRadius='inherit' top={0} bottom={0} right={0} left={0} position='absolute'>
         <SmallBannerMedia mediaQuery={data.media} />
         <Flex align='center' justify='center' position='absolute' top={0} bottom={0} right={0} left={0}>
           <Flex align='center' justify='center' p={2}>
@@ -52,7 +52,7 @@ export default function PreviewPostContentSmallBanner (props: Props): JSX.Elemen
               flexShrink={0}
             />
             <Heading ml={2} noOfLines={1} color='whiteAlpha.800' fontSize='xs'>
-              {formatSecondsIntoMinutes(data?.media?.duration ?? 1 / 1000)}
+              {formatSecondsIntoMinutes((data?.media?.duration ?? 1) / 1000)}
             </Heading>
           </Flex>
         </Flex>
