@@ -18,6 +18,8 @@ var application *service.ComponentTestApplication
 func mockServices(testApplication *service.ComponentTestApplication) {
 	application = testApplication
 
+	application.LoaderClient.On("CancelMediaProcessing", mock.Anything, mock.Anything).Return(&emptypb.Empty{}, nil)
+
 	application.LoaderClient.On("ProcessMediaFromUploads", mock.Anything, mock.Anything).Return(func(c context.Context, req *loader.ProcessMediaFromUploadsRequest, g ...grpc.CallOption) *loader.ProcessMediaFromUploadsResponse {
 
 		var res []*proto.Media
