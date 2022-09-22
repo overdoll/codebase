@@ -5,7 +5,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
+	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/media"
 	"overdoll/libraries/media/proto"
@@ -136,6 +138,24 @@ func TestPostRepository_update_parallel_content(t *testing.T) {
 	for _, res := range pst.Content() {
 		require.True(t, res.Media().IsProcessed(), "resource should be processed")
 	}
+
+	require.Len(t, pst.Content(), 20, "should have 20 posts")
+
+	// refresh posts index
+	es := bootstrap.InitializeElasticSearchSession()
+	_, err = es.Refresh(adapters.PostReaderIndex).Do(context.Background())
+	require.NoError(t, err)
+
+	posts, err := repo.GetPostsByIds(context.Background(), nil, []string{postId})
+	require.NoError(t, err, "no error getting post by id")
+	require.Len(t, posts, 1, "should have found 1 post")
+
+	for _, res := range posts[0].Content() {
+		require.True(t, res.Media().IsProcessed(), "resource should be processed")
+	}
+
+	require.Len(t, posts[0].Content(), 20, "should have 20 posts")
+
 }
 
 func TestPostRepository_failure(t *testing.T) {
