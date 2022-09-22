@@ -40,6 +40,11 @@ type Repository interface {
 	UpdatePostContentOperatorMedia(ctx context.Context, id string, medias []*media.Media) (*Post, error)
 	UpdatePostLikesOperator(ctx context.Context, id string, updateFn func(pending *Post) error) (*Post, error)
 
+	ScanPosts(ctx context.Context, clubId, postId string, callback func(post *Post) error) error
+	ScanCharacters(ctx context.Context, characterId string, callback func(character *Character) error) error
+	ScanSeries(ctx context.Context, characterId string, callback func(character *Series) error) error
+	ScanCategories(ctx context.Context, categoryId string, callback func(category *Category) error) error
+
 	DeletePost(ctx context.Context, postId string) error
 
 	CreateCharacter(ctx context.Context, character *Character) error

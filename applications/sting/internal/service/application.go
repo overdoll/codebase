@@ -185,6 +185,11 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			CreateGameSession: command.NewCreateGameSessionHandler(gamesRepo, postRepo),
 
 			IndexClub: command.NewIndexClubHandler(clubRepo),
+
+			MigratePostsResources:      command.NewMigratePostsResourcesHandler(postRepo, loader),
+			MigrateSeriesResources:     command.NewMigrateSeriesResourcesHandler(postRepo, loader),
+			MigrateCharactersResources: command.NewMigrateCharactersResourcesHandler(postRepo, loader),
+			MigrateCategoryResources:   command.NewMigrateCategoriesResourcesHandler(postRepo, loader),
 		},
 		Queries: app.Queries{
 			DiscoverClubs: query.NewDiscoverClubsHandler(clubRepo),

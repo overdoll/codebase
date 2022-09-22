@@ -33,6 +33,10 @@ go_library(
         "join_club.go",
         "leave_club.go",
         "like_post.go",
+        "migrate_categories_resources.go",
+        "migrate_characters_resources.go",
+        "migrate_posts_resources.go",
+        "migrate_series_resources.go",
         "promote_club_slug_alias_to_default.go",
         "publish_post.go",
         "reject_post.go",
@@ -98,5 +102,6 @@ go_library(
         "//libraries/media/proto:libraries_go_proto",
         "//libraries/passport",
         "//libraries/principal",
+        "@org_uber_go_zap//:zap",
     ],
 )

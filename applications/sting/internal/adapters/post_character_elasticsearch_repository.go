@@ -176,6 +176,46 @@ func (r PostsCassandraElasticsearchRepository) indexCharacter(ctx context.Contex
 	return nil
 }
 
+func (r PostsCassandraElasticsearchRepository) ScanCharacters(ctx context.Context, characterId string, callback func(character *post.Character) error) error {
+
+	builder := r.client.Search().
+		Index(CharacterReaderIndex)
+
+	query := elastic.NewBoolQuery()
+
+	query.Should(
+		elastic.
+			NewBoolQuery().
+			Should(
+				elastic.NewTermsQueryFromStrings("id", characterId),
+			),
+	)
+
+	builder.Query(query)
+	builder.Size(10000)
+
+	response, err := builder.Pretty(true).Do(ctx)
+
+	if err != nil {
+		return errors.Wrap(support.ParseElasticError(err), "failed to search characters")
+	}
+
+	for _, hit := range response.Hits.Hits {
+
+		createdPost, err := r.unmarshalCharacterDocument(ctx, hit.Source, hit.Sort)
+
+		if err != nil {
+			return err
+		}
+
+		if err := callback(createdPost); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (r PostsCassandraElasticsearchRepository) GetCharactersByIds(ctx context.Context, characterIds []string) ([]*post.Character, error) {
 
 	var characters []*post.Character

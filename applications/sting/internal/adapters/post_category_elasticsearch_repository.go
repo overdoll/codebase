@@ -140,6 +140,46 @@ func (r PostsCassandraElasticsearchRepository) indexCategory(ctx context.Context
 	return nil
 }
 
+func (r PostsCassandraElasticsearchRepository) ScanCategories(ctx context.Context, categoryId string, callback func(category *post.Category) error) error {
+
+	builder := r.client.Search().
+		Index(CategoryReaderIndex)
+
+	query := elastic.NewBoolQuery()
+
+	query.Should(
+		elastic.
+			NewBoolQuery().
+			Should(
+				elastic.NewTermsQueryFromStrings("id", categoryId),
+			),
+	)
+
+	builder.Query(query)
+	builder.Size(10000)
+
+	response, err := builder.Pretty(true).Do(ctx)
+
+	if err != nil {
+		return errors.Wrap(support.ParseElasticError(err), "failed to search categories")
+	}
+
+	for _, hit := range response.Hits.Hits {
+
+		createdPost, err := r.unmarshalCategoryDocument(ctx, hit.Source, hit.Sort)
+
+		if err != nil {
+			return err
+		}
+
+		if err := callback(createdPost); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (r PostsCassandraElasticsearchRepository) GetCategoriesByIds(ctx context.Context, categoryIds []string) ([]*post.Category, error) {
 
 	var categories []*post.Category

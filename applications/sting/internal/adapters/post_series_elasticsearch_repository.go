@@ -150,6 +150,46 @@ func (r PostsCassandraElasticsearchRepository) GetSeriesByIds(ctx context.Contex
 	return series, nil
 }
 
+func (r PostsCassandraElasticsearchRepository) ScanSeries(ctx context.Context, characterId string, callback func(character *post.Series) error) error {
+
+	builder := r.client.Search().
+		Index(SeriesReaderIndex)
+
+	query := elastic.NewBoolQuery()
+
+	query.Should(
+		elastic.
+			NewBoolQuery().
+			Should(
+				elastic.NewTermsQueryFromStrings("id", characterId),
+			),
+	)
+
+	builder.Query(query)
+	builder.Size(10000)
+
+	response, err := builder.Pretty(true).Do(ctx)
+
+	if err != nil {
+		return errors.Wrap(support.ParseElasticError(err), "failed to search series")
+	}
+
+	for _, hit := range response.Hits.Hits {
+
+		createdPost, err := r.unmarshalSeriesDocument(ctx, hit.Source, hit.Sort)
+
+		if err != nil {
+			return err
+		}
+
+		if err := callback(createdPost); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (r PostsCassandraElasticsearchRepository) SearchSeries(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.SeriesFilters) ([]*post.Series, error) {
 
 	builder := r.client.Search().
