@@ -399,10 +399,10 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	grpcClient := getGrpcCallbackClient(t)
 
-	application.TemporalClient.On("SignalWorkflow", mock.Anything, mock.Anything, workflows.SubmitPostMediaFinishedProcessingSignalChannel, mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+	application.TemporalClient.On("SignalWorkflow", mock.Anything, mock.Anything, "", workflows.SubmitPostMediaFinishedProcessingSignalChannel, mock.Anything).
 		Run(
 			func(args mock.Arguments) {
-				env.SignalWorkflow(workflows.SubmitPostMediaFinishedProcessingSignalChannel, args[3])
+				env.SignalWorkflow(workflows.SubmitPostMediaFinishedProcessingSignalChannel, args[4])
 			},
 		).
 		Return(nil, nil).
