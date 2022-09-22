@@ -1,0 +1,58 @@
+import { Flex, Heading, HStack, Stack } from '@chakra-ui/react'
+import { Icon } from '@//:modules/content/PageLayout'
+import { LinkTile } from '@//:modules/content/ContentSelection'
+import { UrlObject } from 'url'
+import { IconType } from '@//:types/components'
+import { ReactNode } from 'react'
+import { StaticImageCover } from '@//:modules/content/HookedComponents/Media'
+
+interface Props {
+  href: string | UrlObject
+  icon: IconType
+  header: ReactNode
+  footer: ReactNode
+  bg: string
+}
+
+export default function StaticTile (props: Props): JSX.Element {
+  const {
+    href,
+    icon,
+    header,
+    footer,
+    bg
+  } = props
+
+  return (
+    <LinkTile linkProps={{ prefetch: false }} href={href}>
+      <Flex bg='gray.900' borderRadius='lg' overflow='hidden' position='relative'>
+        <Flex borderRadius='inherit' right={0} left={0} w='100%' h='100%' top={0} bg='orange.100' position='absolute'>
+          <StaticImageCover url={bg} />
+        </Flex>
+        <Flex
+          borderWidth={3}
+          borderRadius='inherit'
+          borderColor='dimmers.200'
+          right={0}
+          left={0}
+          w='100%'
+          h='100%'
+          top={0}
+          bg='dimmers.500'
+          position='absolute'
+        />
+        <Stack h='inherit' justify='center' w='100%' spacing={3} p={4} position='relative'>
+          <HStack spacing={4}>
+            <Icon icon={icon} w={8} h={8} fill='gray.00' />
+            <Heading fontSize='lg' color='gray.00'>
+              {header}
+            </Heading>
+          </HStack>
+          <Heading fontSize='md' color='whiteAlpha.700'>
+            {footer}
+          </Heading>
+        </Stack>
+      </Flex>
+    </LinkTile>
+  )
+}

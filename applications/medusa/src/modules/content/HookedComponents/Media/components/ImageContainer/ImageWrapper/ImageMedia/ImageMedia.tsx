@@ -12,6 +12,7 @@ export interface ImageMediaProps {
   width?: number
   height?: number
   loadFirst?: boolean
+  unoptimized?: boolean
 }
 
 export default function ImageMedia (props: ImageMediaProps): JSX.Element {
@@ -22,7 +23,7 @@ export default function ImageMedia (props: ImageMediaProps): JSX.Element {
     tiny,
     width,
     height,
-    loadFirst = false,
+    loadFirst = false
   } = props
 
   const [hasError, setError] = useState(false)
@@ -33,9 +34,9 @@ export default function ImageMedia (props: ImageMediaProps): JSX.Element {
       userSelect: 'none',
       width: 'inherit',
       height: 'inherit',
-      objectFit: 'inherit',
+      objectFit: 'inherit'
     },
-    draggable: false,
+    draggable: false
   }
 
   const onError = (): void => {
@@ -71,6 +72,7 @@ export default function ImageMedia (props: ImageMediaProps): JSX.Element {
         loading={loadFirst ? 'eager' : 'lazy'}
         priority={loadFirst}
         onError={onError}
+        unoptimized
         width={width ?? undefined}
         height={height ?? undefined}
         {...IMAGE_STYLE}
@@ -93,6 +95,7 @@ export default function ImageMedia (props: ImageMediaProps): JSX.Element {
         loading={loadFirst ? 'eager' : 'lazy'}
         priority={loadFirst}
         onError={onError}
+        unoptimized
         width={width ?? undefined}
         height={height ?? undefined}
         {...IMAGE_STYLE}

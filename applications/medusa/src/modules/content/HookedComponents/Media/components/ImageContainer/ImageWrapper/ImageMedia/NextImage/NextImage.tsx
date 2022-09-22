@@ -7,7 +7,6 @@ interface Props extends ImageProps {
 const NextImage = forwardRef<any, Props>((props: Props, forwardRef): JSX.Element => {
   return (
     <Image
-      unoptimized
       {...props}
     />
   )

@@ -13,7 +13,8 @@ export default function ImageBackgroundContainer (props: Props): JSX.Element {
     variants,
     width,
     height,
-    tiny
+    tiny,
+    unoptimized
   } = props
 
   const bgColor = typeof rgb === 'string' ? rgb : (rgb != null ? `rgb(${rgb.red},${rgb.green},${rgb.blue})` : undefined)
@@ -31,6 +32,7 @@ export default function ImageBackgroundContainer (props: Props): JSX.Element {
     >
       <CoverImage>
         <ImageMedia
+          unoptimized={unoptimized}
           tiny={tiny}
           width={width}
           height={height}

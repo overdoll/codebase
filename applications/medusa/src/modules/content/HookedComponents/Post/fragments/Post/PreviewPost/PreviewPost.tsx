@@ -50,7 +50,6 @@ export default function PreviewPost (props: Props): JSX.Element {
   return (
     <Box position='relative'>
       <Link
-        onClick={onClick}
         passHref
         href={{
           pathname: '/[slug]/post/[reference]',
@@ -62,7 +61,7 @@ export default function PreviewPost (props: Props): JSX.Element {
           }
         }}
       >
-        <Box position='absolute' top={0} bottom={0} left={0} right={0} as='a' />
+        <Box onClick={onClick} position='absolute' top={0} bottom={0} left={0} right={0} as='a' />
       </Link>
       <PreviewHeader mb={1} postQuery={postData} />
       <PreviewContent onPlayerInit={setPlayer} onSwiper={setSwiper} postQuery={postData} />
