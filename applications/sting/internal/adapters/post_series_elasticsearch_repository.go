@@ -157,13 +157,13 @@ func (r PostsCassandraElasticsearchRepository) ScanSeries(ctx context.Context, c
 
 	query := elastic.NewBoolQuery()
 
-	query.Should(
-		elastic.
-			NewBoolQuery().
-			Should(
-				elastic.NewTermsQueryFromStrings("id", characterId),
-			),
-	)
+	var filterQueries []elastic.Query
+
+	if characterId != "" {
+		filterQueries = append(filterQueries, elastic.NewTermQuery("id", characterId))
+	}
+
+	query.Filter(filterQueries...)
 
 	builder.Query(query)
 	builder.Size(10000)

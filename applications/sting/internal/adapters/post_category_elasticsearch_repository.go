@@ -147,13 +147,13 @@ func (r PostsCassandraElasticsearchRepository) ScanCategories(ctx context.Contex
 
 	query := elastic.NewBoolQuery()
 
-	query.Should(
-		elastic.
-			NewBoolQuery().
-			Should(
-				elastic.NewTermsQueryFromStrings("id", categoryId),
-			),
-	)
+	var filterQueries []elastic.Query
+
+	if categoryId != "" {
+		filterQueries = append(filterQueries, elastic.NewTermQuery("id", categoryId))
+	}
+
+	query.Filter(filterQueries...)
 
 	builder.Query(query)
 	builder.Size(10000)

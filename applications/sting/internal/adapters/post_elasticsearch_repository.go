@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/json"
+	"fmt"
 	"go.uber.org/zap"
 	"hash/fnv"
 	"math"
@@ -216,25 +217,21 @@ func (r PostsCassandraElasticsearchRepository) ScanPosts(ctx context.Context, cl
 
 	query := elastic.NewBoolQuery()
 
-	query.Should(
-		elastic.
-			NewBoolQuery().
-			Should(
-				elastic.NewTermsQueryFromStrings("club_id", clubId),
-			),
-	)
-
-	query.Should(
-		elastic.
-			NewBoolQuery().
-			Should(
-				elastic.NewTermsQueryFromStrings("id", postId),
-			),
-	)
-
 	var filterQueries []elastic.Query
 
 	filterQueries = append(filterQueries, elastic.NewTermQuery("state", post.Published.String()))
+
+	if clubId != "" {
+		filterQueries = append(filterQueries, elastic.NewTermQuery("club_id", clubId))
+	}
+
+	if postId != "" {
+		filterQueries = append(filterQueries, elastic.NewTermQuery("id", postId))
+	}
+
+	if clubId == "" && postId == "" {
+		return nil
+	}
 
 	query.Filter(filterQueries...)
 
@@ -246,6 +243,8 @@ func (r PostsCassandraElasticsearchRepository) ScanPosts(ctx context.Context, cl
 	if err != nil {
 		return errors.Wrap(support.ParseElasticError(err), "failed to search posts")
 	}
+
+	fmt.Println(response.Hits.Hits)
 
 	for _, hit := range response.Hits.Hits {
 
