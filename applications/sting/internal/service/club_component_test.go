@@ -439,7 +439,12 @@ func TestCreateClub_edit_thumbnail(t *testing.T) {
 			Id:   clb.ID(),
 			Type: proto.MediaLinkType_CLUB_THUMBNAIL,
 		},
-		ImageData: &proto.ImageData{Id: uuid.New().String()},
+		ImageData: &proto.ImageData{Id: uuid.New().String(), Sizes: []*proto.ImageDataSize{
+			{
+				Width:  0,
+				Height: 0,
+			},
+		}},
 		State: &proto.MediaState{
 			Processed: true,
 			Failed:    false,
@@ -484,7 +489,12 @@ func TestCreateClub_edit_banner(t *testing.T) {
 			Id:   clb.ID(),
 			Type: proto.MediaLinkType_CLUB_BANNER,
 		},
-		ImageData: &proto.ImageData{Id: uuid.New().String()},
+		ImageData: &proto.ImageData{Id: uuid.New().String(), Sizes: []*proto.ImageDataSize{
+			{
+				Width:  0,
+				Height: 0,
+			},
+		}},
 		State: &proto.MediaState{
 			Processed: true,
 			Failed:    false,

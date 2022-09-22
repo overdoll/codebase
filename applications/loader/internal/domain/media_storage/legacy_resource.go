@@ -34,6 +34,8 @@ func UnmarshalLegacyResourceFromDatabase(id, itemId, resourceToken string, copie
 
 	switch resourceToken {
 	case "POST":
+		link = proto.MediaLinkType_POST_CONTENT
+		break
 	case "POST_PRIVATE_CONTENT":
 		link = proto.MediaLinkType_POST_CONTENT
 		break

@@ -56,11 +56,25 @@ var resourcesTable = table.New(table.Metadata{
 })
 
 type resources struct {
-	ItemId        string `db:"item_id"`
-	ResourceId    string `db:"resource_id"`
-	Processed     bool   `db:"processed"`
-	ResourceToken string `db:"resource_token"`
-	CopiedFromId  string `db:"copied_from_id"`
+	ItemId      string   `db:"item_id"`
+	ResourceId  string   `db:"resource_id"`
+	Type        int      `db:"type"`
+	MimeTypes   []string `db:"mime_types"`
+	Processed   bool     `db:"processed"`
+	ProcessedId string   `db:"processed_id"`
+
+	IsPrivate bool `db:"is_private"`
+
+	VideoDuration          int    `db:"video_duration"`
+	VideoThumbnail         string `db:"video_thumbnail"`
+	VideoThumbnailMimeType string `db:"video_thumbnail_mime_type"`
+	Width                  int    `db:"width"`
+	Height                 int    `db:"height"`
+	Preview                string `db:"preview"`
+	ResourceToken          string `db:"resource_token"`
+	Failed                 bool   `db:"failed"`
+	CopiedFromId           string `db:"copied_from_id"`
+	VideoNoAudio           bool   `db:"video_no_audio"`
 }
 
 type MediaStorageCassandraRepository struct {

@@ -763,6 +763,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperatorMedia(ct
 		Update().
 		Index(postWriterIndex).
 		Id(pst.Id).
+		RetryOnConflict(20).
 		Doc(updateDoc).
 		Do(ctx)
 
