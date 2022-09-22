@@ -9,6 +9,7 @@ go_library(
         "add_like_to_post.go",
         "add_terminated_club.go",
         "archive_post.go",
+        "cancel_submit_post.go",
         "check_if_account_is_club_member.go",
         "check_post_supporter_status_and_send_new.go",
         "club_supporter_no_posts.go",
